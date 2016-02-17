@@ -14,17 +14,20 @@ class Entries extends DashboardPageController
         /**
          * @var $entity Entity
          */
-        $entity = $r->findOneById($id);
-        if (!is_object($entity)) {
-            $this->redirect('/dashboard/express');
+        if ($id) {
+            $entity = $r->findOneById($id);
         }
-        $this->set('entity', $entity);
+        if (isset($entity) && is_object($entity)) {
+            $this->set('entity', $entity);
 
-        $search = new \Concrete\Controller\Search\Express\Entries();
-        $search->search($entity);
+            $search = new \Concrete\Controller\Search\Express\Entries();
+            $search->search($entity);
 
-        $this->set('list', $search->getListObject());
-        $this->set('searchController', $search);
+            $this->set('list', $search->getListObject());
+            $this->set('searchController', $search);
+        } else {
+            $this->set('entities', $r->findByIncludeInPublicList(true));
+        }
     }
 
     public function delete_entry($id = null)

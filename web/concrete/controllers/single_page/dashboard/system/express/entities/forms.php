@@ -1,5 +1,5 @@
 <?php
-namespace Concrete\Controller\SinglePage\Dashboard\Express\Entities;
+namespace Concrete\Controller\SinglePage\Dashboard\System\Express\Entities;
 
 use Concrete\Core\Entity\Express\FieldSet;
 use Concrete\Core\Entity\Express\Form;
@@ -48,12 +48,12 @@ class Forms extends DashboardPageController
                 } else {
                     $this->flash('success', t('Form added successfully.'));
                 }
-                $this->redirect('/dashboard/express/entities/forms', 'view_form_details', $form->getId());
+                $this->redirect('/dashboard/system/express/entities/forms', 'view_form_details', $form->getId());
             } else {
                 $this->add($entity->getId());
             }
         } else {
-            $this->redirect('/dashboard/express/entities');
+            $this->redirect('/dashboard/system/express/entities');
         }
     }
     public function add($id = null)
@@ -63,9 +63,9 @@ class Forms extends DashboardPageController
             $this->set('entity', $entity);
             $this->set('pageTitle', t('Add Form'));
             $this->set('name', '');
-            $this->render('/dashboard/express/entities/forms/details');
+            $this->render('/dashboard/system/express/entities/forms/details');
         } else {
-            $this->redirect('/dashboard/express/entities');
+            $this->redirect('/dashboard/system/express/entities');
         }
     }
     public function view($id = null)
@@ -76,7 +76,7 @@ class Forms extends DashboardPageController
             $this->set('forms', $entity->getForms());
             $this->set('pageTitle', t('Forms'));
         } else {
-            $this->redirect('/dashboard/express/entities');
+            $this->redirect('/dashboard/system/express/entities');
         }
     }
 
@@ -94,7 +94,7 @@ class Forms extends DashboardPageController
             $this->entityManager->remove($form);
             $this->entityManager->flush();
             $this->flash('success', t('Form deleted successfully.'));
-            $this->redirect('/dashboard/express/entities/forms', $id);
+            $this->redirect('/dashboard/system/express/entities/forms', $id);
         } else {
             $this->view_form_details($this->request->request->get('form_id'));
         }
@@ -113,7 +113,7 @@ class Forms extends DashboardPageController
             $this->entityManager->remove($set);
             $this->entityManager->flush();
             $this->flash('success', t('Field set deleted successfully.'));
-            $this->redirect('/dashboard/express/entities/forms', 'view_form_details', $id);
+            $this->redirect('/dashboard/system/express/entities/forms', 'view_form_details', $id);
         } else {
             $this->view_form_details($id);
         }
@@ -132,7 +132,7 @@ class Forms extends DashboardPageController
             $this->entityManager->remove($control);
             $this->entityManager->flush();
             $this->flash('success', t('Field set control deleted successfully.'));
-            $this->redirect('/dashboard/express/entities/forms', 'view_form_details', $id);
+            $this->redirect('/dashboard/system/express/entities/forms', 'view_form_details', $id);
         } else {
             $this->view_form_details($id);
         }
@@ -147,7 +147,7 @@ class Forms extends DashboardPageController
             $this->set('type', $type);
             $this->set('control', $control);
             $this->setThemeViewTemplate('dialog.php');
-            $this->render('/dashboard/express/entities/forms/edit_control');
+            $this->render('/dashboard/system/express/entities/forms/edit_control');
         }
     }
 
@@ -205,7 +205,7 @@ class Forms extends DashboardPageController
             $this->set('tabs', $tabs);
             $this->set('interface', \Core::make('helper/concrete/ui'));
             $this->setThemeViewTemplate('dialog.php');
-            $this->render('/dashboard/express/entities/forms/add_control');
+            $this->render('/dashboard/system/express/entities/forms/add_control');
         }
     }
 
@@ -266,7 +266,7 @@ class Forms extends DashboardPageController
             $this->entityManager->persist($set);
             $this->entityManager->flush();
             $this->flash('success', t('Field set updated successfully.'));
-            $this->redirect('/dashboard/express/entities/forms', 'view_form_details', $id);
+            $this->redirect('/dashboard/system/express/entities/forms', 'view_form_details', $id);
         } else {
             $this->view_form_details($id);
         }
@@ -295,7 +295,7 @@ class Forms extends DashboardPageController
             $this->entityManager->persist($set);
             $this->entityManager->flush();
             $this->flash('success', t('Form field set added successfully.'));
-            $this->redirect('/dashboard/express/entities/forms', 'view_form_details', $form->getId());
+            $this->redirect('/dashboard/system/express/entities/forms', 'view_form_details', $form->getId());
         } else {
             $this->view_form_details($id);
         }
@@ -310,9 +310,9 @@ class Forms extends DashboardPageController
             $this->set('expressForm', $form);
             $this->set('pageTitle', t('Edit Details'));
             $this->set('name', $form->getName());
-            $this->render('/dashboard/express/entities/forms/details');
+            $this->render('/dashboard/system/express/entities/forms/details');
         } else {
-            $this->redirect('/dashboard/express/entities');
+            $this->redirect('/dashboard/system/express/entities');
         }
     }
 
@@ -325,9 +325,9 @@ class Forms extends DashboardPageController
             $this->set('fieldSets', $form->getFieldSets());
             $this->set('expressForm', $form);
             $this->set('pageTitle', t('Form Details'));
-            $this->render('/dashboard/express/entities/forms/view_form');
+            $this->render('/dashboard/system/express/entities/forms/view_form');
         } else {
-            $this->redirect('/dashboard/express/entities');
+            $this->redirect('/dashboard/system/express/entities');
         }
     }
 }

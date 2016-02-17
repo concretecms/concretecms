@@ -1,8 +1,8 @@
 <?php defined('C5_EXECUTE') or die("Access Denied."); ?>
 
 <div class="ccm-dashboard-header-buttons btn-group">
-    <a href="<?=URL::to('/dashboard/express/entities/forms', $entity->getID())?>" class="btn btn-default"><?=t("Back to Object")?></a>
-    <a href="<?=URL::to('/dashboard/express/entities/forms', 'edit', $expressForm->getID())?>" class="btn btn-default"><?=t("Edit Details")?></a>
+    <a href="<?=URL::to('/dashboard/system/express/entities/forms', $entity->getID())?>" class="btn btn-default"><?=t("Back to Object")?></a>
+    <a href="<?=URL::to('/dashboard/system/express/entities/forms', 'edit', $expressForm->getID())?>" class="btn btn-default"><?=t("Edit Details")?></a>
     <button type="button" class="btn btn-default" data-dialog="add-set"><?= t('Add Field Set') ?></button>
     <button type="button" class="btn btn-danger" data-dialog="delete-form"><?= t('Delete Form') ?></button>
 </div>

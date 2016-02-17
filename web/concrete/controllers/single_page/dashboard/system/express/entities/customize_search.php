@@ -1,5 +1,5 @@
 <?php
-namespace Concrete\Controller\SinglePage\Dashboard\Express\Entities;
+namespace Concrete\Controller\SinglePage\Dashboard\System\Express\Entities;
 
 use Concrete\Controller\Element\Search\CustomizeResults;
 use Concrete\Core\Express\Search\ColumnSet\ColumnSet;
@@ -43,11 +43,11 @@ class CustomizeSearch extends DashboardPageController
                 $this->entityManager->persist($entity);
                 $this->entityManager->flush();
                 $this->flash('success', t('Search preferences saved successfully.'));
-                $this->redirect('/dashboard/express/entities/customize_search', $entity->getID());
+                $this->redirect('/dashboard/system/express/entities/customize_search', $entity->getID());
             }
             $this->view($id);
         } else {
-            $this->redirect('/dashboard/express/entities');
+            $this->redirect('/dashboard/system/express/entities');
         }
     }
 
@@ -63,7 +63,7 @@ class CustomizeSearch extends DashboardPageController
             $element = new CustomizeResults($provider);
             $this->set('customizeElement', $element);
         } else {
-            $this->redirect('/dashboard/express/entities');
+            $this->redirect('/dashboard/system/express/entities');
         }
     }
 
