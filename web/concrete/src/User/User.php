@@ -44,7 +44,7 @@ class User extends Object
         $row = $r ? $r->FetchRow() : null;
         $nu = null;
         if ($row) {
-            $nu = new self();
+            $nu = new static();
             $nu->setPropertiesFromArray($row);
             $nu->uGroups = $nu->_getUserGroups(true);
             $nu->superUser = ($nu->getUserID() == USER_SUPER_ID);
@@ -62,7 +62,7 @@ class User extends Object
      *
      * @return User
      */
-    public function loginByUserID($uID)
+    public static function loginByUserID($uID)
     {
         return self::getByUserID($uID, true);
     }
@@ -317,11 +317,13 @@ class User extends Object
     {
         $app = Application::getFacadeApplication();
         $config = $app['config'];
+        $jar = $app['cookie'];
 
         $cookie = array($this->getUserID(),$authType);
         $at = AuthenticationType::getByHandle($authType);
         $cookie[] = $at->controller->buildHash($this);
-        setcookie(
+
+        $jar->set(
             'ccmAuthUserHash',
             implode(':', $cookie),
             time() + USER_FOREVER_COOKIE_LIFETIME,
@@ -373,6 +375,8 @@ class User extends Object
     {
         $app = Application::getFacadeApplication();
         $session = $app['session'];
+        $config = $app['config'];
+        $cookie = $app['cookie'];
 
         // @todo remove this hard option if `Session::clear()` does what we need.
         if (!$hard) {
@@ -381,12 +385,20 @@ class User extends Object
             $session->invalidate();
         }
 
-        if (isset($_COOKIE['ccmAuthUserHash']) && $_COOKIE['ccmAuthUserHash']) {
-            $config = $app['config'];
-            setcookie("ccmAuthUserHash", "", 315532800, DIR_REL . '/',
-                      $config->get('concrete.session.cookie.cookie_domain'),
-                      $config->get('concrete.session.cookie.cookie_secure'),
-                      $config->get('concrete.session.cookie.cookie_httponly'));
+        if ($cookie->has('ccmAuthUserHash') && $cookie->get('ccmAuthUserHash')) {
+            $cookie->set('ccmAuthUserHash',
+                '',
+                315532800,
+                DIR_REL . '/',
+                $config->get('concrete.session.cookie.cookie_domain'),
+                $config->get('concrete.session.cookie.cookie_secure'),
+                $config->get('concrete.session.cookie.cookie_httponly')
+            );
+        }
+
+        $loginCookie = sprintf('%s_LOGIN', $app['config']->get('concrete.session.name'));
+        if ($cookie->has($loginCookie) && $cookie->get($loginCookie)) {
+            $cookie->clear($loginCookie, 1);
         }
     }
 
@@ -563,7 +575,7 @@ class User extends Object
                     $mh->addParameter('badgeName', $g->getGroupDisplayName(false));
                     $mh->addParameter('uDisplayName', $ui->getUserDisplayName());
                     $mh->addParameter('uProfileURL', (string) $ui->getUserPublicProfileURL());
-                    $mh->addParameter('siteName', $app['config']->get('concrete.site'));
+                    $mh->addParameter('siteName', tc('SiteName', $app['config']->get('concrete.site')));
                     $mh->to($ui->getUserEmail());
                     $mh->load('won_badge');
                     $mh->sendMail();
@@ -773,6 +785,9 @@ class User extends Object
         $session->set('uTimezone', $this->getUserTimezone());
         $session->set('uDefaultLanguage', $this->getUserDefaultLanguage());
         $session->set('uLastPasswordChange', $this->getLastPasswordChange());
+
+        $cookie = $app['cookie'];
+        $cookie->set(sprintf('%s_LOGIN', $app['config']->get('concrete.session.name')), 1);
 
         if ($cache_interface) {
             $app->make('helper/concrete/ui')->cacheInterfaceItems();

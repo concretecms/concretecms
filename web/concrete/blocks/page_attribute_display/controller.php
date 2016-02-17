@@ -66,13 +66,18 @@ class Controller extends BlockController
             default:
                 $content = $c->getAttribute($this->attributeHandle);
                 if (is_object($content) && $content instanceof \Concrete\Core\File\File) {
-                    $im = Core::make('helper/image');
-                    $thumb = $im->getThumbnail(
-                        $content,
-                        $this->thumbnailWidth,
-                        $this->thumbnailHeight
-                    ); //<-- set these 2 numbers to max width and height of thumbnails
-                    $content = "<img src=\"{$thumb->src}\" width=\"{$thumb->width}\" height=\"{$thumb->height}\" alt=\"\" />";
+                    if ($this->thumbnailWidth > 0 || $this->thumbnailHeight > 0) {
+                        $im = Core::make('helper/image');
+                        $thumb = $im->getThumbnail(
+                            $content,
+                            $this->thumbnailWidth,
+                            $this->thumbnailHeight
+                        ); //<-- set these 2 numbers to max width and height of thumbnails
+                        $content = "<img src=\"{$thumb->src}\" width=\"{$thumb->width}\" height=\"{$thumb->height}\" alt=\"\" />";
+                    } else {
+                        $image = Core::make('html/image', array($content));
+                        $content = (string) $image->getTag();
+                    }
                 } else {
                     if (!is_scalar($content) && (!is_object($content) || !method_exists($content, '__toString'))) {
                         $content = $c->getAttribute($this->attributeHandle, 'displaySanitized');

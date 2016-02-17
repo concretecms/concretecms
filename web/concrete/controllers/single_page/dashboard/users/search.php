@@ -122,7 +122,7 @@ class Search extends DashboardPageController
                     $mh->addParameter('user', $this->user);
                     $mh->addParameter('uName', $this->user->getUserName());
                     $mh->addParameter('uEmail', $this->user->getUserEmail());
-                    $mh->addParameter('siteName', Config::get('concrete.site'));
+                    $mh->addParameter('siteName', tc('SiteName', Config::get('concrete.site')));
                     $mh->load('user_registered_approval_complete');
                     $mh->sendMail();
                     $this->redirect('/dashboard/users/search', 'view', $this->user->getUserID(), 'activated');
@@ -236,65 +236,63 @@ class Search extends DashboardPageController
         $this->setupUser($uID);
         if ($this->canEditUserName) {
             $username = $this->post('value');
-            if (!Config::get('concrete.user.registration.email_registration')) {
-                if (!Loader::helper('validation/token')->validate()) {
-                    $this->error->add(Loader::helper('validation/token')->getErrorMessage());
-                }
-                if (strlen($username) < Config::get('concrete.user.username.minimum')) {
-                    $this->error->add(
-                        t(
-                            'A username must be at least %s characters long.',
-                            Config::get('concrete.user.username.minimum')
-                        )
-                    );
-                }
-
-                if (strlen($username) > Config::get('concrete.user.username.maximum')) {
-                    $this->error->add(
-                        t(
-                            'A username cannot be more than %s characters long.',
-                            Config::get('concrete.user.username.maximum')
-                        )
-                    );
-                }
-
-                if (strlen($username) >= Config::get('concrete.user.username.minimum') && !Loader::helper(
-                        'concrete/validation'
-                    )->username($username)
-                ) {
-                    if (Config::get('concrete.user.username.allow_spaces')) {
-                        $this->error->add(
-                            t(
-                                'A username may only contain letters, numbers, spaces, dots (not at the beginning/end), underscores (not at the beginning/end).'
-                            )
-                        );
-                    } else {
-                        $this->error->add(
-                            t(
-                                'A username may only contain letters numbers, dots (not at the beginning/end), underscores (not at the beginning/end).'
-                            )
-                        );
-                    }
-                }
-                $uo = $this->user->getUserObject();
-                if (strcasecmp($uo->getUserName(), $username) && !Loader::Helper(
-                        'concrete/validation'
-                    )->isUniqueUsername($username)
-                ) {
-                    $this->error->add(t("The username '%s' already exists. Please choose another", $username));
-                }
-
-                $sr = new UserEditResponse();
-                $sr->setUser($this->user);
-                if (!$this->error->has()) {
-                    $data = array('uName' => $username);
-                    $this->user->update($data);
-                    $sr->setMessage(t('Username saved successfully.'));
-                } else {
-                    $sr->setError($this->error);
-                }
-                $sr->outputJSON();
+            if (!Loader::helper('validation/token')->validate()) {
+                $this->error->add(Loader::helper('validation/token')->getErrorMessage());
             }
+            if (strlen($username) < Config::get('concrete.user.username.minimum')) {
+                $this->error->add(
+                    t(
+                        'A username must be at least %s characters long.',
+                        Config::get('concrete.user.username.minimum')
+                    )
+                );
+            }
+
+            if (strlen($username) > Config::get('concrete.user.username.maximum')) {
+                $this->error->add(
+                    t(
+                        'A username cannot be more than %s characters long.',
+                        Config::get('concrete.user.username.maximum')
+                    )
+                );
+            }
+
+            if (strlen($username) >= Config::get('concrete.user.username.minimum') && !Loader::helper(
+                    'concrete/validation'
+                )->username($username)
+            ) {
+                if (Config::get('concrete.user.username.allow_spaces')) {
+                    $this->error->add(
+                        t(
+                            'A username may only contain letters, numbers, spaces, dots (not at the beginning/end), underscores (not at the beginning/end).'
+                        )
+                    );
+                } else {
+                    $this->error->add(
+                        t(
+                            'A username may only contain letters numbers, dots (not at the beginning/end), underscores (not at the beginning/end).'
+                        )
+                    );
+                }
+            }
+            $uo = $this->user->getUserObject();
+            if (strcasecmp($uo->getUserName(), $username) && !Loader::Helper(
+                    'concrete/validation'
+                )->isUniqueUsername($username)
+            ) {
+                $this->error->add(t("The username '%s' already exists. Please choose another", $username));
+            }
+
+            $sr = new UserEditResponse();
+            $sr->setUser($this->user);
+            if (!$this->error->has()) {
+                $data = array('uName' => $username);
+                $this->user->update($data);
+                $sr->setMessage(t('Username saved successfully.'));
+            } else {
+                $sr->setError($this->error);
+            }
+            $sr->outputJSON();
         }
     }
 
