@@ -61,7 +61,7 @@ class LocalizationTest extends \PHPUnit_Framework_TestCase
         $cmd .= ' --verbose'; // increase verbosity level
         $cmd .= ' --output-file='.escapeshellarg($moFile);
         $cmd .= ' '.escapeshellarg($poFile);
-        $cmd .= '2>&1';
+        $cmd .= ' 2>&1';
         $output = array();
         @exec($cmd, $output, $rc);
         $this->assertSame(0, $rc, "msgfmt output:\n" . implode("\n", $output));
