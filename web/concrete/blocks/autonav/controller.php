@@ -512,6 +512,15 @@ class Controller extends BlockController
 
     public function getNavigationArray($cParentID, $orderBy, $currentLevel)
     {
+        // Check if the parent page is excluded or if it has been set to exclude child pages
+        foreach ($this->navArray as $ni) {
+            if ($ni->getCollectionID() == $cParentID) {
+                if ($ni->getCollectionObject()->getAttribute('exclude_nav') == 1 || $ni->getCollectionObject()->getAttribute('exclude_subpages_from_nav') == 1) {
+                    return;
+                }
+            }
+        }
+        
         // increment all items in the nav array with a greater $currentLevel
 
         foreach ($this->navArray as $ni) {
