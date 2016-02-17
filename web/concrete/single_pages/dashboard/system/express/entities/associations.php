@@ -8,7 +8,7 @@
     $manage->render();
     ?>
 
-    <a href="<?=URL::to('/dashboard/express/entities/associations', 'add', $entity->getId())?>" class="btn btn-primary">
+    <a href="<?=URL::to('/dashboard/system/express/entities/associations', 'add', $entity->getId())?>" class="btn btn-primary">
         <?=t("Add Association")?>
     </a>
 
@@ -27,7 +27,7 @@
     ?>
 
                     <li>
-                        <a href="<?=URL::to('/dashboard/express/entities/associations', 'view_association_details', $association->getID())?>">
+                        <a href="<?=URL::to('/dashboard/system/express/entities/associations', 'view_association_details', $association->getID())?>">
                             <?=$formatter->getIcon()?> <?=$formatter->getDisplayName()?>
                         </a>
                     </li>

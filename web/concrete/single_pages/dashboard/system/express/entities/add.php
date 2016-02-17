@@ -18,7 +18,7 @@
     </fieldset>
     <div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
-            <a href="<?=URL::to('/dashboard/express/entities')?>" class="pull-left btn btn-default" type="button" ><?=t('Back to List')?></a>
+            <a href="<?=URL::to('/dashboard/system/express/entities')?>" class="pull-left btn btn-default" type="button" ><?=t('Back to List')?></a>
             <button class="pull-right btn btn-primary" type="submit" ><?=t('Save')?></button>
         </div>
     </div>

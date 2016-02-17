@@ -13,7 +13,7 @@ class Create extends DashboardPageController
         $r = $this->entityManager->getRepository('\Concrete\Core\Entity\Express\Entity');
         $entity = $r->findOneById($id);
         if (!is_object($entity)) {
-            $this->redirect('/dashboard/express');
+            $this->redirect('/dashboard/express/entries');
         }
         $this->set('entity', $entity);
         $form = $entity->getForms()[0];

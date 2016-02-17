@@ -1,5 +1,5 @@
 <?php
-namespace Concrete\Controller\SinglePage\Dashboard\Express\Entities;
+namespace Concrete\Controller\SinglePage\Dashboard\System\Express\Entities;
 
 use Concrete\Core\Page\Controller\DashboardPageController;
 
@@ -86,13 +86,13 @@ class Associations extends DashboardPageController
                     $this->entityManager->flush();
 
                     $this->flash('success', t('Association added successfully.'));
-                    $this->redirect('/dashboard/express/entities/associations', $entity->getId());
+                    $this->redirect('/dashboard/system/express/entities/associations', $entity->getId());
                 }
             }
 
-            $this->render('/dashboard/express/entities/associations/add');
+            $this->render('/dashboard/system/express/entities/associations/add');
         } else {
-            $this->redirect('/dashboard/express/entities');
+            $this->redirect('/dashboard/system/express/entities');
         }
     }
     public function view($id = null)
@@ -104,7 +104,7 @@ class Associations extends DashboardPageController
             $this->set('associations', $entity->getAssociations());
             $this->set('pageTitle', t('Associations'));
         } else {
-            $this->redirect('/dashboard/express/entities');
+            $this->redirect('/dashboard/system/express/entities');
         }
     }
 
@@ -123,7 +123,7 @@ class Associations extends DashboardPageController
             $this->entityManager->flush();
 
             $this->flash('success', t('Association deleted successfully.'));
-            $this->redirect('/dashboard/express/entities/associations', $id);
+            $this->redirect('/dashboard/system/express/entities/associations', $id);
         } else {
             $this->view_association_details($this->request->request->get('association_id'));
         }
@@ -138,11 +138,11 @@ class Associations extends DashboardPageController
             $this->set('association', $association);
             $this->set('formatter', $association->getFormatter());
             $this->set('pageTitle', t('Association Details'));
-            $this->render('/dashboard/express/entities/associations/view_association');
+            $this->render('/dashboard/system/express/entities/associations/view_association');
         }
         if (is_object($entity)) {
         } else {
-            $this->redirect('/dashboard/express/entities');
+            $this->redirect('/dashboard/system/express/entities');
         }
     }
 }

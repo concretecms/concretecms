@@ -6,7 +6,7 @@ use Concrete\Core\Express\Search\ColumnSet\ColumnSet;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * @Entity
+ * @Entity(repositoryClass="\Concrete\Core\Entity\Express\EntityRepository")
  * @Table(name="ExpressEntities")
  */
 class Entity implements EntityInterface

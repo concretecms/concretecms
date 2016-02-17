@@ -8,7 +8,7 @@
     $manage->render();
     ?>
 
-    <a href="<?=URL::to('/dashboard/express/entities/forms', 'add', $entity->getId())?>" class="btn btn-primary">
+    <a href="<?=URL::to('/dashboard/system/express/entities/forms', 'add', $entity->getId())?>" class="btn btn-primary">
         <?=t("Add Form")?>
     </a>
 
@@ -26,7 +26,7 @@
                 <?php foreach ($forms as $form) {
     ?>
                     <li>
-                        <a href="<?=URL::to('/dashboard/express/entities/forms', 'view_form_details', $form->getID())?>">
+                        <a href="<?=URL::to('/dashboard/system/express/entities/forms', 'view_form_details', $form->getID())?>">
                             <i class="fa fa-list-alt"></i> <?=$form->getName()?>
                         </a>
                     </li>

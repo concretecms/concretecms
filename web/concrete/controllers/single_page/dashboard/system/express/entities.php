@@ -1,5 +1,5 @@
 <?php
-namespace Concrete\Controller\SinglePage\Dashboard\Express;
+namespace Concrete\Controller\SinglePage\Dashboard\System\Express;
 
 use Concrete\Core\Entity\Express\Entity;
 use Concrete\Core\Page\Controller\DashboardPageController;
@@ -33,38 +33,13 @@ class Entities extends DashboardPageController
                 }
 
                 $this->flash('success', t('Object added successfully.'));
-                $this->redirect('/dashboard/express/entities', 'view_entity', $entity->getId());
+                $this->redirect('/dashboard/system/express/entities', 'view_entity', $entity->getId());
             }
         }
 
-        $this->render('/dashboard/express/entities/add');
+        $this->render('/dashboard/system/express/entities/add');
     }
 
-    /*
-    public function delete_batch()
-    {
-        if (!$this->token->validate('delete_batch')) {
-            $this->error->add($this->token->getErrorMessage());
-        }
-        if (!$this->error->has()) {
-            $r = $this->entityManager->getRepository('\PortlandLabs\Concrete5\MigrationTool\Entity\Export\Batch');
-            $batch = $r->findOneById($this->request->request->get('id'));
-            if (is_object($batch)) {
-                foreach ($batch->getObjectCollections() as $collection) {
-                    $this->entityManager->remove($collection);
-                }
-                $batch->setObjectCollections(new ArrayCollection());
-                $this->entityManager->flush();
-                $this->entityManager->remove($batch);
-                $this->entityManager->flush();
-                $this->flash('success', t('Batch removed successfully.'));
-                $this->redirect('/dashboard/system/migration/export');
-            }
-        }
-        $this->view();
-    }
-
-    */
     public function view()
     {
         $r = $this->entityManager->getRepository('\Concrete\Core\Entity\Express\Entity');
@@ -79,7 +54,7 @@ class Entities extends DashboardPageController
         if (is_object($entity)) {
             $this->set('entity', $entity);
             $this->set('pageTitle', t('Object Details'));
-            $this->render('/dashboard/express/entities/view_details');
+            $this->render('/dashboard/system/express/entities/view_details');
         } else {
             $this->view();
         }

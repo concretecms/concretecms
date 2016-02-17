@@ -1,5 +1,5 @@
 <?php
-namespace Concrete\Controller\SinglePage\Dashboard\Express\Entities;
+namespace Concrete\Controller\SinglePage\Dashboard\System\Express\Entities;
 
 use Concrete\Core\Attribute\Type;
 use Concrete\Core\Page\Controller\DashboardAttributesPageController;
@@ -33,7 +33,7 @@ class Attributes extends DashboardAttributesPageController
         $r = $this->entityManager->getRepository('\Concrete\Core\Entity\Attribute\Key\Key');
         $key = $r->findOneBy(array('akID' => $akID));
         $this->renderEdit($key,
-            \URL::to('/dashboard/express/entities/attributes', 'view', $id)
+            \URL::to('/dashboard/system/express/entities/attributes', 'view', $id)
         );
     }
 
@@ -45,7 +45,7 @@ class Attributes extends DashboardAttributesPageController
         $r = $this->entityManager->getRepository('\Concrete\Core\Entity\Attribute\Key\Key');
         $key = $r->findOneBy(array('akID' => $akID));
         $this->executeUpdate($key,
-            \URL::to('/dashboard/express/entities/attributes', 'view', $id)
+            \URL::to('/dashboard/system/express/entities/attributes', 'view', $id)
         );
     }
 
@@ -54,7 +54,7 @@ class Attributes extends DashboardAttributesPageController
         $this->set('entity', $this->getEntity($id));
         $type = Type::getByID($type);
         $this->renderAdd($type,
-            \URL::to('/dashboard/express/entities/attributes', 'view', $id)
+            \URL::to('/dashboard/system/express/entities/attributes', 'view', $id)
         );
     }
 
@@ -64,7 +64,7 @@ class Attributes extends DashboardAttributesPageController
         $type = Type::getByID($type);
         $entity = $this->getEntity($id);
         $this->set('entity', $entity);
-        $this->executeAdd($type, \URL::to('/dashboard/express/entities/attributes', 'view', $id));
+        $this->executeAdd($type, \URL::to('/dashboard/system/express/entities/attributes', 'view', $id));
     }
 
     public function delete($id = null, $akID = null)
@@ -74,7 +74,7 @@ class Attributes extends DashboardAttributesPageController
         $key = $factory->getAttributeKeyByID($akID);
         $this->set('entity', $entity);
         $this->executeDelete($key,
-            \URL::to('/dashboard/express/entities/attributes', 'view', $id)
+            \URL::to('/dashboard/system/express/entities/attributes', 'view', $id)
         );
     }
 }
