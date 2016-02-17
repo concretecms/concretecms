@@ -289,6 +289,7 @@ class Application extends Container
             }
         }
         $config->set('app.bootstrap.packages_loaded', true);
+        \Localization::setupSiteLocalization();
 
         if ($checkAfterStart) {
             foreach($this->packages as $pkg) {

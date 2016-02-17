@@ -25,11 +25,11 @@ class Value extends Object
         $row = $db->GetRow('select avID, akID, uID, avDateAdded, atID from AttributeValues where avID = ?', array($avID));
         if (is_array($row) && $row['avID'] == $avID) {
             $this->setPropertiesFromArray($row);
-        }
 
-        $this->attributeType = $this->getAttributeTypeObject();
-        $this->attributeType->controller->setAttributeKey($this->getAttributeKey());
-        $this->attributeType->controller->setAttributeValue($this);
+            $this->attributeType = $this->getAttributeTypeObject();
+            $this->attributeType->controller->setAttributeKey($this->getAttributeKey());
+            $this->attributeType->controller->setAttributeValue($this);
+        }
     }
 
     public function __destruct()

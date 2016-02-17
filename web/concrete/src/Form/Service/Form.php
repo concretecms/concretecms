@@ -224,8 +224,11 @@ class Form
             $checkedValue = $checkedValueOrMiscFields;
         }
         $checked = false;
-        if (isset($_REQUEST[$key])) {
-            if ($_REQUEST[$key] == $value) {
+
+        $requestValue = $this->getRequestValue($key);
+
+        if ($requestValue !== false) {
+            if ($requestValue == $value) {
                 $checked = true;
             }
         } else {

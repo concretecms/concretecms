@@ -701,16 +701,14 @@ class StyleSet
      */
     public static function getByID($issID)
     {
-        $db = Database::get();
-        $em = $db->getEntityManager();
+        $em = \ORM::entityManager('core');
 
         return $em->find('\Concrete\Core\StyleCustomizer\Inline\StyleSet', $issID);
     }
 
     public function save()
     {
-        $db = Database::get();
-        $em = $db->getEntityManager();
+        $em = \ORM::entityManager('core');
         $em->persist($this);
         $em->flush();
     }

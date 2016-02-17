@@ -4,14 +4,10 @@ namespace Concrete\Controller\SinglePage;
 use Concrete\Core\Authentication\AuthenticationType;
 use Concrete\Core\Authentication\AuthenticationTypeFailureException;
 use Concrete\Core\Routing\RedirectResponse;
-use Config;
-use Events;
-use Core;
 use Localization;
 use Page;
 use PageController;
 use Permissions;
-use Session;
 use User;
 use UserAttributeKey;
 use UserInfo;
@@ -105,7 +101,7 @@ class Login extends PageController
      */
     public function authenticate($type = '')
     {
-        $valt = Core::make('helper/validation/token');
+        $valt = $this->app->make('token');
         if (!$valt->validate('login_' . $type)) {
             $this->error->add($valt->getErrorMessage());
         } else {
@@ -139,7 +135,8 @@ class Login extends PageController
             return $this->view();
         }
         $u = new User();
-        if (Config::get('concrete.i18n.choose_language_login')) {
+        $config = $this->app->make('config');
+        if ($config->get('concrete.i18n.choose_language_login')) {
             $userLocale = $this->post('USER_LOCALE');
             if (is_string($userLocale) && ($userLocale !== '')) {
                 if ($userLocale !== 'en_US') {
@@ -177,8 +174,9 @@ class Login extends PageController
             $this->set('required_attributes', $unfilled);
             $this->set('u', $u);
 
-            Session::set('uRequiredAttributeUser', $u->getUserID());
-            Session::set('uRequiredAttributeUserAuthenticationType', $type->getAuthenticationTypeHandle());
+            $session = $this->app->make('session');
+            $session->set('uRequiredAttributeUser', $u->getUserID());
+            $session->set('uRequiredAttributeUserAuthenticationType', $type->getAuthenticationTypeHandle());
 
             $this->view();
             echo $this->getViewObject()->render();
@@ -188,22 +186,23 @@ class Login extends PageController
         $u->setLastAuthType($type);
 
         $ue = new \Concrete\Core\User\Event\User($u);
-        Events::dispatch('on_user_login', $ue);
+        $this->app->make('director')->dispatch('on_user_login', $ue);
 
         $this->chooseRedirect();
     }
 
     public function on_start()
     {
-        $this->error = Core::make('helper/validation/error');
-        $this->set('valt', Core::make('helper/validation/token'));
-        if (Config::get('concrete.user.registration.email_registration')) {
+        $config = $this->app->make('config');
+        $this->error = $this->app->make('helper/validation/error');
+        $this->set('valt', $this->app->make('helper/validation/token'));
+        if ($config->get('concrete.user.registration.email_registration')) {
             $this->set('uNameLabel', t('Email Address'));
         } else {
             $this->set('uNameLabel', t('Username'));
         }
 
-        $txt = Core::make('helper/text');
+        $txt = $this->app->make('helper/text');
         if (isset($_GET['uName']) && strlen($_GET['uName'])
         ) { // pre-populate the username if supplied, if its an email address with special characters the email needs to be urlencoded first,
             $this->set("uName", trim($txt->email($_GET['uName'])));
@@ -211,7 +210,7 @@ class Login extends PageController
 
         $languages = array();
         $locales = array();
-        if (Config::get('concrete.i18n.choose_language_login')) {
+        if ($config->get('concrete.i18n.choose_language_login')) {
             $languages = Localization::getAvailableInterfaceLanguages();
             if (count($languages) > 0) {
                 array_unshift($languages, 'en_US');
@@ -229,12 +228,15 @@ class Login extends PageController
 
     public function chooseRedirect()
     {
+        $config = $this->app->make('config');
+        $session = $this->app->make('session');
+
         if (!$this->error) {
-            $this->error = Core::make('helper/validation/error');
+            $this->error = $this->app->make('helper/validation/error');
         }
 
-        $nh = Core::make('helper/validation/numbers');
-        $navigation = Core::make('helper/navigation');
+        $nh = $this->app->make('helper/validation/numbers');
+        $navigation = $this->app->make('helper/navigation');
         $rUrl = false;
 
         $u = new User(); // added for the required registration attribute change above. We recalc the user and make sure they're still logged in
@@ -244,8 +246,8 @@ class Login extends PageController
             }
             do {
                 // redirect to original destination
-                if (Session::has('rcID')) {
-                    $rcID = Session::get('rcID');
+                if ($session->has('rcID')) {
+                    $rcID = $session->get('rcID');
                     if ($nh->integer($rcID)) {
                         $rc = Page::getByID($rcID);
                     } elseif (strlen($rcID)) {
@@ -262,7 +264,7 @@ class Login extends PageController
                 $dash = Page::getByPath("/dashboard", "RECENT");
                 $dbp = new Permissions($dash);
                 //should administrator be redirected to dashboard?  defaults to yes if not set.
-                $adminToDash = intval(Config::get('concrete.misc.login_admin_to_dashboard'));
+                $adminToDash = intval($config->get('concrete.misc.login_admin_to_dashboard'));
                 if ($dbp->canRead() && $adminToDash) {
                     if (!$rc instanceof Page || $rc->isError()) {
                         $rc = $dash;
@@ -272,7 +274,7 @@ class Login extends PageController
                 }
 
                 //options set in dashboard/users/registration
-                $login_redirect_mode = Config::get('concrete.misc.login_redirect');
+                $login_redirect_mode = $config->get('concrete.misc.login_redirect');
 
                 //redirect to user profile
                 if ($login_redirect_mode == 'PROFILE') {
@@ -284,7 +286,7 @@ class Login extends PageController
                 }
 
                 //redirect to custom page
-                $login_redirect_cid = intval(Config::get('concrete.misc.login_redirect_cid'));
+                $login_redirect_cid = intval($config->get('concrete.misc.login_redirect_cid'));
                 if ($login_redirect_mode == 'CUSTOM' && $login_redirect_cid > 0) {
                     $rc = Page::getByID($login_redirect_cid);
                     if ($rc instanceof Page && !$rc->isError()) {
@@ -323,20 +325,21 @@ class Login extends PageController
     public function fill_attributes()
     {
         try {
-            if (!Session::has('uRequiredAttributeUser') ||
-                intval(Session::get('uRequiredAttributeUser')) < 1 ||
-                !Session::has('uRequiredAttributeUserAuthenticationType') ||
-                !Session::get('uRequiredAttributeUserAuthenticationType')
+            $session = $this->app->make('session');
+            if (!$session->has('uRequiredAttributeUser') ||
+                intval($session->get('uRequiredAttributeUser')) < 1 ||
+                !$session->has('uRequiredAttributeUserAuthenticationType') ||
+                !$session->get('uRequiredAttributeUserAuthenticationType')
             ) {
-                Session::remove('uRequiredAttributeUser');
-                Session::remove('uRequiredAttributeUserAuthenticationType');
+                $session->remove('uRequiredAttributeUser');
+                $session->remove('uRequiredAttributeUserAuthenticationType');
                 throw new \Exception(t('Invalid Request, please attempt login again.'));
             }
-            User::loginByUserID(Session::get('uRequiredAttributeUser'));
-            Session::remove('uRequiredAttributeUser');
+            User::loginByUserID($session->get('uRequiredAttributeUser'));
+            $session->remove('uRequiredAttributeUser');
             $u = new User();
-            $at = AuthenticationType::getByHandle(Session::get('uRequiredAttributeUserAuthenticationType'));
-            Session::remove('uRequiredAttributeUserAuthenticationType');
+            $at = AuthenticationType::getByHandle($session->get('uRequiredAttributeUserAuthenticationType'));
+            $session->remove('uRequiredAttributeUserAuthenticationType');
             if (!$at) {
                 throw new \Exception(t("Invalid Authentication Type"));
             }
@@ -374,7 +377,7 @@ class Login extends PageController
 
     public function logout($token = false)
     {
-        if (Core::make('helper/validation/token')->validate('logout', $token)) {
+        if ($this->app->make('token')->validate('logout', $token)) {
             $u = new User();
             $u->logout();
             $this->redirect('/');
@@ -383,10 +386,10 @@ class Login extends PageController
 
     public function forward($cID = 0)
     {
-        $nh = Core::make('helper/validation/numbers');
+        $nh = $this->app->make('helper/validation/numbers');
         if ($nh->integer($cID) && intval($cID) > 0) {
             $this->set('rcID', intval($cID));
-            Session::set('rcID', intval($cID));
+            $this->app->make('session')->set('rcID', intval($cID));
         }
     }
 }
