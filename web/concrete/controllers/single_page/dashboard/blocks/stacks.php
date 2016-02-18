@@ -13,6 +13,7 @@ use Permissions;
 use User;
 use Concrete\Core\Workflow\Request\DeletePageRequest;
 use Concrete\Core\Workflow\Request\ApproveStackRequest;
+use Concrete\Core\Workflow\Request\ApprovePageRequest;
 use View;
 use Exception;
 use Redirect;
@@ -172,11 +173,14 @@ class Stacks extends DashboardPageController
             case 'stack_delete_saved':
                 $this->set('flashMessage', t('Delete request saved. You must complete the delete workflow before this stack can be deleted.'));
                 break;
+            case 'folder_delete_saved':
+                $this->set('flashMessage', t('Delete request saved. You must complete the delete workflow before this stack folder can be deleted.'));
+                break;
             case 'global_area_delete_saved':
                 $this->set('flashMessage', t('Delete request saved. You must complete the delete workflow before this version of the global area can be deleted.'));
                 break;
             case 'rename_saved':
-                $this->set('flashMessage', t('Rename request saved. You must complete the approval workflow before the name of the stack will be updated.'));
+                $this->set('flashMessage', t('Rename request saved. You must complete the approval workflow before the name will be updated.'));
                 break;
             case 'stack_deleted':
                 $this->set('flashMessage', t('Stack deleted successfully'));
@@ -196,8 +200,14 @@ class Stacks extends DashboardPageController
             case 'stack_renamed':
                 $this->set('flashMessage', t('Stack renamed successfully'));
                 break;
+            case 'folder_renamed':
+                $this->set('flashMessage', t('Stack Folder renamed successfully'));
+                break;
             case 'folder_added':
                 $this->set('flashMessage', t('Folder added successfully.'));
+                break;
+            case 'folder_deleted':
+                $this->set('flashMessage', t('Folder deleted successfully.'));
                 break;
         }
     }
@@ -363,7 +373,6 @@ class Stacks extends DashboardPageController
                 $isGlobalArea = $s->getStackType() == Stack::ST_TYPE_GLOBAL_AREA;
                 $neutralStack = $s->getNeutralStack();
                 $locale = '';
-                $justClearContents = false;
                 if ($neutralStack === null) {
                     if ($isGlobalArea) {
                         $msg = 'global_area_cleared';
@@ -444,63 +453,86 @@ class Stacks extends DashboardPageController
 
     public function rename($cID)
     {
-        $s = Stack::getByID($cID);
-        if (!$s) {
+        $page = null;
+        $stack = Stack::getByID($cID);
+        if ($stack) {
+            $neutralStack = $stack->getNeutralStack();
+            if ($neutralStack !== null) {
+                $this->redirect('/dashboard/blocks/stacks', 'rename', $neutralStack->getCollectionID());
+            }
+            if ($stack->getStackType() == Stack::ST_TYPE_GLOBAL_AREA) {
+                $this->error->add(t("You can't rename global areas"));
+                $this->view_details($cID);
+
+                return;
+            }
+            $isFolder = false;
+            $page = $stack;
+            $viewCID = $cID;
+        } else {
+            $folder = StackFolder::getByID($cID);
+            if ($folder) {
+                $isFolder = true;
+                $page = $folder->getPage();
+                $viewCID = $page->getCollectionParentID();
+            }
+        }
+        if ($page === null) {
             $this->error->add(t('Invalid stack'));
             $this->view();
-        } elseif ($s->getStackType() == Stack::ST_TYPE_GLOBAL_AREA) {
-            $this->error->add(t("You can't rename global areas"));
-            $this->view_details($cID);
         } else {
-            $ns = $s->getNeutralStack();
-            if ($ns !== null) {
-                $this->redirect('/dashboard/blocks/stacks', 'rename', $ns->getCollectionID());
-            }
-            $sps = new Permissions($s);
+            $sps = new Permissions($page);
             if (!$sps->canEditPageProperties()) {
-                $this->error->add(t("You don't have the permission to rename this stack"));
-                $this->view_details($cID);
+                if ($isFolder) {
+                    $this->error->add(t("You don't have the permission to rename this stack"));
+                } else {
+                    $this->error->add(t("You don't have the permission to rename this stack folder"));
+                }
+                $this->view_details($viewCID);
             } else {
-                $this->set('renameStack', $s);
+                $this->set('renamePage', $page);
+                $this->set('isFolder', $isFolder);
+                $this->set('oldName', $isFolder ? $page->getCollectionName() : $stack->getStackName());
                 if ($this->isPost()) {
                     $valt = $this->app->make('helper/validation/token');
                     if (!$valt->validate('rename_stack')) {
                         $this->error->add($valt->getErrorMessage());
                     } else {
-                        $stackName = $this->post('stackName');
-                        if (!$this->app->make('helper/validation/strings')->notempty($stackName)) {
-                            $this->error->add(t("The stack name cannot be empty."));
+                        $newName = $this->post('newName');
+                        if (!$this->app->make('helper/validation/strings')->notempty($newName)) {
+                            $this->error->add(t("The name cannot be empty."));
                         } else {
                             $txt = $this->app->make('helper/text');
-                            $v = $s->getVersionToModify();
+                            $v = $page->getVersionToModify();
                             $v->update(array(
-                                'cName' => $stackName,
-                                'cHandle' => str_replace('-', Config::get('concrete.seo.page_path_separator'), $txt->urlify($stackName)),
+                                'cName' => $newName,
+                                'cHandle' => str_replace('-', Config::get('concrete.seo.page_path_separator'), $txt->urlify($newName)),
                             ));
                             $u = new User();
-                            $pkr = new ApproveStackRequest();
-                            $pkr->setRequestedPage($s);
+                            if ($isFolder) {
+                                $pkr = new ApprovePageRequest();
+                            } else {
+                                $pkr = new ApproveStackRequest();
+                            }
+                            $pkr->setRequestedPage($page);
                             $pkr->setRequestedVersionID($v->getVersionID());
                             $pkr->setRequesterUserID($u->getUserID());
                             $response = $pkr->trigger();
                             if ($response instanceof \Concrete\Core\Workflow\Progress\Response) {
                                 // we only get this response if we have skipped workflows and jumped straight in to an approve() step.
-                                $this->redirect('/dashboard/blocks/stacks', 'view_details', $cID, 'stack_renamed');
+                                if ($isFolder) {
+                                    $this->redirect('/dashboard/blocks/stacks', 'view_details', $viewCID, 'folder_renamed');
+                                } else {
+                                    $this->redirect('/dashboard/blocks/stacks', 'view_details', $viewCID, 'stack_renamed');
+                                }
                             } else {
-                                $this->redirect('/dashboard/blocks/stacks', 'view_details', $cID, 'rename_saved');
+                                $this->redirect('/dashboard/blocks/stacks', 'view_details', $viewCID, 'rename_saved');
                             }
                         }
                     }
                 }
             }
         }
-    }
-
-    public function stack_renamed($cID)
-    {
-        $this->set('flashMessage', t('Stack renamed successfully'));
-        $this->view_details($cID);
-        $this->action = 'view_details';
     }
 
     public function move_to_folder()
@@ -623,5 +655,42 @@ class Stacks extends DashboardPageController
     public function list_page()
     {
         return Redirect::to('/');
+    }
+
+    public function delete_stackfolder()
+    {
+        $parentID = null;
+        $valt = $this->app->make('helper/validation/token');
+        if (!$valt->validate('delete_stackfolder')) {
+            $this->error->add($valt->getErrorMessage());
+        } else {
+            $folder = StackFolder::getByID($this->post('stackfolderID'));
+            if (!is_object($folder)) {
+                $this->error->add(t("Unable to find the specified stack folder."));
+            } else {
+                $parentID = $folder->getPage()->getCollectionParentID();
+                $sps = new Permissions($folder->getPage());
+                if (!$sps->canDeletePage()) {
+                    $this->error->add(t('You do not have access to delete this stack folder.'));
+                } else {
+                    $u = new User();
+                    $pkr = new DeletePageRequest();
+                    $pkr->setRequestedPage($folder->getPage());
+                    $pkr->setRequesterUserID($u->getUserID());
+                    $response = $pkr->trigger();
+                    if ($response instanceof \Concrete\Core\Workflow\Progress\Response) {
+                        // we only get this response if we have skipped workflows and jumped straight in to an approve() step.
+                        $this->redirect('/dashboard/blocks/stacks', 'view_details', $parentID, 'folder_deleted');
+                    } else {
+                        $this->redirect('/dashboard/blocks/stacks', 'view_details', $parentID, 'folder_delete_saved');
+                    }
+                }
+            }
+        }
+        if ($parentID) {
+            $this->view_details($parentID);
+        } else {
+            $this->view();
+        }
     }
 }

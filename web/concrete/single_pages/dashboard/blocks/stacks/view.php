@@ -269,20 +269,22 @@ $(function() {
         </div>
     </form>
     <?php
-} elseif (isset($renameStack)) {
-    /* @var Stack $renameStack */
-    $sv = CollectionVersion::get($renameStack, 'ACTIVE');
+} elseif (isset($renamePage)) {
+    /* @var Concrete\Core\Page\Page $renamePage */
+    /* @var bool $isFolder */
+    /* @var string $oldName */
+    $sv = CollectionVersion::get($renamePage, 'ACTIVE');
     ?>
-    <form action="<?=$view->action('rename', $renameStack->getCollectionID())?>" method="POST">
-        <legend><?=t('Rename Stack')?></legend>
+    <form action="<?=$view->action('rename', $renamePage->getCollectionID())?>" method="POST">
+        <legend><?=$isFolder ? t('Rename Stack Folder') : t('Rename Stack')?></legend>
         <?=$token->output('rename_stack')?>
         <div class="form-group">
-            <?=$form->label('stackName', t("Name"))?>
-            <?=$form->text('stackName', $renameStack->getStackName())?>
+            <?=$form->label('newName', t("Name"))?>
+            <?=$form->text('newName', $oldName)?>
         </div>
         <div class="ccm-dashboard-form-actions-wrapper">
             <div class="ccm-dashboard-form-actions">
-                <a href="<?=$view->action('view_details', $renameStack->getCollectionID())?>" class="btn btn-default"><?=t('Cancel')?></a>
+                <a href="<?=$view->action('view_details', $renamePage->getCollectionID())?>" class="btn btn-default"><?=t('Cancel')?></a>
                 <button type="submit" class="btn pull-right btn-primary"><?=t('Rename')?></button>
             </div>
         </div>
@@ -430,8 +432,34 @@ $(function() {
             }
         });
     <?php } ?>
+   	$('.ccm-search-results-stackfolder .ccm-search-results-name').concreteStackMenu({menu: '#ccm-stackfolders-menu'});
 });
         </script>
+
+        <div class="ccm-popover-page-menu popover fade" id="ccm-stackfolders-menu">
+        	<div class="arrow"></div>
+        	<div class="popover-inner">
+        		<ul class="dropdown-menu">
+					<li><a data-action="rename" href="#" data-href-template="<?=$view->action('rename', '__folderID__')?>"><?=t('Rename Folder')?></a></li>
+					<li><a data-action="delete" href="javascript:void(0)"><?=t('Delete Folder')?></a></li>
+				</ul>
+			</div>
+		</div>
+
+		<div style="display: none">
+    		<div id="ccm-dialog-delete-stackfolder" class="ccm-ui" title="<?=t('Delete Folder')?>">
+    			<form method="post" class="form-stacked" style="padding-left: 0px" action="<?=$view->action('delete_stackfolder')?>">
+    				<?=$token->output('delete_stackfolder')?>
+    				<input type="hidden" name="stackfolderID" />
+    				<p><?=t('Are you sure? This action cannot be undone.');?></p>
+    			</form>
+    			<div class="dialog-buttons">
+    				<button class="btn btn-default pull-left" onclick="jQuery.fn.dialog.closeTop()"><?=t('Cancel')?></button>
+    				<button class="btn btn-danger pull-right" onclick="$('#ccm-dialog-delete-stackfolder form').submit()"><?=t('Delete Folder')?></button>
+    			</div>
+    		</div>
+    	</div>
+
         <?php
     } else {
         ?><div class="alert alert-info"><?php
