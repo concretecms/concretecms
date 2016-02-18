@@ -11,9 +11,13 @@ use Concrete\Core\Package\Routine\AttachModeInstallRoutine;
 use Concrete\Core\Permission\Access\Entity\ConversationMessageAuthorEntity;
 use Concrete\Core\Permission\Access\Entity\GroupEntity as GroupPermissionAccessEntity;
 use Concrete\Core\Permission\Access\Entity\PageOwnerEntity as PageOwnerPermissionAccessEntity;
+use Concrete\Core\Tree\Node\Type\Category;
+use Concrete\Core\Tree\Node\Type\ExpressEntryCategory;
 use Concrete\Core\Tree\Type\ExpressEntry;
+use Concrete\Core\Tree\Type\ExpressEntryResults;
 use Concrete\Core\Updater\Migrations\Configuration;
 use Concrete\Core\User\Point\Action\Action as UserPointAction;
+use Concrete\Block\ExpressForm\Controller as ExpressFormBlockController;
 use Config;
 use Core;
 use Database;
@@ -45,6 +49,7 @@ class StartingPointPackage extends BasePackage
                 5,
                 t('Starting installation and creating directories.')),
             new StartingPointInstallRoutine('install_database', 10, t('Creating database tables.')),
+            new StartingPointInstallRoutine('install_data_objects', 15, t('Installing Custom Data Objects.')),
             new StartingPointInstallRoutine('add_users', 18, t('Adding admin user.')),
             new StartingPointInstallRoutine('install_permissions', 20, t('Installing permissions & workflow.')),
             new StartingPointInstallRoutine('add_home_page', 23, t('Creating home page.')),
@@ -62,7 +67,6 @@ class StartingPointPackage extends BasePackage
             new StartingPointInstallRoutine('install_image_editor', 57, t('Adding image editor functionality.')),
             new StartingPointInstallRoutine('install_config', 60, t('Configuring site.')),
             new StartingPointInstallRoutine('import_files', 65, t('Importing files.')),
-            new StartingPointInstallRoutine('install_data_objects', 68, t('Installing Custom Data Objects.')),
             new StartingPointInstallRoutine('install_content', 70, t('Adding pages and content.')),
             new StartingPointInstallRoutine('set_site_permissions', 90, t('Setting up site permissions.')),
             new AttachModeInstallRoutine('finish', 95, t('Finishing.')),
@@ -156,12 +160,14 @@ class StartingPointPackage extends BasePackage
     public function install_data_objects()
     {
         \Concrete\Core\Tree\Node\NodeType::add('express_entry_category');
-        \Concrete\Core\Tree\TreeType::add('express_entity_results');
+        \Concrete\Core\Tree\TreeType::add('express_entry_results');
+        \Concrete\Core\Tree\Node\NodeType::add('express_entry_results');
 
-        $tree = ExpressEntry::add();
+        $tree = ExpressEntryResults::add();
+        $node = $tree->getRootTreeNodeObject();
 
-
-
+        // Add forms node beneath it.
+        $forms = ExpressEntryCategory::add(ExpressFormBlockController::FORM_RESULTS_CATEGORY_NAME, $node);
     }
 
     public function install_attributes()

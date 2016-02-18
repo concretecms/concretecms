@@ -6,11 +6,6 @@ use Loader;
 
 abstract class Category extends TreeNode
 {
-    public function getTreeNodeName()
-    {
-        return $this->treeNodeCategoryName;
-    }
-
     public function getTreeNodeTranslationContext()
     {
         return 'TreeNodeCategoryName';
@@ -34,20 +29,17 @@ abstract class Category extends TreeNode
 
     public function loadDetails()
     {
-        $db = Loader::db();
-        $r = $db->GetRow('select * from TreeCategoryNodes where treeNodeID = ?', array($this->treeNodeID));
-        $this->setPropertiesFromArray($r);
+        return false;
     }
 
     public function deleteDetails()
     {
-        $db = Loader::db();
-        $db->Execute('delete from TreeCategoryNodes where treeNodeID = ?', array($this->treeNodeID));
+        return false;
     }
 
     public function duplicate($parent = false)
     {
-        $node = $this::add($this->treeNodeCategoryName, $parent);
+        $node = $this::add($this->treeNodeName, $parent);
         $this->duplicateChildren($node);
 
         return $node;
@@ -63,17 +55,10 @@ abstract class Category extends TreeNode
         }
     }
 
-    public function setTreeNodeCategoryName($treeNodeCategoryName)
-    {
-        $db = Loader::db();
-        $db->Replace('TreeCategoryNodes', array('treeNodeID' => $this->getTreeNodeID(), 'treeNodeCategoryName' => $treeNodeCategoryName), array('treeNodeID'), true);
-        $this->treeNodeCategoryName = $treeNodeCategoryName;
-    }
-
     public static function add($treeNodeCategoryName = '', $parent = false)
     {
         $node = parent::add($parent);
-        $node->setTreeNodeCategoryName($treeNodeCategoryName);
+        $node->setTreeNodeName($treeNodeCategoryName);
 
         return $node;
     }

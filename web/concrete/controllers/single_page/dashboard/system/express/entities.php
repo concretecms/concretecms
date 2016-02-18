@@ -3,6 +3,8 @@ namespace Concrete\Controller\SinglePage\Dashboard\System\Express;
 
 use Concrete\Core\Entity\Express\Entity;
 use Concrete\Core\Page\Controller\DashboardPageController;
+use Concrete\Core\Tree\Node\Type\ExpressEntryCategory;
+use Concrete\Core\Tree\Type\ExpressEntryResults;
 
 class Entities extends DashboardPageController
 {
@@ -24,6 +26,13 @@ class Entities extends DashboardPageController
                 $entity->setName($this->request->request->get('name'));
                 $entity->setHandle($this->request->request->get('handle'));
                 $entity->setDescription($this->request->request->get('description'));
+
+                // Create a results node
+                $tree = ExpressEntryResults::get();
+                $node = $tree->getRootTreeNodeObject();
+                $node = \Concrete\Core\Tree\Node\Type\ExpressEntryResults::add($entity->getName(), $node);
+
+                $entity->setEntityResultsNodeId($node->getTreeNodeID());
                 $this->entityManager->persist($entity);
                 $this->entityManager->flush();
 

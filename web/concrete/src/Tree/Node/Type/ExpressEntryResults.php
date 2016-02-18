@@ -4,7 +4,7 @@ namespace Concrete\Core\Tree\Node\Type;
 use Concrete\Core\Tree\Node\Node as TreeNode;
 use Loader;
 
-class Topic extends TreeNode
+class ExpressEntryResults extends TreeNode
 {
     public function getPermissionResponseClassName()
     {
@@ -18,7 +18,7 @@ class Topic extends TreeNode
 
     public function getPermissionObjectKeyCategoryHandle()
     {
-        return 'topic_tree_node';
+        return 'express_entry_results';
     }
 
     public function getTreeNodeTranslationContext()
@@ -40,12 +40,12 @@ class Topic extends TreeNode
 
     public function loadDetails()
     {
-        return false;
+
     }
 
     public function deleteDetails()
     {
-        return false;
+
     }
 
     public function getTreeNodeJSON()
@@ -72,11 +72,12 @@ class Topic extends TreeNode
         return static::add((string) $sx['name'], $parent);
     }
 
-    public static function add($treeNodeTopicName = '', $parent = false)
+    public static function add($resultsName = '', $parent = false)
     {
         $db = Loader::db();
         $node = parent::add($parent);
-        $node->setTreeNodeName($treeNodeTopicName);
+        $node->setTreeNodeName($resultsName);
+
         return $node;
     }
 
