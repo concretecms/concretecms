@@ -5,7 +5,7 @@ use Concrete\Core\Tree\Node\Type\ExpressEntryCategory;
 use Concrete\Core\Tree\Tree;
 use Database;
 
-class ExpressEntry extends Tree
+class ExpressEntryResults extends Tree
 {
     /** Returns the standard name for this tree
      * @return string
@@ -35,7 +35,7 @@ class ExpressEntry extends Tree
     public static function get()
     {
         $db = Database::connection();
-        $treeTypeID = $db->GetOne('select treeTypeID from TreeTypes where treeTypeHandle = ?', array('express_entry'));
+        $treeTypeID = $db->GetOne('select treeTypeID from TreeTypes where treeTypeHandle = ?', array('express_entry_results'));
         $treeID = $db->GetOne('select treeID from Trees where treeTypeID = ?', array($treeTypeID));
 
         return Tree::getByID($treeID);

@@ -11,6 +11,8 @@ use Concrete\Core\Entity\Express\FieldSet;
 use Concrete\Core\Entity\Express\Form;
 use Concrete\Core\Express\Form\Renderer;
 use Concrete\Core\Http\ResponseAssetGroup;
+use Concrete\Core\Tree\Node\Type\ExpressEntryCategory;
+use Concrete\Core\Tree\Type\ExpressEntryResults;
 use Doctrine\ORM\Id\UuidGenerator;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
@@ -21,6 +23,8 @@ class Controller extends BlockController
     protected $btInterfaceHeight = 480;
     protected $btTable = 'btExpressForm';
     protected $entityManager;
+
+    const FORM_RESULTS_CATEGORY_NAME = 'Forms';
 
     /**
      * Used for localization. If we want to localize the name/description we have to include this.
@@ -154,9 +158,14 @@ class Controller extends BlockController
             $c = \Page::getCurrentPage();
             $name = is_object($c) ? $c->getCollectionName() : t('Form');
 
+            // Create a results node
+            $node = ExpressEntryCategory::getNodeByName(self::FORM_RESULTS_CATEGORY_NAME);
+            $node = \Concrete\Core\Tree\Node\Type\ExpressEntryResults::add($name, $node);
+
             $entity = new Entity();
             $entity->setName($name);
             $entity->setHandle(sprintf('express_form_%s', $this->block->getBlockID()));
+            $entity->setEntityResultsNodeId($node->getTreeNodeID());
             $entityManager->persist($entity);
             $entityManager->flush();
 

@@ -5,7 +5,7 @@ use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Core\Tree\Tree;
 use Loader;
 use Core;
-use Concrete\Core\Tree\Type\Topic as TopicTree;
+use Concrete\Core\Tree\Type\ExpressEntryResults;
 use Concrete\Core\Tree\Node\Node as TreeNode;
 use Concrete\Core\Tree\Node\Type\Topic as TopicTreeNode;
 use Concrete\Core\Tree\Node\Type\TopicCategory as TopicCategoryTreeNode;
@@ -15,25 +15,9 @@ class Entries extends DashboardPageController
 {
     public function view($treeID = false)
     {
-        $defaultTree = TopicTree::getDefault();
-        $tree = TopicTree::getByID(Loader::helper('security')->sanitizeInt($treeID));
-        if (!$tree) {
-            $tree = $defaultTree;
-        }
-
+        $tree = ExpressEntryResults::get();
         $this->set('tree', $tree);
         $this->requireAsset('core/topics');
-
-        $trees = array();
-        if (is_object($defaultTree)) {
-            $trees[] = $defaultTree;
-            foreach (TopicTree::getList() as $ctree) {
-                if ($ctree->getTreeID() != $defaultTree->getTreeID()) {
-                    $trees[] = $ctree;
-                }
-            }
-        }
-        $this->set('trees', $trees);
     }
 
     public function tree_added($treeID)
@@ -123,7 +107,7 @@ class Entries extends DashboardPageController
             }
 
             if (!$this->error->has()) {
-                $node->setTreeNodeCategoryName($title);
+                $node->setTreeNodeName($title);
                 $r = $node->getTreeNodeJSON();
                 Loader::helper('ajax')->sendResult($r);
             }

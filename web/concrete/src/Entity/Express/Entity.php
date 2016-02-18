@@ -43,6 +43,11 @@ class Entity implements EntityInterface
     protected $include_in_public_list = true;
 
     /**
+     * @Column(type="integer")
+     */
+    protected $entity_results_node_id;
+
+    /**
      * @OneToMany(targetEntity="\Concrete\Core\Entity\Attribute\Key\ExpressKey", mappedBy="entity", cascade={"persist", "remove"})
      **/
     protected $attributes;
@@ -249,6 +254,22 @@ class Entity implements EntityInterface
     public function setForms($forms)
     {
         $this->forms = $forms;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEntityResultsNodeId()
+    {
+        return $this->entity_results_node_id;
+    }
+
+    /**
+     * @param mixed $entity_results_node_id
+     */
+    public function setEntityResultsNodeId($entity_results_node_id)
+    {
+        $this->entity_results_node_id = $entity_results_node_id;
     }
 
     public function getAttributeKeyCategory()
