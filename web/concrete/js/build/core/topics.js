@@ -56,13 +56,13 @@
 			}
 
 			if (data.canEditTreeNodePermissions) {
-				menu += '<li><a class="dialog-launch" dialog-width="480" dialog-height="auto" dialog-modal="true" dialog-title="' + ccmi18n_topics.editPermissions + '" href="' + CCM_TOOLS_PATH + '/tree/node/permissions?treeNodeID=' + data.key + '">' + ccmi18n_topics.editPermissions + '<\/a><\/li>';
+				menu += '<li><a class="dialog-launch" dialog-width="480" dialog-height="auto" dialog-modal="true" dialog-title="' + ccmi18n_topics.editPermissions + '" href="' + CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/tree/node/permissions?treeNodeID=' + data.key + '">' + ccmi18n_topics.editPermissions + '<\/a><\/li>';
 			}
 			if (data.treeNodeParentID > 0 && data.treeNodeTypeHandle == 'topic_category' && data.canDeleteTreeNode) {
-				menu += '<li><a class="dialog-launch" dialog-width="550" dialog-on-open="$(\'[data-topic-form=remove-tree-node]\').ccmtopicstree(\'initRemoveNodeForm\', ' + options.treeID + ');" dialog-height="auto" dialog-modal="false" dialog-title="' + ccmi18n_topics.deleteCategory + '" href="' + CCM_TOOLS_PATH + '/tree/node/remove?treeNodeID=' + data.key + '">' + ccmi18n_topics.deleteCategory + '<\/a><\/li>';
+				menu += '<li><a class="dialog-launch" dialog-width="550" dialog-on-open="$(\'[data-tree-form=remove-tree-node]\').ccmtopicstree(\'initRemoveNodeForm\', ' + options.treeID + ');" dialog-height="auto" dialog-modal="false" dialog-title="' + ccmi18n_topics.deleteCategory + '" href="' + CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/tree/node/delete?treeNodeID=' + data.key + '">' + ccmi18n_topics.deleteCategory + '<\/a><\/li>';
 			}
 			if (data.treeNodeParentID > 0 && data.treeNodeTypeHandle == 'topic' && data.canDeleteTreeNode) {
-				menu += '<li><a class="dialog-launch" dialog-width="550" dialog-on-open="$(\'[data-topic-form=remove-tree-node]\').ccmtopicstree(\'initRemoveNodeForm\', ' + options.treeID + ');" dialog-height="auto" dialog-modal="false" dialog-title="' + ccmi18n_topics.deleteTopic + '" href="' + CCM_TOOLS_PATH + '/tree/node/remove?treeNodeID=' + data.key + '">' + ccmi18n_topics.deleteTopic + '<\/a><\/li>';
+				menu += '<li><a class="dialog-launch" dialog-width="550" dialog-on-open="$(\'[data-tree-form=remove-tree-node]\').ccmtopicstree(\'initRemoveNodeForm\', ' + options.treeID + ');" dialog-height="auto" dialog-modal="false" dialog-title="' + ccmi18n_topics.deleteTopic + '" href="' + CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/tree/node/delete?treeNodeID=' + data.key + '">' + ccmi18n_topics.deleteTopic + '<\/a><\/li>';
 			}
 			menu += '</ul></div></div>';
 			var $menu = $(menu);

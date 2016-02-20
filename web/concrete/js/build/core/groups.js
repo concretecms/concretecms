@@ -254,7 +254,7 @@
 				'<li><a href="' + CCM_DISPATCHER_FILENAME + '/dashboard/users/groups/-/edit/<%=data.gID%>">' + ccmi18n_groups.editGroup + '</a></li>' + 
 			'<% } %>' +
 			'<% if (data.canEditTreeNodePermissions) { %>' + 
-				'<li><a class="dialog-launch" dialog-width="480" dialog-height="380" dialog-modal="true" dialog-title="Edit Permissions" href="' + CCM_TOOLS_PATH + '/tree/node/permissions?treeNodeID=<%=data.key%>">' + ccmi18n_groups.editPermissions + '</a></li>' + 
+				'<li><a class="dialog-launch" dialog-width="480" dialog-height="380" dialog-modal="true" dialog-title="Edit Permissions" href="' + CCM_DISPATCHER_FILNAME + '/ccm/system/dialogs/tree/node/permissions?treeNodeID=<%=data.key%>">' + ccmi18n_groups.editPermissions + '</a></li>' +
 			'<% } %>' +
 		'</ul></div></div>';
 	};
