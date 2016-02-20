@@ -47,7 +47,7 @@
 				dataType: 'json',
 				type: 'POST',
 				data: params,
-				url: CCM_TOOLS_PATH + '/tree/node/drag_request',
+				url: CCM_DISPATCHER_FILENAME + '/ccm/system/tree/node/drag_request',
 				success: function(r) {
 					ccm_parseJSON(r, function() {});
     				jQuery.fn.dialog.hideLoader();
@@ -87,7 +87,7 @@
 					path: CCM_REL + '/'
 				},
 				initAjax: {
-					url: CCM_TOOLS_PATH + '/tree/load',
+					url: CCM_DISPATCHER_FILENAME + '/ccm/system/tree/load',
 					type: 'post',
 					data: ajaxData
 				},
@@ -227,7 +227,7 @@
     		var my = this,
     			options = my.options,
     			params = {
-					url: CCM_TOOLS_PATH + '/tree/node/load',
+					url: CCM_DISPATCHER_FILENAME + '/ccm/system/tree/node/load',
 					data: {
 						treeNodeParentID: node.data.key
 					},

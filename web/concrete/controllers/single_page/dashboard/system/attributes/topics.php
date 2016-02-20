@@ -93,7 +93,7 @@ class Topics extends DashboardPageController
             }
 
             if (!$this->error->has()) {
-                $node->setTreeNodeTopicName($title);
+                $node->setTreeNodeName($title);
                 $r = $node->getTreeNodeJSON();
                 Loader::helper('ajax')->sendResult($r);
             }

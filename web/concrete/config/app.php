@@ -360,6 +360,19 @@ return array(
             'action' => ".+"
         )),
 
+        /*
+         * Trees
+         */
+        "/ccm/system/tree/load" => array('\Concrete\Controller\Backend\Tree::load'),
+        "/ccm/system/tree/node/load" => array('\Concrete\Controller\Backend\Tree\Node::load'),
+        "/ccm/system/tree/node/drag_request" => array('\Concrete\Controller\Backend\Tree\Node\DragRequest::execute'),
+        "/ccm/system/tree/node/duplicate" => array('\Concrete\Controller\Backend\Tree\Node\Duplicate::execute'),
+
+        "/ccm/system/dialogs/tree/node/add/topic_category" => array('\Concrete\Controller\Dialog\Tree\Node\TopicCategory::add'),
+        "/ccm/system/dialogs/tree/node/add/topic" => array('\Concrete\Controller\Dialog\Tree\Node\Topic::add'),
+        "/ccm/system/dialogs/tree/node/edit/topic_category" => array('\Concrete\Controller\Dialog\Tree\Node\TopicCategory::edit'),
+        "/ccm/system/dialogs/tree/node/edit/topic" => array('\Concrete\Controller\Dialog\Tree\Node\Topic::edit'),
+        "/ccm/system/dialogs/tree/node/delete" => array('\Concrete\Controller\Dialog\Tree\Node::delete'),
 
         /*
          * Marketplace
