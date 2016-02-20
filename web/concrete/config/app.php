@@ -372,7 +372,9 @@ return array(
         "/ccm/system/dialogs/tree/node/add/topic" => array('\Concrete\Controller\Dialog\Tree\Node\Topic::add'),
         "/ccm/system/dialogs/tree/node/edit/topic_category" => array('\Concrete\Controller\Dialog\Tree\Node\TopicCategory::edit'),
         "/ccm/system/dialogs/tree/node/edit/topic" => array('\Concrete\Controller\Dialog\Tree\Node\Topic::edit'),
-        "/ccm/system/dialogs/tree/node/delete" => array('\Concrete\Controller\Dialog\Tree\Node::delete'),
+        "/ccm/system/dialogs/tree/node/delete" => array('\Concrete\Controller\Dialog\Tree\Node\Delete::view'),
+        "/ccm/system/dialogs/tree/node/delete/remove_tree_node" => array('\Concrete\Controller\Dialog\Tree\Node\Delete::remove_tree_node'),
+        "/ccm/system/dialogs/tree/node/permissions" => array('\Concrete\Controller\Dialog\Tree\Node\Permissions::view'),
 
         /*
          * Marketplace
