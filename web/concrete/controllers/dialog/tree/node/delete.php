@@ -1,10 +1,10 @@
 <?php
 namespace Concrete\Controller\Dialog\Tree\Node;
 
-use Concrete\Controller\Backend\UserInterface;
+use Concrete\Controller\Dialog\Tree\Node;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
-class Delete extends Permissions
+class Delete extends Node
 {
     protected $viewPath = '/dialogs/tree/node/delete';
 

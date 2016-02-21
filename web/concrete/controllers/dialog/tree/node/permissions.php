@@ -1,19 +1,11 @@
 <?php
 namespace Concrete\Controller\Dialog\Tree\Node;
 
-use Concrete\Controller\Backend\UserInterface;
+use Concrete\Controller\Dialog\Tree\Node;
 
-class Permissions extends UserInterface
+class Permissions extends Node
 {
     protected $viewPath = '/dialogs/tree/node/permissions';
-
-    protected function getNode()
-    {
-        if (!isset($this->node)) {
-            $this->node = \Concrete\Core\Tree\Node\Node::getByID(\Loader::helper('security')->sanitizeInt($_REQUEST['treeNodeID']));
-        }
-        return $this->node;
-    }
 
     protected function canAccess()
     {
