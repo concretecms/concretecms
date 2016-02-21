@@ -4,25 +4,24 @@ namespace Concrete\Core\Html\Object;
 use HtmlObject\Element;
 use HtmlObject\Image;
 
-
 class Picture extends Element
 {
     /**
-     * Default element
+     * Default element.
      *
      * @var string
      */
     protected $element = 'picture';
 
     /**
-     * Whether the element is self closing
+     * Whether the element is self closing.
      *
-     * @var boolean
+     * @var bool
      */
     protected $isSelfClosing = false;
 
     /**
-     * Default element for nested children
+     * Default element for nested children.
      *
      * @var string
      */
@@ -39,12 +38,13 @@ class Picture extends Element
     }
 
     /**
-     * Static alias for constructor
+     * Static alias for constructor.
      *
-     * @param string $element
+     * @param string          $element
      * @param string|null|Tag $value
-     * @param array $attributes
-     * @return                Table
+     * @param array           $attributes
+     *
+     * @return Table
      */
     public static function create($sources = array(), $fallbackSrc = false, $attributes = array())
     {
@@ -59,7 +59,7 @@ class Picture extends Element
     {
         $this->nest("<!--[if IE 9]><video style='display: none;'><![endif]-->");
 
-        foreach($sources as $source) {
+        foreach ($sources as $source) {
             $path = $source['src'];
             $width = $source['width'];
             $source = Source::create();
@@ -75,17 +75,18 @@ class Picture extends Element
         return $this;
     }
 
-    public function fallback($src)
+    public function fallback($srcset)
     {
         $img = Image::create();
-        $img->src($src);
+        $img->srcset($srcset);
+        $img->removeAttribute('src');
         $this->setChild($img);
     }
 
     public function alt($alt)
     {
-        foreach($this->getChildren() as $child) {
-            if ($child instanceof Image || $child instanceof Source) {
+        foreach ($this->getChildren() as $child) {
+            if ($child instanceof Image) {
                 $child->alt($alt);
             }
         }
@@ -93,8 +94,8 @@ class Picture extends Element
 
     public function title($title)
     {
-        foreach($this->getChildren() as $child) {
-            if ($child instanceof Image || $child instanceof Source) {
+        foreach ($this->getChildren() as $child) {
+            if ($child instanceof Image) {
                 $child->title($title);
             }
         }
@@ -102,10 +103,10 @@ class Picture extends Element
 
     public function addClass($classes)
     {
-        $sources = $this->getChildren();
-        foreach($sources as $source) {
-            $source->addClass($classes);
+        foreach ($this->getChildren() as $child) {
+            if ($child instanceof Image) {
+                $child->addClass($classes);
+            }
         }
     }
-
 }
