@@ -3,7 +3,7 @@
 
     <script type="text/javascript">
         $(function() {
-            $('.tree-view-template').ccmtopicstree({  // run first time around to get default tree if new.
+            $('.tree-view-template').concreteTopicsTree({  // run first time around to get default tree if new.
                 'treeID': <?php echo $tree->getTreeID();
     ?>,
                 'chooseNodeInForm': true,
@@ -32,7 +32,7 @@
                 var toolsURL = '<?php echo Loader::helper('concrete/urls')->getToolsURL('tree/load');
     ?>';
                 var chosenTree = $(this).val();
-                $('.tree-view-template').ccmtopicstree({
+                $('.tree-view-template').concreteTopicsTree({
                     'treeID': chosenTree,
                     'chooseNodeInForm': true,
                     'onSelect' : function(select, node) {

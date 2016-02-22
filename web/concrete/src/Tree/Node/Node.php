@@ -163,6 +163,7 @@ abstract class Node extends Object implements \Concrete\Core\Permission\ObjectIn
         if ($p->canViewTreeNode()) {
             $node = new stdClass();
             $node->title = $this->getTreeNodeDisplayName();
+            $node->treeID = $this->getTreeID();
             $node->key = $this->getTreeNodeID();
             $node->treeNodeID = $this->getTreeNodeID();
             $node->isFolder = false;

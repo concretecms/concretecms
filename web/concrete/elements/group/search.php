@@ -93,7 +93,7 @@ $(function() {
 		'treeID': '<?=$tree->getTreeID()?>',
 		<?php if ($searchRequest['filter'] == 'assign') {
     ?>
-	      'removeNodesByID': ['<?=$guestGroupNode->getTreeNodeID()?>','<?=$registeredGroupNode->getTreeNodeID()?>'],
+	      'removeNodesByKey': ['<?=$guestGroupNode->getTreeNodeID()?>','<?=$registeredGroupNode->getTreeNodeID()?>'],
 	      <?php 
 }
     ?>

@@ -291,9 +291,14 @@ module.exports = function(grunt) {
             ]
         },
 
-        ccm_topics: {
+        ccm_topics_tree: {
             dest: '<%= DIR_BASE %>/concrete/js/topics.js',
             src: '<%= DIR_BASE %>/concrete/js/build/core/topics.js'
+        },
+
+        ccm_tree: {
+            dest: '<%= DIR_BASE %>/concrete/js/tree.js',
+            src: '<%= DIR_BASE %>/concrete/js/build/core/tree.js'
         },
 
         ccm_groups: {

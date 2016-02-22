@@ -16,7 +16,7 @@
             onSelect: false, // This is when you click a checkbox or radio button
             onClick: false, // this is when you click a group title when not in chooseNodeInForm mode.
 			readOnly: false,
-			removeNodesByID: [],
+			removeNodesByKey: [],
 			chooseNodeInForm: false // false (no ability to choose a node as a form element), "single" uses radio, "multiple" = checkbox.
 		}, options);
 		my.options = options;
@@ -103,9 +103,9 @@
 				onPostInit: function() {
 		    		var $tree = my.$element;
 
-		    		if (options.removeNodesByID.length) {
-		    			for (var i = 0; i < options.removeNodesByID.length; i++) {
-		    				var nodeID = options.removeNodesByID[i];
+		    		if (options.removeNodesByKey.length) {
+		    			for (var i = 0; i < options.removeNodesByKey.length; i++) {
+		    				var nodeID = options.removeNodesByKey[i];
 		    				var node = this.getNodeByKey(nodeID);
 		    				if (node) {
 		    					node.remove();
@@ -254,7 +254,7 @@
 				'<li><a href="' + CCM_DISPATCHER_FILENAME + '/dashboard/users/groups/-/edit/<%=data.gID%>">' + ccmi18n_groups.editGroup + '</a></li>' + 
 			'<% } %>' +
 			'<% if (data.canEditTreeNodePermissions) { %>' + 
-				'<li><a class="dialog-launch" dialog-width="480" dialog-height="380" dialog-modal="true" dialog-title="Edit Permissions" href="' + CCM_DISPATCHER_FILNAME + '/ccm/system/dialogs/tree/node/permissions?treeNodeID=<%=data.key%>">' + ccmi18n_groups.editPermissions + '</a></li>' +
+				'<li><a class="dialog-launch" dialog-width="480" dialog-height="380" dialog-modal="true" dialog-title="Edit Permissions" href="' + CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/tree/node/permissions?treeNodeID=<%=data.key%>">' + ccmi18n_groups.editPermissions + '</a></li>' +
 			'<% } %>' +
 		'</ul></div></div>';
 	};

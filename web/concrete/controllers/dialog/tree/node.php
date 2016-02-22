@@ -13,4 +13,11 @@ abstract class Node extends UserInterface
         return $this->node;
     }
 
+    public function view()
+    {
+        $node = $this->getNode();
+        $this->set('node', $node);
+    }
+
+
 }
