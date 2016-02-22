@@ -7,24 +7,23 @@ use OAuth\ServiceFactory;
 
 class ServiceProvider extends \Concrete\Core\Foundation\Service\Provider
 {
-
     /**
      * Register the service provider.
-     *
-     * @return void
      */
     public function register()
     {
         $this->app->bindShared(
             'authentication/facebook',
             function ($app, $callback = '/ccm/system/authentication/oauth2/facebook/callback/') {
-                /** @var ServiceFactory $factory */
-                $factory = $app->make('oauth/factory/service', array(CURLOPT_SSL_VERIFYPEER => Config::get('app.curl.verifyPeer')));
+                /* @var ServiceFactory $factory */
+                $config = $app->make('config');
+                $factory = $app->make('oauth/factory/service', array(CURLOPT_SSL_VERIFYPEER => $config->get('app.curl.verifyPeer')));
+
                 return $factory->createService(
                     'facebook',
                     new Credentials(
-                        \Config::get('auth.facebook.appid'),
-                        \Config::get('auth.facebook.secret'),
+                        $config->get('auth.facebook.appid'),
+                        $config->get('auth.facebook.secret'),
                         (string) \URL::to($callback)
                     ),
                     new SymfonySession(\Session::getFacadeRoot(), false),
@@ -32,5 +31,4 @@ class ServiceProvider extends \Concrete\Core\Foundation\Service\Provider
             }
         );
     }
-
 }
