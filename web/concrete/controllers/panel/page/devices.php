@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Controller\Panel\Page;
-use \Concrete\Controller\Backend\UserInterface\Page as BackendInterfacePageController;
+
+use Concrete\Controller\Backend\UserInterface\Page as BackendInterfacePageController;
 use Concrete\Core\View\View;
 
 class Devices extends BackendInterfacePageController
@@ -14,7 +15,6 @@ class Devices extends BackendInterfacePageController
 
     public function view()
     {
-
     }
 
     public function detail()
@@ -61,5 +61,4 @@ class Devices extends BackendInterfacePageController
             exit;
         }
     }
-
 }

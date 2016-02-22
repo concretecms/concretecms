@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Asset;
 
 use Concrete\Core\Html\Object\HeadLink;
@@ -72,7 +71,7 @@ class CssAsset extends Asset
         $current_path_slugs = explode('/', $current_path);
         $target_path_slugs = explode('/', $target_path);
         $smallest_count = min(count($current_path_slugs), count($target_path_slugs));
-        for ($i = 0; $i < $smallest_count && $current_path_slugs[$i] === $target_path_slugs[$i]; $i++);
+        for ($i = 0; $i < $smallest_count && $current_path_slugs[$i] === $target_path_slugs[$i]; ++$i);
         $change_prefix = @implode('/', @array_merge(@array_fill(0, count($target_path_slugs) - $i, '..'), @array_slice($current_path_slugs, $i)));
         if (strlen($change_prefix) > 0) {
             $change_prefix .= '/';
@@ -143,7 +142,7 @@ class CssAsset extends Asset
             $relativeDirectory = self::getRelativeOutputDirectory();
             $filename = '';
             $sourceFiles = array();
-            for ($i = 0; $i < count($assets); $i++) {
+            for ($i = 0; $i < count($assets); ++$i) {
                 $asset = $assets[$i];
                 $filename .= $asset->getAssetHashKey();
                 $sourceFiles[] = $asset->getAssetURL();
@@ -155,7 +154,7 @@ class CssAsset extends Asset
                 foreach ($assets as $asset) {
                     $contents = $asset->getAssetContents();
                     if (isset($contents)) {
-                        $contents = CssAsset::changePaths($contents, $asset->getAssetURLPath(), $relativeDirectory);
+                        $contents = self::changePaths($contents, $asset->getAssetURLPath(), $relativeDirectory);
                         if ($asset->assetSupportsMinification()) {
                             $contents = \CssMin::minify($contents);
                         }
@@ -165,7 +164,7 @@ class CssAsset extends Asset
                 @file_put_contents($cacheFile, $css);
             }
 
-            $asset = new CssAsset();
+            $asset = new self();
             $asset->setAssetURL($relativeDirectory.'/'.$filename.'.css');
             $asset->setAssetPath($directory.'/'.$filename.'.css');
             $asset->setCombinedAssetSourceFiles($sourceFiles);

@@ -1,7 +1,7 @@
-<? defined('C5_EXECUTE') or die("Access Denied."); ?>
-<?
+<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
+<?php
 if (is_array($image)) {
-	$image = $image[0];
+    $image = $image[0];
 }
 ?>
 <div class="ccm-gathering-image-masthead-description ccm-gathering-centered-content ccm-gathering-scaled-image">

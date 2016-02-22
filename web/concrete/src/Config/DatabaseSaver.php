@@ -3,11 +3,9 @@ namespace Concrete\Core\Config;
 
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Support\Facade\Database;
-use Doctrine\DBAL\Driver\PDOStatement;
 
 class DatabaseSaver implements SaverInterface
 {
-
     /**
      * @var \Concrete\Core\Database\Connection\Connection
      */
@@ -21,6 +19,7 @@ class DatabaseSaver implements SaverInterface
         if (!$this->connection) {
             $this->connection = Database::connection();
         }
+
         return $this->connection;
     }
 
@@ -33,13 +32,14 @@ class DatabaseSaver implements SaverInterface
     }
 
     /**
-     * Save config item
+     * Save config item.
      *
      * @param string      $item
      * @param string      $value
      * @param string      $environment
      * @param string      $group
      * @param string|null $namespace
+     *
      * @return bool
      */
     public function save($item, $value, $environment, $group, $namespace = null)
@@ -53,7 +53,7 @@ class DatabaseSaver implements SaverInterface
             ->setParameters(array(
                 ':namespace' => $namespace ?: '',
                 ':group' => $group,
-                ':item' => "{$item}.%"
+                ':item' => "{$item}.%",
             ));
         $amount_deleted = $query->execute();
 
@@ -92,12 +92,11 @@ class DatabaseSaver implements SaverInterface
                         $item,
                         $value,
                         $group,
-                        $namespace ?: ''
+                        $namespace ?: '',
                     ));
             } catch (\Exception $e) {
                 // This happens when the update succeeded, but didn't actually change anything on the row.
             }
         }
     }
-
 }

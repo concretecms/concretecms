@@ -16,7 +16,6 @@ class Aliasing extends BackendInterfaceBlockController
         $ct = Type::getByDefaultsPage($this->page);
         $template = Template::getByID($this->page->getPageTemplateID());
 
-
         $pl = new PageList();
         $pl->filterByPageTypeID($ct->getPageTypeID());
         $pl->filterByPageTemplate($template);
@@ -58,7 +57,6 @@ class Aliasing extends BackendInterfaceBlockController
                                 }
                                 $nc->rescanDisplayOrder($_REQUEST['arHandle']);
                             }
-
                         }
                     }
                     $er = new EditResponse();
@@ -77,6 +75,4 @@ class Aliasing extends BackendInterfaceBlockController
     {
         return $this->permissions->canAdminBlock();
     }
-
 }
-

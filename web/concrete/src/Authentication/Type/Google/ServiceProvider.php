@@ -11,15 +11,12 @@ use OAuth\UserData\ExtractorFactory;
 
 class ServiceProvider extends \Concrete\Core\Foundation\Service\Provider
 {
-
     /**
      * Register the service provider.
-     *
-     * @return void
      */
     public function register()
     {
-        /** @var ExtractorFactory $factory */
+        /* @var ExtractorFactory $factory */
         $extractor = $this->app->make('oauth/factory/extractor');
         $extractor->addExtractorMapping(
             'OAuth\\OAuth2\\Service\\Google',
@@ -43,5 +40,4 @@ class ServiceProvider extends \Concrete\Core\Foundation\Service\Provider
             }
         );
     }
-
 }

@@ -1,4 +1,5 @@
-<?
+<?php
+
 defined('C5_EXECUTE') or die("Access Denied.");
 
 $subject = t('Private message limit exceeded for user: %s on %s', $offenderUname, $siteName);

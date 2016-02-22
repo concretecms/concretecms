@@ -1,10 +1,11 @@
-<?
+<?php
 namespace Concrete\Controller\Dialog\Page\Design;
-use \Concrete\Core\StyleCustomizer\CustomCssRecord;
+
+use Concrete\Core\StyleCustomizer\CustomCssRecord;
 use Core;
 
-class Css extends \Concrete\Controller\Backend\UserInterface\Page {
-
+class Css extends \Concrete\Controller\Backend\UserInterface\Page
+{
     protected $viewPath = '/dialogs/page/design/css';
     public function view()
     {
@@ -41,5 +42,4 @@ class Css extends \Concrete\Controller\Backend\UserInterface\Page {
             Core::make('helper/ajax')->sendResult($ax);
         }
     }
-
 }

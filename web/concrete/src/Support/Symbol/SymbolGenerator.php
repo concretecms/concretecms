@@ -4,7 +4,6 @@
  * Concrete5 symbol file generator.
  * Inspired by Laravel IDE Helper Generator by Barry vd. Heuvel <barryvdh@gmail.com>.
  */
-
 namespace Concrete\Core\Support\Symbol;
 
 use Concrete\Core\Foundation\ClassAliasList;

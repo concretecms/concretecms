@@ -1,7 +1,7 @@
 <?php
-
 namespace Concrete\Controller\SinglePage\Dashboard\System\Multilingual;
-use \Concrete\Core\Page\Controller\DashboardPageController;
+
+use Concrete\Core\Page\Controller\DashboardPageController;
 use Core;
 use Concrete\Core\Multilingual\Page\Section\Section;
 use Config;
@@ -90,7 +90,7 @@ class Setup extends DashboardPageController
             $html = "<div><strong>" . t('None') . "</strong></div>";
         }
 
-        print $html;
+        echo $html;
         exit;
     }
 
@@ -130,7 +130,7 @@ class Setup extends DashboardPageController
                 Config::save('concrete.multilingual.default_locale', $this->post('defaultLocale'));
                 Config::save('concrete.multilingual.redirect_home_to_default_locale', $this->post('redirectHomeToDefaultLocale'));
                 Config::save('concrete.multilingual.use_browser_detected_locale', $this->post('useBrowserDetectedLocale'));
-                Config::save('concrete.multilingual.keep_users_locale', !!$this->post('keepUsersLocale'));
+                Config::save('concrete.multilingual.keep_users_locale', (bool) $this->post('keepUsersLocale'));
                 $defaultSourceLocale = '';
                 $s = $this->post('defaultSourceLanguage');
                 if (is_string($s) && array_key_exists($s, $languages)) {

@@ -7,12 +7,12 @@ class Object
 
     /* TODO: move these into an error class */
 
-    function loadError($error)
+    public function loadError($error)
     {
         $this->error = $error;
     }
 
-    function isError()
+    public function isError()
     {
         $args = func_get_args();
         if (isset($args[0]) && $args[0]) {
@@ -22,7 +22,7 @@ class Object
         }
     }
 
-    function getError()
+    public function getError()
     {
         return $this->error;
     }
@@ -43,5 +43,4 @@ class Object
     {
         return uncamelcase($string);
     }
-
 }

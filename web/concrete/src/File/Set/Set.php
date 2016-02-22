@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\File\Set;
 
 use Concrete\Core\Permission\Access\Entity\GroupCombinationEntity as GroupCombinationPermissionAccessEntity;
@@ -107,7 +106,7 @@ class Set implements \Concrete\Core\Permission\ObjectInterface
      * @param int    $fs_type
      * @param int|bool    $fs_uid
      *
-     * @return Mixed
+     * @return mixed
      *
      * Dev Note: This will create duplicate sets with the same name if a set exists owned by another user!!!
      */

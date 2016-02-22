@@ -1,4 +1,6 @@
-<?php defined('C5_EXECUTE') or die('Access Denied.');
+<?php
+
+defined('C5_EXECUTE') or die('Access Denied.');
 
 use Concrete\Core\Utility\Service\Text;
 use \Concrete\Core\Localization\Localization;
@@ -8,7 +10,9 @@ use \Concrete\Core\Localization\Localization;
  *
  * @param string $text The text to be translated.
  * @param        mixed ... Unlimited optional number of arguments: if specified they'll be used for printf.
+ *
  * @return string Returns the translated text.
+ *
  * @example t('Hello %s') will return translation for 'Hello %s' (example for Italian 'Ciao %s').
  * @example t('Hello %s', 'John') will return translation for 'Hello %s' (example: 'Ciao %s'), using 'John' for printf (so the final result will be 'Ciao John' for Italian).
  */
@@ -45,7 +49,9 @@ function t($text)
  * @param string $plural   The plural form.
  * @param int    $number   The number.
  * @param        mixed     ... Unlimited optional number of arguments: if specified they'll be used for printf
+ *
  * @return string Returns the translated text.
+ *
  * @example t2('%d child', '%d children', $n) will return translated '%d child' if $n is 1, translated '%d children' otherwise.
  * @example t2('%d child', '%d children', $n, $n) will return translated '1 child' if $n is 1, translated '2 children' if $n is 2.
  */
@@ -74,7 +80,9 @@ function t2($singular, $plural, $number)
  * @param string $context A context, useful for translators to better understand the meaning of the text to be translated.
  * @param string $text    The text to be translated.
  * @param        mixed    ... Unlimited optional number of arguments: if specified they'll be used for printf.
+ *
  * @return string Returns the translated text.
+ *
  * @example tc('Recipient', 'To %s') will return translation for 'To %s' (example for Italian 'A %s').
  * @example tc('End date', 'To %s') will return translation for 'To %s' (example for Italian 'Fino al %s').
  * @example tc('Recipient', 'To %s', 'John') will return translation for 'To %s' (example: 'A %s'), using 'John' for printf (so the final result will be 'A John' for Italian).
@@ -97,7 +105,7 @@ function tc($context, $text)
         return $text;
     }
     $arg = array();
-    for ($i = 2; $i < func_num_args(); $i++) {
+    for ($i = 2; $i < func_num_args(); ++$i) {
         $arg[] = func_get_arg($i);
     }
 
@@ -105,9 +113,10 @@ function tc($context, $text)
 }
 
 /**
- * Security helper
+ * Security helper.
  *
  * @param string $input
+ *
  * @return string mixed
  */
 function h($input)
@@ -121,6 +130,7 @@ function h($input)
  *     id(new Block)->render();
  *
  * @param  mixed $mixed
+ *
  * @return mixed mixed
  */
 function id($mixed)
@@ -133,15 +143,17 @@ function id($mixed)
  *
  * @param string $class
  * @param bool   $prefix
+ *
  * @return string
  */
 function core_class($class, $prefix = false)
 {
+    $app = \Core::make('app');
     $class = trim($class, '\\');
     if ($prefix) {
         if (substr($class, 0, 5) == "Core\\") {
             if ($prefix !== true) {
-                $x = \Package::getClass($prefix);
+                $x = $app->make('Concrete\Core\Package\PackageService')->getClass($prefix);
                 if ($x->providesCoreExtensionAutoloaderMapping()) {
                     $class = substr($class, 5);
                 } else {
@@ -182,10 +194,11 @@ function overrideable_core_class($class, $path, $pkgHandle = null)
 }
 
 /**
- * Returns $string in CamelCase
+ * Returns $string in CamelCase.
  *
  * @param string $string
  * @param bool   $leaveSlashes
+ *
  * @return string
  */
 function camelcase($string, $leaveSlashes = false)
@@ -215,9 +228,10 @@ function camelcase($string, $leaveSlashes = false)
 }
 
 /**
- * Returns CamelCase string as camel_case
+ * Returns CamelCase string as camel_case.
  *
  * @param  string $string
+ *
  * @return string mixed
  */
 function uncamelcase($string)
@@ -225,7 +239,7 @@ function uncamelcase($string)
     $v = preg_split('/([A-Z])/', $string, false, PREG_SPLIT_DELIM_CAPTURE);
     $a = array();
     array_shift($v);
-    for ($i = 0; $i < count($v); $i++) {
+    for ($i = 0; $i < count($v); ++$i) {
         if ($i % 2) {
             if (function_exists('mb_strtolower')) {
                 $a[] = mb_strtolower($v[$i - 1] . $v[$i], APP_CHARSET);
@@ -239,11 +253,12 @@ function uncamelcase($string)
 }
 
 /**
- * Fills an object properties from an array
+ * Fills an object properties from an array.
  */
 /**
  * @param $o
  * @param $array
+ *
  * @return mixed
  */
 function array_to_object($o, $array)
@@ -256,7 +271,8 @@ function array_to_object($o, $array)
 }
 
 /**
- * Dumps information about a variable in a way that can be used with Doctrine recursive objects.)
+ * Dumps information about a variable in a way that can be used with Doctrine recursive objects.).
+ *
  * @param $o
  * @param bool $maxDepth
  */

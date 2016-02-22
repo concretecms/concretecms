@@ -1,7 +1,9 @@
 <?php
-
 namespace Concrete\Attribute\Boolean;
 
+use Concrete\Core\Attribute\FontAwesomeIconFormatter;
+use Concrete\Core\Entity\Attribute\Key\Type\BooleanType;
+use Concrete\Core\Entity\Attribute\Value\Value\BooleanValue;
 use Core;
 use Database;
 use Concrete\Core\Search\ItemList\Database\AttributedItemList;
@@ -9,18 +11,16 @@ use Concrete\Core\Attribute\Controller as AttributeTypeController;
 
 class Controller extends AttributeTypeController
 {
-    /**
-     * Field definition in the ADODB Format. We omit the first column (name) though, since it's
-     * automatically generated.
-     *
-     * @var array
-     */
     protected $searchIndexFieldDefinition = array('type' => 'boolean', 'options' => array('default' => 0, 'notnull' => false));
+
+    public function getIconFormatter()
+    {
+        return new FontAwesomeIconFormatter('check-square');
+    }
 
     public function searchForm($list)
     {
-        $list->filterByAttribute($this->attributeKey->getAttributeKeyHandle(), 1);
-
+        $list->filterByAttribute($this->attributeKey->getAttributeKeyHandle(), $this->request('value'));
         return $list;
     }
 
@@ -41,40 +41,30 @@ class Controller extends AttributeTypeController
         }
     }
 
-    public function getValue()
-    {
-        $db = Database::get();
-        $value = $db->GetOne("select value from atBoolean where avID = ?", array($this->getAttributeValueID()));
-
-        return $value;
-    }
-
     public function exportKey($akey)
     {
         $this->load();
         $type = $akey->addChild('type');
         $type->addAttribute('checked', $this->akCheckedByDefault);
-
         return $akey;
     }
 
-    public function importKey($akey)
+    public function importKey(\SimpleXMLElement $akey)
     {
+        $type = new BooleanType();
         if (isset($akey->type)) {
-            $data = array();
             $checked = (string) $akey->type['checked'];
             if ($checked != '') {
-                $data['akCheckedByDefault'] = 1;
-            } else {
-                $data['akCheckedByDefault'] = 0;
+                $type->setIsCheckedByDefault(true);
             }
-            $this->saveKey($data);
         }
+
+        return $type;
     }
 
     public function getDisplayValue()
     {
-        $v = $this->getValue();
+        $v = $this->attributeValue->getValue();
 
         return ($v == 1) ? t('Yes') : t('No');
     }
@@ -86,14 +76,9 @@ class Controller extends AttributeTypeController
             return false;
         }
 
-        $db = Database::get();
-        $row = $db->GetRow('select akCheckedByDefault from atBooleanSettings where akID = ?', array($ak->getAttributeKeyID()));
-        $this->akCheckedByDefault = $row['akCheckedByDefault'];
+        $this->akCheckedByDefault = $ak
+            ->getAttributeKeyType()->isCheckedByDefault();
         $this->set('akCheckedByDefault', $this->akCheckedByDefault);
-    }
-
-    public function label($customText = false)
-    {
     }
 
     public function form()
@@ -109,19 +94,19 @@ class Controller extends AttributeTypeController
         }
 
         $cb = Core::make('helper/form')->checkbox($this->field('value'), 1, $checked);
-        print $cb . ' <span>' . $this->attributeKey->getAttributeKeyDisplayName() .  '</span>';
+        $this->set('checkbox', $cb);
     }
 
     public function composer()
     {
-        print '<div class="ccm-attribute ccm-attribute-boolean checkbox"><label>';
+        echo '<div class="ccm-attribute ccm-attribute-boolean checkbox"><label>';
         $this->form();
-        print '</label></div>';
+        echo '</label></div>';
     }
 
     public function search()
     {
-        print '<div class="ccm-attribute ccm-attribute-boolean checkbox"><label>' . Core::make('helper/form')->checkbox($this->field('value'), 1, $this->request('value') == 1) . ' ' . $this->attributeKey->getAttributeKeyDisplayName() . '</label></div>';
+        echo '<div class="ccm-attribute ccm-attribute-boolean checkbox"><label>' . Core::make('helper/form')->checkbox($this->field('value'), 1, $this->request('value') == 1) . ' ' . $this->attributeKey->getAttributeKeyDisplayName() . '</label></div>';
     }
 
     public function type_form()
@@ -133,53 +118,41 @@ class Controller extends AttributeTypeController
     // run when we call setAttribute(), instead of saving through the UI
     public function saveValue($value)
     {
-        $db = Database::get();
-        $value = ($value == false || $value == '0') ? 0 : 1;
-        $db->Replace('atBoolean', array('avID' => $this->getAttributeValueID(), 'value' => $value), 'avID', true);
+        $v = new BooleanValue();
+        $value = ($value == false || $value == '0') ? false : true;
+        $v->setValue($value);
+
+        return $v;
     }
 
-    public function deleteKey()
+    public function validateValue()
     {
-        $db = Database::get();
-        $db->Execute('delete from atBooleanSettings where akID = ?', array($this->getAttributeKey()->getAttributeKeyID()));
+        $v = $this->getValue();
 
-        $arr = $this->attributeKey->getAttributeValueIDList();
-        foreach ($arr as $id) {
-            $db->Execute('delete from atBoolean where avID = ?', array($id));
-        }
+        return $v == 1;
     }
 
-	public function validateValue()
-	{
-		$v = $this->getValue();
-		return $v == 1;
-	}
-
-	public function duplicateKey($newAK)
+    public function getSearchIndexValue()
     {
-        $this->load();
-        $db = Database::get();
-        $db->Execute('insert into atBooleanSettings (akID, akCheckedByDefault) values (?, ?)', array($newAK->getAttributeKeyID(), $this->akCheckedByDefault));
+        return $this->attributeValue->getValue() ? 1 : 0;
     }
 
     public function saveKey($data)
     {
-        $ak = $this->getAttributeKey();
-        $db = Database::get();
+        $type = $this->getAttributeKeyType();
+
         $akCheckedByDefault = 0;
         if (isset($data['akCheckedByDefault']) && $data['akCheckedByDefault']) {
             $akCheckedByDefault = 1;
         }
 
-        $db->Replace('atBooleanSettings', array(
-            'akID' => $ak->getAttributeKeyID(),
-            'akCheckedByDefault' => $akCheckedByDefault,
-        ), array('akID'), true);
+        $type->setIsCheckedByDefault($akCheckedByDefault);
+        return $type;
     }
 
     public function saveForm($data)
     {
-        $this->saveValue(isset($data['value']) ? $data['value'] : false);
+        return $this->saveValue(isset($data['value']) ? $data['value'] : false);
     }
 
     // if this gets run we assume we need it to be validated/checked
@@ -188,9 +161,8 @@ class Controller extends AttributeTypeController
         return $data['value'] == 1;
     }
 
-    public function deleteValue()
+    public function createAttributeKeyType()
     {
-        $db = Database::get();
-        $db->Execute('delete from atBoolean where avID = ?', array($this->getAttributeValueID()));
+        return new BooleanType();
     }
 }

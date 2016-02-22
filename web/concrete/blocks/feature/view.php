@@ -6,9 +6,11 @@ if ($linkURL) {
 }
 ?>
 <div class="ccm-block-feature-item">
-    <?php if ($title) { ?>
+    <?php if ($title) {
+    ?>
         <h4><i class="fa fa-<?=$icon?>"></i> <?=$title?></h4>
-    <?php } ?>
+    <?php 
+} ?>
     <?php
     if ($paragraph) {
         echo $paragraph;

@@ -3,7 +3,6 @@ namespace Concrete\Core\Foundation\Processor;
 
 class Action implements ActionInterface
 {
-
     public function __construct(ProcessorInterface $processor, TargetInterface $target, TaskInterface $task, $subject = null)
     {
         $this->processor = $processor;
@@ -79,5 +78,4 @@ class Action implements ActionInterface
     {
         $this->task->finish($this);
     }
-
 }

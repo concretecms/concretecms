@@ -3,7 +3,6 @@ namespace tests\Core\Validator;
 
 class AbstractTranslatableValidatorTest extends \PHPUnit_Framework_TestCase
 {
-
     public function testClosureMessage()
     {
         $obj = $this;
@@ -15,7 +14,7 @@ class AbstractTranslatableValidatorTest extends \PHPUnit_Framework_TestCase
         $method = new \ReflectionMethod($mock, 'getErrorString');
         $method->setAccessible(true);
 
-        /** @type \Concrete\Core\Validator\AbstractTranslatableValidator $mock */
+        /* @type \Concrete\Core\Validator\AbstractTranslatableValidator $mock */
         $mock->setErrorString(5, function ($validator, $code, $passed) use ($mock, $test_code, $test_string, $obj) {
             $obj->assertEquals($mock, $validator);
             $obj->assertEquals($code, $test_code);
@@ -33,7 +32,7 @@ class AbstractTranslatableValidatorTest extends \PHPUnit_Framework_TestCase
         $method = new \ReflectionMethod($mock, 'getErrorString');
         $method->setAccessible(true);
 
-        /** @type \Concrete\Core\Validator\AbstractTranslatableValidator $mock */
+        /* @type \Concrete\Core\Validator\AbstractTranslatableValidator $mock */
         $mock->setErrorString(5, 'ERROR');
 
         $this->assertEquals('ERROR',  $method->invokeArgs($mock, array(5, '')));
@@ -46,7 +45,7 @@ class AbstractTranslatableValidatorTest extends \PHPUnit_Framework_TestCase
         $test_code = 5;
         $mock = $this->getMockForAbstractClass('\Concrete\Core\Validator\AbstractTranslatableValidator');
 
-        /** @type \Concrete\Core\Validator\AbstractTranslatableValidator $mock */
+        /* @type \Concrete\Core\Validator\AbstractTranslatableValidator $mock */
         $mock->setRequirementString(5, function ($validator, $code) use ($mock, $test_code, $obj) {
             $obj->assertEquals($mock, $validator);
             $obj->assertEquals($code, $test_code);
@@ -61,7 +60,7 @@ class AbstractTranslatableValidatorTest extends \PHPUnit_Framework_TestCase
     {
         $mock = $this->getMockForAbstractClass('\Concrete\Core\Validator\AbstractTranslatableValidator');
 
-        /** @type \Concrete\Core\Validator\AbstractTranslatableValidator $mock */
+        /* @type \Concrete\Core\Validator\AbstractTranslatableValidator $mock */
         $mock->setRequirementString(5, 'REQUIREMENT');
         $this->assertEquals(array(5 => 'REQUIREMENT'), $mock->getRequirementStrings());
     }
@@ -83,5 +82,4 @@ class AbstractTranslatableValidatorTest extends \PHPUnit_Framework_TestCase
         $mock = $this->getMockForAbstractClass('\Concrete\Core\Validator\AbstractTranslatableValidator');
         $mock->setRequirementString(5, $mock);
     }
-
 }

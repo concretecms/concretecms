@@ -5,7 +5,6 @@ use Concrete\Core\User\UserInfo;
 
 class Author
 {
-
     protected $user;
     protected $name;
     protected $email;
@@ -31,7 +30,6 @@ class Author
         }
         $this->name = $this->user->getUserName();
         $this->email = $this->user->getUserEmail();
-
     }
 
     /**
@@ -88,7 +86,7 @@ class Author
     public function getFormatter()
     {
         $formatter = new AuthorFormatter($this);
+
         return $formatter;
     }
-
 }

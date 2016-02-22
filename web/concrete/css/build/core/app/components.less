@@ -52,7 +52,8 @@ ul.item-select-list > li > a:focus {
   text-decoration: none;
 }
 ul.item-select-list > li > a img, ul.item-select-list li > span img {vertical-align: middle; max-width: 16px; margin-right: 5px; display: Inline-block;}
-ul.item-select-list > li > a i {vertical-align: middle; font-size: 18px; -webkit-font-smoothing: antialiased; margin-right: 5px; display: inline-block}
+ul.item-select-list > li > a i {vertical-align: middle; font-size: 16px;
+  width: 16px; text-align: center; -webkit-font-smoothing: antialiased; margin-right: 5px; display: inline-block}
 ul.item-select-list i.ccm-item-select-list-sort {
   position: absolute;
   top: 10px;
@@ -108,6 +109,14 @@ span.ccm-group-description {color: #aaa; font-size: 12px; padding-top: 2px; padd
 /* date controls */
 .ccm-input-time-wrapper select {width: auto !important; margin-right: 4px !important;}
 .ccm-input-date {width: auto !important; margin-right: 4px !important;}
+div.popover {
+  .ccm-input-date-wrapper {
+    margin-bottom: 10px;
+  }
+  .ccm-input-time-wrapper, .ccm-input-date-wrapper {
+    display: block;
+  }
+}
 
 /* clipboard */
 div.ccm-scrapbook-list-item {position:relative; margin-bottom: 20px;}
@@ -165,4 +174,14 @@ div#ccm-tooltip-holder {
 
 input.ccm-activate-date-time {
   margin-right: 8px !important;
+}
+
+/**
+ * Page/entity selector
+ */
+div.ccm-item-selector {
+  border: 1px solid #dedede; .border-radius(4px); margin-top: 8px; margin-bottom: 8px; padding: 10px
+}
+a.ccm-item-selector-clear {
+  float: right;
 }

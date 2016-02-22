@@ -6,18 +6,15 @@ use Concrete\Core\Block\CustomStyle;
 
 class InlineStyleSet extends ConcreteDatabaseTestCase
 {
-
     protected $fixtures = array();
     protected $tables = array('StyleCustomizerInlineStyleSets');
 
     public function testPopulateFromRequestEmpty()
     {
-
         $r = Request::create('http://www.foo.com', 'POST', array());
         $set = StyleSet::populateFromRequest($r);
         $this->assertNull($set);
     }
-
 
     public function testPopulateFromRequestDefaults()
     {
@@ -71,12 +68,11 @@ class InlineStyleSet extends ConcreteDatabaseTestCase
 
         $arguments = array(
             'backgroundColor' => '',
-            'backgroundImageFileID' => 10
+            'backgroundImageFileID' => 10,
         );
         $r = Request::create('http://www.foo.com', 'POST', $arguments);
         $set = StyleSet::populateFromRequest($r);
         $this->assertInstanceOf('\Concrete\Core\StyleCustomizer\Inline\StyleSet', $set);
-
     }
 
     public function testPopulateFromRequestBackgroundRepeat()
@@ -93,7 +89,6 @@ class InlineStyleSet extends ConcreteDatabaseTestCase
         $this->assertEquals('no-repeat', $set->getBackgroundRepeat());
         $this->assertEquals(50, $set->getBackgroundImageFileID());
         $this->assertEquals('rgb(120,120,120)', $set->getTextColor());
-
     }
     public function testPopulateFromRequestAll()
     {
@@ -155,8 +150,5 @@ class InlineStyleSet extends ConcreteDatabaseTestCase
         $this->assertEquals('55px', $set->getBoxShadowVertical());
         $this->assertEquals('60px', $set->getBoxShadowSpread());
         $this->assertEquals('testclass', $set->getCustomClass());
-
-
     }
-
 }

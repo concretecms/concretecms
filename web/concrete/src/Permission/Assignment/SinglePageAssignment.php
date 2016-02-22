@@ -1,4 +1,6 @@
 <?php
 namespace Concrete\Core\Permission\Assignment;
-class SinglePageAssignment extends PageAssignment {
+
+class SinglePageAssignment extends PageAssignment
+{
 }

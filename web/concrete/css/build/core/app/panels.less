@@ -851,7 +851,6 @@ div.ccm-panel-header-accordion-dropdown-visible {
     margin-right: 8px;
     margin-top: -1px;
     display: inline-block;
-    float: left;
     position: relative !important;
     .border-radius(3px);
 
@@ -969,8 +968,8 @@ div.ccm-panel-header-accordion-dropdown-visible {
   }
 
   div.ccm-panel-content-inner {
-    textarea {
-      border: 1px solid #101114;
+    textarea, input, select {
+      border: 1px solid @panel-border-color;
       background-color: #4c4e53;
       color: #bababa;
     }

@@ -8,7 +8,6 @@ use Core;
 
 class DatabaseStructureManager
 {
-
     /**
      * The entity manager instance.
      *
@@ -58,21 +57,24 @@ class DatabaseStructureManager
      * Returns true on successful generation and false if there were no proxy
      * classes to be generated.
      * 
-     * @return boolean
+     * @return bool
      */
     public function generateProxyClasses()
     {
         $metadatas = $this->getMetadatas();
+
         return $this->generateProxyClassesFor($metadatas);
     }
 
     /**
      * Generates the proxy classes for all given classes contained in the
      * $metadatas array. Returns true on successful generation and false if
-     * there were no proxy classes to be generated
+     * there were no proxy classes to be generated.
      * 
      * @param  array $metadatas
-     * @return boolean
+     *
+     * @return bool
+     *
      * @throws \Exception Throws an exception in case there are issues with the proxy dir.
      */
     public function generateProxyClassesFor(array $metadatas)
@@ -84,7 +86,7 @@ class DatabaseStructureManager
                 if (file_exists($proxyDir)) {
                     throw new \Exception(t(
                         "A file exists in place of the proxy directory. " .
-                        "Please remove the '%s' file to proceed with the " . 
+                        "Please remove the '%s' file to proceed with the " .
                         "proxy class generation.",
                         $proxyDir
                     ));
@@ -95,7 +97,7 @@ class DatabaseStructureManager
                 } else {
                     throw new \Exception(t(
                         "Could not create the proxies directory. " .
-                        "Please check the file permissions of the proxy " . 
+                        "Please check the file permissions of the proxy " .
                         "directory: %s.",
                         $proxyDir
                     ));
@@ -108,6 +110,7 @@ class DatabaseStructureManager
 
             return true;
         }
+
         return false;
     }
 
@@ -119,22 +122,21 @@ class DatabaseStructureManager
      * Returns a boolean indicating whether any files were deleted or not.
      * 
      * @param  string $prefix
-     * @return boolean
+     *
+     * @return bool
+     *
      * @throws \Exception Throws an exception if the given prefix is invalid or 
      *         if one of the proxy files cannot be deleted.
      */
-    public function destroyProxyClasses($prefix)
+    public function destroyProxyClasses($prefix = null)
     {
-        if (!is_string($prefix) || strlen($prefix) < 1) {
-            throw new \Exception(t("The given prefix needs to be a string."));
-        }
         $proxyDir = $this->getProxyDir();
         if (is_dir($proxyDir)) {
             $fh = Core::make('helper/file');
             $prefix = \Doctrine\Common\Proxy\Proxy::MARKER . $prefix;
             $filesMatched = 0;
             foreach ($fh->getDirectoryContents($proxyDir) as $file) {
-                if (strpos($file, $prefix) === 0) {
+                if (strpos($file, $prefix) === 0 || !$prefix) {
                     if (!@unlink($proxyDir . '/' . $file)) {
                         throw new \Exception(t(
                             "Could not delete a proxy file. Please check the " .
@@ -142,11 +144,13 @@ class DatabaseStructureManager
                             $proxyDir
                         ));
                     }
-                    $filesMatched++;
+                    ++$filesMatched;
                 }
             }
+
             return $filesMatched > 0;
         }
+
         return false;
     }
 
@@ -155,11 +159,12 @@ class DatabaseStructureManager
      * This will not install any existing tables but it will migrate those
      * tables to match the current schema definitions for the classes.
      * 
-     * @return boolean
+     * @return bool
      */
     public function installDatabase()
     {
         $metadatas = $this->getMetadatas();
+
         return $this->installDatabaseFor($metadatas);
     }
 
@@ -170,7 +175,8 @@ class DatabaseStructureManager
      * migrations needed.
      * 
      * @param  array $metadatas
-     * @return boolean
+     *
+     * @return bool
      */
     public function installDatabaseFor(array $metadatas)
     {
@@ -222,9 +228,11 @@ class DatabaseStructureManager
                 foreach ($migrateSql as $sql) {
                     $conn->executeQuery($sql);
                 }
+
                 return true;
             }
         }
+
         return false;
     }
 
@@ -234,11 +242,12 @@ class DatabaseStructureManager
      * Do not normally call this for anything. Save this ONLY for special
      * occasions.
      * 
-     * @return boolean
+     * @return bool
      */
     public function uninstallDatabase()
     {
         $metadatas = $this->getMetadatas();
+
         return $this->uninstallDatabaseFor($metadatas);
     }
 
@@ -248,7 +257,8 @@ class DatabaseStructureManager
      * dropped and false otherwise.
      * 
      * @param  array $metadatas
-     * @return boolean
+     *
+     * @return bool
      */
     public function uninstallDatabaseFor(array $metadatas)
     {
@@ -282,6 +292,7 @@ class DatabaseStructureManager
                 return true;
             }
         }
+
         return false;
     }
 
@@ -289,7 +300,7 @@ class DatabaseStructureManager
      * Drops all the database tables that
      * a) are prefixed with the given prefix string
      * b) are not linked to any existing entity managed by this class
-     * c) are not contained within the $excludeTables array
+     * c) are not contained within the $excludeTables array.
      * 
      * Can be used e.g. for packages by giving the package's handle in
      * camelcased format. This would drop all the prefixed database tables
@@ -299,6 +310,7 @@ class DatabaseStructureManager
      * 
      * @param  string $prefix
      * @param  array $excludeTables
+     *
      * @return int
      */
     public function dropObsoleteDatabaseTables($prefix, array $excludeTables = array())
@@ -329,7 +341,7 @@ class DatabaseStructureManager
      * Determines whether the entity manager instance for this class has any
      * entity classes defined in its entity class path.
      * 
-     * @return boolean
+     * @return bool
      */
     public function hasEntities()
     {
@@ -347,13 +359,12 @@ class DatabaseStructureManager
         if (!isset($this->metadatas)) {
             $this->loadMetadatas();
         }
+
         return $this->metadatas;
     }
 
     /**
      * Loads the entity class metadata into the $metadatas variable.
-     * 
-     * @return void
      */
     protected function loadMetadatas()
     {
@@ -368,5 +379,4 @@ class DatabaseStructureManager
             // we don't want them complaining about a src directory not being in the package.
         }
     }
-
 }

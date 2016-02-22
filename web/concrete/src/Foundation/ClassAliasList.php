@@ -1,29 +1,34 @@
 <?php
 namespace Concrete\Core\Foundation;
-class ClassAliasList {
 
-	private static $loc = null;
-	public $aliases = array();
+class ClassAliasList
+{
+    private static $loc = null;
+    public $aliases = array();
 
-	public function getRegisteredAliases() {
-		return $this->aliases;
-	}
+    public function getRegisteredAliases()
+    {
+        return $this->aliases;
+    }
 
-	public static function getInstance() {
-		if (null === self::$loc) {
-			self::$loc = new self;
-		}
-		return self::$loc;
-	}
+    public static function getInstance()
+    {
+        if (null === self::$loc) {
+            self::$loc = new self();
+        }
 
-	public function register($alias, $class) {
-		$this->aliases[$alias] = $class;
-	}
+        return self::$loc;
+    }
 
-	public function registerMultiple($array) {
-		foreach($array as $alias => $class) {
-			$this->register($alias, $class);
-		}
-	}
+    public function register($alias, $class)
+    {
+        $this->aliases[$alias] = $class;
+    }
 
+    public function registerMultiple($array)
+    {
+        foreach ($array as $alias => $class) {
+            $this->register($alias, $class);
+        }
+    }
 }

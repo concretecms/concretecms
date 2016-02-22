@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Validation\BannedWord;
 
 class Service

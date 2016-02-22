@@ -47,13 +47,17 @@ $view = View::getInstance();
     false); ?>
     <div class="ccm-pane-body">
 
-        <? if ($dh->canRead()) { ?>
+        <?php if ($dh->canRead()) {
+    ?>
 
             <div id="ccm-flat-sitemap-container" data-sitemap="container"></div>
 
-        <? } else { ?>
+        <?php 
+} else {
+    ?>
             <p><?= t('You do not have access to the dashboard sitemap.') ?></p>
-        <? } ?>
+        <?php 
+} ?>
 
     </div>
     <div class="ccm-pane-footer" id="ccm-explore-paging-footer">

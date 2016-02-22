@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Updater\Migrations\Migrations;
 
 use Concrete\Core\Permission\Access\Entity\Type;

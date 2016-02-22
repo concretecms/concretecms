@@ -1,10 +1,8 @@
 <?php
-
 namespace Concrete\Core\File\Type;
 
 use Loader;
-
-/**
+/*
  * @package Core
  * @subpackage Files
  * @author Andrew Embler <andrew@concrete5.org>
@@ -13,7 +11,7 @@ use Loader;
  *
  */
 
-/**
+/*
  * @package Core
  * @subpackage Files
  * @author Andrew Embler <andrew@concrete5.org>
@@ -22,11 +20,10 @@ use Loader;
  * @license    http://www.concrete5.org/license/     MIT License
  *
  */
-use \Concrete\Core\File\Type\Type as FileType;
+use Concrete\Core\File\Type\Type as FileType;
 
 class TypeList
 {
-
     /**
      * @return TypeList
      */
@@ -35,8 +32,9 @@ class TypeList
         static $instance;
         if (!isset($instance)) {
             $v = __CLASS__;
-            $instance = new $v;
+            $instance = new $v();
         }
+
         return $instance;
     }
 
@@ -77,7 +75,7 @@ class TypeList
 
     public function defineImporterAttribute($akHandle, $akName, $akType, $akIsEditable)
     {
-        $obj = new \stdClass;
+        $obj = new \stdClass();
         $obj->akHandle = $akHandle;
         $obj->akName = $akName;
         $obj->akType = $akType;
@@ -96,12 +94,13 @@ class TypeList
     public function getImporterAttribute($akHandle)
     {
         $ftl = static::getInstance();
+
         return $ftl->importerAttributes[$akHandle];
     }
 
     /**
      * Can take an extension or a filename
-     * Returns any registered information we have for the particular file type, based on its registration
+     * Returns any registered information we have for the particular file type, based on its registration.
      */
     public static function getType($ext)
     {
@@ -119,6 +118,4 @@ class TypeList
             return $ft;
         }
     }
-
-
 }

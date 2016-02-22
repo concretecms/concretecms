@@ -13,7 +13,8 @@ class TypeValue extends Value
     protected $textDecoration = -1;
     protected $textTransform = -1;
 
-    public function setFontFamily($fontFamily) {
+    public function setFontFamily($fontFamily)
+    {
         $this->fontFamily = $fontFamily;
     }
 
@@ -102,13 +103,13 @@ class TypeValue extends Value
         return $this->lineHeight;
     }
 
-    public function toStyleString() {
+    public function toStyleString()
+    {
         return '';
     }
 
     public function toLessVariablesArray()
     {
-
         $variables = array();
         if ($this->getFontFamily() != -1) {
             $variables[$this->getVariable() . '-type-font-family'] = $this->getFontFamily();
@@ -137,7 +138,7 @@ class TypeValue extends Value
         if (is_object($this->letterSpacing) && $this->letterSpacing->getSize()) {
             $variables[$this->getVariable() . '-type-letter-spacing'] = $this->letterSpacing->toStyleString();
         }
+
         return $variables;
     }
-
 }

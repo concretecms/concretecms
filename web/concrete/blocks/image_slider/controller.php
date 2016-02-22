@@ -75,7 +75,6 @@ class Controller extends BlockController
         $this->requireAsset('javascript', 'jquery');
         $this->requireAsset('responsive-slides');
 
-
         $al->register('javascript', 'responsiveslides', 'blocks/image_slider/responsiveslides.js');
         $this->requireAsset('javascript', 'blocks/image_slider/responsiveslides');
 
@@ -150,9 +149,10 @@ class Controller extends BlockController
         }
         // https://github.com/viljamis/ResponsiveSlides.js/issues/132#issuecomment-12543345
         // "The 'timeout' (amount of time spent on one slide) has to be at least 100 bigger than 'speed', otherwise the function simply returns."
-        if(($timeout - $speed) < 100) {
+        if (($timeout - $speed) < 100) {
             $error->add(t('Slide Duration must be at least 100 ms greater than the Slide Transition Speed.'));
         }
+
         return $error;
     }
 

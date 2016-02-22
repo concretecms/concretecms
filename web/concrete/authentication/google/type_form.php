@@ -37,6 +37,7 @@
                 <?= $group->getGroupDisplayName(false) ?>
             </option>
         <?php
+
         }
         ?>
     </select>
@@ -56,7 +57,7 @@
             'One per line, to whitelist all %s domains: %s',
             '<code>concrete5.org</code>',
             '<code>~^concrete5\\.org$i~</code>') ?></span>
-    <textarea type="text" name="whitelist" class="form-control"><?= implode(PHP_EOL, (array)$whitelist) ?></textarea>
+    <textarea type="text" name="whitelist" class="form-control"><?= implode(PHP_EOL, (array) $whitelist) ?></textarea>
 </div>
 
 <div class="form-group">

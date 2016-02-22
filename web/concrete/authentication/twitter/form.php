@@ -6,13 +6,14 @@ if (isset($error)) {
     ?>
     <div class="alert alert-danger"><?= $error ?></div>
     <?php
+
 }
 if (isset($message)) {
     ?>
     <div class="alert alert-success"><?= $message ?></div>
 <?php
-}
 
+}
 
 if (isset($show_email) && $show_email) {
     ?>
@@ -25,12 +26,13 @@ if (isset($show_email) && $show_email) {
                 <button class="btn btn-primary"><?= t('Register') ?></button>
             </span>
         </div>
-        <?= id(new Token)->output('twitter_register'); ?>
+        <?= id(new Token())->output('twitter_register');
+    ?>
     </form>
     <?php
-} else {
 
-    $user = new User;
+} else {
+    $user = new User();
 
     if ($user->isLoggedIn()) {
         ?>
@@ -41,13 +43,15 @@ if (isset($show_email) && $show_email) {
             <hr>
         </div>
         <div class="form-group">
-            <a href="<?= \URL::to('/ccm/system/authentication/oauth2/twitter/attempt_attach'); ?>"
+            <a href="<?= \URL::to('/ccm/system/authentication/oauth2/twitter/attempt_attach');
+        ?>"
                class="btn btn-primary btn-twitter btn-block">
                 <i class="fa fa-twitter"></i>
                 <?= t('Attach a %s account', t('twitter')) ?>
             </a>
         </div>
     <?php
+
     } else {
         ?>
         <div class="form-group">
@@ -57,13 +61,15 @@ if (isset($show_email) && $show_email) {
             <hr>
         </div>
         <div class="form-group">
-            <a href="<?= \URL::to('/ccm/system/authentication/oauth2/twitter/attempt_auth'); ?>"
+            <a href="<?= \URL::to('/ccm/system/authentication/oauth2/twitter/attempt_auth');
+        ?>"
                class="btn btn-primary btn-twitter btn-block">
                 <i class="fa fa-twitter"></i>
                 <?= t('Log in with %s', 'twitter') ?>
             </a>
         </div>
     <?php
+
     }
     ?>
     <style>
@@ -77,5 +83,6 @@ if (isset($show_email) && $show_email) {
         }
     </style>
 <?php
+
 }
 ?>

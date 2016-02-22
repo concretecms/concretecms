@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Controller;
 
 use Concrete\Core\Application\Application;
@@ -10,7 +9,6 @@ use Symfony\Component\HttpKernel\Controller\ControllerResolver as SymfonyControl
 
 class ApplicationAwareControllerResolver extends SymfonyControllerResolver implements ApplicationAwareInterface
 {
-
     /** @var Application */
     protected $app;
 
@@ -24,7 +22,7 @@ class ApplicationAwareControllerResolver extends SymfonyControllerResolver imple
     }
 
     /**
-     * Set the application object
+     * Set the application object.
      *
      * @param \Concrete\Core\Application\Application $application
      */
@@ -103,5 +101,4 @@ class ApplicationAwareControllerResolver extends SymfonyControllerResolver imple
 
         return array($this->app->make($class), $method);
     }
-
 }

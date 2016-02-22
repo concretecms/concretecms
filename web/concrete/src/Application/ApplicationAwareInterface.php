@@ -10,7 +10,7 @@ namespace Concrete\Core\Application;
 interface ApplicationAwareInterface
 {
     /**
-     * Set the application object
+     * Set the application object.
      *
      * @param \Concrete\Core\Application\Application $application
      */

@@ -3,7 +3,6 @@ namespace Concrete\Core\Support\Facade;
 
 class Url extends Facade
 {
-
     /**
      * @return \Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface
      */
@@ -18,7 +17,7 @@ class Url extends Facade
     }
 
     /**
-     * Resolve a URL from data
+     * Resolve a URL from data.
      *
      * Working core examples for example.com:
      * \Url::to('/some/path', 'some_action', $some_variable = 2)
@@ -35,9 +34,10 @@ class Url extends Facade
     }
 
     /**
-     * This method is only here as a legacy decorator, use url::to
+     * This method is only here as a legacy decorator, use url::to.
      *
      * @return \League\URL\URLInterface
+     *
      * @deprecated
      */
     public static function route($data)
@@ -48,18 +48,19 @@ class Url extends Facade
         }
         $route = \Router::route($data);
         array_unshift($arguments, $route);
+
         return static::getFacadeRoot()->resolve($arguments);
     }
 
     /**
-     * This method is only here as a legacy decorator, use `\URL::to($page)`
+     * This method is only here as a legacy decorator, use `\URL::to($page)`.
      *
      * @return \League\URL\URLInterface
+     *
      * @deprecated
      */
     public static function page()
     {
         return static::getFacadeRoot()->resolve(func_get_args());
     }
-
 }

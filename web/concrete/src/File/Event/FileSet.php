@@ -6,7 +6,6 @@ use Symfony\Component\EventDispatcher\Event as AbstractEvent;
 
 class FileSet extends AbstractEvent
 {
-
     protected $fs;
 
     public function __construct(Set $fs)
@@ -18,5 +17,4 @@ class FileSet extends AbstractEvent
     {
         return $this->fs;
     }
-
 }

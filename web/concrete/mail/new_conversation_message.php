@@ -1,4 +1,5 @@
-<? 
+<?php
+
 defined('C5_EXECUTE') or die("Access Denied.");
 $subject = t('New Message on Conversation: %s', $title);
 $body = t("

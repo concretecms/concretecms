@@ -5,6 +5,7 @@ use Concrete\Core\Search\ItemList\Database\AttributedItemList as DatabaseItemLis
 use Concrete\Core\Search\Pagination\Pagination;
 use Concrete\Core\Search\Pagination\PermissionablePagination;
 use Concrete\Core\Search\PermissionableListItemInterface;
+use Concrete\Core\Entity\Package;
 use Page as ConcretePage;
 use Pagerfanta\Adapter\DoctrineDbalAdapter;
 
@@ -301,6 +302,16 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
     }
 
     /**
+     * Filters by package.
+     */
+    public function filterByPackage(Package $package)
+    {
+        $this->query->andWhere('p.pkgID = :pkgID');
+        $this->query->setParameter('pkgID', $package->getPackageID());
+    }
+
+
+    /**
      * Displays only those pages that have style customizations.
      */
     public function filterByPagesWithCustomStyles()
@@ -481,7 +492,7 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
      */
     public function sortByName()
     {
-        $this->query->orderBy('cv.cvName', 'asc');
+        $this->sortBy('cv.cvName', 'asc');
     }
 
     /**
@@ -489,7 +500,7 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
      */
     public function sortByNameDescending()
     {
-        $this->query->orderBy('cv.cvName', 'desc');
+        $this->sortBy('cv.cvName', 'desc');
     }
 
     /**
@@ -497,7 +508,7 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
      */
     public function sortByPublicDateDescending()
     {
-        $this->query->orderBy('cv.cvDatePublic', 'desc');
+        $this->sortBy('cv.cvDatePublic', 'desc');
     }
 
     /**
@@ -506,7 +517,7 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
     public function sortByRelevance()
     {
         if ($this->isFulltextSearch) {
-            $this->query->orderBy('cIndexScore', 'desc');
+            $this->sortBy('cIndexScore', 'desc');
         }
     }
 

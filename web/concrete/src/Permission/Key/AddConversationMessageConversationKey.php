@@ -2,25 +2,25 @@
 namespace Concrete\Core\Permission\Key;
 
 use Concrete\Core\Permission\Access\ListItem\AddConversationMessageConversationListItem;
-use Loader;
 use User;
-use \Concrete\Core\Permission\Duration as PermissionDuration;
+use Concrete\Core\Permission\Duration as PermissionDuration;
 
 class AddConversationMessageConversationKey extends ConversationKey
 {
-
     public function getMyAssignment()
     {
         $u = new User();
         $asl = new AddConversationMessageConversationListItem();
         if ($u->isSuperUser()) {
             $asl->setNewConversationMessageApprovalStatus('A');
+
             return $asl;
         }
 
         $pae = $this->getPermissionAccessObject();
         if (!is_object($pae)) {
             $asl->setNewConversationMessageApprovalStatus('U');
+
             return $asl;
         }
 
@@ -41,6 +41,4 @@ class AddConversationMessageConversationKey extends ConversationKey
 
         return $asl;
     }
-
-
 }

@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Page\Type\PublishTarget\Type;
 
 use Concrete\Core\Page\Type\Type as PageType;
@@ -28,6 +27,7 @@ class AllType extends Type
             $c = \Page::getByPath($path);
             $configuration->setStartingPointPageID($c->getCollectionID());
         }
+
         return $configuration;
     }
 }

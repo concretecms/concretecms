@@ -5,7 +5,6 @@ use Illuminate\Support\Manager;
 
 class DriverManager extends Manager
 {
-
     /**
      * The array of created "drivers".
      *
@@ -15,6 +14,7 @@ class DriverManager extends Manager
 
     /**
      * @param null $driver
+     *
      * @return \Doctrine\DBAL\Driver
      */
     public function driver($driver = null)
@@ -39,7 +39,7 @@ class DriverManager extends Manager
             $this->extend(
                 $driver,
                 function () use ($class) {
-                    return new $class;
+                    return new $class();
                 });
         }
     }
@@ -48,5 +48,4 @@ class DriverManager extends Manager
     {
         return 'c5_pdo_mysql';
     }
-
 }

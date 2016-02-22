@@ -1,8 +1,11 @@
 <?php
 namespace Concrete\Core\Permission\Key;
+
 use Core;
-class ConversationKey extends Key {
-	protected $permissionObjectToCheck;
+
+class ConversationKey extends Key
+{
+    protected $permissionObjectToCheck;
 
     // We need this because we don't always have a permission object
     public function getPermissionAssignmentObject()
@@ -12,7 +15,7 @@ class ConversationKey extends Key {
             $targ->setPermissionObject($this->permissionObject);
         }
         $targ->setPermissionKeyObject($this);
+
         return $targ;
     }
-
 }

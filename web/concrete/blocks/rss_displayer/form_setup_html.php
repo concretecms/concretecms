@@ -21,11 +21,11 @@
     $dateFormats[':custom:'] = t('Custom date/time format');
     $standardDateFormat = $rssObj->dateFormat;
     $customDateFormat = '';
-    if(!$standardDateFormat) {
+    if (!$standardDateFormat) {
         reset($dateFormats);
         $standardDateFormat = key($dateFormats);
     }
-    if(!array_key_exists($standardDateFormat, $dateFormats)) {
+    if (!array_key_exists($standardDateFormat, $dateFormats)) {
         $customDateFormat = $standardDateFormat;
         $standardDateFormat = ':custom:';
     }
@@ -53,7 +53,7 @@ $(document).ready(function() {
 <div class="form-group">
     <div class="checkbox">
         <label>
-            <input type="checkbox" value="1" name="showSummary"<?= (!!$rssObj->showSummary ? ' checked' : '') ?> />
+            <input type="checkbox" value="1" name="showSummary"<?= ((bool) $rssObj->showSummary ? ' checked' : '') ?> />
             <?= t('Include Summary') ?>
         </label>
     </div>
@@ -62,7 +62,7 @@ $(document).ready(function() {
     <div class="checkbox">
         <label>
             <input type="checkbox" value="1"
-               name="launchInNewWindow"<?= (!!$rssObj->launchInNewWindow ? ' checked' : '') ?> />
+               name="launchInNewWindow"<?= ((bool) $rssObj->launchInNewWindow ? ' checked' : '') ?> />
             <?= t('Open links in a new window') ?>
         </label>
     </div>

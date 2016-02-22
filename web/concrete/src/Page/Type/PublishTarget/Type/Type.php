@@ -3,17 +3,16 @@ namespace Concrete\Core\Page\Type\PublishTarget\Type;
 
 use Loader;
 use Concrete\Core\Page\Type\Type as PageType;
-use \Concrete\Core\Foundation\Object;
-use \Concrete\Core\Package\PackageList;
+use Concrete\Core\Foundation\Object;
+use Concrete\Core\Package\PackageList;
 use Environment;
-use \Concrete\Core\Package\Package as Package;
+use Concrete\Core\Package\Package as Package;
 use Core;
 use Database;
 use Symfony\Component\HttpFoundation\Request;
 
 abstract class Type extends Object
 {
-
     protected $ptPublishTargetTypeID;
     protected $ptPublishTargetTypeHandle;
     protected $ptPublishTargetTypeName;
@@ -55,6 +54,7 @@ abstract class Type extends Object
 
     /** Returns the display name for this instance (localized and escaped accordingly to $format)
      * @param string $format = 'html' Escape the result in html format (if $format is 'html'). If $format is 'text' or any other value, the display name won't be escaped.
+     *
      * @return string
      */
     public function getPageTypePublishTargetTypeDisplayName($format = 'html')
@@ -72,6 +72,7 @@ abstract class Type extends Object
     public function validatePageTypeRequest(Request $request)
     {
         $e = Core::make('error');
+
         return $e;
     }
 
@@ -96,8 +97,10 @@ abstract class Type extends Object
 
             $sc = Core::make($class);
             $sc->setPropertiesFromArray($r);
+
             return $sc;
         }
+
         return null;
     }
 
@@ -122,15 +125,18 @@ abstract class Type extends Object
 
             $sc = Core::make($class);
             $sc->setPropertiesFromArray($r);
+
             return $sc;
         }
+
         return null;
     }
 
     public static function importConfiguredPageTypePublishTarget($txml)
     {
-        $type = static::getByHandle((string)$txml['handle']);
+        $type = static::getByHandle((string) $txml['handle']);
         $target = $type->configurePageTypePublishTargetFromImport($txml);
+
         return $target;
     }
 
@@ -146,6 +152,7 @@ abstract class Type extends Object
             values (?, ?, ?)',
             array($ptPublishTargetTypeHandle, $ptPublishTargetTypeName, $pkgID)
         );
+
         return static::getByHandle($ptPublishTargetTypeHandle);
     }
 
@@ -178,6 +185,7 @@ abstract class Type extends Object
                 );
             }
         );
+
         return $types;
     }
 
@@ -204,6 +212,7 @@ abstract class Type extends Object
                 );
             }
         );
+
         return $types;
     }
 
@@ -233,6 +242,7 @@ abstract class Type extends Object
             ) . '.php',
             $this->getPackageHandle()
         );
+
         return $rec->exists();
     }
 
@@ -245,6 +255,4 @@ abstract class Type extends Object
             $this->getPackageHandle()
         );
     }
-
-
 }

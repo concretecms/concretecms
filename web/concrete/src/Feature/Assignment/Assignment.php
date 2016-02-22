@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Feature\Assignment;
 
 use Concrete\Core\Foundation\Object;

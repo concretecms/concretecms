@@ -1,14 +1,11 @@
 <?php
 namespace Concrete\Core\Page\Controller;
 
-use Config;
 use Loader;
-use Page;
-use \PageController as CorePageController;
+use PageController as CorePageController;
 
 class AccountPageController extends CorePageController
 {
-
     public $helpers = array('html', 'form', 'text');
 
     public function on_start()
@@ -29,6 +26,4 @@ class AccountPageController extends CorePageController
     {
         $this->set('error', $this->error);
     }
-
-
 }

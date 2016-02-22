@@ -5,7 +5,6 @@ use Database;
 
 class CacheSettings
 {
-
     protected $btCacheBlockOutputOnPost = false;
     protected $btCacheBlockOutputForRegisteredUsers = false;
     protected $btCacheBlockOutput = false;
@@ -30,7 +29,7 @@ class CacheSettings
             $r = $db->GetRow('select * from CollectionVersionBlocksCacheSettings where
               cID = ? and cvID = ? and arHandle = ? and bID = ?',
                 array(
-                    $cID, $cvID, $arHandle, $bID
+                    $cID, $cvID, $arHandle, $bID,
                 )
             );
             if ($r['bID']) {
@@ -56,6 +55,7 @@ class CacheSettings
                 $o->btCacheBlockOutputLifetime = false;
             }
         }
+
         return $o;
     }
 
@@ -78,5 +78,4 @@ class CacheSettings
     {
         return $this->btCacheBlockOutputLifetime;
     }
-
 }

@@ -3,7 +3,6 @@ namespace Concrete\Core\Tests\Validator\String;
 
 class MaximumLengthValidatorTest extends \PHPUnit_Framework_TestCase
 {
-
     public function testIsValid()
     {
         $validator = new \Concrete\Core\Validator\String\MaximumLengthValidator(1000);
@@ -21,7 +20,7 @@ class MaximumLengthValidatorTest extends \PHPUnit_Framework_TestCase
     {
         $validator = new \Concrete\Core\Validator\String\MaximumLengthValidator(5);
 
-        $this->assertFalse($validator->isValid('123456', $error = new \ArrayObject));
+        $this->assertFalse($validator->isValid('123456', $error = new \ArrayObject()));
         $this->assertNotEmpty($error);
     }
 
@@ -32,5 +31,4 @@ class MaximumLengthValidatorTest extends \PHPUnit_Framework_TestCase
         $this->setExpectedException('InvalidArgumentException');
         $validator->isValid($validator);
     }
-
 }

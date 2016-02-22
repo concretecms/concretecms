@@ -3,7 +3,6 @@ namespace Concrete\Core\Foundation\Processor;
 
 class Processor implements ProcessorInterface
 {
-
     protected $target;
     protected $tasks = array();
 
@@ -25,7 +24,7 @@ class Processor implements ProcessorInterface
     public function finish()
     {
         $tasks = $this->getTasks();
-        foreach($tasks as $task) {
+        foreach ($tasks as $task) {
             $action = new Action($this, $this->target, $task[1]);
             $action->finish();
         }
@@ -34,12 +33,14 @@ class Processor implements ProcessorInterface
     public function getTasks()
     {
         $tasks = $this->tasks;
-        usort($tasks, function($a, $b) {
+        usort($tasks, function ($a, $b) {
             if ($a[0] == $b[0]) {
                 return 0;
             }
+
             return ($a[0] < $b[0]) ? -1 : 1;
         });
+
         return $tasks;
     }
 
@@ -51,15 +52,12 @@ class Processor implements ProcessorInterface
     public function process()
     {
         $tasks = $this->getTasks();
-        foreach($this->target->getItems() as $targetItem) {
-            foreach($tasks as $task) {
+        foreach ($this->target->getItems() as $targetItem) {
+            foreach ($tasks as $task) {
                 $action = new Action($this, $this->target, $task[1], $targetItem);
                 $this->execute($action);
             }
         }
         $this->finish();
-
     }
-
-
 }

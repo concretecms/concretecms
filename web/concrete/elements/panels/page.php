@@ -11,16 +11,17 @@ $seoSet = AttributeSet::getByHandle('seo');
 ?>
 <section>
     <header><?= t('Page Settings') ?></header>
-    <? if ($cp->canEditPageContents()
+    <?php if ($cp->canEditPageContents()
         || $cp->canEditPageTheme()
         || $cp->canEditPageProperties()
-        || $cp->canEditPageTemplate()) { ?>
+        || $cp->canEditPageTemplate()) {
+    ?>
 
     <menu class="ccm-panel-page-basics">
         <?php
         $pagetype = PageType::getByID($c->getPageTypeID());
-        if (is_object($pagetype) && $cp->canEditPageContents()) {
-            ?>
+    if (is_object($pagetype) && $cp->canEditPageContents()) {
+        ?>
             <li>
                 <a href="#" data-launch-panel-detail="page-composer"
                    data-panel-detail-url="<?= URL::to('/ccm/system/panels/details/page/composer') ?>"
@@ -29,10 +30,11 @@ $seoSet = AttributeSet::getByHandle('seo');
                 </a>
             </li>
         <?php
-        }
 
-        if ($cp->canEditPageTheme() || $cp->canEditPageTemplate()) {
-            ?>
+    }
+
+    if ($cp->canEditPageTheme() || $cp->canEditPageTemplate()) {
+        ?>
             <li>
                 <a href="#" data-launch-sub-panel-url="<?= URL::to('/ccm/system/panels/page/design') ?>"
                    data-launch-panel-detail="page-design"
@@ -42,10 +44,11 @@ $seoSet = AttributeSet::getByHandle('seo');
                 </a>
             </li>
         <?php
-        }
 
-        if ($cp->canEditPageProperties() && is_object($seoSet)) {
-            ?>
+    }
+
+    if ($cp->canEditPageProperties() && is_object($seoSet)) {
+        ?>
             <li>
                 <a href="#" data-launch-panel-detail="page-seo"
                    data-panel-detail-url="<?= URL::to('/ccm/system/panels/details/page/seo') ?>"
@@ -54,9 +57,10 @@ $seoSet = AttributeSet::getByHandle('seo');
                 </a>
             </li>
         <?php
-        }
-        if ($c->getCollectionID() != HOME_CID && is_object($asl) && ($asl->allowEditPaths())) {
-            ?>
+
+    }
+    if ($c->getCollectionID() != HOME_CID && is_object($asl) && ($asl->allowEditPaths())) {
+        ?>
             <li>
                 <a href="#" data-launch-panel-detail="page-location"
                    data-panel-detail-url="<?= URL::to('/ccm/system/panels/details/page/location') ?>"
@@ -65,10 +69,12 @@ $seoSet = AttributeSet::getByHandle('seo');
                 </a>
             </li>
         <?php
-        }
-        ?>
+
+    }
+    ?>
     </menu>
-    <? } ?>
+    <?php 
+} ?>
 
     <menu>
         <?php
@@ -87,6 +93,7 @@ $seoSet = AttributeSet::getByHandle('seo');
                     </a>
                 </li>
             <?php
+
             }
         }
 
@@ -100,6 +107,7 @@ $seoSet = AttributeSet::getByHandle('seo');
                 </a>
             </li>
         <?php
+
         }
 
         if ($cp->canEditPagePermissions()) {
@@ -112,6 +120,7 @@ $seoSet = AttributeSet::getByHandle('seo');
                 </a>
             </li>
         <?php
+
         }
 
         if ($cp->canViewPageVersions()) {
@@ -130,6 +139,7 @@ $seoSet = AttributeSet::getByHandle('seo');
                 </a>
             </li>
         <?php
+
         }
 
         if ($cp->canPreviewPageAsUser() && Config::get('concrete.permissions.model') == 'advanced') {
@@ -143,6 +153,7 @@ $seoSet = AttributeSet::getByHandle('seo');
                 </a>
             </li>
         <?php
+
         }
 
         if ($cp->canDeletePage()) {
@@ -155,6 +166,7 @@ $seoSet = AttributeSet::getByHandle('seo');
                 </a>
             </li>
         <?php
+
         }
         ?>
     </menu>

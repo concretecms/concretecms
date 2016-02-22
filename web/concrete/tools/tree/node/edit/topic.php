@@ -1,4 +1,4 @@
-<?
+<?php
 defined('C5_EXECUTE') or die("Access Denied.");
 $form = Loader::helper('form');
 $node = \Concrete\Core\Tree\Node\Node::getByID(Loader::helper('security')->sanitizeInt($_REQUEST['treeNodeID']));
@@ -7,7 +7,8 @@ $tree = $node->getTreeObject();
 $canEdit = (is_object($node) && $node->getTreeNodeTypeHandle() == 'topic' && $np->canEditTreeNode());
 $url = View::url('/dashboard/system/attributes/topics', 'update_topic_node');
 $al = Loader::helper("concrete/asset_library");
-if ($canEdit) { ?>
+if ($canEdit) {
+    ?>
 
 	<div class="ccm-ui">
 		<form method="post" data-topic-form="update-topic-node" class="form-horizontal" action="<?=$url?>">
@@ -25,6 +26,6 @@ if ($canEdit) { ?>
 	</div>
 
 
-<?
-}
+<?php
 
+}

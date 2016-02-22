@@ -9,5 +9,4 @@ interface ProcessorInterface
     public function registerTask(TaskInterface $task, $priority = 0);
     public function getTasks();
     public function execute(ActionInterface $action);
-
 }

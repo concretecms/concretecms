@@ -1,12 +1,12 @@
-<?
+<?php
 defined('C5_EXECUTE') or die("Access Denied.");
 $form = Loader::helper('form');
 $factors = array('' => t('Sitemap Pop-Up'), 'sitemap_in_page' => t('In-Page Sitemap'));
 $pageSelector = Core::make('helper/form/page_selector');
 if (is_object($pagetype) && $pagetype->getPageTypePublishTargetTypeID() == $type->getPageTypePublishTargetTypeID()) {
-	$configuredTarget = $pagetype->getPageTypePublishTargetObject();
-	$selectorFormFactor = $configuredTarget->getSelectorFormFactor();
-	$startingPointPageID = $configuredTarget->getStartingPointPageID();
+    $configuredTarget = $pagetype->getPageTypePublishTargetObject();
+    $selectorFormFactor = $configuredTarget->getSelectorFormFactor();
+    $startingPointPageID = $configuredTarget->getStartingPointPageID();
 }
 ?>
 

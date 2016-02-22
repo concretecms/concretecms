@@ -4,13 +4,9 @@ namespace Concrete\Core\Area\Layout\Preset\Provider;
 use Concrete\Core\Area\Layout\Preset\Column;
 use Concrete\Core\Area\Layout\Preset\Formatter\ThemeFormatter;
 use Concrete\Core\Area\Layout\Preset\Preset;
-use Concrete\Core\Area\Layout\Preset\Provider\ProviderInterface;
-use Concrete\Core\Area\Layout\Preset\Provider\ThemeProviderInterface;
-use Concrete\Core\Page\Page;
 
 class ThemeProvider implements ProviderInterface
 {
-
     protected $presets = array();
     protected $themeHandle;
 
@@ -20,9 +16,9 @@ class ThemeProvider implements ProviderInterface
         $this->name = $interface->getThemeName();
         $this->themeHandle = $interface->getThemeHandle();
 
-        foreach($arrayPresets as $arrayPreset) {
+        foreach ($arrayPresets as $arrayPreset) {
             $columns = array();
-            foreach($arrayPreset['columns'] as $html) {
+            foreach ($arrayPreset['columns'] as $html) {
                 $columns[] = Column::fromHtml($html);
             }
 
@@ -45,6 +41,4 @@ class ThemeProvider implements ProviderInterface
     {
         return $this->presets;
     }
-
-
 }

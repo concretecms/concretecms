@@ -1,34 +1,33 @@
 <?php
-
 namespace Concrete\Core\Foundation;
 
-use \Concrete\Core\Foundation\Object;
-use \Concrete\Core\Package\Package;
-use \Concrete\Core\Foundation\ModifiedPSR4ClassLoader;
-use \Symfony\Component\ClassLoader\MapClassLoader as SymfonyMapClassloader;
+use Concrete\Core\Package\Package;
+use Symfony\Component\ClassLoader\MapClassLoader as SymfonyMapClassloader;
 use Symfony\Component\ClassLoader\Psr4ClassLoader as SymfonyClassLoader;
 
 /**
  * Provides autoloading for concrete5
  * Typically getInstance() should be used rather than instantiating a new object.
+ *
  * @package Concrete\Core\Foundation
  */
 class ClassLoader
 {
-
     /** @var ClassLoader */
-    static $instance;
+    public static $instance;
     protected $classAliases = array();
 
     /**
-     * Returns the ClassLoader instance
+     * Returns the ClassLoader instance.
+     *
      * @return ClassLoader
      */
     public static function getInstance()
     {
         if (!isset(static::$instance)) {
-            static::$instance = new Classloader();
+            static::$instance = new self();
         }
+
         return static::$instance;
     }
 
@@ -40,14 +39,14 @@ class ClassLoader
     }
 
     /**
-     * Maps legacy classes
+     * Maps legacy classes.
      */
     protected function setupMapClassAutoloader()
     {
         $mapping = array(
             'Loader' => DIR_BASE_CORE . '/' . DIRNAME_CLASSES . '/Legacy/Loader.php',
             'TaskPermission' => DIR_BASE_CORE . '/' . DIRNAME_CLASSES . '/Legacy/TaskPermission.php',
-            'FilePermissions' => DIR_BASE_CORE . '/' . DIRNAME_CLASSES . '/Legacy/FilePermissions.php'
+            'FilePermissions' => DIR_BASE_CORE . '/' . DIRNAME_CLASSES . '/Legacy/FilePermissions.php',
         );
 
         $loader = new SymfonyMapClassloader($mapping);
@@ -55,7 +54,7 @@ class ClassLoader
     }
 
     /**
-     * Aliases concrete5 classes to shorter class name aliases
+     * Aliases concrete5 classes to shorter class name aliases.
      *
      * IDEs will not recognize these classes by default. A symbols file can be generated to
      * assist IDEs by running SymbolGenerator::render() via PHP or executing the command-line
@@ -81,7 +80,7 @@ class ClassLoader
     }
 
     /**
-     * Registers the prefixes for a package
+     * Registers the prefixes for a package.
      *
      * The following prefixes are registered:
      * <ul>
@@ -103,11 +102,12 @@ class ClassLoader
      * The function Package::getPackageAutoloaderRegistries() can be used to add custom prefixes
      *
      * @param string|\Package $pkg Package handle or an instance of the package controller
+     *
      * @see Package::$pkgAutoloaderMapCoreExtensions, Package::getPackageAutoloaderRegistries()
      */
     public function registerPackage($pkg)
     {
-        if (!($pkg instanceof Package)) {
+        if (is_string($pkg)) {
             $pkg = \Package::getClass($pkg);
         }
 
@@ -141,25 +141,23 @@ class ClassLoader
         $symfonyLoader->register();
         $strictLoader->register();
         $this->registerPackageController($pkgHandle);
-
     }
 
     /**
-     * Maps a package controller's class name to the file
+     * Maps a package controller's class name to the file.
+     *
      * @param string $pkgHandle Handle of package
      */
     public function registerPackageController($pkgHandle)
     {
         $symfonyLoader = new SymfonyMapClassloader(array(
-            NAMESPACE_SEGMENT_VENDOR . '\\Package\\' . camelcase($pkgHandle) . '\\Controller' =>
-                DIR_PACKAGES . '/' . $pkgHandle . '/' . FILENAME_PACKAGE_CONTROLLER
+            NAMESPACE_SEGMENT_VENDOR . '\\Package\\' . camelcase($pkgHandle) . '\\Controller' => DIR_PACKAGES . '/' . $pkgHandle . '/' . FILENAME_PACKAGE_CONTROLLER,
         ));
         $symfonyLoader->register();
-
     }
 
     /**
-     * Adds concrete5's core autoloading prefixes
+     * Adds concrete5's core autoloading prefixes.
      *
      * * The following prefixes are registered:
      * <ul>
@@ -198,7 +196,7 @@ class ClassLoader
         $symfonyLoader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Controller\\PageType', DIR_BASE_CORE . '/' . DIRNAME_CONTROLLERS . '/' . DIRNAME_PAGE_TYPES);
         $symfonyLoader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Controller', DIR_BASE_CORE . '/' . DIRNAME_CONTROLLERS);
         $symfonyLoader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Job', DIR_BASE_CORE . '/' . DIRNAME_JOBS);
-
+        $symfonyLoader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Express', DIR_APPLICATION . '/config/express/Entity/Concrete/Express');
 
         $namespace = 'Application';
         $app_config_path = DIR_APPLICATION . '/config/app.php';
@@ -234,6 +232,4 @@ class ClassLoader
         }
         $strictLoader->register();
     }
-
-
 }

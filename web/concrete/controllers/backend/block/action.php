@@ -9,7 +9,6 @@ use Concrete\Core\Page\Type\Composer\FormLayoutSetControl;
 
 class Action extends AbstractController
 {
-
     public function add($cID, $arHandle, $btID, $action)
     {
         $c = \Page::getByID($cID);
@@ -28,6 +27,7 @@ class Action extends AbstractController
         }
 
         $response = new Response(t('Access Denied'));
+
         return $response;
     }
 
@@ -41,10 +41,12 @@ class Action extends AbstractController
                 return $response;
             } else {
                 $r = new Response($response);
+
                 return $r;
             }
         }
         $response = new Response(t('Access Denied'));
+
         return $response;
     }
 
@@ -62,6 +64,7 @@ class Action extends AbstractController
         }
 
         $response = new Response(t('Access Denied'));
+
         return $response;
     }
 
@@ -80,6 +83,7 @@ class Action extends AbstractController
             }
         }
         $response = new Response(t('Access Denied'));
+
         return $response;
     }
 
@@ -102,8 +106,7 @@ class Action extends AbstractController
             }
         }
         $response = new Response(t('Access Denied'));
+
         return $response;
     }
-
-
 }

@@ -1,8 +1,7 @@
-<?
+<?php
 defined('C5_EXECUTE') or die("Access Denied.");
 $valt = Loader::helper('validation/token');
 $th = Loader::helper('text');
-
 
 ?>
 <div class="ccm-dashboard-header-buttons">
@@ -73,30 +72,31 @@ $th = Loader::helper('text');
                 </tr>
             </thead>
             <tbody>
-                <? foreach($entries as $ent) { ?>
+                <?php foreach ($entries as $ent) {
+    ?>
                 <tr>
                     <td valign="top" style="white-space: nowrap" class="active"><?php
-                        print $ent->getDisplayTimestamp();
-                    ?></td>
+                        echo $ent->getDisplayTimestamp();
+    ?></td>
                     <td valign="top" style="text-align: center"><?=$ent->getLevelIcon()?></td>
                     <td valign="top" style="white-space: nowrap"><?=$ent->getChannelDisplayName()?></td>
                     <td valign="top"><strong><?php
                     $uID = $ent->getUserID();
-                    if(empty($uID)) {
-                        echo t("Guest");
-                    } else {
-                        $u = User::getByUserID($uID);
-                        if(is_object($u)) {
-                            echo $u->getUserName();
-                        }
-                        else {
-                            echo tc('Deleted user', 'Deleted (id: %s)', $uID);
-                        }
-                    }
-                    ?></strong></td>
+    if (empty($uID)) {
+        echo t("Guest");
+    } else {
+        $u = User::getByUserID($uID);
+        if (is_object($u)) {
+            echo $u->getUserName();
+        } else {
+            echo tc('Deleted user', 'Deleted (id: %s)', $uID);
+        }
+    }
+    ?></strong></td>
                     <td style="width: 100%"><?=$th->makenice($ent->getMessage())?></td>
                 </tr>
-                <? } ?>
+                <?php
+} ?>
             </tbody>
         </table>
     </div>

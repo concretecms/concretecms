@@ -6,8 +6,8 @@ use Concrete\Core\Search\StickyRequest;
 use Concrete\Core\User\Group\GroupSetList;
 use Controller;
 use UserList;
-use \Concrete\Core\User\Search\ColumnSet\ColumnSet as UserSearchColumnSet;
-use \Concrete\Core\User\Search\Result\Result as UserSearchResult;
+use Concrete\Core\User\Search\ColumnSet\ColumnSet as UserSearchColumnSet;
+use Concrete\Core\User\Search\Result\Result as UserSearchResult;
 use GroupList;
 use UserAttributeKey;
 use Permissions;
@@ -246,7 +246,7 @@ class Users extends Controller
     {
         $r = array(
             'date_added' => t('Registered Between'),
-            'is_active' => t('Activated Users')
+            'is_active' => t('Activated Users'),
         );
         $sfa = UserAttributeKey::getSearchableList();
         foreach ($sfa as $ak) {
@@ -256,5 +256,4 @@ class Users extends Controller
 
         return $r;
     }
-
 }

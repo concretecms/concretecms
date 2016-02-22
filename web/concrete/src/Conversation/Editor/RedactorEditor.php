@@ -5,11 +5,11 @@ use AssetList;
 
 class RedactorEditor extends Editor
 {
-
     public function getConversationEditorAssetPointers()
     {
         $list = AssetList::getInstance();
         $r = $list->getAssetGroup('redactor');
+
         return $r->getAssetPointers();
     }
 

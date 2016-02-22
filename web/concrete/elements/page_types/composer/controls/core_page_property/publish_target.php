@@ -1,4 +1,4 @@
-<?
+<?php
 defined('C5_EXECUTE') or die("Access Denied.");
 $pagetype = $set->getPageTypeObject();
 $target = $pagetype->getPageTypePublishTargetObject();
@@ -13,9 +13,9 @@ if (is_object($parent) && $parent->isError()) {
 
 <div class="form-group">
 	<label class="control-label"><?=$label?></label>
-	<? if($description): ?>
+	<?php if ($description): ?>
 	<i class="fa fa-question-circle launch-tooltip" title="" data-original-title="<?=$description?>"></i>
-	<? endif; ?>
+	<?php endif; ?>
 	<div data-composer-field="name">
 		<?=$target->includeChooseTargetForm($pagetype, $parent)?>
 	</div>

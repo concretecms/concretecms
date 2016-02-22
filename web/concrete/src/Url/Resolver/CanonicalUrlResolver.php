@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Url\Resolver;
 
 use Concrete\Core\Application\Application;
@@ -11,7 +10,6 @@ use Concrete\Core\Url\UrlImmutable;
 
 class CanonicalUrlResolver implements UrlResolverInterface
 {
-
     /** @var Request */
     protected $request;
 
@@ -94,11 +92,10 @@ class CanonicalUrlResolver implements UrlResolverInterface
     }
 
     /**
-     * Clear the cached canonical URL
+     * Clear the cached canonical URL.
      */
     public function clearCached()
     {
         $this->cached = null;
     }
-
 }

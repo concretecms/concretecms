@@ -22,7 +22,7 @@
             <?= $form->label('zoom', t('Zoom'));?>
             <?php
                 $zoomArray = array();
-                for($i=0;$i<=21;$i++) {
+                for ($i = 0;$i <= 21;++$i) {
                     $zoomArray[$i] = $i;
                 }
             ?>
@@ -35,7 +35,9 @@
             <?= $form->label('width', t('Map Width'));?>
             <div class="input-group">
                 <span class="input-group-addon"><i class="fa fa-arrows-h"></i></span>
-                <?php if(is_null($width) || $width == 0) {$width = '100%';};?>
+                <?php if (is_null($width) || $width == 0) {
+    $width = '100%';
+};?>
                 <?= $form->text('width', $width);?>
             </div>
         </div>
@@ -46,7 +48,9 @@
             <?= $form->label('height', t('Map Height'));?>
             <div class="input-group">
                 <span class="input-group-addon"><i class="fa fa-arrows-v"></i></span>
-                <?php if(is_null($height) || $height == 0) {$height = '400px';};?>
+                <?php if (is_null($height) || $height == 0) {
+    $height = '400px';
+};?>
                 <?= $form->text('height', $height); ?>
             </div>
         </div>

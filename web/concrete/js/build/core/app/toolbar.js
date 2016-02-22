@@ -31,7 +31,7 @@ var ConcreteToolbar = function() {
 	setupPageAlerts = function() {
 		$(document.body).on('click', 'a[data-dismiss-alert=page-alert]', function(e) {
 			e.stopPropagation();
-			$('.ccm-notification').queue(function() {
+			$(this).closest('.ccm-notification').queue(function() {
 				$(this).addClass('animated fadeOut');
 				$(this).dequeue();
 			}).delay(500).queue(function() {
@@ -41,7 +41,7 @@ var ConcreteToolbar = function() {
 			return false;
 		});
 
-		$('#ccm-notification-page-alert-workflow form').ajaxForm({
+		$('#ccm-notification-page-alert-workflow form, #ccm-notification-user-alert-workflow form').ajaxForm({
 			dataType: 'json',
 			beforeSubmit: function() {
 				jQuery.fn.dialog.showLoader();

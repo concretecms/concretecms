@@ -10,16 +10,16 @@ $bt = BlockType::getByHandle('form');
 $addSelected = true;
 ?>
 <p>
-<? print Loader::helper('concrete/ui')->tabs(array(
-	array('form-add', t('Add'), $addSelected),
-	array('form-edit', t('Edit')),
-	array('form-preview', t('Preview')),
-	array('form-options', t('Options')),
+<?php echo Loader::helper('concrete/ui')->tabs(array(
+    array('form-add', t('Add'), $addSelected),
+    array('form-edit', t('Edit')),
+    array('form-preview', t('Preview')),
+    array('form-options', t('Options')),
 ));?>
 </p>
 
 <input type="hidden" name="miniSurveyServices" value="<?php echo $uh->getBlockTypeToolsURL($bt)?>/services" />
-<? /* these question ids have been deleted, or edited, and so shouldn't be duplicated for block versioning */ ?>
+<?php /* these question ids have been deleted, or edited, and so shouldn't be duplicated for block versioning */ ?>
 <input type="hidden" id="ccm-ignoreQuestionIDs" name="ignoreQuestionIDs" value="" />
 <input type="hidden" id="ccm-pendingDeleteIDs" name="pendingDeleteIDs" value="" />
 <input type="hidden" id="qsID" name="qsID" type="text" value="<?php echo intval($miniSurveyInfo['questionSetId'])?>" />
@@ -29,10 +29,11 @@ $addSelected = true;
 
 <div class="ccm-tab-content" id="ccm-tab-content-form-options">
 	<?php 
-	$c = Page::getCurrentPage();
-	if(strlen($miniSurveyInfo['surveyName'])==0)
-		$miniSurveyInfo['surveyName']=$c->getCollectionName();
-	?>
+    $c = Page::getCurrentPage();
+    if (strlen($miniSurveyInfo['surveyName']) == 0) {
+        $miniSurveyInfo['surveyName'] = $c->getCollectionName();
+    }
+    ?>
 	<fieldset>
 		<legend><?=t('Options')?></legend>
 		<div class="form-group">
@@ -52,7 +53,7 @@ $addSelected = true;
 			<div class="input-group">
 				<span class="input-group-addon" style="z-index: 2000">
 				<?=$form->checkbox('notifyMeOnSubmission', 1, $miniSurveyInfo['notifyMeOnSubmission'] == 1, array('onclick' => "$('input[name=recipientEmail]').focus()"))?>
-				</span><?=$form->text('recipientEmail', $miniSurveyInfo['recipientEmail'], array('style' => 'z-index:2000;' ))?>
+				</span><?=$form->text('recipientEmail', $miniSurveyInfo['recipientEmail'], array('style' => 'z-index:2000;'))?>
 			</div>
 			<span class="help-block"><?=t('(Seperate multiple emails with a comma)')?></span>
 		</div>
@@ -75,28 +76,28 @@ $addSelected = true;
 			<label class="control-label" for="ccm-form-redirect"><?=t('Redirect to another page after form submission?')?></label>
 			<div id="ccm-form-redirect-page">
 				<?php
-					$page_selector = Loader::helper('form/page_selector');
-					if ($miniSurveyInfo['redirectCID']) {
-						print $page_selector->selectPage('redirectCID', $miniSurveyInfo['redirectCID']);
-					} else {
-						print $page_selector->selectPage('redirectCID');
-					}
-				?>
+                    $page_selector = Loader::helper('form/page_selector');
+                    if ($miniSurveyInfo['redirectCID']) {
+                        echo $page_selector->selectPage('redirectCID', $miniSurveyInfo['redirectCID']);
+                    } else {
+                        echo $page_selector->selectPage('redirectCID');
+                    }
+                ?>
 			</div>
 		</div>
 		<div class="form-group">
 			<label class="control-label" for="ccm-form-fileset"><?=t('Add uploaded files to a set?')?></label>
 			<div id="ccm-form-fileset">
 				<?php
-					
-					$fs = new FileSet();
-					$fileSets = $fs->getMySets();
-					$sets = array(0 => t('None'));
-					foreach($fileSets as $fileSet) {
-						$sets[$fileSet->fsID] = $fileSet->fsName;
-					}
-					print $form->select('addFilesToSet', $sets, $miniSurveyInfo['addFilesToSet']);
-				?>
+
+                    $fs = new FileSet();
+                    $fileSets = $fs->getMySets();
+                    $sets = array(0 => t('None'));
+                    foreach ($fileSets as $fileSet) {
+                        $sets[$fileSet->fsID] = $fileSet->fsName;
+                    }
+                    echo $form->select('addFilesToSet', $sets, $miniSurveyInfo['addFilesToSet']);
+                ?>
 			</div>
 		</div>
 	</fieldset>
@@ -174,8 +175,8 @@ $addSelected = true;
 
 		<div class="form-group">
 			<div id="emailSettings">
-				<?php print $form->label('send_notification_from', t('Reply to this email address'));?>
-				<span class="send_notification_from"><?php print $form->checkbox('send_notification_from', 1); ?></span>
+				<?php echo $form->label('send_notification_from', t('Reply to this email address'));?>
+				<span class="send_notification_from"><?php echo $form->checkbox('send_notification_from', 1); ?></span>
 			</div>
 		</div>
 
@@ -262,8 +263,8 @@ $addSelected = true;
 
 			<div class="form-group">
 				<div id="emailSettingsEdit">
-					<?php print $form->label('send_notification_from_edit', t('Reply to this email address'));?>
-					<span class="send_notification_from_edit"><?php print $form->checkbox('send_notification_from_edit', 1); ?></span>
+					<?php echo $form->label('send_notification_from_edit', t('Reply to this email address'));?>
+					<span class="send_notification_from_edit"><?php echo $form->checkbox('send_notification_from_edit', 1); ?></span>
 				</div>
 			</div>
 		</fieldset>

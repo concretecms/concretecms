@@ -2,12 +2,11 @@
 namespace Concrete\Core\Permission;
 
 use Loader;
-use \Concrete\Core\Permission\Response\Response as PermissionResponse;
-use \Concrete\Core\Permission\Key\Key as PermissionKey;
+use Concrete\Core\Permission\Response\Response as PermissionResponse;
+use Concrete\Core\Permission\Key\Key as PermissionKey;
 
 class Checker
 {
-
     public $error;
 
     /** @var PermissionResponse */
@@ -22,7 +21,7 @@ class Checker
     }
 
     /**
-     * Returns the error code if there is one
+     * Returns the error code if there is one.
      */
     public function getError()
     {
@@ -30,14 +29,14 @@ class Checker
     }
 
     /**
-     * Legacy
+     * Legacy.
+     *
      * @private
      */
     public function getOriginalObject()
     {
         return $this->response->getPermissionObject();
     }
-
 
     public function __construct($object = false)
     {
@@ -56,7 +55,7 @@ class Checker
     }
 
     /**
-     * We take any permissions function run on the permissions class and send it into the category object
+     * We take any permissions function run on the permissions class and send it into the category object.
      */
     public function __call($f, $a)
     {
@@ -91,5 +90,4 @@ class Checker
             return 0;
         }
     }
-
 }

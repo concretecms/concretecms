@@ -9,7 +9,6 @@ use Session;
 
 class Authentication extends DashboardPageController
 {
-
     const ERROR_INVALID_TYPE = 1;
     const ERROR_INVALID_TOKEN = 2;
 
@@ -17,7 +16,7 @@ class Authentication extends DashboardPageController
     {
         return array(
             self::ERROR_INVALID_TOKEN => t('Invalid Token'),
-            self::ERROR_INVALID_TYPE => t('Invalid Authentication Type')
+            self::ERROR_INVALID_TYPE => t('Invalid Authentication Type'),
         );
     }
 
@@ -42,7 +41,7 @@ class Authentication extends DashboardPageController
     {
         $order = $this->post('order');
         $l = count($order);
-        for ($i = 0; $i < $l; $i++) {
+        for ($i = 0; $i < $l; ++$i) {
             try {
                 $at = AuthenticationType::getByID($order[$i]);
                 $at->setAuthenticationTypeDisplayOrder($i);

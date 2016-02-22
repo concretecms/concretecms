@@ -2,14 +2,13 @@
 namespace Concrete\Job;
 
 use Concrete\Core\Page\Collection\Version\VersionList;
-use \Job as AbstractJob;
+use Job as AbstractJob;
 use Config;
 use PageList;
 use Concrete\Core\Page\Collection\Version\Version;
 
 class RemoveOldPageVersions extends AbstractJob
 {
-
     public function getJobName()
     {
         return t("Remove Old Page Versions");
@@ -22,11 +21,10 @@ class RemoveOldPageVersions extends AbstractJob
 
     public function run()
     {
-
-        $pNum = (int)Config::get('concrete.maintenance.version_job_page_num');
+        $pNum = (int) Config::get('concrete.maintenance.version_job_page_num');
         $pNum = $pNum < 0 ? 1 : $pNum + 1;
 
-        $pl = new PageList;
+        $pl = new PageList();
         $pl->ignorePermissions();
         $pl->setItemsPerPage(3);
         $pl->filter('p.cID', $pNum, '>=');
@@ -40,6 +38,7 @@ class RemoveOldPageVersions extends AbstractJob
 
         if (!count($pages)) {
             Config::save('concrete.maintenance.version_job_page_num', 0);
+
             return t("All pages have been processed, starting from beginning on next run.");
         }
 
@@ -51,7 +50,7 @@ class RemoveOldPageVersions extends AbstractJob
             foreach (array_slice($pvl->get(), 10) as $v) {
                 if ($v instanceof Version && !$v->isApproved() && !$v->isMostRecent()) {
                     @$v->delete();
-                    $versionCount++;
+                    ++$versionCount;
                 }
             }
             $pNum = $page->getCollectionID();
@@ -68,6 +67,5 @@ class RemoveOldPageVersions extends AbstractJob
             $pageCount,
             implode(',', $pagesAffected)
         );
-
     }
 }

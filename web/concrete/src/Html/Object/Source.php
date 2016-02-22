@@ -6,19 +6,18 @@ use HtmlObject\Element;
 class Source extends Element
 {
     /**
-     * Default element
+     * Default element.
      *
      * @var string
      */
     protected $element = 'source';
 
     /**
-     * Whether the element is self closing
+     * Whether the element is self closing.
      *
-     * @var boolean
+     * @var bool
      */
     protected $isSelfClosing = true;
-
 
     public function __construct()
     {

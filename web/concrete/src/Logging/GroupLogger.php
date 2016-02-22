@@ -3,7 +3,6 @@ namespace Concrete\Core\Logging;
 
 class GroupLogger
 {
-
     protected $level;
     protected $messages = array();
 
@@ -13,14 +12,16 @@ class GroupLogger
         $this->level = $level;
     }
 
-    public function write($message) {
+    public function write($message)
+    {
         $this->messages[] = $message;
     }
 
-    public function close($context = array()) {
+    public function close($context = array())
+    {
         $method = 'add' . ucfirst(strtolower(Logger::getLevelName($this->level)));
         $arguments = array(implode("\n", $this->messages), $context);
+
         return call_user_func_array(array($this->logger, $method), $arguments);
     }
-
 }

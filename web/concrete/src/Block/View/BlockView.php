@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Block\View;
 
 use Concrete\Core\View\AbstractView;
@@ -90,7 +89,7 @@ class BlockView extends AbstractView
      * Creates a URL that can be posted or navigated to that, when done so, will automatically run the corresponding method inside the block's controller.
      * <code>
      *     <a href="<?=$this->action('get_results')?>">Get the results</a>
-     * </code>
+     * </code>.
      *
      * @param string $task
      *
@@ -100,17 +99,16 @@ class BlockView extends AbstractView
     {
         try {
             if ($this->viewToRender == 'add') {
-
                 $c = $this->area->getAreaCollectionObject();
                 $arguments = array('/ccm/system/block/action/add',
                     $c->getCollectionID(),
                     urlencode($this->area->getAreaHandle()),
                     $this->blockType->getBlockTypeID(),
-                    $task
+                    $task,
                 );
-                return call_user_func_array(array('\URL', 'to'), $arguments);
 
-            } else if (is_object($this->block)) {
+                return call_user_func_array(array('\URL', 'to'), $arguments);
+            } elseif (is_object($this->block)) {
                 if (is_object($this->block->getProxyBlock())) {
                     $b = $this->block->getProxyBlock();
                 } else {
@@ -123,8 +121,9 @@ class BlockView extends AbstractView
                         $c->getCollectionID(),
                         urlencode($this->area->getAreaHandle()),
                         $b->getBlockID(),
-                        $task
+                        $task,
                     );
+
                     return call_user_func_array(array('\URL', 'to'), $arguments);
                 } else {
                     $c = Page::getCurrentPage();
@@ -132,6 +131,7 @@ class BlockView extends AbstractView
                         $arguments = func_get_args();
                         $arguments[] = $b->getBlockID();
                         array_unshift($arguments, $c);
+
                         return call_user_func_array(array('\URL', 'page'), $arguments);
                     }
                 }
@@ -265,7 +265,7 @@ class BlockView extends AbstractView
         $this->controller->registerViewAssets($this->outputContent);
 
         $this->onBeforeGetContents();
-        print $this->outputContent;
+        echo $this->outputContent;
         $this->onAfterGetContents();
 
         if ($this->blockViewFooterFile) {
@@ -291,7 +291,6 @@ class BlockView extends AbstractView
     /**
      * Returns the path to the current block's directory.
      *
-     * @access private
      *
      * @deprecated
      *
@@ -372,7 +371,7 @@ class BlockView extends AbstractView
         $u = new User();
         $c = Page::getCurrentPage();
         if ($this->viewToRender == 'view' && Config::get('concrete.cache.blocks') && $this->block instanceof Block
-            && $this->block->cacheBlockOutput() && $c->isPageDraft() === false
+            && $this->block->cacheBlockOutput() && is_object($c) && $c->isPageDraft() === false
         ) {
             if ((!$u->isRegistered() || ($this->block->cacheBlockOutputForRegisteredUsers())) &&
                 (($_SERVER['REQUEST_METHOD'] != 'POST' || ($this->block->cacheBlockOutputOnPost() == true)))
@@ -446,8 +445,6 @@ class BlockView extends AbstractView
 
     /**
      * Legacy.
-     *
-     * @access private
      */
     public function getThemePath()
     {

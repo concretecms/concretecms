@@ -1,9 +1,9 @@
 <?php
 namespace Concrete\Controller\SinglePage\Account\Messages;
 
-use \Concrete\Core\Page\Controller\AccountPageController;
-use \Concrete\Core\User\PrivateMessage\Mailbox as UserPrivateMessageMailbox;
-use \Concrete\Core\User\PrivateMessage\PrivateMessage as UserPrivateMessage;
+use Concrete\Core\Page\Controller\AccountPageController;
+use Concrete\Core\User\PrivateMessage\Mailbox as UserPrivateMessageMailbox;
+use Concrete\Core\User\PrivateMessage\PrivateMessage as UserPrivateMessage;
 use UserInfo;
 use Loader;
 use View;
@@ -119,7 +119,7 @@ class Inbox extends AccountPageController
             $msg->delete();
             $this->redirect('/account/messages/inbox', 'view_mailbox', $box);
         }
-        print $this->view();
+        echo $this->view();
     }
 
     public function write($uID)
@@ -196,5 +196,4 @@ class Inbox extends AccountPageController
     {
         $this->set('error', $this->error);
     }
-
 }

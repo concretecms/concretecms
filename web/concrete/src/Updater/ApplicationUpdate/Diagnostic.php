@@ -1,10 +1,8 @@
 <?php
-
 namespace Concrete\Core\Updater\ApplicationUpdate;
 
 class Diagnostic
 {
-
     protected $requestedVersion;
     protected $marketplaceItemStatuses = array();
     protected $notices = array();
@@ -50,17 +48,17 @@ class Diagnostic
             $o->releaseNotesUrl = $this->requestedVersion->getReleaseNotesURL();
         }
         $o->marketplaceItemStatuses = array();
-        foreach($this->marketplaceItemStatuses as $s) {
+        foreach ($this->marketplaceItemStatuses as $s) {
             $o->marketplaceItemStatuses[] = $s->getJSONObject();
         }
         $o->notices = array();
-        foreach($this->notices as $s) {
+        foreach ($this->notices as $s) {
             $o->notices[] = $s->getJSONObject();
         }
         if ($this->status) {
             $o->status = $this->status->getJSONObject();
         }
+
         return $o;
     }
-
 }

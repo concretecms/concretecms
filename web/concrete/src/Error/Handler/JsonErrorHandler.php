@@ -8,7 +8,6 @@ use Whoops\Util\Misc;
 
 class JsonErrorHandler extends Handler
 {
-
     public function handle()
     {
         if (!$this->isAjaxRequest()) {
@@ -33,8 +32,8 @@ class JsonErrorHandler extends Handler
         }
 
         $response = array(
-            'error'  => $error,
-            'errors' => array($error['message'])
+            'error' => $error,
+            'errors' => array($error['message']),
         );
 
         if (Misc::canSendHeaders()) {
@@ -46,6 +45,7 @@ class JsonErrorHandler extends Handler
         }
 
         echo json_encode($response);
+
         return Handler::QUIT;
     }
 
@@ -56,9 +56,8 @@ class JsonErrorHandler extends Handler
      */
     private function isAjaxRequest()
     {
-        return (
+        return
             !empty($_SERVER['HTTP_X_REQUESTED_WITH'])
-            && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest');
+            && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest';
     }
-
 }

@@ -1,6 +1,7 @@
-<?php defined('C5_EXECUTE') or die("Access Denied.");
+<?php
+
+defined('C5_EXECUTE') or die("Access Denied.");
 use \Concrete\Core\Conversation\Message\Message as ConversationMessage;
-use \Concrete\Core\Conversation\FlagType\FlagType as ConversationFlagType;
 
 $ax = Loader::helper('ajax');
 $vs = Loader::helper('validation/strings');
@@ -18,9 +19,9 @@ if (!$vs->notempty($_POST['cnvMessageBody'])) {
 }
 
 if (Loader::helper('validation/numbers')->integer($_POST['cnvMessageID']) && $_POST['cnvMessageID'] > 0) {
-	$message = ConversationMessage::getByID($_POST['cnvMessageID']);
+    $message = ConversationMessage::getByID($_POST['cnvMessageID']);
 
-	if (!is_object($message)) {
+    if (!is_object($message)) {
         $ve->add(t('Invalid message object.'));
     } else {
         $mp = new Permissions($message);
@@ -33,12 +34,12 @@ if (Loader::helper('validation/numbers')->integer($_POST['cnvMessageID']) && $_P
 $messageAttachmentCount = count($message->getAttachments($_POST['cnvMessageID']));
 $attachmentsToAddCount = count($_POST['attachments']);
 $totalCurrentAttachments = intval($attachmentsToAddCount) + intval($messageAttachmentCount);
-if($_POST['attachments'] && $attachmentsToAddCount) {
+if ($_POST['attachments'] && $attachmentsToAddCount) {
     if (is_object($pp) && !$pp->canAddConversationMessageAttachments()) {
         $ve->add(t('You do not have permission to add attachments.'));
     } else {  // this will require more maths to calc vs existing attachments
         $maxFiles = $u->isRegistered() ? $blockObj->getController()->maxFilesRegistered : $blockObj->getController()->maxFilesGuest;
-        if($maxFiles > 0 && $totalCurrentAttachments > $maxFiles) {
+        if ($maxFiles > 0 && $totalCurrentAttachments > $maxFiles) {
             $ve->add(t('You have too many attachments.'));
         }
     }
@@ -46,8 +47,8 @@ if($_POST['attachments'] && $attachmentsToAddCount) {
 
 if (!$ve->has()) {
     $message->setMessageBody($_POST['cnvMessageBody']);
-    if($_POST['attachments'] && count($_POST['attachments'])) {
-        foreach($_POST['attachments'] as $attachmentID) {
+    if ($_POST['attachments'] && count($_POST['attachments'])) {
+        foreach ($_POST['attachments'] as $attachmentID) {
             $message->attachFile(File::getByID($attachmentID));
         }
     }

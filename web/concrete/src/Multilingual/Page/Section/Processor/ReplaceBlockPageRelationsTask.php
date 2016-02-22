@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Multilingual\Page\Section\Processor;
 
 use Concrete\Core\Foundation\Processor\ActionInterface;
@@ -10,7 +9,6 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 class ReplaceBlockPageRelationsTask implements TaskInterface
 {
-
     public function execute(ActionInterface $action)
     {
         $target = $action->getTarget();
@@ -23,7 +21,7 @@ class ReplaceBlockPageRelationsTask implements TaskInterface
             $blocks = $c->getBlocks();
             $nvc = $c->getVersionToModify();
             $isApproved = $c->getVersionObject()->isApproved();
-            foreach($blocks as $b) {
+            foreach ($blocks as $b) {
                 $controller = $b->getController();
                 $pageColumns = $controller->getBlockTypeExportPageColumns();
                 if (count($pageColumns)) {
@@ -34,7 +32,7 @@ class ReplaceBlockPageRelationsTask implements TaskInterface
                         $data[$key] = $record->{$key};
                     }
 
-                    foreach($pageColumns as $column) {
+                    foreach ($pageColumns as $column) {
                         $cID = $data[$column];
                         if ($cID > 0) {
                             $link = Page::getByID($cID, 'ACTIVE');
@@ -71,5 +69,4 @@ class ReplaceBlockPageRelationsTask implements TaskInterface
     {
         return;
     }
-
 }

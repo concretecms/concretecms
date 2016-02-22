@@ -3,7 +3,6 @@ namespace Concrete\Core\File\Exception;
 
 class FileException extends \Exception
 {
-
     protected $fileObject;
 
     /**
@@ -29,5 +28,4 @@ class FileException extends \Exception
     {
         return $this->$fileObject;
     }
-
 }

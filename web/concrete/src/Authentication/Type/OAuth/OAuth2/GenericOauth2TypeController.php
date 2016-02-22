@@ -11,7 +11,6 @@ use User;
 
 abstract class GenericOauth2TypeController extends GenericOauthTypeController
 {
-
     /** @var AbstractService */
     protected $service;
 
@@ -25,7 +24,7 @@ abstract class GenericOauth2TypeController extends GenericOauthTypeController
 
     public function handle_authentication_callback()
     {
-        $user = new User;
+        $user = new User();
         if ($user && !$user->isError() && $user->isLoggedIn()) {
             $this->handle_attach_callback();
         }
@@ -98,7 +97,8 @@ abstract class GenericOauth2TypeController extends GenericOauthTypeController
     /**
      * @return \OAuth\OAuth2\Service\AbstractService
      */
-    public function getService() {
+    public function getService()
+    {
         return parent::getService();
     }
 
@@ -112,7 +112,6 @@ abstract class GenericOauth2TypeController extends GenericOauthTypeController
      * This method must be defined, if it isn't needed, leave it blank.
      *
      * @param \User $u
-     * @return void
      */
     public function deauthenticate(User $u)
     {
@@ -123,11 +122,11 @@ abstract class GenericOauth2TypeController extends GenericOauthTypeController
      * Test user authentication status.
      *
      * @param \User $u
+     *
      * @return bool Returns true if user is authenticated, false if not
      */
     public function isAuthenticated(User $u)
     {
         return $u->isLoggedIn();
     }
-
 }

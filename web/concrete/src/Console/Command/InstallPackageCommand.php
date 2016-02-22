@@ -1,6 +1,8 @@
 <?php
 namespace Concrete\Core\Console\Command;
 
+use Concrete\Core\Error\Error;
+use Concrete\Core\Package\ContentSwapper;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputArgument;
@@ -75,9 +77,12 @@ EOT
             $output->writeln(sprintf('<info>found (%s).</info>', $pkg->getPackageName()));
 
             $output->write('Checking preconditions... ');
-            $test = Package::testForInstall($pkgHandle);
-            if ($test !== true) {
-                throw new Exception(implode("\n", Package::mapError($r)));
+            $test = $pkg->testForInstall();
+            if (is_object($test)) {
+                /**
+                 * @var $test Error
+                 */
+                throw new Exception(implode("\n", $test->getList()));
             }
             $output->writeln('<info>good.</info>');
 
@@ -85,9 +90,11 @@ EOT
             $pkgInstalled = $pkg->install($packageOptions);
             $output->writeln('<info>done.</info>');
 
-            if ($pkg->allowsFullContentSwap() && $input->getOption('full-content-swap')) {
+            $swapper = new ContentSwapper();
+
+            if ($swapper->allowsFullContentSwap($pkg) && $input->getOption('full-content-swap')) {
                 $output->write('Performing full content swap... ');
-                $pkg->swapContent(array());
+                $swapper->swapContent($pkg, array());
                 $output->writeln('<info>done.</info>');
             }
         } catch (Exception $x) {

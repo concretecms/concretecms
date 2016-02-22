@@ -6,7 +6,6 @@ use Concrete\Core\View\View;
 
 class ImageEditor
 {
-
     const ImageEditorExtensionControl = 1;
     const ImageEditorExtensionFilter = 2;
 
@@ -70,6 +69,7 @@ class ImageEditor
 
     /**
      * @param Version $version
+     *
      * @return View
      */
     public function getView(Version $version)
@@ -77,10 +77,9 @@ class ImageEditor
         $view = new View('image-editor/editor');
         $view->addScopeItems(array(
             'editor' => $this,
-            'fv' => $version
+            'fv' => $version,
         ));
 
         return $view;
     }
-
 }

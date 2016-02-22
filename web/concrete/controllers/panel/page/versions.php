@@ -1,19 +1,19 @@
 <?php
 namespace Concrete\Controller\Panel\Page;
 
-use \Concrete\Controller\Backend\UserInterface\Page as BackendInterfacePageController;
+use Concrete\Controller\Backend\UserInterface\Page as BackendInterfacePageController;
 use Permissions;
 use Page;
 use Loader;
 use Core;
 use Config;
 use CollectionVersion;
-use \Concrete\Core\Page\Collection\Version\EditResponse as PageEditVersionResponse;
+use Concrete\Core\Page\Collection\Version\EditResponse as PageEditVersionResponse;
 use PageEditResponse;
-use \Concrete\Core\Workflow\Request\ApprovePageRequest as ApprovePagePageWorkflowRequest;
-use \Concrete\Core\Page\Collection\Version\VersionList;
+use Concrete\Core\Workflow\Request\ApprovePageRequest as ApprovePagePageWorkflowRequest;
+use Concrete\Core\Page\Collection\Version\VersionList;
 use User;
-use \Concrete\Core\Workflow\Progress\Response as WorkflowProgressResponse;
+use Concrete\Core\Workflow\Progress\Response as WorkflowProgressResponse;
 
 class Versions extends BackendInterfacePageController
 {
@@ -96,7 +96,7 @@ class Versions extends BackendInterfacePageController
                 $vls = new VersionList($nc);
                 $vls->setItemsPerPage(-1);
                 $vArray = $vls->getPage();
-                for ($i = 1; $i < count($vArray); $i++) {
+                for ($i = 1; $i < count($vArray); ++$i) {
                     $cv = $vArray[$i];
                     $cv->delete();
                 }
@@ -122,7 +122,7 @@ class Versions extends BackendInterfacePageController
                 $r->setPage($c);
                 if (is_array($_POST['cvID'])) {
                     foreach ($_POST['cvID'] as $cvID) {
-                        $versions++;
+                        ++$versions;
                         $v = CollectionVersion::get($c, $cvID);
                         if (is_object($v)) {
                             if (!$v->isApproved()) {

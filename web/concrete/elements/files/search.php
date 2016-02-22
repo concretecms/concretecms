@@ -40,12 +40,13 @@ $req = $flr->getSearchRequest();
             <?php
             $fp = FilePermissions::getGlobal();
             if ($fp->canAddFile()) {
-            $imageresize = Config::get('concrete.file_manager.restrict_uploaded_image_sizes');
-            if ($imageresize) {
-                $datastring = ' data-image-max-width="'. (int)Config::get('concrete.file_manager.restrict_max_width') . '" ';
-                $datastring .=' data-image-max-height="'. (int) Config::get('concrete.file_manager.restrict_max_height'). '" ';
-                $datastring .= ' data-image-quality="'. (int)Config::get('concrete.file_manager.restrict_resize_quality'). '" ';
-            }  ?>
+                $imageresize = Config::get('concrete.file_manager.restrict_uploaded_image_sizes');
+                if ($imageresize) {
+                    $datastring = ' data-image-max-width="'. (int) Config::get('concrete.file_manager.restrict_max_width') . '" ';
+                    $datastring .= ' data-image-max-height="'. (int) Config::get('concrete.file_manager.restrict_max_height'). '" ';
+                    $datastring .= ' data-image-quality="'. (int) Config::get('concrete.file_manager.restrict_resize_quality'). '" ';
+                }
+                ?>
                 <li class="ccm-file-manager-show-dialog ccm-file-manager-upload" <?=$datastring?>><a href="javascript:void"><?php echo t('Upload Files')?><input type="file" name="files[]" multiple="multiple" /></a></li>
                 <li class="ccm-file-manager-show-dialog">        <a href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/import"
                                class="dialog-launch"
@@ -56,31 +57,43 @@ $req = $flr->getSearchRequest();
 
 
                 </li>
-            <?php } ?>
+            <?php 
+            } ?>
 
         </ul>
     </div>
     <?php
     $s1 = FileSet::getMySets();
-    if (count($s1) > 0) { ?>
+    if (count($s1) > 0) {
+        ?>
     <div class="ccm-search-fields-row">
         <div class="form-group form-group-full">
         <?php echo $form->label('fsID', t('File Set'))?>
 			<div class="ccm-search-field-content ccm-search-field-content-select2">
         <select multiple name="fsID[]" class="select2-select" style="width: 360px">
             <optgroup label="<?php echo t('Sets')?>">
-            <?php foreach ($s1 as $s) { ?>
-                <option value="<?php echo $s->getFileSetID()?>"  <?php if (is_array($req['fsID']) && in_array($s->getFileSetID(), $req['fsID'])) { ?> selected="selected" <?php } ?>><?php echo $s->getFileSetDisplayName()?></option>
-            <?php } ?>
+            <?php foreach ($s1 as $s) {
+    ?>
+                <option value="<?php echo $s->getFileSetID()?>"  <?php if (is_array($req['fsID']) && in_array($s->getFileSetID(), $req['fsID'])) {
+    ?> selected="selected" <?php 
+}
+    ?>><?php echo $s->getFileSetDisplayName()?></option>
+            <?php 
+}
+        ?>
             </optgroup>
             <optgroup label="<?php echo t('Other')?>">
-                <option value="-1" <?php if (is_array($req['fsID']) && in_array(-1, $req['fsID'])) { ?> selected="selected" <?php } ?>><?php echo t('Files in no sets.')?></option>
+                <option value="-1" <?php if (is_array($req['fsID']) && in_array(-1, $req['fsID'])) {
+    ?> selected="selected" <?php 
+}
+        ?>><?php echo t('Files in no sets.')?></option>
             </optgroup>
         </select>
         </div>
         </div>
     </div>
-    <?php } ?>
+    <?php 
+    } ?>
     <div class="ccm-search-fields-advanced"></div>
     <div class="ccm-search-fields-row ccm-search-fields-submit">
         <div class="form-group form-group-full">
@@ -98,9 +111,11 @@ $req = $flr->getSearchRequest();
 <div class="ccm-search-fields-row">
     <select name="field[]" class="ccm-search-choose-field form-control" data-search-field="files">
         <option value=""><?php echo t('Choose Field')?></option>
-        <?php foreach ($searchFields as $key => $value) { ?>
+        <?php foreach ($searchFields as $key => $value) {
+    ?>
             <option value="<?php echo $key?>" <% if (typeof(field) != 'undefined' && field.field == '<?php echo $key?>') { %>selected<% } %> data-search-field-url="<?php echo URL::to('/ccm/system/search/files/field', $key)?>"><?php echo $value?></option>
-        <?php } ?>
+        <?php 
+} ?>
     </select>
     <div class="ccm-search-field-content"><% if (typeof(field) != 'undefined') { %><%=field.html%><% } %></div>
     <a data-search-remove="search-field" class="ccm-search-remove-field" href="#"><i class="fa fa-minus-circle"></i></a>

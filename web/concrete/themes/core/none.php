@@ -1,2 +1,2 @@
-<? defined('C5_EXECUTE') or die("Access Denied."); ?>
-<?php print $innerContent ?>
+<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
+<?php echo $innerContent ?>

@@ -1,5 +1,6 @@
 <?php
-
 namespace Concrete\Core\Authentication;
-class AuthenticationTypeFailureException extends \Exception {}
 
+class AuthenticationTypeFailureException extends \Exception
+{
+}

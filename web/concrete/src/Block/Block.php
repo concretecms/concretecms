@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Block;
 
 use Area;
@@ -20,7 +19,6 @@ use Page;
 
 class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
 {
-
     protected $cID;
     protected $arHandle;
     protected $c;
@@ -28,6 +26,7 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
     protected $proxyBlock = false;
     protected $bActionCID;
     protected $cacheSettings;
+    protected $cbOverrideBlockTypeCacheSettings;
     public $a;
 
     protected $bFilename;
@@ -790,7 +789,7 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
         $old_area_handle = $this->getAreaHandle();
         $new_area_handle = $area->getAreaHandle();
 
-        return !!\Database::connection()->update(
+        return (bool) \Database::connection()->update(
             'CollectionVersionBlocks',
             array(
                 'cID' => $new_collection,
@@ -1362,10 +1361,10 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
             $q = "select bID from CollectionVersionBlocks where bID = ? and cID=? and isOriginal = 0 and cvID = ?";
             $r = $db->query($q, array($this->bID, $cID, $cvID));
             if ($r) {
-                return ($r->numRows() > 0);
+                return $r->numRows() > 0;
             }
         } else {
-            return (!$this->isOriginal);
+            return !$this->isOriginal;
         }
     }
 

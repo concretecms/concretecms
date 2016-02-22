@@ -9,7 +9,6 @@ use Concrete\Core\User\UserInfo;
 
 class UserEntity extends Entity
 {
-
     protected $user;
 
     public static function getAccessEntitiesForUser($user)
@@ -28,6 +27,7 @@ class UserEntity extends Entity
                 }
             }
         }
+
         return $entities;
     }
 
@@ -46,6 +46,7 @@ class UserEntity extends Entity
                 'INSERT INTO PermissionAccessEntityUsers (peID, uID) VALUES (?, ?)',
                 array($peID, $ui->getUserID()));
         }
+
         return \Concrete\Core\Permission\Access\Entity\Entity::getByID($peID);
     }
 
@@ -66,6 +67,7 @@ class UserEntity extends Entity
                 'Add User') . '" class="dialog-launch" dialog-height="70%"">' . tc(
                 'PermissionAccessEntityTypeName',
                 'User') . '</a>';
+
         return $html;
     }
 
@@ -83,5 +85,4 @@ class UserEntity extends Entity
             }
         }
     }
-
 }

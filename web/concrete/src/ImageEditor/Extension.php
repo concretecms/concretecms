@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\ImageEditor;
 
 use Concrete\Core\Asset\AssetInterface;
@@ -7,7 +6,6 @@ use Concrete\Core\View\AbstractView;
 
 class Extension implements EditorExtensionInterface
 {
-
     /** @var array */
     protected $assets = array();
 
@@ -110,5 +108,4 @@ class Extension implements EditorExtensionInterface
     {
         return $this->view;
     }
-
 }

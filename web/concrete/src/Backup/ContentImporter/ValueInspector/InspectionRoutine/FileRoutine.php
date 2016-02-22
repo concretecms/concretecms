@@ -1,12 +1,10 @@
 <?php
-
 namespace Concrete\Core\Backup\ContentImporter\ValueInspector\InspectionRoutine;
 
 use Concrete\Core\Backup\ContentImporter\ValueInspector\Item\FileItem;
 
 class FileRoutine extends AbstractRegularExpressionRoutine
 {
-
     public function getHandle()
     {
         return 'file';
@@ -21,6 +19,4 @@ class FileRoutine extends AbstractRegularExpressionRoutine
     {
         return new FileItem($identifier);
     }
-
-
 }

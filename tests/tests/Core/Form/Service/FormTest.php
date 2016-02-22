@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Tests\Core\Form\Service;
 
 use Core;

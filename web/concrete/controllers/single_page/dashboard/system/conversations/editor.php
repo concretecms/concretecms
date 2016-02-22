@@ -1,9 +1,9 @@
 <?php
 namespace Concrete\Controller\SinglePage\Dashboard\System\Conversations;
 
-use \Concrete\Core\Page\Controller\DashboardPageController;
+use Concrete\Core\Page\Controller\DashboardPageController;
 use Loader;
-use \Concrete\Core\Routing\Redirect;
+use Concrete\Core\Routing\Redirect;
 
 class Editor extends DashboardPageController
 {
@@ -47,6 +47,7 @@ class Editor extends DashboardPageController
         $db = Loader::db();
         if (!isset($this->editors[$active])) {
             $this->redirect('/dashboard/system/conversations/editor/error');
+
             return;
         }
         $db->executeQuery('UPDATE ConversationEditors SET cnvEditorIsActive=0');
@@ -54,4 +55,3 @@ class Editor extends DashboardPageController
         $this->redirect('/dashboard/system/conversations/editor', 'success');
     }
 }
-

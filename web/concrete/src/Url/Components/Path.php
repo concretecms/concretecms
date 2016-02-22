@@ -2,20 +2,20 @@
 namespace Concrete\Core\Url\Components;
 
 /**
- * c5 specific path component for league/url
+ * c5 specific path component for league/url.
  */
 class Path extends \League\Url\Components\Path
 {
-
     protected $trail = false;
 
     /**
      * @param \League\Url\Components\Path $old_path
      * @param bool                        $trailing_slash
      */
-    public function __construct($data, $trailing_slash = false) {
+    public function __construct($data, $trailing_slash = false)
+    {
         $this->set($data);
-        $this->trail = !!$trailing_slash;
+        $this->trail = (bool) $trailing_slash;
     }
 
     /**
@@ -37,7 +37,7 @@ class Path extends \League\Url\Components\Path
             }
         }
 
-        return implode($this->delimiter, $res) . ((!!$this->trail && $res) ? '/' : '');
+        return implode($this->delimiter, $res) . (((bool) $this->trail && $res) ? '/' : '');
     }
 
     public function withoutDispatcher()
@@ -49,5 +49,4 @@ class Path extends \League\Url\Components\Path
 
         return $path;
     }
-
 }

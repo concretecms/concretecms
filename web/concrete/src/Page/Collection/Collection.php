@@ -1,14 +1,13 @@
 <?php
-
 namespace Concrete\Core\Page\Collection;
 
 use Area;
 use Block;
 use CacheLocal;
-use CollectionAttributeKey;
 use CollectionVersion;
-use Concrete\Core\Attribute\Key\Key;
-use Concrete\Core\Attribute\Value\CollectionValue as CollectionAttributeValue;
+use Concrete\Core\Attribute\Key\CollectionKey;
+use Concrete\Core\Entity\Attribute\Value\PageValue;
+use Concrete\Core\Entity\Attribute\Value\Value\Value;
 use Concrete\Core\Feature\Assignment\CollectionVersionAssignment as CollectionVersionFeatureAssignment;
 use Concrete\Core\Feature\Feature;
 use Concrete\Core\Foundation\Object as Object;
@@ -46,7 +45,7 @@ class Collection extends Object
         while ($row = $r->FetchRow()) {
             $pc = Page::getByID($row['cID']);
             $pc->reindex(false, true);
-            $num++;
+            ++$num;
         }
         Config::save('concrete.misc.do_page_reindex_check', false);
 
@@ -76,7 +75,7 @@ class Collection extends Object
             if ($row['cID'] > 0 && $row['pcID'] == null) {
 
                 // there is a collection, but it is not a page. so we grab it
-                $cObj = Collection::getByID($row['cID']);
+                $cObj = self::getByID($row['cID']);
             }
         }
 
@@ -170,7 +169,7 @@ class Collection extends Object
             $res2 = $db->execute($r2, $v2);
         }
 
-        $nc = Collection::getByID($newCID);
+        $nc = self::getByID($newCID);
 
         return $nc;
     }
@@ -187,7 +186,7 @@ class Collection extends Object
         $q = 'select Collections.cDateAdded, Collections.cDateModified, Collections.cID from Collections where cID = ?';
         $row = $db->getRow($q, array($cID));
 
-        $c = new Collection();
+        $c = new self();
         $c->setPropertiesFromArray($row);
 
         if ($version != false) {
@@ -232,7 +231,7 @@ class Collection extends Object
 
     // remove the collection attributes for this version of a page
 
-    public function cloneVersion($versionComments)
+    public function cloneVersion($versionComments, $createEmpty = false)
     {
         // first, we run the version object's createNew() command, which returns a new
         // version object, which we can combine with our collection object, so we'll have
@@ -250,35 +249,35 @@ class Collection extends Object
         $db = Loader::db();
         $cID = $this->getCollectionID();
         $cvID = $vObj->getVersionID();
-        $q = "select bID, arHandle from CollectionVersionBlocks where cID = '$cID' and cvID = '$cvID' and cbIncludeAll=0 order by cbDisplayOrder asc";
-        $r = $db->query($q);
-        if ($r) {
-            while ($row = $r->fetchRow()) {
-                // now we loop through these, create block objects for all of them, and
-                // duplicate them to our collection object (which is actually the same collection,
-                // but different version)
-                $b = Block::getByID($row['bID'], $this, $row['arHandle']);
-                if (is_object($b)) {
-                    $b->alias($nc);
+        if (!$createEmpty) {
+            $q = "select bID, arHandle from CollectionVersionBlocks where cID = '$cID' and cvID = '$cvID' and cbIncludeAll=0 order by cbDisplayOrder asc";
+            $r = $db->query($q);
+            if ($r) {
+                while ($row = $r->fetchRow()) {
+                    // now we loop through these, create block objects for all of them, and
+                    // duplicate them to our collection object (which is actually the same collection,
+                    // but different version)
+                    $b = Block::getByID($row['bID'], $this, $row['arHandle']);
+                    if (is_object($b)) {
+                        $b->alias($nc);
+                    }
                 }
             }
+            // duplicate any area styles
+            $q = "select issID, arHandle from CollectionVersionAreaStyles where cID = '$cID' and cvID = '$cvID'";
+            $r = $db->query($q);
+            while ($row = $r->FetchRow()) {
+                $db->Execute(
+                   'insert into CollectionVersionAreaStyles (cID, cvID, arHandle, issID) values (?, ?, ?, ?)',
+                   array(
+                       $this->getCollectionID(),
+                       $nvObj->getVersionID(),
+                       $row['arHandle'],
+                       $row['issID'],
+                   )
+                );
+            }
         }
-
-        // duplicate any area styles
-        $q = "select issID, arHandle from CollectionVersionAreaStyles where cID = '$cID' and cvID = '$cvID'";
-        $r = $db->query($q);
-        while ($row = $r->FetchRow()) {
-            $db->Execute(
-               'insert into CollectionVersionAreaStyles (cID, cvID, arHandle, issID) values (?, ?, ?, ?)',
-               array(
-                   $this->getCollectionID(),
-                   $nvObj->getVersionID(),
-                   $row['arHandle'],
-                   $row['issID'],
-               )
-            );
-        }
-
         return $nc;
     }
 
@@ -302,6 +301,62 @@ class Collection extends Object
         }
 
         return array();
+    }
+
+    public function getVersionID()
+    {
+        // shortcut
+        return $this->vObj->cvID;
+    }
+
+    /* area stuff */
+
+    public function reindex($index = false, $actuallyDoReindex = true)
+    {
+        if ($this->isAlias() && !$this->isExternalLink()) {
+            return false;
+        }
+        if ($actuallyDoReindex || Config::get('concrete.page.search.always_reindex') == true) {
+
+            // Retrieve the attribute values for the current page
+            $category = \Core::make('Concrete\Core\Attribute\Category\PageCategory');
+            $indexer = $category->getSearchIndexer();
+            $indexer->indexEntry($category, $this);
+
+            if ($index == false) {
+                $index = new IndexedSearch();
+            }
+
+            $index->reindexPage($this);
+
+            $db = \Database::connection();
+            $db->Replace(
+               'PageSearchIndex',
+               array('cID' => $this->getCollectionID(), 'cRequiresReindex' => 0),
+               array('cID'),
+               false
+            );
+
+            $cache = PageCache::getLibrary();
+            $cache->purge($this);
+
+            // we check to see if this page is referenced in any gatherings
+            $c = Page::getByID($this->getCollectionID(), $this->getVersionID());
+            $items = PageGatheringItem::getListByItem($c);
+            foreach ($items as $it) {
+                $it->deleteFeatureAssignments();
+                $it->assignFeatureAssignments($c);
+            }
+        } else {
+            $db = Loader::db();
+            Config::save('concrete.misc.do_page_reindex_check', true);
+            $db->Replace(
+               'PageSearchIndex',
+               array('cID' => $this->getCollectionID(), 'cRequiresReindex' => 1),
+               array('cID'),
+               false
+            );
+        }
     }
 
     /**
@@ -337,15 +392,16 @@ class Collection extends Object
     public function getAttribute($akHandle, $displayMode = false)
     {
         if (is_object($this->vObj)) {
-            return $this->vObj->getAttribute($akHandle, $this, $displayMode);
+            return $this->vObj->getAttribute($akHandle, $displayMode);
         }
     }
 
-    public function getCollectionAttributeValue($ak)
+    /**
+     * @deprecated
+     */
+    public function getCollectionAttributeValue($akHandle)
     {
-        if (is_object($this->vObj)) {
-            return $this->vObj->getAttribute($ak, $this);
-        }
+        return $this->getAttribute($akHandle);
     }
 
     // get's an array of collection attribute objects that are attached to this collection. Does not get values
@@ -361,8 +417,8 @@ class Collection extends Object
             $akIDStr = implode(',', $cleanAKIDs);
             $v2 = array($this->getCollectionID(), $this->getVersionID());
             $db->query(
-               "delete from CollectionAttributeValues where cID = ? and cvID = ? and akID not in ({$akIDStr})",
-               $v2
+                "delete from CollectionAttributeValues where cID = ? and cvID = ? and akID not in ({$akIDStr})",
+                $v2
             );
         } else {
             $v2 = array($this->getCollectionID(), $this->getVersionID());
@@ -371,145 +427,27 @@ class Collection extends Object
         $this->reindex();
     }
 
-    public function getVersionID()
-    {
-        // shortcut
-        return $this->vObj->cvID;
-    }
-
-    /* area stuff */
-
-    public function reindex($index = false, $actuallyDoReindex = true)
-    {
-        if ($this->isAlias() && !$this->isExternalLink()) {
-            return false;
-        }
-        if ($actuallyDoReindex || Config::get('concrete.page.search.always_reindex') == true) {
-            $db = Loader::db();
-            $attribs = CollectionAttributeKey::getAttributes(
-                $this->getCollectionID(),
-                $this->getVersionID(),
-                'getSearchIndexValue'
-            );
-            $db->Execute('delete from CollectionSearchIndexAttributes where cID = ?', array($this->getCollectionID()));
-            $searchableAttributes = array('cID' => $this->getCollectionID());
-            $key = new Key();
-            $key->reindex('CollectionSearchIndexAttributes', $searchableAttributes, $attribs);
-
-            if ($index == false) {
-                $index = new IndexedSearch();
-            }
-
-            $index->reindexPage($this);
-            $db->Replace(
-               'PageSearchIndex',
-               array('cID' => $this->getCollectionID(), 'cRequiresReindex' => 0),
-               array('cID'),
-               false
-            );
-
-            $cache = PageCache::getLibrary();
-            $cache->purge($this);
-
-            // we check to see if this page is referenced in any gatherings
-            $c = Page::getByID($this->getCollectionID(), $this->getVersionID());
-            $items = PageGatheringItem::getListByItem($c);
-            foreach ($items as $it) {
-                $it->deleteFeatureAssignments();
-                $it->assignFeatureAssignments($c);
-            }
-        } else {
-            $db = Loader::db();
-            Config::save('concrete.misc.do_page_reindex_check', true);
-            $db->Replace(
-               'PageSearchIndex',
-               array('cID' => $this->getCollectionID(), 'cRequiresReindex' => 1),
-               array('cID'),
-               false
-            );
-        }
-    }
-
-    /* aliased content */
-
     public function clearAttribute($ak)
     {
-        $db = Loader::db();
-        $cav = $this->getAttributeValueObject($ak);
-        if (is_object($cav)) {
-            $cav->delete();
-        }
-        $this->reindex();
-    }
-
-    /* basic CRUD */
-
-    public function getAttributeValueObject($ak, $createIfNotFound = false)
-    {
-        $db = Loader::db();
-        $av = false;
-        if (is_string($ak)) {
-            $ak = CollectionAttributeKey::getByHandle($ak);
-        }
-        $v = array($this->getCollectionID(), $this->getVersionID(), $ak->getAttributeKeyID());
-        $avID = $db->GetOne('select avID from CollectionAttributeValues where cID = ? and cvID = ? and akID = ?', $v);
-        if ($avID > 0) {
-            $av = CollectionAttributeValue::getByID($avID);
-            if (is_object($av)) {
-                $av->setCollection($this);
-                $av->setAttributeKey($ak);
-            }
-        }
-
-        if ($createIfNotFound) {
-            $cnt = 0;
-
-            // Is this avID in use ?
-            if (is_object($av)) {
-                $cnt = $db->GetOne(
-                          'select count(avID) from CollectionAttributeValues where avID = ?',
-                          $av->getAttributeValueID()
-                );
-            }
-
-            if ((!is_object($av)) || ($cnt > 1)) {
-                $newAV = $ak->addAttributeValue();
-                $av = CollectionAttributeValue::getByID($newAV->getAttributeValueID());
-                $av->setCollection($this);
-            }
-        }
-
-        return $av;
+        $this->vObj->clearAttribute($ak);
     }
 
     public function getSetCollectionAttributes()
     {
-        $db = Loader::db();
-        $akIDs = $db->GetCol(
-                    'select akID from CollectionAttributeValues where cID = ? and cvID = ?',
-                    array($this->getCollectionID(), $this->getVersionID())
-        );
+        $category = $this->vObj->getObjectAttributeCategory();
+        $values = $category->getAttributeValues($this->vObj);
+
         $attribs = array();
-        foreach ($akIDs as $akID) {
-            $attribs[] = CollectionAttributeKey::getByID($akID);
+        foreach ($values as $value) {
+            $attribs[] = $value->getAttributeKey();
         }
 
         return $attribs;
     }
 
-    public function addAttribute($ak, $value)
-    {
-        $this->setAttribute($ak, $value);
-    }
-
     public function setAttribute($ak, $value)
     {
-        if (!is_object($ak)) {
-            $ak = CollectionAttributeKey::getByHandle($ak);
-        }
-        $ak->setAttribute($this, $value);
-        unset($ak);
-        $this->reindex();
+        return $this->vObj->setAttribute($ak, $value);
     }
 
     /**
@@ -719,10 +657,10 @@ class Collection extends Object
         $db->Replace(
            'CollectionVersionAreaStyles',
            array(
-               'cID'      => $this->getCollectionID(),
-               'cvID'     => $this->getVersionID(),
+               'cID' => $this->getCollectionID(),
+               'cvID' => $this->getVersionID(),
                'arHandle' => $area->getAreaHandle(),
-               'issID'    => $set->getID(),
+               'issID' => $set->getID(),
            ),
            array('cID', 'cvID', 'arHandle'),
            true
@@ -787,7 +725,7 @@ class Collection extends Object
                 $args = array($displayOrder, $cID, $cvID, $arHandle, $row['bID']);
                 $q = "update CollectionVersionBlocks set cbDisplayOrder = ? where cID = ? and cvID = ? and arHandle = ? and bID = ?";
                 $db->query($q, $args);
-                $displayOrder++;
+                ++$displayOrder;
             }
             $r->free();
         }
@@ -976,7 +914,7 @@ class Collection extends Object
                 if (is_null($displayOrder)) {
                     return 0;
                 }
-                $displayOrder++;
+                ++$displayOrder;
 
                 return $displayOrder;
             } else {
@@ -1131,9 +1069,9 @@ class Collection extends Object
                         $db->Replace(
                            'BlockPermissionAssignments',
                            array(
-                               'cID'  => $newCID,
+                               'cID' => $newCID,
                                'cvID' => $row['cvID'],
-                               'bID'  => $row['bID'],
+                               'bID' => $row['bID'],
                                'paID' => $row2['paID'],
                                'pkID' => $row2['pkID'],
                            ),
@@ -1145,16 +1083,25 @@ class Collection extends Object
             }
 
             // duplicate any attributes belonging to the collection
-
-            $v = array($this->getCollectionID());
-            $q = 'select akID, cvID, avID from CollectionAttributeValues where cID = ?';
-            $r = $db->query($q, $v);
-            while ($row = $r->fetchRow()) {
-                $v2 = array($row['akID'], $row['cvID'], $row['avID'], $newCID);
-                $db->query('insert into CollectionAttributeValues (akID, cvID, avID, cID) values (?, ?, ?, ?)', $v2);
+            $list = CollectionKey::getAttributeValues($this->vObj);
+            $em = \Database::connection()->getEntityManager();
+            foreach($list as $av) {
+                $cav = new PageValue();
+                $cav->setPageID($newCID);
+                $cav->setValue($av->getValueObject());
+                $cav->setVersionID($this->vObj->getVersionID());
+                $cav->setAttributeKey($av->getAttributeKey());
+                $em->persist($cav);
             }
+            $em->flush();
 
-            return Collection::getByID($newCID);
+
+            return self::getByID($newCID);
         }
+    }
+
+    public function getAttributeValueObject($ak)
+    {
+        return $this->vObj->getAttributeValueObject($ak);
     }
 }

@@ -7,24 +7,28 @@ use Core;
 class Statistics
 {
     /**
-     * Gets the total number of submissions
+     * Gets the total number of submissions.
+     *
      * @param string $date Set to a specific day (eg '2014-09-14') to retrieve the submissions in that day.
      * @param string $dateTimezone The timezone of the $date parameter (acceptable values: 'user', 'system', 'app' or any valid PHP timezone identifier)
+     *
      * @return int
      */
     public static function getTotalSubmissions($date = null, $dateTimezone = 'user')
     {
         if ($date) {
-           return static::getTotalSubmissionsBetween("$date 00:00:00", "$date 23:59:59", $dateTimezone);
+            return static::getTotalSubmissionsBetween("$date 00:00:00", "$date 23:59:59", $dateTimezone);
         } else {
-           return static::getTotalSubmissionsBetween();
+            return static::getTotalSubmissionsBetween();
         }
     }
     /**
-     * Gets the total number of submissions in specific date/time ranges
+     * Gets the total number of submissions in specific date/time ranges.
+     *
      * @param string|int|\DateTime $fromDate The start of the period (if empty: from ever). Inclusive. Example: '2014-09-14 08:00:00'.
      * @param string|int|\DateTime $toDate The end of the period (if empty: for ever). Inclusive. Example: '2014-09-14 08:00:00'.
      * @param string $dateTimezone The timezone of the $dateFrom and $dateTo parameter (acceptable values: 'user', 'system', 'app' or any valid PHP timezone identifier)
+     *
      * @return number
      */
     public static function getTotalSubmissionsBetween($fromDate = null, $toDate = null, $datesTimezone = 'user')
@@ -68,17 +72,17 @@ class Statistics
          )');
     }
 
-    public static $sortChoices = array('newest' => 'created DESC' , 'chrono'=>'created');
+    public static $sortChoices = array('newest' => 'created DESC', 'chrono' => 'created');
 
-    public static function buildAnswerSetsArray($questionSet, $orderBy='', $limit='')
+    public static function buildAnswerSetsArray($questionSet, $orderBy = '', $limit = '')
     {
         $db = Loader::db();
 
-        if ((strlen(trim($limit)) > 0) && (!strstr(strtolower($limit),'limit'))) {
+        if ((strlen(trim($limit)) > 0) && (!strstr(strtolower($limit), 'limit'))) {
             $limit = ' LIMIT ' . $limit;
         }
         if ((strlen(trim($orderBy)) > 0) && array_key_exists($orderBy, self::$sortChoices)) {
-             $orderBySQL = self::$sortChoices[$orderBy];
+            $orderBySQL = self::$sortChoices[$orderBy];
         } else {
             $orderBySQL = self::$sortChoices['newest'];
         }
@@ -97,7 +101,7 @@ class Statistics
         }
 
         //get answers
-        $sql = 'SELECT * FROM btFormAnswers AS a WHERE a.asID IN (' . join(',', $answerSetIds) . ')';
+        $sql = 'SELECT * FROM btFormAnswers AS a WHERE a.asID IN (' . implode(',', $answerSetIds) . ')';
         $answersRS = $db->query($sql);
 
         //load answers into a nicer multi-dimensional array

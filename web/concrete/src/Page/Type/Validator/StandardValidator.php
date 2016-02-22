@@ -33,6 +33,7 @@ class StandardValidator implements ValidatorInterface
                 $e->add(t('This page template is not a valid template for this page type.'));
             }
         }
+
         return $e;
     }
 
@@ -47,6 +48,7 @@ class StandardValidator implements ValidatorInterface
                 $e->add(t('You do not have permission to publish a page in this location.'));
             }
         }
+
         return $e;
     }
     public function validatePublishDraftRequest(Page $page = null)
@@ -64,6 +66,7 @@ class StandardValidator implements ValidatorInterface
                 }
             }
         }
+
         return $e;
     }
 }

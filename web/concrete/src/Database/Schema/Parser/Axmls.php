@@ -3,26 +3,24 @@ namespace Concrete\Core\Database\Schema\Parser;
 
 class Axmls extends XmlParser
 {
-
     /**
      * Transforms the XML from Adodb XML into
-     * Doctrine DBAL Schema
+     * Doctrine DBAL Schema.
      */
     public function parse(\Concrete\Core\Database\Connection\Connection $db)
     {
         $x = $this->rawXML;
         $schema = new \Doctrine\DBAL\Schema\Schema();
         foreach ($x->table as $t) {
-
             if ($this->ignoreExistingTables && $db->tableExists($t['name'])) {
                 continue;
             }
-            $table = $schema->createTable((string)$t['name']);
+            $table = $schema->createTable((string) $t['name']);
             foreach ($t->field as $f) {
                 $options = $this->_getColumnOptions($db, $f);
                 $version = (isset($options['version']) && $options['version']) ? true : false;
                 unset($options['version']);
-                $field = $table->addColumn((string)$f['name'], $this->_getColumnType($f), $options);
+                $field = $table->addColumn((string) $f['name'], $this->_getColumnType($f), $options);
                 if ($version) {
                     $field->setPlatformOption('version', true);
                 }
@@ -31,6 +29,7 @@ class Axmls extends XmlParser
             $this->_setIndexes($db, $t, $table);
             $this->_setTableOpts($db, $t, $table);
         }
+
         return $schema;
     }
 
@@ -55,7 +54,7 @@ class Axmls extends XmlParser
         $primaryKeys = array();
         foreach ($table->field as $column) {
             if ($column->autoincrement || $column->AUTOINCREMENT || $column->key || $column->KEY) {
-                $primaryKeys[] = (string)$column['name'];
+                $primaryKeys[] = (string) $column['name'];
             }
         }
         if (count($primaryKeys) > 0) {
@@ -69,7 +68,7 @@ class Axmls extends XmlParser
         $schemaTable
     ) {
         foreach ($table->index as $index) {
-            $name = (string)$index['name'];
+            $name = (string) $index['name'];
             $fields = array();
             $flags = array();
             foreach ($index->col as $col) {
@@ -88,8 +87,8 @@ class Axmls extends XmlParser
 
     protected function _getColumnOptions(\Concrete\Core\Database\Connection\Connection $db, \SimpleXMLElement $column)
     {
-        $type = strtoupper((string)$column['type']);
-        $size = (string)$column['size'];
+        $type = strtoupper((string) $column['type']);
+        $size = (string) $column['size'];
         $options = array();
         if ($size) {
             if (in_array($type, array('N', 'F'))) {
@@ -113,18 +112,18 @@ class Axmls extends XmlParser
         }
         if ($column->default) {
             if (isset($column->default['value'])) {
-                $options['default'] = (string)$column->default['value'];
+                $options['default'] = (string) $column->default['value'];
             }
             if (isset($column->default['VALUE'])) {
-                $options['default'] = (string)$column->default['VALUE'];
+                $options['default'] = (string) $column->default['VALUE'];
             }
         }
         if ($column->DEFAULT) {
             if (isset($column->DEFAULT['value'])) {
-                $options['default'] = (string)$column->DEFAULT['value'];
+                $options['default'] = (string) $column->DEFAULT['value'];
             }
             if (isset($column->DEFAULT['VALUE'])) {
-                $options['default'] = (string)$column->DEFAULT['VALUE'];
+                $options['default'] = (string) $column->DEFAULT['VALUE'];
             }
         }
         if ($column->notnull || $column->NOTNULL) {
@@ -140,13 +139,14 @@ class Axmls extends XmlParser
             $options['default'] = $platform->getCurrentTimestampSQL();
             $options['version'] = true;
         }
+
         return $options;
     }
 
     protected function _getColumnType(\SimpleXMLElement $column)
     {
-        $type = strtoupper((string)$column['type']);
-        $size = (string)$column['size'];
+        $type = strtoupper((string) $column['type']);
+        $size = (string) $column['size'];
         if ($type == 'L') {
             return 'boolean';
         }
@@ -170,6 +170,7 @@ class Axmls extends XmlParser
             if ($size != '' && $size < 5) {
                 return 'smallint';
             }
+
             return 'integer';
         }
         if ($type == 'I8') {
@@ -215,6 +216,4 @@ class Axmls extends XmlParser
             return 'time';
         }
     }
-
 }
-

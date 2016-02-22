@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Page\Controller;
 
 use Concrete\Core\Block\Block;
@@ -56,7 +55,7 @@ class PageController extends Controller
         $controller->runAction('view');
         $controller->on_before_render();
         $view = $controller->getViewObject();
-        print $view->render();
+        echo $view->render();
         exit;
     }
 
@@ -66,14 +65,13 @@ class PageController extends Controller
         $session = Core::make('session');
         if ($session->getFlashBag()->has('page_message')) {
             $value = $session->getFlashBag()->get('page_message');
-            foreach($value as $message) {
+            foreach ($value as $message) {
                 $sets[$message[0]] = $message[1];
             }
         }
+
         return $sets;
     }
-
-
 
     /**
      * Given a path to a single page, this command uses the CURRENT controller and renders
@@ -93,13 +91,11 @@ class PageController extends Controller
         $b = $path . '.php';
 
         $r = $env->getRecord(DIRNAME_PAGES . '/' . $a);
-        if ($pkgHandle) {
-            $view->setPackageHandle($pkgHandle);
-        }
+
         if ($r->exists()) {
-            $view->renderSinglePageByFilename($a);
+            $view->renderSinglePageByFilename($a, $pkgHandle);
         } else {
-            $view->renderSinglePageByFilename($b);
+            $view->renderSinglePageByFilename($b, $pkgHandle);
         }
     }
 
@@ -211,8 +207,6 @@ class PageController extends Controller
     }
 
     /**
-     * @access private
-     *
      * @param Block $b
      * @param BlockController $controller
      */

@@ -8,15 +8,14 @@ use Core;
 use Whoops\Handler\PrettyPageHandler;
 
 /**
- * Class ErrorHandler
+ * Class ErrorHandler.
  *
  * @package Concrete\Core\Error\Handler
  */
 class ErrorHandler extends PrettyPageHandler
 {
-
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function handle()
     {
@@ -70,22 +69,22 @@ class ErrorHandler extends PrettyPageHandler
     }
 
     /**
-     * Add the c5 specific debug stuff
+     * Add the c5 specific debug stuff.
      */
     protected function addDetails()
     {
-        /**
+        /*
          * General
          */
         $this->addDataTable(
             'Concrete5',
             array(
-                'Version'           => APP_VERSION,
-                'Installed Version' => Config::get('concrete.version_installed')
+                'Version' => APP_VERSION,
+                'Installed Version' => Config::get('concrete.version_installed'),
             )
         );
 
-        /**
+        /*
          * Config
          */
         $this->addDataTable('Concrete Configuration', $this->flatConfig(Config::get('concrete'), 'concrete'));
@@ -106,5 +105,4 @@ class ErrorHandler extends PrettyPageHandler
 
         return $flat;
     }
-
 }

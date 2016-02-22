@@ -5,28 +5,24 @@
     {
       "type": "vcs",
       "url": "https://github.com/mlocati/zendframework2-i18n-v3"
-    },
-    {
-      "type": "vcs",
-      "url": "https://github.com/concrete5/flysystem"
     }
   ],
   "config": {
     "optimize-autoloader": true
   },
   "require": {
-    "php": ">=5.3.3",
+    "php": ">=5.5.9",
     "doctrine/dbal": "2.5.*",
-    "symfony/class-loader": "2.5.*",
-    "symfony/http-foundation": "2.5.*",
-    "symfony/routing": "2.5.*",
-    "symfony/http-kernel": "2.5.*",
-    "doctrine/orm": "2.4.*",
+    "symfony/class-loader": "3.0.*",
+    "symfony/http-foundation": "3.0.*",
+    "symfony/routing": "3.0.*",
+    "symfony/http-kernel": "3.0.*",
+    "doctrine/orm": "2.5.*",
     "doctrine/migrations": "v1.0.0-alpha3",
-    "concrete5/flysystem": "0.4.*",
-    "symfony/event-dispatcher": "2.5.*",
-    "symfony/serializer": "2.5.*",
-    "illuminate/container": "4.1.*",
+    "league/flysystem": "1.0.*",
+    "symfony/event-dispatcher": "3.0.*",
+    "symfony/serializer": "3.0.*",
+    "illuminate/container": "5.*",
     "illuminate/config": "4.1.*",
     "patchwork/utf8": "1.1.x-dev",
     "oyejorge/less.php": "v1.7.0.1",
@@ -40,7 +36,7 @@
     "mobiledetect/mobiledetectlib": "2.8.*",
     "monolog/monolog": "~1.7",
     "sunra/php-simple-html-dom-parser": "1.5.0",
-    "hautelook/phpass": "dev-master",
+    "hautelook/phpass": "0.3.4",
     "voku/urlify": "1.0.1-stable",
     "dapphp/securimage": "3.5.*",
     "anahkiasen/html-object": "1.4.0",
@@ -54,8 +50,8 @@
     "nesbot/carbon": "1.11.*",
     "egulias/email-validator": "1.2.4",
     "punic/punic": "1.6.3",
-    "tedivm/stash": "0.12.1",
-    "lusitanian/oauth": "~0.3",
+    "tedivm/stash": "0.13.*",
+    "lusitanian/oauth": "0.8.*",
     "oryzone/oauth-user-data": "~1.0@dev",
     "mlocati/concrete5-translation-library": "1.4.2",
     "league/url": "3.3.*",
@@ -63,5 +59,10 @@
   },
   "require-dev": {
     "concrete5/documentation_generator": "1.0-beta3"
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Concrete\\Tests\\": "../../tests/tests"
+    }
   }
 }

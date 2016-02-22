@@ -2,7 +2,6 @@
 namespace Concrete\Core\Captcha;
 
 use Loader;
-use \Concrete\Core\Foundation\Object;
 use Securimage;
 use Securimage_Color;
 
@@ -13,23 +12,23 @@ class SecurimageController extends Controller
     public function __construct()
     {
         $this->securimage = new Securimage();
-        $this->securimage->image_width   = 190;
-        $this->securimage->image_height  = 60;
+        $this->securimage->image_width = 190;
+        $this->securimage->image_height = 60;
         $this->securimage->image_bg_color = new Securimage_Color(227, 218, 237);
         $this->securimage->line_color = new Securimage_Color(51, 51, 51);
         $this->securimage->num_lines = 5;
 
-        $this->securimage->use_multi_text   = true;
+        $this->securimage->use_multi_text = true;
         $this->securimage->multi_text_color = array(
             new Securimage_Color(184, 4, 50),
             new Securimage_Color(12, 67, 157),
-            new Securimage_Color(244, 49, 11)
+            new Securimage_Color(244, 49, 11),
         );
         $this->securimage->text_color = new Securimage_Color(184, 4, 50);
     }
 
     /**
-     * Display the captcha
+     * Display the captcha.
      */
     public function display()
     {
@@ -40,12 +39,12 @@ class SecurimageController extends Controller
     public function label()
     {
         $form = Loader::helper('form');
-        print $form->label('ccm-captcha-code', t('Please type the letters and numbers shown in the image. Click the image to see another captcha.'));
+        echo $form->label('ccm-captcha-code', t('Please type the letters and numbers shown in the image. Click the image to see another captcha.'));
     }
 
     /**
      * Print the captcha image. You usually don't have to call this method directly.
-     * It gets called by captcha.php from the tools
+     * It gets called by captcha.php from the tools.
      */
     public function displayCaptchaPicture()
     {
@@ -70,11 +69,11 @@ class SecurimageController extends Controller
      * Checks the captcha code the user has entered.
      *
      * @param string $fieldName Optional name of the field that contains the captcha code
-     * @return boolean true if the code was correct, false if not
+     *
+     * @return bool true if the code was correct, false if not
      */
-    public function check($fieldName='ccmCaptchaCode')
+    public function check($fieldName = 'ccmCaptchaCode')
     {
         return $this->securimage->check($_REQUEST[$fieldName]);
     }
-
 }

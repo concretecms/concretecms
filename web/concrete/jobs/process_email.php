@@ -1,13 +1,12 @@
 <?php
 namespace Concrete\Job;
 
-use \Job as AbstractJob;
-use \Concrete\Core\Mail\Importer\MailImporter;
+use Job as AbstractJob;
+use Concrete\Core\Mail\Importer\MailImporter;
 use Loader;
 
 class ProcessEmail extends AbstractJob
 {
-
     public function getJobName()
     {
         return t("Process Email Posts");

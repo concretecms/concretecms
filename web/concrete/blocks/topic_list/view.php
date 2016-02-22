@@ -19,13 +19,13 @@
                 foreach ($node->getChildNodes() as $topic) {
                     if ($topic instanceof \Concrete\Core\Tree\Node\Type\TopicCategory) {
                         ?><li><?php echo $topic->getTreeNodeDisplayName(); ?></li>
-                    <?php 
+                        <?php
                     } else {
                         ?><li><a href="<?php echo $view->controller->getTopicLink($topic); ?>" <?php
                         if (isset($selectedTopicID) && $selectedTopicID == $topic->getTreeNodeID()) {
                             ?> class="ccm-block-topic-list-topic-selected"<?php
                         }
-                        ?>><?php echo $topic->getTreeNodeDisplayName(); ?></a></li><?php 
+                        ?>><?php echo $topic->getTreeNodeDisplayName(); ?></a></li><?php
                     }
                     $walk($topic);
                 }
@@ -41,7 +41,7 @@
             foreach ($topics as $topic) {
                 ?><li><a href="<?php echo $view->controller->getTopicLink($topic); ?>"><?php echo $topic->getTreeNodeDisplayName(); ?></a></li><?php
             }
-            ?></ul><?php 
+            ?></ul><?php
         } else {
             echo t('No topics.');
         }

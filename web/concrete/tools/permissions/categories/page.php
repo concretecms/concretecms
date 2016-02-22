@@ -1,4 +1,5 @@
-<?
+<?php
+
 defined('C5_EXECUTE') or die("Access Denied.");
 use \Concrete\Core\Permission\Access\Entity\Entity as PermissionAccessEntity;
 use \Concrete\Core\Permission\Duration as PermissionDuration;
@@ -11,7 +12,7 @@ use \Concrete\Core\Permission\Set as PermissionSet;
 
 $pages = array();
 if (is_array($_REQUEST['cID'])) {
-    foreach($_REQUEST['cID'] as $cID) {
+    foreach ($_REQUEST['cID'] as $cID) {
         $c = Page::getByID($cID);
         $cp = new Permissions($c);
         if ($cp->canEditPagePermissions()) {
@@ -26,12 +27,12 @@ if (is_array($_REQUEST['cID'])) {
     }
 }
 
-if (count($pages) > 0) { 
+if (count($pages) > 0) {
     if ($_REQUEST['task'] == 'add_access_entity' && Loader::helper("validation/token")->validate('add_access_entity')) {
         $pk = PagePermissionKey::getByID($_REQUEST['pkID']);
         $pe = PermissionAccessEntity::getByID($_REQUEST['peID']);
         $pd = PermissionDuration::getByID($_REQUEST['pdID']);
-        foreach($pages as $c) {
+        foreach ($pages as $c) {
             $pk->setPermissionObject($c);
             $pa = PermissionAccess::getByID($_REQUEST['paID'], $pk);
             $pa->addListItem($pe, $pd, $_REQUEST['accessType']);
@@ -41,7 +42,7 @@ if (count($pages) > 0) {
     if ($_REQUEST['task'] == 'remove_access_entity' && Loader::helper("validation/token")->validate('remove_access_entity')) {
         $pk = PagePermissionKey::getByID($_REQUEST['pkID']);
         $pe = PermissionAccessEntity::getByID($_REQUEST['peID']);
-        foreach($pages as $c) {
+        foreach ($pages as $c) {
             $pk->setPermissionObject($c);
             $pa = PermissionAccess::getByID($_REQUEST['paID'], $pk);
             $pa->removeListItem($pe);
@@ -50,9 +51,9 @@ if (count($pages) > 0) {
 
     if ($_REQUEST['task'] == 'save_permission' && Loader::helper("validation/token")->validate('save_permission')) {
         $pk = PagePermissionKey::getByID($_REQUEST['pkID']);
-        foreach($pages as $c) {
+        foreach ($pages as $c) {
             $pa = PermissionAccess::getByID($_REQUEST['paID'], $pk);
-            if(is_object($pa)) {
+            if (is_object($pa)) {
                 $pa->save($_POST);
                 $pa->clearWorkflows();
                 if (is_array($_POST['wfID'])) {
@@ -69,7 +70,7 @@ if (count($pages) > 0) {
 
     if ($_REQUEST['task'] == 'change_permission_inheritance' && Loader::helper("validation/token")->validate('change_permission_inheritance')) {
         $deferred = false;
-        foreach($pages as $c) {
+        foreach ($pages as $c) {
             if ($c->getCollectionID() == HOME_CID) {
                 continue;
             }
@@ -83,16 +84,15 @@ if (count($pages) > 0) {
                 $deferred = true;
             }
         }
-        $obj = new stdClass;
+        $obj = new stdClass();
         $obj->deferred = $deferred;
-        print Loader::helper('json')->encode($obj);
+        echo Loader::helper('json')->encode($obj);
         exit;
     }
 
     if ($_REQUEST['task'] == 'change_subpage_defaults_inheritance' && Loader::helper("validation/token")->validate('change_subpage_defaults_inheritance')) {
         $deferred = false;
-        foreach($pages as $c) {
-
+        foreach ($pages as $c) {
             $pkr = new ChangeSubpageDefaultsInheritancePageWorkflowRequest();
             $pkr->setRequestedPage($c);
             $pkr->setPagePermissionsInheritance($_REQUEST['inherit']);
@@ -102,11 +102,10 @@ if (count($pages) > 0) {
                 $deferred = true;
             }
         }
-        $obj = new stdClass;
+        $obj = new stdClass();
         $obj->deferred = $deferred;
-        print Loader::helper('json')->encode($obj);
+        echo Loader::helper('json')->encode($obj);
         exit;
-
     }
 
     if ($_REQUEST['task'] == 'display_access_cell' && Loader::helper("validation/token")->validate('display_access_cell')) {
@@ -120,12 +119,12 @@ if (count($pages) > 0) {
         $u = new User();
         $permissions = PermissionKey::getList('page');
         $deferred = false;
-        foreach($pages as $c) {
+        foreach ($pages as $c) {
             $pkr = new ChangePagePermissionsPageWorkflowRequest();
             $pkr->setRequestedPage($c);
             $ps = new PermissionSet();
             $ps->setPermissionKeyCategory('page');
-            foreach($permissions as $pk) {
+            foreach ($permissions as $pk) {
                 $paID = $_POST['pkID'][$pk->getPermissionKeyID()];
                 $ps->addPermissionAssignment($pk->getPermissionKeyID(), $paID);
             }
@@ -156,7 +155,7 @@ if (count($pages) > 0) {
             $u = new User();
             $deferred = false;
 
-            foreach($pages as $c) {
+            foreach ($pages as $c) {
                 if ($_REQUEST['paReplaceAll'] == 'add') {
                     $pk->setPermissionObject($c);
                     $pa = $pk->getPermissionAccessObject();
@@ -192,27 +191,25 @@ if (count($pages) > 0) {
     }
 
     if ($_REQUEST['task'] == 'bulk_remove_access' && Loader::helper('validation/token')->validate('bulk_remove_access')) {
-
         $pkID = $_REQUEST['pkID'];
         $pk = PermissionKey::getByID($pkID);
 
         $u = new User();
         $deferred = false;
 
-        foreach($pages as $c) {
+        foreach ($pages as $c) {
             $pk->setPermissionObject($c);
             $pa = $pk->getPermissionAccessObject();
             $matches = array();
             if (is_object($pa)) {
-                foreach($_REQUEST['listItem'] as $li) {
+                foreach ($_REQUEST['listItem'] as $li) {
                     $lii = explode(':', $li);
                     $peID = $lii[0];
                     $accessType = $lii[1];
                     $pdID = $lii[2];
 
-
                     $listItems = $pa->getAccessListItems($accessType);
-                    foreach($listItems as $as) {
+                    foreach ($listItems as $as) {
                         $entity = $as->getAccessEntityObject();
                         $pd = $as->getPermissionDurationObject();
                         if ($entity->getAccessEntityID() == $peID && ((is_object($pd) && $pd->getPermissionDurationID() == $pdID) || (!is_object($pd) && $pdID == 0))) {
@@ -225,13 +222,13 @@ if (count($pages) > 0) {
                     // remove the associated things.
 
                     $listItems = $newpa->getAccessListItems(PermissionKey::ACCESS_TYPE_ALL);
-                    foreach($listItems as $li) {
-                        foreach($matches as $as) {
+                    foreach ($listItems as $li) {
+                        foreach ($matches as $as) {
                             $entity = $as->getAccessEntityObject();
                             $pd = $as->getPermissionDurationObject();
                             if ($entity->getAccessEntityID() == $peID &&
                                 ((is_object($pd) && $pd->getPermissionDurationID() == $pdID) || (!is_object($pd) && $pdID == 0))) {
-                                    $newpa->removeListItem($entity);
+                                $newpa->removeListItem($entity);
                             }
                         }
                     }
@@ -255,6 +252,3 @@ if (count($pages) > 0) {
         exit;
     }
 }
-
-
-

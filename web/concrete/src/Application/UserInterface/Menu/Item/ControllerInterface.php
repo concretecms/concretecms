@@ -3,16 +3,14 @@ namespace Concrete\Core\Application\UserInterface\Menu\Item;
 
 interface ControllerInterface
 {
-
     /**
-     * Determine whether item should be displayed
+     * Determine whether item should be displayed.
      *
      * @return bool
      */
     public function displayItem();
 
     /**
-     * @return void
      */
     public function registerViewAssets();
 
@@ -23,7 +21,6 @@ interface ControllerInterface
 
     /**
      * @param ItemInterface $item
-     * @return void
      */
     public function setMenuItem(ItemInterface $item);
 
@@ -31,5 +28,4 @@ interface ControllerInterface
      * @return ItemInterface
      */
     public function getMenuItem();
-
 }

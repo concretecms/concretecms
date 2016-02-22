@@ -3,7 +3,6 @@ namespace Concrete\Core\Permission\Access\Entity;
 
 use Loader;
 use PermissionAccess;
-use URL;
 use Config;
 use UserInfo;
 use User;
@@ -12,7 +11,6 @@ use Concrete\Core\Permission\Access\ConversationAccess;
 
 class ConversationMessageAuthorEntity extends Entity
 {
-
     public function getAccessEntityUsers(PermissionAccess $pa)
     {
         $message = $pa->getPermissionObject();
@@ -29,6 +27,7 @@ class ConversationMessageAuthorEntity extends Entity
 
         if ($message instanceof Message) {
             $u = new User();
+
             return $u->getUserID() == $message->getConversationMessageUserID();
         }
 
@@ -41,6 +40,7 @@ class ConversationMessageAuthorEntity extends Entity
                 'PermissionAccessEntityTypeName',
                 'Message Author'
             ) . '</a>';
+
         return $html;
     }
 
@@ -55,6 +55,7 @@ class ConversationMessageAuthorEntity extends Entity
                 $entities[] = $pae;
             }
         }
+
         return $entities;
     }
 
@@ -71,6 +72,7 @@ class ConversationMessageAuthorEntity extends Entity
             $peID = $db->Insert_ID();
             Config::save('concrete.misc.access_entity_updated', time());
         }
+
         return \Concrete\Core\Permission\Access\Entity\Entity::getByID($peID);
     }
 
@@ -79,5 +81,4 @@ class ConversationMessageAuthorEntity extends Entity
         $db = Loader::db();
         $this->label = t('Message Author');
     }
-
 }

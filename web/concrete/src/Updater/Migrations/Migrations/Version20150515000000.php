@@ -1,14 +1,11 @@
 <?php
-
 namespace Concrete\Core\Updater\Migrations\Migrations;
 
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
-use ORM;
 
 class Version20150515000000 extends AbstractMigration
 {
-
     public function getDescription()
     {
         return '5.7.5a1';
@@ -44,7 +41,7 @@ class Version20150515000000 extends AbstractMigration
             where bt.btID IS NULL',
             array()
         );
-        foreach($orphanedCollectionVersionBlocks AS $row) {
+        foreach ($orphanedCollectionVersionBlocks as $row) {
             $nc = \Page::getByID($row['cID'], $row['cvID']);
             if (!is_object($nc) || $nc->isError()) {
                 continue;
@@ -55,6 +52,4 @@ class Version20150515000000 extends AbstractMigration
             }
         }
     }
-
-
 }

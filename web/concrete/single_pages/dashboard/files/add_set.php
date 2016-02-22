@@ -1,5 +1,5 @@
 <?php defined('C5_EXECUTE') or die("Access Denied."); ?>
-<? $ih = Loader::helper('concrete/ui'); ?>
+<?php $ih = Loader::helper('concrete/ui'); ?>
 
     <form method="post" class="form-horizontal" id="file-sets-add" action="<?=$view->url('/dashboard/files/add_set', 'do_add')?>">
 	<div class="ccm-pane-body">
@@ -9,7 +9,7 @@
 		<div class="control-group">
 			<?=Loader::helper("form")->label('file_set_name', t('Name'))?>
 			<div class="controls">
-				<?=$form->text('file_set_name','', array('class' => 'span4'))?>
+				<?=$form->text('file_set_name', '', array('class' => 'span4'))?>
 			</div>
 		</div>
 	</div>

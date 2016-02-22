@@ -3,9 +3,8 @@
  * Created by PhpStorm.
  * User: Korvin
  * Date: 7/26/15
- * Time: 6:49 PM
+ * Time: 6:49 PM.
  */
-
 namespace Concrete\Core\ImageEditor;
 
 use Concrete\Core\Asset\AssetList;
@@ -13,7 +12,6 @@ use Concrete\Core\View\View;
 
 class ExtensionFactory
 {
-
     /**
      * @var AssetList
      */
@@ -26,6 +24,7 @@ class ExtensionFactory
 
     /**
      * @param array $config
+     *
      * @return Extension
      */
     public function extensionFromConfig(array $config)
@@ -46,9 +45,9 @@ class ExtensionFactory
         $view = new View(array_get($config, 'view'));
         $extension->setView($view);
 
-        $assets = (array)array_get($config, 'assets');
+        $assets = (array) array_get($config, 'assets');
         foreach ($assets as $handle => $asset_config) {
-            $asset_config = (array)$asset_config;
+            $asset_config = (array) $asset_config;
 
             foreach ($asset_config as $type) {
                 if ($asset = $this->assetList->getAsset($type, $handle)) {
@@ -62,5 +61,4 @@ class ExtensionFactory
 
         return $extension;
     }
-
 }

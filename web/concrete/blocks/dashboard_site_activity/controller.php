@@ -1,14 +1,13 @@
 <?php
 namespace Concrete\Block\DashboardSiteActivity;
 
-use Loader;
 use Core;
-use \Concrete\Core\Block\BlockController;
+use Concrete\Core\Block\BlockController;
 use User;
 use UserInfo;
-use \Concrete\Core\User\Statistics as UserStatistics;
-use \Concrete\Block\Form\Statistics as FormBlockStatistics;
-use \Concrete\Core\Page\Statistics as PageStatistics;
+use Concrete\Core\User\Statistics as UserStatistics;
+use Concrete\Block\Form\Statistics as FormBlockStatistics;
+use Concrete\Core\Page\Statistics as PageStatistics;
 
 class Controller extends BlockController
 {
@@ -45,5 +44,4 @@ class Controller extends BlockController
         $now = new \DateTime('now', $dh->getTimezone('user'));
         $this->set('totalFormSubmissionsToday', FormBlockStatistics::getTotalSubmissions($now->format('Y-m-d')));
     }
-
 }

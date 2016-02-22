@@ -6,10 +6,11 @@ use Config;
 
 class Validation
 {
-
     /**
-     * Checks whether a passed username is unique or if a user of this name already exists
+     * Checks whether a passed username is unique or if a user of this name already exists.
+     *
      * @param string $uName
+     *
      * @return bool
      */
     public function isUniqueUsername($uName)
@@ -24,10 +25,11 @@ class Validation
         }
     }
 
-
     /**
-     * Checks whether a passed email address is unique
+     * Checks whether a passed email address is unique.
+     *
      * @return bool
+     *
      * @param string $uEmail
      */
     public function isUniqueEmail($uEmail)
@@ -42,11 +44,13 @@ class Validation
         }
     }
 
-
     /**
      * Returns true if this is a valid password.
+     *
      * @param string $pass
+     *
      * @return bool
+     *
      * @deprecated Use `\Core::make('validator/password')->isValid($pass, $error);`
      */
     public function password($pass)
@@ -56,8 +60,10 @@ class Validation
 
     /**
      * Returns true if this is a valid username.
-     * Valid usernames can only contain letters, numbers, dots (only in the middle), underscores (only in the middle) and optionally single spaces
+     * Valid usernames can only contain letters, numbers, dots (only in the middle), underscores (only in the middle) and optionally single spaces.
+     *
      * @param string $username
+     *
      * @return bool
      */
     public function username($username)
@@ -84,7 +90,7 @@ class Validation
                 return false;
             }
         }
+
         return true;
     }
-
 }

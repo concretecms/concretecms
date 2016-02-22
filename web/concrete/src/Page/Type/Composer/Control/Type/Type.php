@@ -3,8 +3,8 @@ namespace Concrete\Core\Page\Type\Composer\Control\Type;
 
 use Loader;
 use Core;
-use \Concrete\Core\Foundation\Object;
-use \Concrete\Core\Package\PackageList;
+use Concrete\Core\Foundation\Object;
+use Concrete\Core\Package\PackageList;
 
 abstract class Type extends Object
 {
@@ -12,8 +12,14 @@ abstract class Type extends Object
     abstract public function getPageTypeComposerControlByIdentifier($identifier);
     abstract public function configureFromImportHandle($handle);
 
-    public function controlTypeSupportsOutputControl() {return false;}
-    public function getPageTypeComposerControlTypeName() {return $this->ptComposerControlTypeName;}
+    public function controlTypeSupportsOutputControl()
+    {
+        return false;
+    }
+    public function getPageTypeComposerControlTypeName()
+    {
+        return $this->ptComposerControlTypeName;
+    }
     public function getPageTypeComposerControlTypeDisplayName($format = 'html')
     {
         $value = tc('PageTypeComposerControlTypeName', $this->getPageTypeComposerControlTypeName());
@@ -25,14 +31,26 @@ abstract class Type extends Object
                 return $value;
         }
     }
-    public function getPageTypeComposerControlTypeHandle() {return $this->ptComposerControlTypeHandle;}
-    public function getPageTypeComposerControlTypeID() { return $this->ptComposerControlTypeID;}
-    public function getPackageID() { return $this->pkgID;}
+    public function getPageTypeComposerControlTypeHandle()
+    {
+        return $this->ptComposerControlTypeHandle;
+    }
+    public function getPageTypeComposerControlTypeID()
+    {
+        return $this->ptComposerControlTypeID;
+    }
+    public function getPackageID()
+    {
+        return $this->pkgID;
+    }
     public function getPackageHandle()
     {
         return PackageList::getHandle($this->pkgID);
     }
-    public function getPackageObject() {return Package::getByID($this->pkgID);}
+    public function getPackageObject()
+    {
+        return Package::getByID($this->pkgID);
+    }
 
     public static function getByHandle($ptComposerControlTypeHandle)
     {
@@ -126,5 +144,4 @@ abstract class Type extends Object
             $sc->export($nxml);
         }
     }
-
 }

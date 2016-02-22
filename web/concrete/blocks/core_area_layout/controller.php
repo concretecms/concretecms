@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Block\CoreAreaLayout;
 
 use Concrete\Core\Area\Layout\CustomLayout;
@@ -92,9 +91,9 @@ class Controller extends BlockController
             // we are passing it in directly –likely from import
             $values = array('arLayoutID' => $post['arLayoutID']);
             parent::save($values);
+
             return;
         } else {
-
             $db = Database::connection();
             $arLayoutID = $db->GetOne('select arLayoutID from btCoreAreaLayout where bID = ?', array($this->bID));
             if (!$arLayoutID) {
@@ -335,6 +334,4 @@ class Controller extends BlockController
         $this->set('maxColumns', $maxColumns);
         $this->requireAsset('core/style-customizer');
     }
-
-
 }

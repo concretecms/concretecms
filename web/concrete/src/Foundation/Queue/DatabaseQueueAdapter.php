@@ -1,12 +1,12 @@
 <?php
 namespace Concrete\Core\Foundation\Queue;
-use \ZendQueue\Queue as ZendQueue;
-use \ZendQueue\Exception\RuntimeException;
-use \ZendQueue\Message;
+
+use ZendQueue\Queue as ZendQueue;
+use ZendQueue\Exception\RuntimeException;
+use ZendQueue\Message;
 
 class DatabaseQueueAdapter extends \ZendQueue\Adapter\AbstractAdapter
 {
-
     protected $db;
 
     public function __construct($options = array(), ZendQueue $queue = null)
@@ -25,12 +25,11 @@ class DatabaseQueueAdapter extends \ZendQueue\Adapter\AbstractAdapter
             return false;
         }
 
-        return ($id > 0);
+        return $id > 0;
     }
 
     protected function getQueueId($name)
     {
-
         $r = $this->db->fetchAssoc('select queue_id from Queues where queue_name = ?', array($name));
 
         if ($r === null) {
@@ -38,9 +37,9 @@ class DatabaseQueueAdapter extends \ZendQueue\Adapter\AbstractAdapter
         }
 
         $count = (int) $r['queue_id'];
+
         return $count;
     }
-
 
     public function create($name, $timeout = null)
     {
@@ -51,7 +50,7 @@ class DatabaseQueueAdapter extends \ZendQueue\Adapter\AbstractAdapter
         try {
             $this->db->insert('Queues', array(
                 'queue_name' => $name,
-                'timeout' => ($timeout === null) ? self::CREATE_TIMEOUT_DEFAULT : (int) $timeout
+                'timeout' => ($timeout === null) ? self::CREATE_TIMEOUT_DEFAULT : (int) $timeout,
             ));
         } catch (\Exception $e) {
             throw new RuntimeException($e->getMessage(), $e->getCode(), $e);
@@ -71,13 +70,12 @@ class DatabaseQueueAdapter extends \ZendQueue\Adapter\AbstractAdapter
         }
         try {
             $this->db->delete('Queues', array('queue_id' => $id));
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             throw new RuntimeException($e->getMessage(), $e->getCode(), $e);
         }
 
         return true;
     }
-
 
     public function getQueues()
     {
@@ -90,7 +88,6 @@ class DatabaseQueueAdapter extends \ZendQueue\Adapter\AbstractAdapter
         $list = array_keys($queues);
 
         return $list;
-
     }
 
     public function count(ZendQueue $queue = null)
@@ -99,7 +96,7 @@ class DatabaseQueueAdapter extends \ZendQueue\Adapter\AbstractAdapter
             $queue = $this->_queue;
         }
         $count = $this->db->GetOne('select count(*) from QueueMessages where queue_id = ?', array(
-           $this->getQueueId($queue->getName())
+           $this->getQueueId($queue->getName()),
         ));
 
         return (int) $count;
@@ -136,10 +133,11 @@ class DatabaseQueueAdapter extends \ZendQueue\Adapter\AbstractAdapter
 
         $options = array(
             'queue' => $queue,
-            'data'  => $msg,
+            'data' => $msg,
         );
 
         $classname = $queue->getMessageClass();
+
         return new $classname($options);
     }
 
@@ -155,12 +153,12 @@ class DatabaseQueueAdapter extends \ZendQueue\Adapter\AbstractAdapter
             $queue = $this->_queue;
         }
 
-        $msgs      = array();
+        $msgs = array();
         $microtime = microtime(true); // cache microtime
 
         // start transaction handling
         try {
-            if ( $maxMessages > 0 ) { // ZF-7666 LIMIT 0 clause not included.
+            if ($maxMessages > 0) { // ZF-7666 LIMIT 0 clause not included.
                 $this->db->beginTransaction();
                 $statement = $this->db->prepare('select * from QueueMessages where queue_id = ? and handle is null or timeout + ' . (int) $timeout . ' < ' . (int) $microtime . ' limit ' . $maxMessages . ' for update');
                 $statement->bindValue(1, $this->getQueueId($queue->getName()));
@@ -171,7 +169,7 @@ class DatabaseQueueAdapter extends \ZendQueue\Adapter\AbstractAdapter
                     $data['handle'] = md5(uniqid(rand(), true));
 
                     // update the database
-                    $count = $this->db->executeUpdate('update QueueMessages set handle = ?, timeout = ? where message_id = ? and (handle is null or timeout + ' . (int)$timeout . ' < ' . (int) $microtime . ')',
+                    $count = $this->db->executeUpdate('update QueueMessages set handle = ?, timeout = ? where message_id = ? and (handle is null or timeout + ' . (int) $timeout . ' < ' . (int) $microtime . ')',
                         array($data['handle'], $microtime, $data['message_id']));
 
                     // we check count to make sure no other thread has gotten
@@ -188,12 +186,13 @@ class DatabaseQueueAdapter extends \ZendQueue\Adapter\AbstractAdapter
         }
 
         $options = array(
-            'queue'        => $queue,
-            'data'         => $msgs,
+            'queue' => $queue,
+            'data' => $msgs,
             'messageClass' => $queue->getMessageClass(),
         );
 
         $classname = $queue->getMessageSetClass();
+
         return new $classname($options);
     }
 
@@ -206,18 +205,17 @@ class DatabaseQueueAdapter extends \ZendQueue\Adapter\AbstractAdapter
         return false;
     }
 
-
     public function getCapabilities()
     {
         return array(
-            'create'        => true,
-            'delete'        => true,
-            'send'          => true,
-            'receive'       => true,
+            'create' => true,
+            'delete' => true,
+            'send' => true,
+            'receive' => true,
             'deleteMessage' => true,
-            'getQueues'     => true,
-            'count'         => true,
-            'isExists'      => true,
+            'getQueues' => true,
+            'count' => true,
+            'isExists' => true,
         );
     }
 }

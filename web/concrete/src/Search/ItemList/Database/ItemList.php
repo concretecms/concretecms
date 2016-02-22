@@ -1,5 +1,6 @@
 <?php
 namespace Concrete\Core\Search\ItemList\Database;
+
 use Concrete\Core\Search\StickyRequest;
 use Database;
 use Concrete\Core\Search\ItemList\ItemList as AbstractItemList;
@@ -7,7 +8,6 @@ use Doctrine\DBAL\Logging\EchoSQLLogger;
 
 abstract class ItemList extends AbstractItemList
 {
-
     /** @var \Doctrine\DBAL\Query\QueryBuilder */
     protected $query;
 
@@ -18,6 +18,7 @@ abstract class ItemList extends AbstractItemList
 
     /**
      * @param \Doctrine\DBAL\Query\QueryBuilder $query
+     *
      * @return \Doctrine\DBAL\Query\QueryBuilder
      */
     public function finalizeQuery(\Doctrine\DBAL\Query\QueryBuilder $query)
@@ -43,6 +44,7 @@ abstract class ItemList extends AbstractItemList
         $this->setupAutomaticSorting($this->searchRequest);
         $query = clone $this->query;
         $query = $this->finalizeQuery($query);
+
         return $query;
     }
 
@@ -67,7 +69,7 @@ abstract class ItemList extends AbstractItemList
 
     protected function executeSortBy($column, $direction = 'asc')
     {
-        if (in_array(strtolower($direction), array('asc','desc'))) {
+        if (in_array(strtolower($direction), array('asc', 'desc'))) {
             $this->query->orderBy($column, $direction);
         } else {
             throw new \Exception(t('Invalid SQL in order by'));
@@ -92,9 +94,8 @@ abstract class ItemList extends AbstractItemList
             $this->query->andWhere($value); // ugh
         } else {
             $this->query->andWhere(implode(' ', array(
-               $field, $comparison, $this->query->createNamedParameter($value)
+               $field, $comparison, $this->query->createNamedParameter($value),
             )));
         }
     }
-
 }
