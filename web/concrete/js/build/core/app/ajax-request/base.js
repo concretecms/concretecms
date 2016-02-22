@@ -36,7 +36,7 @@
 		},
 
 		before: function(my) {
-			if (this.options.loader) {
+			if (my.options.loader) {
 				jQuery.fn.dialog.showLoader();
 			}
 		},

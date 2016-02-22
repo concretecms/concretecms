@@ -3,7 +3,7 @@
 
     <script type="text/javascript">
         $(function() {
-            $('.tree-view-template-<?=$attributeKey->getAttributeKeyID()?>').ccmtopicstree({  // run first time around to get default tree if new.
+            $('.tree-view-template-<?=$attributeKey->getAttributeKeyID()?>').concreteTopicsTree({  // run first time around to get default tree if new.
                 'treeID': <?php echo $tree->getTreeID();
     ?>,
                 'chooseNodeInForm': true,

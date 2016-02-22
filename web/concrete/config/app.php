@@ -777,6 +777,9 @@ return array(
             array('javascript', 'js/topics.js', array('minify' => false)),
             array('css', 'css/topics.css', array('minify' => false)),
         ),
+        'core/tree' => array(
+            array('javascript', 'js/tree.js', array('minify' => false)),
+        ),
         'core/groups' => array(
             array('javascript', 'js/groups.js', array('minify' => false)),
         ),
@@ -1035,10 +1038,12 @@ return array(
         'core/topics' => array(
             array(
                 array('javascript', 'core/events'),
+                array('javascript', 'underscore'),
                 array('javascript', 'jquery/ui'),
                 array('javascript-localized', 'jquery/ui'),
                 array('javascript', 'dynatree'),
                 array('javascript-localized', 'dynatree'),
+                array('javascript', 'core/tree'),
                 array('javascript', 'core/topics'),
                 array('css', 'dynatree'),
                 array('css', 'core/topics'),
@@ -1052,6 +1057,7 @@ return array(
                 array('javascript-localized', 'jquery/ui'),
                 array('javascript', 'dynatree'),
                 array('javascript-localized', 'dynatree'),
+                array('javascript', 'core/tree'),
                 array('javascript', 'core/groups'),
                 array('css', 'dynatree'),
             ),

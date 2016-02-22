@@ -237,7 +237,7 @@
             my.$menuPointer = $menu;
             ConcreteMenuManager.activeMenu = my;
 
-            ConcreteEvent.publish('ConcreteMenuShow', {menu: my});
+            ConcreteEvent.publish('ConcreteMenuShow', {menu: my, menuElement: $menu});
         },
 
         hide: function (e) {

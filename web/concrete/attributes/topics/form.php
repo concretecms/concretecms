@@ -8,7 +8,7 @@
 	<script type="text/javascript">
 	$(function() {
 		var treeObj = $('.tree-view-template_<?php echo $akID ?>');
-		treeObj.ccmtopicstree({
+		treeObj.concreteTopicsTree({
 			'treeID': '<?php echo $treeID ?>',
 			'treeNodeParentID': '<?php echo $parentNode ?>',
 			'chooseNodeInForm': 'multiple',

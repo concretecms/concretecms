@@ -138,7 +138,7 @@ $(function() {
           <?php 
 }
     ?>
-          'removeNodesByID': ['<?=$guestGroupNode->getTreeNodeID()?>','<?=$registeredGroupNode->getTreeNodeID()?>'],
+          'removeNodesByKey': ['<?=$guestGroupNode->getTreeNodeID()?>','<?=$registeredGroupNode->getTreeNodeID()?>'],
           'onSelect': function(select, node) {
              if (select) {
                 $('input[name=gParentNodeID]').val(node.data.key);

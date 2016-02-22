@@ -4,7 +4,7 @@ $form = Loader::helper('form');
     ?>
 
 <div class="ccm-ui">
-	<form method="post" data-topic-form="update-topic-node" class="form-horizontal" action="<?=$controller->action('update_topic_node')?>">
+	<form method="post" data-dialog-form="edit-topic-node" class="form-horizontal" action="<?=$controller->action('update_topic_node')?>">
 		<?=Loader::helper('validation/token')->output('update_topic_node')?>
 		<input type="hidden" name="treeNodeID" value="<?=$node->getTreeNodeID()?>" />
 		<div class="form-group">
@@ -12,9 +12,21 @@ $form = Loader::helper('form');
 			<?=$form->text('treeNodeTopicName', $node->getTreeNodeName(), array('class' => 'span4'))?>
 		</div>
 		<div class="dialog-buttons">
-			<button class="btn btn-default" onclick="jQuery.fn.dialog.closeTop()"><?=t('Cancel')?></button>
-			<button class="btn btn-primary pull-right" type="submit"><?=t('Update')?></button>
+			<button class="btn btn-default" data-dialog-action="cancel"><?=t('Cancel')?></button>
+			<button class="btn btn-primary pull-right" data-dialog-action="submit" type="submit"><?=t('Update')?></button>
 		</div>
 	</form>
+
+	<script type="text/javascript">
+		$(function() {
+			ConcreteEvent.unsubscribe('AjaxFormSubmitSuccess.updateTreeNode');
+			ConcreteEvent.subscribe('AjaxFormSubmitSuccess.updateTreeNode', function(e, data) {
+				if (data.form == 'edit-topic-node') {
+					ConcreteEvent.publish('ConcreteTreeUpdateTreeNode', {'node': data.response});
+				}
+			});
+		});
+	</script>
+
 </div>
 
