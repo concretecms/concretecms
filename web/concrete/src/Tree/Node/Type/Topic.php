@@ -2,6 +2,7 @@
 namespace Concrete\Core\Tree\Node\Type;
 
 use Concrete\Core\Tree\Node\Node as TreeNode;
+use Concrete\Core\Tree\Node\Type\Menu\TopicMenu;
 use Loader;
 
 class Topic extends TreeNode
@@ -25,6 +26,17 @@ class Topic extends TreeNode
     {
         return 'TopicName';
     }
+
+    public function getTreeNodeTypeName()
+    {
+        return 'Topic';
+    }
+
+    public function getTreeNodeMenu()
+    {
+        return new TopicMenu($this);
+    }
+
     public function getTreeNodeDisplayName($format = 'html')
     {
         $name = $this->getTreeNodeName();

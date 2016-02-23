@@ -22,11 +22,24 @@ abstract class Node extends Object implements \Concrete\Core\Permission\ObjectIn
      */
     abstract public function getTreeNodeDisplayName($format = 'html');
     abstract public function deleteDetails();
+    abstract public function getTreeNodeTypeName();
 
     protected $childNodes = array();
     protected $childNodesLoaded = false;
     protected $treeNodeIsSelected = false;
     protected $tree;
+
+    public function getTreeNodeTypeDisplayName($format = 'html')
+    {
+        $name = $this->getTreeNodeTypeName();
+        switch ($format) {
+            case 'html':
+                return h($name);
+            case 'text':
+            default:
+                return $name;
+        }
+    }
 
     public function getPermissionObjectIdentifier()
     {
@@ -82,8 +95,12 @@ abstract class Node extends Object implements \Concrete\Core\Permission\ObjectIn
     }
     public function getTreeNodeTypeObject()
     {
-        return TreeNodeType::getByID($this->treeNodeTypeID);
+        if (!isset($this->treeNodeType)) {
+            $this->treeNodeType = TreeNodeType::getByID($this->treeNodeTypeID);
+        }
+        return $this->treeNodeType;
     }
+
     public function getTreeNodeTypeHandle()
     {
         $type = $this->getTreeNodeTypeObject();
@@ -157,6 +174,11 @@ abstract class Node extends Object implements \Concrete\Core\Permission\ObjectIn
         }
     }
 
+    public function getTreeNodeMenu()
+    {
+        return null;
+    }
+
     public function getTreeNodeJSON()
     {
         $p = new Permissions($this);
@@ -175,6 +197,7 @@ abstract class Node extends Object implements \Concrete\Core\Permission\ObjectIn
             $node->treeNodeParentID = $this->getTreeNodeParentID();
             $node->treeNodeTypeID = $this->getTreeNodeTypeID();
             $node->treeNodeTypeHandle = $this->getTreeNodeTypeHandle();
+            $node->treeNodeMenu = $this->getTreeNodeMenu();
 
             foreach ($this->getChildNodes() as $childnode) {
                 $childnodejson = $childnode->getTreeNodeJSON();

@@ -11,7 +11,7 @@ $jh = Core::make('helper/json');
 	<script type="text/javascript">
 	$(function() {
 
-		$('[data-tree]').concreteTopicsTree({
+		$('[data-tree]').concreteTree({
 			'treeID': '<?=$tree->getTreeID()?>'
 		});
 

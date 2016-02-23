@@ -773,10 +773,6 @@ return array(
             array('javascript', 'js/sitemap.js', array('minify' => false)),
             array('css', 'css/sitemap.css', array('minify' => false)),
         ),
-        'core/topics' => array(
-            array('javascript', 'js/topics.js', array('minify' => false)),
-            array('css', 'css/topics.css', array('minify' => false)),
-        ),
         'core/tree' => array(
             array('javascript', 'js/tree.js', array('minify' => false)),
         ),
@@ -1044,9 +1040,7 @@ return array(
                 array('javascript', 'dynatree'),
                 array('javascript-localized', 'dynatree'),
                 array('javascript', 'core/tree'),
-                array('javascript', 'core/topics'),
-                array('css', 'dynatree'),
-                array('css', 'core/topics'),
+                array('css', 'dynatree')
             ),
         ),
         'core/groups' => array(
@@ -1058,7 +1052,6 @@ return array(
                 array('javascript', 'dynatree'),
                 array('javascript-localized', 'dynatree'),
                 array('javascript', 'core/tree'),
-                array('javascript', 'core/groups'),
                 array('css', 'dynatree'),
             ),
         ),

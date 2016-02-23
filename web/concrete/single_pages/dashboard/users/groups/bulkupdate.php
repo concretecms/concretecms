@@ -128,7 +128,7 @@ $(function() {
 
 <script type="text/javascript">
     $(function() {
-       $('[data-groups-tree=<?=$tree->getTreeID()?>]').concreteGroupsTree({
+       $('[data-groups-tree=<?=$tree->getTreeID()?>]').concreteTree({
           'treeID': '<?=$tree->getTreeID()?>',
           'chooseNodeInForm': 'single',
 		  'enableDragAndDrop': false,

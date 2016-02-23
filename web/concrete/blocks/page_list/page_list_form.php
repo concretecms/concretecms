@@ -548,7 +548,7 @@ $form = Loader::helper('form/page_selector');
                 return;
             }
             $('.tree-view-container').append(treeViewTemplate);
-            $('.tree-view-template').concreteTopicsTree({
+            $('.tree-view-template').concreteTree({
                 'treeID': chosenTree,
                 'chooseNodeInForm': true,
                 'selectNodesByKey': [<?=intval($customTopicTreeNodeID)?>],
