@@ -4,9 +4,13 @@ $c = Page::getCurrentPage();
 ?>
 <div class="col-md-4">
 	<div class="list-group">
-		<a class="list-group-item <?php if ($c->getCollectionPath() == '/dashboard/system/express/entities') {
+		<a class="list-group-item <?php if ($c->getCollectionPath() == '/dashboard/system/express/entities' && $view->controller->getTask() == 'view_entity') {
     ?>active<?php 
-} ?>" href="<?=URL::to('/dashboard/system/express/entities', 'view_entity', $entity->getId())?>"><?=t('Edit Object')?></a>
+} ?>" href="<?=URL::to('/dashboard/system/express/entities', 'view_entity', $entity->getId())?>"><?=t('Details')?></a>
+		<a class="list-group-item <?php if ($c->getCollectionPath() == '/dashboard/system/express/entities' &&
+			($view->controller->getTask() == 'edit' || $view->controller->getTask() == 'update')) {
+			?>active<?php
+		} ?>" href="<?=URL::to('/dashboard/system/express/entities', 'edit', $entity->getId())?>"><?=t('Edit Entity')?></a>
 		<a class="list-group-item <?php if ($c->getCollectionPath() == '/dashboard/system/express/entities/attributes') {
     ?>active<?php 
 } ?>" href="<?=URL::to('/dashboard/system/express/entities/attributes', $entity->getId())?>"><?=t('Attributes')?></a>

@@ -182,6 +182,14 @@ abstract class Node extends Object implements \Concrete\Core\Permission\ObjectIn
     public function getTreeNodeJSON()
     {
         $p = new Permissions($this);
+        $data = $this->tree->getRequestData();
+        if (isset($data['displayOnly'])) {
+            // filter by node type handle
+            if ($this->getTreeNodeTypeHandle() != $data['displayOnly']) {
+                return false;
+            }
+        }
+
         if ($p->canViewTreeNode()) {
             $node = new stdClass();
             $node->title = $this->getTreeNodeDisplayName();
