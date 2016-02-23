@@ -2,6 +2,7 @@
 namespace Concrete\Core\Tree\Node\Type;
 
 use Concrete\Core\Tree\Node\Node as TreeNode;
+use Concrete\Core\Tree\Node\Type\Menu\CategoryMenu;
 use Loader;
 
 class Category extends TreeNode
@@ -23,6 +24,16 @@ class Category extends TreeNode
     public function getPermissionObjectKeyCategoryHandle()
     {
         return 'category_tree_node';
+    }
+
+    public function getTreeNodeMenu()
+    {
+        return new CategoryMenu($this);
+    }
+
+    public function getTreeNodeTypeName()
+    {
+        return 'Category';
     }
 
     public function getTreeNodeDisplayName($format = 'html')

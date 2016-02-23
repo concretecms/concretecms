@@ -2,6 +2,7 @@
 namespace Concrete\Core\Tree\Node\Type;
 
 use Concrete\Core\Tree\Node\Node as TreeNode;
+use Concrete\Core\Tree\Node\Type\Menu\GroupMenu;
 use Loader;
 use Concrete\Core\User\Group\Group as UserGroup;
 
@@ -22,10 +23,21 @@ class Group extends TreeNode
         return 'group_tree_node';
     }
 
+    public function getTreeNodeTypeName()
+    {
+        return 'Group';
+    }
+
     public function getTreeNodeGroupID()
     {
         return $this->gID;
     }
+
+    public function getTreeNodeMenu()
+    {
+        return new GroupMenu($this);
+    }
+
     public function getTreeNodeGroupObject()
     {
         return UserGroup::getByID($this->gID);

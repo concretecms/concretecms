@@ -21,6 +21,11 @@ class ExpressEntryResults extends TreeNode
         return 'express_entry_results';
     }
 
+    public function getTreeNodeTypeName()
+    {
+        return 'Results';
+    }
+
     public function getTreeNodeTranslationContext()
     {
         return 'TopicName';

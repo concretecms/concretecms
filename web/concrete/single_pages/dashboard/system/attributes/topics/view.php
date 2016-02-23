@@ -47,7 +47,7 @@ $jh = Core::make('helper/json');
 			window.location.href = '<?=$view->url('/dashboard/system/attributes/topics', 'view')?>' + $(this).val();
 		});
 		
-		$('[data-topic-tree]').concreteTopicsTree({
+		$('[data-topic-tree]').concreteTree({
 			'treeID': '<?=$tree->getTreeID()?>'
 		});
 
