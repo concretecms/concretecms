@@ -13,4 +13,16 @@ defined('C5_EXECUTE') or die("Access Denied.");
             <button class="btn btn-danger pull-right" data-dialog-action="submit" type="submit"><?=t('Remove')?></button>
         </div>
     </form>
+
+    <script type="text/javascript">
+        $(function() {
+            ConcreteEvent.unsubscribe('AjaxFormSubmitSuccess.deleteTreeNode');
+            ConcreteEvent.subscribe('AjaxFormSubmitSuccess.deleteTreeNode', function(e, data) {
+                if (data.form == 'remove-tree-node') {
+                    ConcreteEvent.publish('ConcreteTreeDeleteTreeNode', {'node': data.response});
+                }
+            });
+        });
+    </script>
+
 </div>

@@ -15,7 +15,6 @@
 			'allowFolderSelection': false,
 			'selectNodesByKey': [<?php echo $valueIDs ?>],
 			'selectMode': '2',
-			'noDrag' : true,
 			'minExpandLevel': '1',
 			'checkbox': true,
 			'onSelect' : function(select, node) {

@@ -7,7 +7,6 @@
                 'treeID': <?php echo $tree->getTreeID();
     ?>,
                 'chooseNodeInForm': true,
-                'noDrag' : true,
                 <?php if ($selectedNode) {
     ?>
                  'selectNodesByKey': [<?php echo $selectedNode ?>],

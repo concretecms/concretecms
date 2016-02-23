@@ -1,19 +1,19 @@
 <?php
-namespace Concrete\Controller\Dialog\Tree\Node\TopicCategory;
+namespace Concrete\Controller\Dialog\Tree\Node\Category;
 
 use Concrete\Controller\Dialog\Tree\Node;
-use Concrete\Core\Tree\Node\Type\TopicCategory;
+use Concrete\Core\Tree\Node\Type\Category;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 class Add extends Node
 {
-    protected $viewPath = '/dialogs/tree/node/topic_category/add';
+    protected $viewPath = '/dialogs/tree/node/category/add';
 
     protected function canAccess()
     {
         $node = $this->getNode();
         $np = new \Permissions($node);
-        return $np->canAddTopicCategoryTreeNode();
+        return $np->canAddCategoryTreeNode();
     }
 
     public function view()
@@ -42,7 +42,7 @@ class Add extends Node
         }
 
         if (!$error->has()) {
-            $category = TopicCategory::add($title, $parent);
+            $category = Category::add($title, $parent);
             $r = $category->getTreeNodeJSON();
             return new JsonResponse($r);
         } else {

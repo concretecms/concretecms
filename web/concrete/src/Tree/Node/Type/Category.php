@@ -4,11 +4,25 @@ namespace Concrete\Core\Tree\Node\Type;
 use Concrete\Core\Tree\Node\Node as TreeNode;
 use Loader;
 
-abstract class Category extends TreeNode
+class Category extends TreeNode
 {
     public function getTreeNodeTranslationContext()
     {
         return 'TreeNodeCategoryName';
+    }
+
+    public function getPermissionResponseClassName()
+    {
+        return '\\Concrete\\Core\\Permission\\Response\\CategoryTreeNodeResponse';
+    }
+
+    public function getPermissionAssignmentClassName()
+    {
+        return '\\Concrete\\Core\\Permission\\Assignment\\CategoryTreeNodeAssignment';
+    }
+    public function getPermissionObjectKeyCategoryHandle()
+    {
+        return 'category_tree_node';
     }
 
     public function getTreeNodeDisplayName($format = 'html')
@@ -50,6 +64,15 @@ abstract class Category extends TreeNode
         $obj = parent::getTreeNodeJSON();
         if (is_object($obj)) {
             $obj->isFolder = true;
+            $p = new \Permissions($this);
+            $data = $this->getTreeObject()->getRequestData();
+            if (is_array($data) && $data['allowFolderSelection']) {
+                $obj->hideCheckbox = false;
+            } else {
+                $obj->hideCheckbox = true;
+            }
+            $obj->canAddTopicTreeNode = $p->canAddTopicTreeNode();
+            $obj->canAddCategoryTreeNode = $p->canAddCategoryTreeNode();
 
             return $obj;
         }

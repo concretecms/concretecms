@@ -30,16 +30,16 @@ class ExpressEntryCategory extends Category
 
     public function getPermissionResponseClassName()
     {
-        return '\\Concrete\\Core\\Permission\\Response\\TopicCategoryTreeNodeResponse';
+        return '\\Concrete\\Core\\Permission\\Response\\CategoryTreeNodeResponse';
     }
 
     public function getPermissionAssignmentClassName()
     {
-        return '\\Concrete\\Core\\Permission\\Assignment\\TopicCategoryTreeNodeAssignment';
+        return '\\Concrete\\Core\\Permission\\Assignment\\CategoryTreeNodeAssignment';
     }
     public function getPermissionObjectKeyCategoryHandle()
     {
-        return 'topic_category_tree_node';
+        return 'category_tree_node';
     }
 
     public function getTreeNodeJSON()
@@ -54,7 +54,7 @@ class ExpressEntryCategory extends Category
                 $obj->hideCheckbox = true;
             }
             $obj->canAddTopicTreeNode = $p->canAddTopicTreeNode();
-            $obj->canAddTopicCategoryTreeNode = $p->canAddTopicCategoryTreeNode();
+            $obj->canAddCategoryTreeNode = $p->canAddCategoryTreeNode();
 
             return $obj;
         }
