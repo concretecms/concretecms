@@ -1,13 +1,12 @@
 <?php
-namespace Concrete\Controller\Dialog\Tree\Node\TopicCategory;
+namespace Concrete\Controller\Dialog\Tree\Node\Category;
 
 use Concrete\Controller\Dialog\Tree\Node;
-use Concrete\Core\Tree\Node\Type\TopicCategory;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 class Edit extends Node
 {
-    protected $viewPath = '/dialogs/tree/node/topic_category/edit';
+    protected $viewPath = '/dialogs/tree/node/category/edit';
 
     protected function canAccess()
     {

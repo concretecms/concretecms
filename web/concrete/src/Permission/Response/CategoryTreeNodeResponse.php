@@ -4,7 +4,7 @@ namespace Concrete\Core\Permission\Response;
 use Page;
 use Permissions;
 
-class TopicCategoryTreeNodeResponse extends Response
+class CategoryTreeNodeResponse extends Response
 {
     protected function canAccessTopics()
     {
@@ -21,7 +21,7 @@ class TopicCategoryTreeNodeResponse extends Response
 
     public function canViewTreeNode()
     {
-        return $this->validate('view_topic_category_tree_node');
+        return $this->validate('view_category_tree_node');
     }
 
     public function canDuplicateTreeNode()
@@ -44,7 +44,7 @@ class TopicCategoryTreeNodeResponse extends Response
         return $this->canAccessTopics();
     }
 
-    public function canAddTopicCategoryTreeNode()
+    public function canAddCategoryTreeNode()
     {
         return $this->canAccessTopics();
     }

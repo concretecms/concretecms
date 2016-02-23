@@ -18,7 +18,7 @@
         <category handle="page_type" package=""/>
         <category handle="gathering" package=""/>
         <category handle="group_tree_node" package=""/>
-        <category handle="topic_category_tree_node" package=""/>
+        <category handle="category_tree_node" package=""/>
         <category handle="topic_tree_node" package=""/>
         <category handle="conversation" package=""/>
         <category handle="conversation_message" package=""/>
@@ -111,7 +111,7 @@
 
         <!-- topics //-->
         <permissionkey handle="view_topic_tree_node" name="View Topic Tree Node" description="" package="" category="topic_tree_node" />
-        <permissionkey handle="view_topic_category_tree_node" name="View Topic Category Tree Node" description="" package="" category="topic_category_tree_node" />
+        <permissionkey handle="view_category_tree_node" name="View Topic Category Tree Node" description="" package="" category="category_tree_node" />
 
         <!-- conversations //-->
         <permissionkey handle="add_conversation_message" name="Add Message to Conversation" has-custom-class="true" description="" package="" category="conversation" />
@@ -302,7 +302,7 @@
                 <category handle="page_type" />
                 <category handle="gathering" />
                 <category handle="group_tree_node" />
-                <category handle="topic_category_tree_node" />
+                <category handle="category_tree_node" />
                 <category handle="topic_tree_node" />
                 <category handle="conversation" />
                 <category handle="conversation_message" />
@@ -325,7 +325,7 @@
                 <category handle="page_type" />
                 <category handle="gathering" />
                 <category handle="group_tree_node" />
-                <category handle="topic_category_tree_node" />
+                <category handle="category_tree_node" />
                 <category handle="topic_tree_node" />
                 <category handle="conversation" />
                 <category handle="conversation_message" />
@@ -348,7 +348,7 @@
                 <category handle="page_type" />
                 <category handle="gathering" />
                 <category handle="group_tree_node" />
-                <category handle="topic_category_tree_node" />
+                <category handle="category_tree_node" />
                 <category handle="topic_tree_node" />
                 <category handle="conversation" />
                 <category handle="conversation_message" />
@@ -370,7 +370,7 @@
                 <category handle="page_type" />
                 <category handle="gathering" />
                 <category handle="group_tree_node" />
-                <category handle="topic_category_tree_node" />
+                <category handle="category_tree_node" />
                 <category handle="topic_tree_node" />
                 <category handle="conversation" />
                 <category handle="conversation_message" />

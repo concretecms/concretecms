@@ -7,8 +7,6 @@ use Loader;
 use Core;
 use Concrete\Core\Tree\Type\Topic as TopicTree;
 use Concrete\Core\Tree\Node\Node as TreeNode;
-use Concrete\Core\Tree\Node\Type\Topic as TopicTreeNode;
-use Concrete\Core\Tree\Node\Type\TopicCategory as TopicCategoryTreeNode;
 use Permissions;
 
 class Topics extends DashboardPageController

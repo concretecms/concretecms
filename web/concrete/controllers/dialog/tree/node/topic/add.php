@@ -3,7 +3,6 @@ namespace Concrete\Controller\Dialog\Tree\Node\Topic;
 
 use Concrete\Controller\Dialog\Tree\Node;
 use Concrete\Core\Tree\Node\Type\Topic;
-use Concrete\Core\Tree\Node\Type\TopicCategory;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 class Add extends Node

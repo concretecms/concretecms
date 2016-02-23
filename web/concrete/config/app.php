@@ -368,8 +368,8 @@ return array(
         "/ccm/system/tree/node/drag_request" => array('\Concrete\Controller\Backend\Tree\Node\DragRequest::execute'),
         "/ccm/system/tree/node/duplicate" => array('\Concrete\Controller\Backend\Tree\Node\Duplicate::execute'),
 
-        "/ccm/system/dialogs/tree/node/add/topic_category" => array('\Concrete\Controller\Dialog\Tree\Node\TopicCategory\Add::view'),
-        "/ccm/system/dialogs/tree/node/add/topic_category/add_category_node" => array('\Concrete\Controller\Dialog\Tree\Node\TopicCategory\Add::add_category_node'),
+        "/ccm/system/dialogs/tree/node/add/category" => array('\Concrete\Controller\Dialog\Tree\Node\Category\Add::view'),
+        "/ccm/system/dialogs/tree/node/add/category/add_category_node" => array('\Concrete\Controller\Dialog\Tree\Node\Category\Add::add_category_node'),
 
         "/ccm/system/dialogs/tree/node/add/topic" => array('\Concrete\Controller\Dialog\Tree\Node\Topic\Add::view'),
         "/ccm/system/dialogs/tree/node/add/topic/add_topic_node" => array('\Concrete\Controller\Dialog\Tree\Node\Topic\Add::add_topic_node'),
@@ -377,8 +377,8 @@ return array(
         "/ccm/system/dialogs/tree/node/edit/topic" => array('\Concrete\Controller\Dialog\Tree\Node\Topic\Edit::view'),
         "/ccm/system/dialogs/tree/node/edit/topic/update_topic_node" => array('\Concrete\Controller\Dialog\Tree\Node\Topic\Edit::update_topic_node'),
 
-        "/ccm/system/dialogs/tree/node/edit/topic_category" => array('\Concrete\Controller\Dialog\Tree\Node\TopicCategory\Edit::view'),
-        "/ccm/system/dialogs/tree/node/edit/topic_category/update_category_node" => array('\Concrete\Controller\Dialog\Tree\Node\TopicCategory\Edit::update_category_node'),
+        "/ccm/system/dialogs/tree/node/edit/category" => array('\Concrete\Controller\Dialog\Tree\Node\Category\Edit::view'),
+        "/ccm/system/dialogs/tree/node/edit/category/update_category_node" => array('\Concrete\Controller\Dialog\Tree\Node\Category\Edit::update_category_node'),
 
         "/ccm/system/dialogs/tree/node/delete" => array('\Concrete\Controller\Dialog\Tree\Node\Delete::view'),
         "/ccm/system/dialogs/tree/node/delete/remove_tree_node" => array('\Concrete\Controller\Dialog\Tree\Node\Delete::remove_tree_node'),

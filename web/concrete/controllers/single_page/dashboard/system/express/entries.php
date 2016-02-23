@@ -8,7 +8,7 @@ use Core;
 use Concrete\Core\Tree\Type\ExpressEntryResults;
 use Concrete\Core\Tree\Node\Node as TreeNode;
 use Concrete\Core\Tree\Node\Type\Topic as TopicTreeNode;
-use Concrete\Core\Tree\Node\Type\TopicCategory as TopicCategoryTreeNode;
+use Concrete\Core\Tree\Node\Type\Category as CategoryTreeNode;
 use Permissions;
 
 class Entries extends DashboardPageController
@@ -41,12 +41,12 @@ class Entries extends DashboardPageController
             }
 
             $np = new Permissions($parent);
-            if (!$np->canAddTopicCategoryTreeNode()) {
+            if (!$np->canAddCategoryTreeNode()) {
                 $this->error->add(t('You may not add a category here.'));
             }
 
             if (!$this->error->has()) {
-                $category = TopicCategoryTreeNode::add($title, $parent);
+                $category = CategoryTreeNode::add($title, $parent);
                 $r = $category->getTreeNodeJSON();
                 Loader::helper('ajax')->sendResult($r);
             }
@@ -93,7 +93,7 @@ class Entries extends DashboardPageController
     {
         if ($this->token->validate('update_category_node')) {
             $node = TreeNode::getByID(Loader::helper('security')->sanitizeInt($_POST['treeNodeID']));
-            if (!($node instanceof TopicCategoryTreeNode)) {
+            if (!($node instanceof CategoryTreeNode)) {
                 $this->error->add(t('Invalid node.'));
             }
             $title = $_POST['treeNodeCategoryName'];

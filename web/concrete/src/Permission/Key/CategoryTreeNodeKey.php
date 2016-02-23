@@ -1,6 +1,6 @@
 <?php
 namespace Concrete\Core\Permission\Key;
 
-class TopicCategoryTreeNodeKey extends TreeNodeKey
+class CategoryTreeNodeKey extends TreeNodeKey
 {
 }
