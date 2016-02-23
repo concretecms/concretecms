@@ -11,7 +11,7 @@ use Concrete\Core\Entity\Express\FieldSet;
 use Concrete\Core\Entity\Express\Form;
 use Concrete\Core\Express\Form\Renderer;
 use Concrete\Core\Http\ResponseAssetGroup;
-use Concrete\Core\Tree\Node\Type\ExpressEntryCategory;
+use Concrete\Core\Tree\Node\Type\Category;
 use Concrete\Core\Tree\Type\ExpressEntryResults;
 use Doctrine\ORM\Id\UuidGenerator;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -159,7 +159,7 @@ class Controller extends BlockController
             $name = is_object($c) ? $c->getCollectionName() : t('Form');
 
             // Create a results node
-            $node = ExpressEntryCategory::getNodeByName(self::FORM_RESULTS_CATEGORY_NAME);
+            $node = Category::getNodeByName(self::FORM_RESULTS_CATEGORY_NAME);
             $node = \Concrete\Core\Tree\Node\Type\ExpressEntryResults::add($name, $node);
 
             $entity = new Entity();

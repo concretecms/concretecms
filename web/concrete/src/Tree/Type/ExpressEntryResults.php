@@ -1,8 +1,12 @@
 <?php
 namespace Concrete\Core\Tree\Type;
 
-use Concrete\Core\Tree\Node\Type\ExpressEntryCategory;
+use Concrete\Core\Permission\Access\Access;
+use Concrete\Core\Permission\Access\Entity\GroupEntity;
+use Concrete\Core\Permission\Key\CategoryTreeNodeKey;
+use Concrete\Core\Tree\Node\Type\Category;
 use Concrete\Core\Tree\Tree;
+use Concrete\Core\User\Group\Group;
 use Database;
 
 class ExpressEntryResults extends Tree
@@ -52,9 +56,17 @@ class ExpressEntryResults extends Tree
     public static function add()
     {
         // copy permissions from the other node.
-        $rootNode = ExpressEntryCategory::add();
+        $rootNode = Category::add();
         $treeID = parent::create($rootNode);
         $tree = self::getByID($treeID);
+
+        $adminGroupEntity = GroupEntity::getOrCreate(Group::getByID(ADMIN_GROUP_ID));
+        $pk = CategoryTreeNodeKey::getByHandle('view_category_tree_node');
+        $pk->setPermissionObject($rootNode);
+        $pa = Access::create($pk);
+        $pa->addListItem($adminGroupEntity);
+        $pt = $pk->getPermissionAssignmentObject();
+        $pt->assignPermissionAccess($pa);
 
         return $tree;
     }

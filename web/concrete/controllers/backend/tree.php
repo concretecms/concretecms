@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Controller\Backend;
 
+use Concrete\Core\Tree\Node\Node;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 class Tree extends UserInterface
@@ -30,7 +31,7 @@ class Tree extends UserInterface
         if (is_array($_REQUEST['treeNodeSelectedIDs'])) {
             $selectedIDs = array();
             foreach ($_REQUEST['treeNodeSelectedIDs'] as $nID) {
-                $node = TreeNode::getByID($nID);
+                $node = Node::getByID($nID);
                 if (is_object($node) && $node->getTreeID() == $tree->getTreeID()) {
                     $selectedIDs[] = $node->getTreeNodeID();
                 }

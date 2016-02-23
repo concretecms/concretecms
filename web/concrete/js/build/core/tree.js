@@ -12,7 +12,9 @@
 			treeID: false,
 			allowFolderSelection: true,
 			selectNodesByKey: [],
-			removeNodesByKey: []
+			removeNodesByKey: [],
+			removeNodesByCallback: false,
+			ajaxData: {} // additional to be sent up
 		}, options);
 		my.options = options;
 		my.$element = $element;
@@ -20,6 +22,7 @@
 		my.setupTreeEvents();
 		return my.$element;
 	}
+
 
 	ConcreteTree.prototype = {
 
@@ -77,7 +80,7 @@
 			});
 
 			ConcreteEvent.subscribe('ConcreteTreeAddTreeNode', function(e, r) {
-				var $tree = $('[data-topic-tree=' + my.options.treeID + ']'),
+				var $tree = $('[data-tree=' + my.options.treeID + ']'),
 					nodes = r.node;
 				if (nodes.length) {
 					for (var i = 0; i < nodes.length; i++) {
@@ -90,13 +93,13 @@
 				}
 			});
 			ConcreteEvent.subscribe('ConcreteTreeUpdateTreeNode', function(e, r) {
-				var $tree = $('[data-topic-tree=' + my.options.treeID + ']'),
+				var $tree = $('[data-tree=' + my.options.treeID + ']'),
 					node = $tree.dynatree('getTree').getNodeByKey(r.node.key);
 				node.data = r.node;
 				node.render();
 			});
 			ConcreteEvent.subscribe('ConcreteTreeDeleteTreeNode', function(e, r) {
-				var $tree = $('[data-topic-tree=' + my.options.treeID + ']'),
+				var $tree = $('[data-tree=' + my.options.treeID + ']'),
 					node = $tree.dynatree('getTree').getNodeByKey(r.node.treeNodeID);
 				node.remove();
 			});
@@ -135,30 +138,56 @@
 				checkbox = false,
 				ajaxData = {};
 
-			ajaxData.treeID = options.treeID;
+			if (my.options.ajaxData != false) {
+				ajaxData = my.options.ajaxData;
+			}
+
+			if (!options.treeNodeParentID) {
+				ajaxData.treeID = options.treeID;
+			} else {
+				ajaxData.treeNodeParentID = options.treeNodeParentID;
+			}
+
+			if (options.allowFolderSelection) {
+				ajaxData.allowFolderSelection = 1;
+			}
+
+			var persist = true;
 
 			if (options.chooseNodeInForm) {
 				checkbox = true;
-				switch(options.chooseNodeInForm) {
-					case 'single':
-						classNames = {'checkbox': 'dynatree-radio'};
-						break;
-					case 'multiple':
-						classNames = {'checkbox': 'dynatree-checkbox'};
-						break;
-
-				}
+				persist = false;
+				classNames = {
+					'checkbox': 'dynatree-radio'
+				};
 				if (options.selectNodesByKey.length) {
 					ajaxData.treeNodeSelectedIDs = options.selectNodesByKey;
 				}
 			}
 
+			if (options.chooseNodeInForm === 'multiple') {
+				checkbox = true;
+				persist = false;
+				classNames = {
+					'checkbox': 'dynatree-checkbox'
+				};
+				if (options.selectNodesByKey.length) {
+					ajaxData.treeNodeSelectedIDs = options.selectNodesByKey;
+				}
+			}
+
+			var selectMode = 1;
+			if(options.selectMode) {
+				selectMode = options.selectMode;
+			}
+			var minExpandLevel = 2;
+			if(options.minExpandLevel) {
+				minExpandLevel = options.minExpandLevel;
+			}
+
+
 			$(my.$element).dynatree({
 				autoFocus: false,
-				cookieId: 'ConcreteGroups',
-				cookie: {
-					path: CCM_REL + '/'
-				},
 				initAjax: {
 					url: CCM_DISPATCHER_FILENAME + '/ccm/system/tree/load',
 					type: 'post',
@@ -167,11 +196,15 @@
 				onLazyRead: function(node) {
 					my.reloadNode(node);
 				},
-				onSelect: options.onSelect,
-				selectMode: options.chooseNodeInForm === 'multiple' ? 3 : 1, // allow multi-select for checkboxes
+				onSelect: function(select, node) {
+					if (options.chooseNodeInForm) {
+						options.onSelect(select, node);
+					}
+				},
+				selectMode: selectMode,
 				checkbox: checkbox,
 				classNames: classNames,
-				minExpandLevel: options.minimumExpandLevel,
+				minExpandLevel:  minExpandLevel,
 				clickFolderMode: 1,
 				onPostInit: function() {
 					var $tree = my.$element;
@@ -210,6 +243,14 @@
 						return true;
 					}
 
+					if (options.chooseNodeInForm && node.getEventTargetType(e) != 'checkbox') {
+						return false;
+					}
+					if (!node.getEventTargetType(e)) {
+						return false;
+					}
+
+					/*
 					if (options.chooseNodeInForm) {
 						var targetType = node.getEventTargetType(e);
 						if (targetType == 'checkbox' || targetType == 'title') {
@@ -221,27 +262,19 @@
 							return false;
 						}
 					}
+					*/
 
-					if (!node.getEventTargetType(e)) {
-						return false;
-					}
 					if (!options.chooseNodeInForm && node.getEventTargetType(e) == 'title') {
-						if (options.onClick) {
-							if (!node.data.gID) {
-								return false;
-							}
-							options.onClick(node);
-						} else {
-							var $menu = node.data.treeNodeMenu;
-							if ($menu) {
-								var menu = new ConcreteMenu($(node.span), {
-									menu: $menu,
-									handle: 'none'
-								});
-								menu.show(e);
-							}
+						var $menu = node.data.treeNodeMenu;
+						if ($menu) {
+							var menu = new ConcreteMenu($(node.span), {
+								menu: $menu,
+								handle: 'none'
+							});
+							menu.show(e);
 						}
 					}
+
 					return true;
 				},
 				fx: {height: 'toggle', duration: 200},
@@ -295,11 +328,13 @@
 		reloadNode: function(node, onComplete) {
 			var my = this,
 				options = my.options,
-				params = {
+				data = my.options.ajaxData != false ? my.options.ajaxData : {};
+
+			data.treeNodeParentID = node.data.key;
+
+				var params = {
 					url: CCM_DISPATCHER_FILENAME + '/ccm/system/tree/node/load',
-					data: {
-						treeNodeParentID: node.data.key
-					},
+					data: data,
 					success: function() {
 						if (onComplete) {
 							onComplete();
@@ -312,7 +347,7 @@
 
 		cloneNode: function(treeNodeID) {
 			var my = this;
-			var $tree = $('[data-topic-tree=' + my.options.treeID + ']');
+			var $tree = $('[data-tree=' + my.options.treeID + ']');
 			$.ajax({
 				'dataType': 'json',
 				'type': 'post',

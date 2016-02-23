@@ -111,7 +111,7 @@
 
         <!-- topics //-->
         <permissionkey handle="view_topic_tree_node" name="View Topic Tree Node" description="" package="" category="topic_tree_node" />
-        <permissionkey handle="view_category_tree_node" name="View Topic Category Tree Node" description="" package="" category="category_tree_node" />
+        <permissionkey handle="view_category_tree_node" name="View Category Tree Node" description="" package="" category="category_tree_node" />
 
         <!-- conversations //-->
         <permissionkey handle="add_conversation_message" name="Add Message to Conversation" has-custom-class="true" description="" package="" category="conversation" />
