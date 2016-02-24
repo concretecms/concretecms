@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Page\Type\Composer\Control;
 
+use Concrete\Core\Package\PackageList;
 use Loader;
 use Concrete\Core\Foundation\Object;
 use Controller;
@@ -225,6 +226,18 @@ class BlockControl extends Control
             );
             if ($rec->exists()) {
                 $template = DIRNAME_BLOCK_TEMPLATES_COMPOSER . '/' . $customTemplate;
+            } else {
+                foreach (PackageList::get()->getPackages() as $pkg) {
+                    $file =
+                        (is_dir(DIR_PACKAGES . '/' . $pkg->getPackageHandle()) ? DIR_PACKAGES : DIR_PACKAGES_CORE)
+                        . '/' . $pkg->getPackageHandle() . '/' . DIRNAME_BLOCKS . '/' . $obj->getBlockTypeHandle() . '/' . DIRNAME_BLOCK_TEMPLATES_COMPOSER . '/' .
+                        $customTemplate;
+                    if (file_exists($file)) {
+                        $template = DIRNAME_BLOCK_TEMPLATES_COMPOSER . '/' . $customTemplate;
+                        break;
+                    }
+
+                }
             }
         }
 
@@ -284,8 +297,22 @@ class BlockControl extends Control
 
         $view = $this;
 
-        $path = $env->getPath(DIRNAME_BLOCKS . '/' . $obj->getBlockTypeHandle() . '/' . $file, $pkg);
-        include $path;
+        $r = $env->getRecord(DIRNAME_BLOCKS . '/' . $obj->getBlockTypeHandle() . '/' . $file, $pkg);
+        if ($r->exists()) {
+            include $r->file;
+        } else {
+            foreach (PackageList::get()->getPackages() as $pkg) {
+                $include =
+                    (is_dir(DIR_PACKAGES . '/' . $pkg->getPackageHandle()) ? DIR_PACKAGES : DIR_PACKAGES_CORE)
+                    . '/' . $pkg->getPackageHandle() . '/' . DIRNAME_BLOCKS . '/' . $obj->getBlockTypeHandle() . '/' .
+                    $file;
+                if (file_exists($include)) {
+                    include $include;
+                }
+
+            }
+
+        }
     }
 
     public function getPageTypeComposerControlDraftValue()
