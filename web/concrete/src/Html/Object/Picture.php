@@ -85,7 +85,7 @@ class Picture extends Element
     public function alt($alt)
     {
         foreach($this->getChildren() as $child) {
-            if ($child instanceof Image || $child instanceof Source) {
+            if ($child instanceof Image) {
                 $child->alt($alt);
             }
         }
