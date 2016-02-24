@@ -31,7 +31,7 @@
 				my.success(r, my, successCallback);
 			}
 
-			my.before();
+			my.before(my);
 			$.ajax(options);
 		},
 

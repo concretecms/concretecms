@@ -365,6 +365,7 @@ return array(
          */
         "/ccm/system/tree/load" => array('\Concrete\Controller\Backend\Tree::load'),
         "/ccm/system/tree/node/load" => array('\Concrete\Controller\Backend\Tree\Node::load'),
+        "/ccm/system/tree/node/load_starting" => array('\Concrete\Controller\Backend\Tree\Node::load_starting'),
         "/ccm/system/tree/node/drag_request" => array('\Concrete\Controller\Backend\Tree\Node\DragRequest::execute'),
         "/ccm/system/tree/node/duplicate" => array('\Concrete\Controller\Backend\Tree\Node\Duplicate::execute'),
 
@@ -1032,6 +1033,18 @@ return array(
             ),
         ),
         'core/topics' => array(
+            array(
+                array('javascript', 'core/events'),
+                array('javascript', 'underscore'),
+                array('javascript', 'jquery/ui'),
+                array('javascript-localized', 'jquery/ui'),
+                array('javascript', 'dynatree'),
+                array('javascript-localized', 'dynatree'),
+                array('javascript', 'core/tree'),
+                array('css', 'dynatree')
+            ),
+        ),
+        'core/tree' => array(
             array(
                 array('javascript', 'core/events'),
                 array('javascript', 'underscore'),

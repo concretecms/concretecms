@@ -181,15 +181,20 @@
 				selectMode = options.selectMode;
 			}
 			var minExpandLevel = 2;
-			if(options.minExpandLevel) {
+			if (options.minExpandLevel) {
 				minExpandLevel = options.minExpandLevel;
 			}
 
+			if (!options.treeNodeParentID) {
+				var ajaxURL = CCM_DISPATCHER_FILENAME + '/ccm/system/tree/load';
+			} else {
+				var ajaxURL = CCM_DISPATCHER_FILENAME + '/ccm/system/tree/node/load_starting';
+			}
 
 			$(my.$element).dynatree({
 				autoFocus: false,
 				initAjax: {
-					url: CCM_DISPATCHER_FILENAME + '/ccm/system/tree/load',
+					url: ajaxURL,
 					type: 'post',
 					data: ajaxData
 				},

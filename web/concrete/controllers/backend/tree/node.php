@@ -24,7 +24,7 @@ class Node extends UserInterface
         return $np->canViewTreeNode();
     }
 
-    public function load()
+    protected function loadNode()
     {
         $node = $this->getNode();
         $selected = array();
@@ -36,12 +36,34 @@ class Node extends UserInterface
         $node->getTreeObject()->setRequest($_REQUEST);
         $node->populateDirectChildrenOnly();
 
-        $r = array();
         if (count($selected) > 0) {
             foreach ($selected as $match) {
                 $node->selectChildrenNodesByID($match);
             }
         }
+        return $node;
+    }
+
+    /**
+     * This endpoint is meant to be called when we are starting from a particular spot
+     * in the tree. It will include the current node, and the children, while normally
+     * loading the node will only return the children.
+     * @return JsonResponse
+     */
+    public function load_starting()
+    {
+        $node = $this->loadNode();
+        return new JsonResponse($node->getTreeNodeJSON());
+    }
+
+    /**
+     * Returns the child nodes of the current node.
+     * @return JsonResponse
+     */
+    public function load()
+    {
+        $node = $this->loadNode();
+        $r = array();
         foreach ($node->getChildNodes() as $childnode) {
             $json = $childnode->getTreeNodeJSON();
             if ($json) {
