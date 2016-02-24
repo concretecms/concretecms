@@ -49,6 +49,8 @@ class PageController extends Controller
             $var = \Page::getByPath($var);
         }
 
+        $request = \Request::getInstance();
+        $request->setCurrentPage($var);
         $controller = $var->getPageController();
         $controller->on_start();
         $controller->runAction('view');
@@ -57,6 +59,21 @@ class PageController extends Controller
         print $view->render();
         exit;
     }
+
+    public function getSets()
+    {
+        $sets = parent::getSets();
+        $session = Core::make('session');
+        if ($session->getFlashBag()->has('page_message')) {
+            $value = $session->getFlashBag()->get('page_message');
+            foreach($value as $message) {
+                $sets[$message[0]] = $message[1];
+            }
+        }
+        return $sets;
+    }
+
+
 
     /**
      * Given a path to a single page, this command uses the CURRENT controller and renders
@@ -89,6 +106,12 @@ class PageController extends Controller
     public function getPageObject()
     {
         return $this->c;
+    }
+
+    public function flash($key, $value)
+    {
+        $session = Core::make('session');
+        $session->getFlashBag()->add('page_message', array($key, $value));
     }
 
     public function getTheme()

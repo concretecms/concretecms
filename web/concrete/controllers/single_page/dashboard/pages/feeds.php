@@ -133,7 +133,7 @@ class Feeds extends DashboardPageController
 
     public function add()
     {
-        $pageTypes = array('' => t('** No Filtering'));
+        $pageTypes = array('0' => t('** No Filtering'));
         $types = Type::getList();
         foreach($types as $type) {
             $pageTypes[$type->getPageTypeID()] = $type->getPageTypeDisplayName();
@@ -141,7 +141,7 @@ class Feeds extends DashboardPageController
         $this->set('pageTypes', $pageTypes);
 
         $attributeKeys = array();
-        $keys = CollectionKey::getList(array('atHandle' => 'topics'));
+        $keys = CollectionKey::getList();
         foreach ($keys as $ak) {
             if ($ak->getAttributeTypeHandle() == 'topics') {
                 $attributeKeys[] = $ak;

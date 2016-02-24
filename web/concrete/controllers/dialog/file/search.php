@@ -1,26 +1,35 @@
 <?
 namespace Concrete\Controller\Dialog\File;
+
 use \Concrete\Controller\Backend\UserInterface as BackendInterfaceController;
 use FilePermissions;
 use Loader;
 use \Concrete\Controller\Search\Files as SearchFilesController;
-class Search extends BackendInterfaceController {
 
-	protected $viewPath = '/dialogs/file/search';
+class Search extends BackendInterfaceController
+{
 
-	protected function canAccess() {
-		$cp = FilePermissions::getGlobal();
-		return $cp->canSearchFiles();
-	}
+    protected $viewPath = '/dialogs/file/search';
 
-	public function view() {
-		$cnt = new SearchFilesController();
-		$cnt->search();
-		$result = Loader::helper('json')->encode($cnt->getSearchResultObject()->getJSONObject());
+    protected function canAccess()
+    {
+        $cp = FilePermissions::getGlobal();
+        if ($cp->canSearchFiles() || $cp->canAddFile()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function view()
+    {
+        $cnt = new SearchFilesController();
+        $cnt->search();
+        $result = Loader::helper('json')->encode($cnt->getSearchResultObject()->getJSONObject());
         $this->requireAsset('select2');
-		$this->set('result', $result);
-		$this->set('searchController', $cnt);
-	}
+        $this->set('result', $result);
+        $this->set('searchController', $cnt);
+    }
 
 }
 

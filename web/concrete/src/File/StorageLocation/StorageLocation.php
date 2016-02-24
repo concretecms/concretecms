@@ -41,7 +41,7 @@ class StorageLocation
     {
         return $this->fslName;
     }
-    
+
     /** Returns the display name for this storage location (localized and escaped accordingly to $format)
     * @param string $format = 'html'
     *    Escape the result in html format (if $format is 'html').
@@ -99,8 +99,7 @@ class StorageLocation
     {
         $default = self::getDefault();
 
-        $db = Database::get();
-        $em = $db->getEntityManager();
+        $em = \ORM::entityManager('core');
         $o = new static();
         $o->fslName = $fslName;
         $o->fslIsDefault = $fslIsDefault;
@@ -119,8 +118,7 @@ class StorageLocation
 
     public static function getByID($id)
     {
-        $db = Database::get();
-        $em = $db->getEntityManager();
+        $em = \ORM::entityManager('core');
         $r = $em->find('\Concrete\Core\File\StorageLocation\StorageLocation', intval($id));
         return $r;
     }
@@ -129,8 +127,7 @@ class StorageLocation
      */
     public static function getList()
     {
-        $db = Database::get();
-        $em = $db->getEntityManager();
+        $em = \ORM::entityManager('core');
         return $em->getRepository('\Concrete\Core\File\StorageLocation\StorageLocation')->findBy(
             array(), array('fslID' => 'asc')
         );
@@ -141,8 +138,7 @@ class StorageLocation
      */
     public static function getDefault()
     {
-        $db = Database::get();
-        $em = $db->getEntityManager();
+        $em = \ORM::entityManager('core');
         $location = $em->getRepository('\Concrete\Core\File\StorageLocation\StorageLocation')->findOneBy(
             array('fslIsDefault' => true
             ));
@@ -174,7 +170,7 @@ class StorageLocation
             }
         }
 
-        $em = $db->getEntityManager();
+        $em = \ORM::entityManager('core');
         $em->remove($this);
         $em->flush();
     }
@@ -183,8 +179,7 @@ class StorageLocation
     {
         $default = self::getDefault();
 
-        $db = Database::get();
-        $em = $db->getEntityManager();
+        $em = \ORM::entityManager('core');
         $em->persist($this);
 
         if ($this->isDefault() && is_object($default) && $default->getID() != $this->getID()) {

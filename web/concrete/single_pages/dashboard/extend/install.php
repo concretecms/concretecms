@@ -17,8 +17,12 @@ $nav = \Core::make('helper/navigation');
 
 $catList = AttributeCategory::getList();
 
-if (is_object($pkg)) {
-    $pkgID = $pkg->getPackageID();
+if (isset($pkg)) {
+    if (is_object($pkg)) {
+        $pkgID = $pkg->getPackageID();
+    }
+} else {
+    $pkg = null;
 }
 
 if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScreen && $tp->canInstallPackages()) { ?>
@@ -53,9 +57,8 @@ if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScre
     </form>
 <?php
 } elseif ($this->controller->getTask() == 'uninstall' && $tp->canUninstallPackages()) {
-    $removeBTConfirm = t('This will remove all elements associated with the %s package. This cannot be undone. Are you sure?', $pkg->getPackageHandle());
     ?>
-    <form method="post" class="form-stacked" id="ccm-uninstall-form" action="<?= $view->action('do_uninstall_package'); ?>" onsubmit="<?= h('return confirm(' . json_encode($removeBTConfirm) . ')'); ?>">
+    <form method="post" class="form-stacked" id="ccm-uninstall-form" action="<?= $view->action('do_uninstall_package'); ?>">
         <?= $valt->output('uninstall'); ?>
         <input type="hidden" name="pkgID" value="<?=$pkgID ?>" />
         <fieldset>
@@ -68,7 +71,15 @@ if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScre
                 </tr>
             </table>
 
-            <?php @Loader::packageElement('dashboard/uninstall', $pkg->getPackageHandle()); ?>
+            <?php
+            if ($pkg->hasUninstallNotes()) {
+                View::element('dashboard/uninstall', null, $pkg->getPackageHandle());
+            }
+            ?>
+
+            <div class="alert alert-danger">
+                <?=t('This will remove all elements associated with the %s package. While you can reinstall the package, this may result in data loss.', $pkg->getPackageName())?>
+            </div>
 
             <div class="form-group">
                 <label class="control-label"><?= t('Move package to trash directory on server?'); ?></label>
@@ -117,11 +128,11 @@ if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScre
     }
     if ($tp->canInstallPackages()) {
         foreach (Package::getAvailablePackages() as $_pkg) {
+            if (empty($pkgAvailableArray)) {
+                Localization::clearCache();                
+            }
             $_pkg->setupPackageLocalization();
             $pkgAvailableArray[] = $_pkg;
-        }
-        if(count($pkgAvailableArray) > 0) {
-            Localization::clearCache();
         }
     }
 
@@ -290,7 +301,7 @@ if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScre
         <?php
 
      } else {
-        if (is_object($installedPKG) && $installedPKG->hasInstallPostScreen()) {
+        if (isset($installedPKG) && is_object($installedPKG) && $installedPKG->hasInstallPostScreen()) {
             ?>
             <div style="display: none">
                 <div id="ccm-install-post-notes">

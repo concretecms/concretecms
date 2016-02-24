@@ -1,11 +1,11 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
-$html = Loader::helper('html');
-$dh = Loader::helper('concrete/dashboard');
-$ihm = Loader::helper('concrete/ui/menu');
-$valt = Loader::helper('validation/token');
+$html = Core::make('helper/html');
+$dh = Core::make('helper/concrete/dashboard');
+$ihm = Core::make('helper/concrete/ui/menu');
+$valt = Core::make('helper/validation/token');
 $token = '&' . $valt->getParameter();
-$logouttoken = Loader::helper('validation/token')->generate('logout');
+$logouttoken = $valt->generate('logout');
 $cID = $c->getCollectionID();
 $permissions = new Permissions($c);
 
@@ -31,12 +31,12 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
     }
 
     if (!$c->isEditMode()) {
-       print Loader::helper('concrete/ui/help')->displayHelpDialogLauncher();
+       print Core::make('helper/concrete/ui/help')->displayHelpDialogLauncher();
     }
 
     $cih = Core::make("helper/concrete/ui");
     if ($cih->showHelpOverlay()) {
-        Loader::element('help/dialog/introduction');
+        View::element('help/dialog/introduction');
         $v = View::getInstance();
         $v->addFooterItem('<script type="text/javascript">$(function() { new ConcreteHelpDialog().open(); });</script>');
         $cih->trackHelpOverlayDisplayed();
@@ -60,9 +60,7 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
                                     ?>href="<?= URL::to(
                                         '/ccm/system/page/check_in',
                                         $c->getCollectionID(),
-                                        Loader::helper(
-                                            'validation/token')
-                                              ->generate()) ?>" data-panel-url="<?= URL::to(
+                                        $valt->generate()) ?>" data-panel-url="<?= URL::to(
                                         '/ccm/system/panels/page/check_in') ?>"><?php echo t(
                                         'Save Changes') ?><?
                                 } ?></a></li>
@@ -180,13 +178,22 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
                     </ul>
                 </li>
                 <? } ?>
+                <li>
+                    <i class="fa fa-sign-out mobile-leading-icon"></i><a href="<?= URL::to('/login', 'logout', $valt->generate('logout')); ?>"><?= t('Sign Out'); ?></a>
+                </li>
             </ul>
         </div>
     </div>
     <ul class="ccm-toolbar-item-list">
-        <li class="ccm-logo pull-left"><span><?= Loader::helper('concrete/ui')->getToolbarLogoSRC() ?></span></li>
+        <li class="ccm-logo pull-left"><span><?= Core::make('helper/concrete/ui')->getToolbarLogoSRC() ?></span></li>
         <? if ($c->isMasterCollection()) { ?>
-        <li class="pull-left"><a href="<?= URL::to('/dashboard/pages/types') ?>"><i class="fa fa-arrow-left"></i></a>
+        <li class="pull-left">
+            <a href="<?php echo URL::to('/dashboard/pages/types/output', $c->getPageTypeID()); ?>">
+                <i class="fa fa-arrow-left"></i>
+                <span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-edit-mode">
+                    <?php echo tc('toolbar', 'Exit Edit Defaults'); ?>
+                </span>
+            </a>
             <? } ?>
             <? if (!$pageInUseBySomeoneElse && $c->getCollectionPointerID() == 0) { ?>
 
@@ -196,7 +203,7 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
                data-launch-panel="check-in" <? } else { ?>href="<?= URL::to(
                 '/ccm/system/page/check_in',
                 $c->getCollectionID(),
-                Loader::helper('validation/token')->generate()) ?>"<? } ?>
+                $valt->generate()) ?>"<? } ?>
                data-panel-url="<?= URL::to('/ccm/system/panels/page/check_in') ?>"
                title="<?= t('Exit Edit Mode') ?>">
                 <i class="fa fa-pencil"></i>
@@ -223,13 +230,21 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
                 $permissions->canEditPageTheme() ||
                 $permissions->canEditPageTemplate() ||
                 $permissions->canDeletePage() ||
-                $permissions->canEditPagePermissions())) { ?>
+                $permissions->canEditPagePermissions())) {
+                $hasComposer = is_object($pagetype) && $cp->canEditPageContents(); ?>
         <li data-guide-toolbar-action="page-settings" class="pull-left hidden-xs">
             <a href="#" data-launch-panel="page"
                data-panel-url="<?= URL::to('/ccm/system/panels/page') ?>"
+               <? if ($hasComposer) { ?>}
+               title="<?= t('Composer, Page Design, Location, Attributes and Settings') ?>">
+               <? } else { ?>
                title="<?= t('Page Design, Location, Attributes and Settings') ?>">
+               <? } ?>
                 <i class="fa fa-cog"></i>
                 <span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-settings">
+                    <? if ($hasComposer) { ?>
+                    <?= tc('toolbar', 'Composer') ?> /
+                    <? } ?>
                     <?= tc('toolbar', 'Page Settings') ?>
                 </span>
             </a>
@@ -274,7 +289,7 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
         }
     }
 
-    if (Loader::helper('concrete/ui')->showWhiteLabelMessage()) {
+    if (Core::make('helper/concrete/ui')->showWhiteLabelMessage()) {
         ?>
         <li class="pull-left visible-xs visible-lg" id="ccm-white-label-message"><?= t(
                 'Powered by <a href="%s">concrete5</a>.',
@@ -297,7 +312,7 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
         </li>
         <? } else { ?>
             <li class="pull-right hidden-xs ">
-                <a href="<?=URL::to('/login', 'logout', Loader::helper('validation/token')->generate('logout'))?>" title="<?=t('Sign Out')?>"><i class="fa fa-sign-out"></i>
+                <a href="<?=URL::to('/login', 'logout', $valt->generate('logout'))?>" title="<?=t('Sign Out')?>"><i class="fa fa-sign-out"></i>
                 <span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-site-settings">
                     <?= tc('toolbar', 'Sign Out') ?>
                 </span>
@@ -356,7 +371,7 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
     ?>
 
     <? if ($pageInUseBySomeoneElse) { ?>
-        <?= Loader::helper('concrete/ui')->notify(
+        <?= Core::make('helper/concrete/ui')->notify(
             array(
                 'title'   => t('Editing Unavailable.'),
                 'message' => t("%s is currently editing this page.", $c->getCollectionCheckedOutUserName()),
@@ -372,11 +387,12 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
             $buttons[] = '<a href="' . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $c->getCollectionID() . '" class="btn btn-default btn-xs">' . t(
                     'View/Edit Original') . '</a>';
             if ($canApprovePageVersions) {
-                $buttons[] = '<a href="' . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $c->getCollectionPointerOriginalID() . '&ctask=remove-alias' . $token . '" class="btn btn-xs btn-danger">' . t(
+                $url = URL::to('/ccm/system/dialogs/page/delete_alias?cID=' . $c->getCollectionPointerOriginalID());
+                $buttons[] = '<a href="' . $url . '" dialog-title="' . t('Remove Alias') . '" class="dialog-launch btn btn-xs btn-danger">' . t(
                         'Remove Alias') . '</a>';
             }
 
-            print Loader::helper('concrete/ui')->notify(
+            print Core::make('helper/concrete/ui')->notify(
                 array(
                     'title'   => t('Page Alias.'),
                     'message' => t("This page is an alias of one that actually appears elsewhere."),
@@ -451,7 +467,7 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
                 if (!$vo->isApproved() && !$c->isEditMode()) {
 
                     if ($c->isPageDraft()) {
-                    print Loader::helper('concrete/ui')->notify(
+                    print Core::make('helper/concrete/ui')->notify(
                         array(
                             'title'   => t('Page Draft.'),
                             'message' => t("This is an un-published draft."),
@@ -464,11 +480,22 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
                             $pk = \Concrete\Core\Permission\Key\PageKey::getByHandle('approve_page_versions');
                             $pk->setPermissionObject($c);
                             $pa = $pk->getPermissionAccessObject();
+
+                            $workflows = array();
+                            $canApproveWorkflow = true;
                             if (is_object($pa)) {
-                                if (count($pa->getWorkflows()) > 0) {
-                                    $appLabel = t('Submit for Approval');
+                                $workflows = $pa->getWorkflows();
+                            }
+                            foreach($workflows as $wf) {
+                                if (!$wf->canApproveWorkflow()) {
+                                    $canApproveWorkflow = false;
                                 }
                             }
+
+                            if (count($workflows) > 0 && !$canApproveWorkflow) {
+                                $appLabel = t('Submit to Workflow');
+                            }
+
                             if (!isset($appLabel) || !$appLabel) {
                                 $appLabel = t('Approve Version');
                             }
@@ -477,7 +504,7 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
 
                         }
 
-                        print Loader::helper('concrete/ui')->notify(
+                        print Core::make('helper/concrete/ui')->notify(
                             array(
                                 'title'   => t('Page is Pending Approval.'),
                                 'message' => t("This page is newer than what appears to visitors on your live site."),

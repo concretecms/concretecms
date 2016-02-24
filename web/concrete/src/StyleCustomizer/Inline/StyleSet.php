@@ -59,6 +59,16 @@ class StyleSet
     /**
      * @Column(type="string")
      */
+    protected $backgroundSize = 'auto';
+
+    /**
+     * @Column(type="string")
+     */
+    protected $backgroundPosition = '0% 0%';
+
+    /**
+     * @Column(type="string")
+     */
     protected $borderColor;
 
     /**
@@ -232,6 +242,38 @@ class StyleSet
     public function getBackgroundRepeat()
     {
         return $this->backgroundRepeat;
+    }
+
+    /**
+     * @param mixed $backgroundSize
+     */
+    public function setBackgroundSize($backgroundSize)
+    {
+        $this->backgroundSize = $backgroundSize;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getBackgroundSize()
+    {
+        return $this->backgroundSize;
+    }
+
+    /**
+     * @param mixed $backgroundPosition
+     */
+    public function setBackgroundPosition($backgroundPosition)
+    {
+        $this->backgroundPosition = $backgroundPosition;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getBackgroundPosition()
+    {
+        return $this->backgroundPosition;
     }
 
     /**
@@ -655,20 +697,18 @@ class StyleSet
     /**
      * @param $issID
      *
-     * @return \Concrete\Core\Page\Style\Set
+     * @return \Concrete\Core\StyleCustomizer\Set
      */
     public static function getByID($issID)
     {
-        $db = Database::get();
-        $em = $db->getEntityManager();
+        $em = \ORM::entityManager('core');
 
         return $em->find('\Concrete\Core\StyleCustomizer\Inline\StyleSet', $issID);
     }
 
     public function save()
     {
-        $db = Database::get();
-        $em = $db->getEntityManager();
+        $em = \ORM::entityManager('core');
         $em->persist($this);
         $em->flush();
     }
@@ -677,15 +717,19 @@ class StyleSet
     {
         $o = new self();
         $o->setBackgroundColor((string) $node->backgroundColor);
-        $filename = (string) $node['backgroundImage'];
+        $filename = (string) $node->backgroundImage;
         if ($filename) {
-            $fID = ContentImporter::getValue($filename);
+            $inspector = \Core::make('import/value_inspector');
+            $result = $inspector->inspect($filename);
+            $fID = $result->getReplacedValue();
             if ($fID) {
                 $o->setBackgroundImageFileID($fID);
             }
         }
 
         $o->setBackgroundRepeat((string) $node->backgroundRepeat);
+        $o->setBackgroundSize((string) $node->backgroundSize);
+        $o->setBackgroundPosition((string) $node->backgroundPosition);
         $o->setBorderWidth((string) $node->borderWidth);
         $o->setBorderColor((string) $node->borderColor);
         $o->setBorderStyle((string) $node->borderStyle);
@@ -723,6 +767,8 @@ class StyleSet
             $node->addChild('backgroundImage', ContentExporter::replaceFileWithPlaceHolder($fID));
         }
         $node->addChild('backgroundRepeat', $this->getBackgroundRepeat());
+        $node->addChild('backgroundSize', $this->getBackgroundSize());
+        $node->addChild('backgroundPosition', $this->getBackgroundPosition());
         $node->addChild('borderWidth', $this->getBorderWidth());
         $node->addChild('borderColor', $this->getBorderColor());
         $node->addChild('borderStyle', $this->getBorderStyle());
@@ -752,29 +798,6 @@ class StyleSet
         $node->addChild('hideOnLargeDevice', $this->getHideOnLargeDevice());
     }
 
-    public function getClass($theme = null)
-    {
-        $class = '';
-        if ($this->getCustomClass()) {
-            $class .= $this->getCustomClass();
-        }
-        if (is_object($theme) && ($gf = $theme->getThemeGridFrameworkObject())) {
-            if ($this->getHideOnExtraSmallDevice()) {
-                $class .= ' ' . $gf->getPageThemeGridFrameworkHideOnExtraSmallDeviceClass();
-            }
-            if ($this->getHideOnSmallDevice()) {
-                $class .= ' ' . $gf->getPageThemeGridFrameworkHideOnSmallDeviceClass();
-            }
-            if ($this->getHideOnMediumDevice()) {
-                $class .= ' ' . $gf->getPageThemeGridFrameworkHideOnMediumDeviceClass();
-            }
-            if ($this->getHideOnLargeDevice()) {
-                $class .= ' ' . $gf->getPageThemeGridFrameworkHideOnLargeDeviceClass();
-            }
-        }
-        return $class;
-    }
-
     /**
      * If the request contains any fields that are valid to save as a style set, we return the style set object
      * pre-save. If it's not (e.g. there's a background repeat but no actual background image, empty strings, etc...)
@@ -790,6 +813,8 @@ class StyleSet
         if (trim($r['backgroundColor']) != '') {
             $set->setBackgroundColor($r['backgroundColor']);
             $set->setBackgroundRepeat($r['backgroundRepeat']);
+            $set->setBackgroundSize($r['backgroundSize']);
+            $set->setBackgroundPosition($r['backgroundPosition']);
             $return = true;
         }
 
@@ -797,6 +822,8 @@ class StyleSet
         if ($fID > 0) {
             $set->setBackgroundImageFileID($fID);
             $set->setBackgroundRepeat($r['backgroundRepeat']);
+            $set->setBackgroundSize($r['backgroundSize']);
+            $set->setBackgroundPosition($r['backgroundPosition']);
             $return = true;
         }
 

@@ -263,17 +263,13 @@ abstract class Editor extends Object
         } else {
             $lawed = $cnvMessageBody;
         }
-        if ($config['mention'] !== false && Config::get('concrete.user.profiles_enabled')) {
+        if ($config['mention'] !== false) {
             $users = $cnv->getConversationMessageUsers();
             $needle = array();
             $haystack = array();
             foreach ($users as $user) {
                 $needle[] = "@" . $user->getUserName();
-                $haystack[] = "<a href='" . View::url(
-                        '/members/profile',
-                        'view',
-                        $user->getUserID()
-                    ) . "'>@" . $user->getUserName() . "</a>";
+                $haystack[] = "<a href='" . $user->getUserPublicProfileURL() . "'>'@" . $user->getUserName() . "</a>";
             }
 
             return str_ireplace($needle, $haystack, $lawed);
@@ -378,6 +374,15 @@ abstract class Editor extends Object
         return static::getList($pkg->getPackageID());
     }
 
+    public function export($xml)
+    {
+        $type = $xml->addChild('editor');
+        $type->addAttribute('handle', $this->getConversationEditorHandle());
+        $type->addAttribute('name', $this->getConversationEditorName());
+        $type->addAttribute('package', $this->getPackageHandle());
+        $type->addAttribute('activated', $this->isConversationEditorActive());
+    }
+
     /**
      * Adds a ConversationEditors node and all Editor records to the provided SimleXMLElement object provided.
      *
@@ -389,11 +394,7 @@ abstract class Editor extends Object
         $nxml = $xml->addChild('conversationeditors');
 
         foreach ($list as $sc) {
-            $type = $nxml->addChild('editor');
-            $type->addAttribute('handle', $sc->getConversationEditorHandle());
-            $type->addAttribute('name', $sc->getConversationEditorName());
-            $type->addAttribute('package', $sc->getPackageHandle());
-            $type->addAttribute('activated', $sc->isConversationEditorActive());
+            $sc->export($nxml);
         }
     }
 

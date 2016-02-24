@@ -91,8 +91,7 @@ class Type
      */
     public static function add($fslTypeHandle, $fslTypeName, $pkg = false)
     {
-        $db = Database::get();
-        $em = $db->getEntityManager();
+        $em = \ORM::entityManager('core');
         $o = new static();
         $o->fslTypeHandle = $fslTypeHandle;
         $o->fslTypeName = $fslTypeName;
@@ -110,8 +109,7 @@ class Type
      */
     public static function getByID($id)
     {
-        $db = Database::get();
-        $em = $db->getEntityManager();
+        $em = \ORM::entityManager('core');
         $r = $em->find('\Concrete\Core\File\StorageLocation\Type\Type', $id);
         return $r;
     }
@@ -123,8 +121,7 @@ class Type
      */
     public static function getByHandle($fslTypeHandle)
     {
-        $db = Database::get();
-        $em = $db->getEntityManager();
+        $em = \ORM::entityManager('core');
         $type = $em->getRepository('\Concrete\Core\File\StorageLocation\Type\Type')->findOneBy(
             array('fslTypeHandle' => $fslTypeHandle
          ));
@@ -138,8 +135,7 @@ class Type
      */
     public static function getList()
     {
-        $db = Database::get();
-        $em = $db->getEntityManager();
+        $em = \ORM::entityManager('core');
         return $em->getRepository('\Concrete\Core\File\StorageLocation\Type\Type')->findBy(
             array(), array('fslTypeID' => 'asc')
         );
@@ -180,8 +176,7 @@ class Type
      */
     public static function getListByPackage(\Package $pkg)
     {
-        $db = Database::get();
-        $em = $db->getEntityManager();
+        $em = \ORM::entityManager('core');
         return $em->getRepository('\Concrete\Core\File\StorageLocation\Type\Type')->findBy(
             array('pkgID' => $pkg->getPackageID()), array('fslTypeID' => 'asc')
         );
@@ -201,8 +196,7 @@ class Type
             }
         }
 
-        $db = \Database::get();
-        $em = $db->getEntityManager();
+        $em = \ORM::entityManager('core');
         $em->remove($this);
         $em->flush();
         return true;

@@ -85,7 +85,15 @@ use Concrete\Core\Device\Device;
                                     </div>
                                 </div>
                                 <div class="ccm-panel-device-resolution">
-                                    <?= h($device->getWidth()) ?> x <?= h($device->getHeight()) ?>
+                                    <?php
+                                    $deviceWidth = h($device->getWidth());
+                                    $deviceHeight = h($device->getHeight());
+                                    $pixelRatio = h($device->getPixelRatio());
+                                    $displayedWidth = floor($device->getWidth() / $device->getPixelRatio());
+                                    $displayedHeight = floor($device->getHeight() / $device->getPixelRatio());
+
+                                    echo "$deviceWidth x  $deviceHeight @{$pixelRatio}x ($displayedWidth x $displayedHeight)";
+                                    ?>
                                 </div>
                             </a>
                         </li>

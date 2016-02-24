@@ -714,7 +714,6 @@
                                             <record>
                                                 <num><![CDATA[0]]></num>
                                                 <orderBy><![CDATA[chrono_desc]]></orderBy>
-                                                <cParentID>{ccm:export:page:}</cParentID>
                                                 <cThis><![CDATA[1]]></cThis>
                                                 <useButtonForLink><![CDATA[0]]></useButtonForLink>
                                                 <buttonLinkText><![CDATA[]]></buttonLinkText>
@@ -767,7 +766,7 @@
                         <data table="btContentLocal">
                             <record>
                                 <content>
-                                    <![CDATA[<p>© 2014 Elemental Theme</p>]]></content>
+                                    <![CDATA[<p>© 2016 Elemental Theme</p>]]></content>
                             </record>
                         </data>
                     </block>

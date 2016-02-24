@@ -14,12 +14,13 @@ class Strings
      * Returns true if the provided email is valid
      * @param string $em The email address to be tested
      * @param bool $testMXRecord Set to true if you want to perform dns record validation for the domain, defaults to false
+     * @param bool $strict Strict email validation
      * @return bool
      */
-    public function email($em, $testMXRecord = false)
+    public function email($em, $testMXRecord = false, $strict = false)
     {
         $validator = new EmailValidator();
-        return $validator->isValid($em, $testMXRecord, $testMXRecord);
+        return $validator->isValid($em, $testMXRecord, $strict);
     }
 
     /**

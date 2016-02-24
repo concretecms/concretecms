@@ -57,7 +57,7 @@
                         <div class="col-md-8"><p><span <? if ($canEditUserName) { ?>data-editable-field-type="xeditable"
                                                        data-url="<?= $view->action('update_username', $user->getUserID()) ?>"
                                                        data-type="text"
-                                                       data-name="uName" <? } ?>><?= $user->getUserName() ?></span></p>
+                                                       data-name="uName" <? } ?>><?= h($user->getUserName()) ?></span></p>
                         </div>
                     </div>
                     <div class="row">
@@ -65,7 +65,7 @@
                         <div class="col-md-8"><p><span <? if ($canEditEmail) { ?>data-editable-field-type="xeditable"
                                                        data-url="<?= $view->action('update_email', $user->getUserID()) ?>"
                                                        data-type="email"
-                                                       data-name="uEmail"<? } ?>><?= $user->getUserEmail() ?></span></p>
+                                                       data-name="uEmail"<? } ?>><?= h($user->getUserEmail()) ?></span></p>
                         </div>
                     </div>
                     <div class="row">
@@ -88,7 +88,7 @@
 	                <span class="editable-image-wrapper">
 	                    <input type="file" id="file-avatar" name="avatar"/>
 	                    <div
-                            class="editable-image-display"><?= Loader::helper('concrete/avatar')->outputUserAvatar($user) ?></div>
+                            class="editable-image-display"><?=$user->getUserAvatar()->output() ?></div>
 					</span>
                             </div>
                             </p>
@@ -134,7 +134,7 @@
                                         data-source="<?= $view->action('get_languages') ?>"
                                         data-url="<?= $view->action('update_language', $user->getUserID()) ?>"
                                         data-type="select"
-                                        data-name="uDefaultLanguage"<? } ?>><?= $user->getUserDefaultLanguage(); ?></span>
+                                        data-name="uDefaultLanguage"<? } ?>><?= h($user->getUserDefaultLanguage()); ?></span>
                                 </p></div>
                         </div>
                     <? } ?>

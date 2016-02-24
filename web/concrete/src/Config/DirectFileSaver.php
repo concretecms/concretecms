@@ -2,11 +2,9 @@
 namespace Concrete\Core\Config;
 
 use Illuminate\Filesystem\Filesystem;
-use Concrete\Core\Cache\OpCache;
 
 class DirectFileSaver extends FileSaver
 {
-
     /**
      * @var string|null
      */
@@ -32,5 +30,4 @@ class DirectFileSaver extends FileSaver
             return "{$path}/{$file}";
         }
     }
-
 }

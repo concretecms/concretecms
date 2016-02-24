@@ -1,68 +1,47 @@
 <?php
 namespace Concrete\Core\Session;
 
-use Concrete\Core\Session\Storage\Handler\NativeFileSessionHandler;
-use Concrete\Core\Utility\IPAddress;
-use Config;
+use Concrete\Core\Application\Application;
 use \Symfony\Component\HttpFoundation\Session\Session as SymfonySession;
-use \Symfony\Component\HttpFoundation\Session\Storage\NativeSessionStorage;
-use \Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
-use Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler;
-use Core;
 
+/**
+ * Class Session
+ * @package Concrete\Core\Session
+ * @deprecated
+ */
 class Session
 {
 
-    public static function start()
+    /** @var Application */
+    protected static $app;
+
+    /**
+     * DO NOT USE THIS METHOD
+     * Instead override the application bindings.
+     * This method only exists to enable legacy static methods on the real application instance
+     * @deprecated Create the session using $app->make('session');
+     */
+    public static function setApplicationObject(Application $app)
     {
-        $app = Core::make('app');
-        if ($app->isRunThroughCommandLineInterface()) {
-            $storage = new MockArraySessionStorage();
-        } else {
-            if (Config::get('concrete.session.handler') == 'database') {
-                $db = \Database::get();
-                $storage = new NativeSessionStorage(array(),
-                    new PdoSessionHandler($db->getWrappedConnection(), array(
-                            'db_table' => 'Sessions',
-                            'db_id_col' => 'sessionID',
-                            'db_data_col' => 'sessionValue',
-                            'db_time_col' => 'sessionTime'
-                        )
-                    )
-                );
-            } else {
-                $savePath = Config::get('concrete.session.save_path') ?: null;
-                $storage = new NativeSessionStorage(array(), new NativeFileSessionHandler($savePath));
-            }
-            $options = Config::get('concrete.session.cookie');
-            if ($options['cookie_path'] === false) {
-                $options['cookie_path'] = $app['app_relative_path'] . '/';
-            }
-            $options['gc_max_lifetime'] = Config::get('concrete.session.max_lifetime');
-            $storage->setOptions($options);
-        }
-
-        $session = new SymfonySession($storage);
-        $session->setName(Config::get('concrete.session.name'));
-
-        static::testSessionFixation($session);
-        return $session;
+        static::$app = $app;
     }
 
-    protected static function testSessionFixation(SymfonySession $session)
+    /**
+     * @deprecated Create the session using $app->make('session');
+     */
+    public static function start()
     {
-        $iph = Core::make('helper/validation/ip');
-        $currentIp = $iph->getRequestIP();
-        $ip = $session->get('CLIENT_REMOTE_ADDR');
-        $agent = $session->get('CLIENT_HTTP_USER_AGENT');
-        if ($ip && $ip != $currentIp->getIp(IPAddress::FORMAT_IP_STRING) || $agent && $agent != $_SERVER['HTTP_USER_AGENT']) {
-            $session->invalidate();
-        }
-        if (!$ip && $currentIp !== false) {
-            $session->set('CLIENT_REMOTE_ADDR', $currentIp->getIp(IPAddress::FORMAT_IP_STRING));
-        }
-        if (!$agent && isset($_SERVER['HTTP_USER_AGENT'])) {
-            $session->set('CLIENT_HTTP_USER_AGENT', $_SERVER['HTTP_USER_AGENT']);
-        }
+        /** @var FactoryInterface $factory */
+        return self::$app->make('session');
+    }
+
+    /**
+     * @param \Symfony\Component\HttpFoundation\Session\Session $session
+     * @deprecated Use \Concrete\Core\Session\SessionValidator
+     */
+    public static function testSessionFixation(SymfonySession $session)
+    {
+        $validator = self::$app->make('Concrete\Core\Session\SessionValidatorInterface');
+        $validator->handleSessionValidation($session);
     }
 }

@@ -12,8 +12,12 @@ class NameCorePageProperty extends CorePageProperty
     public function __construct()
     {
         $this->setCorePagePropertyHandle('name');
-        $this->setPageTypeComposerControlName(tc('PageTypeComposerControlName', 'Page Name'));
         $this->setPageTypeComposerControlIconSRC(ASSETS_URL . '/attributes/text/icon.png');
+    }
+
+    public function getPageTypeComposerControlName()
+    {
+        return tc('PageTypeComposerControlName', 'Page Name');
     }
 
     public function publishToPage(Page $c, $data, $controls)
@@ -42,9 +46,12 @@ class NameCorePageProperty extends CorePageProperty
         } else {
             $name = $this->getPageTypeComposerControlDraftValue();
         }
-        if (!$name) {
+        
+        /** @var \Concrete\Core\Utility\Service\Validation\Strings $stringValidator */
+        $stringValidator = Core::make('helper/validation/strings');
+        if (!$stringValidator->notempty($name)) {
             $control = $this->getPageTypeComposerFormLayoutSetControlObject();
-            $e->add(t('You haven\'t chosen a valid %s', $control->getPageTypeComposerControlLabel()));
+            $e->add(t('You haven\'t chosen a valid %s', $control->getPageTypeComposerControlDisplayLabel()));
 
             return $e;
         }

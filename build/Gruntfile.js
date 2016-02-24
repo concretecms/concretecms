@@ -117,6 +117,8 @@ module.exports = function(grunt) {
                 '<%= DIR_BASE %>/concrete/js/build/core/app/help/guides/toolbar.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/app/help/guides/change-content.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/app/help/guides/change-content-edit-mode.js',
+                '<%= DIR_BASE %>/concrete/js/build/core/app/help/guides/add-content.js',
+                '<%= DIR_BASE %>/concrete/js/build/core/app/help/guides/add-content-edit-mode.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/app/help/guides/add-page.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/app/help/guides/personalize.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/app/help/guides/dashboard.js',
@@ -201,8 +203,18 @@ module.exports = function(grunt) {
         jquery_fileupload: {
             dest: '<%= DIR_BASE %>/concrete/js/jquery-fileupload.js',
             src: [
+                '<%= DIR_BASE %>/concrete/js/build/vendor/jquery-fileupload/load-image.js',
+                '<%= DIR_BASE %>/concrete/js/build/vendor/jquery-fileupload/load-image-ios.js',
+                '<%= DIR_BASE %>/concrete/js/build/vendor/jquery-fileupload/load-image-orientation.js',
+                '<%= DIR_BASE %>/concrete/js/build/vendor/jquery-fileupload/load-image-meta.js',
+                '<%= DIR_BASE %>/concrete/js/build/vendor/jquery-fileupload/load-image-exif.js',
+                '<%= DIR_BASE %>/concrete/js/build/vendor/jquery-fileupload/load-image-exif-map.js',
+                '<%= DIR_BASE %>/concrete/js/build/vendor/jquery-fileupload/javascript-canvas-to-blob.js',
+                '<%= DIR_BASE %>/concrete/js/build/vendor/jquery-fileupload/javascript-canvas-to-blob.js',
                 '<%= DIR_BASE %>/concrete/js/build/vendor/jquery-fileupload/jquery-iframe-transport.js',
-                '<%= DIR_BASE %>/concrete/js/build/vendor/jquery-fileupload/jquery-fileupload.js'
+                '<%= DIR_BASE %>/concrete/js/build/vendor/jquery-fileupload/jquery-fileupload.js',
+                '<%= DIR_BASE %>/concrete/js/build/vendor/jquery-fileupload/jquery-fileupload-process.js',
+                '<%= DIR_BASE %>/concrete/js/build/vendor/jquery-fileupload/jquery-fileupload-image.js'
             ]
         },
 
@@ -264,7 +276,8 @@ module.exports = function(grunt) {
                 '<%= DIR_BASE %>/concrete/js/build/core/sitemap/sitemap.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/sitemap/menu.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/sitemap/search.js',
-                '<%= DIR_BASE %>/concrete/js/build/core/sitemap/selector.js'
+                '<%= DIR_BASE %>/concrete/js/build/core/sitemap/selector.js',
+                '<%= DIR_BASE %>/concrete/js/build/core/sitemap/sitemap-selector.js'
             ]
         },
 
@@ -335,6 +348,10 @@ module.exports = function(grunt) {
         ccm_translator: {
             dest: '<%= DIR_BASE %>/concrete/js/translator.js',
             src: '<%= DIR_BASE %>/concrete/js/build/core/translator.js'
+        },
+        jquery_text_counter: {
+            dest: '<%= DIR_BASE %>/concrete/js/textcounter.js',
+            src: '<%= DIR_BASE %>/concrete/js/build/vendor/jquery-text-counter/textcounter.js'
         }
     };
 

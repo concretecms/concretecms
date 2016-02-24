@@ -37,10 +37,12 @@ class Controller extends BlockController
         $args += array(
             'showArrows' => 0,
             'loopSequence' => 0,
+            'excludeSystemPages' => 0,
         );
 
         $args['showArrows'] = intval($args['showArrows']);
         $args['loopSequence'] = intval($args['loopSequence']);
+        $args['excludeSystemPages'] = intval($args['excludeSystemPages']);
 
         parent::save($args);
     }

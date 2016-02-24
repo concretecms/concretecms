@@ -9,6 +9,7 @@ use Environment;
 use \Concrete\Core\Package\Package as Package;
 use Core;
 use Database;
+use Symfony\Component\HttpFoundation\Request;
 
 abstract class Type extends Object
 {
@@ -66,6 +67,12 @@ abstract class Type extends Object
             default:
                 return $value;
         }
+    }
+
+    public function validatePageTypeRequest(Request $request)
+    {
+        $e = Core::make('error');
+        return $e;
     }
 
     public static function getByID($ptPublishTargetTypeID)
@@ -200,16 +207,21 @@ abstract class Type extends Object
         return $types;
     }
 
+    public function export($xml)
+    {
+        $type = $xml->addChild('type');
+        $type->addAttribute('handle', $this->getPageTypePublishTargetTypeHandle());
+        $type->addAttribute('name', $this->getPageTypePublishTargetTypeName());
+        $type->addAttribute('package', $this->getPackageHandle());
+    }
+
     public static function exportList($xml)
     {
         $list = self::getList();
         $nxml = $xml->addChild('pagetypepublishtargettypes');
 
         foreach ($list as $sc) {
-            $type = $nxml->addChild('type');
-            $type->addAttribute('handle', $sc->getPageTypePublishTargetTypeHandle());
-            $type->addAttribute('name', $sc->getPageTypePublishTargetTypeName());
-            $type->addAttribute('package', $sc->getPackageHandle());
+            $sc->export($nxml);
         }
     }
 

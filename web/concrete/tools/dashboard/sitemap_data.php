@@ -1,28 +1,28 @@
-<?
+<?php
 
 defined('C5_EXECUTE') or die("Access Denied.");
-$dh = Loader::helper('concrete/dashboard/sitemap');
+
+$dh = Core::make('helper/concrete/dashboard/sitemap');
 if (!$dh->canRead()) {
     die(t("Access Denied."));
 }
 
 /*
 if (isset($_REQUEST['selectedPageID'])) {
-	if (strstr($_REQUEST['selectedPageID'], ',')) {
-		$sanitizedPageID = preg_replace('/[^0-9,]/', '', $_REQUEST['selectedPageID']);
-		$sanitizedPageID = preg_replace('/\s/', '', $sanitizedPageID);
-	} else {
-		$sanitizedPageID = intval($_REQUEST['selectedPageID']);
-	}
-	$dh->setSelectedPageID($sanitizedPageID);
+    if (strstr($_REQUEST['selectedPageID'], ',')) {
+        $sanitizedPageID = preg_replace('/[^0-9,]/', '', $_REQUEST['selectedPageID']);
+        $sanitizedPageID = preg_replace('/\s/', '', $sanitizedPageID);
+    } else {
+        $sanitizedPageID = intval($_REQUEST['selectedPageID']);
+    }
+    $dh->setSelectedPageID($sanitizedPageID);
 }
 
 if (isset($_REQUEST['task']) && $_REQUEST['task'] == 'save_sitemap_display_mode') {
-	$u = new User();
-	$u->saveConfig('SITEMAP_OVERLAY_DISPLAY_MODE', $_REQUEST['display_mode']);
-	exit;
+    $u = new User();
+    $u->saveConfig('SITEMAP_OVERLAY_DISPLAY_MODE', $_REQUEST['display_mode']);
+    exit;
 }
-
 */
 
 if ($_REQUEST['displayNodePagination']) {
@@ -38,7 +38,7 @@ if ($_GET['includeSystemPages']) {
 }
 
 $cParentID = (isset($_REQUEST['cParentID'])) ? $_REQUEST['cParentID'] : 0;
-if ($_REQUEST['displaySingleLevel']) {
+if (isset($_REQUEST['displaySingleLevel']) && $_REQUEST['displaySingleLevel']) {
     $c = Page::getByID($cParentID);
     $parent = Page::getByID($c->getCollectionParentID());
     if (is_object($parent) && !$parent->isError()) {
@@ -56,6 +56,12 @@ if ($_REQUEST['displaySingleLevel']) {
     }
     $nodes[] = $n;
 } else {
+    if (isset($_COOKIE['ConcreteSitemap-expand'])) {
+        $openNodeArray = explode(',', str_replace('_', '', $_COOKIE['ConcreteSitemap-expand']));
+        if (is_array($openNodeArray)) {
+            $dh->setExpandedNodes($openNodeArray);
+        }
+    }
     $nodes = $dh->getSubNodes($cParentID);
 }
-print Loader::helper('json')->encode($nodes);
+print Core::make('helper/json')->encode($nodes);

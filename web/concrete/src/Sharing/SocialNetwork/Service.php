@@ -27,6 +27,11 @@ class Service
         return $this->ssName;
     }
 
+    public function getDisplayName()
+    {
+        return h($this->getName());
+    }
+
     public function getIcon()
     {
         return $this->ssIcon;

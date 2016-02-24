@@ -11,8 +11,16 @@
 		options = $.extend({
 			displayNodePagination: false,
 			cParentID: 0,
+			cookieId: 'ConcreteSitemap',
 			includeSystemPages: false,
-            displaySingleLevel: false
+            displaySingleLevel: false,
+			minExpandLevel: false,
+			dataSource: CCM_TOOLS_PATH + '/dashboard/sitemap_data',
+			ajaxData: {},
+			selectMode: false, // 1 - single, 2 = multiple , 3 = hierarchical-multiple - has NOTHING to do with clicks. If you enable select mode you CANNOT use a click handler.
+			onClickNode: false, // This handles clicking on the title.
+			onSelectNode: false, // this handles when a radio or checkbox in the tree is checked
+			onPostInit: false
 		}, options);
 		my.options = options;
 		my.$element = $element;
@@ -36,46 +44,83 @@
 				my = this,
 				doPersist = true;
 
-			if (my.options.displaySingleLevel) {
-				if (my.options.cParentID == 1) {
-					minExpandLevel = 2;
-				} else {
-					minExpandLevel = 3;
-				}
-				doPersist = false;
-			} else {
-				minExpandLevel = 1;
+			var dynatreeSelectMode = 1,
+				checkbox = false,
+				classNames = false;
+
+			if (my.options.selectMode == 'single') {
+				checkbox = true;
+				classNames = {checkbox: "dynatree-radio"};
+			} else if (my.options.selectMode == 'multiple') {
+				dynatreeSelectMode = 2;
+				checkbox = true;
+			} else if (my.options.selectMode == 'hierarchical-multiple') {
+				dynatreeSelectMode = 3;
+				checkbox = true;
 			}
+
+			if (checkbox) {
+				doPersist = false;
+			}
+
+			if (my.options.minExpandLevel !== false) {
+				minExpandLevel = my.options.minExpandLevel;
+			} else {
+				if (my.options.displaySingleLevel) {
+					if (my.options.cParentID == 1) {
+						minExpandLevel = 2;
+					} else {
+						minExpandLevel = 3;
+					}
+					doPersist = false;
+				} else {
+					if (my.options.selectMode) {
+						minExpandLevel = 2;
+					} else {
+						minExpandLevel = 1;
+					}
+				}
+			}
+
+			var ajaxData = $.extend({
+				'displayNodePagination': my.options.displayNodePagination ? 1 : 0,
+				'cParentID': my.options.cParentID,
+				'displaySingleLevel': my.options.displaySingleLevel ? 1 : 0,
+				'includeSystemPages': my.options.includeSystemPages ? 1 : 0
+			}, my.options.ajaxData);
+
     		$(my.$element).addClass('ccm-tree-sitemap');
     		$(my.$element).dynatree({
                 onQueryExpand: function () {
                     (my.options.onQueryExpand || $.noop).apply(this, arguments);
                 },
 				autoFocus: false,
-				cookieId: 'ConcreteSitemap',
+				classNames: classNames,
+				cookieId: my.options.cookieId,
 				cookie: {
 					path: CCM_REL + '/'
 				},
 				persist: doPersist,
 				initAjax: {
-					url: CCM_TOOLS_PATH + '/dashboard/sitemap_data',
-					data: {
-						'displayNodePagination': my.options.displayNodePagination ? 1 : 0,
-						'cParentID': my.options.cParentID,
-						'displaySingleLevel': my.options.displaySingleLevel ? 1 : 0,
-						'includeSystemPages': my.options.includeSystemPages ? 1 : 0
-					}
-
+					url: my.options.dataSource,
+					data: ajaxData
 				},
 				onPostInit: function() {
+					if (my.options.onPostInit) {
+						my.options.onPostInit.call();
+					}
 					if (my.options.displayNodePagination) {
 						my.setupNodePagination(my.$element, my.options.cParentID);
 					}
 				},
-                onRender: function() {
+                onRender: function(node, span) {
+					if (my.options.selectMode != false) {
+						$(span).find('.fa').remove();
+					}
                     my.$element.children('.ccm-pagination-bound').remove();
                 },
-				selectMode: 1,
+				selectMode: dynatreeSelectMode,
+				checkbox: checkbox,
 				minExpandLevel:  minExpandLevel,
 				clickFolderMode: 2,
 				onLazyRead: function(node) {
@@ -92,34 +137,49 @@
 				},
 				onClick: function(node, e) {
 					if (node.getEventTargetType(e) == "title" && node.data.cID) {
-						if (my.options.onSelectNode) {
-							my.options.onSelectNode.call(my, node);
 
-						/*} else if (methods.private.eventListenerExists(my.options.requestID, 'onSelectNode')) {
-							methods.private.triggerEvent(my.options.requestID, 'onSelectNode', [node]); */
-
-						} else {
-							var menu = new ConcretePageMenu($(node.span).find('>a'), {
-								menuOptions: my.options,
-								data: node.data,
-								sitemap: my,
-								onHide: function(menu) {
-									menu.$launcher.each(function() {
-										$(this).unbind('mousemove.concreteMenu');
-									});
-								}
-							});
-							menu.show(e);
+						// I have a select mode, so clicking on the title does nothing.
+						if (my.options.selectMode) {
+							return false;
 						}
+
+						// I have a special on click handler, so we run that. It CAN return
+						// false to disable the on click, but it probably won't.
+						if (my.options.onClickNode) {
+							return my.options.onClickNode.call(my, node);
+						}
+
+						// Standard sitemap dashboard mode.
+						var menu = new ConcretePageMenu($(node.span).find('>a'), {
+							menuOptions: my.options,
+							data: node.data,
+							sitemap: my,
+							onHide: function(menu) {
+								menu.$launcher.each(function() {
+									$(this).unbind('mousemove.concreteMenu');
+								});
+							}
+						});
+						menu.show(e);
+
 					} else if (node.data.href) {
 						window.location.href = node.data.href;
-                    } else if (node.data.displaySingleLevel) {
-                        my.displaySingleLevel(node);
-                    }
+					} else if (node.data.displaySingleLevel) {
+						my.displaySingleLevel(node);
+					}
 				},
+				onSelect: function(flag, node) {
+					if (my.options.onSelectNode) {
+						my.options.onSelectNode.call(my, node, flag);
+					}
+				},
+
 				fx: {height: 'toggle', duration: 200},
 				dnd: {
 					onDragStart: function(node) {
+						if (my.options.selectMode) {
+							return false;
+						}
 						if (node.data.cID) {
 							return true;
 						}
@@ -171,8 +231,15 @@
 			});
 		},
 
+		/**
+		 * These are events that are useful when the sitemap is in the Dashboard, but
+		 * they should NOT be listened to when the sitemap is in select Mode.
+		 */
 		setupTreeEvents: function() {
 			var my = this;
+			if (my.options.selectMode || my.options.onClickNode) {
+				return false;
+			}
             ConcreteEvent.unsubscribe('SitemapDeleteRequestComplete.sitemap');
 			ConcreteEvent.subscribe('SitemapDeleteRequestComplete.sitemap', function(e) {
 	 			var node = my.$element.dynatree('getActiveNode');
@@ -301,15 +368,15 @@
     		var root = my.$element.dynatree('getRoot');
 			$(node.li).closest('[data-sitemap=container]').dynatree('option', 'minExpandLevel', minExpandLevel);
 			root.removeChildren();
+			var ajaxData = $.extend({
+				'displayNodePagination': options.displayNodePagination ? 1 : 0,
+				'cParentID': node.data.cID,
+				'displaySingleLevel': true,
+				'includeSystemPages': options.includeSystemPages ? 1 : 0
+			}, options.ajaxData);
 			root.appendAjax({
-				url: CCM_TOOLS_PATH + '/dashboard/sitemap_data',
-				data: {
-					'displayNodePagination': options.displayNodePagination ? 1 : 0,
-					'cParentID': node.data.cID,
-					'displaySingleLevel': true,
-					'includeSystemPages': options.includeSystemPages ? 1 : 0
-				},
-
+				url: options.dataSource,
+				data: ajaxData,
 				success: function() {
 					my.setupNodePagination(root.tree.$tree, node.data.key);
 				}
@@ -320,13 +387,15 @@
     	reloadNode: function(node, onComplete) {
     		var my = this,
     			options = my.options,
+				ajaxData = $.extend({
+					cParentID: node.data.cID,
+					'includeSystemPages': options.includeSystemPages ? 1 : 0,
+					'displayNodePagination': options.displayNodePagination ? 1 : 0
+				}, options.ajaxData),
+
     			params = {
-					url: CCM_TOOLS_PATH + '/dashboard/sitemap_data',
-					data: {
-						cParentID: node.data.cID,
-						'includeSystemPages': options.includeSystemPages ? 1 : 0,
-						'displayNodePagination': options.displayNodePagination ? 1 : 0
-					},
+					url: options.dataSource,
+					data: ajaxData,
 					success: function() {
 						if (onComplete) {
 							onComplete();

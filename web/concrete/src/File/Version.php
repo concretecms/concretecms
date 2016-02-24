@@ -8,17 +8,20 @@ use Concrete\Core\File\Image\Thumbnail\Thumbnail;
 use Concrete\Core\File\Image\Thumbnail\Type\Type;
 use Concrete\Core\File\Image\Thumbnail\Type\Version as ThumbnailTypeVersion;
 use Concrete\Core\File\Type\TypeList as FileTypeList;
+use Concrete\Core\Http\FlysystemFileResponse;
 use Concrete\Flysystem\AdapterInterface;
 use Concrete\Flysystem\FileNotFoundException;
 use Core;
+use Database;
 use Events;
 use FileAttributeKey;
 use Imagine\Exception\InvalidArgumentException as ImagineInvalidArgumentException;
 use Imagine\Image\ImageInterface;
-use Loader;
 use Page;
 use Permissions;
 use stdClass;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use User;
 use View;
 
@@ -28,13 +31,13 @@ use View;
  */
 class Version
 {
-
     const UT_REPLACE_FILE = 1;
     const UT_TITLE = 2;
     const UT_DESCRIPTION = 3;
     const UT_TAGS = 4;
     const UT_EXTENDED_ATTRIBUTE = 5;
     const UT_CONTENTS = 6;
+    const UT_RENAME = 7;
 
     /**
      * /* @Id
@@ -125,8 +128,8 @@ class Version
         $fvTags = (isset($data['fvTags'])) ? Version::cleanTags($data['fvTags']) : '';
         $fvIsApproved = (isset($data['fvIsApproved'])) ? $data['fvIsApproved'] : '1';
 
-        $db = Loader::db();
-        $dh = Loader::helper('date');
+        $db = Database::get();
+        $dh = Core::make('helper/date');
         $date = new Carbon($dh->getOverridableNow());
 
         $fv = new static();
@@ -143,7 +146,7 @@ class Version
         $fv->file = $file;
         $fv->fvID = 1;
 
-        $em = Loader::db()->getEntityManager();
+        $em = \ORM::entityManager('core');
         $em->persist($fv);
         $em->flush();
 
@@ -222,7 +225,7 @@ class Version
 
     public function clearAttribute($ak)
     {
-        $db = Loader::db();
+        $db = Database::get();
         $cav = $this->getAttributeValueObject($ak);
         if (is_object($cav)) {
             $cav->delete();
@@ -233,7 +236,7 @@ class Version
 
     public function getAttributeValueObject($ak, $createIfNotFound = false)
     {
-        $db = Loader::db();
+        $db = Database::get();
         $av = false;
         $v = array($this->getFileID(), $this->getFileVersionID(), $ak->getAttributeKeyID());
         $avID = $db->GetOne("SELECT avID FROM FileAttributeValues WHERE fID = ? AND fvID = ? AND akID = ?", $v);
@@ -283,8 +286,7 @@ class Version
      */
     public function delete($deleteFilesAndThumbnails = false)
     {
-
-        $db = Loader::db();
+        $db = Database::get();
 
         $db->Execute("DELETE FROM FileAttributeValues WHERE fID = ? AND fvID = ?", array($this->getFileID(), $this->fvID));
         $db->Execute("DELETE FROM FileVersionLog WHERE fID = ? AND fvID = ?", array($this->getFileID(), $this->fvID));
@@ -306,7 +308,7 @@ class Version
             }
         }
 
-        $em = $db->getEntityManager();
+        $em = \ORM::entityManager('core');
         $em->remove($this);
         $em->flush();
     }
@@ -347,7 +349,7 @@ class Version
 
     public function getSize()
     {
-        return Loader::helper('number')->formatSize($this->fvSize, 'KB');
+        return Core::make('helper/number')->formatSize($this->fvSize, 'KB');
     }
 
     public function getFullSize()
@@ -374,7 +376,7 @@ class Version
      *
      * @return string date formated like: 2009-01-01 00:00:00
      */
-    function getDateAdded()
+    public function getDateAdded()
     {
         return $this->fvDateAdded;
     }
@@ -389,8 +391,8 @@ class Version
      */
     public function duplicate()
     {
-        $db = Loader::db();
-        $em = $db->getEntityManager();
+        $db = Database::get();
+        $em = \ORM::entityManager('core');
         $qq = $em->createQuery('SELECT max(v.fvID) FROM \Concrete\Core\File\Version v where v.file = :file');
         $qq->setParameter('file', $this->file);
         $fvID = $qq->getSingleScalarResult();
@@ -438,7 +440,7 @@ class Version
 
     protected function save($flush = true)
     {
-        $em = Loader::db()->getEntityManager();
+        $em = \ORM::entityManager('core');
         $em->persist($this);
         if ($flush) {
             $em->flush();
@@ -455,7 +457,7 @@ class Version
 
     public function getTypeObject()
     {
-        $fh = Loader::helper('file');
+        $fh = Core::make('helper/file');
         $ext = $fh->getExtension($this->fvFilename);
 
         $ftl = FileTypeList::getType($ext);
@@ -468,7 +470,7 @@ class Version
     public function getVersionLogComments()
     {
         $updates = array();
-        $db = Loader::db();
+        $db = Database::get();
         $ga = $db->GetAll(
             'SELECT fvUpdateTypeID, fvUpdateTypeAttributeID FROM FileVersionLog WHERE fID = ? AND fvID = ? ORDER BY fvlID ASC',
             array($this->getFileID(), $this->getFileVersionID())
@@ -489,6 +491,9 @@ class Version
                     break;
                 case self::UT_CONTENTS:
                     $updates[] = t('File Content');
+                    break;
+                case self::UT_RENAME:
+                    $updates[] = t('File Name');
                     break;
                 case self::UT_EXTENDED_ATTRIBUTE:
                     $val = $db->GetOne(
@@ -521,7 +526,7 @@ class Version
 
     public function logVersionUpdate($updateTypeID, $updateTypeAttributeID = 0)
     {
-        $db = Loader::db();
+        $db = Database::get();
         $db->Execute(
             'INSERT INTO FileVersionLog (fID, fvID, fvUpdateTypeID, fvUpdateTypeAttributeID) VALUES (?, ?, ?, ?)',
             array(
@@ -552,12 +557,38 @@ class Version
         Events::dispatch('on_file_version_update_description', $fe);
     }
 
+    public function rename($filename)
+    {
+        $cf = Core::make('helper/concrete/file');
+        $storage = $this->getFile()->getFileStorageLocationObject();
+        $oldFilename = $this->fvFilename;
+        if (is_object($storage)) {
+            $path = $cf->prefix($this->fvPrefix, $oldFilename);
+            $newPath = $cf->prefix($this->fvPrefix, $filename);
+            $filesystem = $storage->getFileSystemObject();
+            if ($filesystem->has($path)) {
+                $filesystem->rename($path, $newPath);
+            }
+            $this->fvFilename = $filename;
+            if ($this->fvTitle == $oldFilename) {
+                $this->fvTitle = $filename;
+            }
+            $this->logVersionUpdate(self::UT_RENAME);
+            $this->save();
+        }
+    }
+
     public function updateContents($contents)
     {
         $cf = Core::make('helper/concrete/file');
         $storage = $this->getFile()->getFileStorageLocationObject();
         if (is_object($storage)) {
-            $storage->getFileSystemObject()->write($cf->prefix($this->fvPrefix, $this->fvFilename), $contents);
+            $path = $cf->prefix($this->fvPrefix, $this->fvFilename);
+            $filesystem = $storage->getFileSystemObject();
+            if ($filesystem->has($path)) {
+                $filesystem->delete($path);
+            }
+            $filesystem->write($path, $contents);
             $this->logVersionUpdate(self::UT_CONTENTS);
             $fe = new \Concrete\Core\File\Event\FileVersion($this);
             Events::dispatch('on_file_version_update_contents', $fe);
@@ -590,7 +621,6 @@ class Version
         $fo->reindex();
 
         \Core::make('cache/request')->delete('file/version/approved/' . $this->getFileID());
-
     }
 
     /**
@@ -624,24 +654,16 @@ class Version
     {
         session_write_close();
         $fre = $this->getFileResource();
-        ob_clean();
-        header('Content-type: application/octet-stream');
-        header("Content-Disposition: attachment; filename=\"" . $this->getFilename() . "\"");
-        header('Content-Length: ' . $fre->getSize());
-        header("Pragma: public");
-        header("Expires: 0");
-        header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
-        header("Cache-Control: private", false);
-        header("Content-Transfer-Encoding: binary");
-        header("Content-Encoding: plainbinary");
 
         $fs = $this->getFile()->getFileStorageLocationObject()->getFileSystemObject();
+        $response = new FlysystemFileResponse($fre->getPath(), $fs);
 
-        $stream = $fs->readStream($fre->getPath());
-        $contents = stream_get_contents($stream);
-        fclose($stream);
+        $response->setContentDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT);
+        $response->prepare(\Request::getInstance());
 
-        print $contents;
+        ob_end_clean();
+        $response->send();
+        \Core::shutdown();
         exit;
     }
 
@@ -794,7 +816,6 @@ class Version
 
                 unset($thumbnail);
                 unset($filesystem);
-
             }
         } catch (ImagineInvalidArgumentException $e) {
             return false;
@@ -918,10 +939,10 @@ class Version
      */
     public function refreshAttributes($rescanThumbnails = true)
     {
-        $fh = Loader::helper('file');
+        $fh = Core::make('helper/file');
         $ext = $fh->getExtension($this->fvFilename);
         $ftl = FileTypeList::getType($ext);
-        $db = Loader::db();
+        $db = Database::get();
 
         $fsr = $this->getFileResource();
         if (!$fsr->isFile()) {
@@ -968,6 +989,7 @@ class Version
         $r = new stdClass;
         $fp = new Permissions($this->getFile());
         $r->canCopyFile = $fp->canCopyFile();
+        $r->canEditFileProperties = $fp->canEditFileProperties();
         $r->canEditFilePermissions = $fp->canEditFilePermissions();
         $r->canDeleteFile = $fp->canDeleteFile();
         $r->canReplaceFile = $fp->canEditFileContents();
@@ -1027,7 +1049,9 @@ class Version
             $type = Type::getByHandle(\Config::get('concrete.icons.file_manager_listing.handle'));
             $baseSrc = $this->getThumbnailURL($type->getBaseVersion());
             $doubledSrc = $this->getThumbnailURL($type->getDoubledVersion());
-            return '<img src="' . $baseSrc . '" data-at2x="' . $doubledSrc . '" />';
+            $width = $type->getWidth();
+            $height = $type->getHeight();
+            return sprintf('<img width="%s" height="%s" src="%s" data-at2x="%s">', $width, $height, $baseSrc, $doubledSrc);
         } else {
             return $this->getTypeObject()->getThumbnail();
         }

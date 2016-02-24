@@ -66,7 +66,7 @@ EOL;
 		$form = Loader::helper('form');
 		$valt = Loader::helper('validation/token');
 		$token = $valt->generate('quick_user_select_' . $key);
-		$html .= "
+		$html = "
 		<style type=\"text/css\">
 		ul.ui-autocomplete {position:absolute; list-style:none; }
 		ul.ui-autocomplete li.ui-menu-item { margin-left:0; padding:2px;}
@@ -96,7 +96,7 @@ EOL;
 			$html .= '<tr id="ccmUserSelect' . $fieldName . '_' . $ui->getUserID() . '" class="ccm-list-record">';
 			$html .= '<td><input type="hidden" name="' . $fieldName . '[]" value="' . $ui->getUserID() . '" />' . $ui->getUserName() . '</td>';
 			$html .= '<td>' . $ui->getUserEmail() . '</td>';
-			$html .= '<td><a href="javascript:void(0)" class="ccm-user-list-clear icon-link"><i class="fa fa-minus-circle ccm-user-list-clear-button" /></a>';
+			$html .= '<td><a href="javascript:void(0)" class="ccm-user-list-clear icon-link"><i class="fa fa-minus-circle ccm-user-list-clear-button"></i></a>';
 			$html .= '</tr>';
 		}
 		if (count($users) == 0) {

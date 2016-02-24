@@ -1618,7 +1618,7 @@
       <unsigned/>
     </field>
     <field name="avDateAdded" type="datetime">
-      <default value="0000-00-00 00:00:00"/>
+      <default value="1000-01-01 00:00:00"/>
       <notnull/>
     </field>
     <field name="uID" type="integer" size="10">
@@ -1828,11 +1828,11 @@
     </field>
     <field name="bName" type="string" size="60"/>
     <field name="bDateAdded" type="datetime">
-      <default value="0000-00-00 00:00:00"/>
+      <default value="1000-01-01 00:00:00"/>
       <notnull/>
     </field>
     <field name="bDateModified" type="datetime">
-      <default value="0000-00-00 00:00:00"/>
+      <default value="1000-01-01 00:00:00"/>
       <notnull/>
     </field>
     <field name="bFilename" type="string" size="255"/>
@@ -2204,7 +2204,7 @@
     <field name="cvDescription" type="text" size="65535"/>
     <field name="cvDatePublic" type="datetime"/>
     <field name="cvDateCreated" type="datetime">
-      <default value="0000-00-00 00:00:00"/>
+      <default value="1000-01-01 00:00:00"/>
       <notnull/>
     </field>
     <field name="cvComments" type="string" size="255"/>
@@ -2257,11 +2257,11 @@
       <key/>
     </field>
     <field name="cDateAdded" type="datetime">
-      <default value="0000-00-00 00:00:00"/>
+      <default value="1000-01-01 00:00:00"/>
       <notnull/>
     </field>
     <field name="cDateModified" type="datetime">
-      <default value="0000-00-00 00:00:00"/>
+      <default value="1000-01-01 00:00:00"/>
       <notnull/>
     </field>
     <field name="cHandle" type="string" size="255"/>
@@ -2452,6 +2452,8 @@
     <field name="backgroundColor" type="string" size="255"/>
     <field name="backgroundImageFileID" type="integer"/>
     <field name="backgroundRepeat" type="string" size="255"/>
+    <field name="backgroundSize" type="string" size="255"/>
+    <field name="backgroundPosition" type="string" size="255"/>
     <field name="borderWidth" type="string" size="255"/>
     <field name="borderColor" type="string" size="255"/>
     <field name="borderStyle" type="string" size="255"/>
@@ -3737,7 +3739,7 @@
       <col>pkgID</col>
     </index>
   </table>
-    
+
   <table name="Packages">
     <field name="pkgID" type="integer" size="10">
       <unsigned/>
@@ -4341,7 +4343,7 @@
       <notnull/>
     </field>
     <field name="expires" type="datetime">
-      <default value="0000-00-00 00:00:00"/>
+      <default value="1000-01-01 00:00:00"/>
       <notnull/>
     </field>
     <field name="isManual" type="boolean">
@@ -4362,7 +4364,7 @@
       <default value="0"/>
     </field>
     <field name="ugEntered" type="datetime">
-      <default value="0000-00-00 00:00:00"/>
+      <default value="1000-01-01 00:00:00"/>
       <notnull/>
     </field>
     <index name="uID">
@@ -4544,11 +4546,11 @@
       <notnull/>
     </field>
     <field name="uDateAdded" type="datetime">
-      <default value="0000-00-00 00:00:00"/>
+      <default value="1000-01-01 00:00:00"/>
       <notnull/>
     </field>
     <field name="uLastPasswordChange" type="datetime">
-      <default value="0000-00-00 00:00:00"/>
+      <default value="1000-01-01 00:00:00"/>
       <notnull/>
     </field>
     <field name="uHasAvatar" type="boolean">
@@ -4769,7 +4771,7 @@
       <key/>
     </field>
     <field name="value" type="datetime">
-      <default value="0000-00-00 00:00:00"/>
+      <default value="1000-01-01 00:00:00"/>
     </field>
   </table>
 

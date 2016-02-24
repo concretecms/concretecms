@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Workflow;
 
+use Concrete\Core\Permission\Key\Key;
 use Concrete\Core\Workflow\HistoryEntry\BasicHistoryEntry as BasicWorkflowHistoryEntry;
 use Concrete\Core\Workflow\Progress\Action\ApprovalAction as WorkflowProgressApprovalAction;
 use Concrete\Core\Workflow\Progress\Action\CancelAction as WorkflowProgressCancelAction;
@@ -16,7 +17,8 @@ use Config;
 
 class BasicWorkflow extends \Concrete\Core\Workflow\Workflow
 {
-    public function getPermissionAssignmentClassName() {
+    public function getPermissionAssignmentClassName()
+    {
         return '\\Concrete\\Core\\Permission\\Assignment\\BasicWorkflowAssignment';
     }
 
@@ -35,6 +37,16 @@ class BasicWorkflow extends \Concrete\Core\Workflow\Workflow
                 }
             }
         }
+    }
+
+    /**
+     * Returns true if the logged-in user can approve the current workflow
+     */
+    public function canApproveWorkflow()
+    {
+        $pk = Key::getByHandle('approve_basic_workflow_action');
+        $pk->setPermissionObject($this);
+        return $pk->validate();
     }
 
     public function loadDetails()
@@ -57,15 +69,25 @@ class BasicWorkflow extends \Concrete\Core\Workflow\Workflow
             'INSERT INTO BasicWorkflowProgressData (wpID, uIDStarted) VALUES (?, ?)',
             array($wp->getWorkflowProgressID(), $req->getRequesterUserID()));
 
-        $ui = UserInfo::getByID($req->getRequesterUserID());
+        if ($this->canApproveWorkflow()) {
+            // Then that means we have the ability to approve the workflow we just started.
+            // In that case, we transparently approve it, and skip the entry notification step.
+            $wpr = $req->approve($wp);
+            $wp->delete();
 
-        // let's get all the people who are set to be notified on entry
-        $message = t(
-            'On %s, user %s submitted the following request: %s',
-            Core::make('helper/date')->formatDateTime($wp->getWorkflowProgressDateAdded(), true),
-            $ui->getUserName(),
-            $req->getWorkflowRequestDescriptionObject()->getEmailDescription());
-        $this->notify($wp, $message, 'notify_on_basic_workflow_entry');
+        } else {
+
+            $ui = UserInfo::getByID($req->getRequesterUserID());
+
+            // let's get all the people who are set to be notified on entry
+            $message = t(
+                'On %s, user %s submitted the following request: %s',
+                Core::make('helper/date')->formatDateTime($wp->getWorkflowProgressDateAdded(), true),
+                $ui->getUserName(),
+                $req->getWorkflowRequestDescriptionObject()->getEmailDescription());
+            $this->notify($wp, $message, 'notify_on_basic_workflow_entry');
+        }
+
     }
 
     protected function notify(
@@ -89,7 +111,7 @@ class BasicWorkflow extends \Concrete\Core\Workflow\Workflow
             foreach ($parameters as $key => $value) {
                 $mh->addParameter($key, $value);
             }
-            $mh->addParameter('siteName', Config::get('concrete.site'));
+            $mh->addParameter('siteName', tc('SiteName', Config::get('concrete.site')));
             $mh->load('basic_workflow_notification');
             $mh->sendMail();
             unset($mh);
@@ -153,10 +175,7 @@ class BasicWorkflow extends \Concrete\Core\Workflow\Workflow
 
     public function canApproveWorkflowProgressObject(WorkflowProgress $wp)
     {
-        $pk = PermissionKey::getByHandle('approve_basic_workflow_action');
-        $pk->setPermissionObject($this);
-
-        return $pk->validate();
+        return $this->canApproveWorkflow();
     }
 
     public function approve(WorkflowProgress $wp)

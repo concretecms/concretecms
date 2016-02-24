@@ -70,8 +70,10 @@
             var my = this;
 
             if (is_selectable && !my.getIsSelectable()) {
+                my.getArea().getElem().addClass('ccm-parent-menu-item-active');
                 my.getElem().addClass('ccm-area-drag-area-selectable');
             } else if (!is_selectable && my.getIsSelectable()) {
+                my.getArea().getElem().removeClass('ccm-parent-menu-item-active');
                 my.getElem().removeClass('ccm-area-drag-area-selectable');
             }
             my.setAttr('isSelectable', is_selectable);

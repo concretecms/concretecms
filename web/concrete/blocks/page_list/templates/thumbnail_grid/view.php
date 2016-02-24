@@ -6,7 +6,7 @@ $c = Page::getCurrentPage();
 
 <div class="ccm-block-page-list-thumbnail-grid-wrapper">
 
-    <?php if ($pageListTitle): ?>
+    <?php if (isset($pageListTitle) && $pageListTitle): ?>
         <div class="ccm-block-page-list-header">
             <h5><?=h($pageListTitle)?></h5>
         </div>

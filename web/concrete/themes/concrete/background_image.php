@@ -4,7 +4,17 @@
 <div class="container">
 <div class="row">
 <div class="col-sm-10 col-sm-offset-1">
-<?php Loader::element('system_errors', array('format' => 'block', 'error' => $error, 'success' => $success, 'message' => $message)); ?>
+<?php
+View::element(
+    'system_errors',
+    array(
+        'format' => 'block',
+        'error' => isset($error) ? $error : null,
+        'success' => isset($success) ? $success : null,
+        'message' => isset($message) ? $message : null,
+    )
+);
+?>
 </div>
 </div>
 
@@ -41,7 +51,7 @@ $(function() {
             .append(
             $('<img/>')
                 .css({ width: '100%', height: '100%' })
-                .attr('src', '<?= DIR_REL ?>/concrete/images/login_fade.png'))
+                .attr('src', '<?= ASSETS_URL_IMAGES ?>/login_fade.png'))
             .fadeIn();
     }, 0);
 

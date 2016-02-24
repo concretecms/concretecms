@@ -143,6 +143,7 @@
 	ConcreteAjaxSearch.prototype.updateResults = function(result) {
 		var cs = this,
 			options = cs.options;
+
 		cs.$resultsTableHead.html(cs._templateSearchResultsTableHead({'columns': result.columns}));
 		cs.$resultsTableBody.html(cs._templateSearchResultsTableBody({'items': result.items}));
 		cs.$resultsPagination.html(cs._templateSearchResultsPagination({'paginationTemplate': result.paginationTemplate}));
@@ -197,10 +198,7 @@
 
 	ConcreteAjaxSearch.prototype.refreshResults = function() {
 		var cs = this;
-		
-		if ($.contains(document, cs.$element)) {
-			cs.$element.find('form[data-search-form]').trigger('submit');
-		}
+		cs.$element.find('form[data-search-form]').trigger('submit');
 	}
 
 	ConcreteAjaxSearch.prototype.setupSearch = function() {

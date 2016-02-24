@@ -52,13 +52,15 @@ class Search extends DashboardPageController
         $sr = new UserEditResponse();
         $sr->setUser($this->user);
         $sr->setMessage(t('Avatar saved successfully.'));
-        $html = $av->outputUserAvatar($ui);
+        $av = $this->user->getUserAvatar();
+        $html = $av->output();
         $sr->setAdditionalDataAttribute('imageHTML', $html);
         $sr->outputJSON();
     }
 
     protected function setupUser($uID)
     {
+        $me = new User();
         $ui = UserInfo::getByID(Loader::helper('security')->sanitizeInt($uID));
         if (is_object($ui)) {
             $up = new Permissions($ui);
@@ -71,15 +73,15 @@ class Search extends DashboardPageController
             $this->assignment = $pke->getMyAssignment();
             $this->canEdit = $up->canEditUser();
             if ($this->canEdit) {
-                $this->canActivateUser = $tp->canActivateUser();
+                $this->canActivateUser = $tp->canActivateUser() && $me->getUserID() != $ui->getUserID();
                 $this->canEditAvatar = $this->assignment->allowEditAvatar();
                 $this->canEditUserName = $this->assignment->allowEditUserName();
                 $this->canEditLanguage = $this->assignment->allowEditDefaultLanguage();
                 $this->canEditTimezone = $this->assignment->allowEditTimezone();
                 $this->canEditEmail = $this->assignment->allowEditEmail();
                 $this->canEditPassword = $this->assignment->allowEditPassword();
-                $this->canSignInAsUser = $tp->canSudo();
-                $this->canDeleteUser = $tp->canDeleteUser();
+                $this->canSignInAsUser = $tp->canSudo() && $me->getUserID() != $ui->getUserID();
+                $this->canDeleteUser = $tp->canDeleteUser() && $me->getUserID() != $ui->getUserID();
                 $this->canAddGroup = $tp->canAccessGroupSearch();
                 $this->allowedEditAttributes = $this->assignment->getAttributesAllowedArray();
             }
@@ -120,7 +122,7 @@ class Search extends DashboardPageController
                     $mh->addParameter('user', $this->user);
                     $mh->addParameter('uName', $this->user->getUserName());
                     $mh->addParameter('uEmail', $this->user->getUserEmail());
-                    $mh->addParameter('siteName', Config::get('concrete.site'));
+                    $mh->addParameter('siteName', tc('SiteName', Config::get('concrete.site')));
                     $mh->load('user_registered_approval_complete');
                     $mh->sendMail();
                     $this->redirect('/dashboard/users/search', 'view', $this->user->getUserID(), 'activated');
@@ -234,65 +236,63 @@ class Search extends DashboardPageController
         $this->setupUser($uID);
         if ($this->canEditUserName) {
             $username = $this->post('value');
-            if (!Config::get('concrete.user.registration.email_registration')) {
-                if (!Loader::helper('validation/token')->validate()) {
-                    $this->error->add(Loader::helper('validation/token')->getErrorMessage());
-                }
-                if (strlen($username) < Config::get('concrete.user.username.minimum')) {
-                    $this->error->add(
-                        t(
-                            'A username must be at least %s characters long.',
-                            Config::get('concrete.user.username.minimum')
-                        )
-                    );
-                }
-
-                if (strlen($username) > Config::get('concrete.user.username.maximum')) {
-                    $this->error->add(
-                        t(
-                            'A username cannot be more than %s characters long.',
-                            Config::get('concrete.user.username.maximum')
-                        )
-                    );
-                }
-
-                if (strlen($username) >= Config::get('concrete.user.username.minimum') && !Loader::helper(
-                        'concrete/validation'
-                    )->username($username)
-                ) {
-                    if (Config::get('concrete.user.username.allow_spaces')) {
-                        $this->error->add(
-                            t(
-                                'A username may only contain letters, numbers, spaces, dots (not at the beginning/end), underscores (not at the beginning/end).'
-                            )
-                        );
-                    } else {
-                        $this->error->add(
-                            t(
-                                'A username may only contain letters numbers, dots (not at the beginning/end), underscores (not at the beginning/end).'
-                            )
-                        );
-                    }
-                }
-                $uo = $this->user->getUserObject();
-                if (strcasecmp($uo->getUserName(), $username) && !Loader::Helper(
-                        'concrete/validation'
-                    )->isUniqueUsername($username)
-                ) {
-                    $this->error->add(t("The username '%s' already exists. Please choose another", $username));
-                }
-
-                $sr = new UserEditResponse();
-                $sr->setUser($this->user);
-                if (!$this->error->has()) {
-                    $data = array('uName' => $username);
-                    $this->user->update($data);
-                    $sr->setMessage(t('Username saved successfully.'));
-                } else {
-                    $sr->setError($this->error);
-                }
-                $sr->outputJSON();
+            if (!Loader::helper('validation/token')->validate()) {
+                $this->error->add(Loader::helper('validation/token')->getErrorMessage());
             }
+            if (strlen($username) < Config::get('concrete.user.username.minimum')) {
+                $this->error->add(
+                    t(
+                        'A username must be at least %s characters long.',
+                        Config::get('concrete.user.username.minimum')
+                    )
+                );
+            }
+
+            if (strlen($username) > Config::get('concrete.user.username.maximum')) {
+                $this->error->add(
+                    t(
+                        'A username cannot be more than %s characters long.',
+                        Config::get('concrete.user.username.maximum')
+                    )
+                );
+            }
+
+            if (strlen($username) >= Config::get('concrete.user.username.minimum') && !Loader::helper(
+                    'concrete/validation'
+                )->username($username)
+            ) {
+                if (Config::get('concrete.user.username.allow_spaces')) {
+                    $this->error->add(
+                        t(
+                            'A username may only contain letters, numbers, spaces, dots (not at the beginning/end), underscores (not at the beginning/end).'
+                        )
+                    );
+                } else {
+                    $this->error->add(
+                        t(
+                            'A username may only contain letters numbers, dots (not at the beginning/end), underscores (not at the beginning/end).'
+                        )
+                    );
+                }
+            }
+            $uo = $this->user->getUserObject();
+            if (strcasecmp($uo->getUserName(), $username) && !Loader::Helper(
+                    'concrete/validation'
+                )->isUniqueUsername($username)
+            ) {
+                $this->error->add(t("The username '%s' already exists. Please choose another", $username));
+            }
+
+            $sr = new UserEditResponse();
+            $sr->setUser($this->user);
+            if (!$this->error->has()) {
+                $data = array('uName' => $username);
+                $this->user->update($data);
+                $sr->setMessage(t('Username saved successfully.'));
+            } else {
+                $sr->setError($this->error);
+            }
+            $sr->outputJSON();
         }
     }
 
@@ -354,28 +354,12 @@ class Search extends DashboardPageController
         if ($this->canEditPassword) {
             $password = $this->post('uPassword');
             $passwordConfirm = $this->post('uPasswordConfirm');
-            if ((strlen($password) < Config::get('concrete.user.password.minimum')) || (strlen($password) > Config::get(
-                        'concrete.user.password.maximum'
-                    ))
-            ) {
-                $this->error->add(
-                    t(
-                        'A password must be between %s and %s characters',
-                        Config::get('concrete.user.password.minimum'),
-                        Config::get('concrete.user.password.maximum')
-                    )
-                );
-            }
+
+            \Core::make('validator/password')->isValid($password, $this->error);
+
             if (!Loader::helper('validation/token')->validate('change_password')) {
                 $this->error->add(Loader::helper('validation/token')->getErrorMessage());
             }
-            if (strlen($password) >= Config::get('concrete.user.password.minimum') && !Loader::helper(
-                    'concrete/validation'
-                )->password($password)
-            ) {
-                $this->error->add(t('A password may not contain ", \', >, <, or any spaces.'));
-            }
-
             if ($password != $passwordConfirm) {
                 $this->error->add(t('The two passwords provided do not match.'));
             }

@@ -224,8 +224,11 @@ class Form
             $checkedValue = $checkedValueOrMiscFields;
         }
         $checked = false;
-        if (isset($_REQUEST[$key])) {
-            if ($_REQUEST[$key] == $value) {
+
+        $requestValue = $this->getRequestValue($key);
+
+        if ($requestValue !== false) {
+            if ($requestValue == $value) {
                 $checked = true;
             }
         } else {
@@ -233,7 +236,13 @@ class Form
                 $checked = true;
             }
         }
-        $str = '<input type="radio" id="' . $key . $this->radioIndex . '" name="' . $key . '" value="' . $value . '"';
+        $id = null;
+        if (isset($miscFields['id'])) {
+            $id = $miscFields['id'];
+            unset($miscFields['id']);
+        }
+        $id = $id ?: $key.$this->radioIndex;
+        $str = '<input type="radio" id="' . $id . '" name="' . $key . '" value="' . $value . '"';
         $str .= $this->parseMiscFields('ccm-input-radio', $miscFields);
         if ($checked) {
             $str .= ' checked="checked"';
@@ -318,7 +327,7 @@ class Form
         if (is_string($requestValue)) {
             $value = $requestValue;
         }
-        $value = str_replace('"', '&#34;', $value);
+        $value = h($value);
 
         return "<input type=\"$type\" id=\"$key\" name=\"$key\" value=\"$value\"" . $this->parseMiscFields("form-control ccm-input-$type", $miscFields) . ' />';
     }

@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Controller\SinglePage\Dashboard\System\Environment;
 
+use Concrete\Core\Package\Package;
 use \Concrete\Core\Page\Controller\DashboardPageController;
 use Core;
 use Config;
@@ -37,15 +38,19 @@ class Entities extends DashboardPageController
                     $cache->flushAll();
                 }
                 try {
-                    $dbm = Core::make('database/structure', $em);
+                    $packages = Package::getInstalledList();
+                    foreach($packages as $package) {
+                        $package->installEntitiesDatabase();
+                    }
+
+                    $dbm = Core::make('database/structure', array($em));
                     $dbm->destroyProxyClasses('ApplicationSrc');
                     if ($dbm->hasEntities()) {
                         $dbm->generateProxyClasses();
                         $dbm->installDatabase();
-                        $this->redirect('/dashboard/system/environment/entities', 'entities_refreshed');
-                    } else {
-                        $this->error->add(t("There are no application specific database entities available."));
                     }
+                    $this->redirect('/dashboard/system/environment/entities', 'entities_refreshed');
+
                 } catch (\Doctrine\Common\Persistence\Mapping\MappingException $e) {
                     $drv = $em->getConfiguration()->getMetadataDriverImpl();
                     $this->error->add(t("The application specific entities directory is missing. Please create it first at: %s.", array_shift($drv->getPaths())));

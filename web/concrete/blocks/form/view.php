@@ -28,21 +28,8 @@ while ($questionRow = $questionsRS->fetchRow()) {
 	} else {
 		$question['type'] = $questionRow['inputType'];
 	}
-	
-	//Construct label "for" (and misc. hackery for checkboxlist / radio lists)
-	if ($question['type'] == 'checkboxlist') {
-		$question['input'] = str_replace('<div class="checkboxPair">', '<div class="checkboxPair"><label>', $question['input']);
-		$question['input'] = str_replace("</div>\n", "</label></div>\n", $question['input']); //include linebreak in find/replace string so we don't replace the very last closing </div> (the one that closes the "checkboxList" wrapper div that's around this whole question)
-	} else if ($question['type'] == 'radios') {
-		//Put labels around each radio items (super hacky string replacement -- this might break in future versions of C5)
-		$question['input'] = str_replace('<div class="radioPair">', '<div class="radioPair"><label>', $question['input']);
-		$question['input'] = str_replace('</div>', '</label></div>', $question['input']);
-		
-		//Make radioList wrapper consistent with checkboxList wrapper
-		$question['input'] = "<div class=\"radioList\">\n{$question['input']}\n</div>\n";
-	} else {
-		$question['labelFor'] = 'for="Question' . $questionRow['msqID'] . '"';
-	}
+
+    	$question['labelFor'] = 'for="Question' . $questionRow['msqID'] . '"';
 	
 	//Remove hardcoded style on textareas
 	if ($question['type'] == 'textarea') {
@@ -97,7 +84,7 @@ $captcha = $surveyBlockInfo['displayCaptcha'] ? Loader::helper('validation/captc
 	<div class="fields">
 		
 		<?php  foreach ($questions as $question): ?>
-			<div class="form-group field field-<?php  echo $question['type']; ?> <?php echo $errorDetails[$question['msqID']] ? 'has-error' : ''?>">
+			<div class="form-group field field-<?php  echo $question['type']; ?> <?php echo isset($errorDetails[$question['msqID']]) ? 'has-error' : ''?>">
 				<label class="control-label" <?php  echo $question['labelFor']; ?>>
 					<?php  echo $question['question']; ?>
                     <?php if ($question['required']): ?>

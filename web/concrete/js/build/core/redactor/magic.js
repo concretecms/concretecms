@@ -79,8 +79,7 @@ RedactorPlugins.concrete5magic = function() {
         setCustomFormat: function (s)
         {
             if (s.forceBlock != -1 && (s.forceBlock == 1 || (s.wrap && !(jQuery.inArray(s.wrap,['a','em','strong','small','s','cite','q','dfn','abbr','data','time','var','samp','kbd','i','b','u','mark','ruby','rt','rp','bdi','bdo','span','sub','sup','code']) > -1)))) {
-                this.selection.wrap(s.wrap);
-                //this.inlineFormat(s.wrap);
+                if(s.wrap) this.selection.wrap(s.wrap);
                 if(s.style) this.block.setAttr('style',s.style);
                 if(s.spanClass) this.block.setClass(s.spanClass);
             }

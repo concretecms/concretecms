@@ -1,9 +1,9 @@
 <?php
-
 namespace Concrete\Controller;
 
 use Concrete\Core\Cache\Cache;
 use Concrete\Core\Config\Renderer;
+use Concrete\Core\Error\Error;
 use Concrete\Core\Localization\Localization as Localization;
 use Controller;
 use Config;
@@ -28,6 +28,13 @@ class Install extends Controller
      * @var int
      */
     protected $docCommentCanary = 1;
+
+    /**
+     * If the database already exists and is valid, lets just attach to it rather than installing over it.
+     *
+     * @var bool
+     */
+    protected $auto_attach = false;
 
     protected $fp;
     protected $fpu;
@@ -64,57 +71,65 @@ class Install extends Controller
             }
             $e = Core::make('helper/validation/error');
             $e = $this->validateDatabase($e);
+            if (defined('INSTALL_STARTING_POINT') && INSTALL_STARTING_POINT) {
+                $spName = INSTALL_STARTING_POINT;
+            } else {
+                $spName = 'elemental_full';
+            }
+            $spl = StartingPointPackage::getClass($spName);
+            if ($spl === null) {
+                $e->add(t('Invalid starting point: %s', $spName));
+            }
             if ($e->has()) {
                 $this->set('error', $e);
             } else {
-                if (defined('INSTALL_STARTING_POINT') && INSTALL_STARTING_POINT) {
-                    $spl = StartingPointPackage::getClass(INSTALL_STARTING_POINT);
-                } else {
-                    $spl = StartingPointPackage::getClass('elemental_full');
-                }
                 $this->set('installPackage', $spl->getPackageHandle());
                 $this->set('installRoutines', $spl->getInstallRoutines());
                 $this->set(
                     'successMessage',
                     t(
                         'Congratulations. concrete5 has been installed. You have been logged in as <b>%s</b> with the password you chose. If you wish to change this password, you may do so from the users area of the dashboard.',
-                        USER_SUPER));
+                        USER_SUPER
+                    )
+                );
             }
         }
     }
 
-    protected function validateDatabase($e)
+    protected function validateDatabase(Error $e)
     {
         if (!extension_loaded('pdo')) {
             $e->add($this->getDBErrorMsg());
         } else {
+            $DB_SERVER = isset($_POST['DB_SERVER']) ? $_POST['DB_SERVER'] : null;
+            $DB_DATABASE = isset($_POST['DB_DATABASE']) ? $_POST['DB_DATABASE'] : null;
             $db = \Database::getFactory()->createConnection(
                 array(
-                    'host' => $_POST['DB_SERVER'],
-                    'user' => $_POST['DB_USERNAME'],
-                    'password' => $_POST['DB_PASSWORD'],
-                    'database' => $_POST['DB_DATABASE'],
-                ));
-
-            $DB_SERVER = $_POST['DB_SERVER'];
-            $DB_DATABASE = $_POST['DB_DATABASE'];
+                    'host' => $DB_SERVER,
+                    'user' => isset($_POST['DB_USERNAME']) ? $_POST['DB_USERNAME'] : null,
+                    'password' => isset($_POST['DB_PASSWORD']) ? $_POST['DB_PASSWORD'] : null,
+                    'database' => $DB_DATABASE,
+                )
+            );
 
             if ($DB_SERVER && $DB_DATABASE) {
                 if (!$db) {
                     $e->add(t('Unable to connect to database.'));
-                } else {
+                } elseif (!$this->isAutoAttachEnabled()) {
                     $num = $db->GetCol("show tables");
                     if (count($num) > 0) {
                         $e->add(
                             t(
                                 'There are already %s tables in this database. concrete5 must be installed in an empty database.',
-                                count($num)));
+                                count($num)
+                            )
+                        );
                     }
 
                     try {
                         $support = $db->GetAll('show engines');
                         $supported = false;
-                        foreach($support as $engine) {
+                        foreach ($support as $engine) {
                             $engine = array_change_key_case($engine, CASE_LOWER);
                             if (isset($engine['engine']) && strtolower($engine['engine']) == 'innodb') {
                                 $supported = true;
@@ -123,7 +138,7 @@ class Install extends Controller
                         if (!$supported) {
                             $e->add(t('Your MySQL database does not support InnoDB database tables. These are required.'));
                         }
-                    } catch(\Exception $exception) {
+                    } catch (\Exception $exception) {
                         // we're going to just proceed and hope for the best.
                     }
                 }
@@ -165,6 +180,8 @@ class Install extends Controller
         if (!isset($_COOKIE['CONCRETE5_INSTALL_TEST'])) {
             setcookie('CONCRETE5_INSTALL_TEST', '1', 0, DIR_REL . '/');
         }
+
+        $this->set('pageTitle', t('Install concrete5'));
     }
 
     private function setRequiredItems()
@@ -256,7 +273,7 @@ class Install extends Controller
     {
         $js = Core::make('helper/json');
         $num = $num1 + $num2;
-        print $js->encode(array('response' => $num));
+        echo $js->encode(array('response' => $num));
         exit;
     }
 
@@ -270,6 +287,9 @@ class Install extends Controller
         $js = new \stdClass();
 
         try {
+            if ($spl === null) {
+                throw new Exception(t('Invalid starting point: %s', $pkgHandle));
+            }
             call_user_func(array($spl, $routine));
             $js->error = false;
         } catch (Exception $e) {
@@ -277,7 +297,7 @@ class Install extends Controller
             $js->message = tc('InstallError', '%s.<br><br>Trace:<br>%s', $e->getMessage(), $e->getTraceAsString());
             $this->reset();
         }
-        print $jsx->encode($js);
+        echo $jsx->encode($js);
         exit;
     }
 
@@ -314,8 +334,7 @@ class Install extends Controller
             $password = $_POST['uPassword'];
             $passwordConfirm = $_POST['uPasswordConfirm'];
 
-            $uh = Core::make('helper/concrete/user');
-            $uh->validNewPassword($password, $error);
+            Core::make('validator/password')->isValid($password, $error);
 
             if ($password) {
                 if ($password != $passwordConfirm) {
@@ -324,7 +343,9 @@ class Install extends Controller
             }
 
             if (is_object($this->fileWriteErrors)) {
-                $error = $this->fileWriteErrors;
+                foreach ($this->fileWriteErrors->getList() as $msg) {
+                    $error->add($msg);
+                }
             }
 
             $error = $this->validateDatabase($error);
@@ -364,13 +385,12 @@ class Install extends Controller
                 if ($this->fpu) {
                     $hasher = new PasswordHash(Config::get('concrete.user.password.hash_cost_log2'), Config::get('concrete.user.password.hash_portable'));
                     $configuration = "<?php\n";
-                    $configuration .= "define('INSTALL_USER_EMAIL', '" . $_POST['uEmail'] . "');\n";
-                    $configuration .= "define('INSTALL_USER_PASSWORD_HASH', '" . $hasher->HashPassword(
-                            $_POST['uPassword']) . "');\n";
-                    $configuration .= "define('INSTALL_STARTING_POINT', '" . $this->post('SAMPLE_CONTENT') . "');\n";
-                    $configuration .= "define('SITE', '" . addslashes($_POST['SITE']) . "');\n";
+                    $configuration .= "define('INSTALL_USER_EMAIL', " . var_export((string) $_POST['uEmail'], true) . ");\n";
+                    $configuration .= "define('INSTALL_USER_PASSWORD_HASH', " . var_export((string) $hasher->HashPassword($_POST['uPassword']), true) . ");\n";
+                    $configuration .= "define('INSTALL_STARTING_POINT', " . var_export((string) $this->post('SAMPLE_CONTENT'), true) . ");\n";
+                    $configuration .= "define('SITE', " . var_export((string) $_POST['SITE'], true) . ");\n";
                     if (Localization::activeLocale() != '' && Localization::activeLocale() != 'en_US') {
-                        $configuration .= "define('SITE_INSTALL_LOCALE', '" . Localization::activeLocale() . "');\n";
+                        $configuration .= "define('SITE_INSTALL_LOCALE', " . var_export((string) Localization::activeLocale(), true) . ");\n";
                     }
                     $res = fwrite($this->fpu, $configuration);
                     fclose($this->fpu);
@@ -402,7 +422,7 @@ class Install extends Controller
     {
         $pkg = StartingPointPackage::getClass($this->post('SAMPLE_CONTENT'));
 
-        if (!is_object($pkg)) {
+        if ($pkg === null) {
             $e->add(t("You must select a valid sample content starting point."));
         }
 
@@ -412,5 +432,21 @@ class Install extends Controller
     public function getMinimumPhpVersion()
     {
         return '5.3.3';
+    }
+
+    /**
+     * @return bool
+     */
+    public function isAutoAttachEnabled()
+    {
+        return $this->auto_attach;
+    }
+
+    /**
+     * @param bool $auto_attach
+     */
+    public function setAutoAttach($auto_attach)
+    {
+        $this->auto_attach = $auto_attach;
     }
 }

@@ -8,7 +8,6 @@ class ApplicationServiceProvider extends ServiceProvider {
 		$singletons = array(
 			'helper/concrete/asset_library' => '\Concrete\Core\Application\Service\FileManager',
 			'helper/concrete/file_manager' => '\Concrete\Core\Application\Service\FileManager',
-			'helper/concrete/avatar' => '\Concrete\Core\Application\Service\Avatar',
 			'helper/concrete/composer' => '\Concrete\Core\Application\Service\Composer',
 			'helper/concrete/dashboard' => '\Concrete\Core\Application\Service\Dashboard',
 			'helper/concrete/dashboard/sitemap' => '\Concrete\Core\Application\Service\Dashboard\Sitemap',
@@ -34,6 +33,11 @@ class ApplicationServiceProvider extends ServiceProvider {
 		}
 
         $this->app->bind('error', 'Concrete\Core\Error\Error');
+
+		/**
+		 * @deprecated
+		 */
+		$this->app->singleton('helper/concrete/avatar', '\Concrete\Core\Legacy\Avatar');
 	}
 
 }

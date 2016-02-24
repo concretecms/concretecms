@@ -18,7 +18,8 @@
 
     <script type="text/javascript">
     $(function() {
-        $('a[data-sitemap=show-more]').on('click', function() {
+        $('a[data-sitemap=show-more]').on('click', function(e) {
+            e.preventDefault();
             $('li[data-page-type=other]').show();
             $(this).parent().remove();
         });
@@ -27,13 +28,13 @@
 <? } ?>
 
 <?
-if ($canViewSitemap) { ?>	
+if ($canViewSitemap) { ?>
 	<h5><?=t('Sitemap')?></h5>
 	<div id="ccm-sitemap-panel-sitemap"></div>
 	<script type="text/javascript">
 	$(function() {
 		$('#ccm-sitemap-panel-sitemap').concreteSitemap({
-			onSelectNode: function(node) {
+			onClickNode: function(node) {
 				window.location.href = CCM_DISPATCHER_FILENAME + '?cID=' + node.data.cID;
 			}
 		});
@@ -44,13 +45,13 @@ if ($canViewSitemap) { ?>
 <? if (count($drafts)) {?>
 	<h5><?=t('Page Drafts')?></h5>
 	<ul class="ccm-panel-sitemap-list">
-	<? foreach($drafts as $dc) { 
-		?> 
+	<? foreach($drafts as $dc) {
+		?>
 		<li><a href="<?=Loader::helper('navigation')->getLinkToCollection($dc)?>"><?
 			if ($dc->getCollectionName()) {
-				print $dc->getCollectionName();
+                echo $dc->getCollectionName() . ' ' . Core::make('date')->formatDateTime($dc->getCollectionDateAdded(), false);
 			} else {
-				print t('(Untitled)');
+                echo t('(Untitled)') . ' ' . Core::make('date')->formatDateTime($dc->getCollectionDateAdded(), false);
 			}
 		?></a></li>
 	<? } ?>

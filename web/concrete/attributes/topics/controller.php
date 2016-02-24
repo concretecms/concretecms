@@ -13,10 +13,7 @@ use Database;
 
 class Controller extends AttributeTypeController
 {
-    protected $searchIndexFieldDefinition = array(
-        'type' => 'text',
-        'options' => array('length' => 4294967295, 'default' => null, 'notnull' => false),
-    );
+    protected $searchIndexFieldDefinition = array('type' => 'text', 'options' => array('default' => null, 'notnull' => false));
 
     public $helpers = array('form');
 
@@ -328,13 +325,13 @@ class Controller extends AttributeTypeController
     public function validateValue()
     {
         $val = $this->getValue();
-
-        return is_object($val);
+        return is_array($val) && count($val) > 0;
     }
 
-    public function validateForm($data)
+    public function validateForm($p)
     {
-        // TODO: form validation
+        $topicsArray = $_POST['topics_' . $this->attributeKey->getAttributeKeyID()];
+        return is_array($topicsArray) && count($topicsArray) > 0;
     }
 
     public function getTopicParentNode()

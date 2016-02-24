@@ -62,17 +62,13 @@ class Composer extends BackendInterfacePageController {
 
 			$c = $this->page;
 			$e = $ptr->error;
-			if (!$c->getPageDraftTargetParentPageID()) {
-				$e->add(t('You must choose a page to publish this page beneath.'));
-			} else {
-				$target = \Page::getByID($c->getPageDraftTargetParentPageID());
-				$ppc = new \Permissions($target);
-				$pagetype = $c->getPageTypeObject();
-				if (!$ppc->canAddSubCollection($pagetype)) {
-					$e->add(t('You do not have permission to publish a page in this location.'));
-				}
-			}
 			$validator = $pagetype->getPageTypeValidatorObject();
+			if ($this->page->isPageDraft()) {
+				$target = \Page::getByID($this->page->getPageDraftTargetParentPageID());
+			} else {
+				$target = \Page::getByID($this->page->getCollectionParentID());
+			}
+			$e->add($validator->validatePublishLocationRequest($target));
 			$e->add($validator->validatePublishDraftRequest($c));
 
 			$ptr->setError($e);

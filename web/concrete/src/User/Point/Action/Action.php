@@ -119,7 +119,7 @@ class Action
         $upa->upaHasCustomClass = 0;
         $upa->upaIsActive = $upaIsActive;
         if (!$upaIsActive) {
-            $up->upaIsActive = 0;
+            $upa->upaIsActive = 0;
         }
 
         if (is_object($group)) {

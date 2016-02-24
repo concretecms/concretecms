@@ -107,7 +107,22 @@ class ArrangeBlocks extends Page
         }
 
         if (!$e->has()) {
-            $nvc->processArrangement($_POST['area'], $_POST['block'], $_POST['blocks']);
+
+            $request = \Request::getInstance();
+            $area_id = $request->post('area', 0);
+            $block_id = $request->post('block', 0);
+            $block_ids = $request->post('blocks', array());
+
+            if ($destination_area->isGlobalArea()) {
+                $stack = Stack::getByName($destination_area->getAreaHandle());
+                $stackToModify = $stack->getVersionToModify();
+                $area = Area::get($stackToModify, STACKS_AREA_NAME);
+                $area_id = $area->getAreaID();
+                $nvc->relateVersionEdits($stackToModify);
+                $stackToModify->processArrangement($area_id, $block_id, $block_ids);
+            } else {
+                $nvc->processArrangement($area_id, $block_id, $block_ids);
+            }
         }
 
         $pc->setError($e);

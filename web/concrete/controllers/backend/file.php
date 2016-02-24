@@ -2,6 +2,7 @@
 namespace Concrete\Controller\Backend;
 
 use Concrete\Core\File\Importer;
+use Concrete\Core\Validation\CSRF\Token;
 use Controller;
 use FileSet;
 use File as ConcreteFile;
@@ -87,11 +88,18 @@ class File extends Controller
 
     public function deleteVersion()
     {
+        /** @var Token $token */
+        $token = $this->app->make('token');
+        if (!$token->validate('delete-version'))
+
         $files = $this->getRequestFiles('canEditFileContents');
         $r = new FileEditResponse();
         $r->setFiles($files);
         $fv = $files[0]->getVersion(Loader::helper('security')->sanitizeInt($_REQUEST['fvID']));
         if (is_object($fv) && !$fv->isApproved()) {
+            if (!$token->validate('version/delete/' . $fv->getFileID() . "/" . $fv->getFileVersionId())) {
+                throw new Exception($token->getErrorMessage());
+            }
             $fv->delete();
         } else {
             throw new Exception(t('Invalid file version.'));
@@ -130,8 +138,10 @@ class File extends Controller
             throw new Exception(t("Unable to add files."));
         }
 
-        if (\Loader::helper('number')->getBytes(ini_get('post_max_size')) < $_SERVER['CONTENT_LENGTH']) {
-            throw new Exception(FileImporter::getErrorMessage(Importer::E_FILE_EXCEEDS_POST_MAX_FILE_SIZE));
+        if ($post_max_size = \Loader::helper('number')->getBytes(ini_get('post_max_size'))) {
+            if ($post_max_size < $_SERVER['CONTENT_LENGTH']) {
+                throw new Exception(FileImporter::getErrorMessage(Importer::E_FILE_EXCEEDS_POST_MAX_FILE_SIZE));
+            }
         }
 
         if (!Loader::helper('validation/token')->validate()) {

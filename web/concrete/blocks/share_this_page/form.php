@@ -18,7 +18,7 @@
     <?=t('Choose Sharing Service')?></label>
     <select name="service[]" class="form-control">
         <? foreach($services as $service) { ?>
-            <option value="<?=$service->getHandle()?>" <% if (service == '<?=$service->getHandle()?>') { %>selected<% } %>><?=$service->getName()?></option>
+            <option value="<?=$service->getHandle()?>" <% if (service == '<?=$service->getHandle()?>') { %>selected<% } %>><?=$service->getDisplayName()?></option>
         <? } ?>
     </select>
 </div>

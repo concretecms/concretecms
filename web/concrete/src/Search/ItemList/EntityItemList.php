@@ -21,4 +21,10 @@ abstract class EntityItemList extends ItemList
         $this->query = $this->getEntityManager()->createQueryBuilder();
         $this->createQuery();
     }
+
+    public function getQueryObject()
+    {
+        return $this->query;
+    }
+
 }

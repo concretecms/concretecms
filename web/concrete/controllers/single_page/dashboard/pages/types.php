@@ -1,6 +1,7 @@
 <?
 namespace Concrete\Controller\SinglePage\Dashboard\Pages;
 
+use Concrete\Core\Error\Error;
 use \Concrete\Core\Page\Controller\DashboardPageController;
 use PageType;
 use Loader;
@@ -147,6 +148,11 @@ class Types extends DashboardPageController
         $target = \Concrete\Core\Page\Type\PublishTarget\Type\Type::getByID($this->post('ptPublishTargetTypeID'));
         if (!is_object($target)) {
             $this->error->add(t('Invalid page type target type.'));
+        } else {
+            $pe = $target->validatePageTypeRequest($this->request);
+            if ($pe instanceof Error) {
+                $this->error->add($pe);
+            }
         }
         if (!$this->error->has()) {
             $data = array(
@@ -163,5 +169,6 @@ class Types extends DashboardPageController
             $pagetype->setConfiguredPageTypePublishTargetObject($configuredTarget);
             $this->redirect('/dashboard/pages/types', 'page_type_updated');
         }
+        $this->edit($ptID);
     }
 }

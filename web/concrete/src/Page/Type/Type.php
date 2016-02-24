@@ -434,7 +434,7 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
                 if (isset($setnode->control)) {
                     foreach ($setnode->control as $controlnode) {
                         $controltype = PageTypeComposerControlType::getByHandle((string) $controlnode['type']);
-                        $control = $controltype->configureFromImport($controlnode);
+                        $control = $controltype->configureFromImportHandle((string) $controlnode['handle']);
                         $setcontrol = $control->addToPageTypeComposerFormLayoutSet($set, true);
                         $required = (string) $controlnode['required'];
                         $customTemplate = (string) $controlnode['custom-template'];
@@ -505,65 +505,67 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
         }
     }
 
+    public function export($nxml)
+    {
+        $templates = $this->getPageTypePageTemplateObjects();
+        $pagetype = $nxml->addChild('pagetype');
+        $pagetype->addAttribute('name', $this->getPageTypeName());
+        $pagetype->addAttribute('handle', $this->getPageTypeHandle());
+        $pagetype->addAttribute('package', $this->getPackageHandle());
+        if ($this->isPageTypeInternal()) {
+            $pagetype->addAttribute('internal', 'true');
+        }
+        if ($this->doesPageTypeLaunchInComposer()) {
+            $pagetype->addAttribute('launch-in-composer', '1');
+        } else {
+            $pagetype->addAttribute('launch-in-composer', '0');
+        }
+        if ($this->isPageTypeFrequentlyAdded()) {
+            $pagetype->addAttribute('is-frequently-added', '1');
+        }
+        $pagetemplates = $pagetype->addChild('pagetemplates');
+        if ($this->getPageTypeAllowedPageTemplates() == 'A') {
+            $pagetemplates->addAttribute('type', 'all');
+        } else {
+            if ($this->getPageTypeAllowedPageTemplates() == 'X') {
+                $pagetemplates->addAttribute('type', 'except');
+            } else {
+                $pagetemplates->addAttribute('type', 'custom');
+            }
+            foreach ($templates as $tt) {
+                $pagetemplates->addChild('pagetemplate')->addAttribute('handle', $tt->getPageTemplateHandle());
+            }
+        }
+
+        $defaultPageTemplate = PageTemplate::getByID($this->getPageTypeDefaultPageTemplateID());
+        if (is_object($defaultPageTemplate)) {
+            $pagetemplates->addAttribute('default', $defaultPageTemplate->getPageTemplateHandle());
+        }
+        $target = $this->getPageTypePublishTargetObject();
+        $target->export($pagetype);
+
+        $cfsn = $pagetype->addChild('composer');
+        $fsn = $cfsn->addChild('formlayout');
+
+        $fieldsets = PageTypeComposerFormLayoutSet::getList($this);
+        foreach ($fieldsets as $fs) {
+            $fs->export($fsn);
+        }
+
+        $osn = $cfsn->addChild('output');
+        foreach ($templates as $tt) {
+            $pagetemplate = $osn->addChild('pagetemplate');
+            $pagetemplate->addAttribute('handle', $tt->getPageTemplateHandle());
+            $xc = $this->getPageTypePageTemplateDefaultPageObject($tt);
+            $xc->export($pagetemplate);
+        }
+    }
     public static function exportList($xml)
     {
         $list = self::getList();
         $nxml = $xml->addChild('pagetypes');
-
         foreach ($list as $sc) {
-            $activated = 0;
-            $templates = $sc->getPageTypePageTemplateObjects();
-            $pagetype = $nxml->addChild('pagetype');
-            $pagetype->addAttribute('name', $sc->getPageTypeName());
-            $pagetype->addAttribute('handle', $sc->getPageTypeHandle());
-            $pagetype->addAttribute('package', $sc->getPackageHandle());
-            if ($sc->isPageTypeInternal()) {
-                $pagetype->addAttribute('internal', 'true');
-            }
-            if ($sc->doesPageTypeLaunchInComposer()) {
-                $pagetype->addAttribute('launch-in-composer', '1');
-            } else {
-                $pagetype->addAttribute('launch-in-composer', '0');
-            }
-            if ($sc->isPageTypeFrequentlyAdded()) {
-                $pagetype->addAttribute('is-frequently-added', '1');
-            }
-            $pagetemplates = $pagetype->addChild('pagetemplates');
-            if ($sc->getPageTypeAllowedPageTemplates() == 'A') {
-                $pagetemplates->addAttribute('type', 'all');
-            } else {
-                if ($sc->getPageTypeAllowedPageTemplates() == 'X') {
-                    $pagetemplates->addAttribute('type', 'except');
-                } else {
-                    $pagetemplates->addAttribute('type', 'custom');
-                }
-                foreach ($templates as $tt) {
-                    $pagetemplates->addChild('pagetemplate')->addAttribute('handle', $tt->getPageTemplateHandle());
-                }
-            }
-
-            $defaultPageTemplate = PageTemplate::getByID($sc->getPageTypeDefaultPageTemplateID());
-            if (is_object($defaultPageTemplate)) {
-                $pagetemplates->addAttribute('default', $defaultPageTemplate->getPageTemplateHandle());
-            }
-            $target = $sc->getPageTypePublishTargetObject();
-            $target->export($pagetype);
-
-            $cfsn = $pagetype->addChild('composer');
-            $fsn = $cfsn->addChild('formlayout');
-
-            $fieldsets = PageTypeComposerFormLayoutSet::getList($sc);
-            foreach ($fieldsets as $fs) {
-                $fs->export($fsn);
-            }
-
-            $osn = $cfsn->addChild('output');
-            foreach ($templates as $tt) {
-                $pagetemplate = $osn->addChild('pagetemplate');
-                $pagetemplate->addAttribute('handle', $tt->getPageTemplateHandle());
-                $xc = $sc->getPageTypePageTemplateDefaultPageObject($tt);
-                $xc->export($pagetemplate);
-            }
+            $sc->export($nxml);
         }
     }
 
@@ -886,9 +888,11 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
         foreach ($existingDefaultTemplateIDs as $existingPageTemplateID) {
             if (!in_array($existingPageTemplateID, $templateIDs)) {
                 $existingPageTemplate = Template::getByID($existingPageTemplateID);
-                $c = $this->getPageTypePageTemplateDefaultPageObject($existingPageTemplate);
-                if (is_object($c)) {
-                    $c->delete();
+                if (is_object($existingPageTemplate)) {
+                    $c = $this->getPageTypePageTemplateDefaultPageObject($existingPageTemplate);
+                    if (is_object($c)) {
+                        $c->delete();
+                    }
                 }
                 $db->Execute('delete from PageTypePageTemplateDefaultPages where pTemplateID = ? and ptID = ?', array($existingPageTemplateID, $this->getPageTypeID()));
             }
@@ -954,6 +958,26 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
             }
         }
 
+        return $list;
+    }
+
+    public static function getListByDefaultPageTemplate($templateOrTemplateID)
+    {
+        $pTemplateID = is_object($templateOrTemplateID) ?
+            $templateOrTemplateID->getPageTemplateID() : $templateOrTemplateID;
+
+        $db = \Database::connection();
+        $stmt = $db->prepare("SELECT ptID FROM PageTypes WHERE ptDefaultPageTemplateID = ?");
+        $stmt->bindValue(1, $pTemplateID);
+        $stmt->execute();
+
+        $list = array();
+        while ($ptID = $stmt->fetchColumn(0)) {
+            $cm = static::getByID($ptID);
+            if (is_object($cm)) {
+                $list[] = $cm;
+            }
+        }
         return $list;
     }
 

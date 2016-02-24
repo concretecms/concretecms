@@ -207,6 +207,9 @@ class Pagination {
 	function getPages($wrapper='span'){
 		if($this->number_of_pages==1) return;
 		$pages_made=0;
+        $pages = '';
+        $predotted = 0;
+        $postdotted = 0;
 		for ($i=0;$i<$this->number_of_pages;$i++){
 			//preceeding dots for high number of pages
 			if($i<($this->current_page-5) && $i!=0){

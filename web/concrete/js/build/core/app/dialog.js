@@ -3,9 +3,7 @@
  */
 $.widget("concrete.dialog", $.ui.dialog, {
     _allowInteraction: function(event) {
-        return $.ui.dialog.prototype._allowInteraction.call(this, event)
-            ? true
-            : !!$( event.target).closest('.ccm-interaction-dialog').length;
+        return !!$( event.target).closest('.ccm-interaction-dialog').length || this._super(event);
     }
 });
 
@@ -165,7 +163,7 @@ jQuery.fn.dialog.open = function(options) {
             }
             if (typeof options.onClose != "undefined") {
                 if ((typeof options.onClose) == 'function') {
-                    options.onClose();
+                    options.onClose($(this));
                 } else {
                     eval(options.onClose);
                 }

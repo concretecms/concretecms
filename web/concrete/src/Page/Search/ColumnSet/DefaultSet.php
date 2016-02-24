@@ -1,8 +1,8 @@
 <?php
 namespace Concrete\Core\Page\Search\ColumnSet;
 
-use \Concrete\Core\Search\Column\Column;
-use \Concrete\Core\Search\Column\Set;
+use Concrete\Core\Search\Column\Column;
+use Concrete\Core\Search\Column\Set;
 use UserInfo;
 use Core;
 
@@ -20,7 +20,7 @@ class DefaultSet extends Set
         return Core::make('helper/date')->formatDateTime($c->getCollectionDateLastModified());
     }
 
-    public function getCollectionAuthor($c)
+    public static function getCollectionAuthor($c)
     {
         $uID = $c->getCollectionUserID();
         $ui = UserInfo::getByID($uID);

@@ -2,11 +2,15 @@
 
 namespace Concrete\Core\File;
 
+use Concrete\Core\File\ImportProcessor\ConstrainImageProcessor;
+use Concrete\Core\File\ImportProcessor\ProcessorInterface;
+use Concrete\Core\File\ImportProcessor\SetJPEGQualityProcessor;
 use Concrete\Core\File\StorageLocation\StorageLocation;
 use Concrete\Flysystem\AdapterInterface;
 use Loader;
 use File as ConcreteFile;
 use Core;
+use Config;
 
 class Importer
 {
@@ -29,6 +33,22 @@ class Importer
     const E_FILE_EXCEEDS_POST_MAX_FILE_SIZE = 20;
 
     protected $rescanThumbnailsOnImport = true;
+
+    protected $importProcessors = array();
+
+    public function __construct()
+    {
+        $resize = Config::get('concrete.file_manager.restrict_uploaded_image_sizes');
+        if ($resize) {
+            $width = (int) Config::get('concrete.file_manager.restrict_max_width');
+            $height = (int) Config::get('concrete.file_manager.restrict_max_height');
+            $quality = (int) Config::get('concrete.file_manager.restrict_resize_quality');
+            $resizeProcessor = new ConstrainImageProcessor($width, $height);
+            $qualityProcessor = new SetJPEGQualityProcessor($quality);
+            $this->addImportProcessor($resizeProcessor);
+            $this->addImportProcessor($qualityProcessor);
+        }
+    }
 
     /**
      * Returns a text string explaining the error that was passed.
@@ -76,6 +96,11 @@ class Importer
         }
 
         return $msg;
+    }
+
+    public function addImportProcessor(ProcessorInterface $processor)
+    {
+        $this->importProcessors[] = $processor;
     }
 
     /**
@@ -147,7 +172,16 @@ class Importer
         if (!($fr instanceof File)) {
             // we have to create a new file object for this file version
             $fv = ConcreteFile::add($sanitizedFilename, $prefix, array('fvTitle' => $filename), $fsl);
+
+            foreach($this->importProcessors as $processor) {
+                if ($processor->shouldProcess($fv)) {
+                    $processor->process($fv);
+                }
+            }
+
             $fv->refreshAttributes($this->rescanThumbnailsOnImport);
+
+
         } else {
             // We get a new version to modify
             $fv = $fr->getVersionToModify(true);
@@ -192,9 +226,9 @@ class Importer
             $copied = false;
         }
         if (!$copied) {
-            $storage->write(
+            $storage->writeStream(
                 $cf->prefix($prefix, $sanitizedFilename),
-                $storage->read(REL_DIR_FILES_INCOMING . '/' . $filename)
+                $storage->readStream(REL_DIR_FILES_INCOMING . '/' . $filename)
             );
         }
 
@@ -202,7 +236,13 @@ class Importer
             // we have to create a new file object for this file version
             $fv = ConcreteFile::add($sanitizedFilename, $prefix, array('fvTitle' => $filename), $default);
             $fv->refreshAttributes($this->rescanThumbnailsOnImport);
-            $fr = $fv->getFile();
+
+            foreach($this->importProcessors as $processor) {
+                if ($processor->shouldProcess($fv)) {
+                    $processor->process($fv);
+                }
+            }
+
         } else {
             // We get a new version to modify
             $fv = $fr->getVersionToModify(true);

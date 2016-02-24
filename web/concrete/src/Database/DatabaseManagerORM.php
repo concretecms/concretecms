@@ -91,33 +91,19 @@ class DatabaseManagerORM
      */
     public static function makeEntityManager(Connection $connection, $context = null)
     {
-        $config = Setup::createConfiguration(
-            Config::get('concrete.cache.doctrine_dev_mode'),
-            Config::get('database.proxy_classes'),
-            new DoctrineCacheDriver('cache/expensive')
-        );
 
-        $path = DIR_APPLICATION . '/' . DIRNAME_CLASSES;
-        if ($context instanceof Package) {
-            $path = $context->getPackageEntitiesPath();
-        } elseif ($context === 'core') {
-            $path = DIR_BASE_CORE . '/' . DIRNAME_CLASSES;
-        } elseif (is_object($context) && method_exists($context, 'getEntitiesPath')) {
-            $path = $context->getEntitiesPath();
+        if (is_object($context) && $context instanceof Package) {
+            $factory = $context->getEntityManagerFactory();
+        } else {
+            if ($context === 'core') {
+                $path = DIR_BASE_CORE . '/' . DIRNAME_CLASSES;
+            } else {
+                $path = DIR_APPLICATION . '/' . DIRNAME_CLASSES;
+            }
+            $factory = new EntityManagerFactory($path, $context);
         }
 
-        $driverImpl = $config->newDefaultAnnotationDriver($path);
-        $driverImpl->addExcludePaths(Config::get('database.proxy_exclusions', array()));
-        $config->setMetadataDriverImpl($driverImpl);
-
-        $event = new \Symfony\Component\EventDispatcher\GenericEvent();
-        $event->setArgument('connection', $connection);
-        $event->setArgument('context', $context);
-        $event->setArgument('configuration', $config);
-        Events::dispatch('on_entity_manager_configure', $event);
-        $config = $event->getArgument('configuration');
-
-        return EntityManager::create($connection, $config);
+        return $factory->create($connection);
     }
 
 }

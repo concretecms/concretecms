@@ -109,4 +109,88 @@ EOL;
         return $html;
     }
 
+    public function selectMultipleFromSitemap($field, $pages = array(), $startingPoint = HOME_CID, $filters = array())
+    {
+        $v = \View::getInstance();
+        $v->requireAsset('core/sitemap');
+
+        $identifier = new \Concrete\Core\Utility\Service\Identifier();
+        $identifier = $identifier->getString(32);
+
+        $args = new \stdClass;
+        $selected = array();
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            if (isset($_POST[$field]) && is_array($_POST[$field])) {
+                foreach($_POST[$field] as $value) {
+                    $selected[] = intval($value);
+                }
+            }
+        } else {
+            foreach($pages as $cID) {
+                $selected[] = is_object($cID) ? $cID->getCollectionID() : $cID;
+            }
+        }
+
+        $args->identifier = $identifier;
+        $args->selected = $selected;
+        $args->mode = 'multiple';
+        $args->token = Core::make('token')->generate('select_sitemap');
+        $args->inputName = $field;
+        $args->startingPoint = $startingPoint;
+        if (count($filters)) {
+            $args->filters = $filters;
+        }
+        $args = json_encode($args);
+
+        $html = <<<EOL
+        <div data-page-sitemap-selector="{$identifier}"></div>
+        <script type="text/javascript">
+        $(function() {
+            $('[data-page-sitemap-selector={$identifier}]').concretePageSitemapSelector({$args});
+        });
+        </script>
+EOL;
+        return $html;
+    }
+
+    public function selectFromSitemap($field, $page = null, $startingPoint = HOME_CID, $filters = array())
+    {
+        $v = \View::getInstance();
+        $v->requireAsset('core/sitemap');
+
+        $identifier = new \Concrete\Core\Utility\Service\Identifier();
+        $identifier = $identifier->getString(32);
+
+        $args = new \stdClass;
+        $selected = 0;
+
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            if (isset($_POST[$field])) {
+                $selected = intval($_POST[$field]);
+            }
+        } else if ($page) {
+            $selected = is_object($page) ? $page->getCollectionID() : $page;
+        }
+        $args->identifier = $identifier;
+        $args->selected = $selected;
+        $args->inputName = $field;
+        $args->startingPoint = $startingPoint;
+        $args->token = Core::make('token')->generate('select_sitemap');
+        if (count($filters)) {
+            $args->filters = $filters;
+        }
+        $args = json_encode($args);
+
+        $html = <<<EOL
+        <div data-page-sitemap-selector="{$identifier}"></div>
+        <script type="text/javascript">
+        $(function() {
+            $('[data-page-sitemap-selector={$identifier}]').concretePageSitemapSelector({$args});
+        });
+        </script>
+EOL;
+        return $html;
+    }
+
+
 }
