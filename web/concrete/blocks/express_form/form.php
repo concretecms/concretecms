@@ -3,6 +3,7 @@
 <?php echo Loader::helper('concrete/ui')->tabs(array(
     array('form-add', t('Add'), true),
     array('form-edit', t('Edit')),
+    array('form-results', t('Results')),
     array('form-options', t('Options')),
 ));?>
 
@@ -60,27 +61,46 @@
 
 </div>
 
+
+<div id="ccm-tab-content-form-results" class="ccm-tab-content" >
+    <fieldset>
+        <input type="hidden" name="resultsFolder" value="<?=$resultsFolder?>">
+
+        <legend><?php echo t('Results')?></legend>
+        <p><?=t('Store results in a folder:')?></p>
+
+        <?php if (is_object($tree)) {
+        ?>
+        <div data-root-tree-node-id="<?=$formResultsRootFolderNodeID?>" data-tree="<?=$tree->getTreeID()?>">
+        </div>
+        <?php } ?>
+
+
+    </fieldset>
+
+</div>
+
 <div id="ccm-tab-content-form-options" class="ccm-tab-content">
     <fieldset>
         <legend><?=t('Options')?></legend>
         <div class="form-group">
-            <?=$form->label('surveyName', t('Form Name'))?>
-            <?=$form->text('surveyName', $miniSurveyInfo['surveyName'])?>
+            <?=$form->label('formName', t('Form Name'))?>
+            <?=$form->text('formName', $formName)?>
         </div>
         <div class="form-group">
-            <?=$form->label('submitText', t('Submit Text'))?>
-            <?=$form->text('submitText', $this->controller->submitText)?>
+            <?=$form->label('submitLabel', t('Submit Button Label'))?>
+            <?=$form->text('submitLabel', $submitLabel)?>
         </div>
         <div class="form-group">
             <?=$form->label('thankyouMsg', t('Message to display when completed'))?>
-            <?=$form->textarea('thankyouMsg', $this->controller->thankyouMsg, array('rows' => 3))?>
+            <?=$form->textarea('thankyouMsg', $thankyouMsg, array('rows' => 3))?>
         </div>
         <div class="form-group">
             <?=$form->label('recipientEmail', t('Notify me by email when people submit this form'))?>
             <div class="input-group">
 				<span class="input-group-addon" style="z-index: 2000">
-				<?=$form->checkbox('notifyMeOnSubmission', 1, $miniSurveyInfo['notifyMeOnSubmission'] == 1, array('onclick' => "$('input[name=recipientEmail]').focus()"))?>
-				</span><?=$form->text('recipientEmail', $miniSurveyInfo['recipientEmail'], array('style' => 'z-index:2000;'))?>
+				<?=$form->checkbox('notifyMeOnSubmission', 1, $notifyMeOnSubmission == 1, array('onclick' => "$('input[name=recipientEmail]').focus()"))?>
+				</span><?=$form->text('recipientEmail', $recipientEmail, array('style' => 'z-index:2000;'))?>
             </div>
             <span class="help-block"><?=t('(Seperate multiple emails with a comma)')?></span>
         </div>
@@ -88,13 +108,13 @@
             <label class="control-label"><?=t('Solving a <a href="%s" target="_blank">CAPTCHA</a> Required to Post?', t('http://en.wikipedia.org/wiki/Captcha'))?></label>
             <div class="radio">
                 <label>
-                    <?=$form->radio('displayCaptcha', 1, (int) $miniSurveyInfo['displayCaptcha'])?>
+                    <?=$form->radio('displayCaptcha', 1, (int) $displayCaptcha)?>
                     <span><?=t('Yes')?></span>
                 </label>
             </div>
             <div class="radio">
                 <label>
-                    <?=$form->radio('displayCaptcha', 0, (int) $miniSurveyInfo['displayCaptcha'])?>
+                    <?=$form->radio('displayCaptcha', 0, (int) $displayCaptcha)?>
                     <span><?=t('No')?></span>
                 </label>
             </div>
@@ -104,8 +124,8 @@
             <div id="ccm-form-redirect-page">
                 <?php
                 $page_selector = Loader::helper('form/page_selector');
-                if ($miniSurveyInfo['redirectCID']) {
-                    echo $page_selector->selectPage('redirectCID', $miniSurveyInfo['redirectCID']);
+                if ($redirectCID) {
+                    echo $page_selector->selectPage('redirectCID', $redirectCID);
                 } else {
                     echo $page_selector->selectPage('redirectCID');
                 }

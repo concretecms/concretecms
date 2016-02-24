@@ -169,6 +169,25 @@ $(function() {
             });
         }
 
+
+        $('[data-tree]').each(function() {
+            $(this).concreteTree({
+                ajaxData: {
+                    displayOnly: 'category'
+                },
+                treeNodeParentID: $(this).attr('data-root-tree-node-id'),
+                selectNodesByKey: [$('input[name=resultsFolder]').val()],
+                onSelect : function(select, node) {
+                    if (select) {
+                        $('input[name=resultsFolder]').val(node.data.key);
+                    } else {
+                        $('input[name=resultsFolder]').val('');
+                    }
+                },
+                chooseNodeInForm: 'single'
+            });
+        });
+
     });
 
     Concrete.event.bind('block.express_form.add_control', function(e, data) {

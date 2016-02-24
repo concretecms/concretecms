@@ -12,6 +12,21 @@
       <unsigned/>
       <default value="0"/>
     </field>
-  </table>
+    <field name="submitLabel" type="string" size="255">
+      <default value="Submit"/>
+    </field>
+    <field name="thankyouMsg" type="text" size="65535"/>
+    <field name="notifyMeOnSubmission" type="boolean">
+      <unsigned/>
+      <default value="0"/>
+      <notnull/>
+    </field>
+    <field name="recipientEmail" type="string" size="255"/>
+    <field name="displayCaptcha" type="integer">
+      <default value="1"/>
+    </field>
+    <field name="redirectCID" type="integer">
+      <default value="0"/>
+    </field>  </table>
 
 </schema>

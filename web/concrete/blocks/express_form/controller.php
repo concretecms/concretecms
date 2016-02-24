@@ -11,6 +11,8 @@ use Concrete\Core\Entity\Express\FieldSet;
 use Concrete\Core\Entity\Express\Form;
 use Concrete\Core\Express\Form\Renderer;
 use Concrete\Core\Http\ResponseAssetGroup;
+use Concrete\Core\Tree\Node\Node;
+use Concrete\Core\Tree\Node\NodeType;
 use Concrete\Core\Tree\Node\Type\Category;
 use Concrete\Core\Tree\Type\ExpressEntryResults;
 use Doctrine\ORM\Id\UuidGenerator;
@@ -49,7 +51,17 @@ class Controller extends BlockController
 
     public function add()
     {
+        $c = \Page::getCurrentPage();
+        $this->set('formName', $c->getCollectionName());
+        $this->set('submitLabel', t('Submit'));
         $this->edit();
+        $this->set('resultsFolder', $this->get('formResultsRootFolderNodeID'));
+    }
+
+    protected function loadResultsFolderInformation()
+    {
+        $folder = Category::getNodeByName(self::FORM_RESULTS_CATEGORY_NAME);
+        $this->set('formResultsRootFolderNodeID', $folder->getTreeNodeID());
     }
 
     public function action_add_control()
@@ -145,7 +157,7 @@ class Controller extends BlockController
             return new JsonResponse($e);
         }
     }
-    public function save()
+    public function save($data)
     {
         $requestControls = (array) $this->request->request->get('controlID');
         $entityManager = \Core::make('database/orm')->entityManager();
@@ -156,7 +168,7 @@ class Controller extends BlockController
 
             // This is a new submission.
             $c = \Page::getCurrentPage();
-            $name = is_object($c) ? $c->getCollectionName() : t('Form');
+            $name = $data['formName'] ? $data['formName'] : t('Form');
 
             // Create a results node
             $node = Category::getNodeByName(self::FORM_RESULTS_CATEGORY_NAME);
@@ -261,9 +273,15 @@ class Controller extends BlockController
 
         $entityManager->flush();
 
-        $data = array(
-            'exFormID' => $form->getId()
-        );
+        // Now, we handle the entity results folder.
+        $resultsNode = Node::getByID($entity->getEntityResultsNodeId());
+        $folder = Node::getByID($data['resultsFolder']);
+        if (is_object($folder)) {
+            $resultsNode->move($folder);
+        }
+
+
+        $data['exFormID'] = $form->getId();
 
         $this->clearSessionControls();
         parent::save($data);
@@ -271,6 +289,8 @@ class Controller extends BlockController
 
     public function edit()
     {
+        $this->loadResultsFolderInformation();
+        $this->requireAsset('core/tree');
         $this->clearSessionControls();
         $list = Type::getList();
         $types_select = array();
@@ -283,10 +303,20 @@ class Controller extends BlockController
         $controls = array();
         $form = $this->getFormEntity();
         if (is_object($form)) {
+            $entity = $form->getEntity();
             $controls = $form->getControls();
+            $this->set('formName', $entity->getName());
+            $this->set('submitLabel', $this->submitLabel);
+            $node = Node::getByID($entity->getEntityResultsNodeId());
+            if (is_object($node)) {
+                $folder = $node->getTreeNodeParentObject();
+                $this->set('resultsFolder', $folder->getTreeNodeID());
+            }
         }
         $this->set('controls', $controls);
         $this->set('types_select', $types_select);
+        $tree = ExpressEntryResults::get();
+        $this->set('tree', $tree);
     }
 
     public function action_get_type_form()
