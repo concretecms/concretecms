@@ -2,6 +2,7 @@
 namespace Concrete\Block\ExpressForm;
 
 use Concrete\Controller\Element\Attribute\KeyList;
+use Concrete\Core\Attribute\Category\ExpressCategory;
 use Concrete\Core\Attribute\Type;
 use Concrete\Core\Block\BlockController;
 use Concrete\Core\Entity\Attribute\Key\ExpressKey;
@@ -176,6 +177,7 @@ class Controller extends BlockController
 
             $entity = new Entity();
             $entity->setName($name);
+            $entity->setIncludeInPublicList(false);
             $entity->setHandle(sprintf('express_form_%s', $this->block->getBlockID()));
             $entity->setEntityResultsNodeId($node->getTreeNodeID());
             $entityManager->persist($entity);
@@ -192,6 +194,11 @@ class Controller extends BlockController
             $field_set->setForm($form);
             $entityManager->persist($field_set);
             $entityManager->flush();
+
+            $indexer = $entity->getAttributeKeyCategory()->getSearchIndexer();
+            if (is_object($indexer)) {
+                $indexer->createRepository($entity->getAttributeKeyCategory());
+            }
 
         } else {
             // We check save the order as well as potentially deleting orphaned controls.
@@ -214,6 +221,7 @@ class Controller extends BlockController
         }
 
         // Now, let's loop through our request controls
+        $indexKeys = array();
         $position = 0;
         foreach($requestControls as $id) {
 
@@ -228,6 +236,9 @@ class Controller extends BlockController
                     $entityManager->persist($key);
                     $control->setPosition($position);
                     $entityManager->persist($control);
+
+                    $indexKeys[] = $key;
+
                 } else {
                     // Possibility 2: This is an existing control that has an updated version.
                     foreach($existingControls as $existingControl) {
@@ -246,6 +257,8 @@ class Controller extends BlockController
 
                             // save it.
                             $entityManager->persist($existingControl);
+
+                            $indexKeys[] = $key;
                         }
                     }
                 }
@@ -272,6 +285,12 @@ class Controller extends BlockController
         }
 
         $entityManager->flush();
+
+        $category = new ExpressCategory($entity, \Core::make('app'), $entityManager);
+        $indexer = $category->getSearchIndexer();
+        foreach($indexKeys as $key) {
+            $indexer->updateRepository($category, $key);
+        }
 
         // Now, we handle the entity results folder.
         $resultsNode = Node::getByID($entity->getEntityResultsNodeId());
