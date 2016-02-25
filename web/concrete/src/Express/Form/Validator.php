@@ -34,5 +34,7 @@ class Validator
                 }
             }
         }
+
+        return $this->error;
     }
 }

@@ -8,10 +8,13 @@ use Concrete\Core\Block\BlockController;
 use Concrete\Core\Entity\Attribute\Key\ExpressKey;
 use Concrete\Core\Entity\Express\Control\AttributeKeyControl;
 use Concrete\Core\Entity\Express\Entity;
+use Concrete\Core\Entity\Express\Entry;
 use Concrete\Core\Entity\Express\FieldSet;
 use Concrete\Core\Entity\Express\Form;
+use Concrete\Core\Express\Form\Control\SaveHandler\SaveHandlerInterface;
 use Concrete\Core\Express\Form\Renderer;
 use Concrete\Core\Http\ResponseAssetGroup;
+use Concrete\Core\Routing\Redirect;
 use Concrete\Core\Tree\Node\Node;
 use Concrete\Core\Tree\Node\NodeType;
 use Concrete\Core\Tree\Node\Type\Category;
@@ -55,8 +58,44 @@ class Controller extends BlockController
         $c = \Page::getCurrentPage();
         $this->set('formName', $c->getCollectionName());
         $this->set('submitLabel', t('Submit'));
+        $this->set('thankyouMsg', t('Thanks!'));
         $this->edit();
         $this->set('resultsFolder', $this->get('formResultsRootFolderNodeID'));
+    }
+
+    public function action_form_success($bID = null)
+    {
+        if ($this->bID == $bID) {
+            $this->set('success', $this->thankyouMsg);
+            $this->view();
+        }
+    }
+
+
+    public function action_submit($bID = null)
+    {
+        if ($this->bID == $bID) {
+            /*
+            $entityManager = \Core::make('database/orm')->entityManager();
+            $form = $this->getFormEntity();
+            if (is_object($form)) {
+                $entity = $form->getEntity();
+                $entry = new Entry();
+                $entry->setEntity($entity);
+                $entityManager->persist($entry);
+                foreach ($form->getControls() as $control) {
+                    $type = $control->getControlType();
+                    $saver = $type->getSaveHandler($control);
+                    if ($saver instanceof SaveHandlerInterface) {
+                        $saver->saveFromRequest($control, $entry, $this->request);
+                    }
+                }
+            }
+            $this->redirect($c->getCollectionPath() . '?form_success=1#form' . $this->bID);
+            */
+            $c = \Page::getCurrentPage();
+            return Redirect::to($c->getCollectionPath(), 'form_success', $this->bID);
+        }
     }
 
     protected function loadResultsFolderInformation()
