@@ -123,19 +123,17 @@ class BasicThumbnailer
 
         $src = $configuration->getPublicURLToFile($abspath);
         $thumb = new \stdClass;
-        //if (isset($abspath) && $filesystem->has($abspath)) {
-            $thumb->src = $src;
-            //this is terrible
-            try {
-                //try and get it locally, otherwise use http
-                $dimensions = getimagesize($abspath);
-            } catch (\Exception $e) {
-                $dimensions = getimagesize($src);
-            }
-            $thumb->width = $dimensions[0];
-            $thumb->height = $dimensions[1];
-            return $thumb;
-        //}
+        $thumb->src = $src;
+        //this is terrible
+        try {
+            //try and get it locally, otherwise use http
+            $dimensions = getimagesize($abspath);
+        } catch (\Exception $e) {
+            $dimensions = getimagesize($src);
+        }
+        $thumb->width = $dimensions[0];
+        $thumb->height = $dimensions[1];
+        return $thumb;
     }
 
     /**
