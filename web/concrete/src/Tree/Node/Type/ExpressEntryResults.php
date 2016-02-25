@@ -2,6 +2,7 @@
 namespace Concrete\Core\Tree\Node\Type;
 
 use Concrete\Core\Tree\Node\Node as TreeNode;
+use Concrete\Core\Tree\Node\Type\Formatter\ExpressEntryResultsListFormatter;
 use Loader;
 
 class ExpressEntryResults extends TreeNode
@@ -14,6 +15,11 @@ class ExpressEntryResults extends TreeNode
     public function getPermissionAssignmentClassName()
     {
         return '\\Concrete\\Core\\Permission\\Assignment\\TopicTreeNodeAssignment';
+    }
+
+    public function getListFormatter()
+    {
+        return new ExpressEntryResultsListFormatter();
     }
 
     public function getPermissionObjectKeyCategoryHandle()

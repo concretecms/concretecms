@@ -41,6 +41,11 @@ abstract class Node extends Object implements \Concrete\Core\Permission\ObjectIn
         }
     }
 
+    public function getListFormatter()
+    {
+        return false;
+    }
+
     public function getPermissionObjectIdentifier()
     {
         return $this->treeNodeID;
