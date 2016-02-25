@@ -19,7 +19,6 @@ class BasicThumbnailer
      * to the default system setting (DEFINE or 80).
      *
      * @param int $level the level of compression
-     *
      * @return self
      */
     public function setJpegCompression($level)
@@ -46,21 +45,34 @@ class BasicThumbnailer
      */
     public function create($mixed, $newPath, $width, $height, $fit = false)
     {
+        $thumbnailOptions = array('jpeg_quality' => \Config::get('concrete.misc.default_jpeg_image_compression'));
+        $filesystem = StorageLocation::getDefault()
+          ->getFileSystemObject();
+
         if ($mixed instanceof \Imagine\Image\ImageInterface) {
             $image = $mixed;
         } else {
             $image = Image::open($mixed);
         }
         if ($fit) {
-            return $image->thumbnail(new Box($width, $height), ImageInterface::THUMBNAIL_OUTBOUND)->save($newPath, array('quality' => $this->getJpegCompression()));
+            $thumb = $image->thumbnail(new Box($width, $height), ImageInterface::THUMBNAIL_OUTBOUND);
+            $filesystem->write(
+              $newPath,
+              $thumb->get('jpeg', $thumbnailOptions)
+            );
+
         } else {
             if ($height < 1) {
-                $image->thumbnail($image->getSize()->widen($width))->save($newPath, array('quality' => $this->getJpegCompression()));
-            } elseif ($width < 1) {
-                $image->thumbnail($image->getSize()->heighten($height))->save($newPath, array('quality' => $this->getJpegCompression()));
+                $thumb = $image->thumbnail($image->getSize()->widen($width));
+            } else if ($width < 1) {
+                $thumb = $image->thumbnail($image->getSize()->heighten($height));
             } else {
-                $image->thumbnail(new Box($width, $height))->save($newPath, array('quality' => $this->getJpegCompression()));
+                $thumb = $image->thumbnail(new Box($width, $height));
             }
+            $filesystem->write(
+              $newPath,
+              $thumb->get('jpeg', $thumbnailOptions)
+            );
         }
     }
 
@@ -77,16 +89,19 @@ class BasicThumbnailer
      * @param int $maxHeight
      * @param bool $crop
      */
-    public function getThumbnail($obj, $maxWidth, $maxHeight, $crop = false)
+    public function getThumbnail($obj, $maxWidth, $maxHeight, $crop = false) 
     {
-        $fID = false;
+        $storage = StorageLocation::getDefault();
+        $filesystem = $storage->getFileSystemObject();
+        $configuration = $storage->getConfigurationObject();
+
         $fh = Loader::helper('file');
         if ($obj instanceof File) {
             try {
                 $fr = $obj->getFileResource();
                 $fID = $obj->getFileID();
                 $filename = md5(implode(':', array($fID, $maxWidth, $maxHeight, $crop, $fr->getTimestamp())))
-                . '.' . $fh->getExtension($fr->getPath());
+                  . '.' . $fh->getExtension($fr->getPath());
             } catch (\Exception $e) {
                 $filename = '';
             }
@@ -95,7 +110,8 @@ class BasicThumbnailer
                 . '.' . $fh->getExtension($obj);
         }
 
-        if (!file_exists(Config::get('concrete.cache.directory') . '/' . $filename)) {
+        $abspath = '/cache/' . $filename;
+        if (!$filesystem->has($abspath)) {
             if ($obj instanceof File) {
                 $image = \Image::load($fr->read());
             } else {
@@ -103,23 +119,28 @@ class BasicThumbnailer
             }
             // create image there
             $this->create($image,
-                          Config::get('concrete.cache.directory') . '/' . $filename,
+                $abspath,
                 $maxWidth,
                 $maxHeight,
                 $crop);
         }
 
-        $src = REL_DIR_FILES_CACHE . '/' . $filename;
-        $abspath = Config::get('concrete.cache.directory') . '/' . $filename;
+        $src = $configuration->getPublicURLToFile($abspath);
         $thumb = new \stdClass();
-        if (isset($abspath) && file_exists($abspath)) {
+        //if (isset($abspath) && $filesystem->has($abspath)) {
             $thumb->src = $src;
-            $dimensions = getimagesize($abspath);
+            //this is terrible
+            try {
+                //try and get it locally, otherwise use http
+                $dimensions = getimagesize($abspath);
+            } catch (\Exception $e) {
+                $dimensions = getimagesize($src);
+            }
             $thumb->width = $dimensions[0];
             $thumb->height = $dimensions[1];
 
             return $thumb;
-        }
+        //}
     }
 
     /**
