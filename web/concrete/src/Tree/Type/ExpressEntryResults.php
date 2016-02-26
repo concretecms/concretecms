@@ -6,7 +6,6 @@ use Concrete\Core\Permission\Access\Entity\GroupEntity;
 use Concrete\Core\Permission\Key\CategoryTreeNodeKey;
 use Concrete\Core\Tree\Node\Type\Category;
 use Concrete\Core\Tree\Tree;
-use Concrete\Core\User\Group\Group;
 use Database;
 
 class ExpressEntryResults extends Tree

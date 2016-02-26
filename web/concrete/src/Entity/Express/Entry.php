@@ -154,4 +154,22 @@ class Entry implements \JsonSerializable
         );
         return $data;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getDateCreated()
+    {
+        return $this->date_created;
+    }
+
+    /**
+     * @param mixed $date_created
+     */
+    public function setDateCreated($date_created)
+    {
+        $this->date_created = $date_created;
+    }
+
+
 }
