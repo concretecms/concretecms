@@ -106,12 +106,12 @@ abstract class Control implements \JsonSerializable
     /**
      * @return \Concrete\Core\Express\Form\Control\RendererInterface
      */
-    abstract public function getFormRenderer(Entity $entity = null);
+    abstract public function getFormControlRenderer(Entity $entity = null);
 
     /**
      * @return \Concrete\Core\Express\Form\Control\RendererInterface
      */
-    abstract public function getViewRenderer(Entry $entry);
+    abstract public function getViewControlRenderer(Entry $entry);
 
     public function getControlOptionsController()
     {

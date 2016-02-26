@@ -13,6 +13,7 @@ use Concrete\Core\Entity\Express\FieldSet;
 use Concrete\Core\Entity\Express\Form;
 use Concrete\Core\Express\Form\Control\SaveHandler\SaveHandlerInterface;
 use Concrete\Core\Express\Form\Renderer;
+use Concrete\Core\Express\Form\Validator;
 use Concrete\Core\Http\ResponseAssetGroup;
 use Concrete\Core\Routing\Redirect;
 use Concrete\Core\Tree\Node\Node;
@@ -75,27 +76,50 @@ class Controller extends BlockController
     public function action_submit($bID = null)
     {
         if ($this->bID == $bID) {
-            /*
             $entityManager = \Core::make('database/orm')->entityManager();
             $form = $this->getFormEntity();
             if (is_object($form)) {
-                $entity = $form->getEntity();
-                $entry = new Entry();
-                $entry->setEntity($entity);
-                $entityManager->persist($entry);
-                foreach ($form->getControls() as $control) {
-                    $type = $control->getControlType();
-                    $saver = $type->getSaveHandler($control);
-                    if ($saver instanceof SaveHandlerInterface) {
-                        $saver->saveFromRequest($control, $entry, $this->request);
+                $e = \Core::make('error');
+                $validator = new Validator($e, $this->request);
+                $validator->validate($form);
+                if ($this->displayCaptcha) {
+                    $captcha = \Core::make('helper/validation/captcha');
+                    if (!$captcha->check()) {
+                        $e->add(t('Incorrect captcha code.'));
                     }
                 }
+                $this->set('error', $e);
             }
-            $this->redirect($c->getCollectionPath() . '?form_success=1#form' . $this->bID);
-            */
+        }
+
+        if (isset($e) && !$e->has()) {
+
+            $entity = $form->getEntity();
+            $entry = new Entry();
+            $entry->setEntity($entity);
+            $entityManager->persist($entry);
+            foreach ($form->getControls() as $control) {
+                $type = $control->getControlType();
+                $saver = $type->getSaveHandler($control);
+                if ($saver instanceof SaveHandlerInterface) {
+                    $saver->saveFromRequest($control, $entry, $this->request);
+                }
+            }
+
+            if ($this->redirectCID > 0) {
+                $c = \Page::getByID($this->redirectCID);
+                if (is_object($c) && !$c->isError()) {
+                    $r = Redirect::page($c);
+                    $r->setTargetUrl($r->getTargetUrl() . '?form_success=1');
+                    return $r;
+                }
+            }
+
             $c = \Page::getCurrentPage();
             return Redirect::to($c->getCollectionPath(), 'form_success', $this->bID);
+
         }
+        $this->view();
     }
 
     protected function loadResultsFolderInformation()
@@ -465,6 +489,9 @@ class Controller extends BlockController
             $renderer = $app->make('Concrete\Core\Express\Form\Renderer');
             $this->set('renderer', $renderer);
             $this->set('expressForm', $form);
+        }
+        if ($this->displayCaptcha) {
+            $this->requireAsset('css', 'core/frontend/captcha');
         }
     }
 
