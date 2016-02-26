@@ -12,7 +12,9 @@ class RendererFactory
     protected $control;
     protected $application;
     protected $entityManager;
-    protected $renderer;
+    protected $viewControlRenderer;
+    protected $formRenderer;
+    protected $formControlRenderer;
 
     /**
      * @return Control
@@ -62,34 +64,43 @@ class RendererFactory
         $this->entityManager = $entityManager;
     }
 
-    public function __construct(Control $control, Application $application, EntityManagerInterface $entityManager)
+    public function __construct($formRenderer, Control $control, Application $application, EntityManagerInterface $entityManager)
     {
         $this->control = $control;
         $this->application = $application;
         $this->entityManager = $entityManager;
+        $this->formRenderer = $formRenderer;
     }
 
-    public function getViewRenderer(Entry $entry)
-    {
-        if (!isset($this->viewRenderer)) {
-            $this->viewRenderer = $this->control->getViewRenderer($entry);
-            if (is_object($this->viewRenderer)) {
-                $this->viewRenderer->build($this);
-            }
-        }
-
-        return $this->viewRenderer;
-    }
-
+    /**
+     * @return mixed
+     */
     public function getFormRenderer()
     {
-        if (!isset($this->formRenderer)) {
-            $this->formRenderer = $this->control->getFormRenderer();
-            if (is_object($this->formRenderer)) {
-                $this->formRenderer->build($this);
+        return $this->formRenderer;
+    }
+
+    public function getViewControlRenderer(Entry $entry)
+    {
+        if (!isset($this->viewRenderer)) {
+            $this->viewControlRenderer = $this->control->getViewControlRenderer($entry);
+            if (is_object($this->viewControlRenderer)) {
+                $this->viewControlRenderer->build($this);
             }
         }
 
-        return $this->formRenderer;
+        return $this->viewControlRenderer;
+    }
+
+    public function getFormControlRenderer()
+    {
+        if (!isset($this->formControlRenderer)) {
+            $this->formControlRenderer = $this->control->getFormControlRenderer();
+            if (is_object($this->formControlRenderer)) {
+                $this->formControlRenderer->build($this);
+            }
+        }
+
+        return $this->formControlRenderer;
     }
 }
