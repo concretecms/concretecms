@@ -48,12 +48,13 @@ class ObjectBuilder
         return $this;
     }
 
-    public function addAttribute($type, $name)
+    public function addAttribute($type_handle, $name)
     {
         /** @var $attribute \Concrete\Core\Entity\Attribute\Key\Key */
         $key = new Key();
-        $type = $this->attributeTypeFactory->getByHandle($type);
+        $type = $this->attributeTypeFactory->getByHandle($type_handle);
         $key_type = $type->getController()->createAttributeKeyType();
+        $key_type->setAttributeTypeHandle($type_handle);
         $key->setAttributeKeyType($key_type);
         $key->setAttributeKeyName($name);
         $this->entity->getAttributes()->add($key);

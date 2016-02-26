@@ -14,17 +14,4 @@ class TextType extends Type
         return new TextValue();
     }
 
-    public function getAttributeTypeHandle()
-    {
-        return 'text';
-    }
-
-    public function createController()
-    {
-
-        $controller = \Core::make('\Concrete\Attribute\Text\Controller');
-        $controller->setAttributeType($this->getAttributeType());
-
-        return $controller;
-    }
 }
