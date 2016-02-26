@@ -6,6 +6,7 @@ use Concrete\Core\Permission\Access\Entity\GroupEntity;
 use Concrete\Core\Permission\Key\CategoryTreeNodeKey;
 use Concrete\Core\Tree\Node\Type\Category;
 use Concrete\Core\Tree\Tree;
+use Concrete\Core\User\Group\Group as ConcreteGroup;
 use Database;
 
 class ExpressEntryResults extends Tree
@@ -59,7 +60,7 @@ class ExpressEntryResults extends Tree
         $treeID = parent::create($rootNode);
         $tree = self::getByID($treeID);
 
-        $adminGroupEntity = GroupEntity::getOrCreate(Group::getByID(ADMIN_GROUP_ID));
+        $adminGroupEntity = GroupEntity::getOrCreate(ConcreteGroup::getByID(ADMIN_GROUP_ID));
         $pk = CategoryTreeNodeKey::getByHandle('view_category_tree_node');
         $pk->setPermissionObject($rootNode);
         $pa = Access::create($pk);
