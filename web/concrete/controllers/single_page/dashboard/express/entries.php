@@ -2,60 +2,52 @@
 namespace Concrete\Controller\SinglePage\Dashboard\Express;
 
 use Concrete\Core\Entity\Express\Entity;
+use Concrete\Core\Entity\Express\Entry;
 use Concrete\Core\Express\EntryList;
+use Concrete\Core\Page\Controller\DashboardExpressEntriesPageController;
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Core\Search\Result\Result;
+use Concrete\Core\Tree\Node\Node;
 
-class Entries extends DashboardPageController
+class Entries extends DashboardExpressEntriesPageController
 {
-    public function view($id = null)
+
+    /**
+     * @var $entity Entity
+     */
+    protected $entity;
+
+    protected function getResultsTreeNodeObject()
+    {
+        return Node::getByID($this->entity->getEntityResultsNodeId());
+    }
+
+    protected function getBackToListURL(Entry $entry)
+    {
+        return \URL::to($this->getPageObject()
+            ->getCollectionPath(), 'view', $entry->getEntity()->getID(),
+            $entry->getEntity()->getEntityResultsNodeID());
+    }
+
+    protected function getCreateEntryURL()
+    {
+        return \URL::to('/dashboard/express/create', $this->entity->getId());
+    }
+
+    public function view($entity = null, $folder = null)
     {
         $r = $this->entityManager->getRepository('\Concrete\Core\Entity\Express\Entity');
-        /**
-         * @var $entity Entity
-         */
-        if ($id) {
-            $entity = $r->findOneById($id);
+        if ($entity) {
+            $entity = $r->findOneById($entity);
         }
         if (isset($entity) && is_object($entity)) {
+            $this->entity = $entity;
             $this->set('entity', $entity);
-
-            $search = new \Concrete\Controller\Search\Express\Entries();
-            $search->search($entity);
-
-            $this->set('list', $search->getListObject());
-            $this->set('searchController', $search);
+            $this->renderList($folder);
         } else {
             $this->set('entities', $r->findByIncludeInPublicList(true));
         }
     }
 
-    public function delete_entry($id = null)
-    {
-        $this->view($id);
-        if (!$this->token->validate('delete_entry')) {
-            $this->error->add($this->token->getErrorMessage());
-        }
-        if (!$this->error->has()) {
-            $manager = \Core::make('express');
-            $entry = $manager->getById($this->get('entity'), $this->request->request->get('entry_id'));
-            $this->entityManager->remove($entry);
-            $this->entityManager->flush();
-            $this->flash('success', t('Entry deleted successfully.'));
-            $this->redirect('/dashboard/express/entries', $id);
-        }
-    }
 
-    public function view_entry($entityId = null, $id = null)
-    {
-        $this->view($entityId);
-        $manager = \Core::make('express');
-        $o = $manager->getByID($this->get('entity'), $id);
-        $renderer = \Core::make('Concrete\Core\Express\Form\ViewRenderer');
-
-        $this->set('entry', $o);
-        $this->set('expressForm', $this->get('entity')->getForms()[0]);
-        $this->set('renderer', $renderer);
-        $this->render('/dashboard/express/entries/view_entry');
-    }
 }
