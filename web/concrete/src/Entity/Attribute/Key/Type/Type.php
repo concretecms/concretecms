@@ -18,6 +18,11 @@ abstract class Type
     protected $akTypeID;
 
     /**
+     * @Column(type="string")
+     */
+    protected $akTypeHandle;
+
+    /**
      * @ManyToOne(targetEntity="\Concrete\Core\Entity\Attribute\Key\Key", inversedBy="key_type")
      * @JoinColumn(name="akID", referencedColumnName="akID")
      */
@@ -31,6 +36,22 @@ abstract class Type
     public function setKeyTypeID($akTypeID)
     {
         $this->akTypeID = $akTypeID;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAttributeTypeHandle()
+    {
+        return $this->akTypeHandle;
+    }
+
+    /**
+     * @param mixed $akTypeHandle
+     */
+    public function setAttributeTypeHandle($akTypeHandle)
+    {
+        $this->akTypeHandle = $akTypeHandle;
     }
 
     /**
@@ -66,8 +87,11 @@ abstract class Type
         $this->type = $type;
     }
 
-    abstract public function createController();
-    abstract public function getAttributeTypeHandle();
+    public function createController()
+    {
+        $type = $this->getAttributeType();
+        return $type->getController();
+    }
 
     public function getController()
     {

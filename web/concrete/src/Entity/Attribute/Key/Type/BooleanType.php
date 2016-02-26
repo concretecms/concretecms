@@ -40,11 +40,4 @@ class BooleanType extends Type
         return new BooleanValue();
     }
 
-    public function createController()
-    {
-        $controller = \Core::make('\Concrete\Attribute\Boolean\Controller');
-        $controller->setAttributeType($this->getAttributeType());
-
-        return $controller;
-    }
 }
