@@ -53,4 +53,11 @@ class AttributeKeyControl extends Control
     {
         return 'attribute_key';
     }
+
+    public function jsonSerialize()
+    {
+        $data = parent::jsonSerialize();
+        $data['attributeType'] = $this->getAttributeKey()->getAttributeTypeHandle();
+        return $data;
+    }
 }

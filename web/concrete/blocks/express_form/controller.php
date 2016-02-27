@@ -72,6 +72,15 @@ class Controller extends BlockController
         }
     }
 
+    public function delete()
+    {
+        parent::delete();
+        $entity = $this->getFormEntity()->getEntity();
+        $entityManager = \Core::make('database/orm')->entityManager();
+        $entityManager->remove($entity);
+        $entityManager->flush();
+    }
+
 
     public function action_submit($bID = null)
     {
@@ -106,6 +115,41 @@ class Controller extends BlockController
                 }
             }
 
+            if ($this->notifyMeOnSubmission) {
+                if (\Config::get('concrete.email.form_block.address') && strstr(Config::get('concrete.email.form_block.address'), '@')) {
+                    $formFormEmailAddress = \Config::get('concrete.email.form_block.address');
+                } else {
+                    $adminUserInfo = \UserInfo::getByID(USER_SUPER_ID);
+                    $formFormEmailAddress = $adminUserInfo->getUserEmail();
+                }
+
+                $replyToEmailAddress = $formFormEmailAddress;
+                if ($this->replyToEmailControlID) {
+                    $entityManager->refresh($entry);
+                    $control = $entityManager->getRepository('Concrete\Core\Entity\Express\Control\Control')
+                        ->findOneById($this->replyToEmailControlID);
+                    if (is_object($control)) {
+                        $email = $entry->getAttribute($control->getAttributeKey());
+                        if ($email) {
+                            $replyToEmailAddress = $email;
+                        }
+                    }
+                }
+
+                $values = $entity->getAttributeKeyCategory()->getAttributeValues($entity);
+
+                $mh = \Core::make('helper/mail');
+                $mh->to($this->recipientEmail);
+                $mh->from($formFormEmailAddress);
+                $mh->replyto($replyToEmailAddress);
+                $mh->addParameter('entity', $entity);
+                $mh->addParameter('formName', $this->surveyName);
+                $mh->addParameter('attributes', $values);
+                $mh->load('block_express_form_submission');
+                $mh->setSubject(t('%s Form Submission', $this->surveyName));
+                $mh->sendMail();
+            }
+
             if ($this->redirectCID > 0) {
                 $c = \Page::getByID($this->redirectCID);
                 if (is_object($c) && !$c->isError()) {
@@ -116,7 +160,9 @@ class Controller extends BlockController
             }
 
             $c = \Page::getCurrentPage();
-            return Redirect::to($c->getCollectionPath(), 'form_success', $this->bID);
+            $r = Redirect::to($c->getCollectionPath(), 'form_success', $this->bID);
+            $r->setTargetUrl($r->getTargetUrl() . '#form' . $this->bID);
+            return $r;
 
         }
         $this->view();

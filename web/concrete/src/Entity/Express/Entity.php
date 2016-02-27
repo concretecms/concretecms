@@ -3,11 +3,14 @@ namespace Concrete\Core\Entity\Express;
 
 use Concrete\Core\Attribute\EntityInterface;
 use Concrete\Core\Express\Search\ColumnSet\ColumnSet;
+use Concrete\Core\Express\Search\ColumnSet\DefaultSet;
+use Concrete\Core\Tree\Node\Node;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @Entity(repositoryClass="\Concrete\Core\Entity\Express\EntityRepository")
  * @Table(name="ExpressEntities")
+ * @HasLifecycleCallbacks
  */
 class Entity implements EntityInterface
 {
@@ -67,11 +70,19 @@ class Entity implements EntityInterface
      **/
     protected $entries;
 
-
     /**
      * @Column(type="datetime")
      */
     protected $created_date;
+
+    /** @PostRemove */
+    public function afterRemove()
+    {
+        $node = Node::getByID($this->getEntityResultsNodeId());
+        if (is_object($node)) {
+            $node->delete();
+        }
+    }
 
     public function __construct()
     {
@@ -80,6 +91,7 @@ class Entity implements EntityInterface
         $this->forms = new ArrayCollection();
         $this->associations = new ArrayCollection();
         $this->entries = new ArrayCollection();
+        $this->result_column_set = new DefaultSet($this->getAttributeKeyCategory());
     }
 
     /**

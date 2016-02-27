@@ -126,7 +126,7 @@ class Controller extends DefaultController
 
     public function importKey(\SimpleXMLElement $akey)
     {
-        $type = new TextareaType();
+        $type = $this->getAttributeKeyType();
         if (isset($akey->type)) {
             $data['akTextareaDisplayMode'] = $akey->type['mode'];
             $type->setMode((string) $akey->type['mode']);

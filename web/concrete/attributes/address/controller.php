@@ -246,7 +246,7 @@ class Controller extends AttributeTypeController
 
     public function importKey(\SimpleXMLElement $akey)
     {
-        $type = new AddressType();
+        $type = $this->getAttributeKeyType();
         if (isset($akey->type)) {
             $type->setHasCustomCountries((bool) $akey->type['custom-countries']);
             $type->setDefaultCountry((string) $akey->type['default-country']);
