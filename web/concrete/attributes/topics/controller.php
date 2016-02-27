@@ -151,7 +151,7 @@ class Controller extends AttributeTypeController
 
     public function importKey(\SimpleXMLElement $key)
     {
-        $type = new TopicsType();
+        $type = $this->getAttributeKeyType();
         $name = (string) $key->tree['name'];
         $tree = \Concrete\Core\Tree\Type\Topic::getByName($name);
         $node = $tree->getNodeByDisplayPath((string) $key->tree['path']);

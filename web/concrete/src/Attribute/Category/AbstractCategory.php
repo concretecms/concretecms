@@ -111,8 +111,7 @@ abstract class AbstractCategory implements CategoryInterface
          */
         if ($key_type instanceof \Concrete\Core\Entity\Attribute\Type) {
             $type_handle = $key_type->getAttributeTypeHandle();
-            $key_type = $key_type->getController()->createAttributeKeyType();
-            $key_type->setAttributeTypeHandle($type_handle);
+            $key_type = $key_type->getController()->getAttributeKeyType();
             // $key is actually an array.
             $handle = $key['akHandle'];
             $name = $key['akName'];
@@ -150,7 +149,6 @@ abstract class AbstractCategory implements CategoryInterface
         if (!is_object($key_type)) {
             $key_type = $controller->getAttributeKeyType();
         }
-        $key_type->setAttributeTypeHandle($type->getAttributeTypeHandle());
         return $this->add($key_type, $key);
     }
 
@@ -165,7 +163,6 @@ abstract class AbstractCategory implements CategoryInterface
         if (!is_object($key_type)) {
             $key_type = $controller->getAttributeKeyType();
         }
-        $key_type->setAttributeTypeHandle($type->getAttributeTypeHandle());
         return $this->add($key_type, $key, $package);
     }
 

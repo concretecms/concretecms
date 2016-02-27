@@ -275,7 +275,9 @@ class Controller extends AbstractController
         if ($this->attributeKey) {
             return $this->attributeKey->getAttributeKeyType();
         } else {
-            return $this->createAttributeKeyType();
+            $key_type = $this->createAttributeKeyType();
+            $key_type->setAttributeTypeHandle($this->getAttributeType()->getAttributeTypeHandle());
+            return $key_type;
         }
     }
 

@@ -6,27 +6,6 @@
         <category handle="file" allow-sets="1" package=""/>
     </attributecategories>
     <attributetypes>
-        <attributetype handle="telephone" name="Phone Number" package="">
-            <categories>
-                <category handle="collection"/>
-                <category handle="user"/>
-                <category handle="file"/>
-            </categories>
-        </attributetype>
-        <attributetype handle="url" name="URL" package="">
-            <categories>
-                <category handle="collection"/>
-                <category handle="user"/>
-                <category handle="file"/>
-            </categories>
-        </attributetype>
-        <attributetype handle="email" name="Email" package="">
-            <categories>
-                <category handle="collection"/>
-                <category handle="user"/>
-                <category handle="file"/>
-            </categories>
-        </attributetype>
         <attributetype handle="text" name="Text" package="">
             <categories>
                 <category handle="collection"/>
@@ -67,12 +46,7 @@
                 <category handle="file"/>
             </categories>
         </attributetype>
-        <attributetype handle="rating" name="Rating" package="">
-            <categories>
-                <category handle="collection"/>
-                <category handle="file"/>
-            </categories>
-        </attributetype>
+
         <attributetype handle="select" name="Select" package="">
             <categories>
                 <category handle="collection"/>
@@ -83,6 +57,35 @@
         <attributetype handle="address" name="Address" package="">
             <categories>
                 <category handle="user"/>
+            </categories>
+        </attributetype>
+
+        <attributetype handle="telephone" name="Phone Number" package="">
+            <categories>
+                <category handle="collection"/>
+                <category handle="user"/>
+                <category handle="file"/>
+            </categories>
+        </attributetype>
+        <attributetype handle="url" name="URL" package="">
+            <categories>
+                <category handle="collection"/>
+                <category handle="user"/>
+                <category handle="file"/>
+            </categories>
+        </attributetype>
+        <attributetype handle="email" name="Email" package="">
+            <categories>
+                <category handle="collection"/>
+                <category handle="user"/>
+                <category handle="file"/>
+            </categories>
+        </attributetype>
+
+        <attributetype handle="rating" name="Rating" package="">
+            <categories>
+                <category handle="collection"/>
+                <category handle="file"/>
             </categories>
         </attributetype>
         <attributetype handle="topics" name="Topics" package="">

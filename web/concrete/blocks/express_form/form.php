@@ -99,11 +99,12 @@
             <?=$form->label('recipientEmail', t('Notify me by email when people submit this form'))?>
             <div class="input-group">
 				<span class="input-group-addon" style="z-index: 2000">
-				<?=$form->checkbox('notifyMeOnSubmission', 1, $notifyMeOnSubmission == 1, array('onclick' => "$('input[name=recipientEmail]').focus()"))?>
+				<?=$form->checkbox('notifyMeOnSubmission', 1, $notifyMeOnSubmission == 1)?>
 				</span><?=$form->text('recipientEmail', $recipientEmail, array('style' => 'z-index:2000;'))?>
             </div>
             <span class="help-block"><?=t('(Seperate multiple emails with a comma)')?></span>
         </div>
+        <div data-view="form-options-email-reply-to"></div>
         <div class="form-group">
             <label class="control-label"><?=t('Solving a <a href="%s" target="_blank">CAPTCHA</a> Required to Post?', t('http://en.wikipedia.org/wiki/Captcha'))?></label>
             <div class="radio">
@@ -136,7 +137,11 @@
 </div>
 
 <script type="text/template" data-template="express-form-form-control">
-<li class="list-group-item" data-action="<?=$view->action('get_control')?>" data-form-control-id="<%=control.id%>">
+<li class="list-group-item"
+    data-action="<?=$view->action('get_control')?>"
+    data-form-control-attribute-type="<%=control.attributeType%>"
+    data-form-control-label="<%=control.displayLabel%>"
+    data-form-control-id="<%=control.id%>">
     <input type="hidden" name="controlID[]" value="<%=control.id%>">
     <%=control.displayLabel%>
     <span class="pull-right">
@@ -148,6 +153,18 @@
     <span style="margin-right: 20px" class="badge badge-info"><?=t('Required')?></span>
     <% } %>
 </li>
+</script>
+
+<script type="text/template" data-template="express-form-reply-to-email">
+    <div class="form-group">
+        <?=$form->label('replyToEmailControlID', t('Set value of Reply-To to Email Field'))?>
+        <select name="replyToEmailControlID" class="form-control">
+            <option value=""><?=t('** None')?></option>
+            <% _.each(controls, function(control){ %>
+            <option value="<%=control.key%>" <% if (selected == control.key) { %>selected<% } %>><%=_.escape(control.value)%></option>
+            <% }); %>
+        </select>
+    </div>
 </script>
 
 <script type="text/template" data-template="express-form-form-question">
@@ -195,6 +212,9 @@
 <script type="application/javascript">
     Concrete.event.publish('block.express_form.open', {
         controls: <?=json_encode($controls)?>,
-        types: <?=json_encode($types_select)?>
+        types: <?=json_encode($types_select)?>,
+        settings: {
+            'replyToEmailControlID': <?=json_encode($replyToEmailControlID)?>
+        }
     });
 </script>

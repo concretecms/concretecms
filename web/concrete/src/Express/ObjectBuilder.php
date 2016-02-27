@@ -53,8 +53,7 @@ class ObjectBuilder
         /** @var $attribute \Concrete\Core\Entity\Attribute\Key\Key */
         $key = new Key();
         $type = $this->attributeTypeFactory->getByHandle($type_handle);
-        $key_type = $type->getController()->createAttributeKeyType();
-        $key_type->setAttributeTypeHandle($type_handle);
+        $key_type = $type->getController()->getAttributeKeyType();
         $key->setAttributeKeyType($key_type);
         $key->setAttributeKeyName($name);
         $this->entity->getAttributes()->add($key);

@@ -21,9 +21,7 @@ class ObjectAttributeBuilder
             ->getByHandle($type_handle);
 
         $key_type = $type->getController()
-            ->createAttributeKeyType();
-
-        $key_type->setAttributeTypeHandle($type_handle);
+            ->getAttributeKeyType();
 
         $key = new Key();
         $key->setAttributeKeyType($key_type);

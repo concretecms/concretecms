@@ -101,7 +101,7 @@ class Controller extends AttributeTypeController
 
     public function importKey(\SimpleXMLElement $akey)
     {
-        $type = new DateTimeType();
+        $type = $this->getAttributeKeyType();
         if (isset($akey->type)) {
             $type->setDisplayMode((string) $akey->type['mode']);
         }
