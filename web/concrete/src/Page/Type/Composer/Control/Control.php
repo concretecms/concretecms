@@ -47,7 +47,6 @@ abstract class Control extends Object
         $this->ptComposerControlRequiredOnThisRequest = $req;
     }
 
-    
     public function setPageTypeComposerControlCustomLabel($label)
     {
         $this->ptComposerControlCustomLabel = $label;
