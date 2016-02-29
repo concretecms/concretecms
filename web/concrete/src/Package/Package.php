@@ -568,6 +568,10 @@ abstract class Package implements LocalizablePackageInterface
      */
     public function getPackageEntityPaths()
     {
+        // Support for the legacy method for backwards compatibility
+        if (method_exists($this, 'getPackageEntityPath')) {
+            return array($this->getPackageEntityPath());
+        }
         return array($this->getPackagePath() . '/' . DIRNAME_CLASSES);
     }
 
