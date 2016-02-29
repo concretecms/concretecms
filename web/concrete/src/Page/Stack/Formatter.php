@@ -28,7 +28,7 @@ class Formatter
     {
         switch($this->page->getCollectionTypeHandle()) {
             case STACK_CATEGORY_PAGE_TYPE:
-                return 'ccm-search-results-folder ccm-droppable-search-item';
+                return 'ccm-search-results-folder ccm-search-results-stackfolder ccm-droppable-search-item';
             default:
                 return 'ccm-search-results-stack ccm-undroppable-search-item';
         }

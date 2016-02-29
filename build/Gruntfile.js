@@ -134,7 +134,8 @@ module.exports = function(grunt) {
                 '<%= DIR_BASE %>/concrete/js/build/core/app/edit-mode/blocktype.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/app/edit-mode/stack.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/app/edit-mode/duplicateblock.js',
-                '<%= DIR_BASE %>/concrete/js/build/core/app/edit-mode/stackblock.js'
+                '<%= DIR_BASE %>/concrete/js/build/core/app/edit-mode/stackblock.js',
+                '<%= DIR_BASE %>/concrete/js/build/core/stacks/menu.js'
             ]
         },
         filemanager: {
