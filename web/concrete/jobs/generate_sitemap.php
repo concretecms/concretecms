@@ -144,7 +144,7 @@ class GenerateSitemap extends AbstractJob
         $xmlNode->addChild('lastmod', $lastmod->format(DateTime::ATOM));
         $xmlNode->addChild(
             'changefreq',
-            empty($changefreq) ? Config::get('concrete.sitemap_xml.frequency') : $changefreq
+            Core::make('helper/validation/strings')->notempty($changefreq) ? $changefreq : Config::get('concrete.sitemap_xml.frequency')
         );
         $xmlNode->addChild(
             'priority',
