@@ -12,6 +12,7 @@
             <directory>tests/Asset/</directory>
             <directory>tests/Block/</directory>
             <directory>tests/Attribute/</directory>
+            <directory>tests/Localization/</directory>
         </testsuite>
     </testsuites>
 </phpunit>
