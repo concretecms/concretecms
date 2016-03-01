@@ -133,6 +133,19 @@
                 ?>
             </div>
         </div>
+        <div class="form-group">
+            <label class="control-label" for="ccm-form-fileset"><?=t('Add uploaded files to a set?')?></label>
+                <?php
+
+                $fileSets = Concrete\Core\File\Set\Set::getMySets();
+                $sets = array(0 => t('None'));
+                foreach ($fileSets as $fileSet) {
+                    $sets[$fileSet->getFileSetID()] = $fileSet->getFileSetDisplayName();
+                }
+                echo $form->select('addFilesToSet', $sets, $addFilesToSet);
+                ?>
+        </div>
+
     </fieldset>
 </div>
 

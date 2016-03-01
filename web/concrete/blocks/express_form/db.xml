@@ -30,6 +30,9 @@
     </field>
     <field name="replyToEmailControlID" type="string">
     </field>
+    <field name="addFilesToSet" type="integer">
+      <default value="0"/>
+    </field>
   </table>
 
 </schema>
