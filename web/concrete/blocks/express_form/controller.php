@@ -14,6 +14,8 @@ use Concrete\Core\Entity\Express\Form;
 use Concrete\Core\Express\Form\Control\SaveHandler\SaveHandlerInterface;
 use Concrete\Core\Express\Form\Renderer;
 use Concrete\Core\Express\Form\Validator;
+use Concrete\Core\File\FileProviderInterface;
+use Concrete\Core\File\Set\Set;
 use Concrete\Core\Http\ResponseAssetGroup;
 use Concrete\Core\Routing\Redirect;
 use Concrete\Core\Tree\Node\Node;
@@ -115,6 +117,23 @@ class Controller extends BlockController
                 }
             }
 
+            $values = $entity->getAttributeKeyCategory()->getAttributeValues($entry);
+
+            if ($this->addFilesToSet) {
+                $set = Set::getByID($this->addFilesToSet);
+                if (is_object($set)) {
+                    foreach($values as $value) {
+                        $value = $value->getValueObject();
+                        if ($value instanceof FileProviderInterface) {
+                            $files = $value->getFileObjects();
+                            foreach($files as $file) {
+                                $set->addFileToSet($file);
+                            }
+                        }
+                    }
+                }
+            }
+
             if ($this->notifyMeOnSubmission) {
                 if (\Config::get('concrete.email.form_block.address') && strstr(Config::get('concrete.email.form_block.address'), '@')) {
                     $formFormEmailAddress = \Config::get('concrete.email.form_block.address');
@@ -125,7 +144,6 @@ class Controller extends BlockController
 
                 $replyToEmailAddress = $formFormEmailAddress;
                 if ($this->replyToEmailControlID) {
-                    $entityManager->refresh($entry);
                     $control = $entityManager->getRepository('Concrete\Core\Entity\Express\Control\Control')
                         ->findOneById($this->replyToEmailControlID);
                     if (is_object($control)) {
@@ -135,8 +153,6 @@ class Controller extends BlockController
                         }
                     }
                 }
-
-                $values = $entity->getAttributeKeyCategory()->getAttributeValues($entity);
 
                 $mh = \Core::make('helper/mail');
                 $mh->to($this->recipientEmail);
