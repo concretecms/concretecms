@@ -329,14 +329,16 @@ function ConcretePanel(options) {
                 obj.closePanelDetail();
             });
 
-            $content.find('[data-panel-detail-form]').not('[data-panel-detail-form="seo"],[data-panel-detail-form="attributes"]').concreteAjaxForm();
-
-            $content.find('[data-panel-detail-form="seo"],[data-panel-detail-form="attributes"]').concreteAjaxForm({complete: function(){
-                location.reload();
-            }});
+            $content.find('[data-panel-detail-form]').concreteAjaxForm();
 
             $('button[data-panel-detail-action=submit]').on('click', function () {
                 $('[data-panel-detail-form]').submit();
+            });
+
+            ConcreteEvent.subscribe('AjaxFormSubmitSuccess', function(e, data) {
+                if ($('[data-panel-detail-form="'+ data.form + '"]').data('action-after-save')=='reload') {
+                    location.reload();
+                }
             });
         }
     };
