@@ -245,6 +245,11 @@ echo Core::make('helper/concrete/ui')->tabs(array(
         height: 94px;
         margin-bottom: 15px;
     }
+    .ccm-image-slider-entries .ui-sortable-helper {
+        -webkit-box-shadow: 0px 10px 18px 2px rgba(54,55,66,0.27);
+        -moz-box-shadow: 0px 10px 18px 2px rgba(54,55,66,0.27);
+        box-shadow: 0px 10px 18px 2px rgba(54,55,66,0.27);
+    }
     .ccm-image-slider-block-container .show-slide-link {
         display: block;
     }

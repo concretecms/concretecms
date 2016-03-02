@@ -276,9 +276,9 @@ class Controller extends BlockController
     public function action_filter_by_topic($treeNodeID = false, $topic = false)
     {
         if ($treeNodeID) {
-            $this->list->filterByTopic(intval($treeNodeID));
             $topicObj = Topic::getByID(intval($treeNodeID));
-            if (is_object($topicObj)) {
+            if (is_object($topicObj) && $topicObj instanceof Topic) {
+                $this->list->filterByTopic(intval($treeNodeID));
                 $seo = Core::make('helper/seo');
                 $seo->addTitleSegment($topicObj->getTreeNodeDisplayName());
             }
