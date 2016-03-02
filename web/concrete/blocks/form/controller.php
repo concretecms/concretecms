@@ -578,6 +578,7 @@ class Controller extends BlockController
             }
 
             if (!$this->noSubmitFormRedirect) {
+                $targetPage = null;
                 if ($this->redirectCID > 0) {
                     $pg = Page::getByID($this->redirectCID);
                     if (is_object($pg) && $pg->cID) {
