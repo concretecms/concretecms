@@ -950,7 +950,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         }
     }
 
-    public function export($pageNode, $includePublicDate = false)
+    public function export($pageNode, $includePublicDate = true)
     {
         $p = $pageNode->addChild('page');
         $p->addAttribute('name', Core::make('helper/text')->entities($this->getCollectionName()));

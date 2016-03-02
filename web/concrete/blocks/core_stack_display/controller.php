@@ -39,6 +39,23 @@ class Controller extends BlockController
         return $this->bOriginalID;
     }
 
+    public function getSearchableContent() 
+    {
+        $searchableContent = '';
+        $stack = Stack::getByID($this->stID);
+        if (is_object($stack)) {
+            $blocks = $stack->getBlocks();
+            if (!empty($blocks)) {
+                foreach ($blocks as $block) {
+                    if (method_exists($block->instance, 'getSearchableContent')) {
+                        $searchableContent .= $block->instance->getSearchableContent();
+                    }
+                }
+            }
+        }
+        return $searchableContent;
+    }
+
     public function getImportData($blockNode, $page)
     {
         $args = array();

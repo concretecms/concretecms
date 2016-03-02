@@ -246,6 +246,13 @@ class Login extends PageController
             }
             do {
                 // redirect to original destination
+                if ($session->has('rUri')) {
+                    $rUrl = $session->get('rUri');
+                    $session->remove('rUri');
+                    if ($rUrl) {
+                        break;
+                    }
+                }
                 if ($session->has('rcID')) {
                     $rcID = $session->get('rcID');
                     if ($nh->integer($rcID)) {
