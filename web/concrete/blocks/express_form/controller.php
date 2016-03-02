@@ -119,6 +119,24 @@ class Controller extends BlockController
 
             $values = $entity->getAttributeKeyCategory()->getAttributeValues($entry);
 
+            // Check antispam
+            $antispam = \Core::make('helper/validation/antispam');
+            $submittedData = '';
+            foreach($values as $value) {
+                $submittedData .= $value->getAttributeKey()->getAttributeKeyDisplayName() . "\r\n";
+                $submittedData .= $value->getValue('displaySanitized') . "\r\n\r\n";
+            }
+
+            if (!$antispam->check($submittedData, 'form_block')) {
+                // Remove the entry and silently fail.
+                $entityManager->refresh($entry);
+                $entityManager->remove($entry);
+                $entityManager->flush();
+                $c = \Page::getCurrentPage();
+                $r = Redirect::to($c->getCollectionPath());
+                $r->setTargetUrl($r->getTargetUrl() . '#form' . $this->bID);
+            }
+
             if ($this->addFilesToSet) {
                 $set = Set::getByID($this->addFilesToSet);
                 if (is_object($set)) {
