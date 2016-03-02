@@ -581,11 +581,17 @@ class Controller extends BlockController
                 if ($this->redirectCID > 0) {
                     $pg = Page::getByID($this->redirectCID);
                     if (is_object($pg) && $pg->cID) {
-                        $this->redirect($pg->getCollectionPath());
+                        $targetPage = $pg;
                     }
                 }
-                $c = Page::getCurrentPage();
-                header("Location: ".Core::make('helper/navigation')->getLinkToCollection($c, true)."?surveySuccess=1&qsid=".$this->questionSetId."#formblock".$this->bID);
+                if (is_object($targetPage)) {
+                    $response = \Redirect::page($targetPage);
+                } else {
+                    $response = \Redirect::page(Page::getCurrentPage());
+                    $url = $response->getTargetUrl() . "?surveySuccess=1&qsid=".$this->questionSetId."#formblock".$this->bID;
+                    $response->setTargetUrl($url);
+                }
+                $response->send();
                 exit;
             }
         }
