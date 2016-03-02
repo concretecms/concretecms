@@ -47,6 +47,10 @@ echo $innerContent;
 
 echo Core::make('helper/concrete/ui/help')->display('dashboard', $c->getCollectionPath());
 
+if (isset($headerMenu) && $headerMenu instanceof \Concrete\Core\Controller\ElementController) {
+    $headerMenu->render();
+}
+
 if (isset($breadcrumb) && (!empty($breadcrumb))) {
     ?>
     <div class="ccm-search-results-breadcrumb">

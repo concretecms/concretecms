@@ -1,10 +1,5 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");?>
-
-<?php
-if (isset($attributeHeader)) {
-    $attributeHeader->render();
-} else {
-    ?>
+?>
 
     <div class="ccm-dashboard-header-buttons">
 
@@ -14,10 +9,6 @@ if (isset($attributeHeader)) {
         ?>
 
     </div>
-
-    <?php
-} ?>
-
 
 <div class="row">
     <?php View::element('dashboard/express/detail_navigation', array('entity' => $entity))?>

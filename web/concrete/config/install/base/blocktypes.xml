@@ -82,7 +82,7 @@
             <blocktype handle="switch_language"/>
         </blocktypeset>
         <blocktypeset handle="form" name="Forms" package="">
-            <blocktype handle="form"/>
+            <blocktype handle="express_form"/>
             <blocktype handle="search"/>
             <blocktype handle="external_form"/>
         </blocktypeset>
