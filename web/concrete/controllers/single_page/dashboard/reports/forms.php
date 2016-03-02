@@ -2,6 +2,7 @@
 namespace Concrete\Controller\SinglePage\Dashboard\Reports;
 
 use Concrete\Block\ExpressForm\Controller;
+use Concrete\Controller\Element\Dashboard\Reports\Forms\Header;
 use Concrete\Core\Page\Controller\DashboardExpressEntriesPageController;
 use Concrete\Core\Tree\Node\Type\Category;
 
@@ -15,6 +16,8 @@ class Forms extends DashboardExpressEntriesPageController
 
     public function view($folder = null)
     {
+        $header = new Header();
+        $this->set('headerMenu', $header);
         $this->renderList($folder);
     }
 

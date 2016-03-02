@@ -208,6 +208,17 @@
                 </attributekey>
             </attributes>
         </page>
+        <page name="Form Results" path="/dashboard/reports/forms/legacy" filename="/dashboard/reports/legacy.php" pagetype=""
+              description="Get submission data." package="">
+            <attributes>
+                <attributekey handle="exclude_nav">
+                    <value><![CDATA[1]]></value>
+                </attributekey>
+                <attributekey handle="exclude_search_index">
+                    <value><![CDATA[1]]></value>
+                </attributekey>
+            </attributes>
+        </page>
         <page name="Surveys" path="/dashboard/reports/surveys" filename="/dashboard/reports/surveys.php" pagetype=""
               description="" package="">
             <attributes>

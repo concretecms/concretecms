@@ -38,7 +38,7 @@ abstract class DashboardAttributesPageController extends DashboardPageController
         }
 
         $header = new StandardListHeader($category);
-        $this->set('attributeHeader', $header);
+        $this->set('headerMenu', $header);
 
         $this->set('attributeView', $list);
         $this->set('pageTitle', t('Attributes'));
@@ -65,7 +65,7 @@ abstract class DashboardAttributesPageController extends DashboardPageController
 
         $header = new KeyHeader($key);
         $header->setDashboardPageParameters($this->getRequestActionParameters());
-        $this->set('attributeHeader', $header);
+        $this->set('headerMenu', $header);
     }
 
     protected function executeAdd(Type $type, $successURL, $onComplete = null)

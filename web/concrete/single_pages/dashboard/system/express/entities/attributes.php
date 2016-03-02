@@ -1,10 +1,7 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");?>
 
 <?php
-if (isset($attributeHeader)) {
-    $attributeHeader->render();
-} else {
-    ?>
+if (!isset($headerMenu)) { ?>
 
 <div class="ccm-dashboard-header-buttons">
 
@@ -16,7 +13,7 @@ if (isset($attributeHeader)) {
 
 </div>
 
-<?php 
+<?php
 } ?>
 
 
