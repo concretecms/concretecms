@@ -31,6 +31,6 @@ interface ValidatorInterface
      * @param Request $request
      * @return ResponseInterface
      */
-    function validateSaveValueRequest(Key $key, Request $request);
+    function validateSaveValueRequest(Controller $controller, Request $request, $includeFieldNotPresentErrors = true);
 
 }

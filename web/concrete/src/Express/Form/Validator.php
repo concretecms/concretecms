@@ -2,7 +2,7 @@
 namespace Concrete\Core\Express\Form;
 
 use Concrete\Core\Entity\Express\Form;
-use Concrete\Core\Error\Error;
+use Concrete\Core\Error\ErrorBag\ErrorBag;
 use Symfony\Component\HttpFoundation\Request;
 
 class Validator
@@ -10,7 +10,7 @@ class Validator
     protected $request;
     protected $error;
 
-    public function __construct(Error $error, Request $request)
+    public function __construct(ErrorBag $error, Request $request)
     {
         $this->request = $request;
         $this->error = $error;
@@ -23,14 +23,12 @@ class Validator
             $this->error->add($token->getErrorMessage());
         }
         foreach ($form->getControls() as $control) {
-            if ($control->isRequired()) {
-                $type = $control->getControlType();
-                $validator = $type->getValidator($control);
-                if (is_object($validator)) {
-                    $e = $validator->validateRequest($control, $this->request);
-                    if (is_object($e) && $e->has()) {
-                        $this->error->add($e);
-                    }
+            $type = $control->getControlType();
+            $validator = $type->getValidator($control);
+            if (is_object($validator)) {
+                $e = $validator->validateRequest($control, $this->request);
+                if (is_object($e) && $e->has()) {
+                    $this->error->add($e);
                 }
             }
         }

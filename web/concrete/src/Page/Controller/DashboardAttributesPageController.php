@@ -72,7 +72,7 @@ abstract class DashboardAttributesPageController extends DashboardPageController
     {
         $entity = $this->getCategoryEntityObject();
         $category = $entity->getAttributeKeyCategory();
-        $validator = $type->getValidator();
+        $validator = $type->getController()->getValidator();
         $response = $validator->validateAddKeyRequest($category, $type, $this->request);
         if (!$response->isValid()) {
             $this->error = $response->getErrorObject();
@@ -137,8 +137,7 @@ abstract class DashboardAttributesPageController extends DashboardPageController
     {
         $entity = $this->getCategoryEntityObject();
         $category = $entity->getAttributeKeyCategory();
-        $type = $key->getAttributeType();
-        $validator = $type->getValidator();
+        $validator = $key->getController()->getValidator();
         $response = $validator->validateUpdateKeyRequest($category, $key, $this->request);
         if (!$response->isValid()) {
             $this->error = $response->getErrorObject();

@@ -150,10 +150,11 @@ class CollectionAttributeControl extends Control
         if (is_object($ak)) {
             $e = \Core::make('error');
             if ($this->isFormSubmission()) {
-                $validator = $ak->getAttributeType()->getValidator();
+                $controller = $ak->getController();
+                $validator = $controller->getValidator();
                 $control = $this->getPageTypeComposerFormLayoutSetControlObject();
                 $response = $validator->validateSaveValueRequest(
-                    $ak, $this->request, $control->getPageTypeComposerControlLabel()
+                    $controller, $this->request, $control->getPageTypeComposerControlLabel()
                 );
                 /**
                  * @var $response ResponseInterface

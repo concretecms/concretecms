@@ -1,7 +1,6 @@
 <?php
 namespace Concrete\Controller\SinglePage\Dashboard\Extend;
 
-use Concrete\Core\Error\Error;
 use Concrete\Core\Package\BrokenPackage;
 use Concrete\Core\Package\ContentSwapper;
 use Concrete\Core\Package\ItemCategory\Manager;

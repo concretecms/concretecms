@@ -5,6 +5,10 @@ use Concrete\Core\Application\Application;
 use Concrete\Core\Attribute\Category\CategoryInterface;
 use Concrete\Core\Entity\Attribute\Key\Key;
 use Concrete\Core\Error\Error;
+use Concrete\Core\Error\ErrorBag\Error\ErrorInterface;
+use Concrete\Core\Error\ErrorBag\Error\FieldNotPresentError;
+use Concrete\Core\Error\ErrorBag\ErrorBag;
+use Concrete\Core\Error\ErrorBag\Field\Field;
 use Concrete\Core\Validation\Response;
 use Concrete\Core\Entity\Attribute\Type as TypeEntity;
 use Symfony\Component\HttpFoundation\Request;
@@ -24,22 +28,31 @@ class StandardValidator implements ValidatorInterface
         return $this->validate($category, $key->getAttributeType()->getController(), $request, $key);
     }
 
-    public function validateSaveValueRequest(Key $key, Request $request, $fieldName = null)
+    public function validateSaveValueRequest(Controller $controller, Request $request, $includeFieldNotPresentErrors = true)
     {
-        $fieldName = $fieldName ? $fieldName : $key->getAttributeKeyDisplayName();
-        $controller = $key->getAttributeType()->getController();
-        $controller->setAttributeKey($key);
+        $key = $controller->getAttributeKey();
         $response = new Response();
         if (method_exists($controller, 'validateForm')) {
-            $error = $controller->validateForm($controller->post());
-            if ($error instanceof Error || $error == false) {
-                $response->setIsValid(false);
-                if ($error == false) {
-                    $error = $this->application->make('error');
-                    $error->add(t('The field "%s" is required', $fieldName));
+            $controller->setRequest($request);
+            $validateResponse = $controller->validateForm($controller->post());
+            if ($validateResponse instanceof ErrorBag) {
+                foreach($validateResponse->getList() as $error) {
+                    if (!($error instanceof FieldNotPresentError) || $includeFieldNotPresentErrors) {
+                        $response->getErrorObject()->add($error);
+                    }
                 }
-                $response->setErrorObject($error);
+            } else if ($validateResponse instanceof ErrorInterface) {
+                if (!($validateResponse instanceof FieldNotPresentError) || $includeFieldNotPresentErrors) {
+                    $response->getErrorObject()->add($validateResponse);
+                }
+            } else if ($validateResponse == false) {
+                if ($includeFieldNotPresentErrors) {
+                    $response->getErrorObject()->add(new FieldNotPresentError(new Field($key->getAttributeKeyDisplayName())));
+                }
             }
+        }
+        if ($response->getErrorObject()->has()) {
+            $response->setIsValid(false);
         }
         return $response;
     }

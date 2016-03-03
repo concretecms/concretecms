@@ -1,7 +1,6 @@
 <?php
 namespace Concrete\Controller\SinglePage\Dashboard\Pages\Types;
 
-use Concrete\Core\Error\Error;
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Loader;
 use PageType;
