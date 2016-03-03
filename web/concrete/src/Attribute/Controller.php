@@ -68,6 +68,11 @@ class Controller extends AbstractController
 
     }
 
+    public function getValidator()
+    {
+        return \Core::make('Concrete\Core\Attribute\StandardValidator');
+    }
+
     public function deleteKey()
     {
     }
@@ -141,7 +146,7 @@ class Controller extends AbstractController
     public function post($field = false, $defaultValue = null)
     {
         // the only post that matters is the one for this attribute's name space
-        $req = ($this->requestArray == false) ? $_POST : $this->requestArray;
+        $req = ($this->requestArray == false) ? $this->request->request->all() : $this->requestArray;
         if (is_object($this->attributeKey) && isset($req['akID']) && is_array($req['akID'])) {
             $p = $req['akID'][$this->attributeKey->getAttributeKeyID()];
             if ($field) {
@@ -156,7 +161,8 @@ class Controller extends AbstractController
 
     public function requestFieldExists()
     {
-        $req = ($this->requestArray == false) ? $_REQUEST : $this->requestArray;
+        $request = array_merge($this->request->request->all(), $this->request->query->all());
+        $req = ($this->requestArray == false) ? $request : $this->requestArray;
         if (is_object($this->attributeKey) && is_array($req['akID'])) {
             return true;
         }
@@ -166,8 +172,8 @@ class Controller extends AbstractController
 
     public function request($field = false)
     {
-        $req = ($this->requestArray == false) ? $_REQUEST : $this->requestArray;
-
+        $request = array_merge($this->request->request->all(), $this->request->query->all());
+        $req = ($this->requestArray == false) ? $request : $this->requestArray;
         if (is_object($this->attributeKey) && is_array($req['akID'])) {
             $p = $req['akID'][$this->attributeKey->getAttributeKeyID()];
             if ($field) {

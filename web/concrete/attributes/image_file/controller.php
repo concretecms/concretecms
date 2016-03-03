@@ -4,6 +4,9 @@ namespace Concrete\Attribute\ImageFile;
 use Concrete\Core\Attribute\FontAwesomeIconFormatter;
 use Concrete\Core\Entity\Attribute\Key\Type\ImageFileType;
 use Concrete\Core\Entity\Attribute\Value\Value\ImageFileValue;
+use Concrete\Core\Error\ErrorBag\Error\Error;
+use Concrete\Core\Error\ErrorBag\Error\FieldNotPresentError;
+use Concrete\Core\Error\ErrorBag\Field\AttributeField;
 use Concrete\Core\File\Importer;
 use Core;
 use File;
@@ -172,17 +175,19 @@ class Controller extends AttributeTypeController
 
     public function validateForm($data)
     {
-        $e = Core::make('helper/validation/error');
         if ($this->getAttributeKeyType()->isModeFileManager()) {
             if (Core::make('helper/validation/numbers')->integer($data['value'])) {
                 $f = File::getByID($data['value']);
                 if (is_object($f) && !$f->isError()) {
                     return true;
+                } else {
+                    return new Error(t('You must specify a valid file for %s', $this->getAttributeKey()->getAttributeKeyDisplayName()),
+                        new AttributeField($this->getAttributeKey())
+                    );
                 }
+            } else {
+                return new FieldNotPresentError(new AttributeField($this->getAttributeKey()));
             }
-            $e->add(t('You must specify a valid file for %s', $this->attributeKey->getAttributeKeyDisplayName()));
-
-            return $e;
         }
         if ($this->getAttributeKeyType()->isModeHtmlInput()) {
             $tmp_name = $_FILES['akID']['tmp_name'][$this->attributeKey->getAttributeKeyID()]['value'];
@@ -190,16 +195,21 @@ class Controller extends AttributeTypeController
             if (!empty($tmp_name) && is_uploaded_file($tmp_name)) {
                 $fh = \Core::make('helper/validation/file');
                 if (!$fh->file($tmp_name)) {
-                    $e->add(t('You have not uploaded a valid file.'));
+                    return new Error(t('You have not uploaded a valid file.'),
+                        new AttributeField($this->getAttributeKey())
+                    );
                 }
 
                 if (!$fh->extension($name)) {
-                    $e->add(t('Invalid file extension.'));
+                    return new Error(t('Invalid file extension.'),
+                        new AttributeField($this->getAttributeKey())
+                    );
                 }
+
+                return true;
             } else {
-                return false;
+                return new FieldNotPresentError(new AttributeField($this->getAttributeKey()));
             }
-            return $e;
         }
     }
 

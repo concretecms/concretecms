@@ -356,8 +356,9 @@ class Login extends PageController
 
             $saveAttributes = array();
             foreach ($unfilled as $attribute) {
-                $validator = $attribute->getAttributeType()->getValidator();
-                $response = $validator->validateSaveValueRequest($attribute, $this->request);
+                $controller = $attribute->getController();
+                $validator = $controller->getValidator();
+                $response = $validator->validateSaveValueRequest($controller, $this->request);
                 /**
                  * @var $response ResponseInterface
                  */

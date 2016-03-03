@@ -103,7 +103,11 @@ class Controller extends AttributeTypeController
 
     public function validateForm($data)
     {
-        return $data['address1'] != '' && $data['city'] != '' && $data['state_province'] != '' && $data['country'] != '' && $data['postal_code'] != '';
+        return !empty($data['address1'])
+        && !empty($data['city'])
+        && !empty($data['state_province'])
+        && !empty($data['country'])
+        && !empty($data['postal_code']);
     }
 
     public function validateValue()
