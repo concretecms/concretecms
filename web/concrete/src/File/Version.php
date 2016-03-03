@@ -381,6 +381,11 @@ class Version
         return $this->fvExtension;
     }
 
+    public function setFileVersionID($fvID)
+    {
+        $this->fvID = $fvID;
+    }
+
     /**
      * Takes the current value of the file version and makes a new one with the same values.
      */

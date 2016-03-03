@@ -394,7 +394,20 @@ class File implements \Concrete\Core\Permission\ObjectInterface
         foreach ($versions as $version) {
             if ($version->isApproved()) {
                 $cloneVersion = clone $version;
+                $cloneVersion->setFileVersionID(1);
                 $cloneVersion->setFile($nf);
+
+                $em->persist($cloneVersion);
+                $em->flush();
+
+                foreach ($version->getAttributes() as $value) {
+                    $value = clone $value;
+                    $value->setVersion($cloneVersion);
+                    $em->persist($value);
+                }
+
+                $em->flush();
+
                 do {
                     $prefix = $importer->generatePrefix();
                     $path = $cf->prefix($prefix, $version->getFilename());
@@ -411,20 +424,6 @@ class File implements \Concrete\Core\Permission\ObjectInterface
         $em->persist($nf);
         $em->flush();
 
-        /*
-
-        $r = $db->Execute('select fvID, akID, avID from FileAttributeValues where fID = ?', array($this->getFileID()));
-        while ($row = $r->fetchRow()) {
-            $db->Execute(
-                "insert into FileAttributeValues (fID, fvID, akID, avID) values (?, ?, ?, ?)",
-                array(
-                    $nf->getFileID(),
-                    $row['fvID'],
-                    $row['akID'],
-                    $row['avID'],
-                )
-            );
-        }*/
 
         $v = array($this->fID);
         $q = "select fID, paID, pkID from FilePermissionAssignments where fID = ?";
@@ -433,10 +432,6 @@ class File implements \Concrete\Core\Permission\ObjectInterface
             $v = array($nf->getFileID(), $row['paID'], $row['pkID']);
             $q = "insert into FilePermissionAssignments (fID, paID, pkID) values (?, ?, ?)";
             $db->query($q, $v);
-        }
-
-        foreach ($nf->getVersionList() as $v) {
-            $v->refreshAttributes();
         }
 
         $fe = new \Concrete\Core\File\Event\DuplicateFile($this);
