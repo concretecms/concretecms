@@ -13,7 +13,6 @@ use Concrete\Core\Entity\Attribute\Key\Type\Type;
 use Concrete\Core\Entity\Attribute\Set;
 use Concrete\Core\Entity\Attribute\Value\Value\Value;
 use Concrete\Core\Entity\Package;
-use Concrete\Core\Error\Error;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
 use Concrete\Core\Entity\Attribute\Type as AttributeType;

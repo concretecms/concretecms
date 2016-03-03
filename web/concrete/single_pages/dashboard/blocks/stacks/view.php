@@ -9,7 +9,6 @@ use Concrete\Core\Page\Stack\Stack;
 /* @var Concrete\Core\Application\Service\UserInterface $interface */
 /* @var Concrete\Core\Application\Service\Dashboard $dashboard */
 /* @var Concrete\Core\Validation\CSRF\Token $token */
-/* @var Concrete\Core\Error\Error $error */
 /* @var Concrete\Core\Form\Service\Form $form */
 /* @var Concrete\Core\Page\View\PageView $view */
 /* @var Concrete\Controller\SinglePage\Dashboard\Blocks\Stacks $controller */

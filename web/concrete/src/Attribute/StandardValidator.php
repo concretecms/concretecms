@@ -4,7 +4,7 @@ namespace Concrete\Core\Attribute;
 use Concrete\Core\Application\Application;
 use Concrete\Core\Attribute\Category\CategoryInterface;
 use Concrete\Core\Entity\Attribute\Key\Key;
-use Concrete\Core\Error\Error;
+use Concrete\Core\Entity\Attribute\Value\Value;
 use Concrete\Core\Error\ErrorBag\Error\ErrorInterface;
 use Concrete\Core\Error\ErrorBag\Error\FieldNotPresentError;
 use Concrete\Core\Error\ErrorBag\ErrorBag;
@@ -49,6 +49,29 @@ class StandardValidator implements ValidatorInterface
                 if ($includeFieldNotPresentErrors) {
                     $response->getErrorObject()->add(new FieldNotPresentError(new Field($key->getAttributeKeyDisplayName())));
                 }
+            }
+        }
+        if ($response->getErrorObject()->has()) {
+            $response->setIsValid(false);
+        }
+        return $response;
+    }
+
+    public function validateCurrentAttributeValue(Controller $controller, Value $value)
+    {
+        $key = $controller->getAttributeKey();
+        $controller->setAttributeValue($value);
+        $response = new Response();
+        if (method_exists($controller, 'validateValue')) {
+            $validateResponse = $controller->validateValue();
+            if ($validateResponse instanceof ErrorBag) {
+                foreach($validateResponse->getList() as $error) {
+                    $response->getErrorObject()->add($error);
+                }
+            } else if ($validateResponse instanceof ErrorInterface) {
+                $response->getErrorObject()->add($validateResponse);
+            } else if ($validateResponse == false) {
+                $response->getErrorObject()->add(new FieldNotPresentError(new Field($key->getAttributeKeyDisplayName())));
             }
         }
         if ($response->getErrorObject()->has()) {

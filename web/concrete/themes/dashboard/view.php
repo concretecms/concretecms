@@ -10,7 +10,7 @@ $_error = array();
 if (isset($error)) {
     if ($error instanceof Exception) {
         $_error[] = $error->getMessage();
-    } elseif ($error instanceof \Concrete\Core\Error\Error) {
+    } elseif ($error instanceof \Concrete\Core\Error\ErrorBag\ErrorBag) {
         if ($error->has()) {
             $_error = $error->getList();
         }

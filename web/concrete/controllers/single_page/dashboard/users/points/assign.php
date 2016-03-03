@@ -1,7 +1,6 @@
 <?php
 namespace Concrete\Controller\SinglePage\Dashboard\Users\Points;
 
-use Concrete\Core\Error\Error;
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Loader;
 use Concrete\Core\User\Point\Entry as UserPointEntry;
@@ -48,7 +47,7 @@ class Assign extends DashboardPageController
     public function save()
     {
         if (!\Core::make('helper/validation/token')->validate('add_community_points')) {
-            $this->error = new Error();
+            $this->error = \Core::make('error');
             $this->error->add('Invalid Token');
             $this->view();
 
@@ -86,7 +85,6 @@ class Assign extends DashboardPageController
             }
             $this->redirect('/dashboard/users/points/assign', 'entry_saved');
         } else {
-            $this->set('error', $error);
             $this->view();
         }
     }
