@@ -4,6 +4,7 @@ namespace Concrete\Core\Attribute;
 use Concrete\Core\Attribute\Category\CategoryInterface;
 use Concrete\Core\Entity\Attribute\Key\Key;
 use Concrete\Core\Entity\Attribute\Type as TypeEntity;
+use Concrete\Core\Entity\Attribute\Value\Value;
 use Concrete\Core\Validation\ResponseInterface;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -27,10 +28,17 @@ interface ValidatorInterface
     function validateUpdateKeyRequest(CategoryInterface $category, Key $key, Request $request);
 
     /**
-     * @param Key $key
+     * @param Controller $controller
      * @param Request $request
-     * @return ResponseInterface
+     * @param bool $includeFieldNotPresentErrors
+     * @return mixed
      */
     function validateSaveValueRequest(Controller $controller, Request $request, $includeFieldNotPresentErrors = true);
+
+    /**
+     * @param Controller $controller
+     */
+    function validateCurrentAttributeValue(Controller $controller, Value $value);
+
 
 }

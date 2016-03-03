@@ -12,7 +12,6 @@ use Concrete\Core\Attribute\EntityInterface;
 use Concrete\Core\Attribute\Set;
 use Concrete\Core\Entity\Attribute\SetKey;
 use Concrete\Core\Entity\Attribute\Type;
-use Concrete\Core\Error\Error;
 use Concrete\Core\Validation\CSRF\Token;
 use Symfony\Component\HttpFoundation\JsonResponse;
 

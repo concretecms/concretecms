@@ -2,7 +2,6 @@
 namespace Concrete\Core\Express\Form\Control\Validator;
 
 use Concrete\Core\Entity\Express\Control\Control;
-use Concrete\Core\Error\Error;
 use Symfony\Component\HttpFoundation\Request;
 
 class AttributeKeyControlValidator implements ValidatorInterface

@@ -25,7 +25,7 @@ class EditResponse
 
     public function __construct($e = false)
     {
-        if ($e instanceof \Concrete\Core\Error\Error && $e->has()) {
+        if ($e instanceof \Concrete\Core\Error\ErrorBag\ErrorBag && $e->has()) {
             $this->error = $e;
         } else {
             $this->error = Core::make('helper/validation/error');
