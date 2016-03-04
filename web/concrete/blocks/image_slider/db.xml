@@ -24,7 +24,7 @@
     <field name="pause" type="integer">
       <unsigned/>
     </field>
-	<field name=maxWidth" type="integer">
+    <field name=maxWidth" type="integer">
       <unsigned/>
     </field>
   </table>
