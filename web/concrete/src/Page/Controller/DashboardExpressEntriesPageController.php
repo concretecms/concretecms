@@ -55,11 +55,11 @@ abstract class DashboardExpressEntriesPageController extends DashboardPageContro
             $this->set('searchController', $search);
             $this->set('entity', $entity);
             $this->set('createURL', $this->getCreateEntryURL());
-            $this->render('/dashboard/express/entries/entries');
+            $this->render('/dashboard/express/entries/entries', false);
         } else {
             $parent->populateDirectChildrenOnly();
             $this->set('nodes', $parent->getChildNodes());
-            $this->render('/dashboard/express/entries/folder');
+            $this->render('/dashboard/express/entries/folder', false);
         }
     }
 
@@ -122,7 +122,7 @@ abstract class DashboardExpressEntriesPageController extends DashboardPageContro
         $this->set('expressForm', $entry->getEntity()->getForms()[0]);
         $this->set('renderer', $renderer);
         $this->set('backURL', $this->getBackToListURL($entry));
-        $this->render('/dashboard/express/entries/view_entry');
+        $this->render('/dashboard/express/entries/view_entry', false);
     }
 
 

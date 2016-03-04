@@ -120,7 +120,7 @@ class StandardValidator implements ValidatorInterface
         }
 
         $controllerResponse = $controller->validateKey($request->request->all());
-        if ($controllerResponse instanceof Error) {
+        if ($controllerResponse instanceof ErrorBag) {
             $error->add($controllerResponse);
         }
 

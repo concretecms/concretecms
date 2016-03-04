@@ -18,7 +18,7 @@ abstract class Type
     protected $akTypeID;
 
     /**
-     * @Column(type="string")
+     * @Column(type="string", nullable=true)
      */
     protected $akTypeHandle;
 
@@ -43,7 +43,14 @@ abstract class Type
      */
     public function getAttributeTypeHandle()
     {
-        return $this->akTypeHandle;
+        if (isset($this->akTypeHandle)) {
+            return $this->akTypeHandle; // By allowing the controllers to set this, we can create attributes that extend the built-in key types
+        } else {
+            // attempt to determine it dynamically
+            $class = substr(get_called_class(), strrpos(get_called_class(), '\\') + 1);
+            $class = substr($class, 0, strpos($class, 'Type'));
+            return uncamelcase($class);
+        }
     }
 
     /**
@@ -77,14 +84,6 @@ abstract class Type
     {
         $factory = \Core::make('Concrete\Core\Attribute\TypeFactory');
         return $factory->getByHandle($this->getAttributeTypeHandle());
-    }
-
-    /**
-     * @param mixed $type
-     */
-    public function setAttributeType($type)
-    {
-        $this->type = $type;
     }
 
     public function createController()
