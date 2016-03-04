@@ -258,7 +258,9 @@ echo Core::make('helper/concrete/ui')->tabs(array(
         <div class="ccm-image-slider-entries">
 
         </div>
-        <button type="button" class="btn btn-success ccm-add-image-slider-entry"><?php echo t('Add Slide'); ?></button>
+        <div>
+            <button type="button" class="btn btn-success ccm-add-image-slider-entry"><?php echo t('Add Slide'); ?></button>
+        </div>
     </div>
 </div>
 
