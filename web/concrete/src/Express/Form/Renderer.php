@@ -11,6 +11,7 @@ class Renderer implements RendererInterface
 {
     protected $entityManager;
     protected $application;
+    protected $requiredHtmlElement = '<span class="ccm-input-required">*</span>';
 
     public function __construct(Application $application, EntityManagerInterface $entityManager)
     {
@@ -26,6 +27,22 @@ class Renderer implements RendererInterface
     protected function getFormCloseTag()
     {
         return '</div>';
+    }
+
+    /**
+     * @return string
+     */
+    public function getRequiredHtmlElement()
+    {
+        return $this->requiredHtmlElement;
+    }
+
+    /**
+     * @param string $requiredHtmlElement
+     */
+    public function setRequiredHtmlElement($requiredHtmlElement)
+    {
+        $this->requiredHtmlElement = $requiredHtmlElement;
     }
 
     protected function getFieldSetOpenTag(FieldSet $set)
@@ -57,8 +74,8 @@ class Renderer implements RendererInterface
     {
         $html = $this->getFieldSetOpenTag($fieldSet);
         foreach ($fieldSet->getControls() as $control) {
-            $factory = new RendererFactory($control, $this->application, $this->entityManager);
-            $renderer = $factory->getFormRenderer();
+            $factory = new RendererFactory($this, $control, $this->application, $this->entityManager);
+            $renderer = $factory->getFormControlRenderer();
             if (is_object($renderer)) {
                 $html .= $renderer->render();
             }

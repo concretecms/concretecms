@@ -75,6 +75,16 @@ class ExpressCategory extends AbstractCategory implements StandardSearchIndexerI
         return $this->getList();
     }
 
+    /*
+    public function getAttributeKeyByHandle($handle)
+    {
+        return $this->getAttributeRepository()->findOneBy(array(
+            'akHandle' => $handle,
+            'entity' => $this->getEntity(),
+        ));
+    }*/
+
+
     public function getAttributeTypes()
     {
         return $this->entityManager

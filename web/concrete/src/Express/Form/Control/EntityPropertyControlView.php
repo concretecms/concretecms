@@ -31,6 +31,7 @@ class EntityPropertyControlView implements ControlViewInterface
         $form = $this->factory->getApplication()->make('helper/form');
         $control = $this->factory->getControl();
         $label = $control->getDisplayLabel();
+        $renderer = $this->factory->getFormRenderer();
 
         ob_start();
         include $template;

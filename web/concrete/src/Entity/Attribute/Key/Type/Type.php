@@ -18,6 +18,11 @@ abstract class Type
     protected $akTypeID;
 
     /**
+     * @Column(type="string", nullable=true)
+     */
+    protected $akTypeHandle;
+
+    /**
      * @ManyToOne(targetEntity="\Concrete\Core\Entity\Attribute\Key\Key", inversedBy="key_type")
      * @JoinColumn(name="akID", referencedColumnName="akID")
      */
@@ -31,6 +36,29 @@ abstract class Type
     public function setKeyTypeID($akTypeID)
     {
         $this->akTypeID = $akTypeID;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAttributeTypeHandle()
+    {
+        if (isset($this->akTypeHandle)) {
+            return $this->akTypeHandle; // By allowing the controllers to set this, we can create attributes that extend the built-in key types
+        } else {
+            // attempt to determine it dynamically
+            $class = substr(get_called_class(), strrpos(get_called_class(), '\\') + 1);
+            $class = substr($class, 0, strpos($class, 'Type'));
+            return uncamelcase($class);
+        }
+    }
+
+    /**
+     * @param mixed $akTypeHandle
+     */
+    public function setAttributeTypeHandle($akTypeHandle)
+    {
+        $this->akTypeHandle = $akTypeHandle;
     }
 
     /**
@@ -58,16 +86,11 @@ abstract class Type
         return $factory->getByHandle($this->getAttributeTypeHandle());
     }
 
-    /**
-     * @param mixed $type
-     */
-    public function setAttributeType($type)
+    public function createController()
     {
-        $this->type = $type;
+        $type = $this->getAttributeType();
+        return $type->getController();
     }
-
-    abstract public function createController();
-    abstract public function getAttributeTypeHandle();
 
     public function getController()
     {

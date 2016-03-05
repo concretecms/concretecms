@@ -51,7 +51,7 @@ class Controller extends AttributeTypeController
 
     public function importKey(\SimpleXMLElement $akey)
     {
-        $type = new BooleanType();
+        $type = $this->getAttributeKeyType();
         if (isset($akey->type)) {
             $checked = (string) $akey->type['checked'];
             if ($checked != '') {
@@ -158,7 +158,7 @@ class Controller extends AttributeTypeController
     // if this gets run we assume we need it to be validated/checked
     public function validateForm($data)
     {
-        return $data['value'] == 1;
+        return isset($data['value']) && $data['value'] == 1;
     }
 
     public function createAttributeKeyType()

@@ -220,7 +220,7 @@
                     return;
                 }
                 $('.tree-view-container').append(treeViewTemplate);
-                $('.tree-view-template').ccmtopicstree({
+                $('.tree-view-template').concreteTree({
                     'treeID': chosenTree,
                     'chooseNodeInForm': true,
                     'selectNodesByKey': [<?=intval($customTopicTreeNodeID)?>],

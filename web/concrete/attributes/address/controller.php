@@ -103,7 +103,11 @@ class Controller extends AttributeTypeController
 
     public function validateForm($data)
     {
-        return $data['address1'] != '' && $data['city'] != '' && $data['state_province'] != '' && $data['country'] != '' && $data['postal_code'] != '';
+        return !empty($data['address1'])
+        && !empty($data['city'])
+        && !empty($data['state_province'])
+        && !empty($data['country'])
+        && !empty($data['postal_code']);
     }
 
     public function validateValue()
@@ -246,7 +250,7 @@ class Controller extends AttributeTypeController
 
     public function importKey(\SimpleXMLElement $akey)
     {
-        $type = new AddressType();
+        $type = $this->getAttributeKeyType();
         if (isset($akey->type)) {
             $type->setHasCustomCountries((bool) $akey->type['custom-countries']);
             $type->setDefaultCountry((string) $akey->type['default-country']);

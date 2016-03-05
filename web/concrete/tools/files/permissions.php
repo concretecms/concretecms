@@ -29,7 +29,7 @@ if ($_POST['task'] == 'set_location') {
             $f->setFileStorageLocation($fsl);
         } catch (\Exception $e) {
             $json = new \Concrete\Core\Application\EditResponse();
-            $err = new \Concrete\Core\Error\Error();
+            $err = Core::make('error');
             $err->add($e->getMessage());
             $json->setError($err);
             $json->outputJSON();

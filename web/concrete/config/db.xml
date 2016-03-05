@@ -4646,6 +4646,10 @@
       <unsigned/>
       <default value="0"/>
     </field>
+    <field name="treeNodeName" type="string" size="255">
+      <default value=""/>
+    </field>
+
     <field name="treeNodeOverridePermissions" type="boolean">
       <unsigned/>
       <default value="0"/>
@@ -4667,17 +4671,6 @@
       <col>inheritPermissionsFromTreeNodeID</col>
       <col>treeNodeID</col>
     </index>
-  </table>
-
-  <table name="TreeCategoryNodes">
-    <field name="treeNodeID" type="integer" size="11">
-      <unsigned/>
-      <autoincrement/>
-      <key/>
-    </field>
-    <field name="treeNodeCategoryName" type="string" size="255">
-      <default value=""/>
-    </field>
   </table>
 
   <table name="TreeNodePermissionAssignments">
@@ -4726,17 +4719,6 @@
       <default value="0"/>
     </field>
     <field name="topicTreeName" type="string" size="255">
-      <default value=""/>
-    </field>
-  </table>
-
-  <table name="TreeTopicNodes">
-    <field name="treeNodeID" type="integer" size="11">
-      <unsigned/>
-      <autoincrement/>
-      <key/>
-    </field>
-    <field name="treeNodeTopicName" type="string" size="255">
       <default value=""/>
     </field>
   </table>

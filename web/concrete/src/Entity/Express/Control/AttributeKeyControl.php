@@ -34,12 +34,12 @@ class AttributeKeyControl extends Control
         $this->attribute_key = $attribute_key;
     }
 
-    public function getFormRenderer(Entity $entity = null)
+    public function getFormControlRenderer(Entity $entity = null)
     {
         return new AttributeKeyControlFormRenderer($entity);
     }
 
-    public function getViewRenderer(Entry $entry)
+    public function getViewControlRenderer(Entry $entry)
     {
         return new AttributeKeyControlViewRenderer($entry);
     }
@@ -52,5 +52,12 @@ class AttributeKeyControl extends Control
     public function getType()
     {
         return 'attribute_key';
+    }
+
+    public function jsonSerialize()
+    {
+        $data = parent::jsonSerialize();
+        $data['attributeType'] = $this->getAttributeKey()->getAttributeTypeHandle();
+        return $data;
     }
 }

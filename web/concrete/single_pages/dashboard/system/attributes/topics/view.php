@@ -38,7 +38,7 @@ $jh = Core::make('helper/json');
 
 <?php if (is_object($tree)) {
     ?>
-	<div class="topic-tree" data-topic-tree="<?=$tree->getTreeID()?>">
+	<div data-tree="<?=$tree->getTreeID()?>">
 	</div>
 
 	<script type="text/javascript">
@@ -47,7 +47,7 @@ $jh = Core::make('helper/json');
 			window.location.href = '<?=$view->url('/dashboard/system/attributes/topics', 'view')?>' + $(this).val();
 		});
 		
-		$('[data-topic-tree]').ccmtopicstree({
+		$('[data-tree]').concreteTree({
 			'treeID': '<?=$tree->getTreeID()?>'
 		});
 

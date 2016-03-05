@@ -72,6 +72,11 @@ class Key implements AttributeKeyInterface, ExportableInterface
     protected $attribute_values;
 
 
+    public function setAttributeKeyID($akID)
+    {
+        $this->akID = $akID;
+    }
+
     /**
      * @return mixed
      */

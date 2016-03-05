@@ -2,18 +2,39 @@
 namespace Concrete\Core\Tree\Node\Type;
 
 use Concrete\Core\Tree\Node\Node as TreeNode;
+use Concrete\Core\Tree\Node\Type\Formatter\CategoryListFormatter;
+use Concrete\Core\Tree\Node\Type\Menu\CategoryMenu;
 use Loader;
 
-abstract class Category extends TreeNode
+class Category extends TreeNode
 {
-    public function getTreeNodeName()
-    {
-        return $this->treeNodeCategoryName;
-    }
-
     public function getTreeNodeTranslationContext()
     {
         return 'TreeNodeCategoryName';
+    }
+
+    public function getPermissionResponseClassName()
+    {
+        return '\\Concrete\\Core\\Permission\\Response\\CategoryTreeNodeResponse';
+    }
+
+    public function getPermissionAssignmentClassName()
+    {
+        return '\\Concrete\\Core\\Permission\\Assignment\\CategoryTreeNodeAssignment';
+    }
+    public function getPermissionObjectKeyCategoryHandle()
+    {
+        return 'category_tree_node';
+    }
+
+    public function getTreeNodeMenu()
+    {
+        return new CategoryMenu($this);
+    }
+
+    public function getTreeNodeTypeName()
+    {
+        return 'Category';
     }
 
     public function getTreeNodeDisplayName($format = 'html')
@@ -34,20 +55,17 @@ abstract class Category extends TreeNode
 
     public function loadDetails()
     {
-        $db = Loader::db();
-        $r = $db->GetRow('select * from TreeCategoryNodes where treeNodeID = ?', array($this->treeNodeID));
-        $this->setPropertiesFromArray($r);
+        return false;
     }
 
     public function deleteDetails()
     {
-        $db = Loader::db();
-        $db->Execute('delete from TreeCategoryNodes where treeNodeID = ?', array($this->treeNodeID));
+        return false;
     }
 
     public function duplicate($parent = false)
     {
-        $node = $this::add($this->treeNodeCategoryName, $parent);
+        $node = $this::add($this->treeNodeName, $parent);
         $this->duplicateChildren($node);
 
         return $node;
@@ -58,22 +76,29 @@ abstract class Category extends TreeNode
         $obj = parent::getTreeNodeJSON();
         if (is_object($obj)) {
             $obj->isFolder = true;
+            $p = new \Permissions($this);
+            $data = $this->getTreeObject()->getRequestData();
+            if (is_array($data) && $data['allowFolderSelection']) {
+                $obj->hideCheckbox = false;
+            } else {
+                $obj->hideCheckbox = true;
+            }
+            $obj->canAddTopicTreeNode = $p->canAddTopicTreeNode();
+            $obj->canAddCategoryTreeNode = $p->canAddCategoryTreeNode();
 
             return $obj;
         }
     }
 
-    public function setTreeNodeCategoryName($treeNodeCategoryName)
+    public function getListFormatter()
     {
-        $db = Loader::db();
-        $db->Replace('TreeCategoryNodes', array('treeNodeID' => $this->getTreeNodeID(), 'treeNodeCategoryName' => $treeNodeCategoryName), array('treeNodeID'), true);
-        $this->treeNodeCategoryName = $treeNodeCategoryName;
+        return new CategoryListFormatter();
     }
 
     public static function add($treeNodeCategoryName = '', $parent = false)
     {
         $node = parent::add($parent);
-        $node->setTreeNodeCategoryName($treeNodeCategoryName);
+        $node->setTreeNodeName($treeNodeCategoryName);
 
         return $node;
     }

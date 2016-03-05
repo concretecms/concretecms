@@ -27,25 +27,25 @@ class Entries extends AbstractController
         $this->entryList = new EntryList($entity);
         $this->entity = $entity;
 
-        $defaultSortColumn = $this->entity->getResultColumnSet()->getDefaultSortColumn();
-        if ($this->request->query->has($this->entryList->getQuerySortDirectionParameter())) {
-            $direction = $this->request->query->get($this->entryList->getQuerySortDirectionParameter());
-        } else {
-            $direction = $defaultSortColumn->getColumnDefaultSortDirection();
-        }
-        if ($this->request->query->has($this->entryList->getQuerySortColumnParameter())) {
-            $value = $this->request->query->get($this->entryList->getQuerySortColumnParameter());
-            $column = $this->entity->getResultColumnSet();
-            $value = $column->getColumnByKey($value);
-            if (is_object($value)) {
-                $this->entryList->sanitizedSortBy($value->getColumnKey(), $direction);
-            }
-        } else {
-            $this->entryList->sanitizedSortBy($defaultSortColumn->getColumnKey(), $direction);
-        }
-
         $set = $this->entity->getResultColumnSet();
         if ($set) {
+            $defaultSortColumn = $set->getDefaultSortColumn();
+            if ($this->request->query->has($this->entryList->getQuerySortDirectionParameter())) {
+                $direction = $this->request->query->get($this->entryList->getQuerySortDirectionParameter());
+            } else {
+                $direction = $defaultSortColumn->getColumnDefaultSortDirection();
+            }
+            if ($this->request->query->has($this->entryList->getQuerySortColumnParameter())) {
+                $value = $this->request->query->get($this->entryList->getQuerySortColumnParameter());
+                $column = $this->entity->getResultColumnSet();
+                $value = $column->getColumnByKey($value);
+                if (is_object($value)) {
+                    $this->entryList->sanitizedSortBy($value->getColumnKey(), $direction);
+                }
+            } else {
+                $this->entryList->sanitizedSortBy($defaultSortColumn->getColumnKey(), $direction);
+            }
+
             $result = new Result($this->entity->getResultColumnSet(), $this->entryList,
                 \URL::to('/ccm/system/search/express/entries/submit', $this->entity->getID()));
             $this->result = $result;

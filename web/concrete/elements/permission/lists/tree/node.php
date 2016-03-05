@@ -126,7 +126,7 @@ var TopicsPermissions = {
 
 	refresh: function() {
 		jQuery.fn.dialog.showLoader();
-		$.get('<?=Loader::helper('concrete/urls')->getToolsURL('tree/node/permissions')?>?treeNodeID=<?=$node->getTreeNodeID()?>', function(r) { 
+		$.get('<?=URL::to('/ccm/system/dialogs/tree/node/permissions')?>?treeNodeID=<?=$node->getTreeNodeID()?>', function(r) {
 			jQuery.fn.dialog.replaceTop(r);
 			jQuery.fn.dialog.hideLoader();
 		});

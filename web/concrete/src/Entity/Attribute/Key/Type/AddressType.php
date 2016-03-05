@@ -45,11 +45,6 @@ class AddressType extends Type
         $this->defaultCountry = $defaultCountry;
     }
 
-    public function getAttributeTypeHandle()
-    {
-        return 'address';
-    }
-
     /**
      * @return mixed
      */
@@ -82,11 +77,4 @@ class AddressType extends Type
         $this->customCountries = $customCountries;
     }
 
-    public function createController()
-    {
-        $controller = \Core::make('\Concrete\Attribute\Address\Controller');
-        $controller->setAttributeType($this->getAttributeType());
-
-        return $controller;
-    }
 }

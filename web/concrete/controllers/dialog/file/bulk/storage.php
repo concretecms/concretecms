@@ -74,7 +74,7 @@ class Storage extends BackendInterfaceController
                                     $f->setFileStorageLocation($fsl);
                                 } catch (\Exception $e) {
                                     $json = new \Concrete\Core\Application\EditResponse();
-                                    $err = new \Concrete\Core\Error\Error();
+                                    $err = \Core::make('error');
                                     $err->add($e->getMessage());
                                     $json->setError($err);
                                     $json->outputJSON();
@@ -85,7 +85,7 @@ class Storage extends BackendInterfaceController
                 }
             } else {
                 $json = new \Concrete\Core\Application\EditResponse();
-                $err = new \Concrete\Core\Error\Error();
+                $err = \Core::make('error');
                 $err->add(t('Please select valid file storage location.'));
                 $json->setError($err);
                 $json->outputJSON();

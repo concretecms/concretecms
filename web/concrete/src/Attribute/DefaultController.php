@@ -65,6 +65,6 @@ class DefaultController extends AttributeTypeController
 
     public function validateForm($data)
     {
-        return $data['value'] != '';
+        return isset($data['value']) && $data['value'] != '';
     }
 }
