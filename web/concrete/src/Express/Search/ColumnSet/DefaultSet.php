@@ -18,8 +18,8 @@ class DefaultSet extends ColumnSet
     public function __construct(ExpressCategory $category)
     {
         parent::__construct($category);
-        $this->addColumn(new Column('e.date_created', t('Date Added'), array('\Concrete\Core\Express\Search\ColumnSet\DefaultSet', 'getDateAdded')));
-        $date = $this->getColumnByKey('e.date_created');
+        $this->addColumn(new Column('e.exEntryDateCreated', t('Date Added'), array('\Concrete\Core\Express\Search\ColumnSet\DefaultSet', 'getDateAdded')));
+        $date = $this->getColumnByKey('e.exEntryDateCreated');
         $this->setDefaultSortColumn($date, 'desc');
     }
 

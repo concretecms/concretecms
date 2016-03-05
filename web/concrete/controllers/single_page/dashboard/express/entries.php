@@ -1,15 +1,16 @@
 <?php
 namespace Concrete\Controller\SinglePage\Dashboard\Express;
 
+use Concrete\Controller\Element\Dashboard\Express\Entries\Header;
 use Concrete\Core\Entity\Express\Entity;
 use Concrete\Core\Entity\Express\Entry;
 use Concrete\Core\Express\EntryList;
-use Concrete\Core\Page\Controller\DashboardExpressEntriesPageController;
+use Concrete\Core\Page\Controller\DashboardExpressEntityPageController;
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Core\Search\Result\Result;
 use Concrete\Core\Tree\Node\Node;
 
-class Entries extends DashboardExpressEntriesPageController
+class Entries extends DashboardExpressEntityPageController
 {
 
     /**
@@ -17,22 +18,18 @@ class Entries extends DashboardExpressEntriesPageController
      */
     protected $entity;
 
-    protected function getResultsTreeNodeObject()
+    public function getEntity()
     {
-        return Node::getByID($this->entity->getEntityResultsNodeId());
+        return $this->entity;
     }
 
-    protected function getBackToListURL(Entry $entry)
+    protected function getBackToListURL(Entity $entity)
     {
         return \URL::to($this->getPageObject()
-            ->getCollectionPath(), 'view', $entry->getEntity()->getID(),
-            $entry->getEntity()->getEntityResultsNodeID());
+            ->getCollectionPath(), 'view', $entity->getID(),
+            $entity->getEntityResultsNodeID());
     }
 
-    protected function getCreateEntryURL()
-    {
-        return \URL::to('/dashboard/express/create', $this->entity->getId());
-    }
 
     public function view($entity = null, $folder = null)
     {
@@ -44,6 +41,8 @@ class Entries extends DashboardExpressEntriesPageController
             $this->entity = $entity;
             $this->set('entity', $entity);
             $this->renderList($folder);
+            $header = new Header($entity, $this->getPageObject());
+            $this->set('headerMenu', $header);
         } else {
             $this->set('entities', $r->findByIncludeInPublicList(true));
         }
