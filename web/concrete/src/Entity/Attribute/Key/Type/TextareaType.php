@@ -14,11 +14,6 @@ class TextareaType extends Type
         return new TextareaValue();
     }
 
-    public function getAttributeTypeHandle()
-    {
-        return 'textarea';
-    }
-
     /**
      * @Column(type="string")
      */
@@ -40,10 +35,4 @@ class TextareaType extends Type
         $this->mode = $mode;
     }
 
-    public function createController()
-    {
-        $controller = \Core::make('\Concrete\Attribute\Textarea\Controller');
-        $controller->setAttributeType($this->getAttributeType());
-        return $controller;
-    }
 }

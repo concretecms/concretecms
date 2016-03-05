@@ -57,18 +57,6 @@ class TopicsType extends Type
         return new TopicsValue();
     }
 
-    public function createController()
-    {
-        $controller = \Core::make('\Concrete\Attribute\Topics\Controller');
-        $controller->setAttributeType($this->getAttributeType());
-        return $controller;
-    }
-
-    public function getAttributeTypeHandle()
-    {
-        return 'topics';
-    }
-
     public function getTopicTreeObject()
     {
         return Tree::getByID($this->topicTreeID);

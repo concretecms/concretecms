@@ -16,11 +16,6 @@ class SelectType extends Type
         $this->list = new SelectValueOptionList();
     }
 
-    public function getAttributeTypeHandle()
-    {
-        return 'select';
-    }
-
     /**
      * @OneToOne(targetEntity="Concrete\Core\Entity\Attribute\Value\Value\SelectValueOptionList", cascade={"all"})
      * @JoinColumn(name="avSelectOptionListID", referencedColumnName="avSelectOptionListID")
@@ -111,11 +106,4 @@ class SelectType extends Type
         $this->displayOrder = $displayOrder;
     }
 
-    public function createController()
-    {
-        $controller = \Core::make('\Concrete\Attribute\Select\Controller');
-        $controller->setAttributeType($this->getAttributeType());
-
-        return $controller;
-    }
 }

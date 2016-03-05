@@ -17,6 +17,5 @@ class Item extends SearchResultItem
     protected function populateDetails($item)
     {
         $this->id = $item->getID();
-        $this->url = (string) \URL::to('/dashboard/express/entries', 'view_entry', $item->getEntity()->getID(), $this->id);
     }
 }

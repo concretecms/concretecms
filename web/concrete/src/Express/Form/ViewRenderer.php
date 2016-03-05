@@ -48,8 +48,8 @@ class ViewRenderer implements ViewRendererInterface
     {
         $html = $this->getFieldSetOpenTag($fieldSet);
         foreach ($fieldSet->getControls() as $control) {
-            $factory = new RendererFactory($control, $this->application, $this->entityManager);
-            $renderer = $factory->getViewRenderer($entry);
+            $factory = new RendererFactory($this, $control, $this->application, $this->entityManager);
+            $renderer = $factory->getViewControlRenderer($entry);
             if (is_object($renderer)) {
                 $html .= $renderer->render();
             }

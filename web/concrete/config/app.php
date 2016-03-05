@@ -360,6 +360,30 @@ return array(
             'action' => ".+"
         )),
 
+        /*
+         * Trees
+         */
+        "/ccm/system/tree/load" => array('\Concrete\Controller\Backend\Tree::load'),
+        "/ccm/system/tree/node/load" => array('\Concrete\Controller\Backend\Tree\Node::load'),
+        "/ccm/system/tree/node/load_starting" => array('\Concrete\Controller\Backend\Tree\Node::load_starting'),
+        "/ccm/system/tree/node/drag_request" => array('\Concrete\Controller\Backend\Tree\Node\DragRequest::execute'),
+        "/ccm/system/tree/node/duplicate" => array('\Concrete\Controller\Backend\Tree\Node\Duplicate::execute'),
+
+        "/ccm/system/dialogs/tree/node/add/category" => array('\Concrete\Controller\Dialog\Tree\Node\Category\Add::view'),
+        "/ccm/system/dialogs/tree/node/add/category/add_category_node" => array('\Concrete\Controller\Dialog\Tree\Node\Category\Add::add_category_node'),
+
+        "/ccm/system/dialogs/tree/node/add/topic" => array('\Concrete\Controller\Dialog\Tree\Node\Topic\Add::view'),
+        "/ccm/system/dialogs/tree/node/add/topic/add_topic_node" => array('\Concrete\Controller\Dialog\Tree\Node\Topic\Add::add_topic_node'),
+
+        "/ccm/system/dialogs/tree/node/edit/topic" => array('\Concrete\Controller\Dialog\Tree\Node\Topic\Edit::view'),
+        "/ccm/system/dialogs/tree/node/edit/topic/update_topic_node" => array('\Concrete\Controller\Dialog\Tree\Node\Topic\Edit::update_topic_node'),
+
+        "/ccm/system/dialogs/tree/node/edit/category" => array('\Concrete\Controller\Dialog\Tree\Node\Category\Edit::view'),
+        "/ccm/system/dialogs/tree/node/edit/category/update_category_node" => array('\Concrete\Controller\Dialog\Tree\Node\Category\Edit::update_category_node'),
+
+        "/ccm/system/dialogs/tree/node/delete" => array('\Concrete\Controller\Dialog\Tree\Node\Delete::view'),
+        "/ccm/system/dialogs/tree/node/delete/remove_tree_node" => array('\Concrete\Controller\Dialog\Tree\Node\Delete::remove_tree_node'),
+        "/ccm/system/dialogs/tree/node/permissions" => array('\Concrete\Controller\Dialog\Tree\Node\Permissions::view'),
 
         /*
          * Marketplace
@@ -750,9 +774,8 @@ return array(
             array('javascript', 'js/sitemap.js', array('minify' => false)),
             array('css', 'css/sitemap.css', array('minify' => false)),
         ),
-        'core/topics' => array(
-            array('javascript', 'js/topics.js', array('minify' => false)),
-            array('css', 'css/topics.css', array('minify' => false)),
+        'core/tree' => array(
+            array('javascript', 'js/tree.js', array('minify' => false)),
         ),
         'core/groups' => array(
             array('javascript', 'js/groups.js', array('minify' => false)),
@@ -1012,13 +1035,25 @@ return array(
         'core/topics' => array(
             array(
                 array('javascript', 'core/events'),
+                array('javascript', 'underscore'),
                 array('javascript', 'jquery/ui'),
                 array('javascript-localized', 'jquery/ui'),
                 array('javascript', 'dynatree'),
                 array('javascript-localized', 'dynatree'),
-                array('javascript', 'core/topics'),
-                array('css', 'dynatree'),
-                array('css', 'core/topics'),
+                array('javascript', 'core/tree'),
+                array('css', 'dynatree')
+            ),
+        ),
+        'core/tree' => array(
+            array(
+                array('javascript', 'core/events'),
+                array('javascript', 'underscore'),
+                array('javascript', 'jquery/ui'),
+                array('javascript-localized', 'jquery/ui'),
+                array('javascript', 'dynatree'),
+                array('javascript-localized', 'dynatree'),
+                array('javascript', 'core/tree'),
+                array('css', 'dynatree')
             ),
         ),
         'core/groups' => array(
@@ -1029,7 +1064,7 @@ return array(
                 array('javascript-localized', 'jquery/ui'),
                 array('javascript', 'dynatree'),
                 array('javascript-localized', 'dynatree'),
-                array('javascript', 'core/groups'),
+                array('javascript', 'core/tree'),
                 array('css', 'dynatree'),
             ),
         ),

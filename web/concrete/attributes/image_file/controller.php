@@ -4,6 +4,10 @@ namespace Concrete\Attribute\ImageFile;
 use Concrete\Core\Attribute\FontAwesomeIconFormatter;
 use Concrete\Core\Entity\Attribute\Key\Type\ImageFileType;
 use Concrete\Core\Entity\Attribute\Value\Value\ImageFileValue;
+use Concrete\Core\Error\ErrorBag\Error\Error;
+use Concrete\Core\Error\ErrorBag\Error\FieldNotPresentError;
+use Concrete\Core\Error\ErrorBag\Field\AttributeField;
+use Concrete\Core\File\Importer;
 use Core;
 use File;
 use Concrete\Core\Backup\ContentExporter;
@@ -16,6 +20,46 @@ class Controller extends AttributeTypeController
     public function getIconFormatter()
     {
         return new FontAwesomeIconFormatter('download');
+    }
+
+    public function saveKey($data)
+    {
+        /**
+         * @var $type ImageFileType
+         */
+        $type = $this->getAttributeKeyType();
+        $data += array(
+            'mode' => null,
+        );
+        $mode = $data['mode'];
+        if ($mode == ImageFileType::TYPE_HTML_INPUT) {
+            $type->setModeToHtmlInput();
+        } else {
+            $type->setModeToFileManager();
+        }
+        return $type;
+    }
+
+    public function type_form()
+    {
+        $this->set('form', \Core::make('helper/form'));
+        $this->set('mode', $this->getAttributeKeyType()->getMode());
+    }
+
+
+    public function exportKey($akey)
+    {
+        /**
+         * @var $type ImageFileType
+         */
+        $type = $this->getAttributeKeyType();
+        if ($type->isModeHtmlInput()) {
+            $mode = 'html_input';
+        } else {
+            $mode = 'file_manager';
+        }
+        $akey->addChild('type')->addAttribute('mode', $mode);
+        return $akey;
     }
 
     public function getDisplayValue()
@@ -68,11 +112,25 @@ class Controller extends AttributeTypeController
         if (is_object($this->attributeValue)) {
             $bf = $this->getValue();
         }
-        $al = Core::make('helper/concrete/asset_library');
-        $form = '<div class="ccm-attribute ccm-attribute-image-file">';
-        $form .= $al->file('ccm-file-akID-' . $this->attributeKey->getAttributeKeyID(), $this->field('value'), t('Choose File'), $bf);
-        $form .= '</div>';
-        echo $form;
+        $this->set('mode', $this->getAttributeKeyType()->getMode());
+        $this->set('file', $bf);
+
+    }
+
+    public function importKey(\SimpleXMLElement $akey)
+    {
+        $type = $this->getAttributeKeyType();
+        /**
+         * @var $type ImageFileType
+         */
+        if (isset($akey->type)) {
+            $mode = (string) $akey->type['mode'];
+            if ($mode == 'html_input') {
+                $type->setModeToHtmlInput();
+            }
+        }
+
+        return $type;
     }
 
     public function importValue(\SimpleXMLElement $akv)
@@ -94,7 +152,7 @@ class Controller extends AttributeTypeController
     // run when we call setAttribute(), instead of saving through the UI
     public function saveValue($obj)
     {
-        if (!is_object($obj)) {
+        if ($obj && !is_object($obj)) {
             $obj = File::getByID($obj);
         }
 
@@ -117,23 +175,63 @@ class Controller extends AttributeTypeController
 
     public function validateForm($data)
     {
-        if (Core::make('helper/validation/numbers')->integer($data['value'])) {
-            $f = File::getByID($data['value']);
-            if (is_object($f) && !$f->isError()) {
-                return true;
+        if ($this->getAttributeKeyType()->isModeFileManager()) {
+            if (Core::make('helper/validation/numbers')->integer($data['value'])) {
+                $f = File::getByID($data['value']);
+                if (is_object($f) && !$f->isError()) {
+                    return true;
+                } else {
+                    return new Error(t('You must specify a valid file for %s', $this->getAttributeKey()->getAttributeKeyDisplayName()),
+                        new AttributeField($this->getAttributeKey())
+                    );
+                }
+            } else {
+                return new FieldNotPresentError(new AttributeField($this->getAttributeKey()));
             }
         }
-        $e = Core::make('helper/validation/error');
-        $e->add(t('You must specify a valid file for %s', $this->attributeKey->getAttributeKeyDisplayName()));
+        if ($this->getAttributeKeyType()->isModeHtmlInput()) {
+            $tmp_name = $_FILES['akID']['tmp_name'][$this->attributeKey->getAttributeKeyID()]['value'];
+            $name = $_FILES['akID']['name'][$this->attributeKey->getAttributeKeyID()]['value'];
+            if (!empty($tmp_name) && is_uploaded_file($tmp_name)) {
+                $fh = \Core::make('helper/validation/file');
+                if (!$fh->file($tmp_name)) {
+                    return new Error(t('You have not uploaded a valid file.'),
+                        new AttributeField($this->getAttributeKey())
+                    );
+                }
 
-        return $e;
+                if (!$fh->extension($name)) {
+                    return new Error(t('Invalid file extension.'),
+                        new AttributeField($this->getAttributeKey())
+                    );
+                }
+
+                return true;
+            } else {
+                return new FieldNotPresentError(new AttributeField($this->getAttributeKey()));
+            }
+        }
     }
 
     public function saveForm($data)
     {
-        if ($data['value'] > 0) {
-            $f = File::getByID($data['value']);
-            return $this->saveValue($f);
+        if ($this->getAttributeKeyType()->isModeFileManager()) {
+            if ($data['value'] > 0) {
+                $f = File::getByID($data['value']);
+                return $this->saveValue($f);
+            }
+        }
+        if ($this->getAttributeKeyType()->isModeHtmlInput()) {
+            // import the file.
+            $tmp_name = $_FILES['akID']['tmp_name'][$this->attributeKey->getAttributeKeyID()]['value'];
+            $name = $_FILES['akID']['name'][$this->attributeKey->getAttributeKeyID()]['value'];
+            if (!empty($tmp_name) && is_uploaded_file($tmp_name)) {
+                $importer = new Importer();
+                $f = $importer->import($tmp_name, $name);
+                if (is_object($f)) {
+                    return $this->saveValue($f->getFile());
+                }
+            }
         }
     }
 

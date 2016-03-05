@@ -42,7 +42,7 @@ class Controller extends BlockController
 
     public function getBlockTypeName()
     {
-        return t("Form");
+        return t("Legacy Form");
     }
 
     public function getJavaScriptStrings()

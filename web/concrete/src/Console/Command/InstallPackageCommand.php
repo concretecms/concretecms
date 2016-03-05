@@ -1,7 +1,6 @@
 <?php
 namespace Concrete\Core\Console\Command;
 
-use Concrete\Core\Error\Error;
 use Concrete\Core\Package\ContentSwapper;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -79,9 +78,6 @@ EOT
             $output->write('Checking preconditions... ');
             $test = $pkg->testForInstall();
             if (is_object($test)) {
-                /**
-                 * @var $test Error
-                 */
                 throw new Exception(implode("\n", $test->getList()));
             }
             $output->writeln('<info>good.</info>');

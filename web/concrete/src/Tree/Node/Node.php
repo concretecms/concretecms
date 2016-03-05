@@ -15,11 +15,6 @@ abstract class Node extends Object implements \Concrete\Core\Permission\ObjectIn
 {
     abstract public function loadDetails();
 
-    /** Returns the standard name for this tree node
-     * @return string
-     */
-    abstract public function getTreeNodeName();
-
     /** Returns the display name for this tree node (localized and escaped accordingly to $format)
      * @param  string $format = 'html' Escape the result in html format (if $format is 'html'). If $format is 'text' or any other value, the display name won't be escaped.
      *
@@ -27,11 +22,29 @@ abstract class Node extends Object implements \Concrete\Core\Permission\ObjectIn
      */
     abstract public function getTreeNodeDisplayName($format = 'html');
     abstract public function deleteDetails();
+    abstract public function getTreeNodeTypeName();
 
     protected $childNodes = array();
     protected $childNodesLoaded = false;
     protected $treeNodeIsSelected = false;
     protected $tree;
+
+    public function getTreeNodeTypeDisplayName($format = 'html')
+    {
+        $name = $this->getTreeNodeTypeName();
+        switch ($format) {
+            case 'html':
+                return h($name);
+            case 'text':
+            default:
+                return $name;
+        }
+    }
+
+    public function getListFormatter()
+    {
+        return false;
+    }
 
     public function getPermissionObjectIdentifier()
     {
@@ -65,6 +78,18 @@ abstract class Node extends Object implements \Concrete\Core\Permission\ObjectIn
         return $this->tree;
     }
 
+    public function setTreeNodeName($treeNodeName)
+    {
+        $db = Loader::db();
+        $db->Execute('update TreeNodes set treeNodeName = ? where treeNodeID = ?', array($treeNodeName, $this->treeNodeID));
+        $this->treeNodeName = $treeNodeName;
+    }
+
+    public function getTreeNodeName()
+    {
+        return $this->treeNodeName;
+    }
+
     public function getTreeID()
     {
         return $this->treeID;
@@ -75,8 +100,12 @@ abstract class Node extends Object implements \Concrete\Core\Permission\ObjectIn
     }
     public function getTreeNodeTypeObject()
     {
-        return TreeNodeType::getByID($this->treeNodeTypeID);
+        if (!isset($this->treeNodeType)) {
+            $this->treeNodeType = TreeNodeType::getByID($this->treeNodeTypeID);
+        }
+        return $this->treeNodeType;
     }
+
     public function getTreeNodeTypeHandle()
     {
         $type = $this->getTreeNodeTypeObject();
@@ -150,12 +179,26 @@ abstract class Node extends Object implements \Concrete\Core\Permission\ObjectIn
         }
     }
 
+    public function getTreeNodeMenu()
+    {
+        return null;
+    }
+
     public function getTreeNodeJSON()
     {
         $p = new Permissions($this);
+        $data = $this->getTreeObject()->getRequestData();
+        if (isset($data['displayOnly'])) {
+            // filter by node type handle
+            if ($this->getTreeNodeTypeHandle() != $data['displayOnly']) {
+                return false;
+            }
+        }
+
         if ($p->canViewTreeNode()) {
             $node = new stdClass();
             $node->title = $this->getTreeNodeDisplayName();
+            $node->treeID = $this->getTreeID();
             $node->key = $this->getTreeNodeID();
             $node->treeNodeID = $this->getTreeNodeID();
             $node->isFolder = false;
@@ -167,6 +210,7 @@ abstract class Node extends Object implements \Concrete\Core\Permission\ObjectIn
             $node->treeNodeParentID = $this->getTreeNodeParentID();
             $node->treeNodeTypeID = $this->getTreeNodeTypeID();
             $node->treeNodeTypeHandle = $this->getTreeNodeTypeHandle();
+            $node->treeNodeMenu = $this->getTreeNodeMenu();
 
             foreach ($this->getChildNodes() as $childnode) {
                 $childnodejson = $childnode->getTreeNodeJSON();
@@ -475,4 +519,19 @@ abstract class Node extends Object implements \Concrete\Core\Permission\ObjectIn
             $childnode->exportTranslations($translations);
         }
     }
+
+    public static function getNodeByName($name)
+    {
+        $db = Loader::db();
+        $treeNodeTypeHandle = Loader::helper('text')->uncamelcase(strrchr(get_called_class(), '\\'));
+        $type = TreeNodeType::getByHandle($treeNodeTypeHandle);
+        $treeNodeID = $db->GetOne(
+            'select treeNodeID from TreeNodes where treeNodeName = ? and treeNodeTypeID = ?',
+            array($name, $type->getTreeNodeTypeID())
+        );
+        if ($treeNodeID) {
+            return static::getByID($treeNodeID);
+        }
+    }
+
 }

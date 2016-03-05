@@ -3,7 +3,7 @@ namespace Concrete\Controller;
 
 use Concrete\Core\Cache\Cache;
 use Concrete\Core\Config\Renderer;
-use Concrete\Core\Error\Error;
+use Concrete\Core\Error\ErrorBag\ErrorBag;
 use Concrete\Core\Localization\Localization as Localization;
 use Controller;
 use Config;
@@ -96,7 +96,7 @@ class Install extends Controller
         }
     }
 
-    protected function validateDatabase(Error $e)
+    protected function validateDatabase(ErrorBag $e)
     {
         if (!extension_loaded('pdo')) {
             $e->add($this->getDBErrorMsg());
@@ -431,7 +431,7 @@ class Install extends Controller
 
     public function getMinimumPhpVersion()
     {
-        return '5.5.9';
+        return '5.3.3';
     }
 
     /**

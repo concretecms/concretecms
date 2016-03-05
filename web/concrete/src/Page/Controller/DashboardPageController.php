@@ -1,13 +1,11 @@
 <?php
 namespace Concrete\Core\Page\Controller;
 
-use Concrete\Core\Error\Error;
 use Concrete\Core\Validation\CSRF\Token;
 use Loader;
 
 class DashboardPageController extends PageController
 {
-    /** @var Error */
     protected $error;
 
     /** @var Token */

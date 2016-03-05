@@ -37,17 +37,4 @@ class ExpressType extends Type
         return new ExpressValue();
     }
 
-    public function getAttributeTypeHandle()
-    {
-        return 'express';
-    }
-
-
-    public function createController()
-    {
-        $controller = \Core::make('\Concrete\Attribute\Express\Controller');
-        $controller->setAttributeType($this->getAttributeType());
-
-        return $controller;
-    }
 }

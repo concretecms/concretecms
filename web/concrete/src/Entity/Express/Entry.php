@@ -53,12 +53,7 @@ class Entry implements \JsonSerializable
     /**
      * @Column(type="datetime")
      */
-    protected $date_created;
-
-    /**
-     * @Column(type="datetime")
-     */
-    protected $date_last_updated;
+    protected $exEntryDateCreated;
 
     /**
      * @ManyToOne(targetEntity="Entity", inversedBy="entries")
@@ -134,8 +129,7 @@ class Entry implements \JsonSerializable
     {
         $this->attributes = new ArrayCollection();
         $this->associations = new ArrayCollection();
-        $this->date_created = new \DateTime();
-        $this->date_last_updated = new \DateTime();
+        $this->exEntryDateCreated = new \DateTime();
     }
 
     public function getLabel()
@@ -154,4 +148,22 @@ class Entry implements \JsonSerializable
         );
         return $data;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getDateCreated()
+    {
+        return $this->exEntryDateCreated;
+    }
+
+    /**
+     * @param mixed $exEntryDateCreated
+     */
+    public function setDateCreated($exEntryDateCreated)
+    {
+        $this->exEntryDateCreated = $exEntryDateCreated;
+    }
+
+
 }

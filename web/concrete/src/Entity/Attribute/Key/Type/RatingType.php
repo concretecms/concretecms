@@ -14,16 +14,4 @@ class RatingType extends Type
         return new RatingValue();
     }
 
-    public function getAttributeTypeHandle()
-    {
-        return 'rating';
-    }
-
-    public function createController()
-    {
-        $controller = \Core::make('\Concrete\Attribute\Rating\Controller');
-        $controller->setAttributeType($this->getAttributeType());
-
-        return $controller;
-    }
 }

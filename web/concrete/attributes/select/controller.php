@@ -149,7 +149,7 @@ class Controller extends AttributeTypeController
 
     public function importKey(\SimpleXMLElement $akey)
     {
-        $type = new SelectType();
+        $type = $this->getAttributeKeyType();
         if (isset($akey->type)) {
             $akSelectAllowMultipleValues = $akey->type['allow-multiple-values'];
             $akSelectOptionDisplayOrder = $akey->type['display-order'];

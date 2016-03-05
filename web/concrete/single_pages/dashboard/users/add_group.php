@@ -41,7 +41,7 @@ $registeredGroupNode = GroupTreeNode::getTreeNodeByGroupID(REGISTERED_GROUP_ID);
 
     <script type="text/javascript">
     $(function() {
-       $('[data-groups-tree=<?=$tree->getTreeID()?>]').concreteGroupsTree({
+       $('[data-groups-tree=<?=$tree->getTreeID()?>]').concreteTree({
           'treeID': '<?=$tree->getTreeID()?>',
           'chooseNodeInForm': 'single',
 		  'enableDragAndDrop': false,
@@ -58,7 +58,7 @@ $registeredGroupNode = GroupTreeNode::getTreeNodeByGroupID(REGISTERED_GROUP_ID);
     ?>
 	      	<?php 
 } ?>
-	      'removeNodesByID': ['<?=$guestGroupNode->getTreeNodeID()?>','<?=$registeredGroupNode->getTreeNodeID()?>'],
+	      'removeNodesByKey': ['<?=$guestGroupNode->getTreeNodeID()?>','<?=$registeredGroupNode->getTreeNodeID()?>'],
 		  'onSelect': function(select, node) {
              if (select) {
                 $('input[name=gParentNodeID]').val(node.data.key);

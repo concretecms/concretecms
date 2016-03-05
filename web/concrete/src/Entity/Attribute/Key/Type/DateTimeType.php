@@ -14,11 +14,6 @@ class DateTimeType extends Type
         return new DateTimeValue();
     }
 
-    public function getAttributeTypeHandle()
-    {
-        return 'date_time';
-    }
-
     /**
      * @Column(type="string")
      */
@@ -40,11 +35,4 @@ class DateTimeType extends Type
         $this->mode = $mode;
     }
 
-    public function createController()
-    {
-        $controller = \Core::make('\Concrete\Attribute\DateTime\Controller');
-        $controller->setAttributeType($this->getAttributeType());
-
-        return $controller;
-    }
 }

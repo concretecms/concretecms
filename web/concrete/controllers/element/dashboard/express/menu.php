@@ -7,10 +7,16 @@ use Concrete\Core\Entity\Express\Entity;
 class Menu extends ElementController
 {
     protected $currentEntity;
+    protected $entityAction = 'admin';
 
     public function __construct(Entity $entity)
     {
         $this->currentEntity = $entity;
+    }
+
+    public function enableViewEntityAction()
+    {
+        $this->entityAction = 'view';
     }
 
     public function getElement()
@@ -24,5 +30,6 @@ class Menu extends ElementController
         $entities = $r->findAll(array(), array('name' => 'asc'));
         $this->set('types', $entities);
         $this->set('currentType', $this->currentEntity);
+        $this->set('entityAction', $this->entityAction);
     }
 }

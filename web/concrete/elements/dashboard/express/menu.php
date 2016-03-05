@@ -13,15 +13,19 @@ defined('C5_EXECUTE') or die("Access Denied.");
 <ul class="dropdown-menu">
     <li class="dropdown-header"><?=t('Types')?></li>
     <?php foreach ($types as $type) {
+        if ($entityAction == 'view') {
+            $action = URL::to('/dashboard/express/entries', $type->getID());
+        } else {
+            $action = URL::to('/dashboard/system/express/entities', 'view_entity', $type->getID());
+        }
     ?>
-        <li><a href="<?=URL::to('/dashboard/express/entries', $type->getID())?>">
-                <?=$type->getName()?></a></li>
+        <li><a href="<?=$action?>"><?=$type->getName()?></a></li>
     <?php
 
 }
     ?>
     <li class="divider"></li>
-    <li><a href="<?=URL::to('/dashboard/express/entities', 'add')?>"><?=t('Add Data Object')?></a></li>
+    <li><a href="<?=URL::to('/dashboard/system/express/entities', 'add')?>"><?=t('Add Data Object')?></a></li>
 </ul>
 
 </div>

@@ -9,7 +9,6 @@ use Concrete\Core\Page\Stack\Stack;
 /* @var Concrete\Core\Application\Service\UserInterface $interface */
 /* @var Concrete\Core\Application\Service\Dashboard $dashboard */
 /* @var Concrete\Core\Validation\CSRF\Token $token */
-/* @var Concrete\Core\Error\Error $error */
 /* @var Concrete\Core\Form\Service\Form $form */
 /* @var Concrete\Core\Page\View\PageView $view */
 /* @var Concrete\Controller\SinglePage\Dashboard\Blocks\Stacks $controller */
@@ -305,7 +304,7 @@ $(function() {
         ?>
         <div class="ccm-dashboard-content-full">
             <div class="table-responsive">
-                <table class="ccm-search-results-table">
+                <table class="ccm-search-results-table ccm-search-results-table-icon">
                     <thead>
                         <tr>
                             <th></th>
@@ -538,44 +537,6 @@ $(function() {
     });
 });
     </script>
-    <?php
-}
-
-if (isset($breadcrumb) && (!empty($breadcrumb))) {
-    ?>
-    <div class="ccm-search-results-breadcrumb">
-        <ol class="breadcrumb">
-            <?php
-            foreach ($breadcrumb as $value) {
-                ?><li class="<?=$value['active'] ? 'ccm-undroppable-search-item active' : 'ccm-droppable-search-item'?>" data-collection-id="<?=$value['id']?>"><?php
-                if (isset($value['children'])) {
-                    ?><span class="dropdown">
-                        <button type="button" class="btn btn-default btn-xs" data-toggle="dropdown">
-                            <?=$value['name']?>
-                            <span class="caret"></span>
-                        </button>
-                        <ul class="dropdown-menu" role="menu">
-                            <?php
-                            foreach ($value['children'] as $child) {
-                                ?><li><a href="<?=h($child['url'])?>"><?=$child['name']?></a></li><?php
-                            }
-                            ?>
-                        </ul>
-                    </span><?php
-                } else {
-                    if (!$value['active']) {
-                        ?><a href="<?=h($value['url'])?>"><?php
-                    }
-                    echo $value['name'];
-                    if (!$value['active']) {
-                        ?></a><?php
-                    }
-                }
-                ?></li><?php
-            }
-            ?>
-        </ol>
-    </div>
     <?php
 }
 
