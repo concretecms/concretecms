@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Page\Controller;
 
+use Concrete\Core\Entity\Express\Entity;
 use Concrete\Core\Entity\Express\Entry;
 use Concrete\Core\Tree\Node\Node;
 use Concrete\Core\Tree\Node\Type\Category;
@@ -9,15 +10,10 @@ use Concrete\Core\Tree\Type\ExpressEntryResults;
 abstract class DashboardExpressEntriesPageController extends DashboardPageController
 {
 
-    protected function getCreateEntryURL()
-    {
-        return false;
-    }
-
-    protected function getBackToListURL(Entry $entry)
+    protected function getBackToListURL(Entity $entity)
     {
         return \URL::to($this->getPageObject()
-            ->getCollectionPath(), 'view', $entry->getEntity()->getEntityResultsNodeID());
+            ->getCollectionPath(), 'view', $entity->getEntityResultsNodeID());
     }
 
     protected function getResultsTreeNodeObject()
@@ -26,7 +22,7 @@ abstract class DashboardExpressEntriesPageController extends DashboardPageContro
         return $tree->getRootTreeNodeObject();
     }
 
-    public function renderList($treeNodeParentID = null)
+    protected function renderList($treeNodeParentID = null)
     {
         $nodes = null;
         $parent = null;
@@ -54,7 +50,6 @@ abstract class DashboardExpressEntriesPageController extends DashboardPageContro
             $this->set('list', $search->getListObject());
             $this->set('searchController', $search);
             $this->set('entity', $entity);
-            $this->set('createURL', $this->getCreateEntryURL());
             $this->render('/dashboard/express/entries/entries', false);
         } else {
             $parent->populateDirectChildrenOnly();
@@ -103,7 +98,8 @@ abstract class DashboardExpressEntriesPageController extends DashboardPageContro
             $this->error->add($this->token->getErrorMessage());
         }
         if (!$this->error->has()) {
-            $url = $this->getBackToListURL($entry);
+            $entity = $entry->getEntity();
+            $url = $this->getBackToListURL($entity);
             $this->entityManager->remove($entry);
             $this->entityManager->flush();
             $this->flash('success', t('Entry deleted successfully.'));
@@ -121,7 +117,7 @@ abstract class DashboardExpressEntriesPageController extends DashboardPageContro
         $this->set('entity', $entry->getEntity());
         $this->set('expressForm', $entry->getEntity()->getForms()[0]);
         $this->set('renderer', $renderer);
-        $this->set('backURL', $this->getBackToListURL($entry));
+        $this->set('backURL', $this->getBackToListURL($entry->getEntity()));
         $this->render('/dashboard/express/entries/view_entry', false);
     }
 

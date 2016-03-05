@@ -171,17 +171,6 @@
 
         </page>
 
-        <page name="New Entry" path="/dashboard/express/create" filename="/dashboard/express/create.php" pagetype=""
-              description="" package="">
-
-            <attributes>
-                <attributekey handle="exclude_nav">
-                    <value><![CDATA[1]]></value>
-                </attributekey>
-            </attributes>
-
-        </page>
-
         <page name="Reports" path="/dashboard/reports" filename="/dashboard/reports.php" pagetype=""
               description="Get data from forms and logs." package="">
             <attributes>
