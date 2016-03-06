@@ -402,7 +402,7 @@ return array(
          * RSS Feeds
          */
         "/rss/{identifier}"                                                             => array(
-            '\Concrete\Controller\Feed::get',
+            '\Concrete\Controller\Feed::output',
             'rss',
             array('identifier' => '[A-Za-z0-9_/.]+')),
 
