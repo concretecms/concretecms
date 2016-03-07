@@ -72,7 +72,9 @@ class Version extends Object implements \Concrete\Core\Permission\ObjectInterfac
              "where cID = ?";
 
         if ($cvID == 'ACTIVE') {
-            $q .= ' and cvIsApproved = 1';
+            $q .= ' and cvIsApproved = 1 and cvPublishDate is NULL';
+        } elseif ($cvID == 'SCHEDULED') {
+                $q .= ' and cvIsApproved = 1 and cvPublishDate is not NULL';
         } elseif ($cvID == 'RECENT') {
             $q .= ' order by cvID desc';
         } else {
@@ -358,7 +360,7 @@ class Version extends Object implements \Concrete\Core\Permission\ObjectInterfac
         return $nv;
     }
 
-    public function approve($doReindexImmediately = true)
+    public function approve($doReindexImmediately = true, $scheduleDatetime = null)
     {
         $db = Loader::db();
         $u = new User();
@@ -367,6 +369,7 @@ class Version extends Object implements \Concrete\Core\Permission\ObjectInterfac
         $cID = $this->cID;
         $c = Page::getByID($cID, $this->cvID);
 
+        // Current active
         $ov = Page::getByID($cID, 'ACTIVE');
 
         $oldHandle = $ov->getCollectionHandle();
@@ -379,11 +382,21 @@ class Version extends Object implements \Concrete\Core\Permission\ObjectInterfac
             $cID,
         ));
 
-        // first we remove approval for the other version of this collection
-        $v = array(
-            $cID,
-        );
-        $q = "update CollectionVersions set cvIsApproved = 0 where cID = ?";
+        // Remove all publish dates before setting the new ones, if any
+        $this->clearPublishDates();
+
+        if ($scheduleDatetime) {
+            // remove approval for all versions except the current one because a scheduled version is being processed
+            $oldVersion = $ov->getVersionObject();
+            $v = array($cID, $oldVersion->cvID);
+            $q = "update CollectionVersions set cvIsApproved = 0 where cID = ? and cvID != ?";
+            $this->setPublishDate($scheduleDatetime);
+        } else {
+            // remove approval for the other version of this collection
+            $v = array($cID);
+            $q = "update CollectionVersions set cvIsApproved = 0 where cID = ?";
+        }
+
         $r = $db->query($q, $v);
         $ov->refreshCache();
 
@@ -582,5 +595,13 @@ class Version extends Object implements \Concrete\Core\Permission\ObjectInterfac
         $q = "delete from CollectionVersions where cID = '{$cID}' and cvID='{$cvID}'";
         $r = $db->query($q);
         $this->refreshCache();
+    }
+
+    private function clearPublishDates()
+    {
+        $db = Loader::db();
+        $q = "update CollectionVersions set cvPublishDate = NULL where cID = ?";
+
+        $db->query($q, array($this->cID));
     }
 }
