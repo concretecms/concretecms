@@ -410,6 +410,11 @@ function Translator(data) {
   this.translations = [];
   this.approvalSupport = (data.approvalSupport === false) ? false : true;
   this.referencePatterns = $.extend(true, {file: null, file_line: null}, data.referencePatterns);
+  this.on = {
+    uiLaunched: ('onUILaunched' in data) ? data.onUILaunched : null,
+    beforeActivatingTranslation: ('onBeforeActivatingTranslation' in data) ? data.onBeforeActivatingTranslation : null,
+    currentTranslationChanged: ('onCurrentTranslationChanged' in data) ? data.onCurrentTranslationChanged : null
+  };
   if (this.approvalSupport) {
     this.canModifyApproved = (data.canModifyApproved === true) ? true : false;
   }
@@ -528,6 +533,9 @@ Translator.prototype = {
         )
       )
     ;
+    if (this.on.uiLaunched) {
+      this.on.uiLaunched(this);
+    }
     var n = this.translations.length;
     if (n < MAX_TRANSLATIONS_FOR_FASTSEARCH) {
       this.UI.$searchButton.remove();
@@ -670,25 +678,44 @@ Translator.prototype = {
     }
   },
   setCurrentTranslation: function(translation) {
-    if (this.saving) {
+    var my = this;
+    var workOnTranslation = translation;
+    if (my.saving) {
       return false;
     }
-    if (this.currentTranslationView) {
-      if (this.currentTranslationView.translation === translation) {
+    if (my.currentTranslationView) {
+      if (my.currentTranslationView.translation === translation) {
         return;
       }
-      if (this.currentTranslationView.isDirty()) {
+      if (my.currentTranslationView.isDirty()) {
         if (!window.confirm(i18n.AskDiscardDirtyTranslation)) {
           return;
         }
       }
-      this.currentTranslationView.dispose();
-      this.currentTranslationView = null;
+      my.currentTranslationView.dispose();
+      my.currentTranslationView = null;
+      if (my.on.currentTranslationChanged) {
+        my.on.currentTranslationChanged(my);
+      }
     }
     if (translation === null) {
       return;
     }
-    this.currentTranslationView = translation.isPlural ? new TranslationView.Plural(translation) :  new TranslationView.Singular(translation);
+    if (my.on.beforeActivatingTranslation) {
+      my.on.beforeActivatingTranslation(my, translation, function(proceed) {
+        if (proceed !== false && translation === workOnTranslation) {
+          my.currentTranslationView = translation.isPlural ? new TranslationView.Plural(translation) :  new TranslationView.Singular(translation);
+          if (my.on.currentTranslationChanged) {
+            my.on.currentTranslationChanged(my);
+          }
+        }
+      });
+    } else {
+      my.currentTranslationView = translation.isPlural ? new TranslationView.Plural(translation) :  new TranslationView.Singular(translation);
+      if (my.on.currentTranslationChanged) {
+        my.on.currentTranslationChanged(my);
+      }
+    }
   },
   setSaving: function(saving) {
     this.saving = !!saving;
@@ -724,30 +751,41 @@ Translator.prototype = {
       }
     }
     this.setSaving(true);
-    $.ajax({
-      type: 'POST',
-      url: this.saveAction,
-      data: postData,
-      dataType: 'json'
-    })
-    .always(function() {
-      my.setSaving(false);
-    })
-    .fail(function (data) {
-      if (data.responseJSON && data.responseJSON.errors) {
-        window.alert(data.responseJSON.errors.join("\n"));
-      } else {
-        window.alert(data.responseText);
-      }
-    })
-    .done(function(response) {
-      if (response && response.error) {
-        window.alert(response.errors.join("\n"));
-        return;
-      }
-      translation.translatedSaved(translatedState.strings, translatedState.approved);
-      my.gotoNextTranslation(backward);
-    });
+    if ($.isFunction(this.saveAction)) {
+      this.saveAction(translation, postData, function(err) {
+        my.setSaving(false);
+        if (err) {
+          window.alert(err);
+        } else {
+          my.gotoNextTranslation(backward);
+        }
+      });
+    } else {
+      $.ajax({
+        type: 'POST',
+        url: this.saveAction,
+        data: postData,
+        dataType: 'json'
+      })
+      .always(function() {
+        my.setSaving(false);
+      })
+      .fail(function (data) {
+        if (data.responseJSON && data.responseJSON.errors) {
+          window.alert(data.responseJSON.errors.join("\n"));
+        } else {
+          window.alert(data.responseText);
+        }
+      })
+      .done(function(response) {
+        if (response && response.error) {
+          window.alert(response.errors.join("\n"));
+          return;
+        }
+        translation.translatedSaved(translatedState.strings, translatedState.approved);
+        my.gotoNextTranslation(backward);
+      });
+    }
   },
   gotoNextTranslation: function(backward) {
     var $lis = this.UI.$list.children(':visible');
