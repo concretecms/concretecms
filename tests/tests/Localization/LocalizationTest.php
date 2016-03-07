@@ -30,7 +30,20 @@ class LocalizationTest extends \PHPUnit_Framework_TestCase
                 $relDir  .= '/'.$parsersDir;
             }
             foreach ($parsers as $parser) {
-                $parser->parseDirectory($dir, $relDir, $translations);
+                try {
+                    $parser->parseDirectory($dir, $relDir, $translations);
+                } catch (Exception $x) {
+                    $reason = $x->getMessage();
+                    $stack = $x->getTraceAsString();
+                    $this->markTestSkipped(<<<EOT
+Extraction of translatable strings has been skipped.
+Reason: $reason
+Stack trace:
+$stack
+EOT
+                    );
+                    return;
+                }
             }
         }
         $translatableStrings = count($translations);
