@@ -28,7 +28,7 @@ Before submitting pull requests, please be sure to read these pages:
 
   Please run the above command on every PHP-only file included in your pull requests (preferably in a separated commit).
 
-- Pull requests that address existing issues are much **much** more likely to be accepted than unsolicited pull requests. Pull requests that address issues with the **contributor:community** label and adhere to the coding style guidelines are almost guaranteed to be accepted in some form or another.
+- Pull requests that address existing issues are much **much** more likely to be accepted than unsolicited pull requests. 
 
 - Pull requests should normally be directed at the `develop` branch. Master is reserved for the most recent stable release. [Read more about the gitflow branching model](https://github.com/concrete5/concrete5/issues/1058).
 
