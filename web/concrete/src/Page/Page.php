@@ -2688,26 +2688,6 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         return (bool) $this->cIsActive;
     }
 
-    public function canBePublished()
-    {
-        $publishDate = $this->getVersionObject()->getPublishDate();
-
-        if (!$publishDate) {
-            return true;
-        }
-
-        if (strtotime($publishDate) >= time()) {
-            if (User::isLoggedIn()) {
-                return true;
-            } else {
-                return false;
-            }
-        }
-
-        $this->getVersionObject()->setPublishDate(null);
-        return true;
-    }
-
     public function setPageIndexScore($score)
     {
         $this->cIndexScore = $score;
