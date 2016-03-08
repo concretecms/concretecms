@@ -34,7 +34,7 @@ var i18n = {
   TAB_SHIFT: '[SHIFT]+[TAB] Backward',
   Translate: 'Translate',
   Translation: 'Translation',
-  TranslationIsApproved_ReadOnly: 'This translation is approved: you can NOT change it.',
+  TranslationIsApproved_WillNeedApproval: 'This translation is approved: your changes will need approval.',
   TranslationIsNotApproved: 'This translation is not approved.',
   PluralNames: {
     zero: 'Zero',
@@ -149,10 +149,6 @@ var TranslationView = (function() {
     this.translation = translation;
     this.multiline = multiline;
     this.element = this.multiline ? 'textarea rows="8"' : 'input type="text"';
-    this.readOnly = false;
-    if (this.translation.translator.approvalSupport && this.translation.isApproved && (!this.translation.translator.canModifyApproved)) {
-      this.readOnly = true;
-    }
     this.UI.$container = this.translation.translator.UI.$translation;
     this.UI.$container.empty();
     this.UI.$container.closest('.panel').css('visibility', 'visible');
@@ -167,7 +163,7 @@ var TranslationView = (function() {
             )
         ;
       } else {
-        this.UI.$container.append($('<p />').text(this.translation.isApproved ? i18n.TranslationIsApproved_ReadOnly : i18n.TranslationIsNotApproved));
+        this.UI.$container.append($('<p />').text(this.translation.isApproved ? i18n.TranslationIsApproved_WillNeedApproval : i18n.TranslationIsNotApproved));
       }
     }
     if (('comments' in this.translation) || ('context' in this.translation) || ('references' in this.translation)) {
@@ -295,7 +291,7 @@ var TranslationView = (function() {
       this.UI.$container
         .append($('<div class="form-group" />')
           .append($('<label class="control-label" />').text(i18n.Translation))
-          .append(this.UI.$translated = $('<' + this.element + (this.readOnly ? ' readonly="readonly"' : '') + ' class="form-control" />').val(this.translation.isTranslated ? this.translation.translations[0] : ''))
+          .append(this.UI.$translated = $('<' + this.element + ' class="form-control" />').val(this.translation.isTranslated ? this.translation.translations[0] : ''))
         )
       ;
       this.UI.$translated.focus();
@@ -359,7 +355,7 @@ var TranslationView = (function() {
         );
         my.UI.$tabBodies.append($('<div class="tab-pane' + ((index === 0) ? ' active' : '') + '"  data-key="' + key + '" />')
           .append($('<p />').text(i18n.ExamplePH.replace(/%s/, examples)))
-          .append(my.UI.$translated[key] = $('<' + my.element + (my.readOnly ? ' readonly="readonly"' : '') + ' class="form-control" />').val(my.translation.isTranslated ? my.translation.translations[index] : ''))
+          .append(my.UI.$translated[key] = $('<' + my.element + ' class="form-control" />').val(my.translation.isTranslated ? my.translation.translations[index] : ''))
         );
         index++;
       });
