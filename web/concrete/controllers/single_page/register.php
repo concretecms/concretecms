@@ -123,7 +123,7 @@ class Register extends PageController
             $data['uPassword'] = $password;
             $data['uPasswordConfirm'] = $passwordConfirm;
 
-            $process = $this->app->make('user.registration')->createFromPublicRegistration($data);
+            $process = $this->app->make('user/registration')->createFromPublicRegistration($data);
             if (is_object($process)) {
                 $process->saveUserAttributesForm($aks);
 
