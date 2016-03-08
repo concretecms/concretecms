@@ -72,7 +72,7 @@ class SessionFactory implements SessionFactoryInterface
             if ($options['cookie_path'] === false) {
                 $options['cookie_path'] = $app['app_relative_path'] . '/';
             }
-            $options['gc_max_lifetime'] = $config->get('concrete.session.max_lifetime');
+            $options['gc_maxlifetime'] = $config->get('concrete.session.max_lifetime');
             $storage->setOptions($options);
         }
 

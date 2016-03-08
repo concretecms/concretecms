@@ -360,6 +360,11 @@ class Feed
         return $r;
     }
 
+    /**
+     * Get a PageFeed by its handle
+     * @param $pfHandle
+     * @return self|null
+     */
     public static function getByHandle($pfHandle)
     {
         $em = \ORM::entityManager('core');
@@ -452,6 +457,11 @@ class Feed
         return $content;
     }
 
+    /**
+     * Get the feed output in RSS form given a Request object
+     * @param Request|null $request
+     * @return string|null The full RSS output as a string
+     */
     public function getOutput($request = null)
     {
         $pl = $this->getPageListObject();
