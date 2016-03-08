@@ -296,6 +296,9 @@ var TranslationView = (function() {
       ;
       this.UI.$translated.focus();
     },
+    getCurrentTextInput: function() {
+      return this.UI.$translated;
+    },
     /**
      * @return null if no string is translated
      * @return false if forSave === true and some string is not translated
@@ -364,6 +367,9 @@ var TranslationView = (function() {
         my.showTranslationTab($(this).closest('li').attr('data-key'));
       });
       this.UI.$translated[firstKey].focus();
+    },
+    getCurrentTextInput: function() {
+      return this.UI.$tabBodies.find('.tab-pane.active').find('textarea,input');
     },
     /**
      * @return null if no string is translated
