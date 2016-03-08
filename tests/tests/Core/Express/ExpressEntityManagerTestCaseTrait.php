@@ -81,7 +81,7 @@ trait ExpressEntityManagerTestCaseTrait
 
         $student->getAttributes()->add($attribute);
 
-        $builder = Core::make('express.builder.association');
+        $builder = Core::make('express/builder/association');
         $builder->addOneToMany($teacher, $student);
         $builder->addManyToOne($student, $teacher);
 

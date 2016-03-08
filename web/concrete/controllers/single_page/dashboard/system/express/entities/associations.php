@@ -54,7 +54,7 @@ class Associations extends DashboardPageController
                     $this->error->add(t('You must give your association a target property name.'));
                 }
                 if (!$this->error->has()) {
-                    $builder = \Core::make('express.builder.association');
+                    $builder = \Core::make('express/builder/association');
                     $targetEntity = $this->repository->findOneById($this->request->request->get('target_entity'));
                     /*
                      * @var $builder \Concrete\Core\Express\ObjectAssociationBuilder
