@@ -161,7 +161,7 @@ abstract class Control implements \JsonSerializable
 
     public function getControlType()
     {
-        $manager = \Core::make('express.control.type.manager');
+        $manager = \Core::make('express/control/type/manager');
 
         return $manager->driver($this->getType());
     }
