@@ -157,7 +157,7 @@ var TranslationView = (function() {
     if (this.translation.translator.approvalSupport) {
       if (this.translation.translator.canModifyApproved) {
         this.UI.$container
-            .append($('<label class="control-label checkbox inline" />')
+            .append($('<label class="control-label inline" />')
               .text(i18n.Approved)
               .prepend(this.UI.$approved = $('<input type="checkbox" ' + (this.translation.isApproved ? ' checked="checked"' : '') + ' />'))
             )
