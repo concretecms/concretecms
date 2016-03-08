@@ -61,7 +61,7 @@ class UserTest extends \UserTestCase
 
     public function testCreateNew()
     {
-        $service = Core::make('user.registration');
+        $service = Core::make('user/registration');
         $ui = $service->create(array('uName' => 'andrew', 'uEmail' => 'andrew@concrete5.org'));
         $this->assertEquals(1, $ui->getUserID());
         $this->assertEquals('andrew', $ui->getUserName());
@@ -71,7 +71,7 @@ class UserTest extends \UserTestCase
     public function testGravatar()
     {
         \Config::set('concrete.user.gravatar.enabled', true);
-        $service = Core::make('user.registration');
+        $service = Core::make('user/registration');
         $ui = $service->create(array('uName' => 'andrew', 'uEmail' => 'andrew@concrete5.org'));
         $this->assertFalse($ui->hasAvatar());
 
@@ -90,7 +90,7 @@ class UserTest extends \UserTestCase
         $configuration = $type->getConfigurationObject();
         $fsl = StorageLocation::add($configuration, 'Default', true);
 
-        $service = Core::make('user.registration');
+        $service = Core::make('user/registration');
         $ui = $service->create(array('uName' => 'andrew', 'uEmail' => 'andrew@concrete5.org'));
         $this->assertFalse($ui->hasAvatar());
 
@@ -111,7 +111,7 @@ class UserTest extends \UserTestCase
             '<img src="http://www.dummyco.com/path/to/server/application/files/avatars/1.jpg" alt="andrew" class="u-avatar">',
             $avatar->output());
 
-        $service = Core::make('user.avatar');
+        $service = Core::make('user/avatar');
         $service->removeAvatar($ui);
 
         // I KNOW I KNOW This is lame
@@ -123,7 +123,7 @@ class UserTest extends \UserTestCase
     {
         \Config::set('concrete.user.profiles_enabled', false);
 
-        $service = Core::make('user.registration');
+        $service = Core::make('user/registration');
         $ui = $service->create(array('uName' => 'andrew', 'uEmail' => 'andrew@concrete5.org'));
         $this->assertEquals(null, $ui->getUserPublicProfileUrl());
 
