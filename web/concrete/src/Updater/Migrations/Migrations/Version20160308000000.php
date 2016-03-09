@@ -44,8 +44,6 @@ class Version20160308000000 extends AbstractMigration
         $sm = \Core::make('Concrete\Core\Database\DatabaseStructureManager');
         $entities = array();
 
-        //       $this->connection->Execute('set foreign_key_checks = 0');
-
         // Now we fill the rest of the class names recursively from the entity directory, since it's
         // entirely new
         $entityPath = DIR_BASE_CORE . '/' . DIRNAME_CLASSES . '/Entity';
@@ -75,12 +73,46 @@ class Version20160308000000 extends AbstractMigration
 
         $sm->installDatabaseFor($metadatas);
 
-        //$this->connection->Execute('set foreign_key_checks = 1');
     }
 
     protected function importAttributeKeys()
     {
-
+        // loop through all old attributes and make sure to import them into the new system
+        $r = $this->connection->executeQuery('select ak.*, akCategoryHandle from _AttributeKeys ak inner join AttributeKeyCategories akc on ak.akCategoryID = akc.akCategoryID;');
+        while ($row = $r->fetch()) {
+            $table = false;
+            switch($row['akCategoryHandle']) {
+                case 'collection':
+                    $table = 'CollectionAttributeKeys';
+                    $akCategory = 'pagekey';
+                    break;
+                case 'file':
+                    $table = 'FileAttributeKeys';
+                    $akCategory = 'filekey';
+                    break;
+                case 'user':
+                    $akCategory = 'userkey';
+                    break;
+            }
+            $data = array(
+                'akID' => $row['akID'],
+                'akName' => $row['akName'],
+                'akHandle' => $row['akHandle'],
+                'akIsSearchable' => $row['akIsSearchable'],
+                'akIsSearchableIndexed' => $row['akIsSearchableIndexed'],
+                'akIsInternal' => $row['akIsInternal'],
+                'akIsColumnHeader' => $row['akIsColumnHeader'],
+                'pkgID' => $row['pkgID'],
+                'akCategory' => $akCategory,
+            );
+            $this->connection->insert('AttributeKeys', $data);
+            if ($table) {
+                $count = $this->connection->fetchColumn("select count(*) from {$table} where akID = ?", array($row['akID']));
+                if (!$count) {
+                    $this->connection->insert($table, array('akID' => $row['akID']));
+                }
+            }
+        }
     }
 
     protected function importAttributeKeyTypes()
@@ -97,13 +129,15 @@ class Version20160308000000 extends AbstractMigration
 
     public function up(Schema $schema)
     {
-
+        $this->connection->Execute('set foreign_key_checks = 0');
         $this->renameProblematicTables();
         $this->updateDoctrineXmlTables();
         $this->installEntities();
         $this->importAttributeKeys();
         $this->importAttributeKeyTypes();
         $this->importAttributeValues();
+        $this->connection->Execute('set foreign_key_checks = 1');
+
     }
 
     public function down(Schema $schema)
