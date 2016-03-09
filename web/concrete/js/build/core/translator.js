@@ -848,7 +848,9 @@ window.ccmTranslator = {
     }
   },
   initialize: function(data) {
-    Startup.setTranslatorReady(new Translator(data));
+    var translator = new Translator(data);
+    Startup.setTranslatorReady(translator);
+    return translator;
   }
 };
   
