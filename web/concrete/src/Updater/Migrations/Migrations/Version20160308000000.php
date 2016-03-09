@@ -81,6 +81,7 @@ class Version20160308000000 extends AbstractMigration
         $r = $this->connection->executeQuery('select ak.*, akCategoryHandle from _AttributeKeys ak inner join AttributeKeyCategories akc on ak.akCategoryID = akc.akCategoryID;');
         while ($row = $r->fetch()) {
             $table = false;
+            $akCategory = null;
             switch($row['akCategoryHandle']) {
                 case 'collection':
                     $table = 'CollectionAttributeKeys';
@@ -112,12 +113,21 @@ class Version20160308000000 extends AbstractMigration
                     $this->connection->insert($table, array('akID' => $row['akID']));
                 }
             }
+
+            $this->importAttributeKeyType($row['atID'], $row['akID']);
         }
     }
 
-    protected function importAttributeKeyTypes()
+    protected function importAttributeKeyType($atID, $akID)
     {
-
+        $row = $this->connection->fetchAssoc('select * from AttributeTypes where atID = ?', array($atID));
+        if ($row['atID']) {
+            $count = $this->connection->fetchColumn("select count(*) from AttributeKeyTypes where akID = ?", array($akID));
+            $type = strtolower(preg_replace("/[^A-Za-z]/", '', $row['atHandle'])) . 'type';
+            if (!$count) {
+                $this->connection->insert('AttributeKeyTypes', ['akTypeHandle' => $row['atHandle'], 'akID' => $akID, $type]);
+            }
+        }
     }
 
     protected function importAttributeValues()
