@@ -423,7 +423,7 @@ function Translator(data) {
   for (var i = 0, n = data.translations.length; i < n; i++) {
     new Translation(data.translations[i], this);
   }
-  this.saving = false;
+  this.busy = false;
 }
 Translator.prototype = {
   launch: function() {
@@ -681,8 +681,7 @@ Translator.prototype = {
   },
   setCurrentTranslation: function(translation) {
     var my = this;
-    var workOnTranslation = translation;
-    if (my.saving) {
+    if (my.busy) {
       return false;
     }
     if (my.currentTranslationView) {
@@ -694,35 +693,38 @@ Translator.prototype = {
           return;
         }
       }
-      my.currentTranslationView.dispose();
-      my.currentTranslationView = null;
-      if (my.on.currentTranslationChanged) {
-        my.on.currentTranslationChanged(my);
+    }
+    var goOn = function() {
+      if (my.currentTranslationView) {
+        my.currentTranslationView.dispose();
+        my.currentTranslationView = null;
+        if (my.on.currentTranslationChanged) {
+          my.on.currentTranslationChanged(my);
+        }
       }
-    }
-    if (translation === null) {
-      return;
-    }
+      if (translation) {
+        my.currentTranslationView = translation.isPlural ? new TranslationView.Plural(translation) :  new TranslationView.Singular(translation);
+        if (my.on.currentTranslationChanged) {
+          my.on.currentTranslationChanged(my);
+        }
+      }
+    };
     if (my.on.beforeActivatingTranslation) {
+      my.setBusy(true);
       my.on.beforeActivatingTranslation(my, translation, function(proceed) {
-        if (proceed !== false && translation === workOnTranslation) {
-          my.currentTranslationView = translation.isPlural ? new TranslationView.Plural(translation) :  new TranslationView.Singular(translation);
-          if (my.on.currentTranslationChanged) {
-            my.on.currentTranslationChanged(my);
-          }
+        my.setBusy(false);
+        if (proceed !== false) {
+          goOn();
         }
       });
     } else {
-      my.currentTranslationView = translation.isPlural ? new TranslationView.Plural(translation) :  new TranslationView.Singular(translation);
-      if (my.on.currentTranslationChanged) {
-        my.on.currentTranslationChanged(my);
-      }
+      goOn();
     }
   },
-  setSaving: function(saving) {
-    this.saving = !!saving;
+  setBusy: function(busy) {
+    this.busy = !!busy;
     var $btn = this.UI.$container.find('button.ccm-translator-savecontinue');
-    if (this.saving) {
+    if (this.busy) {
       $btn.css('width', $btn.outerWidth() + 'px').html('<span class="fa fa-spinner fa-spin"></span>');
     } else {
       $btn.css('width', 'auto').text(i18n.Save_and_Continue);
@@ -730,7 +732,7 @@ Translator.prototype = {
   },
   saveAndContinue: function(backward) {
     var my = this;
-    if (this.saving) {
+    if (this.busy) {
       return;
     }
     if (this.currentTranslationView.isDirty() === false) {
@@ -752,10 +754,10 @@ Translator.prototype = {
         postData.approved = translatedState.approved ? 1 : 0;
       }
     }
-    this.setSaving(true);
+    this.setBusy(true);
     if ($.isFunction(this.saveAction)) {
       this.saveAction(translation, postData, function(err) {
-        my.setSaving(false);
+        my.setBusy(false);
         if (err) {
           window.alert(err);
         } else {
@@ -770,7 +772,7 @@ Translator.prototype = {
         dataType: 'json'
       })
       .always(function() {
-        my.setSaving(false);
+        my.setBusy(false);
       })
       .fail(function (data) {
         if (data.responseJSON && data.responseJSON.errors) {
