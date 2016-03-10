@@ -52,7 +52,7 @@ class Controller extends BlockController
                 $content = h($c->getCollectionName());
                 break;
             case "rpv_pageDescription":
-                $content = h($c->getCollectionDescription());
+                $content = nl2br(h($c->getCollectionDescription()));
                 break;
             case "rpv_pageDateCreated":
                 $content = $c->getCollectionDateAdded();
@@ -81,6 +81,13 @@ class Controller extends BlockController
                 } else {
                     if (!is_scalar($content) && (!is_object($content) || !method_exists($content, '__toString'))) {
                         $content = $c->getAttribute($this->attributeHandle, 'displaySanitized');
+                        $attributeKey = CollectionAttributeKey::getByHandle($this->attributeHandle);
+                        if (is_object($attributeKey)) {
+                            $attributeType = $attributeKey->getAttributeType();
+                            if ($attributeType->atHandle == 'textarea') {
+                                $content = nl2br($content);
+                            }
+                        }
                     }
                 }
                 break;
