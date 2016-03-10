@@ -95,6 +95,10 @@ class Version20160308000000 extends AbstractMigration
                     $akCategory = 'userkey';
                     break;
             }
+            $pkgID = null;
+            if ($row['pkgID']) {
+                $pkgID = $row['pkgID'];
+            }
             $data = array(
                 'akID' => $row['akID'],
                 'akName' => $row['akName'],
@@ -102,8 +106,7 @@ class Version20160308000000 extends AbstractMigration
                 'akIsSearchable' => $row['akIsSearchable'],
                 'akIsSearchableIndexed' => $row['akIsSearchableIndexed'],
                 'akIsInternal' => $row['akIsInternal'],
-                'akIsColumnHeader' => $row['akIsColumnHeader'],
-                'pkgID' => $row['pkgID'],
+                'pkgID' => $pkgID,
                 'akCategory' => $akCategory,
             );
             $keyCount = $this->connection->fetchColumn("select count(*) from AttributeKeys where akID = ?", array($row['akID']));
