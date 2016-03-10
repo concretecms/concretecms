@@ -204,6 +204,36 @@ class Version20160308000000 extends AbstractMigration
                         }
                     }
                     break;
+                case 'image_file':
+                    $count = $this->connection->fetchColumn('select count(*) from ImageFileAttributeKeyTypes where akTypeID = ?', array($akTypeID));
+                    if (!$count) {
+                        $this->connection->insert('ImageFileAttributeKeyTypes', []);
+                    }
+                    break;
+                case 'number':
+                    $count = $this->connection->fetchColumn('select count(*) from NumberAttributeKeyTypes where akTypeID = ?', array($akTypeID));
+                    if (!$count) {
+                        $this->connection->insert('NumberAttributeKeyTypes', []);
+                    }
+                    break;
+                case 'rating':
+                    $count = $this->connection->fetchColumn('select count(*) from RatingAttributeKeyTypes where akTypeID = ?', array($akTypeID));
+                    if (!$count) {
+                        $this->connection->insert('RatingAttributeKeyTypes', []);
+                    }
+                    break;
+                case 'social_links':
+                    $count = $this->connection->fetchColumn('select count(*) from SocialLinksAttributeKeyTypes where akTypeID = ?', array($akTypeID));
+                    if (!$count) {
+                        $this->connection->insert('SocialLinksAttributeKeyTypes', []);
+                    }
+                    break;
+                case 'text':
+                    $count = $this->connection->fetchColumn('select count(*) from TextAttributeKeyTypes where akTypeID = ?', array($akTypeID));
+                    if (!$count) {
+                        $this->connection->insert('TextAttributeKeyTypes', []);
+                    }
+                    break;
                 case 'textarea':
                     $count = $this->connection->fetchColumn('select count(*) from TextareaAttributeKeyTypes where akTypeID = ?', array($akTypeID));
                     if (!$count) {
