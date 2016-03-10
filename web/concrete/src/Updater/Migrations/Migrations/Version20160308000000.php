@@ -475,6 +475,9 @@ class Version20160308000000 extends AbstractMigration
         $this->connection->Execute('update PermissionKeys set pkHandle = ? where pkHandle = ?', array(
             'view_category_tree_node', 'view_topic_category_tree_node'
         ));
+        $this->connection->Execute('update PermissionKeyCategories set pkCategoryHandle = ? where pkCategoryHandle = ?', array(
+            'category_tree_node', 'topic_category_tree_node'
+        ));
         $results = NodeType::getByHandle('express_entry_results');
         if (!is_object($results)) {
             NodeType::add('express_entry_results');
