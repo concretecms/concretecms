@@ -106,7 +106,10 @@ class Version20160308000000 extends AbstractMigration
                 'pkgID' => $row['pkgID'],
                 'akCategory' => $akCategory,
             );
-            $this->connection->insert('AttributeKeys', $data);
+            $keyCount = $this->connection->fetchColumn("select count(*) from AttributeKeys where akID = ?", array($row['akID']));
+            if (!$keyCount) {
+                $this->connection->insert('AttributeKeys', $data);
+            }
             if ($table) {
                 $count = $this->connection->fetchColumn("select count(*) from {$table} where akID = ?", array($row['akID']));
                 if (!$count) {
@@ -122,10 +125,107 @@ class Version20160308000000 extends AbstractMigration
     {
         $row = $this->connection->fetchAssoc('select * from AttributeTypes where atID = ?', array($atID));
         if ($row['atID']) {
-            $count = $this->connection->fetchColumn("select count(*) from AttributeKeyTypes where akID = ?", array($akID));
+            $akTypeID = $this->connection->fetchColumn("select akTypeID from AttributeKeyTypes where akID = ?", array($akID));
             $type = strtolower(preg_replace("/[^A-Za-z]/", '', $row['atHandle'])) . 'type';
-            if (!$count) {
-                $this->connection->insert('AttributeKeyTypes', ['akTypeHandle' => $row['atHandle'], 'akID' => $akID, $type]);
+            if (!$akTypeID) {
+                $this->connection->insert('AttributeKeyTypes', ['akTypeHandle' => $row['atHandle'], 'akID' => $akID, 'type' => $type]);
+                $akTypeID = $this->connection->lastInsertId();
+            }
+            switch($row['atHandle']) {
+                case 'address':
+                    $count = $this->connection->fetchColumn('select count(*) from AddressAttributeKeyTypes where akTypeID = ?', array($akTypeID));
+                    if (!$count) {
+                        $rowA = $this->connection->fetchAssoc('select * from atAddressSettings where akID = ?', array($akID));
+                        if ($rowA['akID']) {
+                            $countries = $this->connection->fetchAll('select * from atAddressCustomCountries where akID = ?', array($akID));
+                            if (!$countries) {
+                                $countries = array();
+                            }
+                            $this->connection->insert('AddressAttributeKeyTypes', [
+                                'akHasCustomCountries' => $rowA['akHasCustomCountries'],
+                                'akDefaultCountry' => $rowA['akDefaultCountry'],
+                                'customCountries' => json_encode($countries),
+                                'akTypeID' => $akTypeID,
+                            ]);
+                        }
+                    }
+                    break;
+                case 'boolean':
+                    $count = $this->connection->fetchColumn('select count(*) from BooleanAttributeKeyTypes where akTypeID = ?', array($akTypeID));
+                    if (!$count) {
+                        $rowA = $this->connection->fetchAssoc('select * from atBooleanSettings where akID = ?', array($akID));
+                        if ($rowA['akID']) {
+                            $this->connection->insert('BooleanAttributeKeyTypes', [
+                                'akCheckedByDefault' => $rowA['akCheckedByDefault'],
+                                'akTypeID' => $akTypeID,
+                            ]);
+                        }
+                    }
+                    break;
+                case 'date_time':
+                    $count = $this->connection->fetchColumn('select count(*) from DateTimeAttributeKeyTypes where akTypeID = ?', array($akTypeID));
+                    if (!$count) {
+                        $rowA = $this->connection->fetchAssoc('select * from atDateTimeSettings where akID = ?', array($akID));
+                        if ($rowA['akID']) {
+                            $this->connection->insert('DateTimeAttributeKeyTypes', [
+                                'akDateDisplayMode' => $rowA['akDateDisplayMode'],
+                                'akTypeID' => $akTypeID,
+                            ]);
+                        }
+                    }
+                    break;
+                case 'select':
+                    $count = $this->connection->fetchColumn('select count(*) from SelectAttributeKeyTypes where akTypeID = ?', array($akTypeID));
+                    if (!$count) {
+                        $rowA = $this->connection->fetchAssoc('select * from atSelectSettings where akID = ?', array($akID));
+                        if ($rowA['akID']) {
+                            $this->connection->insert('SelectAttributeValueOptionLists', []);
+                            $listID = $this->connection->lastInsertId();
+                            $this->connection->insert('SelectAttributeKeyTypes', [
+                                'akSelectAllowMultipleValues' => $rowA['akSelectAllowMultipleValues'],
+                                'akSelectOptionDisplayOrder' => $rowA['akSelectOptionDisplayOrder'],
+                                'akSelectAllowOtherValues' => $rowA['akSelectAllowOtherValues'],
+                                'avSelectOptionListID' => $listID,
+                                'akTypeID' => $akTypeID,
+                            ]);
+
+                            $options = $this->connection->fetchAll('select * from atSelectOptions where akID = ?', array($akID));
+                            foreach($options as $option) {
+                                $this->connection->insert('SelectAttributeValueOptions', [
+                                    'isEndUserAdded' => $option['isEndUserAdded'],
+                                    'displayOrder' => $option['displayOrder'],
+                                    'value' => $option['value'],
+                                    'avSelectOptionListID' => $listID,
+                                ]);
+                            }
+                        }
+                    }
+                    break;
+                case 'textarea':
+                    $count = $this->connection->fetchColumn('select count(*) from TextareaAttributeKeyTypes where akTypeID = ?', array($akTypeID));
+                    if (!$count) {
+                        $rowA = $this->connection->fetchAssoc('select * from atTextareaSettings where akID = ?', array($akID));
+                        if ($rowA['akID']) {
+                            $this->connection->insert('TextareaAttributeKeyTypes', [
+                                'akTextareaDisplayMode' => $rowA['akTextareaDisplayMode'],
+                                'akTypeID' => $akTypeID,
+                            ]);
+                        }
+                    }
+                    break;
+                case 'topics':
+                    $count = $this->connection->fetchColumn('select count(*) from TopicsAttributeKeyTypes where akTypeID = ?', array($akTypeID));
+                    if (!$count) {
+                        $rowA = $this->connection->fetchAssoc('select * from atTopicSettings where akID = ?', array($akID));
+                        if ($rowA['akID']) {
+                            $this->connection->insert('TopicsAttributeKeyTypes', [
+                                'akTopicParentNodeID' => $rowA['akTopicParentNodeID'],
+                                'akTopicTreeID' => $rowA['akTopicTreeID'],
+                                'akTypeID' => $akTypeID,
+                            ]);
+                        }
+                    }
+                    break;
             }
         }
     }
@@ -144,9 +244,9 @@ class Version20160308000000 extends AbstractMigration
         $this->updateDoctrineXmlTables();
         $this->installEntities();
         $this->importAttributeKeys();
-        $this->importAttributeKeyTypes();
         $this->importAttributeValues();
         $this->connection->Execute('set foreign_key_checks = 1');
+        $this->fart();
 
     }
 
