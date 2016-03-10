@@ -246,7 +246,6 @@ class Version20160308000000 extends AbstractMigration
         $this->importAttributeKeys();
         $this->importAttributeValues();
         $this->connection->Execute('set foreign_key_checks = 1');
-        $this->fart();
 
     }
 
