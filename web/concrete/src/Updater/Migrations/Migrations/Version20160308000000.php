@@ -469,15 +469,18 @@ class Version20160308000000 extends AbstractMigration
 
     protected function addTreeNodeTypes()
     {
-        $results = NodeType::getByHandle('category');
+        $this->connection->Execute('update TreeNodeTypes set treeNodeTypeHandle = ? where treeNodeTypeHandle = ?', array(
+            'category', 'topic_category'
+        ));
+        $results = NodeType::getByHandle('express_entry_results');
         if (!is_object($results)) {
             NodeType::add('express_entry_results');
         }
         $results = TreeType::getByHandle('express_entry_results');
         if (!is_object($results)) {
+            TreeType::add('express_entry_results');
             $tree = ExpressEntryResults::add();
             $node = $tree->getRootTreeNodeObject();
-            TreeType::add('express_entry_results');
             // Add forms node beneath it.
             \Concrete\Core\Tree\Node\Type\Category::add(ExpressFormBlockController::FORM_RESULTS_CATEGORY_NAME, $node);
         }
