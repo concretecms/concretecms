@@ -1,6 +1,9 @@
 <?php
 namespace Concrete\Core\Updater\Migrations\Migrations;
 
+use Concrete\Core\Attribute\Key\Category;
+use Concrete\Core\Attribute\Type;
+use Concrete\Core\Block\BlockType\BlockType;
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
 
@@ -123,15 +126,15 @@ class Version20160308000000 extends AbstractMigration
             $this->importAttributeKeyType($row['atID'], $row['akID']);
             switch($akCategory) {
                 case 'pagekey':
-                    $r = $this->connection->executeQuery("select * from _CollectionAttributeValues where akID = ?", array($row['akID']));
-                    while ($rowB = $r->fetch()) {
+                    $rb = $this->connection->executeQuery("select * from _CollectionAttributeValues where akID = ?", array($row['akID']));
+                    while ($rowB = $rb->fetch()) {
                         $avrID = $this->addAttributeValue($row['atID'], $row['akID'], $rowB['avID'], 'page');
                         if ($avrID) {
-                            $this->connection->insert('CollectionAttributeValues', array([
+                            $this->connection->insert('CollectionAttributeValues', [
                                 'cID' => $rowB['cID'],
                                 'cvID' => $rowB['cvID'],
                                 'avrID' => $avrID
-                            ]));
+                            ]);
                         }
                     }
                     break;
@@ -142,9 +145,71 @@ class Version20160308000000 extends AbstractMigration
     protected function loadAttributeValue($atHandle, $legacyAVID, $avID)
     {
         switch($atHandle) {
+            case 'address':
+                $row = $this->connection->fetchAssoc('select * from atAddress where avID = ?', [$legacyAVID]);
+                $row['avID'] = $avID;
+                $this->connection->insert('AddressAttributeValues', $row);
+                break;
             case 'boolean':
                 $value = $this->connection->fetchColumn('select value from atBoolean where avID = ?', [$legacyAVID]);
-                $this->connection->insert('BooleanAttributeValues', array(['value' => $value, 'avID' => $avID]));
+                $this->connection->insert('BooleanAttributeValues', ['value' => $value, 'avID' => $avID]);
+                break;
+            case 'date_time':
+                $row = $this->connection->fetchAssoc('select * from atDateTime where avID = ?', [$legacyAVID]);
+                $row['avID'] = $avID;
+                $this->connection->insert('DateTimeAttributeValues', $row);
+                break;
+            case 'image_file':
+                $row = $this->connection->fetchAssoc('select * from atFile where avID = ?', [$legacyAVID]);
+                $row['avID'] = $avID;
+                $this->connection->insert('ImageFileAttributeValues', $row);
+                break;
+            case 'number':
+            case 'rating':
+                $row = $this->connection->fetchAssoc('select * from atNumber where avID = ?', [$legacyAVID]);
+                $row['avID'] = $avID;
+                $this->connection->insert('NumberAttributeValues', $row);
+                break;
+            case 'select':
+                $this->connection->insert('SelectAttributeValues', array('avID' => $avID));
+                $options = $this->connection->fetchAll('select * from atSelectOptionsSelected where avID = ?', [$legacyAVID]);
+                foreach($options as $option) {
+                    $this->connection->insert('SelectAttributeValueSelectedOptions', array(
+                        'avSelectOptionID' => $option['atSelectOptionID'],
+                        'avID' => $avID
+                    ));
+                }
+                break;
+            case 'social_links':
+                $this->connection->insert('SocialLinksAttributeValues', array('avID' => $avID));
+                $links = $this->connection->fetchAll('select * from atSocialLinks where avID = ?', [$legacyAVID]);
+                foreach($links as $link) {
+                    $this->connection->insert('SocialLinksAttributeSelectedLinks', array(
+                        'service' => $link['service'],
+                        'serviceInfo' => $link['serviceInfo'],
+                        'avID' => $avID
+                    ));
+                }
+                break;
+            case 'text':
+                $row = $this->connection->fetchAssoc('select * from atDefault where avID = ?', [$legacyAVID]);
+                $row['avID'] = $avID;
+                $this->connection->insert('TextAttributeValues', $row);
+                break;
+            case 'textarea':
+                $row = $this->connection->fetchAssoc('select * from atDefault where avID = ?', [$legacyAVID]);
+                $row['avID'] = $avID;
+                $this->connection->insert('TextareaAttributeValues', $row);
+                break;
+            case 'topics':
+                $this->connection->insert('TopicAttributeValues', array('avID' => $avID));
+                $topics = $this->connection->fetchAll('select * from atSocialLinks where avID = ?', [$legacyAVID]);
+                foreach($topics as $topic) {
+                    $this->connection->insert('TopicAttributeSelectedTopics', array(
+                        'treeNodeID' => $topic['TopicNodeID'],
+                        'avID' => $avID
+                    ));
+                }
                 break;
         }
     }
@@ -158,17 +223,17 @@ class Version20160308000000 extends AbstractMigration
             $valueType = strtolower(preg_replace("/[^A-Za-z]/", '', $atHandle)) . 'value';
             $type = $type . 'value';
 
-            $this->connection->insert('AttributeValueValues', array([$valueType]));
+            $this->connection->insert('AttributeValueValues', ['type' => $valueType]);
             $avID = $this->connection->lastInsertId();
 
             $this->loadAttributeValue($atHandle, $legacyAVID, $avID);
 
             // Create AttributeValue record
-            $this->connection->insert('AttributeValues', array([
-                $akID,
-                $avID,
-                $type
-            ]));
+            $this->connection->insert('AttributeValues', [
+                'akID' => $akID,
+                'avID' => $avID,
+                'type' => $type
+            ]);
 
             return $this->connection->lastInsertId();
         }
@@ -313,14 +378,87 @@ class Version20160308000000 extends AbstractMigration
         }
     }
 
-    protected function importAttributeValues()
-    {
-
-    }
-
     protected function importAttributeTypes()
     {
         $this->connection->executeQuery('update AttributeTypes set pkgID = null where pkgID = 0');
+
+        $types = array(
+            'express' => 'Express Entity',
+            'email' => 'Email Address',
+            'telephone' => 'Telephone',
+            'url' => 'URL',
+        );
+        $categories = array('file', 'user', 'collection');
+        foreach($types as $handle => $name) {
+            $type = Type::getByHandle($handle);
+            if (!is_object($type)) {
+                $type = Type::add($handle $name);
+                foreach($categories as $category) {
+                    $cat = Category::getByHandle($category);
+                    $cat->getController()->associateAttributeKeyType($type);
+                }
+            }
+        }
+    }
+
+
+
+    protected function addDashboard()
+    {
+        $page = Page::getByPath('/dashboard/express');
+        if (!is_object($page) || $page->isError()) {
+            $sp = SinglePage::add('/dashboard/express');
+            $sp->update(array('cName' => 'Data Objects', 'cDescription' => 'Express Data Objects'));
+        }
+        $page = Page::getByPath('/dashboard/express/entries');
+        if (!is_object($page) || $page->isError()) {
+            $sp = SinglePage::add('/dashboard/express/entries');
+            $sp->update(array('cName' => 'View Entries'));
+        }
+        $page = Page::getByPath('/dashboard/system/express');
+        if (!is_object($page) || $page->isError()) {
+            $sp = SinglePage::add('/dashboard/system/express');
+            $sp->update(array('cName' => 'Express Data Objects'));
+        }
+        $page = Page::getByPath('/dashboard/system/express/entities');
+        if (!is_object($page) || $page->isError()) {
+            $sp = SinglePage::add('/dashboard/system/express/entities');
+            $sp->update(array('cName' => 'Express Data Types'));
+            $sp->setAttribute('exclude_nav', true);
+        }
+        $page = Page::getByPath('/dashboard/system/express/entities/attributes');
+        if (!is_object($page) || $page->isError()) {
+            $sp = SinglePage::add('/dashboard/system/express/entities/attributes');
+            $sp->setAttribute('exclude_nav', true);
+        }
+        $page = Page::getByPath('/dashboard/system/express/entities/associations');
+        if (!is_object($page) || $page->isError()) {
+            $sp = SinglePage::add('/dashboard/system/express/entities/associations');
+            $sp->setAttribute('exclude_nav', true);
+        }
+        $page = Page::getByPath('/dashboard/system/express/entities/forms');
+        if (!is_object($page) || $page->isError()) {
+            $sp = SinglePage::add('/dashboard/system/express/entities/forms');
+            $sp->setAttribute('exclude_nav', true);
+        }
+        $page = Page::getByPath('/dashboard/system/express/entities/customize_search');
+        if (!is_object($page) || $page->isError()) {
+            $sp = SinglePage::add('/dashboard/system/express/entities/customize_search');
+            $sp->setAttribute('exclude_nav', true);
+        }
+        $page = Page::getByPath('/dashboard/system/express/entries');
+        if (!is_object($page) || $page->isError()) {
+            $sp = SinglePage::add('/dashboard/system/express/entries');
+            $sp->update(array('cName' => 'Custom Entry Locations'));
+        }
+    }
+
+    protected function addBlockTypes()
+    {
+        $bt = BlockType::getByHandle('express_form');
+        if (!is_object($bt)) {
+            BlockType::installBlockType('express_form');
+        }
     }
 
     public function up(Schema $schema)
@@ -331,7 +469,8 @@ class Version20160308000000 extends AbstractMigration
         $this->installEntities();
         $this->importAttributeTypes();
         $this->importAttributeKeys();
-        $this->importAttributeValues();
+        $this->addDashboard();
+        $this->addBlockTypes();
         $this->connection->Execute('set foreign_key_checks = 1');
 
     }
