@@ -121,6 +121,56 @@ class Version20160308000000 extends AbstractMigration
             }
 
             $this->importAttributeKeyType($row['atID'], $row['akID']);
+            switch($akCategory) {
+                case 'pagekey':
+                    $r = $this->connection->executeQuery("select * from _CollectionAttributeValues where akID = ?", array($row['akID']));
+                    while ($rowB = $r->fetch()) {
+                        $avrID = $this->addAttributeValue($row['atID'], $row['akID'], $rowB['avID'], 'page');
+                        if ($avrID) {
+                            $this->connection->insert('CollectionAttributeValues', array([
+                                'cID' => $rowB['cID'],
+                                'cvID' => $rowB['cvID'],
+                                'avrID' => $avrID
+                            ]));
+                        }
+                    }
+                    break;
+            }
+        }
+    }
+
+    protected function loadAttributeValue($atHandle, $legacyAVID, $avID)
+    {
+        switch($atHandle) {
+            case 'boolean':
+                $value = $this->connection->fetchColumn('select value from atBoolean where avID = ?', [$legacyAVID]);
+                $this->connection->insert('BooleanAttributeValues', array(['value' => $value, 'avID' => $avID]));
+                break;
+        }
+    }
+
+    protected function addAttributeValue($atID, $akID, $legacyAVID, $type)
+    {
+        // Create AttributeValueValue Record.
+        // Retrieve type
+        $atHandle = $this->connection->fetchColumn('select atHandle from AttributeTypes where atID = ?', array($atID));
+        if ($atHandle) {
+            $valueType = strtolower(preg_replace("/[^A-Za-z]/", '', $atHandle)) . 'value';
+            $type = $type . 'value';
+
+            $this->connection->insert('AttributeValueValues', array([$valueType]));
+            $avID = $this->connection->lastInsertId();
+
+            $this->loadAttributeValue($atHandle, $legacyAVID, $avID);
+
+            // Create AttributeValue record
+            $this->connection->insert('AttributeValues', array([
+                $akID,
+                $avID,
+                $type
+            ]));
+
+            return $this->connection->lastInsertId();
         }
     }
 
@@ -207,31 +257,31 @@ class Version20160308000000 extends AbstractMigration
                 case 'image_file':
                     $count = $this->connection->fetchColumn('select count(*) from ImageFileAttributeKeyTypes where akTypeID = ?', array($akTypeID));
                     if (!$count) {
-                        $this->connection->insert('ImageFileAttributeKeyTypes', []);
+                        $this->connection->insert('ImageFileAttributeKeyTypes', ['akFileManagerMode' => 0, 'akTypeID' => $akTypeID]);
                     }
                     break;
                 case 'number':
                     $count = $this->connection->fetchColumn('select count(*) from NumberAttributeKeyTypes where akTypeID = ?', array($akTypeID));
                     if (!$count) {
-                        $this->connection->insert('NumberAttributeKeyTypes', []);
+                        $this->connection->insert('NumberAttributeKeyTypes', ['akTypeID' => $akTypeID]);
                     }
                     break;
                 case 'rating':
                     $count = $this->connection->fetchColumn('select count(*) from RatingAttributeKeyTypes where akTypeID = ?', array($akTypeID));
                     if (!$count) {
-                        $this->connection->insert('RatingAttributeKeyTypes', []);
+                        $this->connection->insert('RatingAttributeKeyTypes', ['akTypeID' => $akTypeID]);
                     }
                     break;
                 case 'social_links':
                     $count = $this->connection->fetchColumn('select count(*) from SocialLinksAttributeKeyTypes where akTypeID = ?', array($akTypeID));
                     if (!$count) {
-                        $this->connection->insert('SocialLinksAttributeKeyTypes', []);
+                        $this->connection->insert('SocialLinksAttributeKeyTypes', ['akTypeID' => $akTypeID]);
                     }
                     break;
                 case 'text':
                     $count = $this->connection->fetchColumn('select count(*) from TextAttributeKeyTypes where akTypeID = ?', array($akTypeID));
                     if (!$count) {
-                        $this->connection->insert('TextAttributeKeyTypes', []);
+                        $this->connection->insert('TextAttributeKeyTypes', ['akTypeID' => $akTypeID]);
                     }
                     break;
                 case 'textarea':
