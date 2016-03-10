@@ -46,24 +46,24 @@ class SelectType extends Type
     /**
      * @Column(type="boolean")
      */
-    protected $allowMultipleValues = false;
+    protected $akSelectAllowMultipleValues = false;
 
     /**
      * @Column(type="boolean")
      */
-    protected $allowOtherValues = false;
+    protected $akSelectAllowOtherValues = false;
 
     /**
      * @Column(type="string")
      */
-    protected $displayOrder = 'display_asc';
+    protected $akSelectOptionDisplayOrder = 'display_asc';
 
     /**
      * @return mixed
      */
     public function getAllowMultipleValues()
     {
-        return $this->allowMultipleValues;
+        return $this->akSelectAllowMultipleValues;
     }
 
     /**
@@ -71,7 +71,7 @@ class SelectType extends Type
      */
     public function setAllowMultipleValues($allowMultipleValues)
     {
-        $this->allowMultipleValues = $allowMultipleValues;
+        $this->akSelectAllowMultipleValues = $allowMultipleValues;
     }
 
     /**
@@ -79,7 +79,7 @@ class SelectType extends Type
      */
     public function getAllowOtherValues()
     {
-        return $this->allowOtherValues;
+        return $this->akSelectAllowOtherValues;
     }
 
     /**
@@ -87,7 +87,7 @@ class SelectType extends Type
      */
     public function setAllowOtherValues($allowOtherValues)
     {
-        $this->allowOtherValues = $allowOtherValues;
+        $this->akSelectAllowOtherValues = $allowOtherValues;
     }
 
     /**
@@ -95,7 +95,7 @@ class SelectType extends Type
      */
     public function getDisplayOrder()
     {
-        return $this->displayOrder;
+        return $this->akSelectOptionDisplayOrder;
     }
 
     /**
@@ -103,7 +103,7 @@ class SelectType extends Type
      */
     public function setDisplayOrder($displayOrder)
     {
-        $this->displayOrder = $displayOrder;
+        $this->akSelectOptionDisplayOrder = $displayOrder;
     }
 
 }
