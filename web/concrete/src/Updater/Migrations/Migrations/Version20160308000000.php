@@ -4,8 +4,14 @@ namespace Concrete\Core\Updater\Migrations\Migrations;
 use Concrete\Core\Attribute\Key\Category;
 use Concrete\Core\Attribute\Type;
 use Concrete\Core\Block\BlockType\BlockType;
+use Concrete\Core\Tree\Node\NodeType;
+use Concrete\Core\Tree\TreeType;
+use Concrete\Core\Tree\Type\ExpressEntryResults;
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
+use Concrete\Core\Page\Page;
+use Concrete\Core\Page\Single as SinglePage;
+use Concrete\Block\ExpressForm\Controller as ExpressFormBlockController;
 
 class Version20160308000000 extends AbstractMigration
 {
@@ -392,7 +398,7 @@ class Version20160308000000 extends AbstractMigration
         foreach($types as $handle => $name) {
             $type = Type::getByHandle($handle);
             if (!is_object($type)) {
-                $type = Type::add($handle $name);
+                $type = Type::add($handle, $name);
                 foreach($categories as $category) {
                     $cat = Category::getByHandle($category);
                     $cat->getController()->associateAttributeKeyType($type);
@@ -461,6 +467,22 @@ class Version20160308000000 extends AbstractMigration
         }
     }
 
+    protected function addTreeNodeTypes()
+    {
+        $results = NodeType::getByHandle('category');
+        if (!is_object($results)) {
+            NodeType::add('express_entry_results');
+        }
+        $results = TreeType::getByHandle('express_entry_results');
+        if (!is_object($results)) {
+            $tree = ExpressEntryResults::add();
+            $node = $tree->getRootTreeNodeObject();
+            TreeType::add('express_entry_results');
+            // Add forms node beneath it.
+            \Concrete\Core\Tree\Node\Type\Category::add(ExpressFormBlockController::FORM_RESULTS_CATEGORY_NAME, $node);
+        }
+    }
+
     public function up(Schema $schema)
     {
         $this->connection->Execute('set foreign_key_checks = 0');
@@ -471,6 +493,7 @@ class Version20160308000000 extends AbstractMigration
         $this->importAttributeKeys();
         $this->addDashboard();
         $this->addBlockTypes();
+        $this->addTreeNodeTypes();
         $this->connection->Execute('set foreign_key_checks = 1');
 
     }
