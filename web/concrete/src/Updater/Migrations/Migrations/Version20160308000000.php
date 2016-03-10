@@ -238,7 +238,10 @@ class Version20160308000000 extends AbstractMigration
 
     }
 
-
+    protected function importAttributeTypes()
+    {
+        $this->connection->executeQuery('update AttributeTypes set pkgID = null where pkgID = 0');
+    }
 
     public function up(Schema $schema)
     {
@@ -246,6 +249,7 @@ class Version20160308000000 extends AbstractMigration
         $this->renameProblematicTables();
         $this->updateDoctrineXmlTables();
         $this->installEntities();
+        $this->importAttributeTypes();
         $this->importAttributeKeys();
         $this->importAttributeValues();
         $this->connection->Execute('set foreign_key_checks = 1');
