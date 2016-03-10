@@ -21,7 +21,7 @@ class ImageFileType extends Type
     /**
      * @Column(type="integer")
      */
-    protected $mode;
+    protected $akFileManagerMode;
 
     public function __construct()
     {
@@ -30,27 +30,27 @@ class ImageFileType extends Type
 
     public function getMode()
     {
-        return $this->mode;
+        return $this->akFileManagerMode;
     }
 
     public function isModeFileManager()
     {
-        return $this->mode == self::TYPE_FILE_MANAGER;
+        return $this->akFileManagerMode == self::TYPE_FILE_MANAGER;
     }
 
     public function isModeHtmlInput()
     {
-        return $this->mode == self::TYPE_HTML_INPUT;
+        return $this->akFileManagerMode == self::TYPE_HTML_INPUT;
     }
 
     public function setModeToFileManager()
     {
-        $this->mode = self::TYPE_FILE_MANAGER;
+        $this->akFileManagerMode = self::TYPE_FILE_MANAGER;
     }
 
     public function setModeToHtmlInput()
     {
-        $this->mode = self::TYPE_HTML_INPUT;
+        $this->akFileManagerMode = self::TYPE_HTML_INPUT;
     }
 
 }
