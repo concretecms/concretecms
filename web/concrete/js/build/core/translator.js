@@ -853,7 +853,8 @@ window.ccmTranslator = {
     var translator = new Translator(data);
     Startup.setTranslatorReady(translator);
     return translator;
-  }
+  },
+  views: TranslationView
 };
   
 $(document).ready(function() {
