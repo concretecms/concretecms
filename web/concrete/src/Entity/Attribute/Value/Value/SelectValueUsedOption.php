@@ -57,6 +57,11 @@ class SelectValueUsedOption
         $this->count = $count;
     }
 
+    public function getSelectAttributeOptionDisplayValue()
+    {
+        return $this->getSelectAttributeOptionValue();
+    }
+
 
 
 }

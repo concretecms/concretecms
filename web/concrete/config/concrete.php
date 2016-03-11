@@ -501,7 +501,7 @@ return array(
 
     'updates' => array(
 
-        'enable_auto_update_core' => false,
+        'enable_auto_update_core' => true,
         'enable_auto_update_packages' => false,
         'enable_permissions_protection' => true,
         'check_threshold' => 172800,
