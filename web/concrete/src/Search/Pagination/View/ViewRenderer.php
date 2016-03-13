@@ -1,14 +1,13 @@
 <?php
-
 namespace Concrete\Core\Search\Pagination\View;
+
 use Concrete\Core\Search\Pagination\Pagination;
 use Concrete\Core\Search\Pagination\View\ViewInterface;
-use \Core;
 use Request;
 use URL;
+
 class ViewRenderer
 {
-
     protected $view;
     protected $pagination;
     protected $routeCollectionFunction;
@@ -24,6 +23,7 @@ class ViewRenderer
             $query = $url->getQuery();
             $query->modify(array($list->getQueryPaginationPageParameter() => $page));
             $url = $url->setQuery($query);
+
             return (string) $url;
         };
     }
