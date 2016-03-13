@@ -4,6 +4,8 @@ namespace Concrete\Core\Search\Pagination\View;
 use Concrete\Core\Search\Pagination\Pagination;
 use Concrete\Core\Search\Pagination\View\ViewInterface;
 use \Core;
+use Request;
+use URL;
 class ViewRenderer
 {
 
@@ -17,9 +19,12 @@ class ViewRenderer
         $this->pagination = $pagination;
         $list = $pagination->getItemListObject();
         $this->routeCollectionFunction = function ($page) use ($list) {
-            $qs = Core::make('helper/url');
-            $url = $qs->setVariable($list->getQueryPaginationPageParameter(), $page);
-            return $url;
+            $request = Request::getInstance();
+            $url = URL::to($request->getRequestUri());
+            $query = $url->getQuery();
+            $query->modify(array($list->getQueryPaginationPageParameter() => $page));
+            $url = $url->setQuery($query);
+            return (string) $url;
         };
     }
 
