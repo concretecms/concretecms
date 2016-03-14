@@ -407,6 +407,7 @@ class Package extends Object
             );
             if ($row) {
                 if (version_compare($p->getPackageVersion(), $row['pkgVersion'], '>')) {
+                    $p->setPackageID($row['pkgID']);
                     $p->pkgCurrentVersion = $row['pkgVersion'];
                     $upgradeables[] = $p;
                 }
