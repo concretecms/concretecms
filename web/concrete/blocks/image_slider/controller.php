@@ -166,6 +166,7 @@ class Controller extends BlockController
         $args['speed'] = intval($args['speed']);
         $args['noAnimate'] = isset($args['noAnimate']) ? 1 : 0;
         $args['pause'] = isset($args['pause']) ? 1 : 0;
+        $args['maxWidth'] = isset($args['maxWidth']) ? intval($args['maxWidth']) : 0;
 
         $db = Database::get();
         $db->execute('DELETE from btImageSliderEntries WHERE bID = ?', array($this->bID));
