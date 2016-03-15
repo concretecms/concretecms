@@ -3,6 +3,14 @@
 use Concrete\Core\Utility\Service\Text;
 use \Concrete\Core\Localization\Localization;
 
+function debugT($text)
+{
+    if (defined('DEBUG_T_FUNCTION')) {
+        return "*{$text}*";
+    }
+    return $text;
+}
+
 /**
  * Translate text (simple form).
  *
@@ -29,12 +37,12 @@ function t($text)
         }
     }
     if (func_num_args() === 1) {
-        return $text;
+        return debugT($text);
     } else {
         $args = func_get_args();
         array_shift($args);
 
-        return vsprintf($text, $args);
+        return debugT(vsprintf($text, $args));
     }
 }
 
@@ -62,10 +70,10 @@ function t2($singular, $plural, $number)
     }
     $arg = array_slice(func_get_args(), 3);
     if ($arg) {
-        return vsprintf($translated, $arg);
+        return debugT(vsprintf($translated, $arg));
     }
 
-    return vsprintf($translated, $number);
+    return debugT(sprintf($translated, $number));
 }
 
 /**
@@ -94,14 +102,14 @@ function tc($context, $text)
         }
     }
     if (func_num_args() == 2) {
-        return $text;
+        return debugT($text);
     }
     $arg = array();
     for ($i = 2; $i < func_num_args(); $i++) {
         $arg[] = func_get_arg($i);
     }
 
-    return vsprintf($text, $arg);
+    return debugT(vsprintf($text, $arg));
 }
 
 /**
