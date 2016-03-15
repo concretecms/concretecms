@@ -1,14 +1,16 @@
 <?php
 namespace Concrete\Core\Entity\Attribute\Value\Value;
 
+use Doctrine\ORM\Mapping as ORM;
+
 /**
- * @Entity
- * @Table(name="TextareaAttributeValues")
+ * @ORM\Entity
+ * @ORM\Table(name="TextareaAttributeValues")
  */
 class TextareaValue extends Value
 {
     /**
-     * @Column(type="text", nullable=true)
+     * @ORM\Column(type="text", nullable=true)
      */
     protected $value = '';
 

@@ -6,10 +6,11 @@ use Concrete\Core\Block\View\BlockView;
 use Concrete\Core\Http\Request;
 use Concrete\Core\Permission\Access\Entity\GroupEntity;
 use Database;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @Entity
- * @Table(name="PageFeeds")
+ * @ORM\Entity
+ * @ORM\Table(name="PageFeeds")
  */
 class Feed
 {
@@ -17,17 +18,17 @@ class Feed
     protected $checkPagePermissions = true;
 
     /**
-     * @Column(type="string", nullable=true)
+     * @ORM\Column(type="string", nullable=true)
      */
     protected $customTopicAttributeKeyHandle = null;
 
     /**
-     * @Column(type="integer", options={"unsigned":true})
+     * @ORM\Column(type="integer", options={"unsigned":true})
      */
     protected $customTopicTreeNodeID = 0;
 
     /**
-     * @Column(type="integer", options={"unsigned":true})
+     * @ORM\Column(type="integer", options={"unsigned":true})
      */
     protected $iconFID = 0;
 
@@ -200,12 +201,12 @@ class Feed
     }
 
     /**
-     * @Column(type="string")
+     * @ORM\Column(type="string")
      */
     protected $pfDescription;
 
     /**
-     * @Column(type="string")
+     * @ORM\Column(type="string")
      */
     protected $pfHandle;
 
@@ -226,44 +227,44 @@ class Feed
     }
 
     /**
-     * @Column(type="string")
+     * @ORM\Column(type="string")
      */
     protected $pfTitle;
 
     /**
-     * @Id @Column(type="integer", options={"unsigned":true})
-     * @GeneratedValue(strategy="AUTO")
+     * @ORM\Id @ORM\Column(type="integer", options={"unsigned":true})
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $pfID;
 
     /**
-     * @Column(type="integer", options={"unsigned":true})
+     * @ORM\Column(type="integer", options={"unsigned":true})
      */
 
     protected $cParentID;
 
     /**
-     * @Column(type="integer", options={"unsigned":true})
+     * @ORM\Column(type="integer", options={"unsigned":true})
      */
     protected $ptID;
 
     /**
-     * @Column(type="boolean")
+     * @ORM\Column(type="boolean")
      */
     protected $pfIncludeAllDescendents = false;
 
     /**
-     * @Column(type="boolean")
+     * @ORM\Column(type="boolean")
      */
     protected $pfDisplayAliases = false;
 
     /**
-     * @Column(type="string")
+     * @ORM\Column(type="string")
      */
     protected $pfContentToDisplay = 'S'; // short description
 
     /**
-     * @Column(type="string", nullable=true)
+     * @ORM\Column(type="string", nullable=true)
      */
     protected $pfAreaHandleToDisplay;
 
@@ -294,7 +295,7 @@ class Feed
         return \URL::to('/rss/' . $this->getHandle());
     }
     /**
-     * @Column(type="boolean")
+     * @ORM\Column(type="boolean")
      */
     protected $pfDisplayFeaturedOnly = false;
 

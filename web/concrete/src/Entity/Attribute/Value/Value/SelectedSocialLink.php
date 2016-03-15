@@ -1,31 +1,33 @@
 <?php
 namespace Concrete\Core\Entity\Attribute\Value\Value;
 
+use Doctrine\ORM\Mapping as ORM;
+
 /**
- * @Entity
- * @Table(name="SocialLinkAttributeSelectedLinks")
+ * @ORM\Entity
+ * @ORM\Table(name="SocialLinkAttributeSelectedLinks")
  */
 class SelectedSocialLink
 {
     /**
-     * @Id @Column(type="integer", options={"unsigned":true})
-     * @GeneratedValue(strategy="AUTO")
+     * @ORM\Id @ORM\Column(type="integer", options={"unsigned":true})
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $avsID;
 
     /**
-     * @ManyToOne(targetEntity="SocialLinksValue")
-     * @JoinColumn(name="avID", referencedColumnName="avID")
+     * @ORM\ManyToOne(targetEntity="SocialLinksValue")
+     * @ORM\JoinColumn(name="avID", referencedColumnName="avID")
      */
     protected $value;
 
     /**
-     * @Column(type="string")
+     * @ORM\Column(type="string")
      */
     protected $service;
 
     /**
-     * @Column(type="string", nullable=true)
+     * @ORM\Column(type="string", nullable=true)
      */
     protected $serviceInfo;
 

@@ -4,14 +4,15 @@ namespace Concrete\Core\Entity\Attribute;
 use Concrete\Core\Entity\Attribute\Key\Key;
 use Concrete\Core\Entity\PackageTrait;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @Entity
- * @Table(
+ * @ORM\Entity
+ * @ORM\Table(
  *     name="AttributeSets",
  *     indexes={
- *     @Index(name="asHandle", columns={"asHandle"}),
- *     @Index(name="pkgID", columns={"pkgID"})
+ *     @ORM\Index(name="asHandle", columns={"asHandle"}),
+ *     @ORM\Index(name="pkgID", columns={"pkgID"})
  *     }
  * )
  */
@@ -20,14 +21,14 @@ class Set
     use PackageTrait;
 
     /**
-     * @OneToMany(targetEntity="\Concrete\Core\Entity\Attribute\SetKey", mappedBy="set", cascade={"all"})
-     * @OrderBy({"asDisplayOrder" = "ASC"})
+     * @ORM\OneToMany(targetEntity="\Concrete\Core\Entity\Attribute\SetKey", mappedBy="set", cascade={"all"})
+     * @ORM\OrderBy({"asDisplayOrder" = "ASC"})
      */
     protected $keys;
 
     /**
-     * @ManyToOne(targetEntity="Category", inversedBy="set")
-     * @JoinColumn(name="akCategoryID", referencedColumnName="akCategoryID")
+     * @ORM\ManyToOne(targetEntity="Category", inversedBy="set")
+     * @ORM\JoinColumn(name="akCategoryID", referencedColumnName="akCategoryID")
      */
     protected $category;
 
@@ -37,28 +38,28 @@ class Set
     }
 
     /**
-     * @Id @Column(type="integer", options={"unsigned":true})
-     * @GeneratedValue(strategy="AUTO")
+     * @ORM\Id @ORM\Column(type="integer", options={"unsigned":true})
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $asID;
 
     /**
-     * @Column(type="string")
+     * @ORM\Column(type="string")
      */
     protected $asHandle;
 
     /**
-     * @Column(type="string")
+     * @ORM\Column(type="string")
      */
     protected $asName;
 
     /**
-     * @Column(type="integer", options={"unsigned":true})
+     * @ORM\Column(type="integer", options={"unsigned":true})
      */
     protected $asDisplayOrder = 0;
 
     /**
-     * @Column(type="boolean")
+     * @ORM\Column(type="boolean")
      */
     protected $asIsLocked = false;
 

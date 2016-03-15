@@ -1,22 +1,24 @@
 <?php
 namespace Concrete\Core\Entity\Express\Entry;
 
+use Doctrine\ORM\Mapping as ORM;
+
 /**
- * @Entity
- * @Table(name="ExpressEntityEntryOneAssociations")
+ * @ORM\Entity
+ * @ORM\Table(name="ExpressEntityEntryOneAssociations")
  */
 class OneAssociation extends Association
 {
 
     /**
-     * @Id @Column(type="integer")
-     * @GeneratedValue(strategy="AUTO")
+     * @ORM\Id @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $id;
 
     /**
-     * @ManyToOne(targetEntity="\Concrete\Core\Entity\Express\Entry")
-     * @JoinColumn(name="exSelectedEntryID", referencedColumnName="exEntryID")
+     * @ORM\ManyToOne(targetEntity="\Concrete\Core\Entity\Express\Entry")
+     * @ORM\JoinColumn(name="exSelectedEntryID", referencedColumnName="exEntryID")
      */
     protected $selected_entry;
 

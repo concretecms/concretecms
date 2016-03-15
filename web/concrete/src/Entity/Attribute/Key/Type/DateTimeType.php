@@ -2,10 +2,11 @@
 namespace Concrete\Core\Entity\Attribute\Key\Type;
 
 use Concrete\Core\Entity\Attribute\Value\Value\DateTimeValue;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @Entity
- * @Table(name="DateTimeAttributeKeyTypes")
+ * @ORM\Entity
+ * @ORM\Table(name="DateTimeAttributeKeyTypes")
  */
 class DateTimeType extends Type
 {
@@ -15,7 +16,7 @@ class DateTimeType extends Type
     }
 
     /**
-     * @Column(type="string")
+     * @ORM\Column(type="string")
      */
     protected $mode = '';
 

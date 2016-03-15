@@ -2,10 +2,11 @@
 namespace Concrete\Core\Entity\Attribute\Key\Type;
 
 use Concrete\Core\Entity\Attribute\Value\Value\RatingValue;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @Entity
- * @Table(name="RatingAttributeKeyTypes")
+ * @ORM\Entity
+ * @ORM\Table(name="RatingAttributeKeyTypes")
  */
 class RatingType extends Type
 {

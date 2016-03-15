@@ -2,28 +2,29 @@
 namespace Concrete\Core\Sharing\SocialNetwork;
 
 use Database;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @Entity
- * @Table(name="SocialLinks")
+ * @ORM\Entity
+ * @ORM\Table(name="SocialLinks")
  */
 class Link
 {
     /**
      * The social service handle.
      *
-     * @Column(type="string")
+     * @ORM\Column(type="string")
      */
     protected $ssHandle;
 
     /**
-     * @Column(type="string")
+     * @ORM\Column(type="string")
      */
     protected $url;
 
     /**
-     * @Id @Column(type="integer")
-     * @GeneratedValue
+     * @ORM\Id @ORM\Column(type="integer")
+     * @ORM\GeneratedValue
      */
     protected $slID;
 

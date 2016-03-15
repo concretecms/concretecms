@@ -2,10 +2,11 @@
 namespace Concrete\Core\Entity\Attribute\Key\Type;
 
 use Concrete\Core\Entity\Attribute\Value\Value\ImageFileValue;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @Entity
- * @Table(name="ImageFileAttributeKeyTypes")
+ * @ORM\Entity
+ * @ORM\Table(name="ImageFileAttributeKeyTypes")
  */
 class ImageFileType extends Type
 {
@@ -19,7 +20,7 @@ class ImageFileType extends Type
     }
 
     /**
-     * @Column(type="integer")
+     * @ORM\Column(type="integer")
      */
     protected $mode;
 

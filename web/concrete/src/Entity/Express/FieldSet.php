@@ -2,42 +2,43 @@
 namespace Concrete\Core\Entity\Express;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @Entity
- * @Table(name="ExpressFormFieldSets")
+ * @ORM\Entity
+ * @ORM\Table(name="ExpressFormFieldSets")
  */
 class FieldSet
 {
     /**
-     * @Id @Column(type="integer")
-     * @GeneratedValue(strategy="AUTO")
+     * @ORM\Id @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $id;
 
     /**
-     * @Column(type="integer")
+     * @ORM\Column(type="integer")
      */
     protected $position = 0;
 
     /**
-     * @Column(type="string", nullable=true)
+     * @ORM\Column(type="string", nullable=true)
      */
     protected $title;
 
     /**
-     * @Column(type="text", nullable=true)
+     * @ORM\Column(type="text", nullable=true)
      */
     protected $description;
 
     /**
-     * @ManyToOne(targetEntity="Form")
+     * @ORM\ManyToOne(targetEntity="Form")
      **/
     protected $form;
 
     /**
-     * @OneToMany(targetEntity="\Concrete\Core\Entity\Express\Control\Control", mappedBy="field_set", cascade={"persist", "remove"})
-     * @OrderBy({"position" = "ASC"})
+     * @ORM\OneToMany(targetEntity="\Concrete\Core\Entity\Express\Control\Control", mappedBy="field_set", cascade={"persist", "remove"})
+     * @ORM\OrderBy({"position" = "ASC"})
      **/
     protected $controls;
 

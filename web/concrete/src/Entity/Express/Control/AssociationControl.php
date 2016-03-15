@@ -6,21 +6,22 @@ use Concrete\Core\Express\Form\Control\Form\AssociationControlFormRenderer;
 use Concrete\Core\Express\Form\Control\Type\SaveHandler\AssociationControlSaveHandler;
 use Concrete\Core\Express\Form\Control\View\AssociationControlViewRenderer;
 use Concrete\Core\Entity\Express\Entity;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @Entity
- * @Table(name="ExpressFormFieldSetAssociationControls")
+ * @ORM\Entity
+ * @ORM\Table(name="ExpressFormFieldSetAssociationControls")
  */
 class AssociationControl extends Control
 {
     /**
      * @var \Concrete\Core\Entity\Express\Association
-     * @ManyToOne(targetEntity="\Concrete\Core\Entity\Express\Association", inversedBy="controls")
+     * @ORM\ManyToOne(targetEntity="\Concrete\Core\Entity\Express\Association", inversedBy="controls")
      */
     protected $association;
 
     /**
-     * @Column(type="string", nullable=true)
+     * @ORM\Column(type="string", nullable=true)
      */
     protected $association_entity_label_mask;
 

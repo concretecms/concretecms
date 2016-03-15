@@ -5,29 +5,30 @@ use PageType;
 use Concrete\Core\Support\Facade\Database;
 use Concrete\Core\Package\PackageList;
 use Core;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @Entity
- * @Table(name="PageTemplates")
+ * @ORM\Entity
+ * @ORM\Table(name="PageTemplates")
  */
 class Template
 {
-    /** @Id @Column(type="integer") @GeneratedValue **/
+    /** @ORM\Id @ORM\Column(type="integer") @ORM\GeneratedValue **/
     protected $pTemplateID;
 
-    /** @Column(type="string") **/
+    /** @ORM\Column(type="string") **/
     protected $pTemplateHandle;
 
-    /** @Column(type="string") **/
+    /** @ORM\Column(type="string") **/
     protected $pTemplateIcon = FILENAME_PAGE_TEMPLATE_DEFAULT_ICON;
 
-    /** @Column(type="string") **/
+    /** @ORM\Column(type="string") **/
     protected $pTemplateName;
 
-    /** @Column(type="boolean") **/
+    /** @ORM\Column(type="boolean") **/
     protected $pTemplateIsInternal = false;
 
-    /** @Column(type="integer") **/
+    /** @ORM\Column(type="integer") **/
     protected $pkgID = 0;
 
     public static function exportList($xml)

@@ -2,10 +2,11 @@
 namespace Concrete\Core\Entity\Attribute\Key\Type;
 
 use Concrete\Core\Entity\Attribute\Value\Value\AddressValue;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @Entity
- * @Table(name="AddressAttributeKeyTypes")
+ * @ORM\Entity
+ * @ORM\Table(name="AddressAttributeKeyTypes")
  */
 class AddressType extends Type
 {
@@ -15,17 +16,17 @@ class AddressType extends Type
     }
 
     /**
-     * @Column(type="string")
+     * @ORM\Column(type="string")
      */
     protected $defaultCountry = '';
 
     /**
-     * @Column(type="boolean")
+     * @ORM\Column(type="boolean")
      */
     protected $hasCustomCountries = false;
 
     /**
-     * @Column(type="json_array")
+     * @ORM\Column(type="json_array")
      */
     protected $customCountries = array();
 

@@ -1,14 +1,16 @@
 <?php
 namespace Concrete\Core\Entity\Attribute\Value\Value;
 
+use Doctrine\ORM\Mapping as ORM;
+
 /**
- * @Entity
- * @Table(name="BooleanAttributeValues")
+ * @ORM\Entity
+ * @ORM\Table(name="BooleanAttributeValues")
  */
 class BooleanValue extends Value
 {
     /**
-     * @Column(type="boolean")
+     * @ORM\Column(type="boolean")
      */
     protected $value = false;
 

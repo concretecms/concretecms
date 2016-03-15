@@ -3,25 +3,27 @@ namespace Concrete\Core\Entity\Express\Entry;
 
 use Doctrine\Common\Collections\ArrayCollection;
 
+use Doctrine\ORM\Mapping as ORM;
+
 /**
- * @Entity
- * @Table(name="ExpressEntityEntryManyAssociations")
+ * @ORM\Entity
+ * @ORM\Table(name="ExpressEntityEntryManyAssociations")
  */
 class ManyAssociation extends Association
 {
 
     /**
-     * @Id @Column(type="integer")
-     * @GeneratedValue(strategy="AUTO")
+     * @ORM\Id @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $id;
 
 
     /**
-     * @ManyToMany(targetEntity="\Concrete\Core\Entity\Express\Entry", cascade={"persist"})
-     * @JoinTable(name="ExpressEntityEntryManyAssociationSelectedEntries",
-     * joinColumns={@JoinColumn(name="id", referencedColumnName="id")},
-     * inverseJoinColumns={@JoinColumn(name="exSelectedEntryID", referencedColumnName="exEntryID")}
+     * @ORM\ManyToMany(targetEntity="\Concrete\Core\Entity\Express\Entry", cascade={"persist"})
+     * @ORM\JoinTable(name="ExpressEntityEntryManyAssociationSelectedEntries",
+     * joinColumns={@ORM\JoinColumn(name="id", referencedColumnName="id")},
+     * inverseJoinColumns={@ORM\JoinColumn(name="exSelectedEntryID", referencedColumnName="exEntryID")}
      * )
      */
     protected $selectedEntries;

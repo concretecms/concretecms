@@ -2,18 +2,19 @@
 namespace Concrete\Core\Entity\Attribute\Value\Value;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @Entity
- * @Table(name="SelectAttributeValues")
+ * @ORM\Entity
+ * @ORM\Table(name="SelectAttributeValues")
  */
 class SelectValue extends Value
 {
     /**
-     * @ManyToMany(targetEntity="SelectValueOption", inversedBy="values", cascade={"persist"})
-     * @JoinTable(name="SelectAttributeValueSelectedOptions",
-     * joinColumns={@JoinColumn(name="avID", referencedColumnName="avID")},
-     * inverseJoinColumns={@JoinColumn(name="avSelectOptionID", referencedColumnName="avSelectOptionID")}
+     * @ORM\ManyToMany(targetEntity="SelectValueOption", inversedBy="values", cascade={"persist"})
+     * @ORM\JoinTable(name="SelectAttributeValueSelectedOptions",
+     * joinColumns={@ORM\JoinColumn(name="avID", referencedColumnName="avID")},
+     * inverseJoinColumns={@ORM\JoinColumn(name="avSelectOptionID", referencedColumnName="avSelectOptionID")}
      * )
      */
     protected $selectedOptions;

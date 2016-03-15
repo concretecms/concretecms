@@ -2,15 +2,16 @@
 namespace Concrete\Core\Entity\Attribute\Key\Type;
 
 use Concrete\Core\Entity\Attribute\Value\Value\BooleanValue;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @Entity
- * @Table(name="BooleanAttributeKeyTypes")
+ * @ORM\Entity
+ * @ORM\Table(name="BooleanAttributeKeyTypes")
  */
 class BooleanType extends Type
 {
     /**
-     * @Column(type="boolean")
+     * @ORM\Column(type="boolean")
      */
     protected $isCheckedByDefault = false;
 

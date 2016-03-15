@@ -2,21 +2,22 @@
 namespace Concrete\Core\StyleCustomizer;
 
 use Database;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @Entity
- * @Table(name="StyleCustomizerCustomCssRecords")
+ * @ORM\Entity
+ * @ORM\Table(name="StyleCustomizerCustomCssRecords")
  */
 class CustomCssRecord
 {
     /**
-     * @Column(type="text")
+     * @ORM\Column(type="text")
      */
     protected $value;
 
     /**
-     * @Id @Column(type="integer")
-     * @GeneratedValue
+     * @ORM\Id @ORM\Column(type="integer")
+     * @ORM\GeneratedValue
      */
     protected $sccRecordID;
 

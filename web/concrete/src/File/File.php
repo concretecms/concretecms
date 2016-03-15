@@ -14,16 +14,17 @@ use Page;
 use Database;
 use Concrete\Core\File\StorageLocation\StorageLocation;
 use PermissionKey;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @Entity
- * @Table(
+ * @ORM\Entity
+ * @ORM\Table(
  *     name="Files",
  *     indexes={
- *     @Index(name="uID", columns={"uID"}),
- *     @Index(name="fslID", columns={"fslID"}),
- *     @Index(name="ocID", columns={"ocID"}),
- *     @Index(name="fOverrideSetPermissions", columns={"fOverrideSetPermissions"}),
+ *     @ORM\Index(name="uID", columns={"uID"}),
+ *     @ORM\Index(name="fslID", columns={"fslID"}),
+ *     @ORM\Index(name="ocID", columns={"ocID"}),
+ *     @ORM\Index(name="fOverrideSetPermissions", columns={"fOverrideSetPermissions"}),
  *     }
  * )
  */
@@ -32,47 +33,47 @@ class File implements \Concrete\Core\Permission\ObjectInterface
     const CREATE_NEW_VERSION_THRESHOLD = 300;
 
     /**
-     * @Id @Column(type="integer", options={"unsigned": true})
-     * @GeneratedValue(strategy="AUTO")
+     * @ORM\Id @ORM\Column(type="integer", options={"unsigned": true})
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $fID;
 
     /**
-     * @Column(type="datetime")
+     * @ORM\Column(type="datetime")
      */
     protected $fDateAdded = null;
 
     /**
-     * @Column(type="string", nullable=true)
+     * @ORM\Column(type="string", nullable=true)
      */
     protected $fPassword;
 
     /**
-     * @OneToMany(targetEntity="Version", mappedBy="file", cascade={"persist"})
-     * @JoinColumn(name="fID")
+     * @ORM\OneToMany(targetEntity="Version", mappedBy="file", cascade={"persist"})
+     * @ORM\JoinColumn(name="fID")
      */
     protected $versions;
 
     /**
-     * @Column(type="boolean")
+     * @ORM\Column(type="boolean")
      */
     protected $fOverrideSetPermissions = false;
 
     /**
      * Originally placed on which page.
      *
-     * @Column(type="integer", options={"unsigned": true})
+     * @ORM\Column(type="integer", options={"unsigned": true})
      */
     protected $ocID = 0;
 
     /**
-     * @Column(type="integer", options={"unsigned": true})
+     * @ORM\Column(type="integer", options={"unsigned": true})
      */
     protected $uID = 0;
 
     /**
-     * @ManyToOne(targetEntity="\Concrete\Core\File\StorageLocation\StorageLocation", inversedBy="files")
-     * @JoinColumn(name="fslID", referencedColumnName="fslID")
+     * @ORM\ManyToOne(targetEntity="\Concrete\Core\File\StorageLocation\StorageLocation", inversedBy="files")
+     * @ORM\JoinColumn(name="fslID", referencedColumnName="fslID")
      **/
     protected $storageLocation;
 

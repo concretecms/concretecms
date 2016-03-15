@@ -15,73 +15,74 @@ use Localization;
 use Package;
 use Page;
 use User;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @Entity
- * @Table(name="BlockTypes")
+ * @ORM\Entity
+ * @ORM\Table(name="BlockTypes")
  */
 class BlockType
 {
     public $controller;
 
     /**
-     * @Column(type="boolean")
+     * @ORM\Column(type="boolean")
      */
     protected $btIgnorePageThemeGridFrameworkContainer = false;
 
     /**
-     * @Id @Column(type="integer")
-     * @GeneratedValue
+     * @ORM\Id @ORM\Column(type="integer")
+     * @ORM\GeneratedValue
      */
     protected $btID;
     /**
-     * @Column(type="string", length=128)
+     * @ORM\Column(type="string", length=128)
      */
     protected $btHandle;
     /**
-     * @Column(type="string", length=128)
+     * @ORM\Column(type="string", length=128)
      */
     protected $btName;
     /**
-     * @Column(type="text")
+     * @ORM\Column(type="text")
      */
     protected $btDescription;
     /**
-     * @Column(type="boolean")
+     * @ORM\Column(type="boolean")
      */
     protected $btCopyWhenPropagate = false;
     /**
-     * @Column(type="boolean")
+     * @ORM\Column(type="boolean")
      */
     protected $btIncludeAll = false;
     /**
-     * @Column(type="boolean")
+     * @ORM\Column(type="boolean")
      */
     protected $btIsInternal = false;
     /**
-     * @Column(type="boolean")
+     * @ORM\Column(type="boolean")
      */
     protected $btSupportsInlineEdit = false;
     /**
-     * @Column(type="boolean")
+     * @ORM\Column(type="boolean")
      */
     protected $btSupportsInlineAdd = false;
 
     /**
-     * @Column(type="integer")
+     * @ORM\Column(type="integer")
      */
     protected $btDisplayOrder = 0;
 
     /**
-     * @Column(type="integer")
+     * @ORM\Column(type="integer")
      */
     protected $btInterfaceHeight;
     /**
-     * @Column(type="integer")
+     * @ORM\Column(type="integer")
      */
     protected $btInterfaceWidth;
     /**
-     * @Column(columnDefinition="integer unsigned")
+     * @ORM\Column(columnDefinition="integer unsigned")
      */
     protected $pkgID = 0;
 

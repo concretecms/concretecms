@@ -4,11 +4,12 @@ namespace Concrete\Core\Entity\Attribute;
 use Concrete\Core\Attribute\EntityInterface;
 use Concrete\Core\Entity\PackageTrait;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @Entity
- * @Table(name="AttributeKeyCategories", indexes={@Index(name="pkgID", columns={"pkgID", "akCategoryID"}),
- * @Index(name="akCategoryHandle", columns={"akCategoryHandle"})})
+ * @ORM\Entity
+ * @ORM\Table(name="AttributeKeyCategories", indexes={@ORM\Index(name="pkgID", columns={"pkgID", "akCategoryID"}),
+ * @ORM\Index(name="akCategoryHandle", columns={"akCategoryHandle"})})
  */
 class Category implements EntityInterface
 {
@@ -21,33 +22,33 @@ class Category implements EntityInterface
     use PackageTrait;
 
     /**
-     * @Id @Column(type="integer", options={"unsigned":true})
-     * @GeneratedValue(strategy="AUTO")
+     * @ORM\Id @ORM\Column(type="integer", options={"unsigned":true})
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $akCategoryID;
 
     /**
-     * @Column(type="string", unique=true)
+     * @ORM\Column(type="string", unique=true)
      */
     protected $akCategoryHandle;
 
     /**
-     * @Column(type="integer")
+     * @ORM\Column(type="integer")
      */
     protected $akCategoryAllowSets;
 
     /**
-     * @ManyToMany(targetEntity="Type", inversedBy="categories")
-     * @JoinTable(name="AttributeTypeCategories",
-     * joinColumns={@JoinColumn(name="akCategoryID", referencedColumnName="akCategoryID")},
-     * inverseJoinColumns={@JoinColumn(name="atID", referencedColumnName="atID")}
+     * @ORM\ManyToMany(targetEntity="Type", inversedBy="categories")
+     * @ORM\JoinTable(name="AttributeTypeCategories",
+     * joinColumns={@ORM\JoinColumn(name="akCategoryID", referencedColumnName="akCategoryID")},
+     * inverseJoinColumns={@ORM\JoinColumn(name="atID", referencedColumnName="atID")}
      * )
      */
     protected $types;
 
     /**
-     * @OneToMany(targetEntity="Set", mappedBy="category")
-     * @JoinColumn(name="akCategoryID", referencedColumnName="asID")
+     * @ORM\OneToMany(targetEntity="Set", mappedBy="category")
+     * @ORM\JoinColumn(name="akCategoryID", referencedColumnName="asID")
      */
     protected $sets;
 

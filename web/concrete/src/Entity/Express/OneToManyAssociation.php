@@ -3,9 +3,10 @@ namespace Concrete\Core\Entity\Express;
 
 use Concrete\Core\Express\Association\Builder\OneToManyAssociationBuilder;
 use Concrete\Core\Express\Association\Formatter\OneToManyFormatter;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @Entity
+ * @ORM\Entity
  */
 class OneToManyAssociation extends Association
 {

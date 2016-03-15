@@ -6,31 +6,32 @@ use Concrete\Core\Package\PackageList;
 use Database;
 use Core;
 use Environment;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @Entity
- * @Table(name="FileStorageLocationTypes")
+ * @ORM\Entity
+ * @ORM\Table(name="FileStorageLocationTypes")
  */
 class Type
 {
     /**
-     * @Column(type="text")
+     * @ORM\Column(type="text")
      */
     protected $fslTypeHandle;
 
     /**
-     * @Column(type="text")
+     * @ORM\Column(type="text")
      */
     protected $fslTypeName;
 
     /**
-     * @Id @Column(type="integer")
-     * @GeneratedValue
+     * @ORM\Id @ORM\Column(type="integer")
+     * @ORM\GeneratedValue
      */
     protected $fslTypeID;
 
     /**
-     * @Column(type="integer")
+     * @ORM\Column(type="integer")
      */
     protected $pkgID = 0;
 

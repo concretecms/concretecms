@@ -1,14 +1,16 @@
 <?php
 namespace Concrete\Core\Entity\Attribute\Value\Value;
 
+use Doctrine\ORM\Mapping as ORM;
+
 /**
- * @Entity
- * @Table(name="DateTimeAttributeValues")
+ * @ORM\Entity
+ * @ORM\Table(name="DateTimeAttributeValues")
  */
 class DateTimeValue extends Value
 {
     /**
-     * @Column(type="datetime", nullable=true)
+     * @ORM\Column(type="datetime", nullable=true)
      */
     protected $value = '';
 

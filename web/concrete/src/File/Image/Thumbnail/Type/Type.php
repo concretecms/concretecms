@@ -2,41 +2,42 @@
 namespace Concrete\Core\File\Image\Thumbnail\Type;
 
 use Database;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @Entity
- * @Table(name="FileImageThumbnailTypes")
+ * @ORM\Entity
+ * @ORM\Table(name="FileImageThumbnailTypes")
  */
 class Type
 {
     /**
-     * @Column(type="string")
+     * @ORM\Column(type="string")
      */
     protected $ftTypeHandle;
 
     /**
-     * @Column(type="string")
+     * @ORM\Column(type="string")
      */
     protected $ftTypeName;
 
     /**
-     * @Column(type="integer")
+     * @ORM\Column(type="integer")
      */
     protected $ftTypeWidth = 0;
 
     /**
-     * @Column(type="integer", nullable=true)
+     * @ORM\Column(type="integer", nullable=true)
      */
     protected $ftTypeHeight = null;
 
     /**
-     * @Column(type="boolean")
+     * @ORM\Column(type="boolean")
      */
     protected $ftTypeIsRequired = false;
 
     /**
-     * @Id @Column(type="integer")
-     * @GeneratedValue
+     * @ORM\Id @ORM\Column(type="integer")
+     * @ORM\GeneratedValue
      */
     protected $ftTypeID;
 

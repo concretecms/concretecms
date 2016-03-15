@@ -2,22 +2,23 @@
 namespace Concrete\Core\Entity\Attribute\Value\Value;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @Entity
- * @Table(name="SelectAttributeValueOptionLists")
+ * @ORM\Entity
+ * @ORM\Table(name="SelectAttributeValueOptionLists")
  */
 class SelectValueOptionList
 {
     /**
-     * @Id @Column(type="integer", options={"unsigned":true})
-     * @GeneratedValue(strategy="AUTO")
+     * @ORM\Id @ORM\Column(type="integer", options={"unsigned":true})
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $avSelectOptionListID;
 
     /**
-     * @OneToMany(targetEntity="SelectValueOption", mappedBy="list", cascade={"all"})
-     * @JoinColumn(name="avSelectOptionListID", referencedColumnName="avSelectOptionListID")
+     * @ORM\OneToMany(targetEntity="SelectValueOption", mappedBy="list", cascade={"all"})
+     * @ORM\JoinColumn(name="avSelectOptionListID", referencedColumnName="avSelectOptionListID")
      */
     protected $options;
 

@@ -1,9 +1,11 @@
 <?php
 namespace Concrete\Core\Entity\Attribute\Key;
 
+use Doctrine\ORM\Mapping as ORM;
+
 /**
- * @Entity
- * @Table(name="CollectionAttributeKeys")
+ * @ORM\Entity
+ * @ORM\Table(name="CollectionAttributeKeys")
  */
 class PageKey extends Key
 {

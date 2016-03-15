@@ -1,14 +1,16 @@
 <?php
 namespace Concrete\Core\Entity\Attribute\Value\Value;
 
+use Doctrine\ORM\Mapping as ORM;
+
 /**
- * @Entity
- * @Table(name="TextAttributeValues")
+ * @ORM\Entity
+ * @ORM\Table(name="TextAttributeValues")
  */
 class TextValue extends Value
 {
     /**
-     * @Column(type="string", nullable=true)
+     * @ORM\Column(type="string", nullable=true)
      */
     protected $value = '';
 

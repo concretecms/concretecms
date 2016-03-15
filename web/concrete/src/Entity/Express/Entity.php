@@ -6,76 +6,77 @@ use Concrete\Core\Express\Search\ColumnSet\ColumnSet;
 use Concrete\Core\Express\Search\ColumnSet\DefaultSet;
 use Concrete\Core\Tree\Node\Node;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @Entity(repositoryClass="\Concrete\Core\Entity\Express\EntityRepository")
- * @Table(name="ExpressEntities")
- * @HasLifecycleCallbacks
+ * @ORM\Entity(repositoryClass="\Concrete\Core\Entity\Express\EntityRepository")
+ * @ORM\Table(name="ExpressEntities")
+ * @ORM\HasLifecycleCallbacks
  */
 class Entity implements EntityInterface
 {
     /**
-     * @Id @Column(type="integer")
-     * @GeneratedValue(strategy="AUTO")
+     * @ORM\Id @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $id;
 
     /**
-     * @Column(type="string")
+     * @ORM\Column(type="string")
      */
     protected $name;
 
     /**
-     * @Column(type="string", unique=true)
+     * @ORM\Column(type="string", unique=true)
      */
     protected $handle;
 
     /**
-     * @Column(type="text", nullable=true)
+     * @ORM\Column(type="text", nullable=true)
      */
     protected $description;
 
     /**
-     * @Column(type="object", nullable=true)
+     * @ORM\Column(type="object", nullable=true)
      */
     protected $result_column_set;
 
     /**
-     * @Column(type="boolean")
+     * @ORM\Column(type="boolean")
      */
     protected $include_in_public_list = true;
 
     /**
-     * @Column(type="integer")
+     * @ORM\Column(type="integer")
      */
     protected $entity_results_node_id;
 
     /**
-     * @OneToMany(targetEntity="\Concrete\Core\Entity\Attribute\Key\ExpressKey", mappedBy="entity", cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity="\Concrete\Core\Entity\Attribute\Key\ExpressKey", mappedBy="entity", cascade={"persist", "remove"})
      **/
     protected $attributes;
 
     /**
-     * @OneToMany(targetEntity="Association", mappedBy="source_entity", cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity="Association", mappedBy="source_entity", cascade={"persist", "remove"})
      **/
     protected $associations;
 
     /**
-     * @OneToMany(targetEntity="Form", mappedBy="entity", cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity="Form", mappedBy="entity", cascade={"persist", "remove"})
      **/
     protected $forms;
 
     /**
-     * @OneToMany(targetEntity="Entry", mappedBy="entity", cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity="Entry", mappedBy="entity", cascade={"persist", "remove"})
      **/
     protected $entries;
 
     /**
-     * @Column(type="datetime")
+     * @ORM\Column(type="datetime")
      */
     protected $created_date;
 
-    /** @PostRemove */
+    /** @ORM\PostRemove */
     public function afterRemove()
     {
         $node = Node::getByID($this->getEntityResultsNodeId());

@@ -3,36 +3,37 @@ namespace Concrete\Core\File\StorageLocation;
 
 use Concrete\Core\File\StorageLocation\Configuration\ConfigurationInterface;
 use Database;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @Entity
- * @Table(name="FileStorageLocations")
+ * @ORM\Entity
+ * @ORM\Table(name="FileStorageLocations")
  */
 class StorageLocation
 {
     /**
-     * @Column(type="string")
+     * @ORM\Column(type="string")
      */
     protected $fslName;
 
     /**
-     * @Column(type="object")
+     * @ORM\Column(type="object")
      */
     protected $fslConfiguration;
 
     /**
-     * @Id @Column(type="integer", options={"unsigned": true})
-     * @GeneratedValue
+     * @ORM\Id @ORM\Column(type="integer", options={"unsigned": true})
+     * @ORM\GeneratedValue
      */
     protected $fslID;
 
     /**
-     * @OneToMany(targetEntity="\Concrete\Core\File\File", mappedBy="storageLocation")
+     * @ORM\OneToMany(targetEntity="\Concrete\Core\File\File", mappedBy="storageLocation")
      **/
     protected $files;
 
     /**
-     * @Column(type="boolean")
+     * @ORM\Column(type="boolean")
      */
     protected $fslIsDefault = false;
 

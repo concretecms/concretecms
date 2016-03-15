@@ -2,10 +2,11 @@
 namespace Concrete\Core\Entity\Attribute\Key\Type;
 
 use Concrete\Core\Entity\Attribute\Value\Value\TextareaValue;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @Entity
- * @Table(name="TextareaAttributeTypes")
+ * @ORM\Entity
+ * @ORM\Table(name="TextareaAttributeTypes")
  */
 class TextareaType extends Type
 {
@@ -15,7 +16,7 @@ class TextareaType extends Type
     }
 
     /**
-     * @Column(type="string")
+     * @ORM\Column(type="string")
      */
     protected $mode = '';
 

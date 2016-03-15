@@ -1,30 +1,32 @@
 <?php
 namespace Concrete\Core\Entity\Attribute\Key\Type;
 
+use Doctrine\ORM\Mapping as ORM;
+
 /**
- * @Entity
- * @InheritanceType("JOINED")
- * @DiscriminatorColumn(name="type", type="string")
- * @Table(
+ * @ORM\Entity
+ * @ORM\InheritanceType("JOINED")
+ * @ORM\DiscriminatorColumn(name="type", type="string")
+ * @ORM\Table(
  *     name="AttributeKeyTypes"
  * )
  */
 abstract class Type
 {
     /**
-     * @Id @Column(type="integer")
-     * @GeneratedValue(strategy="AUTO")
+     * @ORM\Id @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $akTypeID;
 
     /**
-     * @Column(type="string", nullable=true)
+     * @ORM\Column(type="string", nullable=true)
      */
     protected $akTypeHandle;
 
     /**
-     * @ManyToOne(targetEntity="\Concrete\Core\Entity\Attribute\Key\Key", inversedBy="key_type")
-     * @JoinColumn(name="akID", referencedColumnName="akID")
+     * @ORM\ManyToOne(targetEntity="\Concrete\Core\Entity\Attribute\Key\Key", inversedBy="key_type")
+     * @ORM\JoinColumn(name="akID", referencedColumnName="akID")
      */
     protected $key;
 

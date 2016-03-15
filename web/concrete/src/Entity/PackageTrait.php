@@ -4,8 +4,8 @@ namespace Concrete\Core\Entity;
 trait PackageTrait
 {
     /**
-     * @ManyToOne(targetEntity="\Concrete\Core\Entity\Package", cascade={"persist"})
-     * @JoinColumn(name="pkgID", referencedColumnName="pkgID")
+     * @ORM\ManyToOne(targetEntity="\Concrete\Core\Entity\Package", cascade={"persist"})
+     * @ORM\JoinColumn(name="pkgID", referencedColumnName="pkgID")
      */
     protected $package = null;
 
