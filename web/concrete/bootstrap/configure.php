@@ -144,8 +144,12 @@ define('DIRNAME_EXPRESS_VIEW_CONTROLS', 'view');
 define('DIRNAME_EXPRESS_CONTROL_OPTIONS', 'control');
 define('DIRNAME_EXPRESS_FORM_CONTROLS', 'form');
 define('DIRNAME_EXPRESS_FORM_CONTROLS_ASSOCIATION', 'association');
+define('DIRNAME_METADATA_XML', 'xml');
+define('DIRNAME_METADATA_YAML', 'yaml');
 define('REL_DIR_FILES_INCOMING', '/incoming');
 define('REL_DIR_FILES_THUMBNAILS', '/thumbnails');
+define('REL_DIR_METADATA_XML', DIRNAME_CONFIG.DIRECTORY_SEPARATOR.DIRNAME_METADATA_XML);
+define('REL_DIR_METADATA_YAML', DIRNAME_CONFIG.DIRECTORY_SEPARATOR.DIRNAME_METADATA_YAML);
 
 /*
  * ----------------------------------------------------------------------------
