@@ -71,7 +71,7 @@ class Controller extends BlockController
                                 $nodeName = $node->getName();
                                 $aar->{$nodeName} = (string) $node;
                             }
-                            if ($table == 'btFormQuestions') {
+                            if ($table == $btQuestionsTablename) {
                                 $db = Database::connection();
                                 $aar->questionSetId = $db->GetOne('select questionSetId from btForm where bID = ?', array($b->getBlockID()));
                             }
