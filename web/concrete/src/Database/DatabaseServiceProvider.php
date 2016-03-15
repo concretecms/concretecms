@@ -52,16 +52,28 @@ class DatabaseServiceProvider extends ServiceProvider
             $packages = $entityManager->getRepository('Concrete\Core\Entity\Package')
                 ->findAll();
 
-            $driver = $entityManager->getConfiguration()->getMetadataDriverImpl();
-
+            $implementation = $entityManager->getConfiguration()->getMetadataDriverImpl();
+            
             $paths = array();
-
-            foreach($packages as $package) {
-                $class = $package->getController();
-                $paths = array_merge($paths, $class->getPackageEntityPaths());
+            // @todo - Check if functionality is ok.
+            if($implementation instanceof \Doctrine\Common\Persistence\Mapping\Driver\MappingDriverChain){
+                $drivers = $implementation->getDrivers();
+                foreach($packages as $package) {
+                    $class = $package->getController();
+                    
+                    $applicationVersionRequired = $class->getApplicationVersionRequired();
+                    
+                    $paths = array_merge($paths, $class->getPackageEntityPaths());
+                }
+            }else {
+                //MappingDriver
+                $driver = $implementation;
+                foreach($packages as $package) {
+                    $class = $package->getController();
+                    $paths = array_merge($paths, $class->getPackageEntityPaths());
+                }
+                $driver->addPaths($paths);
             }
-
-            $driver->addPaths($paths);
         } catch(\Exception $e) {}
     }
 
