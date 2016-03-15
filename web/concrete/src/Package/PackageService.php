@@ -182,10 +182,28 @@ class PackageService
             $this->localization->changeLocale('en_US');
         }
         try {
-
+            
+            // @ What happens if a package has no need for a entityManager 
+            
             $config = $this->entityManager->getConfiguration();
-            $driver = $config->getMetadataDriverImpl();
-            $driver->addPaths($p->getPackageEntityPaths());
+            $driverChain = $config->getMetadataDriverImpl();
+            
+            // @Todo
+            // For annotations: get the correct CachedReader and create a appropriate driver
+            
+            $driver = $p->getMetadataDriver();
+            
+            //@todo latest - get Package Class
+            
+            $driverChain->addDriver($driver, 'Concrete\Core');
+            // For xml and yaml: create an appropriate driver
+            
+            \Doctrine\Common\Util\Debug::dump($driverChain);
+            die('ups');
+            
+            //@todo -> driverChain is returned
+            //         add class which returns the apropriate driver
+            //$driver->addPaths($p->getPackageEntityPaths());
             $cache = $config->getMetadataCacheImpl();
             $cache->flushAll();
 

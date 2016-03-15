@@ -55,7 +55,7 @@ abstract class Package implements LocalizablePackageInterface
     protected $pkgAutoloaderRegistries = array();
 
     protected $appVersionRequired = '5.7.0';
-
+    
     protected $pkgAllowsFullContentSwap = false;
 
     protected $pkgContentProvidesFileThumbnails = false;
@@ -75,7 +75,16 @@ abstract class Package implements LocalizablePackageInterface
      * @var \Concrete\Core\Database\DatabaseStructureManager
      */
     protected $databaseStructureManager;
-
+    
+    
+    const PACKAGE_METADATADRIVER_ANNOTATION = 1;
+    const PACKAGE_METADATADRIVER_XML = 2;
+    const PACKAGE_METADATADRIVER_YAML = 3;
+    
+    /**
+     * @var $metadataDriver default is annotaion driver
+     */
+    protected $metadataDriver = self::PACKAGE_METADATADRIVER_ANNOTATION;
 
     /**
      * @return \Concrete\Core\Entity\Package
@@ -591,7 +600,22 @@ abstract class Package implements LocalizablePackageInterface
         // Create a custom entity manager for this package, in order to
         // extract entities
         $config = Setup::createConfiguration(true);
-        $driverImpl = $config->newDefaultAnnotationDriver($this->getPackageEntityPaths());
+        
+        // Create a appropriate EntityManager for the installation
+        if ($this->metadataDriver === self::PACKAGE_METADATADRIVER_ANNOTATION){
+            if(version_compare($this->getApplicationVersionRequired(), '8.0.0', '<')){
+                // Legacy - uses SimpleAnnotationReader
+                $driverImpl = $config->newDefaultAnnotationDriver($this->getPackageMetadataPaths());
+            }else{
+                // Use default AnnotationReader
+                $driverImpl = $config->newDefaultAnnotationDriver($this->getPackageMetadataPaths(), false);
+            }
+        } else if ($this->metadataDriver === self::PACKAGE_METADATADRIVER_XML){
+            $driverImpl = new XmlDriver($this->getPackageMetadataPaths());
+
+        } else if ($this->metadataDriver === self::PACKAGE_METADATADRIVER_YAML){
+            $driverImpl = new YamlDriver($this->getPackageMetadataPaths());
+        }
         $config->setMetadataDriverImpl($driverImpl);
         $manager = EntityManager::create(\Database::connection(), $config);
 
@@ -686,14 +710,69 @@ abstract class Package implements LocalizablePackageInterface
     }
 
     /**
+     * Get the metadatadriver type for the package
+     * 
+     * @return integer
+     */
+    public function getMetadataDriverType()
+    {
+        return $this->metadataDriver;
+    }
+
+    /**
+     * Create the appropriate ORM metadata driver
+     */
+    public function getMetadataDriver()
+    {
+        // Create a appropriate EntityManager for the installation
+        if ($this->metadataDriver === self::PACKAGE_METADATADRIVER_ANNOTATION){
+            if(version_compare($this->getApplicationVersionRequired(), '8.0.0', '<')){
+                // Legacy - uses SimpleAnnotationReader
+                $cachedSimpleAnnotationReader = \Core::bind('orm/cachedSimpleAnnotationReader');
+                $simpleAnnotationDriver = new \Doctrine\ORM\Mapping\Driver\AnnotationDriver($cachedSimpleAnnotationReader, $this->getPackageMetadataPaths());
+                return $simpleAnnotationDriver;
+            }else{
+                // Use default AnnotationReader
+                $cachedAnnotationReader = \Core::bind('orm/cachedAnnotationReader');
+                $annotationDriver = new \Doctrine\ORM\Mapping\Driver\AnnotationDriver($cachedAnnotationReader, $this->getPackageMetadataPaths());
+                return $annotationDriver;
+            }
+        } else if ($this->metadataDriver === self::PACKAGE_METADATADRIVER_XML){
+            $driverImpl = new XmlDriver($this->getPackageMetadataPaths());
+
+        } else if ($this->metadataDriver === self::PACKAGE_METADATADRIVER_YAML){
+            $driverImpl = new YamlDriver($this->getPackageMetadataPaths());
+        }
+    }
+    
+    /**
+     * Get path to the location containing the metadata info
+     * 
+     * @return array 
+     */
+    public function getPackageMetadataPaths()
+    {
+        // annotations entity path
+        if ($this->metadataDriver === self::PACKAGE_METADATADRIVER_ANNOTATION){
+            // Support for the legacy method for backwards compatibility
+            if (method_exists($this, 'getPackageEntityPath')) {
+                return array($this->getPackageEntityPath());
+            }
+            return array($this->getPackagePath() . '/' . DIRNAME_CLASSES);
+        } else if ($this->metadataDriver === self::PACKAGE_METADATADRIVER_XML){
+            // return xml metadata dir
+            return array($this->getPackagePath() . DIRECTORY_SEPARATOR . REL_DIR_METADATA_XML);
+        } else if ($this->metadataDriver === self::PACKAGE_METADATADRIVER_YAML){
+            // return yaml metadata dir
+            return array($this->getPackagePath() . DIRECTORY_SEPARATOR . REL_DIR_METADATA_YAML);
+        }
+    }
+    
+    /**
      * @deprecated
      */
     public function getEntityManager()
     {
         return \ORM::entityManager();
     }
-
-
-
-
 }
