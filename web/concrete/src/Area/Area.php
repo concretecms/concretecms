@@ -847,12 +847,18 @@ class Area extends Object implements \Concrete\Core\Permission\ObjectInterface
 
         $u = new User();
 
+        // The translatable texts in the area header/footer need to be printed
+        // out in the system language.
+        $loc = \Localization::getInstance();
+
         // now, we iterate through these block groups (which are actually arrays of block objects), and display them on the page
+        $loc->setActiveContext('system');
         if ($this->showControls && $c->isEditMode() && $ap->canViewAreaControls()) {
             View::element('block_area_header', array('a' => $this));
         } else {
             View::element('block_area_header_view', array('a' => $this));
         }
+        $loc->revertActiveContext();
 
         foreach ($blocksToDisplay as $b) {
             $bv = new BlockView($b);
@@ -869,11 +875,13 @@ class Area extends Object implements \Concrete\Core\Permission\ObjectInterface
             }
         }
 
+        $loc->setActiveContext('system');
         if ($this->showControls && $c->isEditMode() && $ap->canViewAreaControls()) {
             View::element('block_area_footer', array('a' => $this));
         } else {
             View::element('block_area_footer_view', array('a' => $this));
         }
+        $loc->revertActiveContext();
     }
 
     /**

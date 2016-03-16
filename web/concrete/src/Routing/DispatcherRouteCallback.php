@@ -17,12 +17,16 @@ use Permissions;
 use Response;
 use Core;
 use Session;
+use Localization;
 
 class DispatcherRouteCallback extends RouteCallback
 {
     protected function sendResponse(View $v, $code = 200)
     {
+        $loc = Localization::getInstance();
+        $loc->setActiveContext('site');
         $contents = $v->render();
+        $loc->revertActiveContext();
         $response = new Response($contents, $code);
 
         return $response;

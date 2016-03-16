@@ -49,7 +49,7 @@ class GlobalArea extends Area
      */
     public function getAreaDisplayName()
     {
-        return t('Sitewide %s', $this->getAreaHandle());
+        return t('Sitewide %s', parent::getAreaDisplayName());
     }
 
     /**
