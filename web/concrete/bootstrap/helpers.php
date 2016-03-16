@@ -14,28 +14,9 @@ use \Concrete\Core\Localization\Localization;
  */
 function t($text)
 {
-    if (!is_string($text)) {
-        return '';
-    }
-    $zt = Localization::getTranslate();
-    if (is_object($zt)) {
-        $v = $zt->translate($text);
-        if (is_array($v)) {
-            if (isset($v[0]) && ($v[0] !== '')) {
-                $text = $v[0];
-            }
-        } else {
-            $text = $v;
-        }
-    }
-    if (func_num_args() === 1) {
-        return $text;
-    } else {
-        $args = func_get_args();
-        array_shift($args);
-
-        return vsprintf($text, $args);
-    }
+    $loc = Localization::getInstance();
+    $adapter = $loc->getActiveTranslatorAdapter();
+    return call_user_func_array(array($adapter, 'translate'), func_get_args());
 }
 
 /**
@@ -51,21 +32,9 @@ function t($text)
  */
 function t2($singular, $plural, $number)
 {
-    if (!(is_string($singular) && is_string($plural))) {
-        return '';
-    }
-    $zt = Localization::getTranslate();
-    if (is_object($zt)) {
-        $translated = $zt->translatePlural($singular, $plural, $number);
-    } else {
-        $translated = $number == 1 ? $singular : $plural;
-    }
-    $arg = array_slice(func_get_args(), 3);
-    if ($arg) {
-        return vsprintf($translated, $arg);
-    }
-
-    return vsprintf($translated, $number);
+    $loc = Localization::getInstance();
+    $adapter = $loc->getActiveTranslatorAdapter();
+    return call_user_func_array(array($adapter, 'translatePlural'), func_get_args());
 }
 
 /**
@@ -82,26 +51,9 @@ function t2($singular, $plural, $number)
  */
 function tc($context, $text)
 {
-    if (!(is_string($context) && is_string($text))) {
-        return '';
-    }
-    $zt = Localization::getTranslate();
-    if (is_object($zt)) {
-        $msgid = $context . "\x04" . $text;
-        $msgtxt = $zt->translate($msgid);
-        if ($msgtxt != $msgid) {
-            $text = $msgtxt;
-        }
-    }
-    if (func_num_args() == 2) {
-        return $text;
-    }
-    $arg = array();
-    for ($i = 2; $i < func_num_args(); $i++) {
-        $arg[] = func_get_arg($i);
-    }
-
-    return vsprintf($text, $arg);
+    $loc = Localization::getInstance();
+    $adapter = $loc->getActiveTranslatorAdapter();
+    return call_user_func_array(array($adapter, 'translateContext'), func_get_args());
 }
 
 /**

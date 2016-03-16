@@ -4,9 +4,10 @@ namespace Concrete\Core\Multilingual\Service;
 
 use Concrete\Core\Multilingual\Page\Section\Section;
 use Concrete\Core\Page\Page;
-use Session;
 use Cookie;
 use Config;
+use Localization;
+use Session;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
@@ -71,9 +72,6 @@ class Detector
 
     public static function setupSiteInterfaceLocalization(Page $c = null)
     {
-        if (\User::isLoggedIn() && Config::get('concrete.multilingual.keep_users_locale')) {
-            return;
-        }
         if (!$c) {
             $c = Page::getCurrentPage();
         }
@@ -95,7 +93,8 @@ class Detector
         $locale = $ms->getLocale();
 
         if (strlen($locale)) {
-            \Localization::changeLocale($locale);
+            $loc = Localization::getInstance();
+            $loc->setContextLocale('site', $locale);
         }
     }
 

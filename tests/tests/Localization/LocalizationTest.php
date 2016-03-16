@@ -1,13 +1,28 @@
 <?php
 
+use Illuminate\Filesystem\Filesystem;
+
 class LocalizationTest extends \PHPUnit_Framework_TestCase
 {
+
+    public static function setUpBeforeClass()
+    {
+        $filesystem = new Filesystem();
+        $translationsFolder = DIR_APPLICATION . '/' . DIRNAME_LANGUAGES;
+        if (!$filesystem->isDirectory($translationsFolder)) {
+            $filesystem->makeDirectory($translationsFolder);
+        }
+    }
+
+    public static function tearDownAfterClass()
+    {
+        $filesystem = new Filesystem();
+        $filesystem->deleteDirectory(DIR_APPLICATION . '/' . DIRNAME_LANGUAGES);
+    }
+
     public function testGeneratedPO()
     {
         $translationsFolder = DIR_APPLICATION.'/'.DIRNAME_LANGUAGES;
-        if (!is_dir($translationsFolder)) {
-            mkdir($translationsFolder);
-        }
 
         // Extract the translatable strings and create the template .pot file
         $potFile = $translationsFolder.'/messages.pot';
