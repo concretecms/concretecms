@@ -71,10 +71,12 @@ class CkeditorEditor implements EditorInterface
             )
         );
         $options = json_encode($options);
+        $removeEmptyIcon = '$removeEmpty[\'i\']';
         $html = <<<EOL
         <script type="text/javascript">
         var CCM_EDITOR_SECURITY_TOKEN = "{$this->token}";
         $(function() {
+            CKEDITOR.dtd.{$removeEmptyIcon} = false;
             if (CKEDITOR.stylesSet.get('concrete5styles') === null) {
                 CKEDITOR.stylesSet.add('concrete5styles', {$this->getStylesJson()});
             }
