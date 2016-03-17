@@ -1,13 +1,14 @@
 <?php
 namespace Concrete\Core\Entity\Attribute\Value\Value;
 
+use Concrete\Core\Tree\Node\Node;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @Entity
  * @Table(name="TopicAttributeValues")
  */
-class TopicsValue extends Value implements \ArrayAccess
+class TopicsValue extends Value
 {
     /**
      * @OneToMany(targetEntity="\Concrete\Core\Entity\Attribute\Value\Value\SelectedTopic", mappedBy="value", cascade={"all"})
@@ -26,26 +27,6 @@ class TopicsValue extends Value implements \ArrayAccess
         $this->topics = new ArrayCollection();
     }
 
-    public function offsetSet($offset, $value)
-    {
-        $this->topics->offsetSet($offset, $value);
-    }
-
-    public function offsetExists($offset)
-    {
-        return $this->topics->offsetExists($offset);
-    }
-
-    public function offsetUnset($offset)
-    {
-        $this->offsetUnset($offset);
-    }
-
-    public function offsetGet($offset)
-    {
-        return $this->offsetGet($offset);
-    }
-
     public function getSelectedTopics()
     {
         return $this->topics;
@@ -54,5 +35,17 @@ class TopicsValue extends Value implements \ArrayAccess
     public function setSelectedTopics($topics)
     {
         $this->topics = $topics;
+    }
+
+    public function getSelectedTopicNodes()
+    {
+        $topics = array();
+        foreach($this->topics as $selectedTopic) {
+            $node = Node::getByID($selectedTopic->getTreeNodeID());
+            if (is_object($node)) {
+                $topics[] = $node;
+            }
+        }
+        return $topics;
     }
 }
