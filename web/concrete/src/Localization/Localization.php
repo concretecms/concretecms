@@ -201,7 +201,7 @@ class Localization
      * Removes all the loaded translator adapters from the translator adapter
      * repository.
      */
-    public function removeLoadedTranslationAdapters()
+    public function removeLoadedTranslatorAdapters()
     {
         foreach ($this->contextLocales as $context => $locale) {
             $this->getTranslatorAdapterRepository()->removeTranslatorAdaptersWithHandle($context);
@@ -376,6 +376,10 @@ class Localization
         // cache/expensive should be used by the translator adapters.
         $app = Facade::getFacadeApplication();
         $app->make('cache/expensive')->flush();
+
+        // Also remove the translation
+        $loc = static::getInstance();
+        $loc->removeLoadedTranslatorAdapters();
     }
 
     /**
