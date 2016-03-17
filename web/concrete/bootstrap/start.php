@@ -19,6 +19,7 @@ use Concrete\Core\Asset\AssetList;
 use Concrete\Core\File\Type\TypeList;
 use Concrete\Core\Foundation\ClassAliasList;
 use Concrete\Core\Foundation\Service\ProviderList;
+use Concrete\Core\Localization\Localization;
 use Concrete\Core\Permission\Key\Key as PermissionKey;
 use Concrete\Core\Support\Facade\Facade;
 use Patchwork\Utf8\Bootup as PatchworkUTF8;
@@ -82,6 +83,16 @@ $cms->detectEnvironment(function() use ($db_config, $environment, $cms) {
  */
 $config_provider = $app->make('Concrete\Core\Config\ConfigServiceProvider');
 $config_provider->register();
+
+/**
+ * Enable localization. This needs to happen very early in the bootstrap
+ * process because the application configuration (config/app.php) is already
+ * calling the t() functions which are initializing the Localization singleton.
+ * When the singleton is being initialized, these services need to be already
+ * available.
+ */
+$localization_provider = $app->make('Concrete\Core\Localization\LocalizationEssentialServiceProvider');
+$localization_provider->register();
 
 /**
  * @var Concrete\Core\Config\Repository\Repository $config
@@ -269,7 +280,7 @@ require DIR_BASE_CORE . '/bootstrap/preprocess.php';
 $u = new User();
 $lan = $u->getUserLanguageToDisplay();
 $loc = Localization::getInstance();
-$loc->setLocale($lan);
+$loc->setContextLocale('system', $lan);
 
 /**
  * Handle automatic updating

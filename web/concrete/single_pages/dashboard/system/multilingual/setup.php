@@ -209,23 +209,6 @@ ccm_multilingualPopulateIcons = function(country) {
             </div>
 
             <div class="form-group">
-                <label class="control-label"><?php echo t('Registered Users Language Preferences'); ?></label>
-                <p><?php echo t('Load Interface Language from:'); ?></p>
-                <div class="radio">
-                    <label>
-                        <?php echo $form->radio('keepUsersLocale', 0, $keepUsersLocale); ?>
-                        <span><?php echo t('Page (if it exists)'); ?></span>
-                    </label>
-                </div>
-                <div class="radio">
-                    <label>
-                        <?php echo $form->radio('keepUsersLocale', 1, $keepUsersLocale); ?>
-                        <span><?php echo t("User Profile"); ?></span>
-                    </label>
-                </div>
-            </div>
-
-            <div class="form-group">
                 <label class="control-label"><?php echo t('Site interface source locale');?></label>
                 <div class="form-inline">
                 <?php
