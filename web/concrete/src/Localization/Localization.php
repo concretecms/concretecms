@@ -373,8 +373,9 @@ class Localization
      */
     public static function clearCache()
     {
-        $loc = static::getInstance();
-        $loc->removeLoadedTranslationAdapters();
+        // cache/expensive should be used by the translator adapters.
+        $app = Facade::getFacadeApplication();
+        $app->make('cache/expensive')->flush();
     }
 
     /**
