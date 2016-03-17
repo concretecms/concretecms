@@ -6,6 +6,12 @@ use Concrete\Core\Application\Application;
 use Concrete\Core\Localization\Translator\Translation\TranslationLoaderInterface;
 use Zend\I18n\Translator\Translator;
 
+/**
+ * Translation loader repositories provide a way to store multiple translation
+ * loaders.
+ *
+ * @author Antti Hukkanen <antti.hukkanen@mainiotech.fi>
+ */
 interface TranslationLoaderRepositoryInterface
 {
 

@@ -6,6 +6,12 @@ use Concrete\Core\Application\Application;
 use Concrete\Core\Localization\Translator\Translation\TranslationLoaderInterface;
 use Zend\I18n\Translator\Translator;
 
+/**
+ * Basic implementation of the {@link TranslationLoaderRepositoryInterface}.
+ * Stores the translation loaders in a local array.
+ *
+ * @author Antti Hukkanen <antti.hukkanen@mainiotech.fi>
+ */
 class TranslationLoaderRepository implements TranslationLoaderRepositoryInterface
 {
 
