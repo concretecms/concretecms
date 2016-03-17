@@ -1,16 +1,23 @@
 <?php
 namespace Concrete\Controller;
 
-class Feed extends \Concrete\Core\Controller\Controller
+use Concrete\Core\Controller\Controller;
+use Concrete\Core\Page\Feed as PageFeed;
+use Symfony\Component\HttpFoundation\Response;
+
+class Feed extends Controller
 {
-    public function get($identifier=null, $defaultValue=null)
+
+    public function output($identifier)
     {
-        $feed = \Concrete\Core\Page\Feed::getByHandle($identifier);
-        if (is_object($feed)) {
-            //header('Content-Type: text/xml');
-            $xml = $feed->getOutput($this->request);
-            print $xml;
+        if ($feed = PageFeed::getByHandle($identifier)) {
+
+            if ($xml = $feed->getOutput($this->request)) {
+                return Response::create($xml, 200, array('Content-Type' => 'text/xml'));
+            }
         }
-        exit;
+
+        return Response::create('', 404);
     }
+
 }

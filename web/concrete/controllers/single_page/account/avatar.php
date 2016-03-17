@@ -58,7 +58,7 @@ class Avatar extends AccountProfileEditPageController
             $profile = $this->get('profile');
             $av = $this->get('av');
 
-            $service = \Core::make('user.avatar');
+            $service = \Core::make('user/avatar');
             $service->removeAvatar($profile);
             $this->redirect('/account/avatar', 'deleted');
         }

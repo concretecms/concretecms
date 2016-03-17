@@ -62,7 +62,7 @@ class Avatar
     */
     public function removeAvatar($ui)
     {
-        $service = Core::make('user.avatar');
+        $service = Core::make('user/avatar');
         $service->removeAvatar($ui);
     }
 
