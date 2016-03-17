@@ -290,7 +290,7 @@ class Application extends Container
         // After package initialization, the translations adapters need to be
         // reinitialized when accessed the next time because new translations
         // are now available.
-        $loc->removeLoadedTranslationAdapters();
+        $loc->removeLoadedTranslatorAdapters();
 
         if ($checkAfterStart) {
             foreach($this->packages as $pkg) {

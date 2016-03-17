@@ -2,6 +2,8 @@
 
 namespace Concrete\Tests\Core\Localization;
 
+use Concrete\Core\Cache\Adapter\ZendCacheDriver;
+use Concrete\Core\Cache\CacheServiceProvider;
 use Concrete\Core\Localization\Localization;
 use Concrete\Core\Localization\Translator\Adapter\Plain\TranslatorAdapterFactory as PlainTranslatorAdapterFactory;
 use Concrete\Core\Localization\Translator\Adapter\Zend\TranslatorAdapterFactory as ZendTranslatorAdapterFactory;
@@ -247,7 +249,7 @@ class LocalizationTest extends PHPUnit_Framework_TestCase
         });
     }
 
-    public function testRemoveLoadedTranslationAdapters()
+    public function testRemoveLoadedTranslatorAdapters()
     {
         $this->loc->setActiveContext('test');
 
@@ -260,7 +262,7 @@ class LocalizationTest extends PHPUnit_Framework_TestCase
         $this->loc->setContextLocale('test', 'xx_XX');
         $this->loc->getActiveTranslatorAdapter();
 
-        $this->loc->removeLoadedTranslationAdapters();
+        $this->loc->removeLoadedTranslatorAdapters();
 
         $rep = $this->loc->getTranslatorAdapterRepository();
 
@@ -344,35 +346,48 @@ class LocalizationTest extends PHPUnit_Framework_TestCase
     public function testStaticClearCache()
     {
         $app = Facade::getFacadeApplication();
-        $oldTranslationsFile = __DIR__ . '/fixtures/translations.php';
-        $newTranslationsFile = __DIR__ . '/fixtures/translations_updated.php';
+        $csp = new CacheServiceProvider($app);
 
-        $loc = $this->getMockBuilder('Concrete\Core\Localization\Localization')
-            ->setMethods(array('removeLoadedTranslationAdapters'))
-            ->getMock();
+        // Make sure cache is enabled
+        $config = $app->make('config');
+        $config->set('concrete.cache.enabled', true);
 
+        // Re-register the cache related services in case they have been
+        // already registered by some other tests. This might be the case if
+        // this test is run together with some other tests that are referencing
+        // the singletons. In case they are already registered prior to running
+        // this test, this test will fail.
+        $csp->register();
+
+        // Make sure that the cache/expensive does not have any existing values
+        // prior to starting this test. This needs to run AFTER the cache is
+        // set as enabled for the rest of the test to work properly.
+        $app->make('cache/expensive')->flush();
+
+        // Create the translation loader repository
+        $loaderRep = new TranslationLoaderRepository();
+        $loaderRep->registerTranslationLoader('old', new TestTranslationLoader($app));
+
+        // Fill the translations cache with the translations from the first
+        // loader.
+        $adapterFactory = new ZendTranslatorAdapterFactory($loaderRep);
+        $adapter = $adapterFactory->createTranslatorAdapter('fi_FI');
+        $adapter->translate("Hello Translator!");
+
+        // Initialize localization and test that the cache is working properly
+        // and clearing the cache has the expected result.
+        $loc = Localization::getInstance();
+
+        $loc->setContextLocale('test', 'fi_FI');
         $loc->setActiveContext('test');
 
-        $loaderRep = new TranslationLoaderRepository();
-        $loaderRep->registerTranslationLoader('default', new TestTranslationLoader($app));
+        // Register the additional translation loader that overrides the
+        // string loaded in the cache.
+        $loaderRep->registerTranslationLoader('updated', new TestUpdatedTranslationLoader($app));
 
         $translatorAdapterFactory = new ZendTranslatorAdapterFactory($loaderRep);
         $repository = new TranslatorAdapterRepository($translatorAdapterFactory);
         $loc->setTranslatorAdapterRepository($repository);
-
-        $adapter = $loc->getTranslatorAdapter('test');
-
-        // The translate method needs to be called for the translator to load
-        // the translation into its cache.
-        $adapter->translate('Hello Translator!');
-
-        $updatedLoader = new TestUpdatedTranslationLoader($app);
-        $loaderRep->registerTranslationLoader('updated', $updatedLoader);
-
-        // The loader repository loads the translations only for new adapter
-        // instances, so for the testing purposes we need to manually load the
-        // translations into the adapter.
-        $updatedLoader->loadTranslations($adapter);
 
         // Now, even as we have added the new translations to the adapter it
         // should still be using the old translation as it should be coming
@@ -380,28 +395,17 @@ class LocalizationTest extends PHPUnit_Framework_TestCase
         $adapter = $loc->getTranslatorAdapter('test');
         $this->assertEquals("Original String!", $adapter->translate('Hello Translator!'));
 
-        // Make the mock object to be used as the events backend through IoC.
-        $app->bindShared('Concrete\Core\Localization\Localization', function() use ($loc) {
-            return $loc;
-        });
-
-        // The clearCache() method should be calling the
-        // removeLoadedTranslationAdapters() for the localization instance.
-        $loc->expects($this->once())
-            ->method('removeLoadedTranslationAdapters');
-
-        // Reset the translator adapter repository so that it is using the
-        // factory instance that has both loaders registered.
-        $translatorAdapterFactory = new ZendTranslatorAdapterFactory($loaderRep);
-        $repository = new TranslatorAdapterRepository($translatorAdapterFactory);
-        $loc->setTranslatorAdapterRepository($repository);
-
         Localization::clearCache();
 
         // After the cache has been cleared, the adapter returned by the
         // localization instance should use the updated translations.
         $adapter = $loc->getTranslatorAdapter('test');
         $this->assertEquals("Updated String!", $adapter->translate('Hello Translator!'));
+
+        $config->set('concrete.cache.enabled', false);
+
+        // Make sure we don't mess up the cache functionality for other tests.
+        $csp->register();
     }
 
     /**
