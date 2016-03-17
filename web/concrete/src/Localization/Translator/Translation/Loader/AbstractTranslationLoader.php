@@ -6,6 +6,12 @@ use Concrete\Core\Application\Application;
 use Concrete\Core\Localization\Translator\Translation\TranslationLoaderInterface;
 use Concrete\Core\Localization\Translator\TranslatorAdapterInterface;
 
+/**
+ * Abstract translation loader provides general methods needed in most
+ * translation loader implementations.
+ *
+ * @author Antti Hukkanen <antti.hukkanen@mainiotech.fi>
+ */
 abstract class AbstractTranslationLoader implements TranslationLoaderInterface
 {
 

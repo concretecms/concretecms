@@ -4,6 +4,12 @@ namespace Concrete\Core\Localization\Translator\Translation;
 
 use Concrete\Core\Localization\Translator\TranslatorAdapterInterface;
 
+/**
+ * Translation loaders provide a standardized way to load new translations into
+ * the translator adapters.
+ *
+ * @author Antti Hukkanen <antti.hukkanen@mainiotech.fi>
+ */
 interface TranslationLoaderInterface
 {
 
