@@ -1,13 +1,17 @@
 <?php
 
-namespace Concrete\Tests\Core\Localization\Translator\Translation;
+namespace Concrete\Tests\Core\Localization;
 
 use Concrete\Core\Localization\Localization;
-use Concrete\Core\Localization\Translator\TranslatorAdapterRepository;
 use Concrete\Core\Localization\Translator\Adapter\Plain\TranslatorAdapterFactory as PlainTranslatorAdapterFactory;
 use Concrete\Core\Localization\Translator\Adapter\Zend\TranslatorAdapterFactory as ZendTranslatorAdapterFactory;
+use Concrete\Core\Localization\Translator\Adapter\Zend\TranslatorAdapter as ZendTranslatorAdapter;
+use Concrete\Core\Localization\Translator\Translation\TranslationLoaderRepository;
+use Concrete\Core\Localization\Translator\TranslatorAdapterRepository;
 use Concrete\Core\Support\Facade\Facade;
 use Concrete\Core\Support\Facade\Events;
+use Concrete\Tests\Core\Localization\Fixtures\TestTranslationLoader;
+use Concrete\Tests\Core\Localization\Fixtures\TestUpdatedTranslationLoader;
 use Concrete\Tests\Core\Localization\Translator\Adapter\Zend\Translation\Loader\Gettext\Fixtures\MultilingualDetector;
 use Exception;
 use Illuminate\Filesystem\Filesystem;
@@ -16,6 +20,7 @@ use Punic\Language as PunicLanguage;
 use ReflectionClass;
 use Symfony\Component\ClassLoader\MapClassLoader;
 use Zend\I18n\Translator\Translator as ZendTranslator;
+
 
 /**
  * Tests for:
@@ -42,6 +47,14 @@ class LocalizationTest extends PHPUnit_Framework_TestCase
         }
 
         $filesystem->copyDirectory($source, $target);
+
+        $loader = new MapClassLoader([
+            'Concrete\\Tests\\Core\\Localization\\Fixtures\\TestTranslationLoader'
+                => __DIR__ . '/fixtures/TestTranslationLoader.php',
+            'Concrete\\Tests\\Core\\Localization\\Fixtures\\TestUpdatedTranslationLoader'
+                => __DIR__ . '/fixtures/TestUpdatedTranslationLoader.php',
+        ]);
+        $loader->register();
     }
 
     public static function tearDownAfterClass()
@@ -331,20 +344,64 @@ class LocalizationTest extends PHPUnit_Framework_TestCase
     public function testStaticClearCache()
     {
         $app = Facade::getFacadeApplication();
+        $oldTranslationsFile = __DIR__ . '/fixtures/translations.php';
+        $newTranslationsFile = __DIR__ . '/fixtures/translations_updated.php';
 
         $loc = $this->getMockBuilder('Concrete\Core\Localization\Localization')
             ->setMethods(array('removeLoadedTranslationAdapters'))
             ->getMock();
+
+        $loc->setActiveContext('test');
+
+        $loaderRep = new TranslationLoaderRepository();
+        $loaderRep->registerTranslationLoader('default', new TestTranslationLoader($app));
+
+        $translatorAdapterFactory = new ZendTranslatorAdapterFactory($loaderRep);
+        $repository = new TranslatorAdapterRepository($translatorAdapterFactory);
+        $loc->setTranslatorAdapterRepository($repository);
+
+        $adapter = $loc->getTranslatorAdapter('test');
+
+        // The translate method needs to be called for the translator to load
+        // the translation into its cache.
+        $adapter->translate('Hello Translator!');
+
+        $updatedLoader = new TestUpdatedTranslationLoader($app);
+        $loaderRep->registerTranslationLoader('updated', $updatedLoader);
+
+        // The loader repository loads the translations only for new adapter
+        // instances, so for the testing purposes we need to manually load the
+        // translations into the adapter.
+        $updatedLoader->loadTranslations($adapter);
+
+        // Now, even as we have added the new translations to the adapter it
+        // should still be using the old translation as it should be coming
+        // from the cache (with the Zend adapter).
+        $adapter = $loc->getTranslatorAdapter('test');
+        $this->assertEquals("Original String!", $adapter->translate('Hello Translator!'));
 
         // Make the mock object to be used as the events backend through IoC.
         $app->bindShared('Concrete\Core\Localization\Localization', function() use ($loc) {
             return $loc;
         });
 
+        // The clearCache() method should be calling the
+        // removeLoadedTranslationAdapters() for the localization instance.
         $loc->expects($this->once())
             ->method('removeLoadedTranslationAdapters');
 
+        // Reset the translator adapter repository so that it is using the
+        // factory instance that has both loaders registered.
+        $translatorAdapterFactory = new ZendTranslatorAdapterFactory($loaderRep);
+        $repository = new TranslatorAdapterRepository($translatorAdapterFactory);
+        $loc->setTranslatorAdapterRepository($repository);
+
         Localization::clearCache();
+
+        // After the cache has been cleared, the adapter returned by the
+        // localization instance should use the updated translations.
+        $adapter = $loc->getTranslatorAdapter('test');
+        $this->assertEquals("Updated String!", $adapter->translate('Hello Translator!'));
     }
 
     /**
