@@ -24,10 +24,6 @@ class SiteTranslationLoader extends AbstractTranslationLoader
             if (is_file($languageFile)) {
                 $translator = $translatorAdapter->getTranslator();
                 $translator->addTranslationFile('gettext', $languageFile);
-
-                if (is_object($cache = $translator->getCache())) {
-                    $cache->flush();
-                }
             }
         }
     }

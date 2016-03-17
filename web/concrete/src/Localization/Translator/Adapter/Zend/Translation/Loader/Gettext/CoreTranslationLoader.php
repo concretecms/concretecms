@@ -30,9 +30,6 @@ class CoreTranslationLoader extends AbstractTranslationLoader
         if ($languageFile !== '') {
             $translator = $translatorAdapter->getTranslator();
             $translator->addTranslationFile('gettext', $languageFile);
-            if (is_object($cache = $translator->getCache())) {
-                $cache->flush();
-            }
         }
     }
 

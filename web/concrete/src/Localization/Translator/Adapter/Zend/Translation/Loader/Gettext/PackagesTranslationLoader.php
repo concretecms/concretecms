@@ -32,9 +32,6 @@ class PackagesTranslationLoader extends AbstractTranslationLoader
                     $translator->addTranslationFile('gettext', $languageFile);
                 }
             }
-            if (is_object($cache = $translator->getCache())) {
-                $cache->flush();
-            }
         }
     }
 
