@@ -50,12 +50,12 @@ class LocalizationTest extends PHPUnit_Framework_TestCase
 
         $filesystem->copyDirectory($source, $target);
 
-        $loader = new MapClassLoader([
+        $loader = new MapClassLoader(array(
             'Concrete\\Tests\\Core\\Localization\\Fixtures\\TestTranslationLoader'
                 => __DIR__ . '/fixtures/TestTranslationLoader.php',
             'Concrete\\Tests\\Core\\Localization\\Fixtures\\TestUpdatedTranslationLoader'
                 => __DIR__ . '/fixtures/TestUpdatedTranslationLoader.php',
-        ]);
+        ));
         $loader->register();
     }
 
@@ -466,10 +466,10 @@ class LocalizationTest extends PHPUnit_Framework_TestCase
         $filesystem->copyDirectory($langDir, $appLangDir);
 
         // Make the MultilingualDetector override available
-        $loader = new MapClassLoader([
+        $loader = new MapClassLoader(array(
             'Concrete\\Tests\\Core\\Localization\\Translator\\Adapter\\Zend\\Translation\\Loader\\Gettext\\Fixtures\\MultilingualDetector'
                 => $siteTranslatorLoaderTestPath . '/fixtures/MultilingualDetector.php'
-        ]);
+        ));
         $loader->register();
 
         // Custom Localization instance for these tests

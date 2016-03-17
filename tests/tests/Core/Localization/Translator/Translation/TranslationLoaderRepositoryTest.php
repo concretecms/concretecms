@@ -20,10 +20,10 @@ class TranslationLoaderRepositoryTest extends PHPUnit_Framework_TestCase
 
     public static function setUpBeforeClass()
     {
-        $loader = new MapClassLoader([
+        $loader = new MapClassLoader(array(
             'Concrete\\Tests\\Core\\Localization\\Translator\\Translation\\Fixtures\\DummyTranslationLoader'
                 => __DIR__ . '/fixtures/DummyTranslationLoader.php'
-        ]);
+        ));
         $loader->register();
     }
 

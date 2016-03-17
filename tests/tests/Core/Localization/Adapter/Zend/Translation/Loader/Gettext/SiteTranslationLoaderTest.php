@@ -22,10 +22,10 @@ class SiteTranslationLoaderTest extends PHPUnit_Framework_TestCase
 
     public static function setUpBeforeClass()
     {
-        $loader = new MapClassLoader([
+        $loader = new MapClassLoader(array(
             'Concrete\\Tests\\Core\\Localization\\Translator\\Adapter\\Zend\\Translation\\Loader\\Gettext\\Fixtures\\MultilingualDetector'
                 => __DIR__ . '/fixtures/MultilingualDetector.php'
-        ]);
+        ));
         $loader->register();
 
         $filesystem = new Filesystem();
