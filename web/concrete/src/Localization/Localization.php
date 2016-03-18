@@ -377,7 +377,8 @@ class Localization
         $app = Facade::getFacadeApplication();
         $app->make('cache/expensive')->flush();
 
-        // Also remove the translation
+        // Also remove the loaded translation adapters so that old strings are
+        // not being used from the adapters already in memory.
         $loc = static::getInstance();
         $loc->removeLoadedTranslatorAdapters();
     }
@@ -385,7 +386,7 @@ class Localization
     /**
      * Load the site language files (must be done after all packages called their setupPackageLocalization)
      *
-     * @deprecated Use \Concrete\Core\Localization\Translation\Loader\SiteTranslationLoader instead.
+     * @deprecated Use \Concrete\Core\Localization\Translator\Adapter\Zend\Translation\Loader\Gettext\SiteTranslationLoader instead.
      *
      * @param ZendTranslator $translate
      */
