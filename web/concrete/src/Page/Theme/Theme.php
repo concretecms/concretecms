@@ -668,21 +668,15 @@ class Theme extends Object
             if ($cnt > 0) {
                 throw new \Exception(static::E_THEME_INSTALLED);
             }
-            $curLang = Localization::activeLocale();
-            if ($curLang !== 'en_US') {
-                Localization::changeLocale('en_US');
-            }
+            $loc = Localization::getInstance();
+            $loc->setActiveContext('database');
             try {
                 $res = static::getThemeNameAndDescription($dir, $pThemeHandle, is_object($pkg) ? $pkg->getPackageHandle() : '');
             } catch (\Exception $x) {
-                if ($curLang !== 'en_US') {
-                    Localization::changeLocale($curLang);
-                }
+                $loc->revertActiveContext();
                 throw $x;
             }
-            if ($curLang !== 'en_US') {
-                Localization::changeLocale($curLang);
-            }
+            $loc->revertActiveContext();
             if (strlen($res->pError) === 0) {
                 $pThemeName = $res->pThemeName;
                 $pThemeDescription = $res->pThemeDescription;

@@ -264,7 +264,6 @@ class Application extends Container
         $config = $this['config'];
 
         $loc = Localization::getInstance();
-        $loc->setActiveContext('database');
 
         foreach ($this->packages as $pkg) {
             // handle updates
@@ -273,8 +272,10 @@ class Application extends Container
                 $pkgInstalledVersion = $dbPkg->getPackageVersion();
                 $pkgFileVersion = $pkg->getPackageVersion();
                 if (version_compare($pkgFileVersion, $pkgInstalledVersion, '>')) {
+                    $loc->setActiveContext('database');
                     $dbPkg->upgradeCoreData();
                     $dbPkg->upgrade();
+                    $loc->revertActiveContext();
                 }
             }
             $this->make('Concrete\Core\Package\PackageService')->setupLocalization($pkg);
@@ -286,8 +287,6 @@ class Application extends Container
             }
         }
         $config->set('app.bootstrap.packages_loaded', true);
-
-        $loc->revertActiveContext();
 
         // After package initialization, the translations adapters need to be
         // reinitialized when accessed the next time because new translations

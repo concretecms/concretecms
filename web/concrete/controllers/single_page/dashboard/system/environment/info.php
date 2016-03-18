@@ -12,10 +12,8 @@ class Info extends DashboardPageController
 {
     public function get_environment_info()
     {
-        $activeLocale = Localization::activeLocale();
-        if ($activeLocale != 'en_US') {
-            Localization::changeLocale('en_US');
-        }
+        $loc = Localization::getInstance();
+        $loc->setActiveContext('database');
         $maxExecutionTime = ini_get('max_execution_time');
         set_time_limit(5);
 
