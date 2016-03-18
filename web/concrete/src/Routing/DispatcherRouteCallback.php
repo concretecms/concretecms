@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Routing;
 
+use Concrete\Core\Localization\Localization;
 use Concrete\Core\Page\Event as PageEvent;
 use Concrete\Core\Page\Theme\Theme;
 use Concrete\Core\Url\Url;
@@ -21,7 +22,10 @@ class DispatcherRouteCallback extends RouteCallback
 {
     protected function sendResponse(View $v, $code = 200)
     {
+        $loc = Localization::getInstance();
+        $loc->setActiveContext('site');
         $contents = $v->render();
+        $loc->revertActiveContext();
         $response = new Response($contents, $code);
 
         return $response;

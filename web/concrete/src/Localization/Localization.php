@@ -2,47 +2,285 @@
 namespace Concrete\Core\Localization;
 
 use Config;
-use Concrete\Core\Cache\Adapter\ZendCacheDriver;
+use Concrete\Core\Support\Facade\Facade;
+use Concrete\Core\Localization\Translator\Adapter\Zend\Translation\Loader\Gettext\SiteTranslationLoader as ZendSiteTranslationLoader;
+use Concrete\Core\Localization\Translator\Adapter\Zend\TranslatorAdapter as ZendTranslatorAdapter;
+use Concrete\Core\Localization\Translator\TranslatorAdapterRepositoryInterface;
 use Core;
-use Concrete\Core\Support\Facade\Package;
 use Events;
-use Zend\I18n\Translator\Translator;
+use Exception;
 use Punic\Data as PunicData;
+use Zend\I18n\Translator\Translator as ZendTranslator;
 
 class Localization
 {
-    private static $loc = null;
-    /**
-     * @var ZendCacheDriver|null
-     */
-    private static $cache = null;
 
+    /** @var string */
+    const BASE_LOCALE = 'en_US';
+
+    /** @var TranslatorAdapterRepositoryInterface */
+    protected $translatorAdapterRepository;
+
+    /** @var array */
+    protected $contextLocales = array();
+    /** @var string|null */
+    protected $activeContext = null;
+    /** @var array */
+    protected $activeContextQueue = array();
+
+    /**
+     * Gets the translator adapter repository.
+     *
+     * @return TranslatorAdapterRepositoryInterface
+     *
+     * @throws Exception In case the translator adapter repository has not been
+     *                   set, an exception is thrown.
+     */
+    public function getTranslatorAdapterRepository()
+    {
+        if (!isset($this->translatorAdapterRepository)) {
+            // Note: Do NOT call the t() function here as it would cause an
+            // infinte loop if the translator adapter repository has not been
+            // set.
+            throw new Exception("Translator adapter repository has not been set.");
+        }
+        return $this->translatorAdapterRepository;
+    }
+
+    /**
+     * Sets the translator adapter repository.
+     *
+     * @param TranslatorAdapterRepositoryInterface $repository
+     */
+    public function setTranslatorAdapterRepository(TranslatorAdapterRepositoryInterface $repository)
+    {
+        $this->translatorAdapterRepository = $repository;
+    }
+
+    /**
+     * Returns the currently active translation context.
+     *
+     * @return string
+     */
+    public function getActiveContext()
+    {
+        return $this->activeContext;
+    }
+
+    /**
+     * Sets the active translation context.
+     *
+     * @param string $context
+     */
+    public function setActiveContext($context)
+    {
+        if (
+            $this->activeContext !== null ||
+            count($this->activeContextQueue) > 0
+        ) {
+            $this->activeContextQueue[] = $this->activeContext;
+        }
+        $this->activeContext = $context;
+
+        if (!isset($this->contextLocales[$context])) {
+            $this->setContextLocale($context, static::BASE_LOCALE);
+        }
+    }
+
+    /**
+     * Reverts the active translation context to the previous context. Useful
+     * when temporarily setting the translation context to something else than
+     * the original.
+     *
+     * Usage:
+     *
+     * ```php
+     * $loc = \Localization::getInstance();
+     * $loc->setActiveContext('first_context');
+     *
+     * // Do something else
+     * $loc->setActiveContext('second_context');
+     * $foo->bar();
+     *
+     * // Revert the context back
+     * $loc->revertActiveContext();
+     *
+     * echo $loc->getActiveContext(); // Prints out 'first_context'
+     * ```
+     */
+    public function revertActiveContext()
+    {
+        $this->activeContext = array_pop($this->activeContextQueue);
+    }
+
+    /**
+     * Gets the translator adapter object for the given context from the
+     * translator adapter repository.
+     *
+     * @return \Concrete\Core\Localization\Translator\TranslatorAdapterInterface
+     *
+     * @throws Exception In case trying to fetch an adapter for an unknown
+     *                   context, an exception is thrown.
+     */
+    public function getTranslatorAdapter($context)
+    {
+        if (!isset($this->contextLocales[$context])) {
+            // Note: Do NOT call the t() function here as it might possibly
+            // cause an infinte loop in case this happens with the active
+            // context.
+            throw new Exception(sprintf("Context locale has not been set for context: %s", $context));
+        }
+        $locale = $this->contextLocales[$context];
+
+        return $this->getTranslatorAdapterRepository()->getTranslatorAdapter($context, $locale);
+    }
+
+    /**
+     * Gets the translator adapter for the active context.
+     *
+     * @return \Concrete\Core\Localization\Translator\TranslatorAdapterInterface
+     */
+    public function getActiveTranslatorAdapter()
+    {
+        return $this->getTranslatorAdapter($this->getActiveContext());
+    }
+
+    /**
+     * Sets the context locale for the given context as the given locale.
+     *
+     * @param string $context
+     * @param string $locale
+     */
+    public function setContextLocale($context, $locale)
+    {
+        if (isset($this->contextLocales[$context]) && $this->contextLocales[$context] == $locale) {
+            return;
+        }
+        $this->contextLocales[$context] = $locale;
+        //$this->getTranslatorAdapterRepository()->removeTranslatorAdaptersWithHandle($context);
+    }
+
+    /**
+     * Gets the context locale for the given context.
+     *
+     * @return string|null
+     */
+    public function getContextLocale($context)
+    {
+        return isset($this->contextLocales[$context]) ? $this->contextLocales[$context] : null;
+    }
+
+    /**
+     * Sets the locale for the active context.
+     *
+     * @param string $locale
+     */
+    public function setLocale($locale)
+    {
+        $this->setContextLocale($this->getActiveContext(), $locale);
+
+        PunicData::setDefaultLocale($locale);
+        $event = new \Symfony\Component\EventDispatcher\GenericEvent();
+        $event->setArgument('locale', $locale);
+        Events::dispatch('on_locale_load', $event);
+    }
+
+    /**
+     * Gets the locale for the active context.
+     *
+     * @param string
+     */
+    public function getLocale()
+    {
+        $adapter = $this->getActiveTranslatorAdapter();
+
+        return $adapter ? $adapter->getLocale() : static::BASE_LOCALE;
+    }
+
+    /**
+     * Removes all the loaded translator adapters from the translator adapter
+     * repository.
+     */
+    public function removeLoadedTranslatorAdapters()
+    {
+        foreach ($this->contextLocales as $context => $locale) {
+            $this->getTranslatorAdapterRepository()->removeTranslatorAdaptersWithHandle($context);
+        }
+    }
+
+    /**
+     * Gets the translator object for the active context.
+     *
+     * @deprecated Use translator adapters instead
+     *
+     * @return ZendTranslator|null
+     */
+    public function getActiveTranslateObject()
+    {
+        $adapter = $this->getTranslatorAdapter($this->getActiveContext());
+        if (is_object($adapter)) {
+            return $adapter->getTranslator();
+        }
+        return null;
+    }
+
+    /**
+     * Gets a singleton instance of this class.
+     *
+     * @return Localization
+     */
     public static function getInstance()
     {
-        if (null === self::$loc) {
-            self::$loc = new self();
-        }
-
-        return self::$loc;
+        $app = Facade::getFacadeApplication();
+        return $app->make('Concrete\Core\Localization\Localization');
     }
 
+    /**
+     * Gets the translator object for the active context from from the
+     * singleton instance of this class.
+     *
+     * @deprecated Use translator adapters instead
+     *
+     * @return ZendTranslator
+     */
+    public static function getTranslate()
+    {
+        $loc = static::getInstance();
+
+        return $loc->getActiveTranslateObject();
+    }
+
+    /**
+     * Sets the locale for the active context for the singleton instance of
+     * this class.
+     *
+     * @param string $locale
+     */
     public static function changeLocale($locale)
     {
-        $loc = self::getInstance();
+        $loc = static::getInstance();
         $loc->setLocale($locale);
     }
-    /** Returns the currently active locale
+
+    /**
+     * Returns the currently active locale for the currently active context
+     * from the singleton instance of this class.
+     *
      * @return string
      *
      * @example 'en_US'
      */
     public static function activeLocale()
     {
-        $loc = self::getInstance();
+        $loc = static::getInstance();
 
         return $loc->getLocale();
     }
-    /** Returns the language for the currently active locale
+
+    /**
+     * Returns the language for the currently active locale for the currently
+     * active context from the singleton instance of this class.
+     *
      * @return string
      *
      * @example 'en'
@@ -52,80 +290,12 @@ class Localization
         return current(explode('_', self::activeLocale()));
     }
 
-    protected $translate = null;
-
-    public function setLocale($locale)
-    {
-        if (($locale == 'en_US') && (!Config::get('concrete.misc.enable_translate_locale_en_us'))) {
-            $this->translate = null;
-        } else {
-            $this->translate = new Translator();
-            $this->translate->setLocale($locale);
-            $this->translate->setCache(self::getCache());
-            // Core language files
-            $languageFile = DIR_LANGUAGES . "/$locale/LC_MESSAGES/messages.mo";
-            if (!is_file($languageFile)) {
-                $languageFile = DIR_LANGUAGES_CORE . "/$locale/LC_MESSAGES/messages.mo";
-                if (!is_file($languageFile)) {
-                    $languageFile = '';
-                }
-            }
-            if ($languageFile !== '') {
-                $this->translate->addTranslationFile('gettext', $languageFile);
-            }
-            // Package language files
-            if (Config::get('app.bootstrap.packages_loaded') === true) {
-                $pkgList = \Concrete\Core\Package\PackageList::get();
-                foreach ($pkgList->getPackages() as $pkg) {
-                    Package::setupLocalization($pkg, $locale, $this->translate);
-                }
-                // Site language files
-                static::setupSiteLocalization($this->translate);
-            }
-        }
-        PunicData::setDefaultLocale($locale);
-        $event = new \Symfony\Component\EventDispatcher\GenericEvent();
-        $event->setArgument('locale', $locale);
-        Events::dispatch('on_locale_load', $event);
-    }
-
     /**
-     * Load the site language files (must be done after all packages called their setupPackageLocalization)
+     * Gets a list of the available site interface languages. Returns an array
+     * that where each item is a locale in format xx_XX.
+     *
+     * @return array
      */
-    public static function setupSiteLocalization(Translator $translate = null)
-    {
-        if (\Core::make('multilingual/detector')->isEnabled()) {
-            if ($translate === null) {
-                $translate = static::getInstance()->getActiveTranslateObject();
-            }
-            if ($translate !== null) {
-                $languageFile = DIR_LANGUAGES_SITE_INTERFACE . "/" . $translate->getLocale() . ".mo";
-                if (is_file($languageFile)) {
-                    $translate->addTranslationFile('gettext', $languageFile);
-                }
-            }
-        }
-    }
-
-    public function getLocale()
-    {
-        $translate = $this->getActiveTranslateObject();
-
-        return $translate ? $translate->getLocale() : 'en_US';
-    }
-
-    public function getActiveTranslateObject()
-    {
-        return isset($this->translate) ? $this->translate : null;
-    }
-
-    public static function getTranslate()
-    {
-        $loc = self::getInstance();
-
-        return $loc->getActiveTranslateObject();
-    }
-
     public static function getAvailableInterfaceLanguages()
     {
         $languages = array();
@@ -170,7 +340,7 @@ class Localization
     {
         $languages = self::getAvailableInterfaceLanguages();
         if (count($languages) > 0) {
-            array_unshift($languages, 'en_US');
+            array_unshift($languages, static::BASE_LOCALE);
         }
         $locales = array();
         foreach ($languages as $lang) {
@@ -199,24 +369,40 @@ class Localization
     }
 
     /**
-     * @return ZendCacheDriver
-     */
-    protected static function getCache()
-    {
-        if (is_null(self::$cache)) {
-            self::$cache = new ZendCacheDriver('cache/expensive');
-        }
-
-        return self::$cache;
-    }
-
-    /**
      * Clear the translations cache.
      */
     public static function clearCache()
     {
-        $locale = static::activeLocale();
-        self::getCache()->flush();
-        static::changeLocale($locale);
+        // cache/expensive should be used by the translator adapters.
+        $app = Facade::getFacadeApplication();
+        $app->make('cache/expensive')->flush();
+
+        // Also remove the translation
+        $loc = static::getInstance();
+        $loc->removeLoadedTranslatorAdapters();
     }
+
+    /**
+     * Load the site language files (must be done after all packages called their setupPackageLocalization)
+     *
+     * @deprecated Use \Concrete\Core\Localization\Translation\Loader\SiteTranslationLoader instead.
+     *
+     * @param ZendTranslator $translate
+     */
+    public static function setupSiteLocalization(ZendTranslator $translate = null)
+    {
+        $loc = static::getInstance();
+        if ($translate === null) {
+            $translate = $loc->getActiveTranslateObject();
+        }
+        if ($translate instanceof ZendTranslator) {
+            $adapter = new ZendTranslatorAdapter($translate);
+            $adapter->setLocale($translate->getLocale());
+
+            $app = Facade::getFacadeApplication();
+            $loader = new ZendSiteTranslationLoader($app);
+            $loader->loadTranslations($adapter);
+        }
+    }
+
 }
