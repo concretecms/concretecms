@@ -112,7 +112,6 @@ EOT
             $cnt->on_start();
             $fileWriteErrors = clone $cnt->fileWriteErrors;
             $e = Core::make('helper/validation/error');
-            /* @var $e \Concrete\Core\Error\Error */
             if (!$cnt->get('imageTest')) {
                 $e->add('GD library must be enabled to install concrete5.');
             }

@@ -12,7 +12,6 @@ use Concrete\Core\Attribute\EntityInterface;
 use Concrete\Core\Attribute\Set;
 use Concrete\Core\Entity\Attribute\SetKey;
 use Concrete\Core\Entity\Attribute\Type;
-use Concrete\Core\Error\Error;
 use Concrete\Core\Validation\CSRF\Token;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
@@ -38,7 +37,7 @@ abstract class DashboardAttributesPageController extends DashboardPageController
         }
 
         $header = new StandardListHeader($category);
-        $this->set('attributeHeader', $header);
+        $this->set('headerMenu', $header);
 
         $this->set('attributeView', $list);
         $this->set('pageTitle', t('Attributes'));
@@ -65,14 +64,14 @@ abstract class DashboardAttributesPageController extends DashboardPageController
 
         $header = new KeyHeader($key);
         $header->setDashboardPageParameters($this->getRequestActionParameters());
-        $this->set('attributeHeader', $header);
+        $this->set('headerMenu', $header);
     }
 
     protected function executeAdd(Type $type, $successURL, $onComplete = null)
     {
         $entity = $this->getCategoryEntityObject();
         $category = $entity->getAttributeKeyCategory();
-        $validator = $type->getValidator();
+        $validator = $type->getController()->getValidator();
         $response = $validator->validateAddKeyRequest($category, $type, $this->request);
         if (!$response->isValid()) {
             $this->error = $response->getErrorObject();
@@ -137,8 +136,7 @@ abstract class DashboardAttributesPageController extends DashboardPageController
     {
         $entity = $this->getCategoryEntityObject();
         $category = $entity->getAttributeKeyCategory();
-        $type = $key->getAttributeType();
-        $validator = $type->getValidator();
+        $validator = $key->getController()->getValidator();
         $response = $validator->validateUpdateKeyRequest($category, $key, $this->request);
         if (!$response->isValid()) {
             $this->error = $response->getErrorObject();

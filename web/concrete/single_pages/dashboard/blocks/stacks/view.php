@@ -9,7 +9,6 @@ use Concrete\Core\Page\Stack\Stack;
 /* @var Concrete\Core\Application\Service\UserInterface $interface */
 /* @var Concrete\Core\Application\Service\Dashboard $dashboard */
 /* @var Concrete\Core\Validation\CSRF\Token $token */
-/* @var Concrete\Core\Error\Error $error */
 /* @var Concrete\Core\Form\Service\Form $form */
 /* @var Concrete\Core\Page\View\PageView $view */
 /* @var Concrete\Controller\SinglePage\Dashboard\Blocks\Stacks $controller */
@@ -269,20 +268,22 @@ $(function() {
         </div>
     </form>
     <?php
-} elseif (isset($renameStack)) {
-    /* @var Stack $renameStack */
-    $sv = CollectionVersion::get($renameStack, 'ACTIVE');
+} elseif (isset($renamePage)) {
+    /* @var Concrete\Core\Page\Page $renamePage */
+    /* @var bool $isFolder */
+    /* @var string $oldName */
+    $sv = CollectionVersion::get($renamePage, 'ACTIVE');
     ?>
-    <form action="<?=$view->action('rename', $renameStack->getCollectionID())?>" method="POST">
-        <legend><?=t('Rename Stack')?></legend>
+    <form action="<?=$view->action('rename', $renamePage->getCollectionID())?>" method="POST">
+        <legend><?=$isFolder ? t('Rename Stack Folder') : t('Rename Stack')?></legend>
         <?=$token->output('rename_stack')?>
         <div class="form-group">
-            <?=$form->label('stackName', t("Name"))?>
-            <?=$form->text('stackName', $renameStack->getStackName())?>
+            <?=$form->label('newName', t("Name"))?>
+            <?=$form->text('newName', $oldName)?>
         </div>
         <div class="ccm-dashboard-form-actions-wrapper">
             <div class="ccm-dashboard-form-actions">
-                <a href="<?=$view->action('view_details', $renameStack->getCollectionID())?>" class="btn btn-default"><?=t('Cancel')?></a>
+                <a href="<?=$view->action('view_details', $renamePage->getCollectionID())?>" class="btn btn-default"><?=t('Cancel')?></a>
                 <button type="submit" class="btn pull-right btn-primary"><?=t('Rename')?></button>
             </div>
         </div>
@@ -303,7 +304,7 @@ $(function() {
         ?>
         <div class="ccm-dashboard-content-full">
             <div class="table-responsive">
-                <table class="ccm-search-results-table">
+                <table class="ccm-search-results-table ccm-search-results-table-icon">
                     <thead>
                         <tr>
                             <th></th>
@@ -315,7 +316,7 @@ $(function() {
                         <?php
                         if ($showGlobalAreasFolder) {
                             ?>
-                            <tr class="ccm-search-results-folder" data-details-url="<?=$view->url('/dashboard/blocks/stacks', 'view_global_areas')?>">
+                            <tr class="ccm-search-results-folder ccm-search-results-globalareafolder" data-details-url="<?=$view->url('/dashboard/blocks/stacks', 'view_global_areas')?>">
                                 <td class="ccm-search-results-icon"><i class="fa fa-object-group"></i></td>
                                 <td class="ccm-search-results-name"><?=t('Global Areas')?></td>
                                 <td></td>
@@ -358,31 +359,33 @@ $(function() {
                 window.location.href = $this.data('details-url');
             })
             <?php if ($canMoveStacks) { ?>
-                .draggable({
-                    delay: 300,
-                    start: function() {
-                        $this.addClass('ccm-search-selected');
-                        $('.ccm-undroppable-search-item').css('opacity', '0.4');
-                    },
-                    stop: function() {
-                        $('.ccm-undroppable-search-item').css('opacity', '');
-                    },
-                    revert: 'invalid',
-                    helper: function() {
-                        var $selected = $this.add($tbody.find('.ccm-search-selected'));
-                        return $('<div class="' + className + ' ccm-draggable-search-item"><span>' + $selected.length + '</span></div>').data('$selected', $selected);
-                    },
-                    cursorAt: {
-                        left: -20,
-                        top: 5
-                    }
-                })
+                .not('.ccm-search-results-globalareafolder')
+                    .draggable({
+                        delay: 300,
+                        start: function() {
+                            $this.addClass('ccm-search-selected');
+                            $('.ccm-undroppable-search-item').css('opacity', '0.4');
+                        },
+                        stop: function() {
+                            $('.ccm-undroppable-search-item').css('opacity', '');
+                        },
+                        revert: 'invalid',
+                        helper: function() {
+                            var $selected = $this.add($tbody.find('.ccm-search-selected'));
+                            return $('<div class="' + className + ' ccm-draggable-search-item"><span>' + $selected.length + '</span></div>').data('$selected', $selected);
+                        },
+                        cursorAt: {
+                            left: -20,
+                            top: 5
+                        }
+                    })
+                .end()
             <?php } ?>
         ;
     });
     <?php if ($canMoveStacks) { ?>
         $('.ccm-droppable-search-item').droppable({
-            accept: '.ccm-search-results-folder, .ccm-search-results-stack',
+            accept: '.ccm-search-results-stackfolder, .ccm-search-results-stack',
             //activeClass: 'ui-state-highlight',
             hoverClass: 'ui-state-highlight',
             drop: function(event, ui) {
@@ -428,8 +431,34 @@ $(function() {
             }
         });
     <?php } ?>
+   	$('.ccm-search-results-stackfolder .ccm-search-results-name').concreteStackMenu({menu: '#ccm-stackfolders-menu'});
 });
         </script>
+
+        <div class="ccm-popover-page-menu popover fade" id="ccm-stackfolders-menu">
+        	<div class="arrow"></div>
+        	<div class="popover-inner">
+        		<ul class="dropdown-menu">
+					<li><a data-action="rename" href="#" data-href-template="<?=$view->action('rename', '__folderID__')?>"><?=t('Rename Folder')?></a></li>
+					<li><a data-action="delete" href="javascript:void(0)"><?=t('Delete Folder')?></a></li>
+				</ul>
+			</div>
+		</div>
+
+		<div style="display: none">
+    		<div id="ccm-dialog-delete-stackfolder" class="ccm-ui" title="<?=t('Delete Folder')?>">
+    			<form method="post" class="form-stacked" style="padding-left: 0px" action="<?=$view->action('delete_stackfolder')?>">
+    				<?=$token->output('delete_stackfolder')?>
+    				<input type="hidden" name="stackfolderID" />
+    				<p><?=t('Are you sure? This action cannot be undone.');?></p>
+    			</form>
+    			<div class="dialog-buttons">
+    				<button class="btn btn-default pull-left" onclick="jQuery.fn.dialog.closeTop()"><?=t('Cancel')?></button>
+    				<button class="btn btn-danger pull-right" onclick="$('#ccm-dialog-delete-stackfolder form').submit()"><?=t('Delete Folder')?></button>
+    			</div>
+    		</div>
+    	</div>
+
         <?php
     } else {
         ?><div class="alert alert-info"><?php
@@ -508,44 +537,6 @@ $(function() {
     });
 });
     </script>
-    <?php
-}
-
-if (isset($breadcrumb) && (!empty($breadcrumb))) {
-    ?>
-    <div class="ccm-search-results-breadcrumb">
-        <ol class="breadcrumb">
-            <?php
-            foreach ($breadcrumb as $value) {
-                ?><li class="<?=$value['active'] ? 'ccm-undroppable-search-item active' : 'ccm-droppable-search-item'?>" data-collection-id="<?=$value['id']?>"><?php
-                if (isset($value['children'])) {
-                    ?><span class="dropdown">
-                        <button type="button" class="btn btn-default btn-xs" data-toggle="dropdown">
-                            <?=$value['name']?>
-                            <span class="caret"></span>
-                        </button>
-                        <ul class="dropdown-menu" role="menu">
-                            <?php
-                            foreach ($value['children'] as $child) {
-                                ?><li><a href="<?=h($child['url'])?>"><?=$child['name']?></a></li><?php
-                            }
-                            ?>
-                        </ul>
-                    </span><?php
-                } else {
-                    if (!$value['active']) {
-                        ?><a href="<?=h($value['url'])?>"><?php
-                    }
-                    echo $value['name'];
-                    if (!$value['active']) {
-                        ?></a><?php
-                    }
-                }
-                ?></li><?php
-            }
-            ?>
-        </ol>
-    </div>
     <?php
 }
 

@@ -17,7 +17,7 @@
             $walk = function ($node) use (&$walk, &$view, $selectedTopicID) {
                 ?><ul class="ccm-block-topic-list-list"><?php
                 foreach ($node->getChildNodes() as $topic) {
-                    if ($topic instanceof \Concrete\Core\Tree\Node\Type\TopicCategory) {
+                    if ($topic instanceof \Concrete\Core\Tree\Node\Type\Category) {
                         ?><li><?php echo $topic->getTreeNodeDisplayName(); ?></li>
                         <?php
                     } else {

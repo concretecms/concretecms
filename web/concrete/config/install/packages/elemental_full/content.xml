@@ -3021,12 +3021,12 @@
     </sociallinks>
     <trees>
     <tree type="topic" name="Blog Entries">
-        <topic_category name="Reviews">
+        <category name="Reviews">
             <topic name="Gadgets"/>
             <topic name="Movies"/>
             <topic name="Books"/>
             <topic name="Music"/>
-        </topic_category>
+        </category>
         <topic name="Projects"/>
         <topic name="Sports"/>
         <topic name="Humor"/>

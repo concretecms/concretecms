@@ -5,7 +5,7 @@ use Concrete\Core\Entity\Attribute\Value\Value\TextareaValue;
 
 /**
  * @Entity
- * @Table(name="TextareaAttributeTypes")
+ * @Table(name="TextareaAttributeKeyTypes")
  */
 class TextareaType extends Type
 {
@@ -14,22 +14,17 @@ class TextareaType extends Type
         return new TextareaValue();
     }
 
-    public function getAttributeTypeHandle()
-    {
-        return 'textarea';
-    }
-
     /**
      * @Column(type="string")
      */
-    protected $mode = '';
+    protected $akTextareaDisplayMode = '';
 
     /**
      * @return mixed
      */
     public function getMode()
     {
-        return $this->mode;
+        return $this->akTextareaDisplayMode;
     }
 
     /**
@@ -37,13 +32,7 @@ class TextareaType extends Type
      */
     public function setMode($mode)
     {
-        $this->mode = $mode;
+        $this->akTextareaDisplayMode = $mode;
     }
 
-    public function createController()
-    {
-        $controller = \Core::make('\Concrete\Attribute\Textarea\Controller');
-        $controller->setAttributeType($this->getAttributeType());
-        return $controller;
-    }
 }

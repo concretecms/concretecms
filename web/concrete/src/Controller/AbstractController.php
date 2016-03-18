@@ -24,6 +24,22 @@ abstract class AbstractController implements ApplicationAwareInterface
         $this->request = Request::getInstance();
     }
 
+    /**
+     * @return mixed
+     */
+    public function getRequest()
+    {
+        return $this->request;
+    }
+
+    /**
+     * @param mixed $request
+     */
+    public function setRequest($request)
+    {
+        $this->request = $request;
+    }
+
     public function requireAsset()
     {
         $args = func_get_args();

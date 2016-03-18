@@ -207,6 +207,13 @@ table.ccm-search-results-table {
   thead {
 
     th {
+
+      &:first-child {
+        @media (min-width: @screen-sm-min) {
+          padding-left: 82px; /* 97 - 15 */
+        }
+      }
+
       input[type=checkbox], input[type=radio] {
         border: 1px solid #ccc;
         color: #ccc;
@@ -280,7 +287,7 @@ table.ccm-search-results-table {
 
       &:first-child {
         @media (min-width: @screen-sm-min) {
-          padding-left: 70px;
+          padding-left: 97px;
         }
       }
       border-bottom: 1px solid #dbdbdb;
@@ -357,6 +364,33 @@ div.ccm-search-results-pagination {
   text-align: center;
 }
 
+table.ccm-search-results-table-icon {
+
+  thead {
+
+    th {
+
+      &:first-child {
+        @media (min-width: @screen-sm-min) {
+          padding-left: 70px;
+        }
+      }
+    }
+  }
+
+  tbody {
+
+    td {
+
+      &:first-child {
+        @media (min-width: @screen-sm-min) {
+          padding-left: 70px;
+        }
+      }
+    }
+  }
+
+}
 // Responsive - Adjust for medium & smaller screens
 @media (max-width: @screen-md-max) {
 

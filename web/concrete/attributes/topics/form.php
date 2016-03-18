@@ -8,14 +8,13 @@
 	<script type="text/javascript">
 	$(function() {
 		var treeObj = $('.tree-view-template_<?php echo $akID ?>');
-		treeObj.ccmtopicstree({
+		treeObj.concreteTree({
 			'treeID': '<?php echo $treeID ?>',
 			'treeNodeParentID': '<?php echo $parentNode ?>',
 			'chooseNodeInForm': 'multiple',
 			'allowFolderSelection': false,
 			'selectNodesByKey': [<?php echo $valueIDs ?>],
 			'selectMode': '2',
-			'noDrag' : true,
 			'minExpandLevel': '1',
 			'checkbox': true,
 			'onSelect' : function(select, node) {

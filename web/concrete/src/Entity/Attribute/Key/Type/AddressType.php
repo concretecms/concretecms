@@ -17,12 +17,12 @@ class AddressType extends Type
     /**
      * @Column(type="string")
      */
-    protected $defaultCountry = '';
+    protected $akDefaultCountry = '';
 
     /**
      * @Column(type="boolean")
      */
-    protected $hasCustomCountries = false;
+    protected $akHasCustomCountries = false;
 
     /**
      * @Column(type="json_array")
@@ -34,7 +34,7 @@ class AddressType extends Type
      */
     public function getDefaultCountry()
     {
-        return $this->defaultCountry;
+        return $this->akDefaultCountry;
     }
 
     /**
@@ -42,12 +42,7 @@ class AddressType extends Type
      */
     public function setDefaultCountry($defaultCountry)
     {
-        $this->defaultCountry = $defaultCountry;
-    }
-
-    public function getAttributeTypeHandle()
-    {
-        return 'address';
+        $this->akDefaultCountry = $defaultCountry;
     }
 
     /**
@@ -55,7 +50,7 @@ class AddressType extends Type
      */
     public function hasCustomCountries()
     {
-        return $this->hasCustomCountries;
+        return $this->akHasCustomCountries;
     }
 
     /**
@@ -63,7 +58,7 @@ class AddressType extends Type
      */
     public function setHasCustomCountries($hasCustomCountries)
     {
-        $this->hasCustomCountries = $hasCustomCountries;
+        $this->akHasCustomCountries = $hasCustomCountries;
     }
 
     /**
@@ -82,11 +77,4 @@ class AddressType extends Type
         $this->customCountries = $customCountries;
     }
 
-    public function createController()
-    {
-        $controller = \Core::make('\Concrete\Attribute\Address\Controller');
-        $controller->setAttributeType($this->getAttributeType());
-
-        return $controller;
-    }
 }

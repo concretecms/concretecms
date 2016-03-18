@@ -116,11 +116,6 @@ class Type implements ExportableInterface
         }
     }
 
-    public function getValidator()
-    {
-        return \Core::make('Concrete\Core\Attribute\StandardValidator');
-    }
-
     public function getExporter()
     {
         return new AttributeType();

@@ -62,7 +62,7 @@ class File extends Controller
             }
         }
         if ($errorMessage && !$successMessage) {
-            $e = new \Concrete\Core\Error\Error();
+            $e = \Core::make('error');
             $e->add($errorMessage);
             $r->setError($e);
         } else {

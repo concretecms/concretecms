@@ -436,6 +436,7 @@ DynaTreeNode.prototype = {
 			// Allow tweaking, binding, after node was created for the first time
 			if(firstTime && opts.onCreate){
 				opts.onCreate.call(tree, this, this.span);
+
 			}
 			// Hide children, if node is collapsed
 //			this.ul.style.display = ( this.bExpanded || !parent ) ? "" : "none";

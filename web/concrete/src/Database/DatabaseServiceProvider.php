@@ -51,20 +51,18 @@ class DatabaseServiceProvider extends ServiceProvider
         try {
             $packages = $entityManager->getRepository('Concrete\Core\Entity\Package')
                 ->findAll();
-        } catch (\Exception $e) {
-            $packages = array();
-        }
 
-        $driver = $entityManager->getConfiguration()->getMetadataDriverImpl();
+            $driver = $entityManager->getConfiguration()->getMetadataDriverImpl();
 
-        $paths = array();
+            $paths = array();
 
-        foreach($packages as $package) {
-            $class = $package->getController();
-            $paths = array_merge($paths, $class->getPackageEntityPaths());
-        }
+            foreach($packages as $package) {
+                $class = $package->getController();
+                $paths = array_merge($paths, $class->getPackageEntityPaths());
+            }
 
-        $driver->addPaths($paths);
+            $driver->addPaths($paths);
+        } catch(\Exception $e) {}
     }
 
 

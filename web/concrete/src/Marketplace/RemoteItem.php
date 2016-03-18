@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Core\Marketplace;
 
-use Concrete\Core\Error\Error;
+use Concrete\Core\Error\ErrorBag\ErrorBag;
 use Concrete\Core\Package\Package;
 use Concrete\Core\Package\PackageArchive;
 use Loader;
@@ -245,7 +245,7 @@ class RemoteItem extends Object
     public function download()
     {
         $file = Marketplace::downloadRemoteFile($this->getRemoteFileURL());
-        if ($file instanceof Error) {
+        if ($file instanceof ErrorBag) {
             return $file;
         } else {
             try {

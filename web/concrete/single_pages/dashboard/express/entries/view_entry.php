@@ -1,13 +1,13 @@
 <?php defined('C5_EXECUTE') or die("Access Denied."); ?>
 
 <div class="ccm-dashboard-header-buttons btn-group">
-    <a href="<?=URL::to('/dashboard/express/entries', $entity->getID())?>" class="btn btn-default"><?=t("Back to List")?></a>
+    <a href="<?=$backURL?>" class="btn btn-default"><?=t("Back to List")?></a>
     <button type="button" class="btn btn-danger" data-dialog="delete-entry"><?= t('Delete %s', $entity->getName()) ?></button>
 </div>
 
 <div style="display: none">
     <div id="ccm-dialog-delete-entry" class="ccm-ui">
-        <form method="post" action="<?=$view->action('delete_entry', $entity->getID())?>">
+        <form method="post" action="<?=$view->action('delete_entry')?>">
             <?=Core::make("token")->output('delete_entry')?>
             <input type="hidden" name="entry_id" value="<?=$entry->getID()?>">
             <p><?=t('Are you sure you want to delete this entry? This cannot be undone.')?></p>

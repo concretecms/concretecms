@@ -10,7 +10,7 @@ $result = json_encode($result);
 
     <script type="text/template" data-template="search-results-table-body">
         <% _.each(items, function(entity) {%>
-        <tr data-entity-id="<%=entity.id%>" data-search-row-url="<%=entity.url%>">
+        <tr data-entity-id="<%=entity.id%>">
             <% for(i = 0; i < entity.columns.length; i++) {
             var column = entity.columns[i];
             %>
@@ -68,14 +68,10 @@ $result = json_encode($result);
 
                     concreteSearch.$element.on('click.expressEntries', 'tr[data-entity-id]', function(e) {
                         e.stopPropagation();
-                        <?php if (isset($selectMode) && $selectMode) { ?>
-                            ConcreteEvent.publish('SelectExpressEntry', {
-                                exEntryID: $(this).attr('data-entity-id')
-                            });
-                            return false;
-                        <?php } else { ?>
-                            window.location.href = $(this).attr('data-search-row-url');
-                        <?php } ?>
+                        ConcreteEvent.publish('SelectExpressEntry', {
+                            exEntryID: $(this).attr('data-entity-id')
+                        });
+                        return false;
                     });
                 }
             });

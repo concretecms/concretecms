@@ -26,7 +26,7 @@ class TopicTreeNodeResponse extends Response
 
     public function canDuplicateTreeNode()
     {
-        return false;
+        return $this->canAccessTopics();
     }
 
     public function canEditTreeNode()

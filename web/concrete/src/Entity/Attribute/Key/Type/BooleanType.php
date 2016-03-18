@@ -12,7 +12,7 @@ class BooleanType extends Type
     /**
      * @Column(type="boolean")
      */
-    protected $isCheckedByDefault = false;
+    protected $akCheckedByDefault = false;
 
     public function getAttributeTypeHandle()
     {
@@ -24,7 +24,7 @@ class BooleanType extends Type
      */
     public function isCheckedByDefault()
     {
-        return $this->isCheckedByDefault;
+        return $this->akCheckedByDefault;
     }
 
     /**
@@ -32,7 +32,7 @@ class BooleanType extends Type
      */
     public function setIsCheckedByDefault($isCheckedByDefault)
     {
-        $this->isCheckedByDefault = $isCheckedByDefault;
+        $this->akCheckedByDefault = $isCheckedByDefault;
     }
 
     public function getAttributeValue()
@@ -40,11 +40,4 @@ class BooleanType extends Type
         return new BooleanValue();
     }
 
-    public function createController()
-    {
-        $controller = \Core::make('\Concrete\Attribute\Boolean\Controller');
-        $controller->setAttributeType($this->getAttributeType());
-
-        return $controller;
-    }
 }
