@@ -21,6 +21,7 @@ $(document).ready(function(){
             <?php if ($speed) { echo "speed: $speed,"; } ?>
             <?php if ($pause) { echo "pause: true,"; } ?>
             <?php if ($noAnimate) { echo "auto: false,"; } ?>
+            <?php if ($maxWidth) { echo "maxWidth: $maxWidth,"; } ?>
         });
     });
 });

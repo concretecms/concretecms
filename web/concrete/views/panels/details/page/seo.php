@@ -4,7 +4,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 <section class="ccm-ui">
 	<header><?=t('SEO')?></header>
-	<form method="post" action="<?=$controller->action('submit')?>" class="ccm-panel-detail-content-form" data-dialog-form="seo" data-panel-detail-form="seo">
+	<form method="post" action="<?=$controller->action('submit')?>" class="ccm-panel-detail-content-form" data-dialog-form="seo" data-panel-detail-form="seo" data-action-after-save="reload">
 
 	<?php if ($allowEditName) { ?>
 	<div class="form-group">
