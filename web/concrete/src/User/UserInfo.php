@@ -847,7 +847,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
      */
     public static function add($data)
     {
-        return Core::make('user.registration')->create($data);
+        return Core::make('user/registration')->create($data);
     }
 
     /**
@@ -855,7 +855,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
      */
     public static function addSuperUser($uPasswordEncrypted, $uEmail)
     {
-        return Core::make('user.registration')->createSuperUser($uPasswordEncrypted, $uEmail);
+        return Core::make('user/registration')->createSuperUser($uPasswordEncrypted, $uEmail);
     }
 
     /**
@@ -863,7 +863,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
      */
     public static function register($data)
     {
-        return Core::make('user.registration')->createFromPublicRegistration($data);
+        return Core::make('user/registration')->createFromPublicRegistration($data);
     }
 
     /**
