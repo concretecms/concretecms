@@ -247,10 +247,8 @@ abstract class Tree extends Object
     public static function exportTranslations()
     {
         $translations = new Translations();
-        $currentLocale = Localization::activeLocale();
-        if ($currentLocale !== 'en_US') {
-            Localization::changeLocale('en_US');
-        }
+        $loc = Localization::getInstance();
+        $loc->setActiveContext('database');
         try {
             $db = \Database::get();
             $r = $db->Execute('select treeID from Trees order by treeID asc');
@@ -274,14 +272,10 @@ abstract class Tree extends Object
                 }
             }
         } catch (\Exception $x) {
-            if ($currentLocale !== 'en_US') {
-                Localization::changeLocale($currentLocale);
-            }
+            $loc->revertActiveContext();
             throw $x;
         }
-        if ($currentLocale !== 'en_US') {
-            Localization::changeLocale($currentLocale);
-        }
+        $loc->revertActiveContext();
 
         return $translations;
     }

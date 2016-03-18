@@ -27,22 +27,15 @@ class Update extends DashboardPageController
                     $this->error->add($r);
                 } else {
                     $p = Package::getByHandle($pkgHandle);
-                    $currentLocale = Localization::activeLocale();
-                    if ($currentLocale != 'en_US') {
-                        // Prevent the database records being stored in wrong language
-                        Localization::changeLocale('en_US');
-                    }
+                    $loc = Localization::getInstance();
+                    $loc->setActiveContext('database');
                     try {
                         $p->upgradeCoreData();
                         $p->upgrade();
-                        if ($currentLocale != 'en_US') {
-                            Localization::changeLocale($currentLocale);
-                        }
+                        $loc->revertActiveContext();
                         $this->set('message', t('The package has been updated successfully.'));
                     } catch (Exception $e) {
-                        if ($currentLocale != 'en_US') {
-                            Localization::changeLocale($currentLocale);
-                        }
+                        $loc->revertActiveContext();
                         $this->error->add($e);
                     }
                 }

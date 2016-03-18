@@ -176,11 +176,7 @@ class PackageService
 
     public function install(Package $p, $data)
     {
-        $currentLocale = $this->localization->activeLocale();
-        if ($currentLocale != 'en_US') {
-            // Prevent the database records being stored in wrong language
-            $this->localization->changeLocale('en_US');
-        }
+        $this->localization->setActiveContext('database');
         try {
 
             $config = $this->entityManager->getConfiguration();
@@ -195,15 +191,11 @@ class PackageService
             if ($u->isSuperUser() && $swapper->allowsFullContentSwap($p) && $data['pkgDoFullContentSwap']) {
                 $swapper->swapContent($p, $data);
             }
-            if ($currentLocale != 'en_US') {
-                Localization::changeLocale($currentLocale);
-            }
+            $this->localization->revertActiveContext();
             $pkg = $this->getByHandle($p->getPackageHandle());
             return $pkg;
         } catch (\Exception $e) {
-            if ($currentLocale != 'en_US') {
-                $this->localization->changeLocale($currentLocale);
-            }
+            $this->localization->revertActiveContext();
             $error = $this->application->make('error');
             $error->add($e);
             return $error;
