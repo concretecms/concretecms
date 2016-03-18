@@ -1,9 +1,7 @@
 <?php
 namespace Concrete\Core\Entity\Express;
 
-use Doctrine\ORM\EntityRepository;
-
-class EntryRepository extends EntityRepository
+class EntryRepository extends \Doctrine\ORM\EntityRepository
 {
     public function findOneByID($id)
     {

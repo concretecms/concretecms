@@ -3,11 +3,14 @@ namespace Concrete\Core\Entity\Express;
 
 use Concrete\Core\Attribute\EntityInterface;
 use Concrete\Core\Express\Search\ColumnSet\ColumnSet;
+use Concrete\Core\Express\Search\ColumnSet\DefaultSet;
+use Concrete\Core\Tree\Node\Node;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * @Entity
+ * @Entity(repositoryClass="\Concrete\Core\Entity\Express\EntityRepository")
  * @Table(name="ExpressEntities")
+ * @HasLifecycleCallbacks
  */
 class Entity implements EntityInterface
 {
@@ -43,6 +46,11 @@ class Entity implements EntityInterface
     protected $include_in_public_list = true;
 
     /**
+     * @Column(type="integer")
+     */
+    protected $entity_results_node_id;
+
+    /**
      * @OneToMany(targetEntity="\Concrete\Core\Entity\Attribute\Key\ExpressKey", mappedBy="entity", cascade={"persist", "remove"})
      **/
     protected $attributes;
@@ -62,11 +70,19 @@ class Entity implements EntityInterface
      **/
     protected $entries;
 
-
     /**
      * @Column(type="datetime")
      */
     protected $created_date;
+
+    /** @PostRemove */
+    public function afterRemove()
+    {
+        $node = Node::getByID($this->getEntityResultsNodeId());
+        if (is_object($node)) {
+            $node->delete();
+        }
+    }
 
     public function __construct()
     {
@@ -75,6 +91,7 @@ class Entity implements EntityInterface
         $this->forms = new ArrayCollection();
         $this->associations = new ArrayCollection();
         $this->entries = new ArrayCollection();
+        $this->result_column_set = new DefaultSet($this->getAttributeKeyCategory());
     }
 
     /**
@@ -249,6 +266,22 @@ class Entity implements EntityInterface
     public function setForms($forms)
     {
         $this->forms = $forms;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEntityResultsNodeId()
+    {
+        return $this->entity_results_node_id;
+    }
+
+    /**
+     * @param mixed $entity_results_node_id
+     */
+    public function setEntityResultsNodeId($entity_results_node_id)
+    {
+        $this->entity_results_node_id = $entity_results_node_id;
     }
 
     public function getAttributeKeyCategory()

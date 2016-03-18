@@ -2,7 +2,7 @@
 
 namespace Concrete\Core\Validation;
 
-use Concrete\Core\Error\Error;
+use Concrete\Core\Error\ErrorBag\ErrorBag;
 
 interface ResponseInterface
 {
@@ -13,7 +13,7 @@ interface ResponseInterface
     function isValid();
 
     /**
-     * @return Error | null
+     * @return ErrorBag | null
      */
     function getErrorObject();
 

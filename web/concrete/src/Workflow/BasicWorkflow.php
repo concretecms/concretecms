@@ -7,6 +7,7 @@ use Concrete\Core\Workflow\Progress\Action\ApprovalAction as WorkflowProgressApp
 use Concrete\Core\Workflow\Progress\Action\CancelAction as WorkflowProgressCancelAction;
 use Concrete\Core\Workflow\Progress\BasicData as BasicWorkflowProgressData;
 use Concrete\Core\Workflow\Progress\Progress as WorkflowProgress;
+use Concrete\Core\Workflow\Progress\Category as WorkflowProgressCategory;
 use Loader;
 use Core;
 use PermissionAccess;

@@ -64,7 +64,7 @@ $datetime = loader::helper('form/date_time');
         </div>
     <?php endif ?>
     <br/>
-    <?php if ($publishAction): ?>
+
         <div class="small">
         <?php foreach ($publishErrors->getList() as $error): ?>
             <div class="text-warning"><strong><i class="fa fa-warning"></i> <?=$error?></strong></div>
@@ -87,7 +87,7 @@ $datetime = loader::helper('form/date_time');
                 <br/>
             </div>
         <?php endif ?>
-    <?php endif ?>
+
 </div>
 
 <?php 

@@ -2,6 +2,7 @@
 namespace Concrete\Core\Routing;
 
 use Concrete\Core\Localization\Localization;
+use Concrete\Core\Page\Collection\Version\Version;
 use Concrete\Core\Page\Event as PageEvent;
 use Concrete\Core\Page\Theme\Theme;
 use Concrete\Core\Url\Url;
@@ -136,8 +137,15 @@ class DispatcherRouteCallback extends RouteCallback
             return $this->sendPageNotFound($request);
         }
 
-        if (!$c->canBePublished()) {
-            return $this->sendPageNotFound($request);
+        $scheduledVersion = Version::get($c, "SCHEDULED");
+        if ($publishDate = $scheduledVersion->cvPublishDate) {
+            $datetime = Core::make('helper/date');
+            $now = $datetime->date('Y-m-d G:i:s');
+
+            if (strtotime($now) >= strtotime($publishDate)) {
+                $scheduledVersion->approve();
+                $c->loadVersionObject('ACTIVE');
+            }
         }
 
         if ($cp->canEditPageContents() || $cp->canEditPageProperties() || $cp->canViewPageVersions()) {

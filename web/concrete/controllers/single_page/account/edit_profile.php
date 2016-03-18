@@ -128,16 +128,15 @@ class EditProfile extends AccountPageController
         $aks = UserAttributeKey::getEditableInProfileList();
 
         foreach ($aks as $uak) {
-            if ($uak->isAttributeKeyRequiredOnProfile()) {
-                $validator = $uak->getAttributeType()->getValidator();
-                $response = $validator->validateSaveValueRequest($uak, $this->request);
-                /**
-                 * @var $response ResponseInterface
-                 */
-                if (!$response->isValid()) {
-                    $error = $response->getErrorObject();
-                    $this->error->add($error);
-                }
+            $controller = $uak->getController();
+            $validator = $controller->getValidator();
+            $response = $validator->validateSaveValueRequest($controller, $this->request, $uak->isAttributeKeyRequiredOnProfile());
+            /**
+             * @var $response ResponseInterface
+             */
+            if (!$response->isValid()) {
+                $error = $response->getErrorObject();
+                $this->error->add($error);
             }
         }
 

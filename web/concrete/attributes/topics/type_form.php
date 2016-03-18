@@ -3,11 +3,10 @@
 
     <script type="text/javascript">
         $(function() {
-            $('.tree-view-template').ccmtopicstree({  // run first time around to get default tree if new.
+            $('.tree-view-template').concreteTree({  // run first time around to get default tree if new.
                 'treeID': <?php echo $tree->getTreeID();
     ?>,
                 'chooseNodeInForm': true,
-                'noDrag' : true,
                 //'selectMode': 2,
                 <?php if ($parentNode) {
     ?>
@@ -32,7 +31,7 @@
                 var toolsURL = '<?php echo Loader::helper('concrete/urls')->getToolsURL('tree/load');
     ?>';
                 var chosenTree = $(this).val();
-                $('.tree-view-template').ccmtopicstree({
+                $('.tree-view-template').concreteTree({
                     'treeID': chosenTree,
                     'chooseNodeInForm': true,
                     'onSelect' : function(select, node) {

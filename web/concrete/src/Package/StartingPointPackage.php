@@ -11,8 +11,12 @@ use Concrete\Core\Package\Routine\AttachModeInstallRoutine;
 use Concrete\Core\Permission\Access\Entity\ConversationMessageAuthorEntity;
 use Concrete\Core\Permission\Access\Entity\GroupEntity as GroupPermissionAccessEntity;
 use Concrete\Core\Permission\Access\Entity\PageOwnerEntity as PageOwnerPermissionAccessEntity;
+use Concrete\Core\Tree\Node\Type\Category;
+use Concrete\Core\Tree\Type\ExpressEntry;
+use Concrete\Core\Tree\Type\ExpressEntryResults;
 use Concrete\Core\Updater\Migrations\Configuration;
 use Concrete\Core\User\Point\Action\Action as UserPointAction;
+use Concrete\Block\ExpressForm\Controller as ExpressFormBlockController;
 use Config;
 use Core;
 use Database;
@@ -44,16 +48,17 @@ class StartingPointPackage extends BasePackage
                 5,
                 t('Starting installation and creating directories.')),
             new StartingPointInstallRoutine('install_database', 10, t('Creating database tables.')),
-            new StartingPointInstallRoutine('add_users', 18, t('Adding admin user.')),
+            new StartingPointInstallRoutine('add_users', 15, t('Adding admin user.')),
             new StartingPointInstallRoutine('install_permissions', 20, t('Installing permissions & workflow.')),
-            new StartingPointInstallRoutine('add_home_page', 23, t('Creating home page.')),
-            new StartingPointInstallRoutine('install_attributes', 25, t('Installing attributes.')),
-            new StartingPointInstallRoutine('install_blocktypes', 30, t('Adding block types.')),
-            new StartingPointInstallRoutine('install_gathering', 33, t('Adding gathering data sources.')),
-            new StartingPointInstallRoutine('install_page_types', 36, t('Page type basic setup.')),
-            new StartingPointInstallRoutine('install_themes', 38, t('Adding themes.')),
-            new StartingPointInstallRoutine('install_jobs', 40, t('Installing automated jobs.')),
-            new StartingPointInstallRoutine('install_dashboard', 45, t('Installing dashboard.')),
+            new StartingPointInstallRoutine('install_data_objects', 23, t('Installing Custom Data Objects.')),
+            new StartingPointInstallRoutine('add_home_page', 26, t('Creating home page.')),
+            new StartingPointInstallRoutine('install_attributes', 30, t('Installing attributes.')),
+            new StartingPointInstallRoutine('install_blocktypes', 35, t('Adding block types.')),
+            new StartingPointInstallRoutine('install_gathering', 39, t('Adding gathering data sources.')),
+            new StartingPointInstallRoutine('install_page_types', 40, t('Page type basic setup.')),
+            new StartingPointInstallRoutine('install_themes', 45, t('Adding themes.')),
+            new StartingPointInstallRoutine('install_jobs', 47, t('Installing automated jobs.')),
+            new StartingPointInstallRoutine('install_dashboard', 50, t('Installing dashboard.')),
             new StartingPointInstallRoutine(
                 'install_required_single_pages',
                 55,
@@ -151,15 +156,26 @@ class StartingPointPackage extends BasePackage
     }
     */
 
+    public function install_data_objects()
+    {
+        \Concrete\Core\Tree\Node\NodeType::add('category');
+        \Concrete\Core\Tree\TreeType::add('express_entry_results');
+        \Concrete\Core\Tree\Node\NodeType::add('express_entry_results');
+
+        $tree = ExpressEntryResults::add();
+        $node = $tree->getRootTreeNodeObject();
+
+        // Add forms node beneath it.
+        $forms = Category::add(ExpressFormBlockController::FORM_RESULTS_CATEGORY_NAME, $node);
+    }
+
     public function install_attributes()
     {
         $ci = new ContentImporter();
         $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/attributes.xml');
 
         $topicType = \Concrete\Core\Tree\TreeType::add('topic');
-        $topicCategoryNodeType = \Concrete\Core\Tree\Node\NodeType::add('topic_category');
         $topicNodeType = \Concrete\Core\Tree\Node\NodeType::add('topic');
-        //$tree = \Concrete\Core\Tree\Type\Topic::add('Topics');
     }
 
     public function install_dashboard()

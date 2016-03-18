@@ -13,7 +13,6 @@ use Concrete\Core\Entity\Attribute\Key\Type\Type;
 use Concrete\Core\Entity\Attribute\Set;
 use Concrete\Core\Entity\Attribute\Value\Value\Value;
 use Concrete\Core\Entity\Package;
-use Concrete\Core\Error\Error;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
 use Concrete\Core\Entity\Attribute\Type as AttributeType;
@@ -110,7 +109,8 @@ abstract class AbstractCategory implements CategoryInterface
          * LEGACY SUPPORT
          */
         if ($key_type instanceof \Concrete\Core\Entity\Attribute\Type) {
-            $key_type = $key_type->getController()->createAttributeKeyType();
+            $type_handle = $key_type->getAttributeTypeHandle();
+            $key_type = $key_type->getController()->getAttributeKeyType();
             // $key is actually an array.
             $handle = $key['akHandle'];
             $name = $key['akName'];
@@ -148,7 +148,6 @@ abstract class AbstractCategory implements CategoryInterface
         if (!is_object($key_type)) {
             $key_type = $controller->getAttributeKeyType();
         }
-
         return $this->add($key_type, $key);
     }
 
@@ -163,7 +162,6 @@ abstract class AbstractCategory implements CategoryInterface
         if (!is_object($key_type)) {
             $key_type = $controller->getAttributeKeyType();
         }
-
         return $this->add($key_type, $key, $package);
     }
 

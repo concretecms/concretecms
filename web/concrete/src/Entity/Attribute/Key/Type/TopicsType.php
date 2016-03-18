@@ -13,19 +13,19 @@ class TopicsType extends Type
     /**
      * @Column(type="integer")
      */
-    protected $parentNodeID = 0;
+    protected $akTopicParentNodeID = 0;
 
     /**
      * @Column(type="integer")
      */
-    protected $topicTreeID = 0;
+    protected $akTopicTreeID = 0;
 
     /**
      * @return mixed
      */
     public function getTopicTreeID()
     {
-        return $this->topicTreeID;
+        return $this->akTopicTreeID;
     }
 
     /**
@@ -33,7 +33,7 @@ class TopicsType extends Type
      */
     public function setTopicTreeID($topicTreeID)
     {
-        $this->topicTreeID = $topicTreeID;
+        $this->akTopicTreeID = $topicTreeID;
     }
 
     /**
@@ -41,7 +41,7 @@ class TopicsType extends Type
      */
     public function getParentNodeID()
     {
-        return $this->parentNodeID;
+        return $this->akTopicParentNodeID;
     }
 
     /**
@@ -49,24 +49,12 @@ class TopicsType extends Type
      */
     public function setParentNodeID($parentNodeID)
     {
-        $this->parentNodeID = $parentNodeID;
+        $this->akTopicParentNodeID = $parentNodeID;
     }
 
     public function getAttributeValue()
     {
         return new TopicsValue();
-    }
-
-    public function createController()
-    {
-        $controller = \Core::make('\Concrete\Attribute\Topics\Controller');
-        $controller->setAttributeType($this->getAttributeType());
-        return $controller;
-    }
-
-    public function getAttributeTypeHandle()
-    {
-        return 'topics';
     }
 
     public function getTopicTreeObject()

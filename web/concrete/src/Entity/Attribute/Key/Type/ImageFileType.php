@@ -9,21 +9,48 @@ use Concrete\Core\Entity\Attribute\Value\Value\ImageFileValue;
  */
 class ImageFileType extends Type
 {
+
+    const TYPE_FILE_MANAGER = 0;
+    const TYPE_HTML_INPUT = 5;
+
     public function getAttributeValue()
     {
         return new ImageFileValue();
     }
 
-    public function getAttributeTypeHandle()
+    /**
+     * @Column(type="integer")
+     */
+    protected $mode;
+
+    public function __construct()
     {
-        return 'image_file';
+        $this->mode = self::TYPE_FILE_MANAGER;
     }
 
-    public function createController()
+    public function getMode()
     {
-        $controller = \Core::make('\Concrete\Attribute\ImageFile\Controller');
-        $controller->setAttributeType($this->getAttributeType());
-
-        return $controller;
+        return $this->mode;
     }
+
+    public function isModeFileManager()
+    {
+        return $this->mode == self::TYPE_FILE_MANAGER;
+    }
+
+    public function isModeHtmlInput()
+    {
+        return $this->mode == self::TYPE_HTML_INPUT;
+    }
+
+    public function setModeToFileManager()
+    {
+        $this->mode = self::TYPE_FILE_MANAGER;
+    }
+
+    public function setModeToHtmlInput()
+    {
+        $this->mode = self::TYPE_HTML_INPUT;
+    }
+
 }

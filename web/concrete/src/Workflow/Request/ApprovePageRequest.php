@@ -16,6 +16,8 @@ use Concrete\Core\Workflow\Progress\Response as WorkflowProgressResponse;
 class ApprovePageRequest extends PageRequest
 {
     protected $wrStatusNum = 30;
+    private $isScheduled = false;
+    private $scheduleDatetime;
 
     public function __construct()
     {
@@ -114,7 +116,7 @@ class ApprovePageRequest extends PageRequest
     {
         $c = Page::getByID($this->getRequestedPageID());
         $v = CollectionVersion::get($c, $this->cvID);
-        $v->approve(false);
+        $v->approve(false, $this->scheduleDatetime);
 
         $ev = new \Concrete\Core\Page\Collection\Version\Event($c);
         $ev->setCollectionVersionObject($v);
@@ -124,5 +126,11 @@ class ApprovePageRequest extends PageRequest
         $wpr->setWorkflowProgressResponseURL(\URL::to($c));
 
         return $wpr;
+    }
+
+    public function scheduleVersion($dateTime)
+    {
+        $this->isScheduled = true;
+        $this->scheduleDatetime = $dateTime;
     }
 }

@@ -12,16 +12,16 @@ class ObjectAttributeBuilder
 
     protected $builder;
 
-    public function __construct(ObjectBuilder $builder, $type, $name)
+    public function __construct(ObjectBuilder $builder, $type_handle, $name)
     {
         $this->builder = $builder;
 
         $type = $builder
             ->getAttributeTypeFactory()
-            ->getByHandle($type);
+            ->getByHandle($type_handle);
 
         $key_type = $type->getController()
-            ->createAttributeKeyType();
+            ->getAttributeKeyType();
 
         $key = new Key();
         $key->setAttributeKeyType($key_type);

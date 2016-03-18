@@ -271,6 +271,14 @@ class BlockType
         if (is_dir($dir)) {
             $files = array_merge($files, $fh->getDirectoryContents($dir));
         }
+        foreach (PackageList::get()->getPackages() as $pkg) {
+            $dir =
+                (is_dir(DIR_PACKAGES . '/' . $pkg->getPackageHandle()) ? DIR_PACKAGES : DIR_PACKAGES_CORE)
+                . '/' . $pkg->getPackageHandle() . '/' . DIRNAME_BLOCKS . '/' . $btHandle . '/' . DIRNAME_BLOCK_TEMPLATES_COMPOSER;
+            if (is_dir($dir)) {
+                $files = array_merge($files, $fh->getDirectoryContents($dir));
+            }
+        }
         $dir = DIR_FILES_BLOCK_TYPES_CORE . "/{$btHandle}/" . DIRNAME_BLOCK_TEMPLATES_COMPOSER;
         if (file_exists($dir)) {
             $files = array_merge($files, $fh->getDirectoryContents($dir));

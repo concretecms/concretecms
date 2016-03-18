@@ -81,7 +81,7 @@ class PageView extends View
             }
 
             // set the inner content for the theme wrapper we found
-            if (!$pkgHandle) {
+            if (!isset($pkgHandle)) { // This way we can pass in a false and skip this.
                 $pkgHandle = $this->c->getPackageHandle();
             }
 

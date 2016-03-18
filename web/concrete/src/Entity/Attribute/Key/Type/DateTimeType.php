@@ -14,22 +14,17 @@ class DateTimeType extends Type
         return new DateTimeValue();
     }
 
-    public function getAttributeTypeHandle()
-    {
-        return 'date_time';
-    }
-
     /**
      * @Column(type="string")
      */
-    protected $mode = '';
+    protected $akDateDisplayMode = '';
 
     /**
      * @return mixed
      */
     public function getMode()
     {
-        return $this->mode;
+        return $this->akDateDisplayMode;
     }
 
     /**
@@ -37,14 +32,7 @@ class DateTimeType extends Type
      */
     public function setMode($mode)
     {
-        $this->mode = $mode;
+        $this->akDateDisplayMode = $mode;
     }
 
-    public function createController()
-    {
-        $controller = \Core::make('\Concrete\Attribute\DateTime\Controller');
-        $controller->setAttributeType($this->getAttributeType());
-
-        return $controller;
-    }
 }

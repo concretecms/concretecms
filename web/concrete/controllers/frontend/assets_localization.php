@@ -248,6 +248,11 @@ var ccmi18n_topics = {
   editPermissions: <?=json_encode(t('Edit Permissions'))?>
 };
 
+var ccmi18n_tree = {
+    add: <?=json_encode(t('Add'))?>,
+    edit: <?=json_encode(t('Edit'))?>,
+    delete: <?=json_encode(t('Delete'))?>
+};
 var ccmi18n_tourist = {
   skipButton: <?=json_encode('<button class="btn btn-default btn-sm pull-right tour-next">'.t('Skip →').'</button>')?>,
   nextButton: <?=json_encode('<button class="btn btn-primary btn-sm pull-right tour-next">'.t('Next →').'</button>')?>,

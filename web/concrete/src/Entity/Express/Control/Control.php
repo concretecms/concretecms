@@ -15,8 +15,7 @@ use Concrete\Core\Express\Form\Control\Type\SaveHandler\ControlSaveHandler;
 abstract class Control implements \JsonSerializable
 {
     /**
-     * @Id @Column(type="integer")
-     * @GeneratedValue(strategy="AUTO")
+     * @Id @Column(type="guid")
      */
     protected $id;
 
@@ -107,12 +106,12 @@ abstract class Control implements \JsonSerializable
     /**
      * @return \Concrete\Core\Express\Form\Control\RendererInterface
      */
-    abstract public function getFormRenderer(Entity $entity = null);
+    abstract public function getFormControlRenderer(Entity $entity = null);
 
     /**
      * @return \Concrete\Core\Express\Form\Control\RendererInterface
      */
-    abstract public function getViewRenderer(Entry $entry);
+    abstract public function getViewControlRenderer(Entry $entry);
 
     public function getControlOptionsController()
     {
@@ -132,6 +131,8 @@ abstract class Control implements \JsonSerializable
     {
         return [
             'id' => $this->getId(),
+            'displayLabel' => $this->getDisplayLabel(),
+            'isRequired' => $this->isRequired(),
         ];
     }
 
@@ -160,7 +161,7 @@ abstract class Control implements \JsonSerializable
 
     public function getControlType()
     {
-        $manager = \Core::make('express.control.type.manager');
+        $manager = \Core::make('express/control/type/manager');
 
         return $manager->driver($this->getType());
     }

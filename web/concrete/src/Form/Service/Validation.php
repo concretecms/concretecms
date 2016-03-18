@@ -230,16 +230,7 @@ class Validation
         }
     }
 
-    /**
-     * Gets the error object.
-     * <code>
-     *     if ($val->test() > 0) {
-     *         $e = $val->getError();
-     *     }
-     * </code>.
-     *
-     * @return \Concrete\Core\Error\Error
-     */
+
     public function getError()
     {
         return $this->error;
