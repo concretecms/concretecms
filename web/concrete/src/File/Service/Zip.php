@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\File\Service;
 
 use Concrete\Core\Application\ApplicationAwareInterface;
@@ -405,6 +406,17 @@ class Zip implements ApplicationAwareInterface
      */
     protected function zipNative($sourceDirectory, $zipFile, array $options)
     {
+        $fs = $this->getFilesystem();
+        $originalZipFile = $zipFile;
+        if (!strpos(basename($zipFile), '.')) {
+            for ($i = 0; ; ++$i) {
+                $tmp = "$zipFile-$i.zip";
+                if (!$fs->exists($tmp)) {
+                    $zipFile = $tmp;
+                    break;
+                }
+            }
+        }
         $cmd = 'zip';
         $cmd .= ' -r'; // recurse into directories
         $level = (isset($options['level']) && is_numeric($options['level'])) ? @intval($options['level']) : null;
@@ -429,8 +441,17 @@ class Zip implements ApplicationAwareInterface
         @exec($cmd.' 2>&1', $output, $rc);
         @chdir($prevDir);
         if ($rc !== 0) {
+            if ($fs->exists($zipFile)) {
+                @$fs->delete(array($zipFile));
+            }
             $error = trim(implode("\n", $output)) ?: t('Unknown error compressing a directory');
             throw new Exception($error);
+        }
+        if ($originalZipFile !== $zipFile) {
+            if (@$fs->move($zipFile, $originalZipFile) === false) {
+                @$fs->delete(array($zipFile));
+                throw new Exception(t('Failed to move a temporary file.'));
+            }
         }
     }
 
