@@ -58,6 +58,10 @@ class ZipTest extends \PHPUnit_Framework_TestCase
                 throw new Exception('Failed to create a temporary file');
             }
             $this->delFiles[] = $this->sourceDir.'/inner/file with space.txt';
+            if (@file_put_contents($this->sourceDir.'/inner/.hiddenUnderInner', 'Hidden under inner') === false) {
+                throw new Exception('Failed to create a temporary file');
+            }
+            $this->delFiles[] = $this->sourceDir.'/inner/.hiddenUnderInner';
             if (@mkdir($this->sourceDir.'/.innerHidden') === false) {
                 throw new Exception('Failed to create a temporary directory');
             }
@@ -89,11 +93,15 @@ class ZipTest extends \PHPUnit_Framework_TestCase
     protected function tearDown()
     {
         foreach ($this->delFiles as $delFile) {
-            @unlink($delFile);
+            if (is_file($delFile)) {
+                @unlink($delFile);
+            }
         }
         $this->delFiles = array();
         foreach (array_reverse($this->delDirs) as $delDir) {
-            @rmdir($delDir);
+            if (is_dir($delDir)) {
+                @rmdir($delDir);
+            }
         }
         $this->delDirs = array();
     }
@@ -139,10 +147,13 @@ class ZipTest extends \PHPUnit_Framework_TestCase
         if ($includeDotFiles) {
             $this->assertFileExists($this->destDir.'/.root.txt');
             $this->assertSame('Root hidden', file_get_contents($this->destDir.'/.root.txt'));
+            $this->assertFileExists($this->destDir.'/inner/.hiddenUnderInner');
+            $this->assertSame('Hidden under inner', file_get_contents($this->destDir.'/inner/.hiddenUnderInner'));
             $this->assertFileExists($this->destDir.'/.innerHidden/underHidden.txt');
             $this->assertSame('File under hidden directory', file_get_contents($this->destDir.'/.innerHidden/underHidden.txt'));
         } else {
             $this->assertFileNotExists($this->destDir.'/.root.txt');
+            $this->assertFileNotExists($this->destDir.'/inner/.hiddenUnderInner');
             $this->assertFileNotExists($this->destDir.'/.innerHidden');
             $this->assertFileNotExists($this->destDir.'/.innerHidden/underHidden.txt');
         }
