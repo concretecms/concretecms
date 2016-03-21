@@ -2,6 +2,7 @@
 
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Database\DatabaseStructureManager;
+use Doctrine\DBAL\Schema\Comparator as SchemaComparator;
 
 class ConcreteDatabaseTestCase extends PHPUnit_Extensions_Database_TestCase
 {
@@ -56,24 +57,10 @@ class ConcreteDatabaseTestCase extends PHPUnit_Extensions_Database_TestCase
     {
         $db = Database::get();
         if (count($this->tables)) {
-            $partial = new SimpleXMLElement('<schema xmlns="http://www.concrete5.org/doctrine-xml/0.5" />');
-
-            $xml = simplexml_load_file(DIR_BASE_CORE . '/config/db.xml');
-            foreach ($xml->table as $t) {
-                $name = (string) $t['name'];
-                if (in_array($name, $this->tables)) {
-                    $this->appendXML($partial, $t);
-                }
-            }
-
-            $schema = \Concrete\Core\Database\Schema\Schema::loadFromXMLElement($partial, $db);
-            $platform = $db->getDatabasePlatform();
-            $queries = $schema->toSql($platform);
-            foreach ($queries as $query) {
-                $db->query($query);
-            }
-
             // Install entity database tables
+            // NOTE: This needs to happen first because not all entities have
+            //       been defined perfectly in the annotation format and are
+            //       missing some columns that are defined in the db.xml.
             $app = Application::getFacadeApplication();
             $em = $app->make('Doctrine\ORM\EntityManager');
             $dbm = new DatabaseStructureManager($em);
@@ -87,6 +74,31 @@ class ConcreteDatabaseTestCase extends PHPUnit_Extensions_Database_TestCase
             }
             if (count($installMetadatas) > 0) {
                 $dbm->installDatabaseFor($installMetadatas);
+            }
+
+            // Install XML database tables
+            $partial = new SimpleXMLElement('<schema xmlns="http://www.concrete5.org/doctrine-xml/0.5" />');
+
+            $xml = simplexml_load_file(DIR_BASE_CORE . '/config/db.xml');
+            foreach ($xml->table as $t) {
+                $name = (string) $t['name'];
+                if (in_array($name, $this->tables)) {
+                    $this->appendXML($partial, $t);
+                }
+            }
+
+            $parser = \Concrete\Core\Database\Schema\Schema::getSchemaParser($partial);
+            $parser->setIgnoreExistingTables(false);
+            $schema = $parser->parse($db);
+
+            $fromSchema = $db->getSchemaManager()->createSchema();
+            $comparator = new SchemaComparator();
+            $schemaDiff = $comparator->compare($fromSchema, $schema);
+
+            $platform = $db->getDatabasePlatform();
+            $queries = $schemaDiff->toSaveSql($platform);
+            foreach ($queries as $query) {
+                $db->query($query);
             }
         }
 
