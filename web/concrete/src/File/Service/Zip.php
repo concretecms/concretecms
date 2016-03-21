@@ -474,13 +474,17 @@ class Zip
                     case '..':
                         break;
                     default:
+                        $itemFullPath = $item->getRealPath();
+                        $itemRelPath = substr($itemFullPath, $skipPathLength);
                         if (
                             $options['includeDotFiles']
                             ||
-                            strpos($item, '.') !== 0
+                            (
+                                strpos($itemRelPath, '.') !== 0
+                                &&
+                                strpos($itemRelPath, DIRECTORY_SEPARATOR.'.') === false
+                            )
                         ) {
-                            $itemFullPath = $item->getRealPath();
-                            $itemRelPath = substr($itemFullPath, $skipPathLength);
                             if ($item->isDir()) {
                                 $added = @$zip->addEmptyDir($itemRelPath);
                             } else {
