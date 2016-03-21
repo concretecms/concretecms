@@ -410,9 +410,10 @@ class Zip
         $cmd .= ' -q'; // quiet mode, to avoid overflow of stdout
         $cmd .= ' '.escapeshellarg($zipFile); // destination ZIP archive
         if ($options['includeDotFiles']) {
-            $cmd .= ' .*'; // source files
+            $cmd .= ' .'; // source files: everything in current directory
+        } else {
+            $cmd .= ' *'; // source files: everything, excluding dot-files
         }
-        $cmd .= ' *'; // source files
         $rc = 1;
         $output = array();
         $prevDir = @getcwd();
