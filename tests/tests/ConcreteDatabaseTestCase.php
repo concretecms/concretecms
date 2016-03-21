@@ -1,5 +1,8 @@
 <?php
 
+use Concrete\Core\Support\Facade\Application;
+use Concrete\Core\Database\DatabaseStructureManager;
+
 class ConcreteDatabaseTestCase extends PHPUnit_Extensions_Database_TestCase
 {
     /** @var PHPUnit_Extensions_Database_DB_DefaultDatabaseConnection */
@@ -68,6 +71,22 @@ class ConcreteDatabaseTestCase extends PHPUnit_Extensions_Database_TestCase
             $queries = $schema->toSql($platform);
             foreach ($queries as $query) {
                 $db->query($query);
+            }
+
+            // Install entity database tables
+            $app = Application::getFacadeApplication();
+            $em = $app->make('Doctrine\ORM\EntityManager');
+            $dbm = new DatabaseStructureManager($em);
+
+            $metadatas = $dbm->getMetadatas();
+            $installMetadatas = array();
+            foreach ($metadatas as $data) {
+                if (in_array($data->getTableName(), $this->tables)) {
+                    $installMetadatas[] = $data;
+                }
+            }
+            if (count($installMetadatas) > 0) {
+                $dbm->installDatabaseFor($installMetadatas);
             }
         }
 
