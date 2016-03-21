@@ -140,7 +140,7 @@ class Zip implements ApplicationAwareInterface
     }
 
     /**
-     * Check if a native command is available.
+     * Check if a native command is available and if we may use it.
      *
      * @param string $command
      *
@@ -403,7 +403,7 @@ class Zip implements ApplicationAwareInterface
      *
      * @throws Exception
      */
-    public function zipNative($sourceDirectory, $zipFile, array $options)
+    protected function zipNative($sourceDirectory, $zipFile, array $options)
     {
         $cmd = 'zip';
         $cmd .= ' -r'; // recurse into directories
@@ -440,7 +440,7 @@ class Zip implements ApplicationAwareInterface
      *
      * @throws Exception
      */
-    public function zipPHP($sourceDirectory, $zipFile, array $options)
+    protected function zipPHP($sourceDirectory, $zipFile, array $options)
     {
         if (!class_exists('ZipArchive')) {
             throw new Exception('Unable to zip files using ZipArchive. Please ensure the Zip extension is installed.');
