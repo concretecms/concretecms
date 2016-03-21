@@ -1,5 +1,9 @@
 <?php
 
+use Concrete\Core\Support\Facade\Application;
+use Concrete\Core\Database\DatabaseStructureManager;
+use Doctrine\DBAL\Schema\Comparator as SchemaComparator;
+
 class ConcreteDatabaseTestCase extends PHPUnit_Extensions_Database_TestCase
 {
     /** @var PHPUnit_Extensions_Database_DB_DefaultDatabaseConnection */
@@ -53,6 +57,26 @@ class ConcreteDatabaseTestCase extends PHPUnit_Extensions_Database_TestCase
     {
         $db = Database::get();
         if (count($this->tables)) {
+            // Install entity database tables
+            // NOTE: This needs to happen first because not all entities have
+            //       been defined perfectly in the annotation format and are
+            //       missing some columns that are defined in the db.xml.
+            $app = Application::getFacadeApplication();
+            $em = $app->make('Doctrine\ORM\EntityManager');
+            $dbm = new DatabaseStructureManager($em);
+
+            $metadatas = $dbm->getMetadatas();
+            $installMetadatas = array();
+            foreach ($metadatas as $data) {
+                if (in_array($data->getTableName(), $this->tables)) {
+                    $installMetadatas[] = $data;
+                }
+            }
+            if (count($installMetadatas) > 0) {
+                $dbm->installDatabaseFor($installMetadatas);
+            }
+
+            // Install XML database tables
             $partial = new SimpleXMLElement('<schema xmlns="http://www.concrete5.org/doctrine-xml/0.5" />');
 
             $xml = simplexml_load_file(DIR_BASE_CORE . '/config/db.xml');
@@ -63,9 +87,16 @@ class ConcreteDatabaseTestCase extends PHPUnit_Extensions_Database_TestCase
                 }
             }
 
-            $schema = \Concrete\Core\Database\Schema\Schema::loadFromXMLElement($partial, $db);
+            $parser = \Concrete\Core\Database\Schema\Schema::getSchemaParser($partial);
+            $parser->setIgnoreExistingTables(false);
+            $schema = $parser->parse($db);
+
+            $fromSchema = $db->getSchemaManager()->createSchema();
+            $comparator = new SchemaComparator();
+            $schemaDiff = $comparator->compare($fromSchema, $schema);
+
             $platform = $db->getDatabasePlatform();
-            $queries = $schema->toSql($platform);
+            $queries = $schemaDiff->toSaveSql($platform);
             foreach ($queries as $query) {
                 $db->query($query);
             }
