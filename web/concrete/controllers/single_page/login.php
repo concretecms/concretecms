@@ -320,6 +320,12 @@ class Login extends PageController
 
     public function view($type = null, $element = 'form')
     {
+        //Check if user login or not, If user login redirect to destination page
+        $u = new User();
+        if($u->isLoggedIn()){
+            $this->chooseRedirect();
+        }
+        
         $this->requireAsset('javascript', 'backstretch');
         $this->set('authTypeParams', $this->getSets());
         if (strlen($type)) {
