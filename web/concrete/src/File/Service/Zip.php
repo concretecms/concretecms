@@ -194,6 +194,7 @@ class Zip implements ApplicationAwareInterface
      * @param string $zipFile The ZIP file to create (it will be deleted if already exists).
      * @param array $options {
      *
+     *   @var bool $includeDotFiles Shall the zip file include files and folders whose name starts with a dot?
      *   @var bool $skipCheck Skip test compressed archive data
      *   @var int $level Compression level (0 to 9)
      * }
@@ -215,6 +216,7 @@ class Zip implements ApplicationAwareInterface
             }
         }
         $options += array(
+            'includeDotFiles' => false,
             'skipCheck' => false,
             'level' => 9,
         );
@@ -411,6 +413,9 @@ class Zip implements ApplicationAwareInterface
         }
         $cmd .= ' -q'; // quiet mode, to avoid overflow of stdout
         $cmd .= ' '.escapeshellarg($zipFile); // destination ZIP archive
+        if ($options['includeDotFiles']) {
+            $cmd .= ' .*'; // source files
+        }
         $cmd .= ' *'; // source files
         $rc = 1;
         $output = array();
@@ -464,15 +469,21 @@ class Zip implements ApplicationAwareInterface
                     case '..':
                         break;
                     default:
-                        $itemFullPath = $item->getRealPath();
-                        $itemRelPath = substr($itemFullPath, $skipPathLength);
-                        if ($item->isDir()) {
-                            $added = @$zip->addEmptyDir($itemRelPath);
-                        } else {
-                            $added = @$zip->addFile($itemFullPath, $itemRelPath);
-                        }
-                        if ($added !== true) {
-                            throw new Exception($this->describeZipArchiveError($zip, ZipArchive::ER_OK));
+                        if (
+                            $options['includeDotFiles']
+                            ||
+                            strpos($item, '.') !== 0
+                        ) {
+                            $itemFullPath = $item->getRealPath();
+                            $itemRelPath = substr($itemFullPath, $skipPathLength);
+                            if ($item->isDir()) {
+                                $added = @$zip->addEmptyDir($itemRelPath);
+                            } else {
+                                $added = @$zip->addFile($itemFullPath, $itemRelPath);
+                            }
+                            if ($added !== true) {
+                                throw new Exception($this->describeZipArchiveError($zip, ZipArchive::ER_OK));
+                            }
                         }
                         break;
                 }
