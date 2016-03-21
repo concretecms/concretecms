@@ -3,6 +3,9 @@ use Concrete\Core\Permission\Duration;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
+$r = \Concrete\Core\Http\ResponseAssetGroup::get();
+$r->requireAsset('select2');
+
 $repeats = array(
     '' => t('** Options'),
     'daily' => t('Every Day'),
@@ -22,7 +25,11 @@ for ($i = 1; $i <= 12; ++$i) {
     $repeatMonths[$i] = $i;
 }
 
-$pdStartDate = false;
+$service = Core::make('helper/date');
+$now = $service->toDateTime('now', 'user');
+
+$pdStartDate = $now->format('Y-m-d');
+
 $pdEndDate = false;
 $pdRepeats = false;
 $pdRepeatPeriod = false;
@@ -72,37 +79,179 @@ if (is_object($pd)) {
 $form = Loader::helper('form');
 $dt = Loader::helper('form/date_time');
 
-?>
+$values = array(
+    '12:00am',
+    '12:30am',
+    '1:00am',
+    '1:30am',
+    '2:00am',
+    '2:30am',
+    '3:00am',
+    '3:30am',
+    '4:00am',
+    '4:30am',
+    '5:00am',
+    '5:30am',
+    '6:00am',
+    '6:30am',
+    '7:00am',
+    '7:30am',
+    '8:00am',
+    '8:30am',
+    '9:00am',
+    '9:30am',
+    '10:00am',
+    '10:30am',
+    '11:00am',
+    '11:30am',
+    '12:00pm',
+    '12:30pm',
+    '1:00pm',
+    '1:30pm',
+    '2:00pm',
+    '2:30pm',
+    '3:00pm',
+    '3:30pm',
+    '4:00pm',
+    '4:30pm',
+    '5:00pm',
+    '5:30pm',
+    '6:00pm',
+    '6:30pm',
+    '7:00pm',
+    '7:30pm',
+    '8:00pm',
+    '8:30pm',
+    '9:00pm',
+    '9:30pm',
+    '10:00pm',
+    '10:30pm',
+    '11:00pm',
+    '11:30pm',
+);
 
+$now = $service->toDateTime('now', 'user');
+$currentHour = $now->format('g');
+$currentMinutes = $now->format('i');
+$currentAM = $now->format('a');
+
+$selectedStartTime = $currentHour . ':00' . $currentAM;
+if ($currentMinutes > 29) {
+    $selectedStartTime = $currentHour . ':30' . $currentAM;
+}
+
+$now->add(new DateInterval('PT1H'));
+$endHour = $now->format('g');
+$endMinutes = $now->format('i');
+$endAM = $now->format('a');
+
+$selectedEndTime = $endHour . ':00' . $endAM;
+if ($endMinutes > 29) {
+    $selectedEndTime = $endHour . ':30' . $endAM;
+}
+
+$times = array();
+for ($i = 0; $i < count($values); $i++) {
+    $value = $values[$i];
+    $o = new stdClass;
+    $o->id = $value;
+    $o->text = $value;
+    $times[] = $o;
+
+}
+
+
+?>
 
 <div id="ccm-permissions-access-entity-dates">
 
-    <div class="form-group">
-        <label for="pdStartDate_activate" class="control-label"><?=tc('Start date', 'From')?></label>
-        <div class="">
-            <?= $dt->datetime('pdStartDate', $pdStartDate, true); ?>
-            <div class="checkbox"><label><?= $form->checkbox('pdStartDateAllDayActivate', 1, $pdStartDateAllDay) ?> <?= t(
-                    "All Day") ?></label>
+    <?php if (isset($format) && $format == 'elegant') { ?>
+
+        <div class="form-inline">
+            <div class="form-group">
+                <?= $dt->date('pdStartDate', $pdStartDate, true); ?>
+            </div>
+            <div class="form-group" id="pdStartDate_tw">
+                <input type="hidden" data-select="time" name="pdStartDateSelectTime" style="" value="<?=$selectedStartTime?>"/>
+            </div>
+            <div class="form-inline-separator">–</div>
+            <div class="form-group">
+                <?= $dt->date('pdEndDate', $pdStartDate, true); ?>
+            </div>
+            <div class="form-group" id="pdEndDate_tw">
+                <input type="hidden" data-select="time" name="pdEndDateSelectTime" style="" value="<?=$selectedEndTime?>"/>
             </div>
         </div>
-    </div>
 
-    <div class="form-group">
-        <label for="pdEndDate_activate" class="control-label"><?=tc('End date', 'To')?></label>
-        <div class="">
-            <?= $dt->datetime('pdEndDate', $pdEndDate, true); ?>
-            <div class="checkbox"><label><?= $form->checkbox('pdEndDateAllDayActivate', 1, $pdEndDateAllDay) ?> <?= t(
-                        "All Day") ?></label></div>
+
+        <style type="text/css">
+            div.form-inline div.form-group input.ccm-input-date {
+                width: 95px;
+            }
+            div.form-inline-separator {
+                font-size: 18px;
+                color: #999;
+                margin-left: 10px;
+                margin-right: 10px;
+                display: inline-block;
+            }
+
+            div.ccm-select2-flat {
+                min-width: 100px;
+            }
+        </style>
+
+        <script type="text/javascript">
+            $(function () {
+                $('input[data-select=time]').select2({
+
+                    createSearchChoice: function (term, data) {
+                        if ($(data).filter(function () {
+                                return this.text.localeCompare(term) === 0;
+                            }).length === 0) {
+                            return {id: term, text: term};
+                        }
+                    },
+                    dropdownCssClass: 'ccm-ui ccm-select2-flat',
+                    multiple: false,
+                    data: <?=json_encode($times)?>
+                });
+            });
+        </script>
+
+
+    <?php } else { ?>
+        <div class="form-group">
+            <label for="pdStartDate_activate" class="control-label"><?= tc('Start date', 'From') ?></label>
+            <div class="form-group">
+                <?= $dt->datetime('pdStartDate', $pdStartDate, true); ?>
+                <div class="checkbox"><label><?= $form->checkbox('pdStartDateAllDayActivate', 1,
+                            $pdStartDateAllDay) ?> <?= t(
+                            "All Day") ?></label>
+                </div>
+            </div>
         </div>
-    </div>
 
+        <div class="form-group">
+            <label for="pdEndDate_activate" class="control-label"><?= tc('End date', 'To') ?></label>
+            <div class="">
+                <?= $dt->datetime('pdEndDate', $pdEndDate, true); ?>
+                <div class="checkbox"><label><?= $form->checkbox('pdEndDateAllDayActivate', 1,
+                            $pdEndDateAllDay) ?> <?= t(
+                            "All Day") ?></label></div>
+            </div>
+        </div>
+    <?php } ?>
 </div>
+
+<div class="form-group-highlight">
 
 <div id="ccm-permissions-access-entity-repeat" style="display: none">
 
     <div class="form-group">
         <div class="">
-            <div class="checkbox"><label><?= $form->checkbox('pdRepeat', 1, $pdRepeats) ?> <?= t('Repeat...') ?></label></div>
+            <div class="checkbox"><label><?= $form->checkbox('pdRepeat', 1, $pdRepeats) ?> <?= t('Repeat...') ?></label>
+            </div>
         </div>
     </div>
 
@@ -112,7 +261,7 @@ $dt = Loader::helper('form/date_time');
 
 
     <div class="form-group">
-        <label for="pdRepeatPeriod" class="control-label"><?=t('Repeats')?></label>
+        <label for="pdRepeatPeriod" class="control-label"><?= t('Repeats') ?></label>
         <div class="">
             <?= $form->select('pdRepeatPeriod', $repeats, $pdRepeatPeriod) ?>
         </div>
@@ -121,15 +270,15 @@ $dt = Loader::helper('form/date_time');
     <div id="ccm-permissions-access-entity-dates-repeat-daily" style="display: none">
 
         <div class="form-group">
-            <label for="pdRepeatPeriodDaysEvery" class="control-label"><?=t('Repeat every')?></label>
+            <label for="pdRepeatPeriodDaysEvery" class="control-label"><?= t('Repeat every') ?></label>
             <div class="">
                 <div class="form-inline">
-                <?= $form->select(
-                    'pdRepeatPeriodDaysEvery',
-                    $repeatDays,
-                    $pdRepeatPeriodDaysEvery,
-                    array('style' => 'width: 60px')) ?>
-                <?= t('days') ?>
+                    <?= $form->select(
+                        'pdRepeatPeriodDaysEvery',
+                        $repeatDays,
+                        $pdRepeatPeriodDaysEvery,
+                        array('style' => 'width: 60px')) ?>
+                    <?= t('days') ?>
                 </div>
             </div>
         </div>
@@ -140,14 +289,14 @@ $dt = Loader::helper('form/date_time');
 
 
         <div class="form-group">
-            <label for="pdRepeatPeriodMonthsRepeatBy" class="control-label"><?=t('Repeat By')?></label>
+            <label for="pdRepeatPeriodMonthsRepeatBy" class="control-label"><?= t('Repeat By') ?></label>
             <div class="">
                 <div class="radio"><label><?= $form->radio(
-                    'pdRepeatPeriodMonthsRepeatBy',
-                    'month',
-                    $pdRepeatPeriodMonthsRepeatBy) ?> <?= t(
-                    'Day of Month')
-                ?></label>
+                            'pdRepeatPeriodMonthsRepeatBy',
+                            'month',
+                            $pdRepeatPeriodMonthsRepeatBy) ?> <?= t(
+                            'Day of Month')
+                        ?></label>
                 </div>
                 <div class="radio"><label><?= $form->radio(
                             'pdRepeatPeriodMonthsRepeatBy',
@@ -161,13 +310,20 @@ $dt = Loader::helper('form/date_time');
                             'lastweekday',
                             $pdRepeatPeriodMonthsRepeatBy) ?> <?= t('The last ') ?>
                         <select name="pdRepeatPeriodMonthsRepeatLastDay">
-                            <option value="0" <?= $pdRepeatPeriodMonthsRepeatLastDay == 0 ? 'selected' : '' ?>><?= t('Sunday') ?></option>
-                            <option value="1" <?= $pdRepeatPeriodMonthsRepeatLastDay == 1 ? 'selected' : '' ?>><?= t('Monday') ?></option>
-                            <option value="2" <?= $pdRepeatPeriodMonthsRepeatLastDay == 2 ? 'selected' : '' ?>><?= t('Tuesday') ?></option>
-                            <option value="3" <?= $pdRepeatPeriodMonthsRepeatLastDay == 3 ? 'selected' : '' ?>><?= t('Wednesday') ?></option>
-                            <option value="4" <?= $pdRepeatPeriodMonthsRepeatLastDay == 4 ? 'selected' : '' ?>><?= t('Thursday') ?></option>
-                            <option value="5" <?= $pdRepeatPeriodMonthsRepeatLastDay == 5 ? 'selected' : '' ?>><?= t('Friday') ?></option>
-                            <option value="6" <?= $pdRepeatPeriodMonthsRepeatLastDay == 6 ? 'selected' : '' ?>><?= t('Saturday') ?></option>
+                            <option
+                                value="0" <?= $pdRepeatPeriodMonthsRepeatLastDay == 0 ? 'selected' : '' ?>><?= t('Sunday') ?></option>
+                            <option
+                                value="1" <?= $pdRepeatPeriodMonthsRepeatLastDay == 1 ? 'selected' : '' ?>><?= t('Monday') ?></option>
+                            <option
+                                value="2" <?= $pdRepeatPeriodMonthsRepeatLastDay == 2 ? 'selected' : '' ?>><?= t('Tuesday') ?></option>
+                            <option
+                                value="3" <?= $pdRepeatPeriodMonthsRepeatLastDay == 3 ? 'selected' : '' ?>><?= t('Wednesday') ?></option>
+                            <option
+                                value="4" <?= $pdRepeatPeriodMonthsRepeatLastDay == 4 ? 'selected' : '' ?>><?= t('Thursday') ?></option>
+                            <option
+                                value="5" <?= $pdRepeatPeriodMonthsRepeatLastDay == 5 ? 'selected' : '' ?>><?= t('Friday') ?></option>
+                            <option
+                                value="6" <?= $pdRepeatPeriodMonthsRepeatLastDay == 6 ? 'selected' : '' ?>><?= t('Saturday') ?></option>
                         </select>
                     </label>
                 </div>
@@ -175,7 +331,7 @@ $dt = Loader::helper('form/date_time');
         </div>
 
         <div class="form-group">
-            <label for="pdRepeatPeriodMonthsEvery" class="control-label"><?=t('Repeat every')?></label>
+            <label for="pdRepeatPeriodMonthsEvery" class="control-label"><?= t('Repeat every') ?></label>
             <div class="">
                 <div class="form-inline">
                     <?= $form->select(
@@ -199,19 +355,20 @@ $dt = Loader::helper('form/date_time');
             <div class="form-group">
                 <label class="control-label"><?= t('On') ?></label>
                 <div class="">
-                <?php
-                foreach (\Punic\Calendar::getSortedWeekdays('wide') as $weekDay) {
-                    ?>
-                    <div class="checkbox"><label><input
-                                <?php if (in_array($weekDay['id'], $pdRepeatPeriodWeekDays)) {
-    ?>checked="checked" <?php 
-}
-                    ?>
-                                type="checkbox" name="pdRepeatPeriodWeeksDays[]" value="<?= $weekDay['id'] ?>"/> <?= h(
-                                $weekDay['name']) ?></label></div>
-                <?php
+                    <?php
+                    foreach (\Punic\Calendar::getSortedWeekdays('wide') as $weekDay) {
+                        ?>
+                        <div class="checkbox"><label><input
+                                    <?php if (in_array($weekDay['id'], $pdRepeatPeriodWeekDays)) {
+                                    ?>checked="checked" <?php
+                                }
+                                ?>
+                                    type="checkbox" name="pdRepeatPeriodWeeksDays[]"
+                                    value="<?= $weekDay['id'] ?>"/> <?= h(
+                                    $weekDay['name']) ?></label></div>
+                        <?php
 
-                } ?>
+                    } ?>
                 </div>
             </div>
 
@@ -247,7 +404,8 @@ $dt = Loader::helper('form/date_time');
             <div class="">
                 <div class="radio"><label><?= $form->radio('pdEndRepeatDate', '', $pdEndRepeatDate) ?> <?= t(
                             'Never') ?></label></div>
-                <div class="radio"><label><?= $form->radio('pdEndRepeatDate', 'date', $pdEndRepeatDate) ?> <?= $dt->date(
+                <div class="radio"><label><?= $form->radio('pdEndRepeatDate', 'date',
+                            $pdEndRepeatDate) ?> <?= $dt->date(
                             'pdEndRepeatDateSpecific',
                             $pdEndRepeatDateSpecific) ?></label></div>
             </div>
@@ -257,32 +415,63 @@ $dt = Loader::helper('form/date_time');
 
 </div>
 
+</div>
 <script type="text/javascript">
     ccm_accessEntityCalculateRepeatOptions = function () {
-        // get the difference between start date and end date
-        if (!$("#pdStartDate_activate").is(':checked')) {
-            return false;
-        }
 
-        var sdf = ($("#pdStartDate_dt_pub").datepicker('option', 'altFormat'));
-        var sdfr = $.datepicker.parseDate(sdf, $("#pdStartDate_dt").val());
-        var edf = ($("#pdEndDate_dt_pub").datepicker('option', 'altFormat'));
-        var edfr = $.datepicker.parseDate(edf, $("#pdEndDate_dt").val());
-        var sh = $("select[name=pdStartDate_h]").val();
-        var eh = $("select[name=pdEndDate_h]").val();
-        if ($("select[name=pdStartDate_a]").val() == 'PM' && (sh < 12)) {
-            sh = parseInt(sh) + 12;
-        } else if (sh == 12 && $("select[name=pdStartDate_a]").val() == 'AM') {
-            sh = 0;
-        }
-        if ($("select[name=pdEndDate_a]").val() == 'PM' && (eh < 12)) {
-            eh = parseInt(eh) + 12;
-        } else if (eh == 12 && $("select[name=pdEndDate_a]").val() == 'AM') {
-            eh = 0;
-        }
-        var startDate = new Date(sdfr.getFullYear(), sdfr.getMonth(), sdfr.getDate(), sh, $('select[name=pdStartDate_m]').val(), 0);
-        var endDate = new Date(edfr.getFullYear(), edfr.getMonth(), edfr.getDate(), eh, $('select[name=pdEndDate_m]').val(), 0);
+        <?php if ($format == 'elegant') { ?>
+
+
+            var sdf = ($("#pdStartDate_pub").datepicker('option', 'altFormat'));
+            var sdfr = $.datepicker.parseDate(sdf, $("#pdStartDate").val());
+            var edf = ($("#pdEndDate_pub").datepicker('option', 'altFormat'));
+            var edfr = $.datepicker.parseDate(edf, $("#pdEndDate").val());
+            var startTime = $('input[name=pdStartDateSelectTime]').val();
+            var endTime = $('input[name=pdEndDateSelectTime]').val();
+            var sh = startTime.split(/:/gi)[0];
+            var eh = endTime.split(/:/gi)[0];
+            var sm = startTime.split(/:/gi)[1].replace(/\D/g, '');
+            var em = endTime.split(/:/gi)[1].replace(/\D/g, '');
+            if (startTime.match('/pm/i') && sh < 12) {
+                sh = parseInt(sh) + 12;
+            }
+            if (endTime.match('/pm/i') && eh < 12) {
+                eh = parseInt(eh) + 12;
+            }
+
+            var startDate = new Date(sdfr.getFullYear(), sdfr.getMonth(), sdfr.getDate(), sh, sm, 0);
+            var endDate = new Date(edfr.getFullYear(), edfr.getMonth(), edfr.getDate(), eh, em, 0);
+
+
+        <?php } else { ?>
+            // get the difference between start date and end date
+            if (!$("#pdStartDate_activate").is(':checked')) {
+                return false;
+            }
+
+            var sdf = ($("#pdStartDate_dt_pub").datepicker('option', 'altFormat'));
+            var sdfr = $.datepicker.parseDate(sdf, $("#pdStartDate_dt").val());
+            var edf = ($("#pdEndDate_dt_pub").datepicker('option', 'altFormat'));
+            var edfr = $.datepicker.parseDate(edf, $("#pdEndDate_dt").val());
+            var sh = $("select[name=pdStartDate_h]").val();
+            var eh = $("select[name=pdEndDate_h]").val();
+            if ($("select[name=pdStartDate_a]").val() == 'PM' && (sh < 12)) {
+                sh = parseInt(sh) + 12;
+            } else if (sh == 12 && $("select[name=pdStartDate_a]").val() == 'AM') {
+                sh = 0;
+            }
+            if ($("select[name=pdEndDate_a]").val() == 'PM' && (eh < 12)) {
+                eh = parseInt(eh) + 12;
+            } else if (eh == 12 && $("select[name=pdEndDate_a]").val() == 'AM') {
+                eh = 0;
+            }
+            var startDate = new Date(sdfr.getFullYear(), sdfr.getMonth(), sdfr.getDate(), sh, $('select[name=pdStartDate_m]').val(), 0);
+            var endDate = new Date(edfr.getFullYear(), edfr.getMonth(), edfr.getDate(), eh, $('select[name=pdEndDate_m]').val(), 0);
+
+        <?php } ?>
+
         var difference = ((endDate.getTime() / 1000) - (startDate.getTime() / 1000));
+
         if (difference >= 60 * 60 * 24) {
             $('select[name=pdRepeatPeriod] option[value=daily]').attr('disabled', true);
             $("#ccm-permissions-access-entity-dates-repeat-weekly-dow").hide();
@@ -314,6 +503,7 @@ $dt = Loader::helper('form/date_time');
                 $("#ccm-permissions-access-entity-dates-repeat-weekly-dow input[value=6]").attr('checked', true);
                 break;
         }
+
     }
 
     ccm_accessEntityCheckRepeat = function () {
@@ -328,33 +518,41 @@ $dt = Loader::helper('form/date_time');
         if ($("#pdStartDate_activate").is(':checked') || $("#pdEndDate_activate").is(':checked')) {
             ccm_accessEntityCalculateRepeatOptions();
         }
-        if ($("#pdStartDate_activate").is(':checked') && $("#pdEndDate_activate").is(':checked')) {
+
+        <?php if ($format == 'elegant') { ?>
             $("#ccm-permissions-access-entity-repeat").show();
-        } else {
-            $("#ccm-permissions-access-entity-repeat").hide();
-        }
-        if ($("#pdStartDate_activate").is(':checked')) {
             $('#pdStartDateAllDayActivate').attr('disabled', false);
-        } else {
-            $('input[name=pdStartDateAllDayActivate]').attr('disabled', true);
-        }
-        if ($("#pdEndDate_activate").is(':checked')) {
             $('#pdEndDateAllDayActivate').attr('disabled', false);
-        } else {
-            $('input[name=pdEndDateAllDayActivate]').attr('disabled', true);
-        }
+        <?php } else { ?>
+            if ($("#pdStartDate_activate").is(':checked') && $("#pdEndDate_activate").is(':checked')) {
+                $("#ccm-permissions-access-entity-repeat").show();
+            } else {
+                $("#ccm-permissions-access-entity-repeat").hide();
+            }
+            if ($("#pdStartDate_activate").is(':checked')) {
+                $('#pdStartDateAllDayActivate').attr('disabled', false);
+            } else {
+                $('input[name=pdStartDateAllDayActivate]').attr('disabled', true);
+            }
+            if ($("#pdEndDate_activate").is(':checked')) {
+                $('#pdEndDateAllDayActivate').attr('disabled', false);
+            } else {
+                $('input[name=pdEndDateAllDayActivate]').attr('disabled', true);
+            }
 
-        if ($("input[name=pdStartDateAllDayActivate]").is(':checked')) {
-            $('span#pdStartDate_tw').hide();
-        } else {
-            $('span#pdStartDate_tw').show();
-        }
+        <?php } ?>
 
-        if ($("input[name=pdEndDateAllDayActivate]").is(':checked')) {
-            $('span#pdEndDate_tw').hide();
-        } else {
-            $('span#pdEndDate_tw').show();
-        }
+            if ($("input[name=pdStartDateAllDayActivate]").is(':checked')) {
+                $('span#pdStartDate_tw').hide();
+            } else {
+                $('span#pdStartDate_tw').show();
+            }
+
+            if ($("input[name=pdEndDateAllDayActivate]").is(':checked')) {
+                $('span#pdEndDate_tw').hide();
+            } else {
+                $('span#pdEndDate_tw').show();
+            }
 
     }
 

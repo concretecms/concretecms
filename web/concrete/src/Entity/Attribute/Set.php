@@ -65,9 +65,21 @@ class Set
     /**
      * @return mixed
      */
-    public function getAttributeKeys()
+    public function getAttributeKeyCollection()
     {
         return $this->keys;
+    }
+
+    /**
+     * @return Key
+     */
+    public function getAttributeKeys()
+    {
+        $keys = array();
+        foreach($this->keys as $set_key) {
+            $keys[] = $set_key->getAttributeKey();
+        }
+        return $keys;
     }
 
     /**
