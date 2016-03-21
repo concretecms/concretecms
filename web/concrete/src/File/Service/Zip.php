@@ -2,7 +2,6 @@
 
 namespace Concrete\Core\File\Service;
 
-use Concrete\Core\Application\ApplicationAwareInterface;
 use Illuminate\Filesystem\Filesystem;
 use Exception;
 use ZipArchive;
@@ -10,23 +9,8 @@ use ZipArchive;
 /**
  * Wrapper for ZIP functions.
  */
-class Zip implements ApplicationAwareInterface
+class Zip
 {
-    /**
-     * @var \Concrete\Core\Application\Application
-     */
-    protected $app;
-
-    /**
-     * {@inheritdoc}
-     *
-     * @see ApplicationAwareInterface::setApplication()
-     */
-    public function setApplication(\Concrete\Core\Application\Application $app)
-    {
-        $this->app = $app;
-    }
-
     /**
      * The Filesystem instance to use.
      *
