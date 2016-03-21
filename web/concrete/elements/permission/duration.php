@@ -6,6 +6,14 @@ defined('C5_EXECUTE') or die("Access Denied.");
 $r = \Concrete\Core\Http\ResponseAssetGroup::get();
 $r->requireAsset('select2');
 
+if (Config::get('concrete.misc.user_timezones')) {
+    $user = new User();
+    $userInfo = $user->getUserInfoObject();
+    $timezone = $userInfo->getUserTimezone();
+} else {
+    $timezone = Config::get('app.timezone');
+}
+
 $repeats = array(
     '' => t('** Options'),
     'daily' => t('Every Day'),
@@ -40,9 +48,32 @@ $pdRepeatPeriodMonthsEvery = 1;
 $pdRepeatPeriodMonthsRepeatBy = 'month';
 $pdEndRepeatDateSpecific = false;
 $pdEndRepeatDate = '';
+
+$now = $service->toDateTime('now', 'user');
+$currentHour = $now->format('g');
+$currentMinutes = $now->format('i');
+$currentAM = $now->format('a');
+
+$selectedStartTime = $currentHour . ':00' . $currentAM;
+if ($currentMinutes > 29) {
+    $selectedStartTime = $currentHour . ':30' . $currentAM;
+}
+
+$now->add(new DateInterval('PT1H'));
+$endHour = $now->format('g');
+$endMinutes = $now->format('i');
+$endAM = $now->format('a');
+
+$selectedEndTime = $endHour . ':00' . $endAM;
+if ($endMinutes > 29) {
+    $selectedEndTime = $endHour . ':30' . $endAM;
+}
+
 if (is_object($pd)) {
     $pdStartDate = $pd->getStartDate();
     $pdEndDate = $pd->getEndDate();
+    $selectedStartTime = date('g:ia', strtotime($pdStartDate));
+    $selectedEndTime = date('g:ia', strtotime($pdEndDate));
     $pdRepeats = $pd->repeats();
     $pdStartDateAllDay = $pd->isStartDateAllDay();
     $pdEndDateAllDay = $pd->isEndDateAllDay();
@@ -130,25 +161,6 @@ $values = array(
     '11:30pm',
 );
 
-$now = $service->toDateTime('now', 'user');
-$currentHour = $now->format('g');
-$currentMinutes = $now->format('i');
-$currentAM = $now->format('a');
-
-$selectedStartTime = $currentHour . ':00' . $currentAM;
-if ($currentMinutes > 29) {
-    $selectedStartTime = $currentHour . ':30' . $currentAM;
-}
-
-$now->add(new DateInterval('PT1H'));
-$endHour = $now->format('g');
-$endMinutes = $now->format('i');
-$endAM = $now->format('a');
-
-$selectedEndTime = $endHour . ':00' . $endAM;
-if ($endMinutes > 29) {
-    $selectedEndTime = $endHour . ':30' . $endAM;
-}
 
 $times = array();
 for ($i = 0; $i < count($values); $i++) {
@@ -165,96 +177,83 @@ for ($i = 0; $i < count($values); $i++) {
 
 <div id="ccm-permissions-access-entity-dates">
 
-    <?php if (isset($format) && $format == 'elegant') { ?>
-
-        <div class="form-inline">
-            <div class="form-group">
-                <?= $dt->date('pdStartDate', $pdStartDate, true); ?>
-            </div>
-            <div class="form-group" id="pdStartDate_tw">
-                <input type="hidden" data-select="time" name="pdStartDateSelectTime" style="" value="<?=$selectedStartTime?>"/>
-            </div>
-            <div class="form-inline-separator">–</div>
-            <div class="form-group">
-                <?= $dt->date('pdEndDate', $pdStartDate, true); ?>
-            </div>
-            <div class="form-group" id="pdEndDate_tw">
-                <input type="hidden" data-select="time" name="pdEndDateSelectTime" style="" value="<?=$selectedEndTime?>"/>
-            </div>
+    <div class="form-inline">
+        <div class="form-group">
+            <?= $dt->date('pdStartDate', $pdStartDate, true); ?>
         </div>
+        <div class="form-group" id="pdStartDate_tw">
+            <input type="hidden" data-select="time" name="pdStartDateSelectTime" style="" value="<?=$selectedStartTime?>"/>
+        </div>
+        <div class="form-inline-separator">–</div>
+        <div class="form-group">
+            <?= $dt->date('pdEndDate', $pdStartDate, true); ?>
+        </div>
+        <div class="form-group" id="pdEndDate_tw">
+            <input type="hidden" data-select="time" name="pdEndDateSelectTime" style="" value="<?=$selectedEndTime?>"/>
+        </div>
+    </div>
 
 
-        <style type="text/css">
-            div.form-inline div.form-group input.ccm-input-date {
-                width: 95px;
-            }
-            div.form-inline-separator {
-                font-size: 18px;
-                color: #999;
-                margin-left: 10px;
-                margin-right: 10px;
-                display: inline-block;
-            }
+    <style type="text/css">
+        div.form-inline div.form-group input.ccm-input-date {
+            width: 95px;
+        }
+        div.form-inline #pdStartDate_tw, div.form-inline #pdEndDate_tw {
+            width: 60px;
+        }
+        div.form-inline-separator {
+            font-size: 18px;
+            color: #999;
+            margin-left: 20px;
+            margin-right: 20px;
+            display: inline-block;
+        }
 
-            div.ccm-select2-flat {
-                min-width: 100px;
-            }
-        </style>
+        div.ccm-select2-flat {
+            min-width: 100px;
+        }
+    </style>
 
-        <script type="text/javascript">
-            $(function () {
-                $('input[data-select=time]').select2({
+    <script type="text/javascript">
+        $(function () {
+            $('input[data-select=time]').select2({
 
-                    createSearchChoice: function (term, data) {
-                        if ($(data).filter(function () {
-                                return this.text.localeCompare(term) === 0;
-                            }).length === 0) {
-                            return {id: term, text: term};
-                        }
-                    },
-                    dropdownCssClass: 'ccm-ui ccm-select2-flat',
-                    multiple: false,
-                    data: <?=json_encode($times)?>
-                });
+                createSearchChoice: function (term, data) {
+                    if ($(data).filter(function () {
+                            return this.text.localeCompare(term) === 0;
+                        }).length === 0) {
+                        return {id: term, text: term};
+                    }
+                },
+                dropdownCssClass: 'ccm-ui ccm-select2-flat',
+                multiple: false,
+                data: <?=json_encode($times)?>
             });
-        </script>
+        });
+    </script>
 
-
-    <?php } else { ?>
-        <div class="form-group">
-            <label for="pdStartDate_activate" class="control-label"><?= tc('Start date', 'From') ?></label>
-            <div class="form-group">
-                <?= $dt->datetime('pdStartDate', $pdStartDate, true); ?>
-                <div class="checkbox"><label><?= $form->checkbox('pdStartDateAllDayActivate', 1,
-                            $pdStartDateAllDay) ?> <?= t(
-                            "All Day") ?></label>
-                </div>
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label for="pdEndDate_activate" class="control-label"><?= tc('End date', 'To') ?></label>
-            <div class="">
-                <?= $dt->datetime('pdEndDate', $pdEndDate, true); ?>
-                <div class="checkbox"><label><?= $form->checkbox('pdEndDateAllDayActivate', 1,
-                            $pdEndDateAllDay) ?> <?= t(
-                            "All Day") ?></label></div>
-            </div>
-        </div>
-    <?php } ?>
 </div>
 
 <div class="form-group-highlight">
 
 <div id="ccm-permissions-access-entity-repeat" style="display: none">
 
+    <div class="form-inline">
+
+    <div class="form-group" style="width: 100px">
+        <label><?= $form->checkbox('pdStartDateAllDayActivate', 1,
+                    $pdStartDateAllDay) ?> <?= t(
+                    "All Day") ?></label>
+    </div>
     <div class="form-group">
-        <div class="">
-            <div class="checkbox"><label><?= $form->checkbox('pdRepeat', 1, $pdRepeats) ?> <?= t('Repeat...') ?></label>
-            </div>
-        </div>
+        <label><?= $form->checkbox('pdRepeat', 1, $pdRepeats) ?> <?= t('Repeat Event') ?></label>
+    </div>
+    <div class="pull-right text-muted">
+        <?=$service->getTimeZoneDisplayName($timezone)?>
     </div>
 
+
+    </div>
 </div>
 
 <div id="ccm-permissions-access-entity-repeat-selector" style="display: none">
@@ -419,56 +418,25 @@ for ($i = 0; $i < count($values); $i++) {
 <script type="text/javascript">
     ccm_accessEntityCalculateRepeatOptions = function () {
 
-        <?php if ($format == 'elegant') { ?>
+        var sdf = ($("#pdStartDate_pub").datepicker('option', 'altFormat'));
+        var sdfr = $.datepicker.parseDate(sdf, $("#pdStartDate").val());
+        var edf = ($("#pdEndDate_pub").datepicker('option', 'altFormat'));
+        var edfr = $.datepicker.parseDate(edf, $("#pdEndDate").val());
+        var startTime = $('input[name=pdStartDateSelectTime]').val();
+        var endTime = $('input[name=pdEndDateSelectTime]').val();
+        var sh = startTime.split(/:/gi)[0];
+        var eh = endTime.split(/:/gi)[0];
+        var sm = startTime.split(/:/gi)[1].replace(/\D/g, '');
+        var em = endTime.split(/:/gi)[1].replace(/\D/g, '');
+        if (startTime.match('/pm/i') && sh < 12) {
+            sh = parseInt(sh) + 12;
+        }
+        if (endTime.match('/pm/i') && eh < 12) {
+            eh = parseInt(eh) + 12;
+        }
 
-
-            var sdf = ($("#pdStartDate_pub").datepicker('option', 'altFormat'));
-            var sdfr = $.datepicker.parseDate(sdf, $("#pdStartDate").val());
-            var edf = ($("#pdEndDate_pub").datepicker('option', 'altFormat'));
-            var edfr = $.datepicker.parseDate(edf, $("#pdEndDate").val());
-            var startTime = $('input[name=pdStartDateSelectTime]').val();
-            var endTime = $('input[name=pdEndDateSelectTime]').val();
-            var sh = startTime.split(/:/gi)[0];
-            var eh = endTime.split(/:/gi)[0];
-            var sm = startTime.split(/:/gi)[1].replace(/\D/g, '');
-            var em = endTime.split(/:/gi)[1].replace(/\D/g, '');
-            if (startTime.match('/pm/i') && sh < 12) {
-                sh = parseInt(sh) + 12;
-            }
-            if (endTime.match('/pm/i') && eh < 12) {
-                eh = parseInt(eh) + 12;
-            }
-
-            var startDate = new Date(sdfr.getFullYear(), sdfr.getMonth(), sdfr.getDate(), sh, sm, 0);
-            var endDate = new Date(edfr.getFullYear(), edfr.getMonth(), edfr.getDate(), eh, em, 0);
-
-
-        <?php } else { ?>
-            // get the difference between start date and end date
-            if (!$("#pdStartDate_activate").is(':checked')) {
-                return false;
-            }
-
-            var sdf = ($("#pdStartDate_dt_pub").datepicker('option', 'altFormat'));
-            var sdfr = $.datepicker.parseDate(sdf, $("#pdStartDate_dt").val());
-            var edf = ($("#pdEndDate_dt_pub").datepicker('option', 'altFormat'));
-            var edfr = $.datepicker.parseDate(edf, $("#pdEndDate_dt").val());
-            var sh = $("select[name=pdStartDate_h]").val();
-            var eh = $("select[name=pdEndDate_h]").val();
-            if ($("select[name=pdStartDate_a]").val() == 'PM' && (sh < 12)) {
-                sh = parseInt(sh) + 12;
-            } else if (sh == 12 && $("select[name=pdStartDate_a]").val() == 'AM') {
-                sh = 0;
-            }
-            if ($("select[name=pdEndDate_a]").val() == 'PM' && (eh < 12)) {
-                eh = parseInt(eh) + 12;
-            } else if (eh == 12 && $("select[name=pdEndDate_a]").val() == 'AM') {
-                eh = 0;
-            }
-            var startDate = new Date(sdfr.getFullYear(), sdfr.getMonth(), sdfr.getDate(), sh, $('select[name=pdStartDate_m]').val(), 0);
-            var endDate = new Date(edfr.getFullYear(), edfr.getMonth(), edfr.getDate(), eh, $('select[name=pdEndDate_m]').val(), 0);
-
-        <?php } ?>
+        var startDate = new Date(sdfr.getFullYear(), sdfr.getMonth(), sdfr.getDate(), sh, sm, 0);
+        var endDate = new Date(edfr.getFullYear(), edfr.getMonth(), edfr.getDate(), eh, em, 0);
 
         var difference = ((endDate.getTime() / 1000) - (startDate.getTime() / 1000));
 
@@ -519,40 +487,17 @@ for ($i = 0; $i < count($values); $i++) {
             ccm_accessEntityCalculateRepeatOptions();
         }
 
-        <?php if ($format == 'elegant') { ?>
-            $("#ccm-permissions-access-entity-repeat").show();
-            $('#pdStartDateAllDayActivate').attr('disabled', false);
-            $('#pdEndDateAllDayActivate').attr('disabled', false);
-        <?php } else { ?>
-            if ($("#pdStartDate_activate").is(':checked') && $("#pdEndDate_activate").is(':checked')) {
-                $("#ccm-permissions-access-entity-repeat").show();
-            } else {
-                $("#ccm-permissions-access-entity-repeat").hide();
-            }
-            if ($("#pdStartDate_activate").is(':checked')) {
-                $('#pdStartDateAllDayActivate').attr('disabled', false);
-            } else {
-                $('input[name=pdStartDateAllDayActivate]').attr('disabled', true);
-            }
-            if ($("#pdEndDate_activate").is(':checked')) {
-                $('#pdEndDateAllDayActivate').attr('disabled', false);
-            } else {
-                $('input[name=pdEndDateAllDayActivate]').attr('disabled', true);
-            }
+        $("#ccm-permissions-access-entity-repeat").show();
+        $('#pdStartDateAllDayActivate').attr('disabled', false);
+        $('#pdEndDateAllDayActivate').attr('disabled', false);
 
-        <?php } ?>
-
-            if ($("input[name=pdStartDateAllDayActivate]").is(':checked')) {
-                $('span#pdStartDate_tw').hide();
-            } else {
-                $('span#pdStartDate_tw').show();
-            }
-
-            if ($("input[name=pdEndDateAllDayActivate]").is(':checked')) {
-                $('span#pdEndDate_tw').hide();
-            } else {
-                $('span#pdEndDate_tw').show();
-            }
+        if ($("input[name=pdStartDateAllDayActivate]").is(':checked')) {
+            $('#pdStartDate_tw').hide();
+            $('#pdEndDate_tw').hide();
+        } else {
+            $('#pdStartDate_tw').show();
+            $('#pdEndDate_tw').show();
+        }
 
     }
 
@@ -575,7 +520,7 @@ for ($i = 0; $i < count($values); $i++) {
     }
 
     $(function () {
-        $("#ccm-permissions-access-entity-dates input[type=checkbox]").click(function () {
+        $("#ccm-permissions-access-entity-repeat input[type=checkbox]").click(function () {
             ccm_accessEntityOnActivateDates();
         });
 
