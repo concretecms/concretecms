@@ -1,8 +1,6 @@
 <?php
-
 namespace Concrete\Core\File\Service;
 
-use Concrete\Core\Application\Application;
 use Concrete\Core\Application\ApplicationAwareInterface;
 use Illuminate\Filesystem\Filesystem;
 use Exception;
@@ -14,7 +12,7 @@ use ZipArchive;
 class Zip implements ApplicationAwareInterface
 {
     /**
-     * @var Application
+     * @var \Concrete\Core\Application\Application
      */
     protected $app;
 
@@ -23,7 +21,7 @@ class Zip implements ApplicationAwareInterface
      *
      * @see ApplicationAwareInterface::setApplication()
      */
-    public function setApplication(Application $app)
+    public function setApplication(\Concrete\Core\Application\Application $app)
     {
         $this->app = $app;
     }
