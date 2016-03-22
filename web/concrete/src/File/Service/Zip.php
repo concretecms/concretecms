@@ -566,12 +566,7 @@ class Zip
         }
         $zip = new ZipArchive();
         try {
-            $flags = 0;
-            if ($options['append']) {
-                $flags |= ZipArchive::CREATE;
-            } else {
-                $flags |= ZipArchive::OVERWRITE;
-            }
+            $flags = ZipArchive::CREATE;
             if (!$options['skipCheck']) {
                 $flags |= ZipArchive::CHECKCONS;
             }
