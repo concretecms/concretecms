@@ -56,7 +56,7 @@ class SiteTranslationLoaderTest extends PHPUnit_Framework_TestCase
 
         // Override the multilingual detector so that we can run these tests
         // without the need to create any database tables.
-        $app->bind('multilingual/detector', function() {
+        $app->bind('multilingual/detector', function () {
             return new MultilingualDetector();
         });
     }

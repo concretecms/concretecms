@@ -42,7 +42,6 @@ class TranslatorAdapterFactoryTest extends PHPUnit_Framework_TestCase
         $adapter = $this->factory->createTranslatorAdapter('tlh_US');
 
         $this->assertInstanceOf('Concrete\Core\Localization\Translator\Adapter\Zend\TranslatorAdapter', $adapter);
-
     }
 
 }
