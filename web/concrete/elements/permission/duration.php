@@ -59,15 +59,7 @@ if ($currentMinutes > 29) {
     $selectedStartTime = $currentHour . ':30' . $currentAM;
 }
 
-$now->add(new DateInterval('PT1H'));
-$endHour = $now->format('g');
-$endMinutes = $now->format('i');
-$endAM = $now->format('a');
-
-$selectedEndTime = $endHour . ':00' . $endAM;
-if ($endMinutes > 29) {
-    $selectedEndTime = $endHour . ':30' . $endAM;
-}
+$selectedEndTime = null;
 
 if (is_object($pd)) {
     $pdStartDate = $pd->getStartDate();
@@ -186,7 +178,7 @@ for ($i = 0; $i < count($values); $i++) {
         </div>
         <div class="form-inline-separator"><i class="fa fa-long-arrow-right"></i></div>
         <div class="form-group">
-            <?= $dt->date('pdEndDate', $pdStartDate, true); ?>
+            <?= $dt->date('pdEndDate', $pdEndDate, true); ?>
         </div>
         <div class="form-group" id="pdEndDate_tw">
             <input type="hidden" data-select="time" name="pdEndDateSelectTime" style="" value="<?=$selectedEndTime?>"/>
@@ -216,6 +208,9 @@ for ($i = 0; $i < count($values); $i++) {
 
     <script type="text/javascript">
         $(function () {
+
+            // Any time the start date is changed, change the end date date to that date.
+
             $('input[data-select=time]').select2({
 
                 createSearchChoice: function (term, data) {
@@ -225,9 +220,18 @@ for ($i = 0; $i < count($values); $i++) {
                         return {id: term, text: term};
                     }
                 },
+                initSelection: function(element, callback) {
+                    return callback({id: element.val(), text: element.val()});
+                },
+
                 dropdownCssClass: 'ccm-ui ccm-select2-flat',
                 multiple: false,
                 data: <?=json_encode($times)?>
+            }).on('change', function() {
+                var name = $(this).attr('name');
+                if (name == 'pdStartDateSelectTime') {
+                    ccm_durationCalculateEndDate();
+                }
             });
         });
     </script>
@@ -416,27 +420,37 @@ for ($i = 0; $i < count($values); $i++) {
 
 </div>
 <script type="text/javascript">
-    ccm_accessEntityCalculateRepeatOptions = function () {
 
+    ccm_getSelectedStartDate = function() {
         var sdf = ($("#pdStartDate_pub").datepicker('option', 'altFormat'));
         var sdfr = $.datepicker.parseDate(sdf, $("#pdStartDate").val());
-        var edf = ($("#pdEndDate_pub").datepicker('option', 'altFormat'));
-        var edfr = $.datepicker.parseDate(edf, $("#pdEndDate").val());
         var startTime = $('input[name=pdStartDateSelectTime]').val();
-        var endTime = $('input[name=pdEndDateSelectTime]').val();
         var sh = startTime.split(/:/gi)[0];
-        var eh = endTime.split(/:/gi)[0];
         var sm = startTime.split(/:/gi)[1].replace(/\D/g, '');
-        var em = endTime.split(/:/gi)[1].replace(/\D/g, '');
-        if (startTime.match('/pm/i') && sh < 12) {
+        if (startTime.match(/pm/i) && sh < 12) {
             sh = parseInt(sh) + 12;
         }
-        if (endTime.match('/pm/i') && eh < 12) {
-            eh = parseInt(eh) + 12;
-        }
+        return new Date(sdfr.getFullYear(), sdfr.getMonth(), sdfr.getDate(), sh, sm, 0);
+    }
 
-        var startDate = new Date(sdfr.getFullYear(), sdfr.getMonth(), sdfr.getDate(), sh, sm, 0);
-        var endDate = new Date(edfr.getFullYear(), edfr.getMonth(), edfr.getDate(), eh, em, 0);
+    ccm_getSelectedEndDate = function() {
+        var edf = ($("#pdEndDate_pub").datepicker('option', 'altFormat'));
+        var edfr = $.datepicker.parseDate(edf, $("#pdEndDate").val());
+        var endTime = $('input[name=pdEndDateSelectTime]').val();
+        if (endTime) {
+            var eh = endTime.split(/:/gi)[0];
+            var em = endTime.split(/:/gi)[1].replace(/\D/g, '');
+            if (endTime.match('/pm/i') && eh < 12) {
+                eh = parseInt(eh) + 12;
+            }
+            return new Date(edfr.getFullYear(), edfr.getMonth(), edfr.getDate(), eh, em, 0);
+        }
+    }
+
+    ccm_accessEntityCalculateRepeatOptions = function () {
+
+        var startDate = ccm_getSelectedStartDate();
+        var endDate = ccm_getSelectedEndDate();
 
         var difference = ((endDate.getTime() / 1000) - (startDate.getTime() / 1000));
 
@@ -448,7 +462,7 @@ for ($i = 0; $i < count($values); $i++) {
             $("#ccm-permissions-access-entity-dates-repeat-weekly-dow").show();
         }
         $('input[name=pdStartRepeatDate]').val($("#pdStartDate_dt_pub").val());
-        switch (sdfr.getDay()) {
+        switch (startDate.getDay()) {
             case 0:
                 $("#ccm-permissions-access-entity-dates-repeat-weekly-dow input[value=0]").attr('checked', true);
                 break;
@@ -483,9 +497,7 @@ for ($i = 0; $i < count($values); $i++) {
     }
 
     ccm_accessEntityOnActivateDates = function () {
-        if ($("#pdStartDate_activate").is(':checked') || $("#pdEndDate_activate").is(':checked')) {
-            ccm_accessEntityCalculateRepeatOptions();
-        }
+        ccm_accessEntityCalculateRepeatOptions();
 
         $("#ccm-permissions-access-entity-repeat").show();
         $('#pdStartDateAllDayActivate').attr('disabled', false);
@@ -519,11 +531,46 @@ for ($i = 0; $i < count($values); $i++) {
         }
     }
 
+    ccm_durationCalculateEndDate = function() {
+        var startDate = ccm_getSelectedStartDate();
+        var endDate = startDate;
+        var format = $("#pdStartDate_pub").datepicker('option', 'dateFormat');
+        endDate.setTime(startDate.getTime() + (1*60*60*1000)); // one hour
+        var endDateFormatted = $.datepicker.formatDate(format, endDate);
+        var hours = endDate.getHours();
+        var pm = 'am';
+        var minutes = endDate.getMinutes();
+        if (hours == 0) {
+            hours = 12;
+        }
+        if (minutes < 10) {
+            minutes = '0' + minutes;
+        }
+        if (hours > 12) {
+            hours = hours - 12;
+            pm = 'pm';
+        }
+        var endTime = hours + ':' + minutes + pm;
+        $('#pdEndDate_pub').datepicker('setDate', endDateFormatted);
+        $('input[name=pdEndDateSelectTime]').select2('val', endTime);
+        $('input[name=pdEndDateSelectTime]').val(endTime);
+    }
+
     $(function () {
+        <?php if (!$selectedEndTime) { ?>
+            ccm_durationCalculateEndDate();
+        <?php } ?>
         $("#ccm-permissions-access-entity-repeat input[type=checkbox]").click(function () {
             ccm_accessEntityOnActivateDates();
         });
-
+        $('#pdStartDate_pub').datepicker({
+           onSelect: function() {
+               $(this).trigger('change');
+           }
+        });
+        $('#pdStartDate_pub').on('change', function() {
+            $('#pdEndDate_pub').datepicker('setDate', $(this).val());
+        });
         $("select[name=pdRepeatPeriod]").change(function () {
             ccm_accessEntityOnRepeatPeriodChange();
         });
