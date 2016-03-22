@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Tests\Core\File\Service;
 
 use Core;
@@ -140,6 +139,7 @@ class ZipTest extends \PHPUnit_Framework_TestCase
             $zh->disableNativeCommands();
         }
         $zh->zip($this->workDir.'/source', $this->workDir.'/file.zip', compact('includeDotFiles'));
+        $zh->zip(__DIR__, $this->workDir.'/file.zip', array('append' => true));
         $zh->unzip($this->workDir.'/file.zip', $this->workDir.'/destination');
         foreach ($this->getDirectories() as $rel => $hidden) {
             $abs = $this->workDir.'/destination/'.$rel;
@@ -160,5 +160,9 @@ class ZipTest extends \PHPUnit_Framework_TestCase
                 $this->assertSame("This is the content of $rel", file_get_contents($abs));
             }
         }
+        $abs = $this->workDir.'/destination/'.basename(__FILE__);
+        $this->assertFileExists($abs);
+        $this->assertTrue(is_file($abs));
+        $this->assertSame(file_get_contents(__FILE__), file_get_contents($abs));
     }
 }
