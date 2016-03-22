@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\File\Service;
 
 use Illuminate\Filesystem\Filesystem;
@@ -140,7 +139,6 @@ class Zip
      * @param string $zipFile The source ZIP archive.
      * @param string $destinationDirectory The destination folder.
      * @param array $options {
-     *
      *   @var bool $skipCheck Skip test compressed archive data
      * }
      *
@@ -176,12 +174,12 @@ class Zip
      * Compress the contents of a directory to a ZIP archive.
      *
      * @param string $sourceDirectory The directory to compress.
-     * @param string $zipFile The ZIP file to create (it will be deleted if already exists).
+     * @param string $zipFile The ZIP file to create (it will be deleted if already existing, unless the 'append' option is set to true).
      * @param array $options {
-     *
      *   @var bool $includeDotFiles Shall the zip file include files and folders whose name starts with a dot?
      *   @var bool $skipCheck Skip test compressed archive data
      *   @var int $level Compression level (0 to 9)
+     *   @var bool $append Append to an existing archive instead of overwriting it?
      * }
      *
      * @throws Exception
@@ -196,9 +194,17 @@ class Zip
         $sourceDirectory = $normalized;
         $zipFile = str_replace('/', DIRECTORY_SEPARATOR, $zipFile);
         if ($fs->exists($zipFile)) {
-            if (@$fs->delete(array($zipFile)) === false) {
-                throw new Exception(t('Failed to delete file %s', $zipFile));
+            if ($fs->isDirectory($zipFile)) {
+                throw new Exception(t('The specified path of the ZIP archive (%s) is a directory, not a file', $zipFile));
             }
+            $options['append'] = isset($options['append']) ? (bool) $options['append'] : false;
+            if (!$options['append']) {
+                if (@$fs->delete(array($zipFile)) === false) {
+                    throw new Exception(t('Failed to delete file %s', $zipFile));
+                }
+            }
+        } else {
+            $options['append'] = false;
         }
         $options += array(
             'includeDotFiles' => false,
@@ -397,6 +403,7 @@ class Zip
         }
         $fs = $this->getFilesystem();
         $originalZipFile = $zipFile;
+        $revertName = false;
         if (!strpos(basename($zipFile), '.')) {
             for ($i = 0; ; ++$i) {
                 $tmp = "$zipFile-$i.zip";
@@ -405,37 +412,51 @@ class Zip
                     break;
                 }
             }
-        }
-        $cmd = 'zip';
-        $level = (isset($options['level']) && is_numeric($options['level'])) ? @intval($options['level']) : null;
-        if ($level !== null && $level >= 0 && $level <= 9) {
-            $cmd .= ' -'.$level;
-        }
-        $cmd .= ' -q'; // quiet mode, to avoid overflow of stdout
-        $cmd .= ' -r'; // recurse into directories
-        $cmd .= ' '.escapeshellarg($zipFile); // destination ZIP archive
-        if ($options['includeDotFiles']) {
-            $cmd .= ' .* *';
-        } else {
-            $cmd .= ' * -x \*/.\*';
-        }
-        $rc = 1;
-        $output = array();
-        $prevDir = @getcwd();
-        if ($prevDir === false) {
-            throw new Exception(t('Failed to determine current directory'));
-        }
-        if (@chdir($sourceDirectory) === false) {
-            throw new Exception(t('Failed to enter directory '.$sourceDirectory));
-        }
-        @exec($cmd.' 2>&1', $output, $rc);
-        @chdir($prevDir);
-        if ($rc !== 0) {
-            if ($fs->exists($zipFile)) {
-                @$fs->delete(array($zipFile));
+            if ($options['append']) {
+                if (@$fs->move($originalZipFile, $zipFile) === false) {
+                    throw new Exception(t('Failed to move a temporary file.'));
+                }
+                $revertName = true;
             }
-            $error = trim(implode("\n", $output)) ?: t('Unknown error compressing a directory');
-            throw new Exception($error);
+        }
+        try {
+            $cmd = 'zip';
+            $level = (isset($options['level']) && is_numeric($options['level'])) ? @intval($options['level']) : null;
+            if ($level !== null && $level >= 0 && $level <= 9) {
+                $cmd .= ' -'.$level;
+            }
+            $cmd .= ' -q'; // quiet mode, to avoid overflow of stdout
+            $cmd .= ' -r'; // recurse into directories
+            $cmd .= ' '.escapeshellarg($zipFile); // destination ZIP archive
+            if ($options['includeDotFiles']) {
+                $cmd .= ' .* *';
+            } else {
+                $cmd .= ' * -x \*/.\*';
+            }
+            $rc = 1;
+            $output = array();
+            $prevDir = @getcwd();
+            if ($prevDir === false) {
+                throw new Exception(t('Failed to determine current directory'));
+            }
+            if (@chdir($sourceDirectory) === false) {
+                throw new Exception(t('Failed to enter directory '.$sourceDirectory));
+            }
+            @exec($cmd.' 2>&1', $output, $rc);
+            @chdir($prevDir);
+            if ($rc !== 0) {
+                $error = trim(implode("\n", $output)) ?: t('Unknown error compressing a directory');
+                throw new Exception($error);
+            }
+        } catch (Exception $x) {
+            if ($fs->exists($zipFile)) {
+                if ($revertName) {
+                    @$fs->move($zipFile, $originalZipFile);
+                } elseif (!$options['append']) {
+                    @$fs->delete(array($zipFile));
+                }
+            }
+            throw $x;
         }
         if ($originalZipFile !== $zipFile) {
             if (@$fs->move($zipFile, $originalZipFile) === false) {
@@ -461,7 +482,12 @@ class Zip
         }
         $zip = new ZipArchive();
         try {
-            $flags = ZipArchive::CREATE;
+            $flags = 0;
+            if ($options['append']) {
+                $flags |= ZipArchive::CREATE;
+            } else {
+                $flags |= ZipArchive::OVERWRITE;
+            }
             if (!$options['skipCheck']) {
                 $flags |= ZipArchive::CHECKCONS;
             }
