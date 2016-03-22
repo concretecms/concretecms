@@ -221,7 +221,7 @@ class LocalizationTest extends PHPUnit_Framework_TestCase
         Events::clearResolvedInstance("director");
 
         // Make the mock object to be used as the events backend through IoC.
-        $app->bindShared('director', function() use ($director) {
+        $app->bindShared('director', function () use ($director) {
             return $director;
         });
 
@@ -235,7 +235,7 @@ class LocalizationTest extends PHPUnit_Framework_TestCase
         $director = $app->make('director');
         $director->addListener(
             'on_locale_load',
-            function($event) {
+            function ($event) {
                 $locale = $event->getArgument('locale');
                 $this->assertEquals('tlh_US', $locale);
             }
@@ -244,7 +244,7 @@ class LocalizationTest extends PHPUnit_Framework_TestCase
 
         // After the test has run, make sure the original director is being used.
         Events::clearResolvedInstance("director");
-        $app->bindShared('director', function() use ($origDirector) {
+        $app->bindShared('director', function () use ($origDirector) {
             return $origDirector;
         });
     }
@@ -480,10 +480,10 @@ class LocalizationTest extends PHPUnit_Framework_TestCase
         $loc->setTranslatorAdapterRepository($repository);
 
         $app = Facade::getFacadeApplication();
-        $app->bind('Concrete\Core\Localization\Localization', function() use ($loc) {
+        $app->bind('Concrete\Core\Localization\Localization', function () use ($loc) {
             return $loc;
         });
-        $app->bind('multilingual/detector', function() {
+        $app->bind('multilingual/detector', function () {
             return new MultilingualDetector();
         });
 
@@ -509,7 +509,7 @@ class LocalizationTest extends PHPUnit_Framework_TestCase
     {
         $loc = $this->loc;
         $app = Facade::getFacadeApplication();
-        $app->bind('Concrete\Core\Localization\Localization', function() use ($loc) {
+        $app->bind('Concrete\Core\Localization\Localization', function () use ($loc) {
             return $loc;
         });
     }

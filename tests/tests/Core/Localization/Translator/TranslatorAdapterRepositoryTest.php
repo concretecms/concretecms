@@ -15,7 +15,7 @@ use Symfony\Component\ClassLoader\MapClassLoader;
  *
  * @author Antti Hukkanen <antti.hukkanen@mainiotech.fi>
  */
-class TranslationAdapterRepositoryTest extends PHPUnit_Framework_TestCase
+class TranslatorAdapterRepositoryTest extends PHPUnit_Framework_TestCase
 {
 
     protected $repository;

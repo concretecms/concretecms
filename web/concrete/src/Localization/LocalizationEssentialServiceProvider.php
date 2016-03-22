@@ -19,7 +19,7 @@ class LocalizationEssentialServiceProvider extends ServiceProvider
     public function register()
     {
         if (!$this->app->bound('Concrete\Core\Localization\Translator\TranslatorAdapterFactoryInterface')) {
-            $this->app->bind('Concrete\Core\Localization\Translator\TranslatorAdapterFactoryInterface', function($app, $params) {
+            $this->app->bind('Concrete\Core\Localization\Translator\TranslatorAdapterFactoryInterface', function ($app, $params) {
                 $config = $app->make('config');
                 $loaders = $config->get('i18n.adapters.zend.loaders', array());
 
@@ -36,7 +36,7 @@ class LocalizationEssentialServiceProvider extends ServiceProvider
             });
         }
 
-        $this->app->bindShared('Concrete\Core\Localization\Localization', function($app) {
+        $this->app->bindShared('Concrete\Core\Localization\Localization', function ($app) {
             $loc = new Localization();
 
             $translatorAdapterFactory = $app->make('Concrete\Core\Localization\Translator\TranslatorAdapterFactoryInterface');
@@ -48,6 +48,5 @@ class LocalizationEssentialServiceProvider extends ServiceProvider
             return $loc;
         });
     }
-
 
 }
