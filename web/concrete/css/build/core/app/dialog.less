@@ -215,6 +215,7 @@ div.ccm-dialog-arctic {
   label.control-label {
     font-size: 10px;
     color: #999;
+    padding: 0px 0px 0px 4px;
     text-transform: uppercase;
   }
 
@@ -231,31 +232,54 @@ div.ccm-dialog-arctic {
     padding-bottom: 8px;
     padding-top: 10px;
     margin-bottom: 10px;
+
+    select.form-control,
+    input.form-control,
+    textarea.form-control {
+      &:focus {
+        background-color: #ffffff !important;
+      }
+
+      &:hover {
+        background-color: #ffffff !important;
+      }
+    }
+
   }
 
   div.form-group {
 
     margin-bottom: 0px;
+    margin-left: -4px;
+    position: relative;
 
     select.form-control,
     input.form-control,
     textarea.form-control {
       border-width: 0px;
       box-shadow: none;
-      padding: 0px;
+      padding: 4px;
       font-size: 18px;
       background-color: #fff;
-
+      .border-radius(4px);
+      -webkit-appearance: none;
+      appearance: none;
+      -moz-appearance: none;
 
       &:focus {
         outline: 0px;
+        background-color: #ededed;
+      }
+
+      &:hover {
+        background-color: #ededed;
       }
 
     }
 
     select.form-control {
-      border-color: #e1e1e1;
-      border-width: 1px;
+
+      background: #fff url(../images/icons/select_arrow_down.png) no-repeat right 15px top 10px;
     }
 
     hr {
@@ -293,6 +317,11 @@ div.ccm-dialog-arctic {
     }
   }
 
+  div.form-inline {
+    div.form-group {
+      margin-left: 0px;
+    }
+  }
 }
 
 div.ccm-select2-flat {
