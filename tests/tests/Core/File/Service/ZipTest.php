@@ -140,24 +140,37 @@ class ZipTest extends \PHPUnit_Framework_TestCase
         }
         $zh->zip($this->workDir.'/source', $this->workDir.'/file.zip', compact('includeDotFiles'));
         $zh->zip(__DIR__, $this->workDir.'/file.zip', array('append' => true));
+        $contents = $zh->listContents($this->workDir.'/file.zip');
         $zh->unzip($this->workDir.'/file.zip', $this->workDir.'/destination');
         foreach ($this->getDirectories() as $rel => $hidden) {
             $abs = $this->workDir.'/destination/'.$rel;
             if ($hidden && !$includeDotFiles) {
                 $this->assertFileNotExists($abs);
+                $this->assertArrayNotHasKey($rel, $contents);
             } else {
                 $this->assertFileExists($abs);
                 $this->assertTrue(is_dir($abs));
+                $this->assertArrayHasKey($rel, $contents);
+                $this->assertArrayHasKey('type', $contents[$rel]);
+                $this->assertSame('D', $contents[$rel]['type']);
+                $this->assertArrayNotHasKey('originalSize', $contents[$rel]);
+                $this->assertArrayNotHasKey('compressedSize', $contents[$rel]);
             }
         }
         foreach ($this->getFiles() as $rel => $hidden) {
             $abs = $this->workDir.'/destination/'.$rel;
             if ($hidden && !$includeDotFiles) {
                 $this->assertFileNotExists($abs);
+                $this->assertArrayNotHasKey($rel, $contents);
             } else {
                 $this->assertFileExists($abs);
                 $this->assertTrue(is_file($abs));
                 $this->assertSame("This is the content of $rel", file_get_contents($abs));
+                $this->assertArrayHasKey($rel, $contents);
+                $this->assertArrayHasKey('type', $contents[$rel]);
+                $this->assertSame('F', $contents[$rel]['type']);
+                $this->assertArrayHasKey('originalSize', $contents[$rel]);
+                $this->assertArrayHasKey('compressedSize', $contents[$rel]);
             }
         }
         $abs = $this->workDir.'/destination/'.basename(__FILE__);

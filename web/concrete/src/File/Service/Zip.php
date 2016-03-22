@@ -4,6 +4,7 @@ namespace Concrete\Core\File\Service;
 use Illuminate\Filesystem\Filesystem;
 use Exception;
 use ZipArchive;
+use DateTime;
 
 /**
  * Wrapper for ZIP functions.
@@ -216,6 +217,89 @@ class Zip
         } else {
             $this->zipPHP($sourceDirectory, $zipFile, $options);
         }
+    }
+
+    /**
+     * List the contents of a ZIP archive.
+     *
+     * @param string $zipFile The ZIP file to inspect.
+     * @param array $options {
+     *   @var bool $skipCheck Skip test compressed archive data
+     *   @var bool $excludeDirs Don't include directories
+     *   @var bool $excludeFiles Don't include files
+     * }
+     *
+     * @throws Exception
+     *
+     * @return array The keys of the resulting array contain the paths to the items, and the values will be arrays, whose keys are:
+     * - string 'type' For directories it will be 'D', for files it will be 'F'
+     * - \DateTime 'date' Last modification date/time
+     * - int 'originalSize' (only for files) Uncompressed size of the file
+     * - int 'compressedSize' (only for files) Compressed size of the file
+     */
+    public function listContents($zipFile, array $options = array())
+    {
+        $fs = $this->getFilesystem();
+        if (!$fs->isFile($zipFile)) {
+            throw new Exception(t('Unable to find the ZIP file %s', $zipFile));
+        }
+        $options += array(
+            'skipCheck' => false,
+            'excludeDirs' => false,
+            'excludeFiles' => false,
+        );
+        $result = array();
+        $zip = new ZipArchive();
+        try {
+            $flags = 0;
+            if (!$options['skipCheck']) {
+                $flags |= ZipArchive::CHECKCONS;
+            }
+            $zipErr = @$zip->open($zipFile, $flags);
+            if ($zipErr !== true) {
+                throw new Exception($this->describeZipArchiveError($zip, $zipErr));
+            }
+            for ($index = 0; $index < $zip->numFiles; ++$index) {
+                $stat = @$zip->statIndex($index);
+                if ($stat === false) {
+                    throw new Exception(t('Failed to retrieve the details of a ZIP archive entry.'));
+                }
+                $isDir = substr($stat['name'], -1) === '/' || substr($stat['name'], -1) === '\\';
+                if ($isDir) {
+                    if ($options['excludeDirs']) {
+                        continue;
+                    }
+                } else {
+                    if ($options['excludeFiles']) {
+                        continue;
+                    }
+                }
+                $item = array(
+                    'type' => $isDir ? 'D' : 'F',
+                    'date' => (isset($stat['mtime']) && $stat['mtime']) ? DateTime::createFromFormat('U', $stat['mtime']) : null,
+                );
+                if (!$isDir) {
+                    $item += array(
+                        'originalSize' => isset($stat['size']) ? (int) $stat['size'] : null,
+                        'compressedSize' => isset($stat['comp_size']) ? (int) $stat['comp_size'] : null,
+                    );
+                }
+                $result[trim($stat['name'], '/\\')] = $item;
+            }
+            @$zip->close();
+            $zip = null;
+        } catch (Exception $x) {
+            if ($zip !== null) {
+                try {
+                    @$zip->close();
+                } catch (\Exception $foo) {
+                }
+                $zip = null;
+            }
+            throw $x;
+        }
+
+        return $result;
     }
 
     /**
