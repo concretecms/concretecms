@@ -184,7 +184,7 @@ for ($i = 0; $i < count($values); $i++) {
         <div class="form-group" id="pdStartDate_tw">
             <input type="hidden" data-select="time" name="pdStartDateSelectTime" style="" value="<?=$selectedStartTime?>"/>
         </div>
-        <div class="form-inline-separator">–</div>
+        <div class="form-inline-separator"><i class="fa fa-long-arrow-right"></i></div>
         <div class="form-group">
             <?= $dt->date('pdEndDate', $pdStartDate, true); ?>
         </div>
