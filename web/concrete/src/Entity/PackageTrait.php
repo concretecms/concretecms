@@ -5,7 +5,7 @@ trait PackageTrait
 {
     /**
      * @ManyToOne(targetEntity="\Concrete\Core\Entity\Package", cascade={"persist"})
-     * @JoinColumn(name="pkgID", referencedColumnName="pkgID")
+     * @JoinColumn(name="pkgID", referencedColumnName="pkgID", nullable=true)
      */
     protected $package = null;
 

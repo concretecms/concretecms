@@ -5,7 +5,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @Entity
- * @Table(name="SocialLinkAttributeValues")
+ * @Table(name="SocialLinksAttributeValues")
  */
 class SocialLinksValue extends Value
 {

@@ -3,7 +3,7 @@ namespace Concrete\Core\Entity\Attribute\Value\Value;
 
 /**
  * @Entity
- * @Table(name="SocialLinkAttributeSelectedLinks")
+ * @Table(name="SocialLinksAttributeSelectedLinks")
  */
 class SelectedSocialLink
 {
