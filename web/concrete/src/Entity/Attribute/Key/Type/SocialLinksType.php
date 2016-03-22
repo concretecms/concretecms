@@ -5,7 +5,7 @@ use Concrete\Core\Entity\Attribute\Value\Value\SocialLinksValue;
 
 /**
  * @Entity
- * @Table(name="SocialLinkAttributeKeyTypes")
+ * @Table(name="SocialLinksAttributeKeyTypes")
  */
 class SocialLinksType extends Type
 {

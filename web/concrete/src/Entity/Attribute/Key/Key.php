@@ -56,11 +56,6 @@ class Key implements AttributeKeyInterface, ExportableInterface
     protected $akIsSearchableIndexed = false;
 
     /**
-     * @Column(type="boolean")
-     */
-    protected $akIsColumnHeader = true;
-
-    /**
      * @OneToOne(targetEntity="\Concrete\Core\Entity\Attribute\Key\Type\Type", mappedBy="key", cascade={"persist", "remove"})
      */
     protected $key_type;
@@ -163,22 +158,6 @@ class Key implements AttributeKeyInterface, ExportableInterface
     public function setIsAttributeKeyContentIndexed($akIsSearchableIndexed)
     {
         $this->akIsSearchableIndexed = $akIsSearchableIndexed;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function isAttributeKeyColumnHeader()
-    {
-        return $this->akIsColumnHeader;
-    }
-
-    /**
-     * @param mixed $akIsColumnHeader
-     */
-    public function setIsAttributeKeyColumnHeader($akIsColumnHeader)
-    {
-        $this->akIsColumnHeader = $akIsColumnHeader;
     }
 
     /**

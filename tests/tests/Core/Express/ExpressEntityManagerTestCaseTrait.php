@@ -7,8 +7,6 @@ trait ExpressEntityManagerTestCaseTrait
         $type = new \Concrete\Core\Entity\Attribute\Type();
         $type->setAttributeTypeHandle('text');
         $key_type = new \Concrete\Core\Entity\Attribute\Key\Type\TextType();
-        $key_type->setAttributeType($type);
-
         $first_name = new \Concrete\Core\Entity\Attribute\Key\ExpressKey();
         $first_name->setAttributeKeyHandle('first_name');
         $first_name->setAttributeKeyType($key_type);
