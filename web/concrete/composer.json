@@ -57,7 +57,7 @@
     "tedivm/stash": "0.12.1",
     "lusitanian/oauth": "~0.3",
     "oryzone/oauth-user-data": "~1.0@dev",
-    "mlocati/concrete5-translation-library": "1.4.2",
+    "mlocati/concrete5-translation-library": "1.4.4",
     "league/url": "3.3.*",
     "concrete5/doctrine-xml": "1.0.0"
   },
