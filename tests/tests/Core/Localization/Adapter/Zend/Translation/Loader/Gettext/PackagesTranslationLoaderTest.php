@@ -21,7 +21,9 @@ class PackagesTranslationLoaderTest extends ConcreteDatabaseTestCase
 
     private static $packagesInstalled = false;
 
-    protected $tables = array('Packages');
+    protected $metadatas = array(
+        'Concrete\Core\Entity\Package',
+    );
 
     /**
      * Move a couple of test packages to the packages folder to be used by
@@ -81,7 +83,7 @@ class PackagesTranslationLoaderTest extends ConcreteDatabaseTestCase
 
     protected function setUp()
     {
-        $this->markTestIncomplete('Database setup does not currently work for tables that are not defined in the db.xml.');
+        parent::setUp();
 
         // The setUp() procedures install the database table required for
         // installing the packages. This is why we need to install these
