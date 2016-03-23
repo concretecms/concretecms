@@ -39,17 +39,17 @@ $userGroup = $u->getUserGroups();
     </div>
 
     <!-- user group starts -->
-    <? 	if(count($userGroups) > 0) { ?>
+    <?php if(count($userGroups) > 0) { ?>
         <h3><?=t('Groups')?></h3>
         <br>
-    <? } ?>
+    <?php } ?>
     <!-- user group ends -->
 
     <!-- user attribut starts -->
-    <? 	if(count($attributeList) > 0) { ?>
+    <?php if(count($attributeList) > 0) { ?>
         <h3><?=t('User Attributes')?></h3>
         <br>
-        <?php	foreach ($attributeList as $ak) { ?>
+        <?php foreach ($attributeList as $ak) { ?>
             <div class="row">
                 <div class="col-md-8">
                     <p><strong><?php echo t($ak->getAttributeKeyName()) ?></strong></p>
@@ -59,8 +59,8 @@ $userGroup = $u->getUserGroups();
                     <p><?php echo $ui->getAttribute($ak, 'displaySanitized', 'display') ?></p>
                 </div>
             </div>
-        <? }
-    }?>
+        <?php }
+    } ?>
     <!-- // user attribut end -->
 
     <div class="dialog-buttons">
