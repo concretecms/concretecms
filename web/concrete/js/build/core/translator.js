@@ -356,7 +356,7 @@ var TranslationView = (function() {
             .text(i18n.PluralNames[key])
           )
         );
-        my.UI.$tabBodies.append($('<div class="tab-pane' + ((index === 0) ? ' active' : '') + '"  data-key="' + key + '" />')
+        my.UI.$tabBodies.append($('<div class="tab-pane' + ((index === 0) ? ' active' : '') + '" data-key="' + key + '" />')
           .append($('<p />').text(i18n.ExamplePH.replace(/%s/, examples)))
           .append(my.UI.$translated[key] = $('<' + my.element + ' class="form-control" />').val(my.translation.isTranslated ? my.translation.translations[index] : ''))
         );
@@ -445,6 +445,14 @@ Translator.prototype = {
             )
             .append($('<div class="panel-body" />')
               .append($('<div class="input-group">')
+                .append($('<div class="input-group-btn" />')
+                  .append(this.UI.$showTranslated = $('<a href="javascript:void(0)" class="btn btn-default" />')
+                    .text(i18n.Show_translated)
+                  )
+                  .append(this.UI.$showUntranslated = $('<a href="javascript:void(0)" class="btn btn-default" />')
+                    .text(i18n.Show_untranslated)
+                  )
+                )
                 .append(this.UI.$searchText = $('<input type="text" class="form-control" />')
                   .attr('placeholder', i18n.Search_for_)
                 )
@@ -482,19 +490,6 @@ Translator.prototype = {
                     .append($('<li />')
                       .append(this.UI.$showApproved = $('<a href="javascript:void(0)" />')
                         .text(' ' + i18n.Show_approved)
-                        .prepend($('<i class="fa" />'))
-                      )
-                    )
-                    .append('<li class="divider"></li>')
-                    .append($('<li />')
-                      .append(this.UI.$showTranslated = $('<a href="javascript:void(0)" />')
-                        .text(' ' + i18n.Show_translated)
-                        .prepend($('<i class="fa" />'))
-                      )
-                    )
-                    .append($('<li />')
-                      .append(this.UI.$showUntranslated = $('<a href="javascript:void(0)" />')
-                        .text(' ' + i18n.Show_untranslated)
                         .prepend($('<i class="fa" />'))
                       )
                     )
@@ -645,8 +640,8 @@ Translator.prototype = {
       this.UI.$showUnapproved.find('i').removeClass('fa-check-square-o fa-square-o').addClass(f.showUnapproved ? 'fa-check-square-o' : 'fa-square-o');
       this.UI.$showApproved.find('i').removeClass('fa-check-square-o fa-square-o').addClass(f.showApproved ? 'fa-check-square-o' : 'fa-square-o');
     }
-    this.UI.$showTranslated.find('i').removeClass('fa-check-square-o fa-square-o').addClass(f.showTranslated ? 'fa-check-square-o' : 'fa-square-o');
-    this.UI.$showUntranslated.find('i').removeClass('fa-check-square-o fa-square-o').addClass(f.showUntranslated ? 'fa-check-square-o' : 'fa-square-o');
+    this.UI.$showTranslated.removeClass('btn-default btn-primary').addClass(f.showTranslated ? 'btn-primary' : 'btn-default');
+    this.UI.$showUntranslated.removeClass('btn-default btn-primary').addClass(f.showUntranslated ? 'btn-primary' : 'btn-default');
   },
   filter: function(f) {
     var my = this;
@@ -703,7 +698,7 @@ Translator.prototype = {
         }
       }
       if (translation) {
-        my.currentTranslationView = translation.isPlural ? new TranslationView.Plural(translation) :  new TranslationView.Singular(translation);
+        my.currentTranslationView = translation.isPlural ? new TranslationView.Plural(translation) : new TranslationView.Singular(translation);
         if (my.on.currentTranslationChanged) {
           my.on.currentTranslationChanged(my);
         }
