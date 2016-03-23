@@ -41,7 +41,7 @@ if (!isset($query) || !is_string($query)) {
 
                             }
                             echo $currentPageBody;
-                            ?> <a href="<?=$r->getCollectionLink()?>" class="pageLink"><?=$this->controller->highlightedMarkup($r->getCollectionLink(), $query)?></a>
+                            ?> <br/><a href="<?=$r->getCollectionLink()?>" class="pageLink"><?=$this->controller->highlightedMarkup($r->getCollectionLink(), $query)?></a>
                         </p>
                     </div><?php
                 }
