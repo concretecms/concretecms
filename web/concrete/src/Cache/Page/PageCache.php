@@ -49,6 +49,9 @@ abstract class PageCache
         $config = $app['config'];
         $cookie = $app['cookie'];
         $loginCookie = sprintf('%s_LOGIN', $config->get('concrete.session.name'));
+        if (Config::get('concrete.cache.pages') === false) {
+            return false;
+        }
         if ($cookie->has($loginCookie) && $cookie->get($loginCookie)) {
             return false;
         }
