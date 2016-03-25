@@ -34,9 +34,9 @@ class AttributeKeyControl extends Control
         $this->attribute_key = $attribute_key;
     }
 
-    public function getFormControlRenderer(Entity $entity = null)
+    public function getFormControlRenderer(Entry $entry = null)
     {
-        return new AttributeKeyControlFormRenderer($entity);
+        return new AttributeKeyControlFormRenderer($entry);
     }
 
     public function getViewControlRenderer(Entry $entry)

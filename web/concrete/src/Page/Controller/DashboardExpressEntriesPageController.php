@@ -3,6 +3,8 @@ namespace Concrete\Core\Page\Controller;
 
 use Concrete\Core\Entity\Express\Entity;
 use Concrete\Core\Entity\Express\Entry;
+use Concrete\Core\Express\Entry\Manager;
+use Concrete\Core\Express\Form\Validator;
 use Concrete\Core\Tree\Node\Node;
 use Concrete\Core\Tree\Node\Type\Category;
 use Concrete\Core\Tree\Type\ExpressEntryResults;
@@ -15,6 +17,13 @@ abstract class DashboardExpressEntriesPageController extends DashboardPageContro
         return \URL::to($this->getPageObject()
             ->getCollectionPath(), 'view', $entity->getEntityResultsNodeID());
     }
+
+    protected function getEditEntryURL(Entry $entry)
+    {
+        return \URL::to($this->getPageObject()
+            ->getCollectionPath(), 'edit_entry', $entry->getID());
+    }
+
 
     protected function getResultsTreeNodeObject()
     {
@@ -115,11 +124,67 @@ abstract class DashboardExpressEntriesPageController extends DashboardPageContro
         $renderer = \Core::make('Concrete\Core\Express\Form\ViewRenderer');
         $this->set('entry', $entry);
         $this->set('entity', $entry->getEntity());
-        $this->set('expressForm', $entry->getEntity()->getForms()[0]);
+        $entity = $entry->getEntity();
+        $this->entityManager->refresh($entity); // sometimes this isn't eagerly loaded (?)
+        $this->set('expressForm', $entity->getDefaultViewForm());
         $this->set('renderer', $renderer);
         $this->set('backURL', $this->getBackToListURL($entry->getEntity()));
+        $this->set('editURL', $this->getEditEntryURL($entry));
         $this->render('/dashboard/express/entries/view_entry', false);
     }
+
+    public function edit_entry($id = null)
+    {
+        $entry = $this->entityManager->getRepository('Concrete\Core\Entity\Express\Entry')
+            ->findOneById($id);
+
+        $renderer = \Core::make('Concrete\Core\Express\Form\Renderer');
+        $this->set('entry', $entry);
+        $this->set('entity', $entry->getEntity());
+        $entity = $entry->getEntity();
+        $this->entityManager->refresh($entity); // sometimes this isn't eagerly loaded (?)
+        $this->set('expressForm', $entity->getDefaultEditForm());
+        $this->set('renderer', $renderer);
+        $this->set('backURL', $this->getBackToListURL($entry->getEntity()));
+        $this->render('/dashboard/express/entries/update', false);
+    }
+
+    public function submit($id = null)
+    {
+        $r = $this->entityManager->getRepository('\Concrete\Core\Entity\Express\Entity');
+        $entity = $r->findOneById($id);
+
+        $r = $this->entityManager->getRepository('\Concrete\Core\Entity\Express\Form');
+        $form = $r->findOneById($this->request->request->get('express_form_id'));
+
+        if ($this->request->request->has('entry_id')) {
+            $entry = $this->entityManager->getRepository('Concrete\Core\Entity\Express\Entry')
+                ->findOneById($this->request->request->get('entry_id'));
+        }
+
+        if (is_object($form)) {
+            $validator = new Validator($this->error, $this->request);
+            $validator->validate($form);
+            if (!$this->error->has()) {
+                $manager = new Manager($this->entityManager, $this->request);
+                if (isset($entry) && is_object($entry)) { // update
+                    $manager->saveEntryAttributesForm($form, $entry);
+                    $this->flash('success', t('%s updated successfully.', $entity->getName()));
+                } else {
+                    $entry = $manager->addEntry($this->get('entity'));
+                    $manager->saveEntryAttributesForm($form, $entry);
+                    $this->flash('success', t('%s added successfully.', $entity->getName()));
+                }
+
+                $this->redirect($this->getBackToListURL($entity));
+            }
+        } else {
+            throw new \Exception(t('Invalid form.'));
+        }
+
+    }
+
+
 
 
 }

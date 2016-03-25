@@ -48,21 +48,23 @@ class DatabaseServiceProvider extends ServiceProvider
 
     protected function setupPackageEntityManagers(EntityManagerInterface $entityManager)
     {
-        try {
-            $packages = $entityManager->getRepository('Concrete\Core\Entity\Package')
-                ->findAll();
+        $packages = $entityManager->getRepository('Concrete\Core\Entity\Package')
+            ->findAll();
 
-            $driver = $entityManager->getConfiguration()->getMetadataDriverImpl();
+        $driver = $entityManager->getConfiguration()->getMetadataDriverImpl();
 
-            $paths = array();
+        $paths = array();
 
-            foreach($packages as $package) {
-                $class = $package->getController();
-                $paths = array_merge($paths, $class->getPackageEntityPaths());
+        foreach($packages as $package) {
+            $class = $package->getController();
+            foreach($class->getPackageEntityPaths() as $path) {
+                if (is_dir($path)) {
+                    $paths[] = $path;
+                }
             }
+        }
 
-            $driver->addPaths($paths);
-        } catch(\Exception $e) {}
+        $driver->addPaths($paths);
     }
 
 

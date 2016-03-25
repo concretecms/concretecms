@@ -86,11 +86,17 @@ class DispatcherRouteCallback extends RouteCallback
             $request->setCurrentPage($home);
             $homeController = $home->getPageController();
             $homeController->setupRequestActionAndParameters($request);
-            if (!$homeController->validateRequest()) {
-                return $this->sendPageNotFound($request);
+
+            $response = $homeController->validateRequest();
+            if ($response instanceof \Symfony\Component\HttpFoundation\Response) {
+                return $response;
             } else {
-                $c = $home;
-                $c->cPathFetchIsCanonical = true;
+                if ($response == false) {
+                    return $this->sendPageNotFound($request);
+                } else {
+                    $c = $home;
+                    $c->cPathFetchIsCanonical = true;
+                }
             }
         }
         if (!$c->cPathFetchIsCanonical) {

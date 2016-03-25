@@ -66,6 +66,16 @@ class Entity implements EntityInterface
     protected $forms;
 
     /**
+     * @OneToOne(targetEntity="Form", cascade={"persist", "remove"})
+     **/
+    protected $default_view_form;
+
+    /**
+     * @OneToOne(targetEntity="Form", cascade={"persist", "remove"})
+     **/
+    protected $default_edit_form;
+
+    /**
      * @OneToMany(targetEntity="Entry", mappedBy="entity", cascade={"persist", "remove"})
      **/
     protected $entries;
@@ -188,6 +198,38 @@ class Entity implements EntityInterface
     public function setResultColumnSet($result_column_set)
     {
         $this->result_column_set = $result_column_set;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDefaultViewForm()
+    {
+        return $this->default_view_form;
+    }
+
+    /**
+     * @param mixed $default_view_form
+     */
+    public function setDefaultViewForm($default_view_form)
+    {
+        $this->default_view_form = $default_view_form;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDefaultEditForm()
+    {
+        return $this->default_edit_form;
+    }
+
+    /**
+     * @param mixed $default_edit_form
+     */
+    public function setDefaultEditForm($default_edit_form)
+    {
+        $this->default_edit_form = $default_edit_form;
     }
 
 

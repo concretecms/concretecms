@@ -6,7 +6,9 @@
     if (count($entities)) {
         foreach ($entities as $entity) { ?>
             <div class="checkbox">
-                <label><input type="checkbox" name="express_association_<?=$control->getId()?>[]" value="<?=$entity->getId()?>"> <?=$formatter->getEntryDisplayName($control, $entity)?></label>
+                <label><input type="checkbox"
+                              <?php if (is_array($selectedEntities) && in_array($entity, $selectedEntities)) { ?>checked<?php } ?>
+                              name="express_association_<?=$control->getId()?>[]" value="<?=$entity->getId()?>"> <?=$formatter->getEntryDisplayName($control, $entity)?></label>
             </div>
         <?php 
         }

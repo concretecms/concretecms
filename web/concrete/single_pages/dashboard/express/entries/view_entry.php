@@ -2,7 +2,8 @@
 
 <div class="ccm-dashboard-header-buttons btn-group">
     <a href="<?=$backURL?>" class="btn btn-default"><?=t("Back to List")?></a>
-    <button type="button" class="btn btn-danger" data-dialog="delete-entry"><?= t('Delete %s', $entity->getName()) ?></button>
+    <a href="<?=$editURL?>" class="btn btn-default"><?=t("Edit")?></a>
+    <button type="button" class="btn btn-danger" data-dialog="delete-entry"><?= t('Delete') ?></button>
 </div>
 
 <div style="display: none">
