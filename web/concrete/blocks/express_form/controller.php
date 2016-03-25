@@ -11,6 +11,7 @@ use Concrete\Core\Entity\Express\Entity;
 use Concrete\Core\Entity\Express\Entry;
 use Concrete\Core\Entity\Express\FieldSet;
 use Concrete\Core\Entity\Express\Form;
+use Concrete\Core\Express\Entry\Manager;
 use Concrete\Core\Express\Form\Control\SaveHandler\SaveHandlerInterface;
 use Concrete\Core\Express\Form\Renderer;
 use Concrete\Core\Express\Form\Validator;
@@ -101,103 +102,97 @@ class Controller extends BlockController
                 }
                 $this->set('error', $e);
             }
-        }
 
-        if (isset($e) && !$e->has()) {
+            if (isset($e) && !$e->has()) {
 
-            $entity = $form->getEntity();
-            $entry = new Entry();
-            $entry->setEntity($entity);
-            $entityManager->persist($entry);
-            foreach ($form->getControls() as $control) {
-                $type = $control->getControlType();
-                $saver = $type->getSaveHandler($control);
-                if ($saver instanceof SaveHandlerInterface) {
-                    $saver->saveFromRequest($control, $entry, $this->request);
+                $entity = $form->getEntity();
+                $manager = new Manager($entityManager, $this->request);
+                $entry = $manager->addEntry($entity);
+                $entry = $manager->saveEntryAttributesForm($form, $entry);
+                $values = $entity->getAttributeKeyCategory()->getAttributeValues($entry);
+
+                // Check antispam
+                $antispam = \Core::make('helper/validation/antispam');
+                $submittedData = '';
+                foreach($values as $value) {
+                    $submittedData .= $value->getAttributeKey()->getAttributeKeyDisplayName() . "\r\n";
+                    $submittedData .= $value->getValue('displaySanitized') . "\r\n\r\n";
                 }
-            }
 
-            $values = $entity->getAttributeKeyCategory()->getAttributeValues($entry);
+                if (!$antispam->check($submittedData, 'form_block')) {
+                    // Remove the entry and silently fail.
+                    $entityManager->refresh($entry);
+                    $entityManager->remove($entry);
+                    $entityManager->flush();
+                    $c = \Page::getCurrentPage();
+                    $r = Redirect::page($c);
+                    $r->setTargetUrl($r->getTargetUrl() . '#form' . $this->bID);
+                    return $r;
+                }
 
-            // Check antispam
-            $antispam = \Core::make('helper/validation/antispam');
-            $submittedData = '';
-            foreach($values as $value) {
-                $submittedData .= $value->getAttributeKey()->getAttributeKeyDisplayName() . "\r\n";
-                $submittedData .= $value->getValue('displaySanitized') . "\r\n\r\n";
-            }
-
-            if (!$antispam->check($submittedData, 'form_block')) {
-                // Remove the entry and silently fail.
-                $entityManager->refresh($entry);
-                $entityManager->remove($entry);
-                $entityManager->flush();
-                $c = \Page::getCurrentPage();
-                $r = Redirect::to($c->getCollectionPath());
-                $r->setTargetUrl($r->getTargetUrl() . '#form' . $this->bID);
-            }
-
-            if ($this->addFilesToSet) {
-                $set = Set::getByID($this->addFilesToSet);
-                if (is_object($set)) {
-                    foreach($values as $value) {
-                        $value = $value->getValueObject();
-                        if ($value instanceof FileProviderInterface) {
-                            $files = $value->getFileObjects();
-                            foreach($files as $file) {
-                                $set->addFileToSet($file);
+                if ($this->addFilesToSet) {
+                    $set = Set::getByID($this->addFilesToSet);
+                    if (is_object($set)) {
+                        foreach($values as $value) {
+                            $value = $value->getValueObject();
+                            if ($value instanceof FileProviderInterface) {
+                                $files = $value->getFileObjects();
+                                foreach($files as $file) {
+                                    $set->addFileToSet($file);
+                                }
                             }
                         }
                     }
                 }
-            }
 
-            if ($this->notifyMeOnSubmission) {
-                if (\Config::get('concrete.email.form_block.address') && strstr(Config::get('concrete.email.form_block.address'), '@')) {
-                    $formFormEmailAddress = \Config::get('concrete.email.form_block.address');
-                } else {
-                    $adminUserInfo = \UserInfo::getByID(USER_SUPER_ID);
-                    $formFormEmailAddress = $adminUserInfo->getUserEmail();
+                if ($this->notifyMeOnSubmission) {
+                    if (\Config::get('concrete.email.form_block.address') && strstr(Config::get('concrete.email.form_block.address'), '@')) {
+                        $formFormEmailAddress = \Config::get('concrete.email.form_block.address');
+                    } else {
+                        $adminUserInfo = \UserInfo::getByID(USER_SUPER_ID);
+                        $formFormEmailAddress = $adminUserInfo->getUserEmail();
+                    }
+
+                    $replyToEmailAddress = $formFormEmailAddress;
+                    if ($this->replyToEmailControlID) {
+                        $control = $entityManager->getRepository('Concrete\Core\Entity\Express\Control\Control')
+                            ->findOneById($this->replyToEmailControlID);
+                        if (is_object($control)) {
+                            $email = $entry->getAttribute($control->getAttributeKey());
+                            if ($email) {
+                                $replyToEmailAddress = $email;
+                            }
+                        }
+                    }
+
+                    $mh = \Core::make('helper/mail');
+                    $mh->to($this->recipientEmail);
+                    $mh->from($formFormEmailAddress);
+                    $mh->replyto($replyToEmailAddress);
+                    $mh->addParameter('entity', $entity);
+                    $mh->addParameter('formName', $this->surveyName);
+                    $mh->addParameter('attributes', $values);
+                    $mh->load('block_express_form_submission');
+                    $mh->setSubject(t('%s Form Submission', $this->surveyName));
+                    $mh->sendMail();
                 }
 
-                $replyToEmailAddress = $formFormEmailAddress;
-                if ($this->replyToEmailControlID) {
-                    $control = $entityManager->getRepository('Concrete\Core\Entity\Express\Control\Control')
-                        ->findOneById($this->replyToEmailControlID);
-                    if (is_object($control)) {
-                        $email = $entry->getAttribute($control->getAttributeKey());
-                        if ($email) {
-                            $replyToEmailAddress = $email;
-                        }
+                if ($this->redirectCID > 0) {
+                    $c = \Page::getByID($this->redirectCID);
+                    if (is_object($c) && !$c->isError()) {
+                        $r = Redirect::page($c);
+                        $r->setTargetUrl($r->getTargetUrl() . '?form_success=1');
+                        return $r;
                     }
                 }
 
-                $mh = \Core::make('helper/mail');
-                $mh->to($this->recipientEmail);
-                $mh->from($formFormEmailAddress);
-                $mh->replyto($replyToEmailAddress);
-                $mh->addParameter('entity', $entity);
-                $mh->addParameter('formName', $this->surveyName);
-                $mh->addParameter('attributes', $values);
-                $mh->load('block_express_form_submission');
-                $mh->setSubject(t('%s Form Submission', $this->surveyName));
-                $mh->sendMail();
+                $c = \Page::getCurrentPage();
+                $url = \URL::to($c);
+                $r = Redirect::to($url, 'form_success', $this->bID);
+                $r->setTargetUrl($r->getTargetUrl() . '#form' . $this->bID);
+                return $r;
+
             }
-
-            if ($this->redirectCID > 0) {
-                $c = \Page::getByID($this->redirectCID);
-                if (is_object($c) && !$c->isError()) {
-                    $r = Redirect::page($c);
-                    $r->setTargetUrl($r->getTargetUrl() . '?form_success=1');
-                    return $r;
-                }
-            }
-
-            $c = \Page::getCurrentPage();
-            $r = Redirect::to($c->getCollectionPath(), 'form_success', $this->bID);
-            $r->setTargetUrl($r->getTargetUrl() . '#form' . $this->bID);
-            return $r;
-
         }
         $this->view();
     }
@@ -329,6 +324,8 @@ class Controller extends BlockController
             $form = new Form();
             $form->setName(t('Form'));
             $form->setEntity($entity);
+            $entity->setDefaultViewForm($form);
+            $entity->setDefaultEditForm($form);
             $entityManager->persist($form);
             $entityManager->flush();
 

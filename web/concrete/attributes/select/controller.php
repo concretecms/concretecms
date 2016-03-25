@@ -590,10 +590,12 @@ class Controller extends AttributeTypeController
 
     public function filterByAttribute(AttributedItemList $list, $value, $comparison = '=')
     {
-        if ($value instanceof Option) {
+        $em = \Database::connection()->getEntityManager();
+        if ($value instanceof SelectValueOption) {
             $option = $value;
         } else {
-            $option = Option::getByValue($value);
+            $option = $em->getRepository('\Concrete\Core\Entity\Attribute\Value\Value\SelectValueOption')
+                ->findOneByValue($value);
         }
         if (is_object($option)) {
             $column = 'ak_' . $this->attributeKey->getAttributeKeyHandle();

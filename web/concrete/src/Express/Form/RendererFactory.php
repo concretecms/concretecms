@@ -92,10 +92,10 @@ class RendererFactory
         return $this->viewControlRenderer;
     }
 
-    public function getFormControlRenderer()
+    public function getFormControlRenderer(Entry $entry = null)
     {
         if (!isset($this->formControlRenderer)) {
-            $this->formControlRenderer = $this->control->getFormControlRenderer();
+            $this->formControlRenderer = $this->control->getFormControlRenderer($entry);
             if (is_object($this->formControlRenderer)) {
                 $this->formControlRenderer->build($this);
             }

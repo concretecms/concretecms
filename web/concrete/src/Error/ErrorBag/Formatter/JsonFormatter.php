@@ -19,7 +19,7 @@ class JsonFormatter extends AbstractFormatter
             $o['error'] = true;
             $o['errors'] = array();
             foreach ($error->getList() as $error) {
-                $o['errors'][] = $error;
+                $o['errors'][] = (string) $error;
             }
             return $o;
         }
