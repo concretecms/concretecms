@@ -30,6 +30,7 @@ class Controller extends BlockController
     protected $btExportTables = array('btForm', 'btFormQuestions');
     protected $btExportPageColumns = array('redirectCID');
     protected $lastAnswerSetId = 0;
+    protected $btTranslatableColumns = array('surveyName', 'submitText', 'thankyouMsg', 'question');
 
     /**
      * Used for localization. If we want to localize the name/description we have to include this.

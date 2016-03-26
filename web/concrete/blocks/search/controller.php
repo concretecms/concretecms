@@ -18,6 +18,7 @@ class Controller extends BlockController
     protected $btExportPageColumns = array('postTo_cID');
     protected $btCacheBlockRecord = true;
     protected $btCacheBlockOutput = null;
+    protected $btTranslatableColumns = array('title', 'buttonText');
 
     public $title = "";
     public $buttonText = ">";

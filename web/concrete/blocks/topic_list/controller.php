@@ -110,7 +110,8 @@ class Controller extends BlockController
         $tree = Tree::getByID($this->topicTreeID);
         $data = $blockNode->addChild('data');
         $data->addChild('mode', $this->mode);
-        $data->addChild("title", $this->title);
+        $title = $data->addChild("title", $this->title);
+        $title->setAttribute('translatable', true);
         $data->addChild('topicAttributeKeyHandle', $this->topicAttributeKeyHandle);
         if (is_object($tree)) {
             $data->addChild('tree', $tree->getTreeName());

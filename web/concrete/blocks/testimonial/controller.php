@@ -17,6 +17,7 @@ class Controller extends BlockController
     protected $btInterfaceHeight = 560;
     protected $btExportFileColumns = array('fID');
     protected $btTable = 'btTestimonial';
+    protected $btTranslatableColumns = array('name', 'position', 'company', 'companyURL', 'paragraph');
 
     public function getBlockTypeDescription()
     {

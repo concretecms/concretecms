@@ -55,6 +55,7 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
     protected $btFeatureObjects;
     protected $identifier;
     protected $btTable = null;
+    protected $btTranslatableColumns = array();
 
     public function getBlockTypeExportPageColumns()
     {
@@ -323,18 +324,22 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
                 foreach ($record as $key => $value) {
                     if (isset($columns[strtolower($key)])) {
                         if (in_array($key, $this->btExportPageColumns)) {
-                            $tableRecord->addChild($key, ContentExporter::replacePageWithPlaceHolder($value));
+                            $newChild = $tableRecord->addChild($key, ContentExporter::replacePageWithPlaceHolder($value));
                         } elseif (in_array($key, $this->btExportFileColumns)) {
-                            $tableRecord->addChild($key, ContentExporter::replaceFileWithPlaceHolder($value));
+                            $newChild = $tableRecord->addChild($key, ContentExporter::replaceFileWithPlaceHolder($value));
                         } elseif (in_array($key, $this->btExportPageTypeColumns)) {
-                            $tableRecord->addChild($key, ContentExporter::replacePageTypeWithPlaceHolder($value));
+                            $newChild = $tableRecord->addChild($key, ContentExporter::replacePageTypeWithPlaceHolder($value));
                         } elseif (in_array($key, $this->btExportPageFeedColumns)) {
-                            $tableRecord->addChild($key, ContentExporter::replacePageFeedWithPlaceHolder($value));
+                            $newChild = $tableRecord->addChild($key, ContentExporter::replacePageFeedWithPlaceHolder($value));
                         } else {
-                            $cnode = $tableRecord->addChild($key);
-                            $node = dom_import_simplexml($cnode);
+                            $newChild = $tableRecord->addChild($key);
+                            $node = dom_import_simplexml($newChild);
                             $no = $node->ownerDocument;
                             $node->appendChild($no->createCDataSection($value));
+                        }
+
+                        if (in_array($key, $this->btTranslatableColumns)) {
+                            $newChild->addAttribute('translatable', true);
                         }
                     }
                 }

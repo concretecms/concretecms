@@ -88,6 +88,7 @@ class Controller extends BlockController
         $data->addAttribute('table', $this->btTable);
         $record = $data->addChild('record');
         $cnode = $record->addChild('content');
+        $cnode->addAttribute('translatable', true);
         $node = dom_import_simplexml($cnode);
         $no = $node->ownerDocument;
         $content = LinkAbstractor::export($this->content);

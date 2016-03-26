@@ -14,8 +14,8 @@ class Controller extends BlockController
     protected $btCacheBlockOutputForRegisteredUsers = true;
     protected $btInterfaceHeight = 320;
     protected $btTable = 'btContentFile';
-
     protected $btExportFileColumns = array('fID');
+    protected $btTranslatableColumns = array('fileLinkText');
 
     /** 
      * Used for localization. If we want to localize the name/description we have to include this.

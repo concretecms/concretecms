@@ -13,7 +13,8 @@ class Controller extends BlockController
     protected $btCacheBlockOutput = true;
     protected $btCacheBlockOutputOnPost = true;
     protected $btCacheBlockOutputForRegisteredUsers = false;
-    
+    protected $btTranslatableColumns = array('title');
+
     /**
      * Used for localization. If we want to localize the name/description we have to include this.
      */

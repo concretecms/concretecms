@@ -20,6 +20,7 @@ class Controller extends BlockController
     protected $btCacheBlockOutputOnPost = true;
     protected $btCacheBlockOutputForRegisteredUsers = false;
     protected $btIgnorePageThemeGridFrameworkContainer = true;
+    protected $btTranslatableColumns = array('title', 'description');
 
     public function getBlockTypeDescription()
     {
