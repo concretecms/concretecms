@@ -106,14 +106,14 @@
                 targetInput.change(function () {
                     var value = currentValue();
 
-                    if (value > max) { 
+                    if (value > max) {
                         value = max;
                     } else if (value < min) {
                         value = min;
                     } else if (isNaN(value)) {
                         value = defaultValue;
                     }
-                    
+
                     $(this).val(value + targetInputFormat);
                     sliderElement.slider("value", value);
                     disableCheck();
@@ -208,8 +208,8 @@
     $.fn.removeClassExcept = function (val) {
         return this.each(function (index, el) {
             var keep = val.split(" "),  // list we'd like to keep
-                reAdd = [],          // ones that should be re-added if found
-                $el = $(el);       // element we're working on
+                reAdd = [],             // ones that should be re-added if found
+                $el = $(el);            // element we're working on
 
             // look for which we re-add (based on them already existing)
             for (var i = 0; i < keep.length; i++){
@@ -218,7 +218,7 @@
 
             // drop all, and only add those confirmed as existing
             $el
-                .removeClass()               // remove existing classes
+                .removeClass()               // remove existing classes
                 .addClass(reAdd.join(' '));  // re-add the confirmed ones
         });
     };
