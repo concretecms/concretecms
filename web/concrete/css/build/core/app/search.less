@@ -1,4 +1,4 @@
-/** 
+/**
  * Search Fields, including action select menu, keyword search bar, advanced search
  */
 
@@ -198,7 +198,7 @@ div.ccm-search-fields-advanced-dialog {
 
 }
 
-/** 
+/**
  * Search results
  */
 
@@ -242,6 +242,14 @@ table.ccm-search-results-table {
         color: #333;
         background: #e7e7e7;
         white-space: nowrap;
+        &:after {
+          vertical-align: middle;
+          content: "";
+          width: 0;
+          height: 0;
+          display: inline-block;
+          margin-left: 10px;
+        }
       }
 
       &.ccm-results-list-active-sort-desc a:after {
