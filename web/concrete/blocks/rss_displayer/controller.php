@@ -20,7 +20,32 @@ class Controller extends BlockController
     protected $btCacheBlockOutputOnPost = true;
     protected $btWrapperClass = 'ccm-ui';
     protected $btCacheBlockOutputForRegisteredUsers = true;
+    
+    /**
+     * Default number of seconds that the output of this block should be cached
+     * (Can be overridden by the user within C5 UI)
+     * 
+     * @var integer
+     */
     protected $btCacheBlockOutputLifetime = 3600;
+    
+    /**
+     * Number of seconds that the RSS feed itself should be cached before fetching
+     * a fresh copy 
+     * 
+     * (Perhaps this could eventually become a user-setting?)
+     * 
+     * Caching is important as fetching a remote URL can significantly delay
+     * the rendering of a PHP page.
+     * 
+     * Setting to "null" should cache it indefinitely until cache is manually cleared.
+     * 
+     * Should probably be less than $btCacheBlockOutputLifetime above, otherwise the
+     * block will be re-rendered using the same stale RSS data.
+     * 
+     * @var integer
+     */
+    protected $rssFeedCacheLifetime = 1800;   
 
     /**
      * Used for localization. If we want to localize the name/description we have to include this
@@ -122,7 +147,7 @@ class Controller extends BlockController
         $posts = array();
 
         try {
-            $channel = $fp->load($this->url);
+            $channel = $fp->load($this->url, $this->rssFeedCacheLifetime);
             $i = 0;
             foreach ($channel as $post) {
                 $posts[] = $post;
@@ -164,7 +189,9 @@ class Controller extends BlockController
         $posts = array();
 
         try {
-            $channel = $fp->load($this->url);
+            // We manually set cache time to 2hrs here as getSearchableContent()
+            // can probably cope with slightly older data
+            $channel = $fp->load($this->url, 7200);
             $i = 0;
             foreach ($channel as $post) {
                 $posts[] = $post;
