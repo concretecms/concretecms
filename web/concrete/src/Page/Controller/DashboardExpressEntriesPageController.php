@@ -171,7 +171,7 @@ abstract class DashboardExpressEntriesPageController extends DashboardPageContro
                     $manager->saveEntryAttributesForm($form, $entry);
                     $this->flash('success', t('%s updated successfully.', $entity->getName()));
                 } else {
-                    $entry = $manager->addEntry($this->get('entity'));
+                    $entry = $manager->addEntry($entity);
                     $manager->saveEntryAttributesForm($form, $entry);
                     $this->flash('success', t('%s added successfully.', $entity->getName()));
                 }
