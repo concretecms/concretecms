@@ -145,7 +145,7 @@ class PackageService
         return $upgradeables;
     }
 
-
+    
     public function setupLocalization(LocalizablePackageInterface $package, $locale = null, $translate = 'current')
     {
         if ($translate === 'current') {
@@ -169,6 +169,7 @@ class PackageService
     public function uninstall(Package $p)
     {
         $p->uninstall();
+        $this->removPackageMetadataDriverFromConfig($p);
         $config = $this->entityManager->getConfiguration();
         $cache = $config->getMetadataCacheImpl();
         $cache->flushAll();
@@ -184,22 +185,15 @@ class PackageService
         try {
             
             // @ What happens if a package has no need for a entityManager 
-            
             $config = $this->entityManager->getConfiguration();
             $driverChain = $config->getMetadataDriverImpl();
             
-            // @Todo
-            // For annotations: get the correct CachedReader and create a appropriate driver
-            
             $driver = $p->getMetadataDriver();
+            $pkgNamespace = $p->getNamespace();
             
-            //@todo latest - get Package Class
-            
-            $driverChain->addDriver($driver, 'Concrete\Core');
-            // For xml and yaml: create an appropriate driver
-            
-            \Doctrine\Common\Util\Debug::dump($driverChain);
-            die('ups');
+            $driverChain->addDriver($driver, $pkgNamespace);
+            //\Doctrine\Common\Util\Debug::dump($driverChain);
+            //die('ups');
             
             //@todo -> driverChain is returned
             //         add class which returns the apropriate driver
@@ -217,6 +211,9 @@ class PackageService
                 Localization::changeLocale($currentLocale);
             }
             $pkg = $this->getByHandle($p->getPackageHandle());
+            
+            // add package entity to generated_overrides config file
+            $this->savePackageMetadataDriverToConfig($p);
             return $pkg;
         } catch (\Exception $e) {
             if ($currentLocale != 'en_US') {
@@ -258,6 +255,72 @@ class PackageService
         return clone $cl;
     }
 
+    /**
+     * Save the entity path of the package to the 
+     * application/generated_overrides/concrete.php
+     * So the single entity manager is able to add the appropriate 
+     * drivers for the package namespaces
+     * 
+     * @param \Concrete\Core\Package\Package $p
+     */
+    protected function savePackageMetadataDriverToConfig(Package $p){
+        
+        $packageMetadataDriverType = $p->getMetadataDriverType();
+        $packageHandle = $p->getPackageHandle();
+        
+        $settings = array(
+            'namespace' => $p->getNamespace(),
+            'paths' => $p->getPackageMetadataPaths()
+        );
+        
+        if ($packageMetadataDriverType === Package::PACKAGE_METADATADRIVER_ANNOTATION) {
+            if(version_compare($p->getApplicationVersionRequired(), '5.8.0', '<')){
+                // Legacy - uses SimpleAnnotationReader
+                $basePath = 'concrete.metadatadriver.annotation.legacy.';
+                \Config::save($basePath.  strtolower($packageHandle), $settings);
+            }else{
+                // Use default AnnotationReader
+                $basePath = 'concrete.metadatadriver.annotation.default.';
+                \Config::save($basePath.  strtolower($packageHandle), $settings);
+            }
+        } else if ($packageMetadataDriverType === Package::PACKAGE_METADATADRIVER_XML) {
+            $basePath = 'concrete.metadatadriver.xml.';
+            \Config::save($basePath.  strtolower($packageHandle), $settings);
+        } else if ($packageMetadataDriverType === Package::PACKAGE_METADATADRIVER_YAML){
+            $basePath = 'concrete.metadatadriver.yaml.';
+            \Config::save($basePath.  strtolower($packageHandle), $settings);
+        }
+    }
+    
+    /**
+     * Remove metadatadriver from config
+     * 
+     * @param \Concrete\Core\Package\Package $p
+     */
+    protected function removPackageMetadataDriverFromConfig(Package $p)
+    {
+        $packageMetadataDriverType = $p->getMetadataDriverType();
+        $packageHandle = $p->getPackageHandle();
+        
 
-
+        if ($packageMetadataDriverType === Package::PACKAGE_METADATADRIVER_ANNOTATION) {
+            if(version_compare($p->getApplicationVersionRequired(), '5.8.0', '<')){
+                // Legacy - uses SimpleAnnotationReader
+                $basePath = 'concrete.metadatadriver.annotation.legacy';
+            }else{
+                // Use default AnnotationReader
+                $basePath = 'concrete.metadatadriver.annotation.default';
+            }
+        } else if ($packageMetadataDriverType === Package::PACKAGE_METADATADRIVER_XML) {
+            $basePath = 'concrete.metadatadriver.xml';
+        } else if ($packageMetadataDriverType === Package::PACKAGE_METADATADRIVER_YAML){
+            $basePath = 'concrete.metadatadriver.yaml';
+        }
+        
+        // \Config::clear() din't work with the config file in 'generated_overrides'
+        $metaDriverConfig = \Config::get($basePath);
+        unset($metaDriverConfig[strtolower($packageHandle)]);
+        \Config::save($basePath, $metaDriverConfig);
+        
+    }
 }

@@ -601,7 +601,9 @@ abstract class Package implements LocalizablePackageInterface
         // extract entities
         $config = Setup::createConfiguration(true);
         
-        // Create a appropriate EntityManager for the installation
+        // Create a temporary EntityManager with the apropriate metadata driver for the installation
+        // We don't want to accidentially update other packages, so we create
+        // a new EntityManager which contains only the ORM metadata of the specific package
         if ($this->metadataDriver === self::PACKAGE_METADATADRIVER_ANNOTATION){
             if(version_compare($this->getApplicationVersionRequired(), '8.0.0', '<')){
                 // Legacy - uses SimpleAnnotationReader
@@ -611,10 +613,10 @@ abstract class Package implements LocalizablePackageInterface
                 $driverImpl = $config->newDefaultAnnotationDriver($this->getPackageMetadataPaths(), false);
             }
         } else if ($this->metadataDriver === self::PACKAGE_METADATADRIVER_XML){
-            $driverImpl = new XmlDriver($this->getPackageMetadataPaths());
+            $driverImpl = new \Doctrine\ORM\Mapping\Driver\XmlDriver($this->getPackageMetadataPaths());
 
         } else if ($this->metadataDriver === self::PACKAGE_METADATADRIVER_YAML){
-            $driverImpl = new YamlDriver($this->getPackageMetadataPaths());
+            $driverImpl = new \Doctrine\ORM\Mapping\Driver\YamlDriver($this->getPackageMetadataPaths());
         }
         $config->setMetadataDriverImpl($driverImpl);
         $manager = EntityManager::create(\Database::connection(), $config);
@@ -721,6 +723,9 @@ abstract class Package implements LocalizablePackageInterface
 
     /**
      * Create the appropriate ORM metadata driver
+     * 
+     * @return Doctrine\Common\Persistence\Mapping\Driver\MappingDriver
+     *          returns eather a AnnotationDriver or a FileDriver
      */
     public function getMetadataDriver()
     {
@@ -728,21 +733,22 @@ abstract class Package implements LocalizablePackageInterface
         if ($this->metadataDriver === self::PACKAGE_METADATADRIVER_ANNOTATION){
             if(version_compare($this->getApplicationVersionRequired(), '8.0.0', '<')){
                 // Legacy - uses SimpleAnnotationReader
-                $cachedSimpleAnnotationReader = \Core::bind('orm/cachedSimpleAnnotationReader');
+                $cachedSimpleAnnotationReader = \Core::make('orm/cachedSimpleAnnotationReader');
                 $simpleAnnotationDriver = new \Doctrine\ORM\Mapping\Driver\AnnotationDriver($cachedSimpleAnnotationReader, $this->getPackageMetadataPaths());
                 return $simpleAnnotationDriver;
             }else{
                 // Use default AnnotationReader
-                $cachedAnnotationReader = \Core::bind('orm/cachedAnnotationReader');
+                $cachedAnnotationReader = \Core::make('orm/cachedAnnotationReader');
                 $annotationDriver = new \Doctrine\ORM\Mapping\Driver\AnnotationDriver($cachedAnnotationReader, $this->getPackageMetadataPaths());
                 return $annotationDriver;
             }
         } else if ($this->metadataDriver === self::PACKAGE_METADATADRIVER_XML){
-            $driverImpl = new XmlDriver($this->getPackageMetadataPaths());
+            $driverImpl = new \Doctrine\ORM\Mapping\Driver\XmlDriver($this->getPackageMetadataPaths());
 
         } else if ($this->metadataDriver === self::PACKAGE_METADATADRIVER_YAML){
-            $driverImpl = new YamlDriver($this->getPackageMetadataPaths());
+            $driverImpl = new \Doctrine\ORM\Mapping\Driver\YamlDriver($this->getPackageMetadataPaths());
         }
+        return $driverImpl;
     }
     
     /**
@@ -767,6 +773,21 @@ abstract class Package implements LocalizablePackageInterface
             return array($this->getPackagePath() . DIRECTORY_SEPARATOR . REL_DIR_METADATA_YAML);
         }
     }
+    
+    /**
+     * Get the namespace of the package by the package handle
+     * 
+     * @param boolean $withLeadingBacksalsh
+     * @return string
+     */
+    public function getNamespace($withLeadingBacksalsh = false)
+    {   
+        $leadingBkslsh = '';
+        if($withLeadingBacksalsh){
+            $leadingBkslsh = '\\';
+        }
+        return $leadingBkslsh . 'Concrete\\Package\\' . camelcase($this->getPackageHandle());
+    } 
     
     /**
      * @deprecated
