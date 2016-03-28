@@ -11,7 +11,26 @@ use Database;
 use Events;
 
 class EntityManagerFactory implements EntityManagerFactoryInterface
-{
+{   
+    /**
+     * Contains the cached AnnotationReader which is used by all packages
+     * using Doctrine entities with mapping information as annotations with
+     * a concrete version higher than 8.0.0
+     * 
+     * @var \Doctrine\Common\Annotations\CachedReader 
+     */
+    protected $cachedAnnotationsReader;
+    
+    /**
+     * Contains the cached SimpleAnnotationReader
+     * which is used by all packages using Doctrine entities with annotations
+     * with a concrete version less than 8.0.0
+     * 
+     * @var \Doctrine\Common\Annotations\CachedReader 
+     */
+    protected $cachedSimpleAnnotationsReader;
+
+    
     /* 
      * old create function
      * @todo - remove
@@ -46,7 +65,8 @@ class EntityManagerFactory implements EntityManagerFactoryInterface
      * @param Connection $connection
      * @return \Doctrine\ORM\EntityManager
      */
-    public function create(Connection $connection) {
+    public function create(Connection $connection) 
+    {
         
         // Set cache based on doctrine dev mode
         $isDevMode = Config::get('concrete.cache.doctrine_dev_mode');
@@ -54,9 +74,9 @@ class EntityManagerFactory implements EntityManagerFactoryInterface
         //@todo - test remove
         $isDevMode = true;
         
-        if($isDevMode){
+        if ($isDevMode) {
             $cache = new \Doctrine\Common\Cache\ArrayCache();
-        }else{
+        } else {
             $cache = new DoctrineCacheDriver('cache/expensive');
         }
         
@@ -77,7 +97,8 @@ class EntityManagerFactory implements EntityManagerFactoryInterface
         // Even though the addGlobalIgnoredName is set the exception ist still thrown.
         // http://stackoverflow.com/questions/21609571/swagger-php-and-doctrine-annotation-issue
         
-        // @Todo remove all possible annototaions
+        // @Todo remove all unkown annotations used by the SimpleAnnotationReader form the AnnotationReader
+        // to prevent fatal errors
         \Doctrine\Common\Annotations\AnnotationReader::addGlobalIgnoredName('subpackages');
         \Doctrine\Common\Annotations\AnnotationReader::addGlobalIgnoredName('package');
         \Doctrine\Common\Annotations\AnnotationReader::addGlobalIgnoredName('Id');
@@ -93,52 +114,54 @@ class EntityManagerFactory implements EntityManagerFactoryInterface
         $driverChain = new \Doctrine\Common\Persistence\Mapping\Driver\MappingDriverChain();
         
         //@todo - > get lookup paths
-        $searchDirs = array(
-            DIR_BASE_CORE . '/' . DIRNAME_CLASSES,
-        );
+
         // Create the annotation reader > 8.0.0
         $annotationReader = new \Doctrine\Common\Annotations\AnnotationReader();
         $cachedAnnotationReader = new \Doctrine\Common\Annotations\CachedReader($annotationReader, $cache);
-        \Core::bind('orm/cachedAnnotationReader', function($cachedAnnotationReader){
+        // Add the reader to the DI container, so the reader same reader instance
+        // can be accessed in the PackageService
+        \Core::bind('orm/cachedAnnotationReader', function ($cachedAnnotationReader) {
             return $cachedAnnotationReader;
         });
-        $annotationDriver = new \Doctrine\ORM\Mapping\Driver\AnnotationDriver($cachedAnnotationReader, $searchDirs);
-        //@todo not sure if is needed
-        $annotationDriver->addExcludePaths(Config::get('database.proxy_exclusions', array()));
+        $this->cachedAnnotationReader = $cachedAnnotationReader;
         
-        //@todo - > get namespaces form config file
-        //          and add as many drivers as needed
-        //          
-        $driverChain->addDriver($annotationDriver, 'Concrete\Core');
-        // @todo -> test if defaultDriver can be used
-        //$driverChain->setDefaultDriver($annotationDriver);
-        
-
-        // @todo -> get lookup paths
-        $simpleSearchDirs = array();
         // Create legacy annotation reader used package requiring concrete5
         // version lower than 8.0.0
         $simpleAnnotationReader = new \Doctrine\Common\Annotations\SimpleAnnotationReader();
         $simpleAnnotationReader->addNamespace('Doctrine\ORM\Mapping');
         $cachedSimpleAnnotationReader = new \Doctrine\Common\Annotations\CachedReader($simpleAnnotationReader, $cache);
-        \Core::bind('orm/cachedSimpleAnnotationReader', function($cachedSimpleAnnotationReader){
+        // Add the reader to the DI container, so the reader same reader instance
+        // can be accessed in the PackageService
+        \Core::bind('orm/cachedSimpleAnnotationReader', function ($cachedSimpleAnnotationReader) {
             return $cachedSimpleAnnotationReader;
         });
-        //$simpleAnnotationDriver = new \Doctrine\ORM\Mapping\Driver\AnnotationDriver($cachedSimpleAnnotationReader, $simpleSearchDirs);
+        $this->cachedSimpleAnnotationReader = $cachedSimpleAnnotationReader;
+        
+        // Create Core annotationDriver
+        $coreDirs = array(
+            DIR_BASE_CORE . DIRECTORY_SEPARATOR . DIRNAME_CLASSES,
+        );
+        $annotationDriver = new \Doctrine\ORM\Mapping\Driver\AnnotationDriver($cachedAnnotationReader, $coreDirs);
+        
+        // @todo important -> test if defaultDriver can be used
+        //$driverChain->setDefaultDriver($annotationDriver);
         //@todo not sure if is needed
-        //$simpleAnnotationDriver->addExcludePaths(Config::get('database.proxy_exclusions', array()));
-        //@todo - > get package namespaces form config file
-        //          and add as many drivers as needed
-        //$driverChain->addDriver($simpleAnnotationDriver, '');
+        //$annotationDriver->addExcludePaths(Config::get('database.proxy_exclusions', array()));     
+        $driverChain->addDriver($annotationDriver, 'Concrete\Core');
         
-        // @todo -> create for each registred namespace a yaml driver
-        // Register yaml drivers
-        $yamlDir = DIR_CONFIG_SITE.DIRECTORY_SEPARATOR.'yaml';
-        $yamlDriver = new \Doctrine\ORM\Mapping\Driver\YamlDriver($yamlDir);
-        //$driverChain->addDriver($yamlDriver, 'Application\Src');
+        // @todo important -> test if defaultDriver can be used
+        //$driverChain->setDefaultDriver($annotationDriver);
         
-        // @todo -> add xml driver 
+        // Register application metadata driver;
+        $this->addApplicationMetadataDriverToDriverChain($driverChain);
         
+        // Register all concrete packages with entities to the driverChain 
+        $this->addPackageMetadataDriverToDriverChain($driverChain);
+
+//        \Doctrine\Common\Util\Debug::dump($driverChain);
+//        die('ups');
+        
+
         
         // @todo - Provide a way to register the own doctrine extentions
         //       - add a way to register the gedmo extentions
@@ -171,5 +194,112 @@ class EntityManagerFactory implements EntityManagerFactoryInterface
         // Inject the ORM EventManager into the EntityManager so ORM Events
         // can be triggered.
         return EntityManager::create($conn, $config, $evm);
+    }
+    
+    /**
+     * Register the application metadata driver into the driver chain
+     * Default metadata driver is the annotation driver
+     * 
+     * Other metadata driver typs (xml and yaml) can be configured in the configruation file:
+     * application\config\concrete.php
+     * 
+     * 'application' => array('metadatadriver' => 'yaml'),
+     * 
+     * @param \Doctrine\Common\Persistence\Mapping\Driver\MappingDriverChain $driverChain
+     */
+    protected function addApplicationMetadataDriverToDriverChain($driverChain)
+    {
+        $appSrcPath = DIR_APPLICATION.DIRECTORY_SEPARATOR.DIRNAME_CLASSES;
+        $xmlConfig = DIR_APPLICATION.DIRECTORY_SEPARATOR.REL_DIR_METADATA_XML;
+        $ymlConfig = DIR_APPLICATION.DIRECTORY_SEPARATOR.REL_DIR_METADATA_YAML;
+        
+        $appDriverSettings = \Config::get('concrete.application.metadatadriver');
+        
+        if(empty($appDriverSettings)){
+            $annotationDriver = new \Doctrine\ORM\Mapping\Driver\AnnotationDriver($this->cachedAnnotationsReader,$appSrcPath);
+            $driverChain->addDriver($annotationDriver, 'Application\Src');
+        }else if($appDriverSettings === \Package::PACKAGE_METADATADRIVER_XML || $appDriverSettings === 'xml'){
+            $xmlDriver = new \Doctrine\ORM\Mapping\Driver\XmlDriver($xmlConfig);
+            $driverChain->addDriver($xmlDriver, 'Application\Src');
+        }else if($appDriverSettings === \Package::PACKAGE_METADATADRIVER_YAML || $appDriverSettings === 'yaml' || $appDriverSettings === 'yml'){
+            $yamlDriver = new \Doctrine\ORM\Mapping\Driver\YamlDriver($ymlConfig);
+            $driverChain->addDriver($yamlDriver, 'Application\Src');
+        }
+    }
+    
+    /**
+     * Register all metadatadrivers of all installed packages containing entities 
+     * into the driver chain
+     * 
+     * @param \Doctrine\Common\Persistence\Mapping\Driver\MappingDriverChain $driverChain
+     */    
+    protected function addPackageMetadataDriverToDriverChain($driverChain)
+    {
+        $this->registerPkgWithAnnotationMetadataImpl($driverChain);
+        $this->registerPkgWithXMLMetadataImpl($driverChain);
+        $this->registerPkgWithYamlMetadataImpl($driverChain);
+    }
+    
+    /**
+     * Register the namespace and the metadata paths of all 
+     * packages with annotations as ORM mapping information
+     * 
+     * @param \Doctrine\Common\Persistence\Mapping\Driver\MappingDriverChain $driverChain
+     */
+    protected function registerPkgWithAnnotationMetadataImpl($driverChain)
+    {
+        $driverSettingsLegacy = \Config::get('concrete.metadatadriver.annotation.legacy');
+        $driverSettingsDefault = \Config::get('concrete.metadatadriver.annotation.default');
+        
+        // add Annotation drivers with "legacy" Annotation reader
+        if(count($driverSettingsLegacy) > 0){
+            foreach($driverSettingsLegacy as $setting){
+                $simpleAnnotationDriver = new \Doctrine\ORM\Mapping\Driver\AnnotationDriver($this->cachedSimpleAnnotationReader, $setting['paths']);
+                $driverChain->addDriver($simpleAnnotationDriver, $setting['namespace']);
+            }
+        }
+        
+        // add Annotation drivers with normal Annotation reader -> Annotation prefixed with \ORM
+        if(count($driverSettingsDefault) > 0){
+            foreach($driverSettingsDefault as $setting){
+                $annotationDriver = new \Doctrine\ORM\Mapping\Driver\AnnotationDriver($this->cachedAnnotationReader, $setting['paths']);
+                $driverChain->addDriver($annotationDriver, $setting['namespace']);
+            }
+        }
+        
+    }
+    
+    /**
+     * Register the namespace and the metadata paths of all 
+     * packages with xml metadata as ORM mapping information
+     * 
+     * @param \Doctrine\Common\Persistence\Mapping\Driver\MappingDriverChain $driverChain
+     */
+    protected function registerPkgWithXMLMetadataImpl($driverChain)
+    {
+        $driverSettings = \Config::get('concrete.metadatadriver.xml');
+        if(count($driverSettings) > 0){
+            foreach($driverSettings as $setting){
+                $xmlDriver = new \Doctrine\ORM\Mapping\Driver\XmlDriver($setting['paths']);
+                $driverChain->addDriver($xmlDriver, $setting['namespace']);
+            }
+        }
+    }
+    
+    /**
+     * Register the namespace and the metadata paths of all 
+     * packages with yaml metadata as ORM mapping information
+     * 
+     * @param \Doctrine\Common\Persistence\Mapping\Driver\MappingDriverChain $driverChain
+     */
+    protected function registerPkgWithYamlMetadataImpl($driverChain)
+    {
+        $driverSettings = \Config::get('concrete.metadatadriver.yaml');
+        if(count($driverSettings) > 0){
+            foreach($driverSettings as $setting){
+                $yamlDriver = new \Doctrine\ORM\Mapping\Driver\YamlDriver($setting['paths']);
+                $driverChain->addDriver($yamlDriver, $setting['namespace']);
+            }
+        }
     }
 }
