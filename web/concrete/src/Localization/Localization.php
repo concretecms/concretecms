@@ -1,7 +1,6 @@
 <?php
 namespace Concrete\Core\Localization;
 
-use Config;
 use Concrete\Core\Support\Facade\Facade;
 use Concrete\Core\Localization\Translator\Adapter\Zend\Translation\Loader\Gettext\SiteTranslationLoader as ZendSiteTranslationLoader;
 use Concrete\Core\Localization\Translator\Adapter\Zend\TranslatorAdapter as ZendTranslatorAdapter;
@@ -14,7 +13,6 @@ use Zend\I18n\Translator\Translator as ZendTranslator;
 
 class Localization
 {
-
     /** @var string */
     const BASE_LOCALE = 'en_US';
 
@@ -44,6 +42,7 @@ class Localization
             // set.
             throw new Exception("Translator adapter repository has not been set.");
         }
+
         return $this->translatorAdapterRepository;
     }
 
@@ -221,6 +220,7 @@ class Localization
         if (is_object($adapter)) {
             return $adapter->getTranslator();
         }
+
         return null;
     }
 
@@ -232,6 +232,7 @@ class Localization
     public static function getInstance()
     {
         $app = Facade::getFacadeApplication();
+
         return $app->make('Concrete\Core\Localization\Localization');
     }
 
@@ -384,7 +385,7 @@ class Localization
     }
 
     /**
-     * Load the site language files (must be done after all packages called their setupPackageLocalization)
+     * Load the site language files (must be done after all packages called their setupPackageLocalization).
      *
      * @deprecated Use \Concrete\Core\Localization\Translator\Adapter\Zend\Translation\Loader\Gettext\SiteTranslationLoader instead.
      *
@@ -405,5 +406,4 @@ class Localization
             $loader->loadTranslations($adapter);
         }
     }
-
 }
