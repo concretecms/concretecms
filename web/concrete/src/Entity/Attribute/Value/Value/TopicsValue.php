@@ -27,6 +27,12 @@ class TopicsValue extends Value
         $this->topics = new ArrayCollection();
     }
 
+    public function getValue()
+    {
+        return $this->getSelectedTopicNodes();
+    }
+
+
     public function getSelectedTopics()
     {
         return $this->topics;
