@@ -44,7 +44,7 @@ class TranslatorAdapterRepository implements TranslatorAdapterRepositoryInterfac
     {
         $key = $this->getKey($handle, $locale);
 
-        return array_key_exists($key, $this->adapters);
+        return isset($this->adapters[$key]);
     }
 
     /**

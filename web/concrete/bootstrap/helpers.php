@@ -19,8 +19,19 @@ function t($text)
 {
     $loc = Localization::getInstance();
     $adapter = $loc->getActiveTranslatorAdapter();
-
-    return call_user_func_array(array($adapter, 'translate'), func_get_args());
+    $args = func_get_args();
+    switch (count($args)) {
+        case 1:
+            return $adapter->translate($text);
+        case 2:
+            return $adapter->translate($text, $args[1]);
+        case 3:
+            return $adapter->translate($text, $args[1], $args[2]);
+        case 4:
+            return $adapter->translate($text, $args[1], $args[2], $args[3]);
+        default:
+            return call_user_func_array(array($adapter, 'translate'), $args);
+    }
 }
 
 /**
@@ -40,8 +51,19 @@ function t2($singular, $plural, $number)
 {
     $loc = Localization::getInstance();
     $adapter = $loc->getActiveTranslatorAdapter();
-
-    return call_user_func_array(array($adapter, 'translatePlural'), func_get_args());
+    $args = func_get_args();
+    switch (count($args)) {
+        case 3:
+            return $adapter->translatePlural($singular, $plural, $number);
+        case 4:
+            return $adapter->translatePlural($singular, $plural, $number, $args[3]);
+        case 5:
+            return $adapter->translatePlural($singular, $plural, $number, $args[3], $args[4]);
+        case 6:
+            return $adapter->translatePlural($singular, $plural, $number, $args[3], $args[4], $args[5]);
+        default:
+            return call_user_func_array(array($adapter, 'translatePlural'), $args);
+    }
 }
 
 /**
@@ -62,8 +84,19 @@ function tc($context, $text)
 {
     $loc = Localization::getInstance();
     $adapter = $loc->getActiveTranslatorAdapter();
-
-    return call_user_func_array(array($adapter, 'translateContext'), func_get_args());
+    $args = func_get_args();
+    switch (count($args)) {
+        case 2:
+            return $adapter->translateContext($context, $text);
+        case 3:
+            return $adapter->translateContext($context, $text, $args[2]);
+        case 4:
+            return $adapter->translateContext($context, $text, $args[2], $args[3]);
+        case 5:
+            return $adapter->translateContext($context, $text, $args[2], $args[3], $args[4]);
+        default:
+            return call_user_func_array(array($adapter, 'translateContext'), $args);
+    }
 }
 
 /**
