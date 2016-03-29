@@ -1,9 +1,7 @@
 <?php
-
 namespace Concrete\Core\Localization\Translator;
 
 use Concrete\Core\Application\Application;
-use Concrete\Core\Localization\Localization;
 use Zend\I18n\Translator\Translator;
 
 /**
@@ -14,7 +12,6 @@ use Zend\I18n\Translator\Translator;
  */
 class TranslatorAdapterRepository implements TranslatorAdapterRepositoryInterface
 {
-
     const KEY_SEPARATOR = '@';
 
     /** @var Application */
@@ -32,7 +29,7 @@ class TranslatorAdapterRepository implements TranslatorAdapterRepositoryInterfac
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function registerTranslatorAdapter($handle, $locale, TranslatorAdapterInterface $translatorAdater)
     {
@@ -41,16 +38,17 @@ class TranslatorAdapterRepository implements TranslatorAdapterRepositoryInterfac
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function hasTranslatorAdapter($handle, $locale)
     {
         $key = $this->getKey($handle, $locale);
+
         return array_key_exists($key, $this->adapters);
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getTranslatorAdapter($handle, $locale)
     {
@@ -59,11 +57,12 @@ class TranslatorAdapterRepository implements TranslatorAdapterRepositoryInterfac
             $this->registerTranslatorAdapter($handle, $locale, $adapter);
         }
         $key = $this->getKey($handle, $locale);
+
         return $this->adapters[$key];
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function removeTranslatorAdapter($handle, $locale)
     {
@@ -74,7 +73,7 @@ class TranslatorAdapterRepository implements TranslatorAdapterRepositoryInterfac
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function removeTranslatorAdaptersWithHandle($handle)
     {
@@ -99,5 +98,4 @@ class TranslatorAdapterRepository implements TranslatorAdapterRepositoryInterfac
     {
         return $handle . static::KEY_SEPARATOR . $locale;
     }
-
 }

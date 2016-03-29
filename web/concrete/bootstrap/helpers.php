@@ -1,5 +1,4 @@
 <?php
-
 defined('C5_EXECUTE') or die('Access Denied.');
 
 use Concrete\Core\Utility\Service\Text;
@@ -20,6 +19,7 @@ function t($text)
 {
     $loc = Localization::getInstance();
     $adapter = $loc->getActiveTranslatorAdapter();
+
     return call_user_func_array(array($adapter, 'translate'), func_get_args());
 }
 
@@ -40,6 +40,7 @@ function t2($singular, $plural, $number)
 {
     $loc = Localization::getInstance();
     $adapter = $loc->getActiveTranslatorAdapter();
+
     return call_user_func_array(array($adapter, 'translatePlural'), func_get_args());
 }
 
@@ -61,6 +62,7 @@ function tc($context, $text)
 {
     $loc = Localization::getInstance();
     $adapter = $loc->getActiveTranslatorAdapter();
+
     return call_user_func_array(array($adapter, 'translateContext'), func_get_args());
 }
 
