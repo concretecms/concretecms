@@ -3,6 +3,8 @@ namespace Concrete\Core\Page\Controller;
 
 use Concrete\Controller\Element\Dashboard\Express\Entries\Header;
 use Concrete\Core\Entity\Express\Entry;
+use Concrete\Core\Express\Entry\Manager;
+use Concrete\Core\Express\Event\Event;
 use Concrete\Core\Express\Form\Control\SaveHandler\SaveHandlerInterface;
 use Concrete\Core\Express\Form\Validator;
 use Concrete\Core\Tree\Node\Node;
@@ -43,7 +45,7 @@ abstract class DashboardExpressEntityPageController extends DashboardExpressEntr
             $this->redirect('/dashboard/express/entries');
         }
         $this->set('entity', $entity);
-        $form = $entity->getForms()[0];
+        $form = $entity->getDefaultEditForm();
         $renderer = \Core::make('Concrete\Core\Express\Form\Renderer');
         $this->set('expressForm', $form);
         $this->set('renderer', $renderer);
@@ -51,35 +53,4 @@ abstract class DashboardExpressEntityPageController extends DashboardExpressEntr
         $this->render('/dashboard/express/entries/create', false);
     }
 
-    public function submit($id = null)
-    {
-        $this->view($id);
-        $r = $this->entityManager->getRepository('\Concrete\Core\Entity\Express\Form');
-        $form = $r->findOneById($this->request->request->get('express_form_id'));
-        if (is_object($form)) {
-            $validator = new Validator($this->error, $this->request);
-            $validator->validate($form);
-            if (!$this->error->has()) {
-                $entry = new Entry();
-                $entry->setEntity($this->get('entity'));
-
-                $this->entityManager->persist($entry);
-                foreach ($form->getControls() as $control) {
-                    $type = $control->getControlType();
-                    $saver = $type->getSaveHandler($control);
-                    if ($saver instanceof SaveHandlerInterface) {
-                        $saver->saveFromRequest($control, $entry, $this->request);
-                    }
-                }
-
-                $this->entityManager->flush();
-
-                $this->flash('success', t('%s added successfully.', $this->get('entity')->getName()));
-                $this->redirect($this->getBackToListURL($this->get('entity')));
-            }
-        } else {
-            throw new \Exception(t('Invalid form.'));
-        }
-
-    }
 }

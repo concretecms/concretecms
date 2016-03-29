@@ -570,6 +570,14 @@ return array(
      */
     'assets' => array(
 
+        'autosize' => array(
+            array(
+                'javascript',
+                'js/autosize.js',
+                array('minify' => false, 'combine' => false),
+            ),
+        ),
+
         'jquery' => array(
             array(
                 'javascript',

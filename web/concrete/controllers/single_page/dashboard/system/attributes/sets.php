@@ -138,7 +138,7 @@ class Sets extends DashboardPageController
 
             if (!$this->error->has()) {
                 // go through and add all the attributes that aren't in another set
-                foreach ($as->getAttributeKeys() as $setKey) {
+                foreach ($as->getAttributeKeyCollection() as $setKey) {
                     $this->entityManager->remove($setKey);
                 }
 

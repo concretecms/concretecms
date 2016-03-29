@@ -62,6 +62,11 @@ module.exports = function(grunt) {
     // List of the JavaScripts to be generated
     var js = {
 
+        autosize: {
+            dest: '<%= DIR_BASE %>/concrete/js/autosize.js',
+            src: '<%= DIR_BASE %>/concrete/js/build/vendor/autosize/autosize.js'
+        },
+
         redactor: {
             dest: '<%= DIR_BASE %>/concrete/js/redactor.js',
             src: [

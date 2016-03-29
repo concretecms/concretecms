@@ -36,7 +36,7 @@ class SetManager
         $setKey->setAttributeKey($key);
         $setKey->setAttributeSet($this->set);
         $setKey->setDisplayOrder($displayOrder);
-        $this->set->getAttributeKeys()->add($setKey);
+        $this->set->getAttributeKeyCollection()->add($setKey);
         $this->entityManager->persist($setKey);
         $this->entityManager->flush();
     }

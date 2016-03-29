@@ -245,7 +245,7 @@ EOS;
             $defaultDateJs = '""';
         }
         $html = '';
-        $html .= '<div><span class="ccm-input-date-wrapper" id="' . $id . '_dw"><input id="' . $id . '_pub" class="form-control ccm-input-date"  /><input id="' . $id . '" name="' . $field . '" type="hidden"  /></span></div>';
+        $html .= '<span class="ccm-input-date-wrapper" id="' . $id . '_dw"><input id="' . $id . '_pub" class="form-control ccm-input-date"  /><input id="' . $id . '" name="' . $field . '" type="hidden"  /></span>';
         $jh = Core::make('helper/json'); /* @var $jh \Concrete\Core\Http\Service\Json */
         if ($calendarAutoStart) {
             $html .= '<script type="text/javascript">$(function () {

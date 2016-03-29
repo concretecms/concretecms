@@ -14,7 +14,7 @@
     <?php View::element('dashboard/express/detail_navigation', array('entity' => $entity))?>
     <div class="col-md-8">
 
-        <form method="post" class="ccm-dashboard-content-form" action="<?=$view->action('update', $entity->getID())?>">
+        <form method="post" action="<?=$view->action('update', $entity->getID())?>">
             <?=$token->output('update_entity')?>
 
             <fieldset>
@@ -31,6 +31,18 @@
                     <label for="name"><?=t('Description')?></label>
                     <?=$form->textarea('description', $entity->getDescription(), array('rows' => 5))?>
                 </div>
+            </fieldset>
+            <fieldset>
+                <legend><?=t('Views')?></legend>
+                <div class="form-group">
+                    <label for="name"><?=t('Default Edit Form')?></label>
+                    <?=$form->select('default_edit_form_id', $forms, $defaultEditFormID)?>
+                </div>
+                <div class="form-group">
+                    <label for="name"><?=t('Default View Form')?></label>
+                    <?=$form->select('default_view_form_id', $forms, $defaultViewFormID)?>
+                </div>
+
             </fieldset>
             <fieldset>
                 <legend><?=t('Results Folder')?></legend>
