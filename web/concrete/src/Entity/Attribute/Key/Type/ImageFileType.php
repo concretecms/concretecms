@@ -25,7 +25,7 @@ class ImageFileType extends Type
 
     public function __construct()
     {
-        $this->mode = self::TYPE_FILE_MANAGER;
+        $this->akFileManagerMode = self::TYPE_FILE_MANAGER;
     }
 
     public function getMode()
