@@ -4,7 +4,6 @@ namespace Concrete\Core\Entity\Express;
 use Concrete\Core\Attribute\ObjectTrait;
 use Concrete\Core\Entity\Attribute\Value\ExpressValue;
 use Doctrine\Common\Collections\ArrayCollection;
-use DoctrineProxies\__CG__\Concrete\Core\Entity\Attribute\Key\ExpressKey;
 
 /**
  * @Entity(repositoryClass="\Concrete\Core\Entity\Express\EntryRepository")
@@ -25,7 +24,7 @@ class Entry implements \JsonSerializable
     public function getAttributeValueObject($ak, $createIfNotExists = false)
     {
         if (!is_object($ak)) {
-            $ak = ExpressKey::getByHandle($ak);
+            $ak = $this->getEntity()->getAttributeKeyCategory()->getByHandle($ak);
         }
         $value = false;
         if (is_object($ak)) {

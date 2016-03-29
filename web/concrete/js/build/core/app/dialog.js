@@ -28,6 +28,7 @@ jQuery.fn.dialog = function() {
             var height =$(this).attr('dialog-height');
             var title = $(this).attr('dialog-title');
             var onOpen = $(this).attr('dialog-on-open');
+            var dialogClass = $(this).attr('dialog-class');
             var onDestroy = $(this).attr('dialog-on-destroy');
             /*
              * no longer necessary. we auto detect
@@ -43,6 +44,7 @@ jQuery.fn.dialog = function() {
                 title: title,
                 onOpen: onOpen,
                 onDestroy: onDestroy,
+                dialogClass: dialogClass,
                 onClose: onClose,
                 onDirectClose: onDirectClose
             }
@@ -128,9 +130,12 @@ jQuery.fn.dialog.open = function(options) {
             var overlays = $('.ui-widget-overlay').length;
             $('.ui-widget-overlay').each(function(i, obj) {
                 if ((i + 1) < overlays) {
-                    $(this).css('opacity', 0);
+                    $(this).removeClass('animated fadeIn').css('opacity', 0);
                 }
             });
+            if (overlays == 1) {
+                $('.ui-widget-overlay').addClass('animated fadeIn');
+            }
 
             jQuery.fn.dialog.activateDialogContents($dialog);
 

@@ -12,5 +12,5 @@ defined('C5_EXECUTE') or die("Access Denied.");
         ?>
     </label>
 
-    <?=$key->render('composer')?>
+    <?=$key->render('composer', $value)?>
 </div>

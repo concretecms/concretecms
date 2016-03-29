@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Express\Form\Control\Form;
 
+use Concrete\Core\Entity\Express\Entry;
 use Concrete\Core\Express\EntryList;
 use Concrete\Core\Express\Form\Control\EntityPropertyControlView;
 use Concrete\Core\Express\Form\Control\RendererInterface;
@@ -10,6 +11,12 @@ class AssociationControlFormRenderer implements RendererInterface
 {
     protected $application;
     protected $factory;
+    protected $entry;
+
+    public function __construct(Entry $entry = null)
+    {
+        $this->entry = $entry;
+    }
 
     public function build(RendererFactory $factory)
     {
@@ -42,6 +49,14 @@ class AssociationControlFormRenderer implements RendererInterface
         $list = new EntryList($entity);
         $entities = $list->getResults();
         $view = new EntityPropertyControlView($this->factory);
+
+        $related = $this->entry->getAssociations();
+        foreach($related as $relatedAssociation) {
+            if ($relatedAssociation->getAssociation()->getID() == $association->getID()) {
+                $view->addScopeItem('selectedEntities', $relatedAssociation->getSelectedEntries());
+            }
+        }
+
         $view->addScopeItem('entities', $entities);
         $view->addScopeItem('control', $this->factory->getControl());
         $view->addScopeItem('formatter', $association->getFormatter());
