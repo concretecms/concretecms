@@ -183,11 +183,19 @@ class PackageService
         }
         try {
 
-            $config = $this->entityManager->getConfiguration();
-            $driver = $config->getMetadataDriverImpl();
-            $driver->addPaths($p->getPackageEntityPaths());
-            $cache = $config->getMetadataCacheImpl();
-            $cache->flushAll();
+            $paths = array();
+            foreach($p->getPackageEntityPaths() as $path) {
+                if (is_dir($path)) {
+                    $paths[] = $path;
+                }
+            }
+            if (count($paths)) {
+                $config = $this->entityManager->getConfiguration();
+                $driver = $config->getMetadataDriverImpl();
+                $driver->addPaths($paths);
+                $cache = $config->getMetadataCacheImpl();
+                $cache->flushAll();
+            }
 
             $u = new \User();
             $swapper = new ContentSwapper();

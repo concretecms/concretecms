@@ -1026,100 +1026,103 @@
     <pagetypes>
         <pagetype handle="core_stack" name="Stack" internal="1" package=""/>
         <pagetype handle="core_stack_category" name="Stack Category" internal="1" package=""/>
-        <pagetype handle="dashboard_primary_five" name="Dashboard Primary + Five" internal="1" package=""/>
-        <pagetype handle="dashboard_header_four_col" name="Dashboard Header + Four Column" internal="1" package=""/>
+        <pagetype handle="core_desktop" name="Desktop" internal="1" package=""/>
         <pagetype handle="dashboard_full" name="Dashboard Full" internal="1" package=""/>
     </pagetypes>
 
     <pagetemplates>
         <pagetemplate handle="core_stack" name="Stack" internal="1" package=""/>
-        <pagetemplate handle="dashboard_primary_five" name="Dashboard Primary + Five" internal="1" package=""/>
-        <pagetemplate handle="dashboard_header_four_col" name="Dashboard Header + Four Column" internal="1" package=""/>
+        <pagetemplate handle="desktop" name="Desktop" internal="1" package=""/>
         <pagetemplate handle="dashboard_full" name="Dashboard Full" internal="1" package=""/>
     </pagetemplates>
     <pages>
-        <page name="Welcome to concrete5" path="/dashboard/welcome" filename=""
-              description="Learn about how to use concrete5, how to develop for concrete5, and get general help."
-              template="dashboard_full">
-            <attributes>
-                <attributekey handle="exclude_nav">
-                    <value><![CDATA[1]]></value>
-                </attributekey>
-            </attributes>
-            <area name="Main">
-                <blocks>
-                <block type="content" name="">
-                    <data table="btContentLocal">
-                        <record>
-                            <content><![CDATA[<div style="padding: 40px; text-align: center">
-<iframe width="853" height="480" src="//www.youtube.com/embed/VB-R71zk06U" frameborder="0" allowfullscreen></iframe>
-                                    </div>]]></content>
-                        </record>
-                    </data>
-                </block>
-                </blocks>
-            </area>
+
+        <page name="Welcome" path="/dashboard/welcome" filename="" pagetype="core_desktop" template="desktop" description="" package="">
         </page>
 
-        <page name="Customize Dashboard Home" path="/dashboard/home" filename="" template="dashboard_primary_five"
-              description="" package="">
-            <attributes>
-                <attributekey handle="exclude_nav">
-                    <value><![CDATA[1]]></value>
-                </attributekey>
-                <attributekey handle="exclude_search_index">
-                    <value><![CDATA[1]]></value>
-                </attributekey>
-            </attributes>
-            <area name="Primary">
-                <blocks>
-                <block type="dashboard_app_status" name=""/>
-                <block type="dashboard_site_activity" name=""/>
-                </blocks>
-            </area>
-            <area name="Secondary 1">
-                <blocks>
-                <block type="dashboard_newsflow_latest" name="">
-                    <data table="btDashboardNewsflowLatest">
-                        <record>
-                            <slot>A</slot>
-                        </record>
-                    </data>
-                </block>
-                </blocks>
-            </area>
-            <area name="Secondary 2">
-                <blocks>
-                <block type="dashboard_newsflow_latest" name="">
-                    <data table="btDashboardNewsflowLatest">
-                        <record>
-                            <slot>B</slot>
-                        </record>
-                    </data>
-                </block>
-                </blocks>
-            </area>
-            <area name="Secondary 3">
-                <blocks>
-                <block type="dashboard_featured_theme" name=""/>
-                </blocks>
-            </area>
-            <area name="Secondary 4">
-                <blocks>
-                <block type="dashboard_featured_addon" name=""/>
-                </blocks>
-            </area>
-            <area name="Secondary 5">
-                <blocks>
-                <block type="dashboard_newsflow_latest" name="">
-                    <data table="btDashboardNewsflowLatest">
-                        <record>
-                            <slot>C</slot>
-                        </record>
-                    </data>
-                </block>
-                </blocks>
-            </area>
-        </page>
+        <!--
+                <page name="Welcome to concrete5" path="/dashboard/welcome" filename=""
+                      description="Learn about how to use concrete5, how to develop for concrete5, and get general help."
+                      template="dashboard_full">
+                    <attributes>
+                        <attributekey handle="exclude_nav">
+                            <value><![CDATA[1]]></value>
+                        </attributekey>
+                    </attributes>
+                    <area name="Main">
+                        <blocks>
+                        <block type="content" name="">
+                            <data table="btContentLocal">
+                                <record>
+                                    <content><![CDATA[<div style="padding: 40px; text-align: center">
+        <iframe width="853" height="480" src="//www.youtube.com/embed/VB-R71zk06U" frameborder="0" allowfullscreen></iframe>
+                                            </div>]]></content>
+                                </record>
+                            </data>
+                        </block>
+                        </blocks>
+                    </area>
+                </page>
+                <page name="Customize Dashboard Home" path="/dashboard/home" filename="" template="dashboard_primary_five"
+                      description="" package="">
+                    <attributes>
+                        <attributekey handle="exclude_nav">
+                            <value><![CDATA[1]]></value>
+                        </attributekey>
+                        <attributekey handle="exclude_search_index">
+                            <value><![CDATA[1]]></value>
+                        </attributekey>
+                    </attributes>
+                    <area name="Primary">
+                        <blocks>
+                        <block type="dashboard_app_status" name=""/>
+                        <block type="dashboard_site_activity" name=""/>
+                        </blocks>
+                    </area>
+                    <area name="Secondary 1">
+                        <blocks>
+                        <block type="dashboard_newsflow_latest" name="">
+                            <data table="btDashboardNewsflowLatest">
+                                <record>
+                                    <slot>A</slot>
+                                </record>
+                            </data>
+                        </block>
+                        </blocks>
+                    </area>
+                    <area name="Secondary 2">
+                        <blocks>
+                        <block type="dashboard_newsflow_latest" name="">
+                            <data table="btDashboardNewsflowLatest">
+                                <record>
+                                    <slot>B</slot>
+                                </record>
+                            </data>
+                        </block>
+                        </blocks>
+                    </area>
+                    <area name="Secondary 3">
+                        <blocks>
+                        <block type="dashboard_featured_theme" name=""/>
+                        </blocks>
+                    </area>
+                    <area name="Secondary 4">
+                        <blocks>
+                        <block type="dashboard_featured_addon" name=""/>
+                        </blocks>
+                    </area>
+                    <area name="Secondary 5">
+                        <blocks>
+                        <block type="dashboard_newsflow_latest" name="">
+                            <data table="btDashboardNewsflowLatest">
+                                <record>
+                                    <slot>C</slot>
+                                </record>
+                            </data>
+                        </block>
+                        </blocks>
+                    </area>
+                </page>
+        //-->
     </pages>
 </concrete5-cif>

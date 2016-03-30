@@ -531,6 +531,7 @@ class DefaultDashboardMenu extends DashboardMenu
      * @var array
      */
     public $items = array(
+        '/dashboard/welcome',
         '/dashboard/composer/write',
         '/dashboard/composer/drafts',
         '/dashboard/sitemap/full',

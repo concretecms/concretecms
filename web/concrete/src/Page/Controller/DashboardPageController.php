@@ -36,6 +36,13 @@ class DashboardPageController extends PageController
             $hideDashboardPanel = true;
         }
         $this->set('hideDashboardPanel', $hideDashboardPanel);
+        \Core::make('helper/concrete/dashboard');
+        $dh = \Concrete\Core\Application\Service\DashboardMenu::getMine();
+        if ($dh->contains($this->getPageObject())) {
+            $this->set("_bookmarked", true);
+        } else {
+            $this->set('_bookmarked', false);
+        }
     }
 
     public function on_before_render()

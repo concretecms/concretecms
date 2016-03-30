@@ -2,10 +2,12 @@
 namespace Concrete\Controller\Panel;
 
 use Concrete\Controller\Backend\UserInterface\Page as BackendInterfacePageController;
+use Concrete\Core\Application\Service\DashboardMenu;
 use Cookie;
 use Loader;
 use Page;
 use BlockType;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use User;
 use UserInfo;
 
@@ -18,6 +20,35 @@ class Dashboard extends BackendInterfacePageController
         $dh = Loader::helper('concrete/dashboard');
 
         return $dh->canRead();
+    }
+
+    protected function toggleFavorite($action)
+    {
+        $h = \Core::make('helper/concrete/dashboard');
+        if ($h->inDashboard($this->page) && $this->permissions->canViewPage()) {
+            \Core::make("helper/concrete/ui")->clearInterfaceItemsCache();
+            $u = new User();
+            if (\Core::make('token')->validate('access_bookmarks', $this->request->query->get('ccm_token'))) {
+                $qn = DashboardMenu::getMine();
+                if ($action == 'add' && !$qn->contains($this->page)) {
+                    $qn->add($this->page);
+                } else if ($qn->contains($this->page)) {
+                    $qn->remove($this->page);
+                }
+                $u->saveConfig('QUICK_NAV_BOOKMARKS', serialize($qn));
+                return new JsonResponse(['action' => $action]);
+            }
+        }
+    }
+
+    public function addFavorite()
+    {
+        return $this->toggleFavorite('add');
+    }
+
+    public function removeFavorite()
+    {
+        return $this->toggleFavorite('remove');
     }
 
     public function view()
