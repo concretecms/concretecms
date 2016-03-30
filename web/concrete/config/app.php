@@ -416,6 +416,8 @@ return array(
          */
         "/ccm/system/panels/add" => array('\Concrete\Controller\Panel\Add::view'),
         "/ccm/system/panels/dashboard" => array('\Concrete\Controller\Panel\Dashboard::view'),
+        "/ccm/system/panels/dashboard/add_favorite" => array('\Concrete\Controller\Panel\Dashboard::addFavorite'),
+        "/ccm/system/panels/dashboard/remove_favorite" => array('\Concrete\Controller\Panel\Dashboard::removeFavorite'),
         "/ccm/system/panels/multilingual" => array('\Concrete\Controller\Panel\Multilingual::view'),
         "/ccm/system/panels/page" => array('\Concrete\Controller\Panel\Page::view'),
         "/ccm/system/panels/page/attributes" => array('\Concrete\Controller\Panel\Page\Attributes::view'),

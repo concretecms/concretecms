@@ -26,9 +26,11 @@ foreach ($parents as $pc) {
 
 		<?php if ($tab == 'favorites') {
     ?>
-			<menu>
-			<?php foreach ($nav as $cc) {
-    $active = ($cc->getCollectionID() == $c->getCollectionID() || (in_array($cc->getCollectionID(), $pageIDs)));
+			<ul class="nav">
+			<?php
+			for ($i = 0; $i < count($nav); $i++) {
+				$cc = $nav[$i];
+				$active = ($cc->getCollectionID() == $c->getCollectionID() || (in_array($cc->getCollectionID(), $pageIDs)));
     $cp = new Permissions($cc);
     if ($cp->canViewPage()) {
         ?>
@@ -36,13 +38,21 @@ foreach ($parents as $pc) {
     ?>class="ccm-panel-dashboard-nav-active"<?php 
 }
         ?>><?=t($cc->getCollectionName())?></a></li>
-				<?php 
+
+			<?php
+		$next = $nav[$i + 1];
+		if ($cc->getPageTypeHandle() == DESKTOP_PAGE_TYPE || is_object($next) && $next->getPackageID() > 0 && $cc->getPackageID() == 0) {
+			echo '<li class="nav-divider"></li>';
+		}
+
+		?>
+				<?php
     }
     ?>
 			<?php 
 }
     ?>
-			</menu>
+			</ul>
 		<?php 
 } else {
     ?>

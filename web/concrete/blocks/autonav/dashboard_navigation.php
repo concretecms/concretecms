@@ -23,7 +23,8 @@ foreach ($navItems as $ni) {
 if (count($navItems) > 0) {
     echo '<ul class="nav">'; //opens the top-level menu
 
-    foreach ($navItems as $ni) {
+    for ($i = 0; $i < count($navItems); $i++) {
+        $ni = $navItems[$i];
         echo '<li class="' . $ni->classes . '">'; //opens a nav item
         echo '<a href="' . $ni->url . '" target="' . $ni->target . '" class="' . $ni->classes . '">' . $ni->name . '</a>';
         if ($ni->hasSubmenu) {
@@ -32,6 +33,11 @@ if (count($navItems) > 0) {
             echo '</li>'; //closes a nav item
             echo str_repeat('</ul></li>', $ni->subDepth); //closes dropdown sub-menu(s) and their top-level nav item(s)
         }
+        $next = $navItems[$i + 1];
+        if ($ni->cObj->getPageTypeHandle() == DESKTOP_PAGE_TYPE || is_object($next) && $next->cObj->getPackageID() > 0 && $ni->cObj->getPackageID() == 0) {
+            echo '<li class="nav-divider"></li>';
+        }
+
     }
     echo '</ul>'; //closes the top-level menu
 }

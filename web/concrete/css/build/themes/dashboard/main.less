@@ -64,6 +64,7 @@ div#ccm-dashboard-content {
     margin-right: -50px;
     margin-bottom: 30px;
     padding: 34px 80px 34px 97px;
+    position: relative;
 
     h1 {
       font-size: 22px;
@@ -77,6 +78,16 @@ div#ccm-dashboard-content {
 
     margin-bottom: 30px;
     */
+
+    a.ccm-dashboard-page-header-bookmark {
+      position: absolute;
+      left: 72px;
+      top: 56px;
+      color: rgba(16,81,146,0.3);
+      &:focus {
+        outline: none;
+      }
+    }
   }
 
   form.ccm-dashboard-content-form {

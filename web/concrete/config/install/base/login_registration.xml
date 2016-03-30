@@ -32,6 +32,9 @@
                 </attributekey>
             </attributes>
         </page>
+        <page name="Welcome" path="/account/welcome" filename="" pagetype="core_desktop" template="desktop" description="" package="">
+        </page>
+
         <page name="Edit Profile" path="/account/edit_profile" filename="/account/edit_profile.php" pagetype="" description="Edit your user profile and change password." package="" />
         <page name="Profile Picture" path="/account/avatar" filename="/account/avatar.php" pagetype="" description="Specify a new image attached to posts or edits." package="" />
         <page name="Messages" path="/account/messages" filename="/account/messages/view.php" pagetype="" description="Inbox for site-specific messages." package="" />
