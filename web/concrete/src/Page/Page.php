@@ -2570,7 +2570,8 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         }
         $path .= '/';
         $cID = ($this->getCollectionPointerOriginalID() > 0) ? $this->getCollectionPointerOriginalID() : $this->cID;
-        /** @var \Concrete\Core\Utility\Service\Validation\Strings $stringValidator */        $stringValidator = Core::make('helper/validation/strings');
+        /** @var \Concrete\Core\Utility\Service\Validation\Strings $stringValidator */
+        $stringValidator = Core::make('helper/validation/strings');
         if ($stringValidator->notempty($this->getCollectionHandle())) {
             $path .= $this->getCollectionHandle();
         } else {
