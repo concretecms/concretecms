@@ -275,7 +275,6 @@ module.exports = function(grunt) {
             src: '<%= DIR_BASE %>/concrete/js/build/vendor/kinetic/kinetic.js'
         },
 
-
         jquery_backstretch: {
             dest: '<%= DIR_BASE %>/concrete/js/backstretch.js',
             src: '<%= DIR_BASE %>/concrete/js/build/vendor/backstretch/backstretch.js'

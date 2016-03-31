@@ -116,6 +116,9 @@
         <attributekey handle="meta_keywords" name="Meta Keywords" package="" searchable="1" indexed="0" type="textarea" category="collection">
             <type mode=""/>
         </attributekey>
+        <attributekey handle="desktop_priority" name="Desktop Priority" package="" searchable="0" indexed="0" type="number" internal="1" category="collection">
+            <type mode=""/>
+        </attributekey>
         <attributekey handle="icon_dashboard" name="Dashboard Icon" package="" searchable="0" indexed="0" type="textarea" internal="1" category="collection">
             <type mode=""/>
         </attributekey>

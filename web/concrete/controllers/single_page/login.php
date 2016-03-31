@@ -3,6 +3,7 @@ namespace Concrete\Controller\SinglePage;
 
 use Concrete\Core\Authentication\AuthenticationType;
 use Concrete\Core\Authentication\AuthenticationTypeFailureException;
+use Concrete\Core\Page\Desktop\DesktopList;
 use Concrete\Core\Routing\RedirectResponse;
 use Localization;
 use Page;
@@ -260,6 +261,7 @@ class Login extends PageController
                     }
                 }
 
+                /*
                 // admin to dashboard?
                 $dash = Page::getByPath("/dashboard", "RECENT");
                 $dbp = new Permissions($dash);
@@ -285,6 +287,9 @@ class Login extends PageController
                     break;
                 }
 
+                */
+                $login_redirect_mode = $config->get('concrete.misc.login_redirect');
+
                 //redirect to custom page
                 $login_redirect_cid = intval($config->get('concrete.misc.login_redirect_cid'));
                 if ($login_redirect_mode == 'CUSTOM' && $login_redirect_cid > 0) {
@@ -293,6 +298,11 @@ class Login extends PageController
                         $rUrl = $navigation->getLinkToCollection($rc);
                         break;
                     }
+                }
+
+                $desktop = DesktopList::getMyDesktop();
+                if (is_object($desktop)) {
+                    $rUrl = $navigation->getLinkToCollection($desktop);
                 }
 
                 break;

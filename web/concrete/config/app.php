@@ -710,6 +710,9 @@ return array(
         'backstretch' => array(
             array('javascript', 'js/backstretch.js'),
         ),
+        'background-check' => array(
+            array('javascript', 'js/background-check.js'),
+        ),
         'dynatree' => array(
             array('javascript', 'js/dynatree.js', array('minify' => false)),
             array('javascript-localized', '/ccm/assets/localization/dynatree/js', array('minify' => false)),

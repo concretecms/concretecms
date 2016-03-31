@@ -1038,6 +1038,11 @@
     <pages>
 
         <page name="Welcome" path="/dashboard/welcome" filename="" pagetype="core_desktop" template="desktop" description="" package="">
+            <attributes>
+                <attributekey handle="desktop_priority">
+                    <value>2</value>
+                </attributekey>
+            </attributes>
         </page>
 
         <!--

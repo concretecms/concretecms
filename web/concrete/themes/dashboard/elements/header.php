@@ -45,7 +45,7 @@ $show_titles = (bool) Config::get('concrete.accessibility.toolbar_titles');
 $large_font = (bool) Config::get('concrete.accessibility.toolbar_large_font');
 
 ?>
-
+    <link href='https://fonts.googleapis.com/css?family=Roboto:900' rel='stylesheet' type='text/css'>
 </head>
 <body>
 
