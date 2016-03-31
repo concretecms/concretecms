@@ -23,7 +23,7 @@ html.ccm-panel-right {
 
 div#ccm-dashboard-content {
 
-  padding-top: 35px;
+  padding-top: 48px;
 
   tr {
     &.ccm-theme-active {
@@ -69,6 +69,8 @@ div#ccm-dashboard-content {
     h1 {
       font-size: 22px;
       font-weight: 600;
+      margin-top: 0px;
+      margin-bottom: 0px;
       color: #105192;
     }
 
@@ -82,7 +84,7 @@ div#ccm-dashboard-content {
     a.ccm-dashboard-page-header-bookmark {
       position: absolute;
       left: 72px;
-      top: 56px;
+      top: 37px;
       color: rgba(16,81,146,0.3);
       &:focus {
         outline: none;
@@ -246,6 +248,7 @@ div#ccm-dashboard-content {
   }
 }
 
+@import "./welcome.less";
 @import "./attributes.less";
 @import "./form-and-set-builder.less";
 @import "./multilingual.less";
