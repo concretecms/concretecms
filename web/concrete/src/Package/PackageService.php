@@ -257,7 +257,7 @@ class PackageService
 
     /**
      * Save the entity path of the package to the 
-     * application/generated_overrides/concrete.php
+     * application/config/database.php
      * So the single entity manager is able to add the appropriate 
      * drivers for the package namespaces
      * 
@@ -267,28 +267,25 @@ class PackageService
         
         $packageMetadataDriverType = $p->getMetadataDriverType();
         $packageHandle = $p->getPackageHandle();
+        $config = $this->getFileConfigORMMetadata();
         
         $settings = array(
             'namespace' => $p->getNamespace(),
             'paths' => $p->getPackageMetadataPaths()
         );
-        
+
         if ($packageMetadataDriverType === Package::PACKAGE_METADATADRIVER_ANNOTATION) {
             if(version_compare($p->getApplicationVersionRequired(), '5.8.0', '<')){
                 // Legacy - uses SimpleAnnotationReader
-                $basePath = 'concrete.metadatadriver.annotation.legacy.';
-                \Config::save($basePath.  strtolower($packageHandle), $settings);
+                $config->save(CONFIG_ORM_METADATA_ANNOTATION_LEGACY . '.' . strtolower($packageHandle), $settings);
             }else{
                 // Use default AnnotationReader
-                $basePath = 'concrete.metadatadriver.annotation.default.';
-                \Config::save($basePath.  strtolower($packageHandle), $settings);
+                $config->save(CONFIG_ORM_METADATA_ANNOTATION_DEFAULT . '.' . strtolower($packageHandle), $settings);
             }
         } else if ($packageMetadataDriverType === Package::PACKAGE_METADATADRIVER_XML) {
-            $basePath = 'concrete.metadatadriver.xml.';
-            \Config::save($basePath.  strtolower($packageHandle), $settings);
+            $config->save(CONFIG_ORM_METADATA_XML . '.' . strtolower($packageHandle), $settings);
         } else if ($packageMetadataDriverType === Package::PACKAGE_METADATADRIVER_YAML){
-            $basePath = 'concrete.metadatadriver.yaml.';
-            \Config::save($basePath.  strtolower($packageHandle), $settings);
+            $config->save(CONFIG_ORM_METADATA_YAML . '.' . strtolower($packageHandle), $settings);
         }
     }
     
@@ -301,26 +298,45 @@ class PackageService
     {
         $packageMetadataDriverType = $p->getMetadataDriverType();
         $packageHandle = $p->getPackageHandle();
-        
+        $config = $this->getFileConfigORMMetadata();
 
         if ($packageMetadataDriverType === Package::PACKAGE_METADATADRIVER_ANNOTATION) {
             if(version_compare($p->getApplicationVersionRequired(), '5.8.0', '<')){
                 // Legacy - uses SimpleAnnotationReader
-                $basePath = 'concrete.metadatadriver.annotation.legacy';
+                $basePath = CONFIG_ORM_METADATA_ANNOTATION_LEGACY;
             }else{
                 // Use default AnnotationReader
-                $basePath = 'concrete.metadatadriver.annotation.default';
+                $basePath = CONFIG_ORM_METADATA_ANNOTATION_DEFAULT;
             }
         } else if ($packageMetadataDriverType === Package::PACKAGE_METADATADRIVER_XML) {
-            $basePath = 'concrete.metadatadriver.xml';
+            $basePath = CONFIG_ORM_METADATA_XML;
         } else if ($packageMetadataDriverType === Package::PACKAGE_METADATADRIVER_YAML){
-            $basePath = 'concrete.metadatadriver.yaml';
+            $basePath = CONFIG_ORM_METADATA_YAML;
         }
         
-        // \Config::clear() din't work with the config file in 'generated_overrides'
-        $metaDriverConfig = \Config::get($basePath);
-        unset($metaDriverConfig[strtolower($packageHandle)]);
-        \Config::save($basePath, $metaDriverConfig);
+        $config->clear($basePath);
         
+        // \Config::clear() din't work with the config file in 'generated_overrides'
+//        $metaDriverConfig = \Config::get($basePath);
+//        unset($metaDriverConfig[strtolower($packageHandle)]);
+//        \Config::save($basePath, $metaDriverConfig);
+    }
+    
+    /**
+     * Get the config with a direct file safer,
+     * so settings can be saved directly to application/config/database.php
+     * instead of application/config/generated_overrides
+     * 
+     * Used to store the orm metadata of packages
+     * 
+     * @return \Concrete\Core\Package\Repository
+     */
+    protected function getFileConfigORMMetadata(){
+        $defaultEnv = \Config::getEnvironment();
+        $fileSystem = new \Illuminate\Filesystem\Filesystem();
+        $fileLoader = new \Concrete\Core\Config\FileLoader($fileSystem);
+        $directFileSaver = new \Concrete\Core\Config\DirectFileSaver($fileSystem);
+        $repository = new \Concrete\Core\Config\Repository\Repository($fileLoader, $directFileSaver, $defaultEnv);
+        return $repository;
     }
 }

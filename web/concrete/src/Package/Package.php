@@ -36,11 +36,12 @@ abstract class Package implements LocalizablePackageInterface
      * @var \Concrete\Core\Config\Repository\Liaison
      */
     protected $config;
+    
     /**
      * @var \Concrete\Core\Config\Repository\Liaison
      */
     protected $fileConfig;
-
+    
     /**
      * Whether to automatically map core extensions into the packages src/Concrete directory
      * @var bool
@@ -152,7 +153,7 @@ abstract class Package implements LocalizablePackageInterface
 
         return $this->fileConfig;
     }
-
+    
     /**
      * Returns custom autoloader prefixes registered by the class loader.
      * @return array Keys represent the namespace, not relative to the package's namespace. Values are the path, and are relative to the package directory.

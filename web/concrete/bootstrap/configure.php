@@ -148,8 +148,21 @@ define('DIRNAME_METADATA_XML', 'xml');
 define('DIRNAME_METADATA_YAML', 'yaml');
 define('REL_DIR_FILES_INCOMING', '/incoming');
 define('REL_DIR_FILES_THUMBNAILS', '/thumbnails');
-define('REL_DIR_METADATA_XML', DIRNAME_CONFIG.DIRECTORY_SEPARATOR.DIRNAME_METADATA_XML);
-define('REL_DIR_METADATA_YAML', DIRNAME_CONFIG.DIRECTORY_SEPARATOR.DIRNAME_METADATA_YAML);
+define('REL_DIR_METADATA_XML', DIRNAME_CONFIG . DIRECTORY_SEPARATOR . DIRNAME_METADATA_XML);
+define('REL_DIR_METADATA_YAML', DIRNAME_CONFIG . DIRECTORY_SEPARATOR . DIRNAME_METADATA_YAML);
+
+/*
+ * ----------------------------------------------------------------------------
+ * Config location/path
+ * ----------------------------------------------------------------------------
+ */
+define('CONFIG_ORM_METADATA_BASE', 'database.metadatadriver');
+define('CONFIG_ORM_METADATA_PACKAGES_BASE', CONFIG_ORM_METADATA_BASE.'.packages');
+define('CONFIG_ORM_METADATA_ANNOTATION_LEGACY', CONFIG_ORM_METADATA_PACKAGES_BASE.'.annotation.legacy');
+define('CONFIG_ORM_METADATA_ANNOTATION_DEFAULT', CONFIG_ORM_METADATA_PACKAGES_BASE.'.annotation.default');
+define('CONFIG_ORM_METADATA_XML', CONFIG_ORM_METADATA_PACKAGES_BASE.'.xml');
+define('CONFIG_ORM_METADATA_YAML', CONFIG_ORM_METADATA_PACKAGES_BASE.'.yaml');
+define('CONFIG_ORM_METADATA_APPLICATION', CONFIG_ORM_METADATA_BASE.'.application');
 
 /*
  * ----------------------------------------------------------------------------
@@ -279,7 +292,7 @@ define('GUEST_GROUP_ID', '1');
 define('REGISTERED_GROUP_ID', '2');
 define('ADMIN_GROUP_ID', '3');
 define('USER_FOREVER_COOKIE_LIFETIME', 1209600); // 14 days
-define('USER_CHANGE_PASSWORD_URL_LIFETIME',  7200);
+define('USER_CHANGE_PASSWORD_URL_LIFETIME', 7200);
 define('ONLINE_NOW_TIMEOUT', 300);
 define('UVTYPE_REGISTER', 0);
 define('UVTYPE_CHANGE_PASSWORD', 1);
