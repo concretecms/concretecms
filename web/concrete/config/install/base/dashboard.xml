@@ -9,6 +9,17 @@
             </attributes>
         </page>
 
+        <page name="Welcome" path="/dashboard/welcome" filename="/dashboard/welcome.php" description="" package="">
+            <attributes>
+                <attributekey handle="desktop_priority">
+                    <value>2</value>
+                </attributekey>
+                <attributekey handle="is_desktop">
+                    <value>1</value>
+                </attributekey>
+            </attributes>
+        </page>
+
         <page name="Sitemap" path="/dashboard/sitemap" filename="/dashboard/sitemap/view.php" pagetype=""
               description="Whole world at a glance." package="">
             <attributes>
@@ -1036,14 +1047,6 @@
         <pagetemplate handle="dashboard_full" name="Dashboard Full" internal="1" package=""/>
     </pagetemplates>
     <pages>
-
-        <page name="Welcome" path="/dashboard/welcome" filename="" pagetype="core_desktop" template="desktop" description="" package="">
-            <attributes>
-                <attributekey handle="desktop_priority">
-                    <value>2</value>
-                </attributekey>
-            </attributes>
-        </page>
 
         <!--
                 <page name="Welcome to concrete5" path="/dashboard/welcome" filename=""

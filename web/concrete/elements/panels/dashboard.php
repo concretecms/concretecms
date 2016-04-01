@@ -41,7 +41,7 @@ foreach ($parents as $pc) {
 
 			<?php
 		$next = $nav[$i + 1];
-		if ($cc->getPageTypeHandle() == DESKTOP_PAGE_TYPE || is_object($next) && $next->getPackageID() > 0 && $cc->getPackageID() == 0) {
+		if ($cc->getAttribute('is_desktop') || is_object($next) && $next->getPackageID() > 0 && $cc->getPackageID() == 0) {
 			echo '<li class="nav-divider"></li>';
 		}
 

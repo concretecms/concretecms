@@ -59,7 +59,10 @@ abstract class AbstractCategory implements CategoryInterface
 
     public function getList()
     {
-        return $this->getAttributeRepository()->findAll();
+        return $this->getAttributeRepository()->findBy(array(
+            'akIsSearchable' => true,
+            'akIsInternal' => false,
+        ));
     }
 
     public function getSearchableList()

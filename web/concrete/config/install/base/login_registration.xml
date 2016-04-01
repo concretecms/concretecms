@@ -58,6 +58,9 @@
             <attributekey handle="desktop_priority">
                 <value>1</value>
             </attributekey>
+            <attributekey handle="is_desktop">
+                <value>1</value>
+            </attributekey>
         </attributes>
     </page>
     </pages>

@@ -22,7 +22,7 @@ $dh = Loader::helper('concrete/dashboard');
         $v = View::getInstance();
         $request = \Request::getInstance();
 
-        if (!$dh->inDashboard() || $c->getCollectionTypeHandle() == DESKTOP_PAGE_TYPE) {
+        if (!$dh->inDashboard() || $c->getAttribute('is_desktop')) {
             $v->requireAsset('core/app');
 
             $editMode = $c->isEditMode();

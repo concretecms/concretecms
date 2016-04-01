@@ -182,9 +182,6 @@ class StartingPointPackage extends BasePackage
     {
         $ci = new ContentImporter();
         $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/dashboard.xml');
-
-        $welcome = \Page::getByPath('/dashboard/welcome');
-        $welcome->movePageDisplayOrderToTop();
     }
 
     public function install_gathering()

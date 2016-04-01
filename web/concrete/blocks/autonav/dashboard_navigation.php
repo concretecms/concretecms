@@ -34,7 +34,7 @@ if (count($navItems) > 0) {
             echo str_repeat('</ul></li>', $ni->subDepth); //closes dropdown sub-menu(s) and their top-level nav item(s)
         }
         $next = $navItems[$i + 1];
-        if ($ni->cObj->getPageTypeHandle() == DESKTOP_PAGE_TYPE || is_object($next) && $next->cObj->getPackageID() > 0 && $ni->cObj->getPackageID() == 0) {
+        if ($ni->cObj->getAttribute('is_desktop') || is_object($next) && $next->cObj->getPackageID() > 0 && $ni->cObj->getPackageID() == 0) {
             echo '<li class="nav-divider"></li>';
         }
 
