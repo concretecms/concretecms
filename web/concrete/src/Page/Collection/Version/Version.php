@@ -312,9 +312,10 @@ class Version extends Object implements \Concrete\Core\Permission\ObjectInterfac
             /*
              * @var $value PageValue
              */
-            $value->setVersionID($this->getVersionID());
+            $value->setVersionID($newVID);
             $em->persist($value);
         }
+        $em->flush();
 
         $q3 = "select faID from CollectionVersionFeatureAssignments where cID = ? and cvID = ?";
         $v3 = array(

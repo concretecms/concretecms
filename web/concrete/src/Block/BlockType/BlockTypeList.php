@@ -62,20 +62,6 @@ class BlockTypeList extends DatabaseItemList
     }
 
     /**
-     * returns an array of Block Types used in the concrete5 Dashboard.
-     *
-     * @return BlockType[]
-     */
-    public static function getDashboardBlockTypes()
-    {
-        $btl = new static();
-        $btl->filter(false, 'btHandle like \'dashboard_%\'');
-        $blockTypes = $btl->get();
-
-        return $blockTypes;
-    }
-
-    /**
      * Gets a list of block types that are not installed, used to get blocks that can be installed
      * This function only surveys the web/blocks directory - it's not looking at the package level.
      *

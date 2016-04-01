@@ -572,6 +572,14 @@ return array(
      */
     'assets' => array(
 
+        'google-charts' => array(
+            array(
+                'javascript',
+                'https://www.gstatic.com/charts/loader.js',
+                array('local' => false)
+            )
+        ),
+
         'autosize' => array(
             array(
                 'javascript',

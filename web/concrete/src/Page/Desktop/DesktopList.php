@@ -8,8 +8,8 @@ class DesktopList
     public static function getMyDesktop()
     {
         $list = new PageList();
-        $list->filterByPageTypeHandle(DESKTOP_PAGE_TYPE);
         $list->includeSystemPages();
+        $list->filterByAttribute('is_desktop', true);
         $list->sortByDesktopPriority('desc');
         $results = $list->getResults();
         if (is_object($results[0])) {

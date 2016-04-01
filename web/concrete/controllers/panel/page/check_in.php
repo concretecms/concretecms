@@ -15,6 +15,9 @@ use PageEditResponse;
 class CheckIn extends BackendInterfacePageController
 {
     protected $viewPath = '/panels/page/check_in';
+    // we need this extra because this controller gets called by another page
+    // and that page needs to know how to submit it.
+    protected $controllerActionPath = '/ccm/system/panels/page/check_in';
 
     public function canAccess()
     {

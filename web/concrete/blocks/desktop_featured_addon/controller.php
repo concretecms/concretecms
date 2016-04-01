@@ -1,14 +1,14 @@
 <?php
-namespace Concrete\Block\DashboardFeaturedTheme;
+namespace Concrete\Block\DesktopFeaturedAddon;
 
 use Concrete\Core\Block\BlockController;
 use Concrete\Core\Marketplace\RemoteItemList as MarketplaceRemoteItemList;
 
 /**
-     * The controller for the block that displays featured themes in the dashboard news overlay.
+     * The controller for the block that displays featured add-ons in the dashboard news overlay.
      *
      * @package Blocks
-     * @subpackage Dashboard Featured Theme
+     * @subpackage Dashboard Featured Add-On
      *
      * @author Andrew Embler <andrew@concrete5.org>
      * @copyright  Copyright (c) 2003-2012 Concrete5. (http://www.concrete5.org)
@@ -22,27 +22,26 @@ use Concrete\Core\Marketplace\RemoteItemList as MarketplaceRemoteItemList;
         protected $btCacheBlockOutputForRegisteredUsers = true;
         protected $btCacheBlockOutputLifetime = 7200;
 
-        protected $btIsInternal = true;
         protected $btInterfaceWidth = 300;
         protected $btInterfaceHeight = 100;
 
         public function getBlockTypeDescription()
         {
-            return t("Features a theme from concrete5.org.");
+            return t("Features an add-on from concrete5.org.");
         }
 
         public function getBlockTypeName()
         {
-            return t("Dashboard Featured Theme");
+            return t("Dashboard Featured Add-On");
         }
 
         public function view()
         {
             $mri = new MarketplaceRemoteItemList();
             $mri->sortBy('recommended');
-            $mri->filterByCompatibility(1);
             $mri->setItemsPerPage(1);
-            $mri->setType('themes');
+            $mri->filterByCompatibility(1);
+            $mri->setType('addons');
             $mri->execute();
             $items = $mri->getPage();
             if (is_object($items[0])) {

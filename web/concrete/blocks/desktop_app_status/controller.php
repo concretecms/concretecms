@@ -1,19 +1,9 @@
 <?php
-namespace Concrete\Block\DashboardAppStatus;
+namespace Concrete\Block\DesktopAppStatus;
 
 use Package;
 use Concrete\Core\Block\BlockController;
 
-/**
-     * The controller for the Dashboard App Status block. It is added to the dashboard news page/overlay and handles display of available updates.
-     *
-     * @package Blocks
-     * @subpackage Dashboard App Status
-     *
-     * @author Andrew Embler <andrew@concrete5.org>
-     * @copyright  Copyright (c) 2003-2012 Concrete5. (http://www.concrete5.org)
-     * @license    http://www.concrete5.org/license/     MIT License
-     */
     class Controller extends BlockController
     {
         protected $btCacheBlockRecord = true;
@@ -22,16 +12,14 @@ use Concrete\Core\Block\BlockController;
         protected $btCacheBlockOutputForRegisteredUsers = true;
         protected $btCacheBlockOutputLifetime = 86400; // check every day
 
-        protected $btIsInternal = true;
-
         public function getBlockTypeDescription()
         {
-            return t("Displays update and welcome back information on your dashboard.");
+            return t("Displays alerts about your concrete5 site and package updates.");
         }
 
         public function getBlockTypeName()
         {
-            return t("Dashboard App Status");
+            return t("concrete5 Status Messages");
         }
 
         public function view()

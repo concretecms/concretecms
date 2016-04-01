@@ -415,6 +415,10 @@
                     'title': ccmi18n.editMode
                 });
             }
+
+            ConcreteEvent.fire('EditModeAfterInit', {
+                editMode: my
+            });
         },
 
         bindEvent: function editModeBindEvent(event, handler) {

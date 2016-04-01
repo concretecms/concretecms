@@ -1,3 +1,29 @@
+div.ccm-dashboard-desktop {
+  .row, .row > div[class*='col-'] {
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    flex:1 1 auto;
+  }
+
+  .row > div[class*='col-'] > div {
+    width: 100%;
+  }
+
+  .row > div[class*='col-'] {
+    margin:-.2px; /* hack adjust for wrapping */
+  }
+
+  .row {
+    -webkit-flex-flow: row wrap;
+    align-content: flex-start;
+    flex:0;
+  }
+
+}
+
 div.ccm-dashboard-welcome {
 
   h1 {
@@ -40,8 +66,10 @@ nav.ccm-dashboard-desktop-navbar.navbar {
   background-color: #1f2a34;
   padding-top: 10px;
   padding-bottom: 10px;
-  -webkit-box-shadow: inset 0px 10px 5px 0px rgba(0,0,0,0.3), inset 0px -10px 5px 0px rgba(0,0,0,0.3);
+  -webkit-box-shadow: inset 0px 20px 20px 0px rgba(0,0,0,0.3), inset 0px -5px 10px 0px rgba(0,0,0,0.3);
   font-size: 12px;
+
+  margin-bottom: 40px;
 
   p.navbar-text {
     color: #5b717c !important;
@@ -55,3 +83,4 @@ nav.ccm-dashboard-desktop-navbar.navbar {
   }
 
 }
+

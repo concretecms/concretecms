@@ -119,6 +119,9 @@
         <attributekey handle="desktop_priority" name="Desktop Priority" package="" searchable="0" indexed="0" type="number" internal="1" category="collection">
             <type mode=""/>
         </attributekey>
+        <attributekey handle="is_desktop" name="Is Desktop" package="" searchable="0" indexed="0" type="boolean" internal="1" category="collection">
+            <type mode=""/>
+        </attributekey>
         <attributekey handle="icon_dashboard" name="Dashboard Icon" package="" searchable="0" indexed="0" type="textarea" internal="1" category="collection">
             <type mode=""/>
         </attributekey>

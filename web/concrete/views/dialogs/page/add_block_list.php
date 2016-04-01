@@ -1,6 +1,5 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
-$sets = BlockTypeSet::getList();
 $types = array();
 foreach ($blockTypes as $bt) {
     if (!$cp->canAddBlockType($bt)) {
