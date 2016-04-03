@@ -192,8 +192,8 @@ class Install extends Controller
             && function_exists('imagegif')
             && function_exists('imagejpeg'));
         $this->set('mysqlTest', extension_loaded('pdo_mysql'));
-        $this->set('i18nTest', function_exists('ctype_lower')
-           );
+        $this->set('i18nTest', function_exists('ctype_lower'));
+        $this->set('domTest', extension_loaded('dom'));
         $this->set('jsonTest', extension_loaded('json'));
         $this->set('xmlTest', function_exists('xml_parse') && function_exists('simplexml_load_file'));
         $this->set('fileWriteTest', $this->testFileWritePermissions());
@@ -263,7 +263,8 @@ class Install extends Controller
     {
         if ($this->get('imageTest') && $this->get('mysqlTest') && $this->get('fileWriteTest') &&
             $this->get('xmlTest') && $this->get('phpVtest') && $this->get('i18nTest') &&
-            $this->get('memoryTest') !== -1 && $this->get('docCommentTest') && $this->get('aspTagsTest')
+            $this->get('memoryTest') !== -1 && $this->get('docCommentTest') && $this->get('aspTagsTest') &&
+            $this->get('domTest')
         ) {
             return true;
         }
