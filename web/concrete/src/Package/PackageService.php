@@ -176,7 +176,7 @@ class PackageService
 
     public function install(Package $p, $data)
     {
-        $this->localization->setActiveContext('database');
+        $this->localization->pushActiveContext('database');
         try {
 
             $config = $this->entityManager->getConfiguration();
@@ -191,11 +191,11 @@ class PackageService
             if ($u->isSuperUser() && $swapper->allowsFullContentSwap($p) && $data['pkgDoFullContentSwap']) {
                 $swapper->swapContent($p, $data);
             }
-            $this->localization->revertActiveContext();
+            $this->localization->popActiveContext();
             $pkg = $this->getByHandle($p->getPackageHandle());
             return $pkg;
         } catch (\Exception $e) {
-            $this->localization->revertActiveContext();
+            $this->localization->popActiveContext();
             $error = $this->application->make('error');
             $error->add($e);
             return $error;

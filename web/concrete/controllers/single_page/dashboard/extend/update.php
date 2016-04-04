@@ -28,14 +28,14 @@ class Update extends DashboardPageController
                 } else {
                     $p = Package::getByHandle($pkgHandle);
                     $loc = Localization::getInstance();
-                    $loc->setActiveContext('database');
+                    $loc->pushActiveContext('database');
                     try {
                         $p->upgradeCoreData();
                         $p->upgrade();
-                        $loc->revertActiveContext();
+                        $loc->popActiveContext();
                         $this->set('message', t('The package has been updated successfully.'));
                     } catch (Exception $e) {
-                        $loc->revertActiveContext();
+                        $loc->popActiveContext();
                         $this->error->add($e);
                     }
                 }

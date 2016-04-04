@@ -160,7 +160,7 @@ class BlockType
 
         // Prevent the database records being stored in wrong language
         $loc = Localization::getInstance();
-        $loc->setActiveContext('database');
+        $loc->pushActiveContext('database');
 
         //Install the block
         $bt = new static();
@@ -172,7 +172,7 @@ class BlockType
         }
         $bt->btHandle = $btHandle;
 
-        $loc->revertActiveContext();
+        $loc->popActiveContext();
 
         $em = \ORM::entityManager('core');
         $em->persist($bt);
