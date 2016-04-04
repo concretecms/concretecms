@@ -327,8 +327,10 @@ abstract class Package implements LocalizablePackageInterface
         \Config::clearNamespace($this->getPackageHandle());
         $this->app->make('config/database')->clearNamespace($this->getPackageHandle());
 
-//        $this->destroyProxyClasses();
-
+        // @todo remove proxyclasses
+        $this->destroyProxyClasses($this->getPackageEntityManager());
+        
+        die('booom');
         $manager = \ORM::entityManager('core');
         $manager->remove($package);
         $manager->flush();
@@ -598,34 +600,17 @@ abstract class Package implements LocalizablePackageInterface
 
     public function installEntitiesDatabase()
     {
-        // Create a custom entity manager for this package, in order to
-        // extract entities
-        $config = Setup::createConfiguration(true);
+        $em = $this->getPackageEntityManager();
         
-        // Create a temporary EntityManager with the apropriate metadata driver for the installation
-        // We don't want to accidentially update other packages, so we create
-        // a new EntityManager which contains only the ORM metadata of the specific package
-        if ($this->metadataDriver === self::PACKAGE_METADATADRIVER_ANNOTATION){
-            if(version_compare($this->getApplicationVersionRequired(), '8.0.0', '<')){
-                // Legacy - uses SimpleAnnotationReader
-                $driverImpl = $config->newDefaultAnnotationDriver($this->getPackageMetadataPaths());
-            }else{
-                // Use default AnnotationReader
-                $driverImpl = $config->newDefaultAnnotationDriver($this->getPackageMetadataPaths(), false);
-            }
-        } else if ($this->metadataDriver === self::PACKAGE_METADATADRIVER_XML){
-            $driverImpl = new \Doctrine\ORM\Mapping\Driver\XmlDriver($this->getPackageMetadataPaths());
-
-        } else if ($this->metadataDriver === self::PACKAGE_METADATADRIVER_YAML){
-            $driverImpl = new \Doctrine\ORM\Mapping\Driver\YamlDriver($this->getPackageMetadataPaths());
-        }
-        $config->setMetadataDriverImpl($driverImpl);
-        $manager = EntityManager::create(\Database::connection(), $config);
-
-        $structure = new DatabaseStructureManager($manager);
+        // Update database
+        $structure = new DatabaseStructureManager($em);
         $structure->installDatabase();
+        
+        // Create or update entity proxies
+        $metadata = $em->getMetadataFactory()->getAllMetadata();
+        $em->getProxyFactory()->generateProxyClasses($metadata, $em->getConfiguration()->getProxyDir());
     }
-
+    
     /**
      * Installs a package's database from an XML file.
      *
@@ -788,7 +773,59 @@ abstract class Package implements LocalizablePackageInterface
             $leadingBkslsh = '\\';
         }
         return $leadingBkslsh . 'Concrete\\Package\\' . camelcase($this->getPackageHandle());
-    } 
+    }
+    
+        
+    /**
+     * Create a entity manager used for the package installation, 
+     * update and unistall process.
+     * 
+     * @return \Doctrine\ORM\EntityManager
+     */
+    protected function getPackageEntityManager()
+    {
+        $config = Setup::createConfiguration(true, \Config::get('database.proxy_classes'));
+        
+        // Create a temporary EntityManager with the apropriate metadata driver 
+        // for the package installation
+        // We don't want to accidentially update other packages, so we create
+        // a new EntityManager which contains only the ORM metadata of the specific package
+        if ($this->metadataDriver === self::PACKAGE_METADATADRIVER_ANNOTATION){
+            if(version_compare($this->getApplicationVersionRequired(), '8.0.0', '<')){
+                // Legacy - uses SimpleAnnotationReader
+                $driverImpl = $config->newDefaultAnnotationDriver($this->getPackageMetadataPaths());
+            }else{
+                // Use default AnnotationReader
+                $driverImpl = $config->newDefaultAnnotationDriver($this->getPackageMetadataPaths(), false);
+            }
+        } else if ($this->metadataDriver === self::PACKAGE_METADATADRIVER_XML){
+            $driverImpl = new \Doctrine\ORM\Mapping\Driver\XmlDriver($this->getPackageMetadataPaths());
+
+        } else if ($this->metadataDriver === self::PACKAGE_METADATADRIVER_YAML){
+            $driverImpl = new \Doctrine\ORM\Mapping\Driver\YamlDriver($this->getPackageMetadataPaths());
+        }
+        $config->setMetadataDriverImpl($driverImpl);
+        $em = EntityManager::create(\Database::connection(), $config);
+        return $em;
+    }
+    
+    /**
+     * Destroys all proxies 
+     */
+    protected function destroyProxyClasses(\Doctrine\ORM\EntityManager $em)
+    {
+        $config = $em->getConfiguration();
+        $proxyGenerator = new \Doctrine\Common\Proxy\ProxyGenerator($config->getProxyDir(), $config->getProxyNamespace());
+        
+        $classes = $em->getMetadataFactory()->getAllMetadata();
+        foreach ($classes as $class) {
+
+            $proxyFileName = $proxyGenerator->getProxyFileName($class->getName(), $config->getProxyDir());
+            if(file_exists($proxyFileName)){
+                unlink($proxyFileName);
+            }
+        }
+    }
     
     /**
      * @deprecated

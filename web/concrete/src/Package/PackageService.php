@@ -192,12 +192,7 @@ class PackageService
             $pkgNamespace = $p->getNamespace();
             
             $driverChain->addDriver($driver, $pkgNamespace);
-            //\Doctrine\Common\Util\Debug::dump($driverChain);
-            //die('ups');
-            
-            //@todo -> driverChain is returned
-            //         add class which returns the apropriate driver
-            //$driver->addPaths($p->getPackageEntityPaths());
+
             $cache = $config->getMetadataCacheImpl();
             $cache->flushAll();
 
@@ -263,8 +258,8 @@ class PackageService
      * 
      * @param \Concrete\Core\Package\Package $p
      */
-    protected function savePackageMetadataDriverToConfig(Package $p){
-        
+    protected function savePackageMetadataDriverToConfig(Package $p)
+    {
         $packageMetadataDriverType = $p->getMetadataDriverType();
         $packageHandle = $p->getPackageHandle();
         $config = $this->getFileConfigORMMetadata();
@@ -314,12 +309,10 @@ class PackageService
             $basePath = CONFIG_ORM_METADATA_YAML;
         }
         
-        $config->clear($basePath);
-        
-        // \Config::clear() din't work with the config file in 'generated_overrides'
-//        $metaDriverConfig = \Config::get($basePath);
-//        unset($metaDriverConfig[strtolower($packageHandle)]);
-//        \Config::save($basePath, $metaDriverConfig);
+        // $config->clear($basePath) does not remove settings in config files
+        $metaDriverConfig = $config->get($basePath);
+        unset($metaDriverConfig[strtolower($packageHandle)]);
+        $config->save($basePath, $metaDriverConfig);
     }
     
     /**
@@ -331,7 +324,8 @@ class PackageService
      * 
      * @return \Concrete\Core\Package\Repository
      */
-    protected function getFileConfigORMMetadata(){
+    protected function getFileConfigORMMetadata()
+    {
         $defaultEnv = \Config::getEnvironment();
         $fileSystem = new \Illuminate\Filesystem\Filesystem();
         $fileLoader = new \Concrete\Core\Config\FileLoader($fileSystem);

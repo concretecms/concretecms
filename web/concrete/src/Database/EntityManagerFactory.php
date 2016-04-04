@@ -155,7 +155,7 @@ class EntityManagerFactory implements EntityManagerFactoryInterface
         $config = $event->getArgument('configuration');
         $evm = $event->getArgument('eventManager');
 
-        // @todo - test remove
+//        // @todo - test remove
 //        \Doctrine\Common\Util\Debug::dump($configuration->getMetadataDriverImpl());
 //        die('est');
         // Inject the ORM EventManager into the EntityManager so ORM Events
@@ -165,12 +165,12 @@ class EntityManagerFactory implements EntityManagerFactoryInterface
 
     /**
      * Register the application metadata driver into the driver chain
-     * Default metadata driver is the annotation driver
+     * Default metadata driver is the annotation driver.
      * 
-     * Other metadata driver typs (xml and yaml) can be configured in the configruation file:
-     * application\config\concrete.php
+     * Other metadata driver typs (xml and yaml) can be configured in the 
+     * database configruation file: application\config\database.php
      * 
-     * 'application' => array('metadatadriver' => 'yaml'),
+     * 'metadatadriver' => array('application' => 'yaml'),
      * 
      * @param \Doctrine\Common\Persistence\Mapping\Driver\MappingDriverChain $driverChain
      */
