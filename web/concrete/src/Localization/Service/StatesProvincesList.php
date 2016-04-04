@@ -395,13 +395,13 @@ class StatesProvincesList {
 		'SG' => 'Saint-Gall',
 		'SH' => 'Schaffhouse',
 		'SO' => 'Soleure',
-		'SZ' => 'SZ',
+		'SZ' => 'Schwyz',
 		'TG' => 'Thurgovie',
 		'TI' => 'Tessin',
 		'UR' => 'Uri',
 		'VD' => 'Vaud',
 		'VS' => 'Valais',
-		'ZG' => 'Zug',
+		'ZG' => 'Zoug',
 		'ZH' => 'Zürich'
 	),
 
