@@ -375,6 +375,35 @@ class StatesProvincesList {
 		'SP' => 'Sao Paulo',
 		'TO' => 'Tocatins'
 	),
+	
+	'CH' => array(
+		'AG' => 'Argovie',
+		'AI' => 'Appenzell RI',
+		'AR' => 'Appenzell RE',
+		'BE' => 'Berne',
+		'BL' => 'Bâle Campagne',
+		'BS' => 'Bâle Ville',
+		'FR' => 'Fribourg',
+		'GE' =>'Genève',
+		'GL' => 'Glaris',
+		'GR' => 'Grisons',
+		'JU' => 'Jura',
+		'LU' => 'Lucerne',
+		'NE' => 'Neuchâtel',
+		'NW' => 'Nidwald',
+		'OW' => 'Obwald',
+		'SG' => 'Saint-Gall',
+		'SH' => 'Schaffhouse',
+		'SO' => 'Soleure',
+		'SZ' => 'SZ',
+		'TG' => 'Thurgovie',
+		'TI' => 'Tessin',
+		'UR' => 'Uri',
+		'VD' => 'Vaud',
+		'VS' => 'Valais',
+		'ZG' => 'Zug',
+		'ZH' => 'Zürich'
+	),
 
 	'IT' => array(
 		'AG' => 'Agrigento',
