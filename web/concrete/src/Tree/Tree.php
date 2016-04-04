@@ -248,7 +248,7 @@ abstract class Tree extends Object
     {
         $translations = new Translations();
         $loc = Localization::getInstance();
-        $loc->setActiveContext('database');
+        $loc->pushActiveContext('database');
         try {
             $db = \Database::get();
             $r = $db->Execute('select treeID from Trees order by treeID asc');
@@ -272,10 +272,10 @@ abstract class Tree extends Object
                 }
             }
         } catch (\Exception $x) {
-            $loc->revertActiveContext();
+            $loc->popActiveContext();
             throw $x;
         }
-        $loc->revertActiveContext();
+        $loc->popActiveContext();
 
         return $translations;
     }
