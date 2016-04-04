@@ -8,9 +8,6 @@ class Welcome extends DashboardPageController
 {
     public function view()
     {
-        $controller = new CheckIn();
-        $controller->setPageObject($this->getPageObject());
         $this->setThemeViewTemplate('dialog.php');
-        $this->set('approveAction', $controller->action('submit'));
     }
 }

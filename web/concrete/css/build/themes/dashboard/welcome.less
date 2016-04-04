@@ -1,4 +1,20 @@
-div.ccm-dashboard-desktop {
+body.ccm-dashboard-desktop {
+  background-color: #f8fafb;
+  -webkit-font-smoothing: antialiased;
+
+  div#ccm-dashboard-content {
+    padding-right: 0px;
+    padding-left: 0px;
+    padding-bottom: 0px;
+  }
+}
+
+div.ccm-dashboard-desktop-grid {
+  padding: 0px 40px 40px 40px;
+}
+
+div.ccm-dashboard-desktop-flex {
+
   .row, .row > div[class*='col-'] {
     display: -webkit-box;
     display: -moz-box;
@@ -6,10 +22,17 @@ div.ccm-dashboard-desktop {
     display: -webkit-flex;
     display: flex;
     flex:1 1 auto;
+
+    color: #878a8f;
+
   }
 
   .row > div[class*='col-'] > div {
     width: 100%;
+  }
+
+  .row {
+    margin-bottom: 30px;
   }
 
   .row > div[class*='col-'] {
@@ -60,27 +83,46 @@ div.ccm-dashboard-welcome {
   #gradient > .vertical(#c0dae9, #f8f8f8);
 }
 
-nav.ccm-dashboard-desktop-navbar.navbar {
-  .border-radius(0px);
-  border-width: 0px;
-  background-color: #1f2a34;
-  padding-top: 10px;
-  padding-bottom: 10px;
-  -webkit-box-shadow: inset 0px 20px 20px 0px rgba(0,0,0,0.3), inset 0px -5px 10px 0px rgba(0,0,0,0.3);
-  font-size: 12px;
+.ccm-ui {
 
-  margin-bottom: 40px;
+  nav.ccm-dashboard-desktop-navbar.navbar {
+    .border-radius(0px);
+    border-width: 0px;
+    background-color: #1f2a34;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    -webkit-box-shadow: inset 0px 20px 20px 0px rgba(0,0,0,0.3), inset 0px -5px 10px 0px rgba(0,0,0,0.3);
+    font-size: 12px;
 
-  p.navbar-text {
-    color: #5b717c !important;
-  }
+    margin-bottom: 40px;
 
-  a {
-    &:hover {
-      color: #b8d7e7 !important;
+    p.navbar-text {
+      color: #5b717c !important;
+      line-height: 20px;
     }
-    color: #5b717c;
+
+    a {
+      &:hover, &:active, &:focus {
+        color: #b8d7e7 !important;
+      }
+      color: #5b717c;
+    }
+
+    li.active a {
+      background-color: transparent;
+      color: #fff;
+
+      &:hover, &:active {
+        background-color: transparent;
+      }
+
+    }
+
   }
 
 }
 
+div.ccm-dashboard-desktop h1.page-title {
+  font-weight: 300;
+  -webkit-font-smoothing: antialiased;
+}

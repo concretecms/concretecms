@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Workflow\Request;
 
+use HtmlObject\Element;
 use URL;
 use Concrete\Core\User\UserInfo;
 use Core;
@@ -96,5 +97,12 @@ abstract class UserRequest extends Request
         }
 
         return $wpr;
+    }
+
+    public function getRequestIconElement()
+    {
+        $span = new Element('i');
+        $span->addClass('fa fa-user');
+        return $span;
     }
 }

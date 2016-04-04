@@ -22,6 +22,7 @@ class Me extends DashboardPageController
 
     public function on_before_render()
     {
+        parent::on_before_render();
         $tabs = array();
         foreach ($this->categories as $cat) {
             $active = ($cat->getWorkflowProgressCategoryHandle() == $this->wpCategoryHandleActive);
