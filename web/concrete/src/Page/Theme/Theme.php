@@ -669,14 +669,14 @@ class Theme extends Object
                 throw new \Exception(static::E_THEME_INSTALLED);
             }
             $loc = Localization::getInstance();
-            $loc->setActiveContext('database');
+            $loc->pushActiveContext('database');
             try {
                 $res = static::getThemeNameAndDescription($dir, $pThemeHandle, is_object($pkg) ? $pkg->getPackageHandle() : '');
             } catch (\Exception $x) {
-                $loc->revertActiveContext();
+                $loc->popActiveContext();
                 throw $x;
             }
-            $loc->revertActiveContext();
+            $loc->popActiveContext();
             if (strlen($res->pError) === 0) {
                 $pThemeName = $res->pThemeName;
                 $pThemeDescription = $res->pThemeDescription;

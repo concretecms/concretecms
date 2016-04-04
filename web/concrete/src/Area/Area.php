@@ -853,13 +853,13 @@ class Area extends Object implements \Concrete\Core\Permission\ObjectInterface
         $loc = Localization::getInstance();
 
         // now, we iterate through these block groups (which are actually arrays of block objects), and display them on the page
-        $loc->setActiveContext('system');
+        $loc->pushActiveContext('system');
         if ($this->showControls && $c->isEditMode() && $ap->canViewAreaControls()) {
             View::element('block_area_header', array('a' => $this));
         } else {
             View::element('block_area_header_view', array('a' => $this));
         }
-        $loc->revertActiveContext();
+        $loc->popActiveContext();
 
         foreach ($blocksToDisplay as $b) {
             $bv = new BlockView($b);
@@ -876,13 +876,13 @@ class Area extends Object implements \Concrete\Core\Permission\ObjectInterface
             }
         }
 
-        $loc->setActiveContext('system');
+        $loc->pushActiveContext('system');
         if ($this->showControls && $c->isEditMode() && $ap->canViewAreaControls()) {
             View::element('block_area_footer', array('a' => $this));
         } else {
             View::element('block_area_footer_view', array('a' => $this));
         }
-        $loc->revertActiveContext();
+        $loc->popActiveContext();
     }
 
     /**

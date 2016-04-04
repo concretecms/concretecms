@@ -136,16 +136,16 @@ class LocalizationTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(Localization::BASE_LOCALE, $this->loc->getContextLocale('test'));
     }
 
-    public function testRevertActiveContext()
+    public function testPushPopActiveContext()
     {
-        $this->loc->setActiveContext('test1');
-        $this->loc->setActiveContext('test2');
-        $this->loc->setActiveContext('test3');
+        $this->loc->pushActiveContext('test1');
+        $this->loc->pushActiveContext('test2');
+        $this->loc->pushActiveContext('test3');
 
-        $this->loc->revertActiveContext();
+        $this->loc->popActiveContext();
         $this->assertEquals('test2', $this->loc->getActiveContext());
 
-        $this->loc->revertActiveContext();
+        $this->loc->popActiveContext();
         $this->assertEquals('test1', $this->loc->getActiveContext());
     }
 

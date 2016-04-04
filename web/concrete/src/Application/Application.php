@@ -272,10 +272,10 @@ class Application extends Container
                 $pkgInstalledVersion = $dbPkg->getPackageVersion();
                 $pkgFileVersion = $pkg->getPackageVersion();
                 if (version_compare($pkgFileVersion, $pkgInstalledVersion, '>')) {
-                    $loc->setActiveContext('database');
+                    $loc->pushActiveContext('database');
                     $dbPkg->upgradeCoreData();
                     $dbPkg->upgrade();
-                    $loc->revertActiveContext();
+                    $loc->popActiveContext();
                 }
             }
             $this->make('Concrete\Core\Package\PackageService')->setupLocalization($pkg);

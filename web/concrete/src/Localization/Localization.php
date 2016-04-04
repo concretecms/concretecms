@@ -13,17 +13,42 @@ use Zend\I18n\Translator\Translator as ZendTranslator;
 
 class Localization
 {
-    /** @var string */
+    /**
+     * The "base" locale identifier.
+     * 
+     * @var string
+     */
     const BASE_LOCALE = 'en_US';
 
-    /** @var TranslatorAdapterRepositoryInterface */
+    /**
+     * The translator adapter repository to be used.
+     *
+     * @var TranslatorAdapterRepositoryInterface
+     */
     protected $translatorAdapterRepository;
 
-    /** @var array */
+    /**
+     * The locale identifier to be used for every translation context.
+     * 
+     * @var array
+     */
     protected $contextLocales = array();
-    /** @var string|null */
+
+    /**
+     * The currently active translation context.
+     *
+     * @var string|null
+     */
     protected $activeContext = null;
-    /** @var array */
+
+    /**
+     * Tracks the list of active contexts.
+     *
+     * @var array
+     *
+     * @see Localization::pushActiveContext()
+     * @see Localization::popActiveContext()
+     */
     protected $activeContextQueue = array();
 
     /**
@@ -73,43 +98,51 @@ class Localization
      */
     public function setActiveContext($context)
     {
-        if (
-            $this->activeContext !== null ||
-            count($this->activeContextQueue) > 0
-        ) {
-            $this->activeContextQueue[] = $this->activeContext;
-        }
         $this->activeContext = $context;
-
         if (!isset($this->contextLocales[$context])) {
             $this->setContextLocale($context, static::BASE_LOCALE);
         }
     }
 
     /**
-     * Reverts the active translation context to the previous context. Useful
-     * when temporarily setting the translation context to something else than
-     * the original.
+     * Change the active translation context, but remember the previous one.
+     * Useful when temporarily setting the translation context to something else than the original.
      *
-     * Usage:
+     * @param string $newContext The new translation context to activate.
      *
+     * @see Localization::popActiveContext()
+     *
+     * @example
      * ```php
      * $loc = \Localization::getInstance();
-     * $loc->setActiveContext('first_context');
+     * // Let's assume the current context is 'original_context'
      *
-     * // Do something else
-     * $loc->setActiveContext('second_context');
-     * $foo->bar();
+     * $loc->pushActiveContext('new_context');
      *
-     * // Revert the context back
-     * $loc->revertActiveContext();
+     * // Do what you want in context 'new_context'
      *
-     * echo $loc->getActiveContext(); // Prints out 'first_context'
+     * $loc->popActiveContext();
+     * // Now the context is 'original_context'
      * ```
      */
-    public function revertActiveContext()
+    public function pushActiveContext($newContext)
     {
-        $this->activeContext = array_pop($this->activeContextQueue);
+        if ($this->activeContext !== null) {
+            $this->activeContextQueue[] = $this->activeContext;
+        }
+        $this->setActiveContext($newContext);
+    }
+
+    /**
+     * Restore the context that was active before calling pushActiveContext.
+     *
+     * @see Localization::pushActiveContext()
+     */
+    public function popActiveContext()
+    {
+        if (!empty($this->activeContextQueue)) {
+            $this->activeContext = array_pop($this->activeContextQueue);
+        }
     }
 
     /**

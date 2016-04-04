@@ -262,7 +262,7 @@ class BlockView extends AbstractView
         // The translatable texts in the block header/footer need to be printed
         // out in the system language.
         $loc = Localization::getInstance();
-        $loc->setActiveContext('system');
+        $loc->pushActiveContext('system');
 
         if ($this->blockViewHeaderFile) {
             include $this->blockViewHeaderFile;
@@ -278,7 +278,7 @@ class BlockView extends AbstractView
             include $this->blockViewFooterFile;
         }
 
-        $loc->revertActiveContext();
+        $loc->popActiveContext();
     }
 
     protected function setBlockViewHeaderFile($file)
