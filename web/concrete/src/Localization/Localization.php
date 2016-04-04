@@ -6,7 +6,6 @@ use Concrete\Core\Localization\Translator\Adapter\Zend\Translation\Loader\Gettex
 use Concrete\Core\Localization\Translator\Adapter\Zend\TranslatorAdapter as ZendTranslatorAdapter;
 use Concrete\Core\Localization\Translator\TranslatorAdapterRepositoryInterface;
 use Core;
-use Events;
 use Exception;
 use Punic\Data as PunicData;
 use Zend\I18n\Translator\Translator as ZendTranslator;
@@ -15,7 +14,7 @@ class Localization
 {
     /**
      * The "base" locale identifier.
-     * 
+     *
      * @var string
      */
     const BASE_LOCALE = 'en_US';
@@ -29,7 +28,7 @@ class Localization
 
     /**
      * The locale identifier to be used for every translation context.
-     * 
+     *
      * @var array
      */
     protected $contextLocales = array();
@@ -190,10 +189,13 @@ class Localization
         }
         $this->contextLocales[$context] = $locale;
         if ($context === $this->activeContext) {
-            PunicData::setDefaultLocale($locale);
-            $event = new \Symfony\Component\EventDispatcher\GenericEvent();
-            $event->setArgument('locale', $locale);
-            Events::dispatch('on_locale_load', $event);
+            $app = Facade::getFacadeApplication();
+            if ($app->bound('director')) {
+                PunicData::setDefaultLocale($locale);
+                $event = new \Symfony\Component\EventDispatcher\GenericEvent();
+                $event->setArgument('locale', $locale);
+                $app->make('director')->dispatch('on_locale_load', $event);
+            }
         }
     }
 
