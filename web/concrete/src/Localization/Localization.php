@@ -156,7 +156,12 @@ class Localization
             return;
         }
         $this->contextLocales[$context] = $locale;
-        //$this->getTranslatorAdapterRepository()->removeTranslatorAdaptersWithHandle($context);
+        if ($context === $this->activeContext) {
+            PunicData::setDefaultLocale($locale);
+            $event = new \Symfony\Component\EventDispatcher\GenericEvent();
+            $event->setArgument('locale', $locale);
+            Events::dispatch('on_locale_load', $event);
+        }
     }
 
     /**
@@ -177,11 +182,6 @@ class Localization
     public function setLocale($locale)
     {
         $this->setContextLocale($this->getActiveContext(), $locale);
-
-        PunicData::setDefaultLocale($locale);
-        $event = new \Symfony\Component\EventDispatcher\GenericEvent();
-        $event->setArgument('locale', $locale);
-        Events::dispatch('on_locale_load', $event);
     }
 
     /**
