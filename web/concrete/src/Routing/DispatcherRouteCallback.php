@@ -24,9 +24,9 @@ class DispatcherRouteCallback extends RouteCallback
     protected function sendResponse(View $v, $code = 200)
     {
         $loc = Localization::getInstance();
-        $loc->setActiveContext('site');
+        $loc->pushActiveContext('site');
         $contents = $v->render();
-        $loc->revertActiveContext();
+        $loc->popActiveContext();
         $response = new Response($contents, $code);
 
         return $response;
