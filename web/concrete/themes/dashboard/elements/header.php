@@ -47,7 +47,7 @@ $large_font = (bool) Config::get('concrete.accessibility.toolbar_large_font');
 ?>
     <link href='https://fonts.googleapis.com/css?family=Roboto:900' rel='stylesheet' type='text/css'>
 </head>
-<body>
+<body <?php if (isset($bodyClass)) { ?>class="<?=$bodyClass?>"<?php } ?>>
 
 <div id="ccm-dashboard-page" class="ccm-ui">
     <div class="ccm-mobile-menu-overlay ccm-mobile-menu-overlay-dashboard hidden-md hidden-lg">

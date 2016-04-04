@@ -137,9 +137,9 @@ class ActivateUserRequest extends UserRequest
     public function getWorkflowRequestApproveButtonText()
     {
         if ($this->isDeactivationRequest()) {
-            return t('Deactivate User');
+            return t('Deactivate');
         } else {
-            return t('Activate User');
+            return t('Activate');
         }
 
     }
@@ -148,7 +148,7 @@ class ActivateUserRequest extends UserRequest
     {
         $buttons = array();
         $button = new WorkflowProgressAction();
-        $button->setWorkflowProgressActionLabel(t('User Details'));
+        $button->setWorkflowProgressActionLabel(t('Review'));
         $button->addWorkflowProgressActionButtonParameter('dialog-title', t('User Details'));
         $button->addWorkflowProgressActionButtonParameter('dialog-width', '420');
         $button->addWorkflowProgressActionButtonParameter('dialog-height', '310');

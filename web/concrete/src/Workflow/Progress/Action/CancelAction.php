@@ -5,7 +5,7 @@ class CancelAction extends Action
 {
     public function __construct()
     {
-        $this->setWorkflowProgressActionLabel(t('Cancel'));
+        $this->setWorkflowProgressActionLabel(t('Deny'));
         $this->setWorkflowProgressActionTask('cancel');
         $this->setWorkflowProgressActionStyleClass('btn-default');
     }

@@ -22,17 +22,17 @@ $dh = Loader::helper('concrete/dashboard');
         $v = View::getInstance();
         $request = \Request::getInstance();
 
-        if (!$dh->inDashboard() || $c->getAttribute('is_desktop')) {
-            $v->requireAsset('core/app');
+        $v->requireAsset('core/app');
 
-            $editMode = $c->isEditMode();
-            $tools = REL_DIR_FILES_TOOLS_REQUIRED;
-            if ($c->isEditMode()) {
-                $startEditMode = 'new Concrete.EditMode();';
-            } else {
-                $startEditMode = '';
-            }
+        $editMode = $c->isEditMode();
+        $tools = REL_DIR_FILES_TOOLS_REQUIRED;
+        if ($c->isEditMode()) {
+            $startEditMode = 'new Concrete.EditMode();';
+        } else {
+            $startEditMode = '';
+        }
 
+        if (!$dh->inDashboard()) {
             $launchPageComposer = '';
             if ($cp->canEditPageContents() && $request->get('ctask') == 'check-out-first') {
                 $pagetype = $c->getPageTypeObject();
@@ -63,16 +63,23 @@ $dh = Loader::helper('concrete/dashboard');
 </script>
 
 EOL;
+        } else {
+            $js = <<<EOL
+<script type="text/javascript">$(function() {
+	{$startEditMode}
+});
+</script>
 
-            $v->addFooterItem($js);
+EOL;
+        }
+        $v->addFooterItem($js);
 
-            if (Config::get('concrete.misc.enable_progressive_page_reindex') && Config::get('concrete.misc.do_page_reindex_check')) {
-                $v->addFooterItem('<script type="text/javascript">$(function() { ccm_doPageReindexing(); });</script>');
-            }
-            $cih = Loader::helper('concrete/ui');
-            if (Localization::activeLanguage() != 'en') {
-                $v->addFooterItem('<script type="text/javascript">$(function() { jQuery.datepicker.setDefaults({dateFormat: \'yy-mm-dd\'}); });</script>');
+        if (Config::get('concrete.misc.enable_progressive_page_reindex') && Config::get('concrete.misc.do_page_reindex_check')) {
+            $v->addFooterItem('<script type="text/javascript">$(function() { ccm_doPageReindexing(); });</script>');
+        }
+        $cih = Loader::helper('concrete/ui');
+        if (Localization::activeLanguage() != 'en') {
+            $v->addFooterItem('<script type="text/javascript">$(function() { jQuery.datepicker.setDefaults({dateFormat: \'yy-mm-dd\'}); });</script>');
             }
         }
-    }
 }

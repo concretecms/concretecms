@@ -2,6 +2,7 @@
 namespace Concrete\Core\Workflow\Request;
 
 use Concrete\Core\Foundation\Object;
+use Concrete\Core\User\UserInfo;
 use Symfony\Component\EventDispatcher\GenericEvent;
 use Workflow;
 use Concrete\Core\Workflow\EmptyWorkflow;
@@ -59,6 +60,11 @@ abstract class Request extends Object
     public function getRequesterUserID()
     {
         return $this->uID;
+    }
+
+    public function getRequesterUserObject()
+    {
+        return UserInfo::getByID($this->uID);
     }
 
     public static function getByID($wrID)
@@ -175,4 +181,12 @@ abstract class Request extends Object
             }
         }
     }
+
+    public function getRequesterComment()
+    {
+        return false;
+    }
+
+    abstract public function getRequestIconElement();
+
 }

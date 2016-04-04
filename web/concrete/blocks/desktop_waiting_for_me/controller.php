@@ -3,6 +3,7 @@ namespace Concrete\Block\DesktopWaitingForMe;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 use Concrete\Core\Block\BlockController;
+use Concrete\Core\Workflow\Progress\Category;
 use Core;
 
 class Controller extends BlockController
@@ -11,7 +12,6 @@ class Controller extends BlockController
 
     protected $btInterfaceWidth = 450;
     protected $btInterfaceHeight = 560;
-    protected $btTable = 'btDesktopWaitingForMe';
 
     public function getBlockTypeDescription()
     {
@@ -23,5 +23,24 @@ class Controller extends BlockController
         return t("Waiting for Me");
     }
 
+    public function view()
+    {
+        $categories = Category::getList();
+        $items = [];
+        foreach($categories as $category) {
+            $list = $category->getPendingWorkflowProgressList();
+            if (is_object($list)) {
+                foreach($list->get() as $it) {
+                    $wp = $it->getWorkflowProgressObject();
+                    $wf = $wp->getWorkflowObject();
+                    if ($wf->canApproveWorkflowProgressObject($wp)) {
+                        $items[] = $wp;
+                    }
+                }
+            }
+        }
+        $this->set('items', $items);
+
+    }
 
 }

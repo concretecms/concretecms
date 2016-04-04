@@ -3,6 +3,7 @@ namespace Concrete\Block\DesktopSiteActivity;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 use Concrete\Core\Block\BlockController;
+use Concrete\Core\Workflow\Progress\Category;
 use Core;
 
 class Controller extends BlockController
@@ -71,9 +72,11 @@ class Controller extends BlockController
 
     protected function getLatestFormSubmissions($since)
     {
+        $since = date('Y-m-d H:i:s', $since);
+
         // legacy
         $db = \Database::connection();
-        $r = $db->query('select count(uID) from btFormAnswerSet where UNIX_TIMESTAMP(created) >= ?', array($since));
+        $r = $db->query('select count(uID) from btFormAnswerSet where created >= ?', array($since));
         $legacy = $r->fetchColumn();
 
         // new
@@ -89,13 +92,53 @@ class Controller extends BlockController
 
         if (count($ids)) {
             $q = $entityManager->createQuery(
-                'select count(e) from Concrete\Core\Entity\Express\Entry e where e.entity in (:entities)'
+                'select count(e) from Concrete\Core\Entity\Express\Entry e where e.entity in (:entities) and e.exEntryDateCreated >= :date'
             );
             $q->setParameter('entities', $forms);
+            $q->setParameter('date', $since);
             $new = $q->getSingleScalarResult();
         }
 
         return $legacy + $new;
+    }
+
+    public function export(\SimpleXMLElement $blockNode)
+    {
+        $data = $blockNode->addChild('data');
+        $this->loadTypes();
+        $types = $this->get('types');
+        foreach($types as $type) {
+            $data->addChild('type', $type);
+        }
+    }
+
+    public function getImportData($blockNode, $page)
+    {
+        $args = array();
+        foreach ($blockNode->data->type as $type) {
+            $args['types'][] = (string) $type;
+        }
+
+        return $args;
+    }
+
+    protected function getWorkflowProgressItems()
+    {
+        $categories = Category::getList();
+        $items = 0;
+        foreach($categories as $category) {
+            $list = $category->getPendingWorkflowProgressList();
+            if (is_object($list)) {
+                foreach($list->get() as $it) {
+                    $wp = $it->getWorkflowProgressObject();
+                    $wf = $wp->getWorkflowObject();
+                    if ($wf->canApproveWorkflowProgressObject($wp)) {
+                        $items++;
+                    }
+                }
+            }
+        }
+        return $items;
     }
 
     public function view()
@@ -121,6 +164,11 @@ class Controller extends BlockController
             $messages = $this->getLatestMessages($ui->getLastLogin());
             $this->set('messages', $messages);
         }
+        if (in_array('workflow', $types)) {
+            $approvals = $this->getWorkflowProgressItems();
+            $this->set('approvals', $approvals);
+        }
+
 
     }
 
