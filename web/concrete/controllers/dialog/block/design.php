@@ -1,5 +1,6 @@
 <?php
 namespace Concrete\Controller\Dialog\Block;
+
 use Concrete\Controller\Backend\UserInterface\Block as BackendInterfaceBlockController;
 use Concrete\Core\Block\CustomStyle;
 use Concrete\Core\Block\View\BlockView;
@@ -8,8 +9,8 @@ use Concrete\Core\Page\Type\Composer\Control\BlockControl;
 use Concrete\Core\Page\Type\Composer\FormLayoutSetControl;
 use Concrete\Core\StyleCustomizer\Inline\StyleSet;
 
-class Design extends BackendInterfaceBlockController {
-
+class Design extends BackendInterfaceBlockController
+{
     protected $viewPath = '/dialogs/block/design';
 
     protected function canAccess()
@@ -35,7 +36,6 @@ class Design extends BackendInterfaceBlockController {
     public function submit()
     {
         if ($this->validateAction() && $this->canAccess()) {
-
             $b = $this->getBlockToEdit();
             $oldStyle = $b->getCustomStyle();
             if (is_object($oldStyle)) {
@@ -47,7 +47,7 @@ class Design extends BackendInterfaceBlockController {
             if (is_object($set)) {
                 $set->save();
                 $b->setCustomStyleSet($set);
-            } else if ($oldStyleSet) {
+            } elseif ($oldStyleSet) {
                 $b->resetCustomStyle();
             }
 
@@ -92,7 +92,8 @@ class Design extends BackendInterfaceBlockController {
         }
     }
 
-	public function view() {
+    public function view()
+    {
         $btc = $this->block->getInstance();
         $btc->outputAutoHeaderItems();
         $bv = new BlockView($this->block);
@@ -102,7 +103,7 @@ class Design extends BackendInterfaceBlockController {
         $canEditCustomTemplate = false;
         if ($this->permissions->canEditBlockCustomTemplate()) {
             $canEditCustomTemplate = true;
-            switch($this->block->getBlockTypeHandle()) {
+            switch ($this->block->getBlockTypeHandle()) {
                 case BLOCK_HANDLE_SCRAPBOOK_PROXY:
                     $bi = $this->block->getInstance();
                     $bx = \Block::getByID($bi->getOriginalBlockID());
@@ -132,7 +133,5 @@ class Design extends BackendInterfaceBlockController {
             $this->set('templates', $templates);
         }
         $this->set('canEditCustomTemplate', $canEditCustomTemplate);
-	}
-
+    }
 }
-
