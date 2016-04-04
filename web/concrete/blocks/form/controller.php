@@ -578,7 +578,9 @@ class Controller extends BlockController
             }
 
             if (!$this->noSubmitFormRedirect) {
-                if ($this->redirectCID > 0) {
+                if ($this->redirectCID == HOME_CID) {
+                    $this->redirect(Core::make('url/canonical'));
+                } elseif ($this->redirectCID > 0) {
                     $pg = Page::getByID($this->redirectCID);
                     if (is_object($pg) && $pg->cID) {
                         $this->redirect($pg->getCollectionPath());
