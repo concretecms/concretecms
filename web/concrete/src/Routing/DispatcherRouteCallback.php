@@ -5,6 +5,7 @@ use Concrete\Core\Localization\Localization;
 use Concrete\Core\Page\Collection\Version\Version;
 use Concrete\Core\Page\Event as PageEvent;
 use Concrete\Core\Page\Theme\Theme;
+use Concrete\Core\Support\Facade\Facade;
 use Concrete\Core\Url\Url;
 use PermissionKey;
 use Request;
@@ -24,9 +25,14 @@ class DispatcherRouteCallback extends RouteCallback
     protected function sendResponse(View $v, $code = 200)
     {
         $loc = Localization::getInstance();
-        $loc->pushActiveContext('site');
+        $changeContext = $this->shouldChangeContext();
+        if ($changeContext) {
+            $loc->pushActiveContext('site');
+        }
         $contents = $v->render();
-        $loc->popActiveContext();
+        if ($changeContext) {
+            $loc->popActiveContext();
+        }
         $response = new Response($contents, $code);
 
         return $response;
@@ -73,6 +79,14 @@ class DispatcherRouteCallback extends RouteCallback
         $v->setController($cnt);
 
         return $this->sendResponse($v, 403);
+    }
+
+    protected function shouldChangeContext()
+    {
+        $app = Facade::getFacadeApplication();
+        $mlEnabled = $app->make('multilingual/detector')->isEnabled();
+        $inDashboard = $app->make('helper/concrete/dashboard')->inDashboard();
+        return $mlEnabled && !$inDashboard;
     }
 
     public function execute(Request $request, \Concrete\Core\Routing\Route $route = null, $parameters = array())
