@@ -559,6 +559,35 @@ class StatesProvincesList
                     '47' => tc('Japanese Prefecture', 'Okinawa'),
                 ),
 
+                'CH' => array(
+                    'AG' => tc('Swiss Canton', 'Aargau'),
+                    'AI' => tc('Swiss Canton', 'Appenzell Innerrhoden'),
+                    'AR' => tc('Swiss Canton', 'Appenzell Ausserrhoden'),
+                    'BE' => tc('Swiss Canton', 'Bern'),
+                    'BL' => tc('Swiss Canton', 'Basel-Landschaft'),
+                    'BS' => tc('Swiss Canton', 'Basel-Stadt'),
+                    'FR' => tc('Swiss Canton', 'Fribourg'),
+                    'GE' => tc('Swiss Canton', 'Geneva'),
+                    'GL' => tc('Swiss Canton', 'Glarus'),
+                    'GR' => tc('Swiss Canton', 'Graubünden'),
+                    'JU' => tc('Swiss Canton', 'Jura'),
+                    'LU' => tc('Swiss Canton', 'Luzern'),
+                    'NE' => tc('Swiss Canton', 'Neuchâtel'),
+                    'NW' => tc('Swiss Canton', 'Nidwalden'),
+                    'OW' => tc('Swiss Canton', 'Obwalden'),
+                    'SG' => tc('Swiss Canton', 'St. Gallen'),
+                    'SH' => tc('Swiss Canton', 'Schaffhausen'),
+                    'SO' => tc('Swiss Canton', 'Solothurn'),
+                    'SZ' => tc('Swiss Canton', 'Schwyz'),
+                    'TG' => tc('Swiss Canton', 'Thurgau'),
+                    'TI' => tc('Swiss Canton', 'Ticino'),
+                    'UR' => tc('Swiss Canton', 'Uri'),
+                    'VD' => tc('Swiss Canton', 'Vaud'),
+                    'VS' => tc('Swiss Canton', 'Valais'),
+                    'ZG' => tc('Swiss Canton', 'Zug'),
+                    'ZH' => tc('Swiss Canton', 'Zürich'),
+                ),
+
             );
             $comparer = new \Punic\Comparer($locale);
             foreach (array_keys($provinces) as $country) {
@@ -628,8 +657,7 @@ class StatesProvincesList
     }
 
     /** Returns the list of Canadian provinces.
-     *
-     * @deprecated Use getStateProvinceArray('US')
+     * @deprecated Use getStateProvinceArray('CA')
      *
      * @return array Returns an array whose keys are the Canadian Provinces codes and the values are their names.
      */
