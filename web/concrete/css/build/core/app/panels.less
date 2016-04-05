@@ -181,7 +181,7 @@ div.ccm-panel-content {
 
   ul.nav, menu {
 
-    margin: 20px 30px 0px 20px;
+    margin: 20px 15px 0px 20px;
     padding: 0px;
 
     > li {
@@ -257,27 +257,35 @@ div#ccm-panel-dashboard {
 
   menu, ul.nav {
     li {
+      &.nav-selected {
+        > a {
+          color: #0c253e;
+        }
+      }
+
       a {
         color: #4674a1;
 
         &:hover {
           color: #0c253e;
         }
-
-        &.nav-selected, &.nav-path-selected {
-          color: #0c253e;
-        }
       }
     }
 
     > li.nav-selected > a,
-    > li.nav-path-selected > a {
-      background-color: rgba(201,212,222, 1.0);
+    > li.nav-path-selected {
+      background-color: rgba(201,212,222, 0.7);
+      .border-radius(4px);
+
+      ul {
+        padding-bottom: 5px;
+      }
     }
 
     > li > a:hover,
     > li > a:focus {
-      background-color: rgba(201,212,222, 0.7);
+      background-color: rgba(201,212,222, 0.3);
+
     }
 
     li.nav-divider {
@@ -335,6 +343,9 @@ div#ccm-panel-dashboard {
   div.ccm-panel-dashboard-footer {
     margin-left: 40px;
     margin-top: 20px;
+
+    margin-bottom: 40px;
+
     border-top: 1px solid #c6cbcf;
     padding-top: 20px;
     font-size: @font-size-small;

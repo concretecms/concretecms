@@ -6,11 +6,9 @@ $save_url = $save_url->setQuery(array(
 ));
 ?>
 
-<div class="row">
-<div class="col-sm-8 col-sm-offset-2">
+<h2><?=$c->getCollectionName()?></h2>
 
-<h1 class="page-header"><?=t('User Avatar')?></h1>
-<p><?php echo t('Change the picture attached to my posts.')?></p>
+	<p><?php echo t('Change the picture attached to my posts.')?></p>
 
 		<div id="profile-avatar">
 			<?php echo t('You need the Adobe Flash plugin installed on your computer to upload and crop your user profile picture.')?>
@@ -70,6 +68,3 @@ $save_url = $save_url->setQuery(array(
     <div class="form-actions">
         <a href="<?=URL::to('/account')?>" class="btn btn-default" /><?=t('Back to Account')?></a>
     </div>
-
-</div>
-</div>

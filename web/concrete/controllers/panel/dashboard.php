@@ -2,6 +2,8 @@
 namespace Concrete\Controller\Panel;
 
 use Concrete\Controller\Backend\UserInterface\Page as BackendInterfacePageController;
+use Concrete\Controller\Element\Dashboard\Navigation;
+use Concrete\Controller\Element\Navigation\Menu;
 use Concrete\Core\Application\Service\DashboardMenu;
 use Cookie;
 use Loader;
@@ -62,16 +64,8 @@ class Dashboard extends BackendInterfacePageController
 
         $nav = array();
         if ($tab != 'favorites') {
-            $c = Page::getByPath('/dashboard');
-            $bt = BlockType::getByHandle('autonav');
-            $bt->controller->displayPages = 'custom';
-            $bt->controller->displaySystemPages = true;
-            $bt->controller->displayPagesCID = $c->getCollectionID();
-            $bt->controller->orderBy = 'display_asc';
-            $bt->controller->displaySubPages = 'relevant';
-            $bt->controller->displaySubPageLevels = 'all';
-            $bt->controller->set('translate', true);
-            $this->set('nav', $bt);
+            $nav = new \Concrete\Controller\Element\Navigation\DashboardMenu($this->page);
+            $this->set('nav', $nav);
         } else {
             $dh = Loader::helper('concrete/dashboard');
             $qn = \Concrete\Core\Application\Service\DashboardMenu::getMine();

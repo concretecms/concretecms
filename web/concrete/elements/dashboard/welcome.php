@@ -59,15 +59,15 @@ if (Config::get('concrete.white_label.background_image') !== 'none' && !Config::
                 </li>
             </ul>
                 <ul class="nav navbar-nav navbar-right">
-                    <li><a href="<?=URL::to('/dashboard/welcome')?>"><?=t('Welcome')?></a></li>
-                    <li><a href="<?=URL::to('/account')?>"><?=t('My Account')?></a></li>
+                    <li <?php if ($c->getCollectionPath() == '/dashboard/welcome') {?>class="active"<?php } ?>><a href="<?=URL::to('/dashboard/welcome')?>"><?=t('Welcome')?></a></li>
                     <?php
                     foreach($nav as $page) { ?>
-                        ?>
+
                         <li <?php if ($page->getCollectionID() == $c->getCollectionID()) {?>class="active"<?php } ?>>
                             <a href="<?=$page->getCollectionLink()?>"><?=$page->getCollectionName()?></a>
                         </li>
                     <?php } ?>
+                    <li><a href="<?=URL::to('/account')?>"><?=t('My Account')?></a></li>
                 </ul>
             <input type="hidden" name="cID" value="<?=$c->getCollectionID()?>">
             <input type="hidden" name="action" value="publish">

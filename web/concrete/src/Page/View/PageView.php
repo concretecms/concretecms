@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Page\View;
 
+use Concrete\Core\Page\Theme\Theme;
 use Environment;
 use Events;
 use Loader;
@@ -73,10 +74,18 @@ class PageView extends View
                     $this->setViewTemplate($themeTemplate->file);
                 } else {
                     // fall back to the active theme wrapper if nothing else was found
-                    $fallbackTheme = PageTheme::getByHandle($this->themeHandle);
-                    $fallbackPkgHandle = ($fallbackTheme instanceof PageTheme) ? $fallbackTheme->getPackageHandle() : $this->pkgHandle;
+                    $fallbackTheme = Theme::getByHandle($this->themeHandle);
+                    $fallbackPkgHandle = ($fallbackTheme instanceof Theme) ? $fallbackTheme->getPackageHandle() : $this->pkgHandle;
                     $fallbackTemplate = $env->getRecord(DIRNAME_THEMES . '/' . $this->themeHandle . '/' . $this->controller->getThemeViewTemplate(), $fallbackPkgHandle);
-                    $this->setViewTemplate($fallbackTemplate->file);
+                    $path = $fallbackTemplate->file;
+                    if (basename($path) != FILENAME_THEMES_VIEW) {
+                        // We're going to check to see if this file actually exists in the theme. Otherwise we're going to use the default wrapper.
+                        // Ideally this would happen in getThemeViewTemplate but it's hard to add the logic there.
+                        if (!$fallbackTemplate->exists()) {
+                            $path = $env->getPath(DIRNAME_THEMES . '/' . $this->themeHandle . '/' . FILENAME_THEMES_VIEW, $fallbackPkgHandle);
+                        }
+                    }
+                    $this->setViewTemplate($path);
                 }
             }
 

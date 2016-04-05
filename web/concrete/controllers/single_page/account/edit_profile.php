@@ -39,6 +39,12 @@ class EditProfile extends AccountPageController
         $this->set('locales', $locales);
     }
 
+    public function save_complete()
+    {
+        $this->set('success', t('Profile updated successfully.'));
+        $this->view();
+    }
+
     public function callback($type, $method = 'callback')
     {
         $at = AuthenticationType::getByHandle($type);
@@ -148,7 +154,7 @@ class EditProfile extends AccountPageController
 
             $ui->saveUserAttributesForm($aks);
             $ui->update($data);
-            $this->redirect("/account", "save_complete");
+            $this->redirect("/account/edit_profile", "save_complete");
         }
     }
 }

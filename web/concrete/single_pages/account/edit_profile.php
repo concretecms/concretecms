@@ -1,15 +1,6 @@
 <?php defined('C5_EXECUTE') or die("Access Denied."); ?>
 
-<script type="text/javascript">
-$(function() {
-	$('i.icon-question-sign').parent().tooltip();
-});
-</script>
-
-<div class="row">
-<div class="col-sm-offset-1 col-sm-10">
-
-	<h1 class="page-header"><?=t('Edit Profile')?></h1>
+<h2><?=$c->getCollectionName()?></h2>
 
 	<form method="post" action="<?php echo $view->action('save')?>" enctype="multipart/form-data">
 	<?php  $attribs = UserAttributeKey::getEditableInProfileList();
@@ -99,6 +90,3 @@ $(function() {
 	</div>
 
 	</form>
-
-</div>
-</div>

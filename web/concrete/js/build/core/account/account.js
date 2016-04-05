@@ -7,4 +7,11 @@ ccm_enableUserProfileMenu = function() {
 	}
 	container.addClass('ccm-ui').attr('id', 'ccm-account-menu-container');
 	$('#ccm-account-menu').appendTo(container);
+
+	var documentHeight = $(document).height(),
+		position = $('#ccm-account-menu').offset().top;
+
+	if ((documentHeight > 700) && ((documentHeight - position) < 200)) {
+		$('#ccm-account-menu').addClass('dropup');
+	}
 }
