@@ -561,8 +561,8 @@ class StatesProvincesList
 
                 'CH' => array(
                     'AG' => tc('Swiss Canton', 'Aargau'),
-                    'AI' => tc('Swiss Canton', 'Appenzell Innerrhoden'),
-                    'AR' => tc('Swiss Canton', 'Appenzell Ausserrhoden'),
+                    'AI' => tc('Swiss Canton', 'Appenzell I. Rh.'),
+                    'AR' => tc('Swiss Canton', 'Appenzell A. Rh.'),
                     'BE' => tc('Swiss Canton', 'Bern'),
                     'BL' => tc('Swiss Canton', 'Basel-Landschaft'),
                     'BS' => tc('Swiss Canton', 'Basel-Stadt'),
@@ -571,7 +571,7 @@ class StatesProvincesList
                     'GL' => tc('Swiss Canton', 'Glarus'),
                     'GR' => tc('Swiss Canton', 'Graubünden'),
                     'JU' => tc('Swiss Canton', 'Jura'),
-                    'LU' => tc('Swiss Canton', 'Luzern'),
+                    'LU' => tc('Swiss Canton', 'Lucerne'),
                     'NE' => tc('Swiss Canton', 'Neuchâtel'),
                     'NW' => tc('Swiss Canton', 'Nidwalden'),
                     'OW' => tc('Swiss Canton', 'Obwalden'),
@@ -585,7 +585,7 @@ class StatesProvincesList
                     'VD' => tc('Swiss Canton', 'Vaud'),
                     'VS' => tc('Swiss Canton', 'Valais'),
                     'ZG' => tc('Swiss Canton', 'Zug'),
-                    'ZH' => tc('Swiss Canton', 'Zürich'),
+                    'ZH' => tc('Swiss Canton', 'Zurich'),
                 ),
 
             );
