@@ -294,12 +294,12 @@ echo Core::make('helper/concrete/ui')->tabs(array(
         </div>
     </div>
     <div class="form-group">
+        <?php echo $form->checkbox('noAnimate', 1, $noAnimate); ?>
         <?php echo $form->label('noAnimate', t('Disable Automatic Slideshow')); ?>
-        <?php echo $form->checkbox('noAnimate', $noAnimate, $noAnimate ? 'checked' : ''); ?>
     </div>
     <div class="form-group">
+        <?php echo $form->checkbox('pause', 1, $pause); ?>
         <?php echo $form->label('pause', t('Pause Slideshow on Hover')); ?>
-        <?php echo $form->checkbox('pause', $pause, $pause ? 'checked' : ''); ?>
     </div>
     <div class="form-group">
         <?php echo $form->label('maxWidth', t('Maximum Slide Width (0 means no limit)')); ?>
