@@ -189,9 +189,10 @@ class Localization
         }
         $this->contextLocales[$context] = $locale;
         if ($context === $this->activeContext) {
+            PunicData::setDefaultLocale($locale);
+
             $app = Facade::getFacadeApplication();
             if ($app->bound('director')) {
-                PunicData::setDefaultLocale($locale);
                 $event = new \Symfony\Component\EventDispatcher\GenericEvent();
                 $event->setArgument('locale', $locale);
                 $app->make('director')->dispatch('on_locale_load', $event);
