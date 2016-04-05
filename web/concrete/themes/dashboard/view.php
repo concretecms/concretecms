@@ -51,7 +51,7 @@ if (isset($message)) {
 	<div class="ccm-ui" id="ccm-dashboard-result-message">
 		<div class="alert alert-success"><button type="button" class="close" data-dismiss="alert">×</button><?=nl2br(h($success))?></div>
 	</div>
-	<?php 
+	<?php
 }
 
 echo $innerContent;

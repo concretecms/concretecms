@@ -56,10 +56,9 @@ foreach ($parents as $pc) {
 		<?php 
 } else {
     ?>
-			<?php $nav->render('dashboard_navigation');
-    ?>
-		<?php 
-} ?>
+			<?php
+			$nav->render();
+		} ?>
 
 	
 	<div class="ccm-panel-dashboard-footer">

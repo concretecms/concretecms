@@ -42,7 +42,7 @@ class Add extends BackendInterfacePageController
         //}
         $stacks->filterByUserAdded();
 
-        if ($dsh->inDashboard()) {
+        if ($dsh->inDashboard() || strpos($this->page->getCollectionPath(), '/account') === 0) {
             $sets = Set::getList(array());
         } else {
             $sets = Set::getList();

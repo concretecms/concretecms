@@ -66,6 +66,7 @@ EOL;
         } else {
             $js = <<<EOL
 <script type="text/javascript">$(function() {
+	$('html').addClass('ccm-toolbar-visible');
 	{$startEditMode}
 });
 </script>

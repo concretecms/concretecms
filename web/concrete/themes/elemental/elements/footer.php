@@ -65,6 +65,9 @@ $displayFirstSection = $footerSiteTitleBlocks > 0 || $footerSocialBlocks > 0 || 
                 <span class="pull-right">
                     <?=Core::make('helper/navigation')->getLogInOutLink()?>
                 </span>
+                <span id="ccm-account-menu-container">
+
+                </span>
             </div>
         </div>
     </div>

@@ -1150,11 +1150,6 @@
     <pages>
 
         <page name="Waiting for Me" path="/dashboard/welcome/me" filename="" pagetype="" template="desktop" description="" package="">
-            <attributes>
-                <attributekey handle="exclude_nav">
-                    <value><![CDATA[1]]></value>
-                </attributekey>
-            </attributes>
             <area name="Main">
                 <blocks>
                     <block type="desktop_waiting_for_me" />
