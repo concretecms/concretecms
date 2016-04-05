@@ -97,9 +97,14 @@ class Localization
      */
     public function setActiveContext($context)
     {
+        $oldLocale = isset($this->activeContext) ? $this->contextLocales[$this->activeContext] : null;
         $this->activeContext = $context;
         if (!isset($this->contextLocales[$context])) {
             $this->setContextLocale($context, static::BASE_LOCALE);
+        }
+        $newLocale = $this->contextLocales[$context];
+        if ($newLocale !== $oldLocale) {
+            $this->currentLocaleChanged($newLocale);
         }
     }
 
@@ -189,14 +194,7 @@ class Localization
         }
         $this->contextLocales[$context] = $locale;
         if ($context === $this->activeContext) {
-            PunicData::setDefaultLocale($locale);
-
-            $app = Facade::getFacadeApplication();
-            if ($app->bound('director')) {
-                $event = new \Symfony\Component\EventDispatcher\GenericEvent();
-                $event->setArgument('locale', $locale);
-                $app->make('director')->dispatch('on_locale_load', $event);
-            }
+            $this->currentLocaleChanged($locale);
         }
     }
 
@@ -440,6 +438,22 @@ class Localization
             $app = Facade::getFacadeApplication();
             $loader = new ZendSiteTranslationLoader($app);
             $loader->loadTranslations($adapter);
+        }
+    }
+
+    /**
+     * To be called every time the current locale changes.
+     *
+     * @param string $locale
+     */
+    protected function currentLocaleChanged($locale)
+    {
+        PunicData::setDefaultLocale($locale);
+        $app = Facade::getFacadeApplication();
+        if ($app->bound('director')) {
+            $event = new \Symfony\Component\EventDispatcher\GenericEvent();
+            $event->setArgument('locale', $locale);
+            $app->make('director')->dispatch('on_locale_load', $event);
         }
     }
 }
