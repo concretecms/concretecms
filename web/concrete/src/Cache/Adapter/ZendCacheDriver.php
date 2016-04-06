@@ -46,6 +46,7 @@ class ZendCacheDriver extends AbstractAdapter implements StorageInterface, Flush
         parent::__construct();
 
         $this->cacheName = $cacheName;
+        $this->cacheLifetime = $cacheLifetime;
     }
 
     /**
