@@ -904,6 +904,9 @@ class StyleSet
             $set->setBorderWidth($r['borderWidth']);
             $set->setBorderStyle($r['borderStyle']);
             $set->setBorderColor($r['borderColor']);
+            $return = true;
+        }
+        if (trim($r['borderRadius']) && trim($r['borderRadius']) != '0px') {
             $set->setBorderRadius($r['borderRadius']);
             $return = true;
         }
