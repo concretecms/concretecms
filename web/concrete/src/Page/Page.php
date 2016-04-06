@@ -1871,7 +1871,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         $txt = Core::make('helper/text');
         if (!isset($data['cHandle']) && ($this->getCollectionHandle() != '')) {
             $cHandle = $this->getCollectionHandle();
-        } elseif (!$data['cHandle']) {
+        } elseif (!Core::make('helper/validation/strings')->notempty($data['cHandle'])) {
             // make the handle out of the title
             $cHandle = $txt->urlify($cName);
             $cHandle = str_replace('-', Config::get('concrete.seo.page_path_separator'), $cHandle);
@@ -2570,7 +2570,13 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         }
         $path .= '/';
         $cID = ($this->getCollectionPointerOriginalID() > 0) ? $this->getCollectionPointerOriginalID() : $this->cID;
-        $path .= $this->getCollectionHandle() ? $this->getCollectionHandle() : $cID;
+        /** @var \Concrete\Core\Utility\Service\Validation\Strings $stringValidator */
+        $stringValidator = Core::make('helper/validation/strings');
+        if ($stringValidator->notempty($this->getCollectionHandle())) {
+            $path .= $this->getCollectionHandle();
+        } else {
+            $path .= $cID;
+        }
 
         $event = new PagePathEvent($this);
         $event->setPagePath($path);
