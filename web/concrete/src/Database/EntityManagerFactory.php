@@ -62,36 +62,16 @@ class EntityManagerFactory implements EntityManagerFactoryInterface
         \Doctrine\Common\Annotations\AnnotationRegistry::registerFile(DIR_BASE_CORE . '/vendor/doctrine/orm/lib/Doctrine/ORM' . '/Mapping/Driver/DoctrineAnnotations.php');
         \Doctrine\Common\Annotations\AnnotationRegistry::registerAutoloadNamespace('Application\Src', DIR_BASE . '/application/src');
 
-        // Ignore the Annotions of the SimpleAnnotationReader
-        // Ther is a bug in the Doctrine annotation doc parser class. 
-        // If there's a class named the same as a annotation, an exeption will be raised. In the case of Concrete5 this is the [at]package annotaton
-        // Even though the addGlobalIgnoredName is set the exception ist still thrown.
-        // http://stackoverflow.com/questions/21609571/swagger-php-and-doctrine-annotation-issue
-        // @Todo remove all unkown annotations used by the SimpleAnnotationReader form the AnnotationReader
+        // Remove all unkown annotations used by the SimpleAnnotationReader from the AnnotationReader
         // to prevent fatal errors
-        \Doctrine\Common\Annotations\AnnotationReader::addGlobalIgnoredName('subpackages');
-        \Doctrine\Common\Annotations\AnnotationReader::addGlobalIgnoredName('package');
-        \Doctrine\Common\Annotations\AnnotationReader::addGlobalIgnoredName('Id');
-        \Doctrine\Common\Annotations\AnnotationReader::addGlobalIgnoredName('Table');
-        \Doctrine\Common\Annotations\AnnotationReader::addGlobalIgnoredName('Column');
-        \Doctrine\Common\Annotations\AnnotationReader::addGlobalIgnoredName('GeneratedValue');
-        \Doctrine\Common\Annotations\AnnotationReader::addGlobalIgnoredName('Entity');
-        \Doctrine\Common\Annotations\AnnotationReader::addGlobalIgnoredName('OneToMany');
-        \Doctrine\Common\Annotations\AnnotationReader::addGlobalIgnoredName('ManyToOne');
-        \Doctrine\Common\Annotations\AnnotationReader::addGlobalIgnoredName('JoinColumn');
+        $this->registerGlobalIgnoredAnnotations();
 
         // initiate the driver chain which will hold all driver instances
         $driverChain = new \Doctrine\Common\Persistence\Mapping\Driver\MappingDriverChain();
 
-        //@todo - > get lookup paths
         // Create the annotation reader > 8.0.0
         $annotationReader = new \Doctrine\Common\Annotations\AnnotationReader();
         $cachedAnnotationReader = new \Doctrine\Common\Annotations\CachedReader($annotationReader, $cache);
-        // Add the reader to the DI container, so the reader same reader instance
-        // can be accessed in the PackageService
-        \Core::bind('orm/cachedAnnotationReader', function ($cachedAnnotationReader) {
-            return $cachedAnnotationReader;
-        });
         $this->cachedAnnotationReader = $cachedAnnotationReader;
 
         // Create legacy annotation reader used package requiring concrete5
@@ -99,11 +79,6 @@ class EntityManagerFactory implements EntityManagerFactoryInterface
         $simpleAnnotationReader = new \Doctrine\Common\Annotations\SimpleAnnotationReader();
         $simpleAnnotationReader->addNamespace('Doctrine\ORM\Mapping');
         $cachedSimpleAnnotationReader = new \Doctrine\Common\Annotations\CachedReader($simpleAnnotationReader, $cache);
-        // Add the reader to the DI container, so the reader same reader instance
-        // can be accessed in the PackageService
-        \Core::bind('orm/cachedSimpleAnnotationReader', function ($cachedSimpleAnnotationReader) {
-            return $cachedSimpleAnnotationReader;
-        });
         $this->cachedSimpleAnnotationReader = $cachedSimpleAnnotationReader;
 
         // Create Core annotationDriver
@@ -112,29 +87,17 @@ class EntityManagerFactory implements EntityManagerFactoryInterface
         );
         $annotationDriver = new \Doctrine\ORM\Mapping\Driver\AnnotationDriver($cachedAnnotationReader, $coreDirs);
 
-        // @todo important -> test if defaultDriver can be used
-        //$driverChain->setDefaultDriver($annotationDriver);
-        //@todo not sure if is needed
+        $driverChain->setDefaultDriver($annotationDriver);
+
         //$annotationDriver->addExcludePaths(Config::get('database.proxy_exclusions', array()));     
         $driverChain->addDriver($annotationDriver, 'Concrete\Core');
 
-        // @todo important -> test if defaultDriver can be used
-        //$driverChain->setDefaultDriver($annotationDriver);
         // Register application metadata driver;
         $this->addApplicationMetadataDriverToDriverChain($driverChain);
 
         // Register all concrete packages with entities to the driverChain 
         $this->addPackageMetadataDriverToDriverChain($driverChain);
 
-//        \Doctrine\Common\Util\Debug::dump($driverChain);
-//        die('ups');
-//        
-        // @todo - Provide a way to register the own doctrine extentions
-        //       - add a way to register the gedmo extentions
-        // Register Gedmo Doctrine Extensions 
-        // 1.) AbstractMapping vs Mapping @See https://github.com/Atlantic18/DoctrineExtensions/issues/790
-        //\Gedmo\DoctrineExtensions::registerMappingIntoDriverChainORM($driverChain, $cachedAnnotationReader);
-        //\Gedmo\DoctrineExtensions::registerAbstractMappingIntoDriverChainORM($driverChain, $cachedAnnotationReader);
         // Inject DriverChain into the doctrine config
         $configuration->setMetadataDriverImpl($driverChain);
 
@@ -148,7 +111,17 @@ class EntityManagerFactory implements EntityManagerFactoryInterface
         $event->setArgument('connection', $connection);
         $event->setArgument('configuration', $configuration);
         $event->setArgument('eventManager', $eventManager);
+        $event->setArgument('cachedAnnotationReader', $cachedAnnotationReader);
         Events::dispatch('on_entity_manager_configure', $event);
+
+        // Add the reader to the DI container, so the reader same reader instance
+        // can be accessed in the PackageService
+        \Core::bind('orm/cachedAnnotationReader', function ($cachedAnnotationReader) {
+            return $cachedAnnotationReader;
+        });
+        \Core::bind('orm/cachedSimpleAnnotationReader', function ($cachedSimpleAnnotationReader) {
+            return $cachedSimpleAnnotationReader;
+        });
 
         // Reasign the values from the dispatched event
         $conn = $event->getArgument('connection');
@@ -267,6 +240,61 @@ class EntityManagerFactory implements EntityManagerFactoryInterface
                 $driverChain->addDriver($yamlDriver, $setting['namespace']);
             }
         }
+    }
+
+    /**
+     * Register globally ignored annotations
+     */
+    protected function registerGlobalIgnoredAnnotations()
+    {
+        // There is a bug in the Doctrine annotation DocParser class. 
+        // If there's a class named the same as an annotation, an exeption will be raised. 
+        // In the case of Concrete5 this is the \@package annotaton. Even though 
+        // the addGlobalIgnoredName is set the exception is still thrown.
+        // http://stackoverflow.com/questions/21609571/swagger-php-and-doctrine-annotation-issue
+        // Solution 1: Add this fix to \Doctrine\Common\Annotations\DocParser and customize other Classes
+        // https://github.com/bfanger/annotations/commit/1dfb5073061d3fe856c3b138286aa4c75120fcd3 
+        // Solution 2: Comment all [at]package annotation found in concrete/src with a backslash. Example \@package
+        // The annotations added to the global ignored namespace are still valid for the simple annotation reader
+        \Doctrine\Common\Annotations\AnnotationReader::addGlobalIgnoredName('subpackages');
+        \Doctrine\Common\Annotations\AnnotationReader::addGlobalIgnoredName('package');
+
+        // Default Doctrine annotations
+        \Doctrine\Common\Annotations\AnnotationReader::addGlobalIgnoredName('Column');
+        \Doctrine\Common\Annotations\AnnotationReader::addGlobalIgnoredName('ColumnResult');
+        \Doctrine\Common\Annotations\AnnotationReader::addGlobalIgnoredName('Cache');
+        \Doctrine\Common\Annotations\AnnotationReader::addGlobalIgnoredName('ChangeTrackingPolicy');
+        \Doctrine\Common\Annotations\AnnotationReader::addGlobalIgnoredName('DiscriminatorColumn');
+        \Doctrine\Common\Annotations\AnnotationReader::addGlobalIgnoredName('DiscriminatorMap');
+        \Doctrine\Common\Annotations\AnnotationReader::addGlobalIgnoredName('Entity');
+        \Doctrine\Common\Annotations\AnnotationReader::addGlobalIgnoredName('EntityResult');
+        \Doctrine\Common\Annotations\AnnotationReader::addGlobalIgnoredName('FieldResult');
+        \Doctrine\Common\Annotations\AnnotationReader::addGlobalIgnoredName('GeneratedValue');
+        \Doctrine\Common\Annotations\AnnotationReader::addGlobalIgnoredName('HasLifecycleCallbacks');
+        \Doctrine\Common\Annotations\AnnotationReader::addGlobalIgnoredName('Id');
+        \Doctrine\Common\Annotations\AnnotationReader::addGlobalIgnoredName('InheritanceType');
+        \Doctrine\Common\Annotations\AnnotationReader::addGlobalIgnoredName('JoinColumn');
+        \Doctrine\Common\Annotations\AnnotationReader::addGlobalIgnoredName('JoinColumns');
+        \Doctrine\Common\Annotations\AnnotationReader::addGlobalIgnoredName('JoinTable');
+        \Doctrine\Common\Annotations\AnnotationReader::addGlobalIgnoredName('ManyToOne');
+        \Doctrine\Common\Annotations\AnnotationReader::addGlobalIgnoredName('ManyToMany');
+        \Doctrine\Common\Annotations\AnnotationReader::addGlobalIgnoredName('MappedSuperclass');
+        \Doctrine\Common\Annotations\AnnotationReader::addGlobalIgnoredName('NamedNativeQuery');
+        \Doctrine\Common\Annotations\AnnotationReader::addGlobalIgnoredName('OneToOne');
+        \Doctrine\Common\Annotations\AnnotationReader::addGlobalIgnoredName('OneToMany');
+        \Doctrine\Common\Annotations\AnnotationReader::addGlobalIgnoredName('OrderBy');
+        \Doctrine\Common\Annotations\AnnotationReader::addGlobalIgnoredName('PostLoad');
+        \Doctrine\Common\Annotations\AnnotationReader::addGlobalIgnoredName('PostPersist');
+        \Doctrine\Common\Annotations\AnnotationReader::addGlobalIgnoredName('PostRemove');
+        \Doctrine\Common\Annotations\AnnotationReader::addGlobalIgnoredName('PostUpdate');
+        \Doctrine\Common\Annotations\AnnotationReader::addGlobalIgnoredName('PrePersist');
+        \Doctrine\Common\Annotations\AnnotationReader::addGlobalIgnoredName('PreRemove');
+        \Doctrine\Common\Annotations\AnnotationReader::addGlobalIgnoredName('PreUpdate');
+        \Doctrine\Common\Annotations\AnnotationReader::addGlobalIgnoredName('SequenceGenerator');
+        \Doctrine\Common\Annotations\AnnotationReader::addGlobalIgnoredName('SqlResultSetMapping');
+        \Doctrine\Common\Annotations\AnnotationReader::addGlobalIgnoredName('Table');
+        \Doctrine\Common\Annotations\AnnotationReader::addGlobalIgnoredName('UniqueConstraint');
+        \Doctrine\Common\Annotations\AnnotationReader::addGlobalIgnoredName('Version');
     }
 
 }
