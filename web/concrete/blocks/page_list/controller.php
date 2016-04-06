@@ -188,11 +188,7 @@ class Controller extends BlockController
             $feed = Feed::getByID($this->pfID);
             if (is_object($feed)) {
                 $this->set('rssUrl', $feed->getFeedURL());
-                $link = new \HtmlObject\Element('link');
-                $link->href($feed->getFeedURL());
-                $link->rel('alternate');
-                $link->type('application/rss+xml');
-                $link->title($feed->getTitle());
+                $link = $feed->getHeadLinkElement();
                 $this->addHeaderItem($link);
             }
         }
