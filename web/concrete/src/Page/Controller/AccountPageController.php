@@ -3,6 +3,7 @@ namespace Concrete\Core\Page\Controller;
 
 use Concrete\Controller\Element\Navigation\AccountMenu;
 use Concrete\Controller\Element\Navigation\Menu;
+use Concrete\Core\Page\Desktop\DesktopList;
 use Loader;
 use PageController as CorePageController;
 
@@ -18,7 +19,8 @@ class AccountPageController extends CorePageController
         }
 
         $dh = \Core::make('helper/concrete/dashboard');
-        if ($dh->canRead() && $this->getPageObject()->getCollectionPath() != '/account/welcome') {
+        $desktop = DesktopList::getMyDesktop();
+        if ($dh->inDashboard($desktop) && $this->getPageObject()->getCollectionPath() != '/account/welcome') {
             $this->theme = 'dashboard';
             $this->set('pageTitle', t('My Account'));
         }

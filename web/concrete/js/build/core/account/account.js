@@ -11,7 +11,7 @@ ccm_enableUserProfileMenu = function() {
 	var documentHeight = $(document).height(),
 		position = $('#ccm-account-menu').offset().top;
 
-	if ((documentHeight > 700) && ((documentHeight - position) < 200)) {
+	if ((documentHeight > 200) && ((documentHeight - position) < 200)) {
 		$('#ccm-account-menu').addClass('dropup');
 	}
 }
