@@ -67,13 +67,13 @@ class Link
 
     public static function getList()
     {
-        $em = \ORM::entityManager('core');
+        $em = \ORM::entityManager();
         return $em->getRepository('\Concrete\Core\Sharing\SocialNetwork\Link')->findBy(array(), array('ssHandle' => 'asc'));
     }
 
     public function save()
     {
-        $em = \ORM::entityManager('core');
+        $em = \ORM::entityManager();
         $em->persist($this);
         $em->flush();
     }
@@ -91,14 +91,14 @@ class Link
 
     public function delete()
     {
-        $em = \ORM::entityManager('core');
+        $em = \ORM::entityManager();
         $em->remove($this);
         $em->flush();
     }
 
     public static function getByID($id)
     {
-        $em = \ORM::entityManager('core');
+        $em = \ORM::entityManager();
         $r = $em->find('\Concrete\Core\Sharing\SocialNetwork\Link', $id);
 
         return $r;
@@ -106,7 +106,7 @@ class Link
 
     public static function getByServiceHandle($ssHandle)
     {
-        $em = \ORM::entityManager('core');
+        $em = \ORM::entityManager();
         return $em->getRepository('\Concrete\Core\Sharing\SocialNetwork\Link')->findOneBy(
             array('ssHandle' => $ssHandle)
         );

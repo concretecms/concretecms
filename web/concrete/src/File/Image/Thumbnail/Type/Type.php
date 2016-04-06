@@ -153,7 +153,7 @@ class Type
      */
     public static function getList()
     {
-        $em = \ORM::entityManager('core');
+        $em = \ORM::entityManager();
 
         return $em->getRepository('\Concrete\Core\File\Image\Thumbnail\Type\Type')->findBy(array(), array('ftTypeWidth' => 'asc'));
     }
@@ -175,7 +175,7 @@ class Type
 
     public function save()
     {
-        $em = \ORM::entityManager('core');
+        $em = \ORM::entityManager();
         $em->persist($this);
         $em->flush();
     }
@@ -200,14 +200,14 @@ class Type
 
     public function delete()
     {
-        $em = \ORM::entityManager('core');
+        $em = \ORM::entityManager();
         $em->remove($this);
         $em->flush();
     }
 
     public static function getByID($id)
     {
-        $em = \ORM::entityManager('core');
+        $em = \ORM::entityManager();
         $r = $em->find('\Concrete\Core\File\Image\Thumbnail\Type\Type', $id);
 
         return $r;
@@ -226,7 +226,7 @@ class Type
             return $item->get();
         }
 
-        $em = \ORM::entityManager('core');
+        $em = \ORM::entityManager();
         $r = $em->getRepository('\Concrete\Core\File\Image\Thumbnail\Type\Type')
             ->findOneBy(array('ftTypeHandle' => $ftTypeHandle));
 

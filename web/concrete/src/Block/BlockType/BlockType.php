@@ -93,7 +93,7 @@ class BlockType
      */
     public static function getByHandle($btHandle)
     {
-        $em = \ORM::entityManager('core');
+        $em = \ORM::entityManager();
         $bt = $em->getRepository('\Concrete\Core\Block\BlockType\BlockType')->findOneBy(array('btHandle' => $btHandle));
         if (is_object($bt)) {
             $bt->loadController();
@@ -127,7 +127,7 @@ class BlockType
      */
     public static function getByID($btID)
     {
-        $em = \ORM::entityManager('core');
+        $em = \ORM::entityManager();
         $bt = $em->getRepository('\Concrete\Core\Block\BlockType\BlockType')->find($btID);
         $bt->loadController();
 
@@ -178,7 +178,7 @@ class BlockType
             Localization::changeLocale($currentLocale);
         }
 
-        $em = \ORM::entityManager('core');
+        $em = \ORM::entityManager();
         $em->persist($bt);
         $em->flush();
 
@@ -613,7 +613,7 @@ class BlockType
 
         $this->loadFromController($bta);
 
-        $em = \ORM::entityManager('core');
+        $em = \ORM::entityManager();
         $em->persist($this);
         $em->flush();
 
@@ -677,7 +677,7 @@ class BlockType
             }
         }
 
-        $em = \ORM::entityManager('core');
+        $em = \ORM::entityManager();
         $em->remove($this);
         $em->flush();
 

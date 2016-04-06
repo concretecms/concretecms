@@ -700,14 +700,14 @@ class StyleSet
      */
     public static function getByID($issID)
     {
-        $em = \ORM::entityManager('core');
+        $em = \ORM::entityManager();
 
         return $em->find('\Concrete\Core\StyleCustomizer\Inline\StyleSet', $issID);
     }
 
     public function save()
     {
-        $em = \ORM::entityManager('core');
+        $em = \ORM::entityManager();
         $em->persist($this);
         $em->flush();
     }

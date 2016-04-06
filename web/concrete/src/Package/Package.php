@@ -329,7 +329,7 @@ abstract class Package implements LocalizablePackageInterface
 
         $this->destroyProxyClasses($this->getPackageEntityManager());
         
-        $em = \ORM::entityManager('core');
+        $em = \ORM::entityManager();
         $em->remove($package);
         $em->flush();
 
@@ -653,7 +653,7 @@ abstract class Package implements LocalizablePackageInterface
      */
     public function upgradeCoreData()
     {
-        $em = \ORM::entityManager('core');
+        $em = \ORM::entityManager();
         $entity = $this->getPackageEntity();
         if (is_object($entity)) {
             $entity->setPackageName($this->getPackageName());

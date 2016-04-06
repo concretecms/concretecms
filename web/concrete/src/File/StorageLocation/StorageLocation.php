@@ -106,7 +106,7 @@ class StorageLocation
     {
         $default = self::getDefault();
 
-        $em = \ORM::entityManager('core');
+        $em = \ORM::entityManager();
         $o = new static();
         $o->fslName = $fslName;
         $o->fslIsDefault = $fslIsDefault;
@@ -125,7 +125,7 @@ class StorageLocation
 
     public static function getByID($id)
     {
-        $em = \ORM::entityManager('core');
+        $em = \ORM::entityManager();
         $r = $em->find('\Concrete\Core\File\StorageLocation\StorageLocation', intval($id));
 
         return $r;
@@ -135,7 +135,7 @@ class StorageLocation
      */
     public static function getList()
     {
-        $em = \ORM::entityManager('core');
+        $em = \ORM::entityManager();
         return $em->getRepository('\Concrete\Core\File\StorageLocation\StorageLocation')->findBy(
             array(), array('fslID' => 'asc')
         );
@@ -146,7 +146,7 @@ class StorageLocation
      */
     public static function getDefault()
     {
-        $em = \ORM::entityManager('core');
+        $em = \ORM::entityManager();
         $location = $em->getRepository('\Concrete\Core\File\StorageLocation\StorageLocation')->findOneBy(
             array('fslIsDefault' => true,
             ));
@@ -181,7 +181,7 @@ class StorageLocation
             }
         }
 
-        $em = \ORM::entityManager('core');
+        $em = \ORM::entityManager();
         $em->remove($this);
         $em->flush();
     }
@@ -190,7 +190,7 @@ class StorageLocation
     {
         $default = self::getDefault();
 
-        $em = \ORM::entityManager('core');
+        $em = \ORM::entityManager();
         $em->persist($this);
 
         if ($this->isDefault() && is_object($default) && $default->getID() != $this->getID()) {

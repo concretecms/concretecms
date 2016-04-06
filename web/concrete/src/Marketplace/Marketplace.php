@@ -100,7 +100,7 @@ class Marketplace
      */
     public static function checkPackageUpdates()
     {
-        $em = \ORM::entityManager('core');
+        $em = \ORM::entityManager();
         $items = self::getAvailableMarketplaceItems(false);
         foreach ($items as $i) {
             $p = Package::getByHandle($i->getHandle());
