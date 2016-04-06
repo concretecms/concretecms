@@ -3,6 +3,7 @@
 namespace Concrete\Core\Page;
 use Concrete\Core\Backup\ContentExporter;
 use Concrete\Core\Block\View\BlockView;
+use Concrete\Core\Html\Object\HeadLink;
 use Concrete\Core\Http\Request;
 use Concrete\Core\Permission\Access\Entity\GroupEntity;
 use Database;
@@ -517,6 +518,12 @@ class Feed
 
             return $writer->export('rss');
         }
+    }
+
+    public function getHeadLinkElement()
+    {
+        $link = new HeadLink($this->getFeedURL(), 'alternate', 'application/rss+xml');
+        return $link;
     }
 
 }
