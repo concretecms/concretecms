@@ -145,7 +145,7 @@ class LinkAbstractor extends Object
 										$child->$attr($val);
 									}
 								}
-							} else {
+							} elseif (is_callable($tag, true, $attr)) {
 								$tag->$attr($val);
 							}
 						}
