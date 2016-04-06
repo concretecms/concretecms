@@ -36,47 +36,10 @@ class DatabaseServiceProvider extends ServiceProvider
         $this->app->bindShared('Doctrine\ORM\EntityManagerInterface', function ($app) {
             $factory = new EntityManagerFactory();
             $entityManager = $factory->create($app->make('Concrete\Core\Database\Connection\Connection'));
-            if ($this->app->isInstalled()) {
-                $this->setupPackageEntityManagers($entityManager);
-            }
             return $entityManager;
         });
         $this->app->bind('Doctrine\ORM\EntityManager', 'Doctrine\ORM\EntityManagerInterface');
-
     }
-
-
-    protected function setupPackageEntityManagers(EntityManagerInterface $entityManager)
-    {
-        try {
-            $packages = $entityManager->getRepository('Concrete\Core\Entity\Package')
-                ->findAll();
-
-            $implementation = $entityManager->getConfiguration()->getMetadataDriverImpl();
-            
-            $paths = array();
-            // @todo - Check if functionality is ok.
-            if($implementation instanceof \Doctrine\Common\Persistence\Mapping\Driver\MappingDriverChain){
-                $drivers = $implementation->getDrivers();
-                foreach($packages as $package) {
-                    $class = $package->getController();
-                    
-                    $applicationVersionRequired = $class->getApplicationVersionRequired();
-                    
-                    $paths = array_merge($paths, $class->getPackageEntityPaths());
-                }
-            }else {
-                //MappingDriver
-                $driver = $implementation;
-                foreach($packages as $package) {
-                    $class = $package->getController();
-                    $paths = array_merge($paths, $class->getPackageEntityPaths());
-                }
-                $driver->addPaths($paths);
-            }
-        } catch(\Exception $e) {}
-    }
-
 
     /**
      * A list of things that this service provider provides.

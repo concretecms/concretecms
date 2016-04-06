@@ -87,7 +87,8 @@ class EntityManagerFactory implements EntityManagerFactoryInterface
         );
         $annotationDriver = new \Doctrine\ORM\Mapping\Driver\AnnotationDriver($cachedAnnotationReader, $coreDirs);
 
-        $driverChain->setDefaultDriver($annotationDriver);
+        // Not sure if needed - if some problems occure uncommenting this maybe helps
+        //$driverChain->setDefaultDriver($annotationDriver);
 
         //$annotationDriver->addExcludePaths(Config::get('database.proxy_exclusions', array()));     
         $driverChain->addDriver($annotationDriver, 'Concrete\Core');
@@ -95,7 +96,7 @@ class EntityManagerFactory implements EntityManagerFactoryInterface
         // Register application metadata driver;
         $this->addApplicationMetadataDriverToDriverChain($driverChain);
 
-        // Register all concrete packages with entities to the driverChain 
+        // Register all installed packages with entities to the driverChain 
         $this->addPackageMetadataDriverToDriverChain($driverChain);
 
         // Inject DriverChain into the doctrine config
@@ -111,6 +112,7 @@ class EntityManagerFactory implements EntityManagerFactoryInterface
         $event->setArgument('connection', $connection);
         $event->setArgument('configuration', $configuration);
         $event->setArgument('eventManager', $eventManager);
+        // This argument is used by doctrine extentsions, which need to register their custom annotations.
         $event->setArgument('cachedAnnotationReader', $cachedAnnotationReader);
         Events::dispatch('on_entity_manager_configure', $event);
 
@@ -128,16 +130,13 @@ class EntityManagerFactory implements EntityManagerFactoryInterface
         $config = $event->getArgument('configuration');
         $evm = $event->getArgument('eventManager');
 
-//        // @todo - test remove
-//        \Doctrine\Common\Util\Debug::dump($configuration->getMetadataDriverImpl());
-//        die('est');
         // Inject the ORM EventManager into the EntityManager so ORM Events
         // can be triggered.
         return EntityManager::create($conn, $config, $evm);
     }
 
     /**
-     * Register the application metadata driver into the driver chain
+     * Register the application metadata driver to the driver chain
      * Default metadata driver is the annotation driver.
      * 
      * Other metadata driver typs (xml and yaml) can be configured in the 
@@ -169,7 +168,7 @@ class EntityManagerFactory implements EntityManagerFactoryInterface
 
     /**
      * Register all metadatadrivers of all installed packages containing entities 
-     * into the driver chain
+     * to the driver chain
      * 
      * @param \Doctrine\Common\Persistence\Mapping\Driver\MappingDriverChain $driverChain
      */
