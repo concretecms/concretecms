@@ -9,6 +9,10 @@
     {
       "type": "vcs",
       "url": "https://github.com/concrete5/flysystem"
+    },
+    {
+      "type": "vcs",
+      "url": "https://github.com/concrete5/ZendQueue"
     }
   ],
   "config": {
