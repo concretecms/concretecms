@@ -23,9 +23,9 @@ class Controller extends AttributeTypeController
 
     public function getDisplayValue()
     {
-        $value = $this->getValue() / 20;
+        $value = $this->getValue();
         $rt = Loader::helper('rating');
-        return $rt->output($this->attributeKey->getAttributeKeyHandle() . time(), $value);
+        return $rt->outputDisplay($value);
     }
 
     public function form()
