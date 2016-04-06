@@ -7,7 +7,7 @@ use Permissions;
 /**
  * Class CollectionVersionResponse.
  *
- * @package Concrete\Core\Permission\Response
+ * \@package Concrete\Core\Permission\Response
  */
 class CollectionVersionResponse extends Response
 {

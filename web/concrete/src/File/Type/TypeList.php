@@ -3,7 +3,7 @@ namespace Concrete\Core\File\Type;
 
 use Loader;
 /*
- * @package Core
+ * \@package Core
  * @subpackage Files
  * @author Andrew Embler <andrew@concrete5.org>
  * @copyright  Copyright (c) 2003-2009 Concrete5. (http://www.concrete5.org)
@@ -12,7 +12,7 @@ use Loader;
  */
 
 /*
- * @package Core
+ * \@package Core
  * @subpackage Files
  * @author Andrew Embler <andrew@concrete5.org>
  * @category Concrete

@@ -8,7 +8,7 @@ use FileAttributeKey;
 /**
  * An object that allows a filtered list of files to be returned.
  *
- * @package Files
+ * \@package Files
  */
 class FileList extends DatabaseItemList
 {

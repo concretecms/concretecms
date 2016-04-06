@@ -5,7 +5,7 @@ use Core;
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 
 /**
- * @package    Core
+ * \@package    Core
  *
  * @category   Concrete
  *
@@ -17,7 +17,7 @@ use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 /**
  * An object that represents a particular request to the Concrete-powered website. The request object then determines what is being requested, based on the path, and presents itself to the rest of the dispatcher (which loads the page, etc...).
  *
- * @package    Core
+ * \@package    Core
  *
  * @author     Andrew Embler <andrew@concrete5.org>
  *

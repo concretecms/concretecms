@@ -5,7 +5,7 @@ namespace Concrete\Core\Validator;
  * Interface ValidatorManagerInterface
  * A generic validator manager interface that enables validating against many validators at once.
  *
- * @package Concrete\Core\Validator
+ * \@package Concrete\Core\Validator
  */
 interface ValidatorManagerInterface extends ValidatorInterface
 {

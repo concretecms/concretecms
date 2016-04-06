@@ -7,7 +7,7 @@ use \Symfony\Component\HttpFoundation\Session\Session as SymfonySession;
 /**
  * Class Session.
  *
- * @package Concrete\Core\Session
+ * \@package Concrete\Core\Session
  *
  * @deprecated
  */

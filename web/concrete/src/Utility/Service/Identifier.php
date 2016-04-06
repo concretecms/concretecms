@@ -4,7 +4,7 @@ namespace Concrete\Core\Utility\Service;
 use Loader;
 
 /**
- * @package Helpers
+ * \@package Helpers
  * @subpackage Validation
  *
  * @author Andrew Embler <andrew@concrete5.org>
@@ -15,7 +15,7 @@ use Loader;
 /**
  * A helper that allows the creation of unique strings, for use when creating hashes, identifiers.
  *
- * @package Helpers
+ * \@package Helpers
  * @subpackage Validation
  *
  * @author Andrew Embler <andrew@concrete5.org>

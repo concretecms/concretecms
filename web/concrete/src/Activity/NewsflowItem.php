@@ -6,7 +6,7 @@ use Concrete\Core\Http\Service\Json;
 /**
  * Class NewsflowItem.
  *
- * @package Concrete\Core\Activity
+ * \@package Concrete\Core\Activity
  */
 class NewsflowItem
 {

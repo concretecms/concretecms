@@ -8,7 +8,7 @@ use Core;
  *
  * @deprecated
  *
- * @package Concrete\Core\Application\Service
+ * \@package Concrete\Core\Application\Service
  */
 class Avatar
 {

@@ -12,7 +12,7 @@ use Zend\Cache\Storage\FlushableInterface;
  * Class ZendCacheDriver
  * Adapter class to hook Zend's cache into Concrete5's cache.
  *
- * @package Concrete\Core\Cache\Adapter
+ * \@package Concrete\Core\Cache\Adapter
  */
 class ZendCacheDriver extends AbstractAdapter implements StorageInterface, FlushableInterface
 {

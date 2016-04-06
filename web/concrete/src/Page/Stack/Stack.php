@@ -15,7 +15,7 @@ use PageType;
 /**
  * Class Stack.
  *
- * @package Concrete\Core\Page\Stack
+ * \@package Concrete\Core\Page\Stack
  */
 class Stack extends Page implements ExportableInterface
 {

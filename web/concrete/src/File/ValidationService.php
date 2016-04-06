@@ -5,7 +5,7 @@ use Config;
 use Loader;
 
 /**
- * @package Helpers
+ * \@package Helpers
  * @subpackage Validation
  *
  * @author Andrew Embler <andrew@concrete5.org>
@@ -16,7 +16,7 @@ use Loader;
 /**
  * Helper elements for validating uploaded and existing files in Concrete.
  *
- * @package Helpers
+ * \@package Helpers
  * @subpackage Validation
  *
  * @author Andrew Embler <andrew@concrete5.org>

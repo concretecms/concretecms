@@ -5,7 +5,7 @@ namespace Concrete\Core\Device;
  * Class Device
  * A representation of a device.
  *
- * @package Concrete\Core\Device
+ * \@package Concrete\Core\Device
  */
 interface DeviceInterface
 {
