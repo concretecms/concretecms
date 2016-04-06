@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "7a0927db15a4ff8766f0ccafb99e386e",
-    "content-hash": "98c76a3da521273c97aa2c844b5bfe5d",
+    "hash": "571cc4707885a6e0d5a3b05aa641d197",
+    "content-hash": "b7d1fb871d7b709921350b8a13548121",
     "packages": [
         {
             "name": "anahkiasen/html-object",
@@ -3586,13 +3586,13 @@
             "version": "dev-master",
             "source": {
                 "type": "git",
-                "url": "https://github.com/zendframework/ZendQueue.git",
-                "reference": "b3a31b42a25f306291fba40f5c77ab6645971e45"
+                "url": "https://github.com/concrete5/ZendQueue.git",
+                "reference": "15f30c0d8061c6dc8c23b6163b32b049827556a0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zendframework/ZendQueue/zipball/b3a31b42a25f306291fba40f5c77ab6645971e45",
-                "reference": "b3a31b42a25f306291fba40f5c77ab6645971e45",
+                "url": "https://api.github.com/repos/concrete5/ZendQueue/zipball/15f30c0d8061c6dc8c23b6163b32b049827556a0",
+                "reference": "15f30c0d8061c6dc8c23b6163b32b049827556a0",
                 "shasum": ""
             },
             "require": {
@@ -3613,7 +3613,6 @@
                     "ZendQueue": "library/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "BSD-3-Clause"
             ],
@@ -3623,7 +3622,10 @@
                 "queue",
                 "zf2"
             ],
-            "time": "2013-07-17 22:15:58"
+            "support": {
+                "source": "https://github.com/concrete5/ZendQueue/tree/master"
+            },
+            "time": "2016-04-06 13:44:13"
         },
         {
             "name": "zendframework/zend-serializer",
