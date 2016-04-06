@@ -327,13 +327,11 @@ abstract class Package implements LocalizablePackageInterface
         \Config::clearNamespace($this->getPackageHandle());
         $this->app->make('config/database')->clearNamespace($this->getPackageHandle());
 
-        // @todo remove proxyclasses
         $this->destroyProxyClasses($this->getPackageEntityManager());
         
-        die('booom');
-        $manager = \ORM::entityManager('core');
-        $manager->remove($package);
-        $manager->flush();
+        $em = \ORM::entityManager('core');
+        $em->remove($package);
+        $em->flush();
 
         \Localization::clearCache();
     }
@@ -691,7 +689,7 @@ abstract class Package implements LocalizablePackageInterface
      */
     public function upgradeDatabase()
     {
-//        $this->destroyProxyClasses();
+        $this->destroyProxyClasses($this->getPackageEntityManager());
         $this->installEntitiesDatabase();
 
         static::installDB($this->getPackagePath() . '/' . FILENAME_PACKAGE_DB);
@@ -715,9 +713,8 @@ abstract class Package implements LocalizablePackageInterface
      */
     public function getMetadataDriver()
     {
-        // Create a appropriate EntityManager for the installation
         if ($this->metadataDriver === self::PACKAGE_METADATADRIVER_ANNOTATION){
-            if(version_compare($this->getApplicationVersionRequired(), '8.0.0', '<')){
+            if(version_compare($this->getApplicationVersionRequired(), '5.8.0', '<')){
                 // Legacy - uses SimpleAnnotationReader
                 $cachedSimpleAnnotationReader = \Core::make('orm/cachedSimpleAnnotationReader');
                 $simpleAnnotationDriver = new \Doctrine\ORM\Mapping\Driver\AnnotationDriver($cachedSimpleAnnotationReader, $this->getPackageMetadataPaths());
@@ -791,7 +788,7 @@ abstract class Package implements LocalizablePackageInterface
         // We don't want to accidentially update other packages, so we create
         // a new EntityManager which contains only the ORM metadata of the specific package
         if ($this->metadataDriver === self::PACKAGE_METADATADRIVER_ANNOTATION){
-            if(version_compare($this->getApplicationVersionRequired(), '8.0.0', '<')){
+            if(version_compare($this->getApplicationVersionRequired(), '5.8.0', '<')){
                 // Legacy - uses SimpleAnnotationReader
                 $driverImpl = $config->newDefaultAnnotationDriver($this->getPackageMetadataPaths());
             }else{
@@ -810,7 +807,7 @@ abstract class Package implements LocalizablePackageInterface
     }
     
     /**
-     * Destroys all proxies 
+     * Destroys all proxies related to a package 
      */
     protected function destroyProxyClasses(\Doctrine\ORM\EntityManager $em)
     {
