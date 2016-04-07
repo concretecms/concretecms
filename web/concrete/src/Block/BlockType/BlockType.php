@@ -158,11 +158,9 @@ class BlockType
         //Attempt to run the subclass methods (install schema from db.xml, etc.)
         $r = $bta->install($path);
 
-        $currentLocale = Localization::activeLocale();
-        if ($currentLocale != 'en_US') {
-            // Prevent the database records being stored in wrong language
-            Localization::changeLocale('en_US');
-        }
+        // Prevent the database records being stored in wrong language
+        $loc = Localization::getInstance();
+        $loc->pushActiveContext('system');
 
         //Install the block
         $bt = new static();
@@ -173,9 +171,8 @@ class BlockType
             $bt->pkgID = 0;
         }
         $bt->btHandle = $btHandle;
-        if ($currentLocale != 'en_US') {
-            Localization::changeLocale($currentLocale);
-        }
+
+        $loc->popActiveContext();
 
         $em = \ORM::entityManager('core');
         $em->persist($bt);

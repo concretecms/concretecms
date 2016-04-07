@@ -1,0 +1,14 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: concrete5 tests\n"
+"POT-Creation-Date: 2016-03-15 19:32+0200\n"
+"PO-Revision-Date: 2016-03-15 19:32+0200\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: dummy/controller.php:17
+msgid "Dummy"
+msgstr ""
