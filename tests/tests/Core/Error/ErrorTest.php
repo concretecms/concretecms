@@ -38,7 +38,7 @@ class ErrorTest extends PHPUnit_Framework_TestCase
         $html = ob_get_contents();
         ob_end_clean();
         $json = json_encode($e);
-        $this->assertEquals('{"error":true,"errors":[{"message":"This is a test."}]}', $json);
+        $this->assertEquals('{"error":true,"errors":["This is a test."]}', $json);
         $this->assertEquals($json, $output);
         $output = json_decode($output);
         $this->assertEquals(true, $output->error);
