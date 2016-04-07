@@ -4,9 +4,7 @@ namespace Concrete\Core\Multilingual\Service;
 use Concrete\Core\Localization\Localization;
 use Concrete\Core\Multilingual\Page\Section\Section;
 use Concrete\Core\Page\Page;
-use Cookie;
-use Config;
-use Session;
+use Concrete\Core\Support\Facade\Facade;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
@@ -26,11 +24,16 @@ class Detector
     public static function getPreferredSection()
     {
         $locale = false;
+        $app = Facade::getFacadeApplication();
         // they have a language in a certain session going already
-        if (Session::has('multilingual_default_locale')) {
-            $locale = Session::get('multilingual_default_locale');
-        } elseif (Cookie::has('multilingual_default_locale')) {
-            $locale = Cookie::get('multilingual_default_locale');
+        $session = $app->make('session');
+        if ($session->has('multilingual_default_locale')) {
+            $locale = $session->get('multilingual_default_locale');
+        } else {
+            $cookie = $app->make('cookie');
+            if ($cookie->has('multilingual_default_locale')) {
+                $locale = $cookie->get('multilingual_default_locale');
+            }
         }
 
         if ($locale) {
@@ -51,7 +54,8 @@ class Detector
             }
         }
 
-        if (Config::get('concrete.multilingual.use_browser_detected_locale')) {
+        $config = $app->make('config');
+        if ($config->get('concrete.multilingual.use_browser_detected_locale')) {
             $home = false;
             $locales = \Punic\Misc::getBrowserLocales();
             foreach (array_keys($locales) as $locale) {
@@ -66,7 +70,7 @@ class Detector
             }
         }
 
-        return Section::getByLocale(Config::get('concrete.multilingual.default_locale'));
+        return Section::getByLocale($config->get('concrete.multilingual.default_locale'));
     }
 
     public static function setupSiteInterfaceLocalization(Page $c = null)
@@ -74,8 +78,9 @@ class Detector
         if (!$c) {
             $c = Page::getCurrentPage();
         }
+        $app = Facade::getFacadeApplication();
         // don't translate dashboard pages
-        $dh = \Core::make('helper/concrete/dashboard');
+        $dh = $app->make('helper/concrete/dashboard');
         if ($dh->inDashboard($c)) {
             return;
         }
@@ -90,8 +95,7 @@ class Detector
         }
 
         $locale = $ms->getLocale();
-
-        if (strlen($locale)) {
+        if ($locale) {
             $loc = Localization::getInstance();
             $loc->setContextLocale('site', $locale);
         }
@@ -100,13 +104,12 @@ class Detector
     public static function isEnabled()
     {
         if (!isset(self::$enabled)) {
-            $app = \Core::make('app');
+            $app = Facade::getFacadeApplication();
             if (!$app->isInstalled()) {
                 return false;
             }
-            $db = \Database::connection();
-            $count = $db->GetOne('select count(cID) from MultilingualSections');
-            self::$enabled = $count > 0;
+            $db = $app->make('database')->connection();
+            self::$enabled = (bool) $db->fetchColumn('select cID from MultilingualSections limit 1');
         }
 
         return self::$enabled;
