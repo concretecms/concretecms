@@ -32,11 +32,17 @@ class StorageLocation
      */
     protected $fslIsDefault = false;
 
+    /**
+     * @return int
+     */
     public function getID()
     {
         return $this->fslID;
     }
 
+    /**
+     * @return string
+     */
     public function getName()
     {
         return $this->fslName;
@@ -60,11 +66,17 @@ class StorageLocation
         }
     }
 
+    /**
+     * @param string $fslName
+     */
     public function setName($fslName)
     {
         $this->fslName = $fslName;
     }
 
+    /**
+     * @param bool $fslIsDefault
+     */
     public function setIsDefault($fslIsDefault)
     {
         $this->fslIsDefault = $fslIsDefault;
@@ -78,6 +90,9 @@ class StorageLocation
         return $this->fslConfiguration;
     }
 
+    /**
+     * @return bool
+     */
     public function isDefault()
     {
         return $this->fslIsDefault;
@@ -101,13 +116,13 @@ class StorageLocation
 
         $em = \ORM::entityManager('core');
         $o = new static();
-        $o->fslName = $fslName;
-        $o->fslIsDefault = $fslIsDefault;
-        $o->fslConfiguration = $configuration;
+        $o->setName($fslName);
+        $o->setIsDefault($fslIsDefault);
+        $o->setConfigurationObject($configuration);
         $em->persist($o);
 
         if ($fslIsDefault && is_object($default)) {
-            $default->fslIsDefault = false;
+            $default->setIsDefault(false);
             $em->persist($default);
         }
 
@@ -116,12 +131,20 @@ class StorageLocation
         return $o;
     }
 
+    /**
+     * @param int $id
+     * @return null|StorageLocation
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws \Doctrine\ORM\TransactionRequiredException
+     */
     public static function getByID($id)
     {
         $em = \ORM::entityManager('core');
         $r = $em->find('\Concrete\Core\File\StorageLocation\StorageLocation', intval($id));
         return $r;
     }
+
     /**
      * @return StorageLocation[]
      */
@@ -152,7 +175,7 @@ class StorageLocation
      */
     public function getFileSystemObject()
     {
-        $adapter = $this->fslConfiguration->getAdapter();
+        $adapter = $this->getConfigurationObject()->getAdapter();
         $filesystem = new \Concrete\Flysystem\Filesystem($adapter);
         return $filesystem;
     }
