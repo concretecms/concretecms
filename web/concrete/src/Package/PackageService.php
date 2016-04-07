@@ -176,11 +176,7 @@ class PackageService
 
     public function install(Package $p, $data)
     {
-        $currentLocale = $this->localization->activeLocale();
-        if ($currentLocale != 'en_US') {
-            // Prevent the database records being stored in wrong language
-            $this->localization->changeLocale('en_US');
-        }
+        $this->localization->pushActiveContext('system');
         try {
 
             $paths = array();
@@ -203,15 +199,11 @@ class PackageService
             if ($u->isSuperUser() && $swapper->allowsFullContentSwap($p) && $data['pkgDoFullContentSwap']) {
                 $swapper->swapContent($p, $data);
             }
-            if ($currentLocale != 'en_US') {
-                Localization::changeLocale($currentLocale);
-            }
+            $this->localization->popActiveContext();
             $pkg = $this->getByHandle($p->getPackageHandle());
             return $pkg;
         } catch (\Exception $e) {
-            if ($currentLocale != 'en_US') {
-                $this->localization->changeLocale($currentLocale);
-            }
+            $this->localization->popActiveContext();
             $error = $this->application->make('error');
             $error->add($e);
             return $error;
