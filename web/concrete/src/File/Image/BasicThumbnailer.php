@@ -4,7 +4,6 @@ namespace Concrete\Core\File\Image;
 use Concrete\Core\File\StorageLocation\StorageLocation;
 use Config;
 use Image;
-use Loader;
 use \Imagine\Image\Box;
 use Imagine\Image\ImageInterface;
 use \Concrete\Core\File\File;
@@ -13,6 +12,39 @@ class BasicThumbnailer
 {
 
     protected $jpegCompression;
+
+    /**
+     * @var StorageLocation
+     */
+    private $storageLocation;
+
+    /**
+     * BasicThumbnailer constructor.
+     * Set the storage location to the the default, if it exists.
+     */
+    public function __construct()
+    {
+        $sl = StorageLocation::getDefault();
+        if(is_object($sl)) {
+            $this->setStorageLocation($sl);
+        }
+    }
+
+    /**
+     * @return StorageLocation
+     */
+    public function getStorageLocation()
+    {
+        return $this->storageLocation;
+    }
+
+    /**
+     * @param StorageLocation $storageLocation
+     */
+    public function setStorageLocation(StorageLocation $storageLocation)
+    {
+        $this->storageLocation = $storageLocation;
+    }
 
     /**
      * Overrides the default or defined JPEG compression level per instance
@@ -43,7 +75,7 @@ class BasicThumbnailer
     public function create($mixed, $newPath, $width, $height, $fit = false)
     {
         $thumbnailOptions = array('jpeg_quality' => \Config::get('concrete.misc.default_jpeg_image_compression'));
-        $filesystem = StorageLocation::getDefault()
+        $filesystem = $this->getStorageLocation()
           ->getFileSystemObject();
 
         if ($mixed instanceof \Imagine\Image\ImageInterface) {
@@ -81,17 +113,18 @@ class BasicThumbnailer
      * Returns a path to the specified item, resized and/or cropped to meet max width and height. $obj can either be
      * a string (path) or a file object.
      * Returns an object with the following properties: src, width, height
-     * @param mixed $obj
+     * @param File|string $obj
      * @param int $maxWidth
      * @param int $maxHeight
      * @param bool $crop
+     * @return \stdClass Object that has the following properties: src, width, height
      */
     public function getThumbnail($obj, $maxWidth, $maxHeight, $crop = false) {
-        $storage = StorageLocation::getDefault();
+        $storage = $this->getStorageLocation();
         $filesystem = $storage->getFileSystemObject();
         $configuration = $storage->getConfigurationObject();
 
-        $fh = Loader::helper('file');
+        $fh = \Core::make('helper/file');
         if ($obj instanceof File) {
             try {
                 $fr = $obj->getFileResource();
