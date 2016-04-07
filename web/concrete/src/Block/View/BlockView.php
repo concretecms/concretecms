@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Block\View;
 
+use Concrete\Core\Localization\Localization;
 use Concrete\Core\View\AbstractView;
 use Config;
 use Area;
@@ -258,6 +259,11 @@ class BlockView extends AbstractView
             ob_end_clean();
         }
 
+        // The translatable texts in the block header/footer need to be printed
+        // out in the system language.
+        $loc = Localization::getInstance();
+        $loc->pushActiveContext('ui');
+
         if ($this->blockViewHeaderFile) {
             include $this->blockViewHeaderFile;
         }
@@ -271,6 +277,8 @@ class BlockView extends AbstractView
         if ($this->blockViewFooterFile) {
             include $this->blockViewFooterFile;
         }
+
+        $loc->popActiveContext();
     }
 
     protected function setBlockViewHeaderFile($file)

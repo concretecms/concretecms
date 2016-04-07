@@ -126,16 +126,16 @@ var ccmCountryForLanguageLister = (function() {
                 <td><?php echo $pc->getCollectionPath()?></td>
                 <td><a href="<?php echo $this->action('remove_locale_section', $pc->getCollectionID(), Loader::helper('validation/token')->generate())?>" class="icon-link"><i class="fa fa-trash"></i></a></td>
             </tr>
-        <?php 
+        <?php
 }
         ?>
         </table>
 
-    <?php 
+    <?php
     } else {
         ?>
         <p><?php echo t('You have not created any multilingual content sections yet.')?></p>
-    <?php 
+    <?php
     } ?>
     <form method="post" action="<?php echo $this->action('add_content_section')?>">
         <h4><?php echo t('Add a Locale')?></h4>
@@ -216,29 +216,6 @@ ccm_multilingualPopulateIcons = function(country) {
                     <?php echo $form->checkbox('redirectHomeToDefaultLocale', 1, $redirectHomeToDefaultLocale)?>
                     <span><?php echo t('Redirect home page to default locale.') ?></span>
                 </label>
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label class="control-label"><?php echo t('Registered Users Language Preferences');
-    ?></label>
-                <p><?php echo t('Load Interface Language from:');
-    ?></p>
-                <div class="radio">
-                    <label>
-                        <?php echo $form->radio('keepUsersLocale', 0, $keepUsersLocale);
-    ?>
-                        <span><?php echo t('Page (if it exists)');
-    ?></span>
-                    </label>
-                </div>
-                <div class="radio">
-                    <label>
-                        <?php echo $form->radio('keepUsersLocale', 1, $keepUsersLocale);
-    ?>
-                        <span><?php echo t("User Profile");
-    ?></span>
-                    </label>
                 </div>
             </div>
 

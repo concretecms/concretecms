@@ -70,6 +70,13 @@ class DefaultBooter implements BootInterface, ApplicationAwareInterface
 
         /*
          * ----------------------------------------------------------------------------
+         * Enable Localization
+         * ----------------------------------------------------------------------------
+         */
+        $this->initializeLocalization($app);
+
+        /*
+         * ----------------------------------------------------------------------------
          * Finalize paths.
          * ----------------------------------------------------------------------------
          */
@@ -182,7 +189,7 @@ class DefaultBooter implements BootInterface, ApplicationAwareInterface
              * Start localization library.
              * ----------------------------------------------------------------------------
              */
-            $this->initializeLocalization();
+            $this->setSystemLocale();
 
             /*
              * Handle automatic updating
@@ -209,6 +216,23 @@ class DefaultBooter implements BootInterface, ApplicationAwareInterface
         $config = $app->make('config');
 
         return $config;
+    }
+
+    /**
+     * Enable localization.
+     *
+     * This needs to happen very early in the boot process because the
+     * application configuration (config/app.php) is already calling the t()
+     * functions which are initializing the Localization singleton. When the
+     * singleton is being initialized, these services need to be already
+     * available.
+     *
+     * @param Application $app
+     */
+    private function initializeLocalization(Application $app)
+    {
+        $localization_provider = $app->make('Concrete\Core\Localization\LocalizationEssentialServiceProvider');
+        $localization_provider->register();
     }
 
     /**
@@ -409,11 +433,11 @@ class DefaultBooter implements BootInterface, ApplicationAwareInterface
     /**
      * Initialize localization.
      */
-    private function initializeLocalization()
+    private function setSystemLocale()
     {
         $u = new User();
         $lan = $u->getUserLanguageToDisplay();
         $loc = Localization::getInstance();
-        $loc->setLocale($lan);
+        $loc->setContextLocale('ui', $lan);
     }
 }
