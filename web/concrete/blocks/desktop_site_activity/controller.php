@@ -52,7 +52,7 @@ class Controller extends BlockController
     protected function getLatestSignups($since)
     {
         $db = \Database::connection();
-        $r = $db->query('select count(uID) from Users where UNIX_TIMESTAMP(uDateAdded) >= ?', array($since));
+        $r = $db->query('select count(uID) from Users where UNIX_TIMESTAMP(uDateAdded) >= ? and uIsActive = 1', array($since));
         return $r->fetchColumn();
     }
 
