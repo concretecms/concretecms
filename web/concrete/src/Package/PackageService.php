@@ -176,7 +176,7 @@ class PackageService
 
     public function install(Package $p, $data)
     {
-        $this->localization->pushActiveContext('database');
+        $this->localization->pushActiveContext('system');
         try {
 
             $config = $this->entityManager->getConfiguration();

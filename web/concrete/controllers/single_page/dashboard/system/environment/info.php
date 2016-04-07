@@ -13,7 +13,7 @@ class Info extends DashboardPageController
     public function get_environment_info()
     {
         $loc = Localization::getInstance();
-        $loc->setActiveContext('database');
+        $loc->setActiveContext('system');
         $maxExecutionTime = ini_get('max_execution_time');
         set_time_limit(5);
 
