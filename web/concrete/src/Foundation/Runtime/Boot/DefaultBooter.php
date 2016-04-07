@@ -438,6 +438,6 @@ class DefaultBooter implements BootInterface, ApplicationAwareInterface
         $u = new User();
         $lan = $u->getUserLanguageToDisplay();
         $loc = Localization::getInstance();
-        $loc->setContextLocale('system', $lan);
+        $loc->setContextLocale('ui', $lan);
     }
 }

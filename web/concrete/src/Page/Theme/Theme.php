@@ -669,7 +669,7 @@ class Theme extends Object
                 throw new \Exception(static::E_THEME_INSTALLED);
             }
             $loc = Localization::getInstance();
-            $loc->pushActiveContext('database');
+            $loc->pushActiveContext('system');
             try {
                 $res = static::getThemeNameAndDescription($dir, $pThemeHandle, is_object($pkg) ? $pkg->getPackageHandle() : '');
             } catch (\Exception $x) {

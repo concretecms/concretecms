@@ -160,7 +160,7 @@ class BlockType
 
         // Prevent the database records being stored in wrong language
         $loc = Localization::getInstance();
-        $loc->pushActiveContext('database');
+        $loc->pushActiveContext('system');
 
         //Install the block
         $bt = new static();

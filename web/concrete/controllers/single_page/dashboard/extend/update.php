@@ -28,7 +28,7 @@ class Update extends DashboardPageController
                 } else {
                     $p = Package::getByHandle($pkgHandle);
                     $loc = Localization::getInstance();
-                    $loc->pushActiveContext('database');
+                    $loc->pushActiveContext('system');
                     try {
                         $p->upgradeCoreData();
                         $p->upgrade();

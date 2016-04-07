@@ -248,7 +248,7 @@ abstract class Tree extends Object
     {
         $translations = new Translations();
         $loc = Localization::getInstance();
-        $loc->pushActiveContext('database');
+        $loc->pushActiveContext('system');
         try {
             $db = \Database::get();
             $r = $db->Execute('select treeID from Trees order by treeID asc');

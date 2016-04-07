@@ -43,7 +43,7 @@ class LocalizationEssentialServiceProvider extends ServiceProvider
             $repository = new TranslatorAdapterRepository($translatorAdapterFactory);
             $loc->setTranslatorAdapterRepository($repository);
 
-            $loc->setActiveContext('system');
+            $loc->setActiveContext('ui');
 
             return $loc;
         });
