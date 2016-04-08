@@ -19,22 +19,13 @@ class BasicThumbnailer
     private $storageLocation;
 
     /**
-     * BasicThumbnailer constructor.
-     * Set the storage location to the the default, if it exists.
-     */
-    public function __construct()
-    {
-        $sl = StorageLocation::getDefault();
-        if(is_object($sl)) {
-            $this->setStorageLocation($sl);
-        }
-    }
-
-    /**
      * @return StorageLocation
      */
     public function getStorageLocation()
     {
+        if ($this->storageLocation === null) {
+            $this->setStorageLocation(StorageLocation::getDefault());
+        }
         return $this->storageLocation;
     }
 
