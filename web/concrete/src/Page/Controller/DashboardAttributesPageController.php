@@ -115,7 +115,7 @@ abstract class DashboardAttributesPageController extends DashboardPageController
 
                 // Refresh display order just in case.
                 $displayOrder = 0;
-                foreach ($set->getAttributeKeys() as $setKey) {
+                foreach ($set->getAttributeKeyCollection() as $setKey) {
                     $setKey->setDisplayOrder($displayOrder);
                     $this->entityManager->persist($setKey);
                     ++$displayOrder;
@@ -201,7 +201,7 @@ abstract class DashboardAttributesPageController extends DashboardPageController
                 if ($set->getAttributeSetID() == $this->request->request->get('asID') && count($keys)) {
 
                     // Clear the keys
-                    foreach ($set->getAttributeKeys() as $setKey) {
+                    foreach ($set->getAttributeKeyCollection() as $setKey) {
                         $this->entityManager->remove($setKey);
                     }
                     $this->entityManager->flush();
@@ -212,7 +212,7 @@ abstract class DashboardAttributesPageController extends DashboardPageController
                         $setKey->setAttributeKey($key);
                         $setKey->setAttributeSet($set);
                         $setKey->setDisplayOrder($i);
-                        $set->getAttributeKeys()->add($setKey);
+                        $set->getAttributeKeyCollection()->add($setKey);
                         ++$i;
                     }
                     break;

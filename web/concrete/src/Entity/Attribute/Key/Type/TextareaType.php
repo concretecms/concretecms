@@ -18,14 +18,14 @@ class TextareaType extends Type
     /**
      * @ORM\Column(type="string")
      */
-    protected $mode = '';
+    protected $akTextareaDisplayMode = '';
 
     /**
      * @return mixed
      */
     public function getMode()
     {
-        return $this->mode;
+        return $this->akTextareaDisplayMode;
     }
 
     /**
@@ -33,7 +33,7 @@ class TextareaType extends Type
      */
     public function setMode($mode)
     {
-        $this->mode = $mode;
+        $this->akTextareaDisplayMode = $mode;
     }
 
 }

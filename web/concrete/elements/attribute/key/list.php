@@ -10,8 +10,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
     <h4><?=$set->getAttributeSetName()?></h4>
     <ul class="item-select-list ccm-attribute-list-wrapper" data-sortable-attribute-set="<?=$set->getAttributeSetID()?>">
         <?php
-        foreach ($set->getAttributeKeys() as $set_key) {
-            $key = $set_key->getAttributeKey();
+        foreach ($set->getAttributeKeys() as $key) {
             $controller = $key->getController();
             $formatter = $controller->getIconFormatter();
             ?>

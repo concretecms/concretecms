@@ -1,6 +1,8 @@
 <?php defined('C5_EXECUTE') or die("Access Denied."); ?>
 
 <div class="ccm-block-rss-displayer-wrapper">
+    <div class="ccm-block-rss-displayer">
+
 
 <?php if (strlen($title) > 0) {
     ?>
@@ -49,4 +51,6 @@ if (strlen($errorMsg) > 0) {
     }
 }
 ?>
+    </div>
+
 </div>

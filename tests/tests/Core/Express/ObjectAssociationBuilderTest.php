@@ -12,7 +12,7 @@ class ObjectAssociationBuilderTest extends PHPUnit_Framework_TestCase
     protected function setUp()
     {
         parent::setUp();
-        $this->builder = Core::make('express.builder.association');
+        $this->builder = Core::make('express/builder/association');
     }
     protected function getData()
     {

@@ -5,6 +5,7 @@ use Concrete\Core\Multilingual\Page\Section\Section;
 use Concrete\Core\Page\Type\Composer\Control\BlockControl;
 use Concrete\Core\Page\Type\Composer\FormLayoutSetControl;
 use Concrete\Core\Page\Type\Type;
+use Concrete\Core\Support\Facade\Route;
 use Database;
 use CacheLocal;
 use Collection;
@@ -1298,7 +1299,20 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     public function getCollectionThemeObject()
     {
         if (!isset($this->themeObject)) {
-            if ($this->vObj->pThemeID < 1) {
+            $tmpTheme = Route::getThemeByRoute($this->getCollectionPath());
+            if (isset($tmpTheme[0])) {
+                switch($tmpTheme[0]) {
+                    case VIEW_CORE_THEME:
+                        $this->themeObject = new \Concrete\Theme\Concrete\PageTheme();
+                        break;
+                    case 'dashboard':
+                        $this->themeObject = new \Concrete\Theme\Dashboard\PageTheme();
+                        break;
+                    default:
+                        $this->themeObject = PageTheme::getByHandle($tmpTheme[0]);
+                        break;
+                }
+            } else if ($this->vObj->pThemeID < 1) {
                 $this->themeObject = PageTheme::getSiteTheme();
             } else {
                 $this->themeObject = PageTheme::getByID($this->vObj->pThemeID);

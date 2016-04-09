@@ -263,7 +263,6 @@ defined('C5_EXECUTE') or die("Access Denied.");
     <div class="ccm-panel-content-inner" id="ccm-panel-add-blocktypes-list">
 
         <?php
-        $sets = BlockTypeSet::getList();
         $types = array();
         foreach ($blockTypes as $bt) {
             if (!$cp->canAddBlockType($bt)) {

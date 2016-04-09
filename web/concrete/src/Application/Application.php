@@ -263,6 +263,8 @@ class Application extends Container
 
         $config = $this['config'];
 
+        $loc = Localization::getInstance();
+
         foreach ($this->packages as $pkg) {
             // handle updates
             if ($config->get('concrete.updates.enable_auto_update_packages')) {
@@ -270,15 +272,10 @@ class Application extends Container
                 $pkgInstalledVersion = $dbPkg->getPackageVersion();
                 $pkgFileVersion = $pkg->getPackageVersion();
                 if (version_compare($pkgFileVersion, $pkgInstalledVersion, '>')) {
-                    $currentLocale = Localization::activeLocale();
-                    if ($currentLocale != 'en_US') {
-                        Localization::changeLocale('en_US');
-                    }
+                    $loc->pushActiveContext('system');
                     $dbPkg->upgradeCoreData();
                     $dbPkg->upgrade();
-                    if ($currentLocale != 'en_US') {
-                        Localization::changeLocale($currentLocale);
-                    }
+                    $loc->popActiveContext();
                 }
             }
             $this->make('Concrete\Core\Package\PackageService')->setupLocalization($pkg);
@@ -290,7 +287,11 @@ class Application extends Container
             }
         }
         $config->set('app.bootstrap.packages_loaded', true);
-        \Localization::setupSiteLocalization();
+
+        // After package initialization, the translations adapters need to be
+        // reinitialized when accessed the next time because new translations
+        // are now available.
+        $loc->removeLoadedTranslatorAdapters();
 
         if ($checkAfterStart) {
             foreach ($this->packages as $pkg) {

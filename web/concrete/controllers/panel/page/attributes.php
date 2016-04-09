@@ -41,7 +41,6 @@ class Attributes extends BackendInterfacePageController
             $obj->title = $set->getAttributeSetDisplayName();
             $obj->attributes = array();
             foreach ($set->getAttributeKeys() as $ak) {
-                $ak = $ak->getAttributeKey();
                 if (in_array($ak->getAttributeKeyID(), $allowed)) {
                     $obj->attributes[] = $ak;
                 }

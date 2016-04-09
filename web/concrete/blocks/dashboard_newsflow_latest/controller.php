@@ -18,7 +18,6 @@ class Controller extends BlockController
     protected $btCacheBlockOutputLifetime = 7200;
     protected $btTable = 'btDashboardNewsflowLatest';
     protected $btCacheBlockOutputForRegisteredUsers = true;
-    protected $btIsInternal = true;
 
     public function getBlockTypeDescription()
     {
@@ -38,6 +37,7 @@ class Controller extends BlockController
         $this->set('slot', $slots[$this->slot]);
 
         // this is kind of a hack
+        /*
         if ($this->slot == 'C') {
             $ni = false;
             try {
@@ -53,5 +53,6 @@ class Controller extends BlockController
             } else {
             }
         }
+        */
     }
 }

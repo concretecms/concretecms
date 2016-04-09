@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Workflow\Request;
 
+use HtmlObject\Element;
 use Workflow;
 use Loader;
 use Page;
@@ -35,18 +36,42 @@ class ApprovePageRequest extends PageRequest
         return $this->cvID;
     }
 
+    protected function isNewPageRequest()
+    {
+        $active = Page::getByID($this->cID, 'ACTIVE');
+        if (is_object($active) && !$active->isError()) {
+            $version = $active->getVersionObject();
+            if (is_object($version) && $version->getVersionID()) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     public function getWorkflowRequestDescriptionObject()
     {
         $d = new WorkflowDescription();
         $c = Page::getByID($this->cID, 'RECENT');
         $link = Loader::helper('navigation')->getLinkToCollection($c, true);
         $comments = $c->getVersionObject()->getVersionComments();
-        $d->setEmailDescription(t("\"%s\" has pending changes and needs to be approved.\n\nVersion Comments: %s\n\nView the page here: %s.",
-            $c->getCollectionName(), $comments, $link));
-        $d->setDescription(t("Version %s of Page <a href=\"%s\">%s</a> submitted for Approval.", $this->cvID, $link,
-            $c->getCollectionName()));
-        $d->setInContextDescription(t("Page Version %s Submitted for Approval.", $this->cvID));
-        $d->setShortStatus(t("Pending Approval"));
+
+        if (!$this->isNewPageRequest()) {
+            // new version of existing page
+            $d->setEmailDescription(t("\"%s\" has pending changes and needs to be approved.\n\nVersion Comments: %s\n\nView the page here: %s.",
+                $c->getCollectionName(), $comments, $link));
+            $d->setDescription(t("Version %s of Page <a target=\"_blank\" href=\"%s\">%s</a> submitted for Approval.", $this->cvID, $link,
+                $c->getCollectionName()));
+            $d->setInContextDescription(t("Page Version %s Submitted for Approval.", $this->cvID));
+            $d->setShortStatus(t("Pending Approval"));
+        } else {
+            // Completely new page.
+            $d->setEmailDescription(t("New page created: \"%s\". This page requires approval.\n\nAuthor Comments: %s\n\nView the page here: %s.",
+                $c->getCollectionName(), $comments, $link));
+            $d->setDescription(t("New Page: <a target=\"_blank\" href=\"%s\">%s</a>", $link, $c->getCollectionName()));
+            $d->setInContextDescription(t("New Page %s submitted for approval.", $this->cvID));
+            $d->setShortStatus(t("New Page"));
+        }
+
 
         return $d;
     }
@@ -68,7 +93,7 @@ class ApprovePageRequest extends PageRequest
 
     public function getWorkflowRequestApproveButtonText()
     {
-        return t('Approve Page');
+        return t('Approve');
     }
 
     public function trigger()
@@ -78,6 +103,18 @@ class ApprovePageRequest extends PageRequest
         return parent::trigger();
     }
 
+    public function getRequestIconElement()
+    {
+        if (!$this->isNewPageRequest()) {
+            return parent::getRequestIconElement();
+        }
+
+        $span = new Element('i');
+        $span->addClass('fa fa-file');
+        return $span;
+    }
+
+
     public function getWorkflowRequestAdditionalActions(WorkflowProgress $wp)
     {
         $buttons = array();
@@ -85,7 +122,7 @@ class ApprovePageRequest extends PageRequest
         $cp = new Permissions($c);
         if ($cp->canViewPageVersions()) {
             $button = new WorkflowProgressAction();
-            $button->setWorkflowProgressActionLabel(t('Compare Versions'));
+            $button->setWorkflowProgressActionLabel(t('Review'));
             $button->addWorkflowProgressActionButtonParameter('dialog-title', t('Compare Versions'));
             $button->addWorkflowProgressActionButtonParameter('dialog-width', '90%');
             $button->addWorkflowProgressActionButtonParameter('dialog-height', '70%');
@@ -133,4 +170,12 @@ class ApprovePageRequest extends PageRequest
         $this->isScheduled = true;
         $this->scheduleDatetime = $dateTime;
     }
+
+    public function getRequesterComment()
+    {
+        $c = Page::getByID($this->getRequestedPageID());
+        $v = CollectionVersion::get($c, $this->cvID);
+        return $v->getVersionComments();
+    }
+
 }

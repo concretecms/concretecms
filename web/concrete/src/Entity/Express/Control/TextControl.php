@@ -41,9 +41,9 @@ class TextControl extends Control
         return new TextControlSaveHandler();
     }
 
-    public function getFormControlRenderer(Entity $entity = null)
+    public function getFormControlRenderer(Entry $entry = null)
     {
-        return new TextEntityPropertyControlFormRenderer($entity);
+        return new TextEntityPropertyControlFormRenderer($entry);
     }
 
     public function getViewControlRenderer(Entry $entry)

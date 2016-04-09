@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Entity\Attribute\Value\Value;
 
+use Concrete\Core\Tree\Node\Node;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -27,6 +28,12 @@ class TopicsValue extends Value
         $this->topics = new ArrayCollection();
     }
 
+    public function getValue()
+    {
+        return $this->getSelectedTopicNodes();
+    }
+
+
     public function getSelectedTopics()
     {
         return $this->topics;
@@ -35,5 +42,17 @@ class TopicsValue extends Value
     public function setSelectedTopics($topics)
     {
         $this->topics = $topics;
+    }
+
+    public function getSelectedTopicNodes()
+    {
+        $topics = array();
+        foreach($this->topics as $selectedTopic) {
+            $node = Node::getByID($selectedTopic->getTreeNodeID());
+            if (is_object($node)) {
+                $topics[] = $node;
+            }
+        }
+        return $topics;
     }
 }

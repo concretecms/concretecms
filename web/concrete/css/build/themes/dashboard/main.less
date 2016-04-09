@@ -23,7 +23,7 @@ html.ccm-panel-right {
 
 div#ccm-dashboard-content {
 
-  padding-top: 35px;
+  padding-top: 48px;
 
   tr {
     &.ccm-theme-active {
@@ -64,10 +64,13 @@ div#ccm-dashboard-content {
     margin-right: -50px;
     margin-bottom: 30px;
     padding: 34px 80px 34px 97px;
+    position: relative;
 
     h1 {
       font-size: 22px;
       font-weight: 600;
+      margin-top: 0px;
+      margin-bottom: 0px;
       color: #105192;
     }
 
@@ -77,6 +80,16 @@ div#ccm-dashboard-content {
 
     margin-bottom: 30px;
     */
+
+    a.ccm-dashboard-page-header-bookmark {
+      position: absolute;
+      left: 72px;
+      top: 37px;
+      color: rgba(16,81,146,0.3);
+      &:focus {
+        outline: none;
+      }
+    }
   }
 
   form.ccm-dashboard-content-form {
@@ -235,6 +248,31 @@ div#ccm-dashboard-content {
   }
 }
 
+div.ccm-dashboard-my-account {
+  div#ccm-dashboard-content {
+    > header {
+      background: #000;
+
+      > h1 {
+        color: #7d8791;
+      }
+    }
+
+    > h2 {
+      font-weight: 200;
+      -webkit-font-smoothing: antialiased;
+      font-size: 24px;
+    }
+  }
+}
+
+@import "./welcome.less";
+@import "./welcome/site-activity.less";
+@import "./welcome/rss-displayer.less";
+@import "./welcome/newsflow.less";
+@import "./welcome/latest-form.less";
+@import "./welcome/marketplace.less";
+@import "./welcome/waiting-for-me.less";
 @import "./attributes.less";
 @import "./form-and-set-builder.less";
 @import "./multilingual.less";

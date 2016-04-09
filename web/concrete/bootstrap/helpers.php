@@ -1,5 +1,4 @@
 <?php
-
 defined('C5_EXECUTE') or die('Access Denied.');
 
 use Concrete\Core\Utility\Service\Text;
@@ -18,27 +17,20 @@ use \Concrete\Core\Localization\Localization;
  */
 function t($text)
 {
-    if (!is_string($text)) {
-        return '';
-    }
-    $zt = Localization::getTranslate();
-    if (is_object($zt)) {
-        $v = $zt->translate($text);
-        if (is_array($v)) {
-            if (isset($v[0]) && ($v[0] !== '')) {
-                $text = $v[0];
-            }
-        } else {
-            $text = $v;
-        }
-    }
-    if (func_num_args() === 1) {
-        return $text;
-    } else {
-        $args = func_get_args();
-        array_shift($args);
-
-        return vsprintf($text, $args);
+    $loc = Localization::getInstance();
+    $adapter = $loc->getActiveTranslatorAdapter();
+    $args = func_get_args();
+    switch (count($args)) {
+        case 1:
+            return $adapter->translate($text);
+        case 2:
+            return $adapter->translate($text, $args[1]);
+        case 3:
+            return $adapter->translate($text, $args[1], $args[2]);
+        case 4:
+            return $adapter->translate($text, $args[1], $args[2], $args[3]);
+        default:
+            return call_user_func_array(array($adapter, 'translate'), $args);
     }
 }
 
@@ -57,21 +49,21 @@ function t($text)
  */
 function t2($singular, $plural, $number)
 {
-    if (!(is_string($singular) && is_string($plural))) {
-        return '';
+    $loc = Localization::getInstance();
+    $adapter = $loc->getActiveTranslatorAdapter();
+    $args = func_get_args();
+    switch (count($args)) {
+        case 3:
+            return $adapter->translatePlural($singular, $plural, $number);
+        case 4:
+            return $adapter->translatePlural($singular, $plural, $number, $args[3]);
+        case 5:
+            return $adapter->translatePlural($singular, $plural, $number, $args[3], $args[4]);
+        case 6:
+            return $adapter->translatePlural($singular, $plural, $number, $args[3], $args[4], $args[5]);
+        default:
+            return call_user_func_array(array($adapter, 'translatePlural'), $args);
     }
-    $zt = Localization::getTranslate();
-    if (is_object($zt)) {
-        $translated = $zt->translatePlural($singular, $plural, $number);
-    } else {
-        $translated = $number == 1 ? $singular : $plural;
-    }
-    $arg = array_slice(func_get_args(), 3);
-    if ($arg) {
-        return vsprintf($translated, $arg);
-    }
-
-    return vsprintf($translated, $number);
 }
 
 /**
@@ -90,26 +82,21 @@ function t2($singular, $plural, $number)
  */
 function tc($context, $text)
 {
-    if (!(is_string($context) && is_string($text))) {
-        return '';
+    $loc = Localization::getInstance();
+    $adapter = $loc->getActiveTranslatorAdapter();
+    $args = func_get_args();
+    switch (count($args)) {
+        case 2:
+            return $adapter->translateContext($context, $text);
+        case 3:
+            return $adapter->translateContext($context, $text, $args[2]);
+        case 4:
+            return $adapter->translateContext($context, $text, $args[2], $args[3]);
+        case 5:
+            return $adapter->translateContext($context, $text, $args[2], $args[3], $args[4]);
+        default:
+            return call_user_func_array(array($adapter, 'translateContext'), $args);
     }
-    $zt = Localization::getTranslate();
-    if (is_object($zt)) {
-        $msgid = $context . "\x04" . $text;
-        $msgtxt = $zt->translate($msgid);
-        if ($msgtxt != $msgid) {
-            $text = $msgtxt;
-        }
-    }
-    if (func_num_args() == 2) {
-        return $text;
-    }
-    $arg = array();
-    for ($i = 2; $i < func_num_args(); ++$i) {
-        $arg[] = func_get_arg($i);
-    }
-
-    return vsprintf($text, $arg);
 }
 
 /**

@@ -97,6 +97,7 @@ __IDE_SYMBOLS__.php
 /web/concrete/js/jquery-awesome-rating.js
 /web/concrete/js/sitemap.js
 /web/concrete/js/tree.js
+/web/concrete/js/autosize.js
 /web/concrete/js/express.js
 /web/concrete/js/spectrum.js
 /web/concrete/js/style-customizer.js

@@ -13,7 +13,7 @@ class BooleanType extends Type
     /**
      * @ORM\Column(type="boolean")
      */
-    protected $isCheckedByDefault = false;
+    protected $akCheckedByDefault = false;
 
     public function getAttributeTypeHandle()
     {
@@ -25,7 +25,7 @@ class BooleanType extends Type
      */
     public function isCheckedByDefault()
     {
-        return $this->isCheckedByDefault;
+        return $this->akCheckedByDefault;
     }
 
     /**
@@ -33,7 +33,7 @@ class BooleanType extends Type
      */
     public function setIsCheckedByDefault($isCheckedByDefault)
     {
-        $this->isCheckedByDefault = $isCheckedByDefault;
+        $this->akCheckedByDefault = $isCheckedByDefault;
     }
 
     public function getAttributeValue()

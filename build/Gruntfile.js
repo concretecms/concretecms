@@ -62,6 +62,11 @@ module.exports = function(grunt) {
     // List of the JavaScripts to be generated
     var js = {
 
+        autosize: {
+            dest: '<%= DIR_BASE %>/concrete/js/autosize.js',
+            src: '<%= DIR_BASE %>/concrete/js/build/vendor/autosize/autosize.js'
+        },
+
         redactor: {
             dest: '<%= DIR_BASE %>/concrete/js/redactor.js',
             src: [
@@ -269,7 +274,6 @@ module.exports = function(grunt) {
             dest: '<%= DIR_BASE %>/concrete/js/kinetic.js',
             src: '<%= DIR_BASE %>/concrete/js/build/vendor/kinetic/kinetic.js'
         },
-
 
         jquery_backstretch: {
             dest: '<%= DIR_BASE %>/concrete/js/backstretch.js',

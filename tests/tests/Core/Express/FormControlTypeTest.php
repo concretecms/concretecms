@@ -4,7 +4,7 @@ class FormControlTypeTest extends PHPUnit_Framework_TestCase
 {
     public function testList()
     {
-        $manager = \Core::make('express.control.type.manager');
+        $manager = \Core::make('express/control/type/manager');
         $this->assertInstanceOf('\Concrete\Core\Express\Form\Control\Type\Manager', $manager)
 ;
         $drivers = $manager->getDrivers();

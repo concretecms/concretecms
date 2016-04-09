@@ -107,7 +107,7 @@ abstract class Control implements \JsonSerializable
     /**
      * @return \Concrete\Core\Express\Form\Control\RendererInterface
      */
-    abstract public function getFormControlRenderer(Entity $entity = null);
+    abstract public function getFormControlRenderer(Entry $entry = null);
 
     /**
      * @return \Concrete\Core\Express\Form\Control\RendererInterface
@@ -162,7 +162,7 @@ abstract class Control implements \JsonSerializable
 
     public function getControlType()
     {
-        $manager = \Core::make('express.control.type.manager');
+        $manager = \Core::make('express/control/type/manager');
 
         return $manager->driver($this->getType());
     }

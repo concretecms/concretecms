@@ -211,6 +211,10 @@ class ContentImporter
                     if ($p['name']) {
                         $spl->update(array('cName' => $p['name'], 'cDescription' => $p['description']));
                     }
+
+                    if ($p['custom-path']) {
+                        $spl->setCanonicalPagePath((string) $p['custom-path'], false);
+                    }
                 }
             }
         }
@@ -220,7 +224,11 @@ class ContentImporter
     {
         if (isset($sx->singlepages)) {
             foreach ($sx->singlepages->page as $px) {
-                $page = Page::getByPath($px['path'], 'RECENT');
+                if ($px['custom-path']) {
+                    $page = Page::getByPath((string) $px['custom-path'], 'RECENT');
+                } else {
+                    $page = Page::getByPath((string) $px['path'], 'RECENT');
+                }
                 if (isset($px->area)) {
                     $this->importPageAreas($page, $px);
                 }

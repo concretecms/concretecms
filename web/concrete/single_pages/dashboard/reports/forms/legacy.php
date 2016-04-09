@@ -247,7 +247,7 @@ else {
                 <tbody>
                 <?php foreach ($answerSets as $answerSetId => $answerSet): { ?>
                     <tr>
-                        <td><?php echo $dh->formatCustom($dh::DB_FORMAT, $answerSet['created']) ?></td>
+                        <td><?php echo date($dh::DB_FORMAT, strtotime($answerSet['created'])) ?></td>
                         <td><?php
                             if ($answerSet['uID'] > 0) {
                                 $ui = UserInfo::getByID($answerSet['uID']);

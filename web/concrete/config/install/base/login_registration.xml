@@ -32,11 +32,29 @@
                 </attributekey>
             </attributes>
         </page>
+
+        <page name="Welcome Back" path="/desktop" custom-path="/account/welcome" filename="/desktop.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="desktop_priority">
+                    <value>1</value>
+                </attributekey>
+                <attributekey handle="is_desktop">
+                    <value>1</value>
+                </attributekey>
+                <attributekey handle="exclude_nav">
+                    <value>1</value>
+                </attributekey>
+            </attributes>
+            <area name="Main">
+                <blocks>
+                    <block type="desktop_waiting_for_me" />
+                </blocks>
+            </area>
+        </page>
+
         <page name="Edit Profile" path="/account/edit_profile" filename="/account/edit_profile.php" pagetype="" description="Edit your user profile and change password." package="" />
         <page name="Profile Picture" path="/account/avatar" filename="/account/avatar.php" pagetype="" description="Specify a new image attached to posts or edits." package="" />
-        <page name="Messages" path="/account/messages" filename="/account/messages/view.php" pagetype="" description="Inbox for site-specific messages." package="" />
-        <page name="Inbox" path="/account/messages/inbox" filename="/account/messages/inbox.php" pagetype="" description="" package="" />
-
+        <page name="Private Messages" path="/account/messages" filename="/account/messages.php" pagetype="" description="Inbox for site-specific messages." package="" />
         <page name="Members" path="/members" filename="/members/view.php" pagetype="" description="" package="">
         </page>
         <page name="View Profile" path="/members/profile" filename="/members/profile.php" pagetype="" description="" package="" />

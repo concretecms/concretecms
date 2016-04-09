@@ -80,7 +80,7 @@ class DeleteUserRequest extends UserRequest
     {
         $buttons = array();
         $button = new WorkflowProgressAction();
-        $button->setWorkflowProgressActionLabel(t('User Details'));
+        $button->setWorkflowProgressActionLabel(t('Review'));
         $button->addWorkflowProgressActionButtonParameter('dialog-title', t('User Details'));
         $button->addWorkflowProgressActionButtonParameter('dialog-width', '420');
         $button->addWorkflowProgressActionButtonParameter('dialog-height', '310');

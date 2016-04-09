@@ -14,19 +14,19 @@ class TopicsType extends Type
     /**
      * @ORM\Column(type="integer")
      */
-    protected $parentNodeID = 0;
+    protected $akTopicParentNodeID = 0;
 
     /**
      * @ORM\Column(type="integer")
      */
-    protected $topicTreeID = 0;
+    protected $akTopicTreeID = 0;
 
     /**
      * @return mixed
      */
     public function getTopicTreeID()
     {
-        return $this->topicTreeID;
+        return $this->akTopicTreeID;
     }
 
     /**
@@ -34,7 +34,7 @@ class TopicsType extends Type
      */
     public function setTopicTreeID($topicTreeID)
     {
-        $this->topicTreeID = $topicTreeID;
+        $this->akTopicTreeID = $topicTreeID;
     }
 
     /**
@@ -42,7 +42,7 @@ class TopicsType extends Type
      */
     public function getParentNodeID()
     {
-        return $this->parentNodeID;
+        return $this->akTopicParentNodeID;
     }
 
     /**
@@ -50,7 +50,7 @@ class TopicsType extends Type
      */
     public function setParentNodeID($parentNodeID)
     {
-        $this->parentNodeID = $parentNodeID;
+        $this->akTopicParentNodeID = $parentNodeID;
     }
 
     public function getAttributeValue()

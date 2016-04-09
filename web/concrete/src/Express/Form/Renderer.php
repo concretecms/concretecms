@@ -2,6 +2,7 @@
 namespace Concrete\Core\Express\Form;
 
 use Concrete\Core\Application\Application;
+use Concrete\Core\Entity\Express\Entry;
 use Concrete\Core\Entity\Express\FieldSet;
 use Concrete\Core\Entity\Express\Form;
 use Concrete\Core\Entity\Express\Entity;
@@ -70,12 +71,12 @@ class Renderer implements RendererInterface
         return '<input type="hidden" name="express_form_id" value="' . $form->getId() . '">';
     }
 
-    protected function renderFieldSet(FieldSet $fieldSet)
+    protected function renderFieldSet(FieldSet $fieldSet, Entry $entry = null)
     {
         $html = $this->getFieldSetOpenTag($fieldSet);
         foreach ($fieldSet->getControls() as $control) {
             $factory = new RendererFactory($this, $control, $this->application, $this->entityManager);
-            $renderer = $factory->getFormControlRenderer();
+            $renderer = $factory->getFormControlRenderer($entry);
             if (is_object($renderer)) {
                 $html .= $renderer->render();
             }
@@ -85,13 +86,13 @@ class Renderer implements RendererInterface
         return $html;
     }
 
-    public function render(Form $form, Entity $entity = null)
+    public function render(Form $form, Entry $entry = null)
     {
         $html = $this->getFormOpenTag();
         $html .= $this->getFormField($form);
         $html .= $this->getCsrfTokenField();
         foreach ($form->getFieldSets() as $fieldSet) {
-            $html .= $this->renderFieldSet($fieldSet);
+            $html .= $this->renderFieldSet($fieldSet, $entry);
         }
 
         $html .= $this->getFormCloseTag();

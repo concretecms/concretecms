@@ -3,7 +3,18 @@ defined('C5_EXECUTE') or die("Access Denied.");
 $this->inc('elements/header.php');
 ?>
 
-<header class="ccm-dashboard-page-header"><h1><?=(isset($pageTitle) && $pageTitle) ? t($pageTitle) : '&nbsp;' ?></h1></header>
+<header class="ccm-dashboard-page-header">
+    <?php if (isset($_bookmarked)) { ?>
+        <a href="#" class="ccm-dashboard-page-header-bookmark" data-page-id="<?=$c->getCollectionID()?>" data-token="<?=$token->generate('access_bookmarks')?>" data-bookmark-action="<?php if ($_bookmarked) { ?>remove-favorite<?php } else { ?>add-favorite<?php } ?>">
+            <?php if ($_bookmarked) { ?>
+                <i class="fa fa-lg fa-bookmark"></i>
+            <?php } else { ?>
+                <i class="fa fa-lg fa-bookmark-o"></i>
+            <?php } ?>
+        </a>
+    <?php } ?>
+    <h1><?=(isset($pageTitle) && $pageTitle) ? t($pageTitle) : '&nbsp;' ?></h1>
+</header>
 
 <?php
 $_error = array();
@@ -40,7 +51,7 @@ if (isset($message)) {
 	<div class="ccm-ui" id="ccm-dashboard-result-message">
 		<div class="alert alert-success"><button type="button" class="close" data-dismiss="alert">×</button><?=nl2br(h($success))?></div>
 	</div>
-	<?php 
+	<?php
 }
 
 echo $innerContent;

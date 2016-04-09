@@ -28,19 +28,31 @@ class Controller extends AttributeTypeController
 
     public function filterByAttribute(AttributedItemList $list, $value, $comparison = '=')
     {
-        if ($value instanceof TreeNode) {
-            $topic = $value;
+        if (is_array($value)) {
+            $topics = $value;
         } else {
-            $topic = Node::getByID(intval($value));
+            $topics = array($value);
         }
-        if (is_object($topic) && $topic instanceof \Concrete\Core\Tree\Node\Type\Topic) {
-            $column = 'ak_' . $this->attributeKey->getAttributeKeyHandle();
-            $qb = $list->getQueryObject();
-            $qb->andWhere(
-                $qb->expr()->like($column, ':topicPath')
-            );
-            $qb->setParameter('topicPath', "%||" . $topic->getTreeNodeDisplayPath() . '%||');
+
+        $i = 1;
+        $expressions = array();
+        $qb = $list->getQueryObject();
+        foreach($topics as $value) {
+            if ($value instanceof TreeNode) {
+                $topic = $value;
+            } else {
+                $topic = Node::getByID(intval($value));
+            }
+            if (is_object($topic) && $topic instanceof \Concrete\Core\Tree\Node\Type\Topic) {
+                $column = 'ak_' . $this->attributeKey->getAttributeKeyHandle();
+                $expressions[] = $qb->expr()->like($column, ':topicPath' . $i);
+                $qb->setParameter('topicPath' . $i, "%||" . $topic->getTreeNodeDisplayPath() . '%||');
+            }
+            $i++;
         }
+
+        $expr = $qb->expr();
+        $qb->andWhere(call_user_func_array(array($expr, 'orX'), $expressions));
     }
 
     public function saveKey($data)
@@ -60,13 +72,10 @@ class Controller extends AttributeTypeController
 
     public function getDisplayValue()
     {
-        $list = $this->attributeValue->getValue()->getSelectedTopics();
+        $list = $this->attributeValue->getValue();
         $topics = array();
-        foreach ($list as $node) {
-            $topic = Node::getByID($node->getTreeNodeID());
-            if (is_object($topic)) {
-                $topics[] = $topic->getTreeNodeDisplayName();
-            }
+        foreach ($list as $topic) {
+            $topics[] = $topic->getTreeNodeDisplayName();
         }
 
         return implode(', ', $topics);
@@ -82,7 +91,7 @@ class Controller extends AttributeTypeController
      */
     public function getSelectedOptions()
     {
-        return $this->attributeValue->getValue()->getSelectedTopics();
+        return $this->attributeValue->getValueObject()->getSelectedTopics();
     }
 
     public function exportValue(\SimpleXMLElement $akn)
@@ -92,12 +101,9 @@ class Controller extends AttributeTypeController
          */
         $xml = \Core::make('helper/xml');
         $avn = $akn->addChild('topics');
-        $nodes = $this->attributeValue->getValue()->getSelectedTopics();
-        foreach ($nodes as $node) {
-            $topic = Node::getByID($node->getTreeNodeID());
-            if (is_object($topic)) {
-                $xml->createCDataNode($avn, 'topic', $topic->getTreeNodeDisplayPath());
-            }
+        $nodes = $this->attributeValue->getValue();
+        foreach ($nodes as $topic) {
+            $xml->createCDataNode($avn, 'topic', $topic->getTreeNodeDisplayPath());
         }
     }
 
@@ -167,11 +173,8 @@ class Controller extends AttributeTypeController
         $this->requireAsset('core/topics');
         $this->requireAsset('javascript', 'jquery/form');
         if (is_object($this->attributeValue)) {
-            $value = $this->getAttributeValue()->getValue();
-        }
-        if (is_object($this->attributeValue)) {
             $valueIDs = array();
-            foreach ($this->attributeValue->getValue()->getSelectedTopics() as $value) {
+            foreach ($this->attributeValue->getValueObject()->getSelectedTopics() as $value) {
                 $valueID = $value->getTreeNodeID();
                 $withinParentScope = false;
                 $nodeObj = TreeNode::getByID($value->getTreeNodeID());
@@ -207,13 +210,11 @@ class Controller extends AttributeTypeController
     public function getSearchIndexValue()
     {
         $str = "||";
-        $nodeKeys = $this->attributeValue->getValue()->getSelectedTopics();
-        foreach ($nodeKeys as $nodeKey) {
-            $nodeObj = TreeNode::getByID($nodeKey->getTreeNodeID());
-            if (is_object($nodeObj)) {
-                $str .= $nodeObj->getTreeNodeDisplayPath() . "||";
-            }
+        $nodeKeys = $this->attributeValue->getValue();
+        foreach ($nodeKeys as $nodeObj) {
+            $str .= $nodeObj->getTreeNodeDisplayPath() . "||";
         }
+
         // remove line break for empty list
         if ($str == "\n") {
             return '';

@@ -9,7 +9,7 @@
             <option value=""><?=t('** Choose %s', $control->getControlLabel())?></option>
         <?php foreach ($entities as $entity) {
     ?>
-            <option value="<?=$entity->getId()?>"><?=$formatter->getEntryDisplayName($control, $entity)?></option>
+            <option value="<?=$entity->getId()?>" <?php if (is_array($selectedEntities) && in_array($entity, $selectedEntities)) { ?>selected<?php } ?> ><?=$formatter->getEntryDisplayName($control, $entity)?></option>
         <?php 
 }
         ?>

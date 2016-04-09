@@ -41,7 +41,7 @@ class StyleSet
     }
 
     /**
-     * @ORM\Column(type="string")
+     * @Column(type="string", nullable=true)
      */
     protected $backgroundColor;
 
@@ -81,7 +81,7 @@ class StyleSet
     protected $borderWidth;
 
     /**
-     * @ORM\Column(type="string")
+     * @Column(type="string", nullable=true)
      */
     protected $borderRadius;
 

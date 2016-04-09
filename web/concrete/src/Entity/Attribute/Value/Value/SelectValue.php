@@ -26,6 +26,14 @@ class SelectValue extends Value
     }
 
     /**
+     * @deprecated
+     */
+    public function getOptions()
+    {
+        return $this->getSelectedOptions();
+    }
+
+    /**
      * @return mixed
      */
     public function getSelectedOptions()

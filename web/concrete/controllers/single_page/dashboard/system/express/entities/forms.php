@@ -142,7 +142,7 @@ class Forms extends DashboardPageController
     {
         $control = $this->controlRepository->findOneById($controlID);
         if ($control) {
-            $manager = \Core::make('express.control.type.manager');
+            $manager = \Core::make('express/control/type/manager');
             $type = $manager->driver($control->getType());
             $this->set('type', $type);
             $this->set('control', $control);
@@ -168,7 +168,7 @@ class Forms extends DashboardPageController
     public function add_control($id = null)
     {
         $set = $this->fieldSetRepository->findOneById($id);
-        $manager = \Core::make('express.control.type.manager');
+        $manager = \Core::make('express/control/type/manager');
         if ($this->request->isMethod("POST")) {
             if ($this->token->validate('add_control')) {
                 $current = count($set->getControls());

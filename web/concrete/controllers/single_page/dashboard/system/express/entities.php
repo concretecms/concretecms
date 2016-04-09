@@ -2,6 +2,7 @@
 namespace Concrete\Controller\SinglePage\Dashboard\System\Express;
 
 use Concrete\Core\Entity\Express\Entity;
+use Concrete\Core\Entity\Express\Form;
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Core\Tree\Node\Node;
 use Concrete\Core\Tree\Type\ExpressEntryResults;
@@ -26,6 +27,12 @@ class Entities extends DashboardPageController
                 $entity->setName($this->request->request->get('name'));
                 $entity->setHandle($this->request->request->get('handle'));
                 $entity->setDescription($this->request->request->get('description'));
+
+                $form = new Form();
+                $form->setEntity($entity);
+                $form->setName('Form');
+                $entity->setDefaultEditForm($form);
+                $entity->setDefaultViewForm($form);
 
                 // Create a results node
                 $tree = ExpressEntryResults::get();
@@ -82,6 +89,21 @@ class Entities extends DashboardPageController
                 $folder = $node->getTreeNodeParentObject();
                 $this->set('folder', $folder);
             }
+            $forms = array('' => t('** Select Form'));
+            $defaultViewFormID = 0;
+            $defaultEditFormID = 0;
+            foreach($this->entity->getForms() as $form) {
+                $forms[$form->getID()] = $form->getName();
+            }
+            if (is_object($this->entity->getDefaultViewForm())) {
+                $defaultViewFormID = $this->entity->getDefaultViewForm()->getID();
+            }
+            if (is_object($this->entity->getDefaultEditForm())) {
+                $defaultEditFormID = $this->entity->getDefaultEditForm()->getID();
+            }
+            $this->set('defaultEditFormID', $defaultEditFormID);
+            $this->set('defaultViewFormID', $defaultViewFormID);
+            $this->set('forms', $forms);
             $this->set('entity', $this->entity);
             $this->set('pageTitle', t('Edit Entity'));
             $this->render('/dashboard/system/express/entities/edit');
@@ -107,11 +129,28 @@ class Entities extends DashboardPageController
         if (!$this->request->request->get('entity_results_node_id')) {
             $this->error->add(t('You must choose where the results for your entity are going live.'));
         }
+        $viewForm = null;
+        $editForm = null;
+        foreach($this->entity->getForms() as $form) {
+            if ($form->getID() == $this->request->request->get('default_edit_form_id')) {
+                $editForm = $form;
+            }
+            if ($form->getID() == $this->request->request->get('default_view_form_id')) {
+                $viewForm = $form;
+            }
+        }
+        if (!is_object($viewForm)) {
+            $this->error->add(t('You must specify a valid default view form.'));
+        }
+        if (!is_object($editForm)) {
+            $this->error->add(t('You must specify a valid default edit form.'));
+        }
         if (!$this->error->has()) {
             $entity->setName($this->request->request->get('name'));
             $entity->setHandle($this->request->request->get('handle'));
             $entity->setDescription($this->request->request->get('description'));
-
+            $entity->setDefaultViewForm($viewForm);
+            $entity->setDefaultEditForm($editForm);
             $this->entityManager->persist($entity);
             $this->entityManager->flush();
 

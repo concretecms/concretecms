@@ -26,7 +26,7 @@ class Entry implements \JsonSerializable
     public function getAttributeValueObject($ak, $createIfNotExists = false)
     {
         if (!is_object($ak)) {
-            $ak = ExpressKey::getByHandle($ak);
+            $ak = $this->getEntity()->getAttributeKeyCategory()->getByHandle($ak);
         }
         $value = false;
         if (is_object($ak)) {

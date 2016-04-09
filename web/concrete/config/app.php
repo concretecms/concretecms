@@ -416,6 +416,8 @@ return array(
          */
         "/ccm/system/panels/add" => array('\Concrete\Controller\Panel\Add::view'),
         "/ccm/system/panels/dashboard" => array('\Concrete\Controller\Panel\Dashboard::view'),
+        "/ccm/system/panels/dashboard/add_favorite" => array('\Concrete\Controller\Panel\Dashboard::addFavorite'),
+        "/ccm/system/panels/dashboard/remove_favorite" => array('\Concrete\Controller\Panel\Dashboard::removeFavorite'),
         "/ccm/system/panels/multilingual" => array('\Concrete\Controller\Panel\Multilingual::view'),
         "/ccm/system/panels/page" => array('\Concrete\Controller\Panel\Page::view'),
         "/ccm/system/panels/page/attributes" => array('\Concrete\Controller\Panel\Page\Attributes::view'),
@@ -570,6 +572,22 @@ return array(
      */
     'assets' => array(
 
+        'google-charts' => array(
+            array(
+                'javascript',
+                'https://www.gstatic.com/charts/loader.js',
+                array('local' => false)
+            )
+        ),
+
+        'autosize' => array(
+            array(
+                'javascript',
+                'js/autosize.js',
+                array('minify' => false, 'combine' => false),
+            ),
+        ),
+
         'jquery' => array(
             array(
                 'javascript',
@@ -699,6 +717,9 @@ return array(
         ),
         'backstretch' => array(
             array('javascript', 'js/backstretch.js'),
+        ),
+        'background-check' => array(
+            array('javascript', 'js/background-check.js'),
         ),
         'dynatree' => array(
             array('javascript', 'js/dynatree.js', array('minify' => false)),

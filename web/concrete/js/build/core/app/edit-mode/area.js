@@ -40,6 +40,13 @@
                     my.setTotalBlocks(my.getTotalBlocks() + 1);
                 }
             });
+            my.bindEvent('EditModeAddBlocksToArea.area', function(e, data) {
+                if (data.area === my) {
+                    my.getEditMode().setNextBlockArea(my);
+                    var panelButton = $('[data-launch-panel="add-block"]');
+                    panelButton.click();
+                }
+            });
         },
 
         /**
@@ -204,9 +211,9 @@
                 .on('click.edit-mode', function(e) {
                     var max = my.getMaximumBlocks();
                     if (max < 0 || max > my.getTotalBlocks()) {
-                        my.getEditMode().setNextBlockArea(my);
-                        var panelButton = $('[data-launch-panel="add-block"]');
-                        panelButton.click();
+                        Concrete.event.fire('EditModeAddBlocksToArea', {
+                            area: my
+                        });
                     } else {
                         ConcreteAlert.error({'message' : ccmi18n.fullArea});
                     }

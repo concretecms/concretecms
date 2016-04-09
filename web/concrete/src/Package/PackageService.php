@@ -177,11 +177,7 @@ class PackageService
 
     public function install(Package $p, $data)
     {
-        $currentLocale = $this->localization->activeLocale();
-        if ($currentLocale != 'en_US') {
-            // Prevent the database records being stored in wrong language
-            $this->localization->changeLocale('en_US');
-        }
+        $this->localization->pushActiveContext('system');
         try {
             
             // @ What happens if a package has no need for a entityManager 
@@ -202,18 +198,14 @@ class PackageService
             if ($u->isSuperUser() && $swapper->allowsFullContentSwap($p) && $data['pkgDoFullContentSwap']) {
                 $swapper->swapContent($p, $data);
             }
-            if ($currentLocale != 'en_US') {
-                Localization::changeLocale($currentLocale);
-            }
+            $this->localization->popActiveContext();
             $pkg = $this->getByHandle($p->getPackageHandle());
             
             // add package entity to generated_overrides config file
             $this->savePackageMetadataDriverToConfig($p);
             return $pkg;
         } catch (\Exception $e) {
-            if ($currentLocale != 'en_US') {
-                $this->localization->changeLocale($currentLocale);
-            }
+            $this->localization->popActiveContext();
             $error = $this->application->make('error');
             $error->add($e);
             return $error;

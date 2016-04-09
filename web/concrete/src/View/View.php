@@ -111,12 +111,20 @@ class View extends AbstractView
     {
         $env = Environment::get();
         if ($this->themeHandle) {
-            if ($this->themeHandle != VIEW_CORE_THEME && $this->themeHandle != 'dashboard') {
-                if (!isset($this->themeObject)) {
+            switch($this->themeHandle) {
+                case VIEW_CORE_THEME:
+                    $this->themeObject = new \Concrete\Theme\Concrete\PageTheme();
+                    $this->pkgHandle = false;
+                    break;
+                case 'dashboard':
+                    $this->themeObject = new \Concrete\Theme\Dashboard\PageTheme();
+                    $this->pkgHandle = false;
+                    break;
+                default:
                     $this->themeObject = PageTheme::getByHandle($this->themeHandle);
                     $this->pkgHandle = $this->themeObject->getPackageHandle();
-                }
             }
+
             $this->themeAbsolutePath = $env->getPath(DIRNAME_THEMES.'/'.$this->themeHandle, $this->pkgHandle);
             $this->themeRelativePath = $env->getURL(DIRNAME_THEMES.'/'.$this->themeHandle, $this->pkgHandle);
         }
@@ -161,13 +169,7 @@ class View extends AbstractView
         $event = new \Symfony\Component\EventDispatcher\GenericEvent();
         $event->setArgument('view', $this);
         Events::dispatch('on_before_render', $event);
-
-        if ($this->themeHandle == VIEW_CORE_THEME) {
-            $_pt = new \Concrete\Theme\Concrete\PageTheme();
-            $_pt->registerAssets();
-        } elseif (is_object($this->themeObject)) {
-            $this->themeObject->registerAssets();
-        }
+        $this->themeObject->registerAssets();
     }
 
     public function renderViewContents($scopeItems)

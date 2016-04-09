@@ -2,6 +2,7 @@
 namespace Concrete\Core\Block\BlockType;
 
 use Concrete\Core\Foundation\Object;
+use Doctrine\DBAL\Connection;
 use Loader;
 use Core;
 use Concrete\Core\Package\PackageList;
@@ -58,12 +59,18 @@ class Set extends Object
     /**
      * @return static[]
      */
-    public static function getList()
+    public static function getList($excluded = ['core_desktop'])
     {
         $db = Loader::db();
         $list = array();
-        $r = $db->Execute('select btsID from BlockTypeSets order by btsDisplayOrder asc');
-        while ($row = $r->FetchRow()) {
+        if (count($excluded)) {
+            $r = $db->executeQuery('select btsID from BlockTypeSets where btsHandle not in (?) order by btsDisplayOrder asc',
+                array($excluded),
+                array(Connection::PARAM_INT_ARRAY));
+        } else {
+            $r = $db->executeQuery('select btsID from BlockTypeSets order by btsDisplayOrder asc');
+        }
+        while ($row = $r->fetch()) {
             $list[] = static::getByID($row['btsID']);
         }
         $r->Close();

@@ -181,7 +181,7 @@ div.ccm-panel-content {
 
   ul.nav, menu {
 
-    margin: 20px 30px 0px 20px;
+    margin: 20px 15px 0px 20px;
     padding: 0px;
 
     > li {
@@ -257,22 +257,45 @@ div#ccm-panel-dashboard {
 
   menu, ul.nav {
     li {
+      &.nav-selected {
+        > a {
+          color: #0c253e;
+        }
+      }
+
       a {
         color: #4674a1;
 
         &:hover {
           color: #0c253e;
         }
-
-        &.nav-selected, &.nav-path-selected {
-          color: #0c253e;
-        }
       }
     }
 
-    > li > a:hover {
-      background-color: #c9d4de;
+    > li.nav-selected > a,
+    > li.nav-path-selected {
+      background-color: rgba(201,212,222, 0.7);
+      .border-radius(4px);
+
+      ul {
+        padding-bottom: 5px;
+      }
     }
+
+    > li > a:hover,
+    > li > a:focus {
+      background-color: rgba(201,212,222, 0.3);
+
+    }
+
+    li.nav-divider {
+      background-color: #c6cbcf;
+      margin-top: 20px;
+      margin-bottom: 20px;
+      margin-left: 22px;
+      margin-right: -30px;
+    }
+
   }
 
   div.ccm-panel-header-accordion {
@@ -320,14 +343,26 @@ div#ccm-panel-dashboard {
   div.ccm-panel-dashboard-footer {
     margin-left: 40px;
     margin-top: 20px;
+
+    margin-bottom: 40px;
+
     border-top: 1px solid #c6cbcf;
-    padding-top: 10px;
+    padding-top: 20px;
     font-size: @font-size-small;
     p {
       line-height: @line-height-small;
       margin-bottom: 5px;
     }
     color: #5d6a78;
+
+    a {
+      text-decoration: none;
+      font-weight: bold;
+      color: #336699;
+      &:hover {
+        text-decoration: underline;
+      }
+    }
   }
 
 }

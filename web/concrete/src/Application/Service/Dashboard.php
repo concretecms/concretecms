@@ -48,6 +48,11 @@ class Dashboard
      */
     public function inDashboard($page = false)
     {
+        $view = \View::getInstance();
+        if (is_object($view) && $view->getThemeHandle() == 'dashboard') {
+            return true;
+        }
+
         $path = "";
         if ($page instanceof Page && !$page->isError()) {
             $path = $page->getCollectionPath();
@@ -531,6 +536,7 @@ class DefaultDashboardMenu extends DashboardMenu
      * @var array
      */
     public $items = array(
+        '/dashboard/welcome',
         '/dashboard/composer/write',
         '/dashboard/composer/drafts',
         '/dashboard/sitemap/full',
