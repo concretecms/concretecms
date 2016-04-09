@@ -67,17 +67,17 @@ class Entity implements EntityInterface
     protected $forms;
 
     /**
-     * @OneToOne(targetEntity="Form", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity="Form", cascade={"persist", "remove"})
      **/
     protected $default_view_form;
 
     /**
-     * @OneToOne(targetEntity="Form", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity="Form", cascade={"persist", "remove"})
      **/
     protected $default_edit_form;
 
     /**
-     * @OneToMany(targetEntity="Entry", mappedBy="entity", cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity="Entry", mappedBy="entity", cascade={"persist", "remove"})
      **/
     protected $entries;
 

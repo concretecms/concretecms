@@ -57,7 +57,7 @@ class Key implements AttributeKeyInterface, ExportableInterface
     protected $akIsSearchableIndexed = false;
 
     /**
-     * @OneToOne(targetEntity="\Concrete\Core\Entity\Attribute\Key\Type\Type", mappedBy="key", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity="\Concrete\Core\Entity\Attribute\Key\Type\Type", mappedBy="key", cascade={"persist", "remove"})
      */
     protected $key_type;
 
