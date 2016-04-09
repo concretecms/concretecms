@@ -180,7 +180,6 @@ class PackageService
         $this->localization->pushActiveContext('system');
         try {
             
-            // @ What happens if a package has no need for a entityManager 
             $config = $this->entityManager->getConfiguration();
             $driverChain = $config->getMetadataDriverImpl();
             

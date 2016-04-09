@@ -16,8 +16,8 @@ class EntityManagerFactory implements EntityManagerFactoryInterface
 
     /**
      * Contains the cached AnnotationReader which is used by all packages
-     * using Doctrine entities with mapping information as annotations with
-     * a concrete version higher than 8.0.0
+     * using Doctrine entities with annotations as mapping information for
+     * a concrete version > 8.0.0
      * 
      * @var \Doctrine\Common\Annotations\CachedReader 
      */
@@ -25,8 +25,8 @@ class EntityManagerFactory implements EntityManagerFactoryInterface
 
     /**
      * Contains the cached SimpleAnnotationReader
-     * which is used by all packages using Doctrine entities with annotations
-     * with a concrete version less than 8.0.0
+     * which is used by all packages using doctrine entities with annotations
+     * for a concrete version less than 8.0.0
      * 
      * @var \Doctrine\Common\Annotations\CachedReader 
      */
