@@ -44,9 +44,6 @@ class EntityManagerFactory implements EntityManagerFactoryInterface
         // Set cache based on doctrine dev mode
         $isDevMode = Config::get('concrete.cache.doctrine_dev_mode');
 
-        //@todo - test remove
-        $isDevMode = true;
-
         if ($isDevMode) {
             $cache = new \Doctrine\Common\Cache\ArrayCache();
         } else {
@@ -62,14 +59,14 @@ class EntityManagerFactory implements EntityManagerFactoryInterface
         \Doctrine\Common\Annotations\AnnotationRegistry::registerFile(DIR_BASE_CORE . '/vendor/doctrine/orm/lib/Doctrine/ORM' . '/Mapping/Driver/DoctrineAnnotations.php');
         \Doctrine\Common\Annotations\AnnotationRegistry::registerAutoloadNamespace('Application\Src', DIR_BASE . '/application/src');
 
-        // Remove all unkown annotations used by the SimpleAnnotationReader from the AnnotationReader
+        // Remove all unkown annotations from the AnnotationReader used by the SimpleAnnotationReader 
         // to prevent fatal errors
         $this->registerGlobalIgnoredAnnotations();
 
         // initiate the driver chain which will hold all driver instances
         $driverChain = new \Doctrine\Common\Persistence\Mapping\Driver\MappingDriverChain();
 
-        // Create the annotation reader > 8.0.0
+        // Create the annotation reader used by packages and core > c5 version 8.0.0
         $annotationReader = new \Doctrine\Common\Annotations\AnnotationReader();
         $cachedAnnotationReader = new \Doctrine\Common\Annotations\CachedReader($annotationReader, $cache);
         $this->cachedAnnotationReader = $cachedAnnotationReader;
@@ -87,22 +84,24 @@ class EntityManagerFactory implements EntityManagerFactoryInterface
         );
         $annotationDriver = new \Doctrine\ORM\Mapping\Driver\AnnotationDriver($cachedAnnotationReader, $coreDirs);
 
-        // Not sure if needed - if some problems occure uncommenting this maybe helps
+        // The default driver only kicks in, if no driver has been found for a specific namespace. 
+        // In c5 this shouldn't be the case. If some problems occure with entity 
+        // mapping uncommenting the following line maybe helps to fix them.
         //$driverChain->setDefaultDriver($annotationDriver);
 
-        //$annotationDriver->addExcludePaths(Config::get('database.proxy_exclusions', array()));     
+        $annotationDriver->addExcludePaths(Config::get('database.proxy_exclusions', array()));     
         $driverChain->addDriver($annotationDriver, 'Concrete\Core');
 
-        // Register application metadata driver;
+        // Register application metadata driver
         $this->addApplicationMetadataDriverToDriverChain($driverChain);
 
-        // Register all installed packages with entities to the driverChain 
+        // Register all installed packages in the driverChain 
         $this->addPackageMetadataDriverToDriverChain($driverChain);
 
-        // Inject DriverChain into the doctrine config
+        // Inject the driverChain into the doctrine config
         $configuration->setMetadataDriverImpl($driverChain);
 
-        // Get ORM event manager
+        // Get orm event manager
         $eventManager = $connection->getEventManager();
 
         // Pass the database connection, the orm config and the event manager 
@@ -116,7 +115,7 @@ class EntityManagerFactory implements EntityManagerFactoryInterface
         $event->setArgument('cachedAnnotationReader', $cachedAnnotationReader);
         Events::dispatch('on_entity_manager_configure', $event);
 
-        // Add the reader to the DI container, so the reader same reader instance
+        // Add the reader to the DI container, so the same reader instance
         // can be accessed in the PackageService
         \Core::bind('orm/cachedAnnotationReader', function ($cachedAnnotationReader) {
             return $cachedAnnotationReader;
@@ -130,7 +129,7 @@ class EntityManagerFactory implements EntityManagerFactoryInterface
         $config = $event->getArgument('configuration');
         $evm = $event->getArgument('eventManager');
 
-        // Inject the ORM EventManager into the EntityManager so ORM Events
+        // Inject the orm eventManager into the entityManager so orm events
         // can be triggered.
         return EntityManager::create($conn, $config, $evm);
     }
@@ -167,8 +166,8 @@ class EntityManagerFactory implements EntityManagerFactoryInterface
     }
 
     /**
-     * Register all metadatadrivers of all installed packages containing entities 
-     * to the driver chain
+     * Register all metadatadrivers of all installed packages
+     * in the driver chain
      * 
      * @param \Doctrine\Common\Persistence\Mapping\Driver\MappingDriverChain $driverChain
      */
@@ -181,7 +180,7 @@ class EntityManagerFactory implements EntityManagerFactoryInterface
 
     /**
      * Register the namespace and the metadata paths of all 
-     * packages with annotations as ORM mapping information
+     * packages with annotations
      * 
      * @param \Doctrine\Common\Persistence\Mapping\Driver\MappingDriverChain $driverChain
      */
@@ -209,7 +208,7 @@ class EntityManagerFactory implements EntityManagerFactoryInterface
 
     /**
      * Register the namespace and the metadata paths of all 
-     * packages with xml metadata as ORM mapping information
+     * packages with xml metadata
      * 
      * @param \Doctrine\Common\Persistence\Mapping\Driver\MappingDriverChain $driverChain
      */
@@ -226,7 +225,7 @@ class EntityManagerFactory implements EntityManagerFactoryInterface
 
     /**
      * Register the namespace and the metadata paths of all 
-     * packages with yaml metadata as ORM mapping information
+     * packages with yaml metadata
      * 
      * @param \Doctrine\Common\Persistence\Mapping\Driver\MappingDriverChain $driverChain
      */
@@ -295,5 +294,4 @@ class EntityManagerFactory implements EntityManagerFactoryInterface
         \Doctrine\Common\Annotations\AnnotationReader::addGlobalIgnoredName('UniqueConstraint');
         \Doctrine\Common\Annotations\AnnotationReader::addGlobalIgnoredName('Version');
     }
-
 }
