@@ -164,7 +164,6 @@ class Resolver
             $file = $cf->prefix($file_version->getPrefix(), $file_version->getFileName());
 
             if ($configuration instanceof DeferredConfigurationInterface) {
-                dd('test');
                 return $file;
             }
 
