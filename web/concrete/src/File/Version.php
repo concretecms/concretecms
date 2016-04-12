@@ -4,6 +4,7 @@ namespace Concrete\Core\File;
 use Carbon\Carbon;
 use Concrete\Core\Attribute\Value\FileValue as FileAttributeValue;
 use Concrete\Core\File\Exception\InvalidDimensionException;
+use Concrete\Core\File\Image\Thumbnail\Path\Resolver;
 use Concrete\Core\File\Image\Thumbnail\Thumbnail;
 use Concrete\Core\File\Image\Thumbnail\Type\Type;
 use Concrete\Core\File\Image\Thumbnail\Type\Version as ThumbnailTypeVersion;
@@ -851,20 +852,26 @@ class Version
         }
     }
 
+    /**
+     * Resolve a path using the default core path resolver.
+     * Avoid using this method when you have access to your a resolver instance.
+     *
+     * @param $type
+     * @return null|string
+     */
     public function getThumbnailURL($type)
     {
         if (!($type instanceof ThumbnailTypeVersion)) {
             $type = ThumbnailTypeVersion::getByHandle($type);
         }
-        $fsl = $this->getFile()->getFileStorageLocationObject();
-        if ($fsl && $type) {
-            $configuration = $fsl->getConfigurationObject();
-            $fss = $fsl->getFileSystemObject();
-            $path = $type->getFilePath($this);
-            if ($fss->has($path)) {
-                return $configuration->getPublicURLToFile($path);
-            }
+
+        /** @var Resolver $path_resolver */
+        $path_resolver = Core::make('Concrete\Core\File\Image\Thumbnail\Path\Resolver');
+
+        if ($path = $path_resolver->getPath($this, $type)) {
+            return $path;
         }
+
         return $this->getURL();
     }
 
