@@ -55,6 +55,11 @@ class Controller extends BlockController
         return LinkAbstractor::translateFrom($this->paragraph);
     }
 
+    public function getParagraphEditMode()
+    {
+        return LinkAbstractor::translateFromEditMode($this->paragraph);
+    }
+
     public function registerViewAssets($outputContent = '')
     {
         $this->requireAsset('css', 'font-awesome');
