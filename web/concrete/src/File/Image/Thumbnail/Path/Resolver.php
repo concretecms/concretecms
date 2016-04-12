@@ -67,6 +67,14 @@ class Resolver
         }
     }
 
+    /**
+     * Get the stored path for a file
+     * @param int $file_id
+     * @param int $version_id
+     * @param int $storage_location_id
+     * @param string $thumbnail_handle
+     * @return null|string
+     */
     protected function getStoredPath($file_id, $version_id, $storage_location_id, $thumbnail_handle)
     {
         $builder = $this->connection->createQueryBuilder();
@@ -88,6 +96,15 @@ class Resolver
         }
     }
 
+    /**
+     * Store a path in the database against a storage location for a file version and a thumbnail handle
+     *
+     * @param $path
+     * @param $file_id
+     * @param $version_id
+     * @param $storage_location_id
+     * @param $thumbnail_handle
+     */
     protected function storePath($path, $file_id, $version_id, $storage_location_id, $thumbnail_handle)
     {
         $this->connection->insert('FileImageThumbnailPaths', array(
@@ -99,6 +116,13 @@ class Resolver
         ));
     }
 
+    /**
+     * Determine the path for a file version thumbnail based on the configured storage location
+     *
+     * @param \Concrete\Core\File\Version $file_version
+     * @param \Concrete\Core\File\Image\Thumbnail\Type\Version $thumbnail
+     * @return string
+     */
     protected function determinePath(Version $file_version, ThumbnailVersion $thumbnail)
     {
         $file = $file_version->getFile();
@@ -117,6 +141,13 @@ class Resolver
         return $this->getDefaultPath($file_version, $thumbnail);
     }
 
+    /**
+     * Fallback to getting the
+     *
+     * @param \Concrete\Core\File\Version $file_version
+     * @param \Concrete\Core\File\Image\Thumbnail\Type\Version $thumbnail
+     * @return string
+     */
     protected function getDefaultPath(Version $file_version, ThumbnailVersion $thumbnail)
     {
         $cf = $this->app->make('helper/concrete/file');
@@ -129,8 +160,6 @@ class Resolver
             if ($configuration->hasPublicURL()) {
                 $file = $cf->prefix($file_version->getPrefix(), $file_version->getFileName());
                 return $configuration->getPublicURLToFile($file);
-            } else {
-                return $this->getDownloadURL();
             }
         }
     }
