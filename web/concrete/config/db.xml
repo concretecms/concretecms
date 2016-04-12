@@ -5437,4 +5437,33 @@
     </field>
   </table>
 
+  <table name="FileImageThumbnailPaths">
+    <field name="fileID" type="integer">
+      <unsigned/>
+      <notnull/>
+    </field>
+    <field name="fileVersionID" type="integer">
+      <unsigned/>
+      <notnull/>
+    </field>
+    <field name="thumbnailTypeHandle" type="string" size="255">
+      <notnull/>
+    </field>
+    <field name="storageLocationID" type="integer">
+      <unsigned/>
+      <notnull/>
+    </field>
+    <field name="path" type="text">
+      <notnull/>
+    </field>
+
+    <index name="thumbnailPathID">
+      <unique/>
+      <col>fileID</col>
+      <col>fileVersionID</col>
+      <col>thumbnailTypeHandle</col>
+      <col>storageLocationID</col>
+    </index>
+  </table>
+
 </schema>
