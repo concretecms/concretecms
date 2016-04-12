@@ -142,7 +142,7 @@ class Resolver
     }
 
     /**
-     * Fallback to getting the
+     * Get the main image path ignoring the thumbnail requirements
      *
      * @param \Concrete\Core\File\Version $file_version
      * @param \Concrete\Core\File\Image\Thumbnail\Type\Version $thumbnail
