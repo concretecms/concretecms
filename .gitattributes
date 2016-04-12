@@ -23,6 +23,7 @@
 *.tpl normalizetext
 *.txt normalizetext
 *.xml normalizetext
+*.as normalizetext
 
 #
 # Binary files
