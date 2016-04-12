@@ -281,6 +281,8 @@ class Application extends Container
                 }
             }
             $pkg->setupPackageLocalization();
+        }
+        foreach($this->packages as $pkg) {
             if (method_exists($pkg, 'on_start')) {
                 $pkg->on_start();
             }
