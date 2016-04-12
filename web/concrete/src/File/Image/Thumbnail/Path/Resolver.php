@@ -6,6 +6,9 @@ use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\File\File;
 use Concrete\Core\File\Image\Thumbnail\Type\Type;
 use Concrete\Core\File\Image\Thumbnail\Type\Version as ThumbnailVersion;
+use Concrete\Core\File\StorageLocation\Configuration\ConfigurationInterface;
+use Concrete\Core\File\StorageLocation\Configuration\DeferredConfigurationInterface;
+use Concrete\Core\File\StorageLocation\StorageLocation;
 use Concrete\Core\File\Version;
 use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\EntityManagerInterface;
@@ -43,8 +46,10 @@ class Resolver
         /** @var File $file */
         $file = $file_version->getFile();
         $file_id = $file->getFileID();
+        $storage_location = $file->getFileStorageLocationObject();
+        $configuration = $storage_location->getConfigurationObject();
         $version_id = $file_version->getFileVersionID();
-        $storage_location_id = $file->getStorageLocationID();
+        $storage_location_id = $storage_location->getID();
         $thumbnail_handle = $thumbnail->getHandle();
 
         $path = $this->getStoredPath(
@@ -54,14 +59,17 @@ class Resolver
             $thumbnail_handle);
 
         if ($path) {
+            if ($configuration instanceof DeferredConfigurationInterface) {
+                return $configuration->getPublicURLToFile($path);
+            }
+
             return $path;
-        } elseif ($path = $this->determinePath($file_version, $thumbnail)) {
-            $this->storePath(
-                $path,
-                $file->getFileID(),
-                $file_version->getFileVersionID(),
-                $storage_location_id,
-                $thumbnail_handle);
+        } elseif ($path = $this->determinePath($file_version, $thumbnail, $storage_location, $configuration)) {
+            $this->storePath($path, $file_id, $version_id, $storage_location_id, $thumbnail_handle);
+
+            if ($configuration instanceof DeferredConfigurationInterface) {
+                return $configuration->getPublicURLToFile($path);
+            }
 
             return $path;
         }
@@ -117,28 +125,28 @@ class Resolver
     }
 
     /**
-     * Determine the path for a file version thumbnail based on the configured storage location
+     * Determine the path for a file version thumbnail based on the storage location
      *
      * @param \Concrete\Core\File\Version $file_version
      * @param \Concrete\Core\File\Image\Thumbnail\Type\Version $thumbnail
+     * @param \Concrete\Core\File\StorageLocation\StorageLocation $storage
+     * @param \Concrete\Core\File\StorageLocation\Configuration\ConfigurationInterface $configuration
      * @return string
      */
-    protected function determinePath(Version $file_version, ThumbnailVersion $thumbnail)
+    protected function determinePath(Version $file_version, ThumbnailVersion $thumbnail, StorageLocation $storage, ConfigurationInterface $configuration)
     {
-        $file = $file_version->getFile();
-        $storage_location = $file->getFileStorageLocationObject();
+        $fss = $storage->getFileSystemObject();
+        $path = $thumbnail->getFilePath($file_version);
 
-        if ($storage_location) {
-            $configuration = $storage_location->getConfigurationObject();
-            $fss = $storage_location->getFileSystemObject();
-            $path = $thumbnail->getFilePath($file_version);
-
-            if ($fss->has($path)) {
-                return $configuration->getPublicURLToFile($path);
+        if ($fss->has($path)) {
+            if ($configuration instanceof DeferredConfigurationInterface) {
+                return $path;
             }
+
+            return $configuration->getPublicURLToFile($path);
         }
 
-        return $this->getDefaultPath($file_version, $thumbnail);
+        return $this->getDefaultPath($file_version, $thumbnail, $storage, $configuration);
     }
 
     /**
@@ -148,20 +156,21 @@ class Resolver
      * @param \Concrete\Core\File\Image\Thumbnail\Type\Version $thumbnail
      * @return string
      */
-    protected function getDefaultPath(Version $file_version, ThumbnailVersion $thumbnail)
+    protected function getDefaultPath(Version $file_version, ThumbnailVersion $thumbnail, StorageLocation $storage, ConfigurationInterface $configuration)
     {
         $cf = $this->app->make('helper/concrete/file');
 
-        $fsl = $file_version->getFile()->getFileStorageLocationObject();
+        if ($configuration->hasPublicURL()) {
+            $file = $cf->prefix($file_version->getPrefix(), $file_version->getFileName());
 
-        if (is_object($fsl)) {
-            $configuration = $fsl->getConfigurationObject();
-
-            if ($configuration->hasPublicURL()) {
-                $file = $cf->prefix($file_version->getPrefix(), $file_version->getFileName());
-                return $configuration->getPublicURLToFile($file);
+            if ($configuration instanceof DeferredConfigurationInterface) {
+                dd('test');
+                return $file;
             }
+
+            return $configuration->getPublicURLToFile($file);
         }
+
     }
 
 }

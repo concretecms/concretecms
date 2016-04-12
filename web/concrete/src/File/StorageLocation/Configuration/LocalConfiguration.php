@@ -3,7 +3,7 @@ namespace Concrete\Core\File\StorageLocation\Configuration;
 use Concrete\Core\Error\Error;
 use \Concrete\Flysystem\Adapter\Local;
 
-class LocalConfiguration extends Configuration implements ConfigurationInterface
+class LocalConfiguration extends Configuration implements ConfigurationInterface, DeferredConfigurationInterface
 {
 
     protected $path;
