@@ -6,6 +6,7 @@ use Concrete\Core\Block\BlockType\BlockType;
 use Concrete\Core\Cache\Page\PageCache;
 use Concrete\Core\Cache\Page\PageCacheRecord;
 use Concrete\Core\Cache\OpCache;
+use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Foundation\ClassLoader;
 use Concrete\Core\Foundation\EnvironmentDetector;
 use Concrete\Core\Localization\Localization;
@@ -115,6 +116,11 @@ class Application extends Container
         if (is_object($pageCache)) {
             $pageCache->flush();
         }
+
+        // Clear the file thumbnail path cache
+        $connection = $this['database'];
+        $sql = $connection->getDatabasePlatform()->getTruncateTableSQL('FileImageThumbnailPaths');
+        $connection->executeUpdate($sql);
 
         // clear the environment overrides cache
         $env = \Environment::get();
