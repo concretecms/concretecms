@@ -128,7 +128,7 @@ class EntityManagerFactory implements EntityManagerFactoryInterface
         $conn = $event->getArgument('connection');
         $config = $event->getArgument('configuration');
         $evm = $event->getArgument('eventManager');
-
+        
         // Inject the orm eventManager into the entityManager so orm events
         // can be triggered.
         return EntityManager::create($conn, $config, $evm);
