@@ -11,8 +11,7 @@ class Connection extends \Doctrine\DBAL\Connection
 
     /**
      * @deprecated Please use the ORM facade instead of this method:
-     * - ORM::entityManager('core') in the core
-     * - ORM::entityManager() in the application/site code
+     * - ORM::entityManager() in the application/site code and core
      * - $pkg->getEntityManager() in packages
      * @return EntityManager
      */
@@ -32,7 +31,7 @@ class Connection extends \Doctrine\DBAL\Connection
      */
     public function createEntityManager()
     {
-        return ORM::entityManager('core');
+        return ORM::entityManager();
     }
 
     /**
