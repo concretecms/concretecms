@@ -393,7 +393,7 @@ class StatesProvincesList
                     'SC' => tc('Brazilian State', 'Santa Catarina'),
                     'SE' => tc('Brazilian State', 'Sergipe'),
                     'SP' => tc('Brazilian State', 'São Paulo'),
-                    'TO' => tc('Brazilian State', 'Tocatins'),
+                    'TO' => tc('Brazilian State', 'Tocantins'),
                 ),
 
                 'IT' => array(
