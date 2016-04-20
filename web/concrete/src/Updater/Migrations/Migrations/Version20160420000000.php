@@ -498,7 +498,7 @@ class Version20160420000000 extends AbstractMigration
 
     protected function installAttributes()
     {
-        $category = Category::getByHandle('collection');
+        $category = Category::getByHandle('collection')->getController();
         $attribute = CollectionKey::getByHandle('is_desktop');
         if (!is_object($attribute)) {
             $type = new BooleanType();
@@ -519,6 +519,21 @@ class Version20160420000000 extends AbstractMigration
         }
     }
 
+    protected function updateWorkflows()
+    {
+        $page = \Page::getByPath("/dashboard/workflow/workflows");
+        if (is_object($page) && !$page->isError()) {
+            $parent = \Page::getByPath('/dashboard/system');
+            if (is_object($parent) && !$parent->isError()) {
+                $page->move($parent);
+            }
+        }
+        $page = \Page::getByPath("/dashboard/workflow");
+        if (is_object($page) && !$page->isError()) {
+            $page->moveToTrash();
+        }
+    }
+
     public function up(Schema $schema)
     {
         $this->connection->Execute('set foreign_key_checks = 0');
@@ -529,6 +544,7 @@ class Version20160420000000 extends AbstractMigration
         $this->importAttributeKeys();
         $this->addDashboard();
         $this->addBlockTypes();
+        $this->updateWorkflows();
         $this->addTreeNodeTypes();
         $this->installAttributes();
         $this->connection->Execute('set foreign_key_checks = 1');
