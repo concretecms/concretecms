@@ -521,16 +521,13 @@ class Version20160420000000 extends AbstractMigration
 
     protected function updateWorkflows()
     {
-        $page = \Page::getByPath("/dashboard/workflow/workflows");
-        if (is_object($page) && !$page->isError()) {
-            $parent = \Page::getByPath('/dashboard/system');
-            if (is_object($parent) && !$parent->isError()) {
-                $page->move($parent);
-            }
-        }
         $page = \Page::getByPath("/dashboard/workflow");
         if (is_object($page) && !$page->isError()) {
             $page->moveToTrash();
+        }
+        $page = \Page::getByPath("/dashboard/system/permissions/workflows");
+        if (!is_object($page) && $page->isError()) {
+            SinglePage::add('/dashboard/system/permissions/workflows');
         }
     }
 
