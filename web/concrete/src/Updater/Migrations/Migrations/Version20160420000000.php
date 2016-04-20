@@ -8,6 +8,8 @@ use Concrete\Core\Block\BlockType\BlockType;
 use Concrete\Core\Entity\Attribute\Key\PageKey;
 use Concrete\Core\Entity\Attribute\Key\Type\BooleanType;
 use Concrete\Core\Entity\Attribute\Key\Type\NumberType;
+use Concrete\Core\StyleCustomizer\Inline\StyleSet;
+use Concrete\Core\StyleCustomizer\Set;
 use Concrete\Core\Tree\Node\NodeType;
 use Concrete\Core\Tree\TreeType;
 use Concrete\Core\Tree\Type\ExpressEntryResults;
@@ -550,6 +552,31 @@ class Version20160420000000 extends AbstractMigration
             $bt = BlockType::getByHandle("desktop_waiting_for_me");
             $desktop->addBlock($bt, 'Main', array());
         }
+
+        $desktop = Page::getByPath('/dashboard/welcome');
+        if (!is_object($desktop) || $desktop->isError()) {
+            $desktop = SinglePage::add('/dashboard/welcome');
+            $desktop->update(array('cName' => 'Welcome Back'));
+            $desktop->setAttribute('desktop_priority', 2);
+            $desktop->setAttribute('is_desktop', true);
+
+            $bt = BlockType::getByHandle("desktop_app_status");
+            $desktop->addBlock($bt, 'Main', array());
+
+            $bt = BlockType::getByHandle("rss_displayer");
+            $b = $desktop->addBlock($bt, 'Main', array(
+                'title' => 'News from concrete5.org',
+                'url' => 'http://www.concrete5.org/rss/blog',
+                'dateFormat' => 'longDate',
+                'itemsToDisplay' => '3',
+                'showSummary' => '1',
+                'launchInNewWindow' => '1',
+            ));
+            $set = new StyleSet();
+            $set->setCustomClass('concrete5-org-stories');
+            $b->setCustomStyleSet($set);
+        }
+
 
         // Private Messages tweak
         $page = \Page::getByPath("/account/messages");
