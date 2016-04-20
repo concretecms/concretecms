@@ -13,7 +13,7 @@ use Concrete\Core\Page\Page;
 use Concrete\Core\Page\Single as SinglePage;
 use Concrete\Block\ExpressForm\Controller as ExpressFormBlockController;
 
-class Version20160308000000 extends AbstractMigration
+class Version20160420000000 extends AbstractMigration
 {
 
     protected function renameProblematicTables()
