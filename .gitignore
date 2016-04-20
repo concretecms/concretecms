@@ -78,6 +78,7 @@ __IDE_SYMBOLS__.php
 /web/concrete/js/dashboard.js
 /web/concrete/js/dropzone.js
 /web/concrete/js/dynatree.js
+/web/concrete/js/express.js
 /web/concrete/js/events.js
 /web/concrete/js/file-manager.js
 /web/concrete/js/gathering.js
