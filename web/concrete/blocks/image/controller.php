@@ -89,8 +89,8 @@ class Controller extends BlockController
     {
         // i don't know why this->fID isn't sticky in some cases, leading us to query
         // every damn time
-        $db = Database::get();
-        $fID = $db->GetOne('select fID from btContentImage where bID = ?', array($this->bID));
+        $db = Database::connection();
+        $fID = $db->fetchColumn('select fID from btContentImage where bID = ?', array($this->bID), 0);
         if ($fID) {
             $f = File::getByID($fID);
             if (is_object($f) && !$f->isError()) {
