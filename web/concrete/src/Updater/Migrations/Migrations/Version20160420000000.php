@@ -496,7 +496,7 @@ class Version20160420000000 extends AbstractMigration
         }
     }
 
-    protected function installAttributes()
+    protected function installDesktops()
     {
         $category = Category::getByHandle('collection')->getController();
         $attribute = CollectionKey::getByHandle('is_desktop');
@@ -517,6 +517,9 @@ class Version20160420000000 extends AbstractMigration
             $key->setIsAttributeKeyInternal(true);
             $category->add($type, $key);
         }
+
+
+
     }
 
     protected function updateWorkflows()
@@ -543,7 +546,7 @@ class Version20160420000000 extends AbstractMigration
         $this->addBlockTypes();
         $this->updateWorkflows();
         $this->addTreeNodeTypes();
-        $this->installAttributes();
+        $this->installDesktops();
         $this->connection->Execute('set foreign_key_checks = 1');
 
     }
