@@ -14,8 +14,8 @@
 
             <div class="radio">
               <label>
-                <input type="radio" name="LOGIN_REDIRECT" value="PROFILE" <?php echo ($site_login_redirect == 'PROFILE') ? 'checked' : ''?> />
-                <span><?php echo t('Member profile (if enabled)')?></span>
+                <input type="radio" name="LOGIN_REDIRECT" value="DESKTOP" <?php echo ($site_login_redirect == 'DESKTOP') ? 'checked' : ''?> />
+                <span><?php echo t('Desktop')?></span>
               </label>
             </div>
 
@@ -32,12 +32,6 @@
                 </div>
             </div>
 
-            <div class="checkbox">
-              <label>
-               <input type="checkbox" name="LOGIN_ADMIN_TO_DASHBOARD" value="1" <?php echo ($site_login_admin_to_dashboard) ? 'checked' : ''?> />
-                <span><?php echo t('Redirect administrators to dashboard')?></span>
-              </label>
-            </div>
         </div>
     </div>
     </fieldset>
