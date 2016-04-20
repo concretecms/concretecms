@@ -318,15 +318,39 @@ table.ccm-search-results-table {
       text-align: right;
     }
 
+    td.ccm-search-results-menu-launcher {
 
-    tr.ccm-menu-item-hover, tr.ccm-menu-item-active {
+      a {
+        .transition(all 0.1s);
+        color: #999;
+      }
+
+
+      &.ccm-parent-menu-item-hover,
+      &.ccm-parent-menu-item-active {
+        a {
+          color: #000;
+        }
+      }
+    }
+
+    tr.ccm-menu-item-hover {
       td {
-        background-color: #edf7fe !important;
+        background-color: rgba(222, 235, 241, 0.6);
         color: #000;
       }
     }
 
-    tr.ccm-search-select-hover {
+    tr.ccm-menu-item-active,
+    tr.ccm-parent-menu-item-active {
+      td {
+        background-color: rgba(222, 235, 241, 1.0);
+        color: #000;
+      }
+    }
+
+    tr.ccm-search-select-hover,
+    tr.ccm-parent-menu-item-hover {
       td {
         cursor: pointer;
         background-color: #edf7fe !important;
@@ -341,13 +365,6 @@ table.ccm-search-results-table {
       }
       td.ccm-search-results-icon {
         color: #333;
-      }
-    }
-
-    tr.ccm-search-selected {
-      td {
-        background-color: #cfeafc !important;
-        color: #000;
       }
     }
   }
@@ -411,7 +428,6 @@ table.ccm-search-results-table-icon {
 
   .ccm-ui {
     form.ccm-search-fields {
-
       select.ccm-search-bulk-action, select.ccm-search-choose-field {
         width: 120px;
       }
@@ -473,7 +489,7 @@ table.ccm-search-results-table-icon {
 div.ccm-search-results-breadcrumb {
   -webkit-font-smoothing: antialiased;
   position: absolute;
-  top: 130px;
+  top: 112px;
   left: 97px;
 
   ol.breadcrumb {

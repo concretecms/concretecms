@@ -310,6 +310,7 @@ $(function() {
                             <th></th>
                             <th class="<?=$list->getSortClassName('cv.cvName')?>"><a href="<?=$list->getSortURL('cv.cvName')?>"><?=t('Name')?></a></th>
                             <th class="<?=$list->getSortClassName('c.cDateAdded')?>"><a href="<?=$list->getSortURL('c.cDateAdded')?>"><?=t('Date Added')?></a></th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -319,6 +320,7 @@ $(function() {
                             <tr class="ccm-search-results-folder ccm-search-results-globalareafolder" data-details-url="<?=$view->url('/dashboard/blocks/stacks', 'view_global_areas')?>">
                                 <td class="ccm-search-results-icon"><i class="fa fa-object-group"></i></td>
                                 <td class="ccm-search-results-name"><?=t('Global Areas')?></td>
+                                <td></td>
                                 <td></td>
                             </tr>
                             <?php
@@ -330,6 +332,11 @@ $(function() {
                                 <td class="ccm-search-results-icon"><?=$formatter->getIconElement()?></td>
                                 <td class="ccm-search-results-name"><?=h($st->getCollectionName())?></td>
                                 <td><?=$dh->formatDateTime($st->getCollectionDateAdded())?></td>
+                                <td class="ccm-search-results-menu-launcher">
+                                    <?php if ($st->getCollectionTypeHandle() == STACK_CATEGORY_PAGE_TYPE) { ?>
+                                        <a href="#" data-launch-stack-menu="<?=$st->getCollectionID()?>"><i class="fa fa-share"></i></a>
+                                    <?php } ?>
+                                </td>
                             </tr>
                             <?php
                         }
@@ -353,9 +360,6 @@ $(function() {
                 }
             )
             .on('click', function() {
-                $this.toggleClass('ccm-search-selected');
-            })
-            .on('dblclick', function() {
                 window.location.href = $this.data('details-url');
             })
             <?php if ($canMoveStacks) { ?>
@@ -363,7 +367,7 @@ $(function() {
                     .draggable({
                         delay: 300,
                         start: function() {
-                            $this.addClass('ccm-search-selected');
+                            $this.addClass('ccm-stack-folder-dragging');
                             $('.ccm-undroppable-search-item').css('opacity', '0.4');
                         },
                         stop: function() {
@@ -371,7 +375,7 @@ $(function() {
                         },
                         revert: 'invalid',
                         helper: function() {
-                            var $selected = $this.add($tbody.find('.ccm-search-selected'));
+                            var $selected = $this.add($tbody.find('.ccm-stack-folder-dragging'));
                             return $('<div class="' + className + ' ccm-draggable-search-item"><span>' + $selected.length + '</span></div>').data('$selected', $selected);
                         },
                         cursorAt: {
@@ -431,7 +435,7 @@ $(function() {
             }
         });
     <?php } ?>
-   	$('.ccm-search-results-stackfolder .ccm-search-results-name').concreteStackMenu({menu: '#ccm-stackfolders-menu'});
+   	$('[data-launch-stack-menu]').concreteStackMenu({menu: '#ccm-stackfolders-menu'});
 });
         </script>
 
