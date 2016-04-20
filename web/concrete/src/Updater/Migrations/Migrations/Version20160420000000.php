@@ -2,8 +2,12 @@
 namespace Concrete\Core\Updater\Migrations\Migrations;
 
 use Concrete\Core\Attribute\Key\Category;
+use Concrete\Core\Attribute\Key\CollectionKey;
 use Concrete\Core\Attribute\Type;
 use Concrete\Core\Block\BlockType\BlockType;
+use Concrete\Core\Entity\Attribute\Key\PageKey;
+use Concrete\Core\Entity\Attribute\Key\Type\BooleanType;
+use Concrete\Core\Entity\Attribute\Key\Type\NumberType;
 use Concrete\Core\Tree\Node\NodeType;
 use Concrete\Core\Tree\TreeType;
 use Concrete\Core\Tree\Type\ExpressEntryResults;
@@ -492,6 +496,29 @@ class Version20160420000000 extends AbstractMigration
         }
     }
 
+    protected function installAttributes()
+    {
+        $category = Category::getByHandle('collection');
+        $attribute = CollectionKey::getByHandle('is_desktop');
+        if (!is_object($attribute)) {
+            $type = new BooleanType();
+            $key = new PageKey();
+            $key->setAttributeKeyHandle('is_desktop');
+            $key->setAttributeKeyName('Is Desktop');
+            $key->setIsAttributeKeyInternal(true);
+            $category->add($type, $key);
+        }
+        $attribute = CollectionKey::getByHandle('desktop_priority');
+        if (!is_object($attribute)) {
+            $type = new NumberType();
+            $key = new PageKey();
+            $key->setAttributeKeyHandle('desktop_priority');
+            $key->setAttributeKeyName('Desktop Priority');
+            $key->setIsAttributeKeyInternal(true);
+            $category->add($type, $key);
+        }
+    }
+
     public function up(Schema $schema)
     {
         $this->connection->Execute('set foreign_key_checks = 0');
@@ -503,6 +530,7 @@ class Version20160420000000 extends AbstractMigration
         $this->addDashboard();
         $this->addBlockTypes();
         $this->addTreeNodeTypes();
+        $this->installAttributes();
         $this->connection->Execute('set foreign_key_checks = 1');
 
     }
