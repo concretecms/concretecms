@@ -463,18 +463,6 @@
 			</attributes>
         </page>
 
-        <page name="Workflow" path="/dashboard/workflow" filename="/dashboard/workflow/view.php" pagetype=""
-              description="" package="">
-            <attributes>
-                <attributekey handle="meta_keywords">
-                    <value>add workflow, remove workflow</value>
-                </attributekey>
-            </attributes>
-        </page>
-        <page name="Waiting for Me" path="/dashboard/workflow/me" filename="/dashboard/workflow/me.php" pagetype=""
-              description="" package="" />
-        <page name="Workflow List" path="/dashboard/workflow/workflows" filename="/dashboard/workflow/workflows.php"
-              pagetype="" description="" package="" />
         <page name="Stacks &amp; Blocks" path="/dashboard/blocks" filename="/dashboard/blocks/view.php" pagetype=""
               description="Manage sitewide content and administer block types." package=""/>
         <page name="Stacks &amp; Global Areas" path="/dashboard/blocks/stacks" filename="/dashboard/blocks/stacks/view.php" pagetype=""
@@ -884,6 +872,8 @@
         <page name="Advanced Permissions" path="/dashboard/system/permissions/advanced"
               filename="/dashboard/system/permissions/advanced.php" pagetype="" description="" package="">
         </page>
+        <page name="Workflows" path="/dashboard/system/permissions/workflows" filename="/dashboard/system/permissions/workflows.php"
+              pagetype="" description="" package="" />
         <page name="IP Blacklist" path="/dashboard/system/permissions/blacklist"
               filename="/dashboard/system/permissions/blacklist.php" pagetype="" description="" package="">
             <attributes>

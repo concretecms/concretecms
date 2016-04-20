@@ -1,5 +1,5 @@
 <?php
-namespace Concrete\Controller\SinglePage\Dashboard\Workflow;
+namespace Concrete\Controller\SinglePage\Dashboard\System\Permissions;
 
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Workflow;
@@ -27,7 +27,7 @@ class Workflows extends DashboardPageController
 
             $wf->delete();
 
-            $this->redirect("/dashboard/workflow/workflows", 'workflow_deleted');
+            $this->redirect("/dashboard/system/permissions/workflows", 'workflow_deleted');
         } catch (Exception $e) {
             $this->error->add($e);
         }
@@ -49,7 +49,7 @@ class Workflows extends DashboardPageController
             $wf = Workflow::getByID($this->post('wfID'));
             $wf->updateName($wfName);
             $wf->updateDetails($this->post());
-            $this->redirect('/dashboard/workflow/workflows', 'view_detail', $this->post('wfID'), 'workflow_updated');
+            $this->redirect('/dashboard/system/permissions/workflows', 'view_detail', $this->post('wfID'), 'workflow_updated');
         } else {
             $this->view_detail($this->post('wfID'));
         }
@@ -104,7 +104,7 @@ class Workflows extends DashboardPageController
             }
             $wf = Workflow::add($type, $wfName);
             $wf->updateDetails($this->post());
-            $this->redirect('/dashboard/workflow/workflows/', 'view_detail', $wf->getWorkflowID(), 'workflow_created');
+            $this->redirect('/dashboard/system/permissions/workflows/', 'view_detail', $wf->getWorkflowID(), 'workflow_created');
         }
         $this->add();
     }
@@ -113,7 +113,7 @@ class Workflows extends DashboardPageController
     {
         $wf = Workflow::getByID($wfID);
         if (!is_object($wf)) {
-            $this->redirect("/dashboard/workflow/workflows");
+            $this->redirect("/dashboard/system/permissions/workflows");
         }
         $this->set('wf', $wf);
     }
@@ -122,7 +122,7 @@ class Workflows extends DashboardPageController
     {
         $wf = Workflow::getByID($wfID);
         if (!is_object($wf)) {
-            $this->redirect("/dashboard/workflow/workflows");
+            $this->redirect("/dashboard/system/permissions/workflows");
         }
         switch ($message) {
             case 'workflow_created':

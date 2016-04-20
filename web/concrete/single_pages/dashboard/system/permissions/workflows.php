@@ -101,7 +101,7 @@
     ?>
 
 	<div class="ccm-dashboard-header-buttons">
-		<a href="<?=URL::to('/dashboard/workflow/workflows', 'add')?>" class="btn btn-primary"><?=t('Add Workflow')?></a>
+		<a href="<?=URL::to('/dashboard/system/permissions/workflows', 'add')?>" class="btn btn-primary"><?=t('Add Workflow')?></a>
 	</div>
 	
 	<h4><?=t2('%d Workflow', '%d Workflows', count($workflows))?></h4>
@@ -109,7 +109,7 @@
 	<ul class="item-select-list">
 	<?php foreach ($workflows as $workflow) {
     ?>
-		<li><a href="<?=$view->url('/dashboard/workflow/workflows', 'view_detail', $workflow->getWorkflowID())?>"><i class="fa fa-exchange"></i> <?=$workflow->getWorkflowDisplayName()?></a></li>
+		<li><a href="<?=$view->url('/dashboard/system/permissions/workflows', 'view_detail', $workflow->getWorkflowID())?>"><i class="fa fa-exchange"></i> <?=$workflow->getWorkflowDisplayName()?></a></li>
 	<?php 
 }
     ?>
