@@ -13,7 +13,10 @@ do {
     }
 
     $desktop = \Concrete\Core\Page\Desktop\DesktopList::getMyDesktop();
-    $cp = new Permissions($account);
+    if (!is_object($desktop) || $desktop->isError()) {
+        break;
+    }
+    $cp = new Permissions($desktop);
     if (!$cp->canRead()) {
         break;
     }
