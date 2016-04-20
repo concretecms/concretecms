@@ -526,7 +526,7 @@ class Version20160420000000 extends AbstractMigration
             $page->moveToTrash();
         }
         $page = \Page::getByPath("/dashboard/system/permissions/workflows");
-        if (!is_object($page) && $page->isError()) {
+        if (!is_object($page) || $page->isError()) {
             SinglePage::add('/dashboard/system/permissions/workflows');
         }
     }
