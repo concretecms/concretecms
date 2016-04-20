@@ -551,7 +551,12 @@ class Version20160420000000 extends AbstractMigration
             $desktop->addBlock($bt, 'Main', array());
         }
 
-
+        // Private Messages tweak
+        $page = \Page::getByPath("/account/messages");
+        if (is_object($page) && !$page->isError()) {
+            $page->moveToTrash();
+        }
+        SinglePage::add('/account/messages');
     }
 
     protected function updateWorkflows()
