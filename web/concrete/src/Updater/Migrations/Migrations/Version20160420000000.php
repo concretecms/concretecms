@@ -469,6 +469,26 @@ class Version20160420000000 extends AbstractMigration
         if (!is_object($bt)) {
             BlockType::installBlockType('express_form');
         }
+
+        $db = \Database::connection();
+        // Migrate desktop block types
+        $db->Execute("update BlockTypes set btHandle = 'desktop_app_status' where btHandle = 'dashboard_app_status'");
+        $db->Execute("update BlockTypes set btHandle = 'desktop_site_activity' where btHandle = 'dashboard_site_activity'");
+        $db->Execute("update BlockTypes set btHandle = 'desktop_featured_theme' where btHandle = 'dashboard_featured_theme'");
+        $db->Execute("update BlockTypes set btHandle = 'desktop_featured_addon' where btHandle = 'dashboard_featured_addon'");
+        $db->Execute("update BlockTypes set btHandle = 'desktop_newsflow_latest' where btHandle = 'dashboard_newsflow_latest'");
+        if (!$this->connection->tableExists('btDashboardNewsflowLatest')) {
+            $this->connection->Execute('alter table btDashboardNewsflowLatest rename btDesktopNewsflowLatest');
+        }
+
+        $bt = BlockType::getByHandle('desktop_latest_form');
+        if (!is_object($bt)) {
+            BlockType::installBlockType('desktop_latest_form');
+        }
+        $bt = BlockType::getByHandle('desktop_waiting_for_me');
+        if (!is_object($bt)) {
+            BlockType::installBlockType('desktop_waiting_for_me');
+        }
     }
 
     protected function addTreeNodeTypes()

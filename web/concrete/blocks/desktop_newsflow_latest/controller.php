@@ -1,5 +1,5 @@
 <?php
-namespace Concrete\Block\DashboardNewsflowLatest;
+namespace Concrete\Block\DesktopNewsflowLatest;
 
 use Concrete\Core\Block\BlockController;
 use Concrete\Core\Activity\Newsflow;
@@ -16,7 +16,7 @@ class Controller extends BlockController
     protected $btCacheBlockOutput = true;
     protected $btCacheBlockOutputOnPost = true;
     protected $btCacheBlockOutputLifetime = 7200;
-    protected $btTable = 'btDashboardNewsflowLatest';
+    protected $btTable = 'btDesktopNewsflowLatest';
     protected $btCacheBlockOutputForRegisteredUsers = true;
 
     public function getBlockTypeDescription()
