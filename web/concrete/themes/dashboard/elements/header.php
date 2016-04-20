@@ -60,7 +60,6 @@ $large_font = (bool) Config::get('concrete.accessibility.toolbar_large_font');
                         <li class="last-li"><a href="<?=View::url('/dashboard/users') ?>"><?php echo t('Members'); ?></a></li>
                         <li class="last-li"><a href="<?=View::url('/dashboard/reports') ?>"><?php echo t('Reports'); ?></a></li>
                         <li class="last-li"><a href="<?=View::url('/dashboard/pages') ?>"><?php echo t('Pages & Themes'); ?></a></li>
-                        <li class="last-li"><a href="<?=View::url('/dashboard/workflow') ?>"><?php echo t('Workflow'); ?></a></li>
                         <li class="last-li"><a href="<?=View::url('/dashboard/blocks/stacks') ?>"><?php echo t('Stacks & Blocks'); ?></a></li>
                         <li class="last-li"><a href="<?=View::url('/dashboard/extend') ?>"><?php echo t('Extend concrete5'); ?></a></li>
                         <li class="last-li"><a href="<?=View::url('/dashboard/system') ?>"><?php echo t('System & Settings'); ?></a></li>

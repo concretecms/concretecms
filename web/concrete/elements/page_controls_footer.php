@@ -212,9 +212,6 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
                         <li class="last-li"><a href="<?= URL::to('/dashboard/pages') ?>"><?php echo t(
                                     'Pages & Themes');
     ?></a></li>
-                        <li class="last-li"><a href="<?= URL::to('/dashboard/workflow') ?>"><?php echo t(
-                                    'Workflow');
-    ?></a></li>
                         <li class="last-li"><a href="<?= URL::to('/dashboard/blocks/stacks') ?>"><?php echo t(
                                     'Stacks & Blocks');
     ?></a></li>
