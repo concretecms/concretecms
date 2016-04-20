@@ -73,6 +73,11 @@ class CheckIn extends BackendInterfacePageController
     public function submit()
     {
         if ($this->validateAction()) {
+            $comments = $this->request->request('comments');
+            $comments = is_string($comments) ? trim($comments) : '';
+            if ($comments === '' && $this->app->make('config')->get('concrete.misc.require_version_comments')) {
+                return Response::create(t('Please specify the version comments'), 400);
+            }
             $c = $this->page;
             $u = new User();
             $v = CollectionVersion::get($c, "RECENT");
