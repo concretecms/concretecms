@@ -17,8 +17,6 @@ class Postlogin extends DashboardPageController
         //login redirection
         $this->set('site_login_redirect', Config::get('concrete.misc.login_redirect'));
         $this->set('login_redirect_cid', intval(Config::get('concrete.misc.login_redirect_cid')));
-        $adminToDash = Config::get('concrete.misc.login_admin_to_dashboard');
-        $this->set('site_login_admin_to_dashboard', intval($adminToDash));
     }
 
     public function update_login_redirect()
@@ -27,7 +25,6 @@ class Postlogin extends DashboardPageController
             if ($this->isPost()) {
                 Config::save('concrete.misc.login_redirect', $this->post('LOGIN_REDIRECT'));
                 Config::save('concrete.misc.login_redirect_cid', intval($this->post('LOGIN_REDIRECT_CID')));
-                Config::save('concrete.misc.login_admin_to_dashboard', intval($this->post('LOGIN_ADMIN_TO_DASHBOARD')));
 
                 $this->redirect('/dashboard/system/registration/postlogin', 'login_redirect_saved');
             }

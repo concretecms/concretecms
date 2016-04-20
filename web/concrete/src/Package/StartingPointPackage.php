@@ -460,6 +460,7 @@ class StartingPointPackage extends BasePackage
         }
         Config::save('concrete.site', SITE);
         Config::save('concrete.version_installed', APP_VERSION);
+        Config::save('concrete.misc.login_redirect', 'DESKTOP');
 
         $u = new User();
         $u->saveConfig('NEWSFLOW_LAST_VIEWED', 'FIRSTRUN');
