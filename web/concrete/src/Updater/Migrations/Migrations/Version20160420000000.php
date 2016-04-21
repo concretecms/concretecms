@@ -582,25 +582,31 @@ class Version20160420000000 extends AbstractMigration
         }
 
         $desktop = Page::getByPath('/dashboard/welcome');
-        if (!is_object($desktop) || $desktop->isError()) {
+        if (is_object($desktop) && !$desktop->isError()) {
             $desktop->moveToTrash();
         }
 
 
         $desktop = Page::getByPath('/desktop');
-        if (!is_object($desktop) || $desktop->isError()) {
+        if (is_object($desktop) && !$desktop->isError()) {
             $desktop->moveToTrash();
         }
 
-        $ci = new ContentImporter();
-        $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/desktops.xml');
-        
-        // Private Messages tweak
         $page = \Page::getByPath("/account/messages");
         if (is_object($page) && !$page->isError()) {
             $page->moveToTrash();
         }
+
+        // Private Messages tweak
         SinglePage::add('/account/messages');
+
+        $ci = new ContentImporter();
+        $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/desktops.xml');
+        
+
+        $desktop = Page::getByPath('/dashboard/welcome');
+        $desktop->movePageDisplayOrderToTop();
+
     }
 
     protected function updateWorkflows()
