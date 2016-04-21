@@ -68,11 +68,6 @@ class BasicWorkflow extends \Concrete\Core\Workflow\Workflow
         // Check if the workflow is not already approved
         if (is_object($req)) {
         
-            $db = Loader::db();
-            $db->Execute(
-                'INSERT INTO BasicWorkflowProgressData (wpID, uIDStarted) VALUES (?, ?)',
-                array($wp->getWorkflowProgressID(), $req->getRequesterUserID()));
-
             if ($this->canApproveWorkflow()) {
                 // Then that means we have the ability to approve the workflow we just started.
                 // In that case, we transparently approve it, and skip the entry notification step.
@@ -80,6 +75,11 @@ class BasicWorkflow extends \Concrete\Core\Workflow\Workflow
                 $wp->delete();
 
             } else {
+
+                $db = Loader::db();
+                $db->Execute(
+                    'INSERT INTO BasicWorkflowProgressData (wpID, uIDStarted) VALUES (?, ?)',
+                    array($wp->getWorkflowProgressID(), $req->getRequesterUserID()));
 
                 $ui = UserInfo::getByID($req->getRequesterUserID());
 
