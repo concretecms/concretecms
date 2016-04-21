@@ -581,21 +581,13 @@ class Version20160420000000 extends AbstractMigration
             $category->add($type, $key);
         }
 
-        $desktop = Page::getByPath('/desktop');
+        $desktop = Page::getByPath('/dashboard/welcome');
         if (!is_object($desktop) || $desktop->isError()) {
-            $desktop = SinglePage::add('/desktop');
-            $desktop->update(array('cName' => 'Welcome Back'));
-            $desktop->setAttribute('desktop_priority', 1);
-            $desktop->setAttribute('exclude_nav', true);
-            $desktop->setAttribute('is_desktop', true);
-            $desktop->setCanonicalPagePath('/account/welcome', false);
-
-            $bt = BlockType::getByHandle("desktop_waiting_for_me");
-            $desktop->addBlock($bt, 'Main', array());
+            $desktop->moveToTrash();
         }
 
 
-        $desktop = Page::getByPath('/dashboard/welcome');
+        $desktop = Page::getByPath('/desktop');
         if (!is_object($desktop) || $desktop->isError()) {
             $desktop->moveToTrash();
         }
