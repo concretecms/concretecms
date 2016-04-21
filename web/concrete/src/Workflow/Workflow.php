@@ -205,6 +205,12 @@ abstract class Workflow extends Object implements \Concrete\Core\Permission\Obje
 
     public function validateTrigger(WorkflowRequest $req)
     {
-        return true;
+        // Check if the current workflow request is not already deleted
+        $wr = $req::getByID($req->getWorkflowRequestID());
+        if (is_object($wr)) {
+            return true;
+        }
+        
+        return false;
     }
 }

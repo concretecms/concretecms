@@ -29,7 +29,7 @@ class DateTimeCorePageProperty extends CorePageProperty
         $date = $this->getPageTypeComposerControlDraftValue();
         if (!strtotime($date)) {
             $control = $this->getPageTypeComposerFormLayoutSetControlObject();
-            $e->add(t('You haven\'t chosen a valid %s', $control->getPageTypeComposerControlLabel()));
+            $e->add(t('You haven\'t chosen a valid %s', $control->getPageTypeComposerControlDisplayLabel()));
 
             return $e;
         }

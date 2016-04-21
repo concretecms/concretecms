@@ -120,17 +120,23 @@ class LinkAbstractor extends Object
 				$fID = $picture->fid;
 				$fo = \File::getByID($fID);
 				if (is_object($fo)) {
-					if ($picture->style) {
-						$image = new \Concrete\Core\Html\Image($fo, false);
-						$image->getTag()->width(false)->height(false);
-					} else {
-						$image = new \Concrete\Core\Html\Image($fo);
+					// move width px to width attribute and height px to height attribute
+					$widthPattern = "/(?:^width|[^-]width):\\s([0-9]+)px;?/i";
+					if (preg_match($widthPattern, $picture->style, $matches)) {
+						$picture->style = preg_replace($widthPattern, '', $picture->style);
+						$picture->width = $matches[1];
 					}
+					$heightPattern = "/(?:^height|[^-]height):\\s([0-9]+)px;?/i";
+					if (preg_match($heightPattern, $picture->style, $matches)) {
+						$picture->style = preg_replace($heightPattern, '', $picture->style);
+						$picture->height = $matches[1];
+					}
+					$picture->style = trim($picture->style);
+					$image = new \Concrete\Core\Html\Image($fo);
 					$tag = $image->getTag();
 
 					foreach ($picture->attr as $attr => $val) {
 						if (!in_array($attr, self::$blackListImgAttributes)) {
-
 							//Apply attributes to child img, if using picture tag.
 							if ($tag instanceof \Concrete\Core\Html\Object\Picture) {
 								foreach ($tag->getChildren() as $child) {
@@ -138,8 +144,10 @@ class LinkAbstractor extends Object
 										$child->$attr($val);
 									}
 								}
-							} else {
+							} elseif (is_callable(array($tag, $attr))) {
 								$tag->$attr($val);
+							} else {
+								$tag->setAttribute($attr, $val);
 							}
 						}
 					}

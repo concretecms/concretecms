@@ -99,7 +99,7 @@ class Service
      * Adds a parameter to a mail template.
      *
      * @param string $key
-     * @param string $val
+     * @param mixed $val
      */
     public function addParameter($key, $val)
     {

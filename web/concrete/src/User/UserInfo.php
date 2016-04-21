@@ -126,7 +126,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
         }
 
         $r = $db->query("DELETE FROM OauthUserMap WHERE user_id = ?", array(intval($this->uID)));
-        
+
         $r = $db->query("DELETE FROM UserSearchIndexAttributes WHERE uID = ?", array(intval($this->uID)));
 
         $r = $db->query("DELETE FROM UserGroups WHERE uID = ?", array(intval($this->uID)));
@@ -234,7 +234,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
             $mh->addParameter('profileURL', $this->getUserPublicProfileUrl());
             $mh->addParameter('profilePreferencesURL', View::url('/account/profile/edit'));
             $mh->to($recipient->getUserEmail());
-            $mh->addParameter('siteName', Config::get('concrete.site'));
+            $mh->addParameter('siteName', tc('SiteName', Config::get('concrete.site')));
 
             $mi = MailImporter::getByHandle("private_message");
             if (is_object($mi) && $mi->isMailImporterEnabled()) {
@@ -306,7 +306,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
                 if ($data['uPassword'] == $data['uPasswordConfirm']) {
                     $dh = Core::make('helper/date');
                     $dateTime = $dh->getOverridableNow();
-                    $v = array($uName, $uEmail, $this->getUserObject()->getUserPasswordHasher()->HashPassword($data['uPassword']), $uHasAvatar, $uTimezone, $uDefaultLanguage, $dateTime, $this->uID);
+                    $v = array($uName, $uEmail, $this->getUserObject()->getUserPasswordHasher()->HashPassword($data['uPassword']), $uHasAvatar ? 1 : 0, $uTimezone, $uDefaultLanguage, $dateTime, $this->uID);
                     $r = $db->prepare("update Users set uName = ?, uEmail = ?, uPassword = ?, uHasAvatar = ?, uTimezone = ?, uDefaultLanguage = ?, uLastPasswordChange = ? where uID = ?");
                     $res = $db->execute($r, $v);
 
@@ -319,7 +319,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
                     }
                 }
             } else {
-                $v = array($uName, $uEmail, $uHasAvatar, $uTimezone, $uDefaultLanguage, $this->uID);
+                $v = array($uName, $uEmail, $uHasAvatar ? 1 : 0, $uTimezone, $uDefaultLanguage, $this->uID);
                 $r = $db->prepare("update Users set uName = ?, uEmail = ?, uHasAvatar = ?, uTimezone = ?, uDefaultLanguage = ? where uID = ?");
                 $res = $db->execute($r, $v);
             }
@@ -847,7 +847,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
      */
     public static function add($data)
     {
-        return Core::make('user.registration')->create($data);
+        return Core::make('user/registration')->create($data);
     }
 
     /**
@@ -855,7 +855,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
      */
     public static function addSuperUser($uPasswordEncrypted, $uEmail)
     {
-        return Core::make('user.registration')->createSuperUser($uPasswordEncrypted, $uEmail);
+        return Core::make('user/registration')->createSuperUser($uPasswordEncrypted, $uEmail);
     }
 
     /**
@@ -863,7 +863,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
      */
     public static function register($data)
     {
-        return Core::make('user.registration')->createFromPublicRegistration($data);
+        return Core::make('user/registration')->createFromPublicRegistration($data);
     }
 
     /**

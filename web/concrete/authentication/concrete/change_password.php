@@ -1,5 +1,27 @@
 <?php defined('C5_EXECUTE') or die('Access denied.'); ?>
 
+<?php
+$_error = array();
+if (isset($error)) {
+    if ($error instanceof Exception) {
+        $_error[] = $error->getMessage();
+    } elseif ($error instanceof \Concrete\Core\Error\Error) {
+        if ($error->has()) {
+            $_error = $error->getList();
+        }
+    } else {
+        $_error = $error;
+    }
+}
+if (!empty($_error)) {
+    ?>
+	<div class="ccm-ui"  id="ccm-dashboard-result-message">
+		<?php View::element('system_errors', array('format' => 'block', 'error' => $_error)); ?>
+	</div>
+	<?php
+}
+?>
+
 <h4><?= t('Reset Password') ?></h4>
 <div class="help-block"><?= t('Enter your new password below.') ?></div>
 <div class="change-password">

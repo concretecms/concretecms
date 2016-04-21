@@ -73,7 +73,7 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
 
 			  <li class="span2">
 
-			    <div class="thumbnail launch-tooltip ccm-profile-badge-image" title="<?=$ub->getGroupBadgeDescription()?>">
+			    <div class="thumbnail launch-tooltip ccm-profile-badge-image" title="<?=h($ub->getGroupBadgeDescription())?>">
 			      <div><img src="<?=$uf->getRelativePath()?>" /></div>
 			      <div><?=t("Awarded %s", $dh->formatDate($ub->getGroupDateTimeEntered($profile)))?></div>
 			    </div>

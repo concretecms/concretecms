@@ -10,13 +10,12 @@ $(function () {
             $wrapper = $self.closest('div.ccm-block-custom-template-parallax'),
             $children = $wrapper.children(),
             $inner = $children.first();
-            console.log($wrapper);
 
         $wrapper.attr('data-stripe', 'parallax').attr('data-background-image', $self.attr('data-background-image'));
         $inner.addClass('parallax-stripe-inner');
 
         $wrapper.parallaxize({
-            variation: $wrapper.height()
+            speed: 0.2
         });
 
     });

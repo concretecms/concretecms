@@ -17,8 +17,12 @@ $nav = \Core::make('helper/navigation');
 
 $catList = AttributeCategory::getList();
 
-if (is_object($pkg)) {
-    $pkgID = $pkg->getPackageID();
+if (isset($pkg)) {
+    if (is_object($pkg)) {
+        $pkgID = $pkg->getPackageID();
+    }
+} else {
+    $pkg = null;
 }
 
 if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScreen && $tp->canInstallPackages()) { ?>
@@ -67,7 +71,11 @@ if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScre
                 </tr>
             </table>
 
-            <?php @Loader::packageElement('dashboard/uninstall', $pkg->getPackageHandle()); ?>
+            <?php
+            if ($pkg->hasUninstallNotes()) {
+                View::element('dashboard/uninstall', null, $pkg->getPackageHandle());
+            }
+            ?>
 
             <div class="alert alert-danger">
                 <?=t('This will remove all elements associated with the %s package. While you can reinstall the package, this may result in data loss.', $pkg->getPackageName())?>
@@ -293,7 +301,7 @@ if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScre
         <?php
 
      } else {
-        if (is_object($installedPKG) && $installedPKG->hasInstallPostScreen()) {
+        if (isset($installedPKG) && is_object($installedPKG) && $installedPKG->hasInstallPostScreen()) {
             ?>
             <div style="display: none">
                 <div id="ccm-install-post-notes">

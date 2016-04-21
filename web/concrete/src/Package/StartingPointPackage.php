@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Package;
 
 use AuthenticationType;
@@ -7,6 +6,7 @@ use Concrete\Core\Backup\ContentImporter;
 use Concrete\Core\Config\Renderer;
 use Concrete\Core\File\Image\Thumbnail\Type\Type;
 use Concrete\Core\Mail\Importer\MailImporter;
+use Concrete\Core\Package\Routine\AttachModeInstallRoutine;
 use Concrete\Core\Permission\Access\Entity\ConversationMessageAuthorEntity;
 use Concrete\Core\Permission\Access\Entity\GroupEntity as GroupPermissionAccessEntity;
 use Concrete\Core\Permission\Access\Entity\PageOwnerEntity as PageOwnerPermissionAccessEntity;
@@ -62,7 +62,7 @@ class StartingPointPackage extends BasePackage
             new StartingPointInstallRoutine('import_files', 65, t('Importing files.')),
             new StartingPointInstallRoutine('install_content', 70, t('Adding pages and content.')),
             new StartingPointInstallRoutine('set_site_permissions', 90, t('Setting up site permissions.')),
-            new StartingPointInstallRoutine('finish', 95, t('Finishing.')),
+            new AttachModeInstallRoutine('finish', 95, t('Finishing.')),
         );
     }
 
@@ -94,12 +94,20 @@ class StartingPointPackage extends BasePackage
         }
         $availableList = array();
         foreach ($available as $pkgHandle) {
-            $availableList[] = static::getClass($pkgHandle);
+            $cl = static::getClass($pkgHandle);
+            if ($cl !== null) {
+                $availableList[] = $cl;
+            }
         }
 
         return $availableList;
     }
 
+    /**
+     * @param string $pkgHandle
+     *
+     * @return static|null
+     */
     public static function getClass($pkgHandle)
     {
         if (is_dir(DIR_STARTING_POINT_PACKAGES . '/' . $pkgHandle)) {
@@ -107,11 +115,18 @@ class StartingPointPackage extends BasePackage
         } else {
             $class = '\\Concrete\\StartingPointPackage\\' . camelcase($pkgHandle) . '\\Controller';
         }
-        $cl = new $class();
+        if (class_exists($class, true)) {
+            $cl = new $class();
+        } else {
+            $cl = null;
+        }
 
         return $cl;
     }
 
+    /**
+     * @return StartingPointInstallRoutine[]
+     */
     public function getInstallRoutines()
     {
         return $this->routines;
@@ -251,6 +266,7 @@ class StartingPointPackage extends BasePackage
     {
         $db = Database::get();
         $num = $db->GetCol("show tables");
+
         if (count($num) > 0) {
             throw new \Exception(
                 t(
@@ -260,7 +276,7 @@ class StartingPointPackage extends BasePackage
         $installDirectory = DIR_BASE_CORE . '/config';
         try {
             $em = \ORM::entityManager('core');
-            $dbm = Core::make('database/structure', $em);
+            $dbm = Core::make('database/structure', array($em));
             $dbm->generateProxyClasses();
 
             Package::installDB($installDirectory . '/db.xml');

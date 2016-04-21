@@ -13,28 +13,37 @@ use Database;
 
 class Controller extends AttributeTypeController
 {
-    protected $searchIndexFieldDefinition = array(
-        'type' => 'text',
-        'options' => array('length' => 4294967295, 'default' => null, 'notnull' => false),
-    );
+    protected $searchIndexFieldDefinition = array('type' => 'text', 'options' => array('default' => null, 'notnull' => false));
 
     public $helpers = array('form');
 
     public function filterByAttribute(AttributedItemList $list, $value, $comparison = '=')
     {
-        if ($value instanceof TreeNode) {
-            $topic = $value;
+        if (is_array($value)) {
+            $topics = $value;
         } else {
-            $topic = Node::getByID(intval($value));
+            $topics = array($value);
         }
-        if (is_object($topic) && $topic instanceof \Concrete\Core\Tree\Node\Type\Topic) {
-            $column = 'ak_' . $this->attributeKey->getAttributeKeyHandle();
-            $qb = $list->getQueryObject();
-            $qb->andWhere(
-                $qb->expr()->like($column, ':topicPath')
-            );
-            $qb->setParameter('topicPath', "%||" . $topic->getTreeNodeDisplayPath() . '%||');
+
+        $i = 1;
+        $expressions = array();
+        $qb = $list->getQueryObject();
+        foreach($topics as $value) {
+            if ($value instanceof TreeNode) {
+                $topic = $value;
+            } else {
+                $topic = Node::getByID(intval($value));
+            }
+            if (is_object($topic) && $topic instanceof \Concrete\Core\Tree\Node\Type\Topic) {
+                $column = 'ak_' . $this->attributeKey->getAttributeKeyHandle();
+                $expressions[] = $qb->expr()->like($column, ':topicPath' . $i);
+                $qb->setParameter('topicPath' . $i, "%||" . $topic->getTreeNodeDisplayPath() . '%||');
+            }
+            $i++;
         }
+
+        $expr = $qb->expr();
+        $qb->andWhere(call_user_func_array(array($expr, 'orX'), $expressions));
     }
 
     public function saveKey($data)

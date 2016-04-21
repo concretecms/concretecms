@@ -1,5 +1,11 @@
-<? defined('C5_EXECUTE') or die("Access Denied.");?>
+<? defined('C5_EXECUTE') or die("Access Denied.");
+$token = \Core::make('token');
+?>
     <form method="post" id="public-profiles-form" action="<?php echo $view->url('/dashboard/system/registration/profiles', 'update_profiles')?>">
+		<?php
+		$token->output('update_profile');
+		?>
+
 	<div class="container">
     	<div class="row">
     		<div class="col-sm-12">

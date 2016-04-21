@@ -90,6 +90,9 @@ return array(
      * Core Providers
      */
     'providers'           => array(
+        // Router service provider
+        'core_router' => 'Concrete\Core\Routing\RoutingServiceProvider',
+
         'core_file'                   => '\Concrete\Core\File\FileServiceProvider',
         'core_encryption'             => '\Concrete\Core\Encryption\EncryptionServiceProvider',
         'core_validation'             => '\Concrete\Core\Validation\ValidationServiceProvider',
@@ -129,7 +132,7 @@ return array(
 
         // Validator
         'core_validator'          => '\Concrete\Core\Validator\ValidatorServiceProvider',
-        'core_validator_password' => '\Concrete\Core\Validator\PasswordValidatorServiceProvider'
+        'core_validator_password' => '\Concrete\Core\Validator\PasswordValidatorServiceProvider',
     ),
 
     /**
@@ -161,7 +164,7 @@ return array(
         "/ccm/system/dialogs/area/design/"                                              => array('\Concrete\Controller\Dialog\Area\Design::view'),
         "/ccm/system/dialogs/area/design/reset"                                         => array('\Concrete\Controller\Dialog\Area\Design::reset'),
         "/ccm/system/dialogs/area/design/submit"                                        => array('\Concrete\Controller\Dialog\Area\Design::submit'),
-        "/ccm/system/dialogs/area/layout/presets/manage/"                               => array('\Concrete\Controller\Dialog\Area\Layout\Presets\Manage::view'),
+        "/ccm/system/dialogs/area/layout/presets/manage/"                               => array('\Concrete\Controller\Dialog\Area\Layout\Presets\Manage::viewPresets'),
         "/ccm/system/dialogs/area/layout/presets/manage/delete"                         => array('\Concrete\Controller\Dialog\Area\Layout\Presets\Manage::delete'),
         "/ccm/system/dialogs/area/layout/presets/{arLayoutID}"                          => array('\Concrete\Controller\Dialog\Area\Layout\Presets::view'),
         "/ccm/system/dialogs/area/layout/presets/{arLayoutID}/submit"                   => array('\Concrete\Controller\Dialog\Area\Layout\Presets::submit'),
@@ -188,6 +191,8 @@ return array(
         "/ccm/system/dialogs/file/bulk/sets/submit"                                     => array('\Concrete\Controller\Dialog\File\Bulk\Sets::submit'),
         "/ccm/system/dialogs/file/bulk/properties/clear_attribute"                      => array('\Concrete\Controller\Dialog\File\Bulk\Properties::clearAttribute'),
         "/ccm/system/dialogs/file/bulk/properties/update_attribute"                     => array('\Concrete\Controller\Dialog\File\Bulk\Properties::updateAttribute'),
+        "/ccm/system/dialogs/file/bulk/storage"                                         => array('\Concrete\Controller\Dialog\File\Bulk\Storage::view'),
+        "/ccm/system/dialogs/file/bulk/storage/submit"                                  => array('\Concrete\Controller\Dialog\File\Bulk\Storage::submit'),
         "/ccm/system/dialogs/file/sets"                                                 => array('\Concrete\Controller\Dialog\File\Sets::view'),
         "/ccm/system/dialogs/file/sets/submit"                                          => array('\Concrete\Controller\Dialog\File\Sets::submit'),
         "/ccm/system/dialogs/file/properties"                                           => array('\Concrete\Controller\Dialog\File\Properties::view'),
@@ -397,7 +402,7 @@ return array(
          * RSS Feeds
          */
         "/rss/{identifier}"                                                             => array(
-            '\Concrete\Controller\Feed::get',
+            '\Concrete\Controller\Feed::output',
             'rss',
             array('identifier' => '[A-Za-z0-9_/.]+')),
 
@@ -608,6 +613,9 @@ return array(
         ),
         'jquery/fileupload'        => array(
             array('javascript', 'js/jquery-fileupload.js')
+        ),
+        'jquery/textcounter'        => array(
+            array('javascript', 'js/textcounter.js')
         ),
         'swfobject'                => array(
             array('javascript', 'js/swfobject.js')

@@ -9,6 +9,10 @@
     {
       "type": "vcs",
       "url": "https://github.com/concrete5/flysystem"
+    },
+    {
+      "type": "vcs",
+      "url": "https://github.com/concrete5/ZendQueue"
     }
   ],
   "config": {
@@ -32,7 +36,7 @@
     "oyejorge/less.php": "v1.7.0.1",
     "imagine/imagine": "0.6.*@dev",
     "natxet/cssmin": "dev-master",
-    "tedivm/jshrink": "0.5.*",
+    "tedivm/jshrink": "~1.0",
     "michelf/php-markdown": "1.4.*@dev",
     "filp/whoops": "1.*",
     "pagerfanta/pagerfanta": "1.0.2",
@@ -43,7 +47,6 @@
     "hautelook/phpass": "dev-master",
     "voku/urlify": "1.0.1-stable",
     "dapphp/securimage": "3.5.*",
-    "kertz/twitteroauth": "dev-master",
     "anahkiasen/html-object": "1.4.0",
     "primal/color": "1.0.*@dev",
     "zendframework/zend-queue": "dev-master",
@@ -53,12 +56,12 @@
     "zendframework/zend-feed": "2.2.*",
     "zendframework/zend-i18n": "2.2.*",
     "nesbot/carbon": "1.11.*",
-    "egulias/email-validator": "1.2.0",
+    "egulias/email-validator": "1.2.4",
     "punic/punic": "1.6.3",
     "tedivm/stash": "0.12.1",
     "lusitanian/oauth": "~0.3",
     "oryzone/oauth-user-data": "~1.0@dev",
-    "mlocati/concrete5-translation-library": "1.4.2",
+    "mlocati/concrete5-translation-library": "1.4.4",
     "league/url": "3.3.*",
     "concrete5/doctrine-xml": "1.0.0"
   },

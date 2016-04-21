@@ -21,6 +21,7 @@ class ImporterTest extends \FileStorageTestCase {
             'PermissionAccessEntityTypes',
             'FileAttributeValues',
             'FileImageThumbnailTypes',
+            'FileImageThumbnailPaths',
             'FilePermissionAssignments',
             'AttributeKeyCategories',
             'AttributeTypes',

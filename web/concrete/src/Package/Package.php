@@ -58,7 +58,6 @@ use Loader;
  * A package can contains related components that customize concrete5. They can br easily
  * installed and uninstall by a user.
  *
- * @property int $pkgId ID of package
  * @property string $pkgName Installed name of package
  * @property string $pkgHandle Installed handle of package. This should be provided by the ending package.
  * @property string $pkgDescription Installed description of package
@@ -83,6 +82,17 @@ class Package extends Object
     protected $REL_DIR_PACKAGES_CORE = REL_DIR_PACKAGES_CORE;
     protected $REL_DIR_PACKAGES = REL_DIR_PACKAGES;
     protected $backedUpFname = '';
+
+    /**
+     * The package ID.
+     * Don't access this directly: use Package->getPackageID and Package->setPackageID.
+     *
+     * @var int|null
+     *
+     * @internal
+     */
+    public $pkgID = null;
+
     /**
      * @var \Concrete\Core\Config\Repository\Liaison
      */
@@ -416,6 +426,7 @@ class Package extends Object
             );
             if ($row) {
                 if (version_compare($p->getPackageVersion(), $row['pkgVersion'], '>')) {
+                    $p->setPackageID($row['pkgID']);
                     $p->pkgCurrentVersion = $row['pkgVersion'];
                     $upgradeables[] = $p;
                 }
@@ -645,6 +656,11 @@ class Package extends Object
         return file_exists($this->getPackagePath() . '/' . DIRNAME_ELEMENTS . '/' . DIRNAME_DASHBOARD . '/install.php');
     }
 
+    public function hasUninstallNotes()
+    {
+        return file_exists($this->getPackagePath() . '/' . DIRNAME_ELEMENTS . '/' . DIRNAME_DASHBOARD . '/uninstall.php');
+    }
+
     public function allowsFullContentSwap()
     {
         return $this->pkgAllowsFullContentSwap;
@@ -856,7 +872,7 @@ class Package extends Object
     public function getDatabaseStructureManager()
     {
         if (!isset($this->databaseStructureManager)) {
-            $this->databaseStructureManager = Core::make('database/structure', $this->getEntityManager());
+            $this->databaseStructureManager = Core::make('database/structure', array($this->getEntityManager()));
         }
 
         return $this->databaseStructureManager;
@@ -945,7 +961,7 @@ class Package extends Object
      */
     protected function validateClearSiteContents($options)
     {
-        if (Core::make('application')->isRunThroughCommandLineInterface()) {
+        if (Core::make('app')->isRunThroughCommandLineInterface()) {
             $result = true;
         } else {
             $result = false;
@@ -1234,11 +1250,21 @@ class Package extends Object
     /**
      * Returns the package ID.
      *
-     * @return int
+     * @return int|null
      */
     public function getPackageID()
     {
         return $this->pkgID;
+    }
+
+    /**
+     * Sets the package ID.
+     *
+     * @param int|null $value
+     */
+    public function setPackageID($value)
+    {
+        $this->pkgID = empty($value) ? null : (int) $value;
     }
 
     /**

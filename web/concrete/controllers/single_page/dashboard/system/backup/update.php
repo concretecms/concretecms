@@ -19,9 +19,9 @@ class UpdateArchive extends Archive
         $this->targetDirectory = DIR_CORE_UPDATES;
     }
 
-    public function install($file)
+    public function install($file, $inplace = true)
     {
-        parent::install($file, true);
+        parent::install($file, $inplace);
     }
 
 }
@@ -184,7 +184,10 @@ class Update extends DashboardPageController
                     case ApplicationUpdate::E_UPDATE_WRITE_CONFIG:
                         $this->error->add(
                             t(
-                                'Unable to write to config/site.php. You must make config/site.php writable in order to upgrade in this manner.'));
+                                'Unable to write to %1$s. You must make %1$s writable in order to upgrade in this manner.',
+                                'application/config/update.php'
+                            )
+                        );
                         break;
                 }
             } else {

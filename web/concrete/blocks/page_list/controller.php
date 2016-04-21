@@ -22,6 +22,9 @@ class Controller extends BlockController
     protected $btExportPageTypeColumns = array('ptID');
     protected $btExportPageFeedColumns = array('pfID');
     protected $btCacheBlockRecord = true;
+    protected $btCacheBlockOutput = null;
+    protected $btCacheBlockOutputOnPost = true;
+    protected $btCacheBlockOutputLifetime = 300;
     protected $list;
 
     /**
@@ -185,11 +188,7 @@ class Controller extends BlockController
             $feed = Feed::getByID($this->pfID);
             if (is_object($feed)) {
                 $this->set('rssUrl', $feed->getFeedURL());
-                $link = new \HtmlObject\Element('link');
-                $link->href($feed->getFeedURL());
-                $link->rel('alternate');
-                $link->type('application/rss+xml');
-                $link->title($feed->getTitle());
+                $link = $feed->getHeadLinkElement();
                 $this->addHeaderItem($link);
             }
         }
@@ -273,9 +272,9 @@ class Controller extends BlockController
     public function action_filter_by_topic($treeNodeID = false, $topic = false)
     {
         if ($treeNodeID) {
-            $this->list->filterByTopic(intval($treeNodeID));
             $topicObj = Topic::getByID(intval($treeNodeID));
-            if (is_object($topicObj)) {
+            if (is_object($topicObj) && $topicObj instanceof Topic) {
+                $this->list->filterByTopic(intval($treeNodeID));
                 $seo = Core::make('helper/seo');
                 $seo->addTitleSegment($topicObj->getTreeNodeDisplayName());
             }
@@ -358,6 +357,8 @@ class Controller extends BlockController
             if (isset($parameters[1])) {
                 $parameters[1] = intval($parameters[1]);
             }
+        } else {
+            $parameters = $method = null;
         }
 
         return array($method, $parameters);
@@ -501,5 +502,18 @@ class Controller extends BlockController
                 return true;
             }
         }
+    }
+
+    public function cacheBlockOutput()
+    {
+        if ($this->btCacheBlockOutput === null) {
+            if (!$this->enableExternalFiltering && !$this->paginate) {
+                $this->btCacheBlockOutput = true;
+            } else {
+                $this->btCacheBlockOutput = false;
+            }
+        }
+
+        return  $this->btCacheBlockOutput;
     }
 }

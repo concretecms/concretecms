@@ -8,7 +8,7 @@ echo Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Sing
 		<?php if(Config::get('concrete.seo.url_rewriting')) {
 			$base = Core::getApplicationURL();
 		} else {
-			$base = Core::getApplicationURL() . DISPATCHER_FILENAME;
+			$base = Core::getApplicationURL() . '/' . DISPATCHER_FILENAME;
 		}?>
 		<form class="form-inline" method="post" id="add_static_page_form" action="<?php echo $view->url('/dashboard/pages/single')?>">
 			<?php echo $this->controller->token->output('add_single_page')?>

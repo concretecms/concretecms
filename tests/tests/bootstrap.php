@@ -7,13 +7,6 @@
 
 use Concrete\Core\Config\Repository\Repository;
 
-define('DIR_BUILDTOOLS', dirname(dirname(__FILE__)) . '/build-tools');
-if (!is_dir(DIR_BUILDTOOLS)) {
-    exec(
-        'git clone --depth 1 --single-branch --branch master https://github.com/mlocati/concrete5-build ' . escapeshellarg(
-            DIR_BUILDTOOLS));
-}
-
 // error reporting
 PHPUnit_Framework_Error_Notice::$enabled = false;
 
@@ -101,7 +94,13 @@ $config->set('concrete.cache.blocks', false);
 $config->set('concrete.cache.pages', false);
 $config->set('concrete.cache.enabled', false);
 
+/** @var Concrete\Core\Database\Connection\Connection $cn */
 $cn = $cms->make('database')->connection('travisWithoutDB');
+$cn->connect();
+if (!$cn->isConnected()) {
+    throw new \Exception('Unable to connect to test database, please create a user "travis" with no password with full privileges to a database "concrete5_tests"');
+}
+
 $cn->query('DROP DATABASE IF EXISTS concrete5_tests');
 $cn->query('CREATE DATABASE concrete5_tests');
 $cn->close();

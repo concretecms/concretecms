@@ -3,6 +3,7 @@ namespace Concrete\Core\Page\Type\Composer\Control\CorePageProperty;
 
 use Loader;
 use Page;
+use Core;
 
 class UrlSlugCorePageProperty extends CorePageProperty
 {
@@ -27,9 +28,12 @@ class UrlSlugCorePageProperty extends CorePageProperty
     {
         $e = Loader::helper('validation/error');
         $handle = $this->getPageTypeComposerControlDraftValue();
-        if (!$handle) {
+        
+        /** @var \Concrete\Core\Utility\Service\Validation\Strings $stringValidator */
+        $stringValidator = Core::make('helper/validation/strings');
+        if (!$stringValidator->notempty($handle)) {
             $control = $this->getPageTypeComposerFormLayoutSetControlObject();
-            $e->add(t('You haven\'t chosen a valid %s', $control->getPageTypeComposerControlLabel()));
+            $e->add(t('You haven\'t chosen a valid %s', $control->getPageTypeComposerControlDisplayLabel()));
             return $e;
         }
     }
