@@ -607,6 +607,8 @@ class Version20160420000000 extends AbstractMigration
         $desktop = Page::getByPath('/dashboard/welcome');
         $desktop->movePageDisplayOrderToTop();
 
+        \Config::save('concrete.misc.login_redirect', 'DESKTOP');
+
     }
 
     protected function updateWorkflows()
