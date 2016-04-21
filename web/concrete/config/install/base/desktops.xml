@@ -10,6 +10,9 @@
                 <attributekey handle="is_desktop">
                     <value>1</value>
                 </attributekey>
+                <attributekey handle="exclude_nav">
+                    <value>0</value>
+                </attributekey>
             </attributes>
             <area name="Main">
                 <blocks>

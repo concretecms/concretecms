@@ -205,7 +205,9 @@ class BlockType
         $prefix = $r->override ? true : $pkgHandle;
         $class = core_class('Block\\' . $txt->camelcase($btHandle) . '\\Controller', $prefix);
 
-        return $class;
+        if (class_exists($class)) {
+            return $class;
+        }
     }
 
     /**
@@ -746,6 +748,8 @@ class BlockType
     protected function loadController()
     {
         $class = static::getBlockTypeMappedClass($this->getBlockTypeHandle(), $this->getPackageHandle());
-        $this->controller = new $class($this);
+        if ($class) {
+            $this->controller = new $class($this);
+        }
     }
 }
