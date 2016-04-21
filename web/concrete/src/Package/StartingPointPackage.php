@@ -67,6 +67,7 @@ class StartingPointPackage extends BasePackage
             new StartingPointInstallRoutine('install_config', 60, t('Configuring site.')),
             new StartingPointInstallRoutine('import_files', 65, t('Importing files.')),
             new StartingPointInstallRoutine('install_content', 70, t('Adding pages and content.')),
+            new StartingPointInstallRoutine('install_desktops', 85, t('Adding desktops.')),
             new StartingPointInstallRoutine('set_site_permissions', 90, t('Setting up site permissions.')),
             new AttachModeInstallRoutine('finish', 95, t('Finishing.')),
         );
@@ -277,6 +278,12 @@ class StartingPointPackage extends BasePackage
     {
         $ci = new ContentImporter();
         $ci->importContentFile($this->getPackagePath() . '/content.xml');
+    }
+
+    public function install_desktops()
+    {
+        $ci = new ContentImporter();
+        $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/desktops.xml');
     }
 
     public function install_database()

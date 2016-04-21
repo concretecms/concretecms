@@ -560,30 +560,9 @@ class Version20160420000000 extends AbstractMigration
             $desktop->moveToTrash();
         }
 
-        $desktop = SinglePage::add('/dashboard/welcome');
-        $desktop->update(array('cName' => 'Welcome Back'));
-        $desktop->setAttribute('desktop_priority', 2);
-        $desktop->setAttribute('is_desktop', true);
-
-        $bt = BlockType::getByHandle("desktop_app_status");
-        $desktop->addBlock($bt, 'Main', array());
-
-        $bt = BlockType::getByHandle("rss_displayer");
-        $b = $desktop->addBlock($bt, 'Main', array(
-            'title' => 'News from concrete5.org',
-            'url' => 'http://www.concrete5.org/rss/blog',
-            'dateFormat' => 'longDate',
-            'itemsToDisplay' => '3',
-            'showSummary' => '1',
-            'launchInNewWindow' => '1',
-        ));
-        $set = new StyleSet();
-        $set->setCustomClass('concrete5-org-stories');
-        $manager = $db->getEntityManager();
-        $manager->persist($set);
-        $manager->flush();
-        $b->setCustomStyleSet($set);
-
+        $ci = new ContentImporter();
+        $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/desktops.xml');
+        
         // Private Messages tweak
         $page = \Page::getByPath("/account/messages");
         if (is_object($page) && !$page->isError()) {
