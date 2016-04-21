@@ -214,7 +214,7 @@ class EntityManagerFactory implements EntityManagerFactoryInterface
      */
     protected function registerPkgWithXMLMetadataImpl($driverChain)
     {
-        $driverSettings = \Config::get(CONFIG_ORM_METADATA_XMLL);
+        $driverSettings = \Config::get(CONFIG_ORM_METADATA_XML);
         if (count($driverSettings) > 0) {
             foreach ($driverSettings as $setting) {
                 $xmlDriver = new \Doctrine\ORM\Mapping\Driver\XmlDriver($setting['paths']);
