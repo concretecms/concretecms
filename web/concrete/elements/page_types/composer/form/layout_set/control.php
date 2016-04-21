@@ -22,6 +22,10 @@ if (strlen($control->getPageTypeComposerFormLayoutSetControlCustomLabel())) {
 		<? endif ?>
 	</td>
 
+	<td>
+		<span class="text-muted"><?php if ($control->isPageTypeComposerFormLayoutSetControlRequired()) { echo t('Required'); } ?></span>
+	</td>
+
 	<td style="text-align: right; white-space: nowrap;">
 		<ul class="ccm-page-type-composer-item-controls">
 			<li><a href="#" data-command="move-set-control" style="cursor: move"><i class="fa fa-arrows"></i></a></li>
@@ -36,7 +40,7 @@ if (strlen($control->getPageTypeComposerFormLayoutSetControlCustomLabel())) {
 
 				<div class="dialog-buttons">
 					<button class="btn btn-default pull-left" onclick="jQuery.fn.dialog.closeTop()"><?=t('Cancel')?></button>
-					<button class="btn btn-danger pull-right" onclick="Composer.deleteFromLayoutSetControl(<?=$control->getPageTypeComposerFormLayoutSetControlID()?>)"><?=t('Update Set')?></button>
+					<button class="btn btn-danger pull-right" onclick="Composer.deleteFromLayoutSetControl(<?=$control->getPageTypeComposerFormLayoutSetControlID()?>)"><?=t('Delete Control')?></button>
 				</div>
 
 			</div>

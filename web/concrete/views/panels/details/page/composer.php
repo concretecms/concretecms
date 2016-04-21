@@ -122,6 +122,10 @@ ConcretePageComposerDetail = {
 			}
 		});
 
+		ConcreteEvent.subscribe('AjaxRequestError',function(r) {
+			my.disableAutosave();
+		});
+
 	    my.enableAutosave();
 	}
 

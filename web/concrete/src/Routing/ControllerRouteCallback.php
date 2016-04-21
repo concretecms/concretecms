@@ -2,6 +2,7 @@
 
 namespace Concrete\Core\Routing;
 
+use Concrete\Core\Support\Facade\Application;
 use Symfony\Component\HttpKernel;
 use Response;
 use Request;
@@ -17,7 +18,7 @@ class ControllerRouteCallback extends RouteCallback
      */
     public function execute(Request $request, Route $route, $parameters)
     {
-        $resolver = new HttpKernel\Controller\ControllerResolver();
+        $resolver = Application::make('Concrete\Core\Controller\ApplicationAwareControllerResolver');
         $callback = $resolver->getController($request);
         $arguments = $resolver->getArguments($request, $callback);
         $controller = $callback[0];

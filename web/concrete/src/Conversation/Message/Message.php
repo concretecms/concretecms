@@ -14,6 +14,7 @@ use \Concrete\Core\Foundation\Object;
 use User;
 use UserInfo;
 use Concrete\Core\Utility\IPAddress;
+use Events;
 
 class Message extends Object implements \Concrete\Core\Permission\ObjectInterface
 {
@@ -309,8 +310,9 @@ class Message extends Object implements \Concrete\Core\Permission\ObjectInterfac
             $msg->setPropertiesFromArray($r);
 
             $author = new Author();
-            if ($r['uID'] > 0) {
-                $author->setUser(\UserInfo::getByID($r['uID']));
+            $authorUser = ($r['uID'] > 0) ? \UserInfo::getByID($r['uID']) : null;
+            if ($authorUser !== null) {
+                $author->setUser($authorUser);
             } else {
                 $author->setName($r['cnvMessageAuthorName']);
                 $author->setEmail($r['cnvMessageAuthorEmail']);
@@ -408,6 +410,11 @@ class Message extends Object implements \Concrete\Core\Permission\ObjectInterfac
                           array($cnvMessageSubject, $cnvMessageBody, $date, $cnvMessageParentID, $cnvEditorID, $cnvMessageLevel, $cnvID, $uID, $cnvMessageAuthorName, $cnvMessageAuthorEmail, $cnvMessageAuthorWebsite, ($ip === false)?(''):($ip->getIp()), $_SERVER['HTTP_USER_AGENT']));
 
         $cnvMessageID = $db->Insert_ID();
+        
+        $message = static::getByID($cnvMessageID);
+
+        $event = new MessageEvent($message);
+        Events::dispatch('on_new_conversation_message', $event);
 
         if ($cnv instanceof \Concrete\Core\Conversation\Conversation) {
             $cnv->updateConversationSummary();

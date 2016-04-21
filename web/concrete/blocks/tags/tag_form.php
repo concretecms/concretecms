@@ -1,4 +1,4 @@
-<?php defined('C5_EXECUTE') or die("Access Denied.");  
+<?php defined('C5_EXECUTE') or die("Access Denied.");
 $form = Loader::helper('form');
 $c = Page::getCurrentPage();
 
@@ -47,7 +47,7 @@ if(!$ak instanceof CollectionAttributeKey) {?>
 
 
 	<div class="clearfix">
-	<label style="margin-bottom: 0px;"><?=t('Link Tag to Search Page')?></label>
+	<label style="margin-bottom: 0px;"><?=t('Link Tags to Filtered Page List')?></label>
 	<div class="input">
 		<?php
 		$form_selector = Loader::helper('form/page_selector');

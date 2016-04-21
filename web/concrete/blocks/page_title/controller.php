@@ -72,7 +72,9 @@ class Controller extends BlockController
     {
         if ($treeNodeID) {
             $topicObj = Topic::getByID(intval($treeNodeID));
-            $this->set('currentTopic', $topicObj);
+            if ($topicObj instanceof Topic) {
+                $this->set('currentTopic', $topicObj);
+            }
         }
         $this->view();
     }

@@ -399,8 +399,7 @@ class Version extends Object implements \Concrete\Core\Permission\ObjectInterfac
         if ($c->getCollectionInheritance() == 'TEMPLATE') {
             // we make sure to update the cInheritPermissionsFromCID value
             $pType = PageType::getByID($c->getPageTypeID());
-            $pTemplate = PageTemplate::getByID($c->getPageTemplateID());
-            $masterC = $pType->getPageTypePageTemplateDefaultPageObject($pTemplate);
+            $masterC = $pType->getPageTypePageTemplateDefaultPageObject();
             $db->Execute('update Pages set cInheritPermissionsFromCID = ? where cID = ?', array(
                 $masterC->getCollectionID(),
                 $c->getCollectioniD()

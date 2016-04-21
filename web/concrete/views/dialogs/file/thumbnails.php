@@ -1,12 +1,13 @@
-<?php
+<?php defined('C5_EXECUTE') or die("Access Denied.");
 
-use Concrete\Core\File\Image\Thumbnail\Type\Version;
-
-defined('C5_EXECUTE') or die("Access Denied.");
 /* @var FileVersion $version */
+use Concrete\Core\File\Image\Thumbnail\Type\Version;
 ?>
+
 <div class="ccm-ui">
     <?php
+    $i = 1;
+
     /* @var Version $type */
     foreach ($types as $type) {
         $width = $type->getWidth();
@@ -23,39 +24,51 @@ defined('C5_EXECUTE') or die("Access Denied.");
             'fvID' => $version->getFileVersionID(),
             'thumbnail' => $type->getHandle(),
         ));
+    ?>
+
+        <?php if ($i % 3 === 1) { ?>
+            <div class="row">
+        <?php } ?>
+                <div class="col-md-4">
+                    <div class="ccm-image-thumbnail-card">
+                        <div class="ccm-image-thumbnail-display-name">
+                            <h4><?php echo $type->getDisplayName(); ?></h4>
+                        </div>
+                        <small class="ccm-image-thumbnail-dimensions"><?php echo t('%s x %s dimensions', $width, $height); ?></small>
+                        <?php if ($fp->canEditFileContents() && $hasFile) { ?>
+                            <a href="<?php echo $url . '?' . $query; ?>"
+                                dialog-width="90%"
+                                dialog-height="70%"
+                                class="btn btn-sm btn-default dialog-launch"
+                                dialog-title="<?php echo t('Edit Thumbnail Images'); ?>">
+                                <?php echo t('Edit Thumbnail'); ?>
+                            </a>
+                        <?php } ?>
+                        <hr class="ccm-image-thumbnail-divider">
+                        <div class="ccm-file-manager-image-thumbnail">
+                            <?php if ($hasFile) { ?>
+                                <img class="ccm-file-manager-image-thumbnail-image"
+                                    data-handle='<?php echo $type->getHandle(); ?>'
+                                    data-fid="<?php echo $version->getFileID(); ?>"
+                                    data-fvid="<?php echo $version->getFileVersionID(); ?>"
+                                    style="max-width: 100%"
+                                    src="<?php echo $configuration->getPublicURLToFile($thumbnailPath); ?>"/>
+                            <?php
+                            } else {
+                                echo t(
+                                    'No thumbnail found. Usually this is because the ' .
+                                    'source file is smaller than this thumbnail configuration.');
+                            }
+                            ?>
+                        </div>
+                    </div>
+                </div>
+        <?php if ($i % 3 === 0 || $i === count($types)) { ?>
+            </div>
+        <?php }
+
+        ++$i;
         ?>
-        <h4>
-            <?= $type->getDisplayName() ?>
-            <small><?= t('%s x %s dimensions', $width, $height) ?></small>
-            <?php if ($fp->canEditFileContents() && $hasFile) { ?>
-                <a href="<?= $url . '?' . $query ?>"
-                   dialog-width="90%"
-                   dialog-height="70%"
-                   class="pull-right btn btn-sm btn-default dialog-launch"
-                   dialog-title="<?= t('Edit Thumbnail Images') ?>">
-                    <?= t('Edit Thumbnail') ?>
-                </a>
-            <?php } ?>
-        </h4>
-        <hr/>
-        <div class="ccm-file-manager-image-thumbnail">
-            <?php
-            if ($hasFile) {
-                ?>
-                <img class="ccm-file-manager-image-thumbnail-image"
-                     data-handle='<?= $type->getHandle() ?>'
-                     data-fid="<?= $version->getFileID() ?>"
-                     data-fvid="<?= $version->getFileVersionID() ?>"
-                     style="max-width: 100%"
-                     src="<?= $configuration->getPublicURLToFile($thumbnailPath) ?>"/>
-                <?php
-            } else {
-                echo t(
-                    'No thumbnail found. Usually this is because the ' .
-                    'source file is smaller than this thumbnail configuration.');
-            }
-            ?>
-        </div>
 
     <?php } ?>
 

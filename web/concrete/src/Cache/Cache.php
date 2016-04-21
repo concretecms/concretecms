@@ -7,6 +7,17 @@ use Stash\Driver\BlackHole;
 use Stash\Driver\Composite;
 use Stash\Pool;
 
+/**
+ * Base class for the three caching layers present in Concrete5:
+ *   - ExpensiveCache
+ *   - ObjectCache
+ *   - RequestCache
+ *   
+ * Cache storage is performed using the Stash Library, see http://www.stashphp.com/
+ * 
+ * This class imports the various caching settings from Config class, sets
+ * up the Stash pools and provides a basic caching API for all of Concrete5.
+ */
 abstract class Cache
 {
     /** @var Pool */

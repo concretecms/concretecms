@@ -43,6 +43,16 @@ $page_selector = Loader::helper('form/page_selector');
         </div>
 
         <div class="form-group">
+            <label for="displaySystemPages"><?php echo t('System pages') ?></label>
+            <div class="checkbox">
+                <label>
+                <?php echo $form->checkbox('displaySystemPages', 1, $info['displaySystemPages']); ?>
+                <?php echo t('Display system pages.'); ?>
+                </label>
+            </div>
+        </div>
+
+        <div class="form-group">
             <label for="displayUnavailablePages"><?= t('Check Page Permissions') ?></label>
             <div class="checkbox">
                 <label>

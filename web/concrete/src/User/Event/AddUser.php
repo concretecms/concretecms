@@ -7,7 +7,15 @@ class AddUser extends AbstractEvent {
 	protected $proceed = true;
     protected $data = array();
 
-    public function __construct($data)
+	/**
+	 * @return array
+	 */
+	public function getData()
+	{
+		return $this->data;
+	}
+
+	public function __construct($data)
     {
         $this->data = $data;
     }

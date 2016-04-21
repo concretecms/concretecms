@@ -214,9 +214,13 @@ EOS;
     public function date($field, $value = null, $calendarAutoStart = true)
     {
         $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service\Date */
+        $fh = Core::make("helper/form");
         $id = preg_replace("/[^0-9A-Za-z-]/", "_", $field);
-        if (isset($_REQUEST[$field])) {
-            $timestamp = empty($_REQUEST[$field]) ? false : @strtotime($_REQUEST[$field]);
+
+        $requestValue = $fh->getRequestValue($field);
+
+        if ($requestValue !== false) {
+            $timestamp = empty($requestValue) ? false : @strtotime($requestValue);
         } elseif ($value) {
             $timestamp = @strtotime($value);
         } elseif ($value === '') {
@@ -231,7 +235,7 @@ EOS;
             $defaultDateJs = '""';
         }
         $html = '';
-        $html .= '<div><span class="ccm-input-date-wrapper" id="' . $id . '_dw"><input id="' . $id . '_pub" class="form-control ccm-input-date"  /><input id="' . $id . '" name="' . $field . '" type="hidden"  /></span></div>';
+        $html .= '<div><span class="ccm-input-date-wrapper" id="' . $id . '_dw"><input id="' . $id . '_pub" type="text" class="form-control ccm-input-date"  /><input id="' . $id . '" name="' . $field . '" type="hidden"  /></span></div>';
         $jh = Core::make('helper/json'); /* @var $jh \Concrete\Core\Http\Service\Json */
         if ($calendarAutoStart) {
             $html .= '<script type="text/javascript">$(function () {

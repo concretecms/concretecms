@@ -15,7 +15,7 @@ class UserInfoFactory extends Facade
     public static function add($data)
     {
         $cms = static::getFacadeApplication();
-        return $cms->make('user.registration')->create($data);
+        return $cms->make('user/registration')->create($data);
     }
 
     /**
@@ -24,7 +24,7 @@ class UserInfoFactory extends Facade
     public static function addSuperUser($uPasswordEncrypted, $uEmail)
     {
         $cms = static::getFacadeApplication();
-        return $cms->make('user.registration')->createSuperUser($uPasswordEncrypted, $uEmail);
+        return $cms->make('user/registration')->createSuperUser($uPasswordEncrypted, $uEmail);
     }
 
     /**
@@ -33,7 +33,7 @@ class UserInfoFactory extends Facade
     public static function register($data)
     {
         $cms = static::getFacadeApplication();
-        return $cms->make('user.registration')->createFromPublicRegistration($data);
+        return $cms->make('user/registration')->createFromPublicRegistration($data);
     }
 
 

@@ -4,7 +4,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 <section class="ccm-ui">
 	<header><?=t('SEO')?></header>
-	<form method="post" action="<?=$controller->action('submit')?>" class="ccm-panel-detail-content-form" data-dialog-form="seo" data-panel-detail-form="seo">
+	<form method="post" action="<?=$controller->action('submit')?>" class="ccm-panel-detail-content-form" data-dialog-form="seo" data-panel-detail-form="seo" data-action-after-save="reload">
 
 	<?php if ($allowEditName) { ?>
 	<div class="form-group">
@@ -56,5 +56,13 @@ defined('C5_EXECUTE') or die("Access Denied.");
                 ConcreteEvent.publish('SitemapUpdatePageRequestComplete', {'cID': data.response.cID});
             }
         });
+		$('#ccm-panel-detail-page-seo .form-control').textcounter({
+			type: "character",
+			max: -1,
+			countSpaces: true,
+			stopInputAtMaximum: false,
+			counterText: '<?php echo t('Characters'); ?>: ',
+			countContainerClass: 'help-block'
+		});
     });
 </script>

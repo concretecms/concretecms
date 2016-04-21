@@ -4,6 +4,11 @@ namespace Concrete\Core\Controller;
 use Concrete\Core\Foundation\ClassLoader;
 use Core;
 
+/**
+ * Class ControllerResolver
+ * @package Concrete\Core\Controller
+ * @deprecated The default is ApplicationAwareControllerResolver
+ */
 class ControllerResolver extends \Symfony\Component\HttpKernel\Controller\ControllerResolver {
 
     protected function createController($controller) {

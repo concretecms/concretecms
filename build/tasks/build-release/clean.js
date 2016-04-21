@@ -49,7 +49,6 @@ module.exports = function(grunt, config, parameters, done) {
 				/^\/concrete\/vendor\/.*\/UPGRADE_TO_\w+$/,
 				/^\/concrete\/vendor\/.*\/UPGRADE$/i,
 				/^\/concrete\/vendor\/htmlawed\/htmlawed\/htmLawed_[README|TESTCASE]/,
-				/^\/concrete\/vendor\/.*\.(sh|bash|bat|exe|cmd|dll)$/i,
 			]
 		},
 		dir: {

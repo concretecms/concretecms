@@ -3,6 +3,7 @@
 namespace Concrete\Core\Page;
 use Concrete\Core\Backup\ContentExporter;
 use Concrete\Core\Block\View\BlockView;
+use Concrete\Core\Html\Object\HeadLink;
 use Concrete\Core\Http\Request;
 use Concrete\Core\Permission\Access\Entity\GroupEntity;
 use Database;
@@ -300,15 +301,13 @@ class Feed
 
     public static function getList()
     {
-        $db = Database::get();
-        $em = $db->getEntityManager();
+        $em = \ORM::entityManager('core');
         return $em->getRepository('\Concrete\Core\Page\Feed')->findBy(array(), array('pfTitle' => 'asc'));
     }
 
     public function save()
     {
-        $db = Database::get();
-        $em = $db->getEntityManager();
+        $em = \ORM::entityManager('core');
         $em->persist($this);
         $em->flush();
     }
@@ -350,23 +349,26 @@ class Feed
 
     public function delete()
     {
-        $em = Database::get()->getEntityManager();
+        $em = \ORM::entityManager('core');
         $em->remove($this);
         $em->flush();
     }
 
     public static function getByID($id)
     {
-        $db = Database::get();
-        $em = $db->getEntityManager();
+        $em = \ORM::entityManager('core');
         $r = $em->find('\Concrete\Core\Page\Feed', $id);
         return $r;
     }
 
+    /**
+     * Get a PageFeed by its handle
+     * @param $pfHandle
+     * @return self|null
+     */
     public static function getByHandle($pfHandle)
     {
-        $db = Database::get();
-        $em = $db->getEntityManager();
+        $em = \ORM::entityManager('core');
         return $em->getRepository('\Concrete\Core\Page\Feed')->findOneBy(
             array('pfHandle' => $pfHandle)
         );
@@ -456,6 +458,11 @@ class Feed
         return $content;
     }
 
+    /**
+     * Get the feed output in RSS form given a Request object
+     * @param Request|null $request
+     * @return string|null The full RSS output as a string
+     */
     public function getOutput($request = null)
     {
         $pl = $this->getPageListObject();
@@ -511,6 +518,12 @@ class Feed
 
             return $writer->export('rss');
         }
+    }
+
+    public function getHeadLinkElement()
+    {
+        $link = new HeadLink($this->getFeedURL(), 'alternate', 'application/rss+xml');
+        return $link;
     }
 
 }

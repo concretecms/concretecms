@@ -106,6 +106,7 @@ class Controller extends BlockController
         $args['displayPagesCID'] = isset($args['displayPagesCID']) && $args['displayPagesCID'] ? $args['displayPagesCID'] : 0;
         $args['displaySubPageLevelsNum'] = isset($args['displaySubPageLevelsNum']) && $args['displaySubPageLevelsNum'] > 0 ? $args['displaySubPageLevelsNum'] : 0;
         $args['displayUnavailablePages'] = isset($args['displayUnavailablePages']) && $args['displayUnavailablePages'] ? 1 : 0;
+        $args['displaySystemPages'] = isset($args['displaySystemPages']) && $args['displaySystemPages'] ? 1 : 0;
         parent::save($args);
     }
 

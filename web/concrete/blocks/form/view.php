@@ -84,7 +84,7 @@ $captcha = $surveyBlockInfo['displayCaptcha'] ? Loader::helper('validation/captc
 	<div class="fields">
 		
 		<?php  foreach ($questions as $question): ?>
-			<div class="form-group field field-<?php  echo $question['type']; ?> <?php echo $errorDetails[$question['msqID']] ? 'has-error' : ''?>">
+			<div class="form-group field field-<?php  echo $question['type']; ?> <?php echo isset($errorDetails[$question['msqID']]) ? 'has-error' : ''?>">
 				<label class="control-label" <?php  echo $question['labelFor']; ?>>
 					<?php  echo $question['question']; ?>
                     <?php if ($question['required']): ?>

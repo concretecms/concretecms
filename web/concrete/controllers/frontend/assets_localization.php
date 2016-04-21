@@ -198,6 +198,7 @@ var ccmi18n_filemanager = {
   duplicateFile: <?=json_encode(t('Copy File'))?>,
   clear: <?=json_encode(t('Clear'))?>,
   edit: <?=json_encode(t('Edit'))?>,
+  thumbnailImages: <?=json_encode(t('Thumbnail Images'))?>,
   replace: <?=json_encode(t('Replace'))?>,
   duplicate: <?=json_encode(t('Copy'))?>,
   chooseNew: <?=json_encode(t('Choose New File'))?>,
@@ -511,6 +512,7 @@ var ccmi18n_imageeditor = {
         ?>
 ccmTranslator.setI18NDictionart({
   AskDiscardDirtyTranslation: <?=json_encode(t("The current item has changed.\nIf you proceed you will lose your changes.\n\nDo you want to proceed anyway?"))?>,
+  Approved: <?=json_encode(tc('Translation', 'Approved')); ?>,
   Comments: <?=json_encode(t('Comments'))?>,
   Context: <?=json_encode(t('Context'))?>,
   ExamplePH: <?=json_encode(t('Example: %s'))?>,
@@ -534,6 +536,8 @@ ccmTranslator.setI18NDictionart({
   TAB_SHIFT: <?=json_encode(t('[SHIFT]+[TAB] Backward'))?>,
   Translate: <?=json_encode(t('Translate'))?>,
   Translation: <?=json_encode(t('Translation'))?>,
+  TranslationIsApproved_WillNeedApproval: <?=json_encode(t('This translation is approved: your changes will need approval.')); ?>,
+  TranslationIsNotApproved: <?=json_encode(t('This translation is not approved.')); ?>,
   PluralNames: {
     zero: <?=json_encode(tc('PluralCase', 'Zero'))?>,
     one: <?=json_encode(tc('PluralCase', 'One'))?>,

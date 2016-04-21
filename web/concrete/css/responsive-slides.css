@@ -51,17 +51,18 @@
     padding-top: 15px;
     padding-bottom: 10px;
 }
-.rslide_tabs li {
+.rslides_tabs li {
     list-style-type: none;
     display: inline-block;
     margin-right: 5px;
 }
 
-.rslide_tabs li.rslides_here a {
+.rslides_tabs li.rslides_here a {
     background: #333;
 }
 
-.rslide-tabs li a {
+.rslides_tabs li a {
+    text-indent: -9999px;
     overflow: hidden;
     background: #ccccc9;
     width: 15px;
