@@ -520,6 +520,7 @@ class Version20160420000000 extends AbstractMigration
 
     protected function installDesktops()
     {
+        $db = \Database::connection();
         $category = Category::getByHandle('collection')->getController();
         $attribute = CollectionKey::getByHandle('is_desktop');
         if (!is_object($attribute)) {
@@ -578,6 +579,9 @@ class Version20160420000000 extends AbstractMigration
         ));
         $set = new StyleSet();
         $set->setCustomClass('concrete5-org-stories');
+        $manager = $db->getEntityManager();
+        $manager->persist($set);
+        $manager->flush();
         $b->setCustomStyleSet($set);
 
         // Private Messages tweak
