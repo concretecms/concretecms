@@ -1064,6 +1064,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         $path->setPagePathIsCanonical(true);
         $em->persist($path);
         $em->flush();
+        $this->rescanSystemPageStatus();
     }
 
     public function getPagePaths()
