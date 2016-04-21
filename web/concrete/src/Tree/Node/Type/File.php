@@ -20,7 +20,7 @@ class File extends TreeNode
 
     public function getPermissionAssignmentClassName()
     {
-        return '\\Concrete\\Core\\Permission\\Assignment\\FileTreeNodeAssignment';
+        return '\\Concrete\\Core\\Permission\\Assignment\\TreeNodeAssignment';
     }
     public function getPermissionObjectKeyCategoryHandle()
     {

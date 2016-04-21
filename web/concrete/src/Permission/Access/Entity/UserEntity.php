@@ -9,7 +9,8 @@ use Concrete\Core\User\UserInfo;
 
 class UserEntity extends Entity
 {
-    protected $user;
+
+    protected $uID;
 
     public static function getAccessEntitiesForUser($user)
     {
@@ -57,7 +58,7 @@ class UserEntity extends Entity
 
     public function getUserObject()
     {
-        return $this->user;
+        return \UserInfo::getByID($this->uID);
     }
 
     public function getAccessEntityTypeLinkHTML()
@@ -78,7 +79,7 @@ class UserEntity extends Entity
         if ($uID) {
             $ui = \UserInfo::getByID($uID);
             if (is_object($ui)) {
-                $this->user = $ui;
+                $this->uID = $uID;
                 $this->label = $ui->getUserName();
             } else {
                 $this->label = t('(Deleted User)');

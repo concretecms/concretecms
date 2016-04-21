@@ -39,7 +39,7 @@ class FileFolder extends Category
 
     public function getTreeNodeJSON()
     {
-        $node = parent::getTreeNodeJSON();
+        $node = TreeNode::getTreeNodeJSON();
         if ($node) {
             $node->isFolder = true;
             $node->resultsThumbnailImg = $this->getListFormatter()->getIconElement();

@@ -22,6 +22,11 @@ class FileFolderResponse extends TreeNodeResponse
         return $this->validate('add_file');
     }
 
+    public function canDuplicateTreeNode()
+    {
+        return false;
+    }
+
     public function canEditTreeNode()
     {
         return $this->validate('edit_file_folder');

@@ -66,18 +66,24 @@ class BasicWorkflow extends \Concrete\Core\Workflow\Workflow
     {
         // lets save the basic data associated with this workflow.
         $req = $wp->getWorkflowRequestObject();
-        $db = Loader::db();
-        $db->Execute(
-            'INSERT INTO BasicWorkflowProgressData (wpID, uIDStarted) VALUES (?, ?)',
-            array($wp->getWorkflowProgressID(), $req->getRequesterUserID()));
+        
+        // Check if the workflow is not already approved
+        if (is_object($req)) {
+        
+            if ($this->canApproveWorkflow()) {
+                // Then that means we have the ability to approve the workflow we just started.
+                // In that case, we transparently approve it, and skip the entry notification step.
+                $wpr = $req->approve($wp);
+                $wp->delete();
 
-        if ($this->canApproveWorkflow()) {
-            // Then that means we have the ability to approve the workflow we just started.
-            // In that case, we transparently approve it, and skip the entry notification step.
-            $wpr = $req->approve($wp);
-            $wp->delete();
-        } else {
-            $ui = UserInfo::getByID($req->getRequesterUserID());
+            } else {
+
+                $db = Loader::db();
+                $db->Execute(
+                    'INSERT INTO BasicWorkflowProgressData (wpID, uIDStarted) VALUES (?, ?)',
+                    array($wp->getWorkflowProgressID(), $req->getRequesterUserID()));
+
+                $ui = UserInfo::getByID($req->getRequesterUserID());
 
             // let's get all the people who are set to be notified on entry
             $message = t(
