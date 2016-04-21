@@ -26,7 +26,7 @@ class AddFileFileFolderKey extends FileFolderKey
 
         $accessEntities = $u->getUserAccessEntityObjects();
         $accessEntities = $pae->validateAndFilterAccessEntities($accessEntities);
-        $list = $this->getAccessListItems(FileSetKey::ACCESS_TYPE_ALL, $accessEntities);
+        $list = $this->getAccessListItems(FileFolderKey::ACCESS_TYPE_ALL, $accessEntities);
         $list = PermissionDuration::filterByActive($list);
 
         foreach ($list as $l) {

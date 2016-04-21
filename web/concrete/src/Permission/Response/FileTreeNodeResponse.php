@@ -5,16 +5,30 @@ use TaskPermission;
 
 class FileTreeNodeResponse extends TreeNodeResponse
 {
+
+    protected function getPermissionsCheckerObject()
+    {
+        $f = $this->getPermissionObject()->getTreeNodeFileObject();
+        if (is_object($f)) {
+            $fp = new \Permissions($f);
+            return $fp;
+        }
+    }
+
     public function canEditTreeNodePermissions()
     {
-        return $this->validate('edit_group_permissions');
+        $checker = $this->getPermissionsCheckerObject();
+        if (is_object($checker)) {
+            return $checker->validate('edit_file_permissions');
+        }
     }
 
     public function canViewTreeNode()
     {
-        $tp = new TaskPermission();
-
-        return $tp->canAccessGroupSearch();
+        $checker = $this->getPermissionsCheckerObject();
+        if (is_object($checker)) {
+            return $checker->validate('view_file');
+        }
     }
 
     public function canDuplicateTreeNode()
@@ -24,16 +38,22 @@ class FileTreeNodeResponse extends TreeNodeResponse
 
     public function canEditTreeNode()
     {
-        return $this->validate('edit_group');
+        $checker = $this->getPermissionsCheckerObject();
+        if (is_object($checker)) {
+            return $checker->validate('edit_file_properties');
+        }
     }
 
     public function canAddTreeSubNode()
     {
-        return $this->validate('add_sub_group');
+        return false;
     }
 
     public function canDeleteTreeNode()
     {
-        return $this->validate('edit_group');
+        $checker = $this->getPermissionsCheckerObject();
+        if (is_object($checker)) {
+            return $checker->validate('delete_file');
+        }
     }
 }
