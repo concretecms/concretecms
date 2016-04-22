@@ -12,9 +12,9 @@ if ($imageresize) {
     $datastring .= ' data-image-quality="'. (int) Config::get('concrete.file_manager.restrict_resize_quality'). '" ';
 }
 
-if ($fp->canAddFile() || $fp->canSearchFiles()) {
-    ?>
+if ($fp->canAddFile() || $fp->canSearchFiles()) { ?>
 
+<?php /* ?>
 <div class="ccm-dashboard-content-full" data-search="files">
 <?php Loader::element('files/search', array('controller' => $searchController))?>
 </div>
@@ -34,10 +34,12 @@ if ($fp->canAddFile() || $fp->canSearchFiles()) {
 }
     ?>
 
-<?php 
+ */ ?>
+
+<?php
 } else {
     ?>
 	<p><?=t("You do not have access to the file manager.");
     ?></p>
-<?php 
+<?php
 } ?>

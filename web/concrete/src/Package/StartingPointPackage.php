@@ -5,6 +5,7 @@ use AuthenticationType;
 use Concrete\Core\Backup\ContentImporter;
 use Concrete\Core\Config\Renderer;
 use Concrete\Core\Database\DatabaseStructureManager;
+use Concrete\Core\File\Filesystem;
 use Concrete\Core\File\Image\Thumbnail\Type\Type;
 use Concrete\Core\Mail\Importer\MailImporter;
 use Concrete\Core\Package\Routine\AttachModeInstallRoutine;
@@ -248,6 +249,10 @@ class StartingPointPackage extends BasePackage
         \Concrete\Core\File\StorageLocation\Type\Type::add('local', t('Local'));
         $configuration = $type->getConfigurationObject();
         $fsl = \Concrete\Core\File\StorageLocation\StorageLocation::add($configuration, t('Default'), true);
+
+        $filesystem = new Filesystem();
+        $tree = $filesystem->create();
+        $filesystem->setDefaultPermissions($tree);
 
         $thumbnailType = new Type();
         $thumbnailType->requireType();
