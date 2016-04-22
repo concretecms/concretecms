@@ -23,6 +23,11 @@
       <default value="0"/>
       <notnull/>
     </field>
+    <field name="cThisParent" type="boolean">
+      <unsigned/>
+      <default value="0"/>
+      <notnull/>
+    </field>
     <field name="useButtonForLink" type="boolean">
       <unsigned/>
       <default value="0"/>

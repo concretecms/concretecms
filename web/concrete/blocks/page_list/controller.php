@@ -126,6 +126,7 @@ class Controller extends BlockController
         $c = Page::getCurrentPage();
         if (is_object($c)) {
             $this->cID = $c->getCollectionID();
+            $this->cPID = $c->getCollectionParentID();
         }
 
         if ($this->displayFeaturedOnly == 1) {
@@ -166,7 +167,7 @@ class Controller extends BlockController
         }
 
         if (intval($this->cParentID) != 0) {
-            $cParentID = ($this->cThis) ? $this->cID : $this->cParentID;
+            $cParentID = ($this->cThis) ? $this->cID : ($this->cThisParent) ? $this->cPID : $this->cParentID;
             if ($this->includeAllDescendents) {
                 $this->list->filterByPath(Page::getByID($cParentID)->getCollectionPath());
             } else {
@@ -239,7 +240,7 @@ class Controller extends BlockController
         $bID = $b->getBlockID();
         $this->set('bID', $bID);
         $c = Page::getCurrentPage();
-        if ((!$this->cThis) && ($this->cParentID != 0)) {
+        if ((!$this->cThis) && (!$this->cThisParent) && ($this->cParentID != 0)) {
             $isOtherPage = true;
             $this->set('isOtherPage', true);
         }
@@ -384,6 +385,7 @@ class Controller extends BlockController
         $c = $this->getCollectionObject();
         if (is_object($c)) {
             $this->cID = $c->getCollectionID();
+            $this->cPID = $c->getCollectionParentID();
         }
 
         $args = $args + array(
@@ -405,6 +407,7 @@ class Controller extends BlockController
 
         $args['num'] = ($args['num'] > 0) ? $args['num'] : 0;
         $args['cThis'] = ($args['cParentID'] == $this->cID) ? '1' : '0';
+        $args['cThisParent'] = ($args['cParentID'] == $this->cPID) ? '1' : '0';
         $args['cParentID'] = ($args['cParentID'] == 'OTHER') ? $args['cParentIDValue'] : $args['cParentID'];
         if (!$args['cParentID']) {
             $args['cParentID'] = 0;
