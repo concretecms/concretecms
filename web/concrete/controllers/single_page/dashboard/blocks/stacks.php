@@ -1,12 +1,16 @@
 <?php
 namespace Concrete\Controller\SinglePage\Dashboard\Blocks;
 
+use Concrete\Core\Entity\Statistics\UsageTracker\StackUsageRecord;
+use Concrete\Core\Http\Response;
 use Concrete\Core\Multilingual\Page\Section\Section;
 use Concrete\Core\Page\Collection\Version\Version;
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Core\Page\Stack\StackCategory;
+use Concrete\Core\View\AbstractView;
 use Config;
 use Concrete\Core\Page\Stack\StackList;
+use Doctrine\ORM\EntityManagerInterface;
 use Stack;
 use Page;
 use Permissions;
@@ -307,6 +311,59 @@ class Stacks extends DashboardPageController
                 $this->error->add(Loader::helper('validation/token')->getErrorMessage());
             }
             $name = trim($this->post('name'));
+        }
+    }
+
+    public function usage($stackId)
+    {
+        $this->set('stackId', $stackId);
+
+        /** @var EntityManagerInterface $entityManager */
+        $entityManager = $this->app->make(EntityManagerInterface::class);
+        $repository = $entityManager->getRepository(StackUsageRecord::class);
+
+        $records = $repository->findBy([
+                'stack_id' => $stackId
+        ]);
+
+        /** @var AbstractView $view */
+        $view = new \Concrete\Core\View\DialogView('dialogs/stack/usage');
+        $view->setController($this);
+
+        $view->addScopeItems([
+            'records' => $this->getUsageGenerator($records)
+        ]);
+
+        return new Response($view->render());
+    }
+
+    /**
+     * Generator for transforming a list of StackUsageRecords into Collection objects
+     * This method can be used to do some interesting things with the list two sine it is ordered
+     * by Collection ID /and/ Collection Version ID.
+     *
+     * @param StackUsageRecord[] $records
+     * @return \Generator
+     */
+    protected function getUsageGenerator(array $records)
+    {
+        $last_collection = null;
+
+        foreach ($records as $record) {
+
+            if ($last_collection && $last_collection->getCollectionID() == $record->getCollectionId()) {
+                // This is the same collection as the last collection, lets use it again.
+                $collection = $last_collection;
+            } else {
+                /** @var \Concrete\Core\Page\Collection\Collection $collection */
+                $last_collection = $collection = Page::getByID($record->getCollectionId());
+            }
+
+            // Load in the version object
+            $collection->loadVersionObject($record->getCollectionVersionId());
+
+            // Yield the collection object
+            yield $collection;
         }
     }
 
