@@ -302,6 +302,7 @@ return array(
         "/ccm/system/file/rescan" => array('\Concrete\Controller\Backend\File::rescan'),
         "/ccm/system/file/star" => array('\Concrete\Controller\Backend\File::star'),
         "/ccm/system/file/upload" => array('\Concrete\Controller\Backend\File::upload'),
+        "/ccm/system/file/folder/add" => array('\Concrete\Controller\Backend\File\Folder::add'),
 
         /*
          * Users
