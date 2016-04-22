@@ -203,7 +203,14 @@ $form = Loader::helper('form/page_selector');
                        value="<?= $c->getCollectionID() ?>" <? if ($cThis) { ?> checked<? } ?>>
                 <?= t('Beneath this page') ?>
             </label>
-         </div>
+        </div>
+        <div class="radio">
+            <label>
+                <input type="radio" name="cParentID" id="cThisParentField"
+                       value="<?= $c->getCollectionParentID() ?>" <?php if ($cThisParent) { ?> checked<? } ?>>
+                <?= t('At the current level') ?>
+            </label>
+        </div>
         <div class="radio">
             <label>
                 <input type="radio" name="cParentID" id="cOtherField"
