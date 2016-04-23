@@ -14,11 +14,13 @@ if ($imageresize) {
 
 if ($fp->canAddFile() || $fp->canSearchFiles()) { ?>
 
-<?php /* ?>
+
+
 <div class="ccm-dashboard-content-full" data-search="files">
-<?php Loader::element('files/search', array('controller' => $searchController))?>
+<?php Loader::element('files/search', array('result' => $result))?>
 </div>
 
+    <?php /* ?>
     <?php if ($fp->canAddFile()) {
     ?>
 	<div id="ccm-file-manager-upload-prompt" class="ccm-file-manager-upload" <?=$datastring?>>
@@ -36,7 +38,7 @@ if ($fp->canAddFile() || $fp->canSearchFiles()) { ?>
 
  */ ?>
 
-<?php
+    <?php
 } else {
     ?>
 	<p><?=t("You do not have access to the file manager.");

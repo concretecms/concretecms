@@ -42,7 +42,7 @@ class Result
         return $this->listColumns;
     }
 
-    public function __construct(Set $columns, ItemList $il, $url, $fields = array())
+    public function __construct(Set $columns, ItemList $il, $url = null, $fields = array())
     {
         $this->listColumns = $columns;
         $this->list = $il;
@@ -90,6 +90,11 @@ class Result
         $node = new Item($this, $this->listColumns, $item);
 
         return $node;
+    }
+
+    public function getSortURL($column, $dir = 'asc')
+    {
+        return $this->getItemListObject()->getSortURL($column, $dir, $this->getBaseURL());
     }
 
     public function getJSONObject()

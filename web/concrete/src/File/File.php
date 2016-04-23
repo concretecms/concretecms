@@ -71,6 +71,11 @@ class File implements \Concrete\Core\Permission\ObjectInterface
     protected $uID = 0;
 
     /**
+     * @Column(type="integer", options={"unsigned": true})
+     */
+    protected $folderTreeNodeID = 0;
+
+    /**
      * @ManyToOne(targetEntity="\Concrete\Core\File\StorageLocation\StorageLocation", inversedBy="files")
      * @JoinColumn(name="fslID", referencedColumnName="fslID")
      **/
