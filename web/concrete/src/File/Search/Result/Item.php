@@ -22,8 +22,5 @@ class Item extends SearchResultItem
             $this->{$key} = $value;
         }
         //$this->isStarred = $item->isStarred();
-        $this->type = t('Folder');
-        $this->thumbnail = '<i class="fa fa-folder"></i>';
-        $this->dateModified = \Core::make('date')->formatDateTime($item->getDateLastModified());
     }
 }

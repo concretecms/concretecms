@@ -5,16 +5,24 @@ $list = $result->getItemListObject();
 ?>
 
 <script type="text/template" data-template="search-results-table-body">
-<% _.each(items, function (item) {%>
-<tr data-launch-search-menu="<%=item.treeNodeID%>" data-file-manager-tree-node="<%=item.treeNodeID%>">
-    <td class="ccm-search-results-icon"><%=item.thumbnail%></td>
-    <td class="ccm-search-results-name"><%=item.title%></td>
-    <td><%=item.type%></td>
-    <td><%=item.dateModified%></td>
-    <td><%=item.size%></td>
-</tr>
-<% }); %>
+    <% _.each(items, function (item) {%>
+    <tr data-launch-search-menu="<%=item.treeNodeID%>" data-file-manager-tree-node="<%=item.treeNodeID%>">
+        <% for (i = 0; i < item.columns.length; i++) {
+        var column = item.columns[i]; %>
+
+            <% if (i == 0) { %>
+                <td class="ccm-search-results-icon"><%=column.value%></td>
+            <% } else if (i == 1) { %>
+            <td class="ccm-search-results-name"><%-column.value%></td>
+            <% } else { %>
+            <td><%-column.value%></td>
+            <% } %>
+
+        <% } %>
+    </tr>
+    <% }); %>
 </script>
+
 
 <div data-search-element="wrapper"></div>
 
@@ -57,7 +65,6 @@ $list = $result->getItemListObject();
 
 <script type="text/template" data-template="search-results-table-head">
     <tr>
-        <th></th>
         <%
         for (i = 0; i < columns.length; i++) {
         var column = columns[i];
