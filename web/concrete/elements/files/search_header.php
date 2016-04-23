@@ -18,7 +18,7 @@
 
 <div style="display: none">
     <div data-dialog="add-file-manager-folder" class="ccm-ui">
-        <form data-dialog-form="add-folder" method="post" class="form-stacked" action="<?=$addFolderAction?>">
+        <form data-dialog-form="add-folder" method="post" action="<?=$addFolderAction?>">
             <?=$token->output('add_folder')?>
             <?=$form->hidden('currentFolder', $currentFolder);?>
             <div class="form-group">

@@ -9,6 +9,16 @@
 
         my.$element = $element;
         my.setupAddFolder();
+        my.setupEvents();
+    }
+
+    ConcreteFileManagerHeader.prototype.setupEvents = function() {
+        ConcreteEvent.subscribe('AjaxFormSubmitSuccess', function(e, data) {
+            if (data.form == 'add-folder') {
+
+            }
+        });
+
     }
 
     ConcreteFileManagerHeader.prototype.setupAddFolder = function() {

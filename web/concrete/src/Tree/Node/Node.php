@@ -69,6 +69,16 @@ abstract class Node extends Object implements \Concrete\Core\Permission\ObjectIn
         $this->tree = $tree;
     }
 
+    public function getDateLastModified()
+    {
+        return $this->dateModified;
+    }
+
+    public function getDateCreated()
+    {
+        return $this->dateCreated;
+    }
+
     public function getTreeObject()
     {
         if (!isset($this->tree)) {
@@ -182,6 +192,11 @@ abstract class Node extends Object implements \Concrete\Core\Permission\ObjectIn
     public function getTreeNodeMenu()
     {
         return null;
+    }
+
+    public function getJSONObject()
+    {
+        return $this->getTreeNodeJSON();
     }
 
     public function getTreeNodeJSON()
@@ -405,10 +420,12 @@ abstract class Node extends Object implements \Concrete\Core\Permission\ObjectIn
         }
         $treeNodeTypeHandle = Loader::helper('text')->uncamelcase(strrchr(get_called_class(), '\\'));
 
+        $dateModified = Core::make('date')->toDB();
+        $dateCreated = Core::make('date')->toDB();
+
         $type = TreeNodeType::getByHandle($treeNodeTypeHandle);
-        $db->Execute('insert into TreeNodes (treeNodeTypeID, treeNodeParentID, treeNodeDisplayOrder, inheritPermissionsFromTreeNodeID, treeID) values (?, ?, ?, ?, ?)', array(
-            $type->getTreeNodeTypeID(), $treeNodeParentID, $treeNodeDisplayOrder, $inheritPermissionsFromTreeNodeID, $treeID,
-        ));
+        $db->Execute('insert into TreeNodes (treeNodeTypeID, treeNodeParentID, treeNodeDisplayOrder, inheritPermissionsFromTreeNodeID, dateModified, dateCreated, treeID) values (?, ?, ?, ?, ?, ?, ?)', array(
+            $type->getTreeNodeTypeID(), $treeNodeParentID, $treeNodeDisplayOrder, $inheritPermissionsFromTreeNodeID, $dateModified, $dateCreated, $treeID));
         $id = $db->Insert_ID();
         $node = self::getByID($id);
 

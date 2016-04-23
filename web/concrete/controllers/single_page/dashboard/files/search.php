@@ -2,6 +2,10 @@
 namespace Concrete\Controller\SinglePage\Dashboard\Files;
 
 use Concrete\Controller\Element\Search\Files\Header;
+use Concrete\Controller\Search\FileFolder;
+use Concrete\Core\File\Filesystem;
+use Concrete\Core\File\Search\ColumnSet\DefaultSet;
+use Concrete\Core\File\Search\Result\Result;
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Controller\Search\Files as SearchFilesController;
 use View;
@@ -16,16 +20,19 @@ class Search extends DashboardPageController
         $this->set('headerMenu', $header);
         $this->requireAsset('core/file-manager');
         $this->requireAsset('core/imageeditor');
-        /*
-        $cnt = new SearchFilesController();
-        $cnt->search();
-        $this->set('searchController', $cnt);
-        $result = $cnt->getSearchResultObject();
+
+        $search = new FileFolder();
+        $search->search();
+        $this->set('searchController', $search);
+        $result = $search->getSearchResultObject();
+
         if (is_object($result)) {
-            $result = Loader::helper('json')->encode($result->getJSONObject());
-            $v = View::getInstance();
-			$token = \Core::make('token')->generate();
-			$this->addFooterItem("<script type=\"text/javascript\">$(function() { $('div[data-search=files]').concreteFileManager({upload_token: '" . $token . "', result: " . $result . "}); });</script>");
-        }*/
+            $this->set('result', $result);
+            $result = json_encode($result->getJSONObject());
+            $token = \Core::make('token')->generate();
+            $this->addFooterItem(
+                "<script type=\"text/javascript\">$(function() { $('div[data-search=files]').concreteFileManager({upload_token: '" . $token . "', result: " . $result . "}); });</script>"
+            );
+        }
     }
 }

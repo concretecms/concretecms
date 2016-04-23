@@ -4649,7 +4649,12 @@
     <field name="treeNodeName" type="string" size="255">
       <default value=""/>
     </field>
-
+    <field name="dateModified" type="datetime">
+      <unsigned/>
+    </field>
+    <field name="dateCreated" type="datetime">
+      <unsigned/>
+    </field>
     <field name="treeNodeOverridePermissions" type="boolean">
       <unsigned/>
       <default value="0"/>
@@ -4711,6 +4716,22 @@
       <col>gID</col>
     </index>
   </table>
+
+  <table name="TreeFileNodes">
+    <field name="treeNodeID" type="integer" size="11">
+      <unsigned/>
+      <autoincrement/>
+      <key/>
+    </field>
+    <field name="fID" type="integer" size="11">
+      <unsigned/>
+      <default value="0"/>
+    </field>
+    <index name="fID">
+      <col>fID</col>
+    </index>
+  </table>
+
 
   <table name="TopicTrees">
     <field name="treeID" type="integer" size="11">

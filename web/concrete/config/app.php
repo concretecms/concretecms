@@ -303,6 +303,7 @@ return array(
         "/ccm/system/file/star" => array('\Concrete\Controller\Backend\File::star'),
         "/ccm/system/file/upload" => array('\Concrete\Controller\Backend\File::upload'),
         "/ccm/system/file/folder/add" => array('\Concrete\Controller\Backend\File\Folder::add'),
+        "/ccm/system/file/folder/contents" => array('\Concrete\Controller\Search\FileFolder::submit'),
 
         /*
          * Users
