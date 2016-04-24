@@ -26,9 +26,17 @@ class FolderSet extends Set
     {
         return '<i class="fa fa-folder"></i>';
     }
-    public function getSize()
+    public static function getSize($node)
     {
-        return '';
+        if ($node->getTreeNodeTypeHandle() == 'file_folder') {
+            return '';
+        }
+        if ($node->getTreeNodeTypeHandle() == 'file') {
+            $file = $node->getTreeNodeFileObject();
+            if (is_object($file)) {
+                return $file->getSize();
+            }
+        }
     }
 
     public static function getFileDateActivated($f)
@@ -44,7 +52,7 @@ class FolderSet extends Set
         $this->addColumn(new Column('folderItemName', t('Name'), array('\Concrete\Core\File\Search\ColumnSet\FolderSet', 'getName')));
         $this->addColumn(new Column('folderItemType', t('Type'), array('\Concrete\Core\File\Search\ColumnSet\FolderSet', 'getType'), false));
         $this->addColumn(new Column('folderItemModified', t('Date Modified'), array('\Concrete\Core\File\Search\ColumnSet\FolderSet', 'getDateModified')));
-        $this->addColumn(new Column('folderItemSize', t('Size'), array('\Concrete\Core\File\Search\ColumnSet\FolderSet', 'getSize'), false));
+        $this->addColumn(new Column('folderItemSize', t('Size'), array('\Concrete\Core\File\Search\ColumnSet\FolderSet', 'getSize')));
         $title = $this->getColumnByKey('folderItemName');
         $this->setDefaultSortColumn($title, 'desc');
     }

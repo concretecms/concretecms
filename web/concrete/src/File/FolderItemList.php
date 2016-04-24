@@ -17,7 +17,8 @@ class FolderItemList extends ItemList implements PermissionableListItemInterface
 
     protected $autoSortColumns = array(
         'folderItemName',
-        'folderItemModified'
+        'folderItemModified',
+        'folderItemSize'
     );
 
     public function __construct(FileFolder $parent)
@@ -44,8 +45,15 @@ class FolderItemList extends ItemList implements PermissionableListItemInterface
 
     public function createQuery()
     {
-        $this->query->select('n.treeNodeID, n.treeNodeName as folderItemName, n.dateModified as folderItemModified')
-            ->from('TreeNodes', 'n');
+        $this->query->select('n.treeNodeID')
+            ->addSelect('if(nt.treeNodeTypeHandle=\'file\', fv.fvTitle, n.treeNodeName) as folderItemName')
+            ->addSelect('if(nt.treeNodeTypeHandle=\'file\', fv.fvDateAdded, n.dateModified) as folderItemModified')
+            ->addSelect('fv.fvSize as folderItemSize')
+            ->from('TreeNodes', 'n')
+            ->innerJoin('n', 'TreeNodeTypes', 'nt', 'nt.treeNodeTypeID = n.treeNodeTypeID')
+            ->leftJoin('n', 'TreeFileNodes', 'tf', 'tf.treeNodeID = n.treeNodeID')
+            ->leftJoin('tf', 'FileVersions', 'fv', 'tf.fID = fv.fID and fv.fvIsApproved = 1');
+
     }
 
     public function getTotalResults()
