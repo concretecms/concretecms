@@ -2,6 +2,7 @@
 namespace Concrete\Core\File;
 
 use Carbon\Carbon;
+use Concrete\Core\Tree\Node\Type\FileFolder;
 use Doctrine\Common\Collections\ArrayCollection;
 use FileSet;
 use League\Flysystem\AdapterInterface;
@@ -464,13 +465,22 @@ class File implements \Concrete\Core\Permission\ObjectInterface
             }
         }
 
+        $filesystem = new Filesystem();
+        $folder = $filesystem->getRootFolder();
+
         $f = new self();
         $f->uID = $uID;
         $f->storageLocation = $fsl;
         $f->fDateAdded = new Carbon($date);
+        $f->folderTreeNodeID = $folder->getTreeNodeID();
+
+
         $em = \ORM::entityManager('core');
         $em->persist($f);
         $em->flush();
+
+        $node = \Concrete\Core\Tree\Node\Type\File::add($f, $folder);
+
 
         $fv = Version::add($f, $filename, $prefix, $data);
 

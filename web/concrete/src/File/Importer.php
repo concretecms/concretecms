@@ -7,9 +7,9 @@ use Concrete\Core\File\ImportProcessor\SetJPEGQualityProcessor;
 use Concrete\Core\File\StorageLocation\StorageLocation;
 use League\Flysystem\AdapterInterface;
 use Loader;
-use File as ConcreteFile;
 use Core;
 use Config;
+use Concrete\Core\Tree\Node\Type\FileFolder;
 
 class Importer
 {
@@ -120,7 +120,7 @@ class Importer
      *
      * @param string $pointer path to file
      * @param string|bool $filename
-     * @param ConcreteFile|bool $fr
+     * @param File|FileFolder|bool $fr
      *
      * @return number Error Code | \Concrete\Core\File\Version
      */
@@ -170,7 +170,7 @@ class Importer
 
         if (!($fr instanceof File)) {
             // we have to create a new file object for this file version
-            $fv = ConcreteFile::add($sanitizedFilename, $prefix, array('fvTitle' => $filename), $fsl);
+            $fv = File::add($sanitizedFilename, $prefix, array('fvTitle' => $filename), $fsl);
 
             foreach ($this->importProcessors as $processor) {
                 if ($processor->shouldProcess($fv)) {
@@ -193,7 +193,7 @@ class Importer
      * Imports a file in the default file storage location's incoming directory.
      *
      * @param string $filename
-     * @param ConcreteFile|bool $fr
+     * @param File|FileFolder|bool $fr
      *
      * @return number Error Code | \Concrete\Core\File\Version
      */
@@ -231,7 +231,7 @@ class Importer
 
         if (!($fr instanceof File)) {
             // we have to create a new file object for this file version
-            $fv = ConcreteFile::add($sanitizedFilename, $prefix, array('fvTitle' => $filename), $default);
+            $fv = File::add($sanitizedFilename, $prefix, array('fvTitle' => $filename), $default);
             $fv->refreshAttributes($this->rescanThumbnailsOnImport);
 
             foreach ($this->importProcessors as $processor) {

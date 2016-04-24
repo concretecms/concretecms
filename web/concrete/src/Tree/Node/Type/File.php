@@ -2,6 +2,7 @@
 namespace Concrete\Core\Tree\Node\Type;
 
 use Concrete\Core\Tree\Node\Node as TreeNode;
+use Loader;
 
 class File extends TreeNode
 {
@@ -88,16 +89,15 @@ class File extends TreeNode
     public function setTreeNodeFile(\Concrete\Core\File\File $file)
     {
         $db = Loader::db();
-        $db->Replace('TreeGroupNodes', array('treeNodeID' => $this->getTreeNodeID(), 'fID' => $file->getFileID()), array('treeNodeID'), true);
-        $this->gID = $file->getFileID();
+        $db->Replace('TreeFileNodes', array('treeNodeID' => $this->getTreeNodeID(), 'fID' => $file->getFileID()), array('treeNodeID'), true);
+        $this->fID = $file->getFileID();
     }
 
     public static function add($file = false, $parent = false)
     {
-        $db = Loader::db();
         $node = parent::add($parent);
         if (is_object($file)) {
-            $node->setTreeNodeGroup($file);
+            $node->setTreeNodeFile($file);
         }
 
         return $node;
