@@ -11,7 +11,8 @@
 			'result': {},
 			'onLoad': false,
 			'onUpdateResults': false,
-            'bulkParameterName': 'item'
+            'bulkParameterName': 'item',
+			'selectMode': false
 		}, options);
 		this.$element = $element;
 		this.$results = $element.find('div[data-search-element=results]');
@@ -116,9 +117,109 @@
 		});
 	}
 
+	/*
+	 * Returns an array of selected result objects. These are not DOM objects, they are objects
+	 * passed in through the options.result object.
+	 */
+	ConcreteAjaxSearch.prototype.getSelectedResults = function() {
+		var my = this,
+			$total = my.$element.find('tbody tr'),
+			$selected = my.$element.find('.ccm-search-select-selected'),
+			results = [];
+
+		$selected.each(function() {
+			var index = $total.index($(this));
+			if (index > -1) {
+				results.push(my.getResult().items[index]);
+			}
+		});
+
+		return results;
+	}
+
+	ConcreteAjaxSearch.prototype.triggerMenu = function(event, results) {
+		var my = this;
+		if (results.length == 1) {
+			// single menu
+			var $menu = results[0].treeNodeMenu;
+			if ($menu) {
+				var $element = $('tr[data-launch-search-menu=' + results[0].treeNodeID + ']');
+				var menu = new ConcreteMenu($element, {
+					menu: $menu,
+					handle: 'none'
+				});
+				menu.show(event);
+			}
+		}
+	}
+
+
+	ConcreteAjaxSearch.prototype.handleSelectClick = function(event, $row) {
+		var my = this;
+		event.preventDefault();
+		$row.removeClass('ccm-search-select-hover');
+		if (event.shiftKey) {
+			var $selected = my.$element.find('.ccm-search-select-selected');
+			var index = my.$element.find('tbody tr').index($row);
+			if (!$selected.length) {
+				// If nothing is selected, we select everything from the beginning up to row.
+				my.$element.find('tbody tr').slice(0, index + 1).removeClass().addClass('ccm-search-select-selected');
+			} else {
+				var selectedIndex = my.$element.find('tbody tr').index($selected.eq(0));
+				if (selectedIndex > -1) {
+					if (selectedIndex > index) {
+						// we select from $row up to index.
+						my.$element.find('tbody tr').slice(index, selectedIndex + 1).removeClass().addClass('ccm-search-select-selected');
+					} else {
+						// we select from selectedIndex up to row
+						my.$element.find('tbody tr').slice(selectedIndex, index + 1).removeClass().addClass('ccm-search-select-selected');
+					}
+				}
+			}
+			ConcreteEvent.publish('SearchSelectItems', {
+				'results': my.getSelectedResults()
+			}, my.$element);
+
+		} else {
+			if (event.which == 3) {
+				// right click
+				// If the current item is not selected, we deselect everything and select it
+				if (!$row.hasClass('ccm-search-select-selected')) {
+					my.$element.find('.ccm-search-select-selected').removeClass();
+					$row.addClass('ccm-search-select-selected');
+				}
+
+				var results = my.getSelectedResults();
+				my.triggerMenu(event, results);
+
+
+			} else {
+				if ($row.hasClass('ccm-search-select-selected')) {
+					$row.removeClass('ccm-search-select-selected');
+				} else {
+					$row.addClass('ccm-search-select-selected');
+				}
+				if (!event.metaKey) {
+					my.$element.find('.ccm-search-select-selected').not($row).removeClass();
+				}
+
+			}
+			ConcreteEvent.publish('SearchSelectItems', {
+				'results': my.getSelectedResults()
+			}, my.$element);
+
+		}
+	}
+
+	ConcreteAjaxSearch.prototype.getResult = function() {
+		return this.result;
+	}
+
 	ConcreteAjaxSearch.prototype.updateResults = function(result) {
 		var cs = this,
 			options = cs.options;
+
+		cs.result = result;
 
 		cs.$resultsTableHead.html(cs._templateSearchResultsTableHead({'columns': result.columns}));
 		cs.$resultsTableBody.html(cs._templateSearchResultsTableBody({'items': result.items}));
@@ -127,7 +228,23 @@
 		$.each(result.fields, function(i, field) {
 			cs.$advancedFields.append(cs._templateAdvancedSearchFieldRow({'field': field}));
 		});
-		cs.setupMenus(result);
+		if (options.selectMode == 'multiple') {
+			// We enable item selection, click to select single, command click for
+			// multiple, shift click for range
+			cs.$element.find('tbody tr').on('contextmenu' +
+				'', function(e) {
+				e.preventDefault();
+				return false;
+			}).on('mouseover.concreteSearchResultItem', function() {
+				$(this).addClass('ccm-search-select-hover');
+			}).on('mouseout.concreteSearchResultItem', function() {
+				$(this).removeClass('ccm-search-select-hover');
+			}).on('mousedown.concreteSearchResultItem', function(e) {
+				cs.handleSelectClick(e, $(this));
+			});
+		} else {
+			cs.setupMenus(result);
+		}
 		if (options.onUpdateResults) {
 			options.onUpdateResults(this);
 		}
@@ -237,7 +354,9 @@
 
 	ConcreteAjaxSearch.prototype.setupBulkActions = function() {
 		var cs = this;
+
 		cs.$bulkActions = cs.$element.find('select[data-bulk-action]');
+		// legacy bulk actions
 		cs.$element.on('change', 'select[data-bulk-action]', function() {
 			var $option = $(this).find('option:selected'),
 				value = $option.val(),
@@ -247,6 +366,18 @@
 			cs.handleSelectedBulkAction(value, type, $option, cs.$element.find('input[data-search-checkbox=individual]:checked'));
 			cs.$element.find('option').eq(0).prop('selected', true);
 		});
+
+		// Or, maybe we're using a button launcher
+		cs.$element.on('click', 'button.btn-menu-launcher', function(event) {
+			var results = cs.getSelectedResults();
+			var menu = results[0].treeNodeMenu;
+			if (menu) {
+				$(this).parent().find('ul').remove();
+				$(this).parent().append($(menu).find('ul'));
+			}
+		});
+
+
 	}
 
 	ConcreteAjaxSearch.prototype.setupPagination = function() {
@@ -269,6 +400,15 @@
 				cs.$bulkActions.prop('disabled', true);
 			}
 		});
+
+		ConcreteEvent.subscribe('SearchSelectItems', function(e, data) {
+			if (data.results.length > 0) {
+				cs.$element.find('button.btn-menu-launcher').prop('disabled', false);
+			} else {
+				cs.$element.find('button.btn-menu-launcher').prop('disabled', true);
+			}
+		}, cs.$element);
+
 
 	}
 

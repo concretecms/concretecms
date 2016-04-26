@@ -17,7 +17,7 @@ class Item extends SearchResultItem
 
     protected function populateDetails($item)
     {
-        $obj = $item->getJSONObject();
+        $obj = $item->getTreeNodeJSON();
         foreach ($obj as $key => $value) {
             $this->{$key} = $value;
         }

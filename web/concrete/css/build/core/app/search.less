@@ -194,6 +194,8 @@ div.ccm-search-fields-advanced {
 table.ccm-search-results-table {
 
   width: 100%;
+  -webkit-user-select: none;
+  -moz-user-select: none;
   -webkit-font-smoothing: antialiased;
 
 
@@ -278,6 +280,25 @@ table.ccm-search-results-table {
           */
       }
 
+      button.btn-menu-launcher {
+        .ccm-ui.btn-sm;
+        background-color: transparent;
+        border: 1px solid #aaa;
+        i {
+          color: #aaa;
+        }
+        &:active, &:focus {
+          outline: 0px !important;
+        }
+      }
+
+      button.btn-menu-launcher[disabled] {
+        i {
+          color: #ccc;
+        }
+        border: 1px solid #ccc;
+      }
+
     }
   }
 
@@ -342,7 +363,8 @@ table.ccm-search-results-table {
     }
 
     tr.ccm-menu-item-active,
-    tr.ccm-parent-menu-item-active {
+    tr.ccm-parent-menu-item-active,
+    tr.ccm-search-select-selected {
       td {
         background-color: rgba(222, 235, 241, 1.0);
         color: #000;
