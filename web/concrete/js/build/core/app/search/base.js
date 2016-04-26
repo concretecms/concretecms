@@ -67,19 +67,34 @@
 		})
 	}
 
-    ConcreteAjaxSearch.prototype.setupSelect2 = function() {
+	ConcreteAjaxSearch.prototype.getSearchData = function() {
+		var cs = this;
+		var $form = cs.$element.find('form[data-search-form]');
+		var data = $form.serializeArray();
+		return data;
+	}
+
+	ConcreteAjaxSearch.prototype.setupSelect2 = function() {
         var selects = this.$element.find('.select2-select');
         if (selects.length) {
             selects.select2();
         }
     }
 
+	/**
+	 * The legacy create menu function for simple list items without multiple selection
+	 * @param $selector
+     */
     ConcreteAjaxSearch.prototype.createMenu = function($selector) {
 		$selector.concreteMenu({
 			'menu': $('[data-search-menu=' + $selector.attr('data-launch-search-menu') + ']')
 		});
 	}
 
+	/**
+	 * The legacy setup menus function for simple list items without multiple selection
+	 * @param result
+     */
 	ConcreteAjaxSearch.prototype.setupMenus = function(result) {
 		var cs = this;
 		if (cs._templateSearchResultsMenu) {
@@ -137,23 +152,6 @@
 		return results;
 	}
 
-	ConcreteAjaxSearch.prototype.triggerMenu = function(event, results) {
-		var my = this;
-		if (results.length == 1) {
-			// single menu
-			var $menu = results[0].treeNodeMenu;
-			if ($menu) {
-				var $element = $('tr[data-launch-search-menu=' + results[0].treeNodeID + ']');
-				var menu = new ConcreteMenu($element, {
-					menu: $menu,
-					handle: 'none'
-				});
-				menu.show(event);
-			}
-		}
-	}
-
-
 	ConcreteAjaxSearch.prototype.handleSelectClick = function(event, $row) {
 		var my = this;
 		event.preventDefault();
@@ -190,8 +188,14 @@
 				}
 
 				var results = my.getSelectedResults();
-				my.triggerMenu(event, results);
-
+				var menu = my.getResultMenu(results);
+				if (menu) {
+					var concreteMenu = new ConcreteMenu($row, {
+						menu: $(menu),
+						handle: 'none'
+					});
+					concreteMenu.show(event);
+				}
 
 			} else {
 				if ($row.hasClass('ccm-search-select-selected')) {
@@ -369,15 +373,10 @@
 
 		// Or, maybe we're using a button launcher
 		cs.$element.on('click', 'button.btn-menu-launcher', function(event) {
-			var results = cs.getSelectedResults();
-			if (results.length > 1) {
-
-			} else if (results.length == 1) {
-				var menu = results[0].treeNodeMenu;
-				if (menu) {
-					$(this).parent().find('ul').remove();
-					$(this).parent().append($(menu).find('ul'));
-				}
+			var menu = cs.getResultMenu(cs.getSelectedResults());
+			if (menu) {
+				$(this).parent().find('ul').remove();
+				$(this).parent().append($(menu).find('ul'));
 			}
 		});
 
@@ -390,6 +389,31 @@
 			cs.ajaxUpdate($(this).attr('href'));
 			return false;
 		});
+	}
+
+	ConcreteAjaxSearch.prototype.getResultMenu = function(results) {
+		var cs = this;
+		if (results.length > 1 && cs.options.result.bulkMenus) {
+			var propertyName = cs.options.result.bulkMenus.propertyName,
+				menu = cs.options.result.bulkMenus.menu,
+				type,
+				currentType;
+			$.each(results, function(i, result) {
+				var propertyValue = result[propertyName];
+				if (i == 0) {
+					type = propertyValue;
+				} else if (type != propertyValue) {
+					type = null;
+				}
+			});
+			if (type) {
+				return menu;
+			}
+		} else if (results.length == 1) {
+			var menu = results[0].treeNodeMenu;
+			return menu;
+		}
+		return false;
 	}
 
 	ConcreteAjaxSearch.prototype.setupCheckboxes = function() {
@@ -406,7 +430,8 @@
 		});
 
 		ConcreteEvent.subscribe('SearchSelectItems', function(e, data) {
-			if (data.results.length > 0) {
+			var menu = cs.getResultMenu(data.results);
+			if (menu) {
 				cs.$element.find('button.btn-menu-launcher').prop('disabled', false);
 			} else {
 				cs.$element.find('button.btn-menu-launcher').prop('disabled', true);

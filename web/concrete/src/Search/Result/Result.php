@@ -133,6 +133,7 @@ class Result
         $obj->paginationTemplate = $html;
         $obj->fields = $this->fields;
         $obj->bulkMenus = $this->getSearchResultBulkMenus();
+        $obj->baseUrl = (string) $this->getBaseURL();
 
         return $obj;
     }

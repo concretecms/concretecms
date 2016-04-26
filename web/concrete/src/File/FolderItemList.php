@@ -21,13 +21,6 @@ class FolderItemList extends ItemList implements PermissionableListItemInterface
         'folderItemSize'
     );
 
-    public function __construct(FileFolder $parent)
-    {
-        $request = new StickyRequest('file_folder_' . $parent->getTreeNodeID());
-        parent::__construct($request);
-        $this->parent = $parent;
-    }
-
     protected function getAttributeKeyClassName()
     {
         return '\\Concrete\\Core\\Attribute\\Key\\FileKey';
@@ -105,8 +98,17 @@ class FolderItemList extends ItemList implements PermissionableListItemInterface
         return $fp->canViewTreeNode();
     }
 
+    public function filterByParentFolder(FileFolder $folder)
+    {
+        $this->parent = $folder;
+    }
+
     public function deliverQueryObject()
     {
+        if (!isset($this->parent)) {
+            $filesystem = new Filesystem();
+            $this->parent = $filesystem->getRootFolder();
+        }
         $this->query->andWhere('n.treeNodeParentID = :treeNodeParentID');
         $this->query->setParameter('treeNodeParentID', $this->parent->getTreeNodeID());
         return parent::deliverQueryObject();
