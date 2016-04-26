@@ -34,6 +34,11 @@ class Result
         return $this->baseURL;
     }
 
+    public function getSearchResultBulkMenus()
+    {
+        return false;
+    }
+
     /**
      * @return Set
      */
@@ -127,6 +132,7 @@ class Result
         }
         $obj->paginationTemplate = $html;
         $obj->fields = $this->fields;
+        $obj->bulkMenus = $this->getSearchResultBulkMenus();
 
         return $obj;
     }
