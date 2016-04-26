@@ -5,6 +5,7 @@
         'use strict';
         var my = this;
         options = $.extend({
+            selectMode: 'multiple' // Enables multiple advanced item selection, range click, etc
         }, options);
 
         ConcreteAjaxSearch.call(my, $element, options);

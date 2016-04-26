@@ -7,17 +7,20 @@ $list = $result->getItemListObject();
 <script type="text/template" data-template="search-results-table-body">
     <% _.each(items, function (item) {%>
     <tr data-launch-search-menu="<%=item.treeNodeID%>" data-file-manager-tree-node="<%=item.treeNodeID%>">
+        <td class="ccm-search-results-icon">
+            <% if (item.treeNodeTypeHandle == 'file_folder') { %>
+                <i class="fa fa-folder"></i>
+            <% } else { %>
+                <%=item.resultsThumbnailImg%>
+            <% } %>
+        </td>
         <% for (i = 0; i < item.columns.length; i++) {
         var column = item.columns[i]; %>
-
             <% if (i == 0) { %>
-                <td class="ccm-search-results-icon"><%=column.value%></td>
-            <% } else if (i == 1) { %>
             <td class="ccm-search-results-name"><%-column.value%></td>
             <% } else { %>
             <td><%-column.value%></td>
             <% } %>
-
         <% } %>
     </tr>
     <% }); %>
@@ -28,7 +31,7 @@ $list = $result->getItemListObject();
 
 <div data-search-element="results">
     <div class="table-responsive">
-        <table class="ccm-search-results-table ccm-search-results-table-icon">
+        <table class="ccm-file-manager-list ccm-search-results-table ccm-search-results-table-icon">
         <thead>
         </thead>
         <tbody>
@@ -65,6 +68,11 @@ $list = $result->getItemListObject();
 
 <script type="text/template" data-template="search-results-table-head">
     <tr>
+        <th>
+            <div class="dropdown">
+                <button class="btn btn-menu-launcher" disabled data-toggle="dropdown"><i class="fa fa-chevron-down"></i></button>
+            </div>
+        </th>
         <%
         for (i = 0; i < columns.length; i++) {
         var column = columns[i];

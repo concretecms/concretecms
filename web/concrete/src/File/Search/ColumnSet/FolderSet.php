@@ -9,7 +9,15 @@ class FolderSet extends Set
 {
     public static function getType($node)
     {
-        return t('Folder');
+        if ($node->getTreeNodeTypeHandle() == 'file_folder') {
+            return t('Folder');
+        }
+        if ($node->getTreeNodeTypeHandle() == 'file') {
+            $file = $node->getTreeNodeFileObject();
+            if (is_object($file)) {
+                return $file->getType();
+            }
+        }
     }
 
     public static function getDateModified($node)
@@ -22,10 +30,6 @@ class FolderSet extends Set
         return $node->getTreeNodeDisplayName();
     }
 
-    public static function getThumbnail($node)
-    {
-        return '<i class="fa fa-folder"></i>';
-    }
     public static function getSize($node)
     {
         if ($node->getTreeNodeTypeHandle() == 'file_folder') {
@@ -48,7 +52,6 @@ class FolderSet extends Set
 
     public function __construct()
     {
-        $this->addColumn(new Column('folderItemThumbnail', '', array('\Concrete\Core\File\Search\ColumnSet\FolderSet', 'getThumbnail'), false));
         $this->addColumn(new Column('folderItemName', t('Name'), array('\Concrete\Core\File\Search\ColumnSet\FolderSet', 'getName')));
         $this->addColumn(new Column('folderItemType', t('Type'), array('\Concrete\Core\File\Search\ColumnSet\FolderSet', 'getType'), false));
         $this->addColumn(new Column('folderItemModified', t('Date Modified'), array('\Concrete\Core\File\Search\ColumnSet\FolderSet', 'getDateModified')));

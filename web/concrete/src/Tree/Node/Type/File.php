@@ -69,22 +69,21 @@ class File extends TreeNode
         $db->Execute('delete from TreeFileNodes where treeNodeID = ?', array($this->treeNodeID));
     }
 
-    /*
     public function getTreeNodeJSON()
     {
         $obj = parent::getTreeNodeJSON();
         if (is_object($obj)) {
-            $obj->gID = $this->gID;
-            $obj->iconClass = 'fa fa-users';
-            if (isset($this->gID)) {
-                $obj->title = $this->getTreeNodeDisplayName('text');
+            $file = $this->getTreeNodeFileObject();
+            if (is_object($file)) {
+                $json = $file->getJSONObject();
+                foreach($json as $key => $value) {
+                    $obj->{$key} = $value;
+                }
             }
 
             return $obj;
         }
     }
-
-    */
 
     public function setTreeNodeFile(\Concrete\Core\File\File $file)
     {
