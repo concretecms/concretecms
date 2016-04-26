@@ -370,10 +370,14 @@
 		// Or, maybe we're using a button launcher
 		cs.$element.on('click', 'button.btn-menu-launcher', function(event) {
 			var results = cs.getSelectedResults();
-			var menu = results[0].treeNodeMenu;
-			if (menu) {
-				$(this).parent().find('ul').remove();
-				$(this).parent().append($(menu).find('ul'));
+			if (results.length > 1) {
+
+			} else if (results.length == 1) {
+				var menu = results[0].treeNodeMenu;
+				if (menu) {
+					$(this).parent().find('ul').remove();
+					$(this).parent().append($(menu).find('ul'));
+				}
 			}
 		});
 
