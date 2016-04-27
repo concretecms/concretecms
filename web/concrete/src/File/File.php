@@ -445,7 +445,7 @@ class File implements \Concrete\Core\Permission\ObjectInterface
         return $nf;
     }
 
-    public static function add($filename, $prefix, $data = array(), $fsl = false)
+    public static function add($filename, $prefix, $data = array(), $fsl = false, $folder = false)
     {
         $db = Loader::db();
         $dh = Loader::helper('date');
@@ -465,8 +465,10 @@ class File implements \Concrete\Core\Permission\ObjectInterface
             }
         }
 
-        $filesystem = new Filesystem();
-        $folder = $filesystem->getRootFolder();
+        if (!($folder instanceof FileFolder)) {
+            $filesystem = new Filesystem();
+            $folder = $filesystem->getRootFolder();
+        }
 
         $f = new self();
         $f->uID = $uID;

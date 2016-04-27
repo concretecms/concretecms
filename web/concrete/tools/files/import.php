@@ -13,6 +13,14 @@ if (!$fp->canAddFiles()) {
     die(t("Unable to add files."));
 }
 
+$folder = null;
+if (isset($_REQUEST['currentFolder'])) {
+    $node = Concrete\Core\Tree\Node\Node::getByID($_REQUEST['currentFolder']);
+    if ($node instanceof \Concrete\Core\Tree\Node\Type\FileFolder) {
+        $folder = $node;
+    }
+}
+
 $types = $fp->getAllowedFileExtensions();
 $ocID = 0;
 if (Loader::helper('validation/numbers')->integer($_REQUEST['ocID'])) {
@@ -84,6 +92,9 @@ ConcreteFileImportDialog = {
     <br/>
 <form id="ccm-file-add-incoming-form" method="post" action="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/importers/incoming">
     <input type="hidden" name="ocID" value="<?=$ocID?>" />
+    <?php if ($folder) { ?>
+        <input type="hidden" name="currentFolder" value="<?=$folder->getTreeNodeID()?>" />
+    <?php } ?>
 		<table id="incoming_file_table" class="table table-striped" width="100%" cellpadding="0" cellspacing="0">
 			<tr>
 				<th width="10%" valign="middle" class="center theader">
@@ -114,7 +125,7 @@ ConcreteFileImportDialog = {
     ?>
             <tr>
                 <td><input type="checkbox" name="removeFilesAfterPost" value="1" /></td>
-                <td colspan="2"><?=t('Remove files from incoming/ directory.')?></td>
+                <td colspan="3"><?=t('Remove files from incoming/ directory.')?></td>
             </tr>
 		</table>
 
@@ -149,6 +160,9 @@ ConcreteFileImportDialog = {
     <div id="ccm-file-add-remote-tab" style="display: none">
         <br/>
 <form method="POST" id="ccm-file-add-remote-form" action="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/importers/remote">
+    <?php if ($folder) { ?>
+        <input type="hidden" name="currentFolder" value="<?=$folder->getTreeNodeID()?>" />
+    <?php } ?>
     <input type="hidden" name="ocID" value="<?=$ocID?>" />
 	<p><?=t('Enter URL to valid file(s)')?></p>
 	<?=$valt->output('import_remote');?>

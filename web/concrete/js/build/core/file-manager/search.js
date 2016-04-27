@@ -9,18 +9,22 @@
             selectMode: 'multiple' // Enables multiple advanced item selection, range click, etc
         }, options);
 
-        this.$breadcrumb = $(options.breadcrumbElement);
+        my.currentFolder = 0;
+        my.$breadcrumb = $(options.breadcrumbElement);
+        my._templateFileProgress = _.template('<div id="ccm-file-upload-progress" class="ccm-ui"><div id="ccm-file-upload-progress-bar">' +
+            '<div class="progress progress-striped active"><div class="progress-bar" style="width: <%=progress%>%;"></div></div>' +
+            '</div></div>');
 
-        this.currentFolder = 0;
         ConcreteAjaxSearch.call(my, $element, options);
 
         my.setupEvents();
         my.setupAddFolder();
+        my.setupFileUploads();
     }
 
     ConcreteFileManager.prototype = Object.create(ConcreteAjaxSearch.prototype);
 
-    ConcreteAjaxSearch.prototype.setupBreadcrumb = function(result) {
+    ConcreteFileManager.prototype.setupBreadcrumb = function(result) {
         var my = this;
         if (result.breadcrumb) {
             my.$breadcrumb.html('');
@@ -41,6 +45,103 @@
             });
 
         }
+    }
+
+    ConcreteFileManager.prototype.setupFileUploads = function() {
+        var my = this,
+            $fileUploader = $('#ccm-file-manager-upload'),
+            $maxWidth = $fileUploader.data('image-max-width'),
+            $maxHeight = $fileUploader.data('image-max-height'),
+            $imageResize = ($maxWidth > 0 && $maxHeight>0),
+            $quality = $fileUploader.data('image-quality'),
+            errors = [],
+            files = [],
+            error_template = _.template(
+                '<ul><% _(errors).each(function(error) { %>' +
+                '<li><strong><%- error.name %></strong><p><%- error.error %></p></li>' +
+                '<% }) %></ul>'),
+            args = {
+                url: CCM_DISPATCHER_FILENAME + '/ccm/system/file/upload',
+                dataType: 'json',
+                formData: {
+                    'ccm_token': my.options.upload_token,
+                    'currentFolder': my.currentFolder
+                },
+                disableImageResize: !$imageResize,
+                imageQuality: ($quality > 0 ? $quality : 85),
+                imageMaxWidth:($maxWidth > 0 ? $maxWidth : 1920),
+                imageMaxHeight:($maxHeight > 0 ? $maxHeight : 1080),
+                error: function(r) {
+                    var message = r.responseText;
+                    try {
+                        message = jQuery.parseJSON(message).errors;
+                        var name = this.files[0].name;
+                        _(message).each(function(error) {
+                            errors.push({ name:name, error:error });
+                        });
+                    } catch (e) {}
+                },
+                progressall: function(e, data) {
+                    var progress = parseInt(data.loaded / data.total * 100, 10);
+                    $('#ccm-file-upload-progress-wrapper').html(my._templateFileProgress({'progress': progress}));
+                },
+                start: function() {
+                    errors = [];
+                    $('<div />', {'id': 'ccm-file-upload-progress-wrapper'}).html(my._templateFileProgress({'progress': 100})).appendTo(document.body);
+                    $.fn.dialog.open({
+                        title: ccmi18n_filemanager.uploadProgress,
+                        width: 400,
+                        height: 50,
+                        onClose: function($dialog) {
+                            $dialog.jqdialog('destroy').remove();
+                        },
+                        element: $('#ccm-file-upload-progress-wrapper'),
+                        modal: true
+                    });
+                },
+                done: function(e, data)
+                {
+                    files.push(data.result[0]);
+                },
+                stop: function() {
+                    jQuery.fn.dialog.closeTop();
+
+                    if (errors.length) {
+                        ConcreteAlert.dialog(ccmi18n_filemanager.uploadFailed, error_template({errors: errors}));
+                    } else {
+                        var canAdd = false;
+                        _.each(files, function(file) {
+                            if (file.canEditFileProperties) {
+                                canAdd = true;
+                            }
+                        });
+                        if (canAdd) {
+                            my._launchUploadCompleteDialog(files);
+                        } else {
+                            my.reloadFolder();
+                        }
+                        files = [];
+                    }
+                }
+            };
+
+        $fileUploader.fileupload(args);
+
+        $('a[data-dialog=add-files]').on('click', function() {
+            $.fn.dialog.open({
+                width: 500,
+                height: 500,
+                modal: true,
+                title: ccmi18n_filemanager.addFiles,
+                href: CCM_DISPATCHER_FILENAME + '/tools/required/files/import?currentFolder=' + my.currentFolder
+            });
+        });
+
+    };
+
+    ConcreteFileManager.prototype._launchUploadCompleteDialog = function(files) {
+        var my = this;
+        ConcreteFileManager.launchUploadCompleteDialog(files, my);
     }
 
     ConcreteFileManager.prototype.setupFolders = function(result) {
@@ -66,10 +167,23 @@
         var my = this;
         ConcreteEvent.subscribe('AjaxFormSubmitSuccess', function(e, data) {
             if (data.form == 'add-folder') {
-                my.loadFolder(my.currentFolder);
+                my.reloadFolder();
             }
         });
 
+        ConcreteEvent.unsubscribe('FileManagerAddFilesComplete');
+        ConcreteEvent.subscribe('FileManagerAddFilesComplete', function(e, data) {
+            my._launchUploadCompleteDialog(data.files);
+        });
+        ConcreteEvent.unsubscribe('FileManagerDeleteFilesComplete');
+        ConcreteEvent.subscribe('FileManagerDeleteFilesComplete', function(e, data) {
+            my.refreshResults();
+        });
+
+    }
+
+    ConcreteFileManager.prototype.reloadFolder = function() {
+        this.loadFolder(this.currentFolder);
     }
 
     ConcreteFileManager.prototype.setupAddFolder = function() {
@@ -100,6 +214,33 @@
         my.currentFolder = folderID;
         my.ajaxUpdate(my.options.result.baseUrl, data);
     }
+
+    ConcreteFileManager.launchUploadCompleteDialog = function(files, my) {
+        if (files && files.length && files.length > 0) {
+            var data = '';
+            _.each(files, function(file) {
+                data += 'fID[]=' + file.fID + '&';
+            });
+            data = data.substring(0, data.length - 1);
+            $.fn.dialog.open({
+                width: '660',
+                height: '500',
+                href: CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/file/upload_complete',
+                modal: true,
+                data: data,
+                onClose: function() {
+                    var data = {filemanager: my}
+                    ConcreteEvent.publish('FileManagerUploadCompleteDialogClose', data);
+                },
+                onOpen: function() {
+                    var data = {filemanager: my}
+                    ConcreteEvent.publish('FileManagerUploadCompleteDialogOpen', data);
+                },
+                title: ccmi18n_filemanager.uploadComplete
+            });
+        }
+    }
+
 
     $.fn.concreteFileManager = function(options) {
         return $.each($(this), function(i, obj) {
