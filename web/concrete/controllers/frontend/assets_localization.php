@@ -213,6 +213,7 @@ var ccmi18n_filemanager = {
   deleteFile: <?=json_encode(t('Delete'))?>,
   title: <?=json_encode(t('File Manager'))?>,
   uploadErrorChooseFile: <?=json_encode(t('You must choose a file.'))?>,
+  addFiles: <?=json_encode(t('Add Files'))?>,
   rescan: <?=json_encode(t('Rescan'))?>,
   pending: <?=json_encode(t('Pending'))?>,
   uploadComplete: <?=json_encode(t('Upload Complete'))?>,

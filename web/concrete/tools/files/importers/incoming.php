@@ -36,6 +36,18 @@ if ($valt->validate('import_incoming') && !$error->has()) {
                 if (!$fp->canAddFileType($cf->getExtension($name))) {
                     $resp = FileImporter::E_FILE_INVALID_EXTENSION;
                 } else {
+                    $folder = null;
+                    if (isset($_POST['currentFolder'])) {
+                        $node = \Concrete\Core\Tree\Node\Node::getByID($_POST['currentFolder']);
+                        if ($node instanceof \Concrete\Core\Tree\Node\Type\FileFolder) {
+                            $folder = $node;
+                        }
+                    }
+
+                    if (!$fr && $folder) {
+                        $fr = $folder;
+                    }
+
                     $resp = $fi->importIncomingFile($name, $fr);
                 }
                 if (!($resp instanceof \Concrete\Core\File\Version)) {

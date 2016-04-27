@@ -2,6 +2,8 @@
 namespace Concrete\Controller\Backend;
 
 use Concrete\Core\File\Importer;
+use Concrete\Core\Tree\Node\Node;
+use Concrete\Core\Tree\Node\Type\FileFolder;
 use Concrete\Core\Validation\CSRF\Token;
 use Controller;
 use FileSet;
@@ -152,8 +154,15 @@ class File extends Controller
                 if (!$fp->canAddFileType($cf->getExtension($_FILES['files']['name'][$i]))) {
                     throw new Exception(FileImporter::getErrorMessage(FileImporter::E_FILE_INVALID_EXTENSION));
                 } else {
+                    $folder = null;
+                    if ($this->request->request->has('currentFolder')) {
+                        $node = Node::getByID($this->request->request->get('currentFolder'));
+                        if ($node instanceof FileFolder) {
+                            $folder = $node;
+                        }
+                    }
                     $importer = new FileImporter();
-                    $response = $importer->import($_FILES['files']['tmp_name'][$i], $_FILES['files']['name'][$i]);
+                    $response = $importer->import($_FILES['files']['tmp_name'][$i], $_FILES['files']['name'][$i], $folder);
                 }
                 if (!($response instanceof \Concrete\Core\File\Version)) {
                     throw new Exception(FileImporter::getErrorMessage($response));

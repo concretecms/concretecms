@@ -10,7 +10,16 @@
         </div><!-- /input-group -->
         <ul class="ccm-file-manager-navigation">
             <li><a href="#" data-launch-dialog="add-file-manager-folder"><i class="fa fa-folder-o"></i> <?=t('New Folder')?></a></li>
-            <li><a href="#" class="ccm-file-manager-upload-link"><i class="fa fa-file"></i> <?=t('Upload Files')?></a></li>
+            <li><a href="#" id="ccm-file-manager-upload">
+                    <i class="fa fa-file"></i> <?=t('Upload Files')?>
+                    <input type="file" name="files[]" multiple="multiple" />
+                </a></li>
+            <li><a data-dialog="add-files" href="#">
+                    <i class="fa fa-upload"></i> <?=t('More Options')?>
+                </a>
+            </li>
+
+
         </ul>
     </form>
 </div>

@@ -170,7 +170,7 @@ class Importer
 
         if (!($fr instanceof File)) {
             // we have to create a new file object for this file version
-            $fv = File::add($sanitizedFilename, $prefix, array('fvTitle' => $filename), $fsl);
+            $fv = File::add($sanitizedFilename, $prefix, array('fvTitle' => $filename), $fsl, $fr);
 
             foreach ($this->importProcessors as $processor) {
                 if ($processor->shouldProcess($fv)) {
@@ -231,7 +231,7 @@ class Importer
 
         if (!($fr instanceof File)) {
             // we have to create a new file object for this file version
-            $fv = File::add($sanitizedFilename, $prefix, array('fvTitle' => $filename), $default);
+            $fv = File::add($sanitizedFilename, $prefix, array('fvTitle' => $filename), $default, $fr);
             $fv->refreshAttributes($this->rescanThumbnailsOnImport);
 
             foreach ($this->importProcessors as $processor) {
