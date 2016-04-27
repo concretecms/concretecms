@@ -20,6 +20,7 @@
         my.setupEvents();
         my.setupAddFolder();
         my.setupFileUploads();
+        my.setupFileDownloads();
     }
 
     ConcreteFileManager.prototype = Object.create(ConcreteAjaxSearch.prototype);
@@ -46,6 +47,18 @@
 
         }
     }
+
+    ConcreteFileManager.prototype.setupFileDownloads = function() {
+        var my = this;
+        if (!$('#ccm-file-manager-download-target').length) {
+            my.$downloadTarget = $('<iframe />', {
+                'name': 'ccm-file-manager-download-target',
+                'id': 'ccm-file-manager-download-target'
+            }).appendTo(document.body);
+        } else {
+            my.$downloadTarget = $('#ccm-file-manager-download-target');
+        }
+    };
 
     ConcreteFileManager.prototype.setupFileUploads = function() {
         var my = this,
@@ -180,6 +193,8 @@
             my.refreshResults();
         });
 
+        my.$
+
     }
 
     ConcreteFileManager.prototype.reloadFolder = function() {
@@ -213,6 +228,39 @@
         data.push({'name': 'folder', 'value': folderID});
         my.currentFolder = folderID;
         my.ajaxUpdate(my.options.result.baseUrl, data);
+    }
+
+    ConcreteFileManager.prototype.getResultMenu = function(results) {
+        var $menu = ConcreteAjaxSearch.prototype.getResultMenu.call(this, results);
+        if ($menu) {
+            $menu.find('a[data-file-manager-action=clear]').on('click', function() {
+                var menu = ConcreteMenuManager.getActiveMenu();
+                if (menu) {
+                    menu.hide();
+                }
+
+                //_.defer(function() { container.$element.html(container._chooseTemplate); });
+                return false;
+            });
+            $menu.find('a[data-file-manager-action=download]').on('click', function(e) {
+                e.preventDefault();
+                window.frames['ccm-file-manager-download-target'].location =
+                    CCM_TOOLS_PATH + '/files/download?fID=' + $(this).attr('data-file-id');
+            });
+            $menu.find('a[data-file-manager-action=duplicate]').on('click', function() {
+                $.concreteAjax({
+                    url: CCM_DISPATCHER_FILENAME + '/ccm/system/file/duplicate',
+                    data: {fID: $(this).attr('data-file-id')},
+                    success: function(r) {
+                        if (typeof(container.refreshResults) != 'undefined') {
+                            container.refreshResults();
+                        }
+                    }
+                });
+                return false;
+            });
+        }
+        return $menu;
     }
 
     ConcreteFileManager.launchUploadCompleteDialog = function(files, my) {

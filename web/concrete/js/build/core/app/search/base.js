@@ -190,10 +190,10 @@
 				}
 
 				var results = my.getSelectedResults();
-				var menu = my.getResultMenu(results);
-				if (menu) {
+				var $menu = my.getResultMenu(results);
+				if ($menu) {
 					var concreteMenu = new ConcreteMenu($row, {
-						menu: $(menu),
+						menu: $menu,
 						handle: 'none'
 					});
 					concreteMenu.show(event);
@@ -376,10 +376,10 @@
 
 		// Or, maybe we're using a button launcher
 		cs.$element.on('click', 'button.btn-menu-launcher', function(event) {
-			var menu = cs.getResultMenu(cs.getSelectedResults());
-			if (menu) {
+			var $menu = cs.getResultMenu(cs.getSelectedResults());
+			if ($menu) {
 				$(this).parent().find('ul').remove();
-				$(this).parent().append($(menu).find('ul'));
+				$(this).parent().append($menu.find('ul'));
 			}
 		});
 
@@ -410,11 +410,11 @@
 				}
 			});
 			if (type) {
-				return menu;
+				return $(menu);
 			}
 		} else if (results.length == 1) {
 			var menu = results[0].treeNodeMenu;
-			return menu;
+			return $(menu);
 		}
 		return false;
 	}
@@ -433,8 +433,8 @@
 		});
 
 		ConcreteEvent.subscribe('SearchSelectItems', function(e, data) {
-			var menu = cs.getResultMenu(data.results);
-			if (menu) {
+			var $menu = cs.getResultMenu(data.results);
+			if ($menu) {
 				cs.$element.find('button.btn-menu-launcher').prop('disabled', false);
 			} else {
 				cs.$element.find('button.btn-menu-launcher').prop('disabled', true);

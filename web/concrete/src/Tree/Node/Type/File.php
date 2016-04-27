@@ -2,6 +2,8 @@
 namespace Concrete\Core\Tree\Node\Type;
 
 use Concrete\Core\Tree\Node\Node as TreeNode;
+use Concrete\Core\Tree\Node\Type\Menu\FileMenu;
+use Concrete\Core\Tree\Node\Type\Menu\GroupMenu;
 use Loader;
 
 class File extends TreeNode
@@ -33,12 +35,10 @@ class File extends TreeNode
         return $this->fID;
     }
 
-    /*
     public function getTreeNodeMenu()
     {
-        return new GroupMenu($this);
+        return new FileMenu($this);
     }
-    */
 
     public function getTreeNodeFileObject()
     {
