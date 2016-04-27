@@ -45,6 +45,33 @@ class FileFolder extends AbstractController
 
         $columns = new FolderSet();
         $ilr = new Result($columns, $this->list, \URL::to('/ccm/system/file/folder/contents'));
+
+        $breadcrumb = [];
+        if ($folder->getTreeNodeParentID() > 0) {
+            $nodes = array_reverse($folder->getTreeNodeParentArray());
+            $ilr->setFolder($folder);
+
+            foreach($nodes as $node) {
+                $breadcrumb[] = [
+                    'active' => false,
+                    'name' => $node->getTreeNodeDisplayName(),
+                    'folder' => $node->getTreeNodeID(),
+                    'url' => (string) $ilr->getBaseURL()
+                ];
+            }
+
+            $breadcrumb[] = [
+                'active' => true,
+                'name' => $folder->getTreeNodeDisplayName(),
+                'folder' => $folder->getTreeNodeID(),
+                'url' => (string) $ilr->getBaseURL(),
+            ];
+
+        }
+
+
+        $ilr->setBreadcrumb($breadcrumb);
+
         $this->result = $ilr;
     }
 

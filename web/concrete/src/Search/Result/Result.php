@@ -11,6 +11,7 @@ class Result
     protected $listColumns;
     protected $list;
     protected $baseURL;
+    protected $breadcrumb;
 
     /** @var \Concrete\Core\Search\Pagination\Pagination */
     protected $pagination;
@@ -22,6 +23,22 @@ class Result
     public function getItemListObject()
     {
         return $this->list;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getBreadcrumb()
+    {
+        return $this->breadcrumb;
+    }
+
+    /**
+     * @param mixed $breadcrumb
+     */
+    public function setBreadcrumb($breadcrumb)
+    {
+        $this->breadcrumb = $breadcrumb;
     }
 
     public function setBaseURL($url)
@@ -134,6 +151,7 @@ class Result
         $obj->fields = $this->fields;
         $obj->bulkMenus = $this->getSearchResultBulkMenus();
         $obj->baseUrl = (string) $this->getBaseURL();
+        $obj->breadcrumb = $this->getBreadcrumb();
 
         return $obj;
     }

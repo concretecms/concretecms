@@ -81,6 +81,8 @@
         }
     }
 
+
+
 	/**
 	 * The legacy create menu function for simple list items without multiple selection
 	 * @param $selector
@@ -252,6 +254,7 @@
 		if (options.onUpdateResults) {
 			options.onUpdateResults(this);
 		}
+
 	}
 
 	ConcreteAjaxSearch.prototype.setupAdvancedSearch = function() {

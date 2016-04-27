@@ -64,10 +64,10 @@ if (isset($message)) {
 
 echo $innerContent;
 
+echo '<div class="ccm-search-results-breadcrumb">'; // We output the DIV even if it's empty because some pages might add to it via javascript
 
 if (isset($breadcrumb) && (!empty($breadcrumb))) {
     ?>
-    <div class="ccm-search-results-breadcrumb">
         <ol class="breadcrumb">
             <?php
             foreach ($breadcrumb as $value) {
@@ -99,8 +99,9 @@ if (isset($breadcrumb) && (!empty($breadcrumb))) {
             }
             ?>
         </ol>
-    </div>
     <?php
 }
+
+echo '</div>';
 
 $this->inc('elements/footer.php');
