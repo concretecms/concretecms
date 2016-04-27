@@ -33,9 +33,3 @@
     </div>
 
 </div>
-
-<script type="text/javascript">
-    $(function() {
-        $('div[data-header=file-manager]').concreteFileManagerHeader();
-    });
-</script>

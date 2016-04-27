@@ -9,4 +9,12 @@ use Loader;
 class FileFolder extends Category
 {
 
+    public function getTreeNodeName()
+    {
+        if ($this->getTreeNodeParentID() == 0) {
+            return t('File Manager');
+        }
+        return parent::getTreeNodeName();
+    }
+
 }

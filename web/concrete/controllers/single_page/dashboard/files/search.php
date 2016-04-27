@@ -31,7 +31,7 @@ class Search extends DashboardPageController
             $result = json_encode($result->getJSONObject());
             $token = \Core::make('token')->generate();
             $this->addFooterItem(
-                "<script type=\"text/javascript\">$(function() { $('div[data-search=files]').concreteFileManager({upload_token: '" . $token . "', result: " . $result . "}); });</script>"
+                "<script type=\"text/javascript\">$(function() { $('#ccm-dashboard-content').concreteFileManager({upload_token: '" . $token . "', result: " . $result . "}); });</script>"
             );
         }
     }

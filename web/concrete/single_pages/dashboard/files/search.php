@@ -16,7 +16,7 @@ if ($fp->canAddFile() || $fp->canSearchFiles()) { ?>
 
 
 
-<div class="ccm-dashboard-content-full" data-search="files">
+<div class="ccm-dashboard-content-full">
 <?php Loader::element('files/search', array('result' => $result))?>
 </div>
 

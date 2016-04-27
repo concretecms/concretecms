@@ -289,6 +289,8 @@ class StartingPointPackage extends BasePackage
     {
         $ci = new ContentImporter();
         $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/desktops.xml');
+        $desktop = \Page::getByPath('/dashboard/welcome');
+        $desktop->movePageDisplayOrderToTop();
     }
 
     public function install_database()
