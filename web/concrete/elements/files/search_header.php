@@ -13,6 +13,8 @@
             <li><a href="#" id="ccm-file-manager-upload">
                     <i class="fa fa-file"></i> <?=t('Upload Files')?>
                     <input type="file" name="files[]" multiple="multiple" />
+                    <input name="ccm_token" value="" type="hidden">
+                    <input name="currentFolder" value="" type="hidden">
                 </a></li>
             <li><a data-dialog="add-files" href="#">
                     <i class="fa fa-upload"></i> <?=t('More Options')?>

@@ -19,91 +19,12 @@
 		my.options = options;
 		my.$element = $element;
 		my.setupTree();
-		my.setupTreeEvents();
+		ConcreteTree.setupTreeEvents(my);
 		return my.$element;
 	}
 
 
 	ConcreteTree.prototype = {
-
-        setupTreeEvents: function() {
-			var my = this;
-			ConcreteEvent.subscribe('ConcreteMenuShow', function(e, data) {
-				var treeID = data.menu.$menu.attr('data-tree-menu');
-				if (treeID && treeID == my.options.treeID) {
-					var $menu = data.menuElement;
-					$menu.find('a[data-tree-action]').on('click.concreteMenu', function(e) {
-						e.preventDefault();
-						var url = $(this).attr('data-tree-action-url'),
-							action = $(this).attr('data-tree-action'),
-							title = $(this).attr('dialog-title'),
-							width = $(this).attr('dialog-width'),
-							height = $(this).attr('dialog-height');
-
-						switch(action) {
-							case 'clone-node':
-								my.cloneNode($(this).attr('data-tree-node-id'));
-								break;
-							default:
-								if (!title) {
-									switch(action) {
-										case 'add-node':
-											title = ccmi18n_tree.add;
-											break;
-										case 'edit-node':
-											title = ccmi18n_tree.edit;
-											break;
-										case 'delete-node':
-											title = ccmi18n_tree.delete;
-											break;
-									}
-								}
-								if (!width) {
-									width = 550;
-								}
-
-								if (!height) {
-									height = 'auto';
-								}
-
-								jQuery.fn.dialog.open({
-									title: title,
-									href: url,
-									width: width,
-									modal: false,
-									height: height
-								});
-								break;
-						}
-					});
-				}
-			});
-
-			ConcreteEvent.subscribe('ConcreteTreeAddTreeNode', function(e, r) {
-				var $tree = $('[data-tree=' + my.options.treeID + ']'),
-					nodes = r.node;
-				if (nodes.length) {
-					for (var i = 0; i < nodes.length; i++) {
-						var node = $tree.dynatree('getTree').getNodeByKey(nodes[i].treeNodeParentID);
-						node.addChild(nodes[i]);
-					}
-				} else {
-					var node = $tree.dynatree('getTree').getNodeByKey(nodes.treeNodeParentID);
-					node.addChild(nodes);
-				}
-			});
-			ConcreteEvent.subscribe('ConcreteTreeUpdateTreeNode', function(e, r) {
-				var $tree = $('[data-tree=' + my.options.treeID + ']'),
-					node = $tree.dynatree('getTree').getNodeByKey(r.node.key);
-				node.data = r.node;
-				node.render();
-			});
-			ConcreteEvent.subscribe('ConcreteTreeDeleteTreeNode', function(e, r) {
-				var $tree = $('[data-tree=' + my.options.treeID + ']'),
-					node = $tree.dynatree('getTree').getNodeByKey(r.node.treeNodeID);
-				node.remove();
-			});
-		},
 
 		dragRequest: function(sourceNode, node, hitMode) {
 			var treeNodeParentID = node.parent.data.key;
@@ -382,6 +303,81 @@
 			return false;
 		}
 
+	};
+
+	ConcreteTree.setupTreeEvents = function(my) {
+		ConcreteEvent.subscribe('ConcreteMenuShow', function(e, data) {
+			var $menu = data.menuElement;
+			$menu.find('a[data-tree-action]').on('click.concreteMenu', function(e) {
+				e.preventDefault();
+				var url = $(this).attr('data-tree-action-url'),
+					action = $(this).attr('data-tree-action'),
+					title = $(this).attr('dialog-title'),
+					width = $(this).attr('dialog-width'),
+					height = $(this).attr('dialog-height');
+
+				switch(action) {
+					case 'clone-node':
+						my.cloneNode($(this).attr('data-tree-node-id'));
+						break;
+					default:
+						if (!title) {
+							switch(action) {
+								case 'add-node':
+									title = ccmi18n_tree.add;
+									break;
+								case 'edit-node':
+									title = ccmi18n_tree.edit;
+									break;
+								case 'delete-node':
+									title = ccmi18n_tree.delete;
+									break;
+							}
+						}
+						if (!width) {
+							width = 550;
+						}
+
+						if (!height) {
+							height = 'auto';
+						}
+
+						jQuery.fn.dialog.open({
+							title: title,
+							href: url,
+							width: width,
+							modal: false,
+							height: height
+						});
+						break;
+				}
+			});
+		});
+
+		ConcreteEvent.subscribe('ConcreteTreeAddTreeNode.concreteTree', function(e, r) {
+			var $tree = $('[data-tree=' + my.options.treeID + ']'),
+				nodes = r.node;
+			if (nodes.length) {
+				for (var i = 0; i < nodes.length; i++) {
+					var node = $tree.dynatree('getTree').getNodeByKey(nodes[i].treeNodeParentID);
+					node.addChild(nodes[i]);
+				}
+			} else {
+				var node = $tree.dynatree('getTree').getNodeByKey(nodes.treeNodeParentID);
+				node.addChild(nodes);
+			}
+		});
+		ConcreteEvent.subscribe('ConcreteTreeUpdateTreeNode.concreteTree', function(e, r) {
+			var $tree = $('[data-tree=' + my.options.treeID + ']'),
+				node = $tree.dynatree('getTree').getNodeByKey(r.node.key);
+			node.data = r.node;
+			node.render();
+		});
+		ConcreteEvent.subscribe('ConcreteTreeDeleteTreeNode.concreteTree', function(e, r) {
+			var $tree = $('[data-tree=' + my.options.treeID + ']'),
+				node = $tree.dynatree('getTree').getNodeByKey(r.node.treeNodeID);
+			node.remove();
+		});
 	};
 
 	// jQuery Plugin
