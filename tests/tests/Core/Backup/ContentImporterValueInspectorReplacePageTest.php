@@ -36,8 +36,8 @@ class ContentImporterValueInspectorReplacePageTest extends PageTestCase
         $feed = new \Concrete\Core\Page\Feed();
         $feed->setHandle('blog');
         $feed->setParentID(1);
-        \Database::connection()->getEntityManager()->persist($feed);
-        \Database::connection()->getEntityManager()->flush();
+        \ORM::entityManager('core')->persist($feed);
+        \ORM::entityManager('core')->flush();
 
     }
 

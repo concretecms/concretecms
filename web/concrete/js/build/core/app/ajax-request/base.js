@@ -39,11 +39,17 @@
 		},
 
 		error: function(r, my) {
+			ConcreteEvent.fire('AjaxRequestError', {
+				'response': r
+			});
 			ConcreteAlert.dialog('Error', r.responseText);
 		},
 
 		validateResponse: function(r) {
 			if (r.error) {
+				ConcreteEvent.fire('AjaxRequestError', {
+					'response': r
+				});
 				ConcreteAlert.dialog('Error', r.errors.join("<br/>"));
 				return false;
 			}

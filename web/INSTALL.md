@@ -3,8 +3,8 @@
 	1.	Make sure your config/ directory is writable by a web server. (Note, this is the config/ directory in the root of the archive).
 	2.	Make sure files/ and its subdirectories are writable by the Apache process (or the world.)
 	3.	Create a new MySQL database and a MySQL user account with the following privileges on that database: INSERT, SELECT, UPDATE, DELETE, CREATE, DROP, ALTER
-	4.	Visit your Concrete5 site in your web browser. You should see an installation screen where you can specify your site's name, your base URL, and your database settings.
-	5.	Concrete 5 should be installed.
+	4.	Visit your concrete5 site in your web browser. You should see an installation screen where you can specify your site's name, your base URL, and your database settings.
+	5.	concrete5 should be installed.
 	
 You'll probably want to change your admin users password (which can be done in the dashboard). Also check out the settings page in the dashboard
 
@@ -19,13 +19,15 @@ concrete5 can also be installed with one click on other web hosts by using Softa
 
 ## Upgrading from a previous Version of concrete5
 
-	1. In the dashboard of your site, place your site into "Maintenance Mode." This will ensure your site does not appear down while upgrading.
-	2. Back up all site data thoroughly, including files and database tables, just in case.
-	3. Copy the "concrete" subdirectory from this new archive over your previous directory.
-	4. Visit the URL http://yoursite.com/index.php/tools/required/upgrade
-	5. You should get some upgrade notes for the current version of Concrete. These might advise you to do current things for upgrading to go smoothly.
-	6. Click the upgrade button, and your site should be upgraded!
-	
+If you want to minimize disk space usage and don't need to use the web interface for update concrete5, you can replace the original concrete directory with a new version, and then upgrade through a particular route.
+
+1. Login as the super user or someone in the Administrators group. You must do this because upgrading a concrete5 site requires that the user attempting to do so have access to the "Upgrade Concrete5" permission. By default this is people in the Administrators group (or the super user.)
+2. Download the latest core from http://www.concrete5.org/download
+3. Unzip the file.
+4. Replace the concrete directory in the web root with the concrete directory you downloaded.
+5. Visit the URL http://www.yoursite.com/ccm/system/upgrade. You should see a message about an upgrade being available. Click through to upgrade your database to the most recent version.
+
+
 ## Credits
 
 	Everyone in the concrete5 core beta team for lots of testing and feedback.

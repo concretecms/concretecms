@@ -6,6 +6,7 @@ use Concrete\Core\Block\BlockType\BlockType;
 use Concrete\Core\Cache\Page\PageCache;
 use Concrete\Core\Cache\Page\PageCacheRecord;
 use Concrete\Core\Cache\OpCache;
+use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Foundation\ClassLoader;
 use Concrete\Core\Foundation\EnvironmentDetector;
 use Concrete\Core\Localization\Localization;
@@ -115,6 +116,13 @@ class Application extends Container
         if (is_object($pageCache)) {
             $pageCache->flush();
         }
+
+        // Clear the file thumbnail path cache
+        $connection = $this['database'];
+        $sql = $connection->getDatabasePlatform()->getTruncateTableSQL('FileImageThumbnailPaths');
+        try {
+            $connection->executeUpdate($sql);
+        } catch(\Exception $e) {}
 
         // clear the environment overrides cache
         $env = \Environment::get();
@@ -281,6 +289,8 @@ class Application extends Container
                 }
             }
             $pkg->setupPackageLocalization();
+        }
+        foreach($this->packages as $pkg) {
             if (method_exists($pkg, 'on_start')) {
                 $pkg->on_start();
             }
@@ -289,6 +299,7 @@ class Application extends Container
             }
         }
         $config->set('app.bootstrap.packages_loaded', true);
+        \Localization::setupSiteLocalization();
 
         if ($checkAfterStart) {
             foreach($this->packages as $pkg) {
@@ -369,7 +380,7 @@ class Application extends Container
             // port, scheme. Set scheme first so that our port can use the magic "set if necessary" method.
             $new = $url->setScheme($canonical->getScheme()->get());
             $new = $new->setHost($canonical->getHost()->get());
-            $new = $new->setPortIfNecessary($canonical->getPort()->get());
+            $new = $new->setPort($canonical->getPort()->get());
 
             // Now we have our current url, swapped out with the important parts of the canonical URL.
             // If it matches, we're good.
@@ -384,7 +395,7 @@ class Application extends Container
 
                 $new = $url->setScheme($ssl->getScheme()->get());
                 $new = $new->setHost($ssl->getHost()->get());
-                $new = $new->setPortIfNecessary($ssl->getPort()->get());
+                $new = $new->setPort($ssl->getPort()->get());
 
                 // Now we have our current url, swapped out with the important parts of the canonical URL.
                 // If it matches, we're good.

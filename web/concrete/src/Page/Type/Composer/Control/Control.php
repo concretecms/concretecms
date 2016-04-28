@@ -19,6 +19,8 @@ abstract class Control extends Object
     protected $ptComposerControl;
     protected $ptComposerControlRequiredByDefault = false;
     protected $ptComposerControlRequiredOnThisRequest = false;
+    protected $ptComposerControlCustomLabel;
+    protected $ptComposerControlDescription;
 
     abstract public function getPageTypeComposerControlCustomTemplates();
     abstract public function render($label, $customTemplate, $description);
@@ -46,11 +48,31 @@ abstract class Control extends Object
         $this->ptComposerControlRequiredOnThisRequest = $req;
     }
 
+    public function setPageTypeComposerControlCustomLabel($label)
+    {
+        $this->ptComposerControlCustomLabel = $label;
+    }
+    
+    public function getPageTypeComposerControlCustomLabel()
+    {
+        return $this->ptComposerControlCustomLabel;
+    }
+    
+    public function setPageTypeComposerControlDescription($description)
+    {
+        $this->ptComposerControlDescription = $description;
+    }
+    
+    public function getPageTypeComposerControlDescription()
+    {
+        return $this->ptComposerControlDescription;
+    }
+
     public function setPageObject($page)
     {
         $this->page = $page;
     }
-
+    
     public function getPageObject()
     {
         return $this->page;
@@ -75,6 +97,7 @@ abstract class Control extends Object
     {
         return $this->ptComposerControlName;
     }
+    
     public function getPageTypeComposerControlDisplayName($format = 'html')
     {
         $value = $this->getPageTypeComposerControlName();
@@ -158,8 +181,10 @@ abstract class Control extends Object
             $ptComposerFormLayoutSetControlRequired = 1;
         }
         $controlType = $this->getPageTypeComposerControlTypeObject();
-        $db->Execute('insert into PageTypeComposerFormLayoutSetControls (ptComposerFormLayoutSetID, ptComposerControlTypeID, ptComposerControlObject, ptComposerFormLayoutSetControlDisplayOrder, ptComposerFormLayoutSetControlRequired) values (?, ?, ?, ?, ?)', array(
-            $set->getPageTypeComposerFormLayoutSetID(), $controlType->getPageTypeComposerControlTypeID(), serialize($this), $displayOrder, $ptComposerFormLayoutSetControlRequired,
+        $customLabel = $this->getPageTypeComposerControlCustomLabel();
+        $description = $this->getPageTypeComposerControlDescription();
+        $db->Execute('insert into PageTypeComposerFormLayoutSetControls (ptComposerFormLayoutSetID, ptComposerControlTypeID, ptComposerControlObject, ptComposerFormLayoutSetControlDisplayOrder, ptComposerFormLayoutSetControlCustomLabel, ptComposerFormLayoutSetControlDescription, ptComposerFormLayoutSetControlRequired) values (?, ?, ?, ?, ?, ?, ?)', array(
+            $set->getPageTypeComposerFormLayoutSetID(), $controlType->getPageTypeComposerControlTypeID(), serialize($this), $displayOrder, $customLabel, $description, $ptComposerFormLayoutSetControlRequired,
         ));
 
         return PageTypeComposerFormLayoutSetControl::getByID($db->Insert_ID());

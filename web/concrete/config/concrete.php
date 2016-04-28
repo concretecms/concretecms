@@ -7,9 +7,9 @@ return array(
      *
      * @var string
      */
-    'version'           => '5.7.5.6',
-    'version_installed' => '5.7.5.6',
-    'version_db' => '20151221000000', // the key of the latest database migration
+    'version'           => '5.7.5.7',
+    'version_installed' => '5.7.5.7',
+    'version_db' => '20160412000000', // the key of the latest database migration
 
     /**
      * Installation status
@@ -450,6 +450,7 @@ return array(
         'app_version_display_in_header' => true,
         'default_jpeg_image_compression'     => 80,
         'help_overlay'                  => true,
+        'require_version_comments'      => false,
     ),
 
     'theme' => array(
@@ -499,12 +500,11 @@ return array(
     ),
 
     'file_manager' => array(
-
         'images' => array(
             'use_exim_data_to_rotate_images' => false,
             'manipulation_library' => 'gd'
-        )
-
+        ),
+        'results' => 10
     ),
 
     'sitemap_xml'       => array(
@@ -794,7 +794,7 @@ return array(
             )
         ),
         'misc' => array(
-            
+
             /**
              * Defence Click Jacking.
              *

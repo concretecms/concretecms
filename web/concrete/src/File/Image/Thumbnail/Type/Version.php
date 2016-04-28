@@ -2,6 +2,7 @@
 
 namespace Concrete\Core\File\Image\Thumbnail\Type;
 
+use Concrete\Core\File\Image\Thumbnail\Path\Resolver;
 use Concrete\Core\File\Version as FileVersion;
 use Core;
 
@@ -79,7 +80,7 @@ class Version
     {
         $value = tc('ThumbnailTypeName', $this->getName());
         if ($this->isDoubledVersion) {
-            $value = t('%s (Retina Version)', $value);
+            $value = t('%s (Retina)', $value);
         }
         switch ($format) {
             case 'html':

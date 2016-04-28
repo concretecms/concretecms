@@ -1,16 +1,15 @@
-//adding this reset here for now
-// you'd think this would be handled by bootstrap's reset but it is not.
-
-.ccm-ui {
-    li {margin-left: 0px; }
-}
-
 @import "../include/variables.less";
 @import "../include/mixins.less";
-@import "../../vendor/bootstrap/bootstrap.less";
 
+// Bootstrap needs to be imported as a CSS file to attain proper namespacing
+@import "../../vendor/bootstrap/variables.less";
+@import "../../vendor/bootstrap/mixins.less";
+.ccm-ui {
+  @import (less) "../../vendor/bootstrap/bootstrap.css";
+}
+
+@import "ccm-ui.less";
 @import "animate.less";
-
 @import "permissions.less";
 @import "intelligent-search-and-dashboard.less";
 @import "tabs.less";

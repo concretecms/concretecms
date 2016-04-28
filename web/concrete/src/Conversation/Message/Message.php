@@ -310,8 +310,9 @@ class Message extends Object implements \Concrete\Core\Permission\ObjectInterfac
             $msg->setPropertiesFromArray($r);
 
             $author = new Author();
-            if ($r['uID'] > 0) {
-                $author->setUser(\UserInfo::getByID($r['uID']));
+            $authorUser = ($r['uID'] > 0) ? \UserInfo::getByID($r['uID']) : null;
+            if ($authorUser !== null) {
+                $author->setUser($authorUser);
             } else {
                 $author->setName($r['cnvMessageAuthorName']);
                 $author->setEmail($r['cnvMessageAuthorEmail']);

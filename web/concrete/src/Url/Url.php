@@ -7,19 +7,37 @@ use RuntimeException;
 class Url extends \League\Url\Url implements UrlInterface
 {
 
+    /**
+     * @param integer $port
+     * @deprecated Use `->setPort($port)`
+     * @return UrlInterface
+     */
     public function setPortIfNecessary($port)
     {
-        if (
-            $port
-            &&
-            ($this->getScheme()->get() != 'http' || $port != '80')
-            &&
-            ($this->getScheme()->get() != 'https' || $port != '443')
-        ) {
-            $this->getPort()->set($port);
+        return $this->setPort($port);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getAuthority()
+    {
+        $user = $this->getUserInfo();
+        $host = $this->host->getUriComponent();
+        $port = $this->port->getUriComponent();
+
+        $authority = $user . $host;
+        $scheme = strtolower($this->getScheme());
+        $port_map = array(
+            'http' => ':80',
+            'https' => ':443'
+        );
+
+        if (!isset($port_map[$scheme]) || $port_map[$scheme] != $port) {
+            $authority .= $port;
         }
 
-        return $this;
+        return $authority;
     }
 
     public static function createFromUrl($url, $trailing_slashes = self::TRAILING_SLASHES_AUTO)

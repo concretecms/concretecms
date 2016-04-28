@@ -1,86 +1,89 @@
-<?php defined('C5_EXECUTE') or die("Access Denied.");
-use \Concrete\Core\Conversation\Message\MessageList as ConversationMessageList;
-use \Concrete\Core\Conversation\Message\ThreadedList as ConversationMessageThreadedList;
+<?php
 
-$cnv = Conversation::getByID($_POST['cnvID']);
+defined('C5_EXECUTE') or die("Access Denied.");
+
+use Concrete\Core\Conversation\Message\MessageList as ConversationMessageList;
+use Concrete\Core\Conversation\Message\ThreadedList as ConversationMessageThreadedList;
+
+$cnv = Conversation::getByID(Request::post('cnvID'));
 if (is_object($cnv)) {
-	$displayForm = true;
-	$enableOrdering = ($_POST['enableOrdering'] == 1) ? true : false;
-	$enablePosting = ($_POST['enablePosting'] == 1) ? Conversation::POSTING_ENABLED : Conversation::POSTING_DISABLED_MANUALLY;
-	$paginate = ($_POST['paginate'] == 1) ? true : false;
-	$enableCommentRating = ($_POST['enableCommentRating']);
+    $displayForm = true;
+    $enableOrdering = (Request::post('enableOrdering') == 1) ? true : false;
+    $enablePosting = (Request::post('enablePosting') == 1) ? Conversation::POSTING_ENABLED : Conversation::POSTING_DISABLED_MANUALLY;
+    $paginate = (Request::post('paginate') == 1) ? true : false;
+    $enableCommentRating = (Request::post('enableCommentRating'));
 
     $cp = new Permissions($cnv);
     if (!$cp->canAddConversationMessage()) {
         $enablePosting = Conversation::POSTING_DISABLED_PERMISSIONS;
     }
 
-	if (in_array($_POST['displayMode'], array('flat'))) {
-		$displayMode = $_POST['displayMode'];
-	} else {
-		$displayMode = 'threaded';
-	}
-	
-	$addMessageLabel = t('Add Message');
-	if ($_POST['addMessageLabel']) {
-		$addMessageLabel = Loader::helper('security')->sanitizeString($_POST['addMessageLabel']);
-	}
-	switch($_POST['task']) {
-		case 'get_messages':
-			$displayForm = false;
-			break;
-	}
+    if (in_array(Request::post('displayMode'), array('flat'))) {
+        $displayMode = Request::post('displayMode');
+    } else {
+        $displayMode = 'threaded';
+    }
 
-	switch($displayMode) {
-		case 'flat':
-			$ml = new ConversationMessageList();
-			$ml->filterByConversation($cnv);
-			break;
-		default: // threaded
-			$ml = new ConversationMessageThreadedList($cnv);
-			break;
-	}
+    $addMessageLabel = t('Add Message');
+    if (Request::post('addMessageLabel')) {
+        $addMessageLabel = Core::make('helper/security')->sanitizeString(Request::post('addMessageLabel'));
+    }
+    switch (Request::post('task')) {
+        case 'get_messages':
+            $displayForm = false;
+            break;
+    }
 
-	switch($_POST['orderBy']) {
-		case 'date_desc':
-			$ml->sortByDateDescending();
-			break;
-		case 'date_asc':
-			$ml->sortByDateAscending();
-			break;
-		case 'rating':
-			$ml->sortByRating();
-			break;
-	}
+    switch ($displayMode) {
+        case 'flat':
+            $ml = new ConversationMessageList();
+            $ml->filterByConversation($cnv);
+            break;
+        default: // threaded
+            $ml = new ConversationMessageThreadedList($cnv);
+            break;
+    }
 
-	if ($paginate && Loader::helper('validation/numbers')->integer($_POST['itemsPerPage'])) {
-		$ml->setItemsPerPage($_POST['itemsPerPage']);
-	} else {
-		$ml->setItemsPerPage(-1);
-	}
+    switch (Request::post('orderBy')) {
+        case 'date_desc':
+            $ml->sortByDateDescending();
+            break;
+        case 'date_asc':
+            $ml->sortByDateAscending();
+            break;
+        case 'rating':
+            $ml->sortByRating();
+            break;
+    }
 
-	$summary = $ml->getSummary();
-	$totalPages = $summary->pages;
-	$args = array(
-		'cID' => intval($_POST['cID']),
-		'bID' => intval($_POST['blockID']),
-		'conversation' => $cnv,
-		'messages' => $ml->getPage(),
-		'displayMode' => $displayMode,
-		'displayForm' => $displayForm,
-		'enablePosting' => $enablePosting,
-		'addMessageLabel' => $addMessageLabel,
-		'currentPage' => 1,
-		'totalPages' => $totalPages,
-		'orderBy' => $_POST['orderBy'],
-		'enableOrdering' => $enableOrdering,
-		'displayPostingForm' => $_POST['displayPostingForm'],
-		'enableCommentRating' => $_POST['enableCommentRating'],
-		'dateFormat' => $_POST['dateFormat'], 
-		'customDateFormat' => $_POST['customDateFormat'],
-		'blockAreaHandle' => $_POST['blockAreaHandle'],
-        'attachmentsEnabled' => $_POST['attachmentsEnabled'],
-        'attachmentOverridesEnabled' => $_POST['attachmentOverridesEnabled']
-	);
-	Loader::element('conversation/display', $args);
+    if ($paginate && Core::make('helper/validation/numbers')->integer(Request::post('itemsPerPage'))) {
+        $ml->setItemsPerPage(Request::post('itemsPerPage'));
+    } else {
+        $ml->setItemsPerPage(-1);
+    }
+
+    $summary = $ml->getSummary();
+    $totalPages = $summary->pages;
+    $args = array(
+        'cID' => intval(Request::post('cID')),
+        'bID' => intval(Request::post('blockID')),
+        'conversation' => $cnv,
+        'messages' => $ml->getPage(),
+        'displayMode' => $displayMode,
+        'displayForm' => $displayForm,
+        'enablePosting' => $enablePosting,
+        'addMessageLabel' => $addMessageLabel,
+        'currentPage' => 1,
+        'totalPages' => $totalPages,
+        'orderBy' => Request::post('orderBy'),
+        'enableOrdering' => $enableOrdering,
+        'displayPostingForm' => Request::post('displayPostingForm'),
+        'enableCommentRating' => Request::post('enableCommentRating'),
+        'dateFormat' => Request::post('dateFormat'),
+        'customDateFormat' => Request::post('customDateFormat'),
+        'blockAreaHandle' => Request::post('blockAreaHandle'),
+        'attachmentsEnabled' => Request::post('attachmentsEnabled'),
+        'attachmentOverridesEnabled' => Request::post('attachmentOverridesEnabled'),
+    );
+    View::element('conversation/display', $args);
 }

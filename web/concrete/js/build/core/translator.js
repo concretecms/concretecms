@@ -34,7 +34,7 @@ var i18n = {
   TAB_SHIFT: '[SHIFT]+[TAB] Backward',
   Translate: 'Translate',
   Translation: 'Translation',
-  TranslationIsApproved_ReadOnly: 'This translation is approved: you can NOT change it.',
+  TranslationIsApproved_WillNeedApproval: 'This translation is approved: your changes will need approval.',
   TranslationIsNotApproved: 'This translation is not approved.',
   PluralNames: {
     zero: 'Zero',
@@ -149,10 +149,6 @@ var TranslationView = (function() {
     this.translation = translation;
     this.multiline = multiline;
     this.element = this.multiline ? 'textarea rows="8"' : 'input type="text"';
-    this.readOnly = false;
-    if (this.translation.translator.approvalSupport && this.translation.isApproved && (!this.translation.translator.canModifyApproved)) {
-      this.readOnly = true;
-    }
     this.UI.$container = this.translation.translator.UI.$translation;
     this.UI.$container.empty();
     this.UI.$container.closest('.panel').css('visibility', 'visible');
@@ -161,13 +157,13 @@ var TranslationView = (function() {
     if (this.translation.translator.approvalSupport) {
       if (this.translation.translator.canModifyApproved) {
         this.UI.$container
-            .append($('<label class="control-label checkbox inline" />')
+            .append($('<label class="control-label inline" />')
               .text(i18n.Approved)
               .prepend(this.UI.$approved = $('<input type="checkbox" ' + (this.translation.isApproved ? ' checked="checked"' : '') + ' />'))
             )
         ;
       } else {
-        this.UI.$container.append($('<p />').text(this.translation.isApproved ? i18n.TranslationIsApproved_ReadOnly : i18n.TranslationIsNotApproved));
+        this.UI.$container.append($('<p />').text(this.translation.isApproved ? i18n.TranslationIsApproved_WillNeedApproval : i18n.TranslationIsNotApproved));
       }
     }
     if (('comments' in this.translation) || ('context' in this.translation) || ('references' in this.translation)) {
@@ -295,10 +291,13 @@ var TranslationView = (function() {
       this.UI.$container
         .append($('<div class="form-group" />')
           .append($('<label class="control-label" />').text(i18n.Translation))
-          .append(this.UI.$translated = $('<' + this.element + (this.readOnly ? ' readonly="readonly"' : '') + ' class="form-control" />').val(this.translation.isTranslated ? this.translation.translations[0] : ''))
+          .append(this.UI.$translated = $('<' + this.element + ' class="form-control" />').val(this.translation.isTranslated ? this.translation.translations[0] : ''))
         )
       ;
       this.UI.$translated.focus();
+    },
+    getCurrentTextInput: function() {
+      return this.UI.$translated;
     },
     /**
      * @return null if no string is translated
@@ -357,9 +356,9 @@ var TranslationView = (function() {
             .text(i18n.PluralNames[key])
           )
         );
-        my.UI.$tabBodies.append($('<div class="tab-pane' + ((index === 0) ? ' active' : '') + '"  data-key="' + key + '" />')
+        my.UI.$tabBodies.append($('<div class="tab-pane' + ((index === 0) ? ' active' : '') + '" data-key="' + key + '" />')
           .append($('<p />').text(i18n.ExamplePH.replace(/%s/, examples)))
-          .append(my.UI.$translated[key] = $('<' + my.element + (my.readOnly ? ' readonly="readonly"' : '') + ' class="form-control" />').val(my.translation.isTranslated ? my.translation.translations[index] : ''))
+          .append(my.UI.$translated[key] = $('<' + my.element + ' class="form-control" />').val(my.translation.isTranslated ? my.translation.translations[index] : ''))
         );
         index++;
       });
@@ -368,6 +367,9 @@ var TranslationView = (function() {
         my.showTranslationTab($(this).closest('li').attr('data-key'));
       });
       this.UI.$translated[firstKey].focus();
+    },
+    getCurrentTextInput: function() {
+      return this.UI.$tabBodies.find('.tab-pane.active').find('textarea,input');
     },
     /**
      * @return null if no string is translated
@@ -410,13 +412,18 @@ function Translator(data) {
   this.translations = [];
   this.approvalSupport = (data.approvalSupport === false) ? false : true;
   this.referencePatterns = $.extend(true, {file: null, file_line: null}, data.referencePatterns);
+  this.on = {
+    uiLaunched: ('onUILaunched' in data) ? data.onUILaunched : null,
+    beforeActivatingTranslation: ('onBeforeActivatingTranslation' in data) ? data.onBeforeActivatingTranslation : null,
+    currentTranslationChanged: ('onCurrentTranslationChanged' in data) ? data.onCurrentTranslationChanged : null
+  };
   if (this.approvalSupport) {
     this.canModifyApproved = (data.canModifyApproved === true) ? true : false;
   }
   for (var i = 0, n = data.translations.length; i < n; i++) {
     new Translation(data.translations[i], this);
   }
-  this.saving = false;
+  this.busy = false;
 }
 Translator.prototype = {
   launch: function() {
@@ -438,6 +445,14 @@ Translator.prototype = {
             )
             .append($('<div class="panel-body" />')
               .append($('<div class="input-group">')
+                .append($('<div class="input-group-btn" />')
+                  .append(this.UI.$showTranslated = $('<a href="javascript:void(0)" class="btn btn-default" />')
+                    .text(i18n.Show_translated)
+                  )
+                  .append(this.UI.$showUntranslated = $('<a href="javascript:void(0)" class="btn btn-default" />')
+                    .text(i18n.Show_untranslated)
+                  )
+                )
                 .append(this.UI.$searchText = $('<input type="text" class="form-control" />')
                   .attr('placeholder', i18n.Search_for_)
                 )
@@ -478,19 +493,6 @@ Translator.prototype = {
                         .prepend($('<i class="fa" />'))
                       )
                     )
-                    .append('<li class="divider"></li>')
-                    .append($('<li />')
-                      .append(this.UI.$showTranslated = $('<a href="javascript:void(0)" />')
-                        .text(' ' + i18n.Show_translated)
-                        .prepend($('<i class="fa" />'))
-                      )
-                    )
-                    .append($('<li />')
-                      .append(this.UI.$showUntranslated = $('<a href="javascript:void(0)" />')
-                        .text(' ' + i18n.Show_untranslated)
-                        .prepend($('<i class="fa" />'))
-                      )
-                    )
                   )
                 )
               )
@@ -528,6 +530,9 @@ Translator.prototype = {
         )
       )
     ;
+    if (this.on.uiLaunched) {
+      this.on.uiLaunched(this);
+    }
     var n = this.translations.length;
     if (n < MAX_TRANSLATIONS_FOR_FASTSEARCH) {
       this.UI.$searchButton.remove();
@@ -635,8 +640,8 @@ Translator.prototype = {
       this.UI.$showUnapproved.find('i').removeClass('fa-check-square-o fa-square-o').addClass(f.showUnapproved ? 'fa-check-square-o' : 'fa-square-o');
       this.UI.$showApproved.find('i').removeClass('fa-check-square-o fa-square-o').addClass(f.showApproved ? 'fa-check-square-o' : 'fa-square-o');
     }
-    this.UI.$showTranslated.find('i').removeClass('fa-check-square-o fa-square-o').addClass(f.showTranslated ? 'fa-check-square-o' : 'fa-square-o');
-    this.UI.$showUntranslated.find('i').removeClass('fa-check-square-o fa-square-o').addClass(f.showUntranslated ? 'fa-check-square-o' : 'fa-square-o');
+    this.UI.$showTranslated.removeClass('btn-default btn-primary').addClass(f.showTranslated ? 'btn-primary' : 'btn-default');
+    this.UI.$showUntranslated.removeClass('btn-default btn-primary').addClass(f.showUntranslated ? 'btn-primary' : 'btn-default');
   },
   filter: function(f) {
     var my = this;
@@ -670,30 +675,51 @@ Translator.prototype = {
     }
   },
   setCurrentTranslation: function(translation) {
-    if (this.saving) {
+    var my = this;
+    if (my.busy) {
       return false;
     }
-    if (this.currentTranslationView) {
-      if (this.currentTranslationView.translation === translation) {
+    if (my.currentTranslationView) {
+      if (my.currentTranslationView.translation === translation) {
         return;
       }
-      if (this.currentTranslationView.isDirty()) {
+      if (my.currentTranslationView.isDirty()) {
         if (!window.confirm(i18n.AskDiscardDirtyTranslation)) {
           return;
         }
       }
-      this.currentTranslationView.dispose();
-      this.currentTranslationView = null;
     }
-    if (translation === null) {
-      return;
+    var goOn = function() {
+      if (my.currentTranslationView) {
+        my.currentTranslationView.dispose();
+        my.currentTranslationView = null;
+        if (my.on.currentTranslationChanged) {
+          my.on.currentTranslationChanged(my);
+        }
+      }
+      if (translation) {
+        my.currentTranslationView = translation.isPlural ? new TranslationView.Plural(translation) : new TranslationView.Singular(translation);
+        if (my.on.currentTranslationChanged) {
+          my.on.currentTranslationChanged(my);
+        }
+      }
+    };
+    if (my.on.beforeActivatingTranslation) {
+      my.setBusy(true);
+      my.on.beforeActivatingTranslation(my, translation, function(proceed) {
+        my.setBusy(false);
+        if (proceed !== false) {
+          goOn();
+        }
+      });
+    } else {
+      goOn();
     }
-    this.currentTranslationView = translation.isPlural ? new TranslationView.Plural(translation) :  new TranslationView.Singular(translation);
   },
-  setSaving: function(saving) {
-    this.saving = !!saving;
+  setBusy: function(busy) {
+    this.busy = !!busy;
     var $btn = this.UI.$container.find('button.ccm-translator-savecontinue');
-    if (this.saving) {
+    if (this.busy) {
       $btn.css('width', $btn.outerWidth() + 'px').html('<span class="fa fa-spinner fa-spin"></span>');
     } else {
       $btn.css('width', 'auto').text(i18n.Save_and_Continue);
@@ -701,7 +727,7 @@ Translator.prototype = {
   },
   saveAndContinue: function(backward) {
     var my = this;
-    if (this.saving) {
+    if (this.busy) {
       return;
     }
     if (this.currentTranslationView.isDirty() === false) {
@@ -723,31 +749,42 @@ Translator.prototype = {
         postData.approved = translatedState.approved ? 1 : 0;
       }
     }
-    this.setSaving(true);
-    $.ajax({
-      type: 'POST',
-      url: this.saveAction,
-      data: postData,
-      dataType: 'json'
-    })
-    .always(function() {
-      my.setSaving(false);
-    })
-    .fail(function (data) {
-      if (data.responseJSON && data.responseJSON.errors) {
-        window.alert(data.responseJSON.errors.join("\n"));
-      } else {
-        window.alert(data.responseText);
-      }
-    })
-    .done(function(response) {
-      if (response && response.error) {
-        window.alert(response.errors.join("\n"));
-        return;
-      }
-      translation.translatedSaved(translatedState.strings, translatedState.approved);
-      my.gotoNextTranslation(backward);
-    });
+    this.setBusy(true);
+    if ($.isFunction(this.saveAction)) {
+      this.saveAction(translation, postData, function(err) {
+        my.setBusy(false);
+        if (err) {
+          window.alert(err);
+        } else {
+          my.gotoNextTranslation(backward);
+        }
+      });
+    } else {
+      $.ajax({
+        type: 'POST',
+        url: this.saveAction,
+        data: postData,
+        dataType: 'json'
+      })
+      .always(function() {
+        my.setBusy(false);
+      })
+      .fail(function (data) {
+        if (data.responseJSON && data.responseJSON.errors) {
+          window.alert(data.responseJSON.errors.join("\n"));
+        } else {
+          window.alert(data.responseText);
+        }
+      })
+      .done(function(response) {
+        if (response && response.error) {
+          window.alert(response.errors.join("\n"));
+          return;
+        }
+        translation.translatedSaved(translatedState.strings, translatedState.approved);
+        my.gotoNextTranslation(backward);
+      });
+    }
   },
   gotoNextTranslation: function(backward) {
     var $lis = this.UI.$list.children(':visible');
@@ -808,8 +845,11 @@ window.ccmTranslator = {
     }
   },
   initialize: function(data) {
-    Startup.setTranslatorReady(new Translator(data));
-  }
+    var translator = new Translator(data);
+    Startup.setTranslatorReady(translator);
+    return translator;
+  },
+  views: TranslationView
 };
   
 $(document).ready(function() {
