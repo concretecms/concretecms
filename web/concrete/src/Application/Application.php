@@ -120,7 +120,9 @@ class Application extends Container
         // Clear the file thumbnail path cache
         $connection = $this['database'];
         $sql = $connection->getDatabasePlatform()->getTruncateTableSQL('FileImageThumbnailPaths');
-        $connection->executeUpdate($sql);
+        try {
+            $connection->executeUpdate($sql);
+        } catch(\Exception $e) {}
 
         // clear the environment overrides cache
         $env = \Environment::get();
