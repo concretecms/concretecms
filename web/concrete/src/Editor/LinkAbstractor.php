@@ -137,7 +137,6 @@ class LinkAbstractor extends Object
 
 					foreach ($picture->attr as $attr => $val) {
 						if (!in_array($attr, self::$blackListImgAttributes)) {
-
 							//Apply attributes to child img, if using picture tag.
 							if ($tag instanceof \Concrete\Core\Html\Object\Picture) {
 								foreach ($tag->getChildren() as $child) {
@@ -145,8 +144,10 @@ class LinkAbstractor extends Object
 										$child->$attr($val);
 									}
 								}
-							} else {
+							} elseif (is_callable(array($tag, $attr))) {
 								$tag->$attr($val);
+							} else {
+								$tag->setAttribute($attr, $val);
 							}
 						}
 					}

@@ -14,8 +14,7 @@ class Themes extends MarketplaceDashboardPageController {
     {
         parent::view_detail($mpID);
         $html = \Core::make('helper/html');
-        $this->addFooterItem($html->javascript(ASSETS_URL . '/' . DIRNAME_BLOCKS . '/image_slider/view.js'));
-        $this->addHeaderItem($html->css(ASSETS_URL . '/' . DIRNAME_BLOCKS . '/image_slider/view.css'));
+        $this->requireAsset('responsive-slides');
     }
 
 

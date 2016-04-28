@@ -52,6 +52,7 @@ class DispatcherRouteCallback extends RouteCallback
     {
         // set page for redirection after successful login
         Session::set('rcID', $currentPage->getCollectionID());
+        Session::set('rUri', $request->getRequestUri());
 
         // load page forbidden
         $item = '/page_forbidden';

@@ -245,6 +245,11 @@ echo Core::make('helper/concrete/ui')->tabs(array(
         height: 94px;
         margin-bottom: 15px;
     }
+    .ccm-image-slider-entries .ui-sortable-helper {
+        -webkit-box-shadow: 0px 10px 18px 2px rgba(54,55,66,0.27);
+        -moz-box-shadow: 0px 10px 18px 2px rgba(54,55,66,0.27);
+        box-shadow: 0px 10px 18px 2px rgba(54,55,66,0.27);
+    }
     .ccm-image-slider-block-container .show-slide-link {
         display: block;
     }
@@ -255,9 +260,11 @@ echo Core::make('helper/concrete/ui')->tabs(array(
 
 <div id="ccm-tab-content-slides" class="ccm-tab-content">
     <div class="ccm-image-slider-block-container">
-        <button type="button" class="btn btn-success ccm-add-image-slider-entry"><?php echo t('Add Slide'); ?></button>
         <div class="ccm-image-slider-entries">
 
+        </div>
+        <div>
+            <button type="button" class="btn btn-success ccm-add-image-slider-entry"><?php echo t('Add Slide'); ?></button>
         </div>
     </div>
 </div>
@@ -287,12 +294,16 @@ echo Core::make('helper/concrete/ui')->tabs(array(
         </div>
     </div>
     <div class="form-group">
+        <?php echo $form->checkbox('noAnimate', 1, $noAnimate); ?>
         <?php echo $form->label('noAnimate', t('Disable Automatic Slideshow')); ?>
-        <?php echo $form->checkbox('noAnimate', $noAnimate, $noAnimate ? 'checked' : ''); ?>
     </div>
     <div class="form-group">
+        <?php echo $form->checkbox('pause', 1, $pause); ?>
         <?php echo $form->label('pause', t('Pause Slideshow on Hover')); ?>
-        <?php echo $form->checkbox('pause', $pause, $pause ? 'checked' : ''); ?>
+    </div>
+    <div class="form-group">
+        <?php echo $form->label('maxWidth', t('Maximum Slide Width (0 means no limit)')); ?>
+        <?php echo $form->number('speed', $speed ? $speed : 0, array('min' => '1', 'max' => '4000'))?><span class="input-group-addon"><?php echo t('px'); ?></span>
     </div>
 </div>
 

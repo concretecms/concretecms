@@ -190,7 +190,7 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
                                         echo t('Anonymous');
                                     } else {
                                         $downloadUI = UserInfo::getById($uID);
-                                        if ($downloadUI instanceof UserInfo) {
+                                        if ($downloadUI instanceof \Concrete\Core\User\UserInfo) {
                                             echo $downloadUI->getUserName();
                                         } else {
                                             echo t('Deleted User');

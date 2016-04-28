@@ -16,18 +16,24 @@
             }
             $walk = function ($node) use (&$walk, &$view, $selectedTopicID) {
                 ?><ul class="ccm-block-topic-list-list"><?php
-                foreach ($node->getChildNodes() as $topic) {
+                foreach ($node->getChildNodes() as $topic) { ?>
+                    <li>
+                    <?php
                     if ($topic instanceof \Concrete\Core\Tree\Node\Type\TopicCategory) {
-                        ?><li><?php echo $topic->getTreeNodeDisplayName(); ?></li>
+                        ?><?php echo $topic->getTreeNodeDisplayName(); ?>
                     <?php 
                     } else {
-                        ?><li><a href="<?php echo $view->controller->getTopicLink($topic); ?>" <?php
+                        ?><a href="<?php echo $view->controller->getTopicLink($topic); ?>" <?php
                         if (isset($selectedTopicID) && $selectedTopicID == $topic->getTreeNodeID()) {
                             ?> class="ccm-block-topic-list-topic-selected"<?php
                         }
-                        ?>><?php echo $topic->getTreeNodeDisplayName(); ?></a></li><?php 
+                        ?>><?php echo $topic->getTreeNodeDisplayName(); ?></a><?php
                     }
-                    $walk($topic);
+                    if (count($topic->getChildNodes())) {
+                        $walk($topic);
+                    } ?>
+                    </li>
+                    <?php
                 }
                 ?></ul><?php
             };

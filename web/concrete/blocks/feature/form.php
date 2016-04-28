@@ -20,7 +20,7 @@
         <?php echo $form->label('paragraph', t('Paragraph:'));?>
         <?php
             $editor = Core::make('editor');
-            echo $editor->outputBlockEditModeEditor('paragraph', $controller->getParagraph());
+            echo $editor->outputBlockEditModeEditor('paragraph', $controller->getParagraphEditMode());
         ?>
     </div>
 

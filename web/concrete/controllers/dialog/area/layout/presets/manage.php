@@ -12,7 +12,7 @@ class Manage extends Presets
 
     protected $viewPath = '/dialogs/area/layout/presets/manage';
 
-    public function view()
+    public function viewPresets()
     {
         $presets = UserPreset::getList();
         $this->set('presets', $presets);

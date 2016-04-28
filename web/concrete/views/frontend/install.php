@@ -365,6 +365,12 @@ $(function() {
 	<td><?php if (!$jsonTest) { ?><i class="fa fa-question-circle launch-tooltip" title="<?=t('You must enable PHP\'s JSON support. This should be enabled by default in PHP 5.2 and above.')?>"></i><?php } ?></td>
 </tr>
 <tr>
+	<td><?php if ($domTest) { ?><i class="fa fa-check"></i><?php } else { ?><i class="fa fa-exclamation-circle"></i><?php } ?></td>
+	<td width="100%"><?php echo t('DOM Extension Enabled')?>
+	</td>
+	<td><?php if (!$domTest) { ?><i class="fa fa-question-circle launch-tooltip" title="<?php echo t('You must enable PHP\'s DOM support.')?>"></i><?php } ?></td>
+</tr>
+<tr>
     <td><?php if ($aspTagsTest) { ?><i class="fa fa-check"></i><?php } else { ?><i class="fa fa-exclamation-circle"></i><?php } ?></td>
     <td width="100%"><?=t('ASP Style Tags Disabled')?></td>
     <td><?php if (!$aspTagsTest) { ?><i class="fa fa-question-circle launch-tooltip" title="<?=t('You must disable PHP\'s ASP Style Tags.')?>"></i><?php } ?></td>

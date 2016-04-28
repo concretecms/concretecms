@@ -27,7 +27,7 @@ class CssLocalizedAsset extends CssAsset
 
     public function getAssetURL()
     {
-        return (string) URL::to($this->assetURL);
+        return URL::to($this->assetURL)->getRelativeUrl();
     }
 
     /**

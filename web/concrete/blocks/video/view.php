@@ -41,6 +41,6 @@ if ($c->isEditMode()) { ?>
 			<embed src="<?=$mp4URL?>" width="<?=$controller->width?>" height="<?=$controller->height?>" autoplay="true" loop="false" controller="true" pluginspage="http://www.apple.com/quicktime/"></embed>
 		</object>
         <?php } ?>
-<? } ?>
    </video>
+<? } ?>
 </div>
