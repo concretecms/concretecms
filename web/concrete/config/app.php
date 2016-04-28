@@ -1030,6 +1030,7 @@ return array(
                 array('javascript-localized', 'core/localization'),
                 array('javascript', 'core/app'),
                 array('javascript', 'jquery/fileupload'),
+                array('javascript', 'core/tree'),
                 array('javascript', 'core/file-manager'),
             ),
         ),

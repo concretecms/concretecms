@@ -28,6 +28,10 @@ class FileMenu extends Menu
         */
 
         $file = $node->getTreeNodeFileObject();
+        if (!is_object($file)) {
+            return false;
+        }
+
         $this->addItem(new LinkItem('#', t('Clear'), ['data-file-manager-action' => 'clear']));
         $this->addItem(new DividerItem());
 

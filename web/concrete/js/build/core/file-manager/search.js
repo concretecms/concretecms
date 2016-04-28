@@ -17,10 +17,14 @@
 
         ConcreteAjaxSearch.call(my, $element, options);
 
+        ConcreteTree.setupTreeEvents();
+
         my.setupEvents();
         my.setupAddFolder();
         my.setupFileUploads();
         my.setupFileDownloads();
+
+
     }
 
     ConcreteFileManager.prototype = Object.create(ConcreteAjaxSearch.prototype);
@@ -76,10 +80,6 @@
             args = {
                 url: CCM_DISPATCHER_FILENAME + '/ccm/system/file/upload',
                 dataType: 'json',
-                formData: {
-                    'ccm_token': my.options.upload_token,
-                    'currentFolder': my.currentFolder
-                },
                 disableImageResize: !$imageResize,
                 imageQuality: ($quality > 0 ? $quality : 85),
                 imageMaxWidth:($maxWidth > 0 ? $maxWidth : 1920),
@@ -138,6 +138,8 @@
                 }
             };
 
+        $fileUploader.find('input[name=ccm_token]').val(my.options.upload_token);
+
         $fileUploader.fileupload(args);
 
         $('a[data-dialog=add-files]').on('click', function() {
@@ -193,7 +195,16 @@
             my.refreshResults();
         });
 
-        my.$
+        ConcreteEvent.unsubscribe('ConcreteTreeUpdateTreeNode.concreteTree');
+        ConcreteEvent.subscribe('ConcreteTreeUpdateTreeNode.concreteTree', function(e, r) {
+            my.reloadFolder();
+        });
+
+        ConcreteEvent.unsubscribe('ConcreteTreeDeleteTreeNode.concreteTree');
+        ConcreteEvent.subscribe('ConcreteTreeDeleteTreeNode.concreteTree', function(e, r) {
+            my.reloadFolder();
+        });
+
 
     }
 
@@ -228,6 +239,7 @@
         data.push({'name': 'folder', 'value': folderID});
         my.currentFolder = folderID;
         my.ajaxUpdate(my.options.result.baseUrl, data);
+        my.$element.find('#ccm-file-manager-upload input[name=currentFolder]').val(my.currentFolder);
     }
 
     ConcreteFileManager.prototype.getResultMenu = function(results) {
