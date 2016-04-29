@@ -2,6 +2,7 @@
 namespace Concrete\Core\File;
 
 use Carbon\Carbon;
+use Concrete\Core\Tree\Node\Node;
 use Concrete\Core\Tree\Node\Type\FileFolder;
 use Doctrine\Common\Collections\ArrayCollection;
 use FileSet;
@@ -544,6 +545,13 @@ class File implements \Concrete\Core\Permission\ObjectInterface
         // first, we remove all files from the drive
         $db = Loader::db();
         $em = $db->getEntityManager();
+
+        // Delete the tree node for the file.
+        $nodeID = $db->fetchColumn('select treeNodeID from TreeFileNodes where fID = ?', array($this->getFileID()));
+        if ($nodeID) {
+            $node = Node::getByID($nodeID);
+            $node->delete();
+        }
 
         // fire an on_page_delete event
         $fve = new \Concrete\Core\File\Event\DeleteFile($this);

@@ -1,9 +1,11 @@
 <?php
 namespace Concrete\Core\File\Search\Result;
 
+use Concrete\Core\File\File;
 use Concrete\Core\Search\Result\Item as SearchResultItem;
 use Concrete\Core\Search\Result\Result as SearchResult;
 use Concrete\Core\Search\Column\Set;
+use Concrete\Core\Tree\Node\Node;
 
 class Item extends SearchResultItem
 {
@@ -17,7 +19,11 @@ class Item extends SearchResultItem
 
     protected function populateDetails($item)
     {
-        $obj = $item->getTreeNodeJSON();
+        if ($item instanceof Node) {
+            $obj = $item->getTreeNodeJSON();
+        } else if ($item instanceof File) {
+            $obj = $item->getJSONObject();
+        }
         foreach ($obj as $key => $value) {
             $this->{$key} = $value;
         }

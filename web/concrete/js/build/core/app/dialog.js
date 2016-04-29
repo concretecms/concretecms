@@ -229,10 +229,10 @@ jQuery.fn.dialog.activateDialogContents = function($dialog) {
     $dialog.find('button[data-dialog-action=cancel]').on('click', function() {
         jQuery.fn.dialog.closeTop();
     });
-    $('[data-dialog-form]').concreteAjaxForm();
+    $dialog.find('[data-dialog-form]').concreteAjaxForm();
 
     $dialog.find('button[data-dialog-action=submit]').on('click', function() {
-        $('[data-dialog-form]').submit();
+        $dialog.find('[data-dialog-form]').submit();
     });
 
     if ($dialog.find('.dialog-buttons').length > 0) {

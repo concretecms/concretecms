@@ -13,6 +13,29 @@ div.ccm-file-manager-search-form {
   float: right;
   margin-top: -5px;
   width: 400px;
+
+  span.input-group-btn {
+    border-left: 0px;
+  }
+
+  input {
+    border-right-width: 0px !important;
+  }
+
+  a.btn-ccm-file-manager-advanced-search {
+    font-weight: normal;
+    border-left-width: 0px !important;
+    color: #999;
+
+    &:hover, &:active, &:focus {
+      background-color: #fff;
+      border-color: #ccc;
+      color: #333;
+      background-image: none;
+      outline: 0px;
+      .box-shadow(none);
+    }
+  }
 }
 
 ul.ccm-file-manager-navigation {
