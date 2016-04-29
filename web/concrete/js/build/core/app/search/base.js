@@ -290,7 +290,7 @@
 
 	ConcreteAjaxSearch.prototype.setupSort = function() {
 		var cs = this;
-		this.$element.on('click', 'thead th a', function() {
+		this.$element.on('click', 'thead th > a', function() {
 			cs.ajaxUpdate($(this).attr('href'));
 			return false;
 		});
@@ -318,9 +318,13 @@
 		var cs = this,
 			itemIDs = [];
 
-		$.each($items, function(i, checkbox) {
-			itemIDs.push({'name': cs.options.bulkParameterName + '[]', 'value': $(checkbox).val()});
-		});
+		if ($items instanceof jQuery) {
+			$.each($items, function(i, checkbox) {
+				itemIDs.push({'name': cs.options.bulkParameterName + '[]', 'value': $(checkbox).val()});
+			});
+		} else {
+			itemIDs = $items;
+		}
 
 		if (type == 'dialog') {
 			jQuery.fn.dialog.open({
@@ -367,23 +371,11 @@
 		cs.$element.on('change', 'select[data-bulk-action]', function() {
 			var $option = $(this).find('option:selected'),
 				value = $option.val(),
-				type = $option.attr('data-bulk-action-type'),
-				items = [];
+				type = $option.attr('data-bulk-action-type');
 
 			cs.handleSelectedBulkAction(value, type, $option, cs.$element.find('input[data-search-checkbox=individual]:checked'));
 			cs.$element.find('option').eq(0).prop('selected', true);
 		});
-
-		// Or, maybe we're using a button launcher
-		cs.$element.on('click', 'button.btn-menu-launcher', function(event) {
-			var $menu = cs.getResultMenu(cs.getSelectedResults());
-			if ($menu) {
-				$(this).parent().find('ul').remove();
-				$(this).parent().append($menu.find('ul'));
-			}
-		});
-
-
 	}
 
 	ConcreteAjaxSearch.prototype.setupPagination = function() {

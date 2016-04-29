@@ -39,7 +39,9 @@ class Result extends SearchResult
         $group = new BulkMenu();
         $group->setPropertyName('treeNodeTypeHandle');
         $group->setPropertyValue('file');
-        $item = new LinkItem('#', t('Download'));
+        $item = new LinkItem('#', t('Download'), [
+            'data-bulk-action' => 'download'
+        ]);
         $menu = new Menu();
         $menu->addItem($item);
         $group->setMenu($menu);
