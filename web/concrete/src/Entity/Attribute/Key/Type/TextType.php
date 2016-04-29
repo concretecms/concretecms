@@ -14,4 +14,24 @@ class TextType extends Type
         return new TextValue();
     }
 
+    /**
+     * @Column(type="string")
+     */
+    protected $akTextPlaceholder = '';
+
+    /**
+     * @return string
+     */
+    public function getPlaceholder()
+    {
+        return $this->akTextPlaceholder;
+    }
+
+    /**
+     * @param string $placeholder
+     */
+    public function setPlaceholder($placeholder)
+    {
+        $this->akTextPlaceholder = $placeholder;
+    }
 }
