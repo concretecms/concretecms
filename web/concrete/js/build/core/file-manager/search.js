@@ -204,9 +204,86 @@
         ConcreteEvent.subscribe('ConcreteTreeDeleteTreeNode.concreteTree', function(e, r) {
             my.reloadFolder();
         });
-
-
     }
+
+    ConcreteFileManager.prototype.activateMenu = function($menu) {
+        var my = this;
+        if (my.getSelectedResults().length > 1) {
+            // bulk menu
+            $menu.find('a').on('click', function(e) {
+
+                var value = $(this).attr('data-bulk-action'),
+                    type = $(this).attr('data-bulk-action-type'),
+                    ids = [];
+
+                $.each(my.getSelectedResults(), function(i, result) {
+                    ids.push(result.fID);
+                });
+
+                my.handleSelectedBulkAction(value, type, $menu, ids);
+            });
+        } else {
+            $menu.find('a[data-file-manager-action=clear]').on('click', function() {
+                var menu = ConcreteMenuManager.getActiveMenu();
+                if (menu) {
+                    menu.hide();
+                }
+
+                //_.defer(function() { container.$element.html(container._chooseTemplate); });
+                return false;
+            });
+            $menu.find('a[data-file-manager-action=download]').on('click', function(e) {
+                e.preventDefault();
+                window.frames['ccm-file-manager-download-target'].location =
+                    CCM_TOOLS_PATH + '/files/download?fID=' + $(this).attr('data-file-id');
+            });
+            $menu.find('a[data-file-manager-action=duplicate]').on('click', function() {
+                $.concreteAjax({
+                    url: CCM_DISPATCHER_FILENAME + '/ccm/system/file/duplicate',
+                    data: {fID: $(this).attr('data-file-id')},
+                    success: function(r) {
+                        if (typeof(container.refreshResults) != 'undefined') {
+                            container.refreshResults();
+                        }
+                    }
+                });
+                return false;
+            });
+        }
+    }
+
+    ConcreteFileManager.prototype.setupBulkActions = function() {
+        var my = this;
+
+        // Or, maybe we're using a button launcher
+        my.$element.on('click', 'button.btn-menu-launcher', function(event) {
+            var $menu = my.getResultMenu(my.getSelectedResults());
+            if ($menu) {
+                $(this).parent().find('ul').remove();
+                $(this).parent().append($menu.find('ul'));
+                var $menu = $(this).parent();
+                my.activateMenu($menu);
+            }
+        });
+    }
+
+    ConcreteFileManager.prototype.handleSelectedBulkAction = function(value, type, $option, ids) {
+        var my = this, itemIDs = [];
+        $.each(ids, function(i, id) {
+            itemIDs.push({'name': 'item[]', 'value': id});
+        });
+
+        if (value == 'choose') {
+            var items = itemIDs.map(function (value) { return value.value; });
+            ConcreteEvent.publish('FileManagerBeforeSelectFile', { fID: items });
+            ConcreteEvent.publish('FileManagerSelectFile', { fID: items });
+        } else if (value == 'download') {
+            my.$downloadTarget.get(0).src = CCM_TOOLS_PATH + '/files/download?' + jQuery.param(itemIDs);
+        } else {
+            ConcreteAjaxSearch.prototype.handleSelectedBulkAction.call(this, value, type, $option, ids);
+        }
+    };
+
 
     ConcreteFileManager.prototype.reloadFolder = function() {
         this.loadFolder(this.currentFolder);
@@ -243,34 +320,10 @@
     }
 
     ConcreteFileManager.prototype.getResultMenu = function(results) {
+        var my = this;
         var $menu = ConcreteAjaxSearch.prototype.getResultMenu.call(this, results);
         if ($menu) {
-            $menu.find('a[data-file-manager-action=clear]').on('click', function() {
-                var menu = ConcreteMenuManager.getActiveMenu();
-                if (menu) {
-                    menu.hide();
-                }
-
-                //_.defer(function() { container.$element.html(container._chooseTemplate); });
-                return false;
-            });
-            $menu.find('a[data-file-manager-action=download]').on('click', function(e) {
-                e.preventDefault();
-                window.frames['ccm-file-manager-download-target'].location =
-                    CCM_TOOLS_PATH + '/files/download?fID=' + $(this).attr('data-file-id');
-            });
-            $menu.find('a[data-file-manager-action=duplicate]').on('click', function() {
-                $.concreteAjax({
-                    url: CCM_DISPATCHER_FILENAME + '/ccm/system/file/duplicate',
-                    data: {fID: $(this).attr('data-file-id')},
-                    success: function(r) {
-                        if (typeof(container.refreshResults) != 'undefined') {
-                            container.refreshResults();
-                        }
-                    }
-                });
-                return false;
-            });
+            my.activateMenu($menu);
         }
         return $menu;
     }
