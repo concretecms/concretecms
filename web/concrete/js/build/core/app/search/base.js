@@ -230,7 +230,9 @@
 		cs.$resultsTableHead.html(cs._templateSearchResultsTableHead({'columns': result.columns}));
 		cs.$resultsTableBody.html(cs._templateSearchResultsTableBody({'items': result.items}));
 		cs.$resultsPagination.html(cs._templateSearchResultsPagination({'paginationTemplate': result.paginationTemplate}));
-		cs.$advancedFields.html('');
+		if (cs.$advancedFields) {
+			cs.$advancedFields.html('');
+		}
 		$.each(result.fields, function(i, field) {
 			cs.$advancedFields.append(cs._templateAdvancedSearchFieldRow({'field': field}));
 		});
@@ -323,7 +325,9 @@
 				itemIDs.push({'name': cs.options.bulkParameterName + '[]', 'value': $(checkbox).val()});
 			});
 		} else {
-			itemIDs = $items;
+			$.each($items, function(i, id) {
+				itemIDs.push({'name': cs.options.bulkParameterName + '[]', 'value': id});
+			});
 		}
 
 		if (type == 'dialog') {

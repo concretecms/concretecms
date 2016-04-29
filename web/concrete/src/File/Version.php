@@ -1031,6 +1031,7 @@ class Version
         $r->fileName = $this->getFilename();
         $r->resultsThumbnailImg = $this->getListingThumbnailImage();
         $r->fID = $this->getFileID();
+        $r->treeNodeMenu = new Menu($this->getfile());
 
         return $r;
     }

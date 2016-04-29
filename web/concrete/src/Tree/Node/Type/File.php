@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Tree\Node\Type;
 
+use Concrete\Core\File\Menu;
 use Concrete\Core\Tree\Node\Node as TreeNode;
 use Concrete\Core\Tree\Node\Type\Menu\FileMenu;
 use Concrete\Core\Tree\Node\Type\Menu\GroupMenu;
@@ -37,7 +38,10 @@ class File extends TreeNode
 
     public function getTreeNodeMenu()
     {
-        return new FileMenu($this);
+        $file = $this->getTreeNodeFileObject();
+        if (is_object($file)) {
+            return new Menu($file);
+        }
     }
 
     public function getTreeNodeFileObject()

@@ -6,6 +6,7 @@
         var my = this;
         options = $.extend({
             'breadcrumbElement': 'div.ccm-search-results-breadcrumb',
+            'bulkParameterName': 'fID',
             selectMode: 'multiple' // Enables multiple advanced item selection, range click, etc
         }, options);
 
@@ -192,7 +193,7 @@
         });
         ConcreteEvent.unsubscribe('FileManagerDeleteFilesComplete');
         ConcreteEvent.subscribe('FileManagerDeleteFilesComplete', function(e, data) {
-            my.refreshResults();
+            my.reloadFolder();
         });
 
         ConcreteEvent.unsubscribe('ConcreteTreeUpdateTreeNode.concreteTree');
@@ -210,7 +211,7 @@
         var my = this;
         if (my.getSelectedResults().length > 1) {
             // bulk menu
-            $menu.find('a').on('click', function(e) {
+            $menu.find('a').on('click.concreteFileManagerBulkAction', function(e) {
 
                 var value = $(this).attr('data-bulk-action'),
                     type = $(this).attr('data-bulk-action-type'),
@@ -220,7 +221,7 @@
                     ids.push(result.fID);
                 });
 
-                my.handleSelectedBulkAction(value, type, $menu, ids);
+                my.handleSelectedBulkAction(value, type, $(this), ids);
             });
         } else {
             $menu.find('a[data-file-manager-action=clear]').on('click', function() {
@@ -261,23 +262,20 @@
             if ($menu) {
                 $(this).parent().find('ul').remove();
                 $(this).parent().append($menu.find('ul'));
-                var $menu = $(this).parent();
-                my.activateMenu($menu);
             }
         });
     }
 
     ConcreteFileManager.prototype.handleSelectedBulkAction = function(value, type, $option, ids) {
         var my = this, itemIDs = [];
-        $.each(ids, function(i, id) {
-            itemIDs.push({'name': 'item[]', 'value': id});
-        });
 
         if (value == 'choose') {
-            var items = itemIDs.map(function (value) { return value.value; });
-            ConcreteEvent.publish('FileManagerBeforeSelectFile', { fID: items });
-            ConcreteEvent.publish('FileManagerSelectFile', { fID: items });
+            ConcreteEvent.publish('FileManagerBeforeSelectFile', { fID: ids });
+            ConcreteEvent.publish('FileManagerSelectFile', { fID: ids });
         } else if (value == 'download') {
+            $.each(ids, function(i, id) {
+                itemIDs.push({'name': 'item[]', 'value': id});
+            });
             my.$downloadTarget.get(0).src = CCM_TOOLS_PATH + '/files/download?' + jQuery.param(itemIDs);
         } else {
             ConcreteAjaxSearch.prototype.handleSelectedBulkAction.call(this, value, type, $option, ids);
@@ -319,6 +317,25 @@
         my.$element.find('#ccm-file-manager-upload input[name=currentFolder]').val(my.currentFolder);
     }
 
+    ConcreteFileManager.prototype.setupAdvancedSearch = function() {
+        var my = this;
+        my.$element.on('click', 'a[data-launch-dialog=advanced-search]', function() {
+            var url = $(this).attr('href');
+            $.fn.dialog.open({
+                width: 620,
+                height: 500,
+                href: url,
+                modal: true,
+                title: ccmi18n.search,
+                onOpen: function() {
+
+                }
+            });
+            return false;
+        });
+    }
+
+
     ConcreteFileManager.prototype.getResultMenu = function(results) {
         var my = this;
         var $menu = ConcreteAjaxSearch.prototype.getResultMenu.call(this, results);
@@ -327,6 +344,17 @@
         }
         return $menu;
     }
+
+    ConcreteFileManager.prototype.setupSearch = function() {
+        var my = this;
+        my.$element.find('div[data-header=file-manager] form').on('submit', function() {
+            var data = $(this).serializeArray();
+            data.push({'name': 'submitSearch', 'value': '1'});
+            my.ajaxUpdate($(this).attr('action'), data);
+            return false;
+        });
+    }
+
 
     ConcreteFileManager.launchUploadCompleteDialog = function(files, my) {
         if (files && files.length && files.length > 0) {
