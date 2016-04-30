@@ -1,22 +1,18 @@
 <?php
-
 namespace Concrete\Block\PageTitle;
 
 use Page;
 use Concrete\Core\Block\BlockController;
 use Concrete\Core\Tree\Node\Type\Topic;
-
-defined('C5_EXECUTE') or die("Access Denied.");
+use Core;
 
 class Controller extends BlockController
 {
-    public $helpers = array('form');
-
-    protected $btInterfaceWidth = 400;
+    protected $btInterfaceWidth = 470;
+    protected $btInterfaceHeight = 500;
     protected $btCacheBlockOutput = true;
     protected $btCacheBlockOutputOnPost = true;
     protected $btCacheBlockOutputForRegisteredUsers = false;
-    protected $btInterfaceHeight = 400;
     protected $btTable = 'btPageTitle';
     protected $btWrapperClass = 'ccm-ui';
 
@@ -62,9 +58,22 @@ class Controller extends BlockController
         $this->set('title', $this->getTitleText());
     }
 
+    public function on_start()
+    {
+        if ($this->useFilterTitle) {
+            $this->btCacheBlockOutput = false;
+            $this->btCacheBlockOutputOnPost = false;
+        }
+    }
+
     public function save($data)
     {
-        $data['useCustomTitle'] = ($data['useCustomTitle'] ? 1 : 0);
+        $data['useCustomTitle'] = isset($data['useCustomTitle']) ? 1 : 0;
+        $data['useFilterTitle'] = isset($data['useFilterTitle']) ? 1 : 0;
+        $data['useFilterTopic'] = isset($data['useFilterTopic']) ? 1 : 0;
+        $data['useFilterTag'] = isset($data['useFilterTag']) ? 1 : 0;
+        $data['useFilterDate'] = isset($data['useFilterDate']) ? 1 : 0;
+
         parent::save($data);
     }
 
@@ -77,5 +86,61 @@ class Controller extends BlockController
             }
         }
         $this->view();
+    }
+
+    public function action_tag($tag = false)
+    {
+        if ($tag) {
+            // the tag will be lowercase
+            $this->set('tag', $tag);
+        }
+        $this->view();
+    }
+
+    public function action_date($year = false, $month = false)
+    {
+        if ($year) {
+            $this->set('year', $year);
+        }
+        if ($month) {
+            $this->set('month', $month);
+        }
+        $this->view();
+    }
+
+    public function getPassThruActionAndParameters($parameters)
+    {
+        if ($parameters[0] == 'topic') {
+            $method = 'action_topic';
+            $parameters = array_slice($parameters, 1);
+        } elseif ($parameters[0] == 'tag') {
+            $method = 'action_tag';
+            $parameters = array_slice($parameters, 1);
+        } elseif (Core::make('helper/validation/numbers')->integer($parameters[0])) {
+            $method = 'action_date';
+            $parameters[0] = intval($parameters[0]);
+            if (isset($parameters[1])) {
+                $parameters[1] = intval($parameters[1]);
+            }
+        }
+
+        return array($method, $parameters);
+    }
+
+    public function formatPageTitle($title, $case = false)
+    {
+        switch ($case) {
+            case 'lowercase':
+                $title = mb_strtolower($title);
+                break;
+            case 'uppercase':
+                $title = mb_strtoupper($title);
+                break;
+            case 'upperFirst':
+                $title = mb_convert_case($title, MB_CASE_TITLE);
+                break;
+        }
+
+        return $title;
     }
 }
