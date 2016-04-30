@@ -1,12 +1,27 @@
 <?php
 namespace Concrete\Core\Search\Field;
 
-class Manager
+class Manager implements ManagerInterface
 {
 
-    public static function get($manager)
+    protected $groups = [];
+
+    public function getGroups()
     {
-        $app = \Core::make('app');
-        return $app->make(sprintf('manager/search_field/%s', $manager));
+        return $this->groups;
     }
+
+    public function addGroup($name, $fields = [])
+    {
+        $group = new Group();
+        $group->setName($name);
+        $group->setFields($fields);
+        $this->addGroupObject($group);
+    }
+    public function addGroupObject(GroupInterface $group)
+    {
+        $this->groups[] = $group;
+    }
+
+
 }
