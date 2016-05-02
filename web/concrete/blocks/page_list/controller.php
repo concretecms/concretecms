@@ -167,7 +167,7 @@ class Controller extends BlockController
         }
 
         if (intval($this->cParentID) != 0) {
-            $cParentID = ($this->cThis) ? $this->cID : ($this->cThisParent) ? $this->cPID : $this->cParentID;
+            $cParentID = ($this->cThis) ? $this->cID : (($this->cThisParent) ? $this->cPID : $this->cParentID);
             if ($this->includeAllDescendents) {
                 $this->list->filterByPath(Page::getByID($cParentID)->getCollectionPath());
             } else {
