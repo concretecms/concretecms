@@ -22,18 +22,28 @@ div.ccm-file-manager-search-form {
     border-right-width: 0px !important;
   }
 
-  a.btn-ccm-file-manager-advanced-search {
-    font-weight: normal;
-    border-left-width: 0px !important;
-    color: #999;
+  form {
+    position: relative;
+    a.ccm-file-manager-reset-search,
+    a.ccm-file-manager-launch-advanced-search {
+      position: absolute;
+      top: 7px;
+      right: 50px;
+      z-index: @index-level-search-reset;
+    }
 
-    &:hover, &:active, &:focus {
-      background-color: #fff;
-      border-color: #ccc;
-      color: #333;
-      background-image: none;
-      outline: 0px;
-      .box-shadow(none);
+    a.ccm-file-manager-launch-advanced-search {
+      color: #aaa;
+    }
+    a.ccm-file-manager-reset-search {
+      color: #09f;
+      display: none;
+    }
+
+    div.input-group {
+      input {
+        padding-right: 110px;
+      }
     }
   }
 }

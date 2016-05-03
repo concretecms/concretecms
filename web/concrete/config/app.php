@@ -234,6 +234,7 @@ return array(
         "/ccm/system/dialogs/file/sets/submit" => array('\Concrete\Controller\Dialog\File\Sets::submit'),
         "/ccm/system/dialogs/file/properties" => array('\Concrete\Controller\Dialog\File\Properties::view'),
         "/ccm/system/dialogs/file/advanced_search" => array('\Concrete\Controller\Dialog\File\AdvancedSearch::view'),
+        "/ccm/system/dialogs/file/advanced_search/add_field" => array('\Concrete\Controller\Dialog\File\AdvancedSearch::addField'),
         "/ccm/system/dialogs/file/properties/clear_attribute" => array('\Concrete\Controller\Dialog\File\Properties::clear_attribute'),
         "/ccm/system/dialogs/file/properties/save" => array('\Concrete\Controller\Dialog\File\Properties::save'),
         "/ccm/system/dialogs/file/properties/update_attribute" => array('\Concrete\Controller\Dialog\File\Properties::update_attribute'),
