@@ -138,6 +138,45 @@ class Application extends Container
         OpCache::clear();
     }
 
+   /**
+     * Utility method for clearing page caches and block caches that has btCacheBlockOutputClearOnEvents option enabled
+     */
+    public function partialClearCaches()
+    {
+        \Events::dispatch('on_partial_cache_flush');
+        $db = Database::connection();
+
+        $pageCache = PageCache::getLibrary();
+        if (is_object($pageCache)) {
+            $qb    = $db->createQueryBuilder();
+            $subQb = $db->createQueryBuilder();
+            $cIDs  = $qb->select('cvb.cID')->from('CollectionVersionBlocksOutputCache', 'cvb')
+                    ->innerJoin('cvb', 'Blocks', 'b', 'b.bID = cvb.bID')
+                    ->where($qb->expr()->comparison('b.btID', 'IN',
+                            '('.
+                            $subQb->select('bt.btID')->from('BlockTypes', 'bt')
+                            ->where($subQb->expr()->eq('bt.btCacheBlockOutputClearOnEvents',
+                                    ':clearOnEvent'))
+                            ->getSQL().')'
+                    ))
+                    ->setParameter(':clearOnEvent', 1, \PDO::PARAM_INT)
+                    ->execute()->fetchAll();
+
+            foreach ($cIDs as $cID) {
+                $pageCache->purge(Page::getByID($cID));
+            }
+        }
+
+        // Clear localization cache
+        Localization::clearCache();
+
+        // Clear block type cache that has btCacheBlockOutputClearOnEvents enabled
+        BlockType::clearCacheOnEvents();
+
+        // Clear precompiled script bytecode caches
+        OpCache::clear();
+    }
+    
     /**
      * If we have job scheduling running through the site, we check to see if it's time to go for it.
      */
@@ -555,6 +594,18 @@ class Application extends Container
         }
 
         return $object;
+    }
+
+    public function setupClearCacheEvents()
+    {
+        \Events::addListener('on_page_delete', array($this, 'partialClearCaches'));
+        \Events::addListener('on_page_update', array($this, 'partialClearCaches'));
+        \Events::addListener('on_page_add', array($this, 'partialClearCaches'));
+        \Events::addListener('on_page_duplicate', array($this, 'partialClearCaches'));
+        \Events::addListener('on_page_move_to_trash', array($this, 'partialClearCaches'));
+        \Events::addListener('on_page_move', array($this, 'partialClearCaches'));
+        \Events::addListener('on_page_version_add', array($this, 'partialClearCaches'));
+        \Events::addListener('on_page_version_approve', array($this, 'partialClearCaches'));
     }
 
 }

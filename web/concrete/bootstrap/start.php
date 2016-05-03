@@ -291,6 +291,11 @@ $cms->setupPackages();
 PermissionKey::loadAll();
 
 /**
+ *
+ */
+$cms->setupClearCacheEvents();
+
+/**
  * ----------------------------------------------------------------------------
  * Fire an event for intercepting the dispatch
  * ----------------------------------------------------------------------------
