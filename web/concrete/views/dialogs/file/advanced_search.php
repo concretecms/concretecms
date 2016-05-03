@@ -9,7 +9,7 @@
 
     <div class="ccm-tab-content" id="ccm-tab-content-fields">
 
-        <form class="ccm-search-fields ccm-search-fields-none" data-search-form="files" method="post" action="<?php echo URL::to('/ccm/system/search/files/submit')?>">
+        <form class="ccm-search-fields ccm-search-fields-none" data-advanced-search-form="files" method="post" action="<?php echo URL::to('/ccm/system/search/files/submit')?>">
             <button class="btn btn-primary" type="button" data-button-action="add-field"><?=t('Add Field')?></button>
             <hr/>
             <div data-container="search-fields" class="ccm-search-fields-advanced">
@@ -25,7 +25,7 @@
 
     <div class="dialog-buttons">
         <button class="btn btn-default pull-left" data-dialog-action="cancel"><?=t('Cancel')?></button>
-        <button type="button" onclick="$('form[data-search-form=files]').trigger('submit')" class="btn btn-primary pull-right"><?=t('Search')?></button>
+        <button type="button" onclick="$('form[data-advanced-search-form=files]').trigger('submit')" class="btn btn-primary pull-right"><?=t('Search')?></button>
         <button type="button" class="btn btn-success pull-right"><?=t('Save as Search Preset')?></button>
     </div>
 
