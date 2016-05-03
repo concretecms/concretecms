@@ -233,9 +233,11 @@
 		if (cs.$advancedFields) {
 			cs.$advancedFields.html('');
 		}
-		$.each(result.fields, function(i, field) {
-			cs.$advancedFields.append(cs._templateAdvancedSearchFieldRow({'field': field}));
-		});
+		if (cs.$advancedFields.length) {
+			$.each(result.fields, function(i, field) {
+				cs.$advancedFields.append(cs._templateAdvancedSearchFieldRow({'field': field}));
+			});
+		}
 		if (options.selectMode == 'multiple') {
 			// We enable item selection, click to select single, command click for
 			// multiple, shift click for range
@@ -256,6 +258,7 @@
 		if (options.onUpdateResults) {
 			options.onUpdateResults(this);
 		}
+		//jQuery.fn.dialog.closeAll();
 
 	}
 
@@ -288,6 +291,60 @@
 			$row.remove();
 			return false;
 		});
+
+		// New UIs like the file manager use the dialog approach
+		cs.$element.on('click', 'a[data-launch-dialog=advanced-search]', function() {
+			var url = $(this).attr('href');
+			$.fn.dialog.open({
+				width: 620,
+				height: 500,
+				href: url,
+				modal: true,
+				title: ccmi18n.search,
+				onOpen: function() {
+					cs.setupAdvancedSearchDialog();
+				}
+			});
+			return false;
+		});
+
+	}
+
+	/**
+	 * Used by new UIs like the file manager, this gets run on the resulting advanced search dialog window.
+	 */
+	ConcreteAjaxSearch.prototype.setupAdvancedSearchDialog = function() {
+		var my = this;
+		var $container = $('div[data-container=search-fields]');
+		var renderFieldRowTemplate = _.template(
+			$('script[data-template=search-field-row]').html()
+		);
+		$('button[data-button-action=add-field]').on('click', function() {
+			$container.append(
+				renderFieldRowTemplate()
+			);
+		});
+		$container.on('change', 'select.ccm-search-choose-field', function() {
+			var key = $(this).val();
+			var $content = $(this).parent().find('div.ccm-search-field-content');
+			if (key) {
+				$.concreteAjax({
+					url: $(this).attr('data-action'),
+					data: {
+						'field': key
+					},
+					success: function(r) {
+						$content.html(r.element);
+					}
+				});
+			}
+		});
+		$container.on('click', 'a[data-search-remove=search-field]', function(e) {
+			e.preventDefault();
+			var $row = $(this).parent();
+			$row.remove();
+		});
+		my.setupSearch();
 	}
 
 	ConcreteAjaxSearch.prototype.setupSort = function() {
@@ -307,13 +364,13 @@
 		var cs = this;
 		if (cs._templateSearchForm) {
 			cs.$element.find('[data-search-element=wrapper]').html(cs._templateSearchForm());
-			cs.$element.on('submit', 'form[data-search-form]', function() {
-				var data = $(this).serializeArray();
-				data.push({'name': 'submitSearch', 'value': '1'});
-				cs.ajaxUpdate($(this).attr('action'), data);
-				return false;
-			});
 		}
+		$('form[data-search-form]').on('submit', function() {
+			var data = $(this).serializeArray();
+			data.push({'name': 'submitSearch', 'value': '1'});
+			cs.ajaxUpdate($(this).attr('action'), data);
+			return false;
+		});
 	}
 
 	ConcreteAjaxSearch.prototype.handleSelectedBulkAction = function(value, type, $option, $items) {

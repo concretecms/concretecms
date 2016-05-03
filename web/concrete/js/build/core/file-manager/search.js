@@ -12,6 +12,9 @@
 
         my.currentFolder = 0;
         my.$breadcrumb = $(options.breadcrumbElement);
+        my.$advancedSearchButton = $element.find('a[data-launch-dialog=advanced-search]');
+        my.$resetSearchButton = $element.find('a[data-button-action=clear-search]');
+
         my._templateFileProgress = _.template('<div id="ccm-file-upload-progress" class="ccm-ui"><div id="ccm-file-upload-progress-bar">' +
             '<div class="progress progress-striped active"><div class="progress-bar" style="width: <%=progress%>%;"></div></div>' +
             '</div></div>');
@@ -317,25 +320,6 @@
         my.$element.find('#ccm-file-manager-upload input[name=currentFolder]').val(my.currentFolder);
     }
 
-    ConcreteFileManager.prototype.setupAdvancedSearch = function() {
-        var my = this;
-        my.$element.on('click', 'a[data-launch-dialog=advanced-search]', function() {
-            var url = $(this).attr('href');
-            $.fn.dialog.open({
-                width: 620,
-                height: 500,
-                href: url,
-                modal: true,
-                title: ccmi18n.search,
-                onOpen: function() {
-
-                }
-            });
-            return false;
-        });
-    }
-
-
     ConcreteFileManager.prototype.getResultMenu = function(results) {
         var my = this;
         var $menu = ConcreteAjaxSearch.prototype.getResultMenu.call(this, results);
@@ -347,11 +331,24 @@
 
     ConcreteFileManager.prototype.setupSearch = function() {
         var my = this;
+        ConcreteAjaxSearch.prototype.setupSearch.call(this);
         my.$element.find('div[data-header=file-manager] form').on('submit', function() {
             var data = $(this).serializeArray();
             data.push({'name': 'submitSearch', 'value': '1'});
             my.ajaxUpdate($(this).attr('action'), data);
+            my.$advancedSearchButton.hide();
+            my.$resetSearchButton.show();
+
             return false;
+        });
+
+        my.$resetSearchButton.on('click', function(e) {
+            e.preventDefault();
+            $('input[name=fKeywords]').val('');
+            my.ajaxUpdate($(this).attr('action'), []);
+            my.$advancedSearchButton.show();
+            my.$resetSearchButton.hide();
+
         });
     }
 

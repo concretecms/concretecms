@@ -3,8 +3,9 @@ namespace Concrete\Core\Search\Field;
 
 use Concrete\Core\Attribute\AttributeKeyInterface;
 use Concrete\Core\Entity\Attribute\Key\Key;
+use Concrete\Core\Search\ItemList\ItemList;
 
-class AttributeKeyField implements FieldInterface
+class AttributeKeyField extends AbstractField
 {
 
     protected $attributeKey;
@@ -22,5 +23,19 @@ class AttributeKeyField implements FieldInterface
     public function __construct(Key $attributeKey)
     {
         $this->attributeKey = $attributeKey;
+    }
+
+    public function renderSearchField()
+    {
+        return $this->attributeKey->render('search', null, true);
+    }
+
+    public function filterList(ItemList $list, $request)
+    {
+        $type = $this->attributeKey->getAttributeType();
+        $cnt = $type->getController();
+        $cnt->setRequestArray($request);
+        $cnt->setAttributeKey($this->attributeKey);
+        $cnt->searchForm($list);
     }
 }
