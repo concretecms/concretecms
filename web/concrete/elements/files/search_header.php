@@ -6,7 +6,7 @@
         <a class="ccm-file-manager-launch-advanced-search" href="<?php echo URL::to('/ccm/system/dialogs/file/advanced_search')?>" data-launch-dialog="advanced-search"><?=t('Advanced')?></a>
         <div class="input-group">
 
-            <input type="text" class="form-control" name="fKeywords" placeholder="<?=t('Search')?>">
+            <input type="text" class="form-control" autocomplete="off" name="fKeywords" placeholder="<?=t('Search')?>">
               <span class="input-group-btn">'
                 <button class="btn btn-info" type="submit"><i class="fa fa-search"></i></button>
               </span>

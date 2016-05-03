@@ -258,8 +258,6 @@
 		if (options.onUpdateResults) {
 			options.onUpdateResults(this);
 		}
-		//jQuery.fn.dialog.closeAll();
-
 	}
 
 	ConcreteAjaxSearch.prototype.setupAdvancedSearch = function() {

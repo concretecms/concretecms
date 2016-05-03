@@ -342,13 +342,25 @@
             return false;
         });
 
+        $('form[data-advanced-search-form]').on('submit', function() {
+            var data = $(this).serializeArray();
+            data.push({'name': 'submitSearch', 'value': '1'});
+            my.ajaxUpdate($(this).attr('action'), data);
+            jQuery.fn.dialog.closeTop();
+            my.$advancedSearchButton.hide();
+            my.$resetSearchButton.show();
+            return false;
+        });
+
+
         my.$resetSearchButton.on('click', function(e) {
             e.preventDefault();
-            $('input[name=fKeywords]').val('');
-            my.ajaxUpdate($(this).attr('action'), []);
+            var $form = $(this).closest('form');
+            var data = [{'name': 'submitSearch', 'value': '1'}];
+            $form.find('input[name=fKeywords]').val('');
+            my.ajaxUpdate($form.attr('action'), data);
             my.$advancedSearchButton.show();
             my.$resetSearchButton.hide();
-
         });
     }
 
