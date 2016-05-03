@@ -584,7 +584,9 @@ class Controller extends BlockController
             $formEventData['replyToEmailAddress'] = $replyToEmailAddress;
             $formEventData['formFormEmailAddress'] = $formFormEmailAddress;
             $formEventData['questionAnswerPairs'] = $questionAnswerPairs;
-            Events::fire('on_form_submission', $formEventData);
+            $event = new \Symfony\Component\EventDispatcher\GenericEvent();
+            $event->setArgument('formData', $formEventData);
+            Events::fire('on_form_submission', $event);
 
             if (!$this->noSubmitFormRedirect) {
                 $targetPage = null;
