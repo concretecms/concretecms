@@ -8,6 +8,8 @@ use Concrete\Core\Application\UserInterface\ContextMenu\Item\LinkItem;
 class Menu extends \Concrete\Core\Application\UserInterface\ContextMenu\Menu
 {
 
+    protected $menuAttributes = ['class' => 'ccm-popover-file-menu'];
+
     public function __construct(File $file)
     {
         parent::__construct();

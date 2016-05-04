@@ -485,6 +485,7 @@
 				menu = cs.options.result.bulkMenus.menu,
 				type,
 				currentType;
+
 			$.each(results, function(i, result) {
 				var propertyValue = result[propertyName];
 				if (i == 0) {

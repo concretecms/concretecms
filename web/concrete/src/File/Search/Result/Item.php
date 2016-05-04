@@ -21,6 +21,7 @@ class Item extends SearchResultItem
             $obj = $item->getTreeNodeJSON();
         } else if ($item instanceof File) {
             $obj = $item->getJSONObject();
+            $obj->treeNodeTypeHandle = 'file'; // We include this so our bulk menu works when searching.
         }
         foreach ($obj as $key => $value) {
             $this->{$key} = $value;
