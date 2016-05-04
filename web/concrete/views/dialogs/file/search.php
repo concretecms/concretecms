@@ -11,7 +11,7 @@ $(function() {
 	$('div[data-search=files]').concreteFileManager({
 		query: <?=json_encode($query)?>,
 		result: <?=json_encode($result->getJSONObject())?>,
-		mode: 'choose',
+		selectMode: 'choose',
 		upload_token: '<?=Core::make('token')->generate()?>'
 	});
 });

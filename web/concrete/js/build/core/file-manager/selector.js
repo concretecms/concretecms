@@ -59,11 +59,11 @@
                 my.$element.find('.ccm-file-selector-file-selected').on('click', function(event) {
                     var menu = file.treeNodeMenu;
                     if (menu) {
-                        var concreteMenu = new ConcreteMenu($(this), {
+                        var concreteMenu = new ConcreteFileMenu($(this), {
                             menuLauncherHoverClass: 'ccm-file-manager-menu-item-hover',
                             menu: $(menu),
                             handle: 'none',
-                            container: false
+                            container: my
                         });
                         concreteMenu.show(event);
                     }

@@ -6,7 +6,10 @@ $list = $result->getItemListObject();
 
 <script type="text/template" data-template="search-results-table-body">
     <% _.each(items, function (item) {%>
-    <tr data-launch-search-menu="<%=item.treeNodeID%>" data-file-manager-tree-node="<%=item.treeNodeID%>">
+    <tr data-launch-search-menu="<%=item.treeNodeID%>"
+        data-file-manager-tree-node="<%=item.treeNodeID%>"
+        data-file-manager-tree-node-type="<%=item.treeNodeTypeHandle%>"
+        data-file-manager-file="<%=item.fID%>">
         <td class="ccm-search-results-icon">
             <%=item.resultsThumbnailImg%>
         </td>
