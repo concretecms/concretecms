@@ -20,6 +20,16 @@ class FileFolder extends Category
         return new FileFolderMenu($this);
     }
 
+    public function getTreeNodeJSON()
+    {
+        $node = parent::getTreeNodeJSON();
+        if ($node) {
+            $node->isFolder = true;
+            $node->resultsThumbnailImg = $this->getListFormatter()->getIconElement();
+        }
+        return $node;
+    }
+
     public function getTreeNodeName()
     {
         if ($this->getTreeNodeParentID() == 0) {

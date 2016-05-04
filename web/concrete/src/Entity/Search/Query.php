@@ -1,0 +1,61 @@
+<?php
+namespace Concrete\Core\Entity\Search;
+
+/**
+ * @Embeddable
+ */
+class Query implements \JsonSerializable
+{
+
+    /**
+     * @Column(type="object")
+     */
+    protected $fields = array();
+
+    /**
+     * @Column(type="object")
+     */
+    protected $columns;
+
+    /**
+     * @return mixed
+     */
+    public function getFields()
+    {
+        return $this->fields;
+    }
+
+    /**
+     * @param mixed $fields
+     */
+    public function setFields($fields)
+    {
+        $this->fields = $fields;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getColumns()
+    {
+        return $this->columns;
+    }
+
+    /**
+     * @param mixed $columns
+     */
+    public function setColumns($columns)
+    {
+        $this->columns = $columns;
+    }
+
+    public function jsonSerialize()
+    {
+        return array(
+            'queryID' => $this->getQueryID(),
+        );
+
+    }
+
+
+}

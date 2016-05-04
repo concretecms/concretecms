@@ -23,6 +23,7 @@ class Filesystem
     {
         NodeType::add('file');
         NodeType::add('file_folder');
+        NodeType::add('search_preset');
         TreeType::add('file_manager');
         return FileManager::add();
     }

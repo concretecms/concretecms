@@ -12,7 +12,8 @@
 			'onLoad': false,
 			'onUpdateResults': false,
             'bulkParameterName': 'item',
-			'selectMode': false
+			'selectMode': false,
+			'searchMethod': 'post'
 		}, options);
 		this.$element = $element;
 		this.$results = $element.find('div[data-search-element=results]');
@@ -57,6 +58,7 @@
 		$.concreteAjax({
 			url: url,
 			data: data,
+			method: cs.options.searchMethod,
 			success: function(r) {
 				if (!callback) {
 					cs.updateResults(r);
@@ -342,6 +344,37 @@
 			var $row = $(this).parent();
 			$row.remove();
 		});
+
+		$('button[data-button-action=save-search-preset]').on('click.saveSearchPreset', function() {
+			jQuery.fn.dialog.open({
+				element: 'div[data-dialog=save-search-preset]:first',
+				modal: true,
+				width: 320,
+				title: 'Save Preset',
+				height: 'auto'
+			});
+		});
+
+		var $presetForm = $('form[data-form=save-preset]');
+		var $form = $('form[data-advanced-search-form]');
+		$('button[data-button-action=save-search-preset-submit]').on('click.saveSearchPresetSubmit', function() {
+			var $presetForm = $('form[data-form=save-preset]');
+			$presetForm.trigger('submit');
+		});
+
+		$presetForm.on('submit', function() {
+			var data = $.extend($form.serializeArray(), $presetForm.serializeArray());
+			$.concreteAjax({
+				data: data,
+				url: $presetForm.attr('action'),
+				success: function(r) {
+					jQuery.fn.dialog.closeAll();
+					ConcreteEvent.publish('SavedSearchCreated', {search: r});
+				}
+			});
+			return false;
+		});
+
 		my.setupSearch();
 	}
 

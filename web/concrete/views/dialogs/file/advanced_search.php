@@ -7,29 +7,48 @@
         array('columns', t('Customize Results'))
     ));?>
 
+    <form class="ccm-search-fields ccm-search-fields-none" data-advanced-search-form="files" method="post" action="<?=$controller->action('submit')?>">
+
     <div class="ccm-tab-content" id="ccm-tab-content-fields">
 
-        <form class="ccm-search-fields ccm-search-fields-none" data-advanced-search-form="files" method="post" action="<?php echo URL::to('/ccm/system/search/files/submit')?>">
             <button class="btn btn-primary" type="button" data-button-action="add-field"><?=t('Add Field')?></button>
             <hr/>
             <div data-container="search-fields" class="ccm-search-fields-advanced">
 
             </div>
-        </form>
     </div>
 
     <div class="ccm-tab-content" id="ccm-tab-content-columns">
-        Columns
+        <?php
+        print $customizeElement->render();
+        ?>
     </div>
+    </form>
 
 
     <div class="dialog-buttons">
         <button class="btn btn-default pull-left" data-dialog-action="cancel"><?=t('Cancel')?></button>
         <button type="button" onclick="$('form[data-advanced-search-form=files]').trigger('submit')" class="btn btn-primary pull-right"><?=t('Search')?></button>
-        <button type="button" class="btn btn-success pull-right"><?=t('Save as Search Preset')?></button>
+        <button type="button" data-button-action="save-search-preset" class="btn btn-success pull-right"><?=t('Save as Search Preset')?></button>
     </div>
 
 
+</div>
+
+<div style="display: none">
+    <div data-dialog="save-search-preset" class="ccm-ui">
+        <form data-form="save-preset" action="<?=$controller->action('save_preset')?>" method="post">
+            <div class="form-group">
+                <?php $form = Core::make('helper/form'); ?>
+                <?=$form->label('presetName', t('Name'))?>
+                <?=$form->text('presetName')?>
+            </div>
+        </form>
+        <div class="dialog-buttons">
+            <button class="btn btn-default pull-left" onclick="jQuery.fn.dialog.closeTop()"><?=t('Cancel')?></button>
+            <button class="btn btn-primary pull-right" data-button-action="save-search-preset-submit"><?=t('Save Preset')?></button>
+        </div>
+    </div>
 </div>
 
 <script type="text/template" data-template="search-field-row">

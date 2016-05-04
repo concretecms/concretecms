@@ -9,6 +9,17 @@ use Concrete\Core\Search\ItemList\ItemList;
 class DateAddedField extends AbstractField
 {
 
+    protected $requestVariables = [
+        'date_added_from_dt',
+        'date_added_from_h',
+        'date_added_from_m',
+        'date_added_from_a',
+        'date_added_to_dt',
+        'date_added_to_h',
+        'date_added_to_m',
+        'date_added_to_a',
+    ];
+
     public function getKey()
     {
         return 'date_added';
@@ -22,7 +33,7 @@ class DateAddedField extends AbstractField
     public function renderSearchField()
     {
         $wdt = \Core::make('helper/form/date_time');
-        return $wdt->datetime('date_added_from', $wdt->translate('date_added_from', $searchRequest)) . t('to') . $wdt->datetime('date_added_to', $wdt->translate('date_added_to', $searchRequest));
+        return $wdt->datetime('date_added_from', $wdt->translate('date_added_from', $this->data)) . t('to') . $wdt->datetime('date_added_to', $wdt->translate('date_added_to', $this->data));
 
     }
 
@@ -30,15 +41,15 @@ class DateAddedField extends AbstractField
      * @param FileList $list
      * @param $request
      */
-    public function filterList(ItemList $list, $request)
+    public function filterList(ItemList $list)
     {
         $wdt = \Core::make('helper/form/date_time');
         /* @var $wdt \Concrete\Core\Form\Service\Widget\DateTime */
-        $dateFrom = $wdt->translate('date_added_from', $request);
+        $dateFrom = $wdt->translate('date_added_from', $this->data);
         if ($dateFrom) {
             $list->filterByDateAdded($dateFrom, '>=');
         }
-        $dateTo = $wdt->translate('date_added_to', $request);
+        $dateTo = $wdt->translate('date_added_to', $this->data);
         if ($dateTo) {
             if (preg_match('/^(.+\\d+:\\d+):00$/', $dateTo, $m)) {
                 $dateTo = $m[1] . ':59';

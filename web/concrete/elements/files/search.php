@@ -8,11 +8,7 @@ $list = $result->getItemListObject();
     <% _.each(items, function (item) {%>
     <tr data-launch-search-menu="<%=item.treeNodeID%>" data-file-manager-tree-node="<%=item.treeNodeID%>">
         <td class="ccm-search-results-icon">
-            <% if (item.treeNodeTypeHandle == 'file_folder') { %>
-                <i class="fa fa-folder"></i>
-            <% } else { %>
-                <%=item.resultsThumbnailImg%>
-            <% } %>
+            <%=item.resultsThumbnailImg%>
         </td>
         <% for (i = 0; i < item.columns.length; i++) {
         var column = item.columns[i]; %>

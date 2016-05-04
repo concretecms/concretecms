@@ -12,6 +12,9 @@ class FolderSet extends Set
         if ($node->getTreeNodeTypeHandle() == 'file_folder') {
             return t('Folder');
         }
+        if ($node->getTreeNodeTypeHandle() == 'search_preset') {
+            return t('Saved Search');
+        }
         if ($node->getTreeNodeTypeHandle() == 'file') {
             $file = $node->getTreeNodeFileObject();
             if (is_object($file)) {

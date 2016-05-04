@@ -3,12 +3,14 @@ namespace Concrete\Controller\Search;
 
 
 use Concrete\Core\Controller\AbstractController;
+use Concrete\Core\File\FileList;
 use Concrete\Core\File\Filesystem;
 use Concrete\Core\File\FolderItemList;
 use Concrete\Core\File\Search\ColumnSet\FolderSet;
 use Concrete\Core\File\Search\Result\Result;
 use Concrete\Core\Search\StickyRequest;
 use Concrete\Core\Tree\Node\Node;
+use Concrete\Core\Tree\Node\Type\SearchPreset;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 class FileFolder extends AbstractController
@@ -22,29 +24,43 @@ class FileFolder extends AbstractController
     {
         parent::__construct();
         $this->filesystem = new Filesystem();
-        $this->searchRequest = new StickyRequest('file_manager');
-        $this->list = new FolderItemList($this->searchRequest);
     }
 
     public function search()
     {
-        $this->list->sortByNodeName();
-        $searchRequest = $this->searchRequest->getSearchRequest();
-        if (isset($searchRequest['folder'])) {
-            $node = Node::getByID($searchRequest['folder']);
-            if (is_object($node) && $node instanceof \Concrete\Core\Tree\Node\Type\FileFolder) {
-                $folder = $node;
+        if ($this->request->get('folder')) {
+            $node = Node::getByID($this->request->get('folder'));
+            if (is_object($node) &&
+                ($node instanceof \Concrete\Core\Tree\Node\Type\FileFolder ||
+                    $node instanceof SearchPreset)) {
+                    $folder = $node;
             }
         }
 
-        if (!isset($folder)) {
-            $folder = $this->filesystem->getRootFolder();
+        if (isset($folder) && $folder instanceof SearchPreset) {
+
+            $this->list = new FileList();
+            $search = $folder->getSavedSearchObject();
+            $query = $search->getQuery();
+            $provider = \Core::make('Concrete\Core\File\Search\SearchProvider');
+            $ilr = $provider->getSearchResultFromQuery($query);
+            $ilr->setBaseURL(\URL::to('/ccm/system/search/files/preset', $search->getID()));
+
         }
 
-        $this->list->filterByParentFolder($folder);
+        if (!isset($ilr)) {
 
-        $columns = new FolderSet();
-        $ilr = new Result($columns, $this->list, \URL::to('/ccm/system/file/folder/contents'));
+            $this->list = new FolderItemList($this->searchRequest);
+
+            if (!isset($folder)) {
+                $folder = $this->filesystem->getRootFolder();
+            }
+
+            $this->list->filterByParentFolder($folder);
+            $this->list->sortByNodeName();
+            $columns = new FolderSet();
+            $ilr = new Result($columns, $this->list, \URL::to('/ccm/system/file/folder/contents'));
+        }
 
         $breadcrumb = [];
         if ($folder->getTreeNodeParentID() > 0) {
@@ -56,7 +72,7 @@ class FileFolder extends AbstractController
                     'active' => false,
                     'name' => $node->getTreeNodeDisplayName(),
                     'folder' => $node->getTreeNodeID(),
-                    'url' => (string) $ilr->getBaseURL()
+                    'url' => (string) \URL::to('/ccm/system/file/folder/contents')
                 ];
             }
 
@@ -64,7 +80,7 @@ class FileFolder extends AbstractController
                 'active' => true,
                 'name' => $folder->getTreeNodeDisplayName(),
                 'folder' => $folder->getTreeNodeID(),
-                'url' => (string) $ilr->getBaseURL(),
+                'url' => (string) \URL::to('/ccm/system/file/folder/contents'),
             ];
 
         }

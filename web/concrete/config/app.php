@@ -235,12 +235,12 @@ return array(
         "/ccm/system/dialogs/file/properties" => array('\Concrete\Controller\Dialog\File\Properties::view'),
         "/ccm/system/dialogs/file/advanced_search" => array('\Concrete\Controller\Dialog\File\AdvancedSearch::view'),
         "/ccm/system/dialogs/file/advanced_search/add_field" => array('\Concrete\Controller\Dialog\File\AdvancedSearch::addField'),
+        "/ccm/system/dialogs/file/advanced_search/submit" => array('\Concrete\Controller\Dialog\File\AdvancedSearch::submit'),
+        "/ccm/system/dialogs/file/advanced_search/save_preset" => array('\Concrete\Controller\Dialog\File\AdvancedSearch::savePreset'),
         "/ccm/system/dialogs/file/properties/clear_attribute" => array('\Concrete\Controller\Dialog\File\Properties::clear_attribute'),
         "/ccm/system/dialogs/file/properties/save" => array('\Concrete\Controller\Dialog\File\Properties::save'),
         "/ccm/system/dialogs/file/properties/update_attribute" => array('\Concrete\Controller\Dialog\File\Properties::update_attribute'),
         "/ccm/system/dialogs/file/search" => array('\Concrete\Controller\Dialog\File\Search::view'),
-        "/ccm/system/dialogs/file/search/customize" => array('\Concrete\Controller\Dialog\File\Search\Customize::view'),
-        "/ccm/system/dialogs/file/search/customize/submit" => array('\Concrete\Controller\Dialog\File\Search\Customize::submit'),
         "/ccm/system/dialogs/file/thumbnails" => array('\Concrete\Controller\Dialog\File\Thumbnails::view'),
         "/ccm/system/dialogs/file/thumbnails/edit" => array('\Concrete\Controller\Dialog\File\Thumbnails\Edit::view'),
 
@@ -408,8 +408,10 @@ return array(
         /*
          * Search Routes
          */
-        "/ccm/system/search/files/field/{field}" => array('\Concrete\Controller\Search\Files::field'),
-        "/ccm/system/search/files/submit" => array('\Concrete\Controller\Search\Files::submit'),
+        "/ccm/system/search/files/basic" => array('\Concrete\Controller\Search\Files::searchBasic'),
+        "/ccm/system/search/files/current" => array('\Concrete\Controller\Search\Files::searchCurrent'),
+        "/ccm/system/search/files/preset/{presetID}" => array('\Concrete\Controller\Search\Files::searchPreset'),
+        "/ccm/system/search/files/clear" => array('\Concrete\Controller\Search\Files::clearSearch'),
         "/ccm/system/search/groups/submit" => array('\Concrete\Controller\Search\Groups::submit'),
         "/ccm/system/search/pages/field/{field}" => array('\Concrete\Controller\Search\Pages::field'),
         "/ccm/system/search/pages/submit" => array('\Concrete\Controller\Search\Pages::submit'),
