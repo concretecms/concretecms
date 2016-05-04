@@ -156,6 +156,14 @@
 		return results;
 	}
 
+	ConcreteAjaxSearch.prototype.showMenu = function($element, $menu, event) {
+		var concreteMenu = new ConcreteMenu($element, {
+			menu: $menu,
+			handle: 'none'
+		});
+		concreteMenu.show(event);
+	}
+
 	ConcreteAjaxSearch.prototype.handleSelectClick = function(event, $row) {
 		var my = this;
 		event.preventDefault();
@@ -194,11 +202,7 @@
 				var results = my.getSelectedResults();
 				var $menu = my.getResultMenu(results);
 				if ($menu) {
-					var concreteMenu = new ConcreteMenu($row, {
-						menu: $menu,
-						handle: 'none'
-					});
-					concreteMenu.show(event);
+					my.showMenu($row, $menu, event);
 				}
 
 			} else {
