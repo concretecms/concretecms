@@ -138,7 +138,15 @@ class Result
                 function ($page) use ($result) {
                     $list = $result->getItemListObject();
 
-                    return $result->getBaseURL() . '?' . $list->getQueryPaginationPageParameter() . '=' . $page;
+                    $uh = \Core::make("helper/url");
+
+                    $args = array(
+                        $list->getQueryPaginationPageParameter() => $page,
+                        $list->getQuerySortColumnParameter() => $list->getActiveSortColumn(),
+                        $list->getQuerySortDirectionParameter() => $list->getActiveSortDirection(),
+                    );
+
+                    return $uh->setVariable($args, false, $result->getBaseURL());
                 },
                 array(
                     'prev_message' => tc('Pagination', '&larr; Previous'),

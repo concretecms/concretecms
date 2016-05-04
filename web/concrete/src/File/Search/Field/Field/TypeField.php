@@ -10,6 +10,8 @@ use Concrete\Core\Search\ItemList\ItemList;
 class TypeField extends AbstractField
 {
 
+    protected $requestVariables = ['type'];
+
     public function getKey()
     {
         return 'type';
@@ -24,9 +26,9 @@ class TypeField extends AbstractField
      * @param FileList $list
      * @param $request
      */
-    public function filterList(ItemList $list, $request)
+    public function filterList(ItemList $list)
     {
-        $type = $request['type'];
+        $type = $this->data['type'];
         $list->filterByType($type);
     }
 
@@ -39,7 +41,7 @@ class TypeField extends AbstractField
         foreach ($t1 as $value) {
             $types[$value] = Type::getGenericTypeText($value);
         }
-        $html .= $form->select('type', $types, $searchRequest['type']);
+        $html .= $form->select('type', $types, $this->data['type']);
         return $html;
     }
 

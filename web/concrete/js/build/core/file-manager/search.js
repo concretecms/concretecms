@@ -5,13 +5,16 @@
         'use strict';
         var my = this;
         options = $.extend({
+            'query': false,
             'breadcrumbElement': 'div.ccm-search-results-breadcrumb',
             'bulkParameterName': 'fID',
+            searchMethod: 'get',
             selectMode: 'multiple' // Enables multiple advanced item selection, range click, etc
         }, options);
 
         my.currentFolder = 0;
         my.$breadcrumb = $(options.breadcrumbElement);
+        my.$headerSearchInput = $element.find('div[data-header=file-manager] input');
         my.$advancedSearchButton = $element.find('a[data-launch-dialog=advanced-search]');
         my.$resetSearchButton = $element.find('a[data-button-action=clear-search]');
 
@@ -27,7 +30,7 @@
         my.setupAddFolder();
         my.setupFileUploads();
         my.setupFileDownloads();
-
+        my.setupResetButton();
 
     }
 
@@ -67,6 +70,20 @@
             my.$downloadTarget = $('#ccm-file-manager-download-target');
         }
     };
+
+    ConcreteFileManager.prototype.setupResetButton = function() {
+        var my = this;
+        if (my.options.query) {
+            my.$headerSearchInput.prop('disabled', true);
+            my.$advancedSearchButton.hide();
+            my.$resetSearchButton.show();
+        } else {
+            my.$headerSearchInput.prop('disabled', false);
+            my.$advancedSearchButton.show();
+            my.$resetSearchButton.hide();
+        }
+    };
+
 
     ConcreteFileManager.prototype.setupFileUploads = function() {
         var my = this,
@@ -208,6 +225,11 @@
         ConcreteEvent.subscribe('ConcreteTreeDeleteTreeNode.concreteTree', function(e, r) {
             my.reloadFolder();
         });
+        ConcreteEvent.unsubscribe('SavedSearchCreated');
+        ConcreteEvent.subscribe('SavedSearchCreated', function(e, data) {
+            my.ajaxUpdate(data.search.baseUrl, {});
+
+        });
     }
 
     ConcreteFileManager.prototype.activateMenu = function($menu) {
@@ -342,25 +364,27 @@
             return false;
         });
 
-        $('form[data-advanced-search-form]').on('submit', function() {
-            var data = $(this).serializeArray();
-            data.push({'name': 'submitSearch', 'value': '1'});
-            my.ajaxUpdate($(this).attr('action'), data);
-            jQuery.fn.dialog.closeTop();
-            my.$advancedSearchButton.hide();
-            my.$resetSearchButton.show();
-            return false;
+        $('form[data-advanced-search-form]').concreteAjaxForm({
+            'success': function(r) {
+                my.updateResults(r);
+                jQuery.fn.dialog.closeTop();
+                my.$advancedSearchButton.hide();
+                my.$resetSearchButton.show();
+                my.$headerSearchInput.prop('disabled', true);
+            }
         });
-
-
         my.$resetSearchButton.on('click', function(e) {
+            my.$element.find('div[data-header=file-manager] input').val('');
             e.preventDefault();
-            var $form = $(this).closest('form');
-            var data = [{'name': 'submitSearch', 'value': '1'}];
-            $form.find('input[name=fKeywords]').val('');
-            my.ajaxUpdate($form.attr('action'), data);
-            my.$advancedSearchButton.show();
-            my.$resetSearchButton.hide();
+            $.concreteAjax({
+                url: $(this).attr('data-button-action-url'),
+                success: function(r) {
+                    my.updateResults(r);
+                    my.$headerSearchInput.prop('disabled', false);
+                    my.$advancedSearchButton.show();
+                    my.$resetSearchButton.hide();
+                }
+            });
         });
     }
 

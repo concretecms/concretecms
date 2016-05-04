@@ -5,10 +5,11 @@ use Concrete\Core\Application\EditResponse;
 use Concrete\Core\Entity\Search\Query;
 use Concrete\Core\Search\Result\Result as SearchResult;
 
-interface ProviderInterface
+interface SessionQueryProviderInterface
 {
-    function getCurrentColumnSet();
-    function getAvailableColumnSet();
-    function getCustomAttributeKeys();
-    function getSessionNamespace();
+
+    function setSessionCurrentQuery(Query $query);
+    function getSessionCurrentQuery();
+    function clearSessionCurrentQuery();
+
 }

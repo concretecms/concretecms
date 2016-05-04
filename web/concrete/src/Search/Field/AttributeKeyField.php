@@ -9,6 +9,7 @@ class AttributeKeyField extends AbstractField
 {
 
     protected $attributeKey;
+    protected $akID;
 
     public function getKey()
     {
@@ -23,6 +24,7 @@ class AttributeKeyField extends AbstractField
     public function __construct(Key $attributeKey)
     {
         $this->attributeKey = $attributeKey;
+        $this->akID = $attributeKey->getAttributeKeyID();
     }
 
     public function renderSearchField()
@@ -30,12 +32,27 @@ class AttributeKeyField extends AbstractField
         return $this->attributeKey->render('search', null, true);
     }
 
-    public function filterList(ItemList $list, $request)
+    public function filterList(ItemList $list)
     {
         $type = $this->attributeKey->getAttributeType();
         $cnt = $type->getController();
-        $cnt->setRequestArray($request);
+        $cnt->setRequestArray($this->data);
         $cnt->setAttributeKey($this->attributeKey);
         $cnt->searchForm($list);
+    }
+
+    public function loadDataFromRequest(array $request)
+    {
+        $this->data = $request['akID'][$this->attributeKey->getAttributeKeyID()];
+    }
+
+    public function __sleep()
+    {
+        return array('data', 'akID');
+    }
+
+    public function __wakeup()
+    {
+        $this->attributeKey = \Concrete\Core\Attribute\Key\Key::getByID($this->akID);
     }
 }

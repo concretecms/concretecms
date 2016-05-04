@@ -9,8 +9,6 @@ use Concrete\Core\Tree\Node\Node;
 
 class Item extends SearchResultItem
 {
-    public $fID;
-
     public function __construct(SearchResult $result, Set $columns, $item)
     {
         parent::__construct($result, $columns, $item);

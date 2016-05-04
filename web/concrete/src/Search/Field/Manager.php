@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Search\Field;
 
+use Concrete\Core\Entity\Search\Query;
 use Concrete\Core\Search\ItemList\ItemList;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -37,18 +38,21 @@ class Manager implements ManagerInterface
         }
     }
 
-    public function filterListByRequest(ItemList $list, array $request)
+    public function getFieldsFromRequest(array $request)
     {
         $keys = $request['field'];
+        $fields = array();
         if (is_array($keys)) {
             foreach($this->groups as $group) {
                 foreach($group->getFields() as $field) {
                     if (in_array($field->getKey(), $keys)) {
-                        $field->filterList($list, $request);
+                        $field->loadDataFromRequest($request);
+                        $fields[] = $field;
                     }
                 }
             }
         }
+        return $fields;
     }
 
 }

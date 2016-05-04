@@ -4732,6 +4732,18 @@
     </index>
   </table>
 
+  <table name="TreeSearchQueryNodes">
+    <field name="treeNodeID" type="integer" size="11">
+      <unsigned/>
+      <autoincrement/>
+      <key/>
+    </field>
+    <field name="savedSearchID" type="string">
+    </field>
+    <index name="savedSearchID">
+      <col>savedSearchID</col>
+    </index>
+  </table>
 
   <table name="TopicTrees">
     <field name="treeID" type="integer" size="11">

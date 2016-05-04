@@ -231,6 +231,7 @@ jQuery.fn.dialog.activateDialogContents = function($dialog) {
     });
     $dialog.find('[data-dialog-form]').concreteAjaxForm();
 
+
     $dialog.find('button[data-dialog-action=submit]').on('click', function() {
         $dialog.find('[data-dialog-form]').submit();
     });
@@ -239,7 +240,7 @@ jQuery.fn.dialog.activateDialogContents = function($dialog) {
         $dialog.jqdialog('option', 'buttons', [{}]);
         $dialog.parent().find(".ui-dialog-buttonset").remove();
         $dialog.parent().find(".ui-dialog-buttonpane").html('');
-        $dialog.find('.dialog-buttons').removeClass().appendTo($dialog.parent().find('.ui-dialog-buttonpane').addClass("ccm-ui"));
+        $dialog.find('.dialog-buttons').eq(0).removeClass().appendTo($dialog.parent().find('.ui-dialog-buttonpane').addClass("ccm-ui"));
     }
 
     // make dialogs

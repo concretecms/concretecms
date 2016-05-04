@@ -10,6 +10,10 @@ use Concrete\Core\Search\ItemList\ItemList;
 class KeywordsField extends AbstractField
 {
 
+    protected $requestVariables = [
+        'keywords',
+    ];
+
     public function getKey()
     {
         return 'keywords';
@@ -24,16 +28,16 @@ class KeywordsField extends AbstractField
      * @param FileList $list
      * @param $request
      */
-    public function filterList(ItemList $list, $request)
+    public function filterList(ItemList $list)
     {
-        $keywords = $request['keywords'];
+        $keywords = $this->data['keywords'];
         $list->filterByKeywords($keywords);
     }
 
     public function renderSearchField()
     {
         $form = \Core::make('helper/form');
-        return $form->text('keywords', $searchRequest['keywords']);
+        return $form->text('keywords', $this->data['keywords']);
     }
 
 

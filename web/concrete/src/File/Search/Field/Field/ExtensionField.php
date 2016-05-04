@@ -10,6 +10,10 @@ use Concrete\Core\Search\ItemList\ItemList;
 class ExtensionField extends AbstractField
 {
 
+    protected $requestVariables = [
+        'extension',
+    ];
+
     public function getKey()
     {
         return 'extension';
@@ -24,9 +28,9 @@ class ExtensionField extends AbstractField
      * @param FileList $list
      * @param $request
      */
-    public function filterList(ItemList $list, $request)
+    public function filterList(ItemList $list)
     {
-        $extension = $request['extension'];
+        $extension = $this->data['extension'];
         $list->filterByExtension($extension);
     }
 
@@ -38,7 +42,7 @@ class ExtensionField extends AbstractField
         foreach ($ext1 as $value) {
             $extensions[$value] = $value;
         }
-        return $form->select('extension', $extensions, $searchRequest['extensions']);
+        return $form->select('extension', $extensions, $this->data['extension']);
     }
 
 

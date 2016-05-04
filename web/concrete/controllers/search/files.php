@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Controller\Search;
 
+use Concrete\Core\File\Search\ColumnSet\DefaultSet;
 use Concrete\Core\Http\ResponseAssetGroup;
 use Concrete\Core\Search\Field\ManagerFactory;
 use Controller;
@@ -11,6 +12,7 @@ use Concrete\Core\File\Search\Result\Result as FileSearchResult;
 use FileAttributeKey;
 use Loader;
 use FileSet;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use URL;
 use Concrete\Core\File\Type\Type as FileType;
 use FilePermissions;
@@ -25,104 +27,85 @@ class Files extends Controller
 
     public function __construct()
     {
-        $this->searchRequest = new StickyRequest('files');
-        $this->fileList = new FileList($this->searchRequest);
+        parent::__construct();
+        $this->fileList = new FileList();
     }
 
-    public function search()
+    public function searchBasic()
     {
         $cp = FilePermissions::getGlobal();
         if ($cp->canSearchFiles() || $cp->canAddFile()) {
-            if ($_REQUEST['submitSearch']) {
-                $this->searchRequest->resetSearchRequest();
-            }
 
-            $req = $this->searchRequest->getSearchRequest();
-            $columns = FileSearchColumnSet::getCurrent();
-
-            if (!$this->fileList->getActiveSortColumn()) {
-                $col = $columns->getDefaultSortColumn();
-                $this->fileList->sanitizedSortBy($col->getColumnKey(), $col->getColumnDefaultSortDirection());
-            }
-
-            // first thing, we check to see if a saved search is being used
-            /*
-            if (isset($req['fssID'])) {
-                $fs = FileSet::getByID($req['fssID']);
-                if ($fs->getFileSetType() == FileSet::TYPE_SAVED_SEARCH) {
-                    $req = $fs->getSavedSearchRequest();
-                    $columns = $fs->getSavedSearchColumns();
-                    $colsort = $columns->getDefaultSortColumn();
-                    $this->fileList->addToSearchRequest('ccm_order_dir', $colsort->getColumnDefaultSortDirection());
-                    $this->fileList->addToSearchRequest('ccm_order_by', $colsort->getColumnKey());
-                }
-            }
-            */
-
-            $keywords = htmlentities($req['fKeywords'], ENT_QUOTES, APP_CHARSET);
+            $keywords = htmlentities($this->request->get('fKeywords'), ENT_QUOTES, APP_CHARSET);
 
             if ($keywords != '') {
                 $this->fileList->filterByKeywords($keywords);
             }
 
-            if ($req['numResults']) {
-                $this->fileList->setItemsPerPage(intval($req['numResults']));
-            }
-
-            if ((isset($req['fsIDNone']) && $req['fsIDNone'] == 1) || (is_array($req['fsID']) && in_array(-1, $req['fsID']))) {
-                $this->fileList->filterByNoSet();
-            } else {
-                if (is_array($req['fsID'])) {
-                    foreach ($req['fsID'] as $fsID) {
-                        $fs = FileSet::getByID($fsID);
-                        if (is_object($fs)) {
-                            $this->fileList->filterBySet($fs);
-                        }
-                    }
-                } elseif (isset($req['fsID']) && $req['fsID'] != '' && $req['fsID'] > 0) {
-                    $set = $req['fsID'];
-                    $fs = FileSet::getByID($set);
-                    if (is_object($fs)) {
-                        $this->fileList->filterBySet($fs);
-                    }
-                }
-            }
-
-            $manager = ManagerFactory::get('file');
-            $manager->filterListByRequest($this->fileList, $req);
-
-            if (isset($req['numResults'])) {
-                $this->fileList->setItemsPerPage(intval($req['numResults']));
-            }
-
-            $this->fileList->setPermissionsChecker(function ($file) {
-                $cp = new \Permissions($file);
-
-                return $cp->canViewFileInFileManager();
-            });
-
-            $ilr = new FileSearchResult($columns, $this->fileList, URL::to('/ccm/system/search/files/submit'), $this->fields);
-            $this->result = $ilr;
+            $columns = new DefaultSet();
+            $result = new FileSearchResult($columns, $this->fileList);
+            return new JsonResponse($result->getJSONObject());
         } else {
             return false;
         }
     }
 
-    public function getSearchResultObject()
+    public function clearSearch()
     {
-        return $this->result;
+        $cp = FilePermissions::getGlobal();
+        if ($cp->canSearchFiles() || $cp->canAddFile()) {
+            $provider = $this->app->make('Concrete\Core\File\Search\SearchProvider');
+            $provider->clearSessionCurrentQuery();
+
+            // Fall back to file folders search.
+
+            $search = new FileFolder();
+            $search->search();
+            $result = $search->getSearchResultObject();
+
+            return new JsonResponse($result->getJSONObject());
+        } else {
+            return false;
+        }
     }
 
-    public function getListObject()
+
+    public function searchCurrent()
     {
-        return $this->fileList;
+        $cp = FilePermissions::getGlobal();
+        if ($cp->canSearchFiles()) {
+
+            $provider = $this->app->make('Concrete\Core\File\Search\SearchProvider');
+            $query = $provider->getSessionCurrentQuery();
+            if (is_object($query)) {
+                $result = $provider->getSearchResultFromQuery($query);
+                $result->setBaseURL(\URL::to('/ccm/system/search/files/current'));
+                return new JsonResponse($result->getJSONObject());
+            }
+        }
+
     }
 
-    public function submit()
+    public function searchPreset($presetID)
     {
-        $this->search();
-        Loader::helper('ajax')->sendResult($this->result->getJSONObject());
+        $cp = FilePermissions::getGlobal();
+        if ($cp->canSearchFiles()) {
+
+            $em = \Database::connection()->getEntityManager();
+            $preset = $em->find('Concrete\Core\Entity\Search\SavedFileSearch', $presetID);
+            if (is_object($preset)) {
+                $query = $preset->getQuery();
+                if (is_object($query)) {
+                    $provider = $this->app->make('Concrete\Core\File\Search\SearchProvider');
+                    $result = $provider->getSearchResultFromQuery($query);
+                    $result->setBaseURL(\URL::to('/ccm/system/search/files/preset', $presetID));
+                    return new JsonResponse($result->getJSONObject());
+                }
+            }
+        }
+
     }
+
 
 
 }
