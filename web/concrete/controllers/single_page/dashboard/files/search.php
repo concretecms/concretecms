@@ -29,7 +29,6 @@ class Search extends DashboardPageController
         } else {
             $search = new FileFolder();
             $search->search();
-            $this->set('searchController', $search);
             $result = $search->getSearchResultObject();
         }
 

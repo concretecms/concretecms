@@ -388,6 +388,78 @@
         });
     }
 
+    /**
+     * Static Methods
+     */
+    ConcreteFileManager.launchDialog = function(callback, opts ) {
+        var w = $(window).width() - 53;
+        var data = {};
+        var i;
+
+        var options = {
+            filters: [], // filters must be an array of objects ex: [{ field: Concrete.const.Controller.Search.Files.FILTER_BY_TYPE, type: Concrete.const.Core.File.Type.Type.T_IMAGE }]
+            multipleSelection: false, // Multiple selection switch
+        };
+
+        $.extend(options, opts);
+
+        if ( options.filters.length > 0 )
+        {
+            data['field\[\]'] = [];
+
+            for ( i = 0; i < options.filters.length; i++ )
+            {
+                var filter = $.extend(true, {}, options.filters[i] ); // clone
+                data['field\[\]'].push(filter.field);
+                delete ( filter.field );
+                $.extend( data, filter); // add all remaining fields to the data
+            }
+        }
+
+
+        $.fn.dialog.open({
+            width: w,
+            height: '100%',
+            href: CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/file/search',
+            modal: true,
+            data: data,
+            title: ccmi18n_filemanager.title,
+            onOpen: function(dialog) {
+                ConcreteEvent.unsubscribe('FileManagerSelectFile');
+                ConcreteEvent.subscribe('FileManagerSelectFile', function(e, data) {
+                    var multipleItemsSelected = (Object.prototype.toString.call( data.fID ) === '[object Array]');
+                    if (options.multipleSelection && !multipleItemsSelected) {
+                        data.fID = [data.fID];
+                    } else if (!options.multipleSelection && multipleItemsSelected) {
+                        if (data.fID.length > 1) {
+                            $('.ccm-search-bulk-action option:first-child').prop('selected', 'selected');
+                            alert(ccmi18n_filemanager.chosenTooMany);
+                            return;
+                        }
+                        data.fID = data.fID[0];
+                    }
+                    jQuery.fn.dialog.closeTop();
+                    callback(data);
+                });
+            }
+        });
+    };
+
+    ConcreteFileManager.getFileDetails = function(fID, callback) {
+        $.ajax({
+            type: 'post',
+            dataType: 'json',
+            url: CCM_DISPATCHER_FILENAME + '/ccm/system/file/get_json',
+            data: {'fID': fID},
+            error: function(r) {
+                ConcreteAlert.dialog('Error', r.responseText);
+            },
+            success: function(r) {
+                callback(r);
+            }
+        });
+    };
+
 
     ConcreteFileManager.launchUploadCompleteDialog = function(files, my) {
         if (files && files.length && files.length > 0) {

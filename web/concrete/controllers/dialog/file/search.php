@@ -2,6 +2,7 @@
 namespace Concrete\Controller\Dialog\File;
 
 use Concrete\Controller\Backend\UserInterface as BackendInterfaceController;
+use Concrete\Controller\Search\FileFolder;
 use FilePermissions;
 use Loader;
 use Concrete\Controller\Search\Files as SearchFilesController;
@@ -22,11 +23,22 @@ class Search extends BackendInterfaceController
 
     public function view()
     {
-        $cnt = new SearchFilesController();
-        $cnt->search();
-        $result = Loader::helper('json')->encode($cnt->getSearchResultObject()->getJSONObject());
+        $provider = \Core::make('Concrete\Core\File\Search\SearchProvider');
+        $query = $provider->getSessionCurrentQuery();
+        if (is_object($query)) {
+            $result = $provider->getSearchResultFromQuery($query);
+            $result->setBaseURL(\URL::to('/ccm/system/search/files/current'));
+        } else {
+            $search = new FileFolder();
+            $search->search();
+            $result = $search->getSearchResultObject();
+        }
+
+        if (is_object($result)) {
+            $this->set('result', $result);
+            $this->set('query', $query);
+        }
+
         $this->requireAsset('select2');
-        $this->set('result', $result);
-        $this->set('searchController', $cnt);
     }
 }
