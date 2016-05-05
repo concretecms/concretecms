@@ -5,7 +5,6 @@
         'use strict';
         var my = this;
         options = $.extend({
-            'query': false,
             'breadcrumbElement': 'div.ccm-search-results-breadcrumb',
             'bulkParameterName': 'fID',
             'searchMethod': 'get',
@@ -30,7 +29,6 @@
         my.setupAddFolder();
         my.setupFileUploads();
         my.setupFileDownloads();
-        my.setupResetButton();
 
     }
 
@@ -71,16 +69,12 @@
         }
     };
 
-    ConcreteFileManager.prototype.setupResetButton = function() {
+    ConcreteFileManager.prototype.setupResetButton = function(result) {
         var my = this;
-        if (my.options.query) {
+        if (result.query) {
             my.$headerSearchInput.prop('disabled', true);
             my.$advancedSearchButton.hide();
             my.$resetSearchButton.show();
-        } else {
-            my.$headerSearchInput.prop('disabled', false);
-            my.$advancedSearchButton.show();
-            my.$resetSearchButton.hide();
         }
     };
 
@@ -275,6 +269,7 @@
         my.$element.on('click', 'button.btn-menu-launcher', function(event) {
             var $menu = my.getResultMenu(my.getSelectedResults());
             if ($menu) {
+                $menu.find('.dialog-launch').dialog();
                 $(this).parent().find('ul').remove();
                 $(this).parent().append($menu.find('ul'));
             }
@@ -321,6 +316,7 @@
         ConcreteAjaxSearch.prototype.updateResults.call(my, result);
         my.setupFolders(result);
         my.setupBreadcrumb(result);
+        my.setupResetButton(result);
 
         if (my.options.selectMode == 'choose') {
             my.$element.unbind('.concreteFileManagerHoverFile');

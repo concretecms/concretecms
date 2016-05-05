@@ -28,6 +28,7 @@ class Search extends BackendInterfaceController
         if (is_object($query)) {
             $result = $provider->getSearchResultFromQuery($query);
             $result->setBaseURL(\URL::to('/ccm/system/search/files/current'));
+            $result->setQuery($query);
         } else {
             $search = new FileFolder();
             $search->search();
@@ -36,7 +37,6 @@ class Search extends BackendInterfaceController
 
         if (is_object($result)) {
             $this->set('result', $result);
-            $this->set('query', $query);
         }
 
         $this->requireAsset('select2');

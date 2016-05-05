@@ -12,6 +12,7 @@ class Result
     protected $list;
     protected $baseURL;
     protected $breadcrumb;
+    protected $query;
 
     /** @var \Concrete\Core\Search\Pagination\Pagination */
     protected $pagination;
@@ -19,6 +20,23 @@ class Result
     protected $items;
     protected $fields;
     protected $columns;
+
+    /**
+     * @return mixed
+     */
+    public function getQuery()
+    {
+        return $this->query;
+    }
+
+    /**
+     * @param mixed $query
+     */
+    public function setQuery($query)
+    {
+        $this->query = $query;
+    }
+
 
     public function getItemListObject()
     {
@@ -157,6 +175,7 @@ class Result
         }
         $obj->paginationTemplate = $html;
         $obj->fields = $this->fields;
+        $obj->query = $this->query;
         $obj->bulkMenus = $this->getSearchResultBulkMenus();
         $obj->baseUrl = (string) $this->getBaseURL();
         $obj->breadcrumb = $this->getBreadcrumb();

@@ -367,9 +367,10 @@
 		});
 
 		$presetForm.on('submit', function() {
-			var data = $.extend($form.serializeArray(), $presetForm.serializeArray());
+			var formData = $form.serializeArray();
+			formData = formData.concat($presetForm.serializeArray());
 			$.concreteAjax({
-				data: data,
+				data: formData,
 				url: $presetForm.attr('action'),
 				success: function(r) {
 					jQuery.fn.dialog.closeAll();

@@ -89,6 +89,15 @@ class SearchPreset extends Node
         return $node;
     }
 
+    public static function getNodeBySavedSearchID($presetID)
+    {
+        $db = \Database::connection();
+        $nodeID = $db->GetOne('select treeNodeID from TreeSearchQueryNodes where savedSearchID = ?', array($presetID));
+        if ($nodeID) {
+            return static::getByID($nodeID);
+        }
+    }
+
     public function setTreeNodeSavedSearch(SavedFileSearch $search)
     {
         $db = Loader::db();

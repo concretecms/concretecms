@@ -85,6 +85,7 @@ class AdvancedSearch extends BackendInterfaceController
             $provider = $this->app->make('Concrete\Core\File\Search\SearchProvider');
             $result = $provider->getSearchResultFromQuery($query);
             $result->setBaseURL(\URL::to('/ccm/system/search/files/preset', $search->getID()));
+
             return new JsonResponse($result->getJSONObject());
         }
     }
