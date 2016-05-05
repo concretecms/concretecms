@@ -39,7 +39,6 @@ class FileFolder extends AbstractController
 
         if (isset($folder) && $folder instanceof SearchPreset) {
 
-            $this->list = new FileList();
             $search = $folder->getSavedSearchObject();
             $query = $search->getQuery();
             $provider = \Core::make('Concrete\Core\File\Search\SearchProvider');
@@ -50,16 +49,17 @@ class FileFolder extends AbstractController
 
         if (!isset($ilr)) {
 
-            $this->list = new FolderItemList($this->searchRequest);
+            $list = new FolderItemList($this->searchRequest);
 
             if (!isset($folder)) {
                 $folder = $this->filesystem->getRootFolder();
             }
 
-            $this->list->filterByParentFolder($folder);
-            $this->list->sortByNodeName();
+
+            $u = new \User();
+            $list = $folder->getFolderItemList($u, $this->request);
             $columns = new FolderSet();
-            $ilr = new Result($columns, $this->list, \URL::to('/ccm/system/file/folder/contents'));
+            $ilr = new Result($columns, $list, \URL::to('/ccm/system/file/folder/contents'));
         }
 
         $breadcrumb = [];
@@ -94,11 +94,6 @@ class FileFolder extends AbstractController
     public function getSearchResultObject()
     {
         return $this->result;
-    }
-
-    public function getListObject()
-    {
-        return $this->list;
     }
 
     public function submit()

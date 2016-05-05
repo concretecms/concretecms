@@ -14,10 +14,12 @@ class FolderItemList extends ItemList implements PermissionableListItemInterface
 {
 
     protected $parent;
+    protected $itemsPerPage = 100;
 
     protected $autoSortColumns = array(
         'folderItemName',
         'folderItemModified',
+        'folderItemType',
         'folderItemSize'
     );
 
@@ -41,6 +43,7 @@ class FolderItemList extends ItemList implements PermissionableListItemInterface
         $this->query->select('n.treeNodeID')
             ->addSelect('if(nt.treeNodeTypeHandle=\'file\', fv.fvTitle, n.treeNodeName) as folderItemName')
             ->addSelect('if(nt.treeNodeTypeHandle=\'file\', fv.fvDateAdded, n.dateModified) as folderItemModified')
+            ->addSelect('case when nt.treeNodeTypeHandle=\'search_preset\' then 1 when nt.treeNodeTypeHandle=\'file_folder\' then 2 else (10 + fvType) end as folderItemType')
             ->addSelect('fv.fvSize as folderItemSize')
             ->from('TreeNodes', 'n')
             ->innerJoin('n', 'TreeNodeTypes', 'nt', 'nt.treeNodeTypeID = n.treeNodeTypeID')
@@ -118,5 +121,11 @@ class FolderItemList extends ItemList implements PermissionableListItemInterface
     {
         $this->sortBy('folderItemName', 'asc');
     }
+
+    public function sortByNodeType()
+    {
+        $this->sortBy('folderItemType', 'asc');
+    }
+
 
 }
