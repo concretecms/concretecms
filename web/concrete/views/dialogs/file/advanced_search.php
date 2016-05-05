@@ -67,3 +67,15 @@
         <a data-search-remove="search-field" class="ccm-search-remove-field" href="#"><i class="fa fa-minus-circle"></i></a>
     </div>
 </script>
+
+<script type="text/javascript">
+    $(function() {
+        setTimeout(function() {
+            $('button[data-button-action=add-field]').trigger('click');
+            setTimeout(function() {
+                $('select.ccm-search-choose-field option').eq(1).prop('selected', true);
+                $('select.ccm-search-choose-field').trigger('change');
+            }, 100);
+        }, 500);
+    });
+</script>

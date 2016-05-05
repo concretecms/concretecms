@@ -5,7 +5,7 @@ class SavedSearchListFormatter implements ListFormatterInterface
 {
     public function getIconElement()
     {
-        return '<i class="fa fa-cog"></i>';
+        return '<i class="fa fa-search-plus"></i>';
     }
 
     public function getSearchResultsClass()

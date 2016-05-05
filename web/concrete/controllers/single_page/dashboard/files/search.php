@@ -25,6 +25,7 @@ class Search extends DashboardPageController
         $query = $provider->getSessionCurrentQuery();
         if (is_object($query)) {
             $result = $provider->getSearchResultFromQuery($query);
+            $result->setQuery($query);
             $result->setBaseURL(\URL::to('/ccm/system/search/files/current'));
         } else {
             $search = new FileFolder();
@@ -34,11 +35,10 @@ class Search extends DashboardPageController
 
         if (is_object($result)) {
             $this->set('result', $result);
-            $query = json_encode($query);
             $result = json_encode($result->getJSONObject());
             $token = \Core::make('token')->generate();
             $this->addFooterItem(
-                "<script type=\"text/javascript\">$(function() { $('#ccm-dashboard-content').concreteFileManager({query: " . $query . ", upload_token: '" . $token . "', result: " . $result . "}); });</script>"
+                "<script type=\"text/javascript\">$(function() { $('#ccm-dashboard-content').concreteFileManager({upload_token: '" . $token . "', result: " . $result . "}); });</script>"
             );
         }
     }

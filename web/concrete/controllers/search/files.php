@@ -1,9 +1,11 @@
 <?php
 namespace Concrete\Controller\Search;
 
+use Concrete\Core\File\Filesystem;
 use Concrete\Core\File\Search\ColumnSet\DefaultSet;
 use Concrete\Core\Http\ResponseAssetGroup;
 use Concrete\Core\Search\Field\ManagerFactory;
+use Concrete\Core\Tree\Node\Type\SearchPreset;
 use Controller;
 use FileList;
 use Concrete\Core\Search\StickyRequest;
@@ -99,6 +101,29 @@ class Files extends Controller
                     $provider = $this->app->make('Concrete\Core\File\Search\SearchProvider');
                     $result = $provider->getSearchResultFromQuery($query);
                     $result->setBaseURL(\URL::to('/ccm/system/search/files/preset', $presetID));
+                    $result->setQuery($query);
+                    
+                    $filesystem = new Filesystem();
+                    $root = $filesystem->getRootFolder();
+                    $breadcrumb = [];
+                    $breadcrumb[] = [
+                        'active' => false,
+                        'name' => $root->getTreeNodeDisplayName(),
+                        'folder' => $root->getTreeNodeID(),
+                        'url' => (string) \URL::to('/ccm/system/file/folder/contents'),
+                    ];
+
+                    $node = SearchPreset::getNodeBySavedSearchID($presetID);
+
+                    $breadcrumb[] = [
+                        'active' => true,
+                        'name' => $node->getTreeNodeDisplayName(),
+                        'folder' => $node->getTreeNodeID(),
+                        'url' => false
+                    ];
+
+                    $result->setBreadcrumb($breadcrumb);
+
                     return new JsonResponse($result->getJSONObject());
                 }
             }

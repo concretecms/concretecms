@@ -52,7 +52,7 @@ class Query implements \JsonSerializable
     public function jsonSerialize()
     {
         return array(
-            'queryID' => $this->getQueryID(),
+            'fields' => $this->fields,
         );
 
     }
