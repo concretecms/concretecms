@@ -24,17 +24,28 @@ div.ccm-file-manager-search-form {
 
   form {
     position: relative;
+
     a.ccm-file-manager-reset-search,
     a.ccm-file-manager-launch-advanced-search {
       position: absolute;
       top: 7px;
-      right: 50px;
       z-index: @index-level-search-reset;
+    }
+
+    a.ccm-file-manager-reset-search {
+      left: 10px;
+      &.ccm-file-manager-reset-search-right {
+        right: 50px;
+        left: auto;
+
+      }
     }
 
     a.ccm-file-manager-launch-advanced-search {
       color: #aaa;
+      right: 50px;
     }
+
     a.ccm-file-manager-reset-search {
       color: #09f;
       display: none;
@@ -173,6 +184,32 @@ div#ccm-popover-menu-container {
   }
 }
 
+/**
+ * Upload Dialog
+ */
+div#ccm-file-manager-import-files {
+  form.dropzone {
+    .transition(0.1s all linear);
+    span {
+      font-size: 32px;
+      -webkit-font-smoothing: antialiased;
+      font-weight: normal;
+      display: block;
+      padding-top: 30px;
+      color: #999;
+    }
+
+    &.drag-hover {
+      background-color: rgba(102,175,233,0.6);
+      span {
+        color: #999;
+      }
+    }
+
+    height: 340px;
+    border: 2px dashed #09f;
+  }
+}
 
 /**
  *Thumbnail listing

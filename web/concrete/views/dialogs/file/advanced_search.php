@@ -58,24 +58,16 @@
             <?php foreach($manager->getGroups() as $group) { ?>
                 <optgroup label="<?=$group->getName()?>">
                     <?php foreach($group->getFields() as $field) { ?>
-                        <option value="<?=$field->getKey()?>"><?=$field->getDisplayName()?></option>
+                        <option value="<?=$field->getKey()?>" <% if (typeof(field) != 'undefined' && field.key == '<?=$field->getKey()?>') { %> selected <% } %>><?=$field->getDisplayName()?></option>
                     <?php } ?>
                 </optgroup>
             <?php } ?>
         </select>
-        <div class="ccm-search-field-content"><% if (typeof(field) != 'undefined') { %><%=field.html%><% } %></div>
+        <div class="ccm-search-field-content"><% if (typeof(field) != 'undefined') { %><%=field.element%><% } %></div>
         <a data-search-remove="search-field" class="ccm-search-remove-field" href="#"><i class="fa fa-minus-circle"></i></a>
     </div>
 </script>
 
-<script type="text/javascript">
-    $(function() {
-        setTimeout(function() {
-            $('button[data-button-action=add-field]').trigger('click');
-            setTimeout(function() {
-                $('select.ccm-search-choose-field option').eq(1).prop('selected', true);
-                $('select.ccm-search-choose-field').trigger('change');
-            }, 100);
-        }, 500);
-    });
+<script type="text/json" data-template="default-query">
+    <?=$defaultQuery?>
 </script>

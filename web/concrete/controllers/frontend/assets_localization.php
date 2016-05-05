@@ -89,6 +89,7 @@ var ccmi18n = {
   marketplaceLogoutSuccessMsg: <?=json_encode(t('<p>You are now logged out of concrete5 Marketplace.</p>'))?>,
   deleteAttributeValue: <?=json_encode(t('Are you sure you want to remove this value?'))?>,
   search: <?=json_encode(t('Search'))?>,
+  advanced: <?=json_encode(t('Advanced'))?>,
   customizeSearch: <?=json_encode(t('Customize Search'))?>,
   properties: <?=json_encode(t('Page Saved'))?>,
   savePropertiesMsg: <?=json_encode(t('Page Properties saved.'))?>,

@@ -54,6 +54,7 @@ class SearchProvider extends AbstractSearchProvider implements QueryableInterfac
             $list->sanitizedSortBy($column->getColumnKey(), $column->getColumnDefaultSortDirection());
         }
         $result = new Result($query->getColumns(), $list);
+        $result->setQuery($query);
         return $result;
     }
 }
