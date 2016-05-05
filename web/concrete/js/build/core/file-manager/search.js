@@ -34,6 +34,110 @@
 
     ConcreteFileManager.prototype = Object.create(ConcreteAjaxSearch.prototype);
 
+    ConcreteFileManager.prototype.setupAdvancedSearch = function() {
+        var my = this;
+        my.$advancedSearchButton.on('click', function() {
+            var url = $(this).attr('href');
+            $.fn.dialog.open({
+                width: 620,
+                height: 500,
+                href: url,
+                modal: true,
+                title: ccmi18n.search,
+                onOpen: function() {
+                    my.setupAdvancedSearchDialog();
+                }
+            });
+            return false;
+        });
+    }
+
+    ConcreteFileManager.prototype.setupAdvancedSearchDialog = function() {
+        var my = this;
+        var $container = $('div[data-container=search-fields]');
+        var renderFieldRowTemplate = _.template(
+            $('script[data-template=search-field-row]').html()
+        );
+        var defaultQuery = $('script[data-template=default-query]').html();
+        if (defaultQuery) {
+            defaultQuery = JSON.parse(defaultQuery);
+        }
+        $('button[data-button-action=add-field]').on('click', function() {
+            $container.append(
+                renderFieldRowTemplate()
+            );
+        });
+
+        if (my.result.query) {
+            $.each(my.result.query.fields, function(i, field) {
+                $container.append(
+                    renderFieldRowTemplate({'field': field})
+                );
+            });
+        } else if (defaultQuery) {
+            $.each(defaultQuery.fields, function(i, field) {
+                $container.append(
+                    renderFieldRowTemplate({'field': field})
+                );
+            });
+        }
+
+
+        $container.on('change', 'select.ccm-search-choose-field', function() {
+            var key = $(this).val();
+            var $content = $(this).parent().find('div.ccm-search-field-content');
+            if (key) {
+                $.concreteAjax({
+                    url: $(this).attr('data-action'),
+                    data: {
+                        'field': key
+                    },
+                    success: function(r) {
+                        $content.html(r.element);
+                    }
+                });
+            }
+        });
+        $container.on('click', 'a[data-search-remove=search-field]', function(e) {
+            e.preventDefault();
+            var $row = $(this).parent();
+            $row.remove();
+        });
+
+        $('button[data-button-action=save-search-preset]').on('click.saveSearchPreset', function() {
+            jQuery.fn.dialog.open({
+                element: 'div[data-dialog=save-search-preset]:first',
+                modal: true,
+                width: 320,
+                title: 'Save Preset',
+                height: 'auto'
+            });
+        });
+
+        var $presetForm = $('form[data-form=save-preset]');
+        var $form = $('form[data-advanced-search-form]');
+        $('button[data-button-action=save-search-preset-submit]').on('click.saveSearchPresetSubmit', function() {
+            var $presetForm = $('form[data-form=save-preset]');
+            $presetForm.trigger('submit');
+        });
+
+        $presetForm.on('submit', function() {
+            var formData = $form.serializeArray();
+            formData = formData.concat($presetForm.serializeArray());
+            $.concreteAjax({
+                data: formData,
+                url: $presetForm.attr('action'),
+                success: function(r) {
+                    jQuery.fn.dialog.closeAll();
+                    ConcreteEvent.publish('SavedSearchCreated', {search: r});
+                }
+            });
+            return false;
+        });
+
+        my.setupSearch();
+    }
+
     ConcreteFileManager.prototype.setupBreadcrumb = function(result) {
         var my = this;
         if (result.breadcrumb) {
@@ -73,7 +177,8 @@
         var my = this;
         if (result.query) {
             my.$headerSearchInput.prop('disabled', true);
-            my.$advancedSearchButton.hide();
+            my.$headerSearchInput.attr('placeholder', '');
+            my.$advancedSearchButton.html(ccmi18n_filemanager.edit);
             my.$resetSearchButton.show();
         }
     };
@@ -153,13 +258,18 @@
                 }
             };
 
-        $fileUploader.find('input[name=ccm_token]').val(my.options.upload_token);
-
         $fileUploader.fileupload(args);
+
+        $fileUploader.bind('fileuploadsubmit', function (e, data) {
+            data.formData = {
+                currentFolder: my.currentFolder,
+                ccm_token: my.options.upload_token
+            }
+        });
 
         $('a[data-dialog=add-files]').on('click', function() {
             $.fn.dialog.open({
-                width: 500,
+                width: 620,
                 height: 500,
                 modal: true,
                 title: ccmi18n_filemanager.addFiles,
@@ -363,7 +473,7 @@
             data.push({'name': 'submitSearch', 'value': '1'});
             my.ajaxUpdate($(this).attr('action'), data);
             my.$advancedSearchButton.hide();
-            my.$resetSearchButton.show();
+            my.$resetSearchButton.addClass('ccm-file-manager-reset-search-right').show();
 
             return false;
         });
@@ -372,9 +482,10 @@
             'success': function(r) {
                 my.updateResults(r);
                 jQuery.fn.dialog.closeTop();
-                my.$advancedSearchButton.hide();
+                my.$advancedSearchButton.html(ccmi18n_filemanager.edit);
                 my.$resetSearchButton.show();
-                my.$headerSearchInput.prop('disabled', true);
+                my.$headerSearchInput.prop('disabled', true).val('');
+                my.$headerSearchInput.attr('placeholder', '');
             }
         });
         my.$resetSearchButton.on('click', function(e) {
@@ -385,8 +496,9 @@
                 success: function(r) {
                     my.updateResults(r);
                     my.$headerSearchInput.prop('disabled', false);
-                    my.$advancedSearchButton.show();
-                    my.$resetSearchButton.hide();
+                    my.$headerSearchInput.attr('placeholder', ccmi18n.search);
+                    my.$advancedSearchButton.html(ccmi18n.advanced).show();
+                    my.$resetSearchButton.removeClass('ccm-file-manager-reset-search-right').hide();
                 }
             });
         });

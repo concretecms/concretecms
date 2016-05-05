@@ -131,10 +131,58 @@ class File extends Controller
         return $files;
     }
 
+    protected function handleUpload($property, $index = false)
+    {
+
+        if ($index !== false) {
+            $name = $_FILES[$property]['name'][$index];
+            $tmp_name = $_FILES[$property]['tmp_name'][$index];
+
+            if ($_FILES[$property]['error'][$index]) {
+                throw new \Exception(FileImporter::getErrorMessage($_FILES[$property]['error'][$index]));
+            }
+        } else {
+
+            $name = $_FILES[$property]['name'];
+            $tmp_name = $_FILES[$property]['tmp_name'];
+
+            if ($_FILES[$property]['error']) {
+                throw new \Exception(FileImporter::getErrorMessage($_FILES[$property]['error']));
+            }
+        }
+
+        $files = array();
+        $fp = FilePermissions::getGlobal();
+        $cf = Loader::helper('file');
+        if (!$fp->canAddFileType($cf->getExtension($name))) {
+            throw new Exception(FileImporter::getErrorMessage(FileImporter::E_FILE_INVALID_EXTENSION));
+        } else {
+            $folder = null;
+            if ($this->request->request->has('currentFolder')) {
+                $node = Node::getByID($this->request->request->get('currentFolder'));
+                if ($node instanceof FileFolder) {
+                    $folder = $node;
+                }
+            }
+            $importer = new FileImporter();
+            $response = $importer->import($tmp_name, $name, $folder);
+        }
+        if (!($response instanceof \Concrete\Core\File\Version)) {
+            throw new Exception(FileImporter::getErrorMessage($response));
+        } else {
+            $file = $response->getFile();
+            if (isset($_POST['ocID'])) {
+                // we check $fr because we don't want to set it if we are replacing an existing file
+                $file->setOriginalPage($_POST['ocID']);
+            }
+            $files[] = $file->getJSONObject();
+        }
+        return $files;
+    }
+
     public function upload()
     {
         $fp = FilePermissions::getGlobal();
-        $cf = Loader::helper('file');
         if (!$fp->canAddFiles()) {
             throw new Exception(t("Unable to add files."));
         }
@@ -148,35 +196,15 @@ class File extends Controller
         if (!Loader::helper('validation/token')->validate()) {
             throw new Exception(Loader::helper('validation/token')->getErrorMessage());
         }
-        $files = array();
-        if (isset($_FILES['files']) && (is_uploaded_file($_FILES['files']['tmp_name'][0]))) {
+
+        if (isset($_FILES['file'])){
+            $files = $this->handleUpload('file');
+        }
+        if (isset($_FILES['files']['tmp_name'][0])) {
+            $files = array();
             for ($i = 0; $i < count($_FILES['files']['tmp_name']); ++$i) {
-                if (!$fp->canAddFileType($cf->getExtension($_FILES['files']['name'][$i]))) {
-                    throw new Exception(FileImporter::getErrorMessage(FileImporter::E_FILE_INVALID_EXTENSION));
-                } else {
-                    $folder = null;
-                    if ($this->request->request->has('currentFolder')) {
-                        $node = Node::getByID($this->request->request->get('currentFolder'));
-                        if ($node instanceof FileFolder) {
-                            $folder = $node;
-                        }
-                    }
-                    $importer = new FileImporter();
-                    $response = $importer->import($_FILES['files']['tmp_name'][$i], $_FILES['files']['name'][$i], $folder);
-                }
-                if (!($response instanceof \Concrete\Core\File\Version)) {
-                    throw new Exception(FileImporter::getErrorMessage($response));
-                } else {
-                    $file = $response->getFile();
-                    if (isset($_POST['ocID'])) {
-                        // we check $fr because we don't want to set it if we are replacing an existing file
-                        $file->setOriginalPage($_POST['ocID']);
-                    }
-                    $files[] = $file->getJSONObject();
-                }
+                $files = array_merge($files, $this->handleUpload('files', $i));
             }
-        } else {
-            throw new Exception(FileImporter::getErrorMessage($_FILES['Filedata']['error']));
         }
 
         Loader::helper('ajax')->sendResult($files);

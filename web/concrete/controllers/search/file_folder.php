@@ -44,7 +44,6 @@ class FileFolder extends AbstractController
             $query = $search->getQuery();
             $provider = \Core::make('Concrete\Core\File\Search\SearchProvider');
             $ilr = $provider->getSearchResultFromQuery($query);
-            $ilr->setQuery($query);
             $ilr->setBaseURL(\URL::to('/ccm/system/search/files/preset', $search->getID()));
 
         }

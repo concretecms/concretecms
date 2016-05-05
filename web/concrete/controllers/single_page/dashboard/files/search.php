@@ -25,7 +25,6 @@ class Search extends DashboardPageController
         $query = $provider->getSessionCurrentQuery();
         if (is_object($query)) {
             $result = $provider->getSearchResultFromQuery($query);
-            $result->setQuery($query);
             $result->setBaseURL(\URL::to('/ccm/system/search/files/current'));
         } else {
             $search = new FileFolder();

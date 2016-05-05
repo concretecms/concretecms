@@ -8,6 +8,7 @@ use Concrete\Core\Entity\Search\SavedFileSearch;
 use Concrete\Core\File\Filesystem;
 use Concrete\Core\File\Search\ColumnSet\Available;
 use Concrete\Core\File\Search\ColumnSet\ColumnSet;
+use Concrete\Core\File\Search\Field\Field\KeywordsField;
 use Concrete\Core\File\Search\Result\Result;
 use Concrete\Core\Search\Field\ManagerFactory;
 use FilePermissions;
@@ -33,6 +34,9 @@ class AdvancedSearch extends BackendInterfaceController
         $manager = ManagerFactory::get('file');
         $provider = $this->app->make('Concrete\Core\File\Search\SearchProvider');
         $element = new CustomizeResults($provider);
+        $query = new Query();
+        $query->setFields([new KeywordsField()]);
+        $this->set('defaultQuery', json_encode($query));
         $this->set('customizeElement', $element);
         $this->set('manager', $manager);
     }

@@ -101,8 +101,7 @@ class Files extends Controller
                     $provider = $this->app->make('Concrete\Core\File\Search\SearchProvider');
                     $result = $provider->getSearchResultFromQuery($query);
                     $result->setBaseURL(\URL::to('/ccm/system/search/files/preset', $presetID));
-                    $result->setQuery($query);
-                    
+
                     $filesystem = new Filesystem();
                     $root = $filesystem->getRootFolder();
                     $breadcrumb = [];

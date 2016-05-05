@@ -238,11 +238,11 @@
 		cs.$resultsPagination.html(cs._templateSearchResultsPagination({'paginationTemplate': result.paginationTemplate}));
 		if (cs.$advancedFields) {
 			cs.$advancedFields.html('');
-		}
-		if (cs.$advancedFields.length) {
-			$.each(result.fields, function(i, field) {
-				cs.$advancedFields.append(cs._templateAdvancedSearchFieldRow({'field': field}));
-			});
+			if (cs.$advancedFields.length) {
+				$.each(result.fields, function(i, field) {
+					cs.$advancedFields.append(cs._templateAdvancedSearchFieldRow({'field': field}));
+				});
+			}
 		}
 		if (options.selectMode == 'multiple') {
 			// We enable item selection, click to select single, command click for
@@ -296,93 +296,9 @@
 			return false;
 		});
 
-		// New UIs like the file manager use the dialog approach
-		cs.$element.on('click', 'a[data-launch-dialog=advanced-search]', function() {
-			var url = $(this).attr('href');
-			$.fn.dialog.open({
-				width: 620,
-				height: 500,
-				href: url,
-				modal: true,
-				title: ccmi18n.search,
-				onOpen: function() {
-					cs.setupAdvancedSearchDialog();
-				}
-			});
-			return false;
-		});
 
 	}
-
-	/**
-	 * Used by new UIs like the file manager, this gets run on the resulting advanced search dialog window.
-	 */
-	ConcreteAjaxSearch.prototype.setupAdvancedSearchDialog = function() {
-		var my = this;
-		var $container = $('div[data-container=search-fields]');
-		var renderFieldRowTemplate = _.template(
-			$('script[data-template=search-field-row]').html()
-		);
-		$('button[data-button-action=add-field]').on('click', function() {
-			$container.append(
-				renderFieldRowTemplate()
-			);
-		});
-		$container.on('change', 'select.ccm-search-choose-field', function() {
-			var key = $(this).val();
-			var $content = $(this).parent().find('div.ccm-search-field-content');
-			if (key) {
-				$.concreteAjax({
-					url: $(this).attr('data-action'),
-					data: {
-						'field': key
-					},
-					success: function(r) {
-						$content.html(r.element);
-					}
-				});
-			}
-		});
-		$container.on('click', 'a[data-search-remove=search-field]', function(e) {
-			e.preventDefault();
-			var $row = $(this).parent();
-			$row.remove();
-		});
-
-		$('button[data-button-action=save-search-preset]').on('click.saveSearchPreset', function() {
-			jQuery.fn.dialog.open({
-				element: 'div[data-dialog=save-search-preset]:first',
-				modal: true,
-				width: 320,
-				title: 'Save Preset',
-				height: 'auto'
-			});
-		});
-
-		var $presetForm = $('form[data-form=save-preset]');
-		var $form = $('form[data-advanced-search-form]');
-		$('button[data-button-action=save-search-preset-submit]').on('click.saveSearchPresetSubmit', function() {
-			var $presetForm = $('form[data-form=save-preset]');
-			$presetForm.trigger('submit');
-		});
-
-		$presetForm.on('submit', function() {
-			var formData = $form.serializeArray();
-			formData = formData.concat($presetForm.serializeArray());
-			$.concreteAjax({
-				data: formData,
-				url: $presetForm.attr('action'),
-				success: function(r) {
-					jQuery.fn.dialog.closeAll();
-					ConcreteEvent.publish('SavedSearchCreated', {search: r});
-				}
-			});
-			return false;
-		});
-
-		my.setupSearch();
-	}
-
+	
 	ConcreteAjaxSearch.prototype.setupSort = function() {
 		var cs = this;
 		this.$element.on('click', 'thead th > a', function() {
