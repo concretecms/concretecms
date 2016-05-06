@@ -303,7 +303,9 @@ echo Core::make('helper/concrete/ui')->tabs(array(
     </div>
     <div class="form-group">
         <?php echo $form->label('maxWidth', t('Maximum Slide Width (0 means no limit)')); ?>
-        <?php echo $form->number('speed', $speed ? $speed : 0, array('min' => '1', 'max' => '4000'))?><span class="input-group-addon"><?php echo t('px'); ?></span>
+        <div class="input-group" style="width: 150px">
+        <?php echo $form->number('maxWidth', $maxWidth ? $maxWidth : 0, array('min' => '0', 'max' => '9999'))?><span class="input-group-addon"><?php echo t('px'); ?></span>
+        </div>
     </div>
 </div>
 
