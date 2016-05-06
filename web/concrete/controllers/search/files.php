@@ -1,8 +1,10 @@
 <?php
 namespace Concrete\Controller\Search;
 
+use Concrete\Core\Entity\Search\Query;
 use Concrete\Core\File\Filesystem;
 use Concrete\Core\File\Search\ColumnSet\DefaultSet;
+use Concrete\Core\File\Search\Field\Field\KeywordsField;
 use Concrete\Core\Http\ResponseAssetGroup;
 use Concrete\Core\Search\Field\ManagerFactory;
 use Concrete\Core\Tree\Node\Type\SearchPreset;
@@ -38,14 +40,26 @@ class Files extends Controller
         $cp = FilePermissions::getGlobal();
         if ($cp->canSearchFiles() || $cp->canAddFile()) {
 
+            $provider = \Core::make('Concrete\Core\File\Search\SearchProvider');
             $keywords = htmlentities($this->request->get('fKeywords'), ENT_QUOTES, APP_CHARSET);
-
-            if ($keywords != '') {
-                $this->fileList->filterByKeywords($keywords);
+            $query = new Query();
+            $fields = array();
+            if ($keywords) {
+                $fields[] = new KeywordsField($keywords);
             }
 
-            $columns = new DefaultSet();
-            $result = new FileSearchResult($columns, $this->fileList);
+            // If we are passing in something like "filter by images, it will be here.
+            $manager = ManagerFactory::get('file');
+            $fields = array_merge($fields, $manager->getFieldsFromRequest($this->request->query->all()));
+
+            $query->setFields($fields);
+            $query->setColumns(new DefaultSet());
+            $result = $provider->getSearchResultFromQuery($query);
+            $result->setBaseURL((string) \URL::to('/ccm/system/search/files/basic'));
+
+            // Also, if the request contains "fields", then that means we're doing something like
+            // passing "filter by images" from the file selector into the search.
+
             return new JsonResponse($result->getJSONObject());
         } else {
             return false;
@@ -109,6 +123,7 @@ class Files extends Controller
                         'active' => false,
                         'name' => $root->getTreeNodeDisplayName(),
                         'folder' => $root->getTreeNodeID(),
+                        'menu' => $root->getTreeNodeMenu(),
                         'url' => (string) \URL::to('/ccm/system/file/folder/contents'),
                     ];
 
@@ -118,6 +133,7 @@ class Files extends Controller
                         'active' => true,
                         'name' => $node->getTreeNodeDisplayName(),
                         'folder' => $node->getTreeNodeID(),
+                        'menu' => $node->getTreeNodeMenu(),
                         'url' => false
                     ];
 

@@ -4,6 +4,7 @@ namespace Concrete\Core\File\Search;
 use Concrete\Core\Attribute\Category\FileCategory;
 use Concrete\Core\Entity\Search\Query;
 use Concrete\Core\File\FileList;
+use Concrete\Core\File\Search\ColumnSet\DefaultSet;
 use Concrete\Core\File\Search\Result\Result;
 use Concrete\Core\Search\AbstractSearchProvider;
 use Concrete\Core\Search\ProviderInterface;
@@ -50,10 +51,15 @@ class SearchProvider extends AbstractSearchProvider implements QueryableInterfac
             $field->filterList($list);
         }
         if (!$list->getActiveSortColumn()) {
-            $column = $query->getColumns()->getDefaultSortColumn();
-            $list->sanitizedSortBy($column->getColumnKey(), $column->getColumnDefaultSortDirection());
+            $columns = $query->getColumns();
+            if (is_object($columns)) {
+                $column = $columns->getDefaultSortColumn();
+                $list->sanitizedSortBy($column->getColumnKey(), $column->getColumnDefaultSortDirection());
+            } else {
+                $columns = new DefaultSet();
+            }
         }
-        $result = new Result($query->getColumns(), $list);
+        $result = new Result($columns, $list);
         $result->setQuery($query);
         return $result;
     }

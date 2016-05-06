@@ -140,18 +140,34 @@
 
     ConcreteFileManager.prototype.setupBreadcrumb = function(result) {
         var my = this;
+
+        // If we're calling this from a dialog, we move it out to the top of the dialog so it can display properly
+        var $container = my.$element.closest('div.ui-dialog').find('.ui-dialog-titlebar');
+        if ($container.length) {
+            my.$breadcrumb.appendTo($container);
+        }
+
         if (result.breadcrumb) {
             my.$breadcrumb.html('');
             var $nav = $('<ol data-search-navigation="breadcrumb" class="breadcrumb" />');
             $.each(result.breadcrumb, function(i, entry) {
+                var activeClass = '';
                 if (entry.active) {
-                    $nav.append('<li> ' + entry.name + '</li>');
-                } else {
-                    $nav.append('<li><a data-folder-node-id="' + entry.folder + '" href="' + entry.url + '">' + entry.name + '</a></li>');
+                    activeClass = ' class="active"';
                 }
+                $nav.append('<li' + activeClass + '><a data-folder-node-id="' + entry.folder + '" href="' + entry.url + '">' + entry.name + '</a></li>');
+                $nav.find('li.active a').on('click', function(e) {
+                    e.stopPropagation();
+                    e.preventDefault();
+                    if (entry.menu) {
+                        var $menu = $(entry.menu);
+                        my.showMenu($nav, $menu, e);
+                    }
+                });
             });
 
             $nav.appendTo(my.$breadcrumb);
+
 
             $nav.on('click.concreteSearchBreadcrumb', 'a', function() {
                 my.loadFolder($(this).attr('data-folder-node-id'));
@@ -430,18 +446,21 @@
 
         if (my.options.selectMode == 'choose') {
             my.$element.unbind('.concreteFileManagerHoverFile');
-            my.$element.on('mouseover.concreteFileManagerHoverFile', 'tr[data-file-manager-tree-node-type=file]', function() {
+            my.$element.on('mouseover.concreteFileManagerHoverFile', 'tr[data-file-manager-tree-node-type]', function() {
                 $(this).addClass('ccm-search-select-hover');
             });
-            my.$element.on('mouseout.concreteFileManagerHoverFile', 'tr[data-file-manager-tree-node-type=file]', function() {
+            my.$element.on('mouseout.concreteFileManagerHoverFile', 'tr[data-file-manager-tree-node-type]', function() {
                 $(this).removeClass('ccm-search-select-hover');
             });
             my.$element.unbind('.concreteFileManagerChooseFile').on('click.concreteFileManagerChooseFile', 'tr[data-file-manager-tree-node-type=file]', function(e) {
-                if ( 'checkbox' === $(e.target).prop('type') ) return;
                 ConcreteEvent.publish('FileManagerBeforeSelectFile', {fID: $(this).attr('data-file-manager-file')});
                 ConcreteEvent.publish('FileManagerSelectFile', {fID: $(this).attr('data-file-manager-file')});
                 my.$downloadTarget.remove();
                 return false;
+            });
+            my.$element.unbind('.concreteFileManagerOpenFolder').on('click.concreteFileManagerOpenFolder', 'tr[data-file-manager-tree-node-type=search_preset],tr[data-file-manager-tree-node-type=file_folder]', function(e) {
+                e.preventDefault();
+                my.loadFolder($(this).attr('data-file-manager-tree-node'));
             });
         }
 
@@ -478,6 +497,12 @@
             return false;
         });
 
+        // If we're calling this from a dialog, we move it out to the top of the dialog so it can display properly
+        var $container = my.$element.closest('div.ui-dialog');
+        if ($container.length) {
+            my.$element.find('div[data-header=file-manager]').appendTo($container);
+        }
+
         $('form[data-advanced-search-form]').concreteAjaxForm({
             'success': function(r) {
                 my.updateResults(r);
@@ -513,7 +538,7 @@
         var i;
 
         var options = {
-            filters: [], // filters must be an array of objects ex: [{ field: Concrete.const.Controller.Search.Files.FILTER_BY_TYPE, type: Concrete.const.Core.File.Type.Type.T_IMAGE }]
+            filters: [],
             multipleSelection: false, // Multiple selection switch
         };
 
@@ -531,7 +556,6 @@
                 $.extend( data, filter); // add all remaining fields to the data
             }
         }
-
 
         $.fn.dialog.open({
             width: w,

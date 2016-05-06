@@ -298,7 +298,7 @@
 
 
 	}
-	
+
 	ConcreteAjaxSearch.prototype.setupSort = function() {
 		var cs = this;
 		this.$element.on('click', 'thead th > a', function() {

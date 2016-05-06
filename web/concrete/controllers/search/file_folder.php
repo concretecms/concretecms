@@ -72,7 +72,8 @@ class FileFolder extends AbstractController
                     'active' => false,
                     'name' => $node->getTreeNodeDisplayName(),
                     'folder' => $node->getTreeNodeID(),
-                    'url' => (string) \URL::to('/ccm/system/file/folder/contents')
+                    'url' => (string) \URL::to('/ccm/system/file/folder/contents'),
+                    'menu' => $node->getTreeNodeMenu()
                 ];
             }
 
@@ -80,7 +81,8 @@ class FileFolder extends AbstractController
                 'active' => true,
                 'name' => $folder->getTreeNodeDisplayName(),
                 'folder' => $folder->getTreeNodeID(),
-                'url' => (string) \URL::to('/ccm/system/file/folder/contents'),
+                'menu' => $folder->getTreeNodeMenu(),
+                'url' => (string) \URL::to('/ccm/system/file/folder/contents')
             ];
 
         }
