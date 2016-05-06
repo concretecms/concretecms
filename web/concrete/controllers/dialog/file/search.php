@@ -2,7 +2,10 @@
 namespace Concrete\Controller\Dialog\File;
 
 use Concrete\Controller\Backend\UserInterface as BackendInterfaceController;
+use Concrete\Controller\Element\Search\Files\Header;
 use Concrete\Controller\Search\FileFolder;
+use Concrete\Core\Entity\Search\Query;
+use Concrete\Core\Search\Field\ManagerFactory;
 use FilePermissions;
 use Loader;
 use Concrete\Controller\Search\Files as SearchFilesController;
@@ -24,11 +27,14 @@ class Search extends BackendInterfaceController
     public function view()
     {
         $provider = \Core::make('Concrete\Core\File\Search\SearchProvider');
-        $query = $provider->getSessionCurrentQuery();
-        if (is_object($query)) {
+        $fields = $this->request->get('field');
+        if (count($fields)) { // We are passing in something like "filter by images"
+            $manager = ManagerFactory::get('file');
+            $fields = $manager->getFieldsFromRequest($this->request->query->all());
+            $query = new Query();
+            $query->setFields($fields);
             $result = $provider->getSearchResultFromQuery($query);
-            $result->setBaseURL(\URL::to('/ccm/system/search/files/current'));
-            $result->setQuery($query);
+            $result->setBaseURL((string) \URL::to('/ccm/system/search/files/basic'));
         } else {
             $search = new FileFolder();
             $search->search();
@@ -39,6 +45,7 @@ class Search extends BackendInterfaceController
             $this->set('result', $result);
         }
 
+        $this->set('header', new Header($query));
         $this->requireAsset('select2');
     }
 }

@@ -115,6 +115,44 @@ table.ccm-file-manager-list {
   }
 }
 
+/**
+ * In-page file manager dialog
+ */
+div.ui-dialog {
+  div.ccm-file-manager-search-form {
+    position: absolute;
+    right: 60px;
+    top: 17px;
+    float: none;
+    z-index: @index-level-dialog-title-bar-search;
+    ul.ccm-file-manager-navigation {
+      text-align: left;
+      position: absolute;
+      top: -3px;
+      left: -240px;
+    }
+  }
+
+  div.table-responsive {
+    margin: -20px -26px -20px -26px;
+  }
+  div.ccm-search-results-breadcrumb {
+    display: inline-block;
+    position: static;
+    height: 15px;
+    ol {
+      margin-bottom: 0px;
+      font-size: 14px;
+      font-weight: normal;
+    }
+  }
+
+  div.ui-dialog-titlebar {
+    span {
+      margin-right: 20px;
+    }
+  }
+}
 
 /**
  * Download iframe

@@ -10,6 +10,14 @@ use Concrete\Core\Search\ItemList\ItemList;
 class KeywordsField extends AbstractField
 {
 
+
+    public function __construct($keywords = null)
+    {
+        if ($keywords) {
+            $this->data['keywords'] = $keywords;
+        }
+    }
+
     protected $requestVariables = [
         'keywords',
     ];
