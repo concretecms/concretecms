@@ -12,6 +12,7 @@
         }, options);
 
         my.currentFolder = 0;
+        my.interactionIsDragging = false;
         my.$breadcrumb = $(options.breadcrumbElement);
         my.$headerSearchInput = $element.find('div[data-header=file-manager] input');
         my.$advancedSearchButton = $element.find('a[data-launch-dialog=advanced-search]');
@@ -49,6 +50,117 @@
                 }
             });
             return false;
+        });
+    }
+
+    ConcreteFileManager.prototype.setupRowDragging = function() {
+        var my = this,
+            currentItems,
+            $undroppables = my.$element.find('tr[data-file-manager-tree-node-type!=file_folder]');
+
+
+        my.$element.find('tr[data-file-manager-tree-node-type]').each(function() {
+            var $this = $(this), dragClass;
+            switch($(this).attr('data-file-manager-tree-node-type')) {
+                case 'file_folder':
+                    dragClass = 'ccm-search-results-folder';
+                    break;
+                case 'file':
+                    dragClass = 'ccm-search-results-file';
+                    break;
+            }
+
+
+            if (dragClass) {
+
+                $this.draggable({
+                    delay: 300,
+                    start: function(e) {
+                        my.interactionIsDragging = true;
+                        $undroppables.css('opacity', '0.4');
+                        if (e.altKey) {
+                            my.$element.addClass('ccm-search-results-copy');
+                        }
+                        $(window).on('keydown.concreteSearchResultsCopy', function(e) {
+                            if (e.keyCode == 18) {
+                                my.$element.addClass('ccm-search-results-copy');
+                            } else {
+                                my.$element.removeClass('ccm-search-results-copy');
+                            }
+                        });
+                        $(window).on('keyup.concreteSearchResultsCopy', function(e) {
+                            if (e.keyCode == 18) {
+                                my.$element.removeClass('ccm-search-results-copy');
+                            }
+                        });
+                    },
+                    stop: function() {
+                        $(window).unbind('.concreteSearchResultsCopy');
+                        $undroppables.css('opacity', '');
+                        my.$element.removeClass('ccm-search-results-copy');
+                        //$('.ccm-search-result-dragging').removeClass('ccm-search-result-dragging');
+                        my.interactionIsDragging = false;
+                    },
+                    revert: 'invalid',
+                    helper: function() {
+                        var $selected = my.$element.find('.ccm-search-select-selected');
+                        return $('<div class="' + dragClass + ' ccm-draggable-search-item"><span>' + $selected.length + '</span></div>').data('$selected', $selected);
+                    },
+                    cursorAt: {
+                        left: -20,
+                        top: 5
+                    }
+                });
+
+            }
+        });
+
+        my.$element.find('tr[data-file-manager-tree-node-type=file_folder]').droppable({
+            hoverClass: 'ccm-search-select-selected',
+            drop: function(event, ui) {
+
+                var $sourceItems = ui.helper.data('$selected'),
+                    sourceIDs = [],
+                    destinationID = $(this).data('file-manager-tree-node');
+                $sourceItems.each(function() {
+                    var $sourceItem = $(this);
+                    var sourceID = $sourceItem.data('file-manager-tree-node');
+                    if (sourceID == destinationID) {
+                        $sourceItems = $sourceItems.not(this);
+                    } else {
+                        sourceIDs.push($(this).data('file-manager-tree-node'));
+                    }
+                });
+                if (sourceIDs.length === 0) {
+                    return;
+                }
+                $sourceItems.hide();
+                new ConcreteAjaxRequest({
+                    url: CCM_DISPATCHER_FILENAME + '/ccm/system/tree/node/drag_request',
+                    data: {
+                        ccm_token: my.options.upload_token,
+                        copyNodes: event.altKey ? '1' : 0,
+                        sourceTreeNodeIDs: sourceIDs,
+                        treeNodeParentID: destinationID
+                    },
+                    success: function(msg) {
+                        $sourceItems.remove();
+                        ConcreteAlert.notify({
+                            message: msg
+                        });
+                    },
+                    error: function(xhr) {
+                        $sourceItems.show();
+                        var msg = xhr.responseText;
+                        if (xhr.responseJSON && xhr.responseJSON.errors) {
+                            msg = xhr.responseJSON.errors.join("<br/>");
+                        }
+                        ConcreteAlert.dialog(ccmi18n.error, msg);
+                    }
+                });
+            }
+
+
         });
     }
 
@@ -350,6 +462,7 @@
             my.ajaxUpdate(data.search.baseUrl, {});
 
         });
+
     }
 
     ConcreteFileManager.prototype.showMenu = function($element, $menu, event) {
@@ -437,12 +550,19 @@
         });
     }
 
+    ConcreteFileManager.prototype.hoverIsEnabled = function($element) {
+        var my = this;
+        return !my.interactionIsDragging;
+    }
+
+
     ConcreteFileManager.prototype.updateResults = function(result) {
         var my = this;
         ConcreteAjaxSearch.prototype.updateResults.call(my, result);
         my.setupFolders(result);
         my.setupBreadcrumb(result);
         my.setupResetButton(result);
+        my.setupRowDragging();
 
         if (my.options.selectMode == 'choose') {
             my.$element.unbind('.concreteFileManagerHoverFile');

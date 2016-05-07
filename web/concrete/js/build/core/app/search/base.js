@@ -206,15 +206,9 @@
 				}
 
 			} else {
-				if ($row.hasClass('ccm-search-select-selected')) {
-					$row.removeClass('ccm-search-select-selected');
-				} else {
+				if (!$row.hasClass('ccm-search-select-selected')) {
 					$row.addClass('ccm-search-select-selected');
 				}
-				if (!event.metaKey) {
-					my.$element.find('.ccm-search-select-selected').not($row).removeClass();
-				}
-
 			}
 			ConcreteEvent.publish('SearchSelectItems', {
 				'results': my.getSelectedResults()
@@ -252,18 +246,31 @@
 				e.preventDefault();
 				return false;
 			}).on('mouseover.concreteSearchResultItem', function() {
-				$(this).addClass('ccm-search-select-hover');
+				if (cs.hoverIsEnabled($(this))) {
+					$(this).addClass('ccm-search-select-hover');
+				}
 			}).on('mouseout.concreteSearchResultItem', function() {
-				$(this).removeClass('ccm-search-select-hover');
+				if (cs.hoverIsEnabled($(this))) {
+					$(this).removeClass('ccm-search-select-hover');
+				}
 			}).on('mousedown.concreteSearchResultItem', function(e) {
 				cs.handleSelectClick(e, $(this));
+			}).on('mouseup.concreteSearchResultItem', function(e) {
+				if (!e.metaKey && !e.shiftKey) {
+					cs.$element.find('.ccm-search-select-selected').not($(this)).removeClass();
+				}
 			});
+
 		} else {
 			cs.setupMenus(result);
 		}
 		if (options.onUpdateResults) {
 			options.onUpdateResults(this);
 		}
+	}
+
+	ConcreteAjaxSearch.prototype.hoverIsEnabled = function($element) {
+		return true;
 	}
 
 	ConcreteAjaxSearch.prototype.setupAdvancedSearch = function() {

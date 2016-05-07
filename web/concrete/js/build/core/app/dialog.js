@@ -243,6 +243,7 @@ jQuery.fn.dialog.activateDialogContents = function($dialog) {
         $dialog.find('.dialog-buttons').eq(0).removeClass().appendTo($dialog.parent().find('.ui-dialog-buttonpane').addClass("ccm-ui"));
     }
 
+
     // make dialogs
     $dialog.find('.dialog-launch').dialog();
 
@@ -264,7 +265,7 @@ jQuery.fn.dialog.activateDialogContents = function($dialog) {
         }
         var button = $('<button class="ui-dialog-titlebar-help ccm-menu-help-trigger"><i class="fa fa-info-circle"></i></button>'),
             container = $('#ccm-tooltip-holder');
-        $dialog.parent().find('.ui-dialog-titlebar').addClass('ccm-ui').append(button);
+        $dialog.parent().find('.ui-dialog').addClass('ccm-ui').append(button);
         button.popover({
             content: function() {
                 return helpContent;
