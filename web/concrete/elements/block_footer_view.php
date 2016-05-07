@@ -20,8 +20,6 @@ if (
     && !$b->ignorePageThemeGridFrameworkContainer()
 ) {
     $gf = $pt->getThemeGridFrameworkObject();
-    print '</div>';
-    print $gf->getPageThemeGridFrameworkRowEndHTML();
     print $gf->getPageThemeGridFrameworkContainerEndHTML();
 }
 

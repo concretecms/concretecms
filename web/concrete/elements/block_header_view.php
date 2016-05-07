@@ -35,10 +35,6 @@ if (
 ) {
     $gf = $pt->getThemeGridFrameworkObject();
     print $gf->getPageThemeGridFrameworkContainerStartHTML();
-    print $gf->getPageThemeGridFrameworkRowStartHTML();
-    printf('<div class="%s">', $gf->getPageThemeGridFrameworkColumnClassesForSpan(
-        min($a->getAreaGridMaximumColumns(), $gf->getPageThemeGridFrameworkNumColumns())
-    ));
 }
 
 if ($showMenu) {
