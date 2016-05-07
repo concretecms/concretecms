@@ -97,7 +97,7 @@ class Type
         $o = new static();
         $o->fslTypeHandle = $fslTypeHandle;
         $o->fslTypeName = $fslTypeName;
-        if ($pkg instanceof \Concrete\Core\Package\Package) {
+        if ($pkg instanceof \Concrete\Core\Entity\Package) {
             $o->pkgID = $pkg->getPackageID();
         }
         $em->persist($o);
