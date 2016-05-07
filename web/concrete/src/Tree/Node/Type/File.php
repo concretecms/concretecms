@@ -14,12 +14,12 @@ class File extends TreeNode
 
     public function getPermissionResponseClassName()
     {
-        return '\\Concrete\\Core\\Permission\\Response\\GroupTreeNodeResponse';
+        return '\\Concrete\\Core\\Permission\\Response\\FileTreeNodeResponse';
     }
 
     public function getPermissionAssignmentClassName()
     {
-        return '\\Concrete\\Core\\Permission\\Assignment\\GroupTreeNodeAssignment';
+        return '\\Concrete\\Core\\Permission\\Assignment\\FileTreeNodeAssignment';
     }
     public function getPermissionObjectKeyCategoryHandle()
     {
