@@ -179,17 +179,20 @@ class PackageService
     {
         $this->localization->pushActiveContext('system');
         try {
-            
-            $config = $this->entityManager->getConfiguration();
-            $driverChain = $config->getMetadataDriverImpl();
-            
-            $driver = $p->getMetadataDriver();
-            $pkgNamespace = $p->getNamespace();
-            
-            $driverChain->addDriver($driver, $pkgNamespace);
+            if(!empty($p->getPackageMetadataPaths())){
+                $config = $this->entityManager->getConfiguration();
+                $driverChain = $config->getMetadataDriverImpl();
 
-            $cache = $config->getMetadataCacheImpl();
-            $cache->flushAll();
+                $driver = $p->getMetadataDriver();
+                $pkgNamespace = $p->getNamespace();
+
+                $driverChain->addDriver($driver, $pkgNamespace);
+                // add package entity to generated_overrides config file
+                $this->savePackageMetadataDriverToConfig($p);
+                
+                $cache = $config->getMetadataCacheImpl();
+                $cache->flushAll();
+            }
 
             $u = new \User();
             $swapper = new ContentSwapper();
@@ -200,8 +203,6 @@ class PackageService
             $this->localization->popActiveContext();
             $pkg = $this->getByHandle($p->getPackageHandle());
             
-            // add package entity to generated_overrides config file
-            $this->savePackageMetadataDriverToConfig($p);
             return $pkg;
         } catch (\Exception $e) {
             $this->localization->popActiveContext();
@@ -254,7 +255,7 @@ class PackageService
         $packageMetadataDriverType = $p->getMetadataDriverType();
         $packageHandle = $p->getPackageHandle();
         $config = $this->getFileConfigORMMetadata();
-        
+
         $settings = array(
             'namespace' => $p->getNamespace(),
             'paths' => $p->getPackageMetadataPaths()

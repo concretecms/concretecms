@@ -326,9 +326,11 @@ abstract class Package implements LocalizablePackageInterface
 
         \Config::clearNamespace($this->getPackageHandle());
         $this->app->make('config/database')->clearNamespace($this->getPackageHandle());
-
-        $this->destroyProxyClasses($this->getPackageEntityManager());
         
+        if(!empty($this->getPackageMetadataPaths())){
+            $this->destroyProxyClasses($this->getPackageEntityManager());
+        }
+
         $em = \ORM::entityManager();
         $em->remove($package);
         $em->flush();
@@ -597,7 +599,12 @@ abstract class Package implements LocalizablePackageInterface
     }
 
     public function installEntitiesDatabase()
-    {
+    {   
+        // if the src folder doesn't exist, we assume, that no entities are present.
+        if(empty($this->getPackageMetadataPaths())){
+            return;
+        }
+        
         $em = $this->getPackageEntityManager();
         
         // Update database
@@ -745,16 +752,22 @@ abstract class Package implements LocalizablePackageInterface
         if ($this->metadataDriver === self::PACKAGE_METADATADRIVER_ANNOTATION){
             // Support for the legacy method for backwards compatibility
             if (method_exists($this, 'getPackageEntityPath')) {
-                return array($this->getPackageEntityPath());
+                $paths = array($this->getPackageEntityPath());
+            }else{
+                $paths = array($this->getPackagePath() . '/' . DIRNAME_CLASSES);
             }
-            return array($this->getPackagePath() . '/' . DIRNAME_CLASSES);
         } else if ($this->metadataDriver === self::PACKAGE_METADATADRIVER_XML){
             // return xml metadata dir
-            return array($this->getPackagePath() . DIRECTORY_SEPARATOR . REL_DIR_METADATA_XML);
+            $paths =  array($this->getPackagePath() . DIRECTORY_SEPARATOR . REL_DIR_METADATA_XML);
         } else if ($this->metadataDriver === self::PACKAGE_METADATADRIVER_YAML){
             // return yaml metadata dir
-            return array($this->getPackagePath() . DIRECTORY_SEPARATOR . REL_DIR_METADATA_YAML);
+            $paths =  array($this->getPackagePath() . DIRECTORY_SEPARATOR . REL_DIR_METADATA_YAML);
         }
+        // Check if paths exists and is a directory
+        if(!is_dir($paths[0])){
+            $paths = array();
+        }
+        return $paths;
     }
     
     /**
@@ -819,7 +832,7 @@ abstract class Package implements LocalizablePackageInterface
 
             $proxyFileName = $proxyGenerator->getProxyFileName($class->getName(), $config->getProxyDir());
             if(file_exists($proxyFileName)){
-                unlink($proxyFileName);
+                @unlink($proxyFileName);
             }
         }
     }
