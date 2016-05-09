@@ -5,23 +5,9 @@ use PermissionAccess;
 use Concrete\Core\File\Set\Set;
 use Database;
 
-class FileSetAssignment extends Assignment
+class FileFolderAssignment extends TreeNodeAssignment
 {
-    /**
-     * @param Set $fs
-     */
-    public function setPermissionObject($fs)
-    {
-        $this->permissionObject = $fs;
-
-        if ($fs->overrideGlobalPermissions()) {
-            $this->permissionObjectToCheck = $fs;
-        } else {
-            $fs = Set::getGlobal();
-            $this->permissionObjectToCheck = $fs;
-        }
-    }
-
+    /*
     public function getPermissionAccessObject()
     {
         $db = Database::connection();
@@ -53,4 +39,5 @@ class FileSetAssignment extends Assignment
     {
         return parent::getPermissionKeyToolsURL($task) . '&fsID=' . $this->getPermissionObject()->getFileSetID();
     }
+    */
 }

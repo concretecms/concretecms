@@ -13,6 +13,20 @@ use Symfony\Component\HttpFoundation\Request;
 class FileFolder extends Category
 {
 
+    public function getPermissionResponseClassName()
+    {
+        return '\\Concrete\\Core\\Permission\\Response\\FileFolderResponse';
+    }
+
+    public function getPermissionAssignmentClassName()
+    {
+        return '\\Concrete\\Core\\Permission\\Assignment\\FileFolderAssignment';
+    }
+    public function getPermissionObjectKeyCategoryHandle()
+    {
+        return 'file_folder';
+    }
+
     public function getTreeNodeTypeName()
     {
         return t('Folder');

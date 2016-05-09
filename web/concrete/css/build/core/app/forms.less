@@ -2,7 +2,7 @@ div.ccm-ui {
   label.control-label {
     font-size: 10px;
     color: #999;
-    padding: 0px 0px 0px 4px;
+    margin-left: 4px;
     text-transform: uppercase;
   }
 
@@ -36,30 +36,36 @@ div.ccm-ui {
 
   div.form-group {
 
-    margin-bottom: 0px;
     margin-left: -4px;
     position: relative;
 
     select.form-control,
     input.form-control,
     textarea.form-control {
-      border-width: 0px;
+      .transition(0.1s all linear);
       box-shadow: none;
       padding: 4px;
       font-size: 18px;
-      background-color: #fff;
+      background-color: transparent;
       .border-radius(4px);
       -webkit-appearance: none;
       appearance: none;
       -moz-appearance: none;
-
+      /*
+      border: 1px solid #f1f1f1;
+      */
+      border: 1px solid transparent;
       &:focus {
         outline: 0px;
-        background-color: #ededed;
+        /*
+        background-color: #ededed !important;
+        border-color: #ccc;
+        */
+        border-color: transparent
       }
 
       &:hover {
-        background-color: #ededed;
+        border-color: #ccc;
       }
 
     }

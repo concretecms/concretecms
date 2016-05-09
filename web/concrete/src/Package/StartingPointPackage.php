@@ -449,26 +449,29 @@ class StartingPointPackage extends BasePackage
 
     public function set_site_permissions()
     {
-        $fs = FileSet::getGlobal();
         $g1 = Group::getByID(GUEST_GROUP_ID);
         $g2 = Group::getByID(REGISTERED_GROUP_ID);
         $g3 = Group::getByID(ADMIN_GROUP_ID);
 
-        $fs->assignPermissions($g1, array('view_file_set_file'));
-        $fs->assignPermissions(
+        $filesystem = new Filesystem();
+        $folder = $filesystem->getRootFolder();
+        $folder->assignPermissions($g1, array('view_file_folder_file'));
+        $folder->assignPermissions(
             $g3,
             array(
-                'view_file_set_file',
-                'search_file_set',
-                'edit_file_set_file_properties',
-                'edit_file_set_file_contents',
-                'copy_file_set_files',
-                'edit_file_set_permissions',
-                'delete_file_set_files',
-                'delete_file_set',
+                'view_file_folder_file',
+                'search_file_folder',
+                'edit_file_folder',
+                'edit_file_folder_file_properties',
+                'edit_file_folder_file_contents',
+                'copy_file_folder_files',
+                'edit_file_folder_permissions',
+                'delete_file_folder_files',
+                'delete_file_folder',
                 'add_file',
             )
         );
+
         if (defined('SITE_INSTALL_LOCALE') && SITE_INSTALL_LOCALE != '' && SITE_INSTALL_LOCALE != 'en_US') {
             Config::save('concrete.locale', SITE_INSTALL_LOCALE);
         }

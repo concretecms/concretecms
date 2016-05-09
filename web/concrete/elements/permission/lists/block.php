@@ -96,7 +96,7 @@ ccm_permissionLaunchDialog = function(link) {
 	jQuery.fn.dialog.open({
 		title: $(link).attr('dialog-title'),
 		href: '<?=URL::to('/ccm/system/dialogs/block/permissions/detail')?>?duplicate=' + dupe + '&bID=<?=$b->getBlockID()?>&arHandle=<?=urlencode($b->getAreaHandle())?>&cvID=<?=$c->getVersionID()?>&bID=<?=$b->getBlockID()?>&cID=<?=$c->getCollectionID()?>&pkID=' + $(link).attr('data-pkID') + '&paID=' + $(link).attr('data-paID'),
-		modal: false,
+		modal: true,
 		width: 500,
 		height: 380
 	});

@@ -258,7 +258,7 @@ class File implements \Concrete\Core\Permission\ObjectInterface
         }
     }
 
-    public function overrideFileSetPermissions()
+    public function overrideFileFolderPermissions()
     {
         return $this->fOverrideSetPermissions;
     }
@@ -373,6 +373,30 @@ class File implements \Concrete\Core\Permission\ObjectInterface
         return $this->fID;
     }
 
+    public function setFileFolder(FileFolder $folder)
+    {
+        $db = Loader::db();
+        $em = \ORM::entityManager('core');
+
+        $this->folderTreeNodeID = $folder->getTreeNodeID();
+
+        $em->persist($this);
+        $em->flush();
+
+    }
+
+    public function getFileFolderObject()
+    {
+        return Node::getByID($this->folderTreeNodeID);
+    }
+
+    public function getFileNodeObject()
+    {
+        $db = \Database::connection();
+        $treeNodeID = $db->GetOne('select treeNodeID from TreeFileNodes where fID = ?', array($this->getFileID()));
+        return Node::getByID($treeNodeID);
+    }
+
     public function duplicate()
     {
         $db = Loader::db();
@@ -385,6 +409,13 @@ class File implements \Concrete\Core\Permission\ObjectInterface
         $dh = Loader::helper('date');
         $date = $dh->getOverridableNow();
         $nf->fDateAdded = new Carbon($date);
+
+        $em->persist($nf);
+        $em->flush();
+
+        $folder = $this->getFileFolderObject();
+        $folderNode = \Concrete\Core\Tree\Node\Type\File::add($nf, $folder);
+        $nf->folderTreeNodeID = $folderNode->getTreeNodeID();
 
         $em->persist($nf);
         $em->flush();
@@ -540,18 +571,11 @@ class File implements \Concrete\Core\Permission\ObjectInterface
     /**
      * Removes a file, including all of its versions.
      */
-    public function delete()
+    public function delete($removeNode = true)
     {
         // first, we remove all files from the drive
         $db = Loader::db();
         $em = $db->getEntityManager();
-
-        // Delete the tree node for the file.
-        $nodeID = $db->fetchColumn('select treeNodeID from TreeFileNodes where fID = ?', array($this->getFileID()));
-        if ($nodeID) {
-            $node = Node::getByID($nodeID);
-            $node->delete();
-        }
 
         // fire an on_page_delete event
         $fve = new \Concrete\Core\File\Event\DeleteFile($this);
@@ -559,6 +583,16 @@ class File implements \Concrete\Core\Permission\ObjectInterface
         if (!$fve->proceed()) {
             return false;
         }
+
+        // Delete the tree node for the file.
+        if ($removeNode) {
+            $nodeID = $db->fetchColumn('select treeNodeID from TreeFileNodes where fID = ?', array($this->getFileID()));
+            if ($nodeID) {
+                $node = Node::getByID($nodeID);
+                $node->delete();
+            }
+        }
+
 
         $versions = $this->getVersionList();
         foreach ($versions as $fv) {

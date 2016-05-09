@@ -2,6 +2,7 @@
 namespace Concrete\Controller\Backend\Tree\Node;
 
 use Concrete\Controller\Backend\UserInterface;
+use Concrete\Core\Application\EditResponse;
 use Concrete\Core\Tree\Node\Node;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Concrete\Core\Legacy\Loader;
@@ -46,13 +47,16 @@ class DragRequest extends UserInterface
 
     public function execute()
     {
+        $message = new EditResponse();
         list($sourceNodes, $destNode) = $this->getNodes();
         if (is_array($sourceNodes)) {
             foreach($sourceNodes as $sourceNode) {
                 if ($_REQUEST['copyNodes']) {
-                    $sourceNode->move($destNode);
-                } else {
                     $sourceNode->duplicate($destNode);
+                    $message->setMessage(t('Item copied successfully.'));
+                } else {
+                    $sourceNode->move($destNode);
+                    $message->setMessage(t('Item moved successfully.'));
                 }
             }
         }
@@ -61,6 +65,7 @@ class DragRequest extends UserInterface
             $destNode->saveChildOrder($_POST['treeNodeID']);
         }
 
-        return new JsonResponse($destNode->getTreeNodeJSON());
+        $message->setAdditionalDataAttribute('destination', $destNode->getTreeNodeJSON());
+        return new JsonResponse($message);
     }
 }

@@ -6,7 +6,9 @@
         <category handle="single_page" package=""/>
         <category handle="stack" package=""/>
         <category handle="user" package=""/>
-        <category handle="file_set" package=""/>
+        <category handle="file_folder" package=""/>
+        <!--<category handle="file_node" package=""/>//-->
+        <!-- TODO: Kill file and replace with file tree node //-->
         <category handle="file" package=""/>
         <category handle="area" package=""/>
         <category handle="block_type" package=""/>
@@ -77,16 +79,20 @@
         <permissionkey handle="edit_block_design" name="Edit Design" package="" description="Controls whether users can set custom design properties or CSS on this block." category="block"/>
         <permissionkey handle="edit_block_permissions" name="Edit Permissions" package="" category="block" description="Controls whether users can change permissions on this block, potentially granting themselves or others greater access." />
         <permissionkey handle="schedule_guest_access" name="Schedule Guest Access" description="Controls whether users can schedule guest access permissions on this block. Guest Access is a shortcut for granting permissions just to the Guest Group." package="" category="block"/>
+
         <!-- files //-->
-        <permissionkey handle="view_file_set_file" name="View Files" description="Can view and download files in the site." package="" category="file_set"/>
-        <permissionkey handle="search_file_set" name="Search Files in File Manager" description="Can access the file manager" package="" category="file_set"/>
-        <permissionkey handle="edit_file_set_file_properties" name="Edit File Properties" description="Can edit a file's properties." package="" category="file_set"/>
-        <permissionkey handle="edit_file_set_file_contents" name="Edit File Contents" description="Can edit or replace files in set." package="" category="file_set"/>
-        <permissionkey handle="copy_file_set_files" name="Copy File" description="Can copy files in file set." package="" category="file_set"/>
-        <permissionkey handle="edit_file_set_permissions" name="Edit File Access" description="Can edit access to file sets." package="" category="file_set"/>
-        <permissionkey handle="delete_file_set" name="Delete File Set" description="Can delete file set." package="" category="file_set"/>
-        <permissionkey handle="delete_file_set_files" name="Delete File" description="Can delete files in set." package="" category="file_set"/>
-        <permissionkey handle="add_file" has-custom-class="true" name="Add File" description="Can add files to set." package="" category="file_set"/>
+        <permissionkey handle="view_file_folder_file" name="View Files" description="View files within folder in the site." package="" category="file_folder"/>
+        <permissionkey handle="search_file_folder" name="Search File Folder" description="See this file folder in the file manager" package="" category="file_folder"/>
+        <permissionkey handle="edit_file_folder" name="Edit File Folder" description="Edit a file folder." package="" category="file_folder"/>
+        <permissionkey handle="edit_file_folder_file_properties" name="Edit File Properties" description="Can edit a file's properties." package="" category="file_folder"/>
+        <permissionkey handle="edit_file_folder_file_contents" name="Edit File Contents" description="Can edit or replace files in folder." package="" category="file_folder"/>
+        <permissionkey handle="copy_file_folder_files" name="Copy File" description="Can copy files in file folder." package="" category="file_folder"/>
+        <permissionkey handle="edit_file_folder_permissions" name="Edit File Access" description="Can edit access to file folder." package="" category="file_folder"/>
+        <permissionkey handle="delete_file_folder" name="Delete File Set" description="Can delete file folder." package="" category="file_folder"/>
+        <permissionkey handle="delete_file_folder_files" name="Delete File" description="Can delete files in folder." package="" category="file_folder"/>
+        <permissionkey handle="add_file" has-custom-class="true" name="Add File" description="Can add files to folder." package="" category="file_folder"/>
+
+
         <permissionkey handle="view_file" name="View Files" description="Can view and download files." package="" category="file"/>
         <permissionkey handle="view_file_in_file_manager" name="View File in File Manager" description="Can access the File Manager." package="" category="file"/>
         <permissionkey handle="edit_file_properties" name="Edit File Properties" description="Can edit a file's properties." package="" category="file"/>
@@ -290,7 +296,7 @@
         	<categories>
 		        <category handle="page" />
 		        <category handle="user" />
-		        <category handle="file_set" />
+		        <category handle="file_folder" />
 		        <category handle="file" />
 		        <category handle="area" />
 		        <category handle="block_type" />
@@ -313,7 +319,7 @@
 			<categories>
 		        <category handle="page" />
 		        <category handle="user" />
-		        <category handle="file_set" />
+		        <category handle="file_folder" />
 		        <category handle="file" />
 		        <category handle="area" />
 		        <category handle="block_type" />
@@ -336,7 +342,7 @@
 			<categories>
 		        <category handle="page" />
 		        <category handle="user" />
-		        <category handle="file_set" />
+		        <category handle="file_folder" />
 		        <category handle="file" />
 		        <category handle="area" />
 		        <category handle="block_type" />
@@ -358,7 +364,7 @@
 			<categories>
 		        <category handle="page" />
 		        <category handle="user" />
-		        <category handle="file_set" />
+		        <category handle="file_folder" />
 		        <category handle="file" />
 		        <category handle="area" />
 		        <category handle="block_type" />
@@ -386,7 +392,7 @@
         </permissionaccessentitytype>
         <permissionaccessentitytype handle="file_uploader" name="File Uploader" package="">
             <categories>
-                <category handle="file_set" />
+                <category handle="file_folder" />
                 <category handle="file" />
             </categories>
         </permissionaccessentitytype>

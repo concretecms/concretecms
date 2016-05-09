@@ -34,6 +34,6 @@ class FileTreeNodeResponse extends TreeNodeResponse
 
     public function canDeleteTreeNode()
     {
-        return false;
+        return $this->validate('edit_group');
     }
 }

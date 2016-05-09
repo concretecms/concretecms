@@ -2,6 +2,7 @@
 namespace Concrete\Controller\Dialog\Tree\Node;
 
 use Concrete\Controller\Dialog\Tree\Node;
+use Concrete\Core\Application\EditResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 class Delete extends Node
@@ -33,10 +34,12 @@ class Delete extends Node
         }
 
         if (!$error->has()) {
+            $response = new EditResponse();
+            $response->setMessage(t('%s deleted successfully.', $node->getTreeNodeDisplayName()));
+            $response->setAdditionalDataAttribute('treeNodeID', $treeNodeID);
+
             $node->delete();
-            $r = new \stdClass();
-            $r->treeNodeID = $treeNodeID;
-            return new JsonResponse($r);
+            return new JsonResponse($response);
         } else {
             return new JsonResponse($error);
         }

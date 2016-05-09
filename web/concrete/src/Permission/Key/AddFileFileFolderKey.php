@@ -6,7 +6,7 @@ use Loader;
 use User;
 use \Concrete\Core\Permission\Duration as PermissionDuration;
 
-class AddFileFileSetKey extends FileSetKey
+class AddFileFileFolderKey extends FileFolderKey
 {
 
     public function getAllowedFileExtensions()

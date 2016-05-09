@@ -48,7 +48,7 @@ foreach ($permissions as $pk) {
 		jQuery.fn.dialog.open({
 			title: $(link).attr('dialog-title'),
 			href: '<?=REL_DIR_FILES_TOOLS_REQUIRED?>/permissions/dialogs/basic_workflow?duplicate=' + dupe + '&wfID=<?=$workflow->getWorkflowID()?>&pkID=' + $(link).attr('data-pkID') + '&paID=' + $(link).attr('data-paID'),
-			modal: false,
+			modal: true,
 			width: 500,
 			height: 380
 		});		
