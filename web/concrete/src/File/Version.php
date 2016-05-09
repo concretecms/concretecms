@@ -768,10 +768,15 @@ class Version
 
                 $height = $type->getHeight();
                 $thumbnailMode = ImageInterface::THUMBNAIL_OUTBOUND;
-                if (!$height) {
-                    $height = $type->getWidth();
+                if ($type->isConstrained()) {
+                    $thumbnailMode = ImageInterface::THUMBNAIL_INSET;
+                } elseif (!$height) {
                     $thumbnailMode = ImageInterface::THUMBNAIL_INSET;
                 }
+                if (!height) {
+                    $height = $type->getWidth();
+                }
+
                 $thumbnail = $image->thumbnail(new \Imagine\Image\Box($type->getWidth(), $height), $thumbnailMode);
                 $thumbnailPath = $type->getFilePath($this);
                 $thumbnailOptions = array();

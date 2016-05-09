@@ -58,6 +58,11 @@ class Thumbnails extends DashboardPageController {
             $this->error->add(t('Width must be greater than zero.'));
         }
 
+        $IsConstrained = (bool) $request->request->get('ftTypeIsConstrained');
+        if (!is_bool($IsConstrained)) {
+            $this->error->add(t('Something wrong with crop option.'));
+        }
+
         if ($valStrings->notempty($request->request->get('ftTypeHeight'))) {
             if (!$valNumbers->integer($request->request->get('ftTypeHeight'))) {
                 $this->error->add(t('If used, height can only be an integer, with no units.'));
@@ -119,6 +124,7 @@ class Thumbnails extends DashboardPageController {
             } else {
                 $type->setHeight(null);
             }
+            $type->setConstrained((bool) $request->request->get('ftTypeIsConstrained'));
             $type->setName($request->request->get('ftTypeName'));
             $type->setHandle($request->request->get('ftTypeHandle'));
             $type->save();
@@ -141,6 +147,7 @@ class Thumbnails extends DashboardPageController {
                 $type->setHeight($request->request->get('ftTypeHeight'));
             }
             $type->setWidth($request->request->get('ftTypeWidth'));
+            $type->setConstrained((bool) $request->request->get('ftTypeIsConstrained'));
             $type->setName($request->request->get('ftTypeName'));
             $type->setHandle($request->request->get('ftTypeHandle'));
             $type->save();
