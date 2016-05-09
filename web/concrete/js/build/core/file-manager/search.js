@@ -81,6 +81,7 @@
                         if (e.altKey) {
                             my.$element.addClass('ccm-search-results-copy');
                         }
+                        my.$element.find('.ccm-search-select-hover').removeClass('ccm-search-select-hover');
                         $(window).on('keydown.concreteSearchResultsCopy', function(e) {
                             if (e.keyCode == 18) {
                                 my.$element.addClass('ccm-search-results-copy');
@@ -115,13 +116,15 @@
             }
         });
 
-        my.$element.find('tr[data-file-manager-tree-node-type=file_folder]').droppable({
-            hoverClass: 'ccm-search-select-selected',
+        my.$element.find('tr[data-file-manager-tree-node-type=file_folder], ol[data-search-navigation=breadcrumb] a[data-file-manager-tree-node]').droppable({
+            hoverClass: 'ccm-search-select-active-droppable',
             drop: function(event, ui) {
 
                 var $sourceItems = ui.helper.data('$selected'),
                     sourceIDs = [],
-                    destinationID = $(this).data('file-manager-tree-node');
+                    destinationID = $(this).data('file-manager-tree-node'),
+                    copyNodes = event.altKey;
+
                 $sourceItems.each(function() {
                     var $sourceItem = $(this);
                     var sourceID = $sourceItem.data('file-manager-tree-node');
@@ -134,19 +137,24 @@
                 if (sourceIDs.length === 0) {
                     return;
                 }
-                $sourceItems.hide();
+                if (!copyNodes) {
+                    $sourceItems.hide();
+                }
                 new ConcreteAjaxRequest({
                     url: CCM_DISPATCHER_FILENAME + '/ccm/system/tree/node/drag_request',
                     data: {
                         ccm_token: my.options.upload_token,
-                        copyNodes: event.altKey ? '1' : 0,
+                        copyNodes: copyNodes ? '1' : 0,
                         sourceTreeNodeIDs: sourceIDs,
                         treeNodeParentID: destinationID
                     },
-                    success: function(msg) {
-                        $sourceItems.remove();
+                    success: function(r) {
+                        if (!copyNodes) {
+                            $sourceItems.remove();
+                        }
                         ConcreteAlert.notify({
-                            message: msg
+                            'message': r.message,
+                            'title': r.title
                         });
                     },
                     error: function(xhr) {
@@ -267,7 +275,7 @@
                 if (entry.active) {
                     activeClass = ' class="active"';
                 }
-                $nav.append('<li' + activeClass + '><a data-folder-node-id="' + entry.folder + '" href="' + entry.url + '">' + entry.name + '</a></li>');
+                $nav.append('<li' + activeClass + '><a data-file-manager-tree-node="' + entry.folder + '" href="' + entry.url + '">' + entry.name + '</a></li>');
                 $nav.find('li.active a').on('click', function(e) {
                     e.stopPropagation();
                     e.preventDefault();
@@ -282,7 +290,7 @@
 
 
             $nav.on('click.concreteSearchBreadcrumb', 'a', function() {
-                my.loadFolder($(this).attr('data-folder-node-id'));
+                my.loadFolder($(this).attr('data-file-manager-tree-node'));
                 return false;
             });
 
@@ -466,9 +474,11 @@
     }
 
     ConcreteFileManager.prototype.showMenu = function($element, $menu, event) {
+        var my = this;
         var concreteMenu = new ConcreteFileMenu($element, {
             menu: $menu,
-            handle: 'none'
+            handle: 'none',
+            container: my
         });
         concreteMenu.show(event);
     }

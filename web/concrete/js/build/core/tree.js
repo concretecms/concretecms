@@ -346,7 +346,7 @@
 							title: title,
 							href: url,
 							width: width,
-							modal: false,
+							modal: true,
 							height: height
 						});
 						break;

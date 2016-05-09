@@ -242,10 +242,13 @@ class FileList extends DatabaseItemList
 
     protected function setupFilePermissions()
     {
+        /*
+
         $u = new User();
         if ($this->permissionLevel == false || $u->isSuperUser()) {
             return false;
         }
+
 
         $accessEntities = $u->getUserAccessEntityObjects();
         foreach ($accessEntities as $pae) {
@@ -349,6 +352,8 @@ class FileList extends DatabaseItemList
         // exclude detail files where read is excluded
         $this->filter(false, "f.fID not in (select ff.fID from Files ff inner join FilePermissionAssignments fpaExclude on ff.fID = fpaExclude.fID inner join PermissionAccessList palExclude on fpaExclude.paID = palExclude.paID where fOverrideSetPermissions = 1 and palExclude.accessType = " . PermissionKey::ACCESS_TYPE_EXCLUDE . " and palExclude.pdID in (" . implode(',', $activePDIDs) . ")
 			and palExclude.peID in (" . implode(',', $peIDs) . ") and fpaExclude.pkID in (" . $vpPKID . "," . $vpvPKID . "))");
+
+        */
     }
 
     /** 

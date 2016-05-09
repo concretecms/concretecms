@@ -3,6 +3,7 @@ namespace Concrete\Core\Tree\Node\Type;
 
 use Concrete\Core\File\Menu;
 use Concrete\Core\Tree\Node\Node as TreeNode;
+use Concrete\Core\Tree\Node\Node;
 use Concrete\Core\Tree\Node\Type\Menu\FileMenu;
 use Concrete\Core\Tree\Node\Type\Menu\GroupMenu;
 use Loader;
@@ -69,6 +70,10 @@ class File extends TreeNode
 
     public function deleteDetails()
     {
+        $f = $this->getTreeNodeFileObject();
+        if (is_object($f)) {
+            $f->delete(false);
+        }
         $db = Loader::db();
         $db->Execute('delete from TreeFileNodes where treeNodeID = ?', array($this->treeNodeID));
     }
@@ -94,6 +99,23 @@ class File extends TreeNode
         $db = Loader::db();
         $db->Replace('TreeFileNodes', array('treeNodeID' => $this->getTreeNodeID(), 'fID' => $file->getFileID()), array('treeNodeID'), true);
         $this->fID = $file->getFileID();
+    }
+
+    public function duplicate($parent = false)
+    {
+        $node = $this::add($this->getTreeNodeFileObject(), $parent);
+        $this->duplicateChildren($node);
+
+        return $node;
+    }
+
+    public function move(Node $newParent)
+    {
+        parent::move($newParent);
+        $f = $this->getTreeNodeFileObject();
+        if (is_object($f)) {
+            $f->setFileFolder($newParent);
+        }
     }
 
     public static function add($file = false, $parent = false)

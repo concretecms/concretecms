@@ -4,6 +4,7 @@ namespace Concrete\Core\File;
 use Concrete\Core\Application\UserInterface\ContextMenu\Item\DialogLinkItem;
 use Concrete\Core\Application\UserInterface\ContextMenu\Item\DividerItem;
 use Concrete\Core\Application\UserInterface\ContextMenu\Item\LinkItem;
+use Concrete\Core\Tree\Menu\Item\DeleteItem;
 
 class Menu extends \Concrete\Core\Application\UserInterface\ContextMenu\Menu
 {
@@ -14,6 +15,7 @@ class Menu extends \Concrete\Core\Application\UserInterface\ContextMenu\Menu
     {
         parent::__construct();
 
+        $this->setAttribute('data-search-file-menu', $file->getFileID());
         $this->addItem(new LinkItem('#', t('Clear'), ['data-file-manager-action' => 'clear']));
         $this->addItem(new DividerItem());
 
@@ -57,12 +59,7 @@ class Menu extends \Concrete\Core\Application\UserInterface\ContextMenu\Menu
                 t('Permissions'), t('Permissions & Access'), '520', '450')
         );
 
-        $this->addItem(new DialogLinkItem(
-                REL_DIR_FILES_TOOLS_REQUIRED . '/files/delete?fID=' . $file->getFileID(),
-                t('Delete'), t('Delete File'), '500', '350')
-        );
-
-
+        $this->addItem(new DeleteItem($file->getFileNodeObject()));
 
 
     }

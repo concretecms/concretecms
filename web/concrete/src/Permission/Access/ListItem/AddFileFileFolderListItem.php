@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Core\Permission\Access\ListItem;
 
-class AddFileFileSetListItem extends FileSetListItem
+class AddFileFileFolderListItem extends FileFolderListItem
 {
     protected $customFileTypesArray = array();
     protected $fileTypesAllowedPermission = 'N';

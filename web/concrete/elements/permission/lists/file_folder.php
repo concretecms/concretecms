@@ -7,7 +7,7 @@
 $permissions = PermissionKey::getList('file_set');
 
 foreach ($permissions as $pk) {
-    $pk->setPermissionObject($fs);
+    $pk->setPermissionObject($folder);
     ?>
 	<tr>
 	<td class="ccm-permission-grid-name" id="ccm-permission-grid-name-<?=$pk->getPermissionKeyID()?>"><strong><a dialog-title="<?=$pk->getPermissionKeyDisplayName()?>" data-pkID="<?=$pk->getPermissionKeyID()?>" data-paID="<?=$pk->getPermissionAccessID()?>" onclick="ccm_permissionLaunchDialog(this)" href="javascript:void(0)"><?=$pk->getPermissionKeyDisplayName()?></a></strong></td>
@@ -37,8 +37,8 @@ foreach ($permissions as $pk) {
 
 		jQuery.fn.dialog.open({
 			title: $(link).attr('dialog-title'),
-			href: '<?=REL_DIR_FILES_TOOLS_REQUIRED?>/permissions/dialogs/file_set?duplicate=' + dupe + '&fsID=<?=$fs->getFileSetID()?>&pkID=' + $(link).attr('data-pkID') + '&paID=' + $(link).attr('data-paID'),
-			modal: false,
+			href: '<?=REL_DIR_FILES_TOOLS_REQUIRED?>/permissions/dialogs/file_set?duplicate=' + dupe + '&treeNodeIDID=<?=$fs->getFileSetID()?>&pkID=' + $(link).attr('data-pkID') + '&paID=' + $(link).attr('data-paID'),
+			modal: true,
 			width: 500,
 			height: 380
 		});		

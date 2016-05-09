@@ -221,11 +221,21 @@ ConcreteFileImportDialog = {
 	<p><?=t('Enter URL to valid file(s)')?></p>
 	<?=$valt->output('import_remote');?>
 
-	<?=$form->text('url_upload_1', array('style' => 'width:455px'))?><br/><br/>
-	<?=$form->text('url_upload_2', array('style' => 'width:455px'))?><br/><br/>
-	<?=$form->text('url_upload_3', array('style' => 'width:455px'))?><br/><br/>
-	<?=$form->text('url_upload_4', array('style' => 'width:455px'))?><br/><br/>
-	<?=$form->text('url_upload_5', array('style' => 'width:455px'))?><br/>
+    <div class="form-group">
+    	<?=$form->text('url_upload_1')?>
+    </div>
+    <div class="form-group">
+        <?=$form->text('url_upload_2')?>
+    </div>
+    <div class="form-group">
+        <?=$form->text('url_upload_3')?>
+    </div>
+    <div class="form-group">
+        <?=$form->text('url_upload_4')?>
+    </div>
+    <div class="form-group">
+        <?=$form->text('url_upload_5')?>
+    </div>
 </form>
 
 </div>
