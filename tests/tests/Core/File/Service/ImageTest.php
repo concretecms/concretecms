@@ -7,17 +7,34 @@
  */
 
 namespace Concrete\Tests\Core\File\Service;
+use Concrete\Core\File\StorageLocation\Configuration\LocalConfiguration;
+use Concrete\Core\File\StorageLocation\StorageLocation;
 use Core;
 
 class ImageTest extends \PHPUnit_Framework_TestCase {
 
     protected $output1;
 
+    /**
+     * @var StorageLocation
+     */
+    protected $storageLocation;
+
     protected function setUp()
     {
-        $this->output1 = dirname(__FILE__) . '/output.jpg';
-        if (file_exists($this->output1)) {
-            unlink($this->output1);
+        $local = new LocalConfiguration();
+        $local->setRootPath(dirname(__FILE__));
+        $local->setWebRootRelativePath(dirname(__FILE__));
+
+        $sl = new StorageLocation();
+        $sl->setConfigurationObject($local);
+        $this->storageLocation = $sl;
+
+        $fsl = $this->storageLocation->getFileSystemObject();
+
+        $this->output1 = '/output.jpg';
+        if ($fsl->has($this->output1)) {
+            $fsl->delete($this->output1);
         }
     }
 
@@ -40,12 +57,16 @@ class ImageTest extends \PHPUnit_Framework_TestCase {
      */
     public function testLegacyImageCreate($expectedWidth, $expectedHeight, $path, $width, $height, $fit = false)
     {
-        $service = Core::make('helper/image');
-        $this->assertFalse(file_exists($this->output1));
+        $service = new \Concrete\Core\File\Image\BasicThumbnailer();
+
+        $sl = $this->storageLocation;
+        $fsl = $sl->getFileSystemObject();
+        $service->setStorageLocation($sl);
+        $this->assertFalse($fsl->has($this->output1));
         $service->create(
             $path, $this->output1, $width, $height, $fit
         );
-        $this->assertTrue(file_exists($this->output1));
+        $this->assertTrue($fsl->has($this->output1));
         $size = getimagesize($this->output1);
         $this->assertEquals($expectedWidth, $size[0]);
         $this->assertEquals($expectedHeight, $size[1]);
