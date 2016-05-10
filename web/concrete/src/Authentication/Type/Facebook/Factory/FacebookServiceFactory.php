@@ -8,6 +8,7 @@ use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
 use OAuth\Common\Consumer\Credentials;
 use OAuth\Common\Storage\SymfonySession;
+use OAuth\OAuth2\Service\Facebook;
 use OAuth\ServiceFactory;
 use Symfony\Component\HttpFoundation\Session\Session;
 
@@ -68,7 +69,7 @@ class FacebookServiceFactory implements ApplicationAwareInterface
         $storage = new SymfonySession($this->session, false);
 
         // Create the service using the oauth service factory
-        return $factory->createService('facebook', $credentials, $storage, ['email']);
+        return $factory->createService('facebook', $credentials, $storage, [Facebook::SCOPE_EMAIL]);
     }
 
 }
