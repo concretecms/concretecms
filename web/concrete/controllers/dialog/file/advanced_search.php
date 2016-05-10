@@ -84,7 +84,7 @@ class AdvancedSearch extends BackendInterfaceController
 
             $filesystem = new Filesystem();
             $folder = $filesystem->getRootFolder();
-            $node = \Concrete\Core\Tree\Node\Type\SearchPreset::add($search, $folder);
+            $node = \Concrete\Core\Tree\Node\Type\SearchPreset::addSearchPreset($search, $folder);
 
             $provider = $this->app->make('Concrete\Core\File\Search\SearchProvider');
             $result = $provider->getSearchResultFromQuery($query);
