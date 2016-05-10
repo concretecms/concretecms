@@ -40,15 +40,12 @@ class Controller extends GenericOauth2TypeController
     public function getService()
     {
         if (!$this->service) {
-            /** @var \Concrete\Core\Application\Application $app */
-            $app = Application::getFacadeApplication();
-
             /** @var ServiceFactory $serviceFactory */
-            $serviceFactory = $app->make('oauth/factory/service');
+            $serviceFactory = $this->app->make('oauth/factory/service');
             $serviceFactory->registerService('community', CommunityService::class);
 
             /** @var CommunityServiceFactory $communityFactory */
-            $communityFactory = $app->make(CommunityServiceFactory::class);
+            $communityFactory = $this->app->make(CommunityServiceFactory::class);
             $this->service = $communityFactory->createService($serviceFactory);
         }
 
