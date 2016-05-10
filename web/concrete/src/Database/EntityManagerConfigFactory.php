@@ -279,5 +279,8 @@ class EntityManagerConfigFactory implements ApplicationAwareInterface, EntityMan
         \Doctrine\Common\Annotations\AnnotationReader::addGlobalIgnoredName('Table');
         \Doctrine\Common\Annotations\AnnotationReader::addGlobalIgnoredName('UniqueConstraint');
         \Doctrine\Common\Annotations\AnnotationReader::addGlobalIgnoredName('Version');
+        
+        \Doctrine\Common\Annotations\AnnotationReader::addGlobalIgnoredName('Embeddable');
+        \Doctrine\Common\Annotations\AnnotationReader::addGlobalIgnoredName('Embedded');
     }
 }
