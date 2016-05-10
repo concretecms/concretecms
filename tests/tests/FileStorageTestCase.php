@@ -9,6 +9,14 @@ abstract class FileStorageTestCase extends ConcreteDatabaseTestCase
     protected $tables = array(
         'FileStorageLocationTypes',
         'FileImageThumbnailTypes',
+        'TreeTypes',
+        'TreeNodeTypes',
+        'TreeNodes',
+        'TreeFileNodes',
+        'TreeNodePermissionAssignments',
+        'PermissionKeys',
+        'PermissionKeyCategories',
+        'Trees',
     );
 
     protected $metadatas = array(
@@ -55,6 +63,9 @@ abstract class FileStorageTestCase extends ConcreteDatabaseTestCase
     protected function setUp()
     {
         parent::setUp();
+
+        $filesystem = new \Concrete\Core\File\Filesystem();
+        $filesystem->create();
 
         $thumbnailType = new \Concrete\Core\File\Image\Thumbnail\Type\Type();
         $thumbnailType->requireType();
