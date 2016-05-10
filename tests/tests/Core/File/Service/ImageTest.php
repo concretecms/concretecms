@@ -8,10 +8,12 @@
 namespace Concrete\Tests\Core\File\Service;
 use Concrete\Core\File\StorageLocation\Configuration\LocalConfiguration;
 use Concrete\Core\File\StorageLocation\StorageLocation;
+use Concrete\Tests\Core\File\Service\Fixtures\TestStorageLocation;
 use Core;
 
 class ImageTest extends \PHPUnit_Framework_TestCase
 {
+    
     protected $output1;
 
     /**
@@ -22,10 +24,10 @@ class ImageTest extends \PHPUnit_Framework_TestCase
     protected function setUp()
     {
         $local = new LocalConfiguration();
-        $local->setRootPath(dirname(__FILE__));
-        $local->setWebRootRelativePath(dirname(__FILE__));
+        $local->setRootPath(sys_get_temp_dir());
+        $local->setWebRootRelativePath(sys_get_temp_dir());
 
-        $sl = new StorageLocation();
+        $sl = new TestStorageLocation();
         $sl->setConfigurationObject($local);
         $this->storageLocation = $sl;
 
@@ -66,7 +68,7 @@ class ImageTest extends \PHPUnit_Framework_TestCase
             $path, $this->output1, $width, $height, $fit
         );
         $this->assertTrue($fsl->has($this->output1));
-        $size = getimagesize($this->output1);
+        $size = getimagesize(sys_get_temp_dir() . $this->output1);
         $this->assertEquals($expectedWidth, $size[0]);
         $this->assertEquals($expectedHeight, $size[1]);
     }
