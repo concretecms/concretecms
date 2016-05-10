@@ -68,7 +68,7 @@ class NodeType extends Object
     {
         $db = Database::connection();
         $row = $db->GetRow('select * from TreeNodeTypes where treeNodeTypeHandle = ?', array($treeNodeTypeHandle));
-        if (is_array($row) && $row['treeNodeTypeHandle']) {
+        if (is_array($row) && isset($row['treeNodeTypeHandle'])) {
             $type = new TreeNodeType();
             $type->setPropertiesFromArray($row);
 

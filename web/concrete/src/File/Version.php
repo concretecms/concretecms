@@ -1032,6 +1032,7 @@ class Version
         $r->fileName = $this->getFilename();
         $r->resultsThumbnailImg = $this->getListingThumbnailImage();
         $r->fID = $this->getFileID();
+        $r->treeNodeMenu = new Menu($this->getfile());
 
         return $r;
     }
@@ -1081,7 +1082,7 @@ class Version
             $doubledSrc = $this->getThumbnailURL($type->getDoubledVersion());
             $width = $type->getWidth();
             $height = $type->getHeight();
-            return sprintf('<img width="%s" height="%s" src="%s" data-at2x="%s">', $width, $height, $baseSrc, $doubledSrc);
+            return sprintf('<img class="ccm-file-manager-list-thumbnail" src="%s" data-at2x="%s">', $baseSrc, $doubledSrc);
         } else {
             return $this->getTypeObject()->getThumbnail();
         }

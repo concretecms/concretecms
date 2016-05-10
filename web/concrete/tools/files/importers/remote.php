@@ -114,6 +114,19 @@ if (!$error->has()) {
 
                 // import the file into concrete
                 if ($fp->canAddFileType($cf->getExtension($fname))) {
+
+                    $folder = null;
+                    if (isset($_POST['currentFolder'])) {
+                        $node = \Concrete\Core\Tree\Node\Node::getByID($_POST['currentFolder']);
+                        if ($node instanceof \Concrete\Core\Tree\Node\Type\FileFolder) {
+                            $folder = $node;
+                        }
+                    }
+
+                    if (!$fr && $folder) {
+                        $fr = $folder;
+                    }
+
                     $fi = new FileImporter();
                     $resp = $fi->import($fpath.'/'.$fname, $fname, $fr);
                     $r->setMessage(t('File uploaded successfully.'));
@@ -128,7 +141,7 @@ if (!$error->has()) {
                 } else {
                     $import_responses[] = $resp;
 
-                    if (!is_object($fr)) {
+                    if (!($fr instanceof \Concrete\Core\File\Version)) {
                         // we check $fr because we don't want to set it if we are replacing an existing file
                         $respf = $resp->getFile();
                         $respf->setOriginalPage($_POST['ocID']);

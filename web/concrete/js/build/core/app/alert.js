@@ -11,6 +11,8 @@
         dialog : function(title, message, onCloseFn) {
             $('<div id="ccm-popup-alert" class="ccm-ui"><div id="ccm-popup-alert-message" class="alert alert-danger">' + message + '</div></div>').dialog({
                 title: title,
+                width: 500,
+                height: 'auto',
                 modal: true,
                 onDestroy: onCloseFn
             });

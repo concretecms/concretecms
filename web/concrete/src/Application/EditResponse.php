@@ -4,7 +4,7 @@ namespace Concrete\Core\Application;
 use Core;
 use stdClass;
 
-class EditResponse
+class EditResponse implements \JsonSerializable
 {
     public $time;
     public $message;
@@ -85,6 +85,11 @@ class EditResponse
         }
 
         return $o;
+    }
+
+    public function jsonSerialize()
+    {
+        return $this->getJSONObject();
     }
 
     public function outputJSON()

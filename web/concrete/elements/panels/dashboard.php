@@ -34,10 +34,8 @@ foreach ($parents as $pc) {
     $cp = new Permissions($cc);
     if ($cp->canViewPage()) {
         ?>
-					<li><a href="<?=Loader::helper('navigation')->getLinkToCollection($cc)?>" <?php if ($active) {
-    ?>class="ccm-panel-dashboard-nav-active"<?php 
-}
-        ?>><?=t($cc->getCollectionName())?></a></li>
+					<li <?php if ($active) {
+    ?>class="nav-selected"<?php } ?>><a href="<?=Loader::helper('navigation')->getLinkToCollection($cc)?>"><?=t($cc->getCollectionName())?></a></li>
 
 			<?php
 		$next = $nav[$i + 1];

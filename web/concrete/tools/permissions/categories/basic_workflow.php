@@ -4,7 +4,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 use \Concrete\Core\Permission\Access\Entity\Entity as PermissionAccessEntity;
 use \Concrete\Core\Permission\Duration as PermissionDuration;
 
-$p = Page::getByPath('/dashboard/workflow/workflows');
+$p = Page::getByPath('/dashboard/system/permissions/workflows');
 $cp = new Permissions($p);
 $json = Loader::helper('json');
 $workflow = Workflow::getByID($_REQUEST['wfID']);

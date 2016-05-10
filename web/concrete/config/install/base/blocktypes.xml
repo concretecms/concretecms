@@ -15,7 +15,7 @@
         <!--
         <blocktype handle="core_conversation_message" package=""/>
         //-->
-        <blocktype handle="dashboard_newsflow_latest" package=""/>
+        <blocktype handle="desktop_newsflow_latest" package=""/>
         <blocktype handle="desktop_site_activity" package=""/>
         <blocktype handle="desktop_featured_addon" package=""/>
         <blocktype handle="desktop_featured_theme" package=""/>
@@ -110,7 +110,7 @@
             <blocktype handle="desktop_featured_theme"/>
             <blocktype handle="desktop_latest_form"/>
             <blocktype handle="desktop_waiting_for_me"/>
-            <blocktype handle="dashboard_newsflow_latest"/>
+            <blocktype handle="desktop_newsflow_latest"/>
         </blocktypeset>
 
     </blocktypesets>

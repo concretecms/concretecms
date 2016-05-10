@@ -9,118 +9,6 @@
             </attributes>
         </page>
 
-        <page name="Welcome" path="/dashboard/welcome" filename="/dashboard/welcome.php" description="" package="">
-            <attributes>
-                <attributekey handle="desktop_priority">
-                    <value>2</value>
-                </attributekey>
-                <attributekey handle="is_desktop">
-                    <value>1</value>
-                </attributekey>
-            </attributes>
-            <area name="Main">
-                <blocks>
-                    <block type="desktop_app_status" name=""/>
-                    <block type="core_area_layout" name="">
-                        <arealayout type="theme-grid" columns="12">
-                            <columns>
-                                <column span="4" offset="0">
-                                    <block type="desktop_latest_form" name=""/>
-                                </column>
-                                <column span="4" offset="0">
-                                    <block type="desktop_featured_addon" name=""/>
-                                </column>
-                                <column span="4" offset="0">
-                                    <block type="desktop_site_activity" name="">
-                                        <data>
-                                            <type>form_submissions</type>
-                                            <type>survey_results</type>
-                                            <type>signups</type>
-                                            <type>conversation_messages</type>
-                                            <type>workflow</type>
-                                        </data>
-                                    </block>
-                                </column>
-                            </columns>
-                        </arealayout>
-                    </block>
-                    <block type="core_area_layout" name="">
-                        <arealayout type="theme-grid" columns="12">
-                            <columns>
-
-                                <column span="4" offset="0">
-                                    <block type="rss_displayer" name="">
-                                        <data table="btRssDisplay">
-                                            <record>
-                                                <title>Tutorials</title>
-                                                <url>http://documentation.concrete5.org/rss/tutorials</url>
-                                                <dateFormat>longDate</dateFormat>
-                                                <itemsToDisplay>1</itemsToDisplay>
-                                                <showSummary>1</showSummary>
-                                                <launchInNewWindow>1</launchInNewWindow>
-                                            </record>
-                                        </data>
-                                    </block>
-                                </column>
-                                <column span="8" offset="0">
-                                    <block type="desktop_featured_theme" name=""/>
-                                </column>
-                            </columns>
-                        </arealayout>
-                    </block>
-                    <block type="core_area_layout" name="">
-                        <arealayout type="theme-grid" columns="12">
-                            <columns>
-                                <column span="4" offset="0">
-                                    <block type="dashboard_newsflow_latest" name="">
-                                        <data table="btDashboardNewsflowLatest">
-                                            <record>
-                                                <slot>A</slot>
-                                            </record>
-                                        </data>
-                                    </block>
-                                </column>
-                                <column span="4" offset="0">
-                                    <block type="dashboard_newsflow_latest" name="">
-                                        <data table="btDashboardNewsflowLatest">
-                                            <record>
-                                                <slot>B</slot>
-                                            </record>
-                                        </data>
-                                    </block>
-                                </column>
-                                <column span="4" offset="0">
-                                    <block type="dashboard_newsflow_latest" name="">
-                                        <data table="btDashboardNewsflowLatest">
-                                            <record>
-                                                <slot>C</slot>
-                                            </record>
-                                        </data>
-                                    </block>
-                                </column>
-                            </columns>
-                        </arealayout>
-                    </block>
-                    <block type="rss_displayer" name="">
-                        <style>
-                            <customClass>concrete5-org-stories</customClass>
-                        </style>
-                        <data table="btRssDisplay">
-                            <record>
-                                <title>News from concrete5.org</title>
-                                <url>http://www.concrete5.org/rss/blog</url>
-                                <dateFormat>longDate</dateFormat>
-                                <itemsToDisplay>3</itemsToDisplay>
-                                <showSummary>1</showSummary>
-                                <launchInNewWindow>1</launchInNewWindow>
-                            </record>
-                        </data>
-                    </block>
-                </blocks>
-            </area>
-
-        </page>
-
         <page name="Sitemap" path="/dashboard/sitemap" filename="/dashboard/sitemap/view.php" pagetype=""
               description="Whole world at a glance." package="">
             <attributes>
@@ -463,18 +351,6 @@
 			</attributes>
         </page>
 
-        <page name="Workflow" path="/dashboard/workflow" filename="/dashboard/workflow/view.php" pagetype=""
-              description="" package="">
-            <attributes>
-                <attributekey handle="meta_keywords">
-                    <value>add workflow, remove workflow</value>
-                </attributekey>
-            </attributes>
-        </page>
-        <page name="Waiting for Me" path="/dashboard/workflow/me" filename="/dashboard/workflow/me.php" pagetype=""
-              description="" package="" />
-        <page name="Workflow List" path="/dashboard/workflow/workflows" filename="/dashboard/workflow/workflows.php"
-              pagetype="" description="" package="" />
         <page name="Stacks &amp; Blocks" path="/dashboard/blocks" filename="/dashboard/blocks/view.php" pagetype=""
               description="Manage sitewide content and administer block types." package=""/>
         <page name="Stacks &amp; Global Areas" path="/dashboard/blocks/stacks" filename="/dashboard/blocks/stacks/view.php" pagetype=""
@@ -884,6 +760,8 @@
         <page name="Advanced Permissions" path="/dashboard/system/permissions/advanced"
               filename="/dashboard/system/permissions/advanced.php" pagetype="" description="" package="">
         </page>
+        <page name="Workflows" path="/dashboard/system/permissions/workflows" filename="/dashboard/system/permissions/workflows.php"
+              pagetype="" description="" package="" />
         <page name="IP Blacklist" path="/dashboard/system/permissions/blacklist"
               filename="/dashboard/system/permissions/blacklist.php" pagetype="" description="" package="">
             <attributes>
@@ -1147,100 +1025,5 @@
         <pagetemplate handle="desktop" name="Desktop" internal="1" package=""/>
         <pagetemplate handle="dashboard_full" name="Dashboard Full" internal="1" package=""/>
     </pagetemplates>
-    <pages>
 
-        <page name="Waiting for Me" path="/dashboard/welcome/me" filename="" pagetype="" template="desktop" description="" package="">
-            <area name="Main">
-                <blocks>
-                    <block type="desktop_waiting_for_me" />
-                </blocks>
-            </area>
-        </page>
-
-
-        <!--
-                <page name="Welcome to concrete5" path="/dashboard/welcome" filename=""
-                      description="Learn about how to use concrete5, how to develop for concrete5, and get general help."
-                      template="dashboard_full">
-                    <attributes>
-                        <attributekey handle="exclude_nav">
-                            <value><![CDATA[1]]></value>
-                        </attributekey>
-                    </attributes>
-                    <area name="Main">
-                        <blocks>
-                        <block type="content" name="">
-                            <data table="btContentLocal">
-                                <record>
-                                    <content><![CDATA[<div style="padding: 40px; text-align: center">
-        <iframe width="853" height="480" src="//www.youtube.com/embed/VB-R71zk06U" frameborder="0" allowfullscreen></iframe>
-                                            </div>]]></content>
-                                </record>
-                            </data>
-                        </block>
-                        </blocks>
-                    </area>
-                </page>
-                <page name="Customize Dashboard Home" path="/dashboard/home" filename="" template="dashboard_primary_five"
-                      description="" package="">
-                    <attributes>
-                        <attributekey handle="exclude_nav">
-                            <value><![CDATA[1]]></value>
-                        </attributekey>
-                        <attributekey handle="exclude_search_index">
-                            <value><![CDATA[1]]></value>
-                        </attributekey>
-                    </attributes>
-                    <area name="Primary">
-                        <blocks>
-                        <block type="dashboard_app_status" name=""/>
-                        <block type="dashboard_site_activity" name=""/>
-                        </blocks>
-                    </area>
-                    <area name="Secondary 1">
-                        <blocks>
-                        <block type="dashboard_newsflow_latest" name="">
-                            <data table="btDashboardNewsflowLatest">
-                                <record>
-                                    <slot>A</slot>
-                                </record>
-                            </data>
-                        </block>
-                        </blocks>
-                    </area>
-                    <area name="Secondary 2">
-                        <blocks>
-                        <block type="dashboard_newsflow_latest" name="">
-                            <data table="btDashboardNewsflowLatest">
-                                <record>
-                                    <slot>B</slot>
-                                </record>
-                            </data>
-                        </block>
-                        </blocks>
-                    </area>
-                    <area name="Secondary 3">
-                        <blocks>
-                        <block type="dashboard_featured_theme" name=""/>
-                        </blocks>
-                    </area>
-                    <area name="Secondary 4">
-                        <blocks>
-                        <block type="dashboard_featured_addon" name=""/>
-                        </blocks>
-                    </area>
-                    <area name="Secondary 5">
-                        <blocks>
-                        <block type="dashboard_newsflow_latest" name="">
-                            <data table="btDashboardNewsflowLatest">
-                                <record>
-                                    <slot>C</slot>
-                                </record>
-                            </data>
-                        </block>
-                        </blocks>
-                    </area>
-                </page>
-        //-->
-    </pages>
 </concrete5-cif>

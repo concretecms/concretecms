@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Controller\SinglePage\Dashboard\System\Files;
 
+use Concrete\Core\File\Filesystem;
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Loader;
 use PermissionKey;
@@ -13,12 +14,12 @@ class Permissions extends DashboardPageController
     public function save()
     {
         if (Loader::helper('validation/token')->validate('save_permissions')) {
-            $fs = FileSet::getGlobal();
+            $root = (new Filesystem())->getRootFolder();
             $tp = new TaskPermission();
             if ($tp->canAccessTaskPermissions()) {
-                $permissions = PermissionKey::getList('file_set');
+                $permissions = PermissionKey::getList('file_folder');
                 foreach ($permissions as $pk) {
-                    $pk->setPermissionObject($fs);
+                    $pk->setPermissionObject($root);
                     $paID = $_POST['pkID'][$pk->getPermissionKeyID()];
                     $pt = $pk->getPermissionAssignmentObject();
                     $pt->clearPermissionAssignment();

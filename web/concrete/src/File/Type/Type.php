@@ -90,10 +90,6 @@ class Type
     {
         if ($type > 0) {
             return static::mapGenericTypeText($type);
-        } else {
-            if (!empty($this->type)) {
-                return static::mapGenericTypeText($this->type);
-            }
         }
     }
 

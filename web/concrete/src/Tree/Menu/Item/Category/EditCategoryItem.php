@@ -5,6 +5,8 @@ namespace Concrete\Core\Tree\Menu\Item\Category;
 class EditCategoryItem extends CategoryItem
 {
 
+
+
     public function getDialogTitle()
     {
         return t('Edit Category');

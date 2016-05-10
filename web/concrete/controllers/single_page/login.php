@@ -261,33 +261,6 @@ class Login extends PageController
                     }
                 }
 
-                /*
-                // admin to dashboard?
-                $dash = Page::getByPath("/dashboard", "RECENT");
-                $dbp = new Permissions($dash);
-                //should administrator be redirected to dashboard?  defaults to yes if not set.
-                $adminToDash = intval($config->get('concrete.misc.login_admin_to_dashboard'));
-                if ($dbp->canRead() && $adminToDash) {
-                    if (!$rc instanceof Page || $rc->isError()) {
-                        $rc = $dash;
-                    }
-                    $rUrl = $navigation->getLinkToCollection($rc);
-                    break;
-                }
-
-                //options set in dashboard/users/registration
-                $login_redirect_mode = $config->get('concrete.misc.login_redirect');
-
-                //redirect to user profile
-                if ($login_redirect_mode == 'PROFILE') {
-                    $profileURL = $u->getUserInfoObject()->getUserPublicProfileUrl();
-                    if ($profileURL) {
-                        $rUrl = $profileURL;
-                    }
-                    break;
-                }
-
-                */
                 $login_redirect_mode = $config->get('concrete.misc.login_redirect');
 
                 //redirect to custom page
@@ -300,9 +273,12 @@ class Login extends PageController
                     }
                 }
 
-                $desktop = DesktopList::getMyDesktop();
-                if (is_object($desktop)) {
-                    $rUrl = $navigation->getLinkToCollection($desktop);
+                if ($login_redirect_mode == 'DESKTOP') {
+
+                    $desktop = DesktopList::getMyDesktop();
+                    if (is_object($desktop)) {
+                        $rUrl = $navigation->getLinkToCollection($desktop);
+                    }
                 }
 
                 break;

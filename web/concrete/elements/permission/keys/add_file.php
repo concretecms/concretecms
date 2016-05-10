@@ -15,34 +15,39 @@ $extensions = Loader::helper('concrete/file')->getAllowedFileExtensions();
 <?php if (count($included) > 0) {
     ?>
 
-<h3><?=t('Who can add what?')?></h3>
+<fieldset>
+
+<legend><?=t('Who can add what?')?></legend>
 
 <?php foreach ($included as $assignment) {
     $entity = $assignment->getAccessEntityObject();
     ?>
 
 
-<div class="clearfix">
-	<label><?=$entity->getAccessEntityLabel()?></label>
-	<div class="input">
-	<?=$form->select('fileTypesIncluded[' . $entity->getAccessEntityID() . ']', array('A' => t('All File Types'), 'C' => t('Custom')), $assignment->getFileTypesAllowedPermission())?><br/><br/>
-	<ul class="inputs-list" <?php if ($assignment->getFileTypesAllowedPermission() != 'C') {
-    ?>style="display: none"<?php 
-}
-    ?>>
-	<?php foreach ($extensions as $ext) {
-    $checked = ($assignment->getFileTypesAllowedPermission() == 1 || ($assignment->getFileTypesAllowedPermission() == 'C' && in_array($ext, $assignment->getFileTypesAllowedArray())));
-    ?>
-			<li><label><input type="checkbox" name="extensionInclude[<?=$entity->getAccessEntityID()?>][]" value="<?=$ext?>" <?php if ($checked) {
-    ?> checked="checked" <?php 
-}
-    ?> /> <span><?=$ext?></span></label></li>
-		<?php 
-}
-    ?>
-	</ul>
-	</div>
+<div class="form-group">
+	<label class="control-label"><?=$entity->getAccessEntityLabel()?></label>
+	<?=$form->select('fileTypesIncluded[' . $entity->getAccessEntityID() . ']', array('A' => t('All File Types'), 'C' => t('Custom')), $assignment->getFileTypesAllowedPermission())?>
 </div>
+
+
+<div data-list="extensions" class="form-group" <?php if ($assignment->getFileTypesAllowedPermission() != 'C') {
+?>style="display: none"<?php
+}
+?>>
+<?php foreach ($extensions as $ext) {
+$checked = ($assignment->getFileTypesAllowedPermission() == 1 || ($assignment->getFileTypesAllowedPermission() == 'C' && in_array($ext, $assignment->getFileTypesAllowedArray())));
+?>
+		<div class="checkbox"><label><input type="checkbox" name="extensionInclude[<?=$entity->getAccessEntityID()?>][]" value="<?=$ext?>" <?php if ($checked) {
+?> checked="checked" <?php
+}
+?> /> <?=$ext?></label></div>
+	<?php
+}
+?>
+</div>
+
+</fieldset>
+
 
 <?php 
 }
@@ -53,35 +58,39 @@ $extensions = Loader::helper('concrete/file')->getAllowedFileExtensions();
 <?php if (count($excluded) > 0) {
     ?>
 
-<h3><?=t('Who can\'t add what?')?></h3>
+<fieldset>
+<legend><?=t('Who can\'t add what?')?></legend>
 
 <?php foreach ($excluded as $assignment) {
     $entity = $assignment->getAccessEntityObject();
     ?>
 
 
-<div class="clearfix">
+<div class="form-group">
 	<label><?=$entity->getAccessEntityLabel()?></label>
-	<div class="input">
-	<?=$form->select('fileTypesExcluded[' . $entity->getAccessEntityID() . ']', array('N' => t('No File Types'), 'C' => t('Custom')), $assignment->getFileTypesAllowedPermission())?><br/><br/>
-	<ul class="inputs-list" <?php if ($assignment->getFileTypesAllowedPermission() != 'C') {
-    ?>style="display: none"<?php 
-}
-    ?>>
-	<?php foreach ($extensions as $ext) {
-    $checked = in_array($ext, $assignment->getFileTypesAllowedArray());
-    ?>
-			<li><label><input type="checkbox" name="extensionExclude[<?=$entity->getAccessEntityID()?>][]" value="<?=$ext?>" <?php if ($checked) {
-    ?> checked="checked" <?php 
-}
-    ?> /> <span><?=$ext?></span></label></li>
-		<?php 
-}
-    ?>
-	</ul>
-	</div>
+	<?=$form->select('fileTypesExcluded[' . $entity->getAccessEntityID() . ']', array('N' => t('No File Types'), 'C' => t('Custom')), $assignment->getFileTypesAllowedPermission())?>
+
 </div>
 
+
+<div data-list="extensions" class="form-group" <?php if ($assignment->getFileTypesAllowedPermission() != 'C') {
+?>style="display: none"<?php
+}
+?>>
+<?php foreach ($extensions as $ext) {
+$checked = in_array($ext, $assignment->getFileTypesAllowedArray());
+?>
+		<div class="checkbox"><label><input type="checkbox" name="extensionExclude[<?=$entity->getAccessEntityID()?>][]" value="<?=$ext?>" <?php if ($checked) {
+?> checked="checked" <?php
+}
+?> /> <?=$ext?></label></div>
+	<?php
+}
+?>
+</div>
+
+
+</fieldset>
 
 <?php 
 }
@@ -100,9 +109,9 @@ $extensions = Loader::helper('concrete/file')->getAllowedFileExtensions();
 $(function() {
 	$("#ccm-tab-content-custom-options select").change(function() {
 		if ($(this).val() == 'C') {
-			$(this).parent().find('ul.inputs-list').show();
+			$(this).closest('fieldset').find('div[data-list=extensions]').show();
 		} else {
-			$(this).parent().find('ul.inputs-list').hide();
+			$(this).closest('fieldset').find('div[data-list=extensions]').hide();
 		}
 	});
 });

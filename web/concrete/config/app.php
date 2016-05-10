@@ -110,6 +110,7 @@ return array(
         'core_manager_pagination_view' => '\Concrete\Core\Search\Pagination\View\ManagerServiceProvider',
         'core_manager_page_type_validator' => '\Concrete\Core\Page\Type\Validator\ManagerServiceProvider',
         'core_manager_layout_preset_provider' => '\Concrete\Core\Area\Layout\Preset\Provider\ManagerServiceProvider',
+        'core_manager_file_search_fields' => '\Concrete\Core\File\Search\Field\ManagerServiceProvider',
         'core_database' => '\Concrete\Core\Database\DatabaseServiceProvider',
         'core_form' => '\Concrete\Core\Form\FormServiceProvider',
         'core_session' => '\Concrete\Core\Session\SessionServiceProvider',
@@ -127,7 +128,6 @@ return array(
         // Authentication
         'core_oauth' => '\Concrete\Core\Authentication\Type\OAuth\ServiceProvider',
         'core_auth_community' => '\Concrete\Core\Authentication\Type\Community\ServiceProvider',
-        'core_auth_facebook' => '\Concrete\Core\Authentication\Type\Facebook\ServiceProvider',
         'core_auth_google' => '\Concrete\Core\Authentication\Type\Google\ServiceProvider',
         'core_auth_twitter' => '\Concrete\Core\Authentication\Type\Twitter\ServiceProvider',
 
@@ -232,12 +232,14 @@ return array(
         "/ccm/system/dialogs/file/sets" => array('\Concrete\Controller\Dialog\File\Sets::view'),
         "/ccm/system/dialogs/file/sets/submit" => array('\Concrete\Controller\Dialog\File\Sets::submit'),
         "/ccm/system/dialogs/file/properties" => array('\Concrete\Controller\Dialog\File\Properties::view'),
+        "/ccm/system/dialogs/file/advanced_search" => array('\Concrete\Controller\Dialog\File\AdvancedSearch::view'),
+        "/ccm/system/dialogs/file/advanced_search/add_field" => array('\Concrete\Controller\Dialog\File\AdvancedSearch::addField'),
+        "/ccm/system/dialogs/file/advanced_search/submit" => array('\Concrete\Controller\Dialog\File\AdvancedSearch::submit'),
+        "/ccm/system/dialogs/file/advanced_search/save_preset" => array('\Concrete\Controller\Dialog\File\AdvancedSearch::savePreset'),
         "/ccm/system/dialogs/file/properties/clear_attribute" => array('\Concrete\Controller\Dialog\File\Properties::clear_attribute'),
         "/ccm/system/dialogs/file/properties/save" => array('\Concrete\Controller\Dialog\File\Properties::save'),
         "/ccm/system/dialogs/file/properties/update_attribute" => array('\Concrete\Controller\Dialog\File\Properties::update_attribute'),
         "/ccm/system/dialogs/file/search" => array('\Concrete\Controller\Dialog\File\Search::view'),
-        "/ccm/system/dialogs/file/search/customize" => array('\Concrete\Controller\Dialog\File\Search\Customize::view'),
-        "/ccm/system/dialogs/file/search/customize/submit" => array('\Concrete\Controller\Dialog\File\Search\Customize::submit'),
         "/ccm/system/dialogs/file/thumbnails" => array('\Concrete\Controller\Dialog\File\Thumbnails::view'),
         "/ccm/system/dialogs/file/thumbnails/edit" => array('\Concrete\Controller\Dialog\File\Thumbnails\Edit::view'),
 
@@ -302,6 +304,8 @@ return array(
         "/ccm/system/file/rescan" => array('\Concrete\Controller\Backend\File::rescan'),
         "/ccm/system/file/star" => array('\Concrete\Controller\Backend\File::star'),
         "/ccm/system/file/upload" => array('\Concrete\Controller\Backend\File::upload'),
+        "/ccm/system/file/folder/add" => array('\Concrete\Controller\Backend\File\Folder::add'),
+        "/ccm/system/file/folder/contents" => array('\Concrete\Controller\Search\FileFolder::submit'),
 
         /*
          * Users
@@ -403,8 +407,10 @@ return array(
         /*
          * Search Routes
          */
-        "/ccm/system/search/files/field/{field}" => array('\Concrete\Controller\Search\Files::field'),
-        "/ccm/system/search/files/submit" => array('\Concrete\Controller\Search\Files::submit'),
+        "/ccm/system/search/files/basic" => array('\Concrete\Controller\Search\Files::searchBasic'),
+        "/ccm/system/search/files/current" => array('\Concrete\Controller\Search\Files::searchCurrent'),
+        "/ccm/system/search/files/preset/{presetID}" => array('\Concrete\Controller\Search\Files::searchPreset'),
+        "/ccm/system/search/files/clear" => array('\Concrete\Controller\Search\Files::clearSearch'),
         "/ccm/system/search/groups/submit" => array('\Concrete\Controller\Search\Groups::submit'),
         "/ccm/system/search/pages/field/{field}" => array('\Concrete\Controller\Search\Pages::field'),
         "/ccm/system/search/pages/submit" => array('\Concrete\Controller\Search\Pages::submit'),
@@ -1028,6 +1034,7 @@ return array(
                 array('javascript-localized', 'core/localization'),
                 array('javascript', 'core/app'),
                 array('javascript', 'jquery/fileupload'),
+                array('javascript', 'core/tree'),
                 array('javascript', 'core/file-manager'),
             ),
         ),
