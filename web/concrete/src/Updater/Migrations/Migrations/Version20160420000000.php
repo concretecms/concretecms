@@ -531,6 +531,12 @@ class Version20160420000000 extends AbstractMigration
         if (!is_object($bt)) {
             BlockType::installBlockType('desktop_waiting_for_me');
         }
+
+        $bt = BlockType::getByHandle('page_title');
+        if (is_object($bt)) {
+            $bt->refresh();
+        }
+
     }
 
     protected function addTreeNodeTypes()
