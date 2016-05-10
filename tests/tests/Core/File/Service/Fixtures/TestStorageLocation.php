@@ -2,7 +2,7 @@
 
 namespace Concrete\Tests\Core\File\Service\Fixtures;
 use Concrete\Core\File\StorageLocation\StorageLocation;
-use League\Flysystem\Cache\Noop;
+use League\Flysystem\Cached\Storage\Noop;
 
 class TestStorageLocation extends StorageLocation
 {
