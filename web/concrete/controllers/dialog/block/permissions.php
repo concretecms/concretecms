@@ -1,11 +1,11 @@
 <?php
 namespace Concrete\Controller\Dialog\Block;
+
 use Concrete\Controller\Backend\UserInterface\Block as BackendInterfaceBlockController;
 use View;
 
 class Permissions extends BackendInterfaceBlockController
 {
-
     public function viewList()
     {
         $v = new View('/dialogs/block/permissions/list');
@@ -28,6 +28,4 @@ class Permissions extends BackendInterfaceBlockController
     {
         return $this->permissions->canEditBlockPermissions();
     }
-
 }
-

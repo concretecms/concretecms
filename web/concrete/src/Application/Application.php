@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Application;
 
 use Concrete\Core\Block\BlockType\BlockType;
@@ -9,6 +8,8 @@ use Concrete\Core\Cache\OpCache;
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Foundation\ClassLoader;
 use Concrete\Core\Foundation\EnvironmentDetector;
+use Concrete\Core\Foundation\Runtime\DefaultRuntime;
+use Concrete\Core\Foundation\Runtime\RuntimeInterface;
 use Concrete\Core\Localization\Localization;
 use Concrete\Core\Logging\Query\Logger;
 use Concrete\Core\Routing\DispatcherRouteCallback;
@@ -24,7 +25,7 @@ use Illuminate\Container\Container;
 use Job;
 use JobSet;
 use Log;
-use Package;
+use Concrete\Core\Support\Facade\Package;
 use Page;
 use Redirect;
 use Concrete\Core\Http\Request;
@@ -251,9 +252,9 @@ class Application extends Container
         $cl = ClassLoader::getInstance();
         /** @var \Package[] $pl */
         foreach ($pl as $p) {
-            $p->registerConfigNamespace();
+            \Config::package($p);
             if ($p->isPackageInstalled()) {
-                $pkg = Package::getClass($p->getPackageHandle());
+                $pkg = $this->make('Concrete\Core\Package\PackageService')->getClass($p->getPackageHandle());
                 if (is_object($pkg) && (!$pkg instanceof \Concrete\Core\Package\BrokenPackage)) {
                     $cl->registerPackage($pkg);
                     $this->packages[] = $pkg;
@@ -270,25 +271,22 @@ class Application extends Container
 
         $config = $this['config'];
 
-        foreach($this->packages as $pkg) {
+        $loc = Localization::getInstance();
+
+        foreach ($this->packages as $pkg) {
             // handle updates
             if ($config->get('concrete.updates.enable_auto_update_packages')) {
                 $dbPkg = \Package::getByHandle($pkg->getPackageHandle());
                 $pkgInstalledVersion = $dbPkg->getPackageVersion();
                 $pkgFileVersion = $pkg->getPackageVersion();
                 if (version_compare($pkgFileVersion, $pkgInstalledVersion, '>')) {
-                    $currentLocale = Localization::activeLocale();
-                    if ($currentLocale != 'en_US') {
-                        Localization::changeLocale('en_US');
-                    }
+                    $loc->pushActiveContext('system');
                     $dbPkg->upgradeCoreData();
                     $dbPkg->upgrade();
-                    if ($currentLocale != 'en_US') {
-                        Localization::changeLocale($currentLocale);
-                    }
+                    $loc->popActiveContext();
                 }
             }
-            $pkg->setupPackageLocalization();
+            $this->make('Concrete\Core\Package\PackageService')->setupLocalization($pkg);
         }
         foreach($this->packages as $pkg) {
             if (method_exists($pkg, 'on_start')) {
@@ -299,10 +297,14 @@ class Application extends Container
             }
         }
         $config->set('app.bootstrap.packages_loaded', true);
-        \Localization::setupSiteLocalization();
+
+        // After package initialization, the translations adapters need to be
+        // reinitialized when accessed the next time because new translations
+        // are now available.
+        $loc->removeLoadedTranslatorAdapters();
 
         if ($checkAfterStart) {
-            foreach($this->packages as $pkg) {
+            foreach ($this->packages as $pkg) {
                 if (method_exists($pkg, 'on_after_packages_start')) {
                     $pkg->on_after_packages_start();
                 }
@@ -420,7 +422,6 @@ class Application extends Container
         // work unless they come at the end.
         $this->registerLegacyRoutes();
 
-
         $path = rawurldecode($request->getPathInfo());
 
         if (substr($path, 0, 3) == '../' || substr($path, -3) == '/..' || strpos($path, '/../') ||
@@ -454,7 +455,6 @@ class Application extends Container
 
     protected function registerLegacyRoutes()
     {
-
         \Route::register("/tools/blocks/{btHandle}/{tool}",
             '\Concrete\Core\Legacy\Controller\ToolController::displayBlock',
             'blockTool',
@@ -516,7 +516,7 @@ class Application extends Container
     /**
      * Detect the application's current environment.
      *
-     * @param  array|string|Callable  $environments
+     * @param  array|string|callable  $environments
      *
      * @return string
      */
@@ -547,7 +547,7 @@ class Application extends Container
      *
      * @throws BindingResolutionException
      */
-    public function build($concrete, $parameters = array())
+    public function build($concrete, array $parameters = array())
     {
         $object = parent::build($concrete, $parameters);
         if (is_object($object) && $object instanceof ApplicationAwareInterface) {
@@ -557,4 +557,36 @@ class Application extends Container
         return $object;
     }
 
+    /**
+     * @return RuntimeInterface
+     */
+    public function getRuntime()
+    {
+        // Set the runtime to a singleton
+        $runtime_class = 'Concrete\Core\Foundation\Runtime\DefaultRuntime';
+        if (!$this->isShared($runtime_class)) {
+            $this->singleton($runtime_class);
+        }
+
+        /** @var DefaultRuntime $runtime */
+        $runtime = $this->make($runtime_class);
+
+        // If we're in CLI, lets set the runner to the CLI runner
+        if ($this->isRunThroughCommandLineInterface()) {
+            $runtime->setRunClass('Concrete\Core\Foundation\Runtime\Run\CLIRunner');
+        }
+
+        return $runtime;
+    }
+
+    /**
+     * @deprecated Use the singleton method
+     *
+     * @param $abstract
+     * @param $concrete
+     */
+    public function bindShared($abstract, $concrete)
+    {
+        return $this->singleton($abstract, $concrete);
+    }
 }

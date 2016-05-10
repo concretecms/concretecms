@@ -5,7 +5,7 @@ use Concrete\Core\Config\Renderer;
 use Illuminate\Filesystem\Filesystem;
 
 /**
- * Class FileLoaderTest
+ * Class FileLoaderTest.
  *
  * Non-namespaced order:
  *   /concrete/config/group.php
@@ -19,11 +19,9 @@ use Illuminate\Filesystem\Filesystem;
  *   /application/config/generated_overrides/namespace/group.php
  *   /application/config/namespace/group.php
  *   /application/config/namespace/environment.group.php
- *
  */
 class FileLoaderTest extends PHPUnit_Framework_TestCase
 {
-
     /** @var FileLoader */
     protected $loader;
 
@@ -52,42 +50,41 @@ class FileLoaderTest extends PHPUnit_Framework_TestCase
         $path = DIR_APPLICATION . '/config/';
         $this->loader->addNamespace($this->namespace, $path . $this->namespace);
 
-
         $paths = array(
             // No Namespace
-            "generated_overrides/{$this->group}.php"                     => array(
+            "generated_overrides/{$this->group}.php" => array(
                 'non-namespaced' => true,
-                'override'       => true,
-                'second'         => false // This isn't the second one
+                'override' => true,
+                'second' => false, // This isn't the second one
             ),
-            "{$this->group}.php"                                         => array(
+            "{$this->group}.php" => array(
                 'non-namespaced' => true,
-                'main_group'     => true,
-                'second'         => true, // This is the second one, nothing after this should override this value
-                'last'           => false // This isn't the last one
+                'main_group' => true,
+                'second' => true, // This is the second one, nothing after this should override this value
+                'last' => false, // This isn't the last one
             ),
-            "{$this->environment}.{$this->group}.php"                    => array(
+            "{$this->environment}.{$this->group}.php" => array(
                 'non-namespaced' => true,
-                'environment'    => true,
-                'last'           => true // This is the last one, nothing should load after this.
+                'environment' => true,
+                'last' => true, // This is the last one, nothing should load after this.
             ),
             // Namespace
-            "generated_overrides/{$this->namespace}/{$this->group}.php"  => array(
+            "generated_overrides/{$this->namespace}/{$this->group}.php" => array(
                 'namespaced' => true,
-                'override'   => true,
-                'second'     => false // This isn't the second one
+                'override' => true,
+                'second' => false, // This isn't the second one
             ),
-            "{$this->namespace}/{$this->group}.php"                      => array(
+            "{$this->namespace}/{$this->group}.php" => array(
                 'namespaced' => true,
                 'main_group' => true,
-                'second'     => true, // This is the second one, nothing after this should override this value
-                'last'       => false // This isn't the last one
+                'second' => true, // This is the second one, nothing after this should override this value
+                'last' => false, // This isn't the last one
             ),
             "{$this->namespace}/{$this->environment}.{$this->group}.php" => array(
-                'namespaced'  => true,
+                'namespaced' => true,
                 'environment' => true,
-                'last'        => true // This is the last one, nothing should load after this.
-            )
+                'last' => true, // This is the last one, nothing should load after this.
+            ),
         );
 
         foreach ($paths as $relative_path => $array) {
@@ -143,7 +140,5 @@ class FileLoaderTest extends PHPUnit_Framework_TestCase
         $this->assertTrue(array_get($loaded, 'second'), 'Second loaded out of order');
         $this->assertTrue(array_get($loaded, 'last'), 'Last loaded out of order');
         $this->assertNull(array_get($loaded, 'non-namespaced'), 'Loaded a namespaced file... that\'s wrong...');
-
     }
-
 }

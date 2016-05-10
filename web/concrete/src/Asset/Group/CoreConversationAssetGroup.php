@@ -10,9 +10,10 @@ class CoreConversationAssetGroup extends AssetGroup
     {
         $assetPointers = parent::getAssetPointers();
         $editor = Editor::getActive();
-        foreach ((array)$editor->getConversationEditorAssetPointers() as $assetPointer) {
+        foreach ((array) $editor->getConversationEditorAssetPointers() as $assetPointer) {
             $assetPointers[] = $assetPointer;
         }
+
         return $assetPointers;
     }
 }

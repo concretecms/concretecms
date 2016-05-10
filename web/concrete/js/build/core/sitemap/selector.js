@@ -34,13 +34,13 @@
     ConcretePageSelector.prototype = {
 
 
-        chooseTemplate: '<div class="ccm-page-selector">' +
+        chooseTemplate: '<div class="ccm-item-selector">' +
             '<input type="hidden" name="<%=options.inputName%>" value="0" /><a href="#" data-page-selector-link="choose"><%=options.chooseText%></a></div>',
-        loadingTemplate: '<div class="ccm-page-selector"><div class="ccm-page-selector-choose"><i class="fa fa-spin fa-spinner"></i> <%=options.loadingText%></div></div>',
-        pageLoadedTemplate: '<div class="ccm-page-selector"><div class="ccm-page-selector-page-selected">' +
+        loadingTemplate: '<div class="ccm-item-selector"><div class="ccm-item-selector-choose"><i class="fa fa-spin fa-spinner"></i> <%=options.loadingText%></div></div>',
+        pageLoadedTemplate: '<div class="ccm-item-selector"><div class="ccm-item-selector-item-selected">' +
             '<input type="hidden" name="<%=inputName%>" value="<%=page.cID%>" />' +
-            '<a data-page-selector-action="clear" href="#" class="ccm-page-selector-clear"><i class="fa fa-close"></i></a>' +
-            '<div class="ccm-page-selector-page-selected-title"><%=page.name%></div>' +
+            '<a data-page-selector-action="clear" href="#" class="ccm-item-selector-clear"><i class="fa fa-close"></i></a>' +
+            '<div class="ccm-item-selector-item-selected-title"><%=page.name%></div>' +
             '</div></div>',
 
         loadPage: function(cID) {

@@ -1,16 +1,14 @@
-<?
+<?php
 namespace Concrete\Controller\SinglePage\Dashboard\Pages;
 
-use Concrete\Core\Error\Error;
-use \Concrete\Core\Page\Controller\DashboardPageController;
+use Concrete\Core\Error\ErrorBag\ErrorBag;
+use Concrete\Core\Page\Controller\DashboardPageController;
 use PageType;
 use Loader;
 use PageTemplate;
-use \Concrete\Core\Page\Type\PublishTarget\Type as PageTypePublishTargetType;
 
 class Types extends DashboardPageController
 {
-
     public function page_type_added()
     {
         $this->set('success', t('Page Type added successfully.'));
@@ -107,7 +105,6 @@ class Types extends DashboardPageController
         $this->view();
     }
 
-
     public function submit($ptID = false)
     {
         $pagetype = PageType::getByID($ptID);
@@ -150,7 +147,7 @@ class Types extends DashboardPageController
             $this->error->add(t('Invalid page type target type.'));
         } else {
             $pe = $target->validatePageTypeRequest($this->request);
-            if ($pe instanceof Error) {
+            if ($pe instanceof ErrorBag) {
                 $this->error->add($pe);
             }
         }
@@ -162,7 +159,7 @@ class Types extends DashboardPageController
                 'ptLaunchInComposer' => $this->post('ptLaunchInComposer'),
                 'ptIsFrequentlyAdded' => $this->post('ptIsFrequentlyAdded'),
                 'allowedTemplates' => $this->post('ptAllowedPageTemplates'),
-                'templates' => $templates
+                'templates' => $templates,
             );
             $pagetype->update($data);
             $configuredTarget = $target->configurePageTypePublishTarget($pagetype, $this->post());

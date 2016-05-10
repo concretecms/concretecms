@@ -1,6 +1,6 @@
 <?php
 /**
- * @var \Concrete\Core\Attribute\Key\Category $category
+ * @var \Concrete\Core\Attribute\Key\Category
  * @var $objects
  * @var $object
  * @var callback $permissionsCallback
@@ -9,7 +9,7 @@
  * @var string $saveAction
  */
 $sets = $category->getAttributeSets();
-foreach ($sets AS $set) {
+foreach ($sets as $set) {
     echo '<h3>' . $set->getAttributeSetDisplayName() . '</h3><hr/>';
     foreach ($set->getAttributeKeys() as $key => $ak) {
         Loader::element(
@@ -21,13 +21,13 @@ foreach ($sets AS $set) {
                 'saveAction' => $saveAction,
                 'clearAction' => $clearAction,
                 'permissionsCallback' => $permissionsCallback,
-                'permissionArguments' => $permissionsArguments
+                'permissionArguments' => $permissionsArguments,
             )
         );
     }
 }
 
-$attributeKeys = $category->getUnassignedAttributeKeys();
+$attributeKeys = $category->getController()->getUnassignedAttributeKeys();
 if (count($attributeKeys) > 0) {
     echo '<h3>' . t('Other') . '</h3><hr/>';
     foreach ($attributeKeys as $key => $ak) {
@@ -40,7 +40,7 @@ if (count($attributeKeys) > 0) {
                 'saveAction' => $saveAction,
                 'clearAction' => $clearAction,
                 'permissionsCallback' => $permissionsCallback,
-                'permissionArguments' => $permissionsArguments
+                'permissionArguments' => $permissionsArguments,
             )
         );
     }

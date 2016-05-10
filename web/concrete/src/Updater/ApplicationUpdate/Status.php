@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Updater\ApplicationUpdate;
 
 class Status
@@ -44,7 +43,7 @@ class Status
         $o = new \stdClass();
         $o->status = $this->getStatus();
         $o->safety = $this->getSafety();
+
         return $o;
     }
-
 }

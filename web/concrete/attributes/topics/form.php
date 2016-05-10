@@ -1,4 +1,4 @@
-<? defined('C5_EXECUTE') or die("Access Denied."); ?>
+<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
 <div class="ccm-topic-attribute-wrapper">
 	<style>
 		.tree-view-template_<?php echo $akID?> ul.dynatree-container {
@@ -8,14 +8,13 @@
 	<script type="text/javascript">
 	$(function() {
 		var treeObj = $('.tree-view-template_<?php echo $akID ?>');
-		treeObj.ccmtopicstree({
+		treeObj.concreteTree({
 			'treeID': '<?php echo $treeID ?>',
 			'treeNodeParentID': '<?php echo $parentNode ?>',
 			'chooseNodeInForm': 'multiple',
 			'allowFolderSelection': false,
 			'selectNodesByKey': [<?php echo $valueIDs ?>],
 			'selectMode': '2',
-			'noDrag' : true,
 			'minExpandLevel': '1',
 			'checkbox': true,
 			'onSelect' : function(select, node) {
@@ -38,11 +37,13 @@
 		</div>
 		<div class="hidden-value-container">
 		<?php
-		if(is_array($valueIDArray)) {
-			foreach($valueIDArray as $vID) { ?>
+        if (is_array($valueIDArray)) {
+            foreach ($valueIDArray as $vID) {
+                ?>
 				<input data-node-id="<?=$vID?>" type="hidden" name="topics_<?php echo $akID ?>[]" value="<?php echo $vID ?>">
-		<?php }
-		} ?>
+		<?php 
+            }
+        } ?>
 		</div>
 	</fieldset>
 </div>

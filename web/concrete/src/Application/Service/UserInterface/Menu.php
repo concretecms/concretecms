@@ -6,7 +6,6 @@ use Concrete\Core\Application\UserInterface\Menu\Item\ItemInterface;
 
 class Menu
 {
-
     /**
      * @var ItemInterface[]
      */
@@ -16,6 +15,7 @@ class Menu
      * @param string $menuItemControllerHandle
      * @param bool   $pkgHandle
      * @param array  $options
+     *
      * @return Item
      */
     public function addPageHeaderMenuItem(
@@ -23,13 +23,12 @@ class Menu
         $pkgHandle = false,
         $options = array()
     ) {
-
         $defaults = array(
             'icon' => 'share',
             'label' => false,
             'position' => 'right',
             'href' => false,
-            'linkAttributes' => array()
+            'linkAttributes' => array(),
         );
 
         $options = array_merge($defaults, $options);
@@ -55,11 +54,11 @@ class Menu
         $this->pageHeaderMenuItems[] = $item;
     }
 
-
     /**
-     * Returns current menu items
+     * Returns current menu items.
      *
      * @param bool $position
+     *
      * @return ItemInterface[]
      */
     public function getPageHeaderMenuItems($position = false)
@@ -71,11 +70,10 @@ class Menu
                     $tmpItems[] = $mi;
                 }
             }
+
             return $tmpItems;
         } else {
             return $this->pageHeaderMenuItems;
         }
     }
-
 }
-

@@ -1,12 +1,11 @@
 <?php
-
 namespace Concrete\Core\Search\Pagination\View;
+
 use Concrete\Core\Search\Pagination\Pagination;
-use Concrete\Core\Search\Pagination\View\ViewInterface;
-use \Core;
+use Core;
+
 class ViewRenderer
 {
-
     protected $view;
     protected $pagination;
     protected $routeCollectionFunction;
@@ -18,7 +17,15 @@ class ViewRenderer
         $list = $pagination->getItemListObject();
         $this->routeCollectionFunction = function ($page) use ($list) {
             $qs = Core::make('helper/url');
-            $url = $qs->setVariable($list->getQueryPaginationPageParameter(), $page);
+
+            $args = array(
+                $list->getQueryPaginationPageParameter() => $page,
+                $list->getQuerySortColumnParameter() => $list->getActiveSortColumn(),
+                $list->getQuerySortDirectionParameter() => $list->getActiveSortDirection(),
+            );
+
+            $url = $qs->setVariable($args, false);
+
             return $url;
         };
     }

@@ -1,4 +1,4 @@
-<? defined('C5_EXECUTE') or die("Access Denied."); ?>
+<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
 <?= Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(
     t('Public Registration'),
     t(
@@ -30,23 +30,16 @@ $h = Loader::helper('concrete/ui');
                 </div>
                 <div class="radio">
                     <label>
+                        <input type="radio" name="registration_type" value="enabled"
+                               style="" <?php echo ($registration_type == "enabled") ? 'checked' : '' ?> />
+                        <span><?php echo t('On') ?></span>
+                    </label>
+                </div>
+                <div class="radio">
+                    <label>
                         <input type="radio" name="registration_type" value="validate_email"
                                style="" <?php echo ($registration_type == "validate_email") ? 'checked' : '' ?> />
                         <span><?php echo t(' On - email validation') ?></span>
-                    </label>
-                </div>
-                <div class="radio">
-                    <label>
-                        <input type="radio" name="registration_type" value="manual_approve"
-                               style="" <?php echo ($registration_type == "manual_approve") ? 'checked' : '' ?> />
-                        <span><?php echo t('On - approve manually') ?></span>
-                    </label>
-                </div>
-                <div class="radio">
-                    <label>
-                        <input type="radio" name="registration_type" value="enabled"
-                               style="" <?php echo ($registration_type == "enabled") ? 'checked' : '' ?> />
-                        <span><?php echo t('On - signup and go') ?></span>
                     </label>
                 </div>
             </div>

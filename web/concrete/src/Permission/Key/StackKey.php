@@ -1,5 +1,6 @@
 <?php
 namespace Concrete\Core\Permission\Key;
-class StackKey extends PageKey {
 
+class StackKey extends PageKey
+{
 }

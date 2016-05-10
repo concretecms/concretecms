@@ -1,17 +1,17 @@
 <?php
 namespace Concrete\Core\Page;
-use User;
 
-class DuplicatePageEvent extends Event {
+class DuplicatePageEvent extends Event
+{
+    protected $newPage;
 
-	protected $newPage;
+    public function setNewPageObject($newPage)
+    {
+        $this->newPage = $newPage;
+    }
 
-	public function setNewPageObject($newPage) {
-		$this->newPage = $newPage;
-	}
-
-	public function getNewPageObject() {
-		return $this->newPage;
-	}
-
+    public function getNewPageObject()
+    {
+        return $this->newPage;
+    }
 }

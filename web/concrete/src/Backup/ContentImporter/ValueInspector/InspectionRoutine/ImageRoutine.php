@@ -1,13 +1,10 @@
 <?php
-
 namespace Concrete\Core\Backup\ContentImporter\ValueInspector\InspectionRoutine;
 
 use Concrete\Core\Backup\ContentImporter\ValueInspector\Item\ImageItem;
-use Concrete\Core\Backup\ContentImporter\ValueInspector\Item\PageFeedItem;
 
 class ImageRoutine extends AbstractRegularExpressionRoutine
 {
-
     public function getHandle()
     {
         return 'image';
@@ -22,6 +19,4 @@ class ImageRoutine extends AbstractRegularExpressionRoutine
     {
         return new ImageItem($identifier);
     }
-
-
 }

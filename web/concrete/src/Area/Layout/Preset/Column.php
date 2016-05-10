@@ -7,7 +7,6 @@ use Sunra\PhpSimple\HtmlDomParser;
 
 class Column implements ColumnInterface
 {
-
     protected $column;
 
     public static function fromHtml($html)
@@ -19,11 +18,12 @@ class Column implements ColumnInterface
         $node = $nodes[0];
 
         $element = new Element($node->tag);
-        foreach($node->getAllAttributes() as $key => $value) {
+        foreach ($node->getAllAttributes() as $key => $value) {
             $element->setAttribute($key, $value);
         }
 
         $column = new static($element);
+
         return $column;
     }
 
@@ -43,7 +43,7 @@ class Column implements ColumnInterface
         $inner = new Element('div');
         $inner->addClass('ccm-layout-column-inner ccm-layout-column-highlight');
         $column->appendChild($inner);
+
         return $column;
     }
-
 }

@@ -1,15 +1,12 @@
 <?php
-
 namespace Concrete\Core\Updater\Migrations\Migrations;
 
 use Concrete\Core\Page\Page;
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
-use ORM;
 
 class Version20151221000000 extends AbstractMigration
 {
-
     public function up(Schema $schema)
     {
         // image resizing options
@@ -38,15 +35,9 @@ class Version20151221000000 extends AbstractMigration
         if (is_object($bt)) {
             $bt->refresh();
         }
-
-
-
-
     }
 
     public function down(Schema $schema)
     {
     }
-
-
 }

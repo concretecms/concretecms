@@ -1,7 +1,6 @@
-<? defined('C5_EXECUTE') or die("Access Denied.");
+<?php defined('C5_EXECUTE') or die("Access Denied.");
 
 use \Concrete\Core\Page\Type\Composer\FormLayoutSetControl as PageTypeComposerFormLayoutSetControl;
-use \Concrete\Core\Page\Type\Composer\FormLayoutSet as PageTypeComposerFormLayoutSet;
 
 ?>
 
@@ -34,10 +33,11 @@ use \Concrete\Core\Page\Type\Composer\FormLayoutSet as PageTypeComposerFormLayou
 
 <p class="lead"><?php echo $pagetype->getPageTypeDisplayName(); ?></p>
 
-<? if (count($sets) > 0) {
+<?php if (count($sets) > 0) {
 
-	/* @var $set Concrete\Core\Page\Type\Composer\FormLayoutSet */
-	foreach($sets as $set) { ?>
+    /* @var $set Concrete\Core\Page\Type\Composer\FormLayoutSet */
+    foreach ($sets as $set) {
+        ?>
 
 		<div class="ccm-page-type-composer-form-layout-control-set panel panel-default" data-page-type-composer-form-layout-control-set-id="<?= $set->getPageTypeComposerFormLayoutSetID()?>">
 			<div class="panel-heading">
@@ -47,13 +47,13 @@ use \Concrete\Core\Page\Type\Composer\FormLayoutSet as PageTypeComposerFormLayou
 					<li><a href="#" data-edit-set="<?=$set->getPageTypeComposerFormLayoutSetID()?>"><i class="fa fa-pencil"></i></a></li>
 					<li><a href="#" data-delete-set="<?=$set->getPageTypeComposerFormLayoutSetID()?>"><i class="fa fa-trash-o"></i></a></li>
 				</ul>
-				<div class="ccm-page-type-composer-form-layout-control-set-name" ><?
-					if ($set->getPageTypeComposerFormLayoutSetDisplayName()) {
-						echo $set->getPageTypeComposerFormLayoutSetDisplayName();
-					} else {
-						echo t('(No Name)');
-					}
-				?></div>
+				<div class="ccm-page-type-composer-form-layout-control-set-name" ><?php
+                    if ($set->getPageTypeComposerFormLayoutSetDisplayName()) {
+                        echo $set->getPageTypeComposerFormLayoutSetDisplayName();
+                    } else {
+                        echo t('(No Name)');
+                    }
+        ?></div>
 			</div>
 
 			<div style="display: none">
@@ -91,18 +91,24 @@ use \Concrete\Core\Page\Type\Composer\FormLayoutSet as PageTypeComposerFormLayou
 
 			<table class="table table-hover" style="width: 100%;">
 				<tbody class="ccm-page-type-composer-form-layout-control-set-inner">
-					<? $controls = PageTypeComposerFormLayoutSetControl::getList($set);
-					foreach($controls as $cnt) {
-						echo Loader::element('page_types/composer/form/layout_set/control', array('control' => $cnt));
-					} ?>
+					<?php $controls = PageTypeComposerFormLayoutSetControl::getList($set);
+        foreach ($controls as $cnt) {
+            echo Loader::element('page_types/composer/form/layout_set/control', array('control' => $cnt));
+        }
+        ?>
 				</tbody>
 			</table>
 		</div>
 
-	<? } ?>
-<? } else { ?>
+	<?php 
+    }
+    ?>
+<?php 
+} else {
+    ?>
 	<p><?=t('You have not added any composer form layout control sets.')?></p>
-<? } ?>
+<?php 
+} ?>
 
 </div>
 

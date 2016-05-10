@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Page\Theme;
 
 use Concrete\Core\Http\ResponseAssetGroup;
@@ -370,6 +369,7 @@ class Theme extends Object
 
     /**
      * Returns the value list of the custom style object if one exists.
+     *
      * @return ValueList
      */
     public function getThemeCustomStyleObjectValues()
@@ -378,6 +378,7 @@ class Theme extends Object
         if (is_object($style)) {
             return $style->getValueList();
         }
+
         return null;
     }
 
@@ -667,21 +668,15 @@ class Theme extends Object
             if ($cnt > 0) {
                 throw new \Exception(static::E_THEME_INSTALLED);
             }
-            $curLang = Localization::activeLocale();
-            if ($curLang !== 'en_US') {
-                Localization::changeLocale('en_US');
-            }
+            $loc = Localization::getInstance();
+            $loc->pushActiveContext('system');
             try {
                 $res = static::getThemeNameAndDescription($dir, $pThemeHandle, is_object($pkg) ? $pkg->getPackageHandle() : '');
             } catch (\Exception $x) {
-                if ($curLang !== 'en_US') {
-                    Localization::changeLocale($curLang);
-                }
+                $loc->popActiveContext();
                 throw $x;
             }
-            if ($curLang !== 'en_US') {
-                Localization::changeLocale($curLang);
-            }
+            $loc->popActiveContext();
             if (strlen($res->pError) === 0) {
                 $pThemeName = $res->pThemeName;
                 $pThemeDescription = $res->pThemeDescription;
@@ -851,7 +846,7 @@ class Theme extends Object
 
     public function isUninstallable()
     {
-        return ($this->pThemeDirectory != DIR_FILES_THEMES_CORE.'/'.$this->getThemeHandle());
+        return $this->pThemeDirectory != DIR_FILES_THEMES_CORE.'/'.$this->getThemeHandle();
     }
 
     public function getThemeThumbnail()

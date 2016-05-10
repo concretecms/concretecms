@@ -1,5 +1,6 @@
 <?php
 namespace Concrete\Controller\SinglePage\Dashboard\Pages;
+
 use Concrete\Core\Area\Area;
 use Concrete\Core\Attribute\Key\CollectionKey;
 use Concrete\Core\Page\Controller\DashboardPageController;
@@ -9,7 +10,6 @@ use Core;
 
 class Feeds extends DashboardPageController
 {
-
     public function view()
     {
         $this->set('feeds', Feed::getList());
@@ -135,7 +135,7 @@ class Feeds extends DashboardPageController
     {
         $pageTypes = array('0' => t('** No Filtering'));
         $types = Type::getList();
-        foreach($types as $type) {
+        foreach ($types as $type) {
             $pageTypes[$type->getPageTypeID()] = $type->getPageTypeDisplayName();
         }
         $this->set('pageTypes', $pageTypes);
@@ -151,12 +151,11 @@ class Feeds extends DashboardPageController
 
         $areas = Area::getHandleList();
         $select = array();
-        foreach($areas as $handle) {
+        foreach ($areas as $handle) {
             $select[$handle] = $handle;
         }
         $this->set('areas', $select);
         $this->requireAsset('core/topics');
-
     }
 
     public function edit($pfID = null)
@@ -175,5 +174,4 @@ class Feeds extends DashboardPageController
         $this->set('feed', $feed);
         $this->add();
     }
-
 }

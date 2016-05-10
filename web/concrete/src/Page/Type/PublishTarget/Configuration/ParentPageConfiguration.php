@@ -2,12 +2,10 @@
 namespace Concrete\Core\Page\Type\PublishTarget\Configuration;
 
 use Concrete\Core\Page\Type\Type;
-use Loader;
 use Page;
 
 class ParentPageConfiguration extends Configuration
 {
-
     protected $cParentID;
 
     public function setParentPageID($cParentID)
@@ -17,7 +15,7 @@ class ParentPageConfiguration extends Configuration
 
     /**
      * Note: if a configuration contains this method, it is assumed that the configuration will default to this page and
-     * can skip composer
+     * can skip composer.
      */
     public function getDefaultParentPageID()
     {
@@ -47,6 +45,4 @@ class ParentPageConfiguration extends Configuration
     {
         return $page->getCollectionID() == $this->getParentPageID();
     }
-
-
 }

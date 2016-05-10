@@ -23,7 +23,7 @@ html.ccm-panel-right {
 
 div#ccm-dashboard-content {
 
-  padding-top: 35px;
+  padding-top: 48px;
 
   tr {
     &.ccm-theme-active {
@@ -63,11 +63,16 @@ div#ccm-dashboard-content {
     margin-left: -97px;
     margin-right: -50px;
     margin-bottom: 30px;
-    padding: 34px 80px 34px 97px;
+    padding: 39px 80px 0px 97px;
+    min-height: 103px;
+    position: relative;
 
     h1 {
       font-size: 22px;
       font-weight: 600;
+      display: inline-block;
+      margin-top: 0px;
+      margin-bottom: 0px;
       color: #105192;
     }
 
@@ -77,6 +82,16 @@ div#ccm-dashboard-content {
 
     margin-bottom: 30px;
     */
+
+    a.ccm-dashboard-page-header-bookmark {
+      position: absolute;
+      left: 72px;
+      top: 41px;
+      color: rgba(16,81,146,0.3);
+      &:focus {
+        outline: none;
+      }
+    }
   }
 
   form.ccm-dashboard-content-form {
@@ -108,6 +123,13 @@ div#ccm-dashboard-content {
     section {
       margin-left: 97px;
     }
+
+    div.ccm-dashboard-content-full-inner {
+      /* so stupid */
+      padding-left: 97px;
+      padding-right: 50px;
+      padding-top: 30px;
+    }
   }
 
   header + div.ccm-dashboard-content-full {
@@ -116,18 +138,18 @@ div#ccm-dashboard-content {
 
   div.ccm-dashboard-header-buttons {
     position: absolute;
-    top: 85px;
+    top: 82px;
     right: 50px;
 
   }
 
-}
+  header {
+    div.ccm-dashboard-header-buttons {
+      top: 35px;
+    }
 
-/**
- * Attributes
- */
-div.ccm-attribute-list-wrapper {
-  padding-bottom: 20px;
+  }
+
 }
 
 /**
@@ -145,6 +167,8 @@ div#ccm-dashboard-content {
 div#ccm-dashboard-content {
   div.ccm-notification-help-launcher {
 
+    top: 31px;
+
     html.ccm-panel-open.ccm-panel-right & {
       .translate(0, 0);
     }
@@ -156,6 +180,7 @@ div#ccm-dashboard-content {
 
   div.ccm-notification-help {
     position: absolute;
+    top: 31px;
     z-index: @index-level-dashboard-help;
     html.ccm-panel-open.ccm-panel-right & {
       .translate(0, 0);
@@ -235,5 +260,32 @@ div#ccm-dashboard-content {
   }
 }
 
+div.ccm-dashboard-my-account {
+  div#ccm-dashboard-content {
+    > header {
+      background: #000;
+
+      > h1 {
+        color: #7d8791;
+      }
+    }
+
+    > h2 {
+      font-weight: 200;
+      -webkit-font-smoothing: antialiased;
+      font-size: 24px;
+    }
+  }
+}
+
+@import "./welcome.less";
+@import "./welcome/site-activity.less";
+@import "./welcome/rss-displayer.less";
+@import "./welcome/newsflow.less";
+@import "./welcome/latest-form.less";
+@import "./welcome/marketplace.less";
+@import "./welcome/waiting-for-me.less";
+@import "./attributes.less";
+@import "./form-and-set-builder.less";
 @import "./multilingual.less";
 @import "./update.less";

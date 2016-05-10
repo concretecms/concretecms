@@ -1,16 +1,14 @@
 <?php
 namespace Concrete\Core\Conversation;
 
-use Concrete\Core\Search\PermissionableListItemInterface;
 use Loader;
-use \Concrete\Core\Foundation\Object;
+use Concrete\Core\Foundation\Object;
 use Page;
 use Config;
-use \Concrete\Core\Conversation\Message\MessageList as ConversationMessageList;
+use Concrete\Core\Conversation\Message\MessageList as ConversationMessageList;
 
 class Conversation extends Object implements \Concrete\Core\Permission\ObjectInterface
 {
-
     const POSTING_ENABLED = 10;
     const POSTING_DISABLED_MANUALLY = 5;
     const POSTING_DISABLED_PERMISSIONS = 3;
@@ -87,10 +85,10 @@ class Conversation extends Object implements \Concrete\Core\Permission\ObjectInt
             if (!$fileExtensions) {
                 $fileExtensions = Config::get('concrete.upload.extensions');
             }
+
             return $fileExtensions;
         }
     }
-
 
     public function getConversationAttachmentOverridesEnabled()
     {
@@ -100,7 +98,7 @@ class Conversation extends Object implements \Concrete\Core\Permission\ObjectInt
     public function getConversationAttachmentsEnabled()
     {
         if ($this->getConversationAttachmentOverridesEnabled() > 0) {
-            return (bool)$this->cnvAttachmentsEnabled;
+            return (bool) $this->cnvAttachmentsEnabled;
         } else {
             return Config::get('conversations.attachments_enabled');
         }
@@ -144,8 +142,9 @@ class Conversation extends Object implements \Concrete\Core\Permission\ObjectInt
 		cnvNotificationOverridesEnabled, cnvEnableSubscription from Conversations where cnvID = ?',
             array($cnvID));
         if (is_array($r) && $r['cnvID'] == $cnvID) {
-            $cnv = new static;
+            $cnv = new static();
             $cnv->setPropertiesFromArray($r);
+
             return $cnv;
         }
     }
@@ -173,7 +172,7 @@ class Conversation extends Object implements \Concrete\Core\Permission\ObjectInt
         $db = Loader::db();
         $date = $db->GetOne('select max(cnvMessageDateCreated) from ConversationMessages where cnvID =  ? and cnvIsMessageDeleted = 0 and cnvIsMessageApproved = 1',
             array(
-                $this->getConversationID()
+                $this->getConversationID(),
             ));
         if (!$date) {
             $date = $this->getConversationDateCreated();
@@ -184,7 +183,7 @@ class Conversation extends Object implements \Concrete\Core\Permission\ObjectInt
         $db->Execute('update Conversations set cnvDateLastMessage = ?, cnvMessagesTotal = ? where cnvID = ?', array(
             $date,
             $total,
-            $this->getConversationID()
+            $this->getConversationID(),
         ));
     }
 
@@ -202,6 +201,7 @@ class Conversation extends Object implements \Concrete\Core\Permission\ObjectInt
                 $users[$ui->getUserID()] = $ui;
             }
         }
+
         return array_values($users);
     }
 
@@ -219,6 +219,7 @@ class Conversation extends Object implements \Concrete\Core\Permission\ObjectInt
         $date = Loader::helper('date')->getOverridableNow();
         $r = $db->Execute('insert into Conversations (cnvDateCreated, cnvDateLastMessage) values (?, ?)',
             array($date, $date));
+
         return static::getByID($db->Insert_ID());
     }
 
@@ -320,12 +321,13 @@ class Conversation extends Object implements \Concrete\Core\Permission\ObjectInt
         $ids = array_unique($ids);
 
         $users = array();
-        foreach($ids as $uID) {
+        foreach ($ids as $uID) {
             $ui = \UserInfo::getByID($uID);
             if (is_object($ui)) {
                 $users[] = $ui;
             }
         }
+
         return $users;
     }
 
@@ -336,7 +338,7 @@ class Conversation extends Object implements \Concrete\Core\Permission\ObjectInt
             $r = $db->GetCol('select uID from ConversationSubscriptions where cnvID = ? order by uID asc',
                 array($this->getConversationID()));
             $users = array();
-            foreach($r as $uID) {
+            foreach ($r as $uID) {
                 $ui = \UserInfo::getByID($uID);
                 if (is_object($ui)) {
                     $users[] = $ui;
@@ -345,6 +347,7 @@ class Conversation extends Object implements \Concrete\Core\Permission\ObjectInt
         } else {
             $users = \Conversation::getDefaultSubscribedUsers();
         }
+
         return $users;
     }
 
@@ -353,21 +356,22 @@ class Conversation extends Object implements \Concrete\Core\Permission\ObjectInt
         $db = Loader::db();
         $r = $db->GetCol('select uID from ConversationSubscriptions where cnvID = 0 order by uID asc');
         $users = array();
-        foreach($r as $uID) {
+        foreach ($r as $uID) {
             $ui = \UserInfo::getByID($uID);
             if (is_object($ui)) {
                 $users[] = $ui;
             }
         }
+
         return $users;
     }
 
     public function setConversationSubscribedUsers($users)
     {
         $db = Loader::db();
-        $db->delete('ConversationSubscriptions', array('cnvID' => $this->getConversationID() ));
+        $db->delete('ConversationSubscriptions', array('cnvID' => $this->getConversationID()));
         $db->beginTransaction();
-        foreach($users as $ui) {
+        foreach ($users as $ui) {
             $db->insert('ConversationSubscriptions', array('cnvID' => $this->getConversationID(), 'uID' => $ui->getUserID()));
         }
         $db->commit();
@@ -377,19 +381,20 @@ class Conversation extends Object implements \Concrete\Core\Permission\ObjectInt
     {
         $db = Loader::db();
         $type = $db->GetOne('select type from ConversationSubscriptions where uID = ? and cnvID = ?', array(
-           $user->getUserID(), $this->getConversationID()
+           $user->getUserID(), $this->getConversationID(),
         ));
         if ($type == 'S') {
             return true;
-        } else if ($type == 'U') {
+        } elseif ($type == 'U') {
             return false;
         } else {
             if ($this->getConversationNotificationOverridesEnabled() > 0) {
                 return false;
             } else {
                 $cnt = $db->GetOne('select count(cnvID) from ConversationSubscriptions where uID = ? and cnvID = 0', array(
-                    $user->getUserID()
+                    $user->getUserID(),
                 ));
+
                 return $cnt > 0;
             }
         }
@@ -422,11 +427,9 @@ class Conversation extends Object implements \Concrete\Core\Permission\ObjectInt
         $db = Loader::db();
         $db->delete('ConversationSubscriptions', array('cnvID' => 0));
         $db->beginTransaction();
-        foreach($users as $ui) {
+        foreach ($users as $ui) {
             $db->insert('ConversationSubscriptions', array('cnvID' => 0, 'uID' => $ui->getUserID()));
         }
         $db->commit();
     }
-
-
 }

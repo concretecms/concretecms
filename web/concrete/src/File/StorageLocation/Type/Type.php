@@ -1,5 +1,6 @@
 <?php
 namespace Concrete\Core\File\StorageLocation\Type;
+
 use Concrete\Core\File\StorageLocation\StorageLocation;
 use Concrete\Core\Package\PackageList;
 use Database;
@@ -12,7 +13,6 @@ use Environment;
  */
 class Type
 {
-
     /**
      * @Column(type="text")
      */
@@ -80,6 +80,7 @@ class Type
     public function getConfigurationObject()
     {
         $class = core_class('\\Core\\File\\StorageLocation\\Configuration\\' . camelcase($this->getHandle()) . 'Configuration', $this->getPackageHandle());
+
         return Core::make($class);
     }
 
@@ -87,6 +88,7 @@ class Type
      * @param string $fslTypeHandle
      * @param string $fslTypeName
      * @param int|\Package $pkg
+     *
      * @return \Concrete\Core\File\StorageLocation\Type\Type
      */
     public static function add($fslTypeHandle, $fslTypeName, $pkg = false)
@@ -95,42 +97,46 @@ class Type
         $o = new static();
         $o->fslTypeHandle = $fslTypeHandle;
         $o->fslTypeName = $fslTypeName;
-        if ($pkg instanceof \Concrete\Core\Package\Package) {
+        if ($pkg instanceof \Concrete\Core\Package\Package || $pkg instanceof \Concrete\Core\Entity\Package) {
             $o->pkgID = $pkg->getPackageID();
         }
         $em->persist($o);
         $em->flush();
+
         return $o;
     }
 
     /**
      * @param int $id
+     *
      * @return null|\Concrete\Core\File\StorageLocation\Type\Type
      */
     public static function getByID($id)
     {
         $em = \ORM::entityManager('core');
         $r = $em->find('\Concrete\Core\File\StorageLocation\Type\Type', $id);
+
         return $r;
     }
 
-
     /**
      * @param $fslTypeHandle
+     *
      * @return \Concrete\Core\File\StorageLocation\Type\Type
      */
     public static function getByHandle($fslTypeHandle)
     {
         $em = \ORM::entityManager('core');
         $type = $em->getRepository('\Concrete\Core\File\StorageLocation\Type\Type')->findOneBy(
-            array('fslTypeHandle' => $fslTypeHandle
+            array('fslTypeHandle' => $fslTypeHandle,
          ));
+
         return $type;
     }
 
-
     /**
      * Returns an array of \Concrete\Core\File\StorageLocation\Type\Type objects.
+     *
      * @return \Concrete\Core\File\StorageLocation\Type\Type[]
      */
     public static function getList()
@@ -144,19 +150,22 @@ class Type
     /**
      * @return bool
      */
-    public function hasOptionsForm() {
+    public function hasOptionsForm()
+    {
         $env = Environment::get();
         $rec = $env->getRecord(DIRNAME_ELEMENTS .
             '/' . DIRNAME_FILE_STORAGE_LOCATION_TYPES .
             '/' . $this->getHandle() . '.php',
         $this->getPackageHandle());
+
         return $rec->exists();
     }
 
     /**
      * @param bool|StorageLocation $location
      */
-    public function includeOptionsForm($location = false) {
+    public function includeOptionsForm($location = false)
+    {
         $configuration = $this->getConfigurationObject();
         if ($location instanceof StorageLocation) {
             $configuration = $location->getConfigurationObject();
@@ -165,16 +174,18 @@ class Type
         array(
             'type' => $this,
             'location' => $location,
-            'configuration' => $configuration
+            'configuration' => $configuration,
         ), $this->getPackageHandle());
     }
 
     /**
      * Return an array of AuthenticationTypes that are associated with a specific package.
+     *
      * @param \Package $pkg
+     *
      * @return \Concrete\Core\File\StorageLocation\Type\Type[]
      */
-    public static function getListByPackage(\Package $pkg)
+    public static function getListByPackage($pkg)
     {
         $em = \ORM::entityManager('core');
         return $em->getRepository('\Concrete\Core\File\StorageLocation\Type\Type')->findBy(
@@ -184,14 +195,16 @@ class Type
 
     /**
      * Removes the storage type if no configurations exist.
+     *
      * @throws \Exception
+     *
      * @return bool
      */
     public function delete()
     {
         $list = StorageLocation::getList();
-        foreach($list as $item) {
-            if($item->getTypeObject()->getHandle() == $this->getHandle()) {
+        foreach ($list as $item) {
+            if ($item->getTypeObject()->getHandle() == $this->getHandle()) {
                 throw new \Exception(t('Please remove all storage locations using this storage type.'));
             }
         }
@@ -199,8 +212,7 @@ class Type
         $em = \ORM::entityManager('core');
         $em->remove($this);
         $em->flush();
+
         return true;
     }
-
-
 }

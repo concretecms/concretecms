@@ -1,6 +1,6 @@
 <?php
 namespace Concrete\Core\Workflow\Progress;
-use Loader;
-class PageHistory extends History {
 
+class PageHistory extends History
+{
 }

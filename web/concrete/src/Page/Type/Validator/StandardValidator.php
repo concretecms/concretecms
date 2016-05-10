@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Page\Type\Validator;
 
+use Concrete\Core\Error\ErrorBag\ErrorBag;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Page\Type\Composer\Control\Control;
 use Concrete\Core\Page\Type\Type;
@@ -33,6 +34,7 @@ class StandardValidator implements ValidatorInterface
                 $e->add(t('This page template is not a valid template for this page type.'));
             }
         }
+
         return $e;
     }
 
@@ -47,6 +49,7 @@ class StandardValidator implements ValidatorInterface
                 $e->add(t('You do not have permission to publish a page in this location.'));
             }
         }
+
         return $e;
     }
     public function validatePublishDraftRequest(Page $page = null)
@@ -59,11 +62,12 @@ class StandardValidator implements ValidatorInterface
             }
             if ($oc->isPageTypeComposerFormControlRequiredOnThisRequest()) {
                 $r = $oc->validate();
-                if ($r instanceof \Concrete\Core\Error\Error) {
+                if ($r instanceof ErrorBag) {
                     $e->add($r);
                 }
             }
         }
+
         return $e;
     }
 }

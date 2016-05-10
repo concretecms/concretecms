@@ -1,7 +1,7 @@
-<?
+<?php
 namespace Concrete\Controller\SinglePage\Dashboard\Pages\Themes;
 
-use \Concrete\Core\Page\Controller\DashboardPageController;
+use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Core\Page\Theme\Theme;
 use Loader;
 use PageTheme;
@@ -11,7 +11,6 @@ use Exception;
 
 class Inspect extends DashboardPageController
 {
-
     protected $helpers = array('html');
 
     public function on_before_render()
@@ -62,7 +61,6 @@ class Inspect extends DashboardPageController
         }
 
         $this->set('disableThirdLevelNav', true);
-
     }
 
     public function activate_files($pThemeID)
@@ -94,8 +92,4 @@ class Inspect extends DashboardPageController
         }
         $this->view($pThemeID);
     }
-
-
 }
-
-?>

@@ -1,12 +1,14 @@
-<?
+<?php
 defined('C5_EXECUTE') or die("Access Denied.");
 $u = new User();
 ?>
-<? if ($u->isRegistered()) {
-	$ui = $u->getUserInfoObject();?>
+<?php if ($u->isRegistered()) {
+    $ui = $u->getUserInfoObject();
+    ?>
 	<div class="ccm-conversation-avatar"><?=$ui->getUserAvatar()->output()?></div>
-<? } else {
-	// non-logged-in posting. ?>
+<?php 
+} else {
+    // non-logged-in posting. ?>
 	<div class="form-group">
 		<label class="control-label" for="cnvMessageAuthorName"><?=t('Full Name')?></label>
 		<input type="text" class="form-control" name="cnvMessageAuthorName" />
@@ -19,12 +21,15 @@ $u = new User();
         <label class="control-label" for="cnvMessageAuthorWebsite"><?=t('Website')?></label>
         <input type="text" class="form-control" name="cnvMessageAuthorWebsite" />
     </div>
-	<?
-	$captcha = Core::make('captcha');
-	?>
+	<?php
+    $captcha = Core::make('captcha');
+    ?>
 	<div class="form-group">
-		<? $captcha->label()?>
-		<? $captcha->showInput();?>
-		<? $captcha->display();?>
+		<?php $captcha->label()?>
+		<?php $captcha->showInput();
+    ?>
+		<?php $captcha->display();
+    ?>
 	</div>
-<? } ?>
+<?php 
+} ?>

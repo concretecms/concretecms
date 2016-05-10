@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Job;
 
 use Concrete\Core\Cache\Cache;
@@ -174,7 +173,7 @@ class GenerateSitemap extends AbstractJob
         Events::dispatch('on_sitemap_xml_addingpage', $event);
 
         if ((!empty($ret)) && ($ret < 0)) {
-            for ($i = count($xmlDoc->url) - 1; $i >= 0; $i--) {
+            for ($i = count($xmlDoc->url) - 1; $i >= 0; --$i) {
                 if ($xmlDoc->url[$i] == $xmlNode) {
                     unset($xmlDoc->url[$i]);
                     break;

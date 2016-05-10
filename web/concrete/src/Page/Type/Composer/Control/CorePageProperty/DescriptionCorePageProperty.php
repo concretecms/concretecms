@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Page\Type\Composer\Control\CorePageProperty;
 
 use Core;
@@ -26,7 +25,6 @@ class DescriptionCorePageProperty extends CorePageProperty
 
     public function validate()
     {
-
         $e = Core::make('helper/validation/error');
         $val = $this->getRequestValue();
         if ($val['description']) {

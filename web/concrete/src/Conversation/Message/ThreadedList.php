@@ -1,54 +1,66 @@
 <?php
 namespace Concrete\Core\Conversation\Message;
-use Loader;
-use \Concrete\Core\Legacy\ItemList;
-use Conversation, ConversationMessage;
-class ThreadedList extends ItemList {
 
+use Loader;
+use Concrete\Core\Legacy\ItemList;
+use Conversation;
+use ConversationMessage;
+
+class ThreadedList extends ItemList
+{
     protected $sortBy = 'cnvMessageDateCreated';
     protected $sortByDirection = 'asc';
     protected $cnvID;
 
-    public function __construct(Conversation $cnv) {
+    public function __construct(Conversation $cnv)
+    {
         $this->cnvID = $cnv->getConversationID();
         $this->messages = $this->getMessages();
         $this->total = $cnv->getConversationMessagesTotal();
     }
 
-    public function sortByDateDescending() {
+    public function sortByDateDescending()
+    {
         $this->sortBy = 'date';
         $this->sortByDirection = 'desc';
     }
 
-    public function sortByDateAscending() {
+    public function sortByDateAscending()
+    {
         $this->sortBy = 'date';
         $this->sortByDirection = 'asc';
     }
 
-    public function sortByRating() {
+    public function sortByRating()
+    {
         $this->sortBy = 'rating';
         $this->sortByDirection = 'desc';
     }
 
-    public function get($num = 0, $offset = 0) {
+    public function get($num = 0, $offset = 0)
+    {
         $messages = $this->sortThreadedArrays($this->messages);
         // now we turn the threaded messages array into the flat items array
         $this->flattenMessages($messages);
+
         return parent::get($num, $offset);
     }
 
-    protected function sortThreadedArrays($messages) {
+    protected function sortThreadedArrays($messages)
+    {
         usort($messages, array($this, 'sortItems'));
-        foreach($messages as $m) {
+        foreach ($messages as $m) {
             if (is_array($m->messages) && count($m->messages)) {
                 $m->messages = $this->sortThreadedArrays($m->messages);
             }
         }
+
         return $messages;
     }
 
-    protected function flattenMessages($messages) {
-        foreach($messages as $m) {
+    protected function flattenMessages($messages)
+    {
+        foreach ($messages as $m) {
             $this->items[] = $m;
             if (is_array($m->messages) && count($m->messages)) {
                 $this->flattenMessages($m->messages);
@@ -56,11 +68,13 @@ class ThreadedList extends ItemList {
         }
     }
 
-    public function getTotal() {
+    public function getTotal()
+    {
         return $this->total;
     }
 
-    protected function getMessages($cnvMessageParentID = 0) {
+    protected function getMessages($cnvMessageParentID = 0)
+    {
         $db = Loader::db();
         $v = array($this->cnvID, $cnvMessageParentID);
         $r = $db->Execute('select cnvMessageID from ConversationMessages where cnvID = ? and cnvMessageParentID = ?', $v);
@@ -72,16 +86,18 @@ class ThreadedList extends ItemList {
                 $messages[] = $msg;
             }
         }
+
         return $messages;
     }
 
     /**
      * @param ConversationMessage $a
      * @param ConversationMessage $b
+     *
      * @return int
      */
-    protected function sortItems($a, $b) {
-
+    protected function sortItems($a, $b)
+    {
         $aSortVal = 0; //a sort value for a comparison check for the value of $a
         $bSortVal = 0; //a sort value for a comparison check for the value of $b
 
@@ -93,11 +109,10 @@ class ThreadedList extends ItemList {
             $bSortVal = $b->getConversationMessagetotalRatingScore();
         }
 
-
         if ($this->sortByDirection == 'asc') {
             if ($aSortVal > $bSortVal) {
                 return 1;
-            } else if ($aSortVal < $bSortVal) {
+            } elseif ($aSortVal < $bSortVal) {
                 return -1;
             } else {
                 return 0;
@@ -105,7 +120,7 @@ class ThreadedList extends ItemList {
         } else {
             if ($aSortVal > $bSortVal) {
                 return -1;
-            } else if ($aSortVal < $bSortVal) {
+            } elseif ($aSortVal < $bSortVal) {
                 return 1;
             } else {
                 return 0;

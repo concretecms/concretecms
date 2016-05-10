@@ -1,37 +1,69 @@
 <?php
 namespace Concrete\Core\Marketplace;
+
+use Concrete\Core\Error\ErrorBag\ErrorBag;
 use Concrete\Core\Package\Package;
 use Concrete\Core\Package\PackageArchive;
 use Loader;
 use Config;
-use \Concrete\Core\Foundation\Object;
+use Concrete\Core\Foundation\Object;
 use Exception;
-class RemoteItem extends Object {
 
-	protected $price=0.00;
-	protected $remoteCID=0;
-	protected $remoteURL='';
-	protected $remoteFileURL='';
-	protected $remoteIconURL='';
-	protected $isLicensedToSite = false;
+class RemoteItem extends Object
+{
+    protected $price = 0.00;
+    protected $remoteCID = 0;
+    protected $remoteURL = '';
+    protected $remoteFileURL = '';
+    protected $remoteIconURL = '';
+    protected $isLicensedToSite = false;
 
-	public function setPropertiesFromJSONObject($obj) {
-		foreach($obj as $prop => $value) {
-			$this->{$prop} = $value;
-		}
-	}
+    public function setPropertiesFromJSONObject($obj)
+    {
+        foreach ($obj as $prop => $value) {
+            $this->{$prop} = $value;
+        }
+    }
 
-	public function getMarketplaceItemID() {return $this->mpID;}
-	public function getMarketplaceItemType() {return $this->mpType;}
-	public function getHandle() { return $this->handle; }
-	public function getName(){ return $this->name; }
-	public function getDescription() {return $this->description;}
-	public function getBody() {return $this->bodyContent;}
-    public function getPrice() {return $this->price;}
-    public function getSkillLevel() {return $this->skillLevel;}
-    public function getExampleURL() {return $this->exampleURL;}
-    public function getSkillLevelClassName() {
-        switch($this->getSkillLevel()) {
+    public function getMarketplaceItemID()
+    {
+        return $this->mpID;
+    }
+    public function getMarketplaceItemType()
+    {
+        return $this->mpType;
+    }
+    public function getHandle()
+    {
+        return $this->handle;
+    }
+    public function getName()
+    {
+        return $this->name;
+    }
+    public function getDescription()
+    {
+        return $this->description;
+    }
+    public function getBody()
+    {
+        return $this->bodyContent;
+    }
+    public function getPrice()
+    {
+        return $this->price;
+    }
+    public function getSkillLevel()
+    {
+        return $this->skillLevel;
+    }
+    public function getExampleURL()
+    {
+        return $this->exampleURL;
+    }
+    public function getSkillLevelClassName()
+    {
+        switch ($this->getSkillLevel()) {
             case 'beginner':
                 return 'fa fa-cog ccm-marketplace-skill-level-beginner';
             case 'intermediate':
@@ -42,8 +74,9 @@ class RemoteItem extends Object {
                 return 'fa fa-cogs ccm-marketplace-skill-level-bleeding-edge';
         }
     }
-    public function getSkillLevelDisplayName() {
-        switch($this->getSkillLevel()) {
+    public function getSkillLevelDisplayName()
+    {
+        switch ($this->getSkillLevel()) {
             case 'beginner':
                 return t('Beginner');
             case 'intermediate':
@@ -64,173 +97,228 @@ class RemoteItem extends Object {
         }
     }
 
-	public function getDisplayPrice(){
-		if ($this->price == '' || $this->price == '0' || $this->price == '0.00') {
+    public function getDisplayPrice()
+    {
+        if ($this->price == '' || $this->price == '0' || $this->price == '0.00') {
             return t('Free');
         } else {
-            return sprintf("$%.2f",floatval($this->price));
+            return sprintf("$%.2f", floatval($this->price));
         }
     }
-	public function getScreenshots() {
-		if (is_array($this->screenshots)) {
-			return $this->screenshots;
-		} else {
-			return array();
-		}
-	}
-	public function getSlideshow() {
-		if (is_array($this->slideshowImages)) {
-			return $this->slideshowImages;
-		} else {
-			return array();
-		}
-	}
-	public function getMarketplaceItemVersionForThisSite() {return $this->siteLatestAvailableVersion;}
+    public function getScreenshots()
+    {
+        if (is_array($this->screenshots)) {
+            return $this->screenshots;
+        } else {
+            return array();
+        }
+    }
+    public function getSlideshow()
+    {
+        if (is_array($this->slideshowImages)) {
+            return $this->slideshowImages;
+        } else {
+            return array();
+        }
+    }
+    public function getMarketplaceItemVersionForThisSite()
+    {
+        return $this->siteLatestAvailableVersion;
+    }
 
-	public function getAverageRating() {return $this->rating;}
-	public function getVersionHistory() {return $this->versionHistory;}
-	public function getTotalRatings() {
-		if ($this->totalRatings) {
-			return $this->totalRatings;
-		} else {
-			return 0;
-		}
-	}
-	public function getRemoteReviewsURL() {return $this->reviewsURL;}
-	public function getRemoteCollectionID(){ return $this->cID; }
-	public function getReviewBody() {
-		return $this->reviewBody;
-	}
-	public function getLargeThumbnail() {
-		if ($this->largethumbnail) {
-			return $this->largethumbnail;
-		} else {
-			$screenshots = $this->getScreenshots();
-			return $screenshots[0];
-		}
-	}
-	public function getRemoteURL(){ return $this->url; }
-	public function getRemoteHelpURL(){ return $this->helpURL; }
-	public function getProductBlockID() {return $this->productBlockID;}
-	public function getFivePackProductBlockID() {return $this->fivePackProductBlockID;}
-	public function getRemoteFileURL(){ return $this->file; }
-	public function getRemoteIconURL(){ return $this->icon; }
-	public function getRemoteListIconURL() {return $this->listicon;}
-	public function isLicensedToSite() {return $this->islicensed;}
-	public function purchaseRequired() {
-		if ($this->price == '' || $this->price == '0' || $this->price == '0.00') {
-			return false;
-		} else if ($this->isLicensedToSite()) {
-			return false;
-		} else {
-			return true;
-		}
-	}
+    public function getAverageRating()
+    {
+        return $this->rating;
+    }
+    public function getVersionHistory()
+    {
+        return $this->versionHistory;
+    }
+    public function getTotalRatings()
+    {
+        if ($this->totalRatings) {
+            return $this->totalRatings;
+        } else {
+            return 0;
+        }
+    }
+    public function getRemoteReviewsURL()
+    {
+        return $this->reviewsURL;
+    }
+    public function getRemoteCollectionID()
+    {
+        return $this->cID;
+    }
+    public function getReviewBody()
+    {
+        return $this->reviewBody;
+    }
+    public function getLargeThumbnail()
+    {
+        if ($this->largethumbnail) {
+            return $this->largethumbnail;
+        } else {
+            $screenshots = $this->getScreenshots();
 
-	public function getVersion() {return $this->pkgVersion;}
+            return $screenshots[0];
+        }
+    }
+    public function getRemoteURL()
+    {
+        return $this->url;
+    }
+    public function getRemoteHelpURL()
+    {
+        return $this->helpURL;
+    }
+    public function getProductBlockID()
+    {
+        return $this->productBlockID;
+    }
+    public function getFivePackProductBlockID()
+    {
+        return $this->fivePackProductBlockID;
+    }
+    public function getRemoteFileURL()
+    {
+        return $this->file;
+    }
+    public function getRemoteIconURL()
+    {
+        return $this->icon;
+    }
+    public function getRemoteListIconURL()
+    {
+        return $this->listicon;
+    }
+    public function isLicensedToSite()
+    {
+        return $this->islicensed;
+    }
+    public function purchaseRequired()
+    {
+        if ($this->price == '' || $this->price == '0' || $this->price == '0.00') {
+            return false;
+        } elseif ($this->isLicensedToSite()) {
+            return false;
+        } else {
+            return true;
+        }
+    }
 
-	public function downloadUpdate() {
-		$pkg = Package::getByHandle($this->getHandle());
+    public function getVersion()
+    {
+        return $this->pkgVersion;
+    }
 
-		$fileURL = $this->getRemoteFileURL();
-		if (empty($fileURL)) {
-			return array(Package::E_PACKAGE_NOT_FOUND);
-		}
+    public function downloadUpdate()
+    {
+        $pkg = Package::getByHandle($this->getHandle());
 
-		$file = Marketplace::downloadRemoteFile($this->getRemoteFileURL());
-		if (empty($file) || $file == Package::E_PACKAGE_DOWNLOAD) {
-			return array(Package::E_PACKAGE_DOWNLOAD);
-		} else if ($file == Package::E_PACKAGE_SAVE) {
-			return array($file);
-		}
+        $fileURL = $this->getRemoteFileURL();
+        if (empty($fileURL)) {
+            return array(Package::E_PACKAGE_NOT_FOUND);
+        }
 
-		$r = $pkg->backup();
-		if (is_array($r)) {
-			return $r;
-		}
+        $file = Marketplace::downloadRemoteFile($this->getRemoteFileURL());
+        if (is_object($file)) {
+            return $file; // error
+        }
 
-		try {
+        $r = $pkg->backup();
+        if (is_object($r)) {
+            return $r;
+        }
 
-			$am = new PackageArchive($this->getHandle());
-			$am->install($file, true);
-		} catch (Exception $e) {
-			$pkg->restore();
-			return array($e->getMessage());
-		}
+        try {
+            $am = new PackageArchive($this->getHandle());
+            $am->install($file, true);
+        } catch (Exception $e) {
+            $pkg->restore();
+            $error = \Core::make('error');
+            $error->add($e);
+            return $error;
+        }
+    }
 
-	}
+    public function download()
+    {
+        $file = Marketplace::downloadRemoteFile($this->getRemoteFileURL());
+        if ($file instanceof ErrorBag) {
+            return $file;
+        } else {
+            try {
+                $am = new PackageArchive($this->getHandle());
+                $am->install($file, true);
+            } catch (Exception $e) {
+                $error = \Core::make('error');
+                $error->add($e);
+                return $e;
+            }
+        }
+    }
 
-	public function download() {
-		$file = Marketplace::downloadRemoteFile($this->getRemoteFileURL());
-		if (empty($file) || $file == Package::E_PACKAGE_DOWNLOAD) {
-			return array(Package::E_PACKAGE_DOWNLOAD);
-		} else if ($file == Package::E_PACKAGE_SAVE) {
-			return array($file);
-		} else if ($file == Package::E_PACKAGE_INVALID_APP_VERSION) {
-			return array($file);
-		}
-
-		try {
-
-			$am = new PackageArchive($this->getHandle());
-			$am->install($file, true);
-		} catch (Exception $e) {
-			return array($e->getMessage());
-		}
-	}
-
-	public function enableFreeLicense() {
-		$fh = Loader::helper('file');
+    public function enableFreeLicense()
+    {
+        $fh = Loader::helper('file');
         $dbConfig = \Core::make('config/database');
-		$csToken = $dbConfig->get('concrete.marketplace.token');
-		$csiURL = urlencode(\Core::getApplicationURL());
+        $csToken = $dbConfig->get('concrete.marketplace.token');
+        $csiURL = urlencode(\Core::getApplicationURL());
         $url = Config::get('concrete.urls.concrete5') . Config::get('concrete.urls.paths.marketplace.item_free_license');
-		$url .= "?mpID=" . $this->mpID . "&csToken={$csToken}&csiURL=" . $csiURL . "&csiVersion=" . APP_VERSION;
-		$fh->getContents($url);
-	}
+        $url .= "?mpID=" . $this->mpID . "&csToken={$csToken}&csiURL=" . $csiURL . "&csiVersion=" . APP_VERSION;
+        $fh->getContents($url);
+    }
 
-	protected static function getRemotePackageObject($method, $identifier) {
-		$fh = Loader::helper('file');
+    protected static function getRemotePackageObject($method, $identifier)
+    {
+        $fh = Loader::helper('file');
 
-		// Retrieve the URL contents
+        // Retrieve the URL contents
         $dbConfig = \Core::make('config/database');
-		$csToken = $dbConfig->get('concrete.marketplace.token');
-		$csiURL = urlencode(\Core::getApplicationURL());
+        $csToken = $dbConfig->get('concrete.marketplace.token');
+        $csiURL = urlencode(\Core::getApplicationURL());
 
         $url = Config::get('concrete.urls.concrete5') . Config::get('concrete.urls.paths.marketplace.item_information');
-		$url .= "?" . $method . "=" . $identifier . "&csToken={$csToken}&csiURL=" . $csiURL . "&csiVersion=" . APP_VERSION;
-		$json = $fh->getContents($url);
+        $url .= "?" . $method . "=" . $identifier . "&csToken={$csToken}&csiURL=" . $csiURL . "&csiVersion=" . APP_VERSION;
+        $json = $fh->getContents($url);
 
-		try {
-			// Parse the returned XML file
-			$obj = @Loader::helper('json')->decode($json);
-			if (is_object($obj)) {
-				$mi = new RemoteItem();
-				$mi->setPropertiesFromJSONObject($obj);
-				if ($mi->getMarketplaceItemID() > 0) {
-					return $mi;
-				}
-			}
-		} catch (Exception $e) {
-			throw new Exception(t('Unable to connect to marketplace to retrieve item'));
-		}
-	}
-
-    /**
-     * @return \Concrete\Core\Marketplace\RemoteItem;
-     * @param $mpID
-     * @throws Exception
-     */
-	public static function getByHandle($mpHandle) {
-		return RemoteItem::getRemotePackageObject('mpHandle', $mpHandle);
-	}
+        try {
+            // Parse the returned XML file
+            $obj = @Loader::helper('json')->decode($json);
+            if (is_object($obj)) {
+                $mi = new self();
+                $mi->setPropertiesFromJSONObject($obj);
+                if ($mi->getMarketplaceItemID() > 0) {
+                    return $mi;
+                }
+            }
+        } catch (Exception $e) {
+            throw new Exception(t('Unable to connect to marketplace to retrieve item'));
+        }
+    }
 
     /**
      * @return \Concrete\Core\Marketplace\RemoteItem;
+     *
      * @param $mpID
+     *
      * @throws Exception
      */
-	public static function getByID($mpID) {
-		return RemoteItem::getRemotePackageObject('mpID', $mpID);
-	}
+    public static function getByHandle($mpHandle)
+    {
+        return self::getRemotePackageObject('mpHandle', $mpHandle);
+    }
+
+    /**
+     * @return \Concrete\Core\Marketplace\RemoteItem;
+     *
+     * @param $mpID
+     *
+     * @throws Exception
+     */
+    public static function getByID($mpID)
+    {
+        return self::getRemotePackageObject('mpID', $mpID);
+    }
 }

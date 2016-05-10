@@ -1,20 +1,21 @@
-<?
+<?php
 defined('C5_EXECUTE') or die("Access Denied.");
 ?>
 
-<? if (is_object($template) && ($this->controller->getTask() == 'edit' || $this->controller->getTask() == 'update')) {
+<?php if (is_object($template) && ($this->controller->getTask() == 'edit' || $this->controller->getTask() == 'update')) {
     $form = Loader::helper('form');
-?>
+    ?>
       
     <form method="post" class="form-horizontal" id="update_page_template" action="<?=$view->url('/dashboard/pages/templates', 'update')?>">
     <?=$this->controller->token->output('update_page_template')?>
     <input type="hidden" name="pTemplateID" value="<?=$template->getPageTemplateID()?>" />
 
-        <? $confirmMsg = t('Are you sure?'); ?>
+        <?php $confirmMsg = t('Are you sure?');
+    ?>
         <script type="text/javascript">
         deleteTemplate = function() {
             if(confirm('<?=$confirmMsg?>')){ 
-                location.href="<?=$view->url('/dashboard/pages/templates/','delete',$template->getPageTemplateID(), $this->controller->token->generate('delete_page_template'))?>";
+                location.href="<?=$view->url('/dashboard/pages/templates/', 'delete', $template->getPageTemplateID(), $this->controller->token->generate('delete_page_template'))?>";
             }   
         }
         </script>
@@ -39,17 +40,22 @@ defined('C5_EXECUTE') or die("Access Denied.");
             <label for="pTemplateHandle" class="col-md-2 control-label"><?=t('Icon')?></label>
             <div class="col-md-10">
 
-            <?
+            <?php
             $i = 0;
-            foreach($icons as $ic) { ?>
+    foreach ($icons as $ic) {
+        ?>
               <div class="col-sm-2">
                 <label style="text-align: center">
-                     <img src="<?=REL_DIR_FILES_PAGE_TEMPLATE_ICONS.'/'.$ic;?>" class="img-responsive" style="vertical-align: middle" />
+                     <img src="<?=REL_DIR_FILES_PAGE_TEMPLATE_ICONS.'/'.$ic;
+        ?>" class="img-responsive" style="vertical-align: middle" />
                      <?=$form->radio('pTemplateIcon', $ic, $ic == $template->getPageTemplateIcon())?>
                 </label>
               </div>
-              <? $i++; ?>
-            <? } ?>
+              <?php ++$i;
+        ?>
+            <?php 
+    }
+    ?>
             </div>
         </div>
       
@@ -66,28 +72,39 @@ defined('C5_EXECUTE') or die("Access Denied.");
     </form>
     
 
-<? } else { ?>
+<?php 
+} else {
+    ?>
 
     <div class="ccm-dashboard-header-buttons">
         <a href="<?php echo View::url('/dashboard/pages/templates/add')?>" class="btn btn-primary"><?php echo t("Add Template")?></a>
     </div>
 
-    <? if (count($templates) == 0) { ?>
+    <?php if (count($templates) == 0) {
+    ?>
         <br/><strong><?=t('No page types found.')?></strong><br/><br>
-    <? } else { ?>
+    <?php 
+} else {
+    ?>
 
         <table class="table table-striped">
 
-    <? foreach($templates as $pt) { ?>
+    <?php foreach ($templates as $pt) {
+    ?>
         <tr>
             <td><a href="<?=$view->action('edit', $pt->getPageTemplateID())?>"><?=$pt->getPageTemplateIconImage()?></a></td>
             <td style="width: 100%; vertical-align: middle"><a href="<?=$view->action('edit', $pt->getPageTemplateID())?>"><p class="lead" style="margin-bottom: 0px"><?=$pt->getPageTemplateDisplayName()?></p></a></td>
         </tr>
-    <? } ?>
+    <?php 
+}
+    ?>
 
 
         </table>
 
-    <? } ?>
+    <?php 
+}
+    ?>
 
-<? } ?>
+<?php 
+} ?>

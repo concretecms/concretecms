@@ -1,16 +1,18 @@
 <?php
 namespace Concrete\Controller\SinglePage\Dashboard\System\Files;
+
 use Concrete\Core\File\Image\Thumbnail\Type\Type;
-use \Concrete\Core\Page\Controller\DashboardPageController;
+use Concrete\Core\Page\Controller\DashboardPageController;
 use Loader;
 use Request;
 
-class Thumbnails extends DashboardPageController {
-
-	public function view() {
+class Thumbnails extends DashboardPageController
+{
+    public function view()
+    {
         $list = Type::getList();
         $this->set('types', $list);
-	}
+    }
 
     public function edit($ftTypeID = false)
     {
@@ -20,7 +22,6 @@ class Thumbnails extends DashboardPageController {
 
     public function add()
     {
-
     }
 
     public function thumbnail_type_added()
@@ -67,12 +68,13 @@ class Thumbnails extends DashboardPageController {
                     $this->error->add(t('If used, height must be greater than zero.'));
                 }
             }
-
         }
+
         return $request;
     }
 
-    public function thumbnail_type_deleted() {
+    public function thumbnail_type_deleted()
+    {
         $this->set('message', t('Thumbnail type removed.'));
         $this->view();
     }
@@ -97,7 +99,6 @@ class Thumbnails extends DashboardPageController {
             $this->redirect('/dashboard/system/files/thumbnails', 'thumbnail_type_deleted');
         }
         $this->edit($request->request->get('ftTypeID'));
-
     }
 
     public function update()

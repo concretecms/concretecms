@@ -1,5 +1,6 @@
 <?php
 namespace Concrete\Core\Editor;
+
 use Concrete\Core\Http\Request;
 use Concrete\Core\Http\ResponseAssetGroup;
 use Concrete\Core\Legacy\FilePermissions;
@@ -37,7 +38,6 @@ class RedactorEditor implements EditorInterface
         $this->pluginManager->register('fontcolor', t('Font Color'));
 
         $this->pluginManager->selectMultiple(\Config::get('concrete.editor.plugins.selected'));
-
     }
 
     public function allowFileManager()
@@ -65,7 +65,7 @@ class RedactorEditor implements EditorInterface
         $this->requireEditorAssets();
         $concrete5 = array(
             'filemanager' => $this->allowFileManager(),
-            'sitemap' => $this->allowSitemap()
+            'sitemap' => $this->allowSitemap(),
         );
         if (isset($options['concrete5'])) {
             $options['concrete5'] = array_merge($options['concrete5'], $concrete5);
@@ -85,6 +85,7 @@ class RedactorEditor implements EditorInterface
         });
         </script>
 EOL;
+
         return $html;
     }
 
@@ -93,6 +94,7 @@ EOL;
         $plugins = $this->pluginManager->getSelectedPlugins();
         $plugins[] = 'concrete5magic';
         $plugins[] = 'concrete5inline';
+
         return $this->getEditor($key, $content, array('plugins' => $plugins, 'minHeight' => 300));
     }
 
@@ -100,6 +102,7 @@ EOL;
     {
         $plugins = $this->pluginManager->getSelectedPlugins();
         $plugins[] = 'concrete5magic';
+
         return $this->getEditor($key, $content, array('plugins' => $plugins, 'minHeight' => 300));
     }
 
@@ -111,6 +114,7 @@ EOL;
     public function outputStandardEditor($key, $content = null)
     {
         $plugins = $this->pluginManager->getSelectedPlugins();
+
         return $this->getEditor($key, $content, array('plugins' => $plugins, 'minHeight' => 300));
     }
 
@@ -132,7 +136,7 @@ EOL;
         $plugins = array();
         $post = $request->request->get('plugin');
         if (is_array($post)) {
-            foreach($post as $plugin) {
+            foreach ($post as $plugin) {
                 if ($this->pluginManager->isAvailable($plugin)) {
                     $plugins[] = $plugin;
                 }
@@ -151,7 +155,5 @@ EOL;
             $group = $plugin->getRequiredAssets();
             $this->assets->requireAsset($group);
         }
-
-
     }
 }

@@ -1,10 +1,8 @@
 <?php
-
 namespace Concrete\Core\Updater;
 
 class RemoteApplicationUpdate
 {
-
     protected $identifier;
     protected $version;
     protected $date;
@@ -90,6 +88,4 @@ class RemoteApplicationUpdate
     {
         $this->notes = $notes;
     }
-
-
 }

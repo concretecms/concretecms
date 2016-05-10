@@ -8,7 +8,6 @@ echo Core::make('helper/concrete/ui')->tabs(array(
     array('options', t('Options'))
 ));
 ?>
-
 <script>
     var CCM_EDITOR_SECURITY_TOKEN = "<?php echo Core::make('helper/validation/token')->generate('editor'); ?>";
     $(document).ready(function() {

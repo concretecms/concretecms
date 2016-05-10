@@ -163,6 +163,14 @@
             </attributes>
         </page>
 
+        <page name="Data Objects" path="/dashboard/express" filename="/dashboard/express/view.php" pagetype=""
+              description="Express Data Objects" package=""/>
+
+        <page name="View Entries" path="/dashboard/express/entries" filename="/dashboard/express/entries.php" pagetype=""
+              description="" package="">
+
+        </page>
+
         <page name="Reports" path="/dashboard/reports" filename="/dashboard/reports.php" pagetype=""
               description="Get data from forms and logs." package="">
             <attributes>
@@ -186,6 +194,17 @@
             <attributes>
                 <attributekey handle="meta_keywords">
                     <value>forms, questions, response, data</value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Form Results" path="/dashboard/reports/forms/legacy" filename="/dashboard/reports/legacy.php" pagetype=""
+              description="Get submission data." package="">
+            <attributes>
+                <attributekey handle="exclude_nav">
+                    <value><![CDATA[1]]></value>
+                </attributekey>
+                <attributekey handle="exclude_search_index">
+                    <value><![CDATA[1]]></value>
                 </attributekey>
             </attributes>
         </page>
@@ -332,25 +351,13 @@
 			</attributes>
         </page>
 
-        <page name="Workflow" path="/dashboard/workflow" filename="/dashboard/workflow/view.php" pagetype=""
-              description="" package="">
-            <attributes>
-                <attributekey handle="meta_keywords">
-                    <value>add workflow, remove workflow</value>
-                </attributekey>
-            </attributes>
-        </page>
-        <page name="Waiting for Me" path="/dashboard/workflow/me" filename="/dashboard/workflow/me.php" pagetype=""
-              description="" package="" />
-        <page name="Workflow List" path="/dashboard/workflow/workflows" filename="/dashboard/workflow/workflows.php"
-              pagetype="" description="" package="" />
         <page name="Stacks &amp; Blocks" path="/dashboard/blocks" filename="/dashboard/blocks/view.php" pagetype=""
               description="Manage sitewide content and administer block types." package=""/>
-        <page name="Stacks" path="/dashboard/blocks/stacks" filename="/dashboard/blocks/stacks/view.php" pagetype=""
+        <page name="Stacks &amp; Global Areas" path="/dashboard/blocks/stacks" filename="/dashboard/blocks/stacks/view.php" pagetype=""
               description="Share content across your site." package="">
             <attributes>
                 <attributekey handle="meta_keywords">
-                    <value>stacks, reusable content, scrapbook, copy, paste, paste block, copy block, site name, logo</value>
+                    <value>stacks, global areas, reusable content, scrapbook, copy, paste, paste block, copy block, site name, logo</value>
                 </attributekey>
             </attributes>
 
@@ -513,6 +520,60 @@
                     <value>timezone, profile, locale</value>
                 </attributekey>
             </attributes>
+        </page>
+
+        <page name="Data Objects" path="/dashboard/system/express" filename="/dashboard/system/express/view.php" pagetype=""
+              description="Express Data Objects" package=""/>
+
+        <page name="Data Objects" path="/dashboard/system/express/entities" filename="/dashboard/system/express/entities.php" pagetype=""
+              description="" package="">
+
+            <attributes>
+                <attributekey handle="exclude_nav">
+                    <value><![CDATA[1]]></value>
+                </attributekey>
+            </attributes>
+
+        </page>
+
+        <page name="Attributes" path="/dashboard/system/express/entities/attributes"
+              filename="/dashboard/system/express/entities/attributes.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="exclude_nav">
+                    <value><![CDATA[1]]></value>
+                </attributekey>
+            </attributes>
+        </page>
+
+        <page name="Associations" path="/dashboard/system/express/entities/associations"
+              filename="/dashboard/system/express/entities/associations.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="exclude_nav">
+                    <value><![CDATA[1]]></value>
+                </attributekey>
+            </attributes>
+        </page>
+
+        <page name="Forms" path="/dashboard/system/express/entities/forms"
+              filename="/dashboard/system/express/entities/forms.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="exclude_nav">
+                    <value><![CDATA[1]]></value>
+                </attributekey>
+            </attributes>
+        </page>
+
+        <page name="Customize Search" path="/dashboard/system/express/entities/customize_search"
+              filename="/dashboard/system/express/entities/customize_search.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="exclude_nav">
+                    <value><![CDATA[1]]></value>
+                </attributekey>
+            </attributes>
+        </page>
+
+        <page name="Custom Entry Locations" path="/dashboard/system/express/entries"
+              filename="/dashboard/system/express/entries.php" pagetype="" description="" package="">
         </page>
 
 
@@ -699,6 +760,8 @@
         <page name="Advanced Permissions" path="/dashboard/system/permissions/advanced"
               filename="/dashboard/system/permissions/advanced.php" pagetype="" description="" package="">
         </page>
+        <page name="Workflows" path="/dashboard/system/permissions/workflows" filename="/dashboard/system/permissions/workflows.php"
+              pagetype="" description="" package="" />
         <page name="IP Blacklist" path="/dashboard/system/permissions/blacklist"
               filename="/dashboard/system/permissions/blacklist.php" pagetype="" description="" package="">
             <attributes>
@@ -767,7 +830,14 @@
                 </attributekey>
             </attributes>
         </page>
-
+        <page name="Global Password Reset" path="/dashboard/system/registration/global_password_reset"
+              filename="/dashboard/system/registration/global_password_reset.php" pagetype="" description="Signs out all users, resets all passwords and forces users to choose a new one" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>global, password, reset, change password, force, sign out</value>
+                </attributekey>
+            </attributes>
+        </page>
         <page name="Email" path="/dashboard/system/mail" filename="/dashboard/system/mail/view.php" pagetype=""
               description="Control how your site send and processes mail." package="">
             <attributes>
@@ -946,100 +1016,14 @@
     <pagetypes>
         <pagetype handle="core_stack" name="Stack" internal="1" package=""/>
         <pagetype handle="core_stack_category" name="Stack Category" internal="1" package=""/>
-        <pagetype handle="dashboard_primary_five" name="Dashboard Primary + Five" internal="1" package=""/>
-        <pagetype handle="dashboard_header_four_col" name="Dashboard Header + Four Column" internal="1" package=""/>
+        <pagetype handle="core_desktop" name="Desktop" internal="1" package=""/>
         <pagetype handle="dashboard_full" name="Dashboard Full" internal="1" package=""/>
     </pagetypes>
 
     <pagetemplates>
         <pagetemplate handle="core_stack" name="Stack" internal="1" package=""/>
-        <pagetemplate handle="dashboard_primary_five" name="Dashboard Primary + Five" internal="1" package=""/>
-        <pagetemplate handle="dashboard_header_four_col" name="Dashboard Header + Four Column" internal="1" package=""/>
+        <pagetemplate handle="desktop" name="Desktop" internal="1" package=""/>
         <pagetemplate handle="dashboard_full" name="Dashboard Full" internal="1" package=""/>
     </pagetemplates>
-    <pages>
-        <page name="Welcome to concrete5" path="/dashboard/welcome" filename=""
-              description="Learn about how to use concrete5, how to develop for concrete5, and get general help."
-              template="dashboard_full">
-            <attributes>
-                <attributekey handle="exclude_nav">
-                    <value><![CDATA[1]]></value>
-                </attributekey>
-            </attributes>
-            <area name="Main">
-                <blocks>
-                <block type="content" name="">
-                    <data table="btContentLocal">
-                        <record>
-                            <content><![CDATA[<div style="padding: 40px; text-align: center">
-<iframe width="853" height="480" src="//www.youtube.com/embed/VB-R71zk06U" frameborder="0" allowfullscreen></iframe>
-                                    </div>]]></content>
-                        </record>
-                    </data>
-                </block>
-                </blocks>
-            </area>
-        </page>
 
-        <page name="Customize Dashboard Home" path="/dashboard/home" filename="" template="dashboard_primary_five"
-              description="" package="">
-            <attributes>
-                <attributekey handle="exclude_nav">
-                    <value><![CDATA[1]]></value>
-                </attributekey>
-                <attributekey handle="exclude_search_index">
-                    <value><![CDATA[1]]></value>
-                </attributekey>
-            </attributes>
-            <area name="Primary">
-                <blocks>
-                <block type="dashboard_app_status" name=""/>
-                <block type="dashboard_site_activity" name=""/>
-                </blocks>
-            </area>
-            <area name="Secondary 1">
-                <blocks>
-                <block type="dashboard_newsflow_latest" name="">
-                    <data table="btDashboardNewsflowLatest">
-                        <record>
-                            <slot>A</slot>
-                        </record>
-                    </data>
-                </block>
-                </blocks>
-            </area>
-            <area name="Secondary 2">
-                <blocks>
-                <block type="dashboard_newsflow_latest" name="">
-                    <data table="btDashboardNewsflowLatest">
-                        <record>
-                            <slot>B</slot>
-                        </record>
-                    </data>
-                </block>
-                </blocks>
-            </area>
-            <area name="Secondary 3">
-                <blocks>
-                <block type="dashboard_featured_theme" name=""/>
-                </blocks>
-            </area>
-            <area name="Secondary 4">
-                <blocks>
-                <block type="dashboard_featured_addon" name=""/>
-                </blocks>
-            </area>
-            <area name="Secondary 5">
-                <blocks>
-                <block type="dashboard_newsflow_latest" name="">
-                    <data table="btDashboardNewsflowLatest">
-                        <record>
-                            <slot>C</slot>
-                        </record>
-                    </data>
-                </block>
-                </blocks>
-            </area>
-        </page>
-    </pages>
 </concrete5-cif>

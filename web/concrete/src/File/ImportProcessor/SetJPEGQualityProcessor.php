@@ -1,16 +1,13 @@
 <?php
-
 namespace Concrete\Core\File\ImportProcessor;
 
 use Concrete\Core\File\Version;
-use Imagine\Image\ImageInterface;
 
 class SetJPEGQualityProcessor implements ProcessorInterface
 {
-
     protected $quality;
 
-    function __construct($quality)
+    public function __construct($quality)
     {
         $this->quality = $quality;
     }
@@ -42,5 +39,4 @@ class SetJPEGQualityProcessor implements ProcessorInterface
         $image = \Image::load($fr->read());
         $version->updateContents($image->get('jpg', array('jpeg_quality' => $this->getQuality())));
     }
-
 }

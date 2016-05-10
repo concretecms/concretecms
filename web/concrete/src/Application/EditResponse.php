@@ -1,11 +1,10 @@
 <?php
-
 namespace Concrete\Core\Application;
 
 use Core;
 use stdClass;
 
-class EditResponse
+class EditResponse implements \JsonSerializable
 {
     public $time;
     public $message;
@@ -26,7 +25,7 @@ class EditResponse
 
     public function __construct($e = false)
     {
-        if ($e instanceof \Concrete\Core\Error\Error && $e->has()) {
+        if ($e instanceof \Concrete\Core\Error\ErrorBag\ErrorBag && $e->has()) {
             $this->error = $e;
         } else {
             $this->error = Core::make('helper/validation/error');
@@ -86,6 +85,11 @@ class EditResponse
         }
 
         return $o;
+    }
+
+    public function jsonSerialize()
+    {
+        return $this->getJSONObject();
     }
 
     public function outputJSON()

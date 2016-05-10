@@ -9,7 +9,6 @@ use URL;
 
 class GroupEntity extends Entity
 {
-
     protected $group = false;
 
     public function getGroupObject()
@@ -26,6 +25,7 @@ class GroupEntity extends Entity
     {
         $html = '<a href="' . URL::to('/ccm/system/dialogs/group/search') . '" class="dialog-launch" dialog-width="640" dialog-height="480" dialog-modal="false" dialog-title="' . t('Add Group') . '">' . tc('PermissionAccessEntityTypeName',
                 'Group') . '</a>';
+
         return $html;
     }
 
@@ -35,6 +35,7 @@ class GroupEntity extends Entity
         if (!is_object($g)) {
             $g = Group::add((string) $element['name'], (string) $element['description']);
         }
+
         return static::getOrCreate($g);
     }
 
@@ -73,6 +74,7 @@ class GroupEntity extends Entity
             $db->Execute('insert into PermissionAccessEntityGroups (peID, gID) values (?, ?)',
                 array($peID, $g->getGroupID()));
         }
+
         return \Concrete\Core\Permission\Access\Entity\Entity::getByID($peID);
     }
 

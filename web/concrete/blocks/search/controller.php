@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Block\Search;
 
 use Database;
@@ -107,7 +106,7 @@ class Controller extends BlockController
         $db = Database::connection();
         $numRows = $db->GetOne('select count(cID) from PageSearchIndex');
 
-        return ($numRows > 0);
+        return $numRows > 0;
     }
 
     public function cacheBlockOutput()
@@ -185,7 +184,7 @@ class Controller extends BlockController
         parent::save($args);
     }
 
-    public $reservedParams = array('page=','query=','search_paths[]=','submit=','search_paths%5B%5D=');
+    public $reservedParams = array('page=', 'query=', 'search_paths[]=', 'submit=', 'search_paths%5B%5D=');
 
     public function do_search()
     {

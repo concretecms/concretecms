@@ -7,11 +7,11 @@ use Loader;
 
 class Duration extends AbstractRepetition
 {
-
     protected $pdID;
 
     /**
      * @param \Concrete\Core\Permission\Access\ListItem\ListItem[] $list
+     *
      * @return \Concrete\Core\Permission\Access\ListItem\ListItem[]
      */
     public static function filterByActive($list)
@@ -40,9 +40,11 @@ class Duration extends AbstractRepetition
         $dateStart = $dt->translate('pdStartDate');
         $dateEnd = $dt->translate('pdEndDate');
 
-        if ($dateStart || $dateEnd) {
+        $pdEnablePermissionDuration = $_REQUEST['pdEnablePermissionDuration'];
+
+        if ($pdEnablePermissionDuration && ($dateStart || $dateEnd)) {
             // create a Duration object
-            $pd = new Duration();
+            $pd = new self();
 
             if ($_REQUEST['pdStartDateAllDayActivate']) {
                 $pd->setStartDateAllDay(1);
@@ -60,16 +62,15 @@ class Duration extends AbstractRepetition
             $pd->setStartDate($dateStart);
             $pd->setEndDate($dateEnd);
             if ($_POST['pdRepeatPeriod'] && $_POST['pdRepeat']) {
-
                 if ($_POST['pdRepeatPeriod'] == 'daily') {
-                    $pd->setRepeatPeriod(Duration::REPEAT_DAILY);
+                    $pd->setRepeatPeriod(self::REPEAT_DAILY);
                     $pd->setRepeatEveryNum($_POST['pdRepeatPeriodDaysEvery']);
                 } elseif ($_POST['pdRepeatPeriod'] == 'weekly') {
-                    $pd->setRepeatPeriod(Duration::REPEAT_WEEKLY);
+                    $pd->setRepeatPeriod(self::REPEAT_WEEKLY);
                     $pd->setRepeatEveryNum($_POST['pdRepeatPeriodWeeksEvery']);
                     $pd->setRepeatPeriodWeekDays($_POST['pdRepeatPeriodWeeksDays']);
                 } elseif ($_POST['pdRepeatPeriod'] == 'monthly') {
-                    $pd->setRepeatPeriod(Duration::REPEAT_MONTHLY);
+                    $pd->setRepeatPeriod(self::REPEAT_MONTHLY);
 
                     $repeat_by = $_POST['pdRepeatPeriodMonthsRepeatBy'];
                     $repeat = self::MONTHLY_REPEAT_WEEKLY;
@@ -92,7 +93,7 @@ class Duration extends AbstractRepetition
                 }
                 $pd->setRepeatPeriodEnd($dt->translate('pdEndRepeatDateSpecific'));
             } else {
-                $pd->setRepeatPeriod(Duration::REPEAT_NONE);
+                $pd->setRepeatPeriod(self::REPEAT_NONE);
             }
             $pd->save();
 
@@ -100,11 +101,13 @@ class Duration extends AbstractRepetition
         } else {
             unset($pd);
         }
+
         return null;
     }
 
     /**
      * @param $pdID
+     *
      * @return \Concrete\Core\Permission\Duration
      */
     public static function getByID($pdID)
@@ -113,8 +116,10 @@ class Duration extends AbstractRepetition
         $pdObject = $db->fetchColumn('SELECT pdObject FROM PermissionDurationObjects WHERE pdID = ?', array($pdID));
         if ($pdObject) {
             $pd = unserialize($pdObject);
+
             return $pd;
         }
+
         return null;
     }
 
@@ -122,7 +127,7 @@ class Duration extends AbstractRepetition
     {
         $db = Database::connection();
         if (!$this->pdID) {
-            $pd = new Duration();
+            $pd = new self();
             $pdObject = serialize($pd);
             $db->executeQuery('INSERT INTO PermissionDurationObjects (pdObject) VALUES (?)', array($pdObject));
             $this->pdID = $db->lastInsertId();
@@ -143,5 +148,4 @@ class Duration extends AbstractRepetition
     {
         return $this->pdID;
     }
-
 }

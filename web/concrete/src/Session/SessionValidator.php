@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Session;
 
 use Concrete\Core\Application\Application;
@@ -12,12 +11,12 @@ use Symfony\Component\HttpFoundation\Session\Session as SymfonySession;
 
 /**
  * Class SessionValidator
- * Base concrete5 session validator, validates the IP and the agent across requests
+ * Base concrete5 session validator, validates the IP and the agent across requests.
+ *
  * @package Concrete\Core\Session
  */
 class SessionValidator implements SessionValidatorInterface, LoggerAwareInterface
 {
-
     /** @var \Concrete\Core\Application\Application */
     private $app;
 
@@ -58,7 +57,7 @@ class SessionValidator implements SessionValidatorInterface, LoggerAwareInterfac
                 $this->logger->debug('Session Invalidated. Session IP "{session}" did not match provided IP "{client}".',
                     array(
                         'session' => $ip,
-                        'client' => $request_ip));
+                        'client' => $request_ip, ));
             }
 
             $invalidate = true;
@@ -70,7 +69,7 @@ class SessionValidator implements SessionValidatorInterface, LoggerAwareInterfac
                 $this->logger->debug('Session Invalidated. Session user agent "{session}" did not match provided agent "{client}"',
                     array(
                         'session' => $agent,
-                        'client' => $request_agent));
+                        'client' => $request_agent, ));
             }
 
             $invalidate = true;
@@ -106,14 +105,12 @@ class SessionValidator implements SessionValidatorInterface, LoggerAwareInterfac
     }
 
     /**
-     * Sets a logger instance on the object
+     * Sets a logger instance on the object.
      *
      * @param LoggerInterface $logger
-     * @return null
      */
     public function setLogger(LoggerInterface $logger)
     {
         $this->logger = $logger;
     }
-
 }

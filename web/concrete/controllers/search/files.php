@@ -1,16 +1,22 @@
 <?php
 namespace Concrete\Controller\Search;
 
+use Concrete\Core\Entity\Search\Query;
+use Concrete\Core\File\Filesystem;
+use Concrete\Core\File\Search\ColumnSet\DefaultSet;
+use Concrete\Core\File\Search\Field\Field\KeywordsField;
 use Concrete\Core\Http\ResponseAssetGroup;
+use Concrete\Core\Search\Field\ManagerFactory;
+use Concrete\Core\Tree\Node\Type\SearchPreset;
 use Controller;
 use FileList;
-use \Concrete\Core\Search\StickyRequest;
-use \Concrete\Core\File\Search\ColumnSet\ColumnSet as FileSearchColumnSet;
-use \Concrete\Core\File\Search\Result\Result as FileSearchResult;
+use Concrete\Core\Search\StickyRequest;
+use Concrete\Core\File\Search\ColumnSet\ColumnSet as FileSearchColumnSet;
+use Concrete\Core\File\Search\Result\Result as FileSearchResult;
 use FileAttributeKey;
-use Permissions;
 use Loader;
 use FileSet;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use URL;
 use Concrete\Core\File\Type\Type as FileType;
 use FilePermissions;
@@ -25,251 +31,121 @@ class Files extends Controller
 
     public function __construct()
     {
-        $this->searchRequest = new StickyRequest('files');
-        $this->fileList = new FileList($this->searchRequest);
+        parent::__construct();
+        $this->fileList = new FileList();
     }
 
-    public function search()
+    public function searchBasic()
     {
         $cp = FilePermissions::getGlobal();
         if ($cp->canSearchFiles() || $cp->canAddFile()) {
 
-            if ($_REQUEST['submitSearch']) {
-                $this->searchRequest->resetSearchRequest();
+            $provider = \Core::make('Concrete\Core\File\Search\SearchProvider');
+            $keywords = htmlentities($this->request->get('fKeywords'), ENT_QUOTES, APP_CHARSET);
+            $query = new Query();
+            $fields = array();
+            if ($keywords) {
+                $fields[] = new KeywordsField($keywords);
             }
 
-            $req = $this->searchRequest->getSearchRequest();
-            $columns = FileSearchColumnSet::getCurrent();
+            // If we are passing in something like "filter by images, it will be here.
+            $manager = ManagerFactory::get('file');
+            $fields = array_merge($fields, $manager->getFieldsFromRequest($this->request->query->all()));
 
-            if (!$this->fileList->getActiveSortColumn()) {
-                $col = $columns->getDefaultSortColumn();
-                $this->fileList->sanitizedSortBy($col->getColumnKey(), $col->getColumnDefaultSortDirection());
-            }
+            $query->setFields($fields);
+            $query->setColumns(new DefaultSet());
+            $result = $provider->getSearchResultFromQuery($query);
+            $result->setBaseURL((string) \URL::to('/ccm/system/search/files/basic'));
 
-            // first thing, we check to see if a saved search is being used
-            if (isset($req['fssID'])) {
-                $fs = FileSet::getByID($req['fssID']);
-                if ($fs->getFileSetType() == FileSet::TYPE_SAVED_SEARCH) {
-                    $req = $fs->getSavedSearchRequest();
-                    $columns = $fs->getSavedSearchColumns();
-                    $colsort = $columns->getDefaultSortColumn();
-                    $this->fileList->addToSearchRequest('ccm_order_dir', $colsort->getColumnDefaultSortDirection());
-                    $this->fileList->addToSearchRequest('ccm_order_by', $colsort->getColumnKey());
-                }
-            }
-            $keywords = htmlentities($req['fKeywords'], ENT_QUOTES, APP_CHARSET);
+            // Also, if the request contains "fields", then that means we're doing something like
+            // passing "filter by images" from the file selector into the search.
 
-            if ($keywords != '') {
-                $this->fileList->filterByKeywords($keywords);
-            }
-
-            if ($req['numResults']) {
-                $this->fileList->setItemsPerPage(intval($req['numResults']));
-            }
-
-            if ((isset($req['fsIDNone']) && $req['fsIDNone'] == 1) || (is_array($req['fsID']) && in_array(-1, $req['fsID']))) {
-                $this->fileList->filterByNoSet();
-            } else {
-                if (is_array($req['fsID'])) {
-                    foreach ($req['fsID'] as $fsID) {
-                        $fs = FileSet::getByID($fsID);
-                        if (is_object($fs)) {
-                            $this->fileList->filterBySet($fs);
-                        }
-                    }
-                } elseif (isset($req['fsID']) && $req['fsID'] != '' && $req['fsID'] > 0) {
-                    $set = $req['fsID'];
-                    $fs = FileSet::getByID($set);
-                    if (is_object($fs)) {
-                        $this->fileList->filterBySet($fs);
-                    }
-                }
-            }
-
-            $selectedSets = array();
-            if (is_array($req['field'])) {
-                foreach ($req['field'] as $i => $item) {
-                    $this->fields[] = $this->getField($item);
-                    // due to the way the form is setup, index will always be one more than the arrays
-                    if ($item != '') {
-                        switch ($item) {
-                            case "extension":
-                                $extension = $req['extension'];
-                                $this->fileList->filterByExtension($extension);
-                                break;
-                            case "type":
-                                $type = $req['type'];
-                                $this->fileList->filterByType($type);
-                                break;
-                            case "date_added":
-                                $wdt = Loader::helper('form/date_time');
-                                /* @var $wdt \Concrete\Core\Form\Service\Widget\DateTime */
-                                $dateFrom = $wdt->translate('date_added_from', $req);
-                                if ($dateFrom) {
-                                    $this->fileList->filterByDateAdded($dateFrom, '>=');
-                                }
-                                $dateTo = $wdt->translate('date_added_to', $req);
-                                if ($dateTo) {
-                                    if (preg_match('/^(.+\\d+:\\d+):00$/', $dateTo, $m)) {
-                                        $dateTo = $m[1] . ':59';
-                                    }
-                                    $this->fileList->filterByDateAdded($dateTo, '<=');
-                                }
-                                break;
-                            case 'added_to':
-                                $ocID = $req['ocIDSearchField'];
-                                if ($ocID > 0) {
-                                    $this->fileList->filterByOriginalPageID($ocID);
-                                }
-                                break;
-                            case "size":
-                                $from = $req['size_from'];
-                                $to = $req['size_to'];
-                                $this->fileList->filterBySize($from, $to);
-                                break;
-                            default:
-                                $akID = $item;
-                                $fak = FileAttributeKey::get($akID);
-                                $type = $fak->getAttributeType();
-                                $cnt = $type->getController();
-                                $cnt->setRequestArray($req);
-                                $cnt->setAttributeKey($fak);
-                                $cnt->searchForm($this->fileList);
-                                break;
-                        }
-                    }
-                }
-            }
-            if (isset($req['numResults'])) {
-                $this->fileList->setItemsPerPage(intval($req['numResults']));
-            }
-
-            $this->fileList->setPermissionsChecker(function($file) {
-                $cp = new \Permissions($file);
-                return $cp->canViewFileInFileManager();
-            });
-
-            $ilr = new FileSearchResult($columns, $this->fileList, URL::to('/ccm/system/search/files/submit'), $this->fields);
-            $this->result = $ilr;
+            return new JsonResponse($result->getJSONObject());
         } else {
             return false;
         }
     }
 
-    public function getSearchResultObject()
+    public function clearSearch()
     {
-        return $this->result;
-    }
+        $cp = FilePermissions::getGlobal();
+        if ($cp->canSearchFiles() || $cp->canAddFile()) {
+            $provider = $this->app->make('Concrete\Core\File\Search\SearchProvider');
+            $provider->clearSessionCurrentQuery();
 
-    public function getListObject()
-    {
-        return $this->fileList;
-    }
+            // Fall back to file folders search.
 
-    public function field($field)
-    {
-        $r = $this->getField($field);
-        Loader::helper('ajax')->sendResult($r);
-    }
+            $search = new FileFolder();
+            $search->search();
+            $result = $search->getSearchResultObject();
 
-    protected function getField($field)
-    {
-        $r = new stdClass();
-        $r->field = $field;
-        $searchRequest = $this->searchRequest->getSearchRequest();
-        $wdt = Loader::helper('form/date_time');
-        /* @var $wdt \Concrete\Core\Form\Service\Widget\DateTime */
-        $html = '';
-        switch ($field) {
-            case 'size':
-                $form = Loader::helper('form');
-                $html .= $form->text('size_from', $searchRequest['size_from'], array('style' => 'width:  60px'));
-                $html .= t('to');
-                $html .= $form->text('size_to', $searchRequest['size_to'], array('style' => 'width: 60px'));
-                $html .= t('KB');
-                break;
-            case 'type':
-                $form = Loader::helper('form');
-                $t1 = FileType::getTypeList();
-                $types = array();
-                foreach ($t1 as $value) {
-                    $types[$value] = FileType::getGenericTypeText($value);
-                }
-                $html .= $form->select('type', $types, $searchRequest['type'], array('style' => 'width: 120px'));
-                break;
-            case 'extension':
-                $form = Loader::helper('form');
-                $ext1 = FileType::getUsedExtensionList();
-                $extensions = array();
-                foreach ($ext1 as $value) {
-                    $extensions[$value] = $value;
-                }
-                $html .= $form->select('extension', $extensions, $searchRequest['extensions'], array('style' => 'width: 120px'));
-                break;
-            case 'date_added':
-                $html .= $wdt->datetime('date_added_from', $wdt->translate('date_added_from', $searchRequest)) . t('to') . $wdt->datetime('date_added_to', $wdt->translate('date_added_to', $searchRequest));
-                break;
-            case 'added_to':
-                $ps = Loader::helper("form/page_selector");
-                $html .= $ps->selectPage('ocIDSearchField');
-                break;
-            default:
-                if (Loader::helper('validation/numbers')->integer($field)) {
-                    $ak = FileAttributeKey::getByID($field);
-                    $html .= $ak->render('search', null, true);
-                }
-                break;
+            return new JsonResponse($result->getJSONObject());
+        } else {
+            return false;
         }
-        $r->html = $html;
-        $ag = ResponseAssetGroup::get();
-        $r->assets = array();
-        foreach ($ag->getAssetsToOutput() as $position => $assets) {
-            foreach ($assets as $asset) {
-                if (is_object($asset)) {
-                    // have to do a check here because we might be included a dumb javascript call like i18n_js
-                    $r->assets[$asset->getAssetType()][] = $asset->getAssetURL();
+    }
+
+
+    public function searchCurrent()
+    {
+        $cp = FilePermissions::getGlobal();
+        if ($cp->canSearchFiles()) {
+
+            $provider = $this->app->make('Concrete\Core\File\Search\SearchProvider');
+            $query = $provider->getSessionCurrentQuery();
+            if (is_object($query)) {
+                $result = $provider->getSearchResultFromQuery($query);
+                $result->setBaseURL(\URL::to('/ccm/system/search/files/current'));
+                return new JsonResponse($result->getJSONObject());
+            }
+        }
+
+    }
+
+    public function searchPreset($presetID)
+    {
+        $cp = FilePermissions::getGlobal();
+        if ($cp->canSearchFiles()) {
+
+            $em = \Database::connection()->getEntityManager();
+            $preset = $em->find('Concrete\Core\Entity\Search\SavedFileSearch', $presetID);
+            if (is_object($preset)) {
+                $query = $preset->getQuery();
+                if (is_object($query)) {
+                    $provider = $this->app->make('Concrete\Core\File\Search\SearchProvider');
+                    $result = $provider->getSearchResultFromQuery($query);
+                    $result->setBaseURL(\URL::to('/ccm/system/search/files/preset', $presetID));
+
+                    $filesystem = new Filesystem();
+                    $root = $filesystem->getRootFolder();
+                    $breadcrumb = [];
+                    $breadcrumb[] = [
+                        'active' => false,
+                        'name' => $root->getTreeNodeDisplayName(),
+                        'folder' => $root->getTreeNodeID(),
+                        'menu' => $root->getTreeNodeMenu(),
+                        'url' => (string) \URL::to('/ccm/system/file/folder/contents'),
+                    ];
+
+                    $node = SearchPreset::getNodeBySavedSearchID($presetID);
+
+                    $breadcrumb[] = [
+                        'active' => true,
+                        'name' => $node->getTreeNodeDisplayName(),
+                        'folder' => $node->getTreeNodeID(),
+                        'menu' => $node->getTreeNodeMenu(),
+                        'url' => false
+                    ];
+
+                    $result->setBreadcrumb($breadcrumb);
+
+                    return new JsonResponse($result->getJSONObject());
                 }
             }
         }
-        return $r;
-    }
 
-    public function submit()
-    {
-        $this->search();
-        Loader::helper('ajax')->sendResult($this->result->getJSONObject());
-    }
-
-    public function getFields()
-    {
-        return $this->fields;
     }
 
 
-    const FILTER_BY_TYPE = 'type';                  //!< @javascript-exported
-    const FILTER_BY_SIZE = 'size';                  //!< @javascript-exported
-    const FILTER_BY_EXTENSION = 'extension';        //!< @javascript-exported
-    const FILTER_BY_ADDED_DATE = 'date_added';      //!< @javascript-exported
-    const FILTER_BY_ADDED_TO_PAGE = 'added_to';     //!< @javascript-exported
-
-    public static function getSearchFields()
-    {
-        // Warning:
-        // concrete/js/build/core/file-manager/search.js uses those array keys too 
-        $r = array(
-            self::FILTER_BY_SIZE          => t('Size'),
-            self::FILTER_BY_TYPE          => t('Type'),
-            self::FILTER_BY_EXTENSION     => t('Extension'),
-            self::FILTER_BY_ADDED_DATE    => t('Added Between'),
-            self::FILTER_BY_ADDED_TO_PAGE => t('Added to Page')
-        );
-        $sfa = FileAttributeKey::getSearchableList();
-        foreach ($sfa as $ak) {
-            $r[$ak->getAttributeKeyID()] = $ak->getAttributeKeyDisplayName();
-        }
-        natcasesort($r);
-
-        return $r;
-    }
 
 }

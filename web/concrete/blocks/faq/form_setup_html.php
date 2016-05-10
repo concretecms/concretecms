@@ -40,7 +40,8 @@ $tp = new TaskPermission();
 <div class="ccm-faq-block-container">
     <span class="btn btn-success ccm-add-faq-entry"><?php echo t('Add Entry') ?></span>
     <?php if ($rows) {
-    foreach ($rows as $row) { ?>
+    foreach ($rows as $row) {
+        ?>
         <div class="ccm-faq-entry well">
             <i class="fa-sort-asc fa"></i>
             <i class="fa-sort-desc fa"></i>
@@ -60,17 +61,21 @@ $tp = new TaskPermission();
             <input class="ccm-faq-entry-sort" type="hidden" name="sortOrder[]" value="<?php echo $row['sortOrder'] ?>"/>
 
             <div class="form-group">
-                <span class="btn btn-danger ccm-delete-faq-entry"><?php echo t('Delete Entry'); ?></span>
+                <span class="btn btn-danger ccm-delete-faq-entry"><?php echo t('Delete Entry');
+        ?></span>
             </div>
         </div>
-    <?php }
-    } else { ?>
+    <?php 
+    }
+} else {
+    ?>
         <script>
             _.defer(function () {
                 $('.ccm-add-faq-entry').click();
             });
         </script>
-    <?php } ?>
+    <?php 
+} ?>
     <div class="ccm-faq-entry well ccm-faq-entry-template" style="display: none;">
         <i class="fa-sort-asc fa"></i>
         <i class="fa-sort-desc fa"></i>

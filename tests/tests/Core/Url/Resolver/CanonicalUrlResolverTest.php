@@ -4,7 +4,6 @@ require_once __DIR__ . "/ResolverTestCase.php";
 
 class CanonicalUrlResolverTest extends ResolverTestCase
 {
-
     public function testConfig()
     {
         $resolver = new \Concrete\Core\Url\Resolver\CanonicalUrlResolver(
@@ -38,8 +37,6 @@ class CanonicalUrlResolverTest extends ResolverTestCase
             (string) \Concrete\Core\Url\Url::createFromUrl("http://somehost")->setPath(\Core::getApplicationRelativePath()),
             (string) $resolver->resolve(array()));
 
-
         \Config::set('concrete.seo.canonical_url', $old_value);
     }
-
 }

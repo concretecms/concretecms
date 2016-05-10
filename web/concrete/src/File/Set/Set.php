@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\File\Set;
 
 use Concrete\Core\Permission\Access\Entity\GroupCombinationEntity as GroupCombinationPermissionAccessEntity;
@@ -19,7 +18,7 @@ use User;
  *
  * @method static Set add(string $setName, int $fsOverrideGlobalPermissions = 0, bool|\User $u = false, int $type = self::TYPE_PUBLIC) Deprecated method. Use Set::create instead.
  */
-class Set implements \Concrete\Core\Permission\ObjectInterface
+class Set
 {
     const TYPE_PRIVATE = 0;
     const TYPE_PUBLIC = 1;
@@ -47,7 +46,7 @@ class Set implements \Concrete\Core\Permission\ObjectInterface
     /**
      * @var int
      */
-    public $fsOverrideGlobalPermissions;
+    //public $fsOverrideGlobalPermissions;
 
     /**
      * @var int
@@ -88,10 +87,7 @@ class Set implements \Concrete\Core\Permission\ObjectInterface
         while ($row = $r->fetch()) {
             $fs = new static();
             $fs = array_to_object($fs, $row);
-            $fsp = new Permissions($fs);
-            if ($fsp->canSearchFiles()) {
-                $sets[] = $fs;
-            }
+            $sets[] = $fs;
         }
 
         return $sets;
@@ -107,7 +103,7 @@ class Set implements \Concrete\Core\Permission\ObjectInterface
      * @param int    $fs_type
      * @param int|bool    $fs_uid
      *
-     * @return Mixed
+     * @return mixed
      *
      * Dev Note: This will create duplicate sets with the same name if a set exists owned by another user!!!
      */
@@ -191,7 +187,6 @@ class Set implements \Concrete\Core\Permission\ObjectInterface
             "FileSets",
             array(
                 'fsType' => $type,
-                'fsOverrideGlobalPermissions' => $fsOverrideGlobalPermissions,
                 'uID' => $uID,
                 'fsName' => $setName,
             )
@@ -326,6 +321,7 @@ class Set implements \Concrete\Core\Permission\ObjectInterface
         return $sets;
     }
 
+    /*
     public function getPermissionResponseClassName()
     {
         return '\\Concrete\\Core\\Permission\\Response\\FileSetResponse';
@@ -341,13 +337,17 @@ class Set implements \Concrete\Core\Permission\ObjectInterface
         return 'file_set';
     }
 
+    */
+
     /**
      * @return int
      */
+    /*
     public function getPermissionObjectIdentifier()
     {
         return $this->getFileSetID();
     }
+    */
 
     /**
      * @return int
@@ -385,7 +385,7 @@ class Set implements \Concrete\Core\Permission\ObjectInterface
      */
     public function overrideGlobalPermissions()
     {
-        return $this->fsOverrideGlobalPermissions;
+        return false;
     }
 
     /**
@@ -420,13 +420,14 @@ class Set implements \Concrete\Core\Permission\ObjectInterface
      *
      * @return Set
      */
-    public function update($setName, $fsOverrideGlobalPermissions = 0)
+    public function update($setName)
     {
         $db = Database::connection();
         $db->update(
             'FileSets',
-            array('fsName' => $setName, 'fsOverrideGlobalPermissions' => $fsOverrideGlobalPermissions),
-            array('fsID' => $this->fsID));
+            array('fsName' => $setName),
+            array('fsID' => $this->fsID)
+        );
 
         return static::getByID($this->fsID);
     }
@@ -500,6 +501,7 @@ class Set implements \Concrete\Core\Permission\ObjectInterface
         $db->executeQuery('DELETE FROM FileSetSavedSearches WHERE fsID = ?', array($this->fsID));
     }
 
+    /*
     public function acquireBaseFileSetPermissions()
     {
         $this->resetPermissions();
@@ -560,6 +562,8 @@ class Set implements \Concrete\Core\Permission\ObjectInterface
             $pt->assignPermissionAccess($pa);
         }
     }
+
+    */
 
     public function getJSONObject()
     {

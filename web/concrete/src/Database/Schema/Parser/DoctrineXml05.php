@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Database\Schema\Parser;
 
 class DoctrineXml05 extends XmlParser

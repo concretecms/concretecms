@@ -26,23 +26,30 @@ if (is_object($f)) {
         print '<a href="' . $linkURL . '">';
     endif;
 
-    print $tag;
+    echo $tag;
 
     if ($linkURL):
         print '</a>';
     endif;
-} else if ($c->isEditMode()) { ?>
+} elseif ($c->isEditMode()) {
+    ?>
 
     <div class="ccm-edit-mode-disabled-item"><?=t('Empty Image Block.')?></div>
 
-<? } ?>
+<?php 
+} ?>
 
-<?php if(isset($foS) && is_object($foS)) { ?>
+<?php if (isset($foS) && is_object($foS)) {
+    ?>
 <script>
 $(function() {
-    $('.bID-<?php print $bID;?>')
-        .mouseover(function(e){$(this).attr("src", '<?php print $imgPath["hover"];?>');})
-        .mouseout(function(e){$(this).attr("src", '<?php print $imgPath["default"];?>');});
+    $('.bID-<?php echo $bID;
+    ?>')
+        .mouseover(function(e){$(this).attr("src", '<?php echo $imgPath["hover"];
+    ?>');})
+        .mouseout(function(e){$(this).attr("src", '<?php echo $imgPath["default"];
+    ?>');});
 });
 </script>
-<?php } ?>
+<?php 
+} ?>

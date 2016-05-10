@@ -9,7 +9,6 @@ namespace Concrete\Core\Database\Driver;
  */
 class PDOStatement extends \Doctrine\DBAL\Driver\PDOStatement
 {
-
     /**
      * @deprecated
      * alias to old ADODB result method
@@ -45,5 +44,4 @@ class PDOStatement extends \Doctrine\DBAL\Driver\PDOStatement
     {
         return $this->rowCount();
     }
-
 }

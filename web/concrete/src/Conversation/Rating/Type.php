@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Conversation\Rating;
 
 use Concrete\Core\Conversation\Message\Message;
@@ -88,7 +87,6 @@ abstract class Type extends Object
         $type->addAttribute('name', $this->getConversationRatingTypeName());
         $type->addAttribute('package', $this->getPackageHandle());
         $type->addAttribute('points', $this->getConversationRatingTypePoints());
-
     }
 
     public static function exportList($xml)

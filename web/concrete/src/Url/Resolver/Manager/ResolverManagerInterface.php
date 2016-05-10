@@ -5,7 +5,6 @@ use Concrete\Core\Url\Resolver\UrlResolverInterface;
 
 interface ResolverManagerInterface
 {
-
     /**
      * @return URLResolverInterface|null
      */
@@ -13,6 +12,7 @@ interface ResolverManagerInterface
 
     /**
      * @param string $handle
+     *
      * @return URLResolverInterface|null
      */
     public function getResolver($handle);
@@ -21,7 +21,6 @@ interface ResolverManagerInterface
      * @param string               $handle
      * @param URLResolverInterface $resolver
      * @param int                  $priority The order in which we ask for a url, 1 is first, 1024 is last.
-     * @return void
      */
     public function addResolver(
         $handle,
@@ -30,11 +29,11 @@ interface ResolverManagerInterface
     );
 
     /**
-     * Resolve a URI
+     * Resolve a URI.
      *
      * @param array $args This can be an array of any information.
+     *
      * @return \League\URL\URLInterface
      */
     public function resolve(array $args);
-
 }

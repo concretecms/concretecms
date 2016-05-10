@@ -1,36 +1,40 @@
 <?php
 namespace Concrete\Tests\Core\File;
+
 use Concrete\Core\Cache\CacheLocal;
-use \Concrete\Core\File\StorageLocation\Type\Type;
-use \Concrete\Core\File\StorageLocation\StorageLocation;
-use \Concrete\Core\File\Importer;
-use \Concrete\Core\Attribute\Type as AttributeType;
-use \Concrete\Core\Attribute\Key\FileKey;
+use Concrete\Core\File\StorageLocation\StorageLocation;
+use Concrete\Core\File\Importer;
+use Concrete\Core\Attribute\Type as AttributeType;
+use Concrete\Core\Attribute\Key\FileKey;
 use Config;
 use Core;
-use \Concrete\Core\Attribute\Key\Category;
+use Concrete\Core\Attribute\Key\Category;
 
-class ImporterTest extends \FileStorageTestCase {
-
+class ImporterTest extends \FileStorageTestCase
+{
     protected function setUp()
     {
         $this->tables = array_merge($this->tables, array(
-            'Files',
-            'FileVersions',
             'Users',
             'PermissionAccessEntityTypes',
-            'FileAttributeValues',
             'FileImageThumbnailTypes',
             'FileImageThumbnailPaths',
             'FilePermissionAssignments',
-            'AttributeKeyCategories',
-            'AttributeTypes',
             'ConfigStore',
-            'AttributeKeys',
-            'AttributeValues',
-            'atNumber',
             'Logs',
-            'FileVersionLog'
+            'FileVersionLog',
+        ));
+        $this->metadatas = array_merge($this->metadatas, array(
+            'Concrete\Core\Entity\Attribute\Key\Type\NumberType',
+            'Concrete\Core\Entity\Attribute\Key\Type\Type',
+            'Concrete\Core\Entity\Attribute\Key\FileKey',
+            'Concrete\Core\Entity\Attribute\Value\FileValue',
+            'Concrete\Core\Entity\Attribute\Key\Key',
+            'Concrete\Core\Entity\Attribute\Value\Value',
+            'Concrete\Core\Entity\Attribute\Value\Value\NumberValue',
+            'Concrete\Core\Entity\Attribute\Value\Value\Value',
+            'Concrete\Core\Entity\Attribute\Type',
+            'Concrete\Core\Entity\Attribute\Category',
         ));
         parent::setUp();
         Config::set('concrete.upload.extensions', '*.txt;*.jpg;*.jpeg;*.png');
@@ -103,7 +107,6 @@ class ImporterTest extends \FileStorageTestCase {
         $this->assertEquals('/application/files/' . $apr[0] . '/' . $apr[1] . '/' . $apr[2] . '/test.txt',
             $r->getRelativePath()
         );
-
     }
 
     public function testFileVersions()
@@ -120,7 +123,6 @@ class ImporterTest extends \FileStorageTestCase {
         $f = \File::getByID(1);
         $versions = $f->getFileVersions();
         $this->assertEquals(1, count($versions));
-
     }
 
     public function testImageImportSize()
@@ -217,7 +219,6 @@ class ImporterTest extends \FileStorageTestCase {
 
         $fv2 = $f->getVersion(1);
         $this->assertNull($fv2);
-
     }
 
     public function testImporterMimeType()
@@ -229,9 +230,9 @@ class ImporterTest extends \FileStorageTestCase {
         $fi = new Importer();
         $fo1 = $fi->import($sample, 'sample.txt');
 
-        $sample = dirname(__FILE__) . '/StorageLocation/fixtures/gummies.txt';
+        $sample = dirname(__FILE__) . '/StorageLocation/fixtures/gummies.jpg';
         $fi = new Importer();
-        $fo2 = $fi->import($sample, 'gummies.txt');
+        $fo2 = $fi->import($sample, 'gummies.jpg');
 
         $this->assertEquals('text/plain', $fo1->getMimeType());
         $this->assertEquals('image/jpeg', $fo2->getMimeType());
@@ -255,6 +256,29 @@ class ImporterTest extends \FileStorageTestCase {
         $this->assertEquals(2, $versions[0]->getFileID());
     }
 
+    public function testFileAttributesDuplicate()
+    {
+        mkdir($this->getStorageDirectory());
+        $this->getStorageLocation();
+
+        $sample = dirname(__FILE__) . '/StorageLocation/fixtures/gummies.jpg';
+        $fi = new Importer();
+        $fi->import($sample, 'gummies.jpg');
+
+        $f = \File::getByID(1);
+        $f2 = $f->duplicate();
+        $this->assertEquals(2, $f2->getFileID());
+        $versions = $f2->getVersionList();
+        $this->assertEquals(1, count($versions));
+        $this->assertEquals(1, $versions[0]->getFileVersionID());
+        $this->assertEquals(2, $versions[0]->getFileID());
+
+        $attributes = $f->getAttributes();
+        $attributesNew = $f2->getAttributes();
+        $this->assertEquals(2, count($attributes));
+        $this->assertEquals(2, count($attributesNew));
+    }
+
     public function testFileVersionDuplicate()
     {
         mkdir($this->getStorageDirectory());
@@ -274,7 +298,6 @@ class ImporterTest extends \FileStorageTestCase {
         $fv2 = $fv->duplicate();
         $this->assertEquals(2, $fv2->getFileVersionID());
         $this->assertEquals(false, $fv->isApproved());
-
     }
 
     public function testFileReplace()
@@ -334,7 +357,5 @@ class ImporterTest extends \FileStorageTestCase {
         $this->assertEquals(false, $fv1->isApproved());
         $fva = $f->getApprovedVersion();
         $this->assertEquals($fva, $fv3);
-
-
     }
 }

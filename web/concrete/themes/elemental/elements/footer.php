@@ -9,43 +9,45 @@ $displayFirstSection = $footerSiteTitleBlocks > 0 || $footerSocialBlocks > 0 || 
 ?>
 
 <footer id="footer-theme">
-    <? if ($displayFirstSection) { ?>
+    <?php if ($displayFirstSection) {
+    ?>
     <section>
     <div class="container">
         <div class="row">
             <div class="col-sm-9">
-                <?
+                <?php
                 $a = new GlobalArea('Footer Site Title');
-                $a->display();
-                ?>
+    $a->display();
+    ?>
             </div>
             <div class="col-sm-3">
-                <?
+                <?php
                 $a = new GlobalArea('Footer Social');
-                $a->display();
-                ?>
+    $a->display();
+    ?>
             </div>
         </div>
     </div>
     </section>
-    <? } ?>
+    <?php 
+} ?>
     <section>
     <div class="container">
         <div class="row">
             <div class="col-sm-6">
-            <?
+            <?php
             $a = new GlobalArea('Footer Legal');
             $a->display();
             ?>
             </div>
             <div class="col-sm-3">
-                <?
+                <?php
                 $a = new GlobalArea('Footer Navigation');
                 $a->display();
                 ?>
             </div>
             <div class="col-sm-3">
-                <?
+                <?php
                 $a = new GlobalArea('Footer Contact');
                 $a->display();
                 ?>
@@ -63,10 +65,13 @@ $displayFirstSection = $footerSiteTitleBlocks > 0 || $footerSocialBlocks > 0 || 
                 <span class="pull-right">
                     <?=Core::make('helper/navigation')->getLogInOutLink()?>
                 </span>
+                <span id="ccm-account-menu-container">
+
+                </span>
             </div>
         </div>
     </div>
 </footer>
 
 
-<? $this->inc('elements/footer_bottom.php');?>
+<?php $this->inc('elements/footer_bottom.php');?>

@@ -8,7 +8,9 @@ defined('C5_EXECUTE') or die("Access Denied.");
     foreach ($contents as $pile_content) {
         $block = Block::getByID($pile_content->getItemID());
 
-        if (!$block || !is_object($block) || $block->isError()) continue;
+        if (!$block || !is_object($block) || $block->isError()) {
+            continue;
+        }
 
         $type = $block->getBlockTypeObject();
         $icon = $ci->getBlockTypeIconURL($type);
@@ -31,12 +33,13 @@ defined('C5_EXECUTE') or die("Access Denied.");
                 <div class="item-select-list-content">
                     <?php
                     $bv = new \Concrete\Core\Block\View\BlockView($block);
-                    $bv->render('scrapbook')
+        $bv->render('scrapbook')
                     ?>
                 </div>
         </li>
 
-        <? } ?>
+        <?php 
+    } ?>
     </ul>
 </div>
 

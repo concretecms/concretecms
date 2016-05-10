@@ -2,18 +2,19 @@
 namespace Concrete\Core\Area\Layout;
 
 use HtmlObject\Element;
-use Loader;
 
 class PresetColumn extends Column
 {
     /**
      * @param int $arLayoutColumnID
+     *
      * @return static
      */
     public static function getByID($arLayoutColumnID)
     {
         $al = new static();
         $al->loadBasicInformation($arLayoutColumnID);
+
         return $al;
     }
 
@@ -34,6 +35,7 @@ class PresetColumn extends Column
         if (!isset($this->preset)) {
             $this->preset = $this->getAreaLayoutObject()->getPresetObject();
         }
+
         return $this->preset;
     }
     protected function getPresetColumnObject()
@@ -46,6 +48,7 @@ class PresetColumn extends Column
                 return $columns[$index];
             }
         }
+
         return new Element('div');
     }
 
@@ -55,6 +58,7 @@ class PresetColumn extends Column
         if ($column) {
             $inner = $column->getColumnHtmlObject();
             $inner->setValue($this->getContents());
+
             return $inner;
         }
     }
@@ -68,8 +72,8 @@ class PresetColumn extends Column
             $inner->addClass('ccm-layout-column-inner ccm-layout-column-highlight');
             $inner->setValue($this->getContents(true));
             $html->appendChild($inner);
+
             return $html;
         }
     }
-
 }

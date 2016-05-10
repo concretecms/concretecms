@@ -1,55 +1,59 @@
 <?php defined('C5_EXECUTE') or die("Access Denied."); ?>
-<?
+<?php
 use \Concrete\Core\Page\Type\Composer\FormLayoutSet as PageTypeComposerFormLayoutSet;
 use \Concrete\Core\Page\Type\Composer\Control\Type\Type as PageTypeComposerControlType;
-
 
 $c = Page::getByPath('/dashboard/pages/types/form');
 $cp = new Permissions($c);
 $ih = Loader::helper('concrete/ui');
 $set = PageTypeComposerFormLayoutSet::getByID($_REQUEST['ptComposerFormLayoutSetID']);
 if (!is_object($set)) {
-	die(t('Invalid set'));
+    die(t('Invalid set'));
 }
-if ($cp->canViewPage()) { 
+if ($cp->canViewPage()) {
+    if ($_POST['ptComposerControlTypeID'] && $_POST['ptComposerControlIdentifier']) {
+        $type = PageTypeComposerControlType::getByID($_POST['ptComposerControlTypeID']);
+        $control = $type->getPageTypeComposerControlByIdentifier($_POST['ptComposerControlIdentifier']);
+        $layoutSetControl = $control->addToPageTypeComposerFormLayoutSet($set);
+        Loader::element('page_types/composer/form/layout_set/control', array('control' => $layoutSetControl));
+        exit;
+    }
 
-	if ($_POST['ptComposerControlTypeID'] && $_POST['ptComposerControlIdentifier']) {
-		$type = PageTypeComposerControlType::getByID($_POST['ptComposerControlTypeID']);
-		$control = $type->getPageTypeComposerControlByIdentifier($_POST['ptComposerControlIdentifier']);
-		$layoutSetControl = $control->addToPageTypeComposerFormLayoutSet($set);
-		Loader::element('page_types/composer/form/layout_set/control', array('control' => $layoutSetControl));
-		exit;
-	}
-
-	?>
+    ?>
 
 	<div class="ccm-ui">
-	<?
-	$tabs = array();
-	$types = PageTypeComposerControlType::getList();
-	for ($i = 0; $i < count($types); $i++) {
-		$type = $types[$i];
-		$tabs[] = array($type->getPageTypeComposerControlTypeHandle(), $type->getPageTypeComposerControlTypeDisplayName(), $i == 0);
-	}
+	<?php
+    $tabs = array();
+    $types = PageTypeComposerControlType::getList();
+    for ($i = 0; $i < count($types); ++$i) {
+        $type = $types[$i];
+        $tabs[] = array($type->getPageTypeComposerControlTypeHandle(), $type->getPageTypeComposerControlTypeDisplayName(), $i == 0);
+    }
 
-	print $ih->tabs($tabs);
+    echo $ih->tabs($tabs);
 
-	foreach($types as $t) { ?>
+    foreach ($types as $t) {
+        ?>
 
 	<div class="ccm-tab-content" id="ccm-tab-content-<?=$t->getPageTypeComposerControlTypeHandle()?>">
 	<ul data-list="page-type-composer-control-type" class="item-select-list">
-		<? 
-		$controls = $t->getPageTypeComposerControlObjects();
-		foreach($controls as $cnt) { ?>
+		<?php
+        $controls = $t->getPageTypeComposerControlObjects();
+        foreach ($controls as $cnt) {
+            ?>
 			<li><a href="#" data-control-type-id="<?=$t->getPageTypeComposerControlTypeID()?>" data-control-identifier="<?=$cnt->getPageTypeComposerControlIdentifier()?>">
                     <img src="<?=$cnt->getPageTypeComposerControlIconSRC()?>" />
                     <?=$cnt->getPageTypeComposerControlDisplayName()?></a></li>
-		<? } ?>
+		<?php 
+        }
+        ?>
 	</ul>
 	</div>
 
 
-	<? } ?>
+	<?php 
+    }
+    ?>
 
 	</div>
 
@@ -92,6 +96,6 @@ $(function() {
 </script>
 
 
-<?
+<?php
 
 }

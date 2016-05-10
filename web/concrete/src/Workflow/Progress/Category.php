@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Workflow\Progress;
 
 use Concrete\Core\Foundation\Object;
@@ -76,13 +75,23 @@ class Category extends Object
         return PackageList::getHandle($this->pkgID);
     }
 
-    public function __call($method, $arguments)
+    public function getWorkflowProgressCategoryClass()
     {
         $className = '\\Core\\Workflow\\Progress\\' . Loader::helper('text')->camelcase($this->wpCategoryHandle) . 'Progress';
         $pkHandle = $this->getPackageHandle();
         $class = core_class($className, $pkHandle);
+        if (class_exists($class)) {
+            $c = new $class();
+            return $c;
+        }
+    }
 
-        return call_user_func_array(array($class, $method), $arguments);
+    public function __call($method, $arguments)
+    {
+        $class = $this->getWorkflowProgressCategoryClass();
+        if ($class) {
+            return call_user_func_array(array($class, $method), $arguments);
+        }
     }
 
     public function delete()

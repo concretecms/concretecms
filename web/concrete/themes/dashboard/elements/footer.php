@@ -10,11 +10,13 @@ if (Request::getInstance()->get('_ccm_dashboard_external')) {
 <script type="text/javascript">
 	ConcretePanelManager.register({'overlay': false, 'identifier': 'dashboard', 'position': 'right', url: '<?=URL::to("/ccm/system/panels/dashboard")?>'});
 	ConcretePanelManager.register({'identifier': 'sitemap', 'position': 'right', url: '<?=URL::to("/ccm/system/panels/sitemap")?>'});
-    <?php if (!(isset($hideDashboardPanel) && $hideDashboardPanel)) { ?>
+    <?php if (!(isset($hideDashboardPanel) && $hideDashboardPanel)) {
+    ?>
         var panel = ConcretePanelManager.getByIdentifier('dashboard');
         panel.isOpen = true;
         panel.onPanelLoad();
-    <?php } ?>
+    <?php 
+} ?>
 
     $(function() {
         $('a[data-launch-panel=dashboard]').on('click', function() {

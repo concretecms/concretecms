@@ -4,7 +4,6 @@ namespace Concrete\Controller\Frontend;
 use Controller;
 use Concrete\Core\File\Type\Type as FileType;
 use Concrete\Core\Localization\Localization;
-use Core;
 use Environment;
 
 class AssetsLocalization extends Controller
@@ -22,6 +21,7 @@ class AssetsLocalization extends Controller
         ?>
 var ccmi18n = {
   expand: <?=json_encode(t('Expand'))?>,
+  loadingText: <?=json_encode(t('Loading'))?>,
   cancel: <?=json_encode(t('Cancel'))?>,
   collapse: <?=json_encode(t('Collapse'))?>,
   error: <?=json_encode(t('Error'))?>,
@@ -88,6 +88,8 @@ var ccmi18n = {
   marketplaceLoginSuccessMsg: <?=json_encode(t('<p>You have successfully logged into the concrete5 Marketplace.</p>'))?>,
   marketplaceLogoutSuccessMsg: <?=json_encode(t('<p>You are now logged out of concrete5 Marketplace.</p>'))?>,
   deleteAttributeValue: <?=json_encode(t('Are you sure you want to remove this value?'))?>,
+  search: <?=json_encode(t('Search'))?>,
+  advanced: <?=json_encode(t('Advanced'))?>,
   customizeSearch: <?=json_encode(t('Customize Search'))?>,
   properties: <?=json_encode(t('Page Saved'))?>,
   savePropertiesMsg: <?=json_encode(t('Page Properties saved.'))?>,
@@ -126,6 +128,11 @@ var ccmi18n_editor = {
   insertLinkToFile: <?=json_encode(t('Insert Link to File'))?>,
   insertImage: <?=json_encode(t('Insert Image'))?>,
   insertLinkToPage: <?=json_encode(t('Link to Page'))?>
+};
+
+var ccmi18n_express = {
+    chooseEntry: <?=json_encode(t('Choose Entry'))?>,
+    entriesTitle: <?=json_encode(t('Entries'))?>
 };
 
 var ccmi18n_sitemap = {
@@ -208,6 +215,7 @@ var ccmi18n_filemanager = {
   deleteFile: <?=json_encode(t('Delete'))?>,
   title: <?=json_encode(t('File Manager'))?>,
   uploadErrorChooseFile: <?=json_encode(t('You must choose a file.'))?>,
+  addFiles: <?=json_encode(t('Add Files'))?>,
   rescan: <?=json_encode(t('Rescan'))?>,
   pending: <?=json_encode(t('Pending'))?>,
   uploadComplete: <?=json_encode(t('Upload Complete'))?>,
@@ -243,6 +251,11 @@ var ccmi18n_topics = {
   editPermissions: <?=json_encode(t('Edit Permissions'))?>
 };
 
+var ccmi18n_tree = {
+    add: <?=json_encode(t('Add'))?>,
+    edit: <?=json_encode(t('Edit'))?>,
+    delete: <?=json_encode(t('Delete'))?>
+};
 var ccmi18n_tourist = {
   skipButton: <?=json_encode('<button class="btn btn-default btn-sm pull-right tour-next">'.t('Skip →').'</button>')?>,
   nextButton: <?=json_encode('<button class="btn btn-primary btn-sm pull-right tour-next">'.t('Next →').'</button>')?>,

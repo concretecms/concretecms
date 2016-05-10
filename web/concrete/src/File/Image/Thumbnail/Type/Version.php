@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\File\Image\Thumbnail\Type;
 
 use Concrete\Core\File\Image\Thumbnail\Path\Resolver;

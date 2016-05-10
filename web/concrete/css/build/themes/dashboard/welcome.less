@@ -1,0 +1,128 @@
+body.ccm-dashboard-desktop {
+  background-color: #f8fafb;
+  -webkit-font-smoothing: antialiased;
+
+  div#ccm-dashboard-content {
+    padding-right: 0px;
+    padding-left: 0px;
+    padding-bottom: 0px;
+  }
+}
+
+div.ccm-dashboard-desktop-grid {
+  padding: 0px 40px 40px 40px;
+}
+
+div.ccm-dashboard-desktop-flex {
+
+  .row, .row > div[class*='col-'] {
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    flex:1 1 auto;
+
+    color: #878a8f;
+
+  }
+
+  .row > div[class*='col-'] > div {
+    width: 100%;
+  }
+
+  .row {
+    margin-bottom: 30px;
+  }
+
+  .row > div[class*='col-'] {
+    margin: -1px; /* hack adjust for wrapping */
+  }
+
+  .row {
+    -webkit-flex-flow: row wrap;
+    align-content: flex-start;
+    flex:0;
+  }
+
+}
+
+div.ccm-dashboard-welcome {
+
+  h1 {
+    margin-top: 100px;
+    margin-bottom: 100px;
+    margin-left: auto;
+    margin-right: auto;
+    color: #1f2a34;
+    display: inline-block;
+    padding: 50px 80px 50px 80px;
+    font-family: 'Roboto', sans-serif;
+    border: 10px solid rgba(255,255,255,0.9);
+    background-color: rgba(255,255,255,0.4);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+
+
+    div.ccm-dashboard-welcome-inner {
+      position: relative;
+    }
+
+    a {
+      position: absolute;
+      bottom: -50px;
+      right: -80px;
+      font-size: 14px;
+      background-color: rgba(255,255,255,0.9);
+      border-left: 10px solid rgba(255,255,255,0.9);
+      border-top: 10px solid rgba(255,255,255,0.9);
+    }
+  }
+
+  text-align: center;
+  #gradient > .vertical(#c0dae9, #f8f8f8);
+}
+
+.ccm-ui {
+
+  nav.ccm-dashboard-desktop-navbar.navbar {
+    .border-radius(0px);
+    border-width: 0px;
+    background-color: #1f2a34;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    -webkit-box-shadow: inset 0px 20px 20px 0px rgba(0,0,0,0.3), inset 0px -5px 10px 0px rgba(0,0,0,0.3);
+    font-size: 12px;
+
+    margin-bottom: 40px;
+
+    p.navbar-text {
+      color: #5b717c !important;
+      line-height: 20px;
+    }
+
+    a {
+      &:hover, &:active, &:focus {
+        color: #b8d7e7 !important;
+      }
+      color: #5b717c;
+    }
+
+    li.active a {
+      background-color: transparent;
+      color: #fff;
+
+      &:hover, &:active {
+        background-color: transparent;
+      }
+
+    }
+
+  }
+
+}
+
+div.ccm-dashboard-desktop h1.page-title {
+  font-weight: 300;
+  -webkit-font-smoothing: antialiased;
+}

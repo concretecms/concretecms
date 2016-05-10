@@ -6,7 +6,6 @@ use Concrete\Core\Area\Layout\Preset\Formatter\FormatterInterface;
 
 class Preset implements PresetInterface
 {
-
     protected $name;
     protected $identifier;
     protected $formatter;
@@ -16,7 +15,7 @@ class Preset implements PresetInterface
         $this->name = $name;
         $this->identifier = $identifier;
         $this->formatter = $formatter;
-        foreach($columns as $column) {
+        foreach ($columns as $column) {
             $this->addColumn($column);
         }
     }
@@ -66,6 +65,7 @@ class Preset implements PresetInterface
     public static function getByID($identifier)
     {
         $manager = \Core::make('manager/area_layout_preset_provider');
+
         return $manager->getPresetByIdentifier($identifier);
     }
 
@@ -76,5 +76,4 @@ class Preset implements PresetInterface
     {
         return $this->formatter;
     }
-
 }

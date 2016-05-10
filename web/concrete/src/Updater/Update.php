@@ -1,8 +1,8 @@
 <?php
-
 namespace Concrete\Core\Updater;
 
 use Concrete\Core\Cache\Cache;
+use Concrete\Core\Database\DatabaseStructureManager;
 use Core;
 use Marketplace;
 use Config;
@@ -133,9 +133,9 @@ class Update
             $body = @curl_exec($curl_handle);
 
             $update = RemoteApplicationUpdateFactory::getFromJSON($body);
+
             return $update;
         }
-
     }
 
     /**
@@ -178,8 +178,8 @@ class Update
         $cms = Core::make('app');
         $cms->clearCaches();
 
-        $em = ORM::entityManager('core');
-        $dbm = Core::make('database/structure', array($em));
+        $em = ORM::entityManager();
+        $dbm = new DatabaseStructureManager($em);
         $dbm->destroyProxyClasses('ConcreteCore');
         $dbm->generateProxyClasses();
 

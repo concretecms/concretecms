@@ -1,6 +1,6 @@
 <?php
 namespace Concrete\Core\Feature;
-class ConversationFeature extends Feature {
 
-
+class ConversationFeature extends Feature
+{
 }

@@ -1,8 +1,8 @@
 <?php
 namespace Concrete\Core\File\Image\Thumbnail;
+
 class Thumbnail
 {
-
     protected $version;
     protected $path;
 
@@ -21,5 +21,4 @@ class Thumbnail
     {
         return $this->path;
     }
-
 }

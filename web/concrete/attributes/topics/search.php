@@ -1,14 +1,18 @@
-<? if (is_object($tree)) { ?>
+<?php if (is_object($tree)) {
+    ?>
 
     <script type="text/javascript">
         $(function() {
-            $('.tree-view-template-<?=$attributeKey->getAttributeKeyID()?>').ccmtopicstree({  // run first time around to get default tree if new.
-                'treeID': <?php echo $tree->getTreeID(); ?>,
+            $('.tree-view-template-<?=$attributeKey->getAttributeKeyID()?>').concreteTree({  // run first time around to get default tree if new.
+                'treeID': <?php echo $tree->getTreeID();
+    ?>,
                 'chooseNodeInForm': true,
-                'noDrag' : true,
-                <?php if($selectedNode) { ?>
+                <?php if ($selectedNode) {
+    ?>
                  'selectNodesByKey': [<?php echo $selectedNode ?>],
-                 <?php } ?>
+                 <?php 
+}
+    ?>
                 'onSelect' : function(select, node) {
                      if (select) {
                         $('input[data-topic-search-field=<?=$attributeKey->getAttributeKeyID()?>]').val(node.data.key);
@@ -26,4 +30,5 @@
     <input type="hidden" data-topic-search-field="<?=$attributeKey->getAttributeKeyID()?>"
            name="<?=$view->field('treeNodeID')?>" value="">
 
-<? } ?>
+<?php 
+} ?>

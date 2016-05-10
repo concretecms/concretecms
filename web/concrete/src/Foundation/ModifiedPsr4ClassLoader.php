@@ -8,7 +8,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Concrete\Core\Foundation;
 
 /**
@@ -56,21 +55,21 @@ class ModifiedPsr4ClassLoader
                 /* concrete5 Modification */
                 $file = '';
                 $segments = explode('\\', $classWithoutPrefix);
-                foreach($segments as $segment) {
-                	$file .= DIRECTORY_SEPARATOR;
-                	$segment = lcfirst($segment);
-					$chunks = preg_split('/(?=[A-Z])/', $segment);
-					for ($i = 0; $i < count($chunks); $i++) {
-						$file .= strtolower($chunks[$i]);
-						if (($i+1) < count($chunks)) {
-							$file .= '_';
-						}
-					}
+                foreach ($segments as $segment) {
+                    $file .= DIRECTORY_SEPARATOR;
+                    $segment = lcfirst($segment);
+                    $chunks = preg_split('/(?=[A-Z])/', $segment);
+                    for ($i = 0; $i < count($chunks); ++$i) {
+                        $file .= strtolower($chunks[$i]);
+                        if (($i + 1) < count($chunks)) {
+                            $file .= '_';
+                        }
+                    }
                 }
                 $file = ltrim($file, '/') . '.php';
                 $file = $currentBaseDir . $file;
                 if (file_exists($file)) {
-                	return $file;
+                    return $file;
                 }
             }
         }
@@ -79,23 +78,24 @@ class ModifiedPsr4ClassLoader
     /**
      * @param string $class
      *
-     * @return Boolean
+     * @return bool
      */
     public function loadClass($class)
     {
         $file = $this->findFile($class);
         if (null !== $file) {
             require $file;
+
             return true;
         }
-        
+
         return false;
     }
 
     /**
      * Registers this instance as an autoloader.
      *
-     * @param Boolean $prepend
+     * @param bool $prepend
      */
     public function register($prepend = false)
     {

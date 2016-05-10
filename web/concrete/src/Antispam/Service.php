@@ -12,7 +12,6 @@ use UserInfo;
 
 class Service
 {
-
     /**
      * @var bool|mixed
      */
@@ -20,7 +19,6 @@ class Service
 
     public function __construct()
     {
-
         $library = Library::getActive();
         if (is_object($library)) {
             $this->controller = $library->getController();
@@ -36,7 +34,8 @@ class Service
     }
 
     /**
-     * Report some content with the poster's information to the AntiSpam service
+     * Report some content with the poster's information to the AntiSpam service.
+     *
      * @param string $content
      * @param UserInfo $ui
      * @param string $ip
@@ -72,14 +71,16 @@ class Service
      * @param string $type
      * @param array $additionalArgs
      * @param bool $user
+     *
      * @return bool
+     *
      * @throws \Exception
      */
     public function check($content, $type, $additionalArgs = array(), $user = false)
     {
         if ($this->controller) {
             if (!$user) {
-                $user = new User;
+                $user = new User();
             }
             $wlg = $this->getWhitelistGroup();
             if ($wlg instanceof Group && $user->inGroup($wlg)) {
@@ -90,7 +91,7 @@ class Service
             /** @var \Concrete\Core\Permission\IPService $iph */
             $iph = Core::make('helper/validation/ip');
             $ip = $iph->getRequestIP();
-            $args['ip_address'] = ($ip === false)?(''):($ip->getIp($ip::FORMAT_IP_STRING));
+            $args['ip_address'] = ($ip === false) ? ('') : ($ip->getIp($ip::FORMAT_IP_STRING));
             $args['user_agent'] = $_SERVER['HTTP_USER_AGENT'];
             $args['content'] = $content;
             foreach ($additionalArgs as $key => $value) {
@@ -136,6 +137,7 @@ class Service
                     $mh->load('spam_detected');
                     $mh->sendMail();
                 }
+
                 return false;
             }
         } else {
@@ -146,6 +148,7 @@ class Service
     /**
      * @param $nm
      * @param $args
+     *
      * @return mixed
      */
     public function __call($nm, $args)
@@ -154,5 +157,4 @@ class Service
             return call_user_func_array(array($this->controller, $nm), $args);
         }
     }
-
 }

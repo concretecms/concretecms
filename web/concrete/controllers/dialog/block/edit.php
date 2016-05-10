@@ -4,13 +4,10 @@ namespace Concrete\Controller\Dialog\Block;
 use Concrete\Controller\Backend\UserInterface\Block as BackendInterfaceBlockController;
 use Concrete\Core\Block\View\BlockView;
 use BlockType;
-use Concrete\Core\Cache\Cache;
-use Core;
 use Area;
 
 class Edit extends BackendInterfaceBlockController
 {
-
     protected $viewPath = '/dialogs/block/edit';
 
     public function view()
@@ -29,7 +26,6 @@ class Edit extends BackendInterfaceBlockController
     public function submit()
     {
         if ($this->validateAction() && $this->canAccess()) {
-
             $c = $this->page;
             $a = \Area::get($this->page, $_REQUEST['arHandle']);
             $ax = $a;
@@ -53,7 +49,7 @@ class Edit extends BackendInterfaceBlockController
             $pr->setAdditionalDataAttribute('arHandle', $a->getAreaHandle());
             $pr->setError($e);
 
-            if ((!is_object($e)) || (($e instanceof \Concrete\Core\Error\Error) && (!$e->has()))) {
+            if ((!is_object($e)) || (($e instanceof \Concrete\Core\Error\ErrorBag\ErrorBag) && (!$e->has()))) {
                 $bt = BlockType::getByHandle($b->getBlockTypeHandle());
                 if (!$bt->includeAll()) {
                     // we make sure to create a new version, if necessary
@@ -95,8 +91,7 @@ class Edit extends BackendInterfaceBlockController
                     $nb = $ob->duplicate($nvc);
                     $nb->setAbsoluteBlockDisplayOrder($originalDisplayOrder);
                     $b->deleteBlock();
-                    $b = & $nb;
-
+                    $b = &$nb;
                 } else {
                     if ($b->isAlias()) {
 
@@ -121,6 +116,4 @@ class Edit extends BackendInterfaceBlockController
     {
         return $this->permissions->canEditBlock();
     }
-
 }
-

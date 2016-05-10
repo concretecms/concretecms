@@ -2,11 +2,9 @@
 namespace Concrete\Core\User;
 
 use Concrete\Core\Foundation\Service\Provider as ServiceProvider;
-use Concrete\Core\User\RegistrationService;
 
 class UserServiceProvider extends ServiceProvider
 {
-
     public function register()
     {
         $app = $this->app;
@@ -23,5 +21,4 @@ class UserServiceProvider extends ServiceProvider
             return $app->make('user/avatar');
         });
     }
-
 }

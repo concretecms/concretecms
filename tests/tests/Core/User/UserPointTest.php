@@ -1,20 +1,17 @@
 <?php
-
 namespace Concrete\Tests\Core\User;
 
 use Concrete\Core\User\Group\Group;
 use Concrete\Core\User\Point\Action\Action;
 use Concrete\Core\User\Point\EntryList;
 
-class UserPointTest extends \ConcreteDatabaseTestCase {
-
+class UserPointTest extends \ConcreteDatabaseTestCase
+{
     protected $tables = array('UserPointActions', 'Groups', 'TreeTypes', 'Trees', 'TreeNodes', 'TreeGroupNodes',
-    'Users', 'UserGroups', 'UserPointHistory');
-
+    'Users', 'UserGroups', 'UserPointHistory', );
 
     public function testUserPointActionWithGroup()
     {
-
         $g = \Group::add('Test Group', 'Test Group Description');
 
         Action::add('test_action', t('Test Action'), 4, $g);
@@ -25,7 +22,6 @@ class UserPointTest extends \ConcreteDatabaseTestCase {
         $this->assertEquals(4, $action->getUserPointActionDefaultPoints());
         $this->assertInstanceOf('\Concrete\Core\User\Group\Group', $action->getUserPointActionBadgeGroupObject());
         $this->assertEquals($g->getGroupID(), $action->getUserPointActionBadgeGroupObject()->getGroupID());
-
     }
 
     public function testUserPointActionWithNoGroup()
@@ -88,6 +84,4 @@ class UserPointTest extends \ConcreteDatabaseTestCase {
         $this->assertInstanceOf('\Concrete\Core\User\Point\Action\WonBadgeAction', $result->getUserPointEntryActionObject());
         $this->assertInstanceOf('\Concrete\Core\User\Point\Action\WonBadgeActionDescription', $result->getUserPointEntryDescriptionObject());
     }
-
 }
- 

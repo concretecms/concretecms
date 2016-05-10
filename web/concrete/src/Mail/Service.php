@@ -260,7 +260,7 @@ class Service
     protected function generateEmailStrings($arr)
     {
         $str = '';
-        for ($i = 0; $i < count($arr); $i++) {
+        for ($i = 0; $i < count($arr); ++$i) {
             $v = $arr[$i];
             if (isset($v[1])) {
                 $str .= '"'.$v[1].'" <'.$v[0].'>';
@@ -371,7 +371,7 @@ class Service
     }
 
     /** Retrieve the testing state
-     * @return boolean
+     * @return bool
      */
     public function getTesting()
     {
@@ -379,7 +379,7 @@ class Service
     }
 
     /**
-     * Set additional headers
+     * Set additional headers.
      *
      * @param array $headers
      * @param string $val

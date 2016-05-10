@@ -7,13 +7,14 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RouteCollection;
 
 /**
- * Class RouteUrlResolver
+ * Class RouteUrlResolver.
+ *
  * @package Concrete\Core\Url\Resolver
+ *
  * @deprecated Use RouterUrlResolver instead.
  */
 class RouteUrlResolver implements UrlResolverInterface
 {
-
     protected $generator;
     protected $routeList;
 
@@ -45,7 +46,7 @@ class RouteUrlResolver implements UrlResolverInterface
     }
 
     /**
-     * Resolve urls from the list of registered routes takes a string
+     * Resolve urls from the list of registered routes takes a string.
      *
      * [code]
      * $url = \URL::to('route/user_route', array('id' => 1));
@@ -68,6 +69,7 @@ class RouteUrlResolver implements UrlResolverInterface
      *                         The first parameter MUST be prepended with
      *                         "route/" for it to be tested.
      * @param \League\URL\URLInterface $resolved
+     *
      * @return \League\URL\URLInterface
      */
     public function resolve(array $arguments, $resolved = null)
@@ -79,7 +81,6 @@ class RouteUrlResolver implements UrlResolverInterface
             if (is_string($route_handle) &&
                 strtolower(substr($route_handle, 0, 6)) == 'route/' &&
                 is_array($route_parameters)) {
-
                 $route_handle = substr($route_handle, 6);
                 if ($route = $this->getRouteList()->get($route_handle)) {
                     if ($path = $this->getGenerator()->generate($route_handle, $route_parameters, UrlGenerator::ABSOLUTE_PATH)) {
@@ -91,5 +92,4 @@ class RouteUrlResolver implements UrlResolverInterface
 
         return $resolved;
     }
-
 }

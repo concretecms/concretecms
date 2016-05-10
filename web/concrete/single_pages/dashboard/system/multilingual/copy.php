@@ -1,17 +1,19 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");?>
-<?
+<?php
 use Concrete\Core\Multilingual\Page\Section\Section as MultilingualSection;
+
 ?>
 
-<? if (count($pages)) { ?>
+<?php if (count($pages)) {
+    ?>
 
     <fieldset>
         <legend><?php echo t('Copy Locale Tree')?></legend>
-    <?
+    <?php
     $u = new User();
     $copyLocales = array();
     $includesHome = false;
-    foreach($pages as $pc) {
+    foreach ($pages as $pc) {
         $pcl = MultilingualSection::getByID($pc->getCollectionID());
         if ($pc->getCollectionID() == HOME_CID) {
             $includesHome = true;
@@ -19,12 +21,13 @@ use Concrete\Core\Multilingual\Page\Section\Section as MultilingualSection;
         $copyLocales[$pc->getCollectionID()] = tc(/*i18n: %1$s is a page name, %2$s is a language name, %3$s is a locale identifier (eg en_US)*/'PageWithLocale', '%1$s (%2$s, %3$s)', $pc->getCollectionName(), $pcl->getLanguageText(), $pcl->getLocale());
     }
 
-    if ($u->isSuperUser() && !$includesHome) { ?>
+    if ($u->isSuperUser() && !$includesHome) {
+        ?>
     <form method="post" id="ccm-internationalization-copy-tree" action="#">
         <?php if (count($pages) > 1) {
-            $copyLocaleSelect1 = $form->select('copyTreeFrom', $copyLocales);
-            $copyLocaleSelect2 = $form->select('copyTreeTo', $copyLocales);
-            ?>
+    $copyLocaleSelect1 = $form->select('copyTreeFrom', $copyLocales);
+    $copyLocaleSelect2 = $form->select('copyTreeTo', $copyLocales);
+    ?>
             <p><?php echo t('Copy all pages from a locale to another section. This will only copy pages that have not been associated. It will not replace or remove any pages from the destination section.')?></p>
             <div class="form-group">
                 <label class="control-label"><?php echo t('Copy From')?></label>
@@ -39,11 +42,17 @@ use Concrete\Core\Multilingual\Page\Section\Section as MultilingualSection;
             <?php echo Loader::helper('validation/token')->output('copy_tree')?>
             <button class="btn btn-default pull-left" type="submit" name="copy"><?=t('Copy Tree')?></button>
 
-        <?php } else if (count($pages) == 1) { ?>
+        <?php 
+} elseif (count($pages) == 1) {
+    ?>
             <p><?php echo t("You must have more than one multilingual section to use this tool.")?></p>
-        <?php } else { ?>
+        <?php 
+} else {
+    ?>
             <p><?php echo t('You have not created any multilingual content sections yet.')?></p>
-        <?php } ?>
+        <?php 
+}
+        ?>
 
         <script type="text/javascript">
         $(function() {
@@ -72,36 +81,50 @@ use Concrete\Core\Multilingual\Page\Section\Section as MultilingualSection;
         </script>
 
     </form>
-    <? } else if (!$u->isSuperUser()) { ?>
+    <?php 
+    } elseif (!$u->isSuperUser()) {
+        ?>
         <p><?=t('Only the super user may copy locale trees.')?></p>
-    <? } else if ($includesHome) { ?>
+    <?php 
+    } elseif ($includesHome) {
+        ?>
         <p><?=t('Since one of your multilingual sections is the home page, you may not duplicate your site tree using this tool. You must manually assign pages using the page report.')?></p>
-    <? } ?>
+    <?php 
+    }
+    ?>
     </fieldset>
 
     <hr/>
 
     <fieldset>
         <legend><?php echo t('Rescan Multilingual Tree')?></legend>
-        <?
-        if ($u->isSuperUser() && !$includesHome) { ?>
+        <?php
+        if ($u->isSuperUser() && !$includesHome) {
+            ?>
             <form method="post" id="ccm-internationalization-rescan-tree" action="#">
                 <?php if (count($pages) > 1) {
-                    ?>
+    ?>
                     <p><?php echo t('Scans all blocks within the selected section. Any links to pages within another multilingual section will be updated to link to the pages within the selected tree. Any blocks within the scanned section that reference pages in another multilingual section will be updated to point to the page within the selected tree.')?></p>
                     <div class="form-group">
                         <label class="control-label"><?php echo t('Rescan Locale')?></label>
-                        <?php echo $form->select('rescanLocale', $copyLocales);?>
+                        <?php echo $form->select('rescanLocale', $copyLocales);
+    ?>
                     </div>
 
                     <?php echo Loader::helper('validation/token')->output('rescan_locale')?>
                     <button class="btn btn-default pull-left" type="submit" name="rescan_locale"><?=t('Rescan Locale')?></button>
 
-                <?php } else if (count($pages) == 1) { ?>
+                <?php 
+} elseif (count($pages) == 1) {
+    ?>
                     <p><?php echo t("You must have more than one multilingual section to use this tool.")?></p>
-                <?php } else { ?>
+                <?php 
+} else {
+    ?>
                     <p><?php echo t('You have not created any multilingual content sections yet.')?></p>
-                <?php } ?>
+                <?php 
+}
+            ?>
 
                 <script type="text/javascript">
                     $(function() {
@@ -126,13 +149,23 @@ use Concrete\Core\Multilingual\Page\Section\Section as MultilingualSection;
                 </script>
 
             </form>
-        <? } else if (!$u->isSuperUser()) { ?>
+        <?php 
+        } elseif (!$u->isSuperUser()) {
+            ?>
             <p><?=t('Only the super user may rescan the links inside a multilingual tree.')?></p>
-        <? } else if ($includesHome) { ?>
+        <?php 
+        } elseif ($includesHome) {
+            ?>
             <p><?=t('Since one of your multilingual sections is the home page, you may not rescan the links in your site tree using this tool.')?></p>
-        <? } ?>
+        <?php 
+        }
+    ?>
     </fieldset>
 
-<? } else { ?>
-    <p><?php echo t('You have not created any multilingual content sections yet.'); ?></p>
-<? } ?>
+<?php 
+} else {
+    ?>
+    <p><?php echo t('You have not created any multilingual content sections yet.');
+    ?></p>
+<?php 
+} ?>

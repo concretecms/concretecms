@@ -2,17 +2,18 @@
 namespace Concrete\Controller\Backend;
 
 use Concrete\Core\File\Importer;
+use Concrete\Core\Tree\Node\Node;
+use Concrete\Core\Tree\Node\Type\FileFolder;
 use Concrete\Core\Validation\CSRF\Token;
 use Controller;
 use FileSet;
 use File as ConcreteFile;
-use \Concrete\Core\File\EditResponse as FileEditResponse;
+use Concrete\Core\File\EditResponse as FileEditResponse;
 use Loader;
 use FileImporter;
 use Exception;
 use Permissions as ConcretePermissions;
 use FilePermissions;
-use FileVersion;
 use Core;
 
 class File extends Controller
@@ -58,12 +59,12 @@ class File extends Controller
                             $successCount);
                         break;
                 }
-            } catch (\Concrete\Flysystem\FileNotFoundException $e) {
+            } catch (\League\Flysystem\FileNotFoundException $e) {
                 $errorMessage .= t('File %s could not be found.', $fv->getFilename()) . '<br/>';
             }
         }
         if ($errorMessage && !$successMessage) {
-            $e = new \Concrete\Core\Error\Error;
+            $e = \Core::make('error');
             $e->add($errorMessage);
             $r->setError($e);
         } else {
@@ -90,9 +91,9 @@ class File extends Controller
     {
         /** @var Token $token */
         $token = $this->app->make('token');
-        if (!$token->validate('delete-version'))
-
-        $files = $this->getRequestFiles('canEditFileContents');
+        if (!$token->validate('delete-version')) {
+            $files = $this->getRequestFiles('canEditFileContents');
+        }
         $r = new FileEditResponse();
         $r->setFiles($files);
         $fv = $files[0]->getVersion(Loader::helper('security')->sanitizeInt($_REQUEST['fvID']));
@@ -130,10 +131,58 @@ class File extends Controller
         return $files;
     }
 
+    protected function handleUpload($property, $index = false)
+    {
+
+        if ($index !== false) {
+            $name = $_FILES[$property]['name'][$index];
+            $tmp_name = $_FILES[$property]['tmp_name'][$index];
+
+            if ($_FILES[$property]['error'][$index]) {
+                throw new \Exception(FileImporter::getErrorMessage($_FILES[$property]['error'][$index]));
+            }
+        } else {
+
+            $name = $_FILES[$property]['name'];
+            $tmp_name = $_FILES[$property]['tmp_name'];
+
+            if ($_FILES[$property]['error']) {
+                throw new \Exception(FileImporter::getErrorMessage($_FILES[$property]['error']));
+            }
+        }
+
+        $files = array();
+        $fp = FilePermissions::getGlobal();
+        $cf = Loader::helper('file');
+        if (!$fp->canAddFileType($cf->getExtension($name))) {
+            throw new Exception(FileImporter::getErrorMessage(FileImporter::E_FILE_INVALID_EXTENSION));
+        } else {
+            $folder = null;
+            if ($this->request->request->has('currentFolder')) {
+                $node = Node::getByID($this->request->request->get('currentFolder'));
+                if ($node instanceof FileFolder) {
+                    $folder = $node;
+                }
+            }
+            $importer = new FileImporter();
+            $response = $importer->import($tmp_name, $name, $folder);
+        }
+        if (!($response instanceof \Concrete\Core\File\Version)) {
+            throw new Exception(FileImporter::getErrorMessage($response));
+        } else {
+            $file = $response->getFile();
+            if (isset($_POST['ocID'])) {
+                // we check $fr because we don't want to set it if we are replacing an existing file
+                $file->setOriginalPage($_POST['ocID']);
+            }
+            $files[] = $file->getJSONObject();
+        }
+        return $files;
+    }
+
     public function upload()
     {
         $fp = FilePermissions::getGlobal();
-        $cf = Loader::helper('file');
         if (!$fp->canAddFiles()) {
             throw new Exception(t("Unable to add files."));
         }
@@ -147,28 +196,15 @@ class File extends Controller
         if (!Loader::helper('validation/token')->validate()) {
             throw new Exception(Loader::helper('validation/token')->getErrorMessage());
         }
-        $files = array();
-        if (isset($_FILES['files']) && (is_uploaded_file($_FILES['files']['tmp_name'][0]))) {
-            for ($i = 0; $i < count($_FILES['files']['tmp_name']); $i++) {
-                if (!$fp->canAddFileType($cf->getExtension($_FILES['files']['name'][$i]))) {
-                    throw new Exception(FileImporter::getErrorMessage(FileImporter::E_FILE_INVALID_EXTENSION));
-                } else {
-                    $importer = new FileImporter();
-                    $response = $importer->import($_FILES['files']['tmp_name'][$i], $_FILES['files']['name'][$i]);
-                }
-                if (!($response instanceof \Concrete\Core\File\Version)) {
-                    throw new Exception(FileImporter::getErrorMessage($response));
-                } else {
-                    $file = $response->getFile();
-                    if (isset($_POST['ocID'])) {
-                        // we check $fr because we don't want to set it if we are replacing an existing file
-                        $file->setOriginalPage($_POST['ocID']);
-                    }
-                    $files[] = $file->getJSONObject();
-                }
+
+        if (isset($_FILES['file'])){
+            $files = $this->handleUpload('file');
+        }
+        if (isset($_FILES['files']['tmp_name'][0])) {
+            $files = array();
+            for ($i = 0; $i < count($_FILES['files']['tmp_name']); ++$i) {
+                $files = array_merge($files, $this->handleUpload('files', $i));
             }
-        } else {
-            throw new Exception(FileImporter::getErrorMessage($_FILES['Filedata']['error']));
         }
 
         Loader::helper('ajax')->sendResult($files);

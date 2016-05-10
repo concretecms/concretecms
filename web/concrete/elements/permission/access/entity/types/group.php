@@ -1,5 +1,5 @@
-<? defined('C5_EXECUTE') or die("Access Denied."); ?>
-<? $url = $type->getAccessEntityTypeToolsURL(); ?>
+<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
+<?php $url = $type->getAccessEntityTypeToolsURL(); ?>
 
 <script type="text/javascript">
 $(function() {

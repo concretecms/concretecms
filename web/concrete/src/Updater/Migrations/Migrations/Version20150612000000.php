@@ -1,15 +1,12 @@
 <?php
-
 namespace Concrete\Core\Updater\Migrations\Migrations;
 
 use Concrete\Core\Page\Page;
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
-use ORM;
 
 class Version20150612000000 extends AbstractMigration
 {
-
     public function up(Schema $schema)
     {
         $sp = Page::getByPath('/dashboard/system/multilingual/copy');
@@ -22,6 +19,4 @@ class Version20150612000000 extends AbstractMigration
     public function down(Schema $schema)
     {
     }
-
-
 }

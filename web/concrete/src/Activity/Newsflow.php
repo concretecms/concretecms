@@ -4,22 +4,20 @@ namespace Concrete\Core\Activity;
 use Config;
 use Marketplace;
 use Concrete\Core\File\Service\File;
-use Concrete\Core\Activity\NewsflowItem;
-use Concrete\Core\Activity\NewsflowSlotItem;
 
 /**
- * Class Newsflow
+ * Class Newsflow.
  *
  * A class used for retrieving the latest news and updates from Concrete5. This is a singleton class that should be
  * instantiated via Newsflow::getInstance(). This object is prevented from being created if the config file has the
  * 'concrete.external.news' setting set to false.
+ *
  * @package Concrete\Core\Activity
  */
 class Newsflow
 {
-
     /**
-     * Constant for if newsflow is manually disabled (like through a config entry)
+     * Constant for if newsflow is manually disabled (like through a config entry).
      */
     const E_NEWSFLOW_SUPPORT_MANUALLY_DISABLED = 21;
 
@@ -39,7 +37,8 @@ class Newsflow
     public function __construct()
     {
         if (!Config::get('concrete.external.news')) {
-            $this->connectionError = Newsflow::E_NEWSFLOW_SUPPORT_MANUALLY_DISABLED;
+            $this->connectionError = self::E_NEWSFLOW_SUPPORT_MANUALLY_DISABLED;
+
             return;
         }
     }
@@ -61,8 +60,10 @@ class Newsflow
     }
 
     /**
-     * Retrieves a NewsflowItem object for a given collection ID
+     * Retrieves a NewsflowItem object for a given collection ID.
+     *
      * @param int $cID
+     *
      * @return bool|NewsflowItem Returns a NewsflowItem object, false if there was an error or one could not be located.
      */
     public function getEditionByID($cID)
@@ -75,14 +76,18 @@ class Newsflow
             $response = $fileService->getContents($path);
             $ni = new NewsflowItem();
             $obj = $ni->parseResponse($response);
+
             return $obj;
         }
+
         return false;
     }
 
     /**
-     * Retrieves a NewsflowItem object for a given collection path
+     * Retrieves a NewsflowItem object for a given collection path.
+     *
      * @param $cPath
+     *
      * @return bool|NewsflowItem
      */
     public function getEditionByPath($cPath)
@@ -96,13 +101,16 @@ class Newsflow
             $response = $fileService->getContents($path);
             $ni = new NewsflowItem();
             $obj = $ni->parseResponse($response);
+
             return $obj;
         }
+
         return false;
     }
 
     /**
-     * Retrieves an array of NewsflowSlotItems
+     * Retrieves an array of NewsflowSlotItems.
+     *
      * @return NewsflowSlotItem[]|null
      */
     public function getSlotContents()
@@ -117,6 +125,7 @@ class Newsflow
             $nsi = new NewsflowSlotItem();
             $this->slots = $nsi->parseResponse($response);
         }
+
         return $this->slots;
     }
 }

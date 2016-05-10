@@ -8,7 +8,6 @@
  * is moved, or if an entire site is moved to a different directory
  * on the server (or to a different server).
  */
-
 namespace Concrete\Core\Editor;
 
 use Core;
@@ -17,103 +16,100 @@ use Page;
 use Loader;
 use URL;
 use Sunra\PhpSimple\HtmlDomParser;
-use \Concrete\Core\Foundation\Object;
+use Concrete\Core\Foundation\Object;
 
 class LinkAbstractor extends Object
 {
+    /**
+     * Takes a chunk of content containing full urls
+     * and converts them to abstract link references.
+     */
+    private static $blackListImgAttributes = array('src', 'fid', 'data-verified', 'data-save-url');
 
-	/**
-	 * Takes a chunk of content containing full urls
-	 * and converts them to abstract link references.
-	 */
-	private static $blackListImgAttributes = array('src', 'fid', 'data-verified', 'data-save-url');
+    public static function translateTo($text)
+    {
+        // images inline
+        $imgmatch = URL::to('/download_file', 'view_inline');
+        $imgmatch = str_replace('/', '\/', $imgmatch);
+        $imgmatch = str_replace('-', '\-', $imgmatch);
+        $imgmatch = '/' . $imgmatch . '\/([0-9]+)/i';
 
-	public static function translateTo($text)
-	{
-		// images inline
-		$imgmatch = URL::to('/download_file', 'view_inline');
-		$imgmatch = str_replace('/', '\/', $imgmatch);
-		$imgmatch = str_replace('-', '\-', $imgmatch);
-		$imgmatch = '/' . $imgmatch . '\/([0-9]+)/i';
-
-		$dom = new HtmlDomParser();
+        $dom = new HtmlDomParser();
         $r = $dom->str_get_html($text, true, true, DEFAULT_TARGET_CHARSET, false);
-		if ($r) {
-			foreach ($r->find('img') as $img) {
+        if ($r) {
+            foreach ($r->find('img') as $img) {
+                $attrString = "";
+                foreach ($img->attr as $key => $val) {
+                    if (!in_array($key, self::$blackListImgAttributes)) {
+                        $attrString .= "$key=\"$val\" ";
+                    }
+                }
 
-				$attrString = "";
-				foreach ($img->attr as $key => $val) {
-					if (!in_array($key, self::$blackListImgAttributes)) {
-						$attrString .= "$key=\"$val\" ";
-					}
-				}
+                if (preg_match($imgmatch, $img->src, $matches)) {
+                    $img->outertext = '<concrete-picture fID="' . $matches[1] . '" ' . $attrString . '/>';
+                }
+            }
 
-				if (preg_match($imgmatch, $img->src, $matches)) {
-					$img->outertext = '<concrete-picture fID="' . $matches[1] . '" ' . $attrString . '/>';
-				}
-			}
+            $text = (string) $r->restore_noise($r);
+        }
 
-            $text = (string)$r->restore_noise($r);
-		}
+        $appUrl = Core::getApplicationURL();
+        if (!empty($appUrl)) {
+            $url1 = str_replace('/', '\/', $appUrl . '/' . DISPATCHER_FILENAME);
+            $url2 = str_replace('/', '\/', $appUrl);
+            $url4 = URL::to('/download_file', 'view');
+            $url4 = str_replace('/', '\/', $url4);
+            $url4 = str_replace('-', '\-', $url4);
+            $text = preg_replace(
+                array(
+                    '/' . $url1 . '\?cID=([0-9]+)/i',
+                    '/' . $url4 . '\/([0-9]+)/i',
+                    '/' . $url2 . '/i',
+                ),
+                array(
+                    '{CCM:CID_\\1}',
+                    '{CCM:FID_DL_\\1}',
+                    '{CCM:BASE_URL}',
+                ),
+                $text
+            );
+        }
 
-		$appUrl = Core::getApplicationURL();
-		if (!empty($appUrl)) {
-			$url1 = str_replace('/', '\/', $appUrl . '/' . DISPATCHER_FILENAME);
-			$url2 = str_replace('/', '\/', $appUrl);
-			$url4 = URL::to('/download_file', 'view');
-			$url4 = str_replace('/', '\/', $url4);
-			$url4 = str_replace('-', '\-', $url4);
-			$text = preg_replace(
-				array(
-					'/' . $url1 . '\?cID=([0-9]+)/i',
-					'/' . $url4 . '\/([0-9]+)/i',
-					'/' . $url2 . '/i'
-				),
-				array(
-					'{CCM:CID_\\1}',
-					'{CCM:FID_DL_\\1}',
-					'{CCM:BASE_URL}'
-				)
-				,
-				$text
-			);
-		}
+        return $text;
+    }
 
-		return $text;
-	}
+    /**
+     * Takes a chunk of content containing abstracted link references,
+     * and expands them to full urls for displaying on the site front-end.
+     */
+    public static function translateFrom($text)
+    {
+        $text = preg_replace(
+            array(
+                '/{CCM:BASE_URL}/i',
+            ),
+            array(
+                \Core::getApplicationURL(),
+            ),
+            $text
+        );
 
-	/**
-	 * Takes a chunk of content containing abstracted link references,
-	 * and expands them to full urls for displaying on the site front-end.
-	 */
-	public static function translateFrom($text)
-	{
+        // now we add in support for the links
+        $text = preg_replace_callback(
+            '/{CCM:CID_([0-9]+)}/i',
+            function ($matches) {
+                $cID = $matches[1];
+                if ($cID > 0) {
+                    $c = Page::getByID($cID, 'ACTIVE');
 
-		$text = preg_replace(
-			array(
-				'/{CCM:BASE_URL}/i'
-			),
-			array(
-				\Core::getApplicationURL(),
-			),
-			$text
-		);
+                    return Loader::helper("navigation")->getLinkToCollection($c);
+                }
+            },
+            $text
+        );
 
-		// now we add in support for the links
-		$text = preg_replace_callback(
-			'/{CCM:CID_([0-9]+)}/i',
-			function ($matches) {
-				$cID = $matches[1];
-				if ($cID > 0) {
-					$c = Page::getByID($cID, 'ACTIVE');
-					return Loader::helper("navigation")->getLinkToCollection($c);
-				}
-			},
-			$text
-		);
-
-		// now we add in support for the files that we view inline
-		$dom = new HtmlDomParser();
+        // now we add in support for the files that we view inline
+        $dom = new HtmlDomParser();
         $r = $dom->str_get_html($text, true, true, DEFAULT_TARGET_CHARSET, false);
 		if (is_object($r)) {
 			foreach ($r->find('concrete-picture') as $picture) {
@@ -152,154 +148,154 @@ class LinkAbstractor extends Object
 						}
 					}
 
-					$picture->outertext = (string)$tag;
-				}
-			}
+                    $picture->outertext = (string) $tag;
+                }
+            }
 
-            $text = (string)$r->restore_noise($r);
-		}
+            $text = (string) $r->restore_noise($r);
+        }
 
-		// now we add in support for the links
-		$text = preg_replace_callback(
-			'/{CCM:FID_([0-9]+)}/i',
-			function ($matches) {
-				$fID = $matches[1];
-				if ($fID > 0) {
-					$f = File::getByID($fID);
-					return $f->getURL();
-				}
-			},
-			$text
-		);
+        // now we add in support for the links
+        $text = preg_replace_callback(
+            '/{CCM:FID_([0-9]+)}/i',
+            function ($matches) {
+                $fID = $matches[1];
+                if ($fID > 0) {
+                    $f = File::getByID($fID);
 
+                    return $f->getURL();
+                }
+            },
+            $text
+        );
 
-		// now files we download
-		$text = preg_replace_callback(
-			'/{CCM:FID_DL_([0-9]+)}/i',
-			function ($matches) {
-				$fID = $matches[1];
-				if ($fID > 0) {
-					$c = Page::getCurrentPage();
-					if (is_object($c)) {
-						return URL::to('/download_file', 'view', $fID, $c->getCollectionID());
-					} else {
-						return URL::to('/download_file', 'view', $fID);
-					}
-				}
-			},
-			$text
-		);
+        // now files we download
+        $text = preg_replace_callback(
+            '/{CCM:FID_DL_([0-9]+)}/i',
+            function ($matches) {
+                $fID = $matches[1];
+                if ($fID > 0) {
+                    $c = Page::getCurrentPage();
+                    if (is_object($c)) {
+                        return URL::to('/download_file', 'view', $fID, $c->getCollectionID());
+                    } else {
+                        return URL::to('/download_file', 'view', $fID);
+                    }
+                }
+            },
+            $text
+        );
 
-		// snippets
-		$snippets = Snippet::getActiveList();
-		foreach ($snippets as $sn) {
-			$text = $sn->findAndReplace($text);
-		}
-		return $text;
-	}
+        // snippets
+        $snippets = Snippet::getActiveList();
+        foreach ($snippets as $sn) {
+            $text = $sn->findAndReplace($text);
+        }
 
-	/**
-	 * Takes a chunk of content containing abstracted link references,
-	 * and expands them to urls suitable for the rich text editor.
-	 */
-	public static function translateFromEditMode($text)
-	{
-		$text = preg_replace(
-			array(
-				'/{CCM:BASE_URL}/i'
-			),
-			array(
-				\Core::getApplicationURL(),
-			),
-			$text
-		);
+        return $text;
+    }
 
-		//page links...
-		$text = preg_replace(
-			'/{CCM:CID_([0-9]+)}/i',
-			\Core::getApplicationURL() . '/' . DISPATCHER_FILENAME . '?cID=\\1',
-			$text
-		);
+    /**
+     * Takes a chunk of content containing abstracted link references,
+     * and expands them to urls suitable for the rich text editor.
+     */
+    public static function translateFromEditMode($text)
+    {
+        $text = preg_replace(
+            array(
+                '/{CCM:BASE_URL}/i',
+            ),
+            array(
+                \Core::getApplicationURL(),
+            ),
+            $text
+        );
 
-		//images...
-		$dom = new HtmlDomParser();
+        //page links...
+        $text = preg_replace(
+            '/{CCM:CID_([0-9]+)}/i',
+            \Core::getApplicationURL() . '/' . DISPATCHER_FILENAME . '?cID=\\1',
+            $text
+        );
+
+        //images...
+        $dom = new HtmlDomParser();
         $r = $dom->str_get_html($text, true, true, DEFAULT_TARGET_CHARSET, false);
-		if (is_object($r)) {
-			foreach ($r->find('concrete-picture') as $picture) {
-				$fID = $picture->fid;
+        if (is_object($r)) {
+            foreach ($r->find('concrete-picture') as $picture) {
+                $fID = $picture->fid;
 
-				$attrString = "";
-				foreach ($picture->attr as $attr => $val) {
-					if (!in_array($attr, self::$blackListImgAttributes)) {
-						$attrString .= "$attr=\"$val\" ";
-					}
-				}
+                $attrString = "";
+                foreach ($picture->attr as $attr => $val) {
+                    if (!in_array($attr, self::$blackListImgAttributes)) {
+                        $attrString .= "$attr=\"$val\" ";
+                    }
+                }
 
-				$picture->outertext = '<img src="' . URL::to(
-						'/download_file',
-						'view_inline',
-						$fID
-					) . '" ' . $attrString . '/>';
-			}
+                $picture->outertext = '<img src="' . URL::to(
+                        '/download_file',
+                        'view_inline',
+                        $fID
+                    ) . '" ' . $attrString . '/>';
+            }
 
-            $text = (string)$r->restore_noise($r);
-		}
+            $text = (string) $r->restore_noise($r);
+        }
 
-		// now we add in support for the links
-		$text = preg_replace_callback(
-			'/{CCM:FID_([0-9]+)}/i',
-			function ($matches) {
-				$fID = $matches[1];
-				if ($fID > 0) {
-					return URL::to('/download_file', 'view_inline', $fID);
-				}
-			},
-			$text
-		);
+        // now we add in support for the links
+        $text = preg_replace_callback(
+            '/{CCM:FID_([0-9]+)}/i',
+            function ($matches) {
+                $fID = $matches[1];
+                if ($fID > 0) {
+                    return URL::to('/download_file', 'view_inline', $fID);
+                }
+            },
+            $text
+        );
 
+        //file downloads...
+        $text = preg_replace_callback(
+            '/{CCM:FID_DL_([0-9]+)}/i',
+            function ($matches) {
+                $fID = $matches[1];
+                if ($fID > 0) {
+                    return URL::to('/download_file', 'view', $fID);
+                }
+            },
+            $text
+        );
 
+        return $text;
+    }
 
-		//file downloads...
-		$text = preg_replace_callback(
-			'/{CCM:FID_DL_([0-9]+)}/i',
-			function ($matches) {
-				$fID = $matches[1];
-				if ($fID > 0) {
-					return URL::to('/download_file', 'view', $fID);
-				}
-			},
-			$text
-		);
+    /**
+     * For the content block's getImportData() function.
+     */
+    public static function import($text)
+    {
+        $inspector = \Core::make('import/value_inspector');
+        $result = $inspector->inspect((string) $text);
 
-		return $text;
-	}
+        return $result->getReplacedContent();
+    }
 
-	/**
-	 * For the content block's getImportData() function
-	 */
-	public static function import($text)
-	{
-		$inspector = \Core::make('import/value_inspector');
-		$result = $inspector->inspect((string) $text);
-		return $result->getReplacedContent();
-	}
+    /**
+     * For the content block's export() function.
+     */
+    public static function export($text)
+    {
+        $text = preg_replace_callback(
+            '/{CCM:CID_([0-9]+)}/i',
+            array('\Concrete\Core\Backup\ContentExporter', 'replacePageWithPlaceHolderInMatch'),
+            $text
+        );
 
-	/**
-	 * For the content block's export() function
-	 */
-	public static function export($text)
-	{
-		$text = preg_replace_callback(
-			'/{CCM:CID_([0-9]+)}/i',
-			array('\Concrete\Core\Backup\ContentExporter', 'replacePageWithPlaceHolderInMatch'),
-			$text
-		);
-
-		$text = preg_replace_callback(
-			'/{CCM:FID_DL_([0-9]+)}/i',
-			array('\Concrete\Core\Backup\ContentExporter', 'replaceFileWithPlaceHolderInMatch'),
-			$text
-		);
+        $text = preg_replace_callback(
+            '/{CCM:FID_DL_([0-9]+)}/i',
+            array('\Concrete\Core\Backup\ContentExporter', 'replaceFileWithPlaceHolderInMatch'),
+            $text
+        );
 
         $dom = new HtmlDomParser();
         $r = $dom->str_get_html($text, true, true, DEFAULT_TARGET_CHARSET, false);
@@ -312,9 +308,9 @@ class LinkAbstractor extends Object
                     $picture->file = $f->getFilename();
                 }
             }
-            $text = (string)$r->restore_noise($r);
+            $text = (string) $r->restore_noise($r);
         }
 
-		return $text;
-	}
+        return $text;
+    }
 }

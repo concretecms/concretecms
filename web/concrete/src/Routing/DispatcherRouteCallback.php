@@ -1,9 +1,11 @@
 <?php
-
 namespace Concrete\Core\Routing;
 
+use Concrete\Core\Localization\Localization;
+use Concrete\Core\Page\Collection\Version\Version;
 use Concrete\Core\Page\Event as PageEvent;
 use Concrete\Core\Page\Theme\Theme;
+use Concrete\Core\Support\Facade\Facade;
 use Concrete\Core\Url\Url;
 use PermissionKey;
 use Request;
@@ -22,7 +24,15 @@ class DispatcherRouteCallback extends RouteCallback
 {
     protected function sendResponse(View $v, $code = 200)
     {
+        $loc = Localization::getInstance();
+        $changeContext = $this->shouldChangeContext();
+        if ($changeContext) {
+            $loc->pushActiveContext('site');
+        }
         $contents = $v->render();
+        if ($changeContext) {
+            $loc->popActiveContext();
+        }
         $response = new Response($contents, $code);
 
         return $response;
@@ -72,6 +82,14 @@ class DispatcherRouteCallback extends RouteCallback
         return $this->sendResponse($v, 403);
     }
 
+    protected function shouldChangeContext()
+    {
+        $app = Facade::getFacadeApplication();
+        $mlEnabled = $app->make('multilingual/detector')->isEnabled();
+        $inDashboard = $app->make('helper/concrete/dashboard')->inDashboard();
+        return $mlEnabled && !$inDashboard;
+    }
+
     public function execute(Request $request, \Concrete\Core\Routing\Route $route = null, $parameters = array())
     {
         // figure out where we need to go
@@ -87,11 +105,17 @@ class DispatcherRouteCallback extends RouteCallback
             $request->setCurrentPage($home);
             $homeController = $home->getPageController();
             $homeController->setupRequestActionAndParameters($request);
-            if (!$homeController->validateRequest()) {
-                return $this->sendPageNotFound($request);
+
+            $response = $homeController->validateRequest();
+            if ($response instanceof \Symfony\Component\HttpFoundation\Response) {
+                return $response;
             } else {
-                $c = $home;
-                $c->cPathFetchIsCanonical = true;
+                if ($response == false) {
+                    return $this->sendPageNotFound($request);
+                } else {
+                    $c = $home;
+                    $c->cPathFetchIsCanonical = true;
+                }
             }
         }
         if (!$c->cPathFetchIsCanonical) {
@@ -132,6 +156,17 @@ class DispatcherRouteCallback extends RouteCallback
 
         if (!$c->isActive() && (!$cp->canViewPageVersions())) {
             return $this->sendPageNotFound($request);
+        }
+
+        $scheduledVersion = Version::get($c, "SCHEDULED");
+        if ($publishDate = $scheduledVersion->cvPublishDate) {
+            $datetime = Core::make('helper/date');
+            $now = $datetime->date('Y-m-d G:i:s');
+
+            if (strtotime($now) >= strtotime($publishDate)) {
+                $scheduledVersion->approve();
+                $c->loadVersionObject('ACTIVE');
+            }
         }
 
         if ($cp->canEditPageContents() || $cp->canEditPageProperties() || $cp->canViewPageVersions()) {

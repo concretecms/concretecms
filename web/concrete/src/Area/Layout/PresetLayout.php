@@ -7,7 +7,6 @@ use Core;
 
 class PresetLayout extends Layout
 {
-
     /**
      * @var string
      */
@@ -43,6 +42,7 @@ class PresetLayout extends Layout
             $manager = Core::make('manager/area_layout_preset_provider');
             $this->presetObject = $manager->getPresetByIdentifier($this->preset);
         }
+
         return $this->presetObject;
     }
 
@@ -75,7 +75,6 @@ class PresetLayout extends Layout
      */
     public function duplicate()
     {
-
         $db = Loader::db();
         $v = array($this->arLayoutIsPreset);
         $db->Execute('insert into AreaLayouts (arLayoutIsPreset) values (?)', $v);
@@ -96,6 +95,7 @@ class PresetLayout extends Layout
 
     /**
      * @param PresetInterface $preset
+     *
      * @return PresetLayout
      */
     public static function add(PresetInterface $preset)
@@ -106,9 +106,8 @@ class PresetLayout extends Layout
         if ($arLayoutID) {
             $db->Execute('insert into AreaLayoutsUsingPresets (arLayoutID, preset) values (?, ?)', array($arLayoutID, $preset->getIdentifier()));
             $ar = static::getByID($arLayoutID);
+
             return $ar;
         }
     }
-
-
 }

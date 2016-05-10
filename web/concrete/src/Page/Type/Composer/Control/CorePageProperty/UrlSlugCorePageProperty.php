@@ -28,7 +28,7 @@ class UrlSlugCorePageProperty extends CorePageProperty
     {
         $e = Loader::helper('validation/error');
         $handle = $this->getPageTypeComposerControlDraftValue();
-        
+
         /** @var \Concrete\Core\Utility\Service\Validation\Strings $stringValidator */
         $stringValidator = Core::make('helper/validation/strings');
         if (!$stringValidator->notempty($handle)) {
@@ -46,5 +46,4 @@ class UrlSlugCorePageProperty extends CorePageProperty
             return $c->getCollectionHandle();
         }
     }
-
 }

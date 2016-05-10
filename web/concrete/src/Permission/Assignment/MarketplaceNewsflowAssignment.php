@@ -1,4 +1,6 @@
 <?php
 namespace Concrete\Core\Permission\Assignment;
-class MarketplaceNewsflowAssignment extends Assignment {
+
+class MarketplaceNewsflowAssignment extends Assignment
+{
 }

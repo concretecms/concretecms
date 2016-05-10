@@ -57,3 +57,159 @@ div.ccm-dialog-slim {
   }
 
 }
+
+
+// V8 Theme
+
+div.ui-dialog {
+
+  background-color: transparent !important;
+  background-image: none !important;
+  border-width: 0px !important;
+  border-radius: 0px !important;
+  box-shadow: none;
+
+  .ui-dialog-titlebar {
+
+    padding: 19px 0px 19px 0px;
+    font-size: 24px;
+    -webkit-font-smoothing: antialiased;
+    background-image: none;
+    border-bottom: 0px;
+    background-color: transparent;
+
+    .ui-dialog-title {
+      font-weight: normal;
+    }
+
+  }
+
+  .ui-dialog-titlebar-close {
+    height: 24px;
+    width: 24px;
+    opacity: 1;
+    display: inline-block;
+    background: transparent url(../images/icons/icon_close.png) no-repeat scroll;
+    right: 0px;
+    top: 22px;
+    padding: 0px;
+
+    span.ui-icon {
+      display: none;
+    }
+
+  }
+
+  .ui-dialog-titlebar-help {
+    right: 30px;
+
+    i {
+      .transition(opacity linear 0.1s);
+    }
+  }
+
+  .ui-dialog-content {
+    background-color: #fff;
+    .border-top-radius(6px);
+
+    .ccm-ui {
+      ul.nav-tabs {
+        padding-left: 10px;
+        margin-left: -26px;
+        margin-right: -26px;
+        margin-bottom: 0px;
+        > li {
+          margin-bottom: 0px;
+          a {
+            font-size: 13px;
+            padding: 10px 15px;
+            -webkit-font-smoothing: antialiased;
+          }
+        }
+
+        > li.active:after {
+          text-align: center;
+          content: "\f0d7";
+          font-family: FontAwesome;
+          font-size: 16px;
+          position: absolute;
+          bottom: -15px;
+
+          left: 0px;
+          width: 100%;
+          color: #48b4fb;
+          text-align: center;
+        }
+
+        > li > a {
+          &,
+          &:hover,
+          &:focus {
+            outline: none;
+            color: #999;
+            border-width: 0px !important;
+          }
+        }
+        > li > a:hover {
+          background-color: transparent;
+          text-decoration: underline;
+        }
+        > li.active > a {
+          &,
+          &:hover,
+          &:focus {
+            color: #48b4fb;
+            font-weight: bold;
+            text-decoration: none;
+            background-color: transparent;
+            outline: none;
+            border-width: 0px !important;
+            position: relative;
+          }
+        }
+      }
+    }
+
+
+  }
+
+  .ui-dialog-buttonpane {
+    margin-top: 0px;
+    background-image: none;
+    background-color: #48b4fb;
+    padding: 10px 10px 10px 10px;
+    .border-bottom-radius(6px);
+    border-width: 0px;
+
+
+    .btn-primary {
+      background-color: darken(@btn-primary-bg, 15%);
+      &:hover {
+        background-color: darken(@btn-primary-bg, 25%);
+      }
+    }
+
+    .btn-default {
+      border-color: #3f9edc;
+      background-color: #3f9edc;
+      color:#fff;
+      &:hover {
+        background-color: #3585B9;
+      }
+    }
+
+    .btn-success {
+      background-color: darken(@btn-success-bg, 5%);
+      &:hover {
+        background-color: darken(@btn-success-bg, 15%);
+      }
+    }
+  }
+
+}
+
+div.ccm-select2-flat {
+  border-color: #f1f1f1;
+  box-shadow: none;
+  margin-left: -8px;
+}

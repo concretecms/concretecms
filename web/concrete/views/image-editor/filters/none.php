@@ -1,1 +1,1 @@
-<?= t('Remove all filters'); ?>
+<?= t('Remove all filters');

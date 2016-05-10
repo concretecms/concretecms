@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Block\Survey;
 
 use Concrete\Core\Block\BlockController;

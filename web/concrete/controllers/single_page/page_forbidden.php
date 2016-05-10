@@ -1,9 +1,7 @@
 <?php
-
 namespace Concrete\Controller\SinglePage;
 
-use \PageController;
-use Loader;
+use PageController;
 use User;
 use Config;
 

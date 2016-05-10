@@ -1,10 +1,9 @@
 <?php
-
 namespace Concrete\Core\Tree\Node\Type;
 
 use Concrete\Core\Tree\Node\Node as TreeNode;
+use Concrete\Core\Tree\Node\Type\Menu\TopicMenu;
 use Loader;
-use Core;
 
 class Topic extends TreeNode
 {
@@ -23,15 +22,21 @@ class Topic extends TreeNode
         return 'topic_tree_node';
     }
 
-    public function getTreeNodeName()
-    {
-        return $this->treeNodeTopicName;
-    }
-
     public function getTreeNodeTranslationContext()
     {
         return 'TopicName';
     }
+
+    public function getTreeNodeTypeName()
+    {
+        return 'Topic';
+    }
+
+    public function getTreeNodeMenu()
+    {
+        return new TopicMenu($this);
+    }
+
     public function getTreeNodeDisplayName($format = 'html')
     {
         $name = $this->getTreeNodeName();
@@ -47,15 +52,12 @@ class Topic extends TreeNode
 
     public function loadDetails()
     {
-        $db = Loader::db();
-        $row = $db->GetRow('select * from TreeTopicNodes where treeNodeID = ?', array($this->treeNodeID));
-        $this->setPropertiesFromArray($row);
+        return false;
     }
 
     public function deleteDetails()
     {
-        $db = Loader::db();
-        $db->Execute('delete from TreeTopicNodes where treeNodeID = ?', array($this->treeNodeID));
+        return false;
     }
 
     public function getTreeNodeJSON()
@@ -71,19 +73,10 @@ class Topic extends TreeNode
 
     public function duplicate($parent = false)
     {
-        $node = $this::add($this->treeNodeTopicName, $parent);
+        $node = $this::add($this->treeNodeName, $parent);
         $this->duplicateChildren($node);
 
         return $node;
-    }
-
-    public function setTreeNodeTopicName($treeNodeTopicName)
-    {
-        $db = Loader::db();
-        $db->Replace('TreeTopicNodes',
-            array('treeNodeID' => $this->getTreeNodeID(), 'treeNodeTopicName' => $treeNodeTopicName),
-            array('treeNodeID'), true);
-        $this->treeNodeTopicName = $treeNodeTopicName;
     }
 
     public static function importNode(\SimpleXMLElement $sx, $parent = false)
@@ -95,20 +88,8 @@ class Topic extends TreeNode
     {
         $db = Loader::db();
         $node = parent::add($parent);
-        $node->setTreeNodeTopicName($treeNodeTopicName);
-
+        $node->setTreeNodeName($treeNodeTopicName);
         return $node;
     }
 
-    /**
-     * return @Concrete\Core\Tree\Node\Type\Topic | null
-     */
-    public static function getNodeByName($name)
-    {
-        $db = Loader::db();
-        $treeNodeID = $db->GetOne('select treeNodeID from TreeTopicNodes where treeNodeTopicName = ?', array($name));
-        if ($treeNodeID) {
-            return static::getByID($treeNodeID);
-        }
-    }
 }

@@ -15,6 +15,7 @@ class AssetGroup
 
     /**
      * @param AssetPointer $ap
+     *
      * @return bool
      */
     public function contains(AssetPointer $ap)
@@ -43,7 +44,6 @@ class AssetGroup
         // doesn't check anything. this is useful for layouts, etc... other handle-less assets.
         $this->assets[] = $asset;
     }
-
 
     /**
      * @param AssetPointer $ap

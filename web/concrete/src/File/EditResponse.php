@@ -3,7 +3,6 @@ namespace Concrete\Core\File;
 
 class EditResponse extends \Concrete\Core\Application\EditResponse
 {
-
     protected $files = array();
 
     public function setFile(File $file)
@@ -22,7 +21,7 @@ class EditResponse extends \Concrete\Core\Application\EditResponse
         foreach ($this->files as $file) {
             $o->files[] = $file->getJSONObject();
         }
+
         return $o;
     }
-
 }

@@ -3,7 +3,6 @@ namespace Concrete\Core\Support\Facade;
 
 class Application extends Facade
 {
-
     public static function getFacadeAccessor()
     {
         return 'app';
@@ -12,6 +11,7 @@ class Application extends Facade
     public static function getApplicationRelativePath()
     {
         $cms = static::getFacadeApplication();
+
         return $cms['app_relative_path'];
     }
 
@@ -22,10 +22,9 @@ class Application extends Facade
         $url = $cms->make('url/canonical');
 
         if (!$asObject) {
-            $url = rtrim((string)$url, '/');
+            $url = rtrim((string) $url, '/');
         }
 
         return $url;
     }
-
 }

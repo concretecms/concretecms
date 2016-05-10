@@ -1,12 +1,10 @@
 <?php
-
 namespace Concrete\Core\Backup\ContentImporter\ValueInspector\Item;
 
 use Concrete\Core\Page\Feed;
 
 class PageFeedItem extends AbstractItem
 {
-
     public function getDisplayName()
     {
         return t('RSS Feed');
@@ -30,6 +28,4 @@ class PageFeedItem extends AbstractItem
             return $o->getID();
         }
     }
-
-
 }

@@ -14,7 +14,7 @@ class MiniSurvey
 
     public $lastSavedMsqID = 0;
     public $lastSavedqID = 0;
-    
+
     public function __construct()
     {
         $this->db = Database::connection();
@@ -208,7 +208,7 @@ class MiniSurvey
             }
 
             if ($surveyBlockInfo['displayCaptcha']) {
-                print '<div class="ccm-edit-mode-disabled-item">' . t('Form Captcha') . '</div><br/>';
+                echo '<div class="ccm-edit-mode-disabled-item">' . t('Form Captcha') . '</div><br/>';
             }
 
             if ($editmode) {
@@ -370,7 +370,7 @@ class MiniSurvey
         }
         $positionNum = 0;
         foreach ($qIDs as $qID) {
-            $vals = array($positionNum,intval($qID), intval($qsID));
+            $vals = array($positionNum, intval($qID), intval($qsID));
             $sql = 'UPDATE btFormQuestions SET position=? WHERE msqID=? AND questionSetId=?';
             $rs = $this->db->executeQuery($sql, $vals);
             ++$positionNum;

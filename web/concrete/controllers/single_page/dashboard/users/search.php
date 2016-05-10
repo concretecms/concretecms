@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Controller\SinglePage\Dashboard\Users;
 
-use \Concrete\Core\Page\Controller\DashboardPageController;
+use Concrete\Core\Page\Controller\DashboardPageController;
 use Config;
 use Imagine\Image\Box;
 use Loader;
@@ -15,8 +15,9 @@ use Permissions;
 use PermissionKey;
 use UserAttributeKey;
 use Localization;
-use \Concrete\Controller\Search\Users as SearchUsersController;
-use \Concrete\Core\User\EditResponse as UserEditResponse;
+use Concrete\Controller\Search\Users as SearchUsersController;
+use Concrete\Core\User\EditResponse as UserEditResponse;
+use Concrete\Core\Workflow\Progress\UserProgress as UserWorkflowProgress;
 
 class Search extends DashboardPageController
 {
@@ -106,32 +107,34 @@ class Search extends DashboardPageController
             case 'activate':
                 $this->setupUser($uID);
                 if ($this->canActivateUser && Loader::helper('validation/token')->validate()) {
-                    $this->user->activate();
-                    $mh = Loader::helper('mail');
-                    $mh->to($this->user->getUserEmail());
-                    if (Config::get('concrete.user.registration.notification_email')) {
-                        $mh->from(
-                            Config::get('concrete.user.registration.notification_email'),
-                            t('Website Registration Notification')
-                        );
-                    } else {
-                        $adminUser = UserInfo::getByID(USER_SUPER_ID);
-                        $mh->from($adminUser->getUserEmail(), t('Website Registration Notification'));
+                    if ($this->user->triggerActivate()) {
+                        $mh = Loader::helper('mail');
+                        $mh->to($this->user->getUserEmail());
+                        if (Config::get('concrete.user.registration.notification_email')) {
+                            $mh->from(
+                                Config::get('concrete.user.registration.notification_email'),
+                                t('Website Registration Notification')
+                            );
+                        } else {
+                            $adminUser = UserInfo::getByID(USER_SUPER_ID);
+                            $mh->from($adminUser->getUserEmail(), t('Website Registration Notification'));
+                        }
+                        $mh->addParameter('uID', $this->user->getUserID());
+                        $mh->addParameter('user', $this->user);
+                        $mh->addParameter('uName', $this->user->getUserName());
+                        $mh->addParameter('uEmail', $this->user->getUserEmail());
+                        $mh->addParameter('siteName', Config::get('concrete.site'));
+                        $mh->load('user_registered_approval_complete');
+                        $mh->sendMail();
                     }
-                    $mh->addParameter('uID', $this->user->getUserID());
-                    $mh->addParameter('user', $this->user);
-                    $mh->addParameter('uName', $this->user->getUserName());
-                    $mh->addParameter('uEmail', $this->user->getUserEmail());
-                    $mh->addParameter('siteName', tc('SiteName', Config::get('concrete.site')));
-                    $mh->load('user_registered_approval_complete');
-                    $mh->sendMail();
+
                     $this->redirect('/dashboard/users/search', 'view', $this->user->getUserID(), 'activated');
                 }
                 break;
             case 'deactivate':
                 $this->setupUser($uID);
                 if ($this->canActivateUser && Loader::helper('validation/token')->validate()) {
-                    $this->user->deactivate();
+                    $this->user->triggerDeactivate();
                     $this->redirect('/dashboard/users/search', 'view', $this->user->getUserID(), 'deactivated');
                 }
                 break;
@@ -152,8 +155,8 @@ class Search extends DashboardPageController
             case 'delete':
                 $this->setupUser($uID);
                 if ($this->canDeleteUser && Loader::helper('validation/token')->validate()) {
-                    $this->user->delete();
-                    $this->redirect('/dashboard/users/search', 'delete_complete');
+                    $this->user->triggerDelete();
+                    $this->redirect('/dashboard/users/search', 'view', $this->user->getUserID(), 'deleted');
                 }
                 break;
         }
@@ -461,12 +464,35 @@ class Search extends DashboardPageController
             $attributes = UserAttributeKey::getList(true);
             $this->set('attributes', $attributes);
             $this->set('pageTitle', t('View/Edit %s', $this->user->getUserDisplayName()));
+
+            $workflowRequestActions = array();
+            $workflowList = UserWorkflowProgress::getList($uo->getUserID());
+
+            $this->set('workflowList', $workflowList);
+
+            if (count($workflowList) > 0) {
+                foreach($workflowList as $wp) {
+                    $wr = $wp->getWorkflowRequestObject();
+                    $workflowRequestActions[] = $wr->getRequestAction();
+                }
+            }
+
+            $this->set('workflowRequestActions', $workflowRequestActions);
+
             switch ($status) {
                 case 'activated':
-                    $this->set('success', t('User activated successfully.'));
+                    if (in_array("activate", $workflowRequestActions)) {
+                        $this->set('message', t('User activation workflow initiated.'));
+                    } else {
+                        $this->set('success', t('User activated successfully.'));
+                    }
                     break;
                 case 'deactivated':
-                    $this->set('message', t('User deactivated successfully.'));
+                    if (in_array("deactivate", $workflowRequestActions)) {
+                        $this->set('message', t('User deactivation workflow initiated.'));
+                    } else {
+                        $this->set('message', t('User deactivated successfully.'));
+                    }
                     break;
                 case 'created':
                     $this->set('message', t('User created successfully.'));
@@ -474,8 +500,27 @@ class Search extends DashboardPageController
                 case 'email_validated':
                     $this->set('message', t('Email marked as valid.'));
                     break;
+                case 'workflow_canceled':
+                    $this->set('message', t('Workflow request is canceled.'));
+                    break;
+                case 'deleted':
+                    // TODO show username
+                    // $this->set('message', t('User %s has been deleted.', $ui->getUserDisplayName()));
+                    if (in_array('delete', $workflowRequestActions)) {
+                        $this->set('message', t('User deletion workflow initiated.'));
+                    } else {
+                        $this->set('message', t('User has been deleted.'));
+                    }
+                    break;
             }
+
         } else {
+            switch ($status) {
+                case 'deleted':
+                    $this->set('message', t('User has been deleted.'));
+                    break;
+            }
+
             $cnt = new SearchUsersController();
             $cnt->search();
             $this->set('searchController', $cnt);
@@ -503,5 +548,4 @@ class Search extends DashboardPageController
             }
         }
     }
-
 }

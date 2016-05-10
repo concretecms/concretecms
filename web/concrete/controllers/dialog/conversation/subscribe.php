@@ -2,11 +2,10 @@
 namespace Concrete\Controller\Dialog\Conversation;
 
 use Concrete\Core\Application\EditResponse;
-use \Concrete\Core\Controller\Controller;
+use Concrete\Core\Controller\Controller;
 
 class Subscribe extends Controller
 {
-
     protected $controllerActionPath = '/ccm/system/dialogs/conversation/subscribe';
 
     protected function loadConversation($cnvID)
@@ -51,5 +50,4 @@ class Subscribe extends Controller
         $o->setAdditionalDataAttribute('subscribed', false);
         $o->outputJSON();
     }
-
 }

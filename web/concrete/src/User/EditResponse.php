@@ -5,7 +5,6 @@ use stdclass;
 
 class EditResponse extends \Concrete\Core\Application\EditResponse
 {
-
     protected $users = array();
 
     public function setUser(UserInfo $user)
@@ -22,12 +21,12 @@ class EditResponse extends \Concrete\Core\Application\EditResponse
     {
         $o = parent::getBaseJSONObject();
         foreach ($this->users as $user) {
-            $uo = new stdClass;
+            $uo = new stdClass();
             $uo->uID = $user->getUserID();
             $uo->displayName = $user->getUserDisplayName();
             $o->users[] = $uo;
         }
+
         return $o;
     }
-
 }

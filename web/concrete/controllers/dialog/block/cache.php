@@ -22,7 +22,6 @@ class Cache extends BackendInterfaceBlockController
     public function submit()
     {
         if ($this->validateAction()) {
-
             $b = $this->getBlockToEdit();
             if ($this->permissions->canEditBlockName()) {
                 $b->setName($this->request->request->get('bName'));
@@ -54,6 +53,4 @@ class Cache extends BackendInterfaceBlockController
     {
         return $this->permissions->canEditBlockName() || $this->permissions->canEditBlockCacheSettings();
     }
-
 }
-

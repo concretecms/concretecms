@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Block\TopicList;
 
 use Concrete\Core\Attribute\Key\CollectionKey;

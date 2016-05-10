@@ -1,14 +1,14 @@
 <?php
 namespace Concrete\Block\Survey;
 
-use \Concrete\Core\Legacy\DatabaseItemList;
+use Concrete\Core\Legacy\DatabaseItemList;
 
 class SurveyList extends DatabaseItemList
 {
     protected $itemsPerPage = 10;
     protected $autoSortColumns = array('cvName', 'question', 'numberOfResponses', 'lastResponse');
 
-    function __construct()
+    public function __construct()
     {
         $query = 'SELECT btSurvey.bID, CollectionVersions.cID, btSurvey.question, CollectionVersions.cvName,
                         max(btSurveyResults.timestamp) AS lastResponse,

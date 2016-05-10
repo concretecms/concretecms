@@ -9,18 +9,16 @@ use Concrete\Core\User\User;
 use Loader;
 
 /**
- * Class Pile
+ * Class Pile.
  *
  * Essentially a user's scrapbook, a pile is an object used for clumping bits of content together around a user account.
  * Piles currently only contain blocks but they could also contain collections. Any bit of content inside a user's pile
  * can be reordered, etc... although no public interface makes use of much of this functionality.
  *
  * @package Concrete\Core\Page\Stack\Pile
- *
  */
 class Pile extends Object
 {
-
     /**
      * @var int
      */
@@ -77,6 +75,7 @@ class Pile extends Object
 
     /**
      * @param $name
+     *
      * @return Pile
      */
     public function create($name)
@@ -88,12 +87,14 @@ class Pile extends Object
         $r = $db->query($q, $v);
         if ($r) {
             $pID = $db->Insert_ID();
-            return Pile::get($pID);
+
+            return self::get($pID);
         }
     }
 
     /**
      * @param int $pID
+     *
      * @return Pile
      */
     public function get($pID)
@@ -104,17 +105,19 @@ class Pile extends Object
         $r = $db->query($q, $v);
         $row = $r->fetchRow();
 
-        $p = new Pile;
+        $p = new self();
         if (is_array($row)) {
             foreach ($row as $k => $v) {
                 $p->{$k} = $v;
             }
         }
+
         return $p;
     }
 
     /**
      * @param string $name
+     *
      * @return Pile
      */
     public function getOrCreate($name)
@@ -126,7 +129,7 @@ class Pile extends Object
         $pID = $db->getOne($q, $v);
 
         if ($pID > 0) {
-            return Pile::get($pID);
+            return self::get($pID);
         }
 
         $v = array($u->getUserID(), 0, $name, 'READY');
@@ -134,12 +137,14 @@ class Pile extends Object
         $r = $db->query($q, $v);
         if ($r) {
             $pID = $db->Insert_ID();
-            return Pile::get($pID);
+
+            return self::get($pID);
         }
     }
 
     /**
      * @param Collection|Block $obj
+     *
      * @return bool
      */
     public function inPile($obj)
@@ -159,7 +164,7 @@ class Pile extends Object
         $q = "select pcID from PileContents where itemType = ? and itemID = ? and pID = ?";
         $pcID = $db->getOne($q, $v);
 
-        return ($pcID > 0);
+        return $pcID > 0;
     }
 
     /**
@@ -184,11 +189,13 @@ class Pile extends Object
         }
         $pID = $db->getOne($q, $v);
         if ($pID > 0) {
-            $p = Pile::get($pID);
+            $p = self::get($pID);
+
             return $p;
         } else {
             // create a new one
-            $p = Pile::createDefaultPile();
+            $p = self::createDefaultPile();
+
             return $p;
         }
     }
@@ -198,7 +205,6 @@ class Pile extends Object
      */
     public function createDefaultPile()
     {
-
         $db = Loader::db();
         // for the sake of data integrity, we're going to ensure that a general pile does not exist
         $u = new User();
@@ -208,7 +214,8 @@ class Pile extends Object
         }
         $pID = $db->getOne($q, $v);
         if ($pID > 0) {
-            $p = new Pile($pID);
+            $p = new self($pID);
+
             return $p;
         } else {
             // create a new one
@@ -217,7 +224,8 @@ class Pile extends Object
             $r = $db->query($q, $v);
             if ($r) {
                 $pID = $db->Insert_ID();
-                return Pile::get($pID);
+
+                return self::get($pID);
             }
         }
     }
@@ -239,7 +247,7 @@ class Pile extends Object
         $r = $db->query($q, $v);
         if ($r) {
             while ($row = $r->fetchRow()) {
-                $piles[] = Pile::get($row['pID']);
+                $piles[] = self::get($row['pID']);
             }
         }
 
@@ -267,7 +275,7 @@ class Pile extends Object
     }
 
     /**
-     * Delete a pile
+     * Delete a pile.
      *
      * @return bool
      */
@@ -279,6 +287,7 @@ class Pile extends Object
         $db->query($q, $v);
         $q2 = "delete from PileContents where pID = ?";
         $db->query($q, $v);
+
         return true;
     }
 
@@ -300,6 +309,7 @@ class Pile extends Object
 
     /**
      * @param string $display
+     *
      * @return array
      */
     public function getPileContentObjects($display = 'display_order')
@@ -324,12 +334,14 @@ class Pile extends Object
         while ($row = $r->fetchRow()) {
             $pc[] = PileContent::get($row['pcID']);
         }
+
         return $pc;
     }
 
     /**
      * @param Page|Block|PileContent $obj
      * @param int                    $quantity
+     *
      * @return mixed
      */
     public function add(&$obj, $quantity = 1)
@@ -346,6 +358,7 @@ class Pile extends Object
             $r = $db->query($q, $v);
             if ($r) {
                 $pcID = $db->Insert_ID();
+
                 return $pcID;
             }
         } else {
@@ -355,6 +368,7 @@ class Pile extends Object
 
     /**
      * @param Page $obj
+     *
      * @return mixed
      */
     public function getPileContentID(&$obj)
@@ -416,9 +430,9 @@ class Pile extends Object
             $v1 = array($currentDisplayOrder, $row['pcID']);
             $q1 = "update PileContents set displayOrder = ? where pcID = ?";
             $db->query($q1, $v1);
-            $currentDisplayOrder++;
+            ++$currentDisplayOrder;
         }
+
         return true;
     }
 }
-

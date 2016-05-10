@@ -3,12 +3,13 @@
  * Functions useful for working with text.
  *
  * @package    Helpers
+ *
  * @category   Concrete
+ *
  * @author     Andrew Embler <andrew@concrete5.org>
  * @copyright  Copyright (c) 2003-2008 Concrete5. (http://www.concrete5.org)
  * @license    http://www.concrete5.org/license/     MIT License
  */
-
 namespace Concrete\Core\Utility\Service;
 
 use Concrete\Core\Foundation\Object;
@@ -18,11 +19,11 @@ use Patchwork\Utf8;
 
 class Text
 {
-
     /**
-     * URL-encodes collection path
+     * URL-encodes collection path.
      *
      * @param string $path
+     *
      * @return string $path
      */
     public static function encodePath($path)
@@ -39,6 +40,7 @@ class Text
             }
         }
         $path = str_replace('%21', '!', $newPath);
+
         return $path;
     }
 
@@ -47,6 +49,7 @@ class Text
      *
      * @param  string $pattern
      * @param  string $value
+     *
      * @return bool
      */
     public static function match($pattern, $value)
@@ -61,14 +64,16 @@ class Text
         } else {
             $pattern = '/$';
         }
-        return (bool)preg_match('#^' . $pattern . '#', $value);
+
+        return (bool) preg_match('#^' . $pattern . '#', $value);
     }
 
     /**
-     * Remove unsafe characters for URL slug
+     * Remove unsafe characters for URL slug.
      *
      * @param string $handle
      * @param int    $maxlength = Max number of characters of the return value
+     *
      * @return string $handle
      */
     public function slugSafeString($handle, $maxlength = 128)
@@ -84,9 +89,10 @@ class Text
      * @param string $string
      * @param int    $max_length
      * @param string $allowed
+     *
      * @return string
      */
-    function sanitize($string, $max_length = 0, $allowed = '')
+    public function sanitize($string, $max_length = 0, $allowed = '')
     {
         $text = trim(strip_tags($string, $allowed));
         if ($max_length > 0) {
@@ -99,25 +105,29 @@ class Text
         if ($text == null) {
             return ""; // we need to explicitly return a string otherwise some DB functions might insert this as a ZERO.
         }
+
         return $text;
     }
 
     /**
-     * Leaves only characters that are valid in email addresses (RFC)
+     * Leaves only characters that are valid in email addresses (RFC).
      *
      * @param string $email
+     *
      * @return string
      */
     public function email($email)
     {
         $regex = '/[^a-zA-Z0-9_\.!#\$\&\'\*\+-?^`{|}~@]/i';
+
         return preg_replace($regex, '', $email);
     }
 
     /**
-     * Leaves only characters that are alpha-numeric
+     * Leaves only characters that are alpha-numeric.
      *
      * @param string $string
+     *
      * @return string
      */
     public function alphanum($string)
@@ -126,9 +136,10 @@ class Text
     }
 
     /**
-     * always use in place of htmlentites(), so it works with different languages
+     * always use in place of htmlentites(), so it works with different languages.
      *
      * @param string $v
+     *
      * @return string
      */
     public function entities($v)
@@ -137,9 +148,10 @@ class Text
     }
 
     /**
-     * Decodes html-encoded entities (for instance: from '&gt;' to '>')
+     * Decodes html-encoded entities (for instance: from '&gt;' to '>').
      *
      * @param string $v
+     *
      * @return string
      */
     public function decodeEntities($v)
@@ -151,6 +163,7 @@ class Text
      * A concrete5 specific version of htmlspecialchars(). Double encoding is OFF, and the character set is set to your site's.
      *
      * @param $v
+     *
      * @return string
      */
     public function specialchars($v)
@@ -159,11 +172,12 @@ class Text
     }
 
     /**
-     * An alias for shorten()
+     * An alias for shorten().
      *
      * @param string $textStr
      * @param int    $numChars
      * @param string $tail
+     *
      * @return string
      */
     public function shorten($textStr, $numChars = 255, $tail = '…')
@@ -172,14 +186,15 @@ class Text
     }
 
     /**
-     * Like sanitize, but requiring a certain number characters, and assuming a tail
+     * Like sanitize, but requiring a certain number characters, and assuming a tail.
      *
      * @param string $textStr
      * @param int    $numChars
      * @param string $tail
+     *
      * @return string $textStr
      */
-    function shortText($textStr, $numChars = 255, $tail = '…')
+    public function shortText($textStr, $numChars = 255, $tail = '…')
     {
         if (intval($numChars) == 0) {
             $numChars = 255;
@@ -194,13 +209,15 @@ class Text
                 $textStr = substr($textStr, 0, $numChars) . $tail;
             }
         }
+
         return $textStr;
     }
 
     /**
-     * Takes a string and turns it into the CamelCase or StudlyCaps version
+     * Takes a string and turns it into the CamelCase or StudlyCaps version.
      *
      * @param string $string
+     *
      * @return string
      */
     public function camelcase($string)
@@ -209,11 +226,12 @@ class Text
     }
 
     /**
-     * automatically add hyperlinks to any twitter style @usernames in a string
+     * automatically add hyperlinks to any twitter style @usernames in a string.
      *
      * @param string $input
      * @param int    $newWindow
      * @param int    $withSearch
+     *
      * @return string $output
      */
     public function twitterAutolink($input, $newWindow = 0, $withSearch = 0)
@@ -229,6 +247,7 @@ class Text
                 "$1<a href=\"http://search.twitter.com/search?q=%23$2\" " . $target . " class=\"twitter-search\">#$2</a>$3 ",
                 $input);
         }
+
         return $output;
     }
 
@@ -237,6 +256,7 @@ class Text
      * text comments but with a few niceties.
      *
      * @param string $input
+     *
      * @return string $output
      */
     public function makenice($input)
@@ -244,24 +264,27 @@ class Text
         $output = strip_tags($input);
         $output = $this->autolink($output);
         $output = nl2br($output);
+
         return $output;
     }
 
     /**
      * Runs strip_tags but ensures that spaces are kept between the stripped tags.
+     *
      * @param $input
      * @param $allowedTags
      */
     public function prettyStripTags($input, $allowedTags = null)
     {
-        return str_replace('  ',' ', strip_tags(str_replace( '<', ' <', $input), $allowedTags));
+        return str_replace('  ', ' ', strip_tags(str_replace('<', ' <', $input), $allowedTags));
     }
 
     /**
-     * Scans passed text and automatically hyperlinks any URL inside it
+     * Scans passed text and automatically hyperlinks any URL inside it.
      *
      * @param string $input
      * @param int    $newWindow
+     *
      * @return string $output
      */
     public function autolink($input, $newWindow = 0)
@@ -271,7 +294,8 @@ class Text
             '/(http:\/\/|https:\/\/|(www\.))(([^\s<]{4,80})[^\s<]*)/',
             '<a href="http://$2$3" ' . $target . ' rel="nofollow">http://$2$4</a>',
             $input);
-        return ($output);
+
+        return $output;
     }
 
     /**
@@ -279,6 +303,7 @@ class Text
      *
      * @param string $pattern
      * @param string $string
+     *
      * @return bool
      */
     public function fnmatch($pattern, $string)
@@ -295,9 +320,10 @@ class Text
     }
 
     /**
-     * Takes a CamelCase string and turns it into camel_case
+     * Takes a CamelCase string and turns it into camel_case.
      *
      * @param string $string
+     *
      * @return string
      */
     public function uncamelcase($string)
@@ -306,14 +332,16 @@ class Text
     }
 
     /**
-     * Takes a handle-based string like "blah_blah" or "blah-blah" or "blah/blah" and turns it into "Blah Blah"
+     * Takes a handle-based string like "blah_blah" or "blah-blah" or "blah/blah" and turns it into "Blah Blah".
      *
      * @param string $string
+     *
      * @return string $r1
      */
     public function unhandle($string)
     {
         $r1 = ucwords(str_replace(array('_', '-', '/'), ' ', $string));
+
         return $r1;
     }
 
@@ -322,6 +350,7 @@ class Text
      *
      * @param      $handle
      * @param bool $leaveSlashes
+     *
      * @return string
      */
     public function handle($handle, $leaveSlashes = false)
@@ -336,8 +365,8 @@ class Text
      */
 
     /**
-     * @access private
      * @param string $handle
+     *
      * @return string $handle
      */
     public function sanitizeFileSystem($handle)
@@ -346,12 +375,13 @@ class Text
     }
 
     /**
-     * Takes text and returns it in the "lowercase-and-dashed-with-no-punctuation" format
+     * Takes text and returns it in the "lowercase-and-dashed-with-no-punctuation" format.
      *
      * @param string $handle
      * @param int    $max_length           Max number of characters of the return value
      * @param string $locale              Language code of the language rules that should be priorized
      * @param bool   $removeExcludedWords Set to true to remove excluded words, false to allow them.
+     *
      * @return string
      */
     public function urlify($handle, $max_length = null, $locale = '', $removeExcludedWords = true)
@@ -374,7 +404,7 @@ class Text
                 $remove_list = \URLify::$remove_list;
             }
             if (count($remove_list)) {
-                $text = preg_replace('/\b(' . join('|', $remove_list) . ')\b/i', '', $text);
+                $text = preg_replace('/\b(' . implode('|', $remove_list) . ')\b/i', '', $text);
             }
         }
         $text = preg_replace('/[^-\w\s]/', '', $text);   // remove unneeded chars
@@ -390,6 +420,7 @@ class Text
      *
      * @param string $text   The text to be converted.
      * @param string $locale ='' The locale for the string. If not specified we consider the current locale.
+     *
      * @return string
      */
     public function asciify($text, $locale = '')
@@ -408,15 +439,17 @@ class Text
             }
             $text = preg_replace('/[^\\t\\r\\n\\x20-\\x7e]/', '', $text);
         }
+
         return $text;
     }
 
     /**
-     * alias of shortenTextWord()
+     * alias of shortenTextWord().
      *
      * @param string $textStr
      * @param int    $numChars
      * @param string $tail
+     *
      * @return string
      */
     public function wordSafeShortText($textStr, $numChars = 255, $tail = '…')
@@ -425,14 +458,15 @@ class Text
     }
 
     /**
-     * Shortens and sanitizes a string but only cuts at word boundaries
+     * Shortens and sanitizes a string but only cuts at word boundaries.
      *
      * @param        $textStr
      * @param int    $numChars
      * @param string $tail
+     *
      * @return string
      */
-    function shortenTextWord($textStr, $numChars = 255, $tail = '…')
+    public function shortenTextWord($textStr, $numChars = 255, $tail = '…')
     {
         if (intval($numChars) == 0) {
             $numChars = 255;
@@ -450,13 +484,15 @@ class Text
                 $textStr = substr($textStr, 0, $numChars) . $tail;
             }
         }
+
         return $textStr;
     }
 
     /**
-     * Strips out non-alpha-numeric characters
+     * Strips out non-alpha-numeric characters.
      *
      * @param string $val
+     *
      * @return string
      */
     public function filterNonAlphaNum($val)
@@ -465,10 +501,11 @@ class Text
     }
 
     /**
-     * Highlights a string within a string with the class ccm-highlight-search
+     * Highlights a string within a string with the class ccm-highlight-search.
      *
      * @param string $value
      * @param string $searchString
+     *
      * @return string
      */
     public function highlightSearch($value, $searchString)
@@ -480,26 +517,30 @@ class Text
         if (is_array($matches[0]) && count($matches[0]) > 0) {
             return str_replace($matches[0][0], '<em class="ccm-highlight-search">' . $matches[0][0] . '</em>', $value);
         }
+
         return $value;
     }
 
     /**
-     * Formats a passed XML string nicely
+     * Formats a passed XML string nicely.
      *
      * @param $xml
+     *
      * @return string
      */
     public function formatXML($xml)
     {
-        $dom = new DOMDocument;
+        $dom = new DOMDocument();
         $dom->preserveWhiteSpace = false;
         $dom->loadXML($xml);
         $dom->formatOutput = true;
+
         return $dom->saveXml();
     }
 
     /**
-     * Appends a SimpleXMLElement to a SimpleXMLElement
+     * Appends a SimpleXMLElement to a SimpleXMLElement.
+     *
      * @param \SimpleXMLElement $root
      * @param \SimpleXMLElement $new
      */
@@ -513,5 +554,4 @@ class Text
             $this->appendXML($node, $ch);
         }
     }
-
 }

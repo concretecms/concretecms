@@ -1,20 +1,17 @@
 <?php
 namespace Concrete\Core\Application\Service\UserInterface;
 
-use Concrete\Core\Application\Service\UserInterface\Help\Formatter;
 use Concrete\Core\Application\Service\UserInterface\Help\Message;
 use Concrete\Core\Application\Service\UserInterface\Help\MessageInterface;
 use Concrete\Core\Application\Service\UserInterface\Help\StandardManager;
-use User;
 use Core;
 use Config;
 
 class Help
 {
-
     public function display()
     {
-        if(!Config::get('concrete.accessibility.display_help_system')) {
+        if (!Config::get('concrete.accessibility.display_help_system')) {
             return false;
         }
 
@@ -25,7 +22,7 @@ class Help
             $type = $args[0];
             $manager = Core::make('help/' . $type);
             $identifier = $args[1];
-        } else if (count($args) == 1) {
+        } elseif (count($args) == 1) {
             // Then we just create a message object with the contents of this message.
             $manager = new StandardManager();
             $message = new Message();
@@ -38,23 +35,22 @@ class Help
         }
         if ($message instanceof MessageInterface) {
             $formatter = $manager->getFormatter($message);
-            print $formatter->getLauncherHtml($message) . $formatter->getMessageHtml($message);
+            echo $formatter->getLauncherHtml($message) . $formatter->getMessageHtml($message);
         }
     }
 
     public function displayHelpDialogLauncher()
     {
-        if(!Config::get('concrete.accessibility.display_help_system')) {
+        if (!Config::get('concrete.accessibility.display_help_system')) {
             return false;
         }
 
-        $html =<<<EOT
+        $html = <<<EOT
         <div class="ccm-notification-help-launcher">
             <a href="#" data-help-launch-dialog="main"><i class="fa fa-question-circle"></i></a>
         </div>
 EOT;
+
         return $html;
-
     }
-
 }

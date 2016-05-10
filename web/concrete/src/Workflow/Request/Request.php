@@ -1,13 +1,15 @@
 <?php
-
 namespace Concrete\Core\Workflow\Request;
 
 use Concrete\Core\Foundation\Object;
+use Concrete\Core\User\UserInfo;
+use Symfony\Component\EventDispatcher\GenericEvent;
 use Workflow;
 use Concrete\Core\Workflow\EmptyWorkflow;
 use Database;
 use Concrete\Core\Workflow\Progress\Progress as WorkflowProgress;
 use PermissionKey;
+use Events;
 
 abstract class Request extends Object
 {
@@ -60,6 +62,11 @@ abstract class Request extends Object
         return $this->uID;
     }
 
+    public function getRequesterUserObject()
+    {
+        return UserInfo::getByID($this->uID);
+    }
+
     public static function getByID($wrID)
     {
         $db = Database::connection();
@@ -99,7 +106,7 @@ abstract class Request extends Object
      */
     protected function triggerRequest(\PermissionKey $pk)
     {
-        if (!$this->wrID) {
+        if (!(isset($this->wrID) && $this->wrID)) {
             $this->save();
         }
 
@@ -114,8 +121,12 @@ abstract class Request extends Object
             $workflows = $pa->getWorkflows();
             foreach ($workflows as $wf) {
                 if ($wf->validateTrigger($this)) {
-                    $this->addWorkflowProgress($wf);
+                    $wp = $this->addWorkflowProgress($wf);
                     ++$workflowsStarted;
+
+                    $event = new GenericEvent();
+                    $event->setArgument('progress', $wp);
+                    Events::dispatch('workflow_triggered', $event);
                 }
             }
         }
@@ -123,6 +134,10 @@ abstract class Request extends Object
         if ($workflowsStarted == 0) {
             $defaultWorkflow = new EmptyWorkflow();
             $wp = $this->addWorkflowProgress($defaultWorkflow);
+
+            $event = new GenericEvent();
+            $event->setArgument('progress', $wp);
+            Events::dispatch('workflow_triggered', $event);
 
             return $wp->getWorkflowProgressResponseObject();
         }
@@ -166,4 +181,12 @@ abstract class Request extends Object
             }
         }
     }
+
+    public function getRequesterComment()
+    {
+        return false;
+    }
+
+    abstract public function getRequestIconElement();
+
 }

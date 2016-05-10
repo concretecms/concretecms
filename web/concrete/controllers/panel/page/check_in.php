@@ -1,24 +1,23 @@
-<?
+<?php
 namespace Concrete\Controller\Panel\Page;
 
-use \Concrete\Controller\Backend\UserInterface\Page as BackendInterfacePageController;
+use Concrete\Controller\Backend\UserInterface\Page as BackendInterfacePageController;
+use Concrete\Core\Form\Service\Widget\DateTime;
+use Concrete\Core\Support\Facade\Config;
+use Concrete\Core\User\User;
 use Permissions;
 use CollectionVersion;
 use Loader;
 use Page;
-use User;
-use Response;
-use \Concrete\Core\Error\Error as ValidationErrorHelper;
-use Redirect;
-use \Concrete\Core\Workflow\Request\ApprovePageRequest as ApprovePagePageWorkflowRequest;
-use \Concrete\Core\Workflow\Progress\Response as WorkflowProgressResponse;
+use Concrete\Core\Workflow\Request\ApprovePageRequest as ApprovePagePageWorkflowRequest;
 use PageEditResponse;
-use \Concrete\Core\Page\Type\Composer\Control\Control as PageTypeComposerControl;
 
 class CheckIn extends BackendInterfacePageController
 {
-
     protected $viewPath = '/panels/page/check_in';
+    // we need this extra because this controller gets called by another page
+    // and that page needs to know how to submit it.
+    protected $controllerActionPath = '/ccm/system/panels/page/check_in';
 
     public function canAccess()
     {
@@ -29,8 +28,24 @@ class CheckIn extends BackendInterfacePageController
     {
         parent::on_start();
         if ($this->page) {
+            $v = CollectionVersion::get($this->page, "RECENT");
+
+            $this->set('publishDate', $v->getPublishDate());
             $this->set('publishErrors', $this->checkForPublishing());
+            $this->set('timezone', $this->getTimezone());
         }
+    }
+
+    private function getTimezone()
+    {
+        if (Config::get('concrete.misc.user_timezones')) {
+            $user = new User();
+            $userInfo = $user->getUserInfoObject();
+
+            return $userInfo->getUserTimezone();
+        }
+
+        return Config::get('app.timezone');
     }
 
     protected function checkForPublishing()
@@ -67,6 +82,7 @@ class CheckIn extends BackendInterfacePageController
                 }
             }
         }
+
         return $e;
     }
 
@@ -83,7 +99,10 @@ class CheckIn extends BackendInterfacePageController
             $v = CollectionVersion::get($c, "RECENT");
             $v->setComment($_REQUEST['comments']);
             $pr = new PageEditResponse();
-            if ($this->request->request->get('action') == 'publish' && $this->permissions->canApprovePageVersions()) {
+            if (($this->request->request->get('action') == 'publish'
+                    || $this->request->request->get('action') == 'schedule')
+                && $this->permissions->canApprovePageVersions()
+            ) {
                 $e = $this->checkForPublishing();
                 $pr->setError($e);
                 if (!$e->has()) {
@@ -92,6 +111,13 @@ class CheckIn extends BackendInterfacePageController
                     $pkr->setRequestedVersionID($v->getVersionID());
                     $pkr->setRequesterUserID($u->getUserID());
                     $u->unloadCollectionEdit($c);
+
+                    if ($this->request->request->get('action') == 'schedule') {
+                        $dateTime = new DateTime();
+                        $publishDateTime = $dateTime->translate('check-in-scheduler');
+                        $pkr->scheduleVersion($publishDateTime);
+                    }
+
                     $response = $pkr->trigger();
 
                     if ($c->isPageDraft()) {
@@ -133,4 +159,3 @@ class CheckIn extends BackendInterfacePageController
         }
     }
 }
-

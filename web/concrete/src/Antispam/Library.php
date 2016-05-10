@@ -1,15 +1,14 @@
 <?php
 namespace Concrete\Core\Antispam;
 
-use \Concrete\Core\Foundation\Object;
+use Concrete\Core\Foundation\Object;
 use Loader;
 use Package;
-use \Concrete\Core\Package\PackageList;
+use Concrete\Core\Package\PackageList;
 use Core;
 
 class Library extends Object
 {
-
     /**
      * @var string
      */
@@ -89,6 +88,7 @@ class Library extends Object
 
     /**
      * @param string $saslHandle
+     *
      * @return static
      */
     public static function getByHandle($saslHandle)
@@ -98,6 +98,7 @@ class Library extends Object
         if (is_array($r) && $r['saslHandle']) {
             $sc = new static();
             $sc->setPropertiesFromArray($r);
+
             return $sc;
         }
     }
@@ -106,6 +107,7 @@ class Library extends Object
      * @param string $saslHandle
      * @param string $saslName
      * @param bool|\Package $pkg
+     *
      * @return Library
      */
     public static function add($saslHandle, $saslName, $pkg = false)
@@ -116,11 +118,12 @@ class Library extends Object
         }
         $db = Loader::db();
         $db->Execute('insert into SystemAntispamLibraries (saslHandle, saslName, pkgID) values (?, ?, ?)', array($saslHandle, $saslName, $pkgID));
+
         return static::getByHandle($saslHandle);
     }
 
     /**
-     * Delete a library
+     * Delete a library.
      */
     public function delete()
     {
@@ -129,7 +132,7 @@ class Library extends Object
     }
 
     /**
-     * Activate an Antispam library
+     * Activate an Antispam library.
      */
     public function activate()
     {
@@ -139,7 +142,7 @@ class Library extends Object
     }
 
     /**
-     * Deactivate all Antispam Libraries, (called by activate())
+     * Deactivate all Antispam Libraries, (called by activate()).
      */
     public static function deactivateAll()
     {
@@ -159,11 +162,13 @@ class Library extends Object
             $sasl = static::getByHandle($saslHandle);
             $libraries[] = $sasl;
         }
+
         return $libraries;
     }
 
     /**
      * @param \Package $pkg
+     *
      * @return Library[]
      */
     public static function getListByPackage($pkg)
@@ -175,6 +180,7 @@ class Library extends Object
             $sasl = static::getByHandle($saslHandle);
             $libraries[] = $sasl;
         }
+
         return $libraries;
     }
 
@@ -220,13 +226,15 @@ class Library extends Object
     }
 
     /**
-     * Returns the controller class for the currently selected captcha library
+     * Returns the controller class for the currently selected captcha library.
+     *
      * @return mixed
      */
-    public function getController() {
+    public function getController()
+    {
         $class = core_class('Core\\Antispam\\' . Core::make('helper/text')->camelcase($this->saslHandle) . 'Controller', $this->getPackageHandle());
         $cl = Core::make($class);
+
         return $cl;
     }
-
 }

@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Page\Type\Composer\Control;
 
+use Concrete\Core\Validation\ResponseInterface;
 use Controller;
 use CollectionAttributeKey;
 use Page;
@@ -106,7 +107,7 @@ class CollectionAttributeControl extends Control
             return true;
         }
 
-        return ($c->getAttribute($ak) == '');
+        return $c->getAttribute($ak) == '';
     }
 
     public function render($label, $customTemplate, $description)
@@ -128,7 +129,9 @@ class CollectionAttributeControl extends Control
         // the data for this actually doesn't come from $data. Attributes have their own way of gettin data.
         $ak = $this->getAttributeKeyObject();
         if (is_object($ak)) {
-            $ak->saveAttributeForm($c);
+            $controller = $ak->getController();
+            $value = $controller->getAttributeValueFromRequest();
+            $c->setAttribute($ak, $value);
         }
     }
 
@@ -145,17 +148,20 @@ class CollectionAttributeControl extends Control
     {
         $ak = $this->getAttributeKeyObject();
         if (is_object($ak)) {
-
             $e = \Core::make('error');
             if ($this->isFormSubmission()) {
-                $response = $ak->validateAttributeForm();
-                if ($response === false) {
-
-                    $control = $this->getPageTypeComposerFormLayoutSetControlObject();
-                    $e->add(t('The field %s is required', $control->getPageTypeComposerControlLabel()));
-
-                } else if ($response instanceof \Concrete\Core\Error\Error) {
-                    $e->add($response);
+                $controller = $ak->getController();
+                $validator = $controller->getValidator();
+                $control = $this->getPageTypeComposerFormLayoutSetControlObject();
+                $response = $validator->validateSaveValueRequest(
+                    $controller, \Request::createFromGlobals()
+                );
+                /**
+                 * @var $response ResponseInterface
+                 */
+                if (!$response->isValid()) {
+                    $error = $response->getErrorObject();
+                    $e->add($error);
                 }
             } else {
                 $value = $this->getPageTypeComposerControlDraftValue();
@@ -163,12 +169,12 @@ class CollectionAttributeControl extends Control
                     $control = $this->getPageTypeComposerFormLayoutSetControlObject();
                     $e->add(t('The field %s is required', $control->getPageTypeComposerControlLabel()));
                 } else {
-                    $response = $value->validateAttributeValue();
-                    if ($response === false) {
-                        $control = $this->getPageTypeComposerFormLayoutSetControlObject();
-                        $e->add(t('The field %s is required', $control->getPageTypeComposerControlLabel()));
-                    } else if ($response instanceof \Concrete\Core\Error\Error) {
-                        $e->add($response);
+                    $controller = $ak->getController();
+                    $validator = $controller->getValidator();
+                    $response = $validator->validateCurrentAttributeValue($controller, $value);
+                    if (!$response->isValid()) {
+                        $error = $response->getErrorObject();
+                        $e->add($error);
                     }
                 }
             }
@@ -188,5 +194,4 @@ class CollectionAttributeControl extends Control
     {
         return $this->getAttributeKeyObject() !== null;
     }
-
 }

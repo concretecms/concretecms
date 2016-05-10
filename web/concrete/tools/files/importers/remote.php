@@ -1,4 +1,5 @@
 <?php
+
 defined('C5_EXECUTE') or die("Access Denied.");
 
 use \Concrete\Core\File\EditResponse as FileEditResponse;
@@ -38,12 +39,13 @@ if (!function_exists('iconv_get_encoding')) {
 }
 
 if (!$error->has()) {
-    for ($i = 1; $i < 6; $i++) {
+    for ($i = 1; $i < 6; ++$i) {
         $this_url = trim($_REQUEST['url_upload_' .$i]);
 
         // did we get anything?
-        if (!strlen($this_url))
+        if (!strlen($this_url)) {
             continue;
+        }
 
         // validate URL
         try {
@@ -64,7 +66,6 @@ if (!$error->has()) {
     if (count($incoming_urls) < 1) {
         $error->add(t('You must specify at least one valid URL.'));
     }
-
 }
 
 $import_responses = array();
@@ -89,12 +90,12 @@ if (!$error->has()) {
             if (preg_match('/^.+?[\\/]([-\w%]+\.[-\w%]+)$/', $request->getUri(), $matches)) {
                 // got a filename (with extension)... use it
                 $fname = $matches[1];
-            } else if ($contentType) {
+            } elseif ($contentType) {
                 // use mimetype from http response
                 $fextension = Core::make("helper/mime")->mimeToExtension($contentType);
-                if ($fextension === false)
+                if ($fextension === false) {
                     $error->add(t('Unknown mime-type: %s', $contentType));
-                else {
+                } else {
                     // make sure we're coming up with a unique filename
                     do {
                         // make up a filename based on the current date/time, a random int, and the extension from the mime-type
@@ -113,6 +114,19 @@ if (!$error->has()) {
 
                 // import the file into concrete
                 if ($fp->canAddFileType($cf->getExtension($fname))) {
+
+                    $folder = null;
+                    if (isset($_POST['currentFolder'])) {
+                        $node = \Concrete\Core\Tree\Node\Node::getByID($_POST['currentFolder']);
+                        if ($node instanceof \Concrete\Core\Tree\Node\Type\FileFolder) {
+                            $folder = $node;
+                        }
+                    }
+
+                    if (!$fr && $folder) {
+                        $fr = $folder;
+                    }
+
                     $fi = new FileImporter();
                     $resp = $fi->import($fpath.'/'.$fname, $fname, $fr);
                     $r->setMessage(t('File uploaded successfully.'));
@@ -127,7 +141,7 @@ if (!$error->has()) {
                 } else {
                     $import_responses[] = $resp;
 
-                    if (!is_object($fr)) {
+                    if (!($fr instanceof \Concrete\Core\File\Version)) {
                         // we check $fr because we don't want to set it if we are replacing an existing file
                         $respf = $resp->getFile();
                         $respf->setOriginalPage($_POST['ocID']);
@@ -135,7 +149,6 @@ if (!$error->has()) {
                     } else {
                         $respf = $fr;
                     }
-
                 }
 
                 // clean up the file

@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Area\Layout\Formatter;
 
 use Concrete\Core\Area\Layout\Layout;
@@ -7,7 +6,6 @@ use HtmlObject\Element;
 
 class CustomFormatter implements FormatterInterface
 {
-
     protected $layout;
 
     public function __construct(Layout $layout)
@@ -20,9 +18,7 @@ class CustomFormatter implements FormatterInterface
         $element = new Element('div');
         $element->addClass('ccm-layout-column-wrapper')
             ->id('ccm-layout-column-wrapper-' . $this->layout->getAreaLayoutID());
+
         return $element;
     }
-
-
-
 }

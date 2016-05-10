@@ -1,11 +1,11 @@
 <?php
+
 use Concrete\Core\Config\DatabaseLoader;
 use Concrete\Core\Config\DatabaseSaver;
 use Concrete\Core\Config\Repository\Repository;
 
 class DatabaseRepositoryTest extends \ConcreteDatabaseTestCase
 {
-
     /** @var Repository */
     protected $repository;
 
@@ -49,7 +49,7 @@ class DatabaseRepositoryTest extends \ConcreteDatabaseTestCase
             'group.test.key',
             'group2.test.key',
             'group.new.key',
-            'group2.new.key'
+            'group2.new.key',
         );
         $values = array();
 
@@ -65,5 +65,4 @@ class DatabaseRepositoryTest extends \ConcreteDatabaseTestCase
                 "Failed test verification for key '{$test}'.");
         }
     }
-
 }

@@ -8,10 +8,9 @@ use User;
 
 class SetList extends DatabaseItemList
 {
-
     protected $itemsPerPage = 10;
 
-    function __construct()
+    public function __construct()
     {
         $this->setQuery("SELECT FileSets.fsID FROM FileSets");
         $this->sortBy('fsName', 'asc');
@@ -44,7 +43,7 @@ class SetList extends DatabaseItemList
                 $sets[] = $fs;
             }
         }
+
         return $sets;
     }
-
 }

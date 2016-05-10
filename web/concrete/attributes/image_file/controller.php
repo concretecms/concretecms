@@ -1,27 +1,65 @@
 <?php
-
 namespace Concrete\Attribute\ImageFile;
 
+use Concrete\Core\Attribute\FontAwesomeIconFormatter;
+use Concrete\Core\Entity\Attribute\Key\Type\ImageFileType;
+use Concrete\Core\Entity\Attribute\Value\Value\ImageFileValue;
+use Concrete\Core\Error\ErrorBag\Error\Error;
+use Concrete\Core\Error\ErrorBag\Error\FieldNotPresentError;
+use Concrete\Core\Error\ErrorBag\Field\AttributeField;
+use Concrete\Core\File\Importer;
 use Core;
-use Database;
 use File;
 use Concrete\Core\Backup\ContentExporter;
-use Concrete\Core\Backup\ContentImporter;
 use Concrete\Core\Attribute\Controller as AttributeTypeController;
 
 class Controller extends AttributeTypeController
 {
     protected $searchIndexFieldDefinition = array('type' => 'integer', 'options' => array('default' => 0, 'notnull' => false));
 
-    public function getValue()
+    public function getIconFormatter()
     {
-        $db = Database::connection();
-        $value = $db->GetOne("select fID from atFile where avID = ?", array($this->getAttributeValueID()));
-        if ($value > 0) {
-            $f = File::getByID($value);
+        return new FontAwesomeIconFormatter('download');
+    }
 
-            return $f;
+    public function saveKey($data)
+    {
+        /**
+         * @var $type ImageFileType
+         */
+        $type = $this->getAttributeKeyType();
+        $data += array(
+            'mode' => null,
+        );
+        $mode = $data['mode'];
+        if ($mode == ImageFileType::TYPE_HTML_INPUT) {
+            $type->setModeToHtmlInput();
+        } else {
+            $type->setModeToFileManager();
         }
+        return $type;
+    }
+
+    public function type_form()
+    {
+        $this->set('form', \Core::make('helper/form'));
+        $this->set('mode', $this->getAttributeKeyType()->getMode());
+    }
+
+
+    public function exportKey($akey)
+    {
+        /**
+         * @var $type ImageFileType
+         */
+        $type = $this->getAttributeKeyType();
+        if ($type->isModeHtmlInput()) {
+            $mode = 'html_input';
+        } else {
+            $mode = 'file_manager';
+        }
+        $akey->addChild('type')->addAttribute('mode', $mode);
+        return $akey;
     }
 
     public function getDisplayValue()
@@ -58,23 +96,7 @@ class Controller extends AttributeTypeController
 
     public function getSearchIndexValue()
     {
-        $db = Database::connection();
-        $value = $db->GetOne("select fID from atFile where avID = ?", array($this->getAttributeValueID()));
-
-        return $value;
-    }
-
-    public function importValue(\SimpleXMLElement $akv)
-    {
-        if (isset($akv->value->fID)) {
-            $fIDVal = (string) $akv->value->fID;
-            $inspector = \Core::make('import/value_inspector');
-            $result = $inspector->inspect($fIDVal);
-            $fID = $result->getReplacedValue();
-            if ($fID) {
-                return File::getByID($fID);
-            }
-        }
+        return $this->attributeValue->getFileID();
     }
 
     public function search()
@@ -87,35 +109,57 @@ class Controller extends AttributeTypeController
     public function form()
     {
         $bf = false;
-        if ($this->getAttributeValueID() > 0) {
+        if (is_object($this->attributeValue)) {
             $bf = $this->getValue();
         }
-        $al = Core::make('helper/concrete/asset_library');
-        $form = '<div class="ccm-attribute ccm-attribute-image-file">';
-        $form .= $al->file('ccm-file-akID-' . $this->attributeKey->getAttributeKeyID(), $this->field('value'), t('Choose File'), $bf);
-        $form .= '</div>';
-        print $form;
+        $this->set('mode', $this->getAttributeKeyType()->getMode());
+        $this->set('file', $bf);
+
+    }
+
+    public function importKey(\SimpleXMLElement $akey)
+    {
+        $type = $this->getAttributeKeyType();
+        /**
+         * @var $type ImageFileType
+         */
+        if (isset($akey->type)) {
+            $mode = (string) $akey->type['mode'];
+            if ($mode == 'html_input') {
+                $type->setModeToHtmlInput();
+            }
+        }
+
+        return $type;
+    }
+
+    public function importValue(\SimpleXMLElement $akv)
+    {
+        if (isset($akv->value->fID)) {
+            $fIDVal = (string) $akv->value->fID;
+            $inspector = \Core::make('import/value_inspector');
+            $result = $inspector->inspect($fIDVal);
+            $fID = $result->getReplacedValue();
+            if ($fID) {
+                $f = File::getByID($fID);
+                if (is_object($f)) {
+                    return $this->saveValue($f);
+                }
+            }
+        }
     }
 
     // run when we call setAttribute(), instead of saving through the UI
     public function saveValue($obj)
     {
-        if (!is_object($obj)) {
+        if ($obj && !is_object($obj)) {
             $obj = File::getByID($obj);
         }
-        $db = Database::connection();
-        if (is_object($obj) && (!$obj->isError())) {
-            $db->Replace('atFile', array('avID' => $this->getAttributeValueID(), 'fID' => $obj->getFileID()), 'avID', true);
-        }
-    }
 
-    public function deleteKey()
-    {
-        $db = Database::connection();
-        $arr = $this->attributeKey->getAttributeValueIDList();
-        foreach ($arr as $id) {
-            $db->Execute('delete from atFile where avID = ?', array($id));
-        }
+        $value = new ImageFileValue();
+        $value->setFileObject($obj);
+
+        return $value;
     }
 
     public function validateValue()
@@ -131,32 +175,68 @@ class Controller extends AttributeTypeController
 
     public function validateForm($data)
     {
-        if (Core::make('helper/validation/numbers')->integer($data['value'])) {
-            $f = File::getByID($data['value']);
-            if (is_object($f) && !$f->isError()) {
-                return true;
+        if ($this->getAttributeKeyType()->isModeFileManager()) {
+            if (Core::make('helper/validation/numbers')->integer($data['value'])) {
+                $f = File::getByID($data['value']);
+                if (is_object($f) && !$f->isError()) {
+                    return true;
+                } else {
+                    return new Error(t('You must specify a valid file for %s', $this->getAttributeKey()->getAttributeKeyDisplayName()),
+                        new AttributeField($this->getAttributeKey())
+                    );
+                }
+            } else {
+                return new FieldNotPresentError(new AttributeField($this->getAttributeKey()));
             }
         }
-        $e = Core::make('helper/validation/error');
-        $e->add(t('You must specify a valid file for %s', $this->attributeKey->getAttributeKeyDisplayName()));
+        if ($this->getAttributeKeyType()->isModeHtmlInput()) {
+            $tmp_name = $_FILES['akID']['tmp_name'][$this->attributeKey->getAttributeKeyID()]['value'];
+            $name = $_FILES['akID']['name'][$this->attributeKey->getAttributeKeyID()]['value'];
+            if (!empty($tmp_name) && is_uploaded_file($tmp_name)) {
+                $fh = \Core::make('helper/validation/file');
+                if (!$fh->file($tmp_name)) {
+                    return new Error(t('You have not uploaded a valid file.'),
+                        new AttributeField($this->getAttributeKey())
+                    );
+                }
 
-        return $e;
+                if (!$fh->extension($name)) {
+                    return new Error(t('Invalid file extension.'),
+                        new AttributeField($this->getAttributeKey())
+                    );
+                }
+
+                return true;
+            } else {
+                return new FieldNotPresentError(new AttributeField($this->getAttributeKey()));
+            }
+        }
     }
 
     public function saveForm($data)
     {
-        if ($data['value'] > 0) {
-            $f = File::getByID($data['value']);
-            $this->saveValue($f);
-        } else {
-            $db = Database::connection();
-            $db->Replace('atFile', array('avID' => $this->getAttributeValueID(), 'fID' => 0), 'avID', true);
+        if ($this->getAttributeKeyType()->isModeFileManager()) {
+            if ($data['value'] > 0) {
+                $f = File::getByID($data['value']);
+                return $this->saveValue($f);
+            }
+        }
+        if ($this->getAttributeKeyType()->isModeHtmlInput()) {
+            // import the file.
+            $tmp_name = $_FILES['akID']['tmp_name'][$this->attributeKey->getAttributeKeyID()]['value'];
+            $name = $_FILES['akID']['name'][$this->attributeKey->getAttributeKeyID()]['value'];
+            if (!empty($tmp_name) && is_uploaded_file($tmp_name)) {
+                $importer = new Importer();
+                $f = $importer->import($tmp_name, $name);
+                if (is_object($f)) {
+                    return $this->saveValue($f->getFile());
+                }
+            }
         }
     }
 
-    public function deleteValue()
+    public function createAttributeKeyType()
     {
-        $db = Database::connection();
-        $db->Execute('delete from atFile where avID = ?', array($this->getAttributeValueID()));
+        return new ImageFileType();
     }
 }

@@ -3,14 +3,16 @@ if (isset($error)) {
     ?>
     <div class="alert alert-danger"><?= $error ?></div>
 <?php
+
 }
 if (isset($message)) {
     ?>
     <div class="alert alert-success"><?= $message ?></div>
 <?php
+
 }
 
-$user = new User;
+$user = new User();
 
 if ($user->isLoggedIn()) {
     ?>
@@ -21,12 +23,14 @@ if ($user->isLoggedIn()) {
         <hr>
     </div>
     <div class="form-group">
-        <a href="<?= \URL::to('/ccm/system/authentication/oauth2/google/attempt_attach'); ?>" class="btn btn-primary btn-google btn-block">
+        <a href="<?= \URL::to('/ccm/system/authentication/oauth2/google/attempt_attach');
+    ?>" class="btn btn-primary btn-google btn-block">
             <i class="fa fa-google"></i>
             <?= t('Attach a %s account', t('Google')) ?>
         </a>
     </div>
 <?php
+
 } else {
     ?>
     <div class="form-group">
@@ -36,12 +40,14 @@ if ($user->isLoggedIn()) {
         <hr>
     </div>
     <div class="form-group">
-        <a href="<?= \URL::to('/ccm/system/authentication/oauth2/google/attempt_auth'); ?>" class="btn btn-primary btn-google btn-block">
+        <a href="<?= \URL::to('/ccm/system/authentication/oauth2/google/attempt_auth');
+    ?>" class="btn btn-primary btn-google btn-block">
             <i class="fa fa-google"></i>
             <?= t('Log in with %s', 'Google') ?>
         </a>
     </div>
 <?php
+
 }
 ?>
 <style>

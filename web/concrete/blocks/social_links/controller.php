@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Block\SocialLinks;
 
 use Concrete\Core\Block\BlockController;

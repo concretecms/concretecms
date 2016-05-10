@@ -7,7 +7,6 @@ use Concrete\Core\Marketplace\RemoteItemList;
 
 class Search extends UserInterface
 {
-
     public function view()
     {
         session_write_close();
@@ -15,7 +14,7 @@ class Search extends UserInterface
         $mri = new RemoteItemList();
         $mri->setItemsPerPage(5);
         $mri->setIncludeInstalledItems(false);
-  		$mri->filterByCompatibility(1);
+        $mri->filterByCompatibility(1);
         $mri->setType('addons');
         $keywords = $_REQUEST['q'];
         $mri->filterByKeywords($keywords);
@@ -24,7 +23,7 @@ class Search extends UserInterface
 
         $r = array();
         foreach ($items as $it) {
-            $obj = new \stdClass;
+            $obj = new \stdClass();
             $obj->mpID = $it->getMarketplaceItemID();
             $obj->name = $it->getName();
             $obj->img = $it->getRemoteIconURL();
@@ -32,13 +31,14 @@ class Search extends UserInterface
             $r[] = $obj;
         }
 
-        print json_encode($r);
+        echo json_encode($r);
         exit;
     }
 
     public function canAccess()
     {
         $dh = new Dashboard();
+
         return $dh->canRead();
     }
 }

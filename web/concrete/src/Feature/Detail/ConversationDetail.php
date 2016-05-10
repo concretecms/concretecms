@@ -7,7 +7,6 @@ use Database;
 
 class ConversationDetail extends Detail
 {
-
     protected $cnvID;
 
     public function __construct($mixed)
@@ -28,7 +27,7 @@ class ConversationDetail extends Detail
         $db = Database::get();
         $db->Execute('insert into ConversationFeatureDetailAssignments (faID, cnvID) values (?, ?)', array(
             $fa->getFeatureAssignmentID(),
-            $this->cnvID
+            $this->cnvID,
         ));
     }
 
@@ -37,5 +36,4 @@ class ConversationDetail extends Detail
         $db = Database::get();
         $db->delete('ConversationFeatureDetailAssignments', array('faID' => $fa->getFeatureAssignmentID()));
     }
-
 }

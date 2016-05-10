@@ -11,20 +11,23 @@
         <blocktype handle="core_gathering" package=""/>
         //-->
         <blocktype handle="core_conversation" package=""/>
+        <blocktype handle="desktop_app_status" package=""/>
         <!--
         <blocktype handle="core_conversation_message" package=""/>
         //-->
-        <blocktype handle="dashboard_featured_addon" package=""/>
-        <blocktype handle="dashboard_featured_theme" package=""/>
-        <blocktype handle="dashboard_newsflow_latest" package=""/>
-        <blocktype handle="dashboard_app_status" package=""/>
-        <blocktype handle="dashboard_site_activity" package=""/>
+        <blocktype handle="desktop_newsflow_latest" package=""/>
+        <blocktype handle="desktop_site_activity" package=""/>
+        <blocktype handle="desktop_featured_addon" package=""/>
+        <blocktype handle="desktop_featured_theme" package=""/>
+        <blocktype handle="desktop_latest_form" package=""/>
+        <blocktype handle="desktop_waiting_for_me" package=""/>
         <blocktype handle="autonav" package=""/>
         <blocktype handle="content" package=""/>
         <blocktype handle="date_navigation" package=""/>
         <blocktype handle="external_form" package=""/>
         <blocktype handle="file" package=""/>
         <blocktype handle="page_attribute_display" package=""/>
+        <blocktype handle="express_form" package=""/>
         <blocktype handle="form" package=""/>
         <blocktype handle="page_title" package=""/>
         <blocktype handle="feature" package=""/>
@@ -81,7 +84,7 @@
             <blocktype handle="switch_language"/>
         </blocktypeset>
         <blocktypeset handle="form" name="Forms" package="">
-            <blocktype handle="form"/>
+            <blocktype handle="express_form"/>
             <blocktype handle="search"/>
             <blocktype handle="external_form"/>
         </blocktypeset>
@@ -100,6 +103,16 @@
             <blocktype handle="youtube"/>
             <blocktype handle="google_map"/>
         </blocktypeset>
+        <blocktypeset handle="core_desktop" name="Desktop" package="">
+            <blocktype handle="desktop_app_status"/>
+            <blocktype handle="desktop_site_activity"/>
+            <blocktype handle="desktop_featured_addon"/>
+            <blocktype handle="desktop_featured_theme"/>
+            <blocktype handle="desktop_latest_form"/>
+            <blocktype handle="desktop_waiting_for_me"/>
+            <blocktype handle="desktop_newsflow_latest"/>
+        </blocktypeset>
+
     </blocktypesets>
 
 </concrete5-cif>

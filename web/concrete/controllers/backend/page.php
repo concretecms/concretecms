@@ -1,7 +1,6 @@
 <?php
 namespace Concrete\Controller\Backend;
 
-use Concrete\Core\Http\Response;
 use Controller;
 use PageType;
 use Permissions;
@@ -38,6 +37,7 @@ class Page extends Controller
                 if (is_object($parent)) {
                     $d->setPageDraftTargetParentPageID($parent->getCollectionID());
                 }
+
                 return Redirect::url(\Core::getApplicationURL() . '/' . DISPATCHER_FILENAME . '?cID=' . $d->getCollectionID() . '&ctask=check-out-first&' . Loader::helper('validation/token')->getParameter());
             }
         }
@@ -52,6 +52,7 @@ class Page extends Controller
                 $u = new User();
                 $u->unloadCollectionEdit();
             }
+
             return Redirect::page($c);
         }
 

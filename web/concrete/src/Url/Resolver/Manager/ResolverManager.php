@@ -5,7 +5,6 @@ use Concrete\Core\Url\Resolver\UrlResolverInterface;
 
 class ResolverManager implements ResolverManagerInterface
 {
-
     protected $priorityTree;
 
     /**
@@ -97,5 +96,4 @@ class ResolverManager implements ResolverManagerInterface
 
         return $resolved;
     }
-
 }

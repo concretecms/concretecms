@@ -1,9 +1,7 @@
 <?php
-
 namespace Concrete\Core\Routing;
 
 use Concrete\Core\Support\Facade\Application;
-use Symfony\Component\HttpKernel;
 use Response;
 use Request;
 

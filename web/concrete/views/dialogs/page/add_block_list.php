@@ -1,6 +1,5 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
-$sets = BlockTypeSet::getList();
 $types = array();
 foreach ($blockTypes as $bt) {
     if (!$cp->canAddBlockType($bt)) {
@@ -16,9 +15,9 @@ foreach ($blockTypes as $bt) {
     }
 }
 
-for ($i = 0; $i < count($sets); $i++) {
+for ($i = 0; $i < count($sets); ++$i) {
     $set = $sets[$i];
-?>
+    ?>
 
 <div class="ccm-ui" id="ccm-add-block-list">
 
@@ -26,9 +25,9 @@ for ($i = 0; $i < count($sets); $i++) {
     <legend><?= $set->getBlockTypeSetDisplayName() ?></legend>
     <ul class="item-select-list">
         <?php $blockTypes = isset($types[$set->getBlockTypeSetName()]) ? $types[$set->getBlockTypeSetName()] : array();
-        foreach ($blockTypes as $bt) {
-            $btIcon = $ci->getBlockTypeIconURL($bt);
-            ?>
+    foreach ($blockTypes as $bt) {
+        $btIcon = $ci->getBlockTypeIconURL($bt);
+        ?>
             <li>
                 <a
                     data-cID="<?= $c->getCollectionID() ?>"
@@ -42,21 +41,25 @@ for ($i = 0; $i < count($sets); $i++) {
                     title="<?= t($bt->getBlockTypeName()) ?>"
                     href="javascript:void(0)"><img src="<?=$btIcon?>" /> <?=t($bt->getBlockTypeName())?></a>
             </li>
-        <? } ?>
+        <?php 
+    }
+    ?>
     </ul>
 </section>
 
-<? } ?>
+<?php 
+} ?>
 
-<? if (is_array($types['Other'])) { ?>
+<?php if (is_array($types['Other'])) {
+    ?>
 
     <section>
         <legend><?=t('Other')?></legend>
         <ul class="item-select-list">
-            <? $blockTypes = $types['Other'];
-            foreach ($blockTypes as $bt) {
-                $btIcon = $ci->getBlockTypeIconURL($bt);
-                ?>
+            <?php $blockTypes = $types['Other'];
+    foreach ($blockTypes as $bt) {
+        $btIcon = $ci->getBlockTypeIconURL($bt);
+        ?>
                 <li>
                     <a
                         data-cID="<?= $c->getCollectionID() ?>"
@@ -70,11 +73,14 @@ for ($i = 0; $i < count($sets); $i++) {
                         title="<?= t($bt->getBlockTypeName()) ?>"
                         href="javascript:void(0)"><img src="<?=$btIcon?>" /> <?=t($bt->getBlockTypeName())?></a>
                 </li>
-            <? } ?>
+            <?php 
+    }
+    ?>
         </ul>
     </section>
 
-<? } ?>
+<?php 
+} ?>
 
 </div>
 

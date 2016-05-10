@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Authentication\Type\OAuth;
 
 use Concrete\Core\Authentication\AuthenticationTypeController;
@@ -48,7 +47,7 @@ abstract class GenericOauthTypeController extends AuthenticationTypeController
     }
 
     /**
-     * @return Array
+     * @return array
      */
     public function getAdditionalRequestParameters()
     {

@@ -1,10 +1,11 @@
 <?php
 namespace Concrete\Core\User\Event;
-use \Symfony\Component\EventDispatcher\Event as AbstractEvent;
 
-class AddUser extends AbstractEvent {
+use Symfony\Component\EventDispatcher\Event as AbstractEvent;
 
-	protected $proceed = true;
+class AddUser extends AbstractEvent
+{
+    protected $proceed = true;
     protected $data = array();
 
 	/**
@@ -20,12 +21,13 @@ class AddUser extends AbstractEvent {
         $this->data = $data;
     }
 
-	public function cancelAdd() {
-		$this->proceed = false;
-	}
+    public function cancelAdd()
+    {
+        $this->proceed = false;
+    }
 
-	public function proceed() {
-		return $this->proceed;
-	}
-
+    public function proceed()
+    {
+        return $this->proceed;
+    }
 }

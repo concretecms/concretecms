@@ -2,17 +2,17 @@
 namespace Concrete\Core\StyleCustomizer\Style;
 
 use Core;
-use \Concrete\Core\StyleCustomizer\Style\Value\ColorValue;
+use Concrete\Core\StyleCustomizer\Style\Value\ColorValue;
 use Less_Tree_Color;
 use Less_Tree_Call;
-use Less_Tree_Dimension;
 use View;
 use Request;
-use \Concrete\Core\Http\Service\Json;
+use Concrete\Core\Http\Service\Json;
 
-class ColorStyle extends Style {
-
-    public function render($value = false) {
+class ColorStyle extends Style
+{
+    public function render($value = false)
+    {
         $color = '';
         if ($value) {
             $color = $value->toStyleString();
@@ -28,9 +28,9 @@ class ColorStyle extends Style {
 
         $json = new Json();
 
-        print "<input type=\"text\" name=\"{$inputName}[color]\" value=\"{$color}\" id=\"ccm-colorpicker-{$inputName}\" />";
-        print "<script type=\"text/javascript\">";
-        print "$(function() { $('#ccm-colorpicker-{$inputName}').spectrum({
+        echo "<input type=\"text\" name=\"{$inputName}[color]\" value=\"{$color}\" id=\"ccm-colorpicker-{$inputName}\" />";
+        echo "<script type=\"text/javascript\">";
+        echo "$(function() { $('#ccm-colorpicker-{$inputName}').spectrum({
             showInput: true,
             showInitial: true,
             preferredFormat: 'rgb',
@@ -43,10 +43,11 @@ class ColorStyle extends Style {
             clearText: " . $json->encode(t('Clear Color Selection')) . ",
             change: function() {ConcreteEvent.publish('StyleCustomizerControlUpdate');}
         });});";
-        print "</script>";
+        echo "</script>";
     }
 
-    public static function parse($value, $variable = false) {
+    public static function parse($value, $variable = false)
+    {
         if ($value instanceof Less_Tree_Color) {
             if ($value->isTransparentKeyword) {
                 return false;
@@ -55,7 +56,7 @@ class ColorStyle extends Style {
             $cv->setRed($value->rgb[0]);
             $cv->setGreen($value->rgb[1]);
             $cv->setBlue($value->rgb[2]);
-        } else if ($value instanceof Less_Tree_Call) {
+        } elseif ($value instanceof Less_Tree_Call) {
             // might be rgb() or rgba()
             $cv = new ColorValue($variable);
             $cv->setRed($value->args[0]->value[0]->value);
@@ -86,12 +87,14 @@ class ColorStyle extends Style {
         $cv->setGreen($result->green);
         $cv->setBlue($result->blue);
         $cv->setAlpha($alpha);
+
         return $cv;
     }
 
-    public function getValuesFromVariables($rules = array()) {
+    public function getValuesFromVariables($rules = array())
+    {
         $values = array();
-        foreach($rules as $rule) {
+        foreach ($rules as $rule) {
             if (preg_match('/@(.+)\-color/i',  isset($rule->name) ? $rule->name : '', $matches)) {
                 $value = $rule->value->value[0]->value[0];
                 $cv = static::parse($value, $matches[1]);
@@ -100,7 +103,7 @@ class ColorStyle extends Style {
                 }
             }
         }
+
         return $values;
     }
-
 }

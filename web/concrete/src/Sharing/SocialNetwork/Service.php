@@ -3,7 +3,6 @@ namespace Concrete\Core\Sharing\SocialNetwork;
 
 class Service
 {
-
     protected $ssHandle;
     protected $ssName;
     protected $ssIcon;
@@ -39,21 +38,20 @@ class Service
 
     public function getServiceIconHTML()
     {
-        if($this->customHTML) {
+        if ($this->customHTML) {
             return $this->customHTML;
         } else {
-            return '<i class="fa fa-' . $this->getIcon() . '"></i>';    
+            return '<i class="fa fa-' . $this->getIcon() . '"></i>';
         }
     }
 
     public static function getByHandle($ssHandle)
     {
         $services = ServiceList::get();
-        foreach($services as $s) {
+        foreach ($services as $s) {
             if ($s->getHandle() == $ssHandle) {
                 return $s;
             }
         }
     }
-
 }

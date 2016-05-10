@@ -1,8 +1,8 @@
 <?php
 namespace Concrete\Core\Search\Result;
 
-use \Concrete\Core\Search\Column\Set;
-use \Concrete\Core\Search\ItemList\ItemList;
+use Concrete\Core\Search\Column\Set;
+use Concrete\Core\Search\ItemList\ItemList;
 use Pagerfanta\View\TwitterBootstrap3View;
 use stdClass;
 
@@ -11,6 +11,8 @@ class Result
     protected $listColumns;
     protected $list;
     protected $baseURL;
+    protected $breadcrumb;
+    protected $query;
 
     /** @var \Concrete\Core\Search\Pagination\Pagination */
     protected $pagination;
@@ -19,7 +21,43 @@ class Result
     protected $fields;
     protected $columns;
 
-    public function getItemListObject() {return $this->list;}
+    /**
+     * @return mixed
+     */
+    public function getQuery()
+    {
+        return $this->query;
+    }
+
+    /**
+     * @param mixed $query
+     */
+    public function setQuery($query)
+    {
+        $this->query = $query;
+    }
+
+
+    public function getItemListObject()
+    {
+        return $this->list;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getBreadcrumb()
+    {
+        return $this->breadcrumb;
+    }
+
+    /**
+     * @param mixed $breadcrumb
+     */
+    public function setBreadcrumb($breadcrumb)
+    {
+        $this->breadcrumb = $breadcrumb;
+    }
 
     public function setBaseURL($url)
     {
@@ -31,7 +69,20 @@ class Result
         return $this->baseURL;
     }
 
-    public function __construct(Set $columns, ItemList $il, $url, $fields = array())
+    public function getSearchResultBulkMenus()
+    {
+        return false;
+    }
+
+    /**
+     * @return Set
+     */
+    public function getListColumns()
+    {
+        return $this->listColumns;
+    }
+
+    public function __construct(Set $columns, ItemList $il, $url = null, $fields = array())
     {
         $this->listColumns = $columns;
         $this->list = $il;
@@ -81,6 +132,11 @@ class Result
         return $node;
     }
 
+    public function getSortURL($column, $dir = 'asc')
+    {
+        return $this->getItemListObject()->getSortURL($column, $dir, $this->getBaseURL());
+    }
+
     public function getJSONObject()
     {
         $obj = new stdClass();
@@ -100,19 +156,30 @@ class Result
                 function ($page) use ($result) {
                     $list = $result->getItemListObject();
 
-                    return $result->getBaseURL() . '?' . $list->getQueryPaginationPageParameter() . '=' . $page;
+                    $uh = \Core::make("helper/url");
+
+                    $args = array(
+                        $list->getQueryPaginationPageParameter() => $page,
+                        $list->getQuerySortColumnParameter() => $list->getActiveSortColumn(),
+                        $list->getQuerySortDirectionParameter() => $list->getActiveSortDirection(),
+                    );
+
+                    return $uh->setVariable($args, false, $result->getBaseURL());
                 },
                 array(
                     'prev_message' => tc('Pagination', '&larr; Previous'),
                     'next_message' => tc('Pagination', 'Next &rarr;'),
-                    'active_suffix' => '<span class="sr-only">' . tc('Pagination', '(current)') . '</span>'
+                    'active_suffix' => '<span class="sr-only">' . tc('Pagination', '(current)') . '</span>',
                 )
             );
         }
         $obj->paginationTemplate = $html;
         $obj->fields = $this->fields;
+        $obj->query = $this->query;
+        $obj->bulkMenus = $this->getSearchResultBulkMenus();
+        $obj->baseUrl = (string) $this->getBaseURL();
+        $obj->breadcrumb = $this->getBreadcrumb();
 
         return $obj;
     }
-
 }

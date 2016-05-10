@@ -3,7 +3,6 @@ namespace Concrete\Core\Asset;
 
 class AssetPointer
 {
-
     /**
      * @var string
      */
@@ -51,6 +50,7 @@ class AssetPointer
     public function getAsset()
     {
         $al = AssetList::getInstance();
+
         return $al->getAsset($this->assetType, $this->assetHandle);
     }
 }

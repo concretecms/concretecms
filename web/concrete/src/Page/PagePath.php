@@ -1,12 +1,12 @@
 <?php
-
 namespace Concrete\Core\Page;
+
 /**
  * @Entity
  * @Table(name="PagePaths")
  */
-class PagePath {
-
+class PagePath
+{
     /**
      * @Column(type="text")
      */
@@ -17,7 +17,6 @@ class PagePath {
      * @GeneratedValue
      */
     protected $ppID;
-
 
     /**
      * @Column(columnDefinition="integer unsigned")
@@ -40,7 +39,8 @@ class PagePath {
         return $this->ppID;
     }
 
-    public function getPagePath() {
+    public function getPagePath()
+    {
         return $this->cPath;
     }
 
@@ -78,6 +78,4 @@ class PagePath {
     {
         return $this->cID;
     }
-
-
 }

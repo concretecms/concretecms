@@ -6,20 +6,30 @@
         <h5><?=h($title)?></h5>
     </div>
 
-    <? if (count($dates)) { ?>
+    <?php if (count($dates)) {
+    ?>
         <ul class="ccm-block-date-navigation-dates">
             <li><a href="<?=$view->controller->getDateLink()?>"><?=t('All')?></a></li>
 
-            <? foreach($dates as $date) { ?>
+            <?php foreach ($dates as $date) {
+    ?>
                 <li><a href="<?=$view->controller->getDateLink($date)?>"
-                        <? if ($view->controller->isSelectedDate($date)) { ?>
+                        <?php if ($view->controller->isSelectedDate($date)) {
+    ?>
                             class="ccm-block-date-navigation-date-selected"
-                        <? } ?>><?=$view->controller->getDateLabel($date)?></a></li>
-            <? } ?>
+                        <?php 
+}
+    ?>><?=$view->controller->getDateLabel($date)?></a></li>
+            <?php 
+}
+    ?>
         </ul>
-    <? } else { ?>
+    <?php 
+} else {
+    ?>
         <?=t('None.')?>
-    <? } ?>
+    <?php 
+} ?>
 
 
 </div>

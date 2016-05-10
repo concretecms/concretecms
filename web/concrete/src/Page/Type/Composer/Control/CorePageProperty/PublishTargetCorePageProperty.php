@@ -27,17 +27,17 @@ class PublishTargetCorePageProperty extends CorePageProperty
             } else {
                 return $this->page->getCollectionParentID();
             }
-        } else if ($this->getTargetParentPageID()) {
+        } elseif ($this->getTargetParentPageID()) {
             return $this->getTargetParentPageID();
         }
     }
 
-    public function render($label, $customTemplate, $description) {
+    public function render($label, $customTemplate, $description)
+    {
         {
             if (!is_object($this->page) || $this->page->isPageDraft()) {
                 parent::render($label, $customTemplate, $description);
             }
         }
     }
-
 }

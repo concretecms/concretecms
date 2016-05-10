@@ -1,4 +1,4 @@
-<?
+<?php
 defined('C5_EXECUTE') or die("Access Denied.");
 ?>
 
@@ -7,26 +7,28 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 <section>
 	<h4><?=t('Other Attributes')?></h4>
-	<? 
+	<?php
 
-	Loader::element('attribute/editable_list', array(
-		'attributes' => $attributes, 
-		'objects' => $users,
-		'saveAction' => $controller->action('update_attribute'),
-		'clearAction' => $controller->action('clear_attribute'),
-		'permissionsArguments' => array('attributes' => $allowedEditAttributes),
-		'permissionsCallback' => function($ak, $permissionsArguments) {
-			return (is_array($permissionsArguments['attributes']) && in_array($ak->getAttributeKeyID(), $permissionsArguments['attributes']));
-		}
-	));?>
+    Loader::element('attribute/editable_list', array(
+        'attributes' => $attributes,
+        'objects' => $users,
+        'saveAction' => $controller->action('update_attribute'),
+        'clearAction' => $controller->action('clear_attribute'),
+        'permissionsArguments' => array('attributes' => $allowedEditAttributes),
+        'permissionsCallback' => function ($ak, $permissionsArguments) {
+            return is_array($permissionsArguments['attributes']) && in_array($ak->getAttributeKeyID(), $permissionsArguments['attributes']);
+        },
+    ));?>
 </section>
 
 <script type="text/javascript">
 	$('div[data-container=editable-fields]').concreteEditableFieldContainer({
 		data: [
-			<? foreach($users as $ui) { ?>
+			<?php foreach ($users as $ui) {
+    ?>
 				{'name': 'item[]', 'value': '<?=$ui->getUserID()?>'},
-			<? } ?>	
+			<?php 
+} ?>	
 		]
 	});
 </script>

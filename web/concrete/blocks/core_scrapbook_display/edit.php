@@ -20,5 +20,4 @@ if ($bp->canWrite()) {
 
     $bv->addScopeItems($view->getScopeItems());
     $bv->render('edit');
-
 }

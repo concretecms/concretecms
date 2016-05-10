@@ -1,20 +1,11 @@
 <?php
-
 namespace Concrete\Core\Backup\ContentImporter\ValueInspector;
 
-
 use Concrete\Core\Backup\ContentImporter\ValueInspector\InspectionRoutine\RoutineInterface;
-use Concrete\Core\Backup\ContentImporter\ValueInspector\Item\FileItem;
 use Concrete\Core\Backup\ContentImporter\ValueInspector\Item\ItemInterface;
-use Concrete\Core\Backup\ContentImporter\ValueInspector\Item\PageFeedItem;
-use Concrete\Core\Backup\ContentImporter\ValueInspector\Item\PageItem;
-use Concrete\Core\Backup\ContentImporter\ValueInspector\Item\PageTypeItem;
-use Concrete\Core\Backup\ContentImporter\ValueInspector\Item\PictureItem;
-use Concrete\Core\Backup\ContentImporter\ValueInspector\Item\ImageItem;
 
 class Result implements ResultInterface
 {
-
     protected $originalContent;
     protected $replacedContent;
     protected $items = array();
@@ -41,7 +32,6 @@ class Result implements ResultInterface
         $this->originalContent = $originalContent;
     }
 
-
     public function __construct($originalContent)
     {
         $this->originalContent = $originalContent;
@@ -51,10 +41,11 @@ class Result implements ResultInterface
     {
         if (!isset($this->replacedContent)) {
             $this->replacedContent = $this->originalContent;
-            foreach($this->routines as $routine) {
+            foreach ($this->routines as $routine) {
                 $this->replacedContent = $routine->replaceContent($this->replacedContent);
             }
         }
+
         return $this->replacedContent;
     }
 
@@ -76,5 +67,4 @@ class Result implements ResultInterface
             return $this->originalContent;
         }
     }
-
 }

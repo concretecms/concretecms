@@ -1,4 +1,6 @@
-<?php foreach ($attributes as $ak) {
+<?php
+
+foreach ($attributes as $ak) {
     Loader::element(
         'attribute/editable_attribute',
         array(
@@ -8,7 +10,7 @@
             'saveAction' => $saveAction,
             'clearAction' => $clearAction,
             'permissionsCallback' => $permissionsCallback,
-            'permissionsArguments' => $permissionsArguments
+            'permissionsArguments' => $permissionsArguments,
         )
     );
 }

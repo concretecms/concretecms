@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Foundation\Repetition;
 
 /**
@@ -65,7 +64,7 @@ abstract class AbstractRepetition implements RepetitionInterface
      */
     public function isStartDateAllDay()
     {
-        return !!$this->startDateAllDay;
+        return (bool) $this->startDateAllDay;
     }
 
     /**
@@ -83,7 +82,7 @@ abstract class AbstractRepetition implements RepetitionInterface
      */
     public function isEndDateAllDay()
     {
-        return !!$this->endDateAllDay;
+        return (bool) $this->endDateAllDay;
     }
 
     /**
@@ -103,7 +102,7 @@ abstract class AbstractRepetition implements RepetitionInterface
      */
     public function isActive($now = null)
     {
-        return !!$this->getActiveRange($now);
+        return (bool) $this->getActiveRange($now);
     }
 
     /**
@@ -324,7 +323,7 @@ abstract class AbstractRepetition implements RepetitionInterface
      */
     public function repeats()
     {
-        return ($this->getRepeatPeriod() !== self::REPEAT_NONE);
+        return $this->getRepeatPeriod() !== self::REPEAT_NONE;
     }
 
     /**
@@ -478,12 +477,22 @@ abstract class AbstractRepetition implements RepetitionInterface
         /* @var $dh \Concrete\Core\Localization\Service\Date */
         $text = '';
         if ($this->getStartDate() != '') {
-            $text .= t('Starts %s. ', $dh->formatDateTime($this->getStartDate()));
+            if ($this->isStartDateAllDay()) {
+                $date = $dh->formatDate($this->getStartDate());
+            } else {
+                $date = $dh->formatDateTime($this->getStartDate());
+            }
+            $text .= t('Starts %s. ', $date);
         } else {
             $text .= t('Already Started. ');
         }
         if ($this->getEndDate() != '') {
-            $text .= t('Ends %s. ', $dh->formatDateTime($this->getEndDate()));
+            if ($this->isEndDateAllDay()) {
+                $date = $dh->formatDate($this->getEndDate());
+            } else {
+                $date = $dh->formatDateTime($this->getEndDate());
+            }
+            $text .= t('Ends %s. ', $date);
         } else {
             $text .= t('No End Date. ');
         }

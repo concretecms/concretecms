@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\View;
 
 use Concrete\Core\Http\ResponseAssetGroup;

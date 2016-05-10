@@ -5,8 +5,7 @@ use Concrete\Core\Validator\ValidatorManagerInterface;
 
 class ValidatorManagerTest extends \PHPUnit_Framework_TestCase
 {
-
-    /** @type ValidatorManagerInterface */
+    /** @var ValidatorManagerInterface */
     protected $manager;
 
     public function setUp()
@@ -49,10 +48,10 @@ class ValidatorManagerTest extends \PHPUnit_Framework_TestCase
         $mock_2 = $this->getMock('\Concrete\Core\Validator\ValidatorInterface');
 
         $mock_1->method('getRequirementStrings')->willReturn(array(
-            1 => 'string 1'
+            1 => 'string 1',
         ));
         $mock_2->method('getRequirementStrings')->willReturn(array(
-            1 => 'string 2'
+            1 => 'string 2',
         ));
 
         $manager = $this->manager;
@@ -76,5 +75,4 @@ class ValidatorManagerTest extends \PHPUnit_Framework_TestCase
 
         $this->assertFalse($manager->isValid(''));
     }
-
 }

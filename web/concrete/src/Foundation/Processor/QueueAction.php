@@ -3,7 +3,6 @@ namespace Concrete\Core\Foundation\Processor;
 
 class QueueAction extends Action
 {
-
     protected $queueItem;
 
     public function setQueueItem($queueItem)

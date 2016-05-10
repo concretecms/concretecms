@@ -4,14 +4,20 @@ namespace Concrete\Core\Package;
 use AuthenticationType;
 use Concrete\Core\Backup\ContentImporter;
 use Concrete\Core\Config\Renderer;
+use Concrete\Core\Database\DatabaseStructureManager;
+use Concrete\Core\File\Filesystem;
 use Concrete\Core\File\Image\Thumbnail\Type\Type;
 use Concrete\Core\Mail\Importer\MailImporter;
 use Concrete\Core\Package\Routine\AttachModeInstallRoutine;
 use Concrete\Core\Permission\Access\Entity\ConversationMessageAuthorEntity;
 use Concrete\Core\Permission\Access\Entity\GroupEntity as GroupPermissionAccessEntity;
 use Concrete\Core\Permission\Access\Entity\PageOwnerEntity as PageOwnerPermissionAccessEntity;
+use Concrete\Core\Tree\Node\Type\Category;
+use Concrete\Core\Tree\Type\ExpressEntry;
+use Concrete\Core\Tree\Type\ExpressEntryResults;
 use Concrete\Core\Updater\Migrations\Configuration;
 use Concrete\Core\User\Point\Action\Action as UserPointAction;
+use Concrete\Block\ExpressForm\Controller as ExpressFormBlockController;
 use Config;
 use Core;
 use Database;
@@ -45,14 +51,15 @@ class StartingPointPackage extends BasePackage
             new StartingPointInstallRoutine('install_database', 10, t('Creating database tables.')),
             new StartingPointInstallRoutine('add_users', 15, t('Adding admin user.')),
             new StartingPointInstallRoutine('install_permissions', 20, t('Installing permissions & workflow.')),
-            new StartingPointInstallRoutine('add_home_page', 23, t('Creating home page.')),
-            new StartingPointInstallRoutine('install_attributes', 25, t('Installing attributes.')),
-            new StartingPointInstallRoutine('install_blocktypes', 30, t('Adding block types.')),
-            new StartingPointInstallRoutine('install_gathering', 33, t('Adding gathering data sources.')),
-            new StartingPointInstallRoutine('install_page_types', 36, t('Page type basic setup.')),
-            new StartingPointInstallRoutine('install_themes', 38, t('Adding themes.')),
-            new StartingPointInstallRoutine('install_jobs', 40, t('Installing automated jobs.')),
-            new StartingPointInstallRoutine('install_dashboard', 45, t('Installing dashboard.')),
+            new StartingPointInstallRoutine('install_data_objects', 23, t('Installing Custom Data Objects.')),
+            new StartingPointInstallRoutine('add_home_page', 26, t('Creating home page.')),
+            new StartingPointInstallRoutine('install_attributes', 30, t('Installing attributes.')),
+            new StartingPointInstallRoutine('install_blocktypes', 35, t('Adding block types.')),
+            new StartingPointInstallRoutine('install_gathering', 39, t('Adding gathering data sources.')),
+            new StartingPointInstallRoutine('install_page_types', 40, t('Page type basic setup.')),
+            new StartingPointInstallRoutine('install_themes', 45, t('Adding themes.')),
+            new StartingPointInstallRoutine('install_jobs', 47, t('Installing automated jobs.')),
+            new StartingPointInstallRoutine('install_dashboard', 50, t('Installing dashboard.')),
             new StartingPointInstallRoutine(
                 'install_required_single_pages',
                 55,
@@ -61,6 +68,7 @@ class StartingPointPackage extends BasePackage
             new StartingPointInstallRoutine('install_config', 60, t('Configuring site.')),
             new StartingPointInstallRoutine('import_files', 65, t('Importing files.')),
             new StartingPointInstallRoutine('install_content', 70, t('Adding pages and content.')),
+            new StartingPointInstallRoutine('install_desktops', 85, t('Adding desktops.')),
             new StartingPointInstallRoutine('set_site_permissions', 90, t('Setting up site permissions.')),
             new AttachModeInstallRoutine('finish', 95, t('Finishing.')),
         );
@@ -150,15 +158,26 @@ class StartingPointPackage extends BasePackage
     }
     */
 
+    public function install_data_objects()
+    {
+        \Concrete\Core\Tree\Node\NodeType::add('category');
+        \Concrete\Core\Tree\TreeType::add('express_entry_results');
+        \Concrete\Core\Tree\Node\NodeType::add('express_entry_results');
+
+        $tree = ExpressEntryResults::add();
+        $node = $tree->getRootTreeNodeObject();
+
+        // Add forms node beneath it.
+        $forms = Category::add(ExpressFormBlockController::FORM_RESULTS_CATEGORY_NAME, $node);
+    }
+
     public function install_attributes()
     {
         $ci = new ContentImporter();
         $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/attributes.xml');
 
         $topicType = \Concrete\Core\Tree\TreeType::add('topic');
-        $topicCategoryNodeType = \Concrete\Core\Tree\Node\NodeType::add('topic_category');
         $topicNodeType = \Concrete\Core\Tree\Node\NodeType::add('topic');
-        //$tree = \Concrete\Core\Tree\Type\Topic::add('Topics');
     }
 
     public function install_dashboard()
@@ -231,6 +250,10 @@ class StartingPointPackage extends BasePackage
         $configuration = $type->getConfigurationObject();
         $fsl = \Concrete\Core\File\StorageLocation\StorageLocation::add($configuration, t('Default'), true);
 
+        $filesystem = new Filesystem();
+        $tree = $filesystem->create();
+        $filesystem->setDefaultPermissions($tree);
+
         $thumbnailType = new Type();
         $thumbnailType->requireType();
         $thumbnailType->setName(tc('ThumbnailTypeName', 'File Manager Thumbnails'));
@@ -262,6 +285,14 @@ class StartingPointPackage extends BasePackage
         $ci->importContentFile($this->getPackagePath() . '/content.xml');
     }
 
+    public function install_desktops()
+    {
+        $ci = new ContentImporter();
+        $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/desktops.xml');
+        $desktop = \Page::getByPath('/dashboard/welcome');
+        $desktop->movePageDisplayOrderToTop();
+    }
+
     public function install_database()
     {
         $db = Database::get();
@@ -275,12 +306,15 @@ class StartingPointPackage extends BasePackage
         }
         $installDirectory = DIR_BASE_CORE . '/config';
         try {
-            $em = \ORM::entityManager('core');
-            $dbm = Core::make('database/structure', array($em));
+            $em = \ORM::entityManager();
+            $dbm = new DatabaseStructureManager($em);
+            $dbm->destroyProxyClasses();
             $dbm->generateProxyClasses();
 
             Package::installDB($installDirectory . '/db.xml');
             $this->indexAdditionalDatabaseFields();
+
+            $dbm->installDatabase();
 
             $configuration = new Configuration();
             $version = $configuration->getVersion(Config::get('concrete.version_db'));
@@ -415,31 +449,35 @@ class StartingPointPackage extends BasePackage
 
     public function set_site_permissions()
     {
-        $fs = FileSet::getGlobal();
         $g1 = Group::getByID(GUEST_GROUP_ID);
         $g2 = Group::getByID(REGISTERED_GROUP_ID);
         $g3 = Group::getByID(ADMIN_GROUP_ID);
 
-        $fs->assignPermissions($g1, array('view_file_set_file'));
-        $fs->assignPermissions(
+        $filesystem = new Filesystem();
+        $folder = $filesystem->getRootFolder();
+        $folder->assignPermissions($g1, array('view_file_folder_file'));
+        $folder->assignPermissions(
             $g3,
             array(
-                'view_file_set_file',
-                'search_file_set',
-                'edit_file_set_file_properties',
-                'edit_file_set_file_contents',
-                'copy_file_set_files',
-                'edit_file_set_permissions',
-                'delete_file_set_files',
-                'delete_file_set',
+                'view_file_folder_file',
+                'search_file_folder',
+                'edit_file_folder',
+                'edit_file_folder_file_properties',
+                'edit_file_folder_file_contents',
+                'copy_file_folder_files',
+                'edit_file_folder_permissions',
+                'delete_file_folder_files',
+                'delete_file_folder',
                 'add_file',
             )
         );
+
         if (defined('SITE_INSTALL_LOCALE') && SITE_INSTALL_LOCALE != '' && SITE_INSTALL_LOCALE != 'en_US') {
             Config::save('concrete.locale', SITE_INSTALL_LOCALE);
         }
         Config::save('concrete.site', SITE);
         Config::save('concrete.version_installed', APP_VERSION);
+        Config::save('concrete.misc.login_redirect', 'DESKTOP');
 
         $u = new User();
         $u->saveConfig('NEWSFLOW_LAST_VIEWED', 'FIRSTRUN');

@@ -3,12 +3,10 @@ namespace Concrete\Controller\Panel;
 
 use Concrete\Controller\Backend\UserInterface\Page as BackendInterfacePageController;
 use Concrete\Core\Multilingual\Page\Section\Section;
-use Config;
 use Core;
 
 class Multilingual extends BackendInterfacePageController
 {
-
     protected $viewPath = '/panels/multilingual';
 
     public function view()
@@ -17,7 +15,7 @@ class Multilingual extends BackendInterfacePageController
         $mlist = Section::getList();
         $ml = array();
         $currentSection = Section::getCurrentSection();
-        foreach($mlist as $m) {
+        foreach ($mlist as $m) {
             if ($m->getCollectionID() != $currentSection->getCollectionID()) {
                 $ml[] = $m;
             }
@@ -35,6 +33,4 @@ class Multilingual extends BackendInterfacePageController
     {
         return $this->permissions->canEditPageMultilingualSettings() && \Core::make('multilingual/detector')->isEnabled();
     }
-
 }
-

@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Tools\Console\Doctrine;
 
 use Doctrine\ORM\Tools\Console\ConsoleRunner as DoctrineConsoleRunner;

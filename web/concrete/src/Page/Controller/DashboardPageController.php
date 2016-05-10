@@ -1,19 +1,18 @@
 <?php
 namespace Concrete\Core\Page\Controller;
 
-use Concrete\Core\Error\Error;
 use Concrete\Core\Validation\CSRF\Token;
 use Loader;
 
 class DashboardPageController extends PageController
 {
-
-    /** @var Error */
     protected $error;
 
     /** @var Token */
     public $token;
     protected $helpers = array('form');
+
+    protected $entityManager;
 
     public function enableNativeMobile()
     {
@@ -30,11 +29,20 @@ class DashboardPageController extends PageController
         $this->set('interface', Loader::helper('concrete/ui'));
         $this->set('dashboard', Loader::helper('concrete/dashboard'));
 
+        $this->entityManager = \Core::make('Doctrine\ORM\EntityManager');
+
         $hideDashboardPanel = false;
         if (\Cookie::has('dashboardPanelStatus') && \Cookie::get('dashboardPanelStatus') == 'closed') {
             $hideDashboardPanel = true;
         }
         $this->set('hideDashboardPanel', $hideDashboardPanel);
+        \Core::make('helper/concrete/dashboard');
+        $dh = \Concrete\Core\Application\Service\DashboardMenu::getMine();
+        if ($dh->contains($this->getPageObject())) {
+            $this->set("_bookmarked", true);
+        } else {
+            $this->set('_bookmarked', false);
+        }
     }
 
     public function on_before_render()
@@ -47,4 +55,8 @@ class DashboardPageController extends PageController
         $this->set('error', $this->error);
     }
 
+    public function getEntityManager()
+    {
+        return $this->entityManager;
+    }
 }

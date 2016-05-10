@@ -1,11 +1,13 @@
-<? defined('C5_EXECUTE') or die("Access Denied.");
+<?php defined('C5_EXECUTE') or die("Access Denied.");
 
 $set = $b->getCustomStyle();
-if (is_object($set)) { ?>
+if (is_object($set)) {
+    ?>
     <script type="text/javascript">
         $('head').append('<style type="text/css"><?=addslashes($styleHeader)?></style>');
     </script>
-<?
+<?php
+
 }
 
 $ag = \Concrete\Core\Http\ResponseAssetGroup::get();
@@ -18,7 +20,7 @@ if (isset($blockClasses[$b->getBlockTypeHandle()])) {
     $customClasses = $blockClasses[$b->getBlockTypeHandle()];
 }
 
-if(isset($blockClasses['*'])) {
+if (isset($blockClasses['*'])) {
     $customClasses = array_unique(array_merge($customClasses, $blockClasses['*']));
 }
 
@@ -28,7 +30,6 @@ if ($pt->supportsGridFramework() && $b->overrideBlockTypeContainerSettings()) {
 }
 
 $gf = $pt->getThemeGridFrameworkObject();
-
 
 Loader::element("custom_style", array(
     'saveAction' => $controller->action('submit'),

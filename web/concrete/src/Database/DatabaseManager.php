@@ -7,7 +7,6 @@ use Concrete\Core\Support\Facade\Config;
 
 class DatabaseManager
 {
-
     /**
      * The application instance.
      *
@@ -55,9 +54,10 @@ class DatabaseManager
     }
 
     /**
-     * Legacy entry point
+     * Legacy entry point.
      *
      * @deprecated
+     *
      * @return \Concrete\Core\Database\Connection\Connection
      */
     public function getActiveConnection()
@@ -66,9 +66,10 @@ class DatabaseManager
     }
 
     /**
-     * Legacy entry point
+     * Legacy entry point.
      *
      * @deprecated
+     *
      * @return \Concrete\Core\Database\Connection\Connection
      */
     public function get()
@@ -80,6 +81,7 @@ class DatabaseManager
      * Get a database connection instance.
      *
      * @param  string $name
+     *
      * @return \Concrete\Core\Database\Connection\Connection
      */
     public function connection($name = null)
@@ -103,7 +105,6 @@ class DatabaseManager
      * Disconnect from the given database and remove from local cache.
      *
      * @param  string $name
-     * @return void
      */
     public function purge($name = null)
     {
@@ -117,7 +118,6 @@ class DatabaseManager
      * Disconnect from the given database.
      *
      * @param  string $name
-     * @return void
      */
     public function disconnect($name = null)
     {
@@ -130,6 +130,7 @@ class DatabaseManager
      * Reconnect to the given database.
      *
      * @param  string $name
+     *
      * @return \Concrete\Core\Database\Connection\Connection
      */
     public function reconnect($name = null)
@@ -147,11 +148,13 @@ class DatabaseManager
      * Refresh the PDO connections on a given connection.
      *
      * @param  string $name
+     *
      * @return Connection
      */
     protected function refreshPdoConnections($name)
     {
         $this->purge($name);
+
         return $this->connection($name);
     }
 
@@ -159,6 +162,7 @@ class DatabaseManager
      * Make the database connection instance.
      *
      * @param  string $name
+     *
      * @return Connection
      */
     protected function makeConnection($name)
@@ -188,6 +192,7 @@ class DatabaseManager
      * Prepare the database connection instance.
      *
      * @param Connection $connection
+     *
      * @return Connection
      */
     protected function prepare($connection)
@@ -199,6 +204,7 @@ class DatabaseManager
      * Get the configuration for a connection.
      *
      * @param  string $name
+     *
      * @return array
      *
      * @throws \InvalidArgumentException
@@ -233,7 +239,6 @@ class DatabaseManager
      * Set the default connection name.
      *
      * @param  string $name
-     * @return void
      */
     public function setDefaultConnection($name)
     {
@@ -245,7 +250,6 @@ class DatabaseManager
      *
      * @param  string   $name
      * @param  callable $resolver
-     * @return void
      */
     public function extend($name, $resolver)
     {
@@ -267,6 +271,7 @@ class DatabaseManager
      *
      * @param  string $method
      * @param  array  $parameters
+     *
      * @return mixed
      */
     public function __call($method, $parameters)
@@ -281,5 +286,4 @@ class DatabaseManager
     {
         return $this->factory;
     }
-
 }

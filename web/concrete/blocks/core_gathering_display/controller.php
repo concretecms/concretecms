@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Block\CoreGatheringDisplay;
 
 use Concrete\Core\Block\BlockController;
