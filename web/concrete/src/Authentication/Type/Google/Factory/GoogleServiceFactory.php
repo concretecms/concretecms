@@ -54,7 +54,7 @@ class GoogleServiceFactory implements ApplicationAwareInterface
     {
         $appId = $this->config->get('auth.google.appid');
         $appSecret = $this->config->get('auth.google.secret');
-        $verifyPeer = false;$this->config->get('app.curl.verifyPeer');
+        $verifyPeer = $this->config->get('app.curl.verifyPeer');
 
         /** @var ServiceFactory $factory */
         $factory = $this->app->make('oauth/factory/service', array(CURLOPT_SSL_VERIFYPEER => $verifyPeer));
