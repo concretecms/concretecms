@@ -723,12 +723,12 @@ abstract class Package implements LocalizablePackageInterface
         if ($this->metadataDriver === self::PACKAGE_METADATADRIVER_ANNOTATION){
             if(version_compare($this->getApplicationVersionRequired(), '5.8.0', '<')){
                 // Legacy - uses SimpleAnnotationReader
-                $cachedSimpleAnnotationReader = \Core::make('orm/cachedSimpleAnnotationReader');
+                $cachedSimpleAnnotationReader = $this->app->make('orm/cachedSimpleAnnotationReader');
                 $simpleAnnotationDriver = new \Doctrine\ORM\Mapping\Driver\AnnotationDriver($cachedSimpleAnnotationReader, $this->getPackageMetadataPaths());
                 return $simpleAnnotationDriver;
             }else{
                 // Use default AnnotationReader
-                $cachedAnnotationReader = \Core::make('orm/cachedAnnotationReader');
+                $cachedAnnotationReader = $this->app->make('orm/cachedAnnotationReader');
                 $annotationDriver = new \Doctrine\ORM\Mapping\Driver\AnnotationDriver($cachedAnnotationReader, $this->getPackageMetadataPaths());
                 return $annotationDriver;
             }
@@ -794,7 +794,7 @@ abstract class Package implements LocalizablePackageInterface
      */
     protected function getPackageEntityManager()
     {
-        $config = Setup::createConfiguration(true, \Config::get('database.proxy_classes'));
+        $config = Setup::createConfiguration(true, $this->app->make('config')->get('database.proxy_classes'));
         
         // Create a temporary EntityManager with the apropriate metadata driver 
         // for the package installation
