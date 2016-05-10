@@ -2,10 +2,9 @@
 namespace Concrete\Core\Captcha;
 
 use Concrete\Core\Foundation\Object;
-use Loader;
-use Core;
 use Concrete\Core\Package\PackageList;
 use Package;
+use Concrete\Core\Support\Facade\Facade;
 
 class Library extends Object
 {
@@ -36,17 +35,19 @@ class Library extends Object
 
     public static function getActive()
     {
-        $db = Loader::db();
-        $sclHandle = $db->GetOne('select sclHandle from SystemCaptchaLibraries where sclIsActive = 1');
+        $app = Facade::getFacadeApplication();
+        $db = $app->make('database')->connection();
+        $sclHandle = $db->fetchColumn('select sclHandle from SystemCaptchaLibraries where sclIsActive = 1');
 
-        return static::getByHandle($sclHandle);
+        return ($sclHandle === false) ? null : static::getByHandle($sclHandle);
     }
 
     public static function getByHandle($sclHandle)
     {
-        $db = Loader::db();
-        $r = $db->GetRow('select sclHandle, sclIsActive, pkgID, sclName from SystemCaptchaLibraries where sclHandle = ?', array($sclHandle));
-        if (is_array($r) && $r['sclHandle']) {
+        $app = Facade::getFacadeApplication();
+        $db = $app->make('database')->connection();
+        $r = $db->fetchAssoc('select sclHandle, sclIsActive, pkgID, sclName from SystemCaptchaLibraries where sclHandle = ?', array($sclHandle));
+        if ($r !== false) {
             $sc = new static();
             $sc->setPropertiesFromArray($r);
 
@@ -60,37 +61,40 @@ class Library extends Object
         if (is_object($pkg)) {
             $pkgID = $pkg->getPackageID();
         }
-        $db = Loader::db();
-        $db->Execute('insert into SystemCaptchaLibraries (sclHandle, sclName, pkgID) values (?, ?, ?)', array($sclHandle, $sclName, $pkgID));
+        $app = Facade::getFacadeApplication();
+        $db = $app->make('database')->connection();
+        $db->executeQuery('insert into SystemCaptchaLibraries (sclHandle, sclName, pkgID) values (?, ?, ?)', array($sclHandle, $sclName, $pkgID));
 
         return static::getByHandle($sclHandle);
     }
 
     public function delete()
     {
-        $db = Loader::db();
         if (static::getActive()->getSystemCaptchaLibraryHandle() == $this->sclHandle) {
             if ($scl = static::getByHandle('securimage')) {
                 $scl->activate();
             }
         }
-        $db->Execute('delete from SystemCaptchaLibraries where sclHandle = ?', array($this->sclHandle));
+        $app = Facade::getFacadeApplication();
+        $db = $app->make('database')->connection();
+        $db->executeQuery('delete from SystemCaptchaLibraries where sclHandle = ?', array($this->sclHandle));
     }
 
     public function activate()
     {
-        $db = Loader::db();
-        $db->Execute('update SystemCaptchaLibraries set sclIsActive = 0');
-        $db->Execute('update SystemCaptchaLibraries set sclIsActive = 1 where sclHandle = ?', array($this->sclHandle));
+        $app = Facade::getFacadeApplication();
+        $db = $app->make('database')->connection();
+        $db->executeQuery('update SystemCaptchaLibraries set sclIsActive = 0');
+        $db->executeQuery('update SystemCaptchaLibraries set sclIsActive = 1 where sclHandle = ?', array($this->sclHandle));
     }
 
     public static function getList()
     {
-        $db = Loader::db();
-        $sclHandles = $db->GetCol('select sclHandle from SystemCaptchaLibraries order by sclHandle asc');
+        $app = Facade::getFacadeApplication();
+        $db = $app->make('database')->connection();
         $libraries = array();
-        foreach ($sclHandles as $sclHandle) {
-            $scl = static::getByHandle($sclHandle);
+        foreach ($db->fetchAll('select sclHandle from SystemCaptchaLibraries order by sclHandle asc') as $row) {
+            $scl = static::getByHandle($row['sclHandle']);
             $libraries[] = $scl;
         }
 
@@ -99,11 +103,11 @@ class Library extends Object
 
     public static function getListByPackage($pkg)
     {
-        $db = Loader::db();
-        $sclHandles = $db->GetCol('select sclHandle from SystemCaptchaLibraries where pkgID = ? order by sclHandle asc', array($pkg->getPackageID()));
+        $app = Facade::getFacadeApplication();
+        $db = $app->make('database')->connection();
         $libraries = array();
-        foreach ($sclHandles as $sclHandle) {
-            $scl = static::getByHandle($sclHandle);
+        foreach ($db->fetchAll('select sclHandle from SystemCaptchaLibraries where pkgID = ? order by sclHandle asc', array($pkg->getPackageID())) as $row) {
+            $scl = static::getByHandle($row['sclHandle']);
             $libraries[] = $scl;
         }
 
@@ -156,11 +160,12 @@ class Library extends Object
     public function getController()
     {
         $class = overrideable_core_class('Core\\Captcha\\'
-            . Loader::helper('text')->camelcase($this->sclHandle) . 'Controller', DIRNAME_CLASSES . '/Captcha/'
-            . Loader::helper('text')->camelcase($this->sclHandle) . 'Controller.php',
+            . camelcase($this->sclHandle) . 'Controller', DIRNAME_CLASSES . '/Captcha/'
+            . camelcase($this->sclHandle) . 'Controller.php',
             $this->getPackageHandle()
         );
-        $cl = Core::make($class);
+        $app = Facade::getFacadeApplication();
+        $cl = $app->make($class);
 
         return $cl;
     }
