@@ -578,7 +578,7 @@ class Controller extends BlockController
                 @$mh->sendMail();
             }
             
-            //launch form submission event
+            //launch form submission event with dispatch method
             $formEventData = array();
             $formEventData['bID'] = intval($this->bID);
             $formEventData['questionSetID'] = $this->questionSetId;
