@@ -3,7 +3,7 @@ namespace Concrete\Core\Captcha;
 
 use Concrete\Core\Foundation\Object;
 use Concrete\Core\Package\PackageList;
-use Package;
+use Concrete\Core\Support\Facade\Package as PackageService;
 use Concrete\Core\Support\Facade\Facade;
 
 class Library extends Object
@@ -93,7 +93,7 @@ class Library extends Object
      */
     public function getPackageObject()
     {
-        return Package::getByID($this->pkgID);
+        return $this->pkgID ? PackageService::getByID($this->pkgID) : null;
     }
 
     /**
