@@ -108,6 +108,7 @@ __IDE_SYMBOLS__.php
 /web/concrete/js/select2.js
 /web/concrete/js/translator.js
 /web/concrete/js/textcounter.js
+/web/concrete/js/tree.js
 
 # CSS
 /web/concrete/css/select2.css
@@ -137,3 +138,4 @@ __IDE_SYMBOLS__.php
 /web/concrete/themes/dashboard/main.css
 /web/concrete/themes/elemental/css/bootstrap-modified.css
 /web/concrete/css/translator.css
+/web/concrete/css/build/vendor/bootstrap/bootstrap.css
