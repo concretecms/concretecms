@@ -3,6 +3,7 @@ namespace Concrete\Authentication\Facebook;
 
 defined('C5_EXECUTE') or die('Access Denied');
 
+use Concrete\Core\Authentication\Type\Facebook\Factory\FacebookServiceFactory;
 use Concrete\Core\Authentication\Type\OAuth\OAuth2\GenericOauth2TypeController;
 use OAuth\OAuth2\Service\Facebook;
 
@@ -34,7 +35,9 @@ class Controller extends GenericOauth2TypeController
     public function getService()
     {
         if (!$this->service) {
-            $this->service = \Core::make('authentication/facebook');
+            /** @var FacebookServiceFactory $factory */
+            $factory = $this->app->make(FacebookServiceFactory::class);
+            $this->service = $factory->createService();
         }
 
         return $this->service;
