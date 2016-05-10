@@ -47,7 +47,6 @@ class EntityManagerConfigFactory implements ApplicationAwareInterface, EntityMan
      */
     public function getConfiguration()
     {
-
         $driverChain = $this->getMetadataDriverImpl();
         // Inject the driverChain into the doctrine config
         $this->configuration->setMetadataDriverImpl($driverChain);
@@ -55,17 +54,18 @@ class EntityManagerConfigFactory implements ApplicationAwareInterface, EntityMan
     }
 
     /**
-     * Get cachedReader
+     * Get the cached annotation reader used by packages and core > c5 version 8.0.0
      * 
      * @return \Doctrine\Common\Annotations\CachedReader
      */
-    public function getSimpleAnnotationReader()
+    public function getCachedAnnotationReader()
     {
         return $this->app->make('orm/cachedAnnotationReader');
     }
 
     /**
-     * Get cachedReader
+     * Get cached legacy annotation reader used by packages requiring concrete5
+     * version lower than 8.0.0
      * 
      * @return \Doctrine\Common\Annotations\CachedReader
      */
@@ -92,18 +92,11 @@ class EntityManagerConfigFactory implements ApplicationAwareInterface, EntityMan
         // initiate the driver chain which will hold all driver instances
         $driverChain = $this->app->make('Doctrine\Common\Persistence\Mapping\Driver\MappingDriverChain');
 
-        // Create the annotation reader used by packages and core > c5 version 8.0.0
-        $this->cachedAnnotationReader = $this->app->make('orm/cachedAnnotationReader');
-
-        // Create legacy annotation reader used package requiring concrete5
-        // version lower than 8.0.0
-        $this->cachedSimpleAnnotationReader = $this->app->make('orm/cachedSimpleAnnotationReader');
-
         // Create Core annotationDriver
         $coreDirs = array(
             DIR_BASE_CORE.DIRECTORY_SEPARATOR.DIRNAME_CLASSES,
         );
-        $annotationDriver = new \Doctrine\ORM\Mapping\Driver\AnnotationDriver($this->cachedAnnotationReader,
+        $annotationDriver = new \Doctrine\ORM\Mapping\Driver\AnnotationDriver($this->getCachedAnnotationReader(),
             $coreDirs);
 
         // The default driver only kicks in, if no driver has been found for a specific namespace. 
@@ -144,7 +137,7 @@ class EntityManagerConfigFactory implements ApplicationAwareInterface, EntityMan
         $appDriverSettings = $this->app->make('config')->get(CONFIG_ORM_METADATA_APPLICATION);
 
         if (empty($appDriverSettings)) {
-            $annotationDriver = new \Doctrine\ORM\Mapping\Driver\AnnotationDriver($this->cachedAnnotationsReader, $appSrcPath);
+            $annotationDriver = new \Doctrine\ORM\Mapping\Driver\AnnotationDriver($this->getCachedAnnotationReader(), $appSrcPath);
             $driverChain->addDriver($annotationDriver, 'Application\Src');
         } else if ($appDriverSettings === \Package::PACKAGE_METADATADRIVER_XML || $appDriverSettings === 'xml') {
             $xmlDriver = new \Doctrine\ORM\Mapping\Driver\XmlDriver($xmlConfig);
@@ -182,7 +175,7 @@ class EntityManagerConfigFactory implements ApplicationAwareInterface, EntityMan
         // add Annotation drivers with "legacy" Annotation reader
         if (count($driverSettingsLegacy) > 0) {
             foreach ($driverSettingsLegacy as $setting) {
-                $simpleAnnotationDriver = new \Doctrine\ORM\Mapping\Driver\AnnotationDriver($this->cachedSimpleAnnotationReader,
+                $simpleAnnotationDriver = new \Doctrine\ORM\Mapping\Driver\AnnotationDriver($this->getCachedSimpleAnnotationReader(),
                     $setting['paths']);
                 $driverChain->addDriver($simpleAnnotationDriver,
                     $setting['namespace']);
@@ -192,7 +185,7 @@ class EntityManagerConfigFactory implements ApplicationAwareInterface, EntityMan
         // add Annotation drivers with normal Annotation reader -> Annotation prefixed with \ORM
         if (count($driverSettingsDefault) > 0) {
             foreach ($driverSettingsDefault as $setting) {
-                $annotationDriver = new \Doctrine\ORM\Mapping\Driver\AnnotationDriver($this->cachedAnnotationReader,
+                $annotationDriver = new \Doctrine\ORM\Mapping\Driver\AnnotationDriver($this->getCachedAnnotationReader(),
                     $setting['paths']);
                 $driverChain->addDriver($annotationDriver, $setting['namespace']);
             }
