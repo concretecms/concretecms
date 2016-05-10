@@ -12,6 +12,11 @@ class FileFolderResponse extends TreeNodeResponse
         return $this->validate('search_file_folder');
     }
 
+    public function canSearchFiles()
+    {
+        return $this->validate('search_file_folder');
+    }
+
     public function canDeleteTreeNode()
     {
         return $this->validate('delete_file_folder');
@@ -37,12 +42,15 @@ class FileFolderResponse extends TreeNodeResponse
         return $this->validate('edit_file_folder_permissions');
     }
 
-    /*
+    public function canAddFiles()
+    {
+        return $this->validate('add_file');
+    }
 
     /**
      * Returns all file extensions this user can add.
      */
-    /*public function getAllowedFileExtensions()
+    public function getAllowedFileExtensions()
     {
         $pk = $this->category->getPermissionKeyByHandle('add_file');
         $pk->setPermissionObject($this->object);
@@ -69,5 +77,4 @@ class FileFolderResponse extends TreeNodeResponse
 
         return $this->validate('delete_file_set');
     }
-    */
 }
