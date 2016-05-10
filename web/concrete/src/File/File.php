@@ -74,13 +74,13 @@ class File implements \Concrete\Core\Permission\ObjectInterface
     protected $uID = 0;
 
     /**
-     * @Column(type="integer", options={"unsigned": true})
+     * @ORM\Column(type="integer", options={"unsigned": true})
      */
     protected $folderTreeNodeID = 0;
 
     /**
-     * @ManyToOne(targetEntity="\Concrete\Core\File\StorageLocation\StorageLocation", inversedBy="files")
-     * @JoinColumn(name="fslID", referencedColumnName="fslID")
+     * @ORM\ManyToOne(targetEntity="\Concrete\Core\File\StorageLocation\StorageLocation", inversedBy="files")
+     * @ORM\JoinColumn(name="fslID", referencedColumnName="fslID")
      **/
     protected $storageLocation;
 
@@ -510,7 +510,7 @@ class File implements \Concrete\Core\Permission\ObjectInterface
         $f->folderTreeNodeID = $folder->getTreeNodeID();
 
 
-        $em = \ORM::entityManager('core');
+        $em = \ORM::entityManager();
         $em->persist($f);
         $em->flush();
 
