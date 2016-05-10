@@ -37,6 +37,13 @@ require $DIR_BASE_CORE . '/bootstrap/configure.php';
  */
 require $DIR_BASE_CORE . '/bootstrap/autoload.php';
 
+/**
+ * Create PSR4 test namespace
+ */
+$loader = new \Symfony\Component\ClassLoader\Psr4ClassLoader();
+$loader->addPrefix("Concrete\\Tests\\", __DIR__);
+$loader->register();
+
 $r = new \Concrete\Core\Http\Request(
     array(),
     array(),
