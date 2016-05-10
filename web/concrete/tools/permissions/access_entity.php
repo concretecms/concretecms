@@ -122,8 +122,6 @@ if ($_POST['task'] == 'save_permissions') {
 
 <h4><?=t('Time Settings')?></h4>
 
-<p><?=t('How long will this permission be valid for?')?></p>
-
 <?=Loader::element('permission/duration', array('pd' => $pd));
     ?>
 

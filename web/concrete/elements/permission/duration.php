@@ -48,6 +48,7 @@ $pdRepeatPeriodMonthsEvery = 1;
 $pdRepeatPeriodMonthsRepeatBy = 'month';
 $pdEndRepeatDateSpecific = false;
 $pdEndRepeatDate = '';
+$pdEnablePermissionDuration = false;
 
 $now = $service->toDateTime('now', 'user');
 $currentHour = $now->format('g');
@@ -62,6 +63,7 @@ if ($currentMinutes > 29) {
 $selectedEndTime = null;
 
 if (is_object($pd)) {
+    $pdEnablePermissionDuration = true;
     $pdStartDate = $pd->getStartDate();
     $pdEndDate = $pd->getEndDate();
     $selectedStartTime = date('g:ia', strtotime($pdStartDate));
@@ -167,18 +169,28 @@ for ($i = 0; $i < count($values); $i++) {
 
 ?>
 
+<div class="">
+    <div class="checkbox">
+    <label>
+        <?=$form->checkbox('pdEnablePermissionDuration', 1, $pdEnablePermissionDuration)?>
+        <?=t('Make this permission available during custom dates and times.')?>
+    </label>
+</div>
+
+<div id="ccm-permission-access-entity-time-settings-wrapper">
+
 <div id="ccm-permissions-access-entity-dates">
 
     <div class="form-inline">
         <div class="form-group">
-            <?= $dt->date('pdStartDate', $pdStartDate, true); ?>
+            <?= $dt->date('pdStartDate', $pdStartDate); ?>
         </div>
         <div class="form-group" id="pdStartDate_tw">
             <input type="hidden" data-select="time" name="pdStartDateSelectTime" style="" value="<?=$selectedStartTime?>"/>
         </div>
         <div class="form-inline-separator"><i class="fa fa-long-arrow-right"></i></div>
         <div class="form-group">
-            <?= $dt->date('pdEndDate', $pdEndDate, true); ?>
+            <?= $dt->date('pdEndDate', $pdEndDate); ?>
         </div>
         <div class="form-group" id="pdEndDate_tw">
             <input type="hidden" data-select="time" name="pdEndDateSelectTime" style="" value="<?=$selectedEndTime?>"/>
@@ -209,6 +221,13 @@ for ($i = 0; $i < count($values); $i++) {
     <script type="text/javascript">
         $(function () {
 
+            $('input[name=pdEnablePermissionDuration]').on('change', function() {
+               if ($(this).is(':checked')) {
+                   $('#ccm-permission-access-entity-time-settings-wrapper').show();
+               } else {
+                   $('#ccm-permission-access-entity-time-settings-wrapper').hide();
+               }
+            }).trigger('change');
             // Any time the start date is changed, change the end date date to that date.
 
             $('input[data-select=time]').select2({
@@ -419,6 +438,10 @@ for ($i = 0; $i < count($values); $i++) {
 </div>
 
 </div>
+
+</div>
+
+
 <script type="text/javascript">
 
     ccm_getSelectedStartDate = function() {

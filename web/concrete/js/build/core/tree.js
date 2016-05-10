@@ -10,6 +10,7 @@
 			chooseNodeInForm: false,
 			onSelect: false,
 			treeID: false,
+			onClick: false,
 			allowFolderSelection: true,
 			selectNodesByKey: [],
 			removeNodesByKey: [],
@@ -164,6 +165,10 @@
 					}
 				},
 				onClick: function(node, e) {
+
+					if (options.onClick) {
+						return options.onClick(node, e);
+					}
 
 					if (node.getEventTargetType(e) == 'expander') {
 						return true;
