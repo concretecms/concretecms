@@ -159,8 +159,15 @@ abstract class Control extends Object
         if (!$args) {
             $args = $_POST;
         }
+        $result = null;
+        if (isset($args['ptComposer'])) {
+            $lscID = $this->ptComposerFormLayoutSetControlObject->getPageTypeComposerFormLayoutSetControlID();
+            if (isset($args['ptComposer'][$lscID])) {
+                $result = $args['ptComposer'][$lscID];
+            }
+        }
 
-        return $args['ptComposer'][$this->ptComposerFormLayoutSetControlObject->getPageTypeComposerFormLayoutSetControlID()];
+        return $result;
     }
 
     /**
