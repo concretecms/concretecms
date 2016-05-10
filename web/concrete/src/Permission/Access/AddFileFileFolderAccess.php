@@ -1,13 +1,13 @@
 <?php
 namespace Concrete\Core\Permission\Access;
 
-use Concrete\Core\Permission\Key\FileSetKey as FileSetPermissionKey;
+use Concrete\Core\Permission\Key\FileFolderKey;
 use Database;
 
 class AddFileFileFolderAccess extends FileFolderAccess
 {
     public function getAccessListItems(
-        $accessType = FileSetPermissionKey::ACCESS_TYPE_INCLUDE,
+        $accessType = FileFolderKey::ACCESS_TYPE_INCLUDE,
         $filterEntities = array()
     ) {
         $db = Database::connection();

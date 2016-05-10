@@ -324,7 +324,7 @@
 		if (cs._templateSearchForm) {
 			cs.$element.find('[data-search-element=wrapper]').html(cs._templateSearchForm());
 		}
-		$('form[data-search-form]').on('submit', function() {
+		cs.$element.on('submit', 'form[data-search-form]', function() {
 			var data = $(this).serializeArray();
 			data.push({'name': 'submitSearch', 'value': '1'});
 			cs.ajaxUpdate($(this).attr('action'), data);
