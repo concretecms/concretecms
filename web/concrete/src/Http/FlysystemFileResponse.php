@@ -1,8 +1,8 @@
 <?php
 namespace Concrete\Core\Http;
 
-use Concrete\Flysystem\File;
-use Concrete\Flysystem\FilesystemInterface;
+use League\Flysystem\File;
+use League\Flysystem\FilesystemInterface;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 
 /**
