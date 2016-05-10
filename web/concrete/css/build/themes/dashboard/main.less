@@ -63,12 +63,14 @@ div#ccm-dashboard-content {
     margin-left: -97px;
     margin-right: -50px;
     margin-bottom: 30px;
-    padding: 34px 80px 34px 97px;
+    padding: 39px 80px 0px 97px;
+    min-height: 103px;
     position: relative;
 
     h1 {
       font-size: 22px;
       font-weight: 600;
+      display: inline-block;
       margin-top: 0px;
       margin-bottom: 0px;
       color: #105192;
@@ -84,7 +86,7 @@ div#ccm-dashboard-content {
     a.ccm-dashboard-page-header-bookmark {
       position: absolute;
       left: 72px;
-      top: 37px;
+      top: 41px;
       color: rgba(16,81,146,0.3);
       &:focus {
         outline: none;
@@ -136,8 +138,15 @@ div#ccm-dashboard-content {
 
   div.ccm-dashboard-header-buttons {
     position: absolute;
-    top: 85px;
+    top: 82px;
     right: 50px;
+
+  }
+
+  header {
+    div.ccm-dashboard-header-buttons {
+      top: 35px;
+    }
 
   }
 
@@ -158,6 +167,8 @@ div#ccm-dashboard-content {
 div#ccm-dashboard-content {
   div.ccm-notification-help-launcher {
 
+    top: 31px;
+
     html.ccm-panel-open.ccm-panel-right & {
       .translate(0, 0);
     }
@@ -169,6 +180,7 @@ div#ccm-dashboard-content {
 
   div.ccm-notification-help {
     position: absolute;
+    top: 31px;
     z-index: @index-level-dashboard-help;
     html.ccm-panel-open.ccm-panel-right & {
       .translate(0, 0);

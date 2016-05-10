@@ -146,6 +146,9 @@
                 posX = e.pageX + 2,
                 posY = e.pageY + 2;
 
+            $menu.on('contextmenu', function() {
+                return false;
+            });
             e.stopPropagation();
             $highlighter.removeClass();
             my.positionAt($highlighter, $launcher);

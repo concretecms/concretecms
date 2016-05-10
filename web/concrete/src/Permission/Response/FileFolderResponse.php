@@ -4,27 +4,47 @@ namespace Concrete\Core\Permission\Response;
 use User;
 use FileSet;
 
-class FileSetResponse extends Response
+class FileFolderResponse extends TreeNodeResponse
 {
+
+    public function canViewTreeNode()
+    {
+        return $this->validate('search_file_folder');
+    }
+
     public function canSearchFiles()
     {
-        return $this->validate('search_file_set');
+        return $this->validate('search_file_folder');
     }
-    public function canRead()
+
+    public function canDeleteTreeNode()
     {
-        return $this->validate('view_file_set_file');
+        return $this->validate('delete_file_folder');
     }
-    public function canWrite()
-    {
-        return $this->validate('edit_file_set_file');
-    }
-    public function canAddFiles()
+
+    public function canAddTreeSubNode()
     {
         return $this->validate('add_file');
     }
-    public function canAccessFileManager()
+
+    public function canDuplicateTreeNode()
     {
-        return $this->validate('search_file_set');
+        return false;
+    }
+
+    public function canEditTreeNode()
+    {
+        return $this->validate('edit_file_folder');
+    }
+
+    public function canEditTreeNodePermissions()
+    {
+        return $this->validate('edit_file_folder_permissions');
+    }
+
+    public function canAddFiles()
+    {
+        return $this->validate('add_file');
     }
 
     /**

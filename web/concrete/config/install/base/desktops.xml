@@ -136,4 +136,14 @@
             </area>
         </page>
     </singlepages>
+
+    <pages>
+    <page name="Waiting for Me" path="/dashboard/welcome/me" filename="" pagetype="" template="desktop" description="" package="">
+        <area name="Main">
+            <blocks>
+                <block type="desktop_waiting_for_me" />
+            </blocks>
+        </area>
+    </page>
+    </pages>
 </concrete5-cif>

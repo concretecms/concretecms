@@ -4,15 +4,15 @@
 
     <fieldset>
         <div class="form-group">
-            <label for="name"><?=t('Name')?></label>
+            <label for="name" class="control-label"><?=t('Name')?></label>
             <?=$form->text('name')?>
         </div>
         <div class="form-group">
-            <label for="name"><?=t('Handle')?></label>
+            <label for="name" class="control-label"><?=t('Handle')?></label>
             <?=$form->text('handle')?>
         </div>
         <div class="form-group">
-            <label for="name"><?=t('Description')?></label>
+            <label for="name" class="control-label"><?=t('Description')?></label>
             <?=$form->textarea('description', array('rows' => 5))?>
         </div>
     </fieldset>

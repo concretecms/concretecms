@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Legacy;
 
+use Concrete\Core\File\Filesystem;
 use FileSet;
 use Permissions;
 
@@ -11,9 +12,8 @@ final class FilePermissions
 {
     public static function getGlobal()
     {
-        $fs = FileSet::getGlobal();
-        $fsp = new Permissions($fs);
-
+        $filesystem = new Filesystem();
+        $fsp = new Permissions($filesystem->getRootFolder());
         return $fsp;
     }
 }

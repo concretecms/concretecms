@@ -2714,30 +2714,6 @@
     </index>
   </table>
 
-  <table name="FileSetPermissionAssignments">
-    <field name="fsID" type="integer" size="10">
-      <unsigned/>
-      <key/>
-      <default value="0"/>
-    </field>
-    <field name="pkID" type="integer" size="10">
-      <unsigned/>
-      <key/>
-      <default value="0"/>
-    </field>
-    <field name="paID" type="integer" size="10">
-      <unsigned/>
-      <key/>
-      <default value="0"/>
-    </field>
-    <index name="paID">
-      <col>paID</col>
-    </index>
-    <index name="pkID">
-      <col>pkID</col>
-    </index>
-  </table>
-
   <table name="ConversationPermissionAssignments">
     <field name="cnvID" type="integer" size="10">
       <unsigned/>
@@ -2804,7 +2780,7 @@
     </index>
   </table>
 
-  <table name="FileSetPermissionFileTypeAccessList">
+  <table name="FilePermissionFileTypeAccessList">
     <field name="paID" type="integer" size="10">
       <unsigned/>
       <key/>
@@ -2824,7 +2800,7 @@
     </index>
   </table>
 
-  <table name="FileSetPermissionFileTypeAccessListCustom">
+  <table name="FilePermissionFileTypeAccessListCustom">
     <field name="paID" type="integer" size="10">
       <unsigned/>
       <key/>
@@ -4649,7 +4625,12 @@
     <field name="treeNodeName" type="string" size="255">
       <default value=""/>
     </field>
-
+    <field name="dateModified" type="datetime">
+      <unsigned/>
+    </field>
+    <field name="dateCreated" type="datetime">
+      <unsigned/>
+    </field>
     <field name="treeNodeOverridePermissions" type="boolean">
       <unsigned/>
       <default value="0"/>
@@ -4709,6 +4690,34 @@
     </field>
     <index name="gID">
       <col>gID</col>
+    </index>
+  </table>
+
+  <table name="TreeFileNodes">
+    <field name="treeNodeID" type="integer" size="11">
+      <unsigned/>
+      <autoincrement/>
+      <key/>
+    </field>
+    <field name="fID" type="integer" size="11">
+      <unsigned/>
+      <default value="0"/>
+    </field>
+    <index name="fID">
+      <col>fID</col>
+    </index>
+  </table>
+
+  <table name="TreeSearchQueryNodes">
+    <field name="treeNodeID" type="integer" size="11">
+      <unsigned/>
+      <autoincrement/>
+      <key/>
+    </field>
+    <field name="savedSearchID" type="string">
+    </field>
+    <index name="savedSearchID">
+      <col>savedSearchID</col>
     </index>
   </table>
 

@@ -2,7 +2,15 @@
 namespace Concrete\Core\Tree\Node;
 
 use Concrete\Core\Foundation\Object;
+use Concrete\Core\Permission\Access\Access;
+use Concrete\Core\Permission\Access\Entity\GroupCombinationEntity;
+use Concrete\Core\Permission\Access\Entity\GroupEntity;
+use Concrete\Core\Permission\Access\Entity\UserEntity;
+use Concrete\Core\Permission\Key\Key;
+use Concrete\Core\Permission\Key\TreeNodeKey;
 use Concrete\Core\Tree\Tree;
+use Concrete\Core\User\User;
+use Concrete\Core\User\UserInfo;
 use Loader;
 use Concrete\Core\Tree\Node\NodeType as TreeNodeType;
 use PermissionKey;
@@ -67,6 +75,16 @@ abstract class Node extends Object implements \Concrete\Core\Permission\ObjectIn
     public function setTree(Tree $tree)
     {
         $this->tree = $tree;
+    }
+
+    public function getDateLastModified()
+    {
+        return $this->dateModified;
+    }
+
+    public function getDateCreated()
+    {
+        return $this->dateCreated;
     }
 
     public function getTreeObject()
@@ -184,6 +202,11 @@ abstract class Node extends Object implements \Concrete\Core\Permission\ObjectIn
         return null;
     }
 
+    public function getJSONObject()
+    {
+        return $this->getTreeNodeJSON();
+    }
+
     public function getTreeNodeJSON()
     {
         $p = new Permissions($this);
@@ -274,6 +297,44 @@ abstract class Node extends Object implements \Concrete\Core\Permission\ObjectIn
         $this->populateDirectChildrenOnly();
         foreach ($this->getChildNodes() as $childnode) {
             $childnode->duplicate($node);
+        }
+    }
+
+    public function assignPermissions(
+        $userOrGroup,
+        $permissions = array(),
+        $accessType = TreeNodeKey::ACCESS_TYPE_INCLUDE
+    ) {
+        if (!$this->overrideParentTreeNodePermissions()) {
+            $this->setTreeNodePermissionsToOverride();
+        }
+
+        if (is_array($userOrGroup)) {
+            $pe = GroupCombinationEntity::getOrCreate($userOrGroup);
+            // group combination
+        } else {
+            if ($userOrGroup instanceof User || $userOrGroup instanceof UserInfo) {
+                $pe = UserEntity::getOrCreate($userOrGroup);
+            } else {
+                // group;
+                $pe = GroupEntity::getOrCreate($userOrGroup);
+            }
+        }
+
+        foreach ($permissions as $pkHandle) {
+            $pk = Key::getByHandle($pkHandle);
+            $pk->setPermissionObject($this);
+            $pa = $pk->getPermissionAccessObject();
+            if (!is_object($pa)) {
+                $pa = Access::create($pk);
+            } else {
+                if ($pa->isPermissionAccessInUse()) {
+                    $pa = $pa->duplicate();
+                }
+            }
+            $pa->addListItem($pe, false, $accessType);
+            $pt = $pk->getPermissionAssignmentObject();
+            $pt->assignPermissionAccess($pa);
         }
     }
 
@@ -405,10 +466,12 @@ abstract class Node extends Object implements \Concrete\Core\Permission\ObjectIn
         }
         $treeNodeTypeHandle = Loader::helper('text')->uncamelcase(strrchr(get_called_class(), '\\'));
 
+        $dateModified = Core::make('date')->toDB();
+        $dateCreated = Core::make('date')->toDB();
+
         $type = TreeNodeType::getByHandle($treeNodeTypeHandle);
-        $db->Execute('insert into TreeNodes (treeNodeTypeID, treeNodeParentID, treeNodeDisplayOrder, inheritPermissionsFromTreeNodeID, treeID) values (?, ?, ?, ?, ?)', array(
-            $type->getTreeNodeTypeID(), $treeNodeParentID, $treeNodeDisplayOrder, $inheritPermissionsFromTreeNodeID, $treeID,
-        ));
+        $db->Execute('insert into TreeNodes (treeNodeTypeID, treeNodeParentID, treeNodeDisplayOrder, inheritPermissionsFromTreeNodeID, dateModified, dateCreated, treeID) values (?, ?, ?, ?, ?, ?, ?)', array(
+            $type->getTreeNodeTypeID(), $treeNodeParentID, $treeNodeDisplayOrder, $inheritPermissionsFromTreeNodeID, $dateModified, $dateCreated, $treeID));
         $id = $db->Insert_ID();
         $node = self::getByID($id);
 

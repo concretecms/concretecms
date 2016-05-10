@@ -26,7 +26,7 @@ class GroupMenu extends Menu
             $this->addItem(new EditPermissionsItem($group));
         }
         if ($p->canDeleteTreeNode()) {
-            $this->addItem(new DeleteItem($topic));
+            $this->addItem(new DeleteItem($group));
         }
     }
 

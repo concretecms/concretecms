@@ -1,0 +1,117 @@
+.ccm-ui {
+  label.control-label {
+    font-size: 10px;
+    color: #999;
+    text-transform: uppercase;
+  }
+
+  fieldset {
+    margin-bottom: 0px;
+  }
+
+  div.form-group-highlight {
+    background-color: #e7e7e7;
+    margin-left: -26px;
+    margin-right: -26px;
+    padding-left: 26px;
+    padding-right: 26px;
+    padding-bottom: 8px;
+    padding-top: 10px;
+    margin-bottom: 10px;
+
+    select.form-control,
+    input.form-control,
+    textarea.form-control {
+      &:focus {
+        background-color: #ffffff !important;
+      }
+
+      &:hover {
+        background-color: #ffffff !important;
+      }
+    }
+
+  }
+
+  div.form-group {
+
+    position: relative;
+
+    select.form-control,
+    input.form-control,
+    textarea.form-control {
+      .transition(0.1s all linear);
+      box-shadow: none;
+      padding: 4px;
+      margin-left: -5px;
+      font-size: 18px;
+      background-color: transparent;
+      .border-radius(4px);
+      -webkit-appearance: none;
+      appearance: none;
+      -moz-appearance: none;
+      /*
+      border: 1px solid #f1f1f1;
+      */
+      border: 1px solid transparent;
+      &:focus {
+        outline: 0px;
+        /*
+        background-color: #ededed !important;
+        border-color: #ccc;
+        */
+        border-color: transparent
+      }
+
+      &:hover {
+        border-color: #ccc;
+      }
+
+    }
+
+    select.form-control {
+
+      background: #fff url(../images/icons/select_arrow_down.png) no-repeat right 15px top 10px;
+    }
+
+    hr {
+      border-color: #e7e7e7;
+      margin-top: 10px;
+      margin-left: -26px;
+      margin-right: -26px;
+      margin-bottom: 10px;
+    }
+
+    div.select2-container {
+
+      a.select2-choice {
+        border-width: 0px;
+        box-shadow: none;
+        font-size: 18px;
+        padding: 0px;
+        height: auto;
+
+        .select2-chosen {
+          margin-right: 0px;
+          padding: 0px;
+        }
+
+        span.select2-arrow {
+          display: none;
+        }
+
+        &:hover {
+          text-decoration: none;
+          outline: none;
+          color: #555;
+        }
+      }
+    }
+  }
+
+  div.form-inline {
+    div.form-group {
+      margin-left: 0px;
+    }
+  }
+}

@@ -14,6 +14,14 @@ $this->inc('elements/header.php');
         </a>
     <?php } ?>
     <h1><?=(isset($pageTitle) && $pageTitle) ? t($pageTitle) : '&nbsp;' ?></h1>
+    <?
+    echo Core::make('helper/concrete/ui/help')->display('dashboard', $c->getCollectionPath());
+
+    if (isset($headerMenu) && $headerMenu instanceof \Concrete\Core\Controller\ElementController) {
+        $headerMenu->render();
+    }
+
+    ?>
 </header>
 
 <?php
@@ -56,15 +64,10 @@ if (isset($message)) {
 
 echo $innerContent;
 
-echo Core::make('helper/concrete/ui/help')->display('dashboard', $c->getCollectionPath());
-
-if (isset($headerMenu) && $headerMenu instanceof \Concrete\Core\Controller\ElementController) {
-    $headerMenu->render();
-}
+echo '<div class="ccm-search-results-breadcrumb">'; // We output the DIV even if it's empty because some pages might add to it via javascript
 
 if (isset($breadcrumb) && (!empty($breadcrumb))) {
     ?>
-    <div class="ccm-search-results-breadcrumb">
         <ol class="breadcrumb">
             <?php
             foreach ($breadcrumb as $value) {
@@ -96,8 +99,9 @@ if (isset($breadcrumb) && (!empty($breadcrumb))) {
             }
             ?>
         </ol>
-    </div>
     <?php
 }
+
+echo '</div>';
 
 $this->inc('elements/footer.php');

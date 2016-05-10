@@ -4,12 +4,12 @@
 <?php
 
 $enablePermissions = false;
-if (!$f->overrideFileSetPermissions()) {
+if (!$f->overrideFileFolderPermissions()) {
     ?>
 
 	<div class="alert alert-notice">
 	<p>
-	<?=t("Permissions for this file are currently dependent on file sets and global file permissions.")?>
+	<?=t("Permissions for this file are currently dependent on its folder and global file permissions.")?>
 	</p>
 	<br/>
 	<a href="javascript:void(0)" class="btn btn-default btn-sm" onclick="ccm_setFilePermissionsToOverride()"><?=t('Override Permissions')?></a>
@@ -23,7 +23,7 @@ if (!$f->overrideFileSetPermissions()) {
 	<div class="alert alert-notice">
 	<p><?=t("Permissions for this file currently override its sets and the global file permissions.")?></p>
 	<br/>
-	<a href="javascript:void(0)" class="btn btn-default btn-sm" onclick="ccm_revertToGlobalFilePermissions()"><?=t('Revert to File Set and Global Permissions')?></a>
+	<a href="javascript:void(0)" class="btn btn-default btn-sm" onclick="ccm_revertToGlobalFilePermissions()"><?=t('Revert to Folder and Global Permissions')?></a>
 	</div>
 
 <?php 
@@ -91,7 +91,7 @@ ccm_permissionLaunchDialog = function(link) {
 	jQuery.fn.dialog.open({
 		title: $(link).attr('dialog-title'),
 		href: '<?=REL_DIR_FILES_TOOLS_REQUIRED?>/permissions/dialogs/file?duplicate=' + dupe + '&fID=<?=$f->getFileID()?>&pkID=' + $(link).attr('data-pkID') + '&paID=' + $(link).attr('data-paID'),
-		modal: false,
+		modal: true,
 		width: 500,
 		height: 380
 	});		

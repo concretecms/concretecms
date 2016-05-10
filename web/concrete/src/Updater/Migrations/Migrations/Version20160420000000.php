@@ -58,7 +58,7 @@ class Version20160420000000 extends AbstractMigration
     {
         // Add tables for new entities or moved entities
         $sm = \Core::make('Concrete\Core\Database\DatabaseStructureManager');
-        $entities = array();
+        $entities = array('Concrete\Core\File\File');
 
         // Now we fill the rest of the class names recursively from the entity directory, since it's
         // entirely new
