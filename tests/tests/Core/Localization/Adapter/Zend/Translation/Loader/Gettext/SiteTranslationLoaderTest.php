@@ -30,9 +30,11 @@ class SiteTranslationLoaderTest extends PHPUnit_Framework_TestCase
 
         $filesystem = new Filesystem();
         if (!$filesystem->isWritable(DIR_APPLICATION)) {
-            throw new Exception("Cannot write to the application directory for the testing purposes. Please check permissions!");
+            return self::markTestSkipped(
+                "Cannot write to the application directory for the testing purposes. Please check permissions!");
         } elseif ($filesystem->exists(DIR_APPLICATION . '/languages')) {
-            throw new Exception("The languages directory already exists in the application folder. It should not exist for the testing purposes.");
+            return self::markTestSkipped(
+                "The languages directory already exists in the application folder. It should not exist for the testing purposes.");
         }
 
         $langDir = __DIR__ . '/fixtures/' . DIRNAME_LANGUAGES . '/site';
