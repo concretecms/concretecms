@@ -14,6 +14,7 @@ use FileSet;
 use File;
 use Config;
 use Concrete\Core\File\Version;
+use Events;
 
 class Controller extends BlockController
 {
@@ -586,7 +587,7 @@ class Controller extends BlockController
             $formEventData['questionAnswerPairs'] = $questionAnswerPairs;
             $event = new \Symfony\Component\EventDispatcher\GenericEvent();
             $event->setArgument('formData', $formEventData);
-            Events::fire('on_form_submission', $event);
+            Events::dispatch('on_form_submission', $event);
 
             if (!$this->noSubmitFormRedirect) {
                 $targetPage = null;
