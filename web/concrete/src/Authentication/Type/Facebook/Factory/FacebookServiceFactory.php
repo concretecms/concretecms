@@ -68,7 +68,7 @@ class FacebookServiceFactory implements ApplicationAwareInterface
         $storage = new SymfonySession($this->session, false);
 
         // Create the service using the oauth service factory
-        return $factory->createService('facebook', $credentials, $storage);
+        return $factory->createService('facebook', $credentials, $storage, ['email']);
     }
 
 }
