@@ -1,18 +1,17 @@
 <?php
 namespace Concrete\Core\File\StorageLocation;
-use Concrete\Core\File\StorageLocation\Configuration\Configuration;
+
 use Concrete\Core\File\StorageLocation\Configuration\ConfigurationInterface;
 use Database;
-use Core;
+
 /**
  * @Entity
  * @Table(name="FileStorageLocations")
  */
 class StorageLocation
 {
-
     /**
-     * @Column(type="text")
+     * @Column(type="string")
      */
     protected $fslName;
 
@@ -22,10 +21,15 @@ class StorageLocation
     protected $fslConfiguration;
 
     /**
-     * @Id @Column(type="integer")
+     * @Id @Column(type="integer", options={"unsigned": true})
      * @GeneratedValue
      */
     protected $fslID;
+
+    /**
+     * @OneToMany(targetEntity="\Concrete\Core\File\File", mappedBy="storageLocation")
+     **/
+    protected $files;
 
     /**
      * @Column(type="boolean")
@@ -43,15 +47,16 @@ class StorageLocation
     }
 
     /** Returns the display name for this storage location (localized and escaped accordingly to $format)
-    * @param string $format = 'html'
-    *    Escape the result in html format (if $format is 'html').
-    *    If $format is 'text' or any other value, the display name won't be escaped.
-    * @return string
-    */
+     * @param string $format = 'html'
+     *    Escape the result in html format (if $format is 'html').
+     *    If $format is 'text' or any other value, the display name won't be escaped.
+     *
+     * @return string
+     */
     public function getDisplayName($format = 'html')
     {
         $value = tc('StorageLocationName', $this->getName());
-        switch($format) {
+        switch ($format) {
             case 'html':
                 return h($value);
             case 'text':
@@ -92,6 +97,7 @@ class StorageLocation
     {
         $configuration = $this->getConfigurationObject();
         $type = $configuration->getTypeObject();
+
         return $type;
     }
 
@@ -120,6 +126,7 @@ class StorageLocation
     {
         $em = \ORM::entityManager('core');
         $r = $em->find('\Concrete\Core\File\StorageLocation\StorageLocation', intval($id));
+
         return $r;
     }
     /**
@@ -140,20 +147,23 @@ class StorageLocation
     {
         $em = \ORM::entityManager('core');
         $location = $em->getRepository('\Concrete\Core\File\StorageLocation\StorageLocation')->findOneBy(
-            array('fslIsDefault' => true
+            array('fslIsDefault' => true,
             ));
+
         return $location;
     }
 
     /**
      * Returns the proper file system object for the current storage location, by mapping
-     * it through Flysystem
-     * @return \Concrete\Flysystem\Filesystem
+     * it through Flysystem.
+     *
+     * @return \League\Flysystem\Filesystem
      */
     public function getFileSystemObject()
     {
         $adapter = $this->fslConfiguration->getAdapter();
-        $filesystem = new \Concrete\Flysystem\Filesystem($adapter);
+        $filesystem = new \League\Flysystem\Filesystem($adapter);
+
         return $filesystem;
     }
 
@@ -163,7 +173,7 @@ class StorageLocation
         $db = Database::get();
 
         $fIDs = $db->GetCol('select fID from Files where fslID = ?', array($this->getID()));
-        foreach($fIDs as $fID) {
+        foreach ($fIDs as $fID) {
             $file = \File::getByID($fID);
             if (is_object($file)) {
                 $file->setFileStorageLocation($default);
@@ -189,5 +199,4 @@ class StorageLocation
 
         $em->flush();
     }
-
 }

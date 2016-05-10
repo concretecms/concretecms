@@ -1,4 +1,4 @@
-<?
+<?php
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
@@ -12,5 +12,3 @@ You must click the following URL in order to activate your account for %s:
 Thanks for your interest in %s
 
 ", $site, View::url('/login', 'callback', 'concrete', 'v', $uHash), $site);
-
-?>

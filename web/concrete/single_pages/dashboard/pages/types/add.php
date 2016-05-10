@@ -1,4 +1,4 @@
-<? defined('C5_EXECUTE') or die("Access Denied."); ?>
+<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
 
 <form method="post" action="<?=$view->action('submit')?>">
 <div class="ccm-pane-body">

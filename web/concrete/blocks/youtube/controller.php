@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Block\Youtube;
 
 use Concrete\Core\Block\BlockController;
@@ -13,7 +12,7 @@ class Controller extends BlockController
     protected $btCacheBlockOutput = true;
     protected $btCacheBlockOutputOnPost = true;
     protected $btCacheBlockOutputForRegisteredUsers = false;
-    
+
     /**
      * Used for localization. If we want to localize the name/description we have to include this.
      */
@@ -36,9 +35,9 @@ class Controller extends BlockController
 
     public function view()
     {
-        $url       = parse_url($this->videoURL);
+        $url = parse_url($this->videoURL);
         $pathParts = explode('/', rtrim($url['path'], '/'));
-        $videoID   = end($pathParts);
+        $videoID = end($pathParts);
         $playListID = '';
 
         if (isset($url['query'])) {
@@ -77,7 +76,7 @@ class Controller extends BlockController
         $args['sizing'] = $data['sizing'];
         $args['controls'] = $data['controls'] ? 1 : 0;
 
-        if ($data['sizing'] !='fixed') {
+        if ($data['sizing'] != 'fixed') {
             $args['vHeight'] = '';
             $args['vWidth'] = '';
         }

@@ -1,10 +1,8 @@
 <?php
-
 namespace Concrete\Core\Updater;
 
 class RemoteApplicationUpdateFactory
 {
-
     public static function getFromJSON($json)
     {
         $o = json_decode($json);

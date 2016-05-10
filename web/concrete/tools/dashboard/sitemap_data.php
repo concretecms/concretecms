@@ -64,4 +64,4 @@ if (isset($_REQUEST['displaySingleLevel']) && $_REQUEST['displaySingleLevel']) {
     }
     $nodes = $dh->getSubNodes($cParentID);
 }
-print Core::make('helper/json')->encode($nodes);
+echo Core::make('helper/json')->encode($nodes);

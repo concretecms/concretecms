@@ -13,12 +13,14 @@ defined('C5_EXECUTE') or die("Access Denied.");
             </label>
         </div>
         <?php
-        if (Config::get('concrete.seo.url_rewriting')) { ?>
+        if (Config::get('concrete.seo.url_rewriting')) {
+            ?>
             <div class="form-group">
                 <label class="control-label"><?=t('Code for your .htaccess file')?></label>
                 <textarea rows="8" class="form-control" onclick="this.select()"><?=$strRules?></textarea>
             </div>
-        <? } ?>
+        <?php 
+        } ?>
     </fieldset>
 
     <fieldset>

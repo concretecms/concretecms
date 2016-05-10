@@ -12,22 +12,22 @@ use Concrete\Core\Foundation\Service\Provider as ServiceProvider;
 
 class ContentImporterServiceProvider extends ServiceProvider
 {
-
     public function register()
     {
         $this->app->bind(
             'import/value_inspector/core',
-            function($app) {
+            function ($app) {
                 $inspector = new ValueInspector();
+
                 return $inspector;
             }
         );
 
         $this->app->bindshared(
             'import/value_inspector',
-            function($app) {
-                /**
-                 * @var $inspector \Concrete\Core\Backup\ContentImporter\ValueInspector\ValueInspector
+            function ($app) {
+                /*
+                 * @var \Concrete\Core\Backup\ContentImporter\ValueInspector\ValueInspector
                  */
                 $inspector = $app->make('import/value_inspector/core');
                 $inspector->registerInspectionRoutine(new PageRoutine());
@@ -36,10 +36,9 @@ class ContentImporterServiceProvider extends ServiceProvider
                 $inspector->registerInspectionRoutine(new PageFeedRoutine());
                 $inspector->registerInspectionRoutine(new PageTypeRoutine());
                 $inspector->registerInspectionRoutine(new ImageRoutine());
+
                 return $inspector;
             }
         );
-
     }
-
 }

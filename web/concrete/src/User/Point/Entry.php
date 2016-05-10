@@ -2,12 +2,11 @@
 namespace Concrete\Core\User\Point;
 
 use Loader;
-use \Concrete\Core\User\UserInfo;
-use \Concrete\Core\User\Point\Action\Action as UserPointAction;
+use Concrete\Core\User\UserInfo;
+use Concrete\Core\User\Point\Action\Action as UserPointAction;
 
 class Entry
 {
-
     public $upID;
     public $upuID;
     public $upaID = 0;
@@ -38,7 +37,7 @@ class Entry
                 'upaID' => $this->upaID,
                 'object' => $this->object,
                 'upPoints' => $this->upPoints,
-                'timestamp' => date('Y-m-d H:i:s')
+                'timestamp' => date('Y-m-d H:i:s'),
             ), array('upID' => $this->upID));
         } else {
             $db->insert('UserPointHistory', array(
@@ -47,7 +46,7 @@ class Entry
                 'object' => $this->object,
                 'upaID' => $this->upaID,
                 'upPoints' => $this->upPoints,
-                'timestamp' => date('Y-m-d H:i:s')
+                'timestamp' => date('Y-m-d H:i:s'),
             ));
         }
     }
@@ -58,32 +57,32 @@ class Entry
         $db->delete('UserPointHistory', array('upID' => $this->upID));
     }
 
-    public function    getUserPointEntryID()
+    public function getUserPointEntryID()
     {
         return $this->upID;
     }
 
-    public function    getUserPointEntryActionID()
+    public function getUserPointEntryActionID()
     {
         return $this->upaID;
     }
 
-    public function    getUserPointEntryActionObject()
+    public function getUserPointEntryActionObject()
     {
         return UserPointAction::getByID($this->getUserPointEntryActionID());
     }
 
-    public function    getUserPointEntryValue()
+    public function getUserPointEntryValue()
     {
         return $this->upPoints;
     }
 
-    public function    getUserPointEntryTimestamp()
+    public function getUserPointEntryTimestamp()
     {
         return $this->timestamp;
     } // - returns unix timestamp stored in the timestamp column
 
-    public function    getUserPointEntryDateTime()
+    public function getUserPointEntryDateTime()
     {
         return $this->timestamp;
     } // - returns it in a nicely formatted way
@@ -102,6 +101,7 @@ class Entry
     {
         if ($this->object) {
             $obj = unserialize($this->object);
+
             return $obj->getUserPointActionDescription();
         }
     }
@@ -109,6 +109,7 @@ class Entry
     public function getUserPointEntryUserObject()
     {
         $ui = UserInfo::getByID($this->upuID);
+
         return $ui;
     }
 
@@ -117,7 +118,7 @@ class Entry
         $db = Loader::db();
         $cnt = $db->GetOne('select sum(upPoints) as total from UserPointHistory where upuID = ?',
             array($ui->getUserID()));
+
         return $cnt;
     }
-
 }

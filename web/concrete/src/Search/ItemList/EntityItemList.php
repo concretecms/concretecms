@@ -1,11 +1,8 @@
 <?php
 namespace Concrete\Core\Search\ItemList;
-use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\EntityRepository;
 
 abstract class EntityItemList extends ItemList
 {
-
     /** @var \Doctrine\ORM\QueryBuilder */
     protected $query;
 
@@ -25,6 +22,18 @@ abstract class EntityItemList extends ItemList
     public function getQueryObject()
     {
         return $this->query;
+    }
+
+    public function finalizeQuery(\Doctrine\ORM\QueryBuilder $query)
+    {
+        return $query;
+    }
+
+    public function deliverQueryObject()
+    {
+        $query = clone $this->query;
+        $query = $this->finalizeQuery($query);
+        return $query;
     }
 
 }

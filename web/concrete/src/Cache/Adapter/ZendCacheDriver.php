@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Cache\Adapter;
 
 use Concrete\Core\Cache\Cache;
@@ -55,10 +54,12 @@ class ZendCacheDriver extends AbstractAdapter implements StorageInterface, Flush
      * @param  string $normalizedKey
      * @param  bool $success
      * @param  mixed $casToken
+     *
      * @return mixed Data on success, null on failure
+     *
      * @throws Exception\ExceptionInterface
      */
-    protected function internalGetItem(& $normalizedKey, & $success = null, & $casToken = null)
+    protected function internalGetItem(&$normalizedKey, &$success = null, &$casToken = null)
     {
         /** @var Cache $cache  */
         $cache = Core::make($this->cacheName);
@@ -79,10 +80,12 @@ class ZendCacheDriver extends AbstractAdapter implements StorageInterface, Flush
      *
      * @param  string $normalizedKey
      * @param  mixed $value
+     *
      * @return bool
+     *
      * @throws Exception\ExceptionInterface
      */
-    protected function internalSetItem(& $normalizedKey, & $value)
+    protected function internalSetItem(&$normalizedKey, &$value)
     {
         /** @var Cache $cache  */
         $cache = Core::make($this->cacheName);
@@ -95,10 +98,12 @@ class ZendCacheDriver extends AbstractAdapter implements StorageInterface, Flush
      * Internal method to remove an item.
      *
      * @param  string $normalizedKey
+     *
      * @return bool
+     *
      * @throws Exception\ExceptionInterface
      */
-    protected function internalRemoveItem(& $normalizedKey)
+    protected function internalRemoveItem(&$normalizedKey)
     {
         /** @var Cache $cache  */
         $cache = Core::make($this->cacheName);
@@ -108,7 +113,7 @@ class ZendCacheDriver extends AbstractAdapter implements StorageInterface, Flush
     }
 
     /**
-     * Flush the whole storage
+     * Flush the whole storage.
      *
      * @return bool
      */

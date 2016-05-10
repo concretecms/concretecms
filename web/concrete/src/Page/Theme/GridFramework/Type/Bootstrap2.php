@@ -1,12 +1,10 @@
 <?php
 namespace Concrete\Core\Page\Theme\GridFramework\Type;
 
-use Loader;
 use Concrete\Core\Page\Theme\GridFramework\GridFramework;
 
 class Bootstrap2 extends GridFramework
 {
-
     public function getPageThemeGridFrameworkName()
     {
         return t('Twitter Bootstrap');
@@ -56,8 +54,9 @@ class Bootstrap2 extends GridFramework
             'span9',
             'span10',
             'span11',
-            'span12'
+            'span12',
         );
+
         return $columns;
     }
 
@@ -75,10 +74,9 @@ class Bootstrap2 extends GridFramework
             'offset9',
             'offset10',
             'offset11',
-            'offset12'
+            'offset12',
         );
+
         return $offsets;
     }
-
-
 }

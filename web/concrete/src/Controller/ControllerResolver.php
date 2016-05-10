@@ -1,18 +1,19 @@
 <?php
-
 namespace Concrete\Core\Controller;
-use Concrete\Core\Foundation\ClassLoader;
+
 use Core;
 
 /**
- * Class ControllerResolver
+ * Class ControllerResolver.
+ *
  * @package Concrete\Core\Controller
+ *
  * @deprecated The default is ApplicationAwareControllerResolver
  */
-class ControllerResolver extends \Symfony\Component\HttpKernel\Controller\ControllerResolver {
-
-    protected function createController($controller) {
-
+class ControllerResolver extends \Symfony\Component\HttpKernel\Controller\ControllerResolver
+{
+    protected function createController($controller)
+    {
         if (false === strpos($controller, '::')) {
             throw new \InvalidArgumentException(sprintf('Unable to find controller "%s".', $controller));
         }
@@ -22,8 +23,6 @@ class ControllerResolver extends \Symfony\Component\HttpKernel\Controller\Contro
         // now we do some concrete5 magic to route the controller into the right name space.
         $object = Core::make($class);
 
-        return array(new $object, $method);
+        return array(new $object(), $method);
     }
-
-
 }

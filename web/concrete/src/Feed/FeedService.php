@@ -2,11 +2,10 @@
 namespace Concrete\Core\Feed;
 
 use Concrete\Core\Cache\Adapter\ZendCacheDriver;
-use \Zend\Feed\Reader\Reader;
+use Zend\Feed\Reader\Reader;
 
 class FeedService
 {
-
     /**
      * Loads a newsfeed object.
      *
@@ -19,12 +18,11 @@ class FeedService
         if ($cache !== false) {
             Reader::setCache(new ZendCacheDriver('cache/expensive', $cache));
         }
-        
+
         // Load the RSS feed, either from remote URL or from cache
         // (if specified above and still fresh)
         $feed = Reader::import($url);
-        
+
         return $feed;
     }
-
 }

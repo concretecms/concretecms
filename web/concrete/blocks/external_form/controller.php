@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Block\ExternalForm;
 
 use Concrete\Core\Block\BlockController;

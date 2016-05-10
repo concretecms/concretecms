@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Page\Type;
 
 use Concrete\Core\Attribute\Key\CollectionKey;
@@ -223,7 +222,7 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
         // this will ensure that we only ever keep X versions.
         $vArray = $vl->getPage();
         if (count($vArray) > $this->ptDraftVersionsToSave) {
-            for ($i = $this->ptDraftVersionsToSave; $i < count($vArray); $i++) {
+            for ($i = $this->ptDraftVersionsToSave; $i < count($vArray); ++$i) {
                 $v = $vArray[$i];
                 @$v->delete();
             }
@@ -679,6 +678,7 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
      * Add a page type.
      *
      * @param array $data {
+     *
      *     @var string          $handle              A string which can be used to identify the page type
      *     @var string          $name                A user friendly display name
      *     @var \PageTemplate   $defaultTemplate     The default template object or handle
@@ -688,6 +688,7 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
      *     @var bool            $ptLaunchInComposer  Does this launch in composer? Default: `false`
      *     @var bool            $ptIsFrequentlyAdded Should this always be displayed in the pages panel? Default: `false`
      * }
+     *
      * @param bool|Package $pkg This should be false if the type is not tied to a package, or a package object
      *
      * @return static|mixed|null
@@ -953,7 +954,7 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
         return static::returnList($ptIDs);
     }
 
-    public static function getListByPackage(Package $pkg)
+    public static function getListByPackage($pkg)
     {
         $db = Loader::db();
         $ptIDs = $db->GetCol(
@@ -988,6 +989,7 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
                 $list[] = $cm;
             }
         }
+
         return $list;
     }
 
@@ -1059,7 +1061,7 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
         $displayOrder = 0;
         foreach ($sets as $s) {
             $s->updateFormLayoutSetDisplayOrder($displayOrder);
-            $displayOrder++;
+            ++$displayOrder;
         }
     }
 

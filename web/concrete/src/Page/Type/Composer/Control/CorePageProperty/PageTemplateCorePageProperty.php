@@ -35,5 +35,4 @@ class PageTemplateCorePageProperty extends CorePageProperty
             return $c->getPageTemplateID();
         }
     }
-
 }

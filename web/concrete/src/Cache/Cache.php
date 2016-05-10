@@ -27,19 +27,21 @@ abstract class Cache
     /** @var \Stash\Interfaces\DriverInterface */
     protected $driver = null;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->init();
     }
 
     /**
-     * Initializes the cache by setting up the cache pool and enabling the cache
-     * @return void
+     * Initializes the cache by setting up the cache pool and enabling the cache.
      */
     abstract protected function init();
 
     /**
-     * Loads the composite driver from constants
+     * Loads the composite driver from constants.
+     *
      * @param $level
+     *
      * @return \Stash\Interfaces\DriverInterface
      */
     protected function loadConfig($level)
@@ -58,7 +60,7 @@ abstract class Cache
 
                 // Make sure that the provided class implements the DriverInterface
                 if (isset($implements['Stash\Interfaces\DriverInterface'])) {
-                    /** @type \Stash\Interfaces\DriverInterface $temp_driver */
+                    /** @var \Stash\Interfaces\DriverInterface $temp_driver */
                     $temp_driver = new $class();
 
                     if ($options = array_get($driver_build, 'options', null)) {
@@ -71,7 +73,6 @@ abstract class Cache
                 }
             }
         }
-
 
         $count = count($drivers);
         if ($count > 1) {
@@ -87,8 +88,10 @@ abstract class Cache
     }
 
     /**
-     * Deletes an item from the cache
+     * Deletes an item from the cache.
+     *
      * @param string $key Name of the cache item ID
+     *
      * @return bool True if deleted, false if not
      */
     public function delete($key)
@@ -101,8 +104,10 @@ abstract class Cache
     }
 
     /**
-     * Checks if an item exists in the cache
+     * Checks if an item exists in the cache.
+     *
      * @param string $key Name of the cache item ID
+     *
      * @return bool True if exists, false if not
      */
     public function exists($key)
@@ -115,7 +120,7 @@ abstract class Cache
     }
 
     /**
-     * Removes all values from the cache
+     * Removes all values from the cache.
      */
     public function flush()
     {
@@ -123,8 +128,10 @@ abstract class Cache
     }
 
     /**
-     * Gets a value from the cache
+     * Gets a value from the cache.
+     *
      * @param string $key Name of the cache item ID
+     *
      * @return \Stash\Interfaces\ItemInterface
      */
     public function getItem($key)
@@ -133,7 +140,7 @@ abstract class Cache
     }
 
     /**
-     * Enables the cache
+     * Enables the cache.
      */
     public function enable()
     {
@@ -144,7 +151,7 @@ abstract class Cache
     }
 
     /**
-     * Disables the cache
+     * Disables the cache.
      */
     public function disable()
     {
@@ -157,7 +164,8 @@ abstract class Cache
     }
 
     /**
-     * Returns true if the cache is enabled, false if not
+     * Returns true if the cache is enabled, false if not.
+     *
      * @return bool
      */
     public function isEnabled()
@@ -166,7 +174,7 @@ abstract class Cache
     }
 
     /**
-     * Disables all cache levels
+     * Disables all cache levels.
      */
     public static function disableAll()
     {
@@ -176,7 +184,7 @@ abstract class Cache
     }
 
     /**
-     * Enables all cache levels
+     * Enables all cache levels.
      */
     public static function enableAll()
     {

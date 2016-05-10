@@ -1,6 +1,7 @@
 <?php
-class CustomCssRecordTest extends ConcreteDatabaseTestCase {
 
+class CustomCssRecordTest extends ConcreteDatabaseTestCase
+{
     protected $fixtures = array();
     protected $tables = array('StyleCustomizerCustomCssRecords');
 
@@ -17,4 +18,3 @@ class CustomCssRecordTest extends ConcreteDatabaseTestCase {
         $this->assertEquals($record, $rec2);
     }
 }
- 

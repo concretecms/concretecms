@@ -1,9 +1,7 @@
 <?php
-
 namespace Concrete\Core\StyleCustomizer\Inline;
 
 use Concrete\Core\Backup\ContentExporter;
-use Concrete\Core\Backup\ContentImporter;
 use Concrete\Core\Page\Theme\GridFramework\GridFramework;
 use Database;
 use Symfony\Component\HttpFoundation\Request;
@@ -42,7 +40,7 @@ class StyleSet
     }
 
     /**
-     * @Column(type="string")
+     * @Column(type="string", nullable=true)
      */
     protected $backgroundColor;
 
@@ -67,22 +65,22 @@ class StyleSet
     protected $backgroundPosition = '0% 0%';
 
     /**
-     * @Column(type="string")
+     * @Column(type="string", nullable=true)
      */
     protected $borderColor;
 
     /**
-     * @Column(type="string")
+     * @Column(type="string", nullable=true)
      */
     protected $borderStyle;
 
     /**
-     * @Column(type="string")
+     * @Column(type="string", nullable=true)
      */
     protected $borderWidth;
 
     /**
-     * @Column(type="string")
+     * @Column(type="string", nullable=true)
      */
     protected $borderRadius;
 
@@ -103,92 +101,92 @@ class StyleSet
     }
 
     /**
-     * @Column(type="string")
+     * @Column(type="string", nullable=true)
      */
     protected $baseFontSize;
 
     /**
-     * @Column(type="string")
+     * @Column(type="string", nullable=true)
      */
     protected $alignment;
 
     /**
-     * @Column(type="string")
+     * @Column(type="string", nullable=true)
      */
     protected $textColor;
 
     /**
-     * @Column(type="string")
+     * @Column(type="string", nullable=true)
      */
     protected $linkColor;
 
     /**
-     * @Column(type="string")
+     * @Column(type="string", nullable=true)
      */
     protected $marginTop;
 
     /**
-     * @Column(type="string")
+     * @Column(type="string", nullable=true)
      */
     protected $marginBottom;
 
     /**
-     * @Column(type="string")
+     * @Column(type="string", nullable=true)
      */
     protected $marginLeft;
 
     /**
-     * @Column(type="string")
+     * @Column(type="string", nullable=true)
      */
     protected $marginRight;
 
     /**
-     * @Column(type="string")
+     * @Column(type="string", nullable=true)
      */
     protected $paddingTop;
 
     /**
-     * @Column(type="string")
+     * @Column(type="string", nullable=true)
      */
     protected $paddingBottom;
 
     /**
-     * @Column(type="string")
+     * @Column(type="string", nullable=true)
      */
     protected $paddingLeft;
 
     /**
-     * @Column(type="string")
+     * @Column(type="string", nullable=true)
      */
     protected $paddingRight;
 
     /**
-     * @Column(type="string")
+     * @Column(type="string", nullable=true)
      */
     protected $rotate;
 
     /**
-     * @Column(type="string")
+     * @Column(type="string", nullable=true)
      */
     protected $boxShadowHorizontal;
 
     /**
-     * @Column(type="string")
+     * @Column(type="string", nullable=true)
      */
     protected $boxShadowVertical;
 
     /**
-     * @Column(type="string")
+     * @Column(type="string", nullable=true)
      */
     protected $boxShadowBlur;
 
     /**
-     * @Column(type="string")
+     * @Column(type="string", nullable=true)
      */
     protected $boxShadowSpread;
 
     /**
-     * @Column(type="string")
+     * @Column(type="string", nullable=true)
      */
     protected $boxShadowColor;
 
@@ -802,13 +800,14 @@ class StyleSet
      * If the request contains any fields that are valid to save as a style set, we return the style set object
      * pre-save. If it's not (e.g. there's a background repeat but no actual background image, empty strings, etc...)
      * then we return null.
-     * return \Concrete\Core\StyleCustomizer\Inline\StyleSet|null
+     * return \Concrete\Core\StyleCustomizer\Inline\StyleSet|null.
+     *
      * @param Request $request
      */
     public static function populateFromRequest(Request $request)
     {
         $r = $request->request->all();
-        $set = new StyleSet();
+        $set = new self();
         $return = false;
         if (trim($r['backgroundColor']) != '') {
             $set->setBackgroundColor($r['backgroundColor']);
@@ -945,7 +944,7 @@ class StyleSet
 
     public function isHiddenOnDevice($class)
     {
-        switch($class) {
+        switch ($class) {
             case GridFramework::DEVICE_CLASSES_HIDE_ON_EXTRA_SMALL:
                 return $this->getHideOnExtraSmallDevice();
             case GridFramework::DEVICE_CLASSES_HIDE_ON_SMALL:

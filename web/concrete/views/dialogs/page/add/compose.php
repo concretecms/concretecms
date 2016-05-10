@@ -1,10 +1,10 @@
-<?
+<?php
 defined('C5_EXECUTE') or die("Access Denied.");
 ?>
 
 <div class="ccm-ui">
     <form data-dialog-form="add-page-compose" action="<?=$controller->action('submit')?>">
-        <? $pagetype->renderComposerOutputForm(null, $parent); ?>
+        <?php $pagetype->renderComposerOutputForm(null, $parent); ?>
         <input type="hidden" name="addPageComposeAction" value="preview" />
         <div class="dialog-buttons">
             <button type="button" data-dialog-action="cancel" class="btn btn-default pull-left"><?=t('Cancel')?></button>

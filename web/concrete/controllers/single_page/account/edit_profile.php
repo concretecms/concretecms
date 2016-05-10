@@ -1,24 +1,20 @@
-<?
+<?php
 namespace Concrete\Controller\SinglePage\Account;
 
-use Concrete\Core\Application\Application;
-use Concrete\Core\Application\Service\Validation;
+use Concrete\Core\Page\Controller\AccountPageController;
+use Concrete\Core\Validation\ResponseInterface;
+use Config;
+use UserInfo;
+use Exception;
 use Concrete\Core\Authentication\AuthenticationType;
 use Concrete\Core\Authentication\AuthenticationTypeFailureException;
-use Concrete\Core\Page\Controller\AccountPageController;
-use Concrete\Core\Utility\Service\Validation\Strings;
-use Concrete\Core\Validation\CSRF\Token;
-use Config;
-use Exception;
 use Loader;
-use Localization;
 use User;
 use UserAttributeKey;
-use UserInfo;
+use Localization;
 
 class EditProfile extends AccountPageController
 {
-
     public function view()
     {
         $u = new User();
@@ -41,6 +37,12 @@ class EditProfile extends AccountPageController
             $locales = array_merge(array('' => tc('Default locale', '** Default')), $locales);
         }
         $this->set('locales', $locales);
+    }
+
+    public function save_complete()
+    {
+        $this->set('success', t('Profile updated successfully.'));
+        $this->view();
     }
 
     public function callback($type, $method = 'callback')
@@ -132,15 +134,15 @@ class EditProfile extends AccountPageController
         $aks = UserAttributeKey::getEditableInProfileList();
 
         foreach ($aks as $uak) {
-            if ($uak->isAttributeKeyRequiredOnProfile()) {
-                $e1 = $uak->validateAttributeForm();
-                if ($e1 == false) {
-                    $this->error->add(t('The field "%s" is required', $uak->getAttributeKeyDisplayName()));
-                } else {
-                    if ($e1 instanceof \Concrete\Core\Error\Error) {
-                        $this->error->add($e1);
-                    }
-                }
+            $controller = $uak->getController();
+            $validator = $controller->getValidator();
+            $response = $validator->validateSaveValueRequest($controller, $this->request, $uak->isAttributeKeyRequiredOnProfile());
+            /**
+             * @var $response ResponseInterface
+             */
+            if (!$response->isValid()) {
+                $error = $response->getErrorObject();
+                $this->error->add($error);
             }
         }
 
@@ -152,7 +154,7 @@ class EditProfile extends AccountPageController
 
             $ui->saveUserAttributesForm($aks);
             $ui->update($data);
-            $this->redirect("/account", "save_complete");
+            $this->redirect("/account/edit_profile", "save_complete");
         }
     }
 }

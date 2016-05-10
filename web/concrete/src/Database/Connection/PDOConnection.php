@@ -11,7 +11,6 @@ use PDO;
  */
 class PDOConnection extends \Doctrine\DBAL\Driver\PDOConnection
 {
-
     /**
      * @param string      $dsn
      * @param string|null $user
@@ -24,5 +23,4 @@ class PDOConnection extends \Doctrine\DBAL\Driver\PDOConnection
         $this->setAttribute(PDO::ATTR_STATEMENT_CLASS, array('Concrete\Core\Database\Driver\PDOStatement', array()));
         $this->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     }
-
 }

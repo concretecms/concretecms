@@ -5,28 +5,35 @@ use Concrete\Attribute\Select\OptionList;
 
 ?>
 
-<? if ($options instanceof OptionList && $options->count() > 0): ?>
+<?php if ($options instanceof OptionList && $options->count() > 0): ?>
 
 <div class="ccm-block-tags-wrapper">
 
-    <? if ($title): ?>
+    <?php if ($title): ?>
         <div class="ccm-block-tags-header">
             <h5><?=$title?></h5>
         </div>
-    <? endif; ?>
+    <?php endif; ?>
 
-    <? foreach($options as $option) { ?>
+    <?php foreach ($options as $option) {
+    ?>
 
-        <? if ($target) { ?>
+        <?php if ($target) {
+    ?>
             <a href="<?=$controller->getTagLink($option) ?>">
                 <span class="ccm-block-tags-tag label"><?=$option->getSelectAttributeOptionValue()?></span>
             </a>
-        <? } else { ?>
+        <?php 
+} else {
+    ?>
             <span class="ccm-block-tags-tag label"><?=$option->getSelectAttributeOptionValue()?></span>
-        <? } ?>
-    <? } ?>
+        <?php 
+}
+    ?>
+    <?php 
+} ?>
 
 
 </div>
 
-<? endif; ?>
+<?php endif; ?>

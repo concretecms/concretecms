@@ -1,16 +1,17 @@
-<?
-
+<?php
 namespace Concrete\Controller\SinglePage\Dashboard\Reports;
-use \Concrete\Core\Page\Controller\DashboardPageController;
-use \Concrete\Core\Logging\LogList;
+
+use Concrete\Core\Page\Controller\DashboardPageController;
+use Concrete\Core\Logging\LogList;
 use Log;
 use Core;
 use Request;
 use User;
 
-class Logs extends DashboardPageController {
-
-    public function clear($token = '', $channel = false) {
+class Logs extends DashboardPageController
+{
+    public function clear($token = '', $channel = false)
+    {
         $valt = Core::make('helper/validation/token');
         if ($valt->validate('', $token)) {
             if (!$channel) {
@@ -25,17 +26,17 @@ class Logs extends DashboardPageController {
         $this->view();
     }
 
-	public function view($page = 0) {
-		
+    public function view($page = 0)
+    {
         $this->requireAsset('select2');
 
         $levels = array();
-        foreach(Log::getLevels() as $level) {
+        foreach (Log::getLevels() as $level) {
             $levels[$level] = Log::getLevelDisplayName($level);
         }
 
         $channels = array('' => t('All Channels'));
-        foreach(Log::getChannels() as $channel) {
+        foreach (Log::getChannels() as $channel) {
             $channels[$channel] = Log::getChannelDisplayName($channel);
         }
 
@@ -43,7 +44,7 @@ class Logs extends DashboardPageController {
         $query = http_build_query(array(
             'channel' => $r->query->get('channel'),
             'keywords' => $r->query->get('keywords'),
-            'level' => $r->query->get('level')
+            'level' => $r->query->get('level'),
         ));
 
         $list = $this->getFilteredList();
@@ -57,8 +58,9 @@ class Logs extends DashboardPageController {
 
         $this->set('query', $query);
     }
-	
-    public function csv($token = '') {
+
+    public function csv($token = '')
+    {
         $valt = Core::make('helper/validation/token');
         if (!$valt->validate('', $token)) {
             $this->redirect('/dashboard/reports/logs');
@@ -82,22 +84,20 @@ class Logs extends DashboardPageController {
                 t('Level'),
                 t('Channel'),
                 t('User'),
-                t('Message')
+                t('Message'),
             );
 
             fputcsv($fp, $row);
 
-            foreach($entries as $ent) { 
-
+            foreach ($entries as $ent) {
                 $uID = $ent->getUserID();
-                if(empty($uID)) {
+                if (empty($uID)) {
                     $user = t("Guest");
                 } else {
                     $u = User::getByUserID($uID);
-                    if(is_object($u)) {
-                        $user = $u->getUserName() ;
-                    }
-                    else {
+                    if (is_object($u)) {
+                        $user = $u->getUserName();
+                    } else {
                         $user = tc('Deleted user', 'Deleted (id: %s)', $uID);
                     }
                 }
@@ -107,9 +107,9 @@ class Logs extends DashboardPageController {
                     $ent->getLevelName(),
                     $ent->getChannelDisplayName(),
                     $user,
-                    $ent->getMessage()
+                    $ent->getMessage(),
                 );
-                
+
                 fputcsv($fp, $row);
             }
 
@@ -118,7 +118,8 @@ class Logs extends DashboardPageController {
         }
     }
 
-    public function getFilteredList() {
+    public function getFilteredList()
+    {
         $list = new LogList();
 
         $r = Request::getInstance();
@@ -138,5 +139,4 @@ class Logs extends DashboardPageController {
 
         return $list;
     }
-
 }

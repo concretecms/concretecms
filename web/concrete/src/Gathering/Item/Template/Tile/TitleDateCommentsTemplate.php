@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Gathering\Item\Template\Tile;
 
 use Concrete\Core\Gathering\Item\Item as GatheringItem;

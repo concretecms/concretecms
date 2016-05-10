@@ -26,7 +26,7 @@ $availableChartColors = array(
     '66DD00',
     '6699FF',
     'FFFF33',
-    'FFCC33');
+    'FFCC33', );
 $options = $controller->getPollOptions();
 $optionNames = array();
 $optionResults = array();
@@ -36,7 +36,7 @@ $totalVotes = 0;
 foreach ($options as $opt) {
     $optionNamesAbbrev[] = $i;
     $optionResults[] = $opt->getResults();
-    $i++;
+    ++$i;
     $graphColors[] = array_pop($availableChartColors);
     $totalVotes += intval($opt->getResults());
 }
@@ -64,8 +64,8 @@ $show_graph = (count($optionNamesAbbrev) && !$_GET['dontGraphPoll'] && $totalVot
                     <table class="table">
                         <?php
                         $i = 1;
-                        foreach ($options as $opt) {
-                            ?>
+        foreach ($options as $opt) {
+            ?>
                             <tr>
 
                                 <td class="col-sm-2" style="white-space: nowrap">
@@ -79,11 +79,12 @@ $show_graph = (count($optionNamesAbbrev) && !$_GET['dontGraphPoll'] && $totalVot
                                 </td>
                             </tr>
                             <?php
-                            $i++;
-                            ?>
+                            ++$i;
+            ?>
                         <?php
-                        }
-                        ?>
+
+        }
+        ?>
                     </table>
                     <div class="help-block">
                         <?= t2('%d Vote', '%d Votes', intval($totalVotes), intval($totalVotes)) ?>
@@ -96,17 +97,18 @@ $show_graph = (count($optionNamesAbbrev) && !$_GET['dontGraphPoll'] && $totalVot
                 <div class="col-sm-3">
                     <img
                         border=""
-                        src="//chart.apis.google.com/chart?chf=bg,s,FFFFFF00&cht=p&chd=t:<?= join(
+                        src="//chart.apis.google.com/chart?chf=bg,s,FFFFFF00&cht=p&chd=t:<?= implode(
                             ',',
-                            $optionResults) ?>&chs=180x180&chco=<?= join(
+                            $optionResults) ?>&chs=180x180&chco=<?= implode(
                             ',',
                             $graphColors) ?>"
                         alt="<?php echo t('survey results');
-                        ?>"/>
+                ?>"/>
                 </div>
             <?php
+
             }
-            ?>
+        ?>
         </div>
         <div class="spacer">&nbsp;</div>
 
@@ -119,12 +121,14 @@ $show_graph = (count($optionNamesAbbrev) && !$_GET['dontGraphPoll'] && $totalVot
                 </a>
             </div>
         <?php
+
         }
         ?>
 
         <div class="spacer">&nbsp;</div>
 
     <?php
+
     } else {
         ?>
 
@@ -138,6 +142,7 @@ $show_graph = (count($optionNamesAbbrev) && !$_GET['dontGraphPoll'] && $totalVot
             <form method="post" action="<?= $view->action('form_save_vote') ?>">
                 <input type="hidden" name="rcID" value="<?= $c->getCollectionID() ?>"/>
         <?php
+
         }
         $options = $controller->getPollOptions();
         foreach ($options as $opt) {
@@ -149,6 +154,7 @@ $show_graph = (count($optionNamesAbbrev) && !$_GET['dontGraphPoll'] && $totalVot
                 </label>
             </div>
         <?php
+
         }
         if (!$controller->requiresRegistration() || intval($uID) > 0) {
             ?>
@@ -158,12 +164,14 @@ $show_graph = (count($optionNamesAbbrev) && !$_GET['dontGraphPoll'] && $totalVot
                 </button>
             </div>
         <?php
+
         } else {
             ?>
             <span class="help-block">
                 <?= t('Please Login to Vote') ?>
             </span>
         <?php
+
         }
         ?>
 
@@ -172,10 +180,12 @@ $show_graph = (count($optionNamesAbbrev) && !$_GET['dontGraphPoll'] && $totalVot
             ?>
             </form>
         <?php
+
         }
         ?>
 
     <?php
+
     }
     ?>
 

@@ -6,7 +6,6 @@ use Request;
 
 class StickyRequest
 {
-
     protected $namespace;
 
     public function __construct($namespace)
@@ -41,15 +40,15 @@ class StickyRequest
             $data = array();
         }
 
-        foreach(Request::getInstance()->query->all() as $key => $value) {
+        foreach (Request::getInstance()->query->all() as $key => $value) {
             $data[$key] = $value;
         }
-        foreach(Request::getInstance()->request->all() as $key => $value) {
+        foreach (Request::getInstance()->request->all() as $key => $value) {
             $data[$key] = $value;
         }
 
         Session::set($this->getStickySearchNameSpace(), $data);
+
         return $data;
     }
-
 }

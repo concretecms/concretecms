@@ -1,11 +1,10 @@
 <?php
 namespace Concrete\Core\File\StorageLocation\Configuration;
-use Concrete\Core\Error\Error;
-use \Concrete\Flysystem\Adapter\Local;
+
+use League\Flysystem\Adapter\Local;
 
 class LocalConfiguration extends Configuration implements ConfigurationInterface, DeferredConfigurationInterface
 {
-
     protected $path;
     protected $relativePath;
 
@@ -47,12 +46,13 @@ class LocalConfiguration extends Configuration implements ConfigurationInterface
     public function getPublicURLToFile($file)
     {
         $rel = $this->getRelativePathToFile($file);
-        if(strpos($rel, '://')) {
+        if (strpos($rel, '://')) {
             return $rel;
         }
 
         $url = \Core::getApplicationURL(true);
         $url = $url->setPath($rel);
+
         return trim((string) $url, '/');
     }
 
@@ -67,26 +67,29 @@ class LocalConfiguration extends Configuration implements ConfigurationInterface
 
     /**
      * @param \Concrete\Core\Http\Request $req
+     *
      * @return Error
      */
     public function validateRequest(\Concrete\Core\Http\Request $req)
     {
-        $e = new Error();
+        $e = \Core::make('error');
         $data = $req->get('fslType');
         $this->path = $data['path'];
         if (!$this->path) {
             $e->add(t("You must include a root path for this storage location."));
-        } else if (!is_dir($this->path)) {
+        } elseif (!is_dir($this->path)) {
             $e->add(t("The specified root path does not exist."));
-        } else if ($this->path == '/') {
+        } elseif ($this->path == '/') {
             $e->add(t('Invalid path to file storage location. You may not choose the root directory.'));
         }
+
         return $e;
     }
 
     public function getAdapter()
     {
         $local = new Local($this->getRootPath());
+
         return $local;
     }
 }

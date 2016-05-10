@@ -9,7 +9,6 @@ use UserInfo as CoreUserInfo;
 
 class UserList extends DatabaseItemList
 {
-
     protected function getAttributeKeyClassName()
     {
         return '\\Concrete\\Core\\Attribute\\Key\\UserKey';
@@ -17,6 +16,7 @@ class UserList extends DatabaseItemList
 
     /**
      * Columns in this array can be sorted via the request.
+     *
      * @var array
      */
     protected $autoSortColumns = array(
@@ -25,34 +25,52 @@ class UserList extends DatabaseItemList
         'u.uDateAdded',
         'u.uLastLogin',
         'u.uNumLogins',
-        'u.uLastOnline'
+        'u.uLastOnline',
     );
 
     /**
      * Whether to include inactive users.
+     *
      * @var bool
      */
     protected $includeInactiveUsers = false;
 
-
     /**
      * Whether to include unvalidated users.
+     *
      * @var bool
      */
     protected $includeUnvalidatedUsers = false;
 
+    protected function setBaseQuery()
+    {
+        $sql = '';
+        if ($this->sortUserStatus) {
+            // When uStatus column is selected, we also get the "status" column for
+            // multilingual sorting purposes.
+            $sql =
+                ", CASE WHEN u.uIsActive = 1 THEN '" . t("Active") . "' " .
+                "WHEN u.uIsValidated = 1 AND u.uIsActive = 0 THEN '". t("Inactive") . "' " .
+                "ELSE '". t("Unvalidated") . "' END AS uStatus";
+        }
+        $this->setQuery('SELECT DISTINCT u.uID, u.uName' . $sql . ' FROM Users u ');
+    }
+
     /**
-     * The total results of the query
+     * The total results of the query.
+     *
      * @return int
      */
     public function getTotalResults()
     {
         $query = $this->deliverQueryObject();
+
         return $query->select('count(distinct u.uID)')->setMaxResults(1)->execute()->fetchColumn();
     }
 
     /**
      * Gets the pagination object for the query.
+     *
      * @return Pagination
      */
     protected function createPaginationObject()
@@ -61,31 +79,36 @@ class UserList extends DatabaseItemList
             $query->select('count(distinct u.uID)')->setMaxResults(1);
         });
         $pagination = new Pagination($this, $adapter);
+
         return $pagination;
     }
 
     /**
      * @param $queryRow
+     *
      * @return \Concrete\Core\User\UserInfo
      */
     public function getResult($queryRow)
     {
         $ui = CoreUserInfo::getByID($queryRow['uID']);
+
         return $ui;
     }
 
     /**
      * similar to get except it returns an array of userIDs
-     * much faster than getting a UserInfo object for each result if all you need is the user's id
+     * much faster than getting a UserInfo object for each result if all you need is the user's id.
+     *
      * @return array $userIDs
      */
     public function getResultIDs()
     {
         $results = $this->executeGetResults();
         $ids = array();
-        foreach($results as $result) {
+        foreach ($results as $result) {
             $ids[] = $result['uID'];
         }
+
         return $ids;
     }
 
@@ -105,6 +128,7 @@ class UserList extends DatabaseItemList
         if (!$this->includeUnvalidatedUsers) {
             $query->andWhere('u.uIsValidated != 0');
         }
+
         return $query;
     }
 
@@ -122,6 +146,7 @@ class UserList extends DatabaseItemList
      * Explicitly filters by whether a user is active or not. Does this by setting "include inactive users"
      * to true, THEN filtering them in our out. Some settings here are redundant given the default settings
      * but a little duplication is ok sometimes.
+     *
      * @param $val
      */
     public function filterByIsActive($isActive)
@@ -131,8 +156,15 @@ class UserList extends DatabaseItemList
         $this->query->setParameter('uIsActive', $isActive);
     }
 
+    public function sortByStatus($dir="asc")
+    {
+        $this->sortUserStatus = 1;
+        parent::sortBy('uStatus', $dir);
+    }
+
     /**
-     * Filter list by user name
+     * Filter list by user name.
+     *
      * @param $username
      */
     public function filterByUserName($username)
@@ -142,7 +174,8 @@ class UserList extends DatabaseItemList
     }
 
     /**
-     * Filter list by user name but as a like parameter
+     * Filter list by user name but as a like parameter.
+     *
      * @param $username
      */
     public function filterByFuzzyUserName($username)
@@ -155,13 +188,14 @@ class UserList extends DatabaseItemList
 
     /**
      * Filters keyword fields by keywords (including username, email and attributes).
+     *
      * @param $keywords
      */
     public function filterByKeywords($keywords)
     {
         $expressions = array(
             $this->query->expr()->like('u.uName', ':keywords'),
-            $this->query->expr()->like('u.uEmail', ':keywords')
+            $this->query->expr()->like('u.uEmail', ':keywords'),
         );
 
         $keys = \Concrete\Core\Attribute\Key\UserKey::getSearchableIndexedList();
@@ -174,12 +208,11 @@ class UserList extends DatabaseItemList
         $this->query->setParameter('keywords', '%' . $keywords . '%');
     }
 
-
     /**
-     * Filters the user list for only users within the provided group.  Accepts an instance of a group object or a string group name
+     * Filters the user list for only users within the provided group.  Accepts an instance of a group object or a string group name.
+     *
      * @param \Group | string $group
-     * @param boolean $inGroup
-     * @return void
+     * @param bool $inGroup
      */
     public function filterByGroup($group = '', $inGroup = true)
     {
@@ -198,7 +231,8 @@ class UserList extends DatabaseItemList
     }
 
     /**
-     * Filters by date added
+     * Filters by date added.
+     *
      * @param string $date
      */
     public function filterByDateAdded($date, $comparison = '=')
@@ -207,7 +241,7 @@ class UserList extends DatabaseItemList
     }
 
     /**
-     * Filters by Group ID
+     * Filters by Group ID.
      */
     public function filterByGroupID($gID)
     {
@@ -235,6 +269,4 @@ class UserList extends DatabaseItemList
     {
         $this->query->orderBy('u.uDateAdded', 'desc');
     }
-
-
 }

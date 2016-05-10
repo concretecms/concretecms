@@ -7,7 +7,6 @@ use Concrete\Core\Legacy\TaskPermission;
 
 class Connect extends MarketplaceItem
 {
-
     public function view()
     {
         // we also perform the "does the user need to buy it?" query here to save some requests
@@ -28,7 +27,7 @@ class Connect extends MarketplaceItem
     protected function canAccess()
     {
         $tp = new TaskPermission();
+
         return $tp->canInstallPackages();
     }
-
 }

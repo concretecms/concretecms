@@ -12,10 +12,8 @@ class Info extends DashboardPageController
 {
     public function get_environment_info()
     {
-        $activeLocale = Localization::activeLocale();
-        if ($activeLocale != 'en_US') {
-            Localization::changeLocale('en_US');
-        }
+        $loc = Localization::getInstance();
+        $loc->setActiveContext('system');
         $maxExecutionTime = ini_get('max_execution_time');
         set_time_limit(5);
 
@@ -55,7 +53,7 @@ class Info extends DashboardPageController
         }
         $environmentMessage .= "\n";
 
-        print $environmentMessage;
+        echo $environmentMessage;
 
         // cache
         $environmentMessage = "# concrete5 Cache Settings\n";
@@ -66,7 +64,7 @@ class Info extends DashboardPageController
             $environmentMessage .= sprintf("Full Page Cache Lifetime - %s\n", (Config::get('concrete.cache.full_page_lifetime') == 'default' ? sprintf('Every %s (default setting).', Core::make('helper/date')->describeInterval(Config::get('concrete.cache.lifetime'))) : (Config::get('concrete.cache.full_page_lifetime') == 'forever' ? 'Only when manually removed or the cache is cleared.' : sprintf('Every %s minutes.', Config::get('concrete.cache.full_page_lifetime_value')))));
         }
         $environmentMessage .= "\n";
-        print $environmentMessage;
+        echo $environmentMessage;
 
         $environmentMessage = "# Server Software\n" . $_SERVER['SERVER_SOFTWARE'] . "\n\n";
         $environmentMessage .= "# Server API\n" . php_sapi_name() . "\n\n";
@@ -81,7 +79,7 @@ class Info extends DashboardPageController
             $environmentMessage .= "Unable to determine\n";
         }
 
-        print $environmentMessage;
+        echo $environmentMessage;
 
         ob_start();
         phpinfo();
@@ -119,7 +117,7 @@ class Info extends DashboardPageController
             }
         }
 
-        print $environmentMessage;
+        echo $environmentMessage;
         exit;
     }
 }

@@ -1,7 +1,7 @@
-<? 
+<?php
 defined('C5_EXECUTE') or die("Access Denied.");
 
-$bObj=$controller;
+$bObj = $controller;
 $includeAssetLibrary = true;
 $al = Loader::helper('concrete/asset_library');
 ?>
@@ -34,4 +34,4 @@ $al = Loader::helper('concrete/asset_library');
         <?=$al->video('ccm-b-mp4-file', 'mp4fID', t('Choose Video File'));?>
     </div>
 </fieldset>
-<? $this->inc('form_setup_html.php'); ?> 
+<?php $this->inc('form_setup_html.php'); ?> 

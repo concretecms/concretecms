@@ -1,9 +1,9 @@
 <?php
-
 namespace Concrete\Core\Attribute;
 
+use Concrete\Core\Entity\Attribute\Key\Type\TextType;
+use Concrete\Core\Entity\Attribute\Value\Value\TextValue;
 use Core;
-use Database;
 use Concrete\Core\Attribute\Controller as AttributeTypeController;
 
 class DefaultController extends AttributeTypeController
@@ -13,21 +13,13 @@ class DefaultController extends AttributeTypeController
         'options' => array('default' => null, 'notnull' => false),
     );
 
-    public function getValue()
-    {
-        $db = Database::get();
-        $value = $db->GetOne("select value from atDefault where avID = ?", array($this->getAttributeValueID()));
-
-        return $value;
-    }
-
     public function form()
     {
         $value = '';
         if (is_object($this->attributeValue)) {
             $value = Core::make('helper/text')->entities($this->getAttributeValue()->getValue());
         }
-        print Core::make('helper/form')->textarea($this->field('value'), $value);
+        echo Core::make('helper/form')->textarea($this->field('value'), $value);
     }
 
     public function searchForm($list)
@@ -49,28 +41,21 @@ class DefaultController extends AttributeTypeController
     public function search()
     {
         $f = Core::make('helper/form');
-        print $f->text($this->field('value'), $this->request('value'));
+        echo $f->text($this->field('value'), $this->request('value'));
     }
 
     // run when we call setAttribute(), instead of saving through the UI
     public function saveValue($value)
     {
-        $db = Database::get();
-        $db->Replace('atDefault', array('avID' => $this->getAttributeValueID(), 'value' => $value), 'avID', true);
+        $av = new TextValue();
+        $av->setValue($value);
+
+        return $av;
     }
 
     public function saveForm($data)
     {
-        $this->saveValue(isset($data['value']) ? $data['value'] : null);
-    }
-
-    public function deleteKey()
-    {
-        $db = Database::get();
-        $arr = $this->attributeKey->getAttributeValueIDList();
-        foreach ($arr as $id) {
-            $db->Execute('delete from atDefault where avID = ?', array($id));
-        }
+        return $this->saveValue(isset($data['value']) ? $data['value'] : null);
     }
 
     public function validateValue()
@@ -80,12 +65,6 @@ class DefaultController extends AttributeTypeController
 
     public function validateForm($data)
     {
-        return $data['value'] != '';
-    }
-
-    public function deleteValue()
-    {
-        $db = Database::get();
-        $db->Execute('delete from atDefault where avID = ?', array($this->getAttributeValueID()));
+        return isset($data['value']) && $data['value'] != '';
     }
 }

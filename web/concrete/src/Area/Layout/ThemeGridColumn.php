@@ -7,7 +7,6 @@ use Loader;
 
 class ThemeGridColumn extends Column
 {
-
     /**
      * @var int
      */
@@ -20,6 +19,7 @@ class ThemeGridColumn extends Column
 
     /**
      * @param int $arLayoutColumnID
+     *
      * @return static
      */
     public static function getByID($arLayoutColumnID)
@@ -30,12 +30,14 @@ class ThemeGridColumn extends Column
             $al = new static();
             $al->loadBasicInformation($arLayoutColumnID);
             $al->setPropertiesFromArray($row);
+
             return $al;
         }
     }
 
     /**
      * @param Column $newAreaLayout
+     *
      * @return ThemeGridColumn
      */
     public function duplicate($newAreaLayout)
@@ -44,7 +46,8 @@ class ThemeGridColumn extends Column
         $db = Loader::db();
         $v = array($areaLayoutColumnID, $this->arLayoutColumnSpan, $this->arLayoutColumnOffset);
         $db->Execute('insert into AreaLayoutThemeGridColumns (arLayoutColumnID, arLayoutColumnSpan, arLayoutColumnOffset) values (?, ?, ?)', $v);
-        $newAreaLayoutColumn = ThemeGridColumn::getByID($areaLayoutColumnID);
+        $newAreaLayoutColumn = self::getByID($areaLayoutColumnID);
+
         return $newAreaLayoutColumn;
     }
 
@@ -55,7 +58,6 @@ class ThemeGridColumn extends Column
             return $framework->getPageThemeGridFrameworkNumColumns();
         }
     }
-
 
     /**
      * @param \SimpleXMLElement $node
@@ -87,7 +89,7 @@ class ThemeGridColumn extends Column
      */
     public function getAreaLayoutColumnClass()
     {
-        /**
+        /*
          * @var ThemeGridLayout $this->arLayout
          */
         $gf = $this->arLayout->getThemeGridFrameworkObject();
@@ -99,17 +101,19 @@ class ThemeGridColumn extends Column
 
             // the width parameter of the column becomes the span
             $class .= $gf->getPageThemeGridFrameworkColumnClassForSpan($this->arLayoutColumnSpan);
+
             return $class;
         }
     }
 
     /**
-     * this returns offsets in the form of spans
+     * this returns offsets in the form of spans.
+     *
      * @return string
      */
     public function getAreaLayoutColumnOffsetEditClass()
     {
-        /**
+        /*
          * @var ThemeGridLayout $this->arLayout
          */
         $gf = $this->arLayout->getThemeGridFrameworkObject();
@@ -120,6 +124,7 @@ class ThemeGridColumn extends Column
             }
 
             $class .= $gf->getPageThemeGridFrameworkColumnClassForSpan($this->arLayoutColumnOffset);
+
             return $class;
         }
     }
@@ -127,12 +132,14 @@ class ThemeGridColumn extends Column
     public function getColumnHtmlObject()
     {
         $contents = $this->getContents();
+
         return $this->getColumnElement($contents);
     }
 
     public function getColumnHtmlObjectEditMode()
     {
         $contents = $this->getContents(true);
+
         return $this->getColumnElement($contents);
     }
 
@@ -152,6 +159,7 @@ class ThemeGridColumn extends Column
                 ->addClass('ccm-theme-grid-offset-column');
             $collection[0] = $offset;
             $collection[1] = $element;
+
             return $collection;
         } else {
             return $element;
@@ -175,6 +183,7 @@ class ThemeGridColumn extends Column
             } else {
                 $class .= $gf->getPageThemeGridFrameworkColumnClassForSpan($this->arLayoutColumnOffset);
             }
+
             return $class;
         }
     }
@@ -214,5 +223,4 @@ class ThemeGridColumn extends Column
         );
         $this->arLayoutColumnOffset = $offset;
     }
-
 }

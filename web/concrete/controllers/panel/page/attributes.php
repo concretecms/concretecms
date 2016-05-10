@@ -1,16 +1,15 @@
 <?php
 namespace Concrete\Controller\Panel\Page;
 
-use \Concrete\Controller\Backend\UserInterface\Page as BackendInterfacePageController;
+use Concrete\Controller\Backend\UserInterface\Page as BackendInterfacePageController;
 use Permissions;
 use Page;
 use stdClass;
 use PermissionKey;
-use \Concrete\Core\Attribute\Key\Category as AttributeKeyCategory;
+use Concrete\Core\Attribute\Key\Category as AttributeKeyCategory;
 
 class Attributes extends BackendInterfacePageController
 {
-
     protected $viewPath = '/panels/page/attributes';
 
     public function canAccess()
@@ -26,8 +25,9 @@ class Attributes extends BackendInterfacePageController
         $allowed = $assignment->getAttributesAllowedArray();
 
         $category = AttributeKeyCategory::getByHandle('collection');
+        $controller = $category->getController();
         $sets = $category->getAttributeSets();
-        $leftovers = $category->getUnassignedAttributeKeys();
+        $leftovers = $controller->getUnassignedAttributeKeys();
 
         $selectedAttributes = $this->page->getSetCollectionAttributes();
         $selectedAttributeIDs = array();
@@ -64,8 +64,7 @@ class Attributes extends BackendInterfacePageController
         }
 
         $this->set('selectedAttributeIDs', $selectedAttributeIDs);
-        $this->set('assignment', $asl);
+        $this->set('assignment', $assignment);
         $this->set('attributes', $data);
     }
-
 }

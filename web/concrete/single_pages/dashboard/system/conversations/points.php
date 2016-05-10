@@ -2,7 +2,8 @@
 $form = Loader::helper('form');
 ?>
 <h4><?=t('Installed Rating Types')?></h4>
-<? if (count($ratingTypes) > 0) { ?>
+<?php if (count($ratingTypes) > 0) {
+    ?>
     <form action="<?=$view->action('save')?>" method="post">
         <table class="table">
             <thead>
@@ -12,12 +13,16 @@ $form = Loader::helper('form');
             </tr>
             </thead>
             <tbody>
-            <?php foreach ($ratingTypes as $ratingType) { ?>
+            <?php foreach ($ratingTypes as $ratingType) {
+    ?>
                 <tr>
-                    <td><?=$ratingType->getConversationRatingTypeDisplayName();?></td>
+                    <td><?=$ratingType->getConversationRatingTypeDisplayName();
+    ?></td>
                     <td><?=$form->number('rtPoints_' . $ratingType->getConversationRatingTypeID(), $ratingType->cnvRatingTypeCommunityPoints, array('style' => 'width: 100px'))?></td>
                 </tr>
-            <?php } ?>
+            <?php 
+}
+    ?>
             </tbody>
         </table>
         <div class="ccm-dashboard-form-actions-wrapper">
@@ -26,6 +31,9 @@ $form = Loader::helper('form');
             </div>
         </div>
     </form>
-<? } else { ?>
+<?php 
+} else {
+    ?>
     <p><?=t('There are no Community Points Rating Types installed.')?></p>
-<? } ?>
+<?php 
+} ?>

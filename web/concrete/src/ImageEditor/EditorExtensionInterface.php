@@ -5,7 +5,6 @@ use Concrete\Core\View\AbstractView;
 
 interface EditorExtensionInterface
 {
-
     /**
      * @return string
      */
@@ -30,5 +29,4 @@ interface EditorExtensionInterface
      * @return AbstractView
      */
     public function getView();
-
 }

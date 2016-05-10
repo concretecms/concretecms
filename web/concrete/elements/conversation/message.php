@@ -1,4 +1,4 @@
-<?
+<?php
 defined('C5_EXECUTE') or die("Access Denied.");
 $im = Loader::helper('image');
 
@@ -11,14 +11,14 @@ $canRateMessage = $mp->canRateConversationMessage();
 $ui = $message->getConversationMessageUserObject();
 $class = 'message ccm-conversation-message ccm-conversation-message-level' . $message->getConversationMessageLevel();
 if ($message->isConversationMessageDeleted()) {
-	$class .= ' ccm-conversation-message-deleted';
+    $class .= ' ccm-conversation-message-deleted';
 }
 
-if($dateFormat == 'custom' && $customDateFormat) {
-	$dateFormat = array($customDateFormat);
+if ($dateFormat == 'custom' && $customDateFormat) {
+    $dateFormat = array($customDateFormat);
 }
-if (!$message->isConversationMessageApproved()){
-	$class .= ' ccm-conversation-message-flagged';
+if (!$message->isConversationMessageApproved()) {
+    $class .= ' ccm-conversation-message-flagged';
 }
 $cnvMessageID = $message->getConversationMessageID();
 $cnvID = $message->getConversationID();
@@ -26,32 +26,46 @@ $c = Page::getByID($_REQUEST['cID']);
 $cnvMessageURL = urlencode($c->getCollectionLink(true) . '#cnv' . $cnvID . 'Message' . $cnvMessageID);
 
 if ((!$message->isConversationMessageDeleted() && $message->isConversationMessageApproved()) || $message->conversationMessageHasActiveChildren()) {
-	$author = $message->getConversationMessageAuthorObject();
-	$formatter = $author->getFormatter();
-	?>
+    $author = $message->getConversationMessageAuthorObject();
+    $formatter = $author->getFormatter();
+    ?>
 	<div data-conversation-message-id="<?=$message->getConversationMessageID()?>" data-conversation-message-level="<?=$message->getConversationMessageLevel()?>" class="<?=$class?>">
 		<a id="cnv<?=$cnvID?>Message<?=$cnvMessageID?>"></a>
 		<div class="ccm-conversation-message-user">
-			<div class="ccm-conversation-avatar"><? print $formatter->getAvatar(); ?></div>
+			<div class="ccm-conversation-avatar"><?php echo $formatter->getAvatar();
+    ?></div>
 			<div class="ccm-conversation-message-byline">
-				<span class="ccm-conversation-message-username"><?
-					print $formatter->getDisplayName();
-					?></span>
+				<span class="ccm-conversation-message-username"><?php
+                    echo $formatter->getDisplayName();
+    ?></span>
 				<span class="ccm-conversation-message-divider">|</span>
-				<span class="ccm-conversation-message-date"><?=$message->getConversationMessageDateTimeOutput($dateFormat);?></span>
+				<span class="ccm-conversation-message-date"><?=$message->getConversationMessageDateTimeOutput($dateFormat);
+    ?></span>
 
-                <?php if($canDeleteMessage || $canFlagMessage) { ?>
+                <?php if ($canDeleteMessage || $canFlagMessage) {
+    ?>
                     <span class="ccm-conversation-message-admin-control ccm-conversation-message-divider">|</span>
-                    <? if ($canEditMessage) { ?>
+                    <?php if ($canEditMessage) {
+    ?>
                         <span class="ccm-conversation-message-admin-control ccm-conversation-message-divider"><a href="javascript:void(0)" class="admin-edit" data-conversation-message-id="<?=$message->getConversationMessageID()?>" data-load="edit-conversation-message"><?php echo t('Edit') ?></a></span>
-                    <? } ?>
-                    <? if ($canDeleteMessage) { ?>
+                    <?php 
+}
+    ?>
+                    <?php if ($canDeleteMessage) {
+    ?>
                         <span class="ccm-conversation-message-admin-control ccm-conversation-message-divider"><a href="#" class="admin-delete" data-submit="delete-conversation-message" data-conversation-message-id="<?=$message->getConversationMessageID()?>"><?=t('Delete')?></a></span>
-                    <? } ?>
-                    <? if ($canFlagMessage) { ?>
+                    <?php 
+}
+    ?>
+                    <?php if ($canFlagMessage) {
+    ?>
                         <span class="ccm-conversation-message-admin-control ccm-conversation-message-divider"><a href="#" class="admin-flag" data-submit="flag-conversation-message" data-conversation-message-id="<?=$message->getConversationMessageID()?>"><?=t('Flag As Spam')?></a></span>
-                    <? } ?>
-                <?php } ?>
+                    <?php 
+}
+    ?>
+                <?php 
+}
+    ?>
 
 
 			</div>
@@ -63,49 +77,75 @@ if ((!$message->isConversationMessageDeleted() && $message->isConversationMessag
 		<div class="ccm-conversation-message-controls">
 			<div class="message-attachments">
 				<?php
-				if(count($message->getAttachments($message->getConversationMessageID()))) {
-					foreach ($message->getAttachments($message->getConversationMessageID()) as $attachment) { ?>
+                if (count($message->getAttachments($message->getConversationMessageID()))) {
+                    foreach ($message->getAttachments($message->getConversationMessageID()) as $attachment) {
+                        ?>
 						<div class="attachment-container">
 						<?php $file = File::getByID($attachment['fID']);
-						if(is_object($file)) {
-							if(strpos($file->getMimeType(), 'image') !== false) {
-								$paragraphPadding = 'image-preview';
-								$thumb = $im->getThumbnail($file, '90', '90', true); ?>
+                        if (is_object($file)) {
+                            if (strpos($file->getMimeType(), 'image') !== false) {
+                                $paragraphPadding = 'image-preview';
+                                $thumb = $im->getThumbnail($file, '90', '90', true);
+                                ?>
 						  <div class="image-popover-hover" data-full-image="<?php echo $file->getURL() ?>">
 						  	<div class="glyph-container">
 						  		<i class="fa fa-search"></i>
 						  	</div>
 						  </div>
 						  <div class="attachment-preview-container">
-						 	 <img class="posted-attachment-image" src="<?php  echo $thumb->src; ?>" width="<?php  echo $thumb->width; ?>" height="<?php  echo $thumb->height; ?>" alt="attachment image" />
+						 	 <img class="posted-attachment-image" src="<?php  echo $thumb->src;
+                                ?>" width="<?php  echo $thumb->width;
+                                ?>" height="<?php  echo $thumb->height;
+                                ?>" alt="attachment image" />
 						  </div>
-						 <?php } ?>
-							<p class="<?php echo $paragraphPadding ?> filename" rel="<?php echo $attachment['cnvMessageAttachmentID'];?>"><a href="<?php echo $file->getDownloadURL() ?>"><?php echo $file->getFileName() ?></a>
-                            <?
-                            if (!$message->isConversationMessageDeleted() && $canEditMessage) { ?>
-                                <a rel="<?php echo $attachment['cnvMessageAttachmentID'];?>" class="attachment-delete ccm-conversation-message-control-icon ccm-conversation-message-admin-control" href="#"><i class="fa fa-trash-o"></i></a>
-                            <?php } ?>
+						 <?php 
+                            }
+                            ?>
+							<p class="<?php echo $paragraphPadding ?> filename" rel="<?php echo $attachment['cnvMessageAttachmentID'];
+                            ?>"><a href="<?php echo $file->getDownloadURL() ?>"><?php echo $file->getFileName() ?></a>
+                            <?php
+                            if (!$message->isConversationMessageDeleted() && $canEditMessage) {
+                                ?>
+                                <a rel="<?php echo $attachment['cnvMessageAttachmentID'];
+                                ?>" class="attachment-delete ccm-conversation-message-control-icon ccm-conversation-message-admin-control" href="#"><i class="fa fa-trash-o"></i></a>
+                            <?php 
+                            }
+                            ?>
                             </p>
 						</div>
-					<?php }
-					$paragraphPadding = '';
-					}
-				} ?>
+					<?php 
+                        }
+                        $paragraphPadding = '';
+                    }
+                }
+    ?>
 			</div>
-			<? if (!$message->isConversationMessageDeleted() && $message->isConversationMessageApproved()) { ?>
+			<?php if (!$message->isConversationMessageDeleted() && $message->isConversationMessageApproved()) {
+    ?>
 			<ul>
-				<? if ($enablePosting == Conversation::POSTING_ENABLED && $displayMode == 'threaded') { ?>
+				<?php if ($enablePosting == Conversation::POSTING_ENABLED && $displayMode == 'threaded') {
+    ?>
 					<li><a href="#" data-toggle="conversation-reply" data-post-parent-id="<?=$message->getConversationMessageID()?>"><?=t('Reply')?></a></li>
-				<? } ?>
-                <? if ($enableCommentRating && $canRateMessage) { ?>
+				<?php 
+}
+    ?>
+                <?php if ($enableCommentRating && $canRateMessage) {
+    ?>
                     <li><span class="ccm-conversation-message-divider">|</span></li>
-                    <?
+                    <?php
                     $ratingTypes = ConversationRatingType::getList();
-                    foreach($ratingTypes as $ratingType) { ?>
-                        <li><? echo $ratingType->outputRatingTypeHTML();?></li>
-                    <? } ?>
-                    <li><span class="ccm-conversation-message-rating-score" data-message-rating="<?=$message->getConversationMessageID()?>"><?=$message->getConversationMessageTotalRatingScore();?></span></li>
-              <? } ?>
+    foreach ($ratingTypes as $ratingType) {
+        ?>
+                        <li><?php echo $ratingType->outputRatingTypeHTML();
+        ?></li>
+                    <?php 
+    }
+    ?>
+                    <li><span class="ccm-conversation-message-rating-score" data-message-rating="<?=$message->getConversationMessageID()?>"><?=$message->getConversationMessageTotalRatingScore();
+    ?></span></li>
+              <?php 
+}
+    ?>
               <li class="ccm-conversation-social-share"><span class="ccm-conversation-message-divider">|</span></li>
               <li class="ccm-conversation-social-share">
                   <a class="ccm-conversation-message-control-icon share-popup" href="http://twitter.com/intent/tweet?url=<?php echo $cnvMessageURL?>" title="<?=t('Share message URL on Twitter.')?>"><i class="fa fa-twitter"></i></a>
@@ -118,8 +158,11 @@ if ((!$message->isConversationMessageDeleted() && $message->isConversationMessag
               </li>
 
             </ul>
-			<? } ?>
+			<?php 
+}
+    ?>
 
 		</div>
 	</div>
-<? } ?>
+<?php 
+} ?>

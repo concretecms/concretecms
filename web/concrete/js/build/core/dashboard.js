@@ -16,6 +16,42 @@ var ConcreteDashboard = function() {
 		}
 	};
 
+	var setupFavorites = function() {
+		var $addFavorite = $('a[data-bookmark-action=add-favorite]'),
+			$removeFavorite = $('a[data-bookmark-action=remove-favorite]'),
+			url = false;
+
+		if ($addFavorite.length) {
+			var url = CCM_DISPATCHER_FILENAME + '/ccm/system/panels/dashboard/add_favorite',
+				$link = $addFavorite;
+		} else if ($removeFavorite.length) {
+			var url = CCM_DISPATCHER_FILENAME + '/ccm/system/panels/dashboard/remove_favorite',
+				$link = $removeFavorite;
+		}
+
+		if (url) {
+			$link.on('click', function(e) {
+				e.preventDefault();
+				$.concreteAjax({
+					dataType: 'json',
+					type: 'GET',
+					data: {'cID': $(this).attr('data-page-id'), 'ccm_token': $(this).attr('data-token')},
+					url: url,
+					success: function(r) {
+						if (r.action == 'remove') {
+							$link.attr('data-bookmark-action', 'add-favorite');
+							$link.html('<i class="fa fa-lg fa-bookmark-o"></i>');
+						} else {
+							$link.attr('data-bookmark-action', 'remove-favorite');
+							$link.html('<i class="fa fa-lg fa-bookmark"></i>');
+						}
+						setupFavorites();
+					}
+				});
+			});
+		}
+	}
+
 	var setupTooltips = function() {
 		if ($("#ccm-tooltip-holder").length == 0) {
 			$('<div />').attr('id','ccm-tooltip-holder').attr('class', 'ccm-ui').prependTo(document.body);
@@ -32,7 +68,7 @@ var ConcreteDashboard = function() {
 			setupTooltips();
 			setupResultMessages();
             setupDialogs();
-
+			setupFavorites();
 		}
 
 	}

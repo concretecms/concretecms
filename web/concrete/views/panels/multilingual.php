@@ -5,7 +5,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 <div class="ccm-panel-content-inner">
     <h5><?=t("Currently Viewing")?></h5>
     <ul class="item-select-list">
-        <?
+        <?php
         $relatedID = $currentSection->getTranslatedPageID($c);
         $icon = $ih->getSectionFlagIcon($currentSection);
         $locale = $currentSection->getLocale();
@@ -15,35 +15,46 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
     <h5><?=t('Mapped in Other Sections')?></h5>
     <ul class="item-select-list">
-        <? foreach($list as $m) {
-            $relatedID = $m->getTranslatedPageID($c);
-            $icon = $ih->getSectionFlagIcon($m);
-            $locale = $m->getLocale();
-            $cParent = Page::getByID($c->getCollectionParentID());
-            $cParentRelatedID = $m->getTranslatedPageID($cParent);
-        ?>
+        <?php foreach ($list as $m) {
+    $relatedID = $m->getTranslatedPageID($c);
+    $icon = $ih->getSectionFlagIcon($m);
+    $locale = $m->getLocale();
+    $cParent = Page::getByID($c->getCollectionParentID());
+    $cParentRelatedID = $m->getTranslatedPageID($cParent);
+    ?>
             <li>
-                <? if ($relatedID && $currentSection->getCollectionID() != $m->getCollectionID()) {
-                    $relatedPage = Page::getByID($relatedID, 'RECENT'); ?>
+                <?php if ($relatedID && $currentSection->getCollectionID() != $m->getCollectionID()) {
+    $relatedPage = Page::getByID($relatedID, 'RECENT');
+    ?>
                     <a href="<?=$relatedPage->getCollectionLink()?>"><?=$icon?> <?=$relatedPage->getCollectionName()?></a>
-                <? } else { ?>
+                <?php 
+} else {
+    ?>
                     <a href="#" class="ccm-panel-multilingual-section-no-mappings" data-launch-multilingual-menu="<?=$m->getCollectionID()?>"><?=$icon?> <span><?=t('None Created')?></span></a>
                     <div class="ccm-popover-inverse popover fade" data-multilingual-menu="<?=$m->getCollectionID()?>">
                         <div class="popover-inner">
                             <ul class="dropdown-menu">
-                                <? if ($cParentRelatedID) { ?>
+                                <?php if ($cParentRelatedID) {
+    ?>
                                     <li><a href="#" data-multilingual-create-page="<?=$m->getCollectionID()?>"><?=t('Create Page')?></a></li>
-                                <? } else { ?>
+                                <?php 
+} else {
+    ?>
                                     <li class="disabled"><a href="#" title="<?=t('Parent page does not exist. Create the parent page in this tree first.')?>"><?=t('Create Page')?></a></li>
-                                <? } ?>
+                                <?php 
+}
+    ?>
                                 <li class="divider"></li>
                                 <li><a href="#" data-multilingual-map-page="<?=$m->getCollectionID()?>"><?=t('Map Existing Page')?></a></li>
                             </ul>
                         </div>
                     </div>
-                <? } ?>
+                <?php 
+}
+    ?>
             </li>
-        <? } ?>
+        <?php 
+} ?>
     </ul>
 </div>
 

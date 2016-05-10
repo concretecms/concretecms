@@ -1,6 +1,6 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");
 $form = Loader::helper('form');
-print $form->textarea($editor->getConversationEditorInputName(), $editor->getConversationEditorMessageBody(), array('class'=>'unbound markdown_conversation_editor_'.$editor->cnvObject->cnvID));
+echo $form->textarea($editor->getConversationEditorInputName(), $editor->getConversationEditorMessageBody(), array('class' => 'unbound markdown_conversation_editor_'.$editor->cnvObject->cnvID));
 ?>
 <script type="text/javascript">
 	var me = $('textarea.unbound.markdown_conversation_editor_<?=$editor->cnvObject->cnvID?>').first().removeClass('unbound');

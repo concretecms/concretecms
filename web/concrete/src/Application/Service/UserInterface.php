@@ -119,7 +119,7 @@ class UserInterface
      * Outputs button text passed as arguments with a special Concrete wrapper for positioning
      * <code>
      *    $bh->buttons($myButton1, $myButton2, $myButton3);
-     * </code>
+     * </code>.
      *
      * @param string $buttons
      *
@@ -159,7 +159,7 @@ class UserInterface
      */
     public function showWhiteLabelMessage()
     {
-        return (Config::get('concrete.white_label.logo') || file_exists(DIR_APPLICATION . '/' . DIRNAME_IMAGES . '/logo_menu.png'));
+        return Config::get('concrete.white_label.logo') || file_exists(DIR_APPLICATION . '/' . DIRNAME_IMAGES . '/logo_menu.png');
     }
 
     /**

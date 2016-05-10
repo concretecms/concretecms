@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Block\Feature;
 
 use Concrete\Core\Editor\LinkAbstractor;

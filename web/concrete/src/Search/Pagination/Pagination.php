@@ -44,7 +44,9 @@ class Pagination extends Pagerfanta
      * is bootstrap 3) 2. it sets up URLs to start with the pass of the current page, and 3. it uses the default
      * item list query string parameter for paging. If you need more custom functionality you should consider
      * using the Pagerfanta\View\ViewInterface objects directly.
+     *
      * @param array
+     *
      * @return string
      */
     public function renderDefaultView($arguments = array())
@@ -57,6 +59,7 @@ class Pagination extends Pagerfanta
         $manager = Core::make('manager/view/pagination');
         $driver = $manager->driver($driver);
         $v = Core::make('\Concrete\Core\Search\Pagination\View\ViewRenderer', array($this, $driver));
+
         return $v->render($arguments);
     }
 

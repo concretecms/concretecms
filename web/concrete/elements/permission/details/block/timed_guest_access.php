@@ -1,24 +1,23 @@
-<?
+<?php
 defined('C5_EXECUTE') or die("Access Denied.");
 $c = $b->getBlockCollectionObject();
 $arHandle = $b->getAreaHandle();
 use \Concrete\Core\Permission\Duration as PermissionDuration;
+
 $pk = PermissionKey::getByHandle('view_block');
 $pk->setPermissionObject($b);
 $list = $pk->getAccessListItems();
-foreach($list as $pa) { 
-	$pae = $pa->getAccessEntityObject(); 
-	if ($pae->getAccessEntityTypeHandle() == 'group') {
-		if ($pae->getGroupObject()->getGroupID() == GUEST_GROUP_ID) {
-			$pd = $pa->getPermissionDurationObject();
-			if (!is_object($pd)) {
-				$pd = new PermissionDuration();
-			}
-		}
-	}
+foreach ($list as $pa) {
+    $pae = $pa->getAccessEntityObject();
+    if ($pae->getAccessEntityTypeHandle() == 'group') {
+        if ($pae->getGroupObject()->getGroupID() == GUEST_GROUP_ID) {
+            $pd = $pa->getPermissionDurationObject();
+            if (!is_object($pd)) {
+                $pd = new PermissionDuration();
+            }
+        }
+    }
 }
-
-
 
 ?>
 <div class="ccm-ui" id="ccm-permissions-access-entity-wrapper">

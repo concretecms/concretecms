@@ -4,8 +4,7 @@ namespace Concrete\Core\Legacy;
 /**
  * @deprecated
  */
-class BlockRecord extends Model {
-
-	public $bID;
-
+class BlockRecord extends Model
+{
+    public $bID;
 }

@@ -4,11 +4,10 @@ namespace Concrete\Core\Area\Layout\Preset;
 use Concrete\Core\Area\Layout\Layout;
 use Concrete\Core\Area\Layout\Preset\Formatter\UserFormatter;
 use Loader;
-use \Concrete\Core\Foundation\Object;
+use Concrete\Core\Foundation\Object;
 
 class UserPreset extends Object
 {
-
     /**
      * @var int
      */
@@ -27,6 +26,7 @@ class UserPreset extends Object
     /**
      * @param Layout $arLayout
      * @param string $name
+     *
      * @return Preset
      */
     public static function add(Layout $arLayout, $name)
@@ -36,9 +36,10 @@ class UserPreset extends Object
             'insert into AreaLayoutPresets (arLayoutID, arLayoutPresetName) values (?, ?)',
             array(
                 $arLayout->getAreaLayoutID(),
-                $name
+                $name,
             )
         );
+
         return static::getByID($db->Insert_ID());
     }
 
@@ -56,11 +57,13 @@ class UserPreset extends Object
                 $presets[] = $preset;
             }
         }
+
         return $presets;
     }
 
     /**
      * @param int $arLayoutPresetID
+     *
      * @return static
      */
     public static function getByID($arLayoutPresetID)
@@ -69,12 +72,13 @@ class UserPreset extends Object
         $row = $db->GetRow(
             'select arLayoutID, arLayoutPresetID, arLayoutPresetName from AreaLayoutPresets where arLayoutPresetID = ?',
             array(
-                $arLayoutPresetID
+                $arLayoutPresetID,
             )
         );
         if (is_array($row) && $row['arLayoutPresetID']) {
             $preset = new static();
             $preset->setPropertiesFromArray($row);
+
             return $preset;
         }
     }
@@ -85,11 +89,10 @@ class UserPreset extends Object
         $db->Execute(
             'delete from AreaLayoutPresets where arLayoutPresetID = ?',
             array(
-                $this->arLayoutPresetID
+                $this->arLayoutPresetID,
             )
         );
     }
-
 
     /**
      * @return int
@@ -133,7 +136,7 @@ class UserPreset extends Object
             'update AreaLayoutPresets set arLayoutID = ? where arLayoutPresetID = ?',
             array(
                 $arLayout->getAreaLayoutID(),
-                $this->arLayoutPresetID
+                $this->arLayoutPresetID,
             )
         );
         $this->arLayoutID = $arLayout->getAreaLayoutID();
@@ -149,7 +152,7 @@ class UserPreset extends Object
             'update AreaLayoutPresets set arLayoutPresetName = ? where arLayoutPresetID = ?',
             array(
                 $arLayoutPresetName,
-                $this->arLayoutPresetID
+                $this->arLayoutPresetID,
             )
         );
         $this->arLayoutPresetName = $arLayoutPresetName;
@@ -160,12 +163,12 @@ class UserPreset extends Object
         $formatter = new UserFormatter($this->getAreaLayoutObject());
         $columns = $this->getAreaLayoutObject()->getAreaLayoutColumns();
         $presetColumns = array();
-        foreach($columns as $column) {
+        foreach ($columns as $column) {
             $presetColumns[] = new Column($column->getColumnHtmlObject());
         }
         $p = new Preset($this->arLayoutID, $this->getAreaLayoutPresetName(),
             $formatter, $presetColumns);
+
         return $p;
     }
-
 }

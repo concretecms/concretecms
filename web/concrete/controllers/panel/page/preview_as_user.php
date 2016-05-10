@@ -1,9 +1,7 @@
 <?php
 namespace Concrete\Controller\Panel\Page;
 
-use Concrete\Core\Form\Service\Widget\DateTime;
 use Controller;
-use Loader;
 use Page;
 use Permissions;
 use Request;
@@ -14,7 +12,6 @@ use Config;
 
 class PreviewAsUser extends Controller
 {
-
     public function view()
     {
         $this->setViewObject(new View('/panels/page/preview_as/form'));
@@ -55,7 +52,5 @@ class PreviewAsUser extends Controller
             $response->setContent($view->render());
             $response->send();
         }
-
     }
-
 }

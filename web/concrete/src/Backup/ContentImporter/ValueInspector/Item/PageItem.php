@@ -1,12 +1,10 @@
 <?php
-
 namespace Concrete\Core\Backup\ContentImporter\ValueInspector\Item;
 
 use Concrete\Core\Page\Page;
 
 class PageItem extends AbstractItem
 {
-
     public function getDisplayName()
     {
         return t('Page');
@@ -37,6 +35,4 @@ class PageItem extends AbstractItem
             return $o->getCollectionID();
         }
     }
-
-
 }

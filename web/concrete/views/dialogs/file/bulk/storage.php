@@ -1,18 +1,22 @@
 <?php defined('C5_EXECUTE') or die("Access Denied."); ?>
 
 <form data-dialog-form="bulk-file-storage" method="post" action="<?=$controller->action('submit')?>">
-    <?php foreach($files as $f) { ?>
+    <?php foreach ($files as $f) {
+    ?>
         <input type="hidden" name="fID[]" value="<?=$f->getFileID()?>" />
-    <?php } ?>
+    <?php 
+} ?>
 
     <div class="ccm-ui">
         <?php
         use \Concrete\Core\File\StorageLocation\StorageLocation as FileStorageLocation;
-        
-        $locations = FileStorageLocation::getList();
-        foreach($locations as $fsl) { ?>
+
+$locations = FileStorageLocation::getList();
+        foreach ($locations as $fsl) {
+            ?>
             <div class="radio"><label><?=$form->radio('fslID', $fsl->getID()) ?> <?=$fsl->getDisplayName()?></label></div>
-        <?php } ?>
+        <?php 
+        } ?>
     </div>
 
     <div class="dialog-buttons">

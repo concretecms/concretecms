@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Page\Type\Composer\Control;
 
 use Concrete\Core\Page\Type\Type;

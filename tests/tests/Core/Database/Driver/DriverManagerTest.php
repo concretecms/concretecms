@@ -4,7 +4,6 @@ use Concrete\Core\Database\Driver\DriverManager;
 
 class DriverManagerTest extends PHPUnit_Framework_TestCase
 {
-
     /** @var DriverManager */
     protected $driverManager;
 
@@ -17,9 +16,8 @@ class DriverManagerTest extends PHPUnit_Framework_TestCase
     {
         $this->driverManager->configExtensions(
             array(
-                'test' => 'DriverManagerTest'));
+                'test' => 'DriverManagerTest', ));
 
         $this->assertInstanceOf('DriverManagerTest', $this->driverManager->driver('test'));
     }
-
 }

@@ -2,7 +2,10 @@
 namespace Concrete\Core\File;
 
 use Carbon\Carbon;
-use Concrete\Core\Attribute\Value\FileValue as FileAttributeValue;
+use Concrete\Core\Attribute\Key\FileKey;
+use Concrete\Core\Attribute\ObjectTrait;
+use Concrete\Core\Entity\Attribute\Value\FileValue;
+use Concrete\Core\Entity\Attribute\Value\Value\Value;
 use Concrete\Core\File\Exception\InvalidDimensionException;
 use Concrete\Core\File\Image\Thumbnail\Path\Resolver;
 use Concrete\Core\File\Image\Thumbnail\Thumbnail;
@@ -10,28 +13,46 @@ use Concrete\Core\File\Image\Thumbnail\Type\Type;
 use Concrete\Core\File\Image\Thumbnail\Type\Version as ThumbnailTypeVersion;
 use Concrete\Core\File\Type\TypeList as FileTypeList;
 use Concrete\Core\Http\FlysystemFileResponse;
-use Concrete\Flysystem\AdapterInterface;
-use Concrete\Flysystem\FileNotFoundException;
+use Doctrine\Common\Collections\ArrayCollection;
+use League\Flysystem\AdapterInterface;
+use League\Flysystem\FileNotFoundException;
 use Core;
 use Database;
 use Events;
-use FileAttributeKey;
 use Imagine\Exception\InvalidArgumentException as ImagineInvalidArgumentException;
 use Imagine\Image\ImageInterface;
 use Page;
 use Permissions;
 use stdClass;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use User;
 use View;
 
 /**
  * @Entity
- * @Table(name="FileVersions")
+ * @Table(
+ *     name="FileVersions",
+ *     indexes={
+ *     @Index(name="fvFilename", columns={"fvFilename"}),
+ *     @Index(name="fvExtension", columns={"fvExtension"}),
+ *     @Index(name="fvType", columns={"fvType"})
+ *     }
+ * )
  */
 class Version
 {
+    use ObjectTrait {
+        setAttribute as setFileVersionAttribute;
+    }
+
+    public function setAttribute($ak, $value)
+    {
+        $value = $this->setFileVersionAttribute($ak, $value);
+        if (is_object($value)) {
+            $this->attributes->add($value);
+        }
+    }
+
     const UT_REPLACE_FILE = 1;
     const UT_TITLE = 2;
     const UT_DESCRIPTION = 3;
@@ -40,10 +61,18 @@ class Version
     const UT_CONTENTS = 6;
     const UT_RENAME = 7;
 
+    public function __construct()
+    {
+        $this->attributes = new ArrayCollection();
+        $this->fvDateAdded = new \DateTime();
+        $this->fvActivateDateTime = new \DateTime();
+    }
+
     /**
      * /* @Id
      * @ManyToOne(targetEntity="File", inversedBy="versions")
      * @JoinColumn(name="fID", referencedColumnName="fID")
+     *
      * @var \Concrete\Core\File\File
      */
     protected $file;
@@ -56,7 +85,7 @@ class Version
      */
     protected $fvFilename = null;
     /**
-     * @Column(type="string")
+     * @Column(type="string", nullable=true)
      */
     protected $fvPrefix;
     /**
@@ -84,23 +113,33 @@ class Version
      */
     protected $fvApproverUID = 0;
     /**
-     * @Column(type="string")
+     * @Column(type="string", nullable=true)
      */
     protected $fvTitle = null;
     /**
-     * @Column(type="text")
+     * @Column(type="text", nullable=true)
      */
     protected $fvDescription = null;
     /**
-     * @Column(type="string")
+     * @Column(type="string", nullable=true)
      */
     protected $fvExtension = null;
+
+    /**
+     * @OneToMany(targetEntity="\Concrete\Core\Entity\Attribute\Value\FileValue",  mappedBy="version")
+     * @JoinColumns({
+     *   @JoinColumn(name="fID", referencedColumnName="fID"),
+     *   @JoinColumn(name="fvID", referencedColumnName="fvID")
+     * })
+     */
+    protected $attributes;
+
     /**
      * @Column(type="integer")
      */
     protected $fvType = 0;
     /**
-     * @Column(type="text")
+     * @Column(type="text", nullable=true)
      */
     protected $fvTags = null;
     /**
@@ -111,9 +150,6 @@ class Version
      * @Column(type="boolean")
      */
     protected $fvHasDetailThumbnail = false;
-
-    // Update type constants
-    protected $attributes = array();
 
     public static function add(\Concrete\Core\File\File $file, $filename, $prefix, $data = array())
     {
@@ -126,7 +162,7 @@ class Version
 
         $fvTitle = (isset($data['fvTitle'])) ? $data['fvTitle'] : '';
         $fvDescription = (isset($data['fvDescription'])) ? $data['fvDescription'] : '';
-        $fvTags = (isset($data['fvTags'])) ? Version::cleanTags($data['fvTags']) : '';
+        $fvTags = (isset($data['fvTags'])) ? self::cleanTags($data['fvTags']) : '';
         $fvIsApproved = (isset($data['fvIsApproved'])) ? $data['fvIsApproved'] : '1';
 
         $db = Database::get();
@@ -137,7 +173,7 @@ class Version
         $fv->fvFilename = $filename;
         $fv->fvPrefix = $prefix;
         $fv->fvDateAdded = $date;
-        $fv->fvIsApproved = (bool)$fvIsApproved;
+        $fv->fvIsApproved = (bool) $fvIsApproved;
         $fv->fvApproverUID = $uID;
         $fv->fvAuthorUID = $uID;
         $fv->fvActivateDateTime = $date;
@@ -168,7 +204,12 @@ class Version
             $cleanTags[] = trim($tag);
         }
         //the leading and trailing line break char is for searching: fvTag like %\ntag\n%
-        return "\n" . join("\n", $cleanTags) . "\n";
+        return "\n" . implode("\n", $cleanTags) . "\n";
+    }
+
+    public function setFilename($filename)
+    {
+        $this->fvFilename = $filename;
     }
 
     public function getPrefix()
@@ -190,6 +231,7 @@ class Version
                 $clean_tags[] = trim($tag);
             }
         }
+
         return $clean_tags;
     }
 
@@ -198,19 +240,8 @@ class Version
         return $this->fvTags;
     }
 
-    public function setAttribute($ak, $value)
-    {
-        if (!is_object($ak)) {
-            $ak = FileAttributeKey::getByHandle($ak);
-        }
-        $ak->setAttribute($this, $value);
-        $fo = $this->getFile();
-        $fo->reindex();
-        unset($ak);
-    }
-
     /**
-     * returns the File object associated with this FileVersion object
+     * returns the File object associated with this FileVersion object.
      *
      * @return \File
      */
@@ -222,52 +253,6 @@ class Version
     public function setFile(\Concrete\Core\File\File $file)
     {
         $this->file = $file;
-    }
-
-    public function clearAttribute($ak)
-    {
-        $db = Database::get();
-        $cav = $this->getAttributeValueObject($ak);
-        if (is_object($cav)) {
-            $cav->delete();
-        }
-        $fo = $this->getFile();
-        $fo->reindex();
-    }
-
-    public function getAttributeValueObject($ak, $createIfNotFound = false)
-    {
-        $db = Database::get();
-        $av = false;
-        $v = array($this->getFileID(), $this->getFileVersionID(), $ak->getAttributeKeyID());
-        $avID = $db->GetOne("SELECT avID FROM FileAttributeValues WHERE fID = ? AND fvID = ? AND akID = ?", $v);
-        if ($avID > 0) {
-            $av = FileAttributeValue::getByID($avID);
-            if (is_object($av)) {
-                $av->setFile($this->getFile());
-                $av->setAttributeKey($ak);
-            }
-        }
-
-        if ($createIfNotFound) {
-            $cnt = 0;
-
-            // Is this avID in use ?
-            if (is_object($av)) {
-                $cnt = $db->GetOne(
-                    "SELECT count(avID) FROM FileAttributeValues WHERE avID = ?",
-                    $av->getAttributeValueID()
-                );
-            }
-
-            if ((!is_object($av)) || ($cnt > 1)) {
-                $newAV = $ak->addAttributeValue();
-                $av = FileAttributeValue::getByID($newAV->getAttributeValueID());
-                $av->setFile($this->getFile());
-            }
-        }
-
-        return $av;
     }
 
     public function getFileID()
@@ -288,8 +273,16 @@ class Version
     public function delete($deleteFilesAndThumbnails = false)
     {
         $db = Database::get();
+        $em = $db->getEntityManager();
 
-        $db->Execute("DELETE FROM FileAttributeValues WHERE fID = ? AND fvID = ?", array($this->getFileID(), $this->fvID));
+        $values = array();
+
+        $category = \Core::make('Concrete\Core\Attribute\Category\FileCategory');
+
+        foreach ($this->attributes as $attribute) {
+            $category->deleteValue($attribute);
+        }
+
         $db->Execute("DELETE FROM FileVersionLog WHERE fID = ? AND fvID = ?", array($this->getFileID(), $this->fvID));
 
         $types = Type::getVersionList();
@@ -332,19 +325,21 @@ class Version
     /**
      * Returns an abstracted File object for the resource. NOT a concrete5 file object.
      *
-     * @return \Concrete\Flysystem\File
+     * @return \League\Flysystem\File
      */
     public function getFileResource()
     {
         $cf = Core::make('helper/concrete/file');
         $fs = $this->getFile()->getFileStorageLocationObject()->getFileSystemObject();
         $fo = $fs->get($cf->prefix($this->fvPrefix, $this->fvFilename));
+
         return $fo;
     }
 
     public function getMimeType()
     {
         $fre = $this->getFileResource();
+
         return $fre->getMimetype();
     }
 
@@ -364,6 +359,7 @@ class Version
         if (is_object($ui)) {
             return $ui->getUserDisplayName();
         }
+
         return t('(Unknown)');
     }
 
@@ -373,7 +369,7 @@ class Version
     }
 
     /**
-     * Gets the date a file version was added
+     * Gets the date a file version was added.
      *
      * @return string date formated like: 2009-01-01 00:00:00
      */
@@ -387,8 +383,13 @@ class Version
         return $this->fvExtension;
     }
 
+    public function setFileVersionID($fvID)
+    {
+        $this->fvID = $fvID;
+    }
+
     /**
-     * Takes the current value of the file version and makes a new one with the same values
+     * Takes the current value of the file version and makes a new one with the same values.
      */
     public function duplicate()
     {
@@ -397,7 +398,7 @@ class Version
         $qq = $em->createQuery('SELECT max(v.fvID) FROM \Concrete\Core\File\Version v where v.file = :file');
         $qq->setParameter('file', $this->file);
         $fvID = $qq->getSingleScalarResult();
-        $fvID++;
+        ++$fvID;
 
         $fv = clone $this;
         $fv->fvID = $fvID;
@@ -405,25 +406,19 @@ class Version
         $fv->fvDateAdded = new \DateTime();
 
         $em->persist($fv);
-        $em->flush();
 
         $this->deny();
 
-        $r = $db->Execute(
-            'SELECT fvID, akID, avID FROM FileAttributeValues WHERE fID = ? AND fvID = ?',
-            array($this->getFileID(), $this->fvID)
-        );
-        while ($row = $r->fetchRow()) {
-            $db->Execute(
-                "INSERT INTO FileAttributeValues (fID, fvID, akID, avID) VALUES (?, ?, ?, ?)",
-                array(
-                    $this->getFileID(),
-                    $fvID,
-                    $row['akID'],
-                    $row['avID']
-                )
-            );
+        foreach ($this->attributes as $value) {
+            $value = clone $value;
+            /*
+             * @var $value AttributeValue
+             */
+            $value->setVersion($fv);
+            $em->persist($value);
         }
+
+        $em->flush();
 
         $fe = new \Concrete\Core\File\Event\FileVersion($fv);
         Events::dispatch('on_file_version_duplicate', $fe);
@@ -462,11 +457,12 @@ class Version
         $ext = $fh->getExtension($this->fvFilename);
 
         $ftl = FileTypeList::getType($ext);
+
         return $ftl;
     }
 
     /**
-     * Returns an array containing human-readable descriptions of everything that happened in this version
+     * Returns an array containing human-readable descriptions of everything that happened in this version.
      */
     public function getVersionLogComments()
     {
@@ -513,6 +509,7 @@ class Version
             // normalize the keys
             $updates1[] = $val;
         }
+
         return $updates1;
     }
 
@@ -534,7 +531,7 @@ class Version
                 $this->getFileID(),
                 $this->getFileVersionID(),
                 $updateTypeID,
-                $updateTypeAttributeID
+                $updateTypeAttributeID,
             )
         );
     }
@@ -625,7 +622,7 @@ class Version
     }
 
     /**
-     * Return the contents of a file
+     * Return the contents of a file.
      */
     public function getFileContents()
     {
@@ -643,13 +640,12 @@ class Version
     {
         $c = Page::getCurrentPage();
         $cID = ($c instanceof Page) ? $c->getCollectionID() : 0;
+
         return View::url('/download_file', 'force', $this->getFileID(), $cID);
     }
 
     /**
      * Forces the download of a file.
-     *
-     * @return void
      */
     public function forceDownload()
     {
@@ -713,30 +709,43 @@ class Version
         return $thumbnails;
     }
 
-    /**
-     * Gets an attribute for the file. If "nice mode" is set, we display it nicely
-     * for use in the file attributes table
-     */
-
-    public function getAttribute($ak, $mode = false)
+    public function getObjectAttributeCategory()
     {
-        if (is_object($ak)) {
-            $akHandle = $ak->getAttributeKeyHandle();
-        } else {
-            $akHandle = $ak;
-        }
+        return \Core::make('\Concrete\Core\Attribute\Category\FileCategory');
+    }
 
-        if (!isset($this->attributes[$akHandle . $mode])) {
-            $this->attributes[$akHandle . $mode] = false;
-            $ak = FileAttributeKey::getByHandle($akHandle);
-            if (is_object($ak)) {
-                $av = $this->getAttributeValueObject($ak);
-                if (is_object($av)) {
-                    $this->attributes[$akHandle . $mode] = $av->getValue($mode);
-                }
+    /**
+     * Necessary because getAttribute() returns the Value Value object, and this returns the
+     * File Attribute Value object.
+     *
+     * @param $ak
+     * @param $createIfNotExists bool
+     *
+     * @return mixed
+     */
+    public function getAttributeValueObject($ak, $createIfNotExists = false)
+    {
+        $handle = $ak;
+        if (is_object($ak)) {
+            $handle = $ak->getAttributeKeyHandle();
+        }
+        foreach ($this->attributes as $value) {
+            if ($value->getAttributeKey()->getAttributeKeyHandle() == $handle) {
+                return $value;
             }
         }
-        return $this->attributes[$akHandle . $mode];
+
+        if ($createIfNotExists) {
+            if (!is_object($ak)) {
+                $ak = FileKey::getByHandle($ak);
+            }
+
+            $attributeValue = new FileValue();
+            $attributeValue->setVersion($this);
+            $attributeValue->setAttributeKey($ak);
+
+            return $attributeValue;
+        }
     }
 
     public function rescanThumbnails()
@@ -745,6 +754,7 @@ class Version
             return false;
         }
 
+        $width = $this->getAttribute('width');
         $types = Type::getVersionList();
 
         $fr = $this->getFileResource();
@@ -754,11 +764,10 @@ class Version
 
             foreach ($types as $type) {
 
-
                 // delete the file if it exists
                 $this->deleteThumbnail($type);
 
-                if ($this->getAttribute('width') <= $type->getWidth()) {
+                if ($width <= $type->getWidth()) {
                     continue;
                 }
 
@@ -803,7 +812,7 @@ class Version
                     $thumbnail->get($thumbnailType, $thumbnailOptions),
                     array(
                         'visibility' => AdapterInterface::VISIBILITY_PUBLIC,
-                        'mimetype' => $mimetype
+                        'mimetype' => $mimetype,
                     )
                 );
 
@@ -825,7 +834,9 @@ class Version
 
     /**
      * @deprecated
+     *
      * @param $level
+     *
      * @return mixed
      */
     public function hasThumbnail($level)
@@ -846,6 +857,7 @@ class Version
             $type = Type::getByHandle(\Config::get('concrete.icons.file_manager_detail.handle'));
             $baseSrc = $this->getThumbnailURL($type->getBaseVersion());
             $doubledSrc = $this->getThumbnailURL($type->getDoubledVersion());
+
             return '<img src="' . $baseSrc . '" data-at2x="' . $doubledSrc . '" />';
         } else {
             return $this->getTypeObject()->getThumbnail();
@@ -878,6 +890,7 @@ class Version
     /**
      * When given a thumbnail type versin object and a full path to a file on the server
      * the file is imported into the system as is as the thumbnail.
+     *
      * @param ThumbnailTypeVersion $version
      * @param $path
      */
@@ -896,10 +909,9 @@ class Version
             file_get_contents($path),
             array(
                 'visibility' => AdapterInterface::VISIBILITY_PUBLIC,
-                'mimetype'   => 'image/jpeg'
+                'mimetype' => 'image/jpeg',
             )
         );
-
 
         if ($version->getHandle() == \Config::get('concrete.icons.file_manager_listing.handle')) {
             $this->fvHasListingThumbnail = true;
@@ -913,7 +925,7 @@ class Version
     }
 
     /**
-     * Returns a full URL to the file on disk
+     * Returns a full URL to the file on disk.
      */
     public function getURL()
     {
@@ -936,7 +948,16 @@ class Version
     {
         $c = Page::getCurrentPage();
         $cID = ($c instanceof Page) ? $c->getCollectionID() : 0;
+
         return View::url('/download_file', $this->getFileID(), $cID);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAttributes()
+    {
+        return $this->attributes;
     }
 
     /**
@@ -949,7 +970,16 @@ class Version
         $fh = Core::make('helper/file');
         $ext = $fh->getExtension($this->fvFilename);
         $ftl = FileTypeList::getType($ext);
-        $db = Database::get();
+
+        if (is_object($ftl)) {
+            if ($ftl->getCustomImporter() != false) {
+                $this->fvGenericType = $ftl->getGenericType();
+                $cl = $ftl->getCustomInspector();
+                $cl->inspect($this);
+            }
+        }
+
+        \ORM::entityManager('core')->refresh($this);
 
         $fsr = $this->getFileResource();
         if (!$fsr->isFile()) {
@@ -965,13 +995,7 @@ class Version
         }
         $this->fvSize = $size;
 
-        if (is_object($ftl)) {
-            if ($ftl->getCustomImporter() != false) {
-                $this->fvGenericType = $ftl->getGenericType();
-                $cl = $ftl->getCustomInspector();
-                $cl->inspect($this);
-            }
-        }
+
 
         if ($rescanThumbnails) {
             $this->rescanThumbnails();
@@ -993,7 +1017,7 @@ class Version
      */
     public function getJSONObject()
     {
-        $r = new stdClass;
+        $r = new stdClass();
         $fp = new Permissions($this->getFile());
         $r->canCopyFile = $fp->canCopyFile();
         $r->canEditFileProperties = $fp->canEditFileProperties();
@@ -1013,11 +1037,13 @@ class Version
         $r->fileName = $this->getFilename();
         $r->resultsThumbnailImg = $this->getListingThumbnailImage();
         $r->fID = $this->getFileID();
+        $r->treeNodeMenu = new Menu($this->getfile());
+
         return $r;
     }
 
     /**
-     * Checks current viewers for this type and returns true if there is a viewer for this type, false if not
+     * Checks current viewers for this type and returns true if there is a viewer for this type, false if not.
      */
     public function canView()
     {
@@ -1025,6 +1051,7 @@ class Version
         if (is_object($to) && $to->getView() != '') {
             return true;
         }
+
         return false;
     }
 
@@ -1034,12 +1061,14 @@ class Version
         if (is_object($to) && $to->getEditor() != '') {
             return true;
         }
+
         return false;
     }
 
     public function getGenericTypeText()
     {
         $to = $this->getTypeObject();
+
         return $to->getGenericTypeText($to->getGenericType());
     }
 
@@ -1058,7 +1087,7 @@ class Version
             $doubledSrc = $this->getThumbnailURL($type->getDoubledVersion());
             $width = $type->getWidth();
             $height = $type->getHeight();
-            return sprintf('<img width="%s" height="%s" src="%s" data-at2x="%s">', $width, $height, $baseSrc, $doubledSrc);
+            return sprintf('<img class="ccm-file-manager-list-thumbnail" src="%s" data-at2x="%s">', $baseSrc, $doubledSrc);
         } else {
             return $this->getTypeObject()->getThumbnail();
         }

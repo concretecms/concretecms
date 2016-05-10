@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Asset;
 
 use URL;

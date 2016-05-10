@@ -1,14 +1,13 @@
 <?php
 namespace Concrete\Core\Page;
 
-use \Symfony\Component\EventDispatcher\GenericEvent;
+use Symfony\Component\EventDispatcher\GenericEvent;
 use User;
 use Symfony\Component\HttpFoundation\Request;
 use Concrete\Core\Http\RequestEventInterface;
 
 class Event extends GenericEvent implements RequestEventInterface
 {
-
     protected $page;
     protected $user;
     protected $request;

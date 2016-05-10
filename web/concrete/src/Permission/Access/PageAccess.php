@@ -1,9 +1,10 @@
 <?php
 namespace Concrete\Core\Permission\Access;
-use Database;
-class PageAccess extends Access {
 
-	public static function usePermissionCollectionIDForIdentifier() {
+class PageAccess extends Access
+{
+    public static function usePermissionCollectionIDForIdentifier()
+    {
         static $usePermissionsCollectionID;
         if (!isset($usePermissionsCollectionID)) {
             // we do this because these five items are known to be OK for caching permissions against
@@ -22,11 +23,11 @@ class PageAccess extends Access {
                 } else {
                     $usePermissionsCollectionID = true;
                 }
-            } catch(\Exception $e) {
+            } catch (\Exception $e) {
                 $usePermissionsCollectionID = false;
             }
         }
-        return $usePermissionsCollectionID;
-	}
 
+        return $usePermissionsCollectionID;
+    }
 }

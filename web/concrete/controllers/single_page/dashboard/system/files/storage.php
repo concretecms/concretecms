@@ -1,45 +1,50 @@
-<?
+<?php
 namespace Concrete\Controller\SinglePage\Dashboard\System\Files;
-use \Concrete\Core\Page\Controller\DashboardPageController;
-use Config;
+
+use Concrete\Core\Page\Controller\DashboardPageController;
 use Loader;
-use \Concrete\Core\File\StorageLocation\StorageLocation as FileStorageLocation;
+use Concrete\Core\File\StorageLocation\StorageLocation as FileStorageLocation;
 use Concrete\Core\File\StorageLocation\Type\Type;
 
-class Storage extends DashboardPageController {
+class Storage extends DashboardPageController
+{
+    public $helpers = array('form', 'concrete/ui', 'validation/token', 'concrete/file');
 
-	var $helpers = array('form','concrete/ui','validation/token', 'concrete/file');
-	
-	public function view($updated=false) {
+    public function view($updated = false)
+    {
         $this->set('locations', FileStorageLocation::getList());
         $types = array();
         $storageLocationTypes = Type::getList();
-        foreach($storageLocationTypes as $type) {
+        foreach ($storageLocationTypes as $type) {
             if ($type->getHandle() == 'default') {
                 continue;
             }
             $types[$type->getID()] = $type->getName();
         }
         $this->set('types', $types);
-	}
+    }
 
-    public function select_type() {
+    public function select_type()
+    {
         $fslTypeID = $this->request('fslTypeID');
         $type = Type::getByID($fslTypeID);
         $this->set('type', $type);
     }
 
-    public function storage_location_added() {
-		$this->set('message', t('File storage location added.'));
-		$this->view();
-	}
+    public function storage_location_added()
+    {
+        $this->set('message', t('File storage location added.'));
+        $this->view();
+    }
 
-    public function storage_location_deleted() {
+    public function storage_location_deleted()
+    {
         $this->set('message', t('File storage location removed.'));
         $this->view();
     }
 
-    public function storage_location_updated() {
+    public function storage_location_updated()
+    {
         $this->set('message', t('File storage location saved.'));
         $this->view();
     }
@@ -123,7 +128,6 @@ class Storage extends DashboardPageController {
             $this->redirect('/dashboard/system/files/storage', 'storage_location_deleted');
         }
         $this->edit($request->request->get('fslID'));
-
     }
 
     public function add()
@@ -145,5 +149,4 @@ class Storage extends DashboardPageController {
 
         $this->set('type', $type);
     }
-
 }

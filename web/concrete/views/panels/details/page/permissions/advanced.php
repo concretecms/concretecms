@@ -1,44 +1,67 @@
-<?
+<?php
 defined('C5_EXECUTE') or die("Access Denied.");
 ?>
 <section class="ccm-ui">
 	<header><?=t('Page Permissions')?></header>
 
-	<?
-	  $cpc = $c->getPermissionsCollectionObject();
-	if ($c->getCollectionInheritance() == "PARENT") { ?>
-		<div class="alert alert-info"><?=t('This page inherits its permissions from:');?> <a target="_blank" href="<?=URL::to($cpc)?>"><?=$cpc->getCollectionName()?></a></div>
-	<? } ?>		
+	<?php
+      $cpc = $c->getPermissionsCollectionObject();
+    if ($c->getCollectionInheritance() == "PARENT") {
+        ?>
+		<div class="alert alert-info"><?=t('This page inherits its permissions from:');
+        ?> <a target="_blank" href="<?=URL::to($cpc)?>"><?=$cpc->getCollectionName()?></a></div>
+	<?php 
+    } ?>		
 
 
 	<div>
 		<div class="form-group">
-			<label for="ccm-page-permissions-inherit"><?=t('Assign Permissions')?></label>
+			<label class="control-label" for="ccm-page-permissions-inherit"><?=t('Assign Permissions')?></label>
 			<select id="ccm-page-permissions-inherit" class="form-control">
-			<? if ($c->getCollectionID() > 1) { ?><option value="PARENT" <? if ($c->getCollectionInheritance() == "PARENT") { ?> selected<? } ?>><?=t('By Area of Site (Hierarchy)')?></option><? } ?>
-			<? if ($c->getMasterCollectionID() > 1) { ?><option value="TEMPLATE"  <? if ($c->getCollectionInheritance() == "TEMPLATE") { ?> selected<? } ?>><?=t('From Page Type Defaults')?></option><? } ?>
-			<option value="OVERRIDE" <? if ($c->getCollectionInheritance() == "OVERRIDE") { ?> selected<? } ?>><?=t('Manually')?></option>
+			<?php if ($c->getCollectionID() > 1) {
+    ?><option value="PARENT" <?php if ($c->getCollectionInheritance() == "PARENT") {
+    ?> selected<?php 
+}
+    ?>><?=t('By Area of Site (Hierarchy)')?></option><?php 
+} ?>
+			<?php if ($c->getMasterCollectionID() > 1) {
+    ?><option value="TEMPLATE"  <?php if ($c->getCollectionInheritance() == "TEMPLATE") {
+    ?> selected<?php 
+}
+    ?>><?=t('From Page Type Defaults')?></option><?php 
+} ?>
+			<option value="OVERRIDE" <?php if ($c->getCollectionInheritance() == "OVERRIDE") {
+    ?> selected<?php 
+} ?>><?=t('Manually')?></option>
 			</select>
 		</div>
-	<? if (!$c->isMasterCollection()) { ?>
+	<?php if (!$c->isMasterCollection()) {
+    ?>
 		<div class="form-group">
-			<label for="ccm-page-permissions-subpages-override-template-permissions"><?=t('Subpage Permissions')?></label>
+			<label class="control-label" for="ccm-page-permissions-subpages-override-template-permissions"><?=t('Subpage Permissions')?></label>
 			<select id="ccm-page-permissions-subpages-override-template-permissions" class="form-control">
-				<option value="0"<? if (!$c->overrideTemplatePermissions()) { ?>selected<? } ?>><?=t('Inherit page type default permissions.')?></option>
-				<option value="1"<? if ($c->overrideTemplatePermissions()) { ?>selected<? } ?>><?=t('Inherit the permissions of this page.')?></option>
+				<option value="0"<?php if (!$c->overrideTemplatePermissions()) {
+    ?>selected<?php 
+}
+    ?>><?=t('Inherit page type default permissions.')?></option>
+				<option value="1"<?php if ($c->overrideTemplatePermissions()) {
+    ?>selected<?php 
+}
+    ?>><?=t('Inherit the permissions of this page.')?></option>
 			</select>
 		</div>
-	<? } ?>
+	<?php 
+} ?>
 	</div>
 
 	<hr/>
 	
 	<p class="lead"><?=t('Current Permission Set')?></p>
 
-    <? $cat = PermissionKeyCategory::getByHandle('page');?>
+    <?php $cat = PermissionKeyCategory::getByHandle('page');?>
 	<form method="post" id="ccm-permission-list-form" data-dialog-form="permissions" data-panel-detail-form="permissions" action="<?=$cat->getToolsURL("save_permission_assignments")?>&cID=<?=$c->getCollectionID()?>">
-        <? Loader::element('permission/lists/page', array(
-            'page' => $c, 'editPermissions' => $editPermissions
+        <?php Loader::element('permission/lists/page', array(
+            'page' => $c, 'editPermissions' => $editPermissions,
         ))?>
     </form>
 </section>
@@ -51,12 +74,14 @@ defined('C5_EXECUTE') or die("Access Denied.");
     </div>
 </div>
 
-<? if ($editPermissions) { ?>
+<?php if ($editPermissions) {
+    ?>
     <div class="ccm-panel-detail-form-actions dialog-buttons">
         <button class="pull-left btn btn-default" type="button" data-dialog-action="cancel" data-panel-detail-action="cancel"><?=t('Cancel')?></button>
         <button class="pull-right btn btn-success" type="button" data-dialog-action="submit" data-panel-detail-action="submit"><?=t('Save Changes')?></button>
     </div>
-<? } ?>
+<?php 
+} ?>
 
 
 <script type="text/javascript">

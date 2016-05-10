@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Controller\SinglePage\Dashboard\System\Basics;
 
 use Concrete\Core\Page\Controller\DashboardPageController;
@@ -7,7 +6,6 @@ use Config;
 
 class Timezone extends DashboardPageController
 {
-
     public function view()
     {
         $this->set('user_timezones', Config::get('concrete.misc.user_timezones'));
@@ -56,7 +54,5 @@ class Timezone extends DashboardPageController
             $this->error->add($this->token->getErrorMessage());
             $this->view();
         }
-
     }
-
 }

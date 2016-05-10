@@ -6,7 +6,6 @@ use Symfony\Component\EventDispatcher\Event as AbstractEvent;
 
 class FileSetFile extends AbstractEvent
 {
-
     protected $fs;
 
     public function getFileSetFileObject()
@@ -18,5 +17,4 @@ class FileSetFile extends AbstractEvent
     {
         $this->fs = $fs;
     }
-
 }

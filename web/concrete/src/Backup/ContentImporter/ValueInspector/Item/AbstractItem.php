@@ -1,12 +1,8 @@
 <?php
-
 namespace Concrete\Core\Backup\ContentImporter\ValueInspector\Item;
-
-use Concrete\Core\Backup\ContentImporter\ValueInspector\Item\ItemInterface;
 
 abstract class AbstractItem implements ItemInterface
 {
-
     protected $reference;
 
     public function getReference()
@@ -23,5 +19,4 @@ abstract class AbstractItem implements ItemInterface
     {
         $this->reference = $reference;
     }
-
 }

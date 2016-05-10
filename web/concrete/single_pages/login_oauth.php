@@ -17,30 +17,31 @@ $form = Loader::helper('form');
 			<h1><?=t('Sign in to %s', tc('SiteName', Config::get('concrete.site')))?></h1>
 		</div>
 		<?php
-		if (count($activeAuths) > 1) {
-			?>
+        if (count($activeAuths) > 1) {
+            ?>
 			<ul class="nav nav-tabs">
 				<?php
-				$first = true;
-				foreach ($activeAuths as $auth) {
-					?>
-					<li<?=$first?" class='active'":''?>>
+                $first = true;
+            foreach ($activeAuths as $auth) {
+                ?>
+					<li<?=$first ? " class='active'" : ''?>>
 						<a data-authType='<?=$auth->getAuthenticationTypeHandle()?>' href='#<?=$auth->getAuthenticationTypeHandle()?>'><?=$auth->getAuthenticationTypeName()?></a>
 					</li>
 					<?php
-					$first = false;
-				}
-				?>
+                    $first = false;
+            }
+            ?>
 			</ul>
 			<?php
-		}
-		?>
+
+        }
+        ?>
 		<div class='authTypes row'>
 			<?php
-			$first = true;
-			foreach ($activeAuths as $auth) {
-				?>
-				<div data-authType='<?=$auth->getAuthenticationTypeHandle()?>' style='<?=$first?"display:block":"display:none"?>'>
+            $first = true;
+            foreach ($activeAuths as $auth) {
+                ?>
+				<div data-authType='<?=$auth->getAuthenticationTypeHandle()?>' style='<?=$first ? "display:block" : "display:none"?>'>
 					<fieldset>
 						<form method='post' class='form-horizontal' action='<?=$view->action('authenticate', $auth->getAuthenticationTypeHandle())?>'>
 							<div class='authForm'>
@@ -50,9 +51,9 @@ $form = Loader::helper('form');
 					</fieldset>
 				</div>
 				<?php
-				$first = false;
-			}
-			?>
+                $first = false;
+            }
+            ?>
 		</div>
 		<div class='forgotPassword'>
 			<h2><?=t('Forgot Your Password?')?></h2>
@@ -67,7 +68,7 @@ $form = Loader::helper('form');
 					</div>
 				</div>
 				<div class='actions'>
-					<?=$form->button('resetPassword','Reset and Email Password')?>
+					<?=$form->button('resetPassword', 'Reset and Email Password')?>
 				</div>
 			</form>
 		</div>

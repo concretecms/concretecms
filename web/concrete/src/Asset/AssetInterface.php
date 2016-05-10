@@ -3,7 +3,7 @@
  * Created by PhpStorm.
  * User: Korvin
  * Date: 7/25/15
- * Time: 8:35 AM
+ * Time: 8:35 AM.
  */
 namespace Concrete\Core\Asset;
 

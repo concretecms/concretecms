@@ -1,26 +1,23 @@
-<?
+<?php
 namespace Concrete\Controller\Dialog\Area\Layout;
 
-use \Concrete\Controller\Backend\UserInterface as BackendInterfaceController;
-use Concrete\Core\Area\Layout\Preset\Column;
+use Concrete\Controller\Backend\UserInterface as BackendInterfaceController;
 use Concrete\Core\Page\EditResponse;
-use HtmlObject\Element;
 use PermissionKey;
 use Exception;
-use Loader;
 use Request;
-use \Concrete\Core\Area\Layout\Preset\Preset;
-use \Concrete\Core\Area\Layout\Preset\UserPreset;
-use \Concrete\Core\Area\Layout\Layout as AreaLayout;
+use Concrete\Core\Area\Layout\Preset\Preset;
+use Concrete\Core\Area\Layout\Preset\UserPreset;
+use Concrete\Core\Area\Layout\Layout as AreaLayout;
 
 class Presets extends BackendInterfaceController
 {
-
     protected $viewPath = '/dialogs/area/layout/presets';
 
     protected function canAccess()
     {
         $pk = PermissionKey::getByHandle('manage_layout_presets');
+
         return $pk->validate();
     }
 
@@ -50,10 +47,10 @@ class Presets extends BackendInterfaceController
 
         $existingPreset = Preset::getByID($arLayoutPresetID);
         if (is_object($existingPreset)) {
-            $r = new \stdClass;
+            $r = new \stdClass();
             $formatter = $existingPreset->getFormatter();
             $container = $formatter->getPresetContainerHtmlObject();
-            foreach($existingPreset->getColumns() as $column) {
+            foreach ($existingPreset->getColumns() as $column) {
                 $html = $column->getColumnHtmlObjectEditMode();
                 $container->appendChild($html);
             }
@@ -88,8 +85,6 @@ class Presets extends BackendInterfaceController
                 $pr->setMessage(t('Area layout preset saved successfully.'));
             }
             $pr->outputJSON();
-
         }
     }
 }
-

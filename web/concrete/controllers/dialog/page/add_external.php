@@ -1,24 +1,25 @@
-<?
+<?php
 namespace Concrete\Controller\Dialog\Page;
-use \Concrete\Controller\Backend\UserInterface\Page as BackendInterfacePageController;
-use PageType;
-use Loader;
+
+use Concrete\Controller\Backend\UserInterface\Page as BackendInterfacePageController;
 use URL;
 use Concrete\Core\Page\EditResponse;
 
-class AddExternal extends BackendInterfacePageController {
+class AddExternal extends BackendInterfacePageController
+{
+    protected $viewPath = '/dialogs/page/add_external';
 
-	protected $viewPath = '/dialogs/page/add_external';
+    protected function canAccess()
+    {
+        return $this->permissions->canAddExternalLink();
+    }
 
-	protected function canAccess() {
-		return $this->permissions->canAddExternalLink();
-	}
+    public function view()
+    {
+    }
 
-	public function view() {
-
-	}
-
-    public function submit() {
+    public function submit()
+    {
         if ($this->validateAction()) {
             $request = \Request::getInstance();
             $this->page->addCollectionAliasExternal(
@@ -33,6 +34,4 @@ class AddExternal extends BackendInterfacePageController {
             $r->outputJSON();
         }
     }
-
 }
-

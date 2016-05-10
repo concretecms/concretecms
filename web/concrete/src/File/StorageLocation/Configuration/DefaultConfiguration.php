@@ -3,7 +3,6 @@ namespace Concrete\Core\File\StorageLocation\Configuration;
 
 class DefaultConfiguration extends LocalConfiguration
 {
-
     protected $default = true;
 
     public function __construct()

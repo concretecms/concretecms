@@ -62,6 +62,11 @@ module.exports = function(grunt) {
     // List of the JavaScripts to be generated
     var js = {
 
+        autosize: {
+            dest: '<%= DIR_BASE %>/concrete/js/autosize.js',
+            src: '<%= DIR_BASE %>/concrete/js/build/vendor/autosize/autosize.js'
+        },
+
         redactor: {
             dest: '<%= DIR_BASE %>/concrete/js/redactor.js',
             src: [
@@ -86,7 +91,6 @@ module.exports = function(grunt) {
                 '<%= DIR_BASE %>/concrete/js/build/vendor/jquery-form/jquery-form.js',
                 '<%= DIR_BASE %>/concrete/js/build/vendor/jquery-mousewheel/jquery.mousewheel.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/app/concrete5.js',
-                '<%= DIR_BASE %>/concrete/js/build/core/app/concrete5-const.js',
                 '<%= DIR_BASE %>/concrete/js/build/vendor/jquery-liveupdate/jquery-liveupdate.js',
                 '<%= DIR_BASE %>/concrete/js/build/vendor/jquery-pep/jquery-pep.js',
                 //needs some handholding
@@ -105,6 +109,7 @@ module.exports = function(grunt) {
                 '<%= DIR_BASE %>/concrete/js/build/core/app/in-context-menu.js',
                 '<%= DIR_BASE %>/concrete/js/build/vendor/jquery-liveupdate/quicksilver.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/app/remote-marketplace.js',
+                '<%= DIR_BASE %>/concrete/js/build/core/app/search/table.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/app/search/base.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/app/progressive-operations.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/app/custom-style.js',
@@ -133,7 +138,8 @@ module.exports = function(grunt) {
                 '<%= DIR_BASE %>/concrete/js/build/core/app/edit-mode/blocktype.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/app/edit-mode/stack.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/app/edit-mode/duplicateblock.js',
-                '<%= DIR_BASE %>/concrete/js/build/core/app/edit-mode/stackblock.js'
+                '<%= DIR_BASE %>/concrete/js/build/core/app/edit-mode/stackblock.js',
+                '<%= DIR_BASE %>/concrete/js/build/core/stacks/menu.js'
             ]
         },
         filemanager: {
@@ -141,9 +147,19 @@ module.exports = function(grunt) {
             src: [
                 '<%= DIR_BASE %>/concrete/js/build/core/file-manager/search.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/file-manager/selector.js',
-                '<%= DIR_BASE %>/concrete/js/build/core/file-manager/menu.js'
+                '<%= DIR_BASE %>/concrete/js/build/core/file-manager/menu.js',
+                '<%= DIR_BASE %>/concrete/js/build/core/file-manager/header.js'
             ]
         },
+
+        express: {
+            dest: '<%= DIR_BASE %>/concrete/js/express.js',
+            src: [
+                '<%= DIR_BASE %>/concrete/js/build/core/express/search.js',
+                '<%= DIR_BASE %>/concrete/js/build/core/express/selector.js'
+            ]
+        },
+
 
         select2: {
             dest: '<%= DIR_BASE %>/concrete/js/select2.js',
@@ -259,7 +275,6 @@ module.exports = function(grunt) {
             src: '<%= DIR_BASE %>/concrete/js/build/vendor/kinetic/kinetic.js'
         },
 
-
         jquery_backstretch: {
             dest: '<%= DIR_BASE %>/concrete/js/backstretch.js',
             src: '<%= DIR_BASE %>/concrete/js/build/vendor/backstretch/backstretch.js'
@@ -281,14 +296,9 @@ module.exports = function(grunt) {
             ]
         },
 
-        ccm_topics: {
-            dest: '<%= DIR_BASE %>/concrete/js/topics.js',
-            src: '<%= DIR_BASE %>/concrete/js/build/core/topics.js'
-        },
-
-        ccm_groups: {
-            dest: '<%= DIR_BASE %>/concrete/js/groups.js',
-            src: '<%= DIR_BASE %>/concrete/js/build/core/groups.js'
+        ccm_tree: {
+            dest: '<%= DIR_BASE %>/concrete/js/tree.js',
+            src: '<%= DIR_BASE %>/concrete/js/build/core/tree.js'
         },
 
         ccm_layouts: {
@@ -387,11 +397,11 @@ module.exports = function(grunt) {
         '<%= DIR_BASE %>/concrete/css/dynatree.css': '<%= DIR_BASE %>/concrete/css/build/vendor/dynatree/dynatree.less',
         '<%= DIR_BASE %>/concrete/css/sitemap.css': '<%= DIR_BASE %>/concrete/css/build/core/sitemap.less',
         '<%= DIR_BASE %>/concrete/css/file-manager.css': '<%= DIR_BASE %>/concrete/css/build/core/file-manager.less',
+        '<%= DIR_BASE %>/concrete/css/express.css': '<%= DIR_BASE %>/concrete/css/build/core/express.less',
         '<%= DIR_BASE %>/concrete/css/conversations.css': '<%= DIR_BASE %>/concrete/css/build/core/conversations.less',
         '<%= DIR_BASE %>/concrete/css/gathering/display.css': '<%= DIR_BASE %>/concrete/css/build/core/gathering/display.less',
         '<%= DIR_BASE %>/concrete/css/gathering/base.css': '<%= DIR_BASE %>/concrete/css/build/core/gathering/base.less',
         '<%= DIR_BASE %>/concrete/css/redactor.css': '<%= DIR_BASE %>/concrete/css/build/vendor/redactor/redactor.less',
-        '<%= DIR_BASE %>/concrete/css/topics.css': '<%= DIR_BASE %>/concrete/css/build/core/topics.less',
         '<%= DIR_BASE %>/concrete/themes/elemental/css/bootstrap-modified.css': '<%= DIR_BASE %>/concrete/themes/elemental/css/build/bootstrap-3.2.0/bootstrap.less',
         '<%= DIR_BASE %>/concrete/css/frontend/pagination.css': '<%= DIR_BASE %>/concrete/css/build/core/frontend/pagination.less',
         '<%= DIR_BASE %>/concrete/css/translator.css': '<%= DIR_BASE %>/concrete/css/build/core/translator.less'

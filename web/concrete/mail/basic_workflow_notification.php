@@ -1,4 +1,4 @@
-<?
+<?php
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
@@ -10,4 +10,4 @@ $body = t("Dear %s,
 You can review, approve or deny all pending actions from here:
 
 %s
-", $uName, $message, View::url('/dashboard/workflow/me'));
+", $uName, $message, URL::to('/dashboard/welcome/me'));

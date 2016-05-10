@@ -1,4 +1,5 @@
-<?php defined('C5_EXECUTE') or die('Access Denied.');
+<?php
+defined('C5_EXECUTE') or die('Access Denied.');
 
 use Concrete\Core\Utility\Service\Text;
 use \Concrete\Core\Localization\Localization;
@@ -8,33 +9,28 @@ use \Concrete\Core\Localization\Localization;
  *
  * @param string $text The text to be translated.
  * @param        mixed ... Unlimited optional number of arguments: if specified they'll be used for printf.
+ *
  * @return string Returns the translated text.
+ *
  * @example t('Hello %s') will return translation for 'Hello %s' (example for Italian 'Ciao %s').
  * @example t('Hello %s', 'John') will return translation for 'Hello %s' (example: 'Ciao %s'), using 'John' for printf (so the final result will be 'Ciao John' for Italian).
  */
 function t($text)
 {
-    if (!is_string($text)) {
-        return '';
-    }
-    $zt = Localization::getTranslate();
-    if (is_object($zt)) {
-        $v = $zt->translate($text);
-        if (is_array($v)) {
-            if (isset($v[0]) && ($v[0] !== '')) {
-                $text = $v[0];
-            }
-        } else {
-            $text = $v;
-        }
-    }
-    if (func_num_args() === 1) {
-        return $text;
-    } else {
-        $args = func_get_args();
-        array_shift($args);
-
-        return vsprintf($text, $args);
+    $loc = Localization::getInstance();
+    $adapter = $loc->getActiveTranslatorAdapter();
+    $args = func_get_args();
+    switch (count($args)) {
+        case 1:
+            return $adapter->translate($text);
+        case 2:
+            return $adapter->translate($text, $args[1]);
+        case 3:
+            return $adapter->translate($text, $args[1], $args[2]);
+        case 4:
+            return $adapter->translate($text, $args[1], $args[2], $args[3]);
+        default:
+            return call_user_func_array(array($adapter, 'translate'), $args);
     }
 }
 
@@ -45,27 +41,29 @@ function t($text)
  * @param string $plural   The plural form.
  * @param int    $number   The number.
  * @param        mixed     ... Unlimited optional number of arguments: if specified they'll be used for printf
+ *
  * @return string Returns the translated text.
+ *
  * @example t2('%d child', '%d children', $n) will return translated '%d child' if $n is 1, translated '%d children' otherwise.
  * @example t2('%d child', '%d children', $n, $n) will return translated '1 child' if $n is 1, translated '2 children' if $n is 2.
  */
 function t2($singular, $plural, $number)
 {
-    if (!(is_string($singular) && is_string($plural))) {
-        return '';
+    $loc = Localization::getInstance();
+    $adapter = $loc->getActiveTranslatorAdapter();
+    $args = func_get_args();
+    switch (count($args)) {
+        case 3:
+            return $adapter->translatePlural($singular, $plural, $number);
+        case 4:
+            return $adapter->translatePlural($singular, $plural, $number, $args[3]);
+        case 5:
+            return $adapter->translatePlural($singular, $plural, $number, $args[3], $args[4]);
+        case 6:
+            return $adapter->translatePlural($singular, $plural, $number, $args[3], $args[4], $args[5]);
+        default:
+            return call_user_func_array(array($adapter, 'translatePlural'), $args);
     }
-    $zt = Localization::getTranslate();
-    if (is_object($zt)) {
-        $translated = $zt->translatePlural($singular, $plural, $number);
-    } else {
-        $translated = $number == 1 ? $singular : $plural;
-    }
-    $arg = array_slice(func_get_args(), 3);
-    if ($arg) {
-        return vsprintf($translated, $arg);
-    }
-
-    return vsprintf($translated, $number);
 }
 
 /**
@@ -74,7 +72,9 @@ function t2($singular, $plural, $number)
  * @param string $context A context, useful for translators to better understand the meaning of the text to be translated.
  * @param string $text    The text to be translated.
  * @param        mixed    ... Unlimited optional number of arguments: if specified they'll be used for printf.
+ *
  * @return string Returns the translated text.
+ *
  * @example tc('Recipient', 'To %s') will return translation for 'To %s' (example for Italian 'A %s').
  * @example tc('End date', 'To %s') will return translation for 'To %s' (example for Italian 'Fino al %s').
  * @example tc('Recipient', 'To %s', 'John') will return translation for 'To %s' (example: 'A %s'), using 'John' for printf (so the final result will be 'A John' for Italian).
@@ -82,32 +82,28 @@ function t2($singular, $plural, $number)
  */
 function tc($context, $text)
 {
-    if (!(is_string($context) && is_string($text))) {
-        return '';
+    $loc = Localization::getInstance();
+    $adapter = $loc->getActiveTranslatorAdapter();
+    $args = func_get_args();
+    switch (count($args)) {
+        case 2:
+            return $adapter->translateContext($context, $text);
+        case 3:
+            return $adapter->translateContext($context, $text, $args[2]);
+        case 4:
+            return $adapter->translateContext($context, $text, $args[2], $args[3]);
+        case 5:
+            return $adapter->translateContext($context, $text, $args[2], $args[3], $args[4]);
+        default:
+            return call_user_func_array(array($adapter, 'translateContext'), $args);
     }
-    $zt = Localization::getTranslate();
-    if (is_object($zt)) {
-        $msgid = $context . "\x04" . $text;
-        $msgtxt = $zt->translate($msgid);
-        if ($msgtxt != $msgid) {
-            $text = $msgtxt;
-        }
-    }
-    if (func_num_args() == 2) {
-        return $text;
-    }
-    $arg = array();
-    for ($i = 2; $i < func_num_args(); $i++) {
-        $arg[] = func_get_arg($i);
-    }
-
-    return vsprintf($text, $arg);
 }
 
 /**
- * Security helper
+ * Security helper.
  *
  * @param string $input
+ *
  * @return string mixed
  */
 function h($input)
@@ -121,6 +117,7 @@ function h($input)
  *     id(new Block)->render();
  *
  * @param  mixed $mixed
+ *
  * @return mixed mixed
  */
 function id($mixed)
@@ -133,15 +130,17 @@ function id($mixed)
  *
  * @param string $class
  * @param bool   $prefix
+ *
  * @return string
  */
 function core_class($class, $prefix = false)
 {
+    $app = \Core::make('app');
     $class = trim($class, '\\');
     if ($prefix) {
         if (substr($class, 0, 5) == "Core\\") {
             if ($prefix !== true) {
-                $x = \Package::getClass($prefix);
+                $x = $app->make('Concrete\Core\Package\PackageService')->getClass($prefix);
                 if ($x->providesCoreExtensionAutoloaderMapping()) {
                     $class = substr($class, 5);
                 } else {
@@ -182,10 +181,11 @@ function overrideable_core_class($class, $path, $pkgHandle = null)
 }
 
 /**
- * Returns $string in CamelCase
+ * Returns $string in CamelCase.
  *
  * @param string $string
  * @param bool   $leaveSlashes
+ *
  * @return string
  */
 function camelcase($string, $leaveSlashes = false)
@@ -215,9 +215,10 @@ function camelcase($string, $leaveSlashes = false)
 }
 
 /**
- * Returns CamelCase string as camel_case
+ * Returns CamelCase string as camel_case.
  *
  * @param  string $string
+ *
  * @return string mixed
  */
 function uncamelcase($string)
@@ -225,7 +226,7 @@ function uncamelcase($string)
     $v = preg_split('/([A-Z])/', $string, false, PREG_SPLIT_DELIM_CAPTURE);
     $a = array();
     array_shift($v);
-    for ($i = 0; $i < count($v); $i++) {
+    for ($i = 0; $i < count($v); ++$i) {
         if ($i % 2) {
             if (function_exists('mb_strtolower')) {
                 $a[] = mb_strtolower($v[$i - 1] . $v[$i], APP_CHARSET);
@@ -239,11 +240,12 @@ function uncamelcase($string)
 }
 
 /**
- * Fills an object properties from an array
+ * Fills an object properties from an array.
  */
 /**
  * @param $o
  * @param $array
+ *
  * @return mixed
  */
 function array_to_object($o, $array)
@@ -256,7 +258,8 @@ function array_to_object($o, $array)
 }
 
 /**
- * Dumps information about a variable in a way that can be used with Doctrine recursive objects.)
+ * Dumps information about a variable in a way that can be used with Doctrine recursive objects.).
+ *
  * @param $o
  * @param bool $maxDepth
  */

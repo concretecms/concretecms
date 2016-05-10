@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Controller\SinglePage\Dashboard\System\Conversations;
 
 use Concrete\Core\Conversation\Conversation;
@@ -8,7 +7,6 @@ use Core;
 
 class Settings extends DashboardPageController
 {
-
     public function view()
     {
         $config = Core::make('config');
@@ -60,6 +58,7 @@ class Settings extends DashboardPageController
         $db = Core::make('Concrete\Core\Database\Connection\Connection');
         if (!isset($this->editors[$active])) {
             $this->redirect('/dashboard/system/conversations/editor/error');
+
             return;
         }
         $db->executeQuery('UPDATE ConversationEditors SET cnvEditorIsActive=0');
@@ -81,8 +80,8 @@ class Settings extends DashboardPageController
             $config->save('conversations.files.registered.max_size', intval($this->post('maxFileSizeRegistered')));
             $config->save('conversations.files.guest.max', intval($this->post('maxFilesGuest')));
             $config->save('conversations.files.registered.max', intval($this->post('maxFilesRegistered')));
-            $config->save('conversations.attachments_enabled', !!$this->post('attachmentsEnabled'));
-            $config->save('conversations.subscription_enabled', !!$this->post('subscriptionEnabled'));
+            $config->save('conversations.attachments_enabled', (bool) $this->post('attachmentsEnabled'));
+            $config->save('conversations.subscription_enabled', (bool) $this->post('subscriptionEnabled'));
             $users = array();
             if (is_array($this->post('defaultUsers'))) {
                 foreach ($this->post('defaultUsers') as $uID) {
@@ -105,5 +104,4 @@ class Settings extends DashboardPageController
             $this->view();
         }
     }
-
 }

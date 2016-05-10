@@ -1,8 +1,10 @@
 <?php
 namespace Concrete\Tests\Core\File\StorageLocation;
-use \Concrete\Core\File\StorageLocation\Type\Type;
-class TypeTest extends \ConcreteDatabaseTestCase {
 
+use Concrete\Core\File\StorageLocation\Type\Type;
+
+class TypeTest extends \ConcreteDatabaseTestCase
+{
     protected $fixtures = array();
     protected $tables = array(
         'FileStorageLocationTypes',
@@ -19,6 +21,4 @@ class TypeTest extends \ConcreteDatabaseTestCase {
         $type2 = Type::getByHandle('local');
         $this->assertEquals($type, $type2);
     }
-
 }
- 

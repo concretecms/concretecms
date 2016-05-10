@@ -1,8 +1,10 @@
-<?
+<?php
 namespace Concrete\Controller\SinglePage;
 
+use Concrete\Core\Validation\ResponseInterface;
 use PageController;
 use Config;
+use Loader;
 use User;
 use UserInfo;
 use UserAttributeKey;
@@ -13,9 +15,8 @@ class Register extends PageController
 
     protected $displayUserName = true;
 
-    public function on_start()
-    {
-        if (!in_array(Config::get('concrete.user.registration.type'), array('validate_email', 'enabled', 'manual_approve'))) {
+	public function on_start() {
+		if(!in_array(Config::get('concrete.user.registration.type'), array('validate_email', 'enabled'))) {
             $this->replace('/page_not_found');
         }
         $u = new User();
@@ -26,7 +27,7 @@ class Register extends PageController
 
     public function forward($cID = 0)
     {
-        $this->set('rcID', $this->app->make('helper/security')->sanitizeInt($cID));
+        $this->set('rcID', Loader::helper('security')->sanitizeInt($cID));
     }
 
     public function do_register()
@@ -39,9 +40,9 @@ class Register extends PageController
         $token = $this->app->make('token');
 
         if ($token->validate('register.do_register')) {
-            $username = $this->post('uName');
-            $password = $this->post('uPassword');
-            $passwordConfirm = $this->post('uPasswordConfirm');
+            $username = $_POST['uName'];
+            $password = $_POST['uPassword'];
+            $passwordConfirm = $_POST['uPasswordConfirm'];
 
             // clean the username
             $username = trim($username);
@@ -58,11 +59,11 @@ class Register extends PageController
                 }
             }
 
-            if (!$vals->email($this->post('uEmail'))) {
-                $e->add(t('Invalid email address provided.'));
-            } elseif (!$valc->isUniqueEmail($this->post('uEmail'))) {
-                $e->add(t("The email address %s is already in use. Please choose another.", $this->post('uEmail')));
-            }
+			if (!$vals->email($_POST['uEmail'])) {
+				$e->add(t('Invalid email address provided.'));
+			} elseif (!$valc->isUniqueEmail($_POST['uEmail'])) {
+				$e->add(t("The email address %s is already in use. Please choose another.", $_POST['uEmail']));
+			}
 
             if ($this->displayUserName) {
                 if (strlen($username) < $config->get('concrete.user.username.minimum')) {
@@ -91,7 +92,7 @@ class Register extends PageController
                 $e->add(t('Invalid Username'));
             }
 
-            $this->app->make('validator/password')->isValid($password, $e);
+            \Core::make('validator/password')->isValid($password, $e);
 
             if ($password) {
                 if ($password != $passwordConfirm) {
@@ -102,13 +103,17 @@ class Register extends PageController
             $aks = UserAttributeKey::getRegistrationList();
 
             foreach ($aks as $uak) {
-                if ($uak->isAttributeKeyRequiredOnRegister()) {
-                    $e1 = $uak->validateAttributeForm();
-                    if ($e1 == false) {
-                        $e->add(t('The field "%s" is required', $uak->getAttributeKeyDisplayName()));
-                    } elseif ($e1 instanceof \Concrete\Core\Error\Error) {
-                        $e->add($e1);
-                    }
+                $controller = $uak->getController();
+                $validator = $controller->getValidator();
+                $response = $validator->validateSaveValueRequest(
+                    $controller, $this->request, $uak->isAttributeKeyRequiredOnRegister()
+                );
+                /**
+                 * @var $response ResponseInterface
+                 */
+                if (!$response->isValid()) {
+                    $error = $response->getErrorObject();
+                    $e->add($error);
                 }
             }
         } else {
@@ -118,7 +123,7 @@ class Register extends PageController
         if (!$e->has()) {
 
             // do the registration
-            $data = $this->post();
+            $data = $_POST;
             $data['uName'] = $username;
             $data['uPassword'] = $password;
             $data['uPasswordConfirm'] = $passwordConfirm;
@@ -150,37 +155,38 @@ class Register extends PageController
                     $mh->addParameter('attribs', $attribValues);
                     $mh->addParameter('siteName', tc('SiteName', $config->get('concrete.site')));
 
-                    if ($config->get('concrete.user.registration.notification_email')) {
-                        $mh->from($config->get('concrete.user.registration.notification_email'),  t('Website Registration Notification'));
-                    } else {
-                        $adminUser = UserInfo::getByID(USER_SUPER_ID);
-                        if (is_object($adminUser)) {
-                            $mh->from($adminUser->getUserEmail(),  t('Website Registration Notification'));
-                        }
-                    }
-                    if ($config->get('concrete.user.registration.type') == 'manual_approve') {
-                        $mh->load('user_register_approval_required');
-                    } else {
-                        $mh->load('user_register');
-                    }
-                    $mh->sendMail();
-                }
+					if ($config->get('concrete.user.registration.notification_email')) {
+						$mh->from(Config::get('concrete.user.registration.notification_email'),  t('Website Registration Notification'));
+					} else {
+						$adminUser = UserInfo::getByID(USER_SUPER_ID);
+						if (is_object($adminUser)) {
+							$mh->from($adminUser->getUserEmail(),  t('Website Registration Notification'));
+						}
+					}
+
+                    $mh->load('user_register');
+					$mh->sendMail();
+				}
 
                 // now we log the user in
                 if ($config->get('concrete.user.registration.email_registration')) {
                     $u = new User($this->post('uEmail'), $this->post('uPassword'));
                 } else {
-                    $u = new User($this->post('uName'), $this->post('uPassword'));
+                    $u = new User($_POST['uName'], $_POST['uPassword']);
                 }
                 // if this is successful, uID is loaded into session for this user
 
                 $rcID = $this->post('rcID');
-                $nh = $this->app->make('helper/validation/numbers');
+                $nh = Loader::helper('validation/numbers');
                 if (!$nh->integer($rcID)) {
                     $rcID = 0;
                 }
 
-                $redirectMethod = '';
+				// Call deactivate() separately because someone might be still attaching
+				// to the on_user_deactivate method during the registration.
+				// This used to be in the non-validation case only but with the workflow,
+				// we need to default the new user to inactive (uIsActive=0).
+				$process->deactivate();
 
                 // now we check whether we need to validate this user's email address
                 if ($config->get('concrete.user.registration.validate_email')) {
@@ -195,7 +201,7 @@ class Register extends PageController
                         }
                         $mh->from($fromEmail,  $fromName);
                     }
-                    $mh->addParameter('uEmail', $this->post('uEmail'));
+                    $mh->addParameter('uEmail', $_POST['uEmail']);
                     $mh->addParameter('uHash', $uHash);
                     $mh->addParameter('site', tc('SiteName', $config->get('concrete.site')));
                     $mh->to($this->post('uEmail'));
@@ -205,22 +211,14 @@ class Register extends PageController
                     //$this->redirect('/register', 'register_success_validate', $rcID);
                     $redirectMethod = 'register_success_validate';
                     $u->logout();
-                } elseif ($config->get('concrete.user.registration.approval')) {
-                    $ui = UserInfo::getByID($u->getUserID());
-                    $ui->deactivate();
-                    // Email to the user when he/she registered but needs approval
-                    $mh = $this->app->make('mail');
-                    $mh->addParameter('uEmail', $this->post('uEmail'));
-                    $mh->addParameter('site', tc('SiteName', $config->get('concrete.site')));
-                    $mh->to($this->post('uEmail'));
-                    $mh->load('user_register_approval_required_to_user');
-                    $mh->sendMail();
-
-                    //$this->redirect('/register', 'register_pending', $rcID);
-                    $redirectMethod = 'register_pending';
-                    $this->set('message', $this->getRegisterPendingMsg());
-                    $u->logout();
-                }
+				} else {
+					$process->markValidated();
+					if (!$process->triggerActivate('register_activate', USER_SUPER_ID)) {
+						$redirectMethod = 'register_pending';
+						$this->set('message', $this->getRegisterPendingMsg());
+						$u->logout();
+					}
+				}
 
                 if (!$u->isError()) {
                     //$this->redirect('/register', 'register_success', $rcID);

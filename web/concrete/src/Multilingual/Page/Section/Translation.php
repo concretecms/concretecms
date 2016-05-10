@@ -40,7 +40,7 @@ class Translation extends \Gettext\Translation
     {
         $result = null;
         if ($row && $row['mtID']) {
-            $result = new Translation($row['context'], $row['msgid'], $row['msgidPlural']);
+            $result = new self($row['context'], $row['msgid'], $row['msgidPlural']);
             $result->mtID = $row['mtID'];
             $result->mtSectionID = $row['mtSectionID'];
             $result->setTranslation($row['msgstr']);

@@ -1,10 +1,8 @@
 <?php
-
 namespace Concrete\Core\Job;
 
 class JobResult
 {
-
     public $error;
     public $result;
     public $jDateLastRun;
@@ -40,5 +38,4 @@ class JobResult
     {
         return $this->jDateLastRun;
     }
-
 }

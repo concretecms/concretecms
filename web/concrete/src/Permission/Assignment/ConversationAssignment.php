@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Permission\Assignment;
 
 use Concrete\Core\Conversation\Message\Message;

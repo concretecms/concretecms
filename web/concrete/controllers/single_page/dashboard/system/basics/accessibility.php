@@ -7,7 +7,6 @@ use Config;
 
 class Accessibility extends DashboardPageController
 {
-
     public function view()
     {
         $this->set('show_titles', Config::get('concrete.accessibility.toolbar_titles'));
@@ -23,10 +22,9 @@ class Accessibility extends DashboardPageController
 
     public function save()
     {
-        Config::save('concrete.accessibility.toolbar_titles', !!Request::post('show_titles', false));
-        Config::save('concrete.accessibility.toolbar_large_font', !!Request::post('increase_font_size', false));
-        Config::save('concrete.accessibility.display_help_system', !!Request::post('display_help', false));
+        Config::save('concrete.accessibility.toolbar_titles', (bool) Request::post('show_titles', false));
+        Config::save('concrete.accessibility.toolbar_large_font', (bool) Request::post('increase_font_size', false));
+        Config::save('concrete.accessibility.display_help_system', (bool) Request::post('display_help', false));
         $this->redirect('/dashboard/system/basics/accessibility', 'saved');
     }
-
 }

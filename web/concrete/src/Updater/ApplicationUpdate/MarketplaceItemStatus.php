@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Updater\ApplicationUpdate;
 
 class MarketplaceItemStatus extends Status
@@ -39,13 +38,12 @@ class MarketplaceItemStatus extends Status
         $this->marketplaceItemHandle = $marketplaceItemHandle;
     }
 
-
     public function getJSONObject()
     {
         $o = parent::getJSONObject();
         $o->mpID = $this->getMarketplaceItemID();
         $o->mpHandle = $this->getMarketplaceItemHandle();
+
         return $o;
     }
-
 }

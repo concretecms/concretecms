@@ -1,5 +1,9 @@
-<?
+<?php
 defined('C5_EXECUTE') or die("Access Denied.");
 ?>
 
-<? print $innerContent; ?>
+<div class="ccm-ui">
+
+<?php echo $innerContent; ?>
+
+</div>

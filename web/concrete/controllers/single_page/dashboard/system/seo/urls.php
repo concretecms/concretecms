@@ -1,16 +1,17 @@
 <?php
 namespace Concrete\Controller\SinglePage\Dashboard\System\Seo;
 
-use \Concrete\Core\Page\Controller\DashboardPageController;
+use Concrete\Core\Page\Controller\DashboardPageController;
 use Loader;
 use Config;
+
 class Urls extends DashboardPageController
 {
     /**
-    * Returns the mod_rewrite rules
-    *
-    * @return string
-    */
+     * Returns the mod_rewrite rules.
+     *
+     * @return string
+     */
     public function getRewriteRules()
     {
         $strRules = '
@@ -27,10 +28,10 @@ RewriteRule . ' . DISPATCHER_FILENAME .' [L]
     }
 
     /**
-    * Returns the .htaccess text to be copied/inserted
-    *
-    * @return string
-    */
+     * Returns the .htaccess text to be copied/inserted.
+     *
+     * @return string
+     */
     public function getHtaccessText()
     {
         $strHt = '
@@ -42,14 +43,12 @@ RewriteRule . ' . DISPATCHER_FILENAME .' [L]
         return preg_replace('/\t/', '', $strHt);
     }
 
-
     /**
-    * Dashboard page view
-    *
-    * @param string|bool $strStatus - Result of attempting to update rewrite rules
-    * @param boolean $blnHtu - Flag denoting if the .htaccess file was writable or not
-    * @return void
-    */
+     * Dashboard page view.
+     *
+     * @param string|bool $strStatus - Result of attempting to update rewrite rules
+     * @param bool $blnHtu - Flag denoting if the .htaccess file was writable or not
+     */
     public function view($strStatus = false, $blnHtu = false)
     {
         $strStatus = (string) $strStatus;
@@ -75,15 +74,11 @@ RewriteRule . ' . DISPATCHER_FILENAME .' [L]
         }
     }
 
-
     /**
-    * Updates the .htaccess file (if writable)
-    *
-    * @return void
-    */
+     * Updates the .htaccess file (if writable).
+     */
     public function save_urls()
     {
-
         if (!$this->token->validate('save_urls')) {
             $this->error->add($this->token->getErrorMessage());
         }
@@ -95,14 +90,12 @@ RewriteRule . ' . DISPATCHER_FILENAME .' [L]
         if ($this->post('canonical_ssl_url') && strpos(strtolower($this->post('canonical_ssl_url')), 'https://') !== 0) {
             $this->error->add(t('The SSL canonical URL provided must start with "https://".'));
         }
-        
+
         if (!$this->error->has()) {
             $strHtText = (string) $this->getHtaccessText();
             $blnHtu = 0;
 
             if ($this->isPost()) {
-
-
                 Config::save('concrete.seo.canonical_url', $this->post('canonical_url'));
                 Config::save('concrete.seo.canonical_ssl_url', $this->post('canonical_ssl_url'));
                 Config::save('concrete.seo.redirect_to_canonical_url', $this->post('redirect_to_canonical_url') ? 1 : 0);

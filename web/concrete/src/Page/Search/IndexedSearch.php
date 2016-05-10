@@ -2,7 +2,6 @@
 namespace Concrete\Core\Page\Search;
 
 use Concrete\Core\Cache\Cache;
-use Core;
 use Loader;
 use Config;
 use PageList;
@@ -14,14 +13,14 @@ use stdClass;
 
 class IndexedSearch
 {
-
     public $searchBatchSize;
     public $searchReindexTimeout;
 
     private $cPathSections = array();
     private $searchableAreaNames;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->searchReindexTimeout = Config::get('concrete.misc.page_search_index_lifetime');
         $this->searchBatchSize = Config::get('concrete.limits.page_search_index_batch');
     }
@@ -32,6 +31,7 @@ class IndexedSearch
         if (!strlen($action)) {
             $action = 'blacklist';
         }
+
         return $action;
     }
 
@@ -42,6 +42,7 @@ class IndexedSearch
         if (!is_array($areas)) {
             $areas = array();
         }
+
         return $areas;
     }
 
@@ -94,7 +95,7 @@ class IndexedSearch
                     'cPath' => $page->getCollectionPath(),
                     'cDatePublic' => $page->getCollectionDatePublic(),
                     'content' => $this->getBodyContentFromPage($page),
-                    'cDateLastIndexed' => $datetime
+                    'cDateLastIndexed' => $datetime,
                 ),
                 array('cID'),
                 true
@@ -106,7 +107,6 @@ class IndexedSearch
 
     public function getBodyContentFromPage($c)
     {
-
         $text = '';
 
         $tagsToSpaces = array(
@@ -119,7 +119,7 @@ class IndexedSearch
             '<div>',
             '</div>',
             '</ div>',
-            '&nbsp;'
+            '&nbsp;',
         );
         $blarray = array();
         $db = Loader::db();
@@ -162,7 +162,6 @@ class IndexedSearch
 
         $db = Loader::db();
 
-
         if ($fullReindex) {
             $db->Execute("truncate table PageSearchIndex");
         }
@@ -188,7 +187,7 @@ class IndexedSearch
             }
 
             $c->reindex($this, true);
-            $num++;
+            ++$num;
             unset($c);
         }
 
@@ -196,9 +195,9 @@ class IndexedSearch
         $num = $num + $pnum;
 
         Cache::enableAll();
-        $result = new stdClass;
+        $result = new stdClass();
         $result->count = $num;
+
         return $result;
     }
-
 }

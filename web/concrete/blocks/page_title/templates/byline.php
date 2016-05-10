@@ -8,12 +8,12 @@ $user = UserInfo::getByID($page->getCollectionUserID());
     <h1 class="page-title"><?=h($title)?></h1>
 
     <span class="page-date">
-    <? print $date; ?>
+    <?php echo $date; ?>
     </span>
 
-    <? if (is_object($user)): ?>
+    <?php if (is_object($user)): ?>
     <span class="page-author">
-    <? print $user->getUserDisplayName(); ?>
+    <?php echo $user->getUserDisplayName(); ?>
     </span>
-    <? endif; ?>
+    <?php endif; ?>
 </div>

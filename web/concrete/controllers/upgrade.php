@@ -15,6 +15,7 @@ class Upgrade extends BackendUserInterfaceController
         }
 
         $p = new \Permissions();
+
         return $p->canUpgrade();
     }
 
@@ -51,7 +52,6 @@ class Upgrade extends BackendUserInterfaceController
     public function submit()
     {
         if ($this->validateAction()) {
-
             try {
                 Update::updateToCurrentVersion();
                 $this->set('success', t('Upgrade to <b>%s</b> complete!', APP_VERSION));
@@ -67,7 +67,7 @@ class Upgrade extends BackendUserInterfaceController
 
         if (!$sav) {
             $message = t('Unable to determine your current version of concrete5. Upgrading cannot continue.');
-        }elseif($this->request->query->get('force', 0) == 1){
+        } elseif ($this->request->query->get('force', 0) == 1) {
             $this->set('do_upgrade', true);
         } else {
             if (version_compare($sav, APP_VERSION, '>')) {
@@ -90,5 +90,4 @@ class Upgrade extends BackendUserInterfaceController
         }
         $this->set('status', $message);
     }
-
 }

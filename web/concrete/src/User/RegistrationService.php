@@ -1,31 +1,29 @@
 <?php
-
 namespace Concrete\Core\User;
 
 use Concrete\Core\Application\Application;
 use Concrete\Core\Database\Connection\Connection;
-use Concrete\Core\Database\DatabaseManager;
 use Concrete\Core\User\Event\AddUser;
 use Concrete\Core\User\Event\UserInfoWithPassword;
 use Hautelook\Phpass\PasswordHash;
 
 class RegistrationService implements RegistrationServiceInterface
 {
-
     protected $connection;
     protected $application;
-    protected $userInfoFactory;
+    protected $userInfoRepository;
 
-    public function __construct(Application $application, Connection $connection, UserInfoFactory $userInfoFactory)
+    public function __construct(Application $application, Connection $connection, UserInfoRepository $userInfoRepository)
     {
         $this->application = $application;
         $this->connection = $connection;
-        $this->userInfoFactory = $userInfoFactory;
+        $this->userInfoRepository = $userInfoRepository;
     }
 
     /**
      * @param string $uPasswordEncrypted
      * @param string $uEmail
+     *
      * @return UserInfo|null
      */
     public function createSuperUser($uPasswordEncrypted, $uEmail)
@@ -38,12 +36,14 @@ class RegistrationService implements RegistrationServiceInterface
         $res = $r->execute($v);
         if ($res) {
             $newUID = $this->connection->lastInsertId();
-            return $this->userInfoFactory->getByID($newUID);
+
+            return $this->userInfoRepository->getByID($newUID);
         }
     }
 
     /**
      * @param array $data
+     *
      * @return UserInfo|false|null
      */
     public function create($data)
@@ -86,7 +86,7 @@ class RegistrationService implements RegistrationServiceInterface
         $res = $r->execute($v);
         if ($res) {
             $newUID = $db->Insert_ID();
-            $ui = $this->userInfoFactory->getByID($newUID);
+            $ui = $this->userInfoRepository->getByID($newUID);
 
             if (is_object($ui)) {
                 $uo = $ui->getUserObject();
@@ -120,8 +120,7 @@ class RegistrationService implements RegistrationServiceInterface
             $data['uIsValidated'] = 0;
         }
         $ui = $this->create($data);
+
         return $ui;
     }
-
-
 }

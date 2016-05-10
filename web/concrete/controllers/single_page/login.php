@@ -3,6 +3,7 @@ namespace Concrete\Controller\SinglePage;
 
 use Concrete\Core\Authentication\AuthenticationType;
 use Concrete\Core\Authentication\AuthenticationTypeFailureException;
+use Concrete\Core\Page\Desktop\DesktopList;
 use Concrete\Core\Routing\RedirectResponse;
 use Localization;
 use Page;
@@ -267,30 +268,7 @@ class Login extends PageController
                     }
                 }
 
-                // admin to dashboard?
-                $dash = Page::getByPath("/dashboard", "RECENT");
-                $dbp = new Permissions($dash);
-                //should administrator be redirected to dashboard?  defaults to yes if not set.
-                $adminToDash = intval($config->get('concrete.misc.login_admin_to_dashboard'));
-                if ($dbp->canRead() && $adminToDash) {
-                    if (!$rc instanceof Page || $rc->isError()) {
-                        $rc = $dash;
-                    }
-                    $rUrl = $navigation->getLinkToCollection($rc);
-                    break;
-                }
-
-                //options set in dashboard/users/registration
                 $login_redirect_mode = $config->get('concrete.misc.login_redirect');
-
-                //redirect to user profile
-                if ($login_redirect_mode == 'PROFILE') {
-                    $profileURL = $u->getUserInfoObject()->getUserPublicProfileUrl();
-                    if ($profileURL) {
-                        $rUrl = $profileURL;
-                    }
-                    break;
-                }
 
                 //redirect to custom page
                 $login_redirect_cid = intval($config->get('concrete.misc.login_redirect_cid'));
@@ -299,6 +277,14 @@ class Login extends PageController
                     if ($rc instanceof Page && !$rc->isError()) {
                         $rUrl = $navigation->getLinkToCollection($rc);
                         break;
+                    }
+                }
+
+                if ($login_redirect_mode == 'DESKTOP') {
+
+                    $desktop = DesktopList::getMyDesktop();
+                    if (is_object($desktop)) {
+                        $rUrl = $navigation->getLinkToCollection($desktop);
                     }
                 }
 
@@ -363,13 +349,17 @@ class Login extends PageController
 
             $saveAttributes = array();
             foreach ($unfilled as $attribute) {
-                $err = $attribute->validateAttributeForm();
-                if ($err == false) {
-                    $this->error->add(t('The field "%s" is required', $attribute->getAttributeKeyDisplayName()));
-                } elseif ($err instanceof \Concrete\Core\Error\Error) {
-                    $this->error->add($err);
-                } else {
+                $controller = $attribute->getController();
+                $validator = $controller->getValidator();
+                $response = $validator->validateSaveValueRequest($controller, $this->request);
+                /**
+                 * @var $response ResponseInterface
+                 */
+                if ($response->isValid()) {
                     $saveAttributes[] = $attribute;
+                } else {
+                    $error = $response->getErrorObject();
+                    $this->error->add($error);
                 }
             }
 

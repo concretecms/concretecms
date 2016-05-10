@@ -1,11 +1,11 @@
 <?php
 namespace Concrete\Controller\SinglePage\Dashboard\Reports;
 
-use \Concrete\Core\Page\Controller\DashboardPageController;
+use Concrete\Core\Page\Controller\DashboardPageController;
 use Loader;
 use Core;
-use \Concrete\Block\Survey\Controller as SurveyBlockController;
-use \Concrete\Block\Survey\SurveyList;
+use Concrete\Block\Survey\Controller as SurveyBlockController;
+use Concrete\Block\Survey\SurveyList;
 
 class Surveys extends DashboardPageController
 {
@@ -72,14 +72,14 @@ class Surveys extends DashboardPageController
                 'option' => $row['optionName'],
                 'ipAddress' => $row['ipAddress'],
                 'date' => $this->formatDate($row['timestamp']),
-                'user' => $row['uName']
+                'user' => $row['uName'],
             );
 
             $current_survey = $row['question'];
         }
 
         if (!count($details)) {
-        // If there is no user-submitted information pertaining to this survey, just get the name
+            // If there is no user-submitted information pertaining to this survey, just get the name
             $q = 'SELECT question FROM btSurvey WHERE bID = ?';
             $v = array($bID);
             $r = $db->query($q, $v);

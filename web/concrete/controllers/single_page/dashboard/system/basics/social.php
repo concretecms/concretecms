@@ -1,8 +1,7 @@
-<?
-
+<?php
 namespace Concrete\Controller\SinglePage\Dashboard\System\Basics;
 
-use \Concrete\Core\Page\Controller\DashboardPageController;
+use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Core\Sharing\SocialNetwork\Link;
 use Concrete\Core\Sharing\SocialNetwork\ServiceList;
 use Concrete\Core\Sharing\SocialNetwork\Service;
@@ -10,7 +9,6 @@ use Core;
 
 class Social extends DashboardPageController
 {
-
     public function view()
     {
         $this->set('links', Link::getList());
@@ -54,6 +52,7 @@ class Social extends DashboardPageController
         if (!is_object($service)) {
             $this->error->add(t('You must choose a service.'));
         }
+
         return array($ssHandle, $url, $existingLink);
     }
 
@@ -119,7 +118,7 @@ class Social extends DashboardPageController
     {
         $services = array('' => t('Choose a Service'));
         $list = ServiceList::get();
-        foreach($list as $service) {
+        foreach ($list as $service) {
             $services[$service->getHandle()] = $service->getName();
         }
         $this->set('services', $services);
@@ -141,5 +140,4 @@ class Social extends DashboardPageController
         $this->set('link', $link);
         $this->add();
     }
-
 }

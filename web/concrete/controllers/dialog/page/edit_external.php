@@ -1,15 +1,17 @@
-<?
+<?php
 namespace Concrete\Controller\Dialog\Page;
-use \Concrete\Controller\Backend\UserInterface\Page as BackendInterfacePageController;
+
+use Concrete\Controller\Backend\UserInterface\Page as BackendInterfacePageController;
 use Concrete\Core\Page\EditResponse;
 
-class EditExternal extends BackendInterfacePageController {
+class EditExternal extends BackendInterfacePageController
+{
+    protected $viewPath = '/dialogs/page/add_external';
 
-	protected $viewPath = '/dialogs/page/add_external';
-
-	protected function canAccess() {
-		return $this->permissions->canDeletePage() && $this->page->isExternalLink();
-	}
+    protected function canAccess()
+    {
+        return $this->permissions->canDeletePage() && $this->page->isExternalLink();
+    }
 
     public function view()
     {
@@ -18,8 +20,9 @@ class EditExternal extends BackendInterfacePageController {
         $this->set('openInNewWindow', $this->page->openCollectionPointerExternalLinkInNewWindow());
     }
 
-	public function submit() {
-		if ($this->validateAction()) {
+    public function submit()
+    {
+        if ($this->validateAction()) {
             $c = $this->page;
             $request = \Request::getInstance();
             $this->page->updateCollectionAliasExternal(
@@ -31,7 +34,6 @@ class EditExternal extends BackendInterfacePageController {
             $pr->setMessage(t('External Link updated.'));
             $pr->setPage($c);
             $pr->outputJSON();
-		}
-	}
-
+        }
+    }
 }

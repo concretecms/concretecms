@@ -1,45 +1,51 @@
 <?php
 namespace Concrete\Core\Permission\Response;
-use User;
+
 use Page;
-use Group;
-use PermissionKey;
 use Permissions;
-class TopicTreeNodeResponse extends Response {
 
-	protected function canAccessTopics() {
-		$c = Page::getByPath('/dashboard/system/attributes/topics');
-		$cp = new Permissions($c);
-		return $cp->canViewPage();
-	}
+class TopicTreeNodeResponse extends Response
+{
+    protected function canAccessTopics()
+    {
+        $c = Page::getByPath('/dashboard/system/attributes/topics');
+        $cp = new Permissions($c);
 
-	public function canEditTreeNodePermissions() {
-		return $this->canAccessTopics();
-	}
+        return $cp->canViewPage();
+    }
 
-	public function canViewTreeNode() {
-		return $this->validate('view_topic_tree_node');
-	}
+    public function canEditTreeNodePermissions()
+    {
+        return $this->canAccessTopics();
+    }
 
-	public function canDuplicateTreeNode() {
-		return false;
-	}
+    public function canViewTreeNode()
+    {
+        return $this->validate('view_topic_tree_node');
+    }
 
-	public function canEditTreeNode() {
-		return $this->canAccessTopics();
-	}
+    public function canDuplicateTreeNode()
+    {
+        return $this->canAccessTopics();
+    }
 
-	public function canDeleteTreeNode() {
-		return $this->canAccessTopics();
-	}
+    public function canEditTreeNode()
+    {
+        return $this->canAccessTopics();
+    }
 
-	public function canAddTreeSubNode() {
-		return $this->canAccessTopics();
-	}
+    public function canDeleteTreeNode()
+    {
+        return $this->canAccessTopics();
+    }
 
-	public function canAddTopicTreeNode() {
-		return $this->canAccessTopics();
-	}
+    public function canAddTreeSubNode()
+    {
+        return $this->canAccessTopics();
+    }
 
-
+    public function canAddTopicTreeNode()
+    {
+        return $this->canAccessTopics();
+    }
 }

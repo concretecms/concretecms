@@ -6,7 +6,7 @@
         <?php echo $label?>
         <?php echo $form->select('language', $languages, $activeLanguage, array(
             'data-select' => 'multilingual-switch-language',
-            'data-action' => $view->action('switch_language', $cID, '--language--')
+            'data-action' => $view->action('switch_language', $cID, '--language--'),
         ))?>
     </form>
 

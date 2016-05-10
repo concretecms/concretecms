@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Support\Symbol\ClassSymbol\MethodSymbol;
 
 use Concrete\Core\Support\Symbol\ClassSymbol\ClassSymbol;

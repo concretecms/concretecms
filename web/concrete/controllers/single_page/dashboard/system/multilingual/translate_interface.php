@@ -13,7 +13,6 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 class TranslateInterface extends DashboardPageController
 {
-
     public $helpers = array('form');
 
     public function view()

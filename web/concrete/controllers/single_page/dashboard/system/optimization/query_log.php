@@ -1,15 +1,15 @@
-<?
+<?php
 namespace Concrete\Controller\SinglePage\Dashboard\System\Optimization;
+
 use Concrete\Core\Legacy\Loader;
 use Concrete\Core\Logging\Query\Logger;
 use Concrete\Core\Logging\Query\LogList;
-use \Concrete\Core\Page\Controller\DashboardPageController;
+use Concrete\Core\Page\Controller\DashboardPageController;
 
-class QueryLog extends DashboardPageController {
-	
-	public function view()
+class QueryLog extends DashboardPageController
+{
+    public function view()
     {
-
         $l = new LogList();
         $pagination = $l->getPagination();
         $pagination->setMaxPerPage(10);
@@ -19,7 +19,6 @@ class QueryLog extends DashboardPageController {
         $this->set('entries', $entries);
         $this->set('total', Logger::getTotalLogged());
         $this->set('pagination', $pagination);
-
     }
 
     public function inspect($query)
@@ -44,8 +43,7 @@ class QueryLog extends DashboardPageController {
         $this->view();
     }
 
-
-    public function csv() 
+    public function csv()
     {
         if (!Loader::helper('validation/token')->validate('csv')) {
             $this->redirect('/dashboard/system/optimization/query_log');
@@ -65,12 +63,12 @@ class QueryLog extends DashboardPageController {
             // write the columns
             $row = array(
                 t('Times Run'),
-                t('Query')
+                t('Query'),
             );
 
             fputcsv($fp, $row);
 
-            foreach($entries as $ent) { 
+            foreach ($entries as $ent) {
                 fputcsv($fp, array(
                     $ent['queryTotal'],
                     $ent['query'],
@@ -81,5 +79,4 @@ class QueryLog extends DashboardPageController {
             die;
         }
     }
-	
 }

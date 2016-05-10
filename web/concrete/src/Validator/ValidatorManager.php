@@ -3,12 +3,11 @@ namespace Concrete\Core\Validator;
 
 class ValidatorManager implements ValidatorManagerInterface
 {
-
-    /** @type ValidatorInterface[] */
+    /** @var ValidatorInterface[] */
     protected $validators = array();
 
     /**
-     * Get the validator requirements in the form of an array keyed by it's respective error code
+     * Get the validator requirements in the form of an array keyed by it's respective error code.
      *
      * Example:
      *    [ self::E_TOO_SHORT => 'Must be at least 10 characters' ]
@@ -27,7 +26,7 @@ class ValidatorManager implements ValidatorManagerInterface
     }
 
     /**
-     * Get a list of all validators
+     * Get a list of all validators.
      *
      * @return ValidatorInterface[] Array of validators keyed by their handles
      */
@@ -37,9 +36,10 @@ class ValidatorManager implements ValidatorManagerInterface
     }
 
     /**
-     * Does a validator with this handle exist
+     * Does a validator with this handle exist.
      *
      * @param string $handle
+     *
      * @return bool
      */
     public function hasValidator($handle)
@@ -54,7 +54,6 @@ class ValidatorManager implements ValidatorManagerInterface
      *
      * @param string $handle
      * @param \Concrete\Core\Validator\ValidatorInterface $validator
-     * @return void
      */
     public function setValidator($handle, ValidatorInterface $validator = null)
     {
@@ -62,11 +61,13 @@ class ValidatorManager implements ValidatorManagerInterface
     }
 
     /**
-     * Is this mixed value valid based on the added validators
+     * Is this mixed value valid based on the added validators.
      *
      * @param mixed             $mixed Can be any value
      * @param \ArrayAccess|null $error The error object that will contain the error strings
+     *
      * @return bool
+     *
      * @throws \InvalidArgumentException Invalid mixed value type passed.
      */
     public function isValid($mixed, \ArrayAccess $error = null)
@@ -80,5 +81,4 @@ class ValidatorManager implements ValidatorManagerInterface
 
         return $valid;
     }
-
 }

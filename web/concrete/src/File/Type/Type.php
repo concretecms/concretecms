@@ -2,12 +2,10 @@
 namespace Concrete\Core\File\Type;
 
 use Loader;
-use \Concrete\Core\Package\PackageList;
 use Core;
 
 class Type
 {
-
     // File Type Constants
     const T_IMAGE = 1;          //!< @javascript-exported
     const T_VIDEO = 2;          //!< @javascript-exported
@@ -92,10 +90,6 @@ class Type
     {
         if ($type > 0) {
             return static::mapGenericTypeText($type);
-        } else {
-            if (!empty($this->type)) {
-                return static::mapGenericTypeText($this->type);
-            }
         }
     }
 
@@ -104,6 +98,7 @@ class Type
         $name = camelcase($this->getCustomImporter()) . 'Inspector';
         $class = overrideable_core_class('Core\\File\\Type\\Inspector\\' . $name, 'File/Type/Inspector/' . $name . '.php', $this->getPackageHandle());
         $cl = Core::make($class);
+
         return $cl;
     }
 
@@ -115,6 +110,7 @@ class Type
         while ($row = $stm->fetch()) {
             $extensions[] = $row['fvExtension'];
         }
+
         return $extensions;
     }
 
@@ -126,6 +122,7 @@ class Type
         while ($row = $stm->fetch()) {
             $types[] = $row['fvType'];
         }
+
         return $types;
     }
 
@@ -138,12 +135,12 @@ class Type
             static::T_AUDIO,
             static::T_TEXT,
             static::T_APPLICATION,
-            static::T_UNKNOWN
+            static::T_UNKNOWN,
         );
     }
 
     /**
-     * Returns a thumbnail for this type of file
+     * Returns a thumbnail for this type of file.
      */
     public function getThumbnail($fullImageTag = true)
     {
@@ -159,6 +156,4 @@ class Type
             return $url;
         }
     }
-
-
 }

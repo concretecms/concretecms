@@ -1,37 +1,33 @@
 <?php
-
 namespace Concrete\Core\Validator;
 
 use Concrete\Core\Config\Repository\Repository;
-use Concrete\Core\Error\Error;
 use Concrete\Core\Foundation\Service\Provider;
 use Concrete\Core\Validator\String\MaximumLengthValidator;
 use Concrete\Core\Validator\String\MinimumLengthValidator;
 
 class PasswordValidatorServiceProvider extends Provider
 {
-
     /**
      * Registers the services provided by this provider.
-     * @return void
      */
     public function register()
     {
-        $this->app->bindShared('validator/password', function($app) {
-            /** @type Repository $config */
+        $this->app->bindShared('validator/password', function ($app) {
+            /** @var Repository $config */
             $config = $app['config'];
-            /** @type \Concrete\Core\Validator\ValidatorManagerInterface $manager */
+            /** @var \Concrete\Core\Validator\ValidatorManagerInterface $manager */
             $manager = $app->make('\Concrete\Core\Validator\ValidatorManagerInterface');
 
             $minimum_length = $config->get('concrete.user.password.minimum', 5);
             $maximum_length = $config->get('concrete.user.password.maximum');
 
-            /** @type MinimumLengthValidator $minimum */
+            /** @var MinimumLengthValidator $minimum */
             $minimum = null;
-            /** @type MaximumLengthValidator $maximum */
+            /** @var MaximumLengthValidator $maximum */
             $maximum = null;
 
-            $error_closure = function($validator, $code, $password) use (&$minimum, &$maximum) {
+            $error_closure = function ($validator, $code, $password) use (&$minimum, &$maximum) {
                 if ($minimum && $maximum) {
                     return t('A password must be between %s and %s characters long.',
                         $minimum->getMinimumLength(),
@@ -45,7 +41,7 @@ class PasswordValidatorServiceProvider extends Provider
                 return t('Invalid password.');
             };
 
-            $requirement_closure = function($validator, $code) use (&$minimum, &$maximum) {
+            $requirement_closure = function ($validator, $code) use (&$minimum, &$maximum) {
                 if ($minimum && $maximum) {
                     return t('Must be between %s and %s characters long.',
                         $minimum->getMinimumLength(),
@@ -78,5 +74,4 @@ class PasswordValidatorServiceProvider extends Provider
             return $manager;
         });
     }
-
 }

@@ -1,27 +1,28 @@
 <?php
 namespace Concrete\Core\Page;
-use User;
 
-class MovePageEvent extends Event {
+class MovePageEvent extends Event
+{
+    protected $oldParent;
+    protected $newParent;
 
-	protected $oldParent;
-	protected $newParent;
+    public function setNewParentPageObject($newParent)
+    {
+        $this->newParent = $newParent;
+    }
 
-	public function setNewParentPageObject($newParent) {
-		$this->newParent = $newParent;
-	}
+    public function setOldParentPageObject($oldParent)
+    {
+        $this->oldParent = $oldParent;
+    }
 
-	public function setOldParentPageObject($oldParent) {
-		$this->oldParent = $oldParent;
-	}
+    public function getNewParentPageObject()
+    {
+        return $this->newParent;
+    }
 
-	public function getNewParentPageObject() {
-		return $this->newParent;
-	}
-
-	public function getOldParentPageObject() {
-		return $this->oldParent;
-	}
-
-
+    public function getOldParentPageObject()
+    {
+        return $this->oldParent;
+    }
 }

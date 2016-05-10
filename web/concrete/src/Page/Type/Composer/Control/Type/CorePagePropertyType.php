@@ -3,12 +3,9 @@ namespace Concrete\Core\Page\Type\Composer\Control\Type;
 
 use Loader;
 use Core;
-use \Concrete\Core\Foundation\Object;
-use \Concrete\Core\Page\Type\Composer\Control\CorePageProperty\CorePageProperty as CorePagePropertyControl;
 
 class CorePagePropertyType extends Type
 {
-
     protected $corePageProperties = array(
         'name',
         'url_slug',
@@ -16,15 +13,16 @@ class CorePagePropertyType extends Type
         'description',
         'user',
         'page_template',
-        'publish_target'
+        'publish_target',
     );
 
     public function getPageTypeComposerControlObjects()
     {
-		$objects = array();
+        $objects = array();
         foreach ($this->corePageProperties as $propertyHandle) {
             $objects[] = $this->getPageTypeComposerControlByIdentifier($propertyHandle);
         }
+
         return $objects;
     }
 
@@ -32,12 +30,12 @@ class CorePagePropertyType extends Type
     {
         $class = '\\Concrete\\Core\\Page\\Type\\Composer\\Control\\CorePageProperty\\' . Loader::helper('text')->camelcase($identifier) . 'CorePageProperty';
         $object = Core::make($class);
+
         return $object;
     }
 
-	public function configureFromImportHandle($handle)
+    public function configureFromImportHandle($handle)
     {
         return static::getPageTypeComposerControlByIdentifier($handle);
     }
-
 }

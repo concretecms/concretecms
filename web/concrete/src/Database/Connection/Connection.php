@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Database\Connection;
 
 use Doctrine\ORM\EntityManager;
@@ -33,7 +32,7 @@ class Connection extends \Doctrine\DBAL\Connection
      */
     public function createEntityManager()
     {
-        return ORM::makeEntityManager($this, 'core');
+        return ORM::entityManager('core');
     }
 
     /**

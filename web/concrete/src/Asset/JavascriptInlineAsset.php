@@ -3,7 +3,6 @@ namespace Concrete\Core\Asset;
 
 class JavascriptInlineAsset extends JavascriptAsset
 {
-
     /**
      * @var bool
      */
@@ -58,5 +57,4 @@ class JavascriptInlineAsset extends JavascriptAsset
     {
         return $this->assetURL;
     }
-
 }

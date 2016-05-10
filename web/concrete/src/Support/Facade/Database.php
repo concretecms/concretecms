@@ -3,18 +3,19 @@ namespace Concrete\Core\Support\Facade;
 
 class Database extends Facade
 {
-
     public static function getFacadeAccessor()
     {
         return 'database';
     }
 
     /**
-     * This is overridden to allow passthru to `DatabaseManager`'s __call
+     * This is overridden to allow passthru to `DatabaseManager`'s __call.
      *
      * @param string $method
      * @param array  $args
+     *
      * @return mixed
+     *
      * @throws \Exception
      */
     public static function __callStatic($method, $args)
@@ -40,5 +41,4 @@ class Database extends Facade
                 return call_user_func_array(array($instance, $method), $args);
         }
     }
-
 }

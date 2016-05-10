@@ -3,7 +3,6 @@ namespace Concrete\Core\Editor;
 
 class PluginManager
 {
-
     protected $plugins = array();
     protected $selectedPlugins = array();
 
@@ -34,12 +33,14 @@ class PluginManager
     public function isSelected($key)
     {
         $key = ($key instanceof Plugin) ? $key->getKey() : $key;
+
         return in_array($key, $this->selectedPlugins);
     }
 
     public function isAvailable($key)
     {
         $key = ($key instanceof Plugin) ? $key->getKey() : $key;
+
         return array_key_exists($key, $this->plugins);
     }
 
@@ -58,8 +59,7 @@ class PluginManager
 
     public function selectMultiple($plugins)
     {
-        foreach($plugins as $key)
-        {
+        foreach ($plugins as $key) {
             $this->select($key);
         }
     }
@@ -67,22 +67,25 @@ class PluginManager
     public function getSelectedPlugins()
     {
         $manager = $this;
-        return array_filter($this->selectedPlugins, function($plugin) use ($manager) {
+
+        return array_filter($this->selectedPlugins, function ($plugin) use ($manager) {
             return $manager->isAvailable($plugin);
         });
     }
 
     /**
-     * returns an array of selected plug-in objects, filtering out those that aren't available
+     * returns an array of selected plug-in objects, filtering out those that aren't available.
+     *
      * @return array
      */
     public function getSelectedPluginObjects()
     {
         $selected = array();
         $plugins = $this->getSelectedPlugins();
-        foreach($plugins as $key) {
+        foreach ($plugins as $key) {
             $selected[] = $this->plugins[$key];
         }
+
         return $selected;
     }
 }

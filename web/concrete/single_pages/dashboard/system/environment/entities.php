@@ -13,14 +13,18 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
         <div class="radio">
             <label>
-                <input type="radio" name="DOCTRINE_DEV_MODE" value="1" <? if (Config::get('concrete.cache.doctrine_dev_mode')) { ?> checked <? } ?> />
+                <input type="radio" name="DOCTRINE_DEV_MODE" value="1" <?php if (Config::get('concrete.cache.doctrine_dev_mode')) {
+    ?> checked <?php 
+} ?> />
                 <span><?=t('On - Proxy classes will be generated on the fly. Good for development.')?></span>
             </label>
         </div>
 
         <div class="radio">
             <label>
-                <input type="radio" name="DOCTRINE_DEV_MODE" value="0" <? if (!Config::get('concrete.cache.doctrine_dev_mode')) { ?> checked <? } ?> />
+                <input type="radio" name="DOCTRINE_DEV_MODE" value="0" <?php if (!Config::get('concrete.cache.doctrine_dev_mode')) {
+    ?> checked <?php 
+} ?> />
                 <span><?= t('Off - Proxy classes need to be manually generated. Helps speed up a live site.') ?></span>
             </label>
         </div>

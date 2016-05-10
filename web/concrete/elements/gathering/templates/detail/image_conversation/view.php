@@ -1,7 +1,7 @@
-<? defined('C5_EXECUTE') or die("Access Denied.");
+<?php defined('C5_EXECUTE') or die("Access Denied.");
 $nh = Loader::helper('navigation');
 if (is_array($image)) {
-$image = $image[0];
+    $image = $image[0];
 }?>
 
 <div class="ccm-gathering-overlay image-sharing-link" id="image-sharing-link-<?php echo $this->gaiID; ?>">

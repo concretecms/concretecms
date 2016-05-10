@@ -1,39 +1,54 @@
-<?
+<?php
 defined('C5_EXECUTE') or die("Access Denied.");
 $form = Loader::helper('form');?>
 
-<? if (is_array($selectedGroups)) { ?>
+<?php if (is_array($selectedGroups)) {
+    ?>
 
 <h4><?=t('Confirm')?></h4>
-<? if ($gParent instanceof Group) { ?>
+<?php if ($gParent instanceof Group) {
+    ?>
 <p><?=t('Move the following group(s) beneath <strong>%s</strong>.', $gParent->getGroupDisplayName())?></p>
-<? } else { ?> 
+<?php 
+} else {
+    ?> 
 <p><?=t('Move the following group(s) <strong>to the top level of groups</strong>.')?></p>
-<? } ?>
+<?php 
+}
+    ?>
 
 <ul>
-<? foreach($selectedGroups as $g) { ?>
+<?php foreach ($selectedGroups as $g) {
+    ?>
 	<li><?=$g->getGroupDisplayName()?></li>
-<? } ?>
+<?php 
+}
+    ?>
 </ul>
 
 <form method="post" action="<?=$view->action('confirm')?>" role="form">
     <input type="hidden" name="gParentNodeID" value="<?=h($_REQUEST['gParentNodeID'])?>" />
     
-	<? foreach($_REQUEST['gID'] as $gID) { ?>
+	<?php foreach ($_REQUEST['gID'] as $gID) {
+    ?>
 		<input type="hidden" name="gID[]" value="<?=h($gID)?>" />
-	<? } ?>
+	<?php 
+}
+    ?>
 	<br/>
 	<input type="hidden" name="gName" value="<?=h($_REQUEST['gName'])?>" />
 	
 	<div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
-            <?php echo $interface->submit(t('Move Groups'), '', 'right', 'btn-primary'); ?>
+            <?php echo $interface->submit(t('Move Groups'), '', 'right', 'btn-primary');
+    ?>
         </div>
     </div>
 </form>
 
-<? } else if (is_array($groups)) { ?>
+<?php 
+} elseif (is_array($groups)) {
+    ?>
 
 <form action="<?=$view->action('move')?>" method="post" data-form="move-groups">
 
@@ -46,11 +61,17 @@ $form = Loader::helper('form');?>
                     <input data-toggle="checkbox" type="checkbox" /> <strong><?=t('Select All')?></strong>
                 </label>
             </div>
-            <? foreach($groups as $g) { ?>
+            <?php foreach ($groups as $g) {
+    ?>
                 <div class="checkbox" data-checkbox="group-list"><label>
-                    <input name="gID[]" type="checkbox" <? if (is_array($_POST['gID']) && in_array($g->getGroupID(), $_POST['gID'])) { ?>checked<? } ?> value="<?=$g->getGroupID()?>" /> <?=$g->getGroupDisplayName()?>
+                    <input name="gID[]" type="checkbox" <?php if (is_array($_POST['gID']) && in_array($g->getGroupID(), $_POST['gID'])) {
+    ?>checked<?php 
+}
+    ?> value="<?=$g->getGroupID()?>" /> <?=$g->getGroupDisplayName()?>
                 </label></div>
-            <? } ?>
+            <?php 
+}
+    ?>
         </div>
         
         <div class="col-md-6">
@@ -62,10 +83,10 @@ $form = Loader::helper('form');?>
             
             </div>
             
-            <?
+            <?php
             $guestGroupNode = GroupTreeNode::getTreeNodeByGroupID(GUEST_GROUP_ID);
-            $registeredGroupNode = GroupTreeNode::getTreeNodeByGroupID(REGISTERED_GROUP_ID);
-            ?>
+    $registeredGroupNode = GroupTreeNode::getTreeNodeByGroupID(REGISTERED_GROUP_ID);
+    ?>
         </div>
     </div>
     
@@ -82,7 +103,8 @@ $form = Loader::helper('form');?>
             
             <div class="ccm-dashboard-form-actions-wrapper">
                 <div class="ccm-dashboard-form-actions">
-                    <?php echo $interface->submit(t('Move'), '', 'right', 'btn-primary'); ?>
+                    <?php echo $interface->submit(t('Move'), '', 'right', 'btn-primary');
+    ?>
                 </div>
             </div>
         </div>
@@ -106,14 +128,17 @@ $(function() {
 
 <script type="text/javascript">
     $(function() {
-       $('[data-groups-tree=<?=$tree->getTreeID()?>]').concreteGroupsTree({
+       $('[data-groups-tree=<?=$tree->getTreeID()?>]').concreteTree({
           'treeID': '<?=$tree->getTreeID()?>',
           'chooseNodeInForm': 'single',
 		  'enableDragAndDrop': false,
-          <? if ($this->controller->isPost()) { ?>
+          <?php if ($this->controller->isPost()) {
+    ?>
              'selectNodesByKey': [<?=intval($_POST['gParentNodeID'])?>],
-          <? } ?>
-          'removeNodesByID': ['<?=$guestGroupNode->getTreeNodeID()?>','<?=$registeredGroupNode->getTreeNodeID()?>'],
+          <?php 
+}
+    ?>
+          'removeNodesByKey': ['<?=$guestGroupNode->getTreeNodeID()?>','<?=$registeredGroupNode->getTreeNodeID()?>'],
           'onSelect': function(select, node) {
              if (select) {
                 $('input[name=gParentNodeID]').val(node.data.key);
@@ -125,7 +150,9 @@ $(function() {
     });
     </script>
 
-<? } else { ?>
+<?php 
+} else {
+    ?>
 
 <form method="POST" action="<?=$view->action('search')?>">
 	<h4><?=t('Search for Groups to Move')?></h4>
@@ -140,13 +167,15 @@ $(function() {
             
         	<div class="ccm-dashboard-form-actions-wrapper">
                 <div class="ccm-dashboard-form-actions">
-                    <?php echo $interface->submit(t('Search'), '', 'right', 'btn-primary'); ?>
+                    <?php echo $interface->submit(t('Search'), '', 'right', 'btn-primary');
+    ?>
                 </div>
             </div>
 	    </div>
 	</div>
 </form>
 
-<? } ?>
+<?php 
+} ?>
 
 <?=Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper(false);?>

@@ -1,10 +1,8 @@
 <?php
-
 namespace Concrete\Core\Backup\ContentImporter\ValueInspector\Item;
 
 class PictureItem extends FileItem
 {
-
     public function getDisplayName()
     {
         return t('Picture');
@@ -16,5 +14,4 @@ class PictureItem extends FileItem
             return '<concrete-picture fID="' . $o->getFileID() . '" />';
         }
     }
-
 }

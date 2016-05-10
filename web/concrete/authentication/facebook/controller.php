@@ -3,12 +3,12 @@ namespace Concrete\Authentication\Facebook;
 
 defined('C5_EXECUTE') or die('Access Denied');
 
+use Concrete\Core\Authentication\Type\Facebook\Factory\FacebookServiceFactory;
 use Concrete\Core\Authentication\Type\OAuth\OAuth2\GenericOauth2TypeController;
 use OAuth\OAuth2\Service\Facebook;
 
 class Controller extends GenericOauth2TypeController
 {
-
     public function registrationGroupID()
     {
         return \Config::get('auth.facebook.registration.group');
@@ -35,8 +35,11 @@ class Controller extends GenericOauth2TypeController
     public function getService()
     {
         if (!$this->service) {
-            $this->service = \Core::make('authentication/facebook');
+            /** @var FacebookServiceFactory $factory */
+            $factory = $this->app->make(FacebookServiceFactory::class);
+            $this->service = $factory->createService();
         }
+
         return $this->service;
     }
 
@@ -44,7 +47,7 @@ class Controller extends GenericOauth2TypeController
     {
         \Config::save('auth.facebook.appid', $args['apikey']);
         \Config::save('auth.facebook.secret', $args['apisecret']);
-        \Config::save('auth.facebook.registration.enabled', !!$args['registration_enabled']);
+        \Config::save('auth.facebook.registration.enabled', (bool) $args['registration_enabled']);
         \Config::save('auth.facebook.registration.group', intval($args['registration_group'], 10));
     }
 
@@ -58,5 +61,4 @@ class Controller extends GenericOauth2TypeController
         $list->includeAllGroups();
         $this->set('groups', $list->getResults());
     }
-
 }

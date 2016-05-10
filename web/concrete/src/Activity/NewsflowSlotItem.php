@@ -4,12 +4,12 @@ namespace Concrete\Core\Activity;
 use Concrete\Core\Http\Service\Json;
 
 /**
- * Class NewsflowSlotItem
+ * Class NewsflowSlotItem.
+ *
  * @package Concrete\Core\Activity
  */
 class NewsflowSlotItem
 {
-
     protected $content;
 
     /**
@@ -39,24 +39,26 @@ class NewsflowSlotItem
      *      }
      * }
      * </code>
+     *
      * @return NewsflowSlotItem[] Returns an associative array of NewsflowSlotItems
      */
-    public function parseResponse($response) {
-		$slots = array();
-		try {
+    public function parseResponse($response)
+    {
+        $slots = array();
+        try {
             $json = new Json();
             $obj = $json->decode($response);
             if (is_object($obj)) {
                 if (is_object($obj->slots)) {
                     foreach ($obj->slots as $key => $content) {
-                        $cn = new NewsflowSlotItem($content);
+                        $cn = new self($content);
                         $slots[$key] = $cn;
                     }
                 }
             }
         } catch (\Exception $e) {
         }
+
         return $slots;
     }
-
 }

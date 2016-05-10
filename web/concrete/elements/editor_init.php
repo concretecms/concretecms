@@ -1,2 +1,2 @@
-<? defined('C5_EXECUTE') or die("Access Denied."); ?>
-<? // empty for legacy purposes ?>
+<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
+<?php // empty for legacy purposes ?>

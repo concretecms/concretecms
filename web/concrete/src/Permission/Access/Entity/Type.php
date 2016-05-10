@@ -1,18 +1,15 @@
 <?php
 namespace Concrete\Core\Permission\Access\Entity;
 
-use \Concrete\Core\Foundation\Object;
+use Concrete\Core\Foundation\Object;
 use Concrete\Core\Permission\Category;
 use Gettext\Translations;
 use Loader;
-use Config;
 use Core;
-use URL;
-use \Concrete\Core\Package\PackageList;
+use Concrete\Core\Package\PackageList;
 
 class Type extends Object
 {
-
     public function getAccessEntityTypeID()
     {
         return $this->petID;
@@ -29,7 +26,7 @@ class Type extends Object
     }
 
     /**
-     * Returns the controller class for the currently selected captcha library
+     * Returns the controller class for the currently selected captcha library.
      */
     public function getAccessEntityTypeClass()
     {
@@ -39,6 +36,7 @@ class Type extends Object
             . Loader::helper('text')->camelcase($this->petHandle) . 'Entity.php',
             $this->getPackageHandle()
         );
+
         return $class;
     }
 
@@ -46,6 +44,7 @@ class Type extends Object
      * @param string $format = 'html'
      *    Escape the result in html format (if $format is 'html').
      *    If $format is 'text' or any other value, the display name won't be escaped.
+     *
      * @return string
      */
     public function getAccessEntityTypeDisplayName($format = 'html')
@@ -68,6 +67,7 @@ class Type extends Object
         if ($row['petHandle']) {
             $wt = new static();
             $wt->setPropertiesFromArray($row);
+
             return $wt;
         }
     }
@@ -75,6 +75,7 @@ class Type extends Object
     public function __call($method, $args)
     {
         $obj = Core::make($this->getAccessEntityTypeClass());
+
         return call_user_func_array(array($obj, $method), $args);
     }
 
@@ -87,6 +88,7 @@ class Type extends Object
         $url = $uh->getToolsURL('permissions/access/entity/types/' . $this->petHandle, $this->getPackageHandle());
         $token = Loader::helper('validation/token')->getParameter($task);
         $url .= '?' . $token . '&task=' . $task;
+
         return $url;
     }
 
@@ -106,6 +108,7 @@ class Type extends Object
         }
 
         $r->Close();
+
         return $list;
     }
 
@@ -156,6 +159,7 @@ class Type extends Object
             $list[] = static::getByID($row['petID']);
         }
         $r->Close();
+
         return $list;
     }
 
@@ -179,6 +183,7 @@ class Type extends Object
             array($petHandle, $petName, $pkgID));
         $id = $db->Insert_ID();
         $est = static::getByID($id);
+
         return $est;
     }
 
@@ -189,7 +194,7 @@ class Type extends Object
         foreach ($attribs as $type) {
             $translations->insert('PermissionAccessEntityTypeName', $type->getAccessEntityTypeName());
         }
+
         return $translations;
     }
-
 }

@@ -1,11 +1,3 @@
-$(function() {
-	$("input[name=akHasCustomCountries]").click(function() {
-		ccm_attributeTypeAddressCountries($(this));
-	});
-	
-	ccm_attributeTypeAddressCountries();
-});
-
 ccm_attributeTypeAddressCountries = function(obj) {
 	if (!obj) {
 		var obj = $("input[name=akHasCustomCountries][checked=checked]");
@@ -17,3 +9,11 @@ ccm_attributeTypeAddressCountries = function(obj) {
 		$("#akCustomCountries option").attr('selected', true);
 	}
 }
+
+$(function() {
+	$("input[name=akHasCustomCountries]").click(function() {
+		ccm_attributeTypeAddressCountries($(this));
+	});
+	
+	ccm_attributeTypeAddressCountries();
+});

@@ -1,4 +1,4 @@
-<? defined('C5_EXECUTE') or die("Access Denied.");
+<?php defined('C5_EXECUTE') or die("Access Denied.");
 
 $nh = Loader::helper('validation/numbers');
 $form = Loader::helper('form');
@@ -8,34 +8,34 @@ $type = GatheringItemTemplateType::getByID($gatTypeID);
 $nh = Loader::helper('validation/numbers');
 $item = GatheringItem::getByID($gaiID);
 if (is_object($item) && is_object($type)) {
-  $gathering = $item->getGatheringObject();
-  $agp = new Permissions($gathering);
-  if ($agp->canEditGatheringItems() && Loader::helper('validation/token')->validate('edit_gathering_item_template', $_REQUEST['token'])) {
-    $reloadItemTile = false;
-    if ($type->getGatheringItemTemplateTypeHandle() == 'tile') {
-      $reloadItemTile = true;
-    }
+    $gathering = $item->getGatheringObject();
+    $agp = new Permissions($gathering);
+    if ($agp->canEditGatheringItems() && Loader::helper('validation/token')->validate('edit_gathering_item_template', $_REQUEST['token'])) {
+        $reloadItemTile = false;
+        if ($type->getGatheringItemTemplateTypeHandle() == 'tile') {
+            $reloadItemTile = true;
+        }
 
-    if ($_POST['task'] == 'update_item_template') {
-      $template = GatheringItemTemplate::getByID($_POST['gatID']);
-      $item->setGatheringItemTemplate($type, $template);
-      if ($reloadItemTile) {
-        $item->render($type);
-      }
-      exit;
-    }
-  
-    $assignments = GatheringItemFeatureAssignment::getList($item);
-    $features = array();
-    foreach($assignments as $as) {
-      $f = $as->getFeatureObject();
-      if (is_object($f)) {
-        $features[] = $f;
-      }
-    }
+        if ($_POST['task'] == 'update_item_template') {
+            $template = GatheringItemTemplate::getByID($_POST['gatID']);
+            $item->setGatheringItemTemplate($type, $template);
+            if ($reloadItemTile) {
+                $item->render($type);
+            }
+            exit;
+        }
 
-    $templates = GatheringItemTemplate::getListByType($type);
-    ?>
+        $assignments = GatheringItemFeatureAssignment::getList($item);
+        $features = array();
+        foreach ($assignments as $as) {
+            $f = $as->getFeatureObject();
+            if (is_object($f)) {
+                $features[] = $f;
+            }
+        }
+
+        $templates = GatheringItemTemplate::getListByType($type);
+        ?>
 
 
     <script type="text/javascript">
@@ -71,10 +71,13 @@ if (is_object($item) && is_object($type)) {
     </form>
 
       <ul>
-    <?
-    foreach($features as $f) { ?>
+    <?php
+    foreach ($features as $f) {
+        ?>
       <li><a href="#" data-tab="<?=$f->getFeatureHandle()?>"><?=$f->getFeatureName()?></a></li>
-    <? } ?> 
+    <?php 
+    }
+        ?> 
     </ul>
 
     </div>
@@ -83,25 +86,35 @@ if (is_object($item) && is_object($type)) {
       
       <ul class="ccm-overlay-icon-item-grid-list">
 
-      <? foreach($templates as $t) {
-        if (!$item->itemSupportsGatheringItemTemplate($t)) {
-          continue;
-        }
+      <?php foreach ($templates as $t) {
+    if (!$item->itemSupportsGatheringItemTemplate($t)) {
+        continue;
+    }
 
-        $templateFeatures = $t->getGatheringItemTemplateFeatureHandles();
-        $sets = '';
-        foreach($templateFeatures as $tfHandle) {
-          $sets .= $tfHandle . ' ';
-        }
-        $sets = trim($sets);
-       
-        ?>
+    $templateFeatures = $t->getGatheringItemTemplateFeatureHandles();
+    $sets = '';
+    foreach ($templateFeatures as $tfHandle) {
+        $sets .= $tfHandle . ' ';
+    }
+    $sets = trim($sets);
+
+    ?>
 
         <li data-gathering-item-template-features="<?=$sets?>">
-          <a href="javascript:void(0)" <? if ($item->getGatheringItemTemplateID($type) == $t->getGatheringItemTemplateID()) { ?>class="ccm-gathering-item-template-selected"<? } ?> onclick="$.fn.ccmgathering('updateItemTemplate', {gaiID: '<?=$gaiID?>', gatID: '<?=$t->getGatheringItemTemplateID()?>', gatTypeID: '<?=$gatTypeID?>', reloadItemTile: <? if ($reloadItemTile) { ?>true<? } else { ?>false<? } ?>, 'updateToken': '<?=Loader::helper('validation/token')->generate('edit_gathering_item_template')?>'})"><p><img src="<?=$t->getGatheringItemTemplateIconSRC()?>" /><span><?=$t->getGatheringItemTemplateName()?></span></p></a>
+          <a href="javascript:void(0)" <?php if ($item->getGatheringItemTemplateID($type) == $t->getGatheringItemTemplateID()) {
+    ?>class="ccm-gathering-item-template-selected"<?php 
+}
+    ?> onclick="$.fn.ccmgathering('updateItemTemplate', {gaiID: '<?=$gaiID?>', gatID: '<?=$t->getGatheringItemTemplateID()?>', gatTypeID: '<?=$gatTypeID?>', reloadItemTile: <?php if ($reloadItemTile) {
+    ?>true<?php 
+} else {
+    ?>false<?php 
+}
+    ?>, 'updateToken': '<?=Loader::helper('validation/token')->generate('edit_gathering_item_template')?>'})"><p><img src="<?=$t->getGatheringItemTemplateIconSRC()?>" /><span><?=$t->getGatheringItemTemplateName()?></span></p></a>
         </li>
         
-      <? } ?>
+      <?php 
+}
+        ?>
 
       </ul>
 
@@ -109,7 +122,7 @@ if (is_object($item) && is_object($type)) {
     </div>
 
 
-    <? }
-
-  }
+    <?php 
+    }
+}
 ?>

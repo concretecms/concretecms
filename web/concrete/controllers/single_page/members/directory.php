@@ -8,7 +8,6 @@ use Concrete\Core\User\UserList;
 
 class Directory extends PublicProfilePageController
 {
-
     /**
      * @var \Concrete\Core\User\UserList
      */
@@ -41,5 +40,4 @@ class Directory extends PublicProfilePageController
             $this->userList->filterByKeywords($keywords);
         }
     }
-
 }

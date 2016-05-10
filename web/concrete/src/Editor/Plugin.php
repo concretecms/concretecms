@@ -6,7 +6,6 @@ use Concrete\Core\Asset\AssetPointer;
 
 class Plugin
 {
-
     protected $key;
     protected $name;
     protected $requiredAssetGroup;
@@ -70,6 +69,4 @@ class Plugin
     {
         $this->name = $name;
     }
-
-
 }

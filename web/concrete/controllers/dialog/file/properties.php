@@ -1,18 +1,17 @@
 <?php
 namespace Concrete\Controller\Dialog\File;
 
-use \Concrete\Controller\Backend\UserInterface\File as BackendInterfaceFileController;
-use \Concrete\Core\Http\ResponseAssetGroup;
+use Concrete\Controller\Backend\UserInterface\File as BackendInterfaceFileController;
+use Concrete\Core\Http\ResponseAssetGroup;
 use Permissions;
 use File;
 use FileAttributeKey;
-use \Concrete\Core\File\EditResponse as FileEditResponse;
+use Concrete\Core\File\EditResponse as FileEditResponse;
 use Loader;
 use Exception;
 
 class Properties extends BackendInterfaceFileController
 {
-
     protected $viewPath = '/dialogs/file/properties';
     protected $controllerActionPath = '/ccm/system/dialogs/file/properties';
 
@@ -46,7 +45,7 @@ class Properties extends BackendInterfaceFileController
             if ($fp->canEditFileProperties()) {
                 $fv = $this->file->getVersionToModify();
 
-                $ak = FileAttributeKey::get($_REQUEST['akID']);
+                $ak = FileAttributeKey::getByID($_REQUEST['akID']);
                 $fv->clearAttribute($ak);
 
                 $sr = new FileEditResponse();
@@ -57,7 +56,6 @@ class Properties extends BackendInterfaceFileController
         }
 
         throw new Exception(t('Access Denied'));
-
     }
 
     public function update_attribute()
@@ -67,22 +65,20 @@ class Properties extends BackendInterfaceFileController
             if ($fp->canEditFileProperties()) {
                 $fv = $this->file->getVersionToModify();
 
-                $ak = FileAttributeKey::get($_REQUEST['name']);
-                $ak->saveAttributeForm($fv);
-
-                $file = File::getByID($this->file->getFileID());
-                $val = $file->getAttributeValueObject($ak); // ugh this is some kind of race condition or cache issue.
+                $ak = FileAttributeKey::getByID($_REQUEST['name']);
+                $controller = $ak->getController();
+                $value = $controller->getAttributeValueFromRequest();
+                $value = $fv->setAttribute($ak, $value);
 
                 $sr = new FileEditResponse();
                 $sr->setFile($this->file);
                 $sr->setMessage(t('Attribute saved successfully.'));
-                $sr->setAdditionalDataAttribute('value', $val->getValue('displaySanitized', 'display'));
+                $sr->setAdditionalDataAttribute('value', $value->getValue('displaySanitized', 'display'));
                 $sr->outputJSON();
             }
         }
 
         throw new Exception(t('Access Denied'));
-
     }
 
     public function save()
@@ -109,8 +105,6 @@ class Properties extends BackendInterfaceFileController
                 $sr->setMessage(t('File updated successfully.'));
                 $sr->setAdditionalDataAttribute('value', $value);
                 $sr->outputJSON();
-
-
             } else {
                 throw new Exception(t('Access Denied.'));
             }
@@ -118,6 +112,4 @@ class Properties extends BackendInterfaceFileController
             throw new Exception(t('Access Denied.'));
         }
     }
-
 }
-

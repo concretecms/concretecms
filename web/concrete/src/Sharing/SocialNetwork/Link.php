@@ -9,9 +9,9 @@ use Database;
  */
 class Link
 {
-
     /**
-     * The social service handle
+     * The social service handle.
+     *
      * @Column(type="string")
      */
     protected $ssHandle;
@@ -26,7 +26,6 @@ class Link
      * @GeneratedValue
      */
     protected $slID;
-
 
     public function setURL($url)
     {
@@ -56,6 +55,7 @@ class Link
     public function getServiceIconHTML()
     {
         $service = $this->getServiceObject();
+
         return $service->getServiceIconHTML();
     }
 
@@ -81,11 +81,10 @@ class Link
     {
         $child = $node->addChild('sociallinks');
         $list = static::getList();
-        foreach($list as $link) {
+        foreach ($list as $link) {
             $linkNode = $child->addChild('link');
             $linkNode->addAttribute('service', $link->getServiceObject()->getHandle());
             $linkNode->addAttribute('url', $link->getURL());
-
         }
     }
 
@@ -100,6 +99,7 @@ class Link
     {
         $em = \ORM::entityManager('core');
         $r = $em->find('\Concrete\Core\Sharing\SocialNetwork\Link', $id);
+
         return $r;
     }
 
@@ -110,5 +110,4 @@ class Link
             array('ssHandle' => $ssHandle)
         );
     }
-
 }

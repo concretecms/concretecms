@@ -1,12 +1,12 @@
 <?php
 namespace Concrete\Core\Block;
+
 use Concrete\Core\StyleCustomizer\Inline\CustomStyle as AbstractCustomStyle;
 use Concrete\Core\StyleCustomizer\Inline\StyleSet;
 use Core;
 
 class CustomStyle extends AbstractCustomStyle
 {
-
     protected $set;
     protected $theme;
 
@@ -20,6 +20,7 @@ class CustomStyle extends AbstractCustomStyle
     public function getStyleWrapper($css)
     {
         $style = '<style type="text/css" data-area-style-area-handle="' . $this->block->getAreaHandle() . '" data-block-style-block-id="' . $this->block->getBlockID() . '" data-style-set="' . $this->getStyleSet()->getID() . '">' . $css . '</style>';
+
         return $style;
     }
 
@@ -106,9 +107,10 @@ class CustomStyle extends AbstractCustomStyle
         }
 
         $css = '';
-        foreach($groups as $suffix => $styles) {
+        foreach ($groups as $suffix => $styles) {
             $css .= '.' . str_replace(' ', '.', $this->getCustomStyleClass()) . $suffix . '{'.implode(';', $styles).'}';
         }
+
         return $css;
     }
 
@@ -118,6 +120,7 @@ class CustomStyle extends AbstractCustomStyle
         $txt = Core::make('helper/text');
         $class .= strtolower($txt->filterNonAlphaNum($this->block->getAreaHandle()));
         $class .= '-' . $this->block->getBlockID();
+
         return $class;
     }
 
@@ -138,6 +141,7 @@ class CustomStyle extends AbstractCustomStyle
                 $classes = array_merge($gf->getPageThemeGridFrameworkSelectedDeviceHideClassesForDisplay($this->set, $this->block->getBlockCollectionObject()), $classes);
             }
         }
+
         return implode(' ', $classes);
     }
 }

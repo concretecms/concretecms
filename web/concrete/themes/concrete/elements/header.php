@@ -1,9 +1,9 @@
-<? defined('C5_EXECUTE') or die("Access Denied."); ?>
+<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
 <!DOCTYPE html>
 <html>
 <head>
     <link rel="stylesheet" type="text/css" href="<?=$this->getThemePath()?>/main.css" />
-    <?
+    <?php
 $view->requireAsset('css', 'bootstrap');
 $view->requireAsset('css', 'font-awesome');
 $view->requireAsset('javascript', 'jquery');
@@ -18,8 +18,8 @@ if (isset($c) && is_object($c)) {
         $showLogo = false;
     }
 
-     Loader::element('header_required', array('pageTitle' => isset($pageTitle) ? $pageTitle : ''));
-} else { 
+    Loader::element('header_required', array('pageTitle' => isset($pageTitle) ? $pageTitle : ''));
+} else {
     $this->markHeaderAssetPosition();
     if (isset($pageTitle)) {
         echo '<title>' . h($pageTitle) . '</title>';
@@ -44,11 +44,13 @@ if (Config::get('concrete.user.profiles_enabled') && Core::isInstalled()) {
 <body>
 <div class="ccm-ui">
 
-<? if ($showLogo) { ?>
+<?php if ($showLogo) {
+    ?>
 <div id="ccm-toolbar">
     <ul>
         <li class="ccm-logo pull-left"><span><?=Loader::helper('concrete/ui')->getToolbarLogoSRC()?></span></li>
-        <?php if ($showAccount) { ?>
+        <?php if ($showAccount) {
+    ?>
         <li class="pull-right">
             <a href="<?=URL::to('/login', 'logout', Loader::helper('validation/token')->generate('logout'))?>" title="<?=t('Sign Out')?>"><i class="fa fa-sign-out"></i>
             <span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-site-settings">
@@ -72,7 +74,10 @@ if (Config::get('concrete.user.profiles_enabled') && Core::isInstalled()) {
                 </span>
             </a>
         </li>
-        <?php } ?>
+        <?php 
+}
+    ?>
     </ul>
 </div>
-<? } ?>
+<?php 
+} ?>

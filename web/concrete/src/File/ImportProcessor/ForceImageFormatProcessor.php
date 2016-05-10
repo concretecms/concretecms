@@ -1,10 +1,8 @@
 <?php
-
 namespace Concrete\Core\File\ImportProcessor;
 
 use Concrete\Core\File\Type\Type;
 use Concrete\Core\File\Version;
-use Imagine\Image\ImageInterface;
 
 class ForceImageFormatProcessor implements ProcessorInterface
 {
@@ -12,7 +10,7 @@ class ForceImageFormatProcessor implements ProcessorInterface
 
     protected $format;
 
-    function __construct($format)
+    public function __construct($format)
     {
         $this->format = $format;
     }
@@ -39,12 +37,13 @@ class ForceImageFormatProcessor implements ProcessorInterface
             return $version->getTypeObject()->getGenericType() == Type::T_IMAGE
                 && $version->getTypeObject()->getName() != 'JPEG';
         }
+
         return false;
     }
 
     public function process(Version $version)
     {
-        switch($this->getFormat()) {
+        switch ($this->getFormat()) {
             case self::FORMAT_JPEG:
                 $extension = 'jpg';
             default:
@@ -62,5 +61,4 @@ class ForceImageFormatProcessor implements ProcessorInterface
             $version->rename($newFilename);
         }
     }
-
 }

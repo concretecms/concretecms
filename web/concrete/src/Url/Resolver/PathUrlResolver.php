@@ -11,7 +11,6 @@ use League\Url\Url;
 
 class PathUrlResolver implements UrlResolverInterface, ApplicationAwareInterface
 {
-
     /**
      * @var Application
      */
@@ -34,6 +33,7 @@ class PathUrlResolver implements UrlResolverInterface, ApplicationAwareInterface
 
     /**
      * PathUrlResolver constructor.
+     *
      * @param \Concrete\Core\Config\Repository\Repository $repository
      * @param \Concrete\Core\Url\Resolver\CanonicalUrlResolver $canonical_resolver
      * @param \Concrete\Core\Application\Service\Dashboard $dashboard
@@ -46,7 +46,7 @@ class PathUrlResolver implements UrlResolverInterface, ApplicationAwareInterface
     }
 
     /**
-     * Set the application object
+     * Set the application object.
      *
      * @param \Concrete\Core\Application\Application $application
      */
@@ -60,7 +60,6 @@ class PathUrlResolver implements UrlResolverInterface, ApplicationAwareInterface
      */
     public function resolve(array $arguments, $resolved = null)
     {
-
         if ($resolved) {
             // We don't need to do any post processing on urls.
             return $resolved;
@@ -96,7 +95,8 @@ class PathUrlResolver implements UrlResolverInterface, ApplicationAwareInterface
                 $url = Url::createFromUrl($path);
                 $path_object = $url->getPath();
                 $reset = true;
-            } catch (\Exception $e) {}
+            } catch (\Exception $e) {
+            }
         }
 
         if (!$reset) {
@@ -145,5 +145,4 @@ class PathUrlResolver implements UrlResolverInterface, ApplicationAwareInterface
 
         return $path_object;
     }
-
 }

@@ -1,7 +1,8 @@
 <?php
 namespace Concrete\Core\StyleCustomizer\Style\Value;
-class BasicValue extends Value {
 
+class BasicValue extends Value
+{
     protected $value;
 
     public function setValue($value)
@@ -9,15 +10,18 @@ class BasicValue extends Value {
         $this->value = $value;
     }
 
-    public function getValue() {return $this->value;}
+    public function getValue()
+    {
+        return $this->value;
+    }
 
-    public function toStyleString() {
+    public function toStyleString()
+    {
         return false;
     }
 
     public function toLessVariablesArray()
     {
-        return array($this->getVariable()  => '"' . $this->getValue() . '"'); // we have to quote these, i don't know why
+        return array($this->getVariable() => '"' . $this->getValue() . '"'); // we have to quote these, i don't know why
     }
-
 }

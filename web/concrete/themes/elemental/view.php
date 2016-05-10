@@ -9,7 +9,7 @@ $this->inc('elements/header.php'); ?>
 
                 <?php View::element('system_errors', array('format' => 'block', 'error' => isset($error) ? $error : null, 'success' => isset($success) ? $success : null, 'message' => isset($message) ? $message : null)); ?>
 
-                <? print $innerContent; ?>
+                <?php echo $innerContent; ?>
             </div>
         </div>
     </div>

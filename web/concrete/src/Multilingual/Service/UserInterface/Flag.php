@@ -1,6 +1,6 @@
 <?php
-
 namespace Concrete\Core\Multilingual\Service\UserInterface;
+
 use Concrete\Core\Multilingual\Page\Section\Section;
 use Database;
 
@@ -8,9 +8,8 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 class Flag
 {
-
     /**
-     * Returns a flag for a passed country/region
+     * Returns a flag for a passed country/region.
      */
     public function getFlagIcon($region, $filePathOnly = false)
     {
@@ -23,10 +22,10 @@ class Flag
 
         if ($region) {
             $v = \View::getInstance();
-            
+
             if ($v->getThemeDirectory() != '' && file_exists(
                 $v->getThemeDirectory() . '/' . DIRNAME_IMAGES . '/' . DIRNAME_IMAGES_LANGUAGES . '/' . $region . '.png'
-			)) {
+            )) {
                 $icon = $v->getThemePath() . '/' . DIRNAME_IMAGES . '/' . DIRNAME_IMAGES_LANGUAGES . '/' . $region . '.png';
             } elseif (file_exists(
                 DIR_APPLICATION . '/' . DIRNAME_IMAGES . '/' . DIRNAME_IMAGES_LANGUAGES . '/' . $region . '.png'
@@ -50,6 +49,7 @@ class Flag
     {
         $db = Database::get();
         $icon = $db->GetOne('select msCountry from MultilingualSections where cID = ?', array($page->getCollectionID()));
+
         return self::getFlagIcon($icon, $filePathOnly);
     }
 
@@ -66,5 +66,4 @@ class Flag
             return self::getSectionFlagIcon($page, true);
         }
     }
-
 }

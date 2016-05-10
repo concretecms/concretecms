@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Page\View;
 
+use Concrete\Core\Page\Theme\Theme;
 use Environment;
 use Events;
 use Loader;
@@ -15,7 +16,6 @@ use Config;
 
 class PageView extends View
 {
-
     protected $c; // page
     protected $cp;
     protected $pTemplateID;
@@ -26,23 +26,25 @@ class PageView extends View
         $items = parent::getScopeItems();
         $items['c'] = $this->c;
         $items['theme'] = $this->themeObject;
+
         return $items;
     }
 
     /**
-     * Called from previewing functions, this lets us override the page's template with one of our own choosing
+     * Called from previewing functions, this lets us override the page's template with one of our own choosing.
      */
     public function setCustomPageTemplate(PageTemplate $pt)
     {
         $this->pTemplateID = $pt->getPageTemplateID();
     }
 
-    public function getPageTemplate() {
+    public function getPageTemplate()
+    {
         return PageTemplate::getByID($this->pTemplateID);
     }
 
     /**
-     * Called from previewing functions, this lets us override the page's theme with one of our own choosing
+     * Called from previewing functions, this lets us override the page's theme with one of our own choosing.
      */
     public function setCustomPageTheme(PageTheme $pt)
     {
@@ -50,7 +52,7 @@ class PageView extends View
         $this->pkgHandle = $pt->getPackageHandle();
     }
 
-    public function renderSinglePageByFilename($cFilename)
+    public function renderSinglePageByFilename($cFilename, $pkgHandle = null)
     {
         $env = Environment::get();
         $cFilename = trim($cFilename, '/');
@@ -72,23 +74,35 @@ class PageView extends View
                     $this->setViewTemplate($themeTemplate->file);
                 } else {
                     // fall back to the active theme wrapper if nothing else was found
-                    $fallbackTheme = PageTheme::getByHandle($this->themeHandle);
-                    $fallbackPkgHandle = ($fallbackTheme instanceof PageTheme) ? $fallbackTheme->getPackageHandle() : $this->pkgHandle;
+                    $fallbackTheme = Theme::getByHandle($this->themeHandle);
+                    $fallbackPkgHandle = ($fallbackTheme instanceof Theme) ? $fallbackTheme->getPackageHandle() : $this->pkgHandle;
                     $fallbackTemplate = $env->getRecord(DIRNAME_THEMES . '/' . $this->themeHandle . '/' . $this->controller->getThemeViewTemplate(), $fallbackPkgHandle);
-                    $this->setViewTemplate($fallbackTemplate->file);
+                    $path = $fallbackTemplate->file;
+                    if (basename($path) != FILENAME_THEMES_VIEW) {
+                        // We're going to check to see if this file actually exists in the theme. Otherwise we're going to use the default wrapper.
+                        // Ideally this would happen in getThemeViewTemplate but it's hard to add the logic there.
+                        if (!$fallbackTemplate->exists()) {
+                            $path = $env->getPath(DIRNAME_THEMES . '/' . $this->themeHandle . '/' . FILENAME_THEMES_VIEW, $fallbackPkgHandle);
+                        }
+                    }
+                    $this->setViewTemplate($path);
                 }
             }
 
             // set the inner content for the theme wrapper we found
+            if (!isset($pkgHandle)) { // This way we can pass in a false and skip this.
+                $pkgHandle = $this->c->getPackageHandle();
+            }
+
             $this->setInnerContentFile(
                 $env->getPath(
                     DIRNAME_PAGES . '/' . $cFilename,
-                    $this->c->getPackageHandle()
+                    $pkgHandle
                 )
             );
         }
     }
-    
+
     public function setupRender()
     {
         $this->loadViewThemeObject();
@@ -99,7 +113,6 @@ class PageView extends View
             // from within a controller. So we don't reset it.
             return false;
         }
-
 
         if ($this->c->getPageTypeID() == 0 && $this->c->getCollectionFilename()) {
             $this->renderSinglePageByFilename($this->c->getCollectionFilename());
@@ -175,7 +188,7 @@ class PageView extends View
             return $this->themeObject->getStylesheet($stylesheet);
         }
 
-        /**
+        /*
          * deprecated - but this is for backward compatibility. If we don't have a stylesheet in the css/
          * directory we just pass through and return the passed file in the current directory.
          */
@@ -218,6 +231,7 @@ class PageView extends View
         if ($shouldAddToCache) {
             $cache->set($this->c, $contents);
         }
+
         return $contents;
     }
 
@@ -259,5 +273,4 @@ class PageView extends View
             $this->pThemeID = $this->c->getPageTemplateID();
         }
     }
-
 }

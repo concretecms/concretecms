@@ -3,12 +3,11 @@ namespace Concrete\Core\Application\Service;
 
 use Concrete\Core\Page\Type\Type;
 use PageType;
-use \Concrete\Core\Page\Type\Composer\Control\Control as PageTypeComposerControl;
+use Concrete\Core\Page\Type\Composer\Control\Control as PageTypeComposerControl;
 use View;
 
 class Composer
 {
-
     /**
      * @param Type $pagetype
      * @param bool|\Page $page
@@ -26,7 +25,7 @@ class Composer
     {
         View::element('page_types/composer/form/output/buttons', array(
             'pagetype' => $pagetype,
-            'page' => $page
+            'page' => $page,
         ));
     }
 
@@ -41,6 +40,4 @@ class Composer
             $l->addAssetsToRequest($cnt);
         }
     }
-
-
 }

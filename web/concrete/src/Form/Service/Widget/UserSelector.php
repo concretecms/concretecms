@@ -1,43 +1,45 @@
 <?php
 namespace Concrete\Core\Form\Service\Widget;
+
 use UserInfo;
 use URL;
 use Loader;
-class UserSelector {
 
-	/**
-	 * Creates form fields and JavaScript user chooser for choosing a user. For use with inclusion in blocks and addons.
-	 * <code>
-	 *     $dh->selectUser('userID', '1'); // prints out the admin user and makes it changeable.
-	 * </code>
-	 * @param int $uID
-	 */
-
-
-	public function selectUser($fieldName, $uID = false, $javascriptFunc = 'ccm_triggerSelectUser') {
-		$selectedUID = 0;
-		if (isset($_REQUEST[$fieldName])) {
+class UserSelector
+{
+    /**
+     * Creates form fields and JavaScript user chooser for choosing a user. For use with inclusion in blocks and addons.
+     * <code>
+     *     $dh->selectUser('userID', '1'); // prints out the admin user and makes it changeable.
+     * </code>.
+     *
+     * @param int $uID
+     */
+    public function selectUser($fieldName, $uID = false, $javascriptFunc = 'ccm_triggerSelectUser')
+    {
+        $selectedUID = 0;
+        if (isset($_REQUEST[$fieldName])) {
             $val = \Core::make('helper/validation/numbers');
             if ($val->integer($_REQUEST[$fieldName])) {
                 $selectedUID = $_REQUEST[$fieldName];
             }
-		} else if ($uID > 0) {
-			$selectedUID = $uID;
-		}
+        } elseif ($uID > 0) {
+            $selectedUID = $uID;
+        }
 
-		$html = '';
-		$html .= '<div class="ccm-summary-selected-item"><div class="ccm-summary-selected-item-inner"><strong class="ccm-summary-selected-item-label">';
-		if ($selectedUID > 0) {
-			$ui = UserInfo::getByID($selectedUID);
-			$html .= $ui->getUserName();
-		}
-		$html .= '</strong></div>';
+        $html = '';
+        $html .= '<div class="ccm-summary-selected-item"><div class="ccm-summary-selected-item-inner"><strong class="ccm-summary-selected-item-label">';
+        if ($selectedUID > 0) {
+            $ui = UserInfo::getByID($selectedUID);
+            $html .= $ui->getUserName();
+        }
+        $html .= '</strong></div>';
         $identifier = new \Concrete\Core\Utility\Service\Identifier();
         $selector = $identifier->getString(32);
-		$html .= '<a class="ccm-sitemap-select-item" data-form-user-selector="' . $selector . '" dialog-append-buttons="true" dialog-width="90%" dialog-height="70%" dialog-modal="false" dialog-title="' . t('Choose User') . '" href="' . URL::to('/ccm/system/dialogs/user/search') . '">' . t('Select User') . '</a>';
-		$html .= '<input type="hidden" data-form-user-selector-input="' . $selector . '" name="' . $fieldName . '" value="' . $selectedUID . '">';
-		$html .= '</div>';
-		$html .= <<<EOL
+        $html .= '<a class="ccm-sitemap-select-item" data-form-user-selector="' . $selector . '" dialog-append-buttons="true" dialog-width="90%" dialog-height="70%" dialog-modal="false" dialog-title="' . t('Choose User') . '" href="' . URL::to('/ccm/system/dialogs/user/search') . '">' . t('Select User') . '</a>';
+        $html .= '<input type="hidden" data-form-user-selector-input="' . $selector . '" name="' . $fieldName . '" value="' . $selectedUID . '">';
+        $html .= '</div>';
+        $html .= <<<EOL
 <script type="text/javascript">
 $(function() {
 	$("a[data-form-user-selector={$selector}]").dialog();
@@ -59,14 +61,16 @@ $(function() {
 });
 </script>
 EOL;
-		return $html;
-	}
 
-	public function quickSelect($key, $val = false, $args = array()) {
-		$form = Loader::helper('form');
-		$valt = Loader::helper('validation/token');
-		$token = $valt->generate('quick_user_select_' . $key);
-		$html = "
+        return $html;
+    }
+
+    public function quickSelect($key, $val = false, $args = array())
+    {
+        $form = Loader::helper('form');
+        $valt = Loader::helper('validation/token');
+        $token = $valt->generate('quick_user_select_' . $key);
+        $html = "
 		<style type=\"text/css\">
 		ul.ui-autocomplete {position:absolute; list-style:none; }
 		ul.ui-autocomplete li.ui-menu-item { margin-left:0; padding:2px;}
@@ -79,30 +83,31 @@ EOL;
 		});
 		} );
 		</script>";
-		$html .= '<span class="ccm-quick-user-selector">'.$form->text($key,$val, $args).'</span>';
-		return $html;
-	}
+        $html .= '<span class="ccm-quick-user-selector">'.$form->text($key, $val, $args).'</span>';
 
-	public function selectMultipleUsers($fieldName, $users = array()) {
+        return $html;
+    }
 
-		$html = '';
-		$html .= '<table id="ccmUserSelect' . $fieldName . '" class="table table-condensed" cellspacing="0" cellpadding="0" border="0">';
-		$html .= '<tr>';
-		$html .= '<th>' . t('Username') . '</th>';
-		$html .= '<th>' . t('Email Address') . '</th>';
-		$html .= '<th style="width: 1px"><a class="icon-link ccm-user-select-item dialog-launch" dialog-append-buttons="true" dialog-width="90%" dialog-height="70%" dialog-modal="false" dialog-title="' . t('Choose User') . '" href="'. URL::to('/ccm/system/dialogs/user/search') . '"><i class="fa fa-plus-circle" /></a></th>';
-		$html .= '</tr><tbody id="ccmUserSelect' . $fieldName . '_body" >';
-		foreach($users as $ui) {
-			$html .= '<tr id="ccmUserSelect' . $fieldName . '_' . $ui->getUserID() . '" class="ccm-list-record">';
-			$html .= '<td><input type="hidden" name="' . $fieldName . '[]" value="' . $ui->getUserID() . '" />' . $ui->getUserName() . '</td>';
-			$html .= '<td>' . $ui->getUserEmail() . '</td>';
-			$html .= '<td><a href="javascript:void(0)" class="ccm-user-list-clear icon-link"><i class="fa fa-minus-circle ccm-user-list-clear-button"></i></a>';
-			$html .= '</tr>';
-		}
-		if (count($users) == 0) {
-			$html .= '<tr class="ccm-user-selected-item-none"><td colspan="3">' . t('No users selected.') . '</td></tr>';
-		}
-		$html .= '</tbody></table><script type="text/javascript">
+    public function selectMultipleUsers($fieldName, $users = array())
+    {
+        $html = '';
+        $html .= '<table id="ccmUserSelect' . $fieldName . '" class="table table-condensed" cellspacing="0" cellpadding="0" border="0">';
+        $html .= '<tr>';
+        $html .= '<th>' . t('Username') . '</th>';
+        $html .= '<th>' . t('Email Address') . '</th>';
+        $html .= '<th style="width: 1px"><a class="icon-link ccm-user-select-item dialog-launch" dialog-append-buttons="true" dialog-width="90%" dialog-height="70%" dialog-modal="false" dialog-title="' . t('Choose User') . '" href="'. URL::to('/ccm/system/dialogs/user/search') . '"><i class="fa fa-plus-circle" /></a></th>';
+        $html .= '</tr><tbody id="ccmUserSelect' . $fieldName . '_body" >';
+        foreach ($users as $ui) {
+            $html .= '<tr id="ccmUserSelect' . $fieldName . '_' . $ui->getUserID() . '" class="ccm-list-record">';
+            $html .= '<td><input type="hidden" name="' . $fieldName . '[]" value="' . $ui->getUserID() . '" />' . $ui->getUserName() . '</td>';
+            $html .= '<td>' . $ui->getUserEmail() . '</td>';
+            $html .= '<td><a href="javascript:void(0)" class="ccm-user-list-clear icon-link"><i class="fa fa-minus-circle ccm-user-list-clear-button"></i></a>';
+            $html .= '</tr>';
+        }
+        if (count($users) == 0) {
+            $html .= '<tr class="ccm-user-selected-item-none"><td colspan="3">' . t('No users selected.') . '</td></tr>';
+        }
+        $html .= '</tbody></table><script type="text/javascript">
 		$(function() {
 			$("#ccmUserSelect' . $fieldName . ' .ccm-user-select-item").dialog();
 			$("a.ccm-user-list-clear").click(function() {
@@ -133,8 +138,7 @@ EOL;
 		});
 
 		</script>';
-		return $html;
-	}
 
-
+        return $html;
+    }
 }

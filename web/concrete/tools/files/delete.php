@@ -1,12 +1,13 @@
-<?
+<?php
 defined('C5_EXECUTE') or die("Access Denied.");
 use \Concrete\Core\File\EditResponse as FileEditResponse;
+
 $u = new User();
 $form = Loader::helper('form');
 $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service\Date */
 $fp = FilePermissions::getGlobal();
 if (!$fp->canAccessFileManager()) {
-	die(t("Unable to access the file manager."));
+    die(t("Unable to access the file manager."));
 }
 
 $token_validator = \Core::make('helper/validation/token');
@@ -39,28 +40,32 @@ $form = Loader::helper('form');
 
 $files = array();
 if (is_array($_REQUEST['fID'])) {
-	foreach($_REQUEST['fID'] as $fID) {
-		$files[] = File::getByID($fID);
-	}
+    foreach ($_REQUEST['fID'] as $fID) {
+        $files[] = File::getByID($fID);
+    }
 } else {
-	$files[] = File::getByID($_REQUEST['fID']);
+    $files[] = File::getByID($_REQUEST['fID']);
 }
 
 $fcnt = 0;
-foreach($files as $f) {
-	$fp = new Permissions($f);
-	if ($fp->canDeleteFile()) {
-		$fcnt++;
-	}
+foreach ($files as $f) {
+    $fp = new Permissions($f);
+    if ($fp->canDeleteFile()) {
+        ++$fcnt;
+    }
 }
 
 ?>
 
 <div class="ccm-ui">
 <br/>
-<? if ($fcnt == 0) { ?>
-	<p><?=t("You do not have permission to delete any of the selected files."); ?><p>
-<? } else { ?>
+<?php if ($fcnt == 0) {
+    ?>
+	<p><?=t("You do not have permission to delete any of the selected files.");
+    ?><p>
+<?php 
+} else {
+    ?>
 
 	<div class="alert alert-warning"><?=t('Are you sure you want to delete the following files?')?></div>
 
@@ -69,11 +74,12 @@ foreach($files as $f) {
 	<?=$form->hidden('task', 'delete_files')?>
 	<table border="0" cellspacing="0" cellpadding="0" width="100%" class="table table-striped">
 
-	<? foreach($files as $f) {
-		$fp = new Permissions($f);
-		if ($fp->canDeleteFile()) {
-			$fv = $f->getApprovedVersion();
-			if (is_object($fv)) { ?>
+	<?php foreach ($files as $f) {
+    $fp = new Permissions($f);
+    if ($fp->canDeleteFile()) {
+        $fv = $f->getApprovedVersion();
+        if (is_object($fv)) {
+            ?>
 
 			<?=$form->hidden('fID[]', $f->getFileID())?>
 
@@ -85,10 +91,11 @@ foreach($files as $f) {
 				<td><?=$fv->getAuthorName()?></td>
 			</tr>
 
-			<? }
-		}
-
-	} ?>
+			<?php 
+        }
+    }
+}
+    ?>
 	</table>
 	</form>
 
@@ -109,8 +116,6 @@ foreach($files as $f) {
 	});
 	</script>
 
-	<?
+	<?php
 
 }
-
-

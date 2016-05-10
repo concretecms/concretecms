@@ -5,7 +5,6 @@ use Concrete\Controller\SinglePage\Account\EditProfile as AccountProfileEditPage
 
 class Avatar extends AccountProfileEditPageController
 {
-
     public function view()
     {
         parent::view();
@@ -20,7 +19,6 @@ class Avatar extends AccountProfileEditPageController
         if (!$token->validate('avatar/save_thumb')) {
             return false;
         }
-
 
         $profile = $this->get('profile');
         if (!is_object($profile) || $profile->getUserID() < 1) {
@@ -63,5 +61,4 @@ class Avatar extends AccountProfileEditPageController
             $this->redirect('/account/avatar', 'deleted');
         }
     }
-
 }

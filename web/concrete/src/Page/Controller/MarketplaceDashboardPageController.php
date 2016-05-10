@@ -1,14 +1,13 @@
 <?php
 namespace Concrete\Core\Page\Controller;
+
 use Concrete\Core\Marketplace\RemoteItem;
 use TaskPermission;
 use Marketplace;
-use Loader;
-use \Concrete\Core\Marketplace\RemoteItemList as MarketplaceRemoteItemList;
+use Concrete\Core\Marketplace\RemoteItemList as MarketplaceRemoteItemList;
 
 abstract class MarketplaceDashboardPageController extends DashboardPageController
 {
-
     abstract public function getMarketplaceType();
     abstract public function getMarketplaceDefaultHeading();
 
@@ -18,10 +17,10 @@ abstract class MarketplaceDashboardPageController extends DashboardPageControlle
         $this->set('type', $this->getMarketplaceType());
         $this->set('heading', $this->getMarketplaceDefaultHeading());
 
-		$tp = new TaskPermission();
-		$mi = Marketplace::getInstance();
+        $tp = new TaskPermission();
+        $mi = Marketplace::getInstance();
 
-		if ($mi->isConnected() && $tp->canInstallPackages()) {
+        if ($mi->isConnected() && $tp->canInstallPackages()) {
             $mpID = intval($mpID);
             $this->requireAsset('core/lightbox');
             $item = RemoteItem::getByID($mpID);
@@ -37,38 +36,37 @@ abstract class MarketplaceDashboardPageController extends DashboardPageControlle
                 throw new \Exception(t('Invalid marketplace item object.'));
             }
         } else {
-			$this->redirect('/dashboard/extend/connect');
+            $this->redirect('/dashboard/extend/connect');
         }
     }
 
-	public function view()
+    public function view()
     {
         $this->setThemeViewTemplate('marketplace.php');
         $this->set('type', $this->getMarketplaceType());
         $this->set('heading', $this->getMarketplaceDefaultHeading());
 
-		$tp = new TaskPermission();
-		$mi = Marketplace::getInstance();
+        $tp = new TaskPermission();
+        $mi = Marketplace::getInstance();
 
-		if ($mi->isConnected() && $tp->canInstallPackages()) {
+        if ($mi->isConnected() && $tp->canInstallPackages()) {
+            $mri = new MarketplaceRemoteItemList();
+            $mri->setItemsPerPage(9);
+            $sets = MarketplaceRemoteItemList::getItemSets($this->getMarketplaceType());
 
-			$mri = new MarketplaceRemoteItemList();
-			$mri->setItemsPerPage(9);
-			$sets = MarketplaceRemoteItemList::getItemSets($this->getMarketplaceType());
-
-			$setsel = array('' => t('All Items'), 'FEATURED' => t('Featured Items'));
+            $setsel = array('' => t('All Items'), 'FEATURED' => t('Featured Items'));
             $req = $this->request->query;
-			if (is_array($sets)) {
-				foreach($sets as $s) {
-					$setsel[$s->getMarketplaceRemoteSetID()] = $s->getMarketplaceRemoteSetName();
+            if (is_array($sets)) {
+                foreach ($sets as $s) {
+                    $setsel[$s->getMarketplaceRemoteSetID()] = $s->getMarketplaceRemoteSetName();
                     if ($req->has('marketplaceRemoteItemSetID') && $req->get('marketplaceRemoteItemSetID') ==
                         $s->getMarketplaceRemoteSetID()) {
                         $this->set('heading', $s->getMarketplaceRemoteSetName());
                     }
-				}
-			}
+                }
+            }
 
-            switch($this->request->query->get('ccm_order_by')) {
+            switch ($this->request->query->get('ccm_order_by')) {
                 case 'rating':
                 case 'skill_level':
                 case 'recent':
@@ -86,33 +84,32 @@ abstract class MarketplaceDashboardPageController extends DashboardPageControlle
             }
 
             $mri->setIncludeInstalledItems(false);
-			if (isset($_REQUEST['marketplaceRemoteItemSetID'])) {
-				$set = $_REQUEST['marketplaceRemoteItemSetID'];
-			}
+            if (isset($_REQUEST['marketplaceRemoteItemSetID'])) {
+                $set = $_REQUEST['marketplaceRemoteItemSetID'];
+            }
 
-    		$mri->filterByCompatibility(1);
-			if (isset($_REQUEST['keywords']) && $_REQUEST['keywords']) {
-				$keywords = h($_REQUEST['keywords']);
-				$mri->filterByKeywords($keywords);
+            $mri->filterByCompatibility(1);
+            if (isset($_REQUEST['keywords']) && $_REQUEST['keywords']) {
+                $keywords = h($_REQUEST['keywords']);
+                $mri->filterByKeywords($keywords);
                 $this->set('keywords', $keywords);
-			}
+            }
 
             if ($set) {
                 $mri->filterBySet($set);
             }
 
-			$mri->setType($this->getMarketplaceType());
-			$mri->execute();
+            $mri->setType($this->getMarketplaceType());
+            $mri->execute();
 
             $items = $mri->getPage();
 
-			$this->set('pagination', $mri->getPagination());
-			$this->set('items', $items);
-   			$this->set('sets', $setsel);
-			$this->set('list', $mri);
-
-		} else {
-			$this->redirect('/dashboard/extend/connect');
-		}
-	}
+            $this->set('pagination', $mri->getPagination());
+            $this->set('items', $items);
+            $this->set('sets', $setsel);
+            $this->set('list', $mri);
+        } else {
+            $this->redirect('/dashboard/extend/connect');
+        }
+    }
 }

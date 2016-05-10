@@ -3,7 +3,6 @@ namespace Concrete\Core\Url\Resolver;
 
 class PageUrlResolver implements UrlResolverInterface
 {
-
     /** @var UrlResolverInterface */
     protected $pathUrlResolver;
 
@@ -43,5 +42,4 @@ class PageUrlResolver implements UrlResolverInterface
 
         return $this->pathUrlResolver->resolve($arguments, $resolved);
     }
-
 }

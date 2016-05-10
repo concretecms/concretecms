@@ -1,44 +1,61 @@
 <?php
 namespace Concrete\Core\Conversation\Discussion;
+
 use Loader;
-use \Concrete\Core\Foundation\Object;
+use Concrete\Core\Foundation\Object;
 use Page;
 
-class Discussion extends Object {
+class Discussion extends Object
+{
+    public static function add(Page $c)
+    {
+        $db = Loader::db();
+        $cID = $c->getCollectionID();
+        $date = Loader::helper('date')->getOverridableNow();
+        $r = $db->Execute('insert into ConversationDiscussions (cnvDiscussionDateCreated, cID) values (?, ?)', array($date, $cID));
 
-	public static function add(Page $c) {
-		$db = Loader::db();
-		$cID = $c->getCollectionID();
-		$date = Loader::helper('date')->getOverridableNow();
-		$r = $db->Execute('insert into ConversationDiscussions (cnvDiscussionDateCreated, cID) values (?, ?)', array($date, $cID));
-		return static::getByID($db->Insert_ID());
-	}
+        return static::getByID($db->Insert_ID());
+    }
 
-	public function getConversationDiscussionCollectionObject() {
-		$c = Page::getByID($this->cID);
-		if (is_object($c) && !$c->isError()) {
-			return $c;
-		}
-	}
+    public function getConversationDiscussionCollectionObject()
+    {
+        $c = Page::getByID($this->cID);
+        if (is_object($c) && !$c->isError()) {
+            return $c;
+        }
+    }
 
-	public function getConversationDiscussionID() {return $this->cnvDiscussionID;}
-	public function getConversationDiscussionPageTypeID() {return $this->ptID;}
-	public function getConversationDiscussionCollectionID() {return $this->cID;}
+    public function getConversationDiscussionID()
+    {
+        return $this->cnvDiscussionID;
+    }
+    public function getConversationDiscussionPageTypeID()
+    {
+        return $this->ptID;
+    }
+    public function getConversationDiscussionCollectionID()
+    {
+        return $this->cID;
+    }
 
-	public function getConversationDiscussionDateTime() {
-		return $this->cnvDiscussionDateCreated;
-	}
-	public function getConversationDiscussionDateTimeOutput() {
-		return tc('Message posted date', 'Posted on %s', Loader::helper('date')->date('F d, Y \a\t g:i a', strtotime($this->cnvDiscussionDateCreated)));
-	}
+    public function getConversationDiscussionDateTime()
+    {
+        return $this->cnvDiscussionDateCreated;
+    }
+    public function getConversationDiscussionDateTimeOutput()
+    {
+        return tc('Message posted date', 'Posted on %s', Loader::helper('date')->date('F d, Y \a\t g:i a', strtotime($this->cnvDiscussionDateCreated)));
+    }
 
-	public static function getByID($cnvDiscussionID) {
-		$db = Loader::db();
-		$r = $db->GetRow('select * from ConversationDiscussions where cnvDiscussionID = ?', array($cnvDiscussionID));
-		if (is_array($r) && $r['cnvDiscussionID'] == $cnvDiscussionID) {
-			$d = new static;
-			$d->setPropertiesFromArray($r);
-			return $d;
-		}
-	}
+    public static function getByID($cnvDiscussionID)
+    {
+        $db = Loader::db();
+        $r = $db->GetRow('select * from ConversationDiscussions where cnvDiscussionID = ?', array($cnvDiscussionID));
+        if (is_array($r) && $r['cnvDiscussionID'] == $cnvDiscussionID) {
+            $d = new static();
+            $d->setPropertiesFromArray($r);
+
+            return $d;
+        }
+    }
 }

@@ -4,10 +4,10 @@ if (Request::getInstance()->get('_ccm_dashboard_external')) {
     return;
 }
 $html = Core::make('helper/html');
-/** @var Concrete\Core\Html\Service\Html $html */
+/* @var Concrete\Core\Html\Service\Html $html */
 
 $valt = Core::make('helper/validation/token');
-/** @var Concrete\Core\Validation\CSRF\Token $valt */
+/* @var Concrete\Core\Validation\CSRF\Token $valt */
 
 if (!isset($hideDashboardPanel)) {
     $hideDashboardPanel = false;
@@ -41,15 +41,15 @@ if (!$frontendPageID) {
     $backLink = DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $frontendPageID;
 }
 
-$show_titles = !!Config::get('concrete.accessibility.toolbar_titles');
-$large_font = !!Config::get('concrete.accessibility.toolbar_large_font');
+$show_titles = (bool) Config::get('concrete.accessibility.toolbar_titles');
+$large_font = (bool) Config::get('concrete.accessibility.toolbar_large_font');
 
 ?>
-
+    <link href='https://fonts.googleapis.com/css?family=Roboto:900' rel='stylesheet' type='text/css'>
 </head>
-<body>
+<body <?php if (isset($bodyClass)) { ?>class="<?=$bodyClass?>"<?php } ?>>
 
-<div id="ccm-dashboard-page" class="ccm-ui">
+<div id="ccm-dashboard-page" class="<?php if ($view->section('/account')) { ?>ccm-dashboard-my-account<?php } ?> ccm-ui">
     <div class="ccm-mobile-menu-overlay ccm-mobile-menu-overlay-dashboard hidden-md hidden-lg">
         <div class="ccm-mobile-menu-main">
             <ul class="ccm-mobile-menu-entries">
@@ -60,7 +60,6 @@ $large_font = !!Config::get('concrete.accessibility.toolbar_large_font');
                         <li class="last-li"><a href="<?=View::url('/dashboard/users') ?>"><?php echo t('Members'); ?></a></li>
                         <li class="last-li"><a href="<?=View::url('/dashboard/reports') ?>"><?php echo t('Reports'); ?></a></li>
                         <li class="last-li"><a href="<?=View::url('/dashboard/pages') ?>"><?php echo t('Pages & Themes'); ?></a></li>
-                        <li class="last-li"><a href="<?=View::url('/dashboard/workflow') ?>"><?php echo t('Workflow'); ?></a></li>
                         <li class="last-li"><a href="<?=View::url('/dashboard/blocks/stacks') ?>"><?php echo t('Stacks & Blocks'); ?></a></li>
                         <li class="last-li"><a href="<?=View::url('/dashboard/extend') ?>"><?php echo t('Extend concrete5'); ?></a></li>
                         <li class="last-li"><a href="<?=View::url('/dashboard/system') ?>"><?php echo t('System & Settings'); ?></a></li>
@@ -122,12 +121,12 @@ if (!$hideDashboardPanel) {
             <div class="ccm-panel-content ccm-panel-content-visible">
                 <?php
                 $cnt = new \Concrete\Controller\Panel\Dashboard();
-                $cnt->setPageObject($c);
-                $cnt->view();
-                $nav = $cnt->get('nav');
-                $tab = $cnt->get('tab');
-                $ui = $cnt->get('ui');
-                View::element(
+    $cnt->setPageObject($c);
+    $cnt->view();
+    $nav = $cnt->get('nav');
+    $tab = $cnt->get('tab');
+    $ui = $cnt->get('ui');
+    View::element(
                     'panels/dashboard',
                     array(
                         'nav' => $nav,
@@ -136,7 +135,7 @@ if (!$hideDashboardPanel) {
                         'c' => $c,
                     )
                 );
-                ?>
+    ?>
             </div>
         </div>
     </div>

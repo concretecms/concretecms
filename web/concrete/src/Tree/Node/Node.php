@@ -1,9 +1,16 @@
 <?php
-
 namespace Concrete\Core\Tree\Node;
 
 use Concrete\Core\Foundation\Object;
+use Concrete\Core\Permission\Access\Access;
+use Concrete\Core\Permission\Access\Entity\GroupCombinationEntity;
+use Concrete\Core\Permission\Access\Entity\GroupEntity;
+use Concrete\Core\Permission\Access\Entity\UserEntity;
+use Concrete\Core\Permission\Key\Key;
+use Concrete\Core\Permission\Key\TreeNodeKey;
 use Concrete\Core\Tree\Tree;
+use Concrete\Core\User\User;
+use Concrete\Core\User\UserInfo;
 use Loader;
 use Concrete\Core\Tree\Node\NodeType as TreeNodeType;
 use PermissionKey;
@@ -16,11 +23,6 @@ abstract class Node extends Object implements \Concrete\Core\Permission\ObjectIn
 {
     abstract public function loadDetails();
 
-    /** Returns the standard name for this tree node
-     * @return string
-     */
-    abstract public function getTreeNodeName();
-
     /** Returns the display name for this tree node (localized and escaped accordingly to $format)
      * @param  string $format = 'html' Escape the result in html format (if $format is 'html'). If $format is 'text' or any other value, the display name won't be escaped.
      *
@@ -28,11 +30,29 @@ abstract class Node extends Object implements \Concrete\Core\Permission\ObjectIn
      */
     abstract public function getTreeNodeDisplayName($format = 'html');
     abstract public function deleteDetails();
+    abstract public function getTreeNodeTypeName();
 
     protected $childNodes = array();
     protected $childNodesLoaded = false;
     protected $treeNodeIsSelected = false;
     protected $tree;
+
+    public function getTreeNodeTypeDisplayName($format = 'html')
+    {
+        $name = $this->getTreeNodeTypeName();
+        switch ($format) {
+            case 'html':
+                return h($name);
+            case 'text':
+            default:
+                return $name;
+        }
+    }
+
+    public function getListFormatter()
+    {
+        return false;
+    }
 
     public function getPermissionObjectIdentifier()
     {
@@ -57,12 +77,35 @@ abstract class Node extends Object implements \Concrete\Core\Permission\ObjectIn
         $this->tree = $tree;
     }
 
+    public function getDateLastModified()
+    {
+        return $this->dateModified;
+    }
+
+    public function getDateCreated()
+    {
+        return $this->dateCreated;
+    }
+
     public function getTreeObject()
     {
         if (!isset($this->tree)) {
             $this->tree = Tree::getByID($this->treeID);
         }
+
         return $this->tree;
+    }
+
+    public function setTreeNodeName($treeNodeName)
+    {
+        $db = Loader::db();
+        $db->Execute('update TreeNodes set treeNodeName = ? where treeNodeID = ?', array($treeNodeName, $this->treeNodeID));
+        $this->treeNodeName = $treeNodeName;
+    }
+
+    public function getTreeNodeName()
+    {
+        return $this->treeNodeName;
     }
 
     public function getTreeID()
@@ -75,8 +118,12 @@ abstract class Node extends Object implements \Concrete\Core\Permission\ObjectIn
     }
     public function getTreeNodeTypeObject()
     {
-        return TreeNodeType::getByID($this->treeNodeTypeID);
+        if (!isset($this->treeNodeType)) {
+            $this->treeNodeType = TreeNodeType::getByID($this->treeNodeTypeID);
+        }
+        return $this->treeNodeType;
     }
+
     public function getTreeNodeTypeHandle()
     {
         $type = $this->getTreeNodeTypeObject();
@@ -150,12 +197,31 @@ abstract class Node extends Object implements \Concrete\Core\Permission\ObjectIn
         }
     }
 
+    public function getTreeNodeMenu()
+    {
+        return null;
+    }
+
+    public function getJSONObject()
+    {
+        return $this->getTreeNodeJSON();
+    }
+
     public function getTreeNodeJSON()
     {
         $p = new Permissions($this);
+        $data = $this->getTreeObject()->getRequestData();
+        if (isset($data['displayOnly'])) {
+            // filter by node type handle
+            if ($this->getTreeNodeTypeHandle() != $data['displayOnly']) {
+                return false;
+            }
+        }
+
         if ($p->canViewTreeNode()) {
             $node = new stdClass();
             $node->title = $this->getTreeNodeDisplayName();
+            $node->treeID = $this->getTreeID();
             $node->key = $this->getTreeNodeID();
             $node->treeNodeID = $this->getTreeNodeID();
             $node->isFolder = false;
@@ -167,6 +233,7 @@ abstract class Node extends Object implements \Concrete\Core\Permission\ObjectIn
             $node->treeNodeParentID = $this->getTreeNodeParentID();
             $node->treeNodeTypeID = $this->getTreeNodeTypeID();
             $node->treeNodeTypeHandle = $this->getTreeNodeTypeHandle();
+            $node->treeNodeMenu = $this->getTreeNodeMenu();
 
             foreach ($this->getChildNodes() as $childnode) {
                 $childnodejson = $childnode->getTreeNodeJSON();
@@ -208,7 +275,7 @@ abstract class Node extends Object implements \Concrete\Core\Permission\ObjectIn
     {
         $path = '/';
         $nodes = array_reverse($this->getTreeNodeParentArray());
-        for ($i = 0; $i < count($nodes); $i++) {
+        for ($i = 0; $i < count($nodes); ++$i) {
             if ($i == 0) {
                 continue;
             }
@@ -230,6 +297,44 @@ abstract class Node extends Object implements \Concrete\Core\Permission\ObjectIn
         $this->populateDirectChildrenOnly();
         foreach ($this->getChildNodes() as $childnode) {
             $childnode->duplicate($node);
+        }
+    }
+
+    public function assignPermissions(
+        $userOrGroup,
+        $permissions = array(),
+        $accessType = TreeNodeKey::ACCESS_TYPE_INCLUDE
+    ) {
+        if (!$this->overrideParentTreeNodePermissions()) {
+            $this->setTreeNodePermissionsToOverride();
+        }
+
+        if (is_array($userOrGroup)) {
+            $pe = GroupCombinationEntity::getOrCreate($userOrGroup);
+            // group combination
+        } else {
+            if ($userOrGroup instanceof User || $userOrGroup instanceof UserInfo) {
+                $pe = UserEntity::getOrCreate($userOrGroup);
+            } else {
+                // group;
+                $pe = GroupEntity::getOrCreate($userOrGroup);
+            }
+        }
+
+        foreach ($permissions as $pkHandle) {
+            $pk = Key::getByHandle($pkHandle);
+            $pk->setPermissionObject($this);
+            $pa = $pk->getPermissionAccessObject();
+            if (!is_object($pa)) {
+                $pa = Access::create($pk);
+            } else {
+                if ($pa->isPermissionAccessInUse()) {
+                    $pa = $pa->duplicate();
+                }
+            }
+            $pa->addListItem($pe, false, $accessType);
+            $pt = $pk->getPermissionAssignmentObject();
+            $pt->assignPermissionAccess($pa);
         }
     }
 
@@ -326,7 +431,7 @@ abstract class Node extends Object implements \Concrete\Core\Permission\ObjectIn
         $displayOrder = 0;
         while ($row = $r->FetchRow()) {
             $db->Execute('update TreeNodes set treeNodeDisplayOrder = ? where treeNodeID = ?', array($displayOrder, $row['treeNodeID']));
-            $displayOrder++;
+            ++$displayOrder;
         }
     }
 
@@ -337,7 +442,7 @@ abstract class Node extends Object implements \Concrete\Core\Permission\ObjectIn
             $displayOrder = 0;
             foreach ($orderedIDs as $treeNodeID) {
                 $db->Execute('update TreeNodes set treeNodeDisplayOrder = ? where treeNodeID = ?', array($displayOrder, $treeNodeID));
-                $displayOrder++;
+                ++$displayOrder;
             }
         }
     }
@@ -361,10 +466,12 @@ abstract class Node extends Object implements \Concrete\Core\Permission\ObjectIn
         }
         $treeNodeTypeHandle = Loader::helper('text')->uncamelcase(strrchr(get_called_class(), '\\'));
 
+        $dateModified = Core::make('date')->toDB();
+        $dateCreated = Core::make('date')->toDB();
+
         $type = TreeNodeType::getByHandle($treeNodeTypeHandle);
-        $db->Execute('insert into TreeNodes (treeNodeTypeID, treeNodeParentID, treeNodeDisplayOrder, inheritPermissionsFromTreeNodeID, treeID) values (?, ?, ?, ?, ?)', array(
-            $type->getTreeNodeTypeID(), $treeNodeParentID, $treeNodeDisplayOrder, $inheritPermissionsFromTreeNodeID, $treeID,
-        ));
+        $db->Execute('insert into TreeNodes (treeNodeTypeID, treeNodeParentID, treeNodeDisplayOrder, inheritPermissionsFromTreeNodeID, dateModified, dateCreated, treeID) values (?, ?, ?, ?, ?, ?, ?)', array(
+            $type->getTreeNodeTypeID(), $treeNodeParentID, $treeNodeDisplayOrder, $inheritPermissionsFromTreeNodeID, $dateModified, $dateCreated, $treeID));
         $id = $db->Insert_ID();
         $node = self::getByID($id);
 
@@ -475,4 +582,19 @@ abstract class Node extends Object implements \Concrete\Core\Permission\ObjectIn
             $childnode->exportTranslations($translations);
         }
     }
+
+    public static function getNodeByName($name)
+    {
+        $db = Loader::db();
+        $treeNodeTypeHandle = Loader::helper('text')->uncamelcase(strrchr(get_called_class(), '\\'));
+        $type = TreeNodeType::getByHandle($treeNodeTypeHandle);
+        $treeNodeID = $db->GetOne(
+            'select treeNodeID from TreeNodes where treeNodeName = ? and treeNodeTypeID = ?',
+            array($name, $type->getTreeNodeTypeID())
+        );
+        if ($treeNodeID) {
+            return static::getByID($treeNodeID);
+        }
+    }
+
 }
