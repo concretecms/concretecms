@@ -293,6 +293,6 @@ class FileListTest extends \FileStorageTestCase
 
         $columns = $set->getColumns();
 
-        $this->assertEquals(5, count($columns));
+        $this->assertEquals(4, count($columns));
     }
 }
