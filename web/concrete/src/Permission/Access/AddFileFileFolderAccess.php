@@ -1,13 +1,13 @@
 <?php
 namespace Concrete\Core\Permission\Access;
 
-use Concrete\Core\Permission\Key\FileSetKey as FileSetPermissionKey;
+use Concrete\Core\Permission\Key\FileFolderKey;
 use Database;
 
-class AddFileFileSetAccess extends FileSetAccess
+class AddFileFileFolderAccess extends FileFolderAccess
 {
     public function getAccessListItems(
-        $accessType = FileSetPermissionKey::ACCESS_TYPE_INCLUDE,
+        $accessType = FileFolderKey::ACCESS_TYPE_INCLUDE,
         $filterEntities = array()
     ) {
         $db = Database::connection();
@@ -15,7 +15,7 @@ class AddFileFileSetAccess extends FileSetAccess
         foreach ($list as $l) {
             $pe = $l->getAccessEntityObject();
             $permission = $db->fetchColumn(
-                'SELECT permission FROM FileSetPermissionFileTypeAccessList WHERE peID = ? AND paID = ?',
+                'SELECT permission FROM FilePermissionFileTypeAccessList WHERE peID = ? AND paID = ?',
                 array($pe->getAccessEntityID(), $l->getPermissionAccessID()));
             if ($permission != 'N' && $permission != 'C') {
                 $permission = 'A';
@@ -23,7 +23,7 @@ class AddFileFileSetAccess extends FileSetAccess
             $l->setFileTypesAllowedPermission($permission);
             if ($permission == 'C') {
                 $extensions = $db->GetCol(
-                    'SELECT extension FROM FileSetPermissionFileTypeAccessListCustom WHERE peID = ? AND paID = ?',
+                    'SELECT extension FROM FilePermissionFileTypeAccessListCustom WHERE peID = ? AND paID = ?',
                     array($pe->getAccessEntityID(), $l->getPermissionAccessID()));
                 $l->setFileTypesAllowedArray($extensions);
             }
@@ -37,21 +37,21 @@ class AddFileFileSetAccess extends FileSetAccess
         $newPA = parent::duplicate($newPA);
         $db = Database::connection();
         $r = $db->executeQuery(
-            'SELECT * FROM FileSetPermissionFileTypeAccessList WHERE paID = ?',
+            'SELECT * FROM FilePermissionFileTypeAccessList WHERE paID = ?',
             array($this->getPermissionAccessID()));
         while ($row = $r->FetchRow()) {
             $v = array($row['peID'], $newPA->getPermissionAccessID(), $row['permission']);
             $db->executeQuery(
-                'INSERT INTO FileSetPermissionFileTypeAccessList (peID, paID, permission) VALUES (?, ?, ?)',
+                'INSERT INTO FilePermissionFileTypeAccessList (peID, paID, permission) VALUES (?, ?, ?)',
                 $v);
         }
         $r = $db->executeQuery(
-            'SELECT * FROM FileSetPermissionFileTypeAccessListCustom WHERE paID = ?',
+            'SELECT * FROM FilePermissionFileTypeAccessListCustom WHERE paID = ?',
             array($this->getPermissionAccessID()));
         while ($row = $r->FetchRow()) {
             $v = array($row['peID'], $newPA->getPermissionAccessID(), $row['extension']);
             $db->executeQuery(
-                'INSERT INTO FileSetPermissionFileTypeAccessListCustom  (peID, paID, extension) VALUES (?, ?, ?)',
+                'INSERT INTO FilePermissionFileTypeAccessListCustom  (peID, paID, extension) VALUES (?, ?, ?)',
                 $v);
         }
 
@@ -63,16 +63,16 @@ class AddFileFileSetAccess extends FileSetAccess
         parent::save();
         $db = Database::connection();
         $db->executeQuery(
-            'DELETE FROM FileSetPermissionFileTypeAccessList WHERE paID = ?',
+            'DELETE FROM FilePermissionFileTypeAccessList WHERE paID = ?',
             array($this->getPermissionAccessID()));
         $db->executeQuery(
-            'DELETE FROM FileSetPermissionFileTypeAccessListCustom WHERE paID = ?',
+            'DELETE FROM FilePermissionFileTypeAccessListCustom WHERE paID = ?',
             array($this->getPermissionAccessID()));
         if (is_array($args['fileTypesIncluded'])) {
             foreach ($args['fileTypesIncluded'] as $peID => $permission) {
                 $v = array($this->getPermissionAccessID(), $peID, $permission);
                 $db->executeQuery(
-                    'INSERT INTO FileSetPermissionFileTypeAccessList (paID, peID, permission) VALUES (?, ?, ?)',
+                    'INSERT INTO FilePermissionFileTypeAccessList (paID, peID, permission) VALUES (?, ?, ?)',
                     $v);
             }
         }
@@ -81,7 +81,7 @@ class AddFileFileSetAccess extends FileSetAccess
             foreach ($args['fileTypesExcluded'] as $peID => $permission) {
                 $v = array($this->getPermissionAccessID(), $peID, $permission);
                 $db->executeQuery(
-                    'INSERT INTO FileSetPermissionFileTypeAccessList (paID, peID, permission) VALUES (?, ?, ?)',
+                    'INSERT INTO FilePermissionFileTypeAccessList (paID, peID, permission) VALUES (?, ?, ?)',
                     $v);
             }
         }
@@ -91,7 +91,7 @@ class AddFileFileSetAccess extends FileSetAccess
                 foreach ($extensions as $extension) {
                     $v = array($this->getPermissionAccessID(), $peID, $extension);
                     $db->executeQuery(
-                        'INSERT INTO FileSetPermissionFileTypeAccessListCustom (paID, peID, extension) VALUES (?, ?, ?)',
+                        'INSERT INTO FilePermissionFileTypeAccessListCustom (paID, peID, extension) VALUES (?, ?, ?)',
                         $v);
                 }
             }
@@ -102,7 +102,7 @@ class AddFileFileSetAccess extends FileSetAccess
                 foreach ($extensions as $extension) {
                     $v = array($this->getPermissionAccessID(), $peID, $extension);
                     $db->executeQuery(
-                        'INSERT INTO FileSetPermissionFileTypeAccessListCustom (paID, peID, extension) VALUES (?, ?, ?)',
+                        'INSERT INTO FilePermissionFileTypeAccessListCustom (paID, peID, extension) VALUES (?, ?, ?)',
                         $v);
                 }
             }

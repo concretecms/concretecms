@@ -391,7 +391,7 @@ $(function() {
         $('.ccm-droppable-search-item').droppable({
             accept: '.ccm-search-results-stackfolder, .ccm-search-results-stack',
             //activeClass: 'ui-state-highlight',
-            hoverClass: 'ui-state-highlight',
+            hoverClass: 'ccm-search-select-active-droppable',
             drop: function(event, ui) {
                 var $sourceItems = ui.helper.data('$selected'),
                     sourceIDs = [],

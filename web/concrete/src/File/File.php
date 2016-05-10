@@ -2,6 +2,8 @@
 namespace Concrete\Core\File;
 
 use Carbon\Carbon;
+use Concrete\Core\Tree\Node\Node;
+use Concrete\Core\Tree\Node\Type\FileFolder;
 use Doctrine\Common\Collections\ArrayCollection;
 use FileSet;
 use League\Flysystem\AdapterInterface;
@@ -69,6 +71,11 @@ class File implements \Concrete\Core\Permission\ObjectInterface
      * @Column(type="integer", options={"unsigned": true})
      */
     protected $uID = 0;
+
+    /**
+     * @Column(type="integer", options={"unsigned": true})
+     */
+    protected $folderTreeNodeID = 0;
 
     /**
      * @ManyToOne(targetEntity="\Concrete\Core\File\StorageLocation\StorageLocation", inversedBy="files")
@@ -251,7 +258,7 @@ class File implements \Concrete\Core\Permission\ObjectInterface
         }
     }
 
-    public function overrideFileSetPermissions()
+    public function overrideFileFolderPermissions()
     {
         return $this->fOverrideSetPermissions;
     }
@@ -366,6 +373,30 @@ class File implements \Concrete\Core\Permission\ObjectInterface
         return $this->fID;
     }
 
+    public function setFileFolder(FileFolder $folder)
+    {
+        $db = Loader::db();
+        $em = \ORM::entityManager('core');
+
+        $this->folderTreeNodeID = $folder->getTreeNodeID();
+
+        $em->persist($this);
+        $em->flush();
+
+    }
+
+    public function getFileFolderObject()
+    {
+        return Node::getByID($this->folderTreeNodeID);
+    }
+
+    public function getFileNodeObject()
+    {
+        $db = \Database::connection();
+        $treeNodeID = $db->GetOne('select treeNodeID from TreeFileNodes where fID = ?', array($this->getFileID()));
+        return Node::getByID($treeNodeID);
+    }
+
     public function duplicate()
     {
         $db = Loader::db();
@@ -378,6 +409,13 @@ class File implements \Concrete\Core\Permission\ObjectInterface
         $dh = Loader::helper('date');
         $date = $dh->getOverridableNow();
         $nf->fDateAdded = new Carbon($date);
+
+        $em->persist($nf);
+        $em->flush();
+
+        $folder = $this->getFileFolderObject();
+        $folderNode = \Concrete\Core\Tree\Node\Type\File::add($nf, $folder);
+        $nf->folderTreeNodeID = $folderNode->getTreeNodeID();
 
         $em->persist($nf);
         $em->flush();
@@ -439,7 +477,7 @@ class File implements \Concrete\Core\Permission\ObjectInterface
         return $nf;
     }
 
-    public static function add($filename, $prefix, $data = array(), $fsl = false)
+    public static function add($filename, $prefix, $data = array(), $fsl = false, $folder = false)
     {
         $db = Loader::db();
         $dh = Loader::helper('date');
@@ -459,13 +497,24 @@ class File implements \Concrete\Core\Permission\ObjectInterface
             }
         }
 
+        if (!($folder instanceof FileFolder)) {
+            $filesystem = new Filesystem();
+            $folder = $filesystem->getRootFolder();
+        }
+
         $f = new self();
         $f->uID = $uID;
         $f->storageLocation = $fsl;
         $f->fDateAdded = new Carbon($date);
+        $f->folderTreeNodeID = $folder->getTreeNodeID();
+
+
         $em = \ORM::entityManager('core');
         $em->persist($f);
         $em->flush();
+
+        $node = \Concrete\Core\Tree\Node\Type\File::add($f, $folder);
+
 
         $fv = Version::add($f, $filename, $prefix, $data);
 
@@ -522,7 +571,7 @@ class File implements \Concrete\Core\Permission\ObjectInterface
     /**
      * Removes a file, including all of its versions.
      */
-    public function delete()
+    public function delete($removeNode = true)
     {
         // first, we remove all files from the drive
         $db = Loader::db();
@@ -534,6 +583,16 @@ class File implements \Concrete\Core\Permission\ObjectInterface
         if (!$fve->proceed()) {
             return false;
         }
+
+        // Delete the tree node for the file.
+        if ($removeNode) {
+            $nodeID = $db->fetchColumn('select treeNodeID from TreeFileNodes where fID = ?', array($this->getFileID()));
+            if ($nodeID) {
+                $node = Node::getByID($nodeID);
+                $node->delete();
+            }
+        }
+
 
         $versions = $this->getVersionList();
         foreach ($versions as $fv) {

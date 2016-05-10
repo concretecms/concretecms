@@ -5,6 +5,7 @@ use AuthenticationType;
 use Concrete\Core\Backup\ContentImporter;
 use Concrete\Core\Config\Renderer;
 use Concrete\Core\Database\DatabaseStructureManager;
+use Concrete\Core\File\Filesystem;
 use Concrete\Core\File\Image\Thumbnail\Type\Type;
 use Concrete\Core\Mail\Importer\MailImporter;
 use Concrete\Core\Package\Routine\AttachModeInstallRoutine;
@@ -249,6 +250,10 @@ class StartingPointPackage extends BasePackage
         $configuration = $type->getConfigurationObject();
         $fsl = \Concrete\Core\File\StorageLocation\StorageLocation::add($configuration, t('Default'), true);
 
+        $filesystem = new Filesystem();
+        $tree = $filesystem->create();
+        $filesystem->setDefaultPermissions($tree);
+
         $thumbnailType = new Type();
         $thumbnailType->requireType();
         $thumbnailType->setName(tc('ThumbnailTypeName', 'File Manager Thumbnails'));
@@ -284,6 +289,8 @@ class StartingPointPackage extends BasePackage
     {
         $ci = new ContentImporter();
         $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/desktops.xml');
+        $desktop = \Page::getByPath('/dashboard/welcome');
+        $desktop->movePageDisplayOrderToTop();
     }
 
     public function install_database()
@@ -442,26 +449,29 @@ class StartingPointPackage extends BasePackage
 
     public function set_site_permissions()
     {
-        $fs = FileSet::getGlobal();
         $g1 = Group::getByID(GUEST_GROUP_ID);
         $g2 = Group::getByID(REGISTERED_GROUP_ID);
         $g3 = Group::getByID(ADMIN_GROUP_ID);
 
-        $fs->assignPermissions($g1, array('view_file_set_file'));
-        $fs->assignPermissions(
+        $filesystem = new Filesystem();
+        $folder = $filesystem->getRootFolder();
+        $folder->assignPermissions($g1, array('view_file_folder_file'));
+        $folder->assignPermissions(
             $g3,
             array(
-                'view_file_set_file',
-                'search_file_set',
-                'edit_file_set_file_properties',
-                'edit_file_set_file_contents',
-                'copy_file_set_files',
-                'edit_file_set_permissions',
-                'delete_file_set_files',
-                'delete_file_set',
+                'view_file_folder_file',
+                'search_file_folder',
+                'edit_file_folder',
+                'edit_file_folder_file_properties',
+                'edit_file_folder_file_contents',
+                'copy_file_folder_files',
+                'edit_file_folder_permissions',
+                'delete_file_folder_files',
+                'delete_file_folder',
                 'add_file',
             )
         );
+
         if (defined('SITE_INSTALL_LOCALE') && SITE_INSTALL_LOCALE != '' && SITE_INSTALL_LOCALE != 'en_US') {
             Config::save('concrete.locale', SITE_INSTALL_LOCALE);
         }

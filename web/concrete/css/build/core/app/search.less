@@ -187,6 +187,17 @@ div.ccm-search-fields-advanced {
   }
 }
 
+/**
+ * Advanced Search Dialogs
+ */
+div.ccm-search-fields-advanced-dialog {
+
+  div.ccm-search-fields-advanced-dialog-field-list {
+
+  }
+
+}
+
 /** 
  * Search results
  */
@@ -194,6 +205,8 @@ div.ccm-search-fields-advanced {
 table.ccm-search-results-table {
 
   width: 100%;
+  -webkit-user-select: none;
+  -moz-user-select: none;
   -webkit-font-smoothing: antialiased;
 
 
@@ -278,6 +291,25 @@ table.ccm-search-results-table {
           */
       }
 
+      button.btn-menu-launcher {
+        .ccm-ui.btn-sm;
+        background-color: transparent;
+        border: 1px solid #aaa;
+        i {
+          color: #aaa;
+        }
+        &:active, &:focus {
+          outline: 0px !important;
+        }
+      }
+
+      button.btn-menu-launcher[disabled] {
+        i {
+          color: #ccc;
+        }
+        border: 1px solid #ccc;
+      }
+
     }
   }
 
@@ -342,8 +374,10 @@ table.ccm-search-results-table {
     }
 
     tr.ccm-menu-item-active,
-    tr.ccm-parent-menu-item-active {
+    tr.ccm-parent-menu-item-active,
+    tr.ccm-search-select-selected {
       td {
+        cursor: pointer;
         background-color: rgba(222, 235, 241, 1.0);
         color: #000;
       }
@@ -354,6 +388,13 @@ table.ccm-search-results-table {
       td {
         cursor: pointer;
         background-color: #edf7fe !important;
+        color: #000;
+      }
+    }
+
+    tr.ccm-search-select-active-droppable {
+      td {
+        background-color: rgba(222, 235, 241, 1.0);
         color: #000;
       }
     }
@@ -511,6 +552,11 @@ div.ccm-search-results-breadcrumb {
       color: #333;
     }
 
+    > li.ccm-search-select-active-droppable a,
+    > li a.ccm-search-select-active-droppable {
+      color: #09f;
+    }
+
     > li + li:before {
       content: ">";
       font-size: 11px;
@@ -554,6 +600,12 @@ div.ccm-draggable-search-item {
     }
   }
 
+  &.ccm-search-results-file {
+    &:after {
+      content: "\f016";
+    }
+  }
+
   span {
     display: inline-block;
     background-color: #0099ff;
@@ -568,4 +620,8 @@ div.ccm-draggable-search-item {
     position: absolute;
 
   }
+}
+
+.ccm-search-results-copy {
+  cursor: copy !important;
 }
