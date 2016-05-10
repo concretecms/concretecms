@@ -85,14 +85,16 @@ class BasicWorkflow extends \Concrete\Core\Workflow\Workflow
 
                 $ui = UserInfo::getByID($req->getRequesterUserID());
 
-            // let's get all the people who are set to be notified on entry
-            $message = t(
-                'On %s, user %s submitted the following request: %s',
-                Core::make('helper/date')->formatDateTime($wp->getWorkflowProgressDateAdded(), true),
-                $ui->getUserName(),
-                $req->getWorkflowRequestDescriptionObject()->getEmailDescription());
-            $this->notify($wp, $message, 'notify_on_basic_workflow_entry');
+                // let's get all the people who are set to be notified on entry
+                $message = t(
+                    'On %s, user %s submitted the following request: %s',
+                    Core::make('helper/date')->formatDateTime($wp->getWorkflowProgressDateAdded(), true),
+                    $ui->getUserName(),
+                    $req->getWorkflowRequestDescriptionObject()->getEmailDescription());
+                $this->notify($wp, $message, 'notify_on_basic_workflow_entry');
+            }
         }
+
     }
 
     protected function notify(

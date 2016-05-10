@@ -202,7 +202,7 @@
             });
         }
 
-
+        $container.find('select.select2-select').select2();
         $container.on('change', 'select.ccm-search-choose-field', function() {
             var key = $(this).val();
             var $content = $(this).parent().find('div.ccm-search-field-content');
@@ -214,6 +214,7 @@
                     },
                     success: function(r) {
                         $content.html(r.element);
+                        $content.find('select.select2-select').select2();
                     }
                 });
             }
