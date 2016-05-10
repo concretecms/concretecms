@@ -359,10 +359,11 @@ return array(
         /*
          * General Attribute
          */
-        "/ccm/system/attribute/action/{action}"
-        => array('\Concrete\Controller\Backend\Attribute\Action::dispatch', 'attribute_action', array(
-            'action' => ".+"
-        )),
+        "/ccm/system/attribute/action/{action}" => array(
+            '\Concrete\Controller\Backend\Attribute\Action::dispatch',
+            'attribute_action',
+            array('action' => ".+"),
+        ),
 
         /*
          * Trees
@@ -397,7 +398,7 @@ return array(
         "/ccm/system/marketplace/connect" => array('\Concrete\Controller\Backend\Marketplace\Connect::view'),
         "/ccm/system/marketplace/search" => array('\Concrete\Controller\Backend\Marketplace\Search::view'),
 
-        /**
+        /*
          * Express
          */
         "/ccm/system/dialogs/express/entry/search/{entityID}" => array('\Concrete\Controller\Dialog\Express\Search::entries'),
@@ -478,10 +479,11 @@ return array(
         /*
          * RSS Feeds
          */
-        "/rss/{identifier}"                                                             => array(
+        "/rss/{identifier}" => array(
             '\Concrete\Controller\Feed::output',
             'rss',
-            array('identifier' => '[A-Za-z0-9_/.]+'), ),
+            array('identifier' => '[A-Za-z0-9_/.]+'),
+        ),
 
         /*
          * Special Dashboard
@@ -582,8 +584,8 @@ return array(
             array(
                 'javascript',
                 'https://www.gstatic.com/charts/loader.js',
-                array('local' => false)
-            )
+                array('local' => false),
+            ),
         ),
 
         'autosize' => array(
@@ -1069,7 +1071,7 @@ return array(
                 array('javascript', 'dynatree'),
                 array('javascript-localized', 'dynatree'),
                 array('javascript', 'core/tree'),
-                array('css', 'dynatree')
+                array('css', 'dynatree'),
             ),
         ),
         'core/tree' => array(
@@ -1081,7 +1083,7 @@ return array(
                 array('javascript', 'dynatree'),
                 array('javascript-localized', 'dynatree'),
                 array('javascript', 'core/tree'),
-                array('css', 'dynatree')
+                array('css', 'dynatree'),
             ),
         ),
         'core/groups' => array(
