@@ -8,7 +8,7 @@ use Database;
  * @Entity
  * @Table(name="FileStorageLocations")
  */
-class StorageLocation
+class StorageLocation implements StorageLocationInterface
 {
     /**
      * @Column(type="string")

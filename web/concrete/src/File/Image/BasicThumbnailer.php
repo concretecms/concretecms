@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\File\Image;
 
+use Concrete\Core\File\StorageLocation\StorageLocationInterface;
 use Config;
 use Image;
 use Imagine\Image\Box;
@@ -12,12 +13,17 @@ class BasicThumbnailer
     protected $jpegCompression;
 
     /**
-     * @var StorageLocation
+     * @var StorageLocationInterface
      */
     private $storageLocation;
 
+    public function __construct(StorageLocationInterface $storageLocation = null)
+    {
+        $this->storageLocation = $storageLocation;
+    }
+
     /**
-     * @return StorageLocation
+     * @return StorageLocationInterface
      */
     public function getStorageLocation()
     {
@@ -28,9 +34,9 @@ class BasicThumbnailer
     }
 
     /**
-     * @param StorageLocation $storageLocation
+     * @param StorageLocationInterface $storageLocation
      */
-    public function setStorageLocation(StorageLocation $storageLocation)
+    public function setStorageLocation(StorageLocationInterface $storageLocation)
     {
         $this->storageLocation = $storageLocation;
     }
@@ -106,14 +112,14 @@ class BasicThumbnailer
      * Returns a path to the specified item, resized and/or cropped to meet max width and height. $obj can either be
      * a string (path) or a file object.
      * Returns an object with the following properties: src, width, height
-     * 
+     *
      * @param File|string $obj
      * @param int $maxWidth
      * @param int $maxHeight
      * @param bool $crop
      * @return \stdClass Object that has the following properties: src, width, height
      */
-    public function getThumbnail($obj, $maxWidth, $maxHeight, $crop = false) 
+    public function getThumbnail($obj, $maxWidth, $maxHeight, $crop = false)
     {
         $storage = $this->getStorageLocation();
         $filesystem = $storage->getFileSystemObject();

@@ -3,7 +3,6 @@
 namespace Concrete\Tests\Core\File\Service\Fixtures;
 
 use Concrete\Core\File\StorageLocation\StorageLocation;
-use Concrete\Flysystem\Cache\Noop;
 
 class TestStorageLocation extends StorageLocation
 {
@@ -15,7 +14,7 @@ class TestStorageLocation extends StorageLocation
     public function getFileSystemObject()
     {
         $adapter = $this->getConfigurationObject()->getAdapter();
-        $filesystem = new \Concrete\Flysystem\Filesystem($adapter, new Noop());
+        $filesystem = new \League\Flysystem\Filesystem($adapter);
         return $filesystem;
     }
 

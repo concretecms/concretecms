@@ -13,7 +13,7 @@ use Core;
 
 class ImageTest extends \PHPUnit_Framework_TestCase
 {
-    
+
     protected $output1;
 
     /**
@@ -53,16 +53,17 @@ class ImageTest extends \PHPUnit_Framework_TestCase
             ),
         );
     }
+
     /**
      * @dataProvider legacyImageCreateDataProvider
      */
     public function testLegacyImageCreate($expectedWidth, $expectedHeight, $path, $width, $height, $fit = false)
     {
-        $service = new \Concrete\Core\File\Image\BasicThumbnailer();
 
         $sl = $this->storageLocation;
         $fsl = $sl->getFileSystemObject();
-        $service->setStorageLocation($sl);
+        $service = new \Concrete\Core\File\Image\BasicThumbnailer($sl);
+
         $this->assertFalse($fsl->has($this->output1));
         $service->create(
             $path, $this->output1, $width, $height, $fit
