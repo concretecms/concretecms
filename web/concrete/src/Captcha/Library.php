@@ -2,51 +2,127 @@
 namespace Concrete\Core\Captcha;
 
 use Concrete\Core\Foundation\Object;
-use Loader;
-use Core;
 use Concrete\Core\Package\PackageList;
-use Package;
+use Concrete\Core\Support\Facade\Package as PackageService;
+use Concrete\Core\Support\Facade\Facade;
 
 class Library extends Object
 {
+    /**
+     * The library handle.
+     *
+     * @var string
+     */
+    protected $sclHandle;
+
+    /**
+     * The library name.
+     *
+     * @var string
+     */
+    protected $sclName;
+
+    /**
+     * Is this the active library?
+     *
+     * @var bool
+     */
+    protected $sclIsActive;
+
+    /**
+     * The package ID (or 0 if it's a core library).
+     *
+     * @var int
+     */
+    protected $pkgID;
+
+    /**
+     * Get the library handle.
+     *
+     * @return string
+     */
     public function getSystemCaptchaLibraryHandle()
     {
         return $this->sclHandle;
     }
+
+    /**
+     * Get the library name.
+     *
+     * @return string
+     */
     public function getSystemCaptchaLibraryName()
     {
         return $this->sclName;
     }
+
+    /**
+     * Is this the active library?
+     *
+     * @return bool
+     */
     public function isSystemCaptchaLibraryActive()
     {
         return $this->sclIsActive;
     }
+
+    /**
+     * Get the package ID (or 0 if it's a core library).
+     *
+     * @return int
+     */
     public function getPackageID()
     {
         return $this->pkgID;
     }
+
+    /**
+     * Get the package handle (or false if it's a core library).
+     *
+     * @return string|false
+     */
     public function getPackageHandle()
     {
-        return PackageList::getHandle($this->pkgID);
+        return $this->pkgID ? PackageList::getHandle($this->pkgID) : false;
     }
+
+    /**
+     * Get the package instance (or null if it's a core library).
+     *
+     * @return \Concrete\Core\Entity\Package|null
+     */
     public function getPackageObject()
     {
-        return Package::getByID($this->pkgID);
+        return $this->pkgID ? PackageService::getByID($this->pkgID) : null;
     }
 
+    /**
+     * Get the active library.
+     *
+     * @return static|null
+     */
     public static function getActive()
     {
-        $db = Loader::db();
-        $sclHandle = $db->GetOne('select sclHandle from SystemCaptchaLibraries where sclIsActive = 1');
+        $app = Facade::getFacadeApplication();
+        $db = $app->make('database')->connection();
+        $sclHandle = $db->fetchColumn('select sclHandle from SystemCaptchaLibraries where sclIsActive = 1');
 
-        return static::getByHandle($sclHandle);
+        return ($sclHandle === false) ? null : static::getByHandle($sclHandle);
     }
 
+    /**
+     * Get a library given its handle.
+     *
+     * @param string $sclHandle The library handle.
+     *
+     * @return static|null
+     */
     public static function getByHandle($sclHandle)
     {
-        $db = Loader::db();
-        $r = $db->GetRow('select sclHandle, sclIsActive, pkgID, sclName from SystemCaptchaLibraries where sclHandle = ?', array($sclHandle));
-        if (is_array($r) && $r['sclHandle']) {
+        $app = Facade::getFacadeApplication();
+        $db = $app->make('database')->connection();
+        $r = $db->fetchAssoc('select sclHandle, sclIsActive, pkgID, sclName from SystemCaptchaLibraries where sclHandle = ?', array($sclHandle));
+        if ($r !== false) {
             $sc = new static();
             $sc->setPropertiesFromArray($r);
 
@@ -54,72 +130,120 @@ class Library extends Object
         }
     }
 
+    /**
+     * Add a new library.
+     *
+     * @param string $sclHandle The library handle.
+     * @param string $sclName The library name.
+     * @param \Concrete\Core\Entity\Package|int|false $pkg The package that installs this library.
+     *
+     * @return static
+     */
     public static function add($sclHandle, $sclName, $pkg = false)
     {
-        $pkgID = 0;
         if (is_object($pkg)) {
             $pkgID = $pkg->getPackageID();
+        } else {
+            $pkgID = (int) $pkg;
         }
-        $db = Loader::db();
-        $db->Execute('insert into SystemCaptchaLibraries (sclHandle, sclName, pkgID) values (?, ?, ?)', array($sclHandle, $sclName, $pkgID));
+        $app = Facade::getFacadeApplication();
+        $db = $app->make('database')->connection();
+        $db->executeQuery('insert into SystemCaptchaLibraries (sclHandle, sclName, pkgID) values (?, ?, ?)', array($sclHandle, $sclName, $pkgID));
 
         return static::getByHandle($sclHandle);
     }
 
+    /**
+     * Delete this library (if it's the default one we'll activate the default core library).
+     */
     public function delete()
     {
-        $db = Loader::db();
-        if (static::getActive()->getSystemCaptchaLibraryHandle() == $this->sclHandle) {
+        $active = static::getActive();
+        if ($active !== null && $active->getSystemCaptchaLibraryHandle() === $this->sclHandle) {
             if ($scl = static::getByHandle('securimage')) {
                 $scl->activate();
             }
         }
-        $db->Execute('delete from SystemCaptchaLibraries where sclHandle = ?', array($this->sclHandle));
+        $app = Facade::getFacadeApplication();
+        $db = $app->make('database')->connection();
+        $db->executeQuery('delete from SystemCaptchaLibraries where sclHandle = ?', array($this->sclHandle));
     }
 
+    /**
+     * Make this library the active one.
+     */
     public function activate()
     {
-        $db = Loader::db();
-        $db->Execute('update SystemCaptchaLibraries set sclIsActive = 0');
-        $db->Execute('update SystemCaptchaLibraries set sclIsActive = 1 where sclHandle = ?', array($this->sclHandle));
+        $app = Facade::getFacadeApplication();
+        $db = $app->make('database')->connection();
+        $db->executeQuery('update SystemCaptchaLibraries set sclIsActive = 0');
+        $db->executeQuery('update SystemCaptchaLibraries set sclIsActive = 1 where sclHandle = ?', array($this->sclHandle));
+        $this->sclIsActive = 1;
     }
 
+    /**
+     * Retrieve all the installed libraries.
+     *
+     * @return static[]
+     */
     public static function getList()
     {
-        $db = Loader::db();
-        $sclHandles = $db->GetCol('select sclHandle from SystemCaptchaLibraries order by sclHandle asc');
+        $app = Facade::getFacadeApplication();
+        $db = $app->make('database')->connection();
         $libraries = array();
-        foreach ($sclHandles as $sclHandle) {
-            $scl = static::getByHandle($sclHandle);
+        foreach ($db->fetchAll('select sclHandle from SystemCaptchaLibraries order by sclHandle asc') as $row) {
+            $scl = static::getByHandle($row['sclHandle']);
             $libraries[] = $scl;
         }
 
         return $libraries;
     }
 
+    /**
+     * Retrieve the libraries installed by a package.
+     *
+     * @param \Concrete\Core\Entity\Package|int $pkg The package instance (or its ID).
+     *
+     * @return static[]
+     */
     public static function getListByPackage($pkg)
     {
-        $db = Loader::db();
-        $sclHandles = $db->GetCol('select sclHandle from SystemCaptchaLibraries where pkgID = ? order by sclHandle asc', array($pkg->getPackageID()));
+        if (is_object($pkg)) {
+            $pkgID = $pkg->getPackageID();
+        } else {
+            $pkgID = (int) $pkg;
+        }
+        $app = Facade::getFacadeApplication();
+        $db = $app->make('database')->connection();
         $libraries = array();
-        foreach ($sclHandles as $sclHandle) {
-            $scl = static::getByHandle($sclHandle);
+        foreach ($db->fetchAll('select sclHandle from SystemCaptchaLibraries where pkgID = ? order by sclHandle asc', array($pkgID)) as $row) {
+            $scl = static::getByHandle($row['sclHandle']);
             $libraries[] = $scl;
         }
 
         return $libraries;
     }
 
-    public function export($xml)
+    /**
+     * Export the data of this library.
+     *
+     * @param \SimpleXMLElement $xml The parent XML element.
+     */
+    public function export(\SimpleXMLElement $xml)
     {
         $type = $xml->addChild('library');
         $type->addAttribute('handle', $this->getSystemCaptchaLibraryHandle());
         $type->addAttribute('name', $this->getSystemCaptchaLibraryName());
         $type->addAttribute('package', $this->getPackageHandle());
-        $type->addAttribute('activated', $this->isSystemCaptchaLibraryActive());
+        $type->addAttribute('activated', $this->isSystemCaptchaLibraryActive() ? '1' : '0');
     }
 
-    public static function exportList($xml)
+    /**
+     * Export the data of all the libraries.
+     *
+     * @param \SimpleXMLElement $xml The parent XML element.
+     */
+    public static function exportList(\SimpleXMLElement $xml)
     {
         $list = self::getList();
         $nxml = $xml->addChild('systemcaptcha');
@@ -129,6 +253,11 @@ class Library extends Object
         }
     }
 
+    /**
+     * Does this library has an option form?
+     *
+     * @return bool
+     */
     public function hasOptionsForm()
     {
         $path = DIRNAME_SYSTEM . '/' . DIRNAME_SYSTEM_CAPTCHA . '/' . $this->sclHandle . '/' . FILENAME_FORM;
@@ -146,21 +275,22 @@ class Library extends Object
         } else {
             return file_exists(DIR_FILES_ELEMENTS_CORE . '/' . $path);
         }
-
-        return false;
     }
 
     /**
      * Returns the controller class for the currently selected captcha library.
+     *
+     * @return \Concrete\Core\Captcha\Controller
      */
     public function getController()
     {
         $class = overrideable_core_class('Core\\Captcha\\'
-            . Loader::helper('text')->camelcase($this->sclHandle) . 'Controller', DIRNAME_CLASSES . '/Captcha/'
-            . Loader::helper('text')->camelcase($this->sclHandle) . 'Controller.php',
+            . camelcase($this->sclHandle) . 'Controller', DIRNAME_CLASSES . '/Captcha/'
+            . camelcase($this->sclHandle) . 'Controller.php',
             $this->getPackageHandle()
         );
-        $cl = Core::make($class);
+        $app = Facade::getFacadeApplication();
+        $cl = $app->make($class);
 
         return $cl;
     }

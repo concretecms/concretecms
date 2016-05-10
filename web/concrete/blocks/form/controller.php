@@ -575,6 +575,17 @@ class Controller extends BlockController
                 //echo $mh->body.'<br>';
                 @$mh->sendMail();
             }
+            
+            //launch form submission event
+            $formEventData = array();
+            $formEventData['bID'] = intval($this->bID);
+            $formEventData['questionSetID'] = $this->questionSetId;
+            $formEventData['replyToEmailAddress'] = $replyToEmailAddress;
+            $formEventData['formFormEmailAddress'] = $formFormEmailAddress;
+            $formEventData['questionAnswerPairs'] = $questionAnswerPairs;
+            $event = new \Symfony\Component\EventDispatcher\GenericEvent();
+            $event->setArgument('formData', $formEventData);
+            Events::fire('on_form_submission', $event);
 
             if (!$this->noSubmitFormRedirect) {
                 $targetPage = null;
