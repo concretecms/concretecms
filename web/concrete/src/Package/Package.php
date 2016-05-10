@@ -333,9 +333,9 @@ abstract class Package implements LocalizablePackageInterface
     public function getChangelogContents()
     {
         if (file_exists($this->getPackagePath() . '/CHANGELOG')) {
-            $contents = Core::make('helper/file')->getContents($this->getPackagePath() . '/CHANGELOG');
+            $contents = \Core::make('helper/file')->getContents($this->getPackagePath() . '/CHANGELOG');
 
-            return nl2br(Core::make('helper/text')->entities($contents));
+            return nl2br(\Core::make('helper/text')->entities($contents));
         }
 
         return '';
