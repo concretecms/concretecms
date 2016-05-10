@@ -110,7 +110,7 @@ class SearchPreset extends Node
         return new SavedSearchListFormatter();
     }
 
-    public static function add(SavedFileSearch $search, $parent = false)
+    public static function addSearchPreset(SavedFileSearch $search, $parent = false)
     {
         $node = parent::add($parent);
         if (is_object($search)) {
