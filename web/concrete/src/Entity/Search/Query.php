@@ -1,19 +1,21 @@
 <?php
 namespace Concrete\Core\Entity\Search;
 
+use Doctrine\ORM\Mapping as ORM;
+
 /**
- * @Embeddable
+ * @ORM\Embeddable
  */
 class Query implements \JsonSerializable
 {
 
     /**
-     * @Column(type="object")
+     * @ORM\Column(type="object")
      */
     protected $fields = array();
 
     /**
-     * @Column(type="object")
+     * @ORM\Column(type="object")
      */
     protected $columns;
 

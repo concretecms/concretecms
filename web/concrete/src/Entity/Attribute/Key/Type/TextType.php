@@ -16,7 +16,7 @@ class TextType extends Type
     }
 
     /**
-     * @Column(type="string")
+     * @ORM\Column(type="string")
      */
     protected $akTextPlaceholder = '';
 
