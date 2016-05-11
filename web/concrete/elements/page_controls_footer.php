@@ -4,22 +4,21 @@ defined('C5_EXECUTE') or die("Access Denied.");
 $app = Concrete\Core\Support\Facade\Facade::getFacadeApplication();
 
 $dh = $app->make('helper/concrete/dashboard');
-$ihm = $app->make('helper/concrete/ui/menu');
-$valt = $app->make('helper/validation/token');
-$config = $app->make('config');
-$dateHelper = $app->make('helper/date');
-$token = '&' . $valt->getParameter();
-$cID = $c->getCollectionID();
-$permissions = new Permissions($c);
 
-$workflowList = \Concrete\Core\Workflow\Progress\PageProgress::getList($c);
-
-$canViewToolbar = $cp->canViewToolbar();
-
-$show_titles = (bool) $config->get('concrete.accessibility.toolbar_titles');
-$large_font = (bool) $config->get('concrete.accessibility.toolbar_large_font');
-
-if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
+if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
+    $ihm = $app->make('helper/concrete/ui/menu');
+    $valt = $app->make('helper/validation/token');
+    $config = $app->make('config');
+    $dateHelper = $app->make('helper/date');
+    $token = '&' . $valt->getParameter();
+    $cID = $c->getCollectionID();
+    $permissions = new Permissions($c);
+    
+    $workflowList = \Concrete\Core\Workflow\Progress\PageProgress::getList($c);
+    
+    $show_titles = (bool) $config->get('concrete.accessibility.toolbar_titles');
+    $large_font = (bool) $config->get('concrete.accessibility.toolbar_large_font');
+    
     $canApprovePageVersions = $cp->canApprovePageVersions();
     $u = new User();
     $username = $u->getUserName();
