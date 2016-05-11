@@ -99,7 +99,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
 
     public function triggerDelete()
     {
-        global $u;
+        $u = new \User();
 
         $db = $this->connection;
         $v = array($this->uID);
@@ -501,7 +501,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
     function triggerActivate($action=null, $requesterUID=null)
     {
         if ($requesterUID === null) {
-            global $u;
+            $u = new \User();
             $requesterUID = $u->getUserID();
         }
 
@@ -534,7 +534,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
 
     function triggerDeactivate()
     {
-        global $u;
+        $u = new \User();
 
         $db = $this->connection;
         $v = array($this->uID);
