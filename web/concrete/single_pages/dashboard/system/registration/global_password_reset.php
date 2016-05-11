@@ -11,7 +11,7 @@
                         <?=t('The system signs out all users, resets their passwords and forces them to choose a new one.')?>
                     </p>
                     <div class="alert alert-info">
-                        <strong><?=t('Note:')?></strong> <?=t('If you have overridden the standard Concrete5 authentication system or you have created your own, you may not need to reset all passwords.')?>
+                        <strong><?=t('Note:')?></strong> <?=t('If you have overridden the standard concrete5 authentication system or you have created your own, you may not need to reset all passwords.')?>
                     </div>
                 </div>
             </fieldset>
