@@ -14,7 +14,12 @@
 	<?=$form->label('fileLinkText', t('Text for Linked File'))?>
 	<?=$form->text('fileLinkText', $controller->getLinkText())?>
 </div>
+
 <div class="form-group">
-	<?=$form->checkbox('forceDownload', '1', $forceDownload); ?>
-	<?=$form->label('forceDownload', t('Force file to download')); ?>
+    <div class="checkbox">
+        <label>
+            <?=$form->checkbox('forceDownload', '1', $forceDownload); ?>
+            <?=t('Force file to download')?>
+        </label>
+    </div>
 </div>

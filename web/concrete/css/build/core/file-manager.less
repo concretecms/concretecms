@@ -69,7 +69,7 @@ ul.ccm-file-manager-navigation {
   padding: 10px 0px 10px 0px;
   a {
     color: #777;
-    .transition(0.1s all linear);
+    .transition(0.1s linear all);
   }
   a:focus, a:hover {
     text-decoration: none;
@@ -170,10 +170,10 @@ div.ui-dialog {
 div.ccm-file-selector {
   .border-radius(2px);
   color: #606060;
-  background-color: #e5edf1;
+  background-color: #f0f0f0;
   font-size: 14px;
   line-height: @line-height-base;
-  .transition(all ease-in-out .15s);
+  .transition(0.1s linear all);
   cursor: pointer;
 
   &.ccm-parent-menu-item-hover, &.ccm-parent-menu-item-active, &:hover {
@@ -225,7 +225,7 @@ div#ccm-popover-menu-container {
  */
 div#ccm-file-manager-import-files {
   form.dropzone {
-    .transition(0.1s all linear);
+    .transition(0.1s linear all);
     span {
       font-size: 32px;
       -webkit-font-smoothing: antialiased;

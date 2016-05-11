@@ -5,7 +5,7 @@
 
         <div class="form-group">
             <label class="control-label"><?=t('Name')?></label>
-            <input type="text" name="name" value="<?=h($name)?>" class="form-control" />
+            <input type="text" name="name" value="<?=h($name)?>" class="form-control" autofocus />
         </div>
 
         <div class="form-group">

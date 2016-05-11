@@ -265,7 +265,8 @@ jQuery.fn.dialog.activateDialogContents = function($dialog) {
         }
         var button = $('<button class="ui-dialog-titlebar-help ccm-menu-help-trigger"><i class="fa fa-info-circle"></i></button>'),
             container = $('#ccm-tooltip-holder');
-        $dialog.parent().find('.ui-dialog').addClass('ccm-ui').append(button);
+        $dialog.parent().find('.ui-dialog-titlebar').append(button);
+
         button.popover({
             content: function() {
                 return helpContent;

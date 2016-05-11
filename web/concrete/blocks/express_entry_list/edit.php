@@ -21,12 +21,14 @@ echo Core::make('helper/concrete/ui')->tabs(array(
         ]);?>
     </div>
 
-    <div class="checkbox"><label>
-            <?=$form->checkbox('enableSearch', 1, $enableSearch, array('data-options-toggle' => 'search'))?>
-            <?=t('Enable Search')?>
-        </label>
+    <div class="form-group">
+        <div class="checkbox"><label>
+                <?=$form->checkbox('enableSearch', 1, $enableSearch, array('data-options-toggle' => 'search'))?>
+                <?=t('Enable Search')?>
+            </label>
+        </div>
     </div>
-
+    
     <fieldset data-options="search">
 
         <div class="form-group">

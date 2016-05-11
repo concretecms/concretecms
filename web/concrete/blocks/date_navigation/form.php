@@ -2,7 +2,7 @@
 <fieldset>
     <legend><?=t('Filtering')?></legend>
     <div class='form-group'>
-        <label for='title' style="margin-bottom: 0px;"><?=t('By Parent Page')?>:</label>
+        <label for='title' class="control-label"><?=t('By Parent Page')?>:</label>
         <div class="checkbox">
             <label>
                 <input <?php if (intval($cParentID) > 0) {
