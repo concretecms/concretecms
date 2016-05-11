@@ -16,7 +16,7 @@
     <?php 
     } else {
         ?>
-        <p><?=t('None found.')?></p>
+        <p><?=t('No entity found.')?></p>
     <?php 
     } ?>
 </div>
