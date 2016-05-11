@@ -7,21 +7,20 @@
             <fieldset>
                 <div class="form-group">
                     <p>
-                        Global Password Reset allows Administrators to force reset all user passwords.
-                        The system signs out all users, resets their passwords and forces them to choose a new one.
+                        <?=t('Global Password Reset allows Administrators to force reset all user passwords.')?>
+                        <?=t('The system signs out all users, resets their passwords and forces them to choose a new one.')?>
                     </p>
                     <div class="alert alert-info">
-                        <strong>Note: </strong>If you have overridden the standard Concrete5 authentication system
-                        or you have created your own, you may not need to reset all passwords.
+                        <strong><?=t('Note:')?></strong> <?=t('If you have overridden the standard Concrete5 authentication system or you have created your own, you may not need to reset all passwords.')?>
                     </div>
                 </div>
             </fieldset>
 
             <fieldset>
                 <div class="form-group">
-                    <legend>Edit message</legend>
+                    <legend><?=t('Edit message')?></legend>
                     <p>
-                        This message will be shown to users the next time they log in.
+                        <?=t('This message will be shown to users the next time they log in.')?>
                     </p>
                     <div class="input">
                         <?= $form->textarea('resetMessage', $resetMessage, array('rows' => 4, 'cols' => 10)) ?>
@@ -31,9 +30,9 @@
 
             <fieldset>
                 <div class="form-group">
-                    <legend>Confirmation</legend>
+                    <legend><?=t('Confirmation')?></legend>
                     <p>
-                        Type "RESET" in the following box to proceed.
+                        <?=t('Type "RESET" in the following box to proceed.')?>
                     </p>
                     <div class="input">
                         <?= $form->text('confirmation') ?>
@@ -42,8 +41,7 @@
 
                 <div class="form-group">
                     <div class="alert alert-danger">
-                        <strong>Warning: </strong>This action will automatically log out all users (including yourself)
-                        and reset their passwords.
+                        <strong><?=t('Warning:')?></strong> <?=t('This action will automatically log out all users (including yourself) and reset their passwords.')?>
                     </div>
                 </div>
             </fieldset>
