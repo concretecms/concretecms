@@ -4,6 +4,7 @@ namespace Concrete\Authentication\Twitter;
 defined('C5_EXECUTE') or die('Access Denied');
 
 use Concrete\Core\Authentication\Type\OAuth\OAuth1a\GenericOauth1aTypeController;
+use Concrete\Core\Authentication\Type\Twitter\Factory\TwitterServiceFactory;
 use Concrete\Core\Validation\CSRF\Token;
 use OAuth\Common\Exception\Exception;
 use OAuth\OAuth1\Service\Twitter;
@@ -65,7 +66,9 @@ class Controller extends GenericOauth1aTypeController
     public function getService()
     {
         if (!$this->service) {
-            $this->service = \Core::make('authentication/twitter');
+            /** @var TwitterServiceFactory $factory */
+            $factory = $this->app->make(TwitterServiceFactory::class);
+            $this->service = $factory->createService();
         }
 
         return $this->service;
