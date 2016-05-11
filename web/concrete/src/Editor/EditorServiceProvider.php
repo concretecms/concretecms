@@ -226,31 +226,31 @@ class EditorServiceProvider extends ServiceProvider
 
         $plugin = new Plugin();
         $plugin->setKey('concrete5inline');
-        $plugin->setName(t('Concrete5 Inline'));
+        $plugin->setName(t('concrete5 Inline'));
         $plugin->requireAsset('editor/ckeditor4/concrete5inline');
         $pluginManager->register($plugin);
 
         $plugin = new Plugin();
         $plugin->setKey('concrete5filemanager');
-        $plugin->setName(t('Concrete5 File Browser'));
+        $plugin->setName(t('concrete5 File Browser'));
         $plugin->requireAsset('editor/ckeditor4/concrete5filemanager');
         $pluginManager->register($plugin);
 
         $plugin = new Plugin();
         $plugin->setKey('concrete5uploadimage');
-        $plugin->setName(t('Concrete5 Upload Image'));
+        $plugin->setName(t('concrete5 Upload Image'));
         $plugin->requireAsset('editor/ckeditor4/concrete5uploadimage');
         $pluginManager->register($plugin);
 
         $plugin = new Plugin();
         $plugin->setKey('concrete5link');
-        $plugin->setName(t('Concrete5 Link'));
+        $plugin->setName(t('concrete5 Link'));
         $plugin->requireAsset('editor/ckeditor4/concrete5link');
         $pluginManager->register($plugin);
 
         $plugin = new Plugin();
         $plugin->setKey('concrete5styles');
-        $plugin->setName(t('Concrete5 Styles'));
+        $plugin->setName(t('concrete5 Styles'));
         $plugin->requireAsset('editor/ckeditor4/concrete5styles');
         $pluginManager->register($plugin);
     }
