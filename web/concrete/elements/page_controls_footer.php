@@ -20,8 +20,6 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
     $large_font = (bool) $config->get('concrete.accessibility.toolbar_large_font');
     
     $canApprovePageVersions = $cp->canApprovePageVersions();
-    $u = new User();
-    $username = $u->getUserName();
     $vo = $c->getVersionObject();
     $pageInUseBySomeoneElse = false;
 
