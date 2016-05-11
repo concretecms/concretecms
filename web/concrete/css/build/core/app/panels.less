@@ -597,22 +597,6 @@ div.ccm-panel-detail {
     padding-right: 321px;
   }
 
-  fieldset {
-    legend {
-      border: 0px;
-    }
-
-    padding-bottom: 20px;
-    border-bottom: 1px solid @legend-border-color;
-    margin-bottom: 20px;
-    margin-left: -40px;
-    padding-left: 40px;
-  }
-
-  fieldset:last-child {
-    border-bottom: 0px;
-  }
-
 }
 
 html.ccm-panel-left div.ccm-panel-detail {
@@ -647,7 +631,7 @@ div.ccm-panel-detail {
     font-size: 22px;
     margin: -40px -40px 30px -95px;
     padding: 39px 80px 39px 95px;
-    font-weight: 600;
+    font-weight: 300;
   }
 
   hr {
@@ -675,15 +659,43 @@ div#ccm-panel-detail-page-location {
 
   div.ccm-panel-detail-content {
     background-color: #f3fbff;
+
+    div.form-group {
+
+      color: #606060;
+      padding-left: 40px;
+      padding-right: 40px;
+      margin-left: -40px;
+      margin-right: -40px;
+      border-bottom: 1px solid #b7cfe4;
+
+
+      label.control-label {
+        color: #548fc8;
+      }
+
+    }
+
+    ul.dynatree-container {
+      background-color: #e5edf1;
+      .border-radius(4px);
+      padding: 20px;
+    }
   }
 
   header {
-    background-color: #e1f4ff;
-    color: #105192;
+    background-color: #fff;
+    color: #084f94;
   }
 
   hr {
     border-bottom-color: #c6d3db;
+  }
+
+  fieldset {
+    legend {
+      color: #113455;
+    }
   }
 }
 
@@ -791,10 +803,28 @@ div#ccm-panel-detail-form-actions-wrapper {
   div.ccm-panel-detail-form-actions {
     .clearfix;
     margin: 0px 20px 0px 340px; /* default is margin: 0px 20px 20px 340px;*/
-    background-color: #e3eaee;
+    background-color: rgba(40,40,40,0.85);
     padding: 20px 25px 20px 25px;
-    border: 1px solid #c9ced2;
-    .border-radius(2px);
+    .border-radius(4px);
+
+    .btn-primary {
+      background-color: #4cb8ff;
+      border-color: #4cb8ff;
+      &:hover {
+        border-color: darken(#4cb8ff, 5%);
+        background-color: darken(#4cb8ff, 5%);
+      }
+    }
+    .btn-default {
+      background-color: #656565;
+      border-color: #656565;
+      color: #fff;
+      &:hover {
+        border-color: darken(#656565, 5%);
+        background-color: darken(#656565, 5%);
+      }
+    }
+
   }
 }
 
@@ -876,34 +906,6 @@ div.ccm-panel-header-accordion-dropdown-visible {
 }
 
 /**
- * Panel check boxes
- */
-.ccm-ui {
-  input.ccm-flat-checkbox, input.ccm-flat-radio {
-    appearance: none;
-    -webkit-appearance: none;
-    padding: 9px;
-    margin-right: 8px;
-    margin-top: -1px;
-    display: inline-block;
-    position: relative !important;
-    .border-radius(3px);
-
-    &:focus {
-      outline: 0px;
-    }
-
-    &:checked:after {
-      content: '\2714';
-      font-size: 14px;
-      position: absolute;
-      top: 0px;
-      left: 3px;
-    }
-  }
-}
-
-/**
  * Panel list groups
  */
 .ccm-panel {
@@ -970,11 +972,11 @@ div.ccm-panel-header-accordion-dropdown-visible {
  */
 .ccm-panel-dark() {
 
-  input.ccm-flat-checkbox, input.ccm-flat-radio {
+  input[type=checkbox], input[type=radio] {
     border: 1px solid #444;
   }
 
-  input.ccm-flat-checkbox:checked:after, input.ccm-flat-radio:checked:after {
+  input[type=checkbox]:checked:after, input[type=radio]:checked:after {
     color: #3baaf7;
   }
 
