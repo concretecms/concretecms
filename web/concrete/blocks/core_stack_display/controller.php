@@ -1,6 +1,8 @@
 <?php
 namespace Concrete\Block\CoreStackDisplay;
 
+use Concrete\Core\Statistics\UsageTracker\TrackableInterface;
+use Concrete\Core\Support\Facade\Application;
 use Stack;
 use Permissions;
 use Page;
@@ -17,7 +19,7 @@ use Concrete\Core\Multilingual\Page\Section\Section;
  * @copyright  Copyright (c) 2003-2012 Concrete5. (http://www.concrete5.org)
  * @license    http://www.concrete5.org/license/     MIT License
  */
-class Controller extends BlockController
+class Controller extends BlockController implements TrackableInterface
 {
     protected $btCacheBlockRecord = true;
     protected $btTable = 'btCoreStackDisplay';
@@ -26,7 +28,7 @@ class Controller extends BlockController
 
     public $stID = null;
     protected $stIDNeutral = null;
-    
+
     protected function load()
     {
         parent::load();
@@ -117,13 +119,13 @@ class Controller extends BlockController
     /**
      * Returns the Stack instance (if found).
      *
-     * @param bool $localized Set to true to look for a localized version of the stack (if not found return the neutral version). 
+     * @param bool $localized Set to true to look for a localized version of the stack (if not found return the neutral version).
      *
      * @return Stack|null
      */
     protected function getStack($localized)
     {
-        
+
         if ($this->stIDNeutral === null || $localized) {
             $result = Stack::getByID($this->stID);
         } else {
@@ -254,4 +256,23 @@ class Controller extends BlockController
 
         return $this->btCacheBlockOutputLifetime;
     }
+
+    public function getStackID()
+    {
+        return $this->stID;
+    }
+
+    public function save($args)
+    {
+        parent::save($args);
+        $this->stID = $args['stID'];
+        Application::getFacadeApplication()->make('statistics/tracker')->track($this);
+    }
+
+    public function delete()
+    {
+        Application::getFacadeApplication()->make('statistics/tracker')->forget($this);
+        parent::delete();
+    }
+
 }

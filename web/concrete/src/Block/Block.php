@@ -434,6 +434,7 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
         }
         $this->instance->setBlockObject($this);
 
+
         return $this->instance;
     }
 
