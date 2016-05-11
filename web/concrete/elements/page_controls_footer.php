@@ -689,7 +689,7 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
                 if ($publishDate) {
                     $date = $dateHelper->formatDate($publishDate);
                     $time = $dateHelper->formatTime($publishDate);
-                    $message = t('This version of the page is scheduled to be published on %1$s at %2$s.',
+                    $message = t(/*i18n: %1$s is a date, %2$s is a time */'This version of the page is scheduled to be published on %1$s at %2$s.',
                         $date, $time);
                     $button = '<a href="' . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $c->getCollectionID() .
                         '&ctask=publish-now' . $token . '" class="btn btn-primary btn-xs">Publish Now</a>';
