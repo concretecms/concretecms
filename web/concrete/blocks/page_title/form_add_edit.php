@@ -5,7 +5,7 @@ if (!strlen($titleText)) {
 ?>
 
 <div class="form-group">
-    <label><?php echo t("Custom Title"); ?></label>
+    <label class="control-label"><?php echo t("Custom Title"); ?></label>
     <div class="checkbox">
         <label>
         <?php echo $form->checkbox('useCustomTitle', 1, $useCustomTitle); ?>
@@ -32,7 +32,7 @@ if (!strlen($titleText)) {
 </div>
 
 <div class="form-group">
-    <label><?php echo t("Page Title Filtering"); ?></label>
+    <label class="control-label"><?php echo t("Page Title Filtering"); ?></label>
     <div class="checkbox">
         <label>
         <?php echo $form->checkbox('useFilterTitle', 1, $useFilterTitle); ?>

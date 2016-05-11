@@ -8,7 +8,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 	<i class="fa fa-question-circle launch-tooltip" title="" data-original-title="<?=$description?>"></i>
 	<?php endif; ?>
 	<div data-composer-field="name">
-		<?=$form->text($this->field('name'), $control->getPageTypeComposerControlDraftValue())?>
+		<?=$form->text($this->field('name'), $control->getPageTypeComposerControlDraftValue(), ['autofocus' => 'autofocus'])?>
 	</div>
 </div>
 

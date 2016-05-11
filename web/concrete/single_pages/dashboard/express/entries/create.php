@@ -29,3 +29,15 @@ if (is_object($expressForm)) {
     <p><?=t('You have not created any forms for this data type.')?></p>
 <?php 
 } ?>
+
+
+<script type="text/javascript">
+    $(function() {
+        $('form input, form select, form textarea').each(function() {
+            if ($(this).is(':visible')) {
+                $(this).get(0).focus();
+                return false;
+            }
+        });
+    });
+</script>

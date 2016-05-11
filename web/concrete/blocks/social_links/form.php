@@ -31,8 +31,6 @@
     } ?>
     </div>
 </div>
-
-<hr/>
 <div class="alert alert-info">
     <?=t('Add social links <a href="%s">in the dashboard</a>', URL::to('/dashboard/system/basics/social'))?>
 </div>

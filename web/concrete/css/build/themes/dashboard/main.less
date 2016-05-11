@@ -160,12 +160,18 @@ div#ccm-dashboard-content {
     }
   }
 
-  div.form-group {
+  > form > fieldset > div.form-group {
     padding-left: 97px;
     padding-right: 50px;
     margin-left: -97px;
     margin-right: -50px;
+  }
 
+  > form > div.form-group {
+    padding-left: 97px;
+    padding-right: 50px;
+    margin-left: -97px;
+    margin-right: -50px;
   }
 
 }
@@ -250,17 +256,6 @@ div#ccm-dashboard-content {
   // add background hover
   .media-row:hover {
     background: #f1f1f1;
-  }
-}
-
-/**
- * Responsive utilities
- */
-@media (min-width: @screen-md) {
-  div#ccm-dashboard-content {
-    form.ccm-dashboard-content-form {
-      width: 650px;
-    }
   }
 }
 

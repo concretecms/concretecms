@@ -28,8 +28,6 @@ defined('C5_EXECUTE') or die("Access Denied.");
 	<?php 
 } ?>
 
-    <hr/>
-
 	<?php foreach ($attributes as $ak) {
     ?>
 		<?php $av = $c->getAttributeValueObject($ak);

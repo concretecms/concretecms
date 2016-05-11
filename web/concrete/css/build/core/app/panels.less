@@ -670,16 +670,34 @@ div#ccm-panel-detail-page-location {
       border-bottom: 1px solid #b7cfe4;
 
 
+      select.form-control,
+      textarea.form-control,
+      input.form-control {
+        &:hover {
+          background-color: #e5edf1;
+        }
+      }
+
+      .select2-choices {
+        &:hover {
+          background-color: #e5edf1;
+        }
+      }
+
       label.control-label {
         color: #548fc8;
       }
 
+      div.ccm-item-selector, div.ccm-file-selector {
+        background-color: #e5edf1;
+        &:hover {
+          background-color: darken(#e5edf1, 5%);
+        }
+      }
     }
 
     ul.dynatree-container {
       background-color: #e5edf1;
-      .border-radius(4px);
-      padding: 20px;
     }
   }
 

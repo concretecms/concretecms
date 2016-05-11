@@ -36,14 +36,14 @@ ul#ccm-block-type-list li {margin-left: 0px; list-style-type: none; display: non
 
 .item-select-list-hover() {
   color: @text-color;
-  background-color: #D4F0F7;
+  background-color: #e7e7e7;
   text-decoration: none;
   .border-radius(4px);
   .transition(0.1s linear background-color);
 }
 
 ul.item-select-list {padding: 2px 0px 0px 0px; margin: 0px 0px 15px 0px; list-style-type: none !important;}
-ul.item-select-list > li {position: relative;border-bottom: 1px solid #efefef; margin-bottom: 2px; padding-bottom: 2px}
+ul.item-select-list > li {position: relative; margin-bottom: 2px; padding-bottom: 2px}
 ul.item-select-list > li > a, ul.item-select-list > li > span {color: @text-color; background-repeat: no-repeat; display: block; padding: 8px 8px 8px 8px; text-decoration: none; border: 1px solid transparent}
 ul.item-select-list > li > a:hover {
   .item-select-list-hover();
@@ -180,8 +180,33 @@ input.ccm-activate-date-time {
  * Page/entity selector
  */
 div.ccm-item-selector {
-  border: 1px solid #dedede; .border-radius(4px); margin-top: 8px; margin-bottom: 8px; padding: 10px
+  .border-radius(2px);
+  color: #606060;
+  background-color: #e7e7e7;
+  font-size: 14px;
+  padding: 8px 12px 8px 8px;
+  .transition(0.1s linear all);
+
+  &:hover {
+    background-color: darken(#e7e7e7, 5%);
+  }
+
+  a {
+    color: #606060;
+    display: block;
+    &:hover {
+      color: #606060;
+      text-decoration: none;
+    }
+  }
+/*  border: 1px solid #dedede;
+  .border-radius(4px);
+  margin-top: 8px;
+  margin-bottom: 8px;
+  padding: 10px
+*/
 }
+
 a.ccm-item-selector-clear {
   float: right;
 }

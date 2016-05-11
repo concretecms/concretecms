@@ -37,14 +37,13 @@ if ($maxHeight == 0) {
 </div>
 
 </fieldset>
-<hr/>
 
 <fieldset>
     <legend><?=t('HTML')?></legend>
 
 <div class="form-group">
 	<?=$form->label('imageLinkType', t('Image Link'))?>
-	<select name="linkType" id="imageLinkType" class="form-control" style="width: 60%;">
+	<select name="linkType" id="imageLinkType" class="form-control">
 		<option value="0" <?=(empty($externalLink) && empty($internalLinkCID) ? 'selected="selected"' : '')?>><?=t('None')?></option>
 		<option value="1" <?=(empty($externalLink) && !empty($internalLinkCID) ? 'selected="selected"' : '')?>><?=t('Another Page')?></option>
 		<option value="2" <?=(!empty($externalLink) ? 'selected="selected"' : '')?>><?=t('External URL')?></option>
@@ -58,18 +57,18 @@ if ($maxHeight == 0) {
 
 <div id="imageLinkTypeExternal" style="display: none;" class="form-group">
 	<?=$form->label('externalLink', t('URL'))?>
-	<?= $form->text('externalLink', $externalLink, array('style' => 'width: 60%;')); ?>
+	<?= $form->text('externalLink', $externalLink); ?>
 </div>
 
 
 <div class="form-group">
 	<?=$form->label('altText', t('Alt. Text'))?>
-	<?= $form->text('altText', $altText, array('style' => 'width: 60%;')); ?>
+	<?= $form->text('altText', $altText); ?>
 </div>
 
 <div class="form-group">
     <?=$form->label('title', t('Title'))?>
-    <?= $form->text('title', $title, array('style' => 'width: 60%;')); ?>
+    <?= $form->text('title', $title); ?>
 </div>
 
 </fieldset>
@@ -87,12 +86,12 @@ if ($maxHeight == 0) {
     <div data-fields="constrain-image" style="display: none">
         <div class="form-group">
         <?=$form->label('maxWidth', t('Max Width'))?>
-        <?= $form->text('maxWidth', $maxWidth, array('style' => 'width: 60px')); ?>
+        <?= $form->text('maxWidth', $maxWidth); ?>
         </div>
 
         <div class="form-group">
             <?=$form->label('maxHeight', t('Max Height'))?>
-            <?= $form->text('maxHeight', $maxHeight, array('style' => 'width: 60px')); ?>
+            <?= $form->text('maxHeight', $maxHeight); ?>
         </div>
     </div>
 
