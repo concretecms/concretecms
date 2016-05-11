@@ -6,6 +6,7 @@ $app = Concrete\Core\Support\Facade\Facade::getFacadeApplication();
 $dh = $app->make('helper/concrete/dashboard');
 
 if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
+    $cih = $app->make('helper/concrete/ui');
     $ihm = $app->make('helper/concrete/ui/menu');
     $valt = $app->make('helper/validation/token');
     $config = $app->make('config');
@@ -33,7 +34,7 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
         echo $app->make('helper/concrete/ui/help')->displayHelpDialogLauncher();
     }
 
-    $cih = $app->make("helper/concrete/ui");
+    
     if ($cih->showHelpOverlay()) {
         View::element('help/dialog/introduction');
         $v = View::getInstance();
@@ -255,7 +256,7 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
                 </div>
             </div>
             <ul class="ccm-toolbar-item-list">
-                <li class="ccm-logo pull-left"><span><?= $app->make('helper/concrete/ui')->getToolbarLogoSRC() ?></span></li>
+                <li class="ccm-logo pull-left"><span><?= $cih->getToolbarLogoSRC() ?></span></li>
                 <?php
                 if ($c->isMasterCollection()) {
                     ?>
@@ -374,7 +375,7 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
                     }
                 }
 
-                if ($app->make('helper/concrete/ui')->showWhiteLabelMessage()) {
+                if ($cih->showWhiteLabelMessage()) {
                     ?>
                     <li class="pull-left visible-xs visible-lg" id="ccm-white-label-message"><?= t('Powered by <a href="%s">concrete5</a>.', $config->get('concrete.urls.concrete5')) ?></li>
                     <?php
@@ -449,7 +450,7 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
         echo $dh->getIntelligentSearchMenu();
 
         if ($pageInUseBySomeoneElse) {
-            echo $app->make('helper/concrete/ui')->notify(array(
+            echo $cih->notify(array(
                 'title' => t('Editing Unavailable.'),
                 'message' => t("%s is currently editing this page.", $c->getCollectionCheckedOutUserName()),
                 'type' => 'info',
@@ -463,7 +464,7 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
                     $url = URL::to('/ccm/system/dialogs/page/delete_alias?cID=' . $c->getCollectionPointerOriginalID());
                     $buttons[] = '<a href="' . $url . '" dialog-title="' . t('Remove Alias') . '" class="dialog-launch btn btn-xs btn-danger">' . t('Remove Alias') . '</a>';
                 }
-                echo $app->make('helper/concrete/ui')->notify(array(
+                echo $cih->notify(array(
                     'title' => t('Page Alias.'),
                     'message' => t("This page is an alias of one that actually appears elsewhere."),
                     'type' => 'info',
@@ -540,7 +541,7 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
                 if (is_object($vo)) {
                     if (!$vo->isApproved() && !$c->isEditMode()) {
                         if ($c->isPageDraft()) {
-                            echo $app->make('helper/concrete/ui')->notify(array(
+                            echo $cih->notify(array(
                                 'title' => t('Page Draft.'),
                                 'message' => t("This is an un-published draft."),
                                 'type' => 'info',
@@ -570,7 +571,7 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
                                 }
                                 $buttons[] = '<a href="' . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $cID . '&ctask=approve-recent' . $token . '" class="btn btn-primary btn-xs">' . $appLabel . '</a>';
                             }
-                            echo $app->make('helper/concrete/ui')->notify(array(
+                            echo $cih->notify(array(
                                 'title' => t('Page is Pending Approval.'),
                                 'message' => t("This page is newer than what appears to visitors on your live site."),
                                 'type' => 'info',
@@ -585,7 +586,7 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
                             $time = $dateHelper->formatTime($publishDate);
                             $message = t(/*i18n: %1$s is a date, %2$s is a time */'This version of the page is scheduled to be published on %1$s at %2$s.', $date, $time);
                             $button = '<a href="' . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $cID . '&ctask=publish-now' . $token . '" class="btn btn-primary btn-xs">Publish Now</a>';
-                            echo $app->make('helper/concrete/ui')->notify(array(
+                            echo $cih->notify(array(
                                 'title' => t('Publish Pending.'),
                                 'message' => $message,
                                 'type' => 'info',
