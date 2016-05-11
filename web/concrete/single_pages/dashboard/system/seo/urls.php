@@ -69,7 +69,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
     $(function () {
 
         var steps = [{
-            content: '<p><span class="h5"><?=t('Pretty URLs')?></span><br/><?=t('Check this checkbox to remove index.php from your URLs. You will be given code to place in a file named .htaccess in your web root. Concrete5 will try and place this code in the file for you.')?></p>',
+            content: '<p><span class="h5"><?=t('Pretty URLs')?></span><br/><?=t('Check this checkbox to remove index.php from your URLs. You will be given code to place in a file named .htaccess in your web root. concrete5 will try and place this code in the file for you.')?></p>',
             highlightTarget: false,
             nextButton: true,
             target: $('input[name=URL_REWRITING]'),
