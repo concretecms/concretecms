@@ -70,6 +70,7 @@ div#ccm-dashboard-content {
     h1 {
       font-size: 22px;
       font-weight: 600;
+      font-weight: normal;
       display: inline-block;
       margin-top: 0px;
       margin-bottom: 0px;
@@ -110,7 +111,7 @@ div#ccm-dashboard-content {
 
     div.ccm-dashboard-form-actions {
       .clearfix;
-      background-color: #242729;
+      background-color: rgba(40,40,40,0.85);
       padding: 20px;
       .border-radius(4px);
     }
@@ -147,6 +148,23 @@ div#ccm-dashboard-content {
     div.ccm-dashboard-header-buttons {
       top: 35px;
     }
+
+  }
+
+  /**
+ * Form updates for dashboard
+ */
+  fieldset {
+    legend {
+      color: #113455;
+    }
+  }
+
+  div.form-group {
+    padding-left: 97px;
+    padding-right: 50px;
+    margin-left: -97px;
+    margin-right: -50px;
 
   }
 
@@ -277,6 +295,7 @@ div.ccm-dashboard-my-account {
     }
   }
 }
+
 
 @import "./welcome.less";
 @import "./welcome/site-activity.less";
