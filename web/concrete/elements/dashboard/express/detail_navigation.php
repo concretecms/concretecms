@@ -23,7 +23,7 @@ $c = Page::getCurrentPage();
 		<a class="list-group-item <?php if ($c->getCollectionPath() == '/dashboard/system/express/entities/customize_search') {
 			?>active<?php
 		} ?>" href="<?=URL::to('/dashboard/system/express/entities/customize_search', $entity->getId())?>"><?=t('Customize Search')?></a>
-		<a class="list-group-item" href="<?=URL::to('/dashboard/express/entries', $entity->getId())?>"><i class="fa fa-share pull-right" style="margin-top: 4px"></i> <?=t('View %s Entries', $entity->getName())?></a>
+		<a class="list-group-item" href="<?=URL::to('/dashboard/express/entries', $entity->getId())?>"><i class="fa fa-share pull-right" style="margin-top: 4px"></i> <?=tc(/*i18n: %s is an entity name*/'Express', 'View %s Entries', $entity->getName())?></a>
 
 	</div>
 </div>
