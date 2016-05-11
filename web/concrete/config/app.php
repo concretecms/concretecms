@@ -138,6 +138,9 @@ return array(
         // Express
         'core_attribute' => '\Concrete\Core\Attribute\AttributeServiceProvider',
         'core_express' => '\Concrete\Core\Express\ExpressServiceProvider',
+
+        // Tracker
+        'core_usagetracker' => '\Concrete\Core\Statistics\UsageTracker\ServiceProvider'
     ),
 
     /*
