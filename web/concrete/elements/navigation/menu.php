@@ -24,7 +24,7 @@ $walk = function ($pages) use (&$walk, &$view, $c) {
            <li class="<?=$view->controller->getMenuItemClass($page)?>">
 
 
-                <a href="<?=$page->getCollectionLink()?>"><?=$page->getCollectionName()?></a>
+                <a href="<?=$page->getCollectionLink()?>"><?=t($page->getCollectionName())?></a>
                 <?php if ($view->controller->displayChildPages($page)) { ?>
                     <?php $children = $view->controller->getChildPages($page);
                     if (count($children)) { ?>
