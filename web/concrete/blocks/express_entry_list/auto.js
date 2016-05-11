@@ -1,16 +1,19 @@
 $(function() {
 
-    function ConcreteExpressEntryListBlockForm(data) {
+    function ConcreteExpressEntryListBlockForm(options) {
         'use strict';
-        this.data = data;
-        this.init(data);
+        this.options = $.extend({
+            searchProperties: [],
+            searchPropertiesSelected: []
+        }, options);
+        this.init(options);
     }
 
     ConcreteExpressEntryListBlockForm.prototype.initEntitySelector = function() {
         var $source = $('#ccm-tab-content-search'),
-            $customizeContainer = $('#ccm-tab-content-results div[data-container=customize-results]'),
-            $attributesContainer = $('#ccm-tab-content-search div[data-container=advanced-search]'),
-            _searchAttributesTemplate = _.template($('script[data-template=express-attribute-search-list]').html());
+            $customizeContainer = $('#ccm-tab-content-results div[data-container=customize-results]');
+            _searchAttributesTemplate = _.template($('script[data-template=express-attribute-search-list]').html()),
+            my = this;
 
         $source.find('select[name=exEntityID]').on('change', function() {
             var exEntityID = $(this).val();
@@ -20,11 +23,16 @@ $(function() {
                     data: {'exEntityID': $(this).val()},
                     success: function(r) {
                         $customizeContainer.html(r.customize);
-                        $attributesContainer.html(_searchAttributesTemplate({attributes: r.attributes}));
+                        my.setSearchableProperties(r.attributes);
                     }
                 });
             }
         });
+    }
+
+    ConcreteExpressEntryListBlockForm.prototype.setSearchableProperties = function(attributes, selected) {
+        var $attributesContainer = $('#ccm-tab-content-search div[data-container=advanced-search]');
+        $attributesContainer.html(_searchAttributesTemplate({attributes: attributes, selected: selected}));
     }
 
     ConcreteExpressEntryListBlockForm.prototype.initToggling = function() {
@@ -46,12 +54,15 @@ $(function() {
         }).trigger('change');
     }
 
-    ConcreteExpressEntryListBlockForm.prototype.init = function(data) {
+    ConcreteExpressEntryListBlockForm.prototype.init = function() {
 
         var my = this;
         my.initEntitySelector();
         my.initToggling();
 
+        if (my.options.searchProperties.length) {
+            my.setSearchableProperties(my.options.searchProperties, my.options.searchPropertiesSelected);
+        }
 
     }
 

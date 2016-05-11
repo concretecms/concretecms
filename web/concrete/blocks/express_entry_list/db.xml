@@ -13,21 +13,16 @@
 		</field>
 
 		<field name="searchProperties" type="C" size="255">
-		</field> 
-		
-		<field name="orderBy" type="C" size="64">
 		</field>
-		
+
+		<field name="columns" type="X2">
+
+		</field>
+
 		<field name="displayLimit" type="i">
 			<default value="20"/>
 		</field> 		
 		
-		<field name="displayOrderDesc" type="I1">
-			<unsigned />
-			<notnull />
-			<default value="0" />
-		</field>
-
 		<field name="enableSearch" type="i">
 			<default value="0"/>
 		</field>

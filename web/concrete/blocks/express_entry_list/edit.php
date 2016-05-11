@@ -28,7 +28,7 @@ echo Core::make('helper/concrete/ui')->tabs(array(
             </label>
         </div>
     </div>
-    
+
     <fieldset data-options="search">
 
         <div class="form-group">
@@ -130,7 +130,9 @@ echo Core::make('helper/concrete/ui')->tabs(array(
 <script type="text/template" data-template="express-attribute-search-list">
     <% _.each(attributes, function(attribute) { %>
     <div class="checkbox"><label>
-        <input type="checkbox" name="searchProperties[]" value="<%=attribute.akID%>">
+        <input type="checkbox" name="searchProperties[]" value="<%=attribute.akID%>"
+           <% var akID = attribute.akID + ''; %>
+            <% if (_.contains(selected, akID)) { %> checked<% } %>>
         <%=attribute.akName%>
         </label>
     </div>
@@ -140,7 +142,8 @@ echo Core::make('helper/concrete/ui')->tabs(array(
 
 <script type="application/javascript">
     Concrete.event.publish('block.express_entry_list.open', {
-
+        'searchProperties': <?=json_encode($searchProperties)?>,
+        'searchPropertiesSelected': <?=json_encode($searchPropertiesSelected)?>
     });
 </script>
 

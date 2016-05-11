@@ -15,6 +15,15 @@ class SearchProvider extends AbstractSearchProvider
 
     protected $category;
     protected $entity;
+    protected $columnSet;
+
+    /**
+     * @param mixed $columnSet
+     */
+    public function setColumnSet($columnSet)
+    {
+        $this->columnSet = $columnSet;
+    }
 
     public function getSessionNamespace()
     {
@@ -41,10 +50,13 @@ class SearchProvider extends AbstractSearchProvider
 
     public function getCurrentColumnSet()
     {
-        $current = $this->entity->getResultColumnSet();
-        if (!is_object($current)) {
-            $current = new DefaultSet($this->category);
+        if (!isset($this->columnSet)) {
+            $current = $this->entity->getResultColumnSet();
+            if (!is_object($current)) {
+                $current = new DefaultSet($this->category);
+            }
+            $this->columnSet = $current;
         }
-        return $current;
+        return $this->columnSet;
     }
 }

@@ -3,6 +3,7 @@ namespace Concrete\Block\ExpressEntryList;
 
 use Concrete\Controller\Element\Search\CustomizeResults;
 use \Concrete\Core\Block\BlockController;
+use Concrete\Core\Support\Facade\Facade;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 class Controller extends BlockController
@@ -16,7 +17,8 @@ class Controller extends BlockController
     public function on_start()
     {
         parent::on_start();
-        $this->entityManager = \Core::make('database/orm')->entityManager();
+        $this->app = Facade::getFacadeApplication();
+        $this->entityManager = $this->app->make('database/orm')->entityManager();
     }
 
     public function getBlockTypeDescription()
@@ -32,6 +34,8 @@ class Controller extends BlockController
     public function add()
     {
         $this->loadData();
+        $this->set('searchProperties', []);
+        $this->set('searchPropertiesSelected', []);
     }
 
     public function edit()
@@ -40,16 +44,69 @@ class Controller extends BlockController
         if ($this->exEntityID) {
             $entity = $this->entityManager->find('Concrete\Core\Entity\Express\Entity', $this->exEntityID);
             if (is_object($entity)) {
+                $searchPropertiesSelected = (array) json_decode($this->searchProperties);
+                $searchProperties = $this->getSearchPropertiesJsonArray($entity);
+                $columns = unserialize($this->columns);
                 $provider = \Core::make('Concrete\Core\Express\Search\SearchProvider', array($entity));
+                if ($columns) {
+                    $provider->setColumnSet($columns);
+                }
+
                 $element = new CustomizeResults($provider);
                 $this->set('customizeElement', $element);
+
+                $this->set('searchPropertiesSelected', $searchPropertiesSelected);
+                $this->set('searchProperties', $searchProperties);
             }
         }
+
+    }
+
+    protected function getSearchPropertiesJsonArray($entity)
+    {
+        $attributes = $entity->getAttributeKeyCategory()->getList();
+        $select = array();
+        foreach($attributes as $ak) {
+            $o = new \stdClass;
+            $o->akID = $ak->getAttributeKeyID();
+            $o->akName = $ak->getAttributeKeyDisplayName();
+            $select[] = $o;
+        }
+        return $select;
     }
 
     public function view()
     {
 
+    }
+
+    public function save($data)
+    {
+        $this->on_start();
+
+        if (isset($data['searchProperties']) && is_array($data['searchProperties'])) {
+            $searchProperties = $data['searchProperties'];
+            $data['searchProperties'] = json_encode($searchProperties);
+        }
+
+        $entity = $this->entityManager->find('Concrete\Core\Entity\Express\Entity', $data['exEntityID']);
+        if (is_object($entity)) {
+
+            $provider = $this->app->make('Concrete\Core\Express\Search\SearchProvider', array($entity));
+            $set = $this->app->make('Concrete\Core\Express\Search\ColumnSet\ColumnSet');
+            $available = $provider->getAvailableColumnSet();
+            foreach ($this->request->request->get('column') as $key) {
+                $set->addColumn($available->getColumnByKey($key));
+            }
+
+            $sort = $available->getColumnByKey($this->request->request->get('fSearchDefaultSort'));
+            $set->setDefaultSortColumn($sort, $this->request->request->get('fSearchDefaultSortDirection'));
+
+            $data['columns'] = serialize($set);
+
+        }
+
+        parent::save($data);
     }
 
     public function action_load_entity_data()
@@ -66,15 +123,7 @@ class Controller extends BlockController
                 $r->customize = ob_get_contents();
                 ob_end_clean();
 
-                $attributes = $entity->getAttributeKeyCategory()->getList();
-                $select = array();
-                foreach($attributes as $ak) {
-                    $o = new \stdClass;
-                    $o->akID = $ak->getAttributeKeyID();
-                    $o->akName = $ak->getAttributeKeyDisplayName();
-                    $select[] = $o;
-                }
-                $r->attributes = $select;
+                $r->attributes = $this->getSearchPropertiesJsonArray($entity);
                 return new JsonResponse($r);
             }
         }
