@@ -4,14 +4,11 @@ defined('C5_EXECUTE') or die("Access Denied.");
 $app = Concrete\Core\Support\Facade\Facade::getFacadeApplication();
 
 $dh = $app->make('helper/concrete/dashboard');
-
-
-
 $ihm = $app->make('helper/concrete/ui/menu');
 $valt = $app->make('helper/validation/token');
+$config = $app->make('config');
 $dateHelper = $app->make('helper/date');
 $token = '&' . $valt->getParameter();
-$logouttoken = $valt->generate('logout');
 $cID = $c->getCollectionID();
 $permissions = new Permissions($c);
 
@@ -19,8 +16,8 @@ $workflowList = \Concrete\Core\Workflow\Progress\PageProgress::getList($c);
 
 $canViewToolbar = $cp->canViewToolbar();
 
-$show_titles = (bool) Config::get('concrete.accessibility.toolbar_titles');
-$large_font = (bool) Config::get('concrete.accessibility.toolbar_large_font');
+$show_titles = (bool) $config->get('concrete.accessibility.toolbar_titles');
+$large_font = (bool) $config->get('concrete.accessibility.toolbar_large_font');
 
 if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
     $canApprovePageVersions = $cp->canApprovePageVersions();
@@ -382,7 +379,7 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
 
                 if ($app->make('helper/concrete/ui')->showWhiteLabelMessage()) {
                     ?>
-                    <li class="pull-left visible-xs visible-lg" id="ccm-white-label-message"><?= t('Powered by <a href="%s">concrete5</a>.', Config::get('concrete.urls.concrete5')) ?></li>
+                    <li class="pull-left visible-xs visible-lg" id="ccm-white-label-message"><?= t('Powered by <a href="%s">concrete5</a>.', $config->get('concrete.urls.concrete5')) ?></li>
                     <?php
                 }
                 ?>
