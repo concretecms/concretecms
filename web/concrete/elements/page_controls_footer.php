@@ -66,7 +66,7 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
                                             ><?php echo t('Save Changes') ?><?php
                                         } else {
                                             ?>
-                                            href="<?= URL::to('/ccm/system/page/check_in', $c->getCollectionID(), $valt->generate()) ?>"
+                                            href="<?= URL::to('/ccm/system/page/check_in', $cID, $valt->generate()) ?>"
                                             data-panel-url="<?= URL::to('/ccm/system/panels/page/check_in') ?>"
                                             ><?php echo t('Save Changes') ?><?php
                                         }
@@ -81,7 +81,7 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
                                     <a
                                         <?php if ($c->isMasterCollection()) { ?>data-disable-panel="check-in"<?php } ?>
                                         data-toolbar-action="check-out"
-                                        href="<?= DIR_REL ?>/<?= DISPATCHER_FILENAME ?>?cID=<?= $c->getCollectionID() ?>&ctask=check-out<?= $token ?>"
+                                        href="<?= DIR_REL ?>/<?= DISPATCHER_FILENAME ?>?cID=<?= $cID ?>&ctask=check-out<?= $token ?>"
                                     ><?php echo t('Edit this Page') ?></a>
                                 </li>
                                 <?php
@@ -282,7 +282,7 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
                                 if ($vo->isNew() || $c->isPageDraft()) {
                                     ?>href="javascript:void(0)" data-launch-panel="check-in"<?php
                                 } else {
-                                    ?>href="<?= URL::to('/ccm/system/page/check_in', $c->getCollectionID(), $valt->generate()) ?>"<?php
+                                    ?>href="<?= URL::to('/ccm/system/page/check_in', $cID, $valt->generate()) ?>"<?php
                                 }
                                 ?>
                                 data-panel-url="<?= URL::to('/ccm/system/panels/page/check_in') ?>"
@@ -299,7 +299,7 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
                             <a
                                 <?php if ($c->isMasterCollection()) { ?>data-disable-panel="check-in"<?php } ?>
                                 data-toolbar-action="check-out"
-                                href="<?= DIR_REL ?>/<?= DISPATCHER_FILENAME ?>?cID=<?= $c->getCollectionID() ?>&ctask=check-out<?= $token ?>"
+                                href="<?= DIR_REL ?>/<?= DISPATCHER_FILENAME ?>?cID=<?= $cID ?>&ctask=check-out<?= $token ?>"
                                 title="<?= t('Edit This Page') ?>"
                             >
                                 <i class="fa fa-pencil"></i>
@@ -460,7 +460,7 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
         } else {
             if ($c->getCollectionPointerID() > 0) {
                 $buttons = array();
-                $buttons[] = '<a href="' . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $c->getCollectionID() . '" class="btn btn-default btn-xs">' . t('View/Edit Original') . '</a>';
+                $buttons[] = '<a href="' . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $cID . '" class="btn btn-default btn-xs">' . t('View/Edit Original') . '</a>';
                 if ($canApprovePageVersions) {
                     $url = URL::to('/ccm/system/dialogs/page/delete_alias?cID=' . $c->getCollectionPointerOriginalID());
                     $buttons[] = '<a href="' . $url . '" dialog-title="' . t('Remove Alias') . '" class="dialog-launch btn btn-xs btn-danger">' . t('Remove Alias') . '</a>';
@@ -570,7 +570,7 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
                                 if (!isset($appLabel) || !$appLabel) {
                                     $appLabel = t('Approve Version');
                                 }
-                                $buttons[] = '<a href="' . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $c->getCollectionID() . '&ctask=approve-recent' . $token . '" class="btn btn-primary btn-xs">' . $appLabel . '</a>';
+                                $buttons[] = '<a href="' . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $cID . '&ctask=approve-recent' . $token . '" class="btn btn-primary btn-xs">' . $appLabel . '</a>';
                             }
                             echo $app->make('helper/concrete/ui')->notify(array(
                                 'title' => t('Page is Pending Approval.'),
@@ -586,7 +586,7 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
                             $date = $dateHelper->formatDate($publishDate);
                             $time = $dateHelper->formatTime($publishDate);
                             $message = t(/*i18n: %1$s is a date, %2$s is a time */'This version of the page is scheduled to be published on %1$s at %2$s.', $date, $time);
-                            $button = '<a href="' . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $c->getCollectionID() . '&ctask=publish-now' . $token . '" class="btn btn-primary btn-xs">Publish Now</a>';
+                            $button = '<a href="' . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $cID . '&ctask=publish-now' . $token . '" class="btn btn-primary btn-xs">Publish Now</a>';
                             echo $app->make('helper/concrete/ui')->notify(array(
                                 'title' => t('Publish Pending.'),
                                 'message' => $message,
