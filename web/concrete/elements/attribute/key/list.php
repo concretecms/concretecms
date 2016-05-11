@@ -90,8 +90,9 @@ if ($enableSorting) {
 <?php if (isset($types) && is_array($types) && count($types) > 0) {
     ?>
 
-    <h3><?=t('Add Attribute Type')?></h3>
+    <h3><?=t('Add Attribute')?></h3>
 
+    <?php echo t('Type'); ?>
     <div class="btn-group">
         <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
             <?=t('Choose')?> <span class="caret"></span>
