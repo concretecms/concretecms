@@ -17,8 +17,8 @@
             </fieldset>
 
             <fieldset>
+                <legend><?=t('Edit message')?></legend>
                 <div class="form-group">
-                    <legend><?=t('Edit message')?></legend>
                     <p>
                         <?=t('This message will be shown to users the next time they log in.')?>
                     </p>
@@ -29,8 +29,8 @@
             </fieldset>
 
             <fieldset>
+                <legend><?=t('Confirmation')?></legend>
                 <div class="form-group">
-                    <legend><?=t('Confirmation')?></legend>
                     <p>
                         <?=t('Type "RESET" in the following box to proceed.')?>
                     </p>
@@ -48,8 +48,7 @@
 
             <div class="ccm-dashboard-form-actions-wrapper">
                 <div class="ccm-dashboard-form-actions">
-                    <button type="submit" class="btn btn-danger pull-right disabled"
-                            name="global-password-reset-form"><?= t('Reset all passwords') ?></button>
+                    <button type="submit" class="btn btn-danger pull-right disabled" name="global-password-reset-form"><?= t('Reset all passwords') ?></button>
                 </div>
             </div>
 
