@@ -490,7 +490,7 @@ return array(
         'enable_trash_can' => true,
         'app_version_display_in_header' => true,
         'default_jpeg_image_compression' => 80,
-        'help_overlay' => false,
+        'help_overlay' => true,
         'require_version_comments'      => false,
     ),
 
