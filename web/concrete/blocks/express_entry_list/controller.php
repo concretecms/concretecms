@@ -5,6 +5,7 @@ use Concrete\Controller\Element\Search\CustomizeResults;
 use \Concrete\Core\Block\BlockController;
 use Concrete\Core\Express\Entry\Search\Result\Result;
 use Concrete\Core\Express\EntryList;
+use Concrete\Core\Search\Result\ItemColumn;
 use Concrete\Core\Support\Facade\Facade;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
@@ -38,6 +39,7 @@ class Controller extends BlockController
         $this->loadData();
         $this->set('searchProperties', []);
         $this->set('searchPropertiesSelected', []);
+        $this->set('linkedProperties', []);
     }
 
     public function edit()
@@ -47,6 +49,7 @@ class Controller extends BlockController
             $entity = $this->entityManager->find('Concrete\Core\Entity\Express\Entity', $this->exEntityID);
             if (is_object($entity)) {
                 $searchPropertiesSelected = (array) json_decode($this->searchProperties);
+                $linkedPropertiesSelected = (array) json_decode($this->linkedProperties);
                 $searchProperties = $this->getSearchPropertiesJsonArray($entity);
                 $columns = unserialize($this->columns);
                 $provider = \Core::make('Concrete\Core\Express\Search\SearchProvider', array($entity));
@@ -56,7 +59,7 @@ class Controller extends BlockController
 
                 $element = new CustomizeResults($provider);
                 $this->set('customizeElement', $element);
-
+                $this->set('linkedPropertiesSelected', $linkedPropertiesSelected);
                 $this->set('searchPropertiesSelected', $searchPropertiesSelected);
                 $this->set('searchProperties', $searchProperties);
             }
@@ -81,6 +84,7 @@ class Controller extends BlockController
     {
         $entity = $this->entityManager->find('Concrete\Core\Entity\Express\Entity', $this->exEntityID);
         if (is_object($entity)) {
+            $category = $entity->getAttributeKeyCategory();
             $list = new EntryList($entity);
             $list->setItemsPerPage($this->displayLimit);
             $set = unserialize($this->columns);
@@ -99,22 +103,39 @@ class Controller extends BlockController
                     $list->sanitizedSortBy($value->getColumnKey(), $direction);
                 }
             } else {
-                $this->entryList->sanitizedSortBy($defaultSortColumn->getColumnKey(), $direction);
+                $list->sanitizedSortBy($defaultSortColumn->getColumnKey(), $direction);
             }
 
+            if ($this->request->query->has('keywords') && $this->enableSearch) {
+                $list->filterByKeywords($this->request->query->get('keywords'));
+            }
+
+            $tableSearchProperties = array();
+            $searchPropertiesSelected = (array) json_decode($this->searchProperties);
+            foreach($searchPropertiesSelected as $akID) {
+                $ak = $category->getAttributeKeyByID($akID);
+                if (is_object($ak)) {
+                    $tableSearchProperties[] = $ak;
+                    $type = $ak->getAttributeType();
+                    $cnt = $type->getController();
+                    $cnt->setRequestArray($_REQUEST);
+                    $cnt->setAttributeKey($ak);
+                    $cnt->searchForm($list);
+                }
+            }
 
             $result = new Result($set, $list);
-
             $pagination = $list->getPagination();
             if ($pagination->getTotalPages() > 1) {
                 $pagination = $pagination->renderDefaultView();
                 $this->set('pagination', $pagination);
             }
 
-
             $this->set('list', $list);
             $this->set('result', $result);
             $this->set('entity', $entity);
+            $this->set('tableSearchProperties', $tableSearchProperties);
+            $this->set('detailPage', $this->getDetailPageObject());
         }
     }
 
@@ -125,6 +146,10 @@ class Controller extends BlockController
         if (isset($data['searchProperties']) && is_array($data['searchProperties'])) {
             $searchProperties = $data['searchProperties'];
             $data['searchProperties'] = json_encode($searchProperties);
+        }
+        if (isset($data['linkedProperties']) && is_array($data['linkedProperties'])) {
+            $linkedProperties = $data['linkedProperties'];
+            $data['linkedProperties'] = json_encode($linkedProperties);
         }
 
         $entity = $this->entityManager->find('Concrete\Core\Entity\Express\Entity', $data['exEntityID']);
@@ -179,6 +204,33 @@ class Controller extends BlockController
             $entities[$entity->getID()] = $entity->getName();
         }
         $this->set('entities', $entities);
+    }
+
+    protected function getDetailPageObject()
+    {
+        $detailPage = false;
+        if ($this->detailPage) {
+            $c = \Page::getByID($this->detailPage);
+            if (is_object($c) && !$c->isError()) {
+                $detailPage = $c;
+            }
+        }
+
+        return $detailPage;
+    }
+
+    public function linkThisColumn(ItemColumn $column)
+    {
+        $detailPage = $this->getDetailPageObject();
+        if (!$detailPage) {
+            return false;
+        }
+
+        $linkedProperties = (array) json_decode($this->linkedProperties);
+
+        if ($ak = $column->getColumn()->getAttributeKey()) {
+            return in_array($ak->getAttributeKeyID(), $linkedProperties);
+        }
     }
 
 }

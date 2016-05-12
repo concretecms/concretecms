@@ -1,6 +1,5 @@
 <?php  
 defined('C5_EXECUTE') or die(_("Access Denied."));
-
 ?>
 
 <?php
@@ -56,6 +55,15 @@ echo Core::make('helper/concrete/ui')->tabs(array(
     <div class="form-group">
         <?=$form->label('displayLimit', t('Items Per Page'))?>
         <?=$form->text('displayLimit', $displayLimit)?>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label" for="detailPage"><?=t("Link to Detail Page")?></label>
+        <?=Core::make('helper/form/page_selector')->selectPage('detailPage', $detailPage)?>
+
+        <div data-container="linked-attributes">
+
+        </div>
     </div>
 
 
@@ -139,99 +147,23 @@ echo Core::make('helper/concrete/ui')->tabs(array(
     <% }); %>
 </script>
 
+<script type="text/template" data-template="express-attribute-link-list">
+    <% _.each(attributes, function(attribute) { %>
+    <div class="checkbox"><label>
+            <input type="checkbox" name="linkedProperties[]" value="<%=attribute.akID%>"
+            <% var akID = attribute.akID + ''; %>
+            <% if (_.contains(selected, akID)) { %> checked<% } %>>
+            <%=attribute.akName%>
+        </label>
+    </div>
+    <% }); %>
+</script>
+
 
 <script type="application/javascript">
     Concrete.event.publish('block.express_entry_list.open', {
         'searchProperties': <?=json_encode($searchProperties)?>,
-        'searchPropertiesSelected': <?=json_encode($searchPropertiesSelected)?>
+        'searchPropertiesSelected': <?=json_encode($searchPropertiesSelected)?>,
+        'linkedPropertiesSelected': <?=json_encode($linkedPropertiesSelected)?>
     });
 </script>
-
-<?php /* ?>
-
-<div class="ccm-tab-content" id="ccm-tab-content-header">
-
-
-
-</div>
-
-<div class="ccm-tab-content" id="ccm-tab-content-results">
-    <div class="form-group">
-        <?=$form->label('tableName', t('Table Name'))?>
-        <?=$form->text('tableName', $tableName, array('maxlength' => '128'))?>
-    </div>
-    <div class="form-group">
-        <?=$form->label('tableDescription', t('Table Description'))?>
-        <?=$form->text('tableDescription', $tableDescription, array('maxlength' => '128'))?>
-    </div>
-
-
-
-
-    <fieldset>
-        <legend><?=t('Design')?></legend>
-        <div class="form-group">
-            <?=$form->label('', t('Table Striping'))?>
-            <div class="radio">
-                <label>
-                    <?=$form->radio('tableStriped', 0, $tableStriped)?>
-                    <?=t('Off (all rows the same color)')?>
-                </label>
-            </div>
-            <div class="radio">
-                <label>
-                    <?=$form->radio('tableStriped', 1, $tableStriped)?>
-                    <?=t('On (change color of alternate rows)')?>
-                </label>
-            </div>
-        </div>
-
-        <div class="form-group" data-options="table-striped">
-            <?=$form->label('rowBackgroundColorAlternate', t('Alternate Row Background Color'))?>
-            <div>
-                <?=$color->output('rowBackgroundColorAlternate', $rowBackgroundColorAlternate)?>
-            </div>
-        </div>
-    </fieldset>
-
-</div>
-
-
-<script type="text/javascript">
-    $(function() {
-        $('input[type=checkbox][data-options-toggle]').on('change', function() {
-            var option = $(this).attr('data-options-toggle');
-            if ($(this).is(':checked')) {
-                $('[data-options=' + option + ']').show();
-            } else {
-                $('[data-options=' + option + ']').hide();
-            }
-        }).trigger('change');
-        $('input[type=radio][data-view-property=thumbnail]').on('change', function() {
-            var value = $('input[type=radio][data-view-property=thumbnail]:checked').val();
-            if (value != '-1') {
-                $('[data-options=thumbnail]').show();
-            } else {
-                $('[data-options=thumbnail]').hide();
-            }
-        }).trigger('change');
-        $('input[type=radio][name=heightMode]').on('change', function() {
-            var value = $('input[type=radio][name=heightMode]:checked').val();
-            if (value == 'fixed') {
-                $('[data-options=height-mode]').show();
-            } else {
-                $('[data-options=height-mode]').hide();
-            }
-        }).trigger('change');
-        $('input[type=radio][name=tableStriped]').on('change', function() {
-            var value = $('input[type=radio][name=tableStriped]:checked').val();
-            if (value == '1') {
-                $('[data-options=table-striped]').show();
-            } else {
-                $('[data-options=table-striped]').hide();
-            }
-        }).trigger('change');
-    });
-</script>
-
-*/ ?>
