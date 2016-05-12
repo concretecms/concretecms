@@ -4,6 +4,7 @@ namespace Concrete\Authentication\Google;
 defined('C5_EXECUTE') or die('Access Denied');
 
 use Concrete\Core\Authentication\LoginException;
+use Concrete\Core\Authentication\Type\Google\Factory\GoogleServiceFactory;
 use Concrete\Core\Authentication\Type\OAuth\OAuth2\GenericOauth2TypeController;
 use OAuth\OAuth2\Service\Google;
 use User;
@@ -36,7 +37,9 @@ class Controller extends GenericOauth2TypeController
     public function getService()
     {
         if (!$this->service) {
-            $this->service = \Core::make('authentication/google');
+            /** @var GoogleServiceFactory $factory */
+            $factory = $this->app->make(GoogleServiceFactory::class);
+            $this->service = $factory->createService();
         }
 
         return $this->service;
