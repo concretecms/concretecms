@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "005521df2b082342e73fcf7381c001e9",
-    "content-hash": "baa8f8034862fa5f49153a192d360ec9",
+    "hash": "98a883e62d76dd2e5f28fd92a6dd695d",
+    "content-hash": "12906f116f8b1cff5c953040872526be",
     "packages": [
         {
             "name": "anahkiasen/html-object",
@@ -896,16 +896,16 @@
         },
         {
             "name": "gettext/gettext",
-            "version": "v3.4.3",
+            "version": "v3.5.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/oscarotero/Gettext.git",
-                "reference": "55568b89d40bce597ea58168d51565fd67940e66"
+                "reference": "5b1d69f5889513f7ed65060ad2a662ec3b0875c7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/oscarotero/Gettext/zipball/55568b89d40bce597ea58168d51565fd67940e66",
-                "reference": "55568b89d40bce597ea58168d51565fd67940e66",
+                "url": "https://api.github.com/repos/oscarotero/Gettext/zipball/5b1d69f5889513f7ed65060ad2a662ec3b0875c7",
+                "reference": "5b1d69f5889513f7ed65060ad2a662ec3b0875c7",
                 "shasum": ""
             },
             "require": {
@@ -914,7 +914,6 @@
             },
             "require-dev": {
                 "illuminate/view": "*",
-                "phpunit/phpunit": "~4.0",
                 "twig/extensions": "*",
                 "twig/twig": "*"
             },
@@ -951,7 +950,7 @@
                 "po",
                 "translation"
             ],
-            "time": "2015-08-13 08:20:43"
+            "time": "2016-02-19 15:18:12"
         },
         {
             "name": "gettext/languages",
@@ -1190,16 +1189,16 @@
         },
         {
             "name": "illuminate/contracts",
-            "version": "v5.2.7",
+            "version": "v5.2.31",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/contracts.git",
-                "reference": "51b3acf96a12f5a10d767d5f2a534fed6f304235"
+                "reference": "411b851962c211078ade7664a6976e77a78cd2a5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/contracts/zipball/51b3acf96a12f5a10d767d5f2a534fed6f304235",
-                "reference": "51b3acf96a12f5a10d767d5f2a534fed6f304235",
+                "url": "https://api.github.com/repos/illuminate/contracts/zipball/411b851962c211078ade7664a6976e77a78cd2a5",
+                "reference": "411b851962c211078ade7664a6976e77a78cd2a5",
                 "shasum": ""
             },
             "require": {
@@ -1228,7 +1227,7 @@
             ],
             "description": "The Illuminate Contracts package.",
             "homepage": "http://laravel.com",
-            "time": "2015-12-19 14:25:38"
+            "time": "2016-03-07 20:37:17"
         },
         {
             "name": "illuminate/filesystem",
@@ -1523,6 +1522,7 @@
                 "php",
                 "url"
             ],
+            "abandoned": "league/uri",
             "time": "2015-07-15 08:24:12"
         },
         {
@@ -1645,20 +1645,20 @@
         },
         {
             "name": "mlocati/concrete5-translation-library",
-            "version": "1.4.2",
+            "version": "1.4.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mlocati/concrete5-translation-library.git",
-                "reference": "93997c7e229119a8c98ba7e02712b02eae82a560"
+                "reference": "c632aaaec15e62440ba575f6543e5623559b8319"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mlocati/concrete5-translation-library/zipball/93997c7e229119a8c98ba7e02712b02eae82a560",
-                "reference": "93997c7e229119a8c98ba7e02712b02eae82a560",
+                "url": "https://api.github.com/repos/mlocati/concrete5-translation-library/zipball/c632aaaec15e62440ba575f6543e5623559b8319",
+                "reference": "c632aaaec15e62440ba575f6543e5623559b8319",
                 "shasum": ""
             },
             "require": {
-                "gettext/gettext": "3.4.*",
+                "gettext/gettext": "~3.5.9",
                 "php": ">=5.3.0"
             },
             "type": "library",
@@ -1691,7 +1691,7 @@
                 "translate",
                 "translation"
             ],
-            "time": "2015-05-21 07:27:56"
+            "time": "2016-05-10 10:26:35"
         },
         {
             "name": "mobiledetect/mobiledetectlib",
@@ -2332,7 +2332,7 @@
             ],
             "authors": [
                 {
-                    "name": "Sunra",
+                    "name": "sunra",
                     "email": "sunra@yandex.ru",
                     "homepage": "http://github.com/sunra"
                 }
@@ -2404,16 +2404,16 @@
         },
         {
             "name": "symfony/console",
-            "version": "v3.0.2",
+            "version": "v3.0.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/console.git",
-                "reference": "5a02eaadaa285e2bb727eb6bbdfb8201fcd971b0"
+                "reference": "34a214710e0714b6efcf40ba3cd1e31373a97820"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/console/zipball/5a02eaadaa285e2bb727eb6bbdfb8201fcd971b0",
-                "reference": "5a02eaadaa285e2bb727eb6bbdfb8201fcd971b0",
+                "url": "https://api.github.com/repos/symfony/console/zipball/34a214710e0714b6efcf40ba3cd1e31373a97820",
+                "reference": "34a214710e0714b6efcf40ba3cd1e31373a97820",
                 "shasum": ""
             },
             "require": {
@@ -2460,20 +2460,20 @@
             ],
             "description": "Symfony Console Component",
             "homepage": "https://symfony.com",
-            "time": "2016-02-02 13:44:19"
+            "time": "2016-04-28 09:48:42"
         },
         {
             "name": "symfony/debug",
-            "version": "v3.0.2",
+            "version": "v3.0.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/debug.git",
-                "reference": "29606049ced1ec715475f88d1bbe587252a3476e"
+                "reference": "a06d10888a45afd97534506afb058ec38d9ba35b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/debug/zipball/29606049ced1ec715475f88d1bbe587252a3476e",
-                "reference": "29606049ced1ec715475f88d1bbe587252a3476e",
+                "url": "https://api.github.com/repos/symfony/debug/zipball/a06d10888a45afd97534506afb058ec38d9ba35b",
+                "reference": "a06d10888a45afd97534506afb058ec38d9ba35b",
                 "shasum": ""
             },
             "require": {
@@ -2517,7 +2517,7 @@
             ],
             "description": "Symfony Debug Component",
             "homepage": "https://symfony.com",
-            "time": "2016-01-27 05:14:46"
+            "time": "2016-03-30 10:41:14"
         },
         {
             "name": "symfony/event-dispatcher",
@@ -2762,7 +2762,7 @@
         },
         {
             "name": "symfony/polyfill-mbstring",
-            "version": "v1.1.0",
+            "version": "v1.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-mbstring.git",
@@ -3133,8 +3133,7 @@
                 {
                     "name": "Johnny Broadway",
                     "email": "johnny@johnnybroadway.com",
-                    "homepage": "http://www.johnnybroadway.com/",
-                    "role": "Main Developer"
+                    "homepage": "http://www.johnnybroadway.com/"
                 }
             ],
             "description": "PHP port of URLify.js from the Django project. Transliterates non-ascii characters for use in URLs.",

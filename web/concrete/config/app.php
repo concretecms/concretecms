@@ -202,7 +202,7 @@ return array(
         "/ccm/system/dialogs/area/design/" => array('\Concrete\Controller\Dialog\Area\Design::view'),
         "/ccm/system/dialogs/area/design/reset" => array('\Concrete\Controller\Dialog\Area\Design::reset'),
         "/ccm/system/dialogs/area/design/submit" => array('\Concrete\Controller\Dialog\Area\Design::submit'),
-        "/ccm/system/dialogs/area/layout/presets/manage/" => array('\Concrete\Controller\Dialog\Area\Layout\Presets\Manage::view'),
+        "/ccm/system/dialogs/area/layout/presets/manage/" => array('\Concrete\Controller\Dialog\Area\Layout\Presets\Manage::viewPresets'),
         "/ccm/system/dialogs/area/layout/presets/manage/delete" => array('\Concrete\Controller\Dialog\Area\Layout\Presets\Manage::delete'),
         "/ccm/system/dialogs/area/layout/presets/{arLayoutID}" => array('\Concrete\Controller\Dialog\Area\Layout\Presets::view'),
         "/ccm/system/dialogs/area/layout/presets/{arLayoutID}/submit" => array('\Concrete\Controller\Dialog\Area\Layout\Presets::submit'),
@@ -361,10 +361,11 @@ return array(
         /*
          * General Attribute
          */
-        "/ccm/system/attribute/action/{action}"
-        => array('\Concrete\Controller\Backend\Attribute\Action::dispatch', 'attribute_action', array(
-            'action' => ".+"
-        )),
+        "/ccm/system/attribute/action/{action}" => array(
+            '\Concrete\Controller\Backend\Attribute\Action::dispatch',
+            'attribute_action',
+            array('action' => ".+"),
+        ),
 
         /*
          * Trees
@@ -399,7 +400,7 @@ return array(
         "/ccm/system/marketplace/connect" => array('\Concrete\Controller\Backend\Marketplace\Connect::view'),
         "/ccm/system/marketplace/search" => array('\Concrete\Controller\Backend\Marketplace\Search::view'),
 
-        /**
+        /*
          * Express
          */
         "/ccm/system/dialogs/express/entry/search/{entityID}" => array('\Concrete\Controller\Dialog\Express\Search::entries'),
@@ -480,10 +481,11 @@ return array(
         /*
          * RSS Feeds
          */
-        "/rss/{identifier}"                                                             => array(
+        "/rss/{identifier}" => array(
             '\Concrete\Controller\Feed::output',
             'rss',
-            array('identifier' => '[A-Za-z0-9_/.]+'), ),
+            array('identifier' => '[A-Za-z0-9_/.]+'),
+        ),
 
         /*
          * Special Dashboard
@@ -584,8 +586,8 @@ return array(
             array(
                 'javascript',
                 'https://www.gstatic.com/charts/loader.js',
-                array('local' => false)
-            )
+                array('local' => false),
+            ),
         ),
 
         'jquery' => array(
@@ -1063,7 +1065,7 @@ return array(
                 array('javascript', 'dynatree'),
                 array('javascript-localized', 'dynatree'),
                 array('javascript', 'core/tree'),
-                array('css', 'dynatree')
+                array('css', 'dynatree'),
             ),
         ),
         'core/tree' => array(
@@ -1075,7 +1077,7 @@ return array(
                 array('javascript', 'dynatree'),
                 array('javascript-localized', 'dynatree'),
                 array('javascript', 'core/tree'),
-                array('css', 'dynatree')
+                array('css', 'dynatree'),
             ),
         ),
         'core/groups' => array(
