@@ -67,7 +67,7 @@ if ($_POST['task'] == 'deactivate') {
 		}
 
 		if($ui->isActive() && !in_array('deactivate',$workflowRequestActions)) {
-			$ui->triggerDeactivate();
+			$ui->triggerDeactivate($u->getUserID());
 		}
 	}
 	echo Loader::helper('json')->encode(array('error'=>false, 'hudMessage' => $hudMessage));
