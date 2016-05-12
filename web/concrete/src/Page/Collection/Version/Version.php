@@ -69,34 +69,46 @@ class Version extends Object implements \Concrete\Core\Permission\ObjectInterfac
         }
     }
 
+    /**
+     * Get a Version instance given the Collection and a version identifier.
+     *
+     * @param \Concrete\Core\Page\Collection $c The collection for which you want the version.
+     * @param int|string $cvID The specific version ID (or 'ACTIVE', 'SCHEDULED', 'RECENT').
+     *
+     * @return static
+     */
     public static function get($c, $cvID)
     {
         $app = Facade::getFacadeApplication();
         $db = $app->make('database')->connection();
 
-        if (($c instanceof Page) && $c->getCollectionPointerID()) {
-            $v = array(
-                $c->getCollectionPointerID(),
-            );
-        } else {
-            $v = array(
-                $c->getCollectionID(),
-            );
+        $cID = false;
+        if ($c instanceof \Concrete\Core\Page\Page) {
+            $cID = $c->getCollectionPointerID();
         }
+        if (!$cID) {
+            $cID = $c->getCollectionID();
+        }
+        $v = array($cID);
 
         $q = "select cvID, cvIsApproved, cvIsNew, cvHandle, cvName, cvDescription, cvDateCreated, cvDatePublic, " .
              "pTemplateID, cvAuthorUID, cvApproverUID, cvComments, pThemeID, cvPublishDate from CollectionVersions " .
              "where cID = ?";
 
-        if ($cvID == 'ACTIVE') {
-            $q .= ' and cvIsApproved = 1 and cvPublishDate is NULL';
-        } elseif ($cvID == 'SCHEDULED') {
+        switch ($cvID) {
+            case 'ACTIVE':
+                $q .= ' and cvIsApproved = 1 and cvPublishDate is NULL';
+                break;
+            case 'SCHEDULED':
                 $q .= ' and cvIsApproved = 1 and cvPublishDate is not NULL';
-        } elseif ($cvID == 'RECENT') {
-            $q .= ' order by cvID desc';
-        } else {
-            $v[] = $cvID;
-            $q .= ' and cvID = ?';
+                break;
+            case 'RECENT':
+                $q .= ' order by cvID desc';
+                break;
+            default:
+                $v[] = $cvID;
+                $q .= ' and cvID = ?';
+                break;
         }
 
         $row = $db->fetchAssoc($q, $v);
@@ -106,7 +118,6 @@ class Version extends Object implements \Concrete\Core\Permission\ObjectInterfac
             $cv->setPropertiesFromArray($row);
         }
 
-        // load the attributes for a particular version object
         $cv->cID = $c->getCollectionID();
 
         return $cv;
