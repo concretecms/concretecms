@@ -126,6 +126,7 @@ class Version extends Object implements \Concrete\Core\Permission\ObjectInterfac
     public function getObjectAttributeCategory()
     {
         $app = Facade::getFacadeApplication();
+
         return $app->make('\Concrete\Core\Attribute\Category\PageCategory');
     }
 
@@ -331,7 +332,7 @@ class Version extends Object implements \Concrete\Core\Permission\ObjectInterfac
         );
         $q = "insert into CollectionVersions (cID, cvID, cvName, cvHandle, cvDescription, cvDatePublic, " .
              "cvDateCreated, cvComments, cvAuthorUID, cvIsNew, pThemeID, pTemplateID, cvPublishDate) " .
-			 "values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+             "values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         $db->executeQuery($q, $v);
 
@@ -386,7 +387,7 @@ class Version extends Object implements \Concrete\Core\Permission\ObjectInterfac
 
         $ev = new Event($c);
         $ev->setCollectionVersionObject($nv);
-        
+
         $app->make('director')->dispatch('on_page_version_add', $ev);
 
         $nv->refreshCache();
