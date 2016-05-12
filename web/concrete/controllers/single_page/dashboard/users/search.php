@@ -155,7 +155,7 @@ class Search extends DashboardPageController
             case 'delete':
                 $this->setupUser($uID);
                 if ($this->canDeleteUser && Loader::helper('validation/token')->validate()) {
-                    $this->user->triggerDelete();
+                    $this->user->triggerDelete($this->user);
                     $this->redirect('/dashboard/users/search', 'view', $this->user->getUserID(), 'deleted');
                 }
                 break;

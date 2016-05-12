@@ -97,15 +97,13 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
         return $groups;
     }
 
-    public function triggerDelete()
+    public function triggerDelete($requester)
     {
-        global $u;
-
         $db = $this->connection;
         $v = array($this->uID);
         $pkr = new DeleteUserWorkflowRequest();
         $pkr->setRequestedUserID($this->uID);
-        $pkr->setRequesterUserID($u->getUserID());
+        $pkr->setRequesterUserID($requester->getUserID());
         $pkr->trigger();
         return $db->GetOne('select count(uID) from Users where uID = ?', $v) == 0;
     }
