@@ -330,7 +330,7 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
                                     ?>title="<?= t('Page Design, Location, Attributes and Settings') ?>"<?php
                                 }
                                 ?>
-                            >
+
                                 <i class="fa fa-cog"></i>
                                 <span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-settings">
                                     <?php
