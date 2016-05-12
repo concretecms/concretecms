@@ -375,7 +375,7 @@ for ($i = 0; $i < count($values); $i++) {
         <div id="ccm-permissions-access-entity-dates-repeat-weekly-dow" style="display: none">
 
             <div class="form-group">
-                <label class="control-label"><?= t('On') ?></label>
+                <label class="control-label"><?= tc('Date', 'On') ?></label>
                 <div class="">
                     <?php
                     foreach (\Punic\Calendar::getSortedWeekdays('wide') as $weekDay) {
