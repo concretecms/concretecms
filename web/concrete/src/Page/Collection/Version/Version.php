@@ -533,7 +533,7 @@ class Version extends Object implements \Concrete\Core\Permission\ObjectInterfac
             $total = $db->fetchColumn('select count(cvID) from CollectionVersions where cID = ?', array(
                 $this->cID,
             ));
-            if ($total) {
+            if ($total > 1) {
                 $result = true;
             }
         }
