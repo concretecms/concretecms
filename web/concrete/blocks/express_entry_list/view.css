@@ -1,5 +1,5 @@
-th.ccm-block-document-library-active-sort-desc a:after,
-th.ccm-block-document-library-active-sort-desc span:after {
+.ccm-block-express-entry-list-table th.ccm-results-list-active-sort-desc a:after,
+.ccm-block-express-entry-list-table th.ccm-results-list-active-sort-desc span:after {
     border-width: 4px 4px 0px 4px;
     border-style: solid;
     border-color: #000 transparent transparent transparent;
@@ -11,8 +11,8 @@ th.ccm-block-document-library-active-sort-desc span:after {
     margin-left: 10px;
  }
 
-th.ccm-block-document-library-active-sort-asc a:after,
-th.ccm-block-document-library-active-sort-asc span:after
+.ccm-block-express-entry-list-table th.ccm-results-list-active-sort-asc a:after,
+.ccm-block-express-entry-list-table th.ccm-results-list-active-sort-asc span:after
 {
     border-width: 0px 4px 4px 4px;
     border-style: solid;
@@ -25,46 +25,14 @@ th.ccm-block-document-library-active-sort-asc span:after
     margin-left: 10px;
  }
 
-table.ccm-block-document-library-table thead th.ccm-block-document-library-column-thumbnail {
-    width: 1px;
-}
 
-a.ccm-block-document-library-details:after {
-    border-width: 0px 4px 4px 4px;
-    border-style: solid;
-    border-color: transparent transparent #000 transparent;
-    vertical-align: middle;
-    content: "";
-    width: 0;
-    height: 0;
-    display: inline-block;
-    margin-left: 10px;
-}
 
-a.ccm-block-document-library-details-open:after {
-    border-width: 4px 4px 0px 4px;
-    border-style: solid;
-    border-color: #000 transparent transparent transparent;
-    vertical-align: middle;
-    content: "";
-    width: 0;
-    height: 0;
-    display: inline-block;
-    margin-left: 10px;
-}
-
-tr.ccm-block-document-library-table-expanded-properties {
-    display: none;
-}
-
-a.ccm-block-document-library-advanced-search,
-a.ccm-block-document-library-add-files {
-    float: right;
+a.ccm-block-express-entry-list-advanced-search {
     margin-left: 20px;
+    white-space: nowrap;
 }
 
-a.ccm-block-document-library-advanced-search:after,
-a.ccm-block-document-library-add-files:after {
+a.ccm-block-express-entry-list-advanced-search:after {
     border-width: 0px 4px 4px 4px;
     border-style: solid;
     border-color: transparent transparent #000 transparent;
@@ -76,8 +44,7 @@ a.ccm-block-document-library-add-files:after {
     margin-left: 10px;
 }
 
-a.ccm-block-document-library-advanced-search-open:after,
-a.ccm-block-document-library-add-files-open:after
+a.ccm-block-express-entry-list-advanced-search-open:after
 {
     border-width: 4px 4px 0px 4px;
     border-style: solid;
@@ -90,34 +57,7 @@ a.ccm-block-document-library-add-files-open:after
     margin-left: 10px;
 }
 
-div.ccm-block-document-library-advanced-search-fields,
-div.ccm-block-document-library-add-files-uploader,
-div.ccm-block-document-library-add-files-uploading {
+div.ccm-block-express-entry-list-advanced-search-fields {
     display: none;
     margin-bottom: 20px;
-}
-
-div.ccm-block-document-library-add-files-uploader {
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    padding: 30px;
-    color: #aaa;
-    font-size: 1.5em;
-    text-align: center;
-    position: relative;
-}
-
-div.ccm-block-document-library-add-files-uploader input {
-    position: absolute;
-    opacity: 0;
-    top:  0px;
-    left: 0px;
-    width: 100%;
-    height: 100%;
-    cursor: pointer;
-}
-
-a.ccm-block-document-library-icon {
-    color: #999;
-    text-decoration: none;
 }

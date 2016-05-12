@@ -7,7 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  * @Entity
  * @Table(name="ExpressForms")
  */
-class Form
+class Form implements \JsonSerializable
 {
     /**
      * @Id @Column(type="integer")
@@ -110,5 +110,13 @@ class Form
         }
 
         return $controls;
+    }
+
+    public function jsonSerialize()
+    {
+        return [
+            'exFormName' => $this->getName(),
+            'exFormID' => $this->getId()
+        ];
     }
 }

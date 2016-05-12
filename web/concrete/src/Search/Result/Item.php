@@ -15,7 +15,7 @@ class Item
     public function __construct(Result $result, Set $columns, $item)
     {
         foreach ($columns->getColumns() as $col) {
-            $o = new ItemColumn($col->getColumnKey(), $col->getColumnValue($item));
+            $o = new ItemColumn($col->getColumnKey(), $col->getColumnValue($item), $col);
             $this->columns[] = $o;
         }
     }

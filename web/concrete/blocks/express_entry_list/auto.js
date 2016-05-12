@@ -4,7 +4,8 @@ $(function() {
         'use strict';
         this.options = $.extend({
             searchProperties: [],
-            searchPropertiesSelected: []
+            searchPropertiesSelected: [],
+            linkedPropertiesSelected: []
         }, options);
         this.init(options);
     }
@@ -13,6 +14,7 @@ $(function() {
         var $source = $('#ccm-tab-content-search'),
             $customizeContainer = $('#ccm-tab-content-results div[data-container=customize-results]');
             _searchAttributesTemplate = _.template($('script[data-template=express-attribute-search-list]').html()),
+            _linkedAttributesTemplate = _.template($('script[data-template=express-attribute-link-list]').html()),
             my = this;
 
         $source.find('select[name=exEntityID]').on('change', function() {
@@ -24,6 +26,7 @@ $(function() {
                     success: function(r) {
                         $customizeContainer.html(r.customize);
                         my.setSearchableProperties(r.attributes);
+                        my.setLinkableProperties(r.attributes);
                     }
                 });
             }
@@ -33,6 +36,11 @@ $(function() {
     ConcreteExpressEntryListBlockForm.prototype.setSearchableProperties = function(attributes, selected) {
         var $attributesContainer = $('#ccm-tab-content-search div[data-container=advanced-search]');
         $attributesContainer.html(_searchAttributesTemplate({attributes: attributes, selected: selected}));
+    }
+
+    ConcreteExpressEntryListBlockForm.prototype.setLinkableProperties = function(attributes, selected) {
+        var $attributesContainer = $('#ccm-tab-content-results div[data-container=linked-attributes]');
+        $attributesContainer.html(_linkedAttributesTemplate({attributes: attributes, selected: selected}));
     }
 
     ConcreteExpressEntryListBlockForm.prototype.initToggling = function() {
@@ -62,7 +70,9 @@ $(function() {
 
         if (my.options.searchProperties.length) {
             my.setSearchableProperties(my.options.searchProperties, my.options.searchPropertiesSelected);
+            my.setLinkableProperties(my.options.searchProperties, my.options.linkedPropertiesSelected);
         }
+
 
     }
 

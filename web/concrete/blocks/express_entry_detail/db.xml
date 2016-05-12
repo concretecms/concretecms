@@ -1,19 +1,28 @@
-<?xml version="1.0"?>
-<schema version="0.3">
+<?xml version="1.0" encoding="UTF-8"?>
+<schema
+		xmlns="http://www.concrete5.org/doctrine-xml/0.5"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.concrete5.org/doctrine-xml/0.5 http://concrete5.github.io/doctrine-xml/doctrine-xml-0.5.xsd">
+
 	<table name="btExpressEntryDetail">
-		<field name="bID" type="I">
-			<key />
-			<unsigned />
+		<field name="bID" type="integer">
+			<unsigned/>
+			<key/>
 		</field>
-
-		<field name="exEntityID" type="I">
-			<unsigned />
-			<notnull />
-			<default value="0" />
+		<field name="exEntityID" type="integer">
+			<unsigned/>
+			<key/>
 		</field>
-
-		<field name="viewProperties" type="X2">
+		<field name="exSpecificEntryID" type="integer">
+			<unsigned/>
+			<key/>
 		</field>
-
+		<field name="exFormID" type="integer">
+			<unsigned/>
+			<key/>
+		</field>
+		<field name="entryMode" type="string" size="1">
+			<default value="S"/>
+		</field>
 	</table>
+
 </schema>
