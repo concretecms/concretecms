@@ -2,17 +2,18 @@
 namespace Concrete\Core\Entity\Attribute\Key\Type;
 
 use Concrete\Core\Entity\Attribute\Value\Value\ExpressValue;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @Entity
- * @Table(name="ExpressAttributeKeyTypes")
+ * @ORM\Entity
+ * @ORM\Table(name="ExpressAttributeKeyTypes")
  */
 class ExpressType extends Type
 {
 
     /**
-     * @ManyToOne(targetEntity="\Concrete\Core\Entity\Express\Entity")
-     * @JoinColumn(name="exEntityID", referencedColumnName="id")
+     * @ORM\ManyToOne(targetEntity="\Concrete\Core\Entity\Express\Entity")
+     * @ORM\JoinColumn(name="exEntityID", referencedColumnName="id")
      **/
     protected $entity;
 

@@ -291,7 +291,7 @@ class ContentExporter
      */
     public function removeItem($parent, $node, $handle)
     {
-        $query = '//' . $node . '[@handle=\'' . $handle . '\' or @package=\'' . $handle . '\']';
+        $query = '//' . $node . '[@handle=\'' . $handle . '\' or \@package=\'' . $handle . '\']';
         $r = $this->x->xpath($query);
         if ($r && isset($r[0]) && $r[0] instanceof SimpleXMLElement) {
             $dom = dom_import_simplexml($r[0]);

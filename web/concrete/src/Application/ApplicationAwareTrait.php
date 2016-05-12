@@ -5,8 +5,6 @@ namespace Concrete\Core\Application;
 /**
  * Trait ApplicationAwareTrait
  * A trait used with ApplicationAwareInterface
- *
- * @package Concrete\Core\Application
  */
 trait ApplicationAwareTrait
 {

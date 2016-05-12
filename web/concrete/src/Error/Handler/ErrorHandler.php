@@ -10,7 +10,7 @@ use Whoops\Handler\PrettyPageHandler;
 /**
  * Class ErrorHandler.
  *
- * @package Concrete\Core\Error\Handler
+ * \@package Concrete\Core\Error\Handler
  */
 class ErrorHandler extends PrettyPageHandler
 {

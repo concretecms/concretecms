@@ -7,15 +7,16 @@ use Concrete\Core\Entity\Express\Entry;
 use Concrete\Core\Express\Form\Control\Form\TextEntityPropertyControlFormRenderer;
 use Concrete\Core\Express\Form\Control\Type\SaveHandler\TextControlSaveHandler;
 use Concrete\Core\Express\Form\Control\View\TextEntityPropertyControlViewRenderer;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @Entity
- * @Table(name="ExpressFormFieldSetTextControls")
+ * @ORM\Entity
+ * @ORM\Table(name="ExpressFormFieldSetTextControls")
  */
 class TextControl extends Control
 {
     /**
-     * @Column(type="text", nullable=true)
+     * @ORM\Column(type="text", nullable=true)
      */
     protected $text;
 

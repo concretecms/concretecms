@@ -118,11 +118,11 @@ class Location extends BackendInterfacePageController
 					if ($canonical == $i) {
 						$p->setPagePathIsCanonical(true);
 					}
-					\ORM::entityManager('core')->persist($p);
+					\ORM::entityManager()->persist($p);
 				}
 			}
 
-            \ORM::entityManager('core')->flush();
+            \ORM::entityManager()->flush();
 
             $r->setTitle(t('Page Updated'));
             $r->setMessage(t('Page location information saved successfully.'));

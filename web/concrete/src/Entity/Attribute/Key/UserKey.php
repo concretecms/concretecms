@@ -1,39 +1,41 @@
 <?php
 namespace Concrete\Core\Entity\Attribute\Key;
 
+use Doctrine\ORM\Mapping as ORM;
+
 /**
- * @Entity(repositoryClass="\Concrete\Core\Entity\User\AttributeRepository")
- * @Table(name="UserAttributeKeys")
+ * @ORM\Entity(repositoryClass="\Concrete\Core\Entity\User\AttributeRepository")
+ * @ORM\Table(name="UserAttributeKeys")
  */
 class UserKey extends Key
 {
     /**
-     * @Column(type="boolean")
+     * @ORM\Column(type="boolean")
      */
     protected $uakProfileDisplay = false;
 
     /**
-     * @Column(type="boolean")
+     * @ORM\Column(type="boolean")
      */
     protected $uakProfileEdit = false;
 
     /**
-     * @Column(type="boolean")
+     * @ORM\Column(type="boolean")
      */
     protected $uakProfileEditRequired = false;
 
     /**
-     * @Column(type="boolean")
+     * @ORM\Column(type="boolean")
      */
     protected $uakRegisterEdit = false;
 
     /**
-     * @Column(type="boolean")
+     * @ORM\Column(type="boolean")
      */
     protected $uakRegisterEditRequired = false;
 
     /**
-     * @Column(type="boolean")
+     * @ORM\Column(type="boolean")
      */
     protected $uakMemberListDisplay = false;
 

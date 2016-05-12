@@ -1,28 +1,30 @@
 <?php
 namespace Concrete\Core\Entity\Attribute;
 
+use Doctrine\ORM\Mapping as ORM;
+
 /**
- * @Entity
- * @Table(
+ * @ORM\Entity
+ * @ORM\Table(
  *     name="AttributeSetKeys"
  * )
  */
 class SetKey
 {
     /**
-     * @Id @OneToOne(targetEntity="\Concrete\Core\Entity\Attribute\Key\Key")
-     * @JoinColumn(name="akID", referencedColumnName="akID")
+     * @ORM\Id @ORM\OneToOne(targetEntity="\Concrete\Core\Entity\Attribute\Key\Key")
+     * @ORM\JoinColumn(name="akID", referencedColumnName="akID")
      */
     protected $attribute_key;
 
     /**
-     * @Id @ManyToOne(targetEntity="\Concrete\Core\Entity\Attribute\Set")
-     * @JoinColumn(name="asID", referencedColumnName="asID")
+     * @ORM\Id @ORM\ManyToOne(targetEntity="\Concrete\Core\Entity\Attribute\Set")
+     * @ORM\JoinColumn(name="asID", referencedColumnName="asID")
      */
     protected $set;
 
     /**
-     * @Column(type="integer", options={"unsigned":true})
+     * @ORM\Column(type="integer", options={"unsigned":true})
      */
     protected $asDisplayOrder = 0;
 

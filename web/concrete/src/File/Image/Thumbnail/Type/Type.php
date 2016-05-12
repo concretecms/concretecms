@@ -2,41 +2,42 @@
 namespace Concrete\Core\File\Image\Thumbnail\Type;
 
 use Database;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @Entity
- * @Table(name="FileImageThumbnailTypes")
+ * @ORM\Entity
+ * @ORM\Table(name="FileImageThumbnailTypes")
  */
 class Type
 {
     /**
-     * @Column(type="string")
+     * @ORM\Column(type="string")
      */
     protected $ftTypeHandle;
 
     /**
-     * @Column(type="string")
+     * @ORM\Column(type="string")
      */
     protected $ftTypeName;
 
     /**
-     * @Column(type="integer")
+     * @ORM\Column(type="integer")
      */
     protected $ftTypeWidth = 0;
 
     /**
-     * @Column(type="integer", nullable=true)
+     * @ORM\Column(type="integer", nullable=true)
      */
     protected $ftTypeHeight = null;
 
     /**
-     * @Column(type="boolean")
+     * @ORM\Column(type="boolean")
      */
     protected $ftTypeIsRequired = false;
 
     /**
-     * @Id @Column(type="integer")
-     * @GeneratedValue
+     * @ORM\Id @ORM\Column(type="integer")
+     * @ORM\GeneratedValue
      */
     protected $ftTypeID;
 
@@ -152,7 +153,7 @@ class Type
      */
     public static function getList()
     {
-        $em = \ORM::entityManager('core');
+        $em = \ORM::entityManager();
 
         return $em->getRepository('\Concrete\Core\File\Image\Thumbnail\Type\Type')->findBy(array(), array('ftTypeWidth' => 'asc'));
     }
@@ -174,7 +175,7 @@ class Type
 
     public function save()
     {
-        $em = \ORM::entityManager('core');
+        $em = \ORM::entityManager();
         $em->persist($this);
         $em->flush();
     }
@@ -199,14 +200,14 @@ class Type
 
     public function delete()
     {
-        $em = \ORM::entityManager('core');
+        $em = \ORM::entityManager();
         $em->remove($this);
         $em->flush();
     }
 
     public static function getByID($id)
     {
-        $em = \ORM::entityManager('core');
+        $em = \ORM::entityManager();
         $r = $em->find('\Concrete\Core\File\Image\Thumbnail\Type\Type', $id);
 
         return $r;
@@ -225,7 +226,7 @@ class Type
             return $item->get();
         }
 
-        $em = \ORM::entityManager('core');
+        $em = \ORM::entityManager();
         $r = $em->getRepository('\Concrete\Core\File\Image\Thumbnail\Type\Type')
             ->findOneBy(array('ftTypeHandle' => $ftTypeHandle));
 

@@ -6,7 +6,7 @@ use Concrete\Core\Legacy\DatabaseItemList;
 /**
  * An object that holds a list of versions for a particular collection.
  *
- * @package Pages
+ * \@package Pages
  *
  * @author Andrew Embler <andrew@concrete5.org>
  *

@@ -2,17 +2,18 @@
 namespace Concrete\Core\Entity\Attribute\Value\Value;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @Entity
- * @Table(name="SocialLinksAttributeValues")
+ * @ORM\Entity
+ * @ORM\Table(name="SocialLinkAttributeValues")
  */
 class SocialLinksValue extends Value
 {
     /**
-     * @OneToMany(targetEntity="\Concrete\Core\Entity\Attribute\Value\Value\SelectedSocialLink",
+     * @ORM\OneToMany(targetEntity="\Concrete\Core\Entity\Attribute\Value\Value\SelectedSocialLink",
      *     cascade={"persist", "remove"}, mappedBy="value")
-     * @JoinColumn(name="avID", referencedColumnName="avID")
+     * @ORM\JoinColumn(name="avID", referencedColumnName="avID")
      */
     protected $links;
 

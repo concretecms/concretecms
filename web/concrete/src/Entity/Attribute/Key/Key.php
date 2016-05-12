@@ -8,15 +8,16 @@ use Concrete\Core\Entity\Attribute\Set;
 use Concrete\Core\Entity\PackageTrait;
 use Concrete\Core\Export\ExportableInterface;
 use Concrete\Core\Export\Item\AttributeKey;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @Entity
- * @InheritanceType("JOINED")
- * @DiscriminatorColumn(name="akCategory", type="string")
- * @Table(
+ * @ORM\Entity
+ * @ORM\InheritanceType("JOINED")
+ * @ORM\DiscriminatorColumn(name="akCategory", type="string")
+ * @ORM\Table(
  *     name="AttributeKeys",
  *     indexes={
- *     @Index(name="pkgID", columns={"pkgID"})
+ *     @ORM\Index(name="pkgID", columns={"pkgID"})
  *     }
  * )
  */
@@ -25,44 +26,44 @@ class Key implements AttributeKeyInterface, ExportableInterface
     use PackageTrait;
 
     /**
-     * @Id @Column(type="integer", options={"unsigned":true})
-     * @GeneratedValue(strategy="AUTO")
+     * @ORM\Id @ORM\Column(type="integer", options={"unsigned":true})
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $akID;
 
     /**
-     * @Column(type="string")
+     * @ORM\Column(type="string")
      */
     protected $akHandle;
 
     /**
-     * @Column(type="string")
+     * @ORM\Column(type="string")
      */
     protected $akName;
 
     /**
-     * @Column(type="boolean")
+     * @ORM\Column(type="boolean")
      */
     protected $akIsSearchable = true;
 
     /**
-     * @Column(type="boolean")
+     * @ORM\Column(type="boolean")
      */
     protected $akIsInternal = false;
 
     /**
-     * @Column(type="boolean")
+     * @ORM\Column(type="boolean")
      */
     protected $akIsSearchableIndexed = false;
 
     /**
-     * @OneToOne(targetEntity="\Concrete\Core\Entity\Attribute\Key\Type\Type", mappedBy="key", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity="\Concrete\Core\Entity\Attribute\Key\Type\Type", mappedBy="key", cascade={"persist", "remove"})
      */
     protected $key_type;
 
     /**
-     * @OneToMany(targetEntity="\Concrete\Core\Entity\Attribute\Value\Value", mappedBy="attribute_key", cascade={"remove"})
-     * @JoinColumn(name="avID", referencedColumnName="avID")
+     * @ORM\OneToMany(targetEntity="\Concrete\Core\Entity\Attribute\Value\Value", mappedBy="attribute_key", cascade={"remove"})
+     * @ORM\JoinColumn(name="avID", referencedColumnName="avID")
      **/
     protected $attribute_values;
 

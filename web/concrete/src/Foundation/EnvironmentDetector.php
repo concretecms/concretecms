@@ -9,7 +9,7 @@ use Closure;
  * This is a straight copy from Laravel.
  * https://github.com/laravel/framework/blob/7172f42496f3f6f1f7aa3e0dc87065a582ffd0a7/src/Illuminate/Foundation/EnvironmentDetector.php
  *
- * @package Concrete\Core\Foundation
+ * \@package Concrete\Core\Foundation
  */
 class EnvironmentDetector
 {

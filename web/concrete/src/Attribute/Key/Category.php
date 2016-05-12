@@ -4,7 +4,7 @@ namespace Concrete\Core\Attribute\Key;
 /*
  * Factory class for creating instances of the Attribute key category entity.
  * Class Category
- * @package Concrete\Core\Attribute\Key
+ * \@package Concrete\Core\Attribute\Key
  */
 use Concrete\Core\Support\Facade\Facade;
 

@@ -1,44 +1,46 @@
 <?php
 namespace Concrete\Core\Entity\Attribute\Value\Value;
 
+use Doctrine\ORM\Mapping as ORM;
+
 /**
- * @Entity
- * @Table(name="AddressAttributeValues")
+ * @ORM\Entity
+ * @ORM\Table(name="AddressAttributeValues")
  */
 class AddressValue extends Value
 {
     /**
-     * @Column(type="string", nullable=true)
+     * @ORM\Column(type="string", nullable=true)
      */
     protected $address1;
 
     /**
-     * @Column(type="string", nullable=true)
+     * @ORM\Column(type="string", nullable=true)
      */
     protected $address2;
 
     /**
-     * @Column(type="string", nullable=true)
+     * @ORM\Column(type="string", nullable=true)
      */
     protected $address3;
 
     /**
-     * @Column(type="string", nullable=true)
+     * @ORM\Column(type="string", nullable=true)
      */
     protected $city;
 
     /**
-     * @Column(type="string", nullable=true)
+     * @ORM\Column(type="string", nullable=true)
      */
     protected $state_province;
 
     /**
-     * @Column(type="string", nullable=true)
+     * @ORM\Column(type="string", nullable=true)
      */
     protected $country;
 
     /**
-     * @Column(type="string", nullable=true)
+     * @ORM\Column(type="string", nullable=true)
      */
     protected $postal_code;
 

@@ -3,51 +3,52 @@ namespace Concrete\Core\Entity;
 
 use Concrete\Core\Package\LocalizablePackageInterface;
 use Concrete\Core\Package\PackageService;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @Entity
- * @Table(name="Packages")
+ * @ORM\Entity
+ * @ORM\Table(name="Packages")
  */
 class Package implements LocalizablePackageInterface
 {
     /**
-     * @Id @Column(type="integer", options={"unsigned":true})
-     * @GeneratedValue(strategy="AUTO")
+     * @ORM\Id @ORM\Column(type="integer", options={"unsigned":true})
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $pkgID;
 
     /**
-     * @Column(type="string", unique=true)
+     * @ORM\Column(type="string", unique=true)
      */
     protected $pkgHandle;
 
     /**
-     * @Column(type="string")
+     * @ORM\Column(type="string")
      */
     protected $pkgVersion;
 
     /**
-     * @Column(type="boolean")
+     * @ORM\Column(type="boolean")
      */
     protected $pkgIsInstalled = true;
 
     /**
-     * @Column(type="string", nullable=true)
+     * @ORM\Column(type="string", nullable=true)
      */
     protected $pkgAvailableVersion;
 
     /**
-     * @Column(type="text")
+     * @ORM\Column(type="text")
      */
     protected $pkgDescription;
 
     /**
-     * @Column(type="datetime")
+     * @ORM\Column(type="datetime")
      */
     protected $pkgDateInstalled;
 
     /**
-     * @Column(type="string", nullable=true)
+     * @ORM\Column(type="string", nullable=true)
      */
     protected $pkgName;
 

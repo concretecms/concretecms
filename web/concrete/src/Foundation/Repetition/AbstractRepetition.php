@@ -5,7 +5,7 @@ namespace Concrete\Core\Foundation\Repetition;
  * Abstract repetition class
  * This class is used to define and match against various time windows.
  *
- * @package Concrete\Core\Foundation\Repetition
+ * \@package Concrete\Core\Foundation\Repetition
  */
 abstract class AbstractRepetition implements RepetitionInterface
 {

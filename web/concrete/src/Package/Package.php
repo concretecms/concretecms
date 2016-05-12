@@ -36,11 +36,12 @@ abstract class Package implements LocalizablePackageInterface
      * @var \Concrete\Core\Config\Repository\Liaison
      */
     protected $config;
+    
     /**
      * @var \Concrete\Core\Config\Repository\Liaison
      */
     protected $fileConfig;
-
+    
     /**
      * Whether to automatically map core extensions into the packages src/Concrete directory
      * @var bool
@@ -55,7 +56,7 @@ abstract class Package implements LocalizablePackageInterface
     protected $pkgAutoloaderRegistries = array();
 
     protected $appVersionRequired = '5.7.0';
-
+    
     protected $pkgAllowsFullContentSwap = false;
 
     protected $pkgContentProvidesFileThumbnails = false;
@@ -75,7 +76,16 @@ abstract class Package implements LocalizablePackageInterface
      * @var \Concrete\Core\Database\DatabaseStructureManager
      */
     protected $databaseStructureManager;
-
+    
+    
+    const PACKAGE_METADATADRIVER_ANNOTATION = 1;
+    const PACKAGE_METADATADRIVER_XML = 2;
+    const PACKAGE_METADATADRIVER_YAML = 3;
+    
+    /**
+     * @var $metadataDriver default is annotaion driver
+     */
+    protected $metadataDriver = self::PACKAGE_METADATADRIVER_ANNOTATION;
 
     /**
      * @return \Concrete\Core\Entity\Package
@@ -143,7 +153,7 @@ abstract class Package implements LocalizablePackageInterface
 
         return $this->fileConfig;
     }
-
+    
     /**
      * Returns custom autoloader prefixes registered by the class loader.
      * @return array Keys represent the namespace, not relative to the package's namespace. Values are the path, and are relative to the package directory.
@@ -316,12 +326,14 @@ abstract class Package implements LocalizablePackageInterface
 
         \Config::clearNamespace($this->getPackageHandle());
         $this->app->make('config/database')->clearNamespace($this->getPackageHandle());
+        
+        if(!empty($this->getPackageMetadataPaths())){
+            $this->destroyProxyClasses($this->getPackageEntityManager());
+        }
 
-//        $this->destroyProxyClasses();
-
-        $manager = \ORM::entityManager('core');
-        $manager->remove($package);
-        $manager->flush();
+        $em = \ORM::entityManager();
+        $em->remove($package);
+        $em->flush();
 
         \Localization::clearCache();
     }
@@ -587,18 +599,23 @@ abstract class Package implements LocalizablePackageInterface
     }
 
     public function installEntitiesDatabase()
-    {
-        // Create a custom entity manager for this package, in order to
-        // extract entities
-        $config = Setup::createConfiguration(true);
-        $driverImpl = $config->newDefaultAnnotationDriver($this->getPackageEntityPaths());
-        $config->setMetadataDriverImpl($driverImpl);
-        $manager = EntityManager::create(\Database::connection(), $config);
-
-        $structure = new DatabaseStructureManager($manager);
+    {   
+        // if the src folder doesn't exist, we assume, that no entities are present.
+        if(empty($this->getPackageMetadataPaths())){
+            return;
+        }
+        
+        $em = $this->getPackageEntityManager();
+        
+        // Update database
+        $structure = new DatabaseStructureManager($em);
         $structure->installDatabase();
+        
+        // Create or update entity proxies
+        $metadata = $em->getMetadataFactory()->getAllMetadata();
+        $em->getProxyFactory()->generateProxyClasses($metadata, $em->getConfiguration()->getProxyDir());
     }
-
+    
     /**
      * Installs a package's database from an XML file.
      *
@@ -643,7 +660,7 @@ abstract class Package implements LocalizablePackageInterface
      */
     public function upgradeCoreData()
     {
-        $em = \ORM::entityManager('core');
+        $em = \ORM::entityManager();
         $entity = $this->getPackageEntity();
         if (is_object($entity)) {
             $entity->setPackageName($this->getPackageName());
@@ -679,12 +696,147 @@ abstract class Package implements LocalizablePackageInterface
      */
     public function upgradeDatabase()
     {
-//        $this->destroyProxyClasses();
+        $this->destroyProxyClasses($this->getPackageEntityManager());
         $this->installEntitiesDatabase();
 
         static::installDB($this->getPackagePath() . '/' . FILENAME_PACKAGE_DB);
     }
 
+    /**
+     * Get the metadatadriver type for the package
+     * 
+     * @return integer
+     */
+    public function getMetadataDriverType()
+    {
+        return $this->metadataDriver;
+    }
+
+    /**
+     * Create the appropriate ORM metadata driver
+     * 
+     * @return Doctrine\Common\Persistence\Mapping\Driver\MappingDriver
+     *          returns eather a AnnotationDriver or a FileDriver
+     */
+    public function getMetadataDriver()
+    {
+        if ($this->metadataDriver === self::PACKAGE_METADATADRIVER_ANNOTATION){
+            if(version_compare($this->getApplicationVersionRequired(), '5.8.0', '<')){
+                // Legacy - uses SimpleAnnotationReader
+                $cachedSimpleAnnotationReader = $this->app->make('orm/cachedSimpleAnnotationReader');
+                $simpleAnnotationDriver = new \Doctrine\ORM\Mapping\Driver\AnnotationDriver($cachedSimpleAnnotationReader, $this->getPackageMetadataPaths());
+                return $simpleAnnotationDriver;
+            }else{
+                // Use default AnnotationReader
+                $cachedAnnotationReader = $this->app->make('orm/cachedAnnotationReader');
+                $annotationDriver = new \Doctrine\ORM\Mapping\Driver\AnnotationDriver($cachedAnnotationReader, $this->getPackageMetadataPaths());
+                return $annotationDriver;
+            }
+        } else if ($this->metadataDriver === self::PACKAGE_METADATADRIVER_XML){
+            $driverImpl = new \Doctrine\ORM\Mapping\Driver\XmlDriver($this->getPackageMetadataPaths());
+
+        } else if ($this->metadataDriver === self::PACKAGE_METADATADRIVER_YAML){
+            $driverImpl = new \Doctrine\ORM\Mapping\Driver\YamlDriver($this->getPackageMetadataPaths());
+        }
+        return $driverImpl;
+    }
+    
+    /**
+     * Get path to the location containing the metadata info
+     * 
+     * @return array 
+     */
+    public function getPackageMetadataPaths()
+    {
+        // annotations entity path
+        if ($this->metadataDriver === self::PACKAGE_METADATADRIVER_ANNOTATION){
+            // Support for the legacy method for backwards compatibility
+            if (method_exists($this, 'getPackageEntityPath')) {
+                $paths = array($this->getPackageEntityPath());
+            }else{
+                $paths = array($this->getPackagePath() . '/' . DIRNAME_CLASSES);
+            }
+        } else if ($this->metadataDriver === self::PACKAGE_METADATADRIVER_XML){
+            // return xml metadata dir
+            $paths =  array($this->getPackagePath() . DIRECTORY_SEPARATOR . REL_DIR_METADATA_XML);
+        } else if ($this->metadataDriver === self::PACKAGE_METADATADRIVER_YAML){
+            // return yaml metadata dir
+            $paths =  array($this->getPackagePath() . DIRECTORY_SEPARATOR . REL_DIR_METADATA_YAML);
+        }
+        // Check if paths exists and is a directory
+        if(!is_dir($paths[0])){
+            $paths = array();
+        }
+        return $paths;
+    }
+    
+    /**
+     * Get the namespace of the package by the package handle
+     * 
+     * @param boolean $withLeadingBacksalsh
+     * @return string
+     */
+    public function getNamespace($withLeadingBacksalsh = false)
+    {   
+        $leadingBkslsh = '';
+        if($withLeadingBacksalsh){
+            $leadingBkslsh = '\\';
+        }
+        return $leadingBkslsh . 'Concrete\\Package\\' . camelcase($this->getPackageHandle());
+    }
+    
+        
+    /**
+     * Create a entity manager used for the package installation, 
+     * update and unistall process.
+     * 
+     * @return \Doctrine\ORM\EntityManager
+     */
+    protected function getPackageEntityManager()
+    {
+        $config = Setup::createConfiguration(true, $this->app->make('config')->get('database.proxy_classes'));
+        
+        // Create a temporary EntityManager with the apropriate metadata driver 
+        // for the package installation
+        // We don't want to accidentially update other packages, so we create
+        // a new EntityManager which contains only the ORM metadata of the specific package
+        if ($this->metadataDriver === self::PACKAGE_METADATADRIVER_ANNOTATION){
+            if(version_compare($this->getApplicationVersionRequired(), '5.8.0', '<')){
+                // Legacy - uses SimpleAnnotationReader
+                $driverImpl = $config->newDefaultAnnotationDriver($this->getPackageMetadataPaths());
+            }else{
+                // Use default AnnotationReader
+                $driverImpl = $config->newDefaultAnnotationDriver($this->getPackageMetadataPaths(), false);
+            }
+        } else if ($this->metadataDriver === self::PACKAGE_METADATADRIVER_XML){
+            $driverImpl = new \Doctrine\ORM\Mapping\Driver\XmlDriver($this->getPackageMetadataPaths());
+
+        } else if ($this->metadataDriver === self::PACKAGE_METADATADRIVER_YAML){
+            $driverImpl = new \Doctrine\ORM\Mapping\Driver\YamlDriver($this->getPackageMetadataPaths());
+        }
+        $config->setMetadataDriverImpl($driverImpl);
+        $em = EntityManager::create(\Database::connection(), $config);
+        return $em;
+    }
+    
+    /**
+     * Destroys all proxies related to a package 
+     */
+    protected function destroyProxyClasses(\Doctrine\ORM\EntityManager $em)
+    {
+        $config = $em->getConfiguration();
+        $proxyGenerator = new \Doctrine\Common\Proxy\ProxyGenerator($config->getProxyDir(), $config->getProxyNamespace());
+        
+        $classes = $em->getMetadataFactory()->getAllMetadata();
+        foreach ($classes as $class) {
+
+            $proxyFileName = $proxyGenerator->getProxyFileName($class->getName(), $config->getProxyDir());
+            if(file_exists($proxyFileName)){
+                @unlink($proxyFileName);
+            }
+        }
+    }
+    
     /**
      * @deprecated
      */
@@ -692,8 +844,4 @@ abstract class Package implements LocalizablePackageInterface
     {
         return \ORM::entityManager();
     }
-
-
-
-
 }

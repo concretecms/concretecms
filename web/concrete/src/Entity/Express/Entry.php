@@ -4,10 +4,12 @@ namespace Concrete\Core\Entity\Express;
 use Concrete\Core\Attribute\ObjectTrait;
 use Concrete\Core\Entity\Attribute\Value\ExpressValue;
 use Doctrine\Common\Collections\ArrayCollection;
+use DoctrineProxies\__CG__\Concrete\Core\Entity\Attribute\Key\ExpressKey;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @Entity(repositoryClass="\Concrete\Core\Entity\Express\EntryRepository")
- * @Table(name="ExpressEntityEntries")
+ * @ORM\Entity(repositoryClass="\Concrete\Core\Entity\Express\EntryRepository")
+ * @ORM\Table(name="ExpressEntityEntries")
  */
 class Entry implements \JsonSerializable
 {
@@ -44,19 +46,19 @@ class Entry implements \JsonSerializable
     }
 
     /**
-     * @Id @Column(type="integer")
-     * @GeneratedValue(strategy="AUTO")
+     * @ORM\Id @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $exEntryID;
 
     /**
-     * @Column(type="datetime")
+     * @ORM\Column(type="datetime")
      */
     protected $exEntryDateCreated;
 
     /**
-     * @ManyToOne(targetEntity="Entity", inversedBy="entries")
-     * @JoinColumn(name="exEntryEntityID", referencedColumnName="id")
+     * @ORM\ManyToOne(targetEntity="Entity", inversedBy="entries")
+     * @ORM\JoinColumn(name="exEntryEntityID", referencedColumnName="id")
      */
     protected $entity;
 
@@ -98,13 +100,13 @@ class Entry implements \JsonSerializable
     }
 
     /**
-     * @OneToMany(targetEntity="\Concrete\Core\Entity\Attribute\Value\ExpressValue", mappedBy="entry", cascade={"all"})
-     * @JoinColumn(name="exEntryID", referencedColumnName="exEntryID")
+     * @ORM\OneToMany(targetEntity="\Concrete\Core\Entity\Attribute\Value\ExpressValue", mappedBy="entry", cascade={"all"})
+     * @ORM\JoinColumn(name="exEntryID", referencedColumnName="exEntryID")
      */
     protected $attributes;
 
     /**
-     * @OneToMany(targetEntity="\Concrete\Core\Entity\Express\Entry\Association", mappedBy="entry", cascade={"all"})
+     * @ORM\OneToMany(targetEntity="\Concrete\Core\Entity\Express\Entry\Association", mappedBy="entry", cascade={"all"})
      */
     protected $associations;
 

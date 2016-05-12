@@ -3,36 +3,37 @@ namespace Concrete\Core\File\StorageLocation;
 
 use Concrete\Core\File\StorageLocation\Configuration\ConfigurationInterface;
 use Database;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @Entity
- * @Table(name="FileStorageLocations")
+ * @ORM\Entity
+ * @ORM\Table(name="FileStorageLocations")
  */
 class StorageLocation
 {
     /**
-     * @Column(type="string")
+     * @ORM\Column(type="string")
      */
     protected $fslName;
 
     /**
-     * @Column(type="object")
+     * @ORM\Column(type="object")
      */
     protected $fslConfiguration;
 
     /**
-     * @Id @Column(type="integer", options={"unsigned": true})
-     * @GeneratedValue
+     * @ORM\Id @ORM\Column(type="integer", options={"unsigned": true})
+     * @ORM\GeneratedValue
      */
     protected $fslID;
 
     /**
-     * @OneToMany(targetEntity="\Concrete\Core\File\File", mappedBy="storageLocation")
+     * @ORM\OneToMany(targetEntity="\Concrete\Core\File\File", mappedBy="storageLocation")
      **/
     protected $files;
 
     /**
-     * @Column(type="boolean")
+     * @ORM\Column(type="boolean")
      */
     protected $fslIsDefault = false;
 
@@ -105,7 +106,7 @@ class StorageLocation
     {
         $default = self::getDefault();
 
-        $em = \ORM::entityManager('core');
+        $em = \ORM::entityManager();
         $o = new static();
         $o->fslName = $fslName;
         $o->fslIsDefault = $fslIsDefault;
@@ -124,7 +125,7 @@ class StorageLocation
 
     public static function getByID($id)
     {
-        $em = \ORM::entityManager('core');
+        $em = \ORM::entityManager();
         $r = $em->find('\Concrete\Core\File\StorageLocation\StorageLocation', intval($id));
 
         return $r;
@@ -134,7 +135,7 @@ class StorageLocation
      */
     public static function getList()
     {
-        $em = \ORM::entityManager('core');
+        $em = \ORM::entityManager();
         return $em->getRepository('\Concrete\Core\File\StorageLocation\StorageLocation')->findBy(
             array(), array('fslID' => 'asc')
         );
@@ -145,7 +146,7 @@ class StorageLocation
      */
     public static function getDefault()
     {
-        $em = \ORM::entityManager('core');
+        $em = \ORM::entityManager();
         $location = $em->getRepository('\Concrete\Core\File\StorageLocation\StorageLocation')->findOneBy(
             array('fslIsDefault' => true,
             ));
@@ -180,7 +181,7 @@ class StorageLocation
             }
         }
 
-        $em = \ORM::entityManager('core');
+        $em = \ORM::entityManager();
         $em->remove($this);
         $em->flush();
     }
@@ -189,7 +190,7 @@ class StorageLocation
     {
         $default = self::getDefault();
 
-        $em = \ORM::entityManager('core');
+        $em = \ORM::entityManager();
         $em->persist($this);
 
         if ($this->isDefault() && is_object($default) && $default->getID() != $this->getID()) {

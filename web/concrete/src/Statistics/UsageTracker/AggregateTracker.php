@@ -9,8 +9,6 @@ use InvalidArgumentException;
  * Class PolyTracker
  * A tracker that employes `\Illuminate\Support\Manager` to keep track of a list of Trackers.
  * When `::track` is called, `PolyTracker` forwards the call to each of its drivers.
- *
- * @package Concrete\Core\Statistics\UsageTracker
  */
 final class AggregateTracker implements TrackerManagerInterface, ApplicationAwareInterface
 {

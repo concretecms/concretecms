@@ -2,7 +2,7 @@
 /**
  * Functions useful for working with text.
  *
- * @package    Helpers
+ * \@package    Helpers
  *
  * @category   Concrete
  *

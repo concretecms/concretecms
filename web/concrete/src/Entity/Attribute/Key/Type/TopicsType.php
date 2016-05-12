@@ -3,20 +3,21 @@ namespace Concrete\Core\Entity\Attribute\Key\Type;
 
 use Concrete\Core\Entity\Attribute\Value\Value\TopicsValue;
 use Concrete\Core\Tree\Tree;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @Entity
- * @Table(name="TopicsAttributeKeyTypes")
+ * @ORM\Entity
+ * @ORM\Table(name="TopicsAttributeKeyTypes")
  */
 class TopicsType extends Type
 {
     /**
-     * @Column(type="integer")
+     * @ORM\Column(type="integer")
      */
     protected $akTopicParentNodeID = 0;
 
     /**
-     * @Column(type="integer")
+     * @ORM\Column(type="integer")
      */
     protected $akTopicTreeID = 0;
 

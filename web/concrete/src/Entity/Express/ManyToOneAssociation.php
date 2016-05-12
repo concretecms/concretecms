@@ -3,9 +3,10 @@ namespace Concrete\Core\Entity\Express;
 
 use Concrete\Core\Express\Association\Formatter\ManyToOneFormatter;
 use Concrete\Core\Express\Association\Builder\ManyToOneAssociationBuilder;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @Entity
+ * @ORM\Entity
  */
 class ManyToOneAssociation extends Association
 {

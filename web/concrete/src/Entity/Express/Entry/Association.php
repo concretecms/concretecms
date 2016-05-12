@@ -1,29 +1,31 @@
 <?php
 namespace Concrete\Core\Entity\Express\Entry;
 
+use Doctrine\ORM\Mapping as ORM;
+
 /**
- * @Entity
- * @InheritanceType("JOINED")
- * @DiscriminatorColumn(name="type", type="string")
- * @Table(name="ExpressEntityEntryAssociations")
+ * @ORM\Entity
+ * @ORM\InheritanceType("JOINED")
+ * @ORM\DiscriminatorColumn(name="type", type="string")
+ * @ORM\Table(name="ExpressEntityEntryAssociations")
  */
 abstract class Association
 {
 
     /**
-     * @Id @Column(type="integer")
-     * @GeneratedValue(strategy="AUTO")
+     * @ORM\Id @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $id;
 
     /**
-     * @ManyToOne(targetEntity="\Concrete\Core\Entity\Express\Entry")
-     * @JoinColumn(name="exEntryID", referencedColumnName="exEntryID")
+     * @ORM\ManyToOne(targetEntity="\Concrete\Core\Entity\Express\Entry")
+     * @ORM\JoinColumn(name="exEntryID", referencedColumnName="exEntryID")
      */
     protected $entry;
 
     /**
-     * @ManyToOne(targetEntity="\Concrete\Core\Entity\Express\Association")
+     * @ORM\ManyToOne(targetEntity="\Concrete\Core\Entity\Express\Association")
      */
     protected $association;
 

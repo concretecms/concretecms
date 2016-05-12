@@ -27,15 +27,16 @@ use stdClass;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use User;
 use View;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @Entity
- * @Table(
+ * @ORM\Entity
+ * @ORM\Table(
  *     name="FileVersions",
  *     indexes={
- *     @Index(name="fvFilename", columns={"fvFilename"}),
- *     @Index(name="fvExtension", columns={"fvExtension"}),
- *     @Index(name="fvType", columns={"fvType"})
+ *     @ORM\Index(name="fvFilename", columns={"fvFilename"}),
+ *     @ORM\Index(name="fvExtension", columns={"fvExtension"}),
+ *     @ORM\Index(name="fvType", columns={"fvType"})
  *     }
  * )
  */
@@ -69,85 +70,85 @@ class Version
     }
 
     /**
-     * /* @Id
-     * @ManyToOne(targetEntity="File", inversedBy="versions")
-     * @JoinColumn(name="fID", referencedColumnName="fID")
+     * /* @ORM\Id
+     * @ORM\ManyToOne(targetEntity="File", inversedBy="versions")
+     * @ORM\JoinColumn(name="fID", referencedColumnName="fID")
      *
      * @var \Concrete\Core\File\File
      */
     protected $file;
-    /** @Id
-     * @Column(type="integer")
+    /** @ORM\Id
+     * @ORM\Column(type="integer")
      */
     protected $fvID = 0;
     /**
-     * @Column(type="string")
+     * @ORM\Column(type="string")
      */
     protected $fvFilename = null;
     /**
-     * @Column(type="string", nullable=true)
+     * @ORM\Column(type="string", nullable=true)
      */
     protected $fvPrefix;
     /**
-     * @Column(type="datetime")
+     * @ORM\Column(type="datetime")
      */
     protected $fvDateAdded;
     /**
-     * @Column(type="datetime")
+     * @ORM\Column(type="datetime")
      */
     protected $fvActivateDateTime;
     /**
-     * @Column(type="boolean")
+     * @ORM\Column(type="boolean")
      */
     protected $fvIsApproved = false;
     /**
-     * @Column(type="integer")
+     * @ORM\Column(type="integer")
      */
     protected $fvAuthorUID = 0;
     /**
-     * @Column(type="bigint")
+     * @ORM\Column(type="bigint")
      */
     protected $fvSize = 0;
     /**
-     * @Column(type="integer")
+     * @ORM\Column(type="integer")
      */
     protected $fvApproverUID = 0;
     /**
-     * @Column(type="string", nullable=true)
+     * @ORM\Column(type="string", nullable=true)
      */
     protected $fvTitle = null;
     /**
-     * @Column(type="text", nullable=true)
+     * @ORM\Column(type="text", nullable=true)
      */
     protected $fvDescription = null;
     /**
-     * @Column(type="string", nullable=true)
+     * @ORM\Column(type="string", nullable=true)
      */
     protected $fvExtension = null;
 
     /**
-     * @OneToMany(targetEntity="\Concrete\Core\Entity\Attribute\Value\FileValue",  mappedBy="version")
-     * @JoinColumns({
-     *   @JoinColumn(name="fID", referencedColumnName="fID"),
-     *   @JoinColumn(name="fvID", referencedColumnName="fvID")
+     * @ORM\OneToMany(targetEntity="\Concrete\Core\Entity\Attribute\Value\FileValue",  mappedBy="version")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="fID", referencedColumnName="fID"),
+     *   @ORM\JoinColumn(name="fvID", referencedColumnName="fvID")
      * })
      */
     protected $attributes;
 
     /**
-     * @Column(type="integer")
+     * @ORM\Column(type="integer")
      */
     protected $fvType = 0;
     /**
-     * @Column(type="text", nullable=true)
+     * @ORM\Column(type="text", nullable=true)
      */
     protected $fvTags = null;
     /**
-     * @Column(type="boolean")
+     * @ORM\Column(type="boolean")
      */
     protected $fvHasListingThumbnail = false;
     /**
-     * @Column(type="boolean")
+     * @ORM\Column(type="boolean")
      */
     protected $fvHasDetailThumbnail = false;
 
@@ -183,7 +184,7 @@ class Version
         $fv->file = $file;
         $fv->fvID = 1;
 
-        $em = \ORM::entityManager('core');
+        $em = \ORM::entityManager();
         $em->persist($fv);
         $em->flush();
 
@@ -302,7 +303,7 @@ class Version
             }
         }
 
-        $em = \ORM::entityManager('core');
+        $em = \ORM::entityManager();
         $em->remove($this);
         $em->flush();
     }
@@ -394,7 +395,7 @@ class Version
     public function duplicate()
     {
         $db = Database::get();
-        $em = \ORM::entityManager('core');
+        $em = \ORM::entityManager();
         $qq = $em->createQuery('SELECT max(v.fvID) FROM \Concrete\Core\File\Version v where v.file = :file');
         $qq->setParameter('file', $this->file);
         $fvID = $qq->getSingleScalarResult();
@@ -436,7 +437,7 @@ class Version
 
     protected function save($flush = true)
     {
-        $em = \ORM::entityManager('core');
+        $em = \ORM::entityManager();
         $em->persist($this);
         if ($flush) {
             $em->flush();
@@ -979,7 +980,7 @@ class Version
             }
         }
 
-        \ORM::entityManager('core')->refresh($this);
+        \ORM::entityManager()->refresh($this);
 
         $fsr = $this->getFileResource();
         if (!$fsr->isFile()) {

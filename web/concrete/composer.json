@@ -55,7 +55,8 @@
     "oryzone/oauth-user-data": "~1.0@dev",
     "mlocati/concrete5-translation-library": "1.4.5",
     "league/url": "3.3.*",
-    "concrete5/doctrine-xml": "1.0.0"
+    "concrete5/doctrine-xml": "1.0.0",
+    "symfony/yaml":"3.*"
   },
   "require-dev": {
     "concrete5/documentation_generator": "1.0-beta3"

@@ -6,31 +6,32 @@ use Concrete\Core\Package\PackageList;
 use Database;
 use Core;
 use Environment;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @Entity
- * @Table(name="FileStorageLocationTypes")
+ * @ORM\Entity
+ * @ORM\Table(name="FileStorageLocationTypes")
  */
 class Type
 {
     /**
-     * @Column(type="text")
+     * @ORM\Column(type="text")
      */
     protected $fslTypeHandle;
 
     /**
-     * @Column(type="text")
+     * @ORM\Column(type="text")
      */
     protected $fslTypeName;
 
     /**
-     * @Id @Column(type="integer")
-     * @GeneratedValue
+     * @ORM\Id @ORM\Column(type="integer")
+     * @ORM\GeneratedValue
      */
     protected $fslTypeID;
 
     /**
-     * @Column(type="integer")
+     * @ORM\Column(type="integer")
      */
     protected $pkgID = 0;
 
@@ -93,7 +94,7 @@ class Type
      */
     public static function add($fslTypeHandle, $fslTypeName, $pkg = false)
     {
-        $em = \ORM::entityManager('core');
+        $em = \ORM::entityManager();
         $o = new static();
         $o->fslTypeHandle = $fslTypeHandle;
         $o->fslTypeName = $fslTypeName;
@@ -113,7 +114,7 @@ class Type
      */
     public static function getByID($id)
     {
-        $em = \ORM::entityManager('core');
+        $em = \ORM::entityManager();
         $r = $em->find('\Concrete\Core\File\StorageLocation\Type\Type', $id);
 
         return $r;
@@ -126,7 +127,7 @@ class Type
      */
     public static function getByHandle($fslTypeHandle)
     {
-        $em = \ORM::entityManager('core');
+        $em = \ORM::entityManager();
         $type = $em->getRepository('\Concrete\Core\File\StorageLocation\Type\Type')->findOneBy(
             array('fslTypeHandle' => $fslTypeHandle,
          ));
@@ -141,7 +142,7 @@ class Type
      */
     public static function getList()
     {
-        $em = \ORM::entityManager('core');
+        $em = \ORM::entityManager();
         return $em->getRepository('\Concrete\Core\File\StorageLocation\Type\Type')->findBy(
             array(), array('fslTypeID' => 'asc')
         );
@@ -187,7 +188,7 @@ class Type
      */
     public static function getListByPackage($pkg)
     {
-        $em = \ORM::entityManager('core');
+        $em = \ORM::entityManager();
         return $em->getRepository('\Concrete\Core\File\StorageLocation\Type\Type')->findBy(
             array('pkgID' => $pkg->getPackageID()), array('fslTypeID' => 'asc')
         );
@@ -209,7 +210,7 @@ class Type
             }
         }
 
-        $em = \ORM::entityManager('core');
+        $em = \ORM::entityManager();
         $em->remove($this);
         $em->flush();
 

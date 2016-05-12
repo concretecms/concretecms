@@ -21,6 +21,8 @@ use Concrete\Block\ExpressForm\Controller as ExpressFormBlockController;
 use Config;
 use Core;
 use Database;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\Tools\Setup;
 use FileSet;
 use Group;
 use GroupTree;
@@ -306,7 +308,18 @@ class StartingPointPackage extends BasePackage
         }
         $installDirectory = DIR_BASE_CORE . '/config';
         try {
-            $em = \ORM::entityManager();
+            // Retrieving metadata from the entityManager created with \ORM::entityManager() 
+            // will result in a empty metadata array. Because all drivers are wrapped in a driverChain
+            // the method getAllMetadata() of Doctrine\Common\Persistence\Mapping\AbstractClassMetadataFactory
+            // is going to return a empty array. To overcome this issue a new EntityManager is create with the
+            // only purpose to be used during the installation. 
+            $config = Setup::createConfiguration(true, \Config::get('database.proxy_classes'));
+            \Doctrine\Common\Annotations\AnnotationReader::addGlobalIgnoredName('subpackages');
+            \Doctrine\Common\Annotations\AnnotationReader::addGlobalIgnoredName('package');
+            // Use default AnnotationReader
+            $driverImpl = $config->newDefaultAnnotationDriver(DIR_BASE_CORE . DIRECTORY_SEPARATOR . DIRNAME_CLASSES, false);
+            $config->setMetadataDriverImpl($driverImpl);
+            $em = EntityManager::create(\Database::connection(), $config);
             $dbm = new DatabaseStructureManager($em);
             $dbm->destroyProxyClasses();
             $dbm->generateProxyClasses();

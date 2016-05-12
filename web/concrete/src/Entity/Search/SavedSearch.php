@@ -1,18 +1,20 @@
 <?php
 namespace Concrete\Core\Entity\Search;
 
+use Doctrine\ORM\Mapping as ORM;
+
 /**
- * @MappedSuperClass
+ * @ORM\MappedSuperClass
  */
 abstract class SavedSearch
 {
 
 
-    /** @Embedded(class = "Query") */
+    /** @ORM\Embedded(class = "Query") */
     protected $query = null;
 
     /**
-     * @Column(type="string")
+     * @ORM\Column(type="string")
      */
     protected $presetName;
 

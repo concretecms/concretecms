@@ -5,21 +5,22 @@ use Concrete\Core\Backup\ContentExporter;
 use Concrete\Core\Page\Theme\GridFramework\GridFramework;
 use Database;
 use Symfony\Component\HttpFoundation\Request;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @Entity
- * @Table(name="StyleCustomizerInlineStyleSets")
+ * @ORM\Entity
+ * @ORM\Table(name="StyleCustomizerInlineStyleSets")
  */
 class StyleSet
 {
     /**
-     * @Id @Column(type="integer")
-     * @GeneratedValue
+     * @ORM\Id @ORM\Column(type="integer")
+     * @ORM\GeneratedValue
      */
     protected $issID;
 
     /**
-     * @Column(type="string")
+     * @ORM\Column(type="string")
      */
     protected $customClass;
 
@@ -40,47 +41,47 @@ class StyleSet
     }
 
     /**
-     * @Column(type="string", nullable=true)
+     * @ORM\Column(type="string", nullable=true)
      */
     protected $backgroundColor;
 
     /**
-     * @Column(type="integer")
+     * @ORM\Column(type="integer")
      */
     protected $backgroundImageFileID = 0;
 
     /**
-     * @Column(type="string")
+     * @ORM\Column(type="string")
      */
     protected $backgroundRepeat = 'no-repeat';
 
     /**
-     * @Column(type="string")
+     * @ORM\Column(type="string")
      */
     protected $backgroundSize = 'auto';
 
     /**
-     * @Column(type="string")
+     * @ORM\Column(type="string")
      */
     protected $backgroundPosition = '0% 0%';
 
     /**
-     * @Column(type="string", nullable=true)
+     * @ORM\Column(type="string")
      */
     protected $borderColor;
 
     /**
-     * @Column(type="string", nullable=true)
+     * @ORM\Column(type="string")
      */
     protected $borderStyle;
 
     /**
-     * @Column(type="string", nullable=true)
+     * @ORM\Column(type="string")
      */
     protected $borderWidth;
 
     /**
-     * @Column(type="string", nullable=true)
+     * @ORM\Column(type="string", nullable=true)
      */
     protected $borderRadius;
 
@@ -101,112 +102,112 @@ class StyleSet
     }
 
     /**
-     * @Column(type="string", nullable=true)
+     * @ORM\Column(type="string")
      */
     protected $baseFontSize;
 
     /**
-     * @Column(type="string", nullable=true)
+     * @ORM\Column(type="string")
      */
     protected $alignment;
 
     /**
-     * @Column(type="string", nullable=true)
+     * @ORM\Column(type="string")
      */
     protected $textColor;
 
     /**
-     * @Column(type="string", nullable=true)
+     * @ORM\Column(type="string")
      */
     protected $linkColor;
 
     /**
-     * @Column(type="string", nullable=true)
+     * @ORM\Column(type="string")
      */
     protected $marginTop;
 
     /**
-     * @Column(type="string", nullable=true)
+     * @ORM\Column(type="string")
      */
     protected $marginBottom;
 
     /**
-     * @Column(type="string", nullable=true)
+     * @ORM\Column(type="string")
      */
     protected $marginLeft;
 
     /**
-     * @Column(type="string", nullable=true)
+     * @ORM\Column(type="string")
      */
     protected $marginRight;
 
     /**
-     * @Column(type="string", nullable=true)
+     * @ORM\Column(type="string")
      */
     protected $paddingTop;
 
     /**
-     * @Column(type="string", nullable=true)
+     * @ORM\Column(type="string")
      */
     protected $paddingBottom;
 
     /**
-     * @Column(type="string", nullable=true)
+     * @ORM\Column(type="string")
      */
     protected $paddingLeft;
 
     /**
-     * @Column(type="string", nullable=true)
+     * @ORM\Column(type="string")
      */
     protected $paddingRight;
 
     /**
-     * @Column(type="string", nullable=true)
+     * @ORM\Column(type="string")
      */
     protected $rotate;
 
     /**
-     * @Column(type="string", nullable=true)
+     * @ORM\Column(type="string")
      */
     protected $boxShadowHorizontal;
 
     /**
-     * @Column(type="string", nullable=true)
+     * @ORM\Column(type="string")
      */
     protected $boxShadowVertical;
 
     /**
-     * @Column(type="string", nullable=true)
+     * @ORM\Column(type="string")
      */
     protected $boxShadowBlur;
 
     /**
-     * @Column(type="string", nullable=true)
+     * @ORM\Column(type="string")
      */
     protected $boxShadowSpread;
 
     /**
-     * @Column(type="string", nullable=true)
+     * @ORM\Column(type="string")
      */
     protected $boxShadowColor;
 
     /**
-     * @Column(type="boolean")
+     * @ORM\Column(type="boolean")
      */
     protected $hideOnExtraSmallDevice = false;
 
     /**
-     * @Column(type="boolean")
+     * @ORM\Column(type="boolean")
      */
     protected $hideOnSmallDevice = false;
 
     /**
-     * @Column(type="boolean")
+     * @ORM\Column(type="boolean")
      */
     protected $hideOnMediumDevice = false;
 
     /**
-     * @Column(type="boolean")
+     * @ORM\Column(type="boolean")
      */
     protected $hideOnLargeDevice = false;
 
@@ -699,14 +700,14 @@ class StyleSet
      */
     public static function getByID($issID)
     {
-        $em = \ORM::entityManager('core');
+        $em = \ORM::entityManager();
 
         return $em->find('\Concrete\Core\StyleCustomizer\Inline\StyleSet', $issID);
     }
 
     public function save()
     {
-        $em = \ORM::entityManager('core');
+        $em = \ORM::entityManager();
         $em->persist($this);
         $em->flush();
     }

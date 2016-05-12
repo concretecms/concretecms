@@ -1,15 +1,17 @@
 <?php
 namespace Concrete\Core\Entity\Attribute\Key;
 
+use Doctrine\ORM\Mapping as ORM;
+
 /**
- * @Entity
- * @Table(name="ExpressAttributeKeys")
+ * @ORM\Entity
+ * @ORM\Table(name="ExpressAttributeKeys")
  */
 class ExpressKey extends Key
 {
 
     /**
-     * @ManyToOne(targetEntity="\Concrete\Core\Entity\Express\Entity")
+     * @ORM\ManyToOne(targetEntity="\Concrete\Core\Entity\Express\Entity")
      **/
     protected $entity;
 

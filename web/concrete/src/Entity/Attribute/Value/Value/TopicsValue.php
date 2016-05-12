@@ -3,16 +3,17 @@ namespace Concrete\Core\Entity\Attribute\Value\Value;
 
 use Concrete\Core\Tree\Node\Node;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @Entity
- * @Table(name="TopicAttributeValues")
+ * @ORM\Entity
+ * @ORM\Table(name="TopicAttributeValues")
  */
 class TopicsValue extends Value
 {
     /**
-     * @OneToMany(targetEntity="\Concrete\Core\Entity\Attribute\Value\Value\SelectedTopic", mappedBy="value", cascade={"all"})
-     * @JoinColumn(name="avID", referencedColumnName="avID")
+     * @ORM\OneToMany(targetEntity="\Concrete\Core\Entity\Attribute\Value\Value\SelectedTopic", mappedBy="value", cascade={"all"})
+     * @ORM\JoinColumn(name="avID", referencedColumnName="avID")
      */
     protected $topics;
 

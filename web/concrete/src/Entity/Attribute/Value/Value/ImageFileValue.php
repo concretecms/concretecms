@@ -2,16 +2,17 @@
 namespace Concrete\Core\Entity\Attribute\Value\Value;
 
 use Concrete\Core\File\FileProviderInterface;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @Entity
- * @Table(name="ImageFileAttributeValues")
+ * @ORM\Entity
+ * @ORM\Table(name="ImageFileAttributeValues")
  */
 class ImageFileValue extends Value implements FileProviderInterface
 {
     /**
-     * @ManyToOne(targetEntity="\Concrete\Core\File\File")
-     * @JoinColumn(name="fID", referencedColumnName="fID")
+     * @ORM\ManyToOne(targetEntity="\Concrete\Core\File\File")
+     * @ORM\JoinColumn(name="fID", referencedColumnName="fID")
      */
     protected $file;
 
