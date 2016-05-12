@@ -156,7 +156,10 @@ if (isset($neutralStack)) {
                     $bv->render('view');
                 }
             }
-            View::element('block_area_footer', array('a' => $a));
+            //View::element('block_area_footer', array('a' => $a));
+            print '</div>';
+            // No, we don't include the footer because we don't want all area controls available.
+            // But the footer element has a closing DIV we need.
             ?>
         </div>
 
