@@ -92,7 +92,9 @@ class Controller extends BlockController
         if (is_object($entity)) {
             $category = $entity->getAttributeKeyCategory();
             $list = new EntryList($entity);
-            $list->setItemsPerPage($this->displayLimit);
+            if ($this->displayLimit > 0) {
+                $list->setItemsPerPage(intval($this->displayLimit));
+            }
             $set = unserialize($this->columns);
             $defaultSortColumn = $set->getDefaultSortColumn();
             if ($this->request->query->has($list->getQuerySortDirectionParameter())) {
