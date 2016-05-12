@@ -12,6 +12,20 @@ class AttributeRepository extends EntityRepository
         );
     }
 
+    public function getMemberListList()
+    {
+        return $this->findBy(
+            array('uakMemberListDisplay' => true)
+        );
+    }
+
+    public function getPublicProfileList()
+    {
+        return $this->findBy(
+            array('uakProfileDisplay' => true)
+        );
+    }
+
     public function getEditableInProfileList()
     {
         return $this->findBy(
