@@ -534,9 +534,13 @@ module.exports = function(grunt) {
         require('./tasks/build-release/clean.js')(grunt, config, parameters, this.async());
     });
 
+    /*
+
     grunt.registerTask('build-release-remove-short-tags', 'Build process: remove short tags.', function() {
         require('./tasks/build-release/remove-short-tags.js')(grunt, config, parameters, this.async());
     });
+
+    */
 
     grunt.registerTask('build-release-translations', 'Build process: downloading Translations.', function() {
         require('./tasks/build-release/translations.js')(grunt, config, parameters, this.async());
@@ -556,7 +560,9 @@ module.exports = function(grunt) {
             'build-release-download',
             'build-release-build',
             'build-release-clean',
+            /*
             'build-release-remove-short-tags',
+            */
             'build-release-translations',
             'build-release-create-zip',
             'build-release-cleanup'
