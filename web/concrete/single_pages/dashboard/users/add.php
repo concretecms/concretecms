@@ -90,14 +90,18 @@
 
 
 		<fieldset>
-			<legend><?=t('Groups')?></legend>
-			<?php foreach ($gArray as $g) {
-    $gp = new Permissions($g);
-    if ($gp->canAssignGroup()) {
-        ?>
+			<div class="form-group">
 				<div class="row">
-				<div class="col-sm-3"></div>
+				<div class="col-sm-3">
+					<legend><?=t('Groups')?></legend>
+
+				</div>
 				<div class="col-sm-7">
+						<label class="control-label"><?=t('Place this user into groups')?></label>
+					<?php foreach ($gArray as $g) {
+					$gp = new Permissions($g);
+					if ($gp->canAssignGroup()) {
+					?>
 					<div class="checkbox">
 					<label>
 						<input type="checkbox" name="gID[]" value="<?=$g->getGroupID()?>" <?php if (isset($_POST['gID']) && is_array($_POST['gID']) && in_array($g->getGroupID(), $_POST['gID'])) {
@@ -107,11 +111,12 @@
 						<?=$g->getGroupDisplayName()?>
 					</label>
 					</div>
+					<?php }
+
+					}?>
+					</div>
 				</div>
-				</div>
-	        <?php 
-    }
-} ?>
+			</div>
         </fieldset>
 	<?=$token->output('submit');?>
 

@@ -66,7 +66,7 @@ if ($_POST['task'] == 'delete') {
 		}
 
 		if(!(in_array($ui->getUserID(),$excluded_user_ids)) && !in_array('delete',$workflowRequestActions)) {
-			$ui->triggerDelete();
+			$ui->triggerDelete($u);
 		}
 	}
 	echo Loader::helper('json')->encode(array('error'=>false, 'hudMessage' => $hudMessage));
