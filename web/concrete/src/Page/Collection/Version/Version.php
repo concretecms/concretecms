@@ -267,7 +267,7 @@ class Version extends Object implements \Concrete\Core\Permission\ObjectInterfac
         $db = $app->make('database')->connection();
         $q = "update CollectionVersions set cvComments = ? where cvID = ? and cID = ?";
         $db->executeQuery($q, $v);
-        $this->versionComments = $comment;
+        $this->cvComments = $comment;
     }
 
     public function setPublishDate($publishDate)
