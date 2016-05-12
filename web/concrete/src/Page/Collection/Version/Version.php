@@ -526,13 +526,19 @@ class Version extends Object implements \Concrete\Core\Permission\ObjectInterfac
 
     public function canDiscard()
     {
-        $app = Facade::getFacadeApplication();
-        $db = $app->make('database')->connection();
-        $total = $db->fetchColumn('select count(cvID) from CollectionVersions where cID = ?', array(
-            $this->cID,
-        ));
+        $result = false;
+        if ($this->isNew()) {
+            $app = Facade::getFacadeApplication();
+            $db = $app->make('database')->connection();
+            $total = $db->fetchColumn('select count(cvID) from CollectionVersions where cID = ?', array(
+                $this->cID,
+            ));
+            if ($total) {
+                $result = true;
+            }
+        }
 
-        return $this->isNew() && $total > 1;
+        return $result;
     }
 
     public function removeNewStatus()
