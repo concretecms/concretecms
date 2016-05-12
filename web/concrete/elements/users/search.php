@@ -26,7 +26,7 @@ $searchRequest = $flr->getSearchRequest();
 			<?php if ($ek->validate()) {
     ?>
 				<option data-bulk-action-type="dialog" data-bulk-action-title="<?php echo t('Edit Properties')?>" data-bulk-action-url="<?php echo URL::to('/ccm/system/dialogs/user/bulk/properties')?>" data-bulk-action-dialog-width="630" data-bulk-action-dialog-height="450"><?php echo t('Edit Properties')?></option>
-			<?php 
+			<?php
 } ?>
 			<?php /*
             <?php if ($ik->validate()) { ?>
@@ -42,7 +42,7 @@ $searchRequest = $flr->getSearchRequest();
 			<?php if ($mode == 'choose_multiple') {
     ?>
 				<option value="choose"><?php echo t('Choose')?></option>
-			<?php 
+			<?php
 } ?>
 		</select>
 	</div>
@@ -72,7 +72,7 @@ $searchRequest = $flr->getSearchRequest();
     if ($gp->canSearchUsersInGroup($g)) {
         ?>
 					<option value="<?php echo $g->getGroupID()?>"  <?php if (is_array($searchRequest['gID']) && in_array($g->getGroupID(), $searchRequest['gID'])) {
-    ?> selected="selected" <?php 
+    ?> selected="selected" <?php
 }
         ?>><?php echo $g->getGroupDisplayName()?></option>
 				<?php
@@ -88,7 +88,7 @@ $searchRequest = $flr->getSearchRequest();
 		<div class="form-group form-group-full">
 			<label class="control-label"><?=t('Per Page')?></label>
 			<div class="ccm-search-field-content ccm-search-field-content-select2">
-				<?=$form->select('numResults', array(10 => t('10'), 20 => t('20'), 50 => t('50'), 100 => t('100'), 250 => t('250'), 500 => t('500'), 1000 => t('1000'))); ?>
+                <?php echo $form->select('numResults', array(10 => t('10'), 20 => t('20'), 50 => t('50'), 100 => t('100'), 250 => t('250'), 500 => t('500'), 1000 => t('1000')), Config::get('concrete.search_users.results')); ?>
 			</div>
 		</div>
 		<button type="submit" class="btn btn-primary pull-right"><?=t('Search')?></button>
@@ -103,7 +103,7 @@ $searchRequest = $flr->getSearchRequest();
 		<?php foreach ($searchFields as $key => $value) {
     ?>
 			<option value="<?php echo $key?>" <% if (typeof(field) != 'undefined' && field.field == '<?php echo $key?>') { %>selected<% } %> data-search-field-url="<?php echo URL::to('/ccm/system/search/users/field', $key)?>"><?php echo $value?></option>
-		<?php 
+		<?php
 } ?>
 	</select>
 
