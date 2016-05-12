@@ -1,11 +1,7 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
 
-?>
-
-<?php $form = Core::make('helper/form'); ?>
-
-<?php foreach ($sortable_sets as $set) {
+foreach ($sortable_sets as $set) {
     ?>
     <h4><?=$set->getAttributeSetName()?></h4>
     <ul class="item-select-list ccm-attribute-list-wrapper" data-sortable-attribute-set="<?=$set->getAttributeSetID()?>">
@@ -14,35 +10,26 @@ defined('C5_EXECUTE') or die("Access Denied.");
             $controller = $key->getController();
             $formatter = $controller->getIconFormatter();
             ?>
-
             <li class="ccm-attribute" id="akID_<?=$key->getAttributeKeyID()?>">
-                <a href="<?=$view->controller->getEditAttributeKeyURL($key)?>" title="<?php echo t('Handle')?>: <?php echo $key->getAttributeKeyHandle();
-            ?>">
+                <a href="<?=$view->controller->getEditAttributeKeyURL($key)?>" title="<?php echo t('Handle')?>: <?php echo $key->getAttributeKeyHandle(); ?>">
                     <?=$formatter->getListIconElement()?>
                     <?=$key->getAttributeKeyDisplayName()?>
                 </a>
-                <?php if ($enableSorting) {
-    ?>
+                <?php if ($enableSorting) { ?>
                     <i class="ccm-item-select-list-sort"></i>
-                <?php 
-}
-            ?>
+                <?php } ?>
             </li>
-
-        <?php 
+            <?php
         }
-    ?>
+        ?>
     </ul>
-<?php 
-} ?>
-
-<?php if (count($unassigned)) {
-    ?>
-    <?php if (count($sortable_sets)) {
-    ?>
-        <h4><?=t('Other')?></h4>
-    <?php 
+    <?php
 }
+
+if (count($unassigned)) {
+    if (count($sortable_sets)) {
+        ?><h4><?=t('Other')?></h4><?php
+    }
     ?>
     <ul class="item-select-list ccm-attribute-list-wrapper">
         <?php
@@ -50,23 +37,19 @@ defined('C5_EXECUTE') or die("Access Denied.");
             $controller = $key->getController();
             $formatter = $controller->getIconFormatter();
             ?>
-
             <li class="ccm-attribute" id="akID_<?=$key->getAttributeKeyID()?>">
-                <a href="<?=$view->controller->getEditAttributeKeyURL($key)?>" title="<?php echo t('Handle')?>: <?php echo $key->getAttributeKeyHandle();
-            ?>">
+                <a href="<?=$view->controller->getEditAttributeKeyURL($key)?>" title="<?php echo t('Handle')?>: <?php echo $key->getAttributeKeyHandle(); ?>">
                     <?=$formatter->getListIconElement()?>
                     <?=$key->getAttributeKeyDisplayName()?>
                 </a>
             </li>
-
-        <?php 
+            <?php
         }
-    ?>
+        ?>
     </ul>
-<?php 
-} ?>
+    <?php
+}
 
-<?php
 if ($enableSorting) {
     ?>
     <script type="text/javascript">
@@ -84,33 +67,29 @@ if ($enableSorting) {
             });
         });
     </script>
-<?php 
-} ?>
+    <?php
+}
 
-<?php if (isset($types) && is_array($types) && count($types) > 0) {
+if (isset($types) && is_array($types) && count($types) > 0) {
     ?>
-
-    <h3><?=t('Add Attribute Type')?></h3>
-
+    <h3><?=t('Add Attribute')?></h3>
+    <?php echo t('Type'); ?>
     <div class="btn-group">
         <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
             <?=t('Choose')?> <span class="caret"></span>
         </button>
         <ul class="dropdown-menu">
-            <?php foreach ($types as $type) {
-    $controller = $type->getController();
-                /*
-                 * @var \Concrete\Core\Attribute\IconFormatterInterface
-                 */
+            <?php
+            foreach ($types as $type) {
+                $controller = $type->getController();
                 $formatter = $controller->getIconFormatter();
-    ?>
+                /* @var \Concrete\Core\Attribute\IconFormatterInterface $formatter */
+                ?>
                 <li><a href="<?=$view->controller->getAddAttributeTypeURL($type)?>"><?=$formatter->getListIconElement()?> <?=$type->getAttributeTypeDisplayName()?></a></li>
-            <?php 
-}
-    ?>
+                <?php
+            }
+            ?>
         </ul>
     </div>
-
-<?php 
-} ?>
-
+    <?php
+}
