@@ -1,8 +1,9 @@
 <?php
 
-namespace Concrete\tests\Core\Statistics\UsageTracker;
+namespace Concrete\Tests\Core\Statistics\UsageTracker;
 
 use Concrete\Core\Application\Application;
+use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Statistics\UsageTracker\AggregateTracker;
 use Concrete\Core\Statistics\UsageTracker\ServiceProvider;
 use Concrete\Core\Statistics\UsageTracker\TrackerManagerInterface;
@@ -13,6 +14,14 @@ class ServiceProviderTest extends \PHPUnit_Framework_TestCase
     public function testRegister()
     {
         $app = new Application();
+
+        // This service provider requires a config repository be registered
+        $mockBuilder = $this->getMockBuilder(Repository::class);
+        $repository = $mockBuilder->disableOriginalConstructor()->getMock();
+
+        $app->bind('config', function() use ($repository) {
+            return $repository;
+        });
 
         $provider = new ServiceProvider($app);
         $provider->register();
