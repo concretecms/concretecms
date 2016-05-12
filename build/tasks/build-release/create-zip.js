@@ -30,7 +30,7 @@ module.exports = function(grunt, config, parameters, done) {
 		}
 		version = version[1];
 		process.stdout.write(version + '\n');
-		var dirname = 'concrete' + version;
+		var dirname = 'concrete5-' + version;
 		fs.renameSync(path.join(workFolder, 'web'), path.join(workFolder, dirname));
 		revert = function() {
 			fs.renameSync(path.join(workFolder, dirname), path.join(workFolder, 'web'));
