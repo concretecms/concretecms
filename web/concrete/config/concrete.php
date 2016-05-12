@@ -548,6 +548,10 @@ return array(
         'results' => 10
     ),
 
+    'search_users' => array(
+        'results' => 10
+    ),
+
     'sitemap_xml' => array(
         'file' => 'sitemap.xml',
         'frequency' => 'weekly',
