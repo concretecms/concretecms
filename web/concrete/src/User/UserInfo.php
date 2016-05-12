@@ -499,7 +499,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
     function triggerActivate($action=null, $requesterUID=null)
     {
         if ($requesterUID === null) {
-            global $u;
+            $u = new User();
             $requesterUID = $u->getUserID();
         }
 
@@ -530,9 +530,12 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
         Events::dispatch('on_user_activate', $ue);
     }
 
-    function triggerDeactivate()
+    function triggerDeactivate($requesterUID = null)
     {
-        global $u;
+        if ($requesterUID === null) {
+            $u = new User();
+            $requesterUID = $u->getUserID();
+        }
 
         $db = $this->connection;
         $v = array($this->uID);
@@ -540,7 +543,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
         $pkr = new ActivateUserWorkflowRequest();
         $pkr->setRequestAction('deactivate');
         $pkr->setRequestedUserID($this->uID);
-        $pkr->setRequesterUserID($u->getUserID());
+        $pkr->setRequesterUserID($requesterUID);
         $pkr->trigger();
 
         $this->uIsActive = intval($db->GetOne('select uIsActive from Users where uID = ?', $v));
