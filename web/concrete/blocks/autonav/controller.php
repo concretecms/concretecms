@@ -31,6 +31,7 @@ class Controller extends BlockController
     public $haveRetrievedSelfPlus1 = false;
     public $displaySystemPages = false;
     public $displayUnapproved = false;
+    public $ingnoreExludeNav = false;
     protected $btTable = 'btNavigation';
     protected $btInterfaceWidth = "800";
     protected $btInterfaceHeight = "350";
@@ -176,6 +177,8 @@ class Controller extends BlockController
             }
         }
 
+        $this->ingnoreExludeNav = $ignore_exclude_nav;
+
         //Retrieve the raw "pre-processed" list of all nav items (before any custom attributes are considered)
         $allNavItems = $this->generateNav();
 
@@ -201,7 +204,7 @@ class Controller extends BlockController
                 }
             }
 
-            if (!$exclude_page || $ignore_exclude_nav) {
+            if (!$exclude_page || $this->ingnoreExludeNav) {
                 $includedNavItems[] = $ni;
             }
         }
@@ -513,7 +516,7 @@ class Controller extends BlockController
     {
         // Check if the parent page is excluded or if it has been set to exclude child pages
         foreach ($this->navArray as $ni) {
-            if ($ni->getCollectionID() == $cParentID) {
+            if ($ni->getCollectionID() == $cParentID && $this->ingnoreExludeNav === false) {
                 if ($ni->getCollectionObject()->getAttribute('exclude_nav') == 1 || $ni->getCollectionObject()->getAttribute('exclude_subpages_from_nav') == 1) {
                     return;
                 }
