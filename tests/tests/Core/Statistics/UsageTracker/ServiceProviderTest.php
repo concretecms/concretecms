@@ -1,6 +1,6 @@
 <?php
 
-namespace Concrete\tests\Core\Statistics\UsageTracker;
+namespace Concrete\Tests\Core\Statistics\UsageTracker;
 
 use Concrete\Core\Application\Application;
 use Concrete\Core\Statistics\UsageTracker\AggregateTracker;
