@@ -91,7 +91,7 @@ function reloadPreview(event) {
 
 Concrete.event.bind('autonav.edit.open', function() {
     container = $('div.autonav-form');
-    preview_container = container.find('div.preview');
+    preview_container = $('div.autonav-preview');
     preview_loader = container.find('div.loader');
     preview_render = preview_container.children('div.render');
 

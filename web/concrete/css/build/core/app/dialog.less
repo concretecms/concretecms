@@ -112,64 +112,30 @@ div.ui-dialog {
     background-color: #fff;
     .border-top-radius(6px);
 
-    .ccm-ui {
-      ul.nav-tabs {
-        padding-left: 10px;
-        margin-left: -26px;
-        margin-right: -26px;
-        margin-bottom: 0px;
-        > li {
-          margin-bottom: 0px;
-          a {
-            font-size: 13px;
-            padding: 10px 15px;
-            -webkit-font-smoothing: antialiased;
-          }
-        }
+    div.form-group {
 
-        > li.active:after {
-          text-align: center;
-          content: "\f0d7";
-          font-family: FontAwesome;
-          font-size: 16px;
-          position: absolute;
-          bottom: -15px;
+      padding-left: 26px;
+      padding-right: 25px;
+      margin-left: -26px;
+      margin-right: -26px;
+    }
 
-          left: 0px;
-          width: 100%;
-          color: #48b4fb;
-          text-align: center;
-        }
-
-        > li > a {
-          &,
-          &:hover,
-          &:focus {
-            outline: none;
-            color: #999;
-            border-width: 0px !important;
-          }
-        }
-        > li > a:hover {
-          background-color: transparent;
-          text-decoration: underline;
-        }
-        > li.active > a {
-          &,
-          &:hover,
-          &:focus {
-            color: #48b4fb;
-            font-weight: bold;
-            text-decoration: none;
-            background-color: transparent;
-            outline: none;
-            border-width: 0px !important;
-            position: relative;
-          }
-        }
+    div.well {
+      div.form-group {
+        margin-left: 0px;
+        margin-right: 0px;
+        padding-left: 0px;
+        padding-right: 0px;
       }
     }
 
+    hr {
+      border-color: #dcdcdc;
+      padding-left: 26px;
+      padding-right: 25px;
+      margin-left: -26px;
+      margin-right: -26px;
+    }
 
   }
 
@@ -199,10 +165,13 @@ div.ui-dialog {
     }
 
     .btn-success {
-      background-color: darken(@btn-success-bg, 5%);
+      border-color: @btn-primary-border;
+      /* yes - btn success in dialogs is now just an alias to btn primary */
+      background-color: darken(@btn-primary-bg, 15%);
       &:hover {
-        background-color: darken(@btn-success-bg, 15%);
+        background-color: darken(@btn-primary-bg, 25%);
       }
+
     }
   }
 

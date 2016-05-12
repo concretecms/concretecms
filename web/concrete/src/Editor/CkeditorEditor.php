@@ -122,7 +122,6 @@ EOL;
     public function outputStandardEditor($key, $content = null)
     {
         $options = array(
-            'startupFocus' => true,
             'disableAutoInline' => true,
         );
         if ($this->getPluginManager()->isSelected('sourcearea')) {

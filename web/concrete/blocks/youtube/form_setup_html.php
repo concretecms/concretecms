@@ -20,14 +20,12 @@ echo Core::make('helper/concrete/ui')->tabs(array(
 ?>
 
 <div class="ccm-tab-content" id="ccm-tab-content-video">
-    <fieldset>
-        <legend><?php echo t('YouTube URL'); ?></legend>
-        <div class="form-group">
-            <?php echo $form->text('videoURL', $videoURL, array('required' => 'required'));?>
-        </div>
-    </fieldset>
-    <fieldset>
-        <legend><?php echo t('Size'); ?></legend>
+    <div class="form-group">
+        <label class="control-label"><?php echo t('YouTube URL'); ?></label>
+        <?php echo $form->text('videoURL', $videoURL, array('required' => 'required'));?>
+    </div>
+    <div class="form-group">
+        <label class="control-label"><?=t('Size')?></label>
         <div class="radio">
             <label>
                 <?php echo $form->radio('sizing', '16:9', $sizing); ?>
@@ -46,23 +44,23 @@ echo Core::make('helper/concrete/ui')->tabs(array(
                 <?php echo t("Fixed Size (non-responsive)")?>
             </label>
         </div>
-        <div id="fixedsizes" class="row <?php echo $sizing == 'fixed' ? '' : 'hidden';?>">
-            <div class="form-group col-xs-6">
-                <label><?php echo t('Width')?></label>
-                <div class="input-group">
-                    <input type="text" class="form-control" id="YouTubeVideoWidth" name="vWidth" value="<?php echo $vWidth?>" />
-                    <div class="input-group-addon"><?php echo t('px');?></div>
-                </div>
-            </div>
-            <div class="form-group col-xs-6">
-                <label><?php echo t('Height')?></label>
-                <div class="input-group">
-                    <input type="text" class="form-control" id="YouTubeVideoHeight" name="vHeight" value="<?php echo $vHeight?>" />
-                    <div class="input-group-addon"><?php echo t('px');?></div>
-                </div>
+    </div>
+    <div id="fixedsizes" class="<?php echo $sizing == 'fixed' ? '' : 'hidden';?>">
+        <div class="form-group">
+            <label class="control-label"><?php echo t('Width')?></label>
+            <div class="input-group">
+                <input type="text" class="form-control" id="YouTubeVideoWidth" name="vWidth" value="<?php echo $vWidth?>" />
+                <div class="input-group-addon"><?php echo t('px');?></div>
             </div>
         </div>
-    </fieldset>
+        <div class="form-group">
+            <label class="control-label"><?php echo t('Height')?></label>
+            <div class="input-group">
+                <input type="text" class="form-control" id="YouTubeVideoHeight" name="vHeight" value="<?php echo $vHeight?>" />
+                <div class="input-group-addon"><?php echo t('px');?></div>
+            </div>
+        </div>
+    </div>
 </div>
 <div class="ccm-tab-content" id="ccm-tab-content-settings">
     <fieldset>

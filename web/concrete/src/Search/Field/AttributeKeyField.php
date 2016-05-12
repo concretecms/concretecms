@@ -43,7 +43,10 @@ class AttributeKeyField extends AbstractField
 
     public function loadDataFromRequest(array $request)
     {
-        $this->data = $request['akID'][$this->attributeKey->getAttributeKeyID()];
+        // We need to do this because of the request whitelist + the weird request
+        // namespacing we do with attribute forms.
+        $this->data['akID'][$this->attributeKey->getAttributeKeyID()]
+            = $request['akID'][$this->attributeKey->getAttributeKeyID()];
     }
 
     public function __sleep()

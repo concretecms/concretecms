@@ -173,17 +173,16 @@ $addSelected = true;
 			<div class="radio"><label><?=$form->radio('required', 0)?> <?=t('No')?></label></div>
 		</div>
 
-		<div class="form-group">
 			<div id="emailSettings">
+				<div class="form-group">
 				<?php echo $form->label('send_notification_from', t('Reply to this email address'));?>
 				<span class="send_notification_from"><?php echo $form->checkbox('send_notification_from', 1); ?></span>
 			</div>
 		</div>
 
-		<div class="form-group">
-			<?=$ih->button(t('Add Question'), '#', '', '', array('id' => 'addQuestion'))?>
-		</div>
-		
+
+		<?=$ih->button(t('Add Question'), '#', '', '', array('id' => 'addQuestion'))?>
+
 	</fieldset> 
 
 	<input type="hidden" id="position" name="position" value="1000" />

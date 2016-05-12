@@ -40,7 +40,7 @@
     </div>
 
     <div class='form-group'>
-        <label for='title' style="margin-bottom: 0px;"><?=t('Results Page')?>:</label>
+        <label for='title' class="control-label"><?=t('Results Page')?>:</label>
         <div class="checkbox">
             <label for="ccm-search-block-external-target">
                 <input id="ccm-search-block-external-target" <?php if (intval($cParentID) > 0) {

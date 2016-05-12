@@ -5,11 +5,11 @@ $form = Core::make('helper/form');
 
 <form method="post" action="<?= URL::to('/login', 'authenticate', $this->getAuthenticationTypeHandle()) ?>">
 
-	<div class="form-group">
+	<div class="">
 		<input name="uName" class="form-control col-sm-12" placeholder="<?=Config::get('concrete.user.registration.email_registration') ? t('Email Address') : t('Username')?>" autofocus="autofocus" />
 	</div>
 
-	<div class="form-group">
+	<div class="">
 		<label>&nbsp;</label>
 		<input name="uPassword" class="form-control" type="password" placeholder="<?=t('Password')?>" />
 	</div>

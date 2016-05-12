@@ -22,7 +22,7 @@ class EntryList extends DatabaseItemList
 
     protected function getAttributeKeyClassName()
     {
-        return '\\Concrete\\Core\\Entity\\Key\\ExpressKey';
+        return $this->category;
     }
 
     /**
@@ -45,6 +45,20 @@ class EntryList extends DatabaseItemList
 
         return $query->select('count(distinct e.exEntryID)')->setMaxResults(1)->execute()->fetchColumn();
     }
+
+    public function filterByKeywords($keywords)
+    {
+
+        $keys = $this->category->getSearchableIndexedList();
+        foreach ($keys as $ak) {
+            $cnt = $ak->getController();
+            $expressions[] = $cnt->searchKeywords($keywords, $this->query);
+        }
+        $expr = $this->query->expr();
+        $this->query->andWhere(call_user_func_array(array($expr, 'orX'), $expressions));
+        $this->query->setParameter('keywords', '%' . $keywords . '%');
+    }
+
 
     /**
      * Gets the pagination object for the query.
@@ -88,26 +102,6 @@ class EntryList extends DatabaseItemList
         $query->setParameter('entityID', $this->category->getEntity()->getID());
         return $query;
     }
-
-    /**
-     * Filters keyword fields by keywords (including username, email and attributes).
-     *
-     * @param $keywords
-     */
-        /*
-    public function filterByKeywords($keywords)
-    {
-
-        $keys = \Concrete\Core\Attribute\Key\UserKey::getSearchableIndexedList();
-        foreach ($keys as $ak) {
-            $cnt = $ak->getController();
-            $expressions[] = $cnt->searchKeywords($keywords, $this->query);
-        }
-        $expr = $this->query->expr();
-        $this->query->andWhere(call_user_func_array(array($expr, 'orX'), $expressions));
-        $this->query->setParameter('keywords', '%' . $keywords . '%');
-    }
-        */
 
 
 }

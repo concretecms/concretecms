@@ -37,7 +37,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
         <div class="form-group">
             <?= $form->label('akHandle', t('Handle')) ?>
             <div class="input-group">
-                <?= $form->text('akHandle', $akHandle) ?>
+                <?= $form->text('akHandle', $akHandle, ['autofocus' => 'autofocus']) ?>
                 <span class="input-group-addon"><i class="fa fa-asterisk"></i></span>
             </div>
         </div>

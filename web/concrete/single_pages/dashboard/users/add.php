@@ -10,7 +10,7 @@
 					<label for="uName" class="control-label col-sm-3"><?=t('Username')?></label>
 					<div class="col-sm-7">
 						<div class="input-group">
-						<?=$form->text('uName', array('autocomplete' => 'off'))?>
+						<?=$form->text('uName', array('autofocus' => 'autofocus', 'autocomplete' => 'off'))?>
 						<span class="input-group-addon"><i class="fa fa-asterisk"></i></span>
 						</div>
 					</div>

@@ -15,34 +15,35 @@
 </style>
 <div class="ccm-ui survey-block-edit">
     <div class="form-group">
-        <label for="questionEntry"><?= t('Question') ?></label>
-        <input type="text" style="width: 320px" name="question" value="<?= $controller->getQuestion() ?>"
+        <label for="questionEntry" class="control-label"><?= t('Question') ?></label>
+        <input type="text" name="question" value="<?= $controller->getQuestion() ?>"
                class="form-control"/>
     </div>
-    <label for="requiresRegistration"><?= t('Target Audience') ?></label>
-
-    <div class="radio">
-        <label>
-            <input id="requiresRegistration" type="radio" value="0" name="requiresRegistration"
-                   style="vertical-align: middle" <?php if (!$controller->requiresRegistration()) {
-    ?> checked <?php 
-} ?> />&nbsp;<?= t(
-                'Public') ?>
-        </label>
-    </div>
-    <div class="radio">
-        <label>
-            <input type="radio" value="1" name="requiresRegistration"
-                   style="vertical-align: middle" <?php if ($controller->requiresRegistration()) {
-    ?> checked <?php 
-} ?> />&nbsp;<?= t(
-                'Only Registered Users') ?>
-        </label>
-    </div>
-    <hr/>
-    <label><?= t('Answer Options') ?></label>
-
     <div class="form-group">
+        <label for="requiresRegistration" class="control-label"><?= t('Target Audience') ?></label>
+
+        <div class="radio">
+            <label>
+                <input id="requiresRegistration" type="radio" value="0" name="requiresRegistration"
+                       style="vertical-align: middle" <?php if (!$controller->requiresRegistration()) {
+        ?> checked <?php
+    } ?> />&nbsp;<?= t(
+                    'Public') ?>
+            </label>
+        </div>
+        <div class="radio">
+            <label>
+                <input type="radio" value="1" name="requiresRegistration"
+                       style="vertical-align: middle" <?php if ($controller->requiresRegistration()) {
+        ?> checked <?php
+    } ?> />&nbsp;<?= t(
+                    'Only Registered Users') ?>
+            </label>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label"><?= t('Survey Options') ?></label>
+
         <div class="poll-options">
             <?php
             $options = $controller->getPollOptions();
@@ -70,16 +71,15 @@
             } ?>
         </div>
     </div>
-    <label for="optionEntry"><?= t('Add Option') ?></label>
 
     <div class="form-group">
+        <label for="optionEntry" class="control-label"><?= t('Add Option') ?></label>
+
         <div class="input-group">
             <input type="text" name="optionValue" class="option-value form-control"/>
-            <span class="input-group-btn">
-                <button class="add-option btn btn-default" type="button">
-                    <?php echo t('Add'); ?>
-                </button>
-            </span>
+            <button class="add-option btn btn-default" type="button">
+                <?php echo t('Add'); ?>
+            </button>
         </div>
     </div>
     <script type="text/template" role="option">

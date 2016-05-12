@@ -17,8 +17,8 @@
         </div>
 
         <div class="form-group">
-            <hr/>
-            <button type="button" class="btn btn-primary pull-right" data-action="add-question"><?=t('Add Question')?></button>
+
+            <button type="button" class="btn btn-primary" data-action="add-question"><?=t('Add Question')?></button>
         </div>
 
     </fieldset>

@@ -70,6 +70,7 @@ div#ccm-dashboard-content {
     h1 {
       font-size: 22px;
       font-weight: 600;
+      font-weight: normal;
       display: inline-block;
       margin-top: 0px;
       margin-bottom: 0px;
@@ -110,7 +111,7 @@ div#ccm-dashboard-content {
 
     div.ccm-dashboard-form-actions {
       .clearfix;
-      background-color: #242729;
+      background-color: rgba(40,40,40,0.85);
       padding: 20px;
       .border-radius(4px);
     }
@@ -148,6 +149,29 @@ div#ccm-dashboard-content {
       top: 35px;
     }
 
+  }
+
+  /**
+ * Form updates for dashboard
+ */
+  fieldset {
+    legend {
+      color: #113455;
+    }
+  }
+
+  > form > fieldset > div.form-group {
+    padding-left: 97px;
+    padding-right: 50px;
+    margin-left: -97px;
+    margin-right: -50px;
+  }
+
+  > form > div.form-group {
+    padding-left: 97px;
+    padding-right: 50px;
+    margin-left: -97px;
+    margin-right: -50px;
   }
 
 }
@@ -235,17 +259,6 @@ div#ccm-dashboard-content {
   }
 }
 
-/**
- * Responsive utilities
- */
-@media (min-width: @screen-md) {
-  div#ccm-dashboard-content {
-    form.ccm-dashboard-content-form {
-      width: 650px;
-    }
-  }
-}
-
 @media (max-width: @screen-md) {
   div#ccm-dashboard-content {
     padding-left: 20px;
@@ -277,6 +290,7 @@ div.ccm-dashboard-my-account {
     }
   }
 }
+
 
 @import "./welcome.less";
 @import "./welcome/site-activity.less";

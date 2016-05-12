@@ -101,7 +101,7 @@ var pageList ={
         });
 
         $.get(this.servicesDir + 'preview_pane', query, function(msg) {
-            container.find('div.preview').find('div.render').html(msg);
+            preview_container.find('div.render').html(msg);
             pageList.hideLoader();
         }).fail(function() {
             pageList.hideLoader();
@@ -138,7 +138,7 @@ Concrete.event.bind('pagelist.edit.open', function() {
     pageList.init();
 
     container = $('div.pagelist-form');
-    preview_container = container.find('div.preview');
+    preview_container = $('#ccm-tab-content-page-list-preview div.preview');
     preview_loader = container.find('div.loader');
     preview_render = preview_container.children('div.render');
 

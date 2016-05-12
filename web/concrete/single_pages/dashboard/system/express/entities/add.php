@@ -5,7 +5,7 @@
     <fieldset>
         <div class="form-group">
             <label for="name" class="control-label"><?=t('Name')?></label>
-            <?=$form->text('name')?>
+            <?=$form->text('name', '', ['autofocus' => 'autofocus'])?>
         </div>
         <div class="form-group">
             <label for="name" class="control-label"><?=t('Handle')?></label>
@@ -16,6 +16,7 @@
             <?=$form->textarea('description', array('rows' => 5))?>
         </div>
     </fieldset>
+
     <div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
             <a href="<?=URL::to('/dashboard/system/express/entities')?>" class="pull-left btn btn-default" type="button" ><?=t('Back to List')?></a>

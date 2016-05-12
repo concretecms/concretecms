@@ -46,12 +46,10 @@ $searchRequest = $flr->getSearchRequest();
 } ?>
 		</select>
 	</div>
-	<div class="form-group">
-		<div class="ccm-search-main-lookup-field">
-			<i class="fa fa-search"></i>
-			<?php echo $form->search('keywords', $searchRequest['keywords'], array('placeholder' => t('Username or Email')))?>
-			<button type="submit" class="ccm-search-field-hidden-submit" tabindex="-1"><?php echo t('Search')?></button>
-		</div>
+	<div class="ccm-search-main-lookup-field">
+		<i class="fa fa-search"></i>
+		<?php echo $form->search('keywords', $searchRequest['keywords'], array('placeholder' => t('Username or Email')))?>
+		<button type="submit" class="ccm-search-field-hidden-submit" tabindex="-1"><?php echo t('Search')?></button>
 	</div>
 	<ul class="ccm-search-form-advanced list-inline">
 		<li><a href="#" data-search-toggle="advanced"><?php echo t('Advanced Search')?></a>

@@ -532,10 +532,29 @@ class Version20160420000000 extends AbstractMigration
             BlockType::installBlockType('desktop_waiting_for_me');
         }
 
+        $bt = BlockType::getByHandle('express_entry_list');
+        if (!is_object($bt)) {
+            BlockType::installBlockType('express_entry_list');
+        }
+
+        $bt = BlockType::getByHandle('express_entry_detail');
+        if (!is_object($bt)) {
+            BlockType::installBlockType('express_entry_detail');
+        }
+
+
+        $bt = BlockType::getByHandle('desktop_waiting_for_me');
+        if (!is_object($bt)) {
+            BlockType::installBlockType('desktop_waiting_for_me');
+        }
+
+
         $bt = BlockType::getByHandle('page_title');
         if (is_object($bt)) {
             $bt->refresh();
         }
+
+
 
     }
 

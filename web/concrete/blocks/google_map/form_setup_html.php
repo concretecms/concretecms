@@ -58,10 +58,12 @@
 
     <div class="col-xs-12">
         <div class="form-group">
+            <div class="checkbox">
           <label>
             <?= $form->checkbox('scrollwheel', 1, (is_null($scrollwheel) || $scrollwheel)); ?>
             <?=t("Enable Scroll Wheel")?>
           </label>
+                </div>
         </div>
     </div>
 </div>

@@ -30,12 +30,10 @@ $sh = Loader::helper('concrete/dashboard/sitemap');
 	</style>
 
 	<form action="<?=URL::to('/dashboard/sitemap/search')?>"  class="form-inline ccm-search-fields-none ccm-search-fields">
-		<div class="form-group">
-			<div class="ccm-search-main-lookup-field">
-				<i class="fa fa-search"></i>
-				<?=$form->search('cvName', array('placeholder' => t('Name')))?>
-				<button type="submit" class="ccm-search-field-hidden-submit" tabindex="-1"><?=t('Search')?></button>
-			</div>
+		<div class="ccm-search-main-lookup-field">
+			<i class="fa fa-search"></i>
+			<?=$form->search('cvName', array('placeholder' => t('Name')))?>
+			<button type="submit" class="ccm-search-field-hidden-submit" tabindex="-1"><?=t('Search')?></button>
 		</div>
 		<ul class="ccm-search-form-advanced list-inline">
 			<li><a href="<?=URL::to('/dashboard/sitemap/search')?>"><?=t('Advanced Search')?></a>
