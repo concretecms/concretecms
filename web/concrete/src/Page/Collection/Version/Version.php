@@ -17,13 +17,28 @@ class Version extends Object implements \Concrete\Core\Permission\ObjectInterfac
 {
     use ObjectTrait;
 
+    // Properties from database record
+    public $cvID;
     public $cvIsApproved;
+    public $cvIsNew;
+    public $cvHandle;
+    public $cvName;
+    public $cvDescription;
+    public $cvDateCreated;
+    public $cvDatePublic;
+    public $pTemplateID;
+    public $cvAuthorUID;
+    public $cvApproverUID;
+    public $cvComments;
+    public $pThemeID;
+    public $cvPublishDate;
 
+    // Other properties
     public $cID;
-
     protected $attributes = array();
-
     public $layoutStyles = array();
+    protected $isMostRecent;
+    protected $customAreaStyles;
 
     public function getPermissionObjectIdentifier()
     {
