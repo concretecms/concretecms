@@ -54,8 +54,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 } ?>
 	</div>
 
-	<hr/>
-	
+
 	<p class="lead"><?=t('Current Permission Set')?></p>
 
     <?php $cat = PermissionKeyCategory::getByHandle('page');?>

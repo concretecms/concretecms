@@ -11,6 +11,10 @@ $al = Loader::helper('concrete/asset_library');
 	<?=$form->text('fileLinkText')?>
 </div>
 <div class="form-group">
-	<?=$form->checkbox('forceDownload', '1'); ?>
-	<?=$form->label('forceDownload', t('Force file to download')); ?>
+	<div class="checkbox">
+		<label>
+			<?=$form->checkbox('forceDownload', '1'); ?>
+			<?=t('Force file to download')?>
+		</label>
+	</div>
 </div>

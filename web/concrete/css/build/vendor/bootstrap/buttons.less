@@ -17,7 +17,8 @@
   background-image: none; // Reset unusual Firefox-on-Android default style; see https://github.com/necolas/normalize.css/issues/214
   border: 1px solid transparent;
   white-space: nowrap;
-  .button-size(@padding-base-vertical; @padding-base-horizontal; @font-size-base; @line-height-base; @border-radius-base);
+  /* concret5 padding + 10 */
+  .button-size(@padding-base-vertical; @padding-base-horizontal + 10; @font-size-base; @line-height-base; @border-radius-base);
 
   .transition(background-color 0.1s linear);
   .user-select(none);

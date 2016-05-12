@@ -60,7 +60,7 @@
 		},
 
 		success: function(r, my, callback) {
-			if (my.validateResponse(r)) {
+			if (my.options.dataType != 'json' || my.validateResponse(r)) {
 				callback(r);
 			}
 		},

@@ -29,16 +29,16 @@ if (is_object($basePostPage) && $basePostPage->isError()) {
 <fieldset>
 
     <div class='form-group'>
-        <label for='title'><?=t('Title')?>:</label>
+        <label for='title' class="control-label"><?=t('Title')?>:</label>
         <?=$form->text('title', $searchObj->title);?>
     </div>
 
     <div class='form-group'>
-        <label for='buttonText'><?=t('Button Text')?>:</label>
+        <label for='buttonText' class="control-label"><?=t('Button Text')?>:</label>
         <?=$form->text('buttonText', $searchObj->buttonText);?>
     </div>
     <div class='form-group'>
-        <label for='title' style="margin-bottom: 0px;"><?=t('Search for Pages')?>:</label>
+        <label for='title'  class="control-label"><?=t('Search for Pages')?>:</label>
         <div class="radio">
             <label for="baseSearchPathEverywhere">
                 <input type="radio" name="baseSearchPath" id="baseSearchPathEverywhere" value="" <?=($searchObj->baseSearchPath == '' || !$searchObj->baseSearchPath) ? 'checked' : ''?> onchange="searchBlock.pathSelector(this)" />
@@ -74,7 +74,7 @@ if (is_object($basePostPage) && $basePostPage->isError()) {
         </div>
     </div>
     <div class='form-group'>
-        <label for='title' style="margin-bottom: 0px;"><?=t('Results Page')?>:</label>
+        <label for='title'  class="control-label"><?=t('Results Page')?>:</label>
         <div class="checkbox">
             <label for="ccm-searchBlock-externalTarget">
                 <input id="ccm-searchBlock-externalTarget" name="externalTarget" type="checkbox" value="1" <?=(strlen($searchObj->resultsURL) || $basePostPage !== null) ? 'checked' : ''?> />

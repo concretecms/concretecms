@@ -27,6 +27,8 @@
         <blocktype handle="external_form" package=""/>
         <blocktype handle="file" package=""/>
         <blocktype handle="page_attribute_display" package=""/>
+        <blocktype handle="express_entry_list" package=""/>
+        <blocktype handle="express_entry_detail" package=""/>
         <blocktype handle="express_form" package=""/>
         <blocktype handle="form" package=""/>
         <blocktype handle="page_title" package=""/>

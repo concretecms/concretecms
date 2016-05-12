@@ -1,10 +1,5 @@
 <?php defined('C5_EXECUTE') or die("Access Denied."); ?>
 <div class="ccm-topic-attribute-wrapper">
-	<style>
-		.tree-view-template_<?php echo $akID?> ul.dynatree-container {
-			border: 1px solid #ccc;
-		}
-	</style>
 	<script type="text/javascript">
 	$(function() {
 		var treeObj = $('.tree-view-template_<?php echo $akID ?>');

@@ -96,8 +96,8 @@ $(function() {
 <div id="success-message">
 <?=$successMessage?>
 <br/><br/>
-<div class="well">
-<input type="button" class="btn btn-large btn-primary" onclick="window.location.href='<?=URL::to('/')?>'" value="<?=t('Continue to your site')?>" />
+<div style="text-align: center">
+<input type="button" class="btn btn-lg btn-primary" onclick="window.location.href='<?=URL::to('/')?>'" value="<?=t('Continue to your site')?>" />
 </div>
 </div>
 
@@ -147,98 +147,68 @@ $(function() {
 <p><?=t('Version %s', Config::get('concrete.version'))?></p>
 </div>
 
-</div>
-</div>
-
-
-<form action="<?=$view->url('/install', 'configure')?>" method="post" class="form-horizontal">
-
-<div class="row">
-<div class="col-md-5 col-md-offset-1">
+<form action="<?=$view->url('/install', 'configure')?>" method="post">
 
 	<input type="hidden" name="locale" value="<?=h($locale)?>" />
 
 	<fieldset>
 		<legend><?=t('Site Information')?></legend>
 		<div class="form-group">
-		<label for="SITE" class="control-label col-md-4"><?=t('Site Name')?>:</label>
-		<div class="col-md-8">
-			<?=$form->text('SITE', array('class' => ''))?>
-		</div>
+		<label for="SITE" class="control-label"><?=t('Site Name')?>:</label>
+		<?=$form->text('SITE', array('class' => '', 'autofocus' => 'autofocus'))?>
 		</div>
 	</fieldset>
 
 	<fieldset>
 		<legend><?=t('Administrator Information')?></legend>
 		<div class="form-group">
-		<label for="uEmail" class="control-label col-md-4"><?=t('Email Address')?>:</label>
-		<div class="col-md-8">
+		<label for="uEmail" class="control-label"><?=t('Email Address')?>:</label>
 		<?=$form->email('uEmail', array('class' => ''))?>
 		</div>
-		</div>
 		<div class="form-group">
-		<label for="uPassword" class="control-label col-md-4"><?=t('Password')?>:</label>
-		<div class="col-md-8">
+		<label for="uPassword" class="control-label"><?=t('Password')?>:</label>
 		<?=$form->password('uPassword', array('class' => '', 'autocomplete' => 'off'))?>
 		</div>
-		</div>
 		<div class="form-group">
-		<label for="uPasswordConfirm" class="control-label col-md-4"><?=t('Confirm Password')?>:</label>
-		<div class="col-md-8">
-			<?=$form->password('uPasswordConfirm', array('class' => '', 'autocomplete' => 'off'))?>
-		</div>
+		<label for="uPasswordConfirm" class="control-label"><?=t('Confirm Password')?>:</label>
+		<?=$form->password('uPasswordConfirm', array('class' => '', 'autocomplete' => 'off'))?>
 		</div>
 
 	</fieldset>
-
-</div>
-<div class="col-sm-5">
 
 	<fieldset>
 		<legend><?=t('Database Information')?></legend>
 
 	<div class="form-group">
-	<label class="control-label col-md-4" for="DB_SERVER"><?=t('Server')?>:</label>
-	<div class="col-md-8">
+	<label class="control-label" for="DB_SERVER"><?=t('Server')?>:</label>
 	<?=$form->text('DB_SERVER', array('class' => ''))?>
 	</div>
-	</div>
 
 	<div class="form-group">
-	<label class="control-label col-md-4" for="DB_USERNAME"><?=t('MySQL Username')?>:</label>
-	<div class="col-md-8">
+	<label class="control-label" for="DB_USERNAME"><?=t('MySQL Username')?>:</label>
 		<?=$form->text('DB_USERNAME', array('class' => ''))?>
 	</div>
-	</div>
 
 	<div class="form-group">
-	<label class="control-label col-md-4" for="DB_PASSWORD"><?=t('MySQL Password')?>:</label>
-	<div class="col-md-8">
+	<label class="control-label" for="DB_PASSWORD"><?=t('MySQL Password')?>:</label>
 		<?=$form->password('DB_PASSWORD', array('class' => '', 'autocomplete' => 'off'))?>
 	</div>
-	</div>
 
 	<div class="form-group">
-	<label class="control-label col-md-4" for="DB_DATABASE"><?=t('Database Name')?>:</label>
-	<div class="col-md-8">
+	<label class="control-label" for="DB_DATABASE"><?=t('Database Name')?>:</label>
 		<?=$form->text('DB_DATABASE', array('class' => ''))?>
 	</div>
-	</div>
 	</fieldset>
-</div>
-</div>
 
-<div class="row">
-<div class="col-sm-10 col-sm-offset-1">
-
-<h3><?=t('Sample Content')?></h3>
+	<fieldset>
+		<legend><?=t('Sample Content')?></legend>
 
 
 		<?php
         $uh = Loader::helper('concrete/urls');
     ?>
 
-		<table class="table table-striped" id="sample-content-selector">
+		<table class="table" id="sample-content-selector">
 		<tbody>
 		<?php
         $availableSampleContent = StartingPointPackage::getAvailableList();
@@ -262,6 +232,7 @@ $(function() {
 		</tbody>
 		</table>
 		<br/>
+
 		<?php if (!StartingPointPackage::hasCustomList()) {
     ?>
 			<div class="alert alert-info"><?=t('concrete5 veterans can choose "Empty Site," but otherwise we recommend starting with some sample content.')?></div>
@@ -269,19 +240,12 @@ $(function() {
 }
     ?>
 
+</fieldset>
 
-</div>
-</div>
-
-<div class="row">
-<div class="col-sm-10 col-sm-offset-1">
-
-<div class="well">
-	<button class="btn btn-large btn-primary" type="submit"><?=t('Install concrete5')?> <i class="fa fa-thumbs-up fa-white"></i></button>
-</div>
-
-</div>
-</div>
+	<div style="text-align: center">
+	<button class="btn btn-lg btn-primary" type="submit"><?=t('Install concrete5')?> <i class="fa fa-thumbs-up fa-white"></i></button>
+	</div>
+	<br/><br/>
 
 </form>
 
@@ -636,11 +600,12 @@ $(function() {
 
 <div class="row">
 <div class="col-sm-10 col-sm-offset-1">
-<div class="well" id="install-success">
+<div style="text-align: center" id="install-success">
 	<form method="post" action="<?=$view->url('/install', 'setup')?>">
 	<input type="hidden" name="locale" value="<?=h($locale)?>" />
-	<a class="btn btn-large btn-primary" href="javascript:void(0)" onclick="$(this).parent().submit()"><?=t('Continue to Installation')?> <i class="fa fa-arrow-right fa-white"></i></a>
+	<a class="btn btn-lg btn-primary" href="javascript:void(0)" onclick="$(this).parent().submit()"><?=t('Continue to Installation')?> <i class="fa fa-arrow-right fa-white"></i></a>
 	</form>
+	<br/><br/>
 </div>
 
 <div class="alert alert-error" id="install-errors">
@@ -648,7 +613,7 @@ $(function() {
     <br/><br/>
 	<form method="post" action="<?=$view->url('/install')?>">
     	<input type="hidden" name="locale" value="<?=h($locale)?>" />
-    	<button class="btn btn-default" type="submit"><?=t('Run Tests')?> <i class="fa fa-refresh"></i></button>
+    	<button class="btn btn-default btn-lg" type="submit"><?=t('Run Tests')?> <i class="fa fa-refresh"></i></button>
 	</form>
 </div>
 
@@ -677,17 +642,16 @@ $(function() {
 
 <div id="ccm-install-intro">
 
-<form method="post" class="form-horizontal" action="<?=$view->url('/install', 'select_language')?>">
+<form method="post"action="<?=$view->url('/install', 'select_language')?>">
 <fieldset>
 	<div class="form-group">
-	<label for="locale" class="control-label col-sm-3"><?=t('Language')?></label>
-	<div class="col-sm-7">
+		<label for="locale" class="control-label"><?=t('Language')?></label>
 		<?=$form->select('locale', $locales, 'en_US');
     ?>
 	</div>
-	</div>
-	<div class="form-group col-sm-10">
-		<button type="submit" class="btn btn-primary pull-right"><?=t('Choose Language')?></button>
+
+	<div style="text-align: center">
+	<button type="submit" class="btn btn-lg btn-primary"><?=t('Choose Language')?></button>
 	</div>
 
 </fieldset>

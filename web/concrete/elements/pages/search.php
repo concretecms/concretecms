@@ -32,12 +32,10 @@ $req = $flr->getSearchRequest();
 			<option data-bulk-action-type="dialog" data-bulk-action-title="<?php echo t('Delete')?>" data-bulk-action-url="<?php echo REL_DIR_FILES_TOOLS_REQUIRED?>/pages/delete" data-bulk-action-dialog-width="500" data-bulk-action-dialog-height="400"><?php echo t('Delete')?></option>
 		</select>
 	</div>
-	<div class="form-group">
-		<div class="ccm-search-main-lookup-field">
-			<i class="fa fa-search"></i>
-			<?php echo $form->search('cvName', $req['cvName'], array('placeholder' => t('Page Name')))?>
-			<button type="submit" class="ccm-search-field-hidden-submit" tabindex="-1"><?php echo t('Search')?></button>
-		</div>
+	<div class="ccm-search-main-lookup-field">
+		<i class="fa fa-search"></i>
+		<?php echo $form->search('cvName', $req['cvName'], array('placeholder' => t('Page Name')))?>
+		<button type="submit" class="ccm-search-field-hidden-submit" tabindex="-1"><?php echo t('Search')?></button>
 	</div>
 	<ul class="ccm-search-form-advanced list-inline">
 		<li><a href="#" data-search-toggle="advanced"><?php echo t('Advanced Search')?></a>

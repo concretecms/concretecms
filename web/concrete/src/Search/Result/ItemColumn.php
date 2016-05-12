@@ -5,6 +5,7 @@ class ItemColumn
 {
     public $key;
     public $value;
+    public $column;
 
     public function getColumnKey()
     {
@@ -15,9 +16,16 @@ class ItemColumn
         return $this->value;
     }
 
-    public function __construct($key, $value)
+    public function getColumn()
+    {
+        return $this->column;
+    }
+
+
+    public function __construct($key, $value, $column)
     {
         $this->key = $key;
         $this->value = $value;
+        $this->column = $column;
     }
 }

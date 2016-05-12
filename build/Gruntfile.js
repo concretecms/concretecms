@@ -62,11 +62,6 @@ module.exports = function(grunt) {
     // List of the JavaScripts to be generated
     var js = {
 
-        autosize: {
-            dest: '<%= DIR_BASE %>/concrete/js/autosize.js',
-            src: '<%= DIR_BASE %>/concrete/js/build/vendor/autosize/autosize.js'
-        },
-
         redactor: {
             dest: '<%= DIR_BASE %>/concrete/js/redactor.js',
             src: [
@@ -92,6 +87,7 @@ module.exports = function(grunt) {
                 '<%= DIR_BASE %>/concrete/js/build/vendor/jquery-mousewheel/jquery.mousewheel.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/app/concrete5.js',
                 '<%= DIR_BASE %>/concrete/js/build/vendor/jquery-liveupdate/jquery-liveupdate.js',
+                '<%= DIR_BASE %>/concrete/js/build/vendor/autosize/autosize.js',
                 '<%= DIR_BASE %>/concrete/js/build/vendor/jquery-pep/jquery-pep.js',
                 //needs some handholding
                 // '<%= DIR_BASE %>/concrete/js/build/vendor/retinajs/retinajs.js',

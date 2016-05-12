@@ -35,7 +35,7 @@ div.ccm-file-manager-search-form {
     a.ccm-file-manager-reset-search {
       left: 10px;
       &.ccm-file-manager-reset-search-right {
-        right: 50px;
+        right: 70px;
         left: auto;
 
       }
@@ -43,7 +43,8 @@ div.ccm-file-manager-search-form {
 
     a.ccm-file-manager-launch-advanced-search {
       color: #aaa;
-      right: 50px;
+      right: 70px;
+
     }
 
     a.ccm-file-manager-reset-search {
@@ -69,7 +70,7 @@ ul.ccm-file-manager-navigation {
   padding: 10px 0px 10px 0px;
   a {
     color: #777;
-    .transition(0.1s all linear);
+    .transition(0.1s linear all);
   }
   a:focus, a:hover {
     text-decoration: none;
@@ -168,20 +169,18 @@ div.ui-dialog {
  * Select in page
  */
 div.ccm-file-selector {
-  .border-radius(4px);
-  border: 1px solid #ccc;
-  margin-bottom: 8px;
-  color: #aaa;
+  .border-radius(2px);
+  color: #606060;
+  background-color: #f0f0f0;
+  font-size: 14px;
   line-height: @line-height-base;
-  .box-shadow(inset 0 1px 1px rgba(0,0,0,0.075));
-  .transition(all ease-in-out .15s);
+  .transition(0.1s linear all);
+  cursor: pointer;
 
   &.ccm-parent-menu-item-hover, &.ccm-parent-menu-item-active, &:hover {
     cursor: pointer;
     outline: 0px;
-    color: #555;
-    border-color: #66afe9;
-    .box-shadow(0 0 8px rgba(102,175,233,0.6));
+    background-color: #e7e7e7;
   }
 
   div.ccm-file-selector-choose-new {
@@ -227,7 +226,7 @@ div#ccm-popover-menu-container {
  */
 div#ccm-file-manager-import-files {
   form.dropzone {
-    .transition(0.1s all linear);
+    .transition(0.1s linear all);
     span {
       font-size: 32px;
       -webkit-font-smoothing: antialiased;
