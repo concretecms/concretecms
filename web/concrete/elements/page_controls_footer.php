@@ -327,7 +327,7 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
                                 if ($hasComposer) {
                                     ?>title="<?= t('Composer, Page Design, Location, Attributes and Settings') ?>"><?php
                                 } else {
-                                    ?>title="<?= t('Page Design, Location, Attributes and Settings') ?>"<?php
+                                    ?>title="<?= t('Page Design, Location, Attributes and Settings') ?>"><?php
                                 }
                                 ?>
 
