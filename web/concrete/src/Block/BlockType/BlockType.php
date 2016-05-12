@@ -753,10 +753,8 @@ class BlockType
 
         /** @var Controller controller */
         if ($class) {
-            $this->controller = new $class($this);
-
-            /** @todo Move controller construction out of BlockType */
-            $this->controller->setApplication(Application::getFacadeApplication());
+            $app = Application::getFacadeApplication();
+            $this->controller = $app->build($class, [$this]);
         }
     }
 }
