@@ -44,7 +44,7 @@ if (Config::get('concrete.white_label.background_image') !== 'none' && !Config::
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <form method="post" data-form="check-in" action="<?=$approveAction?>">
             <ul class="nav navbar-nav">
-                <li><p class="navbar-text"><?=Core::make('date')->formatCustom('l, M dS g:ia')?></p></li>
+                <li><p class="navbar-text"><?=Core::make('date')->formatDateTime('now', true, true)?></p></li>
                 <li>
                     <?php if ($c->isEditMode()) {
                         ?>
