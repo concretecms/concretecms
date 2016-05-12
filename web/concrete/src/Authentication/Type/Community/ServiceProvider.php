@@ -1,9 +1,8 @@
 <?php
 namespace Concrete\Core\Authentication\Type\Community;
 
-use OAuth\Common\Consumer\Credentials;
-use OAuth\Common\Storage\SymfonySession;
-use OAuth\ServiceFactory;
+use Concrete\Core\Authentication\Type\Community\Extractor\Community as CommunityExtractor;
+use Concrete\Core\Authentication\Type\Community\Service\Community;
 use OAuth\UserData\ExtractorFactory;
 
 class ServiceProvider extends \Concrete\Core\Foundation\Service\Provider
@@ -15,26 +14,6 @@ class ServiceProvider extends \Concrete\Core\Foundation\Service\Provider
     {
         /** @var ExtractorFactory $extractor */
         $extractor = $this->app->make('oauth/factory/extractor');
-        $extractor->addExtractorMapping(
-            'Concrete\\Core\\Authentication\\Type\\Community\\Service\\Community',
-            'Concrete\\Core\\Authentication\\Type\\Community\\Extractor\\Community');
-
-        /** @var ServiceFactory $factory */
-        $factory = $this->app->make('oauth/factory/service');
-        $factory->registerService('community', '\\Concrete\\Core\\Authentication\\Type\\Community\\Service\\Community');
-
-        $this->app->bindShared(
-            'authentication/community',
-            function ($app, $callback = '/ccm/system/authentication/oauth2/community/callback/') use ($factory) {
-                return $factory->createService(
-                    'community',
-                    new Credentials(
-                        \Config::get('auth.community.appid'),
-                        \Config::get('auth.community.secret'),
-                        (string) \URL::to($callback)
-                    ),
-                    new SymfonySession(\Session::getFacadeRoot(), false));
-            }
-        );
+        $extractor->addExtractorMapping(Community::class, CommunityExtractor::class);
     }
 }
