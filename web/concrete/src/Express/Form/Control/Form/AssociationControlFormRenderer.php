@@ -50,10 +50,12 @@ class AssociationControlFormRenderer implements RendererInterface
         $entities = $list->getResults();
         $view = new EntityPropertyControlView($this->factory);
 
-        $related = $this->entry->getAssociations();
-        foreach($related as $relatedAssociation) {
-            if ($relatedAssociation->getAssociation()->getID() == $association->getID()) {
-                $view->addScopeItem('selectedEntities', $relatedAssociation->getSelectedEntries());
+        if (is_object($this->entry)) {
+            $related = $this->entry->getAssociations();
+            foreach($related as $relatedAssociation) {
+                if ($relatedAssociation->getAssociation()->getID() == $association->getID()) {
+                    $view->addScopeItem('selectedEntities', $relatedAssociation->getSelectedEntries());
+                }
             }
         }
 
