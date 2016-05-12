@@ -32,9 +32,6 @@ class StandardSearchIndexer implements SearchIndexerInterface
             // Regenerate based on values.
             $values = $category->getAttributeValues($mixed);
 
-            /** @var \Doctrine\DBAL\Schema\Column[] $columns */
-            $columns = $this->connection->getSchemaManager()->listTableColumns($category->getIndexedSearchTable());
-
             foreach ($values as $value) {
                 /**
                  * @var $value Value

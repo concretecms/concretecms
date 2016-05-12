@@ -141,16 +141,20 @@ class StandardSearchIndexer implements SearchIndexerInterface
             }
         }
 
-        $primaries = array($primary => $primaryValue);
+        if (count($columnValues)) {
 
-        if ($exists) {
-            $this->connection->update(
-                $category->getIndexedSearchTable(),
-                $columnValues,
-                $primaries
-            );
-        } else {
-            $this->connection->insert($category->getIndexedSearchTable(), $primaries + $columnValues);
+            $primaries = array($primary => $primaryValue);
+
+            if ($exists) {
+                $this->connection->update(
+                    $category->getIndexedSearchTable(),
+                    $columnValues,
+                    $primaries
+                );
+            } else {
+                $this->connection->insert($category->getIndexedSearchTable(), $primaries + $columnValues);
+            }
+
         }
     }
 
