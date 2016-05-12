@@ -1,14 +1,16 @@
 <?php
 namespace Concrete\Core\Entity\Attribute\Value\Value;
 
+use Doctrine\ORM\Mapping as ORM;
+
 /**
- * @Entity
- * @Table(name="NumberAttributeValues")
+ * @ORM\Entity
+ * @ORM\Table(name="NumberAttributeValues")
  */
 class NumberValue extends Value
 {
     /**
-     * @Column(type="decimal", precision=14, scale=4, nullable=true)
+     * @ORM\Column(type="decimal", precision=14, scale=4, nullable=true)
      */
     protected $value = '';
 

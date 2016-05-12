@@ -1,44 +1,46 @@
 <?php
 namespace Concrete\Core\Entity\Express;
 
+use Doctrine\ORM\Mapping as ORM;
+
 /**
- * @Entity
- * @InheritanceType("SINGLE_TABLE")
- * @DiscriminatorColumn(name="type", type="string")
- * @Table(name="ExpressEntityAssociations")
+ * @ORM\Entity
+ * @ORM\InheritanceType("SINGLE_TABLE")
+ * @ORM\DiscriminatorColumn(name="type", type="string")
+ * @ORM\Table(name="ExpressEntityAssociations")
  */
 abstract class Association
 {
     abstract public function getAssociationBuilder();
 
     /**
-     * @Id @Column(type="integer")
-     * @GeneratedValue(strategy="AUTO")
+     * @ORM\Id @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $id;
 
     /**
-     * @ManyToOne(targetEntity="Entity")
+     * @ORM\ManyToOne(targetEntity="Entity")
      **/
     protected $source_entity;
 
     /**
-     * @OneToOne(targetEntity="Entity")
+     * @ORM\OneToOne(targetEntity="Entity")
      **/
     protected $target_entity;
 
     /**
-     * @OneToMany(targetEntity="\Concrete\Core\Entity\Express\Control\AssociationControl", mappedBy="association", cascade={"remove"})
+     * @ORM\OneToMany(targetEntity="\Concrete\Core\Entity\Express\Control\AssociationControl", mappedBy="association", cascade={"remove"})
      */
     protected $controls;
 
     /**
-     * @Column(type="string", nullable=true)
+     * @ORM\Column(type="string", nullable=true)
      */
     protected $target_property_name;
 
     /**
-     * @Column(type="string", nullable=true)
+     * @ORM\Column(type="string", nullable=true)
      */
     protected $inversed_by_property_name;
 

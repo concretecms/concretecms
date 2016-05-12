@@ -3,10 +3,11 @@ namespace Concrete\Core\Entity\Attribute\Key\Type;
 
 use Concrete\Core\Entity\Attribute\Value\Value\SelectValue;
 use Concrete\Core\Entity\Attribute\Value\Value\SelectValueOptionList;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @Entity
- * @Table(name="SelectAttributeKeyTypes")
+ * @ORM\Entity
+ * @ORM\Table(name="SelectAttributeKeyTypes")
  */
 class SelectType extends Type
 {
@@ -17,8 +18,8 @@ class SelectType extends Type
     }
 
     /**
-     * @OneToOne(targetEntity="Concrete\Core\Entity\Attribute\Value\Value\SelectValueOptionList", cascade={"all"})
-     * @JoinColumn(name="avSelectOptionListID", referencedColumnName="avSelectOptionListID")
+     * @ORM\OneToOne(targetEntity="Concrete\Core\Entity\Attribute\Value\Value\SelectValueOptionList", cascade={"all"})
+     * @ORM\JoinColumn(name="avSelectOptionListID", referencedColumnName="avSelectOptionListID")
      */
     protected $list;
 
@@ -44,17 +45,17 @@ class SelectType extends Type
     }
 
     /**
-     * @Column(type="boolean")
+     * @ORM\Column(type="boolean")
      */
     protected $akSelectAllowMultipleValues = false;
 
     /**
-     * @Column(type="boolean")
+     * @ORM\Column(type="boolean")
      */
     protected $akSelectAllowOtherValues = false;
 
     /**
-     * @Column(type="string")
+     * @ORM\Column(type="string")
      */
     protected $akSelectOptionDisplayOrder = 'display_asc';
 

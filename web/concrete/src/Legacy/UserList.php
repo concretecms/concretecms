@@ -10,7 +10,7 @@ use Group;
 /**
  * An object that allows a filtered list of users to be returned.
  *
- * @package Files
+ * \@package Files
  *
  * @author Tony Trupp <tony@concrete5.org>
  *

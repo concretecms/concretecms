@@ -2,14 +2,15 @@
 
 namespace Concrete\Core\Entity\Statistics\UsageTracker;
 
+use Doctrine\ORM\Mapping as ORM;
+
 /**
  * Class StackUsageRecord
- * @package Concrete\Core\Entity\Statistics\UsageTracker
- * @Entity
- * @Table(name="StackUsageRecord",
+ * @ORM\Entity
+ * @ORM\Table(name="StackUsageRecord",
  *   indexes={
- *     @Index(name="block", columns={"block_id"}),
- *     @Index(name="collection_version", columns={"collection_id","collection_version_id"})
+ *     @ORM\Index(name="block", columns={"block_id"}),
+ *     @ORM\Index(name="collection_version", columns={"collection_id","collection_version_id"})
  *   }
  * )
  */
@@ -17,25 +18,25 @@ class StackUsageRecord
 {
 
     /**
-     * @Id @Column(type="integer")
+     * @ORM\Id @ORM\Column(type="integer")
      * @var int
      */
     protected $stack_id;
 
     /**
-     * @Id @Column(type="integer")
+     * @ORM\Id @ORM\Column(type="integer")
      * @var int
      */
     protected $block_id;
 
     /**
-     * @Id @Column(type="integer")
+     * @ORM\Id @ORM\Column(type="integer")
      * @var int
      */
     protected $collection_id;
 
     /**
-     * @Id @Column(type="integer")
+     * @ORM\Id @ORM\Column(type="integer")
      * @var int
      */
     protected $collection_version_id;

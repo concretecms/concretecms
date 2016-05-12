@@ -3,9 +3,10 @@ namespace Concrete\Core\Entity\Express;
 
 use Concrete\Core\Express\Association\Builder\ManyToManyAssociationBuilder;
 use Concrete\Core\Express\Association\Formatter\ManyToManyFormatter;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @Entity
+ * @ORM\Entity
  */
 class ManyToManyAssociation extends Association
 {
@@ -13,7 +14,7 @@ class ManyToManyAssociation extends Association
     const TYPE_INVERSE = 'inverse';
 
     /**
-     * @Column(type="string")
+     * @ORM\Column(type="string")
      */
     protected $association_type;
 

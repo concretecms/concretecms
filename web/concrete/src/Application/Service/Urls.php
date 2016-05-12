@@ -2,7 +2,7 @@
 namespace Concrete\Core\Application\Service;
 
 /**
- * @package Helpers
+ * \@package Helpers
  *
  * @category Concrete
  *

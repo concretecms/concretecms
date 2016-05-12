@@ -7,7 +7,7 @@ use HtmlObject\Element;
  * Formerly the only way to specify an icon – lets attributes provide one as icon.png
  * in their folder.
  *
- * @package Concrete\Core\Attribute
+ * \@package Concrete\Core\Attribute
  */
 class FileIconFormatter implements IconFormatterInterface
 {

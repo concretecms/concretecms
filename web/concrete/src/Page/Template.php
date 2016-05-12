@@ -5,29 +5,30 @@ use PageType;
 use Concrete\Core\Support\Facade\Database;
 use Concrete\Core\Package\PackageList;
 use Core;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @Entity
- * @Table(name="PageTemplates")
+ * @ORM\Entity
+ * @ORM\Table(name="PageTemplates")
  */
 class Template
 {
-    /** @Id @Column(type="integer") @GeneratedValue **/
+    /** @ORM\Id @ORM\Column(type="integer") @ORM\GeneratedValue **/
     protected $pTemplateID;
 
-    /** @Column(type="string") **/
+    /** @ORM\Column(type="string") **/
     protected $pTemplateHandle;
 
-    /** @Column(type="string") **/
+    /** @ORM\Column(type="string") **/
     protected $pTemplateIcon = FILENAME_PAGE_TEMPLATE_DEFAULT_ICON;
 
-    /** @Column(type="string") **/
+    /** @ORM\Column(type="string") **/
     protected $pTemplateName;
 
-    /** @Column(type="boolean") **/
+    /** @ORM\Column(type="boolean") **/
     protected $pTemplateIsInternal = false;
 
-    /** @Column(type="integer") **/
+    /** @ORM\Column(type="integer") **/
     protected $pkgID = 0;
 
     public static function exportList($xml)
@@ -105,7 +106,7 @@ class Template
 
     public static function getByHandle($pTemplateHandle)
     {
-        $em = \ORM::entityManager('core');
+        $em = \ORM::entityManager();
         return $em->getRepository('\Concrete\Core\Page\Template')
             ->findOneBy(
                 array('pTemplateHandle' => $pTemplateHandle)
@@ -115,14 +116,14 @@ class Template
     public static function getByID($pTemplateID)
     {
         if ($pTemplateID) {
-            $em = \ORM::entityManager('core');
+            $em = \ORM::entityManager();
             return $em->find('\Concrete\Core\Page\Template', $pTemplateID);
         }
     }
 
     public function delete()
     {
-        $em = \ORM::entityManager('core');
+        $em = \ORM::entityManager();
         $em->remove($this);
         $em->flush();
     }
@@ -141,7 +142,7 @@ class Template
 
     public static function getListByPackage($pkg)
     {
-        $em = \ORM::entityManager('core');
+        $em = \ORM::entityManager();
         $list = $em->getRepository('\Concrete\Core\Page\Template')
             ->findBy(
                 array('pkgID' => $pkg->getPackageID())
@@ -153,7 +154,7 @@ class Template
 
     public static function getList($includeInternal = false)
     {
-        $em = \ORM::entityManager('core');
+        $em = \ORM::entityManager();
         $args = array('pTemplateIsInternal' => $includeInternal);
         $list = $em->getRepository('\Concrete\Core\Page\Template')->findBy(
             $args, array('pTemplateID' => 'asc')
@@ -179,7 +180,7 @@ class Template
         $template->pkgID = $pkgID;
         $template->pTemplateIsInternal = (bool) $pTemplateIsInternal;
 
-        $em = \ORM::entityManager('core');
+        $em = \ORM::entityManager();
         $em->persist($template);
         $em->flush();
 
@@ -199,7 +200,7 @@ class Template
         $this->pTemplateName = $pTemplateName;
         $this->pTemplateIcon = $pTemplateIcon;
 
-        $em = \ORM::entityManager('core');
+        $em = \ORM::entityManager();
         $em->persist($this);
         $em->flush();
     }

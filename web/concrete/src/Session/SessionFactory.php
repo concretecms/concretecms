@@ -14,7 +14,7 @@ use Symfony\Component\HttpFoundation\Session\Session as SymfonySession;
  * Class SessionFactory
  * Base concrete5 session factory.
  *
- * @package Concrete\Core\Session
+ * \@package Concrete\Core\Session
  */
 class SessionFactory implements SessionFactoryInterface
 {

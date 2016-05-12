@@ -1,26 +1,28 @@
 <?php
 namespace Concrete\Core\Entity\Attribute\Value\Value;
 
+use Doctrine\ORM\Mapping as ORM;
+
 /**
- * @Entity
- * @Table(name="TopicAttributeSelectedTopics")
+ * @ORM\Entity
+ * @ORM\Table(name="TopicAttributeSelectedTopics")
  */
 class SelectedTopic
 {
     /**
-     * @Id @Column(type="integer", options={"unsigned":true})
-     * @GeneratedValue(strategy="AUTO")
+     * @ORM\Id @ORM\Column(type="integer", options={"unsigned":true})
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $avTreeTopicNodeID;
 
     /**
-     * @ManyToOne(targetEntity="TopicsValue")
-     * @JoinColumn(name="avID", referencedColumnName="avID")
+     * @ORM\ManyToOne(targetEntity="TopicsValue")
+     * @ORM\JoinColumn(name="avID", referencedColumnName="avID")
      */
     protected $value;
 
     /**
-     * @Column(type="integer", options={"unsigned":true})
+     * @ORM\Column(type="integer", options={"unsigned":true})
      */
     protected $treeNodeID;
 

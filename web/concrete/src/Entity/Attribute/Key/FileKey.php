@@ -1,9 +1,11 @@
 <?php
 namespace Concrete\Core\Entity\Attribute\Key;
 
+use Doctrine\ORM\Mapping as ORM;
+
 /**
- * @Entity
- * @Table(name="FileAttributeKeys")
+ * @ORM\Entity
+ * @ORM\Table(name="FileAttributeKeys")
  */
 class FileKey extends Key
 {

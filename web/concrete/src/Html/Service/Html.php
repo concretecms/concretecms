@@ -6,7 +6,7 @@ use Concrete\Core\Asset\JavascriptAsset;
 use View;
 
 /**
- * @package Helpers
+ * \@package Helpers
  *
  * @category Concrete
  *
@@ -18,7 +18,7 @@ use View;
 /**
  * Functions to help with using HTML. Does not include form elements - those have their own helper.
  *
- * @package Helpers
+ * \@package Helpers
  *
  * @category Concrete
  *

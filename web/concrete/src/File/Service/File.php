@@ -19,7 +19,7 @@ use Core;
  * echo $contents;
  * </code>
  *
- * @package    Helpers
+ * \@package    Helpers
  *
  * @category   Concrete
  *

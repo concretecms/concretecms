@@ -2,32 +2,33 @@
 namespace Concrete\Core\Entity\Express;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @Entity
- * @Table(name="ExpressForms")
+ * @ORM\Entity
+ * @ORM\Table(name="ExpressForms")
  */
 class Form implements \JsonSerializable
 {
     /**
-     * @Id @Column(type="integer")
-     * @GeneratedValue(strategy="AUTO")
+     * @ORM\Id @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $id;
 
     /**
-     * @Column(type="string", nullable=true)
+     * @ORM\Column(type="string", nullable=true)
      */
     protected $name;
 
     /**
-     * @OneToMany(targetEntity="FieldSet", mappedBy="form", cascade={"persist", "remove"})
-     * @OrderBy({"position" = "ASC"})
+     * @ORM\OneToMany(targetEntity="FieldSet", mappedBy="form", cascade={"persist", "remove"})
+     * @ORM\OrderBy({"position" = "ASC"})
      */
     protected $field_sets;
 
     /**
-     * @ManyToOne(targetEntity="Entity")
+     * @ORM\ManyToOne(targetEntity="Entity")
      **/
     protected $entity;
 

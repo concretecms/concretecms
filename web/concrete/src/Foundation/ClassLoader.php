@@ -9,7 +9,7 @@ use Symfony\Component\ClassLoader\Psr4ClassLoader as SymfonyClassLoader;
  * Provides autoloading for concrete5
  * Typically getInstance() should be used rather than instantiating a new object.
  *
- * @package Concrete\Core\Foundation
+ * \@package Concrete\Core\Foundation
  */
 class ClassLoader
 {

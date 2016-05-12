@@ -10,7 +10,7 @@ use Stash\Pool;
  * Class ExpensiveCache
  * This cache stores data that is expensive to build that will see a performance boost if stored on disk.
  *
- * @package Concrete\Core\Cache\Level
+ * \@package Concrete\Core\Cache\Level
  */
 class ExpensiveCache extends Cache
 {

@@ -9,7 +9,7 @@ use Symfony\Component\Routing\RouteCollection;
 /**
  * Class RouteUrlResolver.
  *
- * @package Concrete\Core\Url\Resolver
+ * \@package Concrete\Core\Url\Resolver
  *
  * @deprecated Use RouterUrlResolver instead.
  */

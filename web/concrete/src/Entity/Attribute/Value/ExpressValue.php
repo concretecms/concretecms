@@ -1,17 +1,19 @@
 <?php
 namespace Concrete\Core\Entity\Attribute\Value;
 
+use Doctrine\ORM\Mapping as ORM;
+
 /**
- * @Entity
- * @Table(
+ * @ORM\Entity
+ * @ORM\Table(
  *     name="ExpressEntityEntryAttributeValues"
  * )
  */
 class ExpressValue extends Value
 {
     /**
-     * @ManyToOne(targetEntity="\Concrete\Core\Entity\Express\Entry")
-     * @JoinColumn(name="exEntryID", referencedColumnName="exEntryID"),
+     * @ORM\ManyToOne(targetEntity="\Concrete\Core\Entity\Express\Entry")
+     * @ORM\JoinColumn(name="exEntryID", referencedColumnName="exEntryID"),
      */
     protected $entry;
 

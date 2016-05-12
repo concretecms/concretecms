@@ -22,7 +22,7 @@ use Zend\Cache\Storage\FlushableInterface;
  *     - Concrete\Core\Feed\FeedService
  *     - Concrete\Core\Localization\Localization
  *
- * @package Concrete\Core\Cache\Adapter
+ * \@package Concrete\Core\Cache\Adapter
  */
 class ZendCacheDriver extends AbstractAdapter implements StorageInterface, FlushableInterface
 {

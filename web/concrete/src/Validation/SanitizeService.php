@@ -3,7 +3,7 @@
 /**
  * Helper class for sanitizing input and escaping output.
  *
- * @package Helpers
+ * \@package Helpers
  *
  * @category Concrete
  *

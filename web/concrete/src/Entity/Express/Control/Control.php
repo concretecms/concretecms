@@ -5,37 +5,38 @@ use Concrete\Controller\Element\Dashboard\Express\Control\Options;
 use Concrete\Core\Entity\Express\Entity;
 use Concrete\Core\Entity\Express\Entry;
 use Concrete\Core\Express\Form\Control\Type\SaveHandler\ControlSaveHandler;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @Entity
- * @InheritanceType("JOINED")
- * @DiscriminatorColumn(name="type", type="string")
- * @Table(name="ExpressFormFieldSetControls")
+ * @ORM\Entity
+ * @ORM\InheritanceType("JOINED")
+ * @ORM\DiscriminatorColumn(name="type", type="string")
+ * @ORM\Table(name="ExpressFormFieldSetControls")
  */
 abstract class Control implements \JsonSerializable
 {
     /**
-     * @Id @Column(type="guid")
+     * @ORM\Id @ORM\Column(type="guid")
      */
     protected $id;
 
     /**
-     * @Column(type="boolean")
+     * @ORM\Column(type="boolean")
      */
     protected $is_required = false;
 
     /**
-     * @Column(type="integer")
+     * @ORM\Column(type="integer")
      */
     protected $position = 0;
 
     /**
-     * @Column(type="text", nullable=true)
+     * @ORM\Column(type="text", nullable=true)
      */
     protected $custom_label;
 
     /**
-     * @ManyToOne(targetEntity="\Concrete\Core\Entity\Express\FieldSet")
+     * @ORM\ManyToOne(targetEntity="\Concrete\Core\Entity\Express\FieldSet")
      **/
     protected $field_set;
 

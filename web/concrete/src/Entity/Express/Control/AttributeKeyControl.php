@@ -5,16 +5,17 @@ use Concrete\Core\Entity\Express\Entity;
 use Concrete\Core\Entity\Express\Entry;
 use Concrete\Core\Express\Form\Control\Form\AttributeKeyControlFormRenderer;
 use Concrete\Core\Express\Form\Control\View\AttributeKeyControlViewRenderer;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @Entity
- * @Table(name="ExpressFormFieldSetAttributeKeyControls")
+ * @ORM\Entity
+ * @ORM\Table(name="ExpressFormFieldSetAttributeKeyControls")
  */
 class AttributeKeyControl extends Control
 {
     /**
-     * @ManyToOne(targetEntity="\Concrete\Core\Entity\Attribute\Key\Key")
-     * @JoinColumn(name="akID", referencedColumnName="akID")
+     * @ORM\ManyToOne(targetEntity="\Concrete\Core\Entity\Attribute\Key\Key")
+     * @ORM\JoinColumn(name="akID", referencedColumnName="akID")
      */
     protected $attribute_key;
 

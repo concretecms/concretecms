@@ -1,36 +1,37 @@
 <?php
 namespace Concrete\Core\Page;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @Entity
- * @Table(name="PagePaths")
+ * @ORM\Entity
+ * @ORM\Table(name="PagePaths")
  */
 class PagePath
 {
     /**
-     * @Column(type="text")
+     * @ORM\Column(type="text")
      */
     protected $cPath;
 
     /**
-     * @Id @Column(type="integer")
-     * @GeneratedValue
+     * @ORM\Id @ORM\Column(type="integer")
+     * @ORM\GeneratedValue
      */
     protected $ppID;
 
     /**
-     * @Column(columnDefinition="integer unsigned")
-     * @GeneratedValue(strategy="IDENTITY")
+     * @ORM\Column(columnDefinition="integer unsigned")
+     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     protected $cID;
 
     /**
-     * @Column(type="boolean")
+     * @ORM\Column(type="boolean")
      */
     protected $ppIsCanonical = false;
 
     /**
-     * @Column(type="boolean")
+     * @ORM\Column(type="boolean")
      */
     protected $ppGeneratedFromURLSlugs = false;
 

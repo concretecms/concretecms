@@ -6,10 +6,11 @@ use Concrete\Core\Entity\PackageTrait;
 use Concrete\Core\Export\ExportableInterface;
 use Concrete\Core\Export\Item\AttributeType;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @Entity
- * @Table(name="AttributeTypes", indexes={@Index(name="pkgID", columns={"pkgID", "atID"})})
+ * @ORM\Entity
+ * @ORM\Table(name="AttributeTypes", indexes={@ORM\Index(name="pkgID", columns={"pkgID", "atID"})})
  */
 class Type implements ExportableInterface
 {
@@ -23,23 +24,23 @@ class Type implements ExportableInterface
     }
 
     /**
-     * @Id @Column(type="integer", options={"unsigned":true})
-     * @GeneratedValue(strategy="AUTO")
+     * @ORM\Id @ORM\Column(type="integer", options={"unsigned":true})
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $atID;
 
     /**
-     * @Column(type="string", unique=true)
+     * @ORM\Column(type="string", unique=true)
      */
     protected $atHandle;
 
     /**
-     * @ManyToMany(targetEntity="Category", mappedBy="types")
+     * @ORM\ManyToMany(targetEntity="Category", mappedBy="types")
      */
     protected $categories;
 
     /**
-     * @Column(type="string")
+     * @ORM\Column(type="string")
      */
     protected $atName;
 

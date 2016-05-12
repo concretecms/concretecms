@@ -16,16 +16,17 @@ use Page;
 use Database;
 use Concrete\Core\File\StorageLocation\StorageLocation;
 use PermissionKey;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @Entity
- * @Table(
+ * @ORM\Entity
+ * @ORM\Table(
  *     name="Files",
  *     indexes={
- *     @Index(name="uID", columns={"uID"}),
- *     @Index(name="fslID", columns={"fslID"}),
- *     @Index(name="ocID", columns={"ocID"}),
- *     @Index(name="fOverrideSetPermissions", columns={"fOverrideSetPermissions"}),
+ *     @ORM\Index(name="uID", columns={"uID"}),
+ *     @ORM\Index(name="fslID", columns={"fslID"}),
+ *     @ORM\Index(name="ocID", columns={"ocID"}),
+ *     @ORM\Index(name="fOverrideSetPermissions", columns={"fOverrideSetPermissions"}),
  *     }
  * )
  */
@@ -34,52 +35,52 @@ class File implements \Concrete\Core\Permission\ObjectInterface
     const CREATE_NEW_VERSION_THRESHOLD = 300;
 
     /**
-     * @Id @Column(type="integer", options={"unsigned": true})
-     * @GeneratedValue(strategy="AUTO")
+     * @ORM\Id @ORM\Column(type="integer", options={"unsigned": true})
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $fID;
 
     /**
-     * @Column(type="datetime")
+     * @ORM\Column(type="datetime")
      */
     protected $fDateAdded = null;
 
     /**
-     * @Column(type="string", nullable=true)
+     * @ORM\Column(type="string", nullable=true)
      */
     protected $fPassword;
 
     /**
-     * @OneToMany(targetEntity="Version", mappedBy="file", cascade={"persist"})
-     * @JoinColumn(name="fID")
+     * @ORM\OneToMany(targetEntity="Version", mappedBy="file", cascade={"persist"})
+     * @ORM\JoinColumn(name="fID")
      */
     protected $versions;
 
     /**
-     * @Column(type="boolean")
+     * @ORM\Column(type="boolean")
      */
     protected $fOverrideSetPermissions = false;
 
     /**
      * Originally placed on which page.
      *
-     * @Column(type="integer", options={"unsigned": true})
+     * @ORM\Column(type="integer", options={"unsigned": true})
      */
     protected $ocID = 0;
 
     /**
-     * @Column(type="integer", options={"unsigned": true})
+     * @ORM\Column(type="integer", options={"unsigned": true})
      */
     protected $uID = 0;
 
     /**
-     * @Column(type="integer", options={"unsigned": true})
+     * @ORM\Column(type="integer", options={"unsigned": true})
      */
     protected $folderTreeNodeID = 0;
 
     /**
-     * @ManyToOne(targetEntity="\Concrete\Core\File\StorageLocation\StorageLocation", inversedBy="files")
-     * @JoinColumn(name="fslID", referencedColumnName="fslID")
+     * @ORM\ManyToOne(targetEntity="\Concrete\Core\File\StorageLocation\StorageLocation", inversedBy="files")
+     * @ORM\JoinColumn(name="fslID", referencedColumnName="fslID")
      **/
     protected $storageLocation;
 
@@ -97,7 +98,7 @@ class File implements \Concrete\Core\Permission\ObjectInterface
      */
     public static function getByID($fID)
     {
-        $em = \ORM::entityManager('core');
+        $em = \ORM::entityManager();
         return $em->find('\Concrete\Core\File\File', $fID);
     }
 
@@ -192,7 +193,7 @@ class File implements \Concrete\Core\Permission\ObjectInterface
 
     protected function save()
     {
-        $em = \ORM::entityManager('core');
+        $em = \ORM::entityManager();
         $em->persist($this);
         $em->flush();
     }
@@ -400,7 +401,7 @@ class File implements \Concrete\Core\Permission\ObjectInterface
     public function duplicate()
     {
         $db = Loader::db();
-        $em = \ORM::entityManager('core');
+        $em = \ORM::entityManager();
 
         $versions = $this->versions;
 
@@ -509,7 +510,7 @@ class File implements \Concrete\Core\Permission\ObjectInterface
         $f->folderTreeNodeID = $folder->getTreeNodeID();
 
 
-        $em = \ORM::entityManager('core');
+        $em = \ORM::entityManager();
         $em->persist($f);
         $em->flush();
 
@@ -548,7 +549,7 @@ class File implements \Concrete\Core\Permission\ObjectInterface
             return $item->get();
         }
 
-        $em = \ORM::entityManager('core');
+        $em = \ORM::entityManager();
         $r = $em->getRepository('\Concrete\Core\File\Version');
         $fv = $r->findOneBy(array('file' => $this, 'fvIsApproved' => true));
 
@@ -616,7 +617,7 @@ class File implements \Concrete\Core\Permission\ObjectInterface
         }
 
         // now from the DB
-        $em = \ORM::entityManager('core');
+        $em = \ORM::entityManager();
         $em->remove($this);
         $em->flush();
     }
@@ -628,7 +629,7 @@ class File implements \Concrete\Core\Permission\ObjectInterface
      */
     public function getRecentVersion()
     {
-        $em = \ORM::entityManager('core');
+        $em = \ORM::entityManager();
         $r = $em->getRepository('\Concrete\Core\File\Version');
 
         return $r->findOneBy(
@@ -651,7 +652,7 @@ class File implements \Concrete\Core\Permission\ObjectInterface
             return $this->getApprovedVersion();
         }
 
-        $em = \ORM::entityManager('core');
+        $em = \ORM::entityManager();
         $r = $em->getRepository('\Concrete\Core\File\Version');
 
         return $r->findOneBy(array('file' => $this, 'fvID' => $fvID));

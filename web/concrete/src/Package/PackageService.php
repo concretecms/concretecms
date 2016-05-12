@@ -145,7 +145,7 @@ class PackageService
         return $upgradeables;
     }
 
-
+    
     public function setupLocalization(LocalizablePackageInterface $package, $locale = null, $translate = 'current')
     {
         if ($translate === 'current') {
@@ -169,6 +169,7 @@ class PackageService
     public function uninstall(Package $p)
     {
         $p->uninstall();
+        $this->removPackageMetadataDriverFromConfig($p);
         $config = $this->entityManager->getConfiguration();
         $cache = $config->getMetadataCacheImpl();
         $cache->flushAll();
@@ -178,17 +179,17 @@ class PackageService
     {
         $this->localization->pushActiveContext('system');
         try {
-
-            $paths = array();
-            foreach($p->getPackageEntityPaths() as $path) {
-                if (is_dir($path)) {
-                    $paths[] = $path;
-                }
-            }
-            if (count($paths)) {
+            if(!empty($p->getPackageMetadataPaths())){
                 $config = $this->entityManager->getConfiguration();
-                $driver = $config->getMetadataDriverImpl();
-                $driver->addPaths($paths);
+                $driverChain = $config->getMetadataDriverImpl();
+
+                $driver = $p->getMetadataDriver();
+                $pkgNamespace = $p->getNamespace();
+
+                $driverChain->addDriver($driver, $pkgNamespace);
+                // add package entity to generated_overrides config file
+                $this->savePackageMetadataDriverToConfig($p);
+                
                 $cache = $config->getMetadataCacheImpl();
                 $cache->flushAll();
             }
@@ -201,6 +202,7 @@ class PackageService
             }
             $this->localization->popActiveContext();
             $pkg = $this->getByHandle($p->getPackageHandle());
+            
             return $pkg;
         } catch (\Exception $e) {
             $this->localization->popActiveContext();
@@ -240,6 +242,87 @@ class PackageService
         return clone $cl;
     }
 
+    /**
+     * Save the entity path of the package to the 
+     * application/config/database.php
+     * So the single entity manager is able to add the appropriate 
+     * drivers for the package namespaces
+     * 
+     * @param \Concrete\Core\Package\Package $p
+     */
+    protected function savePackageMetadataDriverToConfig(Package $p)
+    {
+        $packageMetadataDriverType = $p->getMetadataDriverType();
+        $packageHandle = $p->getPackageHandle();
+        $config = $this->getFileConfigORMMetadata();
 
+        $settings = array(
+            'namespace' => $p->getNamespace(),
+            'paths' => $p->getPackageMetadataPaths()
+        );
 
+        if ($packageMetadataDriverType === Package::PACKAGE_METADATADRIVER_ANNOTATION) {
+            if(version_compare($p->getApplicationVersionRequired(), '5.8.0', '<')){
+                // Legacy - uses SimpleAnnotationReader
+                $config->save(CONFIG_ORM_METADATA_ANNOTATION_LEGACY . '.' . strtolower($packageHandle), $settings);
+            }else{
+                // Use default AnnotationReader
+                $config->save(CONFIG_ORM_METADATA_ANNOTATION_DEFAULT . '.' . strtolower($packageHandle), $settings);
+            }
+        } else if ($packageMetadataDriverType === Package::PACKAGE_METADATADRIVER_XML) {
+            $config->save(CONFIG_ORM_METADATA_XML . '.' . strtolower($packageHandle), $settings);
+        } else if ($packageMetadataDriverType === Package::PACKAGE_METADATADRIVER_YAML){
+            $config->save(CONFIG_ORM_METADATA_YAML . '.' . strtolower($packageHandle), $settings);
+        }
+    }
+    
+    /**
+     * Remove metadatadriver from config
+     * 
+     * @param \Concrete\Core\Package\Package $p
+     */
+    protected function removPackageMetadataDriverFromConfig(Package $p)
+    {
+        $packageMetadataDriverType = $p->getMetadataDriverType();
+        $packageHandle = $p->getPackageHandle();
+        $config = $this->getFileConfigORMMetadata();
+
+        if ($packageMetadataDriverType === Package::PACKAGE_METADATADRIVER_ANNOTATION) {
+            if(version_compare($p->getApplicationVersionRequired(), '5.8.0', '<')){
+                // Legacy - uses SimpleAnnotationReader
+                $basePath = CONFIG_ORM_METADATA_ANNOTATION_LEGACY;
+            }else{
+                // Use default AnnotationReader
+                $basePath = CONFIG_ORM_METADATA_ANNOTATION_DEFAULT;
+            }
+        } else if ($packageMetadataDriverType === Package::PACKAGE_METADATADRIVER_XML) {
+            $basePath = CONFIG_ORM_METADATA_XML;
+        } else if ($packageMetadataDriverType === Package::PACKAGE_METADATADRIVER_YAML){
+            $basePath = CONFIG_ORM_METADATA_YAML;
+        }
+        
+        // $config->clear($basePath) does not remove settings in config files
+        $metaDriverConfig = $config->get($basePath);
+        unset($metaDriverConfig[strtolower($packageHandle)]);
+        $config->save($basePath, $metaDriverConfig);
+    }
+    
+    /**
+     * Get the config with a direct file safer,
+     * so settings can be saved directly to application/config/database.php
+     * instead of application/config/generated_overrides
+     * 
+     * Used to store the orm metadata of packages
+     * 
+     * @return \Concrete\Core\Package\Repository
+     */
+    protected function getFileConfigORMMetadata()
+    {
+        $defaultEnv = \Config::getEnvironment();
+        $fileSystem = new \Illuminate\Filesystem\Filesystem();
+        $fileLoader = new \Concrete\Core\Config\FileLoader($fileSystem);
+        $directFileSaver = new \Concrete\Core\Config\DirectFileSaver($fileSystem);
+        $repository = new \Concrete\Core\Config\Repository\Repository($fileLoader, $directFileSaver, $defaultEnv);
+        return $repository;
+    }
 }

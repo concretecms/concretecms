@@ -3,9 +3,10 @@ namespace Concrete\Core\Entity\Express;
 
 use Concrete\Core\Express\Association\Builder\OneToOneAssociationBuilder;
 use Concrete\Core\Express\Association\Formatter\OneToOneFormatter;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @Entity
+ * @ORM\Entity
  */
 class OneToOneAssociation extends Association
 {
@@ -13,7 +14,7 @@ class OneToOneAssociation extends Association
     const TYPE_INVERSE = 'inverse';
 
     /**
-     * @Column(type="string")
+     * @ORM\Column(type="string")
      */
     protected $association_type;
 

@@ -6,7 +6,7 @@ use Core;
 /**
  * Class ControllerResolver.
  *
- * @package Concrete\Core\Controller
+ * \@package Concrete\Core\Controller
  *
  * @deprecated The default is ApplicationAwareControllerResolver
  */

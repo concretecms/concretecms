@@ -15,7 +15,7 @@ use Loader;
  * Piles currently only contain blocks but they could also contain collections. Any bit of content inside a user's pile
  * can be reordered, etc... although no public interface makes use of much of this functionality.
  *
- * @package Concrete\Core\Page\Stack\Pile
+ * \@package Concrete\Core\Page\Stack\Pile
  */
 class Pile extends Object
 {

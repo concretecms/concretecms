@@ -12,7 +12,7 @@ use Concrete\Core\File\Service\File;
  * instantiated via Newsflow::getInstance(). This object is prevented from being created if the config file has the
  * 'concrete.external.news' setting set to false.
  *
- * @package Concrete\Core\Activity
+ * \@package Concrete\Core\Activity
  */
 class Newsflow
 {

@@ -4,7 +4,7 @@ namespace Concrete\Core\Form\Service;
 use Loader;
 
 /**
- * @package    Helpers
+ * \@package    Helpers
  * @subpackage Validation
  *
  * @author     Andrew Embler <andrew@concrete5.org>
@@ -15,7 +15,7 @@ use Loader;
 /**
  * Helper functions to use with validating submitting forms.
  *
- * @package    Helpers
+ * \@package    Helpers
  * @subpackage Validation
  *
  * @author     Andrew Embler <andrew@concrete5.org>

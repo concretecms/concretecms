@@ -13,8 +13,6 @@ use Symfony\Component\HttpFoundation\Session\Session;
 /**
  * Class CommunityServiceFactory
  * A simple factory class for creating community authentication services
- *
- * @package Concrete\Core\Authentication\Type\Community\Factory
  */
 class CommunityServiceFactory
 {

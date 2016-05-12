@@ -1,19 +1,21 @@
 <?php
 namespace Concrete\Core\Entity\Attribute\Value;
 
+use Doctrine\ORM\Mapping as ORM;
+
 /**
- * @Entity
- * @Table(
+ * @ORM\Entity
+ * @ORM\Table(
  *     name="FileAttributeValues"
  * )
  */
 class FileValue extends Value
 {
     /**
-     * @ManyToOne(targetEntity="\Concrete\Core\File\Version")
-     @JoinColumns({
-     *   @JoinColumn(name="fID", referencedColumnName="fID"),
-     *   @JoinColumn(name="fvID", referencedColumnName="fvID")
+     * @ORM\ManyToOne(targetEntity="\Concrete\Core\File\Version")
+     @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="fID", referencedColumnName="fID"),
+     *   @ORM\JoinColumn(name="fvID", referencedColumnName="fvID")
      * })
      */
     protected $version;

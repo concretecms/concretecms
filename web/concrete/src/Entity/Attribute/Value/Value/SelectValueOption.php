@@ -1,41 +1,43 @@
 <?php
 namespace Concrete\Core\Entity\Attribute\Value\Value;
 
+use Doctrine\ORM\Mapping as ORM;
+
 /**
- * @Entity
- * @Table(name="SelectAttributeValueOptions")
+ * @ORM\Entity
+ * @ORM\Table(name="SelectAttributeValueOptions")
  */
 class SelectValueOption
 {
     /**
-     * @Id @Column(type="integer", options={"unsigned":true})
-     * @GeneratedValue(strategy="AUTO")
+     * @ORM\Id @ORM\Column(type="integer", options={"unsigned":true})
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $avSelectOptionID;
 
     /**
-     * @ManyToOne(targetEntity="SelectValueOptionList", inversedBy="options")
-     * @JoinColumn(name="avSelectOptionListID", referencedColumnName="avSelectOptionListID")
+     * @ORM\ManyToOne(targetEntity="SelectValueOptionList", inversedBy="options")
+     * @ORM\JoinColumn(name="avSelectOptionListID", referencedColumnName="avSelectOptionListID")
      */
     protected $list;
 
     /**
-     * @ManyToMany(targetEntity="SelectValue", mappedBy="selectedOptions", cascade={"remove"})
+     * @ORM\ManyToMany(targetEntity="SelectValue", mappedBy="selectedOptions", cascade={"remove"})
      */
     protected $values;
 
     /**
-     * @Column(type="boolean")
+     * @ORM\Column(type="boolean")
      */
     protected $isEndUserAdded = false;
 
     /**
-     * @Column(type="integer")
+     * @ORM\Column(type="integer")
      */
     protected $displayOrder = 0;
 
     /**
-     * @Column(type="string")
+     * @ORM\Column(type="string")
      */
     protected $value = '';
 

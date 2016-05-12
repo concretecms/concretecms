@@ -1,16 +1,18 @@
 <?php
 namespace Concrete\Core\Entity\Search;
 
+use Doctrine\ORM\Mapping as ORM;
+
 /**
- * @Entity
- * @Table(name="SavedFileSearchQueries")
+ * @ORM\Entity
+ * @ORM\Table(name="SavedFileSearchQueries")
  */
 class SavedFileSearch extends SavedSearch
 {
 
     /**
-     * @Id @Column(type="integer")
-     * @GeneratedValue(strategy="AUTO")
+     * @ORM\Id @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $id;
 
