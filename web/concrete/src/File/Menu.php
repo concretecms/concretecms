@@ -52,6 +52,18 @@ class Menu extends \Concrete\Core\Application\UserInterface\ContextMenu\Menu
             'data-file-id' => $file->getFileID()
         ]));
 
+        $this->addItem(new DialogLinkItem(
+                \URL::to('/ccm/system/dialogs/file/sets?fID=' . $file->getFileID()),
+                t('Sets'), t('File Sets'), '500', '400')
+        );
+
+        $this->addItem(new DialogLinkItem(
+                REL_DIR_FILES_TOOLS_REQUIRED . '/files/replace?fID=' . $file->getFileID(),
+                t('Replace'), t('Replace'), '500', '200')
+        );
+
+
+
         $this->addItem(new DividerItem());
 
         $this->addItem(new DialogLinkItem(

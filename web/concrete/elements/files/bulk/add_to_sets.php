@@ -1,14 +1,10 @@
 <?php defined('C5_EXECUTE') or die("Access Denied."); ?>
 <?php Loader::element('files/add_to_sets', array(
     'displayFileSet' => function ($fileset) use ($files) {
-        $fp = new \Permissions($fileset);
-        if (!$fp->canAddFiles()) {
-            return false;
-        } else {
-            foreach ($files as $f) {
-                if (!$fp->canAddFileType(strtolower($f->getExtension()))) {
-                    return false;
-                }
+        $fp = \FilePermissions::getGlobal();
+        foreach ($files as $f) {
+            if (!$fp->canAddFileType(strtolower($f->getExtension()))) {
+                return false;
             }
         }
 

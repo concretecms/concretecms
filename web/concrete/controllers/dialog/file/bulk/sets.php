@@ -5,6 +5,7 @@ use Concrete\Controller\Backend\UserInterface as BackendInterfaceController;
 use Concrete\Core\File\EditResponse;
 use Concrete\Core\File\File;
 use Concrete\Core\File\Set\Set;
+use Concrete\Core\Legacy\FilePermissions;
 
 class Sets extends BackendInterfaceController
 {
@@ -59,13 +60,13 @@ class Sets extends BackendInterfaceController
     {
         if ($this->validateAction()) {
             $post = $this->request->request->all();
+            $fsp = FilePermissions::getGlobal();
             foreach ($post as $key => $value) {
                 if (preg_match('/fsID:/', $key)) {
                     $id = explode(':', $key);
                     $fsID = $id[1];
 
                     $fs = Set::getByID($fsID);
-                    $fsp = new \Permissions($fs);
                     foreach ($this->files as $file) {
                         if ($fsp->canAddFile($file)) {
                             switch ($value) {
