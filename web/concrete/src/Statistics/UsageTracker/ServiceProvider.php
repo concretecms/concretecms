@@ -18,11 +18,12 @@ class ServiceProvider extends Provider
             /** @var AggregateTracker $tracker */
             $tracker = $app->build(AggregateTracker::class);
 
-            $config = $app['config']['statistics.trackers'];
-            foreach ($config as $key => $tracker_string) {
-                $tracker->addTracker($key, function(Application $app) use ($tracker_string) {
-                    return $app->make($tracker_string);
-                });
+            if ($trackers = $app['config']['statistics.trackers']) {
+                foreach ($trackers as $key => $tracker_string) {
+                    $tracker->addTracker($key, function (Application $app) use ($tracker_string) {
+                        return $app->make($tracker_string);
+                    });
+                }
             }
 
             return $tracker;
