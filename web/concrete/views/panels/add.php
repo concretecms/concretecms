@@ -318,13 +318,13 @@ defined('C5_EXECUTE') or die("Access Denied.");
                                     data-dragging-avatar="<?=
                                     h(
                                         '<p><img src="' . $btIcon . '" /><span>' . t(
-                                            $bt->getBlockTypeName()
+                                            $bt->getBlockTypeInSetName()
                                         ) . '</span></p>'
                                     ) ?>"
                                     title="<?= t($bt->getBlockTypeName()) ?>"
                                     href="javascript:void(0)"
                                 >
-                                    <p><img src="<?= $btIcon ?>"/><span><?= t($bt->getBlockTypeName()) ?></span></p>
+                                    <p><img src="<?= $btIcon ?>"/><span><?= t($bt->getBlockTypeInSetName()) ?></span></p>
                                 </a>
                             </li>
 
