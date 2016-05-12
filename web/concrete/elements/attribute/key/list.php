@@ -73,10 +73,9 @@ if ($enableSorting) {
 if (isset($types) && is_array($types) && count($types) > 0) {
     ?>
     <h3><?=t('Add Attribute')?></h3>
-    <?php echo t('Type'); ?>
     <div class="btn-group">
-        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-            <?=t('Choose')?> <span class="caret"></span>
+        <button type="button" class="btn btn-default dropdown-toggle" data-button="attribute-type" data-toggle="dropdown">
+            <?=t('Choose Type')?> <span class="caret"></span>
         </button>
         <ul class="dropdown-menu">
             <?php
@@ -91,5 +90,17 @@ if (isset($types) && is_array($types) && count($types) > 0) {
             ?>
         </ul>
     </div>
+
+    <script type="text/javascript">
+        $(function() {
+            var documentHeight = $(document).height(),
+                position = $('button[data-button=attribute-type]').offset().top;
+
+            if ((documentHeight > 200) && ((documentHeight - position) < 200)) {
+                $('button[data-button=attribute-type]').parent().addClass('dropup');
+            }
+
+        });
+    </script>
     <?php
 }
