@@ -90,6 +90,10 @@
             <blocktype handle="search"/>
             <blocktype handle="external_form"/>
         </blocktypeset>
+        <blocktypeset handle="express" name="Express" package="">
+            <blocktype handle="express_entry_list"/>
+            <blocktype handle="express_entry_detail"/>
+        </blocktypeset>
         <blocktypeset handle="social" name="Social Networking" package="">
             <blocktype handle="survey"/>
             <blocktype handle="core_conversation" />

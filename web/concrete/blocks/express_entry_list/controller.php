@@ -34,6 +34,11 @@ class Controller extends BlockController
         return t("Express Entry List");
     }
 
+    public function getBlockTypeInSetName()
+    {
+        return t("List");
+    }
+
     public function add()
     {
         $this->loadData();
