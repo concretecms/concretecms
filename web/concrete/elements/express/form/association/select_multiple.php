@@ -1,7 +1,7 @@
 <?php defined('C5_EXECUTE') or die("Access Denied."); ?>
 
-<div class="control-group">
-    <label><?=$label?></label>
+<div class="form-group">
+    <label class="control-label"><?=$label?></label>
     <?php
     if (!empty($entities)) {
         foreach ($entities as $entity) {

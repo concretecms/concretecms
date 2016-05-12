@@ -5,6 +5,7 @@ use Concrete\Controller\Element\Search\CustomizeResults;
 use \Concrete\Core\Block\BlockController;
 use Concrete\Core\Express\Entry\Search\Result\Result;
 use Concrete\Core\Express\EntryList;
+use Concrete\Core\Search\Column\AttributeKeyColumn;
 use Concrete\Core\Search\Result\ItemColumn;
 use Concrete\Core\Support\Facade\Facade;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -233,8 +234,10 @@ class Controller extends BlockController
 
         $linkedProperties = (array) json_decode($this->linkedProperties);
 
-        if ($ak = $column->getColumn()->getAttributeKey()) {
-            return in_array($ak->getAttributeKeyID(), $linkedProperties);
+        if ($column->getColumn() instanceof AttributeKeyColumn) {
+            if ($ak = $column->getColumn()->getAttributeKey()) {
+                return in_array($ak->getAttributeKeyID(), $linkedProperties);
+            }
         }
     }
 

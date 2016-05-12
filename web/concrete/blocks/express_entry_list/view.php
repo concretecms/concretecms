@@ -67,7 +67,7 @@ if ($entity) { ?>
                 <tr class="<?=$rowClass?>">
                 <?php foreach($item->getColumns() as $column) {
                     if ($controller->linkThisColumn($column)) { ?>
-                        <td><a href="<?=URL::to($detailPage, 'view_express_entity', $entity->getId())?>"><?=$column->getColumnValue($item);?></a></td>
+                        <td><a href="<?=URL::to($detailPage, 'view_express_entity', $item->getEntry()->getId())?>"><?=$column->getColumnValue($item);?></a></td>
                     <?php } else { ?>
                         <td><?=$column->getColumnValue($item);?></td>
                     <?php }  ?>
