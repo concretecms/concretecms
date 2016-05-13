@@ -16,6 +16,7 @@ class Sets extends BackendInterfaceFileController
 
     public function view()
     {
+
     }
 
     public function submit()
@@ -24,10 +25,10 @@ class Sets extends BackendInterfaceFileController
         if (is_array($this->request->request->get('fsID'))) {
             $requestSets = $this->request->request->get('fsID');
         }
+        $fsp = \FilePermissions::getGlobal();
         if ($this->validateAction()) {
             $sets = Set::getMySets();
             foreach ($sets as $set) {
-                $fsp = new \Permissions($set);
                 if (in_array($set->getFileSetID(), $requestSets) && $fsp->canAddFile($this->file) && !$this->file->inFileSet($set)) {
                     // This was checked and it wasn't in the file set previously
                     $set->addFileToSet($this->file);

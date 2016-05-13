@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Block\ExpressEntryDetail;
 
 use Concrete\Controller\Element\Search\CustomizeResults;
@@ -31,6 +31,11 @@ class Controller extends BlockController
     public function getBlockTypeName()
     {
         return t("Express Entry Detail");
+    }
+
+    public function getBlockTypeInSetName()
+    {
+        return t("Details");
     }
 
     public function add()

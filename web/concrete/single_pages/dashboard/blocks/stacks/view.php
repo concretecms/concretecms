@@ -156,7 +156,10 @@ if (isset($neutralStack)) {
                     $bv->render('view');
                 }
             }
-            View::element('block_area_footer', array('a' => $a));
+            //View::element('block_area_footer', array('a' => $a));
+            print '</div>';
+            // No, we don't include the footer because we don't want all area controls available.
+            // But the footer element has a closing DIV we need.
             ?>
         </div>
 
@@ -168,7 +171,7 @@ if (isset($neutralStack)) {
                     <form method="post" class="form-stacked" style="padding-left: 0px" action="<?=$view->action('delete_stack')?>">
                         <?=$token->output('delete_stack')?>
                         <input type="hidden" name="stackID" value="<?=$stackToEdit->getCollectionID()?>" />
-                        <p><?
+                        <p><?php
                             if (isset($deleteLabels['canUndo']) && $deleteLabels['canUndo']) {
                                 echo t('Are you sure you want to proceed?');
                             } else {

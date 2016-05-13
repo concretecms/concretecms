@@ -19,6 +19,12 @@ class Controller extends AttributeTypeController
         return new FontAwesomeIconFormatter('share');
     }
 
+    public function getSearchIndexValue()
+    {
+        return false;
+    }
+
+
     public function saveForm($data)
     {
         $values = array();

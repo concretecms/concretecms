@@ -9,7 +9,7 @@
 	<div class="form-group">
 	    <?=$form->label('upUser', t('User'))?>
 		<div class="input">
-			<?php echo $form_user_selector->quickSelect('upUser', $upUser);?>
+			<?php echo $form_user_selector->quickSelect('upUser', $upUser, ['autofocus' => 'autofocus']);?>
 		</div>
 	</div>
 	

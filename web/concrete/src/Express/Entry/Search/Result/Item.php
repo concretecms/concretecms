@@ -8,14 +8,23 @@ use Concrete\Core\Search\Column\Set;
 
 class Item extends SearchResultItem
 {
+
+    protected $entry;
+
     public function __construct(SearchResult $result, Set $columns, $item)
     {
         parent::__construct($result, $columns, $item);
         $this->populateDetails($item);
     }
 
-    protected function populateDetails($item)
+    protected function populateDetails($entry)
     {
-        $this->id = $item->getID();
+        $this->entry = $entry;
+        $this->id = $entry->getID();
+    }
+
+    public function getEntry()
+    {
+        return $this->entry;
     }
 }

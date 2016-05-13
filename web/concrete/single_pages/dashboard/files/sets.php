@@ -15,16 +15,9 @@ $dh = Core::make('helper/date');
 		}
 	</script>
 
-	<?php
-    $fsp = new Permissions($fs);
-    if ($fsp->canDeleteFileSet()) {
-        ?>
 	<div class="ccm-dashboard-header-buttons">
 		<button class="btn btn-danger" onclick="deleteFileSet()"><?=t('Delete Set')?></button>
 	</div>
-	<?php 
-    }
-    ?>
 
 	<form method="post" class="form-horizontal" id="file_sets_edit" action="<?=$view->url('/dashboard/files/sets', 'file_sets_edit')?>">
 		<?=$validation_token->output('file_sets_edit');
@@ -44,23 +37,6 @@ $dh = Core::make('helper/date');
     ?>
 			</div>
 
-            <?php if (Config::get('concrete.permissions.model') != 'simple' && $fsp->canEditFileSetPermissions()) {
-    ?>
-			
-                <div class="form-group">
-                    <div class="checkbox">
-                        <label><?=$form->checkbox('fsOverrideGlobalPermissions', 1, $fs->overrideGlobalPermissions())?> <?=t('Enable custom permissions for this file set.')?></label>
-                    </div>
-                </div>
-
-                <div id="ccm-permission-list-form" <?= !$fs->overrideGlobalPermissions() ? 'style="display: none"' : ''?> >
-                    <?php Loader::element('permission/lists/file_set', array("fs" => $fs));
-    ?>
-                </div>
-            <?php 
-}
-    ?>
-			
 			<?= $form->hidden('fsID', $fs->getFileSetID());
     ?>
 			

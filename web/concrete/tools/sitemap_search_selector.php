@@ -38,11 +38,11 @@ if (isset($_REQUEST['requestID']) && Loader::helper('validation/numbers')->integ
 ));
 ?>
 
-<div id="ccm-tab-content-sitemap"></div>
+<div id="ccm-tab-content-sitemap" class="ccm-tab-content"></div>
 
-<div id="ccm-tab-content-explore"></div>
+<div id="ccm-tab-content-explore" class="ccm-tab-content"></div>
 
-<div id="ccm-tab-content-search"></div>
+<div id="ccm-tab-content-search" class="ccm-tab-content"></div>
 
 </div>
 

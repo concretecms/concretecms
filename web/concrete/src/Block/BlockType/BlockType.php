@@ -122,6 +122,13 @@ class BlockType
         }
     }
 
+    public function getBlockTypeInSetName()
+    {
+        if ($this->controller) {
+            return $this->controller->getBlockTypeInSetName();
+        }
+    }
+
     /**
      * Retrieves a BlockType object based on its btID.
      *
