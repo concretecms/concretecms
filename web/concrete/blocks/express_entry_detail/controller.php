@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Block\ExpressEntryDetail;
 
 use Concrete\Controller\Element\Search\CustomizeResults;

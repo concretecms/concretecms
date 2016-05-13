@@ -180,7 +180,7 @@ $(function() {
 			})
 		);
 	});
-	
+
 	<?php // first, we render the URL as it would be displayed auto-generated ?>
 
 	$('table.ccm-page-panel-detail-location-paths tbody').append(
