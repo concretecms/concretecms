@@ -432,7 +432,7 @@ class Install extends Controller
 
     public function getMinimumPhpVersion()
     {
-        return '5.3.3';
+        return '5.5.9';
     }
 
     /**
