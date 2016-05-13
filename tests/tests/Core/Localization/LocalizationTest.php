@@ -1,13 +1,10 @@
 <?php
-
 namespace Concrete\Tests\Core\Localization;
 
-use Concrete\Core\Cache\Adapter\ZendCacheDriver;
 use Concrete\Core\Cache\CacheServiceProvider;
 use Concrete\Core\Localization\Localization;
 use Concrete\Core\Localization\Translator\Adapter\Plain\TranslatorAdapterFactory as PlainTranslatorAdapterFactory;
 use Concrete\Core\Localization\Translator\Adapter\Zend\TranslatorAdapterFactory as ZendTranslatorAdapterFactory;
-use Concrete\Core\Localization\Translator\Adapter\Zend\TranslatorAdapter as ZendTranslatorAdapter;
 use Concrete\Core\Localization\Translator\Translation\TranslationLoaderRepository;
 use Concrete\Core\Localization\Translator\TranslatorAdapterRepository;
 use Concrete\Core\Support\Facade\Facade;
@@ -17,53 +14,36 @@ use Concrete\Tests\Core\Localization\Fixtures\TestUpdatedTranslationLoader;
 use Concrete\Tests\Core\Localization\Translator\Adapter\Zend\Translation\Loader\Gettext\Fixtures\MultilingualDetector;
 use Exception;
 use Illuminate\Filesystem\Filesystem;
-use PHPUnit_Framework_TestCase;
 use Punic\Language as PunicLanguage;
 use ReflectionClass;
 use Symfony\Component\ClassLoader\MapClassLoader;
 use Zend\I18n\Translator\Translator as ZendTranslator;
-
+use Concrete\Tests\Localization\LocalizationTestsBase;
 
 /**
  * Tests for:
- * Concrete\Core\Localization\Localization
+ * Concrete\Core\Localization\Localization.
  *
  * @author Antti Hukkanen <antti.hukkanen@mainiotech.fi>
  */
-class LocalizationTest extends PHPUnit_Framework_TestCase
+class LocalizationTest extends LocalizationTestsBase
 {
-
     protected $loc;
 
     public static function setUpBeforeClass()
     {
+        parent::setUpBeforeClass();
         // Move language directories to the application
         $source = __DIR__ . '/fixtures/languages';
-        $target = DIR_APPLICATION . '/' . DIRNAME_LANGUAGES;
-
+        $target = static::getTranslationsFolder();
         $filesystem = new Filesystem();
-        if (!$filesystem->isWritable(DIR_APPLICATION)) {
-            throw new Exception("Cannot write to the application directory for the testing purposes. Please check permissions!");
-        } elseif ($filesystem->exists($target)) {
-            throw new Exception("The languages directory already exists in the application folder. It should not exist for the testing purposes.");
-        }
-
         $filesystem->copyDirectory($source, $target);
 
         $loader = new MapClassLoader(array(
-            'Concrete\\Tests\\Core\\Localization\\Fixtures\\TestTranslationLoader'
-                => __DIR__ . '/fixtures/TestTranslationLoader.php',
-            'Concrete\\Tests\\Core\\Localization\\Fixtures\\TestUpdatedTranslationLoader'
-                => __DIR__ . '/fixtures/TestUpdatedTranslationLoader.php',
+            'Concrete\\Tests\\Core\\Localization\\Fixtures\\TestTranslationLoader' => __DIR__ . '/fixtures/TestTranslationLoader.php',
+            'Concrete\\Tests\\Core\\Localization\\Fixtures\\TestUpdatedTranslationLoader' => __DIR__ . '/fixtures/TestUpdatedTranslationLoader.php',
         ));
         $loader->register();
-    }
-
-    public static function tearDownAfterClass()
-    {
-        // Delete language directories from the application
-        $filesystem = new Filesystem();
-        $filesystem->deleteDirectory(DIR_APPLICATION . '/' . DIRNAME_LANGUAGES);
     }
 
     protected function setUp()
@@ -456,8 +436,8 @@ class LocalizationTest extends PHPUnit_Framework_TestCase
         $siteTranslatorLoaderTestPath = __DIR__ . '/Adapter/Zend/Translation/Loader/Gettext';
 
         // Move translation files
-        $langDir = $siteTranslatorLoaderTestPath . '/fixtures/' . DIRNAME_LANGUAGES . '/site';
-        $appLangDir = DIR_APPLICATION . '/' . DIRNAME_LANGUAGES . '/site';
+        $langDir = $siteTranslatorLoaderTestPath . '/fixtures/languages/site';
+        $appLangDir = static::getTranslationsFolder() . '/site';
 
         $filesystem = new Filesystem();
         if ($filesystem->exists($appLangDir)) {
@@ -467,8 +447,7 @@ class LocalizationTest extends PHPUnit_Framework_TestCase
 
         // Make the MultilingualDetector override available
         $loader = new MapClassLoader(array(
-            'Concrete\\Tests\\Core\\Localization\\Translator\\Adapter\\Zend\\Translation\\Loader\\Gettext\\Fixtures\\MultilingualDetector'
-                => $siteTranslatorLoaderTestPath . '/fixtures/MultilingualDetector.php'
+            'Concrete\\Tests\\Core\\Localization\\Translator\\Adapter\\Zend\\Translation\\Loader\\Gettext\\Fixtures\\MultilingualDetector' => $siteTranslatorLoaderTestPath . '/fixtures/MultilingualDetector.php',
         ));
         $loader->register();
 
@@ -513,5 +492,4 @@ class LocalizationTest extends PHPUnit_Framework_TestCase
             return $loc;
         });
     }
-
 }
