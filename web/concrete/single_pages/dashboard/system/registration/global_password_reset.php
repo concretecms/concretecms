@@ -1,4 +1,8 @@
-<?php defined('C5_EXECUTE') or die('Access Denied.'); ?>
+<?php defined('C5_EXECUTE') or die('Access Denied.');
+
+$resetText = tc(/*i18n: a text to be asked to the users to confirm the global password reset operation */'GlobalPasswordReset', 'RESET');
+
+?>
 <form id="global-password-reset-form" action="<?= $view->action('reset_passwords') ?>" method="post">
     <?= Core::make('helper/validation/token')->output('global_password_reset_token') ?>
 
@@ -32,7 +36,7 @@
                 <legend><?=t('Confirmation')?></legend>
                 <div class="form-group">
                     <p>
-                        <?=t('Type "RESET" in the following box to proceed.')?>
+                        <?=t('Type "%s" in the following box to proceed.', h($resetText))?>
                     </p>
                     <div class="input">
                         <?= $form->text('confirmation') ?>
@@ -64,7 +68,7 @@
         }
 
         $('input[name=confirmation]').on('keyup', function () {
-            if ($(this).val() === "RESET") {
+            if ($(this).val() === <?=json_encode($resetText)?>) {
                 $('button[name=global-password-reset-form]').removeClass("disabled");
             } else {
                 $('button[name=global-password-reset-form]').addClass("disabled");
