@@ -261,11 +261,6 @@ class Version extends Object implements \Concrete\Core\Permission\ObjectInterfac
         return $this->cvDateCreated;
     }
 
-    public function canWrite()
-    {
-        return $this->cvCanWrite;
-    }
-
     public function setComment($comment)
     {
         $thisCVID = $this->getVersionID();
