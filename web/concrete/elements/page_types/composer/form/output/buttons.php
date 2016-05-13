@@ -44,13 +44,6 @@ $cp = new Permissions($page)
 } ?>
 
 
-<?php /*
-<? if (Config::get('concrete.permissions.model') != 'simple' && $cmpp->canEditPageTypePermissions($pagetype)) { ?>
-    <button type="button" data-page-type-composer-form-btn="permissions" class="btn btn-default pull-left"><?=t('Permissions')?></button>
-<? } ?>
-*/ ?>
-
-
 <style type="text/css">
     button[data-page-type-composer-form-btn=save] {
         margin-left: 10px;

@@ -39,14 +39,14 @@ $userGroup = $u->getUserGroups();
     </div>
 
     <!-- user group starts -->
-    <? 	if(count($userGroups) > 0) { ?>
+    <?php 	if(count($userGroups) > 0) { ?>
         <h3><?=t('Groups')?></h3>
         <br>
-    <? } ?>
+    <?php } ?>
     <!-- user group ends -->
 
     <!-- user attribut starts -->
-    <? 	if(count($attributeList) > 0) { ?>
+    <?php 	if(count($attributeList) > 0) { ?>
         <h3><?=t('User Attributes')?></h3>
         <br>
         <?php	foreach ($attributeList as $ak) { ?>
@@ -59,12 +59,12 @@ $userGroup = $u->getUserGroups();
                     <p><?php echo $ui->getAttribute($ak, 'displaySanitized', 'display') ?></p>
                 </div>
             </div>
-        <? }
+        <?php }
     }?>
     <!-- // user attribut end -->
 
     <div class="dialog-buttons">
-        <? $ih = Core::make('helper/concrete/ui'); ?>
+        <?php $ih = Core::make('helper/concrete/ui'); ?>
         <?=$ih->button_js(t('Close'), 'jQuery.fn.dialog.closeTop()', 'left', 'btn')?>
         <?=$ih->button(t('Edit'), URL::to('/dashboard/users/search/view', $u->getUserID()), 'right', 'btn btn-primary')?>
     </div>

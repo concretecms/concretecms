@@ -138,7 +138,7 @@ if ($controller->getTask() == 'view_detail') {
             <div class="ccm-marketplace-list-item-add-on-price">
                 <div class="btn-group">
                     <button onclick="ConcreteMarketplace.purchaseOrDownload({mpID: <?=$mi->getMarketplaceItemID()?>})" class="btn btn-price" style="background-color: #1888d3"><?=$mi->getDisplayPrice()?></button>
-                    <button onclick="ConcreteMarketplace.purchaseOrDownload({mpID: <?=$mi->getMarketplaceItemID()?>})" class="btn btn-description"><? if ($mi->purchaseRequired()) { ?><?=t('Purchase')?><? } else { ?><?=t('Download')?><? } ?></button>
+                    <button onclick="ConcreteMarketplace.purchaseOrDownload({mpID: <?=$mi->getMarketplaceItemID()?>})" class="btn btn-description"><?php if ($mi->purchaseRequired()) { ?><?=t('Purchase')?><?php } else { ?><?=t('Download')?><?php } ?></button>
                 </div>
             </div>
         </div>

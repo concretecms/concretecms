@@ -186,51 +186,6 @@ $ip = Loader::helper('validation/ip'); ?>
         }
         ?>
                             </td>
-                            <?php /*
-                            <td class="hidden-actions">
-                                <div class="message-actions message-actions<?php echo $msgID ?>" data-id="<?php echo $msgID ?>">
-                                    <ul>
-                                        <li>
-                                            <?php if($msg->isConversationMessageApproved()) { ?>
-                                                <a class = "unapprove-message" data-rel-message-id="<?php echo $msgID ?>" href="#"><?php echo t('Unapprove') ?></a>
-                                            <?php } else {  ?>
-                                                <a class = "approve-message" data-rel-message-id="<?php echo $msgID ?>" href="#"><?php echo t('Approve') ?></a>
-                                            <?php } ?>
-                                        </li>
-                                        <li>
-                                            <?php if($msg->isConversationMessageDeleted()){ ?>
-                                                <a class = "restore-message" data-rel-message-id="<?php echo $msgID ?>" href="#"><?php echo t('Restore') ?></a>
-                                            <?php } else { ?>
-                                                <a class = "delete-message" data-rel-message-id="<?php echo $msgID ?>" href="#"><?php echo t('Delete') ?></a>
-                                            <?php } ?>
-                                        </li>
-                                        <li><?php if($msg->isConversationMessageFlagged()) { ?>
-                                                <a class = "unmark-spam" data-rel-message-id="<?php echo $msgID ?>" href="#"><?php echo t('Unmark as spam') ?></a>
-                                            <?php } else { ?>
-                                                <a class = "mark-spam" data-rel-message-id="<?php echo $msgID ?>" href="#"><?php echo t('Mark as spam') ?></a>
-                                            <?php } ?>
-                                        </li>
-                                        <li>
-                                            <a class = "mark-user" data-rel-message-id="<?php echo $msgID ?>" href="#"><?php echo t('Mark all user posts as spam') ?></a>
-                                        </li>
-                                        <? /*
-                                        <li>
-                                            <?php if(is_object($ui) && $ui->isActive()) { ?>
-                                                <a class = "deactivate-user" data-rel-message-id="<?php echo $msgID ?>" href="#"><?php echo t('Deactivate User') ?></a>
-                                            <?php } else { ?>
-                                                <span class="inactive"><?php echo t('User deactivated'); ?></span>
-                                            <?php }?>
-                                        </li>
-                                        <li>
-                                            <?php if(!$ip->isBanned($msg->getConversationMessageSubmitIP())) { ?>
-                                                <a class = "block-ip" data-rel-message-id="<?php echo $msgID ?>" href="#"><?php echo t('Block user IP Address') ?></a>
-                                            <?php } else { ?>
-                                                <span class="inactive"><?php echo t('IP Banned') ?></span>
-                                            <?php } ?>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </td>*/ ?>
 
                         </tr>
                     <?php 
