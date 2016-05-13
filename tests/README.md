@@ -13,7 +13,7 @@ Or download it.
 
 ## Step 3: Setup concrete5
 
-As described [here](../README#installation)
+As described [here](../README.md#installation)
 
 
 ## Step 4: Setup the database
