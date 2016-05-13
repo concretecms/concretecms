@@ -64,7 +64,7 @@ if (Config::get('concrete.white_label.background_image') !== 'none' && !Config::
                     foreach($nav as $page) { ?>
 
                         <li <?php if ($page->getCollectionID() == $c->getCollectionID()) {?>class="active"<?php } ?>>
-                            <a href="<?=$page->getCollectionLink()?>"><?=$page->getCollectionName()?></a>
+                            <a href="<?=$page->getCollectionLink()?>"><?=t($page->getCollectionName())?></a>
                         </li>
                     <?php } ?>
                     <li><a href="<?=URL::to('/account')?>"><?=t('My Account')?></a></li>
