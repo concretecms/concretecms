@@ -1,6 +1,8 @@
 <?php
 namespace Concrete\Core\File;
 
+use Concrete\Core\File\StorageLocation\StorageLocation;
+use Concrete\Core\File\StorageLocation\StorageLocationInterface;
 use Concrete\Core\Foundation\Service\Provider as ServiceProvider;
 
 class FileServiceProvider extends ServiceProvider
@@ -22,5 +24,9 @@ class FileServiceProvider extends ServiceProvider
         $this->app->bind('image/imagick', '\Imagine\Imagick\Imagine');
         $this->app->bind('image/gd', '\Imagine\Gd\Imagine');
         $this->app->bind('image/thumbnailer', '\Concrete\Core\File\Image\BasicThumbnailer');
+
+        $this->app->bind(StorageLocationInterface::class, function($app) {
+            return StorageLocation::getDefault();
+        });
     }
 }

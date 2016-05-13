@@ -45,6 +45,16 @@ class UserCategory extends AbstractCategory implements StandardSearchIndexerInte
         return $this->entityManager->getRepository('\Concrete\Core\Entity\Attribute\Key\UserKey');
     }
 
+    public function getMemberListList()
+    {
+        return $this->getAttributeRepository()->getMemberListList();
+    }
+
+    public function getPublicProfileList()
+    {
+        return $this->getAttributeRepository()->getPublicProfileList();
+    }
+
     public function getRegistrationList()
     {
         return $this->getAttributeRepository()->getRegistrationList();

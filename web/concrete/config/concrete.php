@@ -7,8 +7,8 @@ return array(
      *
      * @var string
      */
-    'version' => '8.0.0a1',
-    'version_installed' => '8.0.0a1',
+    'version' => '8.0.0a3',
+    'version_installed' => '8.0.0a3',
     'version_db' => '20160420000000', // the key of the latest database migration
 
     /*
@@ -545,6 +545,10 @@ return array(
             'use_exim_data_to_rotate_images' => false,
             'manipulation_library' => 'gd'
         ),
+        'results' => 10
+    ),
+
+    'search_users' => array(
         'results' => 10
     ),
 

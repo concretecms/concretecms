@@ -98,7 +98,11 @@ $(function() {
 		<?php if ($selectMode) {
     ?>
 			onClick: function(node) {
-				ConcreteEvent.publish('SelectGroup', {'gID': node.data.gID, 'gName': node.data.title});
+				if (node.data.gID) {
+					ConcreteEvent.publish('SelectGroup', {'gID': node.data.gID, 'gName': node.data.title});
+				} else {
+					return false;
+				}
 			},
 		'enableDragAndDrop': false
 		<?php 

@@ -150,49 +150,7 @@ $db = Loader::db();
         </table>
     <?php
     }
-    /*foreach ($surveys as $qsid => $survey): {
-            $block = Block::getByID((int)$survey['bID']);
-            if (!is_object($block)) {
-                continue;
-            }
 
-            $url = $nh->getLinkToCollection($block->getBlockCollectionObject());
-            ?>
-            <tr>
-                <td><?= $text->entities($survey['surveyName']) ?></td>
-                <td><?= $text->entities($survey['answerSetCount']) ?></td>
-                <td>
-                    <?= $ih->button(
-                        t('View Responses'),
-                        DIR_REL . '/index.php?cID=' . $c->getCollectionID() . '&qsid=' . $qsid,
-                        'left',
-                        'small') ?>
-                    <?= $ih->button(t('Open Page'), $url, 'left', 'small') ?>
-                    <form method="post" action="" style="display: inline">
-                        <input type="hidden" name="qsID" value="<?= intval($qsid) ?>"/>
-                        <input type="hidden" name="action" value="deleteFormAnswers"/>
-                        <?php $valt->output('deleteFormAnswers') ?>
-                        <?= $ih->submit(
-                            t('Delete Submissions'),
-                            false,
-                            'left',
-                            'small error delete-form-answers') ?>
-                    </form>
-                    <? if (!$in_use): { ?>
-                        <form method="post" action="" style="display: inline">
-                            <input type="hidden" name="bID" value="<?= intval($survey['bID']) ?>"/>
-                            <input type="hidden" name="qsID" value="<?= intval($qsid) ?>"/>
-                            <input type="hidden" name="action" value="deleteForm"/>
-                            <?php $valt->output('deleteForm') ?>
-                            <?= $ih->submit(t('Delete'), false, 'left', 'small error delete-form') ?>
-                        </form>
-                    <? }endif ?>
-                </td>
-            </tr>
-        <? }endforeach ?>
-        </tbody>
-        </table>
-    <? } */
 else {
         ?>
         <p><?php echo t('There are no available forms in your site.') ?></p>

@@ -45,11 +45,20 @@ class Result extends SearchResult
         ]));
         $menu->addItem(new LinkItem('#', t('Properties'), [
             'data-bulk-action-type' => 'dialog',
-            'data-bulk-action-title' => t('Edit Properties'),
+            'data-bulk-action-title' => t('Properties'),
             'data-bulk-action-url' => \URL::to('/ccm/system/dialogs/file/bulk/properties'),
             'data-bulk-action-dialog-width' => '630',
             'data-bulk-action-dialog-height' => '450',
         ]));
+
+        $menu->addItem(new LinkItem('#', t('Sets'), [
+            'data-bulk-action-type' => 'dialog',
+            'data-bulk-action-title' => t('Sets'),
+            'data-bulk-action-url' => \URL::to('/ccm/system/dialogs/file/bulk/sets'),
+            'data-bulk-action-dialog-width' => '500',
+            'data-bulk-action-dialog-height' => '400',
+        ]));
+
         $menu->addItem(new LinkItem('#', t('Rescan'), [
             'data-bulk-action-type' => 'ajax',
             'data-bulk-action-url' => \URL::to('/ccm/system/file/rescan')

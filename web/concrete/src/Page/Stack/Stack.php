@@ -165,7 +165,7 @@ class Stack extends Page implements ExportableInterface
         return $stack;
     }
 
-    protected function getMultilingualSectionFromType($type)
+    protected static function getMultilingualSectionFromType($type)
     {
         $detector = Core::make('multilingual/detector');
         if ($type == self::MULTILINGUAL_CONTENT_SOURCE_DEFAULT) {

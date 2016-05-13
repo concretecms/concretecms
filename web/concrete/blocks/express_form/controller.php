@@ -48,7 +48,7 @@ class Controller extends BlockController
 
     public function getBlockTypeName()
     {
-        return t("Express Form");
+        return t("Form");
     }
 
     protected function clearSessionControls()

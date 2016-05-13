@@ -7,13 +7,6 @@
 
 use Concrete\Core\Config\Repository\Repository;
 
-define('DIR_BUILDTOOLS', dirname(dirname(__FILE__)) . '/build-tools');
-if (!is_dir(DIR_BUILDTOOLS)) {
-    exec(
-        'git clone --depth 1 --single-branch --branch master https://github.com/mlocati/concrete5-build ' . escapeshellarg(
-            DIR_BUILDTOOLS));
-}
-
 // error reporting
 PHPUnit_Framework_Error_Notice::$enabled = false;
 
@@ -36,6 +29,13 @@ require $DIR_BASE_CORE . '/bootstrap/configure.php';
  * Include all autoloaders.
  */
 require $DIR_BASE_CORE . '/bootstrap/autoload.php';
+
+/**
+ * Create PSR4 test namespace
+ */
+$loader = new \Symfony\Component\ClassLoader\Psr4ClassLoader();
+$loader->addPrefix("Concrete\\Tests\\", __DIR__);
+$loader->register();
 
 $r = new \Concrete\Core\Http\Request(
     array(),

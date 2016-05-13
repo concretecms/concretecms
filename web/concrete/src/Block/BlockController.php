@@ -55,6 +55,11 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
     protected $identifier;
     protected $btTable = null;
 
+    public function getBlockTypeInSetName()
+    {
+        return $this->getBlockTypeName();
+    }
+
     public function getBlockTypeExportPageColumns()
     {
         return $this->btExportPageColumns;

@@ -17,7 +17,7 @@
             <label for="width" class="control-label"><?= t('Width') ?></label>
 
             <div class="input-group">
-                <input class="form-control" name="width">
+                <input class="form-control" name="width" type="number">
 
                 <div class="input-group-addon">px</div>
             </div>
@@ -27,7 +27,7 @@
             <label for="height" class="control-label"><?= t('Height') ?></label>
 
             <div class="input-group">
-                <input class="form-control" name="height">
+                <input class="form-control" name="height" type="number">
 
                 <div class="input-group-addon">px</div>
             </div>

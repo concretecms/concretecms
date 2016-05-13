@@ -163,7 +163,7 @@
             </attributes>
         </page>
 
-        <page name="Data Objects" path="/dashboard/express" filename="/dashboard/express/view.php" pagetype=""
+        <page name="Express Data Objects" path="/dashboard/express" filename="/dashboard/express/view.php" pagetype=""
               description="Express Data Objects" package=""/>
 
         <page name="View Entries" path="/dashboard/express/entries" filename="/dashboard/express/entries.php" pagetype=""
@@ -522,7 +522,7 @@
             </attributes>
         </page>
 
-        <page name="Data Objects" path="/dashboard/system/express" filename="/dashboard/system/express/view.php" pagetype=""
+        <page name="Express Data Objects" path="/dashboard/system/express" filename="/dashboard/system/express/view.php" pagetype=""
               description="Express Data Objects" package=""/>
 
         <page name="Data Objects" path="/dashboard/system/express/entities" filename="/dashboard/system/express/entities.php" pagetype=""
