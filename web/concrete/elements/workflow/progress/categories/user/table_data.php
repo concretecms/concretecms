@@ -34,8 +34,8 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
                     <td class="ccm-workflow-progress-actions">
                         <form action="<?=$wp->getWorkflowProgressFormAction()?>" method="post">
 
-                            <? $actions = $wp->getWorkflowProgressActions(); ?>
-                            <? foreach($actions as $act) {
+                            <?php $actions = $wp->getWorkflowProgressActions(); ?>
+                            <?php foreach($actions as $act) {
                                 $attribs = '';
                                 $_attribs = $act->getWorkflowProgressActionExtraButtonParameters();
                                 foreach($_attribs as $key => $value) {
@@ -60,11 +60,11 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
                     </td>
                 </tr>
 
-            <?  }
+            <?php  }
 
         } ?>
 
     </table>
-<? } else { ?>
+<?php } else { ?>
     <p><?=t('None.')?></p>
-<? } ?>
+<?php } ?>
