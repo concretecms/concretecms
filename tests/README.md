@@ -20,7 +20,7 @@ As described [here](../README.md#installation)
 
 The test system expects to have access to a MySQL installation on the same computer where the tests will be executed.
 The tests needs to have administration rights on MySQL in order to create and drop the test database and the tables inside it.
-You need to create a MySQL account with login `travis` and an empty database:
+You need to create a MySQL account with login `travis` and an empty password:
 
 ```sql
 CREATE USER 'travis'@'localhost' IDENTIFIED BY '';
