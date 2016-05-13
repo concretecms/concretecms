@@ -32,9 +32,16 @@ class ErrorHandler extends PrettyPageHandler
                 $result = parent::handle();
             } else {
                 $e = $this->getInspector()->getException();
+                $estr = sprintf("File: %s<br />
+                                 Line: %d<br />
+                                 Error Text: %s"
+                                ,h($e->getFile())
+                                ,$e->getLine()
+                                ,h($e->getMessage())
+                               );
                 Core::make('helper/concrete/ui')->renderError(
-                    t('An unexpected error occurred.'),
-                    h($e->getMessage())
+                    t(sprintf('An unexpected PHP error (%d) occurred.',$e->getCode()))
+                   ,$estr
                 );
             }
         } else {
