@@ -1,51 +1,35 @@
 <?php
-
 namespace Concrete\Tests\Core\Localization\Translator\Adapter\Zend\Translation\Loader\Gettext;
 
 use Concrete\Tests\Core\Localization\Translator\Adapter\Zend\Translation\Loader\Gettext\Fixtures\MultilingualDetector;
 use Concrete\Core\Localization\Translator\Adapter\Zend\Translation\Loader\Gettext\SiteTranslationLoader;
 use Concrete\Core\Localization\Translator\Adapter\Zend\TranslatorAdapterFactory;
 use Concrete\Core\Support\Facade\Facade;
-use Exception;
 use Illuminate\Filesystem\Filesystem;
-use PHPUnit_Framework_TestCase;
 use Symfony\Component\ClassLoader\MapClassLoader;
+use Concrete\Tests\Localization\LocalizationTestsBase;
 
 /**
  * Tests for:
- * Concrete\Core\Localization\Translator\Adapter\Zend\Translation\Loader\Gettext\SiteTranslationLoader
+ * Concrete\Core\Localization\Translator\Adapter\Zend\Translation\Loader\Gettext\SiteTranslationLoader.
  *
  * @author Antti Hukkanen <antti.hukkanen@mainiotech.fi>
  */
-class SiteTranslationLoaderTest extends PHPUnit_Framework_TestCase
+class SiteTranslationLoaderTest extends LocalizationTestsBase
 {
-
     public static function setUpBeforeClass()
     {
+        parent::setUpBeforeClass();
         $loader = new MapClassLoader(array(
-            'Concrete\\Tests\\Core\\Localization\\Translator\\Adapter\\Zend\\Translation\\Loader\\Gettext\\Fixtures\\MultilingualDetector'
-                => __DIR__ . '/fixtures/MultilingualDetector.php'
+            'Concrete\\Tests\\Core\\Localization\\Translator\\Adapter\\Zend\\Translation\\Loader\\Gettext\\Fixtures\\MultilingualDetector' => __DIR__ . '/fixtures/MultilingualDetector.php',
         ));
         $loader->register();
 
         $filesystem = new Filesystem();
-        if (!$filesystem->isWritable(DIR_APPLICATION)) {
-            return self::markTestSkipped(
-                "Cannot write to the application directory for the testing purposes. Please check permissions!");
-        } elseif ($filesystem->exists(DIR_APPLICATION . '/languages')) {
-            return self::markTestSkipped(
-                "The languages directory already exists in the application folder. It should not exist for the testing purposes.");
-        }
 
-        $langDir = __DIR__ . '/fixtures/' . DIRNAME_LANGUAGES . '/site';
-        $appLangDir = DIR_APPLICATION . '/' . DIRNAME_LANGUAGES . '/site';
+        $langDir = __DIR__ . '/fixtures/languages/site';
+        $appLangDir = static::getTranslationsFolder() . '/site';
         $filesystem->copyDirectory($langDir, $appLangDir);
-    }
-
-    public static function tearDownAfterClass()
-    {
-        $filesystem = new Filesystem();
-        $filesystem->deleteDirectory(DIR_APPLICATION . '/' . DIRNAME_LANGUAGES);
     }
 
     protected function setUp()
@@ -76,5 +60,4 @@ class SiteTranslationLoaderTest extends PHPUnit_Framework_TestCase
 
         $this->assertEquals("Tervehdys sivustolta!", $this->adapter->translate("Hello from site!"));
     }
-
 }
