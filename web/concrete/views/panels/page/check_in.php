@@ -74,7 +74,7 @@ $datetime = loader::helper('form/date_time');
         </div>
 
         <?php $pagetype = PageType::getByID($c->getPageTypeID()); ?>
-        <?php if (is_object($pagetype)): ?>
+        <?php if (count($publishErrors->getList()) && (is_object($pagetype))): ?>
             <div class="small">
                 <div class="text-info">
                     <strong>
