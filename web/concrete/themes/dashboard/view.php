@@ -14,7 +14,7 @@ $this->inc('elements/header.php');
         </a>
     <?php } ?>
     <h1><?=(isset($pageTitle) && $pageTitle) ? t($pageTitle) : '&nbsp;' ?></h1>
-    <?
+    <?php
     echo Core::make('helper/concrete/ui/help')->display('dashboard', $c->getCollectionPath());
 
     if (isset($headerMenu) && $headerMenu instanceof \Concrete\Core\Controller\ElementController) {

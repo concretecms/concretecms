@@ -3,7 +3,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service\Date */
 ?>
 
-<? if (count($items) > 0) { ?>
+<?php if (count($items) > 0) { ?>
 
     <table class="ccm-results-list table table-condensed" id="ccm-workflow-waiting-for-me">
         <tr>
@@ -13,7 +13,7 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
             <th class="<?=$list->getSearchResultsClass('wpCurrentStatus')?>"><a href="<?=$list->getSortByURL('wpCurrentStatus', 'desc')?>"><?=t('Current Status')?></a></th>
             <th>&nbsp;</th>
         </tr>
-        <?
+        <?php
         $noitems = true;
         foreach($items as $it) {
             $u = $it->getUserObject();

@@ -171,7 +171,7 @@ if (isset($neutralStack)) {
                     <form method="post" class="form-stacked" style="padding-left: 0px" action="<?=$view->action('delete_stack')?>">
                         <?=$token->output('delete_stack')?>
                         <input type="hidden" name="stackID" value="<?=$stackToEdit->getCollectionID()?>" />
-                        <p><?
+                        <p><?php
                             if (isset($deleteLabels['canUndo']) && $deleteLabels['canUndo']) {
                                 echo t('Are you sure you want to proceed?');
                             } else {
