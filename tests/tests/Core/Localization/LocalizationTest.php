@@ -441,7 +441,7 @@ class LocalizationTest extends LocalizationTestsBase
 
         $filesystem = new Filesystem();
         if ($filesystem->exists($appLangDir)) {
-            throw new Exception("The site languages directory already exists in the application folder. It should not exist for the testing purposes.");
+            static::markTestSkipped("The site languages directory already exists in the application folder. It should not exist for the testing purposes.");
         }
         $filesystem->copyDirectory($langDir, $appLangDir);
 

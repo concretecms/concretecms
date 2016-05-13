@@ -31,7 +31,7 @@ class LocalizationTestsBase extends \PHPUnit_Framework_TestCase
         $filesystem = new Filesystem();
         $translationsFolder = self::getTranslationsFolder();
         if ($filesystem->makeDirectory($translationsFolder) === false) {
-            throw new \Exception('Cannot create the languages directory for the testing purposes. Please check permissions!');
+            static::markTestSkipped('Cannot create the languages directory for the testing purposes. Please check permissions!');
         }
     }
 
