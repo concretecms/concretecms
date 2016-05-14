@@ -747,17 +747,14 @@ abstract class Package implements LocalizablePackageInterface
      * @return array 
      */
     public function getPackageMetadataPaths()
-    {
-        // check if the name space should be treated as core extension
-        $corePath = $this->pkgAutoloaderMapCoreExtensions ? DIRECTORY_SEPARATOR . 'Concrete' : '';
-        
+    {       
         // annotations entity path
         if ($this->metadataDriver === self::PACKAGE_METADATADRIVER_ANNOTATION){
             // Support for the legacy method for backwards compatibility
             if (method_exists($this, 'getPackageEntityPath')) {
                 $paths = array($this->getPackageEntityPath());
             }else{
-                $paths = array($this->getPackagePath() . DIRECTORY_SEPARATOR . DIRNAME_CLASSES . $corePath);
+                $paths = array($this->getPackagePath() . DIRECTORY_SEPARATOR . DIRNAME_CLASSES);
             }
         } else if ($this->metadataDriver === self::PACKAGE_METADATADRIVER_XML){
             // return xml metadata dir
