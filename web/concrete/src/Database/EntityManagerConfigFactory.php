@@ -174,20 +174,24 @@ class EntityManagerConfigFactory implements ApplicationAwareInterface, EntityMan
 
         // add Annotation drivers with "legacy" Annotation reader
         if (count($driverSettingsLegacy) > 0) {
-            foreach ($driverSettingsLegacy as $setting) {
-                $simpleAnnotationDriver = new \Doctrine\ORM\Mapping\Driver\AnnotationDriver($this->getCachedSimpleAnnotationReader(),
-                    $setting['paths']);
-                $driverChain->addDriver($simpleAnnotationDriver,
-                    $setting['namespace']);
+            foreach ($driverSettingsLegacy as $settings) {
+                foreach($settings as $setting){
+                    $simpleAnnotationDriver = new \Doctrine\ORM\Mapping\Driver\AnnotationDriver($this->getCachedSimpleAnnotationReader(),
+                        $setting['paths']);
+                    $driverChain->addDriver($simpleAnnotationDriver,
+                        $setting['namespace']);
+                }
             }
         }
 
         // add Annotation drivers with normal Annotation reader -> Annotation prefixed with \ORM
         if (count($driverSettingsDefault) > 0) {
-            foreach ($driverSettingsDefault as $setting) {
-                $annotationDriver = new \Doctrine\ORM\Mapping\Driver\AnnotationDriver($this->getCachedAnnotationReader(),
-                    $setting['paths']);
-                $driverChain->addDriver($annotationDriver, $setting['namespace']);
+            foreach ($driverSettingsDefault as $settings) {
+                foreach($settings as $setting){
+                    $annotationDriver = new \Doctrine\ORM\Mapping\Driver\AnnotationDriver($this->getCachedAnnotationReader(),
+                        $setting['paths']);
+                    $driverChain->addDriver($annotationDriver, $setting['namespace']);
+                }
             }
         }
     }
@@ -202,9 +206,11 @@ class EntityManagerConfigFactory implements ApplicationAwareInterface, EntityMan
     {
         $driverSettings = $this->app->make('config')->get(CONFIG_ORM_METADATA_XML);
         if (count($driverSettings) > 0) {
-            foreach ($driverSettings as $setting) {
-                $xmlDriver = new \Doctrine\ORM\Mapping\Driver\XmlDriver($setting['paths']);
-                $driverChain->addDriver($xmlDriver, $setting['namespace']);
+            foreach ($driverSettings as $settings) {
+                foreach($settings as $setting){
+                    $xmlDriver = new \Doctrine\ORM\Mapping\Driver\XmlDriver($setting['paths']);
+                    $driverChain->addDriver($xmlDriver, $setting['namespace']);
+                }
             }
         }
     }
@@ -219,9 +225,11 @@ class EntityManagerConfigFactory implements ApplicationAwareInterface, EntityMan
     {
         $driverSettings = $this->app->make('config')->get(CONFIG_ORM_METADATA_YAML);
         if (count($driverSettings) > 0) {
-            foreach ($driverSettings as $setting) {
-                $yamlDriver = new \Doctrine\ORM\Mapping\Driver\YamlDriver($setting['paths']);
-                $driverChain->addDriver($yamlDriver, $setting['namespace']);
+            foreach ($driverSettings as $settings) {
+                foreach($settings as $setting){
+                    $yamlDriver = new \Doctrine\ORM\Mapping\Driver\YamlDriver($setting['paths']);
+                    $driverChain->addDriver($yamlDriver, $setting['namespace']);
+                }
             }
         }
     }

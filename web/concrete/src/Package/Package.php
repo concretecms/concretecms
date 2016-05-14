@@ -748,13 +748,16 @@ abstract class Package implements LocalizablePackageInterface
      */
     public function getPackageMetadataPaths()
     {
+        // check if the name space should be treated as core extension
+        $corePath = $this->pkgAutoloaderMapCoreExtensions ? DIRECTORY_SEPARATOR . 'Concrete' : '';
+        
         // annotations entity path
         if ($this->metadataDriver === self::PACKAGE_METADATADRIVER_ANNOTATION){
             // Support for the legacy method for backwards compatibility
             if (method_exists($this, 'getPackageEntityPath')) {
                 $paths = array($this->getPackageEntityPath());
             }else{
-                $paths = array($this->getPackagePath() . '/' . DIRNAME_CLASSES);
+                $paths = array($this->getPackagePath() . DIRECTORY_SEPARATOR . DIRNAME_CLASSES . $corePath);
             }
         } else if ($this->metadataDriver === self::PACKAGE_METADATADRIVER_XML){
             // return xml metadata dir
@@ -785,7 +788,29 @@ abstract class Package implements LocalizablePackageInterface
         return $leadingBkslsh . 'Concrete\\Package\\' . camelcase($this->getPackageHandle());
     }
     
+    /**
+     * Get additional namespaces from the pkgAutoloaderRegistries
+     * if it contains any
+     */
+    public function getAdditionalNamespaces(){
         
+        $namespaces = array();
+        
+        if(count($this->pkgAutoloaderRegistries) > 0){
+            foreach($this->pkgAutoloaderRegistries as $src => $rawNamespace){
+                
+                $path = $this->getPackagePath() . DIRECTORY_SEPARATOR . $src;
+                
+                $namespace = ltrim($rawNamespace, '\\');
+                $namespaces[] = array(
+                        'namespace' => $namespace,
+                        'paths' => array($path)
+                    );
+            }
+        }
+        return $namespaces;
+    }
+    
     /**
      * Create a entity manager used for the package installation, 
      * update and unistall process.
