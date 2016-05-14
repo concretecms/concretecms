@@ -35,6 +35,11 @@ class Type
     protected $ftTypeIsRequired = false;
 
     /**
+     * @Column(type="boolean")
+     */
+    protected $ftTypeIsConstrained = false;
+
+    /**
      * @Id @Column(type="integer")
      * @GeneratedValue
      */
@@ -78,6 +83,14 @@ class Type
     public function isRequired()
     {
         return $this->ftTypeIsRequired;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function isConstrained()
+    {
+        return $this->ftTypeIsConstrained;
     }
 
     /**
@@ -129,6 +142,14 @@ class Type
     public function setHeight($ftTypeHeight)
     {
         $this->ftTypeHeight = is_numeric($ftTypeHeight) ? $ftTypeHeight : null;
+    }
+
+    /**
+     * @param mixed $ftTypeIsConstrained
+     */
+    public function setConstrained($ftTypeIsConstrained)
+    {
+        $this->ftTypeIsConstrained = is_bool($ftTypeIsConstrained) ? $ftTypeIsConstrained : false;
     }
 
     /**
@@ -194,6 +215,9 @@ class Type
             if ($link->isRequired()) {
                 $linkNode->addAttribute('required', $link->isRequired());
             }
+            if ($link->isConstrained()) {
+                $linkNode->addAttribute('constrained', $link->isConstrained());
+            }
         }
     }
 
@@ -236,7 +260,7 @@ class Type
 
     public function getBaseVersion()
     {
-        return new Version($this->getHandle(), $this->getHandle(), $this->getName(), $this->getWidth(), $this->getHeight());
+        return new Version($this->getHandle(), $this->getHandle(), $this->getName(), $this->getWidth(), $this->getHeight(), false, $this->isConstrained());
     }
 
     public function getDoubledVersion()
@@ -246,6 +270,6 @@ class Type
             $height = $this->getHeight() * 2;
         }
 
-        return new Version($this->getHandle() . '_2x', $this->getHandle() . '_2x', $this->getName(), $this->getWidth() * 2, $height, true);
+        return new Version($this->getHandle() . '_2x', $this->getHandle() . '_2x', $this->getName(), $this->getWidth() * 2, $height, true, $this->isConstrained());
     }
 }

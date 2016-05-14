@@ -14,6 +14,7 @@
         $ftTypeWidth = $type->getWidth();
         $ftTypeHeight = $type->getHeight();
         $ftTypeIsRequired = $type->isRequired();
+        if ($type->isConstrained()) $ftTypeIsConstrained = 1;
         $method = 'update';
 
         if (!$ftTypeIsRequired) {
@@ -71,7 +72,11 @@
                 <?=$form->label('ftTypeHeight', t('Height'))?>
                 <?=$form->text('ftTypeHeight', $ftTypeHeight)?>
             </div>
-            <div class="alert alert-info"><i class="fa fa-exclamation-circle"></i> <?=t('Only place a value in here if you want this thumbnail to force its dimensions to the width and height.')?></div>
+            <div class="form-group">
+                <div><?=$form->label('ftTypeIsConstrained', t('Crop?'))?></div>
+                <?=$form->checkbox('ftTypeIsConstrained', 1, $ftTypeIsConstrained)?> <?=t('No, keep images\' contrained ratio')?>
+            </div>
+            <div class="alert alert-info"><i class="fa fa-exclamation-circle"></i> <?=t('If you leave the height field empty, the value of width becomes the max width and/or height and constrain the image ratio. If you set both width and height, concrete5 will try to crop the thumbnail to indicated size unless you check "No" to the crop option.')?></div>
         </fieldset>
         <div class="ccm-dashboard-form-actions-wrapper">
             <div class="ccm-dashboard-form-actions">
@@ -117,6 +122,7 @@
         <th><?=t('Width')?></th>
         <th><?=t('Height')?></th>
         <th><?=t('Required')?></th>
+        <th><?=t('Contrain')?></th>
     </tr>
     </thead>
     <tbody>
@@ -128,6 +134,7 @@
         <td><?=$type->getWidth()?></td>
         <td><?=($type->getHeight()) ? $type->getHeight() : '<span class="text-muted">' . t('Automatic') . '</span>' ?></td>
         <td><?=($type->isRequired()) ? t('Yes') : t('No')?></td>
+        <td><?=($type->isConstrained()) ? t('Yes') : t('No')?></td>
     </tr>
     <?php 
 }

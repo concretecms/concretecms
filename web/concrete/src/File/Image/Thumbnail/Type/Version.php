@@ -16,9 +16,10 @@ class Version
     protected $name;
     protected $width;
     protected $height;
+    protected $isConstraied;
     protected $isDoubledVersion;
 
-    public function __construct($directoryName, $handle, $name, $width, $height, $isDoubledVersion = false)
+    public function __construct($directoryName, $handle, $name, $width, $height, $isDoubledVersion = false, $isConstrained = false)
     {
         $this->handle = $handle;
         $this->name = $name;
@@ -26,6 +27,7 @@ class Version
         $this->height = $height;
         $this->directoryName = $directoryName;
         $this->isDoubledVersion = (bool) $isDoubledVersion;
+        $this->isConstrained = (bool) $isConstrained;
     }
 
     /**
@@ -112,6 +114,22 @@ class Version
     public function getHeight()
     {
         return $this->height;
+    }
+
+    /**
+     * @param mixed $isConstrained
+     */
+    public function setConstrained($isConstrained)
+    {
+        $this->isConstrained = $isConstrained;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function isConstrained()
+    {
+        return $this->isConstrained;
     }
 
     /**
