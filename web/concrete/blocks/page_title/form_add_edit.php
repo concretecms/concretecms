@@ -1,4 +1,4 @@
-<?php defined('C5_EXECUTE') or die("Access Denied.");
+<?php defined('C5_EXECUTE') or die('Access Denied.');
 if (!strlen($titleText)) {
     $titleText = $controller->getTitleText();
 }
@@ -9,7 +9,7 @@ if (!strlen($titleText)) {
     <div class="checkbox">
         <label>
         <?php echo $form->checkbox('useCustomTitle', 1, $useCustomTitle); ?>
-        <?php echo t('Override page name with custom title'); ?>
+        <?php echo t('Override page name with custom title?'); ?>
         </label>
     </div>
 </div>
@@ -66,7 +66,8 @@ if (!strlen($titleText)) {
                 <?php echo $form->select('topicTextFormat',
                     array(
                         0 => t('Default'),
-                        'upperFirst' => t('Capitalize the first letter of each word'),
+                        'upperWord' => t('Capitalize all words'),
+                        'upperFirst' => t('Capitalize first word'),
                         'lowercase' => t('Lowercase'),
                         'uppercase' => t('Uppercase')
                     ), $topicTextFormat); ?>
@@ -77,7 +78,8 @@ if (!strlen($titleText)) {
                 <?php echo $form->label('tagTextFormat', t('Tag Text Formatting')); ?>
                 <?php echo $form->select('tagTextFormat',
                     array(
-                        'upperFirst' => t('Capitalize the first letter of each word'),
+                        'upperWord' => t('Capitalize all words'),
+                        'upperFirst' => t('Capitalize first word'),
                         'lowercase' => t('Lowercase'),
                         'uppercase' => t('Uppercase')
                     ), $tagTextFormat); ?>
@@ -89,7 +91,8 @@ if (!strlen($titleText)) {
                 <?php echo $form->select('dateTextFormat',
                     array(
                         0 => t('Default'),
-                        'upperFirst' => t('Capitalize the first letter of each word'),
+                        'upperWord' => t('Capitalize all words'),
+                        'upperFirst' => t('Capitalize first word'),
                         'lowercase' => t('Lowercase'),
                         'uppercase' => t('Uppercase')
                     ), $dateTextFormat); ?>
