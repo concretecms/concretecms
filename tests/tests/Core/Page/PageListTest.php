@@ -60,7 +60,7 @@ class PageListTest extends \PageTestCase
         $this->metadatas = array_merge($this->metadatas, array(
             'Concrete\Core\Entity\Attribute\Type',
             'Concrete\Core\Entity\Attribute\Category',
-            'Concrete\Core\Page\Feed',
+            'Concrete\Core\Entity\Page\Feed',
         ));
 
         parent::setUp();
@@ -329,7 +329,7 @@ class PageListTest extends \PageTestCase
     {
         $pt = \Concrete\Core\Page\Type\Type::getByHandle('another');
         $pp = \Concrete\Core\Page\Page::getByPath('/another-fun-page');
-        $pf = new \Concrete\Core\Page\Feed();
+        $pf = new \Concrete\Core\Entity\Page\Feed();
         $pf->setHandle('blog');
         $pf->setPageTypeID($pt->getPageTypeID());
         $pf->setParentID($pp->getCollectionID());

@@ -3,7 +3,7 @@ namespace Concrete\Core\Block;
 
 use Concrete\Core\Backup\ContentExporter;
 use Concrete\Core\Backup\ContentImporter;
-use Concrete\Core\Entity\Block\EnBlockType\BlockType;
+use Concrete\Core\Entity\Block\BlockType\BlockType;
 use Concrete\Core\Block\View\BlockViewTemplate;
 use Concrete\Core\Controller;
 use Concrete\Core\Feature\Feature;

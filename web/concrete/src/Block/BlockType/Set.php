@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Block\BlockType;
 
+use Concrete\Core\Entity\Block\BlockType\BlockType as BlockTypeEntity;
 use Concrete\Core\Foundation\Object;
 use Doctrine\DBAL\Connection;
 use Loader;
@@ -129,7 +130,7 @@ class Set extends Object
         $db->Execute("update BlockTypeSets set btsHandle = ? where btsID = ?", array($btsHandle, $this->btsID));
     }
 
-    public function addBlockType(BlockType $bt)
+    public function addBlockType(BlockTypeEntity $bt)
     {
         $db = Loader::db();
         $no = $db->GetOne("select count(btID) from BlockTypeSetBlockTypes where btID = ? and btsID = ?", array($bt->getBlockTypeID(), $this->getBlockTypeSetID()));

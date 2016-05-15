@@ -1059,7 +1059,7 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
         );
     }
 
-    public function setCustomStyleSet(StyleSet $set)
+    public function setCustomStyleSet(\Concrete\Core\Entity\StyleCustomizer\Inline\StyleSet $set)
     {
         $db = Loader::db();
         $c = $this->getBlockCollectionObject();

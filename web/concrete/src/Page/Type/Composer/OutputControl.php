@@ -3,7 +3,7 @@ namespace Concrete\Core\Page\Type\Composer;
 
 use Loader;
 use Concrete\Core\Foundation\Object;
-use PageTemplate;
+use Concrete\Core\Entity\Page\Template;
 use Concrete\Core\Page\Type\Composer\FormLayoutSetControl as PageTypeComposerFormLayoutSetControl;
 use PageType;
 
@@ -22,7 +22,7 @@ class OutputControl extends Object
         return $this->ptComposerFormLayoutSetID;
     }
 
-    public static function add(PageTypeComposerFormLayoutSetControl $control, PageTemplate $pt)
+    public static function add(PageTypeComposerFormLayoutSetControl $control, Template $pt)
     {
         $set = $control->getPageTypeComposerFormLayoutSetObject();
         $pagetype = $set->getPageTypeObject();
@@ -36,7 +36,7 @@ class OutputControl extends Object
         return static::getByID($ptComposerOutputControlID);
     }
 
-    public static function getList(PageType $pt, PageTemplate $template)
+    public static function getList(PageType $pt, Template $template)
     {
         $db = Loader::db();
         // get all output controls for the particular page template.
@@ -66,7 +66,7 @@ class OutputControl extends Object
         }
     }
 
-    public static function getByPageTypeComposerFormLayoutSetControl(PageTemplate $pt, PageTypeComposerFormLayoutSetControl $control)
+    public static function getByPageTypeComposerFormLayoutSetControl(Template $pt, PageTypeComposerFormLayoutSetControl $control)
     {
         $db = Loader::db();
         $ptComposerOutputControlID = $db->GetOne('select ptComposerOutputControlID from PageTypeComposerOutputControls where pTemplateID = ? and ptComposerFormLayoutSetControlID = ?', array($pt->getPageTemplateID(), $control->getPageTypeComposerFormLayoutSetControlID()));

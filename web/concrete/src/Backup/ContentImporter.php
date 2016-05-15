@@ -698,7 +698,7 @@ class ContentImporter
                 $feed = Feed::getByHandle((string) $f->handle);
                 $inspector = \Core::make('import/value_inspector');
                 if (!is_object($feed)) {
-                    $feed = new Feed();
+                    $feed = new \Concrete\Core\Entity\Page\Feed();
                 }
                 if ($f->parent) {
                     $result = $inspector->inspect((string) $f->parent);

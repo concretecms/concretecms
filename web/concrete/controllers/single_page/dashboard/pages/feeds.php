@@ -57,10 +57,10 @@ class Feeds extends DashboardPageController
         }
     }
 
-    protected function loadFeedFromRequest(Feed $pf = null)
+    protected function loadFeedFromRequest(\Concrete\Core\Entity\Page\Feed $pf = null)
     {
         if (!$pf) {
-            $pf = new Feed();
+            $pf = new \Concrete\Core\Entity\Page\Feed();
         }
 
         $pf->setTitle($this->post('pfTitle'));

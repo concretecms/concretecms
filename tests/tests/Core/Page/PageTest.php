@@ -193,7 +193,7 @@ class PageTest extends PageTestCase
         $page = Page::getByPath('/page-4/page-2/subpage/page-1');
         $this->assertFalse($page->isError());
         $pagePath = $page->getCollectionPathObject();
-        $this->assertInstanceOf('\Concrete\Core\Page\PagePath', $pagePath);
+        $this->assertInstanceOf('\Concrete\Core\Entity\Page\PagePath', $pagePath);
         $this->assertEquals('/page-4/page-2/subpage/page-1', $pagePath->getPagePath());
         $this->assertTrue($pagePath->isPagePathCanonical());
     }
@@ -381,7 +381,7 @@ class PageTest extends PageTestCase
         $this->assertEquals('Contact Us', $c->getCollectionName());
         $this->assertEquals('/about/contact-us', $c->getCollectionPath());
 
-        $p = new \Concrete\Core\Page\PagePath();
+        $p = new \Concrete\Core\Entity\Page\PagePath();
         $p->setPagePath('/contact');
         $p->setPageObject($contact);
         $p->setPagePathIsCanonical(true);

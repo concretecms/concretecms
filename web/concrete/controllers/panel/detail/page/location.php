@@ -2,7 +2,7 @@
 namespace Concrete\Controller\Panel\Detail\Page;
 
 use Concrete\Controller\Backend\UserInterface\Page as BackendInterfacePageController;
-use Concrete\Core\Page\PagePath;
+use Concrete\Core\Entity\Page\PagePath;
 use PageEditResponse;
 use PermissionKey;
 use Exception;
