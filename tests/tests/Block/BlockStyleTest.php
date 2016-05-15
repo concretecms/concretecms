@@ -11,19 +11,19 @@ class BlockStyleTest extends PageTestCase
     }
     public function testPageStyles()
     {
-        $ps = new \Concrete\Core\StyleCustomizer\Inline\StyleSet();
+        $ps = new \Concrete\Core\Entity\StyleCustomizer\Inline\StyleSet();
         $ps->setBackgroundColor('#ffffff');
         $ps->save();
 
         $psx = \Concrete\Core\StyleCustomizer\Inline\StyleSet::getByID(1);
-        $this->assertInstanceOf('\Concrete\Core\StyleCustomizer\Inline\StyleSet', $psx);
+        $this->assertInstanceOf('\Concrete\Core\Entity\StyleCustomizer\Inline\StyleSet', $psx);
         $this->assertEquals(1, $psx->getID());
         $this->assertEquals('#ffffff', $psx->getBackgroundColor());
     }
 
     public function testPageStylesBlock()
     {
-        $ps = new \Concrete\Core\StyleCustomizer\Inline\StyleSet();
+        $ps = new \Concrete\Core\Entity\StyleCustomizer\Inline\StyleSet();
         $ps->setBackgroundColor('#aaa');
         $ps->save();
 

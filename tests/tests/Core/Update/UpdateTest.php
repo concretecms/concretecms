@@ -78,7 +78,7 @@ class UpdateTest extends ConcreteDatabaseTestCase
 
         $this->assertTrue($db->tableExists('Widgets'));
         $bt = BlockType::getByHandle('file');
-        $this->assertInstanceOf('\Concrete\Core\Block\BlockType\BlockType', $bt);
+        $this->assertInstanceOf('\Concrete\Core\Entity\Block\BlockType\BlockType', $bt);
         $this->assertEquals(2, $bt->getBlockTypeID()); // because we cleared it out once already.
 
         $ids = $db->GetOne('select count(btID) from BlockTypes');

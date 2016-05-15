@@ -2,7 +2,7 @@
 namespace Concrete\Core\Page\Theme\GridFramework;
 
 use Concrete\Core\Page\Page;
-use Concrete\Core\StyleCustomizer\Inline\StyleSet;
+use Concrete\Core\Entity\StyleCustomizer\Inline\StyleSet;
 
 abstract class GridFramework
 {

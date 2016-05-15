@@ -682,7 +682,7 @@ class ContentImporter
             foreach ($sx->sociallinks->link as $l) {
                 $sociallink = Link::getByServiceHandle((string) $l['service']);
                 if (!is_object($sociallink)) {
-                    $sociallink = new Link();
+                    $sociallink = new \Concrete\Core\Entity\Sharing\SocialNetwork\Link();
                     $sociallink->setURL((string) $l['url']);
                     $sociallink->setServiceHandle((string) $l['service']);
                     $sociallink->save();
