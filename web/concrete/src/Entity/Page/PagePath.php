@@ -1,5 +1,7 @@
 <?php
-namespace Concrete\Core\Page;
+namespace Concrete\Core\Entity\Page;
+
+use Concrete\Core\Page\Page;
 use Doctrine\ORM\Mapping as ORM;
 
 /**

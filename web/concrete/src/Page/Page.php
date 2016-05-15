@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Page;
 
+use Concrete\Core\Entity\Page\Template;
 use Concrete\Core\Multilingual\Page\Section\Section;
 use Concrete\Core\Page\Type\Composer\Control\BlockControl;
 use Concrete\Core\Page\Type\Composer\FormLayoutSetControl;
@@ -31,6 +32,7 @@ use Concrete\Core\Permission\Access\Entity\GroupCombinationEntity as GroupCombin
 use Concrete\Core\Permission\Access\Entity\UserEntity as UserPermissionAccessEntity;
 use Concrete\Core\StyleCustomizer\CustomCssRecord;
 use Area;
+use Concrete\Core\Entity\Page\PagePath;
 use Queue;
 use Log;
 use Environment;
@@ -1022,7 +1024,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     {
         $em = \ORM::entityManager();
         $cID = ($this->getCollectionPointerOriginalID() > 0) ? $this->getCollectionPointerOriginalID() : $this->cID;
-        $path = $em->getRepository('\Concrete\Core\Page\PagePath')->findOneBy(
+        $path = $em->getRepository('\Concrete\Core\Entity\Page\PagePath')->findOneBy(
             array('cID' => $cID, 'ppIsCanonical' => true,
         ));
 
@@ -1035,7 +1037,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     public function addAdditionalPagePath($cPath, $commit = true)
     {
         $em = \ORM::entityManager();
-        $path = new \Concrete\Core\Page\PagePath();
+        $path = new \Concrete\Core\Entity\Page\PagePath();
         $path->setPagePath('/'.trim($cPath, '/'));
         $path->setPageObject($this);
         $em->persist($path);
@@ -1056,7 +1058,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         if (is_object($path)) {
             $path->setPagePath($cPath);
         } else {
-            $path = new \Concrete\Core\Page\PagePath();
+            $path = new \Concrete\Core\Entity\Page\PagePath();
             $path->setPagePath($cPath);
             $path->setPageObject($this);
         }
@@ -1071,7 +1073,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     {
         $em = \ORM::entityManager();
 
-        return $em->getRepository('\Concrete\Core\Page\PagePath')->findBy(
+        return $em->getRepository('\Concrete\Core\Entity\Page\PagePath')->findBy(
             array('cID' => $this->getCollectionID()), array('ppID' => 'asc')
         );
     }
@@ -1080,7 +1082,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     {
         $em = \ORM::entityManager();
 
-        return $em->getRepository('\Concrete\Core\Page\PagePath')->findBy(
+        return $em->getRepository('\Concrete\Core\Entity\Page\PagePath')->findBy(
             array('cID' => $this->getCollectionID(), 'ppIsCanonical' => false,
         ));
     }
@@ -2519,7 +2521,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
             // ensure that the path is unique
             $suffix = 0;
             $cID = ($this->getCollectionPointerOriginalID() > 0) ? $this->getCollectionPointerOriginalID() : $this->cID;
-            $q = $em->createQuery("select p.cID from Concrete\Core\Page\PagePath p where p.cPath = ?0 and p.cID <> ?1");
+            $q = $em->createQuery("select p.cID from Concrete\Core\Entity\Page\PagePath p where p.cPath = ?0 and p.cID <> ?1");
             $q->setHydrationMode(\Doctrine\ORM\Query::HYDRATE_SCALAR);
             $pagePathSeparator = Config::get('concrete.seo.page_path_separator');
             while (true) {
@@ -2890,7 +2892,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
             }
         }
 
-        if ($template instanceof PageTemplate) {
+        if ($template instanceof Template) {
             $data['pTemplateID'] = $template->getPageTemplateID();
         }
 
@@ -2944,7 +2946,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         return $pc;
     }
 
-    protected function acquireAreaStylesFromDefaults(\Concrete\Core\Page\Template $template)
+    protected function acquireAreaStylesFromDefaults(\Concrete\Core\Entity\Page\Template $template)
     {
         $pt = $this->getPageTypeObject();
         if (is_object($pt)) {

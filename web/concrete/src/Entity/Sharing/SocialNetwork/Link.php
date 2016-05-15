@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Entity\Sharing\SocialNetwork;
 
+use Concrete\Core\Sharing\SocialNetwork\Service;
 use Database;
 use Doctrine\ORM\Mapping as ORM;
 

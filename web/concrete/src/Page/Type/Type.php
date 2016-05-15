@@ -275,7 +275,7 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
         }
     }
 
-    public function getPageTypePageTemplateDefaultPageObject(Template $template = null)
+    public function getPageTypePageTemplateDefaultPageObject(\Concrete\Core\Entity\Page\Template $template = null)
     {
         if (!$template) {
             $template = $this->getPageTypeDefaultPageTemplateObject();
@@ -1114,7 +1114,7 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
         }
     }
 
-    public function createDraft(PageTemplate $pt, $u = false)
+    public function createDraft(\Concrete\Core\Entity\Page\Template $pt, $u = false)
     {
         if (!is_object($u)) {
             $u = new User();

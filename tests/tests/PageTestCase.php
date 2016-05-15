@@ -14,7 +14,7 @@ abstract class PageTestCase extends ConcreteDatabaseTestCase
         'PageTypeComposerOutputBlocks', ); // so brutal
 
     protected $metadatas = array(
-        'Concrete\Core\Page\Template',
+        'Concrete\Core\Entity\Page\Template',
         'Concrete\Core\Entity\Attribute\Key\PageKey',
         'Concrete\Core\Entity\Attribute\Value\PageValue',
         'Concrete\Core\Entity\Attribute\Value\Value',

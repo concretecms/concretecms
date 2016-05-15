@@ -432,7 +432,7 @@ class Controller extends BlockController
             }
 
             if (!is_object($pf)) {
-                $pf = new \Concrete\Core\Page\Feed();
+                $pf = new \Concrete\Core\Entity\Page\Feed();
                 $pf->setTitle($args['rssTitle']);
                 $pf->setDescription($args['rssDescription']);
                 $pf->setHandle($args['rssHandle']);
