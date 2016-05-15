@@ -7,7 +7,7 @@ class CustomCssRecordTest extends ConcreteDatabaseTestCase
 
     public function testCustomStyleRecord()
     {
-        $record = new \Concrete\Core\StyleCustomizer\CustomCssRecord();
+        $record = new \Concrete\Core\Entity\StyleCustomizer\CustomCssRecord();
         $record->setValue('body { display: none; }');
         $record->save();
 

@@ -4,7 +4,7 @@ use \Symfony\Component\HttpFoundation\Request;
 use Concrete\Core\StyleCustomizer\Inline\StyleSet;
 use Concrete\Core\Block\CustomStyle;
 
-class InlineStyleSet extends ConcreteDatabaseTestCase
+class InlineStyleSetTest extends ConcreteDatabaseTestCase
 {
     protected $fixtures = array();
     protected $tables = array('StyleCustomizerInlineStyleSets');
@@ -54,10 +54,13 @@ class InlineStyleSet extends ConcreteDatabaseTestCase
     {
         $arguments = array(
             'backgroundColor' => 'rgb(0,0,0)',
+            'backgroundSize' => 'auto',
+            'backgroundRepeat' => 'no-repeat',
+            'backgroundPosition' => 'left top',
         );
         $r = Request::create('http://www.foo.com', 'POST', $arguments);
         $set = StyleSet::populateFromRequest($r);
-        $this->assertInstanceOf('\Concrete\Core\StyleCustomizer\Inline\StyleSet', $set);
+        $this->assertInstanceOf('\Concrete\Core\Entity\StyleCustomizer\Inline\StyleSet', $set);
 
         $b = new \Concrete\Core\Block\Block();
         $b->bID = 100;
@@ -69,10 +72,13 @@ class InlineStyleSet extends ConcreteDatabaseTestCase
         $arguments = array(
             'backgroundColor' => '',
             'backgroundImageFileID' => 10,
+            'backgroundRepeat' => 'no-repeat',
+            'backgroundPosition' => 'left top',
+            'backgroundSize' => 'auto',
         );
         $r = Request::create('http://www.foo.com', 'POST', $arguments);
         $set = StyleSet::populateFromRequest($r);
-        $this->assertInstanceOf('\Concrete\Core\StyleCustomizer\Inline\StyleSet', $set);
+        $this->assertInstanceOf('\Concrete\Core\Entity\StyleCustomizer\Inline\StyleSet', $set);
     }
 
     public function testPopulateFromRequestBackgroundRepeat()
@@ -81,11 +87,13 @@ class InlineStyleSet extends ConcreteDatabaseTestCase
             'textColor' => 'rgb(120,120,120)',
             'backgroundImageFileID' => 50,
             'backgroundRepeat' => 'no-repeat',
+            'backgroundPosition' => 'left top',
+            'backgroundSize' => 'auto',
 
         );
         $r = Request::create('http://www.foo.com', 'POST', $arguments);
         $set = StyleSet::populateFromRequest($r);
-        $this->assertInstanceOf('\Concrete\Core\StyleCustomizer\Inline\StyleSet', $set);
+        $this->assertInstanceOf('\Concrete\Core\Entity\StyleCustomizer\Inline\StyleSet', $set);
         $this->assertEquals('no-repeat', $set->getBackgroundRepeat());
         $this->assertEquals(50, $set->getBackgroundImageFileID());
         $this->assertEquals('rgb(120,120,120)', $set->getTextColor());
@@ -119,10 +127,12 @@ class InlineStyleSet extends ConcreteDatabaseTestCase
             'boxShadowVertical' => '55px',
             'boxShadowSpread' => '60px',
             'customClass' => 'testclass',
+            'backgroundSize' => 'auto',
+            'backgroundPosition' => 'left top',
         );
         $r = Request::create('http://www.foo.com', 'POST', $arguments);
         $set = StyleSet::populateFromRequest($r);
-        $this->assertInstanceOf('\Concrete\Core\StyleCustomizer\Inline\StyleSet', $set);
+        $this->assertInstanceOf('\Concrete\Core\Entity\StyleCustomizer\Inline\StyleSet', $set);
 
         $this->assertEquals('rgb(0,0,0)', $set->getBackgroundColor());
         $this->assertEquals(50, $set->getBackgroundImageFileID());

@@ -3,7 +3,7 @@ namespace Concrete\Core\Block;
 
 use Concrete\Core\Backup\ContentExporter;
 use Concrete\Core\Backup\ContentImporter;
-use Concrete\Core\Block\BlockType\BlockType;
+use Concrete\Core\Entity\Block\EnBlockType\BlockType;
 use Concrete\Core\Block\View\BlockViewTemplate;
 use Concrete\Core\Controller;
 use Concrete\Core\Feature\Feature;
@@ -358,7 +358,7 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
         $args = $this->getImportData($blockNode, $page);
         $blockData = array();
 
-        $bt = BlockType::getByHandle($this->btHandle);
+        $bt = \Concrete\Core\Block\BlockType\BlockType::getByHandle($this->btHandle);
         $b = $page->addBlock($bt, $arHandle, $args);
         $bName = (string) $blockNode['name'];
         $bFilename = (string) $blockNode['custom-template'];

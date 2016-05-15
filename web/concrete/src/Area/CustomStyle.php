@@ -2,7 +2,7 @@
 namespace Concrete\Core\Area;
 
 use Concrete\Core\StyleCustomizer\Inline\CustomStyle as AbstractCustomStyle;
-use Concrete\Core\StyleCustomizer\Inline\StyleSet;
+use Concrete\Core\Entity\StyleCustomizer\Inline\StyleSet;
 use Core;
 
 class CustomStyle extends AbstractCustomStyle

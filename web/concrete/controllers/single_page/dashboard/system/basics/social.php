@@ -64,7 +64,7 @@ class Social extends DashboardPageController
             $this->error->add(t('This social link already exists.'));
         }
         if (!$this->error->has()) {
-            $link = new Link();
+            $link = new \Concrete\Core\Entity\Sharing\SocialNetwork\Link();
             $link->setServiceHandle($ssHandle);
             $link->setURL($url);
             $link->save();

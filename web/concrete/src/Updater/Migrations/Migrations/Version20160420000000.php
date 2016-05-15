@@ -9,8 +9,6 @@ use Concrete\Core\Block\BlockType\BlockType;
 use Concrete\Core\Entity\Attribute\Key\PageKey;
 use Concrete\Core\Entity\Attribute\Key\Type\BooleanType;
 use Concrete\Core\Entity\Attribute\Key\Type\NumberType;
-use Concrete\Core\StyleCustomizer\Inline\StyleSet;
-use Concrete\Core\StyleCustomizer\Set;
 use Concrete\Core\Tree\Node\NodeType;
 use Concrete\Core\Tree\TreeType;
 use Concrete\Core\Tree\Type\ExpressEntryResults;
