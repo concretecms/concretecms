@@ -10,6 +10,7 @@ use Concrete\Core\Database\Schema\Schema;
 use Concrete\Core\Filesystem\TemplateFile;
 use Concrete\Core\Package\PackageList;
 use Concrete\Core\Support\Facade\Application;
+use Concrete\Core\Support\Facade\Facade;
 use Core;
 use Database as DB;
 use Environment;
