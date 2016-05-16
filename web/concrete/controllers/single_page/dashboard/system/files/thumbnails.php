@@ -136,7 +136,7 @@ class Thumbnails extends DashboardPageController
             $this->error->add(Loader::helper('validation/token')->getErrorMessage());
         }
         if (!$this->error->has()) {
-            $type = new Type();
+            $type = new \Concrete\Core\Entity\File\Image\Thumbnail\Type\Type();
             $height = intval($request->request->get('ftTypeHeight'));
             if ($height > 0) {
                 $type->setHeight($request->request->get('ftTypeHeight'));

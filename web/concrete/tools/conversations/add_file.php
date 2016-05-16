@@ -138,7 +138,7 @@ if (count($error) > 0) {  // send in the errors
 
 $fi = new FileImporter();
 $fv = $fi->import($_FILES["file"]["tmp_name"], $_FILES["file"]["name"]);
-if (!($fv instanceof \Concrete\Core\File\Version)) {
+if (!($fv instanceof \Concrete\Core\Entity\File\Version)) {
     $file->error = $fi->getErrorMessage($fv);
     $file->timestamp = $_POST['timestamp'];
 } else {

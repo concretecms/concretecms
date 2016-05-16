@@ -94,7 +94,7 @@ class File extends TreeNode
         }
     }
 
-    public function setTreeNodeFile(\Concrete\Core\File\File $file)
+    public function setTreeNodeFile(\Concrete\Core\Entity\File\File $file)
     {
         $db = Loader::db();
         $db->Replace('TreeFileNodes', array('treeNodeID' => $this->getTreeNodeID(), 'fID' => $file->getFileID()), array('treeNodeID'), true);

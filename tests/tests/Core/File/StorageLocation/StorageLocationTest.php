@@ -22,7 +22,7 @@ class StorageLocationTest extends \FileStorageTestCase
     {
         $location = $this->getStorageLocation();
         $this->assertEquals(true, $location->isDefault());
-        $this->assertInstanceOf('\Concrete\Core\File\StorageLocation\StorageLocation', $location);
+        $this->assertInstanceOf('\Concrete\Core\Entity\File\StorageLocation\StorageLocation', $location);
 
         $loc2 = StorageLocation::getByID(1);
         $this->assertEquals($loc2, $location);
@@ -101,12 +101,12 @@ class StorageLocationTest extends \FileStorageTestCase
         StorageLocation::add($configuration, 'Other Storage');
 
         $location = StorageLocation::getDefault();
-        $this->assertInstanceOf('\Concrete\Core\File\StorageLocation\StorageLocation', $location);
+        $this->assertInstanceOf('\Concrete\Core\Entity\File\StorageLocation\StorageLocation', $location);
         $this->assertEquals(true, $location->isDefault());
         $this->assertEquals('Default', $location->getName());
 
         $alternate = StorageLocation::getByID(2);
-        $this->assertInstanceOf('\Concrete\Core\File\StorageLocation\StorageLocation', $alternate);
+        $this->assertInstanceOf('\Concrete\Core\Entity\File\StorageLocation\StorageLocation', $alternate);
         $this->assertEquals(false, $alternate->isDefault());
         $this->assertEquals('Other Storage', $alternate->getName());
     }

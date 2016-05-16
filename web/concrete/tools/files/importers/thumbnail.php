@@ -1,7 +1,7 @@
 <?php
 
 use Concrete\Core\File\Image\Thumbnail\Thumbnail;
-use Concrete\Core\File\Version;
+use Concrete\Core\File\Entity\Version;
 
 defined("C5_EXECUTE") or die("Access Denied.");
 $fID = isset($_REQUEST['fID']) ? intval($_REQUEST['fID']) : 0;

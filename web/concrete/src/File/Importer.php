@@ -9,6 +9,7 @@ use League\Flysystem\AdapterInterface;
 use Loader;
 use Core;
 use Config;
+use Concrete\Core\Entity\File\File as FileEntity;
 use Concrete\Core\Tree\Node\Type\FileFolder;
 
 class Importer
@@ -122,7 +123,7 @@ class Importer
      * @param string|bool $filename
      * @param File|FileFolder|bool $fr
      *
-     * @return number Error Code | \Concrete\Core\File\Version
+     * @return number Error Code | \Concrete\Core\EntiFile\Version
      */
     public function import($pointer, $filename = false, $fr = false)
     {
@@ -145,12 +146,12 @@ class Importer
             return self::E_FILE_INVALID_EXTENSION;
         }
 
-        if ($fr instanceof File) {
+        if ($fr instanceof FileEntity) {
             $fsl = $fr->getFileStorageLocationObject();
         } else {
             $fsl = StorageLocation::getDefault();
         }
-        if (!($fsl instanceof StorageLocation)) {
+        if (!($fsl instanceof \Concrete\Core\Entity\File\StorageLocation\StorageLocation)) {
             return self::E_FILE_INVALID_STORAGE_LOCATION;
         }
 
@@ -168,7 +169,7 @@ class Importer
             return self::E_FILE_UNABLE_TO_STORE;
         }
 
-        if (!($fr instanceof File)) {
+        if (!($fr instanceof FileEntity)) {
             // we have to create a new file object for this file version
             $fv = File::add($sanitizedFilename, $prefix, array('fvTitle' => $filename), $fsl, $fr);
 
@@ -195,7 +196,7 @@ class Importer
      * @param string $filename
      * @param File|FileFolder|bool $fr
      *
-     * @return number Error Code | \Concrete\Core\File\Version
+     * @return number Error Code | \Concrete\Core\Entity\File\Version
      */
     public function importIncomingFile($filename, $fr = false)
     {
@@ -229,7 +230,7 @@ class Importer
             );
         }
 
-        if (!($fr instanceof File)) {
+        if (!($fr instanceof FileEntity)) {
             // we have to create a new file object for this file version
             $fv = File::add($sanitizedFilename, $prefix, array('fvTitle' => $filename), $default, $fr);
             $fv->refreshAttributes($this->rescanThumbnailsOnImport);

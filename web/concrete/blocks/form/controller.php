@@ -12,7 +12,7 @@ use FileImporter;
 use FileSet;
 use File;
 use Config;
-use Concrete\Core\File\Version;
+use Concrete\Core\Entity\File\Version;
 use Events;
 
 class Controller extends BlockController

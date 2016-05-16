@@ -11,7 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
 class ImageFileValue extends Value implements FileProviderInterface
 {
     /**
-     * @ORM\ManyToOne(targetEntity="\Concrete\Core\File\File")
+     * @ORM\ManyToOne(targetEntity="\Concrete\Core\Entity\File\File")
      * @ORM\JoinColumn(name="fID", referencedColumnName="fID")
      */
     protected $file;

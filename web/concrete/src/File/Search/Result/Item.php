@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Core\File\Search\Result;
 
-use Concrete\Core\File\File;
+use Concrete\Core\Entity\File\File;
 use Concrete\Core\Search\Result\Item as SearchResultItem;
 use Concrete\Core\Search\Result\Result as SearchResult;
 use Concrete\Core\Search\Column\Set;

@@ -83,7 +83,7 @@ class FileList extends DatabaseItemList implements PermissionableListItemInterfa
     /**
      * @param $queryRow
      *
-     * @return \Concrete\Core\File\File
+     * @return \Concrete\Core\Entity\File\File
      */
     public function getResult($queryRow)
     {

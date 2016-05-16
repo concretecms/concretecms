@@ -31,14 +31,14 @@ class FileAttributeTest extends \AttributeTestCase
             )
         );
         $this->metadatas = array_merge($this->metadatas, array(
-            'Concrete\Core\File\Version',
-            'Concrete\Core\File\File',
+            'Concrete\Core\Entity\File\Version',
+            'Concrete\Core\Entity\File\File',
             'Concrete\Core\Entity\Attribute\Key\Type\NumberType',
             'Concrete\Core\Entity\Attribute\Key\FileKey',
             'Concrete\Core\Entity\Attribute\Key\Key',
             'Concrete\Core\Entity\Attribute\Value\Value\NumberValue',
             'Concrete\Core\Entity\Attribute\Value\FileValue',
-            'Concrete\Core\File\StorageLocation\StorageLocation',
+            'Concrete\Core\Entity\File\StorageLocation\StorageLocation',
         ));
         parent::setUp();
     }
@@ -52,14 +52,14 @@ class FileAttributeTest extends \AttributeTestCase
         $this->category = Category::add('file');
         $em = \Database::connection()->getEntityManager();
 
-        $file = new \Concrete\Core\File\File();
+        $file = new \Concrete\Core\Entity\File\File();
         $file->setDateAdded(new \DateTime());
         $file->setStorageLocation($fsl);
         $em->persist($file);
 
         $em->flush();
 
-        $version = new \Concrete\Core\File\Version();
+        $version = new \Concrete\Core\Entity\File\Version();
         $version->setFile($file);
         $version->setFilename('test.jpg');
         $em->persist($version);

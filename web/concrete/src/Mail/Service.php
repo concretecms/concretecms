@@ -114,13 +114,13 @@ class Service
      * $attachment->filename = "CustomFilename";
      * $mailHelper->send();
      *
-     * @param \Concrete\Core\File\File $fob File to attach
+     * @param \Concrete\Core\Entity\File\File $fob File to attach
      *
      * @return \StdClass Pointer to the attachment
      *
      * @throws \Exception
      */
-    public function addAttachment(\Concrete\Core\File\File $fob)
+    public function addAttachment(\Concrete\Core\Entity\File\File $fob)
     {
 
         // Get file version.

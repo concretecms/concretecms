@@ -43,7 +43,6 @@ return array(
         'FileList' => '\Concrete\Core\File\FileList',
         'FilePermissions' => '\Concrete\Core\Legacy\FilePermissions',
         'FileSet' => '\Concrete\Core\File\Set\Set',
-        'FileVersion' => '\Concrete\Core\File\Version',
         'GlobalArea' => '\Concrete\Core\Area\GlobalArea',
         'Group' => '\Concrete\Core\User\Group\Group',
         'GroupList' => '\Concrete\Core\User\Group\GroupList',

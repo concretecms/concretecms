@@ -2,7 +2,7 @@
 namespace Concrete\Core\File\ImportProcessor;
 
 use Concrete\Core\File\Type\Type;
-use Concrete\Core\File\Version;
+use Concrete\Core\Entity\File\Version;
 
 class ForceImageFormatProcessor implements ProcessorInterface
 {

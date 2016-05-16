@@ -5,7 +5,7 @@ use Concrete\Core\File\Set\Set;
 use Concrete\Core\Permission\Key\Key;
 use PermissionAccess;
 use FileSet;
-use Concrete\Core\File\File;
+use Concrete\Core\Entity\File\File;
 use Database;
 
 class FileAssignment extends TreeNodeAssignment

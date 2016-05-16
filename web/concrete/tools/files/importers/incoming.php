@@ -50,7 +50,7 @@ if ($valt->validate('import_incoming') && !$error->has()) {
 
                     $resp = $fi->importIncomingFile($name, $fr);
                 }
-                if (!($resp instanceof \Concrete\Core\File\Version)) {
+                if (!($resp instanceof \Concrete\Core\Entity\File\Version)) {
                     $error->add($name . ': ' . FileImporter::getErrorMessage($resp));
                 } else {
                     $files[] = $resp;

@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Core\File\Type\Inspector;
 
-use Concrete\Core\File\Version;
+use Concrete\Core\Entity\File\Version;
 use Image;
 use FileAttributeKey;
 use Core;

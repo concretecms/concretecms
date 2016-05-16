@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Core\Permission\Key;
 
-use Concrete\Core\File\File;
+use Concrete\Core\Entity\File\File;
 use Loader;
 use User;
 use \Concrete\Core\Permission\Duration as PermissionDuration;

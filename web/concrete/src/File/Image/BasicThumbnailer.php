@@ -6,7 +6,7 @@ use Config;
 use Image;
 use Imagine\Image\Box;
 use Imagine\Image\ImageInterface;
-use Concrete\Core\File\File;
+use Concrete\Core\Entity\File\File;
 
 class BasicThumbnailer
 {
