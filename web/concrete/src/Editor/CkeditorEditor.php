@@ -60,7 +60,6 @@ class CkeditorEditor implements EditorInterface
                 'uploadUrl' => (string)URL::to('/ccm/system/file/upload'),
                 'language' => $this->getLanguageOption(),
                 'customConfig' => '',
-                'uiColor' => '#FAFAFA',
                 'allowedContent' => true,
                 'image2_captionedClass' => 'content-editor-image-captioned',
                 'image2_alignClasses' => array(
