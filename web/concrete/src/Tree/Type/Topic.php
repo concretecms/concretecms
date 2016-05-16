@@ -69,12 +69,13 @@ class Topic extends Tree
         // by default, topic trees are viewable by all
         $guestGroupEntity = GroupPermissionAccessEntity::getOrCreate(UserGroup::getByID(GUEST_GROUP_ID));
         $pk = CategoryTreeNodePermissionKey::getByHandle('view_category_tree_node');
-        $pk->setPermissionObject($rootNode);
-        $pa = PermissionAccess::create($pk);
-        $pa->addListItem($guestGroupEntity);
-        $pt = $pk->getPermissionAssignmentObject();
-        $pt->assignPermissionAccess($pa);
-
+        if (is_object($pk)) {
+            $pk->setPermissionObject($rootNode);
+            $pa = PermissionAccess::create($pk);
+            $pa->addListItem($guestGroupEntity);
+            $pt = $pk->getPermissionAssignmentObject();
+            $pt->assignPermissionAccess($pa);
+        }
         return $tree;
     }
 
