@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Html;
 
+use Concrete\Core\Entity\File\File;
 use PageTheme;
 
 class Image
@@ -26,7 +27,7 @@ class Image
      * @param \File $f
      * @param null $usePictureTag
      */
-    public function __construct(\File $f = null, $usePictureTag = null)
+    public function __construct(File $f = null, $usePictureTag = null)
     {
         if (!is_object($f)) {
             return false;

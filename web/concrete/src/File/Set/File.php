@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Core\File\Set;
 
-use File as ConcreteFile;
+use Concrete\Core\Entity\File\File as FileEntity;
 use FileSet;
 use Loader;
 
@@ -42,14 +42,14 @@ class File
             return static::getByID($fsfID);
         } else {
             $fs = FileSet::getByID($fs_id);
-            $f = ConcreteFile::getByID($f_id);
+            $f = \Concrete\Core\File\File::getByID($f_id);
             $fsf = static::add($f, $fs);
 
             return $fsf;
         }
     }
 
-    public static function add(ConcreteFile $f, FileSet $fs)
+    public static function add(FileEntity $f, FileSet $fs)
     {
         $db = Loader::db();
         $fsDisplayOrder = $db->GetOne('SELECT count(fID) FROM FileSetFiles WHERE fsID = ?', array($fs->getFileSetID()));
