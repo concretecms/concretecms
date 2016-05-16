@@ -7,6 +7,7 @@ use Concrete\Core\Entity\Attribute\Value\Value\SelectedTopic;
 use Concrete\Core\Entity\Attribute\Value\Value\TopicsValue;
 use Concrete\Core\Search\ItemList\Database\AttributedItemList;
 use Concrete\Core\Tree\Node\Node;
+use Concrete\Core\Tree\Node\Type\Topic;
 use Concrete\Core\Tree\Type\Topic as TopicTree;
 use Concrete\Core\Tree\Tree;
 use Concrete\Core\Tree\Node\Node as TreeNode;
@@ -124,10 +125,18 @@ class Controller extends AttributeTypeController
         $selected = array();
         $this->load();
         $tree = Tree::getByID($this->akTopicTreeID);
-        foreach ($nodes as $topicPath) {
-            $node = $tree->getNodeByDisplayPath($topicPath);
-            if (is_object($node)) {
-                $selected[] = $node->getTreeNodeID();
+        if ($nodes instanceof Topic) {
+            $selected[] = $nodes->getTreeNodeID();
+        } else {
+            foreach ($nodes as $topicPath) {
+                if ($topicPath instanceof Topic) {
+                    $selected[] = $topicPath->getTreeNodeID();
+                } else {
+                    $node = $tree->getNodeByDisplayPath($topicPath);
+                    if (is_object($node)) {
+                        $selected[] = $node->getTreeNodeID();
+                    }
+                }
             }
         }
 

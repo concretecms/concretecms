@@ -64,7 +64,7 @@ class Type extends Object
         $db = Loader::db();
         $row = $db->GetRow('select petID, pkgID, petHandle, petName from PermissionAccessEntityTypes where petID = ?',
             array($petID));
-        if ($row['petHandle']) {
+        if (isset($row['petHandle']) && $row['petHandle']) {
             $wt = new static();
             $wt->setPropertiesFromArray($row);
 
