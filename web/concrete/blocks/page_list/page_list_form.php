@@ -253,6 +253,13 @@ $form = Loader::helper('form/page_selector');
                 </div>
                 <div class="radio">
                     <label>
+                        <input type="radio" name="cParentID" id="cThisParentField"
+                               value="<?= $c->getCollectionParentID() ?>" <?php if ($cThisParent) { ?> checked<?php } ?>>
+                        <?= t('At the current level') ?>
+                    </label>
+                </div>
+                <div class="radio">
+                    <label>
                         <input type="radio" name="cParentID" id="cOtherField"
                                value="OTHER" <?php if ($isOtherPage) {
                             ?> checked<?php

@@ -552,6 +552,12 @@ class Version20160420000000 extends AbstractMigration
             $bt->refresh();
         }
 
+        $bt = BlockType::getByHandle('page_list');
+        if (is_object($bt)) {
+            $bt->refresh();
+        }
+
+
 
 
     }
