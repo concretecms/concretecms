@@ -137,6 +137,9 @@ class Controller extends BlockController
                 $title = mb_strtoupper($title);
                 break;
             case 'upperFirst':
+                $title = mb_strtoupper(mb_substr($title, 0, 1)) . mb_strtolower(mb_substr($title, 1));
+                break;
+            case 'upperWord':
                 $title = mb_convert_case($title, MB_CASE_TITLE);
                 break;
         }
