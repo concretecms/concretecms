@@ -75,6 +75,10 @@ $(function() {
                 url: $tabAdd.attr('data-action'),
                 data: data,
                 success: function(r) {
+                    $types.find('option').eq(0).prop('selected', true);
+                    $types.closest('.ui-dialog-content').scrollTop(0);
+                    $tabAdd.find('input[name=question]').val('');
+                    $tabAdd.find('input[name=required][value=0]').prop('checked', true);
                     $tabAdd.find('div.alert-success').show().addClass("animated fadeIn");
                     Concrete.event.publish('block.express_form.add_control', {
                         'control': r,

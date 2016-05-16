@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Core\Page;
 
-use Concrete\Core\Entity\Page\Template;
+use Concrete\Core\Entity\Page\Template as TemplateEntity;
 use Concrete\Core\Multilingual\Page\Section\Section;
 use Concrete\Core\Page\Type\Composer\Control\BlockControl;
 use Concrete\Core\Page\Type\Composer\FormLayoutSetControl;
@@ -1214,7 +1214,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     public function getPageTemplateHandle()
     {
         $pt = $this->getPageTemplateObject();
-        if ($pt instanceof PageTemplate) {
+        if ($pt instanceof TemplateEntity) {
             return $pt->getPageTemplateHandle();
         }
 
@@ -2892,7 +2892,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
             }
         }
 
-        if ($template instanceof Template) {
+        if ($template instanceof TemplateEntity) {
             $data['pTemplateID'] = $template->getPageTemplateID();
         }
 
