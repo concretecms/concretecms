@@ -259,7 +259,7 @@ function ConcretePanel(options) {
         }).appendTo(document.body);
 
         var $content = $('<div />', {
-            class: 'ccm-panel-detail-content'
+            class: 'ccm-ui ccm-ui-fieldless ccm-panel-detail-content'
         }).appendTo($detail);
 
         $('div.ccm-page')
@@ -523,7 +523,7 @@ var ConcretePanelManager = (function ConcretePanelManagerGenerator() {
                 }).appendTo($(document.body));
 
                 $('<div />', {
-                    'class': 'ccm-panel-content-wrapper ccm-ui'
+                    'class': 'ccm-panel-content-wrapper ccm-ui ccm-ui-fieldless'
                 }).appendTo($('#' + panel.getDOMID()));
             }
         },
