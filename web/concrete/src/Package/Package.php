@@ -604,9 +604,9 @@ abstract class Package implements LocalizablePackageInterface
         if(empty($this->getPackageMetadataPaths())){
             return;
         }
-        
+
         $em = $this->getPackageEntityManager();
-        
+
         // Update database
         $structure = new DatabaseStructureManager($em);
         $structure->installDatabase();
@@ -660,7 +660,7 @@ abstract class Package implements LocalizablePackageInterface
      */
     public function upgradeCoreData()
     {
-        $em = \ORM::entityManager();
+        $em = \Database::connection()->getEntityManager();
         $entity = $this->getPackageEntity();
         if (is_object($entity)) {
             $entity->setPackageName($this->getPackageName());
@@ -680,7 +680,7 @@ abstract class Package implements LocalizablePackageInterface
 
         // now we refresh all blocks
         $manager = new Manager($this->app);
-        $items = $manager->driver('block')->getItems($this->getPackageEntity());
+        $items = $manager->driver('block_type')->getItems($this->getPackageEntity());
         foreach($items as $item) {
             $item->refresh();
         }
@@ -875,6 +875,11 @@ abstract class Package implements LocalizablePackageInterface
      */
     protected function destroyProxyClasses(\Doctrine\ORM\EntityManager $em)
     {
+
+        if(empty($this->getPackageMetadataPaths())){
+            return;
+        }
+
         $config = $em->getConfiguration();
         $proxyGenerator = new \Doctrine\Common\Proxy\ProxyGenerator($config->getProxyDir(), $config->getProxyNamespace());
         
@@ -895,4 +900,17 @@ abstract class Package implements LocalizablePackageInterface
     {
         return \ORM::entityManager();
     }
+
+    /**
+     * @deprecated
+     * This should be handled by the Concrete\Core\Entity\Package object, not by this object.
+     */
+    public function getPackageID()
+    {
+        // If this package is installed, we will query the database for this field.
+        if ($this->getPackageEntity()) {
+            return $this->getPackageEntity()->getPackageID();
+        }
+    }
+
 }
