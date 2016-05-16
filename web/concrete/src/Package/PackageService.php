@@ -241,7 +241,7 @@ class PackageService
 
         return clone $cl;
     }
-
+    
     /**
      * Save the entity path of the package to the 
      * application/config/database.php
@@ -256,11 +256,8 @@ class PackageService
         $packageHandle = $p->getPackageHandle();
         $config = $this->getFileConfigORMMetadata();
 
-        $settings = array(
-            'namespace' => $p->getNamespace(),
-            'paths' => $p->getPackageMetadataPaths()
-        );
-
+        $settings = $this->getPackageMetadataDriverSettings($p);
+        
         if ($packageMetadataDriverType === Package::PACKAGE_METADATADRIVER_ANNOTATION) {
             if(version_compare($p->getApplicationVersionRequired(), '5.8.0', '<')){
                 // Legacy - uses SimpleAnnotationReader
@@ -274,6 +271,29 @@ class PackageService
         } else if ($packageMetadataDriverType === Package::PACKAGE_METADATADRIVER_YAML){
             $config->save(CONFIG_ORM_METADATA_YAML . '.' . strtolower($packageHandle), $settings);
         }
+    }
+        
+    /**
+     * Creates the default metadata driver settings array,
+     * which is stored in the database config file
+     * If the package has registerd any pkg autoloader namespaces,
+     * these namespaces are merged into the settings
+     * 
+     * @param \Concrete\Core\Package\Package $p
+     * @return array
+     */
+    protected function getPackageMetadataDriverSettings(Package $p){
+        $settings[] = array(
+            'namespace' => $p->getNamespace(),
+            'paths' => $p->getPackageMetadataPaths()
+        );
+        
+        $additionalNamespaces = $p->getAdditionalNamespaces();
+        
+        if(count($additionalNamespaces)>0){
+            $settings = array_merge($settings,$additionalNamespaces);
+        }
+        return $settings;
     }
     
     /**
