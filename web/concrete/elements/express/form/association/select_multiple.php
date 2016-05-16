@@ -10,7 +10,15 @@
                 <label>
                     <input
                         type="checkbox"
-                        <?php if (is_array($selectedEntities) && in_array($entity, $selectedEntities)) { ?>checked<?php } ?>
+                        <?php
+                        if (isset($selectedEntities)) {
+                            foreach($selectedEntities as $selectedEntity) {
+                                if ($selectedEntity->getID() == $entity->getID()) {
+                                    print 'checked';
+                                }
+                            }
+                        }
+                        ?>
                         name="express_association_<?=$control->getId()?>[]"
                         value="<?=$entity->getId()?>"
                     >
