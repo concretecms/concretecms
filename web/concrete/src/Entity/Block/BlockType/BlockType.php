@@ -498,7 +498,7 @@ class BlockType
             $pkgHandle = $this->getPackageHandle();
         }
 
-        $class = static::getBlockTypeMappedClass($this->btHandle, $pkgHandle);
+        $class = \Concrete\Core\Block\BlockType\BlockType::getBlockTypeMappedClass($this->btHandle, $pkgHandle);
         $bta = new $class();
 
         $this->loadFromController($bta);
