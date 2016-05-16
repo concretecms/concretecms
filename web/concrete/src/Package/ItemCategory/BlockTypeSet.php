@@ -21,12 +21,6 @@ class BlockTypeSet extends AbstractCategory
         return $set->getBlockTypeSetDisplayName();
     }
 
-    public function renderList(Package $package)
-    {
-        $controller = new BlockTypeItemList($this, $package);
-        $controller->render();
-    }
-
     public function getPackageItems(Package $package)
     {
         return Set::getListByPackage($package);

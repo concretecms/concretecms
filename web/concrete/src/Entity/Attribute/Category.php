@@ -139,4 +139,12 @@ class Category implements EntityInterface
     {
         $this->types = $types;
     }
+
+    /**
+     * @deprecated
+     */
+    public function addSet($handle, $name, $pkg = null)
+    {
+        return $this->getController()->addSet($handle, $name, $pkg, false);
+    }
 }
