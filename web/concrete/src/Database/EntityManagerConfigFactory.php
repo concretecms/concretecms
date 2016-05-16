@@ -94,7 +94,7 @@ class EntityManagerConfigFactory implements ApplicationAwareInterface, EntityMan
 
         // Create Core annotationDriver
         $coreDirs = array(
-            DIR_BASE_CORE.DIRECTORY_SEPARATOR.DIRNAME_CLASSES,
+            DIR_BASE_CORE.DIRECTORY_SEPARATOR.DIRNAME_CLASSES . '/' . DIRNAME_ENTITIES,
         );
         $annotationDriver = new \Doctrine\ORM\Mapping\Driver\AnnotationDriver($this->getCachedAnnotationReader(),
             $coreDirs);
