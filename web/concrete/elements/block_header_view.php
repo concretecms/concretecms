@@ -253,6 +253,13 @@ if ($showMenu) {
 }
     ?>
 
+                        <?php
+                        $event = new \Symfony\Component\EventDispatcher\GenericEvent();
+                        $event->setArgument('bID', $b->getBlockID());
+                        $event->setArgument('arHandle', $a->getAreaHandle());
+                        \Events::dispatch('on_block_edit_menu', $event);
+                        ?>
+
                     </ul>
                 </div>
             </div>
