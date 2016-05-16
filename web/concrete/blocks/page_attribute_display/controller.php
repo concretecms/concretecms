@@ -52,7 +52,7 @@ class Controller extends BlockController
                 $content = h($c->getCollectionName());
                 break;
             case "rpv_pageDescription":
-                $content = h($c->getCollectionDescription());
+                $content = nl2br(h($c->getCollectionDescription()));
                 break;
             case "rpv_pageDateCreated":
                 $content = $c->getCollectionDateAdded();
