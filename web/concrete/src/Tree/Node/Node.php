@@ -280,10 +280,10 @@ abstract class Node extends Object implements \Concrete\Core\Permission\ObjectIn
                 continue;
             }
             $n = $nodes[$i];
-            $path .= $n->getTreeNodeName() . '/';
+            $path .= $n->getTreeNodeDisplayName() . '/';
         }
         if (count($nodes) > 0) {
-            $path .= $this->getTreeNodeName();
+            $path .= $this->getTreeNodeDisplayName();
         }
 
         return $path;
