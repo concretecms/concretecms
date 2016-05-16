@@ -41,7 +41,7 @@ use Concrete\Core\Block\BlockController;
                 );
                 $q->setParameter('entities', $forms);
                 $q->setMaxResults(1);
-                $result = $q->getSingleResult();
+                $result = $q->getOneOrNullResult();
             }
 
             $formDateCreated = 0;

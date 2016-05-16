@@ -226,6 +226,9 @@ jQuery.fn.dialog.open = function(options) {
 
 jQuery.fn.dialog.activateDialogContents = function($dialog) {
     // handle buttons
+
+    $dialog.closest('.ui-dialog-content').addClass("ccm-ui-fieldless");
+
     $dialog.find('button[data-dialog-action=cancel]').on('click', function() {
         jQuery.fn.dialog.closeTop();
     });

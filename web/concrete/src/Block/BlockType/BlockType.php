@@ -3,6 +3,7 @@ namespace Concrete\Core\Block\BlockType;
 
 use Concrete\Core\Foundation\Environment;
 use Core;
+use Database as DB;
 use Localization;
 
 class BlockType
