@@ -111,8 +111,10 @@ abstract class AbstractCategory implements CategoryInterface
         /*
          * LEGACY SUPPORT
          */
+        if (is_string($key_type)) {
+            $key_type = \Concrete\Core\Attribute\Type::getByHandle($key_type);
+        }
         if ($key_type instanceof \Concrete\Core\Entity\Attribute\Type) {
-            $type_handle = $key_type->getAttributeTypeHandle();
             $key_type = $key_type->getController()->getAttributeKeyType();
             // $key is actually an array.
             $handle = $key['akHandle'];
@@ -282,7 +284,9 @@ abstract class AbstractCategory implements CategoryInterface
         $set->setAttributeKeyCategory($this->getCategoryEntity());
         $set->setAttributeSetHandle($handle);
         $set->setAttributeSetName($name);
-        $set->setAttributeSetIsLocked($locked);
+        if ($locked) {
+            $set->setAttributeSetIsLocked($locked);
+        }
         $this->entityManager->persist($set);
         $this->entityManager->flush();
 

@@ -271,4 +271,15 @@ class Key implements AttributeKeyInterface, ExportableInterface
         return (string) $this->getAttributeKeyID();
     }
 
+    /**
+     * @deprecated
+     */
+    public function setAttributeSet($set)
+    {
+        if (!is_object($set)) {
+            $set = Set::getByHandle($set);
+        }
+        $set->addKey($this);
+    }
+
 }
