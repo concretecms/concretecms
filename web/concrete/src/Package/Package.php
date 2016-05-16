@@ -771,6 +771,35 @@ abstract class Package implements LocalizablePackageInterface
     }
     
     /**
+     * Get relative paths to the location containing the metadata info
+     * 
+     * @return array 
+     */
+    public function getPackageMetadataRelativPaths()
+    {       
+        // annotations entity path
+        if ($this->metadataDriver === self::PACKAGE_METADATADRIVER_ANNOTATION){
+            // Support for the legacy method for backwards compatibility
+            if (method_exists($this, 'getPackageEntityPath')) {
+                $paths = array($this->getPackageEntityPath());
+            }else{
+                $paths = array($this->getRelativePath() . DIRECTORY_SEPARATOR . DIRNAME_CLASSES);
+            }
+        } else if ($this->metadataDriver === self::PACKAGE_METADATADRIVER_XML){
+            // return xml metadata dir
+            $paths =  array($this->getRelativePath() . DIRECTORY_SEPARATOR . REL_DIR_METADATA_XML);
+        } else if ($this->metadataDriver === self::PACKAGE_METADATADRIVER_YAML){
+            // return yaml metadata dir
+            $paths =  array($this->getRelativePath() . DIRECTORY_SEPARATOR . REL_DIR_METADATA_YAML);
+        }
+        // Check if paths exists and is a directory
+        if(!is_dir(DIR_BASE.$paths[0])){
+            $paths = array();
+        }
+        return $paths;
+    }
+    
+    /**
      * Get the namespace of the package by the package handle
      * 
      * @param boolean $withLeadingBacksalsh
@@ -796,7 +825,7 @@ abstract class Package implements LocalizablePackageInterface
         if(count($this->pkgAutoloaderRegistries) > 0){
             foreach($this->pkgAutoloaderRegistries as $src => $rawNamespace){
                 
-                $path = $this->getPackagePath() . DIRECTORY_SEPARATOR . $src;
+                $path = $this->getRelativePath() . DIRECTORY_SEPARATOR . $src;
                 
                 $namespace = ltrim($rawNamespace, '\\');
                 $namespaces[] = array(

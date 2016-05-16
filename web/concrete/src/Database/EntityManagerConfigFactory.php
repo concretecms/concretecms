@@ -176,8 +176,9 @@ class EntityManagerConfigFactory implements ApplicationAwareInterface, EntityMan
         if (count($driverSettingsLegacy) > 0) {
             foreach ($driverSettingsLegacy as $settings) {
                 foreach($settings as $setting){
+                    $paths = $this->convertRelativeToAbsolutePaths($setting);
                     $simpleAnnotationDriver = new \Doctrine\ORM\Mapping\Driver\AnnotationDriver($this->getCachedSimpleAnnotationReader(),
-                        $setting['paths']);
+                        $paths);
                     $driverChain->addDriver($simpleAnnotationDriver,
                         $setting['namespace']);
                 }
@@ -188,8 +189,9 @@ class EntityManagerConfigFactory implements ApplicationAwareInterface, EntityMan
         if (count($driverSettingsDefault) > 0) {
             foreach ($driverSettingsDefault as $settings) {
                 foreach($settings as $setting){
+                    $paths = $this->convertRelativeToAbsolutePaths($setting);
                     $annotationDriver = new \Doctrine\ORM\Mapping\Driver\AnnotationDriver($this->getCachedAnnotationReader(),
-                        $setting['paths']);
+                        $paths);
                     $driverChain->addDriver($annotationDriver, $setting['namespace']);
                 }
             }
@@ -208,7 +210,8 @@ class EntityManagerConfigFactory implements ApplicationAwareInterface, EntityMan
         if (count($driverSettings) > 0) {
             foreach ($driverSettings as $settings) {
                 foreach($settings as $setting){
-                    $xmlDriver = new \Doctrine\ORM\Mapping\Driver\XmlDriver($setting['paths']);
+                    $paths = $this->convertRelativeToAbsolutePaths($setting);
+                    $xmlDriver = new \Doctrine\ORM\Mapping\Driver\XmlDriver($paths);
                     $driverChain->addDriver($xmlDriver, $setting['namespace']);
                 }
             }
@@ -227,13 +230,31 @@ class EntityManagerConfigFactory implements ApplicationAwareInterface, EntityMan
         if (count($driverSettings) > 0) {
             foreach ($driverSettings as $settings) {
                 foreach($settings as $setting){
-                    $yamlDriver = new \Doctrine\ORM\Mapping\Driver\YamlDriver($setting['paths']);
+                    $paths = $this->convertRelativeToAbsolutePaths($setting);
+                    $yamlDriver = new \Doctrine\ORM\Mapping\Driver\YamlDriver($paths);
                     $driverChain->addDriver($yamlDriver, $setting['namespace']);
                 }
             }
         }
     }
-
+    
+    /**
+     * Prepend all relativ paths with DIR_BASE
+     * 
+     * @param array $setting
+     */
+    protected function convertRelativeToAbsolutePaths(array $setting)
+    {
+        $paths = $setting['paths'];
+        $newPaths = array();
+        if(count($paths) > 0){
+            foreach($paths as $path){
+                $newPaths[] = DIR_BASE.$path;
+            }
+        }
+        return $newPaths;
+    }
+    
     /**
      * Register globally ignored annotations
      */

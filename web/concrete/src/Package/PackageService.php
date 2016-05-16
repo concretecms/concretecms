@@ -285,7 +285,7 @@ class PackageService
     protected function getPackageMetadataDriverSettings(Package $p){
         $settings[] = array(
             'namespace' => $p->getNamespace(),
-            'paths' => $p->getPackageMetadataPaths()
+            'paths' => $p->getPackageMetadataRelativPaths()
         );
         
         $additionalNamespaces = $p->getAdditionalNamespaces();
