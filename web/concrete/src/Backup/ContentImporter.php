@@ -746,7 +746,7 @@ class ContentImporter
     {
         if (isset($sx->thumbnailtypes)) {
             foreach ($sx->thumbnailtypes->thumbnailtype as $l) {
-                $type = new \Concrete\Core\File\Image\Thumbnail\Type\Type();
+                $type = new \Concrete\Core\Entity\File\Image\Thumbnail\Type\Type();
                 $type->setName((string) $l['name']);
                 $type->setHandle((string) $l['handle']);
                 $type->setWidth((string) $l['width']);

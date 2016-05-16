@@ -2,7 +2,7 @@
 
 namespace Concrete\Tests\Core\File\Service\Fixtures;
 
-use Concrete\Core\File\StorageLocation\StorageLocation;
+use Concrete\Core\Entity\File\StorageLocation\StorageLocation;
 
 class TestStorageLocation extends StorageLocation
 {

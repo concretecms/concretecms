@@ -114,10 +114,10 @@ class DownloadFile extends PageController
     }
 
     /**
-     * @param \Concrete\Core\File\File $file
+     * @param \Concrete\Core\Entity\File\File $file
      * @param null|int $rcID
      */
-    protected function download(\Concrete\Core\File\File $file, $rcID = null)
+    protected function download(\Concrete\Core\Entity\File\File $file, $rcID = null)
     {
         $filename = $file->getFilename();
         $file->trackDownload($rcID);

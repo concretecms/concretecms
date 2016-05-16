@@ -13,7 +13,7 @@ class TypeTest extends \ConcreteDatabaseTestCase
     public function testCreateType()
     {
         $type = Type::add('local', t('Local Storage'));
-        $this->assertInstanceOf('\Concrete\Core\File\StorageLocation\Type\Type', $type);
+        $this->assertInstanceOf('\Concrete\Core\Entity\File\StorageLocation\Type\Type', $type);
         $this->assertEquals('Local Storage', $type->getName());
         $this->assertEquals(1, $type->getID());
         $this->assertEquals(0, $type->getPackageID());

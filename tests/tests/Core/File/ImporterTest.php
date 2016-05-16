@@ -2,7 +2,6 @@
 namespace Concrete\Tests\Core\File;
 
 use Concrete\Core\Cache\CacheLocal;
-use Concrete\Core\File\StorageLocation\StorageLocation;
 use Concrete\Core\File\Importer;
 use Concrete\Core\Attribute\Type as AttributeType;
 use Concrete\Core\Attribute\Key\FileKey;
@@ -94,14 +93,14 @@ class ImporterTest extends \FileStorageTestCase
         $fi = new Importer();
         $r = $fi->import($file, 'test.txt');
 
-        $this->assertInstanceOf('\Concrete\Core\File\Version', $r);
+        $this->assertInstanceOf('\Concrete\Core\Entity\File\Version', $r);
         $this->assertEquals($r->getFileVersionID(), 1);
         $this->assertEquals($r->getFileID(), 1);
         $this->assertEquals('test.txt', $r->getFilename());
         $fo = $r->getFile();
         $fsl = $fo->getFileStorageLocationObject();
         $this->assertEquals(true, $fsl->isDefault());
-        $this->assertInstanceOf('\Concrete\Core\File\StorageLocation\StorageLocation', $fsl);
+        $this->assertInstanceOf('\Concrete\Core\Entity\File\StorageLocation\StorageLocation', $fsl);
         $apr = str_split($r->getPrefix(), 4);
 
         $this->assertEquals('/application/files/' . $apr[0] . '/' . $apr[1] . '/' . $apr[2] . '/test.txt',
@@ -186,7 +185,7 @@ class ImporterTest extends \FileStorageTestCase
 
         $fi = new Importer();
         $fo = $fi->importIncomingFile('trees.png');
-        $this->assertInstanceOf('\Concrete\Core\File\Version', $fo);
+        $this->assertInstanceOf('\Concrete\Core\Entity\File\Version', $fo);
         $type = $fo->getTypeObject();
         $this->assertEquals(\Concrete\Core\File\Type\Type::T_IMAGE, $type->getGenericType());
 
@@ -316,7 +315,7 @@ class ImporterTest extends \FileStorageTestCase
         $sample = dirname(__FILE__) . '/StorageLocation/fixtures/sample.txt';
         $r = $fi->import($sample, 'sample.txt', $fo);
 
-        $this->assertInstanceOf('\Concrete\Core\File\Version', $r);
+        $this->assertInstanceOf('\Concrete\Core\Entity\File\Version', $r);
         $this->assertEquals(2, $r->getFileVersionID());
         $this->assertEquals('sample.txt', $r->getFilename());
         $apr = str_split($r->getPrefix(), 4);

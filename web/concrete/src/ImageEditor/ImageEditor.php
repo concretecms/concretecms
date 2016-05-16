@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Core\ImageEditor;
 
-use Concrete\Core\File\Version;
+use Concrete\Core\Entity\File\Version;
 use Concrete\Core\View\View;
 
 class ImageEditor

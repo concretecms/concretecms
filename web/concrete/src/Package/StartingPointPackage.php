@@ -6,7 +6,6 @@ use Concrete\Core\Backup\ContentImporter;
 use Concrete\Core\Config\Renderer;
 use Concrete\Core\Database\DatabaseStructureManager;
 use Concrete\Core\File\Filesystem;
-use Concrete\Core\File\Image\Thumbnail\Type\Type;
 use Concrete\Core\Mail\Importer\MailImporter;
 use Concrete\Core\Package\Routine\AttachModeInstallRoutine;
 use Concrete\Core\Permission\Access\Entity\ConversationMessageAuthorEntity;
@@ -256,7 +255,7 @@ class StartingPointPackage extends BasePackage
         $tree = $filesystem->create();
         $filesystem->setDefaultPermissions($tree);
 
-        $thumbnailType = new Type();
+        $thumbnailType = new \Concrete\Core\Entity\File\Image\Thumbnail\Type\Type();
         $thumbnailType->requireType();
         $thumbnailType->setName(tc('ThumbnailTypeName', 'File Manager Thumbnails'));
         $thumbnailType->setHandle(Config::get('concrete.icons.file_manager_listing.handle'));
@@ -264,7 +263,7 @@ class StartingPointPackage extends BasePackage
         $thumbnailType->setHeight(Config::get('concrete.icons.file_manager_listing.height'));
         $thumbnailType->save();
 
-        $thumbnailType = new Type();
+        $thumbnailType = new \Concrete\Core\Entity\File\Image\Thumbnail\Type\Type();
         $thumbnailType->requireType();
         $thumbnailType->setName(tc('ThumbnailTypeName', 'File Manager Detail Thumbnails'));
         $thumbnailType->setHandle(Config::get('concrete.icons.file_manager_detail.handle'));

@@ -167,7 +167,7 @@ class File extends Controller
             $importer = new FileImporter();
             $response = $importer->import($tmp_name, $name, $folder);
         }
-        if (!($response instanceof \Concrete\Core\File\Version)) {
+        if (!($response instanceof \Concrete\Core\Entity\File\Version)) {
             throw new Exception(FileImporter::getErrorMessage($response));
         } else {
             $file = $response->getFile();

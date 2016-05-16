@@ -40,7 +40,7 @@ if ($valt->validate('upload') && !$error->has()) {
                 $r->setMessage(t('File replaced successfully.'));
             }
         }
-        if (!($resp instanceof \Concrete\Core\File\Version)) {
+        if (!($resp instanceof \Concrete\Core\Entity\File\Version)) {
             $errorCode = $resp;
         } elseif (!is_object($fr)) {
             // we check $fr because we don't want to set it if we are replacing an existing file

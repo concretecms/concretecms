@@ -7,7 +7,6 @@
  */
 namespace Concrete\Tests\Core\File\Service;
 use Concrete\Core\File\StorageLocation\Configuration\LocalConfiguration;
-use Concrete\Core\File\StorageLocation\StorageLocation;
 use Concrete\Tests\Core\File\Service\Fixtures\TestStorageLocation;
 use Core;
 
@@ -17,7 +16,7 @@ class ImageTest extends \PHPUnit_Framework_TestCase
     protected $output1;
 
     /**
-     * @var StorageLocation
+     * @var \Concrete\Core\Entity\File\StorageLocation\StorageLocation
      */
     protected $storageLocation;
 

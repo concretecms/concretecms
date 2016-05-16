@@ -6,7 +6,7 @@ class UpdateTest extends ConcreteDatabaseTestCase
     protected $tables = array('Blocks', 'BlockTypes', 'CollectionVersionBlocks', 'Logs', 'SystemDatabaseMigrations', 'Widgets');
 
     protected $metadatas = array(
-        'Concrete\Core\File\File',
+        'Concrete\Core\Entity\File\File',
     );
     public function testCurrentMigration()
     {

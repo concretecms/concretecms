@@ -1,5 +1,5 @@
 <?php
-namespace Concrete\Core\File;
+namespace Concrete\Core\Entity\File;
 
 use Carbon\Carbon;
 use Concrete\Core\Attribute\Key\FileKey;
@@ -74,7 +74,7 @@ class Version
      * @ORM\ManyToOne(targetEntity="File", inversedBy="versions")
      * @ORM\JoinColumn(name="fID", referencedColumnName="fID")
      *
-     * @var \Concrete\Core\File\File
+     * @var \Concrete\Core\Entity\File\File
      */
     protected $file;
     /** @ORM\Id
@@ -152,7 +152,7 @@ class Version
      */
     protected $fvHasDetailThumbnail = false;
 
-    public static function add(\Concrete\Core\File\File $file, $filename, $prefix, $data = array())
+    public static function add(\Concrete\Core\Entity\File\File $file, $filename, $prefix, $data = array())
     {
         $u = new User();
         $uID = (isset($data['uID']) && $data['uID'] > 0) ? $data['uID'] : $u->getUserID();
@@ -251,7 +251,7 @@ class Version
         return $this->file;
     }
 
-    public function setFile(\Concrete\Core\File\File $file)
+    public function setFile(\Concrete\Core\Entity\File\File $file)
     {
         $this->file = $file;
     }
@@ -396,7 +396,7 @@ class Version
     {
         $db = Database::get();
         $em = \ORM::entityManager();
-        $qq = $em->createQuery('SELECT max(v.fvID) FROM \Concrete\Core\File\Version v where v.file = :file');
+        $qq = $em->createQuery('SELECT max(v.fvID) FROM \Concrete\Core\Entity\File\Version v where v.file = :file');
         $qq->setParameter('file', $this->file);
         $fvID = $qq->getSingleScalarResult();
         ++$fvID;

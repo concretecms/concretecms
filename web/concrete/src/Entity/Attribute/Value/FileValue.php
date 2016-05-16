@@ -12,7 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
 class FileValue extends Value
 {
     /**
-     * @ORM\ManyToOne(targetEntity="\Concrete\Core\File\Version")
+     * @ORM\ManyToOne(targetEntity="\Concrete\Core\Entity\File\Version")
      @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="fID", referencedColumnName="fID"),
      *   @ORM\JoinColumn(name="fvID", referencedColumnName="fvID")

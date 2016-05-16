@@ -136,12 +136,12 @@ if (!$error->has()) {
                 } else {
                     $resp = FileImporter::E_FILE_INVALID_EXTENSION;
                 }
-                if (!($resp instanceof \Concrete\Core\File\Version)) {
+                if (!($resp instanceof \Concrete\Core\Entity\File\Version)) {
                     $error->add($fname . ': ' . FileImporter::getErrorMessage($resp));
                 } else {
                     $import_responses[] = $resp;
 
-                    if (!($fr instanceof \Concrete\Core\File\Version)) {
+                    if (!($fr instanceof \Concrete\Core\Entity\File\Version)) {
                         // we check $fr because we don't want to set it if we are replacing an existing file
                         $respf = $resp->getFile();
                         $respf->setOriginalPage($_POST['ocID']);

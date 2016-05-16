@@ -3,12 +3,12 @@ namespace Concrete\Core\File\Image\Thumbnail\Path;
 
 use Concrete\Core\Application\Application;
 use Concrete\Core\Database\Connection\Connection;
-use Concrete\Core\File\File;
+use Concrete\Core\Entity\File\File;
 use Concrete\Core\File\Image\Thumbnail\Type\Version as ThumbnailVersion;
 use Concrete\Core\File\StorageLocation\Configuration\ConfigurationInterface;
 use Concrete\Core\File\StorageLocation\Configuration\DeferredConfigurationInterface;
 use Concrete\Core\File\StorageLocation\StorageLocation;
-use Concrete\Core\File\Version;
+use Concrete\Core\Entity\File\Version;
 
 class Resolver
 {
@@ -124,16 +124,16 @@ class Resolver
     /**
      * Determine the path for a file version thumbnail based on the storage location
      *
-     * @param \Concrete\Core\File\Version $file_version
+     * @param \Concrete\Core\Entity\File\Version $file_version
      * @param \Concrete\Core\File\Image\Thumbnail\Type\Version $thumbnail
-     * @param \Concrete\Core\File\StorageLocation\StorageLocation $storage
+     * @param \Concrete\Core\Entity\File\StorageLocation\StorageLocation $storage
      * @param \Concrete\Core\File\StorageLocation\Configuration\ConfigurationInterface $configuration
      * @return string
      */
     protected function determinePath(
         Version $file_version,
         ThumbnailVersion $thumbnail,
-        StorageLocation $storage,
+        \Concrete\Core\Entity\File\StorageLocation\StorageLocation $storage,
         ConfigurationInterface $configuration
     ) {
         $fss = $storage->getFileSystemObject();
@@ -153,14 +153,14 @@ class Resolver
     /**
      * Get the main image path ignoring the thumbnail requirements
      *
-     * @param \Concrete\Core\File\Version $file_version
+     * @param \Concrete\Core\Entity\File\Version $file_version
      * @param \Concrete\Core\File\Image\Thumbnail\Type\Version $thumbnail
      * @return string
      */
     protected function getDefaultPath(
         Version $file_version,
         ThumbnailVersion $thumbnail,
-        StorageLocation $storage,
+        \Concrete\Core\Entity\File\StorageLocation\StorageLocation $storage,
         ConfigurationInterface $configuration
     ) {
         $cf = $this->app->make('helper/concrete/file');

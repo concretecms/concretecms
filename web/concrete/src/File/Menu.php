@@ -4,6 +4,7 @@ namespace Concrete\Core\File;
 use Concrete\Core\Application\UserInterface\ContextMenu\Item\DialogLinkItem;
 use Concrete\Core\Application\UserInterface\ContextMenu\Item\DividerItem;
 use Concrete\Core\Application\UserInterface\ContextMenu\Item\LinkItem;
+use Concrete\Core\Entity\File\File as FileEntity;
 use Concrete\Core\Tree\Menu\Item\DeleteItem;
 
 class Menu extends \Concrete\Core\Application\UserInterface\ContextMenu\Menu
@@ -11,7 +12,7 @@ class Menu extends \Concrete\Core\Application\UserInterface\ContextMenu\Menu
 
     protected $menuAttributes = ['class' => 'ccm-popover-file-menu'];
 
-    public function __construct(File $file)
+    public function __construct(FileEntity $file)
     {
         parent::__construct();
 

@@ -110,7 +110,7 @@ class FileListTest extends \FileStorageTestCase
         $pagination->setMaxPerPage(3)->setCurrentPage(1);
         $results = $pagination->getCurrentPageResults();
         $this->assertEquals(3, count($results));
-        $this->assertInstanceOf('\Concrete\Core\File\File', $results[0]);
+        $this->assertInstanceOf('\Concrete\Core\Entity\File\File', $results[0]);
     }
 
     public function testFilterByExtensionAndType()
@@ -209,7 +209,7 @@ class FileListTest extends \FileStorageTestCase
         $this->assertTrue($pagination->hasPreviousPage());
 
         $results = $pagination->getCurrentPageResults();
-        $this->assertInstanceOf('\Concrete\Core\File\File', $results[0]);
+        $this->assertInstanceOf('\Concrete\Core\Entity\File\File', $results[0]);
         $this->assertEquals(1, count($results[0]));
     }
 

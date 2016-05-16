@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Core\File\ImportProcessor;
 
-use Concrete\Core\File\Version;
+use Concrete\Core\Entity\File\Version;
 
 class SetJPEGQualityProcessor implements ProcessorInterface
 {
