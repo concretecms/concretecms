@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Tests\Core\Foundation;
 
+use Concrete\Core\Entity\Block\BlockType\BlockType;
 use Concrete\Core\Entity\Package;
 use Concrete\Core\Foundation\ClassLoader;
 use Loader;
@@ -119,7 +120,7 @@ class ClassloaderTest extends \PHPUnit_Framework_TestCase
 
     public function testBlocks()
     {
-        $bt = new \BlockType();
+        $bt = new BlockType();
         $bt->setBlockTypeHandle('core_stack_display');
         $class = $bt->getBlockTypeClass();
         $classExists = class_exists($class);
@@ -136,7 +137,7 @@ class ClassloaderTest extends \PHPUnit_Framework_TestCase
         mkdir($root . '/application/blocks/core_area_layout/', 0777, true);
         copy(dirname(__FILE__) . '/fixtures/CoreAreaLayoutController.php', $root . '/application/blocks/core_area_layout/controller.php');
 
-        $bt = new \BlockType();
+        $bt = new BlockType();
         $bt->setBlockTypeHandle('core_area_layout');
         $class = $bt->getBlockTypeClass();
         $classExists = class_exists($class);
