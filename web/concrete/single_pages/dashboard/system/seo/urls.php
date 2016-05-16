@@ -6,20 +6,20 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
     <fieldset>
         <legend><?= t('Pretty URLs') ?></legend>
-        <div class="checkbox">
-            <label>
-                <?php echo $fh->checkbox('URL_REWRITING', 1, $intRewriting) ?>
-                <?php echo t('Remove index.php from URLs'); ?>
-            </label>
-        </div>
-        <?php
-        if (Config::get('concrete.seo.url_rewriting')) {
-            ?>
-            <div class="form-group">
-                <label class="control-label"><?=t('Code for your .htaccess file')?></label>
-                <textarea rows="8" class="form-control" onclick="this.select()"><?=$strRules?></textarea>
+        <div class="form-group">
+            <div class="checkbox">
+                <label>
+                    <?php echo $fh->checkbox('URL_REWRITING', 1, $urlRewriting) ?>
+                    <?php echo t('Remove index.php from URLs'); ?>
+                </label>
             </div>
-        <?php 
+        </div>
+        <?php if (isset($configuration_action)) { ?>
+            <div class="form-group">
+                <label class="control-label"><?=$configuration_action?></label>
+                <textarea rows="8" class="form-control" onclick="this.select()"><?=h($configuration_code)?></textarea>
+            </div>
+        <?php
         } ?>
     </fieldset>
 

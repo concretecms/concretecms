@@ -2,75 +2,110 @@
 namespace Concrete\Controller\SinglePage\Dashboard\System\Seo;
 
 use Concrete\Core\Page\Controller\DashboardPageController;
-use Loader;
-use Config;
 
 class Urls extends DashboardPageController
 {
     /**
-     * Returns the mod_rewrite rules.
-     *
-     * @return string
-     */
-    public function getRewriteRules()
-    {
-        $strRules = '
-<IfModule mod_rewrite.c>
-RewriteEngine On
-RewriteBase ' . DIR_REL . '/
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME}/index.html !-f
-RewriteCond %{REQUEST_FILENAME}/index.php !-f
-RewriteRule . ' . DISPATCHER_FILENAME .' [L]
-</IfModule>';
-
-        return $strRules;
-    }
-
-    /**
-     * Returns the .htaccess text to be copied/inserted.
-     *
-     * @return string
-     */
-    public function getHtaccessText()
-    {
-        $strHt = '
-        # -- concrete5 urls start --'
-        . $this->getRewriteRules() . '
-        # -- concrete5 urls end --
-        ';
-
-        return preg_replace('/\t/', '', $strHt);
-    }
-
-    /**
      * Dashboard page view.
      *
      * @param string|bool $strStatus - Result of attempting to update rewrite rules
-     * @param bool $blnHtu - Flag denoting if the .htaccess file was writable or not
+     * @param bool $prettyUrlState - Flag denoting if the rewrite rule has been saved
      */
-    public function view($strStatus = false, $blnHtu = false)
+    public function view($strStatus = false, $prettyUrlState = '')
     {
+        $config = $this->app->make('config');
+        $urlRewriting = (bool) $config->get('concrete.seo.url_rewriting');
+        $this->set('fh', $this->app->make('helper/form'));
+        $this->set('canonical_url', $config->get('concrete.seo.canonical_url'));
+        $this->set('canonical_ssl_url', $config->get('concrete.seo.canonical_ssl_url'));
+        $this->set('redirect_to_canonical_url', $config->get('concrete.seo.redirect_to_canonical_url'));
+        $this->set('urlRewriting', $urlRewriting);
+
         $strStatus = (string) $strStatus;
-        $blnHtu = (bool) $blnHtu;
-        $intRewriting = Config::get('concrete.seo.url_rewriting') == 1 ? 1 : 0;
-
-        $this->set('fh', \Core::make('helper/form'));
-        $this->set('strRules', $this->getRewriteRules());
-        $this->set('intRewriting', $intRewriting);
-        $this->set('canonical_url', Config::get('concrete.seo.canonical_url'));
-        $this->set('canonical_ssl_url', Config::get('concrete.seo.canonical_ssl_url'));
-        $this->set('redirect_to_canonical_url', Config::get('concrete.seo.redirect_to_canonical_url'));
-
-        if ($strStatus == 'saved') {
+        if ($strStatus === 'saved') {
             $message = t('Settings Saved.');
-            if (Config::get('concrete.seo.url_rewriting') && !$blnHtu) {
-                $this->set('message', $message . ' ' . $urlmsg . ' ' . t('You need to update .htaccess by hand.'));
-            } elseif (Config::get('concrete.seo.url_rewriting') && $blnHtu) {
-                $this->set('message', $message . ' ' . $urlmsg . ' ' .t('We were able to automatically update .htaccess file.'));
-            } else {
-                $this->set('message', $message);
+            $prettyUrlState = (string) $prettyUrlState;
+            switch ($prettyUrlState) {
+                case 'saved':
+                case 'not-needed':
+                    $manager = $this->app->make('Concrete\Core\Service\Manager\ServiceManager');
+                    $services = $manager->getActiveServices();
+                    $service = $services[0];
+                    $rule = $service->getGenerator()->getRule('pretty_urls');
+                    switch ($prettyUrlState) {
+                        case 'saved':
+                            if ($urlRewriting) {
+                                $this->set('configuration_action', t('The following rule has been added to the server configuration'));
+                            } else {
+                                $this->set('configuration_action', t('The following rule has been removed to the server configuration'));
+                            }
+                            break;
+                        case 'not-needed':
+                            if ($urlRewriting) {
+                                $this->set('configuration_action', t('The following rule was already in your server configuration'));
+                            } else {
+                                $this->set('configuration_action', t('The following rule was already missing in your server configuration'));
+                            }
+                            break;
+                    }
+                    $this->set('configuration_code', $rule->getCode());
+                    break;
+                case 'unrecognized':
+                    $codes = array();
+                    $manager = $this->app->make('Concrete\Core\Service\Manager\ServiceManager');
+                    /* @var \Concrete\Core\Service\Manager\ServiceManager $manager */
+                    foreach ($manager->getAllServices() as $service) {
+                        $rule = $service->getGenerator()->getRule('pretty_urls');
+                        if ($rule !== null) {
+                            if (isset($codes[$rule->getCode()])) {
+                                $codes[$rule->getCode()][] = $service->getName();
+                            } else {
+                                $codes[$rule->getCode()] = array($service->getName());
+                            }
+                        }
+                    }
+                    $actionMessage = t("It was not possible to detect your server kind.");
+                    if ($urlRewriting) {
+                        $actionMessage .= ' '.t("Here's the configuration sections for every supported server: please manually add the one relevant for you to your server configuration.");
+                    } else {
+                        $actionMessage .= ' '.t("Here's the configuration sections for every supported server: please manually remove the one relevant for you from your server configuration.");
+                    }
+                    $this->set('configuration_action', $actionMessage);
+                    $joined = '';
+                    foreach ($codes as $code => $serviceNames) {
+                        if ($joined !== '') {
+                            $joined .= "\n\n";
+                        }
+                        $joined .= '>>> ' . tc(/*i18n %s is one or more server names */'For server', 'For %s', implode(', ', $serviceNames)) . " <<<\n";
+                        $joined .= $code;
+                    }
+                    $this->set('configuration_code', $joined);
+                    break;
+                case 'not-readable':
+                case 'not-writable':
+                    $manager = $this->app->make('Concrete\Core\Service\Manager\ServiceManager');
+                    $services = $manager->getActiveServices();
+                    $service = $services[0];
+                    $rule = $service->getGenerator()->getRule('pretty_urls');
+                    $actionMessage = '';
+                    switch ($prettyUrlState) {
+                        case 'not-readable':
+                            $actionMessage .= t('It was not possible read your server configuration.');
+                            break;
+                        case 'not-writable':
+                            $actionMessage .= t('It was not possible write your server configuration.');
+                            break;
+                    }
+                    if ($urlRewriting) {
+                        $actionMessage .= ' '.t('Please add this configuration section to your server configuration:');
+                    } else {
+                        $actionMessage .= ' '.t('Please remove this configuration section from your server configuration');
+                    }
+                    $this->set('configuration_action', $actionMessage);
+                    $this->set('configuration_code', $rule->getCode());
+                    break;
             }
+            $this->set('message', $message);
         }
     }
 
@@ -79,59 +114,60 @@ RewriteRule . ' . DISPATCHER_FILENAME .' [L]
      */
     public function save_urls()
     {
-        if (!$this->token->validate('save_urls')) {
-            $this->error->add($this->token->getErrorMessage());
-        }
+        if ($this->isPost()) {
+            if (!$this->token->validate('save_urls')) {
+                $this->error->add($this->token->getErrorMessage());
+            }
+            if ($this->post('canonical_url') && strpos(strtolower($this->post('canonical_url')), 'http://') !== 0) {
+                $this->error->add(t('The canonical URL provided must start with "http://".'));
+            }
+            if ($this->post('canonical_ssl_url') && strpos(strtolower($this->post('canonical_ssl_url')), 'https://') !== 0) {
+                $this->error->add(t('The SSL canonical URL provided must start with "https://".'));
+            }
+            if (!$this->error->has()) {
+                $config = $this->app->make('config');
+                $config->save('concrete.seo.canonical_url', $this->post('canonical_url'));
+                $config->save('concrete.seo.canonical_ssl_url', $this->post('canonical_ssl_url'));
+                $config->save('concrete.seo.redirect_to_canonical_url', $this->post('redirect_to_canonical_url') ? 1 : 0);
 
-        if ($this->post('canonical_url') && strpos(strtolower($this->post('canonical_url')), 'http://') !== 0) {
-            $this->error->add(t('The canonical URL provided must start with "http://".'));
-        }
-
-        if ($this->post('canonical_ssl_url') && strpos(strtolower($this->post('canonical_ssl_url')), 'https://') !== 0) {
-            $this->error->add(t('The SSL canonical URL provided must start with "https://".'));
-        }
-
-        if (!$this->error->has()) {
-            $strHtText = (string) $this->getHtaccessText();
-            $blnHtu = 0;
-
-            if ($this->isPost()) {
-                Config::save('concrete.seo.canonical_url', $this->post('canonical_url'));
-                Config::save('concrete.seo.canonical_ssl_url', $this->post('canonical_ssl_url'));
-                Config::save('concrete.seo.redirect_to_canonical_url', $this->post('redirect_to_canonical_url') ? 1 : 0);
-
-                $intCurrent = Config::get('concrete.seo.url_rewriting') == 1 ? 1 : 0;
-                $intPosted = $this->post('URL_REWRITING') == 1 ? 1 : 0;
-
-                // If there was no change we don't attempt to edit/create the .htaccess file
-                if ($intCurrent == $intPosted) {
-                    $this->redirect('/dashboard/system/seo/urls', 'saved');
-                }
-
-                Config::save('concrete.seo.url_rewriting', $intPosted);
-
-                if ($this->post('URL_REWRITING') == 1) {
-                    if (file_exists(DIR_BASE . '/.htaccess') && is_writable(DIR_BASE . '/.htaccess')) {
-                        if (file_put_contents(DIR_BASE . '/.htaccess', $strHtText, FILE_APPEND)) {
-                            $blnHtu = 1;
-                        }
-                    } elseif (!file_exists(DIR_BASE . '/.htaccess') && is_writable(DIR_BASE)) {
-                        if (file_put_contents(DIR_BASE . '/.htaccess', $strHtText)) {
-                            $blnHtu = 1;
-                        }
-                    }
+                $urlRewriting = (bool) $this->post('URL_REWRITING');
+                $config->save('concrete.seo.url_rewriting', $urlRewriting);
+                $config->set('concrete.seo.url_rewriting', $urlRewriting);
+                $manager = $this->app->make('Concrete\Core\Service\Manager\ServiceManager');
+                /* @var \Concrete\Core\Service\Manager\ServiceManager $manager */
+                $prettyUrlState = '';
+                $services = $manager->getActiveServices();
+                if (empty($services)) {
+                    $prettyUrlState = 'unsecognized';
                 } else {
-                    if (file_exists(DIR_BASE . '/.htaccess') && is_writable(DIR_BASE . '/.htaccess')) {
-                        $fh = Loader::helper('file');
-                        $contents = $fh->getContents(DIR_BASE . '/.htaccess');
-
-                        if (file_put_contents(DIR_BASE . '/.htaccess', str_replace($strHtText, '', $contents))) {
-                            $blnHtu = 1;
+                    $service = $services[0];
+                    if (!$service->getStorage()->canRead()) {
+                        $prettyUrlState = 'not-readable';
+                    } else {
+                        $rule = $service->getGenerator()->getRule('pretty_urls');
+                        if ($rule === null) {
+                            $prettyUrlState = 'not-needed';
+                        } else {
+                            $configuration = $service->getStorage()->read();
+                            if ($service->getConfigurator()->hasRule($configuration, $rule) === $urlRewriting) {
+                                $prettyUrlState = 'not-needed';
+                            } else {
+                                if ($service->getStorage()->canWrite() === false) {
+                                    $prettyUrlState = 'not-writable';
+                                } else {
+                                    if ($urlRewriting) {
+                                        $configuration = $service->getConfigurator()->addRule($configuration, $rule);
+                                    } else {
+                                        $configuration = $service->getConfigurator()->removeRule($configuration, $rule);
+                                    }
+                                    $service->getStorage()->write($configuration);
+                                    $prettyUrlState = 'saved';
+                                }
+                            }
                         }
                     }
                 }
-
-                $this->redirect('/dashboard/system/seo/urls', 'saved', $blnHtu);
+                $this->redirect('/dashboard/system/seo/urls', 'saved', $prettyUrlState);
             }
         }
         $this->view();
