@@ -42,7 +42,7 @@ if (Config::get('concrete.user.profiles_enabled') && Core::isInstalled()) {
 ?>
 </head>
 <body>
-<div class="ccm-ui">
+<div class="ccm-ui ccm-ui-fieldless">
 
 <?php if ($showLogo) {
     ?>
