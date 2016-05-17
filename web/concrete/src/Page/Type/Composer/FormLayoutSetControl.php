@@ -1,9 +1,9 @@
 <?php
 namespace Concrete\Core\Page\Type\Composer;
 
+use Concrete\Core\Entity\Page\Template;
 use Loader;
 use Concrete\Core\Backup\ContentExporter;
-use PageTemplate;
 use Concrete\Core\Foundation\Object;
 use Concrete\Core\Page\Type\Composer\OutputControl as PageTypeComposerOutputControl;
 use Concrete\Core\Page\Type\Composer\FormLayoutSet as PageTypeComposerFormLayoutSet;
@@ -240,7 +240,7 @@ class FormLayoutSetControl extends Object
     /*
      * @return \Concrete\Core\Page\Type\Composer\OutputControl
      */
-    public function getPageTypeComposerOutputControlObject(PageTemplate $pt)
+    public function getPageTypeComposerOutputControlObject(Template $pt)
     {
         $db = Loader::db();
         $ptComposerOutputControlID = $db->GetOne('select ptComposerOutputControlID from PageTypeComposerOutputControls where ptComposerFormLayoutSetControlID = ? and pTemplateID = ?', array($this->ptComposerFormLayoutSetControlID, $pt->getPageTemplateID()));
