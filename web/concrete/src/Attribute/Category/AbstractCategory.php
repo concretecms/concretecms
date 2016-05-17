@@ -26,6 +26,12 @@ abstract class AbstractCategory implements CategoryInterface
     protected $categoryEntity;
     protected $application;
 
+    public function __construct(Application $application, EntityManager $entityManager)
+    {
+        $this->application = $application;
+        $this->entityManager = $entityManager;
+    }
+
     /**
      * @return EntityRepository
      */
@@ -39,12 +45,6 @@ abstract class AbstractCategory implements CategoryInterface
     public function getByHandle($akHandle)
     {
         return $this->getAttributeKeyByHandle($akHandle);
-    }
-
-    public function __construct(Application $application, EntityManager $entityManager)
-    {
-        $this->application = $application;
-        $this->entityManager = $entityManager;
     }
 
     public function getAttributeTypes()
@@ -204,7 +204,8 @@ abstract class AbstractCategory implements CategoryInterface
     }
 
     /**
-     * @return mixed
+     * Returns the entity object that holds data about this category.
+     * @return Category
      */
     public function getCategoryEntity()
     {
