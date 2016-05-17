@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Core\Attribute\Category;
 
-use Concrete\Core\Attribute\EntityInterface;
+use Concrete\Core\Attribute\StandardSetManager;
 use Concrete\Core\Entity\Package;
 use Doctrine\ORM\EntityManager;
 use Concrete\Core\Entity\Attribute\Category;
@@ -46,7 +46,7 @@ class CategoryService
     }
 
 
-    public function add($akCategoryHandle, $allowSets = EntityInterface::ASET_ALLOW_SINGLE, $pkg = null)
+    public function add($akCategoryHandle, $allowSets = StandardSetManager::ASET_ALLOW_SINGLE, $pkg = null)
     {
         $category = new Category();
         $category->setAttributeKeyCategoryHandle($akCategoryHandle);

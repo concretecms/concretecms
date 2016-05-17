@@ -18,8 +18,7 @@ class Entry implements \JsonSerializable
 
     public function getObjectAttributeCategory()
     {
-        $category = \Core::make('\Concrete\Core\Attribute\Category\ExpressCategory');
-        $category->setEntity($this->getEntity());
+        $category = \Core::make('\Concrete\Core\Attribute\Category\ExpressCategory', [$this->getEntity()]);
         return $category;
     }
 

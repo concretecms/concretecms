@@ -3,33 +3,34 @@ namespace Concrete\Core\Attribute\Category;
 
 use Concrete\Core\Application\Application;
 use Concrete\Core\Attribute\AttributeValueInterface;
-use Concrete\Core\Attribute\Controller;
-use Concrete\Core\Attribute\EntityInterface;
+use Concrete\Core\Attribute\Category\SearchIndexer\StandardSearchIndexerInterface;
 use Concrete\Core\Attribute\Key\ImportLoader\StandardImportLoader;
 use Concrete\Core\Attribute\Key\RequestLoader\StandardRequestLoader;
-use Concrete\Core\Entity\Attribute\Category;
 use Concrete\Core\Entity\Attribute\Key\Key;
-use Concrete\Core\Entity\Attribute\Key\Type\Type;
-use Concrete\Core\Entity\Attribute\Set;
-use Concrete\Core\Entity\Attribute\Value\Value\Value;
 use Concrete\Core\Entity\Package;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
 use Concrete\Core\Entity\Attribute\Type as AttributeType;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\HttpFoundation\Request;
 
-abstract class AbstractCategory implements CategoryInterface
+abstract class AbstractCategory implements CategoryInterface, StandardSearchIndexerInterface
 {
     protected $entityManager;
     protected $entity;
-    protected $categoryEntity;
     protected $application;
+    protected $setManager;
 
     public function __construct(Application $application, EntityManager $entityManager)
     {
         $this->application = $application;
         $this->entityManager = $entityManager;
+    }
+
+    public function getSearchIndexer()
+    {
+        $indexer = $this->application->make('Concrete\Core\Attribute\Category\SearchIndexer\StandardSearchIndexer');
+
+        return $indexer;
     }
 
     /**
@@ -47,15 +48,6 @@ abstract class AbstractCategory implements CategoryInterface
         return $this->getAttributeKeyByHandle($akHandle);
     }
 
-    public function getAttributeTypes()
-    {
-        return $this->getCategoryEntity()->getAttributeTypes();
-    }
-
-    public function allowAttributeSets()
-    {
-        return $this->getCategoryEntity()->allowAttributeSets();
-    }
 
     public function getList()
     {
@@ -100,10 +92,6 @@ abstract class AbstractCategory implements CategoryInterface
             $this->entityManager->remove($key);
         }
         $this->entityManager->flush();
-
-        $this->entityManager->remove($this->getCategoryEntity());
-        $this->entityManager->flush();
-
     }
 
     public function add($key_type, $key, Package $pkg = null)
@@ -198,41 +186,6 @@ abstract class AbstractCategory implements CategoryInterface
         return $key;
     }
 
-    public function getAttributeSets()
-    {
-        return $this->categoryEntity->getAttributeSets();
-    }
-
-    /**
-     * Returns the entity object that holds data about this category.
-     * @return Category
-     */
-    public function getCategoryEntity()
-    {
-        return $this->categoryEntity;
-    }
-
-    /**
-     * @param mixed $categoryEntity
-     */
-    public function setCategoryEntity(Category $categoryEntity)
-    {
-        $this->categoryEntity = $categoryEntity;
-    }
-
-    public function setEntity(EntityInterface $entity)
-    {
-        $this->entity = $entity;
-    }
-
-    /**
-     * @return EntityInterface
-     */
-    public function getEntity()
-    {
-        return $this->entity;
-    }
-
     /**
      * @return EntityManager
      */
@@ -264,58 +217,6 @@ abstract class AbstractCategory implements CategoryInterface
 
         $this->entityManager->remove($key);
         $this->entityManager->flush();
-    }
-
-    public function associateAttributeKeyType(AttributeType $type)
-    {
-        /**
-         * @var $types ArrayCollection
-         */
-        $types = $this->getCategoryEntity()->getAttributeTypes();
-        if (!$types->contains($type)) {
-            $types->add($type);
-        }
-        $this->entityManager->persist($this->getCategoryEntity());
-        $this->entityManager->flush();
-    }
-
-    public function addSet($handle, $name, $pkg = null, $locked = null)
-    {
-        $set = new Set();
-        $set->setAttributeKeyCategory($this->getCategoryEntity());
-        $set->setAttributeSetHandle($handle);
-        $set->setAttributeSetName($name);
-        if ($locked) {
-            $set->setAttributeSetIsLocked($locked);
-        }
-        $this->entityManager->persist($set);
-        $this->entityManager->flush();
-
-        return $set;
-    }
-
-    public function getSearchIndexer()
-    {
-        $indexer = $this->application->make('Concrete\Core\Attribute\Category\SearchIndexer\StandardSearchIndexer');
-
-        return $indexer;
-    }
-
-    public function getUnassignedAttributeKeys()
-    {
-        $attributes = array();
-        foreach ($this->getList() as $key) {
-            $query = $this->entityManager->createQuery(
-                'select sk from \Concrete\Core\Entity\Attribute\SetKey sk where sk.attribute_key = :key'
-            );
-            $query->setParameter('key', $key);
-            $r = $query->getOneOrNullResult();
-            if (!is_object($r)) {
-                $attributes[] = $key;
-            }
-        }
-
-        return $attributes;
     }
 
     public function deleteValue(AttributeValueInterface $attribute)

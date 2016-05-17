@@ -88,7 +88,7 @@ $txt = Loader::helper('text');?>
                     $cat = AttributeKeyCategory::getByID($set->getAttributeSetKeyCategoryID());
     $cat = $cat->getAttributeKeyCategory();
     $list = $cat->getList();
-    $unassigned = $cat->getUnassignedAttributeKeys();
+    $unassigned = $cat->getSetManager()->getUnassignedAttributeKeys();
     if (count($list) > 0) {
         ?>
 

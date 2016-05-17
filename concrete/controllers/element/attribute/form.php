@@ -90,8 +90,7 @@ class Form extends ElementController
     public function view()
     {
         $category = $this->category->getAttributeKeyCategory();
-        $entity = $category->getCategoryEntity();
-        $this->set('category', $entity);
+        $this->set('category', $category);
         $this->set('type', $this->type);
         $this->set('back', $this->getBackButtonUrl());
         $this->set('action', $this->getViewObject()->action($this->getDashboardPageSubmitAction(),

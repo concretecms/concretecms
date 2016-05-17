@@ -192,14 +192,6 @@ class Set
         $this->asIsLocked = $asIsLocked;
     }
 
-    public function getSetManager()
-    {
-        $manager = \Core::make('Concrete\Core\Attribute\SetManager');
-        $manager->setAttributeSet($this);
-
-        return $manager;
-    }
-
     public function getAttributeSetDisplayName($format = 'html')
     {
         $value = tc('AttributeSetName', $this->getAttributeSetName());
