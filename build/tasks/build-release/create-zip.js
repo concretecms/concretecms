@@ -32,9 +32,12 @@ module.exports = function(grunt, config, parameters, done) {
 		process.stdout.write(version + '\n');
 		var dirname = 'concrete5-' + version;
 		var workFolderParent = path.join(workFolder, '..');
-		fs.renameSync(workFolder, path.join(workFolderParent, dirname));
+		var folderToZip = path.join(workFolderParent, dirname);
+		fs.renameSync(workFolder, folderToZip);
+		fs.renameSync(path.join(folderToZip, 'build'), path.join(workFolderParent, 'build-source'));
 		revert = function() {
-			fs.renameSync(path.join(workFolderParent, dirname), workFolder);
+			fs.renameSync(path.join(workFolderParent, 'build-source'), path.join(folderToZip, 'build'));
+			fs.renameSync(folderToZip, workFolder);
 		}
 		shell.pushd(workFolderParent);
 		process.stdout.write('Creating zip file... ');
