@@ -17,7 +17,7 @@ module.exports = function(grunt) {
     var config = {};
 
     config.DIR_REL = ('DIR_REL' in parameters) ? parameters.DIR_REL : '';
-    config.DIR_BASE = ('DIR_BASE' in parameters) ? parameters.DIR_BASE : '../web';
+    config.DIR_BASE = ('DIR_BASE' in parameters) ? parameters.DIR_BASE : '..';
 
     // Options for the tool that will merge the files
     var concatOptions = {
