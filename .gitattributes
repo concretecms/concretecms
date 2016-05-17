@@ -39,3 +39,14 @@
 *.ttf binary
 *.TTF binary
 *.woff binary
+
+#
+# Exclude from archives created from the source code
+#
+/.* export-ignore
+/tests/ export-ignore
+/CHANGELOG.md export-ignore
+/CONTRIBUTING.md export-ignore
+/INSTALL.md export-ignore
+/phpunit.xml export-ignore
+/README.md export-ignore

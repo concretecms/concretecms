@@ -31,6 +31,6 @@ class ShowPasses extends HtmlReporter
 }
 
 $t = new TestSuite('All Tests');
-$t->addFile($_SERVER['DOCUMENT_ROOT'] . '/web/tests/template_tests.php');
-$t->addFile($_SERVER['DOCUMENT_ROOT'] . '/web/tests/block_override_tests.php');
+$t->addFile($_SERVER['DOCUMENT_ROOT'] . '/tests/template_tests.php');
+$t->addFile($_SERVER['DOCUMENT_ROOT'] . '/tests/block_override_tests.php');
 $t->run(new ShowPasses());
