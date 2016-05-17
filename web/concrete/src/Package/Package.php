@@ -763,6 +763,14 @@ abstract class Package implements LocalizablePackageInterface
             // return yaml metadata dir
             $paths =  array($this->getPackagePath() . DIRECTORY_SEPARATOR . REL_DIR_METADATA_YAML);
         }
+        // Add additional source path to the default namespace
+        // if pkgAutoloaderMapCoreExtensions is true
+        $corePath = $this->pkgAutoloaderMapCoreExtensions 
+            ? $this->getPackagePath() . '/' . DIRNAME_CLASSES . '/' . 'Concrete' : '';
+        if(!empty($corePath)){
+            $paths[] = $corePath;
+        }
+
         // Check if paths exists and is a directory
         if(!is_dir($paths[0])){
             $paths = array();
@@ -776,14 +784,14 @@ abstract class Package implements LocalizablePackageInterface
      * @return array 
      */
     public function getPackageMetadataRelativPaths()
-    {       
+    {
         // annotations entity path
         if ($this->metadataDriver === self::PACKAGE_METADATADRIVER_ANNOTATION){
             // Support for the legacy method for backwards compatibility
             if (method_exists($this, 'getPackageEntityPath')) {
                 $paths = array($this->getPackageEntityPath());
             }else{
-                $paths = array($this->getRelativePath() . DIRECTORY_SEPARATOR . DIRNAME_CLASSES);
+                $paths = array($this->getRelativePath() . '/' . DIRNAME_CLASSES);
             }
         } else if ($this->metadataDriver === self::PACKAGE_METADATADRIVER_XML){
             // return xml metadata dir
@@ -792,13 +800,21 @@ abstract class Package implements LocalizablePackageInterface
             // return yaml metadata dir
             $paths =  array($this->getRelativePath() . DIRECTORY_SEPARATOR . REL_DIR_METADATA_YAML);
         }
+        // Add additional source path to the default namespace
+        // if pkgAutoloaderMapCoreExtensions is true
+        $coreRelativPath = $this->pkgAutoloaderMapCoreExtensions ?
+            $this->getRelativePath() . '/' . DIRNAME_CLASSES . '/' . 'Concrete' : '';
+        if(!empty($coreRelativPath)){
+            $paths[] = $coreRelativPath;
+        }
+
         // Check if paths exists and is a directory
         if(!is_dir(DIR_BASE.$paths[0])){
             $paths = array();
         }
         return $paths;
     }
-    
+
     /**
      * Get the namespace of the package by the package handle
      * 
@@ -877,7 +893,7 @@ abstract class Package implements LocalizablePackageInterface
     {
         $config = $em->getConfiguration();
         $proxyGenerator = new \Doctrine\Common\Proxy\ProxyGenerator($config->getProxyDir(), $config->getProxyNamespace());
-        
+
         $classes = $em->getMetadataFactory()->getAllMetadata();
         foreach ($classes as $class) {
 
