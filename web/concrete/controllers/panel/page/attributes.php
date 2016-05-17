@@ -26,7 +26,7 @@ class Attributes extends BackendInterfacePageController
 
         $category = AttributeKeyCategory::getByHandle('collection');
         $controller = $category->getController();
-        $sets = $category->getSetManager()->getAttributeSets();
+        $sets = $controller->getSetManager()->getAttributeSets();
         $leftovers = $controller->getSetManager()->getUnassignedAttributeKeys();
 
         $selectedAttributes = $this->page->getSetCollectionAttributes();
