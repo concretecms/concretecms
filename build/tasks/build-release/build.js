@@ -36,7 +36,7 @@ module.exports = function(grunt, config, parameters, done) {
 						exec(
 							'composer install --prefer-dist --no-dev',
 							{
-								cwd: path.join(workFolder, 'web/concrete')
+								cwd: path.join(workFolder, 'concrete')
 							},
 							function(error, stdout, stderr) {
 								if(error) {

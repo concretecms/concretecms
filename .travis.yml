@@ -12,9 +12,9 @@ php:
 
 before_script:
   - bash -c 'if [ "$TRAVIS_PHP_VERSION" != "hhvm" ]; then echo "short_open_tag = On" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini; fi;'
-  - cd web/concrete
+  - cd concrete
   - travis_retry composer install --no-interaction
-  - cd ../../tests
+  - cd ..
   - phpunit --version
 
 script: phpunit
