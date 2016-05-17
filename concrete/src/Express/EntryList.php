@@ -99,7 +99,7 @@ class EntryList extends DatabaseItemList
     public function finalizeQuery(\Doctrine\DBAL\Query\QueryBuilder $query)
     {
         $query->andWhere('e.exEntryEntityID = :entityID');
-        $query->setParameter('entityID', $this->category->getEntity()->getID());
+        $query->setParameter('entityID', $this->entity->getID());
         return $query;
     }
 

@@ -7,47 +7,51 @@ use Concrete\Controller\Element\Attribute\KeyHeader;
 use Concrete\Controller\Element\Attribute\KeyList;
 use Concrete\Controller\Element\Attribute\StandardListHeader;
 use Concrete\Core\Attribute\AttributeKeyInterface;
-use Concrete\Core\Attribute\Category\CategoryInterface;
-use Concrete\Core\Attribute\EntityInterface;
+use Concrete\Core\Attribute\CategoryObjectInterface;
 use Concrete\Core\Attribute\Set;
+use Concrete\Core\Attribute\StandardSetManager;
+use Concrete\Core\Entity\Attribute\Category;
 use Concrete\Core\Entity\Attribute\SetKey;
 use Concrete\Core\Entity\Attribute\Type;
-use Concrete\Core\Validation\CSRF\Token;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 abstract class DashboardAttributesPageController extends DashboardPageController
 {
     /**
-     * @return EntityInterface
+     * @return CategoryObjectInterface
      */
-    abstract protected function getCategoryEntityObject();
+    abstract protected function getCategoryObject();
 
     public function renderList()
     {
-        $entity = $this->getCategoryEntityObject();
+        $entity = $this->getCategoryObject();
         $category = $entity->getAttributeKeyCategory();
         $list = new KeyList();
-        $list->setAttributeSets($category->getAttributeSets());
-        $list->setUnassignedAttributeKeys($category->getUnassignedAttributeKeys());
+        $list->setAttributeSets($category->getSetManager()->getAttributeSets());
+        $list->setUnassignedAttributeKeys($category->getSetManager()->getUnassignedAttributeKeys());
         $list->setAttributeTypes($category->getAttributeTypes());
         $list->setDashboardPagePath($this->getPageObject()->getCollectionPath());
         $list->setDashboardPageParameters($this->getRequestActionParameters());
-        if (!$entity->allowAttributeSets()) {
+        if (!$category->getSetManager()->allowAttributeSets()) {
             $list->setEnableSorting(false);
         }
 
-        $header = new StandardListHeader($category);
-        $this->set('headerMenu', $header);
+        $this->set('headerMenu', $this->getHeaderMenu($entity));
 
         $this->set('attributeView', $list);
         $this->set('pageTitle', t('Attributes'));
+    }
+
+    protected function getHeaderMenu(CategoryObjectInterface $category)
+    {
+        return new StandardListHeader($category);
     }
 
     public function renderAdd($type, $backURL)
     {
         $add = new Form($type);
         $add->setBackButtonURL($backURL);
-        $add->setCategory($this->getCategoryEntityObject());
+        $add->setCategory($this->getCategoryObject());
         $add->setDashboardPageParameters($this->getRequestActionParameters());
         $this->set('attributeView', $add);
         $this->set('pageTitle', t('Add Attribute'));
@@ -57,7 +61,7 @@ abstract class DashboardAttributesPageController extends DashboardPageController
     {
         $edit = new EditKey($key);
         $edit->setBackButtonURL($backURL);
-        $edit->setCategory($this->getCategoryEntityObject());
+        $edit->setCategory($this->getCategoryObject());
         $edit->setDashboardPageParameters($this->getRequestActionParameters());
         $this->set('attributeView', $edit);
         $this->set('pageTitle', t('Edit Attribute'));
@@ -69,7 +73,7 @@ abstract class DashboardAttributesPageController extends DashboardPageController
 
     protected function executeAdd(Type $type, $successURL, $onComplete = null)
     {
-        $entity = $this->getCategoryEntityObject();
+        $entity = $this->getCategoryObject();
         $category = $entity->getAttributeKeyCategory();
         $validator = $type->getController()->getValidator();
         $response = $validator->validateAddKeyRequest($category, $type, $this->request);
@@ -79,7 +83,6 @@ abstract class DashboardAttributesPageController extends DashboardPageController
             /*
              * @var $category \Concrete\Core\Attribute\Category\CategoryInterface
              */
-            $category->setEntity($entity);
             $key = $category->addFromRequest($type, $this->request);
             $this->assignToSetFromRequest($key);
 
@@ -94,15 +97,16 @@ abstract class DashboardAttributesPageController extends DashboardPageController
     protected function assignToSetFromRequest(AttributeKeyInterface $key)
     {
         $request = $this->request;
-        $category = $this->getCategoryEntityObject();
-        if ($category->allowAttributeSets()) {
+        $entity = $this->getCategoryObject();
+        $category = $entity->getAttributeKeyCategory();
+        if ($category->getSetManager()->allowAttributeSets()) {
             $set = Set::getByID($request->request->get('asID'));
             $setKeys = Set::getByAttributeKey($key);
             if (in_array($set, $setKeys)) {
                 return;
             }
 
-            if ($category->allowAttributeSets() == EntityInterface::ASET_ALLOW_SINGLE || !is_object($set)) {
+            if ($category->getSetManager()->allowAttributeSets() == StandardSetManager::ASET_ALLOW_SINGLE || !is_object($set)) {
                 $query = $this->entityManager->createQuery(
                     'delete from \Concrete\Core\Entity\Attribute\SetKey sk where sk.attribute_key = :attribute_key'
                 );
@@ -134,17 +138,13 @@ abstract class DashboardAttributesPageController extends DashboardPageController
 
     protected function executeUpdate(AttributeKeyInterface $key, $successURL, $onComplete = null)
     {
-        $entity = $this->getCategoryEntityObject();
+        $entity = $this->getCategoryObject();
         $category = $entity->getAttributeKeyCategory();
         $validator = $key->getController()->getValidator();
         $response = $validator->validateUpdateKeyRequest($category, $key, $this->request);
         if (!$response->isValid()) {
             $this->error = $response->getErrorObject();
         } else {
-            /*
-             * @var \Concrete\Core\Attribute\Category\CategoryInterface
-             */
-            $category->setEntity($entity);
             $category->updateFromRequest($key, $this->request);
             $this->assignToSetFromRequest($key);
             if ($onComplete instanceof \Closure) {
@@ -157,14 +157,13 @@ abstract class DashboardAttributesPageController extends DashboardPageController
 
     protected function executeDelete(AttributeKeyInterface $key, $successURL, $onComplete = null)
     {
-        $entity = $this->getCategoryEntityObject();
+        $entity = $this->getCategoryObject();
         try {
             if (!$this->token->validate('delete_attribute')) {
                 throw new \Exception($this->token->getErrorMessage());
             }
 
             $category = $entity->getAttributeKeyCategory();
-            $category->setEntity($entity);
             $category->deleteKey($key);
 
             if ($onComplete instanceof \Closure) {
@@ -180,12 +179,12 @@ abstract class DashboardAttributesPageController extends DashboardPageController
 
     public function sort_attribute_set()
     {
-        $entity = $this->getCategoryEntityObject();
-        if ($entity->allowAttributeSets()) {
+        $entity = $this->getCategoryObject();
+        $category = $entity->getAttributeKeyCategory();
+        if ($category->getSetManager()->allowAttributeSets()) {
             /*
              * @var CategoryInterface
              */
-            $category = $entity->getAttributeKeyCategory();
             $keys = array();
             foreach ((array) $this->request->request->get('akID') as $akID) {
                 /*
@@ -197,7 +196,7 @@ abstract class DashboardAttributesPageController extends DashboardPageController
                 }
             }
 
-            foreach ($entity->getAttributeSets() as $set) {
+            foreach ($category->getSetManager()->getAttributeSets() as $set) {
                 if ($set->getAttributeSetID() == $this->request->request->get('asID') && count($keys)) {
 
                     // Clear the keys

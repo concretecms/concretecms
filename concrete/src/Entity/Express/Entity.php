@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Core\Entity\Express;
 
-use Concrete\Core\Attribute\EntityInterface;
+use Concrete\Core\Attribute\CategoryObjectInterface;
 use Concrete\Core\Express\Search\ColumnSet\ColumnSet;
 use Concrete\Core\Express\Search\ColumnSet\DefaultSet;
 use Concrete\Core\Tree\Node\Node;
@@ -13,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="ExpressEntities")
  * @ORM\HasLifecycleCallbacks
  */
-class Entity implements EntityInterface
+class Entity implements CategoryObjectInterface
 {
     /**
      * @ORM\Id @ORM\Column(type="integer")
@@ -332,13 +332,4 @@ class Entity implements EntityInterface
         return \Core::make('\Concrete\Core\Attribute\Category\ExpressCategory', array($this));
     }
 
-    public function allowAttributeSets()
-    {
-        return false;
-    }
-
-    public function getAttributeSets()
-    {
-        return false;
-    }
 }

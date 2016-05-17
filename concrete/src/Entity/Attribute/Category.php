@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Core\Entity\Attribute;
 
-use Concrete\Core\Attribute\EntityInterface;
+use Concrete\Core\Attribute\CategoryObjectInterface;
 use Concrete\Core\Entity\PackageTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -11,7 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="AttributeKeyCategories", indexes={@ORM\Index(name="pkgID", columns={"pkgID", "akCategoryID"}),
  * @ORM\Index(name="akCategoryHandle", columns={"akCategoryHandle"})})
  */
-class Category implements EntityInterface
+class Category implements CategoryObjectInterface
 {
     public function __construct()
     {
@@ -97,7 +97,6 @@ class Category implements EntityInterface
         $manager = \Core::make('manager/attribute/category');
         $controller = $manager->driver($this->getAttributeKeyCategoryHandle());
         $controller->setCategoryEntity($this);
-
         return $controller;
     }
 
@@ -146,5 +145,10 @@ class Category implements EntityInterface
     public function addSet($handle, $name, $pkg = null)
     {
         return $this->getController()->addSet($handle, $name, $pkg, false);
+    }
+
+    public function __toString()
+    {
+        return (string) $this->getAttributeKeyCategoryID();
     }
 }

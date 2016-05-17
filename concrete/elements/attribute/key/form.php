@@ -51,14 +51,14 @@ defined('C5_EXECUTE') or die("Access Denied.");
             </div>
         </div>
 
-        <?php if ($category && $category->allowAttributeSets() == \Concrete\Core\Attribute\EntityInterface::ASET_ALLOW_SINGLE) {
+        <?php if ($category && $category->getSetManager()->allowAttributeSets() == \Concrete\Core\Attribute\StandardSetManager::ASET_ALLOW_SINGLE) {
     ?>
             <div class="form-group">
                 <?= $form->label('asID', t('Set')) ?>
                 <div class="controls">
                     <?php
                     $sel = array('0' => t('** None'));
-    $sets = $category->getAttributeSets();
+    $sets = $category->getSetManager()->getAttributeSets();
     foreach ($sets as $as) {
         $sel[$as->getAttributeSetID()] = $as->getAttributeSetDisplayName();
     }
@@ -86,18 +86,18 @@ defined('C5_EXECUTE') or die("Access Denied.");
     </fieldset>
 
     <?= $form->hidden('atID', $type->getAttributeTypeID()) ?>
-    <?php if ($category) {
+    <?php if ($category && $category instanceof \Concrete\Core\Attribute\Category\StandardCategoryInterface) {
     ?>
-        <?= $form->hidden('akCategoryID', $category->getAttributeKeyCategoryID());
+        <?= $form->hidden('akCategoryID', $category->getCategoryEntity()->getAttributeKeyCategoryID());
     ?>
 
         <?php
 
-        if ($category->getPackageID() > 0) {
-            @Loader::packageElement('attribute/categories/' . $category->getAttributeKeyCategoryHandle(),
-                $category->getPackageHandle(), array('key' => $key));
+        if ($category->getCategoryEntity()->getPackageID() > 0) {
+            @Loader::packageElement('attribute/categories/' . $category->getCategoryEntity()->getAttributeKeyCategoryHandle(),
+                $category->getCategoryEntity()->getPackageHandle(), array('key' => $key));
         } else {
-            @Loader::element('attribute/categories/' . $category->getAttributeKeyCategoryHandle(),
+            @Loader::element('attribute/categories/' . $category->getCategoryEntity()->getAttributeKeyCategoryHandle(),
                 array('key' => $key));
         }
     ?>

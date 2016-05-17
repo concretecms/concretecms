@@ -29,7 +29,7 @@ class CustomizeSearch extends DashboardPageController
                 /**
                  * @var $provider \Concrete\Core\Express\Search\SearchProvider
                  */
-                $provider = $this->app->make('Concrete\Core\Express\Search\SearchProvider', array($entity));
+                $provider = $this->app->make('Concrete\Core\Express\Search\SearchProvider', array($entity, $entity->getAttributeKeyCategory()));
                 $set = $this->app->make('Concrete\Core\Express\Search\ColumnSet\ColumnSet');
                 $available = $provider->getAvailableColumnSet();
                 foreach ($this->request->request->get('column') as $key) {
@@ -59,7 +59,7 @@ class CustomizeSearch extends DashboardPageController
             /**
              * @var $provider SearchProvider
              */
-            $provider = $this->app->make('Concrete\Core\Express\Search\SearchProvider', array($entity));
+            $provider = $this->app->make('Concrete\Core\Express\Search\SearchProvider', array($entity, $entity->getAttributeKeyCategory()));
             $element = new CustomizeResults($provider);
             $this->set('customizeElement', $element);
         } else {

@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Controller\SinglePage\Dashboard\System\Attributes;
 
-use Concrete\Core\Attribute\EntityInterface;
+use Concrete\Core\Attribute\SetManagerInterface;
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Loader;
 use Concrete\Core\Attribute\Key\Category as AttributeKeyCategory;
@@ -38,7 +38,7 @@ class Sets extends DashboardPageController
         }
         $this->category = AttributeKeyCategory::getByID($categoryID);
         if (is_object($this->category)) {
-            $sets = $this->category->getAttributeSets();
+            $sets = $this->category->getController()->getSetManager()->getAttributeSets();
             $this->set('sets', $sets);
         } else {
             $this->redirect('/dashboard/system/attributes/sets');
@@ -78,14 +78,15 @@ class Sets extends DashboardPageController
                 }
             }
             if (!$this->error->has()) {
-                if (!$this->category->allowAttributeSets()) {
-                    $this->category->setAllowAttributeSets(EntityInterface::ASET_ALLOW_SINGLE);
+                /**
+                 * @var $manager SetManagerInterface
+                 */
+                $manager = $this->category->getController()->getSetManager();
+                if ($manager->allowAttributeSets()) {
+                    $manager->addSet($this->post('asHandle'), $this->post('asName'), false, 0);
+                    $this->redirect('dashboard/system/attributes/sets', 'category',
+                        $this->category->getAttributeKeyCategoryID(), 'set_added');
                 }
-
-                $category = $this->category->getAttributeKeyCategory();
-                $category->addSet($this->post('asHandle'), $this->post('asName'), false, 0);
-                $this->redirect('dashboard/system/attributes/sets', 'category',
-                    $this->category->getAttributeKeyCategoryID(), 'set_added');
             }
         } else {
             $this->error->add($this->token->getErrorMessage());
@@ -145,7 +146,7 @@ class Sets extends DashboardPageController
                 $this->entityManager->flush();
                 $cat = AttributeKeyCategory::getByID($as->getAttributeSetKeyCategoryID());
                 $category = $cat->getAttributeKeyCategory();
-                $unassigned = $category->getUnassignedAttributeKeys();
+                $unassigned = $category->getSetManager()->getUnassignedAttributeKeys();
 
                 if (is_array($this->post('akID'))) {
                     foreach ($unassigned as $ak) {
