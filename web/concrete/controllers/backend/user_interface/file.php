@@ -1,7 +1,8 @@
 <?php
 namespace Concrete\Controller\Backend\UserInterface;
 
-use File as ConcreteFile;
+use Concrete\Core\Entity\File\File as FileEntity;
+use Concrete\Core\File\File as ConcreteFile;
 use Loader;
 use Permissions;
 use Exception;
@@ -26,7 +27,7 @@ abstract class File extends \Concrete\Controller\Backend\UserInterface
         }
     }
 
-    public function setFileObject(ConcreteFile $f)
+    public function setFileObject(FileEntity $f)
     {
         $this->file = $f;
         $this->permissions = new Permissions($this->file);

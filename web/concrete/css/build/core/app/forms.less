@@ -140,7 +140,21 @@
       content: @fa-var-check;
       font-size: 12px;
     }
+
+    &:indeterminate {
+      background-color: #bdbdbd;
+    }
+    &:indeterminate:after {
+      font-family: FontAwesome;
+      content: @fa-var-minus;
+      font-size: 12px;
+      position: absolute;
+      top: 1px;
+      left: 1.5px;
+      color: #fff;
+    }
   }
+
 
   input[type=radio] {
     padding: 6px;
