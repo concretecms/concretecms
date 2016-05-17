@@ -20,7 +20,7 @@ module.exports = function(grunt, config, parameters, done) {
 			shell = require('shelljs'),
 			c5fs = require('../../libraries/fs');
 		process.stdout.write('Determining concrete5 version... ');
-		var str = fs.readFileSync(path.join(workFolder, 'web/concrete/config/concrete.php'), 'utf8');
+		var str = fs.readFileSync(path.join(workFolder, 'concrete/config/concrete.php'), 'utf8');
 		// Remove comments and new lines
 		str = str.replace(/\/\/.*?($|\r|\n)/g, '').replace(/[\r\n]/g, ' ').replace(/\/\*.*?\*\//g, '');
 		var version = str.match(/["']version["']\s*=>\s*['"](.*?)['"]/);
@@ -31,11 +31,15 @@ module.exports = function(grunt, config, parameters, done) {
 		version = version[1];
 		process.stdout.write(version + '\n');
 		var dirname = 'concrete5-' + version;
-		fs.renameSync(path.join(workFolder, 'web'), path.join(workFolder, dirname));
+		var workFolderParent = path.join(workFolder, '..');
+		var folderToZip = path.join(workFolderParent, dirname);
+		fs.renameSync(workFolder, folderToZip);
+		fs.renameSync(path.join(folderToZip, 'build'), path.join(workFolderParent, 'build-source'));
 		revert = function() {
-			fs.renameSync(path.join(workFolder, dirname), path.join(workFolder, 'web'));
+			fs.renameSync(path.join(workFolderParent, 'build-source'), path.join(folderToZip, 'build'));
+			fs.renameSync(folderToZip, workFolder);
 		}
-		shell.pushd(workFolder);
+		shell.pushd(workFolderParent);
 		process.stdout.write('Creating zip file... ');
 		shell.exec(
 			'zip -r ' + c5fs.escapeShellArg(dirname + '.zip') + ' ' + c5fs.escapeShellArg(dirname),
@@ -50,7 +54,7 @@ module.exports = function(grunt, config, parameters, done) {
 					return;
 				}
 				process.stdout.write('done.\n');
-				fs.renameSync(path.join(workFolder, dirname + '.zip'), './' + dirname + '.zip');
+				fs.renameSync(path.join(workFolderParent, dirname + '.zip'), './' + dirname + '.zip');
 				revert();
 				done();
 			}

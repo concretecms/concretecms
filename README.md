@@ -20,9 +20,9 @@ Just log in to the documentation site with your concrete5.org account and edit a
         git clone https://github.com/concrete5/concrete5.git
         cd concrete5/
 
-3. Use [Composer](https://getcomposer.org/) to install the third party dependencies in `/web/concrete`
+3. Use [Composer](https://getcomposer.org/) to install the third party dependencies in `/concrete`
 
-        cd web/concrete
+        cd concrete
         composer install
         cd ../../
 

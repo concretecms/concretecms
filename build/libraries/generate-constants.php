@@ -8,7 +8,7 @@ define('C5_EXECUTE', true);
 if (isset($argv) && is_array($argv) && isset($argv[1])) {
     define('DIR_BASE', $argv[1]);
 } else {
-    define('DIR_BASE', dirname(dirname(dirname(__FILE__))) . DIRECTORY_SEPARATOR . 'web');
+    define('DIR_BASE', dirname(dirname(dirname(__FILE__))));
 }
 $corePath = DIR_BASE . '/concrete';
 $cms = require_once $corePath . '/dispatcher.php';

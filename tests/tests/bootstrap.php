@@ -10,7 +10,7 @@ use Concrete\Core\Config\Repository\Repository;
 // error reporting
 PHPUnit_Framework_Error_Notice::$enabled = false;
 
-set_include_path(get_include_path() . PATH_SEPARATOR . realpath(dirname(__FILE__)));
+set_include_path(get_include_path() . PATH_SEPARATOR . __DIR__);
 
 require_once 'ConcreteDatabaseTestCase.php';
 require_once 'BlockTypeTestCase.php';
@@ -19,9 +19,9 @@ require_once 'AttributeTestCase.php';
 require_once 'FileStorageTestCase.php';
 require_once 'UserTestCase.php';
 
-define('DIR_TESTS', __DIR__ . "/../");
-define('DIR_BASE', realpath(DIR_TESTS . '/../web'));
-$DIR_BASE_CORE = realpath(DIR_TESTS . '/../web/concrete');
+define('DIR_TESTS', realpath(__DIR__ . "/../"));
+define('DIR_BASE', realpath(DIR_TESTS . '/../'));
+$DIR_BASE_CORE = realpath(DIR_BASE . '/concrete');
 
 require $DIR_BASE_CORE . '/bootstrap/configure.php';
 
