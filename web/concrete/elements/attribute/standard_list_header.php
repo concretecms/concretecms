@@ -1,6 +1,6 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
-if ($category && $category->allowAttributeSets()) {
+if ($category && $category->getController()->getSetManager()->allowAttributeSets()) {
     ?>
 
     <div class="ccm-dashboard-header-buttons">

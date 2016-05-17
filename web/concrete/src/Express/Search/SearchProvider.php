@@ -32,7 +32,6 @@ class SearchProvider extends AbstractSearchProvider
 
     public function __construct(Entity $entity, ExpressCategory $category, Session $session)
     {
-        $category->setEntity($entity);
         $this->entity = $entity;
         $this->category = $category;
         parent::__construct($session);

@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Controller\SinglePage\Dashboard\System\Express\Entities;
 
+use Concrete\Core\Attribute\CategoryObjectInterface;
 use Concrete\Core\Attribute\Type;
 use Concrete\Core\Page\Controller\DashboardAttributesPageController;
 
@@ -15,7 +16,7 @@ class Attributes extends DashboardAttributesPageController
         return $this->category;
     }
 
-    protected function getCategoryEntityObject()
+    protected function getCategoryObject()
     {
         return $this->category;
     }
@@ -25,6 +26,11 @@ class Attributes extends DashboardAttributesPageController
         $entity = $this->getEntity($id);
         $this->set('entity', $entity);
         $this->renderList($entity->getAttributes(), Type::getAttributeTypeList());
+    }
+
+    protected function getHeaderMenu(CategoryObjectInterface $category)
+    {
+        return false;
     }
 
     public function edit($id = null, $akID = null)

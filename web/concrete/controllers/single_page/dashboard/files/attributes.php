@@ -8,7 +8,7 @@ use Concrete\Core\Page\Controller\DashboardAttributesPageController;
 
 class Attributes extends DashboardAttributesPageController
 {
-    protected function getCategoryEntityObject()
+    protected function getCategoryObject()
     {
         return Category::getByHandle('file');
     }

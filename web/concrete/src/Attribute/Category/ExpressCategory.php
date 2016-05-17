@@ -4,6 +4,7 @@ namespace Concrete\Core\Attribute\Category;
 use Concrete\Controller\SinglePage\Dashboard\Express;
 use Concrete\Core\Application\Application;
 use Concrete\Core\Attribute\Category\SearchIndexer\StandardSearchIndexerInterface;
+use Concrete\Core\Attribute\ExpressSetManager;
 use Concrete\Core\Entity\Attribute\Key\ExpressKey;
 use Concrete\Core\Entity\Attribute\Key\Key;
 use Concrete\Core\Entity\Attribute\Type;
@@ -11,12 +12,14 @@ use Concrete\Core\Entity\Express\Entity;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\HttpFoundation\Request;
 
-class ExpressCategory extends AbstractCategory implements StandardSearchIndexerInterface
+class ExpressCategory extends AbstractCategory
 {
+
+    protected $expressEntity;
 
     public function getIndexedSearchTable()
     {
-        return camelcase($this->entity->getHandle())
+        return camelcase($this->expressEntity->getHandle())
             . 'ExpressSearchIndexAttributes';
     }
 
@@ -39,9 +42,17 @@ class ExpressCategory extends AbstractCategory implements StandardSearchIndexerI
         );
     }
 
+    public function getSetManager()
+    {
+        if (!isset($this->setManager)) {
+            $this->setManager = new ExpressSetManager($this->expressEntity, $this->entityManager);
+        }
+        return $this->setManager;
+    }
+
     public function __construct(Entity $entity, Application $application, EntityManager $entityManager)
     {
-        $this->setEntity($entity);
+        $this->expressEntity = $entity;
         parent::__construct($application, $entityManager);
     }
 
@@ -55,11 +66,6 @@ class ExpressCategory extends AbstractCategory implements StandardSearchIndexerI
         return $this->entityManager->getRepository('\Concrete\Core\Entity\Attribute\Key\ExpressKey');
     }
 
-    public function getAttributeSets()
-    {
-        return array();
-    }
-
     public function allowAttributeSets()
     {
         return false;
@@ -67,22 +73,8 @@ class ExpressCategory extends AbstractCategory implements StandardSearchIndexerI
 
     public function getList()
     {
-        return $this->getAttributeRepository()->findBy(array('entity' => $this->getEntity()));
+        return $this->getAttributeRepository()->findBy(array('entity' => $this->expressEntity));
     }
-
-    public function getUnassignedAttributeKeys()
-    {
-        return $this->getList();
-    }
-
-    /*
-    public function getAttributeKeyByHandle($handle)
-    {
-        return $this->getAttributeRepository()->findOneBy(array(
-            'akHandle' => $handle,
-            'entity' => $this->getEntity(),
-        ));
-    }*/
 
 
     public function getAttributeTypes()
@@ -92,14 +84,13 @@ class ExpressCategory extends AbstractCategory implements StandardSearchIndexerI
             ->findAll();
     }
 
-
     public function addFromRequest(Type $type, Request $request)
     {
         /**
          * @var $key ExpressKey
          */
         $key = parent::addFromRequest($type, $request);
-        $key->setEntity($this->getEntity());
+        $key->setEntity($this->expressEntity);
         return $key;
     }
 

@@ -6,7 +6,7 @@ use Concrete\Core\Entity\Attribute\Key\FileKey;
 use Concrete\Core\Entity\Attribute\Key\Key;
 use Concrete\Core\Entity\Attribute\Type;
 
-class FileCategory extends AbstractCategory implements StandardSearchIndexerInterface
+class FileCategory extends AbstractStandardCategory
 {
     public function createAttributeKey()
     {

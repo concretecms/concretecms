@@ -1019,14 +1019,16 @@ class ContentImporter
             foreach ($sx->attributesets->attributeset as $as) {
                 $set = \Concrete\Core\Attribute\Set::getByHandle((string) $as['handle']);
                 $akc = AttributeKeyCategory::getByHandle($as['category']);
+                $controller = $akc->getController();
+                $manager = $controller->getSetManager();
                 if (!is_object($set)) {
                     $pkg = static::getPackageObject($as['package']);
-                    $set = $akc->getController()->addSet((string) $as['handle'], (string) $as['name'], $pkg, $as['locked']);
+                    $set = $manager->addSet((string) $as['handle'], (string) $as['name'], $pkg, $as['locked']);
                 }
                 foreach ($as->children() as $ask) {
-                    $ak = $akc->getController()->getAttributeKeyByHandle((string) $ask['handle']);
+                    $ak = $controller->getAttributeKeyByHandle((string) $ask['handle']);
                     if (is_object($ak)) {
-                        $set->getSetManager()->addKey($ak);
+                        $manager->addKey($set, $ak);
                     }
                 }
             }

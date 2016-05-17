@@ -9,7 +9,7 @@ use Concrete\Core\Entity\Attribute\Type;
 use Concrete\Core\Entity\Package;
 use Symfony\Component\HttpFoundation\Request;
 
-class UserCategory extends AbstractCategory implements StandardSearchIndexerInterface
+class UserCategory extends AbstractStandardCategory
 {
     public function createAttributeKey()
     {
