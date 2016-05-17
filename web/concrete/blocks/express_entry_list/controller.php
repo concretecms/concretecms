@@ -3,6 +3,7 @@ namespace Concrete\Block\ExpressEntryList;
 
 use Concrete\Controller\Element\Search\CustomizeResults;
 use \Concrete\Core\Block\BlockController;
+use Concrete\Core\Entity\Express\Entity;
 use Concrete\Core\Express\Entry\Search\Result\Result;
 use Concrete\Core\Express\EntryList;
 use Concrete\Core\Search\Column\AttributeKeyColumn;
@@ -52,13 +53,16 @@ class Controller extends BlockController
     {
         $this->loadData();
         if ($this->exEntityID) {
+            /**
+             * @var $entity Entity
+             */
             $entity = $this->entityManager->find('Concrete\Core\Entity\Express\Entity', $this->exEntityID);
             if (is_object($entity)) {
                 $searchPropertiesSelected = (array) json_decode($this->searchProperties);
                 $linkedPropertiesSelected = (array) json_decode($this->linkedProperties);
                 $searchProperties = $this->getSearchPropertiesJsonArray($entity);
                 $columns = unserialize($this->columns);
-                $provider = \Core::make('Concrete\Core\Express\Search\SearchProvider', array($entity));
+                $provider = \Core::make('Concrete\Core\Express\Search\SearchProvider', array($entity, $entity->getAttributeKeyCategory()));
                 if ($columns) {
                     $provider->setColumnSet($columns);
                 }
@@ -163,7 +167,7 @@ class Controller extends BlockController
         $entity = $this->entityManager->find('Concrete\Core\Entity\Express\Entity', $data['exEntityID']);
         if (is_object($entity)) {
 
-            $provider = $this->app->make('Concrete\Core\Express\Search\SearchProvider', array($entity));
+            $provider = $this->app->make('Concrete\Core\Express\Search\SearchProvider', array($entity, $entity->getAttributeKeyCategory()));
             $set = $this->app->make('Concrete\Core\Express\Search\ColumnSet\ColumnSet');
             $available = $provider->getAvailableColumnSet();
             foreach ($this->request->request->get('column') as $key) {
@@ -186,7 +190,7 @@ class Controller extends BlockController
         if ($exEntityID) {
             $entity = $this->entityManager->find('Concrete\Core\Entity\Express\Entity', $exEntityID);
             if (is_object($entity)) {
-                $provider = \Core::make('Concrete\Core\Express\Search\SearchProvider', array($entity));
+                $provider = \Core::make('Concrete\Core\Express\Search\SearchProvider', array($entity, $entity->getAttributeKeyCategory()));
                 $element = new CustomizeResults($provider);
                 $r = new \stdClass;
                 ob_start();
