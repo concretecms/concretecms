@@ -584,7 +584,7 @@ abstract class Package implements LocalizablePackageInterface
         if (method_exists($this, 'getPackageEntityPath')) {
             return array($this->getPackageEntityPath());
         }
-        return array($this->getPackagePath() . '/' . DIRNAME_CLASSES);
+        return array($this->getPackagePath() . DIRECTORY_SEPARATOR . DIRNAME_CLASSES);
     }
 
     /**
@@ -766,7 +766,7 @@ abstract class Package implements LocalizablePackageInterface
         // Add additional source path to the default namespace
         // if pkgAutoloaderMapCoreExtensions is true
         $corePath = $this->pkgAutoloaderMapCoreExtensions 
-            ? $this->getPackagePath() . '/' . DIRNAME_CLASSES . '/' . 'Concrete' : '';
+            ? $this->getPackagePath() . DIRECTORY_SEPARATOR . DIRNAME_CLASSES . DIRECTORY_SEPARATOR . 'Concrete' : '';
         if(!empty($corePath)){
             $paths[] = $corePath;
         }
@@ -791,7 +791,7 @@ abstract class Package implements LocalizablePackageInterface
             if (method_exists($this, 'getPackageEntityPath')) {
                 $paths = array($this->getPackageEntityPath());
             }else{
-                $paths = array($this->getRelativePath() . '/' . DIRNAME_CLASSES);
+                $paths = array($this->getRelativePath() . DIRECTORY_SEPARATOR . DIRNAME_CLASSES);
             }
         } else if ($this->metadataDriver === self::PACKAGE_METADATADRIVER_XML){
             // return xml metadata dir
@@ -803,7 +803,7 @@ abstract class Package implements LocalizablePackageInterface
         // Add additional source path to the default namespace
         // if pkgAutoloaderMapCoreExtensions is true
         $coreRelativPath = $this->pkgAutoloaderMapCoreExtensions ?
-            $this->getRelativePath() . '/' . DIRNAME_CLASSES . '/' . 'Concrete' : '';
+            $this->getRelativePath() . DIRECTORY_SEPARATOR . DIRNAME_CLASSES . DIRECTORY_SEPARATOR . 'Concrete' : '';
         if(!empty($coreRelativPath)){
             $paths[] = $coreRelativPath;
         }
