@@ -12,9 +12,9 @@ use Stash\Pool;
  *   - ExpensiveCache
  *   - ObjectCache
  *   - RequestCache
- *   
+ *
  * Cache storage is performed using the Stash Library, see http://www.stashphp.com/
- * 
+ *
  * This class imports the various caching settings from Config class, sets
  * up the Stash pools and provides a basic caching API for all of Concrete5.
  */
@@ -61,10 +61,12 @@ abstract class Cache
                 // Make sure that the provided class implements the DriverInterface
                 if (isset($implements['Stash\Interfaces\DriverInterface'])) {
                     /** @var \Stash\Interfaces\DriverInterface $temp_driver */
-                    $temp_driver = new $class();
+
 
                     if ($options = array_get($driver_build, 'options', null)) {
-                        $temp_driver->setOptions($options);
+                        $temp_driver = new $class($options);
+                    } else {
+                        $temp_driver = new $class;
                     }
 
                     $drivers[] = $temp_driver;
@@ -124,7 +126,7 @@ abstract class Cache
      */
     public function flush()
     {
-        return $this->pool->flush();
+        return $this->pool->clear();
     }
 
     /**

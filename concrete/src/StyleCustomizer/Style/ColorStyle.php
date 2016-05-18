@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\StyleCustomizer\Style;
 
+use Concrete\Core\Support\Less\TreeCallColor;
 use Core;
 use Concrete\Core\StyleCustomizer\Style\Value\ColorValue;
 use Less_Tree_Color;
@@ -57,13 +58,17 @@ class ColorStyle extends Style
             $cv->setGreen($value->rgb[1]);
             $cv->setBlue($value->rgb[2]);
         } elseif ($value instanceof Less_Tree_Call) {
+            // Extract the arguments from the value
+            $color = TreeCallColor::fromTreeCall($value);
+            $args = $color->getArguments();
+
             // might be rgb() or rgba()
             $cv = new ColorValue($variable);
-            $cv->setRed($value->args[0]->value[0]->value);
-            $cv->setGreen($value->args[1]->value[0]->value);
-            $cv->setBlue($value->args[2]->value[0]->value);
-            if ($value->name == 'rgba') {
-                $cv->setAlpha($value->args[3]->value[0]->value);
+            $cv->setRed($args[0]->value[0]->value);
+            $cv->setGreen($args[1]->value[0]->value);
+            $cv->setBlue($args[2]->value[0]->value);
+            if ($color->getName() == 'rgba') {
+                $cv->setAlpha($args[3]->value[0]->value);
             }
         }
 

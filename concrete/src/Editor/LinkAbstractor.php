@@ -123,11 +123,13 @@ class LinkAbstractor extends Object
 						$picture->width = $matches[1];
 					}
 					$heightPattern = "/(?:^height|[^-]height):\\s([0-9]+)px;?/i";
-					if (preg_match($heightPattern, $picture->style, $matches)) {
-						$picture->style = preg_replace($heightPattern, '', $picture->style);
-						$picture->height = $matches[1];
-					}
-					$picture->style = trim($picture->style);
+                    if ($picture->style) {
+                        if (preg_match($heightPattern, $picture->style, $matches)) {
+                            $picture->style = preg_replace($heightPattern, '', $picture->style);
+                            $picture->height = $matches[1];
+                        }
+                        $picture->style = trim($picture->style);
+                    }
 					$image = new \Concrete\Core\Html\Image($fo);
 					$tag = $image->getTag();
 
