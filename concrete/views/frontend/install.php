@@ -7,6 +7,8 @@ if ($install_config) {
 }
 ?>
 
+<div class="ccm-ui-fieldless">
+
 <style type="text/css">@import "<?=ASSETS_URL_CSS?>/views/install.css";</style>
 <script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/bootstrap/tooltip.js"></script>
 <script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/jquery-cookie.js"></script>
@@ -663,3 +665,5 @@ $(function() {
 
 <?php
 } ?>
+
+</div>
