@@ -37,7 +37,7 @@
     "mobiledetect/mobiledetectlib": "2.*",
     "monolog/monolog": "1.*",
     "sunra/php-simple-html-dom-parser": "1.*",
-    "hautelook/phpass": "1.*",
+    "hautelook/phpass": "0.3.4",
     "voku/urlify": "1.0.*",
     "dapphp/securimage": "3.*",
     "anahkiasen/html-object": "1.*",
@@ -61,7 +61,7 @@
   },
   "require-dev": {
     "concrete5/documentation_generator": "1.0-beta3",
-    "phpunit/phpunit": "^5.3",
+    "phpunit/phpunit": "4.*",
     "phpunit/dbunit": "^2.0",
     "mybuilder/phpunit-accelerator": "^1.1"
   },
