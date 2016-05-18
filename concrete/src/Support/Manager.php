@@ -3,6 +3,9 @@ namespace Concrete\Core\Support;
 
 class Manager extends \Illuminate\Support\Manager
 {
+
+    protected $defaultDriver;
+
     protected function createDriver($driver)
     {
 
@@ -22,4 +25,19 @@ class Manager extends \Illuminate\Support\Manager
 
         throw new \InvalidArgumentException("Driver [$driver] not supported.");
     }
+
+    /**
+     * Get the default driver name.
+     *
+     * @return string
+     */
+    public function getDefaultDriver()
+    {
+        if ($this->defaultDriver) {
+            return $this->defaultDriver;
+        }
+
+        return null;
+    }
+
 }
