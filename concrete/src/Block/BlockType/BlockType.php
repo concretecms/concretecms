@@ -5,6 +5,7 @@ use Concrete\Core\Foundation\Environment;
 use Core;
 use Database as DB;
 use Localization;
+use Concrete\Core\Support\Facade\Facade;
 
 class BlockType
 {
@@ -58,7 +59,8 @@ class BlockType
             $pkgHandle = $pkg->getPackageHandle();
         }
         $class = static::getBlockTypeMappedClass($btHandle, $pkgHandle);
-        $bta = new $class();
+        $app = Facade::getFacadeApplication();
+        $bta = $app->build($class);
         $path = dirname($env->getPath(DIRNAME_BLOCKS . '/' . $btHandle . '/' . FILENAME_BLOCK_DB, $pkgHandle));
 
         //Attempt to run the subclass methods (install schema from db.xml, etc.)
