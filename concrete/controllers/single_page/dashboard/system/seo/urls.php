@@ -37,7 +37,7 @@ class Urls extends DashboardPageController
                             if ($urlRewriting) {
                                 $this->set('configuration_action', t('The following rule has been added to the server configuration'));
                             } else {
-                                $this->set('configuration_action', t('The following rule has been removed to the server configuration'));
+                                $this->set('configuration_action', t('The following rule has been removed from the server configuration'));
                             }
                             break;
                         case 'not-needed':
