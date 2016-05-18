@@ -59,21 +59,9 @@
     "concrete5/doctrine-xml": "1.*",
     "symfony/yaml":"3.*"
   },
-  "require-dev": {
-    "concrete5/documentation_generator": "1.0-beta3",
-    "phpunit/phpunit": "4.*",
-    "phpunit/dbunit": "^2.0",
-    "mybuilder/phpunit-accelerator": "^1.1"
-  },
   "autoload-dev": {
     "psr-4": {
       "Concrete\\Tests\\": "../../tests/tests"
     }
-  },
-  "scripts": {
-    "test": [
-      "@composer install",
-      "phpunit"
-    ]
   }
 }
