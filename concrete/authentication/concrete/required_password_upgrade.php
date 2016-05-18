@@ -6,7 +6,7 @@
         <h4><?= t('Required password upgrade') ?></h4>
         <div class="ccm-message"></div>
         <div class='help-block'>
-            <?= isset($intro_msg) ? $intro_msg : 'Your user account is being upgraded and requires a new password. Please enter your email address below to create this now.' ?>
+            <?= isset($intro_msg) ? $intro_msg : t('Your user account is being upgraded and requires a new password. Please enter your email address below to create this now.') ?>
         </div>
         <div class="form-group">
             <input name="uEmail" type="email" placeholder="<?= t('Email Address') ?>" class="form-control"/>

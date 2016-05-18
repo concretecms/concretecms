@@ -51,8 +51,7 @@ class GlobalPasswordReset extends DashboardPageController
 
     public function view()
     {
-        $defaultMessage = 'Your user account is being upgraded and requires a new password. ' .
-            'Please enter your email address below to create this now.';
+        $defaultMessage = t('Your user account is being upgraded and requires a new password. Please enter your email address below to create this now.');
         $resetMessage = \Core::make('config/database')->get(self::PASSWORD_RESET_MESSAGE_KEY, $defaultMessage);
 
         $this->set('resetMessage', $resetMessage);
