@@ -1,8 +1,7 @@
 <?php
 namespace Concrete\Core\Legacy;
 
-use Database;
-use Core;
+use Concrete\Core\Support\Facade\Facade;
 use View;
 
 /**
@@ -15,15 +14,18 @@ class Loader
      */
     public static function db()
     {
-        return Database::connection();
+        $app = Facade::getFacadeApplication();
+
+        return $app->make('database')->connection();
     }
 
     public static function helper($service, $pkgHandle = false)
     {
+        $app = Facade::getFacadeApplication();
         if ($pkgHandle !== false) {
-            return Core::make('/packages/' . $pkgHandle . '/helper/' . $service);
+            return $app->make('/packages/' . $pkgHandle . '/helper/' . $service);
         } else {
-            return Core::make('helper/' . $service);
+            return $app->make('helper/' . $service);
         }
     }
 
@@ -54,7 +56,8 @@ class Loader
         }
 
         $controller = '\\Concrete\\Controller\\' . camelcase($item);
+        $app = Facade::getFacadeApplication();
 
-        return new $controller();
+        return $app->build($controller);
     }
 }
