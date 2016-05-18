@@ -2,6 +2,7 @@
 namespace Concrete\Controller\SinglePage\Dashboard\Blocks;
 
 use Concrete\Core\Page\Controller\DashboardPageController;
+use Concrete\Core\Entity\Block\BlockType\BlockType as BlockTypeEntity;
 use Loader;
 use Environment;
 use BlockTypeList;
@@ -55,7 +56,7 @@ class Types extends DashboardPageController
             $bt = BlockType::getByID($btID);
         }
 
-        if (isset($bt) && ($bt instanceof BlockType)) {
+        if (isset($bt) && ($bt instanceof BlockTypeEntity)) {
             try {
                 $bt->refresh();
                 $this->set('message', t('Block Type Refreshed. Any database schema changes have been applied.'));
@@ -100,7 +101,7 @@ class Types extends DashboardPageController
         $u = new \User();
         if (!$u->isSuperUser()) {
             $this->error->add(t('Only the super user may remove block types.'));
-        } elseif (isset($bt) && ($bt instanceof BlockType)) {
+        } elseif (isset($bt) && ($bt instanceof BlockTypeEntity)) {
             if (!$valt->validate('uninstall', $token)) {
                 $this->error->add($valt->getErrorMessage());
             } elseif ($bt->canUnInstall()) {
@@ -125,7 +126,7 @@ class Types extends DashboardPageController
             $bt = BlockType::getByID($btID);
         }
 
-        if (isset($bt) && ($bt instanceof BlockType)) {
+        if (isset($bt) && ($bt instanceof BlockTypeEntity)) {
             $this->set('bt', $bt);
             $this->set('num', $bt->getCount());
             $this->set('numActive', $bt->getCount(true));

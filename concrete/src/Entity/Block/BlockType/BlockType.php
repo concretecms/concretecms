@@ -500,7 +500,7 @@ class BlockType
         }
 
         $class = \Concrete\Core\Block\BlockType\BlockType::getBlockTypeMappedClass($this->btHandle, $pkgHandle);
-        $bta = $db->build($class);
+        $bta = $app->build($class);
 
         $this->loadFromController($bta);
 
