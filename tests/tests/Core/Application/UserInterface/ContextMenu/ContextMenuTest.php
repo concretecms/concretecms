@@ -100,7 +100,7 @@ class ContextMenuTest extends PHPUnit_Framework_TestCase
         $menu = new \Concrete\Core\Application\UserInterface\ContextMenu\Menu();
         $menu->addItem($item);
         $html = (string) $menu->getMenuElement();
-        $this->assertEquals('<div class="popover fade"><div class="arrow"></div><div class="popover-inner"><ul class="dropdown-menu"><li><a href="#" data-tree-action="delete-node" dialog-title="Delete Topic" data-tree-action-url="http://www.dummyco.com/path/to/server/index.php/ccm/system/dialogs/tree/node/delete?treeNodeID=10">Delete Topic</a></li></ul></div></div>', $html);
+        $this->assertEquals('<div class="popover fade"><div class="arrow"></div><div class="popover-inner"><ul class="dropdown-menu"><li><a href="#" data-tree-action="delete-node" dialog-title="Delete Topic" data-tree-action-url="http://www.dummyco.com/path/to/server/index.php/ccm/system/dialogs/tree/node/delete?treeNodeID=10">Delete</a></li></ul></div></div>', $html);
     }
 
     public function testEditPermissionsTreeNode()
