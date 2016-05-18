@@ -44,6 +44,7 @@
 # Exclude from archives created from the source code
 #
 /.* export-ignore
+/build/ export-ignore
 /tests/ export-ignore
 /CHANGELOG.md export-ignore
 /CONTRIBUTING.md export-ignore
