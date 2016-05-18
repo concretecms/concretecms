@@ -44,4 +44,13 @@ abstract class BlockTypeTestCase extends ConcreteDatabaseTestCase
             }
         }
     }
+
+    public function testRefresh()
+    {
+        $bt = BlockType::installBlockType($this->btHandle);
+        $btx = BlockType::getByID(1);
+
+        $btx->refresh();
+        $this->markTestIncomplete('This test should try to actually change the schema and verify it.');
+    }
 }
