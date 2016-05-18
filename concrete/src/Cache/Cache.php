@@ -78,8 +78,7 @@ abstract class Cache
 
         $count = count($drivers);
         if ($count > 1) {
-            $driver = new Composite();
-            $driver->setOptions(array('drivers' => $drivers));
+            $driver = new Composite(['drivers' => $drivers]);
         } elseif ($count === 1) {
             $driver = $drivers[0];
         } else {
