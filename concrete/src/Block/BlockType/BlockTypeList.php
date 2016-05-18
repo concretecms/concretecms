@@ -1,10 +1,11 @@
 <?php
 namespace Concrete\Core\Block\BlockType;
 
+use Concrete\Core\Entity\Block\BlockType\BlockType as BlockTypeEntity;
 use Core;
 use Loader;
-use BlockType as ConcreteBlockType;
 use Package;
+
 use Concrete\Core\Legacy\DatabaseItemList;
 
 class BlockTypeList extends DatabaseItemList
@@ -30,7 +31,7 @@ class BlockTypeList extends DatabaseItemList
         $r = parent::get($itemsToGet, intval($offset));
         $blocktypes = array();
         foreach ($r as $row) {
-            $bt = ConcreteBlockType::getByID($row['btID']);
+            $bt = BlockType::getByID($row['btID']);
             if (is_object($bt)) {
                 $blocktypes[] = $bt;
             }
@@ -84,7 +85,7 @@ class BlockTypeList extends DatabaseItemList
                     if (is_dir($fdir) && !in_array($file, $btHandles) && file_exists($fdir . '/' . FILENAME_BLOCK_CONTROLLER)) {
                         $bt = BlockType::getByHandle($file);
                         if (!is_object($bt)) {
-                            $bt = new BlockType();
+                            $bt = new BlockTypeEntity();
                             $bt->setBlockTypeHandle($file);
                             $class = $bt->getBlockTypeClass();
                             $bta = new $class();
