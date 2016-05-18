@@ -11,14 +11,14 @@ use Zend\Cache\Storage\FlushableInterface;
 /**
  * Class ZendCacheDriver
  * Adapter class to hook Zend's cache into Concrete5's cache.
- * 
+ *
  * By passing this class into various Zend classes, it tells Zend use it for storing and retrieving
  * cache values. Values are passed through here and onto Concrete5's caching layer which uses the
  * Stash library. Allows us to use many of the helpful Zend classes without having to maintain
  * a separate cache configuration.
- * 
+ *
  * Currently used by:
- * 
+ *
  *     - Concrete\Core\Feed\FeedService
  *     - Concrete\Core\Localization\Localization
  *
@@ -91,7 +91,11 @@ class ZendCacheDriver extends AbstractAdapter implements StorageInterface, Flush
         $cache = Core::make($this->cacheName);
         $item = $cache->getItem('zend/'.$normalizedKey);
 
-        return $item->set($value, $this->cacheLifetime);
+        if ($result = $item->set($value, $this->cacheLifetime)) {
+            $item->save();
+        }
+
+        return $result;
     }
 
     /**
