@@ -313,7 +313,7 @@ class BlockType
      */
     public function getBlockTypeClass()
     {
-        return \Concrete\Core\Block\BlockType\BlockType::getBlockTypeMappedClass($this->btHandle, $this->getPackageHandle());
+        return \Concrete\Core\Block\BlockType\BlockType::getBlockTypeMappedClass($this->getBlockTypeHandle(), $this->getPackageHandle());
     }
 
     /**
@@ -492,14 +492,15 @@ class BlockType
      */
     public function refresh()
     {
-        $db = DB::get();
+        $app = Facade::getFacadeApplication();
+        $db = $app->make('database')->connection();
         $pkgHandle = false;
         if ($this->pkgID > 0) {
             $pkgHandle = $this->getPackageHandle();
         }
 
         $class = \Concrete\Core\Block\BlockType\BlockType::getBlockTypeMappedClass($this->btHandle, $pkgHandle);
-        $bta = new $class();
+        $bta = $db->build($class);
 
         $this->loadFromController($bta);
 
@@ -587,7 +588,8 @@ class BlockType
      */
     public function add($data, $c = false, $a = false)
     {
-        $db = Loader::db();
+        $app = Facade::getFacadeApplication();
+        $db = $app->make('database')->connection();
 
         $u = new User();
         if (isset($data['uID'])) {
@@ -601,33 +603,28 @@ class BlockType
         }
 
         $btID = $this->btID;
-        $dh = Loader::helper('date');
+        $dh = $app->make('helper/date');
         $bDate = $dh->getOverridableNow();
         $bIsActive = (isset($this->btActiveWhenAdded) && $this->btActiveWhenAdded == 1) ? 1 : 0;
 
         $v = array($bName, $bDate, $bDate, $bIsActive, $btID, $uID);
         $q = "insert into Blocks (bName, bDateAdded, bDateModified, bIsActive, btID, uID) values (?, ?, ?, ?, ?, ?)";
 
-        $r = $db->prepare($q);
-        $res = $db->execute($r, $v);
-
-        $bIDnew = $db->Insert_ID();
+        $res = $db->executeQuery($q, $v);
 
         // we get the block object for the block we just added
-
         if ($res) {
+            $bIDnew = $db->lastInsertId();
+
             $nb = Block::getByID($bIDnew);
-
-            $btHandle = $this->getBlockTypeHandle();
-
-            $class = $this->getBlockTypeClass();
             if (is_object($c)) {
                 $nb->setBlockCollectionObject($c);
             }
             if (is_object($a)) {
                 $nb->setBlockAreaObject($a);
             }
-            $bc = new $class($nb);
+            $class = $this->getBlockTypeClass();
+            $bc = $app->build($class, [$nb]);
             $bc->save($data);
 
             return Block::getByID($bIDnew);
@@ -639,7 +636,7 @@ class BlockType
      */
     public function loadController()
     {
-        $class = \Concrete\Core\Block\BlockType\BlockType::getBlockTypeMappedClass($this->getBlockTypeHandle(), $this->getPackageHandle());
+        $class = $this->getBlockTypeClass();
 
         /** @var Controller controller */
         if ($class) {
