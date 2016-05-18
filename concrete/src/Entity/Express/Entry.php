@@ -3,6 +3,7 @@ namespace Concrete\Core\Entity\Express;
 
 use Concrete\Core\Attribute\ObjectTrait;
 use Concrete\Core\Entity\Attribute\Value\ExpressValue;
+use Concrete\Core\Permission\ObjectInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use DoctrineProxies\__CG__\Concrete\Core\Entity\Attribute\Key\ExpressKey;
 use Doctrine\ORM\Mapping as ORM;
@@ -11,10 +12,30 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity(repositoryClass="\Concrete\Core\Entity\Express\EntryRepository")
  * @ORM\Table(name="ExpressEntityEntries")
  */
-class Entry implements \JsonSerializable
+class Entry implements \JsonSerializable, ObjectInterface
 {
 
     use ObjectTrait;
+
+    public function getPermissionObjectIdentifier()
+    {
+        return $this->exEntryID;
+    }
+
+    public function getPermissionResponseClassName()
+    {
+        return '\\Concrete\\Core\\Permission\\Response\\ExpressEntryResponse';
+    }
+
+    public function getPermissionAssignmentClassName()
+    {
+        return false;
+    }
+
+    public function getPermissionObjectKeyCategoryHandle()
+    {
+        return false;
+    }
 
     public function getObjectAttributeCategory()
     {
@@ -62,7 +83,7 @@ class Entry implements \JsonSerializable
     protected $entity;
 
     /**
-     * @return mixed
+     * @return Entity
      */
     public function getEntity()
     {

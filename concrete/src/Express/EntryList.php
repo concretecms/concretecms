@@ -4,10 +4,11 @@ namespace Concrete\Core\Express;
 use Concrete\Core\Attribute\Category\ExpressCategory;
 use Concrete\Core\Entity\Express\Entity;
 use Concrete\Core\Search\ItemList\Database\AttributedItemList as DatabaseItemList;
+use Concrete\Core\Search\PermissionableListItemInterface;
 use Pagerfanta\Adapter\DoctrineDbalAdapter;
 use Concrete\Core\Search\Pagination\Pagination;
 
-class EntryList extends DatabaseItemList
+class EntryList extends DatabaseItemList implements PermissionableListItemInterface
 {
 
     protected $category;
@@ -75,17 +76,41 @@ class EntryList extends DatabaseItemList
         return $pagination;
     }
 
-    /**
-     * @param $queryRow
-     *
-     * @return \Concrete\Core\User\UserInfo
-     */
     public function getResult($queryRow)
     {
         $r = $this->category->getEntityManager()->getRepository('Concrete\Core\Entity\Express\Entry');
-        return $r->findOneById($queryRow['exEntryID']);
+        $entry = $r->findOneById($queryRow['exEntryID']);
+        if (is_object($entry)) {
+            if ($this->checkPermissions($entry)) {
+                return $entry;
+            }
+        }
     }
 
+    public function checkPermissions($mixed)
+    {
+
+        if (isset($this->permissionsChecker)) {
+            if ($this->permissionsChecker === -1) {
+                return true;
+            } else {
+                return call_user_func_array($this->permissionsChecker, array($mixed));
+            }
+        }
+
+        $fp = new \Permissions($mixed);
+        return $fp->canViewExpressEntry();
+    }
+
+    public function setPermissionsChecker(\Closure $checker)
+    {
+        $this->permissionsChecker = $checker;
+    }
+
+    public function ignorePermissions()
+    {
+        $this->permissionsChecker = -1;
+    }
 
     public function createQuery()
     {

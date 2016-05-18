@@ -22,7 +22,7 @@ class DeleteItem extends AbstractNodeItem
 
     public function getItemName()
     {
-        return t('Delete %s', $this->node->getTreeNodeTypeName());
+        return t('Delete', $this->node->getTreeNodeTypeName());
     }
 
 }

@@ -31,11 +31,13 @@ abstract class DashboardExpressEntityPageController extends DashboardExpressEntr
 
     public function view($folder = null)
     {
-        $header = new Header($this->getEntity(), $this->getPageObject());
+        $permissions = new \Permissions($this->getEntity());
+        if ($permissions->canAddExpressEntries()) {
+            $header = new Header($this->getEntity(), $this->getPageObject());
+            $this->set('headerMenu', $header);
+        }
         $this->renderList($folder);
-        $this->set('headerMenu', $header);
     }
-
 
     public function create_entry($id = null)
     {
@@ -43,6 +45,10 @@ abstract class DashboardExpressEntityPageController extends DashboardExpressEntr
         $entity = $r->findOneById($id);
         if (!is_object($entity)) {
             $this->redirect('/dashboard/express/entries');
+        }
+        $permissions = new \Permissions($entity);
+        if (!$permissions->canAddExpressEntries()) {
+            throw new \Exception(t('You do not have access to add entries of this entity type.'));
         }
         $this->set('entity', $entity);
         $form = $entity->getDefaultEditForm();
