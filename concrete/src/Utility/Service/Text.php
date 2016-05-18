@@ -401,7 +401,7 @@ class Text
                     $remove_list = array();
                 }
             } else {
-                $remove_list = \URLify::$remove_list;
+                $remove_list = URLify::$remove_list;
             }
             if (count($remove_list)) {
                 $text = preg_replace('/\b(' . implode('|', $remove_list) . ')\b/i', '', $text);
