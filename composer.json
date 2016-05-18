@@ -8,7 +8,9 @@
     }
   ],
   "config": {
-    "optimize-autoloader": true
+    "optimize-autoloader": true,
+    "vendor-dir": "./concrete/vendor",
+    "bin-dir": "./concrete/bin"
   },
   "require": {
     "php": ">=5.5.9",
