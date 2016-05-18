@@ -12,7 +12,7 @@ use Concrete\Core\Permission\Access\Entity\ConversationMessageAuthorEntity;
 use Concrete\Core\Permission\Access\Entity\GroupEntity as GroupPermissionAccessEntity;
 use Concrete\Core\Permission\Access\Entity\PageOwnerEntity as PageOwnerPermissionAccessEntity;
 use Concrete\Core\Tree\Node\Type\Category;
-use Concrete\Core\Tree\Type\ExpressEntry;
+use Concrete\Core\Tree\Node\Type\ExpressEntryCategory;
 use Concrete\Core\Tree\Type\ExpressEntryResults;
 use Concrete\Core\Updater\Migrations\Configuration;
 use Concrete\Core\User\Point\Action\Action as UserPointAction;
@@ -162,6 +162,7 @@ class StartingPointPackage extends BasePackage
     public function install_data_objects()
     {
         \Concrete\Core\Tree\Node\NodeType::add('category');
+        \Concrete\Core\Tree\Node\NodeType::add('express_entry_category');
         \Concrete\Core\Tree\TreeType::add('express_entry_results');
         \Concrete\Core\Tree\Node\NodeType::add('express_entry_results');
 
@@ -169,7 +170,13 @@ class StartingPointPackage extends BasePackage
         $node = $tree->getRootTreeNodeObject();
 
         // Add forms node beneath it.
-        $forms = Category::add(ExpressFormBlockController::FORM_RESULTS_CATEGORY_NAME, $node);
+        $forms = ExpressEntryCategory::add(ExpressFormBlockController::FORM_RESULTS_CATEGORY_NAME, $node);
+
+        // Set the forms node to allow guests to post entries, since we're using it from the front-end.
+        $forms->assignPermissions(
+            Group::getByID(GUEST_GROUP_ID),
+            ['add_express_entry']
+        );
     }
 
     public function install_attributes()

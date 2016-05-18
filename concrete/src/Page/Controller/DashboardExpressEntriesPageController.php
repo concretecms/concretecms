@@ -103,6 +103,10 @@ abstract class DashboardExpressEntriesPageController extends DashboardPageContro
         $entry = $this->entityManager->getRepository('Concrete\Core\Entity\Express\Entry')
             ->findOneById($this->request->request->get('entry_id'));
 
+        $permissions = new \Permissions($entry);
+        if (!$permissions->canDeleteExpressEntry()) {
+            $this->error->add(t('You do not have access to delete entries of this entity type.'));
+        }
         if (!$this->token->validate('delete_entry')) {
             $this->error->add($this->token->getErrorMessage());
         }
@@ -121,6 +125,11 @@ abstract class DashboardExpressEntriesPageController extends DashboardPageContro
         $entry = $this->entityManager->getRepository('Concrete\Core\Entity\Express\Entry')
             ->findOneById($id);
 
+        $permissions = new \Permissions($entry);
+        if (!$permissions->canViewExpressEntry()) {
+            throw new \Exception(t('Access Denied'));
+        }
+
         $renderer = \Core::make('Concrete\Core\Express\Form\ViewRenderer');
         $this->set('entry', $entry);
         $this->set('entity', $entry->getEntity());
@@ -129,7 +138,14 @@ abstract class DashboardExpressEntriesPageController extends DashboardPageContro
         $this->set('expressForm', $entity->getDefaultViewForm());
         $this->set('renderer', $renderer);
         $this->set('backURL', $this->getBackToListURL($entry->getEntity()));
-        $this->set('editURL', $this->getEditEntryURL($entry));
+        if ($permissions->canEditExpressEntry()) {
+            $this->set('editURL', $this->getEditEntryURL($entry));
+        }
+        if ($permissions->canDeleteExpressEntry()) {
+            $this->set('allowDelete', true);
+        } else {
+            $this->set('allowDelete', false);
+        }
         $this->render('/dashboard/express/entries/view_entry', false);
     }
 
@@ -137,6 +153,11 @@ abstract class DashboardExpressEntriesPageController extends DashboardPageContro
     {
         $entry = $this->entityManager->getRepository('Concrete\Core\Entity\Express\Entry')
             ->findOneById($id);
+
+        $permissions = new \Permissions($entry);
+        if (!$permissions->canEditExpressEntry()) {
+            throw new \Exception(t('Access Denied'));
+        }
 
         $renderer = \Core::make('Concrete\Core\Express\Form\Renderer');
         $this->set('entry', $entry);
@@ -157,9 +178,23 @@ abstract class DashboardExpressEntriesPageController extends DashboardPageContro
         $r = $this->entityManager->getRepository('\Concrete\Core\Entity\Express\Form');
         $form = $r->findOneById($this->request->request->get('express_form_id'));
 
+        $entry = false;
         if ($this->request->request->has('entry_id')) {
             $entry = $this->entityManager->getRepository('Concrete\Core\Entity\Express\Entry')
                 ->findOneById($this->request->request->get('entry_id'));
+        }
+
+        if (!is_object($entry)) {
+            $permissions = new \Permissions($entity);
+            if (!$permissions->canAddExpressEntries()) {
+                $this->error->add(t('You do not have access to add entries of this entity type.'));
+            }
+        } else {
+            $permissions = new \Permissions($entry);
+            if (!$permissions->canEditExpressEntry()) {
+                $this->error->add(t('You do not have access to edit entries of this entity type.'));
+            }
+
         }
 
         if (is_object($form)) {
@@ -167,7 +202,7 @@ abstract class DashboardExpressEntriesPageController extends DashboardPageContro
             $validator->validate($form);
             if (!$this->error->has()) {
                 $manager = new Manager($this->entityManager, $this->request);
-                if (isset($entry) && is_object($entry)) { // update
+                if (is_object($entry)) { // update
                     $manager->saveEntryAttributesForm($form, $entry);
                     $this->flash('success', t('%s updated successfully.', $entity->getName()));
                 } else {

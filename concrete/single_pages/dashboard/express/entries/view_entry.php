@@ -2,10 +2,15 @@
 
 <div class="ccm-dashboard-header-buttons btn-group">
     <a href="<?=$backURL?>" class="btn btn-default"><?=t("Back to List")?></a>
-    <a href="<?=$editURL?>" class="btn btn-default"><?=t("Edit")?></a>
-    <button type="button" class="btn btn-danger" data-dialog="delete-entry"><?= t('Delete') ?></button>
+    <?php if (isset($editURL) && $editURL) { ?>
+        <a href="<?=$editURL?>" class="btn btn-default"><?=t("Edit")?></a>
+    <?php } ?>
+    <?php if ($allowDelete) { ?>
+        <button type="button" class="btn btn-danger" data-dialog="delete-entry"><?= t('Delete') ?></button>
+    <?php } ?>
 </div>
 
+<?php if ($allowDelete) { ?>
 <div style="display: none">
     <div id="ccm-dialog-delete-entry" class="ccm-ui">
         <form method="post" action="<?=$view->action('delete_entry')?>">
@@ -20,6 +25,7 @@
     </div>
 
 </div>
+<?php } ?>
 
 <?php
 
@@ -34,6 +40,7 @@ if (is_object($expressForm)) {
 <?php 
 } ?>
 
+<?php if ($allowDelete) { ?>
 <script type="text/javascript">
     $(function() {
         $('[data-dialog]').on('click', function() {
@@ -53,3 +60,4 @@ if (is_object($expressForm)) {
         });
     });
 </script>
+<?php } ?>

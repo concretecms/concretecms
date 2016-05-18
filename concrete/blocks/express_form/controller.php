@@ -22,6 +22,7 @@ use Concrete\Core\Routing\Redirect;
 use Concrete\Core\Tree\Node\Node;
 use Concrete\Core\Tree\Node\NodeType;
 use Concrete\Core\Tree\Node\Type\Category;
+use Concrete\Core\Tree\Node\Type\ExpressEntryCategory;
 use Concrete\Core\Tree\Type\ExpressEntryResults;
 use Doctrine\ORM\Id\UuidGenerator;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -103,9 +104,14 @@ class Controller extends BlockController
                 $this->set('error', $e);
             }
 
+            $entity = $form->getEntity();
+            $permissions = new \Permissions($entity);
+            if (!$permissions->canAddExpressEntries()) {
+                $e->add(t('You do not have access to submit this form.'));
+            }
+
             if (isset($e) && !$e->has()) {
 
-                $entity = $form->getEntity();
                 $manager = new Manager($entityManager, $this->request);
                 $entry = $manager->addEntry($entity);
                 $entry = $manager->saveEntryAttributesForm($form, $entry);
@@ -199,7 +205,7 @@ class Controller extends BlockController
 
     protected function loadResultsFolderInformation()
     {
-        $folder = Category::getNodeByName(self::FORM_RESULTS_CATEGORY_NAME);
+        $folder = ExpressEntryCategory::getNodeByName(self::FORM_RESULTS_CATEGORY_NAME);
         $this->set('formResultsRootFolderNodeID', $folder->getTreeNodeID());
     }
 
@@ -310,7 +316,7 @@ class Controller extends BlockController
             $name = $data['formName'] ? $data['formName'] : t('Form');
 
             // Create a results node
-            $node = Category::getNodeByName(self::FORM_RESULTS_CATEGORY_NAME);
+            $node = ExpressEntryCategory::getNodeByName(self::FORM_RESULTS_CATEGORY_NAME);
             $node = \Concrete\Core\Tree\Node\Type\ExpressEntryResults::add($name, $node);
 
             $entity = new Entity();

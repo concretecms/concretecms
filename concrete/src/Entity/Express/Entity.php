@@ -4,6 +4,7 @@ namespace Concrete\Core\Entity\Express;
 use Concrete\Core\Attribute\CategoryObjectInterface;
 use Concrete\Core\Express\Search\ColumnSet\ColumnSet;
 use Concrete\Core\Express\Search\ColumnSet\DefaultSet;
+use Concrete\Core\Permission\ObjectInterface;
 use Concrete\Core\Tree\Node\Node;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -13,7 +14,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="ExpressEntities")
  * @ORM\HasLifecycleCallbacks
  */
-class Entity implements CategoryObjectInterface
+class Entity implements CategoryObjectInterface, ObjectInterface
 {
     /**
      * @ORM\Id @ORM\Column(type="integer")
@@ -330,6 +331,26 @@ class Entity implements CategoryObjectInterface
     public function getAttributeKeyCategory()
     {
         return \Core::make('\Concrete\Core\Attribute\Category\ExpressCategory', array($this));
+    }
+
+    public function getPermissionObjectIdentifier()
+    {
+        return $this->getId();
+    }
+
+    public function getPermissionResponseClassName()
+    {
+        return '\\Concrete\\Core\\Permission\\Response\\ExpressEntityResponse';
+    }
+
+    public function getPermissionAssignmentClassName()
+    {
+        return false;
+    }
+
+    public function getPermissionObjectKeyCategoryHandle()
+    {
+        return false;
     }
 
 }

@@ -41,8 +41,11 @@ class Entries extends DashboardExpressEntityPageController
             $this->entity = $entity;
             $this->set('entity', $entity);
             $this->renderList($folder);
-            $header = new Header($entity, $this->getPageObject());
-            $this->set('headerMenu', $header);
+            $permissions = new \Permissions($this->getEntity());
+            if ($permissions->canAddExpressEntries()) {
+                $header = new Header($entity, $this->getPageObject());
+                $this->set('headerMenu', $header);
+            }
         } else {
             $this->set('entities', $r->findByIncludeInPublicList(true));
         }
