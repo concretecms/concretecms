@@ -50,3 +50,4 @@
 /INSTALL.md export-ignore
 /phpunit.xml export-ignore
 /README.md export-ignore
+.gitignore export-ignore
