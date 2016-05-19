@@ -34,9 +34,7 @@ module.exports = function(grunt, config, parameters, done) {
 		var workFolderParent = path.join(workFolder, '..');
 		var folderToZip = path.join(workFolderParent, dirname);
 		fs.renameSync(workFolder, folderToZip);
-		fs.renameSync(path.join(folderToZip, 'build'), path.join(workFolderParent, 'build-source'));
 		revert = function() {
-			fs.renameSync(path.join(workFolderParent, 'build-source'), path.join(folderToZip, 'build'));
 			fs.renameSync(folderToZip, workFolder);
 		}
 		shell.pushd(workFolderParent);
