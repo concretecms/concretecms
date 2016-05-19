@@ -1,4 +1,12 @@
 {
+  "name": "concrete5/concrete5",
+  "description": "concrete5 open source CMS",
+  "authors": [
+    {
+      "name": "Korvin Szanto",
+      "email": "korvin@portlandlabs.com"
+    }
+  ],
   "minimum-stability": "beta",
   "prefer-stable": true,
   "repositories": [
