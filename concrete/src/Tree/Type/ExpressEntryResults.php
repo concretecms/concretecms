@@ -63,7 +63,7 @@ class ExpressEntryResults extends Tree
         $tree = self::getByID($treeID);
 
         $adminGroupEntity = GroupEntity::getOrCreate(ConcreteGroup::getByID(ADMIN_GROUP_ID));
-        $permissions = ['view_express_entries', 'add_express_entry', 'edit_express_entry', 'delete_express_entry'];
+        $permissions = ['view_express_entry', 'add_express_entry', 'edit_express_entry', 'delete_express_entry'];
         foreach($permissions as $handle) {
             $pk = ExpressTreeNodeKey::getByHandle($handle);
             $pk->setPermissionObject($rootNode);
