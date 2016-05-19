@@ -5,7 +5,7 @@ namespace Concrete\Core\Cache\Page;
 use Concrete\Core\Http\Response;
 use Config;
 use Request;
-use \Page as ConcretePage;
+use Concrete\Core\Page\Page as ConcretePage;
 use \Concrete\Core\Page\View\PageView;
 use Permissions;
 use User;
