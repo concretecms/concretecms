@@ -37,6 +37,7 @@ abstract class AbstractCategory implements CategoryInterface, StandardSearchInde
      * @return EntityRepository
      */
     abstract public function getAttributeRepository();
+    abstract public function createAttributeKey();
 
     public function getByID($akID)
     {

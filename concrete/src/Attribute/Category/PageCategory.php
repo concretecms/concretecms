@@ -5,8 +5,13 @@ use Concrete\Core\Attribute\Category\SearchIndexer\StandardSearchIndexerInterfac
 use Concrete\Core\Entity\Attribute\Key\Key;
 use Concrete\Core\Entity\Attribute\Key\PageKey;
 
-class PageCategory extends AbstractStandardCategory
+class PageCategory extends AbstractCategory
 {
+
+    use StandardCategoryTrait {
+        delete as deleteCategory;
+    }
+
     public function createAttributeKey()
     {
         return new PageKey();
@@ -63,4 +68,11 @@ class PageCategory extends AbstractStandardCategory
 
         return $value;
     }
+
+    public function delete()
+    {
+        parent::delete();
+        $this->deleteCategory();
+    }
+
 }

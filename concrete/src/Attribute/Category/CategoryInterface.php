@@ -9,13 +9,12 @@ use Symfony\Component\HttpFoundation\Request;
 interface CategoryInterface
 {
     public function getAttributeKeyByID($akID);
-    public function createAttributeKey();
     public function getList();
     public function getSetManager();
     public function getAttributeTypes();
 
     /**
-     * @return SearchIndexerInterface
+     * @return SearchIndexerInterface|null
      */
     public function getSearchIndexer();
 
@@ -27,4 +26,6 @@ interface CategoryInterface
 
     public function deleteKey(Key $key);
     public function deleteValue(AttributeValueInterface $value);
+    public function delete();
+
 }

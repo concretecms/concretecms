@@ -51,7 +51,7 @@ class Manager extends CoreManager
 
     public function createAttributeSetDriver()
     {
-        return new AttributeSet();
+        return $this->app->make('Concrete\Core\Package\ItemCategory\AttributeSet');
     }
 
     public function createCaptchaLibraryDriver()

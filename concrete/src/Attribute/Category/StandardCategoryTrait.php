@@ -6,8 +6,11 @@ use Concrete\Core\Entity\Attribute\Category;
 use Doctrine\Common\Collections\ArrayCollection;
 use Concrete\Core\Entity\Attribute\Type as AttributeType;
 
-abstract class AbstractStandardCategory extends AbstractCategory implements StandardCategoryInterface
+trait StandardCategoryTrait
 {
+
+    abstract public function getEntityManager();
+
     protected $categoryEntity;
 
     public function setCategoryEntity(Category $category)
@@ -23,7 +26,7 @@ abstract class AbstractStandardCategory extends AbstractCategory implements Stan
     public function getSetManager()
     {
         if (!isset($this->setManager)) {
-            $this->setManager = new StandardSetManager($this->categoryEntity, $this->entityManager);
+            $this->setManager = new StandardSetManager($this->categoryEntity, $this->getEntityManager());
         }
         return $this->setManager;
     }
@@ -51,15 +54,14 @@ abstract class AbstractStandardCategory extends AbstractCategory implements Stan
         if (!$types->contains($type)) {
             $types->add($type);
         }
-        $this->entityManager->persist($this->getCategoryEntity());
-        $this->entityManager->flush();
+        $this->getEntityManager()->persist($this->getCategoryEntity());
+        $this->getEntityManager()->flush();
     }
 
     public function delete()
     {
-        parent::delete();
-        $this->entityManager->remove($this->getCategoryEntity());
-        $this->entityManager->flush();
+        $this->getEntityManager()->remove($this->getCategoryEntity());
+        $this->getEntityManager()->flush();
     }
 
 }

@@ -95,7 +95,11 @@ class Category implements CategoryObjectInterface
     public function getController()
     {
         $manager = \Core::make('manager/attribute/category');
-        $controller = $manager->driver($this->getAttributeKeyCategoryHandle());
+        try {
+            $controller = $manager->driver($this->getAttributeKeyCategoryHandle());
+        } catch(\Exception $e) {
+            $controller = $manager->driver('legacy');
+        }
         $controller->setCategoryEntity($this);
         return $controller;
     }
