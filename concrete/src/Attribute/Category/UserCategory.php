@@ -9,12 +9,8 @@ use Concrete\Core\Entity\Attribute\Type;
 use Concrete\Core\Entity\Package;
 use Symfony\Component\HttpFoundation\Request;
 
-class UserCategory extends AbstractCategory
+class UserCategory extends AbstractStandardCategory
 {
-
-    use StandardCategoryTrait {
-        delete as deleteCategory;
-    }
 
     public function createAttributeKey()
     {
@@ -139,10 +135,5 @@ class UserCategory extends AbstractCategory
         return $value;
     }
 
-    public function delete()
-    {
-        parent::delete();
-        $this->deleteCategory();
-    }
 
 }

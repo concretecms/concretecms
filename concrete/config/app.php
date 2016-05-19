@@ -163,8 +163,8 @@ return array(
 
     'package_items' => array(
         'antispam_library',
-        'attribute_key',
         'attribute_key_category',
+        'attribute_key',
         'attribute_set',
         'attribute_type',
         'authentication_type',
