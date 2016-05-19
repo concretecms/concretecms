@@ -26,7 +26,7 @@ class ExpressEntryResponse extends Response
     {
         $p = $this->getExpressEntryNodePermissions();
         if (is_object($p)) {
-            return $p->validate('view_express_entries');
+            return $p->validate('view_express_entry');
         }
     }
 
@@ -34,7 +34,7 @@ class ExpressEntryResponse extends Response
     {
         $p = $this->getExpressEntryNodePermissions();
         if (is_object($p)) {
-            return $p->validate('edit_express_entries');
+            return $p->validate('edit_express_entry');
         }
     }
 
@@ -42,7 +42,7 @@ class ExpressEntryResponse extends Response
     {
         $p = $this->getExpressEntryNodePermissions();
         if (is_object($p)) {
-            return $p->validate('delete_express_entries');
+            return $p->validate('delete_express_entry');
         }
     }
 

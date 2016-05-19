@@ -172,13 +172,13 @@
 
         <!-- express //-->
 
-        <permissionkey handle="view_express_entries" name="View Entries" package="" category="express_tree_node">
+        <permissionkey handle="view_express_entry" name="View Entries" package="" category="express_tree_node">
         </permissionkey>
-        <permissionkey handle="add_express_entries" name="Add Entry" package="" category="express_tree_node">
+        <permissionkey handle="add_express_entry" name="Add Entry" package="" category="express_tree_node">
         </permissionkey>
-        <permissionkey handle="edit_express_entries" name="Edit Entry" package="" category="express_tree_node">
+        <permissionkey handle="edit_express_entry" name="Edit Entry" package="" category="express_tree_node">
         </permissionkey>
-        <permissionkey handle="delete_express_entries" name="Delete Entry" package="" category="express_tree_node">
+        <permissionkey handle="delete_express_entry" name="Delete Entry" package="" category="express_tree_node">
         </permissionkey>
 
         <!-- groups //-->
