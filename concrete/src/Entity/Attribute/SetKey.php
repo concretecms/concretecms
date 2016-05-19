@@ -12,7 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
 class SetKey
 {
     /**
-     * @ORM\Id @ORM\OneToOne(targetEntity="\Concrete\Core\Entity\Attribute\Key\Key")
+     * @ORM\Id @ORM\ManyToOne(targetEntity="\Concrete\Core\Entity\Attribute\Key\Key")
      * @ORM\JoinColumn(name="akID", referencedColumnName="akID")
      */
     protected $attribute_key;

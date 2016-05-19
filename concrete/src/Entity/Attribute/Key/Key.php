@@ -62,6 +62,12 @@ class Key implements AttributeKeyInterface, ExportableInterface
     protected $key_type;
 
     /**
+     * @ORM\OneToMany(targetEntity="\Concrete\Core\Entity\Attribute\SetKey", mappedBy="attribute_key", cascade={"remove"}),
+     * @ORM\JoinColumn(name="akID", referencedColumnName="akID")
+     */
+    protected $set_keys;
+
+    /**
      * @ORM\OneToMany(targetEntity="\Concrete\Core\Entity\Attribute\Value\Value", mappedBy="attribute_key", cascade={"remove"})
      * @ORM\JoinColumn(name="avID", referencedColumnName="avID")
      **/

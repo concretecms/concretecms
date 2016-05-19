@@ -175,7 +175,7 @@ class StartingPointPackage extends BasePackage
         // Set the forms node to allow guests to post entries, since we're using it from the front-end.
         $forms->assignPermissions(
             Group::getByID(GUEST_GROUP_ID),
-            ['add_express_entry']
+            ['add_express_entries']
         );
     }
 

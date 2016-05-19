@@ -203,7 +203,7 @@ class PackageService
             $this->localization->popActiveContext();
             $pkg = $this->getByHandle($p->getPackageHandle());
             
-            return $pkg;
+            return $p;
         } catch (\Exception $e) {
             $this->localization->popActiveContext();
             $error = $this->application->make('error');

@@ -6,8 +6,13 @@ use Concrete\Core\Entity\Attribute\Key\FileKey;
 use Concrete\Core\Entity\Attribute\Key\Key;
 use Concrete\Core\Entity\Attribute\Type;
 
-class FileCategory extends AbstractStandardCategory
+class FileCategory extends AbstractCategory
 {
+
+    use StandardCategoryTrait {
+        delete as deleteCategory;
+    }
+
     public function createAttributeKey()
     {
         return new FileKey();
@@ -61,5 +66,11 @@ class FileCategory extends AbstractStandardCategory
         ));
 
         return $value;
+    }
+
+    public function delete()
+    {
+        parent::delete();
+        $this->deleteCategory();
     }
 }
