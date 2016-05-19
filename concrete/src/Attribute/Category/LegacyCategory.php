@@ -29,20 +29,28 @@ class LegacyCategory implements CategoryInterface, StandardSearchIndexerInterfac
     protected function getLegacyKeyClass()
     {
         $class = camelcase($this->getCategoryEntity()->getAttributeKeyCategoryHandle());
-        return $class . 'Key';
+        $prefix = ($this->getCategoryEntity()->getPackageID() > 0) ?
+            $this->getCategoryEntity()->getPackageHandle() : false;
+        $class = core_class('Core\\Attribute\\Key\\' . $class . 'Key', $prefix);
+        return $class;
     }
 
     public function getSearchIndexer()
     {
+        /*
         $indexer = $this->application->make('Concrete\Core\Attribute\Category\SearchIndexer\StandardSearchIndexer');
 
         return $indexer;
+        */
+        return false;
     }
 
     public function getIndexedSearchTable()
     {
         $class = $this->getLegacyKeyClass();
-        return $class::getIndexedSearchTable();
+        if (method_exists($class, 'getIndexedSearchTable')) {
+            return $class::getIndexedSearchTable();
+        }
     }
 
     public function getIndexedSearchPrimaryKeyValue($mixed)

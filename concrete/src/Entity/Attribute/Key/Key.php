@@ -4,6 +4,7 @@ namespace Concrete\Core\Entity\Attribute\Key;
 use Concrete\Core\Attribute\AttributeKeyInterface;
 use Concrete\Core\Attribute\Key\SearchIndexer\StandardSearchIndexer;
 use Concrete\Core\Attribute\Type;
+use Concrete\Core\Entity\Attribute\Category;
 use Concrete\Core\Entity\Attribute\Set;
 use Concrete\Core\Entity\PackageTrait;
 use Concrete\Core\Export\ExportableInterface;
@@ -73,6 +74,12 @@ class Key implements AttributeKeyInterface, ExportableInterface
      **/
     protected $attribute_values;
 
+
+    /**
+     * @ORM\ManyToOne(targetEntity="\Concrete\Core\Entity\Attribute\Category")
+     * @ORM\JoinColumn(name="akCategoryID", referencedColumnName="akCategoryID")
+     **/
+    protected $category;
 
     public function setAttributeKeyID($akID)
     {
@@ -207,6 +214,25 @@ class Key implements AttributeKeyInterface, ExportableInterface
     {
         return false;
     }
+
+    /**
+     * This is redundant given we already have the handle but we're actually adding this
+     * for backward compatibility so we have an akCategoryID association column.
+     * @return Category
+     */
+    public function getAttributeCategory()
+    {
+        return $this->category;
+    }
+
+    /**
+     * @param mixed $category
+     */
+    public function setAttributeCategory($category)
+    {
+        $this->category = $category;
+    }
+
 
     public function getExporter()
     {

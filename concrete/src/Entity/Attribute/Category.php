@@ -47,10 +47,16 @@ class Category implements CategoryObjectInterface
     protected $types;
 
     /**
-     * @ORM\OneToMany(targetEntity="Set", mappedBy="category")
+     * @ORM\OneToMany(targetEntity="Set", mappedBy="category", cascade={"remove"})
      * @ORM\JoinColumn(name="akCategoryID", referencedColumnName="asID")
      */
     protected $sets;
+
+    /**
+     * @ORM\OneToMany(targetEntity="\Concrete\Core\Entity\Attribute\Key\Key", mappedBy="category", cascade={"remove"})
+     * @ORM\JoinColumn(name="akCategoryID", referencedColumnName="akCategoryID")
+     */
+    protected $keys;
 
     /**
      * @return mixed
