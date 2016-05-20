@@ -673,14 +673,20 @@ div#ccm-panel-detail-page-location {
       select.form-control,
       textarea.form-control,
       input.form-control {
+        background-color: #e5edf1;
+
         &:hover {
-          background-color: #e5edf1;
+          background-color: darken(#e5edf1, 3%);
+        }
+        &:focus {
+          background-color: darken(#e5edf1, 5%);
         }
       }
 
       .select2-choices {
+        background-color: #e5edf1;
         &:hover {
-          background-color: #e5edf1;
+          background-color: darken(#e5edf1, 3%);
         }
       }
 
@@ -691,7 +697,7 @@ div#ccm-panel-detail-page-location {
       div.ccm-item-selector, div.ccm-file-selector {
         background-color: #e5edf1;
         &:hover {
-          background-color: darken(#e5edf1, 5%);
+          background-color: darken(#e5edf1, 3%);
         }
       }
     }

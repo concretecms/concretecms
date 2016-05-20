@@ -69,7 +69,7 @@ if (is_object($key)) {
 	</div>
 </div>
 
-<?php if ($category && $category->getSetManager()->allowAttributeSets() == AttributeKeyCategory::ASET_ALLOW_SINGLE) {
+<?php if ($category && $category->getController()->getSetManager()->allowAttributeSets() == AttributeKeyCategory::ASET_ALLOW_SINGLE) {
     ?>
 <div class="form-group">
 <?=$form->label('asID', t('Set'))?>

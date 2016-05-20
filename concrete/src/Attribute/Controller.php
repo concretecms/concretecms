@@ -268,7 +268,8 @@ class Controller extends AbstractController
 
     public function validateKey($data = false)
     {
-        return false;
+        $e = $this->app->make('error');
+        return $e;
     }
 
     public function createAttributeKeyType()
