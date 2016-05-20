@@ -6,7 +6,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Output\OutputInterface;
-use Package;
+use Concrete\Core\Support\Facade\Package;
 use Exception;
 
 class UpdatePackageCommand extends Command
