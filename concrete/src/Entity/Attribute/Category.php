@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Entity\Attribute;
 
+use Concrete\Core\Attribute\Category\CategoryInterface;
 use Concrete\Core\Attribute\CategoryObjectInterface;
 use Concrete\Core\Entity\PackageTrait;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -98,6 +99,9 @@ class Category implements CategoryObjectInterface
         $this->akCategoryAllowSets = $akCategoryAllowSets;
     }
 
+    /**
+     * @return CategoryInterface
+     */
     public function getController()
     {
         $manager = \Core::make('manager/attribute/category');

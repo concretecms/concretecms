@@ -51,15 +51,4 @@ class Factory
         }
     }
 
-    /**
-     * This is how old attribute keys used to install themselves. They extended
-     * this class and would call parent::add(). Do NOT use this method. It is here
-     * for backward compatibility.
-     * @deprecated
-     */
-    public static function add($type, $args, $pkg = false)
-    {
-
-    }
-
 }

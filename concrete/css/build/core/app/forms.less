@@ -2,7 +2,10 @@
   label.control-label {
     font-size: 13px;
     letter-spacing: 1px;
+    /*
     color: #999;
+    */
+    color: #4290be;
     font-weight: 600;
     margin-bottom: 5px;
     display: inline-block;
@@ -61,7 +64,7 @@
     input.form-control,
     textarea.form-control {
       .transition(0.1s linear all);
-      padding: 0px;
+      padding: 2px;
       color: #606060;
       .box-shadow(none);
       font-size: 18px;
@@ -73,15 +76,28 @@
       /*
       border: 1px solid #f1f1f1;
       */
+      /*
       border: 1px solid transparent;
+      border-top: 1px solid transparent;
+      border-right: 1px solid transparent;
+      border-left: 1px solid transparent;
+      border-bottom: 1px dotted #c1c1c1;
+      */
+
+      border-color: transparent;
+      background-color: #f2f2f2;
+
       &:focus {
         outline: 0px;
+        background-color: #e1e1e1;
+        /*
         background-color: transparent;
-        border-color: transparent
+        */
+        /*border-color: transparent*/
       }
 
       &:hover {
-        background-color: #e9e9e9;
+        background-color: #e1e1e1;
         border-color: transparent;
       }
 
@@ -97,7 +113,7 @@
     select.form-control {
 
       padding-right: 30px;
-      background: transparent url(../images/icons/select_arrow_down.png) no-repeat right 10px top 12px;
+      background: #f2f2f2 url(../images/icons/select_arrow_down.png) no-repeat right 10px top 12px;
     }
 
   }
@@ -173,20 +189,18 @@
 
   input[type=checkbox], input[type=radio] {
     &:checked {
+      /*
       background-color: #bdbdbd;
+      */
+      background-color: #ffffff;
     }
 
     border: 1px solid #bdbdbd;
 
     &:checked:after {
-      color: #fff;
+      color: #48b4fb;
     }
   }
-
-  input[type=radio]:checked:after {
-    color: #fff;
-  }
-
 
 
 
