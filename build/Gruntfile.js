@@ -1,5 +1,6 @@
 module.exports = function(grunt) {
     var fs = require('fs');
+    var path = require('path');
     var extend = require('util')._extend;
 
     var parameters = null;
@@ -17,7 +18,7 @@ module.exports = function(grunt) {
     var config = {};
 
     config.DIR_REL = ('DIR_REL' in parameters) ? parameters.DIR_REL : '';
-    config.DIR_BASE = ('DIR_BASE' in parameters) ? parameters.DIR_BASE : '..';
+    config.DIR_BASE = ('DIR_BASE' in parameters) ? parameters.DIR_BASE : path.join(__dirname, '..');
 
     // Options for the tool that will merge the files
     var concatOptions = {
@@ -500,17 +501,36 @@ module.exports = function(grunt) {
         require('./tasks/generate-constants.js')(grunt, config, parameters, this.async());
     });
 
+    grunt.registerTask('gitskip-on:js', 'Force GIT to consider built JS assets as unchanged', function() {
+        require('./tasks/git-skipper.js')(grunt, config, parameters, 'js', true, this.async());
+    });
+    grunt.registerTask('gitskip-off:js', 'Allow GIT to consider built JS assets', function() {
+        require('./tasks/git-skipper.js')(grunt, config, parameters, 'js', false, this.async());
+    });
+    grunt.registerTask('gitskip-on:css', 'Force GIT to consider built CSS assets as unchanged', function() {
+        require('./tasks/git-skipper.js')(grunt, config, parameters, 'css', true, this.async());
+    });
+    grunt.registerTask('gitskip-off:css', 'Allow GIT to consider built CSS assets', function() {
+        require('./tasks/git-skipper.js')(grunt, config, parameters, 'css', false, this.async());
+    });
+    grunt.registerTask('gitskip-on', 'Force GIT to consider built CSS/JS assets as unchanged', function() {
+        require('./tasks/git-skipper.js')(grunt, config, parameters, 'all', true, this.async());
+    });
+    grunt.registerTask('gitskip-off', 'Allow GIT to consider built CSS/JS assets', function() {
+        require('./tasks/git-skipper.js')(grunt, config, parameters, 'all', false, this.async());
+    });
+
     grunt.registerTask('jsOnly:debug', jsTargets.debug);
     grunt.registerTask('jsOnly:release', jsTargets.release );
 
     //grunt.registerTask('js:debug', ['generate-constants', 'jsOnly:debug' ]);
     //grunt.registerTask('js:release', ['generate-constants', 'jsOnly:release' ]);
-    grunt.registerTask('js:debug', ['jsOnly:debug' ]);
-    grunt.registerTask('js:release', ['jsOnly:release' ]);
+    grunt.registerTask('js:debug', ['jsOnly:debug', 'gitskip-on:js']);
+    grunt.registerTask('js:release', ['jsOnly:release', 'gitskip-off:js']);
     grunt.registerTask('js', 'js:release');
 
-    grunt.registerTask('css:debug', 'less:debug');
-    grunt.registerTask('css:release', 'less:release');
+    grunt.registerTask('css:debug', ['less:debug', 'gitskip-on:css']);
+    grunt.registerTask('css:release', ['less:release', 'gitskip-off:css']);
     grunt.registerTask('css', 'css:release');
 
     grunt.registerTask('debug', ['js:debug', 'css:debug']);
