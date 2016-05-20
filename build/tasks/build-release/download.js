@@ -25,7 +25,6 @@ module.exports = function(grunt, config, parameters, done) {
 			.get(zipUrl)
 			.dest(workFolder);
 		download.run(function(err) {
-			debugger;
 			if (err) {
 				endForError(err);
 				return;
