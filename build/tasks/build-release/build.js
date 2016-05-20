@@ -34,7 +34,7 @@ module.exports = function(grunt, config, parameters, done) {
 						process.stdout.write('done.\n');
 						process.stdout.write('Installng PHP dependencies with Composer... ');
 						exec(
-							'composer install --prefer-dist --no-dev',
+							'composer install --no-dev',
 							{
 								cwd: path.join(workFolder, 'concrete')
 							},
