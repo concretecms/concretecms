@@ -1,4 +1,6 @@
 {
+  "name": "concrete5/concrete5",
+  "description": "concrete5 open source CMS",
   "minimum-stability": "beta",
   "prefer-stable": true,
   "repositories": [
