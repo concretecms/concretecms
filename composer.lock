@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "308b5579034f25ef47380d70e85cd548",
-    "content-hash": "9ed99e4df922bc9b55c452a92c20e1b5",
+    "hash": "d454338d04909e9d284d575b81191469",
+    "content-hash": "c78d77b6762abb491dbf0698618919fc",
     "packages": [
         {
             "name": "anahkiasen/html-object",
@@ -1163,7 +1163,7 @@
         },
         {
             "name": "illuminate/container",
-            "version": "v5.2.31",
+            "version": "v5.2.32",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/container.git",
@@ -1206,7 +1206,7 @@
         },
         {
             "name": "illuminate/contracts",
-            "version": "v5.2.31",
+            "version": "v5.2.32",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/contracts.git",
@@ -2434,16 +2434,16 @@
         },
         {
             "name": "sunra/php-simple-html-dom-parser",
-            "version": "v1.5.0",
+            "version": "v1.5.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sunra/php-simple-html-dom-parser.git",
-                "reference": "a0b80ace086c7e09085669205e1b3c2c9c7a453c"
+                "reference": "f910346ce47513a49ed5b8de197cde26c3f0b193"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sunra/php-simple-html-dom-parser/zipball/a0b80ace086c7e09085669205e1b3c2c9c7a453c",
-                "reference": "a0b80ace086c7e09085669205e1b3c2c9c7a453c",
+                "url": "https://api.github.com/repos/sunra/php-simple-html-dom-parser/zipball/f910346ce47513a49ed5b8de197cde26c3f0b193",
+                "reference": "f910346ce47513a49ed5b8de197cde26c3f0b193",
                 "shasum": ""
             },
             "require": {
@@ -2463,7 +2463,7 @@
                 {
                     "name": "Sunra",
                     "email": "sunra@yandex.ru",
-                    "homepage": "http://github.com/sunra"
+                    "homepage": "https://github.com/sunra"
                 }
             ],
             "description": "Composer adaptation of: A HTML DOM parser written in PHP5+ let you manipulate HTML in a very easy way! Require PHP 5+. Supports invalid HTML. Find tags on an HTML page with selectors just like jQuery. Extract contents from HTML in a single line.",
@@ -2473,7 +2473,7 @@
                 "html",
                 "parser"
             ],
-            "time": "2013-05-04 14:32:03"
+            "time": "2016-05-20 11:21:15"
         },
         {
             "name": "symfony/class-loader",
@@ -3858,7 +3858,7 @@
             "dist": {
                 "type": "zip",
                 "url": "https://api.github.com/repos/mlocati/zendframework2-i18n-v3/zipball/45a8a2442e7eaeef5059cb25e1fffe9c9fa0ffcb",
-                "reference": "45a8a2442e7eaeef5059cb25e1fffe9c9fa0ffcb",
+                "reference": "6a5a65c1cdcf02877e2526c1b3e315de6a59bb8c",
                 "shasum": ""
             },
             "require": {

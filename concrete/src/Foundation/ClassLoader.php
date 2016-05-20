@@ -157,7 +157,7 @@ class ClassLoader
     }
 
     /**
-     * Adds concrete5's core autoloading prefixes.
+     * Adds concrete5's application autoloading prefixes. Core prefixes are added with composer
      *
      * * The following prefixes are registered:
      * <ul>
@@ -188,15 +188,7 @@ class ClassLoader
         $symfonyLoader = new ModifiedPSR4ClassLoader();
 
         $symfonyLoader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\StartingPointPackage', DIR_BASE_CORE . '/config/install/' . DIRNAME_PACKAGES);
-        $symfonyLoader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Attribute', DIR_BASE_CORE . '/' . DIRNAME_ATTRIBUTES);
-        $symfonyLoader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\MenuItem', DIR_BASE_CORE . '/' . DIRNAME_MENU_ITEMS);
-        $symfonyLoader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Authentication', DIR_BASE_CORE . '/' . DIRNAME_AUTHENTICATION);
-        $symfonyLoader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Block', DIR_BASE_CORE . '/' . DIRNAME_BLOCKS);
-        $symfonyLoader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Theme', DIR_BASE_CORE . '/' . DIRNAME_THEMES);
-        $symfonyLoader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Controller\\PageType', DIR_BASE_CORE . '/' . DIRNAME_CONTROLLERS . '/' . DIRNAME_PAGE_TYPES);
-        $symfonyLoader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Controller', DIR_BASE_CORE . '/' . DIRNAME_CONTROLLERS);
         $symfonyLoader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Job', DIR_BASE_CORE . '/' . DIRNAME_JOBS);
-        $symfonyLoader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Express', DIR_APPLICATION . '/config/express/Entity/Concrete/Express');
 
         $namespace = 'Application';
         $app_config_path = DIR_APPLICATION . '/config/app.php';
@@ -224,7 +216,6 @@ class ClassLoader
 
         $strictLoader = new SymfonyClassLoader();
 
-        $strictLoader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Core', DIR_BASE_CORE . '/' . DIRNAME_CLASSES);
         if ($provideCoreExtensionAutoloaderMapping) {
             $strictLoader->addPrefix($namespace, DIR_APPLICATION . '/' . DIRNAME_CLASSES . '/Concrete');
         } else {
