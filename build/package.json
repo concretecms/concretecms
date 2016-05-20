@@ -1,8 +1,7 @@
 {
   "name": "concrete5",
-  "version": "5.7.0",
   "devDependencies": {
-    "download": "~0.1.18",
+    "download": "~4.4.3",
     "grunt": "~0.4.1",
     "grunt-contrib-concat": "~0.3.0",
     "grunt-contrib-cssmin": "~0.6.2",
