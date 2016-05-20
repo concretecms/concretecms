@@ -3,7 +3,7 @@ namespace Concrete\Core\Marketplace;
 
 use Config;
 use Core;
-use Package;
+use Concrete\Core\Support\Facade\Package;
 use TaskPermission;
 use URL;
 

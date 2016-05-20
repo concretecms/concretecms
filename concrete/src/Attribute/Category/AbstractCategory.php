@@ -95,9 +95,10 @@ abstract class AbstractCategory implements CategoryInterface, StandardSearchInde
         $this->entityManager->flush();
     }
 
-    public function add($key_type, $key, Package $pkg = null)
+    public function add($key_type, $key, $pkg = null)
     {
         /*
+         * Note: Do not type hint $pkg because old versions might not send the right object in.
          * LEGACY SUPPORT
          */
         if (is_string($key_type)) {
