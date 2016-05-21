@@ -58,7 +58,7 @@ class Controller extends BlockController
         $this->set('foS', $foS);
 
         $imgPaths = [];
-        $imgPaths['hover']   = File::getRelativePathFromID($this->fOnstateID);
+        $imgPaths['hover'] = File::getRelativePathFromID($this->fOnstateID);
         $imgPaths['default'] = File::getRelativePathFromID($this->fID);
         $this->set('imgPaths', $imgPaths);
 
