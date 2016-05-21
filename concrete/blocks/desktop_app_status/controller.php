@@ -1,8 +1,10 @@
 <?php
 namespace Concrete\Block\DesktopAppStatus;
 
-use Package;
+use Concrete\Core\Updater\Update;
+use Concrete\Core\Support\Facade\Package;
 use Concrete\Core\Block\BlockController;
+use Concrete\Core\Permission\Checker as Permissions;
 
     class Controller extends BlockController
     {
@@ -24,19 +26,18 @@ use Concrete\Core\Block\BlockController;
 
         public function view()
         {
-            $this->set('latest_version', \Concrete\Core\Updater\Update::getLatestAvailableVersionNumber());
-            $tp = new \TaskPermission();
-            $updates = 0;
-            $local = array();
-            $remote = array();
-            if ($tp->canInstallPackages()) {
+            $this->set('latest_version', Update::getLatestAvailableVersionNumber());
+            $local = [];
+            $remote = [];
+            $p = new Permissions();
+            if ($p->canInstallPackages()) {
                 $local = Package::getLocalUpgradeablePackages();
                 $remote = Package::getRemotelyUpgradeablePackages();
             }
 
             // now we strip out any dupes for the total
             $updates = 0;
-            $localHandles = array();
+            $localHandles = [];
             foreach ($local as $_pkg) {
                 ++$updates;
                 $localHandles[] = $_pkg->getPackageHandle();
