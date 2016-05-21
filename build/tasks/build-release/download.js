@@ -21,7 +21,7 @@ module.exports = function(grunt, config, parameters, done) {
 		}
 		fs.mkdir(workFolder);
 		process.stdout.write('Downloading & unzipping archive... ');
-		var download = new Download({extract: true})
+		var download = new Download({extract: true, mode: '755'})
 			.get(zipUrl)
 			.dest(workFolder);
 		download.run(function(err) {
