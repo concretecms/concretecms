@@ -310,9 +310,6 @@ echo Core::make('helper/concrete/ui')->tabs(array(
 
 <script type="text/template" id="imageTemplate">
     <div class="ccm-image-slider-entry slide-well slide-closed">
-        <button type="button" class="btn btn-default ccm-edit-slide" data-slide-close-text="<?php echo t('Collapse Slide'); ?>" data-slide-edit-text="<?php echo t('Edit Slide'); ?>"><?php echo t('Edit Slide'); ?></button>
-        <button type="button" class="btn btn-danger ccm-delete-image-slider-entry"><?php echo t('Remove'); ?></button>
-        <i class="fa fa-arrows"></i>
         <div class="form-group">
             <label><?php echo t('Image'); ?></label>
             <div class="ccm-pick-slide-image">
@@ -350,5 +347,8 @@ echo Core::make('helper/concrete/ui')->tabs(array(
             <div data-field="entry-link-page-selector-select"></div>
         </div>
         <input class="ccm-image-slider-entry-sort" type="hidden" name="<?php echo $view->field('sortOrder'); ?>[]" value="<%=sort_order%>"/>
+        <button type="button" class="btn btn-default ccm-edit-slide" data-slide-close-text="<?php echo t('Collapse Slide'); ?>" data-slide-edit-text="<?php echo t('Edit Slide'); ?>"><?php echo t('Edit Slide'); ?></button>
+        <button type="button" class="btn btn-danger ccm-delete-image-slider-entry"><?php echo t('Remove'); ?></button>
+        <i class="fa fa-arrows"></i>
     </div>
 </script>
