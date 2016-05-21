@@ -2,7 +2,7 @@
 
 </div>
 
-<?php Loader::element('footer_required'); ?>
+<?php View::element('footer_required'); ?>
 
 </body>
 </html>
