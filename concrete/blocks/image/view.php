@@ -1,55 +1,50 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");
 
-$c = Page::getCurrentPage();
-if (is_object($f)) {
+if (is_object($f) && $f->getFileID()) {
     if ($maxWidth > 0 || $maxHeight > 0) {
+        $crop = false;
+
         $im = Core::make('helper/image');
-        $thumb = $im->getThumbnail(
-            $f,
-            $maxWidth,
-            $maxHeight
-        ); //<-- set these 2 numbers to max width and height of thumbnails
+        $thumb = $im->getThumbnail($f, $maxWidth, $maxHeight, $crop);
+
         $tag = new \HtmlObject\Image();
         $tag->src($thumb->src)->width($thumb->width)->height($thumb->height);
     } else {
-        $image = Core::make('html/image', array($f));
+        $image = Core::make('html/image', [$f]);
         $tag = $image->getTag();
     }
-    $tag->addClass('ccm-image-block img-responsive bID-'.$bID);
+
+    $tag->addClass(' bID-'.$bID);
     if ($altText) {
         $tag->alt(h($altText));
     }
+
     if ($title) {
         $tag->title(h($title));
     }
-    if ($linkURL):
-        print '<a href="' . $linkURL . '">';
-    endif;
+
+    if ($linkURL) {
+        echo '<a href="'.$linkURL.'">';
+    }
 
     echo $tag;
 
-    if ($linkURL):
-        print '</a>';
-    endif;
+    if ($linkURL) {
+        echo '</a>';
+    }
 } elseif ($c->isEditMode()) {
     ?>
+    <div class="ccm-edit-mode-disabled-item"><?php echo t('Empty Image Block.') ?></div>
+    <?php
+}
 
-    <div class="ccm-edit-mode-disabled-item"><?=t('Empty Image Block.')?></div>
-
-<?php 
-} ?>
-
-<?php if (isset($foS) && is_object($foS)) {
-    ?>
+if (is_object($foS)): ?>
 <script>
 $(function() {
-    $('.bID-<?php echo $bID;
-    ?>')
-        .mouseover(function(e){$(this).attr("src", '<?php echo $imgPath["hover"];
-    ?>');})
-        .mouseout(function(e){$(this).attr("src", '<?php echo $imgPath["default"];
-    ?>');});
+    $('.bID-<?php echo $bID; ?>')
+        .mouseover(function(){$(this).attr("src", '<?php echo $imgPaths["hover"]; ?>');})
+        .mouseout(function(){$(this).attr("src", '<?php echo $imgPaths["default"]; ?>');});
 });
 </script>
-<?php 
-} ?>
+<?php
+endif;
