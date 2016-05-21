@@ -2,7 +2,7 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 ?>
 
-<div class="control-group">
+<div class="form-group">
     <?php
     echo $form->label($view->field('content'), $label);
 
