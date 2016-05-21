@@ -3,6 +3,7 @@ namespace Concrete\Core\Entity;
 
 use Concrete\Core\Package\LocalizablePackageInterface;
 use Concrete\Core\Package\PackageService;
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -152,7 +153,7 @@ class Package implements LocalizablePackageInterface
     }
 
     /**
-     * @return \DateTime
+     * @return DateTime
      */
     public function getPackageDateInstalled()
     {
@@ -160,7 +161,7 @@ class Package implements LocalizablePackageInterface
     }
 
     /**
-     * @param \DateTime $pkgDateInstalled
+     * @param DateTime $pkgDateInstalled
      */
     public function setPackageDateInstalled($pkgDateInstalled)
     {
@@ -185,7 +186,7 @@ class Package implements LocalizablePackageInterface
 
     public function __construct()
     {
-        $this->pkgDateInstalled = new \DateTime();
+        $this->pkgDateInstalled = new DateTime();
     }
 
     public function getController()
