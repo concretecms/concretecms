@@ -11,8 +11,5 @@
     "grunt-newer": "^0.7.0",
     "shelljs": "0.2.6",
     "temp": "~0.8.1"
-  },
-  "scripts": {
-    "install": "grunt release"
   }
 }
