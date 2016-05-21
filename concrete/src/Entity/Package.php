@@ -53,7 +53,7 @@ class Package implements LocalizablePackageInterface
     protected $pkgName;
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getPackageHandle()
     {
@@ -61,7 +61,7 @@ class Package implements LocalizablePackageInterface
     }
 
     /**
-     * @param mixed $handle
+     * @param string $pkgHandle
      */
     public function setPackageHandle($pkgHandle)
     {
@@ -69,7 +69,7 @@ class Package implements LocalizablePackageInterface
     }
 
     /**
-     * @return mixed
+     * @return int
      */
     public function getPackageID()
     {
@@ -77,7 +77,7 @@ class Package implements LocalizablePackageInterface
     }
 
     /**
-     * @param mixed $pkgID
+     * @param int $pkgID
      */
     public function setPackageID($pkgID)
     {
@@ -87,7 +87,7 @@ class Package implements LocalizablePackageInterface
 
 
     /**
-     * @return mixed
+     * @return bool
      */
     public function isPackageInstalled()
     {
@@ -95,7 +95,7 @@ class Package implements LocalizablePackageInterface
     }
 
     /**
-     * @param mixed $pkgIsInstalled
+     * @param bool $pkgIsInstalled
      */
     public function setIsPackageInstalled($pkgIsInstalled)
     {
@@ -104,7 +104,7 @@ class Package implements LocalizablePackageInterface
 
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getPackageVersion()
     {
@@ -112,7 +112,7 @@ class Package implements LocalizablePackageInterface
     }
 
     /**
-     * @param mixed $pkgVersion
+     * @param string $pkgVersion
      */
     public function setPackageVersion($pkgVersion)
     {
@@ -120,7 +120,7 @@ class Package implements LocalizablePackageInterface
     }
 
     /**
-     * @return mixed
+     * @return string|null
      */
     public function getPackageVersionUpdateAvailable()
     {
@@ -128,7 +128,7 @@ class Package implements LocalizablePackageInterface
     }
 
     /**
-     * @param mixed $pkgAvailableVersion
+     * @param string|null $pkgAvailableVersion
      */
     public function setPackageAvailableVersion($pkgAvailableVersion)
     {
@@ -136,7 +136,7 @@ class Package implements LocalizablePackageInterface
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getPackageDescription()
     {
@@ -144,7 +144,7 @@ class Package implements LocalizablePackageInterface
     }
 
     /**
-     * @param mixed $pkgDescription
+     * @param string $pkgDescription
      */
     public function setPackageDescription($pkgDescription)
     {
@@ -152,7 +152,7 @@ class Package implements LocalizablePackageInterface
     }
 
     /**
-     * @return mixed
+     * @return \DateTime
      */
     public function getPackageDateInstalled()
     {
@@ -160,7 +160,7 @@ class Package implements LocalizablePackageInterface
     }
 
     /**
-     * @param mixed $pkgDateInstalled
+     * @param \DateTime $pkgDateInstalled
      */
     public function setPackageDateInstalled($pkgDateInstalled)
     {
@@ -168,7 +168,7 @@ class Package implements LocalizablePackageInterface
     }
 
     /**
-     * @return mixed
+     * @return string|null
      */
     public function getPackageName()
     {
@@ -176,7 +176,7 @@ class Package implements LocalizablePackageInterface
     }
 
     /**
-     * @param mixed $pkgName
+     * @param string|null $pkgName
      */
     public function setPackageName($pkgName)
     {
@@ -199,6 +199,10 @@ class Package implements LocalizablePackageInterface
         return call_user_func_array(array($controller, $method), $arguments);
     }
 
+    /**
+     * @param string $locale
+     * @return string
+     */
     public function getTranslationFile($locale)
     {
         $controller = $this->getController();
