@@ -1,0 +1,292 @@
+@import "include/variables.less";
+@import "include/mixins.less";
+@import "../vendor/bootstrap/variables.less";
+@import "../vendor/bootstrap/mixins.less";
+
+/**
+ * File Manager Search Header
+ */
+/**
+ * Dashboard/Dialog Header Search
+*/
+div.ccm-file-manager-search-form {
+  float: right;
+  margin-top: -5px;
+  width: 400px;
+
+  span.input-group-btn {
+    border-left: 0px;
+  }
+
+  input {
+    border-right-width: 0px !important;
+  }
+
+  form {
+    position: relative;
+
+    a.ccm-file-manager-reset-search,
+    a.ccm-file-manager-launch-advanced-search {
+      position: absolute;
+      top: 7px;
+      z-index: @index-level-search-reset;
+    }
+
+    a.ccm-file-manager-reset-search {
+      left: 10px;
+      &.ccm-file-manager-reset-search-right {
+        right: 70px;
+        left: auto;
+
+      }
+    }
+
+    a.ccm-file-manager-launch-advanced-search {
+      color: #aaa;
+      right: 70px;
+
+    }
+
+    a.ccm-file-manager-reset-search {
+      color: #09f;
+      display: none;
+    }
+
+    div.input-group {
+      input {
+        padding-right: 110px;
+      }
+    }
+  }
+}
+
+ul.ccm-file-manager-navigation {
+  li {
+    display: inline-block;
+    margin-left: 20px;
+  }
+  list-style: none;
+  text-align: right;
+  padding: 10px 0px 10px 0px;
+  a {
+    color: #777;
+    .transition(0.1s linear all);
+  }
+  a:focus, a:hover {
+    text-decoration: none;
+    color: #333;
+    outline: none;
+  }
+  a#ccm-file-manager-upload {
+
+    position: relative;
+
+    input[type=file] {
+      position: absolute;
+      .opacity(0);
+      top:  0px;
+      left: 0px;
+      width: 100%;
+      height: 20px;
+      border: 1px solid black;
+      cursor: pointer;
+    }
+
+    color: #09f;
+    &:hover {
+      color: #2b507b;
+    }
+  }
+}
+
+/**
+ * File Results List
+ */
+table.ccm-file-manager-list {
+  img.ccm-file-manager-list-thumbnail {
+    width: 30px;
+    height: 30px;
+  }
+  td.ccm-search-results-icon {
+    i {
+      margin-top: 7px;
+      margin-bottom: 7px;
+      display: inline-block;
+    }
+  }
+}
+
+/**
+ * In-page file manager dialog
+ */
+div.ui-dialog {
+  div.ccm-file-manager-search-form {
+    position: absolute;
+    right: 60px;
+    top: 17px;
+    float: none;
+    z-index: @index-level-dialog-title-bar-search;
+    ul.ccm-file-manager-navigation {
+      text-align: left;
+      position: absolute;
+      top: -3px;
+      left: -240px;
+    }
+  }
+
+  div.table-responsive {
+    margin: -20px -26px -20px -26px;
+  }
+  div.ccm-search-results-breadcrumb {
+    display: inline-block;
+    position: static;
+    height: 15px;
+    ol {
+      margin-bottom: 0px;
+      font-size: 14px;
+      font-weight: normal;
+    }
+  }
+
+  div.ui-dialog-titlebar {
+    span {
+      margin-right: 20px;
+    }
+  }
+}
+
+/**
+ * Download iframe
+ */
+#ccm-file-manager-download-target {
+  width: 0px;
+  height: 0px;
+  visibility: hidden;
+}
+
+
+/**
+ * Select in page
+ */
+div.ccm-file-selector {
+  .border-radius(2px);
+  color: #606060;
+  background-color: #f0f0f0;
+  font-size: 14px;
+  line-height: @line-height-base;
+  .transition(0.1s linear all);
+  cursor: pointer;
+
+  &.ccm-parent-menu-item-hover, &.ccm-parent-menu-item-active, &:hover {
+    cursor: pointer;
+    outline: 0px;
+    background-color: #e7e7e7;
+  }
+
+  div.ccm-file-selector-choose-new {
+    padding: 8px;
+  }
+
+  div.ccm-file-selector-loading {
+    padding: 8px;
+  }
+
+  div.ccm-file-selector-file-selected {
+
+    padding: 8px;
+
+    div.ccm-file-selector-file-selected-thumbnail {
+      margin-right: 10px; float: left;
+    }
+
+    div.ccm-file-selector-file-selected-title {
+      font-size: 11px; word-wrap: break-word;
+      color: #333;
+      font-weight: normal;
+    }
+  }
+}
+
+/**
+ * Menuing
+ */
+#ccm-menu-click-proxy.ccm-file-manager-menu-item-hover {
+  z-index: @index-level-dialog-content-click-proxy;
+  background: url(data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7);
+}
+
+div#ccm-popover-menu-container {
+  .ccm-popover-file-menu {
+    z-index: @index-level-dialog-content-click-proxy;
+  }
+}
+
+/**
+ * Upload Dialog
+ */
+div#ccm-file-manager-import-files {
+  form.dropzone {
+    .transition(0.1s linear all);
+    span {
+      font-size: 32px;
+      -webkit-font-smoothing: antialiased;
+      font-weight: normal;
+      display: block;
+      padding-top: 30px;
+      color: #999;
+    }
+
+    &.drag-hover {
+      background-color: rgba(102,175,233,0.6);
+      span {
+        color: #999;
+      }
+    }
+
+    height: 340px;
+    border: 2px dashed #09f;
+  }
+}
+
+/**
+ *Thumbnail listing
+ */
+.ccm-ui {
+  .ccm-image-thumbnail-card {
+    padding: 12px;
+    margin-bottom: 20px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+  }
+  .ccm-file-manager-image-thumbnail {
+    margin-bottom: 0px;
+    padding: 20px;
+    text-align: center;
+    background-color: #efefef;
+    font-size: 18px;
+    font-weight: 300;
+    color: #999;
+  }
+  .ccm-image-thumbnail-display-name {
+    min-height: 40px;
+  }
+  .ccm-image-thumbnail-display-name h4 {
+    margin-top: 0px;
+  }
+  .ccm-image-thumbnail-dimensions {
+    display: block;
+    margin-bottom: 10px;
+    color: #999;
+    font-size: 13.5px;
+  }
+  .ccm-image-thumbnail-divider {
+    margin-top: 15px;
+    margin-bottom: 15px;
+  }
+}
+
+@media (max-width: @screen-xs-max) {
+  div#ccm-file-manager-upload-prompt {
+    position: static;
+  }
+}

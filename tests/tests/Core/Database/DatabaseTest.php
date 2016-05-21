@@ -2,12 +2,11 @@
 
 class DatabaseTest extends ConcreteDatabaseTestcase
 {
-
     protected $fixtures = array(
-        'Users'
+        'Users',
     );
     protected $tables = array(
-        'User'
+        'User',
     );
 
     public function setUp()
@@ -26,9 +25,9 @@ class DatabaseTest extends ConcreteDatabaseTestcase
         $connection = Database::getFactory()->createConnection(
             array(
                 'database' => md5(rand()),
-                'user'     => md5(rand()),
+                'user' => md5(rand()),
                 'password' => md5(rand()),
-                'host'     => DB_SERVER
+                'host' => 'DB_SERVER',
             ));
 
         try {
@@ -42,7 +41,6 @@ class DatabaseTest extends ConcreteDatabaseTestcase
 
     public function testValidConnection()
     {
-
         $config = \Config::get('database');
         $connection_config = $config['connections'][$config['default-connection']];
         $connection = Database::getFactory()->createConnection(
@@ -50,7 +48,7 @@ class DatabaseTest extends ConcreteDatabaseTestcase
                 'host' => $connection_config['server'],
                 'user' => $connection_config['username'],
                 'password' => $connection_config['password'],
-                'database' => $connection_config['database']
+                'database' => $connection_config['database'],
             ));
 
         try {
@@ -101,7 +99,6 @@ class DatabaseTest extends ConcreteDatabaseTestcase
 
     public function testLegacyConcreteApi()
     {
-
         $db = Loader::db();
 
         $q = "SELECT * FROM Users";
@@ -145,7 +142,7 @@ class DatabaseTest extends ConcreteDatabaseTestcase
         // getcol
         $col = $db->GetCol('SELECT uID FROM Users');
         $this->assertTrue(count($col) == 4);
-        for ($i = 0; $i < 4; $i++) {
+        for ($i = 0; $i < 4; ++$i) {
             $uID = $col[$i];
             $this->assertTrue(($i + 1) == $uID);
         }
@@ -179,5 +176,4 @@ class DatabaseTest extends ConcreteDatabaseTestcase
         $uName = $db->GetOne('SELECT uName FROM Users WHERE uEmail = ?', array("testuser5'@concrete5.org"));
         $this->assertTrue($uName == "test'der");
     }
-
 }

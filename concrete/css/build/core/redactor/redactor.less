@@ -1,0 +1,49 @@
+@import "../include/variables.less";
+@import "../../vendor/bootstrap/variables.less";
+@import "../../vendor/bootstrap/mixins.less";
+
+*.ccm-content-editor-snippet {
+  .border-radius(2px);
+  border: 1px solid #eee;
+  padding: 4px;
+  display: inline-block;
+  background-color: #FDFFCE;
+  font-family: @font-family-sans-serif;
+}
+
+div.ccm-panel-detail .redactor-editor, div.ui-dialog .redactor-editor {
+  border: 1px solid #eee;
+  background: white;
+  padding: 10px;
+  .border-bottom-radius(4px);
+}
+
+.ccm-block-edit-inline-active .redactor-box {
+  background: transparent;
+}
+
+.redactor-editor {
+  img {
+    max-width: 100%;
+    width: auto;
+  }
+  video,
+  img {
+    height: auto;
+  }
+  table {
+    border-collapse: collapse;
+    min-width: 55px;
+    & td,
+    & th {
+      padding: 5px;
+      border: 1px solid #ddd;
+      vertical-align: top;
+    }
+  }
+  table thead td,
+  table th {
+    font-weight: bold;
+    border-bottom-color: #888;
+  }
+}

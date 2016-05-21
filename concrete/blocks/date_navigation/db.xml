@@ -1,0 +1,35 @@
+<schema
+  xmlns="http://www.concrete5.org/doctrine-xml/0.5"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.concrete5.org/doctrine-xml/0.5 http://concrete5.github.io/doctrine-xml/doctrine-xml-0.5.xsd">
+
+  <table name="btDateNavigation">
+    <field name="bID" type="integer">
+      <unsigned/>
+      <key/>
+    </field>
+    <field name="title" type="string" size="255">
+      <default value=""/>
+      <notnull/>
+    </field>
+    <field name="filterByParent" type="boolean">
+      <default value="0"/>
+    </field>
+    <field name="redirectToResults" type="boolean">
+      <default value="0"/>
+    </field>
+    <field name="cParentID" type="integer">
+      <unsigned/>
+      <default value="0"/>
+      <notnull/>
+    </field>
+    <field name="cTargetID" type="integer" comment="this field is where the links will direct you">
+      <unsigned/>
+      <default value="0"/>
+      <notnull/>
+    </field>
+    <field name="ptID" type="smallint">
+      <unsigned/>
+    </field>
+  </table>
+
+</schema>

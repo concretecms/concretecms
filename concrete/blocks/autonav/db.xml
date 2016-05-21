@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema
+  xmlns="http://www.concrete5.org/doctrine-xml/0.5"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.concrete5.org/doctrine-xml/0.5 http://concrete5.github.io/doctrine-xml/doctrine-xml-0.5.xsd">
+
+  <table name="btNavigation">
+    <field name="bID" type="integer">
+      <unsigned/>
+      <key/>
+    </field>
+    <field name="orderBy" type="string" size="255">
+      <default value="alpha_asc"/>
+    </field>
+    <field name="displayPages" type="string" size="255" comment="was enum('top','current','above','below','custom')">
+      <default value="top"/>
+    </field>
+    <field name="displayPagesCID" type="integer">
+      <unsigned/>
+      <default value="1"/>
+      <notnull/>
+    </field>
+    <field name="displayPagesIncludeSelf" type="boolean">
+      <unsigned/>
+      <default value="0"/>
+      <notnull/>
+    </field>
+    <field name="displaySubPages" type="string" size="255" comment="was enum('none','all','relevant','relevant_breadcrumb')">
+      <default value="none"/>
+    </field>
+    <field name="displaySubPageLevels" type="string" size="255" comment="was enum('all','none','enough','enough_plus1','custom')">
+      <default value="none"/>
+    </field>
+    <field name="displaySubPageLevelsNum" type="smallint">
+      <unsigned/>
+      <default value="0"/>
+      <notnull/>
+    </field>
+    <field name="displayUnavailablePages" type="boolean">
+      <unsigned/>
+      <default value="0"/>
+      <notnull/>
+    </field>
+    <field name="displaySystemPages" type="smallint">
+      <unsigned/>
+      <default value="0"/>
+      <notnull/>
+    </field>
+  </table>
+
+</schema>

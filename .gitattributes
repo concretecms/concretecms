@@ -1,0 +1,54 @@
+# Try to autodetect as fallback
+* text=auto
+
+# Shorthand for text files with whitespace error config
+[attr]normalizetext   text eol=lf whitespace=trailing-space,tab-in-indent,tabwidth=4
+
+#
+# Text files
+#
+*.conf text
+*.css normalizetext
+*.json normalizetext
+*.yml normalizetext
+*.yaml normalizetext
+*.scss normalizetext
+*.sass normalizetext
+*.less normalizetext
+*.html normalizetext diff=html
+*.js normalizetext
+*.md normalizetext
+*.php normalizetext diff=php
+*.sql normalizetext
+*.tpl normalizetext
+*.txt normalizetext
+*.xml normalizetext
+
+#
+# Binary files
+#
+*.bz2 binary
+*.gif binary
+*.ico binary
+*.jar binary
+*.jpeg binary
+*.jpg binary
+*.otf binary
+*.png binary
+*.tar.* binary
+*.ttf binary
+*.TTF binary
+*.woff binary
+
+#
+# Exclude from archives created from the source code
+#
+/.* export-ignore
+/build/ export-ignore
+/tests/ export-ignore
+/CHANGELOG.md export-ignore
+/CONTRIBUTING.md export-ignore
+/INSTALL.md export-ignore
+/phpunit.xml export-ignore
+/README.md export-ignore
+.gitignore export-ignore

@@ -1,0 +1,9 @@
+.googleMapCanvas {
+    width: 100%;
+    border: 0 none;
+    height: 400px;
+}
+
+.googleMapCanvas img {
+    max-width: none !important;
+}

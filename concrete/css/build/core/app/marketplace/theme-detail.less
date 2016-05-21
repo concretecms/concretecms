@@ -1,0 +1,77 @@
+div.ccm-marketplace-detail-theme-slideshow-wrapper {
+  margin: 0px -50px 0px -97px;
+  position: relative;
+
+  .rslides {
+    margin-bottom: 0px;
+    li {
+      height: 320px;
+      overflow: hidden;
+      position: relative;
+
+      img {
+        position: absolute;
+        top:-100%; left:0; right: 0; bottom:-100%;
+        margin: auto;
+      }
+    }
+  }
+  .rslides_nav {
+    visibility: hidden;
+  }
+
+  div.ccm-marketplace-detail-theme-slideshow-nav {
+    nav {
+      .ccm-ui.list-unstyled();
+      padding-right: 25px;
+      background-color: #f7f7f7;
+      li {
+        display: inline-block;
+
+      }
+
+      text-align: right;
+
+      a {
+        display: block;
+        &:hover {
+          color: #189df6;
+        }
+        padding: 25px 25px 25px 25px;
+        color: #7e8991;
+      }
+    }
+  }
+
+}
+
+div.ccm-marketplace-detail-columns {
+  clear: both;
+  margin-top: 40px;
+  width: 800px;
+}
+
+.ccm-marketplace-detail-theme-details {
+  position: absolute;
+  bottom: -10px;
+  width: 370px;
+  padding: 40px 40px 40px 40px;
+  left: 95px;
+  background-color: #fff;
+  .box-shadow(0px 0px 10px 0px #888);
+  z-index: 5;
+
+  h2 {
+    margin: 0px 0px 20px 0px;
+    padding: 0px;
+    line-height: 24px;
+    font-weight: 300;
+    font-size: 24px;
+  }
+
+  div.ccm-marketplace-detail-theme-buy {
+    background-color: #f4f4f4;
+    padding: 25px 50px 25px 50px;
+    margin: 20px -40px -40px -40px;
+  }
+}

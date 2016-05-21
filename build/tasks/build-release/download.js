@@ -1,5 +1,5 @@
 module.exports = function(grunt, config, parameters, done) {
-	var zipUrl = parameters.releaseSourceZip || 'https://github.com/concrete5/concrete5-5.7.0/archive/master.zip';
+	var zipUrl = parameters.releaseSourceZip || 'https://github.com/concrete5/concrete5/archive/develop.zip';
 	var workFolder = parameters.releaseWorkFolder || './release';
 	function endForError(e) {
 		process.stderr.write(e.message || e);
@@ -8,7 +8,7 @@ module.exports = function(grunt, config, parameters, done) {
 	try {
 		var fs = require('fs'),
 			path = require('path')
-			download = require('download'),
+			Download = require('download'),
 			c5fs = require('../../libraries/fs'),
 			shell = require('shelljs');
 		if(c5fs.isDirectory(workFolder)) {
@@ -21,14 +21,14 @@ module.exports = function(grunt, config, parameters, done) {
 		}
 		fs.mkdir(workFolder);
 		process.stdout.write('Downloading & unzipping archive... ');
-		var stream = download(
-			zipUrl,
-			workFolder,
-			{
-				extract: true
+		var download = new Download({extract: true, mode: '755'})
+			.get(zipUrl)
+			.dest(workFolder);
+		download.run(function(err) {
+			if (err) {
+				endForError(err);
+				return;
 			}
-		);
-		stream.on('close', function() {
 			process.stdout.write('done.\n');
 			var extractedFolder = null;
 			fs.readdirSync(workFolder).forEach(function(item) {

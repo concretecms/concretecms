@@ -8,11 +8,11 @@ module.exports = function(grunt, config, parameters, done) {
 		var path = require('path'),
 			exec = require('child_process').exec,
 			fs = require('fs');
-		process.stdout.write('Installng node.js modules with npm... ');
+		process.stdout.write('Installng PHP dependencies with Composer... ');
 		exec(
-			'npm install',
+			'composer install --prefer-dist --no-dev',
 			{
-				cwd: path.join(workFolder, 'build')
+				cwd: workFolder
 			},
 			function(error, stdout, stderr) {
 				if(error) {
@@ -20,35 +20,7 @@ module.exports = function(grunt, config, parameters, done) {
 					return;
 				}
 				process.stdout.write('done.\n');
-				process.stdout.write('Building release components with Grunt... ');
-				exec(
-					'grunt release',
-					{
-						cwd: path.join(workFolder, 'build')
-					},
-					function(error, stdout, stderr) {
-						if(error) {
-							endForError(stderr || error);
-							return;
-						}
-						process.stdout.write('done.\n');
-						process.stdout.write('Installng PHP dependencies with Composer... ');
-						exec(
-							'composer install --prefer-dist',
-							{
-								cwd: path.join(workFolder, 'web/concrete')
-							},
-							function(error, stdout, stderr) {
-								if(error) {
-									endForError(stderr || error);
-									return;
-								}
-								process.stdout.write('done.\n');
-								done();
-							}
-						);
-					}
-				);
+				done();
 			}
 		);
 	}

@@ -1,0 +1,24 @@
+/*! http://responsiveslides.com v1.54 by @viljamis */
+
+.ccm-image-slider {
+    position: relative;
+}
+
+.ccm-image-slider-text {
+    position: absolute;
+    width: 45%;
+    left: 0;
+    top: 10%;
+}
+
+.ccm-image-slider-title {
+    margin-top:auto;
+}	
+
+.ccm-image-slider-container a.mega-link-overlay {
+    position: absolute;
+    z-index: 20;
+    width: 100%;
+    height: 100%;
+    left: 0px;
+}

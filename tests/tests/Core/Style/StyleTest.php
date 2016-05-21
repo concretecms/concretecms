@@ -1,7 +1,7 @@
-<?
+<?php
 
-class StyleTest extends \PHPUnit_Framework_TestCase {
-
+class StyleTest extends \PHPUnit_Framework_TestCase
+{
     /*
     public static function tearDownAfterClass() {
         @unlink(dirname(__FILE__) . '/fixtures/testing.css');
@@ -17,7 +17,8 @@ class StyleTest extends \PHPUnit_Framework_TestCase {
     }
     */
 
-    public function testStyles() {
+    public function testStyles()
+    {
         $definition = dirname(__FILE__) . '/fixtures/styles.xml';
         $styleList = \Concrete\Core\StyleCustomizer\StyleList::loadFromXMLFile($definition);
         $sets = $styleList->getSets();
@@ -39,7 +40,8 @@ class StyleTest extends \PHPUnit_Framework_TestCase {
         $this->assertTrue($styles2[0]->getFormElementPath() == DIR_FILES_ELEMENTS_CORE . '/' . DIRNAME_STYLE_CUSTOMIZER . '/' . DIRNAME_STYLE_CUSTOMIZER_TYPES . '/size.php', sprintf('Incorrect path: %s', $styles2[0]->getFormElementPath()));
     }
 
-    public function testLessVariableColorParsing() {
+    public function testLessVariableColorParsing()
+    {
         $defaults = dirname(__FILE__) . '/fixtures/defaults.less';
         $list = \Concrete\Core\StyleCustomizer\Style\ValueList::loadFromLessFile($defaults);
 
@@ -63,7 +65,8 @@ class StyleTest extends \PHPUnit_Framework_TestCase {
         $this->assertTrue($value4->getRed() == 255 && $value4->getGreen() == 255 && $value4->getBlue() == 255 && !$value4->hasAlpha());
     }
 
-    public function testLessVariableSizeParsing() {
+    public function testLessVariableSizeParsing()
+    {
         $defaults = dirname(__FILE__) . '/fixtures/defaults.less';
         $list = \Concrete\Core\StyleCustomizer\Style\ValueList::loadFromLessFile($defaults);
 
@@ -79,7 +82,8 @@ class StyleTest extends \PHPUnit_Framework_TestCase {
         $this->assertTrue($value2->getSize() == '1.5' && $value2->getUnits() == 'em');
     }
 
-    public function testLessVariableFontFullParsing() {
+    public function testLessVariableFontFullParsing()
+    {
         $defaults = dirname(__FILE__) . '/fixtures/defaults.less';
         $list = \Concrete\Core\StyleCustomizer\Style\ValueList::loadFromLessFile($defaults);
 
@@ -107,7 +111,8 @@ class StyleTest extends \PHPUnit_Framework_TestCase {
         $this->assertTrue($s3->getSize() == 0.5 && $s3->getUnits() == 'em');
     }
 
-    public function testLessVariableFontPartialParsing() {
+    public function testLessVariableFontPartialParsing()
+    {
         $defaults = dirname(__FILE__) . '/fixtures/defaults.less';
         $list = \Concrete\Core\StyleCustomizer\Style\ValueList::loadFromLessFile($defaults);
 
@@ -120,7 +125,8 @@ class StyleTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals(-1, $value->getTextTransform());
     }
 
-    public function testLessVariableImages() {
+    public function testLessVariableImages()
+    {
         $defaults = dirname(__FILE__) . '/fixtures/defaults.less';
         $list = \Concrete\Core\StyleCustomizer\Style\ValueList::loadFromLessFile($defaults);
 
@@ -130,33 +136,32 @@ class StyleTest extends \PHPUnit_Framework_TestCase {
         $this->assertTrue($value->getUrl() == 'images/logo.png');
     }
 
-    public function testCustomizableStyleSheetObjects() {
-        $defaults = dirname(__FILE__) . '/fixtures/greekyogurt.less';
+    public function testCustomizableStyleSheetObjects()
+    {
+        $defaults = dirname(__FILE__) . '/fixtures/elemental.less';
         $list = \Concrete\Core\StyleCustomizer\Style\ValueList::loadFromLessFile($defaults);
         $env = Environment::get();
 
         $pt = new PageTheme();
-        $pt->setThemeHandle('greek_yogurt');
-        $pt->setThemeDirectory($env->getPath(DIRNAME_THEMES . '/greek_yogurt'));
-        $pt->setThemeURL($env->getURL(DIRNAME_THEMES . '/greek_yogurt'));
+        $pt->setThemeHandle('elemental');
+        $pt->setThemeDirectory($env->getPath(DIRNAME_THEMES . '/elemental'));
+        $pt->setThemeURL($env->getURL(DIRNAME_THEMES . '/elmental'));
 
         $sheets = $pt->getThemeCustomizableStyleSheets();
         $this->assertTrue(count($sheets) == 1);
         $this->assertTrue($sheets[0] instanceof \Concrete\Core\StyleCustomizer\Stylesheet);
 
         $css = $sheets[0]->getCss();
-        $r = preg_match('/background-image: url\(\'(.+)\'\);/i', $css, $matches);
-        $this->assertTrue(trim($matches[1]) == '/concrete/themes/greek_yogurt/images/spacer.gif');
+        $this->assertTrue(strpos($css, "background-image: url('/path/to/server/concrete/themes/elemental/images/background-slider-default.png')") !== false);
 
         $sheets[0]->setValueList($list);
         $css = $sheets[0]->getCss();
-        $r = preg_match('/background-image: url\(\'(.+)\'\);/i', $css, $matches);
-        $this->assertTrue(trim($matches[1]) == '/concrete/themes/greek_yogurt/images/testingit.jpg');
+        $this->assertTrue(strpos($css, "background-image: url('/path/to/server/concrete/themes/elemental/images/testingit.jpg')") !== false);
+        $this->assertTrue(strpos($css, 'font-family: "Testing Font Family"') !== false);
 
         $sheet = $pt->getStylesheetObject('typography.less');
         $sheet->setValueList($list);
-        $this->assertTrue($sheet->getOutputPath() == DIR_BASE . '/application/files/cache/css/greek_yogurt/typography.css');
-        $this->assertTrue($sheet->getOutputRelativePath() == DIR_REL . '/application/files/cache/css/greek_yogurt/typography.css');
-
+        $this->assertTrue($sheet->getOutputPath() == DIR_BASE . '/application/files/cache/css/elemental/typography.css');
+        $this->assertTrue($sheet->getOutputRelativePath() == DIR_REL . '/application/files/cache/css/elemental/typography.css');
     }
 }

@@ -1,3 +1,5 @@
+/* jshint unused:vars, undef:true, node:true */
+
 module.exports = function(grunt, config, parameters, done) {
 
 	var fs = require('fs');
@@ -6,13 +8,35 @@ module.exports = function(grunt, config, parameters, done) {
 	var path = require('path');
 	var StringDecoder = require('string_decoder').StringDecoder;
 	var decoder = new StringDecoder('utf8');
+	var fixPluralRules = {
+		// Belarusian
+		'be': {
+			pluralForms: 3,
+			pluralFormula: 'n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : 2'
+		},
+		// Polish
+		'pl': {
+			pluralForms: 3,
+			pluralFormula: 'n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : 2'
+		},
+		// Russian
+		'ru': {
+			pluralForms: 3,
+			pluralFormula: 'n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : 2'
+		},
+		// Ukrainian
+		'uk': {
+			pluralForms: 3,
+			pluralFormula: 'n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : 2'
+		}
+	};
 
 	function mkdir(dir, mode) {
 		try {
 			fs.mkdirSync(dir, mode);
 		}
 		catch(e) {
-			if(e.errno !== 34) {
+			if(e.errno !== 34 && e.errno !== -4058 && e.errno !== -2) {
 				throw e;
 			}
 			mkdir(path.dirname(dir), mode);
@@ -63,7 +87,7 @@ module.exports = function(grunt, config, parameters, done) {
 									catch(foo) {
 									}
 								}
-							}
+							};
 							break;
 					}
 				}
@@ -81,13 +105,13 @@ module.exports = function(grunt, config, parameters, done) {
 							}
 						}
 						else {
-							data.push(chunk)
+							data.push(chunk);
 						}
 					})
 					.on('end', function() {
 						if(!goodResponse) {
 							cleanup(false);
-							var msg = ''
+							var msg = '';
 							if(response.headers['content-type'] == 'text/plain') {
 								msg = data.join('');
 							}
@@ -119,7 +143,7 @@ module.exports = function(grunt, config, parameters, done) {
 		.on('error', function(e) {
 			process.stderr.write(e.message + '\n');
 			done(false);
-		})
+		});
 	}
 
 	if(!parameters.txUsername) {
@@ -137,7 +161,7 @@ module.exports = function(grunt, config, parameters, done) {
 		done(false);
 		return;
 	}
-	
+
 	var txProgressLimit = parseFloat(parameters.txProgressLimit);
 	if(isNaN(txProgressLimit)) {
 		txProgressLimit = 90;
@@ -152,7 +176,7 @@ module.exports = function(grunt, config, parameters, done) {
 				cfgLocales.push({code: code, name: code});
 			});
 			callback(cfgLocales);
-		}
+		};
 	}
 	else {
 		getAllLocales = function(callback) {
@@ -180,6 +204,62 @@ module.exports = function(grunt, config, parameters, done) {
 			'/api/2/project/concrete5/resource/' + parameters.txResource + '/translation/' + locale.code + '/?file',
 			{type: 'file', filename: locale.poFile},
 			function() {
+				var match;
+				process.stdout.write('done.\n');
+				var fixRules = null;
+				if (fixPluralRules.hasOwnProperty(locale.code.toLowerCase())) {
+					fixRules = fixPluralRules[locale.code.toLowerCase()];
+				} else {
+					match = locale.code.match(/^(\w+)[_\-]/);
+					if (match && fixPluralRules.hasOwnProperty(match[1].toLowerCase())) {
+						fixRules = fixPluralRules[match[1].toLowerCase()];
+					}
+				}
+				if (fixRules === null) {
+					callback();
+					return;
+				}
+				process.stdout.write('\tfixing plural rules... ');
+				var po = fs.readFileSync(locale.poFile, 'utf8');
+				po = po.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+				match = po.match(/\n"Plural-Forms:\s*nplurals\s*=\s*(\d+)\s*; plural\s*=.*?"\s*\n/i);
+				var originalPluralForms = match ? parseInt(match[1], 10) : null;
+				if (originalPluralForms === null || originalPluralForms === fixRules.pluralForms) {
+					process.stdout.write('not needed.\n');
+					callback();
+					return;
+				}
+				process.stdout.write(' (converting from ' + originalPluralForms + ' to ' + fixRules.pluralForms + ' plural forms)... ');
+				po = po.replace(match[0], '\n"Plural-Forms: nplurals=' + fixRules.pluralForms + '; plural=' + fixRules.pluralFormula + ';\\n"\n');
+				var fromLines = po.split('\n');
+				var toLines = [];
+				if (originalPluralForms > fixRules.pluralForms) {
+					// we need to remove extra plural forms
+					var keepLines = true;
+					fromLines.forEach(function(line, lineIndex) {
+						if (line.length > 0 && line.charAt(0) === '"') {
+							if (keepLines) {
+								toLines.push(line);
+							}
+							return;
+						}
+						keepLines = true;
+						match = line.match(/^msgstr\[(\d+)\]/);
+						if (match) {
+							var pluralFormIndex = parseInt(match[1], 10);
+							if (pluralFormIndex >= fixRules.pluralForms) {
+								keepLines = false;
+							}
+						}
+						if (keepLines) {
+							toLines.push(line);
+						}
+					});
+				} else {
+					throw new Error('Increasing the plural forms count is not supported (not necessary at the time of writing this)');
+				}
+				po = toLines.join('\n');
+				fs.writeFileSync(locale.poFile, po, 'utf8');
 				process.stdout.write('done.\n');
 				callback();
 			}
@@ -244,7 +324,7 @@ module.exports = function(grunt, config, parameters, done) {
 						}
 						process.stdout.write('done.\n');
 						parseLocale(allLocales, localeIndex + 1, callback);
-					}				
+					}
 				);
 			});
 		});

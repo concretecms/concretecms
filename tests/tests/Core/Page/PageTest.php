@@ -1,16 +1,16 @@
 <?php
 
-class PageTest extends PageTestCase {
-
+class PageTest extends PageTestCase
+{
     public function testBasicCreatePage()
     {
         $home = Page::getByID(HOME_CID);
         $pt = PageType::getByID(1);
         $template = PageTemplate::getByID(1);
         $page = $home->add($pt, array(
-            'uID'=>1,
-            'cName'=> 'Test page',
-            'pTemplateID' => $template->getPageTemplateID()
+            'uID' => 1,
+            'cName' => 'Test page',
+            'pTemplateID' => $template->getPageTemplateID(),
         ));
         $this->assertTrue($page instanceof Page);
         $this->assertEquals($page->getCollectionParentID(), 1);
@@ -23,16 +23,16 @@ class PageTest extends PageTestCase {
     {
         $badPage = Page::getByID(42069);
         try {
-            $page = $badPage->add($ct,array(
-                    'uID'=>1,
+            $page = $badPage->add($ct, array(
+                    'uID' => 1,
                     'cName' => 'Stupid Page',
-                    'cHandle'=> 'stupid-page'
+                    'cHandle' => 'stupid-page',
                 ));
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             $caught = true;
         }
 
-        if(!$caught) {
+        if (!$caught) {
             $this->fail('Added a page to a non-page');
         } else {
             $this->assertTrue(true, 'Successful exception on creating a page beneath a nonexistent parent page.');
@@ -65,7 +65,8 @@ class PageTest extends PageTestCase {
         $this->assertEquals('/dashboard/system/attributes/view.php', $attrPage->getCollectionFilename());
     }
 
-    public function testSinglePagesController() {
+    public function testSinglePagesController()
+    {
         $reportsPage = SinglePage::add('/dashboard/reports/surveys');
         $reportsPage = Page::getByPath('/dashboard/reports/surveys');
         $controller = $reportsPage->getController();
@@ -106,9 +107,9 @@ class PageTest extends PageTestCase {
         $pt = PageType::getByID(1);
         $template = PageTemplate::getByID(1);
         $newpage = $page1->add($pt, array(
-            'uID'=>1,
-            'cName'=> 'Test Sub-page',
-            'pTemplateID' => $template->getPageTemplateID()
+            'uID' => 1,
+            'cName' => 'Test Sub-page',
+            'pTemplateID' => $template->getPageTemplateID(),
         ));
 
         $page1->delete();
@@ -118,7 +119,6 @@ class PageTest extends PageTestCase {
         $np2 = Page::getByID(4);
         $this->assertEquals($np1->getCollectionID(), null);
         $this->assertEquals($np2->getCollectionID(), null);
-
     }
 
     /**
@@ -130,22 +130,23 @@ class PageTest extends PageTestCase {
         $parentID = $page->getCollectionParentID();
         $this->assertSame($page->getCollectionName(), $name);
         $th = Loader::helper('text');
-        if(!$special) {
+        if (!$special) {
             $this->assertSame($page->getCollectionPath(), '/'.$th->urlify($name));
             $this->assertSame($page->getCollectionHandle(), $th->urlify($name));
         } else {
-            $this->assertSame($page->getCollectionPath(), '/'.(string)$page->getCollectionID());
+            $this->assertSame($page->getCollectionPath(), '/'.(string) $page->getCollectionID());
             $this->assertSame($page->getCollectionHandle(), '');
         }
         $page->delete();
     }
 
-    public function pageNames() {
+    public function pageNames()
+    {
         return array(
-            array('normal page',false),
-            array("awesome page's #spring_break98 !!1! SO COOL",false),
-            array('niño borracho',false),
-            array('雷鶏',true)
+            array('normal page', false),
+            array("awesome page's #spring_break98 !!1! SO COOL", false),
+            array('niño borracho', false),
+            array('雷鶏', true),
         );
     }
 
@@ -155,11 +156,11 @@ class PageTest extends PageTestCase {
         $home = Page::getByID(HOME_CID);
 
         $newPage = $page->duplicate($home);
-        $realNewPage = Page::getByID($newPage->getCollectionID(),'ACTIVE');
+        $realNewPage = Page::getByID($newPage->getCollectionID(), 'ACTIVE');
 
-        $this->assertNotEquals($page->getCollectionID(),$realNewPage->getCollectionID());
-        $this->assertEquals($page->getCollectionPath().'-2',$realNewPage->getCollectionPath());
-        $this->assertEquals($page->getCollectionName().' 2',$realNewPage->getCollectionName());
+        $this->assertNotEquals($page->getCollectionID(), $realNewPage->getCollectionID());
+        $this->assertEquals($page->getCollectionPath().'-2', $realNewPage->getCollectionPath());
+        $this->assertEquals($page->getCollectionName().' 2', $realNewPage->getCollectionName());
 
         $page->delete();
         $realNewPage->delete();
@@ -180,7 +181,6 @@ class PageTest extends PageTestCase {
         $page2->duplicateAll($page4);
         $page3->duplicate($page1);
 
-
         // it's a little lame that we have to re-get the objects
         // in order for them to be in sync but fixing this is outside of what I want to do right now.
         $page1 = Page::getByPath('/page-1');
@@ -193,8 +193,211 @@ class PageTest extends PageTestCase {
         $page = Page::getByPath('/page-4/page-2/subpage/page-1');
         $this->assertFalse($page->isError());
         $pagePath = $page->getCollectionPathObject();
-        $this->assertInstanceOf('\Concrete\Core\Page\PagePath', $pagePath);
+        $this->assertInstanceOf('\Concrete\Core\Entity\Page\PagePath', $pagePath);
         $this->assertEquals('/page-4/page-2/subpage/page-1', $pagePath->getPagePath());
         $this->assertTrue($pagePath->isPagePathCanonical());
+    }
+
+    protected function setupAliases()
+    {
+        $about = self::createPage('About');
+        $search = self::createPage('Search');
+        $contact = self::createPage('Contact Us', $about);
+        $another = self::createPage('Another Page', $about);
+        $awesome = self::createPage('Awesome');
+
+        return array('awesome' => $awesome, 'about' => $about, 'search' => $search, 'contact' => $contact, 'another' => $another);
+    }
+
+    public function testPageAlias()
+    {
+        extract($this->setupAliases());
+
+        $cID = $search->addCollectionAlias($another);
+
+        $this->assertEquals(2, $about->getCollectionID());
+        $this->assertEquals(3, $search->getCollectionID());
+        $this->assertEquals(4, $contact->getCollectionID());
+        $this->assertEquals(5, $another->getCollectionID());
+        $this->assertEquals(6, $awesome->getCollectionID());
+        $this->assertEquals(7, $cID);
+
+        $alias = Page::getByID($cID);
+        $this->assertEquals(3, $alias->getCollectionID());
+        $this->assertEquals(3, $alias->getCollectionPointerID());
+        $this->assertTrue($alias->isAlias());
+        $this->assertEquals(7, $alias->getCollectionPointerOriginalID());
+        $this->assertEquals('/about/another-page/search', $alias->getCollectionPath());
+    }
+
+    public function testPageAliasDirectDelete()
+    {
+        extract($this->setupAliases());
+        $cID = $search->addCollectionAlias($another);
+        $alias = Page::getByID($cID);
+
+        $alias->delete();
+        $search = Page::getByID(3);
+        $this->assertInstanceOf('\Concrete\Core\Page\Page', $search);
+        $this->assertEquals(3, $search->getCollectionID());
+        $this->assertFalse($search->isError());
+
+        $alias = Page::getByID(7);
+        $this->assertEquals(COLLECTION_NOT_FOUND, $alias->getError());
+    }
+
+    public function testPageAliasPageMove()
+    {
+        extract($this->setupAliases());
+        $cID = $search->addCollectionAlias($another);
+        $alias = Page::getByID($cID);
+        $about->move($awesome);
+
+        $about = Page::getByID(2);
+        $search = Page::getByID(3);
+        $contact = Page::getByID(4);
+        $another = Page::getByID(5);
+        $awesome = Page::getByID(6);
+        $alias = Page::getByID(7);
+
+        $this->assertTrue($alias->isAlias());
+
+        $this->assertEquals('/awesome/about', $about->getCollectionPath());
+        $this->assertEquals('/awesome/about/another-page/search', $alias->getCollectionPath());
+        $this->assertEquals('/search', $search->getCollectionPath());
+        $this->assertEquals('/awesome/about/contact-us', $contact->getCollectionPath());
+        $this->assertEquals('/awesome/about/another-page', $another->getCollectionPath());
+        $this->assertEquals('/awesome', $awesome->getCollectionPath());
+        $this->assertEquals(3, $alias->getCollectionID());
+        $this->assertEquals(7, $alias->getCollectionPointerOriginalID());
+    }
+
+    public function testPageAliasParentDelete()
+    {
+        extract($this->setupAliases());
+        $cID = $search->addCollectionAlias($another);
+        $alias = Page::getByID($cID);
+
+        $about->delete();
+        $about = Page::getByID(2);
+        $search = Page::getByID(3);
+        $contact = Page::getByID(4);
+        $another = Page::getByID(5);
+        $awesome = Page::getByID(6);
+        $alias = Page::getByID(7);
+
+        $this->assertEquals(COLLECTION_NOT_FOUND, $about->getError());
+        $this->assertEquals(3, $search->getCollectionID());
+        $this->assertEquals(false, $search->isError());
+        $this->assertEquals(COLLECTION_NOT_FOUND, $contact->getError());
+        $this->assertEquals(COLLECTION_NOT_FOUND, $another->getError());
+        $this->assertEquals(6, $awesome->getCollectionID());
+        $this->assertEquals(false, $awesome->isError());
+
+        $this->assertEquals(COLLECTION_NOT_FOUND, $alias->getError());
+    }
+
+    public function testPageMoveToTrashNoAliases()
+    {
+        \SinglePage::add(Config::get('concrete.paths.trash'));
+
+        $this->setupAliases();
+
+        $about = Page::getByID(3);
+        $about->moveToTrash();
+
+        // note –all the hard coded numerical IDs are increased by one here because we have added
+        // the trash node.
+        $about = Page::getByID(3);
+        $search = Page::getByID(4);
+        $contact = Page::getByID(5);
+        $another = Page::getByID(6);
+        $awesome = Page::getByID(7);
+
+        $this->assertFalse($about->isActive());
+        $this->assertFalse($contact->isActive());
+        $this->assertFalse($another->isActive());
+        $this->assertTrue($search->isActive());
+        $this->assertTrue($awesome->isActive());
+
+        $this->assertTrue($about->isInTrash());
+        $this->assertTrue($contact->isInTrash());
+        $this->assertTrue($another->isInTrash());
+        $this->assertFalse($search->isInTrash());
+        $this->assertFalse($awesome->isInTrash());
+
+        $this->assertEquals('/search', $search->getCollectionPath());
+    }
+
+    public function testPageMoveToTrashAliases()
+    {
+        \SinglePage::add(Config::get('concrete.paths.trash'));
+
+        extract($this->setupAliases());
+
+        $cID = $search->addCollectionAlias($another);
+        $alias = Page::getByID($cID);
+
+        $this->assertEquals(8, $cID);
+        $this->assertTrue($alias->isAlias());
+
+        $about = Page::getByID(3);
+        $about->moveToTrash();
+
+        $about = Page::getByID(3);
+        $search = Page::getByID(4);
+        $another = Page::getByID(6);
+        $awesome = Page::getByID(7);
+        $searchAlias = Page::getByID(8);
+
+        $this->assertFalse($about->isActive());
+        $this->assertFalse($another->isActive());
+        $this->assertFalse($searchAlias->isActive());
+        $this->assertTrue($awesome->isActive());
+        $this->assertTrue($search->isActive());
+
+        $this->assertEquals('/!trash/about', $about->getCollectionPath());
+        $this->assertEquals('/!trash/about/another-page', $another->getCollectionPath());
+        $this->assertEquals('/!trash/about/another-page/search', $searchAlias->getCollectionPath());
+        $this->assertEquals('/awesome', $awesome->getCollectionPath());
+        $this->assertEquals('/search', $search->getCollectionPath());
+
+        $this->assertTrue($about->isInTrash());
+        $this->assertTrue($another->isInTrash());
+        $this->assertTrue($searchAlias->isInTrash());
+        $this->assertFalse($awesome->isInTrash());
+        $this->assertFalse($search->isInTrash());
+    }
+
+    public function testCustomCanonicalURLs()
+    {
+        $cache = Core::make('cache/request');
+        $cache->disable();
+
+        $about = self::createPage('About');
+        $contact = self::createPage('Contact Us', $about);
+
+        $c = Page::getByID(3);
+        $this->assertEquals('Contact Us', $c->getCollectionName());
+        $this->assertEquals('/about/contact-us', $c->getCollectionPath());
+
+        $p = new \Concrete\Core\Entity\Page\PagePath();
+        $p->setPagePath('/contact');
+        $p->setPageObject($contact);
+        $p->setPagePathIsCanonical(true);
+
+        $c->clearPagePaths();
+
+        $em = \ORM::entityManager('core');
+        $em->persist($p);
+        $em->flush();
+
+        $c = Page::getByID(3);
+        $this->assertEquals('/contact', $c->getCollectionPath());
+
+        $c->rescanCollectionPath();
+
+        $c = Page::getByID(3);
+        $this->assertEquals('/contact', $c->getCollectionPath());
     }
 }

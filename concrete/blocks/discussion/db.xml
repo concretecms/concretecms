@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema
+  xmlns="http://www.concrete5.org/doctrine-xml/0.5"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.concrete5.org/doctrine-xml/0.5 http://concrete5.github.io/doctrine-xml/doctrine-xml-0.5.xsd">
+
+  <table name="btDiscussion">
+    <field name="bID" type="integer">
+      <unsigned/>
+      <key/>
+    </field>
+    <field name="cnvDiscussionID" type="integer"/>
+    <field name="ptID" type="integer">
+      <unsigned/>
+      <default value="0"/>
+    </field>
+    <field name="enableNewTopics" type="integer">
+      <default value="1"/>
+    </field>
+    <field name="itemsPerPage" type="smallint">
+      <unsigned/>
+      <default value="50"/>
+      <notnull/>
+    </field>
+    <field name="orderBy" type="string" size="255">
+      <default value="date_desc"/>
+      <notnull/>
+    </field>
+    <field name="enableOrdering" type="boolean">
+      <unsigned/>
+      <default value="1"/>
+      <notnull/>
+    </field>
+    <index name="cnvDiscussionID">
+      <col>cnvDiscussionID</col>
+    </index>
+    <index name="ptID">
+      <col>ptID</col>
+    </index>
+  </table>
+
+</schema>

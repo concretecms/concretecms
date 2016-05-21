@@ -1,0 +1,68 @@
+/* Import bootstrap 3 mixins and variables so we can use them */
+@import "build/bootstrap-3.2.0/variables.less";
+@import "build/bootstrap-3.2.0/mixins.less";
+
+/* Import core mixins so we can use them */
+@import "../../../css/build/core/include/mixins.less";
+
+/* Import our theme variables. */
+@import "presets/defaults.less";
+
+/* Import our theme mixins */
+@import "./build/mixins.less";
+
+/* Import our theme fonts */
+//@import "build/fonts.less";
+
+@import ~"@{preset-fonts-file}";
+
+/* Our style rules - namespace so as not to collide with the core app styles */
+@import "build/body.less";
+@import "build/content.less";
+div.ccm-page {
+  @import "build/errors.less";
+  @import "build/header.less";
+  @import "build/pagination.less";
+  @import "build/breadcrumb.less";
+  @import "build/captcha.less";
+  @import "build/search.less";
+  @import "build/buttons.less";
+
+  @import "build/custom-design-classes/block-sidebar-padded.less";
+  @import "build/custom-design-classes/block-sidebar-wrapped.less";
+  @import "build/custom-design-classes/blog-entry-list.less";
+  @import "build/custom-design-classes/recent-blog-entry.less";
+  @import "build/custom-design-classes/area-content-accent.less";
+  @import "build/custom-design-classes/testimonial-bio.less";
+
+  @import "build/blocks/faq.less";
+  @import "build/blocks/feature.less";
+  @import "build/blocks/feature-template-hover-description.less";
+  @import "build/blocks/image-slider.less";
+  @import "build/blocks/image.less";
+  @import "build/blocks/next-previous.less";
+  @import "build/blocks/page-list-option-buttons.less";
+  @import "build/blocks/page-list-template-thumbnail-grid.less";
+  @import "build/blocks/page-list.less";
+  @import "build/blocks/page-attribute-display.less";
+  @import "build/blocks/page-title.less";
+  @import "build/blocks/page-title-option-byline.less";
+  @import "build/blocks/testimonial.less";
+  @import "build/blocks/tags.less";
+  @import "build/blocks/topic-list.less";
+  @import "build/blocks/date-navigation.less";
+
+  @import "build/add-ons/calendar.less";
+
+}
+
+@import "build/miscellaneous-styles.less";
+@import "build/footer.less";
+@import "build/mobile/navigation.less";
+
+/* CSS with background images – we need these directives to be in the root of theme
+ * otherwise we can't both map the stylesheet to them AND the customizer to them
+ */
+.ccm-image-slider-container {
+  background-image: url(@image-slider-background-image);
+}

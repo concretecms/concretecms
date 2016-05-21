@@ -1,24 +1,26 @@
 language: php
+sudo: false
+
+env:
+  - COMPOSER_DISABLE_XDEBUG_WARN=1
 
 php:
-  - 5.3
-  - 5.4
   - 5.5
   - 5.6
+  - 7.0
   - hhvm
 
 before_script:
   - bash -c 'if [ "$TRAVIS_PHP_VERSION" != "hhvm" ]; then echo "short_open_tag = On" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini; fi;'
-  - mysql -e 'CREATE DATABASE concrete5_tests;'
-  - cd web/concrete
-  - composer install
-  - cd ../../tests
+  - travis_retry composer install --no-interaction
+  - phpunit --version
 
 script: phpunit
 
+cache:
+  directories:
+    - vendor
+    - $HOME/.composer/cache
+
 notifications:
   email: false
-
-matrix:
-  allow_failures:
-    - php: hhvm

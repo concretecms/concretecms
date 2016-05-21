@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema
+  xmlns="http://www.concrete5.org/doctrine-xml/0.5"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.concrete5.org/doctrine-xml/0.5 http://concrete5.github.io/doctrine-xml/doctrine-xml-0.5.xsd">
+
+  <table name="btFeature">
+    <field name="bID" type="integer">
+      <unsigned/>
+      <key/>
+    </field>
+    <field name="icon" type="string" size="255"/>
+    <field name="title" type="string" size="255"/>
+    <field name="paragraph" type="text" size="65535"/>
+    <field name="externalLink" type="string" size="255"/>
+    <field name="internalLinkCID" type="integer">
+      <unsigned/>
+      <default value="0"/>
+    </field>
+  </table>
+
+</schema>

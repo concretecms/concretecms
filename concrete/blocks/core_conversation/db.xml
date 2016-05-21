@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema
+  xmlns="http://www.concrete5.org/doctrine-xml/0.5"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.concrete5.org/doctrine-xml/0.5 http://concrete5.github.io/doctrine-xml/doctrine-xml-0.5.xsd">
+
+  <table name="btCoreConversation">
+    <field name="bID" type="integer">
+      <unsigned/>
+      <key/>
+    </field>
+    <field name="cnvID" type="integer"/>
+    <field name="enablePosting" type="integer">
+      <default value="1"/>
+    </field>
+    <field name="paginate" type="boolean">
+      <unsigned/>
+      <default value="1"/>
+      <notnull/>
+    </field>
+    <field name="itemsPerPage" type="smallint">
+      <unsigned/>
+      <default value="50"/>
+      <notnull/>
+    </field>
+    <field name="displayMode" type="string" size="255">
+      <default value="threaded"/>
+      <notnull/>
+    </field>
+    <field name="orderBy" type="string" size="255">
+      <default value="date_desc"/>
+      <notnull/>
+    </field>
+    <field name="enableOrdering" type="boolean">
+      <unsigned/>
+      <default value="1"/>
+      <notnull/>
+    </field>
+    <field name="enableCommentRating" type="boolean">
+      <unsigned/>
+      <default value="1"/>
+      <notnull/>
+    </field>
+    <field name="displayPostingForm" type="string" size="255">
+      <default value="top"/>
+      <notnull/>
+    </field>
+    <field name="addMessageLabel" type="string" size="255">
+      <default value=""/>
+      <notnull/>
+    </field>
+    <field name="dateFormat" type="string" size="255">
+      <default value="default"/>
+    </field>
+    <field name="customDateFormat" type="string" size="255"/>
+    <index name="cnvID">
+      <col>cnvID</col>
+    </index>
+  </table>
+
+</schema>

@@ -1,0 +1,83 @@
+footer#footer-theme {
+
+  a {
+    color: @footer-link-color;
+    &:hover {
+      color: @footer-link-hover-color;
+    }
+  }
+
+  color: @footer-text-color;
+
+
+  div.ccm-block-social-links {
+    text-align: right;
+    ul {
+      a {
+        color: @footer-social-icon-color;
+
+        &:hover {
+          color: @footer-social-icon-hover-color;
+        }
+      }
+    }
+  }
+
+  section {
+    border-top: 1px solid @footer-section-divider-color;
+    padding-top: 30px;
+    padding-bottom: 30px;
+  }
+
+  section:first-child {
+    background-color: @footer-top-background-color;
+  }
+
+  section:last-child {
+    padding-bottom: 30px;
+    background-color: @footer-bottom-background-color;
+  }
+
+  #footer-site-title {
+    font-family: @footer-site-title-type-font-family;
+    font-weight: @footer-site-title-type-font-weight;
+    color: @footer-site-title-type-color;
+    text-transform: @footer-site-title-type-text-transform;
+    font-size: @footer-site-title-type-font-size;
+    .transition(color 0.2s linear);
+
+    &:hover {
+      color: darken(@header-site-title-type-color, 20%);
+      text-decoration: none !important;
+    }
+  }
+}
+
+footer#concrete5-brand {
+  background-color: rgba(0,0,0,0.1);
+  padding-top: 20px;
+  padding-bottom: 20px;
+
+  a.concrete5 {
+    color: #00baff;
+
+    &:hover {
+      color: #008dc0;
+    }
+  }
+
+  a {
+    color: #9fa7aa;
+
+    &:hover {
+      color: #7B8083;
+    }
+  }
+
+
+  #ccm-account-menu {
+    right: 80px;
+    top: -10px;
+  }
+}
+

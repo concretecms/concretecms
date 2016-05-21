@@ -1,4 +1,5 @@
 <?php
+
 class IPAddressTest extends PHPUnit_Framework_TestCase
 {
     /**
@@ -37,6 +38,7 @@ class IPAddressTest extends PHPUnit_Framework_TestCase
             array('192.168.0.1', false),
             array('::1', true),
             array('2001:0db8:85a3:0000:0000:8a2e:0370:7334', false),
+            array('::ffff:127.0.0.1', true),
         );
     }
 
@@ -64,6 +66,10 @@ class IPAddressTest extends PHPUnit_Framework_TestCase
             array('fd00:ffff:ffff:ffff:ffff:ffff:ffff:ffff', true),
             array('::1', false),
             array('2001:0db8:85a3:0000:0000:8a2e:0370:7334', false),
+            array('::ffff:127.0.0.1', false),
+            array('::ffff:192.168.0.1', true),
+            array('::ffff:172.16.0.1', true),
+            array('::ffff:10.1.0.1', true),
         );
     }
 
@@ -88,6 +94,9 @@ class IPAddressTest extends PHPUnit_Framework_TestCase
             array('feb0::1', true),
             array('fe7f:ffff:ffff:ffff:ffff:ffff:ffff:ffff', false),
             array('fec0::1', false),
+            array('::ffff:169.254.255.255', true),
+            array('::ffff:169.255.0.0', false),
+            array('::ffff:169.253.255.255', false),
         );
     }
 
@@ -103,12 +112,19 @@ class IPAddressTest extends PHPUnit_Framework_TestCase
     {
         return array(
             array('169.254.255.255', 4),
+            array('169.254.255.255:2222', 4),
             array('127.0.0.1', 4),
             array('10.255.255.255', 4),
 
             array('fe80::1', 6),
+            array('[fe80::1]:2222', 6),
             array('::1', 6),
             array('fe7f:ffff:ffff:ffff:ffff:ffff:ffff:ffff', 6),
+            array('::ffff:169.254.255.255', 6),
+            array('::ffff:127.0.0.1', 6),
+            array('::ffff:10.255.255.255', 6),
+            array('::ffff:10.255.255.255:2222', 6),
+            array('[::ffff:10.255.255.255]:2222', 6),
         );
     }
     /**
@@ -117,6 +133,6 @@ class IPAddressTest extends PHPUnit_Framework_TestCase
     public function testIpType($ip, $expected)
     {
         $this->object->setIp($ip);
-        $this->assertEquals($expected, ($this->object->isIPv4())?(4):($this->object->isIPv6()?6:0));
+        $this->assertEquals($expected, ($this->object->isIPv4()) ? (4) : ($this->object->isIPv6() ? 6 : 0));
     }
 }

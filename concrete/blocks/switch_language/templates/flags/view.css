@@ -1,0 +1,18 @@
+div.ccm-block-switch-language-flags {
+    display: inline-block;
+}
+
+div.ccm-block-switch-language-flags-label {
+    float: left;
+    margin-right: 8px
+}
+
+div.ccm-block-switch-language-flags a {
+    margin: 2px;
+    float: left;
+    opacity: 0.4;
+}
+
+div.ccm-block-switch-language-flags a.ccm-block-switch-language-active-flag {
+    opacity: 1.0;
+}

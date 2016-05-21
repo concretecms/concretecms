@@ -1,0 +1,133 @@
+/**
+ * Add block
+ */
+div#ccm-panel-check-in {
+
+    form#ccm-check-in {
+        width: 240px;
+    }
+
+    .ccm-panel-dark();
+
+    h5 {
+        display: inline;
+        border-bottom: 1px dotted #e7e7e7;
+    }
+
+    textarea {
+        width: 100%;
+        height: 60px;
+    }
+
+    div.ccm-panel-check-in-comments {
+        padding-bottom: 25px;
+        padding-top: 10px;
+    }
+
+    div.ccm-panel-check-in-publish {
+        border-bottom: 1px solid #464544;
+        margin-bottom: 30px;
+
+        div.btn-group {
+            margin-bottom: 30px;
+        }
+
+        button#ccm-check-in-publish {
+            width: 190px;
+        }
+
+        button#ccm-check-in-schedule {
+            width: 51px;
+        }
+
+        h5 {
+            border-bottom: none;
+        }
+
+
+        div#ccm-check-in-schedule-wrapper {
+            display: none;
+
+            .form-group {
+                margin-top: 16px;
+            }
+
+            .datetime-group {
+                margin-bottom: 0;
+            }
+
+            .submit-group {
+                margin-top: 0;
+            }
+
+            .remove {
+                display: block;
+                float: right;
+                color: @panel-normal-text-color;
+            }
+
+            span.ccm-input-date-wrapper {
+                margin-bottom: 8px;
+                display: block;
+            }
+
+            input.ccm-input-date {
+                // TODO not happy about that
+                width: 100% !important;
+            }
+
+            .ccm-input-time-wrapper {
+                select {
+                    width: 74px !important;
+
+                    &:last-child {
+                        margin-right: 0 !important;
+                    }
+                }
+            }
+
+            .separator {
+                padding-left: 1px;
+                padding-right: 4px;
+            }
+
+            button.ccm-check-in-schedule {
+                width: auto;
+            }
+
+            .timezone {
+                font-size: 11px;
+                color: @panel-normal-text-color;
+                display: block;
+                margin: 4px 0 10px 0;
+            }
+        }
+    }
+
+}
+
+div.check-in-scheduler-calendar {
+    border: 1px solid @panel-border-color;
+    background: @panel-form-element-bg-color;
+    color: @panel-form-element-text-color;
+
+    div.ui-datepicker-header {
+        background-color: @panel-form-element-bg-color;
+        color: @panel-form-element-text-color;
+    }
+
+    select.ui-datepicker-year {
+        background-color: @panel-form-element-bg-color;
+        border: none;
+    }
+
+    table.ui-datepicker-calendar {
+        th span, td a {
+            color: @panel-form-element-text-color;
+        }
+
+        .ui-state-highlight {
+            background-color: @panel-datepicker-highlight-day-color;
+        }
+    }
+}

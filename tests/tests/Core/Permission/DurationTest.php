@@ -5,14 +5,23 @@ use Concrete\Core\Permission\Duration;
 
 /**
  * Class DurationTest
- * Tests for `\Concrete\Core\Permission\Duration`
+ * Tests for `\Concrete\Core\Permission\Duration`.
  */
 class DurationTest extends \PHPUnit_Framework_TestCase
 {
+    private static function getFarYear($wanted)
+    {
+        static $limitTo32bits;
+        if (!isset($limitTo32bits)) {
+            $limitTo32bits = @strtotime('2300-01-01') === false;
+        }
+
+        return $limitTo32bits ? min($wanted, 2037) : $wanted;
+    }
 
     public function testDailyRecurring()
     {
-        $now = time();
+        $now = strtotime('2/13/2014');
 
         // Setup
         $daily_repetition = new Duration();
@@ -47,7 +56,7 @@ class DurationTest extends \PHPUnit_Framework_TestCase
 
     public function testWeeklyRecurring()
     {
-        $now = time();
+        $now = strtotime('2/13/2014');
 
         // Setup
         $weekly_repetition = new Duration();
@@ -68,7 +77,7 @@ class DurationTest extends \PHPUnit_Framework_TestCase
 
         $weekly_weeekday_repetition->setRepeatEveryNum(1);
 
-        $test_time = strtotime('last saturday of december 3500');
+        $test_time = strtotime('last saturday of december '.self::getFarYear(3500));
         $test_time = strtotime('3:00:00', $test_time);
 
         $this->assertTrue($weekly_weeekday_repetition->isActive($test_time));
@@ -93,7 +102,7 @@ class DurationTest extends \PHPUnit_Framework_TestCase
         $weekly_repetition->setRepeatEveryNum(1);
 
         $dow = date('l', $now);
-        $test_time = strtotime("last {$dow} of december 3500");
+        $test_time = strtotime("last {$dow} of december ".self::getFarYear(3500));
         $test_time = strtotime('3:00:00', $test_time);
 
         $this->assertTrue($weekly_repetition->isActive($test_time));
@@ -117,7 +126,7 @@ class DurationTest extends \PHPUnit_Framework_TestCase
 
         $this->assertTrue(
             $monthly_ldotw_repetition->isActive(
-                strtotime(date('Y-m-d 01:30:00', strtotime('last monday of march 2205')))));
+                strtotime(date('Y-m-d 01:30:00', strtotime('last monday of march '.self::getFarYear(2205))))));
 
         // -- Weekly
         $monthly_weekly_repetition = new Duration();
@@ -133,7 +142,7 @@ class DurationTest extends \PHPUnit_Framework_TestCase
 
         $this->assertTrue(
             $monthly_weekly_repetition->isActive(
-                strtotime(date('Y-m-d 01:30:00', strtotime('second saturday of march 2205')))));
+                strtotime(date('Y-m-d 01:30:00', strtotime('second saturday of march '.self::getFarYear(2205))))));
 
         // -- Monthly
         $monthly_weekly_repetition = new Duration();
@@ -150,10 +159,9 @@ class DurationTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($monthly_weekly_repetition->isActive(strtotime(date('Y-m-21 01:50:00', time()))));
     }
 
-
     public function testGenerateSingle()
     {
-        $now = time();
+        $now = strtotime('2/13/2014');
         $repetition = new Duration();
 
         $repetition->setStartDate(date('Y-m-d H:i:s', $now));
@@ -182,7 +190,7 @@ class DurationTest extends \PHPUnit_Framework_TestCase
         $repetition->setStartDate('12/10/1992 1:00:00');
         $repetition->setEndDate('12/11/1992 1:00:00');
 
-        $now = time();
+        $now = strtotime('2/13/2014');
         $occurrences = $repetition->activeRangesBetween($now, strtotime('+5 years', $now));
 
         $all_active = true;
@@ -193,7 +201,7 @@ class DurationTest extends \PHPUnit_Framework_TestCase
                 break;
             }
 
-            if ($window[0] !== $occurrence[0] || $window[1] !== $occurrence[1]) {
+            if ($window[0] != $occurrence[0] || $window[1] != $occurrence[1]) {
                 $all_active = false;
                 break;
             }
@@ -215,7 +223,7 @@ class DurationTest extends \PHPUnit_Framework_TestCase
         // Sunday, Tuesday
         $repetition->setRepeatPeriodWeekDays(array(2, 3, 0));
 
-        $now = time();
+        $now = strtotime('2/13/2014');
         $occurrences = $repetition->activeRangesBetween($now, strtotime('+5 years', $now));
 
         $all_active = true;
@@ -227,7 +235,7 @@ class DurationTest extends \PHPUnit_Framework_TestCase
                 break;
             }
 
-            if ($window[0] !== $occurrence[0] || $window[1] !== $occurrence[1]) {
+            if ($window[0] != $occurrence[0] || $window[1] != $occurrence[1]) {
                 $all_active = false;
                 break;
             }
@@ -246,7 +254,7 @@ class DurationTest extends \PHPUnit_Framework_TestCase
         $repetition->setStartDate('2/1/2015 1:00:00');
         $repetition->setEndDate('2/10/2015 3:00:00');
 
-        $now = time();
+        $now = strtotime('2/13/2014');
         $end = strtotime('+5 years', $now);
 
         $occurrences = $repetition->activeRangesBetween($now, $end);
@@ -260,7 +268,7 @@ class DurationTest extends \PHPUnit_Framework_TestCase
                 break;
             }
 
-            if ($window[0] !== $occurrence[0] || $window[1] !== $occurrence[1]) {
+            if ($window[0] != $occurrence[0] || $window[1] != $occurrence[1]) {
                 $all_active = false;
                 break;
             }
@@ -278,7 +286,7 @@ class DurationTest extends \PHPUnit_Framework_TestCase
         $repetition->setStartDate('1/14/2015 1:00:00');
         $repetition->setEndDate('1/14/2015 3:00:00');
 
-        $now = time();
+        $now = strtotime('2/13/2014');
         $end = strtotime('+5 years', $now);
 
         $occurrences = $repetition->activeRangesBetween($now, $end);
@@ -292,12 +300,11 @@ class DurationTest extends \PHPUnit_Framework_TestCase
                 break;
             }
 
-            if ($window[0] !== $occurrence[0] || $window[1] !== $occurrence[1]) {
+            if ($window[0] != $occurrence[0] || $window[1] != $occurrence[1]) {
                 $all_active = false;
                 break;
             }
         }
         $this->assertTrue($all_active, 'EventOccurrenceFactory generated inactive occurrences.');
     }
-
 }

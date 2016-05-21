@@ -1,0 +1,41 @@
+div#ccm-dashboard-welcome-back {
+  margin: -20px -20px 0px -20px;
+  overflow: hidden;
+  color: #666;
+  padding: 80px 30px 30px 155px;
+  background: transparent url(../images/newsflow_logo_welcome_back.png) no-repeat 0 0;
+
+  h1 {
+    font-size: 48px;
+    color: #666;
+  }
+
+  border-bottom: 2px solid #eee;
+
+}
+
+
+div.newsflow-paging-previous,
+div.newsflow-paging-next {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 60px;
+
+  a {
+    color: @gray-darker;
+
+    .transition(color cubic-bezier(0.190, 1.000, 0.220, 1.000) 0.5s);
+    &:hover {
+      color: @brand-primary;
+    }
+  }
+}
+
+div.newsflow-paging-next {
+  right: -60px;
+}
+
+div.newsflow-paging-previous {
+  left: -60px;
+}

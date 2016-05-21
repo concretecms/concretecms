@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<concrete5-cif version="1.0">
+    <pagetypepublishtargettypes>
+        <type handle="parent_page" name="Always publish below a certain page" package="" />
+        <type handle="page_type" name="Choose from pages of a certain type" package="" />
+        <type handle="all" name="Choose from all pages when publishing" package="" />
+    </pagetypepublishtargettypes>
+    <pagetypecomposercontroltypes>
+        <type handle="core_page_property" name="Built-In Property" package="" />
+        <type handle="collection_attribute" name="Custom Attribute" package="" />
+        <type handle="block" name="Block" package="" />
+    </pagetypecomposercontroltypes>
+</concrete5-cif>

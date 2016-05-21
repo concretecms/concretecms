@@ -1,41 +1,42 @@
 <?php
 namespace Concrete\Tests\Core\File;
-use \Concrete\Core\File\Importer;
-use \Concrete\Core\Attribute\Type as AttributeType;
-use \Concrete\Core\Attribute\Key\FileKey;
-use Core;
-use \Concrete\Core\Attribute\Key\Category;
-use Doctrine\DBAL\Logging\EchoSQLLogger;
 
-class FileListTest extends \FileStorageTestCase {
+use Concrete\Core\File\Importer;
+use Concrete\Core\Attribute\Type as AttributeType;
+use Concrete\Core\Attribute\Key\FileKey;
+use Concrete\Core\Attribute\Key\Category;
 
+class FileListTest extends \FileStorageTestCase
+{
     /** @var \Concrete\Core\File\FileList */
     protected $list;
 
     protected function setUp()
     {
         $this->tables = array_merge($this->tables, array(
-            'Files',
-            'FileVersions',
             'Users',
             'PermissionAccessEntityTypes',
             'FileAttributeValues',
-            'AttributeKeyCategories',
-            'AttributeSetKeys',
-            'Packages',
-            'AttributeSets',
             'FileImageThumbnailTypes',
-            'AttributeTypes',
             'ConfigStore',
-            'AttributeKeys',
-            'AttributeValues',
             'FileSets',
-            'atNumber',
             'FileVersionLog',
-            'FileSetFiles'
+            'FileSetFiles',
+        ));
+        $this->metadatas = array_merge($this->metadatas, array(
+            'Concrete\Core\Entity\Attribute\Key\Type\NumberType',
+            'Concrete\Core\Entity\Attribute\Key\Type\Type',
+            'Concrete\Core\Entity\Attribute\Key\FileKey',
+            'Concrete\Core\Entity\Attribute\Value\FileValue',
+            'Concrete\Core\Entity\Attribute\Key\Key',
+            'Concrete\Core\Entity\Attribute\Value\Value',
+            'Concrete\Core\Entity\Attribute\Value\Value\NumberValue',
+            'Concrete\Core\Entity\Attribute\Value\Value\Value',
+            'Concrete\Core\Entity\Attribute\Type',
+            'Concrete\Core\Entity\Attribute\Category',
         ));
         parent::setUp();
-        define('UPLOAD_FILE_EXTENSIONS_ALLOWED', '*.txt;*.jpg;*.jpeg;*.png');
+        \Config::set('concrete.upload.extensions', '*.txt;*.jpg;*.jpeg;*.png');
 
         Category::add('file');
         \Concrete\Core\Permission\Access\Entity\Type::add('file_uploader', 'File Uploader');
@@ -61,10 +62,10 @@ class FileListTest extends \FileStorageTestCase {
             'logo2.png' => $image,
             'logo3.png' => $image,
             'foobley.png' => $image,
-            'test.png' => $image
+            'test.png' => $image,
         );
 
-        foreach($files as $filename => $pointer) {
+        foreach ($files as $filename => $pointer) {
             $fi->import($pointer, $filename);
         }
 
@@ -109,7 +110,7 @@ class FileListTest extends \FileStorageTestCase {
         $pagination->setMaxPerPage(3)->setCurrentPage(1);
         $results = $pagination->getCurrentPageResults();
         $this->assertEquals(3, count($results));
-        $this->assertInstanceOf('\Concrete\Core\File\File', $results[0]);
+        $this->assertInstanceOf('\Concrete\Core\Entity\File\File', $results[0]);
     }
 
     public function testFilterByExtensionAndType()
@@ -208,7 +209,7 @@ class FileListTest extends \FileStorageTestCase {
         $this->assertTrue($pagination->hasPreviousPage());
 
         $results = $pagination->getCurrentPageResults();
-        $this->assertInstanceOf('\Concrete\Core\File\File', $results[0]);
+        $this->assertInstanceOf('\Concrete\Core\Entity\File\File', $results[0]);
         $this->assertEquals(1, count($results[0]));
     }
 
@@ -224,15 +225,15 @@ class FileListTest extends \FileStorageTestCase {
             'funtime.txt' => $sample,
             'funtime2.txt' => $sample,
             'awesome-o' => $sample,
-            'image.png' => $image
+            'image.png' => $image,
         );
 
-        foreach($files as $filename => $pointer) {
+        foreach ($files as $filename => $pointer) {
             $fi->import($pointer, $filename);
         }
 
         $nl = new \Concrete\Core\File\FileList();
-        $nl->setPermissionsChecker(function($file) {
+        $nl->setPermissionsChecker(function ($file) {
             if ($file->getTypeObject()->getGenericType() == \Concrete\Core\File\Type\Type::T_IMAGE) {
                 return true;
             } else {
@@ -292,9 +293,6 @@ class FileListTest extends \FileStorageTestCase {
 
         $columns = $set->getColumns();
 
-        $this->assertEquals(5, count($columns));
-
-
-
+        $this->assertEquals(4, count($columns));
     }
 }

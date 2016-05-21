@@ -1,0 +1,81 @@
+<?php
+namespace Concrete\Core\Entity\Attribute\Key\Type;
+
+use Concrete\Core\Entity\Attribute\Value\Value\AddressValue;
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * @ORM\Entity
+ * @ORM\Table(name="AddressAttributeKeyTypes")
+ */
+class AddressType extends Type
+{
+    public function getAttributeValue()
+    {
+        return new AddressValue();
+    }
+
+    /**
+     * @ORM\Column(type="string")
+     */
+    protected $akDefaultCountry = '';
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    protected $akHasCustomCountries = false;
+
+    /**
+     * @ORM\Column(type="json_array")
+     */
+    protected $customCountries = array();
+
+    /**
+     * @return mixed
+     */
+    public function getDefaultCountry()
+    {
+        return $this->akDefaultCountry;
+    }
+
+    /**
+     * @param mixed $defaultCountry
+     */
+    public function setDefaultCountry($defaultCountry)
+    {
+        $this->akDefaultCountry = $defaultCountry;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function hasCustomCountries()
+    {
+        return $this->akHasCustomCountries;
+    }
+
+    /**
+     * @param mixed $hasCustomCountries
+     */
+    public function setHasCustomCountries($hasCustomCountries)
+    {
+        $this->akHasCustomCountries = $hasCustomCountries;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCustomCountries()
+    {
+        return $this->customCountries;
+    }
+
+    /**
+     * @param mixed $customCountries
+     */
+    public function setCustomCountries($customCountries)
+    {
+        $this->customCountries = $customCountries;
+    }
+
+}

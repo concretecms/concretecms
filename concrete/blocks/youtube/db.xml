@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema
+  xmlns="http://www.concrete5.org/doctrine-xml/0.5"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.concrete5.org/doctrine-xml/0.5 http://concrete5.github.io/doctrine-xml/doctrine-xml-0.5.xsd">
+
+  <table name="btYouTube">
+    <field name="bID" type="integer">
+      <unsigned/>
+      <key/>
+    </field>
+    <field name="title" type="string" size="255"/>
+    <field name="videoURL" type="string" size="255"/>
+    <field name="vHeight" type="string" size="255"/>
+    <field name="vWidth" type="string" size="255"/>
+    <field name="sizing" type="string" size="10"/>
+    <field name="autoplay" type="boolean">
+      <unsigned/>
+      <default value="0"/>
+      <notnull/>
+    </field>
+    <field name="color" type="string" size="10"/>
+    <field name="controls" type="integer">
+      <unsigned/>
+    </field>
+    <field name="iv_load_policy" type="integer">
+      <unsigned/>
+    </field>
+    <field name="loopEnd" type="boolean">
+      <unsigned/>
+      <default value="0"/>
+      <notnull/>
+    </field>
+    <field name="modestbranding" type="boolean">
+      <unsigned/>
+      <default value="0"/>
+      <notnull/>
+    </field>
+    <field name="rel" type="boolean">
+      <unsigned/>
+      <default value="0"/>
+      <notnull/>
+    </field>
+    <field name="showinfo" type="boolean">
+      <unsigned/>
+      <default value="0"/>
+      <notnull/>
+    </field>
+  </table>
+</schema>

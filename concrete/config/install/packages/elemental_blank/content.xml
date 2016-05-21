@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<concrete5-cif version="1.0">
+    <themes>
+        <theme handle="elemental" package="" activated="1"/>
+    </themes>
+    <pagetemplates>
+        <pagetemplate handle="full" name="Full" icon="full.png" package="" />
+    </pagetemplates>
+    <pagetypes>
+    <pagetype name="Page" handle="page" is-frequently-added="1" launch-in-composer="0">
+      <pagetemplates type="all" default="full"/>
+      <target handle="all" package=""/>
+      <composer>
+      <formlayout>
+        <set name="Basics">
+          <control custom-template="" required="1" custom-label="Page Name" type="core_page_property" handle="name"/>
+          <control custom-template="" custom-label="" type="core_page_property" handle="description"/>
+          <control custom-template="" custom-label="" type="core_page_property" handle="url_slug"/>
+          <control custom-template="" custom-label="" type="core_page_property" handle="page_template"/>
+          <control custom-template="" custom-label="" type="core_page_property" handle="publish_target"/>
+        </set>
+        <set name="Content">
+          <control custom-template="" custom-label="Body" output-control-id="EcjltFnE" type="block" handle="content"/>
+        </set>
+      </formlayout>
+      <output>
+        <pagetemplate handle="full">
+          <page>
+            <area name="Main">
+              <blocks>
+                  <block type="core_page_type_composer_control_output" name="">
+                    <control output-control-id="EcjltFnE"/>
+                  </block>
+              </blocks>
+            </area>
+          </page>
+        </pagetemplate>
+      </output>
+    </composer>
+    </pagetype>
+    </pagetypes>
+    <pages>
+	<page name="Home" path="" filename="" template="full" pagetype="page" description="" package="">
+	</page>
+    </pages>
+</concrete5-cif>

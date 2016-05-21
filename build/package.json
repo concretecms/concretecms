@@ -1,8 +1,7 @@
 {
   "name": "concrete5",
-  "version": "5.7.0",
   "devDependencies": {
-    "download": "~0.1.18",
+    "download": "~4.4.3",
     "grunt": "~0.4.1",
     "grunt-contrib-concat": "~0.3.0",
     "grunt-contrib-cssmin": "~0.6.2",
@@ -12,8 +11,5 @@
     "grunt-newer": "^0.7.0",
     "shelljs": "0.2.6",
     "temp": "~0.8.1"
-  },
-  "scripts": {
-    "install": "grunt release"
   }
 }

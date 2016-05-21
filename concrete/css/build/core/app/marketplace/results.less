@@ -1,0 +1,123 @@
+div#ccm-dashboard-content {
+
+  div#ccm-marketplace-wrapper {
+
+    header.ccm-marketplace-list {
+
+      margin-bottom: 0px;
+      padding-bottom: 40px;
+      background-color: #f7f7f7;
+      margin-left: -97px;
+      margin-right: -50px;
+      border-bottom: 1px solid #dfdfdf;
+      padding-top: 40px;
+      padding-left: 97px;
+
+      h1 {
+        font-weight: lighter;
+        font-size: 32px;
+      }
+
+      div.ccm-marketplace-sort {
+        nav {
+          .ccm-ui.list-unstyled();
+          li {
+            float: left;
+            margin-right: 40px;
+
+            a {
+              color: #0099ff;
+              &.active {
+                color: #aaa;
+              }
+            }
+          }
+          .clearfix();
+        }
+      }
+
+
+    }
+
+    div.ccm-marketplace-list-item {
+
+      h2 {
+        font-weight: 200;
+        margin-bottom: 20px;
+        font-size: 24px;
+        color: #212326;
+        margin-top: 0px;
+        line-height: 24px;
+      }
+
+      a {
+        color: #212326;
+      }
+
+      border-bottom: 1px solid #dfdfdf;
+      margin: 0px -50px 0px -97px;
+      padding: 60px 0px 60px 97px;
+      .clearfix();
+
+      &:nth-child(odd) {
+        background-color: #f7f7f7;
+      }
+
+      div.ccm-marketplace-list-item-theme-description,
+      div.ccm-marketplace-list-item-add-on-description, {
+        color: #878787;
+        float: left;
+        margin-top: 20px;
+        width: 320px;
+        margin-right: 200px;
+      }
+
+      div.ccm-marketplace-list-item-add-on-description {
+        width: 410px;
+        margin-top: 0px;
+      }
+
+      div.ccm-marketplace-list-item-theme-thumbnail {
+        float: left;
+        width: 190px;
+        margin-right: 40px;
+
+        img {
+          .img-responsive();
+        }
+
+        border: 1px solid #d5d5d5;
+        .border-radius(2px);
+      }
+
+      div.ccm-marketplace-list-item-add-on-thumbnail {
+        img {
+          width: 97px;
+          height: 97px;
+        }
+        float: left;
+        margin-right: 40px;
+       .border-radius(4px);
+      }
+
+      div.ccm-marketplace-list-item-theme-price,
+      div.ccm-marketplace-list-item-add-on-price {
+        color: #4291c5;
+        float: left;
+        padding-top: 25px;
+      }
+
+      div.ccm-marketplace-list-item-add-on-price {
+        padding-top: 0px;
+      }
+    }
+
+    div.ccm-rating {
+      display: inline-block;
+      margin-right: 5px;
+      i.fa-star {
+        color: #189df6;
+      }
+    }
+  }
+}

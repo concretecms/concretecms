@@ -1,12 +1,11 @@
 <?php
 
 use \Concrete\Core\Logging\Logger;
-use \Concrete\Core\Logging\Event;
 use \Concrete\Core\Logging\LogEntry;
 use \Concrete\Core\Logging\GroupLogger;
 
-class LogTest extends ConcreteDatabaseTestCase {
-
+class LogTest extends ConcreteDatabaseTestCase
+{
     protected $fixtures = array();
     protected $tables = array('Logs');
 
@@ -21,19 +20,18 @@ class LogTest extends ConcreteDatabaseTestCase {
         // now we determine if writing occurred successfully.
         $db = Database::get();
         $r = $db->GetAll('select * from Logs');
-        $this->assertTrue($r[0]['logID'] == 1);
-        $this->assertTrue($r[0]['channel'] == 'sample-channel');
-        $this->assertTrue($r[0]['message'] == 'This is a debug line.');
-        $this->assertTrue($r[0]['level'] == Log::getLevelCode('debug'));
+        $this->assertEquals(1, $r[0]['logID']);
+        $this->assertEquals('sample-channel', $r[0]['channel']);
+        $this->assertEquals('This is a debug line.', $r[0]['message']);
+        $this->assertEquals(Log::getLevelCode('debug'), $r[0]['level']);
 
-        $this->assertTrue($r[1]['message'] == 'This is an emergency');
-        $this->assertTrue($r[1]['level'] == Log::getLevelCode('emergency'));
+        $this->assertEquals('This is an emergency', $r[1]['message']);
+        $this->assertEquals(Log::getLevelCode('emergency'), $r[1]['level']);
 
-        $this->assertTrue($r[2]['logID'] == 3);
-        $this->assertTrue($r[2]['message'] == 'Critical error found.');
-        $this->assertTrue($r[2]['level'] == Log::getLevelCode('critical'));
+        $this->assertEquals(3, $r[2]['logID']);
+        $this->assertEquals('Critical error found.', $r[2]['message']);
+        $this->assertEquals(Log::getLevelCode('critical'), $r[2]['level']);
     }
-
 
     /**
      * Attempts to change the default database logging functionality
@@ -49,7 +47,7 @@ class LogTest extends ConcreteDatabaseTestCase {
 
         // now we will add a stream handler that can handle all the different
         // types of debug messages, but it should keep things OUT of the database
-        $r = new stdClass;
+        $r = new stdClass();
         $r->test = 'test';
 
         $sh = new \Monolog\Handler\StreamHandler(dirname(__FILE__) . '/test.log', Logger::DEBUG, false);
@@ -68,6 +66,7 @@ class LogTest extends ConcreteDatabaseTestCase {
 
         $this->assertEquals(count($r), 1);
 
+        $sh->close();
         $contents = trim(file_get_contents(dirname(__FILE__) . '/test.log'));
         $entries = explode("\n", $contents);
 
@@ -76,8 +75,6 @@ class LogTest extends ConcreteDatabaseTestCase {
         if (file_exists(dirname(__FILE__) . '/test.log')) {
             unlink(dirname(__FILE__) . '/test.log');
         }
-
-
     }
 
     public function testOverringDefaultFunctionalityWithEvents()
@@ -85,14 +82,16 @@ class LogTest extends ConcreteDatabaseTestCase {
         $log = new Logger('emails');
         // should only have a database handler.
         $this->assertEquals(count($log->getHandlers()), 1);
-        $this->assertEquals(count(Log::getHandlers()), 2);// this should still have the same stream handler from last test.
+        $this->assertEquals(count(Log::getHandlers()),
+            2);// this should still have the same stream handler from last test.
 
         $handler = new \Monolog\Handler\TestHandler(Logger::CRITICAL, false);
-        $listener = Events::addListener('on_logger_create', function($event) use ($handler) {
+        $listener = Events::addListener('on_logger_create', function ($event) use ($handler) {
             $logger = $event->getLogger();
             $formatter = new \Monolog\Formatter\LineFormatter();
             $handler->setFormatter($formatter);
             $logger->pushHandler($handler);
+
             return $logger;
         });
 
@@ -112,7 +111,6 @@ class LogTest extends ConcreteDatabaseTestCase {
         $r = $db->GetAll('select * from Logs');
         $this->assertEquals(count($r), 3); // only the non-critical, non-alert, non-emergency items.
 
-
         $this->assertEquals(count($handler->getRecords()), 3);
         $records = $handler->getRecords();
         $this->assertEquals($records[0]['level'], Logger::CRITICAL);
@@ -124,7 +122,6 @@ class LogTest extends ConcreteDatabaseTestCase {
         Events::removeListener('on_logger_create', $listeners[0]);
         // AND we pop the stream handler from the previous test
         Log::popHandler();
-
     }
 
     public function testLogEntryObject()
@@ -158,7 +155,6 @@ class LogTest extends ConcreteDatabaseTestCase {
         $l->write('This is line one.');
         $l->write('This is line two.');
 
-
         $l2 = new GroupLogger('test', Logger::CRITICAL);
         $l2->write('OMG!');
         $l2->close();
@@ -172,5 +168,4 @@ class LogTest extends ConcreteDatabaseTestCase {
         $this->assertEquals($le3->getMessage(), "This is line one.\nThis is line two.");
         $this->assertEquals($le2->getMessage(), "OMG!");
     }
-
 }

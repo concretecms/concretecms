@@ -1,0 +1,35 @@
+div.ccm-block-custom-template-parallax {
+	background-image: none !important;
+	/* We take the background image away from the DIV, because the custom template does it
+	in a different way */
+}
+
+div.ccm-block-custom-template-parallax.parallaxic-container,  /* template is also the container */
+div.ccm-block-custom-template-parallax div.parallaxic-container {
+	position: relative;
+	z-index: 5;
+}
+
+div.ccm-block-custom-template-parallax.parallaxic-container > img.parallaxic-image, /* template is also the container */
+div.ccm-block-custom-template-parallax div.parallaxic-container > img.parallaxic-image {
+	position: absolute;
+	top: 0;
+	left: 0;
+	max-height: none;
+	max-width: none;
+	z-index: 4;
+}
+
+div.ccm-block-custom-template-parallax .parallax-stripe-inner {
+	z-index: 5;
+	position: relative;
+}
+
+div.ccm-block-custom-template-parallax .parallax-image-container {
+    position: absolute;
+    overflow: hidden;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}

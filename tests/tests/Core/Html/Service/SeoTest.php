@@ -9,14 +9,20 @@ class SeoTest extends \PHPUnit_Framework_TestCase
         $seo->setSiteName('Test Site Name');
         $seo->addTitleSegment('First');
         $this->assertEquals('Test Site Name :: First', $seo->getTitle());
-        
+
         $seo->addTitleSegment('Second');
-        $this->assertEquals('Test Site Name :: Second :: First', $seo->getTitle());
-        
+        $this->assertEquals('Test Site Name :: First :: Second', $seo->getTitle());
+
         $seo->setTitleSegmentSeparator(' | ');
-        $this->assertEquals('Test Site Name :: Second | First', $seo->getTitle());
-        
+        $this->assertEquals('Test Site Name :: First | Second', $seo->getTitle());
+
         $seo->setTitleFormat('%2$s | %1$s');
-        $this->assertEquals('Second | First | Test Site Name', $seo->getTitle());
+        $this->assertEquals('First | Second | Test Site Name', $seo->getTitle());
+
+        $seo->addTitleSegmentBefore('Third');
+        $this->assertEquals('Third | First | Second | Test Site Name', $seo->getTitle());
+
+        $seo->setCustomTitle('This is the custom title');
+        $this->assertEquals('This is the custom title | Test Site Name', $seo->getTitle());
     }
 }

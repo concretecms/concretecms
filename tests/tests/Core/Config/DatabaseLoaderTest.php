@@ -1,9 +1,9 @@
 <?php
+
 use Concrete\Core\Config\DatabaseLoader;
 
 class DatabaseLoaderTest extends ConcreteDatabaseTestCase
 {
-
     /** @var DatabaseLoader */
     protected $loader;
 
@@ -30,10 +30,10 @@ class DatabaseLoaderTest extends ConcreteDatabaseTestCase
         \Database::insert(
             'Config',
             array(
-                'configItem'      => 'test',
-                'configValue'     => $value = uniqid(),
-                'configGroup'     => 'testing',
-                'configNamespace' => null
+                'configItem' => 'test',
+                'configValue' => $value = uniqid(),
+                'configGroup' => 'testing',
+                'configNamespace' => null,
             ));
 
         $array = $this->loader->load('test', 'testing');
@@ -62,10 +62,10 @@ class DatabaseLoaderTest extends ConcreteDatabaseTestCase
         $db->insert(
             'Config',
             array(
-                'configItem'      => $group,
-                'configValue'     => 1,
-                'configGroup'     => $group,
-                'configNamespace' => ''));
+                'configItem' => $group,
+                'configValue' => 1,
+                'configGroup' => $group,
+                'configNamespace' => '', ));
 
         $exists_after = $this->loader->exists($group);
 
@@ -83,10 +83,10 @@ class DatabaseLoaderTest extends ConcreteDatabaseTestCase
         $db->insert(
             'Config',
             array(
-                'configItem'      => $group,
-                'configValue'     => 1,
-                'configGroup'     => $group,
-                'configNamespace' => $namespace));
+                'configItem' => $group,
+                'configValue' => 1,
+                'configGroup' => $group,
+                'configNamespace' => $namespace, ));
 
         $exists_after = $this->loader->exists($group, $namespace);
 
@@ -94,13 +94,15 @@ class DatabaseLoaderTest extends ConcreteDatabaseTestCase
         $this->assertTrue($exists_after);
     }
 
-    public function testAddNamespace() {
+    public function testAddNamespace()
+    {
         // Satisfy coverage
         $this->loader->addNamespace('', '');
         $this->assertTrue(true);
     }
 
-    public function testGetNamespaces() {
+    public function testGetNamespaces()
+    {
         $namespaces_first = $this->loader->getNamespaces();
 
         $namespace = md5(uniqid());
@@ -108,16 +110,16 @@ class DatabaseLoaderTest extends ConcreteDatabaseTestCase
         $db->insert(
             'Config',
             array(
-                'configItem'      => $namespace,
-                'configValue'     => 1,
-                'configGroup'     => 'test',
-                'configNamespace' => $namespace));
+                'configItem' => $namespace,
+                'configValue' => 1,
+                'configGroup' => 'test',
+                'configNamespace' => $namespace, ));
 
         $namespaces_after = $this->loader->getNamespaces();
 
-        $value = array_shift(array_diff($namespaces_after, $namespaces_first));
+        $diff = array_diff($namespaces_after, $namespaces_first);
+        $value = array_shift($diff);
 
         $this->assertEquals($namespace, $value);
     }
-
 }

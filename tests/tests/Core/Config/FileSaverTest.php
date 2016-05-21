@@ -5,7 +5,6 @@ use Illuminate\Filesystem\Filesystem;
 
 class FileSaverTest extends PHPUnit_Framework_TestCase
 {
-
     /** @var FileSaver */
     protected $saver;
 
@@ -14,7 +13,22 @@ class FileSaverTest extends PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->saver = new FileSaver($this->files = new Filesystem());
+        $this->saver = new \Concrete\Tests\Core\Config\Fixtures\TestFileSaver($this->files = new Filesystem());
+    }
+
+    public function testSavingArray()
+    {
+        $group = md5(time() . uniqid());
+
+        $this->saver->save('test.array', array(1, 2), 'testing', $group);
+        $this->saver->save('test.array', array(1), 'testing', $group);
+
+        $path = DIR_TESTS . "/config/generated_overrides/{$group}.php";
+        $contents = @include_once $path;
+
+        $this->files->delete($path);
+
+        $this->assertEquals(array(1), array_get($contents, 'test.array'), "Saver doesn't save correctly");
     }
 
     public function testSavingConfig()
@@ -25,7 +39,7 @@ class FileSaverTest extends PHPUnit_Framework_TestCase
 
         $this->saver->save($item, $value, 'testing', $group);
 
-        $path = DIR_APPLICATION . "/config/generated_overrides/{$group}.php";
+        $path = DIR_TESTS . "/config/generated_overrides/{$group}.php";
         $exists = $this->files->exists($path);
 
         $array = array();
@@ -47,7 +61,7 @@ class FileSaverTest extends PHPUnit_Framework_TestCase
 
         $this->saver->save($item, $value, 'testing', $group, $namespace);
 
-        $path = DIR_APPLICATION . "/config/generated_overrides/{$namespace}/{$group}.php";
+        $path = DIR_TESTS . "/config/generated_overrides/{$namespace}/{$group}.php";
         $exists = $this->files->exists($path);
 
         $array = array();
@@ -59,5 +73,4 @@ class FileSaverTest extends PHPUnit_Framework_TestCase
         $this->assertTrue($exists, 'Failed to save file');
         $this->assertEquals($value, array_get($array, $item), 'Failed to save correct value.');
     }
-
 }
