@@ -45,7 +45,7 @@ $form = Loader::helper('form');
 					<fieldset>
 						<form method='post' class='form-horizontal' action='<?=$view->action('authenticate', $auth->getAuthenticationTypeHandle())?>'>
 							<div class='authForm'>
-								<?$auth->renderForm()?>
+								<?php $auth->renderForm() ?>
 							</div>
 						</form>
 					</fieldset>
