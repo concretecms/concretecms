@@ -18,9 +18,9 @@ if (version_compare($latest_version, APP_VERSION, '>')) {
 
 if ($updates > 0) {
     ?>
-    <div class="alert alert-info">
+    <div class="alert alert-info clearfix">
         <?php echo t2('There is currently %d add-on update available.', 'There are currently %d add-on updates available.', $updates) ?>
-        <a class="btn btn-info btn-xs pull-right" href="<?php echo $view->url('/dashboard/extend/update') ?>"><?php echo t('Update') ?></a></p>
+        <a class="btn btn-info btn-xs pull-right" href="<?php echo $view->url('/dashboard/extend/update') ?>"><?php echo t('Update') ?></a>
     </div>
     <?php
 }
