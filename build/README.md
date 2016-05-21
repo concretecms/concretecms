@@ -61,7 +61,7 @@ And you can simply launch `grunt taskname`
 
 ## Built assets and GIT
 
-Since the CSS and JavaScript assets are under GIT, you may want to tell to temporarily ignore these assets in your working copy of the repository.
+Since the CSS and JavaScript assets are under GIT, you may want to tell GIT to temporarily ignore these assets in your working copy of the repository.
 This can be done with this command: `grunt gitskip-on`
 To let GIT reconsider your local assets, simply run `grunt gitskip-off`
 
