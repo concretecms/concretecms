@@ -1,5 +1,7 @@
-# Building Assets Required for concrete5
+# Building concrete5 Assets
 
+The concrete5 version currently available on GitHub already contains the required CSS and JavaScript assets.
+If you want to modify these assets you'll need to rebuild them. 
 
 ## Requirements
 In order to build assets for concrete5 you need:
@@ -11,7 +13,8 @@ You can install it globally with `npm install -g grunt-cli`. This requires that 
 If you don't have administrator rights, you may need to install the grunt client locally to your project using `npm install grunt-cli`.
 Unfortunately, this will not put the grunt executable in your PATH, so you'll need to specify its explicit location when executing it (for OS X, \*nix, BSD `node_modules/.bin/grunt`, for Windows `node_modules\.bin\grunt`).
 
-Once you have installed the grunt client, you need to install the project dependencies: simply launch the following command: `npm install` from inside the `build` directory. Note that you will need to install third party PHP dependencies via Composer if you have not done so already.
+Once you have installed the grunt client, you need to install the project dependencies: simply launch the following command: `npm install` from inside the `build` directory.
+Note that you will need to install third party PHP dependencies via Composer if you have not done so already.
 
 ### Task parameters
 
@@ -54,6 +57,13 @@ And you can simply launch `grunt taskname`
 	- it's the same as calling `grunt css:debug` and `grunt js:debug`
 - For production: `grunt release` (or simply `grunt`)
 	- it's the same as calling `grunt css:release` and `grunt js:release`
+
+
+## Built assets and GIT
+
+Since the CSS and JavaScript assets are under GIT, you may want to tell to temporarily ignore these assets in your working copy of the repository.
+This can be done with this command: `grunt gitskip-on`
+To let GIT reconsider your local assets, simply run `grunt gitskip-off`
 
 
 ## Debugging JavaScript with source maps
