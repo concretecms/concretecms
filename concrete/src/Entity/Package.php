@@ -85,8 +85,6 @@ class Package implements LocalizablePackageInterface
         $this->pkgID = $pkgID;
     }
 
-
-
     /**
      * @return bool
      */
@@ -102,7 +100,6 @@ class Package implements LocalizablePackageInterface
     {
         $this->pkgIsInstalled = $pkgIsInstalled;
     }
-
 
     /**
      * @return string
@@ -197,17 +194,19 @@ class Package implements LocalizablePackageInterface
     public function __call($method, $arguments)
     {
         $controller = $this->getController();
+
         return call_user_func_array(array($controller, $method), $arguments);
     }
 
     /**
      * @param string $locale
+     *
      * @return string
      */
     public function getTranslationFile($locale)
     {
         $controller = $this->getController();
+
         return $controller->getTranslationFile($locale);
     }
-
 }
