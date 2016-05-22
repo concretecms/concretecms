@@ -80,7 +80,7 @@
 				checkbox = true;
 				persist = false;
 				classNames = {
-					'checkbox': 'dynatree-radio'
+					'checkbox': 'fancytree-radio'
 				};
 				if (options.selectNodesByKey.length) {
 					ajaxData.treeNodeSelectedIDs = options.selectNodesByKey;
@@ -91,7 +91,7 @@
 				checkbox = true;
 				persist = false;
 				classNames = {
-					'checkbox': 'dynatree-checkbox'
+					'checkbox': 'fancytree-checkbox'
 				};
 				if (options.selectNodesByKey.length) {
 					ajaxData.treeNodeSelectedIDs = options.selectNodesByKey;
@@ -102,7 +102,7 @@
 			if(options.selectMode) {
 				selectMode = options.selectMode;
 			}
-			var minExpandLevel = 2;
+			var minExpandLevel = 1;
 			if (options.minExpandLevel) {
 				minExpandLevel = options.minExpandLevel;
 			}
@@ -113,26 +113,45 @@
 				var ajaxURL = CCM_DISPATCHER_FILENAME + '/ccm/system/tree/node/load_starting';
 			}
 
-			$(my.$element).dynatree({
-				autoFocus: false,
-				initAjax: {
+			$(my.$element).fancytree({
+				extensions: ["glyph"],
+				glyph: {
+					map: {
+						doc: "fa fa-file-o",
+						docOpen: "fa fa-file-o",
+						checkbox: "fa fa-square-o",
+						checkboxSelected: "fa fa-check-square-o",
+						checkboxUnknown: "fa fa-share-square",
+						dragHelper: "fa fa-play",
+						dropMarker: "fa fa-angle-right",
+						error: "fa fa-warning",
+						expanderClosed: "fa fa-plus-square-o",
+						expanderLazy: "fa fa-plus-square-o",  // glyphicon-expand
+						expanderOpen: "fa fa-minus-square-o",  // glyphicon-collapse-down
+						folder: "fa fa-folder-o",
+						folderOpen: "fa fa-folder-open-o",
+						loading: "fa fa-spin fa-refresh"
+					}
+				},
+				source: {
 					url: ajaxURL,
 					type: 'post',
 					data: ajaxData
 				},
-				onLazyRead: function(node) {
-					my.reloadNode(node);
+				lazyLoad: function(event, data) {
+					my.reloadNode(data);
 				},
-				onSelect: function(select, node) {
+				select: function(select, node) {
 					if (options.chooseNodeInForm) {
 						options.onSelect(select, node);
 					}
 				},
+
 				selectMode: selectMode,
 				checkbox: checkbox,
-				classNames: classNames,
 				minExpandLevel:  minExpandLevel,
-				clickFolderMode: 1,
+				clickFolderMode: 1
+				/*
 				onPostInit: function() {
 					var $tree = my.$element;
 
@@ -147,11 +166,11 @@
 					}
 
 					if (options.readOnly) {
-						$tree.dynatree('disable');
+						$tree.fancytree('disable');
 					}
 
 					if (options.chooseNodeInForm) {
-						var selectedNodes = $tree.dynatree('getTree');
+						var selectedNodes = $tree.fancytree('getTree');
 						selectedNodes = selectedNodes.getSelectedNodes();
 						if (selectedNodes[0]) {
 							var node = selectedNodes[0];
@@ -180,20 +199,6 @@
 					if (!node.getEventTargetType(e)) {
 						return false;
 					}
-
-					/*
-					if (options.chooseNodeInForm) {
-						var targetType = node.getEventTargetType(e);
-						if (targetType == 'checkbox' || targetType == 'title') {
-							if (targetType == 'title') {
-								node.select(true);
-							}
-							return true;
-						} else {
-							return false;
-						}
-					}
-					*/
 
 					if (!options.chooseNodeInForm && node.getEventTargetType(e) == 'title') {
 						var $menu = node.data.treeNodeMenu;
@@ -252,28 +257,25 @@
 						sourceNode.move(node, hitMode);
 						my.dragRequest(sourceNode, node, hitMode);
 					}
-				}
+				}*/
 			});
 		},
 
-		reloadNode: function(node, onComplete) {
+		reloadNode: function(data, onComplete) {
 			var my = this,
 				options = my.options,
-				data = my.options.ajaxData != false ? my.options.ajaxData : {};
+				ajaxData = my.options.ajaxData != false ? my.options.ajaxData : {};
 
-			data.treeNodeParentID = node.data.key;
+			ajaxData.treeNodeParentID = data.node.data.treeNodeID;
 
-				var params = {
-					url: CCM_DISPATCHER_FILENAME + '/ccm/system/tree/node/load',
-					data: data,
-					success: function() {
-						if (onComplete) {
-							onComplete();
-						}
+			data.result = $.getJSON(CCM_DISPATCHER_FILENAME + '/ccm/system/tree/node/load',
+				ajaxData,
+				function() {
+					if (onComplete) {
+						onComplete();
 					}
-				};
+				});
 
-			node.appendAjax(params);
 		},
 
 		cloneNode: function(treeNodeID) {
@@ -291,9 +293,9 @@
 						ConcreteAlert.dialog(ccmi18n.error, r.errors.join("<br>"));
 					} else {
 						jQuery.fn.dialog.closeTop();
-						var node = $tree.dynatree('getTree').getNodeByKey(r.treeNodeParentID);
+						var node = $tree.fancytree('getTree').getNodeByKey(r.treeNodeParentID);
 						node.setLazyNodeStatus(DTNodeStatus_Loading);
-						my.reloadNode(node, function() {
+						my.reloadNode(data, function() {
 							node.setLazyNodeStatus(DTNodeStatus_Ok);
 						});
 					}
@@ -364,23 +366,23 @@
 				nodes = r.node;
 			if (nodes.length) {
 				for (var i = 0; i < nodes.length; i++) {
-					var node = $tree.dynatree('getTree').getNodeByKey(nodes[i].treeNodeParentID);
+					var node = $tree.fancytree('getTree').getNodeByKey(nodes[i].treeNodeParentID);
 					node.addChild(nodes[i]);
 				}
 			} else {
-				var node = $tree.dynatree('getTree').getNodeByKey(nodes.treeNodeParentID);
+				var node = $tree.fancytree('getTree').getNodeByKey(nodes.treeNodeParentID);
 				node.addChild(nodes);
 			}
 		});
 		ConcreteEvent.subscribe('ConcreteTreeUpdateTreeNode.concreteTree', function(e, r) {
 			var $tree = $('[data-tree=' + my.options.treeID + ']'),
-				node = $tree.dynatree('getTree').getNodeByKey(r.node.key);
+				node = $tree.fancytree('getTree').getNodeByKey(r.node.key);
 			node.data = r.node;
 			node.render();
 		});
 		ConcreteEvent.subscribe('ConcreteTreeDeleteTreeNode.concreteTree', function(e, r) {
 			var $tree = $('[data-tree=' + my.options.treeID + ']'),
-				node = $tree.dynatree('getTree').getNodeByKey(r.node.treeNodeID);
+				node = $tree.fancytree('getTree').getNodeByKey(r.node.treeNodeID);
 			node.remove();
 		});
 	};
