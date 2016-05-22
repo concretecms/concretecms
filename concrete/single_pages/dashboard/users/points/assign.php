@@ -23,7 +23,7 @@
 	<div class="form-group">
 	    <?=$form->label('upPoints', t('Points'))?>
 		<div class="input">
-			<?php echo $form->text('upPoints', $upPoints);?>
+			<?php echo $form->number('upPoints', $upPoints);?>
 		</div>
 	</div>
 	

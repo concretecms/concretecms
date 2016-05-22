@@ -20,12 +20,6 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
 </form>
 <br />
 <?php
-if (!$mode) {
-    $mode = $_REQUEST['mode'];
-}
-$txt = Loader::helper('text');
-$keywords = $_REQUEST['keywords'];
-
 if (count($entries) > 0) {
     ?>	
 	<table border="0" cellspacing="0" cellpadding="0" id="ccm-product-list" class="table table-striped">
