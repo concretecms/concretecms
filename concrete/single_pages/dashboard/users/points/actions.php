@@ -49,7 +49,7 @@
                 <?=$form->label('upaDefaultPoints', t('Default Points'));
     ?>
         		<div class="input">
-        		    <?php echo $form->text('upaDefaultPoints', $upaDefaultPoints);
+        		    <?php echo $form->number('upaDefaultPoints', $upaDefaultPoints);
     ?>
         		</div>
         	</div>
