@@ -224,8 +224,8 @@ abstract class Node extends Object implements \Concrete\Core\Permission\ObjectIn
             $node->treeID = $this->getTreeID();
             $node->key = $this->getTreeNodeID();
             $node->treeNodeID = $this->getTreeNodeID();
-            $node->isFolder = false;
-            $node->select = $this->treeNodeIsSelected;
+            $node->folder = false;
+            $node->selected = $this->treeNodeIsSelected;
             $node->canEditTreeNodePermissions = $p->canEditTreeNodePermissions();
             $node->canDuplicateTreeNode = $p->canDuplicateTreeNode();
             $node->canDeleteTreeNode = $p->canDeleteTreeNode();
@@ -241,7 +241,7 @@ abstract class Node extends Object implements \Concrete\Core\Permission\ObjectIn
                     $node->children[] = $childnodejson;
                 }
             }
-            $node->isLazy = ($this->getTreeNodeChildCount() > 0) ? true : false;
+            $node->lazy = ($this->getTreeNodeChildCount() > 0) ? true : false;
 
             return $node;
         }
