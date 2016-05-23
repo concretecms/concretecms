@@ -152,6 +152,18 @@ class LinkAbstractor extends Object
 						}
 					}
 
+					if (!in_array('alt', array_keys($picture->attr))) {
+						if ($tag instanceof \Concrete\Core\Html\Object\Picture) {
+							foreach ($tag->getChildren() as $child) {
+								if ($child instanceof \HtmlObject\Image) {
+									$child->alt('');
+								}
+							}
+						} else {
+							$tag->alt('');
+						}
+					}
+
 					$picture->outertext = (string)$tag;
 				}
 			}

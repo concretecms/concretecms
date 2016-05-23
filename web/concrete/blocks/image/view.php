@@ -18,6 +18,8 @@ if (is_object($f)) {
     $tag->addClass('ccm-image-block img-responsive bID-'.$bID);
     if ($altText) {
         $tag->alt(h($altText));
+    } else {
+        $tag->alt('');
     }
     if ($title) {
         $tag->title(h($title));
