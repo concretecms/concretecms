@@ -14,13 +14,12 @@ Just log in to the documentation site with your concrete5.org account and edit a
 
 ## Installation
 
-1. Make sure your development environment enables PHP short tags.
-2. Clone the repository
+1. Clone the repository
 
         git clone https://github.com/concrete5/concrete5.git
         cd concrete5/
 
-3. Use [Composer](https://getcomposer.org/) to install the third party dependencies
+2. Use [Composer](https://getcomposer.org/) to install the third party dependencies
 
         composer install
 

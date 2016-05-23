@@ -238,15 +238,15 @@ $dh = Core::make('helper/date');
 		</tr>
 	</thead>
 	<tbody>
-		<?foreach ($availableJobs as $availableJobName => $job):?>
+		<?php foreach ($availableJobs as $availableJobName => $job):?>
     		<tr> 
     			<td><?=$job->getJobName() ?></td>
     			<td><?=$job->getJobDescription() ?></td> 
-    			<td><?if (!$job->invalid):?>
+    			<td><?php if (!$job->invalid):?>
     				<a href="<?=$view->action('install', $job->jHandle)?>" class="btn btn-sm btn-default pull-right"><?=t('Install')?></a>
-    			<?endif?></td>
+    			<?php endif ?></td>
     		</tr>	
-		<?endforeach?>
+		<?php endforeach ?>
 	</tbody>
 	</table>
 <?php 
