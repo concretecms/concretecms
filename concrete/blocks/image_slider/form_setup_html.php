@@ -214,7 +214,9 @@ echo Core::make('helper/concrete/ui')->tabs(array(
     }
     .ccm-image-slider-entry.slide-closed .form-group:first-of-type {
         display: block;
-        margin-bottom: 0px;
+        margin: 0;
+        padding: 0;
+        border: 0;
     }
     .ccm-image-slider-entry.slide-closed .form-group:first-of-type label {
         display: none;
