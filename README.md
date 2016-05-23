@@ -20,18 +20,9 @@ Just log in to the documentation site with your concrete5.org account and edit a
         git clone https://github.com/concrete5/concrete5.git
         cd concrete5/
 
-3. Use [Composer](https://getcomposer.org/) to install the third party dependencies in `/web/concrete`
+3. Use [Composer](https://getcomposer.org/) to install the third party dependencies
 
-        cd web/concrete
         composer install
-        cd ../../
-
-4. Use [npm](https://www.npmjs.org/) to install [grunt](http://gruntjs.com/) to the build directory and install the command line interface in `/build`
-
-        cd build
-        npm install -g grunt-cli
-        npm install
-        cd ../
 
 ## Legacy
 

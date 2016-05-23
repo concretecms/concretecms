@@ -14,24 +14,26 @@ class FileListTest extends \FileStorageTestCase
     protected function setUp()
     {
         $this->tables = array_merge($this->tables, array(
-            'Files',
-            'FileVersions',
             'Users',
             'PermissionAccessEntityTypes',
             'FileAttributeValues',
-            'AttributeKeyCategories',
-            'AttributeSetKeys',
-            'Packages',
-            'AttributeSets',
             'FileImageThumbnailTypes',
-            'AttributeTypes',
             'ConfigStore',
-            'AttributeKeys',
-            'AttributeValues',
             'FileSets',
-            'atNumber',
             'FileVersionLog',
             'FileSetFiles',
+        ));
+        $this->metadatas = array_merge($this->metadatas, array(
+            'Concrete\Core\Entity\Attribute\Key\Type\NumberType',
+            'Concrete\Core\Entity\Attribute\Key\Type\Type',
+            'Concrete\Core\Entity\Attribute\Key\FileKey',
+            'Concrete\Core\Entity\Attribute\Value\FileValue',
+            'Concrete\Core\Entity\Attribute\Key\Key',
+            'Concrete\Core\Entity\Attribute\Value\Value',
+            'Concrete\Core\Entity\Attribute\Value\Value\NumberValue',
+            'Concrete\Core\Entity\Attribute\Value\Value\Value',
+            'Concrete\Core\Entity\Attribute\Type',
+            'Concrete\Core\Entity\Attribute\Category',
         ));
         parent::setUp();
         \Config::set('concrete.upload.extensions', '*.txt;*.jpg;*.jpeg;*.png');
@@ -108,7 +110,7 @@ class FileListTest extends \FileStorageTestCase
         $pagination->setMaxPerPage(3)->setCurrentPage(1);
         $results = $pagination->getCurrentPageResults();
         $this->assertEquals(3, count($results));
-        $this->assertInstanceOf('\Concrete\Core\File\File', $results[0]);
+        $this->assertInstanceOf('\Concrete\Core\Entity\File\File', $results[0]);
     }
 
     public function testFilterByExtensionAndType()
@@ -207,7 +209,7 @@ class FileListTest extends \FileStorageTestCase
         $this->assertTrue($pagination->hasPreviousPage());
 
         $results = $pagination->getCurrentPageResults();
-        $this->assertInstanceOf('\Concrete\Core\File\File', $results[0]);
+        $this->assertInstanceOf('\Concrete\Core\Entity\File\File', $results[0]);
         $this->assertEquals(1, count($results[0]));
     }
 
@@ -291,6 +293,6 @@ class FileListTest extends \FileStorageTestCase
 
         $columns = $set->getColumns();
 
-        $this->assertEquals(5, count($columns));
+        $this->assertEquals(4, count($columns));
     }
 }

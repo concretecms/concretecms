@@ -1,0 +1,78 @@
+@import "../vendor/bootstrap/variables.less";
+@import "../vendor/bootstrap/mixins.less";
+@import "include/variables.less";
+@import "include/mixins.less";
+
+div.ccm-tree-sitemap {
+
+    span.fa-home {
+        color: #9fb9d3;
+    }
+
+    ul.dynatree-container, a {
+        font-size: 14px;
+        color: #666666;
+    }
+
+    span.dynatree-checkbox, span.dynatree-radio {
+        margin-top: 2px;
+    }
+    .ccm-page-home a {color: #369; font-weight: bold;}
+
+    ul.dynatree-container ul {
+        padding-left: 20px;
+    }
+
+    span.dynatree-node a {
+        margin-bottom: 7px;
+    }
+
+    span.dynatree-node {
+
+        span.dynatree-icon, img {
+            cursor: move;
+        }
+
+        a,
+        a:hover,
+        a:focus {
+            text-decoration: none;
+            .border-radius(2px);
+        }
+    }
+    span.dynatree-drag-source {
+        background-color: transparent !important;
+    }
+
+    span.dynatree-active a
+    {
+        background-color: transparent !important;
+        color: black !important;
+    }
+
+    span.dynatree-drop-target.dynatree-drop-accept a
+    {
+        color: black !important;
+        background-color: #E6FBFF !important;
+    }
+
+    span.dynatree-node.dynatree-drop-accept.dynatree-drop-before a
+    {
+        color: black !important;
+        background-color: transparent !important;
+    }
+
+    span.dynatree-node.dynatree-drop-accept.dynatree-drop-after a
+    {
+        color: black !important;
+        background-color: transparent !important;
+    }
+
+    span.ccm-sitemap-explore:hover {
+        span.dynatree-title {
+            cursor: pointer;
+            text-decoration: underline;
+        }
+    }
+
+}

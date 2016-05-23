@@ -1,38 +1,38 @@
 <?php
+
 use Concrete\Core\Config\Renderer;
 use Concrete\Core\Config\RendererInvalidTypeException;
 
 class RendererTest extends PHPUnit_Framework_TestCase
 {
-
     public function testRendering()
     {
         $array = array(
-            'string'            => 'string',
-            'array'             => array(
+            'string' => 'string',
+            'array' => array(
                 'test1',
                 'test2',
-                'test3'
+                'test3',
             ),
             'associative array' => array(
                 1 => 'test1',
                 3 => 'test2',
-                2 => 'test3'
+                2 => 'test3',
             ),
-            'special chars'     => '!@#$%^&*()_+-={}[]:\'";|<>,./?`~',
-            'other chars'       => "\n\r\t\v\f",
-            'unicode'           => 'œ∑´†¥¨ˆπˆ¨†¬˚∆˙©ƒ∂ßåΩ≈ç√∫˜≤≥çæ…“‘¡™£¢∞§¶•ªº–≠',
-            'parseable'         => '$test {$test}',
-            'int'               => 1,
-            'double'            => 1.25,
-            'boolean'           => true
+            'special chars' => '!@#$%^&*()_+-={}[]:\'";|<>,./?`~',
+            'other chars' => "\n\r\t\v\f",
+            'unicode' => 'œ∑´†¥¨ˆπˆ¨†¬˚∆˙©ƒ∂ßåΩ≈ç√∫˜≤≥çæ…“‘¡™£¢∞§¶•ªº–≠',
+            'parseable' => '$test {$test}',
+            'int' => 1,
+            'double' => 1.25,
+            'boolean' => true,
         );
 
         $first_level = $array;
-        $current_level =& $array;
-        for ($i = 10; $i--;) {
+        $current_level = &$array;
+        for ($i = 10; --$i;) {
             $current_level['depth_test'] = $first_level;
-            $current_level =& $current_level['depth_test'];
+            $current_level = &$current_level['depth_test'];
         }
 
         $rendered = id(new Renderer($array))->render();
@@ -73,6 +73,7 @@ class RendererTest extends PHPUnit_Framework_TestCase
                 }
             }
         }
+
         return true;
     }
 
@@ -81,7 +82,7 @@ class RendererTest extends PHPUnit_Framework_TestCase
         $renderer = new Renderer(
             array(
                 'closure' => function () {
-                }
+                },
             ));
         try {
             $renderer->render();
@@ -95,7 +96,7 @@ class RendererTest extends PHPUnit_Framework_TestCase
     {
         $renderer = new Renderer(
             array(
-                'object' => $this
+                'object' => $this,
             ));
         try {
             $renderer->render();
@@ -104,5 +105,4 @@ class RendererTest extends PHPUnit_Framework_TestCase
         }
         $this->fail('Didn\'t detect invalid Closure type.');
     }
-
 }
