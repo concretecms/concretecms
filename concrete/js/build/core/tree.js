@@ -6,7 +6,7 @@
 		var my = this;
 		options = options || {};
 		options = $.extend({
-			readonly: false,
+			readOnly: false,
 			chooseNodeInForm: false,
 			onSelect: false,
 			treeID: false,
@@ -102,7 +102,7 @@
 			if(options.selectMode) {
 				selectMode = options.selectMode;
 			}
-			var minExpandLevel = 1;
+			var minExpandLevel = 2;
 			if (options.minExpandLevel) {
 				minExpandLevel = options.minExpandLevel;
 			}
@@ -114,7 +114,7 @@
 			}
 
 			$(my.$element).fancytree({
-				extensions: ["glyph"],
+				extensions: ["glyph", "dnd"],
 				glyph: {
 					map: {
 						doc: "fa fa-file-o",
@@ -141,24 +141,27 @@
 				lazyLoad: function(event, data) {
 					my.reloadNode(data);
 				},
-				select: function(select, node) {
+				select: function(select, data) {
 					if (options.chooseNodeInForm) {
-						options.onSelect(select, node);
+						var keys = $.map(data.tree.getSelectedNodes(), function(node) {
+							return node.key;
+						});
+						options.onSelect(keys);
 					}
 				},
 
 				selectMode: selectMode,
 				checkbox: checkbox,
 				minExpandLevel:  minExpandLevel,
-				clickFolderMode: 1
-				/*
-				onPostInit: function() {
+				clickFolderMode: 1,
+				init: function() {
+
 					var $tree = my.$element;
 
 					if (options.removeNodesByKey.length) {
 						for (var i = 0; i < options.removeNodesByKey.length; i++) {
 							var nodeID = options.removeNodesByKey[i];
-							var node = this.getNodeByKey(nodeID);
+							var node = $tree.fancytree('getTree').getNodeByKey(nodeID);
 							if (node) {
 								node.remove();
 							}
@@ -172,9 +175,8 @@
 					if (options.chooseNodeInForm) {
 						var selectedNodes = $tree.fancytree('getTree');
 						selectedNodes = selectedNodes.getSelectedNodes();
-						if (selectedNodes[0]) {
-							var node = selectedNodes[0];
-							options.onSelect(true, node);
+						if (selectedNodes.length) {
+							options.onSelect(selectedNodes);
 						}
 					}
 					if (selectedNodes) {
@@ -183,27 +185,28 @@
 						});
 					}
 				},
-				onClick: function(node, e) {
+
+				click: function(e, data) {
 
 					if (options.onClick) {
-						return options.onClick(node, e);
+						return options.onClick(data.node, e);
 					}
 
-					if (node.getEventTargetType(e) == 'expander') {
+					if (data.targetType == 'expander') {
 						return true;
 					}
 
-					if (options.chooseNodeInForm && node.getEventTargetType(e) != 'checkbox') {
+					if (options.chooseNodeInForm && data.targetType != 'checkbox') {
 						return false;
 					}
-					if (!node.getEventTargetType(e)) {
+					if (!data.targetType) {
 						return false;
 					}
 
-					if (!options.chooseNodeInForm && node.getEventTargetType(e) == 'title') {
-						var $menu = node.data.treeNodeMenu;
+					if (!options.chooseNodeInForm && data.targetType == 'title') {
+						var $menu = data.node.data.treeNodeMenu;
 						if ($menu) {
-							var menu = new ConcreteMenu($(node.span), {
+							var menu = new ConcreteMenu($(data.node.span), {
 								menu: $menu,
 								handle: 'none'
 							});
@@ -213,51 +216,55 @@
 
 					return true;
 				},
-				fx: {height: 'toggle', duration: 200},
+
 				dnd: {
-					onDragStart: function(node) {
+					preventRecursiveMoves: true, // Prevent dropping nodes on own descendants,
+					focusOnClick: true,
+					preventVoidMoves: true, // Prevent dropping nodes 'before self', etc.
+					dragStart: function(sourceNode, data) {
 						if (!options.chooseNodeInForm) {
 							return true;
 						} else {
 							return false;
 						}
 					},
-					onDragStop: function(node) {
-
-					},
-					autoExpandMS: 1000,
-					preventVoidMoves: true,
-					onDragEnter: function(node, sourceNode) {
+					dragStop: function(sourceNode, data) {
 						return true;
 					},
-					onDragOver: function(node, sourceNode, hitMode) {
-						if ((!node.parent.data.treeNodeID) && (node.data.treeNodeID !== '1')) { // Home page has no parents, but we still want to be able to hit it.
+					dragEnter: function(targetNode, data) {
+						return true;
+					},
+					dragOver: function(targetNode, data) {
+						var sourceNode = data.node, hitMode = data.hitMode;
+						if ((!targetNode.parent.data.treeNodeID) && (targetNode.data.treeNodeID !== '1')) { // Home page has no parents, but we still want to be able to hit it.
 							return false;
 						}
 
-						if((hitMode != 'over') && (node.data.treeNodeID == 1)) {  // Home gets no siblings
+						if((hitMode != 'over') && (targetNode.data.treeNodeID == 1)) {  // Home gets no siblings
 							return false;
 						}
 
-						if (sourceNode.data.treeNodeID == node.data.treeNodeID) {
+						if (sourceNode.data.treeNodeID == targetNode.data.treeNodeID) {
 							return false; // can't drag node onto itself.
 						}
 
-						if (!node.data.treeNodeID && hitMode == 'after') {
+						if (!targetNode.data.treeNodeID && hitMode == 'after') {
 							return false;
 						}
 
 						// Prevent dropping a parent below it's own child
-						if(node.isDescendantOf(sourceNode)){
+						if(targetNode.isDescendantOf(sourceNode)){
 							return false;
 						}
 						return true;
 					},
-					onDrop: function(node, sourceNode, hitMode, ui, draggable) {
-						sourceNode.move(node, hitMode);
-						my.dragRequest(sourceNode, node, hitMode);
+					dragDrop: function(targetNode, data) {
+						var sourceNode = data.node, hitMode = data.hitMode;
+
+						sourceNode.moveTo(targetNode, hitMode);
+						my.dragRequest(sourceNode, targetNode, hitMode);
 					}
-				}*/
+				}
 			});
 		},
 

@@ -241,7 +241,15 @@ abstract class Node extends Object implements \Concrete\Core\Permission\ObjectIn
                     $node->children[] = $childnodejson;
                 }
             }
-            $node->lazy = ($this->getTreeNodeChildCount() > 0) ? true : false;
+            if (count($node->children)) {
+                $node->lazy = false;
+            } else {
+                $node->lazy = ($this->getTreeNodeChildCount() > 0) ? true : false;
+            }
+
+            if ($this->getTreeNodeParentID() == 0) {
+                $node->expanded = true;
+            }
 
             return $node;
         }

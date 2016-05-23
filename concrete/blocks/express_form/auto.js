@@ -228,9 +228,9 @@ $(function() {
                 },
                 treeNodeParentID: $(this).attr('data-root-tree-node-id'),
                 selectNodesByKey: [$('input[name=resultsFolder]').val()],
-                onSelect : function(select, node) {
-                    if (select) {
-                        $('input[name=resultsFolder]').val(node.data.key);
+                onSelect : function(nodes) {
+                    if (nodes.length) {
+                        $('input[name=resultsFolder]').val(nodes[0]);
                     } else {
                         $('input[name=resultsFolder]').val('');
                     }
