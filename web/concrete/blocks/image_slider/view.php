@@ -46,7 +46,7 @@ $(document).ready(function(){
                     if($row['title']) {
                     	$tag->alt($row['title']);
                     }else{
-                    	$tag->alt("slide");
+                    	$tag->alt("");
                     }
                     print $tag; ?>
                 <?php } ?>

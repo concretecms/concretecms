@@ -47,7 +47,7 @@
     "hautelook/phpass": "dev-master",
     "voku/urlify": "1.0.1-stable",
     "dapphp/securimage": "3.5.*",
-    "anahkiasen/html-object": "1.4.0",
+    "anahkiasen/html-object": "1.4.2",
     "primal/color": "1.0.*@dev",
     "zendframework/zend-queue": "dev-master",
     "zendframework/zend-mail": "2.2.*",
