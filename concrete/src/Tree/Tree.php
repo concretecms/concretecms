@@ -206,7 +206,7 @@ abstract class Tree extends Object
             $root->selectChildrenNodesByID($this->getSelectedTreeNodeIDs());
         }
 
-        return $root->getTreeNodeJSON();
+        return [$root->getTreeNodeJSON()];
     }
 
     protected static function create(\Concrete\Core\Tree\Node\Node $rootNode)

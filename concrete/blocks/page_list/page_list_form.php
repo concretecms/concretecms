@@ -561,9 +561,9 @@ $form = Loader::helper('form/page_selector');
                 'treeID': chosenTree,
                 'chooseNodeInForm': true,
                 'selectNodesByKey': [<?=intval($customTopicTreeNodeID)?>],
-                'onSelect' : function(select, node) {
-                    if (select) {
-                        $('input[name=customTopicTreeNodeID]').val(node.data.key);
+                'onSelect' : function(nodes) {
+                    if (nodes.length) {
+                        $('input[name=customTopicTreeNodeID]').val(nodes[0]);
                     } else {
                         $('input[name=customTopicTreeNodeID]').val('');
                     }
