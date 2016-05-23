@@ -4,12 +4,10 @@
  * Created by PhpStorm.
  * User: andrew
  * Date: 6/10/14
- * Time: 7:47 AM
+ * Time: 7:47 AM.
  */
-
 class PageThemeGridFrameworkTest extends \PHPUnit_Framework_TestCase
 {
-
     public function testGridFrameworkManagerLoading()
     {
         $gf = Core::make('manager/grid_framework');
@@ -19,5 +17,4 @@ class PageThemeGridFrameworkTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('\Concrete\Core\Page\Theme\GridFramework\Type\Bootstrap3', $gf->driver('bootstrap3'));
         $this->assertInstanceOf('\Concrete\Core\Page\Theme\GridFramework\Type\Foundation', $gf->driver('foundation'));
     }
-
 }

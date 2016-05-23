@@ -1,7 +1,7 @@
-<?
+<?php
 
-class StyleTest extends \PHPUnit_Framework_TestCase {
-
+class StyleTest extends \PHPUnit_Framework_TestCase
+{
     /*
     public static function tearDownAfterClass() {
         @unlink(dirname(__FILE__) . '/fixtures/testing.css');
@@ -17,7 +17,8 @@ class StyleTest extends \PHPUnit_Framework_TestCase {
     }
     */
 
-    public function testStyles() {
+    public function testStyles()
+    {
         $definition = dirname(__FILE__) . '/fixtures/styles.xml';
         $styleList = \Concrete\Core\StyleCustomizer\StyleList::loadFromXMLFile($definition);
         $sets = $styleList->getSets();
@@ -39,7 +40,8 @@ class StyleTest extends \PHPUnit_Framework_TestCase {
         $this->assertTrue($styles2[0]->getFormElementPath() == DIR_FILES_ELEMENTS_CORE . '/' . DIRNAME_STYLE_CUSTOMIZER . '/' . DIRNAME_STYLE_CUSTOMIZER_TYPES . '/size.php', sprintf('Incorrect path: %s', $styles2[0]->getFormElementPath()));
     }
 
-    public function testLessVariableColorParsing() {
+    public function testLessVariableColorParsing()
+    {
         $defaults = dirname(__FILE__) . '/fixtures/defaults.less';
         $list = \Concrete\Core\StyleCustomizer\Style\ValueList::loadFromLessFile($defaults);
 
@@ -63,7 +65,8 @@ class StyleTest extends \PHPUnit_Framework_TestCase {
         $this->assertTrue($value4->getRed() == 255 && $value4->getGreen() == 255 && $value4->getBlue() == 255 && !$value4->hasAlpha());
     }
 
-    public function testLessVariableSizeParsing() {
+    public function testLessVariableSizeParsing()
+    {
         $defaults = dirname(__FILE__) . '/fixtures/defaults.less';
         $list = \Concrete\Core\StyleCustomizer\Style\ValueList::loadFromLessFile($defaults);
 
@@ -79,7 +82,8 @@ class StyleTest extends \PHPUnit_Framework_TestCase {
         $this->assertTrue($value2->getSize() == '1.5' && $value2->getUnits() == 'em');
     }
 
-    public function testLessVariableFontFullParsing() {
+    public function testLessVariableFontFullParsing()
+    {
         $defaults = dirname(__FILE__) . '/fixtures/defaults.less';
         $list = \Concrete\Core\StyleCustomizer\Style\ValueList::loadFromLessFile($defaults);
 
@@ -107,7 +111,8 @@ class StyleTest extends \PHPUnit_Framework_TestCase {
         $this->assertTrue($s3->getSize() == 0.5 && $s3->getUnits() == 'em');
     }
 
-    public function testLessVariableFontPartialParsing() {
+    public function testLessVariableFontPartialParsing()
+    {
         $defaults = dirname(__FILE__) . '/fixtures/defaults.less';
         $list = \Concrete\Core\StyleCustomizer\Style\ValueList::loadFromLessFile($defaults);
 
@@ -120,7 +125,8 @@ class StyleTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals(-1, $value->getTextTransform());
     }
 
-    public function testLessVariableImages() {
+    public function testLessVariableImages()
+    {
         $defaults = dirname(__FILE__) . '/fixtures/defaults.less';
         $list = \Concrete\Core\StyleCustomizer\Style\ValueList::loadFromLessFile($defaults);
 
@@ -130,7 +136,8 @@ class StyleTest extends \PHPUnit_Framework_TestCase {
         $this->assertTrue($value->getUrl() == 'images/logo.png');
     }
 
-    public function testCustomizableStyleSheetObjects() {
+    public function testCustomizableStyleSheetObjects()
+    {
         $defaults = dirname(__FILE__) . '/fixtures/elemental.less';
         $list = \Concrete\Core\StyleCustomizer\Style\ValueList::loadFromLessFile($defaults);
         $env = Environment::get();
@@ -156,6 +163,5 @@ class StyleTest extends \PHPUnit_Framework_TestCase {
         $sheet->setValueList($list);
         $this->assertTrue($sheet->getOutputPath() == DIR_BASE . '/application/files/cache/css/elemental/typography.css');
         $this->assertTrue($sheet->getOutputRelativePath() == DIR_REL . '/application/files/cache/css/elemental/typography.css');
-
     }
 }

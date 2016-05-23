@@ -1,12 +1,13 @@
 <?php
-class CustomCssRecordTest extends ConcreteDatabaseTestCase {
 
+class CustomCssRecordTest extends ConcreteDatabaseTestCase
+{
     protected $fixtures = array();
     protected $tables = array('StyleCustomizerCustomCssRecords');
 
     public function testCustomStyleRecord()
     {
-        $record = new \Concrete\Core\StyleCustomizer\CustomCssRecord();
+        $record = new \Concrete\Core\Entity\StyleCustomizer\CustomCssRecord();
         $record->setValue('body { display: none; }');
         $record->save();
 
@@ -17,4 +18,3 @@ class CustomCssRecordTest extends ConcreteDatabaseTestCase {
         $this->assertEquals($record, $rec2);
     }
 }
- 

@@ -4,9 +4,8 @@
  * Created by PhpStorm.
  * User: andrew
  * Date: 6/10/14
- * Time: 7:47 AM
+ * Time: 7:47 AM.
  */
-
 class PageControllerTest extends PageTestCase
 {
     public function setUp()
@@ -21,10 +20,11 @@ class PageControllerTest extends PageTestCase
         $pt = PageType::getByID(1);
         $template = PageTemplate::getByID(1);
         $page = $home->add($pt, array(
-            'uID'=>1,
-            'cName'=> 'Test page',
-            'pTemplateID' => $template->getPageTemplateID()
+            'uID' => 1,
+            'cName' => 'Test page',
+            'pTemplateID' => $template->getPageTemplateID(),
         ));
+
         return $page;
     }
 
@@ -33,15 +33,16 @@ class PageControllerTest extends PageTestCase
         $home = Page::getByID(HOME_CID);
         PageType::add(array(
             'handle' => 'alternate',
-            'name' => 'Alternate'
+            'name' => 'Alternate',
         ));
         $pt = PageType::getByID(2);
         $template = PageTemplate::getByID(1);
         $page = $home->add($pt, array(
-            'uID'=>1,
-            'cName'=> 'Test page',
-            'pTemplateID' => $template->getPageTemplateID()
+            'uID' => 1,
+            'cName' => 'Test page',
+            'pTemplateID' => $template->getPageTemplateID(),
         ));
+
         return $page;
     }
 
@@ -55,7 +56,7 @@ class PageControllerTest extends PageTestCase
     public function testPageTypeController()
     {
         $page = $this->addPage1();
-        require('fixtures/concrete/basic.php');
+        require 'fixtures/concrete/basic.php';
         $controller = $page->getPageController();
         $this->assertEquals('Concrete\Controller\PageType\Basic', get_class($controller));
         $this->assertInstanceOf('Concrete\Core\Page\Controller\PageTypeController', $controller);
@@ -76,7 +77,6 @@ class PageControllerTest extends PageTestCase
         @rmdir($root . '/' . DIRNAME_CONTROLLERS . '/' . DIRNAME_PAGE_TYPES);
 
         $this->assertEquals('Application\Controller\PageType\Alternate', get_class($controller));
-
     }
 
     public function testSinglePageController()
@@ -90,7 +90,6 @@ class PageControllerTest extends PageTestCase
 
     public function testSinglePageControllerOverride()
     {
-
         $root = realpath(DIR_BASE_CORE . '/../application');
         if (!is_dir($root . '/' . DIRNAME_CONTROLLERS . '/' . DIRNAME_PAGE_CONTROLLERS . '/dashboard/reports')) {
             mkdir($root . '/' . DIRNAME_CONTROLLERS . '/' . DIRNAME_PAGE_CONTROLLERS . '/dashboard/reports', 0777, true);
@@ -112,13 +111,16 @@ class PageControllerTest extends PageTestCase
         $this->assertInstanceOf('\Concrete\Core\Page\Controller\DashboardPageController', $controller);
     }
 
-
     public function testPackagedSinglePageViewPhp()
     {
+        $p = new \Concrete\Core\Entity\Package();
+        $p->setPackageHandle('awesome_package');
+        require_once dirname(__FILE__) . '/fixtures/package/awesome_package.php';
 
-        $pkg = new Package();
+        $pkg = new Concrete\Package\AwesomePackage\Controller(\Core::make('app'));
+        $pkg->setPackageEntity($p);
+
         $pkg->pkgHandle = 'awesome_package';
-        $pkg->setPackageID(1);
         $loader = \Concrete\Core\Foundation\ClassLoader::getInstance();
         $loader->registerPackage($pkg);
 
@@ -130,7 +132,8 @@ class PageControllerTest extends PageTestCase
         @copy(dirname(__FILE__) . '/fixtures/application/views/foo.php',
             $root . '/awesome_package/' . DIRNAME_PAGES . '/testerson/foo/view.php');
 
-        SinglePage::add('/testerson/foo', $pkg);
+        $p->setPackageID(1);
+        SinglePage::add('/testerson/foo', $p);
         $fooPage = Page::getByPath('/testerson/foo');
         $fooPage->pkgHandle = 'awesome_package';
         $controller = $fooPage->getPageController();
@@ -146,13 +149,11 @@ class PageControllerTest extends PageTestCase
 
         $this->assertEquals('Concrete\Package\AwesomePackage\Controller\SinglePage\Testerson\Foo', get_class($controller));
         $this->assertInstanceOf('\Concrete\Core\Page\Controller\PageController', $controller);
-
     }
     public function testPackagedSinglePageViewNoPhp()
     {
-
-        $pkg = new Package();
-        $pkg->pkgHandle = 'awesome_package';
+        $pkg = new \Concrete\Core\Entity\Package();
+        $pkg->setPackageHandle('awesome_package');
         $pkg->setPackageID(1);
         $loader = \Concrete\Core\Foundation\ClassLoader::getInstance();
         $loader->registerPackage($pkg);
@@ -180,11 +181,9 @@ class PageControllerTest extends PageTestCase
 
         $this->assertEquals('Concrete\Package\AwesomePackage\Controller\SinglePage\Testerson\Foo', get_class($controller));
         $this->assertInstanceOf('\Concrete\Core\Page\Controller\PageController', $controller);
-
     }
     public function testApplicableSinglePageViewPhp()
     {
-
         $root = realpath(DIR_BASE_CORE . '/../application');
         @mkdir($root . '/' . DIRNAME_CONTROLLERS . '/' . DIRNAME_PAGE_CONTROLLERS . '/testerson', 0777, true);
         @copy(dirname(__FILE__) . '/fixtures/application/foo.php',
@@ -206,13 +205,10 @@ class PageControllerTest extends PageTestCase
 
         $this->assertEquals('Application\Controller\SinglePage\Testerson\Foo', get_class($controller));
         $this->assertInstanceOf('\Concrete\Core\Page\Controller\PageController', $controller);
-
     }
-
 
     public function testApplicableSinglePageViewNoPhp()
     {
-
         $root = realpath(DIR_BASE_CORE . '/../application');
         @mkdir($root . '/' . DIRNAME_CONTROLLERS . '/' . DIRNAME_PAGE_CONTROLLERS . '/testerson', 0777, true);
         @copy(dirname(__FILE__) . '/fixtures/application/foo.php',
@@ -233,7 +229,5 @@ class PageControllerTest extends PageTestCase
 
         $this->assertEquals('Application\Controller\SinglePage\Testerson\Foo', get_class($controller));
         $this->assertInstanceOf('\Concrete\Core\Page\Controller\PageController', $controller);
-
     }
-
 }

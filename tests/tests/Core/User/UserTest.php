@@ -3,18 +3,19 @@
  * Created by PhpStorm.
  * User: andrew
  * Date: 6/28/14
- * Time: 10:30 AM
+ * Time: 10:30 AM.
  */
-
 namespace Concrete\Tests\Core\User;
+
 use Concrete\Core\File\StorageLocation\StorageLocation;
 use Concrete\Core\File\StorageLocation\Type\Type;
 use Core;
 
 class UserTest extends \UserTestCase
 {
-    protected function setUp() {
-        $this->tables[] = 'FileStorageLocations';
+    protected function setUp()
+    {
+        $this->metadatas[] = 'Concrete\Core\Entity\File\StorageLocation\StorageLocation';
         $this->tables[] = 'FileStorageLocationTypes';
         parent::setUp();
     }
@@ -23,16 +24,15 @@ class UserTest extends \UserTestCase
     {
         $ui = \UserInfo::add(array(
             'uName' => 'andrew',
-            'uEmail' => 'andrew@concrete5.org'
+            'uEmail' => 'andrew@concrete5.org',
         ));
         $this->assertEquals(1, $ui->getUserID());
         $this->assertEquals('andrew', $ui->getUserName());
         $this->assertEquals('andrew@concrete5.org', $ui->getUserEmail());
 
-
         $ui = \Concrete\Core\User\UserInfo::add(array(
             'uName' => 'andrew2',
-            'uEmail' => 'andrew2@concrete5.org'
+            'uEmail' => 'andrew2@concrete5.org',
         ));
         $this->assertEquals(2, $ui->getUserID());
         $this->assertEquals('andrew2', $ui->getUserName());
@@ -43,13 +43,12 @@ class UserTest extends \UserTestCase
     {
         $ui = \UserInfo::register(array(
             'uName' => 'andrew',
-            'uEmail' => 'andrew@concrete5.org'
+            'uEmail' => 'andrew@concrete5.org',
         ));
         $this->assertEquals(1, $ui->getUserID());
         $this->assertEquals('andrew', $ui->getUserName());
         $this->assertEquals('andrew@concrete5.org', $ui->getUserEmail());
     }
-
 
     public function testCreateSuperUserLegacy()
     {
@@ -81,7 +80,6 @@ class UserTest extends \UserTestCase
         $this->assertEquals('//www.gravatar.com/avatar/90c2803fabd994378063e84dd9a3ed92?s=80&d=mm&r=g', $avatar->getPath());
 
         \Config::clear('concrete.user.gravatar.enabled');
-
     }
 
     public function testAvatar()
@@ -102,7 +100,7 @@ class UserTest extends \UserTestCase
 
         $ui->update(array('uHasAvatar' => true));
         // This is lame, I know.
-        $ui = Core::make('Concrete\Core\User\UserInfoFactory')->getByID(1);
+        $ui = Core::make('Concrete\Core\User\UserInfoRepository')->getByID(1);
         $this->assertTrue($ui->hasAvatar());
         $avatar = $ui->getUserAvatar();
         $this->assertEquals('http://www.dummyco.com/path/to/server/application/files/avatars/1.jpg',
@@ -115,7 +113,7 @@ class UserTest extends \UserTestCase
         $service->removeAvatar($ui);
 
         // I KNOW I KNOW This is lame
-        $ui = Core::make('Concrete\Core\User\UserInfoFactory')->getByID(1);
+        $ui = Core::make('Concrete\Core\User\UserInfoRepository')->getByID(1);
         $this->assertFalse($ui->hasAvatar());
     }
 
@@ -133,8 +131,5 @@ class UserTest extends \UserTestCase
         $this->assertEquals('http://www.dummyco.com/path/to/server/index.php/members/profile/view/1', $url);
 
         \Config::clear('concrete.user.profiles_enabled');
-
     }
-
 }
- 

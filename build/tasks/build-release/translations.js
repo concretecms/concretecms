@@ -1,5 +1,5 @@
 module.exports = function(grunt, config, parameters, done) {
-	var workFolder = parameters.releaseWorkFolder || './release/source/web';
+	var workFolder = parameters.releaseWorkFolder || './release/source';
 
 	function endForError(e) {
 		process.stderr.write(e.message || e);
@@ -10,7 +10,7 @@ module.exports = function(grunt, config, parameters, done) {
         buildParameters = parameters;
         buildParameters.destination = workFolder;
         if(!parameters.txResource) {
-        	parameters.txResource = 'core-dev-57';
+        	parameters.txResource = 'core-dev-8';
         }
         require('../translations.js')(grunt, config, buildParameters, done);
 	}

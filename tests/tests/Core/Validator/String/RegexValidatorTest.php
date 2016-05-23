@@ -3,7 +3,6 @@ namespace Concrete\Core\Tests\Validator\String;
 
 class RegexValidatorTest extends \PHPUnit_Framework_TestCase
 {
-
     public function testIsValid()
     {
         $validator = new \Concrete\Core\Validator\String\RegexValidator('//');
@@ -21,7 +20,7 @@ class RegexValidatorTest extends \PHPUnit_Framework_TestCase
     {
         $validator = new \Concrete\Core\Validator\String\RegexValidator('/test/');
 
-        $this->assertFalse($validator->isValid('123456', $error = new \ArrayObject));
+        $this->assertFalse($validator->isValid('123456', $error = new \ArrayObject()));
         $this->assertNotEmpty($error);
     }
 
@@ -46,5 +45,4 @@ class RegexValidatorTest extends \PHPUnit_Framework_TestCase
         $validator = new \Concrete\Core\Validator\String\RegexValidator('Invalid regex');
         $validator->isValid('test');
     }
-
 }

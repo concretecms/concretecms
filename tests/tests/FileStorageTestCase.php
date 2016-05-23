@@ -1,14 +1,28 @@
 <?php
+
 use \Concrete\Core\File\StorageLocation\Type\Type;
 use \Concrete\Core\File\StorageLocation\StorageLocation;
 
-abstract class FileStorageTestCase extends ConcreteDatabaseTestCase {
-
+abstract class FileStorageTestCase extends ConcreteDatabaseTestCase
+{
     protected $fixtures = array();
     protected $tables = array(
         'FileStorageLocationTypes',
-        'FileStorageLocations',
-        'FileImageThumbnailTypes'
+        'FileImageThumbnailTypes',
+        'TreeTypes',
+        'TreeNodeTypes',
+        'TreeNodes',
+        'TreeFileNodes',
+        'TreeNodePermissionAssignments',
+        'PermissionKeys',
+        'PermissionKeyCategories',
+        'Trees',
+    );
+
+    protected $metadatas = array(
+        'Concrete\Core\Entity\File\File',
+        'Concrete\Core\Entity\File\Version',
+        'Concrete\Core\Entity\File\StorageLocation\StorageLocation'
     );
 
     protected function getStorageDirectory()
@@ -34,7 +48,7 @@ abstract class FileStorageTestCase extends ConcreteDatabaseTestCase {
     }
 
     /**
-     * @return \Concrete\Core\File\StorageLocation\StorageLocation
+     * @return \Concrete\Core\Entity\File\StorageLocation\StorageLocation
      */
     protected function getStorageLocation()
     {
@@ -42,6 +56,7 @@ abstract class FileStorageTestCase extends ConcreteDatabaseTestCase {
         $configuration = $type->getConfigurationObject();
         $configuration->setRootPath($this->getStorageDirectory());
         $configuration->setWebRootRelativePath('/application/files');
+
         return StorageLocation::add($configuration, 'Default', true);
     }
 
@@ -49,7 +64,10 @@ abstract class FileStorageTestCase extends ConcreteDatabaseTestCase {
     {
         parent::setUp();
 
-        $thumbnailType = new \Concrete\Core\File\Image\Thumbnail\Type\Type();
+        $filesystem = new \Concrete\Core\File\Filesystem();
+        $filesystem->create();
+
+        $thumbnailType = new \Concrete\Core\Entity\File\Image\Thumbnail\Type\Type();
         $thumbnailType->requireType();
         $thumbnailType->setName(t('File Manager Thumbnails'));
         $thumbnailType->setHandle(Config::get('concrete.icons.file_manager_listing.handle'));
@@ -57,7 +75,7 @@ abstract class FileStorageTestCase extends ConcreteDatabaseTestCase {
         $thumbnailType->setHeight(Config::get('concrete.icons.file_manager_listing.height'));
         $thumbnailType->save();
 
-        $thumbnailType = new \Concrete\Core\File\Image\Thumbnail\Type\Type();
+        $thumbnailType = new \Concrete\Core\Entity\File\Image\Thumbnail\Type\Type();
         $thumbnailType->requireType();
         $thumbnailType->setName(t('File Manager Detail Thumbnails'));
         $thumbnailType->setHandle(Config::get('concrete.icons.file_manager_detail.handle'));
@@ -72,5 +90,4 @@ abstract class FileStorageTestCase extends ConcreteDatabaseTestCase {
         parent::tearDown();
         $this->cleanup();
     }
-
 }

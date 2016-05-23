@@ -2,7 +2,6 @@
 
 class HtmlColumn implements \Concrete\Core\Area\Layout\ColumnInterface
 {
-
     public function __construct($class)
     {
         $this->class = $class;
@@ -12,6 +11,7 @@ class HtmlColumn implements \Concrete\Core\Area\Layout\ColumnInterface
     {
         $column = new \HtmlObject\Element('div');
         $column->addClass($this->class);
+
         return $column;
     }
 
@@ -19,7 +19,6 @@ class HtmlColumn implements \Concrete\Core\Area\Layout\ColumnInterface
     {
         return $this->getColumnHtmlObject();
     }
-
 }
 
 class TestAreaLayoutPresetFormatter implements \Concrete\Core\Area\Layout\Preset\Formatter\FormatterInterface
@@ -28,6 +27,7 @@ class TestAreaLayoutPresetFormatter implements \Concrete\Core\Area\Layout\Preset
     {
         $column = new \HtmlObject\Element('div');
         $column->addClass('foo');
+
         return $column;
     }
 }
@@ -39,8 +39,9 @@ class TestAreaLayoutPresetProvider implements \Concrete\Core\Area\Layout\Preset\
         $preset = new \Concrete\Core\Area\Layout\Preset\Preset('preset-1', 'Preset 1',
             $formatter, array(
            new HtmlColumn('col-sm-4'),
-            new HtmlColumn('col-sm-8')
+            new HtmlColumn('col-sm-8'),
         ));
+
         return array($preset);
     }
 
@@ -54,7 +55,7 @@ class BrokenTestAreaLayoutPresetProvider implements \Concrete\Core\Area\Layout\P
 {
     public function getPresets()
     {
-        return array(1,2,3);
+        return array(1, 2, 3);
     }
 
     public function getName()
@@ -84,7 +85,7 @@ class TestThemeClass implements \Concrete\Core\Area\Layout\Preset\Provider\Theme
                 'container' => '<div class="row"></div>',
                 'columns' => array(
                     '<div class="col-sm-4"></div>',
-                    '<div class="col-sm-8"></div>'
+                    '<div class="col-sm-8"></div>',
                 ),
             ),
             array(
@@ -116,21 +117,22 @@ class TestThemeClass implements \Concrete\Core\Area\Layout\Preset\Provider\Theme
                 'container' => '<div class="row" data-testing="top-row"></div>',
                 'columns' => array(
                     '<div data-foo="foo" class="col-md-2 col-sm-3"></div>',
-                    '<div data-bar="bar" class="col-md-10 col-sm-9"></div>'
+                    '<div data-bar="bar" class="col-md-10 col-sm-9"></div>',
                 ),
-            )
+            ),
 
         );
+
         return $presets;
     }
 }
 
 class AreaLayoutPresetTest extends PageTestCase
 {
-
-    protected function setUp() {
-        $this->tables = array_merge($this->tables, array('AreaLayoutPresets','AreaLayoutsUsingPresets', 'AreaLayouts','AreaLayoutColumns',
-            'AreaLayoutCustomColumns', 'AreaLayoutThemeGridColumns'));
+    protected function setUp()
+    {
+        $this->tables = array_merge($this->tables, array('AreaLayoutPresets', 'AreaLayoutsUsingPresets', 'AreaLayouts', 'AreaLayoutColumns',
+            'AreaLayoutCustomColumns', 'AreaLayoutThemeGridColumns', ));
         parent::setUp();
     }
 
@@ -188,7 +190,6 @@ class AreaLayoutPresetTest extends PageTestCase
 
         $columns = $presets[1]->getColumns();
         $this->assertEquals('<div class="ccm-layout-column" id="ccm-layout-column-4"><div class="ccm-layout-column-inner"></div></div>', (string) $columns[0]->getColumnHtmlObject());
-
     }
 
     public function testSavedGridPresets()
@@ -226,7 +227,6 @@ class AreaLayoutPresetTest extends PageTestCase
         $this->assertEquals('<div class="col-sm-6"></div>', (string) $columns[2]->getColumnHtmlObject());
 
         $req->clearCurrentPage();
-
     }
 
     public function testSavePreset()
@@ -272,7 +272,6 @@ class AreaLayoutPresetTest extends PageTestCase
         $this->assertEquals('<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2"></div>', (string) $columns[3]->getColumnHtmlObject());
         $this->assertEquals('<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2"></div>', (string) $columns[4]->getColumnHtmlObject());
         $this->assertEquals('<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2 visible-lg"></div>', (string) $columns[5]->getColumnHtmlObject());
-
 
         $custom = $presets[3];
         $formatter = $custom->getFormatter();
@@ -328,6 +327,4 @@ class AreaLayoutPresetTest extends PageTestCase
 
         $req->clearCurrentPage();
     }
-
-
 }
