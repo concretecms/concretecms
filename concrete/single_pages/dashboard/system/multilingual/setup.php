@@ -239,6 +239,13 @@ ccm_multilingualPopulateIcons = function(country) {
             </div>
 
             <div class="form-group">
+                <label class="control-label"><?php echo t('Status code to use when redirecting user to the correct language'); ?></label>
+                <div class="form-inline">
+                    <?= $form->text('redirectHomeStatusCode', $redirectHomeStatusCode); ?>
+                </div>
+            </div>
+
+            <div class="form-group">
                 <?php echo Loader::helper('validation/token')->output('set_default')?>
                 <button class="btn btn-default pull-left" type="submit" name="save"><?=t('Save Settings')?></button>
             </div>
