@@ -1,5 +1,5 @@
 <?php
-namespace Concrete\Core\Error\ErrorBag\Field;
+namespace Concrete\Core\Error\ErrorList\Field;
 
 class Field extends AbstractField
 {

@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Core\Page\Type\Validator;
 
-use Concrete\Core\Error\ErrorBag\ErrorBag;
+use Concrete\Core\Error\ErrorList\ErrorList;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Page\Type\Composer\Control\Control;
 use Concrete\Core\Page\Type\Type;
@@ -62,7 +62,7 @@ class StandardValidator implements ValidatorInterface
             }
             if ($oc->isPageTypeComposerFormControlRequiredOnThisRequest()) {
                 $r = $oc->validate();
-                if ($r instanceof ErrorBag) {
+                if ($r instanceof ErrorList) {
                     $e->add($r);
                 }
             }

@@ -29,7 +29,7 @@ $_error = array();
 if (isset($error)) {
     if ($error instanceof Exception) {
         $_error[] = $error->getMessage();
-    } elseif ($error instanceof \Concrete\Core\Error\ErrorBag\ErrorBag) {
+    } elseif ($error instanceof \Concrete\Core\Error\ErrorList\ErrorList) {
         if ($error->has()) {
             $_error = $error->getList();
         }

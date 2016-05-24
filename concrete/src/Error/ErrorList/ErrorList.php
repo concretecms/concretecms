@@ -1,14 +1,15 @@
 <?php
-namespace Concrete\Core\Error\ErrorBag;
+namespace Concrete\Core\Error\ErrorList;
 
-use Concrete\Core\Error\ErrorBag\Error\Error;
-use Concrete\Core\Error\ErrorBag\Error\ErrorInterface;
-use Concrete\Core\Error\ErrorBag\Error\ExceptionError;
-use Concrete\Core\Error\ErrorBag\Field\Field;
-use Concrete\Core\Error\ErrorBag\Formatter\JsonFormatter;
-use Concrete\Core\Error\ErrorBag\Formatter\StandardFormatter;
+use Concrete\Core\Error\ErrorList\Error\Error;
+use Concrete\Core\Error\ErrorList\Error\ErrorInterface;
+use Concrete\Core\Error\ErrorList\Error\ExceptionError;
+use Concrete\Core\Error\ErrorList\Field\Field;
+use Concrete\Core\Error\ErrorList\Field\FieldInterface;
+use Concrete\Core\Error\ErrorList\Formatter\JsonFormatter;
+use Concrete\Core\Error\ErrorList\Formatter\StandardFormatter;
 
-class ErrorBag implements \ArrayAccess, \JsonSerializable
+class ErrorList implements \ArrayAccess, \JsonSerializable
 {
 
     protected $errors = array();
@@ -163,6 +164,18 @@ class ErrorBag implements \ArrayAccess, \JsonSerializable
     {
         $formatter = new JsonFormatter($this);
         return $formatter->asArray();
+    }
+
+    public function containsField($field)
+    {
+        $identifier = ($field instanceof FieldInterface) ? $field->getFieldElementName() : $field;
+        foreach($this->getList() as $error) {
+            $field = $error->getField();
+            if (is_object($field) && $field->getFieldElementName() == $identifier) {
+                return true;
+            }
+        }
+        return false;
     }
 
 }

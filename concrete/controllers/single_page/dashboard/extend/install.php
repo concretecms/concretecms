@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Controller\SinglePage\Dashboard\Extend;
 
-use Concrete\Core\Error\ErrorBag\ErrorBag;
+use Concrete\Core\Error\ErrorList\ErrorList;
 use Concrete\Core\Package\BrokenPackage;
 use Concrete\Core\Package\ContentSwapper;
 use Concrete\Core\Package\ItemCategory\Manager;
@@ -124,7 +124,7 @@ class Install extends DashboardPageController
                         $this->error->add($tests);
                     } else {
                         $r = Package::install($p, $this->post());
-                        if ($r instanceof ErrorBag) {
+                        if ($r instanceof ErrorList) {
                             $this->error->add($r);
                             if ($p->showInstallOptionsScreen()) {
                                 $this->set('showInstallOptionsScreen', true);

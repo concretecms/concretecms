@@ -16,12 +16,20 @@ class Entities extends DashboardPageController
             if (!$this->token->validate('add_entity')) {
                 $this->error->add($this->token->getErrorMessage());
             }
-            if (!$this->request->request->get('name')) {
-                $this->error->add(t('You must give your data object a name.'));
+            $sec = \Core::make('helper/security');
+            $vs = \Core::make('helper/validation/strings');
+
+            $name = $sec->sanitizeString($this->request->request->get('name'));
+            $handle = $sec->sanitizeString($this->request->request->get('handle'));
+
+            if (!$vs->handle($handle)) {
+                $this->error->add(t('You must create a handle for your data object. It may contain only lowercase letters and underscores.'), 'handle');
             }
-            if (!$this->request->request->get('handle')) {
-                $this->error->add(t('You must create a handle for your data object. The handle must be all lowercase, and contain no spaces.'));
+
+            if (!$name || preg_match('/[^A-Za-z ]/', $name)) {
+                $this->error->add(t('You must give your data object a name. It may contain only uppercase or lowercase letters.'), 'name');
             }
+
             if (!$this->error->has()) {
                 $entity = new Entity();
                 $entity->setName($this->request->request->get('name'));

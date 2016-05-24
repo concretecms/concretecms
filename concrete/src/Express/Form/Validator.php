@@ -2,7 +2,7 @@
 namespace Concrete\Core\Express\Form;
 
 use Concrete\Core\Entity\Express\Form;
-use Concrete\Core\Error\ErrorBag\ErrorBag;
+use Concrete\Core\Error\ErrorList\ErrorList;
 use Symfony\Component\HttpFoundation\Request;
 
 class Validator
@@ -10,7 +10,7 @@ class Validator
     protected $request;
     protected $error;
 
-    public function __construct(ErrorBag $error, Request $request)
+    public function __construct(ErrorList $error, Request $request)
     {
         $this->request = $request;
         $this->error = $error;

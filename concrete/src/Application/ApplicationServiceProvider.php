@@ -35,7 +35,7 @@ class ApplicationServiceProvider extends ServiceProvider
             $this->app->singleton($key, $value);
         }
 
-        $this->app->bind('error', 'Concrete\Core\Error\ErrorBag\ErrorBag');
+        $this->app->bind('error', 'Concrete\Core\Error\ErrorList\ErrorList');
 
         $this->app->bindShared('environment', function ($app) {
             $env = Environment::get();

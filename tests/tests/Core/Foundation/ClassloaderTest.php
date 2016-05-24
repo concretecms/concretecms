@@ -176,7 +176,7 @@ class ClassloaderTest extends \PHPUnit_Framework_TestCase
         $fh = Loader::helper('file');
         $vh = Loader::helper('validation/error');
         $this->assertTrue($fh instanceof \Concrete\Core\File\Service\File);
-        $this->assertTrue($vh instanceof \Concrete\Core\Error\ErrorBag\ErrorBag);
+        $this->assertTrue($vh instanceof \Concrete\Core\Error\ErrorList\ErrorList);
     }
 
     public function testUpgradedPackageSrcFiles()

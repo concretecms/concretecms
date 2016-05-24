@@ -1,5 +1,5 @@
 <?php
-namespace Concrete\Core\Error\ErrorBag\Error;
+namespace Concrete\Core\Error\ErrorList\Error;
 
 interface ErrorInterface extends \JsonSerializable
 {

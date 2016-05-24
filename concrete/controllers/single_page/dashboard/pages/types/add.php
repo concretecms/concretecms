@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Controller\SinglePage\Dashboard\Pages\Types;
 
-use Concrete\Core\Error\ErrorBag\ErrorBag;
+use Concrete\Core\Error\ErrorList\ErrorList;
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Loader;
 use PageType;
@@ -53,7 +53,7 @@ class Add extends DashboardPageController
             $this->error->add(t('Invalid page type publish target type.'));
         } else {
             $pe = $target->validatePageTypeRequest($this->request);
-            if ($pe instanceof ErrorBag) {
+            if ($pe instanceof ErrorList) {
                 $this->error->add($pe);
             }
         }
