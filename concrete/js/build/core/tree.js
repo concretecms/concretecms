@@ -28,19 +28,20 @@
 	ConcreteTree.prototype = {
 
 		dragRequest: function(sourceNode, node, hitMode) {
-			var treeNodeParentID = node.parent.data.key;
+			var treeNodeParentID = node.parent.data.treeNodeID;
 			if (hitMode == 'over') {
-				treeNodeParentID = node.data.key;
+				treeNodeParentID = node.data.treeNodeID;
 			}
 			jQuery.fn.dialog.showLoader();
-			var params = [{'name': 'sourceTreeNodeID', 'value': sourceNode.data.key}, {'name': 'treeNodeParentID', 'value': treeNodeParentID}];
+			var params = [{'name': 'sourceTreeNodeID', 'value': sourceNode.data.treeNodeID}, {'name': 'treeNodeParentID', 'value': treeNodeParentID}];
 			var childNodes = node.parent.getChildren();
 			if (childNodes) {
 				for (var i = 0; i < childNodes.length; i++) {
 					var childNode = childNodes[i];
-					params.push({'name': 'treeNodeID[]', 'value': childNode.data.key});
+					params.push({'name': 'treeNodeID[]', 'value': childNode.data.treeNodeID});
 				}
 			}
+
 			$.ajax({
 				dataType: 'json',
 				type: 'POST',
@@ -122,14 +123,12 @@
 						checkbox: "fa fa-square-o",
 						checkboxSelected: "fa fa-check-square-o",
 						checkboxUnknown: "fa fa-share-square",
-						dragHelper: "fa fa-play",
+						dragHelper: "fa fa-share",
 						dropMarker: "fa fa-angle-right",
 						error: "fa fa-warning",
 						expanderClosed: "fa fa-plus-square-o",
 						expanderLazy: "fa fa-plus-square-o",  // glyphicon-expand
 						expanderOpen: "fa fa-minus-square-o",  // glyphicon-collapse-down
-						folder: "fa fa-folder-o",
-						folderOpen: "fa fa-folder-open-o",
 						loading: "fa fa-spin fa-refresh"
 					}
 				},
@@ -139,7 +138,7 @@
 					data: ajaxData
 				},
 				lazyLoad: function(event, data) {
-					my.reloadNode(data);
+					my.reloadNode(data.node);
 				},
 				select: function(select, data) {
 					if (options.chooseNodeInForm) {
@@ -199,11 +198,12 @@
 					if (options.chooseNodeInForm && data.targetType != 'checkbox') {
 						return false;
 					}
+
 					if (!data.targetType) {
 						return false;
 					}
 
-					if (!options.chooseNodeInForm && data.targetType == 'title') {
+					if (!options.chooseNodeInForm && $(e.toElement).hasClass("fancytree-title")) {
 						var $menu = data.node.data.treeNodeMenu;
 						if ($menu) {
 							var menu = new ConcreteMenu($(data.node.span), {
@@ -231,11 +231,10 @@
 					dragStop: function(sourceNode, data) {
 						return true;
 					},
+
 					dragEnter: function(targetNode, data) {
-						return true;
-					},
-					dragOver: function(targetNode, data) {
-						var sourceNode = data.node, hitMode = data.hitMode;
+						var sourceNode = data.otherNode, hitMode = data.hitMode;
+
 						if ((!targetNode.parent.data.treeNodeID) && (targetNode.data.treeNodeID !== '1')) { // Home page has no parents, but we still want to be able to hit it.
 							return false;
 						}
@@ -259,21 +258,19 @@
 						return true;
 					},
 					dragDrop: function(targetNode, data) {
-						var sourceNode = data.node, hitMode = data.hitMode;
-
-						sourceNode.moveTo(targetNode, hitMode);
-						my.dragRequest(sourceNode, targetNode, hitMode);
+						my.dragRequest(data.otherNode, targetNode, data.hitMode);
+						data.otherNode.moveTo(targetNode, data.hitMode);
 					}
 				}
 			});
 		},
 
-		reloadNode: function(data, onComplete) {
+		reloadNode: function(node, onComplete) {
 			var my = this,
 				options = my.options,
 				ajaxData = my.options.ajaxData != false ? my.options.ajaxData : {};
 
-			ajaxData.treeNodeParentID = data.node.data.treeNodeID;
+			ajaxData.treeNodeParentID = node.data.treeNodeID;
 
 			data.result = $.getJSON(CCM_DISPATCHER_FILENAME + '/ccm/system/tree/node/load',
 				ajaxData,
@@ -301,9 +298,9 @@
 					} else {
 						jQuery.fn.dialog.closeTop();
 						var node = $tree.fancytree('getTree').getNodeByKey(r.treeNodeParentID);
-						node.setLazyNodeStatus(DTNodeStatus_Loading);
-						my.reloadNode(data, function() {
-							node.setLazyNodeStatus(DTNodeStatus_Ok);
+						jQuery.fn.dialog.showLoader();
+						my.reloadNode(node, function() {
+							jQuery.fn.dialog.hideLoader();
 						});
 					}
 				},
