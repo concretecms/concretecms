@@ -1,7 +1,7 @@
 <?php
-namespace Concrete\Core\Error\ErrorBag\Error;
+namespace Concrete\Core\Error\ErrorList\Error;
 
-use Concrete\Core\Error\ErrorBag\Field\FieldInterface;
+use Concrete\Core\Error\ErrorList\Field\FieldInterface;
 
 class FieldNotPresentError extends AbstractError
 {

@@ -205,7 +205,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
      * @param string $text
      * @param \Concrete\Core\User\PrivateMessage\PrivateMessage $inReplyTo
      *
-     * @return \Concrete\Core\Error\ErrorBag\ErrorBag|false|null
+     * @return \Concrete\Core\Error\ErrorList\ErrorList|false|null
      */
     public function sendPrivateMessage($recipient, $subject, $text, $inReplyTo = false)
     {

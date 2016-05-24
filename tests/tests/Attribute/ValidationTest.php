@@ -23,7 +23,7 @@ class ValidationTest extends PHPUnit_Framework_TestCase
         $this->assertFalse($response->isValid());
         $this->assertTrue($error->has());
         $errors = $error->getList();
-        $this->assertInstanceOf('\Concrete\Core\Error\ErrorBag\Error\FieldNotPresentError', $errors[0]);
+        $this->assertInstanceOf('\Concrete\Core\Error\ErrorList\Error\FieldNotPresentError', $errors[0]);
         $this->assertEquals('The field First Name is required.', (string) $errors[0]);
 
         $post['akID'][1]['value'] = 'Oh hai!';
@@ -57,7 +57,7 @@ class ValidationTest extends PHPUnit_Framework_TestCase
         $this->assertFalse($response->isValid());
         $this->assertTrue($error->has());
         $errors = $error->getList();
-        $this->assertInstanceOf('\Concrete\Core\Error\ErrorBag\Error\FieldNotPresentError', $errors[0]);
+        $this->assertInstanceOf('\Concrete\Core\Error\ErrorList\Error\FieldNotPresentError', $errors[0]);
         $this->assertEquals('The field Email Address is required.', (string) $errors[0]);
         $this->assertEquals(1, count($errors));
 
@@ -69,7 +69,7 @@ class ValidationTest extends PHPUnit_Framework_TestCase
         $this->assertFalse($response->isValid());
         $this->assertTrue($error->has());
         $errors = $error->getList();
-        $this->assertInstanceOf('\Concrete\Core\Error\ErrorBag\Error\Error', $errors[0]);
+        $this->assertInstanceOf('\Concrete\Core\Error\ErrorList\Error\Error', $errors[0]);
         $this->assertEquals('Invalid email address.', (string) $errors[0]);
         $this->assertEquals(1, count($errors));
 
@@ -99,7 +99,7 @@ class ValidationTest extends PHPUnit_Framework_TestCase
         $this->assertFalse($response->isValid());
         $this->assertTrue($error->has());
         $errors = $error->getList();
-        $this->assertInstanceOf('\Concrete\Core\Error\ErrorBag\Error\FieldNotPresentError', $errors[0]);
+        $this->assertInstanceOf('\Concrete\Core\Error\ErrorList\Error\FieldNotPresentError', $errors[0]);
         $this->assertEquals('The field Contact Address is required.', (string) $errors[0]);
         $this->assertEquals(1, count($errors));
 
@@ -133,7 +133,7 @@ class ValidationTest extends PHPUnit_Framework_TestCase
         $this->assertFalse($response->isValid());
         $this->assertTrue($error->has());
         $errors = $error->getList();
-        $this->assertInstanceOf('\Concrete\Core\Error\ErrorBag\Error\FieldNotPresentError', $errors[0]);
+        $this->assertInstanceOf('\Concrete\Core\Error\ErrorList\Error\FieldNotPresentError', $errors[0]);
         $this->assertEquals('The field Is Featured is required.', (string) $errors[0]);
         $this->assertEquals(1, count($errors));
 
@@ -163,7 +163,7 @@ class ValidationTest extends PHPUnit_Framework_TestCase
         $this->assertFalse($response->isValid());
         $this->assertTrue($error->has());
         $errors = $error->getList();
-        $this->assertInstanceOf('\Concrete\Core\Error\ErrorBag\Error\FieldNotPresentError', $errors[0]);
+        $this->assertInstanceOf('\Concrete\Core\Error\ErrorList\Error\FieldNotPresentError', $errors[0]);
         $this->assertEquals('The field Is Featured is required.', (string) $errors[0]);
         $this->assertEquals(1, count($errors));
 

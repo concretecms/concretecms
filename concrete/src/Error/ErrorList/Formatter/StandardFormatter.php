@@ -1,7 +1,7 @@
 <?php
-namespace Concrete\Core\Error\ErrorBag\Formatter;
+namespace Concrete\Core\Error\ErrorList\Formatter;
 
-use Concrete\Core\Error\ErrorBag\ErrorBag;
+use Concrete\Core\Error\ErrorList\ErrorList;
 
 class StandardFormatter extends AbstractFormatter
 {
