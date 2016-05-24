@@ -238,6 +238,7 @@ return array(
 
     'multilingual' => array(
         'redirect_home_to_default_locale' => false,
+        'redirect_home_status_code' => 302,
         'use_browser_detected_locale' => false,
         'default_locale' => false,
         'default_source_locale' => 'en_US',

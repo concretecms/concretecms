@@ -207,7 +207,7 @@ class DispatcherRouteCallback extends RouteCallback
                 // Let's retrieve the default language
                 $ms = $dl->getPreferredSection();
                 if (is_object($ms) && $ms->getCollectionID() != HOME_CID) {
-                    Redirect::page($ms)->send();
+                    Redirect::page($ms, Config::get('concrete.multilingual.redirect_home_status_code', 302))->send();
                     exit;
                 }
             }
