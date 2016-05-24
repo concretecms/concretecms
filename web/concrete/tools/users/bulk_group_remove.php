@@ -33,19 +33,19 @@ if ($_POST['task'] == 'group_remove') {
 	$groups = array();
 	if(is_array($groupIDs) && count($groupIDs)) {
 		foreach($groupIDs as $gID) {
-			$groups[] = Group::getByID($gID);			
+			$groups[] = Group::getByID($gID);
 		}
 	}
-	
+
 	foreach($users as $ui) {
-		if($ui instanceof UserInfo) {
+		if($ui instanceof \Concrete\Core\User\UserInfo) {
 			$u = $ui->getUserObject();
 			foreach($groups as $g) {
 				$gp = new Permissions($g);
 				if ($gp->canAssignGroup()) {
 					if($u->inGroup($g)) { // avoid messing up group enter times
-						$u->exitGroup($g); 
-					}				
+						$u->exitGroup($g);
+					}
 				}
 			}
 		}
@@ -76,22 +76,22 @@ if (!isset($_REQUEST['reload'])) { ?>
 							$gp = new Permissions($g);
 							if ($gp->canAssignGroup()) { ?>
 							<option value="<?=$g->getGroupID()?>"  <? if (is_array($_REQUEST['groupIDs']) && in_array($g->getGroupID(), $_REQUEST['groupIDs'])) { ?> selected="selected" <? } ?>><?=$g->getGroupDisplayName()?></option>
-						<? } 
-						
+						<? }
+
 						}?>
 					</select>
 				</div>
 			</div>
 			</fieldset>
-			
+
 			<?php Loader::element('users/confirm_list',array('users'=>$users)); ?>
 		</form>
-	
 
-	
+
+
 	</div>
 	<div class="dialog-buttons">
-		<?=$ih->button_js(t('Cancel'), 'jQuery.fn.dialog.closeTop()', 'left', 'btn')?>	
+		<?=$ih->button_js(t('Cancel'), 'jQuery.fn.dialog.closeTop()', 'left', 'btn')?>
 		<?=$ih->button_js(t('Save'), 'ccm_userBulkGroupRemove()', 'right', 'btn primary')?>
 	</div>
 <?
@@ -100,7 +100,7 @@ if (!isset($_REQUEST['reload'])) { ?>
 <? } ?>
 
 <script type="text/javascript">
-ccm_userBulkGroupRemove = function() { 
+ccm_userBulkGroupRemove = function() {
 	jQuery.fn.dialog.showLoader();
 	$("#ccm-user-bulk-group-remove").ajaxSubmit(function(resp) {
 		jQuery.fn.dialog.closeTop();
@@ -116,7 +116,7 @@ ccm_userBulkGroupRemove = function() {
 		});
 	});
 };
-$(function() { 
+$(function() {
 	$(".select2-select").select2();
 });
 </script>

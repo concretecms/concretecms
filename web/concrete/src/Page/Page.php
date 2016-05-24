@@ -475,7 +475,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         if (is_array($userOrGroup)) {
             $pe = GroupCombinationPermissionAccessEntity::getOrCreate($userOrGroup);
             // group combination
-        } elseif ($userOrGroup instanceof User || $userOrGroup instanceof UserInfo) {
+        } elseif ($userOrGroup instanceof User || $userOrGroup instanceof \Concrete\Core\User\UserInfo) {
             $pe = UserPermissionAccessEntity::getOrCreate($userOrGroup);
         } elseif ($userOrGroup instanceof PermissionAccessEntity) {
             $pe = $userOrGroup;
@@ -508,7 +508,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         if (is_array($userOrGroup)) {
             $pe = GroupCombinationPermissionAccessEntity::getOrCreate($userOrGroup);
             // group combination
-        } elseif ($userOrGroup instanceof User || $userOrGroup instanceof UserInfo) {
+        } elseif ($userOrGroup instanceof User || $userOrGroup instanceof \Concrete\Core\User\UserInfo) {
             $pe = UserPermissionAccessEntity::getOrCreate($userOrGroup);
         } else {
             // group;
