@@ -50,7 +50,7 @@
 @border-radius-large: 6px;
 @border-radius-small: 3px;
 
-@text-color: @gray-dark;
+@text-color: @gray-light;
 //** Default background color used for all tables.
 @table-bg:                      transparent;
 //** Background color used for `.table-striped`.
@@ -75,9 +75,11 @@
 @fancy-node-v-spacing: 0px;    // gap between two node borders
 @fancy-icon-width: 1em;
 @fancy-icon-height: 1em;
-@fancy-icon-spacing: 0.5em;    // margin between icon/icon or icon/title
-@fancy-icon-ofs-top: 2px;      // extra vertical offset for expander, checkbox and icon
-@fancy-title-ofs-top: 0px;     // extra vertical offset for title
+@fancy-icon-spacing: 5px;    // margin between icon/icon or icon/title
+@fancy-title-spacing: 0px;
+@fancy-expander-spacing: 6px;
+@fancy-icon-ofs-top: 5px;      // extra vertical offset for expander, checkbox and icon
+@fancy-title-ofs-top: 2px;     // extra vertical offset for title
 @fancy-node-border-width: 1px;
 @fancy-node-border-radius: @border-radius-small;
 @fancy-node-outline-width: 1px;
@@ -85,13 +87,31 @@
 @fancy-font-family: @font-family-base;
 @fancy-font-size: @font-size-base;
 @fancy-font-color: @text-color;
-@fancy-font-color-dimm: @gray-dark;
+@fancy-font-color-dimm: @gray-light;
 @fancy-font-error-color: @brand-danger;
+@fancy-expander-hover-color: #48b4fb;
 
-@fancy-active-text: #fff;
-@fancy-active-color: @brand-primary;
+@fancy-active-text: @gray-base;
+@fancy-active-color: lighten(#48b4fb, 30%);
 @fancy-select-color: @brand-success;
-@fancy-hover-color: @table-bg-hover;
+@fancy-hover-color: #e1e1e1;
+
+div.ccm-ui {
+	span.fancytree-title {
+		margin-left: @fancy-title-spacing;
+	}
+
+	span.fancytree-expander {
+		margin-top: @fancy-expander-spacing;
+	}
+
+	ul.fancytree-container {
+		color: @gray-light;
+		background-color: #f2f2f2;
+		border-color: transparent;
+		border-radius: 4px;
+	}
+}
 
 /*******************************************************************************
  * Plain tree
@@ -164,7 +184,14 @@ ul.fancytree-container ul {
 div.fancytree-drag-helper.fancytree-drop-reject,
 div.fancytree-drag-helper.fancytree-drop-reject span.fancytree-title
 {
-	color: @fancy-font-error-color;
+	opacity: 0.7;
+}
+
+div.fancytree-drag-helper {
+	line-height: 14px;
+	span.fancytree-drag-helper-img {
+		top: 6px;
+	}
 }
 // div.fancytree-drop-accept span.fancytree-drag-helper-img {
 // 	.useSprite(2, 7);
@@ -194,26 +221,22 @@ div.fancytree-drag-helper.fancytree-drop-reject span.fancytree-title
 
 //--- Source node while dragging -----------------------------------------------
 
+
 span.fancytree-node.fancytree-drag-source {
-	background-color: @brand-info !important;
-	span.fancytree.title {
-		// outline: 1px solid @brand-info;
-		// color: @brand-primary;
-	}
+	opacity: 0.3;
 }
 
 //--- Target node while dragging cursor is over it -----------------------------
 
 span.fancytree-node.fancytree-drop-target {
 	&.fancytree-drop-accept span.fancytree.title {
+		opacity: 1;
 		// background-color: @brand-danger !important;
 		// outline: 1px solid @brand-success;
 		// color: white !important;
 	}
 	&.fancytree-drop-reject span.fancytree.title {
-		background-color: @brand-danger !important;
-		// outline: 1px solid @brand-danger;
-		// color: white !important;
+		opacity: 0.3;
 	}
 }
 
@@ -224,7 +247,7 @@ span.fancytree-expander {
 	color: @fancy-font-color;
 }
 span.fancytree-node span.fancytree-expander:hover {
-	color: cyan;
+	color: @fancy-expander-hover-color;
 }
 
 // Inactive tree:
