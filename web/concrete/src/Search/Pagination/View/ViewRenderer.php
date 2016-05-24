@@ -15,16 +15,19 @@ class ViewRenderer
     {
         $this->view = $paginationView;
         $this->pagination = $pagination;
-        $list = $pagination->getItemListObject();
-        $this->routeCollectionFunction = function ($page) use ($list) {
-            $qs = Core::make('helper/url');
-            $url = $qs->setVariable($list->getQueryPaginationPageParameter(), $page);
-            return $url;
-        };
     }
 
     protected function getRouteCollectionFunction()
     {
+        if (!$this->routeCollectionFunction) {
+            $urlHelper = Core::make('helper/url');;
+            $list = $this->pagination->getItemListObject();
+            $this->routeCollectionFunction = function ($page) use ($list, $urlHelper) {
+                $url = $urlHelper->setVariable($list->getQueryPaginationPageParameter(), $page);
+                return h($url);
+            };
+        }
+
         return $this->routeCollectionFunction;
     }
 
@@ -35,7 +38,7 @@ class ViewRenderer
     {
         return $this->view->render(
             $this->pagination,
-            $this->routeCollectionFunction,
+            $this->getRouteCollectionFunction(),
             array_merge($this->view->getArguments(), $args)
         );
     }
