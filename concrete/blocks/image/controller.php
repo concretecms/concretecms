@@ -5,7 +5,6 @@ use Concrete\Core\Block\BlockController;
 use Concrete\Core\Error\Error;
 use Concrete\Core\File\File;
 use Concrete\Core\Page\Page;
-use Concrete\Core\Support\Facade\Facade;
 
 class Controller extends BlockController
 {
@@ -147,8 +146,7 @@ class Controller extends BlockController
     {
         // i don't know why this->fID isn't sticky in some cases, leading us to query
         // every damn time
-        $app = Facade::getFacadeApplication();
-        $db = $app->make('database')->connection();
+        $db = $this->app->make('database')->connection();
 
         $file = null;
         $fID = $db->fetchColumn('select fID from btContentImage where bID = ?', [$this->bID], 0);
@@ -233,11 +231,10 @@ class Controller extends BlockController
      */
     public function getLinkURL()
     {
-        $app = Facade::getFacadeApplication();
         $linkUrl = '';
 
         if (!empty($this->externalLink)) {
-            $sec = $app->make('helper/security');
+            $sec = $this->app->make('helper/security');
             $linkUrl = $sec->sanitizeURL($this->externalLink);
         } elseif (!empty($this->internalLinkCID)) {
             $linkToC = Page::getByID($this->internalLinkCID);
@@ -254,8 +251,7 @@ class Controller extends BlockController
      */
     public function validate_composer()
     {
-        $app = Facade::getFacadeApplication();
-        $e = $app->make('helper/validation/error');
+        $e = $this->app->make('helper/validation/error');
 
         $f = $this->getFileObject();
         if (!is_object($f) || !$f->getFileID()) {
