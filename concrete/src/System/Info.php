@@ -9,6 +9,11 @@ use Concrete\Core\Package\PackageList;
 class Info
 {
     /**
+     * @var bool
+     */
+    protected $installed;
+
+    /**
      * @var string
      */
     protected $webRootDirectory;
@@ -63,18 +68,21 @@ class Info
             $maxExecutionTime = ini_get('max_execution_time');
             @set_time_limit(5);
 
+            $this->installed = (bool) $app->isInstalled();
+
             $this->webRootDirectory = DIR_BASE;
 
             $this->coreRootDirectory = DIR_BASE_CORE;
 
-            $this->coreVersions = implode("\n", [
-                'Core Version - '.$config->get('concrete.version'),
-                'Version Installed - '.$config->get('concrete.version_installed'),
-                'Database Version - '.$config->get('concrete.version_db'),
-            ]);
+            $versions = ['Core Version - '.$config->get('concrete.version')];
+            if ($this->installed) {
+                $versions[] = 'Version Installed - '.$config->get('concrete.version_installed');
+            }
+            $versions[] = 'Database Version - '.$config->get('concrete.version_db');
+            $this->coreVersions = implode("\n", $versions);
 
             $packages = [];
-            if ($app->isInstalled()) {
+            if ($this->installed) {
                 foreach (PackageList::get()->getPackages() as $p) {
                     if ($p->isPackageInstalled()) {
                         $packages[] = $p->getPackageName() . ' (' . $p->getPackageVersion() . ')';
@@ -209,6 +217,14 @@ class Info
             $loc->popActiveContext();
             throw $x;
         }
+    }
+
+    /**
+     * @return bool
+     */
+    public function isInstalled()
+    {
+        return $this->installed;
     }
 
     /**

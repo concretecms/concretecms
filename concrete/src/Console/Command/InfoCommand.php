@@ -26,13 +26,14 @@ class InfoCommand extends Command
             $info = Facade::getFacadeApplication()->make(Info::class);
             /* @var Info $info */
 
+            $output->writeln('<info># concrete5 Version</info>');
+            $output->writeln('Installed - '.($info->isInstalled() ? 'Yes' : 'No'));
+            $output->writeln($info->getCoreVersions());
+
+            $output->writeln('');
             $output->writeln('<info># Paths</info>');
             $output->writeln('Web root - '.$info->getWebRootDirectory());
             $output->writeln('Core root - '.$info->getCoreRootDirectory());
-
-            $output->writeln('');
-            $output->writeln('<info># concrete5 Version</info>');
-            $output->writeln($info->getCoreVersions());
 
             $output->writeln('');
             $output->writeln('<info># concrete5 Packages</info>');
