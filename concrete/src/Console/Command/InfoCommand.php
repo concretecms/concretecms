@@ -48,10 +48,6 @@ class InfoCommand extends Command
             $output->writeln($info->getCache());
 
             $output->writeln('');
-            $output->writeln('<info># Server Software</info>');
-            $output->writeln($info->getServerSoftware());
-
-            $output->writeln('');
             $output->writeln('<info># Server API</info>');
             $output->writeln($info->getServerAPI());
 
