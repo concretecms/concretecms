@@ -65,7 +65,7 @@ class UserEntity extends Entity
     {
         $html = '<a href="' . URL::to(
                 '/ccm/system/dialogs/user/search') . '" dialog-modal="false" dialog-width="90%" dialog-title="' . t(
-                'Add User') . '" class="dialog-launch" dialog-height="70%"">' . tc(
+                'Add User') . '" class="dialog-launch" dialog-height="70%">' . tc(
                 'PermissionAccessEntityTypeName',
                 'User') . '</a>';
 
