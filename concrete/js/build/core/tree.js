@@ -42,15 +42,9 @@
 				}
 			}
 
-			$.ajax({
-				dataType: 'json',
-				type: 'POST',
+			$.concreteAjax({
 				data: params,
-				url: CCM_DISPATCHER_FILENAME + '/ccm/system/tree/node/drag_request',
-				success: function(r) {
-					ccm_parseJSON(r, function() {});
-					jQuery.fn.dialog.hideLoader();
-				}
+				url: CCM_DISPATCHER_FILENAME + '/ccm/system/tree/node/drag_request'
 			});
 		},
 
@@ -138,7 +132,7 @@
 					data: ajaxData
 				},
 				lazyLoad: function(event, data) {
-					my.reloadNode(data.node);
+					data.result = my.getLoadNodePromise(data.node);
 				},
 				select: function(select, data) {
 					if (options.chooseNodeInForm) {
@@ -258,28 +252,34 @@
 						return true;
 					},
 					dragDrop: function(targetNode, data) {
-						my.dragRequest(data.otherNode, targetNode, data.hitMode);
 						data.otherNode.moveTo(targetNode, data.hitMode);
+						my.dragRequest(data.otherNode, targetNode, data.hitMode);
 					}
 				}
 			});
 		},
 
-		reloadNode: function(node, onComplete) {
+		getLoadNodePromise: function(node) {
 			var my = this,
 				options = my.options,
 				ajaxData = my.options.ajaxData != false ? my.options.ajaxData : {};
 
 			ajaxData.treeNodeParentID = node.data.treeNodeID;
 
-			data.result = $.getJSON(CCM_DISPATCHER_FILENAME + '/ccm/system/tree/node/load',
-				ajaxData,
-				function() {
-					if (onComplete) {
-						onComplete();
-					}
-				});
+			return $.when($.getJSON(CCM_DISPATCHER_FILENAME + '/ccm/system/tree/node/load',
+				ajaxData
+			));
+		},
 
+		reloadNode: function(node, onComplete) {
+			this.getLoadNodePromise(node).done(function(data) {
+				node.removeChildren();
+				node.addChildren(data);
+				node.setExpanded(true, {noAnimation: true});
+				if (onComplete) {
+					onComplete();
+				}
+			});
 		},
 
 		cloneNode: function(treeNodeID) {
@@ -371,17 +371,17 @@
 			if (nodes.length) {
 				for (var i = 0; i < nodes.length; i++) {
 					var node = $tree.fancytree('getTree').getNodeByKey(nodes[i].treeNodeParentID);
-					node.addChild(nodes[i]);
+					node.addChildren(nodes);
 				}
 			} else {
 				var node = $tree.fancytree('getTree').getNodeByKey(nodes.treeNodeParentID);
-				node.addChild(nodes);
+				node.addChildren(nodes);
 			}
 		});
 		ConcreteEvent.subscribe('ConcreteTreeUpdateTreeNode.concreteTree', function(e, r) {
 			var $tree = $('[data-tree=' + my.options.treeID + ']'),
 				node = $tree.fancytree('getTree').getNodeByKey(r.node.key);
-			node.data = r.node;
+			node.fromDict(r.node);
 			node.render();
 		});
 		ConcreteEvent.subscribe('ConcreteTreeDeleteTreeNode.concreteTree', function(e, r) {

@@ -17,11 +17,12 @@ $view = View::getInstance();
                     cParentID: '<?=$nodeID?>',
                     displaySingleLevel: true,
                     onDisplaySingleLevel: function (node) {
+                        /*
                         if (window && window.history && window.history.pushState) {
                             window.history.pushState({
                                 key: node.data.key
                             }, 'title', my_url + '/-/' + node.data.key);
-                        }
+                        }*/
                     }
                 });
             });
