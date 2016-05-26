@@ -198,7 +198,7 @@ class Conversation extends Object implements \Concrete\Core\Permission\ObjectInt
         $users = array();
         foreach ($ml->get() as $message) {
             $ui = $message->getConversationMessageUserObject();
-            if ($ui instanceof UserInfo) {
+            if ($ui instanceof \Concrete\Core\User\UserInfo) {
                 $users[$ui->getUserID()] = $ui;
             }
         }

@@ -122,7 +122,7 @@ class Group extends Object implements \Concrete\Core\Permission\ObjectInterface
     {
         $this->pObj = $obj;
         $db = Database::connection();
-        if ($obj instanceof UserInfo) {
+        if ($obj instanceof \Concrete\Core\User\UserInfo) {
             $uID = $this->pObj->getUserID();
             if ($uID) {
                 $q = "select gID, ugEntered from UserGroups where gID = '{$this->gID}' and uID = {$uID}";
