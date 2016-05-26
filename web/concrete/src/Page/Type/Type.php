@@ -218,17 +218,19 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
         }
 
         // remove all but the most recent X drafts.
-        $vl = new VersionList($c);
-        $vl->setItemsPerPage(-1);
-        // this will ensure that we only ever keep X versions.
-        $vArray = $vl->getPage();
-        if (count($vArray) > $this->ptDraftVersionsToSave) {
-            for ($i = $this->ptDraftVersionsToSave; $i < count($vArray); $i++) {
-                $v = $vArray[$i];
-                @$v->delete();
+        if ($c->isPageDraft()) {
+            $vl = new VersionList($c);
+            $vl->setItemsPerPage(-1);
+            // this will ensure that we only ever keep X versions.
+            $vArray = $vl->getPage();
+            if (count($vArray) > $this->ptDraftVersionsToSave) {
+                for ($i = $this->ptDraftVersionsToSave; $i < count($vArray); $i++) {
+                    $v = $vArray[$i];
+                    @$v->delete();
+                }
             }
         }
-
+        
         $c = Page::getByID($c->getCollectionID(), 'RECENT');
         $controls = array();
         foreach ($outputControls as $oc) {
