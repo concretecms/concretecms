@@ -360,5 +360,8 @@ echo Core::make('helper/concrete/ui')->tabs(array(
         <i class="fa fa-arrows"></i>
 
         <input class="ccm-image-slider-entry-sort" type="hidden" name="<?php echo $view->field('sortOrder'); ?>[]" value="<%=sort_order%>"/>
+        <button type="button" class="btn btn-default ccm-edit-slide" data-slide-close-text="<?php echo t('Collapse Slide'); ?>" data-slide-edit-text="<?php echo t('Edit Slide'); ?>"><?php echo t('Edit Slide'); ?></button>
+        <button type="button" class="btn btn-danger ccm-delete-image-slider-entry"><?php echo t('Remove'); ?></button>
+        <i class="fa fa-arrows"></i>
     </div>
 </script>
