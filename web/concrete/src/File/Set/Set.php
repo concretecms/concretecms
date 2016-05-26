@@ -536,7 +536,7 @@ class Set implements \Concrete\Core\Permission\ObjectInterface
             $pe = GroupCombinationPermissionAccessEntity::getOrCreate($userOrGroup);
             // group combination
         } else {
-            if ($userOrGroup instanceof User || $userOrGroup instanceof \UserInfo) {
+            if ($userOrGroup instanceof User || $userOrGroup instanceof \Concrete\Core\User\UserInfo) {
                 $pe = UserPermissionAccessEntity::getOrCreate($userOrGroup);
             } else {
                 // group;
