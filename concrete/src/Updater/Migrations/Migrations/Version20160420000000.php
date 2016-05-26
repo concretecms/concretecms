@@ -643,18 +643,23 @@ class Version20160420000000 extends AbstractMigration
     protected function splittedTrackingCode()
     {
         $config = Facade::getFacadeApplication()->make('config');
-        $singleTrackingCode = (string) $config->get('concrete.seo.tracking.code', '');
-        if ($singleTrackingCode !== '') {
-            switch ($config->get('concrete.seo.tracking.code_position')) {
+        $tracking = (array) $config->get('concrete.seo.tracking', []);
+        $trackingCode = array_get($tracking, 'code');
+        if (!is_array($trackingCode)) {
+            array_set($tracking, 'code', ['header' => '', 'footer' => '']);
+            $trackingCode = (string) $trackingCode;
+            switch (array_get($tracking, 'code_position')) {
                 case 'top':
-                    $config->save('concrete.seo.tracking.code.header', $singleTrackingCode);
+                    array_set($tracking, 'code.header', $trackingCode);
                     break;
                 case 'bottom':
                 default:
-                    $config->save('concrete.seo.tracking.code.footer', $singleTrackingCode);
+                    array_set($tracking, 'code.footer', $trackingCode);
                     break;
             }
         }
+        unset($tracking['code_position']);
+        $config->save('concrete.seo.tracking', $tracking);
     }
 
     public function up(Schema $schema)
