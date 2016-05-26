@@ -216,10 +216,10 @@ class Sitemap
         $node->title = $cvName;
         $node->link = $c->getCollectionLink();
         if ($numSubpages > 0) {
-            $node->isLazy = true;
+            $node->lazy = true;
         }
         if ($cIconClass) {
-            $node->iconClass = $cIconClass;
+            $node->icon = $cIconClass;
         } else {
             $node->icon = $cIcon;
         }
