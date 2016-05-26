@@ -258,7 +258,7 @@ class Action
 
         $g = $this->getUserPointActionBadgeGroupObject();
         if ($g instanceof Group) {
-            if ($user instanceof UserInfo) {
+            if ($user instanceof \Concrete\Core\User\UserInfo) {
                 $user = User::getByUserID($user->getUserID());
             }
             $user->enterGroup($g);
