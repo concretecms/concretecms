@@ -114,8 +114,13 @@ class DispatcherRouteCallback extends RouteCallback
             $smm = Config::get('concrete.maintenance_mode');
             if ($smm == 1 && !PermissionKey::getByHandle('view_in_maintenance_mode')->validate() && ($_SERVER['REQUEST_METHOD'] != 'POST' || Loader::helper('validation/token')->validate() == false)) {
                 $v = new View('/frontend/maintenance_mode');
-                $v->setViewTheme(VIEW_CORE_THEME);
-
+                $tmpTheme = \Route::getThemeByRoute('/frontend/maintenance_mode');
+                $v->setViewTheme($tmpTheme[0]);
+                $v->addScopeItems(array('c' => $c));
+                $request->setCurrentPage($c);
+                if (isset($tmpTheme[1])) {
+                    $v->setViewTemplate($tmpTheme[1]);
+                }
                 return $this->sendResponse($v);
             }
         }

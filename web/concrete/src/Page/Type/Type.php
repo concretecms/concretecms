@@ -230,7 +230,7 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
                 }
             }
         }
-        
+
         $c = Page::getByID($c->getCollectionID(), 'RECENT');
         $controls = array();
         foreach ($outputControls as $oc) {
