@@ -17,6 +17,7 @@ use Doctrine\DBAL\Schema\Schema;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Page\Single as SinglePage;
 use Concrete\Block\ExpressForm\Controller as ExpressFormBlockController;
+use Concrete\Core\Support\Facade\Facade;
 
 class Version20160420000000 extends AbstractMigration
 {
@@ -639,6 +640,23 @@ class Version20160420000000 extends AbstractMigration
         }
     }
 
+    protected function splittedTrackingCode()
+    {
+        $config = Facade::getFacadeApplication()->make('config');
+        $singleTrackingCode = (string) $config->get('concrete.seo.tracking.code', '');
+        if ($singleTrackingCode !== '') {
+            switch ($config->get('concrete.seo.tracking.code_position')) {
+                case 'top':
+                    $config->save('concrete.seo.tracking.code.header', $singleTrackingCode);
+                    break;
+                case 'bottom':
+                default:
+                    $config->save('concrete.seo.tracking.code.footer', $singleTrackingCode);
+                    break;
+            }
+        }
+    }
+
     public function up(Schema $schema)
     {
         $this->connection->Execute('set foreign_key_checks = 0');
@@ -652,6 +670,7 @@ class Version20160420000000 extends AbstractMigration
         $this->updateWorkflows();
         $this->addTreeNodeTypes();
         $this->installDesktops();
+        $this->splittedTrackingCode();
         $this->connection->Execute('set foreign_key_checks = 1');
     }
 
