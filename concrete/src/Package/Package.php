@@ -393,10 +393,10 @@ abstract class Package implements LocalizablePackageInterface
     /**
      * @deprecated
      */
-    public static function getAvailablePackages()
+    public static function getAvailablePackages($filterInstalled = true)
     {
         // this should go through the facade instead
-        return \Concrete\Core\Support\Facade\Package::getAvailablePackages();
+        return \Concrete\Core\Support\Facade\Package::getAvailablePackages($filterInstalled);
     }
 
     /**
