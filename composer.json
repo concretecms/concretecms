@@ -64,9 +64,20 @@
     "concrete5/doctrine-xml": "1.*",
     "symfony/yaml":"3.*"
   },
+  "autoload": {
+    "psr-4": {
+      "Concrete\\Core\\": "concrete/src",
+      "Concrete\\Controller\\": "concrete/controllers",
+      "Concrete\\Block\\": "concrete/blocks",
+      "Concrete\\Attribute\\": "concrete/attributes",
+      "Concrete\\Authentication\\": "concrete/authentication",
+      "Concrete\\Theme\\": "concrete/themes",
+      "Concrete\\MenuItem\\": "concrete/menu_item"
+    }
+  },
   "autoload-dev": {
     "psr-4": {
-      "Concrete\\Tests\\": "../../tests/tests"
+      "Concrete\\Tests\\": "tests/tests"
     }
   }
 }

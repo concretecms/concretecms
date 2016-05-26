@@ -159,6 +159,9 @@ class ClassLoader
     /**
      * Adds concrete5's core autoloading prefixes.
      *
+     * Composer loads most of these using the optimized autoloader. These fallbacks
+     * only happen if composer can't find a mapped class.
+     *
      * * The following prefixes are registered:
      * <ul>
      * <li>`Concrete\StartingPointPackage` -> `concrete/config/install/packages`</li>
@@ -196,7 +199,6 @@ class ClassLoader
         $symfonyLoader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Controller\\PageType', DIR_BASE_CORE . '/' . DIRNAME_CONTROLLERS . '/' . DIRNAME_PAGE_TYPES);
         $symfonyLoader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Controller', DIR_BASE_CORE . '/' . DIRNAME_CONTROLLERS);
         $symfonyLoader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Job', DIR_BASE_CORE . '/' . DIRNAME_JOBS);
-        $symfonyLoader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Express', DIR_APPLICATION . '/config/express/Entity/Concrete/Express');
 
         $namespace = 'Application';
         $app_config_path = DIR_APPLICATION . '/config/app.php';
@@ -224,7 +226,6 @@ class ClassLoader
 
         $strictLoader = new SymfonyClassLoader();
 
-        $strictLoader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Core', DIR_BASE_CORE . '/' . DIRNAME_CLASSES);
         if ($provideCoreExtensionAutoloaderMapping) {
             $strictLoader->addPrefix($namespace, DIR_APPLICATION . '/' . DIRNAME_CLASSES . '/Concrete');
         } else {
