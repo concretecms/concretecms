@@ -120,6 +120,22 @@ class Controller extends AttributeTypeController
         }
     }
 
+
+    /**
+     * @deprecated
+     */
+    public function setNodes($akTopicParentNodeID, $akTopicTreeID)
+    {
+        /**
+         * @var $type TopicsType
+         */
+        $type = $this->getAttributeKey()->getAttributeKeyType();
+        $type->setParentNodeID($akTopicParentNodeID);
+        $type->setTopicTreeID($akTopicTreeID);
+        $this->entityManager->persist($type);
+        $this->entityManager->flush();
+    }
+
     public function saveValue($nodes)
     {
         $selected = array();
