@@ -136,7 +136,7 @@ class EntityManagerConfigFactory implements ApplicationAwareInterface, EntityMan
 
         $appDriverSettings = $this->app->make('config')->get(CONFIG_ORM_METADATA_APPLICATION);
 
-        if (empty($appDriverSettings)) {
+        if (empty($appDriverSettings) && is_dir($appSrcPath)) {
             $annotationDriver = new \Doctrine\ORM\Mapping\Driver\AnnotationDriver($this->getCachedAnnotationReader(), $appSrcPath);
             $driverChain->addDriver($annotationDriver, 'Application\Src');
         } else if ($appDriverSettings === \Package::PACKAGE_METADATADRIVER_XML || $appDriverSettings === 'xml') {
