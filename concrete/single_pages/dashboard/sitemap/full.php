@@ -15,7 +15,7 @@ $sh = Loader::helper('concrete/dashboard/sitemap');
 
 			$('input[name=includeSystemPages]').on('click', function() {
 				var $tree = $('div#ccm-full-sitemap-container');
-				$tree.dynatree('destroy');
+				$tree.fancytree('destroy');
 				$tree.concreteSitemap({
 					includeSystemPages: $('input[name=includeSystemPages]').is(':checked')
 				})
