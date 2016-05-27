@@ -14,6 +14,7 @@
 			cookieId: 'ConcreteSitemap',
 			includeSystemPages: false,
             displaySingleLevel: false,
+			persist: true,
 			minExpandLevel: false,
 			dataSource: CCM_TOOLS_PATH + '/dashboard/sitemap_data',
 			ajaxData: {},
@@ -82,6 +83,10 @@
 				}
 			}
 
+			if (!my.options.persist) {
+				doPersist = false;
+			}
+
 			var ajaxData = $.extend({
 				'displayNodePagination': my.options.displayNodePagination ? 1 : 0,
 				'cParentID': my.options.cParentID,
@@ -89,9 +94,14 @@
 				'includeSystemPages': my.options.includeSystemPages ? 1 : 0
 			}, my.options.ajaxData);
 
+			var extensions = ["glyph", "dnd"];
+			if (doPersist) {
+				extensions.push("persist");
+			}
+
     		$(my.$element).addClass('ccm-tree-sitemap');
     		$(my.$element).fancytree({
-				extensions: ["glyph", "dnd", "persist"],
+				extensions: extensions,
 				glyph: {
 					map: {
 						doc: "fa fa-file-o",
@@ -141,19 +151,20 @@
 				minExpandLevel:  minExpandLevel,
 				clickFolderMode: 2,
 				lazyLoad: function(event, data) {
-					if (my.options.displaySingleLevel) {
-						data.result = my.displaySingleLevel(data.node);
-					} else {
+					if (!my.options.displaySingleLevel) {
 						data.result = my.getLoadNodePromise(data.node);
+					} else {
+						return false;
 					}
 
 				},
-
+				/*
 				expand: function(event, data) {
 					if (my.options.displaySingleLevel) {
-						my.displaySingleLevel(data.node);
+						data.result = my.displaySingleLevel(data.node);
 					}
 				},
+*/
 
 				click: function(event, data) {
 					var node = data.node;
@@ -186,8 +197,9 @@
 
 					} else if (node.data.href) {
 						window.location.href = node.data.href;
-					} else if (node.data.displaySingleLevel) {
+					} else if (my.options.displaySingleLevel) {
 						my.displaySingleLevel(node);
+						return false;
 					}
 				},
 				select: function(event, data) {
@@ -348,32 +360,31 @@
     	},
 
 
-    	setupNodePagination: function($tree, nodeKey) {
+    	setupNodePagination: function($tree) {
     		//var tree = $tree.dynatree('getTree');
-    		var pg = $tree.find('div.ccm-pagination-wrapper');
+    		var pg = $tree.find('div.ccm-pagination-wrapper'),
+				my = this;
     		$tree.children('.ccm-pagination-bound').remove();
     		if (pg.length) {
     			pg.find('a').unbind('click').on('click', function() {
-    				// load under node
-    				var href = $(this).attr('href');
-    				$tree.fancytree('option', 'initAjax', {
-    					url: href
-    				});
-    				$tree.fancytree('getTree').reload();
-    				return false;
+					var href = $(this).attr('href');
+					var root = my.$element.fancytree('getRootNode');
+					jQuery.fn.dialog.showLoader();
+					$.ajax({
+						dataType: 'json',
+						url: href,
+						success: function(data) {
+							jQuery.fn.dialog.hideLoader();
+							root.removeChildren();
+							root.addChildren(data);
+							my.setupNodePagination(my.$element);
+						}
+					});
+					return false;
     			});
-                var node = $.ui.fancytree.getNode(pg);
-                if (node && typeof node.remove === 'function') {
-                    node.remove();
-                }
-	    		pg.addClass('ccm-pagination-bound').appendTo($tree);
 
-				$tree.fancytree('option', 'onActivate', function(node) {
-					if ($(node.span).hasClass('ccm-sitemap-explore-paging')) {
-						node.deactivate();
-					}
-				});
-	    	}
+	    		pg.addClass('ccm-pagination-bound').appendTo($tree);
+			}
     	},
 
     	displaySingleLevel: function(node) {
@@ -384,8 +395,7 @@
             (my.options.onDisplaySingleLevel || $.noop).call(this, node);
 
     		var root = my.$element.fancytree('getRootNode');
-			$(node.li).closest('[data-sitemap=container]').fancytree('option', 'minExpandLevel', minExpandLevel);
-			root.removeChildren();
+			//my.$element.fancytree('option', 'minExpandLevel', minExpandLevel);
 			var ajaxData = $.extend({
                 'dataType': 'json',
 				'displayNodePagination': options.displayNodePagination ? 1 : 0,
@@ -394,11 +404,16 @@
 				'includeSystemPages': options.includeSystemPages ? 1 : 0
 			}, options.ajaxData);
 
+			jQuery.fn.dialog.showLoader();
             return $.ajax({
+				dataType: 'json',
                 url: options.dataSource,
                 data: ajaxData,
-                success: function() {
-                    my.setupNodePagination(root.tree.$tree, node.data.key);
+                success: function(data) {
+					jQuery.fn.dialog.hideLoader();
+					root.removeChildren();
+					root.addChildren(data);
+                    my.setupNodePagination(my.$element, node.data.key);
                 }
             });
     	},
