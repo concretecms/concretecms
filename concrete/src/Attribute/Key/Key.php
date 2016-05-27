@@ -66,4 +66,14 @@ class Key extends Facade
         return array_to_object($this, $array);
     }
 
+    /**
+     * @deprecated
+     */
+    public function getSearchIndexFieldDefinition()
+    {
+        return $this->searchIndexFieldDefinition;
+    }
+
+
+
 }
