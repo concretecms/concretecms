@@ -21,7 +21,7 @@
 			selectMode: false, // 1 - single, 2 = multiple , 3 = hierarchical-multiple - has NOTHING to do with clicks. If you enable select mode you CANNOT use a click handler.
 			onClickNode: false, // This handles clicking on the title.
 			onSelectNode: false, // this handles when a radio or checkbox in the tree is checked
-			onPostInit: false
+			init: false
 		}, options);
 		my.options = options;
 		my.$element = $element;
@@ -140,12 +140,14 @@
 						my.setupNodePagination(my.$element, my.options.cParentID);
 					}
 				},
+				/*
                 renderNode: function(event, data) {
 					if (my.options.selectMode != false) {
 						$(span).find('.fa').remove();
 					}
                     my.$element.children('.ccm-pagination-bound').remove();
-                },
+                },*/
+
 				selectMode: dynatreeSelectMode,
 				checkbox: checkbox,
 				minExpandLevel:  minExpandLevel,
@@ -202,9 +204,9 @@
 						return false;
 					}
 				},
-				select: function(event, data) {
+				select: function(event, data, flag) {
 					if (my.options.onSelectNode) {
-						my.options.onSelectNode.call(my, data.node);
+						my.options.onSelectNode.call(my, data.node, data.node.isSelected());
 					}
 				},
 
