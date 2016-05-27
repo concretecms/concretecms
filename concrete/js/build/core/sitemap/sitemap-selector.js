@@ -27,20 +27,20 @@
                 'selected': my.options.selected,
                 'filters': my.options.filters
             },
-            onPostInit: function() {
+            init: function() {
                 if (options.selected) {
                     if (options.mode == 'multiple') {
                         $.each(options.selected, function(i, cID) {
-                            var node = my.$element.dynatree('getTree').getNodeByKey(String(cID));
+                            var node = my.$element.fancytree('getTree').getNodeByKey(String(cID));
                             if (node) {
-                                node.select(true);
+                                node.setSelected(true);
                             }
                         });
                     } else {
-                        var tree = my.$element.dynatree('getTree');
+                        var tree = my.$element.fancytree('getTree');
                         var node = tree.getNodeByKey(String(options.selected));
                         if (node) {
-                            node.select(true);
+                            node.setSelected(true);
                         }
                     }
                 }
