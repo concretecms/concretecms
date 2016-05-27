@@ -16,13 +16,13 @@ $view = View::getInstance();
                     displayNodePagination: true,
                     cParentID: '<?=$nodeID?>',
                     displaySingleLevel: true,
+                    persist: false,
                     onDisplaySingleLevel: function (node) {
-                        /*
                         if (window && window.history && window.history.pushState) {
                             window.history.pushState({
-                                key: node.data.key
-                            }, 'title', my_url + '/-/' + node.data.key);
-                        }*/
+                                key: node.data.cID
+                            }, 'title', my_url + '/-/' + node.data.cID);
+                        }
                     }
                 });
             });
@@ -65,9 +65,4 @@ $view = View::getInstance();
 
     </div>
 
-    <script type="text/javascript">
-        $(function () {
-            $('#ccm-explore-paging-footer').html($('li.ccm-sitemap-explore-paging').html());
-        });
-    </script>
 <?= Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper(false);

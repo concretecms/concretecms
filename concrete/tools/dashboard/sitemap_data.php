@@ -43,11 +43,12 @@ if (isset($_REQUEST['displaySingleLevel']) && $_REQUEST['displaySingleLevel']) {
     $parent = Page::getByID($c->getCollectionParentID());
     if (is_object($parent) && !$parent->isError()) {
         $n = $dh->getNode($parent->getCollectionID());
-        $n->iconHTML = '<i class="fa fa-angle-double-up"></i>';
-        $n->icon = true;
+        $n->icon = 'fa fa-angle-double-up';
+        $n->expanded = true;
         $n->displaySingleLevel = true;
 
         $p = $dh->getNode($cParentID);
+        $p->expanded = true;
         $p->children = $dh->getSubNodes($cParentID);
         $n->children = array($p);
     } else {

@@ -225,9 +225,10 @@ class Sitemap
         }
         if ($cID == HOME_CID) {
             $node->addClass = 'ccm-page-home';
+            $node->expanded = true;
         }
         if ($nodeOpen) {
-            $node->expand = true;
+            $node->expanded = true;
         }
         $node->cAlias = $cAlias;
         $node->isInTrash = $isInTrash;

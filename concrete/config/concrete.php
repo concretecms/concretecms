@@ -927,7 +927,7 @@ return array(
         'track_downloads' => true,
     ),
     'limits' => array(
-        'sitemap_pages' => 100,
+        'sitemap_pages' => 2,
         'delete_pages' => 10,
         'copy_pages' => 10,
         'page_search_index_batch' => 200,
