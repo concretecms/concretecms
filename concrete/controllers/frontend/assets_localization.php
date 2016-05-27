@@ -463,14 +463,14 @@ jQuery.each(jQuery.Redactor.opts.langs.en, function(key, value) {
 
     }
 
-    public static function getDynatreeJavascript($setResponseHeaders = true)
+    public static function getFancytreeJavascript($setResponseHeaders = true)
     {
         if ($setResponseHeaders) {
             static::sendJavascriptHeader();
         }
         ?>
-jQuery.ui.dynatree.prototype.options.strings.loading = <?=json_encode(t('Loading...'))?>;
-jQuery.ui.dynatree.prototype.options.strings.loadError = <?=json_encode(t('Load error!'))?>;
+jQuery.ui.fancytree.prototype.options.strings.loading = <?=json_encode(t('Loading...'))?>;
+jQuery.ui.fancytree.prototype.options.strings.loadError = <?=json_encode(t('Load error!'))?>;
 <?php
 
     }

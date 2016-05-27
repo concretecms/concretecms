@@ -6,7 +6,7 @@
 		var my = this;
 		options = options || {};
 		options = $.extend({
-			readonly: false,
+			readOnly: false,
 			chooseNodeInForm: false,
 			onSelect: false,
 			treeID: false,
@@ -28,28 +28,23 @@
 	ConcreteTree.prototype = {
 
 		dragRequest: function(sourceNode, node, hitMode) {
-			var treeNodeParentID = node.parent.data.key;
+			var treeNodeParentID = node.parent.data.treeNodeID;
 			if (hitMode == 'over') {
-				treeNodeParentID = node.data.key;
+				treeNodeParentID = node.data.treeNodeID;
 			}
 			jQuery.fn.dialog.showLoader();
-			var params = [{'name': 'sourceTreeNodeID', 'value': sourceNode.data.key}, {'name': 'treeNodeParentID', 'value': treeNodeParentID}];
+			var params = [{'name': 'sourceTreeNodeID', 'value': sourceNode.data.treeNodeID}, {'name': 'treeNodeParentID', 'value': treeNodeParentID}];
 			var childNodes = node.parent.getChildren();
 			if (childNodes) {
 				for (var i = 0; i < childNodes.length; i++) {
 					var childNode = childNodes[i];
-					params.push({'name': 'treeNodeID[]', 'value': childNode.data.key});
+					params.push({'name': 'treeNodeID[]', 'value': childNode.data.treeNodeID});
 				}
 			}
-			$.ajax({
-				dataType: 'json',
-				type: 'POST',
+
+			$.concreteAjax({
 				data: params,
-				url: CCM_DISPATCHER_FILENAME + '/ccm/system/tree/node/drag_request',
-				success: function(r) {
-					ccm_parseJSON(r, function() {});
-					jQuery.fn.dialog.hideLoader();
-				}
+				url: CCM_DISPATCHER_FILENAME + '/ccm/system/tree/node/drag_request'
 			});
 		},
 
@@ -80,7 +75,7 @@
 				checkbox = true;
 				persist = false;
 				classNames = {
-					'checkbox': 'dynatree-radio'
+					'checkbox': 'fancytree-radio'
 				};
 				if (options.selectNodesByKey.length) {
 					ajaxData.treeNodeSelectedIDs = options.selectNodesByKey;
@@ -91,7 +86,7 @@
 				checkbox = true;
 				persist = false;
 				classNames = {
-					'checkbox': 'dynatree-checkbox'
+					'checkbox': 'fancytree-checkbox'
 				};
 				if (options.selectNodesByKey.length) {
 					ajaxData.treeNodeSelectedIDs = options.selectNodesByKey;
@@ -113,33 +108,53 @@
 				var ajaxURL = CCM_DISPATCHER_FILENAME + '/ccm/system/tree/node/load_starting';
 			}
 
-			$(my.$element).dynatree({
-				autoFocus: false,
-				initAjax: {
+			$(my.$element).fancytree({
+				extensions: ["glyph", "dnd"],
+				glyph: {
+					map: {
+						doc: "fa fa-file-o",
+						docOpen: "fa fa-file-o",
+						checkbox: "fa fa-square-o",
+						checkboxSelected: "fa fa-check-square-o",
+						checkboxUnknown: "fa fa-share-square",
+						dragHelper: "fa fa-share",
+						dropMarker: "fa fa-angle-right",
+						error: "fa fa-warning",
+						expanderClosed: "fa fa-plus-square-o",
+						expanderLazy: "fa fa-plus-square-o",  // glyphicon-expand
+						expanderOpen: "fa fa-minus-square-o",  // glyphicon-collapse-down
+						loading: "fa fa-spin fa-refresh"
+					}
+				},
+				source: {
 					url: ajaxURL,
 					type: 'post',
 					data: ajaxData
 				},
-				onLazyRead: function(node) {
-					my.reloadNode(node);
+				lazyLoad: function(event, data) {
+					data.result = my.getLoadNodePromise(data.node);
 				},
-				onSelect: function(select, node) {
+				select: function(select, data) {
 					if (options.chooseNodeInForm) {
-						options.onSelect(select, node);
+						var keys = $.map(data.tree.getSelectedNodes(), function(node) {
+							return node.key;
+						});
+						options.onSelect(keys);
 					}
 				},
+
 				selectMode: selectMode,
 				checkbox: checkbox,
-				classNames: classNames,
 				minExpandLevel:  minExpandLevel,
 				clickFolderMode: 1,
-				onPostInit: function() {
+				init: function() {
+
 					var $tree = my.$element;
 
 					if (options.removeNodesByKey.length) {
 						for (var i = 0; i < options.removeNodesByKey.length; i++) {
 							var nodeID = options.removeNodesByKey[i];
-							var node = this.getNodeByKey(nodeID);
+							var node = $tree.fancytree('getTree').getNodeByKey(nodeID);
 							if (node) {
 								node.remove();
 							}
@@ -147,15 +162,14 @@
 					}
 
 					if (options.readOnly) {
-						$tree.dynatree('disable');
+						$tree.fancytree('disable');
 					}
 
 					if (options.chooseNodeInForm) {
-						var selectedNodes = $tree.dynatree('getTree');
+						var selectedNodes = $tree.fancytree('getTree');
 						selectedNodes = selectedNodes.getSelectedNodes();
-						if (selectedNodes[0]) {
-							var node = selectedNodes[0];
-							options.onSelect(true, node);
+						if (selectedNodes.length) {
+							options.onSelect(selectedNodes);
 						}
 					}
 					if (selectedNodes) {
@@ -164,41 +178,29 @@
 						});
 					}
 				},
-				onClick: function(node, e) {
+
+				click: function(e, data) {
 
 					if (options.onClick) {
-						return options.onClick(node, e);
+						return options.onClick(data.node, e);
 					}
 
-					if (node.getEventTargetType(e) == 'expander') {
+					if (data.targetType == 'expander') {
 						return true;
 					}
 
-					if (options.chooseNodeInForm && node.getEventTargetType(e) != 'checkbox') {
-						return false;
-					}
-					if (!node.getEventTargetType(e)) {
+					if (options.chooseNodeInForm && data.targetType != 'checkbox') {
 						return false;
 					}
 
-					/*
-					if (options.chooseNodeInForm) {
-						var targetType = node.getEventTargetType(e);
-						if (targetType == 'checkbox' || targetType == 'title') {
-							if (targetType == 'title') {
-								node.select(true);
-							}
-							return true;
-						} else {
-							return false;
-						}
+					if (!data.targetType) {
+						return false;
 					}
-					*/
 
-					if (!options.chooseNodeInForm && node.getEventTargetType(e) == 'title') {
-						var $menu = node.data.treeNodeMenu;
+					if (!options.chooseNodeInForm && $(e.toElement).hasClass("fancytree-title")) {
+						var $menu = data.node.data.treeNodeMenu;
 						if ($menu) {
-							var menu = new ConcreteMenu($(node.span), {
+							var menu = new ConcreteMenu($(data.node.span), {
 								menu: $menu,
 								handle: 'none'
 							});
@@ -208,72 +210,76 @@
 
 					return true;
 				},
-				fx: {height: 'toggle', duration: 200},
+
 				dnd: {
-					onDragStart: function(node) {
+					preventRecursiveMoves: true, // Prevent dropping nodes on own descendants,
+					focusOnClick: true,
+					preventVoidMoves: true, // Prevent dropping nodes 'before self', etc.
+					dragStart: function(sourceNode, data) {
 						if (!options.chooseNodeInForm) {
 							return true;
 						} else {
 							return false;
 						}
 					},
-					onDragStop: function(node) {
-
-					},
-					autoExpandMS: 1000,
-					preventVoidMoves: true,
-					onDragEnter: function(node, sourceNode) {
+					dragStop: function(sourceNode, data) {
 						return true;
 					},
-					onDragOver: function(node, sourceNode, hitMode) {
-						if ((!node.parent.data.treeNodeID) && (node.data.treeNodeID !== '1')) { // Home page has no parents, but we still want to be able to hit it.
+
+					dragEnter: function(targetNode, data) {
+						var sourceNode = data.otherNode, hitMode = data.hitMode;
+
+						if ((!targetNode.parent.data.treeNodeID) && (targetNode.data.treeNodeID !== '1')) { // Home page has no parents, but we still want to be able to hit it.
 							return false;
 						}
 
-						if((hitMode != 'over') && (node.data.treeNodeID == 1)) {  // Home gets no siblings
+						if((hitMode != 'over') && (targetNode.data.treeNodeID == 1)) {  // Home gets no siblings
 							return false;
 						}
 
-						if (sourceNode.data.treeNodeID == node.data.treeNodeID) {
+						if (sourceNode.data.treeNodeID == targetNode.data.treeNodeID) {
 							return false; // can't drag node onto itself.
 						}
 
-						if (!node.data.treeNodeID && hitMode == 'after') {
+						if (!targetNode.data.treeNodeID && hitMode == 'after') {
 							return false;
 						}
 
 						// Prevent dropping a parent below it's own child
-						if(node.isDescendantOf(sourceNode)){
+						if(targetNode.isDescendantOf(sourceNode)){
 							return false;
 						}
 						return true;
 					},
-					onDrop: function(node, sourceNode, hitMode, ui, draggable) {
-						sourceNode.move(node, hitMode);
-						my.dragRequest(sourceNode, node, hitMode);
+					dragDrop: function(targetNode, data) {
+						data.otherNode.moveTo(targetNode, data.hitMode);
+						my.dragRequest(data.otherNode, targetNode, data.hitMode);
 					}
 				}
 			});
 		},
 
-		reloadNode: function(node, onComplete) {
+		getLoadNodePromise: function(node) {
 			var my = this,
 				options = my.options,
-				data = my.options.ajaxData != false ? my.options.ajaxData : {};
+				ajaxData = my.options.ajaxData != false ? my.options.ajaxData : {};
 
-			data.treeNodeParentID = node.data.key;
+			ajaxData.treeNodeParentID = node.data.treeNodeID;
 
-				var params = {
-					url: CCM_DISPATCHER_FILENAME + '/ccm/system/tree/node/load',
-					data: data,
-					success: function() {
-						if (onComplete) {
-							onComplete();
-						}
-					}
-				};
+			return $.when($.getJSON(CCM_DISPATCHER_FILENAME + '/ccm/system/tree/node/load',
+				ajaxData
+			));
+		},
 
-			node.appendAjax(params);
+		reloadNode: function(node, onComplete) {
+			this.getLoadNodePromise(node).done(function(data) {
+				node.removeChildren();
+				node.addChildren(data);
+				node.setExpanded(true, {noAnimation: true});
+				if (onComplete) {
+					onComplete();
+				}
+			});
 		},
 
 		cloneNode: function(treeNodeID) {
@@ -291,10 +297,10 @@
 						ConcreteAlert.dialog(ccmi18n.error, r.errors.join("<br>"));
 					} else {
 						jQuery.fn.dialog.closeTop();
-						var node = $tree.dynatree('getTree').getNodeByKey(r.treeNodeParentID);
-						node.setLazyNodeStatus(DTNodeStatus_Loading);
+						var node = $tree.fancytree('getTree').getNodeByKey(r.treeNodeParentID);
+						jQuery.fn.dialog.showLoader();
 						my.reloadNode(node, function() {
-							node.setLazyNodeStatus(DTNodeStatus_Ok);
+							jQuery.fn.dialog.hideLoader();
 						});
 					}
 				},
@@ -364,23 +370,23 @@
 				nodes = r.node;
 			if (nodes.length) {
 				for (var i = 0; i < nodes.length; i++) {
-					var node = $tree.dynatree('getTree').getNodeByKey(nodes[i].treeNodeParentID);
-					node.addChild(nodes[i]);
+					var node = $tree.fancytree('getTree').getNodeByKey(nodes[i].treeNodeParentID);
+					node.addChildren(nodes);
 				}
 			} else {
-				var node = $tree.dynatree('getTree').getNodeByKey(nodes.treeNodeParentID);
-				node.addChild(nodes);
+				var node = $tree.fancytree('getTree').getNodeByKey(nodes.treeNodeParentID);
+				node.addChildren(nodes);
 			}
 		});
 		ConcreteEvent.subscribe('ConcreteTreeUpdateTreeNode.concreteTree', function(e, r) {
 			var $tree = $('[data-tree=' + my.options.treeID + ']'),
-				node = $tree.dynatree('getTree').getNodeByKey(r.node.key);
-			node.data = r.node;
+				node = $tree.fancytree('getTree').getNodeByKey(r.node.key);
+			node.fromDict(r.node);
 			node.render();
 		});
 		ConcreteEvent.subscribe('ConcreteTreeDeleteTreeNode.concreteTree', function(e, r) {
 			var $tree = $('[data-tree=' + my.options.treeID + ']'),
-				node = $tree.dynatree('getTree').getNodeByKey(r.node.treeNodeID);
+				node = $tree.fancytree('getTree').getNodeByKey(r.node.treeNodeID);
 			node.remove();
 		});
 	};

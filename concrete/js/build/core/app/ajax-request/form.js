@@ -66,10 +66,12 @@
                     if (my.$form.attr('data-dialog-form')) {
                         jQuery.fn.dialog.closeTop();
                     }
-                    ConcreteAlert.notify({
-                        'message': r.message,
-                        'title': r.title
-                    });
+                    if (r.message) {
+                        ConcreteAlert.notify({
+                            'message': r.message,
+                            'title': r.title
+                        });
+                    }
                 }
             }
         }
