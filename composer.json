@@ -3,12 +3,6 @@
   "description": "concrete5 open source CMS",
   "minimum-stability": "beta",
   "prefer-stable": true,
-  "repositories": [
-    {
-      "type": "vcs",
-      "url": "https://github.com/mlocati/zendframework2-i18n-v3"
-    }
-  ],
   "config": {
     "optimize-autoloader": true,
     "vendor-dir": "./concrete/vendor",
@@ -48,11 +42,11 @@
     "anahkiasen/html-object": "1.*",
     "primal/color": "1.0.*@dev",
     "zendframework/zend-queue": "dev-master",
-    "zendframework/zend-mail": "2.2.*",
-    "zendframework/zend-cache": "2.2.*",
-    "zendframework/zend-http": "2.2.*",
-    "zendframework/zend-feed": "2.2.*",
-    "zendframework/zend-i18n": "2.2.*",
+    "zendframework/zend-mail": "2.7.*",
+    "zendframework/zend-cache": "2.7.*",
+    "zendframework/zend-http": "2.5.*",
+    "zendframework/zend-feed": "2.7.*",
+    "zendframework/zend-i18n": "2.7.*",
     "nesbot/carbon": "1.*",
     "egulias/email-validator": "1.*",
     "punic/punic": "1.*",
