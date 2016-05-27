@@ -61,9 +61,9 @@
                             },
                             <?php if (is_object($folder)) { ?>
                                 selectNodesByKey: [<?=$folder->getTreeNodeID()?>],
-                                onSelect : function(select, node) {
-                                    if (select) {
-                                        $('input[name=entity_results_node_id]').val(node.data.key);
+                                onSelect : function(nodes) {
+                                    if (nodes.length) {
+                                        $('input[name=entity_results_node_id]').val(nodes[0]);
                                     } else {
                                         $('input[name=entity_results_node_id]').val('');
                                     }

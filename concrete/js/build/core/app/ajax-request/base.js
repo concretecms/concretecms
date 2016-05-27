@@ -61,7 +61,9 @@
 
 		success: function(r, my, callback) {
 			if (my.options.dataType != 'json' || my.validateResponse(r)) {
-				callback(r);
+				if (callback) {
+					callback(r);
+				}
 			}
 		},
 
