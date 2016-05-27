@@ -46,6 +46,9 @@ class StandardSearchIndexer implements SearchIndexerInterface
     {
         $schema = new Schema();
         if ($this->isValid($category)) {
+            /**
+             * @var $category StandardSearchIndexerInterface
+             */
             if (!$this->connection->tableExists($category->getIndexedSearchTable())) {
                 $table = $schema->createTable($category->getIndexedSearchTable());
                 $details = $category->getSearchIndexFieldDefinition();

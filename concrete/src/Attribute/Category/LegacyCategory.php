@@ -39,20 +39,15 @@ class LegacyCategory implements CategoryInterface, StandardSearchIndexerInterfac
 
     public function getSearchIndexer()
     {
-        /*
         $indexer = $this->application->make('Concrete\Core\Attribute\Category\SearchIndexer\StandardSearchIndexer');
-
         return $indexer;
-        */
-        return false;
     }
 
     public function getIndexedSearchTable()
     {
         $class = $this->getLegacyKeyClass();
-        if (method_exists($class, 'getIndexedSearchTable')) {
-            return $class::getIndexedSearchTable();
-        }
+        $o = new $class();
+        return $o->getIndexedSearchTable();
     }
 
     public function getIndexedSearchPrimaryKeyValue($mixed)
@@ -63,7 +58,8 @@ class LegacyCategory implements CategoryInterface, StandardSearchIndexerInterfac
     public function getSearchIndexFieldDefinition()
     {
         $class = $this->getLegacyKeyClass();
-        return $class::getSearchIndexFieldDefinition();
+        $o = new $class();
+        return $o->getSearchIndexFieldDefinition();
     }
 
     public function getList()
