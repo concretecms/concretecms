@@ -6,6 +6,7 @@ $cp = false;
 $isEditMode = false;
 $isArrangeMode = false;
 $scc = false;
+$defaultPageTitle = isset($pageTitle) && $pageTitle ? $pageTitle : null;
 
 if (is_object($c)) {
     $cp = new Permissions($c);
@@ -13,6 +14,7 @@ if (is_object($c)) {
     $isEditMode = $c->isEditMode();
     $isArrangeMode = $c->isArrangeMode();
     $styleObject = false;
+
     /*
      * Handle page title
      */
@@ -23,7 +25,7 @@ if (is_object($c)) {
     // 3. It comes from getCollectionName()
     // In the case of 3, we also pass it through page title format.
 
-    if (!isset($pageTitle) || !$pageTitle) {
+    if (!$defaultPageTitle) {
         // we aren't getting it dynamically.
         $pageTitle = $c->getCollectionAttributeValue('meta_title');
         if (!$pageTitle) {
@@ -62,18 +64,14 @@ if (is_object($c)) {
     if (!isset($pageTitle)) {
         $pageTitle = null;
     }
-} ?>
-
-<title><?php echo htmlspecialchars($pageTitle, ENT_COMPAT, APP_CHARSET); ?></title>
-
-<?php
+}
 $metaTags = array();
 $metaTags['charset'] = sprintf('<meta http-equiv="content-type" content="text/html; charset=%s"/>', APP_CHARSET);
 if (trim($pageDescription) != '') {
     $metaTags['description'] = sprintf('<meta name="description" content="%s"/>', htmlspecialchars($pageDescription, ENT_COMPAT, APP_CHARSET));
 }
 $pageMetaKeywords = !isset($pageMetaKeywords) || !$pageMetaKeywords ? $c->getCollectionAttributeValue('meta_keywords') : $pageMetaKeywords;
-if(trim($pageMetaKeywords) != ''){
+if (trim($pageMetaKeywords) != ''){
     $metaTags['keywords'] = sprintf('<meta name="keywords" content="%s"/>', htmlspecialchars($pageMetaKeywords, ENT_COMPAT, APP_CHARSET));
 }
 if ($c->getCollectionAttributeValue('exclude_search_index')) {
@@ -87,18 +85,21 @@ if (($modernIconFID = intval(Config::get('concrete.misc.modern_tile_thumbnail_fi
         $metaTags['msapplication-TileColor'] = sprintf('<meta name="msapplication-TileColor" content="%s"/>', $modernIconBGColor);
     }
 }
-echo implode(PHP_EOL, $metaTags);
-
 $linkTags = array();
 if (($favIconFID = intval(Config::get('concrete.misc.favicon_fid'))) && ($favIconFile = File::getByID($favIconFID)) && is_object($favIconFile)) {
     $favIconFileURL = $favIconFile->getURL();
-    $linkTags[] = sprintf('<link rel="shortcut icon" href="%s" type="image/x-icon"/>', $favIconFileURL);
-    $linkTags[] = sprintf('<link rel="icon" href="%s" type="image/x-icon"/>', $favIconFileURL);
+    $linkTags['shortcut icon'] = sprintf('<link rel="shortcut icon" href="%s" type="image/x-icon"/>', $favIconFileURL);
+    $linkTags['icon'] = sprintf('<link rel="icon" href="%s" type="image/x-icon"/>', $favIconFileURL);
 }
 if (($appleIconFID = intval(Config::get('concrete.misc.iphone_home_screen_thumbnail_fid'))) && ($appleIconFile = File::getByID($appleIconFID)) && is_object($appleIconFile)) {
-    $linkTags[] = sprintf('<link rel="apple-touch-icon" href="%s"/>', $appleIconFile->getURL());
-}
-if(!empty($linkTags)){
+    $linkTags['apple-touch-icon'] = sprintf('<link rel="apple-touch-icon" href="%s"/>', $appleIconFile->getURL());
+} ?>
+
+<title><?php echo htmlspecialchars($pageTitle, ENT_COMPAT, APP_CHARSET); ?></title>
+
+<?php
+echo implode(PHP_EOL, $metaTags);
+if (!empty($linkTags)) {
     echo implode(PHP_EOL, $linkTags);
 } ?>
 
