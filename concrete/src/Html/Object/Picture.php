@@ -75,10 +75,11 @@ class Picture extends Element
         return $this;
     }
 
-    public function fallback($src)
+    public function fallback($srcset)
     {
         $img = Image::create();
-        $img->src($src);
+        $img->srcset($srcset);
+        $img->removeAttribute('src');
         $this->setChild($img);
     }
 
