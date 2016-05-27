@@ -77,7 +77,7 @@ if (count($attribs) > 0) {
 		<?php 
         }
 
-        $unsetattribs = $category->getSetManager()->getUnassignedAttributeKeys();
+        $unsetattribs = $category->getController()->getSetManager()->getUnassignedAttributeKeys();
         if (count($unsetattribs) > 0) {
             ?>
 		

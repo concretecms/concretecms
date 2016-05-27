@@ -148,7 +148,11 @@ class LegacyCategory implements CategoryInterface, StandardSearchIndexerInterfac
             $type = \Concrete\Core\Attribute\Type::getByHandle($type);
         }
 
-        $key_type = $type->getController()->getAttributeKeyType();
+        $controller = $type->getController();
+        $key_type = $controller->saveKey($args);
+        if (!is_object($key_type)) {
+            $key_type = $controller->getAttributeKeyType();
+        }
         // $key is actually an array.
         $handle = $args['akHandle'];
         $name = $args['akName'];

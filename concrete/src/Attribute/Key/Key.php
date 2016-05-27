@@ -1,17 +1,69 @@
 <?php
 namespace Concrete\Core\Attribute\Key;
 
+use Concrete\Core\Attribute\AttributeKeyInterface;
 use Concrete\Core\Attribute\Category\LegacyCategory;
+use Concrete\Core\Entity\Attribute\Key\LegacyKey;
 use Concrete\Core\Support\Facade\Facade;
 
-class Key extends Facade
+class Key extends Facade implements AttributeKeyInterface
 {
     public static function getFacadeAccessor()
     {
         return 'Concrete\Core\Attribute\Key\Factory';
     }
 
+    /**
+     * @var LegacyKey
+     */
     protected $legacyAttributeKey;
+
+    /**
+     * @deprecated
+     */
+    public function getController()
+    {
+        return $this->legacyAttributeKey->getController();
+    }
+
+    /**
+     * @deprecated
+     */
+    public function getAttributeKeyID()
+    {
+        return $this->legacyAttributeKey->getAttributeKeyID();
+    }
+
+    /**
+     * @deprecated
+     */
+    public function getAttributeKeyHandle()
+    {
+        return $this->legacyAttributeKey->getAttributeKeyHandle();
+    }
+
+    /**
+     * @deprecated
+     */
+    public function getAttributeType()
+    {
+        return $this->legacyAttributeKey->getAttributeType();
+    }
+
+    /**
+     * @deprecated
+     */
+    public function isAttributeKeySearchable()
+    {
+        return $this->legacyAttributeKey->isAttributeKeySearchable();
+    }
+    /**
+     * @deprecated
+     */
+    public function getSearchIndexer()
+    {
+        return $this->legacyAttributeKey->getSearchIndexer();
+    }
 
     /**
      * This is how old attribute keys used to install themselves. They extended
