@@ -39,7 +39,7 @@ class ResponseAssetGroup
      */
     public function addHeaderAsset($item)
     {
-        $this->outputAssets[Asset::ASSET_POSITION_HEADER][] = $item;
+        $this->addOutputAssetAt($item, Asset::ASSET_POSITION_HEADER);
     }
 
     /**
@@ -47,12 +47,21 @@ class ResponseAssetGroup
      */
     public function addFooterAsset($item)
     {
-        $this->outputAssets[Asset::ASSET_POSITION_FOOTER][] = $item;
+        $this->addOutputAssetAt($item, Asset::ASSET_POSITION_FOOTER);
     }
 
     public function addOutputAsset(Asset $asset)
     {
-        $this->outputAssets[$asset->getAssetPosition()][] = $asset;
+        $this->addOutputAssetAt($asset, $asset->getAssetPosition());
+    }
+
+    protected function addOutputAssetAt($item, $position)
+    {
+        if (!isset($this->outputAssets[$position])) {
+            $this->outputAssets[$position] = [$item];
+        } elseif (!in_array($item, $this->outputAssets[$position])) {
+            $this->outputAssets[$position][] = $item;
+        }
     }
 
     /**
