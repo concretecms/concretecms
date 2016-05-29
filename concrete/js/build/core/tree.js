@@ -169,7 +169,10 @@
 						var selectedNodes = $tree.fancytree('getTree');
 						selectedNodes = selectedNodes.getSelectedNodes();
 						if (selectedNodes.length) {
-							options.onSelect(selectedNodes);
+							var keys = $.map(selectedNodes, function(node) {
+								return node.key;
+							});
+							options.onSelect(keys);
 						}
 					}
 					if (selectedNodes) {

@@ -5,6 +5,7 @@ use Concrete\Core\Application\Application;
 use Concrete\Core\Attribute\AttributeValueInterface;
 use Concrete\Core\Attribute\Category\SearchIndexer\StandardSearchIndexerInterface;
 use Concrete\Core\Attribute\Key\RequestLoader\StandardRequestLoader;
+use Concrete\Core\Attribute\Set;
 use Concrete\Core\Entity\Attribute\Key\FileKey;
 use Concrete\Core\Entity\Attribute\Key\Key;
 use Concrete\Core\Entity\Attribute\Key\LegacyKey;
@@ -98,6 +99,7 @@ class LegacyCategory implements CategoryInterface, StandardSearchIndexerInterfac
         $key_type->setAttributeKey($key);
         $key->setAttributeKeyType($key_type);
 
+
         // Modify the category's search indexer.
         $indexer = $this->getSearchIndexer();
         if (is_object($indexer)) {
@@ -105,6 +107,13 @@ class LegacyCategory implements CategoryInterface, StandardSearchIndexerInterfac
         }
 
         $this->entityManager->persist($key);
+        $this->entityManager->flush();
+
+        $this->clearAttributeSet($key);
+        if ($request->request->has('asID') && $request->request->get('asID')) {
+            $key->setAttributeSet(Set::getByID($request->request->get('asID')));
+        }
+
         $this->entityManager->flush();
 
         return $key;
@@ -142,6 +151,13 @@ class LegacyCategory implements CategoryInterface, StandardSearchIndexerInterfac
         // TODO: Implement getAttributeValue() method.
     }
 
+    protected function clearAttributeSet(Key $key)
+    {
+        $query = $this->entityManager->createQuery('delete from \Concrete\Core\Entity\Attribute\SetKey sk where sk.attribute_key = :key');
+        $query->setParameter('key', $key);
+        $query->execute();
+    }
+
     public function addAttributeKey($type, $args, $pkg = false)
     {
         if (!is_object($type)) {
@@ -168,7 +184,7 @@ class LegacyCategory implements CategoryInterface, StandardSearchIndexerInterfac
             $key->setPackage($pkg);
         }
 
-        // Modify the category's search indexer.
+       // Modify the category's search indexer.
         $indexer = $this->getSearchIndexer();
         if (is_object($indexer)) {
             $indexer->updateRepository($this, $key);
@@ -176,6 +192,14 @@ class LegacyCategory implements CategoryInterface, StandardSearchIndexerInterfac
 
         $this->entityManager->persist($key);
         $this->entityManager->flush();
+
+        $this->clearAttributeSet($key);
+        if (isset($args['asID']) && $args['asID'] > 0) {
+            $key->setAttributeSet(Set::getByID($args['asID']));
+        }
+
+        $this->entityManager->flush();
+
         return $key;
     }
 

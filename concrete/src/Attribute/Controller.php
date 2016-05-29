@@ -277,6 +277,14 @@ class Controller extends AbstractController
         return new TextType();
     }
 
+    /*
+     * @deprecated
+     */
+    public function getAttributeValueID()
+    {
+        return $this->attributeValue->getAttributeValueID();
+    }
+
     public function getAttributeKeyType()
     {
         if ($this->attributeKey) {

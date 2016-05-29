@@ -65,8 +65,12 @@ class Controller extends AttributeTypeController
         );
         $akTopicParentNodeID = $data['akTopicParentNodeID'];
         $akTopicTreeID = $data['akTopicTreeID'];
-        $type->setParentNodeID($akTopicParentNodeID);
-        $type->setTopicTreeID($akTopicTreeID);
+        if ($akTopicParentNodeID) {
+            $type->setParentNodeID($akTopicParentNodeID);
+        }
+        if ($akTopicTreeID) {
+            $type->setTopicTreeID($akTopicTreeID);
+        }
 
         return $type;
     }
