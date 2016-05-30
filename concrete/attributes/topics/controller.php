@@ -120,7 +120,7 @@ class Controller extends AttributeTypeController
                 $selected[] = (string) $topicPath;
             }
 
-            return $this->saveValue($selected);
+            return $this->createAttributeValue($selected);
         }
     }
 
@@ -140,7 +140,7 @@ class Controller extends AttributeTypeController
         $this->entityManager->flush();
     }
 
-    public function saveValue($nodes)
+    public function createAttributeValue($nodes)
     {
         $selected = array();
         $this->load();
@@ -266,7 +266,7 @@ class Controller extends AttributeTypeController
         $this->set('attributeKey', $this->attributeKey);
     }
 
-    public function saveForm()
+    public function createAttributeValueFromRequest()
     {
         $sh = Core::make('helper/security');
         $av = new TopicsValue();

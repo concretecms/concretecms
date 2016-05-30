@@ -96,9 +96,9 @@ class Controller extends AttributeTypeController
         $v->render('form');
     }
 
-    public function saveForm($data)
+    public function createAttributeValueFromRequest()
     {
-        return $this->saveValue($data);
+        return $this->createAttributeValue($this->post());
     }
 
     public function validateForm($data)
@@ -216,7 +216,7 @@ class Controller extends AttributeTypeController
         $avn->addAttribute('postal-code', $address->getPostalCode());
     }
 
-    public function saveValue($data)
+    public function createAttributeValue($data)
     {
         if ($data instanceof AddressValue) {
             return $data;

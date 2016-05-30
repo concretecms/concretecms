@@ -25,22 +25,21 @@ class StandardSearchIndexer implements SearchIndexerInterface
         return true;
     }
 
-    public function indexEntry(CategoryInterface $category, $mixed)
+    public function indexEntry(CategoryInterface $category, Value $value, $subject)
+    {
+        if ($this->isValid($category)) {
+            $attributeIndexer = $value->getAttributeKey()->getSearchIndexer();
+            $attributeIndexer->indexEntry($category, $value, $subject);
+        }
+    }
+
+    public function clearIndexEntry(CategoryInterface $category, Value $value, $subject)
     {
         if ($this->isValid($category)) {
 
-            // Regenerate based on values.
-            $values = $category->getAttributeValues($mixed);
-
-            foreach ($values as $value) {
-                /**
-                 * @var $value Value
-                 */
-                $attributeIndexer = $value->getAttributeKey()->getSearchIndexer();
-                $attributeIndexer->indexEntry($category, $value, $mixed);
-            }
         }
     }
+
 
     public function createRepository(CategoryInterface $category)
     {

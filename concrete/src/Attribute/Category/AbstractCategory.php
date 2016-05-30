@@ -223,7 +223,9 @@ abstract class AbstractCategory implements CategoryInterface, StandardSearchInde
 
     public function deleteValue(AttributeValueInterface $attribute)
     {
+        // Handle legacy attributes with these three lines.
         $controller = $attribute->getAttributeKey()->getController();
+        $controller->setAttributeValue($attribute);
         $controller->deleteValue();
 
         /*

@@ -3,6 +3,7 @@ namespace Concrete\Core\Attribute;
 
 use Concrete\Core\Attribute\Key\Category;
 use Concrete\Core\Entity\Package;
+use Concrete\Core\Foundation\Environment;
 use Doctrine\ORM\EntityManager;
 use Concrete\Core\Entity\Attribute\Type as AttributeType;
 
@@ -12,9 +13,11 @@ use Concrete\Core\Entity\Attribute\Type as AttributeType;
 class TypeFactory
 {
     protected $entityManager;
+    protected $environment;
 
-    public function __construct(EntityManager $entityManager)
+    public function __construct(Environment $environment, EntityManager $entityManager)
     {
+        $this->environment = $environment;
         $this->entityManager = $entityManager;
     }
 
@@ -39,6 +42,14 @@ class TypeFactory
         return $r->findOneBy(array('atID' => $atID));
     }
 
+    protected function installLegacyDatabaseFile(AttributeType $type)
+    {
+        $r = $this->environment->getRecord(DIRNAME_ATTRIBUTES . DIRECTORY_SEPARATOR . $type->getAttributeTypeHandle() . DIRECTORY_SEPARATOR . FILENAME_ATTRIBUTE_DB, $type->getPackageHandle());
+        if ($r->exists()) {
+            \Concrete\Core\Package\Package::installDB($r->file);
+        }
+    }
+
     public function add($atHandle, $atName, $pkg = null)
     {
         $type = new AttributeType();
@@ -47,6 +58,9 @@ class TypeFactory
         if ($pkg) {
             $type->setPackage($pkg);
         }
+
+        $this->installLegacyDatabaseFile($type);
+
         $this->entityManager->persist($type);
         $this->entityManager->flush();
 
