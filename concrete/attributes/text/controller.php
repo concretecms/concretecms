@@ -98,7 +98,7 @@ class Controller extends DefaultController
         return $akey;
     }
 
-    public function saveValue($value)
+    public function createAttributeValue($value)
     {
         $av = new TextValue();
         $av->setValue($value);

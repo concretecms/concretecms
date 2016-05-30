@@ -45,7 +45,7 @@ class DefaultController extends AttributeTypeController
     }
 
     // run when we call setAttribute(), instead of saving through the UI
-    public function saveValue($value)
+    public function createAttributeValue($value)
     {
         $av = new TextValue();
         $av->setValue($value);
@@ -53,9 +53,10 @@ class DefaultController extends AttributeTypeController
         return $av;
     }
 
-    public function saveForm($data)
+    public function createAttributeValueFromRequest()
     {
-        return $this->saveValue(isset($data['value']) ? $data['value'] : null);
+        $data = $this->post();
+        return $this->createAttributeValue(isset($data['value']) ? $data['value'] : null);
     }
 
     public function validateValue()

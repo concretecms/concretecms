@@ -233,8 +233,9 @@ class Controller extends AttributeTypeController
         $this->set('selectedOptions', $selectedOptions);
     }
 
-    public function saveForm($data)
+    public function createAttributeValueFromRequest()
     {
+        $data = $this->post();
         $this->load();
 
         $akSelectAllowMultipleValues = $this->akSelectAllowMultipleValues;
@@ -245,9 +246,9 @@ class Controller extends AttributeTypeController
             // select list. Only one option possible. No new options.
             $option = $this->getOptionByID($data['atSelectOptionValue']);
             if (is_object($option)) {
-                return $this->saveValue($option);
+                return $this->createAttributeValue($option);
             } else {
-                return $this->saveValue(null);
+                return $this->createAttributeValue(null);
             }
         } else {
             if ($akSelectAllowMultipleValues && !$akSelectAllowOtherValues) {
@@ -261,7 +262,7 @@ class Controller extends AttributeTypeController
                         }
                     }
                 }
-                return $this->saveValue($options);
+                return $this->createAttributeValue($options);
             } else {
                 if (!$akSelectAllowMultipleValues && $akSelectAllowOtherValues) {
 
@@ -284,9 +285,9 @@ class Controller extends AttributeTypeController
                         }
                     }
                     if (is_object($option)) {
-                        return $this->saveValue($option);
+                        return $this->createAttributeValue($option);
                     } else {
-                        return $this->saveValue(null);
+                        return $this->createAttributeValue(null);
                     }
                 } else {
                     if ($akSelectAllowMultipleValues && $akSelectAllowOtherValues) {
@@ -316,9 +317,9 @@ class Controller extends AttributeTypeController
                         }
 
                         if (count($options)) {
-                            return $this->saveValue($options);
+                            return $this->createAttributeValue($options);
                         } else {
-                            return $this->saveValue(null);
+                            return $this->createAttributeValue(null);
                         }
                     }
                 }
@@ -334,7 +335,7 @@ class Controller extends AttributeTypeController
                 $vals[] = (string) $ch;
             }
 
-            return $this->saveValue($vals);
+            return $this->createAttributeValue($vals);
         }
     }
 
@@ -378,7 +379,7 @@ class Controller extends AttributeTypeController
      * checked under the attribute settings
      * Code from this bug - http://www.concrete5.org/index.php?cID=595692
      */
-    public function saveValue($value)
+    public function createAttributeValue($value)
     {
         $this->load();
 

@@ -41,6 +41,11 @@ abstract class Value implements AttributeValueInterface
         return $this->attribute_key;
     }
 
+    public function getAttributeValueID()
+    {
+        return $this->avrID;
+    }
+
     /**
      * @param mixed $attribute_key
      */

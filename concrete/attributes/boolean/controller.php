@@ -116,7 +116,7 @@ class Controller extends AttributeTypeController
     }
 
     // run when we call setAttribute(), instead of saving through the UI
-    public function saveValue($value)
+    public function createAttributeValue($value)
     {
         $v = new BooleanValue();
         $value = ($value == false || $value == '0') ? false : true;
@@ -150,9 +150,10 @@ class Controller extends AttributeTypeController
         return $type;
     }
 
-    public function saveForm($data)
+    public function createAttributeValueFromRequest()
     {
-        return $this->saveValue(isset($data['value']) ? $data['value'] : false);
+        $data = $this->post();
+        return $this->createAttributeValue(isset($data['value']) ? $data['value'] : false);
     }
 
     // if this gets run we assume we need it to be validated/checked

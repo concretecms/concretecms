@@ -753,7 +753,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
     {
         foreach ($attributes as $uak) {
             $controller = $uak->getController();
-            $value = $controller->getAttributeValueFromRequest();
+            $value = $controller->createAttributeValueFromRequest();
             $this->setAttribute($uak, $value);
         }
 

@@ -245,7 +245,7 @@ class Key implements AttributeKeyInterface, ExportableInterface
     public function saveAttributeForm($mixed)
     {
         $controller = $this->getController();
-        $value = $controller->getAttributeValueFromRequest();
+        $value = $controller->createAttributeValueFromRequest();
         $mixed->setAttribute($this, $value);
 
         return $value;

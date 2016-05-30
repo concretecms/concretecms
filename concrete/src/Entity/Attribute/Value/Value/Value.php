@@ -47,6 +47,12 @@ abstract class Value
         return $this;
     }
 
+    public function getAttributeValueID()
+    {
+        return $this->avID;
+    }
+
+
     public function __construct()
     {
         $this->attribute_values = new ArrayCollection();
@@ -73,7 +79,7 @@ abstract class Value
             return $controller->getDisplayValue();
         }
 
-        return $this;
+        return $this->getValue();
     }
 
     public function getSearchIndexValue()

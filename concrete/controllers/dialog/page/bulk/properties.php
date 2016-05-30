@@ -68,7 +68,7 @@ class Properties extends BackendInterfaceController
             if ($this->canEdit) {
                 foreach ($this->pages as $c) {
                     $controller = $ak->getController();
-                    $value = $controller->getAttributeValueFromRequest();
+                    $value = $controller->createAttributeValueFromRequest();
                     $c->setAttribute($ak, $value);
                     $c->reindex();
                 }

@@ -143,14 +143,14 @@ class Controller extends AttributeTypeController
             if ($fID) {
                 $f = File::getByID($fID);
                 if (is_object($f)) {
-                    return $this->saveValue($f);
+                    return $this->createAttributeValue($f);
                 }
             }
         }
     }
 
     // run when we call setAttribute(), instead of saving through the UI
-    public function saveValue($obj)
+    public function createAttributeValue($obj)
     {
         if ($obj && !is_object($obj)) {
             $obj = File::getByID($obj);
@@ -213,12 +213,13 @@ class Controller extends AttributeTypeController
         }
     }
 
-    public function saveForm($data)
+    public function createAttributeValueFromRequest()
     {
+        $data = $this->post();
         if ($this->getAttributeKeyType()->isModeFileManager()) {
             if ($data['value'] > 0) {
                 $f = File::getByID($data['value']);
-                return $this->saveValue($f);
+                return $this->createAttributeValue($f);
             }
         }
         if ($this->getAttributeKeyType()->isModeHtmlInput()) {
@@ -229,7 +230,7 @@ class Controller extends AttributeTypeController
                 $importer = new Importer();
                 $f = $importer->import($tmp_name, $name);
                 if (is_object($f)) {
-                    return $this->saveValue($f->getFile());
+                    return $this->createAttributeValue($f->getFile());
                 }
             }
         }

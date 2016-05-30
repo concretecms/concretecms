@@ -68,7 +68,7 @@ class Controller extends AttributeTypeController
     }
 
     // run when we call setAttribute(), instead of saving through the UI
-    public function saveValue($value)
+    public function createAttributeValue($value)
     {
         $av = new NumberValue();
         $value = ($value == false || $value == '0') ? 0 : $value;
@@ -77,10 +77,11 @@ class Controller extends AttributeTypeController
         return $av;
     }
 
-    public function saveForm($data)
+    public function createAttributeValueFromRequest()
     {
+        $data = $this->post();
         if (isset($data['value'])) {
-            return $this->saveValue($data['value']);
+            return $this->createAttributeValue($data['value']);
         }
     }
 

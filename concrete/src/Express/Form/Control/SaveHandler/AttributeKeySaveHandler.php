@@ -13,7 +13,7 @@ class AttributeKeySaveHandler implements SaveHandlerInterface
     {
         $controller = $control->getAttributeKey()->getController();
         $controller->setAttributeKey($control->getAttributeKey());
-        $value = $controller->getAttributeValueFromRequest();
+        $value = $controller->createAttributeValueFromRequest();
         $entry->setAttribute($control->getAttributeKey(), $value);
     }
 }

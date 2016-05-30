@@ -2,6 +2,7 @@
 namespace Concrete\Core\Attribute;
 
 use Concrete\Core\Attribute\Category\CategoryInterface;
+use Concrete\Core\Attribute\Value\EmptyRequestAttributeValue;
 use Concrete\Core\Entity\Attribute\Value\Value as AttributeValue;
 use Concrete\Core\Entity\Attribute\Value\Value\Value;
 
@@ -37,8 +38,12 @@ trait ObjectTrait
         if (is_object($value)) {
             $controller = $this->getObjectAttributeCategory();
             $controller->deleteValue($value);
+            $category = $this->getObjectAttributeCategory();
+            $indexer = $category->getSearchIndexer();
+            if ($indexer) {
+                $indexer->clearIndexEntry($category, $value, $this);
+            }
         }
-        $this->reindexAttributes();
     }
 
     /**
@@ -49,36 +54,47 @@ trait ObjectTrait
      */
     public function setAttribute($ak, $value)
     {
+
         $this->clearAttribute($ak);
 
         $attributeValue = $this->getAttributeValueObject($ak, true);
+        $orm = \Database::connection()->getEntityManager();
 
         $controller = $attributeValue->getAttributeKey()->getController();
+
         if (!($value instanceof Value)) {
-            $value = $controller->saveValue($value);
+            if ($value instanceof EmptyRequestAttributeValue) {
+                // If the passed $value object == EmptyRequestAttributeValue, we know we are dealing
+                // with a legacy attribute type that's not using Doctrine. We have not returned an 
+                // attribute value object. And that means that we need to create our OWN empty
+                // attribute value object, and persist it first, before passing it to saveValue.
+                $value = new AttributeValue\LegacyValue();
+                $orm->persist($attributeValue);
+                $orm->persist($value);
+                $orm->flush();
+
+                // Now that we have a legitimate attribute value value, we pass it to the the controller
+                // which will then use it to populate the at* tables that old-school attributes use.
+                $controller->setAttributeValue($value);
+                $controller->saveForm($controller->post());
+            } else {
+                $value = $controller->createAttributeValue($value);
+            }
         }
 
         $value->getAttributeValues()->add($attributeValue);
         $attributeValue->setValue($value);
 
-        $orm = \Database::connection()->getEntityManager();
         $orm->persist($attributeValue);
         $orm->flush();
 
-        $this->reindexAttributes();
+        $category = $this->getObjectAttributeCategory();
+        $indexer = $category->getSearchIndexer();
+        if ($indexer) {
+            $indexer->indexEntry($category, $attributeValue, $this);
+        }
 
         return $attributeValue;
     }
 
-    /**
-     * Reindex the attributes on this object.
-     */
-    public function reindexAttributes()
-    {
-        $category = $this->getObjectAttributeCategory();
-        $indexer = $category->getSearchIndexer();
-        if ($indexer) {
-            $indexer->indexEntry($category, $this);
-        }
-    }
 }

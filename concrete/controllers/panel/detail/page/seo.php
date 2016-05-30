@@ -57,7 +57,7 @@ class Seo extends BackendInterfacePageController
             $attributes = $as->getAttributeKeys();
             foreach ($attributes as $ak) {
                 $controller = $ak->getController();
-                $value = $controller->getAttributeValueFromRequest();
+                $value = $controller->createAttributeValueFromRequest();
                 $nvc->setAttribute($ak, $value);
             }
 

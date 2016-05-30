@@ -44,7 +44,7 @@ class Attributes extends DashboardPageController
             $ak = CollectionKey::getByID(Loader::helper('security')->sanitizeInt($_REQUEST['name']));
             if (is_object($ak)) {
                 $controller = $ak->getController();
-                $val = $controller->getAttributeValueFromRequest();
+                $val = $controller->createAttributeValueFromRequest();
                 $this->defaultPage->setAttribute($ak, $val);
             }
         } else {

@@ -155,7 +155,10 @@ class File implements \Concrete\Core\Permission\ObjectInterface
     {
         $category = \Core::make('Concrete\Core\Attribute\Category\FileCategory');
         $indexer = $category->getSearchIndexer();
-        $indexer->indexEntry($category, $this);
+        $values = $category->getAttributeValues($this);
+        foreach($values as $value) {
+            $indexer->indexEntry($category, $value, $this);
+        }
     }
 
     protected function save()

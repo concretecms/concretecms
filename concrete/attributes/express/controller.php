@@ -63,7 +63,7 @@ class Controller extends AttributeTypeController
         }
     }
 
-    public function saveValue($entry)
+    public function createAttributeValue($entry)
     {
         $selected = array();
         if (!is_array($entry)) {
@@ -76,11 +76,12 @@ class Controller extends AttributeTypeController
         return $av;
     }
 
-    public function saveForm($data)
+    public function createAttributeValueFromRequest()
     {
+        $data = $this->post();
         $entity = $this->entityManager->getRepository('Concrete\Core\Entity\Express\Entry')
             ->findOneById($data['value']);
-        return $this->saveValue($entity);
+        return $this->createAttributeValue($entity);
     }
 
     protected function getEntity()

@@ -25,8 +25,9 @@ class Controller extends AttributeTypeController
     }
 
 
-    public function saveForm($data)
+    public function createAttributeValueFromRequest()
     {
+        $data = $this->post();
         $values = array();
         if (!is_array($data['service'])) {
             $data['service'] = array();
@@ -37,10 +38,10 @@ class Controller extends AttributeTypeController
         for ($i = 0; $i < count($data['service']); ++$i) {
             $values[$data['service'][$i]] = $data['serviceInfo'][$i];
         }
-        return $this->saveValue($values);
+        return $this->createAttributeValue($values);
     }
 
-    public function saveValue($values)
+    public function createAttributeValue($values)
     {
         $av = new SocialLinksValue();
 

@@ -120,7 +120,7 @@ class Controller extends BlockController
             if (!$this->isValidStack($c)) {
                 $nvc = $c->getVersionToModify();
                 $controller = $ak->getController();
-                $value = $controller->getAttributeValueFromRequest();
+                $value = $controller->createAttributeValueFromRequest();
                 $nvc->setAttribute($ak, $value);
                 $nvc->refreshCache();
             }

@@ -130,7 +130,7 @@ class CollectionAttributeControl extends Control
         $ak = $this->getAttributeKeyObject();
         if (is_object($ak)) {
             $controller = $ak->getController();
-            $value = $controller->getAttributeValueFromRequest();
+            $value = $controller->createAttributeValueFromRequest();
             $c->setAttribute($ak, $value);
         }
     }
