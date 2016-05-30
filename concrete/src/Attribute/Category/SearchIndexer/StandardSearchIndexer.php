@@ -36,7 +36,8 @@ class StandardSearchIndexer implements SearchIndexerInterface
     public function clearIndexEntry(CategoryInterface $category, Value $value, $subject)
     {
         if ($this->isValid($category)) {
-
+            $attributeIndexer = $value->getAttributeKey()->getSearchIndexer();
+            $attributeIndexer->clearIndexEntry($category, $value, $subject);
         }
     }
 
