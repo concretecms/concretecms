@@ -106,13 +106,16 @@ abstract class AbstractCategory implements CategoryInterface, StandardSearchInde
         }
         if ($key_type instanceof \Concrete\Core\Entity\Attribute\Type) {
             $key_type = $key_type->getController()->getAttributeKeyType();
-            // $key is actually an array.
-            $handle = $key['akHandle'];
-            $name = $key['akName'];
-            $key = $this->createAttributeKey();
-            $key->setAttributeKeyHandle($handle);
-            $key->setAttributeKeyName($name);
+            if (is_array($key)) {
+                $handle = $key['akHandle'];
+                $name = $key['akName'];
+                $key = $this->createAttributeKey();
+                $key->setAttributeKeyHandle($handle);
+                $key->setAttributeKeyName($name);
+            }
         }
+        /* end legacy support */
+
         $key_type->setAttributeKey($key);
         $key->setAttributeKeyType($key_type);
 

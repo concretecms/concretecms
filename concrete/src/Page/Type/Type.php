@@ -1150,13 +1150,26 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
     public function renderComposerOutputForm($page = null, $targetPage = null)
     {
         $env = \Environment::get();
-        $rec = $env->getRecord(
+        $elementController = $env->getRecord(
+            DIRNAME_CONTROLLERS . '/element/page_type/composer/form/output/form/' . $this->getPageTypeHandle() . '.php',
+            $this->getPackageHandle()
+        );
+        $element = $env->getRecord(
             DIRNAME_ELEMENTS . '/' . DIRNAME_PAGE_TYPES . '/composer/form/output/form/' . $this->getPageTypeHandle() . '.php',
             $this->getPackageHandle()
         );
-        if ($rec->exists()) {
+        if ($elementController->exists()) {
+            $elementController = core_class('Controller\\Element\\PageType\\Composer\\Form\\Output\\Form\\'
+                . camelcase($this->getPageTypeHandle()), $this->getPackageHandle());
+            $elementController = \Core::make($elementController);
+            $elementController->set('pagetype', $this);
+            $elementController->set('page', $page);
+            $elementController->set('targetPage', $targetPage);
+            $elementController->setPackageHandle($this->getPackageHandle());
+            $elementController->render();
+        } else if ($element->exists()) {
             $pagetype = $this;
-            include $rec->file;
+            include $element->file;
         } else {
             Loader::element('page_types/composer/form/output/form', array(
                 'pagetype' => $this,

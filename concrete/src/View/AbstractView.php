@@ -131,7 +131,6 @@ abstract class AbstractView
         }
         $return['view'] = $this;
         $return['controller'] = $this->controller;
-
         return $return;
     }
 

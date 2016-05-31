@@ -54,26 +54,25 @@ trait ObjectTrait
      */
     public function setAttribute($ak, $value)
     {
+        $orm = \Database::connection()->getEntityManager();
 
         $this->clearAttribute($ak);
 
+        // Create the attribute value. Note, normally it would not be necessary to persist
+        // This right after creating, but legacy attributes need the attribute value object in their
+        // controller in order to save their data.
         $attributeValue = $this->getAttributeValueObject($ak, true);
-        $orm = \Database::connection()->getEntityManager();
-
         $controller = $attributeValue->getAttributeKey()->getController();
+        $orm->persist($attributeValue);
+        $orm->flush();
+        $controller->setAttributeValue($attributeValue);
 
         if (!($value instanceof Value)) {
             if ($value instanceof EmptyRequestAttributeValue) {
+                // LEGACY SUPPORT
                 // If the passed $value object == EmptyRequestAttributeValue, we know we are dealing
                 // with a legacy attribute type that's not using Doctrine. We have not returned an 
-                // attribute value object. And that means that we need to create our OWN empty
-                // attribute value object, and persist it first, before passing it to saveValue.
-                $orm->persist($attributeValue);
-                $orm->flush();
-
-                // Now that we have a legitimate attribute value value, we pass it to the the controller
-                // which will then use it to populate the at* tables that old-school attributes use.
-                $controller->setAttributeValue($attributeValue);
+                // attribute value value object.
                 $controller->saveForm($controller->post());
                 unset($value);
             } else {

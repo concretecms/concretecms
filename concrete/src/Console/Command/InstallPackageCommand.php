@@ -91,6 +91,9 @@ EOT
             if ($swapper->allowsFullContentSwap($pkg) && $input->getOption('full-content-swap')) {
                 $output->write('Performing full content swap... ');
                 $swapper->swapContent($pkg, array());
+                if (method_exists($pkg, 'on_after_swap_content')) {
+                    $pkg->on_after_swap_content(array());
+                }
                 $output->writeln('<info>done.</info>');
             }
         } catch (Exception $x) {

@@ -94,9 +94,16 @@ class Controller extends AttributeTypeController
     public function createAttributeValueFromRequest()
     {
         $data = $this->post();
-        $entity = $this->entityManager->getRepository('Concrete\Core\Entity\Express\Entry')
-            ->findOneById($data['value']);
-        return $this->createAttributeValue($entity);
+        if (isset($data['value'])) {
+            $entity = $this->entityManager->getRepository('Concrete\Core\Entity\Express\Entry')
+                ->findOneById($data['value']);
+        }
+
+        if (isset($entity) && $entity) {
+            return $this->createAttributeValue($entity);
+        } else {
+            return $this->createAttributeValue([]);
+        }
     }
 
     protected function getEntity()
