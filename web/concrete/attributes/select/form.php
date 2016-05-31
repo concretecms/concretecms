@@ -49,7 +49,7 @@ if ($akSelectAllowOtherValues) {
 		foreach($selectedOptions as $optionID) {
 			$values[] = 'SelectAttributeOption:' . $optionID;
 		}
-		$value = implode('|', $values);
+		$value = implode(\Config::get('app.attributes.select.multiple.separator'), $values);
 	}
 
 
@@ -83,8 +83,8 @@ if ($akSelectAllowOtherValues) {
 					}
 				},
 				<? if ($akSelectAllowMultipleValues) { ?>
-					tokenSeparators: ['|'],
-					separator: "|",
+					tokenSeparators: ['<?php echo \Config::get('app.attributes.select.multiple.separator'); ?>'],
+					separator: "<?php echo \Config::get('app.attributes.select.multiple.separator'); ?>",
 					multiple: true,
 				<? } else { ?>
 					maximumSelectionSize: 1,

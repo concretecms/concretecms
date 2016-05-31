@@ -312,7 +312,7 @@ class Controller extends AttributeTypeController
                         // list of SelectAttributeOption:ID items and new items.
                         $options = array();
                         if ($data['atSelectOptionValue']) {
-                            foreach (explode('|', $data['atSelectOptionValue']) as $value) {
+                            foreach (explode(\Config::get('app.attributes.select.multiple.separator'), $data['atSelectOptionValue']) as $value) {
                                 if (preg_match('/SelectAttributeOption\:(.+)/i', $value, $matches)) {
                                     $option = Option::getByID($matches[1]);
                                 } else {
@@ -525,7 +525,7 @@ class Controller extends AttributeTypeController
     {
         $r = \Request::getInstance();
         $value = $r->query->get('value');
-        $values = explode('|', $value);
+        $values = explode(\Config::get('app.attributes.select.multiple.separator'), $value);
         $response = array();
         foreach ($values as $value) {
             $value = trim($value);

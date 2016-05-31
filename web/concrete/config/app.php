@@ -4,6 +4,17 @@ use Concrete\Core\File\Type\Type as FileType;
 
 return array(
 
+    /**
+     * Attribute Settings
+     */
+    'attributes' => array(
+        'select' => array(
+            'multiple' => array(
+                'separator' => ','
+            )
+        )
+    ),
+
     'debug'               => false,
     'namespace'           => 'Application',
 
