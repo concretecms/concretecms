@@ -27,6 +27,8 @@ To specify the command return code, define an int variable named '\$rc'.
 Returns codes:
   0 operation completed successfully
   1 errors occurred
+
+More info at http://documentation.concrete5.org/developers/appendix/cli-commands#c5-exec
 EOT
             )
             ;
