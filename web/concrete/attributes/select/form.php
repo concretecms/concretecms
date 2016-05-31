@@ -83,8 +83,8 @@ if ($akSelectAllowOtherValues) {
 					}
 				},
 				<? if ($akSelectAllowMultipleValues) { ?>
-					tokenSeparators: ['<?php echo \Config::get('app.attributes.select.multiple.separator'); ?>'],
-					separator: "<?php echo \Config::get('app.attributes.select.multiple.separator'); ?>",
+					tokenSeparators: [<?php echo json_encode(\Config::get('app.attributes.select.multiple.separator')); ?>],
+					separator: <?php echo json_encode(\Config::get('app.attributes.select.multiple.separator')); ?>,
 					multiple: true,
 				<? } else { ?>
 					maximumSelectionSize: 1,
