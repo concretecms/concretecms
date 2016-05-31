@@ -616,6 +616,10 @@ return array(
             array('javascript-localized', '/ccm/assets/localization/select2/js'),
             array('css', 'css/select2.css', array('minify' => false)),
         ),
+        'selectize' => array(
+            array('javascript', 'js/selectize.js', array('minify' => false, 'combine' => false)),
+            array('css', 'css/selectize.css', array('minify' => false)),
+        ),
         'underscore' => array(
             array('javascript', 'js/underscore.js', array('minify' => false)),
         ),
@@ -860,6 +864,12 @@ return array(
                 array('javascript', 'select2'),
                 array('javascript-localized', 'select2'),
                 array('css', 'select2'),
+            ),
+        ),
+        'selectize' => array(
+            array(
+                array('javascript', 'selectize'),
+                array('css', 'selectize'),
             ),
         ),
         'dropzone' => array(
