@@ -112,74 +112,68 @@
       }
     }
 
+  }
 
+  select.form-control,
+  input.form-control,
+  textarea.form-control {
+    .transition(0.1s linear all);
+    padding: 2px;
+    color: #606060;
+    .box-shadow(none);
+    font-size: 18px;
+    .border-radius(4px);
+    -webkit-appearance: none;
+    appearance: none;
+    -moz-appearance: none;
     /*
-    &:last-child {
-      border-bottom: 0px;
+    border: 1px solid #f1f1f1;
+    */
+    /*
+    border: 1px solid transparent;
+    border-top: 1px solid transparent;
+    border-right: 1px solid transparent;
+    border-left: 1px solid transparent;
+    border-bottom: 1px dotted #c1c1c1;
+    */
+
+    border-color: transparent;
+    background-color: #f2f2f2;
+
+    &:focus {
+      outline: 0px;
+      background-color: darken(#f2f2f2, 5%) !important;
+      /*
+      background-color: transparent;
+      */
+      /*border-color: transparent*/
+
+      + .help-block {
+        display: block;
+      }
     }
-*/
 
-    select.form-control,
-    input.form-control,
-    textarea.form-control {
-      .transition(0.1s linear all);
-      padding: 2px;
-      color: #606060;
-      .box-shadow(none);
-      font-size: 18px;
-      .border-radius(4px);
-      -webkit-appearance: none;
-      appearance: none;
-      -moz-appearance: none;
-      /*
-      border: 1px solid #f1f1f1;
-      */
-      /*
-      border: 1px solid transparent;
-      border-top: 1px solid transparent;
-      border-right: 1px solid transparent;
-      border-left: 1px solid transparent;
-      border-bottom: 1px dotted #c1c1c1;
-      */
-
+    &:hover {
+      background-color: darken(#f2f2f2, 3%);
       border-color: transparent;
-      background-color: #f2f2f2;
-
-      &:focus {
-        outline: 0px;
-        background-color: darken(#f2f2f2, 5%) !important;
-        /*
-        background-color: transparent;
-        */
-        /*border-color: transparent*/
-
-        + .help-block {
-          display: block;
-        }
-      }
-
-      &:hover {
-        background-color: darken(#f2f2f2, 3%);
-        border-color: transparent;
-      }
-
-
     }
 
-    .input-group {
-      .input-group-addon {
-        border-color: transparent;
-        background-color: transparent;
-        padding-right: 10px;
-      }
-    }
-    select.form-control {
-
-      padding-right: 30px;
-      background: #f2f2f2 url(../images/icons/select_arrow_down.png) no-repeat right 10px top 12px;
-    }
 
   }
+
+  .input-group {
+    .input-group-addon {
+      border-color: transparent;
+      background-color: transparent;
+      padding-right: 10px;
+    }
+  }
+  select.form-control {
+
+    padding-right: 30px;
+    background: #f2f2f2 url(../images/icons/select_arrow_down.png) no-repeat right 10px top 12px;
+  }
+
 
   div.checkbox, div.radio {
     label {
@@ -269,7 +263,9 @@
 
   div.form-inline {
     div.form-group {
-      margin-left: 0px;
+      margin: 0px !important;
+      border-bottom-width: 0px !important;
+      padding: 0px !important;
     }
   }
 }
@@ -332,4 +328,10 @@ div.ccm-ui {
     }
   }
 
+}
+
+div.ccm-select2-flat {
+  border-color: #f4f4f4;
+  box-shadow: none;
+  margin-left: -8px;
 }
