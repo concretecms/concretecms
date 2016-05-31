@@ -76,6 +76,21 @@ class Controller extends AttributeTypeController
         return $av;
     }
 
+    public function getDisplayValue()
+    {
+        $html = '';
+        foreach($this->getValue()->getSelectedEntries() as $entry) {
+            $html .= '<div>';
+            $entity = $entry->getEntity();
+            $columns = $entity->getResultColumnSet();
+            foreach($columns->getColumns() as $column) {
+                $html .= '<span>' . $column->getColumnValue($entry) . '</span>';
+            }
+            $html .= '</div>';
+        }
+        return $html;
+    }
+
     public function createAttributeValueFromRequest()
     {
         $data = $this->post();

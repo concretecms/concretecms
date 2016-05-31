@@ -154,7 +154,7 @@ class StandardSearchIndexer implements SearchIndexerInterface
     {
         $columns = $this->connection->getSchemaManager()->listTableColumns($category->getIndexedSearchTable());
 
-        $attributeValue = $value->getValueObject()->getSearchIndexValue();
+        $attributeValue = $value->getSearchIndexValue();
         $details = $category->getSearchIndexFieldDefinition();
         $primary = $details['primary'][0];
         $primaryValue = $category->getIndexedSearchPrimaryKeyValue($subject);

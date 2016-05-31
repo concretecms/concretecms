@@ -58,44 +58,4 @@ abstract class Value
         $this->attribute_values = new ArrayCollection();
     }
 
-    public function getDisplaySanitizedValue()
-    {
-        $controller = $this->getAttributeKey()->getController();
-        if (method_exists($controller, 'getDisplaySanitizedValue')) {
-            $controller->setAttributeValue($this);
-
-            return $controller->getDisplaySanitizedValue();
-        }
-
-        return $this->getDisplayValue();
-    }
-
-    public function getDisplayValue()
-    {
-        $controller = $this->getAttributeKey()->getController();
-        if (method_exists($controller, 'getDisplayValue')) {
-            $controller->setAttributeValue($this);
-
-            return $controller->getDisplayValue();
-        }
-
-        return $this->getValue();
-    }
-
-    public function getSearchIndexValue()
-    {
-        $controller = $this->getAttributeKey()->getController();
-        if (method_exists($controller, 'getSearchIndexValue')) {
-            $controller->setAttributeValue($this);
-
-            return $controller->getSearchIndexValue();
-        }
-
-        return $this;
-    }
-
-    public function __toString()
-    {
-        return (string) $this->getDisplayValue();
-    }
 }

@@ -60,14 +60,17 @@ class Controller extends AttributeTypeController
          * @var SelectType
          */
         $type = $ak->getAttributeKeyType();
+        if (is_object($type)) {
 
-        $this->akSelectAllowMultipleValues = $type->getAllowMultipleValues();
-        $this->akSelectAllowOtherValues = $type->getAllowOtherValues();
-        $this->akSelectOptionDisplayOrder = $type->getDisplayOrder();
+            $this->akSelectAllowMultipleValues = $type->getAllowMultipleValues();
+            $this->akSelectAllowOtherValues = $type->getAllowOtherValues();
+            $this->akSelectOptionDisplayOrder = $type->getDisplayOrder();
 
-        $this->set('akSelectAllowMultipleValues', $this->akSelectAllowMultipleValues);
-        $this->set('akSelectAllowOtherValues', $this->akSelectAllowOtherValues);
-        $this->set('akSelectOptionDisplayOrder', $this->akSelectOptionDisplayOrder);
+            $this->set('akSelectAllowMultipleValues', $this->akSelectAllowMultipleValues);
+            $this->set('akSelectAllowOtherValues', $this->akSelectAllowOtherValues);
+            $this->set('akSelectOptionDisplayOrder', $this->akSelectOptionDisplayOrder);
+
+        }
     }
 
     public function exportKey($akey)
@@ -618,6 +621,10 @@ class Controller extends AttributeTypeController
     public function getOptions($keywords = null)
     {
         if (!isset($this->attributeKey)) {
+            return array();
+        }
+
+        if (!is_object($this->attributeKey->getAttributeKeyType())) {
             return array();
         }
 

@@ -86,7 +86,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
     </fieldset>
 
     <?= $form->hidden('atID', $type->getAttributeTypeID()) ?>
-    <?php if ($category && $category instanceof \Concrete\Core\Attribute\Category\CategoryInterface) {
+    <?php if ($category && $category instanceof \Concrete\Core\Attribute\Category\StandardCategoryInterface) {
     ?>
         <?= $form->hidden('akCategoryID', $category->getCategoryEntity()->getAttributeKeyCategoryID());
     ?>

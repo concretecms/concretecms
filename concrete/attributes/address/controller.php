@@ -125,7 +125,7 @@ class Controller extends AttributeTypeController
 
     public function getSearchIndexValue()
     {
-        $v = $this->attributeValue;
+        $v = $this->getAttributeValue()->getValue();
         $args = array();
         $args['address1'] = $v->getAddress1();
         $args['address2'] = $v->getAddress2();

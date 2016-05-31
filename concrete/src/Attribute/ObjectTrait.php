@@ -68,22 +68,23 @@ trait ObjectTrait
                 // with a legacy attribute type that's not using Doctrine. We have not returned an 
                 // attribute value object. And that means that we need to create our OWN empty
                 // attribute value object, and persist it first, before passing it to saveValue.
-                $value = new AttributeValue\LegacyValue();
                 $orm->persist($attributeValue);
-                $orm->persist($value);
                 $orm->flush();
 
                 // Now that we have a legitimate attribute value value, we pass it to the the controller
                 // which will then use it to populate the at* tables that old-school attributes use.
-                $controller->setAttributeValue($value);
+                $controller->setAttributeValue($attributeValue);
                 $controller->saveForm($controller->post());
+                unset($value);
             } else {
                 $value = $controller->createAttributeValue($value);
             }
         }
 
-        $value->getAttributeValues()->add($attributeValue);
-        $attributeValue->setValue($value);
+        if ($value) {
+            $value->getAttributeValues()->add($attributeValue);
+            $attributeValue->setValue($value);
+        }
 
         $orm->persist($attributeValue);
         $orm->flush();

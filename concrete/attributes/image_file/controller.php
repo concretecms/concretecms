@@ -96,7 +96,13 @@ class Controller extends AttributeTypeController
 
     public function getSearchIndexValue()
     {
-        return $this->attributeValue->getFileID();
+        $value = $this->getAttributeValue();
+        if (is_object($value)) {
+            $value = $value->getValue();
+            if (is_object($value)) {
+                return $value->getFileID();
+            }
+        }
     }
 
     public function search()

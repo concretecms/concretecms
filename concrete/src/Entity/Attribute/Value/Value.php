@@ -62,7 +62,7 @@ abstract class Value implements AttributeValueInterface
     public function getController()
     {
         $controller = $this->getAttributeKey()->getController();
-        $controller->setAttributeValue($this->value);
+        $controller->setAttributeValue($this);
 
         return $controller;
     }
@@ -78,9 +78,9 @@ abstract class Value implements AttributeValueInterface
     public function getValue($mode = false)
     {
         $value = $this->value;
+        $controller = $this->getController();
         if (is_object($value)) {
             if ($mode != false) {
-                $controller = $this->getController();
                 $modes = func_get_args();
                 foreach ($modes as $mode) {
                     $method = 'get' . camelcase($mode) . 'Value';
@@ -88,10 +88,42 @@ abstract class Value implements AttributeValueInterface
                         return $controller->{$method}();
                     }
                 }
+            } else {
+                return $value->getValue();
             }
         }
 
-        return $value->getValue();
+        return $controller->getValue();
+    }
+
+    public function getDisplaySanitizedValue()
+    {
+        $controller = $this->getController();
+        if (method_exists($controller, 'getDisplaySanitizedValue')) {
+            return $controller->getDisplaySanitizedValue();
+        }
+
+        return $this->getDisplayValue();
+    }
+
+    public function getDisplayValue()
+    {
+        $controller = $this->getController();
+        if (method_exists($controller, 'getDisplayValue')) {
+            return $controller->getDisplayValue();
+        }
+
+        return $this->getValue();
+    }
+
+    public function getSearchIndexValue()
+    {
+        $controller = $this->getController();
+        if (method_exists($controller, 'getSearchIndexValue')) {
+            return $controller->getSearchIndexValue();
+        }
+
+        return $this;
     }
 
     /**
@@ -104,6 +136,6 @@ abstract class Value implements AttributeValueInterface
 
     public function __toString()
     {
-        return (string) $this->getValueObject()->getDisplayValue();
+        return (string) $this->getDisplayValue();
     }
 }

@@ -302,7 +302,9 @@ class Controller extends AbstractController
      */
     public function getAttributeValueID()
     {
-        return $this->attributeValue->getAttributeValueID();
+        if (is_object($this->attributeValue)) {
+            return $this->attributeValue->getAttributeValueID();
+        }
     }
 
     public function getAttributeKeyType()

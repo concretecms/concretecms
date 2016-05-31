@@ -72,7 +72,7 @@ class Controller extends AttributeTypeController
     {
         $this->load();
         $dt = Loader::helper('form/date_time');
-        $caValue = $this->getValue();
+        $caValue = $this->getDisplayValue();
         $html = Loader::helper('html');
         switch ($this->akDateDisplayMode) {
             case 'text':
