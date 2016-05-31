@@ -307,7 +307,7 @@ class Controller extends AbstractController
 
     public function getAttributeKeyType()
     {
-        if ($this->attributeKey) {
+        if ($this->attributeKey && is_object($this->attributeKey->getAttributeKeyType())) {
             return $this->attributeKey->getAttributeKeyType();
         } else {
             $key_type = $this->createAttributeKeyType();

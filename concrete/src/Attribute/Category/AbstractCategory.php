@@ -139,6 +139,10 @@ abstract class AbstractCategory implements CategoryInterface, StandardSearchInde
 
         $controller = $type->getController();
 
+        $this->entityManager->persist($key);
+        $this->entityManager->flush();
+
+        $controller->setAttributeKey($key);
         $key_type = $controller->saveKey($request->request->all());
         if (!is_object($key_type)) {
             $key_type = $controller->getAttributeKeyType();
