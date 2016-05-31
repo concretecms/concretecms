@@ -4,7 +4,7 @@ use Concrete\Core\Permission\Duration;
 defined('C5_EXECUTE') or die("Access Denied.");
 
 $r = \Concrete\Core\Http\ResponseAssetGroup::get();
-$r->requireAsset('select2');
+$r->requireAsset('selectize');
 
 if (Config::get('concrete.misc.user_timezones')) {
     $user = new User();
@@ -153,7 +153,7 @@ $values = array(
     '11:30pm',
 );
 
-
+/*
 $times = array();
 for ($i = 0; $i < count($values); $i++) {
     $value = $values[$i];
@@ -163,7 +163,7 @@ for ($i = 0; $i < count($values); $i++) {
     $times[] = $o;
 
 }
-
+*/
 
 ?>
 
@@ -176,14 +176,23 @@ for ($i = 0; $i < count($values); $i++) {
             <?= $dt->date('pdStartDate', $pdStartDate); ?>
         </div>
         <div class="form-group" id="pdStartDate_tw">
-            <input type="hidden" data-select="time" name="pdStartDateSelectTime" style="width: 100%" value="<?=$selectedStartTime?>"/>
+            <select style="width: 140px" class="form-control" name="pdStartDateSelectTime" data-select="time">
+                <?php foreach($values as $value) { ?>
+                    <option value="<?=$value?>"><?=$value?></option>
+                <?php } ?>
+            </select>
+            </div>
         </div>
         <div class="form-inline-separator"><i class="fa fa-long-arrow-right"></i></div>
         <div class="form-group">
             <?= $dt->date('pdEndDate', $pdEndDate); ?>
         </div>
         <div class="form-group" id="pdEndDate_tw">
-            <input type="hidden" data-select="time" name="pdEndDateSelectTime" style="width: 100%" value="<?=$selectedEndTime?>"/>
+            <select class="form-control" name="pdEndDateSelectTime" data-select="time">
+                <?php foreach($values as $value) { ?>
+                    <option value="<?=$value?>"><?=$value?></option>
+                <?php } ?>
+            </select>
         </div>
     </div>
 
@@ -203,13 +212,16 @@ for ($i = 0; $i < count($values); $i++) {
             display: inline-block;
         }
 
-        div.ccm-select2-flat {
-            min-width: 100px;
-        }
     </style>
 
     <script type="text/javascript">
         $(function () {
+            $('select[data-select=time]').selectize({
+                create: true,
+                copyClassesToDropdown: false
+            });
+
+            /*
 
             $('input[data-select=time]').select2({
 
@@ -233,6 +245,8 @@ for ($i = 0; $i < count($values); $i++) {
                     ccm_durationCalculateEndDate();
                 }
             });
+            */
+
         });
     </script>
 
@@ -428,7 +442,7 @@ for ($i = 0; $i < count($values); $i++) {
     ccm_getSelectedStartDate = function() {
         var sdf = ($("#pdStartDate_pub").datepicker('option', 'altFormat'));
         var sdfr = $.datepicker.parseDate(sdf, $("#pdStartDate").val());
-        var startTime = $('input[name=pdStartDateSelectTime]').val();
+        var startTime = $('select[name=pdStartDateSelectTime]').val();
         var sh = startTime.split(/:/gi)[0];
         var sm = startTime.split(/:/gi)[1].replace(/\D/g, '');
         if (startTime.match(/pm/i) && sh < 12) {
@@ -440,7 +454,7 @@ for ($i = 0; $i < count($values); $i++) {
     ccm_getSelectedEndDate = function() {
         var edf = ($("#pdEndDate_pub").datepicker('option', 'altFormat'));
         var edfr = $.datepicker.parseDate(edf, $("#pdEndDate").val());
-        var endTime = $('input[name=pdEndDateSelectTime]').val();
+        var endTime = $('select[name=pdEndDateSelectTime]').val();
         if (endTime) {
             var eh = endTime.split(/:/gi)[0];
             var em = endTime.split(/:/gi)[1].replace(/\D/g, '');
@@ -453,6 +467,7 @@ for ($i = 0; $i < count($values); $i++) {
 
     ccm_accessEntityCalculateRepeatOptions = function () {
 
+        return;
         var startDate = ccm_getSelectedStartDate();
         var endDate = ccm_getSelectedEndDate();
 
@@ -556,8 +571,8 @@ for ($i = 0; $i < count($values); $i++) {
         }
         var endTime = hours + ':' + minutes + pm;
         $('#pdEndDate_pub').datepicker('setDate', endDateFormatted);
-        $('input[name=pdEndDateSelectTime]').select2('val', endTime);
-        $('input[name=pdEndDateSelectTime]').val(endTime);
+        //$('input[name=pdEndDateSelectTime]').select2('val', endTime);
+        $('select[name=pdEndDateSelectTime]').val(endTime);
     }
 
     $(function () {
