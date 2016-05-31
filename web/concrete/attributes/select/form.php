@@ -49,7 +49,7 @@ if ($akSelectAllowOtherValues) {
 		foreach($selectedOptions as $optionID) {
 			$values[] = 'SelectAttributeOption:' . $optionID;
 		}
-		$value = implode(',', $values);
+		$value = implode('|', $values);
 	}
 
 
@@ -83,7 +83,8 @@ if ($akSelectAllowOtherValues) {
 					}
 				},
 				<? if ($akSelectAllowMultipleValues) { ?>
-					tokenSeparators: [','],
+					tokenSeparators: ['|'],
+					separator: "|",
 					multiple: true,
 				<? } else { ?>
 					maximumSelectionSize: 1,
