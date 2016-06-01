@@ -1,3 +1,101 @@
+# 5.7.5.7
+
+## New Features
+
+* Nice column view for thumbnail image browsing (Thanks MrKarlDilkington)
+* Added Max Width as an option to the Image Slider block (thanks cryophallion)
+* Added configuration option concrete.misc.require\_version\_comments (defaulted off) to enable the requiring of version comments (thanks mlocati)
+
+## Behavioral Improvements
+
+* Improved performance and API for parallax scrolling
+* Better support for rich text editor and file manager permissions when the user using the rich text editor and the file manager isn’t an administrator.
+* Custom styles that are set on composer control output blocks will now be inherited when those blocks are published to a page. (thanks olsgreen)
+* Added support for site names in a multilingual site (thanks mlocati)
+* Site localization strings are now loaded after core and package localization strings (thanks mlocati)
+* Added ability to set override meta keywords from a particular page (thanks katz)
+* Facebook authentication uses curl verify peer setting (thanks jaromirdalecky)
+* Allow filter select attribute using NOT LIKE through comparison (thanks Ruudt)
+* Code cleanup (thanks mlocati, a3020)
+* Image slider CSS fixes (thanks robkovacs)
+* Use correct target in page list links (thanks ojalehto)
+* Add “Required” label to required composer form controls (thanks MrKarlDilkington)
+* Prevent empty span from displaying if no title is entered in Page Attribute Display block (thanks Mr
+* If an AJAX error occurs during page composer editing, auto-save is now disabled (thanks hissy)
+* Cosmetic improvements to marketplace item listings
+* Composer custom templates now can be included in packages.
+* Preserve original URL when login is needed (thanks mlocati)
+* Developers can now add pages under the dashboard that aren’t single pages (thanks herent)
+* “Disable Scroll Wheel” option on Google Maps block works on mobile now (thanks hissy)
+* Translation tool improvements
+* Added DOM Extension to official installation requirements (thanks ChrisHougard)
+* Swiss Provinces included in Location List (thanks appliculture/mlocati)
+* Location Lists are now translatable (thanks mlocati)
+* AutoNav performance improvements (thanks littleibex)
+* https://www.concrete5.org/community/forums/5-7-discussion/feature-request-add-filename-colum-option-to-file-manager/ 
+
+## Bug Fixes
+
+* Fixed bug where full page caching would rebuild a page every time it was viewed, instead of viewing from cache.
+* Fixed issue where Upgrade Doesn't Complete Fully When Upgrading from a Previous Upgrade (thanks mlocati)
+* Fixed hanging that could occur on login when attaching specific users to advanced permissions
+* Fixed bug where the table “BasicWorkflowProgressData” could not be inserted into when publishing page edits
+* Fixed HTML block clears saved entities on edit (thank acliss19xx)
+* Bug fix: multiple workflow on same page causes errors (thanks hissy)
+* Avoid InvalidArgumentException with Page Attribute Display block when showing images with both width and height set to zero (thanks hissy)
+* Fixed bug with displaying rating attribute values as stars.
+* Fixes Zend Queue bug (Empty Trash, etc…) in PHP 7.
+* Fixed  https://www.concrete5.org/developers/bugs/5-7-5-6/bootstrap-styles-not-properly-scoped-within-.ccm-ui/#812586 (thanks allybee)
+* Fix custom styling with additional file storage location types (thanks hissy)
+* Fixed http://www.concrete5.org/developers/bugs/5-7-5-6/userlist-filter-by-group/
+* Updated JShrink to fix an issue where minified/compiled JavaScripts used by the asset system would break if comments were included after JS code (thanks 1stthomas)
+* Fixed bug where blocks in global areas couldn’t be reordered on the front-end (thanks ojalehto)
+* Fixed https://www.concrete5.org/developers/bugs/5-7-5-6/magnific-popup-ipad-bug-fixed-in-latest-version/ (thanks MrKarlDilkington)
+* Fixed https://www.concrete5.org/community/forums/usage/squashed-images-mobile-view/ (thanks MrKarlDilkington)
+* Fixed: Stack content isn't indexed in the search index (thanks ottovirtanen)
+* Fix file url in form results when using a non-public file storage location (thanks ottovirtanen)
+* Fixed http://www.concrete5.org/developers/bugs/5-7-5-6/choose-user-not-working/ (thanks mlocati)
+* Fixed image slider in theme listings in the marketplace Dashboard
+* Fixed https://github.com/concrete5/concrete5/pull/3702 (thanks mlocati)
+* Avoid sitemap.xml error on Search Console (thanks hissy)
+* Fixed html entities not being preserved in content block (thanks acliss19xx)
+* Fix some untranslated messages (thanks hissy)
+* Fixed issue where Topic List block returns User Groups
+* Fixed inability to create a page named “0” (thanks hissy)
+* Fix translated placeholders on storage location paths (thanks ojalehto)
+* Fixed issue with thumbnails in the file manager looking too large.
+* fixed misnamed gc\_maxlifetime session cookie option making it impossible to configure this value in custom configurations (thanks simoneast)
+Bugfix: RSS feeds get cached indefinitely (thanks simoneast)
+* Fixed extra UL tags and invalid placement in topic list block.
+* Fixed: page\_list block produces invalid HTML5 for RSS link (thanks derykmarl)
+* Fixing the wrong link in dashboard/blocks/types to marketetplace listing page (thanks katzueno)
+* Fixed https://www.concrete5.org/developers/bugs/5-7-5-6/javascriptlocalizedasset-loads-asset-with-base_url-resulting-in-/ (thanks mlocati)
+* Fixed https://www.concrete5.org/developers/bugs/5-7-5-6/setup-of-security.trustedproxies.ips-done-too-late-in-concretebo/ (thanks hissy)
+* Fixed https://www.concrete5.org/developers/bugs/5-7-5-6/error-on-conversation-with-deleted-users/ (thanks mlocati)
+* https://github.com/concrete5/concrete5/pull/3701 (thanks katzueno)
+* Fixed: feature block wasn't pulling paragraph correctly in editmode (Thanks jaredfolkins)
+* Fixed Error when accessing "Manage Presets" php7 (thanks mlocati)
+* Fixed Display error messages on Concrete password change (thanks Ruud-Zuiderlicht)
+* Fixed https://www.concrete5.org/developers/bugs/5-7-5-6/applying-border-radius-requires-non-zero-border-width/#814380 (thanks mlocati)
+* Fix: unable to redirect to home on submit form block (thanks hissy)
+* Fixed padding and display of toolbar (it was off by a pixel) (thanks zanedev)
+* Fixed https://github.com/concrete5/concrete5/pull/3673 (thanks jaromirdalecky)
+* Bug fixes to Download Report when users have been deleted (Thanks hissy)
+
+## Developer Updates
+
+* Updated Magnific Popup to 1.1.0
+* Improvements to the command line tools (thanks mlocati)
+* Added c5:exec CLI command (thanks mlocati)
+* update Picturefill to current version 3.0.2 (stable) (thanks MrKarlDilkington)
+* add config value to set file manager results per page (thanks MrKarlDilkington)
+* Added File Zip Service (thanks mlocati)
+* Allow the passing of Page Template handles for Page Type adding/updating (thanks cryophallion)
+
+## Backward Compatibility Notes
+
+* Updating Magnific Popup 1.1.0 drops support for Magnific Popup in IE7.
+
 # 5.7.5.6
 
 ## Behavioral Improvements

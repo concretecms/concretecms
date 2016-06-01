@@ -1,5 +1,6 @@
 module.exports = function(grunt) {
     var fs = require('fs');
+    var path = require('path');
     var extend = require('util')._extend;
 
     var parameters = null;
@@ -17,7 +18,7 @@ module.exports = function(grunt) {
     var config = {};
 
     config.DIR_REL = ('DIR_REL' in parameters) ? parameters.DIR_REL : '';
-    config.DIR_BASE = ('DIR_BASE' in parameters) ? parameters.DIR_BASE : '../web';
+    config.DIR_BASE = ('DIR_BASE' in parameters) ? parameters.DIR_BASE : path.join(__dirname, '..');
 
     // Options for the tool that will merge the files
     var concatOptions = {
@@ -86,8 +87,8 @@ module.exports = function(grunt) {
                 '<%= DIR_BASE %>/concrete/js/build/vendor/jquery-form/jquery-form.js',
                 '<%= DIR_BASE %>/concrete/js/build/vendor/jquery-mousewheel/jquery.mousewheel.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/app/concrete5.js',
-                '<%= DIR_BASE %>/concrete/js/build/core/app/concrete5-const.js',
                 '<%= DIR_BASE %>/concrete/js/build/vendor/jquery-liveupdate/jquery-liveupdate.js',
+                '<%= DIR_BASE %>/concrete/js/build/vendor/autosize/autosize.js',
                 '<%= DIR_BASE %>/concrete/js/build/vendor/jquery-pep/jquery-pep.js',
                 //needs some handholding
                 // '<%= DIR_BASE %>/concrete/js/build/vendor/retinajs/retinajs.js',
@@ -105,6 +106,7 @@ module.exports = function(grunt) {
                 '<%= DIR_BASE %>/concrete/js/build/core/app/in-context-menu.js',
                 '<%= DIR_BASE %>/concrete/js/build/vendor/jquery-liveupdate/quicksilver.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/app/remote-marketplace.js',
+                '<%= DIR_BASE %>/concrete/js/build/core/app/search/table.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/app/search/base.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/app/progressive-operations.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/app/custom-style.js',
@@ -133,7 +135,8 @@ module.exports = function(grunt) {
                 '<%= DIR_BASE %>/concrete/js/build/core/app/edit-mode/blocktype.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/app/edit-mode/stack.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/app/edit-mode/duplicateblock.js',
-                '<%= DIR_BASE %>/concrete/js/build/core/app/edit-mode/stackblock.js'
+                '<%= DIR_BASE %>/concrete/js/build/core/app/edit-mode/stackblock.js',
+                '<%= DIR_BASE %>/concrete/js/build/core/stacks/menu.js'
             ]
         },
         filemanager: {
@@ -141,9 +144,19 @@ module.exports = function(grunt) {
             src: [
                 '<%= DIR_BASE %>/concrete/js/build/core/file-manager/search.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/file-manager/selector.js',
-                '<%= DIR_BASE %>/concrete/js/build/core/file-manager/menu.js'
+                '<%= DIR_BASE %>/concrete/js/build/core/file-manager/menu.js',
+                '<%= DIR_BASE %>/concrete/js/build/core/file-manager/header.js'
             ]
         },
+
+        express: {
+            dest: '<%= DIR_BASE %>/concrete/js/express.js',
+            src: [
+                '<%= DIR_BASE %>/concrete/js/build/core/express/search.js',
+                '<%= DIR_BASE %>/concrete/js/build/core/express/selector.js'
+            ]
+        },
+
 
         select2: {
             dest: '<%= DIR_BASE %>/concrete/js/select2.js',
@@ -259,7 +272,6 @@ module.exports = function(grunt) {
             src: '<%= DIR_BASE %>/concrete/js/build/vendor/kinetic/kinetic.js'
         },
 
-
         jquery_backstretch: {
             dest: '<%= DIR_BASE %>/concrete/js/backstretch.js',
             src: '<%= DIR_BASE %>/concrete/js/build/vendor/backstretch/backstretch.js'
@@ -281,14 +293,9 @@ module.exports = function(grunt) {
             ]
         },
 
-        ccm_topics: {
-            dest: '<%= DIR_BASE %>/concrete/js/topics.js',
-            src: '<%= DIR_BASE %>/concrete/js/build/core/topics.js'
-        },
-
-        ccm_groups: {
-            dest: '<%= DIR_BASE %>/concrete/js/groups.js',
-            src: '<%= DIR_BASE %>/concrete/js/build/core/groups.js'
+        ccm_tree: {
+            dest: '<%= DIR_BASE %>/concrete/js/tree.js',
+            src: '<%= DIR_BASE %>/concrete/js/build/core/tree.js'
         },
 
         ccm_layouts: {
@@ -333,9 +340,9 @@ module.exports = function(grunt) {
             dest: '<%= DIR_BASE %>/concrete/js/jquery-awesome-rating.js',
             src: '<%= DIR_BASE %>/concrete/js/build/vendor/jquery-awesome-rating/jquery-awesome-rating.js'
         },
-        dynatree: {
-            dest: '<%= DIR_BASE %>/concrete/js/dynatree.js',
-            src: '<%= DIR_BASE %>/concrete/js/build/vendor/dynatree/dynatree.js'
+        fancytree: {
+            dest: '<%= DIR_BASE %>/concrete/js/fancytree.js',
+            src: '<%= DIR_BASE %>/concrete/js/build/vendor/jquery-fancytree/jquery.fancytree-all.js'
         },
         account: {
             dest: '<%= DIR_BASE %>/concrete/js/account.js',
@@ -368,6 +375,7 @@ module.exports = function(grunt) {
 
     // List of the CSS files to be generated
     var css = {
+        '<%= DIR_BASE %>/concrete/css/build/vendor/bootstrap/bootstrap.css': '<%= DIR_BASE %>/concrete/css/build/vendor/bootstrap/bootstrap.less',
         '<%= DIR_BASE %>/concrete/css/app.css': '<%= DIR_BASE %>/concrete/css/build/core/app/app.less',
         '<%= DIR_BASE %>/concrete/css/editable-fields.css': '<%= DIR_BASE %>/concrete/css/build/core/editable-fields.less',
         '<%= DIR_BASE %>/concrete/css/select2.css': '<%= DIR_BASE %>/concrete/css/build/core/select2.less',
@@ -383,14 +391,13 @@ module.exports = function(grunt) {
         '<%= DIR_BASE %>/concrete/css/spectrum.css': '<%= DIR_BASE %>/concrete/css/build/vendor/spectrum/spectrum.less',
         '<%= DIR_BASE %>/concrete/css/image-editor.css': '<%= DIR_BASE %>/concrete/css/build/core/image-editor/image-editor.less',
         '<%= DIR_BASE %>/concrete/css/account.css': '<%= DIR_BASE %>/concrete/css/build/core/account.less',
-        '<%= DIR_BASE %>/concrete/css/dynatree.css': '<%= DIR_BASE %>/concrete/css/build/vendor/dynatree/dynatree.less',
+        '<%= DIR_BASE %>/concrete/css/fancytree.css': '<%= DIR_BASE %>/concrete/css/build/vendor/jquery-fancytree/fancytree-bootstrap.less',
         '<%= DIR_BASE %>/concrete/css/sitemap.css': '<%= DIR_BASE %>/concrete/css/build/core/sitemap.less',
         '<%= DIR_BASE %>/concrete/css/file-manager.css': '<%= DIR_BASE %>/concrete/css/build/core/file-manager.less',
         '<%= DIR_BASE %>/concrete/css/conversations.css': '<%= DIR_BASE %>/concrete/css/build/core/conversations.less',
         '<%= DIR_BASE %>/concrete/css/gathering/display.css': '<%= DIR_BASE %>/concrete/css/build/core/gathering/display.less',
         '<%= DIR_BASE %>/concrete/css/gathering/base.css': '<%= DIR_BASE %>/concrete/css/build/core/gathering/base.less',
         '<%= DIR_BASE %>/concrete/css/redactor.css': '<%= DIR_BASE %>/concrete/css/build/vendor/redactor/redactor.less',
-        '<%= DIR_BASE %>/concrete/css/topics.css': '<%= DIR_BASE %>/concrete/css/build/core/topics.less',
         '<%= DIR_BASE %>/concrete/themes/elemental/css/bootstrap-modified.css': '<%= DIR_BASE %>/concrete/themes/elemental/css/build/bootstrap-3.2.0/bootstrap.less',
         '<%= DIR_BASE %>/concrete/css/frontend/pagination.css': '<%= DIR_BASE %>/concrete/css/build/core/frontend/pagination.less',
         '<%= DIR_BASE %>/concrete/css/translator.css': '<%= DIR_BASE %>/concrete/css/build/core/translator.less'
@@ -494,17 +501,36 @@ module.exports = function(grunt) {
         require('./tasks/generate-constants.js')(grunt, config, parameters, this.async());
     });
 
+    grunt.registerTask('gitskip-on:js', 'Force GIT to consider built JS assets as unchanged', function() {
+        require('./tasks/git-skipper.js')(grunt, config, parameters, 'js', true, this.async());
+    });
+    grunt.registerTask('gitskip-off:js', 'Allow GIT to consider built JS assets', function() {
+        require('./tasks/git-skipper.js')(grunt, config, parameters, 'js', false, this.async());
+    });
+    grunt.registerTask('gitskip-on:css', 'Force GIT to consider built CSS assets as unchanged', function() {
+        require('./tasks/git-skipper.js')(grunt, config, parameters, 'css', true, this.async());
+    });
+    grunt.registerTask('gitskip-off:css', 'Allow GIT to consider built CSS assets', function() {
+        require('./tasks/git-skipper.js')(grunt, config, parameters, 'css', false, this.async());
+    });
+    grunt.registerTask('gitskip-on', 'Force GIT to consider built CSS/JS assets as unchanged', function() {
+        require('./tasks/git-skipper.js')(grunt, config, parameters, 'all', true, this.async());
+    });
+    grunt.registerTask('gitskip-off', 'Allow GIT to consider built CSS/JS assets', function() {
+        require('./tasks/git-skipper.js')(grunt, config, parameters, 'all', false, this.async());
+    });
+
     grunt.registerTask('jsOnly:debug', jsTargets.debug);
     grunt.registerTask('jsOnly:release', jsTargets.release );
 
     //grunt.registerTask('js:debug', ['generate-constants', 'jsOnly:debug' ]);
     //grunt.registerTask('js:release', ['generate-constants', 'jsOnly:release' ]);
-    grunt.registerTask('js:debug', ['jsOnly:debug' ]);
-    grunt.registerTask('js:release', ['jsOnly:release' ]);
+    grunt.registerTask('js:debug', ['jsOnly:debug', 'gitskip-on:js']);
+    grunt.registerTask('js:release', ['jsOnly:release', 'gitskip-off:js']);
     grunt.registerTask('js', 'js:release');
 
-    grunt.registerTask('css:debug', 'less:debug');
-    grunt.registerTask('css:release', 'less:release');
+    grunt.registerTask('css:debug', ['less:debug', 'gitskip-on:css']);
+    grunt.registerTask('css:release', ['less:release', 'gitskip-off:css']);
     grunt.registerTask('css', 'css:release');
 
     grunt.registerTask('debug', ['js:debug', 'css:debug']);
@@ -527,9 +553,13 @@ module.exports = function(grunt) {
         require('./tasks/build-release/clean.js')(grunt, config, parameters, this.async());
     });
 
+    /*
+
     grunt.registerTask('build-release-remove-short-tags', 'Build process: remove short tags.', function() {
         require('./tasks/build-release/remove-short-tags.js')(grunt, config, parameters, this.async());
     });
+
+    */
 
     grunt.registerTask('build-release-translations', 'Build process: downloading Translations.', function() {
         require('./tasks/build-release/translations.js')(grunt, config, parameters, this.async());
@@ -549,7 +579,9 @@ module.exports = function(grunt) {
             'build-release-download',
             'build-release-build',
             'build-release-clean',
+            /*
             'build-release-remove-short-tags',
+            */
             'build-release-translations',
             'build-release-create-zip',
             'build-release-cleanup'

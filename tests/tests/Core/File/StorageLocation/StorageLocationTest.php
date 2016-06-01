@@ -1,10 +1,11 @@
 <?php
 namespace Concrete\Tests\Core\File\StorageLocation;
-use \Concrete\Core\File\StorageLocation\Type\Type;
-use \Concrete\Core\File\StorageLocation\StorageLocation;
 
-class StorageLocationTest extends \FileStorageTestCase {
+use Concrete\Core\File\StorageLocation\Type\Type;
+use Concrete\Core\File\StorageLocation\StorageLocation;
 
+class StorageLocationTest extends \FileStorageTestCase
+{
     public function testDefaultStorageLocation()
     {
         $type = Type::add('default', t('Default'));
@@ -21,7 +22,7 @@ class StorageLocationTest extends \FileStorageTestCase {
     {
         $location = $this->getStorageLocation();
         $this->assertEquals(true, $location->isDefault());
-        $this->assertInstanceOf('\Concrete\Core\File\StorageLocation\StorageLocation', $location);
+        $this->assertInstanceOf('\Concrete\Core\Entity\File\StorageLocation\StorageLocation', $location);
 
         $loc2 = StorageLocation::getByID(1);
         $this->assertEquals($loc2, $location);
@@ -49,12 +50,11 @@ class StorageLocationTest extends \FileStorageTestCase {
         $this->assertEquals(false, $configuration->hasRelativePath());
     }
 
-
     public function testGetFilesystemObject()
     {
         $location = $this->getStorageLocation();
         $filesystem = $location->getFileSystemObject();
-        $this->assertInstanceOf('\Concrete\Flysystem\Filesystem', $filesystem);
+        $this->assertInstanceOf('\League\Flysystem\Filesystem', $filesystem);
     }
 
     /**
@@ -72,7 +72,6 @@ class StorageLocationTest extends \FileStorageTestCase {
         $contents = $filesystem->get('foo.txt');
         $this->assertEquals('This is a text file.', $contents->read());
     }
-
 
     public function testBasicStreamFile()
     {
@@ -102,14 +101,13 @@ class StorageLocationTest extends \FileStorageTestCase {
         StorageLocation::add($configuration, 'Other Storage');
 
         $location = StorageLocation::getDefault();
-        $this->assertInstanceOf('\Concrete\Core\File\StorageLocation\StorageLocation', $location);
+        $this->assertInstanceOf('\Concrete\Core\Entity\File\StorageLocation\StorageLocation', $location);
         $this->assertEquals(true, $location->isDefault());
         $this->assertEquals('Default', $location->getName());
 
         $alternate = StorageLocation::getByID(2);
-        $this->assertInstanceOf('\Concrete\Core\File\StorageLocation\StorageLocation', $alternate);
+        $this->assertInstanceOf('\Concrete\Core\Entity\File\StorageLocation\StorageLocation', $alternate);
         $this->assertEquals(false, $alternate->isDefault());
         $this->assertEquals('Other Storage', $alternate->getName());
     }
-
 }

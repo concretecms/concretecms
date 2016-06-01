@@ -1,16 +1,16 @@
 <?php
 
-class PageTest extends PageTestCase {
-
+class PageTest extends PageTestCase
+{
     public function testBasicCreatePage()
     {
         $home = Page::getByID(HOME_CID);
         $pt = PageType::getByID(1);
         $template = PageTemplate::getByID(1);
         $page = $home->add($pt, array(
-            'uID'=>1,
-            'cName'=> 'Test page',
-            'pTemplateID' => $template->getPageTemplateID()
+            'uID' => 1,
+            'cName' => 'Test page',
+            'pTemplateID' => $template->getPageTemplateID(),
         ));
         $this->assertTrue($page instanceof Page);
         $this->assertEquals($page->getCollectionParentID(), 1);
@@ -23,16 +23,16 @@ class PageTest extends PageTestCase {
     {
         $badPage = Page::getByID(42069);
         try {
-            $page = $badPage->add($ct,array(
-                    'uID'=>1,
+            $page = $badPage->add($ct, array(
+                    'uID' => 1,
                     'cName' => 'Stupid Page',
-                    'cHandle'=> 'stupid-page'
+                    'cHandle' => 'stupid-page',
                 ));
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             $caught = true;
         }
 
-        if(!$caught) {
+        if (!$caught) {
             $this->fail('Added a page to a non-page');
         } else {
             $this->assertTrue(true, 'Successful exception on creating a page beneath a nonexistent parent page.');
@@ -65,7 +65,8 @@ class PageTest extends PageTestCase {
         $this->assertEquals('/dashboard/system/attributes/view.php', $attrPage->getCollectionFilename());
     }
 
-    public function testSinglePagesController() {
+    public function testSinglePagesController()
+    {
         $reportsPage = SinglePage::add('/dashboard/reports/surveys');
         $reportsPage = Page::getByPath('/dashboard/reports/surveys');
         $controller = $reportsPage->getController();
@@ -106,9 +107,9 @@ class PageTest extends PageTestCase {
         $pt = PageType::getByID(1);
         $template = PageTemplate::getByID(1);
         $newpage = $page1->add($pt, array(
-            'uID'=>1,
-            'cName'=> 'Test Sub-page',
-            'pTemplateID' => $template->getPageTemplateID()
+            'uID' => 1,
+            'cName' => 'Test Sub-page',
+            'pTemplateID' => $template->getPageTemplateID(),
         ));
 
         $page1->delete();
@@ -118,7 +119,6 @@ class PageTest extends PageTestCase {
         $np2 = Page::getByID(4);
         $this->assertEquals($np1->getCollectionID(), null);
         $this->assertEquals($np2->getCollectionID(), null);
-
     }
 
     /**
@@ -130,22 +130,23 @@ class PageTest extends PageTestCase {
         $parentID = $page->getCollectionParentID();
         $this->assertSame($page->getCollectionName(), $name);
         $th = Loader::helper('text');
-        if(!$special) {
+        if (!$special) {
             $this->assertSame($page->getCollectionPath(), '/'.$th->urlify($name));
             $this->assertSame($page->getCollectionHandle(), $th->urlify($name));
         } else {
-            $this->assertSame($page->getCollectionPath(), '/'.(string)$page->getCollectionID());
+            $this->assertSame($page->getCollectionPath(), '/'.(string) $page->getCollectionID());
             $this->assertSame($page->getCollectionHandle(), '');
         }
         $page->delete();
     }
 
-    public function pageNames() {
+    public function pageNames()
+    {
         return array(
-            array('normal page',false),
-            array("awesome page's #spring_break98 !!1! SO COOL",false),
-            array('niño borracho',false),
-            array('雷鶏',true)
+            array('normal page', false),
+            array("awesome page's #spring_break98 !!1! SO COOL", false),
+            array('niño borracho', false),
+            array('雷鶏', true),
         );
     }
 
@@ -155,11 +156,11 @@ class PageTest extends PageTestCase {
         $home = Page::getByID(HOME_CID);
 
         $newPage = $page->duplicate($home);
-        $realNewPage = Page::getByID($newPage->getCollectionID(),'ACTIVE');
+        $realNewPage = Page::getByID($newPage->getCollectionID(), 'ACTIVE');
 
-        $this->assertNotEquals($page->getCollectionID(),$realNewPage->getCollectionID());
-        $this->assertEquals($page->getCollectionPath().'-2',$realNewPage->getCollectionPath());
-        $this->assertEquals($page->getCollectionName().' 2',$realNewPage->getCollectionName());
+        $this->assertNotEquals($page->getCollectionID(), $realNewPage->getCollectionID());
+        $this->assertEquals($page->getCollectionPath().'-2', $realNewPage->getCollectionPath());
+        $this->assertEquals($page->getCollectionName().' 2', $realNewPage->getCollectionName());
 
         $page->delete();
         $realNewPage->delete();
@@ -180,7 +181,6 @@ class PageTest extends PageTestCase {
         $page2->duplicateAll($page4);
         $page3->duplicate($page1);
 
-
         // it's a little lame that we have to re-get the objects
         // in order for them to be in sync but fixing this is outside of what I want to do right now.
         $page1 = Page::getByPath('/page-1');
@@ -193,7 +193,7 @@ class PageTest extends PageTestCase {
         $page = Page::getByPath('/page-4/page-2/subpage/page-1');
         $this->assertFalse($page->isError());
         $pagePath = $page->getCollectionPathObject();
-        $this->assertInstanceOf('\Concrete\Core\Page\PagePath', $pagePath);
+        $this->assertInstanceOf('\Concrete\Core\Entity\Page\PagePath', $pagePath);
         $this->assertEquals('/page-4/page-2/subpage/page-1', $pagePath->getPagePath());
         $this->assertTrue($pagePath->isPagePathCanonical());
     }
@@ -314,7 +314,6 @@ class PageTest extends PageTestCase {
         $another = Page::getByID(6);
         $awesome = Page::getByID(7);
 
-
         $this->assertFalse($about->isActive());
         $this->assertFalse($contact->isActive());
         $this->assertFalse($another->isActive());
@@ -368,7 +367,6 @@ class PageTest extends PageTestCase {
         $this->assertTrue($searchAlias->isInTrash());
         $this->assertFalse($awesome->isInTrash());
         $this->assertFalse($search->isInTrash());
-
     }
 
     public function testCustomCanonicalURLs()
@@ -383,16 +381,16 @@ class PageTest extends PageTestCase {
         $this->assertEquals('Contact Us', $c->getCollectionName());
         $this->assertEquals('/about/contact-us', $c->getCollectionPath());
 
-        $p = new \Concrete\Core\Page\PagePath();
+        $p = new \Concrete\Core\Entity\Page\PagePath();
         $p->setPagePath('/contact');
         $p->setPageObject($contact);
         $p->setPagePathIsCanonical(true);
 
         $c->clearPagePaths();
 
-        $db = Loader::db();
-        $db->getEntityManager()->persist($p);
-        $db->getEntityManager()->flush();
+        $em = \ORM::entityManager('core');
+        $em->persist($p);
+        $em->flush();
 
         $c = Page::getByID(3);
         $this->assertEquals('/contact', $c->getCollectionPath());
@@ -401,8 +399,5 @@ class PageTest extends PageTestCase {
 
         $c = Page::getByID(3);
         $this->assertEquals('/contact', $c->getCollectionPath());
-
     }
-
-
 }

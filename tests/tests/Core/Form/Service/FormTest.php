@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Tests\Core\Form\Service;
 
 use Core;
@@ -463,7 +462,7 @@ class FormTest extends \PHPUnit_Framework_TestCase
             array(
                 'radio',
                 array('Key[subkey1][subkey2]', 'Value'),
-                '<input type="radio" id="Key[subkey1][subkey2]**UNIQUENUMBER**" name="Key[subkey1][subkey2]" value="Value" class="ccm-input-radio" />',
+                '<input type="radio" id="Key[subkey1][subkey2]**UNIQUENUMBER**" name="Key[subkey1][subkey2]" value="Value" class="ccm-input-radio" checked="checked" />',
                 array('Key' => array('subkey1' => array('subkey2' => 'Value'))),
             ),
             // inputType (text, number, email, telephone, url, search, password)

@@ -4,7 +4,6 @@ require_once __DIR__ . "/ResolverTestCase.php";
 
 class CallableUrlResolverTest extends ResolverTestCase
 {
-
     /**
      * @var \Concrete\Core\Url\Resolver\CallableUrlResolver
      */
@@ -12,13 +11,13 @@ class CallableUrlResolverTest extends ResolverTestCase
 
     protected function setUp()
     {
-        $this->urlResolver = new \Concrete\Core\Url\Resolver\CallableUrlResolver(function(){});
+        $this->urlResolver = new \Concrete\Core\Url\Resolver\CallableUrlResolver(function () {});
     }
 
     public function testCallable()
     {
         $obj = $this;
-        $this->urlResolver->setResolver(function() use ($obj) {
+        $this->urlResolver->setResolver(function () use ($obj) {
             return $obj;
         });
 
@@ -30,5 +29,4 @@ class CallableUrlResolverTest extends ResolverTestCase
         $this->setExpectedException('\\InvalidArgumentException', 'Resolver not callable');
         $this->urlResolver->setResolver('string');
     }
-
 }

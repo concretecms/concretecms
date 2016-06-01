@@ -33,11 +33,11 @@ class ContentImporterValueInspectorReplacePageTest extends PageTestCase
         self::createPage('Subpage B', $page2);
         self::createPage('Subpage C', $page2);
 
-        $feed = new \Concrete\Core\Page\Feed();
+        $feed = new \Concrete\Core\Entity\Page\Feed();
         $feed->setHandle('blog');
         $feed->setParentID(1);
-        \Database::connection()->getEntityManager()->persist($feed);
-        \Database::connection()->getEntityManager()->flush();
+        \ORM::entityManager('core')->persist($feed);
+        \ORM::entityManager('core')->flush();
 
     }
 
@@ -89,7 +89,7 @@ EOL;
         $result = $inspector->inspect('{ccm:export:pagefeed:blog}');
         $items = $result->getMatchedItems();
         $o = $items[0];
-        $this->assertInstanceOf('\Concrete\Core\Page\Feed', $o->getContentObject());
+        $this->assertInstanceOf('\Concrete\Core\Entity\Page\Feed', $o->getContentObject());
         $this->assertEquals(1, $o->getContentObject()->getID());
         $this->assertEquals('blog', $o->getContentObject()->getHandle());
         $this->assertEquals(1, $result->getReplacedValue());

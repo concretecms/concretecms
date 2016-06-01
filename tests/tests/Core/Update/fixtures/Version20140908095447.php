@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Updater\Migrations\Migrations;
 
 use Doctrine\DBAL\Migrations\AbstractMigration;
@@ -10,7 +9,6 @@ use Doctrine\DBAL\Schema\Schema;
  */
 class Version20140908095447 extends AbstractMigration
 {
-
     public function getDescription()
     {
         return 'Version571';
@@ -29,7 +27,5 @@ class Version20140908095447 extends AbstractMigration
     {
         // this down() migration is auto-generated, please modify it to your needs
         $schema->dropTable('Widgets');
-
     }
 }
-

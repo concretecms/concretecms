@@ -5,12 +5,9 @@ module.exports = function(grunt, config, parameters, done) {
 		done(false);
 	}
 	try {
-		var fs = require('fs'),
-			path = require('path')
-			download = require('download'),
-			c5fs = require('../../libraries/fs'),
-			shell = require('shelljs');
+		var c5fs = require('../../libraries/fs');
 		if(c5fs.isDirectory(workFolder)) {
+			var shell = require('shelljs');
 			process.stdout.write('Removing working folder... ');
 			shell.rm('-rf', workFolder);
 			if(c5fs.isDirectory(workFolder)) {
