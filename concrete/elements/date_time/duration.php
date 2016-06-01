@@ -181,7 +181,6 @@ for ($i = 0; $i < count($values); $i++) {
                     <option value="<?=$value?>"><?=$value?></option>
                 <?php } ?>
             </select>
-            </div>
         </div>
         <div class="form-inline-separator"><i class="fa fa-long-arrow-right"></i></div>
         <div class="form-group">
@@ -199,10 +198,7 @@ for ($i = 0; $i < count($values); $i++) {
 
     <style type="text/css">
         div.form-inline div.form-group input.ccm-input-date {
-            width: 95px;
-        }
-        div.form-inline #pdStartDate_tw, div.form-inline #pdEndDate_tw {
-            width: 100px;
+            width: 120px;
         }
         div.form-inline-separator {
             font-size: 18px;
