@@ -72,6 +72,8 @@ if ($akSelectAllowOtherValues) {
 					callback(data);
 				},
 				createSearchChoice: function(term, data) {
+					term = $.trim(term);
+
 					if ($(data).filter(function() {
 							return this.text.localeCompare(term) === 0;
 						}).length === 0) {
@@ -99,7 +101,7 @@ if ($akSelectAllowOtherValues) {
 					quietMillis: 250,
 					data: function (term, page) {
 						return {
-							q: term, // search term
+							q: $.trim(term), // search term
 						};
 					},
 					results: function (data, page) {
