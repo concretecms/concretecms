@@ -12,6 +12,10 @@
     text-transform: uppercase;
   }
 
+  div.form-group.form-group-last {
+    border-bottom-width: 0px;
+  }
+
   fieldset {
     margin-bottom: 0px;
     legend {
@@ -20,21 +24,24 @@
     }
   }
 
-  .selectize-control.single .selectize-input:after {
-    border-width: 0px;
-    content: @fa-var-chevron-down;
-    font-family: FontAwesome;
-    font-size: 12px;
-    position: absolute;
-    color: #aaa;
-    right: 15px;
-    top: 5px;
+  .selectize-control.single .selectize-input {
+    padding-right: 30px;
+    background: #f2f2f2 url(../images/icons/select_arrow_down.png) no-repeat right 10px top 12px;
 
+    &:after {
+      display: none;
+    }
+
+    &.focus {
+      background-color: darken(#f2f2f2, 5%) !important;
+    }
+
+    &.input-active {
+      background: darken(#f2f2f2, 5%) url(../images/icons/select_arrow_up.png) no-repeat right 10px top 12px;
+
+    }
   }
 
-  .form-control.selectize-control {
-    height: 34px; /* ugh */
-  }
 }
 
 
@@ -47,6 +54,7 @@
     padding-right: 26px;
     padding-bottom: 8px;
     padding-top: 10px;
+    margin-top: 8px;
     margin-bottom: 10px;
 
     div.selectize-input,
@@ -60,6 +68,11 @@
       &:hover {
         background-color: #ffffff !important;
       }
+    }
+
+    div.form-group {
+      border-bottom-width: 0px;
+      margin-bottom: 0px;
     }
 
   }
@@ -138,15 +151,17 @@
     input.form-control,
     textarea.form-control {
       .transition(0.1s linear all);
+      /*
       padding: 2px;
+      */
       color: #606060;
       .box-shadow(none);
       font-size: 18px;
-      .border-radius(4px);
+      .border-radius(2px);
       -webkit-appearance: none;
       appearance: none;
-      line-height: @line-height-base;
       -moz-appearance: none;
+      overflow: inherit; // needed for selectize ?
       /*
       border: 1px solid #f1f1f1;
       */
