@@ -216,14 +216,14 @@ class Controller extends AttributeTypeController
         $this->load();
         $options = $this->getSelectedOptions();
         $selectedOptions = array();
-        $selectedOptionValues = array();
+        $selectedOptionIDs = array();
         foreach ($options as $opt) {
-            $selectedOptions[] = $opt->getSelectAttributeOptionID();
-            $selectedOptionValues[$opt->getSelectAttributeOptionID()] = $opt->getSelectAttributeOptionValue();
+            $selectedOptions[] = ['id' => 'SelectAttributeOption:' . $opt->getSelectAttributeOptionID(), 'text' => $opt->getSelectAttributeOptionValue()];
+            $selectedOptionIDs[] = 'SelectAttributeOption:' . $opt->getSelectAttributeOptionID();
         }
-        $this->set('selectedOptionValues', $selectedOptionValues);
+        $this->set('selectedOptionIDs', $selectedOptionIDs);
         $this->set('selectedOptions', $selectedOptions);
-        $this->requireAsset('select2');
+        $this->requireAsset('selectize');
     }
 
     public function search()

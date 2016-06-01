@@ -32,16 +32,22 @@
       display: none;
     }
 
-    &.focus {
-      background-color: darken(#f2f2f2, 5%) !important;
-    }
-
     &.input-active {
       background: darken(#f2f2f2, 5%) url(../images/icons/select_arrow_up.png) no-repeat right 10px top 12px;
 
     }
   }
 
+
+  .selectize-control .selectize-input {
+    &.focus {
+      background-color: darken(#f2f2f2, 5%) !important;
+    }
+  }
+
+  .selectize-control.multi div.item {
+    background-color: darken(#f2f2f2, 10%);
+  }
 }
 
 
