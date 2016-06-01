@@ -859,6 +859,9 @@ return array(
                 array('css', 'jquery/visualize'),
             ),
         ),
+        /**
+         * @deprecated
+         */
         'select2' => array(
             array(
                 array('javascript', 'select2'),
@@ -1034,15 +1037,14 @@ return array(
                 array('css', 'core/app'),
                 array('css', 'jquery/ui'),
                 array('css', 'core/file-manager'),
-                array('css', 'select2'),
+                array('css', 'selectize'),
                 array('javascript', 'core/events'),
                 array('javascript', 'bootstrap/tooltip'),
                 array('javascript', 'underscore'),
                 array('javascript', 'backbone'),
                 array('javascript', 'jquery/ui'),
                 array('javascript-localized', 'jquery/ui'),
-                array('javascript', 'select2'),
-                array('javascript-localized', 'select2'),
+                array('javascript', 'selectize'),
                 array('javascript-localized', 'core/localization'),
                 array('javascript', 'core/app'),
                 array('javascript', 'jquery/fileupload'),
