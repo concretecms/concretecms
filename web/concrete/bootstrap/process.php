@@ -1,5 +1,6 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
+use Concrete\Core\Block\Events\BlockDelete;
 use Concrete\Core\Page\Stack\Pile\PileContent;
 
 # Filename: _process.php
@@ -54,6 +55,10 @@ if (isset($_REQUEST['btask']) && $_REQUEST['btask'] && $valt->validate()) {
                     $b->loadNewCollection($nvc);
 
                     $b->deleteBlock();
+
+                    $event = new BlockDelete($b, $c);
+                    \Events::dispatch('on_block_delete', $event);
+
                     $nvc->rescanDisplayOrder($_REQUEST['arHandle']);
 
                     if (isset($_POST['isAjax'])) {
