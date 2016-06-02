@@ -1,5 +1,6 @@
 {
   "name": "concrete5/concrete5",
+  "license": "MIT",
   "description": "concrete5 open source CMS",
   "minimum-stability": "beta",
   "prefer-stable": true,
