@@ -45,18 +45,18 @@
 				my = this,
 				doPersist = true;
 
-			var dynatreeSelectMode = 1,
+			var treeSelectMode = 1,
 				checkbox = false,
 				classNames = false;
 
 			if (my.options.selectMode == 'single') {
 				checkbox = true;
-				classNames = {checkbox: "dynatree-radio"};
+				classNames = {checkbox: "fancytree-radio"};
 			} else if (my.options.selectMode == 'multiple') {
-				dynatreeSelectMode = 2;
+				treeSelectMode = 2;
 				checkbox = true;
 			} else if (my.options.selectMode == 'hierarchical-multiple') {
-				dynatreeSelectMode = 3;
+				treeSelectMode = 3;
 				checkbox = true;
 			}
 
@@ -148,7 +148,7 @@
                     my.$element.children('.ccm-pagination-bound').remove();
                 },*/
 
-				selectMode: dynatreeSelectMode,
+				selectMode: treeSelectMode,
 				checkbox: checkbox,
 				minExpandLevel:  minExpandLevel,
 				clickFolderMode: 2,
@@ -363,7 +363,6 @@
 
 
     	setupNodePagination: function($tree) {
-    		//var tree = $tree.dynatree('getTree');
     		var pg = $tree.find('div.ccm-pagination-wrapper'),
 				my = this;
     		$tree.children('.ccm-pagination-bound').remove();
