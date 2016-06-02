@@ -10,7 +10,7 @@ if ($akSelectAllowMultipleValues && !$akSelectAllowOtherValues) {
         ?>
 
 		<div class="checkbox"><label>
-				<?=$form->checkbox($view->field('atSelectOptionValue') . '[]', $opt->getSelectAttributeOptionID(), in_array($opt->getSelectAttributeOptionID(), $selectedOptions));
+				<?=$form->checkbox($view->field('atSelectOptionValue') . '[]', $opt->getSelectAttributeOptionID(), in_array($opt->getSelectAttributeOptionID(), $selectedOptionIDs));
         ?>
 				<?=$opt->getSelectAttributeOptionDisplayValue()?>
 			</label>
@@ -31,7 +31,7 @@ if (!$akSelectAllowMultipleValues && !$akSelectAllowOtherValues) {
         $options[$option->getSelectAttributeOptionID()] = $option->getSelectAttributeOptionDisplayValue();
     }
     ?>
-	<?=$form->select($view->field('atSelectOptionValue'), $options, $selectedOptions[0]);
+	<?=$form->select($view->field('atSelectOptionValue'), $options, $selectedOptionIDs[0]);
     ?>
 
 
@@ -42,19 +42,7 @@ if (!$akSelectAllowMultipleValues && !$akSelectAllowOtherValues) {
  * Select2
  */
 if ($akSelectAllowOtherValues) {
-	/*
-    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-        $value = $controller->request('atSelectOptionValue');
-    } else {
-        $values = array();
-        foreach ($selectedOptions as $optionID) {
-            $values[] = 'SelectAttributeOption:' . $optionID;
-        }
-        $value = implode(',', $values);
-    }
-	*/
 
-	print $value;
 
     ?>
 	<input type="hidden" data-select-and-add="<?=$akID?>" style="width: 100%" name="<?=$view->field('atSelectOptionValue')?>" value="<?=$value?>" />
