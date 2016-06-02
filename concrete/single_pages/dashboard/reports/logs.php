@@ -14,7 +14,7 @@ $th = Loader::helper('text');
 
     <script type="text/javascript">
         $(function() {
-            $('#level').removeClass('form-control').select2();
+            $('#level').selectize();
         });
     </script>
 
