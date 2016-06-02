@@ -9,7 +9,7 @@ use Package;
 use Block;
 use BlockType;
 use Environment;
-use Page;
+use Concrete\Core\Page\Page;
 use Area;
 use PageTemplate;
 use Concrete\Core\Page\Type\Composer\FormLayoutSet as PageTypeComposerFormLayoutSet;

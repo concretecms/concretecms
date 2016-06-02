@@ -138,7 +138,8 @@ class Composer extends BackendInterfacePageController
             }
 
             $c->setPageDraftTargetParentPageID($targetPageID);
-            $outputControls = $pagetype->savePageTypeComposerForm($c);
+            $saver = $pagetype->getPageTypeSaverObject();
+            $outputControls = $saver->saveForm($c);
         }
         $ptr->setError($e);
 

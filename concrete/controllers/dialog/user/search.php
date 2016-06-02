@@ -20,7 +20,7 @@ class Search extends BackendInterfaceController
         $cnt = new \Concrete\Controller\Search\Users();
         $cnt->search();
         $result = Loader::helper('json')->encode($cnt->getSearchResultObject()->getJSONObject());
-        $this->requireAsset('select2');
+        $this->requireAsset('selectize');
         $this->set('result', $result);
         $this->set('searchController', $cnt);
     }

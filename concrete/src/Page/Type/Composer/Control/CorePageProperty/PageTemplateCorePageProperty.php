@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Core\Page\Type\Composer\Control\CorePageProperty;
 
-use Page;
+use Concrete\Core\Page\Page;
 
 class PageTemplateCorePageProperty extends CorePageProperty
 {

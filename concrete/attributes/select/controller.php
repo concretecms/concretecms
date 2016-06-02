@@ -214,16 +214,37 @@ class Controller extends AttributeTypeController
     public function form()
     {
         $this->load();
-        $options = $this->getSelectedOptions();
         $selectedOptions = array();
-        $selectedOptionValues = array();
-        foreach ($options as $opt) {
-            $selectedOptions[] = $opt->getSelectAttributeOptionID();
-            $selectedOptionValues[$opt->getSelectAttributeOptionID()] = $opt->getSelectAttributeOptionValue();
+        $selectedOptionIDs = array();
+        if ($this->akSelectAllowOtherValues) {
+            // This is the fancy auto complete, which uses an irritating way of handling
+            // IDs so that we can discern whether something is an existing selected option
+            // vs just a number that happens to match that option's ID.
+            if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+                $options = $this->loadSelectedTagValueFromPost($this->request('atSelectOptionValue'));
+                foreach ($options as $opt) {
+                    $selectedOptions[] = ['id' => $opt->id, 'text' => $opt->text];
+                    $selectedOptionIDs[] = $opt->id;
+                }
+            } else {
+                $options = $this->getSelectedOptions();
+                foreach ($options as $opt) {
+                    $selectedOptions[] = ['id' => 'SelectAttributeOption:' . $opt->getSelectAttributeOptionID(), 'text' => $opt->getSelectAttributeOptionValue()];
+                    $selectedOptionIDs[] = 'SelectAttributeOption:' . $opt->getSelectAttributeOptionID();
+                }
+            }
+        } else {
+            // In this case, the selected option IDs array is simply an array of IDs with
+            // no prefix
+            $options = $this->getSelectedOptions();
+            foreach ($options as $opt) {
+                $selectedOptions[] = $opt; // Not sure if the view even needs this.
+                $selectedOptionIDs[] = $opt->getSelectAttributeOptionID();
+            }
         }
-        $this->set('selectedOptionValues', $selectedOptionValues);
+        $this->set('selectedOptionIDs', $selectedOptionIDs);
         $this->set('selectedOptions', $selectedOptions);
-        $this->requireAsset('select2');
+        $this->requireAsset('selectize');
     }
 
     public function search()
@@ -519,16 +540,15 @@ class Controller extends AttributeTypeController
     }
 
     /**
-     * Used by select2. Automatically takes a value request and converts it into tag/text key value pairs.
+     * Used by selectize. Automatically takes a value request and converts it into tag/text key value pairs.
      * New options are just text/tag, whereas existing ones are SelectAttributeOption:ID/text.
      */
-    public function action_load_autocomplete_selected_value()
+    protected function loadSelectedTagValueFromPost($value)
     {
         $em = \Database::get()->getEntityManager();
         $r = $em->getRepository('\Concrete\Core\Entity\Attribute\Value\Value\SelectValueOption');
         $type = $this->attributeKey->getAttributeKeyType();
 
-        $value = $this->request->query->get('value');
         $values = explode(',', $value);
         $response = array();
         foreach ($values as $value) {
@@ -549,7 +569,7 @@ class Controller extends AttributeTypeController
             $response[] = $o;
         }
 
-        return new JsonResponse($response);
+        return $response;
     }
 
     public function action_load_autocomplete_values()
