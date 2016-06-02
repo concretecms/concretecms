@@ -2,11 +2,13 @@
 namespace Concrete\Controller\Dialog\Block;
 
 use Concrete\Controller\Backend\UserInterface\Block as BackendInterfaceBlockController;
+use Concrete\Core\Block\Events\BlockEdit;
 use Concrete\Core\Block\View\BlockView;
 use BlockType;
 use Concrete\Core\Cache\Cache;
 use Core;
 use Area;
+use Events;
 
 class Edit extends BackendInterfaceBlockController
 {
@@ -110,6 +112,10 @@ class Edit extends BackendInterfaceBlockController
                 }
 
                 $pr->setAdditionalDataAttribute('bID', $b->getBlockID());
+
+                $event = new BlockEdit($b, $this->page);
+                Events::dispatch('on_block_edit', $event);
+
                 // we can update the block that we're submitting
                 $b->update($_POST);
             }
