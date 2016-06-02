@@ -230,6 +230,7 @@
 					},
 
 					dragEnter: function(targetNode, data) {
+
 						var sourceNode = data.otherNode, hitMode = data.hitMode;
 
 						if ((!targetNode.parent.data.treeNodeID) && (targetNode.data.treeNodeID !== '1')) { // Home page has no parents, but we still want to be able to hit it.
