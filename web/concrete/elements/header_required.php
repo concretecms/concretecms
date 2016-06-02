@@ -93,7 +93,19 @@ if (($favIconFID = intval(Config::get('concrete.misc.favicon_fid'))) && ($favIco
 }
 if (($appleIconFID = intval(Config::get('concrete.misc.iphone_home_screen_thumbnail_fid'))) && ($appleIconFile = File::getByID($appleIconFID)) && is_object($appleIconFile)) {
     $linkTags['apple-touch-icon'] = sprintf('<link rel="apple-touch-icon" href="%s"/>', $appleIconFile->getURL());
-} ?>
+} 
+
+// Generate and dispatch an event, to let other Add-Ons make use of the available (meta) tags/page title
+$event = new \Symfony\Component\EventDispatcher\GenericEvent();
+$event->setArgument('metaTags', $metaTags);
+$event->setArgument('linkTags', $linkTags);
+$event->setArgument('pageTitle', $pageTitle);
+$event->setArgument('defaultPageTitle', $defaultPageTitle);
+Events::dispatch('on_header_required_ready', $event);
+$metaTags = $event->getArgument('metaTags');
+$linkTags = $event->getArgument('linkTags');
+$pageTitle = $event->getArgument('pageTitle');
+?>
 
 <title><?php echo htmlspecialchars($pageTitle, ENT_COMPAT, APP_CHARSET); ?></title>
 
