@@ -406,7 +406,7 @@ $form = Core::make('helper/form');
 
             <div>
                 <?=t('Custom Class')?>
-                <?= $form->text('customClass', $customClass);?>
+                <?= $form->selectMultiple('customClass', $customClassesSelect, $customClass);?>
             </div>
             <hr/>
 
@@ -473,7 +473,7 @@ $form = Core::make('helper/form');
 
 <script type="text/javascript">
     $('#ccm-inline-design-form').<?=$method?>();
-    $("#customClass").select2({tags:<?= json_encode(array_values($customClassesSelect)); ?>, separator: " "});
+    $("#customClass").selectize();
 
     $('button[data-hide-on-device]').on('click', function(e) {
         e.stopPropagation();
