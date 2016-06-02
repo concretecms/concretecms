@@ -2,7 +2,7 @@
 namespace Concrete\Core\Page\Type\Composer\Control\CorePageProperty;
 
 use Core;
-use Page;
+use Concrete\Core\Page\Page;
 
 class NameCorePageProperty extends CorePageProperty
 {
