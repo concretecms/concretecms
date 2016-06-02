@@ -96,7 +96,8 @@
 @fancy-select-color: @brand-success;
 @fancy-hover-color: #e1e1e1;
 
-div.ccm-ui {
+/* concrete5 */
+.ccm-ui {
 	span.fancytree-title {
 		margin-left: @fancy-title-spacing;
 	}
@@ -110,7 +111,19 @@ div.ccm-ui {
 		background-color: #f2f2f2;
 		border-color: transparent;
 		border-radius: 4px;
+		overflow: visible;
 	}
+
+	span.fancytree-node.fancytree-drop-target {
+		&.fancytree-drop-accept span.fancytree-title {
+			opacity: 1;
+			color: darken(@gray-light, 20%);
+		}
+		&.fancytree-drop-reject span.fancytree.title {
+			opacity: 0.3;
+		}
+	}
+	
 }
 
 /*******************************************************************************
