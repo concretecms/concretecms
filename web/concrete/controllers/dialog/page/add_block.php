@@ -4,9 +4,11 @@ namespace Concrete\Controller\Dialog\Page;
 use Area;
 use Block;
 use BlockType;
+use Concrete\Core\Block\Events\BlockAdd;
 use Concrete\Core\Page\Collection\Collection;
 use Concrete\Controller\Backend\UserInterface\Page as BackendInterfacePageController;
 use Concrete\Core\Block\View\BlockView;
+use Events;
 use Exception;
 use Loader;
 use PageEditResponse;
@@ -98,6 +100,9 @@ class AddBlock extends BackendInterfacePageController
                     // if we apply to all, then we don't worry about a new version of the page
                     $nb = $this->pageToModify->addBlock($bt, $this->areaToModify, $data);
                 }
+
+                $event = new BlockAdd($nb, $this->pageToModify);
+                Events::dispatch('on_block_add', $event);
 
                 if ($this->area->isGlobalArea() && $nvc instanceof Collection) {
                     $xvc = $this->page->getVersionToModify(); // we need to create a new version of THIS page as well.
