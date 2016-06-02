@@ -12,12 +12,41 @@
     text-transform: uppercase;
   }
 
+  div.form-group.form-group-last {
+    border-bottom-width: 0px;
+  }
+
   fieldset {
     margin-bottom: 0px;
     legend {
       font-weight: bold;
       border: 0px;
     }
+  }
+
+  .selectize-control.single .selectize-input {
+    padding-right: 30px;
+    background: #f2f2f2 url(../images/icons/select_arrow_down.png) no-repeat right 10px top 12px;
+
+    &:after {
+      display: none;
+    }
+
+    &.input-active {
+      background: darken(#f2f2f2, 5%) url(../images/icons/select_arrow_up.png) no-repeat right 10px top 12px;
+
+    }
+  }
+
+
+  .selectize-control .selectize-input {
+    &.focus {
+      background-color: darken(#f2f2f2, 5%) !important;
+    }
+  }
+
+  .selectize-control.multi div.item {
+    background-color: darken(#f2f2f2, 10%);
   }
 }
 
@@ -31,8 +60,10 @@
     padding-right: 26px;
     padding-bottom: 8px;
     padding-top: 10px;
+    margin-top: 8px;
     margin-bottom: 10px;
 
+    div.selectize-input,
     select.form-control,
     input.form-control,
     textarea.form-control {
@@ -43,6 +74,11 @@
       &:hover {
         background-color: #ffffff !important;
       }
+    }
+
+    div.form-group {
+      border-bottom-width: 0px;
+      margin-bottom: 0px;
     }
 
   }
@@ -61,6 +97,7 @@
     }
 
     &.has-error, &.has-warning, &.has-success {
+      div.selectize-input,
       select.form-control,
       input.form-control,
       textarea.form-control {
@@ -71,6 +108,7 @@
     }
 
     &.has-error {
+      div.selectize-input,
       select.form-control,
       input.form-control,
       textarea.form-control {
@@ -85,6 +123,7 @@
     }
 
     &.has-success {
+      div.selectize-input,
       select.form-control,
       input.form-control,
       textarea.form-control {
@@ -99,6 +138,7 @@
     }
 
     &.has-warning {
+      div.selectize-input,
       select.form-control,
       input.form-control,
       textarea.form-control {
@@ -112,68 +152,71 @@
       }
     }
 
-  }
-
-  select.form-control,
-  input.form-control,
-  textarea.form-control {
-    .transition(0.1s linear all);
-    padding: 2px;
-    color: #606060;
-    .box-shadow(none);
-    font-size: 18px;
-    .border-radius(4px);
-    -webkit-appearance: none;
-    appearance: none;
-    -moz-appearance: none;
-    /*
-    border: 1px solid #f1f1f1;
-    */
-    /*
-    border: 1px solid transparent;
-    border-top: 1px solid transparent;
-    border-right: 1px solid transparent;
-    border-left: 1px solid transparent;
-    border-bottom: 1px dotted #c1c1c1;
-    */
-
-    border-color: transparent;
-    background-color: #f2f2f2;
-
-    &:focus {
-      outline: 0px;
-      background-color: darken(#f2f2f2, 5%) !important;
+    div.selectize-input,
+    select.form-control,
+    input.form-control,
+    textarea.form-control {
+      .transition(0.1s linear all);
       /*
-      background-color: transparent;
+      padding: 2px;
       */
-      /*border-color: transparent*/
+      color: #606060;
+      .box-shadow(none);
+      font-size: 18px;
+      .border-radius(2px);
+      -webkit-appearance: none;
+      appearance: none;
+      -moz-appearance: none;
+      overflow: inherit; // needed for selectize ?
+      /*
+      border: 1px solid #f1f1f1;
+      */
+      /*
+      border: 1px solid transparent;
+      border-top: 1px solid transparent;
+      border-right: 1px solid transparent;
+      border-left: 1px solid transparent;
+      border-bottom: 1px dotted #c1c1c1;
+      */
 
-      + .help-block {
-        display: block;
+      border-color: transparent;
+      background-color: #f2f2f2;
+
+      &:focus {
+        outline: 0px;
+        background-color: darken(#f2f2f2, 5%) !important;
+        /*
+        background-color: transparent;
+        */
+        /*border-color: transparent*/
+
+        + .help-block {
+          display: block;
+        }
+      }
+
+      &:hover {
+        background-color: darken(#f2f2f2, 3%);
+        border-color: transparent;
+      }
+
+
+    }
+
+    .input-group {
+      .input-group-addon {
+        border-color: transparent;
+        background-color: transparent;
+        padding-right: 10px;
       }
     }
+    select.form-control {
 
-    &:hover {
-      background-color: darken(#f2f2f2, 3%);
-      border-color: transparent;
+      padding-right: 30px;
+      background: #f2f2f2 url(../images/icons/select_arrow_down.png) no-repeat right 10px top 12px;
     }
 
-
   }
-
-  .input-group {
-    .input-group-addon {
-      border-color: transparent;
-      background-color: transparent;
-      padding-right: 10px;
-    }
-  }
-  select.form-control {
-
-    padding-right: 30px;
-    background: #f2f2f2 url(../images/icons/select_arrow_down.png) no-repeat right 10px top 12px;
-  }
-
 
   div.checkbox, div.radio {
     label {
@@ -328,10 +371,4 @@ div.ccm-ui {
     }
   }
 
-}
-
-div.ccm-select2-flat {
-  border-color: #f4f4f4;
-  box-shadow: none;
-  margin-left: -8px;
 }

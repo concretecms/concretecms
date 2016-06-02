@@ -163,6 +163,16 @@ module.exports = function(grunt) {
             src: '<%= DIR_BASE %>/concrete/js/build/vendor/select2/select2.js'
         },
 
+        /**
+         * Don't do this one: it doesn't work through Grunt. I had to include the min file from
+         * the GitHub repository directly
+
+        selectize: {
+            dest: '<%= DIR_BASE %>/concrete/js/selectize.js',
+            src: '<%= DIR_BASE %>/concrete/js/build/vendor/selectize/selectize.js'
+        },
+         */
+
         bootstrap_alert: {
             dest: '<%= DIR_BASE %>/concrete/js/bootstrap/alert.js',
             src: '<%= DIR_BASE %>/concrete/js/build/vendor/bootstrap/alert.js'
@@ -379,6 +389,7 @@ module.exports = function(grunt) {
         '<%= DIR_BASE %>/concrete/css/app.css': '<%= DIR_BASE %>/concrete/css/build/core/app/app.less',
         '<%= DIR_BASE %>/concrete/css/editable-fields.css': '<%= DIR_BASE %>/concrete/css/build/core/editable-fields.less',
         '<%= DIR_BASE %>/concrete/css/select2.css': '<%= DIR_BASE %>/concrete/css/build/core/select2.less',
+        '<%= DIR_BASE %>/concrete/css/selectize.css': '<%= DIR_BASE %>/concrete/css/build/vendor/selectize/selectize.bootstrap3.less',
         '<%= DIR_BASE %>/concrete/css/dropzone.css': '<%= DIR_BASE %>/concrete/css/build/vendor/dropzone/dropzone.less',
         '<%= DIR_BASE %>/concrete/css/jquery-ui.css': '<%= DIR_BASE %>/concrete/css/build/vendor/jquery-ui/jquery-ui.less',
         '<%= DIR_BASE %>/concrete/css/jquery-magnific-popup.css': '<%= DIR_BASE %>/concrete/css/build/vendor/jquery-magnific-popup/jquery-magnific-popup.less',

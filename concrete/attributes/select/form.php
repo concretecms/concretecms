@@ -10,7 +10,7 @@ if ($akSelectAllowMultipleValues && !$akSelectAllowOtherValues) {
         ?>
 
 		<div class="checkbox"><label>
-				<?=$form->checkbox($view->field('atSelectOptionValue') . '[]', $opt->getSelectAttributeOptionID(), in_array($opt->getSelectAttributeOptionID(), $selectedOptions));
+				<?=$form->checkbox($view->field('atSelectOptionValue') . '[]', $opt->getSelectAttributeOptionID(), in_array($opt->getSelectAttributeOptionID(), $selectedOptionIDs));
         ?>
 				<?=$opt->getSelectAttributeOptionDisplayValue()?>
 			</label>
@@ -31,7 +31,7 @@ if (!$akSelectAllowMultipleValues && !$akSelectAllowOtherValues) {
         $options[$option->getSelectAttributeOptionID()] = $option->getSelectAttributeOptionDisplayValue();
     }
     ?>
-	<?=$form->select($view->field('atSelectOptionValue'), $options, $selectedOptions[0]);
+	<?=$form->select($view->field('atSelectOptionValue'), $options, $selectedOptionIDs[0]);
     ?>
 
 
@@ -42,73 +42,49 @@ if (!$akSelectAllowMultipleValues && !$akSelectAllowOtherValues) {
  * Select2
  */
 if ($akSelectAllowOtherValues) {
-    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-        $value = $controller->request('atSelectOptionValue');
-    } else {
-        $values = array();
-        foreach ($selectedOptions as $optionID) {
-            $values[] = 'SelectAttributeOption:' . $optionID;
-        }
-        $value = implode(',', $values);
-    }
+
 
     ?>
 	<input type="hidden" data-select-and-add="<?=$akID?>" style="width: 100%" name="<?=$view->field('atSelectOptionValue')?>" value="<?=$value?>" />
 	<script type="text/javascript">
 		$(function() {
-			$('input[data-select-and-add=<?=$akID?>]').select2({
-				tags: true,
-				createSearchChoicePosition: 'bottom',
-				initSelection: function(element, callback) {
-					var data = [];
-					$.ajax({
-						'dataType': 'json',
-						'data': {value: $(element).val()},
-						'url': '<?=$view->action('load_autocomplete_selected_value')?>'
-					}).done(function(data) {
-						callback(data);
-					});
+			$('input[data-select-and-add=<?=$akID?>]').selectize({
+				valueField: 'id',
+				labelField: 'text',
+				options: <?=json_encode($selectedOptions)?>,
+				items: <?=json_encode($selectedOptionIDs)?>,
+				openOnFocus: false,
+				create: true,
+				createFilter: function(input) {
+					return input.length >= 1;
+				},
 
-					callback(data);
-				},
-				createSearchChoice: function(term, data) {
-					if ($(data).filter(function() {
-							return this.text.localeCompare(term) === 0;
-						}).length === 0) {
-						return {
-							id: term,
-							text: term
-						};
-					}
-				},
+				maxOptions: 10,
+
 				<?php if ($akSelectAllowMultipleValues) {
     ?>
-					tokenSeparators: [','],
-					multiple: true,
+					delimiter: ',',
+					maxItems: 500,
 				<?php 
 } else {
     ?>
-					maximumSelectionSize: 1,
+					maxItems: 1,
 				<?php 
 }
     ?>
-				minimumInputLength: 1,
-				ajax: { // instead of writing the function to execute the request we use Select2's convenient helper
-					url: "<?=$view->action('load_autocomplete_values')?>",
-					dataType: 'json',
-					quietMillis: 250,
-					data: function (term, page) {
-						return {
-							q: term, // search term
-						};
-					},
-					results: function (data, page) {
-					// parse the results into the format expected by Select2.
-						// since we are using custom formatting functions we do not need to alter the remote JSON data
-						return { results: data };
-					},
+				load: function(query, callback) {
+					if (!query.length) return callback();
+					$.ajax({
+						url: "<?=$view->action('load_autocomplete_values')?>",
+						dataType: 'json',
+						error: function() {
+							callback();
+						},
+						success: function(res) {
+							callback(res);
+						}
+					});
 				}
-
 			});
 		});
 	</script>

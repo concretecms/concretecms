@@ -64,7 +64,7 @@ $searchRequest = $flr->getSearchRequest();
             $g1 = $gl->getResults();
             ?>
 			<div class="ccm-search-field-content">
-			<select multiple name="gID[]" class="select2-select" style="width: 360px">
+			<select multiple name="gID[]" class="selectize-select" style="width: 360px">
 				<?php foreach ($g1 as $g) {
     $gp = new Permissions($g);
     if ($gp->canSearchUsersInGroup($g)) {

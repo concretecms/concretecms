@@ -4,7 +4,7 @@ namespace Concrete\Core\Page\Type\Composer\Control;
 use Concrete\Core\Validation\ResponseInterface;
 use Controller;
 use CollectionAttributeKey;
-use Page;
+use Concrete\Core\Page\Page;
 use Environment;
 
 class CollectionAttributeControl extends Control

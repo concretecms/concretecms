@@ -444,7 +444,7 @@ class Search extends DashboardPageController
             $this->setupUser($uID);
         }
 
-        $this->requireAsset('select2');
+        $this->requireAsset('selectize');
 
         $ui = $this->user;
         if (is_object($ui)) {

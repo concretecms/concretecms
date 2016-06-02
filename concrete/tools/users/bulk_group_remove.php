@@ -71,7 +71,7 @@ if (!isset($_REQUEST['reload'])) {
 			<div class="clearfix">
 				<?=$form->label('groupIDs', t('Remove the users below from Group(s)'))?>
 				<div class="input">
-					<select multiple name="groupIDs[]" class="select2-select" data-placeholder="<?php echo t('Select Group(s)');?>" >
+					<select multiple name="groupIDs[]" class="selectize-select" data-placeholder="<?php echo t('Select Group(s)');?>" >
 						<?php foreach ($g1 as $gRow) {
     $g = Group::getByID($gRow['gID']);
     $gp = new Permissions($g);
@@ -124,6 +124,6 @@ ccm_userBulkGroupRemove = function() {
 	});
 };
 $(function() { 
-	$(".select2-select").select2();
+	$(".selectize-select").selectize();
 });
 </script>

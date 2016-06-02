@@ -4,7 +4,7 @@ namespace Concrete\Core\Page\Type\Composer\Control;
 use Concrete\Core\Page\Type\Type;
 use Loader;
 use Concrete\Core\Foundation\Object;
-use Page;
+use Concrete\Core\Page\Page;
 use Controller;
 use Concrete\Core\Page\Type\Composer\FormLayoutSet as PageTypeComposerFormLayoutSet;
 use Concrete\Core\Page\Type\Composer\FormLayoutSetControl as PageTypeComposerFormLayoutSetControl;

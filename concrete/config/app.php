@@ -107,7 +107,7 @@ return array(
         'core_content_importer' => '\Concrete\Core\Backup\ContentImporter\ContentImporterServiceProvider',
         'core_manager_grid_framework' => '\Concrete\Core\Page\Theme\GridFramework\ManagerServiceProvider',
         'core_manager_pagination_view' => '\Concrete\Core\Search\Pagination\View\ManagerServiceProvider',
-        'core_manager_page_type_validator' => '\Concrete\Core\Page\Type\Validator\ManagerServiceProvider',
+        'core_manager_page_type' => '\Concrete\Core\Page\Type\ManagerServiceProvider',
         'core_manager_layout_preset_provider' => '\Concrete\Core\Area\Layout\Preset\Provider\ManagerServiceProvider',
         'core_manager_file_search_fields' => '\Concrete\Core\File\Search\Field\ManagerServiceProvider',
         'core_database' => '\Concrete\Core\Database\DatabaseServiceProvider',
@@ -616,6 +616,10 @@ return array(
             array('javascript-localized', '/ccm/assets/localization/select2/js'),
             array('css', 'css/select2.css', array('minify' => false)),
         ),
+        'selectize' => array(
+            array('javascript', 'js/selectize.js', array('minify' => false, 'combine' => false)),
+            array('css', 'css/selectize.css', array('minify' => false)),
+        ),
         'underscore' => array(
             array('javascript', 'js/underscore.js', array('minify' => false)),
         ),
@@ -855,11 +859,20 @@ return array(
                 array('css', 'jquery/visualize'),
             ),
         ),
+        /**
+         * @deprecated
+         */
         'select2' => array(
             array(
                 array('javascript', 'select2'),
                 array('javascript-localized', 'select2'),
                 array('css', 'select2'),
+            ),
+        ),
+        'selectize' => array(
+            array(
+                array('javascript', 'selectize'),
+                array('css', 'selectize'),
             ),
         ),
         'dropzone' => array(
@@ -1024,15 +1037,14 @@ return array(
                 array('css', 'core/app'),
                 array('css', 'jquery/ui'),
                 array('css', 'core/file-manager'),
-                array('css', 'select2'),
+                array('css', 'selectize'),
                 array('javascript', 'core/events'),
                 array('javascript', 'bootstrap/tooltip'),
                 array('javascript', 'underscore'),
                 array('javascript', 'backbone'),
                 array('javascript', 'jquery/ui'),
                 array('javascript-localized', 'jquery/ui'),
-                array('javascript', 'select2'),
-                array('javascript-localized', 'select2'),
+                array('javascript', 'selectize'),
                 array('javascript-localized', 'core/localization'),
                 array('javascript', 'core/app'),
                 array('javascript', 'jquery/fileupload'),

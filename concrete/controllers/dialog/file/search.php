@@ -46,6 +46,6 @@ class Search extends BackendInterfaceController
         }
 
         $this->set('header', new Header($query));
-        $this->requireAsset('select2');
+        $this->requireAsset('selectize');
     }
 }
