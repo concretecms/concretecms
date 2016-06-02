@@ -43,7 +43,7 @@
 		this.setupBulkActions();
 		this.setupSort();
 		this.setupPagination();
-        this.setupSelect2();
+        this.setupSelectize();
 		this.setupAdvancedSearch();
 		this.setupCustomizeColumns();
 		this.updateResults(options.result);
@@ -76,10 +76,10 @@
 		return data;
 	}
 
-	ConcreteAjaxSearch.prototype.setupSelect2 = function() {
-        var selects = this.$element.find('.select2-select');
+	ConcreteAjaxSearch.prototype.setupSelectize = function() {
+        var selects = this.$element.find('.selectize-select');
         if (selects.length) {
-            selects.select2();
+            selects.selectize();
         }
     }
 

@@ -212,36 +212,19 @@ for ($i = 0; $i < count($values); $i++) {
 
     <script type="text/javascript">
         $(function () {
-            $('select[data-select=time]').selectize({
+
+            $('select[name=pdStartDateSelectTime]').selectize({
                 create: true,
-                copyClassesToDropdown: false
-            });
-
-            /*
-
-            $('input[data-select=time]').select2({
-
-                createSearchChoice: function (term, data) {
-                    if ($(data).filter(function () {
-                            return this.text.localeCompare(term) === 0;
-                        }).length === 0) {
-                        return {id: term, text: term};
-                    }
-                },
-                initSelection: function(element, callback) {
-                    return callback({id: element.val(), text: element.val()});
-                },
-
-                dropdownCssClass: 'ccm-ui ccm-select2-flat',
-                multiple: false,
-                data: <?=json_encode($times)?>
-            }).on('change', function() {
-                var name = $(this).attr('name');
-                if (name == 'pdStartDateSelectTime') {
+                copyClassesToDropdown: false,
+                onChange: function(value) {
                     ccm_durationCalculateEndDate();
                 }
             });
-            */
+
+            $('select[name=pdEndDateSelectTime]').selectize({
+                create: true,
+                copyClassesToDropdown: false,
+            });
 
         });
     </script>
@@ -567,8 +550,9 @@ for ($i = 0; $i < count($values); $i++) {
         }
         var endTime = hours + ':' + minutes + pm;
         $('#pdEndDate_pub').datepicker('setDate', endDateFormatted);
-        //$('input[name=pdEndDateSelectTime]').select2('val', endTime);
-        $('select[name=pdEndDateSelectTime]').val(endTime);
+
+        var $selectize = $('select[name=pdEndDateSelectTime]').selectize();
+        $selectize[0].selectize.setValue(endTime);
     }
 
     $(function () {

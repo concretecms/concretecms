@@ -104,7 +104,7 @@ if (is_object($pagetype)) {
 
 <script type="text/javascript">
 $(function() {
-	$('#ptPageTemplateID').removeClass('form-control').select2();
+	$('#ptPageTemplateID').removeClass('form-control').selectize();
 	$('input[name=ptPublishTargetTypeID]').on('click', function() {
 		$('div[data-page-type-publish-target-type-id]').hide();
 		var ptPublishTargetTypeID = $('input[name=ptPublishTargetTypeID]:checked').val();
