@@ -36,7 +36,7 @@ class Thumbnails extends DashboardPageController
         $this->view();
     }
 
-    protected function validateThumbnailRequest()
+    protected function validateThumbnailRequest($regtype)
     {
         $request = \Request::getInstance();
         $valStrings = Loader::helper('validation/strings');
@@ -46,6 +46,13 @@ class Thumbnails extends DashboardPageController
             $this->error->add(t('Your thumbnail type must have a name.'));
         }
 
+        if($regtype === 'add'){
+            $thumbtype = Type::getByHandle($request->request->get('ftTypeHandle'));
+            if(is_object($thumbtype)){
+                $this->error->add(t('That handle is in use.'));
+            }
+        }
+        
         if (!$valStrings->handle($request->request->get('ftTypeHandle'))) {
             $this->error->add(t('Your thumbnail type handle must only contain lowercase letters and underscores.'));
         }
@@ -103,7 +110,7 @@ class Thumbnails extends DashboardPageController
 
     public function update()
     {
-        $request = $this->validateThumbnailRequest();
+        $request = $this->validateThumbnailRequest('update');
 
         $type = Type::getByID($request->request->get('ftTypeID'));
         if (!Loader::helper('validation/token')->validate('update')) {
@@ -131,7 +138,7 @@ class Thumbnails extends DashboardPageController
 
     public function do_add()
     {
-        $request = $this->validateThumbnailRequest();
+        $request = $this->validateThumbnailRequest('add');
         if (!Loader::helper('validation/token')->validate('do_add')) {
             $this->error->add(Loader::helper('validation/token')->getErrorMessage());
         }
