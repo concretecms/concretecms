@@ -17,10 +17,10 @@ use Doctrine\DBAL\Schema\Schema;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Page\Single as SinglePage;
 use Concrete\Block\ExpressForm\Controller as ExpressFormBlockController;
+use Concrete\Core\Support\Facade\Facade;
 
 class Version20160420000000 extends AbstractMigration
 {
-
     protected function renameProblematicTables()
     {
         if (!$this->connection->tableExists('_AttributeKeys')) {
@@ -86,7 +86,6 @@ class Version20160420000000 extends AbstractMigration
         }
 
         $sm->installDatabaseFor($metadatas);
-
     }
 
     protected function importAttributeKeys()
@@ -96,7 +95,7 @@ class Version20160420000000 extends AbstractMigration
         while ($row = $r->fetch()) {
             $table = false;
             $akCategory = null;
-            switch($row['akCategoryHandle']) {
+            switch ($row['akCategoryHandle']) {
                 case 'collection':
                     $table = 'CollectionAttributeKeys';
                     $akCategory = 'pagekey';
@@ -135,7 +134,7 @@ class Version20160420000000 extends AbstractMigration
             }
 
             $this->importAttributeKeyType($row['atID'], $row['akID']);
-            switch($akCategory) {
+            switch ($akCategory) {
                 case 'pagekey':
                     $rb = $this->connection->executeQuery("select * from _CollectionAttributeValues where akID = ?", array($row['akID']));
                     while ($rowB = $rb->fetch()) {
@@ -144,7 +143,7 @@ class Version20160420000000 extends AbstractMigration
                             $this->connection->insert('CollectionAttributeValues', [
                                 'cID' => $rowB['cID'],
                                 'cvID' => $rowB['cvID'],
-                                'avrID' => $avrID
+                                'avrID' => $avrID,
                             ]);
                         }
                     }
@@ -155,7 +154,7 @@ class Version20160420000000 extends AbstractMigration
 
     protected function loadAttributeValue($atHandle, $legacyAVID, $avID)
     {
-        switch($atHandle) {
+        switch ($atHandle) {
             case 'address':
                 $row = $this->connection->fetchAssoc('select * from atAddress where avID = ?', [$legacyAVID]);
                 $row['avID'] = $avID;
@@ -184,21 +183,21 @@ class Version20160420000000 extends AbstractMigration
             case 'select':
                 $this->connection->insert('SelectAttributeValues', array('avID' => $avID));
                 $options = $this->connection->fetchAll('select * from atSelectOptionsSelected where avID = ?', [$legacyAVID]);
-                foreach($options as $option) {
+                foreach ($options as $option) {
                     $this->connection->insert('SelectAttributeValueSelectedOptions', array(
                         'avSelectOptionID' => $option['atSelectOptionID'],
-                        'avID' => $avID
+                        'avID' => $avID,
                     ));
                 }
                 break;
             case 'social_links':
                 $this->connection->insert('SocialLinksAttributeValues', array('avID' => $avID));
                 $links = $this->connection->fetchAll('select * from atSocialLinks where avID = ?', [$legacyAVID]);
-                foreach($links as $link) {
+                foreach ($links as $link) {
                     $this->connection->insert('SocialLinksAttributeSelectedLinks', array(
                         'service' => $link['service'],
                         'serviceInfo' => $link['serviceInfo'],
-                        'avID' => $avID
+                        'avID' => $avID,
                     ));
                 }
                 break;
@@ -215,10 +214,10 @@ class Version20160420000000 extends AbstractMigration
             case 'topics':
                 $this->connection->insert('TopicAttributeValues', array('avID' => $avID));
                 $topics = $this->connection->fetchAll('select * from atSocialLinks where avID = ?', [$legacyAVID]);
-                foreach($topics as $topic) {
+                foreach ($topics as $topic) {
                     $this->connection->insert('TopicAttributeSelectedTopics', array(
                         'treeNodeID' => $topic['TopicNodeID'],
-                        'avID' => $avID
+                        'avID' => $avID,
                     ));
                 }
                 break;
@@ -243,7 +242,7 @@ class Version20160420000000 extends AbstractMigration
             $this->connection->insert('AttributeValues', [
                 'akID' => $akID,
                 'avID' => $avID,
-                'type' => $type
+                'type' => $type,
             ]);
 
             return $this->connection->lastInsertId();
@@ -260,7 +259,7 @@ class Version20160420000000 extends AbstractMigration
                 $this->connection->insert('AttributeKeyTypes', ['akTypeHandle' => $row['atHandle'], 'akID' => $akID, 'type' => $type]);
                 $akTypeID = $this->connection->lastInsertId();
             }
-            switch($row['atHandle']) {
+            switch ($row['atHandle']) {
                 case 'address':
                     $count = $this->connection->fetchColumn('select count(*) from AddressAttributeKeyTypes where akTypeID = ?', array($akTypeID));
                     if (!$count) {
@@ -319,7 +318,7 @@ class Version20160420000000 extends AbstractMigration
                             ]);
 
                             $options = $this->connection->fetchAll('select * from atSelectOptions where akID = ?', array($akID));
-                            foreach($options as $option) {
+                            foreach ($options as $option) {
                                 $this->connection->insert('SelectAttributeValueOptions', [
                                     'isEndUserAdded' => $option['isEndUserAdded'],
                                     'displayOrder' => $option['displayOrder'],
@@ -400,19 +399,17 @@ class Version20160420000000 extends AbstractMigration
             'url' => 'URL',
         );
         $categories = array('file', 'user', 'collection');
-        foreach($types as $handle => $name) {
+        foreach ($types as $handle => $name) {
             $type = Type::getByHandle($handle);
             if (!is_object($type)) {
                 $type = Type::add($handle, $name);
-                foreach($categories as $category) {
+                foreach ($categories as $category) {
                     $cat = Category::getByHandle($category);
                     $cat->getController()->associateAttributeKeyType($type);
                 }
             }
         }
     }
-
-
 
     protected function addDashboard()
     {
@@ -540,12 +537,10 @@ class Version20160420000000 extends AbstractMigration
             BlockType::installBlockType('express_entry_detail');
         }
 
-
         $bt = BlockType::getByHandle('desktop_waiting_for_me');
         if (!is_object($bt)) {
             BlockType::installBlockType('desktop_waiting_for_me');
         }
-
 
         $bt = BlockType::getByHandle('page_title');
         if (is_object($bt)) {
@@ -556,22 +551,18 @@ class Version20160420000000 extends AbstractMigration
         if (is_object($bt)) {
             $bt->refresh();
         }
-
-
-
-
     }
 
     protected function addTreeNodeTypes()
     {
         $this->connection->Execute('update TreeNodeTypes set treeNodeTypeHandle = ? where treeNodeTypeHandle = ?', array(
-            'category', 'topic_category'
+            'category', 'topic_category',
         ));
         $this->connection->Execute('update PermissionKeys set pkHandle = ? where pkHandle = ?', array(
-            'view_category_tree_node', 'view_topic_category_tree_node'
+            'view_category_tree_node', 'view_topic_category_tree_node',
         ));
         $this->connection->Execute('update PermissionKeyCategories set pkCategoryHandle = ? where pkCategoryHandle = ?', array(
-            'category_tree_node', 'topic_category_tree_node'
+            'category_tree_node', 'topic_category_tree_node',
         ));
         $results = NodeType::getByHandle('express_entry_results');
         if (!is_object($results)) {
@@ -615,7 +606,6 @@ class Version20160420000000 extends AbstractMigration
             $desktop->moveToTrash();
         }
 
-
         $desktop = Page::getByPath('/desktop');
         if (is_object($desktop) && !$desktop->isError()) {
             $desktop->moveToTrash();
@@ -631,13 +621,11 @@ class Version20160420000000 extends AbstractMigration
 
         $ci = new ContentImporter();
         $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/desktops.xml');
-        
 
         $desktop = Page::getByPath('/dashboard/welcome');
         $desktop->movePageDisplayOrderToTop();
 
         \Config::save('concrete.misc.login_redirect', 'DESKTOP');
-
     }
 
     protected function updateWorkflows()
@@ -650,6 +638,28 @@ class Version20160420000000 extends AbstractMigration
         if (!is_object($page) || $page->isError()) {
             SinglePage::add('/dashboard/system/permissions/workflows');
         }
+    }
+
+    protected function splittedTrackingCode()
+    {
+        $config = Facade::getFacadeApplication()->make('config');
+        $tracking = (array) $config->get('concrete.seo.tracking', []);
+        $trackingCode = array_get($tracking, 'code');
+        if (!is_array($trackingCode)) {
+            array_set($tracking, 'code', ['header' => '', 'footer' => '']);
+            $trackingCode = (string) $trackingCode;
+            switch (array_get($tracking, 'code_position')) {
+                case 'top':
+                    array_set($tracking, 'code.header', $trackingCode);
+                    break;
+                case 'bottom':
+                default:
+                    array_set($tracking, 'code.footer', $trackingCode);
+                    break;
+            }
+        }
+        unset($tracking['code_position']);
+        $config->save('concrete.seo.tracking', $tracking);
     }
 
     public function up(Schema $schema)
@@ -665,8 +675,8 @@ class Version20160420000000 extends AbstractMigration
         $this->updateWorkflows();
         $this->addTreeNodeTypes();
         $this->installDesktops();
+        $this->splittedTrackingCode();
         $this->connection->Execute('set foreign_key_checks = 1');
-
     }
 
     public function down(Schema $schema)

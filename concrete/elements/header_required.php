@@ -187,8 +187,9 @@ if (is_object($cp)) {
 
 $v = View::getInstance();
 $v->markHeaderAssetPosition();
-$_trackingCodePosition = Config::get('concrete.seo.tracking.code_position');
-if (empty($disableTrackingCode) && $_trackingCodePosition === 'top') {
-    echo Config::get('concrete.seo.tracking.code');
+
+if (empty($disableTrackingCode)) {
+    echo Config::get('concrete.seo.tracking.code.header');
 }
+
 echo $c->getAttribute('header_extra_content');
