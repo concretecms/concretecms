@@ -40,6 +40,15 @@ class ListItem extends Object {
 	public function getAccessEntityObject() {return $this->accessEntity;}
 	public function getPermissionDurationObject() {return $this->duration;}
 
+	public function setAccessEntityObject($accessEntity)
+	{
+		$this->accessEntity = $accessEntity;
+	}
+
+	public function setPermissionDurationObject($duration)
+	{
+		$this->duration = $duration;
+	}
 
 
 }

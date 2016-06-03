@@ -6,6 +6,7 @@ use Concrete\Core\Multilingual\Page\Section\Section;
 use Concrete\Core\Page\Type\Composer\Control\BlockControl;
 use Concrete\Core\Page\Type\Composer\FormLayoutSetControl;
 use Concrete\Core\Page\Type\Type;
+use Concrete\Core\Permission\Access\Entity\PageOwnerEntity;
 use Database;
 use CacheLocal;
 use Collection;
@@ -535,7 +536,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         $db = Database::connection();
         $u = new User();
         $nc = Page::getByPath(Config::get('concrete.paths.drafts'));
-        $r = $db->executeQuery('select Pages.cID from Pages inner join Collections c on Pages.cID = c.cID where uID = ? and cParentID = ? order by cDateAdded desc', array($u->getUserID(), $nc->getCollectionID()));
+        $r = $db->executeQuery('select Pages.cID from Pages inner join Collections c on Pages.cID = c.cID where cParentID = ? order by cDateAdded desc', array($nc->getCollectionID()));
         $pages = array();
         while ($row = $r->FetchRow()) {
             $entry = Page::getByID($row['cID']);
@@ -2927,6 +2928,17 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
             Events::dispatch('on_page_add', $pe);
 
             $pc->rescanCollectionPath();
+        }
+
+        $entities = $u->getUserAccessEntityObjects();
+        $hasAuthor = false;
+        foreach ($entities as $obj) {
+            if ($obj instanceof PageOwnerEntity) {
+                $hasAuthor = true;
+            }
+        }
+        if (!$hasAuthor) {
+            $u->refreshUserGroups();
         }
 
         return $pc;
