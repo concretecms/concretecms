@@ -844,7 +844,7 @@ abstract class Package implements LocalizablePackageInterface
      * 
      * @return \Doctrine\ORM\EntityManager
      */
-    protected function getPackageEntityManager()
+    public function getPackageEntityManager()
     {
         $config = Setup::createConfiguration(true, $this->app->make('config')->get('database.proxy_classes'));
         

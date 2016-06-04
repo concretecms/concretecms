@@ -33,7 +33,7 @@ class PackageServiceTest extends \ConcreteDatabaseTestCase
     {
         $filesystem = new Filesystem();
         if (!$filesystem->isWritable(DIR_PACKAGES)) {
-            throw new Exception("Cannot write to the packages directory for the testing purposes. Please check permissions!");
+            throw new \Exception("Cannot write to the packages directory for the testing purposes. Please check permissions!");
         }
 
         $packages = self::getTestPackagesForCopy();
@@ -41,7 +41,7 @@ class PackageServiceTest extends \ConcreteDatabaseTestCase
         // First make sure that none of the packages already exist
         foreach ($packages as $pkg => $dir) {
             if ($filesystem->exists(DIR_PACKAGES . '/' . $pkg)) {
-                throw new Exception("A package directory for a package named ${pkg} already exists. It cannot exist prior to running these tests.");
+                throw new \Exception("A package directory for a package named ${pkg} already exists. It cannot exist prior to running these tests.");
             }
         }
         // Then, move the package folders to the package folder
@@ -209,8 +209,31 @@ class PackageServiceTest extends \ConcreteDatabaseTestCase
         // allready covert with tests fount under test/test/Core/Localization
     }
 
-    public function testUninstall(Package $p)
-    {
+    public function testUninstall()
+    {   
+        // Prepare the test - unistall the first package
+        $pkgHandle = 'test_metadatadriver_annotation_default';
+        $packageService = $this->app->make('Concrete\Core\Package\PackageService');
+        $p = $packageService->getClass($pkgHandle);
+        $packageService->uninstall($p);
+        
+        // Load the proxies and test if they are still present
+        $packageEntityManager = $p->getPackageEntityManager();
+        $config = $packageEntityManager->getConfiguration();
+        $proxyGenerator = new \Doctrine\Common\Proxy\ProxyGenerator($config->getProxyDir(), $config->getProxyNamespace());
+        
+        $classes = $packageEntityManager->getMetadataFactory()->getAllMetadata();
+        foreach ($classes as $class) {
+
+            $proxyFileName = $proxyGenerator->getProxyFileName($class->getName(), $config->getProxyDir());
+            $this->assertFileNotExists($proxyFileName, 'File of class ' . $class-getName() . ' still exists.');
+        }
+        
+        
+        // Test if mapping info was removed from the config file
+
+        // Test if the proxies were removed
+  
         
         // constructor (Package $p)
         
