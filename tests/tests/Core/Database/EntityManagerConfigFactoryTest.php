@@ -192,20 +192,4 @@ class EntityManagerConfigFactoryTest extends \PHPUnit_Framework_TestCase
 
         return $entityManagerConfigFactory;
     }
-
-    /**
-     * tearDown
-     */
-    public function tearDown()
-    {
-        parent::tearDown();
-
-        // @todo not really used here
-        // cleanup tests/config/database.php
-//        $fileRepository = $this->getTestFileConfigORMMetadata();
-//        $metaDriverConfig = $fileRepository->get(CONFIG_ORM_METADATA_BASE);
-//        unset($metaDriverConfig['application']);
-//        $fileRepository->save(CONFIG_ORM_METADATA_BASE, $metaDriverConfig);
-    }
-
 }
