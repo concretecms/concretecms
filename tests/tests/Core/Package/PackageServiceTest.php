@@ -36,7 +36,7 @@ class PackageServiceTest extends \ConcreteDatabaseTestCase
             throw new Exception("Cannot write to the packages directory for the testing purposes. Please check permissions!");
         }
 
-        $packages = self::getTestPackages();
+        $packages = self::getTestPackagesForCopy();
 
         // First make sure that none of the packages already exist
         foreach ($packages as $pkg => $dir) {
@@ -63,7 +63,7 @@ class PackageServiceTest extends \ConcreteDatabaseTestCase
         // during tearDown() because the Packages table is already being
         // dropped by the parent class.
         $packageService = $this->app->make('Concrete\Core\Package\PackageService');
-        $installPackages = self::getTestPackages();
+        $installPackages = self::getTestPackagesForInstallation();
         foreach ($installPackages as $pkgHandle => $dir) {
             $pkg = $packageService->getClass($pkgHandle);
 
@@ -154,78 +154,61 @@ class PackageServiceTest extends \ConcreteDatabaseTestCase
             array(false, 5),        // select all packages
         );
     }
+    
+    
+    /**
+     * Test local upgradeable packages
+     */
+    //@todo not working yet
+//    public function testGetLocalUpgradeablePackages()
+//    {   
+//        // Test preparation
+//        self::copyTestPackageFilesForLocalUpgrade();
+//        
+//        
+//        // Test
+//        $packageService = $this->app->make('Concrete\Core\Package\PackageService');
+//        $localUpgradeablePackages = $packageService->getLocalUpgradeablePackages();
+//        $this->assertEquals(1, count($localUpgradeablePackages));
+//    }
 
-    public function testGetLocalUpgradeablePackages()
-    {
-//        $packages = self::getAvailablePackages(false);
-//        $upgradeables = array();
-//        foreach ($packages as $p) {
-//            $entity = $this->getByHandle($p->getPackageHandle());
-//            if ($entity) {
-//                if (version_compare($p->getPackageVersion(), $entity->getPackageVersion(), '>')) {
-//                    $p->pkgCurrentVersion = $entity->getPackageVersion();
-//                    $upgradeables[] = $p;
-//                }
-//            }
-//        }
-//
-//        return $upgradeables;
-    }
-
-
+    /**
+     * Test getInstalledHandles
+     */
     public function testGetInstalledHandles()
     {
-//        $query = "select p.pkgHandle from \\Concrete\\Core\\Entity\\Package p";
-//        $r = $this->entityManager->createQuery($query);
-//        $result = $r->getArrayResult();
-//        $handles = array();
-//        foreach($result as $r) {
-//            $handles[] = $r['pkgHandle'];
-//        }
-//        return $handles;
+        $packageService = $this->app->make('Concrete\Core\Package\PackageService');
+        $installedHandles = $packageService->getInstalledHandles();
+        $this->assertEquals(4, count($installedHandles));
     }
 
     /**
-     * Finds all packages that have an upgraded version available in the marketplace.
-     *
-     * @return Package[]
+     * Test updateable Entities
      */
     public function testGetRemotelyUpgradeablePackages()
-    {
-//        $packages = self::getInstalledList();
-//        $upgradeables = array();
-//        foreach ($packages as $p) {
-//            if (version_compare($p->getPackageVersion(), $p->getPackageVersionUpdateAvailable(), '<')) {
-//                $upgradeables[] = $p;
-//            }
-//        }
-//
-//        return $upgradeables;
+    {   
+        $updateToVersion = '0.0.2';
+        $packageService = $this->app->make('Concrete\Core\Package\PackageService');
+
+        // test preparation increase the $pkgAvailableVersion 
+        // of a package from 0.0.1 to 0.0.2
+        $em = \ORM::entityManager();
+        $package = $packageService->getByHandle('test_metadatadriver_annotation_default');
+        $package->setPackageAvailableVersion($updateToVersion);
+        $em->persist($package);
+        $em->flush();
+
+        // Test the method
+        $updateablePackages = $packageService->getRemotelyUpgradeablePackages();
+        $this->assertEquals(1, count($updateablePackages));
     }
 
     
     public function testSetupLocalization()
     {
-        
-        // constructor (LocalizablePackageInterface $package, $locale = null, $translate = 'current')
-//        if ($translate === 'current') {
-//            $translate = \Localization::getTranslate();
-//        }
-//        if (is_object($translate)) {
-//            if (!isset($locale) || !strlen($locale)) {
-//                $locale = Localization::activeLocale();
-//            }
-//            $languageFile = $package->getTranslationFile($locale);
-//            if (is_file($languageFile)) {
-//                $translate->addTranslationFile('gettext', $languageFile);
-//            }
-//        }
+        // allready covert with tests fount under test/test/Core/Localization
     }
 
-    protected function testClearEntityManagerMetadataCache()
-    {
-
-    }
     public function testUninstall(Package $p)
     {
         
@@ -281,13 +264,12 @@ class PackageServiceTest extends \ConcreteDatabaseTestCase
     }
     
     /**
-     * Get all packages
-     * Borrowed from Antti Hukkanen <antti.hukkanen@mainiotech.fi>
-     * with slight adjustments
+     * Get all packages except the once in the exclude list 
+     * for installation
      * 
      * @return array
      */    
-    private static function getTestPackages()
+    private static function getTestPackagesForInstallation()
     {
         
         // array with not installed packages
@@ -309,6 +291,40 @@ class PackageServiceTest extends \ConcreteDatabaseTestCase
         return $packages;
     }
     
+    
+    /**
+     * Get all packages
+     * Borrowed from Antti Hukkanen <antti.hukkanen@mainiotech.fi>
+     * 
+     * @return array
+     */    
+    private static function getTestPackagesForCopy()
+    {
+        $pkgSource = __DIR__ . DIRECTORY_SEPARATOR . 'fixtures' . DIRECTORY_SEPARATOR . 'packages';
+        $packages = array();
+
+        $filesystem = new Filesystem();
+        foreach ($filesystem->directories($pkgSource) as $dir) {
+            $packages[basename($dir)] = $dir;
+        }
+        return $packages;
+    }
+    
+    /**
+     * Copies the controller with an increase package version 
+     * into the specific package
+     */
+    private static function copyTestPackageFilesForLocalUpgrade(){
+        
+        $pkgFolder = 'test_metadatadriver_annotation_default';
+        
+        $pkgSource = __DIR__ . DIRECTORY_SEPARATOR . 'fixtures' . DIRECTORY_SEPARATOR . 'package_upgrades' .DIRECTORY_SEPARATOR .$pkgFolder;
+        $target = DIR_PACKAGES . DIRECTORY_SEPARATOR . $pkgFolder. DIRECTORY_SEPARATOR .'controller.php';
+        $filesystem = new Filesystem();
+        $files = $filesystem->files($pkgSource);
+        $filesystem->copy($files[0], $target);
+    }
+    
     /**
      * Delete all the temporary package folders from the packages directory
      * after all tests have run.
@@ -316,7 +332,7 @@ class PackageServiceTest extends \ConcreteDatabaseTestCase
      */
     public static function tearDownAfterClass()
     {
-        $installPackages = self::getTestPackages();
+        $installPackages = self::getTestPackagesForCopy();
 
         $filesystem = new Filesystem();
         foreach ($installPackages as $pkg => $dir) {
