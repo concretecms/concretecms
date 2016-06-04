@@ -7,10 +7,10 @@ defined('C5_EXECUTE') or define('C5_EXECUTE', md5(uniqid()));
  * Assets (Images, JS, etc....) URLs
  * ----------------------------------------------------------------------------
  */
-if (defined('APP_UPDATED_PASSTHRU') && APP_UPDATED_PASSTHRU) {
-    $ap = $app['app_relative_path'] . '/' . DIRNAME_UPDATES . '/' . $updates['core'] . '/' . DIRNAME_CORE;
-} else {
+if (APP_UPDATED_PASSTHRU === false) {
     $ap = $app['app_relative_path'] . '/' . DIRNAME_CORE;
+} else {
+    $ap = $app['app_relative_path'] . '/' . DIRNAME_UPDATES . '/' . APP_UPDATED_PASSTHRU . '/' . DIRNAME_CORE;
 }
 
 define('ASSETS_URL', $ap);
