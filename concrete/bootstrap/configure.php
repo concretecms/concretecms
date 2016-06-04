@@ -39,21 +39,23 @@ defined('DIR_CONFIG_SITE') or define('DIR_CONFIG_SITE', DIR_APPLICATION . '/conf
  * ----------------------------------------------------------------------------
  */
 
-$update_file = DIR_CONFIG_SITE . '/update.php';
-$updates = array();
-if (file_exists($update_file)) {
-    $updates = (array) include $update_file;
-}
-if (!defined('APP_UPDATED_PASSTHRU') && isset($updates['core'])) {
-    define('APP_UPDATED_PASSTHRU', true);
-    if (is_dir(DIR_BASE . '/' . DIRNAME_UPDATES . '/' . $updates['core'])) {
-        require DIR_BASE . '/' . DIRNAME_UPDATES . '/' . $updates['core'] . '/' . DIRNAME_CORE . '/' . 'dispatcher.php';
-    } elseif (file_exists(DIRNAME_UPDATES . '/' . $updates['core'] . '/' . DIRNAME_CORE . '/' . 'dispatcher.php')) {
-        require DIRNAME_UPDATES . '/' . $updates['core'] . '/' . DIRNAME_CORE . '/' . 'dispatcher.php';
-    } else {
-        die(sprintf('Invalid "%s" defined. Please remove it from %s.', 'update.core', $update_file));
+if (!defined('APP_UPDATED_PASSTHRU')) {
+    $update_file = DIR_CONFIG_SITE . '/update.php';
+    if (file_exists($update_file)) {
+        $updates = (array) include $update_file;
+        if (isset($updates['core'])) {
+            define('APP_UPDATED_PASSTHRU', $updates['core']);
+            if (is_dir(DIR_BASE . '/' . DIRNAME_UPDATES . '/' . APP_UPDATED_PASSTHRU)) {
+                require DIR_BASE . '/' . DIRNAME_UPDATES . '/' . APP_UPDATED_PASSTHRU . '/' . DIRNAME_CORE . '/' . 'dispatcher.php';
+            } elseif (file_exists(DIRNAME_UPDATES . '/' . APP_UPDATED_PASSTHRU . '/' . DIRNAME_CORE . '/' . 'dispatcher.php')) {
+                require DIRNAME_UPDATES . '/' . APP_UPDATED_PASSTHRU . '/' . DIRNAME_CORE . '/' . 'dispatcher.php';
+            } else {
+                die(sprintf('Invalid "%s" defined. Please remove it from %s.', 'update.core', $update_file));
+            }
+            exit;
+        }
     }
-    exit;
+    define('APP_UPDATED_PASSTHRU', false);
 }
 
 /*
