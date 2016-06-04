@@ -18,6 +18,7 @@
 
   fieldset {
     margin-bottom: 0px;
+    position: relative; /* we need this for right aligned tooltips */
     legend {
       font-weight: bold;
       border: 0px;
@@ -37,7 +38,6 @@
 
     }
   }
-
 
   .selectize-control .selectize-input {
     &.focus {
@@ -221,87 +221,93 @@
   div.checkbox, div.radio {
     label {
       color: #606060;
+      font-size: 18px;
     }
   }
 
   input[type=checkbox], input[type=radio] {
+
+    .transition(0.1s linear all);
+    border: 1px solid #e1e1e1;
     position: relative;
     appearance: none;
     -webkit-appearance: none;
     display: inline-block;
+    color: transparent;
     .box-shadow(none);
 
     &:disabled {
       .opacity(0.7);
     }
+
     &:focus {
       outline: 0px;
     }
 
-    &:checked:after {
-      font-family: FontAwesome;
-      position: absolute;
-      top: 0px;
-      left: 0px;
+    &:hover {
+      background-color: #f2f2f2;
     }
+
+
+    &:after {
+      .transition(0.1s linear all);
+      position: absolute;
+      font-family: FontAwesome;
+      content: @fa-var-check;
+    }
+
+    &:checked {
+      background-color: #ffffff;
+    }
+
+    &:checked:after {
+      background-color: darken(#f2f2f2, 5%);
+      color: darken(#f2f2f2, 50%);
+    }
+
   }
 
   input[type=checkbox] {
 
     padding: 6px;
     margin-top: 6px;
+    font-size: 12px;
 
     .border-radius(2px);
-    &:checked:after {
-      content: @fa-var-check;
-      font-size: 12px;
-    }
 
     &:indeterminate {
       background-color: #bdbdbd;
     }
+
     &:indeterminate:after {
-      font-family: FontAwesome;
       content: @fa-var-minus;
-      font-size: 12px;
       position: absolute;
       top: 1px;
       left: 1.5px;
       color: #fff;
     }
+
+    &:after {
+      top: 0px;
+      left: 0px;
+    }
+
   }
 
 
   input[type=radio] {
     padding: 6px;
     margin-top: 6px;
+    font-size: 5px;
 
     .border-radius(8px);
 
-    &:checked:after {
-      content: @fa-var-circle;
-      font-size: 5px;
+    &:after {
       top: 3.5px;
       left: 4px;
+      content: @fa-var-circle;
     }
   }
-
-
-  input[type=checkbox], input[type=radio] {
-    &:checked {
-      /*
-      background-color: #bdbdbd;
-      */
-      background-color: #ffffff;
-    }
-
-    border: 1px solid #bdbdbd;
-
-    &:checked:after {
-      color: #48b4fb;
-    }
-  }
-
 
 
   div.form-inline {
