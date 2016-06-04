@@ -85,7 +85,7 @@ class Picture extends Element
     public function alt($alt)
     {
         foreach ($this->getChildren() as $child) {
-            if ($child instanceof Image || $child instanceof Source) {
+            if ($child instanceof Image) {
                 $child->alt($alt);
             }
         }
@@ -94,7 +94,7 @@ class Picture extends Element
     public function title($title)
     {
         foreach ($this->getChildren() as $child) {
-            if ($child instanceof Image || $child instanceof Source) {
+            if ($child instanceof Image) {
                 $child->title($title);
             }
         }
@@ -102,9 +102,10 @@ class Picture extends Element
 
     public function addClass($classes)
     {
-        $sources = $this->getChildren();
-        foreach ($sources as $source) {
-            $source->addClass($classes);
+        foreach ($this->getChildren() as $child) {
+            if ($child instanceof Image) {
+                $child->addClass($classes);
+            }
         }
     }
 }
