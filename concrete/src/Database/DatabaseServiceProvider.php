@@ -43,7 +43,8 @@ class DatabaseServiceProvider extends ServiceProvider
         $this->app->bind('Concrete\Core\Database\EntityManagerConfigFactory',
             function($app) {
             $config = $app->make('Doctrine\ORM\Configuration');
-            return new EntityManagerConfigFactory($app, $config);
+            $configRepository = $app->make('config');
+            return new EntityManagerConfigFactory($app, $config, $configRepository);
         });
         $this->app->bind('Concrete\Core\Database\EntityManagerConfigFactoryInterface',
             'Concrete\Core\Database\EntityManagerConfigFactory');
@@ -127,28 +128,6 @@ class DatabaseServiceProvider extends ServiceProvider
             return new \Doctrine\Common\Annotations\CachedReader($simpleAnnotationReader,
                 $app->make('orm/cache'));
         });
-
-//        // ---------------------------------------------------------
-//        // Set the default bindings for EntityManagerConfigFactory
-//        
-//        // Bind the correct Cache to the EntityMangerConfigFactory
-//        $this->app->when('EntityManagerConfigFactory')
-//                ->needs('CacheProvider')
-//                ->give(function($app){
-//                    // Set cache based on doctrine dev mode
-//                    $isDevMode = $app->make('config')->get('concrete.cache.doctrine_dev_mode');
-//                    if ($isDevMode) {
-//                        $cache = $this->app->make('Doctrine\Common\Cache\ArrayCache');
-//                    } else {
-//                        $cache = new \Concrete\Core\Cache\Adapter\DoctrineCacheDriver('cache/expensive');
-//                    } 
-//                    return $cache;
-//        });
-//        
-//        // Bind the correct mapping driver to the EntityManagerConfigFactory
-//        $this->app->when('EntityManagerConfigFactory')
-//                ->needs('MappingDriver')
-//                ->give('Doctrine\Common\Persistence\Mapping\Driver\MappingDriverChain');
     }
 
     /**
