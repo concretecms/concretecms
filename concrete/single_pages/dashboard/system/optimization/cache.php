@@ -2,17 +2,20 @@
 <form method="post" class="ccm-dashboard-content-form" action="<?=$view->url('/dashboard/system/optimization/cache', 'update_cache')?>">
     <?=$this->controller->token->output('update_cache')?>
 
-    <fieldset style="margin-bottom: 15px">
-    <legend style="display: inline-block; margin-bottom: 0; width: auto; font-size: 14px; font-weight: bold" class="launch-tooltip" data-placement="right" title="<?=t('Stores the output of blocks which support block caching')?>"><?=t('Block Cache')?></legend>
+    <fieldset>
 
-    <div class="radio">
-        <label>
-            <input type="radio" name="ENABLE_BLOCK_CACHE" value="0" <?php if (!Config::get('concrete.cache.blocks')) {
-    ?> checked <?php 
-} ?> />
-            <?=t('Off - Good for development of custom blocks.')?>
-        </label>
-    </div>
+        <legend><?=t('Block Cache')?> <i class="fa fa-question-circle launch-tooltip" data-placement="right" title="<?=t('Stores the output of blocks which support block caching')?>"></i></legend>
+
+
+        <div class="form-group">
+        <div class="radio">
+            <label>
+                <input type="radio" name="ENABLE_BLOCK_CACHE" value="0" <?php if (!Config::get('concrete.cache.blocks')) {
+        ?> checked <?php
+    } ?> />
+                <?=t('Off - Good for development of custom blocks.')?>
+            </label>
+        </div>
 
     <div class="radio">
         <label>
@@ -22,32 +25,39 @@
             <?=t('On - Helps speed up a live site.')?>
         </label>
     </div>
+    </div>
     </fieldset>
 
-    <fieldset style="margin-bottom: 15px">
-        <legend style="display: inline-block; margin-bottom: 0; width: auto; font-size: 14px; font-weight: bold" class="launch-tooltip" data-placement="right" title="<?=t('Caches the output of customized theme stylesheets for faster loading. Turn off if you are editing LESS files in your theme directly.')?>"><?=t('Theme CSS Cache.')?></legend>
+    <fieldset>
+        <legend><?=t('Theme CSS Cache')?> <i class="fa fa-question-circle launch-tooltip" data-placement="right" title="<?=t('Caches the output of customized theme stylesheets for faster loading. Turn off if you are editing LESS files in your theme directly.')?>"></i></legend>
 
-        <div class="radio">
-            <label>
-                <input type="radio" name="ENABLE_THEME_CSS_CACHE" value="0" <?php if (!Config::get('concrete.cache.theme_css')) {
-    ?> checked <?php 
-} ?> />
-                <span><?=t('Off - Good for active theme development when using LESS files.')?></span>
-            </label>
-        </div>
+        <div class="form-group">
 
-        <div class="radio">
-            <label>
-                <input type="radio" name="ENABLE_THEME_CSS_CACHE" value="1" <?php  if (Config::get('concrete.cache.theme_css')) {
-     ?> checked <?php 
- } ?> />
-                <span><?=t('On - Helps speed up a live site.')?></span>
-            </label>
+            <div class="radio">
+                <label>
+                    <input type="radio" name="ENABLE_THEME_CSS_CACHE" value="0" <?php if (!Config::get('concrete.cache.theme_css')) {
+        ?> checked <?php
+    } ?> />
+                    <span><?=t('Off - Good for active theme development when using LESS files.')?></span>
+                </label>
+            </div>
+
+            <div class="radio">
+                <label>
+                    <input type="radio" name="ENABLE_THEME_CSS_CACHE" value="1" <?php  if (Config::get('concrete.cache.theme_css')) {
+         ?> checked <?php
+     } ?> />
+                    <span><?=t('On - Helps speed up a live site.')?></span>
+                </label>
+            </div>
         </div>
     </fieldset>
 
-    <fieldset style="margin-bottom: 15px">
-        <legend style="display: inline-block; margin-bottom: 0; width: auto; font-size: 14px; font-weight: bold" class="launch-tooltip" data-placement="right" title="<?=t('Determines whether compiled LESS stylesheets should output as compressed CSS. Uncompressed stylesheets are slightly larger but easier to read.')?>"><?=t('Compress LESS Output.')?></legend>
+
+    <fieldset>
+        <legend><?=t('Compress LESS Output')?> <i class="fa fa-question-circle launch-tooltip" data-placement="right" title="<?=t('Determines whether compiled LESS stylesheets should output as compressed CSS. Uncompressed stylesheets are slightly larger but easier to read.')?>"></i></legend>
+
+        <div class="form-group">
 
         <div class="radio">
             <label>
@@ -70,11 +80,15 @@
                 <span><?=t('On - Helps speed up a live site.')?></span>
             </label>
         </div>
+        </div>
     </fieldset>
 
 
-    <fieldset style="margin-bottom: 15px">
-        <legend style="display: inline-block; margin-bottom: 0; width: auto; font-size: 14px; font-weight: bold" class="launch-tooltip" data-placement="right" title="<?=t('Stores the generation of CSS and JavaScript assets')?>"><?=t('CSS and JavaScript Cache')?></legend>
+    <fieldset>
+
+        <legend><?=t('CSS and JavaScript Cache')?> <i class="fa fa-question-circle launch-tooltip" data-placement="right" title="<?=t('Stores the generation of CSS and JavaScript assets.')?>"></i></legend>
+
+        <div class="form-group">
 
         <div class="radio">
             <label>
@@ -93,10 +107,15 @@
                 <span><?=t('On - Helps speed up a live site.')?></span>
             </label>
         </div>
+        </div>
     </fieldset>
 
-    <fieldset style="margin-bottom: 15px">
-        <legend style="display: inline-block; margin-bottom: 0; width: auto; font-size: 14px; font-weight: bold" class="launch-tooltip" data-placement="right" title="<?=t('Stores the location and existence of source code files')?>"><?=t('Overrides Cache')?></legend>
+    <fieldset>
+
+        <legend><?=t('Overrides Cache')?> <i class="fa fa-question-circle launch-tooltip" data-placement="right" title="<?=t('Stores the location and existence of source code files.')?>"></i></legend>
+
+
+        <div class="form-group">
 
         <div class="radio">
             <label>
@@ -115,10 +134,14 @@
                 <span><?=t('On - Helps speed up a live site.')?></span>
             </label>
         </div>
+        </div>
     </fieldset>
 
-    <fieldset style="margin-bottom: 15px">
-        <legend style="display: inline-block; margin-bottom: 0; width: auto; font-size: 14px; font-weight: bold" class="launch-tooltip" data-placement="right" title="<?=t('Stores the output of an entire page')?>"><?=t('Full Page Caching')?></legend>
+    <fieldset>
+        <legend><?=t('Full Page Caching')?> <i class="fa fa-question-circle launch-tooltip" data-placement="right" title="<?=t('Stores the output of an entire page.')?>"></i></legend>
+
+        <div class="form-group">
+
         <div class="radio">
             <label>
                 <input type="radio" name="FULL_PAGE_CACHE_GLOBAL" value="0" <?php  if (!Config::get('concrete.cache.pages')) {
@@ -145,40 +168,42 @@
                 <span><?=t('On - In all cases.')?></span>
             </label>
         </div>
-    </fieldset>
-
-    <fieldset>
-        <legend style="display: inline-block; margin-bottom: 0; width: auto; font-size: 14px; font-weight: bold" class="launch-tooltip" data-placement="right" title="<?=t('Sets the amount of time to store the page output before generating a new version')?>"><?=t('Expire Pages from Cache')?></legend>
-
-        <div class="radio">
-          <label>
-              <input type="radio" name="FULL_PAGE_CACHE_LIFETIME" value="default" <?php  if (Config::get('concrete.cache.full_page_lifetime') == 'default') {
-     ?> checked <?php 
- } ?> />
-              <span><?=t('Every %s (default setting).', Loader::helper('date')->describeInterval(Config::get('concrete.cache.lifetime')))?></span>
-          </label>
         </div>
 
-        <div class="radio">
-            <label>
-                <input type="radio" name="FULL_PAGE_CACHE_LIFETIME" value="forever" <?php  if (Config::get('concrete.cache.full_page_lifetime') == 'forever') {
-     ?> checked <?php 
- } ?> />
-                <span><?=t('Only when manually removed or the cache is cleared.')?></span>
-            </label>
-        </div>
+        <div class="form-group">
 
-        <div class="radio">
-            <label>
-                <input type="radio" name="FULL_PAGE_CACHE_LIFETIME" value="custom" style="margin-bottom:1px; vertical-align:text-bottom;" <?php if (Config::get('concrete.cache.full_page_lifetime') == 'custom') {
-    ?> checked <?php 
-} ?> />
-                <span>
-                    <?=t('Every ')?>
-                    <input type="text" name="FULL_PAGE_CACHE_LIFETIME_CUSTOM" value="<?= h(Config::get('concrete.cache.full_page_lifetime_value')) ?>" size="4" />
-                    <?=t(' minutes.')?>
-                </span>
-            </label>
+            <label class="control-label"><?=t('Expire Pages from the Cache')?></label>
+
+            <div class="radio">
+              <label>
+                  <input type="radio" name="FULL_PAGE_CACHE_LIFETIME" value="default" <?php  if (Config::get('concrete.cache.full_page_lifetime') == 'default') {
+         ?> checked <?php
+     } ?> />
+                  <span><?=t('Every %s (default setting).', Loader::helper('date')->describeInterval(Config::get('concrete.cache.lifetime')))?></span>
+              </label>
+            </div>
+
+            <div class="radio">
+                <label>
+                    <input type="radio" name="FULL_PAGE_CACHE_LIFETIME" value="forever" <?php  if (Config::get('concrete.cache.full_page_lifetime') == 'forever') {
+         ?> checked <?php
+     } ?> />
+                    <span><?=t('Only when manually removed or the cache is cleared.')?></span>
+                </label>
+            </div>
+
+            <div class="radio">
+                <label>
+                    <input type="radio" name="FULL_PAGE_CACHE_LIFETIME" value="custom" style="margin-bottom:1px; vertical-align:text-bottom;" <?php if (Config::get('concrete.cache.full_page_lifetime') == 'custom') {
+        ?> checked <?php
+    } ?> />
+                    <span>
+                        <?=t('Every ')?>
+                        <input type="text" name="FULL_PAGE_CACHE_LIFETIME_CUSTOM" value="<?= h(Config::get('concrete.cache.full_page_lifetime_value')) ?>" size="4" />
+                        <?=t(' minutes.')?>
+                    </span>
+                </label>
+            </div>
         </div>
     </fieldset>
 
