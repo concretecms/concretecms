@@ -135,6 +135,10 @@ class Thumbnails extends DashboardPageController
         if (!Loader::helper('validation/token')->validate('do_add')) {
             $this->error->add(Loader::helper('validation/token')->getErrorMessage());
         }
+        $thumbtype = Type::getByHandle($request->request->get('ftTypeHandle'));
+        if(is_object($thumbtype)){
+            $this->error->add(t('That handle is in use.'));
+        }
         if (!$this->error->has()) {
             $type = new \Concrete\Core\Entity\File\Image\Thumbnail\Type\Type();
             $height = intval($request->request->get('ftTypeHeight'));
