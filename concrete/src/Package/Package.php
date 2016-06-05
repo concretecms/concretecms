@@ -265,7 +265,16 @@ abstract class Package implements LocalizablePackageInterface
 
         return $dirp . '/' . $this->pkgHandle;
     }
-
+    
+    /**
+     * Returns the path starting from c5 installation folder to the package folder
+     * 
+     * @return string
+     */
+    public function getRelativePathFromInstallFolder(){
+        return DIRECTORY_SEPARATOR . DIRNAME_PACKAGES . DIRECTORY_SEPARATOR . $this->getPackageHandle();
+    }
+    
 
     public function getTranslationFile($locale)
     {
@@ -784,14 +793,14 @@ abstract class Package implements LocalizablePackageInterface
             $tmp = $this->getPackageEntityPaths();
             $paths = array();
             foreach($tmp as $path) {
-                $paths[] = str_replace($this->getPackagePath(), $this->getRelativePath(), $path);
+                $paths[] = str_replace($this->getPackagePath(), $this->getRelativePathFromInstallFolder(), $path);
             }
         } else if ($this->metadataDriver === self::PACKAGE_METADATADRIVER_XML){
             // return xml metadata dir
-            $paths =  array($this->getRelativePath() . DIRECTORY_SEPARATOR . REL_DIR_METADATA_XML);
+            $paths =  array($this->getRelativePathFromInstallFolder() . DIRECTORY_SEPARATOR . REL_DIR_METADATA_XML);
         } else if ($this->metadataDriver === self::PACKAGE_METADATADRIVER_YAML){
             // return yaml metadata dir
-            $paths =  array($this->getRelativePath() . DIRECTORY_SEPARATOR . REL_DIR_METADATA_YAML);
+            $paths =  array($this->getRelativePathFromInstallFolder() . DIRECTORY_SEPARATOR . REL_DIR_METADATA_YAML);
         }
         // Check if paths exists and is a directory
         if(!is_dir(DIR_BASE.$paths[0])){

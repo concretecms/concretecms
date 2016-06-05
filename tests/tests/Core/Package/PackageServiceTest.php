@@ -15,7 +15,15 @@ class PackageServiceTest extends \ConcreteDatabaseTestCase
 {
     protected $metadatas = array(
         'Concrete\Core\Entity\Package',
+        'AttributeKeyCategories' // used for unistall tests
     );
+    
+    /**
+     * These tables are required to test the unistall process
+     * 
+     * @var array
+     */
+    protected $tables = array('SystemAntispamLibraries');
     
     protected $app;
     
@@ -51,6 +59,9 @@ class PackageServiceTest extends \ConcreteDatabaseTestCase
         }
     }
     
+    /**
+     * Install test packages
+     */
     protected function setUp()
     {
         parent::setUp();
@@ -59,9 +70,7 @@ class PackageServiceTest extends \ConcreteDatabaseTestCase
 
         // The setUp() procedures install the database table required for
         // installing the packages. This is why we need to install these
-        // AFTER that has run. There is no need to uninstall the packages
-        // during tearDown() because the Packages table is already being
-        // dropped by the parent class.
+        // AFTER that has run.
         $packageService = $this->app->make('Concrete\Core\Package\PackageService');
         $installPackages = self::getTestPackagesForInstallation();
         foreach ($installPackages as $pkgHandle => $dir) {
@@ -226,7 +235,7 @@ class PackageServiceTest extends \ConcreteDatabaseTestCase
         foreach ($classes as $class) {
 
             $proxyFileName = $proxyGenerator->getProxyFileName($class->getName(), $config->getProxyDir());
-            $this->assertFileNotExists($proxyFileName, 'File of class ' . $class-getName() . ' still exists.');
+            $this->assertFileNotExists($proxyFileName, 'Proxy file of class ' . $class->getName() . ' still exists.');
         }
         
         
@@ -234,18 +243,70 @@ class PackageServiceTest extends \ConcreteDatabaseTestCase
 
         // Test if the proxies were removed
   
-        
-        // constructor (Package $p)
-        
-//        $p->uninstall();
-//        $this->removPackageMetadataDriverFromConfig($p);
-//        $config = $this->entityManager->getConfiguration();
-//        $cache = $config->getMetadataCacheImpl();
-//        $cache->flushAll();
+        // Eventually test cache
     }
-
-    public function testInstall()
-    {
+    
+    /**
+     * Test package installation
+     * 
+     * Test the following things
+     * - proxy generation
+     * - metadata storing in the config file
+     * - test for the corret namespace in config file
+     * - check if the correct metadata paths are stored in the config file
+     * 
+     * @dataProvider dataProviderTestInstall
+     */
+    public function testInstall($pkgHandle, $conifgPath, $namespace, $numberOfPaths)
+    {   
+        
+        $packageService = $this->app->make('Concrete\Core\Package\PackageService');
+        $p = $packageService->getClass($pkgHandle);
+        // Install was already triggert by the setUp method
+        
+        // Test if mapping info was created and is correct
+        
+        // Load the proxies and test if they are still present
+        $packageEntityManager = $p->getPackageEntityManager();
+        $entityManagerConfig = $packageEntityManager->getConfiguration();
+        $proxyGenerator = new \Doctrine\Common\Proxy\ProxyGenerator($entityManagerConfig->getProxyDir(), $entityManagerConfig->getProxyNamespace());
+        
+        $classes = $packageEntityManager->getMetadataFactory()->getAllMetadata();
+        foreach ($classes as $class) {
+            
+            $proxyFileName = $proxyGenerator->getProxyFileName($class->getName(), $entityManagerConfig->getProxyDir());
+            // Test if file exists
+            $this->assertFileExists($proxyFileName, 'Proxy file of class ' . $class->getName() . ' does not exists.');
+        }
+        
+        // Test if conifg is present
+        $config = $packageService->getFileConfigORMMetadata();
+        $packageMetadata = $config->get($conifgPath);
+        $this->assertArrayHasKey($pkgHandle, $packageMetadata, 'Metadata for package '. $pkgHandle .' was not present');
+        
+        // The config should only conatain on set of namespace with paths.
+        // Example:
+        // 'test_metadatadriver_annotation_default' => array(
+        //     array(
+        //          'namespace' => 'Concrete\\Package\\TestMetadatadriverAnnotationDefault',
+        //          'paths' => array(
+        //              '/path/to/server/packages/test_metadatadriver_annotation_default/src'
+        //          ),
+        //     ),
+        // ),
+        $metadataPaths = $packageMetadata[$pkgHandle];
+        $this->assertEquals(1, count($metadataPaths));
+        // Get first driver resultset
+        $driverSet = $packageMetadata[$pkgHandle][0];
+        
+        // Test if the namespace matches
+        $this->assertEquals($namespace, $driverSet['namespace']);
+        
+        // Test if the paths count and path matches;
+        $this->assertEquals($numberOfPaths, count($driverSet['paths']));
+        
+        // Test contents of metadata paths
+        
         // constructor (Package $p, $data)
         
 //        $this->localization->pushActiveContext('system');
@@ -284,6 +345,48 @@ class PackageServiceTest extends \ConcreteDatabaseTestCase
 //            $error->add($e);
 //            return $error;
 //        }
+    }
+    
+    public function dataProviderTestInstall()
+    {
+        return array(
+            array(
+                'pkgHandle' => 'test_metadatadriver_annotation_default',
+                'configPath' => CONFIG_ORM_METADATA_ANNOTATION_DEFAULT,
+                'namespace' => 'Concrete\\Package\\TestMetadatadriverAnnotationDefault',
+                'numberOfPahts' => 1,
+                'metadataPaths' => array(
+                    '\\packages\\test_metadatadriver_annotation_default\\src\\Entity',
+                )
+            ),
+            array(
+                'pkgHandle' => 'test_metadatadriver_annotation_legacy',
+                'configPath' => CONFIG_ORM_METADATA_ANNOTATION_LEGACY,
+                'namespace' => 'Concrete\\Package\\TestMetadatadriverAnnotationLegacy',
+                'numberOfPahts' => 1,
+                'metadataPaths' => array(
+                    '\\packages\\test_metadatadriver_annotation_legacy\\src',
+                )
+            ),
+            array(
+                'pkgHandle' => 'test_metadatadriver_xml',
+                'configPath' => CONFIG_ORM_METADATA_XML,
+                'namespace' => 'Concrete\\Package\\TestMetadatadriverXml',
+                'numberOfPahts' => 1,
+                'metadataPaths' => array(
+                    '\\packages\\test_metadatadriver_xml\\config\\xml',
+                )
+            ),
+            array(
+                'pkgHandle' => 'test_metadatadriver_yaml',
+                'configPath' => CONFIG_ORM_METADATA_YAML,
+                'namespace' => 'Concrete\\Package\\TestMetadatadriverYaml',
+                'numberOfPahts' => 1,
+                'metadataPaths' => array(
+                    '\\packages\\test_metadatadriver_yaml\\config\\yaml',
+                )
+            ),
+        );
     }
     
     /**
@@ -346,6 +449,24 @@ class PackageServiceTest extends \ConcreteDatabaseTestCase
         $filesystem = new Filesystem();
         $files = $filesystem->files($pkgSource);
         $filesystem->copy($files[0], $target);
+    }
+    
+    /**
+     * Uninstall all packages
+     */
+    public function tearDown()
+    {
+        // Remove packages propperly through the packageService
+//        $packageService = $this->app->make('Concrete\Core\Package\PackageService');
+//        $installPackages = self::getTestPackagesForInstallation();
+//        foreach ($installPackages as $pkgHandle => $dir) {
+//            $pkg = $packageService->getClass($pkgHandle);
+//
+//            // uninstall packages via the PackageService, so the metadata and the proxies are removed properly
+//            $packageService->uninstall($pkg, array());
+//        }
+        
+        parent::tearDown();
     }
     
     /**
