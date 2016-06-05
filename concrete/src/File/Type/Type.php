@@ -145,8 +145,8 @@ class Type
     public function getThumbnail($fullImageTag = true)
     {
         $type = \Concrete\Core\File\Image\Thumbnail\Type\Type::getByHandle(\Config::get('concrete.icons.file_manager_listing.handle'));
-        if (file_exists(DIR_AL_ICONS . '/' . $this->extension . '.png')) {
-            $url = REL_DIR_AL_ICONS . '/' . $this->extension . '.png';
+        if (file_exists(DIR_AL_ICONS . '/' . $this->extension . '.svg')) {
+            $url = REL_DIR_AL_ICONS . '/' . $this->extension . '.svg';
         } else {
             $url = AL_ICON_DEFAULT;
         }
