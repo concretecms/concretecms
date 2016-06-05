@@ -339,7 +339,7 @@ class PackageService
      * 
      * @return \Concrete\Core\Package\Repository
      */
-    protected function getFileConfigORMMetadata()
+    public function getFileConfigORMMetadata()
     {
         $defaultEnv = \Config::getEnvironment();
         $fileSystem = new \Illuminate\Filesystem\Filesystem();
