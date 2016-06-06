@@ -36,9 +36,12 @@ class StandardSearchIndexer implements SearchIndexerInterface
      * @param Key $key
      * @param $previousHandle
      */
-    public function addSearchKey(CategoryInterface $category, AttributeKeyInterface $key, $previousHandle)
+    public function updateSearchIndexKeyColumns(CategoryInterface $category, AttributeKeyInterface $key, $previousHandle = null)
     {
         $controller = $key->getController();
+        if (!$previousHandle) {
+            $previousHandle = $key->getAttributeKeyHandle();
+        }
         if ($key->getAttributeKeyHandle() == $previousHandle ||
             $key->isAttributeKeySearchable() == false ||
             $category->getIndexedSearchTable() == false ||

@@ -10,6 +10,6 @@ interface SearchIndexerInterface
 
     function clearIndexEntry(CategoryInterface $category, AttributeValueInterface $value, $subject);
     function indexEntry(CategoryInterface $category, AttributeValueInterface $value, $subject);
-    function addSearchKey(CategoryInterface $category, AttributeKeyInterface $key, $previousHandle);
+    function updateSearchIndexKeyColumns(CategoryInterface $category, AttributeKeyInterface $key, $previousHandle);
 
 }

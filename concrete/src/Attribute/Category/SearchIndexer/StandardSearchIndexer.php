@@ -74,7 +74,7 @@ class StandardSearchIndexer implements SearchIndexerInterface
     {
         if ($this->isValid($category)) {
             $attributeIndexer = $key->getSearchIndexer();
-            $attributeIndexer->addSearchKey($category, $key, $previousHandle);
+            $attributeIndexer->updateSearchIndexKeyColumns($category, $key, $previousHandle);
         }
     }
 }
