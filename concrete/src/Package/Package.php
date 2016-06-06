@@ -773,6 +773,14 @@ abstract class Package implements LocalizablePackageInterface
             // return yaml metadata dir
             $paths =  array($this->getPackagePath() . DIRECTORY_SEPARATOR . REL_DIR_METADATA_YAML);
         }
+
+        // Add additional source path to the default namespace
+        // if pkgAutoloaderMapCoreExtensions is true
+        $corePath = $this->pkgAutoloaderMapCoreExtensions ? $this->getPackagePath() . DIRECTORY_SEPARATOR . DIRNAME_CLASSES . DIRECTORY_SEPARATOR . 'Concrete' : '';
+        if(!empty($corePath)){
+            $paths[] = $corePath;
+        }
+
         // Check if paths exists and is a directory
         if(!is_dir($paths[0])){
             $paths = array();
@@ -802,6 +810,14 @@ abstract class Package implements LocalizablePackageInterface
             // return yaml metadata dir
             $paths =  array($this->getRelativePathFromInstallFolder() . DIRECTORY_SEPARATOR . REL_DIR_METADATA_YAML);
         }
+
+        // Add additional source path to the default namespace
+        // if pkgAutoloaderMapCoreExtensions is true
+        $coreRelativPath = $this->pkgAutoloaderMapCoreExtensions ? $this->getRelativePathFromInstallFolder() . DIRECTORY_SEPARATOR . DIRNAME_CLASSES . DIRECTORY_SEPARATOR . 'Concrete' : '';
+        if(!empty($coreRelativPath)){
+            $paths[] = $coreRelativPath;
+        }
+
         // Check if paths exists and is a directory
         if(!is_dir(DIR_BASE.$paths[0])){
             $paths = array();
