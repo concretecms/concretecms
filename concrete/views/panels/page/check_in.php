@@ -17,24 +17,26 @@ $datetime = loader::helper('form/date_time');
         $publishTitle = t('Publish Page');
     } else {
         $publishTitle = t('Publish Changes');
-        $pk = PermissionKey::getByHandle('approve_page_versions');
-        $pk->setPermissionObject($c);
-        $pa = $pk->getPermissionAccessObject();
-        $workflows = array();
-        $canApproveWorkflow = true;
-        if (is_object($pa)) {
-            $workflows = $pa->getWorkflows();
-        }
-        foreach ($workflows as $wf) {
-            if (!$wf->canApproveWorkflow()) {
-                $canApproveWorkflow = false;
-            }
-        }
+    }
 
-        if (count($workflows) > 0 && !$canApproveWorkflow) {
-            $publishTitle = t('Submit to Workflow');
+    $pk = PermissionKey::getByHandle('approve_page_versions');
+    $pk->setPermissionObject($c);
+    $pa = $pk->getPermissionAccessObject();
+    $workflows = array();
+    $canApproveWorkflow = true;
+    if (is_object($pa)) {
+        $workflows = $pa->getWorkflows();
+    }
+    foreach ($workflows as $wf) {
+        if (!$wf->canApproveWorkflow()) {
+            $canApproveWorkflow = false;
         }
     }
+
+    if (count($workflows) > 0 && !$canApproveWorkflow) {
+        $publishTitle = t('Submit to Workflow');
+    }
+
     ?>
 <div class="ccm-panel-check-in-publish">
     <?php $publishAction = (is_object($publishErrors) && $publishErrors->has()) ? false : true ?>

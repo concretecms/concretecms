@@ -151,7 +151,7 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
         }
     }
 
-    public function publish(Page $c)
+    public function publish(Page $c, ApprovePagePageWorkflowRequest $pkr = null)
     {
         $this->stripEmptyPageTypeComposerControls($c);
         $parent = Page::getByID($c->getPageDraftTargetParentPageID());
@@ -171,11 +171,13 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
         }
 
         $u = new User();
-        $v = CollectionVersion::get($c, 'RECENT');
-        $pkr = new ApprovePagePageWorkflowRequest();
-        $pkr->setRequestedPage($c);
-        $pkr->setRequestedVersionID($v->getVersionID());
-        $pkr->setRequesterUserID($u->getUserID());
+        if (!is_object($pkr)) {
+            $v = CollectionVersion::get($c, 'RECENT');
+            $pkr = new ApprovePagePageWorkflowRequest();
+            $pkr->setRequestedPage($c);
+            $pkr->setRequestedVersionID($v->getVersionID());
+            $pkr->setRequesterUserID($u->getUserID());
+        }
         $pkr->trigger();
 
         $u->unloadCollectionEdit($c);
