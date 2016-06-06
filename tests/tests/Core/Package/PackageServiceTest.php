@@ -8,7 +8,8 @@ use Concrete\Core\Support\Facade\Application;
 
 /**
  * PackageServiceTest
- * 
+ *
+ * @author Markus Liechti <markus@liechti.io>
  * @group ORM setup
  */
 class PackageServiceTest extends \ConcreteDatabaseTestCase
@@ -17,7 +18,9 @@ class PackageServiceTest extends \ConcreteDatabaseTestCase
         'Concrete\Core\Entity\Package',
         'AttributeKeyCategories' // used for unistall tests
     );
-    
+
+    private $totallyInstalledBackages = 7;
+
     /**
      * These tables are required to test the unistall process
      * 
@@ -137,7 +140,7 @@ class PackageServiceTest extends \ConcreteDatabaseTestCase
     {
         $packageService = $this->app->make('Concrete\Core\Package\PackageService');
         $installedPackageEntities = $packageService->getInstalledList();
-        $this->assertEquals(4, count($installedPackageEntities), 'The count of fetched package entities doesn\'t match the installed packages. ');
+        $this->assertEquals($this->totallyInstalledBackages, count($installedPackageEntities), 'The count of fetched package entities doesn\'t match the installed packages. ');
     }
 
     /**
@@ -160,7 +163,7 @@ class PackageServiceTest extends \ConcreteDatabaseTestCase
     {
         return array(
             array(true, 1),         // select only not installed packages
-            array(false, 5),        // select all packages
+            array(false, $this->totallyInstalledBackages),        // select all packages
         );
     }
     
@@ -188,7 +191,7 @@ class PackageServiceTest extends \ConcreteDatabaseTestCase
     {
         $packageService = $this->app->make('Concrete\Core\Package\PackageService');
         $installedHandles = $packageService->getInstalledHandles();
-        $this->assertEquals(4, count($installedHandles));
+        $this->assertEquals($this->totallyInstalledBackages, count($installedHandles));
     }
 
     /**
@@ -233,7 +236,6 @@ class PackageServiceTest extends \ConcreteDatabaseTestCase
         
         $classes = $packageEntityManager->getMetadataFactory()->getAllMetadata();
         foreach ($classes as $class) {
-
             $proxyFileName = $proxyGenerator->getProxyFileName($class->getName(), $config->getProxyDir());
             $this->assertFileNotExists($proxyFileName, 'Proxy file of class ' . $class->getName() . ' still exists.');
         }
