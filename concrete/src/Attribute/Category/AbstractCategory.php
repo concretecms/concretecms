@@ -106,13 +106,16 @@ abstract class AbstractCategory implements CategoryInterface, StandardSearchInde
         }
         if ($key_type instanceof \Concrete\Core\Entity\Attribute\Type) {
             $key_type = $key_type->getController()->getAttributeKeyType();
-            // $key is actually an array.
-            $handle = $key['akHandle'];
-            $name = $key['akName'];
-            $key = $this->createAttributeKey();
-            $key->setAttributeKeyHandle($handle);
-            $key->setAttributeKeyName($name);
+            if (is_array($key)) {
+                $handle = $key['akHandle'];
+                $name = $key['akName'];
+                $key = $this->createAttributeKey();
+                $key->setAttributeKeyHandle($handle);
+                $key->setAttributeKeyName($name);
+            }
         }
+        /* end legacy support */
+
         $key_type->setAttributeKey($key);
         $key->setAttributeKeyType($key_type);
 
@@ -139,6 +142,10 @@ abstract class AbstractCategory implements CategoryInterface, StandardSearchInde
 
         $controller = $type->getController();
 
+        $this->entityManager->persist($key);
+        $this->entityManager->flush();
+
+        $controller->setAttributeKey($key);
         $key_type = $controller->saveKey($request->request->all());
         if (!is_object($key_type)) {
             $key_type = $controller->getAttributeKeyType();
@@ -223,20 +230,22 @@ abstract class AbstractCategory implements CategoryInterface, StandardSearchInde
 
     public function deleteValue(AttributeValueInterface $attribute)
     {
+        // Handle legacy attributes with these three lines.
         $controller = $attribute->getAttributeKey()->getController();
+        $controller->setAttributeValue($attribute);
         $controller->deleteValue();
 
         /*
          * @var Value
          */
         $value = $attribute->getValueObject();
-        $this->entityManager->remove($attribute);
-
-        $this->entityManager->flush();
-
-        $this->entityManager->refresh($value);
-        if (count($value->getAttributeValues()) < 1) {
-            $this->entityManager->remove($value);
+        if (is_object($value)) {
+            $this->entityManager->remove($attribute);
+            $this->entityManager->flush();
+            $this->entityManager->refresh($value);
+            if (count($value->getAttributeValues()) < 1) {
+                $this->entityManager->remove($value);
+            }
         }
     }
 

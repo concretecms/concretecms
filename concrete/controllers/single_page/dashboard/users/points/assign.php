@@ -73,8 +73,12 @@ class Assign extends DashboardPageController
             $this->error->add(t('Points Required'));
         }
 
+        $action = UserPointAction::getByID($this->post('upaID'));
+        if (!$action) {
+            $this->error->add(t('Invalid Action'));
+        }
+
         if (!$this->error->has()) {
-            $action = UserPointAction::getByID($this->post('upaID'));
             $obj = new UserPointActionDescription();
             $obj->setComments($this->post('upComments'));
             if ($this->post('manual_datetime') > 0) {
@@ -97,7 +101,7 @@ class Assign extends DashboardPageController
         $userPointActions = $upal->get(0);
         if (is_array($userPointActions) && count($userPointActions)) {
             foreach ($userPointActions as $upa) {
-                $res[$upa['upaID']] = $upa['upaDefaultPoints']." - ".$upa['upaName'];
+                $res[$upa['upaID']] = h($upa['upaDefaultPoints']." - ".$upa['upaName']);
             }
         }
 

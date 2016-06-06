@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Attribute;
 
+use Concrete\Core\Attribute\Value\EmptyRequestAttributeValue;
 use Concrete\Core\Controller\AbstractController;
 use Concrete\Core\Entity\Attribute\Key\Type\TextType;
 use Concrete\Core\Search\ItemList\Database\AttributedItemList;
@@ -255,10 +256,29 @@ class Controller extends AbstractController
     {
     }
 
-    // Called in place of deprecated saveAttributeForm() method
-    public function getAttributeValueFromRequest()
+    public function createAttributeValueFromRequest()
     {
-        return $this->saveForm($this->post());
+        return new EmptyRequestAttributeValue();
+    }
+
+    public function createAttributeValue($mixed)
+    {
+        return $this->saveValue($mixed);
+    }
+
+    /**
+     * @deprecated
+     */
+    public function saveForm($data)
+    {
+    }
+
+    /**
+     * @deprecated
+     */
+    public function saveValue($mixed)
+    {
+        return false;
     }
 
     public function searchKeywords($keywords, $queryBuilder)
@@ -277,9 +297,19 @@ class Controller extends AbstractController
         return new TextType();
     }
 
+    /*
+     * @deprecated
+     */
+    public function getAttributeValueID()
+    {
+        if (is_object($this->attributeValue)) {
+            return $this->attributeValue->getAttributeValueID();
+        }
+    }
+
     public function getAttributeKeyType()
     {
-        if ($this->attributeKey) {
+        if ($this->attributeKey && is_object($this->attributeKey->getAttributeKeyType())) {
             return $this->attributeKey->getAttributeKeyType();
         } else {
             $key_type = $this->createAttributeKeyType();

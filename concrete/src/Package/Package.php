@@ -393,10 +393,10 @@ abstract class Package implements LocalizablePackageInterface
     /**
      * @deprecated
      */
-    public static function getAvailablePackages()
+    public static function getAvailablePackages($filterInstalled = true)
     {
         // this should go through the facade instead
-        return \Concrete\Core\Support\Facade\Package::getAvailablePackages();
+        return \Concrete\Core\Support\Facade\Package::getAvailablePackages($filterInstalled);
     }
 
     /**
@@ -584,7 +584,12 @@ abstract class Package implements LocalizablePackageInterface
         if (method_exists($this, 'getPackageEntityPath')) {
             return array($this->getPackageEntityPath());
         }
-        return array($this->getPackagePath() . '/' . DIRNAME_CLASSES);
+        // If we're using a legacy package, we scan the entire src directory
+        if (version_compare($this->getApplicationVersionRequired(), '5.8.0', '<')){
+            return array($this->getPackagePath() . DIRECTORY_SEPARATOR . DIRNAME_CLASSES);
+        } else {
+            return array($this->getPackagePath() . DIRECTORY_SEPARATOR . DIRNAME_CLASSES . DIRECTORY_SEPARATOR . DIRNAME_ENTITIES);
+        }
     }
 
     /**
@@ -751,11 +756,7 @@ abstract class Package implements LocalizablePackageInterface
         // annotations entity path
         if ($this->metadataDriver === self::PACKAGE_METADATADRIVER_ANNOTATION){
             // Support for the legacy method for backwards compatibility
-            if (method_exists($this, 'getPackageEntityPath')) {
-                $paths = array($this->getPackageEntityPath());
-            }else{
-                $paths = array($this->getPackagePath() . DIRECTORY_SEPARATOR . DIRNAME_CLASSES);
-            }
+            $paths = $this->getPackageEntityPaths();
         } else if ($this->metadataDriver === self::PACKAGE_METADATADRIVER_XML){
             // return xml metadata dir
             $paths =  array($this->getPackagePath() . DIRECTORY_SEPARATOR . REL_DIR_METADATA_XML);
@@ -775,15 +776,15 @@ abstract class Package implements LocalizablePackageInterface
      * 
      * @return array 
      */
-    public function getPackageMetadataRelativPaths()
+    public function getPackageMetadataRelativePaths()
     {       
         // annotations entity path
         if ($this->metadataDriver === self::PACKAGE_METADATADRIVER_ANNOTATION){
             // Support for the legacy method for backwards compatibility
-            if (method_exists($this, 'getPackageEntityPath')) {
-                $paths = array($this->getPackageEntityPath());
-            }else{
-                $paths = array($this->getRelativePath() . DIRECTORY_SEPARATOR . DIRNAME_CLASSES);
+            $tmp = $this->getPackageEntityPaths();
+            $paths = array();
+            foreach($tmp as $path) {
+                $paths[] = str_replace($this->getPackagePath(), $this->getRelativePath(), $path);
             }
         } else if ($this->metadataDriver === self::PACKAGE_METADATADRIVER_XML){
             // return xml metadata dir

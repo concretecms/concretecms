@@ -65,8 +65,12 @@ class Controller extends AttributeTypeController
         );
         $akTopicParentNodeID = $data['akTopicParentNodeID'];
         $akTopicTreeID = $data['akTopicTreeID'];
-        $type->setParentNodeID($akTopicParentNodeID);
-        $type->setTopicTreeID($akTopicTreeID);
+        if ($akTopicParentNodeID) {
+            $type->setParentNodeID($akTopicParentNodeID);
+        }
+        if ($akTopicTreeID) {
+            $type->setTopicTreeID($akTopicTreeID);
+        }
 
         return $type;
     }
@@ -116,11 +120,27 @@ class Controller extends AttributeTypeController
                 $selected[] = (string) $topicPath;
             }
 
-            return $this->saveValue($selected);
+            return $this->createAttributeValue($selected);
         }
     }
 
-    public function saveValue($nodes)
+
+    /**
+     * @deprecated
+     */
+    public function setNodes($akTopicParentNodeID, $akTopicTreeID)
+    {
+        /**
+         * @var $type TopicsType
+         */
+        $type = $this->getAttributeKey()->getAttributeKeyType();
+        $type->setParentNodeID($akTopicParentNodeID);
+        $type->setTopicTreeID($akTopicTreeID);
+        $this->entityManager->persist($type);
+        $this->entityManager->flush();
+    }
+
+    public function createAttributeValue($nodes)
     {
         $selected = array();
         $this->load();
@@ -246,7 +266,7 @@ class Controller extends AttributeTypeController
         $this->set('attributeKey', $this->attributeKey);
     }
 
-    public function saveForm()
+    public function createAttributeValueFromRequest()
     {
         $sh = Core::make('helper/security');
         $av = new TopicsValue();

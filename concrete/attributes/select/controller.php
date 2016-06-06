@@ -60,14 +60,17 @@ class Controller extends AttributeTypeController
          * @var SelectType
          */
         $type = $ak->getAttributeKeyType();
+        if (is_object($type)) {
 
-        $this->akSelectAllowMultipleValues = $type->getAllowMultipleValues();
-        $this->akSelectAllowOtherValues = $type->getAllowOtherValues();
-        $this->akSelectOptionDisplayOrder = $type->getDisplayOrder();
+            $this->akSelectAllowMultipleValues = $type->getAllowMultipleValues();
+            $this->akSelectAllowOtherValues = $type->getAllowOtherValues();
+            $this->akSelectOptionDisplayOrder = $type->getDisplayOrder();
 
-        $this->set('akSelectAllowMultipleValues', $this->akSelectAllowMultipleValues);
-        $this->set('akSelectAllowOtherValues', $this->akSelectAllowOtherValues);
-        $this->set('akSelectOptionDisplayOrder', $this->akSelectOptionDisplayOrder);
+            $this->set('akSelectAllowMultipleValues', $this->akSelectAllowMultipleValues);
+            $this->set('akSelectAllowOtherValues', $this->akSelectAllowOtherValues);
+            $this->set('akSelectOptionDisplayOrder', $this->akSelectOptionDisplayOrder);
+
+        }
     }
 
     public function exportKey($akey)
@@ -211,16 +214,37 @@ class Controller extends AttributeTypeController
     public function form()
     {
         $this->load();
-        $options = $this->getSelectedOptions();
         $selectedOptions = array();
-        $selectedOptionValues = array();
-        foreach ($options as $opt) {
-            $selectedOptions[] = $opt->getSelectAttributeOptionID();
-            $selectedOptionValues[$opt->getSelectAttributeOptionID()] = $opt->getSelectAttributeOptionValue();
+        $selectedOptionIDs = array();
+        if ($this->akSelectAllowOtherValues) {
+            // This is the fancy auto complete, which uses an irritating way of handling
+            // IDs so that we can discern whether something is an existing selected option
+            // vs just a number that happens to match that option's ID.
+            if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+                $options = $this->loadSelectedTagValueFromPost($this->request('atSelectOptionValue'));
+                foreach ($options as $opt) {
+                    $selectedOptions[] = ['id' => $opt->id, 'text' => $opt->text];
+                    $selectedOptionIDs[] = $opt->id;
+                }
+            } else {
+                $options = $this->getSelectedOptions();
+                foreach ($options as $opt) {
+                    $selectedOptions[] = ['id' => 'SelectAttributeOption:' . $opt->getSelectAttributeOptionID(), 'text' => $opt->getSelectAttributeOptionValue()];
+                    $selectedOptionIDs[] = 'SelectAttributeOption:' . $opt->getSelectAttributeOptionID();
+                }
+            }
+        } else {
+            // In this case, the selected option IDs array is simply an array of IDs with
+            // no prefix
+            $options = $this->getSelectedOptions();
+            foreach ($options as $opt) {
+                $selectedOptions[] = $opt; // Not sure if the view even needs this.
+                $selectedOptionIDs[] = $opt->getSelectAttributeOptionID();
+            }
         }
-        $this->set('selectedOptionValues', $selectedOptionValues);
+        $this->set('selectedOptionIDs', $selectedOptionIDs);
         $this->set('selectedOptions', $selectedOptions);
-        $this->requireAsset('select2');
+        $this->requireAsset('selectize');
     }
 
     public function search()
@@ -233,8 +257,9 @@ class Controller extends AttributeTypeController
         $this->set('selectedOptions', $selectedOptions);
     }
 
-    public function saveForm($data)
+    public function createAttributeValueFromRequest()
     {
+        $data = $this->post();
         $this->load();
 
         $akSelectAllowMultipleValues = $this->akSelectAllowMultipleValues;
@@ -245,9 +270,9 @@ class Controller extends AttributeTypeController
             // select list. Only one option possible. No new options.
             $option = $this->getOptionByID($data['atSelectOptionValue']);
             if (is_object($option)) {
-                return $this->saveValue($option);
+                return $this->createAttributeValue($option);
             } else {
-                return $this->saveValue(null);
+                return $this->createAttributeValue(null);
             }
         } else {
             if ($akSelectAllowMultipleValues && !$akSelectAllowOtherValues) {
@@ -261,7 +286,7 @@ class Controller extends AttributeTypeController
                         }
                     }
                 }
-                return $this->saveValue($options);
+                return $this->createAttributeValue($options);
             } else {
                 if (!$akSelectAllowMultipleValues && $akSelectAllowOtherValues) {
 
@@ -284,9 +309,9 @@ class Controller extends AttributeTypeController
                         }
                     }
                     if (is_object($option)) {
-                        return $this->saveValue($option);
+                        return $this->createAttributeValue($option);
                     } else {
-                        return $this->saveValue(null);
+                        return $this->createAttributeValue(null);
                     }
                 } else {
                     if ($akSelectAllowMultipleValues && $akSelectAllowOtherValues) {
@@ -316,9 +341,9 @@ class Controller extends AttributeTypeController
                         }
 
                         if (count($options)) {
-                            return $this->saveValue($options);
+                            return $this->createAttributeValue($options);
                         } else {
-                            return $this->saveValue(null);
+                            return $this->createAttributeValue(null);
                         }
                     }
                 }
@@ -334,7 +359,7 @@ class Controller extends AttributeTypeController
                 $vals[] = (string) $ch;
             }
 
-            return $this->saveValue($vals);
+            return $this->createAttributeValue($vals);
         }
     }
 
@@ -378,7 +403,7 @@ class Controller extends AttributeTypeController
      * checked under the attribute settings
      * Code from this bug - http://www.concrete5.org/index.php?cID=595692
      */
-    public function saveValue($value)
+    public function createAttributeValue($value)
     {
         $this->load();
 
@@ -515,16 +540,15 @@ class Controller extends AttributeTypeController
     }
 
     /**
-     * Used by select2. Automatically takes a value request and converts it into tag/text key value pairs.
+     * Used by selectize. Automatically takes a value request and converts it into tag/text key value pairs.
      * New options are just text/tag, whereas existing ones are SelectAttributeOption:ID/text.
      */
-    public function action_load_autocomplete_selected_value()
+    protected function loadSelectedTagValueFromPost($value)
     {
         $em = \Database::get()->getEntityManager();
         $r = $em->getRepository('\Concrete\Core\Entity\Attribute\Value\Value\SelectValueOption');
         $type = $this->attributeKey->getAttributeKeyType();
 
-        $value = $this->request->query->get('value');
         $values = explode(',', $value);
         $response = array();
         foreach ($values as $value) {
@@ -545,7 +569,7 @@ class Controller extends AttributeTypeController
             $response[] = $o;
         }
 
-        return new JsonResponse($response);
+        return $response;
     }
 
     public function action_load_autocomplete_values()
@@ -617,6 +641,10 @@ class Controller extends AttributeTypeController
     public function getOptions($keywords = null)
     {
         if (!isset($this->attributeKey)) {
+            return array();
+        }
+
+        if (!is_object($this->attributeKey->getAttributeKeyType())) {
             return array();
         }
 

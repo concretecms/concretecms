@@ -81,7 +81,8 @@ class Compose extends Controller
         if (!$e->has()) {
             $d = $pagetype->createDraft($template);
             $d->setPageDraftTargetParentPageID($cParentID);
-            $pagetype->savePageTypeComposerForm($d);
+            $saver = $pagetype->getPageTypeSaverObject();
+            $saver->saveForm($d);
             if ($this->request->request('addPageComposeAction') == 'publish') {
                 $pagetype->publish($d);
                 $pr->setAdditionalDataAttribute('cParentID', $cParentID);

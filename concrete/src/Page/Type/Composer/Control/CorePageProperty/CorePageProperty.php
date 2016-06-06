@@ -3,7 +3,7 @@ namespace Concrete\Core\Page\Type\Composer\Control\CorePageProperty;
 
 use Loader;
 use Environment;
-use Page;
+use Concrete\Core\Page\Page;
 use Controller;
 
 abstract class CorePageProperty extends \Concrete\Core\Page\Type\Composer\Control\Control

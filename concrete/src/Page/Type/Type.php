@@ -20,7 +20,7 @@ use Concrete\Core\Backup\ContentImporter;
 use Concrete\Core\Package\PackageList;
 use CollectionVersion;
 use Collection;
-use Page;
+use Concrete\Core\Page\Page;
 use Config;
 use User;
 use Package;
@@ -34,7 +34,6 @@ use Concrete\Core\Page\Type\Composer\Control\CorePageProperty\CorePageProperty a
 
 class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
 {
-    protected $ptDraftVersionsToSave = 10;
     protected $ptDefaultPageTemplateID = 0;
 
     public function getPageTypeID()
@@ -188,59 +187,12 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
         \Events::dispatch('on_page_type_publish', $ev);
     }
 
+    /**
+     * @deprecated
+     */
     public function savePageTypeComposerForm(Page $c)
     {
-        $controls = PageTypeComposerControl::getList($this);
-        $outputControls = array();
-        foreach ($controls as $cn) {
-            $data = $cn->getRequestValue();
-            $cn->publishToPage($c, $data, $controls);
-            $outputControls[] = $cn;
-        }
-
-        // set page name from controls
-        // now we see if there's a page name field in there
-        $containsPageNameControl = false;
-        foreach ($outputControls as $cn) {
-            if ($cn instanceof NameCorePageProperty) {
-                $containsPageNameControl = true;
-                break;
-            }
-        }
-        if (!$containsPageNameControl) {
-            foreach ($outputControls as $cn) {
-                if ($cn->canPageTypeComposerControlSetPageName()) {
-                    $pageName = $cn->getPageTypeComposerControlPageNameValue($c);
-                    $c->updateCollectionName($pageName);
-                }
-            }
-        }
-
-        // remove all but the most recent X drafts.
-        $vl = new VersionList($c);
-        $vl->setItemsPerPage(-1);
-        // this will ensure that we only ever keep X versions.
-        $vArray = $vl->getPage();
-        if (count($vArray) > $this->ptDraftVersionsToSave) {
-            for ($i = $this->ptDraftVersionsToSave; $i < count($vArray); ++$i) {
-                $v = $vArray[$i];
-                @$v->delete();
-            }
-        }
-
-        $c = Page::getByID($c->getCollectionID(), 'RECENT');
-        $controls = array();
-        foreach ($outputControls as $oc) {
-            $oc->setPageObject($c);
-            $controls[] = $oc;
-        }
-
-        $ev = new Event($c);
-        $ev->setPageType($this);
-        $ev->setArgument('controls', $controls);
-        \Events::dispatch('on_page_type_save_composer_form', $ev);
-
-        return $controls;
+        return $this->getPageTypeSaverObject()->saveForm($c);
     }
 
     public function getPageTypeSelectedPageTemplateObjects()
@@ -1114,6 +1066,19 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
         }
     }
 
+    /**
+     * @return \Concrete\Core\Page\Type\Saver\SaverInterface|null
+     */
+    public function getPageTypeSaverObject()
+    {
+        if ($this->ptHandle) {
+            $saver = \Core::make('manager/page_type/saver')->driver($this->ptHandle);
+            $saver->setPageTypeObject($this);
+            return $saver;
+        }
+    }
+
+
     public function createDraft(\Concrete\Core\Entity\Page\Template $pt, $u = false)
     {
         if (!is_object($u)) {
@@ -1150,13 +1115,31 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
     public function renderComposerOutputForm($page = null, $targetPage = null)
     {
         $env = \Environment::get();
-        $rec = $env->getRecord(
+        $elementController = $env->getRecord(
+            DIRNAME_CONTROLLERS . '/element/page_type/composer/form/output/form/' . $this->getPageTypeHandle() . '.php',
+            $this->getPackageHandle()
+        );
+        $element = $env->getRecord(
             DIRNAME_ELEMENTS . '/' . DIRNAME_PAGE_TYPES . '/composer/form/output/form/' . $this->getPageTypeHandle() . '.php',
             $this->getPackageHandle()
         );
-        if ($rec->exists()) {
+        if ($elementController->exists()) {
+            $elementController = core_class('Controller\\Element\\PageType\\Composer\\Form\\Output\\Form\\'
+                . camelcase($this->getPageTypeHandle()), $this->getPackageHandle());
+
+            $elementController = \Core::make($elementController);
+            $elementController->setPageTypeObject($this);
+            if (is_object($page)) {
+                $elementController->setPageObject($page);
+            }
+            if (is_object($targetPage)) {
+                $elementController->setTargetPageObject($targetPage);
+            }
+            $elementController->setPackageHandle($this->getPackageHandle());
+            $elementController->render();
+        } else if ($element->exists()) {
             $pagetype = $this;
-            include $rec->file;
+            include $element->file;
         } else {
             Loader::element('page_types/composer/form/output/form', array(
                 'pagetype' => $this,

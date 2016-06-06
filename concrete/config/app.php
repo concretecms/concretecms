@@ -107,7 +107,7 @@ return array(
         'core_content_importer' => '\Concrete\Core\Backup\ContentImporter\ContentImporterServiceProvider',
         'core_manager_grid_framework' => '\Concrete\Core\Page\Theme\GridFramework\ManagerServiceProvider',
         'core_manager_pagination_view' => '\Concrete\Core\Search\Pagination\View\ManagerServiceProvider',
-        'core_manager_page_type_validator' => '\Concrete\Core\Page\Type\Validator\ManagerServiceProvider',
+        'core_manager_page_type' => '\Concrete\Core\Page\Type\ManagerServiceProvider',
         'core_manager_layout_preset_provider' => '\Concrete\Core\Area\Layout\Preset\Provider\ManagerServiceProvider',
         'core_manager_file_search_fields' => '\Concrete\Core\File\Search\Field\ManagerServiceProvider',
         'core_database' => '\Concrete\Core\Database\DatabaseServiceProvider',
@@ -497,7 +497,7 @@ return array(
         '/ccm/assets/localization/core/js' => array('\Concrete\Controller\Frontend\AssetsLocalization::getCoreJavascript'),
         '/ccm/assets/localization/select2/js' => array('\Concrete\Controller\Frontend\AssetsLocalization::getSelect2Javascript'),
         '/ccm/assets/localization/redactor/js' => array('\Concrete\Controller\Frontend\AssetsLocalization::getRedactorJavascript'),
-        '/ccm/assets/localization/dynatree/js' => array('\Concrete\Controller\Frontend\AssetsLocalization::getDynatreeJavascript'),
+        '/ccm/assets/localization/fancytree/js' => array('\Concrete\Controller\Frontend\AssetsLocalization::getFancytreeJavascript'),
         '/ccm/assets/localization/imageeditor/js' => array('\Concrete\Controller\Frontend\AssetsLocalization::getImageEditorJavascript'),
         '/ccm/assets/localization/jquery/ui/js' => array('\Concrete\Controller\Frontend\AssetsLocalization::getJQueryUIJavascript'),
         '/ccm/assets/localization/translator/js' => array('\Concrete\Controller\Frontend\AssetsLocalization::getTranslatorJavascript'),
@@ -616,6 +616,10 @@ return array(
             array('javascript-localized', '/ccm/assets/localization/select2/js'),
             array('css', 'css/select2.css', array('minify' => false)),
         ),
+        'selectize' => array(
+            array('javascript', 'js/selectize.js', array('minify' => false, 'combine' => false)),
+            array('css', 'css/selectize.css', array('minify' => false)),
+        ),
         'underscore' => array(
             array('javascript', 'js/underscore.js', array('minify' => false)),
         ),
@@ -722,10 +726,17 @@ return array(
         'background-check' => array(
             array('javascript', 'js/background-check.js'),
         ),
+        /*
         'dynatree' => array(
             array('javascript', 'js/dynatree.js', array('minify' => false)),
             array('javascript-localized', '/ccm/assets/localization/dynatree/js', array('minify' => false)),
             array('css', 'css/dynatree.css', array('minify' => false)),
+        ),
+        */
+        'fancytree' => array(
+            array('javascript', 'js/fancytree.js', array('minify' => false)),
+            array('javascript-localized', '/ccm/assets/localization/fancytree/js', array('minify' => false)),
+            array('css', 'css/fancytree.css', array('minify' => false)),
         ),
         'bootstrap/dropdown' => array(
             array('javascript', 'js/bootstrap/dropdown.js'),
@@ -848,11 +859,20 @@ return array(
                 array('css', 'jquery/visualize'),
             ),
         ),
+        /**
+         * @deprecated
+         */
         'select2' => array(
             array(
                 array('javascript', 'select2'),
                 array('javascript-localized', 'select2'),
                 array('css', 'select2'),
+            ),
+        ),
+        'selectize' => array(
+            array(
+                array('javascript', 'selectize'),
+                array('css', 'selectize'),
             ),
         ),
         'dropzone' => array(
@@ -934,11 +954,11 @@ return array(
                 array('css', 'font-awesome'),
             ),
         ),
-        'dynatree' => array(
+        'fancytree' => array(
             array(
-                array('javascript', 'dynatree'),
-                array('javascript-localized', 'dynatree'),
-                array('css', 'dynatree'),
+                array('javascript', 'fancytree'),
+                array('javascript-localized', 'fancytree'),
+                array('css', 'fancytree'),
             ),
         ),
         'core/app' => array(
@@ -1017,15 +1037,14 @@ return array(
                 array('css', 'core/app'),
                 array('css', 'jquery/ui'),
                 array('css', 'core/file-manager'),
-                array('css', 'select2'),
+                array('css', 'selectize'),
                 array('javascript', 'core/events'),
                 array('javascript', 'bootstrap/tooltip'),
                 array('javascript', 'underscore'),
                 array('javascript', 'backbone'),
                 array('javascript', 'jquery/ui'),
                 array('javascript-localized', 'jquery/ui'),
-                array('javascript', 'select2'),
-                array('javascript-localized', 'select2'),
+                array('javascript', 'selectize'),
                 array('javascript-localized', 'core/localization'),
                 array('javascript', 'core/app'),
                 array('javascript', 'jquery/fileupload'),
@@ -1040,12 +1059,12 @@ return array(
                 array('javascript', 'backbone'),
                 array('javascript', 'jquery/ui'),
                 array('javascript-localized', 'jquery/ui'),
-                array('javascript', 'dynatree'),
-                array('javascript-localized', 'dynatree'),
+                array('javascript', 'fancytree'),
+                array('javascript-localized', 'fancytree'),
                 array('javascript-localized', 'core/localization'),
                 array('javascript', 'core/app'),
                 array('javascript', 'core/sitemap'),
-                array('css', 'dynatree'),
+                array('css', 'fancytree'),
                 array('css', 'core/sitemap'),
             ),
         ),
@@ -1061,10 +1080,10 @@ return array(
                 array('javascript', 'underscore'),
                 array('javascript', 'jquery/ui'),
                 array('javascript-localized', 'jquery/ui'),
-                array('javascript', 'dynatree'),
-                array('javascript-localized', 'dynatree'),
+                array('javascript', 'fancytree'),
+                array('javascript-localized', 'fancytree'),
                 array('javascript', 'core/tree'),
-                array('css', 'dynatree'),
+                array('css', 'fancytree'),
             ),
         ),
         'core/tree' => array(
@@ -1073,10 +1092,10 @@ return array(
                 array('javascript', 'underscore'),
                 array('javascript', 'jquery/ui'),
                 array('javascript-localized', 'jquery/ui'),
-                array('javascript', 'dynatree'),
-                array('javascript-localized', 'dynatree'),
+                array('javascript', 'fancytree'),
+                array('javascript-localized', 'fancytree'),
                 array('javascript', 'core/tree'),
-                array('css', 'dynatree'),
+                array('css', 'fancytree'),
             ),
         ),
         'core/groups' => array(
@@ -1085,10 +1104,10 @@ return array(
                 array('javascript', 'underscore'),
                 array('javascript', 'jquery/ui'),
                 array('javascript-localized', 'jquery/ui'),
-                array('javascript', 'dynatree'),
-                array('javascript-localized', 'dynatree'),
+                array('javascript', 'fancytree'),
+                array('javascript-localized', 'fancytree'),
                 array('javascript', 'core/tree'),
-                array('css', 'dynatree'),
+                array('css', 'fancytree'),
             ),
         ),
         'core/gathering' => array(

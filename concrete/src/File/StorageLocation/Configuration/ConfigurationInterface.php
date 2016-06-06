@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Core\File\StorageLocation\Configuration;
 
-use Concrete\Core\Error\ErrorBag\Error\Error;
+use Concrete\Core\Error\ErrorList\Error\Error;
 
 interface ConfigurationInterface
 {

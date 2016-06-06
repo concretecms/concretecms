@@ -8,7 +8,7 @@
  * @var string $clearAction
  * @var string $saveAction
  */
-$sets = $category->getController()->getSetManager()->getgetAttributeSets();
+$sets = $category->getController()->getSetManager()->getAttributeSets();
 foreach ($sets as $set) {
     echo '<h3>' . $set->getAttributeSetDisplayName() . '</h3><hr/>';
     foreach ($set->getAttributeKeys() as $key => $ak) {

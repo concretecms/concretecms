@@ -162,7 +162,7 @@ class Sitemap
 
         $numSubpages = ($c->getNumChildren()  > 0) ? $c->getNumChildren()  : '';
 
-        $cvName = ($c->getCollectionName()) ? $c->getCollectionName() : '(No Title)';
+        $cvName = ($c->getCollectionName() !== '') ? $c->getCollectionName() : '(No Title)';
         $cvName = ($c->isSystemPage() || $cID == 1) ? t($cvName) : $cvName;
 
         $isInTrash = $c->isInTrash();
@@ -216,18 +216,19 @@ class Sitemap
         $node->title = $cvName;
         $node->link = $c->getCollectionLink();
         if ($numSubpages > 0) {
-            $node->isLazy = true;
+            $node->lazy = true;
         }
         if ($cIconClass) {
-            $node->iconClass = $cIconClass;
+            $node->icon = $cIconClass;
         } else {
             $node->icon = $cIcon;
         }
         if ($cID == HOME_CID) {
             $node->addClass = 'ccm-page-home';
+            $node->expanded = true;
         }
         if ($nodeOpen) {
-            $node->expand = true;
+            $node->expanded = true;
         }
         $node->cAlias = $cAlias;
         $node->isInTrash = $isInTrash;

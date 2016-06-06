@@ -74,7 +74,7 @@ class Properties extends BackendInterfaceController
                 foreach ($this->files as $f) {
                     $fv = $f->getVersionToModify();
                     $controller = $ak->getController();
-                    $value = $controller->getAttributeValueFromRequest();
+                    $value = $controller->createAttributeValueFromRequest();
                     $fv->setAttribute($ak, $value);
                     $f->reindex();
                 }

@@ -2,7 +2,7 @@
 namespace Concrete\Core\Page\Type\Composer\Control\CorePageProperty;
 
 use Loader;
-use Page;
+use Concrete\Core\Page\Page;
 use Core;
 
 class UrlSlugCorePageProperty extends CorePageProperty

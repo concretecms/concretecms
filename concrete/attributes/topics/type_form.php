@@ -14,9 +14,9 @@
                  <?php 
 }
     ?>
-                'onSelect' : function(select, node) {
-                     if (select) {
-                        $('input[name=akTopicParentNodeID]').val(node.data.key);
+                'onSelect' : function(nodes) {
+                     if (nodes.length) {
+                        $('input[name=akTopicParentNodeID]').val(nodes[0]);
                      } else {
                         $('input[name=akTopicParentNodeID]').val('');
                      }
@@ -34,13 +34,13 @@
                 $('.tree-view-template').concreteTree({
                     'treeID': chosenTree,
                     'chooseNodeInForm': true,
-                    'onSelect' : function(select, node) {
-                         if (select) {
-                            $('input[name=akTopicParentNodeID]').val(node.data.key);
-                         } else {
+                    'onSelect' : function(nodes) {
+                        if (nodes.length) {
+                            $('input[name=akTopicParentNodeID]').val(nodes[0]);
+                        } else {
                             $('input[name=akTopicParentNodeID]').val('');
-                         }
-                     }
+                        }
+                    }
                 });
             });
         });

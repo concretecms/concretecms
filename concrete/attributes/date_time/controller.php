@@ -72,7 +72,7 @@ class Controller extends AttributeTypeController
     {
         $this->load();
         $dt = Loader::helper('form/date_time');
-        $caValue = $this->getValue();
+        $caValue = $this->getDisplayValue();
         $html = Loader::helper('html');
         switch ($this->akDateDisplayMode) {
             case 'text':
@@ -150,7 +150,7 @@ class Controller extends AttributeTypeController
         echo $html;
     }
 
-    public function saveValue($value)
+    public function createAttributeValue($value)
     {
         if ($value != '') {
             $value = date('Y-m-d H:i:s', strtotime($value));
@@ -163,18 +163,19 @@ class Controller extends AttributeTypeController
         return $av;
     }
 
-    public function saveForm($data)
+    public function createAttributeValueFromRequest()
     {
         $this->load();
+        $data = $this->post();
         $dt = Loader::helper('form/date_time');
         switch ($this->akDateDisplayMode) {
             case 'text':
-                return $this->saveValue($data['value']);
+                return $this->createAttributeValue($data['value']);
                 break;
             case 'date':
             case 'date_time':
                 $value = $dt->translate('value', $data);
-                return $this->saveValue($value);
+                return $this->createAttributeValue($value);
                 break;
         }
     }

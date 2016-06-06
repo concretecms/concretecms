@@ -67,7 +67,7 @@ class Properties extends BackendInterfaceFileController
 
                 $ak = FileAttributeKey::getByID($_REQUEST['name']);
                 $controller = $ak->getController();
-                $value = $controller->getAttributeValueFromRequest();
+                $value = $controller->createAttributeValueFromRequest();
                 $value = $fv->setAttribute($ak, $value);
 
                 $sr = new FileEditResponse();

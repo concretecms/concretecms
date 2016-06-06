@@ -154,6 +154,19 @@ a.icon-link:hover {
   border-bottom: 0px;
   text-decoration: none;
 }
+
+.ccm-ui {
+  fieldset {
+    legend {
+      i.launch-tooltip {
+        color: #ccc;
+        position: absolute;
+        top: 4px;
+        left: -26px;
+      }
+    }
+  }
+}
 /**
  * Tooltips
  */
@@ -161,6 +174,13 @@ div#ccm-tooltip-holder {
     z-index: @index-level-tooltip-holder;
     position: relative;
 }
+
+div#ccm-selectize-holder {
+  div.selectize-dropdown {
+    z-index: @index-level-tooltip-holder;
+  }
+}
+
 
 .ccm-ui {
     div.tooltip-inner {
@@ -182,13 +202,14 @@ input.ccm-activate-date-time {
 div.ccm-item-selector {
   .border-radius(2px);
   color: #606060;
-  background-color: #e7e7e7;
-  font-size: 14px;
+  background-color: #f2f2f2;
+  font-size: 18px;
+
   padding: 8px 12px 8px 8px;
   .transition(0.1s linear all);
 
   &:hover {
-    background-color: darken(#e7e7e7, 5%);
+    background-color: darken(#f2f2f2, 3%);
   }
 
   a {

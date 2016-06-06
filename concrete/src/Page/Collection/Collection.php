@@ -321,7 +321,10 @@ class Collection extends Object
             // Retrieve the attribute values for the current page
             $category = \Core::make('Concrete\Core\Attribute\Category\PageCategory');
             $indexer = $category->getSearchIndexer();
-            $indexer->indexEntry($category, $this);
+            $values = $category->getAttributeValues($this);
+            foreach($values as $value) {
+                $indexer->indexEntry($category, $value, $this);
+            }
 
             if ($index == false) {
                 $index = new IndexedSearch();

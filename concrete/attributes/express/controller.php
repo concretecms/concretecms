@@ -63,7 +63,7 @@ class Controller extends AttributeTypeController
         }
     }
 
-    public function saveValue($entry)
+    public function createAttributeValue($entry)
     {
         $selected = array();
         if (!is_array($entry)) {
@@ -76,11 +76,34 @@ class Controller extends AttributeTypeController
         return $av;
     }
 
-    public function saveForm($data)
+    public function getDisplayValue()
     {
-        $entity = $this->entityManager->getRepository('Concrete\Core\Entity\Express\Entry')
-            ->findOneById($data['value']);
-        return $this->saveValue($entity);
+        $html = '';
+        foreach($this->getValue()->getSelectedEntries() as $entry) {
+            $html .= '<div>';
+            $entity = $entry->getEntity();
+            $columns = $entity->getResultColumnSet();
+            foreach($columns->getColumns() as $column) {
+                $html .= '<span>' . $column->getColumnValue($entry) . '</span>';
+            }
+            $html .= '</div>';
+        }
+        return $html;
+    }
+
+    public function createAttributeValueFromRequest()
+    {
+        $data = $this->post();
+        if (isset($data['value'])) {
+            $entity = $this->entityManager->getRepository('Concrete\Core\Entity\Express\Entry')
+                ->findOneById($data['value']);
+        }
+
+        if (isset($entity) && $entity) {
+            return $this->createAttributeValue($entity);
+        } else {
+            return $this->createAttributeValue([]);
+        }
     }
 
     protected function getEntity()

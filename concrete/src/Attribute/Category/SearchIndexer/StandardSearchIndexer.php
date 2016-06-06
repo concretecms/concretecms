@@ -25,27 +25,30 @@ class StandardSearchIndexer implements SearchIndexerInterface
         return true;
     }
 
-    public function indexEntry(CategoryInterface $category, $mixed)
+    public function indexEntry(CategoryInterface $category, Value $value, $subject)
     {
         if ($this->isValid($category)) {
-
-            // Regenerate based on values.
-            $values = $category->getAttributeValues($mixed);
-
-            foreach ($values as $value) {
-                /**
-                 * @var $value Value
-                 */
-                $attributeIndexer = $value->getAttributeKey()->getSearchIndexer();
-                $attributeIndexer->indexEntry($category, $value, $mixed);
-            }
+            $attributeIndexer = $value->getAttributeKey()->getSearchIndexer();
+            $attributeIndexer->indexEntry($category, $value, $subject);
         }
     }
+
+    public function clearIndexEntry(CategoryInterface $category, Value $value, $subject)
+    {
+        if ($this->isValid($category)) {
+            $attributeIndexer = $value->getAttributeKey()->getSearchIndexer();
+            $attributeIndexer->clearIndexEntry($category, $value, $subject);
+        }
+    }
+
 
     public function createRepository(CategoryInterface $category)
     {
         $schema = new Schema();
         if ($this->isValid($category)) {
+            /**
+             * @var $category StandardSearchIndexerInterface
+             */
             if (!$this->connection->tableExists($category->getIndexedSearchTable())) {
                 $table = $schema->createTable($category->getIndexedSearchTable());
                 $details = $category->getSearchIndexFieldDefinition();
@@ -71,7 +74,7 @@ class StandardSearchIndexer implements SearchIndexerInterface
     {
         if ($this->isValid($category)) {
             $attributeIndexer = $key->getSearchIndexer();
-            $attributeIndexer->addSearchKey($category, $key, $previousHandle);
+            $attributeIndexer->updateSearchIndexKeyColumns($category, $key, $previousHandle);
         }
     }
 }

@@ -3,17 +3,20 @@
     <?=$token->output('add_entity')?>
 
     <fieldset>
-        <div class="form-group">
+        <div class="form-group <?php if ($error->containsField('name')) { ?>has-error<?php } ?>">
             <label for="name" class="control-label"><?=t('Name')?></label>
             <?=$form->text('name', '', ['autofocus' => 'autofocus'])?>
+            <p class="help-block"><?=t('The name is how your entity will appear in the Dashboard. It may only contain letters.')?></p>
         </div>
-        <div class="form-group">
+        <div class="form-group <?php if ($error->containsField('handle')) { ?>has-error<?php } ?>">
             <label for="name" class="control-label"><?=t('Handle')?></label>
             <?=$form->text('handle')?>
+            <p class="help-block"><?=t('A unique string consisting of lowercase letters and underscores only.')?></p>
         </div>
         <div class="form-group">
             <label for="name" class="control-label"><?=t('Description')?></label>
             <?=$form->textarea('description', array('rows' => 5))?>
+            <p class="help-block"><?=t('An internal description. This is not publicly displayed.')?></p>
         </div>
     </fieldset>
 

@@ -3,7 +3,7 @@ namespace Concrete\Controller;
 
 use Concrete\Core\Cache\Cache;
 use Concrete\Core\Config\Renderer;
-use Concrete\Core\Error\ErrorBag\ErrorBag;
+use Concrete\Core\Error\ErrorList\ErrorList;
 use Concrete\Core\Localization\Localization as Localization;
 use Controller;
 use Config;
@@ -96,7 +96,7 @@ class Install extends Controller
         }
     }
 
-    protected function validateDatabase(ErrorBag $e)
+    protected function validateDatabase(ErrorList $e)
     {
         if (!extension_loaded('pdo')) {
             $e->add($this->getDBErrorMsg());

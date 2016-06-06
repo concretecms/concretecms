@@ -4,7 +4,7 @@ namespace Concrete\Core\Page\Type\Composer\Control;
 use Concrete\Core\Validation\ResponseInterface;
 use Controller;
 use CollectionAttributeKey;
-use Page;
+use Concrete\Core\Page\Page;
 use Environment;
 
 class CollectionAttributeControl extends Control
@@ -130,7 +130,7 @@ class CollectionAttributeControl extends Control
         $ak = $this->getAttributeKeyObject();
         if (is_object($ak)) {
             $controller = $ak->getController();
-            $value = $controller->getAttributeValueFromRequest();
+            $value = $controller->createAttributeValueFromRequest();
             $c->setAttribute($ak, $value);
         }
     }

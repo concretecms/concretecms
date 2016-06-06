@@ -36,9 +36,12 @@ class StandardSearchIndexer implements SearchIndexerInterface
      * @param Key $key
      * @param $previousHandle
      */
-    public function addSearchKey(CategoryInterface $category, AttributeKeyInterface $key, $previousHandle)
+    public function updateSearchIndexKeyColumns(CategoryInterface $category, AttributeKeyInterface $key, $previousHandle = null)
     {
         $controller = $key->getController();
+        if (!$previousHandle) {
+            $previousHandle = $key->getAttributeKeyHandle();
+        }
         if ($key->getAttributeKeyHandle() == $previousHandle ||
             $key->isAttributeKeySearchable() == false ||
             $category->getIndexedSearchTable() == false ||
@@ -110,11 +113,51 @@ class StandardSearchIndexer implements SearchIndexerInterface
      * @param Value $value
      * @param mixed $subject
      */
+    public function clearIndexEntry(CategoryInterface $category, AttributeValueInterface $value, $subject)
+    {
+        $key = $value->getAttributeKey();
+        $definition = $key->getController()->getSearchIndexFieldDefinition();
+        if (!$definition) {
+            return false;
+        }
+        $details = $category->getSearchIndexFieldDefinition();
+        $primary = $details['primary'][0];
+        $primaryValue = $category->getIndexedSearchPrimaryKeyValue($subject);
+        $columnValues = array();
+
+        if (isset($definition['type'])) {
+            $col = $this->getIndexEntryColumn($key);
+            $columnValues[$col] = null;
+        } else {
+            $subkeys = array_keys($definition);
+            foreach($subkeys as $subkey) {
+                $col = $this->getIndexEntryColumn($key, $subkey);
+                $columnValues[$col] = null;
+            }
+        }
+
+
+        if (count($columnValues)) {
+            $primaries = array($primary => $primaryValue);
+
+            $this->connection->update(
+                $category->getIndexedSearchTable(),
+                $columnValues,
+                $primaries
+            );
+        }
+    }
+
+        /**
+     * @param StandardSearchIndexerInterface $category
+     * @param Value $value
+     * @param mixed $subject
+     */
     public function indexEntry(CategoryInterface $category, AttributeValueInterface $value, $subject)
     {
         $columns = $this->connection->getSchemaManager()->listTableColumns($category->getIndexedSearchTable());
 
-        $attributeValue = $value->getValueObject()->getSearchIndexValue();
+        $attributeValue = $value->getSearchIndexValue();
         $details = $category->getSearchIndexFieldDefinition();
         $primary = $details['primary'][0];
         $primaryValue = $category->getIndexedSearchPrimaryKeyValue($subject);

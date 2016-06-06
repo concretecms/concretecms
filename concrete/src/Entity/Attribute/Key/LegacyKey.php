@@ -61,8 +61,6 @@ class LegacyKey extends Key
         $controller = $attributeValue->getAttributeKey()->getController();
         $controller->saveValue($value);
 
-        $this->reindexAttributes();
-
         //$this->reindexAttributes();
 
     }

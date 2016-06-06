@@ -49,7 +49,7 @@ class Edit extends BackendInterfaceBlockController
             $pr->setAdditionalDataAttribute('arHandle', $a->getAreaHandle());
             $pr->setError($e);
 
-            if ((!is_object($e)) || (($e instanceof \Concrete\Core\Error\ErrorBag\ErrorBag) && (!$e->has()))) {
+            if ((!is_object($e)) || (($e instanceof \Concrete\Core\Error\ErrorList\ErrorList) && (!$e->has()))) {
                 $bt = BlockType::getByHandle($b->getBlockTypeHandle());
                 if (!$bt->includeAll()) {
                     // we make sure to create a new version, if necessary

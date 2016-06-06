@@ -3,7 +3,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 if (isset($error) && $error != '') {
     if ($error instanceof Exception) {
         $_error[] = $error->getMessage();
-    } elseif ($error instanceof \Concrete\Core\Error\ErrorBag\ErrorBag) {
+    } elseif ($error instanceof \Concrete\Core\Error\ErrorList\ErrorList) {
         $_error = $error->getList();
     } elseif (is_array($error)) {
         $_error = $error;
