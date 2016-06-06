@@ -36,7 +36,8 @@ class IndexSearchAll extends QueueableJob
         $attributes = array_merge($attributes, FileAttributeKey::getList());
         $attributes = array_merge($attributes, UserAttributeKey::getList());
         foreach ($attributes as $ak) {
-            $ak->updateSearchIndex();
+            $indexer = $ak->getSearchIndexer();
+            $indexer->updateSearchIndexKeyColumns($ak->getAttributeCategory()->getController(), $ak);
         }
 
         $db = Loader::db();
