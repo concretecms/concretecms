@@ -118,11 +118,9 @@ class CheckIn extends BackendInterfacePageController
                         $pkr->scheduleVersion($publishDateTime);
                     }
 
-                    $response = $pkr->trigger();
-
                     if ($c->isPageDraft()) {
                         $pagetype = $c->getPageTypeObject();
-                        $pagetype->publish($c);
+                        $pagetype->publish($c, $pkr);
                     }
                 }
             } else {
