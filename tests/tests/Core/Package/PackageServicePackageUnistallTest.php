@@ -159,7 +159,7 @@ class PackageServicePackageUnistallTest extends \ConcreteDatabaseTestCase
 
         // Test if metadata was removed from conifg
         $config = $packageService->getFileConfigORMMetadata();
-        $packageMetadata = $config->get(CONFIG_ORM_METADATA_ANNOTATION_LEGACY);
+        $packageMetadata = $config->get(CONFIG_ORM_METADATA_ANNOTATION_DEFAULT);
         $this->assertArrayNotHasKey($pkgHandle, $packageMetadata, 'Metadata for package '. $pkgHandle .' was found.');
     }
 
