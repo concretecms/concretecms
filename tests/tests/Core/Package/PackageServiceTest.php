@@ -11,6 +11,7 @@ use Concrete\Core\Support\Facade\Application;
  *
  * @author Markus Liechti <markus@liechti.io>
  * @group ORM setup
+ * @group package_tests
  */
 class PackageServiceTest extends \ConcreteDatabaseTestCase
 {
@@ -163,7 +164,7 @@ class PackageServiceTest extends \ConcreteDatabaseTestCase
     {
         return array(
             array(true, 1),         // select only not installed packages
-            array(false, $this->totallyInstalledBackages),        // select all packages
+            array(false, ($this->totallyInstalledBackages + 1 )), // select all packages instlled + 1
         );
     }
     
@@ -191,7 +192,7 @@ class PackageServiceTest extends \ConcreteDatabaseTestCase
     {
         $packageService = $this->app->make('Concrete\Core\Package\PackageService');
         $installedHandles = $packageService->getInstalledHandles();
-        $this->assertEquals($this->totallyInstalledBackages, count($installedHandles));
+        $this->assertEquals(($this->totallyInstalledBackages), count($installedHandles));
     }
 
     /**
@@ -256,10 +257,13 @@ class PackageServiceTest extends \ConcreteDatabaseTestCase
      * - metadata storing in the config file
      * - test for the corret namespace in config file
      * - check if the correct metadata paths are stored in the config file
+     *
+     * @todo This test doesn't covert the funtionality related to ContentSwapper
+     *       and on_after_swap_content() method
      * 
      * @dataProvider dataProviderTestInstall
      */
-    public function testInstall($pkgHandle, $conifgPath, $namespace, $numberOfPaths)
+    public function testInstallSafeMetadataToConfig($pkgHandle, $conifgPath, $namespaces, $namepacesCount)
     {   
         
         $packageService = $this->app->make('Concrete\Core\Package\PackageService');
@@ -268,7 +272,7 @@ class PackageServiceTest extends \ConcreteDatabaseTestCase
         
         // Test if mapping info was created and is correct
         
-        // Load the proxies and test if they are still present
+        // Load the proxies and test if they were created
         $packageEntityManager = $p->getPackageEntityManager();
         $entityManagerConfig = $packageEntityManager->getConfiguration();
         $proxyGenerator = new \Doctrine\Common\Proxy\ProxyGenerator($entityManagerConfig->getProxyDir(), $entityManagerConfig->getProxyNamespace());
@@ -296,16 +300,24 @@ class PackageServiceTest extends \ConcreteDatabaseTestCase
         //          ),
         //     ),
         // ),
-        $metadataPaths = $packageMetadata[$pkgHandle];
-        $this->assertEquals(1, count($metadataPaths));
-        // Get first driver resultset
-        $driverSet = $packageMetadata[$pkgHandle][0];
+        $driverSetConfigs = $packageMetadata[$pkgHandle];
+        $this->assertEquals($namepacesCount, count($driverSetConfigs));
+
+        foreach($driverSetConfigs as $key => $driverSetConfig){
+
+            // Test if the namespace matches
+            $this->assertEquals($namespaces[$key]['namespace'], $driverSetConfig['namespace'], 'Namespace does n\'t match.');
+
+            // Test if the paths count and path matches;
+            $this->assertEquals($namespaces[$key]['numberOfPaths'], count($driverSetConfig['paths']), 'Path count does n\'t match.');
+
+            // Test src path
+            foreach($driverSetConfig['paths'] as $k => $path){
+                $this->assertEquals($namespaces[$key]['metadataPaths'][$k], $path, 'Path does n\'t match.');
+            }
+        }
+
         
-        // Test if the namespace matches
-        $this->assertEquals($namespace, $driverSet['namespace']);
-        
-        // Test if the paths count and path matches;
-        $this->assertEquals($numberOfPaths, count($driverSet['paths']));
         
         // Test contents of metadata paths
         
@@ -352,41 +364,110 @@ class PackageServiceTest extends \ConcreteDatabaseTestCase
     public function dataProviderTestInstall()
     {
         return array(
+            // Default AnnotationDriver
             array(
                 'pkgHandle' => 'test_metadatadriver_annotation_default',
                 'configPath' => CONFIG_ORM_METADATA_ANNOTATION_DEFAULT,
-                'namespace' => 'Concrete\\Package\\TestMetadatadriverAnnotationDefault',
-                'numberOfPahts' => 1,
-                'metadataPaths' => array(
-                    '\\packages\\test_metadatadriver_annotation_default\\src\\Entity',
-                )
+                'namespaces' => array(
+                    array(
+                        'namespace' => 'Concrete\\Package\\TestMetadatadriverAnnotationDefault',
+                        'metadataPaths' => array(
+                            '\\packages\\test_metadatadriver_annotation_default\\src\\Entity',
+                        ),
+                        'numberOfPaths' => 1,
+                    ),
+                ),
+                'namepacesCount' => 1,
             ),
+            // Legacy AnnotationDriver
             array(
                 'pkgHandle' => 'test_metadatadriver_annotation_legacy',
                 'configPath' => CONFIG_ORM_METADATA_ANNOTATION_LEGACY,
-                'namespace' => 'Concrete\\Package\\TestMetadatadriverAnnotationLegacy',
-                'numberOfPahts' => 1,
-                'metadataPaths' => array(
-                    '\\packages\\test_metadatadriver_annotation_legacy\\src',
-                )
+                'namespaces' => array(
+                    array(
+                        'namespace' => 'Concrete\\Package\\TestMetadatadriverAnnotationLegacy',
+                        'metadataPaths' => array(
+                            '\\packages\\test_metadatadriver_annotation_legacy\\src',
+                        ),
+                        'numberOfPaths' => 1,
+                    ),
+                ),
+                'namepacesCount' => 1,
             ),
+            // Xml AnnotationDriver
             array(
                 'pkgHandle' => 'test_metadatadriver_xml',
                 'configPath' => CONFIG_ORM_METADATA_XML,
-                'namespace' => 'Concrete\\Package\\TestMetadatadriverXml',
-                'numberOfPahts' => 1,
-                'metadataPaths' => array(
-                    '\\packages\\test_metadatadriver_xml\\config\\xml',
-                )
+                'namespaces' => array(
+                    array(
+                        'namespace' => 'Concrete\\Package\\TestMetadatadriverXml',
+                        'metadataPaths' => array(
+                            '\\packages\\test_metadatadriver_xml\\config\\xml',
+                        ),
+                        'numberOfPaths' => 1,
+                    ),
+                ),
+                'namepacesCount' => 1,
             ),
+            // Yaml AnnotationDriver
             array(
                 'pkgHandle' => 'test_metadatadriver_yaml',
                 'configPath' => CONFIG_ORM_METADATA_YAML,
-                'namespace' => 'Concrete\\Package\\TestMetadatadriverYaml',
-                'numberOfPahts' => 1,
-                'metadataPaths' => array(
-                    '\\packages\\test_metadatadriver_yaml\\config\\yaml',
-                )
+                'namespaces' => array(
+                    array(
+                        'namespace' => 'Concrete\\Package\\TestMetadatadriverYaml',
+                        'metadataPaths' => array(
+                            '\\packages\\test_metadatadriver_yaml\\config\\yaml',
+                        ),
+                        'numberOfPaths' => 1,
+                    ),
+                ),
+                'namepacesCount' => 1,
+            ),
+            // Default AnnotationDriver with coreextension eneabled
+            array(
+                'pkgHandle' => 'test_metadatadriver_annotation_default_core_extension',
+                'configPath' => CONFIG_ORM_METADATA_ANNOTATION_DEFAULT,
+                'namespaces' => array(
+                    array(
+                        'namespace' => 'Concrete\\Package\\TestMetadatadriverAnnotationDefaultCoreExtension',
+                        'metadataPaths' => array(
+                            '\\packages\\test_metadatadriver_annotation_default_core_extension\\src\\Entity',
+                            '\\packages\\test_metadatadriver_annotation_default_core_extension\\src\\Concrete',
+                        ),
+                        'numberOfPaths' => 2,
+                    ),
+                ),
+                'namepacesCount' => 1,
+            ),
+            // Default AnnotationDriver with additional namespaces registerd
+            array(
+                'pkgHandle' => 'test_metadatadriver_additional_namespace',
+                'configPath' => CONFIG_ORM_METADATA_ANNOTATION_DEFAULT,
+                'namespaces' => array(
+                    array(
+                        'namespace' => 'Concrete\\Package\\TestMetadatadriverAdditionalNamespace',
+                        'metadataPaths' => array(
+                            '\\packages\\test_metadatadriver_additional_namespace\\src\\Entity',
+                        ),
+                        'numberOfPaths' => 1,
+                    ),
+                    array(
+                        'namespace' => 'PortlandLabs\\Concrete5\\MigrationTool',
+                        'metadataPaths' => array(
+                            '\\packages\\test_metadatadriver_additional_namespace\\src\\PortlandLabs\\Concrete5\\MigrationTool',
+                        ),
+                        'numberOfPaths' => 1,
+                    ),
+                    array(
+                        'namespace' => 'Dummy',
+                        'metadataPaths' => array(
+                            '\\packages\\test_metadatadriver_additional_namespace\\src\\Dummy',
+                        ),
+                        'numberOfPaths' => 1,
+                    ),
+                ),
+                'namepacesCount' => 3,
             ),
         );
     }
