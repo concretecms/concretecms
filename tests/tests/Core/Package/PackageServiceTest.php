@@ -446,6 +446,28 @@ class PackageServiceTest extends \ConcreteDatabaseTestCase
     }
 
     /**
+     * Test recreating the config file with package metadata
+     */
+    public function testRecreateConfigFileWithPackageMetadata()
+    {
+        $packageService = $this->app->make('Concrete\Core\Package\PackageService');
+        
+        // clean the config
+        $config = $packageService->getFileConfigORMMetadata();
+        $config->set(CONFIG_ORM_METADATA_PACKAGES_BASE, array());
+        $packageMetadata1 = $config->get(CONFIG_ORM_METADATA_PACKAGES_BASE);
+        $this->assertEquals(0, count($packageMetadata1), 'Metadata was not cleaned properly');
+        
+        // recreate the config
+        $packageService->recreateConfigFileWithPackageMetadata();
+        
+        $config2 = $packageService->getFileConfigORMMetadata();
+        $packageMetadata = $config2->get(CONFIG_ORM_METADATA_PACKAGES_BASE);
+        // assert to the 3 arrays xml, yaml, annotation
+        $this->assertEquals(3, count($packageMetadata), 'Metadata of some packages is missing in the regenerated config file');
+    }
+    
+    /**
      * Get all packages except the once in the exclude list 
      * for installation
      * 

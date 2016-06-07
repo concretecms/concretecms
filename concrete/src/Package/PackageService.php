@@ -331,6 +331,27 @@ class PackageService
     }
     
     /**
+     * Recreates the config with the ORM metadata 
+     * for all installed packages with entities
+     * 
+     * Is used by the core update script
+     */
+    public function recreateConfigFileWithPackageMetadata(){
+
+        $packageRepo = $this->entityManager->getRepository('\Concrete\Core\Entity\Package');
+        
+        $packageEntites = $packageRepo->findAll();
+        
+        if(count($packageEntites) > 0){
+            foreach($packageEntites as $packageEntity){
+                $p = static::getClass($packageEntity->getPackageHandle());
+                $this->savePackageMetadataDriverToConfig($p);
+            }
+        }
+    }
+    
+    
+    /**
      * Get the config with a direct file safer,
      * so settings can be saved directly to application/config/database.php
      * instead of application/config/generated_overrides
