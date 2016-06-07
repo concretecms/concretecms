@@ -16,6 +16,7 @@ use Config;
 use Loader;
 use Concrete\Core\Permission\Key\Key as PermissionKey;
 use Page;
+use Concrete\Core\Support\Facade\Facade;
 
 class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
 {
@@ -137,7 +138,8 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
                 return false;
             }
 
-            $b->instance = new $class($b);
+            $app = Facade::getFacadeApplication();
+            $b->instance = $app->build($class, [$b]);
 
             if ($c != null || $a != null) {
                 CacheLocal::set('block', $bID . ':' . $cID . ':' . $cvID . ':' . $arHandle, $b);
@@ -430,7 +432,8 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
         } else {
             $bt = $this->getBlockTypeObject();
             $class = $bt->getBlockTypeClass();
-            $this->instance = new $class($this);
+            $app = Facade::getFacadeApplication();
+            $this->instance = $app->build($class, [$this]);
         }
         $this->instance->setBlockObject($this);
 
@@ -481,7 +484,8 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
         $btID = $this->getBlockTypeID();
         $bt = BlockType::getByID($btID);
         $class = $bt->getBlockTypeClass();
-        $bc = new $class($this);
+        $app = Facade::getFacadeApplication();
+        $bc = $app->build($class, [$this]);
         $bc->save($data);
     }
 
@@ -816,10 +820,11 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
 
         $bt = BlockType::getByID($this->getBlockTypeID());
         $blockTypeClass = $bt->getBlockTypeClass();
-        $bc = new $blockTypeClass($this);
-        if (!$bc) {
+        if (!$blockTypeClass) {
             return false;
         }
+        $app = Facade::getFacadeApplication();
+        $bc = $app->build($blockTypeClass, [$this]);
 
         $bDate = $dh->getOverridableNow();
         $v = array($this->bName, $bDate, $bDate, $this->bFilename, $this->btID, $this->uID);
@@ -1330,8 +1335,8 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
             $bt = BlockType::getByID($this->getBlockTypeID());
             if ($bt && method_exists($bt, 'getBlockTypeClass')) {
                 $class = $bt->getBlockTypeClass();
-
-                $bc = new $class($this);
+                $app = Facade::getFacadeApplication();
+                $bc = $app->build($class, [$this]);
                 $bc->delete();
             }
 
