@@ -175,17 +175,21 @@ class PackageServiceTest extends \ConcreteDatabaseTestCase
     
     /**
      * Test local upgradeable packages
+     * 
+     * @todo Not working yet. controller.php with increased version number is copied, 
+     * but the increased version number is not recognized
      */
-    //@todo not working yet
+
 //    public function testGetLocalUpgradeablePackages()
 //    {   
+//        
 //        // Test preparation
 //        self::copyTestPackageFilesForLocalUpgrade();
-//        
 //        
 //        // Test
 //        $packageService = $this->app->make('Concrete\Core\Package\PackageService');
 //        $localUpgradeablePackages = $packageService->getLocalUpgradeablePackages();
+//
 //        $this->assertEquals(1, count($localUpgradeablePackages));
 //    }
 
@@ -515,7 +519,7 @@ class PackageServiceTest extends \ConcreteDatabaseTestCase
 
         $metaDriverConfig = $config->get('database');
         unset($metaDriverConfig['metadatadriver']);
-        $config->save('database', $metaDriverConfig['metadatadriver']);
+        $config->save('database.metadatadriver', array());
         
         parent::tearDown();
     }
