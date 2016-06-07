@@ -187,7 +187,7 @@ class PackageService
                 $pkgNamespace = $p->getNamespace();
 
                 $driverChain->addDriver($driver, $pkgNamespace);
-                // add package entity to generated_overrides config file
+                // add package metadata to application/config/database.php
                 $this->savePackageMetadataDriverToConfig($p);
                 
                 $cache = $config->getMetadataCacheImpl();
