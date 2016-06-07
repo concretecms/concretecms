@@ -98,28 +98,35 @@ ConcretePageComposerDetail = {
             }).submit();
         });
 
-        $('button[data-page-type-composer-form-btn=publish]').on('click', function() {
-	    	my.disableAutosave();
-	    	var submitSuccess = false;
-			my.$form.concreteAjaxForm({
-				url: '<?=$controller->action('publish')?>',
-				success: function(r) {
-                    submitSuccess = true;
-					window.location.href = r.redirectURL;
-				},
-				complete: function() {
-					if (!submitSuccess) {
-				    	my.enableAutosave();
-					}
-					jQuery.fn.dialog.hideLoader();
-				}
-			}).submit();
+		$('button[data-page-type-composer-form-btn=publish]').on('click', function() {
+			var data = my.$form.serializeArray();
+			ConcreteEvent.fire('PanelComposerPublish', {data: data});
 		});
 
 		ConcreteEvent.subscribe('PanelCloseDetail',function(e, panelDetail) {
 			if (panelDetail && panelDetail.identifier == 'page-composer') {
 				my.disableAutosave();
 			}
+		});
+
+		ConcreteEvent.subscribe('PanelComposerPublish',function(e, data) {
+
+			my.disableAutosave();
+			var submitSuccess = false;
+			$.concreteAjax({
+				data: data.data,
+				url: '<?=$controller->action('publish')?>',
+				success: function(r) {
+					submitSuccess = true;
+					window.location.href = r.redirectURL;
+				},
+				complete: function() {
+					if (!submitSuccess) {
+						my.enableAutosave();
+					}
+					jQuery.fn.dialog.hideLoader();
+				}
+			});
 		});
 
 		ConcreteEvent.subscribe('AjaxRequestError',function(r) {

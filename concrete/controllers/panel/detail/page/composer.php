@@ -2,6 +2,7 @@
 namespace Concrete\Controller\Panel\Detail\Page;
 
 use Concrete\Controller\Backend\UserInterface\Page as BackendInterfacePageController;
+use Concrete\Core\Form\Service\Widget\DateTime;
 use PageEditResponse;
 use PageType;
 use View;
@@ -80,7 +81,14 @@ class Composer extends BackendInterfacePageController
             $ptr->setError($e);
 
             if (!$e->has()) {
-                $pagetype->publish($c);
+
+                $publishDateTime = false;
+                if ($this->request->request->get('action') == 'schedule') {
+                    $dateTime = new DateTime();
+                    $publishDateTime = $dateTime->translate('check-in-scheduler');
+                }
+
+                $pagetype->publish($c, $publishDateTime);
                 $ptr->setRedirectURL(Loader::helper('navigation')->getLinkToCollection($c));
             }
             $ptr->outputJSON();
