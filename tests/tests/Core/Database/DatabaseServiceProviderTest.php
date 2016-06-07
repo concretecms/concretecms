@@ -6,7 +6,7 @@ namespace Concrete\Tests\Core\Database;
  * DatabaseServiceProviderTest
  *
  * @author Markus Liechti <markus@liechti.io>
- * @group ORM setup
+ * @group orm_setup
  */
 class DatabaseServiceProviderTest extends \PHPUnit_Framework_TestCase
 {

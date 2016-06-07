@@ -8,7 +8,7 @@ use Concrete\Core\Support\Facade\Application;
  * EntityManagerConfigFactoryTest
  *
  * @author Markus Liechti <markus@liechti.io>
- * @group ORM setup
+ * @group orm_setup
  */
 class EntityManagerConfigFactoryTest extends \PHPUnit_Framework_TestCase
 {     
