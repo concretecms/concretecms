@@ -851,7 +851,11 @@ abstract class Package implements LocalizablePackageInterface
         if(count($this->pkgAutoloaderRegistries) > 0){
             foreach($this->pkgAutoloaderRegistries as $src => $rawNamespace){
                 
-                $path = $this->getRelativePath() . DIRECTORY_SEPARATOR . $src;
+                // replace / with DIRECTORY_SEPARATOR
+                // prevent a mix between / and \\ in the src string
+                $srcCleand = str_replace('/', DIRECTORY_SEPARATOR, $src);
+
+                $path = $this->getRelativePathFromInstallFolder() . DIRECTORY_SEPARATOR . $srcCleand;
                 
                 $namespace = ltrim($rawNamespace, '\\');
                 $namespaces[] = array(
