@@ -253,8 +253,8 @@ class PackageServiceTest extends \ConcreteDatabaseTestCase
      * Test package installation
      * 
      * Test the following things
-     * - proxy generation
-     * - metadata storing in the config file
+     * - proxy creation
+     * - storing of the package metadata in the config file
      * - test for the corret namespace in config file
      * - check if the correct metadata paths are stored in the config file
      *
@@ -263,14 +263,11 @@ class PackageServiceTest extends \ConcreteDatabaseTestCase
      * 
      * @dataProvider dataProviderTestInstall
      */
-    public function testInstallSafeMetadataToConfig($pkgHandle, $conifgPath, $namespaces, $namepacesCount)
+    public function testInstall($pkgHandle, $conifgPath, $namespaces, $namepacesCount)
     {   
         
         $packageService = $this->app->make('Concrete\Core\Package\PackageService');
         $p = $packageService->getClass($pkgHandle);
-        // Install was already triggert by the setUp method
-        
-        // Test if mapping info was created and is correct
         
         // Load the proxies and test if they were created
         $packageEntityManager = $p->getPackageEntityManager();
@@ -471,7 +468,37 @@ class PackageServiceTest extends \ConcreteDatabaseTestCase
             ),
         );
     }
-    
+
+    /**
+     * Test if package without entites - this package shouldn't be installed safed
+     * in th config file
+     *
+     * @dataProvider dataProviderTestInstallWithPackageWithNoEntites
+     *
+     * @param string $conifgPath
+     */
+    public function testInstallWithPackageWithNoEntities($conifgPath)
+    {
+        $pkgHandle = 'test_package_with_no_entites';
+
+        $packageService = $this->app->make('Concrete\Core\Package\PackageService');
+
+        // Test if conifg is present
+        $config = $packageService->getFileConfigORMMetadata();
+        $packageMetadata = $config->get($conifgPath);
+        $this->assertArrayNotHasKey($pkgHandle, $packageMetadata, 'Metadata for package '. $pkgHandle .' was found.');
+    }
+
+    public function dataProviderTestInstallWithPackageWithNoEntites()
+    {
+        return array(
+            array(CONFIG_ORM_METADATA_ANNOTATION_DEFAULT),
+            array(CONFIG_ORM_METADATA_ANNOTATION_LEGACY),
+            array(CONFIG_ORM_METADATA_XML),
+            array(CONFIG_ORM_METADATA_YAML),
+        );
+    }
+
     /**
      * Get all packages except the once in the exclude list 
      * for installation
