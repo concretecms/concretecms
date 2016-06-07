@@ -903,7 +903,7 @@ abstract class Package implements LocalizablePackageInterface
     /**
      * Destroys all proxies related to a package 
      */
-    protected function destroyProxyClasses(\Doctrine\ORM\EntityManager $em)
+    protected function destroyProxyClasses(\Doctrine\ORM\EntityManagerInterface $em)
     {
 
         if(empty($this->getPackageMetadataPaths())){
