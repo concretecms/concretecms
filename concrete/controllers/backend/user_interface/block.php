@@ -4,7 +4,6 @@ namespace Concrete\Controller\Backend\UserInterface;
 use Exception;
 use Page as ConcretePage;
 use Permissions;
-use Area;
 
 abstract class Block extends Page
 {
