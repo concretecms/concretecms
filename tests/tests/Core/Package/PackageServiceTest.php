@@ -530,6 +530,20 @@ class PackageServiceTest extends \ConcreteDatabaseTestCase
     }
     
     /**
+     * Delete all proxies
+     */
+    protected function deleteAllProxies(){
+        $config = $this->app->make('config');
+        $proxyDir = $config->get('database.proxy_classes');
+        
+        $filesystem = new Filesystem();
+        
+        foreach($filesystem->allFiles($proxyDir) as $proxyFile){
+            $filesystem->delete($proxyFile);
+        }
+    }
+    
+    /**
      * Uninstall all packages
      */
     public function tearDown()
@@ -542,6 +556,8 @@ class PackageServiceTest extends \ConcreteDatabaseTestCase
         $metaDriverConfig = $config->get('database');
         unset($metaDriverConfig['metadatadriver']);
         $config->save('database.metadatadriver', array());
+        
+        $this->deleteAllProxies();
         
         parent::tearDown();
     }
@@ -560,7 +576,7 @@ class PackageServiceTest extends \ConcreteDatabaseTestCase
             $target = DIR_PACKAGES . DIRECTORY_SEPARATOR . $pkg;
             $filesystem->deleteDirectory($target);
         }
-
+        
         parent::tearDownAfterClass();
     }
 }

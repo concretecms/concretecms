@@ -258,7 +258,7 @@ class PackageService
         $packageMetadataDriverType = $p->getMetadataDriverType();
         $packageHandle = $p->getPackageHandle();
         $config = $this->getFileConfigORMMetadata();
-
+        
         $settings = $this->getPackageMetadataDriverSettings($p);
         
         if ($packageMetadataDriverType === Package::PACKAGE_METADATADRIVER_ANNOTATION) {
