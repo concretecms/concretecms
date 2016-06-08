@@ -36,4 +36,4 @@ If you want to minimize disk space usage and don't need to use the web interface
 
 	Passionate concrete5 developers and users worldwide.
 
-	File type icons provided by http://Jordan-Michael.com/
+	File type icons provided by Freepik (http://www.flaticon.com/authors/freepik)

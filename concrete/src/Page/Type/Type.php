@@ -151,7 +151,7 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
         }
     }
 
-    public function publish(Page $c)
+    public function publish(Page $c, $requestOrDateTime = null)
     {
         $this->stripEmptyPageTypeComposerControls($c);
         $parent = Page::getByID($c->getPageDraftTargetParentPageID());
@@ -171,11 +171,19 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
         }
 
         $u = new User();
-        $v = CollectionVersion::get($c, 'RECENT');
-        $pkr = new ApprovePagePageWorkflowRequest();
-        $pkr->setRequestedPage($c);
-        $pkr->setRequestedVersionID($v->getVersionID());
-        $pkr->setRequesterUserID($u->getUserID());
+        if (!($requestOrDateTime instanceof ApprovePagePageWorkflowRequest)) {
+            $v = CollectionVersion::get($c, 'RECENT');
+            $pkr = new ApprovePagePageWorkflowRequest();
+            $pkr->setRequestedPage($c);
+            $pkr->setRequestedVersionID($v->getVersionID());
+            $pkr->setRequesterUserID($u->getUserID());
+            if ($requestOrDateTime) {
+                // That means it's a date time
+                $pkr->scheduleVersion($requestOrDateTime);
+            }
+        } else {
+            $pkr = $requestOrDateTime;
+        }
         $pkr->trigger();
 
         $u->unloadCollectionEdit($c);

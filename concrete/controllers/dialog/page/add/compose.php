@@ -2,6 +2,7 @@
 namespace Concrete\Controller\Dialog\Page\Add;
 
 use Concrete\Core\Controller\Controller;
+use Concrete\Core\Form\Service\Widget\DateTime;
 use Concrete\Core\Page\EditResponse;
 use Concrete\Core\Page\Template;
 use Concrete\Core\Page\Type\Type;
@@ -83,8 +84,17 @@ class Compose extends Controller
             $d->setPageDraftTargetParentPageID($cParentID);
             $saver = $pagetype->getPageTypeSaverObject();
             $saver->saveForm($d);
-            if ($this->request->request('addPageComposeAction') == 'publish') {
-                $pagetype->publish($d);
+            if ($this->request->request('addPageComposeAction') == 'publish'
+            || $this->request->request('addPageComposeAction') == 'schedule') {
+
+                $publishDateTime = false;
+                if ($this->request->request->get('addPageComposeAction') == 'schedule') {
+                    $dateTime = new DateTime();
+                    $publishDateTime = $dateTime->translate('check-in-scheduler');
+                }
+
+                $pagetype->publish($d, $publishDateTime);
+
                 $pr->setAdditionalDataAttribute('cParentID', $cParentID);
                 $pr->setMessage(t('Page Added Successfully.'));
             } else {

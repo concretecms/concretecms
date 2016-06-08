@@ -20,7 +20,6 @@ use League\Flysystem\FileNotFoundException;
 use Core;
 use Database;
 use Events;
-use Imagine\Exception\InvalidArgumentException as ImagineInvalidArgumentException;
 use Imagine\Image\ImageInterface;
 use Page;
 use Permissions;
@@ -29,6 +28,7 @@ use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use User;
 use View;
 use Doctrine\ORM\Mapping as ORM;
+use Concrete\Core\Support\Facade\Facade;
 
 /**
  * @ORM\Entity
@@ -756,14 +756,31 @@ class Version
             return false;
         }
 
+        $app = Facade::getFacadeApplication();
         $width = $this->getAttribute('width');
         $types = Type::getVersionList();
 
         $fr = $this->getFileResource();
         try {
-            $image = \Image::load($fr->read());
             $mimetype = $fr->getMimeType();
-
+            $imageLibrary = \Image::getFacadeRoot();
+            switch ($mimetype) {
+                case 'image/svg+xml':
+                case 'image/svg-xml':
+                    if ($imageLibrary instanceof \Imagine\Gd\Imagine) {
+                        try {
+                            $imageLibrary = $app->make('image/imagick');
+                        } catch (\Exception $x) {
+                            return false;
+                        }
+                    }
+                    break;
+            }
+            $image = $imageLibrary->load($fr->read());
+            /* @var \Imagine\Imagick\Image $image */
+            if (!$width) {
+                $width = $image->getSize()->getWidth();
+            }
             foreach ($types as $type) {
 
                 // delete the file if it exists
@@ -829,7 +846,10 @@ class Version
                 unset($thumbnail);
                 unset($filesystem);
             }
-        } catch (ImagineInvalidArgumentException $e) {
+        } catch (\Imagine\Exception\InvalidArgumentException $e) {
+            return false;
+        }
+        catch (\Imagine\Exception\RuntimeException $e) {
             return false;
         }
     }

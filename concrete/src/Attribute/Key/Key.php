@@ -57,9 +57,7 @@ class Key extends Facade implements AttributeKeyInterface
     {
         return $this->legacyAttributeKey->isAttributeKeySearchable();
     }
-    /**
-     * @deprecated
-     */
+
     public function getSearchIndexer()
     {
         return $this->legacyAttributeKey->getSearchIndexer();
@@ -126,6 +124,13 @@ class Key extends Facade implements AttributeKeyInterface
         return $this->searchIndexFieldDefinition;
     }
 
+    /**
+     * @deprecated
+     */
+    public function getIndexedSearchTable()
+    {
+        return false;
+    }
 
 
 }
