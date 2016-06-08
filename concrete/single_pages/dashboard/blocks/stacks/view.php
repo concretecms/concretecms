@@ -61,26 +61,9 @@ if (isset($neutralStack)) {
 
         if (!$hasPendingPageApproval) {
             $vo = $stackToEdit->getVersionObject();
+            $composer = Core::make('helper/concrete/composer');
             if ($cpc->canApprovePageVersions()) {
-                $publishTitle = t('Approve Changes');
-                $pk = PermissionKey::getByHandle('approve_page_versions');
-                $pk->setPermissionObject($stackToEdit);
-                $pa = $pk->getPermissionAccessObject();
-
-                $workflows = array();
-                $canApproveWorkflow = true;
-                if (is_object($pa)) {
-                    $workflows = $pa->getWorkflows();
-                }
-                foreach ($workflows as $wf) {
-                    if (!$wf->canApproveWorkflow()) {
-                        $canApproveWorkflow = false;
-                    }
-                }
-
-                if (count($workflows > 0) && !$canApproveWorkflow) {
-                    $publishTitle = t('Submit to Workflow');
-                }
+                $publishTitle = $composer->getPublishButtonTitle($stackToEdit);
                 $showApprovalButton = true;
             }
         }
