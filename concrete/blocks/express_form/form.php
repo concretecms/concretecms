@@ -223,7 +223,7 @@
 
 
 <script type="application/javascript">
-    Concrete.event.publish('block.express_form.open', {
+    Concrete.event.publish('open.block_express_form', {
         controls: <?=json_encode($controls)?>,
         types: <?=json_encode($types_select)?>,
         settings: {

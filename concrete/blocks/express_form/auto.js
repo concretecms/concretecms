@@ -11,7 +11,8 @@ $(function() {
     ConcreteBlockForm.prototype.setupEvents = function(data) {
         var my = this;
 
-        Concrete.event.bind('block.express_form.add_control', function(e, data) {
+        Concrete.event.unbind('add_control.block_express_form');
+        Concrete.event.bind('add_control.block_express_form', function(e, data) {
 
             var $tabEdit = $('#ccm-tab-content-form-edit'),
                 $list = $tabEdit.find('ul');
@@ -21,8 +22,8 @@ $(function() {
 
 
         });
-
-        Concrete.event.bind('block.express_form.update_control', function(e, data) {
+        Concrete.event.unbind('update_control.block_express_form');
+        Concrete.event.bind('update_control.block_express_form', function(e, data) {
 
             var $tabEdit = $('#ccm-tab-content-form-edit'),
                 $control = $tabEdit.find('[data-form-control-id=' + data.control.id + ']');
@@ -80,7 +81,7 @@ $(function() {
                     $tabAdd.find('input[name=question]').val('');
                     $tabAdd.find('input[name=required][value=0]').prop('checked', true);
                     $tabAdd.find('div.alert-success').show().addClass("animated fadeIn");
-                    Concrete.event.publish('block.express_form.add_control', {
+                    Concrete.event.publish('add_control.block_express_form', {
                         'control': r,
                         'controlTemplate': controlTemplate
                     });
@@ -110,7 +111,7 @@ $(function() {
                     $fields.show();
                     $editQuestionInner.html('');
 
-                    Concrete.event.publish('block.express_form.update_control', {
+                    Concrete.event.publish('update_control.block_express_form', {
                         'control': r,
                         'controlTemplate': controlTemplate
                     });
@@ -214,7 +215,7 @@ $(function() {
 
         if (data.controls) {
             _.each(data.controls, function(control) {
-                Concrete.event.publish('block.express_form.add_control', {
+                Concrete.event.publish('add_control.block_express_form', {
                     'control': control,
                     'controlTemplate': controlTemplate
                 });
@@ -272,7 +273,7 @@ $(function() {
     }
 
 
-    Concrete.event.bind('block.express_form.open', function(e, data) {
+    Concrete.event.bind('open.block_express_form', function(e, data) {
 
         var form = new ConcreteBlockForm(data);
 
