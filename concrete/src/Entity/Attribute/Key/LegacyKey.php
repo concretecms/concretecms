@@ -1,6 +1,10 @@
 <?php
 namespace Concrete\Core\Entity\Attribute\Key;
 
+use Concrete\Core\Attribute\Category\LegacyCategory;
+use Concrete\Core\Attribute\Value\EmptyRequestAttributeValue;
+use Concrete\Core\Entity\Attribute\Value\LegacyValue;
+use Concrete\Core\Entity\Attribute\Value\Value\Value;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -41,27 +45,55 @@ class LegacyKey extends Key
         $controller->deleteKey($this);
     }
 
-    public function addAttributeValue()
-    {
-
-    }
-
     public function setAttribute($o, $value)
     {
+        /*
+        // Clear attribute
+        $orm = \Database::connection()->getEntityManager();
 
         $attributeValue = $o->getAttributeValueObject($this);
         if (is_object($attributeValue)) {
             $controller = $this->getObjectAttributeCategory();
             $controller->deleteValue($attributeValue);
+            $category = $this->getAttributeCategory()->getController();
+            $indexer = $category->getSearchIndexer();
+            if ($indexer) {
+                $indexer->clearIndexEntry($category, $value, $this);
+            }
         }
 
+        $attributeValue = new LegacyValue();
+        $attributeValue->setAttributeKey($this);
+        $controller = $this->getController();
 
-        $attributeValue = $o->getAttributeValueObject($this, true);
+        $orm->persist($attributeValue);
+        $orm->flush();
 
-        $controller = $attributeValue->getAttributeKey()->getController();
-        $controller->saveValue($value);
+        $controller->setAttributeValue($attributeValue);
 
-        //$this->reindexAttributes();
+        if (!($value instanceof Value)) {
+            if ($value instanceof EmptyRequestAttributeValue) {
+                $controller->saveForm($controller->post());
+                unset($value);
+            } else {
+                $value = $controller->createAttributeValue($value);
+            }
+        }
+
+        if ($value) {
+            $value->getAttributeValues()->add($attributeValue);
+            $attributeValue->setValue($value);
+        }
+
+        $orm->persist($attributeValue);
+        $orm->flush();
+
+        $category = $this->getAttributeCategory()->getController();
+        $indexer = $category->getSearchIndexer();
+        if ($indexer) {
+            $indexer->indexEntry($category, $attributeValue, $this);
+        }
+        */
 
     }
 
