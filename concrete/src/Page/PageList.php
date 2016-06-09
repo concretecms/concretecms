@@ -7,6 +7,7 @@ use Concrete\Core\Search\Pagination\PermissionablePagination;
 use Concrete\Core\Search\PermissionableListItemInterface;
 use Concrete\Core\Entity\Package;
 use Page as ConcretePage;
+use Concrete\Core\Entity\Page\Template as TemplateEntity;
 use Pagerfanta\Adapter\DoctrineDbalAdapter;
 
 /**
@@ -242,7 +243,7 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
      *
      * @param mixed $ptHandle
      */
-    public function filterByPageTemplate(Template $template)
+    public function filterByPageTemplate(TemplateEntity $template)
     {
         $this->query->andWhere('cv.pTemplateID = :pTemplateID');
         $this->query->setParameter('pTemplateID', $template->getPageTemplateID());
