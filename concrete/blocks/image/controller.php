@@ -144,10 +144,9 @@ class Controller extends BlockController
      */
     public function getImageFeatureDetailFileObject()
     {
-        $app = \Core::getFacadeApplication(); // This isn't available in installation.
         // i don't know why this->fID isn't sticky in some cases, leading us to query
         // every damn time
-        $db = $app->make('database')->connection();
+        $db = $this->app->make('database')->connection();
 
         $file = null;
         $fID = $db->fetchColumn('select fID from btContentImage where bID = ?', [$this->bID], 0);
@@ -233,10 +232,8 @@ class Controller extends BlockController
     public function getLinkURL()
     {
         $linkUrl = '';
-        $app = \Core::getFacadeApplication();
-
         if (!empty($this->externalLink)) {
-            $sec = $app->make('helper/security');
+            $sec = $this->app->make('helper/security');
             $linkUrl = $sec->sanitizeURL($this->externalLink);
         } elseif (!empty($this->internalLinkCID)) {
             $linkToC = Page::getByID($this->internalLinkCID);
@@ -253,8 +250,7 @@ class Controller extends BlockController
      */
     public function validate_composer()
     {
-        $app = \Core::getFacadeApplication();
-        $e = $app->make('helper/validation/error');
+        $e = $this->app->make('helper/validation/error');
 
         $f = $this->getFileObject();
         if (!is_object($f) || !$f->getFileID()) {
