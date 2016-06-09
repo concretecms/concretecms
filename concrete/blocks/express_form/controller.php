@@ -435,7 +435,7 @@ class Controller extends BlockController
         $category = new ExpressCategory($entity, \Core::make('app'), $entityManager);
         $indexer = $category->getSearchIndexer();
         foreach($indexKeys as $key) {
-            $indexer->updateRepository($category, $key);
+            $indexer->updateRepositoryColumns($category, $key);
         }
 
         // Now, we handle the entity results folder.
