@@ -203,7 +203,7 @@ class StyleSet
         }
 
         if (isset($r['customClass']) && $r['customClass']) {
-            $set->setCustomClass($r['customClass']);
+            $set->setCustomClass(implode(' ', $r['customClass']));
             $return = true;
         }
 
