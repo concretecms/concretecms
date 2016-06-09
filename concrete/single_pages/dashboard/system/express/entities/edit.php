@@ -57,7 +57,7 @@
                         $('[data-tree]').concreteTree({
                             treeID: '<?=$tree->getTreeID()?>',
                             ajaxData: {
-                                displayOnly: 'category'
+                                displayOnly: 'express_entry_category'
                             },
                             <?php if (is_object($folder)) { ?>
                                 selectNodesByKey: [<?=$folder->getTreeNodeID()?>],
