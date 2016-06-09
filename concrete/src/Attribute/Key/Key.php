@@ -3,7 +3,9 @@ namespace Concrete\Core\Attribute\Key;
 
 use Concrete\Core\Attribute\AttributeKeyInterface;
 use Concrete\Core\Attribute\Category\LegacyCategory;
+use Concrete\Core\Attribute\Value\EmptyRequestAttributeValue;
 use Concrete\Core\Entity\Attribute\Key\LegacyKey;
+use Concrete\Core\Entity\Attribute\Value\LegacyValue;
 use Concrete\Core\Support\Facade\Facade;
 
 class Key extends Facade implements AttributeKeyInterface
@@ -12,6 +14,11 @@ class Key extends Facade implements AttributeKeyInterface
     {
         return 'Concrete\Core\Attribute\Key\Factory';
     }
+
+
+    // EVERYTHING BELOW THIS IS DEPRECATED AND WILL BE REMOVED AT SOME POINT
+    // THE ONLY REASON IT IS HERE IS TO FACILITATE CUSTOM ATTRIBUTE KEY CATEGORIES
+    // IN 5.7 THAT EXTEND THIS FILE.
 
     /**
      * @var LegacyKey
@@ -119,6 +126,62 @@ class Key extends Facade implements AttributeKeyInterface
     /**
      * @deprecated
      */
+    public function saveAttributeForm($o)
+    {
+        return $this->saveAttribute($o);
+    }
+
+    /**
+     * @deprecated
+     */
+    protected function saveAttribute($attributeValue, $passedValue = false)
+    {
+        /** @var \Concrete\Core\Attribute\Type $at */
+        $at = $this->getAttributeType();
+        $at->getController()->setAttributeKey($this);
+        $at->getController()->setAttributeValue($attributeValue);
+        if ($passedValue) {
+            $at->getController()->saveValue($passedValue);
+        } else {
+            $controller = $this->getController();
+            $value = $controller->createAttributeValueFromRequest();
+            if (!($value instanceof EmptyRequestAttributeValue)) {
+                // This is a new v8 attribute type
+
+                $attributeValue->setValue($value);
+
+                $orm = \Database::connection()->getEntityManager();
+                $orm->persist($value);
+                $orm->flush();
+
+                $category = $this->legacyAttributeKey->getAttributeCategory()->getController();
+                $indexer = $category->getSearchIndexer();
+                if ($indexer) {
+                    $indexer->indexEntry($category, $attributeValue, $this);
+                }
+
+                return $attributeValue;
+            }
+        }
+    }
+
+
+    /**
+     * @deprecated
+     */
+    public function addAttributeValue()
+    {
+        $value = new LegacyValue();
+        $value->setAttributeKey($this->legacyAttributeKey);
+        $orm = \Database::connection()->getEntityManager();
+        $orm->persist($value);
+        $orm->flush();
+        return $value;
+    }
+
+    /**
+     * @deprecated
+     */
     public function getSearchIndexFieldDefinition()
     {
         return $this->searchIndexFieldDefinition;
@@ -130,6 +193,14 @@ class Key extends Facade implements AttributeKeyInterface
     public function getIndexedSearchTable()
     {
         return false;
+    }
+
+    /**
+     * @deprecated
+     */
+    public function setAttribute($o, $value)
+    {
+        $this->saveAttribute($o, $value);
     }
 
 
