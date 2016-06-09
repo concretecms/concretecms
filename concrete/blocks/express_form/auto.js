@@ -225,7 +225,7 @@ $(function() {
         $('[data-tree]').each(function() {
             $(this).concreteTree({
                 ajaxData: {
-                    displayOnly: 'category'
+                    displayOnly: 'express_entry_category'
                 },
                 treeNodeParentID: $(this).attr('data-root-tree-node-id'),
                 selectNodesByKey: [$('input[name=resultsFolder]').val()],
