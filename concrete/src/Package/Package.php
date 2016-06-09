@@ -265,7 +265,16 @@ abstract class Package implements LocalizablePackageInterface
 
         return $dirp . '/' . $this->pkgHandle;
     }
-
+    
+    /**
+     * Returns the path starting from c5 installation folder to the package folder
+     * 
+     * @return string
+     */
+    public function getRelativePathFromInstallFolder(){
+        return DIRECTORY_SEPARATOR . DIRNAME_PACKAGES . DIRECTORY_SEPARATOR . $this->getPackageHandle();
+    }
+    
 
     public function getTranslationFile($locale)
     {
@@ -764,6 +773,14 @@ abstract class Package implements LocalizablePackageInterface
             // return yaml metadata dir
             $paths =  array($this->getPackagePath() . DIRECTORY_SEPARATOR . REL_DIR_METADATA_YAML);
         }
+
+        // Add additional source path to the default namespace
+        // if pkgAutoloaderMapCoreExtensions is true
+        $corePath = $this->pkgAutoloaderMapCoreExtensions ? $this->getPackagePath() . DIRECTORY_SEPARATOR . DIRNAME_CLASSES . DIRECTORY_SEPARATOR . 'Concrete' : '';
+        if(!empty($corePath)){
+            $paths[] = $corePath;
+        }
+
         // Check if paths exists and is a directory
         if(!is_dir($paths[0])){
             $paths = array();
@@ -784,15 +801,23 @@ abstract class Package implements LocalizablePackageInterface
             $tmp = $this->getPackageEntityPaths();
             $paths = array();
             foreach($tmp as $path) {
-                $paths[] = str_replace($this->getPackagePath(), $this->getRelativePath(), $path);
+                $paths[] = str_replace($this->getPackagePath(), $this->getRelativePathFromInstallFolder(), $path);
             }
         } else if ($this->metadataDriver === self::PACKAGE_METADATADRIVER_XML){
             // return xml metadata dir
-            $paths =  array($this->getRelativePath() . DIRECTORY_SEPARATOR . REL_DIR_METADATA_XML);
+            $paths =  array($this->getRelativePathFromInstallFolder() . DIRECTORY_SEPARATOR . REL_DIR_METADATA_XML);
         } else if ($this->metadataDriver === self::PACKAGE_METADATADRIVER_YAML){
             // return yaml metadata dir
-            $paths =  array($this->getRelativePath() . DIRECTORY_SEPARATOR . REL_DIR_METADATA_YAML);
+            $paths =  array($this->getRelativePathFromInstallFolder() . DIRECTORY_SEPARATOR . REL_DIR_METADATA_YAML);
         }
+
+        // Add additional source path to the default namespace
+        // if pkgAutoloaderMapCoreExtensions is true
+        $coreRelativPath = $this->pkgAutoloaderMapCoreExtensions ? $this->getRelativePathFromInstallFolder() . DIRECTORY_SEPARATOR . DIRNAME_CLASSES . DIRECTORY_SEPARATOR . 'Concrete' : '';
+        if(!empty($coreRelativPath)){
+            $paths[] = $coreRelativPath;
+        }
+
         // Check if paths exists and is a directory
         if(!is_dir(DIR_BASE.$paths[0])){
             $paths = array();
@@ -826,7 +851,11 @@ abstract class Package implements LocalizablePackageInterface
         if(count($this->pkgAutoloaderRegistries) > 0){
             foreach($this->pkgAutoloaderRegistries as $src => $rawNamespace){
                 
-                $path = $this->getRelativePath() . DIRECTORY_SEPARATOR . $src;
+                // replace / with DIRECTORY_SEPARATOR
+                // prevent a mix between / and \\ in the src string
+                $srcCleand = str_replace('/', DIRECTORY_SEPARATOR, $src);
+
+                $path = $this->getRelativePathFromInstallFolder() . DIRECTORY_SEPARATOR . $srcCleand;
                 
                 $namespace = ltrim($rawNamespace, '\\');
                 $namespaces[] = array(
@@ -844,7 +873,7 @@ abstract class Package implements LocalizablePackageInterface
      * 
      * @return \Doctrine\ORM\EntityManager
      */
-    protected function getPackageEntityManager()
+    public function getPackageEntityManager()
     {
         $config = Setup::createConfiguration(true, $this->app->make('config')->get('database.proxy_classes'));
         
@@ -874,7 +903,7 @@ abstract class Package implements LocalizablePackageInterface
     /**
      * Destroys all proxies related to a package 
      */
-    protected function destroyProxyClasses(\Doctrine\ORM\EntityManager $em)
+    protected function destroyProxyClasses(\Doctrine\ORM\EntityManagerInterface $em)
     {
 
         if(empty($this->getPackageMetadataPaths())){
