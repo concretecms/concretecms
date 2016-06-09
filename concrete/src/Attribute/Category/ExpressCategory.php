@@ -23,6 +23,15 @@ class ExpressCategory extends AbstractCategory
             . 'ExpressSearchIndexAttributes';
     }
 
+
+    public function getSearchIndexer()
+    {
+        $indexer = $this->application->make('Concrete\Core\Attribute\Category\SearchIndexer\ExpressSearchIndexer');
+
+        return $indexer;
+    }
+
+
     public function getIndexedSearchPrimaryKeyValue($mixed)
     {
         return $mixed->getID();

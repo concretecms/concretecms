@@ -125,7 +125,7 @@ abstract class AbstractCategory implements CategoryInterface, StandardSearchInde
         // Modify the category's search indexer.
         $indexer = $this->getSearchIndexer();
         if (is_object($indexer)) {
-            $indexer->updateRepository($this, $key);
+            $indexer->updateRepositoryColumns($this, $key);
         }
 
         $this->entityManager->persist($key);
@@ -186,7 +186,7 @@ abstract class AbstractCategory implements CategoryInterface, StandardSearchInde
         // Modify the category's search indexer.
         $indexer = $this->getSearchIndexer();
         if (is_object($indexer)) {
-            $indexer->updateRepository($this, $key, $previousHandle);
+            $indexer->updateRepositoryColumns($this, $key, $previousHandle);
         }
 
         $this->entityManager->persist($key);

@@ -114,7 +114,7 @@ class LegacyCategory implements CategoryInterface, StandardSearchIndexerInterfac
         // Modify the category's search indexer.
         $indexer = $this->getSearchIndexer();
         if (is_object($indexer)) {
-            $indexer->updateRepository($this, $key, $previousHandle);
+            $indexer->updateRepositoryColumns($this, $key, $previousHandle);
         }
 
         $this->entityManager->persist($key);
@@ -198,7 +198,7 @@ class LegacyCategory implements CategoryInterface, StandardSearchIndexerInterfac
        // Modify the category's search indexer.
         $indexer = $this->getSearchIndexer();
         if (is_object($indexer)) {
-            $indexer->updateRepository($this, $key);
+            $indexer->updateRepositoryColumns($this, $key);
         }
 
         $this->entityManager->persist($key);
