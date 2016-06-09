@@ -184,12 +184,12 @@
 
 				click: function(e, data) {
 
-					if (options.onClick) {
-						return options.onClick(data.node, e);
-					}
-
 					if (data.targetType == 'expander') {
 						return true;
+					}
+
+					if (options.onClick) {
+						return options.onClick(data.node, e);
 					}
 
 					if (options.chooseNodeInForm && data.targetType != 'checkbox') {
