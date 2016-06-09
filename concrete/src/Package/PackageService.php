@@ -352,9 +352,8 @@ class PackageService
     
     
     /**
-     * Get the config with a direct file safer,
-     * so settings can be saved directly to application/config/database.php
-     * instead of application/config/generated_overrides
+     * Get the config with a file safer,
+     * so settings can be saved in application/config/generated_overrides
      * 
      * Used to store the orm metadata of packages
      * 
@@ -365,7 +364,7 @@ class PackageService
         $defaultEnv = \Config::getEnvironment();
         $fileSystem = new \Illuminate\Filesystem\Filesystem();
         $fileLoader = new \Concrete\Core\Config\FileLoader($fileSystem);
-        $directFileSaver = new \Concrete\Core\Config\DirectFileSaver($fileSystem);
+        $directFileSaver = new \Concrete\Core\Config\FileSaver($fileSystem);
         $repository = new \Concrete\Core\Config\Repository\Repository($fileLoader, $directFileSaver, $defaultEnv);
         return $repository;
     }

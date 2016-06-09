@@ -13,7 +13,6 @@ use Concrete\Core\Support\Facade\Application;
  * Attention: Because the test uses a big amount of database tables, it's heavy on resources and runs very slow
  *
  * @author Markus Liechti <markus@liechti.io>
- * @group orm_setup
  * @group package_tests
  */
 class PackageServicePackageUnistallTest extends \ConcreteDatabaseTestCase
@@ -231,6 +230,20 @@ class PackageServicePackageUnistallTest extends \ConcreteDatabaseTestCase
         $filesystem->copy($files[0], $target);
     }
 
+/**
+     * Delete all proxies
+     */
+    protected function deleteAllProxies(){
+        $config = $this->app->make('config');
+        $proxyDir = $config->get('database.proxy_classes');
+
+        $filesystem = new Filesystem();
+
+        foreach($filesystem->allFiles($proxyDir) as $proxyFile){
+            $filesystem->delete($proxyFile);
+        }
+    }
+
     /**
      * Uninstall all packages
      */
@@ -240,10 +253,9 @@ class PackageServicePackageUnistallTest extends \ConcreteDatabaseTestCase
 
         // Remove metadatadriver settings
         $config = $packageService->getFileConfigORMMetadata();
+        $config->save('database.metadatadriver', array());
 
-//        $metaDriverConfig = $config->get('database');
-//        unset($metaDriverConfig['metadatadriver']);
-//        $config->save('database', $metaDriverConfig['metadatadriver']);
+        $this->deleteAllProxies();
 
         parent::tearDown();
     }

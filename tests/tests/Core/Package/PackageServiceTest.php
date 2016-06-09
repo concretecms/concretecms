@@ -10,7 +10,6 @@ use Concrete\Core\Support\Facade\Application;
  * PackageServiceTest
  *
  * @author Markus Liechti <markus@liechti.io>
- * @group orm_setup
  * @group package_tests
  */
 class PackageServiceTest extends \ConcreteDatabaseTestCase
@@ -21,17 +20,6 @@ class PackageServiceTest extends \ConcreteDatabaseTestCase
 
     private $totallyInstalledBackages = 7;
 
-//    /**
-//     * These tables are required to test the unistall process
-//     *
-//     * @var array
-//     */
-//    protected $tables = array(
-//        'SystemAntispamLibraries',  // used for uninstall tests
-//        'AuthenticationTypes',      // used for uninstall tests
-//        'BlockTypeSets',            // used for uninstall tests
-//        'SystemCaptchaLibraries',   // used for uninstall tests
-//    );
     
     protected $app;
     
@@ -460,7 +448,7 @@ class PackageServiceTest extends \ConcreteDatabaseTestCase
         
         // recreate the config
         $packageService->recreateConfigFileWithPackageMetadata();
-        
+
         $config2 = $packageService->getFileConfigORMMetadata();
         $packageMetadata = $config2->get(CONFIG_ORM_METADATA_PACKAGES_BASE);
         // assert to the 3 arrays xml, yaml, annotation
@@ -542,7 +530,7 @@ class PackageServiceTest extends \ConcreteDatabaseTestCase
             $filesystem->delete($proxyFile);
         }
     }
-    
+
     /**
      * Uninstall all packages
      */
@@ -552,9 +540,6 @@ class PackageServiceTest extends \ConcreteDatabaseTestCase
 
         // Remove metadatadriver settings
         $config = $packageService->getFileConfigORMMetadata();
-
-        $metaDriverConfig = $config->get('database');
-        unset($metaDriverConfig['metadatadriver']);
         $config->save('database.metadatadriver', array());
         
         $this->deleteAllProxies();
