@@ -21,11 +21,17 @@
                 <legend><?=t("Basics")?></legend>
                 <div class="form-group">
                     <label for="name"><?=t('Name')?></label>
-                    <?=$form->text('name', $entity->getName())?>
+                    <div class="input-group">
+                        <?=$form->text('name', $entity->getName())?>
+                        <span class="input-group-addon"><i class="fa fa-asterisk"></i></span>
+                    </div>
                 </div>
                 <div class="form-group">
                     <label for="name"><?=t('Handle')?></label>
-                    <?=$form->text('handle', $entity->getHandle())?>
+                    <div class="input-group">
+                        <?=$form->text('handle', $entity->getHandle())?>
+                        <span class="input-group-addon"><i class="fa fa-asterisk"></i></span>
+                    </div>
                 </div>
                 <div class="form-group">
                     <label for="name"><?=t('Description')?></label>
