@@ -47,7 +47,7 @@ if (is_object($pagetype)) {
 	</div>
 
 	<div class="form-group">
-		<?=$form->label('ptPageTemplateID', t('Default Page Template'))?>
+		<?=$form->label('ptDefaultPageTemplateID', t('Default Page Template'))?>
 		<?=$form->select('ptDefaultPageTemplateID', $templates, $ptDefaultPageTemplateID, array('class' => 'span5'))?>
 	</div>
 
