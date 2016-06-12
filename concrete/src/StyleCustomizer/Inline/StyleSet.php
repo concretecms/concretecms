@@ -202,8 +202,8 @@ class StyleSet
             }
         }
 
-        if (isset($r['customClass']) && $r['customClass']) {
-            $set->setCustomClass($r['customClass']);
+        if (isset($r['customClass']) && is_array($r['customClass'])) {
+            $set->setCustomClass(implode(' ', $r['customClass']));
             $return = true;
         }
 

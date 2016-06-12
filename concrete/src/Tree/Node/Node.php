@@ -235,6 +235,7 @@ abstract class Node extends Object implements \Concrete\Core\Permission\ObjectIn
             $node->treeNodeTypeHandle = $this->getTreeNodeTypeHandle();
             $node->treeNodeMenu = $this->getTreeNodeMenu();
 
+            $node->children = array();
             foreach ($this->getChildNodes() as $childnode) {
                 $childnodejson = $childnode->getTreeNodeJSON();
                 if (is_object($childnodejson)) {

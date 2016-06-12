@@ -374,6 +374,16 @@ abstract class Package implements LocalizablePackageInterface
     /**
      * @deprecated
      */
+    public static function getInstalledHandles()
+    {
+        // this should go through the facade instead
+        return \Concrete\Core\Support\Facade\Package::getInstalledHandles();
+    }
+
+
+    /**
+     * @deprecated
+     */
     public static function getByHandle($pkgHandle)
     {
         // this should go through the facade instead

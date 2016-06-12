@@ -29,7 +29,7 @@ class LegacyCategory implements CategoryInterface, StandardSearchIndexerInterfac
         return $this->entityManager;
     }
 
-    protected function getLegacyKeyClass()
+    public function getLegacyKeyClass()
     {
         $class = camelcase($this->getCategoryEntity()->getAttributeKeyCategoryHandle());
         $prefix = ($this->getCategoryEntity()->getPackageID() > 0) ?
@@ -69,11 +69,19 @@ class LegacyCategory implements CategoryInterface, StandardSearchIndexerInterfac
     public function getList()
     {
         $r = $this->entityManager->getRepository('Concrete\Core\Entity\Attribute\Key\LegacyKey');
-        return $r->findBy(array(
+        $attributes = $r->findBy(array(
             'category' => $this->getCategoryEntity(),
             'akIsSearchable' => true,
             'akIsInternal' => false,
         ));
+        $return = array();
+        $class = $this->getLegacyKeyClass();
+        foreach($attributes as $ak) {
+            $attribute = new $class();
+            $attribute->load($ak->getAttributeKeyID());
+            $return[] = $attribute;
+        }
+        return $return;
     }
 
     public function getAttributeValues($mixed)
@@ -106,7 +114,7 @@ class LegacyCategory implements CategoryInterface, StandardSearchIndexerInterfac
         // Modify the category's search indexer.
         $indexer = $this->getSearchIndexer();
         if (is_object($indexer)) {
-            $indexer->updateRepository($this, $key, $previousHandle);
+            $indexer->updateRepositoryColumns($this, $key, $previousHandle);
         }
 
         $this->entityManager->persist($key);
@@ -190,7 +198,7 @@ class LegacyCategory implements CategoryInterface, StandardSearchIndexerInterfac
        // Modify the category's search indexer.
         $indexer = $this->getSearchIndexer();
         if (is_object($indexer)) {
-            $indexer->updateRepository($this, $key);
+            $indexer->updateRepositoryColumns($this, $key);
         }
 
         $this->entityManager->persist($key);

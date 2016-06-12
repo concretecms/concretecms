@@ -8,7 +8,7 @@ use Concrete\Core\Entity\Attribute\Value\Value;
 interface SearchIndexerInterface
 {
     public function createRepository(CategoryInterface $category);
-    public function updateRepository(CategoryInterface $category, AttributeKeyInterface $key, $previousHandle = null);
+    public function updateRepositoryColumns(CategoryInterface $category, AttributeKeyInterface $key, $previousHandle = null);
     public function indexEntry(CategoryInterface $category, Value $attributeValue, $subject);
     public function clearIndexEntry(CategoryInterface $category, Value $attributeValue, $subject);
 }
