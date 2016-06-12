@@ -55,24 +55,24 @@ class DatabaseServiceProviderTest extends \PHPUnit_Framework_TestCase
      * @param string $compare
      * @param string $isDevMode
      */
-    public function testORMCacheSettings($ioCAlias, $compare, $isDevMode){
-        
-        // Store something in the config file and fetching it doesn't work.
-        // The value has to be store first, then a new config file repository
-        // has to be generated.
-        $config = $this->getTestFileConfig();
-        $config->save('concrete.cache.doctrine_dev_mode', $isDevMode);
-
-        // override the application config
-        $this->app->instance('config', $config);
-        
-        // Does the stored value is equals the loaded value
-        $configLoaded = $this->app->make('config')->get('concrete.cache.doctrine_dev_mode');
-        $this->assertEquals($isDevMode, $configLoaded, 'The stored config and the loaded config value are not the same.');
-        // Does the right caching is loaded
-        $doctrineConfig = $this->app->make($ioCAlias);
-        $this->assertInstanceOf($compare, $doctrineConfig);
-    }
+//    public function testORMCacheSettings($ioCAlias, $compare, $isDevMode){
+//        
+//        // Store something in the config file and fetching it doesn't work.
+//        // The value has to be store first, then a new config file repository
+//        // has to be generated.
+//        $config = $this->getTestFileConfig();
+//        $config->save('concrete.cache.doctrine_dev_mode', $isDevMode);
+//
+//        // override the application config
+//        $this->app->instance('config', $config);
+//        
+//        // Does the stored value is equals the loaded value
+//        $configLoaded = $this->app->make('config')->get('concrete.cache.doctrine_dev_mode');
+//        $this->assertEquals($isDevMode, $configLoaded, 'The stored config and the loaded config value are not the same.');
+//        // Does the right caching is loaded
+//        $doctrineConfig = $this->app->make($ioCAlias);
+//        $this->assertInstanceOf($compare, $doctrineConfig);
+//    }
 
     public function dataProviderForTestORMCache()
     {
