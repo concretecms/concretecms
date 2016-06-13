@@ -2,6 +2,9 @@
 
 namespace Concrete\Core\Updater\Migrations\Migrations;
 
+use Doctrine\DBAL\Migrations\AbstractMigration;
+use Doctrine\DBAL\Schema\Schema;
+
 /**
  * Version20160613140000
  */
