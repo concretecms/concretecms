@@ -38,7 +38,7 @@ $c = Page::getCurrentPage();
             class="list-group-item<?=($c->getCollectionPath() == '/dashboard/system/express/entities/customize_search') ? ' active' : ''?>"
             href="<?=URL::to('/dashboard/system/express/entities/customize_search', $entity->getId())?>"
         >
-            <?=t('Customize Search')?>
+            <?=t('Customize Search/Listing')?>
         </a>
         <a
             class="list-group-item"
