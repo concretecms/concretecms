@@ -253,7 +253,7 @@ class PackageService
      * 
      * @param \Concrete\Core\Package\Package $p
      */
-    protected function savePackageMetadataDriverToConfig(Package $p)
+    public function savePackageMetadataDriverToConfig(Package $p)
     {
         $packageMetadataDriverType = $p->getMetadataDriverType();
         $packageHandle = $p->getPackageHandle();
@@ -304,7 +304,7 @@ class PackageService
      * 
      * @param \Concrete\Core\Package\Package $p
      */
-    protected function removPackageMetadataDriverFromConfig(Package $p)
+    public function removPackageMetadataDriverFromConfig(Package $p)
     {
         $packageMetadataDriverType = $p->getMetadataDriverType();
         $packageHandle = $p->getPackageHandle();
