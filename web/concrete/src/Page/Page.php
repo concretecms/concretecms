@@ -2714,7 +2714,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         return $db->fetchColumn('select content from PageSearchIndex where cID = ?', array($this->cID));
     }
 
-    protected function _associateMasterCollectionBlocks($newCID, $masterCID)
+    protected function _associateMasterCollectionBlocks($newCID, $masterCID, $cAcquireComposerOutputControls)
     {
         $mc = Page::getByID($masterCID, 'ACTIVE');
         $nc = Page::getByID($newCID, 'RECENT');
@@ -2738,10 +2738,12 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         if ($r) {
             while ($row = $r->fetchRow()) {
                 $b = Block::getByID($row['bID'], $mc, $row['arHandle']);
-                if ($row['btCopyWhenPropagate']) {
-                    $b->duplicate($nc, true);
-                } else {
-                    $b->alias($nc);
+                if ($cAcquireComposerOutputControls || !in_array($b->getBlockTypeHandle(), array('core_page_type_composer_control_output'))) {
+                    if ($row['btCopyWhenPropagate']) {
+                        $b->duplicate($nc, true);
+                    } else {
+                        $b->alias($nc);
+                    }
                 }
             }
             $r->free();
@@ -2839,6 +2841,11 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
             $pkgID = 0;
         }
 
+        $cIsActive = 1;
+        if (isset($data['cIsActive']) && !$data['cIsActive']) {
+            $cIsActive = 0;
+        }
+
         if (isset($data['cName'])) {
             $data['name'] = $data['cName'];
         }
@@ -2891,8 +2898,8 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
 
         $cInheritPermissionsFromCID = ($this->overrideTemplatePermissions()) ? $this->getPermissionsCollectionID() : $masterCID;
         $cInheritPermissionsFrom = ($this->overrideTemplatePermissions()) ? 'PARENT' : 'TEMPLATE';
-        $v = array($cID, $ptID, $cParentID, $uID, $cInheritPermissionsFrom, $this->overrideTemplatePermissions(), $cInheritPermissionsFromCID, $cDisplayOrder, $pkgID);
-        $q = 'insert into Pages (cID, ptID, cParentID, uID, cInheritPermissionsFrom, cOverrideTemplatePermissions, cInheritPermissionsFromCID, cDisplayOrder, pkgID) values (?, ?, ?, ?, ?, ?, ?, ?, ?)';
+        $v = array($cID, $ptID, $cParentID, $uID, $cInheritPermissionsFrom, $this->overrideTemplatePermissions(), $cInheritPermissionsFromCID, $cDisplayOrder, $pkgID, $cIsActive);
+        $q = 'insert into Pages (cID, ptID, cParentID, uID, cInheritPermissionsFrom, cOverrideTemplatePermissions, cInheritPermissionsFromCID, cDisplayOrder, pkgID, cIsActive) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
         $r = $db->prepare($q);
         $res = $r->execute($v);
 
@@ -2903,9 +2910,14 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
             PageStatistics::incrementParents($newCID);
 
             if ($r) {
+
+                $cAcquireComposerOutputControls = false;
+                if (isset($data['cAcquireComposerOutputControls']) && $data['cAcquireComposerOutputControls']) {
+                    $cAcquireComposerOutputControls = true;
+                }
                 // now that we know the insert operation was a success, we need to see if the collection type we're adding has a master collection associated with it
                 if ($masterCIDBlocks) {
-                    $this->_associateMasterCollectionBlocks($newCID, $masterCIDBlocks);
+                    $this->_associateMasterCollectionBlocks($newCID, $masterCIDBlocks, $cAcquireComposerOutputControls);
                 }
                 if ($masterCID) {
                     $this->_associateMasterCollectionAttributes($newCID, $masterCID);

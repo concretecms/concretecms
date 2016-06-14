@@ -1122,9 +1122,8 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
         $db = Loader::db();
         $ptID = $this->getPageTypeID();
         $parent = Page::getByPath(Config::get('concrete.paths.drafts'));
-        $data = array('cvIsApproved' => 0);
+        $data = array('cvIsApproved' => 0, 'cIsActive' => false, 'cAcquireComposerOutputControls' => true);
         $p = $parent->add($this, $data, $pt);
-        $p->deactivate();
 
         // now we setup in the initial configurated page target
         $target = $this->getPageTypePublishTargetObject();
