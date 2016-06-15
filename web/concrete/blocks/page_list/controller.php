@@ -137,6 +137,10 @@ class Controller extends BlockController
         if ($this->displayAliases) {
             $this->list->includeAliases();
         }
+        if ($this->ignorePermissions) {
+            $this->list->ignorePermissions();
+        }
+
         $this->list->filter('cvName', '', '!=');
 
         if ($this->ptID) {
