@@ -1,8 +1,8 @@
 <?php
 
 namespace Concrete\Core\Cache\Page;
+use Concrete\Core\Page\Page;
 use Config;
-use \Page as ConcretePage;
 use Loader;
 
 class FilePageCache extends PageCache {
@@ -44,14 +44,14 @@ class FilePageCache extends PageCache {
 		$fh->removeAll(Config::get('concrete.cache.page.directory'));
 	}
 
-	public function purge(ConcretePage $c) {
+	public function purge(Page $c) {
 		$file = $this->getCacheFile($c);
 		if ($file && file_exists($file)) {
 			@unlink($file);
 		}
 	}
 
-	public function set(ConcretePage $c, $content) {
+	public function set(Page $c, $content) {
 		if (!is_dir(Config::get('concrete.cache.page.directory'))) {
 			@mkdir(Config::get('concrete.cache.page.directory'));
 			@touch(Config::get('concrete.cache.page.directory') . '/index.html');
