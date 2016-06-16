@@ -5,7 +5,7 @@ namespace Concrete\Core\Cache\Page;
 use Concrete\Core\Http\Response;
 use Config;
 use Request;
-use \Page as ConcretePage;
+use Concrete\Core\Page\Page;
 use \Concrete\Core\Page\View\PageView;
 use Permissions;
 use User;
@@ -55,14 +55,14 @@ abstract class PageCache
         return true;
     }
 
-    public function outputCacheHeaders(ConcretePage $c)
+    public function outputCacheHeaders(Page $c)
     {
         foreach ($this->getCacheHeaders($c) as $header) {
             header($header);
         }
     }
 
-    public function getCacheHeaders(ConcretePage $c)
+    public function getCacheHeaders(Page $c)
     {
         $lifetime = $c->getCollectionFullPageCachingLifetimeValue();
         $expires = gmdate('D, d M Y H:i:s', time() + $lifetime) . ' GMT';
@@ -135,7 +135,7 @@ abstract class PageCache
 
     public function getCacheKey($mixed)
     {
-        if ($mixed instanceof ConcretePage) {
+        if ($mixed instanceof Page) {
             if ($mixed->getCollectionPath() != '') {
                 return urlencode(trim($mixed->getCollectionPath(), '/'));
             } else {
@@ -160,11 +160,11 @@ abstract class PageCache
 
     abstract public function getRecord($mixed);
 
-    abstract public function set(ConcretePage $c, $content);
+    abstract public function set(Page $c, $content);
 
     abstract public function purgeByRecord(\Concrete\Core\Cache\Page\PageCacheRecord $rec);
 
-    abstract public function purge(ConcretePage $c);
+    abstract public function purge(Page $c);
 
     abstract public function flush();
 
