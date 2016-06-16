@@ -68,11 +68,11 @@ class Controller extends BlockController
 
     public function save($data)
     {
-        $data['useCustomTitle'] = isset($data['useCustomTitle']) ? 1 : 0;
-        $data['useFilterTitle'] = isset($data['useFilterTitle']) ? 1 : 0;
-        $data['useFilterTopic'] = isset($data['useFilterTopic']) ? 1 : 0;
-        $data['useFilterTag'] = isset($data['useFilterTag']) ? 1 : 0;
-        $data['useFilterDate'] = isset($data['useFilterDate']) ? 1 : 0;
+        $data['useCustomTitle'] = isset($data['useCustomTitle']) && $data['useCustomTitle'] ? 1 : 0;
+        $data['useFilterTitle'] = isset($data['useFilterTitle']) && $data['useFilterTitle'] ? 1 : 0;
+        $data['useFilterTopic'] = isset($data['useFilterTopic']) && $data['useFilterTopic'] ? 1 : 0;
+        $data['useFilterTag'] = isset($data['useFilterTag']) && $data['useFilterTag'] ? 1 : 0;
+        $data['useFilterDate'] = isset($data['useFilterDate']) && $data['useFilterDate'] ? 1 : 0;
 
         parent::save($data);
     }

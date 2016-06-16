@@ -73,7 +73,7 @@ class Marketplace
         if (empty($pkg)) {
             $error->add(t('An error occurred while downloading the package.'));
         }
-        if ($pkg == Package::E_PACKAGE_INVALID_APP_VERSION) {
+        if ($pkg == \Package::E_PACKAGE_INVALID_APP_VERSION) {
             $error->add(t('This package isn\'t currently available for this version of concrete5 . Please contact the maintainer of this package for assistance.'));
         }
 

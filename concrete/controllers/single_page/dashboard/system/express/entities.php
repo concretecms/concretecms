@@ -1,11 +1,13 @@
 <?php
 namespace Concrete\Controller\SinglePage\Dashboard\System\Express;
 
+use Concrete\Core\Attribute\Category\SearchIndexer\ExpressSearchIndexer;
 use Concrete\Core\Entity\Express\Entity;
 use Concrete\Core\Entity\Express\Form;
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Core\Tree\Node\Node;
 use Concrete\Core\Tree\Type\ExpressEntryResults;
+use Doctrine\DBAL\Schema\Schema;
 
 class Entities extends DashboardPageController
 {
@@ -128,12 +130,21 @@ class Entities extends DashboardPageController
         if (!$this->token->validate('update_entity')) {
             $this->error->add($this->token->getErrorMessage());
         }
-        if (!$this->request->request->get('name')) {
-            $this->error->add(t('You must give your data object a name.'));
+
+        $sec = \Core::make('helper/security');
+        $vs = \Core::make('helper/validation/strings');
+
+        $name = $sec->sanitizeString($this->request->request->get('name'));
+        $handle = $sec->sanitizeString($this->request->request->get('handle'));
+
+        if (!$vs->handle($handle)) {
+            $this->error->add(t('You must create a handle for your data object. It may contain only lowercase letters and underscores.'), 'handle');
         }
-        if (!$this->request->request->get('handle')) {
-            $this->error->add(t('You must create a handle for your data object. The handle must be all lowercase, and contain no spaces.'));
+
+        if (!$name || preg_match('/[^A-Za-z ]/', $name)) {
+            $this->error->add(t('You must give your data object a name. It may contain only uppercase or lowercase letters.'), 'name');
         }
+
         if (!$this->request->request->get('entity_results_node_id')) {
             $this->error->add(t('You must choose where the results for your entity are going live.'));
         }
@@ -154,13 +165,22 @@ class Entities extends DashboardPageController
             $this->error->add(t('You must specify a valid default edit form.'));
         }
         if (!$this->error->has()) {
-            $entity->setName($this->request->request->get('name'));
-            $entity->setHandle($this->request->request->get('handle'));
+
+            $previousEntity = clone $entity;
+
+            $entity->setName($name);
+            $entity->setHandle($handle);
             $entity->setDescription($this->request->request->get('description'));
             $entity->setDefaultViewForm($viewForm);
             $entity->setDefaultEditForm($editForm);
             $this->entityManager->persist($entity);
             $this->entityManager->flush();
+
+            /**
+             * @var $indexer ExpressSearchIndexer
+             */
+            $indexer = $entity->getAttributeKeyCategory()->getSearchIndexer();
+            $indexer->updateRepository($previousEntity, $entity);
 
             $resultsNode = Node::getByID($entity->getEntityResultsNodeId());
             $folder = Node::getByID($this->request->request('entity_results_node_id'));

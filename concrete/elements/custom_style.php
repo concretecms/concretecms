@@ -113,6 +113,11 @@ $alignmentOptions = array(
 );
 
 $customClassesSelect = array();
+$customClassesSelected = array();
+
+if (is_string($customClass) && $customClass != '') {
+    $customClassesSelected = explode(' ' , $customClass);
+}
 
 if (is_array($customClasses)) {
     foreach ($customClasses as $class) {
@@ -406,7 +411,7 @@ $form = Core::make('helper/form');
 
             <div>
                 <?=t('Custom Class')?>
-                <?= $form->selectMultiple('customClass', $customClassesSelect, $customClass);?>
+                <?= $form->selectMultiple('customClass', $customClassesSelect, $customClassesSelected);?>
             </div>
             <hr/>
 
