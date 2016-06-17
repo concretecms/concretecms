@@ -17,6 +17,10 @@ class Version20160615000000 extends AbstractMigration
         if (is_object($bt)) {
             $bt->refresh();
         }
+        $bt = BlockType::getByHandle('form');
+        if (is_object($bt)) {
+            $bt->refresh();
+        }
     }
 
     public function down(Schema $schema)
