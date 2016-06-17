@@ -4,6 +4,7 @@ namespace Concrete\Core\StyleCustomizer;
 use Less_Parser;
 use Less_Tree_Call;
 use Concrete\Core\StyleCustomizer\Style\ColorStyle;
+use Concrete\Core\Support\Less\TreeCallColor;
 
 class Preset
 {
@@ -34,13 +35,18 @@ class Preset
             }
             if ($rule->name == static::PRESET_RULE_ICON) {
                 $method = $rule->value->value[0]->value[0];
-                if ($method instanceof Less_Tree_Call && $method->name == static::PRESET_RULE_ICON_FUNCTION) {
-                    $cv1 = ColorStyle::parse($method->args[0]->value[0]);
-                    $cv2 = ColorStyle::parse($method->args[1]->value[0]);
-                    $cv3 = ColorStyle::parse($method->args[2]->value[0]);
-                    $o->color1 = $cv1;
-                    $o->color2 = $cv2;
-                    $o->color3 = $cv3;
+                if ($method instanceof Less_Tree_Call) {
+                    // extract the name and arguments from the method
+                    $color = TreeCallColor::fromTreeCall($method);
+                    if ($color->getName() == static::PRESET_RULE_ICON_FUNCTION) {
+                        $args = $color->getArguments();
+                        $cv1 = ColorStyle::parse($args[0]->value[0]);
+                        $cv2 = ColorStyle::parse($args[1]->value[0]);
+                        $cv3 = ColorStyle::parse($args[2]->value[0]);
+                        $o->color1 = $cv1;
+                        $o->color2 = $cv2;
+                        $o->color3 = $cv3;
+                    }
                 }
             }
         }
