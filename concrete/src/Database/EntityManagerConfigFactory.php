@@ -24,12 +24,20 @@ class EntityManagerConfigFactory implements ApplicationAwareInterface, EntityMan
     protected $configuration;
 
     /**
+     * Concrete5 configuration files repository
+     *
+     * @var \Illuminate\Config\Repository or \Concrete\Core\Config\Repository\Repository
+     */
+    protected $configRepository;
+
+    /**
      * Constructor
      */
-    public function __construct(\Concrete\Core\Application\Application $app, \Doctrine\ORM\Configuration $configuration)
+    public function __construct(\Concrete\Core\Application\Application $app, \Doctrine\ORM\Configuration $configuration, \Illuminate\Config\Repository $configRepository)
     {
         $this->setApplication($app);
         $this->configuration = $configuration;
+        $this->configRepository = $configRepository;
     }
 
     /**
@@ -38,6 +46,24 @@ class EntityManagerConfigFactory implements ApplicationAwareInterface, EntityMan
     public function setApplication(\Concrete\Core\Application\Application $application)
     {
         $this->app = $application;
+    }
+
+    /**
+     * Set configRepository
+     *
+     * @param \Illuminate\Config\Repository $configRepository
+     */
+    public function setConfigRepository(\Illuminate\Config\Repository $configRepository){
+        $this->configRepository = $configRepository;
+    }
+
+    /**
+     * Get configRepository
+     *
+     * @return \Illuminate\Config\Repository
+     */
+    public function getConfigRepository(){
+        return $this->configRepository;
     }
 
     /**
@@ -104,8 +130,7 @@ class EntityManagerConfigFactory implements ApplicationAwareInterface, EntityMan
         // mapping uncommenting the following line maybe helps to fix them.
         //$driverChain->setDefaultDriver($annotationDriver);
 
-        $annotationDriver->addExcludePaths($this->app->make('config')->get('database.proxy_exclusions',
-                array()));
+        $annotationDriver->addExcludePaths($this->getConfigRepository()->get('database.proxy_exclusions', array()));
         $driverChain->addDriver($annotationDriver, 'Concrete\Core');
 
         // Register application metadata driver
@@ -134,9 +159,9 @@ class EntityManagerConfigFactory implements ApplicationAwareInterface, EntityMan
         $xmlConfig  = DIR_APPLICATION.DIRECTORY_SEPARATOR.REL_DIR_METADATA_XML;
         $ymlConfig  = DIR_APPLICATION.DIRECTORY_SEPARATOR.REL_DIR_METADATA_YAML;
 
-        $appDriverSettings = $this->app->make('config')->get(CONFIG_ORM_METADATA_APPLICATION);
+        $appDriverSettings = $this->getConfigRepository()->get(CONFIG_ORM_METADATA_APPLICATION);
 
-        if (empty($appDriverSettings) && is_dir($appSrcPath)) {
+        if (empty($appDriverSettings)) {
             $annotationDriver = new \Doctrine\ORM\Mapping\Driver\AnnotationDriver($this->getCachedAnnotationReader(), $appSrcPath);
             $driverChain->addDriver($annotationDriver, 'Application\Src');
         } else if ($appDriverSettings === \Package::PACKAGE_METADATADRIVER_XML || $appDriverSettings === 'xml') {
@@ -169,8 +194,8 @@ class EntityManagerConfigFactory implements ApplicationAwareInterface, EntityMan
      */
     protected function registerPkgWithAnnotationMetadataImpl($driverChain)
     {
-        $driverSettingsLegacy  = $this->app->make('config')->get(CONFIG_ORM_METADATA_ANNOTATION_LEGACY);
-        $driverSettingsDefault = $this->app->make('config')->get(CONFIG_ORM_METADATA_ANNOTATION_DEFAULT);
+        $driverSettingsLegacy  = $this->getConfigRepository()->get(CONFIG_ORM_METADATA_ANNOTATION_LEGACY);
+        $driverSettingsDefault = $this->getConfigRepository()->get(CONFIG_ORM_METADATA_ANNOTATION_DEFAULT);
 
         // add Annotation drivers with "legacy" Annotation reader
         if (count($driverSettingsLegacy) > 0) {
@@ -206,7 +231,7 @@ class EntityManagerConfigFactory implements ApplicationAwareInterface, EntityMan
      */
     protected function registerPkgWithXMLMetadataImpl($driverChain)
     {
-        $driverSettings = $this->app->make('config')->get(CONFIG_ORM_METADATA_XML);
+        $driverSettings = $this->getConfigRepository()->get(CONFIG_ORM_METADATA_XML);
         if (count($driverSettings) > 0) {
             foreach ($driverSettings as $settings) {
                 foreach($settings as $setting){
@@ -226,7 +251,7 @@ class EntityManagerConfigFactory implements ApplicationAwareInterface, EntityMan
      */
     protected function registerPkgWithYamlMetadataImpl($driverChain)
     {
-        $driverSettings = $this->app->make('config')->get(CONFIG_ORM_METADATA_YAML);
+        $driverSettings = $this->getConfigRepository()->get(CONFIG_ORM_METADATA_YAML);
         if (count($driverSettings) > 0) {
             foreach ($driverSettings as $settings) {
                 foreach($settings as $setting){
