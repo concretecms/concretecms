@@ -2,6 +2,8 @@
 namespace Concrete\Controller\Backend;
 
 use Concrete\Core\File\Importer;
+use Concrete\Core\File\ImportProcessor\ConstrainImageProcessor;
+use Concrete\Core\File\ImportProcessor\SetJPEGQualityProcessor;
 use Concrete\Core\Validation\CSRF\Token;
 use Controller;
 use FileSet;
@@ -44,9 +46,30 @@ class File extends Controller
         $errorMessage = '';
         $successCount = 0;
 
+        $resize = \Config::get('concrete.file_manager.restrict_uploaded_image_sizes');
+        $processors = array();
+        if ($resize) {
+            $width = (int) \Config::get('concrete.file_manager.restrict_max_width');
+            $height = (int) \Config::get('concrete.file_manager.restrict_max_height');
+            $quality = (int) \Config::get('concrete.file_manager.restrict_resize_quality');
+            $resizeProcessor = new ConstrainImageProcessor($width, $height);
+            $qualityProcessor = new SetJPEGQualityProcessor($quality);
+            $processors[] = $resizeProcessor;
+            $processors[] = $qualityProcessor;
+        }
+
         foreach ($files as $f) {
             try {
-                $fv = $f->getApprovedVersion();
+                if (count($processors)) {
+                    $fv = $f->createNewVersion(true);
+                    foreach($processors as $processor) {
+                        if ($processor->shouldProcess($fv)) {
+                            $processor->process($fv);
+                        }
+                    }
+                } else {
+                    $fv = $f->getApprovedVersion();
+                }
                 $resp = $fv->refreshAttributes();
                 switch ($resp) {
                     case \Concrete\Core\File\Importer::E_FILE_INVALID:
