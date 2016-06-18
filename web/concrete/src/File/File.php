@@ -324,7 +324,6 @@ class File implements \Concrete\Core\Permission\ObjectInterface
         $createNew = false;
 
         $fv = $this->getRecentVersion();
-        $fav = $this->getApprovedVersion();
 
         // first test. Does the user ID of the most recent version match ours? If not, then we create new
         if ($u->getUserID() != $fv->getAuthorUserID()) {
@@ -342,16 +341,27 @@ class File implements \Concrete\Core\Permission\ObjectInterface
         }
 
         if ($createNew) {
-            $fv2 = $fv->duplicate();
-
-            // Are the recent and active versions the same? If so, we approve this new version we just made
-            if ($fv->getFileVersionID() == $fav->getFileVersionID()) {
-                $fv2->approve();
-            }
-            return $fv2;
+            return $this->createNewVersion();
         } else {
             return $fv;
         }
+    }
+
+    public function createNewVersion($copyUnderlyingFile = false)
+    {
+        $fv = $this->getRecentVersion();
+        $fav = $this->getApprovedVersion();
+        $fv2 = $fv->duplicate();
+
+        if ($fv->getFileVersionID() == $fav->getFileVersionID()) {
+            $fv2->approve();
+        }
+
+        if ($copyUnderlyingFile) {
+            $fv2->duplicateUnderlyingFile();
+        }
+
+        return $fv2;
     }
 
     public function getFileID()
@@ -379,23 +389,11 @@ class File implements \Concrete\Core\Permission\ObjectInterface
         // clear out the versions
         $nf->versions = new ArrayCollection();
 
-        $fi = Core::make('helper/file');
-        $cf = Core::make('helper/concrete/file');
-        $importer = new Importer();
-        $filesystem = $this->getFileStorageLocationObject()->getFileSystemObject();
         foreach($versions as $version) {
             if ($version->isApproved()) {
                 $cloneVersion = clone $version;
                 $cloneVersion->setFile($nf);
-                do {
-                    $prefix = $importer->generatePrefix();
-                    $path = $cf->prefix($prefix, $version->getFilename());
-                } while($filesystem->has($path));
-                $filesystem->write($path, $version->getFileResource()->read(), array(
-                    'visibility' => AdapterInterface::VISIBILITY_PUBLIC,
-                    'mimetype' => Core::make('helper/mime')->mimeFromExtension($fi->getExtension($version->getFilename()))
-                ));
-                $cloneVersion->updateFile($version->getFilename(), $prefix);
+                $cloneVersion->duplicateUnderlyingFile();
                 $nf->versions->add($cloneVersion);
             }
         }

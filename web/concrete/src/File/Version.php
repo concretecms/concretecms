@@ -525,6 +525,24 @@ class Version
         Events::dispatch('on_file_version_update_title', $fe);
     }
 
+    public function duplicateUnderlyingFile()
+    {
+        $importer = new Importer();
+        $fi = Core::make('helper/file');
+        $cf = Core::make('helper/concrete/file');
+        $filesystem = $this->getFile()->
+            getFileStorageLocationObject()->getFileSystemObject();
+        do {
+            $prefix = $importer->generatePrefix();
+            $path = $cf->prefix($prefix, $this->getFilename());
+        } while($filesystem->has($path));
+        $filesystem->write($path, $this->getFileResource()->read(), array(
+            'visibility' => AdapterInterface::VISIBILITY_PUBLIC,
+            'mimetype' => Core::make('helper/mime')->mimeFromExtension($fi->getExtension($this->getFilename()))
+        ));
+        $this->updateFile($this->getFilename(), $prefix);
+    }
+
     public function logVersionUpdate($updateTypeID, $updateTypeAttributeID = 0)
     {
         $db = Database::get();
