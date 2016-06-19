@@ -144,14 +144,14 @@ class Files extends Controller
                 $this->fileList->setItemsPerPage(intval($req['numResults']));
             }
 
-            $u = new User();
+            $u = new \User();
             if (!$u->isSuperUser()) {
                 $this->fileList->setPermissionsChecker(function($file) {
                     $cp = new \Permissions($file);
                     return $cp->canViewFileInFileManager();
                 });
             }
-            
+
             $ilr = new FileSearchResult($columns, $this->fileList, URL::to('/ccm/system/search/files/submit'), $this->fields);
             $this->result = $ilr;
         } else {
