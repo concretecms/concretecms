@@ -4,6 +4,7 @@ namespace Concrete\Core\File;
 use Concrete\Core\Search\ItemList\Database\AttributedItemList as DatabaseItemList;
 use Concrete\Core\Search\PermissionableListItemInterface;
 use Concrete\Core\Search\Pagination\PermissionablePagination;
+use Concrete\Core\Search\StickyRequest;
 use Database;
 use Core;
 use Doctrine\DBAL\Query;
@@ -13,6 +14,15 @@ use FileAttributeKey;
 
 class FileList extends DatabaseItemList implements PermissionableListItemInterface
 {
+
+    public function __construct(StickyRequest $req)
+    {
+        $u = new \User();
+        if ($u->isSuperUser()) {
+            $this->ignorePermissions();
+        }
+        parent::__construct($req);
+    }
 
     /** @var  \Closure | integer | null */
     protected $permissionsChecker;
@@ -57,7 +67,6 @@ class FileList extends DatabaseItemList implements PermissionableListItemInterfa
 
     public function getTotalResults()
     {
-        $u = new \User();
         if ($this->permissionsChecker === -1) {
             $query = $this->deliverQueryObject();
             return $query->select('count(distinct f.fID)')->setMaxResults(1)->execute()->fetchColumn();
@@ -68,7 +77,6 @@ class FileList extends DatabaseItemList implements PermissionableListItemInterfa
 
     protected function createPaginationObject()
     {
-        $u = new \User();
         if ($this->permissionsChecker === -1) {
             $adapter = new DoctrineDbalAdapter($this->deliverQueryObject(), function ($query) {
                 $query->select('count(distinct f.fID)')->setMaxResults(1);
