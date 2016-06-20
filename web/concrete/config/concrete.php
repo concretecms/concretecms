@@ -883,7 +883,7 @@ return array(
     ),
     'limits'            => array(
         'sitemap_pages'           => 100,
-        'delete_pages'            => 10,
+        'delete_pages'            => 100,
         'copy_pages'              => 10,
         'page_search_index_batch' => 200,
         'job_queue_batch'         => 10,
