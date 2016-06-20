@@ -11,5 +11,6 @@ class Available extends DefaultSet
     {
         parent::__construct();
         $this->addColumn(new Column('fvAuthorName', t('Author'), 'getAuthorName', false));
+        $this->addColumn(new Column('fv.fvFilename', t('Filename'), 'getFileName'));
     }
 }

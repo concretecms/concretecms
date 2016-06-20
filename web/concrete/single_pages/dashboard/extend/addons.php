@@ -112,9 +112,13 @@ if ($controller->getTask() == 'view_detail') { ?>
             <div class="ccm-marketplace-list-item-add-on-description">
                 <h2><a href="<?=$mi->getLocalURL()?>"><?=$mi->getName()?></a></h2>
                     <p><?=$mi->getDescription()?></p>
+                <a href="<?=$mi->getLocalURL()?>"><?=t('Learn More')?></a>
             </div>
             <div class="ccm-marketplace-list-item-add-on-price">
-                    <?=$mi->getDisplayPrice()?>
+                <div class="btn-group">
+                    <button onclick="ConcreteMarketplace.purchaseOrDownload({mpID: <?=$mi->getMarketplaceItemID()?>})" class="btn btn-price" style="background-color: #1888d3"><?=$mi->getDisplayPrice()?></button>
+                    <button onclick="ConcreteMarketplace.purchaseOrDownload({mpID: <?=$mi->getMarketplaceItemID()?>})" class="btn btn-description"><? if ($mi->purchaseRequired()) { ?><?=t('Purchase')?><? } else { ?><?=t('Download')?><? } ?></button>
+                </div>
             </div>
         </div>
 
