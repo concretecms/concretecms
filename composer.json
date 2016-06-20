@@ -1,0 +1,67 @@
+{
+  "name": "concrete5/concrete5",
+  "license": "MIT",
+  "description": "concrete5 open source CMS",
+  "minimum-stability": "beta",
+  "prefer-stable": true,
+  "config": {
+    "optimize-autoloader": true,
+    "vendor-dir": "./concrete/vendor",
+    "preferred-install": {
+      "*": "dist"
+    }
+  },
+  "require": {
+    "php": ">=5.5.9",
+    "doctrine/dbal": "2.*",
+    "symfony/class-loader": "3.*",
+    "symfony/http-foundation": "3.*",
+    "symfony/routing": "3.*",
+    "symfony/http-kernel": "3.*",
+    "doctrine/orm": "2.*",
+    "doctrine/migrations": "1.*",
+    "league/flysystem": "1.*",
+    "symfony/event-dispatcher": "3.*",
+    "symfony/serializer": "3.*",
+    "illuminate/container": "5.*",
+    "illuminate/config": "4.*",
+    "patchwork/utf8": "1.*",
+    "oyejorge/less.php": "v1.*",
+    "imagine/imagine": "0.6.*",
+    "natxet/cssmin": "3.*",
+    "tedivm/jshrink": "1.*",
+    "michelf/php-markdown": "1.*",
+    "filp/whoops": "1.*",
+    "pagerfanta/pagerfanta": "1.*",
+    "htmlawed/htmlawed": "1.*",
+    "mobiledetect/mobiledetectlib": "2.*",
+    "monolog/monolog": "1.*",
+    "sunra/php-simple-html-dom-parser": "1.*",
+    "hautelook/phpass": "0.3.4",
+    "voku/urlify": "1.0.*",
+    "dapphp/securimage": "3.*",
+    "anahkiasen/html-object": "1.*",
+    "primal/color": "1.0.*@dev",
+    "zendframework/zend-queue": "dev-master",
+    "zendframework/zend-mail": "2.7.*",
+    "zendframework/zend-cache": "2.7.*",
+    "zendframework/zend-http": "2.5.*",
+    "zendframework/zend-feed": "2.7.*",
+    "zendframework/zend-i18n": "2.7.*",
+    "nesbot/carbon": "1.*",
+    "egulias/email-validator": "1.*",
+    "punic/punic": "1.*",
+    "tedivm/stash": "0.14.*",
+    "lusitanian/oauth": "0.8.*",
+    "oryzone/oauth-user-data": "~1.0@dev",
+    "mlocati/concrete5-translation-library": "1.*",
+    "league/url": "3.3.*",
+    "concrete5/doctrine-xml": "1.*",
+    "symfony/yaml":"3.*"
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Concrete\\Tests\\": "../../tests/tests"
+    }
+  }
+}

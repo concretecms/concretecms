@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema
+  xmlns="http://www.concrete5.org/doctrine-xml/0.5"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.concrete5.org/doctrine-xml/0.5 http://concrete5.github.io/doctrine-xml/doctrine-xml-0.5.xsd">
+
+  <table name="btPageAttributeDisplay">
+    <field name="bID" type="integer">
+      <unsigned/>
+      <key/>
+    </field>
+    <field name="attributeHandle" type="string" size="255"/>
+    <field name="attributeTitleText" type="string" size="255"/>
+    <field name="displayTag" type="string" size="255"/>
+    <field name="dateFormat" type="string" size="100">
+      <default value="div"/>
+    </field>
+    <field name="thumbnailHeight" type="integer">
+      <unsigned/>
+    </field>
+    <field name="thumbnailWidth" type="integer">
+      <unsigned/>
+    </field>
+	<field name="delimiter" type="string" size="255"/>
+  </table>
+
+</schema>

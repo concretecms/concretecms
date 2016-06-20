@@ -1,0 +1,387 @@
+.ccm-ui {
+  label.control-label {
+    font-size: 13px;
+    letter-spacing: 1px;
+    /*
+    color: #999;
+    */
+    color: #4290be;
+    font-weight: 600;
+    margin-bottom: 5px;
+    display: inline-block;
+    text-transform: uppercase;
+  }
+
+  div.form-group.form-group-last {
+    border-bottom-width: 0px;
+    margin-bottom: 0px;
+    padding-bottom: 0px;
+  }
+
+  fieldset {
+    margin-bottom: 0px;
+    position: relative; /* we need this for right aligned tooltips */
+    legend {
+      font-weight: bold;
+      border: 0px;
+    }
+  }
+
+  .selectize-control.single .selectize-input {
+    padding-right: 30px;
+    background: #f2f2f2 url(../images/icons/select_arrow_down.svg) no-repeat right 10px top 8px;
+    background-size: 16px 16px;
+
+    &:after {
+      display: none;
+    }
+
+    &.input-active {
+      background: darken(#f2f2f2, 5%) url(../images/icons/select_arrow_up.svg) no-repeat right 10px top 8px;
+      background-size: 16px 16px;
+
+    }
+  }
+
+  .selectize-control .selectize-input {
+    &.focus {
+      background-color: darken(#f2f2f2, 5%) !important;
+    }
+  }
+
+  .selectize-control.multi div.item {
+    background-color: darken(#f2f2f2, 10%);
+  }
+}
+
+
+.ccm-ui-fieldless {
+  div.form-group-highlight {
+    background-color: #e7e7e7;
+    margin-left: -26px;
+    margin-right: -26px;
+    padding-left: 26px;
+    padding-right: 26px;
+    padding-bottom: 8px;
+    padding-top: 10px;
+    margin-top: 8px;
+    margin-bottom: 10px;
+
+    div.selectize-input,
+    select.form-control,
+    input.form-control,
+    textarea.form-control {
+      &:focus {
+        background-color: #ffffff !important;
+      }
+
+      &:hover {
+        background-color: #ffffff !important;
+      }
+    }
+
+    div.form-group {
+      border-bottom-width: 0px;
+      margin-bottom: 0px;
+    }
+
+  }
+
+  div.form-group {
+
+    position: relative;
+    border-bottom: 1px solid #dcdcdc;
+    padding-bottom: 26px;
+    margin-bottom: 30px;
+    font-size: 18px;
+
+    .help-block {
+      display: none;
+      font-size: 12px;
+    }
+
+    &.has-error, &.has-warning, &.has-success {
+      div.selectize-input,
+      select.form-control,
+      input.form-control,
+      textarea.form-control {
+        outline: 0px;
+        .box-shadow(none);
+        border-color: transparent;
+      }
+    }
+
+    &.has-error {
+      div.selectize-input,
+      select.form-control,
+      input.form-control,
+      textarea.form-control {
+        background-color: lighten(#a94442, 50%);
+        &:hover {
+          background-color: lighten(#a94442, 47%);
+        }
+        &:focus {
+          background-color: lighten(#a94442, 45%) !important;
+        }
+      }
+    }
+
+    &.has-success {
+      div.selectize-input,
+      select.form-control,
+      input.form-control,
+      textarea.form-control {
+        background-color: lighten(#3c763d, 50%);
+        &:hover {
+          background-color: lighten(#3c763d, 47%);
+        }
+        &:focus {
+          background-color: lighten(#3c763d, 45%) !important;
+        }
+      }
+    }
+
+    &.has-warning {
+      div.selectize-input,
+      select.form-control,
+      input.form-control,
+      textarea.form-control {
+        background-color: lighten(#8a6d3b, 50%);
+        &:hover {
+          background-color: lighten(#8a6d3b, 47%);
+        }
+        &:focus {
+          background-color: lighten(#8a6d3b, 45%) !important;
+        }
+      }
+    }
+
+    div.selectize-input,
+    select.form-control,
+    input.form-control,
+    textarea.form-control {
+      .transition(0.1s linear all);
+      /*
+      padding: 2px;
+      */
+      color: #606060;
+      .box-shadow(none);
+      font-size: 18px;
+      .border-radius(2px);
+      -webkit-appearance: none;
+      appearance: none;
+      -moz-appearance: none;
+      overflow: inherit; // needed for selectize ?
+      /*
+      border: 1px solid #f1f1f1;
+      */
+      /*
+      border: 1px solid transparent;
+      border-top: 1px solid transparent;
+      border-right: 1px solid transparent;
+      border-left: 1px solid transparent;
+      border-bottom: 1px dotted #c1c1c1;
+      */
+
+      border-color: transparent;
+      background-color: #f2f2f2;
+
+      &:focus {
+        outline: 0px;
+        background-color: darken(#f2f2f2, 5%) !important;
+        /*
+        background-color: transparent;
+        */
+        /*border-color: transparent*/
+
+        + .help-block {
+          display: block;
+        }
+      }
+
+      &:hover {
+        background-color: darken(#f2f2f2, 3%);
+        border-color: transparent;
+      }
+
+
+    }
+
+    .input-group {
+      .input-group-addon {
+        border-color: transparent;
+        background-color: transparent;
+        padding-right: 10px;
+      }
+    }
+    select.form-control {
+
+      padding-right: 30px;
+      background: #f2f2f2 url(../images/icons/select_arrow_down.svg) no-repeat right 10px top 8px;
+      background-size: 16px 16px;
+
+    }
+
+  }
+
+  div.checkbox, div.radio {
+    label {
+      color: #606060;
+      font-size: 18px;
+    }
+  }
+
+  input[type=checkbox], input[type=radio] {
+
+    .transition(0.1s linear all);
+    border: 1px solid #e1e1e1;
+    position: relative;
+    appearance: none;
+    -webkit-appearance: none;
+    display: inline-block;
+    color: transparent;
+    .box-shadow(none);
+
+    &:disabled {
+      .opacity(0.7);
+    }
+
+    &:focus {
+      outline: 0px;
+    }
+
+    &:hover {
+      background-color: #f2f2f2;
+    }
+
+
+    &:after {
+      .transition(0.1s linear all);
+      position: absolute;
+      font-family: FontAwesome;
+      content: @fa-var-check;
+    }
+
+    &:checked {
+      background-color: #ffffff;
+    }
+
+    &:checked:after {
+      background-color: darken(#f2f2f2, 5%);
+      color: darken(#f2f2f2, 50%);
+    }
+
+  }
+
+  input[type=checkbox] {
+
+    padding: 6px;
+    margin-top: 6px;
+    font-size: 12px;
+
+    .border-radius(2px);
+
+    &:indeterminate {
+      background-color: #bdbdbd;
+    }
+
+    &:indeterminate:after {
+      content: @fa-var-minus;
+      position: absolute;
+      top: 1px;
+      left: 1.5px;
+      color: #fff;
+    }
+
+    &:after {
+      top: 0px;
+      left: 0px;
+    }
+
+  }
+
+
+  input[type=radio] {
+    padding: 6px;
+    margin-top: 6px;
+    font-size: 5px;
+
+    .border-radius(8px);
+
+    &:after {
+      top: 3.5px;
+      left: 4px;
+      content: @fa-var-circle;
+    }
+  }
+
+
+  div.form-inline {
+    div.form-group {
+      margin: 0px !important;
+      border-bottom-width: 0px !important;
+      padding: 0px !important;
+    }
+  }
+}
+
+div.ccm-ui {
+
+  ul.nav-tabs {
+    padding-left: 10px;
+    margin-left: -26px;
+    margin-right: -26px;
+    margin-bottom: 0px;
+    > li {
+      margin-bottom: 0px;
+      a {
+        font-size: 13px;
+        padding: 10px 15px;
+        -webkit-font-smoothing: antialiased;
+      }
+    }
+
+    > li.active:after {
+      text-align: center;
+      content: "\f0d7";
+      font-family: FontAwesome;
+      font-size: 16px;
+      position: absolute;
+      bottom: -15px;
+
+      left: 0px;
+      width: 100%;
+      color: #48b4fb;
+      text-align: center;
+    }
+
+    > li > a {
+      &,
+      &:hover,
+      &:focus {
+        outline: none;
+        color: #999;
+        border-width: 0px !important;
+      }
+    }
+    > li > a:hover {
+      background-color: transparent;
+      text-decoration: underline;
+    }
+    > li.active > a {
+      &,
+      &:hover,
+      &:focus {
+        color: #48b4fb;
+        font-weight: bold;
+        text-decoration: none;
+        background-color: transparent;
+        outline: none;
+        border-width: 0px !important;
+        position: relative;
+      }
+    }
+  }
+
+}
+

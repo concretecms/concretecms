@@ -3,10 +3,9 @@
 
 class AreaLayoutTest extends ConcreteDatabaseTestCase
 {
-
-    protected $tables = array('AreaLayoutPresets','AreaLayouts','AreaLayoutColumns',
+    protected $tables = array('AreaLayoutPresets', 'AreaLayouts', 'AreaLayoutColumns',
         'AreaLayoutCustomColumns', 'AreaLayoutThemeGridColumns', 'PageThemes', 'Pages', 'Collections',
-        'CollectionVersions', 'PagePaths');
+        'CollectionVersions', 'PagePaths', );
     protected $fixtures = array();
 
     public function testCustomAreaLayoutContainer()
@@ -24,7 +23,6 @@ class AreaLayoutTest extends ConcreteDatabaseTestCase
         $formatter = $layout->getFormatter();
         $this->assertInstanceOf('\Concrete\Core\Area\Layout\Formatter\CustomFormatter', $formatter);
         $this->assertEquals('<div class="ccm-layout-column-wrapper" id="ccm-layout-column-wrapper-1"></div>', (string) $formatter->getLayoutContainerHtmlObject());
-
     }
 
     public function testThemeGridAreaLayoutContainer()
@@ -57,9 +55,5 @@ class AreaLayoutTest extends ConcreteDatabaseTestCase
         $this->assertEquals('<div class="row"></div>', (string) $formatter->getLayoutContainerHtmlObject());
 
         $req->clearCurrentPage();
-
     }
-
-
-
 }

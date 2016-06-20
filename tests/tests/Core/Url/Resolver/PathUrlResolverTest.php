@@ -4,7 +4,6 @@ require_once __DIR__ . "/ResolverTestCase.php";
 
 class PathUrlResolverTest extends ResolverTestCase
 {
-
     protected function setUp()
     {
         $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
@@ -93,7 +92,6 @@ class PathUrlResolverTest extends ResolverTestCase
     public function testPassedUrl()
     {
         $url = $this->urlResolver->resolve(array('http://google.com/', 'testing'));
-        $this->assertEquals('http://google.com/testing', (string)$url);
+        $this->assertEquals('http://google.com/testing', (string) $url);
     }
-
 }

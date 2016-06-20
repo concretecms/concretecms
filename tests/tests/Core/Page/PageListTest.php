@@ -4,11 +4,10 @@
  * Created by PhpStorm.
  * User: andrew
  * Date: 6/10/14
- * Time: 7:47 AM
+ * Time: 7:47 AM.
  */
-
-class PageListTest extends \PageTestCase {
-
+class PageListTest extends \PageTestCase
+{
     /** @var \Concrete\Core\Page\PageList */
     protected $list;
 
@@ -20,35 +19,35 @@ class PageListTest extends \PageTestCase {
             'Abracadabra', false,
         ),
         array(
-            'Brace Yourself', false, 'alternate'
+            'Brace Yourself', false, 'alternate',
         ),
         array(
             'Foobler', '/test-page-1',
         ),
         array(
-            'Test Page 2', false
+            'Test Page 2', false,
         ),
         array(
-            'Holy Mackerel', false
+            'Holy Mackerel', false,
         ),
         array(
-            'Another Fun Page', false, 'alternate'
+            'Another Fun Page', false, 'alternate',
         ),
         array(
-            'Foo Bar', '/test-page-2'
+            'Foo Bar', '/test-page-2',
         ),
         array(
-            'Test Page 3', false
+            'Test Page 3', false,
         ),
         array(
-            'Another Page', false, 'alternate', 'right_sidebar'
+            'Another Page', false, 'alternate', 'right_sidebar',
         ),
         array(
-            'More Testing', false, 'alternate'
+            'More Testing', false, 'alternate',
         ),
         array(
-            'Foobler', '/another-fun-page', 'another'
-        )
+            'Foobler', '/another-fun-page', 'another',
+        ),
     );
 
     public function setUp()
@@ -56,18 +55,16 @@ class PageListTest extends \PageTestCase {
         $this->tables = array_merge($this->tables, array(
             'PermissionAccessList',
             'PageTypeComposerFormLayoutSets',
-            'AttributeSetKeys',
-            'AttributeSets',
-            'AttributeKeyCategories',
             'PermissionAccessEntityTypes',
-            'Packages',
-            'AttributeKeys',
-            'AttributeTypes',
-            'PageFeeds'
-
+        ));
+        $this->metadatas = array_merge($this->metadatas, array(
+            'Concrete\Core\Entity\Attribute\Type',
+            'Concrete\Core\Entity\Attribute\Category',
+            'Concrete\Core\Entity\Page\Feed',
         ));
 
         parent::setUp();
+        \Concrete\Core\Attribute\Key\Category::add('collection');
         \Concrete\Core\Permission\Access\Entity\Type::add('page_owner', 'Page Owner');
         \Concrete\Core\Permission\Category::add('page');
         \Concrete\Core\Permission\Key\Key::add('page', 'view_page', 'View Page', '', 0, 0);
@@ -75,14 +72,14 @@ class PageListTest extends \PageTestCase {
         PageTemplate::add('right_sidebar', 'Right Sidebar');
         PageType::add(array(
             'handle' => 'alternate',
-            'name' => 'Alternate'
+            'name' => 'Alternate',
         ));
         PageType::add(array(
             'handle' => 'another',
-            'name' => 'Another'
+            'name' => 'Another',
         ));
 
-        foreach($this->pageData as $data) {
+        foreach ($this->pageData as $data) {
             $c = call_user_func_array(array($this, 'createPage'), $data);
             $c->reindex();
         }
@@ -225,7 +222,6 @@ class PageListTest extends \PageTestCase {
 
     public function testFilterByActiveAndSystem()
     {
-
         \SinglePage::add(Config::get('concrete.paths.trash'));
 
         $c = Page::getByPath('/test-page-2');
@@ -317,7 +313,6 @@ class PageListTest extends \PageTestCase {
 
     public function testFilterByPath()
     {
-
         $this->createPage('More Fun', '/test-page-1/foobler');
 
         $this->list->filterByPath('/test-page-1');
@@ -328,20 +323,20 @@ class PageListTest extends \PageTestCase {
         $nl->filterbyPath('/test-page-1', false);
         $pagination = $nl->getPagination();
         $this->assertEquals(1, $pagination->getNBResults());
-
     }
 
     public function testBasicFeedSave()
     {
         $pt = \Concrete\Core\Page\Type\Type::getByHandle('another');
         $pp = \Concrete\Core\Page\Page::getByPath('/another-fun-page');
-        $pf = new \Concrete\Core\Page\Feed();
+        $pf = new \Concrete\Core\Entity\Page\Feed();
         $pf->setHandle('blog');
         $pf->setPageTypeID($pt->getPageTypeID());
         $pf->setParentID($pp->getCollectionID());
         $pf->setTitle('RSS Feed');
         $pf->setDescription('My Description');
         $pf->save();
+
         $this->assertEquals('blog', $pf->getHandle());
         $this->assertEquals(1, $pf->getID());
 
@@ -353,7 +348,4 @@ class PageListTest extends \PageTestCase {
         $results = $pl->getResults();
         $this->assertEquals('Foobler', $results[0]->getCollectionName());
     }
-
-
-
 }

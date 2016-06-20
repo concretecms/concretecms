@@ -1,2 +1,0 @@
-<?
-require('concrete/dispatcher.php');

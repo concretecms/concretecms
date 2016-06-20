@@ -1,0 +1,414 @@
+div#ccm-toolbar {
+  .box-shadow(0px 2px 2px rgba(90, 90, 90, 0.1));
+  border-bottom: 1px solid #999;
+  background-color: #FEFEFE;
+  background: linear-gradient(to bottom, #f2f2f2 0%,#ffffff 4%,#ffffff 50%,#eeeeee 100%);
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  height: 48px;
+  width: 100%;
+  z-index: @index-level-main-bar; /* over the top of the highlighter, which is 1000 */
+
+  &.ccm-toolbar-tour-guide {
+    z-index: @index-level-toolbar-tour-guide;
+  }
+
+  .ccm-toolbar-item-list {
+    height: 48px;
+    overflow: hidden;
+  }
+
+  .ccm-toolbar-accessibility-title {
+    display: none;
+  }
+
+  &.titles {
+    .ccm-toolbar-accessibility-title {
+      display: inline-block;
+    }
+    li > a {
+      width: auto !important;
+      padding: 14px 16px;
+    }
+    li > a i, li > a img {
+      position: static;
+    }
+    .spinner {
+      left: 11px;
+    }
+  }
+
+  &.large-font {
+    li > a {
+      font-size: 20px !important;
+      padding: 10px 16px;
+    }
+  }
+
+  > ul {
+    .clear_float();
+    padding-left: 0px;
+    list-style-type: none;
+    margin: 0px;
+
+    > li {
+
+      position: relative;
+      font-size: 14px;
+
+      > a {
+
+        display: block;
+        height: 47px;
+        width: 60px;
+        box-sizing: border-box;
+        text-align: center;
+        position: relative;
+        color: #999;
+        border-right: 1px solid #ccc;
+        border-left: 1px solid #ccc;
+        margin-left: -1px; /* we have to do this tomfoolery because of user-added menus */
+        text-decoration: none;
+
+        i, img {
+          position: absolute;
+          top: 17px;
+          left: 23px;
+          width: 14px;
+          height: 14px;
+        }
+
+        .spinner {
+          .opacity(0);
+          width: 24px;
+          height: 24px;
+          display: inline-block;
+
+          position: absolute;
+          top: 12px;
+          left: 18px;
+          z-index: @index-level-main-bar-loading;
+          .transition(opacity cubic-bezier(0.355, 0, 1.000, 0.035) 0.5s);
+        }
+
+        .double-bounce1, .double-bounce2 {
+          width: 100%;
+          height: 100%;
+          border-radius: 50%;
+          background-color: #0099ff;
+          opacity: 0.6;
+          position: absolute;
+          top: 0;
+          left: 0;
+
+          -webkit-animation: loader-bounce 2.0s infinite ease-in-out;
+          animation: loader-bounce 2.0s infinite ease-in-out;
+        }
+
+        .double-bounce2 {
+          -webkit-animation-delay: -1.0s;
+          animation-delay: -1.0s;
+        }
+        i {
+          .transition(opacity cubic-bezier(0.355, 0, 1.000, 0.035) 0.5s);
+        }
+      }
+
+      > a:hover {
+        color: #333;
+        background-color: #dddddd;
+        #gradient .vertical(#ededed, #dddddd);
+      }
+
+      > a.ccm-launch-panel-loading {
+        .spinner {
+          .opacity(1);
+        }
+
+        i {
+          .opacity(0);
+        }
+
+      }
+
+      > a.ccm-launch-panel-active, > a.ccm-launch-panel-active:hover {
+        color: #105192;
+
+        i {
+          display: inline-block;
+        }
+        background-color: #dddddd;
+        #gradient .vertical(#ededed, #dddddd);
+      }
+    }
+
+
+    li.ccm-logo {
+      span {
+        padding: 12px 18px 0px 18px;
+        height: 36px;
+        display: block;
+        height: 47px;
+        border-right: 1px solid #ccc;
+      }
+    }
+
+    li.ccm-toolbar-search {
+      background-color: #fff;
+      padding: 0px;
+      height: 47px;
+      white-space: nowrap;
+      border-left: 1px solid #ccc;
+      color: #888;
+      position: relative;
+      margin-left: -1px;
+
+      i.fa-search {
+        position: absolute;
+        top: 16px;
+        left: 16px;
+      }
+
+      input {
+        border-right: 1px solid #ccc;
+        margin-right: 0px;
+        background-color: transparent;
+      }
+
+    }
+
+    li.ccm-toolbar-page-edit-mode-active {
+      > a {
+        background-color: #b5eeb5;
+        #gradient .vertical(#c2ffc2, #b5eeb5);
+        color: #333;
+      }
+    }
+
+    li.ccm-toolbar-page-edit-mode-pinned{
+      > a, a:hover {
+        background-color: #D6E6EE;
+        #gradient .vertical(#D6E6EE, #B8DCEE);
+        color: #136CC0;
+      }
+    }
+
+    > li#ccm-white-label-message {
+
+      > a {
+        display: inline;
+        border: 0px;
+        text-decoration: underline;
+        padding: 0px;
+        color: #ccc;
+      }
+
+      > a:hover {
+        background-color: transparent !important;
+        background-image: none !important;
+        text-decoration: underline;
+      }
+
+      color: #ccc;
+      font-size: 11px;
+      line-height: 11px;
+      padding: 18px 24px 0px 24px;
+      height: 30px;
+      border-right: 0px !important;
+    }
+
+  }
+
+  input[type=search] {
+    margin: 0px 0px 0px 40px;
+    height: 47px;
+    width: 210px;
+    padding: 0px;
+  }
+
+  input[type=search], textarea {
+    border: 0px;
+    .border-radius(0px);
+    .box-shadow(none);
+  }
+
+  input[type=search]:focus, textarea:focus {
+    -webkit-appearance: none !important;
+    outline: none !important;
+  }
+
+  .dropdown-menu {
+    .border-top-radius(0px);
+    border-top: 0px;
+
+  }
+
+  li.ccm-toolbar-last-left-child {
+    border-right: 1px solid #ccc;
+  }
+
+}
+
+@-webkit-keyframes loader-bounce {
+  0%, 100% {
+    -webkit-transform: scale(0.0)
+  }
+  50% {
+    -webkit-transform: scale(1.0)
+  }
+}
+
+@keyframes loader-bounce {
+  0%, 100% {
+    transform: scale(0.0);
+    -webkit-transform: scale(0.0);
+  }
+  50% {
+    transform: scale(1.0);
+    -webkit-transform: scale(1.0);
+  }
+}
+
+/* Disabling the toolbar */
+div#ccm-toolbar-disabled {
+  height: 49px;
+  background-color: rgba(255, 255, 255, 0.8);
+  z-index: @index-level-toolbar-disabled; /* right over the toolbar */
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  .opacity(0);
+}
+
+/* Responsive Toolbar */
+
+.ccm-toolbar-mobile-menu-button {
+  i {
+    font-size: 23px;
+  }
+  padding: 14px 18px;
+  height: 48px;
+  border-left: 1px solid #ccc;
+  cursor: pointer;
+  &:hover,
+  &.ccm-mobile-close {
+    color: #7d7d7d;
+  }
+  &.ccm-toolbar-mobile-menu-button-active {
+    background-color: #b5eeb5;
+    #gradient .vertical(#c2ffc2, #b5eeb5);
+  }
+}
+
+.ccm-mobile-menu-entries {
+  padding-left: 0px;
+  margin-left: 12px;
+  li {
+    &.ccm-toolbar-page-edit-mode-active {
+      a {
+        color: #00cc66;
+      }
+      i {
+        &.fa-pencil {
+          color: #00cc66;
+        }
+      }
+    }
+    a {
+      display: inline-block;
+      &:hover {
+        text-decoration: none;
+      }
+    }
+    ul {
+      display: none;
+      margin-left: 60px;
+      margin-bottom: 10px;
+
+      li {
+        a {
+          text-transform: none;
+          color: #4674a1;
+          padding: 6px 0px 6px 0px;
+          font-weight: normal;
+          font-size: 13px;
+          background: none;
+        }
+        ul {
+          margin-top: 10px;
+          a {
+            text-transform: none;
+            color: #1b7bbc;
+            padding: 6px 0px 6px 0px;
+            font-weight: normal;
+            font-size: 13px;
+          }
+        }
+      }
+    }
+    i {
+      &.fa-caret-down {
+        margin-left: 6px;
+        font-size: 14px;
+      }
+      &.mobile-leading-icon {
+        display: inline-block !important;
+        color: #CAC9C9;
+        font-size: 17px;
+        min-width: 30px;
+        text-align: center;
+        &.fa-th-large {
+          font-size: 16px;
+        }
+        &.fa-cog {
+          font-size: 19px;
+        }
+      }
+    }
+    a {
+      color: #4674a1;
+      font-size: 18px;
+      display: inline-block;
+      width: 80%;
+      padding: 7px 5% 7px 0px;
+      margin: 0% 5% 0% 0;
+      padding-left: 15px;
+      height: 100%;
+      font-weight: 200;
+      text-decoration: none;
+      &:hover {
+        color: #195279;
+      }
+    }
+  }
+  -webkit-text-size-adjust: none;
+  list-style-type: none;
+}
+
+.ccm-mobile-toolbar-menu {
+  display: none;
+
+}
+
+.ccm-mobile-menu-overlay {
+  padding-bottom: 10px;
+  padding-top: 15px;
+  display: none;
+  background-color: #FCFCFC;
+  position: fixed;
+  border-bottom: 5px solid #4674a1;
+  width: 100%;
+  z-index: @index-level-main-bar;
+  top: 49px;
+  left: 0px;
+  &.ccm-mobile-menu-overlay-dashboard {
+    li {
+      ul {
+        display: block; // dashboard's mobile menu is always visible
+      }
+    }
+  }
+}
+

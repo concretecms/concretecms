@@ -7,7 +7,7 @@ module.exports = {
 	// config.DIR_REL = '/c5subfolder';
 	DIR_REL: '',
 	// The path to the web folder, relative to this Gruntfile
-	DIR_BASE: '../web',
+	DIR_BASE: '..',
 	// The path to the cli folder, relative to this Gruntfile
 	DIR_CLI: '../cli',
 
