@@ -154,7 +154,7 @@ class Version
      */
     protected $fvHasDetailThumbnail = false;
 
-    public static function add(\Concrete\Core\Entity\File\File $file, $filename, $prefix, $data = array())
+    public static function add(\Concrete\Core\Entity\File\File $file, $filename, $prefix, $data = [])
     {
         $u = new User();
         $uID = (isset($data['uID']) && $data['uID'] > 0) ? $data['uID'] : $u->getUserID();
@@ -198,8 +198,8 @@ class Version
 
     public static function cleanTags($tagsStr)
     {
-        $tagsArray = explode("\n", str_replace(array("\r", ","), "\n", $tagsStr));
-        $cleanTags = array();
+        $tagsArray = explode("\n", str_replace(["\r", ","], "\n", $tagsStr));
+        $cleanTags = [];
         foreach ($tagsArray as $tag) {
             if (!strlen(trim($tag))) {
                 continue;
@@ -228,7 +228,7 @@ class Version
     public function getTagsList()
     {
         $tags = explode("\n", str_replace("\r", "\n", trim($this->getTags())));
-        $clean_tags = array();
+        $clean_tags = [];
         foreach ($tags as $tag) {
             if (strlen(trim($tag))) {
                 $clean_tags[] = trim($tag);
@@ -278,7 +278,7 @@ class Version
         $db = Database::get();
         $em = $db->getEntityManager();
 
-        $values = array();
+        $values = [];
 
         $category = \Core::make('Concrete\Core\Attribute\Category\FileCategory');
 
@@ -286,7 +286,7 @@ class Version
             $category->deleteValue($attribute);
         }
 
-        $db->Execute("DELETE FROM FileVersionLog WHERE fID = ? AND fvID = ?", array($this->getFileID(), $this->fvID));
+        $db->Execute("DELETE FROM FileVersionLog WHERE fID = ? AND fvID = ?", [$this->getFileID(), $this->fvID]);
 
         $types = Type::getVersionList();
 
@@ -469,11 +469,11 @@ class Version
      */
     public function getVersionLogComments()
     {
-        $updates = array();
+        $updates = [];
         $db = Database::get();
         $ga = $db->GetAll(
             'SELECT fvUpdateTypeID, fvUpdateTypeAttributeID FROM FileVersionLog WHERE fID = ? AND fvID = ? ORDER BY fvlID ASC',
-            array($this->getFileID(), $this->getFileVersionID())
+            [$this->getFileID(), $this->getFileVersionID()]
         );
         foreach ($ga as $a) {
             switch ($a['fvUpdateTypeID']) {
@@ -498,7 +498,7 @@ class Version
                 case self::UT_EXTENDED_ATTRIBUTE:
                     $val = $db->GetOne(
                         "SELECT akName FROM AttributeKeys WHERE akID = ?",
-                        array($a['fvUpdateTypeAttributeID'])
+                        [$a['fvUpdateTypeAttributeID']]
                     );
                     if ($val != '') {
                         $updates[] = $val;
@@ -507,7 +507,7 @@ class Version
             }
         }
         $updates = array_unique($updates);
-        $updates1 = array();
+        $updates1 = [];
         foreach ($updates as $val) {
             // normalize the keys
             $updates1[] = $val;
@@ -530,12 +530,12 @@ class Version
         $db = Database::get();
         $db->Execute(
             'INSERT INTO FileVersionLog (fID, fvID, fvUpdateTypeID, fvUpdateTypeAttributeID) VALUES (?, ?, ?, ?)',
-            array(
+            [
                 $this->getFileID(),
                 $this->getFileVersionID(),
                 $updateTypeID,
                 $updateTypeAttributeID,
-            )
+            ]
         );
     }
 
@@ -686,7 +686,7 @@ class Version
 
     public function getThumbnails()
     {
-        $thumbnails = array();
+        $thumbnails = [];
         $types = Type::getVersionList();
         $width = $this->getAttribute('width');
         $file = $this->getFile();
@@ -805,12 +805,12 @@ class Version
                 }
                 $thumbnail = $image->thumbnail($size, $thumbnailMode);
                 $thumbnailPath = $type->getFilePath($this);
-                $thumbnailOptions = array();
+                $thumbnailOptions = [];
 
                 switch ($mimetype) {
                   case 'image/jpeg':
                     $thumbnailType = 'jpeg';
-                    $thumbnailOptions = array('jpeg_quality' => \Config::get('concrete.misc.default_jpeg_image_compression'));
+                    $thumbnailOptions = ['jpeg_quality' => \Config::get('concrete.misc.default_jpeg_image_compression')];
                     break;
                   case 'image/png':
                     $thumbnailType = 'png';
@@ -832,10 +832,10 @@ class Version
                 $filesystem->write(
                     $thumbnailPath,
                     $thumbnail->get($thumbnailType, $thumbnailOptions),
-                    array(
+                    [
                         'visibility' => AdapterInterface::VISIBILITY_PUBLIC,
                         'mimetype' => $mimetype,
-                    )
+                    ]
                 );
 
                 if ($type->getHandle() == \Config::get('concrete.icons.file_manager_listing.handle')) {
@@ -852,8 +852,7 @@ class Version
             }
         } catch (\Imagine\Exception\InvalidArgumentException $e) {
             return false;
-        }
-        catch (\Imagine\Exception\RuntimeException $e) {
+        } catch (\Imagine\Exception\RuntimeException $e) {
             return false;
         }
     }
@@ -895,6 +894,7 @@ class Version
      * Avoid using this method when you have access to your a resolver instance.
      *
      * @param $type
+     *
      * @return null|string
      */
     public function getThumbnailURL($type)
@@ -933,10 +933,10 @@ class Version
         $filesystem->write(
             $thumbnailPath,
             file_get_contents($path),
-            array(
+            [
                 'visibility' => AdapterInterface::VISIBILITY_PUBLIC,
                 'mimetype' => 'image/jpeg',
-            )
+            ]
         );
 
         if ($version->getHandle() == \Config::get('concrete.icons.file_manager_listing.handle')) {
@@ -1020,8 +1020,6 @@ class Version
             $this->fvTitle = $this->getFilename();
         }
         $this->fvSize = $size;
-
-
 
         if ($rescanThumbnails) {
             $this->rescanThumbnails();
@@ -1113,6 +1111,7 @@ class Version
             $doubledSrc = $this->getThumbnailURL($type->getDoubledVersion());
             $width = $type->getWidth();
             $height = $type->getHeight();
+
             return sprintf('<img class="ccm-file-manager-list-thumbnail" src="%s" data-at2x="%s">', $baseSrc, $doubledSrc);
         } else {
             return $this->getTypeObject()->getThumbnail();
