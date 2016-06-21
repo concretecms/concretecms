@@ -28,8 +28,8 @@ class Entities extends DashboardPageController
                 $this->error->add(t('You must create a handle for your data object. It may contain only lowercase letters and underscores.'), 'handle');
             }
 
-            if (!$name || preg_match('/[^A-Za-z ]/', $name)) {
-                $this->error->add(t('You must give your data object a name. It may contain only uppercase or lowercase letters.'), 'name');
+            if (!$name) {
+                $this->error->add(t('You must give your data object a name.'), 'name');
             }
 
             if (!$this->error->has()) {
@@ -141,8 +141,8 @@ class Entities extends DashboardPageController
             $this->error->add(t('You must create a handle for your data object. It may contain only lowercase letters and underscores.'), 'handle');
         }
 
-        if (!$name || preg_match('/[^A-Za-z ]/', $name)) {
-            $this->error->add(t('You must give your data object a name. It may contain only uppercase or lowercase letters.'), 'name');
+        if (!$name) {
+            $this->error->add(t('You must give your data object a name.'), 'name');
         }
 
         if (!$this->request->request->get('entity_results_node_id')) {
