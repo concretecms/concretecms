@@ -430,33 +430,48 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
         $node = $node->composer;
         if (isset($node->formlayout->set)) {
             foreach ($node->formlayout->set as $setnode) {
-                $set = $cm->addPageTypeComposerFormLayoutSet((string) $setnode['name'], (string) $setnode['description']);
+                $set = PageTypeComposerFormLayoutSet::getBySetName((string) $setnode['name'],$ptID);
+
+                if(!is_object($set)) {
+                    $set = $cm->addPageTypeComposerFormLayoutSet((string)$setnode['name'],(string)$setnode['description']);
+                }
                 if (isset($setnode->control)) {
                     foreach ($setnode->control as $controlnode) {
                         $controltype = PageTypeComposerControlType::getByHandle((string) $controlnode['type']);
                         $control = $controltype->configureFromImportHandle((string) $controlnode['handle']);
-                        $setcontrol = $control->addToPageTypeComposerFormLayoutSet($set, true);
-                        $required = (string) $controlnode['required'];
-                        $customTemplate = (string) $controlnode['custom-template'];
-                        $label = (string) $controlnode['custom-label'];
-                        $description = (string) $controlnode['description'];
-                        $outputControlID = (string) $controlnode['output-control-id'];
-                        if ($required == '1') {
-                            $setcontrol->updateFormLayoutSetControlRequired(true);
-                        } else {
-                            $setcontrol->updateFormLayoutSetControlRequired(false);
+
+                        $ptComposerControlArray  = $control->getToPageTypeComposerFormLayoutSet($set, true);
+                        $checkAttributekey = 0;
+                        foreach($ptComposerControlArray as $ptComposerControlObject){
+                            $ptComposerControlObjectUnserialize = unserialize($ptComposerControlObject['ptComposerControlObject']);
+                            if($control->getAttributeKeyID() == $ptComposerControlObjectUnserialize->getAttributeKeyID()){
+                                $checkAttributekey = 1;
+                            }
                         }
-                        if ($customTemplate) {
-                            $setcontrol->updateFormLayoutSetControlCustomTemplate($customTemplate);
-                        }
-                        if ($label) {
-                            $setcontrol->updateFormLayoutSetControlCustomLabel($label);
-                        }
-                        if ($description) {
-                            $setcontrol->updateFormLayoutSetControlDescription($description);
-                        }
-                        if ($outputControlID) {
-                            ContentImporter::addPageTypeComposerOutputControlID($setcontrol, $outputControlID);
+                        if(!$checkAttributekey) {
+                            $setcontrol = $control->addToPageTypeComposerFormLayoutSet($set, true);
+                            $required = (string)$controlnode['required'];
+                            $customTemplate = (string)$controlnode['custom-template'];
+                            $label = (string)$controlnode['custom-label'];
+                            $description = (string)$controlnode['description'];
+                            $outputControlID = (string)$controlnode['output-control-id'];
+                            if ($required == '1') {
+                                $setcontrol->updateFormLayoutSetControlRequired(true);
+                            } else {
+                                $setcontrol->updateFormLayoutSetControlRequired(false);
+                            }
+                            if ($customTemplate) {
+                                $setcontrol->updateFormLayoutSetControlCustomTemplate($customTemplate);
+                            }
+                            if ($label) {
+                                $setcontrol->updateFormLayoutSetControlCustomLabel($label);
+                            }
+                            if ($description) {
+                                $setcontrol->updateFormLayoutSetControlDescription($description);
+                            }
+                            if ($outputControlID) {
+                                ContentImporter::addPageTypeComposerOutputControlID($setcontrol, $outputControlID);
+                            }
                         }
                     }
                 }
