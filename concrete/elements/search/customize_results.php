@@ -56,10 +56,13 @@ $form = Core::make('helper/form');
 
 		<p><?=t('Click and drag to change column order.')?></p>
 
-		<ul class="list-unstyled" data-search-column-list="<?=$type?>">
+		<ul class="item-select-list" data-search-column-list="<?=$type?>">
 			<?php foreach ($current->getColumns() as $col) {
 				?>
-				<li style="cursor: move" data-field-order-column="<?=$col->getColumnKey()?>"><input type="hidden" name="column[]" value="<?=$col->getColumnKey()?>" /><?=$col->getColumnName()?></li>
+				<li style="cursor: move" data-field-order-column="<?=$col->getColumnKey()?>"><input type="hidden" name="column[]" value="<?=$col->getColumnKey()?>" /><?=$col->getColumnName()?>
+
+					<i class="ccm-item-select-list-sort ui-sortable-handle"></i>
+				</li>
 				<?php
 			} ?>
 		</ul>
