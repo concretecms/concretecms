@@ -9,7 +9,7 @@ abstract class PageTestCase extends ConcreteDatabaseTestCase {
         'PageTemplates', 'Collections', 'CollectionVersions', 'CollectionVersionFeatureAssignments',
         'CollectionAttributeValues', 'CollectionVersionBlockStyles', 'CollectionVersionThemeCustomStyles',
         'CollectionVersionRelatedEdits', 'CollectionVersionAreaStyles', 'MultilingualSections', 'MultilingualPageRelations',
-        'PagePermissionAssignments', 'CollectionVersionBlocks', 'Areas', 'PageSearchIndex', 'ConfigStore',
+        'PagePermissionAssignments', 'PermissionAccessEntityTypes', 'CollectionVersionBlocks', 'Areas', 'PageSearchIndex', 'ConfigStore',
         'GatheringDataSources', 'Logs', 'PageTypePublishTargetTypes', 'AttributeKeyCategories',
         'PageTypeComposerOutputBlocks'); // so brutal
 
