@@ -127,6 +127,7 @@ class Controller extends BlockController
         $this->set('postTo_cID', $this->postTo_cID);
 
         $resultsURL = $c->getCollectionPath();
+        $resultsPage = null;
 
         if ($this->resultsURL != '') {
             $resultsURL = $this->resultsURL;
@@ -138,6 +139,11 @@ class Controller extends BlockController
         $resultsURL = Core::make('helper/text')->encodePath($resultsURL);
 
         $this->set('resultTargetURL', $resultsURL);
+        if (is_object($resultsPage)) {
+            $this->set('resultTarget', $resultsPage);
+        } else {
+            $this->set('resultTarget', $resultsURL);
+        }
 
         //run query if display results elsewhere not set, or the cID of this page is set
         if ($this->postTo_cID == '' && $this->resultsURL == '') {
