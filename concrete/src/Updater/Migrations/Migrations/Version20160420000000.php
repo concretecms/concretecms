@@ -51,7 +51,38 @@ class Version20160420000000 extends AbstractMigration
             'Users',
         ));
     }
+    
+    /**
+     * Loop through all installed packages and write the metadata setting for packages
+     * to the database.php config in genereated_overrides
+     */
+    protected function createMetaDataConfigurationForPackages(){
 
+        $r = $this->connection->executeQuery('SELECT * FROM packages WHERE pkgIsInstalled = 1;');
+        
+        $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
+        $packageService = $app->make('Concrete\Core\Package\PackageService');
+
+        while ($row = $r->fetch()) {
+            $pkgClass = \Concrete\Core\Package\PackageService::getClass($row['pkgHandle']);
+            if(!empty($pkgClass->getPackageMetadataPaths())){
+                $packageService->savePackageMetadataDriverToConfig($pkgClass);
+            }
+        }
+    }
+    
+    /**
+     * Check if application/src folder is present, of not create it
+     */
+    protected function createSrcFolderInApplication(){
+        
+        $srcDirPath = DIR_APPLICATION . DIRECTORY_SEPARATOR . DIRNAME_CLASSES;
+        $filesystem = new \Illuminate\Filesystem\Filesystem();
+        if(!$filesystem->exists($srcDirPath)) {
+            $filesystem->makeDirectory($srcDirPath);
+        }
+    }
+    
     protected function installEntities()
     {
         // Add tables for new entities or moved entities
@@ -661,12 +692,14 @@ class Version20160420000000 extends AbstractMigration
         unset($tracking['code_position']);
         $config->save('concrete.seo.tracking', $tracking);
     }
-
+       
     public function up(Schema $schema)
     {
         $this->connection->Execute('set foreign_key_checks = 0');
         $this->renameProblematicTables();
         $this->updateDoctrineXmlTables();
+        $this->createMetaDataConfigurationForPackages();
+        $this->createSrcFolderInApplication();
         $this->installEntities();
         $this->importAttributeTypes();
         $this->importAttributeKeys();
