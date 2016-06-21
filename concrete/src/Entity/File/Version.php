@@ -29,6 +29,7 @@ use User;
 use View;
 use Doctrine\ORM\Mapping as ORM;
 use Concrete\Core\Support\Facade\Facade;
+use Imagine\Image\Box;
 
 /**
  * @ORM\Entity
@@ -795,12 +796,14 @@ class Version
                     ->getFileSystemObject();
 
                 $height = $type->getHeight();
-                $thumbnailMode = ImageInterface::THUMBNAIL_OUTBOUND;
-                if (!$height) {
-                    $height = $type->getWidth();
+                if ($height) {
+                    $size = new Box($type->getWidth(), $height);
+                    $thumbnailMode = ImageInterface::THUMBNAIL_OUTBOUND;
+                } else {
+                    $size = $image->getSize()->widen($type->getWidth());
                     $thumbnailMode = ImageInterface::THUMBNAIL_INSET;
                 }
-                $thumbnail = $image->thumbnail(new \Imagine\Image\Box($type->getWidth(), $height), $thumbnailMode);
+                $thumbnail = $image->thumbnail($size, $thumbnailMode);
                 $thumbnailPath = $type->getFilePath($this);
                 $thumbnailOptions = array();
 
@@ -843,6 +846,7 @@ class Version
                     $this->fvHasDetailThumbnail = true;
                 }
 
+                unset($size);
                 unset($thumbnail);
                 unset($filesystem);
             }
