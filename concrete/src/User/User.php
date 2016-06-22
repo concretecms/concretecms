@@ -189,7 +189,7 @@ class User extends Object
                     $db->execute($db->prepare("update Users set uPassword = ? where uID = ?"), $v);
                 }
             } else {
-                $this->getUserPasswordHasher()->hashpassword($password); // hashpassword and checkpassword are slow functions.
+                $this->getUserPasswordHasher()->HashPassword($password); // HashPassword and CheckPassword are slow functions.
                 // We run one here just take time.
                 // Without it an attacker would be able to tell that the
                 // username doesn't exist using a timing attack.
