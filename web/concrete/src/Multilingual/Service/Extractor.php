@@ -2,6 +2,7 @@
 namespace Concrete\Core\Multilingual\Service;
 
 use Concrete\Core\Multilingual\Page\Section\Section;
+use Concrete\Core\Package\Package;
 use Gettext\Extractors\Mo as MoExtractor;
 use Gettext\Extractors\Po as PoExtractor;
 use Gettext\Translations;
@@ -48,6 +49,17 @@ class Extractor
                         );
                     }
                 }
+            }
+        }
+
+        if (is_dir(DIR_PACKAGES)) {
+            $packages = Package::getInstalledList();
+            foreach($packages as $package) {
+                $fullDirname = DIR_PACKAGES.'/'.$package->getPackageHandle();
+                $phpParser->parseDirectory($fullDirname,
+                    DIRNAME_PACKAGES.'/'.$dirname,
+                    $translations
+                );
             }
         }
 
