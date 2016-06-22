@@ -196,6 +196,23 @@ abstract class Control extends Object
         return PageTypeComposerFormLayoutSetControl::getByID($db->Insert_ID());
     }
 
+    /**
+     * @param PageTypeComposerFormLayoutSet $set
+     *
+     * @return array
+     */
+    public function getToPageTypeComposerFormLayoutSet(PageTypeComposerFormLayoutSet $set)
+    {
+        $db = Loader::db();
+
+        $controlType = $this->getPageTypeComposerControlTypeObject();
+        $ptComposerControlArray = $db->GetAll('SELECT  ptComposerControlObject FROM PageTypeComposerFormLayoutSetControls  Where ptComposerFormLayoutSetID = ? AND ptComposerControlTypeID = ? ', array(
+            $set->getPageTypeComposerFormLayoutSetID(), $controlType->getPageTypeComposerControlTypeID()
+        ));
+
+        return $ptComposerControlArray;
+    }
+
     public function canPageTypeComposerControlSetPageName()
     {
         return false;
