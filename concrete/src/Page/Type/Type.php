@@ -389,7 +389,7 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
         $node = $node->composer;
         if (isset($node->formlayout->set)) {
             foreach ($node->formlayout->set as $setnode) {
-                $set = PageTypeComposerFormLayoutSet::getBySetName((string) $setnode['name'],$ptID);
+                $set = PageTypeComposerFormLayoutSet::getBySetName($cm, (string) $setnode['name']);
 
                 if(!is_object($set)) {
                     $set = $cm->addPageTypeComposerFormLayoutSet((string)$setnode['name'], (string)$setnode['description']);
