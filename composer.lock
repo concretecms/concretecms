@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "169f8f6218ea477327de64167bfeee88",
+    "hash": "b9cdd1fc93b2e5f5416bc82aa1e15d59",
     "content-hash": "7689b308a4a255cf008a2be37fae0e96",
     "packages": [
         {
@@ -48,16 +48,16 @@
         },
         {
             "name": "concrete5/doctrine-xml",
-            "version": "1.0.0",
+            "version": "1.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/concrete5/doctrine-xml.git",
-                "reference": "a8db3d402a4ee6d63155979eec92d4c5686fcd69"
+                "reference": "11f32dc982352930f990bc28bca466564ff49537"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/concrete5/doctrine-xml/zipball/a8db3d402a4ee6d63155979eec92d4c5686fcd69",
-                "reference": "a8db3d402a4ee6d63155979eec92d4c5686fcd69",
+                "url": "https://api.github.com/repos/concrete5/doctrine-xml/zipball/11f32dc982352930f990bc28bca466564ff49537",
+                "reference": "11f32dc982352930f990bc28bca466564ff49537",
                 "shasum": ""
             },
             "require": {
@@ -85,7 +85,7 @@
                 "structure",
                 "xml"
             ],
-            "time": "2015-04-30 15:46:28"
+            "time": "2016-06-22 13:39:14"
         },
         {
             "name": "container-interop/container-interop",
