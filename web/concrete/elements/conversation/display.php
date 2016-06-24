@@ -7,6 +7,10 @@ if (!is_array($messages)) {
 $u = new User();
 $ui = UserInfo::getByID($u->getUserID());
 $page = Page::getByID($cID);
+$ms = \Concrete\Core\Multilingual\Page\Section\Section::getBySectionOfSite($page);
+if (is_object($ms)) {
+	Localization::changeLocale($ms->getLocale());
+}
 $editor = \Concrete\Core\Conversation\Editor\Editor::getActive();
 $editor->setConversationObject($args['conversation']);
 $val = Loader::helper('validation/token');
