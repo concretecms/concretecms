@@ -36,7 +36,9 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
 
     
     if ($cih->showHelpOverlay()) {
+        print '<div style="display: none">';
         View::element('help/dialog/introduction');
+        print '</div>';
         $v = View::getInstance();
         $v->addFooterItem('<script type="text/javascript">$(function() { new ConcreteHelpDialog().open(); });</script>');
         $cih->trackHelpOverlayDisplayed();

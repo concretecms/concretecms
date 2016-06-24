@@ -95,6 +95,13 @@ class Template
         }
     }
 
+    public function delete()
+    {
+        $em = \ORM::entityManager('core');
+        $em->remove($this);
+        $em->flush();
+    }
+
     public function update($pTemplateHandle, $pTemplateName, $pTemplateIcon = FILENAME_PAGE_TEMPLATE_DEFAULT_ICON)
     {
         $this->pTemplateHandle = $pTemplateHandle;
