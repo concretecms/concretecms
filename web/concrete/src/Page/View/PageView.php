@@ -145,7 +145,7 @@ class PageView extends View
             return $this->themeObject->getStylesheet($stylesheet);
         }
 
-        if ($this->cp->canViewPageVersions() && $this->c->hasPageThemeCustomizations()) {
+        if ($this->c->hasPageThemeCustomizations()) {
             if ($this->c->getVersionObject()->isApproved()) {
                 return URL::to('/ccm/system/css/page', $this->c->getCollectionID(), $stylesheet);
             } else {
