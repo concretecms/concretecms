@@ -734,7 +734,7 @@ return array(
         ),
         */
         'fancytree' => array(
-            array('javascript', 'js/fancytree.js', array('minify' => false)),
+            array('javascript', 'js/fancytree.js', array('minify' => false, 'version' => '2.18.0')),
             array('javascript-localized', '/ccm/assets/localization/fancytree/js', array('minify' => false)),
             array('css', 'css/fancytree.css', array('minify' => false)),
         ),

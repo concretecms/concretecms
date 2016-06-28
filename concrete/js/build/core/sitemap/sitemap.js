@@ -232,8 +232,8 @@
 						if ((!targetNode.parent.data.cID) && (targetNode.data.cID !== '1')) { // Home page has no parents, but we still want to be able to hit it.
 							return false;
 						}
-                        if((data.hitMode != 'over') && (targetNode.data.cID == 1)) {  // Home gets no siblings
-                            return false;
+                        if (targetNode.data.cID == 1) {  // Home gets no siblings
+							return 'over';
                         }
 
                         if (targetNode.data.cID == data.otherNode.data.cID) {
