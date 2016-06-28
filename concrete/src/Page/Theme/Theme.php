@@ -345,6 +345,9 @@ class Theme extends Object
         if ($this->isThemePreviewRequest()) {
             $path .= '?ts='.time();
         }
+        else {
+            $path .= '?ts='.filemtime($stylesheet->getOutputPath());
+        }
 
         return $path;
     }
