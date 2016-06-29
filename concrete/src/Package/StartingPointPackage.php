@@ -2,10 +2,12 @@
 namespace Concrete\Core\Package;
 
 use AuthenticationType;
+use Concrete\Core\Application\Application;
 use Concrete\Core\Backup\ContentImporter;
 use Concrete\Core\Config\Renderer;
 use Concrete\Core\Database\DatabaseStructureManager;
 use Concrete\Core\File\Filesystem;
+use Concrete\Core\File\Service\File;
 use Concrete\Core\Mail\Importer\MailImporter;
 use Concrete\Core\Package\Routine\AttachModeInstallRoutine;
 use Concrete\Core\Permission\Access\Entity\ConversationMessageAuthorEntity;
@@ -415,7 +417,15 @@ class StartingPointPackage extends BasePackage
 
     public function make_directories()
     {
-        Core::make('cache')->flush();
+
+        // Delete generated overrides and doctrine
+        $fh = new File();
+        if (is_dir(DIR_CONFIG_SITE.'/generated_overrides')) {
+            $fh->removeAll(DIR_CONFIG_SITE.'/generated_overrides');
+        }
+        if (is_dir(Config::get('database.proxy_classes'))) {
+            $fh->removeAll(Config::get('database.proxy_classes'));
+        }
 
         if (!is_dir(Config::get('concrete.cache.directory'))) {
             mkdir(Config::get('concrete.cache.directory'), Config::get('concrete.filesystem.permissions.directory'));
