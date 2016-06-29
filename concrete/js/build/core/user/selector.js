@@ -15,8 +15,7 @@
         my.options = options;
         my._chooseTemplate = _.template(my.chooseTemplate, {'options': my.options});
         my._loadingTemplate = _.template(my.loadingTemplate, {'options': my.options});
-        my._pageLoadedTemplate = _.template(my.pageLoadedTemplate);
-        my._pageMenuTemplate = _.template(ConcretePageAjaxSearchMenu.get());
+        my._userLoadedTemplate = _.template(my.userLoadedTemplate);
 
         my.$element.append(my._chooseTemplate);
         my.$element.on('click', 'a[data-user-selector-link=choose]', function(e) {
@@ -33,6 +32,17 @@
         if (my.options.uID) {
             my.loadUser(my.options.uID);
         }
+
+        ConcreteEvent.unsubscribe('UserSearchDialogSelectUser.core');
+        ConcreteEvent.unsubscribe('UserSearchDialogAfterSelectUser.core');
+        ConcreteEvent.subscribe('UserSearchDialogSelectUser.core', function(e, data) {
+            my.loadUser(data.uID);
+        });
+
+        ConcreteEvent.subscribe('UserSearchDialogAfterSelectUser.core', function(e) {
+            jQuery.fn.dialog.closeTop();
+        });
+
     }
 
     ConcreteUserSelector.prototype = {
@@ -43,23 +53,32 @@
         loadingTemplate: '<div class="ccm-item-selector"><div class="ccm-item-selector-choose"><i class="fa fa-spin fa-spinner"></i> <%=options.loadingText%></div></div>',
         userLoadedTemplate: '<div class="ccm-item-selector"><div class="ccm-item-selector-item-selected">' +
             '<input type="hidden" name="<%=inputName%>" value="<%=user.uID%>" />' +
+            '<div class="ccm-item-selector-item-selected-thumbnail"><%=user.avatar%></div>' +
             '<a data-user-selector-action="clear" href="#" class="ccm-item-selector-clear"><i class="fa fa-close"></i></a>' +
-            '<div class="ccm-item-selector-item-selected-title"><%=user.name%></div>' +
+            '<div class="ccm-item-selector-item-selected-title"><%=user.displayName%></div>' +
             '</div></div>',
 
         loadUser: function(uID) {
             var my = this;
             my.$element.html(my._loadingTemplate);
-            /*
-            ConcretePageAjaxSearch.getPageDetails(cID, function(r) {
-                var page = r.pages[0];
-                my.$element.html(my._pageLoadedTemplate({'inputName': my.options.inputName, 'page': page}));
-                my.$element.on('click', 'a[data-page-selector-action=clear]', function(e) {
-                    e.preventDefault();
-                    my.$element.html(my._chooseTemplate);
-                });
+
+            $.ajax({
+                type: 'post',
+                dataType: 'json',
+                url: CCM_DISPATCHER_FILENAME + '/ccm/system/user/get_json',
+                data: {'uID': uID},
+                error: function(r) {
+                    ConcreteAlert.dialog('Error', r.responseText);
+                },
+                success: function(r) {
+                    var user = r.users[0];
+                    my.$element.html(my._userLoadedTemplate({'inputName': my.options.inputName, 'user': user}));
+                    my.$element.on('click', 'a[data-user-selector-action=clear]', function(e) {
+                        e.preventDefault();
+                        my.$element.html(my._chooseTemplate);
+                    });
+                }
             });
-            */
         }
     }
 

@@ -313,6 +313,7 @@ return array(
          */
         "/ccm/system/user/add_group" => array('\Concrete\Controller\Backend\User::addGroup'),
         "/ccm/system/user/remove_group" => array('\Concrete\Controller\Backend\User::removeGroup'),
+        "/ccm/system/user/get_json" => array('\Concrete\Controller\Backend\User::getJSON'),
 
         /*
          * Page actions - non UI
