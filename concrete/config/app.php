@@ -807,6 +807,9 @@ return array(
             array('javascript', 'js/sitemap.js', array('minify' => false)),
             array('css', 'css/sitemap.css', array('minify' => false)),
         ),
+        'core/users' => array(
+            array('javascript', 'js/users.js', array('minify' => false)),
+        ),
         'core/tree' => array(
             array('javascript', 'js/tree.js', array('minify' => false)),
         ),
@@ -1066,6 +1069,13 @@ return array(
                 array('javascript', 'core/sitemap'),
                 array('css', 'fancytree'),
                 array('css', 'core/sitemap'),
+            ),
+        ),
+        'core/users' => array(
+            array(
+                array('javascript', 'core/events'),
+                array('javascript', 'underscore'),
+                array('javascript', 'core/users'),
             ),
         ),
         'core/express' => array(

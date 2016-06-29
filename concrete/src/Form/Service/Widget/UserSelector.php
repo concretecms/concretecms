@@ -15,75 +15,96 @@ class UserSelector
      *
      * @param int $uID
      */
-    public function selectUser($fieldName, $uID = false, $javascriptFunc = 'ccm_triggerSelectUser')
+    public function selectPage($fieldName, $uID = false)
     {
+        $v = \View::getInstance();
+        $v->requireAsset('core/users');
+
         $selectedUID = 0;
         if (isset($_REQUEST[$fieldName])) {
-            $val = \Core::make('helper/validation/numbers');
-            if ($val->integer($_REQUEST[$fieldName])) {
-                $selectedUID = $_REQUEST[$fieldName];
+            $selectedUID = intval($_REQUEST[$fieldName]);
+        } else {
+            if ($uID > 0) {
+                $selectedUID = $uID;
             }
-        } elseif ($uID > 0) {
-            $selectedUID = $uID;
         }
 
-        $html = '';
-        $html .= '<div class="ccm-summary-selected-item"><div class="ccm-summary-selected-item-inner"><strong class="ccm-summary-selected-item-label">';
-        if ($selectedUID > 0) {
-            $ui = UserInfo::getByID($selectedUID);
-            $html .= $ui->getUserName();
+        if ($selectedUID) {
+            $args = "{'inputName': '{$fieldName}', 'cID': {$selectedUID}}";
+        } else {
+            $args = "{'inputName': '{$fieldName}'}";
         }
-        $html .= '</strong></div>';
+
         $identifier = new \Concrete\Core\Utility\Service\Identifier();
-        $selector = $identifier->getString(32);
-        $html .= '<a class="ccm-sitemap-select-item" data-form-user-selector="' . $selector . '" dialog-append-buttons="true" dialog-width="90%" dialog-height="70%" dialog-modal="false" dialog-title="' . t('Choose User') . '" href="' . URL::to('/ccm/system/dialogs/user/search') . '">' . t('Select User') . '</a>';
-        $html .= '<input type="hidden" data-form-user-selector-input="' . $selector . '" name="' . $fieldName . '" value="' . $selectedUID . '">';
-        $html .= '</div>';
-        $html .= <<<EOL
-<script type="text/javascript">
-$(function() {
-	$("a[data-form-user-selector={$selector}]").dialog();
-	$("a[data-form-user-selector={$selector}]").on('click', function() {
-		var selector = $(this);
-		ConcreteEvent.unsubscribe('UserSearchDialogSelectUser.core');
-		ConcreteEvent.unsubscribe('UserSearchDialogAfterSelectUser.core');
-		ConcreteEvent.subscribe('UserSearchDialogSelectUser.core', function(e, data) {
-			var par = selector.parent().find('.ccm-summary-selected-item-label'),
-				pari = selector.parent().find('[data-form-user-selector-input={$selector}]');
-			par.html(data.uName);
-			pari.val(data.uID);
-			e.stopPropagation();
-		});
-		ConcreteEvent.subscribe('UserSearchDialogAfterSelectUser.core', function(e) {
-			jQuery.fn.dialog.closeTop();
-		});
-	});
-});
-</script>
+        $identifier = $identifier->getString(32);
+        $html = <<<EOL
+        <div data-user-selector="{$identifier}"></div>
+        <script type="text/javascript">
+        $(function() {
+            $('[data-user-selector={$identifier}]').concreteUserSelector({$args});
+        });
+        </script>
 EOL;
 
         return $html;
     }
 
+
     public function quickSelect($key, $val = false, $args = array())
     {
+        $v = \View::getInstance();
+        $v->requireAsset('selectize');
         $form = Loader::helper('form');
         $valt = Loader::helper('validation/token');
         $token = $valt->generate('quick_user_select_' . $key);
+
+        $selectedUID = 0;
+        if (isset($_REQUEST[$key])) {
+            $selectedUID = $_REQUEST[$key];
+        } else {
+            if ($val > 0) {
+                $selectedUID = $val;
+            }
+        }
+
+        $uName = '';
+        if ($selectedUID > 0) {
+            $ui = UserInfo::getByID($selectedUID);
+            $uName = $ui->getUserDisplayName();
+        }
+
         $html = "
-		<style type=\"text/css\">
-		ul.ui-autocomplete {position:absolute; list-style:none; }
-		ul.ui-autocomplete li.ui-menu-item { margin-left:0; padding:2px;}
-		</style>
 		<script type=\"text/javascript\">
 		$(function () {
-			$('.ccm-quick-user-selector input').unbind().autocomplete({source: '" . REL_DIR_FILES_TOOLS_REQUIRED . "/users/autocomplete?key=" . $key . "&token=" . $token . "',
-			select: function(e, ui) { $(this).val(ui.item.label); return false;},
-			focus: function(e, ui) { $(this).val(ui.item.label); return false;}
+			$('.ccm-quick-user-selector input').unbind().selectize({
+                valueField: 'value',
+                labelField: 'label',
+                searchField: ['label'],";
+
+        if ($val) {
+            $html .= "options: [{'label': '" . h($uName) . "', 'value': " . intval($selectedUID) . "}],
+				items: [" . intval($selectedUID) . "],";
+        }
+
+        $html .= "maxItems: 1,
+                load: function(query, callback) {
+                    if (!query.length) return callback();
+                    $.ajax({
+                        url: '" . REL_DIR_FILES_TOOLS_REQUIRED . "/users/autocomplete?key=" . $key . "&token=" . $token . "&term=' + encodeURIComponent(query),
+                        type: 'GET',
+						dataType: 'json',
+                        error: function() {
+                            callback();
+                        },
+                        success: function(res) {
+                            callback(res);
+                        }
+                    });
+                }
+		    });
 		});
-		} );
 		</script>";
-        $html .= '<span class="ccm-quick-user-selector">'.$form->text($key, $val, $args).'</span>';
+        $html .= '<span class="ccm-quick-user-selector">'.$form->hidden($key, '', $args).'</span>';
 
         return $html;
     }

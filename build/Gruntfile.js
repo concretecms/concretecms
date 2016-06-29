@@ -303,6 +303,13 @@ module.exports = function(grunt) {
             ]
         },
 
+        ccm_users: {
+            dest: '<%= DIR_BASE %>/concrete/js/users.js',
+            src: [
+                '<%= DIR_BASE %>/concrete/js/build/core/sitemap/selector.js'
+            ]
+        },
+
         ccm_tree: {
             dest: '<%= DIR_BASE %>/concrete/js/tree.js',
             src: '<%= DIR_BASE %>/concrete/js/build/core/tree.js'
