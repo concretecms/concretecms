@@ -158,18 +158,31 @@ class EntityManagerConfigFactory implements ApplicationAwareInterface, EntityMan
         $appSrcPath = DIR_APPLICATION.DIRECTORY_SEPARATOR.DIRNAME_CLASSES;
         $xmlConfig  = DIR_APPLICATION.DIRECTORY_SEPARATOR.REL_DIR_METADATA_XML;
         $ymlConfig  = DIR_APPLICATION.DIRECTORY_SEPARATOR.REL_DIR_METADATA_YAML;
-
+        
         $appDriverSettings = $this->getConfigRepository()->get(CONFIG_ORM_METADATA_APPLICATION);
-
-        if (empty($appDriverSettings)) {
+        
+        // Default setting so it comes first
+        if (empty($appDriverSettings) && is_dir($appSrcPath)) {
             $annotationDriver = new \Doctrine\ORM\Mapping\Driver\AnnotationDriver($this->getCachedAnnotationReader(), $appSrcPath);
             $driverChain->addDriver($annotationDriver, 'Application\Src');
         } else if ($appDriverSettings === \Package::PACKAGE_METADATADRIVER_XML || $appDriverSettings === 'xml') {
-            $xmlDriver = new \Doctrine\ORM\Mapping\Driver\XmlDriver($xmlConfig);
-            $driverChain->addDriver($xmlDriver, 'Application\Src');
+            if (is_dir($xmlConfig)) {
+                $xmlDriver = new \Doctrine\ORM\Mapping\Driver\XmlDriver($xmlConfig);
+                $driverChain->addDriver($xmlDriver, 'Application\Src');
+            }else{
+                // Fallback to default
+                $annotationDriver = new \Doctrine\ORM\Mapping\Driver\AnnotationDriver($this->getCachedAnnotationReader(), $appSrcPath);
+                $driverChain->addDriver($annotationDriver, 'Application\Src');
+            }
         } else if ($appDriverSettings === \Package::PACKAGE_METADATADRIVER_YAML || $appDriverSettings === 'yaml' || $appDriverSettings === 'yml') {
-            $yamlDriver = new \Doctrine\ORM\Mapping\Driver\YamlDriver($ymlConfig);
-            $driverChain->addDriver($yamlDriver, 'Application\Src');
+            if (is_dir($ymlConfig)) {
+                $yamlDriver = new \Doctrine\ORM\Mapping\Driver\YamlDriver($ymlConfig);
+                $driverChain->addDriver($yamlDriver, 'Application\Src');
+            }else{
+                // Fallback to default
+                $annotationDriver = new \Doctrine\ORM\Mapping\Driver\AnnotationDriver($this->getCachedAnnotationReader(), $appSrcPath);
+                $driverChain->addDriver($annotationDriver, 'Application\Src');
+            }
         }
     }
 
@@ -200,8 +213,13 @@ class EntityManagerConfigFactory implements ApplicationAwareInterface, EntityMan
         // add Annotation drivers with "legacy" Annotation reader
         if (count($driverSettingsLegacy) > 0) {
             foreach ($driverSettingsLegacy as $settings) {
-                foreach($settings as $setting){
+                foreach ($settings as $setting) {
                     $paths = $this->convertRelativeToAbsolutePaths($setting);
+                    $hasInvalidPaths = $this->hasInvalidPaths($paths);
+                    if ($hasInvalidPaths) {
+                        // At least one mapping path is invalid
+                        continue;
+                    }
                     $simpleAnnotationDriver = new \Doctrine\ORM\Mapping\Driver\AnnotationDriver($this->getCachedSimpleAnnotationReader(),
                         $paths);
                     $driverChain->addDriver($simpleAnnotationDriver,
@@ -215,6 +233,11 @@ class EntityManagerConfigFactory implements ApplicationAwareInterface, EntityMan
             foreach ($driverSettingsDefault as $settings) {
                 foreach($settings as $setting){
                     $paths = $this->convertRelativeToAbsolutePaths($setting);
+                    $hasInvalidPaths = $this->hasInvalidPaths($paths);
+                    if ($hasInvalidPaths) {
+                        // At least one mapping path is invalid
+                        continue;
+                    }
                     $annotationDriver = new \Doctrine\ORM\Mapping\Driver\AnnotationDriver($this->getCachedAnnotationReader(),
                         $paths);
                     $driverChain->addDriver($annotationDriver, $setting['namespace']);
@@ -222,7 +245,7 @@ class EntityManagerConfigFactory implements ApplicationAwareInterface, EntityMan
             }
         }
     }
-
+       
     /**
      * Register the namespace and the metadata paths of all 
      * packages with xml metadata
@@ -236,6 +259,11 @@ class EntityManagerConfigFactory implements ApplicationAwareInterface, EntityMan
             foreach ($driverSettings as $settings) {
                 foreach($settings as $setting){
                     $paths = $this->convertRelativeToAbsolutePaths($setting);
+                    $hasInvalidPaths = $this->hasInvalidPaths($paths);
+                    if ($hasInvalidPaths) {
+                        // At least one mapping path is invalid
+                        continue;
+                    }
                     $xmlDriver = new \Doctrine\ORM\Mapping\Driver\XmlDriver($paths);
                     $driverChain->addDriver($xmlDriver, $setting['namespace']);
                 }
@@ -256,11 +284,39 @@ class EntityManagerConfigFactory implements ApplicationAwareInterface, EntityMan
             foreach ($driverSettings as $settings) {
                 foreach($settings as $setting){
                     $paths = $this->convertRelativeToAbsolutePaths($setting);
+                    $hasInvalidPaths = $this->hasInvalidPaths($paths);
+                    if ($hasInvalidPaths) {
+                        // At least one mapping path is invalid
+                        continue;
+                    }
                     $yamlDriver = new \Doctrine\ORM\Mapping\Driver\YamlDriver($paths);
                     $driverChain->addDriver($yamlDriver, $setting['namespace']);
                 }
             }
         }
+    }
+    
+    /**
+     * Checks if the mapping paths are valid. If a namespace contains atleast one
+     * invalid mapping path the method returns true. 
+     * If all is fine, false is returned
+     * 
+     * @param array $paths
+     * @return boolean
+     */
+    protected function hasInvalidPaths (array $paths){
+        
+        $oneInvalidPath = false;
+        
+        if (count($paths) > 0){
+            foreach ($paths as $path) {
+                if (!is_dir($path)) {
+                    // Is no directory set flag to true
+                    $oneInvalidPath = true;
+                }
+            }
+        }
+        return $oneInvalidPath;
     }
     
     /**
