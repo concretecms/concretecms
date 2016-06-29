@@ -41,7 +41,27 @@
 <?php 
 } ?>
 
-<?php
+    <?php if (count($drafts)) {
+        ?>
+        <h5><?=t('Page Drafts')?></h5>
+        <ul class="ccm-panel-sitemap-list">
+            <?php foreach ($drafts as $dc) {
+                ?>
+                <li><a href="<?=Loader::helper('navigation')->getLinkToCollection($dc)?>"><?php
+                        if ($dc->getCollectionName()) {
+                            echo $dc->getCollectionName() . ' ' . Core::make('date')->formatDateTime($dc->getCollectionDateAdded(), false);
+                        } else {
+                            echo t('(Untitled)') . ' ' . Core::make('date')->formatDateTime($dc->getCollectionDateAdded(), false);
+                        }
+                        ?></a></li>
+                <?php
+            }
+            ?>
+        </ul>
+        <?php
+    } ?>
+
+    <?php
 if ($canViewSitemap) {
     ?>
 	<h5><?=t('Sitemap')?></h5>
@@ -56,26 +76,6 @@ if ($canViewSitemap) {
 	});
 	</script>
 <?php 
-} ?>
-
-<?php if (count($drafts)) {
-    ?>
-	<h5><?=t('Page Drafts')?></h5>
-	<ul class="ccm-panel-sitemap-list">
-	<?php foreach ($drafts as $dc) {
-    ?>
-		<li><a href="<?=Loader::helper('navigation')->getLinkToCollection($dc)?>"><?php
-            if ($dc->getCollectionName()) {
-                echo $dc->getCollectionName() . ' ' . Core::make('date')->formatDateTime($dc->getCollectionDateAdded(), false);
-            } else {
-                echo t('(Untitled)') . ' ' . Core::make('date')->formatDateTime($dc->getCollectionDateAdded(), false);
-            }
-    ?></a></li>
-	<?php 
-}
-    ?>
-	</ul>
-	<?php 
 } ?>
 
 </div>

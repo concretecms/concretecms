@@ -61,6 +61,7 @@ class CkeditorEditor implements EditorInterface
                 'language' => $this->getLanguageOption(),
                 'customConfig' => '',
                 'allowedContent' => true,
+                'baseFloatZIndex' => 1990, /* Must come below modal variable in variables.less */
                 'image2_captionedClass' => 'content-editor-image-captioned',
                 'image2_alignClasses' => array(
                     'content-editor-image-left',
