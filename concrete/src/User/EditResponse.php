@@ -24,6 +24,7 @@ class EditResponse extends \Concrete\Core\Application\EditResponse
             $uo = new stdClass();
             $uo->uID = $user->getUserID();
             $uo->displayName = $user->getUserDisplayName();
+            $uo->avatar = $user->getUserAvatar()->output();
             $o->users[] = $uo;
         }
 

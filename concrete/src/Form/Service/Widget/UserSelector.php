@@ -15,7 +15,7 @@ class UserSelector
      *
      * @param int $uID
      */
-    public function selectPage($fieldName, $uID = false)
+    public function selectUser($fieldName, $uID = false)
     {
         $v = \View::getInstance();
         $v->requireAsset('core/users');
@@ -30,7 +30,7 @@ class UserSelector
         }
 
         if ($selectedUID) {
-            $args = "{'inputName': '{$fieldName}', 'cID': {$selectedUID}}";
+            $args = "{'inputName': '{$fieldName}', 'uID': {$selectedUID}}";
         } else {
             $args = "{'inputName': '{$fieldName}'}";
         }
