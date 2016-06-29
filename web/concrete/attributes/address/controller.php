@@ -96,8 +96,20 @@ class Controller extends AttributeTypeController
 
     public function validateForm($data)
     {
-        return ($data['address1'] != '' && $data['city'] != '' && $data['state_province'] != '' && $data['country'] != '' && $data['postal_code'] != '');
+        $e = Core::make('helper/validation/error');
+        if($data['address1'] == '')
+            $e->add(t('The field "%s" is required', t('Address 1')));
+        if($data['city'] == '')
+            $e->add(t('The field "%s" is required', t('City')));
+        if($data['state_province'] == '')
+            $e->add(t('The field "%s" is required',  t('State/Province')));
+        if($data['country'] == '')
+            $e->add(t('The field "%s" is required',  t('Country')));
+        if($data['postal_code'] == '')
+            $e->add(t('The field "%s" is required', t('Postal Code')));
+        return $e;
     }
+
 
     public function validateValue()
     {
