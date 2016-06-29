@@ -105,6 +105,7 @@ var ccmi18n = {
   user_delete: <?=json_encode(t('Delete'))?>,
   user_group_remove: <?=json_encode(t('Remove From Group'))?>,
   user_group_add: <?=json_encode(t('Add to Group'))?>,
+  chooseUser: <?=json_encode(t('Choose a User'))?>,
   none: <?=json_encode(t('None'))?>,
   editModeMsg: <?=json_encode(t('Let\'s start editing a page.'))?>,
   editMode: <?=json_encode(t('Edit Mode'))?>,

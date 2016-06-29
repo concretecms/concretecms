@@ -54,6 +54,8 @@ EOL;
 
     public function quickSelect($key, $cID = false, $args = array())
     {
+        $v = \View::getInstance();
+        $v->requireAsset('selectize');
         $selectedCID = 0;
         if (isset($_REQUEST[$key])) {
             $selectedCID = $_REQUEST[$key];
@@ -77,36 +79,36 @@ EOL;
         $html = "
 		<script type=\"text/javascript\">
 		$(function () {
-			$('#ccm-quick-page-selector-label-" . $key . "').autocomplete({
-				select: function(e, ui) {
-					$('#ccm-quick-page-selector-label-" . $key . "').val(ui.item.label);
-					$('#ccm-quick-page-selector-value-" . $key . "').val(ui.item.value);
-					return false;
-				},
-				open: function(e, ui) {
-					//$('#ccm-quick-page-selector-label-" . $key . "').val('');
-					$('#ccm-quick-page-selector-value-" . $key . "').val('');
-				},
-				focus: function(e, ui) {
-					$('#ccm-quick-page-selector-label-" . $key . "').val(ui.item.label);
-					return false;
-				},
-				source: '" . REL_DIR_FILES_TOOLS_REQUIRED . "/pages/autocomplete?key=" . $key . "&token=" . $token . "'
-			});
-			$('#ccm-quick-page-selector-label-" . $key . "').keydown(function(e) {
-				if (e.keyCode == 13) {
-					e.preventDefault();
-				}
-			}).change(function(e) {
-				if ($('#ccm-quick-page-selector-label-" . $key . "').val() == '') {
-					$('#ccm-quick-page-selector-value-" . $key . "').val('');
-				}
-			});
-			$('#ccm-quick-page-selector-label-" . $key . "').autocomplete('widget').addClass('ccm-item-selector-autocomplete');
+			$('#ccm-quick-page-selector-" . $key . " input').unbind().selectize({
+                valueField: 'value',
+                labelField: 'label',
+                searchField: ['label'],";
+
+        if ($selectedCID) {
+            $html .= "options: [{'label': '" . h($cName) . "', 'value': " . intval($selectedCID) . "}],
+				items: [" . intval($selectedCID) . "],";
+        }
+
+        $html .= "maxItems: 1,
+                load: function(query, callback) {
+                    if (!query.length) return callback();
+                    $.ajax({
+                        url: '" . REL_DIR_FILES_TOOLS_REQUIRED . "/pages/autocomplete?key=" . $key . "&token=" . $token . "&term=' + encodeURIComponent(query),
+                        type: 'GET',
+						dataType: 'json',
+                        error: function() {
+                            callback();
+                        },
+                        success: function(res) {
+                            callback(res);
+                        }
+                    });
+                }
+		    });
 		} );
 		</script>";
-        $html .= '<input type="hidden" id="ccm-quick-page-selector-value-' . $key . '" name="' . $key . '" value="' . $selectedCID . '" /><span class="ccm-quick-page-selector">
-		<input type="text" class="ccm-input-text" name="ccm-quick-page-selector-label-' . $key . '" id="ccm-quick-page-selector-label-' . $key . '" value="' . $cName . '" /></span>';
+        $form = \Core::make("helper/form");
+        $html .= '<span id="ccm-quick-page-selector-' . $key . '">'.$form->hidden($key, '', $args).'</span>';
 
         return $html;
     }
