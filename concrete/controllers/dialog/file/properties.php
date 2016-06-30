@@ -68,7 +68,10 @@ class Properties extends BackendInterfaceFileController
                 $ak = FileAttributeKey::getByID($_REQUEST['name']);
                 $controller = $ak->getController();
                 $value = $controller->createAttributeValueFromRequest();
-                $value = $fv->setAttribute($ak, $value);
+                $fv->setAttribute($ak, $value);
+
+                $file = File::getByID($this->file->getFileID());
+                $value = $file->getAttributeValueObject($ak); // ugh this is some kind of race condition or cache issue.
 
                 $sr = new FileEditResponse();
                 $sr->setFile($this->file);
