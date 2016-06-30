@@ -96,20 +96,32 @@ class Controller extends AttributeTypeController
 
     public function validateForm($data)
     {
+        $ak = $this->getAttributeKey();
+        if (!is_object($ak)) {
+            return false;
+        }
+
+        $db = Database::connection();
+        $row = $db->GetRow(
+            'select akHasCustomCountries, akDefaultCountry, akisRequiredAddress1, akisRequiredAddress2, akisRequiredCity, akisRequiredStateProvince, akisRequiredCountry, akisRequiredPostalCode from atAddressSettings where akID = ?',
+            array($ak->getAttributeKeyID())
+        );
+
         $e = Core::make('helper/validation/error');
-        if($data['address1'] == '')
+        if($row['akisRequiredAddress1'] && $data['address1'] == '')
             $e->add(t('The field "%s" is required', t('Address 1')));
-        if($data['city'] == '')
+        if($row['akisRequiredAddress2'] && $data['address2'] == '')
+            $e->add(t('The field "%s" is required', t('Address 2')));
+        if($row['akisRequiredCity'] && $data['city'] == '')
             $e->add(t('The field "%s" is required', t('City')));
-        if($data['state_province'] == '')
+        if($row['akisRequiredstateProvince'] && $data['state_province'] == '')
             $e->add(t('The field "%s" is required',  t('State/Province')));
-        if($data['country'] == '')
+        if($row['akisRequiredCountry'] && $data['country'] == '')
             $e->add(t('The field "%s" is required',  t('Country')));
-        if($data['postal_code'] == '')
+        if($row['akisRequiredPostalCode'] && $data['postal_code'] == '')
             $e->add(t('The field "%s" is required', t('Postal Code')));
         return $e;
     }
-
 
     public function validateValue()
     {
@@ -239,8 +251,8 @@ class Controller extends AttributeTypeController
         $this->load();
         $db = Database::connection();
         $db->Execute(
-            'insert into atAddressSettings (akID, akHasCustomCountries, akDefaultCountry) values (?, ?, ?)',
-            array($newAK->getAttributeKeyID(), $this->akHasCustomCountries, $this->akDefaultCountry)
+            'insert into atAddressSettings (akID, akHasCustomCountries, akDefaultCountry, akisRequiredAddress1, akisRequiredAddress2, akisRequiredCity, akisRequiredStateProvince, akisRequiredCountry, akisRequiredPostalCode) values (?, ?, ?, ?, ?, ?, ?, ?, ?)',
+            array($newAK->getAttributeKeyID(), $this->akHasCustomCountries, $this->akDefaultCountry, $this->akisRequiredAddress1, $this->akisRequiredAddress2, $this->akisRequiredCity, $this->akisRequiredStateProvince, $this->akisRequiredCountry, $this->akisRequiredPostalCode)
         );
         if ($this->akHasCustomCountries) {
             foreach ($this->akCustomCountries as $country) {
@@ -330,6 +342,12 @@ class Controller extends AttributeTypeController
                     'akID' => $ak->getAttributeKeyID(),
                     'akHasCustomCountries' => $akHasCustomCountries,
                     'akDefaultCountry' => $data['akDefaultCountry'],
+                    'akisRequiredAddress1' => $data['akisRequiredAddress1'],
+                    'akisRequiredAddress2' => $data['akisRequiredAddress2'],
+                    'akisRequiredCity' => $data['akisRequiredCity'],
+                    'akisRequiredStateProvince' => $data['akisRequiredStateProvince'],
+                    'akisRequiredCountry' => $data['akisRequiredCountry'],
+                    'akisRequiredPostalCode' => $data['akisRequiredPostalCode']
                 ),
                 array('akID'),
                 true
@@ -358,7 +376,7 @@ class Controller extends AttributeTypeController
 
         $db = Database::connection();
         $row = $db->GetRow(
-            'select akHasCustomCountries, akDefaultCountry from atAddressSettings where akID = ?',
+            'select akHasCustomCountries, akDefaultCountry, akisRequiredAddress1, akisRequiredAddress2, akisRequiredCity, akisRequiredStateProvince, akisRequiredCountry, akisRequiredPostalCode from atAddressSettings where akID = ?',
             array($ak->getAttributeKeyID())
         );
         $countries = array();
@@ -374,6 +392,14 @@ class Controller extends AttributeTypeController
         $this->set('akDefaultCountry', $this->akDefaultCountry);
         $this->set('akHasCustomCountries', $this->akHasCustomCountries);
         $this->set('akCustomCountries', $countries);
+
+
+        $this->set('akisRequiredAddress1', $row['akisRequiredAddress1']);
+        $this->set('akisRequiredAddress2', $row['akisRequiredAddress2']);
+        $this->set('akisRequiredCity', $row['akisRequiredCity']);
+        $this->set('akisRequiredStateProvince', $row['akisRequiredStateProvince']);
+        $this->set('akisRequiredCountry', $row['akisRequiredCountry']);
+        $this->set('akisRequiredPostalCode', $row['akisRequiredPostalCode']);
     }
 
     public function type_form()
