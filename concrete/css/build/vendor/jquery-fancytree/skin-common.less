@@ -435,7 +435,8 @@ span.fancytree-icon { // Default icon
 span.fancytree-node {
 	/* See #117 */
 	display: inherit; // #117, resolves to 'display: list-item;' for standard trees
-	width: 100%;
+	/* width: 100%; */ /* concrete5 */
+	display: inline-block; /* concrete5 */
 	margin-top: @fancy-node-v-spacing;
 	min-height: @fancy-line-height;
 }

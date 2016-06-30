@@ -183,19 +183,17 @@
 							return my.options.onClickNode.call(my, node);
 						}
 
-						if ($(event.toElement).hasClass("fancytree-title")) {
-							var menu = new ConcretePageMenu($(event.toElement), {
-								menuOptions: my.options,
-								data: node.data,
-								sitemap: my,
-								onHide: function(menu) {
-									menu.$launcher.each(function() {
-										$(this).unbind('mousemove.concreteMenu');
-									});
-								}
-							});
-							menu.show(event);
-						}
+						var menu = new ConcretePageMenu($(node.li), {
+							menuOptions: my.options,
+							data: node.data,
+							sitemap: my,
+							onHide: function(menu) {
+								menu.$launcher.each(function() {
+									$(this).unbind('mousemove.concreteMenu');
+								});
+							}
+						});
+						menu.show(event);
 
 					} else if (node.data.href) {
 						window.location.href = node.data.href;
