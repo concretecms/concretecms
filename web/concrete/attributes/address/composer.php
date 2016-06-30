@@ -15,7 +15,7 @@
     </div>
 
     <div class="form-group">
-        <label <?= $this->field('address2'); ?>>
+        <label for="<?= $this->field('address2'); ?>">
             <?= t('Address 2'); ?>
             <?php  if ($akisRequiredAddress2): ?>
                 <span class="required">*</span>
@@ -25,7 +25,7 @@
     </div>
 
     <div class="form-group">
-        <label <?= $this->field('city'); ?>>
+        <label for="<?= $this->field('city'); ?>">
             <?= t('City'); ?>
             <?php  if ($akisRequiredCity): ?>
                 <span class="required">*</span>
@@ -35,7 +35,7 @@
     </div>
 
     <div class="form-group ccm-attribute-address-state-province">
-        <label <?= $this->field('state_province'); ?>>
+        <label for="<?= $this->field('state_province'); ?>">
             <?= t('State/Province'); ?>
             <?php  if ($akisRequiredStateProvince): ?>
                 <span class="required">*</span>
@@ -76,7 +76,7 @@
     ?>
 
     <div class="form-group ccm-attribute-address-country">
-        <label <?= $this->field('country'); ?>>
+        <label for="<?= $this->field('country'); ?>">
             <?= t('Country'); ?>
             <?php  if ($akisRequiredCountry): ?>
                 <span class="required">*</span>
