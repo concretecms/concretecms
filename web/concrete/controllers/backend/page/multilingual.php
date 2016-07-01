@@ -91,24 +91,13 @@ class Multilingual extends Page
                     $v = Version::get($newPage, 'ACTIVE');
                     if (is_object($v)) {
                         $v->deny();
-                        $pkr = new ApprovePageRequest();
-                        $pkr->setRequestedPage($newPage);
-                        $u = new \User();
-                        $pkr->setRequestedVersionID($v->getVersionID());
-                        $pkr->setRequesterUserID($u->getUserID());
-                        $response = $pkr->trigger();
-                        if (!($response instanceof Response)) {
-                            // we are deferred
-                            $pr->setMessage(t('<strong>Request Saved.</strong> You must complete the workflow before this change is active.'));
-                        } else {
-                            $ih = Core::make('multilingual/interface/flag');
-                            $icon = $ih->getSectionFlagIcon($ms);
-                            $pr->setAdditionalDataAttribute('name', $newPage->getCollectionName());
-                            $pr->setAdditionalDataAttribute('link', $newPage->getCollectionLink());
-                            $pr->setAdditionalDataAttribute('icon', $icon);
-                            $pr->setMessage(t('Page created.'));
-                        }
                     }
+                    $pr->setMessage(t('Unapproved page created. You must publish this page before it is live.'));
+                    $ih = Core::make('multilingual/interface/flag');
+                    $icon = $ih->getSectionFlagIcon($ms);
+                    $pr->setAdditionalDataAttribute('name', $newPage->getCollectionName());
+                    $pr->setAdditionalDataAttribute('link', $newPage->getCollectionLink());
+                    $pr->setAdditionalDataAttribute('icon', $icon);
                 }
             } else {
                 throw new \Exception(t('You do not have permission to add this page to this section of the tree.'));
