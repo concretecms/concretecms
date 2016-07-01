@@ -773,6 +773,7 @@ abstract class Package implements LocalizablePackageInterface
     public function getPackageMetadataPaths()
     {       
         // annotations entity path
+        $paths = array();
         if ($this->metadataDriver === self::PACKAGE_METADATADRIVER_ANNOTATION){
             // Support for the legacy method for backwards compatibility
             $paths = $this->getPackageEntityPaths();
@@ -791,11 +792,14 @@ abstract class Package implements LocalizablePackageInterface
             $paths[] = $corePath;
         }
 
-        // Check if paths exists and is a directory
-        if(!is_dir($paths[0])){
-            $paths = array();
+        $returnPaths = array();
+        foreach($paths as $path) {
+            if (is_dir($path)) {
+                $returnPaths[] = $path;
+            }
         }
-        return $paths;
+
+        return $returnPaths;
     }
     
     /**
