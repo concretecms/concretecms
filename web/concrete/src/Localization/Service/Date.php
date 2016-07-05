@@ -267,10 +267,10 @@ class Date
                     }
                     if ($request && $request->hasCustomRequestUser()) {
                         $u = $request->getCustomRequestUser();
-                    } elseif (User::isLoggedIn()) {
+                    } else {
                         $u = new User();
                     }
-                    if ($u) {
+                    if (is_object($u) && $u->isRegistered()) {
                         $tz = $u->getUserTimezone();
                     }
                 }
