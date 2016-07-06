@@ -4939,6 +4939,30 @@
       <notnull/>
     </field>
     <field name="akDefaultCountry" type="string" size="12"/>
+    <field name="akisRequiredAddress1" type="boolean">
+      <default value="0"/>
+      <notnull/>
+    </field>
+    <field name="akisRequiredAddress2" type="boolean">
+      <default value="0"/>
+      <notnull/>
+    </field>
+    <field name="akisRequiredCity" type="boolean">
+      <default value="0"/>
+      <notnull/>
+    </field>
+    <field name="akisRequiredStateProvince" type="boolean">
+      <default value="0"/>
+      <notnull/>
+    </field>
+    <field name="akisRequiredCountry" type="boolean">
+      <default value="0"/>
+      <notnull/>
+    </field>
+    <field name="akisRequiredPostalCode" type="boolean">
+      <default value="0"/>
+      <notnull/>
+    </field>
   </table>
 
   <table name="WorkflowProgressCategories">

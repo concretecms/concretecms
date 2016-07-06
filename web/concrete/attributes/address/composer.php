@@ -1,27 +1,47 @@
-<? defined('C5_EXECUTE') or die("Access Denied."); ?>
-<? $f = Loader::helper('form'); ?>
-<? $co = Loader::helper('lists/countries'); ?>
+<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
+<?php $f = Core::make('helper/form'); ?>
+<?php $co = Core::make('helper/lists/countries'); ?>
 
-<div class="ccm-attribute-address-composer-wrapper ccm-attribute-address-<?=$key->getAttributeKeyID()?>">
+<div class="ccm-attribute-address-composer-wrapper ccm-attribute-address-<?= $key->getAttributeKeyID()?>">
 
     <div class="form-group">
-        <?=$f->label($this->field('address1'), t('Address 1'))?>
-        <?=$f->text($this->field('address1'), $address1)?>
+        <label for="<?= $this->field('address1'); ?>">
+            <?= t('Address 1'); ?>
+            <?php  if ($akisRequiredAddress1): ?>
+                <span class="required">*</span>
+            <?php  endif; ?>
+        </label>
+        <?= $f->text($this->field('address1'), $address1)?>
     </div>
 
     <div class="form-group">
-        <?=$f->label($this->field('address2'), t('Address 2'))?>
-        <?=$f->text($this->field('address2'), $address2)?>
+        <label for="<?= $this->field('address2'); ?>">
+            <?= t('Address 2'); ?>
+            <?php  if ($akisRequiredAddress2): ?>
+                <span class="required">*</span>
+            <?php  endif; ?>
+        </label>
+        <?= $f->text($this->field('address2'), $address2)?>
     </div>
 
     <div class="form-group">
-        <?=$f->label($this->field('city'), t('City'))?>
-        <?=$f->text($this->field('city'), $city)?>
+        <label for="<?= $this->field('city'); ?>">
+            <?= t('City'); ?>
+            <?php  if ($akisRequiredCity): ?>
+                <span class="required">*</span>
+            <?php  endif; ?>
+        </label>
+        <?= $f->text($this->field('city'), $city)?>
     </div>
 
     <div class="form-group ccm-attribute-address-state-province">
-        <?=$f->label($this->field('state_province'), t('State/Province'))?>
-    <?
+        <label for="<?= $this->field('state_province'); ?>">
+            <?= t('State/Province'); ?>
+            <?php  if ($akisRequiredStateProvince): ?>
+                <span class="required">*</span>
+            <?php  endif; ?>
+        </label>
+    <?php
     $spreq = $f->getRequestValue($this->field('state_province'));
     if ($spreq != false) {
         $state_province = $spreq;
@@ -31,11 +51,11 @@
         $country = $creq;
     }
     ?>
-        <?=$f->select($this->field('state_province_select'), array('' => t('Choose State/Province')), $state_province, array('classes'=>'form-control','ccm-attribute-address-field-name' => $this->field('state_province')))?>
-        <?=$f->text($this->field('state_province_text'), $state_province, array('style' => 'display: none', 'ccm-attribute-address-field-name' => $this->field('state_province')))?>
+        <?= $f->select($this->field('state_province_select'), array('' => t('Choose State/Province')), $state_province, array('classes'=>'form-control','ccm-attribute-address-field-name' => $this->field('state_province')))?>
+        <?= $f->text($this->field('state_province_text'), $state_province, array('style' => 'display: none', 'ccm-attribute-address-field-name' => $this->field('state_province')))?>
     </div>
 
-    <?
+    <?php
 
     if (!$country && !$search) {
         if ($akDefaultCountry != '') {
@@ -56,13 +76,23 @@
     ?>
 
     <div class="form-group ccm-attribute-address-country">
-        <?=$f->label($this->field('country'), t('Country'))?>
-        <?=$f->select($this->field('country'), $countries, $country); ?>
+        <label for="<?= $this->field('country'); ?>">
+            <?= t('Country'); ?>
+            <?php  if ($akisRequiredCountry): ?>
+                <span class="required">*</span>
+            <?php  endif; ?>
+        </label>
+        <?= $f->select($this->field('country'), $countries, $country); ?>
     </div>
 
     <div class="form-group">
-        <?=$f->label($this->field('postal_code'), t('Postal Code'))?>
-        <?=$f->text($this->field('postal_code'), $postal_code)?>
+        <label for="<?= $this->field('postal_code'); ?>">
+            <?= t('Postal Code'); ?>
+            <?php  if ($akisRequiredPostalCode): ?>
+                <span class="required">*</span>
+            <?php  endif; ?>
+        </label>
+        <?= $f->text($this->field('postal_code'), $postal_code)?>
     </div>
 
 </div>
