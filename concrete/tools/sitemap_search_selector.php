@@ -66,7 +66,7 @@ $(function() {
 	$('a[data-tab=sitemap]').click(function() {
 		jQuery.cookie('ccm-sitemap-selector-tab', 'sitemap', {path: '<?=DIR_REL?>/'});
 		ccm_sitemapSearchSelectorHideBottom();
-		if ($('#ccm-tab-content-sitemap').html() == '') { 
+		if ($('#ccm-tab-content-sitemap').html() == '') {
 			jQuery.fn.dialog.showLoader();
 			$('#ccm-tab-content-sitemap').load('<?=REL_DIR_FILES_TOOLS_REQUIRED?>/sitemap_overlay?requestID=<?=$requestID?>', function() {
 				jQuery.fn.dialog.hideLoader();
@@ -76,7 +76,7 @@ $(function() {
 	$('a[data-tab=explore]').click(function() {
 		jQuery.cookie('ccm-sitemap-selector-tab', 'explore', {path: '<?=DIR_REL?>/'});
 		ccm_sitemapSearchSelectorHideBottom();
-		if ($('#ccm-tab-content-explore').html() == '') { 
+		if ($('#ccm-tab-content-explore').html() == '') {
 			jQuery.fn.dialog.showLoader();
 			$('#ccm-tab-content-explore').load('<?=REL_DIR_FILES_TOOLS_REQUIRED?>/sitemap_overlay?display=flat&requestID=<?=$requestID?>', function() {
 				jQuery.fn.dialog.hideLoader();
@@ -86,7 +86,7 @@ $(function() {
 	$('a[data-tab=search]').click(function() {
 		jQuery.cookie('ccm-sitemap-selector-tab', 'search', {path: '<?=DIR_REL?>/'});
 		ccm_sitemapSearchSelectorShowBottom();
-		if ($('#ccm-tab-content-search').html() == '') { 
+		if ($('#ccm-tab-content-search').html() == '') {
 			jQuery.fn.dialog.showLoader();
 			$('#ccm-tab-content-search').load('<?=URL::to('/ccm/system/dialogs/page/search')?>', function() {
 				jQuery.fn.dialog.hideLoader();
