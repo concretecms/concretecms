@@ -136,6 +136,8 @@ class Application extends Container
 
         // Clear precompiled script bytecode caches
         OpCache::clear();
+        
+        \Events::dispatch('on_cache_flush_end');
     }
 
     /**
