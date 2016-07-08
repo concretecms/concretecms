@@ -64,7 +64,7 @@ $captcha = $surveyBlockInfo['displayCaptcha'] ? Loader::helper('validation/captc
 
 <div id="formblock<?php  echo $bID; ?>" class="ccm-block-type-form">
 <form enctype="multipart/form-data" class="form-stacked miniSurveyView" id="miniSurveyView<?php  echo $bID; ?>" method="post" action="<?php  echo $formAction ?>">
-    <input type<?=Core::make('token')->output('form_block_submit_qs_'.$qsID);?>
+    <?=Core::make('token')->output('form_block_submit_qs_'.$qsID);?>
 	<?php  if ($success): ?>
 		
 		<div class="alert alert-success">
