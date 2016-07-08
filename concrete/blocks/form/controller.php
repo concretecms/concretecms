@@ -345,13 +345,19 @@ class Controller extends BlockController
 
         $txt = Core::make('helper/text');
         $db = Database::connection();
-
+        
         //question set id
         $qsID = intval($_POST['qsID']);
         if ($qsID == 0) {
             throw new Exception(t("Oops, something is wrong with the form you posted (it doesn't have a question set id)."));
         }
 
+        $token = Core::make('token');
+        if(!$token->validate('form_block_submit_qs_'.$qsID)) 
+        {
+            throw new Exception(t("Invalid Request"));
+        }
+        
         //get all questions for this question set
         $rows = $db->GetArray("SELECT * FROM {$this->btQuestionsTablename} WHERE questionSetId=? AND bID=? order by position asc, msqID", array($qsID, intval($this->bID)));
 
