@@ -21,7 +21,7 @@ if (is_object($expressForm)) {
             </div>
         </div>
 
-
+    </form>
 <?php
 
 } else {
