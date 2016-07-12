@@ -273,7 +273,7 @@ class Search extends DashboardPageController
                 } else {
                     $this->error->add(
                         t(
-                            'A username may only contain letters numbers, dots (not at the beginning/end), underscores (not at the beginning/end).'
+                            'A username may only contain letters, numbers, dots (not at the beginning/end), underscores (not at the beginning/end).'
                         )
                     );
                 }
