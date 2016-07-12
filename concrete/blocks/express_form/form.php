@@ -96,7 +96,7 @@
             <?=$form->textarea('thankyouMsg', $thankyouMsg, array('rows' => 3))?>
         </div>
         <div class="form-group">
-            <?=$form->label('recipientEmail', t('Notify me by email when people submit this form'))?>
+            <?=$form->label('recipientEmail', t('Send form submissions to email addresses'))?>
             <div class="input-group">
 				<span class="input-group-addon" style="z-index: 2000">
 				<?=$form->checkbox('notifyMeOnSubmission', 1, $notifyMeOnSubmission == 1)?>
