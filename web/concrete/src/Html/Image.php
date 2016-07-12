@@ -60,6 +60,7 @@ class Image
                     }
                 }
             }
+
             $this->tag = \Concrete\Core\Html\Object\Picture::create($sources, $fallbackSrc);
         } else {
             // Return a simple image tag.

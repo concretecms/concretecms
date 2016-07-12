@@ -16,7 +16,7 @@ abstract class ResolverTestCase extends PHPUnit_Framework_TestCase
     public function __construct($name = null, array $data = array(), $dataName = '')
     {
         parent::__construct($name, $data, $dataName);
-
+        
         $url = \Concrete\Core\Url\UrlImmutable::createFromUrl(\Core::make('url/canonical'));
         $this->canonicalUrl = $url;
     }
