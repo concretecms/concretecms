@@ -26,6 +26,11 @@ class Site
     protected $siteID;
 
     /**
+     * @ORM\Column(type="boolean")
+     */
+    protected $siteIsDefault = false;
+
+    /**
      * @ORM\Column(type="string", unique=true)
      */
     protected $siteHandle;
@@ -77,6 +82,12 @@ class Site
     {
         return $this->getConfigRepository()->get('name');
     }
+
+    public function setSiteName($name)
+    {
+        return $this->getConfigRepository()->save('name', $name);
+    }
+
 
     public function getConfigRepository()
     {
