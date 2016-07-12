@@ -72,9 +72,8 @@ class StartingPointPackage extends BasePackage
             new StartingPointInstallRoutine('install_config', 60, t('Configuring site.')),
             new StartingPointInstallRoutine('import_files', 65, t('Importing files.')),
             new StartingPointInstallRoutine('install_content', 70, t('Adding pages and content.')),
-            new StartingPointInstallRoutine('install_site', 83, t('Adding site.')),
             new StartingPointInstallRoutine('install_desktops', 85, t('Adding desktops.')),
-            new StartingPointInstallRoutine('set_site_permissions', 90, t('Setting up site permissions.')),
+            new StartingPointInstallRoutine('install_site', 90, t('Installing site.')),
             new AttachModeInstallRoutine('finish', 95, t('Finishing.')),
         );
     }
@@ -297,13 +296,6 @@ class StartingPointPackage extends BasePackage
         $ci->importContentFile($this->getPackagePath() . '/content.xml');
     }
 
-    public function install_site()
-    {
-        $em = EntityManager::create(\Database::connection(), $config);
-        $service = new Service($em);
-        $service->installDefault();
-    }
-
     public function install_desktops()
     {
         $ci = new ContentImporter();
@@ -485,8 +477,10 @@ class StartingPointPackage extends BasePackage
         $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/permissions.xml');
     }
 
-    public function set_site_permissions()
+    public function install_site()
     {
+        $site = \Site::installDefault();
+
         $g1 = Group::getByID(GUEST_GROUP_ID);
         $g2 = Group::getByID(REGISTERED_GROUP_ID);
         $g3 = Group::getByID(ADMIN_GROUP_ID);
@@ -513,7 +507,7 @@ class StartingPointPackage extends BasePackage
         if (defined('SITE_INSTALL_LOCALE') && SITE_INSTALL_LOCALE != '' && SITE_INSTALL_LOCALE != 'en_US') {
             Config::save('concrete.locale', SITE_INSTALL_LOCALE);
         }
-        Config::save('concrete.site', SITE);
+        $site->getConfigRepository()->save('name', SITE);
         Config::save('concrete.version_installed', APP_VERSION);
         Config::save('concrete.misc.login_redirect', 'DESKTOP');
 
