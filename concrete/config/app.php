@@ -124,6 +124,7 @@ return array(
         'core_imageeditor' => '\Concrete\Core\ImageEditor\EditorServiceProvider',
         'core_user' => '\Concrete\Core\User\UserServiceProvider',
         'core_service_manager' => '\Concrete\Core\Service\Manager\ServiceManagerServiceProvider',
+        'core_site' => '\Concrete\Core\Site\ServiceProvider',
 
         // Authentication
         'core_oauth' => '\Concrete\Core\Authentication\Type\OAuth\ServiceProvider',
@@ -153,6 +154,7 @@ return array(
         'ORM' => '\Concrete\Core\Support\Facade\DatabaseORM',
         'Events' => '\Concrete\Core\Support\Facade\Events',
         'Route' => '\Concrete\Core\Support\Facade\Route',
+        'Site' => '\Concrete\Core\Support\Facade\Site',
         'UserInfo' => '\Concrete\Core\Support\Facade\UserInfo',
         'Log' => '\Concrete\Core\Support\Facade\Log',
         'Image' => '\Concrete\Core\Support\Facade\Image',
