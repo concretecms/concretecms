@@ -15,7 +15,7 @@ use FileAttributeKey;
 class FileList extends DatabaseItemList implements PermissionableListItemInterface
 {
 
-    public function __construct(StickyRequest $req)
+    public function __construct(StickyRequest $req = null)
     {
         $u = new \User();
         if ($u->isSuperUser()) {
