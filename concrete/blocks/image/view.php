@@ -14,7 +14,7 @@ if (is_object($f) && $f->getFileID()) {
         $tag = $image->getTag();
     }
 
-    $tag->addClass(' bID-'.$bID);
+    $tag->addClass('ccm-image-block img-responsive bID-'.$bID);
     if ($altText) {
         $tag->alt(h($altText));
     }
