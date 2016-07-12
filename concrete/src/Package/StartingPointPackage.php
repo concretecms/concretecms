@@ -13,6 +13,7 @@ use Concrete\Core\Package\Routine\AttachModeInstallRoutine;
 use Concrete\Core\Permission\Access\Entity\ConversationMessageAuthorEntity;
 use Concrete\Core\Permission\Access\Entity\GroupEntity as GroupPermissionAccessEntity;
 use Concrete\Core\Permission\Access\Entity\PageOwnerEntity as PageOwnerPermissionAccessEntity;
+use Concrete\Core\Site\Service;
 use Concrete\Core\Tree\Node\Type\Category;
 use Concrete\Core\Tree\Node\Type\ExpressEntryCategory;
 use Concrete\Core\Tree\Type\ExpressEntryResults;
@@ -71,6 +72,7 @@ class StartingPointPackage extends BasePackage
             new StartingPointInstallRoutine('install_config', 60, t('Configuring site.')),
             new StartingPointInstallRoutine('import_files', 65, t('Importing files.')),
             new StartingPointInstallRoutine('install_content', 70, t('Adding pages and content.')),
+            new StartingPointInstallRoutine('install_site', 83, t('Adding site.')),
             new StartingPointInstallRoutine('install_desktops', 85, t('Adding desktops.')),
             new StartingPointInstallRoutine('set_site_permissions', 90, t('Setting up site permissions.')),
             new AttachModeInstallRoutine('finish', 95, t('Finishing.')),
@@ -293,6 +295,13 @@ class StartingPointPackage extends BasePackage
     {
         $ci = new ContentImporter();
         $ci->importContentFile($this->getPackagePath() . '/content.xml');
+    }
+
+    public function install_site()
+    {
+        $em = EntityManager::create(\Database::connection(), $config);
+        $service = new Service($em);
+        $service->installDefault();
     }
 
     public function install_desktops()

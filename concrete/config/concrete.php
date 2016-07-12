@@ -18,12 +18,17 @@ return array(
      */
     'installed' => true,
 
-    /*
-     * The current Site Name
-     *
-     * @var string concrete.core.site
-     */
-    'site' => 'concrete5',
+    'sites' => array(
+
+        'default' => array(
+
+            'handle' => 'default',
+
+            'name' => 'concrete5',
+
+        ),
+
+    ),
 
     /*
      * The current Locale
