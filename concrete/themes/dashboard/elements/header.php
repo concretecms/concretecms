@@ -95,7 +95,7 @@ $large_font = (bool) Config::get('concrete.accessibility.toolbar_large_font');
         </li>
         <li class="pull-right hidden-xs hidden-sm">
             <a href="#" data-panel-url="<?=URL::to('/system/panels/sitemap')?>" data-launch-panel="sitemap">
-                <i class="fa fa-files-o"></i>
+                <i class="fa fa-sitemap"></i>
                 <span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-add-page">
                     <?= tc('toolbar', 'Pages') ?>
                 </span>
