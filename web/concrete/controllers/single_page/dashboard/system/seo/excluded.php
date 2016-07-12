@@ -1,7 +1,7 @@
 <?php
 
 namespace Concrete\Controller\SinglePage\Dashboard\System\Seo;
-use \Concrete\Core\Page\Controller\DashboardPageController;
+use Concrete\Core\Page\Controller\DashboardPageController;
 use Config;
 use Loader;
 use URLify;
@@ -9,16 +9,31 @@ use URLify;
 class Excluded extends DashboardPageController {
 
 	public function save() {
-		Config::save('concrete.seo.exclude_words',Loader::helper('security')->sanitizeString($this->post('SEO_EXCLUDE_WORDS')));
-		$this->redirect('/dashboard/system/seo/excluded', 'saved');
+
+		$token = $this->app['token'];
+		$config = $this->app['config'];
+		$security = $this->app['helper/security'];
+
+		if ($token->validate('excluded_words_save')) {
+			$words = $security->sanitizeString($this->post('SEO_EXCLUDE_WORDS'));
+			$config->save('concrete.seo.exclude_words', $words);
+
+			$this->redirect('/dashboard/system/seo/excluded', 'saved');
+		} else {
+			$this->error->add('Invalid token.');
+			$this->view();
+		}
 	}
 
 	public function reset() {
-		Config::clear("concrete.seo.exclude_words");
+		$this->app['config']->save("concrete.seo.exclude_words", implode(', ', URLify::$remove_list));
 		$this->redirect('/dashboard/system/seo/excluded', 'reset_complete');
 	}
 
 	public function view($message = false) {
+		$this->set('app', $this->app);
+        $config = $this->app['config'];
+
 		if ($message) {
 			switch($message) {
 				case 'reset_complete':
@@ -30,7 +45,7 @@ class Excluded extends DashboardPageController {
 			}
 		}
 		$this->set('SEO_EXCLUDE_WORDS_ORIGINAL_ARRAY', Urlify::$remove_list);
-		$excludeSeoWords = Config::get('concrete.seo.exclude_words');
+		$excludeSeoWords = $config->get('concrete.seo.exclude_words');
 		if(is_string($excludeSeoWords)) {
 			if(strlen($excludeSeoWords)) {
 				$remove_list = explode(',', $excludeSeoWords);
