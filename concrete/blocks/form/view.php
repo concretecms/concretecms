@@ -15,7 +15,7 @@ $qsID = intval($survey->questionSetId);
 $formAction = $view->action('submit_form').'#formblock'.$bID;
 
 $questionsRS = $miniSurvey->loadQuestions($qsID, $bID);
-$questions = array();
+$questions = [];
 while ($questionRow = $questionsRS->fetchRow()) {
     $question = $questionRow;
     $question['input'] = $miniSurvey->loadInputType($questionRow, false);
@@ -45,7 +45,7 @@ $thanksMsg = $survey->thankyouMsg;
 
 //Collate all errors and put them into divs
 $errorHeader = isset($formResponse) ? $formResponse : null;
-$errors = isset($errors) && is_array($errors) ? $errors : array();
+$errors = isset($errors) && is_array($errors) ? $errors : [];
 if (isset($invalidIP) && $invalidIP) {
     $errors[] = $invalidIP;
 }
@@ -64,7 +64,7 @@ $captcha = $surveyBlockInfo['displayCaptcha'] ? Loader::helper('validation/captc
 
 <div id="formblock<?php  echo $bID; ?>" class="ccm-block-type-form">
 <form enctype="multipart/form-data" class="form-stacked miniSurveyView" id="miniSurveyView<?php  echo $bID; ?>" method="post" action="<?php  echo $formAction ?>">
-
+    <?=Core::make('token')->output('form_block_submit_qs_'.$qsID);?>
 	<?php  if ($success): ?>
 		
 		<div class="alert alert-success">
@@ -103,8 +103,7 @@ $captcha = $surveyBlockInfo['displayCaptcha'] ? Loader::helper('validation/captc
             $captchaLabel = $captcha->label();
             if (!empty($captchaLabel)) {
                 ?>
-				<label class="control-label"><?php echo $captchaLabel;
-                ?></label>
+				<label class="control-label"><?php echo $captchaLabel; ?></label>
 				<?php
 
             }
