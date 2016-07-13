@@ -12,11 +12,6 @@ use Doctrine\ORM\Mapping as ORM;
 class Site
 {
 
-    public function __construct($appConfigRepository)
-    {
-        $this->siteConfig = new Liaison($appConfigRepository, $this);
-    }
-
     protected $siteConfig;
 
     /**
@@ -34,6 +29,21 @@ class Site
      * @ORM\Column(type="string", unique=true)
      */
     protected $siteHandle;
+
+    public function __construct($appConfigRepository)
+    {
+        $this->updateSiteConfigRepository($appConfigRepository);
+    }
+
+    public function updateSiteConfigRepository($appConfigRepository)
+    {
+        $this->siteConfig = new Liaison($appConfigRepository, $this);
+    }
+
+    public function getConfigRepository()
+    {
+        return $this->siteConfig;
+    }
 
     /**
      * @return mixed
@@ -86,12 +96,6 @@ class Site
     public function setSiteName($name)
     {
         return $this->getConfigRepository()->save('name', $name);
-    }
-
-
-    public function getConfigRepository()
-    {
-        return $this->siteConfig;
     }
 
 
