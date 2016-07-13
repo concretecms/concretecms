@@ -41,8 +41,12 @@ class AssetGroup
      */
     public function addAsset(Asset $asset)
     {
-        // doesn't check anything. this is useful for layouts, etc... other handle-less assets.
-        $this->assets[] = $asset;
+        if ($asset->getAssetHandle()) {
+            $this->add($asset->getAssetPointer());
+        } else {
+            // doesn't check anything. this is useful for layouts, etc... other handle-less assets.
+            $this->assets[] = $asset;
+        }
     }
 
     /**

@@ -7,6 +7,8 @@ class Item implements ItemInterface
 {
     protected $controller;
 
+    protected $linkAttributes = array();
+
     public function __construct($handle, $pkgHandle = false)
     {
         $this->handle = $handle;
