@@ -33,7 +33,8 @@ class Service
 
     public function add($handle, $name, $default = false)
     {
-        $site = new Site($this->config);
+        $factory = new Factory($this->config);
+        $site = $factory->createEntity();
         $site->setSiteHandle($handle);
         $site->setIsDefault($default);
         $site->getConfigRepository()->save('name', $name);
@@ -44,9 +45,38 @@ class Service
         return $site;
     }
 
+    public function getByID($id)
+    {
+        $site = $this->entityManager->getRepository('Concrete\Core\Entity\Site\Site')
+            ->find($id);
+        $factory = new Factory($this->config);
+        if (is_object($site)) {
+            return $factory->createEntity($site);
+        }
+    }
+
+    public function delete(Site $site)
+    {
+        $this->entityManager->remove($site);
+        $this->entityManager->flush();
+    }
+
+    public function getList()
+    {
+        $sites = $this->entityManager->getRepository('Concrete\Core\Entity\Site\Site')
+            ->findAll();
+        $list = array();
+        $factory = new Factory($this->config);
+        foreach($sites as $site) {
+            $list[] = $factory->createEntity($site);
+        }
+        return $list;
+    }
+
     public function installDefault()
     {
-        $site = new Site($this->config);
+        $factory = new Factory($this->config);
+        $site = $factory->createEntity();
         $site->setSiteHandle($this->config->get('concrete.sites.default.handle'));
         $site->setIsDefault(true);
 
