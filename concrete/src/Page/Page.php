@@ -2799,8 +2799,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         $data = array(
             'name' => HOME_NAME,
             'handle' => $handle,
-            'uID' => $uID,
-            'cID' => HOME_CID,
+            'uID' => $uID
         );
         $cobj = parent::createCollection($data);
         $cID = $cobj->getCollectionID();

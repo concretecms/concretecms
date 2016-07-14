@@ -8,12 +8,14 @@ abstract class PageTestCase extends ConcreteDatabaseTestCase
     protected $tables = array('Pages', 'PageThemes', 'PagePaths', 'PermissionKeys', 'PermissionKeyCategories', 'PageTypes',
         'Collections', 'CollectionVersions', 'CollectionVersionFeatureAssignments',
         'CollectionVersionBlockStyles', 'CollectionVersionThemeCustomStyles',
-        'CollectionVersionRelatedEdits', 'CollectionVersionAreaStyles', 'MultilingualSections', 'MultilingualPageRelations',
+        'CollectionVersionRelatedEdits', 'CollectionVersionAreaStyles', 'MultilingualPageRelations',
         'PagePermissionAssignments', 'CollectionVersionBlocks', 'Areas', 'PageSearchIndex', 'ConfigStore',
         'GatheringDataSources', 'Logs', 'PageTypePublishTargetTypes', 'AttributeKeyCategories',
         'PageTypeComposerOutputBlocks', ); // so brutal
 
     protected $metadatas = array(
+        'Concrete\Core\Entity\Site\Site',
+        'Concrete\Core\Entity\Multilingual\Section',
         'Concrete\Core\Entity\Page\Template',
         'Concrete\Core\Entity\Attribute\Key\PageKey',
         'Concrete\Core\Entity\Attribute\Value\PageValue',

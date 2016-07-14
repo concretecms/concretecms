@@ -4,20 +4,21 @@ namespace Concrete\Controller\SinglePage\Dashboard\System\Multilingual;
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Core\Multilingual\Page\Section\Section as MultilingualSection;
 use Concrete\Core\Multilingual\Page\PageList as MultilingualPageList;
+use Concrete\Core\Page\Controller\DashboardSitePageController;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
-class PageReport extends DashboardPageController
+class PageReport extends DashboardSitePageController
 {
     public $helpers = array('form');
 
     public function view()
     {
         $this->requireAsset('core/sitemap');
-        $list = MultilingualSection::getList();
+        $list = MultilingualSection::getList($this->getSite());
         $sections = array();
         usort($list, function ($item) {
-           if ($item->getLocale() == \Config::get('concrete.multilingual.default_locale')) {
+           if ($item->getLocale() == $this->getSite()->getConfigRepository()->get('multilingual.default_locale')) {
                return -1;
            } else {
                return 1;

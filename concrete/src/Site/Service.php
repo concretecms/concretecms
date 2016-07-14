@@ -3,6 +3,7 @@ namespace Concrete\Core\Site;
 
 use Concrete\Core\Application\Application;
 use Concrete\Core\Entity\Site\Site;
+use Concrete\Core\Page\Page;
 use Concrete\Core\Site\Resolver\Resolver;
 use Concrete\Core\Site\Resolver\ResolverFactory;
 use Doctrine\ORM\EntityManagerInterface;
@@ -39,12 +40,13 @@ class Service
         }
     }
 
-    public function add($handle, $name, $default = false)
+    public function add($handle, $name, Page $page, $default = false)
     {
         $factory = new Factory($this->config);
         $site = $factory->createEntity();
         $site->setSiteHandle($handle);
         $site->setIsDefault($default);
+        $site->setSiteHomePageID($page->getCollectionID());
         $site->getConfigRepository()->save('name', $name);
 
         $this->entityManager->persist($site);
@@ -65,6 +67,10 @@ class Service
 
     public function delete(Site $site)
     {
+
+        $page = $site->getSiteHomePageObject();
+        $page->moveToTrash();
+
         $this->entityManager->remove($site);
         $this->entityManager->flush();
     }
@@ -87,6 +93,7 @@ class Service
         $site = $factory->createEntity();
         $site->setSiteHandle($this->config->get('concrete.sites.default.handle'));
         $site->setIsDefault(true);
+        $site->setSiteHomePageID(HOME_CID);
 
         $this->entityManager->persist($site);
         $this->entityManager->flush();
