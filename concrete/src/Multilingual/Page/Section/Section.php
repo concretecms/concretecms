@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Multilingual\Page\Section;
 
+use Concrete\Core\Entity\Site\Site;
 use Concrete\Core\Page\Page;
 use Database;
 use Concrete\Core\Multilingual\Page\Event;
@@ -47,14 +48,8 @@ class Section extends Page
      */
     protected $msPluralCases;
 
-    public static function assign($c, $language, $country, $numPlurals = null, $pluralRule = '', $pluralCases = array())
+    public static function assign(Site $site, $c, $language, $country, $numPlurals = null, $pluralRule = '', $pluralCases = array())
     {
-        $country = (string) $country;
-        $data = array(
-            'cID' => $c->getCollectionID(),
-            'msLanguage' => $language,
-            'msCountry' => $country,
-        );
         $pluralRule = (string) $pluralRule;
         if (empty($numPlurals) || ($pluralRule === '') || (empty($pluralCases))) {
             $locale = $language;
@@ -71,18 +66,27 @@ class Section extends Page
                 }
             }
         }
-        if ((!empty($numPlurals)) && ($pluralRule !== '') && (!empty($pluralCases))) {
-            $data['msNumPlurals'] = $numPlurals;
-            $data['msPluralRule'] = $pluralRule;
-            $data['msPluralCases'] = is_array($pluralCases) ? implode("\n", $pluralCases) : $pluralCases;
+        $em = Database::get()->getEntityManager();
+        $section = $em->find('Concrete\Core\Entity\Multilingual\Section', $c->getCollectionID());
+        if (!is_object($section)) {
+            $section = new \Concrete\Core\Entity\Multilingual\Section();
         }
-        $db = Database::get();
-        $db->Replace(
-            'MultilingualSections',
-            $data,
-            array('cID'),
-            true
-        );
+
+        $country = (string) $country;
+        $section->setSite($site);
+        $section->setPageID($c->getCollectionID());
+        $section->setLanguage($language);
+        $section->setCountry($country);
+
+        if ((!empty($numPlurals)) && ($pluralRule !== '') && (!empty($pluralCases))) {
+            $section->setPluralRule($pluralRule);
+            $section->setNumPlurals($numPlurals);
+            $pluralCases = is_array($pluralCases) ? implode("\n", $pluralCases) : $pluralCases;
+            $section->setPluralCases($pluralCases);
+        }
+
+        $em->persist($section);
+        $em->flush();
     }
 
     public function unassign()
@@ -587,27 +591,31 @@ class Section extends Page
         \Events::dispatch('on_multilingual_page_ignore', $pde);
     }
 
-    public static function getIDList()
+    public static function getIDList(Site $site = null)
     {
+        if (!$site) {
+            $site = \Site::getSite();
+        }
         static $ids;
         if (isset($ids)) {
             return $ids;
         }
 
-        $db = Database::get();
-        $ids = $db->GetCol(
-            'select MultilingualSections.cID from MultilingualSections inner join Pages on MultilingualSections.cID = Pages.cID order by cDisplayOrder asc'
-        );
-        if (!$ids) {
-            $ids = array();
+        $em = Database::get()->getEntityManager();
+        $sites = $em->getRepository('Concrete\Core\Entity\Multilingual\Section')
+            ->findBySite($site);
+
+        $ids = array();
+        foreach($sites as $site) {
+            $ids[] = $site->getPageID();
         }
 
         return $ids;
     }
 
-    public static function getList()
+    public static function getList(Site $site = null)
     {
-        $ids = self::getIDList();
+        $ids = self::getIDList($site);
         $pages = array();
         if ($ids && is_array($ids)) {
             foreach ($ids as $cID) {

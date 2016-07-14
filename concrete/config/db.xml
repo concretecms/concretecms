@@ -202,34 +202,6 @@
     </index>
   </table>
 
-  <table name="MultilingualSections">
-    <field name="cID" type="integer" size="11">
-      <unsigned/>
-      <key/>
-      <default value="0"/>
-    </field>
-    <field name="msLanguage" type="string" size="32">
-      <default value=""/>
-      <notnull/>
-    </field>
-    <field name="msCountry" type="string" size="32">
-      <default value=""/>
-      <notnull/>
-    </field>
-    <field name="msNumPlurals" type="integer" size="10">
-      <default value="2"/>
-      <notnull/>
-    </field>
-    <field name="msPluralRule" type="string" size="400">
-      <default value="(n != 1)"/>
-      <notnull/>
-    </field>
-    <field name="msPluralCases" type="string" size="1000">
-      <default value="one@1\nother@0, 2~16, 100, 1000, 10000, 100000, 1000000, …"/>
-      <notnull/>
-    </field>
-  </table>
-
   <table name="MultilingualPageRelations">
     <field name="mpRelationID" type="integer" size="10">
       <unsigned/>
