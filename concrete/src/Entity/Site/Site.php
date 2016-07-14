@@ -2,6 +2,9 @@
 namespace Concrete\Core\Entity\Site;
 
 use Concrete\Core\Application\Application;
+use Concrete\Core\Attribute\ObjectTrait;
+use Concrete\Core\Entity\Attribute\Key\SiteKey;
+use Concrete\Core\Entity\Attribute\Value\SiteValue;
 use Concrete\Core\Site\Config\Liaison;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -11,6 +14,33 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Site
 {
+
+    use ObjectTrait;
+
+    public function getObjectAttributeCategory()
+    {
+        return \Core::make('\Concrete\Core\Attribute\Category\SiteCategory');
+    }
+
+    public function getAttributeValueObject($ak, $createIfNotExists = false)
+    {
+        if (!is_object($ak)) {
+            $ak = SiteKey::getByHandle($ak);
+        }
+        $value = false;
+        if (is_object($ak)) {
+            $value = $this->getObjectAttributeCategory()->getAttributeValue($ak, $this);
+        }
+
+        if ($value) {
+            return $value;
+        } elseif ($createIfNotExists) {
+            $attributeValue = new SiteValue();
+            $attributeValue->setSite($this);
+            $attributeValue->setAttributeKey($ak);
+            return $attributeValue;
+        }
+    }
 
     protected $siteConfig;
 

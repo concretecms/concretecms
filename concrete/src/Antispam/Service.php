@@ -133,7 +133,7 @@ class Service
                     $mh = Loader::helper('mail');
                     $mh->to(Config::get('concrete.spam.notify_email'));
                     $mh->addParameter('content', $logText);
-                    $mh->addParameter('siteName', tc('SiteName', \Core::make('site')->getCurrentSite()->getSiteName()));
+                    $mh->addParameter('siteName', tc('SiteName', \Core::make('site')->getSite()->getSiteName()));
                     $mh->load('spam_detected');
                     $mh->sendMail();
                 }

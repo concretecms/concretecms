@@ -15,9 +15,9 @@ class Resolver
         $this->service = $service;
     }
 
-    public function getCurrentSite()
+    public function getSite()
     {
-        return $this->driver->getCurrentSite($this->service);
+        return $this->driver->getSite($this->service);
     }
 
 }

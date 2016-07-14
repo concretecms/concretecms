@@ -94,9 +94,9 @@ class Service
         return $site;
     }
 
-    final public function getCurrentSite()
+    final public function getSite()
     {
-        return $this->resolverFactory->createResolver()->getCurrentSite();
+        return $this->resolverFactory->createResolver()->getSite();
     }
 
 

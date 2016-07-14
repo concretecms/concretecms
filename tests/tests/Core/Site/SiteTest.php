@@ -138,7 +138,7 @@ class SiteTest extends \PHPUnit_Framework_TestCase
 
         $service = \Core::make('site');
         $service->setEntityManager($entityManager);
-        $retrieved = $service->getCurrentSite();
+        $retrieved = $service->getSite();
 
         $this->assertEquals($default, $retrieved);
     }
