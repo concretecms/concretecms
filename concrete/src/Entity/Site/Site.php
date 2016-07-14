@@ -60,6 +60,12 @@ class Site
      */
     protected $siteHandle;
 
+    /**
+     * @ORM\Column(type="integer", options={"unsigned":true})
+     */
+    protected $siteHomePageID;
+
+
     public function __construct($appConfigRepository)
     {
         $this->updateSiteConfigRepository($appConfigRepository);
@@ -73,6 +79,27 @@ class Site
     public function getConfigRepository()
     {
         return $this->siteConfig;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSiteHomePageID()
+    {
+        return $this->siteHomePageID;
+    }
+
+    /**
+     * @param mixed $siteHomePageID
+     */
+    public function setSiteHomePageID($siteHomePageID)
+    {
+        $this->siteHomePageID = $siteHomePageID;
+    }
+
+    public function getSiteHomePageObject()
+    {
+        return \Page::getByID($this->siteHomePageID);
     }
 
     /**

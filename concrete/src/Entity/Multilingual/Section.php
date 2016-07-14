@@ -147,7 +147,12 @@ class Section
      */
     public function getPluralCases()
     {
-        return $this->msPluralCases;
+        $msPluralCases = array();
+        foreach (explode("\n", $this->msPluralCases) as $line) {
+            list($key, $examples) = explode('@', $line);
+            $msPluralCases[$key] = $examples;
+        }
+        return $msPluralCases;
     }
 
     /**

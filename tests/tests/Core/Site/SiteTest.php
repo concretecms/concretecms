@@ -6,6 +6,7 @@ use Concrete\Core\Config\FileLoader;
 use Concrete\Core\Config\FileSaver;
 use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Entity\Site\Site;
+use Concrete\Core\Page\Page;
 use Concrete\Core\Site\Resolver\Resolver;
 use Concrete\Core\Site\Resolver\ResolverFactory;
 use Concrete\Core\Site\Resolver\StandardDriver;
@@ -80,7 +81,8 @@ class SiteTest extends \PHPUnit_Framework_TestCase
         $factory = new ResolverFactory(\Core::make('app'), new StandardDriver(\Core::make('Concrete\Core\Site\Factory')));
         $service = new Service($entityManager, $configRepoStub, $factory);
 
-        $new = $service->add('testing', 'Testing');
+        $c = new Page();
+        $new = $service->add('testing', 'Testing', $c);
         $this->assertInstanceOf('Concrete\Core\Entity\Site\Site', $new);
         $this->assertEquals('testing', $new->getSiteHandle());
         $this->assertEquals('Testing', $new->getSiteName());

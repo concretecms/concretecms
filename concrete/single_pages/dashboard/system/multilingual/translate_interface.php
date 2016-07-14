@@ -77,8 +77,8 @@ if ($this->controller->getTask() == 'translate_po') {
     }
     $nav = Loader::helper('navigation');
     Loader::model('section', 'multilingual');
-    $pages = \Concrete\Core\Multilingual\Page\Section\Section::getList();
-    $defaultSourceLocale = Config::get('concrete.multilingual.default_source_locale');
+    $pages = \Concrete\Core\Multilingual\Page\Section\Section::getList($site);
+    $defaultSourceLocale = $site->getConfigRepository()->get('multilingual.default_source_locale');
 
     $ch = Core::make('multilingual/interface/flag');
     $dh = Core::make('helper/date');

@@ -2,6 +2,15 @@
 
 class PageTest extends PageTestCase
 {
+
+    public function testHomePageExists()
+    {
+        $home = Page::getByID(HOME_CID);
+        $this->assertTrue($home instanceof Page);
+        $this->assertEquals(0, $home->getCollectionParentID());
+        $this->assertEquals(1, $home->getCollectionID());
+    }
+
     public function testBasicCreatePage()
     {
         $home = Page::getByID(HOME_CID);
