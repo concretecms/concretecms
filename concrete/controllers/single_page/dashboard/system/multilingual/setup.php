@@ -2,6 +2,7 @@
 namespace Concrete\Controller\SinglePage\Dashboard\System\Multilingual;
 
 use Concrete\Core\Page\Controller\DashboardPageController;
+use Concrete\Core\Page\Controller\DashboardSitePageController;
 use Core;
 use Concrete\Core\Multilingual\Page\Section\Section;
 use Config;
@@ -11,10 +12,46 @@ use Page;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
-class Setup extends DashboardPageController
+class Setup extends DashboardSitePageController
 {
     public $helpers = array('form');
     protected $pagesToCopy = array();
+
+    public function add_content_section()
+    {
+        if (Loader::helper('validation/token')->validate('add_content_section')) {
+            if ((!Loader::helper('validation/numbers')->integer($this->post('pageID'))) || $this->post('pageID') < 1) {
+                $this->error->add(t('You must specify a page for this multilingual content section.'));
+            } else {
+                $pc = Page::getByID($this->post('pageID'));
+            }
+
+            if (!$this->error->has()) {
+                $lc = Section::getByID($this->post('pageID'));
+                if (is_object($lc)) {
+                    $this->error->add(t('A multilingual section page at this location already exists.'));
+                }
+            }
+
+            if (!$this->error->has()) {
+                if ($this->post('msLanguage')) {
+                    $combination = $this->post('msLanguage') . '_' . $this->post('msCountry');
+                    $locale = Section::getByLocale($combination);
+                    if (is_object($locale)) {
+                        $this->error->add(t('This language/region combination already exists.'));
+                    }
+                }
+            }
+
+            if (!$this->error->has()) {
+                Section::assign($this->getSite(), $pc, $this->post('msLanguage'), $this->post('msCountry'));
+                $this->redirect('/dashboard/system/multilingual/setup', 'multilingual_content_updated');
+            }
+        } else {
+            $this->error->add(Loader::helper('validation/token')->getErrorMessage());
+        }
+        $this->view();
+    }
 
     public function view()
     {
@@ -22,7 +59,7 @@ class Setup extends DashboardPageController
         $cl = Core::make('lists/countries');
         $languages = $ll->getLanguageList();
 
-        $this->set('pages', Section::getList());
+        $this->set('pages', Section::getList($this->getSite()));
         $this->set('languages', $languages);
         $this->set('countries', $cl->getCountries());
         $this->set('ch', Core::make('multilingual/interface/flag'));
@@ -165,39 +202,4 @@ class Setup extends DashboardPageController
         $this->view();
     }
 
-    public function add_content_section()
-    {
-        if (Loader::helper('validation/token')->validate('add_content_section')) {
-            if ((!Loader::helper('validation/numbers')->integer($this->post('pageID'))) || $this->post('pageID') < 1) {
-                $this->error->add(t('You must specify a page for this multilingual content section.'));
-            } else {
-                $pc = Page::getByID($this->post('pageID'));
-            }
-
-            if (!$this->error->has()) {
-                $lc = Section::getByID($this->post('pageID'));
-                if (is_object($lc)) {
-                    $this->error->add(t('A multilingual section page at this location already exists.'));
-                }
-            }
-
-            if (!$this->error->has()) {
-                if ($this->post('msLanguage')) {
-                    $combination = $this->post('msLanguage') . '_' . $this->post('msCountry');
-                    $locale = Section::getByLocale($combination);
-                    if (is_object($locale)) {
-                        $this->error->add(t('This language/region combination already exists.'));
-                    }
-                }
-            }
-
-            if (!$this->error->has()) {
-                Section::assign($pc, $this->post('msLanguage'), $this->post('msCountry'));
-                $this->redirect('/dashboard/system/multilingual/setup', 'multilingual_content_updated');
-            }
-        } else {
-            $this->error->add(Loader::helper('validation/token')->getErrorMessage());
-        }
-        $this->view();
-    }
 }
