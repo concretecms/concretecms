@@ -6,6 +6,6 @@ use Concrete\Core\Site\Service;
 interface DriverInterface
 {
 
-    function getCurrentSite(Service $service);
+    function getSite(Service $service);
 
 }

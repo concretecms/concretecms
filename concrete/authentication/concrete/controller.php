@@ -221,7 +221,7 @@ class Controller extends AuthenticationTypeController
                     $mh->from($fromEmail, $fromName);
                 }
 
-                $mh->addParameter('siteName', tc('SiteName', \Core::make('site')->getCurrentSite()->getSiteName()));
+                $mh->addParameter('siteName', tc('SiteName', \Core::make('site')->getSite()->getSiteName()));
                 $mh->load('forgot_password');
                 @$mh->sendMail();
             } catch (\Exception $e) {

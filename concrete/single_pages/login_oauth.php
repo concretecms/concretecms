@@ -14,7 +14,7 @@ $form = Loader::helper('form');
 <div class='row'>
 	<div class='span10 offset1'>
 		<div class="page-header">
-			<h1><?=t('Sign in to %s', tc('SiteName', \Core::make('site')->getCurrentSite()->getSiteName()))?></h1>
+			<h1><?=t('Sign in to %s', tc('SiteName', \Core::make('site')->getSite()->getSiteName()))?></h1>
 		</div>
 		<?php
         if (count($activeAuths) > 1) {

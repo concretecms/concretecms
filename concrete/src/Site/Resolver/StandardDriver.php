@@ -7,7 +7,7 @@ use Concrete\Core\Site\Service;
 class StandardDriver implements DriverInterface
 {
 
-    public function getCurrentSite(Service $service)
+    public function getSite(Service $service)
     {
         return $service->getDefault();
     }

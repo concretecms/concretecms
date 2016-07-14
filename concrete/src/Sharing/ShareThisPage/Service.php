@@ -42,7 +42,7 @@ class Service extends SocialNetworkService
                 case 'print':
                     return "javascript:window.print();";
                 case 'email':
-                    $body = rawurlencode(t("Check out this article on %s:\n\n%s\n%s", tc('SiteName', \Core::make('site')->getCurrentSite()->getSiteName()), $c->getCollectionName(), urldecode($url)));
+                    $body = rawurlencode(t("Check out this article on %s:\n\n%s\n%s", tc('SiteName', \Core::make('site')->getSite()->getSiteName()), $c->getCollectionName(), urldecode($url)));
                     $subject = rawurlencode(t('Thought you\'d enjoy this article.'));
 
                     return "mailto:?body={$body}&subject={$subject}";

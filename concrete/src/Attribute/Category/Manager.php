@@ -28,6 +28,11 @@ class Manager extends CoreManager
         return $this->app->make('Concrete\Core\Attribute\Category\UserCategory');
     }
 
+    public function createSiteDriver()
+    {
+        return $this->app->make('Concrete\Core\Attribute\Category\SiteCategory');
+    }
+
     public function createLegacyDriver()
     {
         return $this->app->make('Concrete\Core\Attribute\Category\LegacyCategory');
