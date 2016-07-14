@@ -576,7 +576,7 @@ class User extends Object
                     $mh->addParameter('badgeName', $g->getGroupDisplayName(false));
                     $mh->addParameter('uDisplayName', $ui->getUserDisplayName());
                     $mh->addParameter('uProfileURL', (string) $ui->getUserPublicProfileURL());
-                    $mh->addParameter('siteName', tc('SiteName', $app['config']->get('concrete.site')));
+                    $mh->addParameter('siteName', tc('SiteName', $app['site']->getCurrentSite()->getSiteName()));
                     $mh->to($ui->getUserEmail());
                     $mh->load('won_badge');
                     $mh->sendMail();

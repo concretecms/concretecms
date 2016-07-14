@@ -6,6 +6,9 @@ use Concrete\Core\Config\FileLoader;
 use Concrete\Core\Config\FileSaver;
 use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Entity\Site\Site;
+use Concrete\Core\Site\Resolver\Resolver;
+use Concrete\Core\Site\Resolver\ResolverFactory;
+use Concrete\Core\Site\Resolver\StandardDriver;
 use Concrete\Core\Site\Service;
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\ORM\EntityManager;
@@ -74,7 +77,8 @@ class SiteTest extends \PHPUnit_Framework_TestCase
             ->method('get')
             ->will($this->returnValue('Testing'));
 
-        $service = new Service($entityManager, $configRepoStub);
+        $factory = new ResolverFactory(\Core::make('app'), new StandardDriver(\Core::make('Concrete\Core\Site\Factory')));
+        $service = new Service($entityManager, $configRepoStub, $factory);
 
         $new = $service->add('testing', 'Testing');
         $this->assertInstanceOf('Concrete\Core\Entity\Site\Site', $new);
@@ -97,7 +101,8 @@ class SiteTest extends \PHPUnit_Framework_TestCase
             ->method('flush');
 
         $config = \Core::make('config');
-        $service = new Service($entityManager, $config);
+        $factory = new ResolverFactory(\Core::make('app'), new StandardDriver(\Core::make('Concrete\Core\Site\Factory')));
+        $service = new Service($entityManager, $config, $factory);
         $default = $service->installDefault();
 
         $this->assertInstanceOf('Concrete\Core\Entity\Site\Site', $default);
@@ -106,5 +111,36 @@ class SiteTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($default->isDefault());
     }
 
+    public function testCurrentSite()
+    {
+        // First, mock the object to be used in the test
+        $default = $this->getMockBuilder(Site::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        // Now, mock the repository
+        $repository = $this
+            ->getMockBuilder(EntityRepository::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $repository->expects($this->once())
+            ->method('findOneBy')
+            ->will($this->returnValue($default));
+
+        // Last, mock the EntityManager to return the mock of the repository
+        $entityManager = $this
+            ->getMockBuilder(EntityManager::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $entityManager->expects($this->once())
+            ->method('getRepository')
+            ->will($this->returnValue($repository));
+
+        $service = \Core::make('site');
+        $service->setEntityManager($entityManager);
+        $retrieved = $service->getCurrentSite();
+
+        $this->assertEquals($default, $retrieved);
+    }
 
 }

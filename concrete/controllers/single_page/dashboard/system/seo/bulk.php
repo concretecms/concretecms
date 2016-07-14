@@ -26,7 +26,7 @@ class Bulk extends DashboardPageController
             if ($prevLocale !== $locale) {
                 \Localization::changeLocale($locale);
             }
-            $names[$locale] = tc('SiteName', $this->app->make('config')->get('concrete.site'));
+            $names[$locale] = tc('SiteName', $this->app->make('site')->getCurrentSite()->getSiteName());
             if ($prevLocale !== $locale) {
                 \Localization::changeLocale($prevLocale);
             }
@@ -62,7 +62,7 @@ class Bulk extends DashboardPageController
             }
             $siteName = $this->getSiteNameForLocale($locale);
         } else {
-            $siteName = $this->app->make('config')->get('concrete.site');
+            $siteName = $this->app->make('site')->getCurrentSite()->getSiteName();
         }
 
         return $siteName;

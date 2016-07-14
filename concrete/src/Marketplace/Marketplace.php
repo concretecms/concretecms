@@ -226,7 +226,7 @@ class Marketplace
                 }
                 $url = $frameURL . Config::get('concrete.urls.paths.marketplace.connect') . '/-/' . $connectMethod;
                 $url = $url . '?ts=' . time() . '&csiBaseURL=' . $csiBaseURL . '&csiURL=' . $csiURL . '&csToken=' . $csToken . '&csReferrer=' . $csReferrer . '&csName=' . htmlspecialchars(
-                        Config::get('concrete.site'),
+                        \Core::make('site')->getCurrentSite()->getSiteName(),
                         ENT_QUOTES,
                         APP_CHARSET);
             } else {

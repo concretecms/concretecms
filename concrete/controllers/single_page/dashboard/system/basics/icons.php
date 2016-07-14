@@ -2,11 +2,12 @@
 namespace Concrete\Controller\SinglePage\Dashboard\System\Basics;
 
 use Concrete\Core\Page\Controller\DashboardPageController;
+use Concrete\Core\Page\Controller\DashboardSitePageController;
 use Config;
 use View;
 use Core;
 
-class Icons extends DashboardPageController
+class Icons extends DashboardSitePageController
 {
     public $helpers = array('form', 'concrete/asset_library', 'json');
 
