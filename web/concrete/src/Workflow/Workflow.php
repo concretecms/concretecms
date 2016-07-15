@@ -2,6 +2,7 @@
 namespace Concrete\Core\Workflow;
 
 use \Concrete\Core\Foundation\Object;
+use Concrete\Core\Package\Package;
 use \Concrete\Core\Workflow\Progress\Progress as WorkflowProgress;
 use Loader;
 use Core;
@@ -154,11 +155,14 @@ abstract class Workflow extends Object implements \Concrete\Core\Permission\Obje
         $r = $db->GetRow('select WorkflowTypes.wftHandle, WorkflowTypes.pkgID from Workflows inner join WorkflowTypes on Workflows.wftID = WorkflowTypes.wftID where Workflows.wfID = ?',
             array($wfID));
         if ($r['wftHandle']) {
-            $class = '\\Concrete\\Core\\Workflow\\' . Loader::helper('text')->camelcase($r['wftHandle']) . 'Workflow';
-            if (!class_exists($class)) {
-                $class = '\\Concrete\\Core\\Workflow\\Workflow';
+            $class = '\\Core\\Workflow\\' . Loader::helper('text')->camelcase($r['wftHandle']) . 'Workflow';
+            if ($r['pkgID']) {
+                $pkg = Package::getByID($r['pkgID']);
+                $prefix = $pkg->getPackageHandle();
             }
+            $class = core_class($class, $prefix);
             $obj = Core::make($class);
+
             $obj->load($wfID);
             if ($obj->getWorkflowID() > 0) {
                 $obj->loadDetails();
@@ -210,7 +214,7 @@ abstract class Workflow extends Object implements \Concrete\Core\Permission\Obje
         if (is_object($wr)) {
             return true;
         }
-        
+
         return false;
     }
 }
