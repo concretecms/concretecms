@@ -202,27 +202,6 @@
     </index>
   </table>
 
-  <table name="MultilingualPageRelations">
-    <field name="mpRelationID" type="integer" size="10">
-      <unsigned/>
-      <key/>
-      <default value="0"/>
-    </field>
-    <field name="cID" type="integer" size="10">
-      <unsigned/>
-      <key/>
-      <default value="0"/>
-    </field>
-    <field name="mpLanguage" type="string" size="32">
-      <default value=""/>
-      <notnull/>
-    </field>
-    <field name="mpLocale" type="string" size="32">
-      <key/>
-      <notnull/>
-    </field>
-  </table>
-
   <table name="MultilingualTranslations">
     <field name="mtID" type="integer" size="11">
       <unsigned/>

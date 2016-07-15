@@ -48,8 +48,8 @@ class Flag
     public function getSectionFlagIcon($page, $filePathOnly = false)
     {
         $db = Database::get();
-        $icon = $db->GetOne('select msCountry from MultilingualSections where cID = ?', array($page->getCollectionID()));
-
+        $section = Section::getBySectionOfSite($page->getCollectionID());
+        $icon = $section->getCountry();
         return self::getFlagIcon($icon, $filePathOnly);
     }
 
