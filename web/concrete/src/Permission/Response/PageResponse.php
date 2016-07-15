@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Permission\Response;
 
+use Concrete\Core\Page\Type\Type;
 use Loader;
 use Page;
 use User;
@@ -138,6 +139,14 @@ class PageResponse extends Response
         }
         if ($u->isSuperUser()) {
             return true;
+        }
+
+        $types = Type::getList();
+        foreach($types as $pt) {
+            $ptp = new \Permissions($pt);
+            if ($ptp->canAddPageType()) {
+                return true;
+            }
         }
 
         $dh = Loader::helper('concrete/dashboard');
