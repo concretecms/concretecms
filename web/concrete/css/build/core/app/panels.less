@@ -1054,7 +1054,7 @@ div.ccm-panel-confirmation-wrapper {
     .opacity(0.4);
     .translate(0, 0);
     .transition(all 0.3s ease-out);
-    
+
     p {
       font-size: @font-size-large;
       line-height: 32px;
@@ -1134,5 +1134,39 @@ div.ccm-panel-header-search {
   }
 }
 
+
+div.ccm-panel-header-accordion {
+
+  nav {
+
+    ul.ccm-panel-header-accordion-dropdown:after {
+      border-color: #999 transparent;
+    }
+
+    li > a:hover {
+      background-color: #111215;
+    }
+
+    li > a {
+      color: #2aa9dd;
+    }
+
+    span {
+      color: #999;
+      background-color: #202226;
+      &:hover {
+        background-color: #111215;
+      }
+    }
+  }
+}
+
+div.ccm-panel-header-accordion-dropdown-visible {
+  nav {
+    ul {
+      height: 220px !important;
+    }
+  }
+}
 
 
