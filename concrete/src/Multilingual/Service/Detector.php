@@ -114,8 +114,9 @@ class Detector
             if (!$app->isInstalled()) {
                 return false;
             }
-            $db = $app->make('database')->connection();
-            self::$enabled = (bool) $db->fetchColumn('select cID from MultilingualSections limit 1');
+            $db = $app->make('database')->getEntityManager();
+            $sections = $db->getRepository('Concrete\Core\Entity\Multilingual\Section')->findAll();
+            self::$enabled = count($sections) > 0;
         }
 
         return self::$enabled;

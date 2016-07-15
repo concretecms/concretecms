@@ -370,7 +370,10 @@ class Section extends Page
     public static function unregisterPage($page)
     {
         $db = Database::get();
-        $db->Execute('delete from MultilingualSections where cID = ?', array($page->getCollectionID()));
+        $em = $db->getEntityManager();
+        $em->remove(static::getSectionEntity($page->getCollectionID()));
+        $em->flush();
+
         $db->Execute('delete from MultilingualPageRelations where cID = ?', array($page->getCollectionID()));
     }
 
@@ -626,9 +629,7 @@ class Section extends Page
         $ids = static::getIDList();
         $locale = explode('_', $this->getLocale());
         if (in_array($page->getCollectionID(), $ids)) {
-            $cID = $db->GetOne('select cID from MultilingualSections where msLanguage = ? and msCountry = ?', array($locale[0], $locale[1]));
-
-            return $cID;
+            return $this->section->getPageID();
         }
 
         $mpRelationID = self::getMultilingualPageRelationID($page->getCollectionID());
