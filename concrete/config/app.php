@@ -213,6 +213,7 @@ return array(
         "/ccm/system/dialogs/block/aliasing/submit" => array('\Concrete\Controller\Dialog\Block\Aliasing::submit'),
         "/ccm/system/dialogs/block/edit/" => array('\Concrete\Controller\Dialog\Block\Edit::view'),
         "/ccm/system/dialogs/block/edit/submit/" => array('\Concrete\Controller\Dialog\Block\Edit::submit'),
+        "/ccm/system/dialogs/block/edit/submit_master/" => array('\Concrete\Controller\Dialog\Block\Edit::submit_master'),
         "/ccm/system/dialogs/block/cache/" => array('\Concrete\Controller\Dialog\Block\Cache::view'),
         "/ccm/system/dialogs/block/cache/submit" => array('\Concrete\Controller\Dialog\Block\Cache::submit'),
         "/ccm/system/dialogs/block/design/" => array('\Concrete\Controller\Dialog\Block\Design::view'),

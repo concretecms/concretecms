@@ -1398,33 +1398,6 @@
     </index>
   </table>
 
-  <table name="BlockRelations">
-    <field name="brID" type="integer" size="10">
-      <unsigned/>
-      <autoincrement/>
-      <key/>
-    </field>
-    <field name="bID" type="integer" size="10">
-      <unsigned/>
-      <default value="0"/>
-      <notnull/>
-    </field>
-    <field name="originalBID" type="integer" size="10">
-      <unsigned/>
-      <default value="0"/>
-      <notnull/>
-    </field>
-    <field name="relationType" type="string" size="50">
-      <notnull/>
-    </field>
-    <index name="bID">
-      <col>bID</col>
-    </index>
-    <index name="originalBID">
-      <col>originalBID</col>
-    </index>
-  </table>
-
   <table name="BlockTypeSetBlockTypes">
     <field name="btID" type="integer" size="10">
       <unsigned/>
@@ -1797,6 +1770,10 @@
     <field name="arHandle" type="string" size="255">
       <key/>
     </field>
+    <field name="cbRelationID" type="integer" size="10">
+      <unsigned/>
+      <default value="0"/>
+    </field>
     <field name="cbDisplayOrder" type="integer" size="10">
       <unsigned/>
       <default value="0"/>
@@ -1830,6 +1807,9 @@
     <index name="bID">
       <col>bID</col>
       <col>cID</col>
+    </index>
+    <index name="cbRelationID">
+      <col>cbRelationID</col>
     </index>
   </table>
 
