@@ -42,6 +42,7 @@ class Setup extends DashboardPageController
         $this->set('defaultSourceCountry', $defaultSourceCountry);
         $this->set('redirectHomeToDefaultLocale', Config::get('concrete.multilingual.redirect_home_to_default_locale'));
         $this->set('useBrowserDetectedLocale', Config::get('concrete.multilingual.use_browser_detected_locale'));
+        $this->set('redirectHomeStatusCode', Config::get('concrete.multilingual.redirect_home_status_code'));
     }
 
     protected function populateCopyArray($startingPage)
@@ -129,6 +130,7 @@ class Setup extends DashboardPageController
                 Config::save('concrete.multilingual.default_locale', $this->post('defaultLocale'));
                 Config::save('concrete.multilingual.redirect_home_to_default_locale', $this->post('redirectHomeToDefaultLocale'));
                 Config::save('concrete.multilingual.use_browser_detected_locale', $this->post('useBrowserDetectedLocale'));
+                Config::save('concrete.multilingual.redirect_home_status_code', $this->post('redirectHomeStatusCode'));
                 $defaultSourceLocale = '';
                 $s = $this->post('defaultSourceLanguage');
                 if (is_string($s) && array_key_exists($s, $languages)) {
