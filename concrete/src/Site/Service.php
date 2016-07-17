@@ -103,7 +103,7 @@ class Service
 
     final public function getSite()
     {
-        return $this->resolverFactory->createResolver()->getSite();
+        return $this->resolverFactory->createResolver($this)->getSite();
     }
 
 

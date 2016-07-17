@@ -2,17 +2,17 @@
 namespace Concrete\Core\User;
 
 use Concrete\Core\Application\Application;
-use Concrete\Core\Database\Connection\Connection;
+use Doctrine\ORM\EntityManagerInterface;
 
 class UserInfoRepository
 {
-    protected $connection;
+    protected $entityManager;
     protected $application;
 
-    public function __construct(Application $application, Connection $connection)
+    public function __construct(Application $application, EntityManagerInterface $entityManager)
     {
         $this->application = $application;
-        $this->connection = $connection;
+        $this->entityManager = $entityManager;
     }
 
     /**
@@ -24,7 +24,7 @@ class UserInfoRepository
      */
     public function getByID($uID)
     {
-        return $this->get('where uID = ?', $uID);
+        return $this->get('uID', $uID);
     }
 
     /**
@@ -36,7 +36,7 @@ class UserInfoRepository
      */
     public function getByName($uName)
     {
-        return $this->get('where uName = ?', $uName);
+        return $this->get('uName', $uName);
     }
 
     /**
@@ -56,7 +56,7 @@ class UserInfoRepository
      */
     public function getByEmail($uEmail)
     {
-        return $this->get('where uEmail = ?', $uEmail);
+        return $this->get('uEmail', $uEmail);
     }
 
     /**
@@ -67,29 +67,25 @@ class UserInfoRepository
      */
     public function getByValidationHash($uHash, $unredeemedHashesOnly = true)
     {
-        $db = $this->connection;
+        $db = $this->entityManager->getConnection();
         if ($unredeemedHashesOnly) {
             $uID = $db->fetchColumn("select uID from UserValidationHashes where uHash = ? and uDateRedeemed = 0", array($uHash));
         } else {
             $uID = $db->fetchColumn("select uID from UserValidationHashes where uHash = ?", array($uHash));
         }
         if ($uID) {
-            $ui = self::getByID($uID);
-
+            $ui = $this->getByID($uID);
             return $ui;
         }
     }
 
     private function get($where, $var)
     {
-        $q = "select * from Users {$where}";
-        $r = $this->connection->query($q, array($var));
-        if ($r && $r->numRows() > 0) {
-            $row = $r->fetchRow();
-            $r->free();
+        $repository = $this->entityManager->getRepository('Concrete\Core\Entity\User\User');
+        $entity = $repository->findOneBy(array($where => $var));
+        if (is_object($entity)) {
             $ui = $this->application->make('Concrete\Core\User\UserInfo');
-            $ui = array_to_object($ui, $row);
-
+            $ui->setEntityObject($entity);
             return $ui;
         }
     }

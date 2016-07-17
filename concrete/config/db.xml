@@ -1452,77 +1452,6 @@
     </index>
   </table>
 
-  <table name="BlockTypes">
-    <field name="btID" type="integer" size="10">
-      <unsigned/>
-      <autoincrement/>
-      <key/>
-    </field>
-    <field name="btHandle" type="string" size="128">
-      <notnull/>
-    </field>
-    <field name="btName" type="string" size="128">
-      <notnull/>
-    </field>
-    <field name="btDescription" type="text" size="65535"/>
-    <field name="btCopyWhenPropagate" type="boolean">
-      <default value="0"/>
-      <notnull/>
-    </field>
-    <field name="btIncludeAll" type="boolean">
-      <default value="0"/>
-      <notnull/>
-    </field>
-    <field name="btIsInternal" type="boolean">
-      <default value="0"/>
-      <notnull/>
-    </field>
-    <field name="btSupportsInlineAdd" type="boolean">
-      <default value="0"/>
-      <notnull/>
-    </field>
-    <field name="btSupportsInlineEdit" type="boolean">
-      <default value="0"/>
-      <notnull/>
-    </field>
-    <field name="btIgnorePageThemeGridFrameworkContainer" type="boolean">
-      <default value="0"/>
-      <notnull/>
-    </field>
-    <field name="btDisplayOrder" type="integer" size="10">
-      <unsigned/>
-      <default value="0"/>
-      <notnull/>
-    </field>
-    <field name="btInterfaceWidth" type="integer" size="10">
-      <unsigned/>
-      <default value="400"/>
-      <notnull/>
-    </field>
-    <field name="btInterfaceHeight" type="integer" size="10">
-      <unsigned/>
-      <default value="400"/>
-      <notnull/>
-    </field>
-    <field name="pkgID" type="integer" size="10">
-      <unsigned/>
-      <default value="0"/>
-      <notnull/>
-    </field>
-    <index name="btHandle">
-      <unique/>
-      <col>btHandle</col>
-    </index>
-    <index name="btDisplayOrder">
-      <col>btDisplayOrder</col>
-      <col>btName</col>
-      <col>btID</col>
-    </index>
-    <index name="pkgID">
-      <col>pkgID</col>
-    </index>
-  </table>
-
   <table name="Blocks">
     <field name="bID" type="integer" size="10">
       <unsigned/>
@@ -3298,35 +3227,6 @@
     </index>
   </table>
 
-  <table name="PagePaths">
-    <field name="ppID" type="integer" size="10">
-      <unsigned/>
-      <autoincrement/>
-      <key/>
-    </field>
-    <field name="cID" type="integer" size="10">
-      <unsigned/>
-      <default value="0"/>
-    </field>
-    <field name="cPath" type="text" size="65535">
-      <notnull/>
-    </field>
-    <field name="ppIsCanonical" type="string" size="1">
-      <default value="1"/>
-      <notnull/>
-    </field>
-    <field name="ppGeneratedFromURLSlugs" type="boolean">
-      <default value="0"/>
-      <notnull/>
-    </field>
-    <index name="cID">
-      <col>cID</col>
-    </index>
-    <index name="ppIsCanonical">
-      <col>ppIsCanonical</col>
-    </index>
-  </table>
-
   <table name="PageSearchIndex">
     <field name="cID" type="integer" size="10">
       <unsigned/>
@@ -3929,85 +3829,6 @@
     <index name="mHash">
       <unique/>
       <col>mHash</col>
-    </index>
-  </table>
-
-  <table name="Users">
-    <field name="uID" type="integer" size="10">
-      <unsigned/>
-      <autoincrement/>
-      <key/>
-    </field>
-    <field name="uName" type="string" size="64">
-      <notnull/>
-    </field>
-    <field name="uEmail" type="string" size="254">
-      <notnull/>
-    </field>
-    <field name="uPassword" type="string" size="255">
-      <notnull/>
-    </field>
-    <field name="uIsActive" type="string" size="1">
-      <default value="0"/>
-      <notnull/>
-    </field>
-    <field name="uIsValidated" type="boolean">
-      <default value="-1"/>
-      <notnull/>
-    </field>
-    <field name="uIsFullRecord" type="boolean">
-      <default value="1"/>
-      <notnull/>
-    </field>
-    <field name="uDateAdded" type="datetime">
-      <default value="1000-01-01 00:00:00"/>
-      <notnull/>
-    </field>
-    <field name="uLastPasswordChange" type="datetime">
-      <default value="1000-01-01 00:00:00"/>
-      <notnull/>
-    </field>
-    <field name="uHasAvatar" type="boolean">
-      <default value="0"/>
-      <notnull/>
-    </field>
-    <field name="uLastOnline" type="integer" size="10">
-      <unsigned/>
-      <default value="0"/>
-      <notnull/>
-    </field>
-    <field name="uLastLogin" type="integer" size="10">
-      <unsigned/>
-      <default value="0"/>
-      <notnull/>
-    </field>
-    <field name="uLastIP" type="blob" size="32"/>
-    <field name="uPreviousLogin" type="integer" size="10">
-      <unsigned/>
-      <default value="0"/>
-    </field>
-    <field name="uNumLogins" type="integer" size="10">
-      <unsigned/>
-      <default value="0"/>
-      <notnull/>
-    </field>
-    <field name="uLastAuthTypeID" type="integer" size="10">
-      <unsigned/>
-      <default value="0"/>
-      <notnull/>
-    </field>
-    <field name="uTimezone" type="string" size="255"/>
-    <field name="uDefaultLanguage" type="string" size="32"/>
-    <field name="ulsPasswordReset" type="boolean">
-      <default value="0"/>
-      <notnull/>
-    </field>
-    <index name="uName">
-      <unique/>
-      <col>uName</col>
-    </index>
-    <index name="uEmail">
-      <col>uEmail</col>
     </index>
   </table>
 

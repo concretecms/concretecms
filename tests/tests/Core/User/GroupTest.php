@@ -15,12 +15,6 @@ use Concrete\Core\Tree\Node\NodeType as TreeNodeType;
 
 class GroupTest extends \UserTestCase
 {
-    protected $metadatas = array(
-        'Concrete\Core\Entity\Attribute\Category',
-        'Concrete\Core\Entity\Attribute\Key\Key',
-        'Concrete\Core\Entity\Attribute\Key\UserKey',
-    );
-
     protected function setUp()
     {
         parent::setUp();
