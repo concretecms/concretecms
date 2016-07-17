@@ -145,6 +145,7 @@ class PageControllerTest extends PageTestCase
         @rmdir($root . '/awesome_package/' . DIRNAME_PAGES . '/testerson/foo');
         @rmdir($root . '/awesome_package/' . DIRNAME_PAGES . '/testerson');
         @rmdir($root . '/awesome_package/' . DIRNAME_PAGES);
+        @rmdir($root . '/awesome_package/' . DIRNAME_CONTROLLERS);
         @rmdir($root . '/awesome_package');
 
         $this->assertEquals('Concrete\Package\AwesomePackage\Controller\SinglePage\Testerson\Foo', get_class($controller));

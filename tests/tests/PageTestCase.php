@@ -5,10 +5,10 @@ use Concrete\Core\Attribute\Key\Category;
 abstract class PageTestCase extends ConcreteDatabaseTestCase
 {
     protected $fixtures = array();
-    protected $tables = array('Pages', 'PageThemes', 'PagePaths', 'PermissionKeys', 'PermissionKeyCategories', 'PageTypes',
+    protected $tables = array('Pages', 'PageThemes', 'PermissionKeys', 'PermissionKeyCategories', 'PageTypes',
         'Collections', 'CollectionVersions', 'CollectionVersionFeatureAssignments',
         'CollectionVersionBlockStyles', 'CollectionVersionThemeCustomStyles',
-        'CollectionVersionRelatedEdits', 'CollectionVersionAreaStyles', 'MultilingualPageRelations',
+        'CollectionVersionRelatedEdits', 'CollectionVersionAreaStyles',
         'PagePermissionAssignments', 'CollectionVersionBlocks', 'Areas', 'PageSearchIndex', 'ConfigStore',
         'GatheringDataSources', 'Logs', 'PageTypePublishTargetTypes', 'AttributeKeyCategories',
         'PageTypeComposerOutputBlocks', ); // so brutal
@@ -16,6 +16,8 @@ abstract class PageTestCase extends ConcreteDatabaseTestCase
     protected $metadatas = array(
         'Concrete\Core\Entity\Site\Site',
         'Concrete\Core\Entity\Multilingual\Section',
+        'Concrete\Core\Entity\Page\Relation\MultilingualRelation',
+        'Concrete\Core\Entity\Page\PagePath',
         'Concrete\Core\Entity\Page\Template',
         'Concrete\Core\Entity\Attribute\Key\PageKey',
         'Concrete\Core\Entity\Attribute\Value\PageValue',

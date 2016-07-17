@@ -3,20 +3,22 @@ namespace Concrete\Core\User;
 
 use Concrete\Core\Application\Application;
 use Concrete\Core\Database\Connection\Connection;
+use Concrete\Core\Entity\User\User as UserEntity;
 use Concrete\Core\User\Event\AddUser;
 use Concrete\Core\User\Event\UserInfoWithPassword;
+use Doctrine\ORM\EntityManagerInterface;
 use Hautelook\Phpass\PasswordHash;
 
 class RegistrationService implements RegistrationServiceInterface
 {
-    protected $connection;
+    protected $entityManager;
     protected $application;
     protected $userInfoRepository;
 
-    public function __construct(Application $application, Connection $connection, UserInfoRepository $userInfoRepository)
+    public function __construct(Application $application, EntityManagerInterface $entityManager, UserInfoRepository $userInfoRepository)
     {
         $this->application = $application;
-        $this->connection = $connection;
+        $this->entityManager = $entityManager;
         $this->userInfoRepository = $userInfoRepository;
     }
 
@@ -29,16 +31,18 @@ class RegistrationService implements RegistrationServiceInterface
     public function createSuperUser($uPasswordEncrypted, $uEmail)
     {
         $dh = $this->application->make('date');
-        $uDateAdded = $dh->getOverridableNow();
 
-        $v = array(USER_SUPER_ID, USER_SUPER, $uEmail, $uPasswordEncrypted, 1, $uDateAdded, $uDateAdded);
-        $r = $this->connection->prepare("insert into Users (uID, uName, uEmail, uPassword, uIsActive, uDateAdded, uLastPasswordChange) values (?, ?, ?, ?, ?, ?, ?)");
-        $res = $r->execute($v);
-        if ($res) {
-            $newUID = $this->connection->lastInsertId();
+        $entity = new UserEntity();
+        $entity->setUserID(USER_SUPER_ID);
+        $entity->setUserName(USER_SUPER);
+        $entity->setUserEmail($uEmail);
+        $entity->setUserPassword($uPasswordEncrypted);
+        $entity->setUserIsActive(true);
 
-            return $this->userInfoRepository->getByID($newUID);
-        }
+        $this->entityManager->persist($entity);
+        $this->entityManager->flush();
+
+        return $this->userInfoRepository->getByID($entity->getUserID());
     }
 
     /**
@@ -54,9 +58,6 @@ class RegistrationService implements RegistrationServiceInterface
             return false;
         }
 
-        $db = $this->connection;
-        $dh = $this->application->make('date');
-        $uDateAdded = $dh->getOverridableNow();
         $config = $this->application->make('config');
         $hasher = new PasswordHash($config->get('concrete.user.password.hash_cost_log2'), $config->get('concrete.user.password.hash_portable'));
 
@@ -81,30 +82,38 @@ class RegistrationService implements RegistrationServiceInterface
         if (isset($data['uDefaultLanguage']) && $data['uDefaultLanguage'] != '') {
             $uDefaultLanguage = $data['uDefaultLanguage'];
         }
-        $v = array($data['uName'], $data['uEmail'], $hash, $uIsValidated, $uDateAdded, $uDateAdded, $uIsFullRecord, $uDefaultLanguage, 1);
-        $r = $db->prepare("insert into Users (uName, uEmail, uPassword, uIsValidated, uDateAdded, uLastPasswordChange, uIsFullRecord, uDefaultLanguage, uIsActive) values (?, ?, ?, ?, ?, ?, ?, ?, ?)");
-        $res = $r->execute($v);
-        if ($res) {
-            $newUID = $db->Insert_ID();
-            $ui = $this->userInfoRepository->getByID($newUID);
 
-            if (is_object($ui)) {
-                $uo = $ui->getUserObject();
-                $groupControllers = \Group::getAutomatedOnRegisterGroupControllers($uo);
-                foreach ($groupControllers as $ga) {
-                    if ($ga->check($uo)) {
-                        $uo->enterGroup($ga->getGroupObject());
-                    }
+        $entity = new UserEntity();
+        $entity->setUserName($data['uName']);
+        $entity->setUserEmail($data['uEmail']);
+        $entity->setUserPassword($hash);
+        $entity->setUserIsValidated($uIsValidated);
+        $entity->setUserIsFullRecord($uIsFullRecord);
+        $entity->setUserDefaultLanguage($uDefaultLanguage);
+        $entity->setUserIsActive(true);
+
+        $this->entityManager->persist($entity);
+        $this->entityManager->flush();
+
+        $newUID = $entity->getUserID();
+        $ui = $this->userInfoRepository->getByID($newUID);
+
+        if (is_object($ui)) {
+            $uo = $ui->getUserObject();
+            $groupControllers = \Group::getAutomatedOnRegisterGroupControllers($uo);
+            foreach ($groupControllers as $ga) {
+                if ($ga->check($uo)) {
+                    $uo->enterGroup($ga->getGroupObject());
                 }
-
-                // run any internal event we have for user add
-                $ue = new UserInfoWithPassword($ui);
-                $ue->setUserPassword($password_to_insert);
-                \Events::dispatch('on_user_add', $ue);
             }
 
-            return $ui;
+            // run any internal event we have for user add
+            $ue = new UserInfoWithPassword($ui);
+            $ue->setUserPassword($password_to_insert);
+            \Events::dispatch('on_user_add', $ue);
         }
+
+        return $ui;
     }
 
     /**

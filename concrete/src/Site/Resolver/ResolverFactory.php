@@ -15,9 +15,9 @@ class ResolverFactory
         $this->driver = $driver;
     }
 
-    public function createResolver()
+    public function createResolver(Service $service)
     {
-        return new Resolver($this->application->make('site'), $this->driver);
+        return new Resolver($service, $this->driver);
     }
 
 }

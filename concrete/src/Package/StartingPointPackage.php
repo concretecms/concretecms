@@ -334,9 +334,9 @@ class StartingPointPackage extends BasePackage
             $dbm->generateProxyClasses();
 
             Package::installDB($installDirectory . '/db.xml');
-            $this->indexAdditionalDatabaseFields();
 
             $dbm->installDatabase();
+            $this->indexAdditionalDatabaseFields();
 
             $configuration = new Configuration();
             $version = $configuration->getVersion(Config::get('concrete.version_db'));

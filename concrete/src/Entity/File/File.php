@@ -69,9 +69,10 @@ class File implements \Concrete\Core\Permission\ObjectInterface
     public $ocID = 0;
 
     /**
-     * @ORM\Column(type="integer", options={"unsigned": true})
-     */
-    public $uID = 0;
+     * @ORM\ManyToOne(targetEntity="\Concrete\Core\Entity\User\User")
+     * @ORM\JoinColumn(name="uID", referencedColumnName="uID")
+     **/
+    public $author;
 
     /**
      * @ORM\Column(type="integer", options={"unsigned": true})
@@ -251,12 +252,12 @@ class File implements \Concrete\Core\Permission\ObjectInterface
 
     public function getUserID()
     {
-        return $this->uID;
+        return $this->author->getUserID();
     }
 
-    public function setUserID($uID)
+    public function setUser(\Concrete\Core\Entity\User\User $user)
     {
-        $this->uID = $uID;
+        $this->author = $user;
         $this->save();
     }
 

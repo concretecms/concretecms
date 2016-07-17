@@ -3,13 +3,15 @@
 class UpdateTest extends ConcreteDatabaseTestCase
 {
     protected $fixtures = array();
-    protected $tables = array('Blocks', 'BlockTypes', 'CollectionVersionBlocks', 'Logs', 'SystemDatabaseMigrations', 'Widgets');
+    protected $tables = array('Blocks', 'CollectionVersionBlocks', 'Logs', 'SystemDatabaseMigrations', 'Widgets');
 
     protected $metadatas = array(
+        'Concrete\Core\Entity\Block\BlockType\BlockType',
         'Concrete\Core\Entity\File\File',
     );
     public function testCurrentMigration()
     {
+        \Concrete\Core\Block\BlockType\BlockType::installBlockType('core_scrapbook_display');
         $directory = dirname(__FILE__) . '/fixtures/';
         $configuration = new \Concrete\Core\Updater\Migrations\Configuration(false);
         $configuration->setMigrationsDirectory($directory);

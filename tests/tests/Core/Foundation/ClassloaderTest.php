@@ -203,9 +203,9 @@ class ClassloaderTest extends \PHPUnit_Framework_TestCase
         @unlink($root . '/packages/amazing_power/src/Concrete/Captcha/AkismetController.php');
         @rmdir($root . '/packages/amazing_power/src/ElectricState/Routing');
         @rmdir($root . '/packages/amazing_power/src/ElectricState');
-        @unlink($root . '/packages/amazing_power/src/Concrete/Captcha');
-        @unlink($root . '/packages/amazing_power/src/Concrete');
-        @unlink($root . '/packages/amazing_power/src');
-        @unlink($root . '/packages/amazing_power');
+        @rmdir($root . '/packages/amazing_power/src/Concrete/Captcha');
+        @rmdir($root . '/packages/amazing_power/src/Concrete');
+        @rmdir($root . '/packages/amazing_power/src');
+        @rmdir($root . '/packages/amazing_power');
     }
 }

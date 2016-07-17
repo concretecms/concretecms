@@ -366,7 +366,7 @@ class Controller extends AuthenticationTypeController
         $app = Application::getFacadeApplication();
         $db = $app['database']->connection();
 
-        return $db->GetOne('select ulsPasswordReset from Users where uName = ?', array($this->post('uName')));
+        return $db->GetOne('select uIsPasswordReset from Users where uName = ?', array($this->post('uName')));
     }
 
     public function v($hash = '')

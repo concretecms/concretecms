@@ -19,6 +19,12 @@ use Illuminate\Filesystem\Filesystem;
 class SiteTest extends \PHPUnit_Framework_TestCase
 {
 
+    public function testService()
+    {
+        $service = \Core::make('site');
+        $this->assertInstanceOf('Concrete\Core\Site\Service', $service);
+    }
+
     public function testGetDefault()
     {
         // First, mock the object to be used in the test
@@ -47,11 +53,11 @@ class SiteTest extends \PHPUnit_Framework_TestCase
             ->method('getRepository')
             ->will($this->returnValue($repository));
 
-        $site = \Core::make('site');
-        $site->setEntityManager($entityManager);
-        $this->assertInstanceOf('Concrete\Core\Site\Service', $site);
+        $config = \Core::make('config');
+        $factory = new ResolverFactory(\Core::make('app'), new StandardDriver(\Core::make('Concrete\Core\Site\Factory')));
+        $service = new Service($entityManager, $config, $factory);
 
-        $retrieved = \Site::getDefault();
+        $retrieved = $service->getDefault();
         $this->assertInstanceOf('Concrete\Core\Entity\Site\Site', $retrieved);
         $this->assertEquals($default, $retrieved);
         $this->assertTrue($default->isDefault());
@@ -138,8 +144,9 @@ class SiteTest extends \PHPUnit_Framework_TestCase
             ->method('getRepository')
             ->will($this->returnValue($repository));
 
-        $service = \Core::make('site');
-        $service->setEntityManager($entityManager);
+        $config = \Core::make('config');
+        $factory = new ResolverFactory(\Core::make('app'), new StandardDriver(\Core::make('Concrete\Core\Site\Factory')));
+        $service = new Service($entityManager, $config, $factory);
         $retrieved = $service->getSite();
 
         $this->assertEquals($default, $retrieved);

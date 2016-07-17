@@ -5,10 +5,17 @@ class BlockStyleTest extends PageTestCase
     public function setUp()
     {
         $this->tables = array_merge($this->tables,
-           array('StyleCustomizerInlineStyleSets', 'BlockTypes', 'Blocks', 'AttributeKeyCategories')
+           array('StyleCustomizerInlineStyleSets', 'Blocks', 'AttributeKeyCategories')
         );
         parent::setUp();
     }
+
+    protected $metadatas = array(
+        'Concrete\Core\Entity\Page\Template',
+        'Concrete\Core\Entity\Block\BlockType\BlockType',
+        'Concrete\Core\Entity\Multilingual\Section',
+    );
+
     public function testPageStyles()
     {
         $ps = new \Concrete\Core\Entity\StyleCustomizer\Inline\StyleSet();

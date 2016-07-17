@@ -369,12 +369,14 @@ class Section extends Page
 
     public static function unregisterPage($page)
     {
+        $entity = static::getSectionEntity($page->getCollectionID());
         $db = Database::get();
-        $em = $db->getEntityManager();
-        $em->remove(static::getSectionEntity($page->getCollectionID()));
-        $em->flush();
-
-        $db->Execute('delete from MultilingualPageRelations where cID = ?', array($page->getCollectionID()));
+        if (is_object($entity)) {
+            $em = $db->getEntityManager();
+            $em->remove($entity);
+            $em->flush();
+            $db->Execute('delete from MultilingualPageRelations where cID = ?', array($page->getCollectionID()));
+        }
     }
 
     public static function registerMove($page, $oldParent, $newParent)

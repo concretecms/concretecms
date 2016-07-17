@@ -23,6 +23,7 @@ abstract class AttributeTestCase extends ConcreteDatabaseTestCase
         'Concrete\Core\Entity\Attribute\Key\UserValue',
         'Concrete\Core\Entity\Attribute\Key\UserKey',
     );
+
     protected $object;
     protected $keys = array();
     protected $keyObjects = array();
