@@ -424,7 +424,7 @@ class Application extends Container
 
         $path = rawurldecode($request->getPathInfo());
 
-        if (strpos($path, '..')) {
+        if (strpos($path, '..') !== false) {
             throw new \RuntimeException(t('Illegal path traversal detected. Please make this request with a valid HTTP client.'));
         }
 
