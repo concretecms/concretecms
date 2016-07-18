@@ -2,7 +2,7 @@
 namespace Concrete\Core\Editor;
 
 
-use Concrete\Core\Config\Repository\Repository;
+use Illuminate\Config\Repository;
 use Concrete\Core\Http\Request;
 use Concrete\Core\Http\ResponseAssetGroup;
 use Concrete\Core\Localization\Localization;
@@ -28,7 +28,7 @@ class CkeditorEditor implements EditorInterface
     protected $pluginManager;
     protected $styles;
 
-    public function __construct(Repository $config, $pluginManager, $styles)
+    public function __construct($config, $pluginManager, $styles)
     {
         $this->assets = ResponseAssetGroup::get();
         $this->pluginManager = $pluginManager;
@@ -144,8 +144,8 @@ EOL;
 
     public function saveOptionsForm(Request $request)
     {
-        $this->config->save('concrete.editor.concrete.enable_filemanager', $request->request->get('enable_filemanager'));
-        $this->config->save('concrete.editor.concrete.enable_sitemap', $request->request->get('enable_sitemap'));
+        $this->config->save('editor.concrete.enable_filemanager', $request->request->get('enable_filemanager'));
+        $this->config->save('editor.concrete.enable_sitemap', $request->request->get('enable_sitemap'));
 
         $plugins = array();
         $post = $request->request->get('plugin');
@@ -157,7 +157,7 @@ EOL;
             }
         }
 
-        $this->config->save('concrete.editor.ckeditor4.plugins.selected', $plugins);
+        $this->config->save('editor.ckeditor4.plugins.selected', $plugins);
     }
 
     public function requireEditorAssets()

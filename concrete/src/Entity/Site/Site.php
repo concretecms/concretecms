@@ -63,7 +63,7 @@ class Site
     /**
      * @ORM\Column(type="integer", options={"unsigned":true})
      */
-    protected $siteHomePageID;
+    protected $siteHomePageID = 0;
 
 
     public function __construct($appConfigRepository)

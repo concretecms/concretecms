@@ -1,15 +1,17 @@
 <?php
 namespace Concrete\Core\Sharing\SocialNetwork;
 
+use Concrete\Core\Entity\Site\Site;
 use Database;
 use Doctrine\ORM\Mapping as ORM;
 
 class Link
 {
-    public static function getList()
+    public static function getList(Site $site = null)
     {
         $em = \ORM::entityManager();
-        return $em->getRepository('\Concrete\Core\Entity\Sharing\SocialNetwork\Link')->findBy(array(), array('ssHandle' => 'asc'));
+        $site = is_object($site) ? $site : \Core::make('site')->getSite();
+        return $em->getRepository('\Concrete\Core\Entity\Sharing\SocialNetwork\Link')->findBy(array('site' => $site), array('ssHandle' => 'asc'));
     }
 
     public static function exportList($node)
@@ -31,11 +33,12 @@ class Link
         return $r;
     }
 
-    public static function getByServiceHandle($ssHandle)
+    public static function getByServiceHandle($ssHandle, Site $site = null)
     {
         $em = \ORM::entityManager();
+        $site = is_object($site) ? $site : \Core::make('site')->getSite();
         return $em->getRepository('\Concrete\Core\Entity\Sharing\SocialNetwork\Link')->findOneBy(
-            array('ssHandle' => $ssHandle)
+            array('ssHandle' => $ssHandle, 'site' => $site)
         );
     }
 }

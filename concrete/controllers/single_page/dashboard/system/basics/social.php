@@ -2,12 +2,13 @@
 namespace Concrete\Controller\SinglePage\Dashboard\System\Basics;
 
 use Concrete\Core\Page\Controller\DashboardPageController;
+use Concrete\Core\Page\Controller\DashboardSitePageController;
 use Concrete\Core\Sharing\SocialNetwork\Link;
 use Concrete\Core\Sharing\SocialNetwork\ServiceList;
 use Concrete\Core\Sharing\SocialNetwork\Service;
 use Core;
 
-class Social extends DashboardPageController
+class Social extends DashboardSitePageController
 {
     public function view()
     {
@@ -66,6 +67,7 @@ class Social extends DashboardPageController
         if (!$this->error->has()) {
             $link = new \Concrete\Core\Entity\Sharing\SocialNetwork\Link();
             $link->setServiceHandle($ssHandle);
+            $link->setSite($this->getSite());
             $link->setURL($url);
             $link->save();
             $this->redirect('/dashboard/system/basics/social', 'link_added');

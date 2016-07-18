@@ -369,13 +369,15 @@ class Section extends Page
 
     public static function unregisterPage($page)
     {
-        $entity = static::getSectionEntity($page->getCollectionID());
-        $db = Database::get();
-        if (is_object($entity)) {
-            $em = $db->getEntityManager();
-            $em->remove($entity);
-            $em->flush();
-            $db->Execute('delete from MultilingualPageRelations where cID = ?', array($page->getCollectionID()));
+        if (static::isMultilingualSection($page)) {
+            $entity = static::getSectionEntity($page->getCollectionID());
+            $db = Database::get();
+            if (is_object($entity)) {
+                $em = $db->getEntityManager();
+                $em->remove($entity);
+                $em->flush();
+                $db->Execute('delete from MultilingualPageRelations where cID = ?', array($page->getCollectionID()));
+            }
         }
     }
 
@@ -564,8 +566,10 @@ class Section extends Page
             $cID = $cID->getCollectionID();
         }
 
-        $entity = self::getSectionEntity($cID);
-        return is_object($entity);
+        if ($cID) {
+            $entity = self::getSectionEntity($cID);
+            return is_object($entity);
+        }
     }
 
     public static function ignorePageRelation($page, $locale)

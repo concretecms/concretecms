@@ -1,10 +1,8 @@
 <?php
 namespace Concrete\Core\Site;
 
-use Concrete\Core\Application\Application;
+use Concrete\Core\Entity\Page\Template;
 use Concrete\Core\Entity\Site\Site;
-use Concrete\Core\Page\Page;
-use Concrete\Core\Site\Resolver\Resolver;
 use Concrete\Core\Site\Resolver\ResolverFactory;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -40,19 +38,30 @@ class Service
         }
     }
 
-    public function add($handle, $name, Page $page, $default = false)
+    public function add($handle, $name, $default = false)
     {
         $factory = new Factory($this->config);
         $site = $factory->createEntity();
         $site->setSiteHandle($handle);
         $site->setIsDefault($default);
-        $site->setSiteHomePageID($page->getCollectionID());
         $site->getConfigRepository()->save('name', $name);
 
         $this->entityManager->persist($site);
         $this->entityManager->flush();
 
         return $site;
+    }
+
+    public function createHomePage(Site $site, Template $template)
+    {
+        $home = \Page::addHomePage($site);
+        $home->update(['cName' => $site->getSiteName(), 'pTemplateID' => $template->getPageTemplateID()]);
+
+        $site->setSiteHomePageID($home->getCollectionID());
+        $this->entityManager->persist($site);
+        $this->entityManager->flush();
+
+        return $home;
     }
 
     public function getByID($id)

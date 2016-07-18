@@ -2,9 +2,10 @@
 namespace Concrete\Controller\SinglePage\Dashboard\Sitemap;
 
 use Concrete\Core\Page\Controller\DashboardPageController;
+use Concrete\Core\Page\Controller\DashboardSitePageController;
 use Loader;
 
-class Full extends DashboardPageController
+class Full extends DashboardSitePageController
 {
     public function view()
     {

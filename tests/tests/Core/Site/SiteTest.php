@@ -87,8 +87,7 @@ class SiteTest extends \PHPUnit_Framework_TestCase
         $factory = new ResolverFactory(\Core::make('app'), new StandardDriver(\Core::make('Concrete\Core\Site\Factory')));
         $service = new Service($entityManager, $configRepoStub, $factory);
 
-        $c = new Page();
-        $new = $service->add('testing', 'Testing', $c);
+        $new = $service->add('testing', 'Testing');
         $this->assertInstanceOf('Concrete\Core\Entity\Site\Site', $new);
         $this->assertEquals('testing', $new->getSiteHandle());
         $this->assertEquals('Testing', $new->getSiteName());

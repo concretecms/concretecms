@@ -4,9 +4,10 @@ namespace Concrete\Controller\SinglePage\Dashboard\Sitemap;
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Controller\Search\Pages as SearchPagesController;
 use Concrete\Core\Http\ResponseAssetGroup;
+use Concrete\Core\Page\Controller\DashboardSitePageController;
 use Loader;
 
-class Search extends DashboardPageController
+class Search extends DashboardSitePageController
 {
     public $helpers = array('form');
 
