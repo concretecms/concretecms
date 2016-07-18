@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Page;
 
+use Concrete\Core\Entity\Site\Site;
 use Concrete\Core\Search\ItemList\Database\AttributedItemList as DatabaseItemList;
 use Concrete\Core\Search\Pagination\Pagination;
 use Concrete\Core\Search\Pagination\PermissionablePagination;
@@ -25,6 +26,9 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
 
     /** @var  \Closure | integer | null */
     protected $permissionsChecker;
+
+    /** @var Site */
+    protected $site;
 
     /**
      * Columns in this array can be sorted via the request.
@@ -63,6 +67,14 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
      * @var bool
      */
     protected $includeInactivePages = false;
+
+    /**
+     * @param mixed $site
+     */
+    public function setSiteObject($site)
+    {
+        $this->site = $site;
+    }
 
     public function setPermissionsChecker(\Closure $checker)
     {
@@ -142,11 +154,22 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
             $query->andWhere('p.cIsActive = :cIsActive');
             $query->setParameter('cIsActive', true);
         }
+
+        if ($this->site) {
+            $site = $this->site;
+        } else {
+            $site = \Core::make("site")->getSite();
+        }
+
         if (!$this->includeSystemPages) {
             $query->andWhere('p.cIsSystemPage = :cIsSystemPage');
             $query->setParameter('cIsSystemPage', false);
+            $query->andWhere('p.siteID = :siteID');
+        } else {
+            $query->andWhere('(p.siteID = :siteID or p.siteID = 0)');
         }
 
+        $query->setParameter('siteID', $site->getSiteID());
         return $query;
     }
 

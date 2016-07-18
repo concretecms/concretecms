@@ -680,10 +680,12 @@ class ContentImporter
     {
         if (isset($sx->sociallinks)) {
             foreach ($sx->sociallinks->link as $l) {
+                $site = \Core::make('site')->getSite();
                 $sociallink = Link::getByServiceHandle((string) $l['service']);
                 if (!is_object($sociallink)) {
                     $sociallink = new \Concrete\Core\Entity\Sharing\SocialNetwork\Link();
                     $sociallink->setURL((string) $l['url']);
+                    $sociallink->setSite($site);
                     $sociallink->setServiceHandle((string) $l['service']);
                     $sociallink->save();
                 }

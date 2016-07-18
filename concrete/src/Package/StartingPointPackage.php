@@ -53,6 +53,7 @@ class StartingPointPackage extends BasePackage
                 5,
                 t('Starting installation and creating directories.')),
             new StartingPointInstallRoutine('install_database', 10, t('Creating database tables.')),
+            new StartingPointInstallRoutine('install_site', 12, t('Creating site.')),
             new StartingPointInstallRoutine('add_users', 15, t('Adding admin user.')),
             new StartingPointInstallRoutine('install_permissions', 20, t('Installing permissions & workflow.')),
             new StartingPointInstallRoutine('install_data_objects', 23, t('Installing Custom Data Objects.')),
@@ -73,7 +74,7 @@ class StartingPointPackage extends BasePackage
             new StartingPointInstallRoutine('import_files', 65, t('Importing files.')),
             new StartingPointInstallRoutine('install_content', 70, t('Adding pages and content.')),
             new StartingPointInstallRoutine('install_desktops', 85, t('Adding desktops.')),
-            new StartingPointInstallRoutine('install_site', 90, t('Installing site.')),
+            new StartingPointInstallRoutine('install_site_permissions', 90, t('Setting site permissions.')),
             new AttachModeInstallRoutine('finish', 95, t('Finishing.')),
         );
     }
@@ -480,7 +481,17 @@ class StartingPointPackage extends BasePackage
     public function install_site()
     {
         $site = \Site::installDefault();
+        $site->getConfigRepository()->save('name', SITE);
 
+        if (defined('SITE_INSTALL_LOCALE') && SITE_INSTALL_LOCALE != '' && SITE_INSTALL_LOCALE != 'en_US') {
+            Config::save('concrete.locale', SITE_INSTALL_LOCALE);
+        }
+        Config::save('concrete.version_installed', APP_VERSION);
+        Config::save('concrete.misc.login_redirect', 'DESKTOP');
+    }
+
+    public function install_site_permissions()
+    {
         $g1 = Group::getByID(GUEST_GROUP_ID);
         $g2 = Group::getByID(REGISTERED_GROUP_ID);
         $g3 = Group::getByID(ADMIN_GROUP_ID);
@@ -503,13 +514,6 @@ class StartingPointPackage extends BasePackage
                 'add_file',
             )
         );
-
-        if (defined('SITE_INSTALL_LOCALE') && SITE_INSTALL_LOCALE != '' && SITE_INSTALL_LOCALE != 'en_US') {
-            Config::save('concrete.locale', SITE_INSTALL_LOCALE);
-        }
-        $site->getConfigRepository()->save('name', SITE);
-        Config::save('concrete.version_installed', APP_VERSION);
-        Config::save('concrete.misc.login_redirect', 'DESKTOP');
 
         $u = new User();
         $u->saveConfig('NEWSFLOW_LAST_VIEWED', 'FIRSTRUN');
