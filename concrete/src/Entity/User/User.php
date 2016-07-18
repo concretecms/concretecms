@@ -21,6 +21,11 @@ class User
     protected $uID;
 
     /**
+     * @ORM\ManyToMany(targetEntity="\Concrete\Core\Entity\Notification\Notification", mappedBy="subscribers", cascade={"remove"})
+     */
+    protected $notifications;
+
+    /**
      * @ORM\Column(type="string", length=64, unique=true)
      */
     protected $uName;
@@ -419,6 +424,11 @@ class User
     public function setUserIsPasswordReset($uIsPasswordReset)
     {
         $this->uIsPasswordReset = $uIsPasswordReset;
+    }
+
+    public function getUserInfoObject()
+    {
+        return \UserInfo::getByID($this->getUserID());
     }
 
 
