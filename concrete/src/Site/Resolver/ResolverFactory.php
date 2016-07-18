@@ -9,15 +9,14 @@ class ResolverFactory
     protected $application;
     protected $driver;
 
-    public function __construct(Application $application, DriverInterface $driver)
+    public function __construct(Application $application)
     {
         $this->application = $application;
-        $this->driver = $driver;
     }
 
     public function createResolver(Service $service)
     {
-        return new Resolver($service, $this->driver);
+        return $this->application->make('Concrete\Core\Site\Resolver\Resolver', ['service' => $service]);
     }
 
 }
