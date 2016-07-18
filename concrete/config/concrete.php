@@ -910,7 +910,7 @@ return array(
         'canonical_url' => null,
         'canonical_ssl_url' => null,
         'trailing_slash' => false,
-        'title_format' => '%1$s :: %2$s',
+        'title_format' => '%2$s :: %1$s',
         'title_segment_separator' => ' :: ',
         'page_path_separator' => '-',
         'group_name_separator' => ' / ',
