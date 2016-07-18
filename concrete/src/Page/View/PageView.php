@@ -6,7 +6,8 @@ use Environment;
 use Events;
 use Loader;
 use PageCache;
-use PageTemplate;
+use Concrete\Core\Entity\Page\Template;
+use Concrete\Core\Page\Template as PageTemplate;
 use PageTheme;
 use Permissions;
 use URL;
@@ -33,7 +34,7 @@ class PageView extends View
     /**
      * Called from previewing functions, this lets us override the page's template with one of our own choosing.
      */
-    public function setCustomPageTemplate(PageTemplate $pt)
+    public function setCustomPageTemplate(Template $pt)
     {
         $this->pTemplateID = $pt->getPageTemplateID();
     }
