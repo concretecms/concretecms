@@ -47,18 +47,18 @@ class CanonicalUrlResolver implements UrlResolverInterface
             return $this->cached;
         }
 
-        $config = $this->app['config'];
+        $config = $this->app['site']->getSite()->getConfigRepository();
 
         // Determine trailing slash setting
-        $trailing_slashes = $config->get('concrete.seo.trailing_slash') ? Url::TRAILING_SLASHES_ENABLED : Url::TRAILING_SLASHES_DISABLED;
+        $trailing_slashes = $config->get('seo.trailing_slash') ? Url::TRAILING_SLASHES_ENABLED : Url::TRAILING_SLASHES_DISABLED;
 
         $url = Url::createFromUrl('', $trailing_slashes);
 
         $url->setHost(null);
         $url->setScheme(null);
 
-        if ($config->get('concrete.seo.canonical_url')) {
-            $canonical = UrlImmutable::createFromUrl($config->get('concrete.seo.canonical_url'), $trailing_slashes);
+        if ($config->get('seo.canonical_url')) {
+            $canonical = UrlImmutable::createFromUrl($config->get('seo.canonical_url'), $trailing_slashes);
 
             // If the request is over https and the canonical url is http, lets just say https for the canonical url.
             if (strtolower($canonical->getScheme()) == 'http' && strtolower($this->request->getScheme()) == 'https') {
