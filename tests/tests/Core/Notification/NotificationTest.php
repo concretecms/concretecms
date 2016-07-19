@@ -42,6 +42,16 @@ class NotificationTest extends \PHPUnit_Framework_TestCase
 
     }
 
+    public function testNotificationSubscribers()
+    {
+        $message = new \Concrete\Core\Conversation\Message\Message();
+        $message->cnvMessageID = 10;
+        $message->cnvMessageDateCreated = '2010-12-11 00:00:00';
+        $driver = new \Concrete\Core\Notification\Factory\NewConversationMessageFactory();
+        $newMessage = new \Concrete\Core\Conversation\Message\NewMessage($message);
+
+        $notification = $driver->createNotification($newMessage);
 
 
+    }
 }
