@@ -16,7 +16,7 @@ class UserSignupNotification extends Notification
 {
 
     /**
-     * @ORM\ManyToOne(targetEntity="\Concrete\Core\Entity\User\User"),
+     * @ORM\OneToOne(targetEntity="\Concrete\Core\Entity\User\User"),
      * @ORM\JoinColumn(name="uID", referencedColumnName="uID")
      */
     protected $user;
