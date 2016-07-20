@@ -5,7 +5,8 @@ use PageController;
 use Core;
 use Page;
 use Permissions;
-use File;
+use Concrete\Core\Entity\File\File as FileEntity;
+use Concrete\Core\File\File;
 
 class DownloadFile extends PageController
 {
@@ -20,7 +21,7 @@ class DownloadFile extends PageController
         // get the file
         if ($fID > 0 && $this->app->make('helper/validation/numbers')->integer($fID)) {
             $file = File::getByID($fID);
-            if ($file instanceof File && $file->getFileID() > 0) {
+            if ($file instanceof FileEntity && $file->getFileID() > 0) {
                 $rcID = $this->app->make('helper/security')->sanitizeInt($rcID);
                 if ($rcID > 0) {
                     $rc = Page::getByID($rcID, 'ACTIVE');
