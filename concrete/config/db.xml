@@ -2373,6 +2373,49 @@
     </index>
   </table>
 
+  <table name="NotificationPermissionSubscriptionList">
+    <field name="paID" type="integer" size="10">
+      <unsigned/>
+      <key/>
+      <default value="0"/>
+    </field>
+    <field name="peID" type="integer" size="10">
+      <unsigned/>
+      <key/>
+      <default value="0"/>
+    </field>
+    <field name="permission" type="string" size="1">
+      <default value="1"/>
+      <notnull/>
+    </field>
+    <index name="peID">
+      <col>peID</col>
+    </index>
+  </table>
+
+  <table name="NotificationPermissionSubscriptionListCustom">
+    <field name="paID" type="integer" size="10">
+      <unsigned/>
+      <key/>
+      <default value="0"/>
+    </field>
+    <field name="peID" type="integer" size="10">
+      <unsigned/>
+      <key/>
+      <default value="0"/>
+    </field>
+    <field name="nSubscriptionIdentifier" type="string">
+      <key/>
+    </field>
+    <index name="peID">
+      <col>peID</col>
+    </index>
+    <index name="nSubscriptionIdentifier">
+      <col>nSubscriptionIdentifier</col>
+    </index>
+  </table>
+
+
   <table name="PagePermissionPropertyAccessList">
     <field name="paID" type="integer" size="10">
       <unsigned/>

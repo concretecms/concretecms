@@ -118,6 +118,7 @@ return array(
         'core_events' => '\Concrete\Core\Events\EventsServiceProvider',
         'core_whoops' => '\Concrete\Core\Error\Provider\WhoopsServiceProvider',
         'core_logging' => '\Concrete\Core\Logging\LoggingServiceProvider',
+        'core_notification' => '\Concrete\Core\Notification\NotificationServiceProvider',
         'core_cache' => '\Concrete\Core\Cache\CacheServiceProvider',
         'core_url' => '\Concrete\Core\Url\UrlServiceProvider',
         'core_devices' => '\Concrete\Core\Device\DeviceServiceProvider',
