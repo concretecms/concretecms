@@ -160,7 +160,7 @@ jQuery.fn.dialog.open = function(options) {
 
         },
         'beforeClose': function() {
-            var nd = $(".ui-dialog").length;
+            var nd = $(".ui-dialog:visible").length;
             if (nd == 1) {
                 $("body").css("overflow", $('body').attr('data-last-overflow'));
             }
