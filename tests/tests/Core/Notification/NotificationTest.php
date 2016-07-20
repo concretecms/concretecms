@@ -15,10 +15,10 @@ class NotificationTest extends \PHPUnit_Framework_TestCase
     public function testCreateNotification()
     {
         $signup = $this->getUserSignup();
-        $driver = new \Concrete\Core\Notification\Factory\UserSignupFactory();
+        $driver = new \Concrete\Core\Notification\Type\UserSignupType();
         $notification = $driver->createNotification($signup);
 
-        $this->assertInstanceOf('Concrete\Core\Notification\Factory\FactoryInterface', $driver);
+        $this->assertInstanceOf('Concrete\Core\Notification\Type\TypeInterface', $driver);
         $this->assertInstanceOf('Concrete\Core\Entity\Notification\UserSignupNotification', $notification);
         $this->assertEquals($notification->getNotificationDate(), $signup->getNotificationDate());
     }
@@ -27,7 +27,7 @@ class NotificationTest extends \PHPUnit_Framework_TestCase
     public function testFormatNotificationView()
     {
         $signup = $this->getUserSignup();
-        $driver = new \Concrete\Core\Notification\Factory\UserSignupFactory();
+        $driver = new \Concrete\Core\Notification\Type\UserSignupType();
         $notification = $driver->createNotification($signup);
 
         $view = $notification->getListView();
@@ -38,20 +38,20 @@ class NotificationTest extends \PHPUnit_Framework_TestCase
 
         $icon = (string) $view->renderIcon();
         $this->assertEquals('<i class="fa fa-user"></i>', $icon);
-
-
     }
 
-    public function testNotificationSubscribers()
+    public function testNotificationTypeManager()
     {
-        $message = new \Concrete\Core\Conversation\Message\Message();
-        $message->cnvMessageID = 10;
-        $message->cnvMessageDateCreated = '2010-12-11 00:00:00';
-        $driver = new \Concrete\Core\Notification\Factory\NewConversationMessageFactory();
-        $newMessage = new \Concrete\Core\Conversation\Message\NewMessage($message);
+        $manager = \Core::make('manager/notification/types');
+        $this->assertInstanceOf('Concrete\Core\Notification\Type\Manager', $manager);
 
-        $notification = $driver->createNotification($newMessage);
+        $manager = \Core::make('manager/notification/subscriptions');
+        $this->assertInstanceOf('Concrete\Core\Notification\Subscription\Manager', $manager);
 
-
+        /**
+         * @var $manager \Concrete\Core\Notification\Subscription\Manager
+         */
+        $subscriptions = $manager->getSubscriptions();
+        $this->assertEquals(6, count($subscriptions));
     }
 }

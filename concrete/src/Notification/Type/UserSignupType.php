@@ -1,13 +1,12 @@
 <?php
-namespace Concrete\Core\Notification\Factory;
-
+namespace Concrete\Core\Notification\Type;
 
 use Concrete\Core\Entity\Notification\UserSignupNotification;
-use Concrete\Core\Entity\User\User;
 use Concrete\Core\Entity\User\UserSignup;
 use Concrete\Core\Notification\Subject\SubjectInterface;
+use Concrete\Core\Notification\Subscription\StandardSubscription;
 
-class UserSignupFactory implements FactoryInterface
+class UserSignupType extends Type
 {
 
     /**
@@ -17,5 +16,14 @@ class UserSignupFactory implements FactoryInterface
     {
         return new UserSignupNotification($user);
     }
+
+    public function getSubscriptions()
+    {
+        $subscription = new StandardSubscription('user_signup', t('User signups'));
+        return array($subscription);
+    }
+
+
+
 
 }

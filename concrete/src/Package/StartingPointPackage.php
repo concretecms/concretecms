@@ -6,6 +6,12 @@ use Concrete\Core\Application\Application;
 use Concrete\Core\Backup\ContentImporter;
 use Concrete\Core\Config\Renderer;
 use Concrete\Core\Database\DatabaseStructureManager;
+use Concrete\Core\Entity\Notification\Type\CoreUpdateType;
+use Concrete\Core\Entity\Notification\Type\NewConversationMessageType;
+use Concrete\Core\Entity\Notification\Type\NewFormSubmissionType;
+use Concrete\Core\Entity\Notification\Type\NewPrivateMessageType;
+use Concrete\Core\Entity\Notification\Type\UserSignupType;
+use Concrete\Core\Entity\Notification\Type\WorkflowProgressType;
 use Concrete\Core\File\Filesystem;
 use Concrete\Core\File\Service\File;
 use Concrete\Core\Mail\Importer\MailImporter;
@@ -13,6 +19,7 @@ use Concrete\Core\Package\Routine\AttachModeInstallRoutine;
 use Concrete\Core\Permission\Access\Entity\ConversationMessageAuthorEntity;
 use Concrete\Core\Permission\Access\Entity\GroupEntity as GroupPermissionAccessEntity;
 use Concrete\Core\Permission\Access\Entity\PageOwnerEntity as PageOwnerPermissionAccessEntity;
+use Concrete\Core\Permission\Access\Entity\UserEntity;
 use Concrete\Core\Site\Service;
 use Concrete\Core\Tree\Node\Type\Category;
 use Concrete\Core\Tree\Node\Type\ExpressEntryCategory;
@@ -669,5 +676,14 @@ class StartingPointPackage extends BasePackage
             $pt = $pk->getPermissionAssignmentObject();
             $pt->assignPermissionAccess($pa);
         }
+
+        // notification
+        $adminUserEntity = UserEntity::getOrCreate(\UserInfo::getByID(USER_SUPER_ID));
+        $pk = PermissionKey::getByHandle('notify_in_notification_center');
+        $pa = PermissionAccess::create($pk);
+        $pa->addListItem($adminUserEntity);
+        $pa->addListItem($adminGroupEntity);
+        $pt = $pk->getPermissionAssignmentObject();
+        $pt->assignPermissionAccess($pa);
     }
 }
