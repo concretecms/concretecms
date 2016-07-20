@@ -9,3 +9,8 @@
 .cke_dialog_background_cover {
     background-color: transparent !important;
 }
+
+.cke_source {
+    white-space: pre-wrap !important;
+}
+
