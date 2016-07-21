@@ -12,11 +12,22 @@ class NewPrivateMessageType extends Type
         // TODO: Implement createNotification() method.
     }
 
-    public function getSubscriptions()
+    protected function createSubscription()
     {
         $subscription = new StandardSubscription('new_private_message', t('Private messages'));
-        return array($subscription);
+        return $subscription;
     }
+
+    public function getSubscription(SubjectInterface $subject)
+    {
+        return $this->createSubscription();
+    }
+
+    public function getAvailableSubscriptions()
+    {
+        return array($this->createSubscription());
+    }
+
 
 
 

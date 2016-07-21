@@ -76,20 +76,24 @@ foreach ($excluded as $assignment) {
 
 <div class="form-group" data-form-group="notification">
 	<label class="control-label"><?=$entity->getAccessEntityLabel()?></label>
-	<?=$form->select('subscriptionsExcluded[' . $entity->getAccessEntityID() . ']', array('N' => t('No Subscriptions'), 'C' => t('Custom')), $assignment->getSubscriptionsAllowedPermission())?>
-	<div class="subscription-list" <?php if ($assignment->getSubscriptionsAllowedPermission() != 'C') {
-    ?>style="display: none"<?php 
-}
-    ?>>
-		<?php foreach ($subscriptions as $subscription) {
-    ?>
-			<div class="checkbox"><label><input type="checkbox" name="subscriptionIdentifierExclude[<?=$entity->getAccessEntityID()?>][]" value="<?=$subscription->getSubscriptionIdentifier()?>" <?php if (in_array($subscription->getSubscriptionIdentifier(), $assignment->getSubscriptionsAllowedArray()) || $assignment->getSubscriptionsAllowedPermission() == 'N') {
-    ?> checked="checked" <?php 
-}
-    ?> /> <span><?=$subscription->getSubscriptionName()?></span></label></div>
-		<?php 
-}
-    ?></div>
+    <div style="padding-right: 30px; position: relative">
+        <a href="javascript:void(0)" class="icon-link" style="position: absolute; top: 5px; right: 0px" onclick="ccm_deleteAccessEntityAssignment(<?=$entity->getAccessEntityID()?>)"><i class="fa fa-trash-o"></i></a>
+
+        <?=$form->select('subscriptionsExcluded[' . $entity->getAccessEntityID() . ']', array('N' => t('No Subscriptions'), 'C' => t('Custom')), $assignment->getSubscriptionsAllowedPermission())?>
+        <div class="subscription-list" <?php if ($assignment->getSubscriptionsAllowedPermission() != 'C') {
+        ?>style="display: none"<?php
+    }
+        ?>>
+            <?php foreach ($subscriptions as $subscription) {
+        ?>
+                <div class="checkbox"><label><input type="checkbox" name="subscriptionIdentifierExclude[<?=$entity->getAccessEntityID()?>][]" value="<?=$subscription->getSubscriptionIdentifier()?>" <?php if (in_array($subscription->getSubscriptionIdentifier(), $assignment->getSubscriptionsAllowedArray()) || $assignment->getSubscriptionsAllowedPermission() == 'N') {
+        ?> checked="checked" <?php
+    }
+        ?> /> <span><?=$subscription->getSubscriptionName()?></span></label></div>
+            <?php
+    }
+        ?></div>
+    </div>
 </div>
 
 
