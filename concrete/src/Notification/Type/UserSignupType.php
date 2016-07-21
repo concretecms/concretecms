@@ -17,12 +17,21 @@ class UserSignupType extends Type
         return new UserSignupNotification($user);
     }
 
-    public function getSubscriptions()
+    protected function createSubscription()
     {
         $subscription = new StandardSubscription('user_signup', t('User signups'));
-        return array($subscription);
+        return $subscription;
     }
 
+    public function getSubscription(SubjectInterface $subject)
+    {
+        return $this->createSubscription();
+    }
+
+    public function getAvailableSubscriptions()
+    {
+        return array($this->createSubscription());
+    }
 
 
 

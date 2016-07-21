@@ -12,10 +12,20 @@ class CoreUpdateType extends Type
         // TODO: Implement createNotification() method.
     }
 
-    public function getSubscriptions()
+    protected function createSubscription()
     {
         $subscription = new StandardSubscription('core_update', t('concrete5 updates'));
-        return array($subscription);
+        return $subscription;
+    }
+
+    public function getSubscription(SubjectInterface $subject)
+    {
+        return $this->createSubscription();
+    }
+
+    public function getAvailableSubscriptions()
+    {
+        return array($this->createSubscription());
     }
 
 

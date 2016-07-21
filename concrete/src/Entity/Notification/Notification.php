@@ -10,6 +10,7 @@ use Concrete\Core\Notification\View\ListableInterface;
 use Concrete\Core\Notification\View\ListViewPopulatorInterface;
 use Concrete\Core\Notification\View\UserSignupView;
 use Concrete\Core\Notification\View\ViewInterface;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -30,7 +31,15 @@ abstract class Notification
      * inverseJoinColumns={@ORM\JoinColumn(name="uID", referencedColumnName="uID")}
      * )
      */
-    protected $subscribers;
+    protected $alerted;
+
+    /**
+     * @return mixed
+     */
+    public function getUsersToAlert()
+    {
+        return $this->alerted;
+    }
 
     /**
      * @ORM\Id @ORM\Column(type="integer", options={"unsigned":true})
@@ -51,6 +60,7 @@ abstract class Notification
     public function __construct(SubjectInterface $subject)
     {
         $this->nDate = $subject->getNotificationDate();
+        $this->alerted = new ArrayCollection();
     }
 
     public function getNotificationID()

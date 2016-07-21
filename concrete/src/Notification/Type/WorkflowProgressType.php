@@ -13,10 +13,20 @@ class WorkflowProgressType extends Type
         // TODO: Implement createNotification() method.
     }
 
-    public function getSubscriptions()
+    protected function createSubscription()
     {
         $subscription = new StandardSubscription('workflow_progress', t('Workflow notifications'));
-        return array($subscription);
+        return $subscription;
+    }
+
+    public function getSubscription(SubjectInterface $subject)
+    {
+        return $this->createSubscription();
+    }
+
+    public function getAvailableSubscriptions()
+    {
+        return array($this->createSubscription());
     }
 
 

@@ -18,7 +18,7 @@ class Manager
     {
         $subscriptions = array();
         foreach($this->typeManager->getDrivers() as $driver) {
-            $subscriptions = array_merge($subscriptions, $driver->getSubscriptions());
+            $subscriptions = array_merge($subscriptions, $driver->getAvailableSubscriptions());
         }
         return $subscriptions;
     }

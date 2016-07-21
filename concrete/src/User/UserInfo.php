@@ -95,6 +95,11 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
         $this->entity = $entity;
     }
 
+    public function getEntityObject()
+    {
+        return $this->entity;
+    }
+
     /**
      * @return Group[]
      */

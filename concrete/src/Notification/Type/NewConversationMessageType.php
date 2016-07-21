@@ -18,10 +18,20 @@ class NewConversationMessageType extends Type
         return new NewConversationMessageNotification($message);
     }
 
-    public function getSubscriptions()
+    protected function createSubscription()
     {
         $subscription = new StandardSubscription('new_conversation_message', t('Conversation messages'));
-        return array($subscription);
+        return $subscription;
+    }
+
+    public function getSubscription(SubjectInterface $subject)
+    {
+        return $this->createSubscription();
+    }
+
+    public function getAvailableSubscriptions()
+    {
+        return array($this->createSubscription());
     }
 
 

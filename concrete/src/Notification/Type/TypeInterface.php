@@ -9,7 +9,8 @@ interface TypeInterface
     /**
      * @return mixed
      */
-    function getSubscriptions();
+    function getAvailableSubscriptions();
+    function getSubscription(SubjectInterface $subject);
     function createNotification(SubjectInterface $subject);
 
 
