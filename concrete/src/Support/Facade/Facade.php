@@ -72,7 +72,7 @@ abstract class Facade
      */
     public static function clearResolvedInstances()
     {
-        static::$resolvedInstance = array();
+        static::$resolvedInstance = [];
     }
 
     /**
@@ -100,7 +100,9 @@ abstract class Facade
      *
      * @param  string $method
      * @param  array $args
+     *
      * @return mixed
+     *
      * @throws \Exception
      */
     public static function __callStatic($method, $args)
