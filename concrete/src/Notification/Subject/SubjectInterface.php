@@ -5,5 +5,6 @@ interface SubjectInterface
 {
 
     function getNotificationDate();
+    function getUsersToExcludeFromNotification();
 
 }

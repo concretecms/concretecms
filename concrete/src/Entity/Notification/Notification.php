@@ -25,23 +25,6 @@ abstract class Notification
 {
 
     /**
-     * @ORM\ManyToMany(targetEntity="Concrete\Core\Entity\User\User", inversedBy="notifications", cascade={"persist"})
-     * @ORM\JoinTable(name="NotificationUsers",
-     * joinColumns={@ORM\JoinColumn(name="nID", referencedColumnName="nID")},
-     * inverseJoinColumns={@ORM\JoinColumn(name="uID", referencedColumnName="uID")}
-     * )
-     */
-    protected $alerted;
-
-    /**
-     * @return mixed
-     */
-    public function getUsersToAlert()
-    {
-        return $this->alerted;
-    }
-
-    /**
      * @ORM\Id @ORM\Column(type="integer", options={"unsigned":true})
      * @ORM\GeneratedValue(strategy="AUTO")
      */
@@ -51,11 +34,6 @@ abstract class Notification
      * @ORM\Column(type="datetime")
      */
     protected $nDate = null;
-
-    /**
-     * @ORM\Column(type="boolean")
-     */
-    protected $nIsArchived = false;
 
     public function __construct(SubjectInterface $subject)
     {
@@ -82,22 +60,6 @@ abstract class Notification
     public function setNotificationDate($nDate)
     {
         $this->nDate = $nDate;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function isNotificationArchived()
-    {
-        return $this->nIsArchived;
-    }
-
-    /**
-     * @param mixed $nIsArchived
-     */
-    public function setNotificationIsArchived($nIsArchived)
-    {
-        $this->nIsArchived = $nIsArchived;
     }
 
     abstract public function getListView();

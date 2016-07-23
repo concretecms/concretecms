@@ -16,10 +16,10 @@ class UserSignupNotification extends Notification
 {
 
     /**
-     * @ORM\OneToOne(targetEntity="\Concrete\Core\Entity\User\User"),
-     * @ORM\JoinColumn(name="uID", referencedColumnName="uID")
+     * @ORM\ManyToOne(targetEntity="\Concrete\Core\Entity\User\UserSignup", cascade={"persist", "remove"}),
+     * @ORM\JoinColumn(name="usID", referencedColumnName="usID")
      */
-    protected $user;
+    protected $signup;
 
     /**
      * UserSignupNotification constructor.
@@ -27,25 +27,18 @@ class UserSignupNotification extends Notification
      */
     public function __construct(SubjectInterface $signup)
     {
-        $this->user = $signup->getUser();
+        $this->signup = $signup;
         parent::__construct($signup);
     }
 
     /**
      * @return mixed
      */
-    public function getUser()
+    public function getSignupRequest()
     {
-        return $this->user;
+        return $this->signup;
     }
 
-    /**
-     * @param mixed $user
-     */
-    public function setUser($user)
-    {
-        $this->user = $user;
-    }
 
     public function getListView()
     {

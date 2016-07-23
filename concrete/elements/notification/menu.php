@@ -2,27 +2,18 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 
 /**
- * @var $listView \Concrete\Core\Notification\View\ListViewInterface
+ * @var $listView \Concrete\Core\Notification\View\StandardListViewInterface
  */
+
+if ($listView->getActions()) {
 
 ?>
 
-<div class="" data-notification-id="<?=$listView->getNotificationObject()->getNotificationID()?>">
-    <form action="" method="post">
 
-        <div class="">
-            <?=$listView->renderIcon()?>
-        </div>
+<?php } else { ?>
 
-        <div class="">
-            <?=$listView->renderDetails()?>
-        </div>
+    <button type="button" data-action="archive" class="btn btn-default btn-waiting-for-me-archive">
+        <i></i>
+    </button>
 
-        <div class="">
-            <?=$listView->renderMenu()?>
-        </div>
-
-    </form>
-</div>
-
-
+<?php } ?>

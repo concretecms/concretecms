@@ -7,9 +7,10 @@ interface StandardListViewInterface extends ListViewInterface
     function getIconClass();
     function getTitle();
     function getShortDescription();
-    function getDetailedDescription();
-    function getRequesterUserObject();
-    function getRequesterComment();
+    function getActionDescription();
+    function getInitiatorUserObject();
+    function getInitiatorComment();
+    function getInitiatorActionDescription();
     function getActions();
 
 }
