@@ -1,0 +1,2 @@
+!function(global,$){"use strict";function ConcreteNotificationList($element,options){var options=$.extend({},options)}ConcreteNotificationList.prototype={},$.fn.concreteNotificationList=function(options){return $.each($(this),function(i,obj){new ConcreteNotificationList($(this),options)})},global.ConcreteNotificationList=ConcreteNotificationList}(this,$);
+//# sourceMappingURL=/concrete/js/notification.js.map

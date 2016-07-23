@@ -363,6 +363,11 @@ return array(
         "/ccm/system/upgrade/submit" => array('\Concrete\Controller\Upgrade::submit'),
 
         /*
+         * Notification
+         */
+        "/ccm/system/notification/alert/archive/" => array('\Concrete\Controller\Backend\Notification\Alert::archive'),
+
+        /*
          * General Attribute
          */
         "/ccm/system/attribute/action/{action}" => array(
@@ -815,6 +820,9 @@ return array(
         'core/users' => array(
             array('javascript', 'js/users.js', array('minify' => false)),
         ),
+        'core/notification' => array(
+            array('javascript', 'js/notification.js', array('minify' => false)),
+        ),
         'core/tree' => array(
             array('javascript', 'js/tree.js', array('minify' => false)),
         ),
@@ -899,6 +907,11 @@ return array(
         'ace' => array(
             array(
                 array('javascript', 'ace'),
+            ),
+        ),
+        'core/notification' => array(
+            array(
+                array('javascript', 'core/notification'),
             ),
         ),
         'core/colorpicker' => array(

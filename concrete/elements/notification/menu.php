@@ -12,7 +12,7 @@ if ($listView->getActions()) {
 
 <?php } else { ?>
 
-    <button type="button" data-action="archive" class="btn btn-default btn-waiting-for-me-archive">
+    <button type="button" data-notification-action="archive" class="btn btn-default btn-waiting-for-me-archive">
         <i></i>
     </button>
 
