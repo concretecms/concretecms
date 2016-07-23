@@ -1,9 +1,10 @@
 <?php defined('C5_EXECUTE') or die("Access Denied."); ?>
 <div class="ccm-block-desktop-waiting-for-me">
+    <div data-list="notification">
 
     <h3><?=t('Waiting For Me')?></h3>
 
-    <?php if (count($items)) {
+    <?php
 
         foreach($items as $item) {
             $notification = $item->getNotification();
@@ -11,7 +12,8 @@
 
             ?>
 
-        <div class="ccm-block-desktop-waiting-for-me-item" data-notification-alert-id="<?=$item->getNotificationAlertID()?>">
+        <div class="ccm-block-desktop-waiting-for-me-item" data-notification-alert-id="<?=$item->getNotificationAlertID()?>"
+        data-token="<?=$token->generate()?>">
             <form action="" method="post">
 
                 <div class="ccm-block-desktop-waiting-for-me-icon">
@@ -35,11 +37,15 @@
 
         ?>
 
+        <p <?php if (count($items)) { ?> style="display: none"<?php }  ?> data-notification-description="empty"><?=t('There are no items that currently need your attention.')?></p>
 
-    <?php } else { ?>
+    </div>
 
-        <p><?=t('There are no items that currently need your attention.')?></p>
 
-    <?php } ?>
+    <script type="text/javascript">
+        $(function() {
+            $('div[data-list=notification]').concreteNotificationList();
+        });
+    </script>
 
 </div>

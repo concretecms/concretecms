@@ -16,6 +16,13 @@ class NotificationAlertRepository extends EntityRepository
         return $result;
     }
 
+    public function findOneById($id)
+    {
+        return $this->findOneBy(
+            array('naID' => $id)
+        );
+    }
+
 
 }
 
