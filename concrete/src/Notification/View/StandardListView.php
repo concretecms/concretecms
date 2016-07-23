@@ -5,6 +5,7 @@ use Concrete\Controller\Element\Notification\ListDetails;
 use Concrete\Controller\Element\Notification\Menu;
 use Concrete\Core\Entity\Notification\Notification;
 use HtmlObject\Element;
+use HtmlObject\Link;
 
 abstract class StandardListView implements StandardListViewInterface
 {
@@ -25,13 +26,13 @@ abstract class StandardListView implements StandardListViewInterface
 
     public function renderDetails()
     {
-        $details = new ListDetails();
+        $details = new ListDetails($this);
         return $details->render();
     }
 
     public function renderMenu()
     {
-        $menu = new Menu();
+        $menu = new Menu($this);
         return $menu->render();
     }
 
@@ -45,12 +46,12 @@ abstract class StandardListView implements StandardListViewInterface
         return '';
     }
 
-    public function getRequesterUserObject()
+    public function getInitiatorUserObject()
     {
         return null;
     }
 
-    public function getRequesterComment()
+    public function getInitiatorComment()
     {
         return null;
     }
@@ -60,5 +61,26 @@ abstract class StandardListView implements StandardListViewInterface
         return array();
     }
 
+    protected function getRequestedByElement()
+    {
+        return new Element('span', t('Requested By '));
+    }
+
+    public function getInitiatorActionDescription()
+    {
+
+        $user = $this->getInitiatorUserObject();
+        if (is_object($user)) {
+            $element = $this->getRequestedByElement();
+            $inner = new Element('span', null, array('class' => 'ccm-block-desktop-waiting-for-me-author'));
+
+            $link = new Link('#', $user->getUserDisplayName());
+
+            $element->appendChild($inner);
+            $inner->appendChild($link);
+            return $element;
+        }
+
+    }
 
 }

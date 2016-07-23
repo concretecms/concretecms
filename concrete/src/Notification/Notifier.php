@@ -2,7 +2,10 @@
 namespace Concrete\Core\Notification;
 
 use Concrete\Core\Entity\Notification\Notification;
+use Concrete\Core\Entity\Notification\NotificationAlert;
+use Concrete\Core\Notification\Subject\SubjectInterface;
 use Concrete\Core\Notification\Subscription\SubscriptionInterface;
+use Concrete\Core\Notification\Type\TypeInterface;
 use Concrete\Core\Permission\Access\Access;
 use Concrete\Core\Permission\Access\Entity\Entity;
 use Concrete\Core\Permission\Access\ListItem\NotifyInNotificationCenterNotificationListItem;
@@ -19,8 +22,9 @@ class Notifier
         $this->entityManager = $entityManager;
     }
 
-    public function getUsersToNotify(SubscriptionInterface $subscription)
+    public function getUsersToNotify(TypeInterface $type, SubjectInterface $subject)
     {
+        $subscription = $type->getSubscription($subject);
         $key = Key::getByHandle('notify_in_notification_center');
         $access = $key->getPermissionAssignmentObject()->getPermissionAccessObject();
         $users = array();
@@ -48,6 +52,10 @@ class Notifier
             /**
              * @var $item NotifyInNotificationCenterNotificationListItem
              */
+            $usersToRemove = array();
+            foreach($subject->getUsersToExcludeFromNotification() as $user) {
+                $usersToRemove[] = $user->getUserID();
+            }
             foreach($items as $item) {
                 if ($item->getSubscriptionsAllowedPermission() == 'N' ||
                     ($item->getSubscriptionsAllowedPermission() == 'C' && in_array($subscription, $item->getSubscriptionsAllowedArray()))) {
@@ -55,17 +63,22 @@ class Notifier
                      * @var $entity Entity
                      */
                     $entity = $item->getAccessEntityObject();
-                    $usersToRemove = $entity->getAccessEntityUsers($access);
-                    $users = array_filter($users, function($element) use ($usersToRemove) {
-                        if (in_array($element, $usersToRemove)) {
-                            return false;
-                        }
-                        return true;
-                    });
+                    foreach($entity->getAccessEntityUsers($access) as $user) {
+                        $usersToRemove[] = $user->getUserID();
+                    }
                 }
             }
 
             $users = array_unique($users);
+            $usersToRemove = array_unique($usersToRemove);
+
+            $users = array_filter($users, function($element) use ($usersToRemove) {
+                if (in_array($element->getUserID(), $usersToRemove)) {
+                    return false;
+                }
+                return true;
+            });
+
             return $users;
         }
     }
@@ -73,9 +86,12 @@ class Notifier
     public function notify($users, Notification $notification)
     {
         foreach($users as $user) {
-            $notification->getUsersToAlert()->add($user->getEntityObject());
+            $alert = new NotificationAlert();
+            $alert->setUser($user->getEntityObject());
+            $alert->setNotification($notification);
+            $this->entityManager->persist($alert);
         }
-        $this->entityManager->persist($notification);
+
         $this->entityManager->flush();
     }
 

@@ -12,9 +12,9 @@ class UserSignupType extends Type
     /**
      * @param $user UserSignup
      */
-    public function createNotification(SubjectInterface $user)
+    public function createNotification(SubjectInterface $signup)
     {
-        return new UserSignupNotification($user);
+        return new UserSignupNotification($signup);
     }
 
     protected function createSubscription()

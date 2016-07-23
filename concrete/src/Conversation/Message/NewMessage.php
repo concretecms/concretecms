@@ -23,4 +23,9 @@ class NewMessage implements SubjectInterface
         return $this->message->getConversationMessageDateTime();
     }
 
+    public function getUsersToExcludeFromNotification()
+    {
+        return array($this->message->getConversationMessageAuthorObject()->getUser());
+    }
+
 }

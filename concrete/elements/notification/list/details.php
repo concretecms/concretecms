@@ -2,27 +2,21 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 
 /**
- * @var $listView \Concrete\Core\Notification\View\ListViewInterface
+ * @var $listView \Concrete\Core\Notification\View\StandardListViewInterface
  */
 
 ?>
 
-<div class="" data-notification-id="<?=$listView->getNotificationObject()->getNotificationID()?>">
-    <form action="" method="post">
+    <div class="ccm-block-desktop-waiting-for-me-description">
+        <?php print $listView->getActionDescription() ?>
+    </div>
 
-        <div class="">
-            <?=$listView->renderIcon()?>
+    <?php
+    $author = $listView->getInitiatorUserObject();
+    if (is_object($author)) { ?>
+        <div class="ccm-block-desktop-waiting-for-me-about">
+
+            <?php print $listView->getInitiatorActionDescription() ?>
+
         </div>
-
-        <div class="">
-            <?=$listView->renderDetails()?>
-        </div>
-
-        <div class="">
-            <?=$listView->renderMenu()?>
-        </div>
-
-    </form>
-</div>
-
-
+    <?php } ?>

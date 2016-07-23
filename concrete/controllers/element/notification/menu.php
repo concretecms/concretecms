@@ -2,10 +2,9 @@
 namespace Concrete\Controller\Element\Notification;
 
 use Concrete\Core\Controller\ElementController;
-use Concrete\Core\Entity\Notification\Notification;
-use Concrete\Core\Notification\View\ListViewInterface;
+use Concrete\Core\Notification\View\StandardListViewInterface;
 
-class Menu extends ElementController
+class Menu extends ListDetails
 {
 
     public function getElement()
@@ -15,5 +14,6 @@ class Menu extends ElementController
 
     public function view()
     {
+        parent::view();
     }
 }

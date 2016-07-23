@@ -431,8 +431,10 @@ class User
         return \UserInfo::getByID($this->getUserID());
     }
 
-
-
+    public function __toString()
+    {
+        return $this->getUserID();
+    }
 
 
 }
