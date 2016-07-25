@@ -168,7 +168,7 @@ class Application extends Container
 
                 // job sets
                 if (!strlen($url)) {
-                    $jSets = JobSet::getList();
+                    $jSets = JobSet::getList(true);
                     if (is_array($jSets) && count($jSets)) {
                         foreach ($jSets as $set) {
                             if ($set->isScheduledForNow()) {
