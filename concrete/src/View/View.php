@@ -124,7 +124,7 @@ class View extends AbstractView
                 default:
                     $this->themeObject = PageTheme::getByHandle($this->themeHandle);
                     $this->themePkgHandle = $this->themeObject->getPackageHandle();
-                }
+
             }
             $this->themeAbsolutePath = $env->getPath(DIRNAME_THEMES.'/'.$this->themeHandle, $this->themePkgHandle);
             $this->themeRelativePath = $env->getURL(DIRNAME_THEMES.'/'.$this->themeHandle, $this->themePkgHandle);
