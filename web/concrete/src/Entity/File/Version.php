@@ -11,6 +11,7 @@ use Concrete\Core\File\Image\Thumbnail\Path\Resolver;
 use Concrete\Core\File\Image\Thumbnail\Thumbnail;
 use Concrete\Core\File\Image\Thumbnail\Type\Type;
 use Concrete\Core\File\Image\Thumbnail\Type\Version as ThumbnailTypeVersion;
+use Concrete\Core\File\Importer;
 use Concrete\Core\File\Menu;
 use Concrete\Core\File\Type\TypeList as FileTypeList;
 use Concrete\Core\Http\FlysystemFileResponse;
@@ -194,6 +195,23 @@ class Version
         Events::dispatch('on_file_version_add', $fve);
 
         return $fv;
+    }
+
+    public function duplicateUnderlyingFile()
+    {
+        $importer = new Importer();
+        $fi = Core::make('helper/file');
+        $cf = Core::make('helper/concrete/file');
+        $filesystem = $this->getFile()->getFileStorageLocationObject()->getFileSystemObject();
+        do {
+            $prefix = $importer->generatePrefix();
+            $path = $cf->prefix($prefix, $this->getFilename());
+        } while($filesystem->has($path));
+        $filesystem->write($path, $this->getFileResource()->read(), array(
+            'visibility' => AdapterInterface::VISIBILITY_PUBLIC,
+            'mimetype' => Core::make('helper/mime')->mimeFromExtension($fi->getExtension($this->getFilename()))
+        ));
+        $this->updateFile($this->getFilename(), $prefix);
     }
 
     public static function cleanTags($tagsStr)
@@ -523,6 +541,24 @@ class Version
         $this->logVersionUpdate(self::UT_TITLE);
         $fe = new \Concrete\Core\File\Event\FileVersion($this);
         Events::dispatch('on_file_version_update_title', $fe);
+    }
+
+    public function duplicateUnderlyingFile()
+    {
+        $importer = new Importer();
+        $fi = Core::make('helper/file');
+        $cf = Core::make('helper/concrete/file');
+        $filesystem = $this->getFile()->
+            getFileStorageLocationObject()->getFileSystemObject();
+        do {
+            $prefix = $importer->generatePrefix();
+            $path = $cf->prefix($prefix, $this->getFilename());
+        } while($filesystem->has($path));
+        $filesystem->write($path, $this->getFileResource()->read(), array(
+            'visibility' => AdapterInterface::VISIBILITY_PUBLIC,
+            'mimetype' => Core::make('helper/mime')->mimeFromExtension($fi->getExtension($this->getFilename()))
+        ));
+        $this->updateFile($this->getFilename(), $prefix);
     }
 
     public function logVersionUpdate($updateTypeID, $updateTypeAttributeID = 0)

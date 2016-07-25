@@ -17,7 +17,8 @@ class View extends AbstractView
     protected $themeObject;
     protected $themeRelativePath;
     protected $themeAbsolutePath;
-    protected $pkgHandle;
+    protected $viewPkgHandle;
+    protected $themePkgHandle;
     protected $viewRootDirectoryName = DIRNAME_VIEWS;
 
     protected function constructView($path = false)
@@ -28,7 +29,7 @@ class View extends AbstractView
 
     public function setPackageHandle($pkgHandle)
     {
-        $this->pkgHandle = $pkgHandle;
+        $this->viewPkgHandle = $pkgHandle;
     }
 
     public function getThemeDirectory()
@@ -69,7 +70,7 @@ class View extends AbstractView
         extract($args);
         extract($this->getScopeItems());
         $env = Environment::get();
-        include $env->getPath(DIRNAME_THEMES.'/'.$this->themeHandle.'/'.$file, $this->pkgHandle);
+        include $env->getPath(DIRNAME_THEMES.'/'.$this->themeHandle.'/'.$file, $this->themePkgHandle);
     }
 
     /**
@@ -122,11 +123,11 @@ class View extends AbstractView
                     break;
                 default:
                     $this->themeObject = PageTheme::getByHandle($this->themeHandle);
-                    $this->pkgHandle = $this->themeObject->getPackageHandle();
+                    $this->themePkgHandle = $this->themeObject->getPackageHandle();
+                }
             }
-
-            $this->themeAbsolutePath = $env->getPath(DIRNAME_THEMES.'/'.$this->themeHandle, $this->pkgHandle);
-            $this->themeRelativePath = $env->getURL(DIRNAME_THEMES.'/'.$this->themeHandle, $this->pkgHandle);
+            $this->themeAbsolutePath = $env->getPath(DIRNAME_THEMES.'/'.$this->themeHandle, $this->themePkgHandle);
+            $this->themeRelativePath = $env->getURL(DIRNAME_THEMES.'/'.$this->themeHandle, $this->themePkgHandle);
         }
     }
 
@@ -145,14 +146,14 @@ class View extends AbstractView
         $this->loadViewThemeObject();
         $env = Environment::get();
         if (!$this->innerContentFile) { // will already be set in a legacy tools file
-            $this->setInnerContentFile($env->getPath($this->viewRootDirectoryName.'/'.trim($this->viewPath, '/').'.php', $this->pkgHandle));
+            $this->setInnerContentFile($env->getPath($this->viewRootDirectoryName.'/'.trim($this->viewPath, '/').'.php', $this->viewPkgHandle));
         }
         if ($this->themeHandle) {
             $templateFile = FILENAME_THEMES_VIEW;
             if (is_object($this->controller)) {
                 $templateFile = $this->controller->getThemeViewTemplate();
             }
-            $this->setViewTemplate($env->getPath(DIRNAME_THEMES.'/'.$this->themeHandle.'/'.$templateFile, $this->pkgHandle));
+            $this->setViewTemplate($env->getPath(DIRNAME_THEMES.'/'.$this->themeHandle.'/'.$templateFile, $this->themePkgHandle));
         }
     }
 

@@ -3,28 +3,17 @@ namespace Concrete\Block\GoogleMap;
 
 use Page;
 use Concrete\Core\Block\BlockController;
+use Config;
 use Core;
 
 class Controller extends BlockController
 {
     protected $btTable = 'btGoogleMap';
-    protected $btInterfaceWidth = "400";
-    protected $btInterfaceHeight = "320";
-    protected $btCacheBlockRecord = true;
+    protected $btInterfaceWidth = 400;
+    protected $btInterfaceHeight = 460;
     protected $btCacheBlockOutput = true;
     protected $btCacheBlockOutputOnPost = true;
-    protected $btCacheBlockOutputForRegisteredUsers = false;
 
-    public $title = "";
-    public $location = "";
-    public $latitude = "";
-    public $longitude = "";
-    public $scrollwheel = true;
-    public $zoom = 14;
-
-    /**
-     * Used for localization. If we want to localize the name/description we have to include this.
-     */
     public function getBlockTypeDescription()
     {
         return t("Enter an address and a Google Map of that location will be placed in your page.");
@@ -38,6 +27,10 @@ class Controller extends BlockController
     public function validate($args)
     {
         $error = Core::make('helper/validation/error');
+
+        if (!trim($args['apiKey'])) {
+            $error->add(t('Please enter a valid API key.'));
+        }
 
         if (empty($args['location']) || $args['latitude'] === '' || $args['longtitude'] === '') {
             $error->add(t('You must select a valid location.'));
@@ -55,25 +48,26 @@ class Controller extends BlockController
     public function registerViewAssets($outputContent = '')
     {
         $this->requireAsset('javascript', 'jquery');
-        $this->addFooterItem(
-            '<script defer src="https://maps.googleapis.com/maps/api/js"></script>'
-        );
+
+        $c = Page::getCurrentPage();
+        if (!$c->isEditMode()) {
+            $this->addFooterItem(
+                '<script defer src="https://maps.googleapis.com/maps/api/js?key='
+                . Config::get('app.api_keys.google.maps')
+                .'"></script>'
+            );
+        }
     }
 
     public function view()
     {
         $this->set('unique_identifier', Core::make('helper/validation/identifier')->getString(18));
-        $this->set('bID', $this->bID);
-        $this->set('title', $this->title);
-        $this->set('location', $this->location);
-        $this->set('latitude', $this->latitude);
-        $this->set('longitude', $this->longitude);
-        $this->set('zoom', $this->zoom);
-        $this->set('scrollwheel', $this->scrollwheel);
     }
 
     public function save($data)
     {
+        Config::save('app.api_keys.google.maps', trim($data['apiKey']));
+
         $data += array(
            'title' => '',
            'location' => '',
@@ -81,9 +75,10 @@ class Controller extends BlockController
            'latitude' => 0,
            'longitude' => 0,
            'width' => null,
-           'width' => null,
+           'height' => null,
            'scrollwheel' => 0,
         );
+
         $args['title'] = trim($data['title']);
         $args['location'] = trim($data['location']);
         $args['zoom'] = (intval($data['zoom']) >= 0 && intval($data['zoom']) <= 21) ? intval($data['zoom']) : 14;
@@ -92,6 +87,7 @@ class Controller extends BlockController
         $args['width'] = $data['width'];
         $args['height'] = $data['height'];
         $args['scrollwheel'] = $data['scrollwheel'] ? 1 : 0;
+
         parent::save($args);
     }
 }

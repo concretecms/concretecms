@@ -3,6 +3,7 @@ namespace Concrete\Core\Permission\Access;
 
 use Concrete\Core\Foundation\Object;
 use CacheLocal;
+use Concrete\Core\Permission\Access\ListItem\ListItem;
 use Concrete\Core\Permission\Key\Key as PermissionKey;
 use User;
 use Core;
@@ -15,6 +16,12 @@ class Access extends Object
 {
     protected $paID;
     protected $paIDList = array();
+    protected $listItems;
+
+    public function setListItems($listItems)
+    {
+        $this->listItems = $listItems;
+    }
 
     public function setPermissionKey($permissionKey)
     {
@@ -62,20 +69,55 @@ class Access extends Object
             $class = '\\Concrete\\Core\\Permission\\Access\\ListItem\\ListItem';
         }
 
-        $filterString = $this->buildAssignmentFilterString($accessType, $filterEntities);
-        $q = $q . ' ' . $filterString;
+        // Now that we have the proper list item class, let's see if we have a custom list item array we've passed
+        // in from the contents of another permission key. If we do, we loop through those, setting their relevant
+        // parameters on our new access list item
+
         $list = array();
-        $r = $db->executeQuery($q);
-        while ($row = $r->FetchRow()) {
-            $obj = Core::make($class);
-            $obj->setPropertiesFromArray($row);
-            if ($row['pdID']) {
-                $obj->loadPermissionDurationObject($row['pdID']);
+        if (isset($this->listItems)) {
+            foreach($this->listItems as $listItem) {
+                $addToList = false;
+                if (count($filterEntities) > 0) {
+                    foreach($filterEntities as $filterEntity) {
+                        if ($filterEntity->getAccessEntityID() == $listItem->getAccessEntityObject()->getAccessEntityID()) {
+                            $addToList = true;
+                        }
+                    }
+                } else {
+                    $addToList = true;
+                }
+
+                if ($addToList) {
+                    /**
+                     * @var $listItem ListItem
+                     * @var $obj ListItem
+                     */
+                    $obj = Core::make($class);
+                    $obj->setAccessType($listItem->getAccessType());
+                    $obj->setPermissionAccessID($listItem->getPermissionAccessID());
+                    $obj->setAccessEntityObject($listItem->getAccessEntityObject());
+                    $obj->setPermissionDurationObject($listItem->getPermissionDurationObject());
+                    $list[] = $obj;
+                }
             }
-            if ($row['peID']) {
-                $obj->loadAccessEntityObject($row['peID']);
+
+        } else {
+
+            $filterString = $this->buildAssignmentFilterString($accessType, $filterEntities);
+            $q = $q . ' ' . $filterString;
+            $r = $db->executeQuery($q);
+            while ($row = $r->FetchRow()) {
+                $obj = Core::make($class);
+                $obj->setPropertiesFromArray($row);
+                if ($row['pdID']) {
+                    $obj->loadPermissionDurationObject($row['pdID']);
+                }
+                if ($row['peID']) {
+                    $obj->loadAccessEntityObject($row['peID']);
+                }
+                $list[] = $obj;
             }
-            $list[] = $obj;
+
         }
 
         return $list;
