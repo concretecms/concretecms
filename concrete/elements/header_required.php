@@ -6,6 +6,7 @@ if (is_object($c)) {
     $cp = new Permissions($c);
 }
 
+$config = \Core::make('site')->getSite()->getConfigRepository();
 /*
  * Handle page title
  */
@@ -29,7 +30,7 @@ if (is_object($c)) {
 			if (!$seo->hasCustomTitle()) {
 				$seo->addTitleSegmentBefore($pageTitle);
 			}
-			$seo->setSiteName(tc('SiteName', Config::get('concrete.site')));
+			$seo->setSiteName(tc('SiteName', \Core::make('site')->getSite()->getSiteName()));
 			$seo->setTitleFormat(Config::get('concrete.seo.title_format'));
 			$seo->setTitleSegmentSeparator(Config::get('concrete.seo.title_segment_separator'));
 			$pageTitle = $seo->getTitle();
@@ -129,10 +130,10 @@ if ($u->isRegistered()) {
     $v->addFooterItem('<script type="text/javascript">$(function() { ccm_enableUserProfileMenu(); });</script>');
 }
 
-$favIconFID = intval(Config::get('concrete.misc.favicon_fid'));
-$appleIconFID = intval(Config::get('concrete.misc.iphone_home_screen_thumbnail_fid'));
-$modernIconFID = intval(Config::get('concrete.misc.modern_tile_thumbnail_fid'));
-$modernIconBGColor = strval(Config::get('concrete.misc.modern_tile_thumbnail_bgcolor'));
+$favIconFID = intval($config->get('misc.favicon_fid'));
+$appleIconFID = intval($config->get('misc.iphone_home_screen_thumbnail_fid'));
+$modernIconFID = intval($config->get('misc.modern_tile_thumbnail_fid'));
+$modernIconBGColor = strval($config->get('misc.modern_tile_thumbnail_bgcolor'));
 
 if ($favIconFID) {
     $f = File::getByID($favIconFID);
@@ -189,7 +190,7 @@ $v = View::getInstance();
 $v->markHeaderAssetPosition();
 
 if (empty($disableTrackingCode)) {
-    echo Config::get('concrete.seo.tracking.code.header');
+    echo $config->get('seo.tracking.code.header');
 }
 
 echo $c->getAttribute('header_extra_content');

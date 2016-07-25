@@ -17,6 +17,9 @@ class Controller extends AbstractController implements ControllerInterface
         return true;
     }
 
+    /**
+     * @return Link
+     */
     public function getMenuItemLinkElement()
     {
         $a = new Link();

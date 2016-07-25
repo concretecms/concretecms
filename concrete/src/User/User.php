@@ -90,7 +90,7 @@ class User extends Object
         if ($session->get('uID') > 0) {
             $db = $app['database']->connection();
 
-            $row = $db->GetRow("select uID, uIsActive, uLastPasswordChange, ulsPasswordReset from Users where uID = ? and uName = ?", array($session->get('uID'), $session->get('uName')));
+            $row = $db->GetRow("select uID, uIsActive, uLastPasswordChange, uIsPasswordReset from Users where uID = ? and uName = ?", array($session->get('uID'), $session->get('uName')));
             $checkUID = (isset($row['uID'])) ? ($row['uID']) : (false);
 
             if ($checkUID == $session->get('uID')) {
@@ -104,7 +104,7 @@ class User extends Object
                     return false;
                 }
 
-                if ($row['ulsPasswordReset']) {
+                if ($row['uIsPasswordReset']) {
                     return false;
                 }
 
@@ -576,7 +576,7 @@ class User extends Object
                     $mh->addParameter('badgeName', $g->getGroupDisplayName(false));
                     $mh->addParameter('uDisplayName', $ui->getUserDisplayName());
                     $mh->addParameter('uProfileURL', (string) $ui->getUserPublicProfileURL());
-                    $mh->addParameter('siteName', tc('SiteName', $app['config']->get('concrete.site')));
+                    $mh->addParameter('siteName', tc('SiteName', $app['site']->getSite()->getSiteName()));
                     $mh->to($ui->getUserEmail());
                     $mh->load('won_badge');
                     $mh->sendMail();

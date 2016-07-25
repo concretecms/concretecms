@@ -3,8 +3,10 @@ namespace Concrete\Core\Cache;
 
 use Core;
 use Config;
+use Psr\Cache\CacheItemInterface;
 use Stash\Driver\BlackHole;
 use Stash\Driver\Composite;
+use Stash\Interfaces\ItemInterface;
 use Stash\Pool;
 
 /**
@@ -21,7 +23,7 @@ use Stash\Pool;
 abstract class Cache
 {
     /** @var Pool */
-    protected $pool = null;
+    public $pool = null;
     /** @var bool */
     protected $enabled = false;
     /** @var \Stash\Interfaces\DriverInterface */
@@ -138,6 +140,11 @@ abstract class Cache
     public function getItem($key)
     {
         return $this->pool->getItem($key);
+    }
+
+    public function save(CacheItemInterface $item)
+    {
+        $this->pool->save($item);
     }
 
     /**

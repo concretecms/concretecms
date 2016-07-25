@@ -38,7 +38,7 @@ class AddConversationMessageConversationAccess extends ConversationAccess
 
     public function getAccessListItems(
         $accessType = Key::ACCESS_TYPE_INCLUDE,
-        $filterEntities = array()
+        $filterEntities = array(), $checkCache = true
     ) {
         $db = Database::connection();
         $list = parent::getAccessListItems($accessType, $filterEntities);

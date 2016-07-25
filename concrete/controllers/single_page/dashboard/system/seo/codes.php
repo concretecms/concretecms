@@ -3,19 +3,21 @@ namespace Concrete\Controller\SinglePage\Dashboard\System\Seo;
 
 use Concrete\Core\Cache\Page\PageCache;
 use Concrete\Core\Page\Controller\DashboardPageController;
+use Concrete\Core\Page\Controller\DashboardSitePageController;
 use Config;
 
-class Codes extends DashboardPageController
+class Codes extends DashboardSitePageController
 {
     public function view()
     {
-        $this->set('tracking_code_header', Config::get('concrete.seo.tracking.code.header'));
-        $this->set('tracking_code_footer', Config::get('concrete.seo.tracking.code.footer'));
+        $config = $this->getSite()->getConfigRepository();
+        $this->set('tracking_code_header', $config->get('seo.tracking.code.header'));
+        $this->set('tracking_code_footer', $config->get('seo.tracking.code.footer'));
 
         if ($this->isPost()) {
             if ($this->token->validate('update_tracking_code')) {
-                Config::save('concrete.seo.tracking.code.header', $this->post('tracking_code_header'));
-                Config::save('concrete.seo.tracking.code.footer', $this->post('tracking_code_footer'));
+                $config->save('seo.tracking.code.header', $this->post('tracking_code_header'));
+                $config->save('seo.tracking.code.footer', $this->post('tracking_code_footer'));
 
                 $pageCache = PageCache::getLibrary();
                 if (is_object($pageCache)) {

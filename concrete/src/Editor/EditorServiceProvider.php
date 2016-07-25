@@ -12,11 +12,11 @@ class EditorServiceProvider extends ServiceProvider
         $this->app->singleton(
             'editor',
             function ($app) {
-                $config = $app->make('config');
-                $styles = $config->get('concrete.editor.ckeditor4.styles', array());
+                $config = $app->make('site')->getSite()->getConfigRepository();
+                $styles = $config->get('editor.ckeditor4.styles', array());
                 $pluginManager = new PluginManager();
                 $pluginManager->selectMultiple(
-                    $config->get('concrete.editor.ckeditor4.plugins.selected', array())
+                    $config->get('editor.ckeditor4.plugins.selected', array())
                 );
                 $this->registerCkeditorPlugins($pluginManager);
                 $this->registerCorePlugins($pluginManager);
@@ -29,11 +29,11 @@ class EditorServiceProvider extends ServiceProvider
 
                 $editor->setAllowFileManager(
                     $filePermission->canAccessFileManager()
-                    && $config->get('concrete.editor.concrete.enable_filemanager')
+                    && $config->get('editor.concrete.enable_filemanager')
                 );
                 $editor->setAllowSitemap(
                     $taskPermission->canAccessSitemap()
-                    && $config->get('concrete.editor.concrete.enable_sitemap')
+                    && $config->get('editor.concrete.enable_sitemap')
                 );
                 return $editor;
             }

@@ -81,7 +81,7 @@ class AddSubpagePageAccess extends PageAccess
         }
     }
 
-    public function getAccessListItems($accessType = PagePermissionKey::ACCESS_TYPE_INCLUDE, $filterEntities = array())
+    public function getAccessListItems($accessType = PagePermissionKey::ACCESS_TYPE_INCLUDE, $filterEntities = array(), $checkCache = true)
     {
         $db = Database::connection();
         $list = parent::getAccessListItems($accessType, $filterEntities);

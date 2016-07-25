@@ -19,7 +19,6 @@ if ($isGlobalArea) {
 if ($c->isMasterCollection()) {
     echo '<div class="ccm-ui"><div class="alert alert-warning">';
     echo t('This is a global block.  Editing it here will change all instances of this block throughout the site.');
-    //echo t('This is a global block.  Edit it from the <a href="%s">Global Scrapbook</a> in your dashboard.<br /><br /><br />', View::url('/dashboard/scrapbook/') );
     //echo '[<a class="ccm-dialog-close">'.t('Close Window').'</a>]';
     echo '</div></div>';
 }

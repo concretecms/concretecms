@@ -221,7 +221,7 @@ class Controller extends AuthenticationTypeController
                     $mh->from($fromEmail, $fromName);
                 }
 
-                $mh->addParameter('siteName', tc('SiteName', Config::get('concrete.site')));
+                $mh->addParameter('siteName', tc('SiteName', \Core::make('site')->getSite()->getSiteName()));
                 $mh->load('forgot_password');
                 @$mh->sendMail();
             } catch (\Exception $e) {
@@ -366,7 +366,7 @@ class Controller extends AuthenticationTypeController
         $app = Application::getFacadeApplication();
         $db = $app['database']->connection();
 
-        return $db->GetOne('select ulsPasswordReset from Users where uName = ?', array($this->post('uName')));
+        return $db->GetOne('select uIsPasswordReset from Users where uName = ?', array($this->post('uName')));
     }
 
     public function v($hash = '')

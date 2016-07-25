@@ -1,9 +1,9 @@
 <?php
 namespace Concrete\Controller\SinglePage\Dashboard\System\Seo;
 
-use Concrete\Core\Page\Controller\DashboardPageController;
+use Concrete\Core\Page\Controller\DashboardSitePageController;
 
-class Urls extends DashboardPageController
+class Urls extends DashboardSitePageController
 {
     /**
      * Dashboard page view.
@@ -13,12 +13,14 @@ class Urls extends DashboardPageController
      */
     public function view($strStatus = false, $prettyUrlState = '')
     {
-        $config = $this->app->make('config');
-        $urlRewriting = (bool) $config->get('concrete.seo.url_rewriting');
+        $globalConfig = $this->app->make('config');
+        $siteConfig = $this->getSite()->getConfigRepository();
+
+        $urlRewriting = (bool) $globalConfig->get('seo.url_rewriting');
         $this->set('fh', $this->app->make('helper/form'));
-        $this->set('canonical_url', $config->get('concrete.seo.canonical_url'));
-        $this->set('canonical_ssl_url', $config->get('concrete.seo.canonical_ssl_url'));
-        $this->set('redirect_to_canonical_url', $config->get('concrete.seo.redirect_to_canonical_url'));
+        $this->set('canonical_url', $siteConfig->get('seo.canonical_url'));
+        $this->set('canonical_ssl_url', $siteConfig->get('seo.canonical_ssl_url'));
+        $this->set('redirect_to_canonical_url', $globalConfig->get('concrete.seo.redirect_to_canonical_url'));
         $this->set('urlRewriting', $urlRewriting);
 
         $strStatus = (string) $strStatus;
@@ -125,14 +127,15 @@ class Urls extends DashboardPageController
                 $this->error->add(t('The SSL canonical URL provided must start with "https://".'));
             }
             if (!$this->error->has()) {
-                $config = $this->app->make('config');
-                $config->save('concrete.seo.canonical_url', $this->post('canonical_url'));
-                $config->save('concrete.seo.canonical_ssl_url', $this->post('canonical_ssl_url'));
-                $config->save('concrete.seo.redirect_to_canonical_url', $this->post('redirect_to_canonical_url') ? 1 : 0);
+                $globalConfig = $this->app->make('config');
+                $siteConfig = $this->getSite()->getConfigRepository();
+                $siteConfig->save('seo.canonical_url', $this->post('canonical_url'));
+                $siteConfig->save('seo.canonical_ssl_url', $this->post('canonical_ssl_url'));
+                $globalConfig->save('concrete.seo.redirect_to_canonical_url', $this->post('redirect_to_canonical_url') ? 1 : 0);
 
                 $urlRewriting = (bool) $this->post('URL_REWRITING');
-                $config->save('concrete.seo.url_rewriting', $urlRewriting);
-                $config->set('concrete.seo.url_rewriting', $urlRewriting);
+                $globalConfig->save('seo.url_rewriting', $urlRewriting);
+                $globalConfig->set('seo.url_rewriting', $urlRewriting);
                 $manager = $this->app->make('Concrete\Core\Service\Manager\ServiceManager');
                 /* @var \Concrete\Core\Service\Manager\ServiceManager $manager */
                 $prettyUrlState = '';

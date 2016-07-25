@@ -12,23 +12,26 @@ use Doctrine\ORM\Mapping as ORM;
 class UserValue extends Value
 {
     /**
-     * @ORM\Column(type="integer", options={"unsigned": true})
-     **/
-    protected $uID;
+     * @ORM\ManyToOne(targetEntity="\Concrete\Core\Entity\User\User"),
+     * @ORM\JoinColumn(name="uID", referencedColumnName="uID")
+     */
+    protected $user;
 
     /**
      * @return mixed
      */
-    public function getUserID()
+    public function getUser()
     {
-        return $this->uID;
+        return $this->user;
     }
 
     /**
-     * @param mixed $cID
+     * @param mixed $version
      */
-    public function setUserID($uID)
+    public function setUser($user)
     {
-        $this->uID = $uID;
+        $this->user = $user;
     }
+
+
 }

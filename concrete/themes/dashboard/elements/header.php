@@ -82,6 +82,27 @@ $large_font = (bool) Config::get('concrete.accessibility.toolbar_large_font');
                 </span>
             </a>
         </li>
+        <?php
+        $ihm = Core::make("helper/concrete/ui/menu");
+        $cih = Core::make('helper/concrete/ui');
+        $items = $ihm->getPageHeaderMenuItems('left');
+        foreach ($items as $ih) {
+            $cnt = $ih->getController();
+            if ($cnt->displayItem()) {
+                $cnt->registerViewAssets();
+                ?>
+                <li class="pull-left"><?= $cnt->getMenuItemLinkElement() ?></li>
+                <?php
+            }
+        }
+
+        if ($cih->showWhiteLabelMessage()) {
+            ?>
+            <li class="pull-left visible-xs visible-lg" id="ccm-white-label-message"><?= t('Powered by <a href="%s">concrete5</a>.', Config::get('concrete.urls.concrete5')) ?></li>
+            <?php
+        }
+        ?>
+
         <li class="pull-right hidden-xs hidden-sm">
             <a href="<?=URL::to('/dashboard')?>"
                 data-launch-panel="dashboard"
@@ -108,6 +129,18 @@ $large_font = (bool) Config::get('concrete.accessibility.toolbar_large_font');
         <li class="pull-right ccm-toolbar-mobile-menu-button visible-xs visible-sm hidden-md hidden-lg">
             <i class="fa fa-bars"></i>
         </li>
+        <?php
+        $items = $ihm->getPageHeaderMenuItems('right');
+        foreach ($items as $ih) {
+            $cnt = $ih->getController();
+            if ($cnt->displayItem()) {
+                $cnt->registerViewAssets();
+                ?>
+                <li class="pull-right"><?= $cnt->getMenuItemLinkElement() ?></li>
+                <?php
+            }
+        }
+        ?>
     </ul>
 </div>
 <?php

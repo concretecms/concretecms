@@ -424,7 +424,7 @@ abstract class Key extends Object
             $valid = false;
         }
 
-        $item->set($valid);
+        $cache->save($item->set($valid));
 
         return $valid;
     }
