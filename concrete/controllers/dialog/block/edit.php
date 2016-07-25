@@ -2,9 +2,13 @@
 namespace Concrete\Controller\Dialog\Block;
 
 use Concrete\Controller\Backend\UserInterface\Block as BackendInterfaceBlockController;
+use Concrete\Core\Block\Block;
 use Concrete\Core\Block\View\BlockView;
 use BlockType;
 use Area;
+use Concrete\Core\Foundation\Queue\Queue;
+use Concrete\Core\Page\Page;
+use Concrete\Core\View\View;
 
 class Edit extends BackendInterfaceBlockController
 {
@@ -23,91 +27,99 @@ class Edit extends BackendInterfaceBlockController
         $this->set('bv', $bv);
     }
 
+    protected function validateBlock($b)
+    {
+        $bi = $b->getInstance();
+        if ($b->getBlockTypeHandle() == BLOCK_HANDLE_SCRAPBOOK_PROXY) {
+            $_b = \Block::getByID($bi->getOriginalBlockID());
+            $bi = $_b->getInstance(); // for validation
+        }
+
+        $e = $bi->validate($_POST);
+        return $e;
+    }
+
+    protected function getEditResponse($b, $e)
+    {
+        $pr = new \Concrete\Core\Page\EditResponse();
+        $pr->setPage($this->page);
+        $pr->setAdditionalDataAttribute('aID', $this->area->getAreaID());
+        $pr->setAdditionalDataAttribute('arHandle', $this->area->getAreaHandle());
+        $pr->setAdditionalDataAttribute('bID', $b->getBlockID());
+        $pr->setError($e);
+        return $pr;
+    }
+
+    public function submit_master()
+    {
+        if ($this->validateAction() && $this->canAccess() && $this->page->isMasterCollection()) {
+            $b = $this->getBlockToEdit();
+            $e = $this->validateBlock($b);
+            $pr = $this->getEditResponse($b, $e);
+
+            if (!is_object($e) || ($e instanceof \Concrete\Core\Error\ErrorList\ErrorList && !$e->has())) {
+
+                $name = sprintf('update_defaults_%s', $b->getBlockID());
+                $queue = Queue::get($name);
+
+                if ($_POST['process']) {
+                    $obj = new \stdClass();
+                    $messages = $queue->receive(20);
+                    foreach ($messages as $key => $p) {
+                        $block = unserialize($p->body);
+                        // Get a block object for the related block
+                        $page = Page::getByID($block['cID'], $block['cvID']);
+                        $approve = $page->getVersionObject()->isApproved();
+                        $child = Block::getByID($block['bID'], $page, $block['arHandle']);
+                        $nvc = $page->getVersionToModify();
+                        $child->loadNewCollection($nvc);
+
+                        // Update the block on the page.
+                        if ($child->isAlias()) {
+                            $nb = $child->duplicate($nvc);
+                            $child->deleteBlock();
+                            $child = $nb;
+                        }
+
+                        if ($approve) {
+                            $nvc->getVersionObject()->approve();
+                        }
+
+                        $child->update($block['data']);
+                        $queue->deleteMessage($p);
+
+                    }
+                    $obj->totalItems = $queue->count();
+                    if ($queue->count() == 0) {
+                        $queue->deleteQueue($name);
+                    }
+                    $obj->bID = $b->getBlockID();
+                    $obj->aID = $this->area->getAreaID();
+                    echo json_encode($obj);
+                    $this->app->shutdown();
+                } else {
+                    $queue = $b->queueForDefaultsUpdate($_POST, $queue);
+                }
+
+                $totalItems = $queue->count();
+                View::element('progress_bar', array('totalItems' => $totalItems, 'totalItemsSummary' => t2("%d block", "%d blocks", $totalItems)));
+                $this->app->shutdown();
+            }
+        }
+    }
+
     public function submit()
     {
         if ($this->validateAction() && $this->canAccess()) {
-            $c = $this->page;
-            $a = \Area::get($this->page, $_REQUEST['arHandle']);
-            $ax = $a;
-            $cx = $c;
-            if ($a->isGlobalArea()) {
-                $ax = STACKS_AREA_NAME;
-                $cx = \Stack::getByName($_REQUEST['arHandle']);
-            }
-            $b = \Block::getByID($_REQUEST['bID'], $cx, $ax);
+            $b = $this->getBlockToEdit();
+            $e = $this->validateBlock($b);
+            $pr = $this->getEditResponse($b, $e);
 
-            $pr = new \Concrete\Core\Page\EditResponse();
-            $pr->setPage($this->page);
-
-            $bi = $b->getInstance();
-            if ($b->getBlockTypeHandle() == BLOCK_HANDLE_SCRAPBOOK_PROXY) {
-                $_b = \Block::getByID($bi->getOriginalBlockID());
-                $bi = $_b->getInstance(); // for validation
-            }
-            $e = $bi->validate($_POST);
-            $pr->setAdditionalDataAttribute('aID', $a->getAreaID());
-            $pr->setAdditionalDataAttribute('arHandle', $a->getAreaHandle());
-            $pr->setError($e);
-
-            if ((!is_object($e)) || (($e instanceof \Concrete\Core\Error\ErrorList\ErrorList) && (!$e->has()))) {
-                $bt = BlockType::getByHandle($b->getBlockTypeHandle());
-                if (!$bt->includeAll()) {
-                    // we make sure to create a new version, if necessary
-                    $nvc = $cx->getVersionToModify();
-                } else {
-                    $nvc = $cx; // keep the same one
-                }
-
-                if ($a->isGlobalArea()) {
-                    $xvc = $c->getVersionToModify(); // we need to create a new version of THIS page as well.
-                    $xvc->relateVersionEdits($nvc);
-                }
-
-                $ob = $b;
-                // replace the block with the version of the block in the later version (if applicable)
-                $b = \Block::getByID($_REQUEST['bID'], $nvc, $ax);
-
-                if ($b->getBlockTypeHandle() == BLOCK_HANDLE_SCRAPBOOK_PROXY) {
-                    // if we're editing a scrapbook display block, we add a new block in this position for the real block type
-                    // set the block to the display order
-                    // delete the scrapbook display block, and save the data
-                    /*
-                    $originalDisplayOrder = $b->getBlockDisplayOrder();
-                    $btx = BlockType::getByHandle($_b->getBlockTypeHandle());
-                    $nb = $nvc->addBlock($btx, $ax, array());
-                    $nb->setAbsoluteBlockDisplayOrder($originalDisplayOrder);
-                    $b->deleteBlock();
-                    $b = &$nb;
-                    */
-
-                    $originalDisplayOrder = $b->getBlockDisplayOrder();
-                    $cnt = $b->getController();
-                    $ob = \Block::getByID($cnt->getOriginalBlockID());
-                    $ob->loadNewCollection($nvc);
-                    if (!is_object($ax)) {
-                        $ax = Area::getOrCreate($cx, $ax);
-                    }
-                    $ob->setBlockAreaObject($ax);
-                    $nb = $ob->duplicate($nvc);
-                    $nb->setAbsoluteBlockDisplayOrder($originalDisplayOrder);
-                    $b->deleteBlock();
-                    $b = &$nb;
-                } else {
-                    if ($b->isAlias()) {
-
-                        // then this means that the block we're updating is an alias. If you update an alias, you're actually going
-                        // to duplicate the original block, and update the newly created block. If you update an original, your changes
-                        // propagate to the aliases
-                        $nb = $ob->duplicate($nvc);
-                        $b->deleteBlock();
-                        $b = &$nb;
-                    }
-                }
-
-                $pr->setAdditionalDataAttribute('bID', $b->getBlockID());
+            if (!is_object($e) || ($e instanceof \Concrete\Core\Error\ErrorList\ErrorList && !$e->has())) {
                 // we can update the block that we're submitting
                 $b->update($_POST);
             }
+
             $pr->outputJSON();
         }
     }

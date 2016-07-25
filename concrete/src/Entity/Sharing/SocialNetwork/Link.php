@@ -24,6 +24,12 @@ class Link
     protected $url;
 
     /**
+     * @ORM\ManyToOne(targetEntity="\Concrete\Core\Entity\Site\Site")
+     * @ORM\JoinColumn(name="siteID", referencedColumnName="siteID")
+     **/
+    protected $site;
+
+    /**
      * @ORM\Id @ORM\Column(type="integer")
      * @ORM\GeneratedValue
      */
@@ -37,6 +43,22 @@ class Link
     public function getURL()
     {
         return $this->url;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSite()
+    {
+        return $this->site;
+    }
+
+    /**
+     * @param mixed $site
+     */
+    public function setSite($site)
+    {
+        $this->site = $site;
     }
 
     public function getID()

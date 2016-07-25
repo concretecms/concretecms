@@ -118,12 +118,14 @@ return array(
         'core_events' => '\Concrete\Core\Events\EventsServiceProvider',
         'core_whoops' => '\Concrete\Core\Error\Provider\WhoopsServiceProvider',
         'core_logging' => '\Concrete\Core\Logging\LoggingServiceProvider',
+        'core_notification' => '\Concrete\Core\Notification\NotificationServiceProvider',
         'core_cache' => '\Concrete\Core\Cache\CacheServiceProvider',
         'core_url' => '\Concrete\Core\Url\UrlServiceProvider',
         'core_devices' => '\Concrete\Core\Device\DeviceServiceProvider',
         'core_imageeditor' => '\Concrete\Core\ImageEditor\EditorServiceProvider',
         'core_user' => '\Concrete\Core\User\UserServiceProvider',
         'core_service_manager' => '\Concrete\Core\Service\Manager\ServiceManagerServiceProvider',
+        'core_site' => '\Concrete\Core\Site\ServiceProvider',
 
         // Authentication
         'core_oauth' => '\Concrete\Core\Authentication\Type\OAuth\ServiceProvider',
@@ -153,6 +155,7 @@ return array(
         'ORM' => '\Concrete\Core\Support\Facade\DatabaseORM',
         'Events' => '\Concrete\Core\Support\Facade\Events',
         'Route' => '\Concrete\Core\Support\Facade\Route',
+        'Site' => '\Concrete\Core\Support\Facade\Site',
         'UserInfo' => '\Concrete\Core\Support\Facade\UserInfo',
         'Log' => '\Concrete\Core\Support\Facade\Log',
         'Image' => '\Concrete\Core\Support\Facade\Image',
@@ -211,6 +214,7 @@ return array(
         "/ccm/system/dialogs/block/aliasing/submit" => array('\Concrete\Controller\Dialog\Block\Aliasing::submit'),
         "/ccm/system/dialogs/block/edit/" => array('\Concrete\Controller\Dialog\Block\Edit::view'),
         "/ccm/system/dialogs/block/edit/submit/" => array('\Concrete\Controller\Dialog\Block\Edit::submit'),
+        "/ccm/system/dialogs/block/edit/submit_master/" => array('\Concrete\Controller\Dialog\Block\Edit::submit_master'),
         "/ccm/system/dialogs/block/cache/" => array('\Concrete\Controller\Dialog\Block\Cache::view'),
         "/ccm/system/dialogs/block/cache/submit" => array('\Concrete\Controller\Dialog\Block\Cache::submit'),
         "/ccm/system/dialogs/block/design/" => array('\Concrete\Controller\Dialog\Block\Design::view'),
@@ -357,6 +361,11 @@ return array(
         // end removing lines
         "/ccm/system/upgrade/" => array('\Concrete\Controller\Upgrade::view'),
         "/ccm/system/upgrade/submit" => array('\Concrete\Controller\Upgrade::submit'),
+
+        /*
+         * Notification
+         */
+        "/ccm/system/notification/alert/archive/" => array('\Concrete\Controller\Backend\Notification\Alert::archive'),
 
         /*
          * General Attribute
@@ -811,6 +820,9 @@ return array(
         'core/users' => array(
             array('javascript', 'js/users.js', array('minify' => false)),
         ),
+        'core/notification' => array(
+            array('javascript', 'js/notification.js', array('minify' => false)),
+        ),
         'core/tree' => array(
             array('javascript', 'js/tree.js', array('minify' => false)),
         ),
@@ -895,6 +907,11 @@ return array(
         'ace' => array(
             array(
                 array('javascript', 'ace'),
+            ),
+        ),
+        'core/notification' => array(
+            array(
+                array('javascript', 'core/notification'),
             ),
         ),
         'core/colorpicker' => array(

@@ -101,7 +101,7 @@ class Stack extends Page implements ExportableInterface
                 }
                 $sql .= ' limit 1';
                 $cID = $db->fetchColumn($sql, $q);
-                $item->set($cID);
+                $cache->save($item->set($cID));
             }
         } else {
             $db = Database::connection();

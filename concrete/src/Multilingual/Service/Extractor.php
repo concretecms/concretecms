@@ -20,7 +20,7 @@ class Extractor
     public function extractTranslatableSiteStrings()
     {
         $translations = new Translations();
-        $translations->insert('SiteName', Config::get('concrete.site'));
+        $translations->insert('SiteName', \Core::make('site')->getSite()->getSiteName());
         $phpParser = new \C5TL\Parser\Php();
         $blockTemplatesParser = new \C5TL\Parser\BlockTemplates();
         $themesPresetsParser = new \C5TL\Parser\ThemePresets();

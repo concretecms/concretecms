@@ -310,6 +310,14 @@ module.exports = function(grunt) {
             ]
         },
 
+        ccm_notification: {
+            dest: '<%= DIR_BASE %>/concrete/js/notification.js',
+            src: [
+                '<%= DIR_BASE %>/concrete/js/build/core/notification/notification.js'
+            ]
+        },
+
+
         ccm_tree: {
             dest: '<%= DIR_BASE %>/concrete/js/tree.js',
             src: '<%= DIR_BASE %>/concrete/js/build/core/tree.js'

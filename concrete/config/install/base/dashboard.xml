@@ -465,7 +465,7 @@
         </page>
         <page name="Basics" path="/dashboard/system/basics" filename="/dashboard/system/basics/view.php" pagetype=""
               description="Basic information about your website." package=""/>
-        <page name="Site Name" path="/dashboard/system/basics/name" filename="/dashboard/system/basics/name.php"
+        <page name="Name &amp; Attributes" path="/dashboard/system/basics/name" filename="/dashboard/system/basics/name.php"
               pagetype="" description="" package="">
             <attributes>
                 <attributekey handle="meta_keywords">
@@ -518,6 +518,21 @@
             <attributes>
                 <attributekey handle="meta_keywords">
                     <value>timezone, profile, locale</value>
+                </attributekey>
+            </attributes>
+        </page>
+
+        <page name="Custom Attributes" path="/dashboard/system/basics/attributes" filename="/dashboard/system/basics/attributes.php"
+              pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>site attributes</value>
+                </attributekey>
+                <attributekey handle="exclude_nav">
+                    <value>1</value>
+                </attributekey>
+                <attributekey handle="exclude_search_index">
+                    <value>1</value>
                 </attributekey>
             </attributes>
         </page>
@@ -838,6 +853,10 @@
                 </attributekey>
             </attributes>
         </page>
+        <page name="Notification Settings" path="/dashboard/system/registration/notification"
+              filename="/dashboard/system/registration/notification.php" pagetype="" description="" package="">
+        </page>
+
         <page name="Email" path="/dashboard/system/mail" filename="/dashboard/system/mail/view.php" pagetype=""
               description="Control how your site send and processes mail." package="">
             <attributes>

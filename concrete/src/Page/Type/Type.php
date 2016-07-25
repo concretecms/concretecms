@@ -967,7 +967,7 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
             $cm = new static();
             $cm->setPropertiesFromArray($r);
             $cm->ptPublishTargetObject = unserialize($r['ptPublishTargetObject']);
-            $item->set($cm);
+            $cache->save($item->set($cm));
 
             return $cm;
         }

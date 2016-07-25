@@ -2,8 +2,9 @@
 namespace Concrete\Controller\SinglePage\Dashboard\System\Basics;
 
 use Concrete\Core\Page\Controller\DashboardPageController;
+use Concrete\Core\Page\Controller\DashboardSitePageController;
 
-class Editor extends DashboardPageController
+class Editor extends DashboardSitePageController
 {
     public function view()
     {

@@ -69,9 +69,10 @@ class File implements \Concrete\Core\Permission\ObjectInterface
     public $ocID = 0;
 
     /**
-     * @ORM\Column(type="integer", options={"unsigned": true})
-     */
-    public $uID = 0;
+     * @ORM\ManyToOne(targetEntity="\Concrete\Core\Entity\User\User")
+     * @ORM\JoinColumn(name="uID", referencedColumnName="uID")
+     **/
+    public $author;
 
     /**
      * @ORM\Column(type="integer", options={"unsigned": true})
@@ -251,12 +252,12 @@ class File implements \Concrete\Core\Permission\ObjectInterface
 
     public function getUserID()
     {
-        return $this->uID;
+        return $this->author->getUserID();
     }
 
-    public function setUserID($uID)
+    public function setUser(\Concrete\Core\Entity\User\User $user)
     {
-        $this->uID = $uID;
+        $this->author = $user;
         $this->save();
     }
 
@@ -454,7 +455,8 @@ class File implements \Concrete\Core\Permission\ObjectInterface
         // object going into the query, so none of them are ever marked as cacheable, which means we always
         // run the query even though we've run it multiple times in the same request. So we're going to
         // step between doctrine this time.
-        $item = \Core::make('cache/request')->getItem('file/version/approved/' . $this->getFileID());
+        $cache = \Core::make('cache/request');
+        $item = $cache->getItem('file/version/approved/' . $this->getFileID());
         if (!$item->isMiss()) {
             return $item->get();
         }
@@ -463,7 +465,7 @@ class File implements \Concrete\Core\Permission\ObjectInterface
         $r = $em->getRepository('\Concrete\Core\Entity\File\Version');
         $fv = $r->findOneBy(array('file' => $this, 'fvIsApproved' => true));
 
-        $item->set($fv);
+        $cache->save($item->set($fv));
 
         return $fv;
     }

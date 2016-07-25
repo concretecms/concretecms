@@ -73,7 +73,7 @@ class Assignment
         $paID = $db->GetOne('select paID from PermissionAssignments where pkID = ?', array($this->pk->getPermissionKeyID()));
         $pa = PermissionAccess::getByID($paID, $this->pk);
 
-        $item->set($pa);
+        $cache->save($item->set($pa));
 
         return $pa;
     }

@@ -5,8 +5,12 @@ use \Concrete\Core\Block\View\BlockView;
 abstract class BlockTypeTestCase extends ConcreteDatabaseTestCase
 {
     protected $fixtures = array();
-    protected $tables = array('BlockTypes', 'Blocks', 'Pages', 'CollectionVersionBlocks', 'Collections', 'PagePaths');
+    protected $tables = array('BlockTypes', 'Blocks', 'Pages', 'CollectionVersionBlocks', 'Collections');
 
+    protected $metadatas = array(
+        'Concrete\Core\Entity\Page\PagePath',
+        'Concrete\Core\Entity\Block\BlockType\BlockType',
+    );
     public function testInstall()
     {
         $bt = BlockType::installBlockType($this->btHandle);

@@ -36,13 +36,16 @@ class CollectionAttributeTest extends \AttributeTestCase
             'Collections',
             'CollectionAttributeValues',
             'Pages',
-            'PagePaths',
             'PageSearchIndex',
             'CollectionSearchIndexAttributes',
             'CollectionVersions',
             'CollectionVersionBlocks',
             'GatheringDataSources', )
         );
+        $this->metadatas = array_merge($this->metadatas, array(
+            'Concrete\Core\Entity\Page\PagePath',
+            'Concrete\Core\Entity\Page\Template'
+        ));
         parent::setUp();
     }
 

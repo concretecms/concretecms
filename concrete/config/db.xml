@@ -202,55 +202,6 @@
     </index>
   </table>
 
-  <table name="MultilingualSections">
-    <field name="cID" type="integer" size="11">
-      <unsigned/>
-      <key/>
-      <default value="0"/>
-    </field>
-    <field name="msLanguage" type="string" size="32">
-      <default value=""/>
-      <notnull/>
-    </field>
-    <field name="msCountry" type="string" size="32">
-      <default value=""/>
-      <notnull/>
-    </field>
-    <field name="msNumPlurals" type="integer" size="10">
-      <default value="2"/>
-      <notnull/>
-    </field>
-    <field name="msPluralRule" type="string" size="400">
-      <default value="(n != 1)"/>
-      <notnull/>
-    </field>
-    <field name="msPluralCases" type="string" size="1000">
-      <default value="one@1\nother@0, 2~16, 100, 1000, 10000, 100000, 1000000, …"/>
-      <notnull/>
-    </field>
-  </table>
-
-  <table name="MultilingualPageRelations">
-    <field name="mpRelationID" type="integer" size="10">
-      <unsigned/>
-      <key/>
-      <default value="0"/>
-    </field>
-    <field name="cID" type="integer" size="10">
-      <unsigned/>
-      <key/>
-      <default value="0"/>
-    </field>
-    <field name="mpLanguage" type="string" size="32">
-      <default value=""/>
-      <notnull/>
-    </field>
-    <field name="mpLocale" type="string" size="32">
-      <key/>
-      <notnull/>
-    </field>
-  </table>
-
   <table name="MultilingualTranslations">
     <field name="mtID" type="integer" size="11">
       <unsigned/>
@@ -1447,33 +1398,6 @@
     </index>
   </table>
 
-  <table name="BlockRelations">
-    <field name="brID" type="integer" size="10">
-      <unsigned/>
-      <autoincrement/>
-      <key/>
-    </field>
-    <field name="bID" type="integer" size="10">
-      <unsigned/>
-      <default value="0"/>
-      <notnull/>
-    </field>
-    <field name="originalBID" type="integer" size="10">
-      <unsigned/>
-      <default value="0"/>
-      <notnull/>
-    </field>
-    <field name="relationType" type="string" size="50">
-      <notnull/>
-    </field>
-    <index name="bID">
-      <col>bID</col>
-    </index>
-    <index name="originalBID">
-      <col>originalBID</col>
-    </index>
-  </table>
-
   <table name="BlockTypeSetBlockTypes">
     <field name="btID" type="integer" size="10">
       <unsigned/>
@@ -1522,77 +1446,6 @@
     </index>
     <index name="btsDisplayOrder">
       <col>btsDisplayOrder</col>
-    </index>
-    <index name="pkgID">
-      <col>pkgID</col>
-    </index>
-  </table>
-
-  <table name="BlockTypes">
-    <field name="btID" type="integer" size="10">
-      <unsigned/>
-      <autoincrement/>
-      <key/>
-    </field>
-    <field name="btHandle" type="string" size="128">
-      <notnull/>
-    </field>
-    <field name="btName" type="string" size="128">
-      <notnull/>
-    </field>
-    <field name="btDescription" type="text" size="65535"/>
-    <field name="btCopyWhenPropagate" type="boolean">
-      <default value="0"/>
-      <notnull/>
-    </field>
-    <field name="btIncludeAll" type="boolean">
-      <default value="0"/>
-      <notnull/>
-    </field>
-    <field name="btIsInternal" type="boolean">
-      <default value="0"/>
-      <notnull/>
-    </field>
-    <field name="btSupportsInlineAdd" type="boolean">
-      <default value="0"/>
-      <notnull/>
-    </field>
-    <field name="btSupportsInlineEdit" type="boolean">
-      <default value="0"/>
-      <notnull/>
-    </field>
-    <field name="btIgnorePageThemeGridFrameworkContainer" type="boolean">
-      <default value="0"/>
-      <notnull/>
-    </field>
-    <field name="btDisplayOrder" type="integer" size="10">
-      <unsigned/>
-      <default value="0"/>
-      <notnull/>
-    </field>
-    <field name="btInterfaceWidth" type="integer" size="10">
-      <unsigned/>
-      <default value="400"/>
-      <notnull/>
-    </field>
-    <field name="btInterfaceHeight" type="integer" size="10">
-      <unsigned/>
-      <default value="400"/>
-      <notnull/>
-    </field>
-    <field name="pkgID" type="integer" size="10">
-      <unsigned/>
-      <default value="0"/>
-      <notnull/>
-    </field>
-    <index name="btHandle">
-      <unique/>
-      <col>btHandle</col>
-    </index>
-    <index name="btDisplayOrder">
-      <col>btDisplayOrder</col>
-      <col>btName</col>
-      <col>btID</col>
     </index>
     <index name="pkgID">
       <col>pkgID</col>
@@ -1846,6 +1699,10 @@
     <field name="arHandle" type="string" size="255">
       <key/>
     </field>
+    <field name="cbRelationID" type="integer" size="10">
+      <unsigned/>
+      <default value="0"/>
+    </field>
     <field name="cbDisplayOrder" type="integer" size="10">
       <unsigned/>
       <default value="0"/>
@@ -1879,6 +1736,9 @@
     <index name="bID">
       <col>bID</col>
       <col>cID</col>
+    </index>
+    <index name="cbRelationID">
+      <col>cbRelationID</col>
     </index>
   </table>
 
@@ -2512,6 +2372,49 @@
       <col>pThemeID</col>
     </index>
   </table>
+
+  <table name="NotificationPermissionSubscriptionList">
+    <field name="paID" type="integer" size="10">
+      <unsigned/>
+      <key/>
+      <default value="0"/>
+    </field>
+    <field name="peID" type="integer" size="10">
+      <unsigned/>
+      <key/>
+      <default value="0"/>
+    </field>
+    <field name="permission" type="string" size="1">
+      <default value="1"/>
+      <notnull/>
+    </field>
+    <index name="peID">
+      <col>peID</col>
+    </index>
+  </table>
+
+  <table name="NotificationPermissionSubscriptionListCustom">
+    <field name="paID" type="integer" size="10">
+      <unsigned/>
+      <key/>
+      <default value="0"/>
+    </field>
+    <field name="peID" type="integer" size="10">
+      <unsigned/>
+      <key/>
+      <default value="0"/>
+    </field>
+    <field name="nSubscriptionIdentifier" type="string">
+      <key/>
+    </field>
+    <index name="peID">
+      <col>peID</col>
+    </index>
+    <index name="nSubscriptionIdentifier">
+      <col>nSubscriptionIdentifier</col>
+    </index>
+  </table>
+
 
   <table name="PagePermissionPropertyAccessList">
     <field name="paID" type="integer" size="10">
@@ -3367,35 +3270,6 @@
     </index>
   </table>
 
-  <table name="PagePaths">
-    <field name="ppID" type="integer" size="10">
-      <unsigned/>
-      <autoincrement/>
-      <key/>
-    </field>
-    <field name="cID" type="integer" size="10">
-      <unsigned/>
-      <default value="0"/>
-    </field>
-    <field name="cPath" type="text" size="65535">
-      <notnull/>
-    </field>
-    <field name="ppIsCanonical" type="string" size="1">
-      <default value="1"/>
-      <notnull/>
-    </field>
-    <field name="ppGeneratedFromURLSlugs" type="boolean">
-      <default value="0"/>
-      <notnull/>
-    </field>
-    <index name="cID">
-      <col>cID</col>
-    </index>
-    <index name="ppIsCanonical">
-      <col>ppIsCanonical</col>
-    </index>
-  </table>
-
   <table name="PageSearchIndex">
     <field name="cID" type="integer" size="10">
       <unsigned/>
@@ -3532,6 +3406,10 @@
       <key/>
       <default value="0"/>
     </field>
+    <field name="siteID" type="integer" size="10">
+      <unsigned/>
+      <default value="0"/>
+    </field>
     <field name="ptID" type="integer" size="10">
       <unsigned/>
       <key/>
@@ -3626,6 +3504,9 @@
     </field>
     <index name="cParentID">
       <col>cParentID</col>
+    </index>
+    <index name="siteID">
+      <col>siteID</col>
     </index>
     <index name="cIsActive">
       <col>cID</col>
@@ -3998,85 +3879,6 @@
     <index name="mHash">
       <unique/>
       <col>mHash</col>
-    </index>
-  </table>
-
-  <table name="Users">
-    <field name="uID" type="integer" size="10">
-      <unsigned/>
-      <autoincrement/>
-      <key/>
-    </field>
-    <field name="uName" type="string" size="64">
-      <notnull/>
-    </field>
-    <field name="uEmail" type="string" size="254">
-      <notnull/>
-    </field>
-    <field name="uPassword" type="string" size="255">
-      <notnull/>
-    </field>
-    <field name="uIsActive" type="string" size="1">
-      <default value="0"/>
-      <notnull/>
-    </field>
-    <field name="uIsValidated" type="boolean">
-      <default value="-1"/>
-      <notnull/>
-    </field>
-    <field name="uIsFullRecord" type="boolean">
-      <default value="1"/>
-      <notnull/>
-    </field>
-    <field name="uDateAdded" type="datetime">
-      <default value="1000-01-01 00:00:00"/>
-      <notnull/>
-    </field>
-    <field name="uLastPasswordChange" type="datetime">
-      <default value="1000-01-01 00:00:00"/>
-      <notnull/>
-    </field>
-    <field name="uHasAvatar" type="boolean">
-      <default value="0"/>
-      <notnull/>
-    </field>
-    <field name="uLastOnline" type="integer" size="10">
-      <unsigned/>
-      <default value="0"/>
-      <notnull/>
-    </field>
-    <field name="uLastLogin" type="integer" size="10">
-      <unsigned/>
-      <default value="0"/>
-      <notnull/>
-    </field>
-    <field name="uLastIP" type="blob" size="32"/>
-    <field name="uPreviousLogin" type="integer" size="10">
-      <unsigned/>
-      <default value="0"/>
-    </field>
-    <field name="uNumLogins" type="integer" size="10">
-      <unsigned/>
-      <default value="0"/>
-      <notnull/>
-    </field>
-    <field name="uLastAuthTypeID" type="integer" size="10">
-      <unsigned/>
-      <default value="0"/>
-      <notnull/>
-    </field>
-    <field name="uTimezone" type="string" size="255"/>
-    <field name="uDefaultLanguage" type="string" size="32"/>
-    <field name="ulsPasswordReset" type="boolean">
-      <default value="0"/>
-      <notnull/>
-    </field>
-    <index name="uName">
-      <unique/>
-      <col>uName</col>
-    </index>
-    <index name="uEmail">
-      <col>uEmail</col>
     </index>
   </table>
 

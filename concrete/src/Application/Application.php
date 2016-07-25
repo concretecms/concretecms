@@ -341,7 +341,8 @@ class Application extends Container
      */
     public function handleURLSlashes(SymfonyRequest $request)
     {
-        $trailing_slashes = $this['config']['concrete.seo.trailing_slash'];
+        $siteConfig = $this['site']->getSite()->getConfigRepository();
+        $trailing_slashes = $siteConfig->get('seo.trailing_slash');
         $path = $request->getPathInfo();
 
         // If this isn't the homepage
@@ -369,13 +370,14 @@ class Application extends Container
      */
     public function handleCanonicalURLRedirection(SymfonyRequest $r)
     {
-        $config = $this['config'];
+        $globalConfig = $this['config'];
+        $siteConfig = $this['site']->getSite()->getConfigRepository();
 
-        if ($config->get('concrete.seo.redirect_to_canonical_url') && $config->get('concrete.seo.canonical_url')) {
+        if ($globalConfig->get('concrete.seo.redirect_to_canonical_url') && $siteConfig->get('seo.canonical_url')) {
             $url = UrlImmutable::createFromUrl($r->getUri());
 
-            $canonical = UrlImmutable::createFromUrl($config->get('concrete.seo.canonical_url'),
-                (bool) $config->get('concrete.seo.trailing_slash')
+            $canonical = UrlImmutable::createFromUrl($siteConfig->get('seo.canonical_url'),
+                (bool) $siteConfig->get('seo.trailing_slash')
             );
 
             // Set the parts of the current URL that are specified in the canonical URL, including host,
@@ -392,8 +394,8 @@ class Application extends Container
 
             // Uh oh, it didn't match. before we redirect to the canonical URL, let's check to see if we have an SSL
             // URL
-            if ($config->get('concrete.seo.canonical_ssl_url')) {
-                $ssl = UrlImmutable::createFromUrl($config->get('concrete.seo.canonical_ssl_url'));
+            if ($siteConfig->get('seo.canonical_ssl_url')) {
+                $ssl = UrlImmutable::createFromUrl($siteConfig->get('seo.canonical_ssl_url'));
 
                 $new = $url->setScheme($ssl->getScheme()->get());
                 $new = $new->setHost($ssl->getHost()->get());

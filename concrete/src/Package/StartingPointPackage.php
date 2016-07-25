@@ -6,6 +6,12 @@ use Concrete\Core\Application\Application;
 use Concrete\Core\Backup\ContentImporter;
 use Concrete\Core\Config\Renderer;
 use Concrete\Core\Database\DatabaseStructureManager;
+use Concrete\Core\Entity\Notification\Type\CoreUpdateType;
+use Concrete\Core\Entity\Notification\Type\NewConversationMessageType;
+use Concrete\Core\Entity\Notification\Type\NewFormSubmissionType;
+use Concrete\Core\Entity\Notification\Type\NewPrivateMessageType;
+use Concrete\Core\Entity\Notification\Type\UserSignupType;
+use Concrete\Core\Entity\Notification\Type\WorkflowProgressType;
 use Concrete\Core\File\Filesystem;
 use Concrete\Core\File\Service\File;
 use Concrete\Core\Mail\Importer\MailImporter;
@@ -13,6 +19,8 @@ use Concrete\Core\Package\Routine\AttachModeInstallRoutine;
 use Concrete\Core\Permission\Access\Entity\ConversationMessageAuthorEntity;
 use Concrete\Core\Permission\Access\Entity\GroupEntity as GroupPermissionAccessEntity;
 use Concrete\Core\Permission\Access\Entity\PageOwnerEntity as PageOwnerPermissionAccessEntity;
+use Concrete\Core\Permission\Access\Entity\UserEntity;
+use Concrete\Core\Site\Service;
 use Concrete\Core\Tree\Node\Type\Category;
 use Concrete\Core\Tree\Node\Type\ExpressEntryCategory;
 use Concrete\Core\Tree\Type\ExpressEntryResults;
@@ -52,6 +60,7 @@ class StartingPointPackage extends BasePackage
                 5,
                 t('Starting installation and creating directories.')),
             new StartingPointInstallRoutine('install_database', 10, t('Creating database tables.')),
+            new StartingPointInstallRoutine('install_site', 12, t('Creating site.')),
             new StartingPointInstallRoutine('add_users', 15, t('Adding admin user.')),
             new StartingPointInstallRoutine('install_permissions', 20, t('Installing permissions & workflow.')),
             new StartingPointInstallRoutine('install_data_objects', 23, t('Installing Custom Data Objects.')),
@@ -72,7 +81,7 @@ class StartingPointPackage extends BasePackage
             new StartingPointInstallRoutine('import_files', 65, t('Importing files.')),
             new StartingPointInstallRoutine('install_content', 70, t('Adding pages and content.')),
             new StartingPointInstallRoutine('install_desktops', 85, t('Adding desktops.')),
-            new StartingPointInstallRoutine('set_site_permissions', 90, t('Setting up site permissions.')),
+            new StartingPointInstallRoutine('install_site_permissions', 90, t('Setting site permissions.')),
             new AttachModeInstallRoutine('finish', 95, t('Finishing.')),
         );
     }
@@ -333,9 +342,9 @@ class StartingPointPackage extends BasePackage
             $dbm->generateProxyClasses();
 
             Package::installDB($installDirectory . '/db.xml');
-            $this->indexAdditionalDatabaseFields();
 
             $dbm->installDatabase();
+            $this->indexAdditionalDatabaseFields();
 
             $configuration = new Configuration();
             $version = $configuration->getVersion(Config::get('concrete.version_db'));
@@ -476,7 +485,19 @@ class StartingPointPackage extends BasePackage
         $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/permissions.xml');
     }
 
-    public function set_site_permissions()
+    public function install_site()
+    {
+        $site = \Site::installDefault();
+        $site->getConfigRepository()->save('name', SITE);
+
+        if (defined('SITE_INSTALL_LOCALE') && SITE_INSTALL_LOCALE != '' && SITE_INSTALL_LOCALE != 'en_US') {
+            Config::save('concrete.locale', SITE_INSTALL_LOCALE);
+        }
+        Config::save('concrete.version_installed', APP_VERSION);
+        Config::save('concrete.misc.login_redirect', 'DESKTOP');
+    }
+
+    public function install_site_permissions()
     {
         $g1 = Group::getByID(GUEST_GROUP_ID);
         $g2 = Group::getByID(REGISTERED_GROUP_ID);
@@ -500,13 +521,6 @@ class StartingPointPackage extends BasePackage
                 'add_file',
             )
         );
-
-        if (defined('SITE_INSTALL_LOCALE') && SITE_INSTALL_LOCALE != '' && SITE_INSTALL_LOCALE != 'en_US') {
-            Config::save('concrete.locale', SITE_INSTALL_LOCALE);
-        }
-        Config::save('concrete.site', SITE);
-        Config::save('concrete.version_installed', APP_VERSION);
-        Config::save('concrete.misc.login_redirect', 'DESKTOP');
 
         $u = new User();
         $u->saveConfig('NEWSFLOW_LAST_VIEWED', 'FIRSTRUN');
@@ -662,5 +676,14 @@ class StartingPointPackage extends BasePackage
             $pt = $pk->getPermissionAssignmentObject();
             $pt->assignPermissionAccess($pa);
         }
+
+        // notification
+        $adminUserEntity = UserEntity::getOrCreate(\UserInfo::getByID(USER_SUPER_ID));
+        $pk = PermissionKey::getByHandle('notify_in_notification_center');
+        $pa = PermissionAccess::create($pk);
+        $pa->addListItem($adminUserEntity);
+        $pa->addListItem($adminGroupEntity);
+        $pt = $pk->getPermissionAssignmentObject();
+        $pt->assignPermissionAccess($pa);
     }
 }

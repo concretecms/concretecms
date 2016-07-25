@@ -23,7 +23,7 @@ class PageAssignment extends Assignment
         $r = $db->GetOne('select paID from PagePermissionAssignments where cID = ? and pkID = ?', array($this->getPermissionObject()->getPermissionsCollectionID(), $this->pk->getPermissionKeyID()));
         $pa = $r ? PermissionAccess::getByID($r, $this->pk, false) : null;
 
-        $item->set($pa);
+        $cache->save($item->set($pa));
 
         return $pa;
     }

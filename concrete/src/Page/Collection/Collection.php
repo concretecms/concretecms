@@ -859,16 +859,24 @@ class Collection extends Object
             $newBlockDisplayOrder = $this->getCollectionAreaDisplayOrder($arHandle);
         }
 
+        $cbRelationID = $db->GetOne('select max(cbRelationID) as cbRelationID from CollectionVersionBlocks');
+        if (!$cbRelationID) {
+            $cbRelationID = 1;
+        } else {
+            ++$cbRelationID;
+        }
+
         $v = array(
             $cID,
             $vObj->getVersionID(),
             $nb->getBlockID(),
             $arHandle,
+            $cbRelationID,
             $newBlockDisplayOrder,
             1,
             intval($bt->includeAll()),
         );
-        $q = 'insert into CollectionVersionBlocks (cID, cvID, bID, arHandle, cbDisplayOrder, isOriginal, cbIncludeAll) values (?, ?, ?, ?, ?, ?, ?)';
+        $q = 'insert into CollectionVersionBlocks (cID, cvID, bID, arHandle, cbRelationID, cbDisplayOrder, isOriginal, cbIncludeAll) values (?, ?, ?, ?, ?, ?, ?, ?)';
 
         $res = $db->Execute($q, $v);
 

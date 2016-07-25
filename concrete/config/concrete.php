@@ -18,12 +18,77 @@ return array(
      */
     'installed' => true,
 
-    /*
-     * The current Site Name
-     *
-     * @var string concrete.core.site
-     */
-    'site' => 'concrete5',
+    'sites' => array(
+
+        'default' => array(
+
+            'handle' => 'default',
+
+            'name' => 'concrete5',
+
+            'editor' => array(
+                'concrete' => array(
+                    'enable_filemanager' => true,
+                    'enable_sitemap' => true,
+                ),
+                'ckeditor4' => array(
+                    'plugins' => array(
+                        'selected' => array(
+                            'autogrow',
+                            'a11yhelp',
+                            'basicstyles',
+                            'colorbutton',
+                            'colordialog',
+                            'contextmenu',
+                            'concrete5link',
+                            'concrete5styles',
+                            'dialogadvtab',
+                            'divarea',
+                            'elementspath',
+                            'enterkey',
+                            'entities',
+                            'floatingspace',
+                            'font',
+                            'format',
+                            'htmlwriter',
+                            'image',
+                            'indentblock',
+                            'indentlist',
+                            'justify',
+                            'link',
+                            'list',
+                            'liststyle',
+                            'magicline',
+                            'removeformat',
+                            'resize',
+                            'showblocks',
+                            'showborders',
+                            'sourcearea',
+                            'sourcedialog',
+                            'stylescombo',
+                            'tab',
+                            'table',
+                            'tableresize',
+                            'tabletools',
+                            'toolbar',
+                            'undo',
+                            'wysiwygarea'
+                        )
+                    )
+                ),
+                'plugins' => array(
+                    'selected' => array(
+                        'concrete5lightbox',
+                        'undoredo',
+                        'specialcharacters',
+                        'table',
+                    ),
+                ),
+            ),
+
+        ),
+
+    ),
 
     /*
      * The current Locale
@@ -303,66 +368,6 @@ return array(
         'permissions' => array(
             'file' => FILE_PERMISSIONS_MODE_COMPUTED,
             'directory' => DIRECTORY_PERMISSIONS_MODE_COMPUTED,
-        ),
-    ),
-
-    'editor' => array(
-        'concrete' => array(
-            'enable_filemanager' => true,
-            'enable_sitemap' => true,
-        ),
-        'ckeditor4' => array(
-            'plugins' => array(
-                'selected' => array(
-                    'autogrow',
-                    'a11yhelp',
-                    'basicstyles',
-                    'colorbutton',
-                    'colordialog',
-                    'contextmenu',
-                    'concrete5link',
-                    'concrete5styles',
-                    'dialogadvtab',
-                    'divarea',
-                    'elementspath',
-                    'enterkey',
-                    'entities',
-                    'floatingspace',
-                    'font',
-                    'format',
-                    'htmlwriter',
-                    'image',
-                    'indentblock',
-                    'indentlist',
-                    'justify',
-                    'link',
-                    'list',
-                    'liststyle',
-                    'magicline',
-                    'removeformat',
-                    'resize',
-                    'showblocks',
-                    'showborders',
-                    'sourcearea',
-                    'sourcedialog',
-                    'stylescombo',
-                    'tab',
-                    'table',
-                    'tableresize',
-                    'tabletools',
-                    'toolbar',
-                    'undo',
-                    'wysiwygarea'
-                )
-            )
-        ),
-        'plugins' => array(
-            'selected' => array(
-                'concrete5lightbox',
-                'undoredo',
-                'specialcharacters',
-                'table',
-            ),
         ),
     ),
 

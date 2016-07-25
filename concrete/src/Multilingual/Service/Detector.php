@@ -23,6 +23,9 @@ class Detector
      */
     public static function getPreferredSection()
     {
+
+        $site = \Site::getSite();
+
         $locale = false;
         $app = Facade::getFacadeApplication();
         // they have a language in a certain session going already
@@ -54,8 +57,8 @@ class Detector
             }
         }
 
-        $config = $app->make('config');
-        if ($config->get('concrete.multilingual.use_browser_detected_locale')) {
+        $config = $site->getConfigRepository();
+        if ($config->get('multilingual.use_browser_detected_locale')) {
             $home = false;
             $locales = \Punic\Misc::getBrowserLocales();
             foreach (array_keys($locales) as $locale) {
@@ -70,7 +73,9 @@ class Detector
             }
         }
 
-        return Section::getByLocale($config->get('concrete.multilingual.default_locale'));
+        $site = \Site::getSite();
+        $config = $site->getConfigRepository();
+        return Section::getByLocale($config->get('multilingual.default_locale'));
     }
 
     public static function setupSiteInterfaceLocalization(Page $c = null)
@@ -109,8 +114,9 @@ class Detector
             if (!$app->isInstalled()) {
                 return false;
             }
-            $db = $app->make('database')->connection();
-            self::$enabled = (bool) $db->fetchColumn('select cID from MultilingualSections limit 1');
+            $db = $app->make('database')->getEntityManager();
+            $sections = $db->getRepository('Concrete\Core\Entity\Multilingual\Section')->findAll();
+            self::$enabled = count($sections) > 0;
         }
 
         return self::$enabled;
