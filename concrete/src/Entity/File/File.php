@@ -420,11 +420,12 @@ class File implements \Concrete\Core\Permission\ObjectInterface
             if ($version->isApproved()) {
                 $cloneVersion = clone $version;
                 $cloneVersion->setFileVersionID(1);
-                $cloneVersion->duplicateUnderlyingFile();
                 $cloneVersion->setFile($nf);
 
                 $em->persist($cloneVersion);
                 $em->flush();
+
+                $cloneVersion->duplicateUnderlyingFile();
 
                 foreach ($version->getAttributes() as $value) {
                     $value = clone $value;
