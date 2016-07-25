@@ -15,7 +15,7 @@ class NotificationTest extends \PHPUnit_Framework_TestCase
     public function testCreateNotification()
     {
         $signup = $this->getUserSignup();
-        $driver = new \Concrete\Core\Notification\Type\UserSignupType();
+        $driver = new \Concrete\Core\Notification\Type\UserSignupType(\Database::get()->getEntityManager());
         $notification = $driver->createNotification($signup);
 
         $this->assertInstanceOf('Concrete\Core\Notification\Type\TypeInterface', $driver);
@@ -27,7 +27,7 @@ class NotificationTest extends \PHPUnit_Framework_TestCase
     public function testFormatNotificationView()
     {
         $signup = $this->getUserSignup();
-        $driver = new \Concrete\Core\Notification\Type\UserSignupType();
+        $driver = new \Concrete\Core\Notification\Type\UserSignupType(\Database::get()->getEntityManager());
         $notification = $driver->createNotification($signup);
 
         $view = $notification->getListView();

@@ -25,59 +25,61 @@ class StandardNotifier implements NotifierInterface
     public function getUsersToNotify(SubscriptionInterface $subscription, SubjectInterface $subject)
     {
         $key = Key::getByHandle('notify_in_notification_center');
-        $access = $key->getPermissionAssignmentObject()->getPermissionAccessObject();
         $users = array();
-        if (is_object($access)) {
-            /**
-             * @var $access Access
-             */
-            $items = $access->getAccessListItems(Key::ACCESS_TYPE_INCLUDE);
-            /**
-             * @var $item NotifyInNotificationCenterNotificationListItem
-             */
-            foreach($items as $item) {
-                if ($item->getSubscriptionsAllowedPermission() == 'A' ||
-                    ($item->getSubscriptionsAllowedPermission() == 'C' && in_array($subscription, $item->getSubscriptionsAllowedArray()))) {
-                    /**
-                     * @var $entity Entity
-                     */
-                    $entity = $item->getAccessEntityObject();
-                    $users = array_merge($entity->getAccessEntityUsers($access), $users);
-                }
-            }
-
-            // Now we loop through the array and remove
-            $items = $access->getAccessListItems(Key::ACCESS_TYPE_EXCLUDE);
-            /**
-             * @var $item NotifyInNotificationCenterNotificationListItem
-             */
-            $usersToRemove = array();
-            foreach($subject->getUsersToExcludeFromNotification() as $user) {
-                $usersToRemove[] = $user->getUserID();
-            }
-            foreach($items as $item) {
-                if ($item->getSubscriptionsAllowedPermission() == 'N' ||
-                    ($item->getSubscriptionsAllowedPermission() == 'C' && in_array($subscription, $item->getSubscriptionsAllowedArray()))) {
-                    /**
-                     * @var $entity Entity
-                     */
-                    $entity = $item->getAccessEntityObject();
-                    foreach($entity->getAccessEntityUsers($access) as $user) {
-                        $usersToRemove[] = $user->getUserID();
+        if (is_object($key)) {
+            $access = $key->getPermissionAssignmentObject()->getPermissionAccessObject();
+            if (is_object($access)) {
+                /**
+                 * @var $access Access
+                 */
+                $items = $access->getAccessListItems(Key::ACCESS_TYPE_INCLUDE);
+                /**
+                 * @var $item NotifyInNotificationCenterNotificationListItem
+                 */
+                foreach($items as $item) {
+                    if ($item->getSubscriptionsAllowedPermission() == 'A' ||
+                        ($item->getSubscriptionsAllowedPermission() == 'C' && in_array($subscription, $item->getSubscriptionsAllowedArray()))) {
+                        /**
+                         * @var $entity Entity
+                         */
+                        $entity = $item->getAccessEntityObject();
+                        $users = array_merge($entity->getAccessEntityUsers($access), $users);
                     }
                 }
-            }
 
-            $users = array_unique($users);
-            $usersToRemove = array_unique($usersToRemove);
-
-            $users = array_filter($users, function($element) use ($usersToRemove) {
-                if (in_array($element->getUserID(), $usersToRemove)) {
-                    return false;
+                // Now we loop through the array and remove
+                $items = $access->getAccessListItems(Key::ACCESS_TYPE_EXCLUDE);
+                /**
+                 * @var $item NotifyInNotificationCenterNotificationListItem
+                 */
+                $usersToRemove = array();
+                foreach($subject->getUsersToExcludeFromNotification() as $user) {
+                    $usersToRemove[] = $user->getUserID();
                 }
-                return true;
-            });
+                foreach($items as $item) {
+                    if ($item->getSubscriptionsAllowedPermission() == 'N' ||
+                        ($item->getSubscriptionsAllowedPermission() == 'C' && in_array($subscription, $item->getSubscriptionsAllowedArray()))) {
+                        /**
+                         * @var $entity Entity
+                         */
+                        $entity = $item->getAccessEntityObject();
+                        foreach($entity->getAccessEntityUsers($access) as $user) {
+                            $usersToRemove[] = $user->getUserID();
+                        }
+                    }
+                }
 
+                $users = array_unique($users);
+                $usersToRemove = array_unique($usersToRemove);
+
+                $users = array_filter($users, function($element) use ($usersToRemove) {
+                    if (in_array($element->getUserID(), $usersToRemove)) {
+                        return false;
+                    }
+                    return true;
+                });
+
+            }
         }
         return $users;
     }

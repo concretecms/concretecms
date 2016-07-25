@@ -190,9 +190,11 @@ class DispatcherRouteCallback extends RouteCallback
         // Now that we've passed all permissions checks, and we have a page, we check to see if we
         // ought to redirect based on base url or trailing slash settings
         $cms = \Core::make("app");
-        $response = $cms->handleCanonicalURLRedirection($request);
+        $site = \Site::getSite();
+
+        $response = $cms->handleCanonicalURLRedirection($request, $site);
         if (!$response) {
-            $response = $cms->handleURLSlashes($request);
+            $response = $cms->handleURLSlashes($request, $site);
         }
         if (isset($response)) {
             $response->send();
@@ -203,7 +205,6 @@ class DispatcherRouteCallback extends RouteCallback
         // and if so, whether we should redirect to the default language page.
         if (\Core::make('multilingual/detector')->isEnabled()) {
             $dl = Core::make('multilingual/detector');
-            $site = \Site::getSite();
             if ($c->getCollectionID() == $site->getSiteHomePageID() &&
                 $site->getConfigRepository()->get('multilingual.redirect_home_to_default_locale')) {
                 // Let's retrieve the default language

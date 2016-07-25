@@ -123,7 +123,10 @@ class RegistrationService implements RegistrationServiceInterface
             $u = new User();
             $createdBy = null;
             if (is_object($u)) {
-                $createdBy = $u->getUserInfoObject()->getEntityObject();
+                $creator = $u->getUserInfoObject();
+                if (is_object($creator)) {
+                    $createdBy = $creator->getEntityObject();
+                }
             }
             $signup = new UserSignup($ui->getEntityObject(), $createdBy);
             $notifier = $type->getNotifier();

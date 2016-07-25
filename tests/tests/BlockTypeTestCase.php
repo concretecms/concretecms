@@ -5,7 +5,7 @@ use \Concrete\Core\Block\View\BlockView;
 abstract class BlockTypeTestCase extends ConcreteDatabaseTestCase
 {
     protected $fixtures = array();
-    protected $tables = array('BlockTypes', 'Blocks', 'Pages', 'CollectionVersionBlocks', 'Collections');
+    protected $tables = array('BlockTypes', 'Blocks', 'Pages', 'CollectionVersionBlocks', 'Collections', 'Config');
 
     protected $metadatas = array(
         'Concrete\Core\Entity\Page\PagePath',

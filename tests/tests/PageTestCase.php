@@ -28,6 +28,11 @@ abstract class PageTestCase extends ConcreteDatabaseTestCase
     protected function setUp()
     {
         parent::setUp();
+        $service = \Core::make('site');
+        if (!$service->getDefault()) {
+            $service->installDefault();
+        }
+
         Page::addHomePage();
         PageTemplate::add('full', 'Full');
         PageType::add(array(
