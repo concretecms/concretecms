@@ -16,7 +16,9 @@ defined('C5_EXECUTE') or die("Access Denied.");
     if (is_object($author)) { ?>
         <div class="ccm-block-desktop-waiting-for-me-about">
 
-            <?php print $listView->getInitiatorActionDescription() ?>
+            <?php print $listView->renderInitiatorActionDescription() ?>
+
+            <?php print $listView->renderInitiatorCommentDescription() ?>
 
         </div>
     <?php } ?>

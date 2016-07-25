@@ -119,7 +119,6 @@ class RegistrationService implements RegistrationServiceInterface
             /**
              * @var $type UserSignupType
              */
-            $notifier = $this->application->make('Concrete\Core\Notification\Notifier');
             $type = $this->application->make('manager/notification/types')->driver('user_signup');
             $u = new User();
             $createdBy = null;
@@ -127,7 +126,9 @@ class RegistrationService implements RegistrationServiceInterface
                 $createdBy = $u->getUserInfoObject()->getEntityObject();
             }
             $signup = new UserSignup($ui->getEntityObject(), $createdBy);
-            $notified = $notifier->getUsersToNotify($type, $signup);
+            $notifier = $type->getNotifier();
+            $subscription = $type->getSubscription($signup);
+            $notified = $notifier->getUsersToNotify($subscription, $signup);
             $notification = $type->createNotification($signup);
             $notifier->notify($notified, $notification);
         }

@@ -13,6 +13,7 @@ use Concrete\Core\File\StorageLocation\StorageLocation;
 use Concrete\Core\Foundation\Object;
 use Concrete\Core\User\PrivateMessage\Limit;
 use Concrete\Core\User\PrivateMessage\Mailbox as UserPrivateMessageMailbox;
+use Concrete\Core\User\PrivateMessage\PrivateMessage;
 use Doctrine\ORM\EntityManagerInterface;
 use Imagine\Image\ImageInterface;
 use League\Flysystem\AdapterInterface;
@@ -290,6 +291,14 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
             }
             $mh->sendMail();
         }
+
+        $msg = PrivateMessage::getByID($msgID);
+        $type = $this->application->make('manager/notification/types')->driver('new_private_message');
+        $notifier = $type->getNotifier();
+        $subscription = $type->getSubscription($msg);
+        $notified = $notifier->getUsersToNotify($subscription, $msg);
+        $notification = $type->createNotification($msg);
+        $notifier->notify($notified, $notification);
     }
 
     /**

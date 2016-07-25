@@ -8,6 +8,6 @@ interface ListViewInterface
     function renderDetails();
     function renderMenu();
     function getNotificationObject();
-
+    function getFormAction();
 
 }

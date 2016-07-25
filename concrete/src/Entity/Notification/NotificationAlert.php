@@ -35,7 +35,7 @@ class NotificationAlert
     protected $user;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Concrete\Core\Entity\Notification\Notification", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="Notification")
      * @ORM\JoinColumn(name="nID", referencedColumnName="nID")
      */
     protected $notification;

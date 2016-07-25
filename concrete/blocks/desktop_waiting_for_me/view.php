@@ -8,13 +8,19 @@
 
         foreach($items as $item) {
             $notification = $item->getNotification();
+            /**
+             * @var $view \Concrete\Core\Notification\View\ListViewInterface
+             */
             $view = $notification->getListView();
+            $action = $view->getFormAction();
 
             ?>
 
         <div class="ccm-block-desktop-waiting-for-me-item" data-notification-alert-id="<?=$item->getNotificationAlertID()?>"
         data-token="<?=$token->generate()?>">
-            <form action="" method="post">
+            <?php if ($action) { ?>
+                <form action="<?=$action?>" method="post">
+            <?php }  ?>
 
                 <div class="ccm-block-desktop-waiting-for-me-icon">
                     <?php print $view->renderIcon() ?>
@@ -29,7 +35,10 @@
                 </div>
 
 
-            </form>
+            <?php if ($action) { ?>
+                </form>
+            <?php }  ?>
+
         </div>
 
             <?php
