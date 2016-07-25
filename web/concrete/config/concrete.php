@@ -9,7 +9,7 @@ return array(
      */
     'version' => '8.0.0a5',
     'version_installed' => '8.0.0a5',
-    'version_db' => '20160420000000', // the key of the latest database migration
+    'version_db' => '20160725000000', // the key of the latest database migration
 
     /*
      * Installation status
@@ -933,7 +933,7 @@ return array(
     ),
     'limits' => array(
         'sitemap_pages' => 100,
-        'delete_pages' => 10,
+        'delete_pages' => 100,
         'copy_pages' => 10,
         'page_search_index_batch' => 200,
         'job_queue_batch' => 10,

@@ -30,6 +30,7 @@ class Controller extends BlockController
     protected $btExportTables = ['btForm', 'btFormQuestions'];
     protected $btExportPageColumns = ['redirectCID'];
     protected $lastAnswerSetId = 0;
+    protected $btCopyWhenPropagate = true;
 
     /**
      * Used for localization. If we want to localize the name/description we have to include this.

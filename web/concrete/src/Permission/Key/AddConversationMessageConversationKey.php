@@ -29,14 +29,22 @@ class AddConversationMessageConversationKey extends ConversationKey
         $list = $this->getAccessListItems(UserKey::ACCESS_TYPE_ALL, $accessEntities);
         $list = PermissionDuration::filterByActive($list);
 
+        $foundUnapproved = false;
+        $foundApproved = false;
         foreach ($list as $l) {
-            if ($l->getNewConversationMessageApprovalStatus() == 'U') {
-                $asl->setNewConversationMessageApprovalStatus('U');
+            if ($l->getNewConversationMessageApprovalStatus() == 'A') {
+                $foundApproved = true;
             }
 
-            if ($l->getNewConversationMessageApprovalStatus() == 'A') {
-                $asl->setNewConversationMessageApprovalStatus('A');
+            if ($l->getNewConversationMessageApprovalStatus() == 'U') {
+                $foundUnapproved = true;
             }
+        }
+
+        if ($foundApproved) {
+            $asl->setNewConversationMessageApprovalStatus('A');
+        } else if ($foundUnapproved) {
+            $asl->setNewConversationMessageApprovalStatus('U');
         }
 
         return $asl;

@@ -17,6 +17,8 @@ if (is_object($f) && $f->getFileID()) {
     $tag->addClass('ccm-image-block img-responsive bID-'.$bID);
     if ($altText) {
         $tag->alt(h($altText));
+    } else {
+        $tag->alt('');
     }
 
     if ($title) {

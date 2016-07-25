@@ -4,6 +4,9 @@ namespace Concrete\Controller\Backend;
 use Concrete\Core\File\Importer;
 use Concrete\Core\Tree\Node\Node;
 use Concrete\Core\Tree\Node\Type\FileFolder;
+use Concrete\Core\File\ImportProcessor\ConstrainImageProcessor;
+use Concrete\Core\File\ImportProcessor\SetJPEGQualityProcessor;
+use Concrete\Core\Foundation\Queue\Queue;
 use Concrete\Core\Validation\CSRF\Token;
 use Controller;
 use FileSet;
@@ -11,6 +14,8 @@ use File as ConcreteFile;
 use Concrete\Core\File\EditResponse as FileEditResponse;
 use Loader;
 use FileImporter;
+use Config;
+use stdClass;
 use Exception;
 use Permissions as ConcretePermissions;
 use FilePermissions;
@@ -36,42 +41,94 @@ class File extends Controller
         $r->outputJSON();
     }
 
+    protected function doRescan($f)
+    {
+        $resize = \Config::get('concrete.file_manager.restrict_uploaded_image_sizes');
+        $processors = array();
+        if ($resize) {
+            $width = (int) \Config::get('concrete.file_manager.restrict_max_width');
+            $height = (int) \Config::get('concrete.file_manager.restrict_max_height');
+            $quality = (int) \Config::get('concrete.file_manager.restrict_resize_quality');
+            $resizeProcessor = new ConstrainImageProcessor($width, $height);
+            $qualityProcessor = new SetJPEGQualityProcessor($quality);
+            $processors[] = $resizeProcessor;
+            $processors[] = $qualityProcessor;
+        }
+
+        if (count($processors)) {
+            $fv = $f->createNewVersion(true);
+            foreach($processors as $processor) {
+                if ($processor->shouldProcess($fv)) {
+                    $processor->process($fv);
+                }
+            }
+        } else {
+            $fv = $f->getApprovedVersion();
+        }
+        $resp = $fv->refreshAttributes();
+        switch ($resp) {
+            case \Concrete\Core\File\Importer::E_FILE_INVALID:
+                $errorMessage = t('File %s could not be found.', $fv->getFilename()) . '<br/>';
+                throw new Exception($errorMessage);
+                break;
+        }
+    }
+
     public function rescan()
     {
         $files = $this->getRequestFiles('canEditFileContents');
         $r = new FileEditResponse();
         $r->setFiles($files);
-        $successMessage = '';
-        $errorMessage = '';
-        $successCount = 0;
+        $error = new \Concrete\Core\Error\Error;
 
-        foreach ($files as $f) {
-            try {
-                $fv = $f->getApprovedVersion();
-                $resp = $fv->refreshAttributes();
-                switch ($resp) {
-                    case \Concrete\Core\File\Importer::E_FILE_INVALID:
-                        $errorMessage .= t('File %s could not be found.', $fv->getFilename()) . '<br/>';
-                        break;
-                    default:
-                        $successCount++;
-                        $successMessage = t2('%s file rescanned successfully.', '%s files rescanned successfully.',
-                            $successCount);
-                        break;
-                }
-            } catch (\League\Flysystem\FileNotFoundException $e) {
-                $errorMessage .= t('File %s could not be found.', $fv->getFilename()) . '<br/>';
-            }
+        try {
+            $this->doRescan($files[0]);
+            $r->setMessage(t('File rescanned successfully.'));
+        } catch (\Concrete\Flysystem\FileNotFoundException $e) {
+            $errorMessage = t('File %s could not be found.', $files[0]->getFilename()) . '<br/>';
+            $error->add($errorMessage);
+        } catch(\Exception $e) {
+            $error->add($e->getMessage());
         }
-        if ($errorMessage && !$successMessage) {
-            $e = \Core::make('error');
-            $e->add($errorMessage);
-            $r->setError($e);
-        } else {
-            $r->setMessage($errorMessage . $successMessage);
-        }
+        $r->setError($error);
         $r->outputJSON();
     }
+
+    public function rescanMultiple()
+    {
+        $files = $this->getRequestFiles('canEditFileContents');
+        $q = Queue::get('rescan_files');
+        if ($_POST['process']) {
+            $obj = new stdClass();
+            $messages = $q->receive(5);
+            foreach($messages as $key => $msg) {
+                // delete the page here
+                $file = unserialize($msg->body);
+                $f = \Concrete\Core\File\File::getByID($file['fID']);
+                if (is_object($f)) {
+                    $this->doRescan($f);
+                }
+                $q->deleteMessage($msg);
+            }
+            $obj->totalItems = $q->count();
+            if ($q->count() == 0) {
+                $q->deleteQueue(5);
+            }
+            print json_encode($obj);
+            exit;
+        } else if ($q->count() == 0) {
+            foreach($files as $f) {
+                $q->send(serialize(array(
+                    'fID' => $f->getFileID()
+                )));
+            }
+        }
+
+        $totalItems = $q->count();
+        Loader::element('progress_bar', array('totalItems' => $totalItems, 'totalItemsSummary' => t2("%d file", "%d files", $totalItems)));
+        return;
+    }
+
 
     public function approveVersion()
     {

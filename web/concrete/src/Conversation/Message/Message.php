@@ -4,74 +4,95 @@ namespace Concrete\Core\Conversation\Message;
 use Concrete\Core\Conversation\FlagType\FlagType;
 use Concrete\Core\Conversation\Rating\Type;
 use Config;
-use File;
-use FileSet;
+use Concrete\Core\File\File;
+use Concrete\Core\File\Set\Set as FileSet;
 use Core;
 use Loader;
-use Conversation;
-use ConversationEditor;
-use Concrete\Core\Foundation\Object;
-use UserInfo;
+use Concrete\Core\Conversation\Conversation;
+use Concrete\Core\Conversation\Editor\Editor as ConversationEditor;
+use \Concrete\Core\Foundation\Object;
+use Concrete\Core\User\User;
+use Concrete\Core\User\UserInfo;
 use Concrete\Core\Utility\IPAddress;
 use Events;
 
 class Message extends Object implements \Concrete\Core\Permission\ObjectInterface
 {
+    protected $cnvMessageDateCreated;
+
     public function getConversationMessageID()
     {
         return $this->cnvMessageID;
     }
+
     public function getConversationMessageSubject()
     {
         return $this->cnvMessageSubject;
     }
+
     public function getConversationMessageBody()
     {
         return $this->cnvMessageBody;
     }
+
+    public function getConversationMessageDateCreated()
+    {
+        return $this->cnvMessageDateCreated;
+    }
+
     public function getConversationID()
     {
         return $this->cnvID;
     }
+
     public function getConversationEditorID()
     {
         return $this->cnvEditorID;
     }
+
     public function getConversationMessageLevel()
     {
         return $this->cnvMessageLevel;
     }
+
     public function getConversationMessageParentID()
     {
         return $this->cnvMessageParentID;
     }
+
     public function getConversationMessageSubmitIP()
     {
         return new IPAddress($this->cnvMessageSubmitIP, true);
     }
+
     public function getConversationMessageSubmitUserAgent()
     {
         return $this->cnvMessageSubmitUserAgent;
     }
+
     public function isConversationMessageDeleted()
     {
         return $this->cnvIsMessageDeleted;
     }
+
     public function isConversationMessageFlagged()
     {
-        return count($this->getConversationMessageFlagTypes()) > 0;
+        return (count($this->getConversationMessageFlagTypes()) > 0);
     }
+
     public function isConversationMessageApproved()
     {
         return $this->cnvIsMessageApproved;
     }
+
     public function getConversationMessageFlagTypes()
     {
         $db = Loader::db();
         if ($this->cnvMessageFlagTypes) {
             return $this->cnvMessageFlagTypes;
         }
-        $flagTypes = $db->GetCol('SELECT cnvMessageFlagTypeID FROM ConversationFlaggedMessages WHERE cnvMessageID=?', array($this->cnvMessageID));
+        $flagTypes = $db->GetCol('SELECT cnvMessageFlagTypeID FROM ConversationFlaggedMessages WHERE cnvMessageID=?',
+            array($this->cnvMessageID));
         $flags = array();
         foreach ($flagTypes as $flagType) {
             $flags[] = FlagType::getByID($flagType);
@@ -80,6 +101,7 @@ class Message extends Object implements \Concrete\Core\Permission\ObjectInterfac
 
         return $flags;
     }
+
     public function getConversationMessageTotalRatingScore()
     {
         return $this->cnvMessageTotalRatingScore;
@@ -113,7 +135,8 @@ class Message extends Object implements \Concrete\Core\Permission\ObjectInterfac
     public function conversationMessageHasActiveChildren()
     {
         $db = Loader::db();
-        $children = $db->getCol('SELECT cnvMessageID as cnt FROM ConversationMessages WHERE cnvMessageParentID=?', array($this->cnvMessageID));
+        $children = $db->getCol('SELECT cnvMessageID as cnt FROM ConversationMessages WHERE cnvMessageParentID=?',
+            array($this->cnvMessageID));
         foreach ($children as $childID) {
             $child = static::getByID($childID);
             if (($child->isConversationMessageApproved() && !$child->isConversationMessageDeleted()) || $child->conversationMessageHasActiveChildren()) {
@@ -124,26 +147,40 @@ class Message extends Object implements \Concrete\Core\Permission\ObjectInterfac
         return false;
     }
 
+    public function setMessageDateCreated($cnvMessageDateCreated)
+    {
+        $this->cnvMessageDateCreated = $cnvMessageDateCreated;
+        $db = Loader::db();
+        $db->Execute('update ConversationMessages set cnvMessageDateCreated = ? where cnvMessageID = ?', array(
+            $cnvMessageDateCreated,
+            $this->getConversationMessageID()
+        ));
+    }
+
     public function setMessageBody($cnvMessageBody)
     {
         $this->cnvMessageBody = $cnvMessageBody;
         $db = Loader::db();
         $db->Execute('update ConversationMessages set cnvMessageBody = ? where cnvMessageID = ?', array(
-                $cnvMessageBody, $this->getConversationMessageID(),
+            $cnvMessageBody,
+            $this->getConversationMessageID(),
         ));
     }
 
     public function conversationMessageHasChildren()
     {
         $db = Loader::db();
-        $count = $db->getOne('SELECT COUNT(cnvMessageID) as cnt FROM ConversationMessages WHERE cnvMessageParentID=?', array($this->cnvMessageID));
+        $count = $db->getOne('SELECT COUNT(cnvMessageID) as cnt FROM ConversationMessages WHERE cnvMessageParentID=?',
+            array($this->cnvMessageID));
 
         return $count > 0;
     }
+
     public function approve()
     {
         $db = Loader::db();
-        $db->execute('UPDATE ConversationMessages SET cnvIsMessageApproved=1 WHERE cnvMessageID=?', array($this->cnvMessageID));
+        $db->execute('UPDATE ConversationMessages SET cnvIsMessageApproved=1 WHERE cnvMessageID=?',
+            array($this->cnvMessageID));
         $this->cnvIsMessageApproved = true;
 
         $cnv = $this->getConversationObject();
@@ -151,10 +188,12 @@ class Message extends Object implements \Concrete\Core\Permission\ObjectInterfac
             $cnv->updateConversationSummary();
         }
     }
+
     public function unapprove()
     {
         $db = Loader::db();
-        $db->execute('UPDATE ConversationMessages SET cnvIsMessageApproved=0 WHERE cnvMessageID=?', array($this->cnvMessageID));
+        $db->execute('UPDATE ConversationMessages SET cnvIsMessageApproved=0 WHERE cnvMessageID=?',
+            array($this->cnvMessageID));
         $this->cnvIsMessageApproved = false;
 
         $cnv = $this->getConversationObject();
@@ -178,6 +217,7 @@ class Message extends Object implements \Concrete\Core\Permission\ObjectInterfac
 
         return false;
     }
+
     public function getConversationMessageBodyOutput($dashboardOverride = false)
     {
         /** @var \Concrete\Core\Conversation\Editor\Editor $editor */
@@ -185,15 +225,18 @@ class Message extends Object implements \Concrete\Core\Permission\ObjectInterfac
         if ($dashboardOverride) {
             return $editor->formatConversationMessageBody($this->getConversationObject(), $this->cnvMessageBody);
         } elseif ($this->cnvIsMessageDeleted) {
-            return $editor->formatConversationMessageBody($this->getConversationObject(), t('This message has been deleted.'));
+            return $editor->formatConversationMessageBody($this->getConversationObject(),
+                t('This message has been deleted.'));
             //return t('This message has been deleted.');
         } elseif (!$this->cnvIsMessageApproved) {
             if ($this->conversationMessageHasFlag('spam')) {
-                return $editor->formatConversationMessageBody($this->getConversationObject(), t('This message has been flagged as spam.'));
+                return $editor->formatConversationMessageBody($this->getConversationObject(),
+                    t('This message has been flagged as spam.'));
                 //return t('This message has been flagged as spam.');
             }
 
-            return $editor->formatConversationMessageBody($this->getConversationObject(), t('This message is queued for approval.'));
+            return $editor->formatConversationMessageBody($this->getConversationObject(),
+                t('This message is queued for approval.'));
             // return t('This message is queued for approval.');
         } else {
             return $editor->formatConversationMessageBody($this->getConversationObject(), $this->cnvMessageBody);
@@ -204,24 +247,30 @@ class Message extends Object implements \Concrete\Core\Permission\ObjectInterfac
     {
         return Conversation::getByID($this->cnvID);
     }
+
     public function getConversationMessageUserObject()
     {
         return UserInfo::getByID($this->uID);
     }
+
     public function getConversationMessageUserID()
     {
         return $this->uID;
     }
+
     public function getConversationMessageDateTime()
     {
         return $this->cnvMessageDateCreated;
     }
+
     public function getConversationMessageDateTimeOutput($format = 'default')
     {
-        $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service\Date */
+        $dh = Core::make('helper/date');
+        /* @var $dh \Concrete\Core\Localization\Service\Date */
         if (is_array($format)) { // custom date format
 
-            return tc('Message posted date', 'Posted on %s', $dh->formatCustom($format[0], $this->cnvMessageDateCreated));
+            return tc('Message posted date', 'Posted on %s',
+                $dh->formatCustom($format[0], $this->cnvMessageDateCreated));
         }
         switch ($format) {
             case 'elapsed': // 3 seconds ago, 4 days ago, etc.
@@ -266,22 +315,34 @@ class Message extends Object implements \Concrete\Core\Permission\ObjectInterfac
             case 'mdy_t':
                 return tc('Message posted date', 'Posted on %s', $dh->formatDateTime($this->cnvMessageDateCreated));
             case 'mdy_full_t':
-                return tc('Message posted date', 'Posted on %s', $dh->formatDateTime($this->cnvMessageDateCreated, true));
+                return tc('Message posted date', 'Posted on %s',
+                    $dh->formatDateTime($this->cnvMessageDateCreated, true));
             case 'mdy_ts':
-                return tc('Message posted date', 'Posted on %s', $dh->formatDateTime($this->cnvMessageDateCreated, false, true));
+                return tc('Message posted date', 'Posted on %s',
+                    $dh->formatDateTime($this->cnvMessageDateCreated, false, true));
             case 'mdy_full_ts':
-                return tc('Message posted date', 'Posted on %s', $dh->formatDateTime($this->cnvMessageDateCreated, true, true));
+                return tc('Message posted date', 'Posted on %s',
+                    $dh->formatDateTime($this->cnvMessageDateCreated, true, true));
             default:
                 return tc('Message posted date', 'Posted on %s', $dh->formatDate($this->cnvMessageDateCreated, true));
                 break;
         }
     }
+
     public function rateMessage(Type $ratingType, $commentRatingIP, $commentRatingUserID, $post = array())
     {
         $db = Loader::db();
         if (!$this->hasRatedMessage($ratingType, $commentRatingUserID)) {
-            $cnvRatingTypeID = $db->GetOne('SELECT * FROM ConversationRatingTypes WHERE cnvRatingTypeHandle = ?', array($ratingType->cnvRatingTypeHandle));
-            $db->Execute('INSERT INTO ConversationMessageRatings (cnvMessageID, cnvRatingTypeID, cnvMessageRatingIP, timestamp, uID) VALUES (?, ?, ?, ?, ?)', array($this->getConversationMessageID(), $cnvRatingTypeID, $commentRatingIP, date('Y-m-d H:i:s'), $commentRatingUserID));
+            $cnvRatingTypeID = $db->GetOne('SELECT * FROM ConversationRatingTypes WHERE cnvRatingTypeHandle = ?',
+                array($ratingType->cnvRatingTypeHandle));
+            $db->Execute('INSERT INTO ConversationMessageRatings (cnvMessageID, cnvRatingTypeID, cnvMessageRatingIP, timestamp, uID) VALUES (?, ?, ?, ?, ?)',
+                array(
+                    $this->getConversationMessageID(),
+                    $cnvRatingTypeID,
+                    $commentRatingIP,
+                    date('Y-m-d H:i:s'),
+                    $commentRatingUserID
+                ));
             $ratingType->adjustConversationMessageRatingTotalScore($this);
         }
     }
@@ -295,9 +356,12 @@ class Message extends Object implements \Concrete\Core\Permission\ObjectInterfac
         }
 
         $db = Loader::db();
-        $cnt = $db->GetOne('select count(cnvMessageID) from ConversationMessageRatings where uID = ? and cnvRatingTypeID = ? and cnvMessageID = ?', array(
-            $uID, $ratingType->getRatingTypeID(), $this->getConversationMessageID(),
-        ));
+        $cnt = $db->GetOne('select count(cnvMessageID) from ConversationMessageRatings where uID = ? and cnvRatingTypeID = ? and cnvMessageID = ?',
+            array(
+                $uID,
+                $ratingType->getRatingTypeID(),
+                $this->getConversationMessageID(),
+            ));
 
         return $cnt > 0;
     }
@@ -305,7 +369,8 @@ class Message extends Object implements \Concrete\Core\Permission\ObjectInterfac
     public function getConversationMessageRating(Type $ratingType)
     {
         $db = Loader::db();
-        $cnt = $db->GetOne('SELECT count(*) from ConversationMessageRatings where cnvRatingTypeID = ? AND cnvMessageID = ?',  array($ratingType->getConversationRatingTypeID(), $this->cnvMessageID));
+        $cnt = $db->GetOne('SELECT count(*) from ConversationMessageRatings where cnvRatingTypeID = ? AND cnvMessageID = ?',
+            array($ratingType->getConversationRatingTypeID(), $this->cnvMessageID));
 
         return $cnt;
     }
@@ -319,7 +384,8 @@ class Message extends Object implements \Concrete\Core\Permission\ObjectInterfac
                     return;
                 }
             }
-            $db->execute('INSERT INTO ConversationFlaggedMessages (cnvMessageFlagTypeID, cnvMessageID) VALUES (?,?)', array($flagtype->getConversationFlagTypeID(), $this->getConversationMessageID()));
+            $db->execute('INSERT INTO ConversationFlaggedMessages (cnvMessageFlagTypeID, cnvMessageID) VALUES (?,?)',
+                array($flagtype->getConversationFlagTypeID(), $this->getConversationMessageID()));
             $this->cnvMessageFlagTypes[] = $flagtype;
             $this->unapprove();
 
@@ -332,7 +398,8 @@ class Message extends Object implements \Concrete\Core\Permission\ObjectInterfac
     {
         if ($flagtype instanceof FlagType) {
             $db = Loader::db();
-            $db->execute('DELETE FROM ConversationFlaggedMessages WHERE cnvMessageFlagTypeID = ? AND cnvMessageID = ?', array($flagtype->getConversationFlagTypeID(), $this->getConversationMessageID()));
+            $db->execute('DELETE FROM ConversationFlaggedMessages WHERE cnvMessageFlagTypeID = ? AND cnvMessageID = ?',
+                array($flagtype->getConversationFlagTypeID(), $this->getConversationMessageID()));
             $this->cnvMessageFlagTypes[] = $flagtype;
 
             return true;
@@ -364,7 +431,7 @@ class Message extends Object implements \Concrete\Core\Permission\ObjectInterfac
         }
     }
 
-    public function attachFile(File $f)
+    public function attachFile(\Concrete\Core\Entity\File\File $f)
     {
         $db = Loader::db();
         if (!is_object($f)) {
@@ -374,8 +441,10 @@ class Message extends Object implements \Concrete\Core\Permission\ObjectInterfac
                 $this->getConversationMessageID(),
                 $f->getFileID(),
             ));
-            $fs = FileSet::createAndGetSet(Config::get('conversations.attachments_file_set'), FileSet::TYPE_PUBLIC, USER_SUPER_ID);
-            $fsToRemove = FileSet::createAndGetSet(Config::get('conversations.attachments_pending_file_set'), FileSet::TYPE_PUBLIC, USER_SUPER_ID);
+            $fs = FileSet::createAndGetSet(Config::get('conversations.attachments_file_set'), FileSet::TYPE_PUBLIC,
+                USER_SUPER_ID);
+            $fsToRemove = FileSet::createAndGetSet(Config::get('conversations.attachments_pending_file_set'),
+                FileSet::TYPE_PUBLIC, USER_SUPER_ID);
             $fs->addFileToSet($f);
             $fsToRemove->removeFileFromSet($f);
         }
@@ -404,9 +473,10 @@ class Message extends Object implements \Concrete\Core\Permission\ObjectInterfac
     public static function getByAttachmentID($cnvMessageAttachmentID)
     {
         $db = Loader::db();
-        $messageID = $db->GetOne('SELECT cnvMessageID FROM ConversationMessageAttachments WHERE cnvMessageAttachmentID = ?', array(
-        $cnvMessageAttachmentID,
-        ));
+        $messageID = $db->GetOne('SELECT cnvMessageID FROM ConversationMessageAttachments WHERE cnvMessageAttachmentID = ?',
+            array(
+                $cnvMessageAttachmentID,
+            ));
 
         if ($messageID) {
             $message = self::getByID($messageID);
@@ -415,8 +485,13 @@ class Message extends Object implements \Concrete\Core\Permission\ObjectInterfac
         }
     }
 
-    public static function add(\Concrete\Core\Conversation\Conversation $cnv, Author $author, $cnvMessageSubject, $cnvMessageBody, $parentMessage = false)
-    {
+    public static function add(
+        \Concrete\Core\Conversation\Conversation $cnv,
+        Author $author,
+        $cnvMessageSubject,
+        $cnvMessageBody,
+        $parentMessage = false
+    ) {
         $db = Loader::db();
         $date = Loader::helper('date')->getOverridableNow();
 
@@ -449,7 +524,21 @@ class Message extends Object implements \Concrete\Core\Permission\ObjectInterfac
         $iph = Core::make('helper/validation/ip');
         $ip = $iph->getRequestIP();
         $r = $db->Execute('insert into ConversationMessages (cnvMessageSubject, cnvMessageBody, cnvMessageDateCreated, cnvMessageParentID, cnvEditorID, cnvMessageLevel, cnvID, uID, cnvMessageAuthorName, cnvMessageAuthorEmail, cnvMessageAuthorWebsite, cnvMessageSubmitIP, cnvMessageSubmitUserAgent) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-                          array($cnvMessageSubject, $cnvMessageBody, $date, $cnvMessageParentID, $cnvEditorID, $cnvMessageLevel, $cnvID, $uID, $cnvMessageAuthorName, $cnvMessageAuthorEmail, $cnvMessageAuthorWebsite, ($ip === false) ? ('') : ($ip->getIp()), $_SERVER['HTTP_USER_AGENT']));
+            array(
+                $cnvMessageSubject,
+                $cnvMessageBody,
+                $date,
+                $cnvMessageParentID,
+                $cnvEditorID,
+                $cnvMessageLevel,
+                $cnvID,
+                $uID,
+                $cnvMessageAuthorName,
+                $cnvMessageAuthorEmail,
+                $cnvMessageAuthorWebsite,
+                ($ip === false) ? ('') : ($ip->getIp()),
+                $_SERVER['HTTP_USER_AGENT']
+            ));
 
         $cnvMessageID = $db->Insert_ID();
 
@@ -484,9 +573,10 @@ class Message extends Object implements \Concrete\Core\Permission\ObjectInterfac
     public function delete()
     {
         $db = Loader::db();
-        $db->Execute('update ConversationMessages set cnvIsMessageDeleted = 1, cnvIsMessageApproved = 0 where cnvMessageID = ?', array(
-            $this->cnvMessageID,
-        ));
+        $db->Execute('update ConversationMessages set cnvIsMessageDeleted = 1, cnvIsMessageApproved = 0 where cnvMessageID = ?',
+            array(
+                $this->cnvMessageID,
+            ));
 
         $cnv = $this->getConversationObject();
         if (is_object($cnv)) {

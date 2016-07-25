@@ -300,6 +300,23 @@ class File implements \Concrete\Core\Permission\ObjectInterface
         return $this->fDateAdded;
     }
 
+    public function createNewVersion($copyUnderlyingFile = false)
+    {
+        $fv = $this->getRecentVersion();
+        $fav = $this->getApprovedVersion();
+        $fv2 = $fv->duplicate();
+
+        if ($fv->getFileVersionID() == $fav->getFileVersionID()) {
+            $fv2->approve();
+        }
+
+        if ($copyUnderlyingFile) {
+            $fv2->duplicateUnderlyingFile();
+        }
+
+        return $fv2;
+    }
+
     /**
      * Returns a file version object that is to be written to. Computes whether we can use the current most recent version, OR a new one should be created.
      */
@@ -403,6 +420,7 @@ class File implements \Concrete\Core\Permission\ObjectInterface
             if ($version->isApproved()) {
                 $cloneVersion = clone $version;
                 $cloneVersion->setFileVersionID(1);
+                $cloneVersion->duplicateUnderlyingFile();
                 $cloneVersion->setFile($nf);
 
                 $em->persist($cloneVersion);

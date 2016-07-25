@@ -1,6 +1,7 @@
 <?php
 
 defined('C5_EXECUTE') or die("Access Denied.");
+use Concrete\Core\Block\Events\BlockDelete;
 use Concrete\Core\Page\Stack\Pile\PileContent;
 
 # Filename: _process.php
@@ -55,6 +56,10 @@ if (isset($_REQUEST['btask']) && $_REQUEST['btask'] && $valt->validate()) {
                     $b->loadNewCollection($nvc);
 
                     $b->deleteBlock();
+
+                    $event = new BlockDelete($b, $c);
+                    \Events::dispatch('on_block_delete', $event);
+
                     $nvc->rescanDisplayOrder($_REQUEST['arHandle']);
 
                     if (isset($_POST['isAjax'])) {
@@ -250,14 +255,23 @@ if (isset($_REQUEST['processBlock']) && $_REQUEST['processBlock'] && $valt->vali
                             $b->setBlockAreaObject($ax);
                             $bt = BlockType::getByHandle($b->getBlockTypeHandle());
                             if ($ap->canAddBlock($bt)) {
-                                $btx = BlockType::getByHandle(BLOCK_HANDLE_SCRAPBOOK_PROXY);
+
                                 $nvc = $cx->getVersionToModify();
                                 if ($a->isGlobalArea()) {
                                     $xvc = $c->getVersionToModify(); // we need to create a new version of THIS page as well.
                                     $xvc->relateVersionEdits($nvc);
                                 }
-                                $data['bOriginalID'] = $bID;
-                                $nb = $nvc->addBlock($btx, $ax, $data);
+
+                                if (!$bt->isCopiedWhenPropagated()) {
+                                    $btx = BlockType::getByHandle(BLOCK_HANDLE_SCRAPBOOK_PROXY);
+
+                                    $data['bOriginalID'] = $bID;
+                                    $nb = $nvc->addBlock($btx, $ax, $data);
+                                } else {
+                                    $nb = $b->duplicate($nvc);
+                                    $nb->move($nvc, $ax);
+                                }
+
                                 $nb->refreshCache();
                             }
                         }
@@ -267,15 +281,24 @@ if (isset($_REQUEST['processBlock']) && $_REQUEST['processBlock'] && $valt->vali
                         $b = Block::getByID($_REQUEST['bID']);
                         $b->setBlockAreaObject($ax);
                         $bt = BlockType::getByHandle($b->getBlockTypeHandle());
+
                         if ($ap->canAddBlock($bt)) {
-                            $btx = BlockType::getByHandle(BLOCK_HANDLE_SCRAPBOOK_PROXY);
+
                             $nvc = $cx->getVersionToModify();
                             if ($a->isGlobalArea()) {
                                 $xvc = $c->getVersionToModify(); // we need to create a new version of THIS page as well.
                                 $xvc->relateVersionEdits($nvc);
                             }
-                            $data['bOriginalID'] = $_REQUEST['bID'];
-                            $nb = $nvc->addBlock($btx, $ax, $data);
+
+                            if (!$bt->isCopiedWhenPropagated()) {
+                                $btx = BlockType::getByHandle(BLOCK_HANDLE_SCRAPBOOK_PROXY);
+                                $data['bOriginalID'] = $_REQUEST['bID'];
+                                $nb = $nvc->addBlock($btx, $ax, $data);
+                            } else {
+                                $nb = $b->duplicate($nvc);
+                                $nb->move($nvc, $ax);
+                            }
+
                             $nb->refreshCache();
                         }
                     }

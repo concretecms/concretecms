@@ -138,6 +138,8 @@ class Application extends Container
 
         // Clear precompiled script bytecode caches
         OpCache::clear();
+
+        \Events::dispatch('on_cache_flush_end');
     }
 
     /**
@@ -427,8 +429,9 @@ class Application extends Container
 
         $path = rawurldecode($request->getPathInfo());
 
-        if (strpos($path, '..') !== false) {
-            throw new \RuntimeException(t('Illegal path traversal detected. Please make this request with a valid HTTP client.'));
+        if (substr($path, 0, 3) == '../' || substr($path, -3) == '/..' || strpos($path, '/../') ||
+            substr($path, 0, 3) == '..\\' || substr($path, -3) == '\\..' || strpos($path, '\\..\\')) {
+            throw new \RuntimeException(t('Invalid path traversal. Please make this request with a valid HTTP client.'));
         }
 
         if ($this->installed) {
@@ -518,7 +521,7 @@ class Application extends Container
     /**
      * Detect the application's current environment.
      *
-     * @param  array|string|callable  $environments
+     * @param  array|string|Callable  $environments
      *
      * @return string
      */

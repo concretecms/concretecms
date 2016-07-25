@@ -4,14 +4,15 @@ defined('C5_EXECUTE') or die("Access Denied.");
 <section class="ccm-ui">
 	<header><?=t('Page Permissions')?></header>
 
-	<?php
-      $cpc = $c->getPermissionsCollectionObject();
-    if ($c->getCollectionInheritance() == "PARENT") {
-        ?>
-		<div class="alert alert-info"><?=t('This page inherits its permissions from:');
-        ?> <a target="_blank" href="<?=URL::to($cpc)?>"><?=$cpc->getCollectionName()?></a></div>
-	<?php 
-    } ?>		
+	<?
+	  $cpc = $c->getPermissionsCollectionObject();
+	if ($c->getCollectionInheritance() == "PARENT") { ?>
+		<?php if ($c->isPageDraft()) { ?>
+			<div class="alert alert-info"><?=t('This page inherits its permissions from the drafts area, as well as its edit page type drafts permission.');?></div>
+		<?php } else {  ?>
+			<div class="alert alert-info"><?=t('This page inherits its permissions from:');?> <a target="_blank" href="<?=URL::to($cpc)?>"><?=$cpc->getCollectionName()?></a></div>
+		<?php } ?>
+	<? } ?>
 
 
 	<div>
@@ -20,18 +21,18 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			<select id="ccm-page-permissions-inherit" class="form-control">
 			<?php if ($c->getCollectionID() > 1) {
     ?><option value="PARENT" <?php if ($c->getCollectionInheritance() == "PARENT") {
-    ?> selected<?php 
+    ?> selected<?php
 }
-    ?>><?=t('By Area of Site (Hierarchy)')?></option><?php 
+    ?>><?=t('By Area of Site (Hierarchy)')?></option><?php
 } ?>
 			<?php if ($c->getMasterCollectionID() > 1) {
     ?><option value="TEMPLATE"  <?php if ($c->getCollectionInheritance() == "TEMPLATE") {
-    ?> selected<?php 
+    ?> selected<?php
 }
-    ?>><?=t('From Page Type Defaults')?></option><?php 
+    ?>><?=t('From Page Type Defaults')?></option><?php
 } ?>
 			<option value="OVERRIDE" <?php if ($c->getCollectionInheritance() == "OVERRIDE") {
-    ?> selected<?php 
+    ?> selected<?php
 } ?>><?=t('Manually')?></option>
 			</select>
 		</div>
@@ -41,16 +42,16 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			<label class="control-label" for="ccm-page-permissions-subpages-override-template-permissions"><?=t('Subpage Permissions')?></label>
 			<select id="ccm-page-permissions-subpages-override-template-permissions" class="form-control">
 				<option value="0"<?php if (!$c->overrideTemplatePermissions()) {
-    ?>selected<?php 
+    ?>selected<?php
 }
     ?>><?=t('Inherit page type default permissions.')?></option>
 				<option value="1"<?php if ($c->overrideTemplatePermissions()) {
-    ?>selected<?php 
+    ?>selected<?php
 }
     ?>><?=t('Inherit the permissions of this page.')?></option>
 			</select>
 		</div>
-	<?php 
+	<?php
 } ?>
 	</div>
 
@@ -79,7 +80,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
         <button class="pull-left btn btn-default" type="button" data-dialog-action="cancel" data-panel-detail-action="cancel"><?=t('Cancel')?></button>
         <button class="pull-right btn btn-success" type="button" data-dialog-action="submit" data-panel-detail-action="submit"><?=t('Save Changes')?></button>
     </div>
-<?php 
+<?php
 } ?>
 
 

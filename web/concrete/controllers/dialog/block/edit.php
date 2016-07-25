@@ -3,12 +3,14 @@ namespace Concrete\Controller\Dialog\Block;
 
 use Concrete\Controller\Backend\UserInterface\Block as BackendInterfaceBlockController;
 use Concrete\Core\Block\Block;
+use Concrete\Core\Block\Events\BlockEdit;
 use Concrete\Core\Block\View\BlockView;
 use BlockType;
 use Area;
 use Concrete\Core\Foundation\Queue\Queue;
 use Concrete\Core\Page\Page;
 use Concrete\Core\View\View;
+use Events;
 
 class Edit extends BackendInterfaceBlockController
 {
@@ -118,6 +120,8 @@ class Edit extends BackendInterfaceBlockController
             if (!is_object($e) || ($e instanceof \Concrete\Core\Error\ErrorList\ErrorList && !$e->has())) {
                 // we can update the block that we're submitting
                 $b->update($_POST);
+                $event = new BlockEdit($b, $this->page);
+                Events::dispatch('on_block_edit', $event);
             }
 
             $pr->outputJSON();
