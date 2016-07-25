@@ -39,6 +39,10 @@ class AreaLayoutTest extends ConcreteDatabaseTestCase
         $layout->addLayoutColumn()->setAreaLayoutColumnSpan(6);
 
         $elemental = \Concrete\Core\Page\Theme\Theme::add('elemental');
+        $service = \Core::make('site');
+        if (!$service->getDefault()) {
+            $service->installDefault();
+        }
         Page::addHomePage();
         Core::make('cache/request')->disable();
         $c = Page::getByID(1);

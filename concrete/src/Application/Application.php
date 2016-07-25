@@ -6,6 +6,7 @@ use Concrete\Core\Cache\Page\PageCache;
 use Concrete\Core\Cache\Page\PageCacheRecord;
 use Concrete\Core\Cache\OpCache;
 use Concrete\Core\Database\Connection\Connection;
+use Concrete\Core\Entity\Site\Site;
 use Concrete\Core\Foundation\ClassLoader;
 use Concrete\Core\Foundation\EnvironmentDetector;
 use Concrete\Core\Foundation\Runtime\DefaultRuntime;
@@ -339,9 +340,9 @@ class Application extends Container
      *
      * @return \Concrete\Core\Routing\RedirectResponse
      */
-    public function handleURLSlashes(SymfonyRequest $request)
+    public function handleURLSlashes(SymfonyRequest $request, Site $site)
     {
-        $siteConfig = $this['site']->getSite()->getConfigRepository();
+        $siteConfig = $site->getConfigRepository();
         $trailing_slashes = $siteConfig->get('seo.trailing_slash');
         $path = $request->getPathInfo();
 
@@ -368,10 +369,10 @@ class Application extends Container
      *
      * @return \Concrete\Core\Routing\RedirectResponse
      */
-    public function handleCanonicalURLRedirection(SymfonyRequest $r)
+    public function handleCanonicalURLRedirection(SymfonyRequest $r, Site $site)
     {
         $globalConfig = $this['config'];
-        $siteConfig = $this['site']->getSite()->getConfigRepository();
+        $siteConfig = $site->getConfigRepository();
 
         if ($globalConfig->get('concrete.seo.redirect_to_canonical_url') && $siteConfig->get('seo.canonical_url')) {
             $url = UrlImmutable::createFromUrl($r->getUri());

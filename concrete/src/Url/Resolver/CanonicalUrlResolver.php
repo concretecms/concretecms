@@ -49,7 +49,10 @@ class CanonicalUrlResolver implements UrlResolverInterface
 
         $config = false;
         if ($this->app->isInstalled()) {
-            $config = $this->app['site']->getSite()->getConfigRepository();
+            $site = $this->app['site']->getSite();
+            if (is_object($site)) {
+                $config = $site->getConfigRepository();
+            }
         }
 
         // Determine trailing slash setting
