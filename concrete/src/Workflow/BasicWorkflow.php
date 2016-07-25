@@ -37,6 +37,45 @@ class BasicWorkflow extends \Concrete\Core\Workflow\Workflow
         }
     }
 
+    public function getWorkflowProgressApprovalUsers(WorkflowProgress $wp)
+    {
+        $pk = Key::getByHandle('approve_basic_workflow_action');
+        $pk->setPermissionObject($this);
+        $access = $pk->getPermissionAssignmentObject()->getPermissionAccessObject();
+        $users = array(\UserInfo::getByID(USER_SUPER_ID));
+        $usersToRemove = array();
+
+        if (is_object($access)) {
+            // Loop through all items and get the relevant users.
+            $items = $access->getAccessListItems(Key::ACCESS_TYPE_INCLUDE);
+            foreach($items as $item) {
+                $entity = $item->getAccessEntityObject();
+                $users = array_merge($entity->getAccessEntityUsers($access), $users);
+            }
+
+            // Now we loop through the array and remove
+            $items = $access->getAccessListItems(Key::ACCESS_TYPE_EXCLUDE);
+            foreach($items as $item) {
+                $entity = $item->getAccessEntityObject();
+                foreach($entity->getAccessEntityUsers($access) as $user) {
+                    $usersToRemove[] = $user->getUserID();
+                }
+            }
+
+            $users = array_unique($users);
+            $usersToRemove = array_unique($usersToRemove);
+
+            $users = array_filter($users, function($element) use ($usersToRemove) {
+                if (in_array($element->getUserID(), $usersToRemove)) {
+                    return false;
+                }
+                return true;
+            });
+        }
+
+        return $users;
+    }
+
     /**
      * Returns true if the logged-in user can approve the current workflow
      */

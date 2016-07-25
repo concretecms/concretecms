@@ -56,9 +56,14 @@ abstract class StandardListView implements StandardListViewInterface
         return null;
     }
 
-    public function getActions()
+    public function getMenu()
     {
-        return array();
+        return false;
+    }
+
+    public function getFormAction()
+    {
+        return false;
     }
 
     protected function getRequestedByElement()
@@ -66,7 +71,16 @@ abstract class StandardListView implements StandardListViewInterface
         return new Element('span', t('Requested By '));
     }
 
-    public function getInitiatorActionDescription()
+    public function renderInitiatorCommentDescription()
+    {
+        $comment = $this->getInitiatorComment();
+        if ($comment) {
+            $commentElement = new Element('div', $comment, array('class' => 'ccm-block-desktop-waiting-for-me-author-comment'));
+            return $commentElement;
+        }
+    }
+
+    public function renderInitiatorActionDescription()
     {
 
         $user = $this->getInitiatorUserObject();
@@ -78,6 +92,7 @@ abstract class StandardListView implements StandardListViewInterface
 
             $element->appendChild($inner);
             $inner->appendChild($link);
+
             return $element;
         }
 

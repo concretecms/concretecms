@@ -189,6 +189,8 @@ abstract class Workflow extends Object implements \Concrete\Core\Permission\Obje
 
     abstract public function canApproveWorkflow();
 
+    abstract public function getWorkflowProgressApprovalUsers(WorkflowProgress $wp);
+
     abstract public function getWorkflowProgressActions(WorkflowProgress $wp);
 
     abstract public function getWorkflowProgressCurrentDescription(WorkflowProgress $wp);

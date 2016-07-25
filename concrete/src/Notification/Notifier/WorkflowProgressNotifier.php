@@ -26,8 +26,15 @@ class WorkflowProgressNotifier extends StandardNotifier
         $workflow = $subject->getWorkflowObject();
         $relevant = $workflow->getWorkflowProgressApprovalUsers($subject);
 
-        var_dump_safe($relevant);
-        exit;
+        // Only add notification for those users who appear in BOTH arrays
+        $notified = array_filter($relevant, function($element) use ($global) {
+            if (in_array($element, $global)) {
+                return true;
+            }
+            return false;
+        });
+
+        return $notified;
     }
 
 }

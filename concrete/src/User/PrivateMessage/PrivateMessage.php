@@ -2,15 +2,26 @@
 namespace Concrete\Core\User\PrivateMessage;
 
 use Concrete\Core\Foundation\Object;
+use Concrete\Core\Notification\Subject\SubjectInterface;
 use Concrete\Core\User\PrivateMessage\Mailbox as UserPrivateMessageMailbox;
 use Loader;
 use UserInfo;
 use Events;
 
-class PrivateMessage extends Object
+class PrivateMessage extends Object implements SubjectInterface
 {
     protected $authorName = false;
     protected $mailbox;
+
+    public function getNotificationDate()
+    {
+        return \Core::make('date')->toDateTime($this->getMessageDateAdded());
+    }
+
+    public function getUsersToExcludeFromNotification()
+    {
+        return array();
+    }
 
     public function getMessageDelimiter()
     {
@@ -99,6 +110,11 @@ class PrivateMessage extends Object
     {
         return $this->uToID;
     }
+    public function getMessageUserToObject()
+    {
+        return UserInfo::getByID($this->uToID);
+    }
+
     public function getMessageRelevantUserID()
     {
         if (is_object($this->mailbox)) {

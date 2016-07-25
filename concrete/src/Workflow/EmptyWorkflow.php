@@ -20,6 +20,11 @@ class EmptyWorkflow extends ConcreteWorkflow
         return $wpr;
     }
 
+    public function getWorkflowProgressApprovalUsers(WorkflowProgress $wp)
+    {
+        return array();
+    }
+
     public function updateDetails($vars)
     {
     }

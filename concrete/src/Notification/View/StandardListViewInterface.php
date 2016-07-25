@@ -10,7 +10,8 @@ interface StandardListViewInterface extends ListViewInterface
     function getActionDescription();
     function getInitiatorUserObject();
     function getInitiatorComment();
-    function getInitiatorActionDescription();
-    function getActions();
+    function renderInitiatorActionDescription();
+    function renderInitiatorCommentDescription();
+    function getMenu();
 
 }

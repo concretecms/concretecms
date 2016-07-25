@@ -1,6 +1,8 @@
 <?php
 namespace Concrete\Core\Notification\Type;
 
+use Concrete\Core\Entity\Notification\NewPrivateMessageNotification;
+use Concrete\Core\Notification\Notifier\NewPrivateMessageNotifier;
 use Concrete\Core\Notification\Subject\SubjectInterface;
 use Concrete\Core\Notification\Subscription\StandardSubscription;
 
@@ -9,7 +11,7 @@ class NewPrivateMessageType extends Type
 
     public function createNotification(SubjectInterface $subject)
     {
-        // TODO: Implement createNotification() method.
+        return new NewPrivateMessageNotification($subject);
     }
 
     protected function createSubscription()
@@ -28,6 +30,11 @@ class NewPrivateMessageType extends Type
         return array($this->createSubscription());
     }
 
+
+    public function getNotifier()
+    {
+        return new NewPrivateMessageNotifier($this->entityManager);
+    }
 
 
 

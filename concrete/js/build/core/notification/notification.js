@@ -32,10 +32,31 @@
             }).delay(500).queue(function () {
                 $item.remove();
                 $item.dequeue();
+                my.handleEmpty();
 
-                var $items = my.$element.find('div[data-notification-alert-id]');
-                if ($items.length < 1) {
-                    my.$element.find('[data-notification-description=empty]').show();
+            });
+        });
+
+        my.$element.on('click', 'a[data-workflow-task]', function(e) {
+            var action = $(this).attr('data-workflow-task'),
+                $form = $(this).closest('form'),
+                $notification = $(this).closest('div[data-notification-alert-id]');
+
+            e.preventDefault();
+            $form.append('<input type="hidden" name="action_' + action + '" value="' + action + '">');
+
+            $form.ajaxSubmit({
+                dataType: 'json',
+                beforeSubmit: function() {
+                    jQuery.fn.dialog.showLoader();
+                },
+                success: function(r) {
+                    $notification.addClass('animated fadeOut');
+                    jQuery.fn.dialog.hideLoader();
+                    setTimeout(function() {
+                        $notification.remove();
+                        my.handleEmpty();
+                    }, 500);
                 }
             });
         });
@@ -43,6 +64,13 @@
 
     ConcreteNotificationList.prototype = {
 
+        handleEmpty: function() {
+            var my = this;
+            var $items = my.$element.find('div[data-notification-alert-id]');
+            if ($items.length < 1) {
+                my.$element.find('[data-notification-description=empty]').show();
+            }
+        }
 
     }
 

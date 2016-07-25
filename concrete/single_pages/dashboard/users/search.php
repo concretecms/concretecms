@@ -64,6 +64,8 @@
     <form action="<?= $view->action('update_status', $user->getUserID()) ?>" method="post">
         <?= $token_validator->output() ?>
         <div class="ccm-dashboard-header-buttons btn-group">
+
+
             <?php if (Config::get('concrete.user.registration.validate_email') == true && $canActivateUser) {
     ?>
                 <?php if ($user->isValidated() < 1) {
@@ -76,6 +78,14 @@
             <?php
 }
     ?>
+
+            <?php
+                if ($user->getAttribute('profile_private_messages_enabled')) {
+                $u = new User();
+                if ($u->getUserID() != $user->getUserID()) { ?>
+                    <a href="<?php echo View::url('/account/messages', 'write', $user->getUserID())?>" class="btn btn-default"><?php echo t("Send Private Message")?></a>
+                <?php } ?>
+            <?php } ?>
 
             <?php if ($canActivateUser) { ?>
                 <?php if ($user->isActive()) { ?>

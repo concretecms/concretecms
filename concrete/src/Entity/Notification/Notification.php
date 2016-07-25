@@ -35,10 +35,16 @@ abstract class Notification
      */
     protected $nDate = null;
 
+    /**
+     * @ORM\OneToMany(targetEntity="Concrete\Core\Entity\Notification\NotificationAlert", cascade={"remove"}, mappedBy="notification")
+     * @ORM\JoinColumn(name="nID", referencedColumnName="nID")
+     */
+    protected $alerts;
+
+
     public function __construct(SubjectInterface $subject)
     {
         $this->nDate = $subject->getNotificationDate();
-        $this->alerted = new ArrayCollection();
     }
 
     public function getNotificationID()
