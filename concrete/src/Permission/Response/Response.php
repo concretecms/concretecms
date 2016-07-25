@@ -76,7 +76,7 @@ class Response
             $pr->setPermissionCategoryObject($category);
         }
         $pr->setPermissionObject($object);
-        $item->set($pr);
+        $cache->save($item->set($pr));
 
         return $pr;
     }

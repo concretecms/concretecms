@@ -66,12 +66,26 @@ class AddBlockToAreaAreaKey extends AreaKey
         $db = Loader::db();
         $btIDs = array();
         if (count($list) > 0) {
+            $cache = \Core::make('cache/request');
             $dsh = Loader::helper('concrete/dashboard');
             if ($dsh->inDashboard()) {
-                $allBTIDs = $db->GetCol('select btID from BlockTypes');
+                $identifier = 'blocktypeids/all';
             } else {
-                $allBTIDs = $db->GetCol('select btID from BlockTypes where btIsInternal = 0');
+                $identifier = 'blocktypeids/public';
             }
+
+            $item = $cache->getItem($identifier);
+            $allBTIDs = $item->get();
+            if ($item->isMiss()) {
+                if ($dsh->inDashboard()) {
+                    $allBTIDs = $db->GetCol('select btID from BlockTypes');
+                } else {
+                    $allBTIDs = $db->GetCol('select btID from BlockTypes where btIsInternal = 0');
+                }
+
+                $cache->save($item->set($allBTIDs));
+            }
+
             foreach ($list as $l) {
                 if ($l->getBlockTypesAllowedPermission() == 'N') {
                     $btIDs = array();

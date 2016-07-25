@@ -223,7 +223,7 @@ class Section extends Page
                     $returnID = $pc->getCollectionID();
                 }
             }
-            $item->set($returnID);
+            $cache->save($item->set($returnID));
         }
 
         if ($returnID) {
