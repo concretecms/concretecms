@@ -239,7 +239,7 @@ class PackageService
             } catch (\Exception $ex) {
                 $cl = $app->make('Concrete\Core\Package\BrokenPackage', array($pkgHandle));
             }
-            $item->set($cl);
+            $cache->save($item->set($cl));
         }
 
         return clone $cl;

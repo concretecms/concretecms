@@ -8,7 +8,7 @@ class AddFileFileFolderAccess extends FileFolderAccess
 {
     public function getAccessListItems(
         $accessType = FileFolderKey::ACCESS_TYPE_INCLUDE,
-        $filterEntities = array()
+        $filterEntities = array(), $checkCache = true
     ) {
         $db = Database::connection();
         $list = parent::getAccessListItems($accessType, $filterEntities);

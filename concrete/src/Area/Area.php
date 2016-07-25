@@ -471,7 +471,7 @@ class Area extends Object implements \Concrete\Core\Permission\ObjectInterface
                     $areas[$arRowHandle] = $obj;
                 }
             }
-            $item->set($areas);
+            $cache->save($item->set($areas));
         }
 
         return isset($areas[$arHandle]) ? $areas[$arHandle] : null;
@@ -517,7 +517,7 @@ class Area extends Object implements \Concrete\Core\Permission\ObjectInterface
             $item->lock();
             $db = Database::connection();
             $arHandle = $db->fetchColumn('select arHandle from Areas where arID = ?', array($arID));
-            $item->set($arHandle);
+            $cache->save($item->set($arHandle));
 
             return $arHandle;
         }
@@ -585,7 +585,7 @@ class Area extends Object implements \Concrete\Core\Permission\ObjectInterface
                     $areas[] = $area;
                 }
             }
-            $item->set($areas);
+            $cache->save($item->set($areas));
 
             return $areas;
         }
