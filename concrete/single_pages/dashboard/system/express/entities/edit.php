@@ -78,16 +78,49 @@
                             'chooseNodeInForm': 'single'
                         });
 
+                        $('[data-dialog]').on('click', function() {
+                            var $element = $('#ccm-dialog-' + $(this).attr('data-dialog'));
+                            if ($(this).attr('data-dialog-title')) {
+                                var title = $(this).attr('data-dialog-title');
+                            } else {
+                                var title = $(this).text();
+                            }
+                            jQuery.fn.dialog.open({
+                                element: $element,
+                                modal: true,
+                                width: 320,
+                                title: title,
+                                height: 'auto'
+                            });
+                        });
+
+
                     });
                 </script>
 
             </fieldset>
             <div class="ccm-dashboard-form-actions-wrapper">
                 <div class="ccm-dashboard-form-actions">
+                    <button type="button" data-dialog="delete-entity" class="pull-left btn btn-danger"><?=t('Delete')?></button>
                     <button class="pull-right btn btn-primary" type="submit" ><?=t('Save')?></button>
                 </div>
             </div>
         </form>
 
     </div>
+</div>
+
+<div style="display: none">
+    <div id="ccm-dialog-delete-entity" class="ccm-ui">
+        <form method="post" action="<?=$view->action('delete')?>">
+            <?=Core::make("token")->output('delete_entity')?>
+            <input type="hidden" name="entity_id" value="<?=$entity->getID()?>">
+            <p><?=t('Are you sure you want to delete this entity? All data entries for it will be removed. This cannot be undone.')?></p>
+            <div class="dialog-buttons">
+                <button class="btn btn-default pull-left" onclick="jQuery.fn.dialog.closeTop()"><?=t('Cancel')?></button>
+                <button class="btn btn-danger pull-right" onclick="$('#ccm-dialog-delete-entity form').submit()"><?=t('Delete Entity')?></button>
+            </div>
+        </form>
+    </div>
+
 </div>

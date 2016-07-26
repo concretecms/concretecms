@@ -321,34 +321,6 @@ class Set
         return $sets;
     }
 
-    /*
-    public function getPermissionResponseClassName()
-    {
-        return '\\Concrete\\Core\\Permission\\Response\\FileSetResponse';
-    }
-
-    public function getPermissionAssignmentClassName()
-    {
-        return '\\Concrete\\Core\\Permission\\Assignment\\FileSetAssignment';
-    }
-
-    public function getPermissionObjectKeyCategoryHandle()
-    {
-        return 'file_set';
-    }
-
-    */
-
-    /**
-     * @return int
-     */
-    /*
-    public function getPermissionObjectIdentifier()
-    {
-        return $this->getFileSetID();
-    }
-    */
-
     /**
      * @return int
      */
@@ -574,4 +546,30 @@ class Set
 
         return $r;
     }
+
+    /**
+     * @deprecated
+     */
+    public function getPermissionResponseClassName()
+    {
+        return '\\Concrete\\Core\\Permission\\Response\\FileSetResponse';
+    }
+
+    /**
+     * @deprecated
+     */
+    public function getPermissionObjectKeyCategoryHandle()
+    {
+        return 'file_set';
+    }
+
+    /**
+     * @deprecated
+     */
+    public function getPermissionObjectIdentifier()
+    {
+        return $this->getFileSetID();
+    }
+
+
 }

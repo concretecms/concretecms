@@ -73,6 +73,37 @@ class Entities extends DashboardPageController
         $this->set('entities', $entities);
     }
 
+    public function delete()
+    {
+        $entity = $this->entityManager->getRepository('Concrete\Core\Entity\Express\Entity')
+            ->findOneById($this->request->request->get('entity_id'));
+
+        if (!is_object($entity)) {
+            $this->error->add(t("Invalid express entity."));
+        }
+        if (!$this->token->validate('delete_entity')) {
+            $this->error->add($this->token->getErrorMessage());
+        }
+        if (!$this->error->has()) {
+            /**
+             * @var $entity Entity
+             */
+            $entity->setDefaultEditForm(null);
+            $entity->setDefaultViewForm(null);
+            foreach($entity->getForms() as $form) {
+                // fuck off, doctrine
+                $this->entityManager->remove($form);
+            }
+            $this->entityManager->flush();
+
+            $this->entityManager->remove($entity);
+            $this->entityManager->flush();
+            $this->flash('success', t('Entity deleted successfully.'));
+            $this->redirect('/dashboard/system/express/entities');
+        }
+
+    }
+
     public function view_entity($id = null)
     {
         $r = $this->entityManager->getRepository('\Concrete\Core\Entity\Express\Entity');

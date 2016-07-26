@@ -28,7 +28,7 @@ class Form implements \JsonSerializable
     protected $field_sets;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Entity")
+     * @ORM\ManyToOne(targetEntity="Entity", inversedBy="forms")
      **/
     protected $entity;
 

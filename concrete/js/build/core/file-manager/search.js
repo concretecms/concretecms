@@ -416,6 +416,12 @@
 
     };
 
+    ConcreteFileManager.prototype.refreshResults = function(files) {
+        var my = this;
+        my.reloadFolder();
+
+    }
+
     ConcreteFileManager.prototype._launchUploadCompleteDialog = function(files) {
         var my = this;
         ConcreteFileManager.launchUploadCompleteDialog(files, my);
