@@ -1,3 +1,44 @@
+# 5.7.5.9
+
+## New Features
+
+* Rescan files through the file manager now scans 5 at a time, works through the queue.
+* Added option to ignore page permissions to the Page List block
+
+## Behavioral Improvements
+
+* When rescanning files, if there are image upload handlers like constrain image or JPEG quality processing, these will run again (allowing you to bulk rescan and constrain large images that have been uploaded through the file manager.)
+* More reliable theme css caching (thanks fabian)
+* Installed packages will now have their strings included in the “Translate Site” interface.
+* Add WCAG label to Share This Page default view (thanks uimatters)
+* When you create a new page through the multilingual page panel, the new page’s approved version is unapproved, allowing administrators time to edit the page’s language to reflect the new section of the site.
+
+## Bug Fixes
+
+* Google Maps now requires an API key – this functionality has been added to the Google Maps block (thanks MrKarlDilkington)
+* Fixed bug where composer deleted old page versions on published pages.
+* Fix namespace of UserInfo (thanks jaromirdalecky)
+* Conversation block can now be appropriately translated based on the area of the site it appears in (thanks lehik)
+* Image Slider bug fixes (these were not included in the previous update.)
+* Fixes minor security vulnerability with pagination parameters
+* “Edit Page Type Drafts” page type permission now controls who can access a particular page draft (as it should have).
+* AutoNav ignore exclude Nav wasn’t working when set programmatically (thanks fabian, rikzuiderlicht)
+* More reliable theme customization caching (thanks fabian)
+* Fixed bug: Permissions Bug: Completely new admins get 404 on first draft creation 
+* Image slider block: Fix smaller than full size slides to center on page (thanks cryophallian)
+ 
+## Developer Updates
+
+* Added event for modifying page meta tags and title attribute in header_required.php (thanks mlocati)
+* More reliable adding of pages programmatically (will automatically strip composer output controls from pages created programmatically)
+* Adds events for add, edit, and delete for blocks on a page
+
+# 5.7.5.8
+
+* German, Japanese and Russian languages are now included
+* Image Slider Bug Fixes
+* Using blank alt tags in Image Slider, Image and Content blocks if no alt is provided, rather than the HtmlObject default “#” ones.
+
 # 5.7.5.7
 
 ## New Features
