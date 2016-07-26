@@ -393,12 +393,19 @@ class Controller extends BlockController
                             // question name
                             $key->setAttributeKeyName($control->getAttributeKey()->getAttributeKeyName());
 
-                            // attribute type
+                            // we have to delete the existing key type
+                            // because otherwise we get duplicate errors
+                            $existing_key_type = $key->getAttributeKeyType();
+                            $entityManager->remove($existing_key_type);
+                            $entityManager->flush();
+
                             $key_type = $control->getAttributeKey()->getAttributeKeyType();
+                            $entityManager->persist($key_type);
                             $key_type->setAttributeKey($key);
                             $key->setAttributeKeyType($key_type);
 
                             // Required
+                            $existingControl->setAttributeKey($key);
                             $existingControl->setIsRequired($control->isRequired());
 
                             // save it.

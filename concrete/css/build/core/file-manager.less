@@ -139,12 +139,19 @@ div.ui-dialog {
   }
   div.ccm-search-results-breadcrumb {
     display: inline-block;
-    position: static;
+    position: absolute;
     height: 15px;
+    top: 0px;
+    left: 150px;
+
+    width: 400px;
     ol {
       margin-bottom: 0px;
-      font-size: 14px;
-      font-weight: normal;
+      li a, li span {
+        position: static;
+        font-size: 14px !important;
+        font-weight: normal;
+      }
     }
   }
 
