@@ -11,6 +11,7 @@ abstract class AbstractMenu implements MenuInterface
 
     protected $items;
     protected $menuAttributes = array();
+    protected $minItemThreshold = 0;
 
     public function __construct()
     {
@@ -29,26 +30,28 @@ abstract class AbstractMenu implements MenuInterface
 
     public function getMenuElement()
     {
-        $menu = new Element('div', null, $this->menuAttributes);
-        $menu->addClass('popover')
-            ->addClass('fade');
-        $menu->appendChild(
-            (new Element('div'))->addClass('arrow')
-        );
+        if ($this->items->count() > $this->minItemThreshold) {
+            $menu = new Element('div', null, $this->menuAttributes);
+            $menu->addClass('popover')
+                ->addClass('fade');
+            $menu->appendChild(
+                (new Element('div'))->addClass('arrow')
+            );
 
-        $inner = (new Element('div'))->addClass('popover-inner');
-        $list = (new Element('ul'))->addClass('dropdown-menu');
+            $inner = (new Element('div'))->addClass('popover-inner');
+            $list = (new Element('ul'))->addClass('dropdown-menu');
 
-        /**
-         * @var $item ItemInterface
-         */
-        foreach($this->items as $item) {
-            $list->appendChild($item->getItemElement());
+            /**
+             * @var $item ItemInterface
+             */
+            foreach($this->items as $item) {
+                $list->appendChild($item->getItemElement());
+            }
+
+            $inner->appendChild($list);
+            $menu->appendChild($inner);
+            return $menu;
         }
-
-        $inner->appendChild($list);
-        $menu->appendChild($inner);
-        return $menu;
     }
 
 }
