@@ -291,7 +291,7 @@
 
 
             $nav.on('click.concreteSearchBreadcrumb', 'a', function() {
-                my.loadFolder($(this).attr('data-file-manager-tree-node'));
+                my.loadFolder($(this).attr('data-file-manager-tree-node'), $(this).attr('href'));
                 return false;
             });
 
@@ -603,12 +603,19 @@
 
     }
 
-    ConcreteFileManager.prototype.loadFolder = function(folderID) {
+    ConcreteFileManager.prototype.loadFolder = function(folderID, url) {
         var my = this;
         var data = my.getSearchData();
+        if (!url) {
+            var url = my.options.result.baseUrl;
+        } else {
+            // dynamically update baseUrl because we're coming to this folder via
+            // something like the breadcrumb
+            my.options.result.baseUrl = url; // probably a nicer way to do this
+        }
         data.push({'name': 'folder', 'value': folderID});
         my.currentFolder = folderID;
-        my.ajaxUpdate(my.options.result.baseUrl, data);
+        my.ajaxUpdate(url, data);
         my.$element.find('#ccm-file-manager-upload input[name=currentFolder]').val(my.currentFolder);
     }
 

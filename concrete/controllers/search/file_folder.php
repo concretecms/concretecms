@@ -17,7 +17,6 @@ class FileFolder extends AbstractController
 {
     protected $list;
     protected $result;
-    protected $searchRequest;
     protected $filesystem;
 
     public function __construct()
@@ -28,33 +27,47 @@ class FileFolder extends AbstractController
 
     public function search()
     {
+        $searchRequest = new StickyRequest('file_manager_folder');
+
         if ($this->request->get('folder')) {
+            $searchRequest->resetSearchRequest();
             $node = Node::getByID($this->request->get('folder'));
             if (is_object($node) &&
                 ($node instanceof \Concrete\Core\Tree\Node\Type\FileFolder ||
                     $node instanceof SearchPreset)) {
                     $folder = $node;
             }
+        } else {
+            $req = $searchRequest->getSearchRequest();
+            if (isset($req['folder'])) {
+                $node = Node::getByID($req['folder']);
+                if (is_object($node) &&
+                    ($node instanceof \Concrete\Core\Tree\Node\Type\FileFolder ||
+                        $node instanceof SearchPreset)) {
+                    $folder = $node;
+                }
+            }
         }
 
-        if (isset($folder) && $folder instanceof SearchPreset) {
+        if (isset($folder)) {
 
-            $search = $folder->getSavedSearchObject();
-            $query = $search->getQuery();
-            $provider = \Core::make('Concrete\Core\File\Search\SearchProvider');
-            $ilr = $provider->getSearchResultFromQuery($query);
-            $ilr->setBaseURL(\URL::to('/ccm/system/search/files/preset', $search->getID()));
+            if ($folder instanceof SearchPreset) {
+                $search = $folder->getSavedSearchObject();
+                $query = $search->getQuery();
+                $provider = \Core::make('Concrete\Core\File\Search\SearchProvider');
+                $ilr = $provider->getSearchResultFromQuery($query);
+                $ilr->setBaseURL(\URL::to('/ccm/system/search/files/preset', $search->getID()));
+            }
+
+            $searchRequest->addToSearchRequest('folder', $folder->getTreeNodeID());
 
         }
 
         if (!isset($ilr)) {
 
-            $list = new FolderItemList($this->searchRequest);
-
             if (!isset($folder)) {
                 $folder = $this->filesystem->getRootFolder();
             }
-
 
             $u = new \User();
             $list = $folder->getFolderItemList($u, $this->request);
