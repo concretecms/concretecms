@@ -188,7 +188,7 @@ class File extends Controller
         return $files;
     }
 
-    protected function handleUpload($property, $index = false)
+    protected function handleUpload($property, $folder = null, $index = false)
     {
 
         if ($index !== false) {
@@ -214,13 +214,6 @@ class File extends Controller
         if (!$fp->canAddFileType($cf->getExtension($name))) {
             throw new Exception(FileImporter::getErrorMessage(FileImporter::E_FILE_INVALID_EXTENSION));
         } else {
-            $folder = null;
-            if ($this->request->request->has('currentFolder')) {
-                $node = Node::getByID($this->request->request->get('currentFolder'));
-                if ($node instanceof FileFolder) {
-                    $folder = $node;
-                }
-            }
             $importer = new FileImporter();
             $response = $importer->import($tmp_name, $name, $folder);
         }
@@ -239,7 +232,20 @@ class File extends Controller
 
     public function upload()
     {
-        $fp = FilePermissions::getGlobal();
+        $folder = null;
+        if ($this->request->request->has('currentFolder')) {
+            $node = Node::getByID($this->request->request->get('currentFolder'));
+            if ($node instanceof FileFolder) {
+                $folder = $node;
+            }
+        }
+
+        if ($folder) {
+            $fp = new \Permissions($folder);
+        } else {
+            $fp = FilePermissions::getGlobal();
+        }
+
         if (!$fp->canAddFiles()) {
             throw new Exception(t("Unable to add files."));
         }
@@ -255,12 +261,12 @@ class File extends Controller
         }
 
         if (isset($_FILES['file'])){
-            $files = $this->handleUpload('file');
+            $files = $this->handleUpload('file', $folder);
         }
         if (isset($_FILES['files']['tmp_name'][0])) {
             $files = array();
             for ($i = 0; $i < count($_FILES['files']['tmp_name']); ++$i) {
-                $files = array_merge($files, $this->handleUpload('files', $i));
+                $files = array_merge($files, $this->handleUpload('files', $folder, $i));
             }
         }
 
