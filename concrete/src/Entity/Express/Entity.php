@@ -68,12 +68,12 @@ class Entity implements CategoryObjectInterface, ObjectInterface
     protected $forms;
 
     /**
-     * @ORM\OneToOne(targetEntity="Form", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity="Form", cascade={"persist"})
      **/
     protected $default_view_form;
 
     /**
-     * @ORM\OneToOne(targetEntity="Form", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity="Form", cascade={"persist"})
      **/
     protected $default_edit_form;
 
