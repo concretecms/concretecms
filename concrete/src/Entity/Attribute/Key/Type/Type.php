@@ -25,7 +25,7 @@ abstract class Type
     protected $akTypeHandle;
 
     /**
-     * @ORM\ManyToOne(targetEntity="\Concrete\Core\Entity\Attribute\Key\Key", inversedBy="key_type")
+     * @ORM\OneToOne(targetEntity="\Concrete\Core\Entity\Attribute\Key\Key", inversedBy="key_type")
      * @ORM\JoinColumn(name="akID", referencedColumnName="akID")
      */
     protected $key;
