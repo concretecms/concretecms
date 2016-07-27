@@ -655,6 +655,8 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
      */
     public static function add($data, $pkg = false)
     {
+        $site = \Core::make('site')->getSite();
+
         $data = $data + array(
             'defaultTemplate' => null,
             'allowedTemplates' => null,
@@ -662,9 +664,13 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
             'internal' => null,
             'ptLaunchInComposer' => null,
             'ptIsFrequentlyAdded' => null,
-        );
+            'site' => $site
+            );
+
         $ptHandle = $data['handle'];
         $ptName = $data['name'];
+        $siteID = $data['site']->getSiteID();
+
         $ptDefaultPageTemplateID = 0;
         $ptIsFrequentlyAdded = 0;
         $ptLaunchInComposer = 0;
@@ -707,7 +713,7 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
         }
 
         $db->Execute(
-            'insert into PageTypes (ptName, ptHandle, ptDefaultPageTemplateID, ptAllowedPageTemplates, ptIsInternal, ptLaunchInComposer, ptDisplayOrder, ptIsFrequentlyAdded, pkgID) values (?, ?, ?, ?, ?, ?, ?, ?, ?)',
+            'insert into PageTypes (ptName, ptHandle, ptDefaultPageTemplateID, ptAllowedPageTemplates, ptIsInternal, ptLaunchInComposer, ptDisplayOrder, ptIsFrequentlyAdded, siteID, pkgID) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
             array(
                 $ptName,
                 $ptHandle,
@@ -717,6 +723,7 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
                 $ptLaunchInComposer,
                 $ptDisplayOrder,
                 $ptIsFrequentlyAdded,
+                $siteID,
                 $pkgID,
             )
         );
@@ -873,10 +880,12 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
     public static function getList($includeInternal = false)
     {
         $db = Loader::db();
+        $site = \Core::make('site')->getSite();
+        $v = array($site->getSiteID());
         if (!$includeInternal) {
-            $ptIDs = $db->GetCol('select ptID from PageTypes where ptIsInternal = false order by ptDisplayOrder asc');
+            $ptIDs = $db->GetCol('select ptID from PageTypes where siteID = ? and ptIsInternal = false order by ptDisplayOrder asc', $v);
         } else {
-            $ptIDs = $db->GetCol('select ptID from PageTypes order by ptDisplayOrder asc');
+            $ptIDs = $db->GetCol('select ptID from PageTypes where siteID = ? order by ptDisplayOrder asc', $v);
         }
 
         return static::returnList($ptIDs);
