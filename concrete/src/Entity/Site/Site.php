@@ -51,6 +51,11 @@ class Site
     protected $siteID;
 
     /**
+     * @ORM\Column(type="integer", options={"unsigned":true})
+     */
+    protected $pThemeID = 0;
+
+    /**
      * @ORM\Column(type="boolean")
      */
     protected $siteIsDefault = false;
@@ -154,6 +159,23 @@ class Site
     {
         return $this->getConfigRepository()->save('name', $name);
     }
+
+    /**
+     * @return mixed
+     */
+    public function getThemeID()
+    {
+        return $this->pThemeID;
+    }
+
+    /**
+     * @param mixed $pThemeID
+     */
+    public function setThemeID($pThemeID)
+    {
+        $this->pThemeID = $pThemeID;
+    }
+
 
 
 

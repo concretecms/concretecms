@@ -3,11 +3,12 @@ namespace Concrete\Controller\SinglePage\Dashboard\Pages;
 
 use Concrete\Core\Error\ErrorList\ErrorList;
 use Concrete\Core\Page\Controller\DashboardPageController;
+use Concrete\Core\Page\Controller\DashboardSitePageController;
 use PageType;
 use Loader;
 use PageTemplate;
 
-class Types extends DashboardPageController
+class Types extends DashboardSitePageController
 {
     public function page_type_added()
     {

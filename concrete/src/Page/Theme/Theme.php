@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Page\Theme;
 
+use Concrete\Core\Entity\Site\Site;
 use Concrete\Core\Http\ResponseAssetGroup;
 use Config;
 use Loader;
@@ -868,13 +869,15 @@ class Theme extends Object
         return $img;
     }
 
-    public function applyToSite()
+    public function applyToSite(Site $site = null)
     {
-        $db = Loader::db();
-        $r = $db->query(
-            "update CollectionVersions inner join Pages on CollectionVersions.cID = Pages.cID left join Packages on Pages.pkgID = Packages.pkgID set CollectionVersions.pThemeID = ? where cIsTemplate = 0 and (Packages.pkgHandle <> 'core' or pkgHandle is null or Pages.ptID > 0)",
-            array($this->pThemeID)
-        );
+        if (!is_object($site)) {
+            $site = \Core::make('site')->getSite();
+        }
+        $entityManager = \Database::connection()->getEntityManager();
+        $site->setThemeID($this->getThemeID());
+        $entityManager->persist($site);
+        $entityManager->flush();
     }
 
     /**
@@ -882,9 +885,8 @@ class Theme extends Object
      */
     public static function getSiteTheme()
     {
-        $c = Page::getByID(HOME_CID);
-
-        return static::getByID($c->getCollectionThemeID());
+        $site = \Core::make('site')->getSite();
+        return static::getByID($site->getThemeID());
     }
 
     public function uninstall()
