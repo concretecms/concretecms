@@ -23,11 +23,21 @@ if (is_object($pagetype) && $pagetype->getPageTypePublishTargetTypeID() == $conf
         $pl->sortByName();
         $pages = $pl->get();
         if (count($pages) > 1) {
+            $navigation = \Core::make('helper/navigation');
             $options = array();
             foreach ($pages as $p) {
                 $pp = new Permissions($p);
                 if ($pp->canAddSubCollection($pagetype)) {
-                    $options[$p->getCollectionID()] = $p->getCollectionName();
+					$label = '';
+					$trail = $navigation->getTrailToCollection($p);
+					if (is_array($trail)) {
+						$trail = array_reverse($trail);
+						for ($i = 0; $i < count($trail); $i++) {
+							$label .= $trail[$i]->getCollectionName() . ' &gt; ';
+						}
+					}
+					$label .= $p->getCollectionName();
+					$options[$p->getCollectionID()] = $label;
                 }
             }
             echo $form->select('cParentID', $options, $cParentID);
