@@ -199,6 +199,7 @@ class Section extends Page
             $returnID = $item->get();
         } else {
             $item->lock();
+            $returnID = null;
             if ($page->getPageTypeHandle() == STACKS_PAGE_TYPE) {
                 $parent = Page::getByID($page->getCollectionParentID());
                 if ($parent->getCollectionPath() == STACKS_PAGE_PATH) {
@@ -210,17 +211,26 @@ class Section extends Page
 
                     return static::getByLocale($locale);
                 }
-            }
-            // looks at the page, traverses its parents until it finds the proper language
-            $nav = \Core::make('helper/navigation');
-            $pages = $nav->getTrailToCollection($page);
-            $pages = array_reverse($pages);
-            $pages[] = $page;
-            $ids = self::getIDList();
-            $returnID = false;
-            foreach ($pages as $pc) {
-                if (in_array($pc->getCollectionID(), $ids)) {
-                    $returnID = $pc->getCollectionID();
+            } else {
+
+                if ($page->isPageDraft() && $page->getPageDraftTargetParentPageID()) {
+                    $cParentID = $page->getPageDraftTargetParentPageID();
+                } else {
+                    $cParentID = $page->getCollectionParentID();
+                }
+
+                $parent = \Page::getByID($cParentID);
+                $nav = \Core::make('helper/navigation');
+                $pages = $nav->getTrailToCollection($parent);
+                $pages = array_reverse($pages);
+                $pages[] = $parent;
+                $pages[] = $page;
+                $ids = self::getIDList();
+                $returnID = false;
+                foreach ($pages as $pc) {
+                    if (in_array($pc->getCollectionID(), $ids)) {
+                        $returnID = $pc->getCollectionID();
+                    }
                 }
             }
             $cache->save($item->set($returnID));

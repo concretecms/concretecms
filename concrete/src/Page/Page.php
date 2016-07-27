@@ -3143,10 +3143,16 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
 
     public function setPageDraftTargetParentPageID($cParentID)
     {
+        if ($cParentID != $this->getPageDraftTargetParentPageID()) {
+            Section::unregisterPage($this);
+        }
         $db = Database::connection();
         $cParentID = intval($cParentID);
         $db->executeQuery('update Pages set cDraftTargetParentPageID = ? where cID = ?', array($cParentID, $this->cID));
         $this->cDraftTargetParentPageID = $cParentID;
+
+        Section::registerPage($this);
+
     }
 
     /**

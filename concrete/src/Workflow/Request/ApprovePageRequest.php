@@ -53,25 +53,27 @@ class ApprovePageRequest extends PageRequest
         $d = new WorkflowDescription();
         $c = Page::getByID($this->cID, 'RECENT');
         $link = Loader::helper('navigation')->getLinkToCollection($c, true);
-        $comments = $c->getVersionObject()->getVersionComments();
+        $v = $c->getVersionObject();
+        if (is_object($v)) {
+			$comments = $c->getVersionObject()->getVersionComments();
 
-        if (!$this->isNewPageRequest()) {
-            // new version of existing page
-            $d->setEmailDescription(t("\"%s\" has pending changes and needs to be approved.\n\nVersion Comments: %s\n\nView the page here: %s.",
-                $c->getCollectionName(), $comments, $link));
-            $d->setDescription(t("Version %s of Page <a target=\"_blank\" href=\"%s\">%s</a> submitted for Approval.", $this->cvID, $link,
-                $c->getCollectionName()));
-            $d->setInContextDescription(t("Page Version %s Submitted for Approval.", $this->cvID));
-            $d->setShortStatus(t("Pending Approval"));
-        } else {
-            // Completely new page.
-            $d->setEmailDescription(t("New page created: \"%s\". This page requires approval.\n\nAuthor Comments: %s\n\nView the page here: %s.",
-                $c->getCollectionName(), $comments, $link));
-            $d->setDescription(t("New Page: <a target=\"_blank\" href=\"%s\">%s</a>", $link, $c->getCollectionName()));
-            $d->setInContextDescription(t("New Page %s submitted for approval.", $this->cvID));
-            $d->setShortStatus(t("New Page"));
-        }
-
+			if (!$this->isNewPageRequest()) {
+				// new version of existing page
+				$d->setEmailDescription(t("\"%s\" has pending changes and needs to be approved.\n\nVersion Comments: %s\n\nView the page here: %s.",
+					$c->getCollectionName(), $comments, $link));
+				$d->setDescription(t("Version %s of Page <a target=\"_blank\" href=\"%s\">%s</a> submitted for Approval.", $this->cvID, $link,
+					$c->getCollectionName()));
+				$d->setInContextDescription(t("Page Version %s Submitted for Approval.", $this->cvID));
+				$d->setShortStatus(t("Pending Approval"));
+			} else {
+				// Completely new page.
+				$d->setEmailDescription(t("New page created: \"%s\". This page requires approval.\n\nAuthor Comments: %s\n\nView the page here: %s.",
+					$c->getCollectionName(), $comments, $link));
+				$d->setDescription(t("New Page: <a target=\"_blank\" href=\"%s\">%s</a>", $link, $c->getCollectionName()));
+				$d->setInContextDescription(t("New Page %s submitted for approval.", $this->cvID));
+				$d->setShortStatus(t("New Page"));
+			}
+		}
 
         return $d;
     }

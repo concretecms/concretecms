@@ -75,23 +75,44 @@ class Multilingual extends Page
         $pr = new PageEditResponse();
         $ms = Section::getByID($this->request->request->get('section'));
         // we get the related parent id
-        $cParentID = $this->page->getCollectionParentID();
+        if ($this->page->isPageDraft()) {
+            $cParentID = $this->page->getPageDraftTargetParentPageID();
+        } else {
+            $cParentID = $this->page->getCollectionParentID();
+        }
         $cParent = \Page::getByID($cParentID);
         $cParentRelatedID = $ms->getTranslatedPageID($cParent);
         if ($cParentRelatedID > 0) {
             // we copy the page underneath it and store it
-            $newParent = \Page::getByID($cParentRelatedID);
             $ct = \PageType::getByID($this->page->getPageTypeID());
+            if ($this->page->isPageDraft()) {
+                $ptp = new \Permissions($ct);
+                if (!$ptp->canAddPageType()) {
+                    throw new \Exception(t('You do not have permission to add a page of this type.'));
+                }
+            }
+            $newParent = \Page::getByID($cParentRelatedID);
             $cp = new \Permissions($newParent);
-            if ($cp->canAddSubCollection($ct) && $this->page->canMoveCopyTo($newParent)) {
-                $newPage = $this->page->duplicate($newParent);
+            if ($cp->canAddSubCollection($ct)) {
+                if ($this->page->isPageDraft()) {
+                    $targetParent = \Page::getByPath(\Config::get('concrete.paths.drafts'));
+                } else {
+                    $targetParent = $newParent;
+                }
+                $newPage = $this->page->duplicate($targetParent);
                 if (is_object($newPage)) {
-                    // grab the approved version and unapprove it
-                    $v = Version::get($newPage, 'ACTIVE');
-                    if (is_object($v)) {
-                        $v->deny();
+                    if ($this->page->isPageDraft()) {
+                        $newPage->setPageDraftTargetParentPageID($newParent->getCollectionID());
+                        Section::relatePage($this->page, $newPage, $ms->getLocale());
+                        $pr->setMessage(t('New draft created.'));
+                    } else {
+                        // grab the approved version and unapprove it
+                        $v = Version::get($newPage, 'ACTIVE');
+                        if (is_object($v)) {
+                            $v->deny();
+                        }
+                        $pr->setMessage(t('Unapproved page created. You must publish this page before it is live.'));
                     }
-                    $pr->setMessage(t('Unapproved page created. You must publish this page before it is live.'));
                     $ih = Core::make('multilingual/interface/flag');
                     $icon = $ih->getSectionFlagIcon($ms);
                     $pr->setAdditionalDataAttribute('name', $newPage->getCollectionName());

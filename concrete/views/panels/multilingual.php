@@ -34,8 +34,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
                     <div class="ccm-popover-inverse popover fade" data-multilingual-menu="<?=$m->getCollectionID()?>">
                         <div class="popover-inner">
                             <ul class="dropdown-menu">
-                                <?php if ($cParentRelatedID) {
-    ?>
+                                <?php if ($cParentRelatedID || $c->isPageDraft()) { ?>
                                     <li><a href="#" data-multilingual-create-page="<?=$m->getCollectionID()?>"><?=t('Create Page')?></a></li>
                                 <?php 
 } else {
