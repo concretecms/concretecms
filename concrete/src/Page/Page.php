@@ -1449,7 +1449,9 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
      */
     public function getCollectionParentID()
     {
-        return $this->cParentID;
+        if (isset($this->cParentID)) {
+            return $this->cParentID;
+        }
     }
 
     /**
