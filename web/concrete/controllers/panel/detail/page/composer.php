@@ -122,14 +122,17 @@ class Composer extends BackendInterfacePageController {
 			$c = $c->getVersionToModify();
             $this->page = $c;
 
+			if ($c->isPageDraft()) {
 			/// set the target
-			$configuredTarget = $pagetype->getPageTypePublishTargetObject();
-			$targetPageID = $configuredTarget->getPageTypePublishTargetConfiguredTargetParentPageID();
-			if (!$targetPageID) {
-				$targetPageID = $_POST['cParentID'];
-			}
+				$configuredTarget = $pagetype->getPageTypePublishTargetObject();
+				$targetPageID = $configuredTarget->getPageTypePublishTargetConfiguredTargetParentPageID();
+				if (!$targetPageID) {
+					$targetPageID = $_POST['cParentID'];
+				}
 
-			$c->setPageDraftTargetParentPageID($targetPageID);
+
+				$c->setPageDraftTargetParentPageID($targetPageID);
+			}
 			$outputControls = $pagetype->savePageTypeComposerForm($c);
 		}
         $ptr->setError($e);
