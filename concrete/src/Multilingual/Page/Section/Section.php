@@ -437,14 +437,16 @@ class Section extends Page
         $db = Database::get();
         $mpRelationID = self::getMultilingualPageRelationID($oldPage->getCollectionID());
 
-        if ($mpRelationID) {
-            $v = array($mpRelationID, $newPage->getCollectionID(), $locale);
+        $section = Section::getByLocale($locale);
+
+        if ($mpRelationID && $section) {
+            $v = array($mpRelationID, $newPage->getCollectionID(), $section->getLocale(), $section->getLanguage());
             $db->Execute(
                 'delete from MultilingualPageRelations where mpRelationID = ? and mpLocale = ?',
-                array($mpRelationID, $locale)
+                array($mpRelationID, $section->getLocale())
             );
             $db->Execute('delete from MultilingualPageRelations where cID = ?', array($newPage->getCollectionID()));
-            $db->Execute('insert into MultilingualPageRelations (mpRelationID, cID, mpLocale) values (?, ?, ?)', $v);
+            $db->Execute('insert into MultilingualPageRelations (mpRelationID, cID, mpLocale, mpLanguage) values (?, ?, ?, ?)', $v);
             $pde = new Event($newPage);
             $pde->setLocale($locale);
             \Events::dispatch('on_multilingual_page_relate', $pde);
