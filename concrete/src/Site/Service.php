@@ -30,10 +30,15 @@ class Service
 
     public function getDefault()
     {
-        $site = $this->entityManager->getRepository('Concrete\Core\Entity\Site\Site')
-            ->findOneBy(array('siteIsDefault' => true));
+        $factory = new Factory($this->config);
+        try {
+            $site = $this->entityManager->getRepository('Concrete\Core\Entity\Site\Site')
+                ->findOneBy(array('siteIsDefault' => true));
+        } catch(\Exception $e) {
+            return $factory->createDefaultEntity();
+        }
+
         if (is_object($site)) {
-            $factory = new Factory($this->config);
             return $factory->createEntity($site);
         }
     }

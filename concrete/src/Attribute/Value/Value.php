@@ -69,16 +69,6 @@ class Value extends Object implements AttributeValueInterface
         }
     }
 
-    public function __destruct()
-    {
-        if (isset($this->attributeType)) {
-            if (is_object($this->attributeType)) {
-                $this->attributeType->__destruct();
-            }
-            unset($this->attributeType);
-        }
-    }
-
     public function setAttributeKey($ak)
     {
         $this->attributeKey = $ak;

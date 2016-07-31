@@ -6,12 +6,20 @@ use Concrete\Core\Attribute\Key\CollectionKey;
 use Concrete\Core\Attribute\Type;
 use Concrete\Core\Backup\ContentImporter;
 use Concrete\Core\Block\BlockType\BlockType;
+use Concrete\Core\Cache\Cache;
+use Concrete\Core\Cache\CacheLocal;
 use Concrete\Core\Entity\Attribute\Key\PageKey;
 use Concrete\Core\Entity\Attribute\Key\Type\BooleanType;
 use Concrete\Core\Entity\Attribute\Key\Type\NumberType;
+use Concrete\Core\Page\Template;
+use Concrete\Core\Permission\Access\Access;
+use Concrete\Core\Permission\Access\Entity\GroupEntity;
+use Concrete\Core\Permission\Key\Key;
+use Concrete\Core\Site\Service;
 use Concrete\Core\Tree\Node\NodeType;
 use Concrete\Core\Tree\TreeType;
 use Concrete\Core\Tree\Type\ExpressEntryResults;
+use Concrete\Core\User\Group\Group;
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
 use Concrete\Core\Page\Page;
@@ -40,10 +48,21 @@ class Version20160725000000 extends AbstractMigration
         }
     }
 
+    protected function deleteOldPermissions()
+    {
+        $category = \Concrete\Core\Permission\Category::getByHandle('file_set');
+        if (is_object($category)) {
+            $category->delete();
+        }
+    }
+
     protected function updateDoctrineXmlTables()
     {
         // Update tables that still exist in db.xml
         \Concrete\Core\Database\Schema\Schema::refreshCoreXMLSchema(array(
+            'Pages',
+            'PageTypes',
+            'CollectionVersionBlocks',
             'CollectionVersions',
             'TreeNodes',
             'Sessions',
@@ -51,7 +70,14 @@ class Version20160725000000 extends AbstractMigration
             'Users',
         ));
     }
-    
+
+    protected function prepareProblematicEntityTables()
+    {
+        // Remove the weird primary keys from the Files table
+        $this->connection->executeQuery('alter table Files drop primary key, add primary key (fID)');
+    }
+
+
     /**
      * Loop through all installed packages and write the metadata setting for packages
      * to the database.php config in genereated_overrides
@@ -70,27 +96,11 @@ class Version20160725000000 extends AbstractMigration
             }
         }
     }
-    
-    /**
-     * Check if application/src folder is present, of not create it
-     */
-    protected function createSrcFolderInApplication(){
-        
-        $srcDirPath = DIR_APPLICATION . DIRECTORY_SEPARATOR . DIRNAME_CLASSES;
-        $filesystem = new \Illuminate\Filesystem\Filesystem();
-        if(!$filesystem->exists($srcDirPath)) {
-            $filesystem->makeDirectory($srcDirPath);
-        }
-    }
-    
-    protected function installEntities()
-    {
-        // Add tables for new entities or moved entities
-        $sm = \Core::make('Concrete\Core\Database\DatabaseStructureManager');
-        $entities = array('Concrete\Core\Entity\File\File');
 
-        // Now we fill the rest of the class names recursively from the entity directory, since it's
-        // entirely new
+    protected function installOtherEntities()
+    {
+        $entities = array();
+
         $entityPath = DIR_BASE_CORE . '/' . DIRNAME_CLASSES . '/Entity';
         $iterator = new \RecursiveIteratorIterator(
             new \RecursiveDirectoryIterator($entityPath, \FilesystemIterator::SKIP_DOTS),
@@ -102,15 +112,25 @@ class Version20160725000000 extends AbstractMigration
                 $path = $path->__toString();
                 if (substr(basename($path), 0, 1) != '.') {
                     $path = str_replace(array($entityPath, '.php'), '', $path);
-                    $entities[] = 'Concrete\Core\Entity' . str_replace('/', '\\', $path);
+                    $entityName = 'Concrete\Core\Entity' . str_replace('/', '\\', $path);
+                    $entities[] = $entityName;
                 }
             }
         }
 
+        $this->installEntities($entities);
+    }
+
+    protected function installEntities($entities)
+    {
+        // Add tables for new entities or moved entities
+        $sm = \Core::make('Concrete\Core\Database\DatabaseStructureManager');
+
         $em = $this->connection->getEntityManager();
         $cmf = $em->getMetadataFactory();
         $metadatas = array();
-        foreach ($cmf->getAllMetadata() as $meta) {
+        $existingMetadata = $cmf->getAllMetadata();
+        foreach($existingMetadata as $meta) {
             if (in_array($meta->getName(), $entities)) {
                 $metadatas[] = $meta;
             }
@@ -599,6 +619,10 @@ class Version20160725000000 extends AbstractMigration
         if (!is_object($results)) {
             NodeType::add('express_entry_results');
         }
+        $category = NodeType::getByHandle('express_entry_category');
+        if (!is_object($category)) {
+            NodeType::add('express_entry_category');
+        }
         $results = TreeType::getByHandle('express_entry_results');
         if (!is_object($results)) {
             TreeType::add('express_entry_results');
@@ -611,7 +635,11 @@ class Version20160725000000 extends AbstractMigration
 
     protected function installDesktops()
     {
-        $db = \Database::connection();
+        $template = Template::getByHandle('desktop');
+        if (!is_object($template)) {
+            Template::add('desktop', t('Desktop'), FILENAME_PAGE_TEMPLATE_DEFAULT_ICON, null, true);
+        }
+
         $category = Category::getByHandle('collection')->getController();
         $attribute = CollectionKey::getByHandle('is_desktop');
         if (!is_object($attribute)) {
@@ -671,6 +699,18 @@ class Version20160725000000 extends AbstractMigration
         }
     }
 
+    protected function installSite()
+    {
+        /**
+         * @var $service Service
+         */
+        $service = \Core::make('site');
+        $site = $service->getDefault();
+        if (!is_object($site) || $site->getSiteID() < 1) {
+            $service->installDefault();
+        }
+    }
+
     protected function splittedTrackingCode()
     {
         $config = Facade::getFacadeApplication()->make('config');
@@ -692,16 +732,46 @@ class Version20160725000000 extends AbstractMigration
         unset($tracking['code_position']);
         $config->save('concrete.seo.tracking', $tracking);
     }
+
+    protected function addPermissions()
+    {
+        $category = \Concrete\Core\Permission\Category::getByHandle('express_tree_node');
+        if (!is_object($category)) {
+            \Concrete\Core\Permission\Category::add('express_tree_node');
+        }
+
+        CacheLocal::delete('permission_keys', false);
+
+        $permissions = [
+            ['view_express_entries', 'View Express Entries', 'View Express Entries'],
+            ['add_express_entries', 'Add Express Entries', 'Add Express Entries'],
+            ['edit_express_entries', 'Edit Express Entries', 'Edit Express Entries'],
+            ['delete_express_entries', 'Delete Express Entries', 'Delete Express Entries']
+        ];
+
+        foreach($permissions as $pk) {
+            $key = Key::getByHandle($pk[0]);
+            if (!is_object($key)) {
+                Key::add('express_tree_node', $pk[0], $pk[1], $pk[2], false, false);
+            }
+        }
+
+        CacheLocal::delete('permission_keys', false);
+    }
        
     public function up(Schema $schema)
     {
         $this->connection->Execute('set foreign_key_checks = 0');
         $this->renameProblematicTables();
+        $this->deleteOldPermissions();
         $this->updateDoctrineXmlTables();
+        $this->prepareProblematicEntityTables();
         $this->createMetaDataConfigurationForPackages();
-        $this->createSrcFolderInApplication();
-        $this->installEntities();
+        $this->installEntities(array('Concrete\Core\Entity\File\File', 'Concrete\Core\Entity\File\Version'));
+        $this->installOtherEntities();
+        $this->installSite();
         $this->importAttributeTypes();
+        $this->addPermissions();
         $this->importAttributeKeys();
         $this->addDashboard();
         $this->addBlockTypes();

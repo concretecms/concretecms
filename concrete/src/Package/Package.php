@@ -808,7 +808,7 @@ abstract class Package implements LocalizablePackageInterface
      * @return array 
      */
     public function getPackageMetadataRelativePaths()
-    {       
+    {
         // annotations entity path
         if ($this->metadataDriver === self::PACKAGE_METADATADRIVER_ANNOTATION){
             // Support for the legacy method for backwards compatibility

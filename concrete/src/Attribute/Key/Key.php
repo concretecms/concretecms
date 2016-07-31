@@ -33,6 +33,11 @@ class Key extends Facade implements AttributeKeyInterface
         return $this->legacyAttributeKey->getController();
     }
 
+    public function __toString()
+    {
+        return (string) $this->legacyAttributeKey->getAttributeKeyID();
+    }
+
     /**
      * @deprecated
      */

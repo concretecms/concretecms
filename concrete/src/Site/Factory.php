@@ -30,4 +30,13 @@ class Factory
         }
         return $site;
     }
+
+    public function createDefaultEntity()
+    {
+        $site = new Site($this->config);
+        $site->setSiteHandle('default');
+        $site->setIsDefault(true);
+        $site->setSiteHomePageID(HOME_CID);
+        return $site;
+    }
 }
