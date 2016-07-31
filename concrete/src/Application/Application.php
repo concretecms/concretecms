@@ -265,6 +265,7 @@ class Application extends Container
             }
         }
     }
+
     /**
      * Run startup and localization events on any installed packages.
      */

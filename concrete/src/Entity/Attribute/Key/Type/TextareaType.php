@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="TextareaAttributeTypes")
+ * @ORM\Table(name="TextareaAttributeKeyTypes")
  */
 class TextareaType extends Type
 {
