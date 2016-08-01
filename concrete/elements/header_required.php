@@ -91,7 +91,7 @@ if (($modernIconFID = intval($config->get('misc.modern_tile_thumbnail_fid'))) &&
     }
 }
 $linkTags = array();
-if (($favIconFID = intval($config->get('misc.favicon_fid')) && ($favIconFile = File::getByID($favIconFID)) && is_object($favIconFile))) {
+if (($favIconFID = intval($config->get('misc.favicon_fid'))) && ($favIconFile = File::getByID($favIconFID)) && is_object($favIconFile)) {
     $favIconFileURL = $favIconFile->getURL();
     $linkTags['shortcut icon'] = sprintf('<link rel="shortcut icon" href="%s" type="image/x-icon"/>', $favIconFileURL);
     $linkTags['icon'] = sprintf('<link rel="icon" href="%s" type="image/x-icon"/>', $favIconFileURL);
