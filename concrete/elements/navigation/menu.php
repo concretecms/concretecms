@@ -9,7 +9,7 @@ if (!empty($top)) {
         } ?>
         <ul class="nav">
             <?php
-            $walk = function ($pages) use (&$walk, &$view, $c) {
+            $walk = function ($pages) use (&$walk, &$view) {
                 $n = count($pages);
                 if ($n > 0) {
                     for ($i = 0; $i < $n; $i++) {
@@ -24,7 +24,7 @@ if (!empty($top)) {
                                 if (!empty($children)) {
                                     ?>
                                     <ul>
-                                        <?php $walk($children, $view, $c); ?>
+                                        <?php $walk($children); ?>
                                     </ul><?php
                                 }
                             }
