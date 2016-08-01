@@ -475,7 +475,10 @@ class ContentImporter
                 if (!$name) {
                     $name = Core::make('helper/text')->unhandle($wt['handle']);
                 }
-                $type = \Concrete\Core\Workflow\Type::add($wt['handle'], $name, $pkg);
+                $type = \Concrete\Core\Workflow\Type::getByHandle((string) $wt['handle']);
+                if (!is_object($type)) {
+                    $type = \Concrete\Core\Workflow\Type::add($wt['handle'], $name, $pkg);
+                }
             }
         }
     }
@@ -908,7 +911,10 @@ class ContentImporter
         if (isset($sx->workflowprogresscategories)) {
             foreach ($sx->workflowprogresscategories->category as $wpc) {
                 $pkg = static::getPackageObject($wpc['package']);
-                WorkflowProgressCategory::add((string) $wpc['handle'], $pkg);
+                $category = WorkflowProgressCategory::getByHandle((string) $wpc['handle']);
+                if (!is_object($category)) {
+                    WorkflowProgressCategory::add((string) $wpc['handle'], $pkg);
+                }
             }
         }
     }
