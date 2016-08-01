@@ -39,6 +39,7 @@ class Search extends BackendInterfaceController
             $search = new FileFolder();
             $search->search();
             $result = $search->getSearchResultObject();
+            $query = null;
         }
 
         if (is_object($result)) {
