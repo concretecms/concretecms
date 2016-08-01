@@ -11,8 +11,6 @@ use Concrete\Core\Permission\Duration as PermissionDuration;
 
 /**
  * An object that allows a filtered list of pages to be returned.
- *
- * \@package Pages
  */
 class PageList extends DatabaseItemList
 {

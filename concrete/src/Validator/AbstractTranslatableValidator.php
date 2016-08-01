@@ -2,10 +2,7 @@
 namespace Concrete\Core\Validator;
 
 /**
- * Class AbstractTranslatableValidator
  * Abstract class for managing translatable requirements and errors.
- *
- * \@package Concrete\Core\Validator
  */
 abstract class AbstractTranslatableValidator implements TranslatableValidatorInterface
 {

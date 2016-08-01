@@ -2,10 +2,7 @@
 namespace Concrete\Core\Application;
 
 /**
- * Interface ApplicationAwareInterface
  * This interface declares awareness of the concrete5 application.
- *
- * \@package Concrete\Core\Application
  */
 interface ApplicationAwareInterface
 {

@@ -6,9 +6,6 @@ use Loader;
 /**
  * An object that represents an option in a survey. 
  *
- * @package Blocks
- * @subpackage Survey
- *
  * @author Ryan Tyler <ryan@concrete5.org>
  * @author Tony Trupp <tony@concrete5.org>
  * @copyright  Copyright (c) 2003-2012 Concrete5. (http://www.concrete5.org)

@@ -3,11 +3,6 @@ namespace Concrete\Core\Activity;
 
 use Concrete\Core\Http\Service\Json;
 
-/**
- * Class NewsflowItem.
- *
- * \@package Concrete\Core\Activity
- */
 class NewsflowItem
 {
     protected $id;

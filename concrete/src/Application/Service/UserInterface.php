@@ -14,9 +14,6 @@ use stdClass;
 /**
  * Useful functions for generating elements on the Concrete interface.
  *
- * @subpackage Concrete
- * \@package Helpers
- *
  * @author Andrew Embler <andrew@concrete5.org>
  * @copyright  Copyright (c) 2003-2008 Concrete5. (http://www.concrete5.org)
  * @license    http://www.concrete5.org/license/     MIT License

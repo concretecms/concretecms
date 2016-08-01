@@ -4,19 +4,7 @@ namespace Concrete\Core\Form\Service;
 use Loader;
 
 /**
- * \@package    Helpers
- * @subpackage Validation
- *
- * @author     Andrew Embler <andrew@concrete5.org>
- * @copyright  Copyright (c) 2003-2008 Concrete5. (http://www.concrete5.org)
- * @license    http://www.concrete5.org/license/     MIT License
- */
-
-/**
  * Helper functions to use with validating submitting forms.
- *
- * \@package    Helpers
- * @subpackage Validation
  *
  * @author     Andrew Embler <andrew@concrete5.org>
  * @copyright  Copyright (c) 2003-2008 Concrete5. (http://www.concrete5.org)

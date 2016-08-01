@@ -6,10 +6,7 @@ use Stash\Driver\Ephemeral;
 use Stash\Pool;
 
 /**
- * Class RequestCache
  * Cache that only lives for the current request. This cache level is not configurable.
- *
- * \@package Concrete\Core\Cache\Level
  */
 class RequestCache extends Cache
 {

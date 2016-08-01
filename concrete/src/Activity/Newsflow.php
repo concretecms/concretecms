@@ -6,13 +6,9 @@ use Marketplace;
 use Concrete\Core\File\Service\File;
 
 /**
- * Class Newsflow.
- *
  * A class used for retrieving the latest news and updates from Concrete5. This is a singleton class that should be
  * instantiated via Newsflow::getInstance(). This object is prevented from being created if the config file has the
  * 'concrete.external.news' setting set to false.
- *
- * \@package Concrete\Core\Activity
  */
 class Newsflow
 {

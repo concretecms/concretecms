@@ -2,10 +2,6 @@
 /**
  * Functions useful for working with text.
  *
- * \@package    Helpers
- *
- * @category   Concrete
- *
  * @author     Andrew Embler <andrew@concrete5.org>
  * @copyright  Copyright (c) 2003-2008 Concrete5. (http://www.concrete5.org)
  * @license    http://www.concrete5.org/license/     MIT License

@@ -9,7 +9,6 @@ use Zend\Cache\Storage\StorageInterface;
 use Zend\Cache\Storage\FlushableInterface;
 
 /**
- * Class ZendCacheDriver
  * Adapter class to hook Zend's cache into Concrete5's cache.
  *
  * By passing this class into various Zend classes, it tells Zend use it for storing and retrieving
@@ -21,8 +20,6 @@ use Zend\Cache\Storage\FlushableInterface;
  *
  *     - Concrete\Core\Feed\FeedService
  *     - Concrete\Core\Localization\Localization
- *
- * \@package Concrete\Core\Cache\Adapter
  */
 class ZendCacheDriver extends AbstractAdapter implements StorageInterface, FlushableInterface
 {

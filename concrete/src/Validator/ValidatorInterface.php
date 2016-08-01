@@ -2,10 +2,7 @@
 namespace Concrete\Core\Validator;
 
 /**
- * Interface ValidatorInterface
  * A generic validator cabable of describing itself and validating mixed values.
- *
- * \@package Concrete\Core\Validator
  */
 interface ValidatorInterface
 {

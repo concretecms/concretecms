@@ -4,11 +4,8 @@ namespace Concrete\Block\CoreConversationMessage;
 use Loader;
 use Concrete\Core\Block\BlockController;
 
-/**
+    /**
      * The controller for the conversation message block. This block is used to display conversation messages in a page.
-     *
-     * @package Blocks
-     * @subpackage Conversation
      *
      * @author Andrew Embler <andrew@concrete5.org>
      * @copyright  Copyright (c) 2003-2013 Concrete5. (http://www.concrete5.org)

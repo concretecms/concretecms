@@ -12,11 +12,6 @@ use Core;
 use Concrete\Core\Page\Page;
 use PageType;
 
-/**
- * Class Stack.
- *
- * \@package Concrete\Core\Page\Stack
- */
 class Stack extends Page implements ExportableInterface
 {
     const ST_TYPE_USER_ADDED = 0;

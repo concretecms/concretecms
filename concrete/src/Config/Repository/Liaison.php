@@ -1,11 +1,6 @@
 <?php
 namespace Concrete\Core\Config\Repository;
 
-/**
- * Class Liaison.
- *
- * \@package Concrete\Core\Config\Repository
- */
 class Liaison
 {
     /**

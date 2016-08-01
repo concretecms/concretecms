@@ -10,9 +10,6 @@ use Permissions;
 /**
  * The controller for the Auto-Nav block.
  *
- * @package    Blocks
- * @subpackage Auto-Nav
- *
  * @author     Andrew Embler <andrew@concrete5.org>
  * @author     Jordan Lev
  * @copyright  Copyright (c) 2003-2012 Concrete5. (http://www.concrete5.org)

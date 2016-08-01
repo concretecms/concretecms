@@ -6,9 +6,6 @@ use Concrete\Core\Activity\Newsflow;
 
 /**
  * @property mixed $slot
- * Class Controller
- *
- * @package Concrete\Block\DashboardNewsflowLatest
  */
 class Controller extends BlockController
 {

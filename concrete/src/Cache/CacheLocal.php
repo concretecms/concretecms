@@ -5,8 +5,6 @@ use Core;
 
 /**
  * @deprecated
- *
- * \@package Concrete\Core\Cache
  */
 class CacheLocal
 {

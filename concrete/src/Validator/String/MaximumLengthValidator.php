@@ -5,8 +5,6 @@ use Concrete\Core\Validator\AbstractTranslatableValidator;
 
 /**
  * Validate the length of a string.
- *
- * \@package Concrete\Core\Validator\String
  */
 class MaximumLengthValidator extends AbstractTranslatableValidator
 {

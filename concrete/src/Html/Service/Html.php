@@ -6,21 +6,7 @@ use Concrete\Core\Asset\JavascriptAsset;
 use View;
 
 /**
- * \@package Helpers
- *
- * @category Concrete
- *
- * @author Andrew Embler <andrew@concrete5.org>
- * @copyright  Copyright (c) 2003-2008 Concrete5. (http://www.concrete5.org)
- * @license    http://www.concrete5.org/license/     MIT License
- */
-
-/**
  * Functions to help with using HTML. Does not include form elements - those have their own helper.
- *
- * \@package Helpers
- *
- * @category Concrete
  *
  * @author Andrew Embler <andrew@concrete5.org>
  * @copyright  Copyright (c) 2003-2008 Concrete5. (http://www.concrete5.org)

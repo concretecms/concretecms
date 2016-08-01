@@ -7,8 +7,6 @@ use Core;
 
 /**
  * Simple cache driver that enables doctrine to use c5's caching library.
- *
- * \@package Concrete\Core\Cache
  */
 class DoctrineCacheDriver extends CacheProvider
 {

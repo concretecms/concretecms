@@ -4,11 +4,6 @@ namespace Concrete\Core\Permission\Response;
 use Page;
 use Permissions;
 
-/**
- * Class CollectionVersionResponse.
- *
- * \@package Concrete\Core\Permission\Response
- */
 class CollectionVersionResponse extends Response
 {
     /** @var \Concrete\Core\Page\Collection\Version\Version $object */

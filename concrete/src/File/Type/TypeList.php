@@ -3,22 +3,9 @@ namespace Concrete\Core\File\Type;
 
 use Loader;
 /*
- * \@package Core
- * @subpackage Files
  * @author Andrew Embler <andrew@concrete5.org>
  * @copyright  Copyright (c) 2003-2009 Concrete5. (http://www.concrete5.org)
  * @license    http://www.concrete5.org/license/     MIT License
- *
- */
-
-/*
- * \@package Core
- * @subpackage Files
- * @author Andrew Embler <andrew@concrete5.org>
- * @category Concrete
- * @copyright  Copyright (c) 2003-2009 Concrete5. (http://www.concrete5.org)
- * @license    http://www.concrete5.org/license/     MIT License
- *
  */
 use Concrete\Core\File\Type\Type as FileType;
 

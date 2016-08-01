@@ -4,9 +4,6 @@ namespace Concrete\Core\Page\Theme;
 /**
  * When activating a theme, any file within the theme is loaded into the system as a Page Theme File. At that point
  * the file can then be used to create a new page type.
- *
- * \@package Pages
- * @subpackage Themes
  */
 class File
 {

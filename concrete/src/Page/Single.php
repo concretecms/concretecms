@@ -9,8 +9,6 @@ use Package;
 /**
  * SinglePage extends the page class for those instances of pages that have no type, and are special "single pages"
  * within the system.
- *
- * \@package Pages
  */
 class Single
 {

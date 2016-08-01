@@ -4,19 +4,7 @@ namespace Concrete\Core\Utility\Service;
 use Loader;
 
 /**
- * \@package Helpers
- * @subpackage Validation
- *
- * @author Andrew Embler <andrew@concrete5.org>
- * @copyright  Copyright (c) 2003-2008 Concrete5. (http://www.concrete5.org)
- * @license    http://www.concrete5.org/license/     MIT License
- */
-
-/**
  * A helper that allows the creation of unique strings, for use when creating hashes, identifiers.
- *
- * \@package Helpers
- * @subpackage Validation
  *
  * @author Andrew Embler <andrew@concrete5.org>
  * @copyright  Copyright (c) 2003-2008 Concrete5. (http://www.concrete5.org)

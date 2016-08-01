@@ -4,11 +4,7 @@ namespace Concrete\Core\Legacy;
 use Core;
 
 /**
- * Class Avatar.
- *
  * @deprecated
- *
- * \@package Concrete\Core\Application\Service
  */
 class Avatar
 {

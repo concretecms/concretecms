@@ -3,11 +3,6 @@ namespace Concrete\Core\Activity;
 
 use Concrete\Core\Http\Service\Json;
 
-/**
- * Class NewsflowSlotItem.
- *
- * \@package Concrete\Core\Activity
- */
 class NewsflowSlotItem
 {
     protected $content;

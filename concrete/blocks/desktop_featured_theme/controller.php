@@ -4,11 +4,8 @@ namespace Concrete\Block\DesktopFeaturedTheme;
 use Concrete\Core\Block\BlockController;
 use Concrete\Core\Marketplace\RemoteItemList as MarketplaceRemoteItemList;
 
-/**
+    /**
      * The controller for the block that displays featured themes in the dashboard news overlay.
-     *
-     * @package Blocks
-     * @subpackage Dashboard Featured Theme
      *
      * @author Andrew Embler <andrew@concrete5.org>
      * @copyright  Copyright (c) 2003-2012 Concrete5. (http://www.concrete5.org)

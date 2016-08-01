@@ -7,10 +7,6 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RouteCollection;
 
 /**
- * Class RouteUrlResolver.
- *
- * \@package Concrete\Core\Url\Resolver
- *
  * @deprecated Use RouterUrlResolver instead.
  */
 class RouteUrlResolver implements UrlResolverInterface

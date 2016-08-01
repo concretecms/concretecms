@@ -10,10 +10,7 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Session\Session as SymfonySession;
 
 /**
- * Class SessionValidator
  * Base concrete5 session validator, validates the IP and the agent across requests.
- *
- * \@package Concrete\Core\Session
  */
 class SessionValidator implements SessionValidatorInterface, LoggerAwareInterface
 {

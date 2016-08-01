@@ -11,10 +11,7 @@ use Symfony\Component\HttpFoundation\Session\Storage\NativeSessionStorage;
 use Symfony\Component\HttpFoundation\Session\Session as SymfonySession;
 
 /**
- * Class SessionFactory
  * Base concrete5 session factory.
- *
- * \@package Concrete\Core\Session
  */
 class SessionFactory implements SessionFactoryInterface
 {

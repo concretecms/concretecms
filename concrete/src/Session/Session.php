@@ -5,10 +5,6 @@ use Concrete\Core\Application\Application;
 use \Symfony\Component\HttpFoundation\Session\Session as SymfonySession;
 
 /**
- * Class Session.
- *
- * \@package Concrete\Core\Session
- *
  * @deprecated
  */
 class Session
