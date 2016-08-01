@@ -48,4 +48,22 @@ class SelectValue extends Value
     {
         $this->selectedOptions = $selectedOptions;
     }
+
+    public function __toString()
+    {
+        $str = '';
+        $i = 0;
+        /**
+         * @var $option SelectValueOption
+         */
+        foreach($this->selectedOptions as $option) {
+            $str .= $option->getSelectAttributeOptionValue();
+            $i++;
+            if ($i < count($this->selectedOptions)) {
+                $str .= "\n";
+            }
+        }
+        return $str;
+    }
+
 }

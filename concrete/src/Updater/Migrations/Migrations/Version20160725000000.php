@@ -11,12 +11,14 @@ use Concrete\Core\Cache\CacheLocal;
 use Concrete\Core\Entity\Attribute\Key\PageKey;
 use Concrete\Core\Entity\Attribute\Key\Type\BooleanType;
 use Concrete\Core\Entity\Attribute\Key\Type\NumberType;
+use Concrete\Core\File\Filesystem;
 use Concrete\Core\Page\Template;
 use Concrete\Core\Permission\Access\Access;
 use Concrete\Core\Permission\Access\Entity\GroupEntity;
 use Concrete\Core\Permission\Key\Key;
 use Concrete\Core\Site\Service;
 use Concrete\Core\Tree\Node\NodeType;
+use Concrete\Core\Tree\Node\Type\File;
 use Concrete\Core\Tree\TreeType;
 use Concrete\Core\Tree\Type\ExpressEntryResults;
 use Concrete\Core\User\Group\Group;
@@ -46,14 +48,19 @@ class Version20160725000000 extends AbstractMigration
         if (!$this->connection->tableExists('_UserAttributeValues')) {
             $this->connection->Execute('alter table UserAttributeValues rename _UserAttributeValues');
         }
+        if (!$this->connection->tableExists('_TreeTopicNodes')) {
+            $this->connection->Execute('alter table TreeTopicNodes rename _TreeTopicNodes');
+        }
     }
 
-    protected function deleteOldPermissions()
+    protected function migrateOldPermissions()
     {
-        $category = \Concrete\Core\Permission\Category::getByHandle('file_set');
-        if (is_object($category)) {
-            $category->delete();
-        }
+        $this->connection->Execute('update PermissionKeys set pkHandle = ? where pkHandle = ?', array(
+            'view_category_tree_node', 'view_topic_category_tree_node',
+        ));
+        $this->connection->Execute('update PermissionKeyCategories set pkCategoryHandle = ? where pkCategoryHandle = ?', array(
+            'category_tree_node', 'topic_category_tree_node',
+        ));
     }
 
     protected function updateDoctrineXmlTables()
@@ -66,6 +73,7 @@ class Version20160725000000 extends AbstractMigration
             'CollectionVersions',
             'TreeNodes',
             'Sessions',
+            'TreeFileNodes',
             'UserWorkflowProgress',
             'Users',
         ));
@@ -199,6 +207,30 @@ class Version20160725000000 extends AbstractMigration
                         }
                     }
                     break;
+                case 'filekey':
+                    $rb = $this->connection->executeQuery("select * from _FileAttributeValues where akID = ?", array($row['akID']));
+                    while ($rowB = $rb->fetch()) {
+                        $avrID = $this->addAttributeValue($row['atID'], $row['akID'], $rowB['avID'], 'page');
+                        if ($avrID) {
+                            $this->connection->insert('FileAttributeValues', [
+                                'fID' => $rowB['fID'],
+                                'fvID' => $rowB['fvID'],
+                                'avrID' => $avrID,
+                            ]);
+                        }
+                    }
+                    break;
+                case 'userkey':
+                    $rb = $this->connection->executeQuery("select * from _UserAttributeValues where akID = ?", array($row['akID']));
+                    while ($rowB = $rb->fetch()) {
+                        $avrID = $this->addAttributeValue($row['atID'], $row['akID'], $rowB['avID'], 'page');
+                        if ($avrID) {
+                            $this->connection->insert('UserAttributeValues', [
+                                'avrID' => $avrID,
+                            ]);
+                        }
+                    }
+                    break;
             }
         }
     }
@@ -264,7 +296,7 @@ class Version20160725000000 extends AbstractMigration
                 break;
             case 'topics':
                 $this->connection->insert('TopicAttributeValues', array('avID' => $avID));
-                $topics = $this->connection->fetchAll('select * from atSocialLinks where avID = ?', [$legacyAVID]);
+                $topics = $this->connection->fetchAll('select * from atSelectedTopics where avID = ?', [$legacyAVID]);
                 foreach ($topics as $topic) {
                     $this->connection->insert('TopicAttributeSelectedTopics', array(
                         'treeNodeID' => $topic['TopicNodeID'],
@@ -707,7 +739,9 @@ class Version20160725000000 extends AbstractMigration
         $service = \Core::make('site');
         $site = $service->getDefault();
         if (!is_object($site) || $site->getSiteID() < 1) {
-            $service->installDefault();
+            $site = $service->installDefault();
+
+            $this->connection->executeQuery('update Pages set siteID = ? where cIsSystemPage = 0', [$site->getSiteID()]);
         }
     }
 
@@ -735,10 +769,43 @@ class Version20160725000000 extends AbstractMigration
 
     protected function addPermissions()
     {
-        $category = \Concrete\Core\Permission\Category::getByHandle('express_tree_node');
-        if (!is_object($category)) {
-            \Concrete\Core\Permission\Category::add('express_tree_node');
+
+        CacheLocal::delete('permission_keys', false);
+
+        $ci = new ContentImporter();
+        $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/permissions.xml');
+
+        CacheLocal::delete('permission_keys', false);
+    }
+
+    /*
+    protected function addPermissions()
+    {
+        $expressTreeNode = \Concrete\Core\Permission\Category::getByHandle('express_tree_node');
+        if (!is_object($expressTreeNode)) {
+            $expressTreeNode = \Concrete\Core\Permission\Category::add('express_tree_node');
         }
+
+        $fileFolder = \Concrete\Core\Permission\Category::getByHandle('file_folder');
+        if (!is_object($fileFolder)) {
+            $fileFolder = \Concrete\Core\Permission\Category::add('file_folder');
+        }
+
+        $notification = \Concrete\Core\Permission\Category::getByHandle('notification');
+        if (!is_object($notification)) {
+            $notification = \Concrete\Core\Permission\Category::add('notification');
+        }
+
+        $types = ['group', 'user', 'group_set', 'group_combination'];
+        foreach([$expressTreeNode, $fileFolder, $notification] as $category) {
+            foreach($types as $typeHandle) {
+                $type = \Concrete\Core\Permission\Access\Entity\Type::getByHandle($typeHandle);
+                $category->associateAccessEntityType($type);
+            }
+        }
+
+        $fileUploader = \Concrete\Core\Permission\Access\Entity\Type::getByHandle('file_uploader');
+        $fileFolder->associateAccessEntityType($fileUploader);
 
         CacheLocal::delete('permission_keys', false);
 
@@ -758,12 +825,47 @@ class Version20160725000000 extends AbstractMigration
 
         CacheLocal::delete('permission_keys', false);
     }
-       
+    */
+
+    protected function updateTopics()
+    {
+        $r = $this->connection->executeQuery('select * from _TreeTopicNodes');
+        while ($row = $r->fetch()) {
+            $this->connection->executeQuery(
+                'update TreeNodes set treeNodeName = ? where treeNodeID = ? and treeNodeName = \'\'', [
+                    $row['treeNodeTopicName'], $row['treeNodeID']]
+            );
+        }
+    }
+
+    protected function updateFileManager()
+    {
+        $filesystem = new Filesystem();
+        $folder = $filesystem->getRootFolder();
+        if (is_object($folder)) {
+            $folder->delete();
+        }
+
+        $filesystem = new Filesystem();
+        $manager = $filesystem->create();
+        $folder = $manager->getRootTreeNodeObject();
+
+        $r = $this->connection->executeQuery('select fID from Files');
+        while ($row = $r->fetch()) {
+            $f = \Concrete\Core\File\File::getByID($row['fID']);
+            File::add($f, $folder);
+        }
+    }
+
+    public function addNotifications()
+    {
+
+    }
+
     public function up(Schema $schema)
     {
         $this->connection->Execute('set foreign_key_checks = 0');
         $this->renameProblematicTables();
-        $this->deleteOldPermissions();
         $this->updateDoctrineXmlTables();
         $this->prepareProblematicEntityTables();
         $this->createMetaDataConfigurationForPackages();
@@ -771,13 +873,17 @@ class Version20160725000000 extends AbstractMigration
         $this->installOtherEntities();
         $this->installSite();
         $this->importAttributeTypes();
+        $this->migrateOldPermissions();
         $this->addPermissions();
         $this->importAttributeKeys();
         $this->addDashboard();
+        $this->updateFileManager();
         $this->addBlockTypes();
+        $this->updateTopics();
         $this->updateWorkflows();
         $this->addTreeNodeTypes();
         $this->installDesktops();
+        $this->addNotifications();
         $this->splittedTrackingCode();
         $this->connection->Execute('set foreign_key_checks = 1');
     }
