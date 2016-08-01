@@ -61,6 +61,55 @@ class Version20160725000000 extends AbstractMigration
         $this->connection->Execute('update PermissionKeyCategories set pkCategoryHandle = ? where pkCategoryHandle = ?', array(
             'category_tree_node', 'topic_category_tree_node',
         ));
+        $this->connection->Execute('update PermissionKeys set pkHandle = ? where pkHandle = ?', array(
+            '_add_file', 'add_file',
+        ));
+
+        if (!$this->connection->tableExists('FilePermissionFileTypeAccessList ')) {
+            $this->connection->Execute('alter table FileSetPermissionFileTypeAccessList rename FilePermissionFileTypeAccessList ');
+        }
+        if (!$this->connection->tableExists('FilePermissionFileTypeAccessListCustom  ')) {
+            $this->connection->Execute('alter table FileSetPermissionFileTypeAccessListCustom  rename FilePermissionFileTypeAccessListCustom');
+        }
+    }
+
+    protected function migrateFileManagerPermissions()
+    {
+        $r = $this->connection->executeQuery('select fpa.*, pk.pkHandle from FileSetPermissionAssignments fpa inner join PermissionKeys pk on fpa.pkID = pk.pkID where fsID = 0');
+        $permissionsMap = array(
+            'view_file_set_file' => 'view_file_folder_file',
+            'search_file_set' => 'search_file_folder',
+            'edit_file_set_file_properties' => 'edit_file_folder_file_properties',
+            'edit_file_set_file_contents' =>  'edit_file_folder_file_contents',
+            'edit_file_set_permissions' =>  'edit_file_folder_permissions',
+            'copy_file_set_files' =>  'copy_file_folder_files',
+            'delete_file_set' =>  'delete_file_folder',
+            'delete_file_set_files' => 'delete_file_folder_files',
+            '_add_file' => 'add_file',
+        );
+        $filesystem = new Filesystem();
+        $folder = $filesystem->getRootFolder();
+
+        while ($row = $r->fetch()) {
+            $mapped = $permissionsMap[$row['pkHandle']];
+            $newPKID = $this->connection->fetchColumn('select pkID from PermissionKeys where pkHandle = ?', array($mapped));
+            $v = array($folder->getTreeNodeID(), $newPKID, $row['paID']);
+            $this->connection->executeQuery(
+                'insert into TreeNodePermissionAssignments (treeNodeID, pkID, paID) values (?, ?, ?)', $v
+            );
+        }
+
+        // Add edit file folder.
+        $pk1 = Key::getByHandle('edit_file_folder_permissions');
+        $pk2 = Key::getByHandle('edit_file_folder');
+        $pk1->setPermissionObject($folder);
+        $pk2->setPermissionObject($folder);
+        $pa = $pk1->getPermissionAccessObject();
+        if (is_object($pa)) {
+            $pt = $pk2->getPermissionAssignmentObject();
+            $pt->clearPermissionAssignment();
+            $pt->assignPermissionAccess($pa);
+        }
     }
 
     protected function updateDoctrineXmlTables()
@@ -406,6 +455,7 @@ class Version20160725000000 extends AbstractMigration
                                     'isEndUserAdded' => $option['isEndUserAdded'],
                                     'displayOrder' => $option['displayOrder'],
                                     'value' => $option['value'],
+                                    'avSelectOptionID' => $option['ID'],
                                     'avSelectOptionListID' => $listID,
                                 ]);
                             }
@@ -778,55 +828,6 @@ class Version20160725000000 extends AbstractMigration
         CacheLocal::delete('permission_keys', false);
     }
 
-    /*
-    protected function addPermissions()
-    {
-        $expressTreeNode = \Concrete\Core\Permission\Category::getByHandle('express_tree_node');
-        if (!is_object($expressTreeNode)) {
-            $expressTreeNode = \Concrete\Core\Permission\Category::add('express_tree_node');
-        }
-
-        $fileFolder = \Concrete\Core\Permission\Category::getByHandle('file_folder');
-        if (!is_object($fileFolder)) {
-            $fileFolder = \Concrete\Core\Permission\Category::add('file_folder');
-        }
-
-        $notification = \Concrete\Core\Permission\Category::getByHandle('notification');
-        if (!is_object($notification)) {
-            $notification = \Concrete\Core\Permission\Category::add('notification');
-        }
-
-        $types = ['group', 'user', 'group_set', 'group_combination'];
-        foreach([$expressTreeNode, $fileFolder, $notification] as $category) {
-            foreach($types as $typeHandle) {
-                $type = \Concrete\Core\Permission\Access\Entity\Type::getByHandle($typeHandle);
-                $category->associateAccessEntityType($type);
-            }
-        }
-
-        $fileUploader = \Concrete\Core\Permission\Access\Entity\Type::getByHandle('file_uploader');
-        $fileFolder->associateAccessEntityType($fileUploader);
-
-        CacheLocal::delete('permission_keys', false);
-
-        $permissions = [
-            ['view_express_entries', 'View Express Entries', 'View Express Entries'],
-            ['add_express_entries', 'Add Express Entries', 'Add Express Entries'],
-            ['edit_express_entries', 'Edit Express Entries', 'Edit Express Entries'],
-            ['delete_express_entries', 'Delete Express Entries', 'Delete Express Entries']
-        ];
-
-        foreach($permissions as $pk) {
-            $key = Key::getByHandle($pk[0]);
-            if (!is_object($key)) {
-                Key::add('express_tree_node', $pk[0], $pk[1], $pk[2], false, false);
-            }
-        }
-
-        CacheLocal::delete('permission_keys', false);
-    }
-    */
-
     protected function updateTopics()
     {
         $r = $this->connection->executeQuery('select * from _TreeTopicNodes');
@@ -842,18 +843,16 @@ class Version20160725000000 extends AbstractMigration
     {
         $filesystem = new Filesystem();
         $folder = $filesystem->getRootFolder();
-        if (is_object($folder)) {
-            $folder->delete();
-        }
+        if (!is_object($folder)) {
+            $filesystem = new Filesystem();
+            $manager = $filesystem->create();
+            $folder = $manager->getRootTreeNodeObject();
 
-        $filesystem = new Filesystem();
-        $manager = $filesystem->create();
-        $folder = $manager->getRootTreeNodeObject();
-
-        $r = $this->connection->executeQuery('select fID from Files');
-        while ($row = $r->fetch()) {
-            $f = \Concrete\Core\File\File::getByID($row['fID']);
-            File::add($f, $folder);
+            $r = $this->connection->executeQuery('select fID from Files');
+            while ($row = $r->fetch()) {
+                $f = \Concrete\Core\File\File::getByID($row['fID']);
+                File::add($f, $folder);
+            }
         }
     }
 
@@ -878,6 +877,7 @@ class Version20160725000000 extends AbstractMigration
         $this->importAttributeKeys();
         $this->addDashboard();
         $this->updateFileManager();
+        $this->migrateFileManagerPermissions();
         $this->addBlockTypes();
         $this->updateTopics();
         $this->updateWorkflows();
