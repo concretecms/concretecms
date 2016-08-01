@@ -178,9 +178,10 @@ var showApprovalButton = function() {
 };
 
 $(function() {
-    var editor = new Concrete.EditMode({notify: false}), ConcreteEvent = Concrete.event;
+    var ConcreteEvent = Concrete.event;
 
     ConcreteEvent.on('ClipboardAddBlock', function(event, data) {
+        var editor = Concrete.getEditMode();
         var area = editor.getAreaByID(<?=$a->getAreaID()?>);
         block = new Concrete.DuplicateBlock(data.$launcher, editor);
         block.addToDragArea(_.last(area.getDragAreas()));
@@ -188,6 +189,7 @@ $(function() {
     });
 
     ConcreteEvent.on('AddBlockListAddBlock', function(event, data) {
+        var editor = Concrete.getEditMode();
         var area = editor.getAreaByID(<?=$a->getAreaID()?>);
         blockType = new Concrete.BlockType(data.$launcher, editor);
         blockType.addToDragArea(_.last(area.getDragAreas()));
