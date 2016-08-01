@@ -60,6 +60,11 @@ class Type
 
     protected function mapGenericTypeText($type)
     {
+        return static::getGenericTypeText($type);
+    }
+
+    public static function getGenericTypeText($type)
+    {
         switch ($type) {
             case static::T_IMAGE:
                 return t('Image');
@@ -82,14 +87,7 @@ class Type
             case static::T_UNKNOWN:
                 return t('File');
                 break;
-
-        }
-    }
-
-    public static function getGenericTypeText($type)
-    {
-        if ($type > 0) {
-            return static::mapGenericTypeText($type);
+        
         }
     }
 
