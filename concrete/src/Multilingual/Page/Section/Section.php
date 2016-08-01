@@ -135,18 +135,23 @@ class Section extends Page
      */
     public static function getByLocale($locale, Site $site = null)
     {
-        if (!$site) {
-            $site = \Core::make('site')->getSite();
-        }
-        $locale = explode('_', $locale);
-        $em = Database::get()->getEntityManager();
-        $section = $em->getRepository('Concrete\Core\Entity\Multilingual\Section')
-            ->findOneBy(array('site' => $site, 'msLanguage' => $locale[0], 'msCountry' => $locale[1]));
-
-        if (is_object($section)) {
-            $obj = parent::getByID($section->getPageID(), 'RECENT');
-            $obj->setSectionEntity($section);
-            return $obj;
+        if ($locale) {
+            if (!$site) {
+                $site = \Core::make('site')->getSite();
+            }
+            $locale = explode('_', $locale);
+            if (!isset($locale[1])) {
+                $locale[1] = '';
+            }
+            $em = Database::get()->getEntityManager();
+            $section = $em->getRepository('Concrete\Core\Entity\Multilingual\Section')
+                ->findOneBy(array('site' => $site, 'msLanguage' => $locale[0], 'msCountry' => $locale[1]));
+    
+            if (is_object($section)) {
+                $obj = parent::getByID($section->getPageID(), 'RECENT');
+                $obj->setSectionEntity($section);
+                return $obj;
+            }
         }
 
         return false;
