@@ -87,7 +87,7 @@ class Type
             case static::T_UNKNOWN:
                 return t('File');
                 break;
-        
+
         }
     }
 
@@ -104,7 +104,7 @@ class Type
     {
         $db = Loader::db();
         $stm = $db->query('select distinct fvExtension from FileVersions where fvIsApproved = 1 and fvExtension <> ""');
-        $extensions = array();
+        $extensions = [];
         while ($row = $stm->fetch()) {
             $extensions[] = $row['fvExtension'];
         }
@@ -116,7 +116,7 @@ class Type
     {
         $db = Loader::db();
         $stm = $db->query('select distinct fvType from FileVersions where fvIsApproved = 1 and fvType <> 0');
-        $types = array();
+        $types = [];
         while ($row = $stm->fetch()) {
             $types[] = $row['fvType'];
         }
@@ -126,7 +126,7 @@ class Type
 
     public static function getTypeList()
     {
-        return array(
+        return [
             static::T_DOCUMENT,
             static::T_IMAGE,
             static::T_VIDEO,
@@ -134,7 +134,7 @@ class Type
             static::T_TEXT,
             static::T_APPLICATION,
             static::T_UNKNOWN,
-        );
+        ];
     }
 
     /**
