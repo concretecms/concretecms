@@ -60,6 +60,11 @@ class Type
 
     protected function mapGenericTypeText($type)
     {
+        return static::getGenericTypeText($type);
+    }
+
+    public static function getGenericTypeText($type)
+    {
         switch ($type) {
             case static::T_IMAGE:
                 return t('Image');
@@ -86,13 +91,6 @@ class Type
         }
     }
 
-    public static function getGenericTypeText($type)
-    {
-        if ($type > 0) {
-            return static::mapGenericTypeText($type);
-        }
-    }
-
     public function getCustomInspector()
     {
         $name = camelcase($this->getCustomImporter()) . 'Inspector';
@@ -106,7 +104,7 @@ class Type
     {
         $db = Loader::db();
         $stm = $db->query('select distinct fvExtension from FileVersions where fvIsApproved = 1 and fvExtension <> ""');
-        $extensions = array();
+        $extensions = [];
         while ($row = $stm->fetch()) {
             $extensions[] = $row['fvExtension'];
         }
@@ -118,7 +116,7 @@ class Type
     {
         $db = Loader::db();
         $stm = $db->query('select distinct fvType from FileVersions where fvIsApproved = 1 and fvType <> 0');
-        $types = array();
+        $types = [];
         while ($row = $stm->fetch()) {
             $types[] = $row['fvType'];
         }
@@ -128,7 +126,7 @@ class Type
 
     public static function getTypeList()
     {
-        return array(
+        return [
             static::T_DOCUMENT,
             static::T_IMAGE,
             static::T_VIDEO,
@@ -136,7 +134,7 @@ class Type
             static::T_TEXT,
             static::T_APPLICATION,
             static::T_UNKNOWN,
-        );
+        ];
     }
 
     /**
