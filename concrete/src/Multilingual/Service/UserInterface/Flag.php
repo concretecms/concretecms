@@ -11,7 +11,7 @@ class Flag
     /**
      * Returns a flag for a passed country/region.
      */
-    public function getFlagIcon($region, $filePathOnly = false)
+    public static function getFlagIcon($region, $filePathOnly = false)
     {
         $val = \Core::make('helper/validation/strings');
         if ($val->alphanum($region, false, true)) {
@@ -45,10 +45,10 @@ class Flag
         }
     }
 
-    public function getSectionFlagIcon($page, $filePathOnly = false)
+    public static function getSectionFlagIcon($page, $filePathOnly = false)
     {
         $db = Database::get();
-        $section = Section::getBySectionOfSite($page->getCollectionID());
+        $section = Section::getBySectionOfSite($page);
         $icon = $section->getCountry();
         return self::getFlagIcon($icon, $filePathOnly);
     }
