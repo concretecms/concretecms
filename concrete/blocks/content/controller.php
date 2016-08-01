@@ -7,8 +7,8 @@ use Concrete\Core\Editor\LinkAbstractor;
 /**
  * The controller for the content block.
  *
- * @package Blocks
- * @subpackage Content
+ * \@package Blocks
+ * \@subpackage Content
  *
  * @author Andrew Embler <andrew@concrete5.org>
  * @copyright  Copyright (c) 2003-2012 Concrete5. (http://www.concrete5.org)

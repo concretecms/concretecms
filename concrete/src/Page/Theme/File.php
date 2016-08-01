@@ -6,7 +6,7 @@ namespace Concrete\Core\Page\Theme;
  * the file can then be used to create a new page type.
  *
  * \@package Pages
- * @subpackage Themes
+ * \@subpackage Themes
  */
 class File
 {

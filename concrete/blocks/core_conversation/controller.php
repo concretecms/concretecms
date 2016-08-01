@@ -12,8 +12,8 @@ use Page;
 /**
  * The controller for the conversation block. This block is used to display conversations in a page.
  *
- * @package Blocks
- * @subpackage Conversation
+ * \@package Blocks
+ * \@subpackage Conversation
  *
  * @author Andrew Embler <andrew@concrete5.org>
  * @copyright  Copyright (c) 2003-2013 Concrete5. (http://www.concrete5.org)

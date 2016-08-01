@@ -7,8 +7,8 @@ use Concrete\Core\Marketplace\RemoteItemList as MarketplaceRemoteItemList;
 /**
      * The controller for the block that displays featured add-ons in the dashboard news overlay.
      *
-     * @package Blocks
-     * @subpackage Dashboard Featured Add-On
+     * \@package Blocks
+     * \@subpackage Dashboard Featured Add-On
      *
      * @author Andrew Embler <andrew@concrete5.org>
      * @copyright  Copyright (c) 2003-2012 Concrete5. (http://www.concrete5.org)

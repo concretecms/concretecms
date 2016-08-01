@@ -5,7 +5,7 @@ use Loader;
 
 /**
  * \@package Helpers
- * @subpackage Validation
+ * \@subpackage Validation
  *
  * @author Andrew Embler <andrew@concrete5.org>
  * @copyright  Copyright (c) 2003-2008 Concrete5. (http://www.concrete5.org)
@@ -16,7 +16,7 @@ use Loader;
  * A helper that allows the creation of unique strings, for use when creating hashes, identifiers.
  *
  * \@package Helpers
- * @subpackage Validation
+ * \@subpackage Validation
  *
  * @author Andrew Embler <andrew@concrete5.org>
  * @copyright  Copyright (c) 2003-2008 Concrete5. (http://www.concrete5.org)
