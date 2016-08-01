@@ -12,8 +12,8 @@ use Concrete\Core\Multilingual\Page\Section\Section;
 /**
  * The controller for the stack display block. This is an internal proxy block that is inserted when a stack's contents are displayed in a page.
  *
- * @package Blocks
- * @subpackage Core Stack Display
+ * \@package Blocks
+ * \@subpackage Core Stack Display
  *
  * @author Andrew Embler <andrew@concrete5.org>
  * @copyright  Copyright (c) 2003-2012 Concrete5. (http://www.concrete5.org)

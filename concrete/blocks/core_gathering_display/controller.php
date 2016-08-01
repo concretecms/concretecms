@@ -7,8 +7,8 @@ use Core;
 /**
  * Displays an gathering stand-alone in a page.
  *
- * @package Blocks
- * @subpackage Core Gathering Display
+ * \@package Blocks
+ * \@subpackage Core Gathering Display
  *
  * @author Andrew Embler <andrew@concrete5.org>
  * @copyright  Copyright (c) 2003-2013 Concrete5. (http://www.concrete5.org)

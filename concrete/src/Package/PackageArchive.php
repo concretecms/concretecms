@@ -7,7 +7,7 @@ use Concrete\Core\Updater\Archive;
  * This class is responsible for unpacking themes that have been zipped and uploaded to the system.
  *
  * \@package Pages
- * @subpackage Themes
+ * \@subpackage Themes
  */
 class PackageArchive extends Archive
 {

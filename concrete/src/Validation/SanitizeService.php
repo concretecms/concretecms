@@ -7,7 +7,7 @@
  *
  * @category Concrete
  *
- * @subpackage Security
+ * \@subpackage Security
  *
  * @author Chris Rosser <chris@bluefuton.com>
  * @copyright  Copyright (c) 2003-2008 Concrete5. (http://www.concrete5.org)

@@ -9,8 +9,8 @@ use Concrete\Core\Block\View\BlockViewTemplate;
  * The controller for the core scrapbook display block. This block is automatically used when a block is copied into a
  * page from a clipboard. It is a proxy block.
  *
- * @package    Blocks
- * @subpackage Core Scrapbook/Clipboard Display
+ * \@package    Blocks
+ * \@subpackage Core Scrapbook/Clipboard Display
  *
  * @author     Andrew Embler <andrew@concrete5.org>
  * @copyright  Copyright (c) 2003-2012 Concrete5. (http://www.concrete5.org)

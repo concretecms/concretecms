@@ -23,7 +23,7 @@ use Localization;
  * Themes inherit down the tree when a page is added, but can also be set at the site-wide level (thereby overriding any previous choices.).
  *
  * \@package Pages and Collections
- * @subpackages Themes
+ * \@subpackages Themes
  */
 class Theme extends Object
 {
