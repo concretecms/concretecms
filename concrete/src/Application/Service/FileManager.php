@@ -42,7 +42,7 @@ class FileManager
         }
 
         $filters = '[]';
-        if ($filterArgs['filters']) {
+        if (isset($filterArgs['filters']) && $filterArgs['filters']) {
             $filters = json_encode($filterArgs['filters']);
         }
 
