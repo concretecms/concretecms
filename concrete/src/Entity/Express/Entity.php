@@ -103,7 +103,6 @@ class Entity implements CategoryObjectInterface, ObjectInterface
         $this->forms = new ArrayCollection();
         $this->associations = new ArrayCollection();
         $this->entries = new ArrayCollection();
-        $this->result_column_set = new DefaultSet($this->getAttributeKeyCategory());
     }
 
     /**
@@ -191,7 +190,12 @@ class Entity implements CategoryObjectInterface, ObjectInterface
      */
     public function getResultColumnSet()
     {
-        return $this->result_column_set;
+        $set = $this->result_column_set;
+        if (is_object($set)) {
+            return $set;
+        } else {
+            return new DefaultSet($this->getAttributeKeyCategory());
+        }
     }
 
     /**
@@ -330,7 +334,7 @@ class Entity implements CategoryObjectInterface, ObjectInterface
 
     public function getAttributeKeyCategory()
     {
-        return \Core::make('\Concrete\Core\Attribute\Category\ExpressCategory', array($this));
+        return \Core::make('\Concrete\Core\Attribute\Category\ExpressCategory', array('entity' => $this));
     }
 
     public function getPermissionObjectIdentifier()
