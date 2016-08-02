@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Entity\Express\Entry;
 
+use Concrete\Core\Entity\Express\Entry;
 use Doctrine\Common\Collections\ArrayCollection;
 
 use Doctrine\ORM\Mapping as ORM;
@@ -49,5 +50,13 @@ class ManyAssociation extends Association
         $this->selectedEntries = new ArrayCollection();
     }
 
+    public function removeSelectedEntry(Entry $entry)
+    {
+        foreach($this->getSelectedEntries() as $selectedEntry) {
+            if ($selectedEntry->getId() == $entry->getID()) {
+                $this->selectedEntries->removeElement($selectedEntry);
+            }
+        }
+    }
 
 }

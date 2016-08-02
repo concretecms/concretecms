@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Entity\Express\Entry;
 
+use Concrete\Core\Entity\Express\Entry;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -43,7 +44,12 @@ class OneAssociation extends Association
         $this->selected_entry = $selected_entry;
     }
 
-
+    public function removeSelectedEntry(Entry $entry)
+    {
+        if ($entry->getID() == $this->selected_entry->getID()) {
+            $this->selected_entry = null;
+        }
+    }
 
 
 }

@@ -30,11 +30,11 @@ class ObjectAssociationBuilder
     public function addManyToOne(Entity $subject, Entity $target, $subject_property = null, $inversed_by = null)
     {
         $this->addAssociation(new ManyToOneAssociation(),
-            $subject, $target, $subject_property);
+            $subject, $target, $subject_property, $inversed_by);
 
         if ($inversed_by) {
             $this->addAssociation(new OneToManyAssociation(),
-                $target, $subject, $inversed_by);
+                $target, $subject, $inversed_by, $subject_property);
 
         }
     }
@@ -42,11 +42,11 @@ class ObjectAssociationBuilder
     public function addOneToMany(Entity $subject, Entity $target, $subject_property = null, $inversed_by = null)
     {
         $this->addAssociation(new OneToManyAssociation(),
-            $subject, $target, $subject_property);
+            $subject, $target, $subject_property, $inversed_by);
 
         if ($inversed_by) {
             $this->addAssociation(new ManyToOneAssociation(),
-                $target, $subject, $inversed_by);
+                $target, $subject, $inversed_by, $subject_property);
         }
     }
 

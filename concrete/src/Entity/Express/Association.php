@@ -30,6 +30,13 @@ abstract class Association
     protected $target_entity;
 
     /**
+     * @ORM\OneToMany(targetEntity="\Concrete\Core\Entity\Express\Entry\Association",
+     *     mappedBy="association", cascade={"remove"})
+     */
+    protected $entry;
+
+
+    /**
      * @ORM\OneToMany(targetEntity="\Concrete\Core\Entity\Express\Control\AssociationControl", mappedBy="association", cascade={"remove"})
      */
     protected $controls;
