@@ -549,7 +549,7 @@ class Version20160725000000 extends AbstractMigration
         $page = Page::getByPath('/dashboard/express');
         if (!is_object($page) || $page->isError()) {
             $sp = SinglePage::add('/dashboard/express');
-            $sp->update(array('cName' => 'Data Objects', 'cDescription' => 'Express Data Objects'));
+            $sp->update(array('cName' => 'Express', 'cDescription' => 'Express Data Objects'));
         }
         $page = Page::getByPath('/dashboard/express/entries');
         if (!is_object($page) || $page->isError()) {
@@ -559,12 +559,12 @@ class Version20160725000000 extends AbstractMigration
         $page = Page::getByPath('/dashboard/system/express');
         if (!is_object($page) || $page->isError()) {
             $sp = SinglePage::add('/dashboard/system/express');
-            $sp->update(array('cName' => 'Express Data Objects'));
+            $sp->update(array('cName' => 'Express'));
         }
         $page = Page::getByPath('/dashboard/system/express/entities');
         if (!is_object($page) || $page->isError()) {
             $sp = SinglePage::add('/dashboard/system/express/entities');
-            $sp->update(array('cName' => 'Express Data Types'));
+            $sp->update(array('cName' => 'Data Objects'));
             $sp->setAttribute('exclude_nav', true);
         }
         $page = Page::getByPath('/dashboard/system/express/entities/attributes');
@@ -792,13 +792,77 @@ class Version20160725000000 extends AbstractMigration
             $site = $service->installDefault();
 
             $this->connection->executeQuery('update Pages set siteID = ? where cIsSystemPage = 0', [$site->getSiteID()]);
+
+            $em = $this->connection->getEntityManager();
+
+            // migrate name
+            $site->setSiteName(\Config::get('concrete.site'));
+
+            // migrate theme
+            $c = \Page::getByID(HOME_CID);
+            $site->setThemeID($c->getCollectionThemeID());
+
+            $em->persist($site);
+
+            // migrate social links
+            $links = $em->getRepository('Concrete\Core\Entity\Sharing\SocialNetwork\Link')
+                ->findAll();
+            foreach($links as $link) {
+                $link->setSite($site);
+                $em->persist($link);
+            }
+            $em->flush();
+
+            $siteConfig = $site->getConfigRepository();
+
+            // migrate bookmark icons
+            $favicon_fid = \Config::get('concrete.misc.favicon_fid');
+            if ($favicon_fid) {
+                $siteConfig->save('misc.favicon_fid', $favicon_fid);
+            }
+            $iphone_home_screen_thumbnail_fid = \Config::get('concrete.misc.iphone_home_screen_thumbnail_fid');
+            if ($iphone_home_screen_thumbnail_fid) {
+                $siteConfig->save('misc.iphone_home_screen_thumbnail_fid', $iphone_home_screen_thumbnail_fid);
+            }
+            $modern_tile_thumbnail_fid = \Config::get('concrete.misc.modern_tile_thumbnail_fid');
+            if ($modern_tile_thumbnail_fid) {
+                $siteConfig->save('misc.modern_tile_thumbnail_fid', $modern_tile_thumbnail_fid);
+            }
+            $modern_tile_thumbnail_bgcolor = \Config::get('concrete.misc.modern_tile_thumbnail_bgcolor');
+            if ($modern_tile_thumbnail_bgcolor) {
+                $siteConfig->save('misc.modern_tile_thumbnail_bgcolor', $modern_tile_thumbnail_bgcolor);
+            }
+
+            // migrate url
+            $canonical_url = \Config::get('seo.canonical_url');
+            if ($canonical_url) {
+                $siteConfig->save('seo.canonical_url', $canonical_url);
+            }
+            $canonical_ssl_url = \Config::get('seo.canonical_ssl_url');
+            if ($canonical_ssl_url) {
+                $siteConfig->save('seo.canonical_ssl_url', $canonical_ssl_url);
+            }
+
+            // migrate tracking code
+            $header = \Config::get('seo.tracking.code.header');
+            if ($header) {
+                $siteConfig->save('seo.tracking.code.header', $header);
+            }
+            $footer = \Config::get('seo.tracking.code.footer');
+            if ($footer) {
+                $siteConfig->save('seo.tracking.code.footer', $footer);
+            }
+
         }
     }
 
     protected function splittedTrackingCode()
     {
-        $config = Facade::getFacadeApplication()->make('config');
-        $tracking = (array) $config->get('concrete.seo.tracking', []);
+        $service = \Core::make('site');
+        $site = $service->getDefault();
+        $config = $site->getConfigRepository();
+
+        $tracking = (array) \Config::get('concrete.seo.tracking', []);
         $trackingCode = array_get($tracking, 'code');
         if (!is_array($trackingCode)) {
             array_set($tracking, 'code', ['header' => '', 'footer' => '']);
