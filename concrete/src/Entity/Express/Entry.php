@@ -3,6 +3,7 @@ namespace Concrete\Core\Entity\Express;
 
 use Concrete\Core\Attribute\ObjectTrait;
 use Concrete\Core\Entity\Attribute\Value\ExpressValue;
+use Concrete\Core\Entity\Express\Entry\Association as EntryAssociation;
 use Concrete\Core\Permission\ObjectInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use DoctrineProxies\__CG__\Concrete\Core\Entity\Attribute\Key\ExpressKey;
@@ -144,6 +145,22 @@ class Entry implements \JsonSerializable, ObjectInterface
     public function setAssociations($associations)
     {
         $this->associations = $associations;
+    }
+
+    public function getAssociation($handle)
+    {
+        if ($handle instanceof Association) {
+            $handle = $handle->getTargetPropertyName();
+        }
+
+        /**
+         * @var $association EntryAssociation
+         */
+        foreach($this->associations as $association) {
+            if ($association->getAssociation()->getTargetPropertyName() == $handle) {
+                return $association;
+            }
+        }
     }
 
     public function __construct()

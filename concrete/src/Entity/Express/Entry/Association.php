@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Entity\Express\Entry;
 
+use Concrete\Core\Entity\Express\Entry;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -30,7 +31,7 @@ abstract class Association
     protected $association;
 
     /**
-     * @return mixed
+     * @return \Concrete\Core\Entity\Express\Association
      */
     public function getAssociation()
     {
@@ -78,5 +79,6 @@ abstract class Association
     }
 
     abstract public function getSelectedEntries();
+    abstract public function removeSelectedEntry(Entry $entry);
 
 }
