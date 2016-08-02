@@ -3157,23 +3157,6 @@
     </index>
   </table>
 
-  <table name="SocialLinks">
-    <field name="slID" type="integer" size="10">
-      <unsigned/>
-      <autoincrement/>
-      <key/>
-    </field>
-    <field name="ssHandle" type="string" size="255">
-      <default value=""/>
-      <notnull/>
-    </field>
-    <field name="url" type="string" size="255"/>
-    <index name="ssHandle">
-      <unique/>
-      <col>ssHandle</col>
-    </index>
-  </table>
-
   <table name="SystemCaptchaLibraries">
     <field name="sclHandle" type="string" size="64">
       <key/>
