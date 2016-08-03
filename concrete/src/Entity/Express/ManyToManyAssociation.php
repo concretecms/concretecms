@@ -46,7 +46,7 @@ class ManyToManyAssociation extends Association
 
     public function getSaveHandler()
     {
-        return \Core::make('\Concrete\Core\Express\Form\Control\SaveHandler\ManyAssociationSaveHandler');
+        return \Core::make('\Concrete\Core\Express\Form\Control\SaveHandler\ManyToManyAssociationSaveHandler');
     }
 
 }

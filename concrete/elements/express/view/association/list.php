@@ -1,8 +1,8 @@
 <?php defined('C5_EXECUTE') or die("Access Denied."); ?>
 
-<div class="control-group">
+<div class="form-group">
     <div>
-    <label><?=$label?></label>
+    <label class="control-label"><?=$label?></label>
     </div>
     <?php
     if (count($entities)) {
