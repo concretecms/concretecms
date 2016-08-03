@@ -7,8 +7,6 @@ use Concrete\Controller\Search\FileFolder;
 use Concrete\Core\Entity\Search\Query;
 use Concrete\Core\Search\Field\ManagerFactory;
 use FilePermissions;
-use Loader;
-use Concrete\Controller\Search\Files as SearchFilesController;
 
 class Search extends BackendInterfaceController
 {
@@ -39,6 +37,7 @@ class Search extends BackendInterfaceController
             $search = new FileFolder();
             $search->search();
             $result = $search->getSearchResultObject();
+            $query = null;
         }
 
         if (is_object($result)) {
