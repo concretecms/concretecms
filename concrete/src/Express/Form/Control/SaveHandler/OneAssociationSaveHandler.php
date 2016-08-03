@@ -11,7 +11,8 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\Builder\AssociationBuilder;
 use Symfony\Component\HttpFoundation\Request;
 
-class OneAssociationSaveHandler implements SaveHandlerInterface
+
+abstract class OneAssociationSaveHandler implements SaveHandlerInterface
 {
     protected $entityManager;
     protected $applier;
@@ -22,7 +23,7 @@ class OneAssociationSaveHandler implements SaveHandlerInterface
         $this->applier = $applier;
     }
 
-    public function saveFromRequest(Control $control, Entry $entry, Request $request)
+    protected function getAssociatedEntryFromRequest(Control $control, Request $request)
     {
         /**
          * @var $control AssociationControl
@@ -30,11 +31,7 @@ class OneAssociationSaveHandler implements SaveHandlerInterface
         $r = $this->entityManager->getRepository('Concrete\Core\Entity\Express\Entry');
         $entryID = $request->request->get('express_association_' . $control->getId());
         $associatedEntry = $r->findOneById($entryID);
-        $target = $control->getAssociation()->getTargetEntity();
-        if (is_object($associatedEntry) && $associatedEntry->getEntity()->getID() == $target->getID()) {
-            $this->applier->associateOne($control->getAssociation(), $entry, $associatedEntry);
-        } else {
-            $this->applier->removeAssociation($control->getAssociation(), $entry);
-        }
+        return $associatedEntry;
     }
+
 }

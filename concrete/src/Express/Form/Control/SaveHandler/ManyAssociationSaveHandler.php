@@ -9,7 +9,7 @@ use Concrete\Core\Express\ObjectManager;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\HttpFoundation\Request;
 
-class ManyAssociationSaveHandler implements SaveHandlerInterface
+abstract class ManyAssociationSaveHandler implements SaveHandlerInterface
 {
     protected $entityManager;
     protected $applier;
@@ -20,11 +20,8 @@ class ManyAssociationSaveHandler implements SaveHandlerInterface
         $this->applier = $applier;
     }
 
-    public function saveFromRequest(Control $control, Entry $entry, Request $request)
+    protected function getAssociatedEntriesFromRequest(Control $control, Request $request)
     {
-        /**
-         * @var $control AssociationControl
-         */
         $r = $this->entityManager->getRepository('Concrete\Core\Entity\Express\Entry');
         $entryIDs = $request->request->get('express_association_' . $control->getId());
         $associatedEntries = array();
@@ -37,12 +34,8 @@ class ManyAssociationSaveHandler implements SaveHandlerInterface
                 }
             }
         }
-
-        if (count($associatedEntries)) {
-            $this->applier->associateMany($control->getAssociation(), $entry, $associatedEntries);
-        } else {
-            $this->applier->removeAssociation($control->getAssociation(), $entry);
-        }
-
+        return $associatedEntries;
     }
+
+
 }

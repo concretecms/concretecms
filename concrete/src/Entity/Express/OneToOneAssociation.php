@@ -46,6 +46,6 @@ class OneToOneAssociation extends Association
 
     public function getSaveHandler()
     {
-        return \Core::make('\Concrete\Core\Express\Form\Control\SaveHandler\OneAssociationSaveHandler');
+        return \Core::make('\Concrete\Core\Express\Form\Control\SaveHandler\OneToOneAssociationSaveHandler');
     }
 }

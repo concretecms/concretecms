@@ -23,9 +23,7 @@ class Associations extends DashboardPageController
             $this->set('entity', $entity);
             $entities = array();
             foreach ($this->repository->findAll() as $targetEntity) {
-                if ($targetEntity->getID() != $entity->getId()) {
-                    $entities[$targetEntity->getID()] = $targetEntity->getName();
-                }
+                $entities[$targetEntity->getID()] = $targetEntity->getName();
             }
             $types = array('' => t('** Select Type'));
             $validTypes = [
