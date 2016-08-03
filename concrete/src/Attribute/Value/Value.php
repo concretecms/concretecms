@@ -18,7 +18,9 @@ class Value extends Object implements AttributeValueInterface
 
     public function getController()
     {
-        return $this->attributeKey->getController();
+        $controller = $this->attributeKey->getController();
+        $controller->setAttributeValue($this);
+        return $controller;
     }
 
     public function getValueObject()
@@ -113,15 +115,15 @@ class Value extends Object implements AttributeValueInterface
     public function getSearchIndexValue()
     {
         if (method_exists($this->attributeType->getController(), 'getSearchIndexValue')) {
-            return $this->attributeType->getController()->getSearchIndexValue();
+            return $this->getController()->getSearchIndexValue();
         } else {
-            return $this->attributeType->getController()->getValue();
+            return $this->getController()->getValue();
         }
     }
 
     public function delete()
     {
-        $this->attributeType->getController()->deleteValue();
+        $this->getController()->deleteValue();
         $db = Loader::db();
         $db->Execute('delete from AttributeValues where avID = ?', $this->getAttributeValueID());
     }

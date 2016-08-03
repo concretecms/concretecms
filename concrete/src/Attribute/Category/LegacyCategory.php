@@ -42,7 +42,7 @@ class LegacyCategory implements CategoryInterface, StandardSearchIndexerInterfac
     {
         $table = $this->getIndexedSearchTable();
         if ($table) {
-            $indexer = $this->application->make('Concrete\Core\Attribute\Category\SearchIndexer\StandardSearchIndexer');
+            $indexer = $this->application->make('Concrete\Core\Attribute\Category\SearchIndexer\LegacySearchIndexer');
             return $indexer;
         }
     }

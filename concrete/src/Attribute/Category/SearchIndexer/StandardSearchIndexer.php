@@ -2,6 +2,7 @@
 namespace Concrete\Core\Attribute\Category\SearchIndexer;
 
 use Concrete\Core\Attribute\AttributeKeyInterface;
+use Concrete\Core\Attribute\AttributeValueInterface;
 use Concrete\Core\Attribute\Category\CategoryInterface;
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Entity\Attribute\Value\Value;
@@ -25,7 +26,7 @@ class StandardSearchIndexer implements SearchIndexerInterface
         return true;
     }
 
-    public function indexEntry(CategoryInterface $category, Value $value, $subject)
+    public function indexEntry(CategoryInterface $category, AttributeValueInterface $value, $subject)
     {
         if ($this->isValid($category)) {
             $attributeIndexer = $value->getAttributeKey()->getSearchIndexer();
@@ -33,7 +34,7 @@ class StandardSearchIndexer implements SearchIndexerInterface
         }
     }
 
-    public function clearIndexEntry(CategoryInterface $category, Value $value, $subject)
+    public function clearIndexEntry(CategoryInterface $category, AttributeValueInterface $value, $subject)
     {
         if ($this->isValid($category)) {
             $attributeIndexer = $value->getAttributeKey()->getSearchIndexer();
