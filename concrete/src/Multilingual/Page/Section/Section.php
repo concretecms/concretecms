@@ -7,13 +7,11 @@ use Database;
 use Concrete\Core\Multilingual\Page\Event;
 use Gettext\Translations;
 use Punic\Language;
-use Config;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
 class Section extends Page
 {
-
     /**
      * @var \Concrete\Core\Entity\Multilingual\Section
      */
@@ -34,7 +32,7 @@ class Section extends Page
         return 'multilingual_section';
     }
 
-    public static function assign(Site $site, $c, $language, $country, $numPlurals = null, $pluralRule = '', $pluralCases = array())
+    public static function assign(Site $site, $c, $language, $country, $numPlurals = null, $pluralRule = '', $pluralCases = [])
     {
         $pluralRule = (string) $pluralRule;
         if (empty($numPlurals) || ($pluralRule === '') || (empty($pluralCases))) {
@@ -46,7 +44,7 @@ class Section extends Page
             if ($localeInfo) {
                 $numPlurals = count($localeInfo->categories);
                 $pluralRule = $localeInfo->formula;
-                $pluralCases = array();
+                $pluralCases = [];
                 foreach ($localeInfo->categories as $category) {
                     $pluralCases[] = $category->id.'@'.$category->examples;
                 }
@@ -97,6 +95,7 @@ class Section extends Page
         if ($entity) {
             $obj = parent::getByID($cID, $cvID);
             $obj->setSectionEntity($entity);
+
             return $obj;
         }
 
@@ -110,18 +109,18 @@ class Section extends Page
      */
     public static function getByLanguage($language, Site $site = null)
     {
-
         if (!is_object($site)) {
             $site = \Site::getSite();
         }
 
         $em = Database::get()->getEntityManager();
         $section = $em->getRepository('Concrete\Core\Entity\Multilingual\Section')
-            ->findOneBy(array('site' => $site, 'msLanguage' => $language));
+            ->findOneBy(['site' => $site, 'msLanguage' => $language]);
 
         if (is_object($section)) {
             $obj = parent::getByID($section->getPageID(), 'RECENT');
             $obj->setSectionEntity($section);
+
             return $obj;
         }
 
@@ -135,18 +134,24 @@ class Section extends Page
      */
     public static function getByLocale($locale, Site $site = null)
     {
-        if (!$site) {
-            $site = \Core::make('site')->getSite();
-        }
-        $locale = explode('_', $locale);
-        $em = Database::get()->getEntityManager();
-        $section = $em->getRepository('Concrete\Core\Entity\Multilingual\Section')
-            ->findOneBy(array('site' => $site, 'msLanguage' => $locale[0], 'msCountry' => $locale[1]));
+        if ($locale) {
+            if (!$site) {
+                $site = \Core::make('site')->getSite();
+            }
+            $locale = explode('_', $locale);
+            if (!isset($locale[1])) {
+                $locale[1] = '';
+            }
+            $em = Database::get()->getEntityManager();
+            $section = $em->getRepository('Concrete\Core\Entity\Multilingual\Section')
+                ->findOneBy(['site' => $site, 'msLanguage' => $locale[0], 'msCountry' => $locale[1]]);
 
-        if (is_object($section)) {
-            $obj = parent::getByID($section->getPageID(), 'RECENT');
-            $obj->setSectionEntity($section);
-            return $obj;
+            if (is_object($section)) {
+                $obj = parent::getByID($section->getPageID(), 'RECENT');
+                $obj->setSectionEntity($section);
+
+                return $obj;
+            }
         }
 
         return false;
@@ -212,7 +217,6 @@ class Section extends Page
                     return static::getByLocale($locale);
                 }
             } else {
-
                 if ($page->isPageDraft() && $page->getPageDraftTargetParentPageID()) {
                     $cParentID = $page->getPageDraftTargetParentPageID();
                 } else {
@@ -262,6 +266,7 @@ class Section extends Page
             $site = \Site::getSite();
         }
         $default_locale = $site->getConfigRepository()->get('multilingual.default_locale');
+
         return static::getByLocale($default_locale);
     }
 
@@ -363,7 +368,7 @@ class Section extends Page
                 } else {
                     ++$mpRelationID;
                 }
-                $v = array($mpRelationID, $page->getCollectionID(), $ms->getLanguage(), $ms->getLocale());
+                $v = [$mpRelationID, $page->getCollectionID(), $ms->getLanguage(), $ms->getLocale()];
                 $db->Execute(
                     'insert into MultilingualPageRelations (mpRelationID, cID, mpLanguage, mpLocale) values (?, ?, ?, ?)',
                     $v
@@ -386,7 +391,7 @@ class Section extends Page
                 $em = $db->getEntityManager();
                 $em->remove($entity);
                 $em->flush();
-                $db->Execute('delete from MultilingualPageRelations where cID = ?', array($page->getCollectionID()));
+                $db->Execute('delete from MultilingualPageRelations where cID = ?', [$page->getCollectionID()]);
             }
         }
     }
@@ -407,7 +412,7 @@ class Section extends Page
         if (is_object($ms)) {
             $cID = $db->GetOne(
                 'select cID from MultilingualPageRelations where cID = ?',
-                array($page->getCollectionID())
+                [$page->getCollectionID()]
             );
             if (!$cID) {
                 $mpRelationID = $db->GetOne('select max(mpRelationID) as mpRelationID from MultilingualPageRelations');
@@ -416,7 +421,7 @@ class Section extends Page
                 } else {
                     ++$mpRelationID;
                 }
-                $v = array($mpRelationID, $page->getCollectionID(), $ms->getLanguage(), $ms->getLocale());
+                $v = [$mpRelationID, $page->getCollectionID(), $ms->getLanguage(), $ms->getLocale()];
                 $db->Execute(
                     'insert into MultilingualPageRelations (mpRelationID, cID, mpLanguage, mpLocale) values (?, ?, ?, ?)',
                     $v
@@ -424,7 +429,7 @@ class Section extends Page
             } else {
                 $db->Execute(
                     'update MultilingualPageRelations set mpLanguage = ? where cID = ?',
-                    array($ms->getLanguage(), $page->getCollectionID())
+                    [$ms->getLanguage(), $page->getCollectionID()]
                 );
             }
         } else {
@@ -437,15 +442,15 @@ class Section extends Page
         $db = Database::get();
         $mpRelationID = self::getMultilingualPageRelationID($oldPage->getCollectionID());
 
-        $section = Section::getByLocale($locale);
+        $section = self::getByLocale($locale);
 
         if ($mpRelationID && $section) {
-            $v = array($mpRelationID, $newPage->getCollectionID(), $section->getLocale(), $section->getLanguage());
+            $v = [$mpRelationID, $newPage->getCollectionID(), $section->getLocale(), $section->getLanguage()];
             $db->Execute(
                 'delete from MultilingualPageRelations where mpRelationID = ? and mpLocale = ?',
-                array($mpRelationID, $section->getLocale())
+                [$mpRelationID, $section->getLocale()]
             );
-            $db->Execute('delete from MultilingualPageRelations where cID = ?', array($newPage->getCollectionID()));
+            $db->Execute('delete from MultilingualPageRelations where cID = ?', [$newPage->getCollectionID()]);
             $db->Execute('insert into MultilingualPageRelations (mpRelationID, cID, mpLocale, mpLanguage) values (?, ?, ?, ?)', $v);
             $pde = new Event($newPage);
             $pde->setLocale($locale);
@@ -466,7 +471,7 @@ class Section extends Page
 
         $mpRelationID = $db->getOne(
             'select mpRelationID from MultilingualPageRelations where cID = ?',
-            array($cID)
+            [$cID]
         );
 
         return $mpRelationID;
@@ -478,7 +483,7 @@ class Section extends Page
 
         $cID = $db->GetOne(
             'select cID from MultilingualPageRelations where mpRelationID = ? and mpLocale = ?',
-            array($mpRelationID, $locale)
+            [$mpRelationID, $locale]
         );
 
         return $cID;
@@ -526,24 +531,24 @@ class Section extends Page
                 if (is_object($msx)) {
                     $db->Execute(
                         'insert into MultilingualPageRelations (mpRelationID, cID, mpLanguage, mpLocale) values (?, ?, ?, ?)',
-                        array(
+                        [
                             $mpRelationID,
                             $oldPage->getCollectionID(),
                             $msx->getLanguage(),
                             $msx->getLocale(),
-                        )
+                        ]
                     );
                 }
             }
 
-            $v = array($mpRelationID, $newPage->getCollectionID(), $ms->getLocale());
+            $v = [$mpRelationID, $newPage->getCollectionID(), $ms->getLocale()];
 
             $cID = self::getCollectionIDForLocale($mpRelationID, $ms->getLocale());
 
             if ($cID > 0) {
                 $db->Execute(
                     'delete from MultilingualPageRelations where mpRelationID = ? and mpLocale = ?',
-                    array($mpRelationID, $ms->getLocale())
+                    [$mpRelationID, $ms->getLocale()]
                 );
             }
 
@@ -569,6 +574,7 @@ class Section extends Page
     {
         $em = Database::get()->getEntityManager();
         $entity = $em->find('Concrete\Core\Entity\Multilingual\Section', $cID);
+
         return $entity;
     }
 
@@ -580,6 +586,7 @@ class Section extends Page
 
         if ($cID) {
             $entity = self::getSectionEntity($cID);
+
             return is_object($entity);
         }
     }
@@ -591,7 +598,7 @@ class Section extends Page
         // first, we retrieve the relation for the page in the default locale.
         $mpRelationID = static::registerPage($page);
 
-        $v = array($mpRelationID, 0, $locale);
+        $v = [$mpRelationID, 0, $locale];
         $db->Execute('insert into MultilingualPageRelations (mpRelationID, cID, mpLocale) values (?, ?, ?)', $v);
         $pde = new Event($page);
         $pde->setLocale($locale);
@@ -612,8 +619,8 @@ class Section extends Page
         $sites = $em->getRepository('Concrete\Core\Entity\Multilingual\Section')
             ->findBySite($site);
 
-        $ids = array();
-        foreach($sites as $site) {
+        $ids = [];
+        foreach ($sites as $site) {
             $ids[] = $site->getPageID();
         }
 
@@ -623,7 +630,7 @@ class Section extends Page
     public static function getList(Site $site = null)
     {
         $ids = self::getIDList($site);
-        $pages = array();
+        $pages = [];
         if ($ids && is_array($ids)) {
             foreach ($ids as $cID) {
                 $obj = self::getByID($cID);
@@ -677,7 +684,7 @@ class Section extends Page
             from MultilingualTranslations
             where mtSectionID = ?
             order by ".($untranslatedFirst ? "if(ifnull(msgstr, '') = '', 0, 1), " : "")."mtID",
-            array($this->getCollectionID())
+            [$this->getCollectionID()]
         );
         while ($row = $r->fetch()) {
             $t = Translation::getByRow($row);
