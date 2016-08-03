@@ -36,17 +36,17 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		<?php 
 }
     ?>
-		<p><?=t('Are you sure you wish to delete this page?')?></p>
+		<strong><?=t('Are you sure you wish to delete this page?')?></strong><br>
 		<?php if ($u->isSuperUser() && $numChildren > 0) {
     ?>
-			<strong><?=t2('This will remove %s child page.', 'This will remove %s child pages.', $numChildren, $numChildren)?></strong>
+			<p><strong><?=t2('This will remove %s child page.', 'This will remove %s child pages.', $numChildren, $numChildren)?></strong></p>
 		<?php 
 }
     ?>
 
 		<?php if (Config::get('concrete.misc.enable_trash_can')) {
     ?>
-			<p><?=t('Deleted pages are moved to the trash can in the sitemap.')?></p>
+			<br><p><?=t('Deleted pages are moved to Trash in the System Pages section of the sitemap.')?></p>
 		<?php 
 } else {
     ?>
