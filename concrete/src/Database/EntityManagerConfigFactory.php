@@ -111,7 +111,7 @@ class EntityManagerConfigFactory implements ApplicationAwareInterface, EntityMan
         \Doctrine\Common\Annotations\AnnotationRegistry::registerAutoloadNamespace('Application\Src',
             DIR_BASE.'/application/src');
 
-        // Remove all unkown annotations from the AnnotationReader used by the SimpleAnnotationReader 
+        // Remove all unkown annotations from the AnnotationReader used by the SimpleAnnotationReader
         // to prevent fatal errors
         $this->registerGlobalIgnoredAnnotations();
 
@@ -125,8 +125,8 @@ class EntityManagerConfigFactory implements ApplicationAwareInterface, EntityMan
         $annotationDriver = new \Doctrine\ORM\Mapping\Driver\AnnotationDriver($this->getCachedAnnotationReader(),
             $coreDirs);
 
-        // The default driver only kicks in, if no driver has been found for a specific namespace. 
-        // In c5 this shouldn't be the case. If some problems occure with entity 
+        // The default driver only kicks in, if no driver has been found for a specific namespace.
+        // In c5 this shouldn't be the case. If some problems occure with entity
         // mapping uncommenting the following line maybe helps to fix them.
         //$driverChain->setDefaultDriver($annotationDriver);
 
@@ -136,7 +136,7 @@ class EntityManagerConfigFactory implements ApplicationAwareInterface, EntityMan
         // Register application metadata driver
         $this->addApplicationMetadataDriverToDriverChain($driverChain);
 
-        // Register all installed packages in the driverChain 
+        // Register all installed packages in the driverChain
         $this->addPackageMetadataDriverToDriverChain($driverChain);
 
         return $driverChain;

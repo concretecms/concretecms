@@ -334,7 +334,7 @@ class StartingPointPackage extends BasePackage
             \Doctrine\Common\Annotations\AnnotationReader::addGlobalIgnoredName('subpackages');
             \Doctrine\Common\Annotations\AnnotationReader::addGlobalIgnoredName('package');
             // Use default AnnotationReader
-            $driverImpl = $config->newDefaultAnnotationDriver(DIR_BASE_CORE . DIRECTORY_SEPARATOR . DIRNAME_CLASSES, false);
+            $driverImpl = $config->newDefaultAnnotationDriver(DIR_BASE_CORE . DIRECTORY_SEPARATOR . DIRNAME_CLASSES . DIRECTORY_SEPARATOR . DIRNAME_ENTITIES, false);
             $config->setMetadataDriverImpl($driverImpl);
             $em = EntityManager::create(\Database::connection(), $config);
             $dbm = new DatabaseStructureManager($em);
