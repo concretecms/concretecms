@@ -208,5 +208,39 @@ class Key extends Facade implements AttributeKeyInterface
         $this->saveAttribute($o, $value);
     }
 
+    /**
+     * @deprecated
+     */
+    public function reindex($table, $columnHeaders, $attribs, $rs = null)
+    {
+        /** @var \Concrete\Core\Database\Connection $db */
+        $db = \Database::connection();
+        $sm = $db->getSchemaManager();
+
+        /** @var \Doctrine\DBAL\Schema\Column[] $columns */
+        $columns = $sm->listTableColumns($table);
+
+        $attribs->rewind();
+        while ($attribs->valid()) {
+            $column = 'ak_' . $attribs->key();
+            if (is_array($attribs->current())) {
+                foreach ($attribs->current() as $key => $value) {
+                    $col = $column . '_' . $key;
+                    if (isset($columns[strtolower($col)])) {
+                        $columnHeaders[$col] = $value;
+                    }
+                }
+            } else {
+                if (isset($columns[strtolower($column)])) {
+                    $columnHeaders[$column] = $attribs->current();
+                }
+            }
+
+            $attribs->next();
+        }
+
+        $db->insert($table, $columnHeaders);
+    }
+
 
 }
