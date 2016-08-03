@@ -131,7 +131,7 @@ class EntityManagerConfigFactory implements ApplicationAwareInterface, EntityMan
         //$driverChain->setDefaultDriver($annotationDriver);
 
         $annotationDriver->addExcludePaths($this->getConfigRepository()->get('database.proxy_exclusions', array()));
-        $driverChain->addDriver($annotationDriver, 'Concrete\Core');
+        $driverChain->addDriver($annotationDriver, 'Concrete\Core\Entity');
 
         // Register application metadata driver
         $this->addApplicationMetadataDriverToDriverChain($driverChain);
