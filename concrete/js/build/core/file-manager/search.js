@@ -528,8 +528,13 @@
             var $menu = my.getResultMenu(my.getSelectedResults());
             if ($menu) {
                 $menu.find('.dialog-launch').dialog();
+                var $list = $menu.find('ul');
+                $list.attr('data-search-file-menu', $menu.attr('data-search-file-menu'));
                 $(this).parent().find('ul').remove();
-                $(this).parent().append($menu.find('ul'));
+                $(this).parent().append($list);
+
+                var fileMenu = new ConcreteFileMenu(false, {'container': my});
+                fileMenu.setupMenuOptions($list);
 
                 ConcreteEvent.publish('ConcreteMenuShow', {menu: my, menuElement: $(this).parent()});
             }

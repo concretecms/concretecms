@@ -9,14 +9,20 @@
 			'container': false,
 		}, options);
 
-		ConcreteMenu.call(my, $element, options);
+		my.options = options;
+
+		if ($element) {
+
+			ConcreteMenu.call(my, $element, options);
+
+		}
 	}
 
     ConcreteFileMenu.prototype = Object.create(ConcreteMenu.prototype);
 
 
     ConcreteFileMenu.prototype.setupMenuOptions = function($menu) {
-		var my = this, 
+		var my = this,
 			parent = ConcreteMenu.prototype,
 			fID = $menu.attr('data-search-file-menu'),
 			container = my.options.container;
@@ -29,6 +35,10 @@
 			}
 			_.defer(function() { container.$element.html(container._chooseTemplate); });
 			return false;
+		});
+		$menu.find('a[data-file-manager-action=download]').on('click', function(e) {
+			e.preventDefault();
+			window.frames['ccm-file-manager-download-target'].location= CCM_TOOLS_PATH + '/files/download?fID=' + fID;
 		});
 		$menu.find('a[data-file-manager-action=duplicate]').on('click', function() {
 			$.concreteAjax({
