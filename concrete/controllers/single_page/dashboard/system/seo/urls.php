@@ -141,7 +141,7 @@ class Urls extends DashboardSitePageController
                 $prettyUrlState = '';
                 $services = $manager->getActiveServices();
                 if (empty($services)) {
-                    $prettyUrlState = 'unsecognized';
+                    $prettyUrlState = 'unrecognized';
                 } else {
                     $service = $services[0];
                     if (!$service->getStorage()->canRead()) {
