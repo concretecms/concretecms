@@ -528,6 +528,8 @@
                 $menu.find('.dialog-launch').dialog();
                 $(this).parent().find('ul').remove();
                 $(this).parent().append($menu.find('ul'));
+
+                ConcreteEvent.publish('ConcreteMenuShow', {menu: my, menuElement: $(this).parent()});
             }
         });
     }
