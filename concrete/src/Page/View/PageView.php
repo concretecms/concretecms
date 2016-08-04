@@ -230,7 +230,7 @@ class PageView extends View
             if (!$dh->inDashboard()
                 && $this->c->getCollectionPath() != '/page_not_found'
                 && $this->c->getCollectionPath() != '/download_file'
-                && $this->c->isActive() && !$this->c->isMasterCollection()) {
+                && !$this->c->isMasterCollection()) {
                 $u = new User();
                 $u->markPreviousFrontendPage($this->c);
             }
