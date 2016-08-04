@@ -16,7 +16,7 @@ class Urls extends DashboardSitePageController
         $globalConfig = $this->app->make('config');
         $siteConfig = $this->getSite()->getConfigRepository();
 
-        $urlRewriting = (bool) $globalConfig->get('seo.url_rewriting');
+        $urlRewriting = (bool) $globalConfig->get('concrete.seo.url_rewriting');
         $this->set('fh', $this->app->make('helper/form'));
         $this->set('canonical_url', $siteConfig->get('seo.canonical_url'));
         $this->set('canonical_ssl_url', $siteConfig->get('seo.canonical_ssl_url'));
@@ -134,8 +134,8 @@ class Urls extends DashboardSitePageController
                 $globalConfig->save('concrete.seo.redirect_to_canonical_url', $this->post('redirect_to_canonical_url') ? 1 : 0);
 
                 $urlRewriting = (bool) $this->post('URL_REWRITING');
-                $globalConfig->save('seo.url_rewriting', $urlRewriting);
-                $globalConfig->set('seo.url_rewriting', $urlRewriting);
+                $globalConfig->save('concrete.seo.url_rewriting', $urlRewriting);
+                $globalConfig->set('concrete.seo.url_rewriting', $urlRewriting);
                 $manager = $this->app->make('Concrete\Core\Service\Manager\ServiceManager');
                 /* @var \Concrete\Core\Service\Manager\ServiceManager $manager */
                 $prettyUrlState = '';
