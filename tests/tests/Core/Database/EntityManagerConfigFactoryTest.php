@@ -36,10 +36,10 @@ class EntityManagerConfigFactoryTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('Doctrine\Common\Persistence\Mapping\Driver\MappingDriverChain',
             $driverChain, 'Is not a Doctrine ORM MappingDriverChain');
         $drivers                    = $driverChain->getDrivers();
-        $this->assertArrayHasKey('Concrete\Core', $drivers);
+        $this->assertArrayHasKey('Concrete\Core\Entity', $drivers);
 
         // Test if the correct MetadataDriver and MetadataReader are present
-        $defaultAnnotationDriver = $drivers['Concrete\Core'];
+        $defaultAnnotationDriver = $drivers['Concrete\Core\Entity'];
         $defaultAnnotationReader = $defaultAnnotationDriver->getReader();
         $this->assertInstanceOf('Doctrine\ORM\Mapping\Driver\AnnotationDriver',
             $defaultAnnotationDriver,
