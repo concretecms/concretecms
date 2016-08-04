@@ -77,6 +77,7 @@
                     delay: 300,
                     start: function(e) {
                         my.interactionIsDragging = true;
+                        $('html').addClass('ccm-search-results-dragging');
                         $undroppables.css('opacity', '0.4');
                         if (e.altKey) {
                             my.$element.addClass('ccm-search-results-copy');
@@ -96,6 +97,7 @@
                         });
                     },
                     stop: function() {
+                        $('html').removeClass('ccm-search-results-dragging');
                         $(window).unbind('.concreteSearchResultsCopy');
                         $undroppables.css('opacity', '');
                         my.$element.removeClass('ccm-search-results-copy');
