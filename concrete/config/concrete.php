@@ -26,7 +26,18 @@ return array(
 
             'name' => 'concrete5',
 
-            'editor' => array(
+            'user' => array(
+
+                'profiles_enabled' => false,
+                'gravatar' => array(
+                    'enabled' => false,
+                    'max_level' => 0,
+                    'image_set' => 0,
+                ),
+
+            ),
+
+                'editor' => array(
                 'concrete' => array(
                     'enable_filemanager' => true,
                     'enable_sitemap' => true,
@@ -747,11 +758,6 @@ return array(
          * Gravatar Settings
          * --------------------------------------------------------------------
          */
-        'gravatar' => array(
-            'enabled' => false,
-            'max_level' => 0,
-            'image_set' => 0,
-        ),
         'group' => array(
 
             'badge' => array(
@@ -760,13 +766,6 @@ return array(
             ),
 
         ),
-
-        /*
-         * Enable public user profiles
-         *
-         * @var bool
-         */
-        'profiles_enabled' => false,
 
         'username' => array(
             'maximum' => 64,

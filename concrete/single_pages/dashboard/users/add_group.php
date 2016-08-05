@@ -73,9 +73,8 @@ $registeredGroupNode = GroupTreeNode::getTreeNodeByGroupID(REGISTERED_GROUP_ID);
 </div>
 
 </fieldset>
-<?php if (Config::get('concrete.user.profiles_enabled')) {
-    ?>
-<fieldset>
+
+    <fieldset>
 	<div class="form-group">
         <div class="checkbox">
             <label>
@@ -115,8 +114,6 @@ $registeredGroupNode = GroupTreeNode::getTreeNodeByGroupID(REGISTERED_GROUP_ID);
     </div>
 
 </fieldset>
-<?php 
-} ?>
 
 <fieldset>
 	<legend><?=t('Automation')?></legend>

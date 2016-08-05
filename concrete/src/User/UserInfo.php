@@ -617,7 +617,10 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
      */
     public function getUserPublicProfileUrl()
     {
-        if (!$this->application['config']->get('concrete.user.profiles_enabled')) {
+        $site = \Core::make('site')->getSite();
+        $config = $site->getConfigRepository();
+
+        if (!$config->get('user.profiles_enabled')) {
             return null;
         }
         $url = $this->application->make('url/manager');
