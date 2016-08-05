@@ -27,7 +27,9 @@ if (isset($c) && is_object($c)) {
 }
 
 $showAccount = false;
-if (Config::get('concrete.user.profiles_enabled') && Core::isInstalled()) {
+$site = Core::make("site")->getSite();
+$config = $site->getConfigRepository();
+if (is_object($site) && $config->get('user.profiles_enabled') && Core::isInstalled()) {
     $account = Page::getByPath('/account');
     if (is_object($account) && !$account->isError()) {
         $cp = new Permissions($account);

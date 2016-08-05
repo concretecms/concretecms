@@ -47,9 +47,6 @@ if (isset($group)) {
 	    </div>
     </fieldset>
 
-	<?php if (Config::get('concrete.user.profiles_enabled')) {
-    ?>
-
 	<fieldset>
         <div class="form-group">
             <div class="checkbox">
@@ -82,9 +79,6 @@ if (isset($group)) {
             </div>
 		</div>
 	</fieldset>
-	<?php 
-}
-    ?>
 
 	<fieldset>
 		<legend><?=t('Automation')?></legend>
