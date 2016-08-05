@@ -19,7 +19,8 @@ abstract class AbstractField implements FieldInterface
         return [
             'key' => $this->getKey(),
             'label' => $this->getDisplayName(),
-            'element' => $this->renderSearchField()
+            'element' => $this->renderSearchField(),
+            'data' => $this->data
         ];
     }
 

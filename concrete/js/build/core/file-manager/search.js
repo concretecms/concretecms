@@ -264,6 +264,7 @@
     ConcreteFileManager.prototype.setupBreadcrumb = function(result) {
         var my = this;
 
+
         if (result.breadcrumb) {
             my.$breadcrumb.html('');
             var $nav = $('<ol data-search-navigation="breadcrumb" class="breadcrumb" />');
@@ -617,6 +618,18 @@
         }
         data.push({'name': 'folder', 'value': folderID});
 
+        if (my.options.result.filters) {
+            // We are loading a folder with a filter. So we loop through the fields
+            // and add them to data.
+            $.each(my.options.result.filters, function(i, field) {
+                var fieldData = field.data;
+                data.push({'name': 'field[]', 'value': field.key});
+                for(var key in fieldData) {
+                    data.push({'name': key, 'value': fieldData[key]});
+                }
+            });
+        }
+
         if (showRecentFirst) {
             data.push({'name': 'ccm_order_by', 'value': 'folderItemModified'});
             data.push({'name': 'ccm_order_by_direction', 'value': 'desc'});
@@ -712,7 +725,7 @@
 
         $.fn.dialog.open({
             width: w,
-            height: '70%',
+            height: '90%',
             href: CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/file/search',
             modal: true,
             data: data,
