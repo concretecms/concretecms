@@ -17,5 +17,9 @@ class ManagerServiceProvider extends ServiceProvider
             $manager = $this->app->make('Concrete\Core\File\Search\Field\Manager');
             return $manager;
         });
+        $this->app['manager/search_field/file_folder'] = $this->app->share(function ($app) {
+            $manager = $this->app->make('Concrete\Core\File\Search\Field\FileFolderManager');
+            return $manager;
+        });
     }
 }

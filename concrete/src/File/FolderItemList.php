@@ -106,6 +106,13 @@ class FolderItemList extends ItemList implements PermissionableListItemInterface
         $this->parent = $folder;
     }
 
+    public function filterByType($type)
+    {
+        $this->query->andWhere('fv.fvType = :fvType or fvType is null');
+        $this->query->setParameter('fvType', $type);
+    }
+
+
     public function deliverQueryObject()
     {
         if (!isset($this->parent)) {

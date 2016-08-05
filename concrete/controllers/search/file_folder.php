@@ -3,11 +3,14 @@ namespace Concrete\Controller\Search;
 
 
 use Concrete\Core\Controller\AbstractController;
+use Concrete\Core\Entity\Search\Query;
 use Concrete\Core\File\FileList;
 use Concrete\Core\File\Filesystem;
 use Concrete\Core\File\FolderItemList;
 use Concrete\Core\File\Search\ColumnSet\FolderSet;
 use Concrete\Core\File\Search\Result\Result;
+use Concrete\Core\Search\Field\FieldInterface;
+use Concrete\Core\Search\Field\ManagerFactory;
 use Concrete\Core\Search\StickyRequest;
 use Concrete\Core\Tree\Node\Node;
 use Concrete\Core\Tree\Node\Type\SearchPreset;
@@ -25,7 +28,7 @@ class FileFolder extends AbstractController
         $this->filesystem = new Filesystem();
     }
 
-    public function search()
+    public function search(Query $query = null)
     {
         $searchRequest = new StickyRequest('file_manager_folder');
 
@@ -71,8 +74,29 @@ class FileFolder extends AbstractController
 
             $u = new \User();
             $list = $folder->getFolderItemList($u, $this->request);
+
+
+            $fields = $this->request->get('field');
+            $filters = array();
+            if (count($fields)) { // We are passing in something like "filter by images"
+                $manager = ManagerFactory::get('file_folder');
+                $filters = $manager->getFieldsFromRequest($this->request->query->all());
+            }
+
+            if (count($filters)) {
+                /**
+                 * @var $field FieldInterface
+                 */
+                foreach($filters as $field) {
+                    $field->filterList($list);
+                }
+            }
+
             $columns = new FolderSet();
             $ilr = new Result($columns, $list, \URL::to('/ccm/system/file/folder/contents'));
+            if ($filters) {
+                $ilr->setFilters($filters);
+            }
         }
 
         $breadcrumb = [];

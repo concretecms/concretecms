@@ -24,27 +24,15 @@ class Search extends BackendInterfaceController
 
     public function view()
     {
-        $provider = \Core::make('Concrete\Core\File\Search\SearchProvider');
-        $fields = $this->request->get('field');
-        if (count($fields)) { // We are passing in something like "filter by images"
-            $manager = ManagerFactory::get('file');
-            $fields = $manager->getFieldsFromRequest($this->request->query->all());
-            $query = new Query();
-            $query->setFields($fields);
-            $result = $provider->getSearchResultFromQuery($query);
-            $result->setBaseURL((string) \URL::to('/ccm/system/search/files/basic'));
-        } else {
-            $search = new FileFolder();
-            $search->search();
-            $result = $search->getSearchResultObject();
-            $query = null;
-        }
+        $search = new FileFolder();
+        $search->search();
+        $result = $search->getSearchResultObject();
 
         if (is_object($result)) {
             $this->set('result', $result);
         }
 
-        $header = new Header($query);
+        $header = new Header();
         $header->setIncludeBreadcrumb(true);
         $this->set('header', $header);
         $this->requireAsset('selectize');
