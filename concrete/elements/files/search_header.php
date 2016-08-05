@@ -25,6 +25,7 @@
         </ul>
     </form>
 </div>
+<div class="clearfix"></div>
 <div style="display: none">
     <div data-dialog="add-file-manager-folder" class="ccm-ui">
         <form data-dialog-form="add-folder" method="post" action="<?=$addFolderAction?>">
