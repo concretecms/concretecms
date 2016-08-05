@@ -2,7 +2,7 @@
 namespace Concrete\Core\Permission\Assignment;
 
 use Concrete\Core\Tree\Node\Node;
-use PermissionAccess;
+use Concrete\Core\Permission\Access\Access;
 use Concrete\Core\Tree\Node\Type\Topic as TopicTreeNode;
 use Concrete\Core\Tree\Node\Type\Category as CategoryTreeNode;
 use Database;
@@ -42,7 +42,7 @@ class TopicTreeNodeAssignment extends TreeNodeAssignment
                     $inheritedPKID,
                 )
             );
-            $pa = PermissionAccess::getByID($r, $this->pk);
+            $pa = Access::getByID($r, $this->pk);
         } else {
             return false;
         }

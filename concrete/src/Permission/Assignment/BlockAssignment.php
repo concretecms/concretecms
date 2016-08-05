@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Core\Permission\Assignment;
 
-use PermissionAccess;
+use Concrete\Core\Permission\Access\Access;
 use Concrete\Core\Block\Block;
 use Area;
 use Concrete\Core\Area\SubArea;
@@ -86,7 +86,7 @@ class BlockAssignment extends Assignment
                 )
             );
             if ($paID) {
-                $pae = PermissionAccess::getByID($paID, $this->pk, false);
+                $pae = Access::getByID($paID, $this->pk, false);
             }
         } elseif ($this->permissionObjectToCheck instanceof Area && isset($this->inheritedAreaPermissions[$this->pk->getPermissionKeyHandle()])) {
             $pk = PermissionKey::getByHandle($this->inheritedAreaPermissions[$this->pk->getPermissionKeyHandle()]);
@@ -108,7 +108,7 @@ class BlockAssignment extends Assignment
         $db->Execute('update BlockPermissionAssignments set paID = 0 where pkID = ? and bID = ? and cvID = ? and cID = ?', array($this->pk->getPermissionKeyID(), $this->permissionObject->getBlockID(), $co->getVersionID(), $co->getCollectionID()));
     }
 
-    public function assignPermissionAccess(PermissionAccess $pa)
+    public function assignPermissionAccess(Access $pa)
     {
         $db = Database::connection();
         $co = $this->permissionObject->getBlockCollectionObject();

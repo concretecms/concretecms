@@ -6,7 +6,6 @@ use Concrete\Core\File\Set\SetList as FileSetList;
 use FileSet;
 use Permissions;
 use PermissionKey;
-use PermissionAccess;
 use Loader;
 use Exception;
 

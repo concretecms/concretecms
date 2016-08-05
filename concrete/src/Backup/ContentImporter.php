@@ -32,7 +32,7 @@ use PermissionKey;
 use Concrete\Core\Permission\Access\Entity\Type as PermissionAccessEntityType;
 use Concrete\Core\Workflow\Progress\Category as WorkflowProgressCategory;
 use Concrete\Core\Permission\Access\Entity\GroupEntity as GroupPermissionAccessEntity;
-use PermissionAccess;
+use Concrete\Core\Permission\Access\Access as PermissionAccess;
 use Concrete\Core\Captcha\Library as SystemCaptchaLibrary;
 use Concrete\Core\Editor\Snippet as SystemContentEditorSnippet;
 use Concrete\Core\Feature\Feature;

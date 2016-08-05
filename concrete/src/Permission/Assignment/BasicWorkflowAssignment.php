@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Core\Permission\Assignment;
 
-use PermissionAccess;
+use Concrete\Core\Permission\Access\Access;
 use Loader;
 
 class BasicWorkflowAssignment extends Assignment
@@ -13,7 +13,7 @@ class BasicWorkflowAssignment extends Assignment
             $this->getPermissionObject()->getWorkflowID(), $this->pk->getPermissionKeyID(),
         ));
 
-        return PermissionAccess::getByID($r, $this->pk);
+        return Access::getByID($r, $this->pk);
     }
 
     public function clearPermissionAssignment()
@@ -22,7 +22,7 @@ class BasicWorkflowAssignment extends Assignment
         $db->Execute('update BasicWorkflowPermissionAssignments set paID = 0 where pkID = ? and wfID = ?', array($this->pk->getPermissionKeyID(), $this->getPermissionObject()->getWorkflowID()));
     }
 
-    public function assignPermissionAccess(PermissionAccess $pa)
+    public function assignPermissionAccess(Access $pa)
     {
         $db = Loader::db();
         $db->Replace('BasicWorkflowPermissionAssignments', array('wfID' => $this->getPermissionObject()->getWorkflowID(), 'paID' => $pa->getPermissionAccessID(), 'pkID' => $this->pk->getPermissionKeyID()), array('wfID', 'pkID'), true);

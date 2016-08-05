@@ -7,7 +7,7 @@ use Concrete\Core\Permission\Key\PageKey as PagePermissionKey;
 use PermissionKey;
 use GroupList;
 use Config;
-use PermissionAccess;
+use Concrete\Core\Permission\Access\Access;
 use Concrete\Core\Permission\Access\Entity\GroupEntity as GroupPermissionAccessEntity;
 use Group;
 use View;
@@ -81,7 +81,7 @@ class Permissions extends BackendInterfacePageController
             $pk->setPermissionObject($c);
             $pt = $pk->getPermissionAssignmentObject();
             $pt->clearPermissionAssignment();
-            $pa = PermissionAccess::create($pk);
+            $pa = Access::create($pk);
 
             if (is_array($_POST['readGID'])) {
                 foreach ($_POST['readGID'] as $gID) {
@@ -120,7 +120,7 @@ class Permissions extends BackendInterfacePageController
                 $pk->setPermissionObject($c);
                 $pt = $pk->getPermissionAssignmentObject();
                 $pt->clearPermissionAssignment();
-                $pa = PermissionAccess::create($pk);
+                $pa = Access::create($pk);
                 foreach ($editAccessEntities as $editObj) {
                     $pa->addListItem($editObj);
                 }

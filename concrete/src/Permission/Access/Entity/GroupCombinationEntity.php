@@ -3,7 +3,7 @@ namespace Concrete\Core\Permission\Access\Entity;
 
 use Loader;
 use Config;
-use PermissionAccess;
+use Concrete\Core\Permission\Access\Access as PermissionAccess;
 use Group;
 
 class GroupCombinationEntity extends Entity

@@ -15,6 +15,7 @@ use Concrete\Core\File\Filesystem;
 use Concrete\Core\Page\Template;
 use Concrete\Core\Permission\Access\Access;
 use Concrete\Core\Permission\Access\Entity\GroupEntity;
+use Concrete\Core\Permission\Access\Entity\UserEntity;
 use Concrete\Core\Permission\Key\Key;
 use Concrete\Core\Site\Service;
 use Concrete\Core\Tree\Node\NodeType;
@@ -61,14 +62,16 @@ class Version20160725000000 extends AbstractMigration
         $this->connection->Execute('update PermissionKeyCategories set pkCategoryHandle = ? where pkCategoryHandle = ?', array(
             'category_tree_node', 'topic_category_tree_node',
         ));
-        $this->connection->Execute('update PermissionKeys set pkHandle = ? where pkHandle = ?', array(
-            '_add_file', 'add_file',
-        ));
-
-        if (!$this->connection->tableExists('FilePermissionFileTypeAccessList ')) {
+        $folderCategoryID = $this->connection->fetchColumn('select pkCategoryID from PermissionKeyCategories where pkCategoryHandle = ?', array('file_folder'));
+        if (!$folderCategoryID) {
+            $this->connection->Execute('update PermissionKeys set pkHandle = ? where pkHandle = ?', array(
+                '_add_file', 'add_file',
+            ));
+        }
+        if (!$this->connection->tableExists('FilePermissionFileTypeAccessList') && $this->connection->tableExists('FileSetPermissionFileTypeAccessList')) {
             $this->connection->Execute('alter table FileSetPermissionFileTypeAccessList rename FilePermissionFileTypeAccessList ');
         }
-        if (!$this->connection->tableExists('FilePermissionFileTypeAccessListCustom  ')) {
+        if (!$this->connection->tableExists('FilePermissionFileTypeAccessListCustom') && $this->connection->tableExists('FileSetPermissionFileTypeAccessListCustom')) {
             $this->connection->Execute('alter table FileSetPermissionFileTypeAccessListCustom  rename FilePermissionFileTypeAccessListCustom');
         }
     }
@@ -90,25 +93,31 @@ class Version20160725000000 extends AbstractMigration
         $filesystem = new Filesystem();
         $folder = $filesystem->getRootFolder();
 
-        while ($row = $r->fetch()) {
-            $mapped = $permissionsMap[$row['pkHandle']];
-            $newPKID = $this->connection->fetchColumn('select pkID from PermissionKeys where pkHandle = ?', array($mapped));
-            $v = array($folder->getTreeNodeID(), $newPKID, $row['paID']);
-            $this->connection->executeQuery(
-                'insert into TreeNodePermissionAssignments (treeNodeID, pkID, paID) values (?, ?, ?)', $v
-            );
-        }
+        $count = $this->connection->fetchColumn('select count(*) from TreeNodePermissionAssignments where treeNodeID = ?', array(
+            $folder->getTreeNodeID()
+        ));
+        if (!$count) {
 
-        // Add edit file folder.
-        $pk1 = Key::getByHandle('edit_file_folder_permissions');
-        $pk2 = Key::getByHandle('edit_file_folder');
-        $pk1->setPermissionObject($folder);
-        $pk2->setPermissionObject($folder);
-        $pa = $pk1->getPermissionAccessObject();
-        if (is_object($pa)) {
-            $pt = $pk2->getPermissionAssignmentObject();
-            $pt->clearPermissionAssignment();
-            $pt->assignPermissionAccess($pa);
+            while ($row = $r->fetch()) {
+                $mapped = $permissionsMap[$row['pkHandle']];
+                $newPKID = $this->connection->fetchColumn('select pkID from PermissionKeys where pkHandle = ?', array($mapped));
+                $v = array($folder->getTreeNodeID(), $newPKID, $row['paID']);
+                $this->connection->executeQuery(
+                    'insert into TreeNodePermissionAssignments (treeNodeID, pkID, paID) values (?, ?, ?)', $v
+                );
+            }
+
+            // Add edit file folder.
+            $pk1 = Key::getByHandle('edit_file_folder_permissions');
+            $pk2 = Key::getByHandle('edit_file_folder');
+            $pk1->setPermissionObject($folder);
+            $pk2->setPermissionObject($folder);
+            $pa = $pk1->getPermissionAccessObject();
+            if (is_object($pa)) {
+                $pt = $pk2->getPermissionAssignmentObject();
+                $pt->clearPermissionAssignment();
+                $pt->assignPermissionAccess($pa);
+            }
         }
     }
 
@@ -118,6 +127,8 @@ class Version20160725000000 extends AbstractMigration
         \Concrete\Core\Database\Schema\Schema::refreshCoreXMLSchema(array(
             'Pages',
             'PageTypes',
+            'NotificationPermissionSubscriptionList',
+            'NotificationPermissionSubscriptionListCustom',
             'CollectionVersionBlocks',
             'CollectionVersions',
             'TreeNodes',
@@ -592,6 +603,36 @@ class Version20160725000000 extends AbstractMigration
             $sp = SinglePage::add('/dashboard/system/express/entries');
             $sp->update(array('cName' => 'Custom Entry Locations'));
         }
+        $page = Page::getByPath('/dashboard/reports/forms/legacy');
+        if (!is_object($page) || $page->isError()) {
+            $sp = SinglePage::add('/dashboard/reports/forms/legacy');
+            $sp->update(array('cName' => 'Form Results'));
+            $sp->setAttribute('exclude_search_index', true);
+            $sp->setAttribute('exclude_nav', true);
+        }
+        $page = Page::getByPath('/dashboard/system/basics/name');
+        if (is_object($page) && !$page->isError()) {
+            $page->update(array('cName' => 'Name & Attributes'));
+        }
+        $page = Page::getByPath('/dashboard/system/basics/attributes');
+        if (!is_object($page) || $page->isError()) {
+            $sp = SinglePage::add('/dashboard/system/basics/attributes');
+            $sp->update(array('cName' => 'Custom Attributes'));
+            $sp->setAttribute('exclude_search_index', true);
+            $sp->setAttribute('exclude_nav', true);
+        }
+        $page = Page::getByPath('/dashboard/system/registration/global_password_reset');
+        if (!is_object($page) || $page->isError()) {
+            $sp = SinglePage::add('/dashboard/system/registration/global_password_reset');
+            $sp->update(array('cDescription' => 'Signs out all users, resets all passwords and forces users to choose a new one'));
+            $sp->setAttribute('meta_keywords', 'global, password, reset, change password, force, sign out');
+        }
+        $page = Page::getByPath('/dashboard/system/registration/notification');
+        if (!is_object($page) || $page->isError()) {
+            $sp = SinglePage::add('/dashboard/system/registration/notification');
+            $sp->update(array('cName' => 'Notification Settings'));
+        }
+
     }
 
     protected function addBlockTypes()
@@ -721,6 +762,14 @@ class Version20160725000000 extends AbstractMigration
         if (!is_object($template)) {
             Template::add('desktop', t('Desktop'), FILENAME_PAGE_TEMPLATE_DEFAULT_ICON, null, true);
         }
+        $type = \Concrete\Core\Page\Type\Type::getByHandle('core_desktop');
+        if (!is_object($type)) {
+            \Concrete\Core\Page\Type\Type::add(array(
+                'handle' => 'core_desktop',
+                'name' => 'Desktop',
+                'internal' => true
+            ));
+        }
 
         $category = Category::getByHandle('collection')->getController();
         $attribute = CollectionKey::getByHandle('is_desktop');
@@ -812,64 +861,76 @@ class Version20160725000000 extends AbstractMigration
                 $em->persist($link);
             }
             $em->flush();
+        }
 
-            $siteConfig = $site->getConfigRepository();
+        $category = Category::getByHandle('site');
+        if (!is_object($category)) {
+            $category = Category::add('site');
+        } else {
+            $category = $category->getController();
+        }
 
-            // migrate bookmark icons
-            $favicon_fid = \Config::get('concrete.misc.favicon_fid');
-            if ($favicon_fid) {
-                $siteConfig->save('misc.favicon_fid', $favicon_fid);
-            }
-            $iphone_home_screen_thumbnail_fid = \Config::get('concrete.misc.iphone_home_screen_thumbnail_fid');
-            if ($iphone_home_screen_thumbnail_fid) {
-                $siteConfig->save('misc.iphone_home_screen_thumbnail_fid', $iphone_home_screen_thumbnail_fid);
-            }
-            $modern_tile_thumbnail_fid = \Config::get('concrete.misc.modern_tile_thumbnail_fid');
-            if ($modern_tile_thumbnail_fid) {
-                $siteConfig->save('misc.modern_tile_thumbnail_fid', $modern_tile_thumbnail_fid);
-            }
-            $modern_tile_thumbnail_bgcolor = \Config::get('concrete.misc.modern_tile_thumbnail_bgcolor');
-            if ($modern_tile_thumbnail_bgcolor) {
-                $siteConfig->save('misc.modern_tile_thumbnail_bgcolor', $modern_tile_thumbnail_bgcolor);
-            }
+        $types = Type::getList();
+        foreach($types as $type) {
+            $category->associateAttributeKeyType($type);
+        }
 
-            // migrate url
-            $canonical_url = \Config::get('seo.canonical_url');
-            if ($canonical_url) {
-                $siteConfig->save('seo.canonical_url', $canonical_url);
-            }
-            $canonical_ssl_url = \Config::get('seo.canonical_ssl_url');
-            if ($canonical_ssl_url) {
-                $siteConfig->save('seo.canonical_ssl_url', $canonical_ssl_url);
-            }
+        $siteConfig = $site->getConfigRepository();
 
-            // migrate tracking code
-            $header = \Config::get('seo.tracking.code.header');
-            if ($header) {
-                $siteConfig->save('seo.tracking.code.header', $header);
-            }
-            $footer = \Config::get('seo.tracking.code.footer');
-            if ($footer) {
-                $siteConfig->save('seo.tracking.code.footer', $footer);
-            }
+        // migrate bookmark icons
+        $favicon_fid = \Config::get('concrete.misc.favicon_fid');
+        if ($favicon_fid) {
+            $siteConfig->save('misc.favicon_fid', $favicon_fid);
+        }
+        $iphone_home_screen_thumbnail_fid = \Config::get('concrete.misc.iphone_home_screen_thumbnail_fid');
+        if ($iphone_home_screen_thumbnail_fid) {
+            $siteConfig->save('misc.iphone_home_screen_thumbnail_fid', $iphone_home_screen_thumbnail_fid);
+        }
+        $modern_tile_thumbnail_fid = \Config::get('concrete.misc.modern_tile_thumbnail_fid');
+        if ($modern_tile_thumbnail_fid) {
+            $siteConfig->save('misc.modern_tile_thumbnail_fid', $modern_tile_thumbnail_fid);
+        }
+        $modern_tile_thumbnail_bgcolor = \Config::get('concrete.misc.modern_tile_thumbnail_bgcolor');
+        if ($modern_tile_thumbnail_bgcolor) {
+            $siteConfig->save('misc.modern_tile_thumbnail_bgcolor', $modern_tile_thumbnail_bgcolor);
+        }
 
-            // migrate public profiles
-            $r = \Config::get('concrete.user.profiles_enabled');
-            if ($r) {
-                $siteConfig->save('user.profiles_enabled', $r);
-            }
-            $r = \Config::get('concrete.user.gravatar.enabled');
-            if ($r) {
-                $siteConfig->save('user.gravatar.enabled', $r);
-            }
-            $r = \Config::get('concrete.user.gravatar.max_level');
-            if ($r) {
-                $siteConfig->save('user.gravatar.max_level', $r);
-            }
-            $r = \Config::get('concrete.user.gravatar.image_set');
-            if ($r) {
-                $siteConfig->save('user.gravatar.image_set', $r);
-            }
+        // migrate url
+        $canonical_url = \Config::get('seo.canonical_url');
+        if ($canonical_url) {
+            $siteConfig->save('seo.canonical_url', $canonical_url);
+        }
+        $canonical_ssl_url = \Config::get('seo.canonical_ssl_url');
+        if ($canonical_ssl_url) {
+            $siteConfig->save('seo.canonical_ssl_url', $canonical_ssl_url);
+        }
+
+        // migrate tracking code
+        $header = \Config::get('seo.tracking.code.header');
+        if ($header) {
+            $siteConfig->save('seo.tracking.code.header', $header);
+        }
+        $footer = \Config::get('seo.tracking.code.footer');
+        if ($footer) {
+            $siteConfig->save('seo.tracking.code.footer', $footer);
+        }
+
+        // migrate public profiles
+        $r = \Config::get('concrete.user.profiles_enabled');
+        if ($r) {
+            $siteConfig->save('user.profiles_enabled', $r);
+        }
+        $r = \Config::get('concrete.user.gravatar.enabled');
+        if ($r) {
+            $siteConfig->save('user.gravatar.enabled', $r);
+        }
+        $r = \Config::get('concrete.user.gravatar.max_level');
+        if ($r) {
+            $siteConfig->save('user.gravatar.max_level', $r);
+        }
+        $r = \Config::get('concrete.user.gravatar.image_set');
+        if ($r) {
+            $siteConfig->save('user.gravatar.image_set', $r);
         }
     }
 
@@ -909,6 +970,11 @@ class Version20160725000000 extends AbstractMigration
         CacheLocal::delete('permission_keys', false);
     }
 
+    protected function cleanupOldPermissions()
+    {
+        $this->connection->Execute('delete from PermissionKeys where pkHandle = ?', array('_add_file'));
+    }
+
     protected function updateTopics()
     {
         $r = $this->connection->executeQuery('select * from _TreeTopicNodes');
@@ -939,7 +1005,14 @@ class Version20160725000000 extends AbstractMigration
 
     public function addNotifications()
     {
-
+        $adminGroupEntity = GroupEntity::getOrCreate(\Group::getByID(ADMIN_GROUP_ID));
+        $adminUserEntity = UserEntity::getOrCreate(\UserInfo::getByID(USER_SUPER_ID));
+        $pk = Key::getByHandle('notify_in_notification_center');
+        $pa = Access::create($pk);
+        $pa->addListItem($adminUserEntity);
+        $pa->addListItem($adminGroupEntity);
+        $pt = $pk->getPermissionAssignmentObject();
+        $pt->assignPermissionAccess($pa);
     }
 
     public function up(Schema $schema)
@@ -955,6 +1028,7 @@ class Version20160725000000 extends AbstractMigration
         $this->importAttributeTypes();
         $this->migrateOldPermissions();
         $this->addPermissions();
+        $this->cleanupOldPermissions();
         $this->importAttributeKeys();
         $this->addDashboard();
         $this->updateFileManager();

@@ -2,7 +2,7 @@
 namespace Concrete\Core\Permission\Assignment;
 
 use Loader;
-use PermissionAccess;
+use Concrete\Core\Permission\Access\Access;
 use PermissionKeyCategory;
 
 class Assignment
@@ -51,7 +51,7 @@ class Assignment
         $db->Execute('update PermissionAssignments set paID = 0 where pkID = ?', array($this->pk->getPermissionKeyID()));
     }
 
-    public function assignPermissionAccess(PermissionAccess $pa)
+    public function assignPermissionAccess(Access $pa)
     {
         $db = Loader::db();
         $db->Replace('PermissionAssignments', array('paID' => $pa->getPermissionAccessID(), 'pkID' => $this->pk->getPermissionKeyID()), array('pkID'), true);
@@ -71,7 +71,7 @@ class Assignment
 
         $db = Loader::db();
         $paID = $db->GetOne('select paID from PermissionAssignments where pkID = ?', array($this->pk->getPermissionKeyID()));
-        $pa = PermissionAccess::getByID($paID, $this->pk);
+        $pa = Access::getByID($paID, $this->pk);
 
         $cache->save($item->set($pa));
 

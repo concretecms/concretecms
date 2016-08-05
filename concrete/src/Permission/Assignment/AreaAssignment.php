@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Core\Permission\Assignment;
 
-use PermissionAccess;
+use Concrete\Core\Permission\Access\Access;
 use Concrete\Core\Area\Area;
 use Stack;
 use Page;
@@ -86,7 +86,7 @@ class AreaAssignment extends Assignment
                 )
             );
             if ($r) {
-                return PermissionAccess::getByID($r, $this->pk, false);
+                return Access::getByID($r, $this->pk, false);
             }
         } elseif (isset($this->inheritedPermissions[$this->pk->getPermissionKeyHandle()])) {
             // this is a page
@@ -121,7 +121,7 @@ class AreaAssignment extends Assignment
         $db->Execute('update AreaPermissionAssignments set paID = 0 where pkID = ? and cID = ? and arHandle = ?', array($this->pk->getPermissionKeyID(), $c->getCollectionID(), $area->getAreaHandle()));
     }
 
-    public function assignPermissionAccess(PermissionAccess $pa)
+    public function assignPermissionAccess(Access $pa)
     {
         $db = Database::connection();
         $db->Replace(
