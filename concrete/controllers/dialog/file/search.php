@@ -44,7 +44,9 @@ class Search extends BackendInterfaceController
             $this->set('result', $result);
         }
 
-        $this->set('header', new Header($query));
+        $header = new Header($query);
+        $header->setIncludeBreadcrumb(true);
+        $this->set('header', $header);
         $this->requireAsset('selectize');
     }
 }

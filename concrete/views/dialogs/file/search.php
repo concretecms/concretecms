@@ -4,9 +4,6 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 <div data-search="files" class="ccm-ui">
 
-	<div class="ccm-search-results-breadcrumb">
-	</div>
-
 	<?php
 	$header->render();
 	?>

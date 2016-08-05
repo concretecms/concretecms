@@ -9,6 +9,15 @@ class Header extends ElementController
 {
 
     protected $query;
+    protected $includeBreadcrumb = false;
+
+    /**
+     * @param boolean $includeBreadcrumb
+     */
+    public function setIncludeBreadcrumb($includeBreadcrumb)
+    {
+        $this->includeBreadcrumb = $includeBreadcrumb;
+    }
 
     public function __construct(Query $query = null)
     {
@@ -24,6 +33,7 @@ class Header extends ElementController
     public function view()
     {
         $this->set('currentFolder', 0);
+        $this->set('includeBreadcrumb', $this->includeBreadcrumb);
         $this->set('addFolderAction', \URL::to('/ccm/system/file/folder/add'));
         $this->set('query', $this->query);
         $this->set('form', \Core::make('helper/form'));

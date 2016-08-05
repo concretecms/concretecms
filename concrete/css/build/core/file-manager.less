@@ -9,6 +9,11 @@
 /**
  * Dashboard/Dialog Header Search
 */
+
+div.ccm-file-manager-search-form + div.ui-dialog-content {
+  .border-top-radius(0px);
+}
+
 div.ccm-file-manager-search-form {
   float: right;
   margin-top: -5px;
@@ -121,16 +126,27 @@ table.ccm-file-manager-list {
  */
 div.ui-dialog {
   div.ccm-file-manager-search-form {
-    position: absolute;
-    right: 60px;
-    top: 17px;
     float: none;
-    z-index: @index-level-dialog-title-bar-search;
+    position: relative;
+    width: auto;
+    box-sizing: content-box;
+    height: 34px;
+    padding-top: 4px;
+    padding-bottom: 4px;
+    background-color: rgba(71, 181, 251, 0.11);
+    .border-top-radius(4px);
+
     ul.ccm-file-manager-navigation {
       text-align: left;
       position: absolute;
       top: -3px;
       left: -240px;
+    }
+
+    form {
+      position: absolute;
+      right: 4px;
+      width: 400px;
     }
   }
 
@@ -141,10 +157,8 @@ div.ui-dialog {
     display: inline-block;
     position: absolute;
     height: 15px;
-    top: 0px;
-    left: 150px;
-
-    width: 400px;
+    top: 10px;
+    left: 10px;
     ol {
       margin-bottom: 0px;
       li a, li span {
@@ -204,12 +218,14 @@ div.ccm-file-selector {
 
     div.ccm-file-selector-file-selected-thumbnail {
       margin-right: 10px; float: left;
+      img {
+        max-width: 20px;
+        max-height: 20px;
+      }
     }
 
     div.ccm-file-selector-file-selected-title {
-      font-size: 11px; word-wrap: break-word;
-      color: #333;
-      font-weight: normal;
+      word-wrap: break-word;
     }
   }
 }
