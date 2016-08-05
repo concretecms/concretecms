@@ -278,6 +278,12 @@ table.ccm-search-results-table {
         color: #999;
         display: block;
 
+        &:active, &:focus {
+          outline: 0px !important;
+          text-decoration: none;
+          color:  #999;
+        }
+
         &:hover {
           text-decoration: none;
           color: #333;
@@ -538,12 +544,14 @@ div.ccm-search-results-breadcrumb {
     position: relative;
 
     > li a {
-      color: #999;
-      text-decoration: none;
+      color: #777;
+      .transition(0.1s linear all);
     }
     > li > a {
-      &:hover {
-        text-decoration: underline;
+      &:hover, &:focus {
+        text-decoration: none;
+        color: #333;
+        outline: none;
       }
     }
 

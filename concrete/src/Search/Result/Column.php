@@ -67,7 +67,10 @@ class Column
             $this->isColumnSortable = $column->isColumnSortable();
             $this->key = $column->getColumnKey();
             $this->title = $column->getColumnName();
-            $this->className = $column->getSortClassName($result);
+            $className = $column->getSortClassName($result);
+            if ($className) {
+                $this->className = $className;
+            }
             $this->sortURL = $column->getSortURL($result);
         }
     }

@@ -264,12 +264,6 @@
     ConcreteFileManager.prototype.setupBreadcrumb = function(result) {
         var my = this;
 
-        // If we're calling this from a dialog, we move it out to the top of the dialog so it can display properly
-        var $container = my.$element.closest('div.ui-dialog').find('.ui-dialog-titlebar');
-        if ($container.length) {
-            my.$breadcrumb.appendTo($container);
-        }
-
         if (result.breadcrumb) {
             my.$breadcrumb.html('');
             var $nav = $('<ol data-search-navigation="breadcrumb" class="breadcrumb" />');
@@ -420,8 +414,7 @@
 
     ConcreteFileManager.prototype.refreshResults = function(files) {
         var my = this;
-        my.reloadFolder();
-
+        my.loadFolder(this.currentFolder, false, true);
     }
 
     ConcreteFileManager.prototype._launchUploadCompleteDialog = function(files) {
@@ -533,8 +526,8 @@
                 $(this).parent().find('ul').remove();
                 $(this).parent().append($list);
 
-                var fileMenu = new ConcreteFileMenu(false, {'container': my});
-                fileMenu.setupMenuOptions($list);
+                var fileMenu = new ConcreteFileMenu();
+                fileMenu.setupMenuOptions($(this).parent());
 
                 ConcreteEvent.publish('ConcreteMenuShow', {menu: my, menuElement: $(this).parent()});
             }
@@ -612,7 +605,7 @@
 
     }
 
-    ConcreteFileManager.prototype.loadFolder = function(folderID, url) {
+    ConcreteFileManager.prototype.loadFolder = function(folderID, url, showRecentFirst) {
         var my = this;
         var data = my.getSearchData();
         if (!url) {
@@ -623,8 +616,15 @@
             my.options.result.baseUrl = url; // probably a nicer way to do this
         }
         data.push({'name': 'folder', 'value': folderID});
+
+        if (showRecentFirst) {
+            data.push({'name': 'ccm_order_by', 'value': 'folderItemModified'});
+            data.push({'name': 'ccm_order_by_direction', 'value': 'desc'});
+        }
+
         my.currentFolder = folderID;
         my.ajaxUpdate(url, data);
+
         my.$element.find('#ccm-file-manager-upload input[name=currentFolder]').val(my.currentFolder);
     }
 
@@ -653,7 +653,7 @@
         // If we're calling this from a dialog, we move it out to the top of the dialog so it can display properly
         var $container = my.$element.closest('div.ui-dialog');
         if ($container.length) {
-            my.$element.find('div[data-header=file-manager]').appendTo($container);
+            my.$element.find('div[data-header=file-manager]').insertBefore($container.find('.ui-dialog-content'));
         }
 
         $('form[data-advanced-search-form]').concreteAjaxForm({
@@ -686,7 +686,7 @@
      * Static Methods
      */
     ConcreteFileManager.launchDialog = function(callback, opts ) {
-        var w = $(window).width() - 53;
+        var w = $(window).width() - 100;
         var data = {};
         var i;
 
@@ -712,7 +712,7 @@
 
         $.fn.dialog.open({
             width: w,
-            height: '100%',
+            height: '70%',
             href: CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/file/search',
             modal: true,
             data: data,

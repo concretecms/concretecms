@@ -1,6 +1,11 @@
 <?php defined('C5_EXECUTE') or die("Access Denied."); ?>
 
 <div class="ccm-file-manager-search-form ccm-ui" data-header="file-manager">
+    <?php if ($includeBreadcrumb) { ?>
+        <div class="ccm-search-results-breadcrumb">
+        </div>
+    <?php } ?>
+
     <form method="get" action="<?php echo URL::to('/ccm/system/search/files/basic')?>">
         <a class="ccm-file-manager-reset-search" href="#" data-button-action-url="<?=URL::to('/ccm/system/search/files/clear')?>" data-button-action="clear-search"><?=t('Reset Search')?></a>
         <a class="ccm-file-manager-launch-advanced-search" href="<?php echo URL::to('/ccm/system/dialogs/file/advanced_search')?>" data-launch-dialog="advanced-search"><?=t('Advanced')?></a>
@@ -20,8 +25,6 @@
         </ul>
     </form>
 </div>
-<div class="clearfix"></div>
-
 <div style="display: none">
     <div data-dialog="add-file-manager-folder" class="ccm-ui">
         <form data-dialog-form="add-folder" method="post" action="<?=$addFolderAction?>">

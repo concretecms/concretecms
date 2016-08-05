@@ -329,3 +329,5 @@ jQuery.fn.dialog.closeAll = function() {
     $($(".ui-dialog-content").get().reverse()).jqdialog('close');
 }
 
+$.ui.dialog.prototype._focusTabbable = $.noop;
+
