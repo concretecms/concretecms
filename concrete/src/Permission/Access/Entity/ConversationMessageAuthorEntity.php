@@ -2,7 +2,7 @@
 namespace Concrete\Core\Permission\Access\Entity;
 
 use Loader;
-use PermissionAccess;
+use Concrete\Core\Permission\Access\Access as PermissionAccess;
 use Config;
 use UserInfo;
 use User;

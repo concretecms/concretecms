@@ -6,7 +6,7 @@ use Concrete\Core\Page\Controller\DashboardPageController;
 use Loader;
 use PermissionKey;
 use TaskPermission;
-use PermissionAccess;
+use Concrete\Core\Permission\Access\Access;
 use FileSet;
 
 class Permissions extends DashboardPageController
@@ -24,7 +24,7 @@ class Permissions extends DashboardPageController
                     $pt = $pk->getPermissionAssignmentObject();
                     $pt->clearPermissionAssignment();
                     if ($paID > 0) {
-                        $pa = PermissionAccess::getByID($paID, $pk);
+                        $pa = Access::getByID($paID, $pk);
                         if (is_object($pa)) {
                             $pt->assignPermissionAccess($pa);
                         }

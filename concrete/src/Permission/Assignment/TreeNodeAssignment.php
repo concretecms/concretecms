@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Core\Permission\Assignment;
 
-use PermissionAccess;
+use Concrete\Core\Permission\Access\Access;
 use PermissionKeyCategory;
 use Loader;
 
@@ -26,7 +26,7 @@ class TreeNodeAssignment extends Assignment
             $this->permissionObject->getTreeNodePermissionsNodeID(), $this->pk->getPermissionKeyID(),
         ));
 
-        return PermissionAccess::getByID($r, $this->pk);
+        return Access::getByID($r, $this->pk);
     }
 
     public function clearPermissionAssignment()
@@ -35,7 +35,7 @@ class TreeNodeAssignment extends Assignment
         $db->Execute('update TreeNodePermissionAssignments set paID = 0 where pkID = ? and treeNodeID = ?', array($this->pk->getPermissionKeyID(), $this->permissionObject->getTreeNodeID()));
     }
 
-    public function assignPermissionAccess(PermissionAccess $pa)
+    public function assignPermissionAccess(Access $pa)
     {
         $db = Loader::db();
         $db->Replace('TreeNodePermissionAssignments', array('treeNodeID' => $this->permissionObject->getTreeNodeID(), 'paID' => $pa->getPermissionAccessID(), 'pkID' => $this->pk->getPermissionKeyID()), array('treeNodeID', 'pkID'), true);

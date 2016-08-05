@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Core\Permission\Assignment;
 
-use PermissionAccess;
+use Concrete\Core\Permission\Access\Access;
 use Loader;
 
 class GatheringAssignment extends Assignment
@@ -13,7 +13,7 @@ class GatheringAssignment extends Assignment
             $this->permissionObject->getGatheringID(), $this->pk->getPermissionKeyID(),
         ));
 
-        return PermissionAccess::getByID($r, $this->pk);
+        return Access::getByID($r, $this->pk);
     }
 
     public function clearPermissionAssignment()
@@ -22,7 +22,7 @@ class GatheringAssignment extends Assignment
         $db->Execute('update GatheringPermissionAssignments set paID = 0 where pkID = ? and gaID = ?', array($this->pk->getPermissionKeyID(), $this->permissionObject->getGatheringID()));
     }
 
-    public function assignPermissionAccess(PermissionAccess $pa)
+    public function assignPermissionAccess(Access $pa)
     {
         $db = Loader::db();
         $db->Replace('GatheringPermissionAssignments', array('gaID' => $this->getPermissionObject()->getGatheringID(), 'paID' => $pa->getPermissionAccessID(), 'pkID' => $this->pk->getPermissionKeyID()), array('gaID', 'pkID'), true);

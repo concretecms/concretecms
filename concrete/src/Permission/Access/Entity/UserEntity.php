@@ -3,7 +3,7 @@ namespace Concrete\Core\Permission\Access\Entity;
 
 use Config;
 use Loader;
-use PermissionAccess;
+use Concrete\Core\Permission\Access\Access as PermissionAccess;
 use URL;
 use Concrete\Core\User\UserInfo;
 

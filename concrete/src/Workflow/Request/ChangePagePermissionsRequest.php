@@ -8,7 +8,7 @@ use Concrete\Core\Workflow\Description as WorkflowDescription;
 use Permissions;
 use PermissionKey;
 use Concrete\Core\Workflow\Progress\Progress as WorkflowProgress;
-use PermissionAccess;
+use Concrete\Core\Permission\Access\Access as PermissionAccess;
 use Concrete\Core\Workflow\Progress\Action\Action as WorkflowProgressAction;
 use Concrete\Core\Workflow\Progress\Response as WorkflowProgressResponse;
 use Concrete\Core\Permission\Set as PermissionSet;

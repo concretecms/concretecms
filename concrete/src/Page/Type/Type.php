@@ -11,7 +11,7 @@ use Loader;
 use Concrete\Core\Foundation\Object;
 use PageTemplate;
 use PermissionKey;
-use PermissionAccess;
+use Concrete\Core\Permission\Access\Access as PermissionAccess;
 use Concrete\Core\Permission\Access\Entity\PageOwnerEntity as PageOwnerPermissionAccessEntity;
 use Concrete\Core\Page\Type\Composer\FormLayoutSet as PageTypeComposerFormLayoutSet;
 use Concrete\Core\Page\Type\Composer\Control\Type\Type as PageTypeComposerControlType;

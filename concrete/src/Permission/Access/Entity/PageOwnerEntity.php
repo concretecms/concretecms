@@ -3,7 +3,7 @@ namespace Concrete\Core\Permission\Access\Entity;
 
 use Concrete\Core\Page\Page;
 use Database;
-use PermissionAccess;
+use Concrete\Core\Permission\Access\Access as PermissionAccess;
 use Config;
 use UserInfo;
 use Concrete\Core\Permission\Access\PageAccess as PagePermissionAccess;

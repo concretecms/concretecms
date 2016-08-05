@@ -8,7 +8,7 @@ use Concrete\Core\Workflow\Progress\Action\CancelAction as WorkflowProgressCance
 use Concrete\Core\Workflow\Progress\BasicData as BasicWorkflowProgressData;
 use Concrete\Core\Workflow\Progress\Progress as WorkflowProgress;
 use Core;
-use PermissionAccess;
+use Concrete\Core\Permission\Access\Access as PermissionAccess;
 use PermissionKey;
 use User;
 use UserInfo;

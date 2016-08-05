@@ -8,7 +8,7 @@ use Concrete\Core\Permission\Key\FileSetKey as FileSetPermissionKey;
 use Events;
 use File as ConcreteFile;
 use Database;
-use PermissionAccess;
+use Concrete\Core\Permission\Access\Access as PermissionAccess;
 use PermissionKey;
 use Permissions;
 use User;

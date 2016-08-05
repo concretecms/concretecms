@@ -38,7 +38,7 @@ use GroupTree;
 use Hautelook\Phpass\PasswordHash;
 use Package as BasePackage;
 use Page;
-use PermissionAccess;
+use Concrete\Core\Permission\Access\Access as PermissionAccess;
 use PermissionKey;
 use User;
 use UserInfo;

@@ -26,7 +26,7 @@ use UserInfo;
 use PageType;
 use PageTheme;
 use Concrete\Core\Permission\Key\PageKey as PagePermissionKey;
-use PermissionAccess;
+use Concrete\Core\Permission\Access\Access as PermissionAccess;
 use Concrete\Core\Package\PackageList;
 use Concrete\Core\Permission\Access\Entity\Entity as PermissionAccessEntity;
 use Concrete\Core\Permission\Access\Entity\GroupEntity as GroupPermissionAccessEntity;

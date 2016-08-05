@@ -6,7 +6,7 @@ use Concrete\Core\Permission\Key\Key;
 use Loader;
 use PermissionKey;
 use TaskPermission;
-use PermissionAccess;
+use Concrete\Core\Permission\Access\Access as PermissionAccess;
 
 class Notification extends DashboardPageController
 {

@@ -2,7 +2,7 @@
 namespace Concrete\Core\Permission\Assignment;
 
 use Concrete\Core\Permission\Key\Key;
-use PermissionAccess;
+use Concrete\Core\Permission\Access\Access;
 use Core;
 use Loader;
 
@@ -31,7 +31,7 @@ class PageAssignment extends Assignment
 
         $db = Loader::db();
         $r = $db->GetOne('select paID from PagePermissionAssignments where cID = ? and pkID = ?', array($this->getPermissionObject()->getPermissionsCollectionID(), $this->pk->getPermissionKeyID()));
-        $pa = $r ? PermissionAccess::getByID($r, $this->pk, false) : null;
+        $pa = $r ? Access::getByID($r, $this->pk, false) : null;
 
         if (is_object($pa)) {
             if ($this->getPermissionObject()->isPageDraft() && $this->getPermissionObject()->getCollectionInheritance() == 'PARENT' && is_object($pageType = $this->getPermissionObject()->getPageTypeObject()) && isset($this->inheritedPageTypeDraftPermissions[$this->pk->getPermissionKeyHandle()])) {
@@ -63,7 +63,7 @@ class PageAssignment extends Assignment
         $cache->delete($identifier);
     }
 
-    public function assignPermissionAccess(PermissionAccess $pa)
+    public function assignPermissionAccess(Access $pa)
     {
         $db = Loader::db();
         $db->Replace('PagePermissionAssignments', array('cID' => $this->getPermissionObject()->getPermissionsCollectionID(), 'paID' => $pa->getPermissionAccessID(), 'pkID' => $this->pk->getPermissionKeyID()), array('cID', 'pkID'), true);
