@@ -12,7 +12,6 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class UserSignup implements SubjectInterface
 {
-
     /**
      * @ORM\Id @ORM\Column(type="integer", options={"unsigned":true})
      * @ORM\GeneratedValue(strategy="AUTO")
@@ -58,13 +57,8 @@ class UserSignup implements SubjectInterface
         return $this->createdBy;
     }
 
-
     public function getUsersToExcludeFromNotification()
     {
-        if (is_object($this->createdBy)) {
-            return array($this->createdBy);
-        }
+        return is_object($this->createdBy) ? [$this->createdBy] : [];
     }
-
-
 }
