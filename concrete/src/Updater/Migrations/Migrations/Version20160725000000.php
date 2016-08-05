@@ -853,6 +853,23 @@ class Version20160725000000 extends AbstractMigration
                 $siteConfig->save('seo.tracking.code.footer', $footer);
             }
 
+            // migrate public profiles
+            $r = \Config::get('concrete.user.profiles_enabled');
+            if ($r) {
+                $siteConfig->save('user.profiles_enabled', $r);
+            }
+            $r = \Config::get('concrete.user.gravatar.enabled');
+            if ($r) {
+                $siteConfig->save('user.gravatar.enabled', $r);
+            }
+            $r = \Config::get('concrete.user.gravatar.max_level');
+            if ($r) {
+                $siteConfig->save('user.gravatar.max_level', $r);
+            }
+            $r = \Config::get('concrete.user.gravatar.image_set');
+            if ($r) {
+                $siteConfig->save('user.gravatar.image_set', $r);
+            }
         }
     }
 
