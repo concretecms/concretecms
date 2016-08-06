@@ -312,13 +312,12 @@ jQuery.fn.dialog.replaceTop = function(html) {
 }
 
 jQuery.fn.dialog.showLoader = function(text) {
-    $('body').addClass('ccm-loading');
+    NProgress.start();
 }
 
 jQuery.fn.dialog.hideLoader = function() {
-    $('body').removeClass('ccm-loading');
+    NProgress.done();
 }
-
 
 jQuery.fn.dialog.closeTop = function() {
     $dialog = jQuery.fn.dialog.getTop();
