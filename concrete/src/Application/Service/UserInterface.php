@@ -1,6 +1,8 @@
 <?php
 namespace Concrete\Core\Application\Service;
 
+use Concrete\Core\Asset\JavascriptInlineAsset;
+use Concrete\Core\Http\ResponseAssetGroup;
 use PermissionKey;
 use User as ConcreteUser;
 use Loader;
@@ -359,33 +361,39 @@ class UserInterface
     {
         $defaults = array(
             'type' => 'success',
-            'icon' => 'ok',
+            'icon' => 'fa fa-check-mark',
             'title' => false,
-            'message' => false,
+            'text' => false,
+            'hide' => false,
             'buttons' => array(),
         );
 
         // overwrite all the defaults with the arguments
         $arguments = array_merge($defaults, $arguments);
 
-        if ($arguments['title']) {
-            $messageText = '<h3>' . $arguments['title'] . '</h3>' . $arguments['message'];
-        } else {
-            $messageText = '<h3>' . $arguments['message'] . '</h3>';
-        }
+        $text = $arguments['text'];
 
         if (count($arguments['buttons']) > 0) {
-            $messageText .= '<div class="ccm-notification-inner-buttons">';
-            foreach ($arguments['buttons'] as $button) {
-                $messageText .= $button;
+            $btn_group = '';
+            if (count($arguments['buttons']) > 1) {
+                $btn_group = 'btn-group';
             }
-            $messageText .= '</div>';
+            $text .= '<div class="' . $btn_group . ' ccm-notification-inner-buttons">';
+            foreach ($arguments['buttons'] as $button) {
+                $text .= $button;
+            }
+            $text .= '</div>';
         }
 
-        $content = '<div id="ccm-notification-page-alert" class="ccm-ui ccm-notification ccm-notification-' . $arguments['type'] . '">';
-        $content .= '<i class="ccm-notification-icon fa fa-' . $arguments['icon'] . '"></i><div class="ccm-notification-inner">' . $messageText . '</div>';
-        $content .= '<div class="ccm-notification-actions"><a href="#" data-dismiss-alert="page-alert">' . t('Hide') . '</a></div></div>';
+        $arguments['text'] = $text;
 
+        unset($arguments['buttons']);
+        $string = json_encode($arguments);
+
+
+        $content = '<script type="text/javascript">$(function() {';
+        $content .= 'new PNotify(' . $string . ');';
+        $content .= '});</script>';
         return $content;
     }
 }

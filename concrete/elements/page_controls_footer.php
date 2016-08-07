@@ -454,9 +454,9 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
         if ($pageInUseBySomeoneElse) {
             echo $cih->notify(array(
                 'title' => t('Editing Unavailable.'),
-                'message' => t("%s is currently editing this page.", $c->getCollectionCheckedOutUserName()),
+                'text' => t("%s is currently editing this page.", $c->getCollectionCheckedOutUserName()),
                 'type' => 'info',
-                'icon' => 'exclamation-sign',
+                'icon' => 'fa fa-exclamation-circle',
             ));
         } else {
             if ($c->getCollectionPointerID() > 0) {
@@ -468,9 +468,9 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
                 }
                 echo $cih->notify(array(
                     'title' => t('Page Alias.'),
-                    'message' => t("This page is an alias of one that actually appears elsewhere."),
+                    'text' => t("This page is an alias of one that actually appears elsewhere."),
                     'type' => 'info',
-                    'icon' => 'info-sign',
+                    'icon' => 'fa fa-info-circle',
                     'buttons' => $buttons,
                 ));
             }
@@ -545,9 +545,9 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
                         if ($c->isPageDraft()) {
                             echo $cih->notify(array(
                                 'title' => t('Page Draft.'),
-                                'message' => t("This is an un-published draft."),
+                                'text' => t("This is an un-published draft."),
                                 'type' => 'info',
-                                'icon' => 'exclamation',
+                                'icon' => 'fa fa-exclamation-circle',
                             ));
                         } else {
                             $buttons = array();
@@ -575,9 +575,9 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
                             }
                             echo $cih->notify(array(
                                 'title' => t('Page is Pending Approval.'),
-                                'message' => t("This page is newer than what appears to visitors on your live site."),
+                                'text' => t("This page is newer than what appears to visitors on your live site."),
                                 'type' => 'info',
-                                'icon' => 'cog',
+                                'icon' => 'fa fa-cog',
                                 'buttons' => $buttons,
                             ));
                         }
@@ -590,9 +590,9 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
                             $button = '<a href="' . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $cID . '&ctask=publish-now' . $token . '" class="btn btn-primary btn-xs">Publish Now</a>';
                             echo $cih->notify(array(
                                 'title' => t('Publish Pending.'),
-                                'message' => $message,
+                                'text' => $message,
                                 'type' => 'info',
-                                'icon' => 'cog',
+                                'icon' => 'fa fa-cog',
                                 'buttons' => array($button),
                             ));
                         }

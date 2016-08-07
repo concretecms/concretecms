@@ -9,6 +9,7 @@ $sh = Loader::helper('concrete/dashboard/sitemap');
 	<div class="ccm-dashboard-content-full">
 	<script type="text/javascript">
 		$(function() {
+
 			$('div#ccm-full-sitemap-container').concreteSitemap({
 				includeSystemPages: $('input[name=includeSystemPages]').is(':checked')
 			});
