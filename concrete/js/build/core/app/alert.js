@@ -1,12 +1,44 @@
 /**
  * Simple alert using dialog class.
  */
-
+PNotify.prototype.options.styling = {
+    container: "ccm-notification",
+    notice: "ccm-notification-warning",
+    notice_icon: "glyphicon glyphicon-exclamation-sign",
+    info: "ccm-notification-info",
+    info_icon: "glyphicon glyphicon-info-sign",
+    success: "ccm-notification-success",
+    success_icon: "glyphicon glyphicon-ok-sign",
+    error: "ccm-notification-danger",
+    error_icon: "glyphicon glyphicon-warning-sign",
+    closer: "ccm-notification-closer",
+    pin_up: false,
+    pin_down: false
+}
+PNotify.prototype.options.width = '400px';
+PNotify.prototype.options.addclass = 'ccm-ui';
+PNotify.prototype.options.animate = {
+    animate: true,
+    in_class: 'fadeIn',
+    out_class: 'bounceOutRight'
+}
+PNotify.prototype.options.buttons.closer_hover = false;
 
 !function(global, $) {
     'use strict';
 
     var ConcreteAlert = {
+
+        /*
+        defaultStack: {
+            dir1: "down",
+            dir2: "left",
+            push: "bottom",
+            spacing1: 36,
+            spacing2: 36,
+            context: $("body"),
+            modal: false
+        },*/
 
         dialog : function(title, message, onCloseFn) {
             $('<div id="ccm-popup-alert" class="ccm-ui"><div id="ccm-popup-alert-message" class="alert alert-danger">' + message + '</div></div>').dialog({
@@ -29,8 +61,8 @@
 
         error: function(defaults) {
             var options = $.extend({
-                type: 'danger',
-                icon: 'times'
+                type: 'error',
+                icon: 'exclamation-circle'
             }, defaults);
 
             return this.notify(options);
@@ -47,6 +79,17 @@
                 callback: function() {}
             }, defaults);
 
+            new PNotify({
+                title: options.title,
+                text: options.message,
+                icon: 'fa fa-' + options.icon,
+                type: options.type,
+                delay: options.delay,
+                after_close: options.callback,
+                stack: ConcreteAlert.defaultStack
+            });
+
+            /*
             var messageText = '',
                 $appendTo = (options.appendTo) ? $(options.appendTo) : $(document.body);
 
@@ -81,6 +124,7 @@
                 removeElem();
                 clearTimeout(timeout);
             });
+             */
         }
 
     };
