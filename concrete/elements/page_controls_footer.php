@@ -264,10 +264,7 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
                     ?>
                     <li class="pull-left">
                         <a href="<?php echo URL::to('/dashboard/pages/types/output', $c->getPageTypeID()); ?>">
-                            <i class="fa fa-arrow-left"></i>
-                            <span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-edit-mode">
-                                <?php echo tc('toolbar', 'Exit Edit Defaults'); ?>
-                            </span>
+                            <i class="fa fa-arrow-left"></i><span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-edit-mode"><?php echo tc('toolbar', 'Exit Edit Defaults'); ?></span>
                          </a>
                      </li>
                      <?php
@@ -289,8 +286,7 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
                                 data-panel-url="<?= URL::to('/ccm/system/panels/page/check_in') ?>"
                                 title="<?= t('Exit Edit Mode') ?>"
                             >
-                                <i class="fa fa-pencil"></i>
-                                <span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-edit-mode"><?= tc('toolbar', 'Exit Edit Mode') ?></span>
+                                <i class="fa fa-pencil"></i><span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-edit-mode"><?= tc('toolbar', 'Exit Edit Mode') ?></span>
                             </a>
                         </li>
                         <?php
@@ -303,8 +299,7 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
                                 href="<?= DIR_REL ?>/<?= DISPATCHER_FILENAME ?>?cID=<?= $cID ?>&ctask=check-out<?= $token ?>"
                                 title="<?= t('Edit This Page') ?>"
                             >
-                                <i class="fa fa-pencil"></i>
-                                <span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-edit-mode"><?= tc('toolbar', 'Edit Mode') ?></span>
+                                <i class="fa fa-pencil"></i><span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-edit-mode"><?= tc('toolbar', 'Edit Mode') ?></span>
                             </a>
                         </li>
                         <?php
@@ -333,15 +328,11 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
                                 }
                                 ?>
 
-                                <i class="fa fa-cog"></i>
-                                <span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-settings">
-                                    <?php
+                                <i class="fa fa-cog"></i><span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-settings"><?php
                                     if ($hasComposer) {
                                         ?><?= tc('toolbar', 'Composer') ?> / <?php
                                     }
-                                    ?>
-                                    <?= tc('toolbar', 'Page Settings') ?>
-                                </span>
+                                    ?><?= tc('toolbar', 'Page Settings') ?></span>
                             </a>
                         </li>
                         <?php
@@ -353,13 +344,11 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
                     <li data-guide-toolbar-action="add-content" class="ccm-toolbar-add pull-left hidden-xs">
                         <?php if ($c->isEditMode()) { ?>
                             <a href="#" data-launch-panel="add-block" data-panel-url="<?= URL::to('/ccm/system/panels/add') ?>" title="<?= t('Add Content to The Page') ?>">
-                                <i class="fa fa-plus"></i>
-                                <span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-add"><?= tc('toolbar', 'Add Content') ?></span>
+                                <i class="fa fa-plus"></i><span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-add"><?= tc('toolbar', 'Add Content') ?></span>
                             </a>
                         <?php } else { ?>
                             <a href="<?= DIR_REL ?>/<?= DISPATCHER_FILENAME ?>?cID=<?= $cID ?>&ctask=check-out-add-block<?= $token ?>" title="<?= t('Add Content to The Page') ?>">
-                                <i class="fa fa-plus"></i>
-                                <span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-add"><?= tc('toolbar', 'Add Content') ?></span>
+                                <i class="fa fa-plus"></i><span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-add"><?= tc('toolbar', 'Add Content') ?></span>
                             </a>
                         <?php } ?>
                     </li>
@@ -391,8 +380,7 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
                     ?>
                     <li data-guide-toolbar-action="dashboard" class="pull-right hidden-xs ">
                         <a href="<?= URL::to('/dashboard') ?>" data-launch-panel="dashboard" title="<?= t('Dashboard – Change Site-wide Settings') ?>">
-                            <i class="fa fa-sliders"></i>
-                            <span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-site-settings"><?= tc('toolbar', 'Dashboard') ?></span>
+                            <i class="fa fa-sliders"></i><span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-site-settings"><?= tc('toolbar', 'Dashboard') ?></span>
                         </a>
                     </li>
                     <?php
@@ -400,8 +388,7 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
                     ?>
                     <li class="pull-right hidden-xs">
                         <a href="<?=URL::to('/login', 'logout', $valt->generate('logout'))?>" title="<?=t('Sign Out')?>">
-                            <i class="fa fa-sign-out"></i>
-                            <span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-site-settings"><?= tc('toolbar', 'Sign Out') ?></span>
+                            <i class="fa fa-sign-out"></i><span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-site-settings"><?= tc('toolbar', 'Sign Out') ?></span>
                         </a>
                     </li>
                     <?php
@@ -409,8 +396,7 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
                 ?>
                 <li data-guide-toolbar-action="sitemap" class="pull-right hidden-xs">
                     <a href="#" data-panel-url="<?= URL::to('/ccm/system/panels/sitemap') ?>" title="<?= t('Add Pages and Navigate Your Site') ?>" data-launch-panel="sitemap">
-                        <i class="fa fa-files-o"></i>
-                        <span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-add-page"><?= tc('toolbar', 'Pages') ?></span>
+                        <i class="fa fa-files-o"></i><span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-add-page"><?= tc('toolbar', 'Pages') ?></span>
                     </a>
                 </li>
                 <?php
@@ -421,8 +407,7 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
                         ?>
                         <li class="pull-right hidden-xs">
                             <a href="#" data-panel-url="<?= URL::to('/ccm/system/panels/multilingual') ?>" title="<?= t('Navigate this page in other languages') ?>" data-launch-panel="multilingual">
-                                <?php echo $ch->getFlagIcon($section->getIcon()); ?>
-                                <span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-add-page"><?=$section->getLanguageText()?></span>
+                                <?php echo $ch->getFlagIcon($section->getIcon()); ?><span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-add-page"><?=$section->getLanguageText()?></span>
                             </a>
                         </li>
                         <?php
