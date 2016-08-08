@@ -22,10 +22,12 @@ if (!$fp->canViewFileInFileManager()) {
 
 <?php
 $to = $fv->getTypeObject();
-if ($to->getPackageHandle() != '') {
-    Loader::packageElement('files/view/' . $to->getView(), $to->getPackageHandle(), array('fv' => $fv));
-} else {
-    Loader::element('files/view/' . $to->getView(), array('fv' => $fv));
+if ($to->getView() != '') {
+    if ($to->getPackageHandle() != '') {
+        Loader::packageElement('files/view/' . $to->getView(), $to->getPackageHandle(), array('fv' => $fv));
+    } else {
+        Loader::element('files/view/' . $to->getView(), array('fv' => $fv));
+    }
 }
 ?>
 </div>
