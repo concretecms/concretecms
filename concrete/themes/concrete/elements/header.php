@@ -64,10 +64,7 @@ $config = $site->getConfigRepository();
         </li>
         <li class="pull-right">
             <a href="<?=URL::to('/')?>">
-                <i class="fa fa-home"></i>
-                <span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-site-settings">
-                    <?=tc('toolbar', 'Return to Website') ?>
-                </span>
+                <i class="fa fa-home"></i><span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-site-settings"><?=tc('toolbar', 'Return to Website') ?></span>
             </a>
         </li>
         <li class="pull-right">

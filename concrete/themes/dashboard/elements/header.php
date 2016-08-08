@@ -76,10 +76,7 @@ $large_font = (bool) Config::get('concrete.accessibility.toolbar_large_font');
         <li class="ccm-logo pull-left"><span><?=Loader::helper('concrete/ui')->getToolbarLogoSRC()?></span></li>
         <li class="ccm-toolbar-account pull-left">
             <a href="<?=$backLink?>">
-                <i class="fa fa-arrow-left"></i>
-                <span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-return">
-                    <?= tc('toolbar', 'Return to Website') ?>
-                </span>
+                <i class="fa fa-arrow-left"></i><span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-return"><?= tc('toolbar', 'Return to Website') ?></span>
             </a>
         </li>
         <?php
