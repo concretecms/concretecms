@@ -59,7 +59,7 @@ $seoSet = AttributeSet::getByHandle('seo');
         <?php
 
     }
-    if ($c->getCollectionID() != HOME_CID && is_object($asl) && ($asl->allowEditPaths())) {
+    if (is_object($asl) && ($asl->allowEditPaths())) {
         ?>
             <li>
                 <a href="#" data-launch-panel-detail="page-location"
