@@ -45,6 +45,7 @@ $r = new \Concrete\Core\Http\Request(
     array(),
     array('HTTP_HOST' => 'www.dummyco.com', 'SCRIPT_NAME' => '/path/to/server/index.php')
 );
+define('BASE_URL', 'http://www.dummyco.com/path/to/server');
 \Concrete\Core\Http\Request::setInstance($r);
 
 /*

@@ -316,11 +316,13 @@ class DefaultBooter implements BootInterface, ApplicationAwareInterface
     {
         define('APP_VERSION', $config->get('concrete.version'));
         define('APP_CHARSET', $config->get('concrete.charset'));
-        try {
-            define('BASE_URL', rtrim((string) $this->app->make('url/canonical'), '/'));
-        } catch (\Exception $x) {
-            echo $x->getMessage();
-            die(1);
+        if (!defined('BASE_URL')) {
+            try {
+                define('BASE_URL', rtrim((string) $this->app->make('url/canonical'), '/'));
+            } catch (\Exception $x) {
+                echo $x->getMessage();
+                die(1);
+            }
         }
         define('DIR_REL', $app['app_relative_path']);
     }
