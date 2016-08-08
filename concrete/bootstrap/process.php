@@ -26,57 +26,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 $securityHelper = Loader::helper('security');
 
-if (isset($_REQUEST['btask']) && $_REQUEST['btask'] && $valt->validate()) {
-
-    // these are tasks dealing with blocks (moving up, down, removing)
-
-    switch ($_REQUEST['btask']) {
-
-        case 'remove':
-            $a = Area::get($c, $_REQUEST['arHandle']);
-            if (is_object($a)) {
-                $ax = $a;
-                $cx = $c;
-                if ($a->isGlobalArea()) {
-                    $ax = STACKS_AREA_NAME;
-                    $cx = Stack::getByName($_REQUEST['arHandle']);
-                }
-
-                $b = Block::getByID($_REQUEST['bID'], $cx, $ax);
-                $p = new Permissions($b); // might be block-level, or it might be area level
-                // we're removing a particular block of content
-                if ($p->canDeleteBlock()) {
-                    $nvc = $cx->getVersionToModify();
-
-                    if ($a->isGlobalArea()) {
-                        $xvc = $c->getVersionToModify(); // we need to create a new version of THIS page as well.
-                        $xvc->relateVersionEdits($nvc);
-                    }
-
-                    $b->loadNewCollection($nvc);
-
-                    $b->deleteBlock();
-
-                    $event = new BlockDelete($b, $c);
-                    \Events::dispatch('on_block_delete', $event);
-
-                    $nvc->rescanDisplayOrder($_REQUEST['arHandle']);
-
-                    if (isset($_POST['isAjax'])) {
-                        exit;
-                    }
-
-                    $cID = $securityHelper->sanitizeInt($_GET['cID']);
-
-                    header(
-                        'Location: ' . \Core::getApplicationURL() . '/' . DISPATCHER_FILENAME . '?cID=' . $cID . '&mode=edit' . $step);
-                    exit;
-                }
-            }
-            break;
-    }
-}
-
 if (isset($_GET['atask']) && $_GET['atask'] && $valt->validate()) {
     switch ($_GET['atask']) {
         case 'add_stack':

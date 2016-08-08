@@ -364,26 +364,43 @@ class UserInterface
             'icon' => 'fa fa-check-mark',
             'title' => false,
             'text' => false,
+            'form' => false,
             'hide' => false,
+            'addclass' => 'ccm-notification-page-alert',
             'buttons' => array(),
         );
 
         // overwrite all the defaults with the arguments
         $arguments = array_merge($defaults, $arguments);
 
-        $text = $arguments['text'];
+        $text = '';
+
+        if ($arguments['form']) {
+            $text .= $arguments['form'];
+        }
+
+        $text .= $arguments['text'];
 
         if (count($arguments['buttons']) > 0) {
-            $btn_group = '';
+
+            $text .= '<div class="ccm-notification-inner-buttons">';
             if (count($arguments['buttons']) > 1) {
-                $btn_group = 'btn-group';
+                $text .= '<div class="btn-group">';
             }
-            $text .= '<div class="' . $btn_group . ' ccm-notification-inner-buttons">';
             foreach ($arguments['buttons'] as $button) {
                 $text .= $button;
             }
+            if (count($arguments['buttons']) > 1) {
+                $text .= '</div>';
+            }
+
             $text .= '</div>';
         }
+
+        if ($arguments['form']) {
+            $text .= '</form>';
+        }
+
 
         $arguments['text'] = $text;
 

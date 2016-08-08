@@ -2,7 +2,6 @@
   max-width: 90%;
   font-family: @font-family-sans-serif;
   font-size: @font-size-base;
-  z-index: @index-level-hud;
   -webkit-font-smoothing: antialiased;
   .border-radius(3px);
   padding: 30px 0px 30px 0px;
@@ -56,36 +55,6 @@
       background-color: rgba(255, 255, 255, 0.4);
     }
   }
-
-
-
-  /*
-  * actions version, let's table this for now
-  div.ui-pnotify-closer {
-    position: absolute;
-    bottom: 0px;
-    left: 0px;
-    width: 100%;
-    margin: 0px;
-    font-size: @font-size-small;
-    font-weight: 400;
-    background-color: rgba(17, 47, 76, 0.9);
-    border-top: 1px solid #002a53;
-    .border-bottom-radius(3px);
-    text-align: right;
-    a, span {
-      color: #ffff00;
-      display: inline-block;
-      text-align: center;
-      padding: 6px 10px 6px 10px;
-      margin-left: 0px;
-      &:hover {
-        color: #fff;
-        text-decoration: none;
-      }
-    }
-  }
-    */
 }
 
 div.ccm-notification-info {
@@ -113,6 +82,14 @@ div.ccm-notification-success {
 div.ccm-notification-danger {
   color: #fff;
   background-color: rgba(190, 62, 62, 0.90);
+}
+
+
+div.ccm-notification-page-alert {
+  z-index: @index-level-page-alert;
+  @media (min-width: @screen-sm-min) {
+    right: 60px;
+  }
 }
 
 
