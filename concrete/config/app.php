@@ -338,6 +338,7 @@ return array(
          * Block actions - non UI
          */
         "/ccm/system/block/render/" => array('\Concrete\Controller\Backend\Block::render'),
+        "/ccm/system/block/delete/" => array('\Concrete\Controller\Backend\Block::delete'),
         "/ccm/system/block/action/add/{cID}/{arHandle}/{btID}/{action}" => array('\Concrete\Controller\Backend\Block\Action::add'),
         "/ccm/system/block/action/edit/{cID}/{arHandle}/{bID}/{action}" => array('\Concrete\Controller\Backend\Block\Action::edit'),
         "/ccm/system/block/action/add_composer/{ptComposerFormLayoutSetControlID}/{action}" => array('\Concrete\Controller\Backend\Block\Action::add_composer'),

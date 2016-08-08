@@ -190,16 +190,23 @@
                 arHandle = area.getHandle();
 
             ConcreteToolbar.disableDirectExit();
-            area.removeBlock(block);
-            ConcreteAlert.notify({
-                'message': ccmi18n.deleteBlockMsg,
-                'title': ccmi18n.deleteBlock
-            });
 
-            $.ajax({
+            $.concreteAjax({
                 type: 'POST',
-                url: CCM_DISPATCHER_FILENAME,
-                data: 'cID=' + cID + '&ccm_token=' + CCM_SECURITY_TOKEN + '&isAjax=true&btask=remove&bID=' + bID + '&arHandle=' + encodeURIComponent(arHandle)
+                data: {
+                    arHandle: arHandle,
+                    cID: cID,
+                    ccm_token: CCM_SECURITY_TOKEN,
+                    bID: bID
+                },
+                success: function(r) {
+                    area.removeBlock(block);
+                    ConcreteAlert.notify({
+                        'message': ccmi18n.deleteBlockMsg,
+                        'title': ccmi18n.deleteBlock
+                    });
+                },
+                url: CCM_DISPATCHER_FILENAME + '/ccm/system/block/delete'
             });
         },
 

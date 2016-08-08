@@ -85,8 +85,7 @@ PNotify.prototype.options.buttons.closer_hover = false;
                 icon: 'fa fa-' + options.icon,
                 type: options.type,
                 delay: options.delay,
-                after_close: options.callback,
-                stack: ConcreteAlert.defaultStack
+                after_close: options.callback
             });
 
             /*

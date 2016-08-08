@@ -478,64 +478,48 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
 
             if (is_array($workflowList) && !empty($workflowList)) {
                 ?>
-                <div id="ccm-notification-page-alert-workflow" class="ccm-notification ccm-notification-info">
-                    <div class="ccm-notification-inner-wrapper">
-                        <?php
-                        foreach ($workflowList as $i => $wl) {
-                            $wr = $wl->getWorkflowRequestObject();
-                            $wf = $wl->getWorkflowObject();
-                            ?>
-                            <form method="post" action="<?= $wl->getWorkflowProgressFormAction() ?>" id="ccm-notification-page-alert-form-<?= $i ?>">
-                                <i class="ccm-notification-icon fa fa-info-circle"></i>
-                                <div class="ccm-notification-inner">
-                                    <p><?= $wf->getWorkflowProgressCurrentDescription($wl) ?></p>
-                                    <?php
-                                    $actions = $wl->getWorkflowProgressActions();
-                                    if (!empty($actions)) {
-                                        ?>
-                                        <div class="btn-group">
-                                        <?php
-                                        foreach ($actions as $act) {
-                                            if ($act->getWorkflowProgressActionURL() != '') {
-                                                ?>
-                                                <a href="<?= $act->getWorkflowProgressActionURL() ?>" <?php
-                                            } else {
-                                                ?>
-                                                <button type="submit" name="action_<?= $act->getWorkflowProgressActionTask() ?>"
-                                                <?php
-                                            }
-                                            if (!empty($act->getWorkflowProgressActionExtraButtonParameters())) {
-                                                foreach ($act->getWorkflowProgressActionExtraButtonParameters() as $key => $value) {
-                                                    ?>
-                                                    <?= $key ?>="<?= $value ?>"
-                                                    <?php
-                                                }
-                                            }
-                                            ?>
-                                            class="btn btn-xs <?= $act->getWorkflowProgressActionStyleClass() ?>">
-                                                <?= $act->getWorkflowProgressActionStyleInnerButtonLeftHTML() ?>
-                                                <?= $act->getWorkflowProgressActionLabel() ?>
-                                                <?= $act->getWorkflowProgressActionStyleInnerButtonRightHTML() ?>
-                                            <?php
-                                            if ($act->getWorkflowProgressActionURL() != '') {
-                                                ?></a><?php
-                                            } else {
-                                                ?></button><?php
-                                            }
-                                        }
-                                        ?>
-                                        </div>
-                                        <?php
-                                    }
-                                    ?>
-                                </div>
-                            </form>
+                    <?php
+                    foreach ($workflowList as $i => $wl) {
+                        $wr = $wl->getWorkflowRequestObject();
+                        $wf = $wl->getWorkflowObject();
+                        $form = '<form data-form="workflow" method="post" action="' . $wl->getWorkflowProgressFormAction() . '">';
+                        $text = $wf->getWorkflowProgressCurrentDescription($wl);
+
+                        $actions = $wl->getWorkflowProgressActions();
+                        $buttons = [];
+                        if (!empty($actions)) { ?>
                             <?php
+                            foreach ($actions as $act) {
+                                $parameters = 'class="btn btn-xs ' . $act->getWorkflowProgressActionStyleClass() . '" ';
+                                if (!empty($act->getWorkflowProgressActionExtraButtonParameters())) {
+                                    foreach ($act->getWorkflowProgressActionExtraButtonParameters() as $key => $value) {
+                                        $parameters .= $key . '="' . $value . '" ';
+                                    }
+                                }
+
+                                $inner = $act->getWorkflowProgressActionStyleInnerButtonLeftHTML() . ' ' .
+                                $act->getWorkflowProgressActionLabel() . ' ' .
+                                $act->getWorkflowProgressActionStyleInnerButtonRightHTML();
+
+                                if ($act->getWorkflowProgressActionURL() != '') {
+                                    $button = '<a href="' . $act->getWorkflowProgressActionURL() . '" ' . $parameters . '>' . $inner . '</a>';
+                                } else {
+                                    $button = '<button type="submit" name="action_' . $act->getWorkflowProgressActionTask() . '" ' . $parameters . '>' . $inner . '</button>';
+                                }
+
+                                $buttons[] = $button;
+                            }
                         }
-                        ?>
-                    </div>
-                    <div class="ccm-notification-actions"><a href="#" data-dismiss-alert="page-alert"><?= t('Hide') ?></a></div>
-                </div>
+
+                        echo $cih->notify(array(
+                            'text' => $text,
+                            'type' => 'info',
+                            'form' => $form,
+                            'icon' => 'fa fa-info-circle',
+                            'buttons' => $buttons
+                        ));
+                    }
+                    ?>
                 <?php
             }
 
