@@ -6,10 +6,10 @@ abstract class UserTestCase extends ConcreteDatabaseTestCase
 {
     protected $fixtures = array();
     protected $tables = array(
-        'UserGroups', 'Groups', 'AttributeKeyCategories',
+        'UserGroups', 'Groups',
         'TreeTypes', 'TreeNodes', 'TreeNodePermissionAssignments',
-        'Packages', 'PermissionKeyCategories', 'PermissionKeys', 'TreeNodeTypes', 'Trees',
-        'TreeGroupNodes', 'UserAttributeValues',
+        'PermissionKeyCategories', 'PermissionKeys', 'TreeNodeTypes', 'Trees',
+        'TreeGroupNodes',
     ); // so brutal
 
     protected $metadatas = array(
