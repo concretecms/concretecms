@@ -8,7 +8,7 @@ use Concrete\Core\User\Point\EntryList;
 class UserPointTest extends \ConcreteDatabaseTestCase
 {
     protected $tables = array('UserPointActions', 'Groups', 'TreeTypes', 'Trees', 'TreeNodes', 'TreeGroupNodes',
-    'UserGroups', 'UserPointHistory', );
+    'UserGroups', 'UserPointHistory', 'PermissionKeys', 'PermissionKeyCategories');
 
     protected $metadatas = array(
         'Concrete\Core\Entity\Site\Site',

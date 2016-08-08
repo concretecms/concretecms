@@ -9,6 +9,7 @@ namespace Concrete\Tests\Core\User;
 
 use Concrete\Core\File\StorageLocation\StorageLocation;
 use Concrete\Core\File\StorageLocation\Type\Type;
+use Concrete\Core\Site\Factory;
 use Core;
 
 class UserTest extends \UserTestCase
@@ -70,8 +71,8 @@ class UserTest extends \UserTestCase
     public function testGravatar()
     {
 
-        $site = \Core::make('site')->getSite();
-
+        $factory = new Factory(\Core::make('\Illuminate\Config\Repository'));
+        $site = $factory->createDefaultEntity();
         $site->getConfigRepository()->set('user.gravatar.enabled', true);
 
         $service = Core::make('user/registration');
@@ -123,7 +124,8 @@ class UserTest extends \UserTestCase
 
     public function testPublicProfileLink()
     {
-        $site = \Core::make('site')->getSite();
+        $factory = new Factory(\Core::make('\Illuminate\Config\Repository'));
+        $site = $factory->createDefaultEntity();
 
         $site->getConfigRepository()->set('user.profiles_enabled', false);
 
