@@ -26,12 +26,12 @@ class LocalizationTestsBase extends \PHPUnit_Framework_TestCase
     public static function setUpBeforeClass()
     {
         if (static::applicationLanguagesAlreadyExisted()) {
-            self::markTestSkipped('Cannot create the languages directory for the testing purposes. Please check permissions!');
+            self::markTestSkipped('Languages directory ('.static::getTranslationsFolder().') already exists: for the testing purposes it should not exist. Please check permissions!');
         }
         $filesystem = new Filesystem();
         $translationsFolder = self::getTranslationsFolder();
         if ($filesystem->makeDirectory($translationsFolder) === false) {
-            static::markTestSkipped('Cannot create the languages directory for the testing purposes. Please check permissions!');
+            static::markTestSkipped('Cannot create the languages directory ('.static::getTranslationsFolder().') for the testing purposes. Please check permissions!');
         }
     }
 
