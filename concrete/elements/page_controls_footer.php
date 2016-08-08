@@ -454,9 +454,9 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
         if ($pageInUseBySomeoneElse) {
             echo $cih->notify(array(
                 'title' => t('Editing Unavailable.'),
-                'message' => t("%s is currently editing this page.", $c->getCollectionCheckedOutUserName()),
+                'text' => t("%s is currently editing this page.", $c->getCollectionCheckedOutUserName()),
                 'type' => 'info',
-                'icon' => 'exclamation-sign',
+                'icon' => 'fa fa-exclamation-circle',
             ));
         } else {
             if ($c->getCollectionPointerID() > 0) {
@@ -468,9 +468,9 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
                 }
                 echo $cih->notify(array(
                     'title' => t('Page Alias.'),
-                    'message' => t("This page is an alias of one that actually appears elsewhere."),
+                    'text' => t("This page is an alias of one that actually appears elsewhere."),
                     'type' => 'info',
-                    'icon' => 'info-sign',
+                    'icon' => 'fa fa-info-circle',
                     'buttons' => $buttons,
                 ));
             }
@@ -478,64 +478,48 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
 
             if (is_array($workflowList) && !empty($workflowList)) {
                 ?>
-                <div id="ccm-notification-page-alert-workflow" class="ccm-notification ccm-notification-info">
-                    <div class="ccm-notification-inner-wrapper">
-                        <?php
-                        foreach ($workflowList as $i => $wl) {
-                            $wr = $wl->getWorkflowRequestObject();
-                            $wf = $wl->getWorkflowObject();
-                            ?>
-                            <form method="post" action="<?= $wl->getWorkflowProgressFormAction() ?>" id="ccm-notification-page-alert-form-<?= $i ?>">
-                                <i class="ccm-notification-icon fa fa-info-circle"></i>
-                                <div class="ccm-notification-inner">
-                                    <p><?= $wf->getWorkflowProgressCurrentDescription($wl) ?></p>
-                                    <?php
-                                    $actions = $wl->getWorkflowProgressActions();
-                                    if (!empty($actions)) {
-                                        ?>
-                                        <div class="btn-group">
-                                        <?php
-                                        foreach ($actions as $act) {
-                                            if ($act->getWorkflowProgressActionURL() != '') {
-                                                ?>
-                                                <a href="<?= $act->getWorkflowProgressActionURL() ?>" <?php
-                                            } else {
-                                                ?>
-                                                <button type="submit" name="action_<?= $act->getWorkflowProgressActionTask() ?>"
-                                                <?php
-                                            }
-                                            if (!empty($act->getWorkflowProgressActionExtraButtonParameters())) {
-                                                foreach ($act->getWorkflowProgressActionExtraButtonParameters() as $key => $value) {
-                                                    ?>
-                                                    <?= $key ?>="<?= $value ?>"
-                                                    <?php
-                                                }
-                                            }
-                                            ?>
-                                            class="btn btn-xs <?= $act->getWorkflowProgressActionStyleClass() ?>">
-                                                <?= $act->getWorkflowProgressActionStyleInnerButtonLeftHTML() ?>
-                                                <?= $act->getWorkflowProgressActionLabel() ?>
-                                                <?= $act->getWorkflowProgressActionStyleInnerButtonRightHTML() ?>
-                                            <?php
-                                            if ($act->getWorkflowProgressActionURL() != '') {
-                                                ?></a><?php
-                                            } else {
-                                                ?></button><?php
-                                            }
-                                        }
-                                        ?>
-                                        </div>
-                                        <?php
-                                    }
-                                    ?>
-                                </div>
-                            </form>
+                    <?php
+                    foreach ($workflowList as $i => $wl) {
+                        $wr = $wl->getWorkflowRequestObject();
+                        $wf = $wl->getWorkflowObject();
+                        $form = '<form data-form="workflow" method="post" action="' . $wl->getWorkflowProgressFormAction() . '">';
+                        $text = $wf->getWorkflowProgressCurrentDescription($wl);
+
+                        $actions = $wl->getWorkflowProgressActions();
+                        $buttons = [];
+                        if (!empty($actions)) { ?>
                             <?php
+                            foreach ($actions as $act) {
+                                $parameters = 'class="btn btn-xs ' . $act->getWorkflowProgressActionStyleClass() . '" ';
+                                if (!empty($act->getWorkflowProgressActionExtraButtonParameters())) {
+                                    foreach ($act->getWorkflowProgressActionExtraButtonParameters() as $key => $value) {
+                                        $parameters .= $key . '="' . $value . '" ';
+                                    }
+                                }
+
+                                $inner = $act->getWorkflowProgressActionStyleInnerButtonLeftHTML() . ' ' .
+                                $act->getWorkflowProgressActionLabel() . ' ' .
+                                $act->getWorkflowProgressActionStyleInnerButtonRightHTML();
+
+                                if ($act->getWorkflowProgressActionURL() != '') {
+                                    $button = '<a href="' . $act->getWorkflowProgressActionURL() . '" ' . $parameters . '>' . $inner . '</a>';
+                                } else {
+                                    $button = '<button type="submit" name="action_' . $act->getWorkflowProgressActionTask() . '" ' . $parameters . '>' . $inner . '</button>';
+                                }
+
+                                $buttons[] = $button;
+                            }
                         }
-                        ?>
-                    </div>
-                    <div class="ccm-notification-actions"><a href="#" data-dismiss-alert="page-alert"><?= t('Hide') ?></a></div>
-                </div>
+
+                        echo $cih->notify(array(
+                            'text' => $text,
+                            'type' => 'info',
+                            'form' => $form,
+                            'icon' => 'fa fa-info-circle',
+                            'buttons' => $buttons
+                        ));
+                    }
+                    ?>
                 <?php
             }
 
@@ -545,9 +529,9 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
                         if ($c->isPageDraft()) {
                             echo $cih->notify(array(
                                 'title' => t('Page Draft.'),
-                                'message' => t("This is an un-published draft."),
+                                'text' => t("This is an un-published draft."),
                                 'type' => 'info',
-                                'icon' => 'exclamation',
+                                'icon' => 'fa fa-exclamation-circle',
                             ));
                         } else {
                             $buttons = array();
@@ -575,9 +559,9 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
                             }
                             echo $cih->notify(array(
                                 'title' => t('Page is Pending Approval.'),
-                                'message' => t("This page is newer than what appears to visitors on your live site."),
+                                'text' => t("This page is newer than what appears to visitors on your live site."),
                                 'type' => 'info',
-                                'icon' => 'cog',
+                                'icon' => 'fa fa-cog',
                                 'buttons' => $buttons,
                             ));
                         }
@@ -590,9 +574,9 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
                             $button = '<a href="' . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $cID . '&ctask=publish-now' . $token . '" class="btn btn-primary btn-xs">Publish Now</a>';
                             echo $cih->notify(array(
                                 'title' => t('Publish Pending.'),
-                                'message' => $message,
+                                'text' => $message,
                                 'type' => 'info',
-                                'icon' => 'cog',
+                                'icon' => 'fa fa-cog',
                                 'buttons' => array($button),
                             ));
                         }
