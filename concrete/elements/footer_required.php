@@ -11,7 +11,11 @@ if (empty($disableTrackingCode)) {
     echo Config::get('concrete.seo.tracking.code.footer');
 }
 
+$dh = Core::make('helper/concrete/dashboard');
+
 View::getInstance()->markFooterAssetPosition();
 
 // user profile menu
-View::element('account/menu');
+if (!$dh->inDashboard($c)) {
+    View::element('account/menu');
+}
