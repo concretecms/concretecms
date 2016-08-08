@@ -9,7 +9,6 @@ namespace Concrete\Tests\Core\User;
 
 use Concrete\Core\File\StorageLocation\StorageLocation;
 use Concrete\Core\File\StorageLocation\Type\Type;
-use Concrete\Core\Site\Factory;
 use Core;
 
 class UserTest extends \UserTestCase
@@ -17,6 +16,7 @@ class UserTest extends \UserTestCase
     protected function setUp()
     {
         $this->metadatas[] = 'Concrete\Core\Entity\File\StorageLocation\StorageLocation';
+        $this->metadatas[] = 'Concrete\Core\Entity\Site\Site';
         $this->tables[] = 'FileStorageLocationTypes';
         parent::setUp();
     }
@@ -71,8 +71,8 @@ class UserTest extends \UserTestCase
     public function testGravatar()
     {
 
-        $factory = new Factory(\Core::make('\Illuminate\Config\Repository'));
-        $site = $factory->createDefaultEntity();
+        $site = \Core::make('site')->installDefault();
+
         $site->getConfigRepository()->set('user.gravatar.enabled', true);
 
         $service = Core::make('user/registration');
@@ -89,6 +89,7 @@ class UserTest extends \UserTestCase
 
     public function testAvatar()
     {
+        $site = \Core::make('site')->installDefault();
         $type = Type::add('default', t('Default'));
         $configuration = $type->getConfigurationObject();
         $fsl = StorageLocation::add($configuration, 'Default', true);
@@ -124,8 +125,7 @@ class UserTest extends \UserTestCase
 
     public function testPublicProfileLink()
     {
-        $factory = new Factory(\Core::make('\Illuminate\Config\Repository'));
-        $site = $factory->createDefaultEntity();
+        $site = \Core::make('site')->installDefault();
 
         $site->getConfigRepository()->set('user.profiles_enabled', false);
 
