@@ -16,7 +16,13 @@ abstract class Block extends Page
         parent::on_start();
         $request = $this->request;
         $arHandle = $request->query->get('arHandle');
+        if (!$arHandle) {
+            $arHandle = $request->request->get('arHandle');
+        }
         $bID = $request->query->get('bID');
+        if (!$bID) {
+            $bID = $request->request->get('bID');
+        }
         $a = \Area::get($this->page, $arHandle);
         if (!is_object($a)) {
             throw new \Exception('Invalid Area');
