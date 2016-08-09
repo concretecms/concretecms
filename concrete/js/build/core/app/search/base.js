@@ -79,7 +79,9 @@
 	ConcreteAjaxSearch.prototype.setupSelectize = function() {
         var selects = this.$element.find('.selectize-select');
         if (selects.length) {
-            selects.selectize();
+        	selects.selectize({
+        		plugins: ['remove_button']
+        	});
         }
     }
 
