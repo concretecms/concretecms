@@ -183,11 +183,7 @@
         },
 
         delete: function blockDelete(msg) {
-            var my = this, bID = my.getId(),
-                area = my.getArea(),
-                block = area.getBlockByID(bID),
-                cID = my.getCID(),
-                arHandle = area.getHandle();
+          /*
 
             ConcreteToolbar.disableDirectExit();
 
@@ -207,7 +203,37 @@
                     });
                 },
                 url: CCM_DISPATCHER_FILENAME + '/ccm/system/block/delete'
+            });*/
+
+            var my = this, bID = my.getId(),
+                area = my.getArea(),
+                block = area.getBlockByID(bID),
+                cID = my.getCID(),
+                arHandle = area.getHandle();
+
+            var data = 'cID=' + cID + '&ccm_token=' + CCM_SECURITY_TOKEN + '&isAjax=true&btask=remove&bID=' + bID + '&arHandle=' + encodeURIComponent(arHandle);
+
+            $.fn.dialog.open({
+                width: 460,
+                height: 'auto',
+                href: CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/block/delete',
+                modal: true,
+                data: data,
+                title: ccmi18n.deleteBlockConfirm
             });
+
+        },
+
+        finishDelete: function blockDelete() {
+
+            ConcreteToolbar.disableDirectExit();
+            var my = this, bID = my.getId(),
+                area = my.getArea(),
+                block = area.getBlockByID(bID),
+                cID = my.getCID(),
+                arHandle = area.getHandle();
+
+             area.removeBlock(block);
         },
 
         /**

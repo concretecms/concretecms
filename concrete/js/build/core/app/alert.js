@@ -79,14 +79,19 @@ PNotify.prototype.options.buttons.closer_hover = false;
                 callback: function() {}
             }, defaults);
 
-            new PNotify({
-                title: options.title,
+            var notifyOptions = {
                 text: options.message,
                 icon: 'fa fa-' + options.icon,
                 type: options.type,
                 delay: options.delay,
                 after_close: options.callback
-            });
+            };
+
+            if (options.title) {
+                notifyOptions.title = options.title;
+            }
+
+            new PNotify(notifyOptions);
 
             /*
             var messageText = '',

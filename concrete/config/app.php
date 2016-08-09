@@ -223,6 +223,9 @@ return array(
         "/ccm/system/dialogs/block/permissions/detail/" => array('\Concrete\Controller\Dialog\Block\Permissions::viewDetail'),
         "/ccm/system/dialogs/block/permissions/guest_access/" => array('\Concrete\Controller\Dialog\Block\Permissions\GuestAccess::__construct'),
         "/ccm/system/dialogs/block/permissions/list/" => array('\Concrete\Controller\Dialog\Block\Permissions::viewList'),
+        "/ccm/system/dialogs/block/delete/" => array('\Concrete\Controller\Dialog\Block\Delete::view'),
+        "/ccm/system/dialogs/block/delete/submit/" => array('\Concrete\Controller\Dialog\Block\Delete::submit'),
+        "/ccm/system/dialogs/block/delete/submit_master/" => array('\Concrete\Controller\Dialog\Block\Delete::submit_master'),
 
         "/ccm/system/dialogs/file/upload_complete" => array('\Concrete\Controller\Dialog\File\UploadComplete::view'),
         "/ccm/system/dialogs/file/bulk/delete" => array('\Concrete\Controller\Dialog\File\Bulk\Delete::view'),
@@ -338,7 +341,6 @@ return array(
          * Block actions - non UI
          */
         "/ccm/system/block/render/" => array('\Concrete\Controller\Backend\Block::render'),
-        "/ccm/system/block/delete/" => array('\Concrete\Controller\Backend\Block::delete'),
         "/ccm/system/block/action/add/{cID}/{arHandle}/{btID}/{action}" => array('\Concrete\Controller\Backend\Block\Action::add'),
         "/ccm/system/block/action/edit/{cID}/{arHandle}/{bID}/{action}" => array('\Concrete\Controller\Backend\Block\Action::edit'),
         "/ccm/system/block/action/add_composer/{ptComposerFormLayoutSetControlID}/{action}" => array('\Concrete\Controller\Backend\Block\Action::add_composer'),
