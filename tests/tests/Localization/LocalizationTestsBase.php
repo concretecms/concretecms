@@ -10,7 +10,13 @@ class LocalizationTestsBase extends \PHPUnit_Framework_TestCase
         return DIR_APPLICATION . '/' . DIRNAME_LANGUAGES;
     }
 
-    private static $applicationLanguagesAlreadyExisted = null;
+    private static function getOriginalTranslationsFolder()
+    {
+        return DIR_APPLICATION . '/' . DIRNAME_LANGUAGES . '-original';
+    }
+    
+    private static $applicationLanguagesRenamed = false;
+    private static $applicationLanguagesCreated = false;
 
     protected static function applicationLanguagesAlreadyExisted()
     {
@@ -25,20 +31,41 @@ class LocalizationTestsBase extends \PHPUnit_Framework_TestCase
 
     public static function setUpBeforeClass()
     {
-        if (static::applicationLanguagesAlreadyExisted()) {
-            self::markTestSkipped('Languages directory ('.static::getTranslationsFolder().') already exists: for the testing purposes it should not exist. Please check permissions!');
-        }
+        self::$applicationLanguagesRenamed = false;
         $filesystem = new Filesystem();
         $translationsFolder = self::getTranslationsFolder();
-        if ($filesystem->makeDirectory($translationsFolder) === false) {
-            static::markTestSkipped('Cannot create the languages directory ('.static::getTranslationsFolder().') for the testing purposes. Please check permissions!');
+        if ($filesystem->exists($translationsFolder)) {
+            $originalTranslationsFolder = self::getOriginalTranslationsFolder();
+            if ($filesystem->exists($originalTranslationsFolder)) {
+                self::markTestSkipped('Both the languages and the languages-original directories exist.');
+                return;
+            }
+            if (!$filesystem->move($translationsFolder, $originalTranslationsFolder)) {
+                self::markTestSkipped('Unable to rename the the languages directory to languages-original.');
+                return;
+            }
+            self::$applicationLanguagesRenamed = true;
         }
+        if ($filesystem->makeDirectory($translationsFolder) === false) {
+            self::markTestSkipped('Cannot create the languages directory for the testing purposes. Please check permissions!');
+            return;
+        }
+        self::$applicationLanguagesCreated = true;
     }
 
     public static function tearDownAfterClass()
     {
         $filesystem = new Filesystem();
         $translationsFolder = self::getTranslationsFolder();
-        $filesystem->deleteDirectory($translationsFolder);
+        if (self::$applicationLanguagesCreated) {
+            if ($filesystem->deleteDirectory($translationsFolder)) {
+                self::$applicationLanguagesCreated = false;
+            }
+        }
+        if (self::$applicationLanguagesRenamed) {
+            if ($filesystem->move(self::getOriginalTranslationsFolder(), $translationsFolder)) {
+                self::$applicationLanguagesRenamed = false;
+            }
+        }
     }
 }
