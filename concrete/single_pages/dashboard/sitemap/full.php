@@ -10,6 +10,12 @@ $sh = Loader::helper('concrete/dashboard/sitemap');
 	<script type="text/javascript">
 		$(function() {
 
+			ConcreteAlert.notify({
+				'title': '',
+				'message': 'block deleted successfully'
+			});
+
+
 			$('div#ccm-full-sitemap-container').concreteSitemap({
 				includeSystemPages: $('input[name=includeSystemPages]').is(':checked')
 			});

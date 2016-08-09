@@ -131,9 +131,9 @@ $(function() {
 			area = editor.getAreaByID(<?=$a->getAreaID()?>),
 			block = area.getBlockByID(<?=$b->getBlockID()?>);
 
-		ConcreteEvent.subscribe('EditModeBlockDeleteComplete', function() {
+		ConcreteEvent.subscribe('EditModeBlockDeleteAfterComplete', function() {
 			editor.destroyInlineEditModeToolbars();
-			ConcreteEvent.unsubscribe('EditModeBlockDeleteComplete');
+			ConcreteEvent.unsubscribe('EditModeBlockDeleteAfterComplete');
 		});
 
 		Concrete.event.fire('EditModeBlockDelete', {message: '<?=$deleteMessage?>', block: block, event: e});

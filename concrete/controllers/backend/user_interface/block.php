@@ -11,6 +11,19 @@ abstract class Block extends Page
     protected $area;
     protected $block;
 
+    protected function getEditResponse($b, $e = null)
+    {
+        $pr = new \Concrete\Core\Page\EditResponse();
+        $pr->setPage($this->page);
+        $pr->setAdditionalDataAttribute('aID', intval($this->area->getAreaID()));
+        $pr->setAdditionalDataAttribute('arHandle', $this->area->getAreaHandle());
+        $pr->setAdditionalDataAttribute('bID', intval($b->getBlockID()));
+        if ($e) {
+            $pr->setError($e);
+        }
+        return $pr;
+    }
+
     public function on_start()
     {
         parent::on_start();

@@ -211,7 +211,7 @@ $(function() {
         Concrete.getEditMode().scanBlocks();
     });
 
-    ConcreteEvent.on('EditModeBlockDelete', function(event, data) {
+    ConcreteEvent.on('EditModeBlockDeleteAfterComplete', function(event, data) {
         showApprovalButton();
         _.defer(function() {
             Concrete.getEditMode().scanBlocks();

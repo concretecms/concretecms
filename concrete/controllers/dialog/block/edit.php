@@ -41,17 +41,6 @@ class Edit extends BackendInterfaceBlockController
         return $e;
     }
 
-    protected function getEditResponse($b, $e)
-    {
-        $pr = new \Concrete\Core\Page\EditResponse();
-        $pr->setPage($this->page);
-        $pr->setAdditionalDataAttribute('aID', $this->area->getAreaID());
-        $pr->setAdditionalDataAttribute('arHandle', $this->area->getAreaHandle());
-        $pr->setAdditionalDataAttribute('bID', $b->getBlockID());
-        $pr->setError($e);
-        return $pr;
-    }
-
     public function submit_master()
     {
         if ($this->validateAction() && $this->canAccess() && $this->page->isMasterCollection()) {

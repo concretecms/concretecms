@@ -25,6 +25,7 @@ var ccmi18n = {
   cancel: <?=json_encode(t('Cancel'))?>,
   collapse: <?=json_encode(t('Collapse'))?>,
   error: <?=json_encode(t('Error'))?>,
+  deleteBlockConfirm: <?=json_encode(t('Delete Block'))?>,
   deleteBlock: <?=json_encode(t('Block Deleted'))?>,
   deleteBlockMsg: <?=json_encode(t('The block has been removed successfully.'))?>,
   addBlock: <?=json_encode(t('Add Block'))?>,
