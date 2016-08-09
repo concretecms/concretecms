@@ -17,7 +17,7 @@ if ($akSelectAllowMultipleValues && !$akSelectAllowOtherValues) {
 		</div>
 
 
-	<?php 
+	<?php
     }
 }
 
@@ -35,7 +35,7 @@ if (!$akSelectAllowMultipleValues && !$akSelectAllowOtherValues) {
     ?>
 
 
-<?php 
+<?php
 }
 
 /*
@@ -49,6 +49,7 @@ if ($akSelectAllowOtherValues) {
 	<script type="text/javascript">
 		$(function() {
 			$('input[data-select-and-add=<?=$akID?>]').selectize({
+                plugins: ['remove_button'],
 				valueField: 'id',
 				labelField: 'text',
 				options: <?=json_encode($selectedOptions)?>,
@@ -65,11 +66,11 @@ if ($akSelectAllowOtherValues) {
     ?>
 					delimiter: ',',
 					maxItems: 500,
-				<?php 
+				<?php
 } else {
     ?>
 					maxItems: 1,
-				<?php 
+				<?php
 }
     ?>
 				load: function(query, callback) {
@@ -89,5 +90,5 @@ if ($akSelectAllowOtherValues) {
 		});
 	</script>
 
-<?php 
+<?php
 }
