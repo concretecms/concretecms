@@ -460,16 +460,19 @@ class Service
         if (($this->body !== false) && ($this->bodyHTML !== false)) {
             $alternatives = new MimeMessage();
             $text = new MimePart($this->body);
-            $text->type = 'text/plain';
+            $text->type = Mime::TYPE_TEXT;
             $text->charset = APP_CHARSET;
             $alternatives->addPart($text);
             $html = new MimePart($this->bodyHTML);
-            $html->type = 'text/html';
+            $html->type = Mime::TYPE_HTML;
             $html->charset = APP_CHARSET;
             $alternatives->addPart($html);
-            $alternativesPath = new MimePart($alternatives->generateMessage());
-            $alternativesPath->type = 'multipart/alternative;'.Mime::LINEEND.' boundary="'.$alternatives->getMime()->boundary().'"';
+            $alternativesPath           = new MimePart($alternatives->generateMessage());
+            $alternativesPath->charset  = 'UTF-8';
+            $alternativesPath->type     = 'multipart/alternative';
+            $alternativesPath->boundary = $alternatives->getMime()->boundary();
             $body->addPart($alternativesPath);
+
         } elseif ($this->body !== false) {
             $text = new MimePart($this->body);
             $text->type = 'text/plain';
