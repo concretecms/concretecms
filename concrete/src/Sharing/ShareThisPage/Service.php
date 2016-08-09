@@ -28,7 +28,7 @@ class Service extends SocialNetworkService
                 case 'facebook':
                     return "https://www.facebook.com/sharer/sharer.php?u=$url";
                 case 'twitter':
-                    return "https://www.twitter.com/intent/tweet?url=$url";
+                    return "https://twitter.com/intent/tweet?url=$url";
                 case 'linkedin':
                     $title = urlencode($c->getCollectionName());
 
