@@ -14,7 +14,9 @@ $th = Loader::helper('text');
 
     <script type="text/javascript">
         $(function() {
-            $('#level').selectize();
+            $('#level').selectize({
+                plugins: ['remove_button']
+            });
         });
     </script>
 
