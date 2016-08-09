@@ -46,6 +46,8 @@ class PageListTopicTest extends PageTestCase
         \Concrete\Core\Tree\Node\NodeType::add('category');
         \Concrete\Core\Tree\Node\NodeType::add('topic');
 
+        \Concrete\Core\Permission\Access\Entity\Type::add('group', 'Group');
+
         $tree = \Concrete\Core\Tree\Type\Topic::add('Calendar Categories');
         $node = $tree->getRootTreeNodeObject();
 
