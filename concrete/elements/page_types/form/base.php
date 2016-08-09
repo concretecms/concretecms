@@ -85,7 +85,7 @@ if (is_object($pagetype)) {
     }
     ?>
             <div class="radio"><label><?=$form->radio('ptPublishTargetTypeID', $t->getPageTypePublishTargetTypeID(), $selected)?><?=$t->getPageTypePublishTargetTypeDisplayName()?></label></div>
-        <?php 
+        <?php
 } ?>
 	</div>
 
@@ -98,13 +98,16 @@ if (is_object($pagetype)) {
         ?>
 		</div>
 
-	<?php 
+	<?php
     }
 } ?>
 
 <script type="text/javascript">
 $(function() {
-	$('#ptPageTemplateID').removeClass('form-control').selectize();
+    $('#ptPageTemplateID').removeClass('form-control').selectize({
+        plugins: ['remove_button']
+    });
+
 	$('input[name=ptPublishTargetTypeID]').on('click', function() {
 		$('div[data-page-type-publish-target-type-id]').hide();
 		var ptPublishTargetTypeID = $('input[name=ptPublishTargetTypeID]:checked').val();

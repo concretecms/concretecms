@@ -165,7 +165,7 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
                                                 dialog-height="280"
                                                 dialog-modal="false"
                                                 dialog-title="<?= t('Caching') ?>"
-                                                href="<?= URL::to('/ccm/system/panels/details/page/caching') ?>?cID=<?= $cID ?>>"
+                                                href="<?= URL::to('/ccm/system/panels/details/page/caching') ?>?cID=<?= $cID ?>"
                                             ><?= t('Caching') ?></a>
                                         </li>
                                         <?php
