@@ -283,8 +283,6 @@ echo Core::make('helper/concrete/ui')->tabs(array(
         <div class="radio">
             <label><input type="radio" name="<?php echo $view->field('navigationType'); ?>" value="0" <?php echo $navigationType > 0 ? '' : 'checked'; ?> /><?php echo t('Arrows'); ?></label>
         </div>
-    </div>
-    <div class="form-group">
         <div class="radio">
             <label><input type="radio" name="<?php echo $view->field('navigationType'); ?>" value="1" <?php echo $navigationType > 0 ? 'checked' : ''; ?> /><?php echo t('Bullets'); ?></label>
         </div>
