@@ -231,7 +231,15 @@ jQuery.fn.dialog.activateDialogContents = function($dialog) {
     $dialog.find('button[data-dialog-action=cancel]').on('click', function() {
         jQuery.fn.dialog.closeTop();
     });
-    $dialog.find('[data-dialog-form]').concreteAjaxForm();
+    $dialog.find('[data-dialog-form]').each(function() {
+        var $form = $(this),
+            options = {};
+        if ($(this).attr("data-dialog-form-processing") == 'progressive') {
+            options.progressiveOperation = true;
+            options.progressiveOperationElement = 'div[data-dialog-form-element=progress-bar]';
+        }
+        $(this).concreteAjaxForm(options);
+    });
 
 
     $dialog.find('button[data-dialog-action=submit]').on('click', function() {

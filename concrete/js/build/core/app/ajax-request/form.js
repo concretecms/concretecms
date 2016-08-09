@@ -9,11 +9,17 @@
         var my = this;
         options = options || {};
         options = $.extend({
+            'progressiveOperation': false,
+            'progressiveOperationTitle': '',
+            'progressiveOperationElement': '',
             'beforeSubmit': my.before,
             'complete': my.complete,
             'data': {}
         }, options);
         my.$form = $form;
+        if (options.progressiveOperation) {
+            options.dataType = 'html';
+        }
         ConcreteAjaxRequest.call(my, options);
         return my.$form;
     }
@@ -46,10 +52,59 @@
         });
     }
 
+    ConcreteAjaxForm.prototype.handleProgressiveOperation = function(resp, onComplete) {
+        var my = this,
+            url = my.$form.attr('action'),
+            params = my.$form.formToArray(true);
+
+        jQuery.fn.dialog.hideLoader();
+        if (!my.options.progressiveOperationElement) {
+            $('<div id="ccm-dialog-progress-bar" />').appendTo(document.body).html(resp).jqdialog({
+                autoOpen: false,
+                height: 200,
+                width: 400,
+                modal: true,
+                title: my.options.progressiveOperationTitle,
+                closeOnEscape: false,
+                open: function(e, ui) {
+                    $('.ui-dialog-titlebar-close', this.parentNode).hide();
+                    var totalItems = $('#ccm-progressive-operation-progress-bar').attr('data-total-items');
+                    ccm_doProgressiveOperation(url, params, totalItems, function(r) {
+                        onComplete(r);
+                    });
+                }
+            });
+            $("#ccm-dialog-progress-bar").jqdialog('open');
+        } else {
+            var $element = $(my.options.progressiveOperationElement);
+            $element.html(resp);
+            var totalItems = $('#ccm-progressive-operation-progress-bar').attr('data-total-items');
+            ccm_doProgressiveOperation(url, params, totalItems, onComplete, false, $element);
+        }
+    }
+
     ConcreteAjaxForm.prototype.error = function(r, my, callback) {
         ConcreteAjaxRequest.prototype.error(r, my);
         if (callback) {
             callback(r);
+        }
+    }
+
+    ConcreteAjaxForm.prototype.doFinish = function(r) {
+        var my = this;
+        ConcreteEvent.publish('AjaxFormSubmitSuccess', {response: r, form: my.$form.attr('data-dialog-form')});
+        if (r.redirectURL) {
+            window.location.href = r.redirectURL;
+        } else {
+            if (my.$form.attr('data-dialog-form')) {
+                jQuery.fn.dialog.closeTop();
+            }
+            if (r.message) {
+                ConcreteAlert.notify({
+                    'message': r.message,
+                    'title': r.title
+                });
+            }
         }
     }
 
@@ -58,20 +113,13 @@
             if (callback) {
                 callback(r);
             } else {
-                // if we get a success function passed through, we use it. Otherwise we use the standard
-                ConcreteEvent.publish('AjaxFormSubmitSuccess', {response: r, form: my.$form.attr('data-dialog-form')});
-                if (r.redirectURL) {
-                    window.location.href = r.redirectURL;
+                if (my.options.progressiveOperation) {
+                    var resp = r;
+                    my.handleProgressiveOperation(resp, function(r) {
+                        my.doFinish(r);
+                    });
                 } else {
-                    if (my.$form.attr('data-dialog-form')) {
-                        jQuery.fn.dialog.closeTop();
-                    }
-                    if (r.message) {
-                        ConcreteAlert.notify({
-                            'message': r.message,
-                            'title': r.title
-                        });
-                    }
+                    my.doFinish(r);
                 }
             }
         }

@@ -11,8 +11,6 @@
         options = $.extend({
             'iframe': true,
             'task': false,
-            'progressiveOperation': false,
-            'progressiveOperationTitle': '',
             'dragAreaBlockID': false,
             'dragArea': null,
             'bID': false,
@@ -24,9 +22,6 @@
             $form.find('input[name=dragAreaBlockID]').val(options.dragAreaBlockID);
         }
 
-        if (my.options.progressiveOperation) {
-            my.options.dataType = 'html';
-        }
         ConcreteAjaxForm.call(my, $form, options);
         return $form;
     }
@@ -131,23 +126,9 @@
 
     ConcreteAjaxBlockForm.prototype.success = function (resp, my) {
         if (my.options.progressiveOperation) {
-            jQuery.fn.dialog.hideLoader();
-            $('<div id="ccm-dialog-progress-bar" />').appendTo(document.body).html(resp).jqdialog({
-                autoOpen: false,
-                height: 200,
-                width: 400,
-                modal: true,
-                title: my.options.progressiveOperationTitle,
-                closeOnEscape: false,
-                open: function(e, ui) {
-                    $('.ui-dialog-titlebar-close', this.parentNode).hide();
-                    var totalItems = $('#ccm-progressive-operation-progress-bar').attr('data-total-items');
-                    ccm_doProgressiveOperation(my.$form.attr('action'), my.$form.formToArray(true), totalItems, function(r) {
-                        my.refreshBlock(r);
-                    });
-                }
+            my.handleProgressiveOperation(resp, function(r) {
+                my.refreshBlock(r);
             });
-            $("#ccm-dialog-progress-bar").jqdialog('open');
         } else if (my.validateResponse(resp)) {
             my.refreshBlock(resp);
         }

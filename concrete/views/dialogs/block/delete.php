@@ -4,7 +4,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 <div class="ccm-ui">
 
-	<form method="post" data-dialog-form="delete-block" action="<?=$submitAction?>">
+	<form method="post" data-dialog-form-processing="progressive" data-dialog-form="delete-block" action="<?=$submitAction?>">
 
 		<div class="dialog-buttons">
 		<button class="btn btn-default pull-left" data-dialog-action="cancel"><?=t('Cancel')?></button>
@@ -16,6 +16,9 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		<?php if ($isMasterCollection) { ?>
 
 			<div class="alert alert-danger"><?php echo t('Warning! This block is contained in the page type defaults. Any blocks aliased from this block in the site will be deleted. <strong>This includes blocks that have since been edited in the site.</strong>') ?></div>
+
+			<div data-dialog-form-element="progress-bar"></div>
+
 		<?php
 } else {
     ?>

@@ -183,27 +183,6 @@
         },
 
         delete: function blockDelete(msg) {
-          /*
-
-            ConcreteToolbar.disableDirectExit();
-
-            $.concreteAjax({
-                type: 'POST',
-                data: {
-                    arHandle: arHandle,
-                    cID: cID,
-                    ccm_token: CCM_SECURITY_TOKEN,
-                    bID: bID
-                },
-                success: function(r) {
-                    area.removeBlock(block);
-                    ConcreteAlert.notify({
-                        'message': ccmi18n.deleteBlockMsg,
-                        'title': ccmi18n.deleteBlock
-                    });
-                },
-                url: CCM_DISPATCHER_FILENAME + '/ccm/system/block/delete'
-            });*/
 
             var my = this, bID = my.getId(),
                 area = my.getArea(),
