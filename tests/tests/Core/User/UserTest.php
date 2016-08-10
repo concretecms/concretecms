@@ -23,18 +23,18 @@ class UserTest extends \UserTestCase
 
     public function testCreateLegacy()
     {
-        $ui = \UserInfo::add(array(
+        $ui = \UserInfo::add([
             'uName' => 'andrew',
             'uEmail' => 'andrew@concrete5.org',
-        ));
+        ]);
         $this->assertEquals(1, $ui->getUserID());
         $this->assertEquals('andrew', $ui->getUserName());
         $this->assertEquals('andrew@concrete5.org', $ui->getUserEmail());
 
-        $ui = \Concrete\Core\User\UserInfo::add(array(
+        $ui = \Concrete\Core\User\UserInfo::add([
             'uName' => 'andrew2',
             'uEmail' => 'andrew2@concrete5.org',
-        ));
+        ]);
         $this->assertEquals(2, $ui->getUserID());
         $this->assertEquals('andrew2', $ui->getUserName());
         $this->assertEquals('andrew2@concrete5.org', $ui->getUserEmail());
@@ -42,10 +42,10 @@ class UserTest extends \UserTestCase
 
     public function testRegisterLegacy()
     {
-        $ui = \UserInfo::register(array(
+        $ui = \UserInfo::register([
             'uName' => 'andrew',
             'uEmail' => 'andrew@concrete5.org',
-        ));
+        ]);
         $this->assertEquals(1, $ui->getUserID());
         $this->assertEquals('andrew', $ui->getUserName());
         $this->assertEquals('andrew@concrete5.org', $ui->getUserEmail());
@@ -62,7 +62,7 @@ class UserTest extends \UserTestCase
     public function testCreateNew()
     {
         $service = Core::make('user/registration');
-        $ui = $service->create(array('uName' => 'andrew', 'uEmail' => 'andrew@concrete5.org'));
+        $ui = $service->create(['uName' => 'andrew', 'uEmail' => 'andrew@concrete5.org']);
         $this->assertEquals(1, $ui->getUserID());
         $this->assertEquals('andrew', $ui->getUserName());
         $this->assertEquals('andrew@concrete5.org', $ui->getUserEmail());
@@ -70,13 +70,12 @@ class UserTest extends \UserTestCase
 
     public function testGravatar()
     {
-
         $site = \Core::make('site')->installDefault();
 
         $site->getConfigRepository()->set('user.gravatar.enabled', true);
 
         $service = Core::make('user/registration');
-        $ui = $service->create(array('uName' => 'andrew', 'uEmail' => 'andrew@concrete5.org'));
+        $ui = $service->create(['uName' => 'andrew', 'uEmail' => 'andrew@concrete5.org']);
         $this->assertFalse($ui->hasAvatar());
 
         // Note, this is a FALLBACK avatar. That's why hasAvatar is false but the avatar actually returns an image.
@@ -90,21 +89,30 @@ class UserTest extends \UserTestCase
     public function testAvatar()
     {
         $site = \Core::make('site')->installDefault();
+        $config = $site->getConfigRepository()->getRepository();
         $type = Type::add('default', t('Default'));
         $configuration = $type->getConfigurationObject();
         $fsl = StorageLocation::add($configuration, 'Default', true);
 
+        $avatarSize = '';
+        if ($config['concrete.icons.user_avatar.width']) {
+            $avatarSize .= ' width="'.$config['concrete.icons.user_avatar.width'].'"';
+        }
+        if ($config['concrete.icons.user_avatar.height']) {
+            $avatarSize .= ' height="'.$config['concrete.icons.user_avatar.height'].'"';
+        }
+
         $service = Core::make('user/registration');
-        $ui = $service->create(array('uName' => 'andrew', 'uEmail' => 'andrew@concrete5.org'));
+        $ui = $service->create(['uName' => 'andrew', 'uEmail' => 'andrew@concrete5.org']);
         $this->assertFalse($ui->hasAvatar());
 
         $avatar = $ui->getUserAvatar();
         $this->assertInstanceOf('Concrete\Core\User\Avatar\EmptyAvatar', $avatar);
-        $this->assertEquals('<img src="/path/to/server/concrete/images/avatar_none.png" alt="andrew" class="u-avatar">',
+        $this->assertEquals('<img src="/path/to/server/concrete/images/avatar_none.png" alt="andrew" class="u-avatar"'.$avatarSize.'>',
             $avatar->output());
         $this->assertEquals('/path/to/server/concrete/images/avatar_none.png', $avatar->getPath());
 
-        $ui->update(array('uHasAvatar' => true));
+        $ui->update(['uHasAvatar' => true]);
         // This is lame, I know.
         $ui = Core::make('Concrete\Core\User\UserInfoRepository')->getByID(1);
         $this->assertTrue($ui->hasAvatar());
@@ -112,7 +120,7 @@ class UserTest extends \UserTestCase
         $this->assertEquals('http://www.dummyco.com/path/to/server/application/files/avatars/1.jpg',
             $avatar->getPath());
         $this->assertEquals(
-            '<img src="http://www.dummyco.com/path/to/server/application/files/avatars/1.jpg" alt="andrew" class="u-avatar">',
+            '<img src="http://www.dummyco.com/path/to/server/application/files/avatars/1.jpg" alt="andrew" class="u-avatar"'.$avatarSize.'>',
             $avatar->output());
 
         $service = Core::make('user/avatar');
@@ -130,7 +138,7 @@ class UserTest extends \UserTestCase
         $site->getConfigRepository()->set('user.profiles_enabled', false);
 
         $service = Core::make('user/registration');
-        $ui = $service->create(array('uName' => 'andrew', 'uEmail' => 'andrew@concrete5.org'));
+        $ui = $service->create(['uName' => 'andrew', 'uEmail' => 'andrew@concrete5.org']);
         $this->assertEquals(null, $ui->getUserPublicProfileUrl());
 
         $site->getConfigRepository()->set('user.profiles_enabled', true);
