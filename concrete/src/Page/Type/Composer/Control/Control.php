@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\Page\Type\Composer\Control;
 
 use Concrete\Core\Page\Type\Type;
@@ -53,17 +54,17 @@ abstract class Control extends Object
     {
         $this->ptComposerControlCustomLabel = $label;
     }
-    
+
     public function getPageTypeComposerControlCustomLabel()
     {
         return $this->ptComposerControlCustomLabel;
     }
-    
+
     public function setPageTypeComposerControlDescription($description)
     {
         $this->ptComposerControlDescription = $description;
     }
-    
+
     public function getPageTypeComposerControlDescription()
     {
         return $this->ptComposerControlDescription;
@@ -73,7 +74,7 @@ abstract class Control extends Object
     {
         $this->page = $page;
     }
-    
+
     public function getPageObject()
     {
         return $this->page;
@@ -98,7 +99,7 @@ abstract class Control extends Object
     {
         return $this->ptComposerControlName;
     }
-    
+
     public function getPageTypeComposerControlDisplayName($format = 'html')
     {
         $value = $this->getPageTypeComposerControlName();
@@ -115,7 +116,7 @@ abstract class Control extends Object
     {
         $this->ptComposerControlIconSRC = $ptComposerControlIconSRC;
     }
-    
+
     public function setPageTypeComposerControlIconFormatter($ptComposerControlIconFormatter)
     {
         $this->ptComposerControlIconFormatter = $ptComposerControlIconFormatter;
@@ -123,14 +124,14 @@ abstract class Control extends Object
 
     public function getPageTypeComposerControlIcon()
     {
-      if (isset($this->ptComposerControlIconSRC)) {
-          $img = new Element('img');
-          $img->src($this->ptComposerControlIconSRC);
-          return $img;
-      }
-      else {
-          return $this->ptComposerControlIconFormatter->getListIconElement();
-      }
+        if (isset($this->ptComposerControlIconSRC)) {
+            $img = new Element('img');
+            $img->src($this->ptComposerControlIconSRC);
+
+            return $img;
+        } else {
+            return $this->ptComposerControlIconFormatter->getListIconElement();
+        }
     }
 
     public function setPageTypeComposerControlIdentifier($ptComposerControlIdentifier)
@@ -165,7 +166,7 @@ abstract class Control extends Object
 
     public function field($key)
     {
-        return 'ptComposer[' . $this->ptComposerFormLayoutSetControlObject->getPageTypeComposerFormLayoutSetControlID(). '][' . $key . ']';
+        return 'ptComposer['.$this->ptComposerFormLayoutSetControlObject->getPageTypeComposerFormLayoutSetControlID().']['.$key.']';
     }
 
     public function getRequestValue($args = false)

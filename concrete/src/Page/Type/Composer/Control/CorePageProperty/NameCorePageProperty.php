@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\Page\Type\Composer\Control\CorePageProperty;
 
 use Core;
@@ -46,7 +47,7 @@ class NameCorePageProperty extends CorePageProperty
         } else {
             $name = $this->getPageTypeComposerControlDraftValue();
         }
-        
+
         /** @var \Concrete\Core\Utility\Service\Validation\Strings $stringValidator */
         $stringValidator = Core::make('helper/validation/strings');
         if (!$stringValidator->notempty($name)) {

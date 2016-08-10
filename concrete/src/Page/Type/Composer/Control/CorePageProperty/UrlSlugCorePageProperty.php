@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\Page\Type\Composer\Control\CorePageProperty;
 
 use Loader;
@@ -35,6 +36,7 @@ class UrlSlugCorePageProperty extends CorePageProperty
         if (!$stringValidator->notempty($handle)) {
             $control = $this->getPageTypeComposerFormLayoutSetControlObject();
             $e->add(t('You haven\'t chosen a valid %s', $control->getPageTypeComposerControlDisplayLabel()));
+
             return $e;
         }
     }

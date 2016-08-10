@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\Page\Type\Composer\Control\CorePageProperty;
 
 use Concrete\Core\Attribute\FontAwesomeIconFormatter;
