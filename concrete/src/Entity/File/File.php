@@ -250,9 +250,14 @@ class File implements \Concrete\Core\Permission\ObjectInterface
         $this->save();
     }
 
+    /**
+     * Returns the user ID of the author of the file (if available).
+     *
+     * @return int|null
+     */
     public function getUserID()
     {
-        return $this->author->getUserID();
+        return $this->author ? $this->author->getUserID() : null;
     }
 
     public function setUser(\Concrete\Core\Entity\User\User $user)
