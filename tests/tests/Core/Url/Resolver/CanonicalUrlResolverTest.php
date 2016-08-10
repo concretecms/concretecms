@@ -21,7 +21,7 @@ class CanonicalUrlResolverTest extends ResolverTestCase
 
         $this->assertEquals(
             (string) \Concrete\Core\Url\Url::createFromUrl($canonical)->setPath(\Core::getApplicationRelativePath()),
-            (string) $resolver->resolve(array()));
+            (string) $resolver->resolve([]));
 
         \Config::set('concrete.seo.canonical_url', $old_value);
     }
@@ -41,7 +41,7 @@ class CanonicalUrlResolverTest extends ResolverTestCase
 
         $this->assertEquals(
             (string) \Concrete\Core\Url\Url::createFromUrl("http://somehost")->setPath(\Core::getApplicationRelativePath()),
-            (string) $resolver->resolve(array()));
+            (string) $resolver->resolve([]));
 
         \Config::set('concrete.seo.canonical_url', $old_value);
     }

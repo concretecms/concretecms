@@ -39,7 +39,7 @@ class ResolverManagerTest extends PHPUnit_Framework_TestCase
 
     public function testDefaultResolve()
     {
-        $this->assertEquals($this->defaultResponse, $this->manager->resolve(array()));
+        $this->assertEquals($this->defaultResponse, $this->manager->resolve([]));
     }
 
     public function testPriority()
@@ -48,7 +48,7 @@ class ResolverManagerTest extends PHPUnit_Framework_TestCase
         $mock->method('resolve')->willReturn('TEST');
 
         $this->manager->addResolver('test_resolver', $mock, 12);
-        $this->assertEquals('TEST', $this->manager->resolve(array()));
+        $this->assertEquals('TEST', $this->manager->resolve([]));
     }
 
     public function testGetters()

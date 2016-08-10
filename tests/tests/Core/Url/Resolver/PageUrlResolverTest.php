@@ -22,7 +22,7 @@ class PageUrlResolverTest extends ResolverTestCase
 
         $this->assertEquals(
             (string) $this->canonicalUrlWithPath($path),
-            (string) $this->urlResolver->resolve(array($page)));
+            (string) $this->urlResolver->resolve([$page]));
     }
 
     public function testWithHome()
@@ -34,7 +34,7 @@ class PageUrlResolverTest extends ResolverTestCase
 
         $this->assertEquals(
             (string) $this->canonicalUrlWithPath('/'),
-            (string) $this->urlResolver->resolve(array($page)));
+            (string) $this->urlResolver->resolve([$page]));
     }
 
     public function testUnapproved()
@@ -46,7 +46,7 @@ class PageUrlResolverTest extends ResolverTestCase
 
         $this->assertEquals(
             (string) $this->canonicalUrlWithPath('/')->setQuery('cID=1337'),
-            (string) $this->urlResolver->resolve(array($page)));
+            (string) $this->urlResolver->resolve([$page]));
     }
 
     public function testAlreadyResolved()
@@ -57,11 +57,11 @@ class PageUrlResolverTest extends ResolverTestCase
             ->method('getCollectionPath')
             ->willReturn($path);
 
-        $this->assertEquals($this, $this->urlResolver->resolve(array($page), $this));
+        $this->assertEquals($this, $this->urlResolver->resolve([$page], $this));
     }
 
     public function testEmptyArguments()
     {
-        $this->assertNull($this->urlResolver->resolve(array()));
+        $this->assertNull($this->urlResolver->resolve([]));
     }
 }

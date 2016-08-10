@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Tests\Core\Statistics\UsageTracker;
 
 use Concrete\Core\Application\Application;
@@ -54,7 +53,7 @@ class ServiceProviderTest extends \PHPUnit_Framework_TestCase
         // Lets set the config item
         $repository->set('statistics.trackers', [
             'foo' => 'tracker/1',
-            'bar' => 'tracker/3'
+            'bar' => 'tracker/3',
         ]);
 
         // Register the service provider
@@ -69,9 +68,10 @@ class ServiceProviderTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Method to make it easy to bind an existing object to the IoC
+     * Method to make it easy to bind an existing object to the IoC.
      *
      * @param $tracker
+     *
      * @return \Closure
      */
     private function returnCallable($tracker)
@@ -82,7 +82,8 @@ class ServiceProviderTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Create an application object to test with
+     * Create an application object to test with.
+     *
      * @return \Concrete\Core\Application\Application
      */
     private function createApplication()
@@ -99,5 +100,4 @@ class ServiceProviderTest extends \PHPUnit_Framework_TestCase
 
         return $app;
     }
-
 }

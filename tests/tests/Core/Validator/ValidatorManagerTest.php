@@ -31,7 +31,7 @@ class ValidatorManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertEmpty($manager->getValidators(), 'Manager should not initialize with validators.');
         $manager->setValidator('test', $mock = $this->createMockFromClass('\Concrete\Core\Validator\ValidatorInterface'));
 
-        $this->assertEquals(array('test' => $mock), $manager->getValidators(), 'Unable to set validator to manager');
+        $this->assertEquals(['test' => $mock], $manager->getValidators(), 'Unable to set validator to manager');
     }
 
     public function testHas()
@@ -49,18 +49,18 @@ class ValidatorManagerTest extends \PHPUnit_Framework_TestCase
         $mock_1 = $this->createMockFromClass('\Concrete\Core\Validator\ValidatorInterface');
         $mock_2 = $this->createMockFromClass('\Concrete\Core\Validator\ValidatorInterface');
 
-        $mock_1->method('getRequirementStrings')->willReturn(array(
+        $mock_1->method('getRequirementStrings')->willReturn([
             1 => 'string 1',
-        ));
-        $mock_2->method('getRequirementStrings')->willReturn(array(
+        ]);
+        $mock_2->method('getRequirementStrings')->willReturn([
             1 => 'string 2',
-        ));
+        ]);
 
         $manager = $this->manager;
         $manager->setValidator('mock_1', $mock_1);
         $manager->setValidator('mock_2', $mock_2);
 
-        $this->assertEquals(array('string 1', 'string 2'), $manager->getRequirementStrings());
+        $this->assertEquals(['string 1', 'string 2'], $manager->getRequirementStrings());
     }
 
     public function testValidation()

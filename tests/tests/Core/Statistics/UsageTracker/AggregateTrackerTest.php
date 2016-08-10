@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Tests\Core\Statistics\UsageTracker;
 
 use Concrete\Core\Application\Application;
@@ -74,7 +73,7 @@ class AggregateTrackerTest extends \PHPUnit_Framework_TestCase
     public function testCallsCreator()
     {
         $return_tracker = $this->createMockFromClass(TrackerInterface::class);
-        $this->tracker->addTracker('test', function() use ($return_tracker) {
+        $this->tracker->addTracker('test', function () use ($return_tracker) {
             return $return_tracker;
         });
 
@@ -87,14 +86,15 @@ class AggregateTrackerTest extends \PHPUnit_Framework_TestCase
 
     public function testUsesDIContainer()
     {
-        $this->app->bind(stdClass::class, function() {
-            return (object)['test' => 'tested'];
+        $this->app->bind(stdClass::class, function () {
+            return (object) ['test' => 'tested'];
         });
 
         $passed = null;
         $return_tracker = $this->createMockFromClass(TrackerInterface::class);
-        $this->tracker->addTracker('test', function(stdClass $obj) use (&$passed, $return_tracker) {
+        $this->tracker->addTracker('test', function (stdClass $obj) use (&$passed, $return_tracker) {
             $passed = $obj;
+
             return $return_tracker;
         });
 
@@ -117,10 +117,26 @@ class AggregateTrackerTest extends \PHPUnit_Framework_TestCase
         $calls = 0;
         // Bind the trackers
         $this->tracker
-            ->addTracker('test1', function() use ($tracker1, &$calls) { $calls++; return $tracker1; })
-            ->addTracker('test2', function() use ($tracker2, &$calls) { $calls++; return $tracker2; })
-            ->addTracker('test3', function() use ($tracker3, &$calls) { $calls++; return $tracker3; })
-            ->addTracker('test4', function() use ($tracker4, &$calls) { $calls++; return $tracker4; });
+            ->addTracker('test1', function () use ($tracker1, &$calls) {
+                ++$calls;
+
+                return $tracker1;
+            })
+            ->addTracker('test2', function () use ($tracker2, &$calls) {
+                ++$calls;
+
+                return $tracker2;
+            })
+            ->addTracker('test3', function () use ($tracker3, &$calls) {
+                ++$calls;
+
+                return $tracker3;
+            })
+            ->addTracker('test4', function () use ($tracker4, &$calls) {
+                ++$calls;
+
+                return $tracker4;
+            });
 
         // Set the expectations
         $tracker1->expects($this->exactly(2))->method('track');
@@ -188,5 +204,4 @@ class AggregateTrackerTest extends \PHPUnit_Framework_TestCase
 
         $property->setValue($object, $value);
     }
-
 }
