@@ -20,7 +20,7 @@ $h = Loader::helper('concrete/ui');
                        style="" <?php echo ($registration_type == "disabled" || !strlen(
                         $registration_type)) ? 'checked' : '' ?> />
                     <span>
-                        <?php echo t('Off - only admins create accounts from Dashboard') ?>
+                        <?php echo t('Off - only admins can create accounts from Dashboard') ?>
                     </span>
             </label>
         </div>
