@@ -12,6 +12,7 @@ use stdClass;
 
 class AggregateTrackerTest extends \PHPUnit_Framework_TestCase
 {
+    use \Concrete\Tests\CreateClassMockTrait;
 
     /** @var Application */
     private $app;
@@ -33,9 +34,9 @@ class AggregateTrackerTest extends \PHPUnit_Framework_TestCase
     public function testCallsTrack()
     {
         // Create the trackers
-        $tracker1 = $this->getMock(TrackerInterface::class);
-        $tracker2 = $this->getMock(TrackerInterface::class);
-        $tracker3 = $this->getMock(TrackerInterface::class);
+        $tracker1 = $this->createMockFromClass(TrackerInterface::class);
+        $tracker2 = $this->createMockFromClass(TrackerInterface::class);
+        $tracker3 = $this->createMockFromClass(TrackerInterface::class);
 
         // Change the properties
         $this->changeProperty($this->tracker, 'trackers', [$tracker1, $tracker2, $tracker3]);
@@ -47,15 +48,15 @@ class AggregateTrackerTest extends \PHPUnit_Framework_TestCase
         $tracker3->expects($this->once())->method('track');
 
         // Run the track;
-        $this->tracker->track($this->getMock(TrackableInterface::class));
+        $this->tracker->track($this->createMockFromClass(TrackableInterface::class));
     }
 
     public function testCallsForget()
     {
         // Create the trackers
-        $tracker1 = $this->getMock(TrackerInterface::class);
-        $tracker2 = $this->getMock(TrackerInterface::class);
-        $tracker3 = $this->getMock(TrackerInterface::class);
+        $tracker1 = $this->createMockFromClass(TrackerInterface::class);
+        $tracker2 = $this->createMockFromClass(TrackerInterface::class);
+        $tracker3 = $this->createMockFromClass(TrackerInterface::class);
 
         // Change the properties
         $this->changeProperty($this->tracker, 'trackers', [$tracker1, $tracker2, $tracker3]);
@@ -67,12 +68,12 @@ class AggregateTrackerTest extends \PHPUnit_Framework_TestCase
         $tracker3->expects($this->once())->method('forget');
 
         // Run the track;
-        $this->tracker->forget($this->getMock(TrackableInterface::class));
+        $this->tracker->forget($this->createMockFromClass(TrackableInterface::class));
     }
 
     public function testCallsCreator()
     {
-        $return_tracker = $this->getMock(TrackerInterface::class);
+        $return_tracker = $this->createMockFromClass(TrackerInterface::class);
         $this->tracker->addTracker('test', function() use ($return_tracker) {
             return $return_tracker;
         });
@@ -81,7 +82,7 @@ class AggregateTrackerTest extends \PHPUnit_Framework_TestCase
         $return_tracker->expects($this->once())->method('track');
 
         // Run the track method
-        $this->tracker->track($this->getMock(TrackableInterface::class));
+        $this->tracker->track($this->createMockFromClass(TrackableInterface::class));
     }
 
     public function testUsesDIContainer()
@@ -91,14 +92,14 @@ class AggregateTrackerTest extends \PHPUnit_Framework_TestCase
         });
 
         $passed = null;
-        $return_tracker = $this->getMock(TrackerInterface::class);
+        $return_tracker = $this->createMockFromClass(TrackerInterface::class);
         $this->tracker->addTracker('test', function(stdClass $obj) use (&$passed, $return_tracker) {
             $passed = $obj;
             return $return_tracker;
         });
 
         // Run the track method
-        $this->tracker->track($this->getMock(TrackableInterface::class));
+        $this->tracker->track($this->createMockFromClass(TrackableInterface::class));
 
         // Make sure it gave us the right stdclass
         $this->assertInstanceOf(stdClass::class, $passed);
@@ -108,10 +109,10 @@ class AggregateTrackerTest extends \PHPUnit_Framework_TestCase
     public function testSomeCreated()
     {
         // Create the trackers
-        $tracker1 = $this->getMock(TrackerInterface::class);
-        $tracker2 = $this->getMock(TrackerInterface::class);
-        $tracker3 = $this->getMock(TrackerInterface::class);
-        $tracker4 = $this->getMock(TrackerInterface::class);
+        $tracker1 = $this->createMockFromClass(TrackerInterface::class);
+        $tracker2 = $this->createMockFromClass(TrackerInterface::class);
+        $tracker3 = $this->createMockFromClass(TrackerInterface::class);
+        $tracker4 = $this->createMockFromClass(TrackerInterface::class);
 
         $calls = 0;
         // Bind the trackers
@@ -135,13 +136,13 @@ class AggregateTrackerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(2, $calls);
 
         // Now track something
-        $this->tracker->track($this->getMock(TrackableInterface::class));
+        $this->tracker->track($this->createMockFromClass(TrackableInterface::class));
 
         // Make sure there were only 4 calls
         $this->assertEquals(4, $calls);
 
         // Now track one more thing
-        $this->tracker->track($this->getMock(TrackableInterface::class));
+        $this->tracker->track($this->createMockFromClass(TrackableInterface::class));
 
         // Make sure there were only 4 calls
         $this->assertEquals(4, $calls);
@@ -149,14 +150,14 @@ class AggregateTrackerTest extends \PHPUnit_Framework_TestCase
 
     public function testReturnsInstance()
     {
-        $result = $this->tracker->track($this->getMock(TrackableInterface::class));
+        $result = $this->tracker->track($this->createMockFromClass(TrackableInterface::class));
         $this->assertSame($this->tracker, $result);
     }
 
     public function testOverwrite()
     {
-        $tracker1 = $this->getMock(TrackerInterface::class);
-        $tracker2 = $this->getMock(TrackerInterface::class);
+        $tracker1 = $this->createMockFromClass(TrackerInterface::class);
+        $tracker2 = $this->createMockFromClass(TrackerInterface::class);
 
         // Bind 'test' to the first tracker
         $this->tracker->addTracker('test', function () use ($tracker1) { return $tracker1; });

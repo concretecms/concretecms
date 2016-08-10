@@ -5,6 +5,8 @@ use Concrete\Core\Validator\ValidatorManagerInterface;
 
 class ValidatorManagerTest extends \PHPUnit_Framework_TestCase
 {
+    use \Concrete\Tests\CreateClassMockTrait;
+
     /** @var ValidatorManagerInterface */
     protected $manager;
 
@@ -27,7 +29,7 @@ class ValidatorManagerTest extends \PHPUnit_Framework_TestCase
         $manager = $this->manager;
 
         $this->assertEmpty($manager->getValidators(), 'Manager should not initialize with validators.');
-        $manager->setValidator('test', $mock = $this->getMock('\Concrete\Core\Validator\ValidatorInterface'));
+        $manager->setValidator('test', $mock = $this->createMockFromClass('\Concrete\Core\Validator\ValidatorInterface'));
 
         $this->assertEquals(array('test' => $mock), $manager->getValidators(), 'Unable to set validator to manager');
     }
@@ -37,15 +39,15 @@ class ValidatorManagerTest extends \PHPUnit_Framework_TestCase
         $manager = new \Concrete\Core\Validator\ValidatorManager();
 
         $this->assertFalse($manager->hasValidator('test'), 'Manager should not initialize with validators.');
-        $manager->setValidator('test', $mock = $this->getMock('\Concrete\Core\Validator\ValidatorInterface'));
+        $manager->setValidator('test', $mock = $this->createMockFromClass('\Concrete\Core\Validator\ValidatorInterface'));
 
         $this->assertTrue($manager->hasValidator('test'), 'Manager does not properly report set validator');
     }
 
     public function testGetRequirements()
     {
-        $mock_1 = $this->getMock('\Concrete\Core\Validator\ValidatorInterface');
-        $mock_2 = $this->getMock('\Concrete\Core\Validator\ValidatorInterface');
+        $mock_1 = $this->createMockFromClass('\Concrete\Core\Validator\ValidatorInterface');
+        $mock_2 = $this->createMockFromClass('\Concrete\Core\Validator\ValidatorInterface');
 
         $mock_1->method('getRequirementStrings')->willReturn(array(
             1 => 'string 1',
@@ -63,8 +65,8 @@ class ValidatorManagerTest extends \PHPUnit_Framework_TestCase
 
     public function testValidation()
     {
-        $mock_1 = $this->getMock('\Concrete\Core\Validator\ValidatorInterface');
-        $mock_2 = $this->getMock('\Concrete\Core\Validator\ValidatorInterface');
+        $mock_1 = $this->createMockFromClass('\Concrete\Core\Validator\ValidatorInterface');
+        $mock_2 = $this->createMockFromClass('\Concrete\Core\Validator\ValidatorInterface');
 
         $mock_1->expects($this->once())->method('isValid')->willReturn(false);
         $mock_2->expects($this->once())->method('isValid')->willReturn(true);

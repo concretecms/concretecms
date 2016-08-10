@@ -4,6 +4,8 @@ require_once __DIR__ . "/ResolverTestCase.php";
 
 class PageUrlResolverTest extends ResolverTestCase
 {
+    use \Concrete\Tests\CreateClassMockTrait;
+
     protected function setUp()
     {
         $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
@@ -13,7 +15,7 @@ class PageUrlResolverTest extends ResolverTestCase
     public function testWithPage()
     {
         $path = '/some/collection/path';
-        $page = $this->getMock('\Concrete\Core\Page\Page');
+        $page = $this->createMockFromClass('\Concrete\Core\Page\Page');
         $page->expects($this->once())
                 ->method('getCollectionPath')
                 ->willReturn($path);
@@ -25,7 +27,7 @@ class PageUrlResolverTest extends ResolverTestCase
 
     public function testWithHome()
     {
-        $page = $this->getMock('\Concrete\Core\Page\Page');
+        $page = $this->createMockFromClass('\Concrete\Core\Page\Page');
         $page->expects($this->once())
             ->method('getCollectionID')
             ->willReturn(HOME_CID);
@@ -37,7 +39,7 @@ class PageUrlResolverTest extends ResolverTestCase
 
     public function testUnapproved()
     {
-        $page = $this->getMock('\Concrete\Core\Page\Page');
+        $page = $this->createMockFromClass('\Concrete\Core\Page\Page');
         $page->expects($this->exactly(2))
             ->method('getCollectionID')
             ->willReturn(1337);
@@ -50,7 +52,7 @@ class PageUrlResolverTest extends ResolverTestCase
     public function testAlreadyResolved()
     {
         $path = '/some/collection/path';
-        $page = $this->getMock('\Concrete\Core\Page\Page');
+        $page = $this->createMockFromClass('\Concrete\Core\Page\Page');
         $page->expects($this->never())
             ->method('getCollectionPath')
             ->willReturn($path);

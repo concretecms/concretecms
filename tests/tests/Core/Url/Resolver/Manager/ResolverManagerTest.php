@@ -2,6 +2,8 @@
 
 class ResolverManagerTest extends PHPUnit_Framework_TestCase
 {
+    use \Concrete\Tests\CreateClassMockTrait;
+
     /**
      * @var \Concrete\Core\Url\Resolver\Manager\ResolverManager
      */
@@ -42,7 +44,7 @@ class ResolverManagerTest extends PHPUnit_Framework_TestCase
 
     public function testPriority()
     {
-        $mock = $this->getMock('\Concrete\Core\Url\Resolver\UrlResolverInterface');
+        $mock = $this->createMockFromClass('\Concrete\Core\Url\Resolver\UrlResolverInterface');
         $mock->method('resolve')->willReturn('TEST');
 
         $this->manager->addResolver('test_resolver', $mock, 12);
@@ -51,7 +53,7 @@ class ResolverManagerTest extends PHPUnit_Framework_TestCase
 
     public function testGetters()
     {
-        $mock = $this->getMock('\Concrete\Core\Url\Resolver\UrlResolverInterface');
+        $mock = $this->createMockFromClass('\Concrete\Core\Url\Resolver\UrlResolverInterface');
         $this->manager->addResolver('test_resolver', $mock);
 
         $this->assertEquals($mock, $this->manager->getResolver('test_resolver'));

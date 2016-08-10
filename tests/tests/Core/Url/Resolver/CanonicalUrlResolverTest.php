@@ -4,6 +4,8 @@ require_once __DIR__ . "/ResolverTestCase.php";
 
 class CanonicalUrlResolverTest extends ResolverTestCase
 {
+    use \Concrete\Tests\CreateClassMockTrait;
+
     public function testConfig()
     {
         $this->markTestIncomplete('This needs to be updated to use the new site-based canonical url');
@@ -28,7 +30,7 @@ class CanonicalUrlResolverTest extends ResolverTestCase
     {
         $this->markTestIncomplete('This needs to be updated to use the new site-based canonical url');
 
-        $mock = $this->getMock('Concrete\Core\Http\Request');
+        $mock = $this->createMockFromClass('Concrete\Core\Http\Request');
         $mock->expects($this->once())->method('getScheme')->willReturn('http');
         $mock->expects($this->once())->method('getHost')->willReturn('somehost');
 
