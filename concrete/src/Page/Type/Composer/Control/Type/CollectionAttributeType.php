@@ -15,7 +15,7 @@ class CollectionAttributeType extends Type
         foreach ($keys as $ak) {
             $ac = new CollectionAttributeControl();
             $ac->setAttributeKeyID($ak->getAttributeKeyID());
-            //$ac->setPageTypeComposerControlIconSRC($ak->getAttributeKeyIconSRC());
+            $ac->setPageTypeComposerControlIconFormatter($ak->getController()->getIconFormatter());
             $ac->setPageTypeComposerControlName($ak->getAttributeKeyDisplayName());
             $objects[] = $ac;
         }
@@ -28,7 +28,7 @@ class CollectionAttributeType extends Type
         $ak = CollectionAttributeKey::getByID($identifier);
         $ax = new CollectionAttributeControl();
         $ax->setAttributeKeyID($ak->getAttributeKeyID());
-        //$ax->setPageTypeComposerControlIconSRC($ak->getAttributeKeyIconSRC($ak));
+        $ax->setPageTypeComposerControlIconFormatter($ak->getController()->getIconFormatter());
         $ax->setPageTypeComposerControlName($ak->getAttributeKeyDisplayName());
 
         return $ax;

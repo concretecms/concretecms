@@ -4,13 +4,14 @@ namespace Concrete\Core\Page\Type\Composer\Control\CorePageProperty;
 use Core;
 use UserInfo;
 use Concrete\Core\Page\Page;
+use Concrete\Core\Attribute\FontAwesomeIconFormatter;
 
 class UserCorePageProperty extends CorePageProperty
 {
     public function __construct()
     {
         $this->setCorePagePropertyHandle('user');
-        $this->setPageTypeComposerControlIconSRC(ASSETS_URL . '/attributes/text/icon.png');
+        $this->setPageTypeComposerControlIconFormatter(new FontAwesomeIconFormatter('file-text'));
     }
 
     public function getPageTypeComposerControlName()
