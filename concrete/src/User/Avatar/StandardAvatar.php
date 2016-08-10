@@ -29,9 +29,7 @@ class StandardAvatar implements AvatarInterface
     public function output()
     {
         $img = new Image();
-        $width = $this->application['config']->get('concrete.icons.user_avatar.width');
-        $height = $this->application['config']->get('concrete.icons.user_avatar.height');
-        $img->src($this->getPath())->class('u-avatar')->width($width)->height($height)->alt($this->userInfo->getUserName());
+        $img->src($this->getPath())->class('u-avatar')->alt($this->userInfo->getUserName());
 
         return (string) $img;
     }
