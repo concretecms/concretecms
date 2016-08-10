@@ -1,8 +1,10 @@
 <?php
+
 namespace Concrete\Core\Page\Type\Composer\Control\CorePageProperty;
 
 use Core;
 use Concrete\Core\Page\Page;
+use Concrete\Core\Attribute\FontAwesomeIconFormatter;
 
 class NameCorePageProperty extends CorePageProperty
 {
@@ -11,7 +13,7 @@ class NameCorePageProperty extends CorePageProperty
     public function __construct()
     {
         $this->setCorePagePropertyHandle('name');
-        $this->setPageTypeComposerControlIconSRC(ASSETS_URL . '/attributes/text/icon.png');
+        $this->setPageTypeComposerControlIconFormatter(new FontAwesomeIconFormatter('file-text'));
     }
 
     public function getPageTypeComposerControlName()
@@ -45,7 +47,7 @@ class NameCorePageProperty extends CorePageProperty
         } else {
             $name = $this->getPageTypeComposerControlDraftValue();
         }
-        
+
         /** @var \Concrete\Core\Utility\Service\Validation\Strings $stringValidator */
         $stringValidator = Core::make('helper/validation/strings');
         if (!$stringValidator->notempty($name)) {

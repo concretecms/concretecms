@@ -1,16 +1,18 @@
 <?php
+
 namespace Concrete\Core\Page\Type\Composer\Control\CorePageProperty;
 
 use Loader;
 use Concrete\Core\Page\Page;
 use Core;
+use Concrete\Core\Attribute\FontAwesomeIconFormatter;
 
 class UrlSlugCorePageProperty extends CorePageProperty
 {
     public function __construct()
     {
         $this->setCorePagePropertyHandle('url_slug');
-        $this->setPageTypeComposerControlIconSRC(ASSETS_URL . '/attributes/text/icon.png');
+        $this->setPageTypeComposerControlIconFormatter(new FontAwesomeIconFormatter('file-text'));
     }
 
     public function getPageTypeComposerControlName()
@@ -34,6 +36,7 @@ class UrlSlugCorePageProperty extends CorePageProperty
         if (!$stringValidator->notempty($handle)) {
             $control = $this->getPageTypeComposerFormLayoutSetControlObject();
             $e->add(t('You haven\'t chosen a valid %s', $control->getPageTypeComposerControlDisplayLabel()));
+
             return $e;
         }
     }
