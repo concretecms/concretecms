@@ -2,6 +2,7 @@
 namespace Concrete\Controller\Search;
 
 use Concrete\Core\Http\ResponseAssetGroup;
+use Concrete\Core\Permission\Key\Key;
 use Concrete\Core\Search\StickyRequest;
 use Concrete\Core\User\Group\GroupSetList;
 use Controller;
@@ -142,6 +143,7 @@ class Users extends Controller
                                 $groups = $gs->getGroups();
                             }
                             $this->userList->addToQuery('left join UserGroups ugs on u.uID = ugs.uID');
+                            $pk = Key::getByHandle('search_users_in_group');
                             foreach ($groups as $g) {
                                 if ($pk->validate($g) && (!in_array($g->getGroupID(), $groupsetids))) {
                                     $groupsetids[] = $g->getGroupID();
