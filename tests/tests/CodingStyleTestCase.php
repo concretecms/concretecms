@@ -15,7 +15,7 @@ abstract class CodingStyleTestCase extends \PHPUnit_Framework_TestCase
     {
         if (self::$phpFiles === null) {
             $files = [];
-            $baseDir = rtrim(str_replace('/', DIRECTORY_SEPARATOR, DIR_BASE), DIRECTORY_SEPARATOR);
+            $baseDir = rtrim(str_replace('/', DIRECTORY_SEPARATOR, DIR_BASE_CORE), DIRECTORY_SEPARATOR);
             $directoryIterator = new \RecursiveDirectoryIterator($baseDir);
             $iterator = new \RecursiveIteratorIterator($directoryIterator, \RecursiveIteratorIterator::LEAVES_ONLY);
             foreach ($iterator as $f) {
