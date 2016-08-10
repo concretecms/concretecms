@@ -1,14 +1,16 @@
 <?php
+
 namespace Concrete\Core\Page\Type\Composer\Control\CorePageProperty;
 
 use Concrete\Core\Page\Page;
+use Concrete\Core\Attribute\FontAwesomeIconFormatter;
 
 class PageTemplateCorePageProperty extends CorePageProperty
 {
     public function __construct()
     {
         $this->setCorePagePropertyHandle('page_template');
-        $this->setPageTypeComposerControlIconSRC(ASSETS_URL . '/attributes/select/icon.png');
+        $this->setPageTypeComposerControlIconFormatter(new FontAwesomeIconFormatter('list-alt'));
     }
 
     public function getPageTypeComposerControlName()

@@ -42,7 +42,7 @@ if ($cp->canViewPage()) {
         foreach ($controls as $cnt) {
             ?>
 			<li><a href="#" data-control-type-id="<?=$t->getPageTypeComposerControlTypeID()?>" data-control-identifier="<?=$cnt->getPageTypeComposerControlIdentifier()?>">
-                    <img src="<?=$cnt->getPageTypeComposerControlIconSRC()?>" />
+                    <?=$cnt->getPageTypeComposerControlIcon()?>
                     <?=$cnt->getPageTypeComposerControlDisplayName()?></a></li>
 		<?php 
         }
