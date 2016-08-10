@@ -23,18 +23,18 @@ class UserTest extends \UserTestCase
 
     public function testCreateLegacy()
     {
-        $ui = \UserInfo::add(array(
+        $ui = \UserInfo::add([
             'uName' => 'andrew',
             'uEmail' => 'andrew@concrete5.org',
-        ));
+        ]);
         $this->assertEquals(1, $ui->getUserID());
         $this->assertEquals('andrew', $ui->getUserName());
         $this->assertEquals('andrew@concrete5.org', $ui->getUserEmail());
 
-        $ui = \Concrete\Core\User\UserInfo::add(array(
+        $ui = \Concrete\Core\User\UserInfo::add([
             'uName' => 'andrew2',
             'uEmail' => 'andrew2@concrete5.org',
-        ));
+        ]);
         $this->assertEquals(2, $ui->getUserID());
         $this->assertEquals('andrew2', $ui->getUserName());
         $this->assertEquals('andrew2@concrete5.org', $ui->getUserEmail());
@@ -42,10 +42,10 @@ class UserTest extends \UserTestCase
 
     public function testRegisterLegacy()
     {
-        $ui = \UserInfo::register(array(
+        $ui = \UserInfo::register([
             'uName' => 'andrew',
             'uEmail' => 'andrew@concrete5.org',
-        ));
+        ]);
         $this->assertEquals(1, $ui->getUserID());
         $this->assertEquals('andrew', $ui->getUserName());
         $this->assertEquals('andrew@concrete5.org', $ui->getUserEmail());
@@ -62,7 +62,7 @@ class UserTest extends \UserTestCase
     public function testCreateNew()
     {
         $service = Core::make('user/registration');
-        $ui = $service->create(array('uName' => 'andrew', 'uEmail' => 'andrew@concrete5.org'));
+        $ui = $service->create(['uName' => 'andrew', 'uEmail' => 'andrew@concrete5.org']);
         $this->assertEquals(1, $ui->getUserID());
         $this->assertEquals('andrew', $ui->getUserName());
         $this->assertEquals('andrew@concrete5.org', $ui->getUserEmail());
@@ -70,13 +70,12 @@ class UserTest extends \UserTestCase
 
     public function testGravatar()
     {
-
         $site = \Core::make('site')->installDefault();
 
         $site->getConfigRepository()->set('user.gravatar.enabled', true);
 
         $service = Core::make('user/registration');
-        $ui = $service->create(array('uName' => 'andrew', 'uEmail' => 'andrew@concrete5.org'));
+        $ui = $service->create(['uName' => 'andrew', 'uEmail' => 'andrew@concrete5.org']);
         $this->assertFalse($ui->hasAvatar());
 
         // Note, this is a FALLBACK avatar. That's why hasAvatar is false but the avatar actually returns an image.
@@ -94,7 +93,7 @@ class UserTest extends \UserTestCase
         $type = Type::add('default', t('Default'));
         $configuration = $type->getConfigurationObject();
         $fsl = StorageLocation::add($configuration, 'Default', true);
-        
+
         $avatarSize = '';
         if ($config['concrete.icons.user_avatar.width']) {
             $avatarSize .= ' width="'.$config['concrete.icons.user_avatar.width'].'"';
@@ -104,7 +103,7 @@ class UserTest extends \UserTestCase
         }
 
         $service = Core::make('user/registration');
-        $ui = $service->create(array('uName' => 'andrew', 'uEmail' => 'andrew@concrete5.org'));
+        $ui = $service->create(['uName' => 'andrew', 'uEmail' => 'andrew@concrete5.org']);
         $this->assertFalse($ui->hasAvatar());
 
         $avatar = $ui->getUserAvatar();
@@ -113,7 +112,7 @@ class UserTest extends \UserTestCase
             $avatar->output());
         $this->assertEquals('/path/to/server/concrete/images/avatar_none.png', $avatar->getPath());
 
-        $ui->update(array('uHasAvatar' => true));
+        $ui->update(['uHasAvatar' => true]);
         // This is lame, I know.
         $ui = Core::make('Concrete\Core\User\UserInfoRepository')->getByID(1);
         $this->assertTrue($ui->hasAvatar());
@@ -139,7 +138,7 @@ class UserTest extends \UserTestCase
         $site->getConfigRepository()->set('user.profiles_enabled', false);
 
         $service = Core::make('user/registration');
-        $ui = $service->create(array('uName' => 'andrew', 'uEmail' => 'andrew@concrete5.org'));
+        $ui = $service->create(['uName' => 'andrew', 'uEmail' => 'andrew@concrete5.org']);
         $this->assertEquals(null, $ui->getUserPublicProfileUrl());
 
         $site->getConfigRepository()->set('user.profiles_enabled', true);
