@@ -12,6 +12,7 @@ use Concrete\Core\Entity\Attribute\Key\PageKey;
 use Concrete\Core\Entity\Attribute\Key\Type\BooleanType;
 use Concrete\Core\Entity\Attribute\Key\Type\NumberType;
 use Concrete\Core\File\Filesystem;
+use Concrete\Core\File\Set\Set;
 use Concrete\Core\Page\Template;
 use Concrete\Core\Permission\Access\Access;
 use Concrete\Core\Permission\Access\Entity\GroupEntity;
@@ -20,6 +21,7 @@ use Concrete\Core\Permission\Key\Key;
 use Concrete\Core\Site\Service;
 use Concrete\Core\Tree\Node\NodeType;
 use Concrete\Core\Tree\Node\Type\File;
+use Concrete\Core\Tree\Node\Type\FileFolder;
 use Concrete\Core\Tree\TreeType;
 use Concrete\Core\Tree\Type\ExpressEntryResults;
 use Concrete\Core\User\Group\Group;
@@ -78,7 +80,35 @@ class Version20160725000000 extends AbstractMigration
 
     protected function migrateFileManagerPermissions()
     {
-        $r = $this->connection->executeQuery('select fpa.*, pk.pkHandle from FileSetPermissionAssignments fpa inner join PermissionKeys pk on fpa.pkID = pk.pkID where fsID = 0');
+        $filesystem = new Filesystem();
+        $root = $filesystem->getRootFolder();
+        $this->migrateFileSetManagerPermissions(0, $root);
+
+        // Now let's look for any file sets that have custom permissions
+        $r = $this->connection->executeQuery('select * from FileSets where fsOverrideGlobalPermissions = 1');
+        while ($row = $r->fetch()) {
+            $folder = FileFolder::getNodeByName($row['fsName']);
+            if (!is_object($folder)) {
+               $folder = $filesystem->addFolder($root, $row['fsName']);
+            }
+            $this->migrateFileSetManagerPermissions($row['fsID'], $folder);
+            // Now we move all the files that were in that set into this folder.
+            $r2 = $this->connection->executeQuery('select fID from FileSetFiles where fsID = ?', array($row['fsID']));
+            while ($row2 = $r2->fetch()) {
+                $f = \File::getByID($row2['fID']);
+                if (is_object($f)) {
+                    $node = $f->getFileNodeObject();
+                    if (is_object($node)) {
+                        $node->move($folder);
+                    }
+                }
+            }
+        }
+    }
+
+    protected function migrateFileSetManagerPermissions($fsID, FileFolder $folder)
+    {
+        $r = $this->connection->executeQuery('select fpa.*, pk.pkHandle from FileSetPermissionAssignments fpa inner join PermissionKeys pk on fpa.pkID = pk.pkID where fsID = ?', array($fsID));
         $permissionsMap = array(
             'view_file_set_file' => 'view_file_folder_file',
             'search_file_set' => 'search_file_folder',
@@ -90,13 +120,16 @@ class Version20160725000000 extends AbstractMigration
             'delete_file_set_files' => 'delete_file_folder_files',
             '_add_file' => 'add_file',
         );
-        $filesystem = new Filesystem();
-        $folder = $filesystem->getRootFolder();
 
         $count = $this->connection->fetchColumn('select count(*) from TreeNodePermissionAssignments where treeNodeID = ?', array(
             $folder->getTreeNodeID()
         ));
         if (!$count) {
+
+            $folder->setTreeNodePermissionsToOverride();
+            $this->connection->executeQuery('delete from TreeNodePermissionAssignments where treeNodeID = ?', array(
+                $folder->getTreeNodeID()
+            ));
 
             while ($row = $r->fetch()) {
                 $mapped = $permissionsMap[$row['pkHandle']];
@@ -119,6 +152,11 @@ class Version20160725000000 extends AbstractMigration
                 $pt->assignPermissionAccess($pa);
             }
         }
+
+        // Loop through all file sets that have custom permissions and create folders from them,
+        // preserving the file permssions on the folders themselves
+
+
     }
 
     protected function updateDoctrineXmlTables()
@@ -143,6 +181,8 @@ class Version20160725000000 extends AbstractMigration
     {
         // Remove the weird primary keys from the Files table
         $this->connection->executeQuery('alter table Files drop primary key, add primary key (fID)');
+
+        $this->connection->executeQuery('update AttributeTypes set pkgID = null where pkgID = 0');
     }
 
 
@@ -534,8 +574,6 @@ class Version20160725000000 extends AbstractMigration
 
     protected function importAttributeTypes()
     {
-        $this->connection->executeQuery('update AttributeTypes set pkgID = null where pkgID = 0');
-
         $types = array(
             'express' => 'Express Entity',
             'email' => 'Email Address',
@@ -1028,7 +1066,6 @@ class Version20160725000000 extends AbstractMigration
         $this->importAttributeTypes();
         $this->migrateOldPermissions();
         $this->addPermissions();
-        $this->cleanupOldPermissions();
         $this->importAttributeKeys();
         $this->addDashboard();
         $this->updateFileManager();
@@ -1040,6 +1077,7 @@ class Version20160725000000 extends AbstractMigration
         $this->installDesktops();
         $this->addNotifications();
         $this->splittedTrackingCode();
+        $this->cleanupOldPermissions();
         $this->connection->Execute('set foreign_key_checks = 1');
     }
 
