@@ -179,8 +179,9 @@ class LinkAbstractor extends Object
                 $fID = $matches[1];
                 if ($fID > 0) {
                     $f = File::getByID($fID);
-
-                    return $f->getURL();
+                    if (is_object($f)) {
+                        return $f->getURL();
+                    }
                 }
             },
             $text
