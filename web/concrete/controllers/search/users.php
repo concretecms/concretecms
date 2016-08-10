@@ -17,6 +17,7 @@ use stdClass;
 use User;
 use URL;
 use Group;
+use PermissionKey;
 
 class Users extends Controller
 {
@@ -142,6 +143,7 @@ class Users extends Controller
                                 $groups = $gs->getGroups();
                             }
                             $this->userList->addToQuery('left join UserGroups ugs on u.uID = ugs.uID');
+                            $pk = PermissionKey::getByHandle('search_users_in_group');
                             foreach ($groups as $g) {
                                 if ($pk->validate($g) && (!in_array($g->getGroupID(), $groupsetids))) {
                                     $groupsetids[] = $g->getGroupID();
