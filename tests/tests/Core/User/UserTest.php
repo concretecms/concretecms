@@ -90,9 +90,18 @@ class UserTest extends \UserTestCase
     public function testAvatar()
     {
         $site = \Core::make('site')->installDefault();
+        $config = $site->getConfigRepository()->getRepository();
         $type = Type::add('default', t('Default'));
         $configuration = $type->getConfigurationObject();
         $fsl = StorageLocation::add($configuration, 'Default', true);
+        
+        $avatarSize = '';
+        if ($config['concrete.icons.user_avatar.width']) {
+            $avatarSize .= ' width="'.$config['concrete.icons.user_avatar.width'].'"';
+        }
+        if ($config['concrete.icons.user_avatar.height']) {
+            $avatarSize .= ' height="'.$config['concrete.icons.user_avatar.height'].'"';
+        }
 
         $service = Core::make('user/registration');
         $ui = $service->create(array('uName' => 'andrew', 'uEmail' => 'andrew@concrete5.org'));
@@ -100,7 +109,7 @@ class UserTest extends \UserTestCase
 
         $avatar = $ui->getUserAvatar();
         $this->assertInstanceOf('Concrete\Core\User\Avatar\EmptyAvatar', $avatar);
-        $this->assertEquals('<img src="/path/to/server/concrete/images/avatar_none.png" alt="andrew" class="u-avatar">',
+        $this->assertEquals('<img src="/path/to/server/concrete/images/avatar_none.png" alt="andrew" class="u-avatar"'.$avatarSize.'>',
             $avatar->output());
         $this->assertEquals('/path/to/server/concrete/images/avatar_none.png', $avatar->getPath());
 
@@ -112,7 +121,7 @@ class UserTest extends \UserTestCase
         $this->assertEquals('http://www.dummyco.com/path/to/server/application/files/avatars/1.jpg',
             $avatar->getPath());
         $this->assertEquals(
-            '<img src="http://www.dummyco.com/path/to/server/application/files/avatars/1.jpg" alt="andrew" class="u-avatar">',
+            '<img src="http://www.dummyco.com/path/to/server/application/files/avatars/1.jpg" alt="andrew" class="u-avatar"'.$avatarSize.'>',
             $avatar->output());
 
         $service = Core::make('user/avatar');
