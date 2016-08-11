@@ -1,16 +1,17 @@
 <?php
 namespace Concrete\Core\Routing;
 
-use Symfony\Component\HttpKernel;
 use Response;
 use Request;
+use Concrete\Core\Support\Facade\Application;
+use Symfony\Component\HttpKernel\Controller\ArgumentResolver;
 
 class ClosureRouteCallback extends RouteCallback
 {
     public function execute(Request $request, \Concrete\Core\Routing\Route $route, $parameters)
     {
-        $resolver = new HttpKernel\Controller\ControllerResolver();
-        $arguments = $resolver->getArguments($request, $this->callback);
+        $argumentsResolver = Application::make(ArgumentResolver::class);
+        $arguments = $argumentsResolver->getArguments($request, $this->callback);
         $callback_response = call_user_func_array($this->callback, $arguments);
 
         if ($callback_response instanceof \Concrete\Core\Http\Response) {
