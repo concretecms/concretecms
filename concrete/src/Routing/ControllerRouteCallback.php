@@ -53,7 +53,7 @@ class ControllerRouteCallback extends RouteCallback
      */
     public static function getRouteAttributes($callback)
     {
-        $attributes = array();
+        $attributes = [];
         $attributes['_controller'] = $callback;
         $callback = new static($callback);
         $attributes['callback'] = $callback;

@@ -33,6 +33,6 @@ class ClosureRouteCallback extends RouteCallback
     {
         $callback = new static($callback);
 
-        return array('callback' => $callback);
+        return ['callback' => $callback];
     }
 }
