@@ -12,9 +12,11 @@ header.ccm-dashboard-page-header {
 }
 
 div.ccm-header-search-form {
-  float: right;
+  position: absolute;
+  top: 0px;
+  right: 0px;
+
   width: auto;
-  max-width: 600px;
 
   span.input-group-btn {
     border-left: 0px;
@@ -54,10 +56,16 @@ div.ccm-header-search-form {
       display: none;
     }
 
+    a.ccm-header-launch-advanced-search +
     div.input-group {
-      input {
+      input.form-control {
+        width: 310px;
         padding-right: 110px;
       }
+    }
+
+    input[type=text].form-control {
+      width: 200px;
     }
   }
 
@@ -70,7 +78,7 @@ ul.ccm-header-search-navigation {
   }
   list-style: none;
   text-align: right;
-  padding: 10px 0px 10px 0px;
+  padding: 7px 0px 10px 0px;
   a {
     color: #777;
     .transition(0.1s linear all);
