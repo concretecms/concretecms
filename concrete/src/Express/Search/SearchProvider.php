@@ -47,6 +47,11 @@ class SearchProvider extends AbstractSearchProvider
         return new Available($this->category);
     }
 
+    public function getBaseColumnSet()
+    {
+        return new ColumnSet($this->category);
+    }
+
     public function getCurrentColumnSet()
     {
         if (!isset($this->columnSet)) {

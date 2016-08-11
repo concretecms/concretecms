@@ -34,4 +34,26 @@ abstract class AbstractSearchProvider implements ProviderInterface, SessionQuery
         }
     }
 
+    public function getSearchResultFromQuery(Query $query)
+    {
+        $list = $this->getItemList();
+        foreach($query->getFields() as $field) {
+            $field->filterList($list);
+        }
+        if (!$list->getActiveSortColumn()) {
+            $columns = $query->getColumns();
+            if (is_object($columns)) {
+                $column = $columns->getDefaultSortColumn();
+                $list->sanitizedSortBy($column->getColumnKey(), $column->getColumnDefaultSortDirection());
+            } else {
+                $columns = $this->getDefaultColumnSet();
+            }
+        }
+        $result = $this->createSearchResultObject($columns, $list);
+        $result->setQuery($query);
+        return $result;
+    }
+
+
+
 }

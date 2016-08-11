@@ -229,6 +229,13 @@ table.ccm-search-results-table {
 
       input[type=checkbox], input[type=radio] {
         vertical-align: middle;
+        border-color: #ccc;
+      }
+
+      span.ccm-search-results-checkbox {
+        input {
+          margin-top: 0px;
+        }
       }
 
       background-color: #e7e7e7;
@@ -338,6 +345,11 @@ table.ccm-search-results-table {
       font-size: 13px;
 
       .transition(all 0.1s);
+
+      input[type=checkbox], input[type=radio] {
+        position: relative;
+        z-index: @index-level-search-results-checkboxes;
+      }
 
       padding: 15px 0px 15px 15px;
 
