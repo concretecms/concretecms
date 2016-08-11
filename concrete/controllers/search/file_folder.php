@@ -75,7 +75,6 @@ class FileFolder extends AbstractController
             $u = new \User();
             $list = $folder->getFolderItemList($u, $this->request);
 
-
             $fields = $this->request->get('field');
             $filters = array();
             if (count($fields)) { // We are passing in something like "filter by images"

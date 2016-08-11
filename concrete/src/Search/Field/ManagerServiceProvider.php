@@ -1,5 +1,5 @@
 <?php
-namespace Concrete\Core\File\Search\Field;
+namespace Concrete\Core\Search\Field;
 
 use Concrete\Core\File\Search\Field\Field\AddedToPageField;
 use Concrete\Core\File\Search\Field\Field\DateAddedField;
@@ -19,6 +19,10 @@ class ManagerServiceProvider extends ServiceProvider
         });
         $this->app['manager/search_field/file_folder'] = $this->app->share(function ($app) {
             $manager = $this->app->make('Concrete\Core\File\Search\Field\FileFolderManager');
+            return $manager;
+        });
+        $this->app['manager/search_field/page'] = $this->app->share(function ($app) {
+            $manager = $this->app->make('Concrete\Core\Page\Search\Field\Manager');
             return $manager;
         });
     }

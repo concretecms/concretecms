@@ -29,6 +29,11 @@ class SearchProvider extends AbstractSearchProvider
         return $this->userCategory->getList();
     }
 
+    public function getBaseColumnSet()
+    {
+        return new ColumnSet();
+    }
+
     public function getAvailableColumnSet()
     {
         return new Available();
