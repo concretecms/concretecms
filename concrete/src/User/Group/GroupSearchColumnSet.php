@@ -8,7 +8,7 @@ class GroupSearchColumnSet extends \Concrete\Core\Search\Column\Set
 {
     public static function getGroupName($g)
     {
-        return '<a data-group-name="' . $g->getGroupDisplayName() . '" href="' . URL::to('/dashboard/users/groups', 'edit', $g->getGroupID()) . '" data-group-id="' . $g->getGroupID() . '" href="#">' . $g->getGroupDisplayName() . '</a>';
+        return '<a data-group-name="' . $g->getGroupDisplayName(false) . '" href="' . URL::to('/dashboard/users/groups', 'edit', $g->getGroupID()) . '" data-group-id="' . $g->getGroupID() . '" href="#">' . $g->getGroupDisplayName() . '</a>';
     }
 
     public function __construct()
