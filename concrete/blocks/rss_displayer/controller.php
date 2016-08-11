@@ -19,18 +19,18 @@ class Controller extends BlockController
     protected $btCacheBlockOutputOnPost = true;
     protected $btWrapperClass = 'ccm-ui';
     protected $btCacheBlockOutputForRegisteredUsers = true;
-    
+
     /**
      * Default number of seconds that the output of this block should be cached
-     * (Can be overridden by the user within C5 UI)
+     * (Can be overridden by the user within C5 UI).
      * 
-     * @var integer
+     * @var int
      */
     protected $btCacheBlockOutputLifetime = 3600;
-    
+
     /**
      * Number of seconds that the RSS feed itself should be cached before fetching
-     * a fresh copy 
+     * a fresh copy.
      * 
      * (Perhaps this could eventually become a user-setting?)
      * 
@@ -42,9 +42,9 @@ class Controller extends BlockController
      * Should probably be less than $btCacheBlockOutputLifetime above, otherwise the
      * block will be re-rendered using the same stale RSS data.
      * 
-     * @var integer
+     * @var int
      */
-    protected $rssFeedCacheLifetime = 1800;   
+    protected $rssFeedCacheLifetime = 1800;
 
     /**
      * Used for localization. If we want to localize the name/description we have to include this.
@@ -61,15 +61,15 @@ class Controller extends BlockController
 
     public function getJavaScriptStrings()
     {
-        return array(
+        return [
             'feed-address' => t('Please enter a valid feed address.'),
             'feed-num-items' => t('Please enter the number of items to display.'),
-        );
+        ];
     }
 
     public function getDefaultDateTimeFormats()
     {
-        $formats = array(
+        $formats = [
             ':longDate:',
             ':shortDate:',
             ':longTime:',
@@ -78,9 +78,9 @@ class Controller extends BlockController
             ':longDate:shortTime:',
             ':shortDate:longTime:',
             ':shortDate:shortTime:',
-        );
+        ];
         $now = new \DateTime();
-        $result = array();
+        $result = [];
         foreach ($formats as $format) {
             $result[$format] = $this->formatDateTime($now, $format);
         }
@@ -144,7 +144,7 @@ class Controller extends BlockController
     public function view()
     {
         $fp = Loader::helper("feed");
-        $posts = array();
+        $posts = [];
 
         try {
             $channel = $fp->load($this->url, $this->rssFeedCacheLifetime);
@@ -196,7 +196,7 @@ class Controller extends BlockController
     public function getSearchableContent()
     {
         $fp = Loader::helper("feed");
-        $posts = array();
+        $posts = [];
 
         try {
             // We manually set cache time to 2hrs here as getSearchableContent()
