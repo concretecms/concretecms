@@ -166,12 +166,22 @@ class Controller extends BlockController
 
     public function save($data)
     {
-        $args['url'] = isset($data['url']) ? $data['url'] : '';
-        $args['dateFormat'] = $data['dateFormat'];
-        $args['itemsToDisplay'] = (intval($data['itemsToDisplay']) > 0) ? intval($data['itemsToDisplay']) : 5;
-        $args['showSummary'] = ($data['showSummary'] == 1) ? 1 : 0;
-        $args['launchInNewWindow'] = ($data['launchInNewWindow'] == 1) ? 1 : 0;
-        $args['title'] = isset($data['title']) ? $data['title'] : '';
+        $data += [
+            'url' => '',
+            'itemsToDisplay' => 0,
+            'showSummary' => 0,
+            'launchInNewWindow' => 0,
+            'title' => '',
+            'standardDateFormat' => '',
+            'customDateFormat' => '',
+        ];
+        $args = [
+            'url' => $data['url'],
+            'itemsToDisplay' => (intval($data['itemsToDisplay']) > 0) ? intval($data['itemsToDisplay']) : 5,
+            'showSummary' => $data['showSummary'] ? 1 : 0,
+            'launchInNewWindow' => $data['launchInNewWindow'] ? 1 : 0,
+            'title' => $data['title'],
+        ];
         switch ($data['standardDateFormat']) {
             case ':custom:':
                 $args['dateFormat'] = $data['customDateFormat'];
