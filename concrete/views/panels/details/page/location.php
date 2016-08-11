@@ -13,11 +13,11 @@ defined('C5_EXECUTE') or die("Access Denied.");
             <div style="min-height: 140px">
                 <?php if ($c->isPageDraft()) {
     ?>
-                    <p class="lead"><?=t('Where will this page live on the site?')?></p>
+                    <label class="control-label"><?=t('Where will this page live on the site?')?></label>
                 <?php 
 } else {
     ?>
-                    <p class="lead"><?=t('Where does this page live on the site?')?></p>
+                    <label class="control-label"><?=t('Where does this page live on the site?')?></label>
                 <?php 
 }
     ?>
@@ -34,7 +34,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 	<?php if ($c->isGeneratedCollection() || $c->isPageDraft()) {
     ?>
 
-		<p class="lead"><?=t('Current Canonical URL')?></p>
+		<label class="control-label"><?=t('Current Canonical URL')?></label>
 		<div class="breadcrumb">
 			<?php if ($c->isPageDraft()) {
     ?>
@@ -52,7 +52,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 } else {
     ?>
 
-		<p class="lead"><?=t('URLs to this Page')?></p>
+		<label class="control-label"><?=t('URLs to this Page')?></label>
 
 		<div>
 		<table class="table table-striped ccm-page-panel-detail-location-paths">
