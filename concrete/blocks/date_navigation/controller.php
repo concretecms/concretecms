@@ -99,7 +99,7 @@ class Controller extends BlockController
         $query = $pl->deliverQueryObject();
         $query->select('date_format(cv.cvDatePublic, "%Y") as navYear, date_format(cv.cvDatePublic, "%m") as navMonth');
         $query->groupBy('navYear, navMonth');
-        $query->orderBy('cvDatePublic', 'desc');
+        $query->orderBy('navYear', 'desc')->addOrderBy('navMonth', 'desc');
         $r = $query->execute();
         $dates = array();
         while ($row = $r->fetch()) {
