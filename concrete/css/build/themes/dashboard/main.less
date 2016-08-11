@@ -285,6 +285,18 @@ div.ccm-dashboard-my-account {
 }
 
 
+select[data-select=bootstrap] {
+  display: none;
+}
+
+select[data-select=bootstrap] +
+  div.btn-group {
+    span.caret {
+      margin-left: 2px !important;
+    }
+  }
+
+
 @import "./welcome.less";
 @import "./welcome/site-activity.less";
 @import "./welcome/rss-displayer.less";

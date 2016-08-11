@@ -23,27 +23,16 @@ $dh = Core::make('helper/date');
 		<?=$validation_token->output('file_sets_edit');
     ?>
 
-		<?= $ih->tabs(array(
-            array('details', t('Details'), true),
-            array('files', t('Files in Set')),
-        ));
-    ?>
 
-		<div id="ccm-tab-content-details" class="ccm-tab-content">
+    <div class="form-group">
+        <?=$form->label('file_set_name', t('Name'))?>
+        <?=$form->text('file_set_name', $fs->fsName, array('class' => 'span5'));
+?>
+    </div>
 
-			<div class="form-group">
-                <?=$form->label('file_set_name', t('Name'))?>
-                <?=$form->text('file_set_name', $fs->fsName, array('class' => 'span5'));
-    ?>
-			</div>
+    <?= $form->hidden('fsID', $fs->getFileSetID()); ?>
 
-			<?= $form->hidden('fsID', $fs->getFileSetID());
-    ?>
-			
-		</div>
-
-		<div class="ccm-tab-content" id="ccm-tab-content-files">
-		<?php
+        <?php
         $fl = new FileList();
     $fl->filterBySet($fs);
     $fl->sortByFileSetDisplayOrder();
@@ -90,7 +79,7 @@ $dh = Core::make('helper/date');
 		<?php 
     }
     ?>
-		</div>
+
 		<div class="ccm-dashboard-form-actions-wrapper">
 		<div class="ccm-dashboard-form-actions">
 			<a href="<?=View::url('/dashboard/files/sets')?>" class="btn btn-default pull-left"><?=t('Cancel')?></a>
@@ -183,90 +172,69 @@ $dh = Core::make('helper/date');
 } else {
     ?>
 
-<div class="ccm-dashboard-content-full">
-    <div data-search-element="wrapper">
-        <form role="form" id="ccm-file-set-search" method="get" action="<?=$view->url('/dashboard/files/sets')?>" class="form-inline ccm-search-fields">
-            <div class="ccm-search-fields-row">
-                <div class="form-group">
-                    <?=$form->label('keywords', t('Search'))?>
-                    <div class="ccm-search-field-content">
-                        <div class="ccm-search-main-lookup-field">
-                            <i class="fa fa-search"></i>
-				            <?=$form->search('fsKeywords', \Core::make('helper/text')->entities($_REQUEST['fsKeywords']), array('placeholder' => t('File Set Name')))?>
-                            <button type="submit" class="ccm-search-field-hidden-submit" tabindex="-1"><?=t('Search')?></button>
-                        </div>
-                    </div>
-                </div>
+    <div class="ccm-dashboard-content-full">
+
+        <?php if (count($fileSets) > 0) { ?>
+            <div class="table-responsive">
+                <table class="ccm-search-results-table">
+                    <thead>
+                    <tr>
+                        <th class="ccm-results-list-active-sort-asc"><a ><?=t('Set Name')?></a></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($fileSets as $fs) { ?>
+
+                            <tr data-details-url="<?=$view->url('/dashboard/files/sets/', 'view_detail', $fs->getFileSetID())?>">
+                                <td>
+                                <?=$fs->getFileSetDisplayName()?>
+                                </td>
+                            </tr>
+
+                        <?php
+                        }
+                        ?>
+
+                    </tbody>
+                </table>
             </div>
-            <div class="ccm-search-fields-row">
-                <div class="form-group">
-                    <?=$form->label('fsType', t('Type'))?>
-                    <div class="ccm-search-field-content">
-                        <select id="fsType" class="form-control" name="fsType" style="width: 200px; float: right">
-                        <option value="<?=FileSet::TYPE_PUBLIC?>" <?php if ($fsType != FileSet::TYPE_PRIVATE) {
-    ?> selected <?php 
-}
-    ?>><?=t('Public Sets')?></option>
-                        <option value="<?=FileSet::TYPE_PRIVATE?>" <?php if ($fsType == FileSet::TYPE_PRIVATE) {
-    ?> selected <?php 
-}
-    ?>><?=t('My Sets')?></option>
-                        </select>
-                    </div>
-                </div>
-            </div>
+            <?php if ($fsl->requiresPaging()) {
+                ?>
+                <?php $fsl->displayPagingV2();
+                ?>
+            <?php } ?>
 
-            <div class="ccm-search-fields-submit">
-                <button type="submit" class="btn btn-primary pull-right"><?=t('Search')?></button>
-            </div>
+    <?php
+    } else { ?>
+        <section>
 
-        </form>
-
-    </div>
-
-  	<div class="ccm-dashboard-header-buttons">
-		<a href="<?=View::url('/dashboard/files/add_set')?>" class="btn btn-default"><?=t('Add File Set')?></a>
-	</div>
-	<style type="text/css">
-		form#ccm-file-set-search {
-			margin-left: 0px !important;
-		}
-	</style>
-
-    <section style="margin-right: 20px">
-	<?php if (count($fileSets) > 0) {
-    ?>
-		
-
-		<?php foreach ($fileSets as $fs) {
-    ?>
-		
-			<div class="ccm-group">
-				<a class="ccm-group-inner" href="<?=$view->url('/dashboard/files/sets/', 'view_detail', $fs->getFileSetID())?>"><i class="fa fa-cubes"></i> <?=$fs->getFileSetDisplayName()?></a>
-			</div>
-		
-		<?php 
-}
-} else {
-    ?>
-	
-		<p><?=t('No file sets found.')?></p>
-	
-	<?php 
-}
-    ?>
-
-
-	<?php if ($fsl->requiresPaging()) {
-    ?>
-		<?php $fsl->displayPagingV2();
-    ?>
-	<?php 
-}
-    ?>
+        <p><?=t('No file sets found.')?></p>
 
         </section>
 
+	<?php } ?>
+
 	</div>
-<?php 
-} ?>	
+<?php } ?>
+
+
+
+<div class="ccm-dashboard-header-buttons">
+    <div class="ccm-header-search-form ccm-ui">
+
+        <form method="get" action="#">
+            <div class="input-group">
+                <input type="text" class="form-control" autocomplete="off" name="fsKeywords" value="<?=h($_REQUEST['fsKeywords'])?>" placeholder="<?=t('Search')?>">
+              <span class="input-group-btn">
+                <select data-select="bootstrap" name="fsType">
+                    <option value="<?=FileSet::TYPE_PUBLIC?>" <?php if ($fsType != FileSet::TYPE_PRIVATE) { ?> selected <?php } ?>><?=t('Public Sets')?></option>
+                    <option value="<?=FileSet::TYPE_PRIVATE?>" <?php if ($fsType == FileSet::TYPE_PRIVATE) { ?> selected <?php } ?>><?=t('My Sets')?></option>
+                </select>
+                <button class="btn btn-info" type="submit"><i class="fa fa-search"></i></button>
+                <a href="<?=View::url('/dashboard/files/add_set')?>" class="btn btn-primary"><?=t('Add File Set')?></a>
+              </span>
+            </div>
+        </form>
+    </div>
+</div>
+

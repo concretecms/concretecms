@@ -30,21 +30,3 @@ defined('C5_EXECUTE') or die("Access Denied.");
         </table>
     </div>
 </div>
-
-<script type="text/javascript">
-    $(function() {
-        $('tr[data-details-url]').each(function() {
-            $(this).hover(
-                function() {
-                    $(this).addClass('ccm-search-select-hover');
-                },
-                function() {
-                    $(this).removeClass('ccm-search-select-hover');
-                }
-            )
-            .on('click', function() {
-                window.location.href = $(this).data('details-url');
-            });
-        });
-    });
-</script>
