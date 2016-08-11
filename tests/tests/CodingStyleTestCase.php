@@ -32,7 +32,7 @@ abstract class CodingStyleTestCase extends \PHPUnit_Framework_TestCase
                 if (strpos($relativePath, '/.') !== false) {
                     continue;
                 }
-                if (strpos($relativePath, '/concrete/vendor/') === 0) {
+                if (strpos($relativePath, '/vendor/') === 0) {
                     continue;
                 }
                 $files[] = $fullPath;
