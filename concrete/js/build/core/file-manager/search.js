@@ -658,7 +658,7 @@
             data.push({'name': 'submitSearch', 'value': '1'});
             my.ajaxUpdate($(this).attr('action'), data);
             my.$advancedSearchButton.hide();
-            my.$resetSearchButton.addClass('ccm-file-manager-reset-search-right').show();
+            my.$resetSearchButton.addClass('ccm-header-reset-search-right').show();
 
             return false;
         });
@@ -689,7 +689,7 @@
                     my.$headerSearchInput.prop('disabled', false);
                     my.$headerSearchInput.attr('placeholder', ccmi18n.search);
                     my.$advancedSearchButton.html(ccmi18n.advanced).show();
-                    my.$resetSearchButton.removeClass('ccm-file-manager-reset-search-right').hide();
+                    my.$resetSearchButton.removeClass('ccm-header-reset-search-right').hide();
                 }
             });
         });

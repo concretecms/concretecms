@@ -1,0 +1,155 @@
+/**
+ * These are search forms for the new style search in v8 (file manager)
+ */
+div.ccm-header-search-form + div.ui-dialog-content {
+  .border-top-radius(0px);
+}
+
+header.ccm-dashboard-page-header {
+  div.ccm-header-search-form {
+    margin-top: -5px;
+  }
+}
+
+div.ccm-header-search-form {
+  float: right;
+  width: auto;
+  max-width: 600px;
+
+  span.input-group-btn {
+    border-left: 0px;
+  }
+
+  input {
+    border-right-width: 0px !important;
+  }
+
+  form {
+    position: relative;
+
+    a.ccm-header-reset-search,
+    a.ccm-header-launch-advanced-search {
+      position: absolute;
+      top: 7px;
+      z-index: @index-level-search-reset;
+    }
+
+    a.ccm-header-reset-search {
+      left: 10px;
+      &.ccm-header-reset-search-right {
+        right: 70px;
+        left: auto;
+
+      }
+    }
+
+    a.ccm-header-launch-advanced-search {
+      color: #aaa;
+      right: 70px;
+
+    }
+
+    a.ccm-header-reset-search {
+      color: #09f;
+      display: none;
+    }
+
+    div.input-group {
+      input {
+        padding-right: 110px;
+      }
+    }
+  }
+
+}
+
+ul.ccm-header-search-navigation {
+  li {
+    display: inline-block;
+    margin-left: 20px;
+  }
+  list-style: none;
+  text-align: right;
+  padding: 10px 0px 10px 0px;
+  a {
+    color: #777;
+    .transition(0.1s linear all);
+  }
+  a:focus, a:hover {
+    text-decoration: none;
+    color: #333;
+    outline: none;
+  }
+  a#ccm-file-manager-upload {
+
+    position: relative;
+
+    input[type=file] {
+      position: absolute;
+      .opacity(0);
+      top:  0px;
+      left: 0px;
+      width: 100%;
+      height: 20px;
+      border: 1px solid black;
+      cursor: pointer;
+    }
+
+    color: #09f;
+    &:hover {
+      color: #2b507b;
+    }
+  }
+}
+
+div.ui-dialog {
+  div.ccm-header-search-form {
+    float: none;
+    position: relative;
+    width: auto;
+    box-sizing: content-box;
+    height: 34px;
+    padding-top: 4px;
+    padding-bottom: 4px;
+    background-color: rgba(71, 181, 251, 0.11);
+    .border-top-radius(4px);
+
+    ul.ccm-header-search-navigation {
+      text-align: left;
+      position: absolute;
+      top: -3px;
+      left: -240px;
+    }
+
+    form {
+      position: absolute;
+      right: 4px;
+      width: 400px;
+    }
+  }
+
+  div.table-responsive {
+    margin: -20px -26px -20px -26px;
+  }
+  div.ccm-search-results-breadcrumb {
+    display: inline-block;
+    position: absolute;
+    height: 15px;
+    top: 10px;
+    left: 10px;
+    ol {
+      margin-bottom: 0px;
+      li a, li span {
+        position: static;
+        font-size: 14px !important;
+        font-weight: normal;
+      }
+    }
+  }
+
+  div.ui-dialog-titlebar {
+    span {
+      margin-right: 20px;
+    }
+  }
+}
