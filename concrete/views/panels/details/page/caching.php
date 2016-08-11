@@ -34,7 +34,7 @@ switch (Config::get('concrete.cache.full_page_lifetime')) {
 
 	<?=Loader::helper('concrete/ui/help')->display('panel', '/page/caching')?>
 
-		<p class="lead"><?=t('Enable Cache')?></p>
+		<label class="control-label"><?=t('Enable Cache')?></label>
 
 		<div class="radio">
 		<label>
@@ -59,7 +59,7 @@ switch (Config::get('concrete.cache.full_page_lifetime')) {
 
 		<hr/>
 
-		<p class="lead"><?=t('Cache for how long?')?></p>
+		<label class="control-label"><?=t('Duration')?></label>
 
 		<div class="ccm-properties-cache-lifetime input">
 		<?php $val = ($c->getCollectionFullPageCachingLifetimeCustomValue() > 0 && $c->getCollectionFullPageCachingLifetime()) ? $c->getCollectionFullPageCachingLifetimeCustomValue() : ''; ?>
@@ -92,7 +92,7 @@ switch (Config::get('concrete.cache.full_page_lifetime')) {
 		</div>
 
 		<hr/>
-		<p class="lead"><?=t('Cache Status')?></p>
+		<label class="control-label"><?=t('Cache Status')?></label>
 
 		<?php
         $cache = PageCache::getLibrary();
@@ -116,6 +116,8 @@ switch (Config::get('concrete.cache.full_page_lifetime')) {
 			<div class="alert alert-info"><?=t('This page is not currently in the full page cache.')?></div>
 		<?php 
         } ?>
+        
+  		<span class="help-block"><?=t('Note: You can enable site-wide caching from the System & Settings area of the Dashboard.')?></span>
 
 	</form>
 	<div class="ccm-panel-detail-form-actions dialog-buttons">

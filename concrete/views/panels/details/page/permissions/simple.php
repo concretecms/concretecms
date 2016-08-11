@@ -6,7 +6,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 	<form method="post" action="<?=$controller->action('save_simple')?>" data-dialog-form="permissions" data-panel-detail-form="permissions">
 		<?=Loader::helper('concrete/ui/help')->display('panel', '/page/permissions')?>
 		
-		<p class="lead"><?=t('Who can view this page?')?></p>
+		<label class="control-label"><?=t('Who can view this page?')?></label>
 
 
 
@@ -25,7 +25,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 		<hr/>
 
-		<p class="lead"><?=t('Who can edit this page?')?></p>
+		<label class="control-label"><?=t('Who can edit this page?')?></label>
 
 		<?php
 
