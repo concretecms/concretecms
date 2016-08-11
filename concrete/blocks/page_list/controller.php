@@ -137,7 +137,7 @@ class Controller extends BlockController
         if ($this->displayAliases) {
             $this->list->includeAliases();
         }
-        if ($this->ignorePermissions) {
+        if (isset($this->ignorePermissions) && $this->ignorePermissions) {
             $this->list->ignorePermissions();
         }
 
