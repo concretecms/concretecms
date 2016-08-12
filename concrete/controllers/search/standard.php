@@ -56,7 +56,7 @@ abstract class Standard extends AbstractController
             $result = $this->getDefaultBasicSearchResultObject();
             return new JsonResponse($result->getJSONObject());
         } else {
-            return false;
+            $this->app->shutdown();
         }
     }
 
@@ -70,7 +70,7 @@ abstract class Standard extends AbstractController
             $result = $this->getDefaultResetSearchResultObject();
             return new JsonResponse($result->getJSONObject());
         } else {
-            return false;
+            $this->app->shutdown();
         }
     }
 
@@ -94,6 +94,7 @@ abstract class Standard extends AbstractController
             $result = $this->getCurrentSearchObject();
             return new JsonResponse($result->getJSONObject());
         }
+        $this->app->shutdown();
     }
 
     protected function onAfterSearchPreset(Result $result, SavedSearch $search)
@@ -120,6 +121,7 @@ abstract class Standard extends AbstractController
             }
         }
 
+        $this->app->shutdown();
     }
 
 

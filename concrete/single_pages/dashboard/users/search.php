@@ -387,13 +387,9 @@
     $tp = Loader::helper('concrete/user');
     if ($tp->canAccessUserSearchInterface()) {
         ?>
-        <div class="ccm-dashboard-content-full" data-search="users">
-            <?php Loader::element('users/search', array('controller' => $searchController)) ?>
-        </div>
 
-        <div class="ccm-dashboard-header-buttons">
-            <a href="<?php echo View::url('/dashboard/users/add') ?>"
-               class="btn btn-primary"><?php echo t("Add User") ?></a>
+        <div class="ccm-dashboard-content-full">
+            <?php Loader::element('users/search', array('result' => $result))?>
         </div>
 
     <?php

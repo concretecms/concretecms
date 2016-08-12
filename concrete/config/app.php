@@ -295,6 +295,12 @@ return array(
         "/ccm/system/dialogs/user/search" => array('\Concrete\Controller\Dialog\User\Search::view'),
         "/ccm/system/dialogs/user/search/customize" => array('\Concrete\Controller\Dialog\User\Search\Customize::view'),
         "/ccm/system/dialogs/user/search/customize/submit" => array('\Concrete\Controller\Dialog\User\Search\Customize::submit'),
+
+        "/ccm/system/dialogs/user/advanced_search" => array('\Concrete\Controller\Dialog\User\AdvancedSearch::view'),
+        "/ccm/system/dialogs/user/advanced_search/add_field" => array('\Concrete\Controller\Dialog\User\AdvancedSearch::addField'),
+        "/ccm/system/dialogs/user/advanced_search/submit" => array('\Concrete\Controller\Dialog\User\AdvancedSearch::submit'),
+        "/ccm/system/dialogs/user/advanced_search/save_preset" => array('\Concrete\Controller\Dialog\User\AdvancedSearch::savePreset'),
+
         /*
          * Conversations
          */
@@ -436,6 +442,14 @@ return array(
         "/ccm/system/search/pages/current" => array('\Concrete\Controller\Search\Pages::searchCurrent'),
         "/ccm/system/search/pages/preset/{presetID}" => array('\Concrete\Controller\Search\Pages::searchPreset'),
         "/ccm/system/search/pages/clear" => array('\Concrete\Controller\Search\Pages::clearSearch'),
+
+
+        "/ccm/system/search/users/basic" => array('\Concrete\Controller\Search\Users::searchBasic'),
+        "/ccm/system/search/users/current" => array('\Concrete\Controller\Search\Users::searchCurrent'),
+        "/ccm/system/search/users/preset/{presetID}" => array('\Concrete\Controller\Search\Users::searchPreset'),
+        "/ccm/system/search/users/clear" => array('\Concrete\Controller\Search\Users::clearSearch'),
+
+
         "/ccm/system/search/groups/submit" => array('\Concrete\Controller\Search\Groups::submit'),
 
         "/ccm/system/search/users/field/{field}" => array('\Concrete\Controller\Search\Users::field'),
