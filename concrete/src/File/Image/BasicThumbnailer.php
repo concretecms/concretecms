@@ -163,7 +163,7 @@ class BasicThumbnailer
             //try and get it locally, otherwise use http
             $dimensions = getimagesize($abspath);
         } catch (\Exception $e) {
-            $dimensions = getimagesize($src);
+            //$dimensions = getimagesize($src);
         }
         $thumb->width = $dimensions[0];
         $thumb->height = $dimensions[1];
