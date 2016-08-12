@@ -81,8 +81,12 @@ class Jobs extends DashboardPageController {
 		$this->view();
 	}
 
-	public function reset()
+	public function reset($token='')
 	{
+	    if (!$this->token->validate('reset_jobs', $token)) {
+            $this->error->add(t('Invalid CSRF token. Please refresh and try again.'));
+            return $this->view();
+        }
 		$jobs = Job::getList();
 		foreach($jobs as $j)
 		{
