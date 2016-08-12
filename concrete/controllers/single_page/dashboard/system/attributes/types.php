@@ -19,6 +19,11 @@ class Types extends DashboardPageController
 
     public function save_attribute_type_associations()
     {
+        if (!$this->token->validate('save_attribute_type_associations')) {
+            $this->error->add(t('Invalid CSRF token. Please refresh and try again.'));
+            return $this->view();
+        }
+
         $manager = \ORM::entityManager();
         $list = Category::getList();
         foreach ($list as $cat) {

@@ -42,8 +42,14 @@ class Jobs extends DashboardPageController
         $this->view();
     }
 
-    public function uninstall($job_id = null)
+    public function uninstall($job_id = null, $token = null)
     {
+
+        if (!$this->token->validate('uninstall_job', $token)) {
+            $this->error->add(t('Invalid CSRF Token.'));
+            return $this->view();
+        }
+
         if ($job_id) {
             $job = Job::getByID((int) $job_id);
             if ($job) {
