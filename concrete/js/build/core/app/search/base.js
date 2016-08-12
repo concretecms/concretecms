@@ -45,7 +45,6 @@
 
 		this.setupSearch();
 		this.setupCheckboxes();
-		this.setupBulkActions();
 		this.setupSort();
 		this.setupPagination();
         this.setupSelectize();
@@ -296,6 +295,7 @@
 		} else {
 			cs.setupMenus(result);
 		}
+		cs.setupBulkActions();
 		if (options.onUpdateResults) {
 			options.onUpdateResults(this);
 		}

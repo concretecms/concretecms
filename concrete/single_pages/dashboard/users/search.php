@@ -392,6 +392,20 @@
             <?php Loader::element('users/search', array('result' => $result))?>
         </div>
 
+        <script type="text/javascript">
+            $(function() {
+                $('#ccm-dashboard-content').concreteAjaxSearch({
+                    result: <?=json_encode($result->getJSONObject())?>,
+                    onLoad: function (concreteSearch) {
+                        concreteSearch.$element.on('click', 'a[data-user-id]', function () {
+                            window.location.href = '<?=rtrim(URL::to('/dashboard/users/search', 'view'), '/')?>/' + $(this).attr('data-user-id');
+                            return false;
+                        });
+                    }
+                });
+            });
+        </script>
+
     <?php
     } else {
         ?>
