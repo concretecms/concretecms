@@ -125,8 +125,10 @@ $uninstallToken = $token->generate('uninstall_job');
     ?>
     	<div id="jd<?=$j->getJobID()?>" class="ccm-ui">
     		<form action="<?=$view->action('update_job_schedule')?>" method="post" data-schedule-form="<?=$j->getJobID()?>">
-    			<?=$form->hidden('jID', $j->getJobID());
-    ?>
+    			<?=$form->hidden('jID', $j->getJobID()); ?>
+				<?php
+				$token->output('update_job_schedule');
+				?>
 
     			<h4><?=t('Run Job')?></h4>
 
@@ -383,8 +385,10 @@ $djs = JobSet::getDefault();
 
                 <form action="<?=$view->action('update_set_schedule');
     ?>" method="post">
-			        <?=$form->hidden('jsID', $set->getJobSetID());
-    ?>
+			        <?=$form->hidden('jsID', $set->getJobSetID()); ?>
+					<?php
+					$token->output('update_job_schedule');
+					?>
                     <div class="radio">
                         <label>
                             <input type="radio" name="isScheduled" class="ccm-jobs-automation-schedule-type" value="1" <?=($set->isScheduled ? 'checked="checked"' : '')?> />

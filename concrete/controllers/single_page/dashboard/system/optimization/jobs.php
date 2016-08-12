@@ -223,6 +223,11 @@ class Jobs extends DashboardPageController
 
     public function update_job_schedule()
     {
+        if (!$this->token->validate('update_job_schedule')) {
+            $this->error->add(t('Invalid CSRF Token.'));
+            return $this->view();
+        }
+
         $jID = $this->request->request->get('jID');
         $J = Job::getByID($jID);
         $J->setSchedule($this->post('isScheduled'), $this->post('unit'), max(0, (int) $this->post('value')));
@@ -237,6 +242,11 @@ class Jobs extends DashboardPageController
 
     public function update_set_schedule()
     {
+        if (!$this->token->validate('update_set_schedule')) {
+            $this->error->add(t('Invalid CSRF Token.'));
+            return $this->view();
+        }
+
         $jsID = $this->post('jsID');
         $S = JobSet::getByID($jsID);
         $S->setSchedule($this->post('isScheduled'), $this->post('unit'), $this->post('value'));
