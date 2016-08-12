@@ -532,10 +532,6 @@ class Search extends DashboardPageController
 
             if (is_object($result)) {
                 $this->set('result', $result);
-                $result = json_encode($result->getJSONObject());
-                $this->addFooterItem(
-                    "<script type=\"text/javascript\">$(function() { $('#ccm-dashboard-content').concreteAjaxSearch({result: " . $result . "}); });</script>"
-                );
             }
         }
     }
