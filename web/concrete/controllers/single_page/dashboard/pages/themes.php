@@ -33,13 +33,18 @@ class Themes extends DashboardPageController {
 	}
 
 	public function save_mobile_theme() {
-		$pt = PageTheme::getByID($this->post('MOBILE_THEME_ID'));
-		if (is_object($pt)) {
-			Config::save('concrete.misc.mobile_theme_id', $pt->getThemeID());
+		if ($this->token->validate('save_mobile_theme')) {
+			$pt = PageTheme::getByID($this->post('MOBILE_THEME_ID'));
+			if (is_object($pt)) {
+				Config::save('concrete.misc.mobile_theme_id', $pt->getThemeID());
+			} else {
+				Config::save('concrete.misc.mobile_theme_id', 0);
+			}
+			$this->redirect('/dashboard/pages/themes', 'mobile_theme_saved');
 		} else {
-			Config::save('concrete.misc.mobile_theme_id', 0);
+			$this->error->add(t('Invalid CSRF token. Please refresh and try again.'));
+			$this->view();
 		}
-		$this->redirect('/dashboard/pages/themes', 'mobile_theme_saved');
 	}
 
 	public function mobile_theme_saved() {
