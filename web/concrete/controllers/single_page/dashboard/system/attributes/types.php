@@ -9,7 +9,7 @@ use Config;
 use Loader;
 
 class Types extends DashboardPageController {
-	
+
 	public function add_attribute_type() {
 		$pat = PendingType::getByHandle($this->post('atHandle'));
 		if (is_object($pat)) {
@@ -19,18 +19,22 @@ class Types extends DashboardPageController {
 	}
 
 	public function save_attribute_type_associations() {
-		$list = Category::getList();
-		foreach($list as $cat) {
-			$cat->clearAttributeKeyCategoryTypes();
-			if (is_array($this->post($cat->getAttributeKeyCategoryHandle()))) {
-				foreach($this->post($cat->getAttributeKeyCategoryHandle()) as $id) {
-					$type = Type::getByID($id);
-					$cat->associateAttributeKeyType($type);
-				}
-			}
-		}
+        if ($this->token->validate('save_attribute_type_associations')) {
+            $list = Category::getList();
+            foreach ($list as $cat) {
+                $cat->clearAttributeKeyCategoryTypes();
+                if (is_array($this->post($cat->getAttributeKeyCategoryHandle()))) {
+                    foreach ($this->post($cat->getAttributeKeyCategoryHandle()) as $id) {
+                        $type = Type::getByID($id);
+                        $cat->associateAttributeKeyType($type);
+                    }
+                }
+            }
 
-		$this->redirect('dashboard/system/attributes/types', 'saved', 'associations_updated');
+            $this->redirect('dashboard/system/attributes/types', 'saved', 'associations_updated');
+        } else {
+            $this->error->add(t('Invalid CSRF token. Please refresh and try again.'));
+        }
 	}
 
 	public function saved($mode = false) {
@@ -46,5 +50,5 @@ class Types extends DashboardPageController {
 			}
 		}
 	}
-	
+
 }
