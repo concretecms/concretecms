@@ -247,10 +247,15 @@ class Jobs extends DashboardPageController {
 
 	public function update_job_schedule()
 	{
-		$jID = $this->request->request->get('jID');
-		$J = Job::getByID($jID);
-		$J->setSchedule($this->post('isScheduled'), $this->post('unit'), max(0,(int)$this->post('value')));
-		$this->redirect('/dashboard/system/optimization/jobs', 'job_scheduled');
+	    if ($this->token->validate('update_job_schedule')) {
+            $jID = $this->request->request->get('jID');
+            $J = Job::getByID($jID);
+            $J->setSchedule($this->post('isScheduled'), $this->post('unit'), max(0, (int)$this->post('value')));
+            $this->redirect('/dashboard/system/optimization/jobs', 'job_scheduled');
+        } else {
+            $this->error->add(t('Invalid CSRF token. Please refresh and try again.'));
+            $this->view();
+        }
 	}
 
 	public function job_scheduled()
@@ -262,11 +267,16 @@ class Jobs extends DashboardPageController {
 
 	public function update_set_schedule()
 	{
-		$jsID = $this->post('jsID');
-		$S = JobSet::getByID($jsID);
-		$S->setSchedule($this->post('isScheduled'), $this->post('unit'), $this->post('value'));
+        if ($this->token->validate('update_set_schedule')) {
+            $jsID = $this->post('jsID');
+            $S = JobSet::getByID($jsID);
+            $S->setSchedule($this->post('isScheduled'), $this->post('unit'), $this->post('value'));
 
-		$this->redirect('/dashboard/system/optimization/jobs', 'set_scheduled');
+            $this->redirect('/dashboard/system/optimization/jobs', 'set_scheduled');
+        } else {
+            $this->error->add(t('Invalid CSRF token. Please refresh and try again.'));
+            $this->view();
+        }
 	}
 
 	public function set_scheduled()

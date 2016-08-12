@@ -110,6 +110,7 @@ $uninstallToken = $token->generate('uninstall_job');
     <? foreach($installedJobs as $j) { ?>
     	<div id="jd<?=$j->getJobID()?>" class="ccm-ui">
     		<form action="<?=$view->action('update_job_schedule')?>" method="post" data-schedule-form="<?=$j->getJobID()?>">
+				<?php $token->output('update_job_schedule') ?>
     			<?=$form->hidden('jID', $j->getJobID());?>
 
     			<h4><?=t('Run Job')?></h4>
@@ -335,6 +336,7 @@ if (is_object($djs)) { ?>
 		        <h4><?=t('Automation Instructions')?></h4>
 
                 <form action="<?=$view->action('update_set_schedule');?>" method="post">
+					<?php $token->output('update_set_schedule'); ?>
 			        <?=$form->hidden('jsID',$set->getJobSetID()); ?>
                     <div class="radio">
                         <label>
