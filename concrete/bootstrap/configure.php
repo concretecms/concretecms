@@ -75,7 +75,6 @@ define('NAMESPACE_SEGMENT_VENDOR', 'Concrete');
  * ----------------------------------------------------------------------------
  */
 define('DIRNAME_BLOCKS', 'blocks');
-define('DIRNAME_BACKUPS', 'backups');
 define('DIRNAME_PAGES', 'single_pages');
 define('DIRNAME_VIEWS', 'views');
 define('DIRNAME_PACKAGES', 'packages');
