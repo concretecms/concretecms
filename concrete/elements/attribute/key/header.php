@@ -17,9 +17,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 </div>
 
 
-<div class="ccm-dashboard-header-buttons">
     <button type="button" class="btn btn-danger" data-action="delete-attribute"><?= t('Delete Attribute') ?></button>
-</div>
 
 <script type="text/javascript">
     $(function() {
