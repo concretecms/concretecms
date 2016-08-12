@@ -192,7 +192,7 @@ class Version20160725000000 extends AbstractMigration
      */
     protected function createMetaDataConfigurationForPackages(){
 
-        $r = $this->connection->executeQuery('SELECT * FROM packages WHERE pkgIsInstalled = 1;');
+        $r = $this->connection->executeQuery('SELECT * FROM Packages WHERE pkgIsInstalled = 1;');
         
         $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
         $packageService = $app->make('Concrete\Core\Package\PackageService');
