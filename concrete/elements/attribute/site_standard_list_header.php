@@ -2,7 +2,7 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 ?>
 
-<div class="ccm-dashboard-header-buttons btn-group">
+<div class="btn-group">
     <a href="<?=URL::to('/dashboard/system/basics/name')?>" class="btn btn-default"><?=t('Back')?></a>
     <?php
         if ($category && $category->getController()->getSetManager()->allowAttributeSets()) {
