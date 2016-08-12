@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Controller\SinglePage\Dashboard\Users;
 
+use Concrete\Controller\Element\Search\Users\Header;
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Config;
 use Imagine\Image\Box;
@@ -521,29 +522,19 @@ class Search extends DashboardPageController
                     break;
             }
 
-            $cnt = new SearchUsersController();
-            $cnt->search();
-            $this->set('searchController', $cnt);
-            $result = $cnt->getSearchResultObject();
+
+            $header = new Header();
+            $header->setShowAddButton(true);
+            $this->set('headerMenu', $header);
+
+            $search = $this->app->make('Concrete\Controller\Search\Users');
+            $result = $search->getCurrentSearchObject();
+
             if (is_object($result)) {
-                $object = $result->getJSONObject();
-                $result = Loader::helper('json')->encode($object);
+                $this->set('result', $result);
+                $result = json_encode($result->getJSONObject());
                 $this->addFooterItem(
-                    "<script type=\"text/javascript\">
-                        $(function () {
-                            $('div[data-search=users]').concreteAjaxSearch({
-                                result: " . $result . ",
-                                onLoad: function (concreteSearch) {
-                                    concreteSearch.\$element.on('click', 'a[data-user-id]', function () {
-                                        window.location.href='"
-                                            . rtrim(URL::to('/dashboard/users/search', 'view'), '/')
-                                            . "/' + $(this).attr('data-user-id');
-                                        return false;
-                                    });
-                                }
-                            });
-                        });
-                    </script>"
+                    "<script type=\"text/javascript\">$(function() { $('#ccm-dashboard-content').concreteAjaxSearch({result: " . $result . "}); });</script>"
                 );
             }
         }
