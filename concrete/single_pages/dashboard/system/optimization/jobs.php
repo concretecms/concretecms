@@ -58,7 +58,7 @@ $uninstallToken = $token->generate('uninstall_job');
     		<th style="width: 250px"><?=t('Name')?></th>
     		<th><?=t('Last Run')?></th>
     		<th style="width: 200px"><?=t('Results of Last Run')?></th>
-    		<th><a href="<?=$view->action('reset')?>" class="btn btn-default pull-right btn-xs"><?=t('Reset All Jobs')?></a></th>
+    		<th><a href="<?=$view->action('reset', $token->generate('reset_jobs'))?>" class="btn btn-default pull-right btn-xs"><?=t('Reset All Jobs')?></a></th>
     		<th></th>
     	</tr>
 	</thead>
@@ -387,7 +387,7 @@ $djs = JobSet::getDefault();
     ?>" method="post">
 			        <?=$form->hidden('jsID', $set->getJobSetID()); ?>
 					<?php
-					$token->output('update_job_schedule');
+					$token->output('update_set_schedule');
 					?>
                     <div class="radio">
                         <label>
