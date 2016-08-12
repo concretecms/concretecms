@@ -214,17 +214,12 @@ $dh = Core::make('helper/date');
 
 	<?php } ?>
 
-	</div>
-<?php } ?>
+        <div class="ccm-dashboard-header-buttons">
+            <div class="ccm-header-search-form ccm-ui">
 
-
-
-<div class="ccm-dashboard-header-buttons">
-    <div class="ccm-header-search-form ccm-ui">
-
-        <form method="get" action="#">
-            <div class="input-group">
-                <input type="text" class="form-control" autocomplete="off" name="fsKeywords" value="<?=h($_REQUEST['fsKeywords'])?>" placeholder="<?=t('Search')?>">
+                <form method="get" action="#">
+                    <div class="input-group">
+                        <input type="text" class="form-control" autocomplete="off" name="fsKeywords" value="<?=h($_REQUEST['fsKeywords'])?>" placeholder="<?=t('Search')?>">
               <span class="input-group-btn">
                 <select data-select="bootstrap" name="fsType">
                     <option value="<?=FileSet::TYPE_PUBLIC?>" <?php if ($fsType != FileSet::TYPE_PRIVATE) { ?> selected <?php } ?>><?=t('Public Sets')?></option>
@@ -233,8 +228,14 @@ $dh = Core::make('helper/date');
                 <button class="btn btn-info" type="submit"><i class="fa fa-search"></i></button>
                 <a href="<?=View::url('/dashboard/files/add_set')?>" class="btn btn-primary"><?=t('Add File Set')?></a>
               </span>
+                    </div>
+                </form>
             </div>
-        </form>
+        </div>
+
+
     </div>
-</div>
+<?php } ?>
+
+
 

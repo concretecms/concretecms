@@ -69,5 +69,6 @@ class Schema
         foreach ($saveQueries as $query) {
             $db->query($query);
         }
+
     }
 }

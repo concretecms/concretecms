@@ -33,6 +33,10 @@ abstract class Standard extends AbstractController
         $result = $provider->getSearchResultFromQuery($query);
         $result->setBaseURL($advancedSearch->getBasicSearchBaseURL());
 
+        // The basic search result doesn't have a query attached to it, only advanced search and current
+        // search requests do.
+        $result->setQuery(null);
+
         return $result;
     }
 
@@ -80,7 +84,6 @@ abstract class Standard extends AbstractController
             $result->setBaseURL($advancedSearch->getCurrentSearchBaseURL());
         } else {
             $result = $this->getDefaultBasicSearchResultObject();
-            $result->setQuery(null); // This way the form element isn't dimmed on start.
         }
         return $result;
     }
