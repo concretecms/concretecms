@@ -1,80 +1,34 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");
-
 $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service\Date */
 ?>
 <div class="ccm-ui">
-    <form method="post" id="ccmBlockMasterCollectionForm" data-dialog-form="master-collection-alias" action="<?=$controller->action('submit')?>">
 
-        <?php if (count($cList) == 0) {
-    ?>
+<?php if (count($cList) == 0) { ?>
 
-            <?=t("There are no pages of this type added to your website. If there were, you'd be able to choose which of those pages this block appears on.")?>
+    <?=t("There are no pages of this type added to your website.")?>
 
-        <?php 
-} else {
-    ?>
+<?php } else { ?>
 
-            <p><?=t("Choose which pages below this particular block should appear on. Any previously selected blocks may also be removed using the checkbox. Click the checkbox in the header to select/deselect all pages.")?></p>
-            <br/>
+    <form method="post" id="ccmBlockMasterCollectionForm" data-dialog-form-processing="progressive" data-dialog-form="master-collection-alias" action="<?=$controller->action('submit')?>">
 
-            <table class="table-striped table table-bordered" >
-                <tr>
-                    <th>ID</th>
-                    <th><?=t('Name')?></th>
-                    <th ><?=t('Date Created')?></th>
-                    <th ><?=t('Date Modified')?></th>
-                    <th ><input type="checkbox" id="mc-cb-all" /></th>
-                </tr>
+    <p><?=t('This block will be added to all pages of this type. If it has been previously added it will be updated – even if the block on the child page has been forked from this block.')?></p>
 
-                <?php
+    <div class="form-group">
+        <label class="control-label"><?=t('If this block does not appear on a page of this type')?></label>
+        <div class="radio"><label><input type="radio" name="addBlock" value="1" checked> <?=t('Add a new instance of the block to the page.')?></label></div>
+        <div class="radio"><label><input type="radio" name="addBlock" value="0"> <?=t('Keep this block off that page.')?></label></div>
+    </div>
 
-                foreach ($cList as $p) {
-                    ?>
-                    <tr class="active">
-                        <td><?=$p->getCollectionID()?></td>
-                        <td><a href="<?=URL::to($p)?>" target="_blank"><?=$p->getCollectionName()?></a></td>
-                        <td ><?=$dh->formatDate($p->getCollectionDateAdded())?></td>
-                        <td ><?php if ($b->isAlias($p)) {
-    ?> <input type="hidden" name="checkedCIDs[]" value="<?=$p->getCollectionID()?>" /><?php 
-}
-                    ?><?=$dh->formatDate($p->getCollectionDateLastModified())?></td>
-                        <td ><input class="mc-cb" type="checkbox" name="cIDs[]" value="<?=$p->getCollectionID()?>" <?php if ($b->isAlias($p)) {
-    ?> checked <?php 
-}
-                    ?> /></td>
-                    </tr>
+        <div data-dialog-form-element="progress-bar"></div>
 
-                <?php 
-                }
-    ?>
 
-            </table>
+    <div class="dialog-buttons">
+        <button class="btn btn-default pull-left" data-dialog-action="cancel"><?=t('Cancel')?></button>
+        <button class="btn btn-primary pull-right" data-dialog-action="submit"><?=t('Save')?></button>
+    </div>
 
-        <?php 
-} ?>
-
-        <div class="dialog-buttons">
-            <button class="btn btn-default pull-left" data-dialog-action="cancel"><?=t('Cancel')?></button>
-            <a href="javascript:void(0)" onclick="$('#ccmBlockMasterCollectionForm').submit()" class="btn btn-primary pull-right"><?=t('Save')?></a>
-        </div>
-
-        <script type="text/javascript">
-            $(function() {
-                $('#mc-cb-all').click(function() {
-                    if (this.checked) {
-                        $('input.mc-cb').each(function() {
-                            $(this).get(0).checked = true;
-                        });
-                    } else {
-                        $('input.mc-cb').each(function() {
-                            $(this).get(0).checked = false;
-                        });
-                    }
-                });
-                $('#ccmBlockMasterCollectionForm').concreteAjaxForm();
-
-            });
-
-        </script>
     </form>
+
+<?php } ?>
+
 </div>

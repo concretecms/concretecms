@@ -54,7 +54,7 @@
 
     ConcreteAjaxForm.prototype.handleProgressiveOperation = function(resp, onComplete) {
         var my = this,
-            url = my.$form.attr('action'),
+            url = my.$form.attr('action') ? my.$form.attr("action") : my.options.url,
             params = my.$form.formToArray(true);
 
         jQuery.fn.dialog.hideLoader();
@@ -108,18 +108,23 @@
         }
     }
 
-    ConcreteAjaxForm.prototype.success = function(r, my, callback) {
-        if (my.validateResponse(r)) {
+    ConcreteAjaxForm.prototype.success = function(resp, my, callback) {
+        if (my.validateResponse(resp)) {
             if (callback) {
-                callback(r);
+                if (my.options.progressiveOperation) {
+                    my.handleProgressiveOperation(resp, function(r) {
+                        callback(r);
+                    });
+                } else {
+                    callback(resp);
+                }
             } else {
                 if (my.options.progressiveOperation) {
-                    var resp = r;
                     my.handleProgressiveOperation(resp, function(r) {
                         my.doFinish(r);
                     });
                 } else {
-                    my.doFinish(r);
+                    my.doFinish(resp);
                 }
             }
         }

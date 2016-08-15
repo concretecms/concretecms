@@ -41,6 +41,7 @@ class Edit extends BackendInterfaceBlockController
         return $e;
     }
 
+    /*
     public function submit_master()
     {
         if ($this->validateAction() && $this->canAccess() && $this->page->isMasterCollection()) {
@@ -98,6 +99,7 @@ class Edit extends BackendInterfaceBlockController
             }
         }
     }
+    */
 
     public function submit()
     {

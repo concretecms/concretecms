@@ -19,19 +19,19 @@ class Delete extends BackendInterfaceBlockController
     public function view()
     {
         $this->set('isMasterCollection', $this->page->isMasterCollection());
-        if ($this->page->isMasterCollection()) {
-            $this->set('submitAction', $this->action('submit_master'));
-        } else {
-            $this->set('submitAction', $this->action('submit'));
-        }
+        $this->set('deleteAllAction', $this->action('submit_all'));
+        $this->set('deleteAction', $this->action('submit'));
     }
 
     public function submit()
     {
         if ($this->validateAction()) {
-            if ($this->permissions->canDeleteBlock() && !$this->page->isMasterCollection()) {
+            if ($this->permissions->canDeleteBlock()) {
                 $b = $this->getBlockToEdit();
                 $pr = $this->getEditResponse($b);
+
+                // Since we have the OLD block ID in the DOM, we need to override that bID
+                $pr->setAdditionalDataAttribute('bID', $this->block->getBlockID());
 
                 $b->deleteBlock();
 
@@ -47,7 +47,7 @@ class Delete extends BackendInterfaceBlockController
         }
     }
 
-    public function submit_master()
+    public function submit_all()
     {
         if ($this->validateAction()) {
             if ($this->permissions->canDeleteBlock() && $this->page->isMasterCollection()) {

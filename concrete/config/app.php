@@ -214,7 +214,6 @@ return array(
         "/ccm/system/dialogs/block/aliasing/submit" => array('\Concrete\Controller\Dialog\Block\Aliasing::submit'),
         "/ccm/system/dialogs/block/edit/" => array('\Concrete\Controller\Dialog\Block\Edit::view'),
         "/ccm/system/dialogs/block/edit/submit/" => array('\Concrete\Controller\Dialog\Block\Edit::submit'),
-        "/ccm/system/dialogs/block/edit/submit_master/" => array('\Concrete\Controller\Dialog\Block\Edit::submit_master'),
         "/ccm/system/dialogs/block/cache/" => array('\Concrete\Controller\Dialog\Block\Cache::view'),
         "/ccm/system/dialogs/block/cache/submit" => array('\Concrete\Controller\Dialog\Block\Cache::submit'),
         "/ccm/system/dialogs/block/design/" => array('\Concrete\Controller\Dialog\Block\Design::view'),
@@ -225,7 +224,7 @@ return array(
         "/ccm/system/dialogs/block/permissions/list/" => array('\Concrete\Controller\Dialog\Block\Permissions::viewList'),
         "/ccm/system/dialogs/block/delete/" => array('\Concrete\Controller\Dialog\Block\Delete::view'),
         "/ccm/system/dialogs/block/delete/submit/" => array('\Concrete\Controller\Dialog\Block\Delete::submit'),
-        "/ccm/system/dialogs/block/delete/submit_master/" => array('\Concrete\Controller\Dialog\Block\Delete::submit_master'),
+        "/ccm/system/dialogs/block/delete/submit_all/" => array('\Concrete\Controller\Dialog\Block\Delete::submit_all'),
 
         "/ccm/system/dialogs/file/upload_complete" => array('\Concrete\Controller\Dialog\File\UploadComplete::view'),
         "/ccm/system/dialogs/file/bulk/delete" => array('\Concrete\Controller\Dialog\File\Bulk\Delete::view'),

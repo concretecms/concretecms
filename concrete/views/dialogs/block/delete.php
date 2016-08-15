@@ -4,18 +4,25 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 <div class="ccm-ui">
 
-	<form method="post" data-dialog-form-processing="progressive" data-dialog-form="delete-block" action="<?=$submitAction?>">
+	<form method="post" data-form="delete-block" data-action-delete-all="<?=$deleteAllAction?>" data-action="<?=$deleteAction?>">
 
 		<div class="dialog-buttons">
-		<button class="btn btn-default pull-left" data-dialog-action="cancel"><?=t('Cancel')?></button>
-		<button type="button" data-dialog-action="submit" class="btn btn-danger pull-right"><?=t('Delete')?></button>
+		<button class="btn btn-default pull-left" onclick="jQuery.fn.dialog.closeTop()""><?=t('Cancel')?></button>
+		<button type="button" data-submit="delete-block-form" class="btn btn-danger pull-right"><?=t('Delete')?></button>
 		</div>
+
+		<div class="alert alert-danger"><?php echo t('Warning! This block is contained in the page type defaults. Any blocks aliased from this block in the site will be deleted. This cannot be undone.') ?></div>
 
 		<p class="lead"><?=t('Are you sure you wish to this block?')?></p>
 
 		<?php if ($isMasterCollection) { ?>
 
-			<div class="alert alert-danger"><?php echo t('Warning! This block is contained in the page type defaults. Any blocks aliased from this block in the site will be deleted. <strong>This includes blocks that have since been edited in the site.</strong>') ?></div>
+			<div class="form-group">
+				<label class="control-label"><?=t('Instances on Child Pages')?></label>
+				<div class="radio"><label><input type="radio" name="deleteAll" value="0" checked> <?=t('Delete only unforked instances on child pages.')?></label></div>
+				<div class="radio"><label><input type="radio" name="deleteAll" value="1"> <?=t('Delete even forked instances on child pages.')?></label></div>
+			</div>
+
 
 			<div data-dialog-form-element="progress-bar"></div>
 
@@ -31,18 +38,40 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 	<script type="text/javascript">
 	$(function() {
-        ConcreteEvent.unsubscribe('AjaxFormSubmitSuccess.blockDelete');
-		ConcreteEvent.subscribe('AjaxFormSubmitSuccess.blockDelete', function(e, data) {
-			if (data.form == 'delete-block') {
+		var $form = $('form[data-form=delete-block]'),
+			options = {};
+		$('button[data-submit=delete-block-form]').on('click', function() {
+			var mode = parseInt($form.find('input[name=deleteAll]:checked').val());
+			if (mode == 1) {
+				options = {
+					url: $form.attr('data-action-delete-all'),
+					data: $form.formToArray(true),
+					progressiveOperation: true,
+					progressiveOperationElement: 'div[data-dialog-form-element=progress-bar]'
+				}
+			} else {
+				options = {
+					url: $form.attr('data-action'),
+					data: $form.formToArray(true)
+				}
+			}
+
+			options.success = function(r) {
 				var editor = Concrete.getEditMode();
-				var area = editor.getAreaByID(parseInt(data.response.aID));
-				var block = area.getBlockByID(parseInt(data.response.bID));
+				var area = editor.getAreaByID(parseInt(r.aID));
+				var block = area.getBlockByID(parseInt(r.bID));
 
 				ConcreteEvent.fire('EditModeBlockDeleteComplete', {
 					block: block
 				});
-
+				jQuery.fn.dialog.closeTop();
+				ConcreteAlert.notify({
+					'message': r.message,
+					'title': r.title
+				});
 			}
+			$form.concreteAjaxForm(options);
+			$form.trigger('submit');
 		});
 	});
 	</script>

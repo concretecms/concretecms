@@ -259,8 +259,9 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
             $cobj = Collection::createCollection($data);
             $cID = $cobj->getCollectionID();
 
-            $v2 = array($cID, 1, $this->getPageTypeID());
-            $q2 = "insert into Pages (cID, cIsTemplate, ptID) values (?, ?, ?)";
+            $site = \Core::make('site')->getSite();
+            $v2 = array($cID, 1, $this->getPageTypeID(), $site->getSiteID());
+            $q2 = "insert into Pages (cID, cIsTemplate, ptID, siteID) values (?, ?, ?, ?)";
             $r2 = $db->prepare($q2);
             $res2 = $db->execute($r2, $v2);
 
