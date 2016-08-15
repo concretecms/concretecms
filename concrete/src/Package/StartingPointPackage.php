@@ -488,6 +488,7 @@ class StartingPointPackage extends BasePackage
     public function install_site()
     {
         $site = \Site::installDefault();
+        \Core::make('site/type')->installDefault();
         $site->getConfigRepository()->save('name', SITE);
 
         if (defined('SITE_INSTALL_LOCALE') && SITE_INSTALL_LOCALE != '' && SITE_INSTALL_LOCALE != 'en_US') {

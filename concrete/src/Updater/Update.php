@@ -171,6 +171,17 @@ class Update
     }
 
     /**
+     * Checks migrations to see if the current code DB version is greater than that registered in the database
+     */
+    public static function isCurrentVersionNewerThanDatabaseVersion()
+    {
+        $db = \Database::get();
+        $database = $db->GetOne('select max(version) from SystemDatabaseMigrations');
+        $code = Config::get('concrete.version_db');
+        return $database < $code;
+    }
+
+    /**
      * Upgrade the current core version to the latest locally available by running the applicable migrations.
      */
     public static function updateToCurrentVersion()
