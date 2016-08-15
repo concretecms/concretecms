@@ -39,12 +39,6 @@ $(function() {
 } else {
     ?><?=$b->getBlockID()?><?php 
 } ?>,
-        <?php if ($c->isMasterCollection()) { ?>
-            progressiveOperation: true,
-            progressiveOperationTitle: '<?=t('Update Child Blocks')?>',
-        <?php } else { ?>
-            progressiveOperation: false,
-        <?php } ?>
 		<?php if ($bt->supportsInlineEdit()) {
     ?>
 			btSupportsInlineEdit: true,
@@ -87,9 +81,6 @@ if (isset($message) && is_object($message) && !$bt->supportsInlineEdit()) {
 }
 
 $method = 'submit';
-if ($c->isMasterCollection()) {
-    $method = 'submit_master';
-}
 ?>>
 
 <form method="post" id="ccm-block-form" class="validate" action="<?=$dialogController->action($method)?>" enctype="multipart/form-data">
