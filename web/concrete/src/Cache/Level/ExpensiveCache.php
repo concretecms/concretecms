@@ -5,7 +5,7 @@ namespace Concrete\Core\Cache\Level;
 
 use Concrete\Core\Cache\Cache;
 use Config;
-use Stash\Driver\BlackHole;
+use Stash\Driver\Ephemeral;
 use Stash\Pool;
 
 /**
@@ -21,7 +21,7 @@ class ExpensiveCache extends Cache
             $driver = $this->loadConfig('expensive');
             $this->pool = new Pool($driver);
         } else {
-            $this->pool = new Pool(new BlackHole());
+            $this->pool = new Pool(new Ephemeral());
         }
         $this->enable();
     }
