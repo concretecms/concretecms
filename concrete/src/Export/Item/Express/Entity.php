@@ -17,6 +17,7 @@ class Entity implements ItemInterface
     public function export(ExportableInterface $entity, \SimpleXMLElement $xml)
     {
         $node = $xml->addChild('entity');
+        $node->addAttribute('id', $entity->getID());
         $node->addAttribute('handle', $entity->getHandle());
         $node->addAttribute('name', $entity->getName());
         $node->addAttribute('include_in_public_list', $entity->getIncludeInPublicList() ? '1' : '');

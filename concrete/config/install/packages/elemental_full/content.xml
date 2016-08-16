@@ -2455,84 +2455,22 @@
                                             </record>
                                         </data>
                                     </block>
-                                    <block type="form" name="">
-                                        <data table="btForm">
+                                    <block type="express_form" name="">
+                                        <data table="btExpressForm">
                                             <record>
-                                                <questionSetId><![CDATA[1404886998]]></questionSetId>
-                                                <surveyName><![CDATA[Contact Us]]></surveyName>
-                                                <thankyouMsg><![CDATA[Thanks!]]></thankyouMsg>
-                                                <submitText><![CDATA[Submit]]></submitText>
-                                                <notifyMeOnSubmission><![CDATA[0]]></notifyMeOnSubmission>
-                                                <recipientEmail><![CDATA[]]></recipientEmail>
-                                                <displayCaptcha><![CDATA[0]]></displayCaptcha>
-                                                <redirectCID/>
-                                                <addFilesToSet><![CDATA[0]]></addFilesToSet>
-                                            </record>
-                                        </data>
-                                        <data table="btFormQuestions">
-                                            <record>
-                                                <qID><![CDATA[19]]></qID>
-                                                <msqID><![CDATA[1]]></msqID>
-                                                <questionSetId><![CDATA[1404886998]]></questionSetId>
-                                                <question><![CDATA[First Name]]></question>
-                                                <inputType><![CDATA[field]]></inputType>
-                                                <options><![CDATA[]]></options>
-                                                <position><![CDATA[0]]></position>
-                                                <width><![CDATA[50]]></width>
-                                                <height><![CDATA[3]]></height>
-                                                <required><![CDATA[1]]></required>
-                                            </record>
-                                            <record>
-                                                <qID><![CDATA[20]]></qID>
-                                                <msqID><![CDATA[2]]></msqID>
-                                                <questionSetId><![CDATA[1404886998]]></questionSetId>
-                                                <question><![CDATA[Last Name]]></question>
-                                                <inputType><![CDATA[field]]></inputType>
-                                                <options><![CDATA[]]></options>
-                                                <position><![CDATA[0]]></position>
-                                                <width><![CDATA[50]]></width>
-                                                <height><![CDATA[3]]></height>
-                                                <required><![CDATA[1]]></required>
-                                            </record>
-                                            <record>
-                                                <qID><![CDATA[21]]></qID>
-                                                <msqID><![CDATA[3]]></msqID>
-                                                <questionSetId><![CDATA[1404886998]]></questionSetId>
-                                                <question><![CDATA[Email Address]]></question>
-                                                <inputType><![CDATA[email]]></inputType>
-                                                <options><![CDATA[a:1:{s:22:"send_notification_from";i:0;}]]></options>
-                                                <position><![CDATA[0]]></position>
-                                                <width><![CDATA[50]]></width>
-                                                <height><![CDATA[3]]></height>
-                                                <required><![CDATA[1]]></required>
-                                            </record>
-                                            <record>
-                                                <qID><![CDATA[25]]></qID>
-                                                <msqID><![CDATA[4]]></msqID>
-                                                <questionSetId><![CDATA[1404886998]]></questionSetId>
-                                                <question><![CDATA[Subject]]></question>
-                                                <inputType><![CDATA[select]]></inputType>
-                                                <options>
-                                                    <![CDATA[I love your work.%%Great website.%%Check out this cool thing I found.%%Other.]]></options>
-                                                <position><![CDATA[0]]></position>
-                                                <width><![CDATA[50]]></width>
-                                                <height><![CDATA[3]]></height>
-                                                <required><![CDATA[0]]></required>
-                                            </record>
-                                            <record>
-                                                <qID><![CDATA[26]]></qID>
-                                                <msqID><![CDATA[5]]></msqID>
-                                                <questionSetId><![CDATA[1404886998]]></questionSetId>
-                                                <question><![CDATA[Message]]></question>
-                                                <inputType><![CDATA[text]]></inputType>
-                                                <options><![CDATA[]]></options>
-                                                <position><![CDATA[0]]></position>
-                                                <width><![CDATA[50]]></width>
-                                                <height><![CDATA[3]]></height>
-                                                <required><![CDATA[0]]></required>
+                                                <exFormID>881b6bde-220f-4482-b8f9-ace40b5d169b</exFormID>
+                                                <submitLabel>Submit</submitLabel>
+                                                <thankyouMsg>Thanks!</thankyouMsg>
+                                                <notifyMeOnSubmission>0</notifyMeOnSubmission>
+                                                <recipientEmail></recipientEmail>
+                                                <displayCaptcha></displayCaptcha>
+                                                <redirectCID>0</redirectCID>
+                                                <replyToEmailControlID>02181ae2-634d-11e6-a245-62e65b165d8e</replyToEmailControlID>
+                                                <addFilesToSet>0</addFilesToSet>
                                             </record>
                                         </data>
                                     </block>
+
                                 </column>
                             </columns>
                         </arealayout>
@@ -3048,4 +2986,48 @@
             <contenttype type="description"/>
         </feed>
     </pagefeeds>
+    <expressentities>
+        <entity id="83ae65b1-79e8-4ded-bbca-e419bfd19bb6" handle="express_form_170" name="Contact" include_in_public_list="" description="" default_view_form="1" default_edit_form="1">
+            <forms>
+                <form id="881b6bde-220f-4482-b8f9-ace40b5d169b" name="Form">
+                    <fieldsets>
+                        <fieldset title="" description="">
+                            <controls>
+                                <control id="f68175ca-634c-11e6-a245-62e65b165d8e" type="attribute_key" required="1" custom_label="">
+                                    <attributekey handle="form_question_1" name="First Name" package="" searchable="1" indexed="1" type="text" category="">
+                                        <type placeholder=""/>
+                                    </attributekey>
+                                </control>
+                                <control id="fbc62d32-634c-11e6-a245-62e65b165d8e" type="attribute_key" required="1" custom_label="">
+                                    <attributekey handle="form_question_2" name="Last Name" package="" searchable="1" indexed="1" type="text" category="">
+                                        <type placeholder=""/>
+                                    </attributekey>
+                                </control>
+                                <control id="02181ae2-634d-11e6-a245-62e65b165d8e" type="attribute_key" required="1" custom_label="">
+                                    <attributekey handle="form_question_3" name="Email Address" package="" searchable="1" indexed="1" type="email" category=""/>
+                                </control>
+                                <control id="b3c4ee52-6350-11e6-a245-62e65b165d8e" type="attribute_key" required="" custom_label="">
+                                    <attributekey handle="form_question_1" name="Subject" package="" searchable="1" indexed="1" type="select" category="">
+                                        <type allow-multiple-values="" display-order="display_asc" allow-other-values="">
+                                            <options>
+                                                <option value="I love your work" is-end-user-added=""/>
+                                                <option value="Great website" is-end-user-added=""/>
+                                                <option value="Check out this cool thing I found" is-end-user-added=""/>
+                                                <option value="Other" is-end-user-added=""/>
+                                            </options>
+                                        </type>
+                                    </attributekey>
+                                </control>
+                                <control id="bf4cdc08-6350-11e6-a245-62e65b165d8e" type="attribute_key" required="1" custom_label="">
+                                    <attributekey handle="form_question_2" name="Message" package="" searchable="1" indexed="1" type="textarea" category="">
+                                        <type mode="text"/>
+                                    </attributekey>
+                                </control>
+                            </controls>
+                        </fieldset>
+                    </fieldsets>
+                </form>
+            </forms>
+        </entity>
+    </expressentities>
 </concrete5-cif>
