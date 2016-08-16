@@ -19,14 +19,22 @@ class Points extends DashboardPageController
     }
     public function save()
     {
-        $db = Loader::db();
-        foreach (ConversationRatingType::getList() as $crt) {
-            $rtID = $crt->getConversationRatingTypeID();
-            $rtPoints = $this->post('rtPoints_' . $rtID);
-            if (is_string($rtPoints) && is_numeric($rtPoints)) {
-                $db->Execute('UPDATE ConversationRatingTypes SET cnvRatingTypeCommunityPoints = ? WHERE cnvRatingTypeID = ? LIMIT 1', array($rtPoints, $rtID));
+
+        if ($this->token->validate('conversation_points')) {
+
+            $db = Loader::db();
+            foreach (ConversationRatingType::getList() as $crt) {
+                $rtID = $crt->getConversationRatingTypeID();
+                $rtPoints = $this->post('rtPoints_' . $rtID);
+                if (is_string($rtPoints) && is_numeric($rtPoints)) {
+                    $db->Execute('UPDATE ConversationRatingTypes SET cnvRatingTypeCommunityPoints = ? WHERE cnvRatingTypeID = ? LIMIT 1',
+                        array($rtPoints, $rtID));
+                }
             }
+            $this->redirect('/dashboard/system/conversations/points', 'success');
+        } else {
+            $this->error->add(t('Invalid CSRF token. Please refresh and try again.'));
+            $this->view();
         }
-        $this->redirect('/dashboard/system/conversations/points', 'success');
     }
 }
