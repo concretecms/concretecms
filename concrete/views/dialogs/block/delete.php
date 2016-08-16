@@ -11,11 +11,11 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		<button type="button" data-submit="delete-block-form" class="btn btn-danger pull-right"><?=t('Delete')?></button>
 		</div>
 
-		<div class="alert alert-danger"><?php echo t('Warning! This block is contained in the page type defaults. Any blocks aliased from this block in the site will be deleted. This cannot be undone.') ?></div>
-
 		<p class="lead"><?=t('Are you sure you wish to this block?')?></p>
 
 		<?php if ($isMasterCollection) { ?>
+
+			<div class="alert alert-danger"><?php echo t('Warning! This block is contained in the page type defaults. Any blocks aliased from this block in the site will be deleted. This cannot be undone.') ?></div>
 
 			<div class="form-group">
 				<label class="control-label"><?=t('Instances on Child Pages')?></label>

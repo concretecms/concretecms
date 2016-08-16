@@ -2,11 +2,13 @@
 namespace Concrete\Core\Entity\Express;
 
 use Concrete\Core\Attribute\CategoryObjectInterface;
+use Concrete\Core\Export\ExportableInterface;
 use Concrete\Core\Express\Search\ColumnSet\ColumnSet;
 use Concrete\Core\Express\Search\ColumnSet\DefaultSet;
 use Concrete\Core\Permission\ObjectInterface;
 use Concrete\Core\Tree\Node\Node;
 use Doctrine\Common\Collections\ArrayCollection;
+use Concrete\Core\Export\Item\Express\Entity as EntityExporter;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -14,11 +16,11 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="ExpressEntities")
  * @ORM\HasLifecycleCallbacks
  */
-class Entity implements CategoryObjectInterface, ObjectInterface
+class Entity implements CategoryObjectInterface, ObjectInterface, ExportableInterface
 {
     /**
-     * @ORM\Id @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
+     * @ORM\Id @ORM\Column(type="guid")
+     * @ORM\GeneratedValue(strategy="UUID")
      */
     protected $id;
 
@@ -355,6 +357,11 @@ class Entity implements CategoryObjectInterface, ObjectInterface
     public function getPermissionObjectKeyCategoryHandle()
     {
         return false;
+    }
+
+    public function getExporter()
+    {
+        return new EntityExporter();
     }
 
 }

@@ -21,8 +21,19 @@ class Service
 
     public function getDefault()
     {
+        return $this->getByID(1);
+    }
+
+    public function getByID($typeID)
+    {
         return $this->entityManager->getRepository('Concrete\Core\Entity\Site\Type')
-            ->findOneBy(array('siteTypeID' => 1));
+            ->findOneBy(array('siteTypeID' => $typeID));
+    }
+
+    public function getList()
+    {
+        return $this->entityManager->getRepository('Concrete\Core\Entity\Site\Type')
+            ->findAll();
     }
 
     public function add($handle, $name)

@@ -65,4 +65,9 @@ class TextControl extends Control
     {
         return new TextOptions($this);
     }
+
+    public function getExporter()
+    {
+        return new \Concrete\Core\Export\Item\Express\Control\TextControl();
+    }
 }

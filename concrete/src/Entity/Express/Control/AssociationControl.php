@@ -81,4 +81,10 @@ class AssociationControl extends Control
     {
         return 'association';
     }
+
+    public function getExporter()
+    {
+        return new \Concrete\Core\Export\Item\Express\Control\AssociationControl();
+    }
+
 }

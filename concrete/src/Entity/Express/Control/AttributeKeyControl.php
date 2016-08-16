@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Entity\Express\Control;
 
+use Concrete\Core\Entity\Attribute\Key\Key;
 use Concrete\Core\Entity\Express\Entity;
 use Concrete\Core\Entity\Express\Entry;
 use Concrete\Core\Express\Form\Control\Form\AttributeKeyControlFormRenderer;
@@ -20,7 +21,7 @@ class AttributeKeyControl extends Control
     protected $attribute_key;
 
     /**
-     * @return mixed
+     * @return Key
      */
     public function getAttributeKey()
     {
@@ -60,5 +61,10 @@ class AttributeKeyControl extends Control
         $data = parent::jsonSerialize();
         $data['attributeType'] = $this->getAttributeKey()->getAttributeTypeHandle();
         return $data;
+    }
+
+    public function getExporter()
+    {
+        return new \Concrete\Core\Export\Item\Express\Control\AttributeKeyControl();
     }
 }
