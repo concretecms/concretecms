@@ -42,8 +42,14 @@ class Jobs extends DashboardPageController
         $this->view();
     }
 
-    public function uninstall($job_id = null)
+    public function uninstall($job_id = null, $token = null)
     {
+
+        if (!$this->token->validate('uninstall_job', $token)) {
+            $this->error->add(t('Invalid CSRF Token.'));
+            return $this->view();
+        }
+
         if ($job_id) {
             $job = Job::getByID((int) $job_id);
             if ($job) {
@@ -74,8 +80,13 @@ class Jobs extends DashboardPageController
         $this->view();
     }
 
-    public function reset()
+    public function reset($token = '')
     {
+        if (!$this->token->validate('reset_jobs', $token)) {
+            $this->error->add(t('Invalid CSRF Token.'));
+            return $this->view();
+        }
+
         $jobs = Job::getList();
         foreach ($jobs as $j) {
             $j->reset();
@@ -217,6 +228,11 @@ class Jobs extends DashboardPageController
 
     public function update_job_schedule()
     {
+        if (!$this->token->validate('update_job_schedule')) {
+            $this->error->add(t('Invalid CSRF Token.'));
+            return $this->view();
+        }
+
         $jID = $this->request->request->get('jID');
         $J = Job::getByID($jID);
         $J->setSchedule($this->post('isScheduled'), $this->post('unit'), max(0, (int) $this->post('value')));
@@ -231,6 +247,11 @@ class Jobs extends DashboardPageController
 
     public function update_set_schedule()
     {
+        if (!$this->token->validate('update_set_schedule')) {
+            $this->error->add(t('Invalid CSRF Token.'));
+            return $this->view();
+        }
+
         $jsID = $this->post('jsID');
         $S = JobSet::getByID($jsID);
         $S->setSchedule($this->post('isScheduled'), $this->post('unit'), $this->post('value'));

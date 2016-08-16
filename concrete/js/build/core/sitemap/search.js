@@ -8,7 +8,8 @@
     function ConcretePageAjaxSearch($element, options) {
         var my = this;
         options = $.extend({
-            'mode': 'menu'
+            'mode': 'menu',
+            'searchMethod': 'get'
         }, options);
 
         my.options = options;

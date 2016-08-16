@@ -192,7 +192,7 @@ class Version20160725000000 extends AbstractMigration
      */
     protected function createMetaDataConfigurationForPackages(){
 
-        $r = $this->connection->executeQuery('SELECT * FROM packages WHERE pkgIsInstalled = 1;');
+        $r = $this->connection->executeQuery('SELECT * FROM Packages WHERE pkgIsInstalled = 1;');
         
         $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
         $packageService = $app->make('Concrete\Core\Package\PackageService');
@@ -875,12 +875,10 @@ class Version20160725000000 extends AbstractMigration
          */
         $service = \Core::make('site');
         $site = $service->getDefault();
+        $em = $this->connection->getEntityManager();
+
         if (!is_object($site) || $site->getSiteID() < 1) {
             $site = $service->installDefault();
-
-            $this->connection->executeQuery('update Pages set siteID = ? where cIsSystemPage = 0', [$site->getSiteID()]);
-
-            $em = $this->connection->getEntityManager();
 
             // migrate name
             $site->setSiteName(\Config::get('concrete.site'));
@@ -890,16 +888,19 @@ class Version20160725000000 extends AbstractMigration
             $site->setThemeID($c->getCollectionThemeID());
 
             $em->persist($site);
-
-            // migrate social links
-            $links = $em->getRepository('Concrete\Core\Entity\Sharing\SocialNetwork\Link')
-                ->findAll();
-            foreach($links as $link) {
-                $link->setSite($site);
-                $em->persist($link);
-            }
             $em->flush();
         }
+
+        $site = $service->getDefault();
+        $this->connection->executeQuery('update Pages set siteID = ? where cIsSystemPage = 0', [$site->getSiteID()]);
+        // migrate social links
+        $links = $em->getRepository('Concrete\Core\Entity\Sharing\SocialNetwork\Link')
+            ->findAll();
+        foreach($links as $link) {
+            $link->setSite($site);
+            $em->persist($link);
+        }
+        $em->flush();
 
         $category = Category::getByHandle('site');
         if (!is_object($category)) {
@@ -1053,32 +1054,61 @@ class Version20160725000000 extends AbstractMigration
         $pt->assignPermissionAccess($pa);
     }
 
+    /**
+     * This shouldn't be necessary - we should have just done this with internal migrations between betas
+     * but we didn't so this is what we have to do.
+     * @return mixed
+     */
+    protected function updatingFromVersion7()
+    {
+        return version_compare(\Config::get("concrete.version_installed"), '8.0.0a1', '<');
+    }
+
     public function up(Schema $schema)
     {
-        $this->connection->Execute('set foreign_key_checks = 0');
-        $this->renameProblematicTables();
+        if ($this->updatingFromVersion7()) { //
+            $this->connection->Execute('set foreign_key_checks = 0');
+            $this->renameProblematicTables();
+        }
+
         $this->updateDoctrineXmlTables();
-        $this->prepareProblematicEntityTables();
+
+        if ($this->updatingFromVersion7()) { //
+            $this->prepareProblematicEntityTables();
+        }
         $this->createMetaDataConfigurationForPackages();
-        $this->installEntities(array('Concrete\Core\Entity\File\File', 'Concrete\Core\Entity\File\Version'));
+        if ($this->updatingFromVersion7()) { //
+            $this->installEntities(array('Concrete\Core\Entity\File\File', 'Concrete\Core\Entity\File\Version'));
+        }
         $this->installOtherEntities();
         $this->installSite();
-        $this->importAttributeTypes();
-        $this->migrateOldPermissions();
+        if ($this->updatingFromVersion7()) { //
+            $this->importAttributeTypes();
+            $this->migrateOldPermissions();
+        }
+
         $this->addPermissions();
-        $this->importAttributeKeys();
+        if ($this->updatingFromVersion7()) { //
+            $this->importAttributeKeys();
+        }
         $this->addDashboard();
-        $this->updateFileManager();
-        $this->migrateFileManagerPermissions();
-        $this->addBlockTypes();
-        $this->updateTopics();
-        $this->updateWorkflows();
-        $this->addTreeNodeTypes();
-        $this->installDesktops();
+        if ($this->updatingFromVersion7()) { //
+            $this->updateFileManager();
+            $this->migrateFileManagerPermissions();
+            $this->addBlockTypes();
+            $this->updateTopics();
+            $this->updateWorkflows();
+            $this->addTreeNodeTypes();
+            $this->installDesktops();
+        }
         $this->addNotifications();
-        $this->splittedTrackingCode();
-        $this->cleanupOldPermissions();
-        $this->connection->Execute('set foreign_key_checks = 1');
+        if ($this->updatingFromVersion7()) { //
+            $this->splittedTrackingCode();
+            $this->cleanupOldPermissions();
+        }
+        if ($this->updatingFromVersion7()) { //
+            $this->connection->Execute('set foreign_key_checks = 1');
+        }
     }
 
     public function down(Schema $schema)

@@ -22,6 +22,10 @@ class Accessibility extends DashboardPageController
 
     public function save()
     {
+        if (!$this->token->validate('accessibility')) {
+            $this->error->add(t('Invalid CSRF token. Please refresh and try again.'));
+            return $this->view();
+        }
         Config::save('concrete.accessibility.toolbar_titles', (bool) Request::post('show_titles', false));
         Config::save('concrete.accessibility.toolbar_large_font', (bool) Request::post('increase_font_size', false));
         Config::save('concrete.accessibility.display_help_system', (bool) Request::post('display_help', false));

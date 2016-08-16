@@ -387,14 +387,24 @@
     $tp = Loader::helper('concrete/user');
     if ($tp->canAccessUserSearchInterface()) {
         ?>
-        <div class="ccm-dashboard-content-full" data-search="users">
-            <?php Loader::element('users/search', array('controller' => $searchController)) ?>
+
+        <div class="ccm-dashboard-content-full">
+            <?php Loader::element('users/search', array('result' => $result))?>
         </div>
 
-        <div class="ccm-dashboard-header-buttons">
-            <a href="<?php echo View::url('/dashboard/users/add') ?>"
-               class="btn btn-primary"><?php echo t("Add User") ?></a>
-        </div>
+        <script type="text/javascript">
+            $(function() {
+                $('#ccm-dashboard-content').concreteAjaxSearch({
+                    result: <?=json_encode($result->getJSONObject())?>,
+                    onLoad: function (concreteSearch) {
+                        concreteSearch.$element.on('click', 'a[data-user-id]', function () {
+                            window.location.href = '<?=rtrim(URL::to('/dashboard/users/search', 'view'), '/')?>/' + $(this).attr('data-user-id');
+                            return false;
+                        });
+                    }
+                });
+            });
+        </script>
 
     <?php
     } else {

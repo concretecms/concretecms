@@ -36,6 +36,11 @@ class Themes extends DashboardPageController
 
     public function save_mobile_theme()
     {
+        if (!$this->token->validate('save_mobile_theme')) {
+            $this->error->add(t('Invalid CSRF token. Please refresh and try again.'));
+            return $this->view();
+        }
+
         $pt = PageTheme::getByID($this->post('MOBILE_THEME_ID'));
         if (is_object($pt)) {
             Config::save('concrete.misc.mobile_theme_id', $pt->getThemeID());

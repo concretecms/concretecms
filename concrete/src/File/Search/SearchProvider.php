@@ -44,23 +44,27 @@ class SearchProvider extends AbstractSearchProvider implements QueryableInterfac
         return ColumnSet::getCurrent();
     }
 
-    public function getSearchResultFromQuery(Query $query)
+    public function getBaseColumnSet()
     {
-        $list = new FileList();
-        foreach($query->getFields() as $field) {
-            $field->filterList($list);
-        }
-        if (!$list->getActiveSortColumn()) {
-            $columns = $query->getColumns();
-            if (is_object($columns)) {
-                $column = $columns->getDefaultSortColumn();
-                $list->sanitizedSortBy($column->getColumnKey(), $column->getColumnDefaultSortDirection());
-            } else {
-                $columns = new DefaultSet();
-            }
-        }
-        $result = new Result($columns, $list);
-        $result->setQuery($query);
-        return $result;
+        return new ColumnSet();
     }
+
+    public function getDefaultColumnSet()
+    {
+        return new DefaultSet();
+    }
+
+    public function getItemList()
+    {
+        return new FileList();
+    }
+
+    public function createSearchResultObject($columns, $list)
+    {
+        return new Result($columns, $list);
+    }
+
+
+
+
 }

@@ -41,7 +41,7 @@ if (isset($iv_load_policy) && $iv_load_policy > 0) {
     $params[] = 'iv_load_policy=' . $iv_load_policy;
 }
 
-if (isset($loop) && $loop) {
+if (isset($loopEnd) && $loopEnd) {
     $params[] = 'loop=1';
 }
 

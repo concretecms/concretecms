@@ -533,6 +533,72 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
         $db->query($q, array($this->bID));
     }
 
+    public function queueForDefaultsAliasing($addBlock, $queue)
+    {
+        $records = array();
+        $db = \Database::connection();
+        $oc = $this->getBlockCollectionObject();
+        $site = \Core::make('site')->getSite();
+        $siteID = $site->getSiteID();
+        $cbRelationID = $this->getBlockRelationID();
+        $rows = $db->GetAll('select p.cID, max(cvID) as cvID from Pages p inner join CollectionVersions cv on p.cID = cv.cID where ptID = ? and cIsTemplate = 0 and cIsActive = 1 and siteID = ? group by cID order by cID', [$oc->getPageTypeID(), $siteID]);
+
+        // now we have a list of all pages of this type in the site.
+        foreach($rows as $row) {
+
+            // Ok, first check. Does this block already exist with the SAME block ID on this page? If so, we don't need to do
+            // anything, because the block has already been updated, because it's in an unforked state
+
+            $r1 = $db->fetchAssoc('select arHandle, bID from CollectionVersionBlocks where cID = ? and cvID = ? and bID = ?', array(
+                $row['cID'], $row['cvID'], $this->getBlockID()
+            ));
+
+            if (!$r1['bID']) {
+                // Ok, no block found. So let's see if a block with the same relationID exists on the page instead.
+
+                $r2 = $db->fetchAssoc('select arHandle, bID from CollectionVersionBlocks where cID = ? and cvID = ? and cbRelationID = ?', array(
+                    $row['cID'], $row['cvID'], $cbRelationID
+                ));
+
+
+
+                if ($r2['bID'] || (!$r2['bID'] && $addBlock)) {
+
+                    // Ok, so either this block doesn't appear on the page at al, but addBlock set to true,
+                    // or, the block appears on the page and it is forked. Either way we're going to add it to the page.
+
+                    $record = array(
+                        'cID' => $row['cID'],
+                        'cvID' => $row['cvID'],
+                        'bID' => $this->getBlockID()
+                    );
+
+                    if ($r2['bID']) {
+                        $record['action'] = 'update_forked_alias';
+                        $record['arHandle'] = $r2['arHandle'];
+                        $record['bID'] = $r2['bID'];
+                    } else {
+                        $record['action'] = 'add_alias';
+                        $record['arHandle'] = $this->getAreaHandle();
+                    }
+
+                    $records[] = $record;
+                }
+            }
+        }
+
+        $name = $queue->getName();
+        $queue->deleteQueue();
+        $queue = Queue::get($name);
+
+        foreach ($records as $record) {
+            $queue->send(serialize($record));
+        }
+
+        return $queue;
+
+    }
+
     public function queueForDefaultsUpdate($data, $queue, $includeThisBlock = true)
     {
         $blocks = array();

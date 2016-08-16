@@ -13,6 +13,9 @@ class ServiceProvider extends BaseServiceProvider
         $this->app->singleton('site', function() use ($app) {
             return $app->make('Concrete\Core\Site\Service');
         });
+        $this->app->singleton('site/type', function() use ($app) {
+            return $app->make('Concrete\Core\Site\Type\Service');
+        });
 
         $this->app->singleton('Concrete\Core\Site\Resolver\DriverInterface', function() use ($app) {
             $resolver = $this->app->make('Concrete\Core\Site\Resolver\StandardDriver');
