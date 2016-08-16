@@ -81,13 +81,12 @@ class Controller extends AttributeTypeController
         $type->addAttribute('allow-multiple-values', $this->akSelectAllowMultipleValues);
         $type->addAttribute('display-order', $this->akSelectOptionDisplayOrder);
         $type->addAttribute('allow-other-values', $this->akSelectAllowOtherValues);
-        $r = $db->Execute('select value, displayOrder, isEndUserAdded from atSelectOptions where akID = ? order by displayOrder asc',
-            $this->getAttributeKey()->getAttributeKeyID());
-        $options = $type->addChild('options');
-        while ($row = $r->FetchRow()) {
-            $opt = $options->addChild('option');
-            $opt->addAttribute('value', $row['value']);
-            $opt->addAttribute('is-end-user-added', $row['isEndUserAdded']);
+        $options = $this->getOptions();
+        $node = $type->addChild('options');
+        foreach($options as $option) {
+            $opt = $node->addChild('option');
+            $opt->addAttribute('value', $option->getSelectAttributeOptionValue());
+            $opt->addAttribute('is-end-user-added', $option->isEndUserAdded());
         }
 
         return $akey;
