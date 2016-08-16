@@ -1,0 +1,39 @@
+<?php
+namespace Concrete\Core\User\Search\Field;
+
+use Concrete\Core\Attribute\Category\UserCategory;
+use Concrete\Core\Search\Field\AttributeKeyField;
+use Concrete\Core\Search\Field\Field\KeywordsField;
+use Concrete\Core\Search\Field\Manager as FieldManager;
+use Concrete\Core\User\Search\Field\Field\DateAddedField;
+use Concrete\Core\User\Search\Field\Field\GroupSetField;
+use Concrete\Core\User\Search\Field\Field\IsActiveField;
+use Concrete\Core\User\Search\Field\Field\UserGroupField;
+
+class Manager extends FieldManager
+{
+
+    protected $fileCategory;
+
+    public function __construct(UserCategory $fileCategory)
+    {
+        $this->fileCategory = $fileCategory;
+        $this->addGroup(t('Core Properties'), [
+            new KeywordsField(),
+            new UserGroupField(),
+            new IsActiveField(),
+            new DateAddedField(),
+            new GroupSetField()
+
+        ]);
+        $attributes = [];
+        foreach($fileCategory->getSearchableList() as $key) {
+            $field = new AttributeKeyField($key);
+            $attributes[] = $field;
+        }
+        $this->addGroup(t('Custom Attributes'), $attributes);
+
+    }
+
+
+}

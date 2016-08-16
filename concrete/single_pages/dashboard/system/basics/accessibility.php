@@ -1,4 +1,7 @@
 <form action="<?= View::action('save') ?>" method="post">
+    <?php
+    Core::make('token')->output('accessibility');
+    ?>
     <div class="checkbox">
         <label>
             <input name="show_titles" value="1" type="checkbox" <?= $show_titles ? 'checked' : '' ?> />

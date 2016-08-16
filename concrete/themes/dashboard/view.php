@@ -17,9 +17,12 @@ $this->inc('elements/header.php');
     <?php
     echo Core::make('helper/concrete/ui/help')->display('dashboard', $c->getCollectionPath());
 
-    if (isset($headerMenu) && $headerMenu instanceof \Concrete\Core\Controller\ElementController) {
-        $headerMenu->render();
-    }
+    if (isset($headerMenu) && $headerMenu instanceof \Concrete\Core\Controller\ElementController) { ?>
+
+        <div class="ccm-dashboard-header-menu">
+            <?php echo $headerMenu->render(); ?>
+        </div>
+    <?php }
 
     ?>
 </header>

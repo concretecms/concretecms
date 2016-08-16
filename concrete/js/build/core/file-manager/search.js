@@ -8,15 +8,13 @@
             'breadcrumbElement': 'div.ccm-search-results-breadcrumb',
             'bulkParameterName': 'fID',
             'searchMethod': 'get',
+            'appendToOuterDialog': true,
             'selectMode': 'multiple' // Enables multiple advanced item selection, range click, etc
         }, options);
 
         my.currentFolder = 0;
         my.interactionIsDragging = false;
         my.$breadcrumb = $(options.breadcrumbElement);
-        my.$headerSearchInput = $element.find('div[data-header=file-manager] input');
-        my.$advancedSearchButton = $element.find('a[data-launch-dialog=advanced-search]');
-        my.$resetSearchButton = $element.find('a[data-button-action=clear-search]');
 
         my._templateFileProgress = _.template('<div id="ccm-file-upload-progress" class="ccm-ui"><div id="ccm-file-upload-progress-bar">' +
             '<div class="progress progress-striped active"><div class="progress-bar" style="width: <%=progress%>%;"></div></div>' +
@@ -34,24 +32,6 @@
     }
 
     ConcreteFileManager.prototype = Object.create(ConcreteAjaxSearch.prototype);
-
-    ConcreteFileManager.prototype.setupAdvancedSearch = function() {
-        var my = this;
-        my.$advancedSearchButton.on('click', function() {
-            var url = $(this).attr('href');
-            $.fn.dialog.open({
-                width: 620,
-                height: 500,
-                href: url,
-                modal: true,
-                title: ccmi18n.search,
-                onOpen: function() {
-                    my.setupAdvancedSearchDialog();
-                }
-            });
-            return false;
-        });
-    }
 
     ConcreteFileManager.prototype.setupRowDragging = function() {
         var my = this,
@@ -174,93 +154,6 @@
         });
     }
 
-    ConcreteFileManager.prototype.setupAdvancedSearchDialog = function() {
-        var my = this;
-        var $container = $('div[data-container=search-fields]');
-        var renderFieldRowTemplate = _.template(
-            $('script[data-template=search-field-row]').html()
-        );
-        var defaultQuery = $('script[data-template=default-query]').html();
-        if (defaultQuery) {
-            defaultQuery = JSON.parse(defaultQuery);
-        }
-        $('button[data-button-action=add-field]').on('click', function() {
-            $container.append(
-                renderFieldRowTemplate()
-            );
-        });
-
-        if (my.result.query) {
-            $.each(my.result.query.fields, function(i, field) {
-                $container.append(
-                    renderFieldRowTemplate({'field': field})
-                );
-            });
-        } else if (defaultQuery) {
-            $.each(defaultQuery.fields, function(i, field) {
-                $container.append(
-                    renderFieldRowTemplate({'field': field})
-                );
-            });
-        }
-
-        $container.find('select.selectize-select').selectize();
-        $container.on('change', 'select.ccm-search-choose-field', function() {
-            var key = $(this).val();
-            var $content = $(this).parent().find('div.ccm-search-field-content');
-            if (key) {
-                $.concreteAjax({
-                    url: $(this).attr('data-action'),
-                    data: {
-                        'field': key
-                    },
-                    success: function(r) {
-                        $content.html(r.element);
-                        $content.find('select.selectize-select').selectize();
-                    }
-                });
-            }
-        });
-        $container.on('click', 'a[data-search-remove=search-field]', function(e) {
-            e.preventDefault();
-            var $row = $(this).parent();
-            $row.remove();
-        });
-
-        $('button[data-button-action=save-search-preset]').on('click.saveSearchPreset', function() {
-            jQuery.fn.dialog.open({
-                element: 'div[data-dialog=save-search-preset]:first',
-                modal: true,
-                width: 320,
-                title: 'Save Preset',
-                height: 'auto'
-            });
-        });
-
-        var $presetForm = $('form[data-form=save-preset]');
-        var $form = $('form[data-advanced-search-form]');
-        $('button[data-button-action=save-search-preset-submit]').on('click.saveSearchPresetSubmit', function() {
-            var $presetForm = $('form[data-form=save-preset]');
-            $presetForm.trigger('submit');
-        });
-
-        $presetForm.on('submit', function() {
-            var formData = $form.serializeArray();
-            formData = formData.concat($presetForm.serializeArray());
-            $.concreteAjax({
-                data: formData,
-                url: $presetForm.attr('action'),
-                success: function(r) {
-                    jQuery.fn.dialog.closeAll();
-                    ConcreteEvent.publish('SavedSearchCreated', {search: r});
-                }
-            });
-            return false;
-        });
-
-        my.setupSearch();
-    }
-
     ConcreteFileManager.prototype.setupBreadcrumb = function(result) {
         var my = this;
 
@@ -306,17 +199,6 @@
             my.$downloadTarget = $('#ccm-file-manager-download-target');
         }
     };
-
-    ConcreteFileManager.prototype.setupResetButton = function(result) {
-        var my = this;
-        if (result.query) {
-            my.$headerSearchInput.prop('disabled', true);
-            my.$headerSearchInput.attr('placeholder', '');
-            my.$advancedSearchButton.html(ccmi18n_filemanager.edit);
-            my.$resetSearchButton.show();
-        }
-    };
-
 
     ConcreteFileManager.prototype.setupFileUploads = function() {
         var my = this,
@@ -581,7 +463,6 @@
         ConcreteAjaxSearch.prototype.updateResults.call(my, result);
         my.setupFolders(result);
         my.setupBreadcrumb(result);
-        my.setupResetButton(result);
         my.setupRowDragging();
 
         if (my.options.selectMode == 'choose') {
@@ -648,51 +529,6 @@
             my.activateMenu($menu);
         }
         return $menu;
-    }
-
-    ConcreteFileManager.prototype.setupSearch = function() {
-        var my = this;
-        ConcreteAjaxSearch.prototype.setupSearch.call(this);
-        my.$element.find('div[data-header=file-manager] form').on('submit', function() {
-            var data = $(this).serializeArray();
-            data.push({'name': 'submitSearch', 'value': '1'});
-            my.ajaxUpdate($(this).attr('action'), data);
-            my.$advancedSearchButton.hide();
-            my.$resetSearchButton.addClass('ccm-header-reset-search-right').show();
-
-            return false;
-        });
-
-        // If we're calling this from a dialog, we move it out to the top of the dialog so it can display properly
-        var $container = my.$element.closest('div.ui-dialog');
-        if ($container.length) {
-            my.$element.find('div[data-header=file-manager]').insertBefore($container.find('.ui-dialog-content'));
-        }
-
-        $('form[data-advanced-search-form]').concreteAjaxForm({
-            'success': function(r) {
-                my.updateResults(r);
-                jQuery.fn.dialog.closeTop();
-                my.$advancedSearchButton.html(ccmi18n_filemanager.edit);
-                my.$resetSearchButton.show();
-                my.$headerSearchInput.prop('disabled', true).val('');
-                my.$headerSearchInput.attr('placeholder', '');
-            }
-        });
-        my.$resetSearchButton.on('click', function(e) {
-            my.$element.find('div[data-header=file-manager] input').val('');
-            e.preventDefault();
-            $.concreteAjax({
-                url: $(this).attr('data-button-action-url'),
-                success: function(r) {
-                    my.updateResults(r);
-                    my.$headerSearchInput.prop('disabled', false);
-                    my.$headerSearchInput.attr('placeholder', ccmi18n.search);
-                    my.$advancedSearchButton.html(ccmi18n.advanced).show();
-                    my.$resetSearchButton.removeClass('ccm-header-reset-search-right').hide();
-                }
-            });
-        });
     }
 
     /**

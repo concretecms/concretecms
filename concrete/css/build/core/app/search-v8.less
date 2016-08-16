@@ -12,9 +12,21 @@ header.ccm-dashboard-page-header {
 }
 
 div.ccm-header-search-form {
-  float: right;
+  position: absolute;
+  top: 0px;
+  right: 0px;
+
   width: auto;
-  max-width: 600px;
+
+  div.ccm-header-search-form-input {
+    position: relative;
+    input.form-control {
+      .border-top-left-radius(4px) !important;
+      .border-bottom-left-radius(4px) !important;
+      .border-top-right-radius(0px) !important;
+      .border-bottom-right-radius(0px) !important;
+    }
+  }
 
   span.input-group-btn {
     border-left: 0px;
@@ -37,7 +49,7 @@ div.ccm-header-search-form {
     a.ccm-header-reset-search {
       left: 10px;
       &.ccm-header-reset-search-right {
-        right: 70px;
+        right: 10px;
         left: auto;
 
       }
@@ -45,7 +57,7 @@ div.ccm-header-search-form {
 
     a.ccm-header-launch-advanced-search {
       color: #aaa;
-      right: 70px;
+      right: 10px;
 
     }
 
@@ -54,10 +66,14 @@ div.ccm-header-search-form {
       display: none;
     }
 
-    div.input-group {
-      input {
-        padding-right: 110px;
-      }
+    a.ccm-header-launch-advanced-search +
+    input.form-control {
+      width: 310px;
+      padding-right: 110px;
+    }
+
+    input[type=text].form-control {
+      width: 200px;
     }
   }
 
@@ -70,7 +86,7 @@ ul.ccm-header-search-navigation {
   }
   list-style: none;
   text-align: right;
-  padding: 10px 0px 10px 0px;
+  padding: 7px 0px 10px 0px;
   a {
     color: #777;
     .transition(0.1s linear all);
@@ -79,6 +95,9 @@ ul.ccm-header-search-navigation {
     text-decoration: none;
     color: #333;
     outline: none;
+  }
+  a.link-primary {
+    color: #09f;
   }
   a#ccm-file-manager-upload {
 
@@ -117,14 +136,14 @@ div.ui-dialog {
     ul.ccm-header-search-navigation {
       text-align: left;
       position: absolute;
-      top: -3px;
+      top: 0px;
       left: -240px;
     }
 
     form {
       position: absolute;
       right: 4px;
-      width: 400px;
+      width: 369px;
     }
   }
 

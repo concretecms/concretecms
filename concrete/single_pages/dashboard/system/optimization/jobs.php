@@ -5,6 +5,9 @@ $json = Core::make('helper/json');
 /* @var $dh \Concrete\Core\Localization\Service\Date */
 $dh = Core::make('helper/date');
 
+$token = Core::make('token');
+$uninstallToken = $token->generate('uninstall_job');
+
 ?>
 <style type="text/css">
 #ccm-jobs-list td {
@@ -55,29 +58,29 @@ $dh = Core::make('helper/date');
     		<th style="width: 250px"><?=t('Name')?></th>
     		<th><?=t('Last Run')?></th>
     		<th style="width: 200px"><?=t('Results of Last Run')?></th>
-    		<th><a href="<?=$view->action('reset')?>" class="btn btn-default pull-right btn-xs"><?=t('Reset All Jobs')?></a></th>
+    		<th><a href="<?=$view->action('reset', $token->generate('reset_jobs'))?>" class="btn btn-default pull-right btn-xs"><?=t('Reset All Jobs')?></a></th>
     		<th></th>
     	</tr>
 	</thead>
-	
+
 	<tbody>
     	<?php foreach ($installedJobs as $j) {
     ?>
     		<tr class="<?php if ($j->didFail()) {
-    ?>error<?php 
+    ?>error<?php
 }
     ?> <?php if ($j->getJobStatus() == 'RUNNING') {
-    ?>running<?php 
+    ?>running<?php
 }
     ?>">
     			<td>
     			    <?=$j->getJobID()?>
                 </td>
-                
+
     			<td>
     			    <i class="fa fa-question-circle launch-tooltip" title="<?=$j->getJobDescription()?>"></i> <?=$j->getJobName()?>
                 </td>
-                
+
     			<td class="jDateLastRun"><?php
                     if ($j->getJobStatus() == 'RUNNING') {
                         $runtime = $dh->formatDateTime($j->getJobDateLastRun(), true, true);
@@ -91,27 +94,27 @@ $dh = Core::make('helper/date');
                         echo $runtime;
                     }
     ?></td>
-    			
+
     			<td class="jLastStatusText">
     			    <?=$j->getJobLastStatusText()?>
                 </td>
-    			
+
     			<td class="ccm-jobs-button">
     				<button data-jID="<?=$j->getJobID()?>" data-jSupportsQueue="<?=$j->supportsQueue()?>" data-jName="<?=$j->getJobName()?>" class="btn-run-job btn btn-default btn-xs"><i class="fa fa-play"></i> <?=t('Run')?></button>
     			</td>
-    			
+
     			<td style="width: 50px">
     				<a href="javascript:void(0)" class="ccm-automate-job-instructions icon-link launch-tooltip" data-jSupportsQueue="<?=$j->supportsQueue()?>" data-jID="<?=$j->getJobID()?>" title="<?=t('Automate this Job')?>"><i class="fa fa-clock-o"></i></a>
     				<?php if ($j->canUninstall()) {
     ?>
-    					<a href="<?=$view->action('uninstall', $j->getJobID())?>" class="icon-link launch-tooltip" title="<?=t('Remove this Job')?>"><i class="fa fa-trash-o"></i></a>
-    				<?php 
+    					<a href="<?=$view->action('uninstall', $j->getJobID(), $uninstallToken)?>" class="icon-link launch-tooltip" title="<?=t('Remove this Job')?>"><i class="fa fa-trash-o"></i></a>
+    				<?php
 }
     ?>
     			</td>
-    			
+
     		</tr>
-    	<?php 
+    	<?php
 }
     ?>
 	</tbody>
@@ -122,28 +125,30 @@ $dh = Core::make('helper/date');
     ?>
     	<div id="jd<?=$j->getJobID()?>" class="ccm-ui">
     		<form action="<?=$view->action('update_job_schedule')?>" method="post" data-schedule-form="<?=$j->getJobID()?>">
-    			<?=$form->hidden('jID', $j->getJobID());
-    ?>
-    			
+    			<?=$form->hidden('jID', $j->getJobID()); ?>
+				<?php
+				$token->output('update_job_schedule');
+				?>
+
     			<h4><?=t('Run Job')?></h4>
-    			
+
     			<div class="radio">
     			    <label>
         			    <input type="radio" name="isScheduled" class="ccm-jobs-automation-schedule-type" value="1" <?=($j->isScheduled ? 'checked="checked"' : '')?> />
         				<?=t('When people browse to the page.  (which runs after the main rendering request of the page.)')?>
     			    </label>
     			</div>
-    			
+
     			<fieldset class="ccm-jobs-automation-schedule-auto" <?=($j->isScheduled ? '' : 'style="display: none;"')?>>
     				<div class="well clearfix">
     				    <div class="form-group">
     					    <label><?php  echo t('Run this Job Every')?></label>
-    						
+
     						<div class="input">
     						    <div class="col-md-6">
     							    <?php echo $form->text('value', h($j->scheduledValue), array('class' => ''))?>
     						    </div>
-    						    
+
     						    <div class="col-md-6">
     						        <?php echo $form->select('unit', array('minutes' => t('Minutes'), 'hours' => t('Hours'), 'days' => t('Days'), 'weeks' => t('Weeks'), 'months' => t('Months')), h($j->scheduledInterval), array('class' => ''))?>
     						    </div>
@@ -151,61 +156,61 @@ $dh = Core::make('helper/date');
     				    </div>
     				</div>
     			</fieldset>
-    			
+
     			<div class="radio">
     			    <label>
         			    <input type="radio" name="isScheduled" class="ccm-jobs-automation-schedule-type" value="0" <?=($j->isScheduled ? '' : 'checked="checked"')?> />
                         <?=t('Through Cron')?>
     			    </label>
     			</div>
-    			
+
     			<fieldset class="ccm-jobs-automation-schedule-cron" <?=($j->isScheduled ? 'style="display: none;"' : '')?>>
     				<div class="well">
     					<?php if ($j->supportsQueue()) {
     ?>
     						<p><?=t('The "%s" job supports queueing, meaning it can be run in a couple different ways:', $j->getJobName())?></p>
-    						
+
     						<h4><?=t('No Queueing')?></h4>
-    						
+
     						<div class="form-group">
     						    <textarea rows="2" class="ccm-default-jobs-url form-control"><?=URL::to('/ccm/system/jobs?auth=' . $auth . '&jID=' . $j->getJobID())?></textarea>
                             </div>
-                            
+
     						<div class="alert alert-info">
     						    <?=t('This will treat the job as though it were like any other concrete5 job. The entire job will be run at once.')?>
                             </div>
-    			
+
     						<h4><?=t('Queueing')?></h4>
-    						
+
     						<p><?=t("First, schedule this URL for when you'd like this job to run:")?></p>
-    						
+
     						<div class="form-group">
     						    <textarea rows="2" class="ccm-default-jobs-url form-control"><?php echo URL::to('/ccm/system/jobs/run_single?auth=' . $auth . '&jID=' . $j->getJobID())?></textarea>
                             </div>
-                            
+
     						<p><?=t('Then, make sure this URL is scheduled to run frequently, like every 3-5 minutes:')?></p>
-    						
+
     						<div class="form-group">
     						    <textarea rows="2" class="ccm-default-jobs-url form-control"><?=URL::to('/ccm/system/jobs/check_queue?auth=' . $auth)?></textarea>
     						</div>
-    						
+
     						<div class="alert alert-info">
     						    <?=t('The first URL starts the process - the second ensures that it completes in batches.')?>
                             </div>
-    			
-    					<?php 
+
+    					<?php
 } else {
     ?>
     						<p><?=t('To run the "%s" job, automate the following URL using cron or a similar system:', $j->getJobName())?></p><br/>
     						<div>
     						    <textarea rows="2" class="ccm-default-jobs-url form-control"><?=URL::to('/ccm/system/jobs/run_single?auth=' . $auth . '&jID=' . $j->getJobID())?></textarea>
                             </div>
-    					<?php 
+    					<?php
 }
-    ?>	
+    ?>
     				</div>
     			</fieldset>
-    			
+
     			<div class="dialog-buttons">
                     <button type="button" onclick="$('form[data-schedule-form=<?=$j->getJobID()?>]').submit()" class="btn btn-primary pull-right">
                         <?=t('Save')?>
@@ -213,16 +218,16 @@ $dh = Core::make('helper/date');
                 </div>
     		</form>
     	</div>
-    <?php 
+    <?php
 }
     ?>
 </div>
 
-<?php 
+<?php
 } else {
     ?>
 	<p><?=t('You have no jobs installed.')?></p>
-<?php 
+<?php
 }
     ?>
 
@@ -231,25 +236,25 @@ $dh = Core::make('helper/date');
 	<h4><?=t('Awaiting Installation')?></h4>
 	<table class="table table-striped">
 	<thead>
-		<tr> 
+		<tr>
 			<th><?=t('Name')?></th>
-			<th><?=t('Description')?></th> 
+			<th><?=t('Description')?></th>
 			<th></th>
 		</tr>
 	</thead>
 	<tbody>
 		<?php foreach ($availableJobs as $availableJobName => $job):?>
-    		<tr> 
+    		<tr>
     			<td><?=$job->getJobName() ?></td>
-    			<td><?=$job->getJobDescription() ?></td> 
+    			<td><?=$job->getJobDescription() ?></td>
     			<td><?php if (!$job->invalid):?>
     				<a href="<?=$view->action('install', $job->jHandle)?>" class="btn btn-sm btn-default pull-right"><?=t('Install')?></a>
     			<?php endif ?></td>
-    		</tr>	
+    		</tr>
 		<?php endforeach ?>
 	</tbody>
 	</table>
-<?php 
+<?php
 }
     ?>
 <?php
@@ -263,13 +268,13 @@ $djs = JobSet::getDefault();
         <input type="text" style="width: 700px" class="ccm-default-jobs-url" value="<?=$view->url('/ccm/system/jobs?auth=' . $auth)?>" />
     </div>
 </div>
-<?php 
+<?php
     }
     ?>
 
 </div>
 
-<?php 
+<?php
 } else {
     ?>
 
@@ -278,25 +283,25 @@ $djs = JobSet::getDefault();
 <?php if (in_array($this->controller->getTask(), array('update_set', 'update_set_jobs', 'edit_set', 'delete_set'))) {
     ?>
 	<h2><?=$set->getJobSetName()?></h2>
-	
+
 	<div class="row">
 	    <div class="col-md-6">
             <form class="form-vertical" method="post" action="<?php echo $view->action('update_set')?>">
-		
+
                 <input type="hidden" name="jsID" value="<?php echo $set->getJobSetID()?>" />
 
                 <?php echo Loader::helper('validation/token')->output('update_set')?>
 
         		<fieldset>
         			<legend><?=t('Details')?></legend>
-        
+
         			<div class="form-group">
         				<?php echo $form->label('jsName', t('Name'))?>
         				<div class="input">
         					<?php echo $form->text('jsName', $set->getJobSetName())?>
         				</div>
         			</div>
-    
+
         			<div class="form-group">
         				<div class="input">
         				    <button type="submit" class="btn btn-primary"><?=t('Update Job Set')?></button>
@@ -307,16 +312,16 @@ $djs = JobSet::getDefault();
 
     		<?php if ($set->canDelete()) {
     ?>
-    
+
         		<form method="post" action="<?php echo $view->action('delete_set')?>" class="form-vertical">
             		<fieldset>
             			<legend><?=t('Delete Set')?></legend>
-            			
+
             			<?php echo Loader::helper('validation/token')->output('delete_set')?>
             			<input type="hidden" name="jsID" value="<?php echo $set->getJobSetID()?>" />
-            			
+
             			<p><?php echo t('Warning, this cannot be undone. No jobs will be deleted but they will no longer be grouped together.')?></p>
-                		
+
                 		<div class="form-group">
             				<div class="input">
             				    <button type="submit" class="btn btn-primary"><?=t('Delete Job Set')?></button>
@@ -324,7 +329,7 @@ $djs = JobSet::getDefault();
             			</div>
             		</fieldset>
         		</form>
-    		<?php 
+    		<?php
 }
     ?>
         </div>
@@ -336,8 +341,8 @@ $djs = JobSet::getDefault();
 
                 <fieldset>
                     <legend><?=t('Jobs')?></legend>
-		
-        			<?php 
+
+        			<?php
                     $list = $set->getJobs();
     if (count($installedJobs) > 0) {
         ?>
@@ -347,23 +352,23 @@ $djs = JobSet::getDefault();
     							<label>
     							    <?php echo $form->checkbox('jID[]', $g->getJobID(), $set->contains($g)) ?>
                                     <span><?php echo $g->getJobName()?></span>
-    							
+
     							</label>
                             </div>
-                        <?php 
+                        <?php
 }
         ?>
-        				
+
                         <div class="form-group">
             				<div class="input">
             				    <button type="submit" class="btn btn-primary"><?=t('Update Jobs')?></button>
             				</div>
             			</div>
-        			<?php 
+        			<?php
     } else {
         ?>
         				<p><?php echo t('No Jobs found.')?></p>
-        			<?php 
+        			<?php
     }
     ?>
                 </fieldset>
@@ -377,18 +382,20 @@ $djs = JobSet::getDefault();
         <div class="col-md-12">
             <div class="well">
 		        <h4><?=t('Automation Instructions')?></h4>
-            
+
                 <form action="<?=$view->action('update_set_schedule');
     ?>" method="post">
-			        <?=$form->hidden('jsID', $set->getJobSetID());
-    ?>
+			        <?=$form->hidden('jsID', $set->getJobSetID()); ?>
+					<?php
+					$token->output('update_set_schedule');
+					?>
                     <div class="radio">
                         <label>
                             <input type="radio" name="isScheduled" class="ccm-jobs-automation-schedule-type" value="1" <?=($set->isScheduled ? 'checked="checked"' : '')?> />
                             <?=t('When people browse to the page.  (which runs after the main rendering request of the page.)')?>
                         </label>
                     </div>
-                
+
                     <fieldset class="ccm-jobs-automation-schedule-auto" <?=($set->isScheduled ? '' : 'style="display: none;"')?>>
     				    <div class="col-md-3">
         				    <div class="form-group">
@@ -398,7 +405,7 @@ $djs = JobSet::getDefault();
             					</div>
         				    </div>
     				    </div>
-    				    
+
     				    <div class="col-md-3">
     				        <div class="form-group">
     				            <label></label>
@@ -408,22 +415,22 @@ $djs = JobSet::getDefault();
     				        </div>
     				    </div>
                     </fieldset>
-		
+
                     <div class="radio">
                         <label>
                             <input type="radio" name="isScheduled" class="ccm-jobs-automation-schedule-type" value="0" <?=($set->isScheduled ? '' : 'checked="checked"')?> />
                             <?=t('Through Cron')?>
                         </label>
                     </div>
-    			
+
                     <fieldset class="ccm-jobs-automation-schedule-cron" <?=($set->isScheduled ? 'style="display: none;"' : '')?>>
     				    <p><?=t('To run all the jobs in this Job Set, schedule this URL using cron or a similar system:', $set->getJobSetID())?></p>
-    				
+
                         <div class="form-group">
                             <textarea rows="2" class="ccm-default-jobs-url form-control"><?=$view->url('/tools/required/jobs?auth=' . $auth . '&jsID=' . $set->getJobSetID())?></textarea>
                         </div>
                     </fieldset>
-    			
+
     			<div class="form-group">
     				<?php echo $form->submit('submit', t('Update Schedule'), array('class' => 'btn-primary'))?>
     			</div>
@@ -432,7 +439,7 @@ $djs = JobSet::getDefault();
         </div>
 	</div>
 
-<?php 
+<?php
 } else {
     ?>
 
@@ -449,22 +456,22 @@ $djs = JobSet::getDefault();
                                 <i class="fa fa-bars"></i> <?php echo $j->getJobSetDisplayName()?>
                             </a>
                         </li>
-        	        <?php 
+        	        <?php
 }
     ?>
         	    </ul>
-        	<?php 
+        	<?php
 } else {
     ?>
         		<p><?php echo t('You have not added any Job sets.')?></p>
-        	<?php 
+        	<?php
 }
     ?>
-    
+
             <br/>
-    	
+
             <h3><?=t('Add Set')?></h3>
-    
+
         	<?php echo Loader::helper('validation/token')->output('add_set')?>
         	<div class="form-group">
         		<?php echo $form->label('jsName', t('Name'))?>
@@ -472,7 +479,7 @@ $djs = JobSet::getDefault();
         			<?php echo $form->text('jsName')?>
         		</div>
         	</div>
-        	
+
         	<div class="form-group">
         		<label><?=t('Jobs')?></label>
         		<?php foreach ($installedJobs as $g) {
@@ -483,24 +490,24 @@ $djs = JobSet::getDefault();
                             <span><?php echo $g->getJobName()?></span>
     					</label>
                     </div>
-                <?php 
+                <?php
 }
     ?>
         	</div>
-        	
+
         	<div class="well clearfix">
         	    <button type="submit" class="btn btn-primary pull-right"><?=t('Add Job Set')?></button>
         	</div>
-        	
+
         </form>
     </div>
 </div>
 
-	<?php 
+	<?php
 }
     ?>
 </div>
-<?php 
+<?php
 } ?>
 
 
@@ -527,7 +534,7 @@ jQuery.fn.showLoading = function() {
 		} else {
 			row.find('td').css('background-color', '#ccc');
 			row.attr('data-color', '#ccc');
-		}			
+		}
 	}, 500);
 }
 
@@ -588,7 +595,7 @@ $(function() {
 				}
 			);
 		} else {
-			$.ajax({ 
+			$.ajax({
 				url: '<?php echo addslashes(URL::to('/ccm/system/jobs/run_single'))?>',
 				data: params,
 				dataType: 'json',
@@ -599,7 +606,7 @@ $(function() {
 			});
 		}
 	});
-	
+
 	$('.ccm-jobs-automation-schedule-type').click(function() {
 		if($(this).val() == 1) {
 			$(this).parent().parent().siblings('.ccm-jobs-automation-schedule-cron').hide();

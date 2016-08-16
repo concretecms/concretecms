@@ -137,11 +137,21 @@ div#ccm-dashboard-content {
     margin-top: -30px;
   }
 
+  /**
+   * Kind of weird, these are both meant to position the menus at the
+   * exact same place, but one is inside <header> which has position
+   * relative so it can't have as much top, and one is in the page,
+   * so it has more top
+   */
+  div.ccm-dashboard-header-menu {
+    position: absolute;
+    top: 34px;
+    right: 50px;
+  }
   div.ccm-dashboard-header-buttons {
     position: absolute;
     top: 82px;
     right: 50px;
-
   }
 
   header {

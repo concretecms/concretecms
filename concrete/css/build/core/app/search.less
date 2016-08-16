@@ -215,6 +215,19 @@ table.ccm-search-results-table {
     text-align: right;
     padding-top: 0px;
     padding-bottom: 0px;
+    white-space: nowrap;
+
+
+    select.ccm-search-bulk-action {
+      font-size: 11px;
+      display: inline-block;
+      width: auto;
+      margin-right: 10px;
+      padding-top: 2px !important;
+      padding-bottom: 2px !important;
+      padding-left: 10px;
+      padding-right: 10px;
+    }
   }
 
   thead {
@@ -229,6 +242,13 @@ table.ccm-search-results-table {
 
       input[type=checkbox], input[type=radio] {
         vertical-align: middle;
+        border-color: #ccc;
+      }
+
+      span.ccm-search-results-checkbox {
+        input {
+          margin-top: 0px;
+        }
       }
 
       background-color: #e7e7e7;
@@ -338,6 +358,11 @@ table.ccm-search-results-table {
       font-size: 13px;
 
       .transition(all 0.1s);
+
+      input[type=checkbox], input[type=radio] {
+        position: relative;
+        z-index: @index-level-search-results-checkboxes;
+      }
 
       padding: 15px 0px 15px 15px;
 

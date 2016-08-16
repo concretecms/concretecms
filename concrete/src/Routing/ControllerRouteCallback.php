@@ -4,6 +4,7 @@ namespace Concrete\Core\Routing;
 use Concrete\Core\Support\Facade\Application;
 use Response;
 use Request;
+use Symfony\Component\HttpKernel\Controller\ArgumentResolver;
 
 class ControllerRouteCallback extends RouteCallback
 {
@@ -16,9 +17,10 @@ class ControllerRouteCallback extends RouteCallback
      */
     public function execute(Request $request, Route $route, $parameters)
     {
-        $resolver = Application::make('Concrete\Core\Controller\ApplicationAwareControllerResolver');
-        $callback = $resolver->getController($request);
-        $arguments = $resolver->getArguments($request, $callback);
+        $controllerResolver = Application::make('Concrete\Core\Controller\ApplicationAwareControllerResolver');
+        $callback = $controllerResolver->getController($request);
+        $argumentsResolver = Application::make(ArgumentResolver::class);
+        $arguments = $argumentsResolver->getArguments($request, $callback);
         $controller = $callback[0];
         $method = $callback[1];
         $controller->on_start();
@@ -51,7 +53,7 @@ class ControllerRouteCallback extends RouteCallback
      */
     public static function getRouteAttributes($callback)
     {
-        $attributes = array();
+        $attributes = [];
         $attributes['_controller'] = $callback;
         $callback = new static($callback);
         $attributes['callback'] = $callback;

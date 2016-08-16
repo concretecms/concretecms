@@ -9,12 +9,12 @@ use Loader;
 
 class Controller extends BlockController
 {
-    public $helpers = array('form');
+    public $helpers = ['form'];
 
     protected $btInterfaceWidth = 400;
     protected $btInterfaceHeight = 450;
-    protected $btExportPageColumns = array('cParentID', 'cTargetID');
-    protected $btExportPageTypeColumns = array('ptID');
+    protected $btExportPageColumns = ['cParentID', 'cTargetID'];
+    protected $btExportPageTypeColumns = ['ptID'];
     protected $btTable = 'btDateNavigation';
 
     public function getBlockTypeDescription()
@@ -70,7 +70,7 @@ class Controller extends BlockController
             }
         }
 
-        return array($method, $parameters);
+        return [$method, $parameters];
     }
 
     public function action_filter_by_date($year = false, $month = false)
@@ -99,11 +99,11 @@ class Controller extends BlockController
         $query = $pl->deliverQueryObject();
         $query->select('date_format(cv.cvDatePublic, "%Y") as navYear, date_format(cv.cvDatePublic, "%m") as navMonth');
         $query->groupBy('navYear, navMonth');
-        $query->orderBy('cvDatePublic', 'desc');
+        $query->orderBy('navYear', 'desc')->addOrderBy('navMonth', 'desc');
         $r = $query->execute();
-        $dates = array();
+        $dates = [];
         while ($row = $r->fetch()) {
-            $dates[] = array('year' => $row['navYear'], 'month' => $row['navMonth']);
+            $dates[] = ['year' => $row['navYear'], 'month' => $row['navMonth']];
         }
         $this->set('dates', $dates);
     }

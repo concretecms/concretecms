@@ -242,7 +242,7 @@ if ($showMenu) {
     ?>
                                 <?php if ($canAliasBlockOut) {
     ?>
-                                    <li><a dialog-title="<?=t('Setup on Child Pages')?>" dialog-modal="false" dialog-width="550" dialog-height="450" data-menu-action="block_dialog" data-menu-href="<?=URL::to('/ccm/system/dialogs/block/aliasing')?>" ><?=t("Setup on Child Pages")?></a></li>
+                                    <li><a dialog-title="<?=t('Setup on Child Pages')?>" dialog-modal="false" dialog-width="500" dialog-height="auto" data-menu-action="block_dialog" data-menu-href="<?=URL::to('/ccm/system/dialogs/block/aliasing')?>" ><?=t("Setup on Child Pages")?></a></li>
                                 <?php 
 }
     ?>

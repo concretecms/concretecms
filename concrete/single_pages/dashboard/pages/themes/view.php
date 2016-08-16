@@ -75,6 +75,9 @@ if (isset($activate_confirm)) {
         }
     ?></table>
     <form method="post" action="<?=$view->action('save_mobile_theme')?>" class="form-inline">
+        <?php
+        $valt->output('save_mobile_theme');
+        ?>
         <h3><?=t('Mobile Theme')?></h3>
         <p><?=t('To use a separate theme for mobile browsers, specify it below.')?></p>
         <div class="control-group">
