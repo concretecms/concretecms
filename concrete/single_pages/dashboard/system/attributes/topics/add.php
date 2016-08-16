@@ -7,7 +7,7 @@ $form = Core::make('helper/form');
 	<?php echo Loader::helper('validation/token')->output('submit'); ?>
 	<div class="form-group">
 		<?php echo $form->label('topicTreeName', t('Tree Name')); ?>
-		<?php echo $form->text('topicTreeName', $topicTreeName, array('class' => 'span4')); ?>
+		<?php echo $form->text('topicTreeName', $topicTreeName); ?>
 	</div>
 <?php } else { ?>
 	<p><?php echo t('You may not add topic trees.'); ?></p>
