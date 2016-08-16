@@ -36,9 +36,9 @@ class Type
     /**
      * @param mixed $siteTypeID
      */
-    public function setSiteTypeID($siteTypeID)
+    public function getSiteTypeID()
     {
-        $this->siteTypeID = $siteTypeID;
+        return $this->siteTypeID;
     }
 
     /**

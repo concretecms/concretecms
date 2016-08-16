@@ -1,18 +1,20 @@
 <?php
 namespace Concrete\Core\Entity\Express;
 
+use Concrete\Core\Export\ExportableInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Concrete\Core\Export\Item\Express\Form as FormExporter;
 
 /**
  * @ORM\Entity
  * @ORM\Table(name="ExpressForms")
  */
-class Form implements \JsonSerializable
+class Form implements \JsonSerializable, ExportableInterface
 {
     /**
-     * @ORM\Id @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
+     * @ORM\Id @ORM\Column(type="guid")
+     * @ORM\GeneratedValue(strategy="UUID")
      */
     protected $id;
 
@@ -119,5 +121,10 @@ class Form implements \JsonSerializable
             'exFormName' => $this->getName(),
             'exFormID' => $this->getId()
         ];
+    }
+
+    public function getExporter()
+    {
+        return new FormExporter();
     }
 }

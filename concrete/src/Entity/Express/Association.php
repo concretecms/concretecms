@@ -1,7 +1,9 @@
 <?php
 namespace Concrete\Core\Entity\Express;
 
+use Concrete\Core\Export\ExportableInterface;
 use Doctrine\ORM\Mapping as ORM;
+use Concrete\Core\Export\Item\Express\Association as AssociationExporter;
 
 /**
  * @ORM\Entity
@@ -9,13 +11,13 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\DiscriminatorColumn(name="type", type="string")
  * @ORM\Table(name="ExpressEntityAssociations")
  */
-abstract class Association
+abstract class Association implements ExportableInterface
 {
     abstract public function getAssociationBuilder();
 
     /**
-     * @ORM\Id @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
+     * @ORM\Id @ORM\Column(type="guid")
+     * @ORM\GeneratedValue(strategy="UUID")
      */
     protected $id;
 
@@ -151,4 +153,9 @@ abstract class Association
 
     abstract public function getFormatter();
     abstract public function getSaveHandler();
+
+    public function getExporter()
+    {
+        return new AssociationExporter();
+    }
 }

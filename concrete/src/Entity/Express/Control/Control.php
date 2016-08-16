@@ -4,7 +4,9 @@ namespace Concrete\Core\Entity\Express\Control;
 use Concrete\Controller\Element\Dashboard\Express\Control\Options;
 use Concrete\Core\Entity\Express\Entity;
 use Concrete\Core\Entity\Express\Entry;
+use Concrete\Core\Export\ExportableInterface;
 use Concrete\Core\Express\Form\Control\Type\SaveHandler\ControlSaveHandler;
+use Concrete\Core\Export\Item\Express\Control as ControlExporter;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -13,7 +15,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\DiscriminatorColumn(name="type", type="string")
  * @ORM\Table(name="ExpressFormFieldSetControls")
  */
-abstract class Control implements \JsonSerializable
+abstract class Control implements \JsonSerializable, ExportableInterface
 {
     /**
      * @ORM\Id @ORM\Column(type="guid")
@@ -166,4 +168,5 @@ abstract class Control implements \JsonSerializable
 
         return $manager->driver($this->getType());
     }
+
 }
