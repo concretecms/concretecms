@@ -7,17 +7,15 @@ $form = Core::make('helper/form');
 <?php if (PermissionKey::getByHandle('add_topic_tree')->validate()) {
     ?>
 	<?=Loader::helper('validation/token')->output('submit')?>
-	<div class="control-group">
+	<div class="form-group">
 		<?=$form->label('topicTreeName', t('Tree Name'))?>
-		<div class="controls">
-			<?=$form->text('topicTreeName', $topicTreeName, array('class' => 'span4'))?>
-		</div>
+		<?=$form->text('topicTreeName', $topicTreeName, array('class' => 'span4'))?>
 	</div>
-<?php 
+<?php
 } else {
     ?>
 	<p><?=t('You may not add topic trees.')?></p>
-<?php 
+<?php
 } ?>
 
 <div class="ccm-dashboard-form-actions-wrapper">
