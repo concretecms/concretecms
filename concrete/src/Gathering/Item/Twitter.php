@@ -47,12 +47,12 @@ class Twitter extends Item
         $userMentions = $tweet->entities->user_mentions;
         if (count($userMentions) > 0) {  // link mentions
             foreach ($tweet->entities->user_mentions as $mention) {
-                $tweet->text = str_replace('@'.$mention->screen_name, '<a target="_blank" href="http://www.twitter.com/'.$mention->screen_name.'">@'.$mention->screen_name.'</a>', $tweet->text);
+                $tweet->text = str_replace('@'.$mention->screen_name, '<a target="_blank" href="https://twitter.com/'.$mention->screen_name.'">@'.$mention->screen_name.'</a>', $tweet->text);
             }
         }
         if (count($tweet->entities->hashtags) > 0) {   //link hashtags
             foreach ($tweet->entities->hashtags as $hash) {
-                $tweet->text = str_replace('#'.$hash->text, '<a target="_blank" href="http://www.twitter.com/search/%23'.$hash->text.'">#'.$hash->text.'</a>', $tweet->text);
+                $tweet->text = str_replace('#'.$hash->text, '<a target="_blank" href="https://twitter.com/search?q=%23'.$hash->text.'">#'.$hash->text.'</a>', $tweet->text);
             }
         }
         if (count($tweet->entities->urls) > 0) {
@@ -70,6 +70,6 @@ class Twitter extends Item
         $this->addFeatureAssignment('description', $tweet->text);
         $this->addFeatureAssignment('date_time', $tweet->created_at);
         $this->addFeatureAssignment('author', $tweet->user->name);
-        $this->addFeatureAssignment('link', 'http://www.twitter.com/' . $tweet->user->name . '/status/' . $tweet->id);
+        $this->addFeatureAssignment('link', 'https://twitter.com/' . $tweet->user->name . '/status/' . $tweet->id);
     }
 }

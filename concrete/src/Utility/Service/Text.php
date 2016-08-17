@@ -239,12 +239,12 @@ class Text
         $target = ($newWindow) ? ' target="_blank" ' : '';
         $output = preg_replace(
             '/([\.|\,|\:|\¡|\¿|\>|\{|\(]?)@{1}(\w*)([\.|\,|\:|\!|\?|\>|\}|\)]?)\s/i',
-            "$1<a href=\"http://twitter.com/$2\" " . $target . " class=\"twitter-username\">@$2</a>$3 ",
+            "$1<a href=\"https://twitter.com/$2\" " . $target . " class=\"twitter-username\">@$2</a>$3 ",
             $input);
         if ($withSearch) {
             $output = preg_replace(
                 '/([\.|\,|\:|\¡|\¿|\>|\{|\(]?)#{1}(\w*)([\.|\,|\:|\!|\?|\>|\}|\)]?)\s/i',
-                "$1<a href=\"http://search.twitter.com/search?q=%23$2\" " . $target . " class=\"twitter-search\">#$2</a>$3 ",
+                "$1<a href=\"https://twitter.com/search?q=%23$2\" " . $target . " class=\"twitter-search\">#$2</a>$3 ",
                 $input);
         }
 
