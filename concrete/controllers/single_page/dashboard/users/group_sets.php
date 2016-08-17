@@ -79,29 +79,12 @@ class GroupSets extends DashboardPageController
             }
             if (!$this->error->has()) {
                 $as->updateGroupSetName($gsName);
-                $this->redirect('dashboard/users/group_sets', 'set_updated');
-            }
-        } else {
-            $this->error->add($this->token->getErrorMessage());
-        }
-    }
-
-    public function update_set_groups()
-    {
-        if ($this->token->validate('update_set_groups')) {
-            $gs = GroupSet::getByID($this->post('gsID'));
-            if (!is_object($gs)) {
-                $this->error->add(t('Invalid group set.'));
-            }
-
-            if (!$this->error->has()) {
-                // go through and add all the groups that aren't in another set
-                $gs->clearGroups();
+                $as->clearGroups();
                 if (is_array($this->post('gID'))) {
                     foreach ($_POST['gID'] as $gID) {
                         $g = Group::getByID($gID);
                         if (is_object($g)) {
-                            $gs->addGroup($g);
+                            $as->addGroup($g);
                         }
                     }
                 }
@@ -110,7 +93,6 @@ class GroupSets extends DashboardPageController
         } else {
             $this->error->add($this->token->getErrorMessage());
         }
-        $this->edit($this->post('asID'));
     }
 
     public function delete_set()
