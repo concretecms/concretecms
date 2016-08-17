@@ -14,7 +14,7 @@
                     return saver.canSave();
                 },
 
-                debug: true,
+                debug: false,
 
                 // The time in seconds until idle triggers a save
                 idleTimeout: 20,
