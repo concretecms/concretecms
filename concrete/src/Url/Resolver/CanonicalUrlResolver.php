@@ -47,44 +47,30 @@ class CanonicalUrlResolver implements UrlResolverInterface
             return $this->cached;
         }
 
-        $config = false;
-        if ($this->app->isInstalled()) {
-            $site = $this->app['site']->getSite();
-            if (is_object($site)) {
-                $config = $site->getConfigRepository();
-            }
-        }
+        $config = $this->app['config'];
 
         // Determine trailing slash setting
-        $trailing_slashes = $config && $config->get('seo.trailing_slash') ? Url::TRAILING_SLASHES_ENABLED : Url::TRAILING_SLASHES_DISABLED;
+        $trailing_slashes = $config->get('concrete.seo.trailing_slash') ? Url::TRAILING_SLASHES_ENABLED : Url::TRAILING_SLASHES_DISABLED;
 
-        $url = Url::createFromUrl('', $trailing_slashes);
+        $url = UrlImmutable::createFromUrl('', $trailing_slashes);
 
-        $url->setHost(null);
-        $url->setScheme(null);
+        $url = $url->setHost(null);
+        $url = $url->setScheme(null);
 
-        if ($config && $config->get('seo.canonical_url')) {
-            $canonical = UrlImmutable::createFromUrl($config->get('seo.canonical_url'), $trailing_slashes);
+        if ($config->get('concrete.seo.canonical_url')) {
+            $canonical = UrlImmutable::createFromUrl($config->get('concrete.seo.canonical_url'), $trailing_slashes);
 
             // If the request is over https and the canonical url is http, lets just say https for the canonical url.
             if (strtolower($canonical->getScheme()) == 'http' && strtolower($this->request->getScheme()) == 'https') {
-                $url->setScheme('https');
+                $url = $url->setScheme('https');
             } else {
-                $url->setScheme($canonical->getScheme());
+                $url = $url->setScheme($canonical->getScheme());
             }
 
-            $url->setHost($canonical->getHost());
+            $url = $url->setHost($canonical->getHost());
 
             if (intval($canonical->getPort()->get()) > 0) {
-                $url->setPort($canonical->getPort());
-            }
-        } else {
-            $host = $this->request->getHost();
-            $scheme = $this->request->getScheme();
-            if ($scheme && $host) {
-                $url->setScheme($scheme)
-                    ->setHost($host)
-                    ->setPort($this->request->getPort());
+                $url = $url->setPort($canonical->getPort());
             }
         }
 
@@ -92,7 +78,7 @@ class CanonicalUrlResolver implements UrlResolverInterface
             $url = $url->setPath($relative_path);
         }
 
-        $this->cached = UrlImmutable::createFromUrl($url, $trailing_slashes);
+        $this->cached = $url;
 
         return $this->cached;
     }
