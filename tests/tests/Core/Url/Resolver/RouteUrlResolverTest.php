@@ -11,8 +11,6 @@ class RouteUrlResolverTest extends ResolverTestCase
 
     protected function setUp()
     {
-        parent::setUp();
-
         $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
 
         $path_url_resolver = $app->make('Concrete\Core\Url\Resolver\PathUrlResolver');

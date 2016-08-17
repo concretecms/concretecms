@@ -3,7 +3,6 @@ namespace Concrete\Core\Config\Repository;
 
 use Concrete\Core\Config\LoaderInterface;
 use Concrete\Core\Config\SaverInterface;
-use Concrete\Core\Support\Facade\Config;
 
 class Repository extends \Illuminate\Config\Repository
 {

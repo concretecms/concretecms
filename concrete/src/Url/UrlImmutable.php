@@ -93,18 +93,4 @@ class UrlImmutable extends \League\Url\UrlImmutable implements UrlInterface
             new    \League\Url\Components\Fragment($components['fragment'])
         );
     }
-
-    /**
-     * Overridden to allow paths be passed in and out
-     * @param $url
-     * @return null|string
-     */
-    protected static function sanitizeUrl($url)
-    {
-        if (strpos($url, '/') === 0) {
-            return $url;
-        }
-        return parent::sanitizeUrl($url);
-    }
-
 }
