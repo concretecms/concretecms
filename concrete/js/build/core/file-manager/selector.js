@@ -27,7 +27,9 @@
         my.$element.append(my._chooseTemplate);
         my.$element.on('click', 'div.ccm-file-selector-choose-new', function() {
             ConcreteFileManager.launchDialog(function(data) {
-                my.loadFile(data.fID);
+                my.loadFile(data.fID, function() {
+                    my.$element.closest('form').trigger('change');
+                });
             }, dialogOpts);
             return false;
         });
@@ -50,7 +52,7 @@
             '<div class="ccm-file-selector-file-selected-title"><div><%=file.title%></div></div><div class="clearfix"></div>' +
             '</div>',
 
-        loadFile: function(fID) {
+        loadFile: function(fID, callback) {
             var my = this;
             my.$element.html(my._loadingTemplate);
             ConcreteFileManager.getFileDetails(fID, function(r) {
@@ -68,6 +70,9 @@
                         concreteMenu.show(event);
                     }
                 });
+                if (callback) {
+                    callback(r);
+                }
             });
         }
 

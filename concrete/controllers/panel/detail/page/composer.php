@@ -22,6 +22,7 @@ class Composer extends BackendInterfacePageController
 
     public function view()
     {
+        $this->requireAsset('javascript', 'core/composer-save-coordinator');
         $pagetype = PageType::getByID($this->page->getPageTypeID());
         $id = $this->page->getCollectionID();
         $saveURL = View::url('/dashboard/composer/write', 'save', 'draft', $id);
