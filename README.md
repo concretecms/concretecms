@@ -1,4 +1,5 @@
 [![Build Status](http://img.shields.io/travis/concrete5/concrete5/develop.svg)](https://travis-ci.org/concrete5/concrete5)
+[![Issues Ready To Start](https://badge.waffle.io/concrete5/concrete5.png?label=Accepted:Ready%20to%20start&title=Ready)](https://github.com/concrete5/concrete5/labels/accepted%3Aready%20to%20start)
 
 Welcome to the official repository for concrete5 development! concrete5 is an open source CMS built by people from 
 around the world. Want to get involved? Check out our [contributor guide](https://github.com/concrete5/concrete5/blob/develop/CONTRIBUTING.md) for more info.
