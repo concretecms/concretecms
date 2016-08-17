@@ -25,7 +25,7 @@ $url = $type->getAccessEntityTypeToolsURL(); ?>
 	<?php if (!is_object($pae)) {
     ?>
 		<th><div style="width: 16px"></div></th>
-	<?php 
+	<?php
 } ?>
 </tr>
 <tr>
@@ -35,7 +35,7 @@ $url = $type->getAccessEntityTypeToolsURL(); ?>
 
 </form>
 
-<input type="button" class="btn btn-small pull-right dialog-launch" dialog-width="640" dialog-height="480" id="ccm-permissions-access-entity-members-add-group" href="<?=URL::to('/ccm/system/dialogs/group/search')?>" dialog-modal="false" dialog-title="<?=t('Add Group')?>" value="<?=t('Add Group')?>" />
+<input type="button" class="btn btn-primary pull-right dialog-launch" dialog-width="640" dialog-height="480" id="ccm-permissions-access-entity-members-add-group" href="<?=URL::to('/ccm/system/dialogs/group/search')?>" dialog-modal="false" dialog-title="<?=t('Add Group')?>" value="<?=t('Add Group')?>" />
 
 </div>
 
@@ -48,7 +48,7 @@ ConcreteEvent.subscribe('SelectGroup', function(e, data) {
 		$("#ccm-permissions-access-entity-combination-groups-none").hide();
 		var tbl = $("#ccm-permissions-access-entity-combination-groups");
 		html = '<tr><td><input type="hidden" class="combogID" name="gID[]" value="' + gID + '" /><img src="<?=ASSETS_URL_IMAGES?>/icons/group.png" /></td><td>' + gName + '</td><?php if (!is_object($pae)) {
-    ?><td><a href="javascript:void(0)" onclick="ccm_removeCombinationGroup(this)"><img src="<?=ASSETS_URL_IMAGES?>/icons/remove.png" /></a></td><?php 
+    ?><td><a href="javascript:void(0)" onclick="ccm_removeCombinationGroup(this)"><img src="<?=ASSETS_URL_IMAGES?>/icons/remove.png" /></a></td><?php
 } ?>';
 		tbl.append(html);
 	}
@@ -80,7 +80,7 @@ $(function() {
 </script>
 
 <div class="dialog-buttons">
-	<input type="button" onclick="jQuery.fn.dialog.closeTop()" value="<?=t('Cancel')?>" class="btn" />
-	<input type="submit" onclick="$('#ccm-permission-access-entity-combination-groups-form').submit()" value="<?=t('Save')?>" class="btn primary ccm-button-right" />
+	<input type="button" onclick="jQuery.fn.dialog.closeTop()" value="<?=t('Cancel')?>" class="btn btn-default btn-hover-danger" />
+	<input type="submit" onclick="$('#ccm-permission-access-entity-combination-groups-form').submit()" value="<?=t('Save')?>" class="btn pull-right btn-primary" />
 </div>
 
