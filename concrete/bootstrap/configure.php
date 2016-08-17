@@ -75,7 +75,6 @@ define('NAMESPACE_SEGMENT_VENDOR', 'Concrete');
  * ----------------------------------------------------------------------------
  */
 define('DIRNAME_BLOCKS', 'blocks');
-define('DIRNAME_BACKUPS', 'backups');
 define('DIRNAME_PAGES', 'single_pages');
 define('DIRNAME_VIEWS', 'views');
 define('DIRNAME_PACKAGES', 'packages');
@@ -249,7 +248,6 @@ define('DIR_FILES_BLOCK_TYPES_FORMS_EXTERNAL_PROCESS', DIR_FILES_BLOCK_TYPES . '
 define('DIR_FILES_BLOCK_TYPES_FORMS_EXTERNAL_CORE', DIR_FILES_BLOCK_TYPES_CORE . '/external_form/form');
 define('DIR_FILES_BLOCK_TYPES_FORMS_EXTERNAL_PROCESS_CORE', DIR_FILES_BLOCK_TYPES_CORE . '/external_form/form/controller');
 define('DIR_FILES_UPLOADED_STANDARD', DIR_APPLICATION . '/files');
-define('DIR_FILES_BACKUPS', DIR_FILES_UPLOADED_STANDARD . '/backups');
 define('DIR_AL_ICONS', DIR_BASE_CORE . '/images/icons/filetypes');
 define('DIR_LANGUAGES_SITE_INTERFACE', DIR_LANGUAGES . '/' . DIRNAME_LANGUAGES_SITE_INTERFACE);
 

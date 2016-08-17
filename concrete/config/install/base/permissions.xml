@@ -59,7 +59,7 @@
                 <group name="Administrators"/>
             </access>
         </permissionkey>
-        
+
         <!-- areas //-->
         <permissionkey handle="view_area" name="View Area" package="" description="Can view the area and its contents." category="area"/>
         <permissionkey handle="edit_area_contents" name="Edit Area Contents" description="Can edit blocks within this area." package="" category="area"/>
@@ -102,13 +102,13 @@
         <permissionkey handle="copy_file" name="Copy File" description="Can copy file." package="" category="file"/>
         <permissionkey handle="edit_file_permissions" name="Edit File Access" description="Can edit access to file." package="" category="file"/>
         <permissionkey handle="delete_file" name="Delete File" description="Can delete file." package="" category="file"/>
-        
+
         <!-- workflow //-->
-        <permissionkey handle="approve_basic_workflow_action" name="Approve or Deny" description="Grant ability to approve workflow." package="" category="basic_workflow" />        
+        <permissionkey handle="approve_basic_workflow_action" name="Approve or Deny" description="Grant ability to approve workflow." package="" category="basic_workflow" />
         <permissionkey handle="notify_on_basic_workflow_entry" name="Notify on Entry" description="Notify approvers that a change has entered the workflow." package="" category="basic_workflow" />
         <permissionkey handle="notify_on_basic_workflow_approve" name="Notify on Approve" description="Notify approvers that a change has been approved." package="" category="basic_workflow" />
         <permissionkey handle="notify_on_basic_workflow_deny" name="Notify on Deny" description="Notify approvers that a change has been denied." package="" category="basic_workflow" />
-        		
+
         <!-- page type (composer) //-->
         <permissionkey handle="add_page_type" name="Add Pages of This Type" description="" package="" category="page_type" />
         <permissionkey handle="edit_page_type" name="Edit Page Type" description="" package="" category="page_type" />
@@ -164,7 +164,7 @@
                 <group name="Administrators"/>
             </access>
         </permissionkey>
-        
+
         <permissionkey handle="delete_user" name="Delete User" package="" category="user" can-trigger-workflow="true">
             <access>
                 <group name="Administrators"/>
@@ -204,12 +204,6 @@
         </permissionkey>
 
         <permissionkey handle="access_page_type_permissions" name="Access Page Type Permissions" package="" category="admin">
-            <access>
-                <group name="Administrators"/>
-            </access>
-        </permissionkey>
-
-        <permissionkey handle="backup" name="Perform Backups" package="" category="admin">
             <access>
                 <group name="Administrators"/>
             </access>
@@ -295,9 +289,9 @@
                 <group name="Administrators"/>
             </access>
         </permissionkey>
-        
+
     </permissionkeys>
-    
+
     <systemcaptcha>
         <library handle="securimage" name="SecurImage (Default)" package="" activated="1"/>
     </systemcaptcha>
