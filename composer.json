@@ -42,7 +42,7 @@
     "dapphp/securimage": "3.*",
     "anahkiasen/html-object": "1.*",
     "primal/color": "1.0.*@dev",
-    "zendframework/zend-queue": "dev-master",
+    "concrete5/zend-queue": "dev-master",
     "zendframework/zend-mail": "2.7.*",
     "zendframework/zend-cache": "2.7.*",
     "zendframework/zend-http": "2.5.*",
