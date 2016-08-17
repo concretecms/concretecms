@@ -17,9 +17,9 @@ class Controller extends BlockController
     protected $btTable = 'btPageList';
     protected $btInterfaceWidth = "800";
     protected $btInterfaceHeight = "350";
-    protected $btExportPageColumns = array('cParentID');
-    protected $btExportPageTypeColumns = array('ptID');
-    protected $btExportPageFeedColumns = array('pfID');
+    protected $btExportPageColumns = ['cParentID'];
+    protected $btExportPageTypeColumns = ['ptID'];
+    protected $btExportPageFeedColumns = ['pfID'];
     protected $btCacheBlockRecord = true;
     protected $btCacheBlockOutput = null;
     protected $btCacheBlockOutputOnPost = true;
@@ -41,9 +41,9 @@ class Controller extends BlockController
 
     public function getJavaScriptStrings()
     {
-        return array(
+        return [
             'feed-name' => t('Please give your RSS Feed a name.'),
-        );
+        ];
     }
 
     public function on_start()
@@ -52,7 +52,7 @@ class Controller extends BlockController
         $this->list->disableAutomaticSorting();
         //$pl->setNameSpace('b' . $this->bID);
 
-        $cArray = array();
+        $cArray = [];
 
         switch ($this->orderBy) {
             case 'display_asc':
@@ -137,7 +137,7 @@ class Controller extends BlockController
         if ($this->displayAliases) {
             $this->list->includeAliases();
         }
-        if ($this->ignorePermissions) {
+        if (isset($this->ignorePermissions) && $this->ignorePermissions) {
             $this->list->ignorePermissions();
         }
 
@@ -259,7 +259,7 @@ class Controller extends BlockController
 
     protected function loadKeys()
     {
-        $attributeKeys = array();
+        $attributeKeys = [];
         $keys = CollectionKey::getList();
         foreach ($keys as $ak) {
             if ($ak->getAttributeTypeHandle() == 'topics') {
@@ -361,10 +361,10 @@ class Controller extends BlockController
             $parameters = $method = null;
         }
 
-        return array($method, $parameters);
+        return [$method, $parameters];
     }
 
-    public function isValidControllerTask($method, $parameters = array())
+    public function isValidControllerTask($method, $parameters = [])
     {
         if (!$this->enableExternalFiltering) {
             return false;
@@ -387,7 +387,7 @@ class Controller extends BlockController
             $this->cPID = $c->getCollectionParentID();
         }
 
-        $args = $args + array(
+        $args += [
             'enableExternalFiltering' => 0,
             'includeAllDescendents' => 0,
             'includeDate' => 0,
@@ -402,7 +402,7 @@ class Controller extends BlockController
             'pfID' => 0,
             'filterDateOption' => '',
             'cParentID' => null,
-        );
+        ];
 
         $args['num'] = ($args['num'] > 0) ? $args['num'] : 0;
         $args['cThis'] = ($args['cParentID'] == $this->cID) ? '1' : '0';
@@ -456,7 +456,7 @@ class Controller extends BlockController
             $args['pfID'] = $pf->getID();
         } elseif (isset($this->pfID) && $this->pfID && !$args['rss']) {
             // let's make sure this isn't in use elsewhere.
-            $cnt = $db->fetchColumn('select count(pfID) from btPageList where pfID = ?', array($this->pfID));
+            $cnt = $db->fetchColumn('select count(pfID) from btPageList where pfID = ?', [$this->pfID]);
             if ($cnt == 1) { // this is the last one, so we delete
                 $pf = Feed::getByID($this->pfID);
                 if (is_object($pf)) {
