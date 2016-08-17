@@ -21,7 +21,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
         <?php if (isset($sitemap) && $sitemap) {
     ?>
             <input type="hidden" name="sitemap" value="1" />
-        <?php 
+        <?php
 } ?>
 
 		<span class="ccm-detail-page-attributes-id"><?=t('Page ID: %s', $c->getCollectionID())?></span>
@@ -35,7 +35,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			<input type="text" class="form-control" id="cName" name="cName" value="<?=htmlentities($c->getCollectionName(), ENT_QUOTES, APP_CHARSET) ?>" />
 			</div>
 		</div>
-		<?php 
+		<?php
 } ?>
 
 		<?php if ($assignment->allowEditDateTime()) {
@@ -47,7 +47,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
     ?>
 			</div>
 		</div>
-		<?php 
+		<?php
 } ?>
 
 		<?php if ($assignment->allowEditUserID()) {
@@ -60,9 +60,9 @@ defined('C5_EXECUTE') or die("Access Denied.");
     ?>
 			</div>
 		</div>
-		<?php 
+		<?php
 } ?>
-		
+
 
 		<?php if ($assignment->allowEditDescription()) {
     ?>
@@ -72,11 +72,12 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				<textarea id="cDescription" name="cDescription" class="form-control" rows="8"><?=$c->getCollectionDescription()?></textarea>
 			</div>
 		</div>
-		<?php 
+		<?php
 } ?>
 
 	</form>
 	<div class="ccm-panel-detail-form-actions dialog-buttons">
+        <button class="pull-left btn btn-default" type="button" data-dialog-action="cancel" data-panel-detail-action="cancel"><?=t('Cancel')?></button>
 		<button class="pull-right btn btn-success" type="button" data-dialog-action="submit" data-panel-detail-action="submit"><?=t('Save Changes')?></button>
 	</div>
 
