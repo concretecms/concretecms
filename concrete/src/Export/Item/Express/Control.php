@@ -20,7 +20,7 @@ class Control implements ItemInterface
         $node->addAttribute('id', $control->getID());
         $node->addAttribute('type', $control->getType());
         $node->addAttribute('required', $control->isRequired() ? 1 : '');
-        $node->addAttribute('custom_label', $control->getCustomLabel());
+        $node->addAttribute('custom-label', $control->getCustomLabel());
         return $node;
 
     }

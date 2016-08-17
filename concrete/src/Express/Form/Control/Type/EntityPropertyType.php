@@ -47,4 +47,9 @@ class EntityPropertyType implements TypeInterface
     {
         return null;
     }
+
+    public function getImporter()
+    {
+        return false;
+    }
 }

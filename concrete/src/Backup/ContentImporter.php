@@ -2,10 +2,15 @@
 namespace Concrete\Core\Backup;
 
 use Concrete\Core\Attribute\Type;
+use Concrete\Core\Entity\Express\Entity;
+use Concrete\Core\Entity\Express\Entry\Association;
+use Concrete\Core\Entity\Express\FieldSet;
+use Concrete\Core\Entity\Express\Form;
 use Concrete\Core\File\Importer;
 use Concrete\Core\Page\Feed;
 use Concrete\Core\Sharing\SocialNetwork\Link;
 use Concrete\Core\Support\Facade\StackFolder;
+use Concrete\Core\Tree\Node\Type\ExpressEntryCategory;
 use Concrete\Core\Tree\Tree;
 use Page;
 use Package;
@@ -92,6 +97,10 @@ class ContentImporter
         $this->importWorkflowProgressCategories($sx);
         $this->importAttributes($sx);
         $this->importAttributeSets($sx);
+        $this->importExpressEntities($sx);
+        $this->importExpressAssociations($sx);
+        $this->importExpressForms($sx);
+        $this->importExpressRelations($sx);
         $this->importThemes($sx);
         $this->importPermissionCategories($sx);
         $this->importPermissionAccessEntityTypes($sx);
@@ -448,6 +457,176 @@ class ContentImporter
                 }
             }
         }
+    }
+
+    protected function importExpressEntities(\SimpleXMLElement $sx)
+    {
+        $em = \Database::connection()->getEntityManager();
+
+        $em->getClassMetadata('Concrete\Core\Entity\Express\Entity')->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
+
+        if (isset($sx->expressentities)) {
+            foreach ($sx->expressentities->entity as $entityNode) {
+                $entity = $em->find('Concrete\Core\Entity\Express\Entity', (string) $entityNode['id']);
+                if (!is_object($entity)) {
+                    $entity = new Entity();
+                    $entity->setId((string) $entityNode['id']);
+                }
+                $entity->setHandle((string) $entityNode['handle']);
+                $entity->setDescription((string) $entityNode['description']);
+                $entity->setName((string) $entityNode['name']);
+                if (((string) $entityNode['include_in_public_list']) == '') {
+                    $entity->setIncludeInPublicList(false);
+                }
+                $entity->setHandle((string) $entityNode['handle']);
+
+                $node = ExpressEntryCategory::getNodeByName(\Concrete\Block\ExpressForm\Controller::FORM_RESULTS_CATEGORY_NAME);
+                $node = \Concrete\Core\Tree\Node\Type\ExpressEntryResults::add((string) $entityNode['name'], $node);
+                $entity->setEntityResultsNodeId($node->getTreeNodeID());
+
+                $indexer = $entity->getAttributeKeyCategory()->getSearchIndexer();
+                if (is_object($indexer)) {
+                    $indexer->createRepository($entity->getAttributeKeyCategory());
+                }
+
+                $em->persist($entity);            }
+        }
+
+        $em->flush();
+        $em->getClassMetadata('Concrete\Core\Entity\Express\Entity')->setIdGenerator(null);
+    }
+
+    protected function importExpressAssociations(\SimpleXMLElement $sx)
+    {
+        $em = \Database::connection()->getEntityManager();
+
+        $em->getClassMetadata('Concrete\Core\Entity\Express\Association')->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
+
+        if (isset($sx->expressentities)) {
+            foreach ($sx->expressentities->entity as $entityNode) {
+                if (isset($entityNode->associations)) {
+                    foreach($entityNode->associations->association as $associationNode) {
+                        $association = $em->find('Concrete\Core\Entity\Express\Association', (string) $associationNode['id']);
+                        if (!is_object($association)) {
+                            $class = '\\Concrete\\Core\Entity\\Express\\' . camelcase((string) $associationNode['type']) . 'Association';
+                            $association = new $class();
+                            $association->setId((string) $associationNode['id']);
+                        }
+                        /**
+                         * @var $association \Concrete\Core\Entity\Express\Association
+                         */
+                        $association->setTargetPropertyName((string) $associationNode['target-property-name']);
+                        $association->setInversedByPropertyName((string) $associationNode['inversed-by-property-name']);
+                        $em->persist($association);
+                    }
+                }
+            }
+        }
+        $em->flush();
+        $em->getClassMetadata('Concrete\Core\Entity\Express\Association')->setIdGenerator(null);
+
+    }
+
+    protected function importExpressForms(\SimpleXMLElement $sx)
+    {
+        $em = \Database::connection()->getEntityManager();
+
+        $em->getClassMetadata('Concrete\Core\Entity\Express\Control\Control')->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
+        $em->getClassMetadata('Concrete\Core\Entity\Express\Form')->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
+
+        if (isset($sx->expressentities)) {
+            foreach ($sx->expressentities->entity as $entityNode) {
+                if (isset($entityNode->forms)) {
+                    foreach($entityNode->forms->form as $formNode) {
+                        $entity = $em->find('Concrete\Core\Entity\Express\Entity', (string) $entityNode['id']);
+                        $form = $em->find('Concrete\Core\Entity\Express\Form', (string) $formNode['id']);
+                        if (!is_object($form)) {
+                            $form = new Form();
+                            $form->setId((string) $formNode['id']);
+                        }
+                        $form->setName((string) $formNode['name']);
+                        if (isset($formNode->fieldsets)) {
+                            $fieldSetPosition = 0;
+                            foreach($formNode->fieldsets->fieldset as $fieldSetNode) {
+                                $fieldset = new FieldSet();
+                                $fieldset->setDescription((string) $fieldSetNode['description']);
+                                $fieldset->setTitle((string) $fieldSetNode['title']);
+                                $fieldset->setPosition($fieldSetPosition);
+                                if (isset($fieldSetNode->controls)) {
+                                    $manager = \Core::make('express/control/type/manager');
+                                    $controlPosition = 0;
+                                    foreach($fieldSetNode->controls->control as $controlNode) {
+                                        $type = $manager->driver((string) $controlNode['type']);
+                                        $control = $type->getImporter()->import($controlNode, $entity);
+                                        $control->setFieldSet($fieldset);
+                                        $control->setPosition($controlPosition);
+                                        $fieldset->getControls()->add($control);
+                                        $controlPosition++;
+                                    }
+                                }
+                                $form->getFieldSets()->add($fieldset);
+                                $fieldset->setForm($form);
+                                $fieldSetPosition++;
+                            }
+                        }
+                        $entity->getForms()->add($form);
+                        $form->setEntity($entity);
+                        $em->persist($entity);
+                        $em->persist($form);
+                    }
+                }
+            }
+        }
+        $em->flush();
+        $em->getClassMetadata('Concrete\Core\Entity\Express\Control\Control')->setIdGenerator(null);
+        $em->getClassMetadata('Concrete\Core\Entity\Express\Form')->setIdGenerator(null);
+
+    }
+
+    protected function importExpressRelations(\SimpleXMLElement $sx)
+    {
+
+        $em = \Database::connection()->getEntityManager();
+        // Loop through all associations and set the related entities
+        if (isset($sx->expressentities)) {
+            foreach ($sx->expressentities->entity as $entityNode) {
+                /**
+                 * @var $entity \Concrete\Core\Entity\Express\Entity
+                 */
+                $entity = $em->find('Concrete\Core\Entity\Express\Entity', (string) $entityNode['id']);
+                if (is_object($entity)) {
+                    $default_view_form = $em->find('Concrete\Core\Entity\Express\Form', (string) $entityNode['default_view_form']);
+                    if (is_object($default_view_form)) {
+                        $entity->setDefaultViewForm($default_view_form);
+                    }
+                    $default_edit_form = $em->find('Concrete\Core\Entity\Express\Form', (string) $entityNode['default_edit_form']);
+                    if (is_object($default_edit_form)) {
+                        $entity->setDefaultEditForm($default_edit_form);
+                    }
+                }
+                $em->persist($entity);
+                if (isset($entityNode->associations)) {
+                    foreach($entityNode->associations->association as $associationNode) {
+                        /**
+                         * @var $association \Concrete\Core\Entity\Express\Association
+                         */
+                        $association = $em->find('Concrete\Core\Entity\Express\Association', (string) $associationNode['id']);
+                        if (is_object($association)) {
+                            $source_entity = $em->find('Concrete\Core\Entity\Express\Entity', (string) $associationNode['source-entity']);
+                            if (is_object($source_entity)) {
+                                $association->setSourceEntity($source_entity);
+                            }
+                            $target_entity = $em->find('Concrete\Core\Entity\Express\Entity', (string) $associationNode['target-entity']);
+                            if (is_object($target_entity)) {
+                                $association->setTargetEntity($target_entity);
+                            }
+                        }
+                        $em->persist($association);
+                    }
+                }
+            }
+        }
+        $em->flush();
     }
 
     protected function importBlockTypes(\SimpleXMLElement $sx)
