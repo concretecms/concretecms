@@ -66,9 +66,7 @@ class Controller extends BlockController
 
     public function save($data)
     {
-        Config::save('app.api_keys.google.maps', trim($data['apiKey']));
-
-        $data += array(
+        $data += [
            'title' => '',
            'location' => '',
            'zoom' => -1,
@@ -77,7 +75,10 @@ class Controller extends BlockController
            'width' => null,
            'height' => null,
            'scrollwheel' => 0,
-        );
+           'apiKey' => '',
+        ];
+
+        Config::save('app.api_keys.google.maps', trim($data['apiKey']));
 
         $args['title'] = trim($data['title']);
         $args['location'] = trim($data['location']);
