@@ -78,6 +78,14 @@ class File extends TreeNode
         $db->Execute('delete from TreeFileNodes where treeNodeID = ?', array($this->treeNodeID));
     }
 
+    public function getDateLastModified()
+    {
+        $f = $this->getTreeNodeFileObject();
+        if (is_object($f)) {
+            return $f->getVersion()->getDateAdded();
+        }
+    }
+
     public function getTreeNodeJSON()
     {
         $obj = parent::getTreeNodeJSON();
