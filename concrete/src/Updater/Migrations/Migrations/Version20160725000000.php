@@ -870,6 +870,7 @@ class Version20160725000000 extends AbstractMigration
 
     protected function installSite()
     {
+
         /**
          * @var $service Service
          */
@@ -889,6 +890,12 @@ class Version20160725000000 extends AbstractMigration
 
             $em->persist($site);
             $em->flush();
+        }
+
+        $type_service = \Core::make('site/type');
+        $type = $type_service->getDefault();
+        if (!is_object($type)) {
+            $type_service->installDefault();
         }
 
         $site = $service->getDefault();

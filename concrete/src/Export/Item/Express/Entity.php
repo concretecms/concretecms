@@ -4,6 +4,7 @@ namespace Concrete\Core\Export\Item\Express;
 use Concrete\Core\Entity\Express\Entity as ExpressEntity;
 use Concrete\Core\Export\Item\ItemInterface;
 use Concrete\Core\Export\ExportableInterface;
+use Concrete\Core\Tree\Node\Node;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
@@ -24,6 +25,13 @@ class Entity implements ItemInterface
         $node->addAttribute('description', h($entity->getDescription()));
         $node->addAttribute('default_view_form', $entity->getDefaultViewForm()->getID());
         $node->addAttribute('default_edit_form', $entity->getDefaultEditForm()->getID());
+
+        $results = Node::getByID($entity->getEntityResultsNodeId());
+        if (is_object($results)) {
+            $parent = $results->getTreeNodeParentObject();
+            $path = $parent->getTreeNodeDisplayPath();
+            $node->addAttribute('results-folder', $path);
+        }
 
         $associations = $entity->getAssociations();
         if (count($associations)) {

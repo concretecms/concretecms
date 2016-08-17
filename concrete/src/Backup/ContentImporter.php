@@ -12,6 +12,7 @@ use Concrete\Core\Sharing\SocialNetwork\Link;
 use Concrete\Core\Support\Facade\StackFolder;
 use Concrete\Core\Tree\Node\Type\ExpressEntryCategory;
 use Concrete\Core\Tree\Tree;
+use Concrete\Core\Tree\Type\ExpressEntryResults;
 use Page;
 use Package;
 use Stack;
@@ -480,7 +481,8 @@ class ContentImporter
                 }
                 $entity->setHandle((string) $entityNode['handle']);
 
-                $node = ExpressEntryCategory::getNodeByName(\Concrete\Block\ExpressForm\Controller::FORM_RESULTS_CATEGORY_NAME);
+                $tree = ExpressEntryResults::get();
+                $node = $tree->getNodeByDisplayPath((string) $entityNode['results-folder']);
                 $node = \Concrete\Core\Tree\Node\Type\ExpressEntryResults::add((string) $entityNode['name'], $node);
                 $entity->setEntityResultsNodeId($node->getTreeNodeID());
 
