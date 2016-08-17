@@ -249,6 +249,11 @@ module.exports = function(grunt) {
             src: '<%= DIR_BASE %>/concrete/js/build/vendor/dropzone/dropzone.js'
         },
 
+        core_composer: {
+            dest: '<%= DIR_BASE %>/concrete/js/composer.savecoordinator.js',
+            src: '<%= DIR_BASE %>/concrete/js/build/core/composer/save_coordinator.js'
+        },
+
         jquery_form: {
             dest: '<%= DIR_BASE %>/concrete/js/jquery-form.js',
             src: '<%= DIR_BASE %>/concrete/js/build/vendor/jquery-form/jquery-form.js'

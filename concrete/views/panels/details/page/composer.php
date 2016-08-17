@@ -42,19 +42,46 @@ ConcretePageComposerDetail = {
 	},
 
 	enableAutosave: function() {
-		var my = this;
-		my.interval = setInterval(function() {
-			ConcretePageComposerDetail.saveDraft();
-		}, my.timeout);
+		this.saver.resetIdleTimer();
 	},
 
 	disableAutosave: function() {
-		var my = this;
-	   	clearInterval(my.interval);
+		this.saver.disableIdleTimer();
+	},
+
+	updateWatchers: function() {
+		var newElements = this.$form.find('button,input,keygen,output,select,textarea').not(this.watching),
+			my = this;
+
+		if (!this.watching.length) {
+			newElements = newElements.add(this.$form);
+		}
+
+		this.watching = this.watching.add(newElements);
+
+		newElements.bind('change', function() {
+			my.saver.requestSave();
+		});
+
+		newElements.bind('keyup', function() {
+			my.saver.requestSave(true);
+		});
 	},
 
 	start: function() {
 		var my = this;
+		this.watching = $();
+		my.updateWatchers();
+
+		this.saver = this.$form.saveCoordinator(function(coordinater, data, success) {
+			my.updateWatchers();
+			my.saveDraft(function() {
+				success();
+			});
+		},{
+			idleTimeout: 1
+		}).data('SaveCoordinator');
+
 	    $('button[data-page-type-composer-form-btn=discard]').on('click', function() {
 			if (confirm('<?=t('This will remove this draft and it cannot be undone. Are you sure?')?>')) {
 		    	my.disableAutosave();
@@ -130,9 +157,10 @@ ConcretePageComposerDetail = {
 		});
 
 		ConcreteEvent.subscribe('AjaxRequestError',function(r) {
-			my.disableAutosave();
+			my.saver.disable();
 		});
 
+		this.saver.enable();
 	    my.enableAutosave();
 	}
 
