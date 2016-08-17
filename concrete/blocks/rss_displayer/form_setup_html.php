@@ -14,7 +14,7 @@
     <input name="title" class="form-control" placeholder="<?= h(t('Feed Title')) ?>" value="<?= h($rssObj->title) ?>"/>
 </div>
 <div class="form-group">
-    <?= $form->label('dateFormat', t('Date Format')) ?>
+    <?= $form->label('standardDateFormat', t('Date Format')) ?>
     <?php
     $dateFormats = $rssObj->getDefaultDateTimeFormats();
     $dateFormats[':custom:'] = t('Custom date/time format');
