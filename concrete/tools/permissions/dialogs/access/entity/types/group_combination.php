@@ -35,7 +35,7 @@ $url = $type->getAccessEntityTypeToolsURL(); ?>
 
 </form>
 
-<input type="button" class="btn btn-primary pull-right dialog-launch" dialog-width="640" dialog-height="480" id="ccm-permissions-access-entity-members-add-group" href="<?=URL::to('/ccm/system/dialogs/group/search')?>" dialog-modal="false" dialog-title="<?=t('Add Group')?>" value="<?=t('Add Group')?>" />
+<input type="button" class="btn btn-default pull-right dialog-launch" dialog-width="640" dialog-height="480" id="ccm-permissions-access-entity-members-add-group" href="<?=URL::to('/ccm/system/dialogs/group/search')?>" dialog-modal="false" dialog-title="<?=t('Add Group')?>" value="<?=t('Add Group')?>" />
 
 </div>
 

@@ -99,7 +99,7 @@ $(function() {
     ?>
 			onClick: function(node) {
 				if (node.data.gID) {
-					ConcreteEvent.publish('SelectGroup', {'gID': node.data.gID, 'gName': node.data.title});
+					ConcreteEvent.publish('SelectGroup', {'gID': node.data.gID, 'gName': node.title});
 				} else {
 					return false;
 				}
