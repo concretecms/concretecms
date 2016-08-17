@@ -8,16 +8,14 @@
 			<unsigned/>
 			<key/>
 		</field>
-		<field name="exEntityID" type="integer">
-			<unsigned/>
+		<field name="exEntityID" type="guid">
 			<key/>
 		</field>
 		<field name="exSpecificEntryID" type="integer">
 			<unsigned/>
 			<key/>
 		</field>
-		<field name="exFormID" type="integer">
-			<unsigned/>
+		<field name="exFormID" type="guid">
 			<key/>
 		</field>
 		<field name="entryMode" type="string" size="1">

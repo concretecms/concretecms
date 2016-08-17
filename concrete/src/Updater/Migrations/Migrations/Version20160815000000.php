@@ -102,6 +102,19 @@ class Version20160815000000 extends AbstractMigration
         ]);
 
         $this->ensureSiteTypeExists();
+
+        $blockTypes = [
+            'express_entry_list',
+            'express_entry_detail',
+            'express_form'
+            ];
+
+        foreach($blockTypes as $btHandle) {
+            $bt = \BlockType::getByHandle($btHandle);
+            if (is_object($bt)) {
+                $bt->refresh();
+            }
+        }
     }
 
     public function down(Schema $schema)

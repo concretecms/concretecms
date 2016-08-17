@@ -63,4 +63,10 @@ class AssociationType implements TypeInterface
     {
         return $control->getAssociation()->getSaveHandler();
     }
+
+    public function getImporter()
+    {
+        return \Core::make('\Concrete\Core\Import\Item\Express\Control\AssociationControl');
+    }
+
 }

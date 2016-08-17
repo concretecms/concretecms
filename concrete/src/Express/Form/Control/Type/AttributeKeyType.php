@@ -64,4 +64,10 @@ class AttributeKeyType implements TypeInterface
     {
         return \Core::make('\Concrete\Core\Express\Form\Control\SaveHandler\AttributeKeySaveHandler');
     }
+
+    public function getImporter()
+    {
+        return \Core::make('\Concrete\Core\Import\Item\Express\Control\AttributeKeyControl');
+    }
+
 }

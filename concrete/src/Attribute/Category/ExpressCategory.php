@@ -9,6 +9,7 @@ use Concrete\Core\Entity\Attribute\Key\ExpressKey;
 use Concrete\Core\Entity\Attribute\Key\Key;
 use Concrete\Core\Entity\Attribute\Type;
 use Concrete\Core\Entity\Express\Entity;
+use Concrete\Core\Package\Package;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -91,6 +92,13 @@ class ExpressCategory extends AbstractCategory
         return $this->entityManager
             ->getRepository('\Concrete\Core\Entity\Attribute\Type')
             ->findAll();
+    }
+
+    public function import(Type $type, \SimpleXMLElement $element, Package $package = null)
+    {
+        $key = parent::import($type, $element, $package);
+        $key->setEntity($this->expressEntity);
+        return $key;
     }
 
     public function addFromRequest(Type $type, Request $request)

@@ -6,10 +6,8 @@
 			<unsigned />
 		</field>
 
-		<field name="exEntityID" type="I">
-			<unsigned />
+		<field name="exEntityID" type="C">
 			<notnull />
-			<default value="0" />
 		</field>
 
 		<field name="detailPage" type="I">

@@ -7,6 +7,7 @@ use Concrete\Core\Entity\Express\Entry;
 use Concrete\Core\Export\ExportableInterface;
 use Concrete\Core\Express\Form\Control\Type\SaveHandler\ControlSaveHandler;
 use Concrete\Core\Export\Item\Express\Control as ControlExporter;
+use Concrete\Core\Import\ImportableInterface;
 use Doctrine\ORM\Mapping as ORM;
 
 /**

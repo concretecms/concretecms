@@ -156,9 +156,9 @@ class Controller extends AttributeTypeController
             $akSelectAllowMultipleValues = $akey->type['allow-multiple-values'];
             $akSelectOptionDisplayOrder = $akey->type['display-order'];
             $akSelectAllowOtherValues = $akey->type['allow-other-values'];
-            $type->setAllowMultipleValues((bool) $akSelectAllowMultipleValues);
+            $type->setAllowMultipleValues(((string) $akSelectAllowMultipleValues) == '1' ? true : false);
             $type->setDisplayOrder($akSelectOptionDisplayOrder);
-            $type->setAllowOtherValues((bool) $akSelectAllowOtherValues);
+            $type->setAllowOtherValues(((string) $akSelectAllowOtherValues) == '1' ? true : false);
             $list = new SelectValueOptionList();
             if (isset($akey->type->options)) {
                 $displayOrder = 0;

@@ -30,7 +30,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 class Controller extends BlockController
 {
     protected $btInterfaceWidth = 640;
-    protected $btCacheBlockOutput = true;
+    protected $btCacheBlockOutput = false;
     protected $btInterfaceHeight = 480;
     protected $btTable = 'btExpressForm';
     protected $entityManager;
@@ -302,8 +302,12 @@ class Controller extends BlockController
             return new JsonResponse($e);
         }
     }
+
     public function save($data)
     {
+        if (isset($data['exFormID'])) {
+            return parent::save($data);
+        }
         $requestControls = (array) $this->request->request->get('controlID');
         $entityManager = \Core::make('database/orm')->entityManager();
         $session = \Core::make('session');
