@@ -7,29 +7,29 @@ $fdh = Core::make('helper/form/date_time'); /* @var $fdh \Concrete\Core\Form\Ser
             <span class="fa fa-chevron-left"></span>
         </a>
         <a href="" data-panel-navigation="back">
-          <?=t('View as User')?>
+          <?php echo t('View as User'); ?>
         </a>
     </header>
-    <form class="preview-panel-form form-horizontal">
+    <form class="preview-panel-form">
         <div class="ccm-panel-content-inner" id="ccm-menu-page-attributes-list">
-
-            <label class="label"><?= t('Date / time') ?></label>
-            <div>
-            	<?php echo $fdh->datetime('preview_as_user_datetime'); ?>
-            </div>
-
-            <label class="label"><?= t('View As') ?></label>
-            <div>
-                <div class="btn-group">
-                    <button class="guest-button btn btn-default active"><?= t('Guest') ?></button>
-                    <button class="user-button btn btn-default"><?= t('Site User') ?></button>
-                </div>
-                <div class="site-user" style="display:none">
-                    <label for="user" class="label"><?= t('User') ?></label>
-                    <input class="form-control custom-user" name="user" />
+            <h5><?php echo t('Date / Time'); ?></h5>
+            <div id="ccm-view-as-user-wrapper">
+                <div class="form-group form-group-last">
+                    <?php echo $fdh->datetime('preview_as_user_datetime'); ?>
                 </div>
             </div>
-
+            <br>
+            <h5><?php echo t('View As'); ?></h5>
+            <div class="btn-group">
+                <button class="guest-button btn btn-default active"><?php echo t('Guest'); ?></button>
+                <button class="user-button btn btn-default"><?php echo t('Site User'); ?></button>
+            </div>
+            <br>
+            <br>
+            <div class="site-user" style="display:none">
+                <h5><?php echo t('User'); ?></h5>
+                <input class="form-control custom-user" name="user" />
+            </div>
         </div>
     </form>
 </section>
@@ -59,7 +59,6 @@ $fdh = Core::make('helper/form/date_time'); /* @var $fdh \Concrete\Core\Form\Ser
 			e.preventDefault();
 			return false;
 		});
-
 	});
 }(jQuery));
 </script>
