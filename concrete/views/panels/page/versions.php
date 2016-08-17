@@ -244,12 +244,15 @@ $(function() {
 		} else {
 			$(this).parent().parent().removeClass('ccm-panel-page-versions-version-checked');
 		}
-		var checkboxes = $('#ccm-panel-page-versions tbody input[type=checkbox]:checked');
+		var allBoxes = $('#ccm-panel-page-versions tbody input[type=checkbox]'),
+			checkboxes = allBoxes.filter(':checked'),
+			notChecked = allBoxes.not(checkboxes);
+
 		$('button[data-version-action]').addClass('disabled');
 		if (checkboxes.length > 1) {
 			$('button[data-version-action=compare]').removeClass('disabled');
 		}
-		if (checkboxes.length > 0 && !checkboxes.filter('[data-version-active=true]').length) {
+		if (checkboxes.length > 0  && notChecked.length > 0 && !checkboxes.filter('[data-version-active=true]').length) {
 			$('button[data-version-action=delete]').removeClass('disabled');
 		}
 		ConcretePageVersionList.previewSelectedVersions(checkboxes);
