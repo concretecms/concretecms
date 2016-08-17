@@ -250,8 +250,8 @@ module.exports = function(grunt) {
         },
 
         core_composer: {
-            dest: '<%= DIR_BASE %>/concrete/js/composer.savecoordinator.js',
-            src: '<%= DIR_BASE %>/concrete/js/build/core/composer/save_coordinator.js'
+            dest: '<%= DIR_BASE %>/concrete/js/composer-save-coordinator.js',
+            src: '<%= DIR_BASE %>/concrete/js/build/core/composer/save-coordinator.js'
         },
 
         jquery_form: {

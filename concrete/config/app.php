@@ -691,7 +691,7 @@ return array(
             array('css', 'css/spectrum.css', array('minify' => false)),
         ),
         'core/composer-save-coordinator' => array(
-            array('javascript', 'js/composer.savecoordinator.js', array('minify' => false)),
+            array('javascript', 'js/composer-save-coordinator.js', array('minify' => false)),
         ),
         'font-awesome' => array(
             array('css', 'css/font-awesome.css', array('minify' => false)),
