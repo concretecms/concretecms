@@ -53,7 +53,7 @@ class LocalConfiguration extends Configuration implements ConfigurationInterface
         $url = \Core::getApplicationURL(true);
         $url = $url->setPath($rel);
 
-        return rtrim((string) $url, '/');
+        return trim((string) $url, '/');
     }
 
     public function loadFromRequest(\Concrete\Core\Http\Request $req)
