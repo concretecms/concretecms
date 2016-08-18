@@ -21,6 +21,7 @@ use Symfony\Component\EventDispatcher\GenericEvent;
  */
 abstract class Progress extends Object implements SubjectInterface
 {
+    protected $wrID = nul;
     protected $wpID;
     protected $wpDateAdded;
     protected $wfID;
@@ -206,9 +207,7 @@ abstract class Progress extends Object implements SubjectInterface
         }
         $class = '\\Core\\Workflow\\Progress\\' . Core::make('helper/text')->camelcase($r['wpCategoryHandle']) . 'Progress';
 
-        if ($r['pkgID']) {
-            $pkgHandle = PackageList::getHandle($r['pkgID']);
-        }
+        $pkgHandle = $r['pkgID'] ? PackageList::getHandle($r['pkgID']) : null;
         $class = core_class($class, $pkgHandle);
         $wp = Core::make($class);
         $wp->setPropertiesFromArray($r);
