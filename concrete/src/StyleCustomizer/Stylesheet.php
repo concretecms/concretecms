@@ -68,7 +68,7 @@ class Stylesheet
     {
         $filename = $this->getOutputPath();
         if (file_exists($filename)) {
-            @unlink($this->getOutputPath());
+            @unlink($filename);
         }
     }
 
