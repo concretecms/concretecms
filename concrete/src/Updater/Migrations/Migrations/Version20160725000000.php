@@ -675,19 +675,45 @@ class Version20160725000000 extends AbstractMigration
 
     protected function addBlockTypes()
     {
+        $desktopSet = \Concrete\Core\Block\BlockType\Set::getByHandle('core_desktop');
+        if (!is_object($desktopSet)) {
+            $desktopSet = \Concrete\Core\Block\BlockType\Set::add('core_desktop', 'Desktop');
+        }
+
+        $expressSet = \Concrete\Core\Block\BlockType\Set::getByHandle('express');
+        if (!is_object($expressSet)) {
+            $expressSet = \Concrete\Core\Block\BlockType\Set::add('express', 'Express');
+        }
+
+        $formSet = \Concrete\Core\Block\BlockType\Set::getByHandle('form');
+        if (!is_object($formSet)) {
+            $formSet = \Concrete\Core\Block\BlockType\Set::add('form', 'Forms');
+        }
+
         $bt = BlockType::getByHandle('express_form');
         if (!is_object($bt)) {
-            BlockType::installBlockType('express_form');
+            $bt = BlockType::installBlockType('express_form');
         }
+
+        $formSet->addBlockType($bt);
+
+        $bt = BlockType::getByHandle('express_entry_list');
+        if (!is_object($bt)) {
+            $bt = BlockType::installBlockType('express_entry_list');
+        }
+
+        $expressSet->addBlockType($bt);
+
+        $bt = BlockType::getByHandle('express_entry_detail');
+        if (!is_object($bt)) {
+            $bt = BlockType::installBlockType('express_entry_detail');
+        }
+
+        $expressSet->addBlockType($bt);
 
         $bt = BlockType::getByHandle('dashboard_site_activity');
         if (is_object($bt)) {
             $bt->delete();
-        }
-
-        $bt = BlockType::getByHandle('desktop_site_activity');
-        if (!is_object($bt)) {
-            BlockType::installBlockType('desktop_site_activity');
         }
 
         $bt = BlockType::getByHandle('dashboard_app_status');
@@ -695,19 +721,9 @@ class Version20160725000000 extends AbstractMigration
             $bt->delete();
         }
 
-        $bt = BlockType::getByHandle('desktop_app_status');
-        if (!is_object($bt)) {
-            BlockType::installBlockType('desktop_app_status');
-        }
-
         $bt = BlockType::getByHandle('dashboard_featured_theme');
         if (is_object($bt)) {
             $bt->delete();
-        }
-
-        $bt = BlockType::getByHandle('desktop_featured_theme');
-        if (!is_object($bt)) {
-            BlockType::installBlockType('desktop_featured_theme');
         }
 
         $bt = BlockType::getByHandle('dashboard_featured_addon');
@@ -715,44 +731,68 @@ class Version20160725000000 extends AbstractMigration
             $bt->delete();
         }
 
-        $bt = BlockType::getByHandle('desktop_featured_addon');
-        if (!is_object($bt)) {
-            BlockType::installBlockType('desktop_featured_addon');
-        }
-
         $bt = BlockType::getByHandle('dashboard_newsflow_latest');
         if (is_object($bt)) {
             $bt->delete();
         }
 
+
+        $bt = BlockType::getByHandle('desktop_site_activity');
+        if (!is_object($bt)) {
+            $bt = BlockType::installBlockType('desktop_site_activity');
+        }
+
+        $desktopSet->addBlockType($bt);
+
+        $bt = BlockType::getByHandle('desktop_app_status');
+        if (!is_object($bt)) {
+            $bt = BlockType::installBlockType('desktop_app_status');
+        }
+
+        $desktopSet->addBlockType($bt);
+
+
+        $bt = BlockType::getByHandle('desktop_featured_theme');
+        if (!is_object($bt)) {
+            $bt = BlockType::installBlockType('desktop_featured_theme');
+        }
+
+        $desktopSet->addBlockType($bt);
+
+        $bt = BlockType::getByHandle('desktop_featured_addon');
+        if (!is_object($bt)) {
+            $bt = BlockType::installBlockType('desktop_featured_addon');
+        }
+
+        $desktopSet->addBlockType($bt);
+
         $bt = BlockType::getByHandle('desktop_newsflow_latest');
         if (!is_object($bt)) {
-            BlockType::installBlockType('desktop_newsflow_latest');
+            $bt = BlockType::installBlockType('desktop_newsflow_latest');
         }
+
+        $desktopSet->addBlockType($bt);
 
         $bt = BlockType::getByHandle('desktop_latest_form');
         if (!is_object($bt)) {
-            BlockType::installBlockType('desktop_latest_form');
-        }
-        $bt = BlockType::getByHandle('desktop_waiting_for_me');
-        if (!is_object($bt)) {
-            BlockType::installBlockType('desktop_waiting_for_me');
+            $bt = BlockType::installBlockType('desktop_latest_form');
         }
 
-        $bt = BlockType::getByHandle('express_entry_list');
-        if (!is_object($bt)) {
-            BlockType::installBlockType('express_entry_list');
-        }
-
-        $bt = BlockType::getByHandle('express_entry_detail');
-        if (!is_object($bt)) {
-            BlockType::installBlockType('express_entry_detail');
-        }
+        $desktopSet->addBlockType($bt);
 
         $bt = BlockType::getByHandle('desktop_waiting_for_me');
         if (!is_object($bt)) {
-            BlockType::installBlockType('desktop_waiting_for_me');
+            $bt = BlockType::installBlockType('desktop_waiting_for_me');
         }
+
+        $desktopSet->addBlockType($bt);
+
+        $bt = BlockType::getByHandle('desktop_waiting_for_me');
+        if (!is_object($bt)) {
+            $bt = BlockType::installBlockType('desktop_waiting_for_me');
+        }
+
+        $desktopSet->addBlockType($bt);
 
         $bt = BlockType::getByHandle('page_title');
         if (is_object($bt)) {
@@ -763,6 +803,7 @@ class Version20160725000000 extends AbstractMigration
         if (is_object($bt)) {
             $bt->refresh();
         }
+
     }
 
     protected function addTreeNodeTypes()
@@ -790,7 +831,7 @@ class Version20160725000000 extends AbstractMigration
             $tree = ExpressEntryResults::add();
             $node = $tree->getRootTreeNodeObject();
             // Add forms node beneath it.
-            \Concrete\Core\Tree\Node\Type\Category::add(ExpressFormBlockController::FORM_RESULTS_CATEGORY_NAME, $node);
+            \Concrete\Core\Tree\Node\Type\ExpressEntryCategory::add(ExpressFormBlockController::FORM_RESULTS_CATEGORY_NAME, $node);
         }
     }
 
