@@ -2463,7 +2463,7 @@
                                                 <thankyouMsg>Thanks!</thankyouMsg>
                                                 <notifyMeOnSubmission>0</notifyMeOnSubmission>
                                                 <recipientEmail></recipientEmail>
-                                                <displayCaptcha></displayCaptcha>
+                                                <displayCaptcha>0</displayCaptcha>
                                                 <redirectCID>0</redirectCID>
                                                 <replyToEmailControlID>02181ae2-634d-11e6-a245-62e65b165d8e</replyToEmailControlID>
                                                 <addFilesToSet>0</addFilesToSet>
