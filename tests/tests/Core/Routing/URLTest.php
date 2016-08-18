@@ -33,14 +33,16 @@ class URLTest extends PHPUnit_Framework_TestCase
         $this->service = $service;
         Config::set('concrete.seo.url_rewriting', false);
         Config::set('concrete.seo.url_rewriting_all', false);
-        Config::set('concrete.seo.canonical_url', false);
+        $this->oldUrl = Config::get('concrete.seo.canonical_url');
 
         parent::setUp();
     }
 
     public function tearDown()
     {
+        Config::set('concrete.seo.canonical_url', $this->oldUrl);
         $this->clearCanonicalUrl();
+
         parent::tearDown();
     }
 
@@ -150,8 +152,6 @@ class URLTest extends PHPUnit_Framework_TestCase
         $request = \Concrete\Core\Http\Request::create('http://concrete5.dev/index.php?cID=1');
         $response = $app->handleCanonicalURLRedirection($request, $site);
         $this->assertNull($response);
-
-        Config::set('concrete.seo.canonical_url', null);
     }
 
     public function testCanonicalUrlRedirectionSslUrl()
@@ -340,7 +340,6 @@ class URLTest extends PHPUnit_Framework_TestCase
 
         $this->assertEquals('http://www.derpco.com/path/to/server/index.php/dashboard/my/awesome/page', (string) URL::to('/dashboard/my/awesome/page'));
         $this->assertEquals('http://www.derpco.com/path/to/server/index.php/dashboard/my/awesome/page', (string) URL::page($this->dashboard));
-        Config::set('concrete.seo.canonical_url', null);
     }
 
     public function testCanonicalUrlWithPort()
@@ -351,7 +350,6 @@ class URLTest extends PHPUnit_Framework_TestCase
         $this->clearCanonicalUrl();
         $this->assertEquals('http://www.derpco.com:8080/path/to/server/index.php/dashboard/my/awesome/page', (string) URL::to('/dashboard/my/awesome/page'));
         $this->assertEquals('http://www.derpco.com:8080/path/to/server/index.php/dashboard/my/awesome/page', (string) URL::page($this->dashboard));
-        Config::set('concrete.seo.canonical_url', null);
     }
 
     public function testURLFunctionWithCanonicalURL()
@@ -364,7 +362,18 @@ class URLTest extends PHPUnit_Framework_TestCase
 
         $url = URL::to('/dashboard/system/test', 'outstanding');
         $this->assertEquals('http://concrete5/path/to/server/index.php/dashboard/system/test/outstanding', (string) $url);
-        Config::set('concrete.seo.canonical_url', null);
+    }
+
+    public function testURLFunctionWithoutCanonicalURL()
+    {
+        $this->markTestIncomplete('This needs to be updated to use the new site-based canonical url');
+
+        Config::set('concrete.seo.canonical_url', '');
+
+        $this->clearCanonicalUrl();
+
+        $url = URL::to('/dashboard/system/test', 'outstanding');
+        $this->assertEquals('/path/to/server/index.php/dashboard/system/test/outstanding', (string) $url);
     }
 
     private function clearCanonicalUrl()
@@ -373,23 +382,4 @@ class URLTest extends PHPUnit_Framework_TestCase
         $app->make('Concrete\Core\Url\Resolver\CanonicalUrlResolver')->clearCached();
     }
 
-    /*
-    public function testPage()
-    {
-
-        // URL Rewriting
-        Config::set('concrete.seo.url_rewriting', true);
-
-
-        // URL Rewriting All
-        Config::set('concrete.seo.url_rewriting_all', true);
-
-        $this->assertEquals('/path/to/my/page', $c->getCollectionLink());
-        $this->assertEquals('/path/to/my/page',
-            $service->getLinkToCollection($c)
-        );
-        $this->assertEquals('/path/to/my/page', URL::to('/path/to/my/page'));
-        $this->assertEquals('/path/to/my/page', URL::page($c));
-    }
-    */
 }

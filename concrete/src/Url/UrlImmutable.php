@@ -41,10 +41,6 @@ class UrlImmutable extends \League\Url\UrlImmutable implements UrlInterface
 
     public static function createFromUrl($url, $trailing_slashes = self::TRAILING_SLASHES_AUTO)
     {
-        if ($trailing_slashes === self::TRAILING_SLASHES_AUTO) {
-            $trailing_slashes = (bool) \Config::get('concrete.seo.trailing_slash', false);
-        }
-
         $trailing_slashes = (bool) $trailing_slashes;
 
         $url = (string) $url;
@@ -93,4 +89,18 @@ class UrlImmutable extends \League\Url\UrlImmutable implements UrlInterface
             new    \League\Url\Components\Fragment($components['fragment'])
         );
     }
+
+    /**
+     * Overridden to allow paths be passed in and out
+     * @param $url
+     * @return null|string
+     */
+    protected static function sanitizeUrl($url)
+    {
+        if (strpos($url, '/') === 0) {
+            return $url;
+        }
+        return parent::sanitizeUrl($url);
+    }
+
 }

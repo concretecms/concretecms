@@ -6,6 +6,7 @@ class PathUrlResolverTest extends ResolverTestCase
 {
     protected function setUp()
     {
+        parent::setUp();
         $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
         $this->urlResolver = $app->make('Concrete\Core\Url\Resolver\PathUrlResolver');
     }

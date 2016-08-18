@@ -3,7 +3,9 @@
 namespace Concrete\Core\Authentication\Type\Community\Factory;
 
 use Concrete\Core\Config\Repository\Repository;
+use Concrete\Core\Http\Request;
 use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
+use Concrete\Core\Url\Url;
 use League\Url\UrlInterface;
 use OAuth\Common\Consumer\Credentials;
 use OAuth\Common\Storage\SymfonySession;
@@ -33,15 +35,22 @@ class CommunityServiceFactory
     protected $urlResolver;
 
     /**
+     * @var \Concrete\Core\Http\Request
+     */
+    protected $request;
+
+    /**
      * CommunityServiceFactory constructor.
      * @param \Concrete\Core\Config\Repository\Repository $config
      * @param \Symfony\Component\HttpFoundation\Session\Session $session
      * @param \Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface $url
+     * @param \Concrete\Core\Http\Request $request
      */
-    public function __construct(Repository $config, Session $session, ResolverManagerInterface $url)
+    public function __construct(Repository $config, Session $session, ResolverManagerInterface $url, Request $request)
     {
         $this->config = $config;
         $this->session = $session;
+        $this->request = $request;
         $this->urlResolver = $url;
     }
 
@@ -57,7 +66,12 @@ class CommunityServiceFactory
         $appSecret = $this->config->get('auth.community.secret');
 
         // Get the callback url
+        /** @var Url $callbackUrl */
         $callbackUrl = $this->urlResolver->resolve(['/ccm/system/authentication/oauth2/community/callback/']);
+        if ($callbackUrl->getHost() == '') {
+            $callbackUrl = $callbackUrl->setHost($this->request->getHost());
+            $callbackUrl = $callbackUrl->setScheme($this->request->getScheme());
+        }
 
         // Create a credential object with our ID, Secret, and callback url
         $credentials = new Credentials($appId, $appSecret, (string) $callbackUrl);
