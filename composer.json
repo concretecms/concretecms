@@ -57,7 +57,8 @@
     "mlocati/concrete5-translation-library": "1.*",
     "league/url": "3.3.*",
     "concrete5/doctrine-xml": "1.*",
-    "symfony/yaml":"3.*"
+    "symfony/yaml":"3.*",
+    "ocramius/proxy-manager": "^1.0"
   },
   "autoload-dev": {
     "psr-4": {
