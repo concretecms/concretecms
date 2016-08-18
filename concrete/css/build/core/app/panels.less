@@ -1124,6 +1124,141 @@ div.ccm-panel-header-accordion-dropdown-visible {
 }
 
 /**
+ * Dark Panel Date Select
+ */
+div#ccm-check-in-schedule-wrapper,
+div#ccm-view-as-user-wrapper {
+  span.ccm-input-date-wrapper {
+    margin-bottom: 8px;
+    display: block;
+  }
+
+  input.ccm-input-date {
+    // TODO not happy about that
+    width: 100% !important;
+  }
+
+  .ccm-input-time-wrapper {
+    white-space: nowrap;
+    select {
+      width: 74px !important;
+
+      &:last-child {
+        margin-right: 0 !important;
+      }
+    }
+  }
+
+  .separator {
+    padding-left: 1px;
+    padding-right: 4px;
+  }
+}
+
+/**
+ * Dark Panel Calendar
+ */
+div.dark-panel-calendar {
+  border: 1px solid #2a2c30;
+  background: @panel-form-element-bg-color;
+  color: @panel-form-element-text-color;
+
+  div.ui-datepicker-header {
+    background: none;
+    background-color: #2a2c30;
+    border: none;
+    color: @panel-form-element-text-color;
+  }
+
+  .ui-datepicker-prev span,
+  .ui-datepicker-next span,
+  .ui-datepicker-prev-hover span,
+  .ui-datepicker-next-hover span {
+    background-size: 16px 16px;
+    background-repeat: no-repeat;
+  }
+
+  .ui-datepicker-prev span {
+    background: url(../images/icons/dark_calendar_left_arrow.svg);
+    background-position-x: -1px;
+  }
+
+  .ui-datepicker-next span {
+    background: url(../images/icons/dark_calendar_right_arrow.svg);
+    background-position-x: 1px;
+  }
+
+  .ui-datepicker-prev-hover span {
+    background: url(../images/icons/dark_calendar_left_arrow_hover.svg);
+    background-position-x: -1px;
+  }
+
+  .ui-datepicker-next-hover span {
+    background: url(../images/icons/dark_calendar_right_arrow_hover.svg);
+    background-position-x: 1px;
+  }
+
+  .ui-datepicker-prev-hover,
+  .ui-datepicker-next-hover {
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
+
+  .ui-datepicker-prev-hover {
+    top: 2px;
+    left: 2px;
+  }
+
+  .ui-datepicker-next-hover {
+    top: 2px;
+    right: 2px;
+  }
+
+  .ui-icon {
+    width: 16px;
+    height: 16px;
+  }
+
+  select.ui-datepicker-year {
+    background-color: @panel-form-element-bg-color;
+    border: none;
+  }
+
+  table.ui-datepicker-calendar {
+    th span,
+    td a {
+      color: @panel-form-element-text-color;
+      text-align: center;
+    }
+
+    .ui-state-default {
+      border: none;
+      background: none;
+    }
+
+    .ui-state-highlight,
+    .ui-state-active,
+    .ui-state-hover {
+      color: #ffffff;
+      border-radius: 2px;
+    }
+
+    .ui-state-highlight {
+      background-color: #37393f;
+    }
+
+    .ui-state-active {
+      background: #406a8e;
+    }
+
+    .ui-state-hover {
+      background: #2aa9dd;
+    }
+  }
+}
+
+/**
  * Panel Confirmation
  */
 div.ccm-panel-confirmation-wrapper {
