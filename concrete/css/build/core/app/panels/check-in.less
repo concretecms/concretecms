@@ -39,7 +39,6 @@ div#ccm-panel-check-in {
             border-bottom: none;
         }
 
-
         div#ccm-check-in-schedule-wrapper {
             display: none;
 
@@ -61,32 +60,6 @@ div#ccm-panel-check-in {
                 color: @panel-normal-text-color;
             }
 
-            span.ccm-input-date-wrapper {
-                margin-bottom: 8px;
-                display: block;
-            }
-
-            input.ccm-input-date {
-                // TODO not happy about that
-                width: 100% !important;
-            }
-
-            .ccm-input-time-wrapper {
-                white-space: nowrap;
-                select {
-                    width: 74px !important;
-
-                    &:last-child {
-                        margin-right: 0 !important;
-                    }
-                }
-            }
-
-            .separator {
-                padding-left: 1px;
-                padding-right: 4px;
-            }
-
             button.ccm-check-in-schedule {
                 width: auto;
             }
@@ -99,31 +72,5 @@ div#ccm-panel-check-in {
             }
         }
     }
-
 }
 
-div.check-in-scheduler-calendar {
-    border: 1px solid @panel-border-color;
-    background: @panel-form-element-bg-color;
-    color: @panel-form-element-text-color;
-
-    div.ui-datepicker-header {
-        background-color: @panel-form-element-bg-color;
-        color: @panel-form-element-text-color;
-    }
-
-    select.ui-datepicker-year {
-        background-color: @panel-form-element-bg-color;
-        border: none;
-    }
-
-    table.ui-datepicker-calendar {
-        th span, td a {
-            color: @panel-form-element-text-color;
-        }
-
-        .ui-state-highlight {
-            background-color: @panel-datepicker-highlight-day-color;
-        }
-    }
-}
