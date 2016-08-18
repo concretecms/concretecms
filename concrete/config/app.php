@@ -127,6 +127,7 @@ return array(
         'core_user' => '\Concrete\Core\User\UserServiceProvider',
         'core_service_manager' => '\Concrete\Core\Service\Manager\ServiceManagerServiceProvider',
         'core_site' => '\Concrete\Core\Site\ServiceProvider',
+        'core_job' => '\Concrete\Core\Job\JobServiceProvider',
 
         // Authentication
         'core_oauth' => '\Concrete\Core\Authentication\Type\OAuth\ServiceProvider',
