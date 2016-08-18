@@ -17,7 +17,7 @@ abstract class CorePageProperty extends \Concrete\Core\Page\Type\Composer\Contro
     {
     }
 
-    public function clearComposerRequestProcessControls()
+    public static function clearComposerRequestProcessControls()
     {
         self::$ptComposerRequestControlsProcessed = array();
     }
