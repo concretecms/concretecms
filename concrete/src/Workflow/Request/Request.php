@@ -16,6 +16,7 @@ abstract class Request extends Object
     protected $currentWP;
     protected $uID;
     protected $wrStatusNum = 0;
+    protected $wrID = null;
 
     public function __construct($pk)
     {
@@ -106,7 +107,7 @@ abstract class Request extends Object
      */
     protected function triggerRequest(\PermissionKey $pk)
     {
-        if (!(isset($this->wrID) && $this->wrID)) {
+        if (!$this->wrID) {
             $this->save();
         }
 
