@@ -1818,9 +1818,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         $theme = $this->getCollectionThemeObject();
         if (is_object($theme) && $theme->isThemeCustomizable()) {
             $style = $this->getCustomStyleObject();
-            if (is_object($style)) {
-                $scl = $style->getValueList();
-            }
+            $scl = is_object($style) ? $style->getValueList() : null;
 
             $theme->setStylesheetCachePath(Config::get('concrete.cache.directory').'/pages/'.$this->getCollectionID());
             $theme->setStylesheetCacheRelativePath(REL_DIR_FILES_CACHE.'/pages/'.$this->getCollectionID());
