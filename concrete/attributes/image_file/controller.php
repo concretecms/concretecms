@@ -182,8 +182,8 @@ class Controller extends AttributeTypeController
     public function validateForm($data)
     {
         if ($this->getAttributeKeyType()->isModeFileManager()) {
-            if (Core::make('helper/validation/numbers')->integer($data['value'])) {
-                $f = File::getByID($data['value']);
+            if (intval($data['value']) > 0) {
+                $f = File::getByID(intval($data['value']));
                 if (is_object($f) && !$f->isError()) {
                     return true;
                 } else {
@@ -240,6 +240,7 @@ class Controller extends AttributeTypeController
                 }
             }
         }
+        return $this->createAttributeValue(null);
     }
 
     public function createAttributeKeyType()
