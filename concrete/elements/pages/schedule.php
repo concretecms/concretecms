@@ -19,7 +19,7 @@ if (Config::get('concrete.misc.user_timezones')) {
 <div class="form-group form-group-last">
     <label class="control-label"><?=t('Date/Time')?></label>
     <?= $datetime->datetime('check-in-scheduler', $publishDate, false, true,
-        'check-in-scheduler-calendar'); ?>
+        'dark-panel-calendar'); ?>
     <span class="help-block" style="display: block"><?=t('Time Zone: %s', $timezone)?></span>
 </div>
 <div class="dialog-buttons">
