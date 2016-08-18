@@ -21,7 +21,7 @@ use Symfony\Component\EventDispatcher\GenericEvent;
  */
 abstract class Progress extends Object implements SubjectInterface
 {
-    protected $wrID = nul;
+    protected $wrID = null;
     protected $wpID;
     protected $wpDateAdded;
     protected $wfID;
