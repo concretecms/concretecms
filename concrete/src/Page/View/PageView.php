@@ -156,7 +156,6 @@ class PageView extends View
     public function getStyleSheet($stylesheet)
     {
         if ($this->themeObject->isThemePreviewRequest()) {
-            exit;
             return $this->themeObject->getStylesheet($stylesheet);
         }
 
