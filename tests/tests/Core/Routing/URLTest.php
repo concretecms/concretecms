@@ -110,6 +110,7 @@ class URLTest extends PHPUnit_Framework_TestCase
             ->method('get')
             ->will($this->returnValueMap(array(
                 array('seo.canonical_url', null, 'https://www2.myawesomesite.com:8080'),
+                array('seo.trailing_slash', null, false),
                 array('seo.canonical_ssl_url', null, 'https://www2.myawesomesite.com:8080'),
             )));
 

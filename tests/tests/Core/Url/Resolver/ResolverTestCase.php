@@ -26,8 +26,13 @@ abstract class ResolverTestCase extends PHPUnit_Framework_TestCase
     protected function canonicalUrlWithPath($path, $dispatcher = null)
     {
         if (is_null($dispatcher)) {
-            $rewriting = \Config::get('concrete.seo.url_rewriting');
-            $rewrite_all = \Config::get('concrete.seo.url_rewriting_all');
+            /** @var \Concrete\Core\Site\Service $site */
+            $site = \Core::make('site');
+            $config = $site->getSite()->getConfigRepository();
+            $rewriting = $config->get('seo.url_rewriting');
+            $rewrite_all = $config->get('seo.url_rewriting_all');
+            $trailing_slash = !!$config->get('seo.trailing_slash');
+
             $in_dashboard = \Core::make('helper/concrete/dashboard')->inDashboard($path);
 
             // If rewriting is disabled, or all_rewriting is disabled and we're
@@ -35,13 +40,14 @@ abstract class ResolverTestCase extends PHPUnit_Framework_TestCase
             $dispatcher = (!$rewriting || (!$rewrite_all && $in_dashboard));
         }
 
+        $path = new \Concrete\Core\Url\Components\Path($path, $trailing_slash);
         if ($dispatcher) {
-            $path = new \Concrete\Core\Url\Components\Path($path);
             $path->prepend(DISPATCHER_FILENAME);
         }
-        $canonical_path = $this->canonicalUrl->getPath();
-        $canonical_path->append($path);
 
-        return $this->canonicalUrl->setPath($canonical_path);
+        $url = \Concrete\Core\Url\Url::createFromUrl($this->canonicalUrl);
+        $path->prepend($this->canonicalUrl->getPath());
+
+        return $url->setPath($path);
     }
 }
