@@ -8,7 +8,7 @@
 ));?>
 
 <div id="ccm-tab-content-form-add" class="ccm-tab-content" data-action="<?=$view->action('add_control')?>">
-    <div class="alert alert-success" style="display: none"><?=t('Question added successfully.')?></div>
+    <div class="alert alert-success" style="display: none"><?=t('Field added successfully.')?></div>
     <fieldset>
         <legend><?php echo t('New Question')?></legend>
 
@@ -27,7 +27,7 @@
 
 <div id="ccm-tab-content-form-edit" class="ccm-tab-content" data-action="<?=$view->action('update_control')?>">
 
-    <div class="alert alert-success" style="display: none"><?=t('Question updated successfully.')?></div>
+    <div class="alert alert-success" style="display: none"><?=t('Field updated successfully.')?></div>
 
     <div data-view="form-fields">
 
