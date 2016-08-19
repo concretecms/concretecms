@@ -51,7 +51,7 @@ $args['instance_id'] = time();
             onClickNode: function (node) {
                 ConcreteEvent.publish('SitemapSelectPage', {
                     cID: node.data.cID,
-                    title: node.data.title,
+                    title: node.title,
                     instance: this
                 });
             },
