@@ -9,4 +9,9 @@ class EmptyAvatar extends StandardAvatar
     {
         return $this->application['config']->get('concrete.icons.user_avatar.default');
     }
+
+    protected function getAlt()
+    {
+        return '';
+    }
 }
