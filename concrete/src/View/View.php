@@ -123,8 +123,10 @@ class View extends AbstractView
                     $this->pkgHandle = false;
                     break;
                 default:
-                    $this->themeObject = PageTheme::getByHandle($this->themeHandle);
-                    $this->themePkgHandle = $this->themeObject->getPackageHandle();
+                    if (!isset($this->themeObject)) {
+                        $this->themeObject = PageTheme::getByHandle($this->themeHandle);
+                        $this->themePkgHandle = $this->themeObject->getPackageHandle();
+                    }
 
             }
             $this->themeAbsolutePath = $env->getPath(DIRNAME_THEMES.'/'.$this->themeHandle, $this->themePkgHandle);
