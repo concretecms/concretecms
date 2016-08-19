@@ -1012,16 +1012,6 @@ div.ccm-panel-header-accordion-dropdown-visible {
  */
 .ccm-panel-dark() {
 
-/*  input[type=checkbox], input[type=radio] {
-    border: 1px solid #444;
-  }
-
-  input[type=checkbox]:checked:after, input[type=radio]:checked:after {
-    color: #3baaf7;
-  }
-
-  */
-
   background-color: #2a2c30;
 
   div.ccm-panel-shadow-layer {
@@ -1047,10 +1037,10 @@ div.ccm-panel-header-accordion-dropdown-visible {
     color: #2aa9dd;
   }
 
-  div.ccm-panel-content-inner {
+  div.ccm-panel-content {
     textarea, input, select {
-      border-color: #3a3c41;
-      background-color: #3A3C41;
+      border-color: #444;
+      background-color: #444;
       color: #bababa;
 
       &:hover {
@@ -1064,6 +1054,15 @@ div.ccm-panel-header-accordion-dropdown-visible {
       }
 
     }
+
+    input[type=checkbox], input[type=radio] {
+      color: transparent;
+      &:checked:after {
+        color: darken(#f2f2f2, 20%);
+      }
+    }
+
+
   }
 
   .pager {
