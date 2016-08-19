@@ -154,7 +154,7 @@ $(function() {
 
 	$('#ccm-panel-detail-location-display').html(renderBreadcrumb({
 		parentLink: '<?=Loader::helper('navigation')->getLinkToCollection($parent);?>',
-		parentName: '<?=$parent->getCollectionName()?>',
+		parentName: <?=json_encode($parent->getCollectionName())?>,
 		parentID: '<?=$cParentID?>'
 	}));
 

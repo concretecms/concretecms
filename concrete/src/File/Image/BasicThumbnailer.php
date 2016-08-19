@@ -142,7 +142,7 @@ class BasicThumbnailer
 
         $abspath = '/cache/' . $filename;
         if (!$filesystem->has($abspath)) {
-            if ($obj instanceof File) {
+            if ($obj instanceof File && $fr->exists()) {
                 $image = \Image::load($fr->read());
             } else {
                 $image = \Image::open($obj);
