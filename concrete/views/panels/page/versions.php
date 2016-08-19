@@ -39,7 +39,10 @@ defined('C5_EXECUTE') or die("Access Denied.");
 					<li><a href="#" data-version-menu-task="new-page" data-version-id="<%-cvID%>"><?=t('New Page')?></a></li>
 					<% } %>
 					<% if (cpCanDeletePageVersions) { %>
-						<li><% if (cvIsApproved == 1) { %><span><?=t('Delete')?></span><% } else { %><a href="#" data-version-menu-task="delete" data-version-id="<%-cvID%>"><?=t('Delete')?></a><% } %></li>
+					<li class="ccm-menu-item-delete">
+						<span <% if (cvIsApproved != 1) { %>style="display:none"<% } %>><?=t('Delete')?></span>
+						<a <% if (cvIsApproved == 1) { %>style="display:none"<% } %> href="#" data-version-menu-task="delete" data-version-id="<%-cvID%>"><?=t('Delete')?></a>
+					</li>
 					<% } %>
 				</ul>
 				</div>
@@ -103,6 +106,7 @@ var ConcretePageVersionList = {
 
 	handleVersionRemovalResponse: function(r) {
 		$('button[data-version-action]').addClass('disabled');
+
 		for (i = 0; i < r.versions.length; i++) {
 			var $row = $('input[type=checkbox][value=' + r.versions[i].cvID + ']').parent().parent();
 			$row.queue(function() {
@@ -111,6 +115,15 @@ var ConcretePageVersionList = {
 			}).delay(600).queue(function() {
 				$(this).remove();
 				$(this).dequeue();
+
+				var menuItems = $('li.ccm-menu-item-delete');
+				if (menuItems.length == 1) {
+					menuItems.children('span').show();
+					menuItems.children('a').hide();
+				} else {
+					menuItems.children('a').show();
+					menuItems.children('span').hide();
+				}
 			});
 		}
 	},
@@ -190,8 +203,19 @@ var ConcretePageVersionList = {
 					break;
 			}
 
+
 			return false;
 		});
+
+
+		var menuItems = $('li.ccm-menu-item-delete');
+		if (menuItems.length == 1) {
+			menuItems.children('span').show();
+			menuItems.children('a').hide();
+		} else {
+			menuItems.children('a').show();
+			menuItems.children('span').hide();
+		}
 	}
 
 }
@@ -255,6 +279,7 @@ $(function() {
 		if (checkboxes.length > 0  && notChecked.length > 0 && !checkboxes.filter('[data-version-active=true]').length) {
 			$('button[data-version-action=delete]').removeClass('disabled');
 		}
+
 		ConcretePageVersionList.previewSelectedVersions(checkboxes);
 
 	});
