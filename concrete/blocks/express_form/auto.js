@@ -37,6 +37,18 @@ $(function() {
 
     }
 
+    ConcreteBlockForm.prototype.destroyContents = function($element) {
+        if (typeof CKEDITOR != 'undefined') {
+            for (name in CKEDITOR.instances) {
+                var instance = CKEDITOR.instances[name];
+                if ($.contains($element.get(0), instance.container.$)) {
+                    instance.destroy(true);
+                }
+            }
+        }
+        $element.children().remove().hide();
+    }
+
     ConcreteBlockForm.prototype.init = function(data) {
 
         var my = this,
@@ -112,7 +124,8 @@ $(function() {
 
                     $editQuestion.hide();
                     $fields.show();
-                    $editQuestionInner.html('');
+                    my.destroyContents($editQuestionInner);
+
 
                     Concrete.event.publish('update_control.block_express_form', {
                         'control': r,
@@ -144,7 +157,7 @@ $(function() {
                 $editQuestionInner = $tabEdit.find('[data-view=edit-question-inner]');
 
             $editQuestion.hide();
-            $editQuestionInner.html('');
+            my.destroyContents($editQuestionInner);
             $fields.show();
         });
 
@@ -159,7 +172,13 @@ $(function() {
                         $editQuestionInner = $tabEdit.find('[data-view=edit-question-inner]');
 
                     $fields.hide();
-                    $editQuestion.show();
+
+                    _.each(r.assets.css, function(css) {
+                        ccm_addHeaderItem(css, 'CSS');
+                    });
+                    _.each(r.assets.javascript, function(javascript) {
+                        ccm_addHeaderItem(javascript, 'JAVASCRIPT');
+                    });
 
                     $editQuestionInner.html(questionTemplate({
                         'id': r.id,
@@ -170,12 +189,14 @@ $(function() {
                         'typeContent': r.typeContent
                     }));
 
-                    _.each(r.assets.css, function(css) {
-                        ccm_addHeaderItem(css, 'CSS');
-                    });
-                    _.each(r.assets.javascript, function(javascript) {
-                        ccm_addHeaderItem(javascript, 'JAVASCRIPT');
-                    });
+                    $editQuestion.show();
+
+                    if (r.showControlName) {
+                        $editQuestion.find('div[data-group=control-name]').show();
+                    }
+                    if (r.showControlRequired) {
+                        $editQuestion.find('div[data-group=control-required]').show();
+                    }
                 }
             });
         });
@@ -191,16 +212,7 @@ $(function() {
         });
 
         $types.find('select').on('change', function() {
-            if (typeof CKEDITOR != 'undefined') {
-                for (name in CKEDITOR.instances) {
-                    var instance = CKEDITOR.instances[name];
-                    if ($.contains($typeData.get(0), instance.container.$)) {
-                        instance.destroy(true);
-                    }
-                }
-            }
-
-            $typeData.children().remove().hide();
+            my.destroyContents($typeData);
             $controlName.hide();
             $controlRequired.hide();
             $addQuestionGroup.hide();
