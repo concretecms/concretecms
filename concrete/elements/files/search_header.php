@@ -11,8 +11,8 @@
         <div class="input-group">
 
             <div class="ccm-header-search-form-input">
-                <a class="ccm-header-reset-search" href="#" data-button-action-url="<?=URL::to('/ccm/system/search/users/clear')?>" data-button-action="clear-search"><?=t('Reset Search')?></a>
-                <a class="ccm-header-launch-advanced-search" href="<?php echo URL::to('/ccm/system/dialogs/user/advanced_search')?>" data-launch-dialog="advanced-search"><?=t('Advanced')?></a>
+                <a class="ccm-header-reset-search" href="#" data-button-action-url="<?=URL::to('/ccm/system/search/files/clear')?>" data-button-action="clear-search"><?=t('Reset Search')?></a>
+                <a class="ccm-header-launch-advanced-search" href="<?php echo URL::to('/ccm/system/dialogs/file/advanced_search')?>" data-launch-dialog="advanced-search"><?=t('Advanced')?></a>
                 <input type="text" class="form-control" autocomplete="off" name="fKeywords" placeholder="<?=t('Search')?>">
             </div>
 
