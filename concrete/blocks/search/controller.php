@@ -133,7 +133,7 @@ class Controller extends BlockController
             $resultsURL = $this->resultsURL;
         } elseif ($this->postTo_cID != '') {
             $resultsPage = Page::getById($this->postTo_cID);
-            $resultsURL = $resultsPage->cPath;
+            $resultsURL = $resultsPage->getCollectionPath();
         }
 
         $resultsURL = Core::make('helper/text')->encodePath($resultsURL);
