@@ -3,6 +3,7 @@ namespace Concrete\Core\Export\Item\Express\Control;
 
 use Concrete\Core\Export\Item\Express\Control;
 use Concrete\Core\Export\ExportableInterface;
+use Concrete\Core\Utility\Service\Xml;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
@@ -16,8 +17,10 @@ class TextControl extends Control
     public function export(ExportableInterface $control, \SimpleXMLElement $xml)
     {
         $node = parent::export($control, $xml);
-        $node->addAttribute('text', $control->getText());
-
+        $node->addAttribute('type-id', 'text');
+        $service = new Xml();
+        $service->createCDataNode($node, 'headline', $control->getHeadline());
+        $service->createCDataNode($node, 'body', $control->getBody());
     }
 
 }

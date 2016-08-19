@@ -2,6 +2,7 @@
 namespace Concrete\Core\View;
 
 use Concrete\Core\Asset\Asset;
+use Concrete\Core\Asset\Output\StandardFormatter;
 use Concrete\Core\Http\ResponseAssetGroup;
 use Environment;
 use Events;
@@ -329,7 +330,12 @@ class View extends AbstractView
 
     protected function outputAssetIntoView($item)
     {
-        return $item."\n";
+        $formatter = new StandardFormatter();
+        if ($item instanceof Asset) {
+            return $formatter->output($item) . "\n";
+        } else {
+            return $item . "\n";
+        }
     }
 
     public static function element($_file, $args = null, $_pkgHandle = null)
