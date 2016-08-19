@@ -3007,6 +3007,8 @@
                                 <control id="02181ae2-634d-11e6-a245-62e65b165d8e" type="attribute_key" required="1" custom-label="">
                                     <attributekey handle="form_question_3" name="Email Address" package="" searchable="1" indexed="1" type="email" category=""/>
                                 </control>
+                                <control id="32a6369e-65a0-11e6-9add-e0995e0a1653" type="entity_property" required="" custom-label="" type-id="text"><headline><![CDATA[]]></headline><body><![CDATA[<div class="alert alert-info">Don&#39;t worry &ndash;&nbsp;we won&#39;t add you to any email list. This is just so we can contact you in case you have questions.</div>
+]]></body></control>
                                 <control id="b3c4ee52-6350-11e6-a245-62e65b165d8e" type="attribute_key" required="" custom-label="">
                                     <attributekey handle="form_question_1" name="Subject" package="" searchable="1" indexed="1" type="select" category="">
                                         <type allow-multiple-values="" display-order="display_asc" allow-other-values="">

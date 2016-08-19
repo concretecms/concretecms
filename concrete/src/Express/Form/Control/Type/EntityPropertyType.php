@@ -5,6 +5,7 @@ use Concrete\Core\Entity\Express\Control\Control;
 use Concrete\Core\Entity\Express\Control\TextControl;
 use Concrete\Core\Entity\Express\Entity;
 use Concrete\Core\Express\Form\Control\Type\Item\TextEntityPropertyItem;
+use Concrete\Core\Import\Item\Express\Control\EntityPropertyControl;
 
 class EntityPropertyType implements TypeInterface
 {
@@ -50,6 +51,6 @@ class EntityPropertyType implements TypeInterface
 
     public function getImporter()
     {
-        return false;
+        return new EntityPropertyControl();
     }
 }
