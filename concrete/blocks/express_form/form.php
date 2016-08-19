@@ -16,7 +16,7 @@
 
         </div>
 
-        <div class="form-group">
+        <div class="form-group" data-group="add-question" style="display: none">
 
             <button type="button" class="btn btn-primary" data-action="add-question"><?=t('Add Question')?></button>
         </div>
@@ -152,7 +152,7 @@
 <script type="text/template" data-template="express-form-form-control">
 <li class="list-group-item"
     data-action="<?=$view->action('get_control')?>"
-    data-form-control-attribute-type="<%=control.attributeType%>"
+    data-form-control-field-type="<%=control.attributeType%>"
     data-form-control-label="<%=control.displayLabel%>"
     data-form-control-id="<%=control.id%>">
     <input type="hidden" name="controlID[]" value="<%=control.id%>">
@@ -186,29 +186,34 @@
         <input type="hidden" name="id" value="<%=id%>">
     <% } %>
 
-    <div class="form-group">
-        <?=$form->label('question', t('Question'))?>
-        <input type="text" name="question" class="form-control" maxlength="255" value="<%=question%>">
-    </div>
-
-    <div class="form-group" data-action="<?=$view->action('get_type_form')?>" data-group="attribute-types">
+    <div class="form-group" data-action="<?=$view->action('get_type_form')?>" data-group="field-types">
         <?=$form->label('type', t('Answer Type'))?>
         &nbsp; <i class="fa fa-refresh fa-spin" style="display: none"></i>
         <select name="type" class="form-control">
-        <% _.each(types, function(type){ %>
-            <option value="<%=type.id%>" <% if (selectedType == type.id) { %>selected<% } %>><%=_.escape(type.displayName)%></option>
+            <option value=""><?=t('** Choose Field')?></option>
+        <% _.each(types, function(group) { %>
+            <optgroup label="<%=group.label%>">
+                <% _.each(group.fields, function(type) { %>
+                    <option value="<%=type.id%>" <% if (selectedType == type.id) { %>selected<% } %>><%=_.escape(type.displayName)%></option>
+                <% }); %>
+            </optgroup>
         <% }); %>
         </select>
 
     </div>
 
+    <div class="form-group" data-group="control-name" style="display: none">
+        <?=$form->label('question', t('Question'))?>
+        <input type="text" name="question" class="form-control" maxlength="255" value="<%=question%>">
+    </div>
+
     <% if (typeContent) { %>
-        <div data-group="attribute-type-data"><%=typeContent%></div>
+        <div data-group="field-type-data"><%=typeContent%></div>
     <% } else { %>
-        <div style="display: none" data-group="attribute-type-data"></div>
+        <div style="display: none" data-group="field-type-data"></div>
     <% } %>
 
-    <div class="form-group">
+    <div class="form-group" data-group="control-required" style="display: none">
         <label class="control-label"><?=t('Required')?></label>
         <div class="radio"><label>
             <input type="radio" name="required<% if (id) { %>Edit<% } %>" value="1" <% if (isRequired) { %>checked<% } %>>

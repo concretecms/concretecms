@@ -7,7 +7,7 @@ class Options extends ElementController
 {
     protected $control;
 
-    public function __construct(\Concrete\Core\Entity\Express\Control\Control $control)
+    public function __construct(\Concrete\Core\Entity\Express\Control\Control $control = null)
     {
         $this->control = $control;
         parent::__construct();
@@ -15,7 +15,9 @@ class Options extends ElementController
 
     public function getElement()
     {
-        return 'dashboard/express/control/options/' . $this->control->getType();
+        if (isset($this->control)) {
+            return 'dashboard/express/control/options/' . $this->control->getType();
+        }
     }
 
     public function view()

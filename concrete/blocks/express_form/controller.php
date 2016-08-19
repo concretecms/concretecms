@@ -2,6 +2,7 @@
 namespace Concrete\Block\ExpressForm;
 
 use Concrete\Controller\Element\Attribute\KeyList;
+use Concrete\Controller\Element\Dashboard\Express\Control\TextOptions;
 use Concrete\Core\Attribute\Category\ExpressCategory;
 use Concrete\Core\Attribute\Type;
 use Concrete\Core\Block\BlockController;
@@ -81,6 +82,14 @@ class Controller extends BlockController
         parent::delete();
         $entity = $this->getFormEntity()->getEntity();
         $entityManager = \Core::make('database/orm')->entityManager();
+
+        $entity->setDefaultEditForm(null);
+        $entity->setDefaultViewForm(null);
+        foreach($entity->getForms() as $form) {
+            // fuck off, doctrine (redux)
+            $entityManager->remove($form);
+        }
+        $entityManager->flush();
         $entityManager->remove($entity);
         $entityManager->flush();
     }
@@ -220,26 +229,31 @@ class Controller extends BlockController
             $controls = array();
         }
 
-        $type = Type::getByID($post['type']);
-        if (is_object($type)) {
+        $field = explode('|', $this->request->request->get('type'));
+        if ($field[0] == 'attribute_key') {
+            $type = Type::getByID($field[1]);
+            if (is_object($type)) {
 
-            $control = new AttributeKeyControl();
-            $control->setId((new UuidGenerator())->generate($entityManager, $control));
-            $key = new ExpressKey();
-            $key->setAttributeKeyName($post['question']);
-            $key->setAttributeKeyHandle(sprintf('form_question_%s', count($controls) + 1));
-            if ($post['required']) {
-                $control->setIsRequired(true);
+                $control = new AttributeKeyControl();
+                $control->setId((new UuidGenerator())->generate($entityManager, $control));
+                $key = new ExpressKey();
+                $key->setAttributeKeyName($post['question']);
+                $key->setAttributeKeyHandle(sprintf('form_question_%s', count($controls) + 1));
+                if ($post['required']) {
+                    $control->setIsRequired(true);
+                }
+
+                $controller = $type->getController();
+                $key = $this->saveAttributeKeyType($controller, $key, $post);
+
+                $control->setAttributeKey($key);
+                $controls[$control->getId()]= $control;
+                $session->set('block.express_form.new', $controls);
+                return new JsonResponse($control);
             }
+        }
 
-            $controller = $type->getController();
-            $key = $this->saveAttributeKeyType($controller, $key, $post);
-
-            $control->setAttributeKey($key);
-            $controls[$control->getId()]= $control;
-            $session->set('block.express_form.new', $controls);
-            return new JsonResponse($control);
-        } else {
+        if (!isset($control)) {
             $e = \Core::make('error');
             $e->add(t('You must choose a valid field type.'));
             return new JsonResponse($e);
@@ -469,12 +483,24 @@ class Controller extends BlockController
         $this->requireAsset('core/tree');
         $this->clearSessionControls();
         $list = Type::getList();
-        $types_select = array();
-        $types_select[] = ['id' => '', 'displayName' => t('** Choose Type')];
+
+        $attribute_fields = array();
 
         foreach($list as $type) {
-            $types_select[] = ['id' => $type->getAttributeTypeID(), 'displayName' => $type->getAttributeTypeDisplayName()];
+            $attribute_fields[] = ['id' => 'attribute_key|' . $type->getAttributeTypeID(), 'displayName' => $type->getAttributeTypeDisplayName()];
         }
+
+        $select = array();
+        $select[0] = new \stdClass();
+        $select[0]->label = t('Input Field Types');
+        $select[0]->fields = $attribute_fields;
+
+        $other_fields = array();
+        $other_fields[] = ['id' => 'entity_property|text', 'displayName' => t('Display Text')];
+
+        $select[1] = new \stdClass();
+        $select[1]->label = t('Other Fields');
+        $select[1]->fields = $other_fields;
 
         $controls = array();
         $form = $this->getFormEntity();
@@ -490,24 +516,48 @@ class Controller extends BlockController
             }
         }
         $this->set('controls', $controls);
-        $this->set('types_select', $types_select);
+        $this->set('types_select', $select);
         $tree = ExpressEntryResults::get();
         $this->set('tree', $tree);
     }
 
     public function action_get_type_form()
     {
-        $type = Type::getByID($this->request->request->get('atID'));
-        if (is_object($type)) {
-            ob_start();
-            echo $type->render('type_form');
-            $html = ob_get_contents();
-            ob_end_clean();
+        $field = explode('|', $this->request->request->get('id'));
+        if ($field[0] == 'attribute_key') {
+            $type = Type::getByID($field[1]);
+            if (is_object($type)) {
+                ob_start();
+                echo $type->render('type_form');
+                $html = ob_get_contents();
+                ob_end_clean();
 
+                $obj = new \stdClass();
+                $obj->content = $html;
+                $obj->showControlRequired = true;
+                $obj->showControlName = true;
+                $obj->assets = $this->getAssetsDefinedDuringOutput();
+
+            }
+        } else if ($field[0] == 'entity_property') {
             $obj = new \stdClass();
-            $obj->content = $html;
-            $obj->assets = $this->getAssetsDefinedDuringOutput();
+            switch($field[1]) {
+                case 'text':
+                    $controller = new TextOptions();
+                    ob_start();
+                    echo $controller->render();
+                    $html = ob_get_contents();
+                    ob_end_clean();
 
+                    $obj = new \stdClass();
+                    $obj->content = $html;
+                    $obj->showControlRequired = false;
+                    $obj->showControlName = false;
+                    $obj->assets = $this->getAssetsDefinedDuringOutput();
+                    break;
+            }
+        }
+        if (isset($obj)) {
             return new JsonResponse($obj);
         }
         \Core::make('app')->shutdown();

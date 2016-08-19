@@ -65,8 +65,11 @@ $(function() {
             'typeContent': null
         }));
 
-        var $types = $('div[data-group=attribute-types]'),
-            $typeData = $('div[data-group=attribute-type-data]');
+        var $types = $('div[data-group=field-types]'),
+            $typeData = $('div[data-group=field-type-data]'),
+            $controlName = $('div[data-group=control-name]'),
+            $controlRequired = $('div[data-group=control-required]'),
+            $addQuestionGroup = $('div[data-group=add-question]');
 
         $tabAdd.on('click', 'button[data-action=add-question]', function() {
             var $form = $tabAdd.find(':input');
@@ -189,22 +192,32 @@ $(function() {
 
         $types.find('select').on('change', function() {
             $typeData.html('').hide();
+            $controlName.hide();
+            $controlRequired.hide();
+            $addQuestionGroup.hide();
             var value = $(this).val();
             if (value) {
                 $types.find('i.fa-refresh').show();
                 $.concreteAjax({
                     url: $types.attr('data-action'),
-                    data: {'atID': value},
+                    data: {'id': value},
                     loader: false,
                     success: function(r) {
-                        $typeData.html(r.content);
-                        $typeData.show();
                         _.each(r.assets.css, function(css) {
                             ccm_addHeaderItem(css, 'CSS');
                         });
                         _.each(r.assets.javascript, function(javascript) {
                             ccm_addHeaderItem(javascript, 'JAVASCRIPT');
                         });
+                        if (r.showControlName) {
+                            $controlName.show();
+                        }
+                        if (r.showControlRequired) {
+                            $controlRequired.show();
+                        }
+                        $typeData.html(r.content);
+                        $typeData.show();
+                        $addQuestionGroup.show();
                     },
                     complete: function() {
                         $types.find('i.fa-refresh').hide();
@@ -257,7 +270,7 @@ $(function() {
         }
         $controls.each(function() {
             var $control = $(this);
-            if ($control.attr('data-form-control-attribute-type') == 'email') {
+            if ($control.attr('data-form-control-field-type') == 'email') {
                 controls.push({
                    key: $control.attr('data-form-control-id'),
                    value: $control.attr('data-form-control-label')
