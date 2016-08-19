@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Class StackUsageRecord
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="\Concrete\Core\Entity\Statistics\UsageTracker\FileUsageRepository")
  * @ORM\Table(name="FileUsageRecord",
  *   indexes={
  *     @ORM\Index(name="block", columns={"block_id"}),
