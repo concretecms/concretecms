@@ -5,6 +5,7 @@ namespace Concrete\Core\File\Tracker;
 use Concrete\Core\Attribute\AttributeKeyInterface;
 use Concrete\Core\Block\Block;
 use Concrete\Core\Block\BlockController;
+use Concrete\Core\Entity\Attribute\Key\Key;
 use Concrete\Core\Entity\File\File;
 use Concrete\Core\Entity\Statistics\UsageTracker\FileUsageRecord;
 use Concrete\Core\Page\Collection\Collection;
@@ -115,7 +116,7 @@ class UsageTracker implements TrackerInterface
     {
         $this->trackTrackables(
             $collection,
-            $this->getTrackables($attributes, function(Block $block) {
+            $this->getTrackables($attributes, function(Key $block) {
                 return $block->getController();
             }),
             function(Collection $collection, \Concrete\Core\Attribute\Controller $attribute, $fileId) {
