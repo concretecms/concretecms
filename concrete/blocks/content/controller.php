@@ -141,4 +141,10 @@ class Controller extends BlockController implements FileTrackableInterface
 
         return $files;
     }
+
+    public function getUsedCollection()
+    {
+        return $this->getCollectionObject();
+    }
+
 }
