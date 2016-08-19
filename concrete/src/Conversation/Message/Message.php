@@ -18,7 +18,9 @@ use Events;
 
 class Message extends Object implements \Concrete\Core\Permission\ObjectInterface
 {
+    protected $cnvMessageID;
     protected $cnvMessageDateCreated;
+    protected $cnvMessageFlagTypes;
 
     public function getConversationMessageID()
     {
