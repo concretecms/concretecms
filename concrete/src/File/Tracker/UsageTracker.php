@@ -8,6 +8,7 @@ use Concrete\Core\Block\BlockController;
 use Concrete\Core\Entity\Attribute\Key\Key;
 use Concrete\Core\Entity\File\File;
 use Concrete\Core\Entity\Statistics\UsageTracker\FileUsageRecord;
+use Concrete\Core\Entity\Statistics\UsageTracker\FileUsageRepository;
 use Concrete\Core\Page\Collection\Collection;
 use Concrete\Core\Page\Controller\PageController;
 use Concrete\Core\Statistics\UsageTracker\TrackableInterface;
@@ -23,7 +24,7 @@ class UsageTracker implements TrackerInterface
     private $manager;
 
     /**
-     * @var \Doctrine\ORM\EntityRepository
+     * @var FileUsageRepository
      */
     private $repository;
 
@@ -206,21 +207,28 @@ class UsageTracker implements TrackerInterface
      * @param $collection_id
      * @param $collection_version_id
      * @param $block_id
+     * @return bool
      */
     private function persist($file_id, $collection_id, $collection_version_id, $block_id)
     {
         $search = [
-            'block_id' => $block_id
+            'collection_id' => $collection_id,
+            'collection_version_id' => $collection_version_id,
+            'block_id' => $block_id,
+            'file_id' => $file_id
         ];
 
-        if (!$record = $this->repository->findOneBy($search)) {
-            $record = new FileUsageRecord();
+        if ($this->repository->findOneBy($search)) {
+            return false;
         }
+
+        $record = new FileUsageRecord();
 
         $record->setCollectionId($collection_id);
         $record->setCollectionVersionId($collection_version_id);
         $record->setBlockId($block_id);
         $record->setFileId($file_id);
+
         $this->manager->merge($record);
     }
 
