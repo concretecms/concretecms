@@ -13,6 +13,7 @@ use Concrete\Core\Entity\Express\Entry;
 use Concrete\Core\Entity\Express\FieldSet;
 use Concrete\Core\Entity\Express\Form;
 use Concrete\Core\Express\Entry\Manager;
+use Concrete\Core\Express\Form\Control\Type\EntityPropertyType;
 use Concrete\Core\Express\Form\Control\SaveHandler\SaveHandlerInterface;
 use Concrete\Core\Express\Form\Renderer;
 use Concrete\Core\Express\Form\Validator;
@@ -230,33 +231,46 @@ class Controller extends BlockController
         }
 
         $field = explode('|', $this->request->request->get('type'));
-        if ($field[0] == 'attribute_key') {
-            $type = Type::getByID($field[1]);
-            if (is_object($type)) {
+        switch($field[0]) {
+            case 'attribute_key':
+                $type = Type::getByID($field[1]);
+                if (is_object($type)) {
 
-                $control = new AttributeKeyControl();
-                $control->setId((new UuidGenerator())->generate($entityManager, $control));
-                $key = new ExpressKey();
-                $key->setAttributeKeyName($post['question']);
-                $key->setAttributeKeyHandle(sprintf('form_question_%s', count($controls) + 1));
-                if ($post['required']) {
-                    $control->setIsRequired(true);
+                    $control = new AttributeKeyControl();
+                    $control->setId((new UuidGenerator())->generate($entityManager, $control));
+                    $key = new ExpressKey();
+                    $key->setAttributeKeyName($post['question']);
+                    $key->setAttributeKeyHandle(sprintf('form_question_%s', count($controls) + 1));
+                    if ($post['required']) {
+                        $control->setIsRequired(true);
+                    }
+
+                    $controller = $type->getController();
+                    $key = $this->saveAttributeKeyType($controller, $key, $post);
+
+                    $control->setAttributeKey($key);
                 }
-
-                $controller = $type->getController();
-                $key = $this->saveAttributeKeyType($controller, $key, $post);
-
-                $control->setAttributeKey($key);
-                $controls[$control->getId()]= $control;
-                $session->set('block.express_form.new', $controls);
-                return new JsonResponse($control);
-            }
+                break;
+            case 'entity_property':
+                /**
+                 * @var $propertyType EntityPropertyType
+                 */
+                $propertyType = $this->app->make(EntityPropertyType::class);
+                $control = $propertyType->createControlByIdentifier($field[1]);
+                $control->setId((new UuidGenerator())->generate($entityManager, $control));
+                $saver = $control->getControlSaveHandler();
+                $control = $saver->saveFromRequest($control, $this->request);
+                break;
         }
 
         if (!isset($control)) {
             $e = \Core::make('error');
             $e->add(t('You must choose a valid field type.'));
             return new JsonResponse($e);
+        } else {
+            $controls[$control->getId()]= $control;
+            $session->set('block.express_form.new', $controls);
+            return new JsonResponse($control);
         }
     }
 
@@ -393,43 +407,49 @@ class Controller extends BlockController
                 $control = $sessionControls[$id];
                 if (!in_array($id, $existingControlIDs)) {
                     // Possibility 1: This is a new control.
-                    $key = $control->getAttributeKey();
-                    $key->setEntity($entity);
-                    $control->setAttributeKey($key);
+                    if ($control instanceof AttributeKeyControl) {
+                        $key = $control->getAttributeKey();
+                        $key->setEntity($entity);
+                        $control->setAttributeKey($key);
+                        $entityManager->persist($key);
+                        $indexKeys[] = $key;
+                    }
+
                     $control->setFieldSet($field_set);
-                    $entityManager->persist($key);
                     $control->setPosition($position);
                     $entityManager->persist($control);
 
-                    $indexKeys[] = $key;
 
                 } else {
                     // Possibility 2: This is an existing control that has an updated version.
                     foreach($existingControls as $existingControl) {
                         if ($existingControl->getId() == $id) {
-                            $key = $existingControl->getAttributeKey();
-                            // question name
-                            $key->setAttributeKeyName($control->getAttributeKey()->getAttributeKeyName());
+                            if ($control instanceof AttributeKeyControl) {
+                                $key = $existingControl->getAttributeKey();
+                                // question name
+                                $key->setAttributeKeyName($control->getAttributeKey()->getAttributeKeyName());
 
-                            // we have to delete the existing key type
-                            // because otherwise we get duplicate errors
-                            $existing_key_type = $key->getAttributeKeyType();
-                            $entityManager->remove($existing_key_type);
-                            $entityManager->flush();
+                                // we have to delete the existing key type
+                                // because otherwise we get duplicate errors
+                                $existing_key_type = $key->getAttributeKeyType();
+                                $entityManager->remove($existing_key_type);
+                                $entityManager->flush();
 
-                            $key_type = $control->getAttributeKey()->getAttributeKeyType();
-                            $entityManager->persist($key_type);
-                            $key_type->setAttributeKey($key);
-                            $key->setAttributeKeyType($key_type);
+                                $key_type = $control->getAttributeKey()->getAttributeKeyType();
+                                $entityManager->persist($key_type);
+                                $key_type->setAttributeKey($key);
+                                $key->setAttributeKeyType($key_type);
 
-                            // Required
-                            $existingControl->setAttributeKey($key);
-                            $existingControl->setIsRequired($control->isRequired());
+                                // Required
+                                $existingControl->setAttributeKey($key);
+                                $existingControl->setIsRequired($control->isRequired());
+                                $indexKeys[] = $key;
+
+                            }
 
                             // save it.
                             $entityManager->persist($existingControl);
 
-                            $indexKeys[] = $key;
                         }
                     }
                 }
@@ -608,7 +628,7 @@ class Controller extends BlockController
             $obj->id = $control->getID();
             $obj->question = $control->getDisplayLabel();
             $obj->isRequired = $control->isRequired();
-            $obj->type = $type->getAttributeTypeID();
+            $obj->type = 'attribute_key|' . $type->getAttributeTypeID();
             $obj->typeContent = $html;
             $obj->assets = $this->getAssetsDefinedDuringOutput();
 

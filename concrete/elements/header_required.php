@@ -150,8 +150,8 @@ if (is_object($cp)) {
     }
 }
 $v->markHeaderAssetPosition();
-if (empty($disableTrackingCode) && Config::get('concrete.seo.tracking.code_position') === 'top') {
-    echo Config::get('concrete.seo.tracking.code');
+if (empty($disableTrackingCode)) {
+    echo $config->get('seo.tracking.code.header');
 }
 if (isset($scc) && is_object($scc)) {
     ?>

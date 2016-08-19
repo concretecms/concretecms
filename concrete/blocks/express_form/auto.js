@@ -191,7 +191,16 @@ $(function() {
         });
 
         $types.find('select').on('change', function() {
-            $typeData.html('').hide();
+            if (typeof CKEDITOR != 'undefined') {
+                for (name in CKEDITOR.instances) {
+                    var instance = CKEDITOR.instances[name];
+                    if ($.contains($typeData.get(0), instance.container.$)) {
+                        instance.destroy(true);
+                    }
+                }
+            }
+
+            $typeData.children().remove().hide();
             $controlName.hide();
             $controlRequired.hide();
             $addQuestionGroup.hide();
