@@ -11,6 +11,7 @@ use Concrete\Core\Foundation\ClassLoader;
 use Concrete\Core\Foundation\EnvironmentDetector;
 use Concrete\Core\Foundation\Runtime\DefaultRuntime;
 use Concrete\Core\Foundation\Runtime\RuntimeInterface;
+use Concrete\Core\Http\DispatcherInterface;
 use Concrete\Core\Localization\Localization;
 use Concrete\Core\Logging\Query\Logger;
 use Concrete\Core\Routing\DispatcherRouteCallback;
@@ -92,6 +93,18 @@ class Application extends Container
             $env->clearOverrideCache();
         }
         exit;
+    }
+
+    /**
+     * @param \Concrete\Core\Http\Request $request
+     * @deprecated Use the dispatcher object to dispatch
+     */
+    public function dispatch(Request $request)
+    {
+        /** @var DispatcherInterface $dispatcher */
+        $dispatcher = $this->make(DispatcherInterface::class);
+
+        return $dispatcher->dispatch($request);
     }
 
     /**
@@ -416,15 +429,6 @@ class Application extends Container
 
             return $response;
         }
-    }
-
-    /**
-     * Inspects the request and determines what to serve.
-     */
-    public function dispatch(Request $request, Response $response)
-    {
-        $dispatcher = $this['dispatcher'];
-        $dispatcher->dispatch($request, $response);
     }
 
     /**

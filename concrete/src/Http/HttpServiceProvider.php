@@ -16,10 +16,6 @@ class HttpServiceProvider extends ServiceProvider
             $this->app->singleton($key, $value);
         }
 
-        $this->app->bind('Concrete\Core\Http\Request', function ($app) {
-            return Request::getInstance();
-        });
-
         $this->app->bind(DispatcherInterface::class, DefaultDispatcher::class);
         $this->app->singleton(ServerInterface::class, function($app) {
             $server = $app->build(DefaultServer::class);

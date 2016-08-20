@@ -1237,6 +1237,11 @@ return array(
 
     // HTTP middleware for processing http requests
     'middleware' => [
-        'core_cookie' => \Concrete\Core\Http\Middleware\CookieMiddleware::class
+        [
+            'priority' => 1,
+            'class' => \Concrete\Core\Http\Middleware\ApplicationMiddleware::class
+        ],
+        'core_cookie' => \Concrete\Core\Http\Middleware\CookieMiddleware::class,
+        'core_xframeoptions' => \Concrete\Core\Http\Middleware\FrameOptionsMiddleware::class
     ]
 );

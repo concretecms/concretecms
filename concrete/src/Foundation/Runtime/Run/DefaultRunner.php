@@ -18,17 +18,13 @@ class DefaultRunner implements RunInterface, ApplicationAwareInterface
     /** @var Repository */
     protected $config;
 
-    /** @var Request */
-    protected $request;
-
     /**
      * @var \Concrete\Core\Http\ServerInterface
      */
     private $server;
 
-    public function __construct(Request $request, ServerInterface $server)
+    public function __construct(ServerInterface $server)
     {
-        $this->request = $request;
         $this->server = $server;
     }
 
@@ -38,7 +34,6 @@ class DefaultRunner implements RunInterface, ApplicationAwareInterface
     public function run()
     {
         $app = $this->app;
-        $request = $this->request;
 
         include DIR_APPLICATION . '/bootstrap/app.php';
 
@@ -77,6 +72,7 @@ class DefaultRunner implements RunInterface, ApplicationAwareInterface
          */
         Events::dispatch('on_before_dispatch');
 
+        $request = Request::createFromGlobals();
         return $this->server->handleRequest($request);
     }
 

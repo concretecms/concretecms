@@ -3,8 +3,13 @@
 namespace Concrete\Core\Http\Middleware;
 
 use Concrete\Core\Config\Repository\Repository;
+use Concrete\Core\Http\Request;
 use Concrete\Core\Utility\Service\Validation\Strings;
 
+/**
+ * Middleware for applying frame options
+ * @package Concrete\Core\Http\Middleware
+ */
 class FrameOptionsMiddleware implements MiddlewareInterface
 {
 
@@ -31,7 +36,7 @@ class FrameOptionsMiddleware implements MiddlewareInterface
         if ($response->headers->has('X-Frame-Options') === false) {
             $x_frame_options = $this->config->get('concrete.security.misc.x_frame_options');
             if ($this->stringValidator->notempty($x_frame_options)) {
-                $this->headers->set('X-Frame-Options', $x_frame_options);
+                $response->headers->set('X-Frame-Options', $x_frame_options);
             }
         }
 
