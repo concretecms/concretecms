@@ -834,7 +834,6 @@ abstract class Package implements LocalizablePackageInterface
 
         $returnPaths = array();
         foreach($paths as $path) {
-            print $path;
             if (is_dir($path)) {
                 $returnPaths[] = $path;
             }
