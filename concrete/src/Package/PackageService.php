@@ -313,7 +313,7 @@ class PackageService
         if (count($additionalNamespaces) > 0) {
             $settings = array_merge($settings, $additionalNamespaces);
         }
-        
+
         return $settings;
     }
 
