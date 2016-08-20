@@ -18,9 +18,6 @@ class FileUsageTrackerTest extends \PHPUnit_Framework_TestCase
         $collection = $trackable->getUsedCollection();
 
         $nonTrackableBuilder = $this->getMockBuilder(BlockController::class);
-        $nonTrackableBuilder->setMethods([
-            'getBlockObject'
-        ]);
         $nonTrackableBuilder->disableProxyingToOriginalMethods();
         $nonTrackableBuilder->disableOriginalConstructor();
         $nonTrackableBlock = $nonTrackableBuilder->getMock();
