@@ -2,6 +2,8 @@
 
 namespace Concrete\Core\Http;
 
+use Concrete\Core\Http\Middleware\MiddlewareInterface;
+
 interface ServerInterface
 {
 
@@ -9,7 +11,7 @@ interface ServerInterface
      * Set the dispatcher this server uses.
      * A dispatcher is used to handle the final conversion from request to response
      * function ($request, $response) : Response;
-     * @param callable $dispatcher
+     * @param DispatcherInterface $dispatcher
      * @return self
      */
     public function setDispatcher(DispatcherInterface $dispatcher);
@@ -17,11 +19,11 @@ interface ServerInterface
     /**
      * Add a middlware callable to the stack
      * Middleware are callables that get an opportunity to do stuff with the request during handling.
-     * @param callable $middleware
+     * @param MiddlewareInterface $middleware
      * @param int $priority Lower priority runs first
      * @return self
      */
-    public function addMiddleware(callable $middleware, $priority = 10);
+    public function addMiddleware(MiddlewareInterface $middleware, $priority = 10);
 
     /**
      * Handle a request and return a response

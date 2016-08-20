@@ -1234,4 +1234,9 @@ return array(
         'verifyPeer' => true,
         'connectionTimeout' => 5,
     ),
+
+    // HTTP middleware for processing http requests
+    'middleware' => [
+        'core_cookie' => \Concrete\Core\Http\Middleware\CookieMiddleware::class
+    ]
 );

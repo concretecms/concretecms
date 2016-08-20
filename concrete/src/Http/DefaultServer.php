@@ -2,7 +2,9 @@
 
 namespace Concrete\Core\Http;
 
-class Server implements ServerInterface
+use Concrete\Core\Http\Middleware\MiddlewareInterface;
+
+class DefaultServer implements ServerInterface
 {
 
     /** @var array[] A list of lists of middlewares ordered by priority*/
@@ -37,11 +39,11 @@ class Server implements ServerInterface
     /**
      * Add a middlware callable to the stack
      * Middleware are callables that get an opportunity to do stuff with the request during handling.
-     * @param callable $middleware
+     * @param MiddlewareInterface $middleware
      * @param int $priority Lower priority runs first
      * @return self
      */
-    public function addMiddleware(callable $middleware, $priority = 10)
+    public function addMiddleware(MiddlewareInterface $middleware, $priority = 10)
     {
         if (!isset($this->middleware[$priority])) {
             $this->middleware[$priority] = [];
@@ -90,9 +92,9 @@ class Server implements ServerInterface
      */
     private function getZipper()
     {
-        return function($last, callable $middleware) {
+        return function($last, MiddlewareInterface $middleware) {
             return function($request) use ($last, $middleware) {
-                return $middleware($request, $last);
+                return $middleware->process($request, $last);
             };
         };
     }

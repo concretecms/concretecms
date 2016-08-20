@@ -21,6 +21,20 @@ class HttpServiceProvider extends ServiceProvider
         });
 
         $this->app->bind(DispatcherInterface::class, DefaultDispatcher::class);
-        $this->app->bind(ServerInterface::class, Server::class);
+        $this->app->singleton(ServerInterface::class, function($app) {
+            $server = $app->build(DefaultServer::class);
+
+            $config = $this->app['config'];
+            foreach ($config->get('app.middleware') as $middleware) {
+                if (is_array($middleware)) {
+                    $server->addMiddleware($app->make($middleware['class']), $middleware['priority']);
+                } else {
+                    $server->addMiddleware($app->make($middleware));
+                }
+            }
+
+            return $server;
+        });
     }
+
 }
