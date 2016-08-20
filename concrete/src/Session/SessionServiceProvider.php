@@ -20,7 +20,7 @@ class SessionServiceProvider extends ServiceProvider
 
         $app = $this->app;
 
-        if ($events = $this->app['director']) {
+        if ($this->app->bound('director')) {
             // Add an event listener that renews session
             $this->app['director']->addListener('on_before_render', function () use ($app) {
                 /** @var Session $session */
