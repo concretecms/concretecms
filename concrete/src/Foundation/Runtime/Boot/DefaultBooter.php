@@ -117,6 +117,7 @@ class DefaultBooter implements BootInterface, ApplicationAwareInterface
          * ----------------------------------------------------------------------------
          */
         $app->setupFilesystem();
+
         /*
          * ----------------------------------------------------------------------------
          * Registries for theme paths, assets, routes and file types.

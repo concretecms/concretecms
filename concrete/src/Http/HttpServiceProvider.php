@@ -19,5 +19,8 @@ class HttpServiceProvider extends ServiceProvider
         $this->app->bind('Concrete\Core\Http\Request', function ($app) {
             return Request::getInstance();
         });
+
+        $this->app->bind(DispatcherInterface::class, DefaultDispatcher::class);
+        $this->app->bind(ServerInterface::class, Server::class);
     }
 }
