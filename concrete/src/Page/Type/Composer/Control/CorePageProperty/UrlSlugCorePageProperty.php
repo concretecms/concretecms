@@ -22,6 +22,12 @@ class UrlSlugCorePageProperty extends CorePageProperty
 
     public function publishToPage(Page $c, $data, $controls)
     {
+        if (!is_array($data)) {
+            $data = [];
+        }
+        $data += [
+            'url_slug' => null,
+        ];
         $this->addPageTypeComposerControlRequestValue('cHandle', $data['url_slug']);
         parent::publishToPage($c, $data, $controls);
     }

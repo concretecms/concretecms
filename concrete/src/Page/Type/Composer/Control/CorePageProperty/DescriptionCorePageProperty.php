@@ -21,6 +21,12 @@ class DescriptionCorePageProperty extends CorePageProperty
 
     public function publishToPage(Page $c, $data, $controls)
     {
+        if (!is_array($data)) {
+            $data = [];
+        }
+        $data += [
+            'description' => null,
+        ];
         $this->addPageTypeComposerControlRequestValue('cDescription', $data['description']);
         parent::publishToPage($c, $data, $controls);
     }
