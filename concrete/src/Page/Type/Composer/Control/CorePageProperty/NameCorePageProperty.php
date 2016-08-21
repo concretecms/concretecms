@@ -23,6 +23,12 @@ class NameCorePageProperty extends CorePageProperty
 
     public function publishToPage(Page $c, $data, $controls)
     {
+        if (!is_array($data)) {
+            $data = [];
+        }
+        $data += [
+            'name' => null,
+        ];
         $slug = array_filter($controls, function ($item) {
             if ($item instanceof UrlSlugCorePageProperty) {
                 return true;
