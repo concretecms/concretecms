@@ -673,5 +673,10 @@ class StartingPointPackage extends BasePackage
         $pa->addListItem($adminGroupEntity);
         $pt = $pk->getPermissionAssignmentObject();
         $pt->assignPermissionAccess($pa);
+
+        try {
+            Core::make('helper/file')->makeExecutable(DIR_BASE_CORE.'/bin/concrete5', 'all');
+        } catch (\Exception $x) {
+        }
     }
 }

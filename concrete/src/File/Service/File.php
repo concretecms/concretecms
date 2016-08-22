@@ -5,6 +5,7 @@ use Concrete\Core\File\Exception\RequestTimeoutException;
 use Config;
 use Environment;
 use Core;
+use Exception;
 
 /**
  * File helper.
@@ -485,5 +486,43 @@ class File
         }
 
         return $same;
+    }
+
+    /**
+     * Try to set the executable bit of a file.
+     *
+     * @param string $file The full path.
+     * @param string $who One of 'user', 'group', 'all'
+     *
+     * @throws Exception Throws an exception in case of errors.
+     */
+    public function makeExecutable($file, $who = 'all')
+    {
+        if (!is_file($file)) {
+            throw new Exception(t('File %s could not be found.', $file));
+        }
+        $perms = @fileperms($file);
+        if ($perms === false) {
+            throw new Exception(t('Unable to retrieve the permissions of the file %s', $file));
+        }
+        $currentMode = $perms & 0777;
+        switch ($who) {
+            case 'user':
+                $newMode = $currentMode | (1 << 0);
+                break;
+            case 'group':
+                $newMode = $currentMode | (1 << 3);
+                break;
+            case 'all':
+                $newMode = $currentMode | (1 << 6);
+                break;
+            default:
+                throw new Exception(t('Bad parameter: %s', '$who'));
+        }
+        if ($currentMode !== $newMode) {
+            if (@chmod($file, $newMode) === false) {
+                throw new Exception(t('Unable to set the permissions of the file %s', $file));
+            }
+        }
     }
 }

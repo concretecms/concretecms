@@ -200,6 +200,10 @@ class Update
         foreach ($migrations as $migration) {
             $migration->execute('up');
         }
+        try {
+            $cms->make('helper/file')->makeExecutable(DIR_BASE_CORE.'/bin/concrete5', 'all');
+        } catch (\Exception $x) {
+        }
         Config::save('concrete.version_installed', Config::get('concrete.version'));
     }
 }
