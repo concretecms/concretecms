@@ -105,7 +105,7 @@ class Service
     {
         $factory = new Factory($this->config);
         $site = $factory->createEntity();
-        $site->setSiteHandle($this->config->get('concrete.sites.default.handle'));
+        $site->setSiteHandle($this->config->get('site.default.handle'));
         $site->setIsDefault(true);
         $site->setSiteHomePageID(HOME_CID);
 
