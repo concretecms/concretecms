@@ -1,6 +1,8 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
-$this->inc('elements/header.php'); ?>
+
+$this->inc('elements/header.php');
+?>
 
 <main>
     <?php
@@ -8,6 +10,7 @@ $this->inc('elements/header.php'); ?>
     $a->enableGridContainer();
     $a->display($c);
     ?>
+
     <div class="container">
         <div class="row">
             <div class="col-md-3 col-sidebar">
@@ -31,7 +34,7 @@ $this->inc('elements/header.php'); ?>
     $a->enableGridContainer();
     $a->display($c);
     ?>
-
 </main>
 
-<?php  $this->inc('elements/footer.php'); ?>
+<?php
+$this->inc('elements/footer.php');
