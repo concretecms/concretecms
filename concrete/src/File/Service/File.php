@@ -5,6 +5,7 @@ use Concrete\Core\File\Exception\RequestTimeoutException;
 use Config;
 use Environment;
 use Core;
+use Exception;
 
 /**
  * File helper.
@@ -41,7 +42,7 @@ class File
      *
      * @see \Concrete\Core\Foundation\Environment::getDirectoryContents()
      */
-    public function getDirectoryContents($dir, $ignoreFilesArray = array(), $recursive = false)
+    public function getDirectoryContents($dir, $ignoreFilesArray = [], $recursive = false)
     {
         $env = Environment::get();
 
@@ -386,7 +387,7 @@ class File
         // Let's build an ASCII-only version of name, to avoid filesystem-specific encoding issues.
         $asciiName = Core::make('helper/text')->asciify($file);
         // Let's keep only letters, numbers, underscore and dots.
-        $asciiName = trim(preg_replace(array("/[\\s]/", "/[^0-9A-Z_a-z-.]/"), array("_", ""), $asciiName));
+        $asciiName = trim(preg_replace(["/[\\s]/", "/[^0-9A-Z_a-z-.]/"], ["_", ""], $asciiName));
         // Trim underscores at start and end
         $asciiName = trim($asciiName, '_');
         if (!strlen(str_replace('.', '', $asciiName))) {
@@ -410,7 +411,7 @@ class File
      */
     public function splitFilename($filename)
     {
-        $result = array('', '', '');
+        $result = ['', '', ''];
         if (is_string($filename)) {
             $result[1] = $filename;
             $slashAt = strrpos(str_replace('\\', '/', $result[1]), '/');
@@ -485,5 +486,43 @@ class File
         }
 
         return $same;
+    }
+
+    /**
+     * Try to set the executable bit of a file.
+     *
+     * @param string $file The full path.
+     * @param string $who One of 'user', 'group', 'all'
+     *
+     * @throws Exception Throws an exception in case of errors.
+     */
+    public function makeExecutable($file, $who = 'all')
+    {
+        if (!is_file($file)) {
+            throw new Exception(t('File %s could not be found.', $file));
+        }
+        $perms = @fileperms($file);
+        if ($perms === false) {
+            throw new Exception(t('Unable to retrieve the permissions of the file %s', $file));
+        }
+        $currentMode = $perms & 0777;
+        switch ($who) {
+            case 'user':
+                $newMode = $currentMode | (1 << 0);
+                break;
+            case 'group':
+                $newMode = $currentMode | (1 << 3);
+                break;
+            case 'all':
+                $newMode = $currentMode | (1 << 6);
+                break;
+            default:
+                throw new Exception(t('Bad parameter: %s', '$who'));
+        }
+        if ($currentMode !== $newMode) {
+            if (@chmod($file, $newMode) === false) {
+                throw new Exception(t('Unable to set the permissions of the file %s', $file));
+            }
+        }
     }
 }

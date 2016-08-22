@@ -2,25 +2,16 @@
 namespace Concrete\Core\Package;
 
 use AuthenticationType;
-use Concrete\Core\Application\Application;
 use Concrete\Core\Backup\ContentImporter;
 use Concrete\Core\Config\Renderer;
 use Concrete\Core\Database\DatabaseStructureManager;
-use Concrete\Core\Entity\Notification\Type\CoreUpdateType;
-use Concrete\Core\Entity\Notification\Type\NewConversationMessageType;
-use Concrete\Core\Entity\Notification\Type\NewFormSubmissionType;
-use Concrete\Core\Entity\Notification\Type\NewPrivateMessageType;
-use Concrete\Core\Entity\Notification\Type\UserSignupType;
-use Concrete\Core\Entity\Notification\Type\WorkflowProgressType;
 use Concrete\Core\File\Filesystem;
 use Concrete\Core\File\Service\File;
 use Concrete\Core\Mail\Importer\MailImporter;
 use Concrete\Core\Package\Routine\AttachModeInstallRoutine;
 use Concrete\Core\Permission\Access\Entity\ConversationMessageAuthorEntity;
 use Concrete\Core\Permission\Access\Entity\GroupEntity as GroupPermissionAccessEntity;
-use Concrete\Core\Permission\Access\Entity\PageOwnerEntity as PageOwnerPermissionAccessEntity;
 use Concrete\Core\Permission\Access\Entity\UserEntity;
-use Concrete\Core\Site\Service;
 use Concrete\Core\Tree\Node\Type\Category;
 use Concrete\Core\Tree\Node\Type\ExpressEntryCategory;
 use Concrete\Core\Tree\Type\ExpressEntryResults;
@@ -32,7 +23,6 @@ use Core;
 use Database;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\Setup;
-use FileSet;
 use Group;
 use GroupTree;
 use Hautelook\Phpass\PasswordHash;
@@ -50,11 +40,11 @@ class StartingPointPackage extends BasePackage
     protected $REL_DIR_PACKAGES_CORE = REL_DIR_STARTING_POINT_PACKAGES_CORE;
     protected $REL_DIR_PACKAGES = REL_DIR_STARTING_POINT_PACKAGES;
 
-    protected $routines = array();
+    protected $routines = [];
 
     public function __construct()
     {
-        $this->routines = array(
+        $this->routines = [
             new StartingPointInstallRoutine(
                 'make_directories',
                 5,
@@ -83,7 +73,7 @@ class StartingPointPackage extends BasePackage
             new StartingPointInstallRoutine('install_desktops', 85, t('Adding desktops.')),
             new StartingPointInstallRoutine('install_site_permissions', 90, t('Setting site permissions.')),
             new AttachModeInstallRoutine('finish', 95, t('Finishing.')),
-        );
+        ];
     }
 
     // default routines
@@ -105,14 +95,14 @@ class StartingPointPackage extends BasePackage
     {
         $fh = Core::make('helper/file');
         // first we check the root install directory. If it exists, then we only include stuff from there. Otherwise we get it from the core.
-        $available = array();
+        $available = [];
         if (is_dir(DIR_STARTING_POINT_PACKAGES)) {
             $available = $fh->getDirectoryContents(DIR_STARTING_POINT_PACKAGES);
         }
         if (count($available) == 0) {
             $available = $fh->getDirectoryContents(DIR_STARTING_POINT_PACKAGES_CORE);
         }
-        $availableList = array();
+        $availableList = [];
         foreach ($available as $pkgHandle) {
             $cl = static::getClass($pkgHandle);
             if ($cl !== null) {
@@ -417,11 +407,11 @@ class StartingPointPackage extends BasePackage
         $superuser = UserInfo::addSuperUser($uPasswordEncrypted, $uEmail);
         $u = User::getByUserID(USER_SUPER_ID, true, false);
 
-        MailImporter::add(array('miHandle' => 'private_message'));
+        MailImporter::add(['miHandle' => 'private_message']);
         UserPointAction::add('won_badge', t('Won a Badge'), 5, false, true);
 
         // Install conversation default email
-        \Conversation::setDefaultSubscribedUsers(array($superuser));
+        \Conversation::setDefaultSubscribedUsers([$superuser]);
     }
 
     public function make_directories()
@@ -506,10 +496,10 @@ class StartingPointPackage extends BasePackage
 
         $filesystem = new Filesystem();
         $folder = $filesystem->getRootFolder();
-        $folder->assignPermissions($g1, array('view_file_folder_file'));
+        $folder->assignPermissions($g1, ['view_file_folder_file']);
         $folder->assignPermissions(
             $g3,
-            array(
+            [
                 'view_file_folder_file',
                 'search_file_folder',
                 'edit_file_folder',
@@ -520,17 +510,17 @@ class StartingPointPackage extends BasePackage
                 'delete_file_folder_files',
                 'delete_file_folder',
                 'add_file',
-            )
+            ]
         );
 
         $u = new User();
         $u->saveConfig('NEWSFLOW_LAST_VIEWED', 'FIRSTRUN');
 
         $home = Page::getByID(1, "RECENT");
-        $home->assignPermissions($g1, array('view_page'));
+        $home->assignPermissions($g1, ['view_page']);
         $home->assignPermissions(
             $g3,
-            array(
+            [
                 'view_page_versions',
                 'view_page_in_sitemap',
                 'preview_page_as_user',
@@ -548,26 +538,26 @@ class StartingPointPackage extends BasePackage
                 'add_subpage',
                 'move_or_copy_page',
                 'schedule_page_contents_guest_access',
-            )
+            ]
         );
 
         // login
         $login = Page::getByPath('/login', "RECENT");
-        $login->assignPermissions($g1, array('view_page'));
+        $login->assignPermissions($g1, ['view_page']);
 
         // register
         $register = Page::getByPath('/register', "RECENT");
-        $register->assignPermissions($g1, array('view_page'));
+        $register->assignPermissions($g1, ['view_page']);
 
         // dashboard
         $dashboard = Page::getByPath('/dashboard', "RECENT");
-        $dashboard->assignPermissions($g3, array('view_page'));
+        $dashboard->assignPermissions($g3, ['view_page']);
 
         // drafts
         $drafts = Page::getByPath('/!drafts', "RECENT");
         $drafts->assignPermissions(
             $g3,
-            array(
+            [
                 'view_page',
                 'view_page_versions',
                 'view_page_in_sitemap',
@@ -586,7 +576,7 @@ class StartingPointPackage extends BasePackage
                 'add_subpage',
                 'move_or_copy_page',
                 'schedule_page_contents_guest_access',
-            )
+            ]
         );
 
         $config = \Core::make('config/database');
@@ -597,13 +587,13 @@ class StartingPointPackage extends BasePackage
         // group permissions
         $tree = GroupTree::get();
         $node = $tree->getRootTreeNodeObject();
-        $permissions = array(
+        $permissions = [
             'search_users_in_group',
             'edit_group',
             'assign_group',
             'add_sub_group',
             'edit_group_permissions',
-        );
+        ];
         $adminGroupEntity = GroupPermissionAccessEntity::getOrCreate($g3);
         foreach ($permissions as $pkHandle) {
             $pk = PermissionKey::getByHandle($pkHandle);
@@ -652,11 +642,11 @@ class StartingPointPackage extends BasePackage
         $pt = $pk->getPermissionAssignmentObject();
         $pt->assignPermissionAccess($pa);
 
-        $permissions = array(
+        $permissions = [
             'edit_conversation_permissions',
             'flag_conversation_message',
             'approve_conversation_message',
-        );
+        ];
         foreach ($permissions as $pkHandle) {
             $pk = PermissionKey::getByHandle($pkHandle);
             $pa = PermissionAccess::create($pk);
@@ -673,5 +663,10 @@ class StartingPointPackage extends BasePackage
         $pa->addListItem($adminGroupEntity);
         $pt = $pk->getPermissionAssignmentObject();
         $pt->assignPermissionAccess($pa);
+
+        try {
+            Core::make('helper/file')->makeExecutable(DIR_BASE_CORE.'/bin/concrete5', 'all');
+        } catch (\Exception $x) {
+        }
     }
 }
