@@ -26,10 +26,19 @@ class StandardAvatar implements AvatarInterface
         return $src;
     }
 
+    protected function getAlt()
+    {
+        return $this->userInfo->getUserName();
+    }
+
     public function output()
     {
         $img = new Image();
-        $img->src($this->getPath())->class('u-avatar')->alt($this->userInfo->getUserName());
+        $img->src($this->getPath())->class('u-avatar');
+        $alt = $this->getAlt();
+        if ($alt !== '') {
+            $img->alt($alt);
+        }
 
         return (string) $img;
     }
