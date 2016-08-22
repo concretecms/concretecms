@@ -7,6 +7,8 @@
  */
 namespace Concrete\Tests\Core\User;
 
+use Concrete\Core\Conversation\Message\Author;
+use Concrete\Core\Conversation\Message\AuthorFormatter;
 use Concrete\Core\File\StorageLocation\StorageLocation;
 use Concrete\Core\File\StorageLocation\Type\Type;
 use Core;
@@ -121,6 +123,20 @@ class UserTest extends \UserTestCase
         // I KNOW I KNOW This is lame
         $ui = Core::make('Concrete\Core\User\UserInfoRepository')->getByID(1);
         $this->assertFalse($ui->hasAvatar());
+    }
+
+    public function testEmptyAvatar()
+    {
+        $author = new Author();
+        $author->setName('Andrew');
+
+        $formatter = new AuthorFormatter($author);
+        $avatar = $formatter->getAvatar();
+
+        $this->assertEquals(
+            '<img src="/path/to/server/concrete/images/avatar_none.png" alt="Andrew" class="u-avatar">',
+            $avatar
+        );
     }
 
     public function testPublicProfileLink()
