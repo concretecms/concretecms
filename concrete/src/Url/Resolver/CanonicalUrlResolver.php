@@ -72,7 +72,7 @@ class CanonicalUrlResolver implements UrlResolverInterface
                 $canonical_ssl = UrlImmutable::createFromUrl($config->get('seo.canonical_ssl_url'), $trailing_slashes);
             }
 
-            $url = $url->setHost($canonical->getHost());
+            $url->setHost($canonical->getHost());
 
             // If the request is over https
             if (strtolower($this->request->getScheme()) == 'https') {
