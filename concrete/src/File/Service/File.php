@@ -42,7 +42,7 @@ class File
      *
      * @see \Concrete\Core\Foundation\Environment::getDirectoryContents()
      */
-    public function getDirectoryContents($dir, $ignoreFilesArray = array(), $recursive = false)
+    public function getDirectoryContents($dir, $ignoreFilesArray = [], $recursive = false)
     {
         $env = Environment::get();
 
@@ -387,7 +387,7 @@ class File
         // Let's build an ASCII-only version of name, to avoid filesystem-specific encoding issues.
         $asciiName = Core::make('helper/text')->asciify($file);
         // Let's keep only letters, numbers, underscore and dots.
-        $asciiName = trim(preg_replace(array("/[\\s]/", "/[^0-9A-Z_a-z-.]/"), array("_", ""), $asciiName));
+        $asciiName = trim(preg_replace(["/[\\s]/", "/[^0-9A-Z_a-z-.]/"], ["_", ""], $asciiName));
         // Trim underscores at start and end
         $asciiName = trim($asciiName, '_');
         if (!strlen(str_replace('.', '', $asciiName))) {
@@ -411,7 +411,7 @@ class File
      */
     public function splitFilename($filename)
     {
-        $result = array('', '', '');
+        $result = ['', '', ''];
         if (is_string($filename)) {
             $result[1] = $filename;
             $slashAt = strrpos(str_replace('\\', '/', $result[1]), '/');
