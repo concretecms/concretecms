@@ -31,7 +31,7 @@ if (!$akSelectAllowMultipleValues && !$akSelectAllowOtherValues) {
         $options[$option->getSelectAttributeOptionID()] = $option->getSelectAttributeOptionDisplayValue();
     }
     ?>
-	<?=$form->select($view->field('atSelectOptionValue'), $options, $selectedOptionIDs[0]);
+	<?=$form->select($view->field('atSelectOptionValue'), $options, empty($selectedOptionIDs) ? '' : $selectedOptionIDs[0]);
     ?>
 
 
