@@ -31,10 +31,10 @@ class FrameOptionsMiddleware implements MiddlewareInterface
 
     /**
      * @param \Concrete\Core\Http\Request $request
-     * @param \Concrete\Core\Http\Middleware\FrameInterface $frame
+     * @param \Concrete\Core\Http\Middleware\DelegateInterface $frame
      * @return Response
      */
-    public function process(Request $request, FrameInterface $frame)
+    public function process(Request $request, DelegateInterface $frame)
     {
         $response = $frame->next($request);
 

@@ -4,6 +4,7 @@ namespace Concrete\Core\Http;
 
 use Concrete\Core\Application\ApplicationAwareInterface;
 use Concrete\Core\Application\ApplicationAwareTrait;
+use Concrete\Core\Http\Middleware\DispatcherDelegate;
 use Concrete\Core\Http\Middleware\DispatcherFrame;
 use Concrete\Core\Http\Middleware\MiddlewareInterface;
 use Concrete\Core\Http\Middleware\MiddlewareStack;
@@ -76,7 +77,7 @@ class DefaultServer implements ServerInterface, ApplicationAwareInterface
     {
         $stack = $this->stack;
         if ($stack instanceof MiddlewareStack) {
-            $stack = $stack->withDispatcher($this->app->make(DispatcherFrame::class, [$this->dispatcher]));
+            $stack = $stack->withDispatcher($this->app->make(DispatcherDelegate::class, [$this->dispatcher]));
         }
 
         return $stack->process($request);

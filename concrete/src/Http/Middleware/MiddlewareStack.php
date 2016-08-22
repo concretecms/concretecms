@@ -4,9 +4,14 @@ namespace Concrete\Core\Http\Middleware;
 
 use Concrete\Core\Application\ApplicationAwareInterface;
 use Concrete\Core\Application\ApplicationAwareTrait;
+use Concrete\Core\Http\DispatcherInterface;
 use Concrete\Core\Http\MiddlewareFrame;
 use Concrete\Core\Http\Request;
 
+/**
+ * The default stack used to keep track of middleware and process requests
+ * @package Concrete\Core\Http\Middleware
+ */
 final class MiddlewareStack implements StackInterface, ApplicationAwareInterface
 {
 
@@ -24,17 +29,17 @@ final class MiddlewareStack implements StackInterface, ApplicationAwareInterface
      * MiddlewareStack constructor.
      * Dispat
      */
-    public function __construct(FrameInterface $dispatcher = null)
+    public function __construct(DelegateInterface $dispatcher = null)
     {
         $this->dispatcher = $dispatcher;
     }
 
     /**
      * Get a stack with the given dispatcher
-     * @param \Concrete\Core\Http\Middleware\DispatcherFrame $dispatcher
+     * @param \Concrete\Core\Http\Middleware\DelegateInterface $dispatcher
      * @return self
      */
-    public function withDispatcher(DispatcherFrame $dispatcher)
+    public function withDispatcher(DelegateInterface $dispatcher)
     {
         $stack = clone $this;
 
@@ -101,14 +106,14 @@ final class MiddlewareStack implements StackInterface, ApplicationAwareInterface
 
     /**
      * Get the function used to zip up the middleware
-     * This function runs as part of the array_reduce routine and returns a function that facilitates the middleware flow
+     * This function runs as part of the array_reduce routine and reduces the list of middlewares into a single delegate
      * @return callable
      */
     private function getZipper()
     {
         $app = $this->app;
         return function($last, MiddlewareInterface $middleware) use ($app) {
-            return $app->make(FrameInterface::class, [$middleware, $last]);
+            return $app->make(DelegateInterface::class, [$middleware, $last]);
         };
     }
 

@@ -26,10 +26,10 @@ class CookieMiddleware implements MiddlewareInterface
     /**
      * Add or remove cookies from the
      * @param \Concrete\Core\Http\Request $request
-     * @param \Concrete\Core\Http\Middleware\FrameInterface $frame
+     * @param \Concrete\Core\Http\Middleware\DelegateInterface $frame
      * @return \Concrete\Core\Http\Response
      */
-    public function process(Request $request, FrameInterface $frame)
+    public function process(Request $request, DelegateInterface $frame)
     {
         $this->cookies->setRequest($request);
 

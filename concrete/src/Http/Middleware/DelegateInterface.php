@@ -5,7 +5,7 @@ namespace Concrete\Core\Http\Middleware;
 use Concrete\Core\Http\Request;
 use Concrete\Core\Http\Response;
 
-interface FrameInterface
+interface DelegateInterface
 {
 
     /**

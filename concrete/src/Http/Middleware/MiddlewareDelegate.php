@@ -4,7 +4,11 @@ namespace Concrete\Core\Http\Middleware;
 
 use Concrete\Core\Http\Request;
 
-final class MiddlewareFrame implements FrameInterface
+/**
+ * A middleware delegate for running the next delegate
+ * @package Concrete\Core\Http
+ */
+final class MiddlewareDelegate implements DelegateInterface
 {
 
     /**
@@ -13,14 +17,14 @@ final class MiddlewareFrame implements FrameInterface
     private $middleware;
 
     /**
-     * @var \Concrete\Core\Http\Middleware\FrameInterface
+     * @var \Concrete\Core\Http\Middleware\DelegateInterface
      */
-    private $lastFrame;
+    private $nextDelegate;
 
-    public function __construct(MiddlewareInterface $middleware, FrameInterface $lastFrame)
+    public function __construct(MiddlewareInterface $middleware, DelegateInterface $nextDelegate)
     {
         $this->middleware = $middleware;
-        $this->lastFrame = $lastFrame;
+        $this->nextDelegate = $nextDelegate;
     }
 
     /**
@@ -31,7 +35,7 @@ final class MiddlewareFrame implements FrameInterface
      */
     public function next(Request $request)
     {
-        return $this->middleware->process($request, $this->lastFrame);
+        return $this->middleware->process($request, $this->nextDelegate);
     }
 
 }

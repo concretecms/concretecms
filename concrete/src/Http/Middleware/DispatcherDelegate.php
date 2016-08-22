@@ -6,7 +6,12 @@ use Concrete\Core\Http\DispatcherInterface;
 use Concrete\Core\Http\Request;
 use Concrete\Core\Http\Response;
 
-class DispatcherFrame implements FrameInterface
+/**
+ * A middleware delegate for dispatching a request and returning a response.
+ * This is typically the last delegate in the stack in order to actually create the response.
+ * @package Concrete\Core\Http
+ */
+class DispatcherDelegate implements DelegateInterface
 {
 
     /**

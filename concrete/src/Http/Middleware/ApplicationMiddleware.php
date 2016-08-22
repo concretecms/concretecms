@@ -15,7 +15,7 @@ class ApplicationMiddleware implements MiddlewareInterface, ApplicationAwareInte
 
     use ApplicationAwareTrait;
 
-    public function process(Request $request, FrameInterface $frame)
+    public function process(Request $request, DelegateInterface $frame)
     {
         Request::setInstance($request);
         $this->app->instance('Concrete\Core\Http\Request', $request);

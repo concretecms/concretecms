@@ -2,8 +2,8 @@
 namespace Concrete\Core\Http;
 
 use Concrete\Core\Foundation\Service\Provider as ServiceProvider;
-use Concrete\Core\Http\Middleware\FrameInterface;
-use Concrete\Core\Http\Middleware\MiddlewareFrame;
+use Concrete\Core\Http\Middleware\DelegateInterface;
+use Concrete\Core\Http\Middleware\MiddlewareDelegate;
 use Concrete\Core\Http\Middleware\MiddlewareStack;
 use Concrete\Core\Http\Middleware\StackInterface;
 
@@ -25,7 +25,7 @@ class HttpServiceProvider extends ServiceProvider
         });
 
         $this->app->bind(StackInterface::class, MiddlewareStack::class);
-        $this->app->bind(FrameInterface::class, MiddlewareFrame::class);
+        $this->app->bind(DelegateInterface::class, MiddlewareDelegate::class);
         $this->app->bind(DispatcherInterface::class, DefaultDispatcher::class);
         $this->app->singleton(ServerInterface::class, function($app) {
             $server = $app->build(DefaultServer::class);
