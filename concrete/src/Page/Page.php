@@ -2882,6 +2882,8 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
 
         if (isset($data['cName'])) {
             $data['name'] = $data['cName'];
+        } elseif (!isset($data['name'])) {
+            $data['name'] = '';
         }
 
         if (!$data['cHandle']) {

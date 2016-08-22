@@ -22,6 +22,12 @@ class UserCorePageProperty extends CorePageProperty
 
     public function publishToPage(Page $c, $data, $controls)
     {
+        if (!is_array($data)) {
+            $data = [];
+        }
+        $data += [
+            'user' => null,
+        ];
         if (Core::make('helper/validation/numbers')->integer($data['user'])) {
             $this->addPageTypeComposerControlRequestValue('uID', $data['user']);
         }
