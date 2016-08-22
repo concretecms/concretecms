@@ -40,7 +40,7 @@ class Manager implements ManagerInterface
 
     public function getFieldsFromRequest(array $request)
     {
-        $keys = $request['field'];
+        $keys = isset($request['field']) ? $request['field'] : null;
         $fields = array();
         if (is_array($keys)) {
             foreach($this->groups as $group) {
