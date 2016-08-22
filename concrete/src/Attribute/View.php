@@ -133,12 +133,10 @@ class View extends AbstractView
 
     protected function onBeforeGetContents()
     {
-        @Loader::element(DIRNAME_ATTRIBUTES . '/' . $view . '_header', array('type' => $this->attributeType));
     }
 
     protected function onAfterGetContents()
     {
-        @Loader::element(DIRNAME_ATTRIBUTES . '/' . $view . '_footer', array('type' => $this->attributeType));
     }
 
     public function field($fieldName)

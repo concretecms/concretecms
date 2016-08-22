@@ -14,7 +14,9 @@ if ($message->isConversationMessageDeleted()) {
     $class .= ' ccm-conversation-message-deleted';
 }
 
-if ($dateFormat == 'custom' && $customDateFormat) {
+if (!isset($dateFormat)) {
+    $dateFormat = 'default';
+} elseif ($dateFormat == 'custom' && $customDateFormat) {
     $dateFormat = array($customDateFormat);
 }
 if (!$message->isConversationMessageApproved()) {
@@ -22,7 +24,7 @@ if (!$message->isConversationMessageApproved()) {
 }
 $cnvMessageID = $message->getConversationMessageID();
 $cnvID = $message->getConversationID();
-$c = Page::getByID($_REQUEST['cID']);
+$c = Page::getByID(\Request::request('cID'));
 $cnvMessageURL = urlencode($c->getCollectionLink(true) . '#cnv' . $cnvID . 'Message' . $cnvMessageID);
 
 if ((!$message->isConversationMessageDeleted() && $message->isConversationMessageApproved()) || $message->conversationMessageHasActiveChildren()) {
