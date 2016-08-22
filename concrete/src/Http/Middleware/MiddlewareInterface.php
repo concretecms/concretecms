@@ -11,9 +11,9 @@ interface MiddlewareInterface
     /**
      * Process the request and return a response
      * @param \Concrete\Core\Http\Request $request The request object
-     * @param callable $next The function that returns the response function(Request $request) : Response;
+     * @param FrameInterface $frame
      * @return Response
      */
-    public function process(Request $request, callable $next);
+    public function process(Request $request, FrameInterface $frame);
 
 }

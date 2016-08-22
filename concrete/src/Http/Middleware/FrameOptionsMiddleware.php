@@ -29,9 +29,14 @@ class FrameOptionsMiddleware implements MiddlewareInterface
         $this->stringValidator = $stringValidator;
     }
 
-    public function process(Request $request, callable $next)
+    /**
+     * @param \Concrete\Core\Http\Request $request
+     * @param \Concrete\Core\Http\Middleware\FrameInterface $frame
+     * @return Response
+     */
+    public function process(Request $request, FrameInterface $frame)
     {
-        $response = $next($request);
+        $response = $frame->next($request);
 
         if ($response->headers->has('X-Frame-Options') === false) {
             $x_frame_options = $this->config->get('concrete.security.misc.x_frame_options');

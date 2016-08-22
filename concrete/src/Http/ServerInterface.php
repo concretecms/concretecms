@@ -26,6 +26,13 @@ interface ServerInterface
     public function addMiddleware(MiddlewareInterface $middleware, $priority = 10);
 
     /**
+     * Remove a middleware
+     * @param MiddlewareInterface $middleware
+     * @return self
+     */
+    public function removeMiddleware(MiddlewareInterface $middleware);
+
+    /**
      * Handle a request and return a response
      * @param \Concrete\Core\Http\Request $request
      * @return Response

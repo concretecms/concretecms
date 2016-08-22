@@ -2,24 +2,32 @@
 
 namespace Concrete\Core\Http;
 
+use Concrete\Core\Application\ApplicationAwareInterface;
+use Concrete\Core\Application\ApplicationAwareTrait;
+use Concrete\Core\Http\Middleware\DispatcherFrame;
 use Concrete\Core\Http\Middleware\MiddlewareInterface;
+use Concrete\Core\Http\Middleware\MiddlewareStack;
+use Concrete\Core\Http\Middleware\StackInterface;
 
-class DefaultServer implements ServerInterface
+class DefaultServer implements ServerInterface, ApplicationAwareInterface
 {
 
-    /** @var array[] A list of lists of middlewares ordered by priority*/
-    protected $middleware = [];
+    use ApplicationAwareTrait;
 
     /** @var callable */
     protected $dispatcher;
 
+    /** @var StackInterface */
+    protected $stack;
+
     /**
      * Server constructor.
      * @param DispatcherInterface $dispatcher
-     * @param array $middleware
+     * @param StackInterface $stack
      */
-    public function __construct(DispatcherInterface $dispatcher, array $middleware=[])
+    public function __construct(DispatcherInterface $dispatcher, StackInterface $stack)
     {
+        $this->stack = $stack;
         $this->dispatcher = $dispatcher;
     }
 
@@ -37,82 +45,41 @@ class DefaultServer implements ServerInterface
     }
 
     /**
-     * Add a middlware callable to the stack
-     * Middleware are callables that get an opportunity to do stuff with the request during handling.
-     * @param MiddlewareInterface $middleware
-     * @param int $priority Lower priority runs first
+     * Add a middleware to the stack
+     * @param \Concrete\Core\Http\Middleware\MiddlewareInterface $middleware
+     * @param int $priority
      * @return self
      */
     public function addMiddleware(MiddlewareInterface $middleware, $priority = 10)
     {
-        if (!isset($this->middleware[$priority])) {
-            $this->middleware[$priority] = [];
-        }
-
-        $this->middleware[$priority][] = $middleware;
+        $this->stack = $this->stack->withMiddleware($middleware, $priority);
         return $this;
     }
 
     /**
-     * Handle a request and return a response
+     * Remove a middleware from the stack
+     * @param \Concrete\Core\Http\Middleware\MiddlewareInterface $middleware
+     * @return self
+     */
+    public function removeMiddleware(MiddlewareInterface $middleware)
+    {
+        $this->stack = $this->stack->withoutMiddleware($middleware);
+        return $this;
+    }
+
+    /**
+     * Take a request and pass it through middleware, then return the response
      * @param \Concrete\Core\Http\Request $request
      * @return Response
      */
     public function handleRequest(Request $request)
     {
-        $stack = $this->getStack();
-        return $stack($request);
-    }
-
-    /**
-     * Reduce middleware into a stack of functions that each call the next
-     * @return callable
-     */
-    private function getStack()
-    {
-        $processed = [];
-
-        foreach ($this->middlewareGenerator() as $middleware) {
-            $processed[] = $middleware;
+        $stack = $this->stack;
+        if ($stack instanceof MiddlewareStack) {
+            $stack = $stack->withDispatcher($this->app->make(DispatcherFrame::class, [$this->dispatcher]));
         }
 
-        $middleware = array_reverse($processed);
-        $dispatcher = $this->dispatcher;
-        $stack = array_reduce($middleware, $this->getZipper(), function($request) use ($dispatcher) {
-            return $dispatcher->dispatch($request);
-        });
-
-        return $stack;
-    }
-
-    /**
-     * Get the function used to zip up the middleware
-     * This function runs as part of the array_reduce routine and returns a function that facilitates the middleware flow
-     * @return callable
-     */
-    private function getZipper()
-    {
-        return function($last, MiddlewareInterface $middleware) {
-            return function($request) use ($last, $middleware) {
-                return $middleware->process($request, $last);
-            };
-        };
-    }
-
-    /**
-     * Get a generator that converts the stored priority array into a sorted flat list
-     * @return \Generator
-     */
-    private function middlewareGenerator()
-    {
-        $middlewares = $this->middleware;
-        ksort($middlewares);
-
-        foreach ($middlewares as $priorityGroup) {
-            foreach ($priorityGroup as $middleware) {
-                yield $middleware;
-            }
-        }
+        return $stack->process($request);
     }
 
 }
