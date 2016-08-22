@@ -54,7 +54,7 @@ class CanonicalUrlResolver implements UrlResolverInterface
         }
 
         // Determine trailing slash setting
-        $trailing_slashes = $config->get('seo.trailing_slash') ? Url::TRAILING_SLASHES_ENABLED : Url::TRAILING_SLASHES_DISABLED;
+        $trailing_slashes = $config && $config->get('seo.trailing_slash') ? Url::TRAILING_SLASHES_ENABLED : Url::TRAILING_SLASHES_DISABLED;
 
         $url = UrlImmutable::createFromUrl('', $trailing_slashes);
 
