@@ -1,8 +1,8 @@
 <?php defined('C5_EXECUTE') or die("Access Denied."); ?>
 
 <div
-    <?php if ($link) { ?>data-link="<?=$link?>"<?php } ?>
-    class="<?php if ($link) { ?>ccm-block-desktop-latest-form-linked<?php } ?> ccm-block-desktop-latest-form">
+    <?php if (isset($link) && $link) { ?>data-link="<?=$link?>"<?php } ?>
+    class="<?php if (isset($link) && $link) { ?>ccm-block-desktop-latest-form-linked<?php } ?> ccm-block-desktop-latest-form">
 
     <div class="ccm-block-desktop-latest-form-inner">
         <div class="ccm-block-desktop-latest-form-icon">
@@ -11,7 +11,7 @@
 
         <h3><?=t('Latest Form')?></h3>
 
-        <?php if ($formName) { ?>
+        <?php if (isset($formName) && $formName) { ?>
 
             <span class="ccm-block-desktop-latest-form-name"><?=$formName?></span>
             <span class="ccm-block-desktop-latest-form-date"><?=$date?></span>
