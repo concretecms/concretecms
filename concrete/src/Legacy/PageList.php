@@ -483,6 +483,8 @@ class PageList extends DatabaseItemList
         if ($this->isIndexedSearch()) {
             $db = Loader::db();
             $ik = ', match(psi.cName, psi.cDescription, psi.content) against (' . $db->quote($this->indexedKeywords) . ') as cIndexScore ';
+        } else {
+            $ik = null;
         }
 
         if (!$this->includeAliases) {
