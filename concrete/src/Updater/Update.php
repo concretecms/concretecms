@@ -148,7 +148,7 @@ class Update
     public function getLocalAvailableUpdates()
     {
         $fh = Core::make('helper/file');
-        $updates = array();
+        $updates = [];
         $contents = @$fh->getDirectoryContents(DIR_CORE_UPDATES);
         foreach ($contents as $con) {
             if (is_dir(DIR_CORE_UPDATES . '/' . $con)) {
@@ -171,13 +171,14 @@ class Update
     }
 
     /**
-     * Checks migrations to see if the current code DB version is greater than that registered in the database
+     * Checks migrations to see if the current code DB version is greater than that registered in the database.
      */
     public static function isCurrentVersionNewerThanDatabaseVersion()
     {
         $db = \Database::get();
         $database = $db->GetOne('select max(version) from SystemDatabaseMigrations');
         $code = Config::get('concrete.version_db');
+
         return $database < $code;
     }
 
@@ -199,6 +200,10 @@ class Update
         $migrations = $configuration->getMigrationsToExecute('up', $configuration->getLatestVersion());
         foreach ($migrations as $migration) {
             $migration->execute('up');
+        }
+        try {
+            $cms->make('helper/file')->makeExecutable(DIR_BASE_CORE.'/bin/concrete5', 'all');
+        } catch (\Exception $x) {
         }
         Config::save('concrete.version_installed', Config::get('concrete.version'));
     }
