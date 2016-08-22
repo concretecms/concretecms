@@ -24,12 +24,6 @@ $sh = Loader::helper('concrete/dashboard/sitemap');
 		});
 	</script>
 
-	<style type="text/css">
-	div#ccm-full-sitemap-container {
-		margin-left: 95px;
-	}
-	</style>
-
 	<form action="<?=URL::to('/dashboard/sitemap/search')?>"  class="form-inline ccm-search-fields-none ccm-search-fields">
 		<div class="ccm-search-main-lookup-field">
 			<i class="fa fa-search"></i>

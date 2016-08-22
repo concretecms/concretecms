@@ -83,10 +83,20 @@ var ConcreteDashboard = function() {
 		$('select[data-select=bootstrap]').bootstrapSelectToButton();
 	};
 
+	var setupHeaderMenu = function() {
+		var $buttons = $('.ccm-dashboard-header-buttons');
+		if ($buttons.length) {
+			$buttons.children().appendTo($('header div.ccm-dashboard-header-menu'));
+		}
+		$buttons.remove();
+	};
+
+
 	return {
 		start: function(options) {
 			setupTooltips();
 			setupResultMessages();
+			setupHeaderMenu();
             setupDialogs();
 			setupSelects();
 			setupTables();
