@@ -53,10 +53,6 @@ class CanonicalUrlResolver implements UrlResolverInterface
             }
         }
 
-        if (!$config) {
-            throw new RuntimeException(t('Cannot resolve urls until concrete5 is installed.'));
-        }
-
         // Determine trailing slash setting
         $trailing_slashes = $config->get('seo.trailing_slash') ? Url::TRAILING_SLASHES_ENABLED : Url::TRAILING_SLASHES_DISABLED;
 
@@ -65,11 +61,11 @@ class CanonicalUrlResolver implements UrlResolverInterface
         $url = $url->setHost(null);
         $url = $url->setScheme(null);
 
-        if ($configUrl = $config->get('seo.canonical_url')) {
+        if ($config && $configUrl = $config->get('seo.canonical_url')) {
             $canonical = UrlImmutable::createFromUrl($configUrl, $trailing_slashes);
 
-            if ($config->get('seo.canonical_ssl_url')) {
-                $canonical_ssl = UrlImmutable::createFromUrl($config->get('seo.canonical_ssl_url'), $trailing_slashes);
+            if ($config && $configSslUrl = $config->get('seo.canonical_ssl_url')) {
+                $canonical_ssl = UrlImmutable::createFromUrl($configSslUrl, $trailing_slashes);
             }
 
             $url = $url->setHost($canonical->getHost());
