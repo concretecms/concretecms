@@ -2,6 +2,8 @@
 namespace Concrete\Controller\Panel\Page;
 
 use Concrete\Controller\Backend\UserInterface\Page as BackendInterfacePageController;
+use Concrete\Core\Database\Connection\Connection;
+use Concrete\Core\Page\Collection\Collection;
 use Permissions;
 use Page;
 use Loader;
@@ -114,25 +116,35 @@ class Versions extends BackendInterfacePageController
     {
         if ($this->validateAction()) {
             $r = new PageEditVersionResponse();
+            /** @var \Concrete\Core\Page\Collection\Collection $c */
             $c = $this->page;
+            $versions = $this->countVersions($c);
+
             $cp = new Permissions($this->page);
             if ($cp->canDeletePageVersions()) {
-                $versions = 0;
                 $r = new PageEditVersionResponse();
                 $r->setPage($c);
                 if (is_array($_POST['cvID'])) {
                     foreach ($_POST['cvID'] as $cvID) {
-                        ++$versions;
                         $v = CollectionVersion::get($c, $cvID);
                         if (is_object($v)) {
-                            if (!$v->isApproved()) {
+                            if (!$v->isApproved() && $versions > 1) {
                                 $r->addCollectionVersion($v);
                                 $v->delete();
+                                $versions--;
+                            } elseif ($versions <= 1) {
+                                $e = Loader::helper('validation/error');
+                                $e->add(t('You cannot delete all page versions.'));
+                                $r = new PageEditResponse($e);
+                                break;
                             }
                         }
                     }
                 }
-                $r->setMessage(t2('%s version deleted successfully', '%s versions deleted successfully.', count($r->getCollectionVersions())));
+                if ($r instanceof PageEditVersionResponse) {
+                    $r->setMessage(t2('%s version deleted successfully', '%s versions deleted successfully.',
+                        count($r->getCollectionVersions())));
+                }
             } else {
                 $e = Loader::helper('validation/error');
                 $e->add(t('You do not have permission to delete page versions.'));
@@ -140,6 +152,18 @@ class Versions extends BackendInterfacePageController
             }
             $r->outputJSON();
         }
+    }
+
+
+    private function countVersions(Collection $c)
+    {
+        /** @var Connection $database */
+        $database = $this->app['database']->connection();
+        $count = $database->fetchColumn('select count(cvID) from CollectionVersions where cID = :cID', [
+            ':cID' => $c->getCollectionID()
+        ]);
+
+        return $count;
     }
 
     public function approve()
