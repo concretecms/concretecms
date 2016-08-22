@@ -7,6 +7,7 @@ use Concrete\Core\Page\PageList;
 use Concrete\Core\Block\BlockController;
 use Page;
 use Core;
+use Request;
 
 class Controller extends BlockController
 {
@@ -112,7 +113,7 @@ class Controller extends BlockController
     public function cacheBlockOutput()
     {
         if ($this->btCacheBlockOutput === null) {
-            $this->btCacheBlockOutput = (($this->postTo_cID !== '' || $this->resultsURL !== '') && empty($_REQUEST['query']));
+            $this->btCacheBlockOutput = (($this->postTo_cID !== '' || $this->resultsURL !== '') && Request::request('query') === null);
         }
 
         return $this->btCacheBlockOutput;
@@ -147,7 +148,8 @@ class Controller extends BlockController
 
         //run query if display results elsewhere not set, or the cID of this page is set
         if ($this->postTo_cID == '' && $this->resultsURL == '') {
-            if (!empty($_REQUEST['query']) || isset($_REQUEST['akID']) || isset($_REQUEST['month'])) {
+            $request = Request::getInstance();
+            if (((string) $request->request('query')) !== '' || $request->request('akID') || $request->request('month')) {
                 $this->do_search();
             }
         }
@@ -194,15 +196,15 @@ class Controller extends BlockController
 
     public function do_search()
     {
-        $q = $_REQUEST['query'];
-        // i have NO idea why we added this in rev 2000. I think I was being stupid. - andrew
-        // $_q = trim(preg_replace('/[^A-Za-z0-9\s\']/i', ' ', $_REQUEST['query']));
-        $_q = $q;
+        $request = Request::getInstance();
 
+        $query = (string) $request->request('query');
+        
         $ipl = new PageList();
         $aksearch = false;
-        if (is_array($_REQUEST['akID'])) {
-            foreach ($_REQUEST['akID'] as $akID => $req) {
+        $akIDs = $request->request('akID');
+        if (is_array($akIDs)) {
+            foreach ($akIDs as $akID => $req) {
                 $fak = CollectionAttributeKey::getByID($akID);
                 if (is_object($fak)) {
                     $type = $fak->getAttributeType();
@@ -214,9 +216,9 @@ class Controller extends BlockController
             }
         }
 
-        if (isset($_REQUEST['month']) && isset($_REQUEST['year'])) {
-            $year = @intval($_REQUEST['year']);
-            $month = abs(@intval($_REQUEST['month']));
+        if ($request->request('month') !== null && $request->request('year') !== null) {
+            $year = @intval($request->request('year'));
+            $month = abs(@intval($request->request('month')));
             if (strlen(abs($year)) < 4) {
                 $year = (($year < 0) ? '-' : '') . str_pad($year, 4, '0', STR_PAD_LEFT);
             }
@@ -233,17 +235,18 @@ class Controller extends BlockController
             $aksearch = true;
         }
 
-        if (empty($_REQUEST['query']) && $aksearch == false) {
+        if ($query === '' && $aksearch === false) {
             return false;
         }
 
-        if (isset($_REQUEST['query'])) {
-            $ipl->filterByKeywords($_q);
+        if ($query !== '') {
+            $ipl->filterByKeywords($query);
         }
 
-        if (is_array($_REQUEST['search_paths'])) {
-            foreach ($_REQUEST['search_paths'] as $path) {
-                if (!strlen($path)) {
+        $search_paths = $request->request('search_paths');
+        if (is_array($search_paths)) {
+            foreach ($search_paths as $path) {
+                if ($path === '') {
                     continue;
                 }
                 $ipl->filterByPath($path);
@@ -258,7 +261,7 @@ class Controller extends BlockController
         $pagination = $ipl->getPagination();
         $results = $pagination->getCurrentPageResults();
 
-        $this->set('query', $q);
+        $this->set('query', $query);
         $this->set('results', $results);
         $this->set('do_search', true);
         $this->set('searchList', $ipl);

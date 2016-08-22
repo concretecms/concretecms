@@ -178,6 +178,7 @@ class Sitemap
         if ($c->getAttribute('icon_dashboard')) {
             $cIconClass = $c->getAttribute('icon_dashboard'); // use markup with custom class name rather than image
         } else {
+            $cIconClass = null;
             $cIcon = $c->getCollectionIcon();
             if (!$cIcon) {
                 if ($cID == 1) {
