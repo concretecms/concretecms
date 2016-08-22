@@ -160,31 +160,30 @@
 
         if (result.breadcrumb) {
             my.$breadcrumb.html('');
-            var $nav = $('<ol data-search-navigation="breadcrumb" class="breadcrumb" />');
-            $.each(result.breadcrumb, function(i, entry) {
-                var activeClass = '';
-                if (entry.active) {
-                    activeClass = ' class="active"';
-                }
-                $nav.append('<li' + activeClass + '><a data-file-manager-tree-node="' + entry.folder + '" href="' + entry.url + '">' + entry.name + '</a></li>');
-                $nav.find('li.active a').on('click', function(e) {
-                    e.stopPropagation();
-                    e.preventDefault();
-                    if (entry.menu) {
-                        var $menu = $(entry.menu);
-                        my.showMenu($nav, $menu, e);
+            if (result.breadcrumb.length) {
+                var $nav = $('<ol data-search-navigation="breadcrumb" class="breadcrumb" />');
+                $.each(result.breadcrumb, function(i, entry) {
+                    var activeClass = '';
+                    if (entry.active) {
+                        activeClass = ' class="active"';
                     }
+                    $nav.append('<li' + activeClass + '><a data-file-manager-tree-node="' + entry.folder + '" href="' + entry.url + '">' + entry.name + '</a></li>');
+                    $nav.find('li.active a').on('click', function(e) {
+                        e.stopPropagation();
+                        e.preventDefault();
+                        if (entry.menu) {
+                            var $menu = $(entry.menu);
+                            my.showMenu($nav, $menu, e);
+                        }
+                    });
                 });
-            });
 
-            $nav.appendTo(my.$breadcrumb);
-
-
-            $nav.on('click.concreteSearchBreadcrumb', 'a', function() {
-                my.loadFolder($(this).attr('data-file-manager-tree-node'), $(this).attr('href'));
-                return false;
-            });
-
+                $nav.appendTo(my.$breadcrumb);
+                $nav.on('click.concreteSearchBreadcrumb', 'a', function() {
+                    my.loadFolder($(this).attr('data-file-manager-tree-node'), $(this).attr('href'));
+                    return false;
+                });
+            }
         }
     }
 

@@ -24,6 +24,7 @@ html.ccm-panel-right {
 div#ccm-dashboard-content {
 
   padding-top: 48px;
+  padding-bottom: 80px; /* so form buttons always work */
 
   tr {
     &.ccm-theme-active {
@@ -63,8 +64,7 @@ div#ccm-dashboard-content {
     margin-left: -97px;
     margin-right: -50px;
     margin-bottom: 30px;
-    padding: 39px 80px 0px 97px;
-    min-height: 103px;
+    padding: 39px 80px 39px 97px;
     position: relative;
 
     h1 {
@@ -131,6 +131,23 @@ div#ccm-dashboard-content {
       padding-right: 50px;
       padding-top: 30px;
     }
+
+    form.ccm-search-fields {
+      &.ccm-search-fields-none {
+        margin-left: 0px;
+        margin-top: 10px;
+        border-bottom: 1px solid #efefef;
+        margin-bottom: 20px;
+        padding-bottom: 10px;
+        div.ccm-search-main-lookup-field {
+          margin-left: 67px;
+        }
+        ul.ccm-search-form-advanced {
+          top: 20px;
+        }
+      }
+    }
+
   }
 
   header + div.ccm-dashboard-content-full {
@@ -148,6 +165,14 @@ div#ccm-dashboard-content {
     top: 34px;
     right: 50px;
   }
+
+  div.ccm-dashboard-header-buttons {
+    display: none; /* So we don't show buttons until they get moved into the header menu */
+  }
+  /*
+   * Not needed any longer. If the legacy header buttons appears in the page we move its contents into the header menu
+   */
+  /*
   div.ccm-dashboard-header-buttons {
     position: absolute;
     top: 82px;
@@ -160,6 +185,8 @@ div#ccm-dashboard-content {
     }
 
   }
+
+*/
 
   /**
  * Form updates for dashboard
@@ -178,6 +205,7 @@ div#ccm-dashboard-content {
   }
 
 }
+
 
 /**
  * Result Messages
@@ -262,18 +290,93 @@ div#ccm-dashboard-content {
   }
 }
 
+/**
+ * Phones
+ */
+
 @media (max-width: @screen-md) {
   div#ccm-dashboard-content {
-    padding-left: 20px;
-  }
+    margin-right: 0px !important; /* because the panel is gone */
+    padding-left: 20px; /* not enough width to do 97px */
+    padding-right: 20px;
 
-  div#ccm-dashboard-content {
-    margin-right: 0px !important;
+    header {
+      margin-left: -20px; /* because it's only 20px instead of 97 */
+      margin-right: -20px;
+      padding: 39px 20px 39px 20px;
 
+      h1 {
+        margin-bottom: 20px;
+      }
+
+      a.ccm-dashboard-page-header-bookmark {
+        display: none;
+      }
+
+      div.ccm-dashboard-header-menu {
+        position: static;
+        left: auto;
+        right: auto;
+        top: auto;
+      }
+
+      div.ccm-header-search-form {
+        position: static;
+        right: auto;
+        top: auto;
+
+        form {
+
+          input[type=text].form-control {
+            width: 100%;
+          }
+
+        }
+      }
+
+    }
+    div.ccm-dashboard-content-full {
+      margin-left: -20px; /* because it's only 20px instead of 97 */
+      margin-right: -20px;
+
+      section {
+        margin-left: 20px;
+      }
+
+
+      div.ccm-search-main-lookup-field {
+        margin-left: 20px !important;
+      }
+
+    }
     div.ccm-dashboard-form-actions-wrapper {
       padding-right: 15px !important;
     }
+
+    /*
+    div.ccm-dashboard-header-buttons {
+      top: 118px;
+    }
+    */
+
+    div.ccm-dashboard-header-menu {
+      top: 70px;
+    }
+
+    > form div.form-group {
+      padding-left: 20px;
+      padding-right: 20px;
+      margin-left: -20px;
+      margin-right: -20px;
+    }
+
   }
+
+  div.ccm-dashboard-header-menu {
+    right: auto;
+    left: 20px;
+  }
+
 }
 
 div.ccm-dashboard-my-account {
@@ -315,6 +418,7 @@ select[data-select=bootstrap] +
 @import "./welcome/marketplace.less";
 @import "./welcome/waiting-for-me.less";
 @import "./users.less";
+@import "./sitemap.less";
 @import "./attributes.less";
 @import "./form-and-set-builder.less";
 @import "./multilingual.less";

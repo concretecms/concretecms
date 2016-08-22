@@ -5,12 +5,6 @@ div.ccm-header-search-form + div.ui-dialog-content {
   .border-top-radius(0px);
 }
 
-header.ccm-dashboard-page-header {
-  div.ccm-header-search-form {
-    margin-top: -5px;
-  }
-}
-
 div.ccm-header-search-form {
   position: absolute;
   top: 0px;
@@ -171,4 +165,117 @@ div.ui-dialog {
       margin-right: 20px;
     }
   }
+}
+
+/**
+ * Breadcrumb
+ */
+div.ccm-search-results-breadcrumb {
+  -webkit-font-smoothing: antialiased;
+
+  ol.breadcrumb {
+    background-color: transparent;
+    padding: 0px;
+    position: relative;
+    margin-bottom: -20px;
+
+    > li a {
+      color: #777;
+      .transition(0.1s linear all);
+    }
+    > li > a {
+      &:hover, &:focus {
+        text-decoration: none;
+        color: #333;
+        outline: none;
+      }
+    }
+
+    > li.active a {
+      color: #333;
+    }
+
+    > li.ccm-search-select-active-droppable a,
+    > li a.ccm-search-select-active-droppable {
+      color: #09f;
+    }
+
+    > li + li:before {
+      content: ">";
+      font-size: 11px;
+      color: #999;
+      font-style: normal;
+      text-decoration: inherit;
+      position: relative;
+      top: -2px;
+      padding-right: 8px;
+      left: 0px;
+    }
+  }
+
+}
+
+/**
+ * Draggable table row items
+ */
+div.ccm-draggable-search-item {
+
+  position: relative;
+
+  &:after {
+    font-family: FontAwesome;
+    font-style: normal;
+    text-decoration: inherit;
+    font-size: 24px;
+    color: #666;
+    display: inline-block;
+  }
+
+  &.ccm-search-results-stack {
+    &:after {
+      content: "\f1b3";
+    }
+  }
+
+  &.ccm-search-results-folder {
+    &:after {
+      content: "\f07b";
+    }
+  }
+
+  &.ccm-search-results-file {
+    &:after {
+      content: "\f016";
+    }
+  }
+
+  span {
+    display: inline-block;
+    background-color: #0099ff;
+    color: #fff;
+    width: 20px;
+    height: 20px;
+    text-align: center;
+    font-weight: bold;
+    .border-radius(10px);
+    top: -2px;
+    right: 18px;
+    position: absolute;
+
+  }
+}
+
+html.ccm-search-results-dragging {
+  div.ccm-search-results-breadcrumb {
+    ol.breadcrumb {
+      > li a:hover {
+        text-decoration: none !important;
+      }
+    }
+  }
+}
+
+
+.ccm-search-results-copy {
+  cursor: copy !important;
 }
