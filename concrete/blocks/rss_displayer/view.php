@@ -16,7 +16,7 @@
 $rssObj = $controller;
 $textHelper = Loader::helper("text");
 
-if (strlen($errorMsg) > 0) {
+if (isset($errorMsg) && strlen($errorMsg) > 0) {
     echo $errorMsg;
 } else {
     foreach ($posts as $itemNumber => $item) {
