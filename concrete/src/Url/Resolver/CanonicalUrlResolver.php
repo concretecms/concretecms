@@ -68,17 +68,38 @@ class CanonicalUrlResolver implements UrlResolverInterface
         if ($configUrl = $config->get('seo.canonical_url')) {
             $canonical = UrlImmutable::createFromUrl($configUrl, $trailing_slashes);
 
-            // If the request is over https and the canonical url is http, lets just say https for the canonical url.
-            if (strtolower($canonical->getScheme()) == 'http' && strtolower($this->request->getScheme()) == 'https') {
-                $url = $url->setScheme('https');
-            } else {
-                $url = $url->setScheme($canonical->getScheme());
+            if ($config->get('seo.canonical_ssl_url')) {
+                $canonical_ssl = UrlImmutable::createFromUrl($config->get('seo.canonical_ssl_url'), $trailing_slashes);
             }
 
             $url = $url->setHost($canonical->getHost());
 
-            if (intval($canonical->getPort()->get()) > 0) {
-                $url = $url->setPort($canonical->getPort());
+            // If the request is over https
+            if (strtolower($this->request->getScheme()) == 'https') {
+                // If the canonical ssl url is set, respect the canonical ssl url.
+                if (isset($canonical_ssl)) {
+                    $url->setHost($canonical_ssl->getHost());
+                    $url->setScheme($canonical_ssl->getScheme());
+                    if (intval($canonical_ssl->getPort()->get()) > 0) {
+                        $url->setPort($canonical_ssl->getPort());
+                    }
+                } else {
+                    // If the canonical url is http, lets just say https for the canonical url.
+                    if (strtolower($canonical->getScheme()) == 'http') {
+                        $url->setScheme('https');
+                    }
+                    if (intval($canonical->getPort()->get()) > 0) {
+                        $url->setPort($canonical->getPort());
+                    }
+                }
+            }
+        } else {
+            $host = $this->request->getHost();
+            $scheme = $this->request->getScheme();
+            if ($scheme && $host) {
+                $url->setScheme($scheme)
+                    ->setHost($host)
+                    ->setPort($this->request->getPort());
             }
         }
 
