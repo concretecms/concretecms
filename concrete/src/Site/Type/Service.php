@@ -4,6 +4,7 @@ namespace Concrete\Core\Site\Type;
 use Concrete\Core\Application\Application;
 use Concrete\Core\Entity\Page\Template;
 use Concrete\Core\Entity\Site\Site;
+use Concrete\Core\Entity\Site\Type;
 use Concrete\Core\Site\Resolver\ResolverFactory;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -34,6 +35,12 @@ class Service
     {
         return $this->entityManager->getRepository('Concrete\Core\Entity\Site\Type')
             ->findAll();
+    }
+
+    public function delete(Type $type)
+    {
+        $this->entityManager->remove($type);
+        $this->entityManager->flush();
     }
 
     public function add($handle, $name)

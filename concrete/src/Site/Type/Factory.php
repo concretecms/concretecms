@@ -12,11 +12,18 @@ class Factory
 
     public function createDefaultEntity()
     {
-        $type = new Type();
+        $type = $this->createEntity();
         $type->setSiteTypeHandle('default');
         $type->setSiteTypeName(t('Default Site Type'));
         return $type;
     }
+
+    public function createEntity()
+    {
+        $type = new Type();
+        return $type;
+    }
+
 
 
 }

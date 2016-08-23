@@ -11,6 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
 class Type
 {
 
+    const DEFAULT_TYPE_HANDLE = 'default';
 
     /**
      * @ORM\Id @ORM\Column(type="integer", options={"unsigned":true})
@@ -32,6 +33,11 @@ class Type
      * @ORM\OneToMany(targetEntity="Site", cascade={"remove"}, mappedBy="type")
      */
     protected $sites;
+
+    public function isDefault()
+    {
+        return $this->getSiteTypeHandle() == self::DEFAULT_TYPE_HANDLE;
+    }
 
     /**
      * @param mixed $siteTypeID

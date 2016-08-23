@@ -77,6 +77,22 @@ var ConcreteDashboard = function() {
 
     var setupDialogs = function() {
         $('.dialog-launch').dialog();
+
+		$('div#ccm-dashboard-page').on('click', '[data-dialog]', function() {
+			var width = $(this).attr('data-dialog-width');
+			if (!width) {
+				width = 320;
+			}
+			var element = 'div[data-dialog-wrapper=' + $(this).attr('data-dialog') + ']';
+			jQuery.fn.dialog.open({
+				element: element,
+				modal: true,
+				width: width,
+				title: $(this).attr('data-dialog-title'),
+				height: 'auto'
+			});
+		});
+
     };
 
 	var setupSelects = function() {
