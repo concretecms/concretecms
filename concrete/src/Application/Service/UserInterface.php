@@ -373,6 +373,8 @@ class UserInterface
         // overwrite all the defaults with the arguments
         $arguments = array_merge($defaults, $arguments);
 
+        $arguments['addclass'] .= ' ccm-ui';
+
         $text = '';
 
         if ($arguments['form']) {
