@@ -100,11 +100,11 @@ var ConcreteDashboard = function() {
 	};
 
 	var setupHeaderMenu = function() {
-		var $buttons = $('.ccm-dashboard-header-buttons');
+		var $buttons = $('.ccm-dashboard-header-buttons'),
+			$menu = $('header div.ccm-dashboard-header-menu');
 		if ($buttons.length) {
-			$buttons.children().appendTo($('header div.ccm-dashboard-header-menu'));
+			$menu.append($buttons);
 		}
-		$buttons.remove();
 	};
 
 
