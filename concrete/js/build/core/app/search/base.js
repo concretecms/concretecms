@@ -287,7 +287,7 @@
 			}).on('mousedown.concreteSearchResultItem', function(e) {
 				cs.handleSelectClick(e, $(this));
 			}).on('mouseup.concreteSearchResultItem', function(e) {
-				if (!e.metaKey && !e.shiftKey) {
+				if (!e.metaKey && !e.ctrlKey && !e.shiftKey) {
 					cs.$element.find('.ccm-search-select-selected').not($(this)).removeClass();
 				}
 			});
