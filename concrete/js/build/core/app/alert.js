@@ -93,42 +93,6 @@ PNotify.prototype.options.buttons.closer_hover = false;
 
             new PNotify(notifyOptions);
 
-            /*
-            var messageText = '',
-                $appendTo = (options.appendTo) ? $(options.appendTo) : $(document.body);
-
-            if (options.title) {
-                messageText = '<h3>' + options.title + '</h3>' + options.message;
-            } else {
-                messageText = '<h3>' + options.message + '</h3>';
-            }
-
-            var elem = $('<div id="ccm-notification-hud" class="ccm-ui ccm-notification ccm-notification-' + options.type + '"><i class="ccm-notification-icon fa fa-' + options.icon + '"></i><div class="ccm-notification-inner">' + messageText + '</div></div>').
-            appendTo($appendTo).delay(5).queue(function() {
-                $(this).addClass('animated fadeIn');
-                $(this).dequeue();
-            });
-
-            var removeElem = _.once(function() {
-                    elem.queue(function () {
-                        $(this).css('opacity', 1);
-                        $(this).dequeue();
-                    }).delay(1).queue(function () {
-                        $(this).addClass('animated bounceOutRight');
-                        $(this).dequeue();
-                    }).delay(1000).queue(function () {
-                        $(this).remove();
-                        $(this).dequeue();
-                        options.callback();
-                    });
-                }),
-                timeout = setTimeout(removeElem, options.delay);
-
-            elem.click(function() {
-                removeElem();
-                clearTimeout(timeout);
-            });
-             */
         }
 
     };
