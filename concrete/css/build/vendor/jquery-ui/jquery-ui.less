@@ -889,7 +889,7 @@ button.ui-button::-moz-focus-inner {
     opacity: 1;
     -webkit-backdrop-filter: blur(4px);
     backdrop-filter: blur(4px);
-    
+
 }
 .ui-widget-shadow {
 	margin: -8px 0 0 -8px;
@@ -898,4 +898,96 @@ button.ui-button::-moz-focus-inner {
 	opacity: .3;
 	filter: Alpha(Opacity=30); /* support: IE8 */
 	border-radius: 8px;
+}
+
+/* Default Date Picker Override Styling */
+.ui-datepicker {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    border-color: #dcdcdc;
+
+    .ui-datepicker-header {
+        background: #f2f2f2;
+        border: none;
+        color: #606060;
+    }
+
+    select.ui-datepicker-year {
+        color: #606060;
+    }
+
+    .ui-datepicker-prev-hover,
+    .ui-datepicker-next-hover {
+        background: none;
+        border: none;
+        cursor: pointer;
+    }
+
+    .ui-datepicker-prev-hover {
+        top: 2px;
+        left: 2px;
+    }
+
+    .ui-datepicker-next-hover {
+        top: 2px;
+        right: 2px;
+    }
+
+    .ui-datepicker-prev span {
+        background: url(../images/icons/calendar_left_arrow.svg);
+        background-position-x: -1px;
+    }
+
+    .ui-datepicker-next span {
+        background: url(../images/icons/calendar_right_arrow.svg);
+        background-position-x: 1px;
+    }
+
+    .ui-datepicker-prev-hover span {
+        background: url(../images/icons/calendar_left_arrow_hover.svg);
+        background-position-x: -1px;
+    }
+
+    .ui-datepicker-next-hover span {
+        background: url(../images/icons/calendar_right_arrow_hover.svg);
+        background-position-x: 1px;
+    }
+
+    .ui-icon {
+        height: 16px;
+        width: 16px;
+    }
+
+    td span,
+    td a {
+        text-align: center;
+    }
+
+    th {
+        color: #606060;
+    }
+
+    td .ui-state-default {
+        background: none;
+        border: none;
+        color: #606060;
+    }
+
+    td .ui-state-active,
+    td .ui-state-highlight,
+    td .ui-state-hover {
+        border-radius: 2px;
+        color: #ffffff;
+    }
+
+    td .ui-state-active {
+        background: #93969f;
+    }
+
+    td .ui-state-highlight {
+        background: #82cdeb;
+    }
+
+    td .ui-state-hover {
+        background: #6396c3;
+    }
 }
