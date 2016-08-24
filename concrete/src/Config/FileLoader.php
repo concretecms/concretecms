@@ -45,7 +45,7 @@ class FileLoader extends \Illuminate\Config\FileLoader implements LoaderInterfac
         }
 
         $paths = array();
-        if ($namespace === null) {
+        if ($namespace === null || $namespace == '') {
             // No namespace, let's load up the concrete config first.
             $items = parent::load($environment, $group, 'core');
 
