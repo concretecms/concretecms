@@ -18,7 +18,9 @@ class RemoteItemList extends ItemList
     {
         $cache = Core::make('cache/expensive');
         $r = $cache->getItem('concrete.marketplace.remote_item_sets.' . $type);
-        if ($r->isMiss()) {
+        if (!$r->isMiss()) {
+            $sets = $r->get();
+        } else {
             $r->lock();
             $url = Config::get('concrete.urls.concrete5') . Config::get('concrete.urls.paths.marketplace.remote_item_list');
             $url .= $type . '/-/get_remote_item_sets';
@@ -38,10 +40,10 @@ class RemoteItemList extends ItemList
                     }
                 }
             }
-            $r->set($sets);
+            $cache->save($r->set($sets));
         }
 
-        return $r->get();
+        return $sets;
     }
 
     public function setIncludeInstalledItems($pp)
