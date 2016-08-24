@@ -1,4 +1,4 @@
-<?php if (is_object($user)) {
+<?php if (isset($user) && is_object($user)) {
     $token_validator = \Core::make('helper/validation/token');
 
     $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service\Date */
@@ -147,7 +147,7 @@
                         <div class="col-md-4"><p><?= t('Last IP Address') ?></p></div>
                         <div class="col-md-8"><p><?= $user->getLastIPAddress() ?></p></div>
                     </div>
-                    <?php if (ENABLE_USER_TIMEZONE) {
+                    <?php if (Config::get('concrete.misc.user_timezones')) {
     $uTimezone = $user->getUserTimezone();
     if (empty($uTimezone)) {
         $uTimezone = date_default_timezone_get();
