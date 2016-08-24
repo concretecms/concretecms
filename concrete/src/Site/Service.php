@@ -103,9 +103,12 @@ class Service
 
     public function installDefault()
     {
+        $siteConfig = $this->config->get('site');
+        $defaultSite = array_get($siteConfig, 'default');
+
         $factory = new Factory($this->config);
         $site = $factory->createEntity();
-        $site->setSiteHandle($this->config->get('concrete.sites.default.handle'));
+        $site->setSiteHandle(array_get($siteConfig, "sites.{$defaultSite}.handle"));
         $site->setIsDefault(true);
         $site->setSiteHomePageID(HOME_CID);
 
