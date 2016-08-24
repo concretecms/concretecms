@@ -45,7 +45,16 @@
 			ConcreteEvent.fire('AjaxRequestError', {
 				'response': r
 			});
-			ConcreteAlert.dialog('Error', r.responseText);
+			var msg = r.responseText;
+            if (r.responseJSON) {
+            	var json = r.responseJSON;
+            	if ($.isArray(json.errors) && json.errors.length > 0 && typeof json.errors[0] === 'string') {
+            		msg = json.errors.join('\n');
+            	} else if (typeof json.error === 'string' && json.error !== '') {
+            		msg = json.error;
+            	}
+            }
+			ConcreteAlert.dialog('Error', msg);
 		},
 
 		validateResponse: function(r) {
