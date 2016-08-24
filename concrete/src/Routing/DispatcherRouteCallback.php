@@ -19,6 +19,7 @@ use Permissions;
 use Response;
 use Core;
 use Session;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class DispatcherRouteCallback extends RouteCallback
 {
@@ -40,6 +41,23 @@ class DispatcherRouteCallback extends RouteCallback
 
     protected function sendPageNotFound(Request $request)
     {
+        if (strcasecmp($request->server->get('HTTP_X_REQUESTED_WITH', ''), 'xmlhttprequest') === 0) {
+            $loc = Localization::getInstance();
+            $changeContext = $this->shouldChangeContext();
+            if ($changeContext) {
+                $loc->pushActiveContext('site');
+            }
+            $responseData = [
+                'error' => t('Page not found'),
+                'errors' => [t('Page not found')],
+            ];
+            if ($changeContext) {
+                $loc->popActiveContext();
+            }
+            $jsonResponse = new JsonResponse($responseData, 404);
+
+            return $jsonResponse;
+        }
         $item = '/page_not_found';
         $c = Page::getByPath($item);
         if (is_object($c) && !$c->isError()) {
@@ -87,10 +105,11 @@ class DispatcherRouteCallback extends RouteCallback
         $app = Facade::getFacadeApplication();
         $mlEnabled = $app->make('multilingual/detector')->isEnabled();
         $inDashboard = $app->make('helper/concrete/dashboard')->inDashboard();
+
         return $mlEnabled && !$inDashboard;
     }
 
-    public function execute(Request $request, \Concrete\Core\Routing\Route $route = null, $parameters = array())
+    public function execute(Request $request, \Concrete\Core\Routing\Route $route = null, $parameters = [])
     {
         // figure out where we need to go
         $c = Page::getFromRequest($request);
@@ -121,7 +140,7 @@ class DispatcherRouteCallback extends RouteCallback
         if (!$c->cPathFetchIsCanonical) {
             // Handle redirect URL (additional page paths)
             /** @var Url $url */
-            $url = \Core::make('url/manager')->resolve(array($c));
+            $url = \Core::make('url/manager')->resolve([$c]);
             $query = $url->getQuery();
             $query->modify($request->getQueryString());
 
@@ -140,11 +159,12 @@ class DispatcherRouteCallback extends RouteCallback
                 $v = new View('/frontend/maintenance_mode');
                 $tmpTheme = \Route::getThemeByRoute('/frontend/maintenance_mode');
                 $v->setViewTheme($tmpTheme[0]);
-                $v->addScopeItems(array('c' => $c));
+                $v->addScopeItems(['c' => $c]);
                 $request->setCurrentPage($c);
                 if (isset($tmpTheme[1])) {
                     $v->setViewTemplate($tmpTheme[1]);
                 }
+
                 return $this->sendResponse($v);
             }
         }
@@ -276,6 +296,6 @@ class DispatcherRouteCallback extends RouteCallback
     {
         $callback = new self($callback);
 
-        return array('callback' => $callback);
+        return ['callback' => $callback];
     }
 }
