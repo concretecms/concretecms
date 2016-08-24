@@ -1,8 +1,8 @@
 <?php
 namespace Concrete\Core\Cookie;
 
+use Concrete\Core\Http\Request;
 use Symfony\Component\HttpFoundation\Cookie as CookieObject;
-use Request;
 
 class CookieJar
 {
@@ -91,6 +91,15 @@ class CookieJar
     public function getClearedCookies()
     {
         return $this->clearedCookies;
+    }
+
+    /**
+     * Set a request for this cookie jar
+     * @param \Concrete\Core\Cookie\Request $request
+     */
+    public function setRequest(Request $request)
+    {
+        $this->request = $request;
     }
 
     protected function getRequest()
