@@ -15,7 +15,7 @@
         my.$element = $element;
         my.options = options;
         my._chooseTemplate = _.template(my.chooseTemplate, {'options': my.options});
-        my._loadingTemplate = _.template(my.loadingTemplate, {'options': my.options});
+        my._loadingTemplate = _.template(my.loadingTemplate);
         my._entryLoadedTemplate = _.template(my.entryLoadedTemplate);
 
         my.$element.append(my._chooseTemplate);
@@ -37,7 +37,7 @@
 
         chooseTemplate: '<div class="ccm-item-selector">' +
             '<input type="hidden" name="<%=options.inputName%>" value="0" /><a href="#" data-express-entry-selector-link="choose"><%=options.chooseText%></a></div>',
-        loadingTemplate: '<div class="ccm-item-selector"><div class="ccm-item-selector-choose"><i class="fa fa-spin fa-spinner"></i> <%=options.loadingText%></div></div>',
+        loadingTemplate: '<div class="ccm-item-selector"><div class="ccm-item-selector-choose"><input type="hidden" name="<%=options.inputName%>" value="<%=exEntryID%>"><i class="fa fa-spin fa-spinner"></i> <%=options.loadingText%></div></div>',
         entryLoadedTemplate: '<div class="ccm-item-selector"><div class="ccm-item-selector-item-selected">' +
             '<input type="hidden" name="<%=inputName%>" value="<%=entry.exEntryID%>" />' +
             '<a data-express-entry-selector-action="clear" href="#" class="ccm-item-selector-clear"><i class="fa fa-close"></i></a>' +
@@ -46,7 +46,7 @@
 
         loadEntry: function(exEntryID) {
             var my = this;
-            my.$element.html(my._loadingTemplate);
+            my.$element.html(my._loadingTemplate({'options': my.options, 'exEntryID': exEntryID}));
             ConcreteExpressEntryAjaxSearch.getEntryDetails(exEntryID, function(r) {
                 var entry = r.entries[0];
                 my.$element.html(my._entryLoadedTemplate({'inputName': my.options.inputName, 'entry': entry}));

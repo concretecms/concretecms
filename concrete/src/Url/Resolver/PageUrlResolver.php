@@ -24,7 +24,7 @@ class PageUrlResolver implements UrlResolverInterface
             if ($page->getCollectionPointerExternalLink()) {
                 return $page->getCollectionPointerExternalLink();
             }
-            
+
             if ($path = $page->getCollectionPath()) {
                 return $this->resolveWithResolver($path, $arguments);
             }
