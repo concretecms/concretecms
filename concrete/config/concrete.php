@@ -600,7 +600,7 @@ return array(
         'max_lifetime' => 7200,
         'cookie' => array(
             'cookie_path' => false, // set a specific path here if you know it, otherwise it'll default to relative
-            'cookie_lifetime' => 0,
+            'cookie_lifetime' => 7200,
             'cookie_domain' => false,
             'cookie_secure' => false,
             'cookie_httponly' => true,
