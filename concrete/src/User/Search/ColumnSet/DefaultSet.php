@@ -35,7 +35,7 @@ class DefaultSet extends Set
         $this->setDefaultSortColumn($date, 'desc');
     }
 
-    public function getUserStatus($ui) {
+    public static function getUserStatus($ui) {
         if ($ui->isActive()) {
             $currentStatus = t('Active');
         } elseif ($ui->isValidated()) {
