@@ -26,16 +26,17 @@ class DefaultSet extends Set
 
     public function __construct()
     {
-        $this->addColumn(new Column('u.uName', t('Username'), array('Concrete\Core\User\Search\ColumnSet\DefaultSet', 'getUserName')));
-        $this->addColumn(new Column('u.uEmail', t('Email'), array('Concrete\Core\User\Search\ColumnSet\DefaultSet', 'getUserEmail')));
-        $this->addColumn(new Column('u.uDateAdded', t('Signup Date'), array('Concrete\Core\User\Search\ColumnSet\DefaultSet', 'getUserDateAdded')));
-        $this->addColumn(new Column('uStatus', t('Status'), array('Concrete\Core\User\Search\ColumnSet\DefaultSet', 'getUserStatus')));
+        $this->addColumn(new Column('u.uName', t('Username'), ['Concrete\Core\User\Search\ColumnSet\DefaultSet', 'getUserName']));
+        $this->addColumn(new Column('u.uEmail', t('Email'), ['Concrete\Core\User\Search\ColumnSet\DefaultSet', 'getUserEmail']));
+        $this->addColumn(new Column('u.uDateAdded', t('Signup Date'), ['Concrete\Core\User\Search\ColumnSet\DefaultSet', 'getUserDateAdded']));
+        $this->addColumn(new Column('uStatus', t('Status'), ['Concrete\Core\User\Search\ColumnSet\DefaultSet', 'getUserStatus']));
         $this->addColumn(new Column('u.uNumLogins', t('# Logins'), 'getNumLogins'));
         $date = $this->getColumnByKey('u.uDateAdded');
         $this->setDefaultSortColumn($date, 'desc');
     }
 
-    public function getUserStatus($ui) {
+    public static function getUserStatus($ui)
+    {
         if ($ui->isActive()) {
             $currentStatus = t('Active');
         } elseif ($ui->isValidated()) {
