@@ -5,6 +5,8 @@ use Concrete\Core\Application\Application;
 use Concrete\Core\Application\ApplicationAwareInterface;
 use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Http\Request;
+use Concrete\Core\Http\Server;
+use Concrete\Core\Http\ServerInterface;
 use Concrete\Core\Permission\Key\Key;
 use Concrete\Core\Support\Facade\Events;
 
@@ -16,12 +18,14 @@ class DefaultRunner implements RunInterface, ApplicationAwareInterface
     /** @var Repository */
     protected $config;
 
-    /** @var Request */
-    protected $request;
+    /**
+     * @var \Concrete\Core\Http\ServerInterface
+     */
+    private $server;
 
-    public function __construct(Request $request)
+    public function __construct(ServerInterface $server)
     {
-        $this->request = $request;
+        $this->server = $server;
     }
 
     /**
@@ -30,7 +34,6 @@ class DefaultRunner implements RunInterface, ApplicationAwareInterface
     public function run()
     {
         $app = $this->app;
-        $request = $this->request;
 
         include DIR_APPLICATION . '/bootstrap/app.php';
 
@@ -42,6 +45,17 @@ class DefaultRunner implements RunInterface, ApplicationAwareInterface
              * ----------------------------------------------------------------------------
              */
             $app->setupPackages();
+
+            // This is a crappy place for this, but it has to come AFTER the packages because sometimes packages
+            // want to replace legacy "tools" URLs with the new MVC, and the tools paths are so greedy they don't
+            // work unless they come at the end.
+            $this->registerLegacyRoutes();
+
+            /* ----------------------------------------------------------------------------
+             * Register legacy routes
+             * ----------------------------------------------------------------------------
+             */
+            $this->registerLegacyRoutes();
 
             /*
              * ----------------------------------------------------------------------------
@@ -58,12 +72,8 @@ class DefaultRunner implements RunInterface, ApplicationAwareInterface
          */
         Events::dispatch('on_before_dispatch');
 
-        /*
-         * ----------------------------------------------------------------------------
-         * Get the response to the current request
-         * ----------------------------------------------------------------------------
-         */
-        return $app->dispatch($request);
+        $request = Request::createFromGlobals();
+        return $this->server->handleRequest($request);
     }
 
     /**
@@ -75,4 +85,18 @@ class DefaultRunner implements RunInterface, ApplicationAwareInterface
     {
         $this->app = $application;
     }
+
+    protected function registerLegacyRoutes()
+    {
+        \Route::register("/tools/blocks/{btHandle}/{tool}",
+            '\Concrete\Core\Legacy\Controller\ToolController::displayBlock',
+            'blockTool',
+            array('tool' => '[A-Za-z0-9_/.]+')
+        );
+        \Route::register("/tools/{tool}", '\Concrete\Core\Legacy\Controller\ToolController::display',
+            '   tool',
+            array('tool' => '[A-Za-z0-9_/.]+')
+        );
+    }
+
 }
