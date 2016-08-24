@@ -35,7 +35,7 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
      *
      * @var array
      */
-    protected $autoSortColumns = array('cv.cvName', 'cv.cvDatePublic', 'c.cDateAdded', 'c.cDateModified');
+    protected $autoSortColumns = ['cv.cvName', 'cv.cvDatePublic', 'c.cDateAdded', 'c.cDateModified'];
 
     /**
      * Which version to attempt to retrieve.
@@ -170,6 +170,7 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
         }
 
         $query->setParameter('siteID', $site->getSiteID());
+
         return $query;
     }
 
@@ -178,10 +179,10 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
         $u = new \User();
         if ($this->permissionsChecker === -1) {
             $query = $this->deliverQueryObject();
-            // We add a custom order by here because otherwise, if we've added
+            // We need to reset the potential custom order by here because otherwise, if we've added
             // items to the select parts, and we're ordering by them, we get a SQL error
             // when we get total results, because we're resetting the select
-            return $query->select('count(distinct p.cID)')->orderBy('p.cID', 'asc')->setMaxResults(1)->execute()->fetchColumn();
+            return $query->select('count(distinct p.cID)')->resetQueryPart('orderBy')->setMaxResults(1)->execute()->fetchColumn();
         } else {
             return -1; // unknown
         }
@@ -192,10 +193,10 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
         $u = new \User();
         if ($this->permissionsChecker === -1) {
             $adapter = new DoctrineDbalAdapter($this->deliverQueryObject(), function ($query) {
-                // We add a custom order by here because otherwise, if we've added
+                // We need to reset the potential custom order by here because otherwise, if we've added
                 // items to the select parts, and we're ordering by them, we get a SQL error
                 // when we get total results, because we're resetting the select
-                $query->select('count(distinct p.cID)')->orderBy('p.cID', 'asc')->setMaxResults(1);
+                $query->select('count(distinct p.cID)')->resetQueryPart('orderBy')->setMaxResults(1);
             });
             $pagination = new Pagination($this, $adapter);
         } else {
@@ -234,7 +235,7 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
             if ($this->permissionsChecker === -1) {
                 return true;
             } else {
-                return call_user_func_array($this->permissionsChecker, array($mixed));
+                return call_user_func_array($this->permissionsChecker, [$mixed]);
             }
         }
 
@@ -253,7 +254,7 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
         $db = \Database::get();
         if (is_array($ptHandle)) {
             $this->query->andWhere(
-                $this->query->expr()->in('ptHandle', array_map(array($db, 'quote'), $ptHandle))
+                $this->query->expr()->in('ptHandle', array_map([$db, 'quote'], $ptHandle))
             );
         } else {
             $this->query->andWhere('pt.ptHandle = :ptHandle');
@@ -334,7 +335,6 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
         $this->query->setParameter('pkgID', $package->getPackageID());
     }
 
-
     /**
      * Displays only those pages that have style customizations.
      */
@@ -365,7 +365,7 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
         $db = \Database::get();
         if (is_array($ptID)) {
             $this->query->andWhere(
-                $this->query->expr()->in('pt.ptID', array_map(array($db, 'quote'), $ptID))
+                $this->query->expr()->in('pt.ptID', array_map([$db, 'quote'], $ptID))
             );
         } else {
             $this->query->andWhere($this->query->expr()->comparison('pt.ptID', '=', ':ptID'));
@@ -383,7 +383,7 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
         $db = \Database::get();
         if (is_array($cParentID)) {
             $this->query->andWhere(
-                $this->query->expr()->in('p.cParentID', array_map(array($db, 'quote'), $cParentID))
+                $this->query->expr()->in('p.cParentID', array_map([$db, 'quote'], $cParentID))
             );
         } else {
             $this->query->andWhere('p.cParentID = :cParentID');
@@ -437,11 +437,11 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
      */
     public function filterByKeywords($keywords)
     {
-        $expressions = array(
+        $expressions = [
             $this->query->expr()->like('psi.cName', ':keywords'),
             $this->query->expr()->like('psi.cDescription', ':keywords'),
             $this->query->expr()->like('psi.content', ':keywords'),
-        );
+        ];
 
         $keys = \CollectionAttributeKey::getSearchableIndexedList();
         foreach ($keys as $ak) {
@@ -449,7 +449,7 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
             $expressions[] = $cnt->searchKeywords($keywords, $this->query);
         }
         $expr = $this->query->expr();
-        $this->query->andWhere(call_user_func_array(array($expr, 'orX'), $expressions));
+        $this->query->andWhere(call_user_func_array([$expr, 'orX'], $expressions));
         $this->query->setParameter('keywords', '%' . $keywords . '%');
     }
 

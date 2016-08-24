@@ -19,14 +19,14 @@ class UserList extends DatabaseItemList
      *
      * @var array
      */
-    protected $autoSortColumns = array(
+    protected $autoSortColumns = [
         'u.uName',
         'u.uEmail',
         'u.uDateAdded',
         'u.uLastLogin',
         'u.uNumLogins',
         'u.uLastOnline',
-    );
+    ];
 
     /**
      * Whether to include inactive users.
@@ -65,7 +65,7 @@ class UserList extends DatabaseItemList
     {
         $query = $this->deliverQueryObject();
 
-        return $query->select('count(distinct u.uID)')->setMaxResults(1)->execute()->fetchColumn();
+        return $query->select('count(distinct u.uID)')->resetQueryPart('orderBy')->setMaxResults(1)->execute()->fetchColumn();
     }
 
     /**
@@ -76,7 +76,7 @@ class UserList extends DatabaseItemList
     protected function createPaginationObject()
     {
         $adapter = new DoctrineDbalAdapter($this->deliverQueryObject(), function ($query) {
-            $query->select('count(distinct u.uID)')->setMaxResults(1);
+            $query->select('count(distinct u.uID)')->resetQueryPart('orderBy')->setMaxResults(1);
         });
         $pagination = new Pagination($this, $adapter);
 
@@ -104,7 +104,7 @@ class UserList extends DatabaseItemList
     public function getResultIDs()
     {
         $results = $this->executeGetResults();
-        $ids = array();
+        $ids = [];
         foreach ($results as $result) {
             $ids[] = $result['uID'];
         }
@@ -156,7 +156,7 @@ class UserList extends DatabaseItemList
         $this->query->setParameter('uIsActive', $isActive);
     }
 
-    public function sortByStatus($dir="asc")
+    public function sortByStatus($dir = "asc")
     {
         $this->sortUserStatus = 1;
         parent::sortBy('uStatus', $dir);
@@ -193,10 +193,10 @@ class UserList extends DatabaseItemList
      */
     public function filterByKeywords($keywords)
     {
-        $expressions = array(
+        $expressions = [
             $this->query->expr()->like('u.uName', ':keywords'),
             $this->query->expr()->like('u.uEmail', ':keywords'),
-        );
+        ];
 
         $keys = \Concrete\Core\Attribute\Key\UserKey::getSearchableIndexedList();
         foreach ($keys as $ak) {
@@ -204,7 +204,7 @@ class UserList extends DatabaseItemList
             $expressions[] = $cnt->searchKeywords($keywords, $this->query);
         }
         $expr = $this->query->expr();
-        $this->query->andWhere(call_user_func_array(array($expr, 'orX'), $expressions));
+        $this->query->andWhere(call_user_func_array([$expr, 'orX'], $expressions));
         $this->query->setParameter('keywords', '%' . $keywords . '%');
     }
 
