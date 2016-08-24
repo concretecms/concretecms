@@ -14,34 +14,43 @@ class PageList extends CorePageList
 
     public function finalizeQuery(QueryBuilder $query)
     {
+        $db = Database::connection();
         $query = parent::finalizeQuery($query);
+
+        $mainRelation = $db->createQueryBuilder();
+        $mainRelation
+            ->select('mpr0.cID')->addSelect('MIN(mpr0.mpRelationID) as mpr')
+            ->from('MultilingualPageRelations', 'mpr0')
+            ->groupBy('mpr0.cID')
+        ;
+        $query
+            ->addSelect('mppr.mpr')
+            ->leftJoin('p', '('.$mainRelation.')', 'mppr', 'p.cID = mppr.cID');
+
         $mslist = Section::getList();
-        $relation = Database::get()->createQueryBuilder();
-        $relation->select('mpRelationID')->from('MultilingualPageRelations', 'mppr')->where('cID = p.cID')->setMaxResults(1);
-        $query->addSelect('(' . $relation . ') as mpr');
+
         foreach ($mslist as $ms) {
-            $section = Database::get()->createQueryBuilder();
-            $section
-                ->select('count(mpRelationID)')
-                ->from('MultilingualPageRelations', 'mppr')
-                ->where('mpRelationID = mpr')
-                ->andWhere(
-                    $section->expr()->comparison('mpLocale', '=', $query->createNamedParameter($ms->getLocale()))
-                );
-            $query->addSelect('(' . $section . ') as relationCount' . $ms->getCollectionID());
+            $cID = (int) $ms->getCollectionID();
+            $cLocale = (string) $ms->getLocale();
+            $query
+                ->addSelect("count(mppr$cID.mpRelationID) as relationCount$cID")
+                ->leftJoin('mppr', 'MultilingualPageRelations', "mppr$cID", "mppr.mpr = mppr$cID.mpRelationID AND ".$db->quote($cLocale)." = mppr$cID.mpLocale")
+            ;
         }
+        $query->addGroupBy(['p.cID', 'mppr.mpr']);
 
         return $query;
     }
 
     public function filterByMissingTargets($targets)
     {
-        if (count($targets)) {
+        if (!empty($targets)) {
+            $db = Database::connection();
             for ($i = 0; $i < count($targets); ++$i) {
-                $having = Database::get()->createQueryBuilder();
+                $having = $db->createQueryBuilder();
                 $t = $targets[$i];
                 $this->query->having(
-                    $having->expr()->orX('relationCount' . $t->getCollectionID() . ' = 0')
+                    $having->expr()->orX('count(mppr'.($t->getCollectionID()).'.mpRelationID) = 0')
                 );
             }
         }
