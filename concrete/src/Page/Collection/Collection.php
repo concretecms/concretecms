@@ -14,6 +14,7 @@ use Concrete\Core\Foundation\Object as Object;
 use Concrete\Core\Gathering\Item\Page as PageGatheringItem;
 use Concrete\Core\Page\Collection\Version\VersionList;
 use Concrete\Core\Page\Search\IndexedSearch;
+use Concrete\Core\Statistics\UsageTracker\TrackableInterface;
 use Concrete\Core\StyleCustomizer\Inline\StyleSet;
 use Concrete\Core\Block\CustomStyle as BlockCustomStyle;
 use Concrete\Core\Area\CustomStyle as AreaCustomStyle;
@@ -25,7 +26,7 @@ use Permissions;
 use Stack;
 use User;
 
-class Collection extends Object
+class Collection extends Object implements TrackableInterface
 {
     public $cID;
     protected $vObj;

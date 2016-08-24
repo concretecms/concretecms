@@ -4,9 +4,11 @@ namespace Concrete\Block\Image;
 use Concrete\Core\Block\BlockController;
 use Concrete\Core\Error\Error;
 use Concrete\Core\File\File;
+use Concrete\Core\File\Tracker\FileTrackableInterface;
 use Concrete\Core\Page\Page;
+use Concrete\Core\Statistics\UsageTracker\AggregateTracker;
 
-class Controller extends BlockController
+class Controller extends BlockController implements FileTrackableInterface
 {
     protected $btInterfaceWidth = 400;
     protected $btInterfaceHeight = 550;
@@ -21,6 +23,15 @@ class Controller extends BlockController
     protected $btFeatures = [
         'image',
     ];
+
+    /** @var AggregateTracker */
+    protected $tracker;
+
+    public function __construct($blockType = null, AggregateTracker $tracker = null)
+    {
+        parent::__construct($blockType);
+        $this->tracker = $tracker;
+    }
 
     public function getBlockTypeDescription()
     {
@@ -261,6 +272,15 @@ class Controller extends BlockController
     }
 
     /**
+     * On delete update the tracker
+     */
+    public function delete()
+    {
+        $this->tracker->forget($this);
+        parent::delete();
+    }
+
+    /**
      * @param array $args
      */
     public function save($args)
@@ -302,6 +322,18 @@ class Controller extends BlockController
         // This doesn't get saved to the database. It's only for UI usage.
         unset($args['linkType']);
 
+        $this->tracker->track($this);
         parent::save($args);
     }
+
+    public function getUsedFiles()
+    {
+        return [$this->getFileID()];
+    }
+
+    public function getUsedCollection()
+    {
+        return $this->getCollectionObject();
+    }
+
 }

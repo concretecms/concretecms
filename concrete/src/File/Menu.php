@@ -82,6 +82,10 @@ class Menu extends \Concrete\Core\Application\UserInterface\ContextMenu\Menu
                     t('Permissions'), t('Permissions & Access'), '520', '450')
             );
         }
+        $this->addItem(new DialogLinkItem(
+                \URL::to('/ccm/system/dialogs/file/usage', $file->getFileID()),
+                t('File Usage'), t('File Usage'), '90%', '75%')
+        );
         if ($fp->canDeleteFile()) {
             $this->addItem(new DeleteItem($file->getFileNodeObject()));
         }

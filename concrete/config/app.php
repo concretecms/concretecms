@@ -249,6 +249,7 @@ return array(
         "/ccm/system/dialogs/file/search" => array('\Concrete\Controller\Dialog\File\Search::view'),
         "/ccm/system/dialogs/file/thumbnails" => array('\Concrete\Controller\Dialog\File\Thumbnails::view'),
         "/ccm/system/dialogs/file/thumbnails/edit" => array('\Concrete\Controller\Dialog\File\Thumbnails\Edit::view'),
+        "/ccm/system/dialogs/file/usage/{fID}" => array('\Concrete\Controller\Dialog\File\Usage::view'),
 
         "/ccm/system/dialogs/group/search" => array('\Concrete\Controller\Dialog\Group\Search::view'),
 
