@@ -17,25 +17,25 @@ $require_version_comments = (bool) Config::get('concrete.misc.require_version_co
 		$publishTitle = t('Publish Page');
 	} else {
 		$publishTitle = t('Publish Changes');
-		$pk = PermissionKey::getByHandle('approve_page_versions');
-		$pk->setPermissionObject($c);
-		$pa = $pk->getPermissionAccessObject();
-        $workflows = array();
-        $canApproveWorkflow = true;
-        if (is_object($pa)) {
-            $workflows = $pa->getWorkflows();
+    }
+    $pk = PermissionKey::getByHandle('approve_page_versions');
+    $pk->setPermissionObject($c);
+    $pa = $pk->getPermissionAccessObject();
+    $workflows = array();
+    $canApproveWorkflow = true;
+    if (is_object($pa)) {
+        $workflows = $pa->getWorkflows();
+    }
+    foreach($workflows as $wf) {
+        if (!$wf->canApproveWorkflow()) {
+            $canApproveWorkflow = false;
         }
-        foreach($workflows as $wf) {
-            if (!$wf->canApproveWorkflow()) {
-                $canApproveWorkflow = false;
-            }
-        }
+    }
 
-        if (count($workflows) > 0 && !$canApproveWorkflow) {
-            $publishTitle = t('Submit to Workflow');
-        }
+    if (count($workflows) > 0 && !$canApproveWorkflow) {
+        $publishTitle = t('Submit to Workflow');
+    }
         
-	}
 ?>
 <div class="ccm-panel-check-in-publish">
 

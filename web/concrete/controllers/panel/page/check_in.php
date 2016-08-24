@@ -92,11 +92,10 @@ class CheckIn extends BackendInterfacePageController
                     $pkr->setRequestedVersionID($v->getVersionID());
                     $pkr->setRequesterUserID($u->getUserID());
                     $u->unloadCollectionEdit($c);
-                    $response = $pkr->trigger();
 
                     if ($c->isPageDraft()) {
                         $pagetype = $c->getPageTypeObject();
-                        $pagetype->publish($c);
+                        $pagetype->publish($c, $pkr);
                     }
                 }
             } else {
