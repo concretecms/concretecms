@@ -11,6 +11,7 @@ use Concrete\Core\Foundation\ClassLoader;
 use Concrete\Core\Foundation\EnvironmentDetector;
 use Concrete\Core\Foundation\Runtime\DefaultRuntime;
 use Concrete\Core\Foundation\Runtime\RuntimeInterface;
+use Concrete\Core\Http\DispatcherInterface;
 use Concrete\Core\Localization\Localization;
 use Concrete\Core\Logging\Query\Logger;
 use Concrete\Core\Routing\DispatcherRouteCallback;
@@ -92,6 +93,18 @@ class Application extends Container
             $env->clearOverrideCache();
         }
         exit;
+    }
+
+    /**
+     * @param \Concrete\Core\Http\Request $request
+     * @deprecated Use the dispatcher object to dispatch
+     */
+    public function dispatch(Request $request)
+    {
+        /** @var DispatcherInterface $dispatcher */
+        $dispatcher = $this->make(DispatcherInterface::class);
+
+        return $dispatcher->dispatch($request);
     }
 
     /**
@@ -420,91 +433,6 @@ class Application extends Container
             $response = new RedirectResponse($new, '301');
 
             return $response;
-        }
-    }
-
-    /**
-     * Inspects the request and determines what to serve.
-     */
-    public function dispatch(Request $request)
-    {
-        // This is a crappy place for this, but it has to come AFTER the packages because sometimes packages
-        // want to replace legacy "tools" URLs with the new MVC, and the tools paths are so greedy they don't
-        // work unless they come at the end.
-        $this->registerLegacyRoutes();
-
-        $path = rawurldecode($request->getPathInfo());
-
-        if (substr($path, 0, 3) == '../' || substr($path, -3) == '/..' || strpos($path, '/../') ||
-            substr($path, 0, 3) == '..\\' || substr($path, -3) == '\\..' || strpos($path, '\\..\\')) {
-            throw new \RuntimeException(t('Invalid path traversal. Please make this request with a valid HTTP client.'));
-        }
-
-        if ($this->installed) {
-            $response = $this->getEarlyDispatchResponse();
-        }
-        if (!isset($response)) {
-            $collection = Route::getList();
-            $context = new \Symfony\Component\Routing\RequestContext();
-            $context->fromRequest($request);
-            $matcher = new UrlMatcher($collection, $context);
-            $path = rtrim($request->getPathInfo(), '/') . '/';
-            try {
-                $request->attributes->add($matcher->match($path));
-                $matched = $matcher->match($path);
-                $route = $collection->get($matched['_route']);
-                Route::setRequest($request);
-                $response = Route::execute($route, $matched);
-            } catch (ResourceNotFoundException $e) {
-                $callback = new DispatcherRouteCallback('dispatcher');
-                $response = $callback->execute($request);
-            }
-        }
-
-        return $response;
-    }
-
-    protected function registerLegacyRoutes()
-    {
-        \Route::register("/tools/blocks/{btHandle}/{tool}",
-            '\Concrete\Core\Legacy\Controller\ToolController::displayBlock',
-            'blockTool',
-            array('tool' => '[A-Za-z0-9_/.]+')
-        );
-        \Route::register("/tools/{tool}", '\Concrete\Core\Legacy\Controller\ToolController::display',
-        '   tool',
-            array('tool' => '[A-Za-z0-9_/.]+')
-        );
-    }
-
-    protected function getEarlyDispatchResponse()
-    {
-        if (!User::isLoggedIn()) {
-            User::verifyAuthTypeCookie();
-        }
-        if (User::isLoggedIn()) {
-            // check to see if this is a valid user account
-            $u = new User();
-            $valid = $u->checkLogin();
-            if (!$valid) {
-                $isActive = $u->isActive();
-                $u->logout();
-                if ($u->isError()) {
-                    switch ($u->getError()) {
-                        case USER_SESSION_EXPIRED:
-                            return Redirect::to('/login', 'session_invalidated')->send();
-                            break;
-                    }
-                } elseif (!$isActive) {
-                    return Redirect::to('/login', 'account_deactivated')->send();
-                } else {
-                    $v = new View('/frontend/user_error');
-                    $v->setViewTheme('concrete');
-                    $contents = $v->render();
-
-                    return new Response($contents, 403);
-                }
-            }
         }
     }
 
