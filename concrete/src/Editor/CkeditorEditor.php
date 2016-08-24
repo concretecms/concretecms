@@ -38,6 +38,19 @@ class CkeditorEditor implements EditorInterface
 
     protected function getEditorScript($identifier, $options = array())
     {
+        $jsFunc = $this->getEditorInitJSFunction($options);
+        $html = <<<EOL
+        <script type="text/javascript">
+        $(function() {
+            var initEditor = {$jsFunc};
+            initEditor('#{$identifier}');
+         });
+        </script>
+EOL;
+        return $html;
+    }
+
+    public function getEditorInitJSFunction($options = array()) {
         $pluginManager = $this->pluginManager;
 
         if ($this->allowFileManager()) {
@@ -72,25 +85,33 @@ class CkeditorEditor implements EditorInterface
         );
         $options = json_encode($options);
         $removeEmptyIcon = '$removeEmpty[\'i\']';
-        $html = <<<EOL
-        <script type="text/javascript">
-        var CCM_EDITOR_SECURITY_TOKEN = "{$this->token}";
-        $(function() {
+
+        $jsfunc = <<<EOL
+        function(identifier) {
+            window.CCM_EDITOR_SECURITY_TOKEN = "{$this->token}";
             CKEDITOR.dtd.{$removeEmptyIcon} = false;
             if (CKEDITOR.stylesSet.get('concrete5styles') === null) {
                 CKEDITOR.stylesSet.add('concrete5styles', {$this->getStylesJson()});
             }
-            var ckeditor = $('#{$identifier}').ckeditor({$options}).editor;
+            var ckeditor = $(identifier).ckeditor({$options}).editor;
             ckeditor.on('blur',function(){
                 return false;
             });
             ckeditor.on('remove', function(){
                 $(this).destroy();
             });
-        });
-        </script>
+        }
 EOL;
-        return $html;
+        return $jsfunc;
+    }
+
+    public function outputInlineEditorInitJSFunction() {
+
+        if ($this->getPluginManager()->isSelected('autogrow')) {
+            $this->getPluginManager()->deselect('autogrow');
+        }
+
+        return $this->getEditorInitJSFunction();
     }
 
     public function outputPageInlineEditor($key, $content = null)
@@ -117,6 +138,17 @@ EOL;
             )
         );
         return $html;
+    }
+
+    public function outputStandardEditorInitJSFunction() {
+        $options = array(
+            'disableAutoInline' => true,
+        );
+        if ($this->getPluginManager()->isSelected('sourcearea')) {
+            $this->getPluginManager()->deselect('sourcedialog');
+        }
+
+        return $this->getEditorInitJSFunction($options);
     }
 
     public function outputStandardEditor($key, $content = null)
