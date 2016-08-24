@@ -29,7 +29,7 @@
 
 			options.success = function(r) {
 				my.success(r, my, successCallback);
-			}
+			};
 
 			my.before(my);
 			$.ajax(options);
@@ -45,7 +45,16 @@
 			ConcreteEvent.fire('AjaxRequestError', {
 				'response': r
 			});
-			ConcreteAlert.dialog('Error', r.responseText);
+			var msg = r.responseText;
+			if (r.responseJSON) {
+				var json = r.responseJSON;
+				if ($.isArray(json.errors) && json.errors.length > 0 && typeof json.errors[0] === 'string') {
+					msg = json.errors.join('\n');
+				} else if (typeof json.error === 'string' && json.error !== '') {
+					msg = json.error;
+				}
+			}
+			ConcreteAlert.dialog('Error', msg);
 		},
 
 		validateResponse: function(r) {
@@ -70,7 +79,7 @@
 		complete: function(my) {
 			jQuery.fn.dialog.hideLoader();
 		}
-	}
+	};
 
 	// static method
 	ConcreteAjaxRequest.validateResponse = ConcreteAjaxRequest.prototype.validateResponse;
@@ -78,7 +87,7 @@
 	// jQuery Plugin
 	$.concreteAjax = function(options) {
 		new ConcreteAjaxRequest(options);
-	}
+	};
 
 	global.ConcreteAjaxRequest = ConcreteAjaxRequest;
 
