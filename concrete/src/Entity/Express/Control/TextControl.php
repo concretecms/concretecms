@@ -4,9 +4,10 @@ namespace Concrete\Core\Entity\Express\Control;
 use Concrete\Controller\Element\Dashboard\Express\Control\TextOptions;
 use Concrete\Core\Entity\Express\Entity;
 use Concrete\Core\Entity\Express\Entry;
-use Concrete\Core\Express\Form\Control\Form\TextEntityPropertyControlFormRenderer;
+use Concrete\Core\Express\Form\Context\ContextInterface;
+use Concrete\Core\Express\Form\Control\Renderer\TextEntityPropertyControlRenderer;
+use Concrete\Core\Express\Form\Control\Template\Template;
 use Concrete\Core\Express\Form\Control\Type\SaveHandler\TextControlSaveHandler;
-use Concrete\Core\Express\Form\Control\View\TextEntityPropertyControlViewRenderer;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -63,14 +64,9 @@ class TextControl extends Control
         return new TextControlSaveHandler();
     }
 
-    public function getFormControlRenderer()
+    public function getControlRenderer(ContextInterface $context)
     {
-        return new TextEntityPropertyControlFormRenderer();
-    }
-
-    public function getViewControlRenderer()
-    {
-        return new TextEntityPropertyControlViewRenderer();
+        return new TextEntityPropertyControlRenderer();
     }
 
     public function getControlLabel()

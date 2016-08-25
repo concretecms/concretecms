@@ -4,8 +4,8 @@ namespace Concrete\Core\Entity\Express\Control;
 use Concrete\Core\Entity\Attribute\Key\Key;
 use Concrete\Core\Entity\Express\Entity;
 use Concrete\Core\Entity\Express\Entry;
-use Concrete\Core\Express\Form\Control\Form\AttributeKeyControlFormRenderer;
-use Concrete\Core\Express\Form\Control\View\AttributeKeyControlViewRenderer;
+use Concrete\Core\Express\Form\Context\ContextInterface;
+use Concrete\Core\Express\Form\Control\Renderer\AttributeKeyControlRenderer;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -36,14 +36,9 @@ class AttributeKeyControl extends Control
         $this->attribute_key = $attribute_key;
     }
 
-    public function getFormControlRenderer()
+    public function getControlRenderer(ContextInterface $context)
     {
-        return new AttributeKeyControlFormRenderer();
-    }
-
-    public function getViewControlRenderer()
-    {
-        return new AttributeKeyControlViewRenderer();
+        return new AttributeKeyControlRenderer();
     }
 
     public function getControlLabel()

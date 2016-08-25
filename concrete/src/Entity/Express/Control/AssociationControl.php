@@ -2,9 +2,12 @@
 namespace Concrete\Core\Entity\Express\Control;
 
 use Concrete\Core\Entity\Express\Entry;
-use Concrete\Core\Express\Form\Control\Form\AssociationControlFormRenderer;
+use Concrete\Core\Express\Form\Context\ContextInterface;
+use Concrete\Core\Express\Form\Context\FormContext;
+use Concrete\Core\Express\Form\Context\ViewContext;
+use Concrete\Core\Express\Form\Control\Renderer\AssociationControlFormRenderer;
+use Concrete\Core\Express\Form\Control\Renderer\AssociationControlViewRenderer;
 use Concrete\Core\Express\Form\Control\Type\SaveHandler\AssociationControlSaveHandler;
-use Concrete\Core\Express\Form\Control\View\AssociationControlViewRenderer;
 use Concrete\Core\Entity\Express\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -57,14 +60,14 @@ class AssociationControl extends Control
         $this->association = $association;
     }
 
-    public function getFormControlRenderer()
+    public function getControlRenderer(ContextInterface $context)
     {
-        return new AssociationControlFormRenderer();
-    }
-
-    public function getViewControlRenderer()
-    {
-        return new AssociationControlViewRenderer();
+        if ($context instanceof ViewContext) {
+            return new AssociationControlViewRenderer();
+        }
+        if ($context instanceof FormContext) {
+            return new AssociationControlFormRenderer();
+        }
     }
 
     public function getControlSaveHandler()
@@ -86,6 +89,7 @@ class AssociationControl extends Control
     {
         return new \Concrete\Core\Export\Item\Express\Control\AssociationControl();
     }
+
 
 
 }
