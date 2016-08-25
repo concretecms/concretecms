@@ -106,7 +106,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 } ?>
 
     <?= $valt->output('add_or_update_attribute') ?>
-    <?php $type->render('type_form', $key); ?>
+    <?php $type->render(new \Concrete\Core\Attribute\Context\AttributeTypeSettingsContext(), $key); ?>
 
     <?php if (!isset($back)) {
     $back = URL::page($c);

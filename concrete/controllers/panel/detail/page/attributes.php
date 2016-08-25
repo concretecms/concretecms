@@ -2,6 +2,7 @@
 namespace Concrete\Controller\Panel\Detail\Page;
 
 use Concrete\Controller\Backend\UserInterface\Page as BackendInterfacePageController;
+use Concrete\Core\Attribute\Context\AttributePanelContext;
 use Concrete\Core\Http\ResponseAssetGroup;
 use Concrete\Core\Workflow\Request\ApprovePageRequest;
 use PageEditResponse;
@@ -40,9 +41,9 @@ class Attributes extends BackendInterfacePageController
         $av = new AttributeTypeView($ak);
         if ($mode == 'edit') {
             $caValue = $this->page->getAttributeValueObject($ak);
-            $ak->render('form', $caValue);
+            $ak->render(new AttributePanelContext(), $caValue);
         } else {
-            echo $av->render('form');
+            echo $av->render(new AttributePanelContext());
         }
         $html = ob_get_contents();
         ob_end_clean();

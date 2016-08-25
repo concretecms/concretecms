@@ -35,7 +35,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		<div class="form-group">
 			<label class="control-label"><?=$ak->getAttributeKeyDisplayName()?></label>
 			<div>
-			<?=$ak->render('form', $av);
+			<?=$ak->render(new \Concrete\Core\Attribute\Context\ComposerContext(), $av);
     ?>
 			</div>
 		</div>

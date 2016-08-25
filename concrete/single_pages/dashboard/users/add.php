@@ -48,7 +48,7 @@ $ih = Loader::helper('concrete/ui');
 		<div class="form-group">
         	<label class="control-label"><?php echo $ak->getAttributeKeyDisplayName(); ?></label>
         	<div>
-                <?php $ak->render('form', null, false); ?>
+                <?php $ak->render(new \Concrete\Core\Attribute\Context\DashboardFormContext(), null, false); ?>
             </div>
         </div>
         <?php } ?>

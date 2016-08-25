@@ -4,6 +4,7 @@ namespace Concrete\Block\ExpressForm;
 use Concrete\Controller\Element\Attribute\KeyList;
 use Concrete\Controller\Element\Dashboard\Express\Control\TextOptions;
 use Concrete\Core\Attribute\Category\ExpressCategory;
+use Concrete\Core\Attribute\Context\AttributeTypeSettingsContext;
 use Concrete\Core\Attribute\Type;
 use Concrete\Core\Block\BlockController;
 use Concrete\Core\Entity\Attribute\Key\ExpressKey;
@@ -565,7 +566,7 @@ class Controller extends BlockController
             $type = Type::getByID($field[1]);
             if (is_object($type)) {
                 ob_start();
-                echo $type->render('type_form');
+                echo $type->render(new AttributeTypeSettingsContext());
                 $html = ob_get_contents();
                 ob_end_clean();
 
@@ -640,7 +641,7 @@ class Controller extends BlockController
             if ($control instanceof AttributeKeyControl) {
                 $type = $control->getAttributeKey()->getAttributeType();
                 ob_start();
-                echo $type->render('type_form', $control->getAttributeKey());
+                echo $type->render(new AttributeTypeSettingsContext(), $control->getAttributeKey());
                 $html = ob_get_contents();
                 ob_end_clean();
 

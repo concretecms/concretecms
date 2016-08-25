@@ -1,6 +1,13 @@
 <?php
 namespace Concrete\Core\Attribute;
 
+use Concrete\Core\Attribute\Context\AttributeTypeSettingsContext;
+use Concrete\Core\Attribute\Context\BasicFormContext;
+use Concrete\Core\Attribute\Context\BasicSearchContext;
+use Concrete\Core\Attribute\Context\ComposerContext;
+use Concrete\Core\Attribute\Context\ContextInterface;
+use Concrete\Core\Attribute\Context\ViewContext;
+use Concrete\Core\Filesystem\TemplateLocator;
 use Loader;
 use Concrete\Core\Attribute\Value\Value as AttributeValue;
 use Concrete\Core\Attribute\Key\Key as AttributeKey;
@@ -13,8 +20,8 @@ class View extends AbstractView
     protected $attributeKey;
     protected $attributeType;
     protected $attributePkgHandle;
-    protected $initialViewToRender;
-    protected $viewToRender;
+    protected $templateLocator;
+    protected $controllerAction;
 
     protected function getValue()
     {
@@ -41,49 +48,92 @@ class View extends AbstractView
             }
         }
         $this->attributePkgHandle = $this->attributeType->getPackageHandle();
-        $this->controller = $this->attributeType->getController();
-        $this->controller->setAttributeKey($this->attributeKey);
-        $this->controller->setAttributeValue($this->attributeValue);
-        if (is_object($this->attributeKey)) {
-            $this->controller->set('akID', $this->attributeKey->getAttributeKeyID());
-        }
     }
 
-    public function start($state)
+    /**
+     * @deprecated
+     */
+    protected function getContextFromString($string)
     {
-        $this->initialViewToRender = $state;
-        $this->viewToRender = $state;
-        $env = Environment::get();
-        $atHandle = $this->attributeType->getAttributeTypeHandle();
-        $r = $env->getRecord(DIRNAME_ATTRIBUTES . '/' . $atHandle . '/' . $this->viewToRender . '.php',
-            $this->attributePkgHandle);
-        if ($this->initialViewToRender == 'composer' && !$r->exists()) {
-            $this->viewToRender = 'form';
+        switch($string) {
+            case 'form':
+                $context = new BasicFormContext();
+                break;
+            case 'composer':
+                $context = new ComposerContext();
+                break;
+            case 'search':
+                $context = new BasicSearchContext();
+                break;
+            case 'type_form':
+                $context = new AttributeTypeSettingsContext();
+                break;
+            case 'label':
+                $context = 'label';
+                break;
         }
+        return $context;
+    }
+
+    /**
+     * @param $start ContextInterface
+     */
+    public function start($context)
+    {
+        if (is_string($context)) {
+            $context = $this->getContextFromString($context);
+        }
+
+        $atHandle = $this->attributeType->getAttributeTypeHandle();
+
+        $this->setupController();
+
+        if (is_object($context)) {
+            $this->templateLocator = new TemplateLocator();
+            foreach($context->getTemplates() as $template) {
+                $pkgHandle = $template[1] ? $template[1] : $this->attributePkgHandle;
+                $this->templateLocator->addLocation(DIRNAME_ATTRIBUTES . DIRECTORY_SEPARATOR . $atHandle . DIRECTORY_SEPARATOR . $template[0] . '.php', $pkgHandle);
+            }
+            foreach($context->getActions() as $method) {
+                if (method_exists($this->controller, $method)) {
+                    $this->controllerAction = $method;
+                    break;
+                }
+            }
+        } else if ($context == 'label') {
+            // sigh. legacy
+            $this->controllerAction = 'label';
+        }
+
+
     }
 
     public function startRender()
     {
-        $js = $this->controller->getAttributeTypeFileURL($this->viewToRender . '.js');
-        $css = $this->controller->getAttributeTypeFileURL($this->viewToRender . '.css');
-        $html = Loader::helper('html');
-        if ($js != false) {
-            $this->addOutputAsset($html->javascript($js));
-        }
-        if ($css != false) {
-            $this->addOutputAsset($html->css($css));
+        if (isset($this->templateLocator)) {
+            $location = $this->templateLocator->getLocation();
+            $file = basename($location->getFile());
+            // turn /path/to/my/file/view.php into view
+            $name = substr($file, 0, strpos($file, '.php'));
+            $js = $this->controller->getAttributeTypeFileURL($name . '.js');
+            $css = $this->controller->getAttributeTypeFileURL($name . '.css');
+            $html = Loader::helper('html');
+            if ($js != false) {
+                $this->addOutputAsset($html->javascript($js));
+            }
+            if ($css != false) {
+                $this->addOutputAsset($html->css($css));
+            }
         }
     }
 
     public function setupRender()
     {
         $this->runControllerTask();
-        $atHandle = $this->attributeType->getAttributeTypeHandle();
-        $env = Environment::get();
-        $r = $env->getRecord(DIRNAME_ATTRIBUTES . '/' . $atHandle . '/' . $this->viewToRender . '.php',
-            $this->attributePkgHandle);
-        $file = $r->file;
-        $this->setViewTemplate($file);
+        if (isset($this->templateLocator)) {
+            $file = $this->templateLocator->getFile();
+            $this->setViewTemplate($file);
+        }
     }
 
     public function setupController()
@@ -101,11 +151,7 @@ class View extends AbstractView
     public function runControllerTask()
     {
         $this->controller->on_start();
-        $action = $this->initialViewToRender;
-        if ($action == 'composer' && !method_exists($this->controller, 'composer')) {
-            $action = 'form';
-        }
-        $this->controller->runAction($action);
+        $this->controller->runAction($this->controllerAction);
         $this->controller->on_before_render();
     }
 

@@ -7,5 +7,5 @@ defined('C5_EXECUTE') or die("Access Denied.");
 	<?php if ($description): ?>
 	<i class="fa fa-question-circle launch-tooltip" title="" data-original-title="<?=$description?>"></i>
 	<?php endif; ?>
-    <?=$ak->render('composer', $this->getPageTypeComposerControlDraftValue())?>
+    <?=$ak->render(new \Concrete\Core\Attribute\Context\ComposerContext(), $this->getPageTypeComposerControlDraftValue())?>
 </div>
