@@ -60,12 +60,12 @@ $form = Loader::helper('form');
 
 <script type="text/javascript">
 ccm_checkMailSettings = function() {
-	obj = $("input[name=MAIL_SEND_METHOD]:checked");
-	if (obj.val() == 'SMTP') {
-		$("#ccm-settings-mail-smtp").show();
-	} else {
-		$("#ccm-settings-mail-smtp").hide();
-	}
+    obj = $("input[name=MAIL_SEND_METHOD]:checked");
+    if (obj.val() == 'SMTP') {
+        $("#ccm-settings-mail-smtp").show();
+    } else {
+        $("#ccm-settings-mail-smtp").hide();
+    }
 };
 
 $("input[name=MAIL_SEND_METHOD]").click(function() {
