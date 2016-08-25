@@ -27,4 +27,22 @@ class EnvironmentRecord
     {
         return file_exists($this->file);
     }
+
+    /**
+     * @return mixed
+     */
+    public function getFile()
+    {
+        return $this->file;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUrl()
+    {
+        return $this->url;
+    }
+
+
 }

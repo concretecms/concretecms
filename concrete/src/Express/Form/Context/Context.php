@@ -5,6 +5,7 @@ use Concrete\Core\Application\Application;
 use Concrete\Core\Entity\Express\Control\Control;
 use Concrete\Core\Express\Form\Control\Template\Template;
 use Concrete\Core\Express\Form\RendererInterface;
+use Concrete\Core\Filesystem\TemplateLocator;
 
 abstract class Context implements ContextInterface
 {
@@ -36,10 +37,8 @@ abstract class Context implements ContextInterface
         return $class;
     }
 
-    public function getTemplateFile(Template $template)
+    protected function getTemplatePath(Template $template)
     {
-        $segments = [DIRNAME_ELEMENTS, DIRNAME_EXPRESS, DIRNAME_EXPRESS_FORM_CONTROLS];
-        $segments[] = $this->getContextHandle();
         $path = DIRNAME_ELEMENTS
             . DIRECTORY_SEPARATOR
             . DIRNAME_EXPRESS
@@ -49,9 +48,14 @@ abstract class Context implements ContextInterface
             . $this->getContextHandle()
             . DIRECTORY_SEPARATOR
             . $template->getTemplateHandle() . '.php';
+        return $path;
+    }
 
-        return $this->getApplication()->make('environment')
-            ->getPath($path);
+    public function getTemplateLocator(Template $template)
+    {
+        $locator = new TemplateLocator();
+        $locator->addLocation($this->getTemplatePath($template));
+        return $locator;
     }
 
 }

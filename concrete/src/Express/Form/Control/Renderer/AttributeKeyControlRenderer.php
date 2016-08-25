@@ -34,7 +34,7 @@ class AttributeKeyControlRenderer extends AbstractControlRenderer
             $view->addScopeItem('key', $ak);
             $view->addScopeItem('value', $av);
 
-            return $view->render($control, $context->getTemplateFile($template));
+            return $view->render($control, $context->getTemplateLocator($template)->getFile());
         }
     }
 }
