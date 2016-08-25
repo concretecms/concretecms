@@ -818,18 +818,6 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
     }
 
     /**
-     * @param UserKey|string $ak
-     */
-    public function getAttributeField($ak)
-    {
-        if (!is_object($ak)) {
-            $ak = UserKey::getByHandle($ak);
-        }
-        $value = $this->getAttributeValueObject($ak);
-        $ak->render('form', $value);
-    }
-
-    /**
      * Magic method for user attributes. This is db expensive but pretty damn cool
      * so if the attrib handle is "my_attribute", then get the attribute with $ui->getUserMyAttribute(), or "uFirstName" become $ui->getUserUfirstname();.
      *

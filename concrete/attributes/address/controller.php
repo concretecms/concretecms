@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Attribute\Address;
 
+use Concrete\Core\Attribute\Context\BasicFormContext;
 use Concrete\Core\Attribute\Controller as AttributeTypeController;
 use Concrete\Core\Attribute\FontAwesomeIconFormatter;
 use Concrete\Core\Entity\Attribute\Key\Type\AddressType;
@@ -93,7 +94,7 @@ class Controller extends AttributeTypeController
         $this->form();
         $v = $this->getView();
         $this->set('search', true);
-        $v->render('form');
+        $v->render(new BasicFormContext());
     }
 
     public function createAttributeValueFromRequest()
@@ -321,7 +322,15 @@ class Controller extends AttributeTypeController
             $this->set('state_province', $value->getStateProvince());
             $this->set('country', $value->getCountry());
             $this->set('postal_code', $value->getPostalCode());
+        } else {
+            $this->set('address1', '');
+            $this->set('address2', '');
+            $this->set('city', '');
+            $this->set('state_province', '');
+            $this->set('country', '');
+            $this->set('postal_code', '');
         }
+        $this->set('search', false);
         $this->addFooterItem(Core::make('helper/html')->javascript($this->getView()->action('load_provinces_js')));
         $this->addFooterItem(
             Core::make('helper/html')->javascript($this->getAttributeTypeFileURL('country_state.js'))

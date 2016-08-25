@@ -139,7 +139,7 @@ if (is_object($category)) {
 } ?>
 
 <?=$valt->output('add_or_update_attribute')?>
-<?php $type->render('type_form', $key); ?>
+<?php $type->render(new \Concrete\Core\Attribute\Context\AttributeTypeSettingsContext(), $key); ?>
 
 <?php if (!isset($back)) {
     $back = URL::page($c);

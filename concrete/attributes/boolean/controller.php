@@ -92,21 +92,7 @@ class Controller extends AttributeTypeController
                 $checked = true;
             }
         }
-
-        $cb = Core::make('helper/form')->checkbox($this->field('value'), 1, $checked);
-        $this->set('checkbox', $cb);
-    }
-
-    public function composer()
-    {
-        echo '<div class="ccm-attribute ccm-attribute-boolean checkbox"><label>';
-        $this->form();
-        echo '</label></div>';
-    }
-
-    public function search()
-    {
-        echo '<div class="ccm-attribute ccm-attribute-boolean checkbox"><label>' . Core::make('helper/form')->checkbox($this->field('value'), 1, $this->request('value') == 1) . ' ' . $this->attributeKey->getAttributeKeyDisplayName() . '</label></div>';
+        $this->set('checked', $checked);
     }
 
     public function type_form()

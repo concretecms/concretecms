@@ -37,7 +37,7 @@ if (!$ak instanceof Concrete\Core\Entity\Attribute\Key\Key) {
     ?></label>
             <?php
                 $av = $c->getAttributeValueObject($ak);
-    $ak->render('form', $av);
+    $ak->render(new \Concrete\Core\Attribute\Context\StandardFormContext(), $av);
     ?>
 	</div>
 	<?php 

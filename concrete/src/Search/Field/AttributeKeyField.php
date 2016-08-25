@@ -2,6 +2,7 @@
 namespace Concrete\Core\Search\Field;
 
 use Concrete\Core\Attribute\AttributeKeyInterface;
+use Concrete\Core\Attribute\Context\BasicSearchContext;
 use Concrete\Core\Entity\Attribute\Key\Key;
 use Concrete\Core\Search\ItemList\ItemList;
 
@@ -29,7 +30,7 @@ class AttributeKeyField extends AbstractField
 
     public function renderSearchField()
     {
-        return $this->attributeKey->render('search', null, true);
+        return $this->attributeKey->render(new BasicSearchContext(), null, true);
     }
 
     public function filterList(ItemList $list)

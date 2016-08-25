@@ -15,6 +15,11 @@ abstract class AbstractView
     protected $template;
     protected $outputAssets = array();
 
+    public function getViewTemplate()
+    {
+        return $this->template;
+    }
+
     public function addScopeItems($items)
     {
         foreach ($items as $key => $value) {

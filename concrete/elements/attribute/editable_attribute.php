@@ -72,7 +72,7 @@ $canEdit = $permissionsCallback($ak, $permissionsArguments); ?>
         <div data-editable-attribute-key-id="<?= $ak->getAttributeKeyID() ?>">
             <?php
             $value = $object->getAttributeValueObject($ak);
-    $ak->render('form', $value);
+    $ak->render(new \Concrete\Core\Attribute\Context\DashboardFormContext(), $value);
     ?>
         </div>
     </div>
