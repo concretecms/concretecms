@@ -52,7 +52,7 @@ abstract class DashboardExpressEntityPageController extends DashboardExpressEntr
         }
         $this->set('entity', $entity);
         $form = $entity->getDefaultEditForm();
-        $renderer = \Core::make('Concrete\Core\Express\Form\Renderer');
+        $renderer = \Core::make('Concrete\Core\Express\Form\StandardFormRenderer');
         $this->set('expressForm', $form);
         $this->set('renderer', $renderer);
         $this->set('backURL', $this->getBackToListURL($entity));

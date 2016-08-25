@@ -57,14 +57,14 @@ class AssociationControl extends Control
         $this->association = $association;
     }
 
-    public function getFormControlRenderer(Entry $entry = null)
+    public function getFormControlRenderer()
     {
-        return new AssociationControlFormRenderer($entry);
+        return new AssociationControlFormRenderer();
     }
 
-    public function getViewControlRenderer(Entry $entry)
+    public function getViewControlRenderer()
     {
-        return new AssociationControlViewRenderer($entry);
+        return new AssociationControlViewRenderer();
     }
 
     public function getControlSaveHandler()

@@ -130,7 +130,7 @@ abstract class DashboardExpressEntriesPageController extends DashboardPageContro
             throw new \Exception(t('Access Denied'));
         }
 
-        $renderer = \Core::make('Concrete\Core\Express\Form\ViewRenderer');
+        $renderer = \Core::make('Concrete\Core\Express\Form\StandardViewRenderer');
         $this->set('entry', $entry);
         $this->set('entity', $entry->getEntity());
         $entity = $entry->getEntity();
@@ -159,7 +159,7 @@ abstract class DashboardExpressEntriesPageController extends DashboardPageContro
             throw new \Exception(t('Access Denied'));
         }
 
-        $renderer = \Core::make('Concrete\Core\Express\Form\Renderer');
+        $renderer = \Core::make('Concrete\Core\Express\Form\StandardFormRenderer');
         $this->set('entry', $entry);
         $this->set('entity', $entry->getEntity());
         $entity = $entry->getEntity();
