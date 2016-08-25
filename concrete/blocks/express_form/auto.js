@@ -165,6 +165,7 @@ $(function() {
             var $control = $(this).closest('[data-form-control-id]');
             $.concreteAjax({
                 url: $control.attr('data-action'),
+                type: 'get',
                 data: {'control': $control.attr('data-form-control-id')},
                 success: function(r) {
                     var $fields = $tabEdit.find('[data-view=form-fields]'),

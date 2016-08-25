@@ -128,6 +128,11 @@ class DatabaseServiceProvider extends ServiceProvider
             return new \Doctrine\Common\Annotations\CachedReader($simpleAnnotationReader,
                 $app->make('orm/cache'));
         });
+
+        // Setup doctrine proxy autoloader
+        $proxyDir = $this->app->make('config')->get('database.proxy_classes');
+        $proxyNamespace = "DoctrineProxies";
+        \Doctrine\Common\Proxy\Autoloader::register($proxyDir, $proxyNamespace);
     }
 
     /**
