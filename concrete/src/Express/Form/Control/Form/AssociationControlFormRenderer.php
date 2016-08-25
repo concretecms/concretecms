@@ -1,32 +1,25 @@
 <?php
 namespace Concrete\Core\Express\Form\Control\Form;
 
+use Concrete\Core\Entity\Express\Control\AssociationControl;
+use Concrete\Core\Entity\Express\Control\Control;
 use Concrete\Core\Entity\Express\Entry;
 use Concrete\Core\Express\EntryList;
+use Concrete\Core\Express\Form\Context\ContextInterface;
 use Concrete\Core\Express\Form\Control\EntityPropertyControlView;
 use Concrete\Core\Express\Form\Control\RendererInterface;
 use Concrete\Core\Express\Form\RendererFactory;
 
 class AssociationControlFormRenderer implements RendererInterface
 {
-    protected $application;
-    protected $factory;
-    protected $entry;
 
-    public function __construct(Entry $entry = null)
+    /**
+     * @param AssociationControl $control
+     * @return string
+     */
+    protected function getFormFieldElement(Control $control)
     {
-        $this->entry = $entry;
-    }
-
-    public function build(RendererFactory $factory)
-    {
-        $this->factory = $factory;
-        $this->application = $factory->getApplication();
-    }
-
-    protected function getFormFieldElement()
-    {
-        $class = get_class($this->factory->getControl()->getAssociation());
+        $class = get_class($control->getAssociation());
         $class = strtolower(str_replace(array('Concrete\\Core\\Entity\\Express\\', 'Association'), '', $class));
         if (substr($class, -4) == 'many') {
             return 'select_multiple';
@@ -35,23 +28,28 @@ class AssociationControlFormRenderer implements RendererInterface
         }
     }
 
-    public function render()
+    /**
+     * @param ContextInterface $context
+     * @param AssociationControl $control
+     * @return string
+     */
+    public function render(ContextInterface $context, Control $control, Entry $entry = null)
     {
-        $template = $this->application->make('environment')->getPath(
+        $template = $context->getApplication()->make('environment')->getPath(
             DIRNAME_ELEMENTS .
             '/' . DIRNAME_EXPRESS .
             '/' . DIRNAME_EXPRESS_FORM_CONTROLS .
             '/' . DIRNAME_EXPRESS_FORM_CONTROLS_ASSOCIATION .
-            '/' . $this->getFormFieldElement() . '.php'
+            '/' . $this->getFormFieldElement($control) . '.php'
         );
-        $association = $this->factory->getControl()->getAssociation();
-        $entity = $this->factory->getControl()->getAssociation()->getTargetEntity();
+        $association = $control->getAssociation();
+        $entity = $control->getAssociation()->getTargetEntity();
         $list = new EntryList($entity);
         $entities = $list->getResults();
-        $view = new EntityPropertyControlView($this->factory);
+        $view = new EntityPropertyControlView($context);
 
-        if (is_object($this->entry)) {
-            $related = $this->entry->getAssociations();
+        if (is_object($entry)) {
+            $related = $entry->getAssociations();
             foreach($related as $relatedAssociation) {
                 if ($relatedAssociation->getAssociation()->getID() == $association->getID()) {
                     $view->addScopeItem('selectedEntities', $relatedAssociation->getSelectedEntries());
@@ -60,9 +58,9 @@ class AssociationControlFormRenderer implements RendererInterface
         }
 
         $view->addScopeItem('entities', $entities);
-        $view->addScopeItem('control', $this->factory->getControl());
+        $view->addScopeItem('control', $control);
         $view->addScopeItem('formatter', $association->getFormatter());
 
-        return $view->render($template);
+        return $view->render($control, $template);
     }
 }

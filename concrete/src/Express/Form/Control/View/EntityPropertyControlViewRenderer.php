@@ -1,31 +1,27 @@
 <?php
 namespace Concrete\Core\Express\Form\Control\View;
 
+use Concrete\Core\Entity\Express\Control\Control;
+use Concrete\Core\Entity\Express\Entry;
+use Concrete\Core\Express\Form\Context\ContextInterface;
 use Concrete\Core\Express\Form\Control\EntityPropertyControlView;
 use Concrete\Core\Express\Form\Control\RendererInterface;
 use Concrete\Core\Express\Form\RendererFactory;
 
 abstract class EntityPropertyControlViewRenderer implements RendererInterface
 {
-    protected $factory;
-
     abstract public function getControlHandle();
 
-    public function build(RendererFactory $factory)
+    public function render(ContextInterface $context, Control $control, Entry $entry = null)
     {
-        $this->factory = $factory;
-    }
-
-    public function render()
-    {
-        $template = $this->factory->getApplication()->make('environment')->getPath(
+        $template = $context->getApplication()->make('environment')->getPath(
             DIRNAME_ELEMENTS .
             '/' . DIRNAME_EXPRESS .
             '/' . DIRNAME_EXPRESS_VIEW_CONTROLS .
             '/' . $this->getControlHandle() . '.php'
         );
-        $view = new EntityPropertyControlView($this->factory);
+        $view = new EntityPropertyControlView($context);
 
-        return $view->render($template);
+        return $view->render($control, $template);
     }
 }

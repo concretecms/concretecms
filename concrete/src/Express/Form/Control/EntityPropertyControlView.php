@@ -1,16 +1,18 @@
 <?php
 namespace Concrete\Core\Express\Form\Control;
 
+use Concrete\Core\Entity\Express\Control\Control;
+use Concrete\Core\Express\Form\Context\ContextInterface;
 use Concrete\Core\Express\Form\RendererFactory;
 
 class EntityPropertyControlView implements ControlViewInterface
 {
-    protected $factory;
     protected $scopeItems = array();
+    protected $context;
 
-    public function __construct(RendererFactory $factory)
+    public function __construct(ContextInterface $context)
     {
-        $this->factory = $factory;
+        $this->context = $context;
     }
 
     public function addScopeItem($key, $value)
@@ -23,15 +25,14 @@ class EntityPropertyControlView implements ControlViewInterface
         return 'ccm_express[' . $name . ']';
     }
 
-    public function render($template)
+    public function render(Control $control, $template)
     {
         extract($this->scopeItems);
 
         $view = $this;
-        $form = $this->factory->getApplication()->make('helper/form');
-        $control = $this->factory->getControl();
+        $form = $this->context->getApplication()->make('helper/form');
         $label = $control->getDisplayLabel();
-        $renderer = $this->factory->getFormRenderer();
+        $renderer = $this->context->getFormRenderer();
 
         ob_start();
         include $template;

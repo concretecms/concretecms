@@ -1,4 +1,8 @@
-<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
+<?php defined('C5_EXECUTE') or die("Access Denied.");
+
+    $renderer = Core::make('Concrete\Core\Express\Form\StandardFormRenderer');
+
+?>
 <div class="ccm-block-express-form">
     <div class="ccm-form">
         <a name="form<?=$bID?>"></a>

@@ -16,7 +16,6 @@ use Concrete\Core\Entity\Express\Form;
 use Concrete\Core\Express\Entry\Manager;
 use Concrete\Core\Express\Form\Control\Type\EntityPropertyType;
 use Concrete\Core\Express\Form\Control\SaveHandler\SaveHandlerInterface;
-use Concrete\Core\Express\Form\Renderer;
 use Concrete\Core\Express\Form\Validator;
 use Concrete\Core\File\FileProviderInterface;
 use Concrete\Core\File\Set\Set;
@@ -684,13 +683,12 @@ class Controller extends BlockController
         $form = $this->getFormEntity();
         $app = \Core::make('app');
         if (is_object($form)) {
-            $renderer = $app->make('Concrete\Core\Express\Form\Renderer');
-            $this->set('renderer', $renderer);
             $this->set('expressForm', $form);
         }
         if ($this->displayCaptcha) {
             $this->requireAsset('css', 'core/frontend/captcha');
         }
+        $this->requireAsset('css', 'core/frontend/errors');
     }
 
 
