@@ -1,5 +1,5 @@
 <?php
-namespace Concrete\Core\Express\Form\Control\View;
+namespace Concrete\Core\Express\Form\Control\Renderer;
 
 use Concrete\Core\Entity\Express\Control\AssociationControl;
 use Concrete\Core\Entity\Express\Control\Control;
@@ -7,9 +7,10 @@ use Concrete\Core\Entity\Express\Entry;
 use Concrete\Core\Express\Form\Context\ContextInterface;
 use Concrete\Core\Express\Form\Control\EntityPropertyControlView;
 use Concrete\Core\Express\Form\Control\RendererInterface;
+use Concrete\Core\Express\Form\Control\Template\Template;
 use Concrete\Core\Express\Form\RendererFactory;
 
-class AssociationControlViewRenderer implements RendererInterface
+class AssociationControlViewRenderer extends AbstractControlRenderer
 {
 
     /**
@@ -18,16 +19,15 @@ class AssociationControlViewRenderer implements RendererInterface
      * @param Entry|null $entry
      * @return string
      */
+
+    protected function getTemplateHandle()
+    {
+        return 'association';
+    }
+
     public function render(ContextInterface $context, Control $control, Entry $entry = null)
     {
-        $template = $context->getApplication()->make('environment')->getPath(
-            DIRNAME_ELEMENTS .
-            '/' . DIRNAME_EXPRESS .
-            '/' . DIRNAME_EXPRESS_VIEW_CONTROLS .
-            '/' . DIRNAME_EXPRESS_FORM_CONTROLS_ASSOCIATION .
-            '/' . 'list.php'
-        );
-
+        $template = $this->getTemplate($context, $control);
         $association = $control->getAssociation();
         /*
          * @var $association \Concrete\Core\Entity\Express\Association
@@ -39,9 +39,9 @@ class AssociationControlViewRenderer implements RendererInterface
                 $view->addScopeItem('entities', $relatedAssociation->getSelectedEntries());
             }
         }
-        $view->addScopeItem('control', $this->factory->getControl());
+        $view->addScopeItem('control', $control);
         $view->addScopeItem('formatter', $association->getFormatter());
 
-        return $view->render($control, $template);
+        return $view->render($control, $template->getFile());
     }
 }

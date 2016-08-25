@@ -25,4 +25,14 @@ abstract class Context implements ContextInterface
     {
         return $this->application;
     }
+
+    public function getContextHandle()
+    {
+        $class = get_class($this);
+        $class = substr($class, strrpos($class, '\\') + 1);
+        $class = substr($class, 0, strpos($class, 'Context'));
+        $class = $this->application->make('helper/text')->handle($class);
+        return $class;
+    }
+
 }

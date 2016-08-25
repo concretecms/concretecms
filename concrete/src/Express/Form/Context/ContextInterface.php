@@ -7,5 +7,5 @@ interface ContextInterface
 {
     function getApplication();
     function getFormRenderer();
-    function getControlRenderer(Control $control);
+    function getContextHandle();
 }

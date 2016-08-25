@@ -2,6 +2,7 @@
 namespace Concrete\Core\Entity\Express;
 
 use Concrete\Core\Export\ExportableInterface;
+use Concrete\Core\Express\Form\Context\ContextInterface;
 use Doctrine\ORM\Mapping as ORM;
 use Concrete\Core\Export\Item\Express\Association as AssociationExporter;
 

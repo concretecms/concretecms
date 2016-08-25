@@ -43,10 +43,7 @@ abstract class AbstractRenderer implements RendererInterface
          * @var $control Control
          */
         foreach ($fieldSet->getControls() as $control) {
-            /**
-             * @var $renderer ControlRendererInterface
-             */
-            $renderer = $context->getControlRenderer($control);
+            $renderer = $control->getControlRenderer($context);
             if (is_object($renderer)) {
                 $html .= $renderer->render($this->getContext(), $control, $entry);
             }

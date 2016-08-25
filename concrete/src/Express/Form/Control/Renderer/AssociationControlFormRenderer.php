@@ -1,5 +1,5 @@
 <?php
-namespace Concrete\Core\Express\Form\Control\Form;
+namespace Concrete\Core\Express\Form\Control\Renderer;
 
 use Concrete\Core\Entity\Express\Control\AssociationControl;
 use Concrete\Core\Entity\Express\Control\Control;
@@ -8,6 +8,7 @@ use Concrete\Core\Express\EntryList;
 use Concrete\Core\Express\Form\Context\ContextInterface;
 use Concrete\Core\Express\Form\Control\EntityPropertyControlView;
 use Concrete\Core\Express\Form\Control\RendererInterface;
+use Concrete\Core\Express\Form\Control\Template\Template;
 use Concrete\Core\Express\Form\RendererFactory;
 
 class AssociationControlFormRenderer implements RendererInterface
@@ -35,13 +36,10 @@ class AssociationControlFormRenderer implements RendererInterface
      */
     public function render(ContextInterface $context, Control $control, Entry $entry = null)
     {
-        $template = $context->getApplication()->make('environment')->getPath(
-            DIRNAME_ELEMENTS .
-            '/' . DIRNAME_EXPRESS .
-            '/' . DIRNAME_EXPRESS_FORM_CONTROLS .
-            '/' . DIRNAME_EXPRESS_FORM_CONTROLS_ASSOCIATION .
-            '/' . $this->getFormFieldElement($control) . '.php'
-        );
+        $template = new Template($context);
+        $template->addTemplateSegment('association');
+        $template->addTemplateSegment($this->getFormFieldElement($control));
+
         $association = $control->getAssociation();
         $entity = $control->getAssociation()->getTargetEntity();
         $list = new EntryList($entity);
@@ -61,6 +59,6 @@ class AssociationControlFormRenderer implements RendererInterface
         $view->addScopeItem('control', $control);
         $view->addScopeItem('formatter', $association->getFormatter());
 
-        return $view->render($control, $template);
+        return $view->render($control, $template->getFile());
     }
 }

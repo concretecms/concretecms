@@ -5,8 +5,11 @@ use Concrete\Controller\Element\Dashboard\Express\Control\Options;
 use Concrete\Core\Entity\Express\Entity;
 use Concrete\Core\Entity\Express\Entry;
 use Concrete\Core\Export\ExportableInterface;
+use Concrete\Core\Express\Form\Context\ContextInterface;
+use Concrete\Core\Express\Form\Control\Template\Template;
 use Concrete\Core\Express\Form\Control\Type\SaveHandler\ControlSaveHandler;
 use Concrete\Core\Export\Item\Express\Control as ControlExporter;
+use Concrete\Core\Express\Form\Control\Type\TypeInterface;
 use Concrete\Core\Import\ImportableInterface;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -110,12 +113,7 @@ abstract class Control implements \JsonSerializable, ExportableInterface
     /**
      * @return \Concrete\Core\Express\Form\Control\RendererInterface
      */
-    abstract public function getFormControlRenderer();
-
-    /**
-     * @return \Concrete\Core\Express\Form\Control\RendererInterface
-     */
-    abstract public function getViewControlRenderer();
+    abstract public function getControlRenderer(ContextInterface $context);
 
     public function getControlOptionsController()
     {
@@ -163,6 +161,9 @@ abstract class Control implements \JsonSerializable, ExportableInterface
             $this->getControlLabel();
     }
 
+    /**
+     * @return TypeInterface
+     */
     public function getControlType()
     {
         $manager = \Core::make('express/control/type/manager');
