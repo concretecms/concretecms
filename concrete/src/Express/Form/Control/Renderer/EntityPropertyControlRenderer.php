@@ -12,12 +12,12 @@ use Concrete\Core\Express\Form\RendererFactory;
 abstract class EntityPropertyControlRenderer extends AbstractControlRenderer
 {
 
+    abstract public function getTemplateHandle();
+
     public function render(ContextInterface $context, Control $control, Entry $entry = null)
     {
-        $template = new Template($context);
-        $template->addTemplateSegment($this->getTemplateHandle());
-
+        $template = new Template($this->getTemplateHandle());
         $view = new EntityPropertyControlView($context);
-        return $view->render($control, $template->getFile());
+        return $view->render($control, $context->getTemplateFile($template));
     }
 }

@@ -19,15 +19,9 @@ class AssociationControlViewRenderer extends AbstractControlRenderer
      * @param Entry|null $entry
      * @return string
      */
-
-    protected function getTemplateHandle()
-    {
-        return 'association';
-    }
-
     public function render(ContextInterface $context, Control $control, Entry $entry = null)
     {
-        $template = $this->getTemplate($context, $control);
+        $template = new Template('association');
         $association = $control->getAssociation();
         /*
          * @var $association \Concrete\Core\Entity\Express\Association
@@ -42,6 +36,6 @@ class AssociationControlViewRenderer extends AbstractControlRenderer
         $view->addScopeItem('control', $control);
         $view->addScopeItem('formatter', $association->getFormatter());
 
-        return $view->render($control, $template->getFile());
+        return $view->render($control, $context->getTemplateFile($template));
     }
 }

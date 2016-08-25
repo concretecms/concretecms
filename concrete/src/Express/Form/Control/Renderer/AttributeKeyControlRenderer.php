@@ -14,11 +14,6 @@ use Concrete\Core\Express\Form\RendererFactory;
 class AttributeKeyControlRenderer extends AbstractControlRenderer
 {
 
-    protected function getTemplateHandle()
-    {
-        return 'attribute_key';
-    }
-
     /**
      * @param ContextInterface $context
      * @param AttributeKeyControl $control
@@ -29,7 +24,7 @@ class AttributeKeyControlRenderer extends AbstractControlRenderer
         $ak = $control->getAttributeKey();
         if (is_object($ak)) {
 
-            $template = $this->getTemplate($context, $control);
+            $template = new Template('attribute_key');
 
             $av = null;
             if (is_object($entry)) {
@@ -39,7 +34,7 @@ class AttributeKeyControlRenderer extends AbstractControlRenderer
             $view->addScopeItem('key', $ak);
             $view->addScopeItem('value', $av);
 
-            return $view->render($control, $template->getFile());
+            return $view->render($control, $context->getTemplateFile($template));
         }
     }
 }

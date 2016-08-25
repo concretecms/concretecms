@@ -6,37 +6,16 @@ use Concrete\Core\Express\Form\Context\ContextInterface;
 class Template implements TemplateInterface
 {
 
-    protected $context;
-    protected $templateSegments = [];
+    protected $template;
 
-    public function __construct(ContextInterface $context)
+    public function __construct($template)
     {
-        $this->context = $context;
+        $this->template = $template;
     }
 
-    /**
-     * @return array
-     */
-    public function getTemplateSegments()
+    public function getTemplateHandle()
     {
-        return $this->templateSegments;
-    }
-
-    /**
-     * @param array $templateSegments
-     */
-    public function addTemplateSegment($templateSegment)
-    {
-        $this->templateSegments[] = $templateSegment;
-    }
-
-    public function getFile()
-    {
-        $segments = [DIRNAME_ELEMENTS, DIRNAME_EXPRESS, DIRNAME_EXPRESS_FORM_CONTROLS];
-        $segments[] = $this->context->getContextHandle();
-        $segments = array_merge($segments, $this->templateSegments);
-        $path = implode('/', $segments);
-        return $this->context->getApplication()->make('environment')->getPath($path . '.php');
+        return $this->template;
     }
 
 }

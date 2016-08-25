@@ -11,7 +11,7 @@ use Concrete\Core\Express\Form\Control\RendererInterface;
 use Concrete\Core\Express\Form\Control\Template\Template;
 use Concrete\Core\Express\Form\RendererFactory;
 
-class AssociationControlFormRenderer implements RendererInterface
+class AssociationControlFormRenderer extends AbstractControlRenderer
 {
 
     /**
@@ -36,9 +36,7 @@ class AssociationControlFormRenderer implements RendererInterface
      */
     public function render(ContextInterface $context, Control $control, Entry $entry = null)
     {
-        $template = new Template($context);
-        $template->addTemplateSegment('association');
-        $template->addTemplateSegment($this->getFormFieldElement($control));
+        $template = new Template('association/' . $this->getFormFieldElement($control));
 
         $association = $control->getAssociation();
         $entity = $control->getAssociation()->getTargetEntity();
@@ -59,6 +57,6 @@ class AssociationControlFormRenderer implements RendererInterface
         $view->addScopeItem('control', $control);
         $view->addScopeItem('formatter', $association->getFormatter());
 
-        return $view->render($control, $template->getFile());
+        return $view->render($control, $context->getTemplateFile($template));
     }
 }
