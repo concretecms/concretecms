@@ -444,20 +444,21 @@ class Controller extends BlockController
                                 // question name
                                 $key->setAttributeKeyName($control->getAttributeKey()->getAttributeKeyName());
 
-                                // we have to delete the existing key type
-                                // because otherwise we get duplicate errors
+                                // Key Type
                                 $existing_key_type = $key->getAttributeKeyType();
-                                $entityManager->remove($existing_key_type);
-                                $entityManager->flush();
-
                                 $key_type = $control->getAttributeKey()->getAttributeKeyType();
-                                $entityManager->persist($key_type);
+                                $key_type->setKeyTypeID($existing_key_type->getKeyTypeID());
                                 $key_type->setAttributeKey($key);
+                                $key_type = $entityManager->merge($key_type);
+                                $entityManager->persist($key_type);
                                 $key->setAttributeKeyType($key_type);
 
                                 // Required
-                                $existingControl->setAttributeKey($key);
                                 $existingControl->setIsRequired($control->isRequired());
+
+                                // Finalize control
+                                $existingControl->setAttributeKey($key);
+
                                 $indexKeys[] = $key;
                             } else if ($control instanceof TextControl) {
                                 // Wish we had a better way of doing this that wasn't so hacky.
@@ -622,7 +623,7 @@ class Controller extends BlockController
         $sessionControls = $session->get('block.express_form.new');
         if (is_array($sessionControls)) {
             foreach($sessionControls as $sessionControl) {
-                if ($sessionControl->getID() == $this->request->request->get('control')) {
+                if ($sessionControl->getID() == $this->request->query->get('control')) {
                     $control = $sessionControl;
                     break;
                 }
@@ -631,7 +632,7 @@ class Controller extends BlockController
 
         if (!isset($control)) {
             $control = $entityManager->getRepository('Concrete\Core\Entity\Express\Control\Control')
-                ->findOneById($this->request->request->get('control'));
+                ->findOneById($this->request->query->get('control'));
         }
 
         if (is_object($control)) {
