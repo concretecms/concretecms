@@ -2,7 +2,7 @@
 
 $ih = Loader::helper('concrete/ui');
 $enabledVals = array('0' => t('No'), '1' => t('Yes'));
-$secureVals = array('' => t('None'), 'SSL' => 'SSL', 'TLS' => 'TLS');
+$secureVals = array('' => t('None'), 'SSL' => tc('Encryption', 'SSL'), 'TLS' => tc('Encryption', 'TLS'));
 $form = Loader::helper('form');
 ?>
 
