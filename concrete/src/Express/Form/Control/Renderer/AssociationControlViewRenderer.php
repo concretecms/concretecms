@@ -36,6 +36,6 @@ class AssociationControlViewRenderer extends AbstractControlRenderer
         $view->addScopeItem('control', $control);
         $view->addScopeItem('formatter', $association->getFormatter());
 
-        return $view->render($control, $context->getTemplateFile($template));
+        return $view->render($control, $context->getTemplateLocator($template)->getFile());
     }
 }

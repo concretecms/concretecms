@@ -4,5 +4,5 @@
     <h3><?=$control->getHeadline()?></h3>
 <?php } ?>
 <?php if ($control->getBody()) { ?>
-    <?=$control->getBody()?>
+    <p><?=$control->getBody()?></p>
 <?php } ?>

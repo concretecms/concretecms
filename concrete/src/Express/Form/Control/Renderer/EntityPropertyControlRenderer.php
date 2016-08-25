@@ -18,6 +18,6 @@ abstract class EntityPropertyControlRenderer extends AbstractControlRenderer
     {
         $template = new Template($this->getTemplateHandle());
         $view = new EntityPropertyControlView($context);
-        return $view->render($control, $context->getTemplateFile($template));
+        return $view->render($control, $context->getTemplateLocator($template)->getFile());
     }
 }
