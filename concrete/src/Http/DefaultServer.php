@@ -9,6 +9,8 @@ use Concrete\Core\Http\Middleware\DispatcherFrame;
 use Concrete\Core\Http\Middleware\MiddlewareInterface;
 use Concrete\Core\Http\Middleware\MiddlewareStack;
 use Concrete\Core\Http\Middleware\StackInterface;
+use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
+use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 
 class DefaultServer implements ServerInterface, ApplicationAwareInterface
 {
@@ -70,10 +72,10 @@ class DefaultServer implements ServerInterface, ApplicationAwareInterface
 
     /**
      * Take a request and pass it through middleware, then return the response
-     * @param \Concrete\Core\Http\Request $request
-     * @return Response
+     * @param SymfonyRequest $request
+     * @return SymfonyResponse
      */
-    public function handleRequest(Request $request)
+    public function handleRequest(SymfonyRequest $request)
     {
         $stack = $this->stack;
         if ($stack instanceof MiddlewareStack) {

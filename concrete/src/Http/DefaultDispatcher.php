@@ -8,6 +8,8 @@ use Concrete\Core\Routing\Redirect;
 use Concrete\Core\Routing\RouterInterface;
 use Concrete\Core\User\User;
 use Concrete\Core\View\View;
+use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
+use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Routing\Matcher\UrlMatcher;
 use Symfony\Component\Routing\RequestContext;
@@ -32,10 +34,10 @@ class DefaultDispatcher implements DispatcherInterface
     }
 
     /**
-     * @param \Concrete\Core\Http\Request $request
-     * @return Response
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @return SymfonyResponse
      */
-    public function dispatch(Request $request)
+    public function dispatch(SymfonyRequest $request)
     {
         $path = rawurldecode($request->getPathInfo());
 

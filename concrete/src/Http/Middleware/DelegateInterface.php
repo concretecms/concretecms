@@ -2,8 +2,7 @@
 
 namespace Concrete\Core\Http\Middleware;
 
-use Concrete\Core\Http\Request;
-use Concrete\Core\Http\Response;
+use Symfony\Component\HttpFoundation\Request;
 
 interface DelegateInterface
 {
@@ -11,8 +10,8 @@ interface DelegateInterface
     /**
      * Dispatch the next available middleware and return the response.
      *
-     * @param \Concrete\Core\Http\Request $request
-     * @return Response
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function next(Request $request);
 

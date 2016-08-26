@@ -2,8 +2,8 @@
 
 namespace Concrete\Core\Http\Middleware;
 
-use Concrete\Core\Http\Request;
-use Concrete\Core\Http\Response;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 interface StackInterface
 {

@@ -3,8 +3,8 @@
 namespace Concrete\Core\Http\Middleware;
 
 use Concrete\Core\Http\DispatcherInterface;
-use Concrete\Core\Http\Request;
-use Concrete\Core\Http\Response;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * A middleware delegate for dispatching a request and returning a response.
@@ -15,7 +15,7 @@ class DispatcherDelegate implements DelegateInterface
 {
 
     /**
-     * @var \Concrete\Core\Http\DispatcherInterface|Mock_BlockController_7fcd43c1|Mock_TrackableBlockController_a75af608
+     * @var \Concrete\Core\Http\DispatcherInterface
      */
     private $dispatcher;
 
@@ -31,7 +31,7 @@ class DispatcherDelegate implements DelegateInterface
     /**
      * Dispatch the next available middleware and return the response.
      *
-     * @param \Concrete\Core\Http\Request $request
+     * @param Request $request
      * @return Response
      */
     public function next(Request $request)

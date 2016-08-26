@@ -2,17 +2,17 @@
 
 namespace Concrete\Core\Http\Middleware;
 
-use Concrete\Core\Http\Request;
-use Concrete\Core\Http\Response;
+
+use Symfony\Component\HttpFoundation\Request;
 
 interface MiddlewareInterface
 {
 
     /**
      * Process the request and return a response
-     * @param \Concrete\Core\Http\Request $request The request object
+     * @param \Symfony\Component\HttpFoundation\Request $request
      * @param DelegateInterface $frame
-     * @return Response
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function process(Request $request, DelegateInterface $frame);
 
