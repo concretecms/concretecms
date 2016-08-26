@@ -449,6 +449,8 @@ class Search extends DashboardPageController
 
         $ui = $this->user;
         if (is_object($ui)) {
+
+            $this->set('headerMenu', $headerMenu);
             $dh = Core::make('helper/date');
             /* @var $dh \Concrete\Core\Localization\Service\Date */
             $this->requireAsset('core/app/editable-fields');
@@ -479,6 +481,12 @@ class Search extends DashboardPageController
             }
 
             $this->set('workflowRequestActions', $workflowRequestActions);
+            $headerMenu = new \Concrete\Controller\Element\Dashboard\Users\Header($this->user);
+            $headerMenu->set('canActivateUser', $this->canActivateUser);
+            $headerMenu->set('canSignInAsUser', $this->canSignInAsUser);
+            $headerMenu->set('canDeleteUser', $this->canDeleteUser);
+            $headerMenu->set('workflowRequestActions', $workflowRequestActions);
+            $this->set('headerMenu', $headerMenu);
 
             switch ($status) {
                 case 'activated':

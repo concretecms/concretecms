@@ -884,7 +884,7 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
         $site = \Core::make('site')->getSite();
         $v = array($site->getSiteID());
         if (!$includeInternal) {
-            $ptIDs = $db->GetCol('select ptID from PageTypes where siteID = ? and ptIsInternal = false order by ptDisplayOrder asc', $v);
+            $ptIDs = $db->GetCol('select ptID from PageTypes where siteID = ? and ptIsInternal = 0 order by ptDisplayOrder asc', $v);
         } else {
             $ptIDs = $db->GetCol('select ptID from PageTypes where siteID = ? order by ptDisplayOrder asc', $v);
         }

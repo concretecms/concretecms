@@ -15,7 +15,6 @@ abstract class ElementController extends AbstractController
     {
         if (!isset($this->view)) {
             $this->view = new ElementView($this->getElement(), $this->getPackageHandle());
-
             $this->view->setController($this);
         }
 
