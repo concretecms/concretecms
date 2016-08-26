@@ -51,6 +51,8 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     protected $blocksAliasedFromMasterCollection = null;
     protected $cIsSystemPage = false;
     protected $cPointerOriginalID = null;
+    protected $cPointerExternalLink = null;
+    protected $cPointerExternalLinkNewWindow = null;
     protected $isMasterCollection = null;
     protected $cInheritPermissionsFromCID = null;
     /**
