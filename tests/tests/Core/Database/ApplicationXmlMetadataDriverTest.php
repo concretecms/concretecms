@@ -108,6 +108,6 @@ class ApplicationXmlMetadataDriverTest extends \PHPUnit_Framework_TestCase
         if($filesystem->isDirectory(DIR_APPLICATION . DIRECTORY_SEPARATOR . REL_DIR_METADATA_XML)){
             $filesystem->deleteDirectory(DIR_APPLICATION . DIRECTORY_SEPARATOR . REL_DIR_METADATA_XML);
         }
-        parent::tearDown();
+        parent::tearDownAfterClass();
     }
 }

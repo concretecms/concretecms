@@ -130,9 +130,11 @@ class DatabaseServiceProvider extends ServiceProvider
         });
 
         // Setup doctrine proxy autoloader
-        $proxyDir = $this->app->make('config')->get('database.proxy_classes');
-        $proxyNamespace = "DoctrineProxies";
-        \Doctrine\Common\Proxy\Autoloader::register($proxyDir, $proxyNamespace);
+        if ($this->app->bound('config')) {
+            $proxyDir = $this->app->make('config')->get('database.proxy_classes');
+            $proxyNamespace = "DoctrineProxies";
+            \Doctrine\Common\Proxy\Autoloader::register($proxyDir, $proxyNamespace);
+        }
     }
 
     /**

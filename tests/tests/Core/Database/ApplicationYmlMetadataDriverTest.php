@@ -114,6 +114,6 @@ class ApplicationYmlMetadataDriverTest  extends \PHPUnit_Framework_TestCase
         if($filesystem->isDirectory(DIR_APPLICATION . DIRECTORY_SEPARATOR . REL_DIR_METADATA_YAML)){
             $filesystem->deleteDirectory(DIR_APPLICATION . DIRECTORY_SEPARATOR . REL_DIR_METADATA_YAML);
         }
-        parent::tearDown();
+        parent::tearDownAfterClass();
     }
 }
