@@ -47,6 +47,7 @@ class Controller extends BlockController
         $this->set('searchProperties', []);
         $this->set('searchPropertiesSelected', []);
         $this->set('linkedProperties', []);
+        $this->set('displayLimit', 20);
     }
 
     public function edit()

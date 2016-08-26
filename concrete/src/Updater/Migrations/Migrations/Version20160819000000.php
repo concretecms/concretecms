@@ -41,6 +41,11 @@ class Version20160819000000 extends AbstractMigration
         if (!$job = Job::getByHandle('update_statistics')) {
             Job::installByHandle('update_statistics');
         }
+
+        $site = \Core::make('site')->getSite();
+        if (is_object($site)) {
+            $this->connection->executeQuery('update PageTypes set siteID = ? where ptIsInternal = 0', [$site->getSiteID()]);
+        }
     }
 
     public function down(Schema $schema)
