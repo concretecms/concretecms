@@ -281,6 +281,8 @@ class URLTest extends PHPUnit_Framework_TestCase
 
     public function testNoUrlRewritingDashboard()
     {
+        $app = Core::make("app");
+        $app['app_relative_path'] = '/path/to/server';
         $this->assertEquals('http://www.dummyco.com/path/to/server/index.php/dashboard/my/awesome/page', (string) $this->dashboard->getCollectionLink());
         $this->assertEquals('http://www.dummyco.com/path/to/server/index.php/dashboard/my/awesome/page',
                             (string) $this->service->getLinkToCollection($this->dashboard)
