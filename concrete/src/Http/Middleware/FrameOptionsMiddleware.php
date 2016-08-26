@@ -3,8 +3,9 @@
 namespace Concrete\Core\Http\Middleware;
 
 use Concrete\Core\Config\Repository\Repository;
-use Concrete\Core\Http\Request;
 use Concrete\Core\Utility\Service\Validation\Strings;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Middleware for applying frame options
@@ -30,7 +31,6 @@ class FrameOptionsMiddleware implements MiddlewareInterface
     }
 
     /**
-     * @param \Concrete\Core\Http\Request $request
      * @param \Concrete\Core\Http\Middleware\DelegateInterface $frame
      * @return Response
      */

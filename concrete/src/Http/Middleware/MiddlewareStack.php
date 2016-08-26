@@ -4,9 +4,9 @@ namespace Concrete\Core\Http\Middleware;
 
 use Concrete\Core\Application\ApplicationAwareInterface;
 use Concrete\Core\Application\ApplicationAwareTrait;
-use Concrete\Core\Http\DispatcherInterface;
 use Concrete\Core\Http\MiddlewareFrame;
-use Concrete\Core\Http\Request;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * The default stack used to keep track of middleware and process requests

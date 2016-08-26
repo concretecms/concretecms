@@ -3,6 +3,8 @@
 namespace Concrete\Core\Http;
 
 use Concrete\Core\Http\Middleware\MiddlewareInterface;
+use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
+use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 
 interface ServerInterface
 {
@@ -34,9 +36,9 @@ interface ServerInterface
 
     /**
      * Handle a request and return a response
-     * @param \Concrete\Core\Http\Request $request
-     * @return Response
+     * @param SymfonyRequest $request
+     * @return SymfonyResponse
      */
-    public function handleRequest(Request $request);
+    public function handleRequest(SymfonyRequest $request);
 
 }

@@ -2,7 +2,7 @@
 
 namespace Concrete\Core\Http\Middleware;
 
-use Concrete\Core\Http\Request;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * A middleware delegate for running the next delegate
@@ -30,7 +30,7 @@ final class MiddlewareDelegate implements DelegateInterface
     /**
      * Dispatch the next available middleware and return the response.
      *
-     * @param \Concrete\Core\Http\Request $request
+     * @param Request $request
      * @return Response
      */
     public function next(Request $request)

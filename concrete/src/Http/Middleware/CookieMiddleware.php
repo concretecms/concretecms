@@ -3,8 +3,8 @@
 namespace Concrete\Core\Http\Middleware;
 
 use Concrete\Core\Cookie\CookieJar;
-use Concrete\Core\Http\Request;
-use Concrete\Core\Http\Response;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Middleware for adding and deleting cookies to an http response
@@ -25,9 +25,9 @@ class CookieMiddleware implements MiddlewareInterface
 
     /**
      * Add or remove cookies from the
-     * @param \Concrete\Core\Http\Request $request
+     * @param Request $request
      * @param \Concrete\Core\Http\Middleware\DelegateInterface $frame
-     * @return \Concrete\Core\Http\Response
+     * @return Response
      */
     public function process(Request $request, DelegateInterface $frame)
     {
