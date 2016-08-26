@@ -10,6 +10,11 @@ php:
   - 7.0
   - 7.1
   - hhvm
+  - nightly
+
+matrix:
+  allow_failures:
+    - nightly
 
 before_script:
   - travis_retry composer install --no-interaction
