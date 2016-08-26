@@ -14,6 +14,7 @@ php:
 
 matrix:
   allow_failures:
+    - 7.1
     - nightly
 
 before_script:
