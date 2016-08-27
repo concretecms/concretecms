@@ -26,17 +26,9 @@
       background: transparent url(../images/icons/arrow_down.png) no-repeat center right;
     }
 
-    div.form-group {
-      margin-right: 40px;
-    }
-
     select.ccm-search-choose-field {
       color: #999;
       margin-right: 40px;
-    }
-
-    select {
-      width: 300px;
     }
 
     div.ccm-search-main-lookup-field {
@@ -44,7 +36,7 @@
 
       i {
         position: absolute;
-        top: 10px;
+        top: 8px;
         left: 5px;
       }
 
@@ -54,17 +46,21 @@
         font-weight: 200;
         font-size: @font-size-large;
         outline: none !important;
-        padding: 0px;
         .border-radius(0px);
         .box-shadow(none);
         margin-left: 30px;
-        width: 240px;
+        width: ~"calc(100% - 30px)";
       }
     }
 
     ul.ccm-search-form-advanced {
       a {
         color: #afafaf;
+
+        &:hover {
+          color: #777;
+        }
+
       }
 
       li {
@@ -72,8 +68,13 @@
       }
 
       position: absolute;
-      right: 20px;
-      top: 10px;
+      right: 18px;
+      top: -20px;
+
+      @media (min-width: @screen-md-min) {
+        right: 48px;
+      }
+
       font-size: @font-size-small;
     }
 
@@ -92,11 +93,7 @@
 
 div.ccm-search-fields-submit {
   .clearfix();
-  padding-bottom: 10px;
-  margin-bottom: 0px !important;
-  button.pull-right {
-    margin-right: 20px;
-  }
+  margin-bottom: 30px;
 }
 
 form.ccm-search-fields-none {
@@ -106,21 +103,15 @@ form.ccm-search-fields-none {
 }
 
 div.ccm-search-fields-row {
-
-  @media (min-width: @screen-sm-min) {
-    padding-left: 97px;
-  }
-
   min-height: 34px;
-
   margin-bottom: 10px;
   padding: 0px 0px 10px 0px;
+  border-bottom: 1px solid #efefef;
+  position: relative;
+
   @media (min-width: @screen-sm-min) {
     padding-left: 97px;
   }
-  border-bottom: 1px solid #efefef;
-
-  position: relative;
 
   div.form-group {
 
@@ -146,6 +137,17 @@ div.ccm-search-fields-row {
       border-left: 0px;
     }
 
+  }
+
+}
+
+div.ccm-search-field-content {
+  .clearfix();
+
+  // Logs level selectize input override
+  .selectize-control.form-control {
+    border: none;
+    padding: 0px;
   }
 
 }
