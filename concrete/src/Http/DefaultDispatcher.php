@@ -89,7 +89,7 @@ class DefaultDispatcher implements DispatcherInterface
                 $v->setViewTheme('concrete');
                 $contents = $v->render();
 
-                return new Response($contents, 403);
+                return $this->app->make(ResponseFactoryInterface::class)->forbidden($contents);
             }
         }
     }
@@ -111,7 +111,7 @@ class DefaultDispatcher implements DispatcherInterface
             $response = $this->router->execute($route, $matched);
 
         } catch (ResourceNotFoundException $e) {
-            $callback = new DispatcherRouteCallback('dispatcher');
+            $callback = $this->app->make(DispatcherRouteCallback::class, ['dispatcher']);
             $response = $callback->execute($request);
         }
 
