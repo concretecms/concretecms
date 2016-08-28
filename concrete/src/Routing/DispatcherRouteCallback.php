@@ -1,309 +1,90 @@
 <?php
 namespace Concrete\Core\Routing;
 
-use Concrete\Core\Localization\Localization;
-use Concrete\Core\Page\Collection\Version\Version;
-use Concrete\Core\Page\Event as PageEvent;
-use Concrete\Core\Page\Theme\Theme;
-use Concrete\Core\Support\Facade\Facade;
-use Concrete\Core\Url\Url;
+use Concrete\Core\Http\Request;
+use Concrete\Core\Http\ResponseFactoryInterface;
+use Concrete\Core\View\View;
 use PermissionKey;
-use Request;
 use User;
 use Events;
 use Loader;
 use Page;
 use Config;
-use View;
 use Permissions;
 use Response;
 use Core;
 use Session;
-use Symfony\Component\HttpFoundation\JsonResponse;
 
 class DispatcherRouteCallback extends RouteCallback
 {
-    protected function sendResponse(View $v, $code = 200)
-    {
-        $loc = Localization::getInstance();
-        $changeContext = $this->shouldChangeContext();
-        if ($changeContext) {
-            $loc->pushActiveContext('site');
-        }
-        $contents = $v->render();
-        if ($changeContext) {
-            $loc->popActiveContext();
-        }
-        $response = new Response($contents, $code);
 
-        return $response;
+    /**
+     * @var \Concrete\Core\Page\Collection\ResponseFactoryInterface
+     */
+    protected $factory;
+
+    /**
+     * DispatcherRouteCallback constructor.
+     * @param $callback
+     * @param $factory
+     */
+    public function __construct($callback, ResponseFactoryInterface $factory)
+    {
+        parent::__construct($callback);
+        $this->factory = $factory;
     }
 
-    protected function sendPageNotFound(Request $request)
-    {
-        if (strcasecmp($request->server->get('HTTP_X_REQUESTED_WITH', ''), 'xmlhttprequest') === 0) {
-            $loc = Localization::getInstance();
-            $changeContext = $this->shouldChangeContext();
-            if ($changeContext) {
-                $loc->pushActiveContext('site');
-            }
-            $responseData = [
-                'error' => t('Page not found'),
-                'errors' => [t('Page not found')],
-            ];
-            if ($changeContext) {
-                $loc->popActiveContext();
-            }
-            $jsonResponse = new JsonResponse($responseData, 404);
-
-            return $jsonResponse;
-        }
-        $item = '/page_not_found';
-        $c = Page::getByPath($item);
-        if (is_object($c) && !$c->isError()) {
-            $item = $c;
-            $request->setCurrentPage($c);
-            $cnt = $item->getPageController();
-        } else {
-            $cnt = Core::make('\Concrete\Controller\Frontend\PageNotFound');
-        }
-
-        $v = $cnt->getViewObject();
-        $cnt->on_start();
-        $cnt->runAction('view');
-        $v->setController($cnt);
-
-        return $this->sendResponse($v, 404);
-    }
-
-    protected function sendPageForbidden(Request $request, $currentPage)
-    {
-        // set page for redirection after successful login
-        Session::set('rcID', $currentPage->getCollectionID());
-        Session::set('rUri', $request->getRequestUri());
-
-        // load page forbidden
-        $item = '/page_forbidden';
-        $c = Page::getByPath($item);
-        if (is_object($c) && !$c->isError()) {
-            $item = $c;
-            $request->setCurrentPage($c);
-            $cnt = $item->getPageController();
-        } else {
-            $cnt = Core::make('\Concrete\Controller\Frontend\PageForbidden');
-        }
-        $v = $cnt->getViewObject();
-        $cnt->on_start();
-        $cnt->runAction('view');
-        $v->setController($cnt);
-
-        return $this->sendResponse($v, 403);
-    }
-
-    protected function shouldChangeContext()
-    {
-        $app = Facade::getFacadeApplication();
-        $mlEnabled = $app->make('multilingual/detector')->isEnabled();
-        $inDashboard = $app->make('helper/concrete/dashboard')->inDashboard();
-
-        return $mlEnabled && !$inDashboard;
-    }
-
-    public function execute(Request $request, \Concrete\Core\Routing\Route $route = null, $parameters = [])
+    public function execute(Request $request, Route $route = null, $parameters = [])
     {
         // figure out where we need to go
         $c = Page::getFromRequest($request);
-        if ($c->isError() && $c->getError() == COLLECTION_NOT_FOUND) {
-            // if we don't have a path and we're doing cID, then this automatically fires a 404.
-            if (!$request->getPath() && $request->get('cID')) {
-                return $this->sendPageNotFound($request);
-            }
-            // let's test to see if this is, in fact, the home page,
-            // and we're routing arguments onto it (which is screwing up the path.)
-            $home = Page::getByID(HOME_CID);
-            $request->setCurrentPage($home);
-            $homeController = $home->getPageController();
-            $homeController->setupRequestActionAndParameters($request);
-
-            $response = $homeController->validateRequest();
-            if ($response instanceof \Symfony\Component\HttpFoundation\Response) {
-                return $response;
-            } else {
-                if ($response == false) {
-                    return $this->sendPageNotFound($request);
-                } else {
-                    $c = $home;
-                    $c->cPathFetchIsCanonical = true;
-                }
-            }
-        }
-        if (!$c->cPathFetchIsCanonical) {
-            // Handle redirect URL (additional page paths)
-            /** @var Url $url */
-            $url = \Core::make('url/manager')->resolve([$c]);
-            $query = $url->getQuery();
-            $query->modify($request->getQueryString());
-
-            $url = $url->setQuery($query);
-
-            $response = Redirect::to($url);
-            $response->setStatusCode(301);
-
-            return $response;
-        }
-
-        // maintenance mode
-        if ($c->getCollectionPath() != '/login') {
-            $smm = Config::get('concrete.maintenance_mode');
-            if ($smm == 1 && !PermissionKey::getByHandle('view_in_maintenance_mode')->validate() && ($_SERVER['REQUEST_METHOD'] != 'POST' || Loader::helper('validation/token')->validate() == false)) {
-                $v = new View('/frontend/maintenance_mode');
-                $tmpTheme = \Route::getThemeByRoute('/frontend/maintenance_mode');
-                $v->setViewTheme($tmpTheme[0]);
-                $v->addScopeItems(['c' => $c]);
-                $request->setCurrentPage($c);
-                if (isset($tmpTheme[1])) {
-                    $v->setViewTemplate($tmpTheme[1]);
-                }
-
-                return $this->sendResponse($v);
-            }
-        }
-
-        if ($c->getCollectionPointerExternalLink() != '') {
-            return Redirect::url($c->getCollectionPointerExternalLink(), 301);
-        }
-
-        $cp = new Permissions($c);
-
-        if ($cp->isError() && $cp->getError() == COLLECTION_FORBIDDEN) {
-            return $this->sendPageForbidden($request, $c);
-        }
-
-        if (!$c->isActive() && (!$cp->canViewPageVersions())) {
-            return $this->sendPageNotFound($request);
-        }
-
-        $scheduledVersion = Version::get($c, "SCHEDULED");
-        if ($publishDate = $scheduledVersion->cvPublishDate) {
-            $datetime = Core::make('helper/date');
-            $now = $datetime->date('Y-m-d G:i:s');
-
-            if (strtotime($now) >= strtotime($publishDate)) {
-                $scheduledVersion->approve();
-                $c->loadVersionObject('ACTIVE');
-            }
-        }
-
-        if ($cp->canEditPageContents() || $cp->canEditPageProperties() || $cp->canViewPageVersions()) {
-            $c->loadVersionObject('RECENT');
-        }
-
-        $vp = new Permissions($c->getVersionObject());
-
-        // returns the $vp object, which we then check
-        if (is_object($vp) && $vp->isError()) {
-            switch ($vp->getError()) {
-                case COLLECTION_NOT_FOUND:
-                    return $this->sendPageNotFound($request);
-                    break;
-                case COLLECTION_FORBIDDEN:
-                    return $this->sendPageForbidden($request, $c);
-                    break;
-            }
-        }
-
-        // Now that we've passed all permissions checks, and we have a page, we check to see if we
-        // ought to redirect based on base url or trailing slash settings
-        $cms = \Core::make("app");
-        $site = \Site::getSite();
-
-        $response = $cms->handleCanonicalURLRedirection($request, $site);
-        if (!$response) {
-            $response = $cms->handleURLSlashes($request, $site);
-        }
-        if (isset($response)) {
-            $response->send();
-            exit;
-        }
-
-        // Now we check to see if we're on the home page, and if it multilingual is enabled,
-        // and if so, whether we should redirect to the default language page.
-        if (\Core::make('multilingual/detector')->isEnabled()) {
-            $dl = Core::make('multilingual/detector');
-            if ($c->getCollectionID() == $site->getSiteHomePageID() &&
-                $site->getConfigRepository()->get('multilingual.redirect_home_to_default_locale')) {
-                // Let's retrieve the default language
-                $ms = $dl->getPreferredSection();
-                if (is_object($ms) && $ms->getCollectionID() != $site->getSiteHomePageID()) {
-                    Redirect::page($ms)->send();
-                    exit;
-                }
-            }
-
-            $dl->setupSiteInterfaceLocalization($c);
-        }
-
-        $request->setCurrentPage($c);
-        require DIR_BASE_CORE . '/bootstrap/process.php';
-        $u = new User();
-
-        // On page view event.
-        $pe = new PageEvent($c);
-        $pe->setUser($u);
-        $pe->setRequest($request);
-        Events::dispatch('on_page_view', $pe);
-
-        $controller = $c->getPageController();
-        $controller->on_start();
-        $controller->setupRequestActionAndParameters($request);
-        $response = $controller->validateRequest();
-        if ($response instanceof \Symfony\Component\HttpFoundation\Response) {
-            return $response;
-        } else {
-            if ($response == false) {
-                return $this->sendPageNotFound($request);
-            }
-        }
-        $requestTask = $controller->getRequestAction();
-        $requestParameters = $controller->getRequestActionParameters();
-        $response = $controller->runAction($requestTask, $requestParameters);
-        if ($response instanceof \Symfony\Component\HttpFoundation\Response) {
-            return $response;
-        }
-
-        if ($controller->isReplaced()) {
-            $controller = $controller->getReplacement();
-            $response = $controller->runAction($requestTask, $requestParameters);
-            if ($response instanceof \Symfony\Component\HttpFoundation\Response) {
-                return $response;
-            }
-        }
-
-        $c->setController($controller);
-        $view = $controller->getViewObject();
-
-        // Mobile theme
-        if (Config::get('concrete.misc.mobile_theme_id') > 0) {
-            $md = new \Mobile_Detect();
-            if ($md->isMobile()) {
-                $mobileTheme = Theme::getByID(Config::get('concrete.misc.mobile_theme_id'));
-                if ($mobileTheme instanceof Theme) {
-                    $view->setViewTheme($mobileTheme);
-                    $controller->setTheme($mobileTheme);
-                }
-            }
-        }
-
-        // we update the current page with the one bound to this controller.
-        $request->setCurrentPage($c);
-
-        return $this->sendResponse($view);
+        return $this->factory->collection($c);
     }
 
     public static function getRouteAttributes($callback)
     {
-        $callback = new self($callback);
-
+        $callback = \Core::make(self::class, [$callback]);
         return ['callback' => $callback];
     }
+
+    /**
+     * @deprecated Use CollectionResponseFactory
+     * @param \Concrete\Core\View\View $view
+     * @param int $code
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    protected function sendResponse(View $view, $code = 200)
+    {
+        return $this->factory->view($view, $code);
+    }
+
+    /**
+     * @deprecated Use CollectionResponseFactory
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    protected function sendPageNotFound(Request $request)
+    {
+        return $this->factory->notFound();
+    }
+
+    /**
+     * @deprecated Use CollectionResponseFactory
+     * @param Request $request
+     * @param $currentPage
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    protected function sendPageForbidden(Request $request, $currentPage)
+    {
+        return $this->factory->forbidden($request->getUri());
+    }
+
+    /**
+     * @deprecated Use CollectionResponseFactory
+     */
+    protected function shouldChangeContext()
+    {
+        return $this->factory->shouldChangeContext();
+    }
+
 }
