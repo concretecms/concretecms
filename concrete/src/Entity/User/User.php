@@ -443,6 +443,6 @@ class User
      */
     public function __toString()
     {
-        return $this->getUserID();
+        return (string) $this->getUserID();
     }
 }
