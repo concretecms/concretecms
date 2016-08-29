@@ -96,6 +96,8 @@ class CheckIn extends BackendInterfacePageController
                     if ($c->isPageDraft()) {
                         $pagetype = $c->getPageTypeObject();
                         $pagetype->publish($c, $pkr);
+                    } else {
+                        $pkr->trigger();
                     }
                 }
             } else {
