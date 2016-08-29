@@ -5,13 +5,13 @@ use Illuminate\Filesystem\Filesystem;
 
 abstract class BlockTypeTestCase extends ConcreteDatabaseTestCase
 {
-    protected $fixtures = array();
-    protected $tables = array('BlockTypes', 'Blocks', 'Pages', 'CollectionVersionBlocks', 'Collections', 'Config');
+    protected $fixtures = [];
+    protected $tables = ['BlockTypes', 'Blocks', 'Pages', 'CollectionVersionBlocks', 'Collections', 'Config'];
 
-    protected $metadatas = array(
+    protected $metadatas = [
         'Concrete\Core\Entity\Page\PagePath',
         'Concrete\Core\Entity\Block\BlockType\BlockType',
-    );
+    ];
     public function testInstall()
     {
         $bt = BlockType::installBlockType($this->btHandle);
@@ -30,7 +30,7 @@ abstract class BlockTypeTestCase extends ConcreteDatabaseTestCase
             $nb = $bt->add($requestData);
             $data = $this->expectedRecordData[$type];
             $db = Loader::db();
-            $r = $db->GetRow('select * from `' . $btc->getBlockTypeDatabaseTable() . '` where bID = ?', array($bID));
+            $r = $db->GetRow('select * from `' . $btc->getBlockTypeDatabaseTable() . '` where bID = ?', [$bID]);
             foreach ($data as $key => $value) {
                 $this->assertTrue($r[$key] == $value, 'Key `' . $key . '` did not equal expected value `' . $value . '` instead equalled `' . $r[$key] . '` (type `' . $type . '`)');
             }
@@ -97,7 +97,7 @@ abstract class BlockTypeTestCase extends ConcreteDatabaseTestCase
         $btx->refresh();
         $sm = Database::connection()->getSchemaManager();
         foreach ($tableColumns as $tableName => $columnNames) {
-            $dbColumns = array();
+            $dbColumns = [];
             foreach ($sm->listTableColumns($tableName) as $dbColumn) {
                 $dbColumns[] = strtolower($dbColumn->getName());
             }
@@ -123,5 +123,4 @@ abstract class BlockTypeTestCase extends ConcreteDatabaseTestCase
             $fs->move($dbXmlOriginal, $dbXml);
         }
     }
-    
 }
