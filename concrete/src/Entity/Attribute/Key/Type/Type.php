@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Entity\Attribute\Key\Type;
 
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -86,6 +87,13 @@ abstract class Type
     {
         $factory = \Core::make('Concrete\Core\Attribute\TypeFactory');
         return $factory->getByHandle($this->getAttributeTypeHandle());
+    }
+
+    public function mergeAndPersist(EntityManagerInterface $entityManager)
+    {
+        $key_type = $entityManager->merge($this);
+        $entityManager->persist($key_type);
+        return $key_type;
     }
 
     public function createController()

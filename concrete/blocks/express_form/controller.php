@@ -449,8 +449,7 @@ class Controller extends BlockController
                                 $key_type = $control->getAttributeKey()->getAttributeKeyType();
                                 $key_type->setKeyTypeID($existing_key_type->getKeyTypeID());
                                 $key_type->setAttributeKey($key);
-                                $key_type = $entityManager->merge($key_type);
-                                $entityManager->persist($key_type);
+                                $key_type = $key_type->mergeAndPersist($entityManager);
                                 $key->setAttributeKeyType($key_type);
 
                                 // Required
