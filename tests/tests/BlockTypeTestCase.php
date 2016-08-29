@@ -1,6 +1,7 @@
 <?php
 
 use \Concrete\Core\Block\View\BlockView;
+use Illuminate\Filesystem\Filesystem;
 
 abstract class BlockTypeTestCase extends ConcreteDatabaseTestCase
 {
@@ -51,10 +52,76 @@ abstract class BlockTypeTestCase extends ConcreteDatabaseTestCase
 
     public function testRefresh()
     {
+        $env = Environment::get();
+        $r = $env->getRecord(DIRNAME_BLOCKS . '/' . $this->btHandle . '/' . FILENAME_BLOCK_DB);
+        $tableColumns = [];
+        $fs = new Filesystem();
+        $dbXmlFile = $r->getFile();
+        if ($fs->isFile($dbXmlFile)) {
+            $xDoc = new \DOMDocument();
+            $xDoc->loadXML($fs->get($dbXmlFile));
+            $xPath = new \DOMXPath($xDoc);
+            $xPath->registerNamespace('dx', 'http://www.concrete5.org/doctrine-xml/0.5');
+            $xTables = $xPath->query('/dx:schema/dx:table');
+            if ($xTables->length > 0) {
+                foreach ($xTables as $xTable) {
+                    /* @var \DOMElement $xTable */
+                    $tableName = (string) $xTable->getAttribute('name');
+                    $tableColumns[$tableName] = [];
+                    foreach ($xPath->query('dx:field', $xTable) as $xField) {
+                        $tableColumns[$tableName][] = strtolower((string) $xField->getAttribute('name'));
+                    }
+                    $newField = $xDoc->createElement('field');
+                    $attr = $xDoc->createAttribute('name');
+                    $attr->value = 'ThisIsATestFieldAddedForTestPurposes__';
+                    $tableColumns[$tableName][] = strtolower((string) $attr->value);
+                    $newField->appendChild($attr);
+                    $attr = $xDoc->createAttribute('type');
+                    $attr->value = 'string';
+                    $newField->appendChild($attr);
+                    $attr = $xDoc->createAttribute('size');
+                    $attr->value = '255';
+                    $newField->appendChild($attr);
+                    $xTable->insertBefore($newField, $xField);
+                }
+                $dbXmlFileOriginal = $dbXmlFile.'-original';
+                $fs->move($dbXmlFile, $dbXmlFileOriginal);
+                $fs->put($dbXmlFile, $xDoc->saveXML());
+            }
+        }
+        if (empty($tableColumns)) {
+            $this->markTestIncomplete('This test should try to actually change the schema and verify it.');
+        }
         $bt = BlockType::installBlockType($this->btHandle);
         $btx = BlockType::getByID(1);
-
         $btx->refresh();
-        $this->markTestIncomplete('This test should try to actually change the schema and verify it.');
+        $sm = Database::connection()->getSchemaManager();
+        foreach ($tableColumns as $tableName => $columnNames) {
+            $dbColumns = array();
+            foreach ($sm->listTableColumns($tableName) as $dbColumn) {
+                $dbColumns[] = strtolower($dbColumn->getName());
+            }
+            $columnNames = array_filter($columnNames, 'strtolower');
+            sort($columnNames);
+            $dbColumns = array_filter($dbColumns, 'strtolower');
+            sort($dbColumns);
+            $this->assertSame($columnNames, $dbColumns);
+        }
     }
+
+    public function tearDown()
+    {
+        $env = Environment::get();
+        $r = $env->getRecord(DIRNAME_BLOCKS . '/' . $this->btHandle . '/' . FILENAME_BLOCK_DB);
+        $dbXml = $r->getFile();
+        $dbXmlOriginal = $dbXml.'-original';
+        $fs = new Filesystem();
+        if ($fs->isFile($dbXmlOriginal)) {
+            if ($fs->isFile($dbXml)) {
+                $fs->delete($dbXml);
+            }
+            $fs->move($dbXmlOriginal, $dbXml);
+        }
+    }
+    
 }
