@@ -122,5 +122,6 @@ abstract class BlockTypeTestCase extends ConcreteDatabaseTestCase
             }
             $fs->move($dbXmlOriginal, $dbXml);
         }
+        parent::tearDown();
     }
 }
