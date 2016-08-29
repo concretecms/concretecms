@@ -684,7 +684,7 @@ class Controller extends AttributeTypeController
     {
 
         $type = $this->getAttributeKeyType();
-        $newOptionSet = $type->getOptionList();
+        $optionList = $type->getOptionList();
 
         $orm = $this->entityManager;
 
@@ -710,8 +710,16 @@ class Controller extends AttributeTypeController
         $type->setDisplayOrder($akSelectOptionDisplayOrder);
         $type->setAllowOtherValues((bool) $akSelectAllowOtherValues);
 
-        $initialOptionSet = $this->getOptions();
         $selectedPostValues = $this->getSelectValuesFromPost();
+
+
+        foreach ($optionList->getOptions() as $iopt) {
+            if (!in_array($iopt, $selectedPostValues)) {
+                $orm->remove($iopt);
+            }
+        }
+
+        $orm->flush();
 
         // Now we add the options
 
@@ -719,19 +727,11 @@ class Controller extends AttributeTypeController
             /*
              * @var $option SelectValueOption
              */
-            $option->setOptionList($newOptionSet);
-            $newOptionSet->getOptions()->add($option);
+            $option->setOptionList($optionList);
+            $optionList->getOptions()->add($option);
         }
 
-        // Now we remove all options that appear in the
-        // old values list but not in the new
-        foreach ($initialOptionSet as $iopt) {
-            if (!$newOptionSet->contains($iopt)) {
-                $orm->remove($iopt);
-            }
-        }
-
-        $type->setOptionList($newOptionSet);
+        $type->setOptionList($optionList);
 
         return $type;
     }
