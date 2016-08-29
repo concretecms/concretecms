@@ -8,6 +8,7 @@ use Concrete\Core\File\Tracker\FileTrackableInterface;
 use Concrete\Core\File\Tracker\UsageTracker;
 use Concrete\Core\Page\Collection\Collection;
 use Doctrine\ORM\EntityManagerInterface;
+use Concrete\Core\Block\BlockController;
 
 class FileUsageTrackerTest extends \PHPUnit_Framework_TestCase
 {
