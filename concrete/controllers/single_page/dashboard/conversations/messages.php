@@ -38,7 +38,7 @@ class Messages extends DashboardPageController
         $ml = new ConversationMessageList();
         $ml->setItemsPerPage(20);
         $cmpFilterTypes = array(
-            'all' => t('** Show All'),
+            'all' => t('Show All'),
             'unapproved' => t('Unapproved'),
             'approved' => t('Approved'),
             'deleted' => t('Deleted'),
@@ -49,10 +49,6 @@ class Messages extends DashboardPageController
                 $flagtype->getConversationFlagTypeHandle()
             );
         }
-        $cmpSortTypes = array(
-            'date_desc' => t('Recent First'),
-            'date_asc' => t('Earliest First'),
-        );
 
         if ($_REQUEST['cmpMessageKeywords']) {
             $ml->filterByKeywords($_REQUEST['cmpMessageKeywords']);
@@ -89,16 +85,12 @@ class Messages extends DashboardPageController
                 break;
 
         }
-        if ($_REQUEST['cmpMessageSort'] == 'date_asc') {
-            $ml->sortByDateAscending();
-        } else {
-            $ml->sortByDateDescending();
-        }
+
+        $ml->sortByDateDescending();
 
         $this->set('list', $ml);
         $this->set('messages', $ml->getPage());
         $this->set('cmpFilterTypes', $cmpFilterTypes);
-        $this->set('cmpSortTypes', $cmpSortTypes);
         $this->set('cmpMessageFilter', $cmpMessageFilter);
     }
 
