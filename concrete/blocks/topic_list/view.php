@@ -21,7 +21,7 @@
                         ?><li><?php echo $topic->getTreeNodeDisplayName(); ?></li>
                         <?php
                     } else {
-                        ?><a href="<?php echo $view->controller->getTopicLink($topic); ?>" <?php
+                        ?><li><a href="<?php echo $view->controller->getTopicLink($topic); ?>" <?php
                         if (isset($selectedTopicID) && $selectedTopicID == $topic->getTreeNodeID()) {
                             ?> class="ccm-block-topic-list-topic-selected"<?php
                         }
