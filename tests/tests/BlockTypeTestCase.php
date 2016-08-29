@@ -90,7 +90,7 @@ abstract class BlockTypeTestCase extends ConcreteDatabaseTestCase
             }
         }
         if (empty($tableColumns)) {
-            $this->markTestIncomplete('This test should try to actually change the schema and verify it.');
+            $this->markTestSkipped('This test tries to add a column to the block type tables, but this block type does not have any table.');
         }
         $bt = BlockType::installBlockType($this->btHandle);
         $btx = BlockType::getByID(1);
