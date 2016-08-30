@@ -14,6 +14,7 @@ use Concrete\Core\Entity\Express\Entity;
 use Concrete\Core\Entity\Express\Entry;
 use Concrete\Core\Entity\Express\FieldSet;
 use Concrete\Core\Entity\Express\Form;
+use Concrete\Core\Express\Attribute\AttributeKeyHandleGenerator;
 use Concrete\Core\Express\Entry\Manager;
 use Concrete\Core\Express\Form\Control\Type\EntityPropertyType;
 use Concrete\Core\Express\Form\Control\SaveHandler\SaveHandlerInterface;
@@ -241,7 +242,6 @@ class Controller extends BlockController
                     $control->setId((new UuidGenerator())->generate($entityManager, $control));
                     $key = new ExpressKey();
                     $key->setAttributeKeyName($post['question']);
-                    $key->setAttributeKeyHandle(sprintf('form_question_%s', count($controls) + 1));
                     if ($post['required']) {
                         $control->setIsRequired(true);
                     }
@@ -406,6 +406,8 @@ class Controller extends BlockController
             $entity = $form->getEntity();
         }
 
+        $attributeKeyCategory = $entity->getAttributeKeyCategory();
+
         // First, we get the existing controls, so we can check them to see if controls should be removed later.
         $existingControls = $form->getControls();
         $existingControlIDs = array();
@@ -425,6 +427,7 @@ class Controller extends BlockController
                     if ($control instanceof AttributeKeyControl) {
                         $key = $control->getAttributeKey();
                         $key->setEntity($entity);
+                        $key->setAttributeKeyHandle((new AttributeKeyHandleGenerator($attributeKeyCategory))->generate($key));
                         $control->setAttributeKey($key);
                         $entityManager->persist($key);
                         $indexKeys[] = $key;
@@ -443,6 +446,7 @@ class Controller extends BlockController
                                 $key = $existingControl->getAttributeKey();
                                 // question name
                                 $key->setAttributeKeyName($control->getAttributeKey()->getAttributeKeyName());
+                                $key->setAttributeKeyHandle((new AttributeKeyHandleGenerator($attributeKeyCategory))->generate($key));
 
                                 // Key Type
                                 $existing_key_type = $key->getAttributeKeyType();
