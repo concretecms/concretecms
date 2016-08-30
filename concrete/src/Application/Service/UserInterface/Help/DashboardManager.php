@@ -51,13 +51,18 @@ class DashboardManager extends AbstractManager
             '/dashboard/system/permissions/maintenance_mode' => t("Enable or disable maintenance mode, in which your site is only visible to the admin user. Maintenance Mode is useful for developing, testing or temporarily disabling a site."),
             '/dashboard/system/optimization/jobs' => t("Have concrete5 perform various tasks to help your site running in top condition, process email posts, and update search engine indexing maps. Click the triangle icon next to the job to start it. A success message will be displayed once the job has been completed."),
             '/dashboard/system/optimization/clearcache' => t("If your site is behaving oddly or displaying out-of-date content, it's a good idea to clear the cache. If you're having to clear the cache a lot, you might want to just turn off caching in Cache & Speed Settings."),
-            '/dashboard/system/seo/urls' => array(t("Remove index.php from your URLs with pretty URLs, and ensure canonical URLs if you're running a site at multiple domains."), 'dashboard-system-urls'),
+            '/dashboard/system/seo/urls' => array(
+                t("Remove index.php from your URLs with pretty URLs, and ensure canonical URLs if you're running a site at multiple domains."),
+                'dashboard-system-urls'
+            ),
             '/dashboard/system/seo/codes' => t("Add any HTML or Javascript code you need for analytics tracking to every page of your site, and pick whether it will go in pages' header or footer. This is where you would input code from Google Analytics, for example."),
             '/dashboard/system/seo/statistics' => t("Turns tracking of page views, file downloads and user registrations on or off. These are displayed on your site's Dashboard > Reports > Statistics page. If your high-traffic site experiences performance issues, you might consider disabling statistics tracking and investigate the use of an alternate, third-party solution for tracking site stats."),
             '/dashboard/system/permissions/site' => t("Control basic, general parameters for viewing and editing your site. Viewing Permissions makes your site's pages accessible to all users, registered-users-only or administrators-only. Edit Access controls which groups can edit pages, when logged in. For more granular control, set permissions on pages individually from Page Properties, or enable Advanced Permissions for even more granular control."),
             '/dashboard/composer/edit' => t("Any attributes or block areas you have enabled to be editable in Composer for this page type are available here. Add blocks to your page type's defaults. After adding the block, click it and choose the option to make it available in Composer."),
             '/dashboard/users/attributes' => t('Store data about your users-- like site preferences, birthdays, bios and more. Control which elements are available for users to update themselves.'),
             '/dashboard/users/add' => t('Manually create new user accounts for your concrete5 site.'),
-            '/dashboard' => t('The Dashboard allows you to perform administrative tasks for your site.'),        ));
+            '/dashboard' => t('The Dashboard allows you to perform administrative tasks for your site.'),
+            '/dashboard/system/files/image_uploading' => t('Control maximum dimensions for all images uploaded to your website. Ensures that enormous images will be resized.'),
+        ));
     }
 }
