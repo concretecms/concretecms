@@ -19,7 +19,7 @@ abstract class Value
     protected $avID;
 
     /**
-     * @ORM\OneToMany(targetEntity="\Concrete\Core\Entity\Attribute\Value\Value", mappedBy="value")
+     * @ORM\OneToMany(targetEntity="\Concrete\Core\Entity\Attribute\Value\Value", mappedBy="value", cascade={"remove"})
      **/
     protected $attribute_values;
 
