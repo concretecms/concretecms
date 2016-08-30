@@ -60,7 +60,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
     }
 
     /**
-     * @return int
+     * @inheritdoc
      */
     public function getPermissionObjectIdentifier()
     {
@@ -84,7 +84,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
     }
 
     /**
-     * @return string|false
+     * @return string
      */
     public function getPermissionObjectKeyCategoryHandle()
     {
@@ -96,6 +96,9 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
         $this->entity = $entity;
     }
 
+    /**
+     * @return UserEntity
+     */
     public function getEntityObject()
     {
         return $this->entity;
@@ -116,6 +119,10 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
         return $groups;
     }
 
+    /**
+     * @param User $requester
+     * @return bool
+     */
     public function triggerDelete($requester)
     {
         $db = $this->connection;
@@ -524,6 +531,11 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
         }
     }
 
+    /**
+     * @param null|string $action
+     * @param null|int $requesterUID
+     * @return bool
+     */
     function triggerActivate($action=null, $requesterUID=null)
     {
         if ($requesterUID === null) {
@@ -547,8 +559,6 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
         return $this->isActive();
     }
 
-    /**
-     */
     public function activate()
     {
         $db = $this->connection;
@@ -558,6 +568,10 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
         Events::dispatch('on_user_activate', $ue);
     }
 
+    /**
+     * @param null|int $requesterUID
+     * @return bool
+     */
     function triggerDeactivate($requesterUID = null)
     {
         if ($requesterUID === null) {
@@ -578,8 +592,6 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
         return $this->isActive()==0;
     }
 
-    /**
-     */
     public function deactivate()
     {
         $db = $this->connection;
@@ -590,7 +602,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
     }
 
     /**
-     * @return string
+     * @return string|null
      */
     public function resetUserPassword()
     {
@@ -605,15 +617,20 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
 
             return $newPassword;
         }
+
+        return null;
     }
 
+    /**
+     * @return \Concrete\Core\User\Avatar\AvatarInterface
+     */
     public function getUserAvatar()
     {
         return $this->avatarService->getAvatar($this);
     }
 
     /**
-     * @return null|Concrete\Core\Url\UrlInterface
+     * @return null|\League\URL\URLInterface
      */
     public function getUserPublicProfileUrl()
     {
@@ -642,7 +659,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
     }
 
     /**
-     * @return int
+     * @inheritdoc
      */
     public function getLastLogin()
     {
@@ -659,7 +676,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
     }
 
     /**
-     * @return int
+     * @inheritdoc
      */
     public function getPreviousLogin()
     {
@@ -667,7 +684,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
     }
 
     /**
-     * @return bool
+     * @inheritdoc
      */
     public function isActive()
     {
@@ -675,7 +692,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
     }
 
     /**
-     * @return bool
+     * @inheritdoc
      */
     public function isValidated()
     {
@@ -683,7 +700,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
     }
 
     /**
-     * @return bool
+     * @inheritdoc
      */
     public function isFullRecord()
     {
@@ -691,7 +708,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
     }
 
     /**
-     * @return int
+     * @inheritdoc
      */
     public function getNumLogins()
     {
@@ -699,7 +716,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
     }
 
     /**
-     * @return int
+     * @inheritdoc
      */
     public function getUserID()
     {
@@ -707,7 +724,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
     }
 
     /**
-     * @return string
+     * @inheritdoc
      */
     public function getUserName()
     {
@@ -715,7 +732,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
     }
 
     /**
-     * @return string
+     * @inheritdoc
      */
     public function getUserDisplayName()
     {
@@ -723,7 +740,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
     }
 
     /**
-     * @return string
+     * @inheritdoc
      */
     public function getUserPassword()
     {
@@ -731,7 +748,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
     }
 
     /**
-     * @return string
+     * @inheritdoc
      */
     public function getUserEmail()
     {
@@ -739,9 +756,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
     }
 
     /**
-     * Returns the user's timezone.
-     *
-     * @return string
+     * @inheritdoc
      */
     public function getUserTimezone()
     {
@@ -749,7 +764,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
     }
 
     /**
-     * @return string
+     * @inheritdoc
      */
     public function getUserDefaultLanguage()
     {
@@ -757,9 +772,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
     }
 
     /**
-     * Gets the date a user was added to the system.
-     *
-     * @return string date formated like: 2009-01-01 00:00:00
+     * @inheritdoc
      */
     public function getUserDateAdded()
     {
@@ -767,9 +780,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
     }
 
     /**
-     * Gets the date a user was last active on the site.
-     *
-     * @return string date formated like: 2009-01-01 00:00:00
+     * @inheritdoc
      */
     public function getLastOnline()
     {
@@ -797,6 +808,11 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
         return $this->application->make('\Concrete\Core\Attribute\Category\UserCategory');
     }
 
+    /**
+     * @param string|\Concrete\Core\Entity\Attribute\Key\UserKey $ak
+     * @param bool $createIfNotExists
+     * @return bool|UserValue
+     */
     public function getAttributeValueObject($ak, $createIfNotExists = false)
     {
         if (!is_object($ak)) {
@@ -815,6 +831,8 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
             $attributeValue->setAttributeKey($ak);
             return $attributeValue;
         }
+
+        return false;
     }
 
     /**
@@ -832,6 +850,8 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
 
             return $this->getAttribute($nm);
         }
+
+        return null;
     }
 
     /**
