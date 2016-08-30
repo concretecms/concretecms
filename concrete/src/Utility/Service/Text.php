@@ -355,7 +355,8 @@ class Text
      */
     public function handle($handle, $leaveSlashes = false)
     {
-        return $this->sanitizeFileSystem($handle, $leaveSlashes);
+        $handle = $this->sanitizeFileSystem($handle, $leaveSlashes);
+        return str_replace('-', '_', $handle);
     }
 
     /**
