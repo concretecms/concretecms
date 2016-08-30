@@ -569,7 +569,7 @@ class Group extends Object implements \Concrete\Core\Permission\ObjectInterface
         return $badges;
     }
 
-    protected function getAutomationControllers($column, $excludeUser = false)
+    protected static function getAutomationControllers($column, $excludeUser = false)
     {
         $gs = new GroupList();
         $gs->filter($column, 1);
