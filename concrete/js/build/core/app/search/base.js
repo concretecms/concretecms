@@ -384,10 +384,12 @@
 			});
 		}
 
-		$container.find('select.selectize-select').selectize();
+		$container.find('select.selectize-select').selectize({
+			plugins: ['remove_button']
+    	});
 		$container.on('change', 'select.ccm-search-choose-field', function() {
 			var key = $(this).val();
-			var $content = $(this).parent().find('div.ccm-search-field-content');
+			var $content = $(this).parent().find('div.form-group');
 			if (key) {
 				$.concreteAjax({
 					url: $(this).attr('data-action'),
@@ -402,7 +404,9 @@
 							ccm_addHeaderItem(javascript, 'JAVASCRIPT');
 						});
 						$content.html(r.element);
-						$content.find('select.selectize-select').selectize();
+						$content.find('select.selectize-select').selectize({
+			        		plugins: ['remove_button']
+			        	});
 					}
 				});
 			}
