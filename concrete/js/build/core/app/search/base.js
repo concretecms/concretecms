@@ -395,6 +395,12 @@
 						'field': key
 					},
 					success: function(r) {
+						_.each(r.assets.css, function(css) {
+							ccm_addHeaderItem(css, 'CSS');
+						});
+						_.each(r.assets.javascript, function(javascript) {
+							ccm_addHeaderItem(javascript, 'JAVASCRIPT');
+						});
 						$content.html(r.element);
 						$content.find('select.selectize-select').selectize();
 					}
