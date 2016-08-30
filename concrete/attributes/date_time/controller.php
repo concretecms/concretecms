@@ -72,19 +72,23 @@ class Controller extends AttributeTypeController
     {
         $this->load();
         $dt = Loader::helper('form/date_time');
-        $caValue = $this->getDisplayValue();
-        $html = Loader::helper('html');
         switch ($this->akDateDisplayMode) {
             case 'text':
                 $form = Loader::helper('form');
                 echo $form->text($this->field('value'), $this->getDisplayValue());
                 break;
             case 'date':
+                $data = $this->post();
+                $value = $dt->translate('value', $data);
+                $caValue = $value ? $value : $this->getDisplayValue();
                 $this->requireAsset('jquery/ui');
                 echo $dt->date($this->field('value'), $caValue == null ? '' : $caValue);
                 break;
             default:
                 $this->requireAsset('jquery/ui');
+                $data = $this->post();
+                $value = $dt->translate('value', $data);
+                $caValue = $value ? $value : $this->getDisplayValue();
                 echo $dt->datetime($this->field('value'), $caValue == null ? '' : $caValue);
                 break;
         }

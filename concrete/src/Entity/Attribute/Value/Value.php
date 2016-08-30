@@ -78,21 +78,20 @@ abstract class Value implements AttributeValueInterface
     public function getValue($mode = false)
     {
         $value = $this->value;
-        $controller = $this->getController();
-        if (is_object($value)) {
-            if ($mode != false) {
-                $modes = func_get_args();
-                foreach ($modes as $mode) {
-                    $method = 'get' . camelcase($mode) . 'Value';
-                    if (method_exists($controller, $method)) {
-                        return $controller->{$method}();
-                    }
-                }
-            } else {
-                return $value->getValue();
-            }
+
+        // legacy
+        if ($mode == 'displaySanitized') {
+            return $this->getDisplaySanitizedValue();
+        }
+        if ($mode == 'display') {
+            return $this->getDisplayValue();
         }
 
+        if (is_object($value)) {
+            return $value->getValue();
+        }
+
+        $controller = $this->getController();
         return $controller->getValue();
     }
 
