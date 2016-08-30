@@ -123,7 +123,7 @@ class User
     }
 
     /**
-     * @return mixed
+     * @return int
      */
     public function getUserID()
     {
@@ -131,7 +131,7 @@ class User
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getUserName()
     {
@@ -139,7 +139,7 @@ class User
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getUserEmail()
     {
@@ -147,7 +147,7 @@ class User
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getUserPassword()
     {
@@ -155,7 +155,7 @@ class User
     }
 
     /**
-     * @return mixed
+     * @return bool
      */
     public function isUserActive()
     {
@@ -163,7 +163,9 @@ class User
     }
 
     /**
-     * @return mixed
+     * Returns false if there is no additional data but the email address.
+     *
+     * @return bool
      */
     public function isUserFullRecord()
     {
@@ -171,7 +173,7 @@ class User
     }
 
     /**
-     * @return mixed
+     * @return bool
      */
     public function isUserValidated()
     {
@@ -179,7 +181,9 @@ class User
     }
 
     /**
-     * @return mixed
+     * Gets the date a user was added to the system.
+     *
+     * @return \DateTime
      */
     public function getUserDateAdded()
     {
@@ -187,7 +191,7 @@ class User
     }
 
     /**
-     * @return mixed
+     * @return \DateTime
      */
     public function getUserLastPasswordChange()
     {
@@ -195,7 +199,7 @@ class User
     }
 
     /**
-     * @return mixed
+     * @return bool
      */
     public function userHasAvatar()
     {
@@ -203,7 +207,7 @@ class User
     }
 
     /**
-     * @return mixed
+     * @return int
      */
     public function getUserLastOnline()
     {
@@ -211,7 +215,7 @@ class User
     }
 
     /**
-     * @return mixed
+     * @return int
      */
     public function getUserLastLogin()
     {
@@ -219,7 +223,7 @@ class User
     }
 
     /**
-     * @return mixed
+     * @return int|null
      */
     public function getUserPreviousLogin()
     {
@@ -227,7 +231,7 @@ class User
     }
 
     /**
-     * @return mixed
+     * @return int
      */
     public function getUserTotalLogins()
     {
@@ -235,7 +239,7 @@ class User
     }
 
     /**
-     * @return mixed
+     * @return int
      */
     public function getUserLastAuthenticationTypeID()
     {
@@ -243,7 +247,7 @@ class User
     }
 
     /**
-     * @return mixed
+     * @return string|null
      */
     public function getUserLastIP()
     {
@@ -251,7 +255,7 @@ class User
     }
 
     /**
-     * @return mixed
+     * @return string|null
      */
     public function getUserTimezone()
     {
@@ -259,7 +263,7 @@ class User
     }
 
     /**
-     * @return mixed
+     * @return string|null
      */
     public function getUserDefaultLanguage()
     {
@@ -267,7 +271,7 @@ class User
     }
 
     /**
-     * @return mixed
+     * @return bool
      */
     public function isUserPasswordReset()
     {
@@ -275,7 +279,7 @@ class User
     }
 
     /**
-     * @param mixed $uID
+     * @param int $uID
      */
     public function setUserID($uID)
     {
@@ -283,7 +287,7 @@ class User
     }
 
     /**
-     * @param mixed $uName
+     * @param string $uName
      */
     public function setUserName($uName)
     {
@@ -291,7 +295,7 @@ class User
     }
 
     /**
-     * @param mixed $uEmail
+     * @param string $uEmail
      */
     public function setUserEmail($uEmail)
     {
@@ -299,7 +303,7 @@ class User
     }
 
     /**
-     * @param mixed $uPassword
+     * @param string $uPassword
      */
     public function setUserPassword($uPassword)
     {
@@ -307,7 +311,7 @@ class User
     }
 
     /**
-     * @param mixed $uIsActive
+     * @param bool $uIsActive
      */
     public function setUserIsActive($uIsActive)
     {
@@ -315,7 +319,7 @@ class User
     }
 
     /**
-     * @param mixed $uIsFullRecord
+     * @param bool $uIsFullRecord
      */
     public function setUserIsFullRecord($uIsFullRecord)
     {
@@ -323,7 +327,7 @@ class User
     }
 
     /**
-     * @param mixed $uIsValidated
+     * @param bool $uIsValidated
      */
     public function setUserIsValidated($uIsValidated)
     {
@@ -331,7 +335,7 @@ class User
     }
 
     /**
-     * @param mixed $uDateAdded
+     * @param \DateTime $uDateAdded
      */
     public function setUserDateAdded($uDateAdded)
     {
@@ -339,7 +343,7 @@ class User
     }
 
     /**
-     * @param mixed $uLastPasswordChange
+     * @param \DateTime $uLastPasswordChange
      */
     public function setUserLastPasswordChange($uLastPasswordChange)
     {
@@ -347,7 +351,7 @@ class User
     }
 
     /**
-     * @param mixed $uHasAvatar
+     * @param bool $uHasAvatar
      */
     public function setUserHasAvatar($uHasAvatar)
     {
@@ -355,7 +359,7 @@ class User
     }
 
     /**
-     * @param mixed $uLastOnline
+     * @param int $uLastOnline
      */
     public function setUserLastOnline($uLastOnline)
     {
@@ -363,7 +367,7 @@ class User
     }
 
     /**
-     * @param mixed $uLastLogin
+     * @param int $uLastLogin
      */
     public function setUserLastLogin($uLastLogin)
     {
@@ -371,7 +375,7 @@ class User
     }
 
     /**
-     * @param mixed $uPreviousLogin
+     * @param int|null $uPreviousLogin
      */
     public function setUserPreviousLogin($uPreviousLogin)
     {
@@ -379,7 +383,7 @@ class User
     }
 
     /**
-     * @param mixed $uNumLogins
+     * @param int $uNumLogins
      */
     public function setUserTotalLogins($uNumLogins)
     {
@@ -387,7 +391,7 @@ class User
     }
 
     /**
-     * @param mixed $uLastAuthTypeID
+     * @param int $uLastAuthTypeID
      */
     public function setUserLastAuthenticationTypeID($uLastAuthTypeID)
     {
@@ -395,7 +399,7 @@ class User
     }
 
     /**
-     * @param mixed $uLastIP
+     * @param string $uLastIP
      */
     public function setUserLastIP($uLastIP)
     {
@@ -403,7 +407,7 @@ class User
     }
 
     /**
-     * @param mixed $uTimezone
+     * @param string|null $uTimezone
      */
     public function setUserTimezone($uTimezone)
     {
@@ -411,7 +415,7 @@ class User
     }
 
     /**
-     * @param mixed $uDefaultLanguage
+     * @param string|null $uDefaultLanguage
      */
     public function setUserDefaultLanguage($uDefaultLanguage)
     {
@@ -419,22 +423,26 @@ class User
     }
 
     /**
-     * @param mixed $uIsPasswordReset
+     * @param bool $uIsPasswordReset
      */
     public function setUserIsPasswordReset($uIsPasswordReset)
     {
         $this->uIsPasswordReset = $uIsPasswordReset;
     }
 
+    /**
+     * @return \UserInfo|null
+     */
     public function getUserInfoObject()
     {
         return \UserInfo::getByID($this->getUserID());
     }
 
+    /**
+     * @return string
+     */
     public function __toString()
     {
-        return $this->getUserID();
+        return (string) $this->getUserID();
     }
-
-
 }
