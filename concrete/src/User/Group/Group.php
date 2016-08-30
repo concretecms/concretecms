@@ -18,7 +18,7 @@ class Group extends Object implements \Concrete\Core\Permission\ObjectInterface
 {
     public $ctID;
     public $permissionSet;
-    private $permissions = array(); // more advanced version of permissions
+    private $permissions = []; // more advanced version of permissions
 
     public function getPermissionObjectIdentifier()
     {
@@ -55,7 +55,7 @@ class Group extends Object implements \Concrete\Core\Permission\ObjectInterface
             return $g;
         }
 
-        $row = $db->getRow("select * from Groups where gID = ?", array($gID));
+        $row = $db->getRow("select * from Groups where gID = ?", [$gID]);
         if (isset($row['gID'])) {
             $g = \Core::make('\Concrete\Core\User\Group\Group');
             $g->setPropertiesFromArray($row);
@@ -75,7 +75,7 @@ class Group extends Object implements \Concrete\Core\Permission\ObjectInterface
     public static function getByName($gName)
     {
         $db = Database::connection();
-        $row = $db->getRow("select * from Groups where gName = ?", array($gName));
+        $row = $db->getRow("select * from Groups where gName = ?", [$gName]);
         if (isset($row['gID'])) {
             $g = new static();
             $g->setPropertiesFromArray($row);
@@ -92,7 +92,7 @@ class Group extends Object implements \Concrete\Core\Permission\ObjectInterface
     public static function getByPath($gPath)
     {
         $db = Database::connection();
-        $row = $db->getRow("select * from Groups where gPath = ?", array($gPath));
+        $row = $db->getRow("select * from Groups where gPath = ?", [$gPath]);
         if (isset($row['gID'])) {
             $g = new static();
             $g->setPropertiesFromArray($row);
@@ -109,7 +109,6 @@ class Group extends Object implements \Concrete\Core\Permission\ObjectInterface
         $group->addAttribute('path', $this->getGroupPath());
         $group->addAttribute('package', $this->getPackageHandle());
     }
-
 
     public function getGroupMembers()
     {
@@ -150,7 +149,7 @@ class Group extends Object implements \Concrete\Core\Permission\ObjectInterface
     public function getGroupMembersNum()
     {
         $db = Database::connection();
-        $cnt = $db->GetOne("select count(uID) from UserGroups where gID = ?", array($this->gID));
+        $cnt = $db->GetOne("select count(uID) from UserGroups where gID = ?", [$this->gID]);
 
         return $cnt;
     }
@@ -185,8 +184,8 @@ class Group extends Object implements \Concrete\Core\Permission\ObjectInterface
         }
 
         $db = Database::connection();
-        $r = $db->query("DELETE FROM UserGroups WHERE gID = ?", array(intval($this->gID)));
-        $r = $db->query("DELETE FROM Groups WHERE gID = ?", array(intval($this->gID)));
+        $r = $db->query("DELETE FROM UserGroups WHERE gID = ?", [intval($this->gID)]);
+        $r = $db->query("DELETE FROM Groups WHERE gID = ?", [intval($this->gID)]);
     }
 
     public function rescanGroupPath()
@@ -209,7 +208,7 @@ class Group extends Object implements \Concrete\Core\Permission\ObjectInterface
         $path .= '/' . $this->gName;
         $this->gPath = $path;
 
-        $db->Execute('update Groups set gPath = ? where gID = ?', array($path, $this->gID));
+        $db->Execute('update Groups set gPath = ? where gID = ?', [$path, $this->gID]);
     }
 
     public function rescanGroupPathRecursive()
@@ -233,7 +232,7 @@ class Group extends Object implements \Concrete\Core\Permission\ObjectInterface
     {
         $db = Database::connection();
         $q = "select ugEntered from UserGroups where gID = ? and uID = ?";
-        $r = $db->GetOne($q, array($this->gID, $user->getUserID()));
+        $r = $db->GetOne($q, [$this->gID, $user->getUserID()]);
         if ($r) {
             return $r;
         }
@@ -257,7 +256,7 @@ class Group extends Object implements \Concrete\Core\Permission\ObjectInterface
     public function getParentGroups()
     {
         $node = GroupTreeNode::getTreeNodeByGroupID($this->gID);
-        $parentGroups = array();
+        $parentGroups = [];
         if (is_object($node)) {
             $parents = $node->getTreeNodeParentArray();
             $parents = array_reverse($parents);
@@ -275,7 +274,7 @@ class Group extends Object implements \Concrete\Core\Permission\ObjectInterface
     public function getChildGroups()
     {
         $node = GroupTreeNode::getTreeNodeByGroupID($this->gID);
-        $children = array();
+        $children = [];
         if (is_object($node)) {
             $node->populateDirectChildrenOnly();
             $node_children = $node->getChildNodes();
@@ -392,9 +391,9 @@ class Group extends Object implements \Concrete\Core\Permission\ObjectInterface
     {
         $class = $this->getGroupAutomationControllerClass();
         try {
-            $c = \Core::make($class, array($this));
+            $c = \Core::make($class, [$this]);
         } catch (\ReflectionException $e) {
-            $c = \Core::make(core_class('\\Core\\User\\Group\\AutomatedGroup\\DefaultAutomation'), array($this));
+            $c = \Core::make(core_class('\\Core\\User\\Group\\AutomatedGroup\\DefaultAutomation'), [$this]);
         }
 
         return $c;
@@ -499,7 +498,7 @@ class Group extends Object implements \Concrete\Core\Permission\ObjectInterface
         $db = Database::connection();
         if ($this->gID) {
             $g = CacheLocal::delete('group', $this->gID);
-            $v = array($gName, $gDescription, $this->gID);
+            $v = [$gName, $gDescription, $this->gID];
             $r = $db->prepare("update Groups set gName = ?, gDescription = ? where gID = ?");
             $res = $db->Execute($r, $v);
             $group = static::getByID($this->gID);
@@ -525,7 +524,7 @@ class Group extends Object implements \Concrete\Core\Permission\ObjectInterface
         if (is_object($pkg)) {
             $pkgID = $pkg->getPackageID();
         }
-        $v = array($gID, $gName, $gDescription, $pkgID);
+        $v = [$gID, $gName, $gDescription, $pkgID];
         $r = $db->prepare("insert into Groups (gID, gName, gDescription, pkgID) values (?, ?, ?, ?)");
         $res = $db->Execute($r, $v);
 
@@ -561,7 +560,7 @@ class Group extends Object implements \Concrete\Core\Permission\ObjectInterface
         $gs = new GroupList();
         $gs->filter('gIsBadge', 1);
         $results = $gs->getResults();
-        $badges = array();
+        $badges = [];
         foreach ($results as $gr) {
             $badges[] = $gr;
         }
@@ -569,11 +568,11 @@ class Group extends Object implements \Concrete\Core\Permission\ObjectInterface
         return $badges;
     }
 
-    protected function getAutomationControllers($column, $excludeUser = false)
+    protected static function getAutomationControllers($column, $excludeUser = false)
     {
         $gs = new GroupList();
         $gs->filter($column, 1);
-        $excludeGIDs = array();
+        $excludeGIDs = [];
         if (is_object($excludeUser)) {
             $groups = $excludeUser->getUserGroups();
             $groupKeys = array_keys($groups);
@@ -582,7 +581,7 @@ class Group extends Object implements \Concrete\Core\Permission\ObjectInterface
             }
         }
         $results = $gs->get();
-        $controllers = array();
+        $controllers = [];
         foreach ($results as $group) {
             $controller = $group->getGroupAutomationController();
             $controllers[] = $controller;
@@ -611,7 +610,7 @@ class Group extends Object implements \Concrete\Core\Permission\ObjectInterface
         $db = Database::connection();
         $db->Execute(
             'update Groups set gIsBadge = 0, gBadgeFID = 0, gBadgeDescription = null, gBadgeCommunityPointValue = 0 where gID = ?',
-            array($this->getGroupID())
+            [$this->getGroupID()]
         );
     }
 
@@ -620,7 +619,7 @@ class Group extends Object implements \Concrete\Core\Permission\ObjectInterface
         $db = Database::connection();
         $db->Execute(
             'update Groups set gIsAutomated = 0, gCheckAutomationOnRegister = 0, gCheckAutomationOnLogin = 0, gCheckAutomationOnJobRun = 0 where gID = ?',
-            array($this->getGroupID())
+            [$this->getGroupID()]
         );
     }
 
@@ -629,7 +628,7 @@ class Group extends Object implements \Concrete\Core\Permission\ObjectInterface
         $db = Database::connection();
         $db->Execute(
             'update Groups set gUserExpirationIsEnabled = 0, gUserExpirationMethod = null, gUserExpirationSetDateTime = null, gUserExpirationInterval = 0, gUserExpirationAction = null where gID = ?',
-            array($this->getGroupID())
+            [$this->getGroupID()]
         );
     }
 
@@ -638,7 +637,7 @@ class Group extends Object implements \Concrete\Core\Permission\ObjectInterface
         $db = Database::connection();
         $db->Execute(
             'update Groups set gIsBadge = 1, gBadgeFID = ?, gBadgeDescription = ?, gBadgeCommunityPointValue = ? where gID = ?',
-            array(intval($gBadgeFID), $gBadgeDescription, $gBadgeCommunityPointValue, $this->gID)
+            [intval($gBadgeFID), $gBadgeDescription, $gBadgeCommunityPointValue, $this->gID]
         );
     }
 
@@ -650,12 +649,12 @@ class Group extends Object implements \Concrete\Core\Permission\ObjectInterface
         $db = Database::connection();
         $db->Execute(
             'update Groups set gIsAutomated = 1, gCheckAutomationOnRegister = ?, gCheckAutomationOnLogin = ?, gCheckAutomationOnJobRun = ? where gID = ?',
-            array(
+            [
                 intval($gCheckAutomationOnRegister),
                 intval($gCheckAutomationOnLogin),
                 intval($gCheckAutomationOnJobRun),
                 $this->gID,
-            )
+            ]
         );
     }
 
@@ -664,7 +663,7 @@ class Group extends Object implements \Concrete\Core\Permission\ObjectInterface
         $db = Database::connection();
         $db->Execute(
             'update Groups set gUserExpirationIsEnabled = 1, gUserExpirationMethod = \'SET_TIME\', gUserExpirationInterval = 0, gUserExpirationSetDateTime = ?, gUserExpirationAction = ? where gID = ?',
-            array($datetime, $action, $this->gID)
+            [$datetime, $action, $this->gID]
         );
     }
 
@@ -674,7 +673,7 @@ class Group extends Object implements \Concrete\Core\Permission\ObjectInterface
         $interval = $minutes + ($hours * 60) + ($days * 1440);
         $db->Execute(
             'update Groups set gUserExpirationIsEnabled = 1, gUserExpirationMethod = \'INTERVAL\', gUserExpirationSetDateTime = null, gUserExpirationInterval = ?, gUserExpirationAction = ? where gID = ?',
-            array($interval, $action, $this->gID)
+            [$interval, $action, $this->gID]
         );
     }
 
