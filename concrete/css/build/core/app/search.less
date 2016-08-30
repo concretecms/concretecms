@@ -1,4 +1,4 @@
-/**
+/*
  * Search Fields, including action select menu, keyword search bar, advanced search
  */
 
@@ -33,10 +33,6 @@
     select.ccm-search-choose-field {
       color: #999;
       margin-right: 40px;
-    }
-
-    select {
-      width: 300px;
     }
 
     div.ccm-search-main-lookup-field {
@@ -102,6 +98,10 @@ div.ccm-search-fields-submit {
 form.ccm-search-fields-none {
   div.ccm-search-fields-row {
     padding-left: 0px;
+
+    &:first-of-type {
+      margin-top: -10px;
+    }
   }
 }
 
@@ -118,7 +118,6 @@ div.ccm-search-fields-row {
   @media (min-width: @screen-sm-min) {
     padding-left: 97px;
   }
-  border-bottom: 1px solid #efefef;
 
   position: relative;
 
@@ -159,8 +158,9 @@ div.ccm-search-fields-advanced {
     a.ccm-search-remove-field {
       color: #aaa;
       position: absolute;
-      right: 20px;
-      top: 8px;
+      right: -4px;
+      top: -2px;
+      padding: 8px;
 
       &:hover {
         color: #666;
