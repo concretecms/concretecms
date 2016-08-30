@@ -1,6 +1,8 @@
 <?php
 namespace Concrete\Core\Url\Resolver;
 
+use Concrete\Core\Url\Url;
+
 class PageUrlResolver implements UrlResolverInterface
 {
     /** @var UrlResolverInterface */
@@ -21,8 +23,8 @@ class PageUrlResolver implements UrlResolverInterface
         $page = array_shift($arguments);
         if ($page && $page instanceof \Concrete\Core\Page\Page) {
 
-            if ($page->getCollectionPointerExternalLink()) {
-                return $page->getCollectionPointerExternalLink();
+            if ($externalUrl = $page->getCollectionPointerExternalLink()) {
+                return Url::createFromUrl($externalUrl);
             }
 
             if ($path = $page->getCollectionPath()) {
