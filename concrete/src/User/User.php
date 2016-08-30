@@ -66,6 +66,11 @@ class User extends Object
         return static::getByUserID($uID, true);
     }
 
+    /**
+     * Return true if user is logged in.
+     *
+     * @return bool
+     */
     public static function isLoggedIn()
     {
         $app = Application::getFacadeApplication();
@@ -74,6 +79,9 @@ class User extends Object
         return $session->has('uID') && $session->get('uID') > 0;
     }
 
+    /**
+     * @return bool
+     */
     public function checkLogin()
     {
         $app = Application::getFacadeApplication();
@@ -119,8 +127,13 @@ class User extends Object
                 return false;
             }
         }
+
+        return false;
     }
 
+    /**
+     * @return UserInfo|null
+     */
     public function getUserInfoObject()
     {
         return UserInfo::getByID($this->uID);
@@ -237,6 +250,11 @@ class User extends Object
         return $this;
     }
 
+    /**
+     * Increment number of logins and update login timestamps.
+     *
+     * @throws \Exception
+     */
     public function recordLogin()
     {
         $app = Application::getFacadeApplication();
@@ -249,6 +267,11 @@ class User extends Object
         $db->query("update Users set uLastIP = ?, uLastLogin = ?, uPreviousLogin = ?, uNumLogins = uNumLogins + 1 where uID = ?", array(($ip === false) ? ('') : ($ip->getIp()), time(), $uLastLogin, $this->uID));
     }
 
+    /**
+     * Update PageStatistics
+     *
+     * @param Page $c
+     */
     public function recordView($c)
     {
         $app = Application::getFacadeApplication();
@@ -260,14 +283,25 @@ class User extends Object
         $db->query("insert into PageStatistics (cID, uID, date) values (?, ?, NOW())", $v);
     }
 
-    // $salt is retained for compatibilty with older versions of concerete5, but not used.
+    /**
+     * $salt is retained for compatibilty with older versions of concerete5, but not used.
+     *
+     * @param string $uPassword
+     * @param null $salt
+     * @return string
+     */
     public function encryptPassword($uPassword, $salt = null)
     {
         return $this->getUserPasswordHasher()->HashPassword($uPassword);
     }
 
-    // this is for compatibility with passwords generated in older versions of Concrete5.
-    // Use only for checking password hashes, not generating new ones to store.
+    /**
+     * This is for compatibility with passwords generated in older versions of concrete5.
+     * Use only for checking password hashes, not generating new ones to store.
+     *
+     * @param string $uPassword
+     * @return string
+     */
     public function legacyEncryptPassword($uPassword)
     {
         $app = Application::getFacadeApplication();
@@ -275,46 +309,76 @@ class User extends Object
         return md5($uPassword . ':' . $app['config']->get('concrete.user.password.legacy_salt'));
     }
 
+    /**
+     * @return bool
+     */
     public function isActive()
     {
         return $this->uIsActive;
     }
 
+    /**
+     * @return bool
+     */
     public function isSuperUser()
     {
         return $this->superUser;
     }
 
+    /**
+     * @return int|null
+     */
     public function getLastOnline()
     {
         return isset($this->uLastOnline) ? $this->uLastOnline : null;
     }
 
+    /**
+     * @return string|null
+     */
     public function getUserName()
     {
         return $this->uName;
     }
 
+    /**
+     * @return bool
+     */
     public function isRegistered()
     {
         return $this->getUserID() > 0;
     }
 
+    /**
+     * @return string
+     */
     public function getUserID()
     {
         return $this->uID;
     }
 
+    /**
+     * @return string|null
+     */
     public function getUserTimezone()
     {
         return $this->uTimezone;
     }
 
+    /**
+     * Return date in yyyy-mm-dd H:i:s format.
+     *
+     * @return string
+     */
     public function getUserSessionValidSince()
     {
         return $this->uLastPasswordChange;
     }
 
+    /**
+     * @param string $authType
+     * @throws \Exception
+     */
     public function setAuthTypeCookie($authType)
     {
         $app = Application::getFacadeApplication();
@@ -336,6 +400,9 @@ class User extends Object
         );
     }
 
+    /**
+     * @param AuthenticationType $at
+     */
     public function setLastAuthType(AuthenticationType $at)
     {
         $app = Application::getFacadeApplication();
@@ -343,6 +410,9 @@ class User extends Object
         $db->Execute('UPDATE Users SET uLastAuthTypeID=? WHERE uID=?', array($at->getAuthenticationTypeID(), $this->getUserID()));
     }
 
+    /**
+     * @return int
+     */
     public function getLastAuthType()
     {
         $app = Application::getFacadeApplication();
@@ -360,6 +430,9 @@ class User extends Object
         }
     }
 
+    /**
+     * @param bool $hard
+     */
     public function logout($hard = true)
     {
         $app = Application::getFacadeApplication();
@@ -373,6 +446,9 @@ class User extends Object
         $events->dispatch('on_user_logout');
     }
 
+    /**
+     * @param bool $hard
+     */
     public function invalidateSession($hard = true)
     {
         $app = Application::getFacadeApplication();
@@ -419,6 +495,11 @@ class User extends Object
         }
     }
 
+    /**
+     * Returns an array of Group objects the user belongs to.
+     *
+     * @return array
+     */
     public function getUserGroupObjects()
     {
         $gs = new GroupList();
@@ -427,13 +508,21 @@ class User extends Object
         return $gs->getResults();
     }
 
+    /**
+     * Returns an array of group ids the user belongs to.
+     *
+     * @return array
+     */
     public function getUserGroups()
     {
         return $this->uGroups;
     }
 
+
     /**
      * Sets a default language for a user record.
+     *
+     * @param string $lang
      */
     public function setUserDefaultLanguage($lang)
     {
@@ -448,6 +537,8 @@ class User extends Object
 
     /**
      * Gets the default language for the logged-in user.
+     *
+     * @return string
      */
     public function getUserDefaultLanguage()
     {
@@ -455,7 +546,9 @@ class User extends Object
     }
 
     /**
-     * Gets the default language for the logged-in user.
+     * Returns date in yyyy-mm-dd H:i:s format.
+     *
+     * @return string
      */
     public function getLastPasswordChange()
     {
@@ -465,6 +558,8 @@ class User extends Object
     /**
      * Checks to see if the current user object is registered. If so, it queries that records
      * default language. Otherwise, it falls back to sitewide settings.
+     *
+     * @return string
      */
     public function getUserLanguageToDisplay()
     {
@@ -490,6 +585,9 @@ class User extends Object
         $this->uGroups = $ug;
     }
 
+    /**
+     * @return array
+     */
     public function getUserAccessEntityObjects()
     {
         $app = Application::getFacadeApplication();
@@ -513,11 +611,16 @@ class User extends Object
         return $entities;
     }
 
+    /**
+     * @param bool $disableLogin
+     * @return array
+     */
     public function _getUserGroups($disableLogin = false)
     {
         $app = Application::getFacadeApplication();
         $req = Request::getInstance();
         $session = $app['session'];
+        $ug = [];
 
         if (($session->has('uGroups')) && (!$disableLogin) && (!$req->hasCustomRequestUser())) {
             $ug = $session->get('uGroups');
@@ -547,6 +650,9 @@ class User extends Object
         return $ug;
     }
 
+    /**
+     * @param Group $g
+     */
     public function enterGroup($g)
     {
         $app = Application::getFacadeApplication();
@@ -590,6 +696,9 @@ class User extends Object
         }
     }
 
+    /**
+     * @param Group $g
+     */
     public function exitGroup($g)
     {
 
@@ -609,6 +718,12 @@ class User extends Object
         }
     }
 
+    /**
+     * Return true if user is in Group.
+     *
+     * @param Group $g
+     * @return bool
+     */
     public function inGroup($g)
     {
         $app = Application::getFacadeApplication();
@@ -620,6 +735,10 @@ class User extends Object
         return $cnt > 0;
     }
 
+    /**
+     * @param int $mcID
+     * @param int $ocID
+     */
     public function loadMasterCollectionEdit($mcID, $ocID)
     {
         $app = Application::getFacadeApplication();
@@ -630,6 +749,12 @@ class User extends Object
         $session->set('ocID', $ocID);
     }
 
+    /**
+     * Loads a page in edit mode.
+     *
+     * @param Page $c
+     * @return bool
+     */
     public function loadCollectionEdit(&$c)
     {
         $c->refreshCache();
@@ -664,8 +789,13 @@ class User extends Object
                 $c->cCheckedOutDatetimeLastEdit = $datetime;
             }
         }
+
+        return true;
     }
 
+    /**
+     * @param bool $removeCache
+     */
     public function unloadCollectionEdit($removeCache = true)
     {
         $app = Application::getFacadeApplication();
@@ -685,6 +815,10 @@ class User extends Object
         }
     }
 
+    /**
+     * @param string $cfKey
+     * @return string|null
+     */
     public function config($cfKey)
     {
         if ($this->isRegistered()) {
@@ -695,27 +829,42 @@ class User extends Object
 
             return $val;
         }
+
+        return null;
     }
 
+    /**
+     * @param Page $c
+     */
     public function markPreviousFrontendPage(Page $c)
     {
         $app = Application::getFacadeApplication();
         $app['session']->set('frontendPreviousPageID', $c->getCollectionID());
     }
 
+    /**
+     * @return int
+     */
     public function getPreviousFrontendPageID()
     {
         $app = Application::getFacadeApplication();
 
-        return $app['session']->get('frontendPreviousPageID');
+        return (int) $app['session']->get('frontendPreviousPageID');
     }
 
+    /**
+     * @param string $cfKey
+     * @param string $cfValue
+     */
     public function saveConfig($cfKey, $cfValue)
     {
         $app = Application::getFacadeApplication();
         $app['database']->connection()->Replace('ConfigStore', array('cfKey' => $cfKey, 'cfValue' => $cfValue, 'uID' => $this->getUserID()), array('cfKey', 'uID'), true);
     }
 
+    /**
+     * @param Page $c
+     */
     public function refreshCollectionEdit(&$c)
     {
         if ($this->isLoggedIn() && $c->getCollectionCheckedOutUserID() == $this->getUserID()) {
@@ -733,6 +882,9 @@ class User extends Object
         }
     }
 
+    /**
+     * @return \Doctrine\DBAL\Driver\Statement
+     */
     public function forceCollectionCheckInAll()
     {
         // This function forces checkin to take place
@@ -794,6 +946,9 @@ class User extends Object
         }
     }
 
+    /**
+     * @param bool $cache_interface
+     */
     public function logIn($cache_interface = true)
     {
         $this->persist($cache_interface);
