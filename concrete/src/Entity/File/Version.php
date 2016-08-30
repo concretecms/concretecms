@@ -408,6 +408,10 @@ class Version
         $fv->fvID = $fvID;
         $fv->fvIsApproved = false;
         $fv->fvDateAdded = new \DateTime();
+        $uID = (int) (new User())->getUserID();
+        if ($uID !== 0) {
+            $fv->fvAuthorUID = $uID;
+        }
 
         $em->persist($fv);
 
@@ -632,6 +636,10 @@ class Version
         }
 
         $this->fvIsApproved = true;
+        $uID = (int) (new User())->getUserID();
+        if ($uID !== 0) {
+            $this->fvApproverUID = $uID;
+        }
         $this->save();
 
         $fe = new \Concrete\Core\File\Event\FileVersion($this);
