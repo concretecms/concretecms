@@ -6,6 +6,8 @@ use Concrete\Core\Attribute\AttributeValueInterface;
 use Concrete\Core\Attribute\Category\SearchIndexer\StandardSearchIndexerInterface;
 use Concrete\Core\Attribute\Key\ImportLoader\StandardImportLoader;
 use Concrete\Core\Attribute\Key\RequestLoader\StandardRequestLoader;
+use Concrete\Core\Attribute\Set;
+use Concrete\Core\Attribute\SetFactory;
 use Concrete\Core\Entity\Attribute\Key\Key;
 use Concrete\Core\Entity\Package;
 use Doctrine\ORM\EntityManager;
@@ -101,6 +103,7 @@ abstract class AbstractCategory implements CategoryInterface, StandardSearchInde
          * Note: Do not type hint $pkg because old versions might not send the right object in.
          * LEGACY SUPPORT
          */
+        $asID = false;
         if (is_string($key_type)) {
             $key_type = \Concrete\Core\Attribute\Type::getByHandle($key_type);
         }
@@ -109,6 +112,9 @@ abstract class AbstractCategory implements CategoryInterface, StandardSearchInde
             if (is_array($key)) {
                 $handle = $key['akHandle'];
                 $name = $key['akName'];
+                if (isset($key['asID'])) {
+                    $asID = $key['asID'];
+                }
                 $key = $this->createAttributeKey();
                 $key->setAttributeKeyHandle($handle);
                 $key->setAttributeKeyName($name);
@@ -130,6 +136,16 @@ abstract class AbstractCategory implements CategoryInterface, StandardSearchInde
 
         $this->entityManager->persist($key);
         $this->entityManager->flush();
+
+        /* legacy support, attribute set */
+        if ($asID) {
+            $manager = $this->getSetManager();
+            $factory = new SetFactory($this->entityManager);
+            $set = $factory->getByID($asID);
+            if (is_object($set)) {
+                $manager->addKey($set, $key);
+            }
+        }
 
         return $key;
     }
