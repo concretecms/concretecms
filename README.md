@@ -35,7 +35,7 @@ accept any change
 #### Expected Contributions:
 In this stage we expect the community to be working on new features and 
 any and all improvements for concrete5. You should expect to see many
-ative discussions about new and existing features as well as many new
+active discussions about new and existing features as well as many new
 pull requests that come in without prior discussion.
 
 #### Accepted Changes:
