@@ -10,6 +10,10 @@ echo Core::make('helper/concrete/ui')->tabs(array(
 ?>
 <script>
     var CCM_EDITOR_SECURITY_TOKEN = "<?php echo Core::make('helper/validation/token')->generate('editor'); ?>";
+    <?php
+    $editorJavascript = Core::make('editor')->outputStandardEditorInitJSFunction();
+    ?>
+    var launchEditor = <?=$editorJavascript?>;
     $(document).ready(function() {
         var ccmReceivingEntry = '';
         var sliderEntriesContainer = $('.ccm-image-slider-entries');
@@ -116,14 +120,7 @@ echo Core::make('helper/concrete/ui')->tabs(array(
             newSlide.removeClass('slide-closed').find('.btn.ccm-edit-slide').text(closeText);
 
             thisModal.scrollTop(newSlide.offset().top);
-            newSlide.find('.redactor-content').redactor({
-                minHeight: 200,
-                'concrete5': {
-                    filemanager: <?php echo $fp->canAccessFileManager(); ?>,
-                    sitemap: <?php echo $tp->canAccessSitemap(); ?>,
-                    lightbox: true
-                }
-            });
+            launchEditor(newSlide.find('.editor-content'));
             attachDelete(newSlide.find('.ccm-delete-image-slider-entry'));
             attachFileManagerLaunch(newSlide.find('.ccm-pick-slide-image'));
             newSlide.find('div[data-field=entry-link-page-selector-select]').concretePageSelector({
@@ -154,22 +151,12 @@ echo Core::make('helper/concrete/ui')->tabs(array(
 
         attachDelete($('.ccm-delete-image-slider-entry'));
         attachFileManagerLaunch($('.ccm-pick-slide-image'));
-        $(function() {  // activate redactors
-            $('.redactor-content').redactor({
-                minHeight: 200,
-                'concrete5': {
-                    filemanager: <?php echo $fp->canAccessFileManager(); ?>,
-                    sitemap: <?php echo $tp->canAccessSitemap(); ?>,
-                    lightbox: true
-                }
-            });
+        $(function() {  // activate editors
+            launchEditor($('.editor-content'));
         });
     });
 </script>
 <style>
-    .ccm-image-slider-block-container .redactor_editor {
-        padding: 20px;
-    }
     .ccm-image-slider-block-container input[type="text"],
     .ccm-image-slider-block-container textarea {
         display: block;
@@ -334,8 +321,8 @@ echo Core::make('helper/concrete/ui')->tabs(array(
         </div>
         <div class="form-group" >
             <label><?php echo t('Description'); ?></label>
-            <div class="redactor-edit-content"></div>
-            <textarea style="display: none" class="redactor-content" name="<?php echo $view->field('description'); ?>[]"><%=description%></textarea>
+            <div class="editor-edit-content"></div>
+            <textarea style="display: none" class="editor-content" name="<?php echo $view->field('description'); ?>[]"><%=description%></textarea>
         </div>
         <div class="form-group" >
            <label><?php echo t('Link'); ?></label>

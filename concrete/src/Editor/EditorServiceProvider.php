@@ -208,6 +208,19 @@ class EditorServiceProvider extends ServiceProvider
 
         $assetList->register(
             'javascript',
+            'editor/ckeditor4/normalizeonchange',
+            $coreAssetDir . 'normalizeonchange/register.js'
+        );
+        $assetList->registerGroup(
+            'editor/ckeditor4/normalizeonchange',
+            array(
+                array('javascript', 'editor/ckeditor4/normalizeonchange'),
+            )
+        );
+
+
+        $assetList->register(
+            'javascript',
             'editor/ckeditor4/concrete5styles',
             $coreAssetDir . 'concrete5styles/register.js'
         );
@@ -246,6 +259,12 @@ class EditorServiceProvider extends ServiceProvider
         $plugin->setKey('concrete5link');
         $plugin->setName(t('concrete5 Link'));
         $plugin->requireAsset('editor/ckeditor4/concrete5link');
+        $pluginManager->register($plugin);
+
+        $plugin = new Plugin();
+        $plugin->setKey('normalizeonchange');
+        $plugin->setName(t('Normalize On Change'));
+        $plugin->requireAsset('editor/ckeditor4/normalizeonchange');
         $pluginManager->register($plugin);
 
         $plugin = new Plugin();
