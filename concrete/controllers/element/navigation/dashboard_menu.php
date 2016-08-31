@@ -49,17 +49,6 @@ class DashboardMenu extends Menu
         return implode(' ' , $classes);
     }
 
-    public function displayDivider(Page $page, Page $next = null)
-    {
-        if ($page->getAttribute('is_desktop')) {
-            return true;
-        }
-
-        if ($page->getPackageID() == 0 && is_object($next) && $next->getPackageID() > 0) {
-            return true;
-        }
-    }
-
     public function getChildPages($parent)
     {
         $pages = parent::getChildPages($parent);
