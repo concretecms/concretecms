@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Updater\Migrations\Migrations;
 
+use Concrete\Core\Attribute\Category\CategoryInterface;
 use Concrete\Core\Attribute\Category\ExpressCategory;
 use Concrete\Core\Attribute\Key\Category;
 use Concrete\Core\Attribute\Key\CollectionKey;
@@ -14,6 +15,7 @@ use Concrete\Core\Entity\Attribute\Key\Type\BooleanType;
 use Concrete\Core\Entity\Attribute\Key\Type\NumberType;
 use Concrete\Core\Entity\Express\Entity;
 use Concrete\Core\Express\Attribute\AttributeKeyHandleGenerator;
+use Concrete\Core\Express\EntryList;
 use Concrete\Core\File\Filesystem;
 use Concrete\Core\File\Set\Set;
 use Concrete\Core\Job\Job;
@@ -43,17 +45,7 @@ class Version20160830000000 extends AbstractMigration
     protected function updateExpressEntityAttributeKeyHandles()
     {
         $em = \Database::connection()->getEntityManager();
-        // Retrieve all attributes
-        /**
-         * @var $r EntityRepository
-         */
-        $r = $em->getRepository('Concrete\Core\Entity\Express\Entity');
-        $entities = $r->findAll();
-        foreach($entities as $entity) {
-            /**
-             * @var $entity Entity
-             * @var $category ExpressCategory
-             */
+        foreach($this->getEntities() as $entity) {
             $category = $entity->getAttributeKeyCategory();
             $keys = $category->getList();
             foreach($keys as $key) {
@@ -62,18 +54,66 @@ class Version20160830000000 extends AbstractMigration
             }
             $em->flush();
         }
+    }
 
+    protected function getEntities()
+    {
+        $em = \Database::connection()->getEntityManager();
+        $r = $em->getRepository('Concrete\Core\Entity\Express\Entity');
+        $entities = $r->findAll();
+        return $entities;
     }
 
     protected function reindexExpressEntityAttributes()
     {
-∫
+        $sm = $this->connection->getSchemaManager();
+        $tables = $sm->listTables();
+        foreach ($tables as $table) {
+            $name = $table->getName();
+            if (preg_match('/ExpressForm.*ExpressSearchIndexAttributes/', $name)) {
+                $this->connection->executeQuery(sprintf('drop table %s', $name));
+            }
+        }
+
+        foreach($this->getEntities() as $entity) {
+            /**
+             * @var $category CategoryInterface
+             */
+            $category = $entity->getAttributeKeyCategory();
+            $indexer = $category->getSearchIndexer();
+            $indexer->createRepository($category);
+
+            $attributes = $category->getList();
+            foreach($attributes as $ak) {
+                $indexer->updateRepositoryColumns($category, $ak);
+            }
+        }
     }
+
+    protected function reindexExpressEntityEntries()
+    {
+        foreach($this->getEntities() as $entity) {
+            $category = $entity->getAttributeKeyCategory();
+            $indexer = $category->getSearchIndexer();
+            $list = new EntryList($entity);
+            $list->ignorePermissions();
+            $entries = $list->getResults();
+
+            foreach($entries as $entry) {
+                $values = $category->getAttributeValues($entry);
+                foreach ($values as $value) {
+                    $indexer->indexEntry($category, $value, $entry);
+                }
+            }
+        }
+    }
+
 
     public function up(Schema $schema)
     {
         $this->updateExpressEntityAttributeKeyHandles();
         $this->reindexExpressEntityAttributes();
+        $this->reindexExpressEntityEntries();
     }
 
     public function down(Schema $schema)
