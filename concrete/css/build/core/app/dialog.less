@@ -169,6 +169,7 @@ div.ui-dialog {
 
 
     .btn-primary {
+      border-color: darken(@btn-primary-bg, 15%);
       background-color: darken(@btn-primary-bg, 15%);
       &:hover {
         background-color: darken(@btn-primary-bg, 25%);
@@ -185,7 +186,7 @@ div.ui-dialog {
     }
 
     .btn-success {
-      border-color: @btn-primary-border;
+      border-color: darken(@btn-primary-bg, 15%);
       /* yes - btn success in dialogs is now just an alias to btn primary */
       background-color: darken(@btn-primary-bg, 15%);
       &:hover {
