@@ -18,17 +18,6 @@ class AttributeKeyHandleGenerator implements AttributeKeyHandleGeneratorInterfac
 
     protected function handleIsAvailable($handleToTest, Key $existingKey)
     {
-        /*
-        $q = $this->category->getEntityManager()->createQuery(
-            'select ek from Concrete\Core\Entity\Attribute\Key\ExpressKey ek where ek.akHandle = :akHandle and ek.akID <> :akID'
-        );
-        $q->setParameter('akHandle', $handleToTest);
-        $q->setParameter('akID', $existingKey->getAttributeKeyID());
-        $q->setMaxResults(1);
-        $result = $q->getOneOrNullResult();
-        return is_object($result);
-        */
-
         $key = $this->category->getByHandle($handleToTest);
         if (is_object($key)) {
             if ($key->getAttributeKeyID() != $existingKey->getAttributeKeyID()) {
@@ -50,12 +39,8 @@ class AttributeKeyHandleGenerator implements AttributeKeyHandleGeneratorInterfac
         $name = $key->getAttributeKeyName();
         $entity = $key->getEntity();
 
-        /**
-         * @var $text Text
-         */
         $text = \Core::make('helper/text');
-        $baseHandle = $text->handle($entity->getName()) .
-            '_' . $text->handle($name);
+        $baseHandle = substr($text->handle($name), 0, 42);
 
         if ($this->handleIsAvailable($baseHandle, $key)) {
             return $baseHandle;

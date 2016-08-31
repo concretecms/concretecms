@@ -19,6 +19,7 @@ use Concrete\Core\Express\Entry\Manager;
 use Concrete\Core\Express\Form\Control\Type\EntityPropertyType;
 use Concrete\Core\Express\Form\Control\SaveHandler\SaveHandlerInterface;
 use Concrete\Core\Express\Form\Validator;
+use Concrete\Core\Express\Generator\EntityHandleGenerator;
 use Concrete\Core\File\FileProviderInterface;
 use Concrete\Core\File\Set\Set;
 use Concrete\Core\Http\ResponseAssetGroup;
@@ -245,7 +246,11 @@ class Controller extends BlockController
                     if ($post['required']) {
                         $control->setIsRequired(true);
                     }
-
+                    if (!$post['question']) {
+                        $e = \Core::make('error');
+                        $e->add(t('You must give this question a name.'));
+                        return new JsonResponse($e);
+                    }
                     $controller = $type->getController();
                     $key = $this->saveAttributeKeyType($controller, $key, $post);
 
@@ -314,6 +319,11 @@ class Controller extends BlockController
                 if (is_object($type)) {
                     $key = $control->getAttributeKey();
                     $key->setAttributeKeyName($post['question']);
+                    if (!$post['question']) {
+                        $e = \Core::make('error');
+                        $e->add(t('You must give this question a name.'));
+                        return new JsonResponse($e);
+                    }
                     if ($post['requiredEdit']) {
                         $control->setIsRequired(true);
                     } else {
@@ -369,7 +379,8 @@ class Controller extends BlockController
             $entity = new Entity();
             $entity->setName($name);
             $entity->setIncludeInPublicList(false);
-            $entity->setHandle(sprintf('express_form_%s', $this->block->getBlockID()));
+            $generator = new EntityHandleGenerator($entityManager);
+            $entity->setHandle($generator->generate($entity));
             $entity->setEntityResultsNodeId($node->getTreeNodeID());
             $entityManager->persist($entity);
             $entityManager->flush();
