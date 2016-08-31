@@ -56,7 +56,7 @@ $tp = new TaskPermission();
             </div>
             <div class="form-group">
                 <label><?php echo t('Description') ?></label>
-                <textarea class='redactor-content' name="description[]"><?php echo $row['description'] ?></textarea>
+                <textarea class='editor-content' name="description[]"><?php echo $row['description'] ?></textarea>
             </div>
             <input class="ccm-faq-entry-sort" type="hidden" name="sortOrder[]" value="<?php echo $row['sortOrder'] ?>"/>
 
@@ -90,7 +90,7 @@ $tp = new TaskPermission();
         </div>
         <div class="form-group">
             <label><?php echo t('Description') ?></label>
-            <textarea class='redactor-content' name="description[]"></textarea>
+            <textarea class='editor-content' name="description[]"></textarea>
         </div>
         <input class="ccm-faq-entry-sort" type="hidden" name="sortOrder[]" value=""/>
 
@@ -101,6 +101,11 @@ $tp = new TaskPermission();
 </div>
 
 <script>
+    <?php
+    $editorJavascript = Core::make('editor')->outputStandardEditorInitJSFunction();
+    ?>
+    var launchEditor = <?=$editorJavascript?>;
+
     (function() {
         var container = $('.ccm-faq-block-container');
         var doSortCount = function () {
@@ -121,14 +126,7 @@ $tp = new TaskPermission();
             }
         });
 
-        container.find('.redactor-content').redactor({
-            minHeight: 200,
-            'concrete5': {
-                filemanager: <?=$fp->canAccessFileManager()?>,
-                sitemap: <?=$tp->canAccessSitemap()?>,
-                lightbox: true
-            }
-        });
+        launchEditor(container.find('.editor-content'));
 
         var attachSortDesc = function ($obj) {
             $obj.click(function () {
@@ -154,14 +152,7 @@ $tp = new TaskPermission();
         $('.ccm-add-faq-entry', container).click(function () {
             var newClone = cloneTemplate.clone(true);
 
-            newClone.show().find('.redactor-content').redactor({
-                minHeight: 200,
-                'concrete5': {
-                    filemanager: <?=$fp->canAccessFileManager()?>,
-                    sitemap: <?=$tp->canAccessSitemap()?>,
-                    lightbox: true
-                }
-            });
+            launchEditor(newClone.show().find('.editor-content'));
             container.append(newClone);
             attachSortAsc(newClone.find('i.fa-sort-asc'));
             attachSortDesc(newClone.find('i.fa-sort-desc'));
