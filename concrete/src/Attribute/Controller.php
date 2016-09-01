@@ -42,6 +42,11 @@ class Controller extends AbstractController
         return $this->attributeKey;
     }
 
+    public function getDisplayValue()
+    {
+        return (string) $this->getValue();
+    }
+
     public function getAttributeValue()
     {
         return $this->attributeValue;
@@ -85,7 +90,7 @@ class Controller extends AbstractController
     public function getValue()
     {
         if (is_object($this->attributeValue)) {
-            return $this->attributeValue->getValue();
+            return $this->attributeValue->g();
         }
     }
 
