@@ -52,7 +52,7 @@ class ImageStyle extends Style
         }
     }
 
-    public function getValuesFromVariables($rules = array())
+    public static function getValuesFromVariables($rules = array())
     {
         $values = array();
         foreach ($rules as $rule) {

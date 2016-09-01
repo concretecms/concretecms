@@ -96,7 +96,7 @@ class ColorStyle extends Style
         return $cv;
     }
 
-    public function getValuesFromVariables($rules = array())
+    public static function getValuesFromVariables($rules = array())
     {
         $values = array();
         foreach ($rules as $rule) {

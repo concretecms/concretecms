@@ -120,7 +120,7 @@ class TypeStyle extends Style
         return $tv;
     }
 
-    public function getValuesFromVariables($rules = array())
+    public static function getValuesFromVariables($rules = array())
     {
         $values = array();
 
