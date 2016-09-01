@@ -175,6 +175,7 @@ class PageControllerTest extends PageTestCase
         @unlink($root . '/awesome_package/' . DIRNAME_CONTROLLERS . '/' . DIRNAME_PAGE_CONTROLLERS . '/testerson/foo.php');
         @rmdir($root . '/awesome_package/' . DIRNAME_CONTROLLERS . '/' . DIRNAME_PAGE_CONTROLLERS . '/testerson');
         @rmdir($root . '/awesome_package/' . DIRNAME_CONTROLLERS . '/' . DIRNAME_PAGE_CONTROLLERS);
+        @rmdir($root . '/awesome_package/' . DIRNAME_CONTROLLERS);
         @unlink($root . '/awesome_package/' . DIRNAME_PAGES . '/testerson/foo.php');
         @rmdir($root . '/awesome_package/' . DIRNAME_PAGES . '/testerson');
         @rmdir($root . '/awesome_package/' . DIRNAME_PAGES);
