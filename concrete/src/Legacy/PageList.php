@@ -17,7 +17,7 @@ use Concrete\Core\Permission\Duration as PermissionDuration;
 class PageList extends DatabaseItemList
 {
     protected $includeSystemPages = false;
-    protected $attributeFilters = array();
+    protected $attributeFilters = [];
     protected $includeAliases = true;
     protected $displayOnlyPermittedPages = false; // not used.
     protected $displayOnlyApprovedPages = true;
@@ -26,7 +26,7 @@ class PageList extends DatabaseItemList
     protected $filterByPageType = false;
     protected $ignorePermissions = false;
     protected $attributeClass = 'CollectionAttributeKey';
-    protected $autoSortColumns = array('cvName', 'cvDatePublic', 'cDateAdded', 'cDateModified');
+    protected $autoSortColumns = ['cvName', 'cvDatePublic', 'cDateAdded', 'cDateModified'];
     protected $indexedSearch = false;
     protected $viewPagePermissionKeyHandle = 'view_page';
 
@@ -144,7 +144,7 @@ class PageList extends DatabaseItemList
         }
 
         $accessEntities = $u->getUserAccessEntityObjects();
-        $peIDs = array('-1');
+        $peIDs = ['-1'];
         foreach ($accessEntities as $pae) {
             $peIDs[] = $pae->getAccessEntityID();
         }
@@ -153,13 +153,13 @@ class PageList extends DatabaseItemList
         // now we retrieve a list of permission duration object IDs that are attached view_page or view_page_version
         // against any of these access entity objects. We just get'em all.
         $db = Loader::db();
-        $activePDIDs = array();
-        $vpPKID = $db->GetOne('select pkID from PermissionKeys where pkHandle = ?', array($this->viewPagePermissionKeyHandle));
+        $activePDIDs = [];
+        $vpPKID = $db->GetOne('select pkID from PermissionKeys where pkHandle = ?', [$this->viewPagePermissionKeyHandle]);
         /*
         $vpvPKID = $db->GetOne('select pkID from PermissionKeys where pkHandle = \'view_page_versions\'');
         $pdIDs = $db->GetCol("select distinct pdID from PagePermissionAssignments ppa inner join PermissionAccessList pa on ppa.paID = pa.paID where pkID in (?, ?) and pdID > 0", array($vpPKID, $vpvPKID));
         */
-        $pdIDs = $db->GetCol("select distinct pdID from PagePermissionAssignments ppa inner join PermissionAccessList pa on ppa.paID = pa.paID where pkID =? and pdID > 0", array($vpPKID));
+        $pdIDs = $db->GetCol("select distinct pdID from PagePermissionAssignments ppa inner join PermissionAccessList pa on ppa.paID = pa.paID where pkID =? and pdID > 0", [$vpPKID]);
         if (count($pdIDs) > 0) {
             // then we iterate through all of them and find any that are active RIGHT NOW
             foreach ($pdIDs as $pdID) {
@@ -179,6 +179,8 @@ class PageList extends DatabaseItemList
 
         if ($this->displayOnlyApprovedPages) {
             $cvIsApproved = ' and cv.cvIsApproved = 1';
+        } else {
+            $cvIsApproved = '';
         }
 
         $uID = 0;
@@ -446,7 +448,7 @@ class PageList extends DatabaseItemList
         // clause and pass that directly to the raw "filter" attribute.
         if (is_array($value)) {
             $db = Loader::db();
-            $criteria = array();
+            $criteria = [];
             foreach ($value as $v) {
                 $escapedValue = $db->escape($v);
                 if ($isMultiSelect) {
@@ -554,7 +556,7 @@ class PageList extends DatabaseItemList
      */
     public function get($itemsToGet = 0, $offset = 0)
     {
-        $pages = array();
+        $pages = [];
         if ($this->getQuery() == '') {
             $this->setBaseQuery();
         }
