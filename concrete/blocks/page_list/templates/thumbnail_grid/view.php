@@ -55,7 +55,7 @@ $c = Page::getCurrentPage();
                     <?php echo $title;
     ?>
                 </div>
-                <?php 
+                <?php
 } ?>
 
                 <?php if ($includeDate): ?>

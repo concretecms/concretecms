@@ -75,17 +75,6 @@ class Controller extends AttributeTypeController
         return $type;
     }
 
-    public function getDisplayValue()
-    {
-        $list = $this->attributeValue->getValue();
-        $topics = array();
-        foreach ($list as $topic) {
-            $topics[] = $topic->getTreeNodeDisplayName();
-        }
-
-        return implode(', ', $topics);
-    }
-
     public function getDisplaySanitizedValue()
     {
         return $this->getDisplayValue();

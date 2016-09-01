@@ -134,8 +134,8 @@ class Controller extends BlockController
                 $antispam = \Core::make('helper/validation/antispam');
                 $submittedData = '';
                 foreach($values as $value) {
-                    $submittedData .= $value->getAttributeKey()->getAttributeKeyDisplayName() . "\r\n";
-                    $submittedData .= $value->getValue('displaySanitized') . "\r\n\r\n";
+                    $submittedData .= $value->getAttributeKey()->getAttributeKeyDisplayName() . ":\r\n";
+                    $submittedData .= $value->getPlainTextValue() . "\r\n\r\n";
                 }
 
                 if (!$antispam->check($submittedData, 'form_block')) {

@@ -54,7 +54,7 @@ class Attributes extends DashboardPageController
             $sr->setError($this->error);
         } else {
             $sr->setMessage(t('Attribute saved successfully.'));
-            $sr->setAdditionalDataAttribute('value',  $val->getValue('displaySanitized', 'display'));
+            $sr->setAdditionalDataAttribute('value',  $val->getRichDisplayValue());
         }
         $sr->outputJSON();
     }

@@ -62,13 +62,6 @@ class Controller extends AttributeTypeController
         return $type;
     }
 
-    public function getDisplayValue()
-    {
-        $v = $this->attributeValue->getValue();
-
-        return ($v == 1) ? t('Yes') : t('No');
-    }
-
     protected function load()
     {
         $ak = $this->getAttributeKey();

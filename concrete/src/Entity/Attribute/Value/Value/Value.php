@@ -12,6 +12,9 @@ use Doctrine\ORM\Mapping as ORM;
  */
 abstract class Value
 {
+
+    abstract public function __toString();
+
     /**
      * @ORM\Id @ORM\Column(type="integer", options={"unsigned":true})
      * @ORM\GeneratedValue(strategy="AUTO")

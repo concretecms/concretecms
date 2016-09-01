@@ -15,7 +15,7 @@ if (isset($objects)) {
         if (!is_object($value)) {
             $display = '';
         } else {
-            $display = $value->getValue('displaySanitized', 'display');
+            $display = $value->getRichDisplayValue();
         }
         if (isset($lastDisplay) && $display != $lastDisplay) {
             $display = t('Multiple Values');

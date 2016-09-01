@@ -75,7 +75,7 @@ class Properties extends BackendInterfaceController
 
                 $pr->setPages($this->pages);
                 $val = $c->getAttributeValueObject($ak);
-                $pr->setAdditionalDataAttribute('value',  $val->getValue('displaySanitized', 'display'));
+                $pr->setAdditionalDataAttribute('value',  $val->getRichDisplayValue());
                 $pr->setMessage(t('Pages updated successfully.'));
             }
         }

@@ -6,8 +6,8 @@ $formDisplayUrl = URL::to('/dashboard/reports/forms', 'view', $entity->getEntity
 
 $submittedData = '';
 foreach($attributes as $value) {
-    $submittedData .= $value->getAttributeKey()->getAttributeKeyDisplayName() . "\r\n";
-    $submittedData .= $value->getValue('displaySanitized') . "\r\n\r\n";
+    $submittedData .= $value->getAttributeKey()->getAttributeKeyDisplayName() . ":\r\n";
+    $submittedData .= $value->getPlainTextValue() . "\r\n\r\n";
 }
 
 $body = t("

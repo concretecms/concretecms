@@ -87,6 +87,8 @@ abstract class Value implements AttributeValueInterface
             return $this->getDisplayValue();
         }
 
+        // Otherwise, we get the default "value" response for the attribute value type, which could be text, could be true/false, could be a
+        // file object.
         if (is_object($value)) {
             return $value->getValue();
         }
@@ -95,24 +97,50 @@ abstract class Value implements AttributeValueInterface
         return $controller->getValue();
     }
 
+
+    /**
+     * @deprecated
+     */
     public function getDisplaySanitizedValue()
     {
-        $controller = $this->getController();
-        if (method_exists($controller, 'getDisplaySanitizedValue')) {
-            return $controller->getDisplaySanitizedValue();
-        }
-
         return $this->getDisplayValue();
     }
 
-    public function getDisplayValue()
+    /**
+     * Returns content that can display the attribute in "rich text" contexts
+     * @return mixed
+     */
+    public function getRichDisplayValue()
     {
         $controller = $this->getController();
+        if (method_exists($controller, 'getRichDisplayValue')) {
+            return $controller->getRichDisplayValue();
+        }
+        // Deprecated
         if (method_exists($controller, 'getDisplayValue')) {
             return $controller->getDisplayValue();
         }
 
         return $this->getValue();
+    }
+
+    /**
+     * @deprecated
+     */
+    public function getDisplayValue()
+    {
+        return $this->getRichDisplayValue();
+    }
+
+    public function getPlainTextValue()
+    {
+        if ($this->getValueObject()) {
+            return (string) $this->getValueObject();
+        }
+
+        // Legacy attribute type support
+        $controller = $this->getController();
+        return $controller->getValue();
     }
 
     public function getSearchIndexValue()
