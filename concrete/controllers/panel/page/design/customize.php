@@ -53,6 +53,7 @@ class Customize extends BackendInterfacePageController
             } else {
                 $selectedPreset = $defaultPreset;
                 $valueList = $defaultPreset->getStyleValueList();
+                $sccRecord = null;
             }
 
             if ($this->request->request->has('handle')) {
