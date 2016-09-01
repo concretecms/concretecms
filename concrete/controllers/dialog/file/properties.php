@@ -76,7 +76,7 @@ class Properties extends BackendInterfaceFileController
                 $sr = new FileEditResponse();
                 $sr->setFile($this->file);
                 $sr->setMessage(t('Attribute saved successfully.'));
-                $sr->setAdditionalDataAttribute('value', $value->getValue('displaySanitized', 'display'));
+                $sr->setAdditionalDataAttribute('value', $value->getRichDisplayValue());
                 $sr->outputJSON();
             }
         }

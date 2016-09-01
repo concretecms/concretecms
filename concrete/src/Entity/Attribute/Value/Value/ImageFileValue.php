@@ -47,4 +47,11 @@ class ImageFileValue extends Value implements FileProviderInterface
     {
         $this->file = $file;
     }
+
+    public function __toString()
+    {
+        if (is_object($this->file)) {
+            return (string) \URL::to('/download_file', $this->file->getFileID());
+        }
+    }
 }

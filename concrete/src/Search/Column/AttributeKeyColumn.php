@@ -21,7 +21,7 @@ class AttributeKeyColumn extends Column
         if (is_object($this->attributeKey)) {
             $vo = $obj->getAttributeValueObject($this->attributeKey);
             if (is_object($vo)) {
-                return $vo->getValue('display');
+                return $vo->getRichDisplayValue();
             }
         }
     }
