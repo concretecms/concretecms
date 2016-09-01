@@ -87,6 +87,7 @@ class AddSubpagePageAccess extends PageAccess
         $list = parent::getAccessListItems($accessType, $filterEntities);
         $list = PermissionDuration::filterByActive($list);
         foreach ($list as $l) {
+            $permission = '';
             $pe = $l->getAccessEntityObject();
             $prow = $db->fetchAssoc('select permission, externalLink from PagePermissionPageTypeAccessList where peID = ? and paID = ?', array($pe->getAccessEntityID(), $l->getPermissionAccessID()));
             if (is_array($prow) && $prow['permission']) {
