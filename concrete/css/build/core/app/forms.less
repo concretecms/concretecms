@@ -174,8 +174,11 @@
       -webkit-appearance: none;
       appearance: none;
       -moz-appearance: none;
-      overflow: inherit; // needed for selectize ?
       /*
+      * Ok, we HAD overflow: inherit for some reason, but it was causing problems when editing address attributes
+      * in the express form block. So now we've disabled it. If we figure out why we needed it in the first place
+      * we can put it back in and perhaps figure out how both approaches can coexist.
+      overflow: inherit; // needed for selectize ?
       border: 1px solid #f1f1f1;
       */
       /*
