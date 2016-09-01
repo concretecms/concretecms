@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "3399aaf5b1e66e39a3dbd9be99a5d49d",
-    "content-hash": "cacce29ed142da46dd0713518a6df1b1",
+    "hash": "bdaa41ae6d6a6fcd8780a1d79db3c01d",
+    "content-hash": "3c69da9ee0cac37e7253e3169683dc76",
     "packages": [
         {
             "name": "anahkiasen/html-object",
@@ -93,12 +93,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/concrete5/ZendQueue.git",
-                "reference": "1e0d442f9b7ba343eec0c400bff622332c820862"
+                "reference": "c1993b008df062879d772570e28320acd60f7f95"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/concrete5/ZendQueue/zipball/1e0d442f9b7ba343eec0c400bff622332c820862",
-                "reference": "1e0d442f9b7ba343eec0c400bff622332c820862",
+                "url": "https://api.github.com/repos/concrete5/ZendQueue/zipball/c1993b008df062879d772570e28320acd60f7f95",
+                "reference": "c1993b008df062879d772570e28320acd60f7f95",
                 "shasum": ""
             },
             "require": {
@@ -129,7 +129,7 @@
                 "queue",
                 "zf2"
             ],
-            "time": "2016-08-17 18:52:26"
+            "time": "2016-08-17 19:07:41"
         },
         {
             "name": "container-interop/container-interop",
