@@ -71,8 +71,8 @@ class EditPageThemePageAccess extends PageAccess
         $list = PermissionDuration::filterByActive($list);
         foreach ($list as $l) {
             $pe = $l->getAccessEntityObject();
-            $prow = $db->GetRow('select permission from PagePermissionThemeAccessList where peID = ? and paID = ?', array($pe->getAccessEntityID(), $l->getPermissionAccessID()));
-            if (is_array($prow) && $prow['permission']) {
+            $prow = $db->fetchAssoc('select permission from PagePermissionThemeAccessList where peID = ? and paID = ?', array($pe->getAccessEntityID(), $l->getPermissionAccessID()));
+            if ($prow && $prow['permission']) {
                 $l->setThemesAllowedPermission($prow['permission']);
                 $permission = $prow['permission'];
                 if ($permission == 'C') {
