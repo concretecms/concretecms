@@ -179,6 +179,8 @@ class PageList extends DatabaseItemList
 
         if ($this->displayOnlyApprovedPages) {
             $cvIsApproved = ' and cv.cvIsApproved = 1';
+        } else {
+            $cvIsApproved = '';
         }
 
         $uID = 0;
