@@ -46,7 +46,7 @@ class NumberOfChildrenField extends AbstractField
         $html .= '<option value="eq"' . ($this->data['cChildrenSelect'] == 'eq' ? ' selected' : '') . '>' . t('Equal To') . '</option>';
         $html .= '<option value="lt"' . ($this->data['cChildrenSelect'] == 'lt' ? ' selected' : '') . '>' . t('Fewer Than') . '</option>';
         $html .= '</select>';
-        $html .= ' <input type="text" name="cChildren" class="form-control" value="' . $this->data['cChildren'] . '" /></div>';
+        $html .= ' <input type="number" name="cChildren" class="form-control" min="0" value="' . $this->data['cChildren'] . '" /></div>';
         return $html;
     }
 

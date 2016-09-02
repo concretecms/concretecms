@@ -11,8 +11,10 @@
 
     <div class="ccm-tab-content" id="ccm-tab-content-fields">
 
-            <button class="btn btn-primary" type="button" data-button-action="add-field"><?=t('Add Field')?></button>
-            <hr/>
+            <div class="form-group">
+                <button class="btn btn-primary" type="button" data-button-action="add-field"><?=t('Add Field')?></button>
+            </div>
+            <!-- <hr/> -->
             <div data-container="search-fields" class="ccm-search-fields-advanced">
 
             </div>
@@ -67,7 +69,7 @@
                 </optgroup>
             <?php } ?>
         </select>
-        <div class="ccm-search-field-content"><% if (typeof(field) != 'undefined') { %><%=field.element%><% } %></div>
+        <div class="form-group"><% if (typeof(field) != 'undefined') { %><%=field.element%><% } %></div>
         <a data-search-remove="search-field" class="ccm-search-remove-field" href="#"><i class="fa fa-minus-circle"></i></a>
     </div>
 </script>

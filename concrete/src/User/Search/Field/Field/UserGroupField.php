@@ -52,7 +52,7 @@ class UserGroupField extends AbstractField
     {
         $gl = new GroupList();
         $g1 = $gl->getResults();
-        $html = '<select multiple name="gID[]" class="selectize-select" style="width: 360px">';
+        $html = '<select multiple name="gID[]" class="selectize-select">';
         foreach ($g1 as $g) {
             $gp = new \Permissions($g);
             if ($gp->canSearchUsersInGroup($g)) {
