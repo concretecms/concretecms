@@ -30,9 +30,12 @@ if (!empty($top)) {
                             }
                             ?>
                         </li>
+
                         <?php
-                        if ($view->controller->displayDivider($page, $next)) {
-                            ?><li class="nav-divider"></li><?php
+                        if ($page->getAttribute('is_desktop')) {
+                            echo '<li class="nav-divider"></li>';
+                        } elseif (is_object($next) && $next->getPackageID() > 0 && $page->getPackageID() == 0) {
+                            echo '<li class="nav-divider package-page-divider"></li>';
                         }
                     }
                 }
