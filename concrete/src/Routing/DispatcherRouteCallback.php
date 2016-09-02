@@ -271,6 +271,14 @@ class DispatcherRouteCallback extends RouteCallback
             return $response;
         }
 
+        if ($controller->isReplaced()) {
+            $controller = $controller->getReplacement();
+            $response = $controller->runAction($requestTask, $requestParameters);
+            if ($response instanceof \Symfony\Component\HttpFoundation\Response) {
+                return $response;
+            }
+        }
+
         $c->setController($controller);
         $view = $controller->getViewObject();
 

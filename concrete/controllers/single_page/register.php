@@ -1,8 +1,8 @@
 <?php
 namespace Concrete\Controller\SinglePage;
 
+use Concrete\Core\Page\Controller\PageController;
 use Concrete\Core\Validation\ResponseInterface;
-use PageController;
 use Config;
 use Loader;
 use User;
@@ -18,6 +18,7 @@ class Register extends PageController
 	public function on_start() {
 		if(!in_array(Config::get('concrete.user.registration.type'), array('validate_email', 'enabled'))) {
             $this->replace('/page_not_found');
+            return;
         }
         $u = new User();
         $this->set('u', $u);
