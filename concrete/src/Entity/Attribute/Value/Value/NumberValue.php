@@ -19,6 +19,12 @@ class NumberValue extends Value
      */
     public function getValue()
     {
+        $number = \Core::make('helper/number');
+        return (string) $number->flexround($this->getUnroundedValue());
+    }
+
+    public function getUnroundedValue()
+    {
         return $this->value;
     }
 
@@ -32,6 +38,6 @@ class NumberValue extends Value
 
     public function __toString()
     {
-        return (string) $this->value;
+        return (string) $this->getValue();
     }
 }
