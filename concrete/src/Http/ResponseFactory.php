@@ -189,22 +189,24 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
      */
     public function collection(Collection $collection, $code = Response::HTTP_OK, $headers = array())
     {
+        $c = $collection;
+
         if (!$this->app) {
             throw new \RuntimeException('Cannot resolve collections without a reference to the application');
         }
 
         $request = $this->request;
 
-        if ($collection->isError() && $collection->getError() == COLLECTION_NOT_FOUND) {
-            if ($response = $this->collectionNotFound($collection, $request, $headers)) {
+        if ($c->isError() && $c->getError() == COLLECTION_NOT_FOUND) {
+            if ($response = $this->collectionNotFound($c, $request, $headers)) {
                 return $response;
             }
         }
 
-        if (!$collection->cPathFetchIsCanonical) {
+        if (!$c->cPathFetchIsCanonical) {
             // Handle redirect URL (additional page paths)
             /** @var Url $url */
-            $url = $this->app->make('url/manager')->resolve([$collection]);
+            $url = $this->app->make('url/manager')->resolve([$c]);
             $query = $url->getQuery();
             $query->modify($request->getQueryString());
 
@@ -213,7 +215,7 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
         }
 
         // maintenance mode
-        if ($collection->getCollectionPath() != '/login') {
+        if ($c->getCollectionPath() != '/login') {
             $smm = $this->config->get('concrete.maintenance_mode');
             if ($smm == 1 && !PermissionKey::getByHandle('view_in_maintenance_mode')->validate() && ($_SERVER['REQUEST_METHOD'] != 'POST' || Loader::helper('validation/token')->validate() == false)) {
                 $v = new View('/frontend/maintenance_mode');
@@ -221,8 +223,8 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
                 $router = $this->app->make(RouterInterface::class);
                 $tmpTheme = $router->getThemeByRoute('/frontend/maintenance_mode');
                 $v->setViewTheme($tmpTheme[0]);
-                $v->addScopeItems(['c' => $collection]);
-                $request->setCurrentPage($collection);
+                $v->addScopeItems(['c' => $c]);
+                $request->setCurrentPage($c);
                 if (isset($tmpTheme[1])) {
                     $v->setViewTemplate($tmpTheme[1]);
                 }
@@ -231,36 +233,36 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
             }
         }
 
-        if ($collection->getCollectionPointerExternalLink() != '') {
-            return $this->redirect($collection);
+        if ($c->getCollectionPointerExternalLink() != '') {
+            return $this->redirect($c);
         }
 
-        $cp = new Checker($collection);
+        $cp = new Checker($c);
 
         if ($cp->isError() && $cp->getError() == COLLECTION_FORBIDDEN) {
             return $this->forbidden($request->getUri(), Response::HTTP_FORBIDDEN, $headers);
         }
 
-        if (!$collection->isActive() && (!$cp->canViewPageVersions())) {
+        if (!$c->isActive() && (!$cp->canViewPageVersions())) {
             return $this->notFound('', Response::HTTP_NOT_FOUND, $headers);
         }
 
-        $scheduledVersion = Version::get($collection, "SCHEDULED");
+        $scheduledVersion = Version::get($c, "SCHEDULED");
         if ($publishDate = $scheduledVersion->cvPublishDate) {
             $datetime = $this->app->make('helper/date');
             $now = $datetime->date('Y-m-d G:i:s');
 
             if (strtotime($now) >= strtotime($publishDate)) {
                 $scheduledVersion->approve();
-                $collection->loadVersionObject('ACTIVE');
+                $c->loadVersionObject('ACTIVE');
             }
         }
 
         if ($cp->canEditPageContents() || $cp->canEditPageProperties() || $cp->canViewPageVersions()) {
-            $collection->loadVersionObject('RECENT');
+            $c->loadVersionObject('RECENT');
         }
 
-        $vp = new Checker($collection->getVersionObject());
+        $vp = new Checker($c->getVersionObject());
 
         // returns the $vp object, which we then check
         if (is_object($vp) && $vp->isError()) {
@@ -291,7 +293,7 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
         // and if so, whether we should redirect to the default language page.
         $dl = $cms->make('multilingual/detector');
         if ($dl->isEnabled()) {
-            if ($collection->getCollectionID() == $site->getSiteHomePageID() &&
+            if ($c->getCollectionID() == $site->getSiteHomePageID() &&
                 $site->getConfigRepository()->get('multilingual.redirect_home_to_default_locale')) {
                 // Let's retrieve the default language
                 $ms = $dl->getPreferredSection();
@@ -300,20 +302,20 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
                 }
             }
 
-            $dl->setupSiteInterfaceLocalization($collection);
+            $dl->setupSiteInterfaceLocalization($c);
         }
 
-        $request->setCurrentPage($collection);
+        $request->setCurrentPage($c);
         require DIR_BASE_CORE . '/bootstrap/process.php';
         $u = new User();
 
         // On page view event.
-        $pe = new Event($collection);
+        $pe = new Event($c);
         $pe->setUser($u);
         $pe->setRequest($request);
         $this->app['director']->dispatch('on_page_view', $pe);
 
-        $controller = $collection->getPageController();
+        $controller = $c->getPageController();
         $controller->on_start();
         $controller->setupRequestActionAndParameters($request);
         $response = $controller->validateRequest();
@@ -331,11 +333,11 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
             return $response;
         }
 
-        $collection->setController($controller);
+        $c->setController($controller);
         $view = $controller->getViewObject();
 
         // we update the current page with the one bound to this controller.
-        $request->setCurrentPage($collection);
+        $request->setCurrentPage($c);
 
         return $this->view($view, $code, $headers);
     }
