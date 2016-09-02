@@ -261,16 +261,6 @@ class JobFactory
     }
 
     /**
-     * @deprecated
-     *
-     * {@inheritdoc}
-     */
-    public function getAvailableList($includeConcreteDirJobs = true)
-    {
-        return $this->getNotInstalledJobs($includeConcreteDirJobs);
-    }
-
-    /**
      * @deprecated Use 'installed' and 'scheduled' methods instead.
      *
      * @param bool $scheduledOnly
