@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Http;
 
 use Concrete\Core\Application\Application;
@@ -16,7 +15,6 @@ use Symfony\Component\Routing\RequestContext;
 
 class DefaultDispatcher implements DispatcherInterface
 {
-
     /**
      * @var \Concrete\Core\Application\Application
      */
@@ -35,6 +33,7 @@ class DefaultDispatcher implements DispatcherInterface
 
     /**
      * @param \Symfony\Component\HttpFoundation\Request $request
+     *
      * @return SymfonyResponse
      */
     public function dispatch(SymfonyRequest $request)
@@ -46,9 +45,11 @@ class DefaultDispatcher implements DispatcherInterface
             throw new \RuntimeException(t('Invalid path traversal. Please make this request with a valid HTTP client.'));
         }
 
-        if (!$this->app->isInstalled()) {
+        $response = null;
+        if ($this->app->isInstalled()) {
             $response = $this->getEarlyDispatchResponse();
-        } else {
+        }
+        if ($response === null) {
             $response = $this->handleDispatch($request);
         }
 
@@ -109,7 +110,6 @@ class DefaultDispatcher implements DispatcherInterface
 
             $this->router->setRequest($request);
             $response = $this->router->execute($route, $matched);
-
         } catch (ResourceNotFoundException $e) {
             $callback = new DispatcherRouteCallback('dispatcher');
             $response = $callback->execute($request);
@@ -117,5 +117,4 @@ class DefaultDispatcher implements DispatcherInterface
 
         return $response;
     }
-
 }
