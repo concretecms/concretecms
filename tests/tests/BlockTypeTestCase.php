@@ -69,7 +69,9 @@ abstract class BlockTypeTestCase extends ConcreteDatabaseTestCase
                     $tableName = (string) $xTable->getAttribute('name');
                     $tableColumns[$tableName] = [];
                     foreach ($xPath->query('dx:field', $xTable) as $xField) {
-                        $tableColumns[$tableName][] = strtolower((string) $xField->getAttribute('name'));
+                        if ($xField instanceof DOMElement) {
+                            $tableColumns[$tableName][] = strtolower((string) $xField->getAttribute('name'));
+                        }
                     }
                     $newField = $xDoc->createElement('field');
                     $attr = $xDoc->createAttribute('name');
