@@ -2,6 +2,7 @@
 namespace Concrete\Core\Job;
 
 use Concrete\Core\Application\Application;
+use Concrete\Core\Database\Connection\Connection;
 
 class Service
 {
@@ -13,10 +14,10 @@ class Service
     }
 
     /**
-     * @param $jHandle
-     * @param $pkg
+     * @param string $jHandle
+     * @param object $pkg
      *
-     * @return false|Job
+     * @return Job|false
      */
     public function installByPackage($jHandle, $pkg)
     {
@@ -26,6 +27,8 @@ class Service
         }
 
         $job = $this->app->make($className);
+
+        /** @var Connection $db */
         $db = $this->app['database']->connection();
 
         $db->executeQuery("INSERT INTO Jobs (jName, jDescription, jDateInstalled, jNotUninstallable, jHandle, pkgID) VALUES (?, ?, ?, ?, ?, ?)", [
@@ -48,8 +51,8 @@ class Service
 
     /**
      * @param string $jHandle
+     * @param array  $notInstalledJobs
      *
-     * @param array $notInstalledJobs
      * @return false|Job
      */
     public function installByHandle($jHandle = '', $notInstalledJobs = [])
@@ -78,30 +81,30 @@ class Service
     public function clearLog()
     {
         $db = $this->app['database']->connection();
-        $db->query("TRUNCATE JobsLog");
+        $db->query('TRUNCATE JobsLog');
     }
 
     /**
-     * @param bool $jobToken
+     * @param string|null $jobToken
+     *
      * @return string
      */
-    public function generateAuth($jobToken = false)
+    public function generateAuth($jobToken = null)
     {
         $jobToken = $jobToken ?: $this->app->make('config/database')->get('concrete.security.token.jobs');
-        $val = $jobToken . ':' . DIRNAME_JOBS;
+        $val = $jobToken.':'.DIRNAME_JOBS;
 
         return md5($val);
     }
 
     /**
      * @param $xml
-     * @return null
      */
     public function exportList($xml)
     {
         $jobs = $this->getList();
         if (count($jobs) === 0) {
-            return null;
+            return;
         }
 
         $jx = $xml->addChild('jobs');

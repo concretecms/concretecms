@@ -16,8 +16,5 @@
             <directory>tests/tests/Core/</directory>
             <directory>tests/tests/Localization/</directory>
         </testsuite>
-        <testsuite name="JobTests">
-            <directory>tests/tests/Core/Job</directory>
-        </testsuite>
     </testsuites>
 </phpunit>

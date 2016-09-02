@@ -117,7 +117,6 @@ abstract class Job extends Object
     }
 
     /**
-     *
      * @param string $datetime
      *
      * @return Job $this
@@ -130,7 +129,7 @@ abstract class Job extends Object
     }
 
     /**
-     * E.g. 'RUNNING'
+     * E.g. 'RUNNING'.
      *
      * @return string
      */
@@ -281,6 +280,7 @@ abstract class Job extends Object
 
     /**
      * @param string $jStatus
+     *
      * @return Job $this
      */
     public function setJobStatus($jStatus = self::JOB_STATUS_ENABLED)
@@ -391,7 +391,6 @@ abstract class Job extends Object
         return true;
     }
 
-
     /**
      * @return bool
      */
@@ -410,7 +409,6 @@ abstract class Job extends Object
         return $this->scheduledInterval;
     }
 
-
     /**
      * @return int
      */
@@ -419,17 +417,16 @@ abstract class Job extends Object
         return (int) $this->scheduledValue;
     }
 
-
     /**
      * Examples:
      * - setSchedule(1, "days", 7);
-     * - setSchedule(1, "minutes", 45);
+     * - setSchedule(1, "minutes", 45);.
      *
      * @param bool $scheduled
      * @param string $interval
      * @param int $value
      *
-     * @return Job $this
+     * @return Job|false
      */
     public function setSchedule($scheduled, $interval, $value)
     {
@@ -454,6 +451,7 @@ abstract class Job extends Object
 
     /**
      * @param bool $scheduled
+     *
      * @return Job $this
      */
     public function setIsScheduled($scheduled = true)
@@ -523,11 +521,11 @@ abstract class Job extends Object
      *
      * Scan job directories for job classes.
      *
-     * @param int $includeConcreteDirJobs
+     * @param bool $includeConcreteDirJobs
      *
      * @return array
      */
-    public static function getAvailableList($includeConcreteDirJobs = 1)
+    public static function getAvailableList($includeConcreteDirJobs = true)
     {
         return self::$app->make(Factory::class)->getNotInstalledJobs($includeConcreteDirJobs);
     }
@@ -597,7 +595,6 @@ abstract class Job extends Object
         return self::$app->make(Service::class)->exportList($xml);
     }
 
-
     /**
      * @deprecated
      *
@@ -641,7 +638,6 @@ abstract class Job extends Object
     {
         return $this->getLastStatusText();
     }
-
 
     /**
      * @deprecated

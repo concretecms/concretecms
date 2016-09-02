@@ -2,7 +2,7 @@
 namespace Concrete\Tests\Core\Job;
 
 use Concrete\Core\Application\Application;
-use Concrete\Core\Job\Factory;
+use Concrete\Core\Job\JobFactory;
 use Concrete\Core\Job\Service;
 use ConcreteDatabaseTestCase;
 
@@ -13,7 +13,7 @@ class Base extends ConcreteDatabaseTestCase
     /** @var Application */
     protected $app;
 
-    /** @var Factory */
+    /** @var JobFactory */
     protected $factory;
 
     /** @var Service */
@@ -24,7 +24,7 @@ class Base extends ConcreteDatabaseTestCase
         $this->app = clone \Concrete\Core\Support\Facade\Application::getFacadeApplication();
         $this->app['config'] = clone $this->app['config'];
 
-        $this->factory = new Factory($this->app);
+        $this->factory = new JobFactory($this->app);
         $this->service = new Service($this->app);
 
         parent::setUp();

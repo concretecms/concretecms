@@ -4,7 +4,7 @@ namespace Concrete\Core\Job;
 use Concrete\Core\Application\Application;
 use Concrete\Core\Package\PackageList;
 
-class Factory
+class JobFactory
 {
     /** @var \Concrete\Core\Application\Application */
     private $app;
@@ -15,22 +15,41 @@ class Factory
     }
 
     /**
-     * @param bool $scheduledOnly
+     * Return list of installed Jobs.
      *
      * @return Job[]
      */
-    public function getList($scheduledOnly = false)
+    public function installed()
     {
-        $db = $this->app['database']->connection();
+        $jobs = [];
 
-        if ($scheduledOnly) {
-            $q = "SELECT jID FROM Jobs WHERE isScheduled = 1 ORDER BY jDateLastRun, jID";
-        } else {
-            $q = "SELECT jID FROM Jobs ORDER BY jDateLastRun, jID";
+        $db = $this->app['database']->connection();
+        $q = "SELECT jID FROM Jobs ORDER BY jDateLastRun, jID";
+        $r = $db->query($q);
+
+        while ($row = $r->fetchRow($q)) {
+            $j = $this->getByID($row['jID']);
+            if (is_object($j)) {
+                $jobs[] = $j;
+            }
         }
 
-        $r = $db->query($q);
+        return $jobs;
+    }
+
+    /**
+     * Return list of scheduled Jobs.
+     *
+     * @return Job[]
+     */
+    public function scheduled()
+    {
         $jobs = [];
+
+        $db = $this->app['database']->connection();
+        $q = "SELECT jID FROM Jobs WHERE isScheduled = 1 ORDER BY jDateLastRun, jID";
+        $r = $db->query($q);
+
         while ($row = $r->fetchRow($q)) {
             $j = $this->getByID($row['jID']);
             if (is_object($j)) {
@@ -46,7 +65,7 @@ class Factory
      *
      * @return null|Job
      */
-    public function getByID($jID = 0)
+    public function getByID($jID)
     {
         $db = $this->app['database']->connection();
         $jobData = $db->fetchAssoc("SELECT * FROM Jobs WHERE jID=?", [
@@ -65,7 +84,7 @@ class Factory
      *
      * @return null|Job
      */
-    public function getByHandle($jHandle = '')
+    public function getByHandle($jHandle)
     {
         $db = $this->app['database']->connection();
         $jobData = $db->fetchAssoc("SELECT * FROM Jobs WHERE jHandle=?", [
@@ -81,7 +100,7 @@ class Factory
 
     /**
      * @param string $jHandle
-     * @param array $jobData
+     * @param array  $jobData
      *
      * @return null|Job
      */
@@ -99,8 +118,8 @@ class Factory
         if ($pkgID > 0) {
             $pkgHandle = PackageList::getHandle($pkgID);
             if ($pkgHandle) {
-                $jcl[] = DIR_PACKAGES . '/' . $pkgHandle . '/' . DIRNAME_JOBS;
-                $jcl[] = DIR_PACKAGES_CORE . '/' . $pkgHandle . '/' . DIRNAME_JOBS;
+                $jcl[] = DIR_PACKAGES.'/'.$pkgHandle.'/'.DIRNAME_JOBS;
+                $jcl[] = DIR_PACKAGES_CORE.'/'.$pkgHandle.'/'.DIRNAME_JOBS;
             }
         }
 
@@ -125,11 +144,11 @@ class Factory
     /**
      * Scan job directories for job classes.
      *
-     * @param int $includeConcreteDirJobs
+     * @param bool $includeConcreteDirJobs
      *
      * @return array
      */
-    public function getNotInstalledJobs($includeConcreteDirJobs = 1)
+    public function getNotInstalledJobs($includeConcreteDirJobs = true)
     {
         $jobObjects = [];
 
@@ -177,12 +196,12 @@ class Factory
         return $jobObjects;
     }
 
-
     /**
-     * @param int $includeConcreteDirJobs
+     * @param bool $includeConcreteDirJobs
+     *
      * @return array
      */
-    public function getJobClassLocations($includeConcreteDirJobs = 1)
+    protected function getJobClassLocations($includeConcreteDirJobs = true)
     {
         if (!$includeConcreteDirJobs) {
             $jobClassLocations = [DIR_FILES_JOBS];
@@ -194,29 +213,31 @@ class Factory
     }
 
     /**
-     * @param string $jHandle
+     * @param string      $jHandle
      * @param null|string $pkgHandle
      *
      * @return string
      */
     protected function getClassName($jHandle, $pkgHandle = null)
     {
-        $class = overrideable_core_class('Job\\' . camelcase($jHandle), DIRNAME_JOBS . '/' . $jHandle . '.php', $pkgHandle);
+        $class = overrideable_core_class('Job\\'.camelcase($jHandle), DIRNAME_JOBS.'/'.$jHandle.'.php', $pkgHandle);
 
         return $class;
     }
 
     /**
-     * @param $pkg
+     * Return list of Jobs from a specific package.
      *
-     * @return array
+     * @param object $pkg
+     *
+     * @return Job[]
      */
-    public function getListByPackage($pkg)
+    public function fromPackage($pkg)
     {
         $list = [];
 
         $db = $this->app['database']->connection();
-        $r = $db->executeQuery("SELECT jHandle FROM Jobs WHERE pkgID = ? ORDER BY jHandle ASC", [
+        $r = $db->executeQuery("ELECT jHandle FROM Jobs WHERE pkgID = ? ORDER BY jHandle ASC", [
             $pkg->getPackageID(),
         ]);
 
@@ -227,14 +248,41 @@ class Factory
         return $list;
     }
 
+    /**
+     * @deprecated Use 'fromPackage($pkg)'
+     *
+     * @param $pkg
+     *
+     * @return array
+     */
+    public function getListByPackage($pkg)
+    {
+        return $this->fromPackage($pkg);
+    }
 
     /**
      * @deprecated
      *
-     * @inheritdoc
+     * {@inheritdoc}
      */
-    public function getAvailableList($includeConcreteDirJobs = 1)
+    public function getAvailableList($includeConcreteDirJobs = true)
     {
         return $this->getNotInstalledJobs($includeConcreteDirJobs);
+    }
+
+    /**
+     * @deprecated Use 'installed' and 'scheduled' methods instead.
+     *
+     * @param bool $scheduledOnly
+     *
+     * @return Job[]
+     */
+    public function getList($scheduledOnly = false)
+    {
+        if ($scheduledOnly) {
+            return $this->scheduled();
+        } else {
+            return $this->installed();
+        }
     }
 }

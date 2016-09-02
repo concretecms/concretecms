@@ -1,10 +1,10 @@
 <?php
 namespace Concrete\Tests\Core\Job;
 
-use Concrete\Core\Job\Factory;
+use Concrete\Core\Job\JobFactory;
 use Concrete\Core\Job\Job;
 
-class FactoryTest extends Base
+class JobFactoryTest extends Base
 {
     /** @test */
     public function install_by_handle_deprecated()
@@ -19,17 +19,17 @@ class FactoryTest extends Base
     {
         $factory = $this->app->make('job');
 
-        $this->assertInstanceOf(Factory::class, $factory);
+        $this->assertInstanceOf(JobFactory::class, $factory);
     }
 
     /** @test */
     public function get_list_of_jobs()
     {
-        $this->app['database']->connection()->query("TRUNCATE Jobs");
+        $this->app['database']->connection()->query('TRUNCATE Jobs');
         $this->service->installByHandle('index_search');
         $this->service->installByHandle('generate_sitemap');
 
-        $jobs = $this->factory->getList();
+        $jobs = $this->factory->installed();
 
         $this->assertCount(2, $jobs);
     }
@@ -37,7 +37,7 @@ class FactoryTest extends Base
     /** @test */
     public function get_list_of_available_jobs_deprecated()
     {
-        $includeConcreteDir = 1;
+        $includeConcreteDir = true;
         $available_jobs = Job::getAvailableList($includeConcreteDir);
 
         $this->assertNotEmpty($available_jobs);
@@ -46,13 +46,13 @@ class FactoryTest extends Base
     /** @test */
     public function get_list_of_scheduled_jobs()
     {
-        $this->app['database']->connection()->query("TRUNCATE Jobs");
+        $this->app['database']->connection()->query('TRUNCATE Jobs');
 
         $this->service->installByHandle('index_search');
         $this->service->installByHandle('generate_sitemap')
             ->setIsScheduled();
 
-        $jobs = $this->factory->getList(true);
+        $jobs = $this->factory->scheduled();
 
         $this->assertCount(1, $jobs);
     }
@@ -67,6 +67,7 @@ class FactoryTest extends Base
 
     /**
      * @test
+     *
      * @param string $handle
      */
     public function get_job_by_handle($handle = 'index_search')
@@ -75,7 +76,6 @@ class FactoryTest extends Base
         $job = $this->factory->getByHandle($handle);
 
         $this->assertInstanceOf(Job::class, $job);
-
     }
 
     /** @test */

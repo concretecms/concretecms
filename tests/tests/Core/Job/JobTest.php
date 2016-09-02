@@ -69,7 +69,7 @@ class JobTest extends Base
     public function set_job_schedule()
     {
         $job = $this->service->installByHandle('index_search')
-            ->setSchedule(1, "minutes", 45);
+            ->setSchedule(1, 'minutes', 45);
 
         $this->assertEquals(1, $job->isScheduled());
 
