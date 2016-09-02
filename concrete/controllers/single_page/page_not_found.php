@@ -7,6 +7,11 @@ use Concrete\Core\Page\Controller\PageController;
 class PageNotFound extends PageController
 {
 
+    public function validateRequest()
+    {
+        return true;
+    }
+
     public function view()
     {
         $view = $this->getViewObject();
