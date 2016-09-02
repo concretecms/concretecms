@@ -5,6 +5,7 @@ use Concrete\Core\Block\View\BlockView;
 use Concrete\Core\Html\Object\HeadLink;
 use Concrete\Core\Http\Request;
 use Concrete\Core\Page\PageList;
+use Concrete\Core\Page\Page;
 use Concrete\Core\Permission\Access\Entity\GroupEntity;
 use Doctrine\ORM\Mapping as ORM;
 use Concrete\Core\Page\FeedEvent;
@@ -370,7 +371,7 @@ class Feed
         return $pl;
     }
 
-    protected function getPageFeedContent(\Page $p)
+    protected function getPageFeedContent(Page $p)
     {
         $content = false;
         switch ($this->pfContentToDisplay) {
@@ -412,7 +413,7 @@ class Feed
         $pl = $this->getPageListObject();
         $link = false;
         if ($this->cParentID) {
-            $parent = \Page::getByID($this->cParentID);
+            $parent = Page::getByID($this->cParentID);
             $link = $parent->getCollectionLink();
         } else {
             $link = \URL::to('/');
