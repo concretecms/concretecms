@@ -12,32 +12,35 @@ class NumberValue extends Value
     /**
      * @ORM\Column(type="decimal", precision=14, scale=4, nullable=true)
      */
-    protected $value = '';
+    protected $value = null;
 
     /**
-     * @return mixed
+     * @return float|null
      */
     public function getValue()
-    {
-        $number = \Core::make('helper/number');
-        return (string) $number->flexround($this->getUnroundedValue());
-    }
-
-    public function getUnroundedValue()
     {
         return $this->value;
     }
 
     /**
-     * @param mixed $value
+     * @param float|null $value
      */
     public function setValue($value)
     {
-        $this->value = $value;
+        if ($value === '' || $value === null) {
+            $this->value = null;
+        } else {
+            $this->value = (float) $value;
+        }
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see Value::__toString()
+     */
     public function __toString()
     {
-        return (string) $this->getValue();
+        return (string) $this->value;
     }
 }
