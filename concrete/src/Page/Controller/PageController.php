@@ -18,6 +18,7 @@ class PageController extends Controller
     protected $action;
     protected $passThruBlocks = array();
     protected $parameters = array();
+    protected $replacement = null;
 
     public function supportsPageCache()
     {
@@ -51,12 +52,17 @@ class PageController extends Controller
         $request = \Request::getInstance();
         $request->setCurrentPage($var);
         $controller = $var->getPageController();
-        $controller->on_start();
-        $controller->runAction('view');
-        $controller->on_before_render();
-        $view = $controller->getViewObject();
-        echo $view->render();
-        exit;
+        $this->replacement = $controller;
+    }
+
+    public function isReplaced()
+    {
+        return !!$this->replacement;
+    }
+
+    public function getReplacement()
+    {
+        return $this->replacement;
     }
 
     public function getSets()
