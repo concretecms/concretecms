@@ -10,8 +10,8 @@ $composer = Core::make("helper/concrete/composer");
         <div class="dialog-buttons">
             <button type="button" data-dialog-action="cancel" class="btn btn-default pull-left"><?=t('Cancel')?></button>
             <div class="btn-group pull-right">
-                <button type="button" data-composer-dialog-action="publish" value="publish" class="btn btn-primary"><?=t('Publish Page')?>
-                <button style="padding-right: 5px; padding-left: 5px;" data-page-type-composer-form-btn="schedule" type="button" class="btn btn-primary">
+                <button style="margin-right: 0;" type="button" data-composer-dialog-action="publish" value="publish" class="btn btn-primary"><?=t('Publish Page')?>
+                <button style="padding-right: 5px; padding-left: 5px; width: 35px;" data-page-type-composer-form-btn="schedule" type="button" class="btn btn-primary">
                     <i class="fa fa-clock-o"></i>
                 </button>
 
