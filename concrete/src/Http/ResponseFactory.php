@@ -98,7 +98,7 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
         }
 
         $cnt = $this->app->make(PageForbidden::class);
-        $this->($cnt, $code, $headers);
+        $this->controller($cnt, $code, $headers);
     }
 
     /**
