@@ -28,7 +28,7 @@ class TemplateLocatorTest extends \PHPUnit_Framework_TestCase
             $fs->deleteDirectory($dir);
         }
     }
-    
+
     public function testBasic()
     {
         $locator = new TemplateLocator();
@@ -80,6 +80,4 @@ class TemplateLocatorTest extends \PHPUnit_Framework_TestCase
         // Should still be the same file because the finally added one doesn't exist
         $this->assertEquals(DIR_BASE_CORE.'/'.DIRNAME_ATTRIBUTES.'/'.static::ATTRIBUTE_HANDLE.'/composer.php', $location->getFile());
     }
-
-
 }
