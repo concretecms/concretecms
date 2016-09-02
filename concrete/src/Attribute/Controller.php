@@ -90,7 +90,7 @@ class Controller extends AbstractController
     public function getValue()
     {
         if (is_object($this->attributeValue)) {
-            return $this->attributeValue->g();
+            return $this->attributeValue->getValue();
         }
     }
 
