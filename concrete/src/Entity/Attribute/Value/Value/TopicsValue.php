@@ -50,6 +50,11 @@ class TopicsValue extends Value
         return $topics;
     }
 
+    public function getValue()
+    {
+        return $this->getSelectedTopicNodes();
+    }
+
     public function __toString()
     {
         $list = $this->getSelectedTopicNodes();
