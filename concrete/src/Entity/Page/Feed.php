@@ -1,14 +1,13 @@
 <?php
 namespace Concrete\Core\Entity\Page;
 
-use Concrete\Core\Backup\ContentExporter;
 use Concrete\Core\Block\View\BlockView;
 use Concrete\Core\Html\Object\HeadLink;
 use Concrete\Core\Http\Request;
 use Concrete\Core\Page\PageList;
 use Concrete\Core\Permission\Access\Entity\GroupEntity;
-use Database;
 use Doctrine\ORM\Mapping as ORM;
+use Concrete\Core\Page\FeedEvent;
 
 /**
  * @ORM\Entity
@@ -242,7 +241,6 @@ class Feed
     /**
      * @ORM\Column(type="integer", options={"unsigned":true})
      */
-
     protected $cParentID;
 
     /**
@@ -343,7 +341,7 @@ class Feed
                     return false;
                 }
 
-                return $pa->validateAccessEntities(array($access));
+                return $pa->validateAccessEntities([$access]);
             });
         }
         if ($this->cParentID) {
@@ -372,7 +370,7 @@ class Feed
         return $pl;
     }
 
-    protected function getPageFeedContent(Page $p)
+    protected function getPageFeedContent(\Page $p)
     {
         $content = false;
         switch ($this->pfContentToDisplay) {
@@ -403,8 +401,10 @@ class Feed
     }
 
     /**
-     * Get the feed output in RSS form given a Request object
+     * Get the feed output in RSS form given a Request object.
+     *
      * @param Request|null $request
+     *
      * @return string|null The full RSS output as a string
      */
     public function getOutput($request = null)
@@ -412,7 +412,7 @@ class Feed
         $pl = $this->getPageListObject();
         $link = false;
         if ($this->cParentID) {
-            $parent = Page::getByID($this->cParentID);
+            $parent = \Page::getByID($this->cParentID);
             $link = $parent->getCollectionLink();
         } else {
             $link = \URL::to('/');
@@ -425,11 +425,11 @@ class Feed
             if ($this->getIconFileID()) {
                 $f = \File::getByID($this->getIconFileID());
                 if (is_object($f)) {
-                    $data = array(
+                    $data = [
                         'uri' => $f->getURL(),
                         'title' => $f->getTitle(),
                         'link' => (string) $link,
-                    );
+                    ];
                     $writer->setImage($data);
                 }
             }
@@ -467,7 +467,7 @@ class Feed
     public function getHeadLinkElement()
     {
         $link = new HeadLink($this->getFeedURL(), 'alternate', 'application/rss+xml');
+
         return $link;
     }
-
 }
