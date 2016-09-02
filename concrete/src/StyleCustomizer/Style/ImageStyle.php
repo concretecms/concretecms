@@ -52,9 +52,9 @@ class ImageStyle extends Style
         }
     }
 
-    public function getValuesFromVariables($rules = array())
+    public static function getValuesFromVariables($rules = [])
     {
-        $values = array();
+        $values = [];
         foreach ($rules as $rule) {
             if (preg_match('/@(.+)\-image/i', isset($rule->name) ? $rule->name : '', $matches)) {
                 $entryURI = $rule->value->value[0]->value[0]->currentFileInfo['entryUri'];
