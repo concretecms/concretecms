@@ -41,6 +41,9 @@ class HttpServiceProvider extends ServiceProvider
 
             return $server;
         });
+
+        // Response Factory
+        $this->app->bind(ResponseFactoryInterface::class, ResponseFactory::class);
     }
 
 }
