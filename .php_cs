@@ -20,6 +20,8 @@ return Symfony\CS\Config\Config::create()
         '-blankline_after_open_tag',
         // Use the short array syntax
         'short_array_syntax',
+        // Descriptions don't have to end with [.!?]
+        '-phpdoc_short_description',
     ))
     ->finder(
         Symfony\CS\Finder\DefaultFinder::create()
