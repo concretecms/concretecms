@@ -46,9 +46,11 @@ class DefaultDispatcher implements DispatcherInterface
             throw new \RuntimeException(t('Invalid path traversal. Please make this request with a valid HTTP client.'));
         }
 
-        if (!$this->app->isInstalled()) {
+        $response = null;
+        if ($this->app->isInstalled()) {
             $response = $this->getEarlyDispatchResponse();
-        } else {
+        }
+        if ($response === null) {
             $response = $this->handleDispatch($request);
         }
 
