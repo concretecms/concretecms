@@ -16,7 +16,7 @@ class Customize extends BackendInterfacePageController
 {
     protected $viewPath = '/panels/page/design/customize';
     protected $controllerActionPath = '/ccm/system/panels/page/design/customize';
-    protected $helpers = array('form');
+    protected $helpers = ['form'];
 
     public function canAccess()
     {
@@ -53,6 +53,7 @@ class Customize extends BackendInterfacePageController
             } else {
                 $selectedPreset = $defaultPreset;
                 $valueList = $defaultPreset->getStyleValueList();
+                $sccRecord = null;
             }
 
             if ($this->request->request->has('handle')) {
