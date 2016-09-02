@@ -476,7 +476,7 @@ abstract class Job extends Object
      */
     public static function getList($scheduledOnly = false)
     {
-        return self::$app->make(Factory::class)->getList($scheduledOnly);
+        return self::$app->make(JobFactory::class)->getList($scheduledOnly);
     }
 
     /**
@@ -488,7 +488,7 @@ abstract class Job extends Object
      */
     public static function getByID($jID = 0)
     {
-        return self::$app->make(Factory::class)->getByID($jID);
+        return self::$app->make(JobFactory::class)->getByID($jID);
     }
 
     /**
@@ -500,7 +500,7 @@ abstract class Job extends Object
      */
     public static function getByHandle($jHandle = '')
     {
-        return self::$app->make(Factory::class)->getByHandle($jHandle);
+        return self::$app->make(JobFactory::class)->getByHandle($jHandle);
     }
 
     /**
@@ -513,7 +513,7 @@ abstract class Job extends Object
      */
     public static function getJobObjByHandle($jHandle = '', $jobData = [])
     {
-        return self::$app->make(Factory::class)->getJobObjByHandle($jHandle, $jobData);
+        return self::$app->make(JobFactory::class)->getJobObjByHandle($jHandle, $jobData);
     }
 
     /**
@@ -527,7 +527,7 @@ abstract class Job extends Object
      */
     public static function getAvailableList($includeConcreteDirJobs = true)
     {
-        return self::$app->make(Factory::class)->getNotInstalledJobs($includeConcreteDirJobs);
+        return self::$app->make(JobFactory::class)->getNotInstalledJobs($includeConcreteDirJobs);
     }
 
     /**
@@ -539,7 +539,7 @@ abstract class Job extends Object
      */
     public static function getListByPackage($pkg)
     {
-        return self::$app->make(Factory::class)->getListByPackage($pkg);
+        return self::$app->make(JobFactory::class)->getListByPackage($pkg);
     }
 
     /**
