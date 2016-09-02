@@ -95,7 +95,6 @@ module.exports = function(grunt, config, parameters, done) {
 				'/concrete/vendor/tedivm/stash/tests',
 				'/concrete/vendor/true/punycode/tests',
 				'/concrete/vendor/voku/urlify/tests',
-				'/concrete/vendor/zendframework/zend-queue/tests',
 			],
 			byRX: [
 			]
