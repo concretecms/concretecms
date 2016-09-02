@@ -11,6 +11,7 @@ use Concrete\Core\Localization\Localization;
 use Concrete\Core\Page\Collection\Collection;
 use Concrete\Core\Page\Collection\Response\ResponseFactoryInterface as CollectionResponseFactoryInterface;
 use Concrete\Core\Page\Collection\Version\Version;
+use Concrete\Core\Page\Controller\PageController;
 use Concrete\Core\Page\Event;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Permission\Checker;
@@ -93,6 +94,7 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
 
         $item = '/page_not_found';
         $c = Page::getByPath($item);
+
         if (is_object($c) && !$c->isError()) {
             return $this->collection($c, $code, $headers);
         }
@@ -159,9 +161,7 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
      */
     public function controller(Controller $controller, $code = Response::HTTP_OK, $headers = array())
     {
-        if ($controller->isReplaced()) {
-            return $this->controller($controller->getReplacement());
-        }
+        $request = $this->request;
 
         $view = $controller->getViewObject();
 
@@ -178,8 +178,37 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
         }
 
         $controller->on_start();
-        $controller->runAction('view');
+
+        if ($controller instanceof PageController) {
+            $controller->setupRequestActionAndParameters($request);
+
+            $response = $controller->validateRequest();
+            // If validaterequest returned a response
+            if ($response instanceof \Symfony\Component\HttpFoundation\Response) {
+                return $response;
+            } else {
+                // If validateRequest did not return true
+                if ($response == false) {
+                    return $this->notFound('', Response::HTTP_NOT_FOUND, $headers);
+                }
+            }
+
+            $requestTask = $controller->getRequestAction();
+            $requestParameters = $controller->getRequestActionParameters();
+            $response = $controller->runAction($requestTask, $requestParameters);
+            if ($response instanceof \Symfony\Component\HttpFoundation\Response) {
+                return $response;
+            }
+
+        } else {
+            $controller->runAction('view');
+        }
+
         $view->setController($controller);
+
+        if ($controller->isReplaced()) {
+            return $this->controller($controller->getReplacement());
+        }
 
         return $this->view($view, $code, $headers);
     }
@@ -199,6 +228,10 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
             if ($response = $this->collectionNotFound($collection, $request, $headers)) {
                 return $response;
             }
+        }
+
+        if ($collection->getCollectionPath() == '/page_not_found') {
+            return $this->controller($collection->getController());
         }
 
         if (!isset($collection->cPathFetchIsCanonical) || !$collection->cPathFetchIsCanonical) {
@@ -315,30 +348,11 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
         $this->app['director']->dispatch('on_page_view', $pe);
 
         $controller = $collection->getPageController();
-        $controller->on_start();
-        $controller->setupRequestActionAndParameters($request);
-        $response = $controller->validateRequest();
-        if ($response instanceof \Symfony\Component\HttpFoundation\Response) {
-            return $response;
-        } else {
-            if ($response == false) {
-                return $this->notFound('', Response::HTTP_NOT_FOUND, $headers);
-            }
-        }
-        $requestTask = $controller->getRequestAction();
-        $requestParameters = $controller->getRequestActionParameters();
-        $response = $controller->runAction($requestTask, $requestParameters);
-        if ($response instanceof \Symfony\Component\HttpFoundation\Response) {
-            return $response;
-        }
-
-        $collection->setController($controller);
-        $view = $controller->getViewObject();
 
         // we update the current page with the one bound to this controller.
-        $request->setCurrentPage($collection);
+        $collection->setController($controller);
 
-        return $this->view($view, $code, $headers);
+        return $this->controller($controller);
     }
 
     private function collectionNotFound(Collection $collection, Request $request, array $headers)
