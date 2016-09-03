@@ -8,19 +8,46 @@ class Number
      *
      * @param string $value
      *
-     * @return number
+     * @return float|null
      */
     public function flexround($value)
     {
-        $v = explode('.', $value);
-        $p = 0;
-        for ($i = 0; $i < strlen($v[1]); ++$i) {
-            if (substr($v[1], $i, 1) > 0) {
-                $p = $i + 1;
+        return ($value === null || $value === '') ? null : (float) $value;
+    }
+
+    /**
+     * Remove superfluous zeroes from a string containing a number.
+     *
+     * @param string $value (decimal separator is dot)
+     *
+     * @return string
+     */
+    public function trim($value)
+    {
+        $result = '';
+        $value = (string) $value;
+        if ($value !== '') {
+            // Temporarily remove leadin sign
+            $sign = $value[0];
+            if ($sign === '-' || $sign === '+') {
+                $value = substr($value, 1);
+            } else {
+                $sign = '';
+            }
+            if ($value !== '') {
+                // Remove initial zeroes
+                $value = ltrim($value, '0');
+                if ($value === '' || $value[0] === '.') {
+                    $value = '0'.$value;
+                }
+                if (strpos($value, '.') !== false) {
+                    // Remove trailing zeroes after the dot
+                    $value = rtrim(rtrim($value, '0'), '.');
+                }
+                $result = $sign.$value;
             }
         }
-
-        return round($value, $p);
+        return $result;
     }
 
     /**
