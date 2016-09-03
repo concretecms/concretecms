@@ -99,49 +99,6 @@ class JobFactory
     }
 
     /**
-     * @param string $jHandle
-     * @param array  $jobData
-     *
-     * @return null|Job
-     */
-    public function getJobObjByHandle($jHandle = '', $jobData = [])
-    {
-        $jcl = $this->getJobClassLocations();
-        $pkgHandle = null;
-
-        //check for the job file in the various locations
-        $db = $this->app['database']->connection();
-        $pkgID = $db->fetchColumn("SELECT pkgID FROM Jobs WHERE jHandle = ?", [
-            $jHandle,
-        ]);
-
-        if ($pkgID > 0) {
-            $pkgHandle = PackageList::getHandle($pkgID);
-            if ($pkgHandle) {
-                $jcl[] = DIR_PACKAGES.'/'.$pkgHandle.'/'.DIRNAME_JOBS;
-                $jcl[] = DIR_PACKAGES_CORE.'/'.$pkgHandle.'/'.DIRNAME_JOBS;
-            }
-        }
-
-        foreach ($jcl as $jobClassLocation) {
-            //load the file & class, then run the job
-            $path = $jobClassLocation.'/'.$jHandle.'.php';
-            if (file_exists($path)) {
-                $className = $this->getClassName($jHandle, $pkgHandle);
-                $j = $this->app->make($className);
-                $j->jHandle = $jHandle;
-                if (count($jobData)) {
-                    $j->setPropertiesFromArray($jobData);
-                }
-
-                return $j;
-            }
-        }
-
-        return null;
-    }
-
-    /**
      * Scan job directories for job classes.
      *
      * @param bool $includeConcreteDirJobs
@@ -194,6 +151,49 @@ class JobFactory
         }
 
         return $jobObjects;
+    }
+
+    /**
+     * @param string $jHandle
+     * @param array  $jobData
+     *
+     * @return null|Job
+     */
+    protected function getJobObjByHandle($jHandle = '', $jobData = [])
+    {
+        $jcl = $this->getJobClassLocations();
+        $pkgHandle = null;
+
+        //check for the job file in the various locations
+        $db = $this->app['database']->connection();
+        $pkgID = $db->fetchColumn("SELECT pkgID FROM Jobs WHERE jHandle = ?", [
+            $jHandle,
+        ]);
+
+        if ($pkgID > 0) {
+            $pkgHandle = PackageList::getHandle($pkgID);
+            if ($pkgHandle) {
+                $jcl[] = DIR_PACKAGES.'/'.$pkgHandle.'/'.DIRNAME_JOBS;
+                $jcl[] = DIR_PACKAGES_CORE.'/'.$pkgHandle.'/'.DIRNAME_JOBS;
+            }
+        }
+
+        foreach ($jcl as $jobClassLocation) {
+            //load the file & class, then run the job
+            $path = $jobClassLocation.'/'.$jHandle.'.php';
+            if (file_exists($path)) {
+                $className = $this->getClassName($jHandle, $pkgHandle);
+                $j = $this->app->make($className);
+                $j->jHandle = $jHandle;
+                if (count($jobData)) {
+                    $j->setPropertiesFromArray($jobData);
+                }
+
+                return $j;
+            }
+        }
+
+        return null;
     }
 
     /**

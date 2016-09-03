@@ -468,6 +468,25 @@ abstract class Job extends Object
     }
 
     /**
+     * @return int
+     */
+    public function getPackageID()
+    {
+        return (int) $this->pkgID;
+    }
+
+    /**
+     * @param int $pkgID
+     * @return $this
+     */
+    public function setPackageID($pkgID)
+    {
+        $this->pkgID = $pkgID;
+
+        return $this;
+    }
+
+    /**
      * @deprecated
      *
      * @param bool $scheduledOnly
@@ -552,7 +571,7 @@ abstract class Job extends Object
      */
     public static function installByPackage($jHandle, $pkg)
     {
-        return self::$app->make(Service::class)->installByPackage($jHandle, $pkg);
+        return self::$app->make(Service::class)->install($jHandle, $pkg);
     }
 
     /**
@@ -562,7 +581,7 @@ abstract class Job extends Object
      */
     public static function installByHandle($jHandle = '')
     {
-        return self::$app->make(Service::class)->installByHandle($jHandle);
+        return self::$app->make(Service::class)->install($jHandle);
     }
 
     /**

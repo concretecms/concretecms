@@ -8,68 +8,94 @@ class Service
 {
     protected $app;
 
-    public function __construct(Application $app)
+    public function __construct(Application $app, JobFactory $jobFactory)
     {
         $this->app = $app;
+        $this->factory = $jobFactory;
     }
 
     /**
-     * @param string $jHandle
-     * @param object $pkg
+     * @param Job|string $jobObjectOrHandle
+     * @param Package|\SimpleXMLElement|null $pkg
      *
      * @return Job|false
      */
-    public function installByPackage($jHandle, $pkg)
+    public function install($jobObjectOrHandle, $pkg = null)
     {
-        $className = $this->getClassName($jHandle, $pkg->getPackageHandle());
-        if (!class_exists($className)) {
-            return false;
+        $job = $jobObjectOrHandle;
+
+        if ($jobObjectOrHandle instanceof Job) {
+            $job = $this->factory->getByHandle($job->getJobHandle());
+
+            // Job is already installed
+            if ($job) {
+                return false;
+            }
         }
 
-        $job = $this->app->make($className);
+        // The XML importer passes a SimpleXMLElement.
+        // Cast it to a string to get the job handle.
+        if ($jobObjectOrHandle instanceof \SimpleXMLElement) {
+            $jobObjectOrHandle = (string) $jobObjectOrHandle;
+        }
+
+        if (is_string($jobObjectOrHandle)) {
+            $job = $this->getNotInstalledJobByHandle($jobObjectOrHandle);
+        }
+
+        // Job doesn't exist, is already installed, or is of a wrong type.
+        if (!$job || !$job instanceof Job) {
+            return false;
+        }
 
         /** @var Connection $db */
         $db = $this->app['database']->connection();
 
-        $db->executeQuery("INSERT INTO Jobs (jName, jDescription, jDateInstalled, jNotUninstallable, jHandle, pkgID) VALUES (?, ?, ?, ?, ?, ?)", [
+        if ($pkg) {
+            $job->setPackageID($pkg->getPackageID());
+        }
+
+        $db->executeQuery("INSERT INTO Jobs
+          (jName, jDescription, jDateInstalled, jHandle, pkgID)
+          VALUES (?, ?, ?, ?, ?)", [
             $job->getJobName(),
             $job->getJobDescription(),
             $this->app->make('helper/date')->getOverridableNow(),
-            0,
-            $jHandle,
-            $pkg->getPackageID(),
+            $job->getJobHandle(),
+            $job->getPackageID(),
         ]);
 
-        $jobEvent = new Event($job);
-
-        $this->app['director']->dispatch('on_job_install', $jobEvent);
-
         $job->jID = $db->lastInsertId();
+
+        $jobEvent = new Event($job);
+        $this->app['director']->dispatch('on_job_install', $jobEvent);
 
         return $job;
     }
 
     /**
-     * @param string $jHandle
-     * @param array  $notInstalledJobs
+     * Returns an instance of the job if it has not been installed yet.
      *
-     * @return false|Job
+     * @param string $jHandle
+     *
+     * @return Job|bool false if not found
      */
-    public function installByHandle($jHandle = '', $notInstalledJobs = [])
+    public function getNotInstalledJobByHandle($jHandle)
     {
+        $includeC5Dirs = 1;
+        $notInstalledJobs = $this->factory->getNotInstalledJobs($includeC5Dirs);
+
+        // All available jobs are installed already
         if (count($notInstalledJobs) === 0) {
-            $includeC5Dirs = 1;
-            $notInstalledJobs = $this->app->make('job')->getNotInstalledJobs($includeC5Dirs);
+            return false;
         }
 
-        if (count($notInstalledJobs)) {
-            foreach ($notInstalledJobs as $jobHandle => $jobObject) {
-                if ($jobHandle != $jHandle) {
-                    continue;
-                }
-
-                return $jobObject->install();
+        foreach ($notInstalledJobs as $jobHandle => $jobObject) {
+            if ($jHandle !== $jobHandle) {
+                continue;
             }
+
+            return $jobObject;
         }
 
         return false;

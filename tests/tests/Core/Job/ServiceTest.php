@@ -33,7 +33,7 @@ class ServiceTest extends Base
      */
     public function install_by_handle($handle = 'index_search')
     {
-        $job = $this->service->installByHandle($handle);
+        $job = $this->service->install($handle);
 
         $this->assertInstanceOf(Job::class, $job);
     }
@@ -42,7 +42,7 @@ class ServiceTest extends Base
     public function import_job_from_xml()
     {
         $xml = simplexml_load_string('<job handle="index_search"/>');
-        $job = $this->service->installByHandle($xml['handle']);
+        $job = $this->service->install($xml['handle']);
 
         $this->assertInstanceOf(Job::class, $job);
     }
@@ -55,7 +55,7 @@ class ServiceTest extends Base
             $event_triggered = true;
         });
 
-        $this->service->installByHandle('index_search')
+        $this->service->install('index_search')
             ->executeJob();
 
         $this->assertTrue($event_triggered);
@@ -69,7 +69,7 @@ class ServiceTest extends Base
             $event_triggered = true;
         });
 
-        $this->service->installByHandle('index_search');
+        $this->service->install('index_search');
         $this->assertTrue($event_triggered);
     }
 
@@ -81,7 +81,7 @@ class ServiceTest extends Base
             $event_triggered = true;
         });
 
-        $this->service->installByHandle('index_search')
+        $this->service->install('index_search')
             ->uninstall();
 
         $this->assertTrue($event_triggered);

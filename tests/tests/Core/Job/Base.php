@@ -25,7 +25,7 @@ class Base extends ConcreteDatabaseTestCase
         $this->app['config'] = clone $this->app['config'];
 
         $this->factory = new JobFactory($this->app);
-        $this->service = new Service($this->app);
+        $this->service = new Service($this->app, $this->factory);
 
         parent::setUp();
     }

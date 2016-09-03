@@ -26,8 +26,8 @@ class JobFactoryTest extends Base
     public function get_list_of_jobs()
     {
         $this->app['database']->connection()->query('TRUNCATE Jobs');
-        $this->service->installByHandle('index_search');
-        $this->service->installByHandle('generate_sitemap');
+        $this->service->install('index_search');
+        $this->service->install('generate_sitemap');
 
         $jobs = $this->factory->installed();
 
@@ -48,8 +48,8 @@ class JobFactoryTest extends Base
     {
         $this->app['database']->connection()->query('TRUNCATE Jobs');
 
-        $this->service->installByHandle('index_search');
-        $this->service->installByHandle('generate_sitemap')
+        $this->service->install('index_search');
+        $this->service->install('generate_sitemap')
             ->setIsScheduled();
 
         $jobs = $this->factory->scheduled();
@@ -72,7 +72,7 @@ class JobFactoryTest extends Base
      */
     public function get_job_by_handle($handle = 'index_search')
     {
-        $this->service->installByHandle($handle);
+        $this->service->install($handle);
         $job = $this->factory->getByHandle($handle);
 
         $this->assertInstanceOf(Job::class, $job);
