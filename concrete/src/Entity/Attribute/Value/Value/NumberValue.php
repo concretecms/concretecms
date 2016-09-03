@@ -34,7 +34,7 @@ class NumberValue extends Value
         if ($value === null || $value === '') {
             $this->value = null;
         } else {
-            $this->value = $value;
+            $this->value = (string) $value;
         }
     }
 
