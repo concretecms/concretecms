@@ -47,6 +47,7 @@ class Number
                 $result = $sign.$value;
             }
         }
+
         return $result;
     }
 
@@ -77,8 +78,8 @@ class Number
     /**
      * Format a number with grouped thousands and localized decimal point/thousands separator.
      *
-     * @param number $number The number being formatted.
-     * @param int|null $precision [default: null] The wanted precision; if null or not specified the complete localized number will be returned.
+     * @param number $number The number being formatted
+     * @param int|null $precision [default: null] The wanted precision; if null or not specified the complete localized number will be returned
      *
      * @return string
      *
@@ -92,9 +93,9 @@ class Number
     /**
      * Parses a localized number representation and returns the number (or null if $string is not a valid number representation).
      *
-     * @param string $string The number representation to parse.
+     * @param string $string The number representation to parse
      * @param bool $trim [default: true] Remove spaces and new lines at the start/end of $string?
-     * @param int|null $precision [default: null] The wanted precision; if null or not specified the complete number will be returned.
+     * @param int|null $precision [default: null] The wanted precision; if null or not specified the complete number will be returned
      *
      * @return null|number
      *
@@ -117,10 +118,10 @@ class Number
     /**
      * Formats a size (measured in bytes, KB, MB, ...).
      *
-     * @param number $size The size to be formatted, in bytes.
-     * @param string $forceUnit = '' Set to 'bytes', 'KB', 'MB', 'GB' or 'TB' if you want to force the unit, leave empty to automatically determine the unit.
+     * @param number $size The size to be formatted, in bytes
+     * @param string $forceUnit = '' Set to 'bytes', 'KB', 'MB', 'GB' or 'TB' if you want to force the unit, leave empty to automatically determine the unit
      *
-     * @return string|mixed If $size is not numeric, the function returns $size (untouched), otherwise it returns the size with the correct usits (GB, MB, ...) and formatted following the locale rules.
+     * @return string|mixed If $size is not numeric, the function returns $size (untouched), otherwise it returns the size with the correct usits (GB, MB, ...) and formatted following the locale rules
      *
      * @example formatSize(0) returns '0 bytes'
      * @example formatSize(1) returns '1 byte'
@@ -137,7 +138,7 @@ class Number
         if (!is_numeric($size)) {
             return $size;
         }
-        if (strlen($forceUnit) && array_search($forceUnit, array('bytes', 'KB', 'MB', 'GB', 'TB')) === false) {
+        if (strlen($forceUnit) && array_search($forceUnit, ['bytes', 'KB', 'MB', 'GB', 'TB']) === false) {
             $forceUnit = '';
         }
         if ($forceUnit === 'bytes' || (abs($size) < 1024 && (!strlen($forceUnit)))) {

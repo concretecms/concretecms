@@ -1,12 +1,10 @@
 <?php
-
 namespace Concrete\Tests\Core\Utility\Service;
 
 use Concrete\Core\Utility\Service\Number;
 
 class NumberTest extends \PHPUnit_Framework_Testcase
 {
-
     public function flexRoundDataProvider()
     {
         return [
@@ -53,7 +51,7 @@ class NumberTest extends \PHPUnit_Framework_Testcase
             ['00000000123456789012345678901234567890000.000000000012345678901234567890123456789000000000', '123456789012345678901234567890000.000000000012345678901234567890123456789'],
         ];
     }
-    
+
     /**
      * @dataProvider trimDataProvider
      */
@@ -62,5 +60,4 @@ class NumberTest extends \PHPUnit_Framework_Testcase
         $numberService = new Number();
         $this->assertSame($expected, $numberService->trim($test));
     }
-    
 }
