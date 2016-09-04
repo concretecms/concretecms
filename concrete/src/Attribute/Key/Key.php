@@ -15,6 +15,16 @@ class Key extends Facade implements AttributeKeyInterface
         return 'Concrete\Core\Attribute\Key\Factory';
     }
 
+    /**
+     * @deprecated
+     * Move to new location.
+     */
+    public static function exportTranslations()
+    {
+        $factory = static::getFacadeRoot();
+        $translations = $factory->exportTranslations();
+        return $translations;
+    }
 
     // EVERYTHING BELOW THIS IS DEPRECATED AND WILL BE REMOVED AT SOME POINT
     // THE ONLY REASON IT IS HERE IS TO FACILITATE CUSTOM ATTRIBUTE KEY CATEGORIES

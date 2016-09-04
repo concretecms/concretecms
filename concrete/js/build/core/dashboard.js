@@ -103,7 +103,11 @@ var ConcreteDashboard = function() {
 		var $buttons = $('.ccm-dashboard-header-buttons'),
 			$menu = $('header div.ccm-dashboard-header-menu');
 		if ($buttons.length) {
-			$menu.append($buttons);
+			if ($buttons.parent().get(0).nodeName.toLowerCase() == 'form') {
+				$menu.append($buttons.parent());
+			} else {
+				$menu.append($buttons);
+			}
 		}
 	};
 

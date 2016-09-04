@@ -4,6 +4,7 @@ namespace Concrete\Core\Attribute\Key;
 use Concrete\Core\Attribute\Category\CategoryService;
 use Concrete\Core\Attribute\Category\CategoryInterface;
 use Doctrine\ORM\EntityManager;
+use Gettext\Translations;
 
 class Factory
 {
@@ -50,5 +51,20 @@ class Factory
             return $category->getList();
         }
     }
+
+    /**
+     * @deprecated
+     */
+    public function exportTranslations()
+    {
+        $translations = new Translations();
+        $keys = $this->entityManager->getRepository('\Concrete\Core\Entity\Attribute\Key\Key')
+            ->findAll();
+        foreach($keys as $key) {
+            $translations->insert('AttributeKeyName', $key->getAttributeKeyName());
+        }
+        return $translations;
+    }
+
 
 }
