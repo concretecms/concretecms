@@ -6,6 +6,7 @@ use Concrete\Core\Entity\Package;
 use Concrete\Core\Foundation\Environment;
 use Doctrine\ORM\EntityManager;
 use Concrete\Core\Entity\Attribute\Type as AttributeType;
+use Gettext\Translations;
 
 /**
  * Factory class for creating and retrieving instances of the Attribute type entity.
@@ -86,4 +87,17 @@ class TypeFactory
     {
         return $this->getList($akCategoryHandle);
     }
+
+    /**
+     * @deprecated
+     */
+    public function exportTranslations()
+    {
+        $translations = new Translations();
+        foreach($this->getList() as $type) {
+            $translations->insert('AttributeTypeName', $type->getAttributeTypeName());
+        }
+        return $translations;
+    }
+
 }

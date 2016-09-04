@@ -5,6 +5,7 @@ use Concrete\Core\Attribute\StandardSetManager;
 use Concrete\Core\Entity\Package;
 use Doctrine\ORM\EntityManager;
 use Concrete\Core\Entity\Attribute\Category;
+use Gettext\Translations;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
@@ -64,4 +65,26 @@ class CategoryService
 
         return $category->getController();
     }
+
+    /**
+     * @deprecated
+     */
+    public function exportTranslations()
+    {
+        $translations = new Translations();
+        $list = $this->getList();
+
+        $akcNameMap = array(
+            'collection' => 'Page attributes',
+            'user' => 'User attributes',
+            'file' => 'File attributes',
+        );
+
+        foreach($list as $category) {
+            $akcHandle = $category->getAttributeKeyCategoryHandle();
+            $translations->insert('AttributeKeyCategory', isset($akcNameMap[$akcHandle]) ? $akcNameMap[$akcHandle] : ucwords(str_replace(array('_', '-', '/'), ' ', $akcHandle)));
+        }
+        return $translations;
+    }
+
 }
