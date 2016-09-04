@@ -77,17 +77,17 @@ class FileAttributeTest extends \AttributeTestCase
         return array(
             array(
                 'width',
-                (float) 200,
-                (float) 0,
-                (float) 200,
-                (float) 0,
+                '200',
+                '0',
+                '200',
+                '0',
             ),
             array(
                 'height',
-                (float) 500,
-                (float) 0,
-                (float) 500,
-                (float) 0,
+                '500',
+                '0',
+                '500',
+                '0',
             ),
         );
     }
