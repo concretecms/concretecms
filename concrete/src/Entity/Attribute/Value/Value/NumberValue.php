@@ -15,22 +15,26 @@ class NumberValue extends Value
     protected $value = null;
 
     /**
-     * @return float|null
+     * @return string|null
      */
     public function getValue()
     {
-        return $this->value;
+        if ($this->value === null) {
+            return null;
+        } else {
+            return \Core::make('helper/number')->trim($this->value);
+        }
     }
 
     /**
-     * @param float|null $value
+     * @param string|float|int|null $value
      */
     public function setValue($value)
     {
-        if ($value === '' || $value === null) {
+        if ($value === null || $value === '') {
             $this->value = null;
         } else {
-            $this->value = (float) $value;
+            $this->value = (string) $value;
         }
     }
 
@@ -41,6 +45,6 @@ class NumberValue extends Value
      */
     public function __toString()
     {
-        return (string) $this->value;
+        return (string) $this->getValue();
     }
 }
