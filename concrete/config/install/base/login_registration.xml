@@ -38,7 +38,7 @@
         <page name="Private Messages" path="/account/messages" filename="/account/messages.php" pagetype="" description="Inbox for site-specific messages." package="" />
         <page name="Members" path="/members" filename="/members/view.php" pagetype="" description="" package="">
         </page>
-        <page name="View Profile" path="/members/profile" filename="/members/profile.php" pagetype="" description="" package="" />
+        <page name="View Public Profile" path="/members/profile" filename="/members/profile.php" pagetype="" description="" package="" />
 
         <page name="Directory" path="/members/directory" filename="/members/directory.php" pagetype="" description="" package=""/>
 

@@ -55,6 +55,11 @@ class DashboardMenu extends Menu
         if ($parent->getCollectionPath() == '/dashboard/welcome') {
             // Add My Account to the List
             $pages[] = Page::getByPath('/account');
+            $site = \Core::make("site")->getSite();
+            $config = $site->getConfigRepository();
+            if (is_object($site) && $config->get('user.profiles_enabled')) {
+                $pages[] = Page::getByPath('/members/profile');
+            }
         }
         return $pages;
     }
