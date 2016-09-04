@@ -23,6 +23,7 @@ module.exports = function(grunt, config, parameters, done) {
 				'/concrete/vendor/htmlawed/htmlawed/htmLawedTest.php',
 				'/concrete/vendor/imagine/imagine/lib/Imagine/resources/Adobe/Color Profile Bundling License_10.15.08.pdf',
 				'/concrete/vendor/imagine/imagine/lib/Imagine/resources/Adobe/Profile Information.pdf',
+				'/concrete/vendor/lusitanian/oauth/src/OAuth/bootstrap.php',
 				'/concrete/vendor/michelf/php-markdown/Readme.php',
 				'/concrete/vendor/ocramius/proxy-manager/index.html',
 				'/concrete/vendor/ocramius/proxy-manager/proxy-manager.png',
@@ -31,12 +32,15 @@ module.exports = function(grunt, config, parameters, done) {
 				'/concrete/vendor/tedivm/stash/autoload.php',
 			],
 			byRX: [
-				/^\/concrete\/vendor\/.*\/(changelog|change_log|changes|upgrade|upgrading|readme|contributing|history|roadmap|security|stability|install)(-\d+(\.\d+)*)?((\.(font|src))?\.(md|mdown|markdown|txt))?$/i,
+				/^\/concrete\/vendor\/.*\/(changelog|change_log|changes|upgrade|upgrading|readme|contributing|history|roadmap|security|stability|install|conduct)(-\d+(\.\d+)*)?((\.(font|src))?\.(md|mdown|markdown|txt))?$/i,
 				/^\/concrete\/vendor\/.*\/composer\.(lock|json)(\.hhvm)?$/,
 				/^\/concrete\/vendor\/.*\/(phpunit|phpdox|phpmd)(\.(xml|dist|travis|hhvm))+$/,
 				/^\/concrete\/vendor\/.*\/build\.(xml|properties)(\.dist)?$/,
 				/^\/concrete\/vendor\/.*\/UPGRADE_TO_\w+$/,
 				/^\/concrete\/vendor\/htmlawed\/htmlawed\/htmLawed_(README|TESTCASE)/,
+				/^\/concrete\/vendor\/.*\/mkdocs\.yml$/,
+				/^\/concrete\/vendor\/.*\/phpbench\.json$/,
+				/^\/concrete\/vendor\/.*\/phpcs\.xml$/,
 			]
 		},
 		
@@ -48,6 +52,7 @@ module.exports = function(grunt, config, parameters, done) {
 			byPath: [
 				'/concrete/vendor/anahkiasen/html-object/examples',
 				'/concrete/vendor/bin',
+				'/concrete/vendor/container-interop/container-interop/docs',
 				'/concrete/vendor/dapphp/securimage/examples',
 				'/concrete/vendor/doctrine/cache/tests',
 				'/concrete/vendor/doctrine/collections/tests',
@@ -66,6 +71,7 @@ module.exports = function(grunt, config, parameters, done) {
 				'/concrete/vendor/gettext/languages/bin',
 				'/concrete/vendor/hautelook/phpass/lib',
 				'/concrete/vendor/hautelook/phpass/Tests',
+				'/concrete/vendor/league/flysystem/build',
 				'/concrete/vendor/lusitanian/oauth/examples',
 				'/concrete/vendor/lusitanian/oauth/tests',
 				'/concrete/vendor/mobiledetect/mobiledetectlib/examples',
@@ -83,6 +89,7 @@ module.exports = function(grunt, config, parameters, done) {
 				'/concrete/vendor/symfony/class-loader/Tests',
 				'/concrete/vendor/symfony/console/Tests',
 				'/concrete/vendor/symfony/debug/Tests',
+				'/concrete/vendor/symfony/debug/Resources',
 				'/concrete/vendor/symfony/event-dispatcher/Tests',
 				'/concrete/vendor/symfony/finder/Symfony/Component/Finder/Tests',
 				'/concrete/vendor/symfony/http-foundation/Tests',
@@ -93,10 +100,10 @@ module.exports = function(grunt, config, parameters, done) {
 				'/concrete/vendor/symfony/yaml/Tests',
 				'/concrete/vendor/tedivm/jshrink/tests',
 				'/concrete/vendor/tedivm/stash/tests',
-				'/concrete/vendor/true/punycode/tests',
 				'/concrete/vendor/voku/urlify/tests',
 			],
 			byRX: [
+				/^\/concrete\/vendor\/zendframework\/zend-[^\/]+\/(bin|benchmark|benchmarks|doc)$/,
 			]
 		}
 	};
