@@ -84,9 +84,11 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     public static function getByID($cID, $version = 'RECENT')
     {
         $class = get_called_class();
-        $c = CacheLocal::getEntry('page', $cID.'/'.$version.'/'.$class);
-        if ($c instanceof $class) {
-            return $c;
+        if ($cID && $version) {
+            $c = CacheLocal::getEntry('page', $cID.'/'.$version.'/'.$class);
+            if ($c instanceof $class) {
+                return $c;
+            }
         }
 
         $where = 'where Pages.cID = ?';
@@ -94,7 +96,9 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         $c->populatePage($cID, $where, $version);
 
         // must use cID instead of c->getCollectionID() because cID may be the pointer to another page
-        CacheLocal::set('page', $cID.'/'.$version.'/'.$class, $c);
+        if ($cID && $version) {
+            CacheLocal::set('page', $cID.'/'.$version.'/'.$class, $c);
+        }
 
         return $c;
     }
