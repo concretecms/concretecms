@@ -2,6 +2,7 @@
 namespace Concrete\Core\Entity\Attribute\Value\Value;
 
 use Doctrine\ORM\Mapping as ORM;
+use Concrete\Core\Support\Facade\Application;
 
 /**
  * @ORM\Entity
@@ -22,7 +23,7 @@ class NumberValue extends Value
         if ($this->value === null) {
             return null;
         } else {
-            return \Core::make('helper/number')->trim($this->value);
+            return Application::getFacadeApplication()->make('helper/number')->trim($this->value);
         }
     }
 
