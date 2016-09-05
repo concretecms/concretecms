@@ -74,7 +74,7 @@ class Seo extends BackendInterfacePageController
                 $u->unloadCollectionEdit();
             }
 
-            $r = new PageEditResponse($e);
+            $r = new PageEditResponse();
             $r->setPage($this->page);
             $r->setTitle(t('Page Updated'));
             $r->setMessage(t('The SEO information has been saved.'));
