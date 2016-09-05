@@ -4,7 +4,7 @@ namespace Concrete\Core\Page;
 class EditResponse extends \Concrete\Core\Application\EditResponse
 {
     protected $cID = 0;
-    protected $cIDs = array();
+    protected $cIDs = [];
 
     public function setPage(Page $page)
     {
