@@ -12,7 +12,7 @@
             <directory>tests/tests/Attribute/</directory>
             <directory>tests/tests/AttributeValue/</directory>
             <directory>tests/tests/Block/</directory>
-				<directory>tests/tests/CodingStyle/</directory>
+            <directory>tests/tests/CodingStyle/</directory>
             <directory>tests/tests/Core/</directory>
             <directory>tests/tests/Localization/</directory>
         </testsuite>
