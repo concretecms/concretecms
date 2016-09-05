@@ -33,7 +33,7 @@ class DefaultController extends AttributeTypeController
         return $list;
     }
 
-    public function getDisplaySanitizedValue()
+    public function getDisplayValue()
     {
         return Core::make('helper/text')->entities($this->getValue());
     }

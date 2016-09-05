@@ -81,7 +81,7 @@ class Properties extends BackendInterfaceController
 
                 $fr->setFiles($this->files);
                 $val = $f->getAttributeValueObject($ak);
-                $fr->setAdditionalDataAttribute('value',  $val->getRichDisplayValue());
+                $fr->setAdditionalDataAttribute('value',  $val->getDisplayValue());
                 $fr->setMessage(t('Files updated successfully.'));
             }
         }

@@ -75,11 +75,6 @@ class Controller extends AttributeTypeController
         return $type;
     }
 
-    public function getDisplaySanitizedValue()
-    {
-        return $this->getDisplayValue();
-    }
-
     /**
      * @deprecated
      */

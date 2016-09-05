@@ -84,7 +84,7 @@ class Properties extends BackendInterfaceController
                 }
                 $ur->setUsers($this->users);
                 $val = $ui->getAttributeValueObject($ak);
-                $ur->setAdditionalDataAttribute('value',  $val->getRichDisplayValue());
+                $ur->setAdditionalDataAttribute('value',  $val->getDisplayValue());
                 $ur->setMessage(t('Users updated successfully.'));
             } else {
                 throw new Exception(t("You don't have access to update this attribute."));

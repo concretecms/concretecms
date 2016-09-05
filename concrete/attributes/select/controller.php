@@ -462,11 +462,6 @@ class Controller extends AttributeTypeController
         return $html;
     }
 
-    public function getDisplaySanitizedValue()
-    {
-        return $this->getDisplayValue();
-    }
-
     public function validateValue()
     {
         return is_object($value = $this->getValue()) && ((string) $value != '');
