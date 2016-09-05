@@ -1349,10 +1349,10 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     public function getCollectionName()
     {
         if (isset($this->vObj)) {
-            return $this->vObj->cvName;
+            return isset($this->vObj->cvName) ? $this->vObj->cvName : null;
         }
 
-        return $this->cvName;
+        return isset($this->cvName) ? $this->cvName : null;
     }
 
     /**
