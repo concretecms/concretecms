@@ -7,7 +7,7 @@ use Concrete\Core\Routing\RedirectResponse;
 use OAuth\Common\Exception\Exception;
 use OAuth\Common\Http\Exception\TokenResponseException;
 use OAuth\OAuth2\Service\AbstractService;
-use User;
+use Concrete\Core\User\User;
 
 abstract class GenericOauth2TypeController extends GenericOauthTypeController
 {
@@ -24,8 +24,8 @@ abstract class GenericOauth2TypeController extends GenericOauthTypeController
 
     public function handle_authentication_callback()
     {
-        $user = new User();
-        if ($user && !$user->isError() && $user->isLoggedIn()) {
+        $user = new \User();
+        if (!$user->isError() && $user->isLoggedIn()) {
             $this->handle_attach_callback();
         }
 
@@ -71,7 +71,7 @@ abstract class GenericOauth2TypeController extends GenericOauthTypeController
 
     public function handle_attach_callback()
     {
-        $user = new User();
+        $user = new \User();
         if (!$user->isLoggedIn()) {
             id(new RedirectResponse(\URL::to('')))->send();
             exit;
@@ -111,7 +111,7 @@ abstract class GenericOauth2TypeController extends GenericOauthTypeController
      * Method used to clean up.
      * This method must be defined, if it isn't needed, leave it blank.
      *
-     * @param \User $u
+     * @param User $u
      */
     public function deauthenticate(User $u)
     {
@@ -121,7 +121,7 @@ abstract class GenericOauth2TypeController extends GenericOauthTypeController
     /**
      * Test user authentication status.
      *
-     * @param \User $u
+     * @param User $u
      *
      * @return bool Returns true if user is authenticated, false if not
      */

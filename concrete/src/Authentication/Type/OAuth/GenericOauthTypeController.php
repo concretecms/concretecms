@@ -7,6 +7,7 @@ use OAuth\Common\Exception\Exception;
 use OAuth\Common\Service\AbstractService;
 use OAuth\Common\Token\TokenInterface;
 use OAuth\UserData\Extractor\Extractor;
+use Concrete\Core\User\User;
 
 abstract class GenericOauthTypeController extends AuthenticationTypeController
 {
@@ -114,11 +115,11 @@ abstract class GenericOauthTypeController extends AuthenticationTypeController
     /**
      * Create a cookie hash to identify the user indefinitely.
      *
-     * @param \User $u
+     * @param User $u
      *
      * @return string Unique hash to be used to verify the users identity
      */
-    public function buildHash(\User $u)
+    public function buildHash(User $u)
     {
         return '';
     }
@@ -126,12 +127,12 @@ abstract class GenericOauthTypeController extends AuthenticationTypeController
     /**
      * Hash authentication disabled for oauth.
      *
-     * @param \User  $u    object requesting verification.
+     * @param User  $u    object requesting verification.
      * @param string $hash
      *
      * @return bool returns true if the hash is valid, false if not
      */
-    public function verifyHash(\User $u, $hash)
+    public function verifyHash(User $u, $hash)
     {
         return false;
     }
@@ -413,12 +414,12 @@ abstract class GenericOauthTypeController extends AuthenticationTypeController
     }
 
     /**
-     * @param \User $user
+     * @param User $user
      * @param       $binding
      *
      * @return int|null
      */
-    public function bindUser(\User $user, $binding)
+    public function bindUser(User $user, $binding)
     {
         return $this->bindUserID(intval($user->getUserID(), 10), $binding);
     }

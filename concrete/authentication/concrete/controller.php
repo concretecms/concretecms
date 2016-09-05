@@ -7,7 +7,7 @@ use Config;
 use Exception;
 use Database;
 use Core;
-use User;
+use Concrete\Core\User\User;
 use UserInfo;
 use View;
 use Session;
@@ -319,8 +319,8 @@ class Controller extends AuthenticationTypeController
             throw new \Exception($ip_service->getErrorMessage());
         }
 
-        $user = new User($uName, $uPassword);
-        if (!is_object($user) || !($user instanceof User) || $user->isError()) {
+        $user = new \User($uName, $uPassword);
+        if ($user->isError()) {
             switch ($user->getError()) {
                 case USER_SESSION_EXPIRED:
                     throw new \Exception(t('Your session has expired. Please sign in again.'));

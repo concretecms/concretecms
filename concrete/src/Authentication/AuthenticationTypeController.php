@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Core\Authentication;
 
-use User;
+use Concrete\Core\User\User;
 use Page;
 use Controller;
 

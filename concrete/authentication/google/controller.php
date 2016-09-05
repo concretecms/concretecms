@@ -7,7 +7,7 @@ use Concrete\Core\Authentication\LoginException;
 use Concrete\Core\Authentication\Type\Google\Factory\GoogleServiceFactory;
 use Concrete\Core\Authentication\Type\OAuth\OAuth2\GenericOauth2TypeController;
 use OAuth\OAuth2\Service\Google;
-use User;
+use Concrete\Core\User\User;
 
 class Controller extends GenericOauth2TypeController
 {
