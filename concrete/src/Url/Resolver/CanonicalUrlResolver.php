@@ -46,6 +46,7 @@ class CanonicalUrlResolver implements UrlResolverInterface
             return $this->cached;
         }
 
+        $config = null;
         if ($this->app->isInstalled()) {
             $site = $this->app['site']->getSite();
             if (is_object($site)) {
@@ -64,7 +65,7 @@ class CanonicalUrlResolver implements UrlResolverInterface
         if ($config && $configUrl = $config->get('seo.canonical_url')) {
             $canonical = UrlImmutable::createFromUrl($configUrl, $trailing_slashes);
 
-            if ($config && $configSslUrl = $config->get('seo.canonical_ssl_url')) {
+            if ($configSslUrl = $config->get('seo.canonical_ssl_url')) {
                 $canonical_ssl = UrlImmutable::createFromUrl($configSslUrl, $trailing_slashes);
             }
 
