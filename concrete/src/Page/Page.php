@@ -1027,7 +1027,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
      */
     public function getCollectionPath()
     {
-        return $this->cPath;
+        return isset($this->cPath) ? $this->cPath : null;
     }
 
     /**
