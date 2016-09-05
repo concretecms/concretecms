@@ -33,9 +33,9 @@ class Caching extends BackendInterfacePageController
     {
         if ($this->validateAction()) {
             $data = array();
-            $data['cCacheFullPageContent'] = $_POST['cCacheFullPageContent'];
-            $data['cCacheFullPageContentLifetimeCustom'] = $_POST['cCacheFullPageContentLifetimeCustom'];
-            $data['cCacheFullPageContentOverrideLifetime'] = $_POST['cCacheFullPageContentOverrideLifetime'];
+            $data['cCacheFullPageContent'] = $this->request->post('cCacheFullPageContent');
+            $data['cCacheFullPageContentLifetimeCustom'] = $this->request->post('cCacheFullPageContentLifetimeCustom');
+            $data['cCacheFullPageContentOverrideLifetime'] = $this->request->post('cCacheFullPageContentOverrideLifetime');
             $this->page->update($data);
             $r = new PageEditResponse();
             $r->setPage($this->page);
