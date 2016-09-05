@@ -44,12 +44,12 @@ class Seo extends BackendInterfacePageController
             $nvc = $this->page->getVersionToModify();
 
             if ($this->asl->allowEditPaths()) {
-                $data = array('cHandle' => $this->request->post('cHandle'));
+                $data = ['cHandle' => $this->request->post('cHandle')];
                 $nvc->update($data);
             }
 
             if ($this->asl->allowEditName()) {
-                $data = array('cName' => $this->request->post('cName'));
+                $data = ['cName' => $this->request->post('cName')];
                 $nvc->update($data);
             }
 
