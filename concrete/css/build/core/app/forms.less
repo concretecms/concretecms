@@ -237,89 +237,112 @@
     }
   }
 
-  input[type=checkbox], input[type=radio] {
-
-    .transition(0.1s linear background-color);
-    border: 1px solid #e1e1e1;
+  input[type=checkbox],
+  input[type=radio] {
+    margin-top: 5px;
     position: relative;
-    appearance: none;
-    -webkit-appearance: none;
     display: inline-block;
-    color: transparent;
-    .box-shadow(none);
-
-    &:disabled {
-      .opacity(0.7);
-    }
 
     &:focus {
-      outline: 0px;
-    }
-
-    &:hover {
-      background-color: #f2f2f2;
-    }
-
-
-    &:after {
-      .transition(0.1s linear all);
-      position: absolute;
-      font-family: FontAwesome;
-      content: @fa-var-check;
-    }
-
-    &:checked {
-      background-color: #e5e5e5;
-    }
-
-    &:checked:after {
-      color: darken(#f2f2f2, 50%);
+      outline: 0px auto -webkit-focus-ring-color;
     }
 
   }
 
-  input[type=checkbox] {
-
-    padding: 6px;
-    margin-top: 6px;
-    font-size: 12px;
-
-    .border-radius(2px);
-
-    &:indeterminate {
-      background-color: #bdbdbd;
-    }
-
-    &:indeterminate:after {
-      content: @fa-var-minus;
-      position: absolute;
-      top: 1px;
-      left: 1.5px;
-      color: #fff;
-    }
-
-    &:after {
-      top: 0px;
-      left: 0px;
-    }
-
+  input[type=radio]:before,
+  input[type=radio]:hover:before,
+  input[type=radio]:disabled:after,
+  input[type=radio]:checked:disabled:after,
+  input[type=radio]:checked:after,
+  input[type=radio]:focus:after,
+  input[type=checkbox]:before,
+  input[type=checkbox]:hover:before,
+  input[type=checkbox]:disabled:after,
+  input[type=checkbox]:checked:disabled:after,
+  input[type=checkbox]:checked:after,
+  input[type=checkbox]:focus:after,
+  input[type=checkbox]:checked:focus:after {
+    content: "";
+    display: block;
+    position: absolute;
   }
 
-
-  input[type=radio] {
-    padding: 6px;
-    margin-top: 6px;
-    font-size: 5px;
-
-    .border-radius(8px);
-
-    &:after {
-      top: 3.5px;
-      left: 4px;
-      content: @fa-var-circle;
-    }
+  input[type=radio]:before,
+  input[type=radio]:hover:before,
+  input[type=radio]:disabled:after,
+  input[type=radio]:checked:disabled:after,
+  input[type=radio]:checked:after,
+  input[type=checkbox]:before,
+  input[type=checkbox]:hover:before,
+  input[type=checkbox]:disabled:after,
+  input[type=checkbox]:checked:disabled:after,
+  input[type=checkbox]:checked:after,
+  input[type=checkbox]:focus:after {
+    height: 14px;
+    width: 14px;
+    top: -1px;
+    left: -1px;
   }
 
+  input[type=radio]:focus:after,
+  input[type=checkbox]:checked:focus:after {
+    height: 18px;
+    width: 18px;
+    top: -3px;
+    left: -3px;
+  }
+
+  input[type=radio]:before {
+    background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" enable-background="new 0 0 100 100"><path d="m50 0c-27.5 0-50 22.5-50 50s22.5 50 50 50 50-22.5 50-50-22.4-50-50-50" fill="#a4a6a8"/><path d="M50,7c23.7,0,43,19.3,43,43s-19.3,43-43,43S7,73.8,7,50S26.3,7,50,7" fill="#fff"/></svg>') no-repeat;
+  }
+
+  input[type=radio]:hover:before {
+    background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" enable-background="new 0 0 100 100"><path d="m50 0c-27.5 0-50 22.5-50 50s22.5 50 50 50 50-22.5 50-50-22.4-50-50-50" fill="#a4a6a8"/><path d="M50,7c23.7,0,43,19.3,43,43s-19.3,43-43,43S7,73.8,7,50S26.3,7,50,7" fill="#f1f5f9"/></svg>') no-repeat;
+  }
+
+  input[type=radio]:disabled:after {
+    background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" enable-background="new 0 0 100 100"><path d="M50,7c23.7,0,43,19.3,43,43s-19.3,43-43,43S7,73.8,7,50S26.3,7,50,7" fill="#bdbdbd"/></svg>') no-repeat;
+  }
+
+  input[type=radio]:checked:disabled:after {
+    background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" enable-background="new 0 0 100 100"><path d="M50,7c23.7,0,43,19.3,43,43s-19.3,43-43,43S7,73.8,7,50S26.3,7,50,7" fill="#bdbdbd"/><circle cx="50" cy="50" r="14" fill="#fff"/></svg>') no-repeat;
+  }
+
+  input[type=radio]:checked:after {
+    background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" enable-background="new 0 0 100 100"><path d="M50,7c23.7,0,43,19.3,43,43s-19.3,43-43,43S7,73.8,7,50S26.3,7,50,7" fill="#428bca"/><circle cx="50" cy="50" r="14" fill="#fff"/></svg>') no-repeat;
+  }
+
+  input[type=checkbox]:before {
+    background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 114 114" enable-background="new 0 0 114 114"><path d="M91.5,0h-69C10.1,0,0,10.1,0,22.5v69C0,103.9,10.1,114,22.5,114h69c12.4,0,22.5-10.1,22.5-22.5v-69 C114,10.1,103.9,0,91.5,0L91.5,0z" fill="#a4a6a8"/><path d="m91.5 107h-69c-8.6 0-15.5-6.9-15.5-15.5v-69c0-8.6 6.9-15.5 15.5-15.5h69c8.6 0 15.5 6.9 15.5 15.5v69c0 8.6-6.9 15.5-15.5 15.5" fill="#fff"/></svg>') no-repeat;
+  }
+
+  input[type=checkbox]:hover:before {
+    background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 114 114" enable-background="new 0 0 114 114"><path d="M91.5,0h-69C10.1,0,0,10.1,0,22.5v69C0,103.9,10.1,114,22.5,114h69c12.4,0,22.5-10.1,22.5-22.5v-69 C114,10.1,103.9,0,91.5,0L91.5,0z" fill="#a4a6a8"/><path d="m91.5 107h-69c-8.6 0-15.5-6.9-15.5-15.5v-69c0-8.6 6.9-15.5 15.5-15.5h69c8.6 0 15.5 6.9 15.5 15.5v69c0 8.6-6.9 15.5-15.5 15.5" fill="#f1f5f9"/></svg>') no-repeat;
+  }
+
+  input[type=checkbox]:disabled:after {
+    background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 114 114" enable-background="new 0 0 114 114"><path d="M91.5,0h-69C10.1,0,0,10.1,0,22.5v69C0,103.9,10.1,114,22.5,114h69c12.4,0,22.5-10.1,22.5-22.5v-69 C114,10.1,103.9,0,91.5,0L91.5,0z" fill="#bdbdbd"/></svg>') no-repeat;
+  }
+
+  input[type=checkbox]:checked:disabled:after {
+    background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" enable-background="new 0 0 100 100"><path d="M84.5,100h-69C6.9,100,0,93.1,0,84.5v-69C0,6.9,6.9,0,15.5,0h69C93.1,0,100,6.9,100,15.5v69 C100,93.1,93.1,100,84.5,100z" fill="#bdbdbd"/><path d="m88 32.5l-9.8-9.8c-.9-.9-2.4-.9-3.3 0l-33.5 33.3-16.2-16.2c-.9-.9-2.4-.9-3.3 0l-9.1 9.2c-.9.9-.9 2.4 0 3.3l27.6 27.6c.1.1.3.2.4.3.9.7 2.2.6 3-.2l44.2-44.3c.8-.9.8-2.3 0-3.2" fill="#fff"/></svg>') no-repeat;
+  }
+
+  input[type=checkbox]:checked:after {
+    background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" enable-background="new 0 0 100 100"><path d="M84.5,100h-69C6.9,100,0,93.1,0,84.5v-69C0,6.9,6.9,0,15.5,0h69C93.1,0,100,6.9,100,15.5v69 C100,93.1,93.1,100,84.5,100z" fill="#428bca"/><path d="m88 32.5l-9.8-9.8c-.9-.9-2.4-.9-3.3 0l-33.5 33.3-16.2-16.2c-.9-.9-2.4-.9-3.3 0l-9.1 9.2c-.9.9-.9 2.4 0 3.3l27.6 27.6c.1.1.3.2.4.3.9.7 2.2.6 3-.2l44.2-44.3c.8-.9.8-2.3 0-3.2" fill="#fff"/></svg>') no-repeat;
+  }
+
+  input[type=checkbox]:focus:after {
+    background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 114 114" enable-background="new 0 0 114 114"><path d="M91.5,0h-69C10.1,0,0,10.1,0,22.5v69C0,103.9,10.1,114,22.5,114h69c12.4,0,22.5-10.1,22.5-22.5v-69 C114,10.1,103.9,0,91.5,0L91.5,0z" fill="#428bca"/><path d="M86.7,100H27.3C19.9,100,14,94.1,14,86.7V27.3C14,19.9,19.9,14,27.3,14h59.3c7.4,0,13.3,5.9,13.3,13.3v59.3 C100,94.1,94.1,100,86.7,100" fill="#fff"/></svg>') no-repeat;
+  }
+
+  input[type=radio]:focus:after {
+    background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" enable-background="new 0 0 100 100"><path d="m50 0c-27.5 0-50 22.5-50 50s22.5 50 50 50 50-22.5 50-50-22.4-50-50-50" fill="#428bca"/><path d="M50,7c23.7,0,43,19.3,43,43s-19.3,43-43,43S7,73.8,7,50S26.3,7,50,7" fill="#fff"/><path d="m50 14c19.9 0 36 16.1 36 36s-16.1 36-36 36-36-16-36-36 16.1-36 36-36" fill="#428bca"/><circle cx="50" cy="50" r="14" fill="#fff"/></svg>') no-repeat;
+  }
+
+  input[type=checkbox]:checked:focus:after {
+    background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 114 114" enable-background="new 0 0 114 114"><path d="M91.5,0h-69C10.1,0,0,10.1,0,22.5v69C0,103.9,10.1,114,22.5,114h69c12.4,0,22.5-10.1,22.5-22.5v-69 C114,10.1,103.9,0,91.5,0L91.5,0z" fill="#428bca"/><path d="m91.5 107h-69c-8.6 0-15.5-6.9-15.5-15.5v-69c0-8.6 6.9-15.5 15.5-15.5h69c8.6 0 15.5 6.9 15.5 15.5v69c0 8.6-6.9 15.5-15.5 15.5" fill="#fff"/><path d="m22.5 103.5c-6.6 0-12-5.4-12-12v-69c0-6.6 5.4-12 12-12h69c6.6 0 12 5.4 12 12v69c0 6.6-5.4 12-12 12h-69" fill="#428bca"/><g fill="#fff"><path d="m91.5 14c4.7 0 8.5 3.8 8.5 8.5v69c0 4.7-3.8 8.5-8.5 8.5h-69c-4.7 0-8.5-3.8-8.5-8.5v-69c0-4.7 3.8-8.5 8.5-8.5h69m0-7h-69c-8.6 0-15.5 6.9-15.5 15.5v69c0 8.6 6.9 15.5 15.5 15.5h69c8.6 0 15.5-6.9 15.5-15.5v-69c0-8.6-6.9-15.5-15.5-15.5z"/><path d="m95 39.5l-9.8-9.8c-.9-.9-2.4-.9-3.3 0l-33.5 33.3-16.2-16.2c-.9-.9-2.4-.9-3.3 0l-9.1 9.2c-.9.9-.9 2.4 0 3.3l27.6 27.6c.1.1.3.2.4.3.9.7 2.2.6 3-.2l44.2-44.3c.8-.9.8-2.3 0-3.2"/></g></svg>') no-repeat;
+  }
 
   div.form-inline {
     div.form-group {
