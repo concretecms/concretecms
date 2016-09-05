@@ -11,7 +11,7 @@ abstract class GenericOauth1aTypeController extends GenericOauthTypeController
     public function handle_authentication_attempt()
     {
         $token = $this->getService()->requestRequestToken();
-        $url = $this->getService()->getAuthorizationUri(array('oauth_token' => $token->getRequestToken()));
+        $url = $this->getService()->getAuthorizationUri(['oauth_token' => $token->getRequestToken()]);
         id(new RedirectResponse((string) $url))->send();
         exit;
     }
@@ -51,7 +51,7 @@ abstract class GenericOauth1aTypeController extends GenericOauthTypeController
     public function handle_attach_attempt()
     {
         $token = $this->getService()->requestRequestToken();
-        $url = $this->getService()->getAuthorizationUri(array('oauth_token' => $token->getRequestToken()));
+        $url = $this->getService()->getAuthorizationUri(['oauth_token' => $token->getRequestToken()]);
         id(new RedirectResponse((string) $url))->send();
         exit;
     }
