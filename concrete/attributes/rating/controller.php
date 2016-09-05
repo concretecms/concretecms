@@ -22,9 +22,8 @@ class Controller extends AttributeTypeController
 
     public function getDisplayValue()
     {
-        $value = $this->getValue() / 20;
         $rt = $this->app->make('helper/rating');
-        return $rt->outputDisplay($value);
+        return $rt->outputDisplay($this->getValue());
     }
 
     public function form()

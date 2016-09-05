@@ -80,10 +80,7 @@ abstract class Value implements AttributeValueInterface
         $value = $this->value;
 
         // legacy
-        if ($mode == 'displaySanitized') {
-            return $this->getDisplaySanitizedValue();
-        }
-        if ($mode == 'display') {
+        if ($mode == 'displaySanitized' || $mode == 'display') {
             return $this->getDisplayValue();
         }
 
@@ -97,7 +94,6 @@ abstract class Value implements AttributeValueInterface
         return $controller->getValue();
     }
 
-
     /**
      * @deprecated
      */
@@ -107,31 +103,23 @@ abstract class Value implements AttributeValueInterface
     }
 
     /**
-     * Returns content that can display the attribute in "rich text" contexts
+     * Returns content that can be displayed on profile pages, elsewhere. Filters
+     * problematic content (sanitizes)
      * @return mixed
      */
-    public function getRichDisplayValue()
+    public function getDisplayValue()
     {
         $controller = $this->getController();
-        if (method_exists($controller, 'getRichDisplayValue')) {
-            return $controller->getRichDisplayValue();
-        }
-        // Deprecated
         if (method_exists($controller, 'getDisplayValue')) {
             return $controller->getDisplayValue();
         }
-
         return $this->getValue();
     }
 
     /**
-     * @deprecated
+     * Returns content that is useful in plain text contexts.
+     * @return string
      */
-    public function getDisplayValue()
-    {
-        return $this->getRichDisplayValue();
-    }
-
     public function getPlainTextValue()
     {
         if ($this->getValueObject()) {
@@ -143,6 +131,11 @@ abstract class Value implements AttributeValueInterface
         return $controller->getValue();
     }
 
+    /**
+     * Returns the attribute in the context of search indexing (for search index
+     * database tables)
+     * @return $this
+     */
     public function getSearchIndexValue()
     {
         $controller = $this->getController();

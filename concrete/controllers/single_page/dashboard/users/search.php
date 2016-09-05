@@ -322,7 +322,7 @@ class Search extends DashboardPageController
             $sr->setError($this->error);
         } else {
             $sr->setMessage(t('Attribute saved successfully.'));
-            $sr->setAdditionalDataAttribute('value', $val->getRichDisplayValue());
+            $sr->setAdditionalDataAttribute('value', $val->getDisplayValue());
         }
         $this->user->reindex();
         $sr->outputJSON();

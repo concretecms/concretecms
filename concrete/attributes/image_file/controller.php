@@ -70,11 +70,6 @@ class Controller extends AttributeTypeController
         }
     }
 
-    public function getDisplaySanitizedValue()
-    {
-        return $this->getDisplayValue();
-    }
-
     public function exportValue(\SimpleXMLElement $akn)
     {
         $av = $akn->addChild('value');
