@@ -190,8 +190,8 @@ class View extends AbstractView
             ob_start();
             $this->onBeforeGetContents();
             include $this->template;
-            $contents = ob_get_contents();
             $this->onAfterGetContents();
+            $contents = ob_get_contents();
             ob_end_clean();
 
             return $contents;
