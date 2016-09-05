@@ -272,7 +272,7 @@ class Controller extends BlockController implements FileTrackableInterface
     }
 
     /**
-     * On delete update the tracker
+     * On delete update the tracker.
      */
     public function delete()
     {
@@ -335,5 +335,4 @@ class Controller extends BlockController implements FileTrackableInterface
     {
         return $this->getCollectionObject();
     }
-
 }
