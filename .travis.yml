@@ -18,7 +18,7 @@ matrix:
     - php: nightly
 
 before_script:
-  - phpenv config-add tests/travis.php.ini
+  - if [[ $TRAVIS_PHP_VERSION = hhvm ]]; then cat tests/travis.hhvm.ini >> /etc/hhvm/php.ini; else phpenv config-add tests/travis.php.ini; fi
   - travis_retry composer install --no-interaction
   - mysql -e "SET GLOBAL sql_mode = 'STRICT_TRANS_TABLES,STRICT_ALL_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION,ONLY_FULL_GROUP_BY'"
   - phpunit --version
