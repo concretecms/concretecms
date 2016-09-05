@@ -8,7 +8,11 @@ class NoShortTagsTest extends \Concrete\Tests\CodingStyleTestCase
      */
     public function testNoShortTags($phpFile)
     {
-        $sot = ini_get('short_open_tag');
+        if (defined('HHVM_VERSION')) {
+            $sot = ini_get('hhvm.enable_short_tags');
+        } else {
+            $sot = ini_get('short_open_tag');
+        }
         if (empty($sot)) {
             static::markTestSkipped('short_open_tag must be enabled in order to run the test '.__CLASS__.'::'.__FUNCTION__);
 
