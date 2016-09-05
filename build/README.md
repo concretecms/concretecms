@@ -89,18 +89,3 @@ Example:
 grunt translations --txUsername=myName --txPassword=myPwd --txResource=core-5621 --txLocales=de_DE,it_IT,el_GE --txProgressLimit=0
 ```
 As stated above, some or all of these options can also be specified in the `Gruntfile.parameters.js` file (but the command-line options take the precedence).
-
-
-## Remove short tags
-
-You can use the `remove-short-tags` grunt task.
-It accepts the following parameters (in `Gruntfile.parameters.js` or in command line):
-- `package` The package handle you want to work on. If not specified (or if its value is `-`) the task work on the whole concrete5 directory. 
-- `destination` The destination path. If not specified the source files will we overwritten.
-- `shortTagRemover` A shell command that will replace short tags with long tags for a specific file. It must accept two syntaxes:
-	- `command filename`: the command should overwrite the specified file
-	- `command sourceFilename destinationFilename`: the command should read from `sourceFilename` and save to `destinationFilename`
-
-If the `shortTagRemover` is not specified, the task uses a predefined PHP script (so your system should have PHP installed, minimum required version 5.3.9).
-
-Example: `grunt remove-short-tags --package=your_package_handle --destination=../out`
