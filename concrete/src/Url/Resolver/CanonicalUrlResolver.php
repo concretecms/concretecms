@@ -5,7 +5,6 @@ use Concrete\Core\Application\Application;
 use Concrete\Core\Http\Request;
 use Concrete\Core\Url\Url;
 use Concrete\Core\Url\UrlImmutable;
-use Zend\Loader\Exception\RuntimeException;
 
 class CanonicalUrlResolver implements UrlResolverInterface
 {
@@ -20,6 +19,7 @@ class CanonicalUrlResolver implements UrlResolverInterface
 
     /**
      * CanonicalUrlResolver constructor.
+     *
      * @param \Concrete\Core\Application\Application $app
      * @param \Concrete\Core\Http\Request $request
      */
