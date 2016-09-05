@@ -1191,12 +1191,12 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
      */
     public function getPageTypeID()
     {
-        return $this->ptID;
+        return isset($this->ptID) ? $this->ptID : null;
     }
 
     public function getPageTypeObject()
     {
-        return PageType::getByID($this->ptID);
+        return PageType::getByID($this->getPageTypeID());
     }
 
     /**
@@ -1243,8 +1243,9 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     {
         if (!isset($this->ptHandle)) {
             $this->ptHandle = false;
-            if ($this->ptID) {
-                $pt = Type::getByID($this->ptID);
+            $ptID = $this->getPageTypeID();
+            if ($ptID) {
+                $pt = Type::getByID($ptID);
                 if (is_object($pt)) {
                     $this->ptHandle = $pt->getPageTypeHandle();
                 }
