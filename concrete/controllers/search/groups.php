@@ -11,7 +11,7 @@ use URL;
 
 class Groups extends Controller
 {
-    protected $fields = array();
+    protected $fields = [];
 
     public function __construct()
     {
