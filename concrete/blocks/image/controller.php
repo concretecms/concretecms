@@ -60,7 +60,7 @@ class Controller extends BlockController implements FileTrackableInterface
     public function view()
     {
         // Check for a valid File in the view
-        $f = File::getByID($this->fID);
+        $f = $this->getFileObject();
         $this->set('f', $f);
 
         // On-State image available
@@ -69,7 +69,7 @@ class Controller extends BlockController implements FileTrackableInterface
 
         $imgPaths = [];
         $imgPaths['hover'] = File::getRelativePathFromID($this->fOnstateID);
-        $imgPaths['default'] = File::getRelativePathFromID($this->fID);
+        $imgPaths['default'] = File::getRelativePathFromID($this->getFileID());
         $this->set('imgPaths', $imgPaths);
 
         $this->set('altText', $this->getAltText());
@@ -176,7 +176,7 @@ class Controller extends BlockController implements FileTrackableInterface
      */
     public function getFileID()
     {
-        return $this->fID;
+        return isset($this->fID) ? $this->fID : null;
     }
 
     /**
@@ -202,7 +202,7 @@ class Controller extends BlockController implements FileTrackableInterface
      */
     public function getFileObject()
     {
-        return File::getByID($this->fID);
+        return File::getByID($this->getFileID());
     }
 
     /**
@@ -272,7 +272,7 @@ class Controller extends BlockController implements FileTrackableInterface
     }
 
     /**
-     * On delete update the tracker
+     * On delete update the tracker.
      */
     public function delete()
     {
@@ -335,5 +335,4 @@ class Controller extends BlockController implements FileTrackableInterface
     {
         return $this->getCollectionObject();
     }
-
 }
