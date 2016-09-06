@@ -44,12 +44,12 @@ class Seo extends BackendInterfacePageController
             $nvc = $this->page->getVersionToModify();
 
             if ($this->asl->allowEditPaths()) {
-                $data = array('cHandle' => $_POST['cHandle']);
+                $data = ['cHandle' => $this->request->post('cHandle')];
                 $nvc->update($data);
             }
 
             if ($this->asl->allowEditName()) {
-                $data = array('cName' => $_POST['cName']);
+                $data = ['cName' => $this->request->post('cName')];
                 $nvc->update($data);
             }
 
@@ -74,7 +74,7 @@ class Seo extends BackendInterfacePageController
                 $u->unloadCollectionEdit();
             }
 
-            $r = new PageEditResponse($e);
+            $r = new PageEditResponse();
             $r->setPage($this->page);
             $r->setTitle(t('Page Updated'));
             $r->setMessage(t('The SEO information has been saved.'));

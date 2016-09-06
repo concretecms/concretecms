@@ -4,7 +4,7 @@ namespace Concrete\Core\Page;
 class EditResponse extends \Concrete\Core\Application\EditResponse
 {
     protected $cID = 0;
-    protected $cIDs = array();
+    protected $cIDs = [];
 
     public function setPage(Page $page)
     {
@@ -28,11 +28,13 @@ class EditResponse extends \Concrete\Core\Application\EditResponse
                 $o->cID[] = $cID;
             }
         }
-        if (!is_array($o->cID)) {
-            $o->pages[] = Page::getByID($o->cID)->getJSONObject();
-        } else {
-            foreach ($o->cID as $cID) {
-                $o->pages[] = Page::getByID($cID)->getJSONObject();
+        if (isset($o->cID)) {
+            if (!is_array($o->cID)) {
+                $o->pages[] = Page::getByID($o->cID)->getJSONObject();
+            } else {
+                foreach ($o->cID as $cID) {
+                    $o->pages[] = Page::getByID($cID)->getJSONObject();
+                }
             }
         }
 

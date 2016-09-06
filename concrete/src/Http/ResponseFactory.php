@@ -201,7 +201,7 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
             }
         }
 
-        if (!$collection->cPathFetchIsCanonical) {
+        if (!isset($collection->cPathFetchIsCanonical) || !$collection->cPathFetchIsCanonical) {
             // Handle redirect URL (additional page paths)
             /** @var Url $url */
             $url = $this->app->make('url/manager')->resolve([$collection]);
