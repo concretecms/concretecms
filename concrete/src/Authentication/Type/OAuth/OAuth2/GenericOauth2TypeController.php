@@ -7,7 +7,7 @@ use Concrete\Core\Routing\RedirectResponse;
 use OAuth\Common\Exception\Exception;
 use OAuth\Common\Http\Exception\TokenResponseException;
 use OAuth\OAuth2\Service\AbstractService;
-use User;
+use Concrete\Core\User\User;
 
 abstract class GenericOauth2TypeController extends GenericOauthTypeController
 {

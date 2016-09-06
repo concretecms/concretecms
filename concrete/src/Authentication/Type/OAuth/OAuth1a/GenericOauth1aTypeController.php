@@ -4,7 +4,7 @@ namespace Concrete\Core\Authentication\Type\OAuth\OAuth1a;
 use Concrete\Core\Authentication\Type\OAuth\GenericOauthTypeController;
 use Concrete\Core\Routing\RedirectResponse;
 use OAuth\Common\Exception\Exception;
-use User;
+use Concrete\Core\User\User;
 
 abstract class GenericOauth1aTypeController extends GenericOauthTypeController
 {
