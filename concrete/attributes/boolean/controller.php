@@ -5,13 +5,12 @@ use Concrete\Core\Attribute\FontAwesomeIconFormatter;
 use Concrete\Core\Entity\Attribute\Key\Type\BooleanType;
 use Concrete\Core\Entity\Attribute\Value\Value\BooleanValue;
 use Core;
-use Database;
 use Concrete\Core\Search\ItemList\Database\AttributedItemList;
 use Concrete\Core\Attribute\Controller as AttributeTypeController;
 
 class Controller extends AttributeTypeController
 {
-    protected $searchIndexFieldDefinition = array('type' => 'boolean', 'options' => array('default' => 0, 'notnull' => false));
+    protected $searchIndexFieldDefinition = ['type' => 'boolean', 'options' => ['default' => 0, 'notnull' => false]];
 
     public function getIconFormatter()
     {
@@ -21,6 +20,7 @@ class Controller extends AttributeTypeController
     public function searchForm($list)
     {
         $list->filterByAttribute($this->attributeKey->getAttributeKeyHandle(), $this->request('value'));
+
         return $list;
     }
 
@@ -46,6 +46,7 @@ class Controller extends AttributeTypeController
         $this->load();
         $type = $akey->addChild('type');
         $type->addAttribute('checked', $this->akCheckedByDefault);
+
         return $akey;
     }
 
@@ -76,6 +77,7 @@ class Controller extends AttributeTypeController
 
     public function form()
     {
+        $checked = false;
         if (is_object($this->attributeValue)) {
             $value = $this->getAttributeValue()->getValue();
             $checked = $value == 1 ? true : false;
@@ -126,12 +128,14 @@ class Controller extends AttributeTypeController
         }
 
         $type->setIsCheckedByDefault($akCheckedByDefault);
+
         return $type;
     }
 
     public function createAttributeValueFromRequest()
     {
         $data = $this->post();
+
         return $this->createAttributeValue(isset($data['value']) ? $data['value'] : false);
     }
 

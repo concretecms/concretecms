@@ -7,12 +7,10 @@ use Concrete\Core\Entity\Attribute\Key\Type\TextType;
 use Concrete\Core\Search\ItemList\Database\AttributedItemList;
 use Core;
 use Concrete\Core\Attribute\View as AttributeTypeView;
-use Concrete\Core\Attribute\Key\Category as AttributeKeyCategory;
 use Doctrine\ORM\EntityManager;
 
 class Controller extends AbstractController
 {
-
     protected $entityManager;
 
     /** @var \Concrete\Core\Attribute\Key\Key */
@@ -71,7 +69,6 @@ class Controller extends AbstractController
 
     public function importKey(\SimpleXMLElement $element)
     {
-
     }
 
     public function getValidator()
@@ -154,9 +151,10 @@ class Controller extends AbstractController
         // the only post that matters is the one for this attribute's name space
         $req = ($this->requestArray == false) ? $this->request->request->all() : $this->requestArray;
         if (is_object($this->attributeKey) && isset($req['akID']) && is_array($req['akID'])) {
-            $p = $req['akID'][$this->attributeKey->getAttributeKeyID()];
+            $akID = $this->attributeKey->getAttributeKeyID();
+            $p = isset($req['akID'][$akID]) ? $req['akID'][$akID] : null;
             if ($field) {
-                return $p[$field];
+                return (is_array($p) && isset($p[$field])) ? $p[$field] : null;
             }
 
             return $p;
@@ -212,7 +210,6 @@ class Controller extends AbstractController
         return $this->attributeValue->getValue();
     }
 
-
     public function getSearchIndexFieldDefinition()
     {
         return $this->searchIndexFieldDefinition;
@@ -229,7 +226,7 @@ class Controller extends AbstractController
             $this->on_start($method);
         }
         if ($method == 'composer') {
-            $method = array('composer', 'form');
+            $method = ['composer', 'form'];
         }
 
         if ($method) {
@@ -245,7 +242,7 @@ class Controller extends AbstractController
     {
         $env = \Environment::get();
         $r = $env->getRecord(
-            implode('/', array(DIRNAME_ATTRIBUTES . '/' . $this->attributeType->getAttributeTypeHandle() . '/' . $_file)),
+            implode('/', [DIRNAME_ATTRIBUTES . '/' . $this->attributeType->getAttributeTypeHandle() . '/' . $_file]),
             $this->attributeType->getPackageHandle()
         );
         if ($r->exists()) {
@@ -294,6 +291,7 @@ class Controller extends AbstractController
     public function validateKey($data = false)
     {
         $e = $this->app->make('error');
+
         return $e;
     }
 
@@ -319,6 +317,7 @@ class Controller extends AbstractController
         } else {
             $key_type = $this->createAttributeKeyType();
             $key_type->setAttributeTypeHandle($this->getAttributeType()->getAttributeTypeHandle());
+
             return $key_type;
         }
     }

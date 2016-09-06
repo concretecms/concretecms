@@ -314,7 +314,7 @@ class User extends Object
      */
     public function isActive()
     {
-        return $this->uIsActive;
+        return isset($this->uIsActive) ? $this->uIsActive : null;
     }
 
     /**

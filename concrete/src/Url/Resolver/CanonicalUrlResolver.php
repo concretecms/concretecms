@@ -5,7 +5,6 @@ use Concrete\Core\Application\Application;
 use Concrete\Core\Http\Request;
 use Concrete\Core\Url\Url;
 use Concrete\Core\Url\UrlImmutable;
-use Zend\Loader\Exception\RuntimeException;
 
 class CanonicalUrlResolver implements UrlResolverInterface
 {
@@ -20,6 +19,7 @@ class CanonicalUrlResolver implements UrlResolverInterface
 
     /**
      * CanonicalUrlResolver constructor.
+     *
      * @param \Concrete\Core\Application\Application $app
      * @param \Concrete\Core\Http\Request $request
      */
@@ -46,6 +46,7 @@ class CanonicalUrlResolver implements UrlResolverInterface
             return $this->cached;
         }
 
+        $config = null;
         if ($this->app->isInstalled()) {
             $site = $this->app['site']->getSite();
             if (is_object($site)) {
@@ -64,7 +65,7 @@ class CanonicalUrlResolver implements UrlResolverInterface
         if ($config && $configUrl = $config->get('seo.canonical_url')) {
             $canonical = UrlImmutable::createFromUrl($configUrl, $trailing_slashes);
 
-            if ($config && $configSslUrl = $config->get('seo.canonical_ssl_url')) {
+            if ($configSslUrl = $config->get('seo.canonical_ssl_url')) {
                 $canonical_ssl = UrlImmutable::createFromUrl($configSslUrl, $trailing_slashes);
             }
 
