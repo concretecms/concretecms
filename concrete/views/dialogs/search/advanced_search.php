@@ -3,7 +3,7 @@
 <div class="ccm-ui ccm-search-fields-advanced-dialog">
 
     <?php echo Core::make('helper/concrete/ui')->tabs(array(
-        array('fields', t('Search Fields'), true),
+        array('fields', t('Filters'), true),
         array('columns', t('Customize Results'))
     ));?>
 
