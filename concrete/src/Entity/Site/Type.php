@@ -30,6 +30,16 @@ class Type
     protected $siteTypeName;
 
     /**
+     * @ORM\Column(type="integer")
+     */
+    protected $siteTypeThemeID = 0;
+
+    /**
+     * @ORM\Column(type="integer")
+     */
+    protected $siteTypeHomePageTemplateID = 0;
+
+    /**
      * @ORM\OneToMany(targetEntity="Site", cascade={"remove"}, mappedBy="type")
      */
     protected $sites;
@@ -91,6 +101,39 @@ class Type
     {
         $this->sites = new ArrayCollection();
     }
+
+    /**
+     * @return mixed
+     */
+    public function getSiteTypeThemeID()
+    {
+        return $this->siteTypeThemeID;
+    }
+
+    /**
+     * @param mixed $siteTypeThemeID
+     */
+    public function setSiteTypeThemeID($siteTypeThemeID)
+    {
+        $this->siteTypeThemeID = $siteTypeThemeID;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSiteTypeHomePageTemplateID()
+    {
+        return $this->siteTypeHomePageTemplateID;
+    }
+
+    /**
+     * @param mixed $siteTypeHomePageTemplate
+     */
+    public function setSiteTypeHomePageTemplateID($siteTypeHomePageTemplateID)
+    {
+        $this->siteTypeHomePageTemplateID = $siteTypeHomePageTemplateID;
+    }
+
 
 
 }
