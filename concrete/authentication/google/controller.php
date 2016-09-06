@@ -52,12 +52,12 @@ class Controller extends GenericOauth2TypeController
         \Config::save('auth.google.registration.enabled', (bool) $args['registration_enabled']);
         \Config::save('auth.google.registration.group', intval($args['registration_group'], 10));
 
-        $whitelist = array();
+        $whitelist = [];
         foreach (explode(PHP_EOL, $args['whitelist']) as $entry) {
             $whitelist[] = trim($entry);
         }
 
-        $blacklist = array();
+        $blacklist = [];
         foreach (explode(PHP_EOL, $args['blacklist']) as $entry) {
             $blacklist[] = json_decode(trim($entry), true);
         }
@@ -76,10 +76,10 @@ class Controller extends GenericOauth2TypeController
         $list->includeAllGroups();
         $this->set('groups', $list->getResults());
 
-        $this->set('whitelist', \Config::get('auth.google.email_filters.whitelist', array()));
+        $this->set('whitelist', \Config::get('auth.google.email_filters.whitelist', []));
         $blacklist = array_map(function ($entry) {
             return json_encode($entry);
-        }, \Config::get('auth.google.email_filters.blacklist', array()));
+        }, \Config::get('auth.google.email_filters.blacklist', []));
 
         $this->set('blacklist', $blacklist);
     }
@@ -102,16 +102,16 @@ class Controller extends GenericOauth2TypeController
 
     public function isValid()
     {
-        $filters = (array) \Config::get('auth.google.email_filters', array());
+        $filters = (array) \Config::get('auth.google.email_filters', []);
         $domain = $this->getExtractor()->getExtra('domain');
 
-        foreach (array_get($filters, 'whitelist', array()) as $regex) {
+        foreach (array_get($filters, 'whitelist', []) as $regex) {
             if (preg_match($regex, $domain)) {
                 return true;
             }
         }
 
-        foreach (array_get($filters, 'blacklist', array()) as $arr) {
+        foreach (array_get($filters, 'blacklist', []) as $arr) {
             list($regex, $error) = array_pad((array) $arr, 2, null);
             if (preg_match($regex, $domain)) {
                 if (trim($error)) {

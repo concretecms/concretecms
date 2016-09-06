@@ -11,15 +11,15 @@ abstract class GenericOauth1aTypeController extends GenericOauthTypeController
     public function handle_authentication_attempt()
     {
         $token = $this->getService()->requestRequestToken();
-        $url = $this->getService()->getAuthorizationUri(array('oauth_token' => $token->getRequestToken()));
+        $url = $this->getService()->getAuthorizationUri(['oauth_token' => $token->getRequestToken()]);
         id(new RedirectResponse((string) $url))->send();
         exit;
     }
 
     public function handle_authentication_callback()
     {
-        $user = new User();
-        if ($user && !$user->isError() && $user->isLoggedIn()) {
+        $user = new \User();
+        if (!$user->isError() && $user->isLoggedIn()) {
             $this->handle_attach_callback();
         }
         $token = \Request::getInstance()->get('oauth_token');
@@ -51,14 +51,14 @@ abstract class GenericOauth1aTypeController extends GenericOauthTypeController
     public function handle_attach_attempt()
     {
         $token = $this->getService()->requestRequestToken();
-        $url = $this->getService()->getAuthorizationUri(array('oauth_token' => $token->getRequestToken()));
+        $url = $this->getService()->getAuthorizationUri(['oauth_token' => $token->getRequestToken()]);
         id(new RedirectResponse((string) $url))->send();
         exit;
     }
 
     public function handle_attach_callback()
     {
-        $user = new User();
+        $user = new \User();
         if (!$user->isLoggedIn()) {
             id(new RedirectResponse(\URL::to('')))->send();
             exit;
@@ -88,7 +88,7 @@ abstract class GenericOauth1aTypeController extends GenericOauthTypeController
      * Method used to clean up.
      * This method must be defined, if it isn't needed, leave it blank.
      *
-     * @param \User $u
+     * @param User $u
      */
     public function deauthenticate(User $u)
     {
@@ -98,7 +98,7 @@ abstract class GenericOauth1aTypeController extends GenericOauthTypeController
     /**
      * Test user authentication status.
      *
-     * @param \User $u
+     * @param User $u
      *
      * @return bool Returns true if user is authenticated, false if not
      */
