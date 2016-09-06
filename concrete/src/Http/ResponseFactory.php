@@ -163,20 +163,6 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
     {
         $request = $this->request;
 
-        $view = $controller->getViewObject();
-
-        // Mobile theme
-        if ($this->config->get('concrete.misc.mobile_theme_id') > 0) {
-            $md = $this->app->make(MobileDetect::class);
-            if ($md->isMobile()) {
-                $mobileTheme = Theme::getByID(Config::get('concrete.misc.mobile_theme_id'));
-                if ($mobileTheme instanceof Theme) {
-                    $view->setViewTheme($mobileTheme);
-                    $controller->setTheme($mobileTheme);
-                }
-            }
-        }
-
         $controller->on_start();
 
         if ($controller instanceof PageController) {
@@ -204,10 +190,22 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
             $controller->runAction('view');
         }
 
-        $view->setController($controller);
-
         if ($controller->isReplaced()) {
             return $this->controller($controller->getReplacement());
+        }
+
+        $view = $controller->getViewObject();
+
+        // Mobile theme
+        if ($this->config->get('concrete.misc.mobile_theme_id') > 0) {
+            $md = $this->app->make(MobileDetect::class);
+            if ($md->isMobile()) {
+                $mobileTheme = Theme::getByID(Config::get('concrete.misc.mobile_theme_id'));
+                if ($mobileTheme instanceof Theme) {
+                    $view->setViewTheme($mobileTheme);
+                    $controller->setTheme($mobileTheme);
+                }
+            }
         }
 
         return $this->view($view, $code, $headers);
