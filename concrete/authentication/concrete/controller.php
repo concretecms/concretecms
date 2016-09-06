@@ -7,7 +7,7 @@ use Config;
 use Exception;
 use Database;
 use Core;
-use User;
+use Concrete\Core\User\User;
 use UserInfo;
 use View;
 use Session;
