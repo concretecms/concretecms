@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Application\Service\Dashboard;
 
+use Concrete\Core\Entity\Site\Tree;
 use Config;
 use PageList;
 use TaskPermission;
@@ -67,7 +68,7 @@ class Sitemap
      *
      * @return array
      */
-    public function getSubNodes($cID, $onGetNode = null)
+    public function getSubNodes($parent, $onGetNode = null)
     {
         $pl = new PageList();
         $pl->setPermissionsChecker(function ($page) {
@@ -81,7 +82,13 @@ class Sitemap
             $pl->includeSystemPages();
             $pl->includeInactivePages();
         }
-        $pl->filterByParentID($cID);
+        if (!is_object($parent)) {
+            $cID = $parent;
+        } else if ($parent instanceof Tree) {
+            $pl->setSiteTreeObject($parent);
+            $cID = 0;
+        }
+        $pl->filterByParentID($cID); // Either 0 or cParentID
         $pl->setPageVersionToRetrieve(\Concrete\Core\Page\PageList::PAGE_VERSION_RECENT);
 
         if ($cID == 1) {

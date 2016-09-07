@@ -76,6 +76,12 @@ class Service
         return $home;
     }
 
+    public function getSiteTreeByID($siteTreeID)
+    {
+        return $this->entityManager->getRepository('Concrete\Core\Entity\Site\Tree')
+            ->find($siteTreeID);
+    }
+
     public function getByID($id)
     {
         $site = $this->entityManager->getRepository('Concrete\Core\Entity\Site\Site')
