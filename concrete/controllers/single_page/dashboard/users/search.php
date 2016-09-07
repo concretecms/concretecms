@@ -3,12 +3,9 @@ namespace Concrete\Controller\SinglePage\Dashboard\Users;
 
 use Concrete\Controller\Element\Search\Users\Header;
 use Concrete\Core\Page\Controller\DashboardPageController;
-use Config;
 use Imagine\Image\Box;
-use Loader;
 use Exception;
 use User;
-use Core;
 use UserInfo;
 use stdClass;
 use Permissions;
@@ -25,17 +22,18 @@ class Search extends DashboardPageController
     public function update_avatar($uID = false)
     {
         $this->setupUser($uID);
-        if (!Loader::helper('validation/token')->validate()) {
-            throw new Exception(Loader::helper('validation/token')->getErrorMessage());
+        if (!$this->app->make('helper/validation/token')->validate()) {
+            throw new Exception($this->app->make('helper/validation/token')->getErrorMessage());
         }
         if ($this->canEditAvatar) {
-            $av = Loader::helper('concrete/avatar');
+            $av = $this->app->make('helper/concrete/avatar');
             if (is_uploaded_file($_FILES['avatar']['tmp_name'])) {
                 $image = \Image::open($_FILES['avatar']['tmp_name']);
+                $config = $this->app->make('config');
                 $image = $image->thumbnail(
                     new Box(
-                        Config::get('concrete.icons.user_avatar.width'),
-                        Config::get('concrete.icons.user_avatar.height')
+                        $config->get('concrete.icons.user_avatar.width'),
+                        $config->get('concrete.icons.user_avatar.height')
                     )
                 );
                 $this->user->updateUserAvatar($image);
@@ -61,7 +59,7 @@ class Search extends DashboardPageController
     protected function setupUser($uID)
     {
         $me = new User();
-        $ui = UserInfo::getByID(Loader::helper('security')->sanitizeInt($uID));
+        $ui = UserInfo::getByID($this->app->make('helper/security')->sanitizeInt($uID));
         if (is_object($ui)) {
             $up = new Permissions($ui);
             if (!$up->canViewUser()) {
@@ -105,13 +103,14 @@ class Search extends DashboardPageController
         switch ($_POST['task']) {
             case 'activate':
                 $this->setupUser($uID);
-                if ($this->canActivateUser && Loader::helper('validation/token')->validate()) {
+                if ($this->canActivateUser && $this->app->make('helper/validation/token')->validate()) {
                     if ($this->user->triggerActivate()) {
-                        $mh = Loader::helper('mail');
+                        $mh = $this->app->make('helper/mail');
                         $mh->to($this->user->getUserEmail());
-                        if (Config::get('concrete.user.registration.notification_email')) {
+                        $config = $this->app->make('config');
+                        if ($config->get('concrete.user.registration.notification_email')) {
                             $mh->from(
-                                Config::get('concrete.user.registration.notification_email'),
+                                $config->get('concrete.user.registration.notification_email'),
                                 t('Website Registration Notification')
                             );
                         } else {
@@ -122,7 +121,7 @@ class Search extends DashboardPageController
                         $mh->addParameter('user', $this->user);
                         $mh->addParameter('uName', $this->user->getUserName());
                         $mh->addParameter('uEmail', $this->user->getUserEmail());
-                        $mh->addParameter('siteName', \Core::make('site')->getSite()->getSiteName());
+                        $mh->addParameter('siteName', $this->app->make('site')->getSite()->getSiteName());
                         $mh->load('user_registered_approval_complete');
                         $mh->sendMail();
                     }
@@ -132,28 +131,28 @@ class Search extends DashboardPageController
                 break;
             case 'deactivate':
                 $this->setupUser($uID);
-                if ($this->canActivateUser && Loader::helper('validation/token')->validate()) {
+                if ($this->canActivateUser && $this->app->make('helper/validation/token')->validate()) {
                     $this->user->triggerDeactivate();
                     $this->redirect('/dashboard/users/search', 'view', $this->user->getUserID(), 'deactivated');
                 }
                 break;
             case 'validate':
                 $this->setupUser($uID);
-                if ($this->canActivateUser && Loader::helper('validation/token')->validate()) {
+                if ($this->canActivateUser && $this->app->make('helper/validation/token')->validate()) {
                     $this->user->markValidated();
                     $this->redirect('/dashboard/users/search', 'view', $this->user->getUserID(), 'email_validated');
                 }
                 break;
             case 'sudo':
                 $this->setupUser($uID);
-                if ($this->canSignInAsUser && Loader::helper('validation/token')->validate()) {
+                if ($this->canSignInAsUser && $this->app->make('helper/validation/token')->validate()) {
                     User::loginByUserID($uID);
                     $this->redirect('/');
                 }
                 break;
             case 'delete':
                 $this->setupUser($uID);
-                if ($this->canDeleteUser && Loader::helper('validation/token')->validate()) {
+                if ($this->canDeleteUser && $this->app->make('helper/validation/token')->validate()) {
                     $this->user->triggerDelete($this->user);
                     $this->redirect('/dashboard/users/search', 'view', $this->user->getUserID(), 'deleted');
                 }
@@ -167,12 +166,12 @@ class Search extends DashboardPageController
         $this->setupUser($uID);
         if ($this->canEditEmail) {
             $email = $this->post('value');
-            if (!Loader::helper('validation/token')->validate()) {
-                $this->error->add(Loader::helper('validation/token')->getErrorMessage());
+            if (!$this->app->make('helper/validation/token')->validate()) {
+                $this->error->add($this->app->make('helper/validation/token')->getErrorMessage());
             }
-            if (!Loader::helper('validation/strings')->email($email)) {
+            if (!$this->app->make('helper/validation/strings')->email($email)) {
                 $this->error->add(t('Invalid email address provided.'));
-            } elseif (!Loader::helper('concrete/validation')->isUniqueEmail($email) && $this->user->getUserEmail(
+            } elseif (!$this->app->make('helper/concrete/validation')->isUniqueEmail($email) && $this->user->getUserEmail(
                 ) != $email
             ) {
                 $this->error->add(t("The email address '%s' is already in use. Please choose another.", $email));
@@ -196,8 +195,8 @@ class Search extends DashboardPageController
         $this->setupUser($uID);
         if ($this->canEditTimezone) {
             $timezone = $this->post('value');
-            if (!Loader::helper('validation/token')->validate()) {
-                $this->error->add(Loader::helper('validation/token')->getErrorMessage());
+            if (!$this->app->make('helper/validation/token')->validate()) {
+                $this->error->add($this->app->make('helper/validation/token')->getErrorMessage());
             }
             $sr = new UserEditResponse();
             $sr->setUser($this->user);
@@ -217,8 +216,8 @@ class Search extends DashboardPageController
         $this->setupUser($uID);
         if ($this->canEditLanguage) {
             $language = $this->post('value');
-            if (!Loader::helper('validation/token')->validate()) {
-                $this->error->add(Loader::helper('validation/token')->getErrorMessage());
+            if (!$this->app->make('helper/validation/token')->validate()) {
+                $this->error->add($this->app->make('helper/validation/token')->getErrorMessage());
             }
             $sr = new UserEditResponse();
             $sr->setUser($this->user);
@@ -237,33 +236,31 @@ class Search extends DashboardPageController
     {
         $this->setupUser($uID);
         if ($this->canEditUserName) {
+            $config = $this->app->make('config');
             $username = $this->post('value');
-            if (!Loader::helper('validation/token')->validate()) {
-                $this->error->add(Loader::helper('validation/token')->getErrorMessage());
+            if (!$this->app->make('helper/validation/token')->validate()) {
+                $this->error->add($this->app->make('helper/validation/token')->getErrorMessage());
             }
-            if (strlen($username) < Config::get('concrete.user.username.minimum')) {
+            if (strlen($username) < $config->get('concrete.user.username.minimum')) {
                 $this->error->add(
                     t(
                         'A username must be at least %s characters long.',
-                        Config::get('concrete.user.username.minimum')
+                        $config->get('concrete.user.username.minimum')
                     )
                 );
             }
 
-            if (strlen($username) > Config::get('concrete.user.username.maximum')) {
+            if (strlen($username) > $config->get('concrete.user.username.maximum')) {
                 $this->error->add(
                     t(
                         'A username cannot be more than %s characters long.',
-                        Config::get('concrete.user.username.maximum')
+                        $config->get('concrete.user.username.maximum')
                     )
                 );
             }
 
-            if (strlen($username) >= Config::get('concrete.user.username.minimum') && !Loader::helper(
-                    'concrete/validation'
-                )->username($username)
-            ) {
-                if (Config::get('concrete.user.username.allow_spaces')) {
+            if (strlen($username) >= $config->get('concrete.user.username.minimum') && !$this->app->make('helper/concrete/validation')->username($username)) {
+                if ($config->get('concrete.user.username.allow_spaces')) {
                     $this->error->add(
                         t(
                             'A username may only contain letters, numbers, spaces, dots (not at the beginning/end), underscores (not at the beginning/end).'
@@ -278,10 +275,7 @@ class Search extends DashboardPageController
                 }
             }
             $uo = $this->user->getUserObject();
-            if (strcasecmp($uo->getUserName(), $username) && !Loader::Helper(
-                    'concrete/validation'
-                )->isUniqueUsername($username)
-            ) {
+            if (strcasecmp($uo->getUserName(), $username) && !$this->app->make('helper/concrete/validation')->isUniqueUsername($username)) {
                 $this->error->add(t("The username '%s' already exists. Please choose another", $username));
             }
 
@@ -302,8 +296,8 @@ class Search extends DashboardPageController
     {
         $this->setupUser($uID);
         $sr = new UserEditResponse();
-        if (Loader::helper('validation/token')->validate()) {
-            $ak = UserAttributeKey::getByID(Loader::helper('security')->sanitizeInt($_REQUEST['name']));
+        if ($this->app->make('helper/validation/token')->validate()) {
+            $ak = UserAttributeKey::getByID($this->app->make('helper/security')->sanitizeInt($_REQUEST['name']));
             if (is_object($ak)) {
                 if (!in_array($ak->getAttributeKeyID(), $this->allowedEditAttributes)) {
                     throw new Exception(t('You do not have permission to modify this attribute.'));
@@ -313,7 +307,7 @@ class Search extends DashboardPageController
                 $val = $this->user->getAttributeValueObject($ak);
             }
         } else {
-            $this->error->add(Loader::helper('validation/token')->getErrorMessage());
+            $this->error->add($this->app->make('helper/validation/token')->getErrorMessage());
         }
         $sr->setUser($this->user);
         if ($this->error->has()) {
@@ -330,8 +324,8 @@ class Search extends DashboardPageController
     {
         $this->setupUser($uID);
         $sr = new UserEditResponse();
-        if (Loader::helper('validation/token')->validate()) {
-            $ak = UserAttributeKey::getByID(Loader::helper('security')->sanitizeInt($_REQUEST['akID']));
+        if ($this->app->make('helper/validation/token')->validate()) {
+            $ak = UserAttributeKey::getByID($this->app->make('helper/security')->sanitizeInt($_REQUEST['akID']));
             if (is_object($ak)) {
                 if (!in_array($ak->getAttributeKeyID(), $this->allowedEditAttributes)) {
                     throw new Exception(t('You do not have permission to modify this attribute.'));
@@ -339,7 +333,7 @@ class Search extends DashboardPageController
                 $this->user->clearAttribute($ak);
             }
         } else {
-            $this->error->add(Loader::helper('validation/token')->getErrorMessage());
+            $this->error->add($this->app->make('helper/validation/token')->getErrorMessage());
         }
         $sr->setUser($this->user);
         if ($this->error->has()) {
@@ -357,10 +351,10 @@ class Search extends DashboardPageController
             $password = $this->post('uPassword');
             $passwordConfirm = $this->post('uPasswordConfirm');
 
-            \Core::make('validator/password')->isValid($password, $this->error);
+            $this->app->make('validator/password')->isValid($password, $this->error);
 
-            if (!Loader::helper('validation/token')->validate('change_password')) {
-                $this->error->add(Loader::helper('validation/token')->getErrorMessage());
+            if (!$this->app->make('helper/validation/token')->validate('change_password')) {
+                $this->error->add($this->app->make('helper/validation/token')->getErrorMessage());
             }
             if ($password != $passwordConfirm) {
                 $this->error->add(t('The two passwords provided do not match.'));
@@ -387,7 +381,7 @@ class Search extends DashboardPageController
         } else {
             $query = '';
         }
-        $timezones = Loader::helper("date")->getTimezones();
+        $timezones = $this->app->make('helper/date')->getTimezones();
         $result = [];
         foreach ($timezones as $timezoneID => $timezoneName) {
             if (($query === '') || (stripos($timezoneName, $query) !== false)) {
@@ -397,7 +391,7 @@ class Search extends DashboardPageController
                 $result[] = $obj;
             }
         }
-        Loader::helper('ajax')->sendResult($result);
+        $this->app->make('helper/ajax')->sendResult($result);
     }
 
     public function get_languages()
@@ -428,7 +422,7 @@ class Search extends DashboardPageController
                 return $cmp;
             }
         );
-        Loader::helper('ajax')->sendResult($result);
+        $this->app->make('helper/ajax')->sendResult($result);
     }
 
     public function delete_complete()
@@ -448,7 +442,7 @@ class Search extends DashboardPageController
         $ui = $this->user;
         if (is_object($ui)) {
             $this->set('headerMenu', $headerMenu);
-            $dh = Core::make('helper/date');
+            $dh = $this->app->make('helper/date');
             /* @var $dh \Concrete\Core\Localization\Service\Date */
             $this->requireAsset('core/app/editable-fields');
             $uo = $this->user->getUserObject();
@@ -460,7 +454,7 @@ class Search extends DashboardPageController
                 $obj->gDateTimeEntered = $dh->formatDateTime($g->getGroupDateTimeEntered($this->user));
                 $groups[] = $obj;
             }
-            $this->set('groupsJSON', Loader::helper('json')->encode($groups));
+            $this->set('groupsJSON', json_encode($groups));
             $attributes = UserAttributeKey::getList(true);
             $this->set('attributes', $attributes);
             $this->set('pageTitle', t('View/Edit %s', $this->user->getUserDisplayName()));
