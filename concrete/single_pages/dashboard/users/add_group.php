@@ -88,7 +88,7 @@ $request = Request::getInstance();
                 <div class="controls">
                     <?php
                     $af = $app->make('helper/concrete/asset_library');
-                    echo $af->image('gBadgeFID', 'gBadgeFID', t('Choose Badge Image'), $badgeImage);
+                    echo $af->image('gBadgeFID', 'gBadgeFID', t('Choose Badge Image'), isset($badgeImage) ? $badgeImage : null);
                     ?>
                 </div>
             </div>
@@ -188,9 +188,9 @@ $request = Request::getInstance();
                             <th><?=t('Minutes')?></th>
                         </tr>
                         <tr>
-                            <td><?=$form->text('gUserExpirationIntervalDays', ['style' => $style, 'class' => 'span1'])?></td>
-                            <td><?=$form->text('gUserExpirationIntervalHours', ['style' => $style, 'class' => 'span1'])?></td>
-                            <td><?=$form->text('gUserExpirationIntervalMinutes', ['style' => $style, 'class' => 'span1'])?></td>
+                            <td><?=$form->text('gUserExpirationIntervalDays', ['style' => isset($style) ? $style : null, 'class' => 'span1'])?></td>
+                            <td><?=$form->text('gUserExpirationIntervalHours', ['style' => isset($style) ? $style : null, 'class' => 'span1'])?></td>
+                            <td><?=$form->text('gUserExpirationIntervalMinutes', ['style' => isset($style) ? $style : null, 'class' => 'span1'])?></td>
                         </tr>
                     </table>
                 </div>
