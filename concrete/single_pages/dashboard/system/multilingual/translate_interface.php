@@ -71,7 +71,7 @@ if ($this->controller->getTask() == 'translate_po') {
 
 } else {
     if (!is_dir(DIR_LANGUAGES_SITE_INTERFACE) || !is_writable(DIR_LANGUAGES_SITE_INTERFACE)) {
-        ?><div class="alert alert-warning"><?php echo t('You must create the directory %s and make it writable before you may run this tool. Additionally, all files within this directory must be writable.', DIR_LANGUAGES_SITE_INTERFACE);
+        ?><div class="alert alert-warning"><?php echo t('You must create the directory %s and make it writable before you may run this tool. Additionally, all files within this directory must be writable.', DIRNAME_APPLICATION.'/'.DIRNAME_LANGUAGES.'/'.DIRNAME_LANGUAGES_SITE_INTERFACE);
         ?></div><?php
 
     }
