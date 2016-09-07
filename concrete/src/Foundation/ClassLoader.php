@@ -138,9 +138,6 @@ class ClassLoader
             $strictLoader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Package\\' . camelcase($pkgHandle) . '\\Src', DIR_PACKAGES . '/' . $pkgHandle . '/' . DIRNAME_CLASSES);
         }
 
-        $strictLoader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Package\\' . camelcase($pkgHandle) . '\\Entity', DIR_PACKAGES . '/' . $pkgHandle . '/' . DIRNAME_CLASSES . '/Entity');
-
-
         $symfonyLoader->register();
         $strictLoader->register();
         $this->registerPackageController($pkgHandle);

@@ -604,11 +604,7 @@ abstract class Package implements LocalizablePackageInterface
             return array($this->getPackageEntityPath());
         }
         // If we're using a legacy package, we scan the entire src directory
-        if (version_compare($this->getApplicationVersionRequired(), '5.8.0', '<')){
-            return array($this->getPackagePath() . DIRECTORY_SEPARATOR . DIRNAME_CLASSES);
-        } else {
-            return array($this->getPackagePath() . DIRECTORY_SEPARATOR . DIRNAME_CLASSES . DIRECTORY_SEPARATOR . DIRNAME_ENTITIES);
-        }
+        return array($this->getPackagePath() . DIRECTORY_SEPARATOR . DIRNAME_CLASSES);
     }
 
     /**
@@ -810,10 +806,10 @@ abstract class Package implements LocalizablePackageInterface
     public function getPackageMetadataRelativePaths()
     {
         // annotations entity path
+        $paths = array();
         if ($this->metadataDriver === self::PACKAGE_METADATADRIVER_ANNOTATION){
             // Support for the legacy method for backwards compatibility
             $tmp = $this->getPackageEntityPaths();
-            $paths = array();
             foreach($tmp as $path) {
                 $paths[] = str_replace($this->getPackagePath(), $this->getRelativePathFromInstallFolder(), $path);
             }
@@ -834,7 +830,7 @@ abstract class Package implements LocalizablePackageInterface
 
         $returnPaths = array();
         foreach($paths as $path) {
-            if (is_dir($path)) {
+            if (is_dir(DIR_BASE . $path)) {
                 $returnPaths[] = $path;
             }
         }
