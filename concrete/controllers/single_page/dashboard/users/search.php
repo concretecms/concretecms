@@ -26,9 +26,13 @@ class Search extends DashboardPageController
             throw new Exception($this->app->make('helper/validation/token')->getErrorMessage());
         }
         if ($this->canEditAvatar) {
-            $av = $this->app->make('helper/concrete/avatar');
-            if (is_uploaded_file($_FILES['avatar']['tmp_name'])) {
-                $image = \Image::open($_FILES['avatar']['tmp_name']);
+            $file = $this->request->files->get('avatar');
+            if ($file !== null) {
+                /* @var \Symfony\Component\HttpFoundation\File\UploadedFile $file */
+                if (!$file->isValid()) {
+                    throw new Exception($file->getErrorMessage());
+                }
+                $image = \Image::open($file->getPathname());
                 $config = $this->app->make('config');
                 $image = $image->thumbnail(
                     new Box(
@@ -37,10 +41,8 @@ class Search extends DashboardPageController
                     )
                 );
                 $this->user->updateUserAvatar($image);
-            } else {
-                if ($_POST['task'] == 'clear') {
-                    $this->user->update(['uHasAvatar' => 0]);
-                }
+            } elseif ($this->request->post('task') == 'clear') {
+                $this->user->update(['uHasAvatar' => 0]);
             }
         } else {
             throw new Exception(t('Access Denied.'));
@@ -100,7 +102,7 @@ class Search extends DashboardPageController
 
     public function update_status($uID = false)
     {
-        switch ($_POST['task']) {
+        switch ($this->request->post('task')) {
             case 'activate':
                 $this->setupUser($uID);
                 if ($this->canActivateUser && $this->app->make('helper/validation/token')->validate()) {
@@ -297,7 +299,7 @@ class Search extends DashboardPageController
         $this->setupUser($uID);
         $sr = new UserEditResponse();
         if ($this->app->make('helper/validation/token')->validate()) {
-            $ak = UserAttributeKey::getByID($this->app->make('helper/security')->sanitizeInt($_REQUEST['name']));
+            $ak = UserAttributeKey::getByID($this->app->make('helper/security')->sanitizeInt($this->request->request('name')));
             if (is_object($ak)) {
                 if (!in_array($ak->getAttributeKeyID(), $this->allowedEditAttributes)) {
                     throw new Exception(t('You do not have permission to modify this attribute.'));
@@ -325,7 +327,7 @@ class Search extends DashboardPageController
         $this->setupUser($uID);
         $sr = new UserEditResponse();
         if ($this->app->make('helper/validation/token')->validate()) {
-            $ak = UserAttributeKey::getByID($this->app->make('helper/security')->sanitizeInt($_REQUEST['akID']));
+            $ak = UserAttributeKey::getByID($this->app->make('helper/security')->sanitizeInt($this->request->request('akID')));
             if (is_object($ak)) {
                 if (!in_array($ak->getAttributeKeyID(), $this->allowedEditAttributes)) {
                     throw new Exception(t('You do not have permission to modify this attribute.'));
@@ -376,8 +378,9 @@ class Search extends DashboardPageController
 
     public function get_timezones()
     {
-        if (array_key_exists('query', $_GET) && is_string($_GET['query'])) {
-            $query = preg_replace('/\s+/', ' ', $_GET['query']);
+        $query = $this->request->get('query');
+        if (is_string($query)) {
+            $query = preg_replace('/\s+/', ' ', $query);
         } else {
             $query = '';
         }
