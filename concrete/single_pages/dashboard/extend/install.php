@@ -1,19 +1,20 @@
 <?php defined('C5_EXECUTE') or die('Access Denied.');
 
-use \Concrete\Core\Attribute\Key\Category as AttributeCategory;
+use Concrete\Core\Attribute\Key\Category as AttributeCategory;
 
-$valt = Loader::helper('validation/token');
-$ci = Loader::helper('concrete/urls');
-$ch = Loader::helper('concrete/ui');
+$app = Concrete\Core\Support\Facade\Application::getFacadeApplication();
+$valt = $app->make('helper/validation/token');
+$ci = $app->make('helper/concrete/urls');
+$ch = $app->make('helper/concrete/ui');
 $tp = new TaskPermission();
 if ($tp->canInstallPackages()) {
     $mi = Marketplace::getInstance();
 }
 $pkgArray = Package::getInstalledList();
 
-$ci = \Core::make('helper/concrete/urls');
-$txt = \Core::make('helper/text');
-$nav = \Core::make('helper/navigation');
+$ci = $app->make('helper/concrete/urls');
+$txt = $app->make('helper/text');
+$nav = $app->make('helper/navigation');
 
 $catList = AttributeCategory::getList();
 
@@ -21,9 +22,9 @@ if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScre
     ?>
     <form method="post" action="<?=$this->action('install_package', $pkg->getPackageHandle())?>">
         <?php
-        echo Loader::helper('validation/token')->output('install_options_selected');
-        echo Loader::packageElement('dashboard/install', $pkg->getPackageHandle());
-        $swapper = new \Concrete\Core\Package\ContentSwapper();
+        echo $app->make('helper/validation/token')->output('install_options_selected');
+        echo View::element('dashboard/install', null, $pkg->getPackageHandle());
+        $swapper = new Concrete\Core\Package\ContentSwapper();
         if ($swapper->allowsFullContentSwap($pkg)) {
             ?>
             <h4><?=t('Clear this Site?')?></h4>
@@ -89,7 +90,7 @@ if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScre
             <div class="form-group">
                 <label class="control-label"><?= t('Move package to trash directory on server?'); ?></label>
                 <div class="checkbox">
-                    <label><?= Loader::helper('form')->checkbox('pkgMoveToTrash', 1); ?>
+                    <label><?= $app->make('helper/form')->checkbox('pkgMoveToTrash', 1); ?>
                     <span><?= t('Yes, remove the package\'s directory from the installation directory.'); ?></span></label>
                 </div>
             </div>
@@ -131,7 +132,7 @@ if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScre
             if (empty($pkgAvailableArray)) {
                 Localization::clearCache();
             }
-            \Concrete\Core\Support\Facade\Package::setupLocalization($_pkg);
+            Concrete\Core\Support\Facade\Package::setupLocalization($_pkg);
             $pkgAvailableArray[] = $_pkg;
         }
     }
@@ -141,7 +142,6 @@ if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScre
         return strcasecmp($a->getPackageName(), $b->getPackageName());
     });
     // Load featured add-ons from the marketplace.
-    $db = Loader::db();
     if (is_object($mi) && $mi->isConnected() && Config::get('concrete.marketplace.enabled') && $tp->canInstallPackages()) {
         $purchasedBlocksSource = Marketplace::getAvailableMarketplaceItems();
     } else {
@@ -171,7 +171,7 @@ if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScre
         </table>
         <?php
         foreach ($categories as $category) {
-            /** @var \Concrete\Core\Package\ItemCategory\ItemInterface */
+            /** @var Concrete\Core\Package\ItemCategory\ItemInterface */
             if ($category->hasItems($pkg)) {
                 $category->renderList($pkg);
             }
@@ -195,7 +195,7 @@ if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScre
             <div style="display: none">
                 <div id="ccm-install-post-notes">
                     <div class="ccm-ui">
-                        <?= Loader::element('dashboard/install_post', false, $installedPKG->getPackageHandle()); ?>
+                        <?= View::element('dashboard/install_post', null, $installedPKG->getPackageHandle()); ?>
                         <div class="dialog-buttons">
                             <a href="javascript:void(0)" onclick="jQuery.fn.dialog.closeAll()" class="btn btn-primary pull-right"><?= t('Ok'); ?></a>
                         </div>
@@ -285,7 +285,7 @@ if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScre
                         <div class="pull-left"><img style="width: 49px" src="<?= $ci->getPackageIconURL($obj); ?>" class"media-object" /></div>
                         <div class="media-body">
                             <?php
-                            if ($obj instanceof \Concrete\Core\Package\BrokenPackage) {
+                            if ($obj instanceof Concrete\Core\Package\BrokenPackage) {
                                 ?>
                                 <div style="display: inline-block" class="launch-tooltip pull-right" title="<?=t('This package is corrupted. Make sure it has a valid controller.php file and that it has been updated for concrete5.7 and later.')?>">
                                     <button type="button" disabled="disabled" class="btn btn-sm btn-default"><i class="fa fa-exclamation-circle"></i> <?= t('Can\'t Install!'); ?></button>
@@ -311,7 +311,7 @@ if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScre
                 <p><?= t('Your site is currently connected to the concrete5 community. Your project page URL is:'); ?><br/><a href="<?= $mi->getSitePageURL(); ?>"><?= $mi->getSitePageURL(); ?></a></p>
                 <?php
             } elseif (is_object($mi) && $mi->hasConnectionError()) {
-                echo Loader::element('dashboard/marketplace_connect_failed');
+                echo View::element('dashboard/marketplace_connect_failed');
             } elseif ($tp->canInstallPackages() && Config::get('concrete.marketplace.enabled') == true) {
                 ?>
                 <hr/>
