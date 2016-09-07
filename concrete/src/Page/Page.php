@@ -3,6 +3,7 @@ namespace Concrete\Core\Page;
 
 use Concrete\Core\Entity\Page\Template as TemplateEntity;
 use Concrete\Core\Entity\Site\Site;
+use Concrete\Core\Entity\Site\Tree;
 use Concrete\Core\Multilingual\Page\Section\Section;
 use Concrete\Core\Page\Type\Composer\Control\BlockControl;
 use Concrete\Core\Page\Type\Composer\FormLayoutSetControl;
@@ -674,10 +675,10 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         ];
         $cobj = parent::addCollection($data);
         $newCID = $cobj->getCollectionID();
-        $siteID = \Core::make('site')->getSite()->getSiteID();
+        $siteTreeID = \Core::make('site')->getSite()->getSiteTreeID();
 
-        $v = [$newCID, $siteID, $cParentID, $uID, $this->getCollectionID(), $cDisplayOrder];
-        $q = "insert into Pages (cID, siteID, cParentID, uID, cPointerID, cDisplayOrder) values (?, ?, ?, ?, ?, ?)";
+        $v = [$newCID, $siteTreeID, $cParentID, $uID, $this->getCollectionID(), $cDisplayOrder];
+        $q = "insert into Pages (cID, siteTreeID, cParentID, uID, cPointerID, cDisplayOrder) values (?, ?, ?, ?, ?, ?)";
         $r = $db->prepare($q);
 
         $r->execute($v);
@@ -753,10 +754,10 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         $cInheritPermissionsFromCID = $this->getPermissionsCollectionID();
         $cInheritPermissionsFrom = 'PARENT';
 
-        $siteID = \Core::make('site')->getSite()->getSiteID();
+        $siteTreeID = \Core::make('site')->getSite()->getSiteTreeID();
 
-        $v = [$newCID, $siteID, $cParentID, $uID, $cInheritPermissionsFrom, $cInheritPermissionsFromCID, $cLink, $newWindow];
-        $q = 'insert into Pages (cID, siteID, cParentID, uID, cInheritPermissionsFrom, cInheritPermissionsFromCID, cPointerExternalLink, cPointerExternalLinkNewWindow) values (?, ?, ?, ?, ?, ?, ?, ?)';
+        $v = [$newCID, $siteTreeID, $cParentID, $uID, $cInheritPermissionsFrom, $cInheritPermissionsFromCID, $cLink, $newWindow];
+        $q = 'insert into Pages (cID, siteTreeID, cParentID, uID, cInheritPermissionsFrom, cInheritPermissionsFromCID, cPointerExternalLink, cPointerExternalLinkNewWindow) values (?, ?, ?, ?, ?, ?, ?, ?)';
         $r = $db->prepare($q);
 
         $r->execute($v);
@@ -2320,10 +2321,10 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         $newC = $cobj->duplicateCollection();
         $newCID = $newC->getCollectionID();
 
-        $siteID = \Core::make('site')->getSite()->getSiteID();
+        $siteTreeID = \Core::make('site')->getSite()->getSiteTreeID();
 
-        $v = [$newCID, $siteID, $this->getPageTypeID(), $cParentID, $uID, $this->overrideTemplatePermissions(), $this->getPermissionsCollectionID(), $this->getCollectionInheritance(), $this->cFilename, $this->cPointerID, $this->cPointerExternalLink, $this->cPointerExternalLinkNewWindow, $this->cDisplayOrder, $this->pkgID];
-        $q = 'insert into Pages (cID, siteID, ptID, cParentID, uID, cOverrideTemplatePermissions, cInheritPermissionsFromCID, cInheritPermissionsFrom, cFilename, cPointerID, cPointerExternalLink, cPointerExternalLinkNewWindow, cDisplayOrder, pkgID) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+        $v = [$newCID, $siteTreeID, $this->getPageTypeID(), $cParentID, $uID, $this->overrideTemplatePermissions(), $this->getPermissionsCollectionID(), $this->getCollectionInheritance(), $this->cFilename, $this->cPointerID, $this->cPointerExternalLink, $this->cPointerExternalLinkNewWindow, $this->cDisplayOrder, $this->pkgID];
+        $q = 'insert into Pages (cID, siteTreeID, ptID, cParentID, uID, cOverrideTemplatePermissions, cInheritPermissionsFromCID, cInheritPermissionsFrom, cFilename, cPointerID, cPointerExternalLink, cPointerExternalLinkNewWindow, cDisplayOrder, pkgID) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
         $res = $db->executeQuery($q, $v);
 
         // Composer specific
@@ -2713,7 +2714,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     public function moveToRoot()
     {
         $db = Database::connection();
-        $db->executeQuery('update Pages set cParentID = 0, siteID = 0 where cID = ?', [$this->getCollectionID()]);
+        $db->executeQuery('update Pages set cParentID = 0, siteTreeID = 0 where cID = ?', [$this->getCollectionID()]);
         $this->cParentID = 0;
         $this->rescanSystemPageStatus();
     }
@@ -2813,7 +2814,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
      *
      * @return page
      **/
-    public static function addHomePage(Site $site = null)
+    public static function addHomePage(Tree $siteTree = null)
     {
         // creates the home page of the site
         $db = Database::connection();
@@ -2830,13 +2831,14 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         $cobj = parent::createCollection($data);
         $cID = $cobj->getCollectionID();
 
-        if (!is_object($site)) {
+        if (!is_object($siteTree)) {
             $site = \Core::make('site')->getSite();
+            $siteTree = $site->getSiteTree();
         }
-        $siteID = $site->getSiteID();
+        $siteTreeID = $siteTree->getSiteTreeID();
 
-        $v = [$cID, $siteID, $cParentID, $uID, 'OVERRIDE', 1, 1, 0];
-        $q = 'insert into Pages (cID, siteID, cParentID, uID, cInheritPermissionsFrom, cOverrideTemplatePermissions, cInheritPermissionsFromCID, cDisplayOrder) values (?, ?, ?, ?, ?, ?, ?, ?)';
+        $v = [$cID, $siteTreeID, $cParentID, $uID, 'OVERRIDE', 1, 1, 0];
+        $q = 'insert into Pages (cID, siteTreeID, cParentID, uID, cInheritPermissionsFrom, cOverrideTemplatePermissions, cInheritPermissionsFromCID, cDisplayOrder) values (?, ?, ?, ?, ?, ?, ?, ?)';
         $r = $db->prepare($q);
         $r->execute($v);
         $pc = self::getByID($cID, 'RECENT');
@@ -2939,12 +2941,12 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         //$this->rescanChildrenDisplayOrder();
         $cDisplayOrder = $this->getNextSubPageDisplayOrder();
 
-        $siteID = \Core::make('site')->getSite()->getSiteID();
+        $siteTreeID = \Core::make('site')->getSite()->getSiteTreeID();
 
         $cInheritPermissionsFromCID = ($this->overrideTemplatePermissions()) ? $this->getPermissionsCollectionID() : $masterCID;
         $cInheritPermissionsFrom = ($this->overrideTemplatePermissions()) ? 'PARENT' : 'TEMPLATE';
-        $v = [$cID, $siteID, $ptID, $cParentID, $uID, $cInheritPermissionsFrom, $this->overrideTemplatePermissions(), $cInheritPermissionsFromCID, $cDisplayOrder, $pkgID, $cIsActive];
-        $q = 'insert into Pages (cID, siteID, ptID, cParentID, uID, cInheritPermissionsFrom, cOverrideTemplatePermissions, cInheritPermissionsFromCID, cDisplayOrder, pkgID, cIsActive) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+        $v = [$cID, $siteTreeID, $ptID, $cParentID, $uID, $cInheritPermissionsFrom, $this->overrideTemplatePermissions(), $cInheritPermissionsFromCID, $cDisplayOrder, $pkgID, $cIsActive];
+        $q = 'insert into Pages (cID, siteTreeID, ptID, cParentID, uID, cInheritPermissionsFrom, cOverrideTemplatePermissions, cInheritPermissionsFromCID, cDisplayOrder, pkgID, cIsActive) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
         $r = $db->prepare($q);
         $res = $r->execute($v);
 
@@ -3109,10 +3111,10 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         $cInheritPermissionsFromCID = $this->getPermissionsCollectionID();
         $cInheritPermissionsFrom = 'PARENT';
 
-        $siteID = \Core::make('site')->getSite()->getSiteID();
+        $siteTreeID = \Core::make('site')->getSite()->getSiteTreeID();
 
-        $v = [$cID, $siteID, $cFilename, $cParentID, $cInheritPermissionsFrom, $this->overrideTemplatePermissions(), $cInheritPermissionsFromCID, $cDisplayOrder, $cIsSystemPage, $uID, $pkgID];
-        $q = 'insert into Pages (cID, siteID, cFilename, cParentID, cInheritPermissionsFrom, cOverrideTemplatePermissions, cInheritPermissionsFromCID, cDisplayOrder, cIsSystemPage, uID, pkgID) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+        $v = [$cID, $siteTreeID, $cFilename, $cParentID, $cInheritPermissionsFrom, $this->overrideTemplatePermissions(), $cInheritPermissionsFromCID, $cDisplayOrder, $cIsSystemPage, $uID, $pkgID];
+        $q = 'insert into Pages (cID, siteTreeID, cFilename, cParentID, cInheritPermissionsFrom, cOverrideTemplatePermissions, cInheritPermissionsFromCID, cDisplayOrder, cIsSystemPage, uID, pkgID) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
         $r = $db->prepare($q);
         $res = $r->execute($v);
 

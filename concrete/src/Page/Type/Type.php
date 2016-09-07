@@ -260,8 +260,8 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
             $cID = $cobj->getCollectionID();
 
             $site = \Core::make('site')->getSite();
-            $v2 = array($cID, 1, $this->getPageTypeID(), $site->getSiteID());
-            $q2 = "insert into Pages (cID, cIsTemplate, ptID, siteID) values (?, ?, ?, ?)";
+            $v2 = array($cID, 1, $this->getPageTypeID(), $site->getSiteTreeID());
+            $q2 = "insert into Pages (cID, cIsTemplate, ptID, siteTreeID) values (?, ?, ?, ?)";
             $r2 = $db->prepare($q2);
             $res2 = $db->execute($r2, $v2);
 

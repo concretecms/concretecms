@@ -539,9 +539,9 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
         $db = \Database::connection();
         $oc = $this->getBlockCollectionObject();
         $site = \Core::make('site')->getSite();
-        $siteID = $site->getSiteID();
+        $siteTreeID = $site->getSiteTreeID();
         $cbRelationID = $this->getBlockRelationID();
-        $rows = $db->GetAll('select p.cID, max(cvID) as cvID from Pages p inner join CollectionVersions cv on p.cID = cv.cID where ptID = ? and cIsTemplate = 0 and cIsActive = 1 and siteID = ? group by cID order by cID', [$oc->getPageTypeID(), $siteID]);
+        $rows = $db->GetAll('select p.cID, max(cvID) as cvID from Pages p inner join CollectionVersions cv on p.cID = cv.cID where ptID = ? and cIsTemplate = 0 and cIsActive = 1 and siteTreeID = ? group by cID order by cID', [$oc->getPageTypeID(), $siteTreeID]);
 
         // now we have a list of all pages of this type in the site.
         foreach($rows as $row) {

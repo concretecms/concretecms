@@ -65,11 +65,6 @@ class Site
      */
     protected $siteHandle;
 
-    /**
-     * @ORM\Column(type="integer", options={"unsigned":true})
-     */
-    protected $siteHomePageID = 0;
-
 
     public function __construct($appConfigRepository)
     {
@@ -85,6 +80,13 @@ class Site
     {
         return $this->siteConfig;
     }
+
+    /**
+     * @var Tree
+     * @ORM\OneToOne(targetEntity="Tree", cascade={"all"})
+     * @ORM\JoinColumn(name="siteTreeID", referencedColumnName="siteTreeID")
+     **/
+    protected $tree;
 
     /**
      * @ORM\ManyToOne(targetEntity="Type", inversedBy="sites")
@@ -113,20 +115,21 @@ class Site
      */
     public function getSiteHomePageID()
     {
-        return $this->siteHomePageID;
+        return $this->tree->getSiteHomePageID();
     }
 
-    /**
-     * @param mixed $siteHomePageID
-     */
-    public function setSiteHomePageID($siteHomePageID)
+    public function getSiteTreeID()
     {
-        $this->siteHomePageID = $siteHomePageID;
+        if (is_object($this->tree)) {
+            return $this->tree->getSiteTreeID();
+        }
     }
 
     public function getSiteHomePageObject()
     {
-        return \Page::getByID($this->siteHomePageID);
+        if (is_object($this->tree)) {
+            return \Page::getByID($this->tree->getSiteHomePageID());
+        }
     }
 
     /**
@@ -167,6 +170,22 @@ class Site
     public function setIsDefault($siteIsDefault)
     {
         $this->siteIsDefault = $siteIsDefault;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSiteTree()
+    {
+        return $this->tree;
+    }
+
+    /**
+     * @param mixed $tree
+     */
+    public function setSiteTree($tree)
+    {
+        $this->tree = $tree;
     }
 
     /**
