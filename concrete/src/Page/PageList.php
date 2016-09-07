@@ -2,6 +2,7 @@
 namespace Concrete\Core\Page;
 
 use Concrete\Core\Entity\Site\Site;
+use Concrete\Core\Entity\Site\Tree;
 use Concrete\Core\Search\ItemList\Database\AttributedItemList as DatabaseItemList;
 use Concrete\Core\Search\Pagination\Pagination;
 use Concrete\Core\Search\Pagination\PermissionablePagination;
@@ -27,8 +28,8 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
     /** @var  \Closure | integer | null */
     protected $permissionsChecker;
 
-    /** @var Site */
-    protected $site;
+    /** @var Tree */
+    protected $siteTree;
 
     /**
      * Columns in this array can be sorted via the request.
@@ -68,12 +69,9 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
      */
     protected $includeInactivePages = false;
 
-    /**
-     * @param mixed $site
-     */
-    public function setSiteObject($site)
+    public function setSiteTreeObject($tree)
     {
-        $this->site = $site;
+        $this->siteTree = $tree;
     }
 
     public function setPermissionsChecker(\Closure $checker)
@@ -155,10 +153,11 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
             $query->setParameter('cIsActive', true);
         }
 
-        if ($this->site) {
-            $site = $this->site;
+        if (is_object($this->siteTree)) {
+            $tree = $this->siteTree;
         } else {
             $site = \Core::make("site")->getSite();
+            $tree = $site->getSiteTree();
         }
 
         if (!$this->includeSystemPages) {
@@ -169,7 +168,7 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
             $query->andWhere('(p.siteTreeID = :siteTreeID or p.siteTreeID = 0)');
         }
 
-        $query->setParameter('siteTreeID', $site->getSiteTreeID());
+        $query->setParameter('siteTreeID', $tree->getSiteTreeID());
 
         return $query;
     }

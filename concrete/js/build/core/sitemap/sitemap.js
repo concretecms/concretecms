@@ -11,6 +11,7 @@
 		options = $.extend({
 			displayNodePagination: false,
 			cParentID: 0,
+			siteTreeID: 0,
 			cookieId: 'ConcreteSitemap',
 			includeSystemPages: false,
             displaySingleLevel: false,
@@ -90,6 +91,7 @@
 			var ajaxData = $.extend({
 				'displayNodePagination': my.options.displayNodePagination ? 1 : 0,
 				'cParentID': my.options.cParentID,
+				'siteTreeID': my.options.siteTreeID,
 				'displaySingleLevel': my.options.displaySingleLevel ? 1 : 0,
 				'includeSystemPages': my.options.includeSystemPages ? 1 : 0
 			}, my.options.ajaxData);
@@ -398,6 +400,7 @@
 			var ajaxData = $.extend({
                 'dataType': 'json',
 				'displayNodePagination': options.displayNodePagination ? 1 : 0,
+				'siteTreeID': options.siteTreeID,
 				'cParentID': node.data.cID,
 				'displaySingleLevel': true,
 				'includeSystemPages': options.includeSystemPages ? 1 : 0
@@ -422,6 +425,7 @@
 				options = my.options,
 				ajaxData = $.extend({
 					cParentID: node.data.cID,
+					'siteTreeID': options.siteTreeID,
 					'includeSystemPages': options.includeSystemPages ? 1 : 0,
 					'displayNodePagination': options.displayNodePagination ? 1 : 0
 				}, options.ajaxData),
