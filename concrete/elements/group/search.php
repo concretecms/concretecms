@@ -7,9 +7,10 @@ if (!$tp->canAccessGroupSearch()) {
     <p><?=t('You do not have access to the group search.')?></p>
     <?php
 } else {
-    $form = Loader::helper('form');
-    $searchRequest = $_REQUEST;
-    $result = Loader::helper('json')->encode($controller->getSearchResultObject()->getJSONObject());
+    $app = Concrete\Core\Support\Facade\Application::getFacadeApplication();
+    $form = $app->make('helper/form');
+    $searchRequest = Request::getInstance()->request();
+    $result = json_encode($controller->getSearchResultObject()->getJSONObject());
     $tree = GroupTree::get();
     $guestGroupNode = GroupTreeNode::getTreeNodeByGroupID(GUEST_GROUP_ID);
     $registeredGroupNode = GroupTreeNode::getTreeNodeByGroupID(REGISTERED_GROUP_ID);
