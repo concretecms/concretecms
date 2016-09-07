@@ -247,6 +247,9 @@ abstract class Node extends Object implements \Concrete\Core\Permission\ObjectIn
                 $node->lazy = false;
             } else {
                 $node->lazy = ($this->getTreeNodeChildCount() > 0) ? true : false;
+                if ($node->lazy) {
+                    unset($node->children);
+                }
             }
 
             if ($this->getTreeNodeParentID() == 0) {
