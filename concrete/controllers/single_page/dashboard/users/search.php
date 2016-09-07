@@ -441,7 +441,6 @@ class Search extends DashboardPageController
 
         $ui = $this->user;
         if (is_object($ui)) {
-            $this->set('headerMenu', $headerMenu);
             $dh = $this->app->make('helper/date');
             /* @var $dh \Concrete\Core\Localization\Service\Date */
             $this->requireAsset('core/app/editable-fields');
