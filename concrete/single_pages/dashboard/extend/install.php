@@ -239,7 +239,7 @@ if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScre
             foreach ($pkgArray as $pkg) {
                 ?>
                 <div class="media-row">
-                    <div class="pull-left"><img style="width: 49px" src="<?= $ci->getPackageIconURL($pkg); ?>" class"media-object" /></div>
+                    <div class="pull-left"><img style="width: 49px" src="<?= $ci->getPackageIconURL($pkg); ?>" class="media-object" /></div>
                     <div class="media-body">
                         <a href="<?= URL::to('/dashboard/extend/install', 'inspect_package', $pkg->getPackageID()); ?>" class="btn pull-right btn-sm btn-default"><?= t('Details'); ?></a>
                         <h4 class="media-heading"><?= $pkg->getPackageName(); ?> <span class="badge badge-info" style="margin-right: 10px"><?= tc('AddonVersion', 'v.%s', $pkg->getPackageVersion()); ?></span></h4>
@@ -266,7 +266,7 @@ if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScre
                     if (!empty($file)) {
                         ?>
                         <div class="media-row">
-                            <div class="pull-left"><img style="width: 49px" src="<?= $pb->getRemoteIconURL(); ?>" class"media-object" /></div>
+                            <div class="pull-left"><img style="width: 49px" src="<?= $pb->getRemoteIconURL(); ?>" class="media-object" /></div>
                             <div class="media-body">
                                 <a href="<?= URL::to('/dashboard/extend/install', 'download', $pb->getMarketplaceItemID()); ?>" class="btn pull-right btn-sm btn-default"><?= t('Download'); ?></a>
                                 <h4 class="media-heading"><?= $pb->getName(); ?> <span class="badge badge-info" style="margin-right: 10px"><?= tc('AddonVersion', 'v.%s', $pb->getVersion()); ?></span></h4>
@@ -279,7 +279,7 @@ if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScre
                 foreach ($availableArray as $obj) {
                     ?>
                     <div class="media-row">
-                        <div class="pull-left"><img style="width: 49px" src="<?= $ci->getPackageIconURL($obj); ?>" class"media-object" /></div>
+                        <div class="pull-left"><img style="width: 49px" src="<?= $ci->getPackageIconURL($obj); ?>" class="media-object" /></div>
                         <div class="media-body">
                             <?php
                             if ($obj instanceof Concrete\Core\Package\BrokenPackage) {
