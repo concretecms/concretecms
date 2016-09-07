@@ -60,7 +60,7 @@ $dk = PermissionKey::getByHandle('delete_user');
 					<option value="delete"><?=t('Delete')?></option>
 					<?php } ?>
 		 */ ?>
-			<?php if ($mode == 'choose_multiple') { ?>
+			<?php if (isset($mode) && $mode == 'choose_multiple') { ?>
 				<option value="choose"><?php echo t('Choose')?></option>
 			<?php } ?>
 		</select>
