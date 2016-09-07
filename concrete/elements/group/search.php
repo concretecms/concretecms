@@ -2,17 +2,18 @@
 
 <?php
 $tp = new TaskPermission();
-if (!$tp->canAccessGroupSearch()) { ?>
+if (!$tp->canAccessGroupSearch()) {
+    ?>
 <p><?=t('You do not have access to the group search.')?></p>
 <?php
+
 } else {
     $form = Loader::helper('form');
     $searchRequest = $_REQUEST;
     $result = Loader::helper('json')->encode($controller->getSearchResultObject()->getJSONObject());
     $tree = GroupTree::get();
     $guestGroupNode = GroupTreeNode::getTreeNodeByGroupID(GUEST_GROUP_ID);
-    $registeredGroupNode = GroupTreeNode::getTreeNodeByGroupID(REGISTERED_GROUP_ID);
-?>
+    $registeredGroupNode = GroupTreeNode::getTreeNodeByGroupID(REGISTERED_GROUP_ID); ?>
 
 <style>
 div[data-search=groups] form.ccm-search-fields {
@@ -27,7 +28,7 @@ div[data-search=groups] form.ccm-search-fields {
     <div class="form-group">
         <div class="ccm-search-main-lookup-field">
             <i class="fa fa-search"></i>
-            <?=$form->search('keywords', $searchRequest['keywords'], array('placeholder' => t('Name')))?>
+            <?=$form->search('keywords', $searchRequest['keywords'], ['placeholder' => t('Name')])?>
             <button type="submit" class="ccm-search-field-hidden-submit" tabindex="-1"><?=t('Search')?></button>
         </div>
     </div>
@@ -85,10 +86,13 @@ div[data-search=groups] form.ccm-search-fields {
 $(function() {
     $('[data-group-tree]').concreteTree({
         'treeID': '<?=$tree->getTreeID()?>',
-        <?php if ($searchRequest['filter'] == 'assign') { ?>
+        <?php if ($searchRequest['filter'] == 'assign') {
+    ?>
         'removeNodesByKey': ['<?=$guestGroupNode->getTreeNodeID()?>','<?=$registeredGroupNode->getTreeNodeID()?>'],
-        <?php } ?>
-        <?php if ($selectMode) { ?>
+        <?php 
+} ?>
+        <?php if ($selectMode) {
+    ?>
         onClick: function(node) {
             if (node.data.gID) {
                 ConcreteEvent.publish('SelectGroup', {'gID': node.data.gID, 'gName': node.title});
@@ -97,7 +101,8 @@ $(function() {
             }
         },
         'enableDragAndDrop': false
-        <?php } ?>
+        <?php 
+} ?>
     });
 
     $('div[data-search=groups]').concreteAjaxSearch({
@@ -120,7 +125,8 @@ $(function() {
                     handleSubmit();
                 }
             });
-            <?php if ($selectMode) { ?>
+            <?php if ($selectMode) {
+    ?>
             concreteSearch.$element.on('click', 'a[data-group-id]', function() {
                 ConcreteEvent.publish('SelectGroup', {
                     gID: $(this).attr('data-group-id'),
@@ -128,7 +134,8 @@ $(function() {
                 });
                 return false;
             });
-            <?php } ?>
+            <?php 
+} ?>
         }
     });
 });
@@ -136,4 +143,5 @@ $(function() {
 
 </div>
 <?php
+
 }
