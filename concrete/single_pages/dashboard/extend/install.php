@@ -10,6 +10,9 @@ $tp = new TaskPermission();
 if ($tp->canInstallPackages()) {
     $mi = Marketplace::getInstance();
 }
+if (!isset($mi) || !is_object($mi)) {
+    $mi = null;
+}
 $pkgArray = Package::getInstalledList();
 
 $ci = $app->make('helper/concrete/urls');
@@ -59,14 +62,8 @@ if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScre
         </div>
     </form>
     <?php
-} elseif ($this->controller->getTask() == 'uninstall' && $tp->canUninstallPackages()) {
-    if (isset($pkg)) {
-        if (is_object($pkg)) {
-            $pkgID = $pkg->getPackageID();
-        }
-    } else {
-        $pkg = null;
-    }
+} elseif (isset($pkg) && is_object($pkg) && $this->controller->getTask() == 'uninstall' && $tp->canUninstallPackages()) {
+    $pkgID = $pkg->getPackageID();
     ?>
     <form method="post" class="form-stacked" id="ccm-uninstall-form" action="<?= $view->action('do_uninstall_package'); ?>">
         <?= $valt->output('uninstall'); ?>
@@ -142,7 +139,7 @@ if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScre
         return strcasecmp($a->getPackageName(), $b->getPackageName());
     });
     // Load featured add-ons from the marketplace.
-    if (is_object($mi) && $mi->isConnected() && Config::get('concrete.marketplace.enabled') && $tp->canInstallPackages()) {
+    if ($mi !== null && $mi->isConnected() && Config::get('concrete.marketplace.enabled') && $tp->canInstallPackages()) {
         $purchasedBlocksSource = Marketplace::getAvailableMarketplaceItems();
     } else {
         $purchasedBlocksSource = [];
@@ -260,7 +257,7 @@ if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScre
             <h3><?= t('Awaiting Installation'); ?></h3>
             <?php
             if (count($availableArray) == 0 && count($purchasedBlocks) == 0) {
-                if (!$mi->isConnected()) {
+                if ($mi === null || !$mi->isConnected()) {
                     ?><p><?= t('Nothing currently available to install.'); ?></p><?php
                 }
             } else {
@@ -304,13 +301,13 @@ if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScre
                     <?php
                 }
             }
-            if (is_object($mi) && $mi->isConnected()) {
+            if ($mi !== null && $mi->isConnected()) {
                 ?>
                 <hr/>
                 <h4><?= t("Project Page"); ?></h4>
                 <p><?= t('Your site is currently connected to the concrete5 community. Your project page URL is:'); ?><br/><a href="<?= $mi->getSitePageURL(); ?>"><?= $mi->getSitePageURL(); ?></a></p>
                 <?php
-            } elseif (is_object($mi) && $mi->hasConnectionError()) {
+            } elseif ($mi !== null && $mi->hasConnectionError()) {
                 echo View::element('dashboard/marketplace_connect_failed');
             } elseif ($tp->canInstallPackages() && Config::get('concrete.marketplace.enabled') == true) {
                 ?>
