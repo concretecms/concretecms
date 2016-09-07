@@ -1,6 +1,8 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");
 
-$form = Loader::helper('form');
+$app = Concrete\Core\Support\Facade\Application::getFacadeApplication();
+
+$form = $app->make('helper/form');
 $ek = PermissionKey::getByHandle('edit_user_properties');
 $ik = PermissionKey::getByHandle('activate_user');
 $dk = PermissionKey::getByHandle('delete_user');
