@@ -10,13 +10,11 @@ use Exception;
 use User;
 use Core;
 use UserInfo;
-use URL;
 use stdClass;
 use Permissions;
 use PermissionKey;
 use UserAttributeKey;
 use Localization;
-use Concrete\Controller\Search\Users as SearchUsersController;
 use Concrete\Core\User\EditResponse as UserEditResponse;
 use Concrete\Core\Workflow\Progress\UserProgress as UserWorkflowProgress;
 
@@ -43,7 +41,7 @@ class Search extends DashboardPageController
                 $this->user->updateUserAvatar($image);
             } else {
                 if ($_POST['task'] == 'clear') {
-                    $this->user->update(array('uHasAvatar' => 0));
+                    $this->user->update(['uHasAvatar' => 0]);
                 }
             }
         } else {
@@ -183,7 +181,7 @@ class Search extends DashboardPageController
             $sr = new UserEditResponse();
             $sr->setUser($this->user);
             if (!$this->error->has()) {
-                $data = array('uEmail' => $email);
+                $data = ['uEmail' => $email];
                 $this->user->update($data);
                 $sr->setMessage(t('Email saved successfully.'));
             } else {
@@ -204,7 +202,7 @@ class Search extends DashboardPageController
             $sr = new UserEditResponse();
             $sr->setUser($this->user);
             if (!$this->error->has()) {
-                $data = array('uTimezone' => $timezone);
+                $data = ['uTimezone' => $timezone];
                 $this->user->update($data);
                 $sr->setMessage(t('Time zone saved successfully.'));
             } else {
@@ -225,7 +223,7 @@ class Search extends DashboardPageController
             $sr = new UserEditResponse();
             $sr->setUser($this->user);
             if (!$this->error->has()) {
-                $data = array('uDefaultLanguage' => $language);
+                $data = ['uDefaultLanguage' => $language];
                 $this->user->update($data);
                 $sr->setMessage(t('Language saved successfully.'));
             } else {
@@ -290,7 +288,7 @@ class Search extends DashboardPageController
             $sr = new UserEditResponse();
             $sr->setUser($this->user);
             if (!$this->error->has()) {
-                $data = array('uName' => $username);
+                $data = ['uName' => $username];
                 $this->user->update($data);
                 $sr->setMessage(t('Username saved successfully.'));
             } else {
@@ -311,7 +309,7 @@ class Search extends DashboardPageController
                     throw new Exception(t('You do not have permission to modify this attribute.'));
                 }
 
-                $this->user->saveUserAttributesForm(array($ak));
+                $this->user->saveUserAttributesForm([$ak]);
                 $val = $this->user->getAttributeValueObject($ak);
             }
         } else {
@@ -390,7 +388,7 @@ class Search extends DashboardPageController
             $query = '';
         }
         $timezones = Loader::helper("date")->getTimezones();
-        $result = array();
+        $result = [];
         foreach ($timezones as $timezoneID => $timezoneName) {
             if (($query === '') || (stripos($timezoneName, $query) !== false)) {
                 $obj = new stdClass();
@@ -409,7 +407,7 @@ class Search extends DashboardPageController
         $obj = new stdClass();
         $obj->text = tc('Default locale', '** Default');
         $obj->value = '';
-        $result = array($obj);
+        $result = [$obj];
         foreach ($languages as $lang) {
             $obj = new stdClass();
             $obj->value = $lang;
@@ -449,13 +447,12 @@ class Search extends DashboardPageController
 
         $ui = $this->user;
         if (is_object($ui)) {
-
             $this->set('headerMenu', $headerMenu);
             $dh = Core::make('helper/date');
             /* @var $dh \Concrete\Core\Localization\Service\Date */
             $this->requireAsset('core/app/editable-fields');
             $uo = $this->user->getUserObject();
-            $groups = array();
+            $groups = [];
             foreach ($uo->getUserGroupObjects() as $g) {
                 $obj = new stdClass();
                 $obj->gDisplayName = $g->getGroupDisplayName();
@@ -468,13 +465,13 @@ class Search extends DashboardPageController
             $this->set('attributes', $attributes);
             $this->set('pageTitle', t('View/Edit %s', $this->user->getUserDisplayName()));
 
-            $workflowRequestActions = array();
+            $workflowRequestActions = [];
             $workflowList = UserWorkflowProgress::getList($uo->getUserID());
 
             $this->set('workflowList', $workflowList);
 
             if (count($workflowList) > 0) {
-                foreach($workflowList as $wp) {
+                foreach ($workflowList as $wp) {
                     $wr = $wp->getWorkflowRequestObject();
                     $workflowRequestActions[] = $wr->getRequestAction();
                 }
@@ -522,14 +519,12 @@ class Search extends DashboardPageController
                     }
                     break;
             }
-
         } else {
             switch ($status) {
                 case 'deleted':
                     $this->set('message', t('User has been deleted.'));
                     break;
             }
-
 
             $header = new Header();
             $header->setShowAddButton(true);
