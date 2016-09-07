@@ -1,6 +1,6 @@
 <?php
 /**
- * @var \Concrete\Core\Attribute\Key\Key
+ * @var Concrete\Core\Entity\Attribute\Key\Key $ak
  * @var $objects
  * @var $object
  * @var callback $permissionsCallback
@@ -58,7 +58,7 @@ $canEdit = $permissionsCallback($ak, $permissionsArguments); ?>
                         data-editable-field-type="xeditableAttribute"
                         data-url="<?= $saveAction ?>"
                         data-type="concreteattribute"<?php
-                        echo $ak->atHandle === 'textarea' ? "data-editableMode='inline'" : '';
+                        echo $ak->getAttributeTypeHandle() === 'textarea' ? "data-editableMode='inline'" : '';
 } ?> >
                 <?= $display ?>
             </span>
