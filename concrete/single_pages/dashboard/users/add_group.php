@@ -44,7 +44,7 @@ $registeredGroupNode = GroupTreeNode::getTreeNodeByGroupID(REGISTERED_GROUP_ID);
                             <?php
                             if ($this->controller->isPost()) {
                                 ?>
-                                'selectNodesByKey': [<?=intval($_POST['gParentNodeID'])?>]
+                                'selectNodesByKey': [<?=intval($_POST['gParentNodeID'])?>],
                                 <?php
 
                             } else {
@@ -52,7 +52,6 @@ $registeredGroupNode = GroupTreeNode::getTreeNodeByGroupID(REGISTERED_GROUP_ID);
                                     ?>
                                     'selectNodesByKey': [<?=intval($rootNode->getTreeNodeID())?>],
                                     <?php
-
                                 }
                             }
                             ?>
