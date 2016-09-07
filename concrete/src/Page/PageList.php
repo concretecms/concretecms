@@ -164,12 +164,12 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
         if (!$this->includeSystemPages) {
             $query->andWhere('p.cIsSystemPage = :cIsSystemPage');
             $query->setParameter('cIsSystemPage', false);
-            $query->andWhere('p.siteID = :siteID');
+            $query->andWhere('p.siteTreeID = :siteTreeID');
         } else {
-            $query->andWhere('(p.siteID = :siteID or p.siteID = 0)');
+            $query->andWhere('(p.siteTreeID = :siteTreeID or p.siteTreeID = 0)');
         }
 
-        $query->setParameter('siteID', $site->getSiteID());
+        $query->setParameter('siteTreeID', $site->getSiteTreeID());
 
         return $query;
     }

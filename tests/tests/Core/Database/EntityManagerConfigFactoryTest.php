@@ -180,4 +180,7 @@ class EntityManagerConfigFactoryTest extends \PHPUnit_Framework_TestCase
 
         return $entityManagerConfigFactory;
     }
+
+
+    // Test a package with no classes
 }

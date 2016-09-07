@@ -3,6 +3,7 @@ namespace Concrete\Core\Site;
 
 use Concrete\Core\Application\Application;
 use Concrete\Core\Entity\Site\Site;
+use Concrete\Core\Entity\Site\Tree;
 use Concrete\Core\Site\Config\Liaison;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -33,10 +34,14 @@ class Factory
 
     public function createDefaultEntity()
     {
+        $tree = new Tree();
+        $tree->setSiteHomePageID(HOME_CID);
+
         $site = new Site($this->config);
         $site->setSiteHandle('default');
         $site->setIsDefault(true);
-        $site->setSiteHomePageID(HOME_CID);
+        $site->setSiteTree($tree);
+
         return $site;
     }
 }

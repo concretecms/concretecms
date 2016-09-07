@@ -3396,7 +3396,7 @@
       <key/>
       <default value="0"/>
     </field>
-    <field name="siteID" type="integer" size="10">
+    <field name="siteTreeID" type="integer" size="10">
       <unsigned/>
       <default value="0"/>
     </field>
@@ -3495,8 +3495,8 @@
     <index name="cParentID">
       <col>cParentID</col>
     </index>
-    <index name="siteID">
-      <col>siteID</col>
+    <index name="siteTreeID">
+      <col>siteTreeID</col>
     </index>
     <index name="cIsActive">
       <col>cID</col>
