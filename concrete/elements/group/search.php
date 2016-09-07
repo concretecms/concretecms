@@ -9,7 +9,7 @@ if (!$tp->canAccessGroupSearch()) {
 } else {
     $app = Concrete\Core\Support\Facade\Application::getFacadeApplication();
     $form = $app->make('helper/form');
-    $searchRequest = Request::getInstance()->request();
+    $request = Request::getInstance();
     $result = json_encode($controller->getSearchResultObject()->getJSONObject());
     $tree = GroupTree::get();
     $guestGroupNode = GroupTreeNode::getTreeNodeByGroupID(GUEST_GROUP_ID);
@@ -23,11 +23,11 @@ if (!$tp->canAccessGroupSearch()) {
     <div data-search="groups">
         <script type="text/template" data-template="search-form">
             <form role="form" data-search-form="groups" action="<?=URL::to('/ccm/system/search/groups/submit')?>" class="ccm-search-fields ccm-search-fields-none">
-                <input type="hidden" name="filter" value="<?=h($searchRequest['filter'])?>" />
+                <input type="hidden" name="filter" value="<?=h($request->request('filter'))?>" />
                 <div class="form-group">
                     <div class="ccm-search-main-lookup-field">
                         <i class="fa fa-search"></i>
-                        <?=$form->search('keywords', $searchRequest['keywords'], ['placeholder' => t('Name')])?>
+                        <?=$form->search('keywords', $request->request('keywords'), ['placeholder' => t('Name')])?>
                         <button type="submit" class="ccm-search-field-hidden-submit" tabindex="-1"><?=t('Search')?></button>
                     </div>
                 </div>
@@ -89,7 +89,7 @@ if (!$tp->canAccessGroupSearch()) {
             $(function() {
                 $('[data-group-tree]').concreteTree({
                     <?php
-                    if ($searchRequest['filter'] == 'assign') {
+                    if ($request->request('filter') == 'assign') {
                         ?>
                         'removeNodesByKey': ['<?=$guestGroupNode->getTreeNodeID()?>','<?=$registeredGroupNode->getTreeNodeID()?>'],
                         <?php
