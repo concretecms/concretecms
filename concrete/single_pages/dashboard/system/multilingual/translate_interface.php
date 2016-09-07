@@ -2,9 +2,9 @@
 
 defined('C5_EXECUTE') or die('Access Denied.');
 
-/* @var $this PageView */
+$app = Concrete\Core\Support\Facade\Application::getFacadeApplication();
 
-$valt = Loader::helper('validation/token');
+$valt = $app->make('helper/validation/token');
 
 if ($this->controller->getTask() == 'translate_po') {
     $url = Url::createFromUrl($this->controller->action('save_translation'));
@@ -27,7 +27,7 @@ if ($this->controller->getTask() == 'translate_po') {
     ?>,
         approvalSupport: false
       });
-      var saveToFileToken = <?php echo json_encode(Core::make('token')->generate('export_translations'));
+      var saveToFileToken = <?php echo json_encode($app->make('token')->generate('export_translations'));
     ?>;
       $('.ccm-save-to-file').on('click', function() {
         var $btn = $(this);
@@ -75,13 +75,12 @@ if ($this->controller->getTask() == 'translate_po') {
         ?></div><?php
 
     }
-    $nav = Loader::helper('navigation');
-    Loader::model('section', 'multilingual');
+    $nav = $app->make('helper/navigation');
     $pages = \Concrete\Core\Multilingual\Page\Section\Section::getList($site);
     $defaultSourceLocale = $site->getConfigRepository()->get('multilingual.default_source_locale');
 
-    $ch = Core::make('multilingual/interface/flag');
-    $dh = Core::make('helper/date');
+    $ch = $app->make('multilingual/interface/flag');
+    $dh = $app->make('helper/date');
     if (count($pages) > 0) {
         ?>
         <div class="ccm-dashboard-content-full">
@@ -194,7 +193,7 @@ if ($this->controller->getTask() == 'translate_po') {
                 ?>
                         <form method="post" class="form-stacked" style="padding-left: 0px" action="<?php echo $view->action('reset_languages');
                 ?>">
-                            <?php echo Loader::helper("validation/token")->output('reset_languages');
+                            <?php echo $app->make('helper/validation/token')->output('reset_languages');
                 ?>
                             <p><?php echo t('Are you sure? This will remove all translations from all languages, in the database and in your site PO files. This cannot be undone.');
                 ?></p>
