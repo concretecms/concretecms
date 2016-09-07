@@ -2,18 +2,20 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 $section = 'groups';
 
-$txt = Loader::helper('text');
-$ih = Loader::helper('concrete/ui');
-$valt = Loader::helper('validation/token');
+$app = Concrete\Core\Support\Facade\Application::getFacadeApplication();
 
-$date = Loader::helper('form/date_time');
-$form = Loader::helper('form');
+$ih = $app->make('helper/concrete/ui');
+$valt = $app->make('helper/validation/token');
+
+$date = $app->make('helper/form/date_time');
+$form = $app->make('helper/form');
 
 $rootNode = $tree->getRootTreeNodeObject();
 
 $guestGroupNode = GroupTreeNode::getTreeNodeByGroupID(GUEST_GROUP_ID);
 $registeredGroupNode = GroupTreeNode::getTreeNodeByGroupID(REGISTERED_GROUP_ID);
 
+$request = Request::getInstance();
 ?>
 
 <form class="form-stacked" method="post" id="add-group-form" action="<?=$view->url('/dashboard/users/add_group/', 'do_add')?>">
@@ -22,7 +24,7 @@ $registeredGroupNode = GroupTreeNode::getTreeNodeByGroupID(REGISTERED_GROUP_ID);
         <legend><?=t('Group Details')?></legend>
         <div class="form-group">
             <?=$form->label('gName', t('Name'))?>
-            <input type="text" class="form-control" name="gName" value="<?=Core::make('helper/text')->entities($_POST['gName'])?>" />
+            <input type="text" class="form-control" name="gName" value="<?=h($request->post('gName'))?>" />
         </div>
         <div class="form-group">
             <?=$form->label('gDescription', t('Description'))?>
@@ -44,7 +46,7 @@ $registeredGroupNode = GroupTreeNode::getTreeNodeByGroupID(REGISTERED_GROUP_ID);
                             <?php
                             if ($this->controller->isPost()) {
                                 ?>
-                                'selectNodesByKey': [<?=intval($_POST['gParentNodeID'])?>],
+                                'selectNodesByKey': [<?=intval($request->post('gParentNodeID'))?>],
                                 <?php
 
                             } else {
@@ -85,7 +87,7 @@ $registeredGroupNode = GroupTreeNode::getTreeNodeByGroupID(REGISTERED_GROUP_ID);
                 <label class="control-label"><?=t('Image')?></label>
                 <div class="controls">
                     <?php
-                    $af = Loader::helper('concrete/asset_library');
+                    $af = $app->make('helper/concrete/asset_library');
                     echo $af->image('gBadgeFID', 'gBadgeFID', t('Choose Badge Image'), $badgeImage);
                     ?>
                 </div>
@@ -99,7 +101,7 @@ $registeredGroupNode = GroupTreeNode::getTreeNodeByGroupID(REGISTERED_GROUP_ID);
             <div class="form-group">
                 <?=$form->label('gBadgeCommunityPointValue', t('Community Points'))?>
                 <div class="controls">
-                    <?=$form->text('gBadgeCommunityPointValue', Config::get('concrete.user.group.badge.default_point_value'), ['class' => 'span1'])?>
+                    <?=$form->text('gBadgeCommunityPointValue', $app->make('config')->get('concrete.user.group.badge.default_point_value'), ['class' => 'span1'])?>
                 </div>
             </div>
         </div>
@@ -214,8 +216,8 @@ $registeredGroupNode = GroupTreeNode::getTreeNodeByGroupID(REGISTERED_GROUP_ID);
 
     <div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
-            <a href="<?=View::url('/dashboard/users/groups')?>" class="btn btn-default pull-left"><?=t('Cancel')?></a>
-            <?=Loader::helper("form")->submit('add', t('Add Group'), ['class' => 'btn btn-primary pull-right'])?>
+            <a href="<?=$app->make('url/manager')->resolve(['/dashboard/users/groups'])?>" class="btn btn-default pull-left"><?=t('Cancel')?></a>
+            <?=$form->submit('add', t('Add Group'), ['class' => 'btn btn-primary pull-right'])?>
         </div>
     </div>
 
