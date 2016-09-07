@@ -481,10 +481,7 @@ module.exports = function(grunt) {
         jsTargets.release.push('uglify:' + key + '_release');
         target.options = {compress: {warnings: true}};
         target.options.mangle = false;
-        target.options.sourceMap = js[key].dest + '.map';
-        target.options.sourceMappingURL = target.options.sourceMap.replace(/<%=\s*DIR_BASE\s*%>/g, '<%= DIR_REL %>');
-        target.options.sourceMapRoot = '<%= DIR_REL %>/';
-        target.options.sourceMapPrefix = 1 + config.DIR_BASE.replace(/\/\/+/g, '/').replace(/[^\/]/g, '').length;
+        target.options.sourceMap = true;
         config.uglify[key + '_debug'] = target;
         jsTargets.debug.push('newer:uglify:' + key + '_debug');
     }
