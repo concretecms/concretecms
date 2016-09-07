@@ -196,7 +196,7 @@ if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScre
         }
     }
 
-    if (is_object($pkg)) {
+    if (isset($pkg) && is_object($pkg)) {
 
         ?>
 
