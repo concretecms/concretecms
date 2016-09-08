@@ -63,12 +63,13 @@ if (isset($_REQUEST['displaySingleLevel']) && $_REQUEST['displaySingleLevel']) {
             $dh->setExpandedNodes($openNodeArray);
         }
     }
-    if (isset($_REQUEST['siteTreeID']) && $_REQUEST['siteTreeID'] > 0) {
+    if ($cParentID) {
+        $nodes = $dh->getSubNodes($cParentID);
+    } else if (isset($_REQUEST['siteTreeID']) && $_REQUEST['siteTreeID'] > 0) {
         $service = \Core::make('site');
         $tree = $service->getSiteTreeByID($_REQUEST['siteTreeID']);
         $nodes = $dh->getSubNodes($tree);
-    } else {
-        $nodes = $dh->getSubNodes($cParentID);
     }
+
 }
 echo Core::make('helper/json')->encode($nodes);

@@ -96,10 +96,12 @@ class Controller extends BlockController
         $app = Facade::getFacadeApplication();
         $db = $app->make('database')->connection();
 
-        $systemPages = '';
-        if ($this->excludeSystemPages) {
-            $systemPages = 'and cIsSystemPage = 0';
+        $siteTreeID = \Core::make('site')->getSite()->getSiteTreeID();
+        $systemPages = '(and siteTreeID = ' . $siteTreeID;
+        if (!$this->excludeSystemPages) {
+            $systemPages = 'or siteTreeID = 0';
         }
+        $systemPages .= ')';
         $cID = 1;
         $currentPage = Page::getCurrentPage();
 
