@@ -41,6 +41,14 @@ class ApplicationYmlMetadataDriverTest  extends \PHPUnit_Framework_TestCase
         if(!$filesystem->isDirectory(DIR_APPLICATION . DIRECTORY_SEPARATOR . REL_DIR_METADATA_YAML)){
             $filesystem->makeDirectory(DIR_APPLICATION . DIRECTORY_SEPARATOR . REL_DIR_METADATA_YAML);
         }
+        if(!$filesystem->isDirectory(DIR_APPLICATION . DIRECTORY_SEPARATOR . DIRNAME_CLASSES)){
+            $filesystem->makeDirectory(DIR_APPLICATION . DIRECTORY_SEPARATOR . DIRNAME_CLASSES);
+        }
+        if(!$filesystem->isDirectory(DIR_APPLICATION . DIRECTORY_SEPARATOR . DIRNAME_CLASSES.DIRECTORY_SEPARATOR.DIRNAME_ENTITIES)){
+            $filesystem->makeDirectory(DIR_APPLICATION . DIRECTORY_SEPARATOR . DIRNAME_CLASSES.DIRECTORY_SEPARATOR.DIRNAME_ENTITIES);
+        }
+
+
     }
     
     /**
@@ -57,8 +65,8 @@ class ApplicationYmlMetadataDriverTest  extends \PHPUnit_Framework_TestCase
 
         // Test if the correct MetadataDriver and MetadataReader are present
         $drivers = $entityManagerConfigFactory->getMetadataDriverImpl()->getDrivers();
-        $this->assertArrayHasKey('Application\Src', $drivers);
-        $driver  = $drivers['Application\Src'];
+        $this->assertArrayHasKey('Application\Entity', $drivers);
+        $driver  = $drivers['Application\Entity'];
         $this->assertInstanceOf('\Doctrine\ORM\Mapping\Driver\YamlDriver',
             $driver);
 
@@ -111,6 +119,9 @@ class ApplicationYmlMetadataDriverTest  extends \PHPUnit_Framework_TestCase
     public static function tearDownAfterClass()
     {   
         $filesystem = new Filesystem();
+        if($filesystem->isDirectory(DIR_APPLICATION . DIRECTORY_SEPARATOR . DIRNAME_CLASSES.DIRECTORY_SEPARATOR.DIRNAME_ENTITIES)){
+            $filesystem->deleteDirectory(DIR_APPLICATION . DIRECTORY_SEPARATOR . DIRNAME_CLASSES.DIRECTORY_SEPARATOR.DIRNAME_ENTITIES);
+        }
         if($filesystem->isDirectory(DIR_APPLICATION . DIRECTORY_SEPARATOR . REL_DIR_METADATA_YAML)){
             $filesystem->deleteDirectory(DIR_APPLICATION . DIRECTORY_SEPARATOR . REL_DIR_METADATA_YAML);
         }

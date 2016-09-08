@@ -11,7 +11,7 @@ use Illuminate\Filesystem\Filesystem;
  * @author Markus Liechti <markus@liechti.io>
  * @group orm_setup
  */
-class ApplicationXmlMetadataDriverTest extends \PHPUnit_Framework_TestCase
+class ApplicationAnnotationMetadataDriverTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var \Concrete\Core\Support\Facade\Application
@@ -34,12 +34,8 @@ class ApplicationXmlMetadataDriverTest extends \PHPUnit_Framework_TestCase
     {   
         
         $filesystem = new Filesystem();
-        if (!$filesystem->isWritable(DIR_APPLICATION . DIRECTORY_SEPARATOR . 'config')) {
-            throw new \Exception("Cannot write to the application config directory for the testing purposes. Please check permissions!");
-        }
-        
-        if(!$filesystem->isDirectory(DIR_APPLICATION . DIRECTORY_SEPARATOR . REL_DIR_METADATA_XML)){
-            $filesystem->makeDirectory(DIR_APPLICATION . DIRECTORY_SEPARATOR . REL_DIR_METADATA_XML);
+        if (!$filesystem->isWritable(DIR_APPLICATION . DIRECTORY_SEPARATOR . DIRNAME_CLASSES)) {
+            throw new \Exception("Cannot write to the application/src directory for the testing purposes. Please check permissions!");
         }
         if(!$filesystem->isDirectory(DIR_APPLICATION . DIRECTORY_SEPARATOR . DIRNAME_CLASSES)){
             $filesystem->makeDirectory(DIR_APPLICATION . DIRECTORY_SEPARATOR . DIRNAME_CLASSES);
@@ -51,35 +47,25 @@ class ApplicationXmlMetadataDriverTest extends \PHPUnit_Framework_TestCase
     
     /**
      * Test the metadata implementation for entities located under application/src with Xml driver
-     *
-     * @dataProvider dataProviderGetConfigurationWithApplicationXmlDriver
-     *
+     **
      * @param string|integer $setting
      */
-    public function testGetConfigurationWithApplicationXmlDriver($setting)
+    public function testGetConfigurationWithApplicationXmlDriver()
     {
 
-        $entityManagerConfigFactory = $this->getEntityManagerFactoryWithStubConfigRepository($setting);
+        $entityManagerConfigFactory = $this->getEntityManagerFactoryWithStubConfigRepository();
 
         // Test if the correct MetadataDriver and MetadataReader are present
         $drivers = $entityManagerConfigFactory->getMetadataDriverImpl()->getDrivers();
         $this->assertArrayHasKey('Application\Entity', $drivers);
         $driver  = $drivers['Application\Entity'];
-        $this->assertInstanceOf('\Doctrine\ORM\Mapping\Driver\XmlDriver',
+        $this->assertInstanceOf('\Doctrine\ORM\Mapping\Driver\AnnotationDriver',
             $driver);
 
         // Test if the driver contains the default lookup path
-        $driverPaths = $driver->getLocator()->getPaths();
-        $this->assertEquals(DIR_APPLICATION.DIRECTORY_SEPARATOR.REL_DIR_METADATA_XML,
+        $driverPaths = $driver->getPaths();
+        $this->assertEquals(DIR_APPLICATION.DIRECTORY_SEPARATOR.DIRNAME_CLASSES.DIRECTORY_SEPARATOR.DIRNAME_ENTITIES,
             $driverPaths[0]);
-    }
-
-    public function dataProviderGetConfigurationWithApplicationXmlDriver()
-    {
-        return array(
-            array('xml'),
-            array(2), // equals \Package::PACKAGE_METADATADRIVER_XML
-        );
     }
 
     /**
@@ -89,7 +75,7 @@ class ApplicationXmlMetadataDriverTest extends \PHPUnit_Framework_TestCase
      * 
      * @return \Concrete\Core\Database\EntityManagerConfigFactory
      */
-    protected function getEntityManagerFactoryWithStubConfigRepository($setting)
+    protected function getEntityManagerFactoryWithStubConfigRepository()
     {
         $config = $this->app->make('Doctrine\ORM\Configuration');
         $configRepoStub = $this->getMockBuilder('Concrete\Core\Config\Repository\Repository')
@@ -97,8 +83,7 @@ class ApplicationXmlMetadataDriverTest extends \PHPUnit_Framework_TestCase
                                 ->getMock();
         $configRepoStub->method('get')
             ->will($this->onConsecutiveCalls(
-                    array(),
-                    $setting
+                    array()
                 ));
         $entityManagerConfigFactory = new \Concrete\Core\Database\EntityManagerConfigFactory($this->app, $config, $configRepoStub);
 
@@ -113,9 +98,6 @@ class ApplicationXmlMetadataDriverTest extends \PHPUnit_Framework_TestCase
         $filesystem = new Filesystem();
         if($filesystem->isDirectory(DIR_APPLICATION . DIRECTORY_SEPARATOR . DIRNAME_CLASSES.DIRECTORY_SEPARATOR.DIRNAME_ENTITIES)){
             $filesystem->deleteDirectory(DIR_APPLICATION . DIRECTORY_SEPARATOR . DIRNAME_CLASSES.DIRECTORY_SEPARATOR.DIRNAME_ENTITIES);
-        }
-        if($filesystem->isDirectory(DIR_APPLICATION . DIRECTORY_SEPARATOR . REL_DIR_METADATA_XML)){
-            $filesystem->deleteDirectory(DIR_APPLICATION . DIRECTORY_SEPARATOR . REL_DIR_METADATA_XML);
         }
         parent::tearDownAfterClass();
     }
