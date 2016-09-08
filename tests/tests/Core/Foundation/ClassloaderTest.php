@@ -65,6 +65,28 @@ class ClassloaderTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($callback[0] instanceof \Concrete\Controller\Panel\Page\Design);
     }
 
+    public function testApplicationCoreClass()
+    {
+        $class = core_class('\Core\Antispam\AkismetController', true);
+        $this->assertEquals('\Application\Concrete\Antispam\AkismetController', $class);
+
+        $class = core_class('\Attribute\Text\Controller', true);
+        $this->assertEquals('\Application\Attribute\Text\Controller', $class);
+    }
+
+    /*
+    public function testApplicationAutoloader()
+    {
+        $root = dirname(DIR_BASE_CORE . '../');
+        mkdir($root . '/application/src/Testing/', 0777, true);
+        copy(dirname(__FILE__) . '/fixtures/TestClass.php', $root . '/application/src/Testing/TestClass.php');
+
+        $this->assertTrue(class_exists('Application\Code\Testing\TestClass'));
+
+        unlink($root . '/application/src/Testing/TestClass.php');
+        rmdir($root . '/application/src/Testing');
+    }*/
+
     public function testCoreClassFunction()
     {
         $class = core_class('\Block\TestBlock\Controller');
