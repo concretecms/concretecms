@@ -3,12 +3,13 @@ namespace Concrete\Core\Page\Controller;
 
 use Concrete\Core\Block\Block;
 use Concrete\Core\Block\BlockController;
+use Concrete\Core\Controller\Controller;
 use Concrete\Core\Foundation\Environment;
+use Concrete\Core\Html\Service\Html;
+use Concrete\Core\Http\Request;
+use Concrete\Core\Page\Page;
 use Concrete\Core\Routing\Redirect;
-use Page;
-use Request;
-use Controller;
-use Core;
+use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Page\View\PageView;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -25,12 +26,12 @@ class PageController extends Controller
         return $this->supportsPageCache;
     }
 
-    public function __construct(\Concrete\Core\Page\Page $c)
+    public function __construct(Page $c)
     {
         parent::__construct();
         $this->c = $c;
         $this->view = new PageView($this->c);
-        $this->set('html', Core::make('\Concrete\Core\Html\Service\Html'));
+        $this->set('html', Application::getFacadeApplication()->make(HTML::class));
     }
 
     /**
@@ -45,11 +46,11 @@ class PageController extends Controller
      */
     public function replace($var)
     {
-        if (!($var instanceof \Concrete\Core\Page\Page)) {
-            $var = \Page::getByPath($var);
+        if (!($var instanceof Page)) {
+            $var = Page::getByPath($var);
         }
 
-        $request = \Request::getInstance();
+        $request = Request::getInstance();
         $request->setCurrentPage($var);
         $controller = $var->getPageController();
         $this->replacement = $controller;
@@ -68,7 +69,7 @@ class PageController extends Controller
     public function getSets()
     {
         $sets = parent::getSets();
-        $session = Core::make('session');
+        $session = Application::getFacadeApplication()->make('session');
         if ($session->getFlashBag()->has('page_message')) {
             $value = $session->getFlashBag()->get('page_message');
             foreach ($value as $message) {
@@ -112,7 +113,7 @@ class PageController extends Controller
 
     public function flash($key, $value)
     {
-        $session = Core::make('session');
+        $session = Application::getFacadeApplication()->make('session');
         $session->getFlashBag()->add('page_message', array($key, $value));
     }
 
