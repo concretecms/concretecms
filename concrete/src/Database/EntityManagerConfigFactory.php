@@ -155,33 +155,33 @@ class EntityManagerConfigFactory implements ApplicationAwareInterface, EntityMan
      */
     protected function addApplicationMetadataDriverToDriverChain($driverChain)
     {
-        $appSrcPath = DIR_APPLICATION.DIRECTORY_SEPARATOR.DIRNAME_CLASSES;
+        $appSrcPath = DIR_APPLICATION.DIRECTORY_SEPARATOR.DIRNAME_CLASSES.DIRECTORY_SEPARATOR.DIRNAME_ENTITIES;
         $xmlConfig  = DIR_APPLICATION.DIRECTORY_SEPARATOR.REL_DIR_METADATA_XML;
         $ymlConfig  = DIR_APPLICATION.DIRECTORY_SEPARATOR.REL_DIR_METADATA_YAML;
         
         $appDriverSettings = $this->getConfigRepository()->get(CONFIG_ORM_METADATA_APPLICATION);
-        
+
         // Default setting so it comes first
         if (empty($appDriverSettings) && is_dir($appSrcPath)) {
             $annotationDriver = new \Doctrine\ORM\Mapping\Driver\AnnotationDriver($this->getCachedAnnotationReader(), $appSrcPath);
-            $driverChain->addDriver($annotationDriver, 'Application\Src');
+            $driverChain->addDriver($annotationDriver, 'Application\Entity');
         } else if ($appDriverSettings === \Package::PACKAGE_METADATADRIVER_XML || $appDriverSettings === 'xml') {
             if (is_dir($xmlConfig)) {
                 $xmlDriver = new \Doctrine\ORM\Mapping\Driver\XmlDriver($xmlConfig);
-                $driverChain->addDriver($xmlDriver, 'Application\Src');
+                $driverChain->addDriver($xmlDriver, 'Application\Entity');
             }else{
                 // Fallback to default
                 $annotationDriver = new \Doctrine\ORM\Mapping\Driver\AnnotationDriver($this->getCachedAnnotationReader(), $appSrcPath);
-                $driverChain->addDriver($annotationDriver, 'Application\Src');
+                $driverChain->addDriver($annotationDriver, 'Application\Entity');
             }
         } else if ($appDriverSettings === \Package::PACKAGE_METADATADRIVER_YAML || $appDriverSettings === 'yaml' || $appDriverSettings === 'yml') {
             if (is_dir($ymlConfig)) {
                 $yamlDriver = new \Doctrine\ORM\Mapping\Driver\YamlDriver($ymlConfig);
-                $driverChain->addDriver($yamlDriver, 'Application\Src');
+                $driverChain->addDriver($yamlDriver, 'Application\Entity');
             }else{
                 // Fallback to default
                 $annotationDriver = new \Doctrine\ORM\Mapping\Driver\AnnotationDriver($this->getCachedAnnotationReader(), $appSrcPath);
-                $driverChain->addDriver($annotationDriver, 'Application\Src');
+                $driverChain->addDriver($annotationDriver, 'Application\Entity');
             }
         }
     }

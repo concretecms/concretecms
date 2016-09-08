@@ -206,9 +206,6 @@ class ClassLoader
             if (isset($app_config['namespace'])) {
                 $namespace = $app_config['namespace'];
             }
-            if (isset($app_config['provide_core_extension_autoloader_mapping'])) {
-                $provideCoreExtensionAutoloaderMapping = true;
-            }
         }
         $symfonyLoader->addPrefix($namespace . '\\StartingPointPackage', DIR_APPLICATION . '/config/install/' . DIRNAME_PACKAGES);
         $symfonyLoader->addPrefix($namespace . '\\Attribute', DIR_APPLICATION . '/' . DIRNAME_ATTRIBUTES);
@@ -225,11 +222,15 @@ class ClassLoader
         $strictLoader = new SymfonyClassLoader();
 
         $strictLoader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Core', DIR_BASE_CORE . '/' . DIRNAME_CLASSES);
-        if ($provideCoreExtensionAutoloaderMapping) {
-            $strictLoader->addPrefix($namespace, DIR_APPLICATION . '/' . DIRNAME_CLASSES . '/Concrete');
-        } else {
-            $strictLoader->addPrefix($namespace . '\\Src', DIR_APPLICATION . '/' . DIRNAME_CLASSES);
-        }
+
+        // Handle class core extensions like antispam and captcha with Application\Concrete\MyCaptchaLibrary
+        $strictLoader->addPrefix($namespace . '\\Concrete', DIR_APPLICATION . '/' . DIRNAME_CLASSES . '/Concrete');
+
+        /**
+         * @deprecated
+         */
+        $strictLoader->addPrefix($namespace . '\\Src', DIR_APPLICATION . '/' . DIRNAME_CLASSES);
+
         $strictLoader->register();
     }
 }
