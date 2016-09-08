@@ -13,21 +13,23 @@ class Library extends Object
      *
      * @var string
      */
-    protected $sclHandle;
+    public $sclHandle;
 
     /**
      * The library name.
      *
      * @var string
      */
-    protected $sclName;
+    public $sclName;
 
     /**
      * Is this the active library?
      *
      * @var bool
      */
-    protected $sclIsActive;
+    public $sclIsActive;
+
+    public $pkgHandle;
 
     /**
      * The package ID (or 0 if it's a core library).
@@ -83,7 +85,10 @@ class Library extends Object
      */
     public function getPackageHandle()
     {
-        return $this->pkgID ? PackageList::getHandle($this->pkgID) : false;
+        if (!isset($this->pkgHandle)) {
+            $this->pkgHandle = $this->pkgID ? PackageList::getHandle($this->pkgID) : false;
+        }
+        return $this->pkgHandle;
     }
 
     /**

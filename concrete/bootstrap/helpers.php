@@ -170,10 +170,25 @@ function core_class($class, $prefix = false)
 function overrideable_core_class($class, $path, $pkgHandle = null)
 {
     $env = \Environment::get();
-    $r = $env->getRecord($path);
-    $prefix = $r->override ? true : $pkgHandle;
 
-    return core_class($class, $prefix);
+    // First, check to see if the class we're trying to override is in the Core namespace
+    if (substr($class, 0, 5) == "Core\\") {
+        // If so, we first check to see if application/src/Concrete/This/Stuff exists
+        // So let's strip DIRNAME_CLASSES off the front, place /Concrete/ between DIRNAME_CLASSES
+        // and the rest of the path.
+        $newPath = substr($path, strlen(DIRNAME_CLASSES));
+        $newPath = DIRNAME_CLASSES . DIRECTORY_SEPARATOR . 'Concrete' . $newPath;
+        $r = $env->getRecord($newPath);
+        if ($r->override) {
+            return core_class($class, true);
+        }
+    } else {
+
+        $r = $env->getRecord($path);
+        $prefix = $r->override ? true : $pkgHandle;
+
+        return core_class($class, $prefix);
+    }
 }
 
 /**

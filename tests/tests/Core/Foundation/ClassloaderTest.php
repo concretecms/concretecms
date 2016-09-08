@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Tests\Core\Foundation;
 
+use Concrete\Core\Captcha\Library;
 use Concrete\Core\Entity\Block\BlockType\BlockType;
 use Concrete\Core\Entity\Package;
 use Concrete\Core\Foundation\ClassLoader;
@@ -10,11 +11,16 @@ use Environment;
 
 class ClassloaderTest extends \PHPUnit_Framework_TestCase
 {
+
+    /** @var ClassLoader */
+    protected $obj;
+
     protected function setUp()
     {
         $this->obj = \Concrete\Core\Foundation\Classloader::getInstance();
     }
 
+    // Core PSR4
     public function testPsr4AutoloadingCore()
     {
         $this->assertTrue(class_exists('\Concrete\Core\Foundation\Object'));
@@ -22,6 +28,7 @@ class ClassloaderTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue(class_exists('\Concrete\Core\Http\Request'));
     }
 
+    // Core Modified PSR4
     public function testThemeAutoloadingCore()
     {
         $this->assertTrue(class_exists('\Concrete\Theme\Elemental\PageTheme'));
@@ -65,30 +72,35 @@ class ClassloaderTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($callback[0] instanceof \Concrete\Controller\Panel\Page\Design);
     }
 
-    public function testApplicationCoreClass()
+    // Application src directory, standard
+    public function testApplicationSrcDirectoryStandard()
+    {
+        $root = dirname(DIR_BASE_CORE . '../');
+        mkdir($root . '/application/src/Testing/', 0777, true);
+        copy(dirname(__FILE__) . '/fixtures/TestClass.php', $root . '/application/src/Testing/TestClass.php');
+
+        $classExists = class_exists('Application\Src\Testing\TestClass');
+
+        unlink($root . '/application/src/Testing/TestClass.php');
+        rmdir($root . '/application/src/Testing');
+
+        $this->assertFalse($classExists);
+    }
+
+    public function testApplicationSrcDirectoryLegacy()
+    {
+        $this->markTestIncomplete('No good way to test for this at the moment. This test is meant to verify that adding enable_legacy_src_namespace to app.php will enable Application\Src namespace');
+    }
+
+    // Application Level Extensions to Core
+    public function testApplicationCoreClassExtensions()
     {
         $class = core_class('\Core\Antispam\AkismetController', true);
         $this->assertEquals('\Application\Concrete\Antispam\AkismetController', $class);
 
         $class = core_class('\Attribute\Text\Controller', true);
         $this->assertEquals('\Application\Attribute\Text\Controller', $class);
-    }
 
-    /*
-    public function testApplicationAutoloader()
-    {
-        $root = dirname(DIR_BASE_CORE . '../');
-        mkdir($root . '/application/src/Testing/', 0777, true);
-        copy(dirname(__FILE__) . '/fixtures/TestClass.php', $root . '/application/src/Testing/TestClass.php');
-
-        $this->assertTrue(class_exists('Application\Code\Testing\TestClass'));
-
-        unlink($root . '/application/src/Testing/TestClass.php');
-        rmdir($root . '/application/src/Testing');
-    }*/
-
-    public function testCoreClassFunction()
-    {
         $class = core_class('\Block\TestBlock\Controller');
         $this->assertEquals('\Concrete\Block\TestBlock\Controller', $class);
 
@@ -107,6 +119,36 @@ class ClassloaderTest extends \PHPUnit_Framework_TestCase
 
         $class = core_class('Core\\Attribute\\Key\\EventKey', 'calendar');
         $this->assertEquals('\\Concrete\\Package\\Calendar\\Src\\Attribute\\Key\\EventKey', $class);
+
+    }
+
+    public function testApplicationCoreClassExtensionsAutoloader()
+    {
+
+        $root = dirname(DIR_BASE_CORE . '../');
+        mkdir($root . '/application/src/Concrete/Captcha', 0777, true);
+        copy(dirname(__FILE__) . '/fixtures/FakeRecaptchaLibrary.php', $root . '/application/src/Concrete/Captcha/RecaptchaController.php');
+
+        $env = \Environment::get();
+        $env->clearOverrideCache();
+
+        $library = new Library();
+        $library->sclHandle = 'recaptcha';
+        $controller = $library->getController();
+
+        $library2 = new Library();
+        $library2->sclHandle = 'recaptcha';
+        $library2->pkgHandle = 'recaptcha';
+        $controller = $library2->getController();
+
+        $classExists = class_exists('Application\Concrete\Captcha\RecaptchaController');
+
+        unlink($root . '/application/src/Concrete/Captcha/RecaptchaController.php');
+        rmdir($root . '/application/src/Concrete/Captcha');
+        rmdir($root . '/application/src/Concrete');
+
+        $this->assertTrue($classExists);
+        $this->assertInstanceOf('Concrete\Core\Captcha\Controller', $controller);
     }
 
     public function testRouteControllerOverride()
