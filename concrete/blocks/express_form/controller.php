@@ -192,7 +192,7 @@ class Controller extends BlockController
                     $mh->addParameter('formName', $this->surveyName);
                     $mh->addParameter('attributes', $values);
                     $mh->load('block_express_form_submission');
-                    $mh->setSubject(t('%s Form Submission', $this->surveyName));
+                    $mh->setSubject(t('Website Form Submission – %s', $this->surveyName));
                     $mh->sendMail();
                 }
 
