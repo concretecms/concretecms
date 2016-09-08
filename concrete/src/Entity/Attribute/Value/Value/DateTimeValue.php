@@ -36,7 +36,7 @@ class DateTimeValue extends Value
         if (empty($v)) {
             return '';
         }
-        $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service\Date */
+        $dh = \Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service\Date */
         if ($this->akDateDisplayMode == 'date') {
             // Don't use user's timezone to avoid showing wrong dates
             return $dh->formatDate($v, false, 'system');
