@@ -147,11 +147,7 @@ function core_class($class, $prefix = false)
                     $class = "Src\\" . substr($class, 5);
                 }
             } else {
-                if (Config::get('app.provide_core_extension_autoloader_mapping')) {
-                    $class = substr($class, 5);
-                } else {
-                    $class = "Src\\" . substr($class, 5);
-                }
+                $class = "Concrete\\" . substr($class, 5);
             }
         }
 
