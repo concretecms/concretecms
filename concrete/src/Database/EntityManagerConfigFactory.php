@@ -108,9 +108,15 @@ class EntityManagerConfigFactory implements ApplicationAwareInterface, EntityMan
     {
         // Register the doctrine Annotations
         \Doctrine\Common\Annotations\AnnotationRegistry::registerFile(DIR_BASE_CORE.'/vendor/doctrine/orm/lib/Doctrine/ORM'.'/Mapping/Driver/DoctrineAnnotations.php');
-        \Doctrine\Common\Annotations\AnnotationRegistry::registerAutoloadNamespace('Application\Src',
-            DIR_BASE.'/application/src');
 
+        $legacyNamespace = $this->getConfigRepository()->get('app.enable_legacy_src_namespace');
+        if ($legacyNamespace) {
+            \Doctrine\Common\Annotations\AnnotationRegistry::registerAutoloadNamespace('Application\Src',
+                DIR_BASE.'/application/src');
+        } else {
+            \Doctrine\Common\Annotations\AnnotationRegistry::registerAutoloadNamespace('Application\Entity',
+                DIR_BASE.'/application/src/Entity');
+        }
         // Remove all unkown annotations from the AnnotationReader used by the SimpleAnnotationReader
         // to prevent fatal errors
         $this->registerGlobalIgnoredAnnotations();
@@ -155,33 +161,41 @@ class EntityManagerConfigFactory implements ApplicationAwareInterface, EntityMan
      */
     protected function addApplicationMetadataDriverToDriverChain($driverChain)
     {
-        $appSrcPath = DIR_APPLICATION.DIRECTORY_SEPARATOR.DIRNAME_CLASSES.DIRECTORY_SEPARATOR.DIRNAME_ENTITIES;
+        $legacyNamespace = $this->getConfigRepository()->get('app.enable_legacy_src_namespace');
+        if ($legacyNamespace) {
+            $appEntityPath = DIR_APPLICATION.DIRECTORY_SEPARATOR.DIRNAME_CLASSES;
+            $appNamespace = 'Application\Src';
+        } else {
+            $appEntityPath = DIR_APPLICATION.DIRECTORY_SEPARATOR.DIRNAME_CLASSES.DIRECTORY_SEPARATOR.DIRNAME_ENTITIES;
+            $appNamespace = 'Application\Entity';
+        }
+
         $xmlConfig  = DIR_APPLICATION.DIRECTORY_SEPARATOR.REL_DIR_METADATA_XML;
         $ymlConfig  = DIR_APPLICATION.DIRECTORY_SEPARATOR.REL_DIR_METADATA_YAML;
         
         $appDriverSettings = $this->getConfigRepository()->get(CONFIG_ORM_METADATA_APPLICATION);
 
         // Default setting so it comes first
-        if (empty($appDriverSettings) && is_dir($appSrcPath)) {
-            $annotationDriver = new \Doctrine\ORM\Mapping\Driver\AnnotationDriver($this->getCachedAnnotationReader(), $appSrcPath);
-            $driverChain->addDriver($annotationDriver, 'Application\Entity');
+        if (empty($appDriverSettings) && is_dir($appEntityPath)) {
+            $annotationDriver = new \Doctrine\ORM\Mapping\Driver\AnnotationDriver($this->getCachedAnnotationReader(), $appEntityPath);
+            $driverChain->addDriver($annotationDriver, $appNamespace);
         } else if ($appDriverSettings === \Package::PACKAGE_METADATADRIVER_XML || $appDriverSettings === 'xml') {
             if (is_dir($xmlConfig)) {
                 $xmlDriver = new \Doctrine\ORM\Mapping\Driver\XmlDriver($xmlConfig);
-                $driverChain->addDriver($xmlDriver, 'Application\Entity');
+                $driverChain->addDriver($xmlDriver, $appNamespace);
             }else{
                 // Fallback to default
-                $annotationDriver = new \Doctrine\ORM\Mapping\Driver\AnnotationDriver($this->getCachedAnnotationReader(), $appSrcPath);
-                $driverChain->addDriver($annotationDriver, 'Application\Entity');
+                $annotationDriver = new \Doctrine\ORM\Mapping\Driver\AnnotationDriver($this->getCachedAnnotationReader(), $appEntityPath);
+                $driverChain->addDriver($annotationDriver, $appNamespace);
             }
         } else if ($appDriverSettings === \Package::PACKAGE_METADATADRIVER_YAML || $appDriverSettings === 'yaml' || $appDriverSettings === 'yml') {
             if (is_dir($ymlConfig)) {
                 $yamlDriver = new \Doctrine\ORM\Mapping\Driver\YamlDriver($ymlConfig);
-                $driverChain->addDriver($yamlDriver, 'Application\Entity');
+                $driverChain->addDriver($yamlDriver, $appNamespace);
             }else{
                 // Fallback to default
-                $annotationDriver = new \Doctrine\ORM\Mapping\Driver\AnnotationDriver($this->getCachedAnnotationReader(), $appSrcPath);
-                $driverChain->addDriver($annotationDriver, 'Application\Entity');
+                $annotationDriver = new \Doctrine\ORM\Mapping\Driver\AnnotationDriver($this->getCachedAnnotationReader(), $appEntityPath);
+                $driverChain->addDriver($annotationDriver, $appNamespace);
             }
         }
     }

@@ -1,5 +1,5 @@
 <?php
-namespace Application\Code\Testing;
+namespace Application\Src\Testing;
 
 class TestClass
 {

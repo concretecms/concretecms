@@ -60,12 +60,42 @@ class EntityManagerConfigFactoryTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetConfigurationDefaultSettingsForTheApplication()
     {
+
+        $root = dirname(DIR_BASE_CORE . '../');
+        mkdir($root . '/application/src/Entity', 0777, true);
+
         $entityManagerConfigFactory = $this->app->make('Concrete\Core\Database\EntityManagerConfigFactory');
         $driverChain                = $entityManagerConfigFactory->getMetadataDriverImpl();
         $this->assertInstanceOf('Doctrine\Common\Persistence\Mapping\Driver\MappingDriverChain',
             $driverChain, 'Is not a Doctrine ORM MappingDriverChain');
         $drivers                    = $driverChain->getDrivers();
         $this->assertArrayHasKey('Application\Entity', $drivers);
+
+        // Test if the correct MetadataDriver and MetadataReader are present
+        $defaultAnnotationDriver = $drivers['Application\Entity'];
+        $defaultAnnotationReader = $defaultAnnotationDriver->getReader();
+        $this->assertInstanceOf('Doctrine\ORM\Mapping\Driver\AnnotationDriver',
+            $defaultAnnotationDriver);
+        $this->assertInstanceOf('Doctrine\Common\Annotations\CachedReader',
+            $defaultAnnotationReader,
+            'AnnotationReader is not cached. For performance reasons, it should be wrapped in a CachedReader');
+
+        // Test if the driver contains the default lookup path
+        $driverPaths = $defaultAnnotationDriver->getPaths();
+        $this->assertEquals(DIR_APPLICATION.DIRECTORY_SEPARATOR.DIRNAME_CLASSES.DIRECTORY_SEPARATOR.DIRNAME_ENTITIES,
+            $driverPaths[0]);
+
+        rmdir($root . '/application/src/Entity');
+    }
+
+    public function testGetConfigurationDefaultSettingsForTheApplicationWithLegacyOption()
+    {
+        \Config::save('app.enable_legacy_src_namespace', true);
+
+        $entityManagerConfigFactory = $this->app->make('Concrete\Core\Database\EntityManagerConfigFactory');
+        $driverChain                = $entityManagerConfigFactory->getMetadataDriverImpl();
+        $drivers                    = $driverChain->getDrivers();
+        $this->assertArrayHasKey('Application\Src', $drivers);
 
         // Test if the correct MetadataDriver and MetadataReader are present
         $defaultAnnotationDriver = $drivers['Application\Src'];
@@ -80,10 +110,13 @@ class EntityManagerConfigFactoryTest extends \PHPUnit_Framework_TestCase
         $driverPaths = $defaultAnnotationDriver->getPaths();
         $this->assertEquals(DIR_APPLICATION.DIRECTORY_SEPARATOR.DIRNAME_CLASSES,
             $driverPaths[0]);
+
+        \Config::save('app.enable_legacy_src_namespace', false);
+
     }
 
     /**
-     * Test the metadata implementation for entities located under application/src with YAML driver
+     * Test the metadata implementation for entities located under application/src/Entity with YAML driver
      * In this case the folder application/config/xml is not present so it will fallback to default
      *
      * @dataProvider dataProviderGetConfigurationWithApplicationYmlDriverFallbackToDefault
@@ -97,8 +130,8 @@ class EntityManagerConfigFactoryTest extends \PHPUnit_Framework_TestCase
 
         // Test if the correct MetadataDriver and MetadataReader are present
         $drivers = $entityManagerConfigFactory->getMetadataDriverImpl()->getDrivers();
-        $this->assertArrayHasKey('Application\Src', $drivers);
-        $defaultAnnotationDriver = $drivers['Application\Src'];
+        $this->assertArrayHasKey('Application\Entity', $drivers);
+        $defaultAnnotationDriver = $drivers['Application\Entity'];
         $defaultAnnotationReader = $defaultAnnotationDriver->getReader();
         $this->assertInstanceOf('Doctrine\ORM\Mapping\Driver\AnnotationDriver',
             $defaultAnnotationDriver);
@@ -108,7 +141,7 @@ class EntityManagerConfigFactoryTest extends \PHPUnit_Framework_TestCase
 
         // Test if the driver contains the default lookup path
         $driverPaths = $defaultAnnotationDriver->getPaths();
-        $this->assertEquals(DIR_APPLICATION.DIRECTORY_SEPARATOR.DIRNAME_CLASSES,
+        $this->assertEquals(DIR_APPLICATION.DIRECTORY_SEPARATOR.DIRNAME_CLASSES.DIRECTORY_SEPARATOR.DIRNAME_ENTITIES,
             $driverPaths[0]);
     }
 
@@ -136,8 +169,8 @@ class EntityManagerConfigFactoryTest extends \PHPUnit_Framework_TestCase
 
         // Test if the correct MetadataDriver and MetadataReader are present
         $drivers = $entityManagerConfigFactory->getMetadataDriverImpl()->getDrivers();
-        $this->assertArrayHasKey('Application\Src', $drivers);
-        $defaultAnnotationDriver = $drivers['Application\Src'];
+        $this->assertArrayHasKey('Application\Entity', $drivers);
+        $defaultAnnotationDriver = $drivers['Application\Entity'];
         $defaultAnnotationReader = $defaultAnnotationDriver->getReader();
         $this->assertInstanceOf('Doctrine\ORM\Mapping\Driver\AnnotationDriver',
             $defaultAnnotationDriver);
@@ -147,7 +180,7 @@ class EntityManagerConfigFactoryTest extends \PHPUnit_Framework_TestCase
 
         // Test if the driver contains the default lookup path
         $driverPaths = $defaultAnnotationDriver->getPaths();
-        $this->assertEquals(DIR_APPLICATION.DIRECTORY_SEPARATOR.DIRNAME_CLASSES,
+        $this->assertEquals(DIR_APPLICATION.DIRECTORY_SEPARATOR.DIRNAME_CLASSES.DIRECTORY_SEPARATOR.DIRNAME_ENTITIES,
             $driverPaths[0]);
     }
 
@@ -174,7 +207,9 @@ class EntityManagerConfigFactoryTest extends \PHPUnit_Framework_TestCase
                                 ->getMock();
         $configRepoStub->method('get')
             ->will($this->onConsecutiveCalls(
+                    false,
                     array(),
+                    false,
                     $setting
                 ));
         $entityManagerConfigFactory = new \Concrete\Core\Database\EntityManagerConfigFactory($this->app, $config, $configRepoStub);

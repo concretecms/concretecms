@@ -199,14 +199,18 @@ class ClassLoader
         $symfonyLoader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Express', DIR_APPLICATION . '/config/express/Entity/Concrete/Express');
 
         $namespace = 'Application';
+        $enable_legacy_src_namespace = false;
         $app_config_path = DIR_APPLICATION . '/config/app.php';
-        $provideCoreExtensionAutoloaderMapping = false;
         if (file_exists($app_config_path)) {
             $app_config = require $app_config_path;
             if (isset($app_config['namespace'])) {
                 $namespace = $app_config['namespace'];
             }
+            if (isset($app_config['enable_legacy_src_namespace'])) {
+                $enable_legacy_src_namespace = $app_config['enable_legacy_src_namespace'];
+            }
         }
+
         $symfonyLoader->addPrefix($namespace . '\\StartingPointPackage', DIR_APPLICATION . '/config/install/' . DIRNAME_PACKAGES);
         $symfonyLoader->addPrefix($namespace . '\\Attribute', DIR_APPLICATION . '/' . DIRNAME_ATTRIBUTES);
         $symfonyLoader->addPrefix($namespace . '\\MenuItem', DIR_APPLICATION . '/' . DIRNAME_MENU_ITEMS);
@@ -226,10 +230,15 @@ class ClassLoader
         // Handle class core extensions like antispam and captcha with Application\Concrete\MyCaptchaLibrary
         $strictLoader->addPrefix($namespace . '\\Concrete', DIR_APPLICATION . '/' . DIRNAME_CLASSES . '/Concrete');
 
+        // Application entities
+        $strictLoader->addPrefix($namespace . '\\Entity', DIR_APPLICATION . '/' . DIRNAME_CLASSES . '/Entity');
+
         /**
          * @deprecated
          */
-        $strictLoader->addPrefix($namespace . '\\Src', DIR_APPLICATION . '/' . DIRNAME_CLASSES);
+        if ($enable_legacy_src_namespace) {
+            $strictLoader->addPrefix($namespace . '\\Src', DIR_APPLICATION . '/' . DIRNAME_CLASSES);
+        }
 
         $strictLoader->register();
     }
