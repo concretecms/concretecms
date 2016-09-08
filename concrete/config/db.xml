@@ -3488,10 +3488,6 @@
       <default value="0"/>
       <notnull/>
     </field>
-    <field name="cIsSystemPage" type="boolean">
-      <default value="0"/>
-      <notnull/>
-    </field>
     <index name="cParentID">
       <col>cParentID</col>
     </index>
@@ -3516,10 +3512,6 @@
     <index name="cIsTemplate">
       <col>cID</col>
       <col>cIsTemplate</col>
-    </index>
-    <index name="cIsSystemPage">
-      <col>cID</col>
-      <col>cIsSystemPage</col>
     </index>
     <index name="pkgID">
       <col>pkgID</col>

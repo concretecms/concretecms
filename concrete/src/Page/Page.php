@@ -50,7 +50,6 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
 {
     protected $controller;
     protected $blocksAliasedFromMasterCollection = null;
-    protected $cIsSystemPage = false;
     protected $cPointerOriginalID = null;
     protected $cPointerExternalLink = null;
     protected $cPointerExternalLinkNewWindow = null;
@@ -117,7 +116,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
 
         $this->loadError(false);
 
-        $q0 = 'select Pages.cID, Pages.pkgID, Pages.siteTreeID, Pages.cPointerID, Pages.cPointerExternalLink, Pages.cIsActive, Pages.cIsSystemPage, Pages.cPointerExternalLinkNewWindow, Pages.cFilename, Pages.ptID, Collections.cDateAdded, Pages.cDisplayOrder, Collections.cDateModified, cInheritPermissionsFromCID, cInheritPermissionsFrom, cOverrideTemplatePermissions, cCheckedOutUID, cIsTemplate, uID, cPath, cParentID, cChildren, cCacheFullPageContent, cCacheFullPageContentOverrideLifetime, cCacheFullPageContentLifetimeCustom from Pages inner join Collections on Pages.cID = Collections.cID left join PagePaths on (Pages.cID = PagePaths.cID and PagePaths.ppIsCanonical = 1) ';
+        $q0 = 'select Pages.cID, Pages.pkgID, Pages.siteTreeID, Pages.cPointerID, Pages.cPointerExternalLink, Pages.cIsActive, Pages.cPointerExternalLinkNewWindow, Pages.cFilename, Pages.ptID, Collections.cDateAdded, Pages.cDisplayOrder, Collections.cDateModified, cInheritPermissionsFromCID, cInheritPermissionsFrom, cOverrideTemplatePermissions, cCheckedOutUID, cIsTemplate, uID, cPath, cParentID, cChildren, cCacheFullPageContent, cCacheFullPageContentOverrideLifetime, cCacheFullPageContentLifetimeCustom from Pages inner join Collections on Pages.cID = Collections.cID left join PagePaths on (Pages.cID = PagePaths.cID and PagePaths.ppIsCanonical = 1) ';
         //$q2 = "select cParentID, cPointerID, cPath, Pages.cID from Pages left join PagePaths on (Pages.cID = PagePaths.cID and PagePaths.ppIsCanonical = 1) ";
 
         $v = [$cInfo];
@@ -770,13 +769,11 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     }
 
     /**
-     * Check if a page is a single page that is in the core (/concrete directory).
-     *
      * @return bool
      */
     public function isSystemPage()
     {
-        return (bool) $this->cIsSystemPage;
+        return (bool) $this->getSiteTreeID() < 1;
     }
 
     /**
@@ -1660,7 +1657,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     public function getFirstChild($sortColumn = 'cDisplayOrder asc', $excludeSystemPages = false)
     {
         if ($excludeSystemPages) {
-            $systemPages = ' and cIsSystemPage = 0';
+            $systemPages = ' and siteTreeID = 0';
         } else {
             $systemPages = '';
         }
@@ -2697,16 +2694,10 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         // now we mark the page as a system page based on this path:
         $systemPages = ['/login', '/register', Config::get('concrete.paths.trash'), STACKS_PAGE_PATH, Config::get('concrete.paths.drafts'), '/members', '/members/*', '/account', '/account/*', Config::get('concrete.paths.trash').'/*', STACKS_PAGE_PATH.'/*', Config::get('concrete.paths.drafts').'/*', '/download_file', '/dashboard', '/dashboard/*', '/page_forbidden', '/page_not_found'];
         $th = Core::make('helper/text');
-        $db->executeQuery('update Pages set cIsSystemPage = 0 where cID = ?', [$cID]);
-        if ($this->cParentID == 0) {
-            $db->executeQuery('update Pages set cIsSystemPage = 1 where cID = ?', [$cID]);
-            $this->cIsSystemPage = true;
-        } else {
-            foreach ($systemPages as $sp) {
-                if ($th->fnmatch($sp, $newPath)) {
-                    $db->executeQuery('update Pages set cIsSystemPage = 1 where cID = ?', [$cID]);
-                    $this->cIsSystemPage = true;
-                }
+        foreach ($systemPages as $sp) {
+            if ($th->fnmatch($sp, $newPath)) {
+                $db->executeQuery('update Pages set siteTreeID = 0 where cID = ?', [$cID]);
+                $this->siteTreeID = 0;
             }
         }
     }
@@ -3105,7 +3096,6 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
 
         $uID = USER_SUPER_ID;
         $data['uID'] = $uID;
-        $cIsSystemPage = 0;
         $cobj = parent::addCollection($data);
         $cID = $cobj->getCollectionID();
 
@@ -3118,8 +3108,8 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
 
         $siteTreeID = \Core::make('site')->getSite()->getSiteTreeID();
 
-        $v = [$cID, $siteTreeID, $cFilename, $cParentID, $cInheritPermissionsFrom, $this->overrideTemplatePermissions(), $cInheritPermissionsFromCID, $cDisplayOrder, $cIsSystemPage, $uID, $pkgID];
-        $q = 'insert into Pages (cID, siteTreeID, cFilename, cParentID, cInheritPermissionsFrom, cOverrideTemplatePermissions, cInheritPermissionsFromCID, cDisplayOrder, cIsSystemPage, uID, pkgID) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+        $v = [$cID, $siteTreeID, $cFilename, $cParentID, $cInheritPermissionsFrom, $this->overrideTemplatePermissions(), $cInheritPermissionsFromCID, $cDisplayOrder, $uID, $pkgID];
+        $q = 'insert into Pages (cID, siteTreeID, cFilename, cParentID, cInheritPermissionsFrom, cOverrideTemplatePermissions, cInheritPermissionsFromCID, cDisplayOrder, uID, pkgID) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
         $r = $db->prepare($q);
         $res = $r->execute($v);
 
