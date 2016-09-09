@@ -27,7 +27,10 @@ class ImageFileValue extends Value implements FileProviderInterface
 
     public function getFileObjects()
     {
-        return array($this->getFileObject());
+        if (is_object($this->file)) {
+            return array($this->file);
+        }
+        return array();
     }
 
     public function getValue()
