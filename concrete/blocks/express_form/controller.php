@@ -184,15 +184,17 @@ class Controller extends BlockController
                         }
                     }
 
+                    $formName = $this->getFormEntity()->getEntity()->getName();
+
                     $mh = \Core::make('helper/mail');
                     $mh->to($this->recipientEmail);
                     $mh->from($formFormEmailAddress);
                     $mh->replyto($replyToEmailAddress);
                     $mh->addParameter('entity', $entity);
-                    $mh->addParameter('formName', $this->surveyName);
+                    $mh->addParameter('formName', $formName);
                     $mh->addParameter('attributes', $values);
                     $mh->load('block_express_form_submission');
-                    $mh->setSubject(t('Website Form Submission – %s', $this->surveyName));
+                    $mh->setSubject(t('Website Form Submission – %s', $formName));
                     $mh->sendMail();
                 }
 
