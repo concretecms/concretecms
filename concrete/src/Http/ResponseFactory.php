@@ -100,7 +100,7 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
         }
 
         $cnt = $this->app->make(PageForbidden::class);
-        $this->controller($cnt, $code, $headers);
+        return $this->controller($cnt, $code, $headers);
     }
 
     /**
@@ -229,6 +229,7 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
         }
 
         if ($collection->getCollectionPath() == '/page_not_found') {
+            $request->setCurrentPage($collection);
             return $this->controller($collection->getController());
         }
 
