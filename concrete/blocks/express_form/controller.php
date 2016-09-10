@@ -165,7 +165,7 @@ class Controller extends BlockController
                 }
 
                 if ($this->notifyMeOnSubmission) {
-                    if (\Config::get('concrete.email.form_block.address') && strstr(Config::get('concrete.email.form_block.address'), '@')) {
+                    if (\Config::get('concrete.email.form_block.address') && strstr(\Config::get('concrete.email.form_block.address'), '@')) {
                         $formFormEmailAddress = \Config::get('concrete.email.form_block.address');
                     } else {
                         $adminUserInfo = \UserInfo::getByID(USER_SUPER_ID);
@@ -184,15 +184,17 @@ class Controller extends BlockController
                         }
                     }
 
+                    $formName = $this->getFormEntity()->getEntity()->getName();
+
                     $mh = \Core::make('helper/mail');
                     $mh->to($this->recipientEmail);
                     $mh->from($formFormEmailAddress);
                     $mh->replyto($replyToEmailAddress);
                     $mh->addParameter('entity', $entity);
-                    $mh->addParameter('formName', $this->surveyName);
+                    $mh->addParameter('formName', $formName);
                     $mh->addParameter('attributes', $values);
                     $mh->load('block_express_form_submission');
-                    $mh->setSubject(t('%s Form Submission', $this->surveyName));
+                    $mh->setSubject(t('Website Form Submission – %s', $formName));
                     $mh->sendMail();
                 }
 
