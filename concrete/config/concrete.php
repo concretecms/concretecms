@@ -9,7 +9,7 @@ return array(
      */
     'version' => '8.0.0b6',
     'version_installed' => '8.0.0b6',
-    'version_db' => '20160906000000', // the key of the latest database migration
+    'version_db' => '20160725000000', // the key of the latest database migration
 
     /*
      * Installation status
@@ -435,7 +435,6 @@ return array(
 
     'updates' => array(
 
-        'enable_auto_update_core' => true,
         'enable_auto_update_packages' => false,
         'enable_permissions_protection' => true,
         'check_threshold' => 172800,

@@ -936,11 +936,12 @@ class Version20160725000000 extends AbstractMigration
         $type_service = \Core::make('site/type');
         $type = $type_service->getDefault();
         if (!is_object($type)) {
-            $type_service->installDefault();
+            $type = $type_service->installDefault();
         }
 
         $site = $service->getDefault();
-        $this->connection->executeQuery('update Pages set siteID = ? where cIsSystemPage = 0', [$site->getSiteID()]);
+        $this->connection->executeQuery('update Pages set siteTreeID = ? where cIsSystemPage = 0', [$site->getSiteTreeID()]);
+        $this->connection->executeQuery('update PageTypes set siteTypeID = ? where ptIsInternal = 0', [$type->getSiteTypeID()]);
         // migrate social links
         $links = $em->getRepository('Concrete\Core\Entity\Sharing\SocialNetwork\Link')
             ->findAll();
@@ -1112,51 +1113,40 @@ class Version20160725000000 extends AbstractMigration
         return version_compare(\Config::get("concrete.version_installed"), '8.0.0a1', '<');
     }
 
+    protected function updateJobs()
+    {
+        if (!$job = \Job::getByHandle('update_statistics')) {
+            \Job::installByHandle('update_statistics');
+        }
+    }
+
     public function up(Schema $schema)
     {
-        if ($this->updatingFromVersion7()) { //
-            $this->connection->Execute('set foreign_key_checks = 0');
-            $this->renameProblematicTables();
-        }
-
+        $this->connection->Execute('set foreign_key_checks = 0');
+        $this->renameProblematicTables();
         $this->updateDoctrineXmlTables();
-
-        if ($this->updatingFromVersion7()) { //
-            $this->prepareProblematicEntityTables();
-        }
+        $this->prepareProblematicEntityTables();
         $this->createMetaDataConfigurationForPackages();
-        if ($this->updatingFromVersion7()) { //
-            $this->installEntities(array('Concrete\Core\Entity\File\File', 'Concrete\Core\Entity\File\Version'));
-        }
+        $this->installEntities(array('Concrete\Core\Entity\File\File', 'Concrete\Core\Entity\File\Version'));
         $this->installOtherEntities();
         $this->installSite();
-        if ($this->updatingFromVersion7()) { //
-            $this->importAttributeTypes();
-            $this->migrateOldPermissions();
-        }
-
+        $this->importAttributeTypes();
+        $this->migrateOldPermissions();
         $this->addPermissions();
-        if ($this->updatingFromVersion7()) { //
-            $this->importAttributeKeys();
-        }
+        $this->importAttributeKeys();
         $this->addDashboard();
-        if ($this->updatingFromVersion7()) { //
-            $this->updateFileManager();
-            $this->migrateFileManagerPermissions();
-            $this->addBlockTypes();
-            $this->updateTopics();
-            $this->updateWorkflows();
-            $this->addTreeNodeTypes();
-            $this->installDesktops();
-        }
+        $this->updateFileManager();
+        $this->migrateFileManagerPermissions();
+        $this->addBlockTypes();
+        $this->updateTopics();
+        $this->updateWorkflows();
+        $this->addTreeNodeTypes();
+        $this->installDesktops();
+        $this->updateJobs();
         $this->addNotifications();
-        if ($this->updatingFromVersion7()) { //
-            $this->splittedTrackingCode();
-            $this->cleanupOldPermissions();
-        }
-        if ($this->updatingFromVersion7()) { //
-            $this->connection->Execute('set foreign_key_checks = 1');
-        }
+        $this->splittedTrackingCode();
+        $this->cleanupOldPermissions();
+        $this->connection->Execute('set foreign_key_checks = 1');
     }
 
     public function down(Schema $schema)
