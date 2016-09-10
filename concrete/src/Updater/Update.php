@@ -206,5 +206,6 @@ class Update
         } catch (\Exception $x) {
         }
         Config::save('concrete.version_installed', Config::get('concrete.version'));
+        Config::save('concrete.version_db_installed', Config::get('concrete.version_db'));
     }
 }

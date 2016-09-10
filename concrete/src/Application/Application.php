@@ -248,13 +248,10 @@ class Application extends Container
     public function handleAutomaticUpdates()
     {
         $config = $this['config'];
-
-        if ($config->get('concrete.updates.enable_auto_update_core')) {
-            $installed = $config->get('concrete.version_installed');
-            $core = $config->get('concrete.version');
-            if ($core && $installed && version_compare($installed, $core, '<')) {
-                Update::updateToCurrentVersion();
-            }
+        $installed = $config->get('concrete.version_db_installed');
+        $core = $config->get('concrete.version_db');
+        if ($installed < $core) {
+            Update::updateToCurrentVersion();
         }
     }
 
