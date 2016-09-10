@@ -233,13 +233,18 @@ class Controller extends AttributeTypeController
                 }
             }
         } else {
-            // In this case, the selected option IDs array is simply an array of IDs with
-            // no prefix
-            $options = $this->getSelectedOptions();
-            foreach ($options as $opt) {
-                $selectedOptions[] = $opt; // Not sure if the view even needs this.
-                $selectedOptionIDs[] = $opt->getSelectAttributeOptionID();
+            if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+                $options = $this->loadSelectedTagValueFromPost($this->request('atSelectOptionValue'));
+                foreach ($options as $opt) {
+                    $selectedOptionIDs[] = $opt->id;
+                }
+            } else {
+                $options = $this->getSelectedOptions();
+                foreach ($options as $opt) {
+                    $selectedOptionIDs[] = $opt->getSelectAttributeOptionID();
+                }
             }
+
         }
         $this->set('selectedOptionIDs', $selectedOptionIDs);
         $this->set('selectedOptions', $selectedOptions);

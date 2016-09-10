@@ -194,7 +194,7 @@ class Controller extends AuthenticationTypeController
 
                 //generate hash that'll be used to authenticate user, allowing them to change their password
                 $h = new \Concrete\Core\User\ValidationHash();
-                $uHash = $h->add($oUser->uID, intval(UVTYPE_CHANGE_PASSWORD), true);
+                $uHash = $h->add($oUser->getUserID(), intval(UVTYPE_CHANGE_PASSWORD), true);
                 $changePassURL = View::url(
                         '/login',
                         'callback',
