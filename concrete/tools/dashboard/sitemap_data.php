@@ -65,9 +65,13 @@ if (isset($_REQUEST['displaySingleLevel']) && $_REQUEST['displaySingleLevel']) {
     }
     if ($cParentID) {
         $nodes = $dh->getSubNodes($cParentID);
-    } else if (isset($_REQUEST['siteTreeID']) && $_REQUEST['siteTreeID'] > 0) {
+    } else {
         $service = \Core::make('site');
-        $tree = $service->getSiteTreeByID($_REQUEST['siteTreeID']);
+        if (isset($_REQUEST['siteTreeID']) && $_REQUEST['siteTreeID'] > 0) {
+            $tree = $service->getSiteTreeByID($_REQUEST['siteTreeID']);
+        } else {
+            $tree = $service->getDefault()->getSiteTree();
+        }
         $nodes = $dh->getSubNodes($tree);
     }
 

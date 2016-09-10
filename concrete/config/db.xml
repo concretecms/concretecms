@@ -45,7 +45,7 @@
       <notnull/>
     </field>
     <field name="ptPublishTargetObject" type="text"/>
-    <field name="siteID" type="integer" size="10">
+    <field name="siteTypeID" type="integer" size="10">
       <unsigned/>
       <default value="0"/>
     </field>
@@ -53,8 +53,8 @@
       <unique/>
       <col>ptHandle</col>
     </index>
-    <index name="siteID">
-      <col>siteID</col>
+    <index name="siteTypeID">
+      <col>siteTypeID</col>
     </index>
     <index name="pkgID">
       <col>pkgID</col>

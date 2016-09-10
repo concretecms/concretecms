@@ -6,10 +6,19 @@ use Concrete\Core\Page\Type\Type;
 
 class Organize extends DashboardPageController
 {
-    public function view()
+    public function view($typeID = null)
     {
-        $this->set('frequent', Type::getFrequentlyUsedList());
-        $this->set('infrequent', Type::getInfrequentlyUsedList());
+        $siteType = false;
+        if ($typeID) {
+            $siteType = $this->app->make('site/type')->getByID($typeID);
+        }
+        if (!$siteType) {
+            $siteType = $this->app->make('site/type')->getDefault();
+        } else {
+            $this->set('siteTypeID', $siteType->getSiteTypeID());
+        }
+        $this->set('frequent', Type::getFrequentlyUsedList($siteType));
+        $this->set('infrequent', Type::getInfrequentlyUsedList($siteType));
     }
 
     public function submit()

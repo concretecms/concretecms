@@ -46,6 +46,17 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
         return $this->ptName;
     }
 
+    public function getSiteTypeID()
+    {
+        return $this->siteTypeID;
+    }
+
+    public function getSiteTypeObject()
+    {
+        $em = \Database::connection()->getEntityManager();
+        return $em->find('Concrete\Core\Entity\Site\Type', $this->getSiteTypeID());
+    }
+
     public function getPageTypeDisplayName($format = 'html')
     {
         $value = t($this->getPageTypeName());
@@ -561,6 +572,7 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
             'templates' => $this->getPageTypeSelectedPageTemplateObjects(),
             'ptLaunchInComposer' => $this->doesPageTypeLaunchInComposer(),
             'ptIsFrequentlyAdded' => $this->isPageTypeFrequentlyAdded(),
+            'siteType' => $this->getSiteTypeObject()
         );
 
         $new = static::add($data);
@@ -656,7 +668,7 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
      */
     public static function add($data, $pkg = false)
     {
-        $site = \Core::make('site')->getSite();
+        $siteType = \Core::make('site/type')->getDefault();
 
         $data = $data + array(
             'defaultTemplate' => null,
@@ -665,12 +677,12 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
             'internal' => null,
             'ptLaunchInComposer' => null,
             'ptIsFrequentlyAdded' => null,
-            'site' => $site
+            'siteType' => $siteType
             );
 
         $ptHandle = $data['handle'];
         $ptName = $data['name'];
-        $siteID = $data['site']->getSiteID();
+        $siteTypeID = $data['siteType']->getSiteTypeID();
 
         $ptDefaultPageTemplateID = 0;
         $ptIsFrequentlyAdded = 0;
@@ -714,7 +726,7 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
         }
 
         $db->Execute(
-            'insert into PageTypes (ptName, ptHandle, ptDefaultPageTemplateID, ptAllowedPageTemplates, ptIsInternal, ptLaunchInComposer, ptDisplayOrder, ptIsFrequentlyAdded, siteID, pkgID) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+            'insert into PageTypes (ptName, ptHandle, ptDefaultPageTemplateID, ptAllowedPageTemplates, ptIsInternal, ptLaunchInComposer, ptDisplayOrder, ptIsFrequentlyAdded, siteTypeID, pkgID) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
             array(
                 $ptName,
                 $ptHandle,
@@ -724,7 +736,7 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
                 $ptLaunchInComposer,
                 $ptDisplayOrder,
                 $ptIsFrequentlyAdded,
-                $siteID,
+                $siteTypeID,
                 $pkgID,
             )
         );
@@ -878,15 +890,18 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
         }
     }
 
-    public static function getList($includeInternal = false)
+    public static function getList($includeInternal = false, $siteType = null)
     {
         $db = Loader::db();
-        $site = \Core::make('site')->getSite();
-        $v = array($site->getSiteID());
+        if (!$siteType) {
+            $site = \Core::make('site')->getDefault();
+            $siteType = $site->getType();
+        }
+        $v = array($siteType->getSiteTypeID());
         if (!$includeInternal) {
-            $ptIDs = $db->GetCol('select ptID from PageTypes where siteID = ? and ptIsInternal = 0 order by ptDisplayOrder asc', $v);
+            $ptIDs = $db->GetCol('select ptID from PageTypes where siteTypeID = ? and ptIsInternal = 0 order by ptDisplayOrder asc', $v);
         } else {
-            $ptIDs = $db->GetCol('select ptID from PageTypes where siteID = ? order by ptDisplayOrder asc', $v);
+            $ptIDs = $db->GetCol('select ptID from PageTypes where siteTypeID = ? order by ptDisplayOrder asc', $v);
         }
 
         return static::returnList($ptIDs);
@@ -908,18 +923,28 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
         return $list;
     }
 
-    public static function getFrequentlyUsedList()
+    public static function getFrequentlyUsedList($siteType = null)
     {
+        if (!is_object($siteType)) {
+            $site = \Core::make('site')->getDefault();
+            $siteType = $site->getType();
+        }
+
         $db = Loader::db();
-        $ptIDs = $db->GetCol('select ptID from PageTypes where ptIsInternal = 0 and ptIsFrequentlyAdded = 1 order by ptDisplayOrder asc');
+        $ptIDs = $db->GetCol('select ptID from PageTypes where ptIsInternal = 0 and ptIsFrequentlyAdded = 1 and siteTypeID = ? order by ptDisplayOrder asc', [$siteType->getSiteTypeID()]);
 
         return static::returnList($ptIDs);
     }
 
-    public static function getInfrequentlyUsedList()
+    public static function getInfrequentlyUsedList($siteType = null)
     {
+        if (!is_object($siteType)) {
+            $site = \Core::make('site')->getDefault();
+            $siteType = $site->getType();
+        }
+
         $db = Loader::db();
-        $ptIDs = $db->GetCol('select ptID from PageTypes where ptIsInternal = 0 and ptIsFrequentlyAdded = 0 order by ptDisplayOrder asc');
+        $ptIDs = $db->GetCol('select ptID from PageTypes where ptIsInternal = 0 and ptIsFrequentlyAdded = 0 and siteTypeID = ? order by ptDisplayOrder asc', [$siteType->getSiteTypeID()]);
 
         return static::returnList($ptIDs);
     }

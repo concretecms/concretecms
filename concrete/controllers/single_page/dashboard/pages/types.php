@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Controller\SinglePage\Dashboard\Pages;
 
+use Concrete\Controller\Element\Dashboard\Pages\Types\Header;
 use Concrete\Core\Error\ErrorList\ErrorList;
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Core\Page\Controller\DashboardSitePageController;
@@ -8,31 +9,31 @@ use PageType;
 use Loader;
 use PageTemplate;
 
-class Types extends DashboardSitePageController
+class Types extends DashboardPageController
 {
-    public function page_type_added()
+    public function page_type_added($siteTypeID = null)
     {
         $this->set('success', t('Page Type added successfully.'));
-        $this->view();
+        $this->view($siteTypeID);
     }
 
-    public function page_type_updated()
+    public function page_type_updated($siteTypeID = null)
     {
         $this->set('success', t('Page type updated successfully.'));
-        $this->view();
+        $this->view($siteTypeID);
     }
 
-    public function page_type_duplicated()
+    public function page_type_duplicated($siteTypeID = null)
     {
         $this->set('success',
             t('Page type copied successfully. Important! You will need to re-add any blocks into output areas that you had set on the original page type.'));
-        $this->view();
+        $this->view($siteTypeID);
     }
 
-    public function page_type_deleted()
+    public function page_type_deleted($siteTypeID = null)
     {
         $this->set('success', t('Page type deleted successfully.'));
-        $this->view();
+        $this->view($siteTypeID);
     }
 
     public function edit($ptID = false)
@@ -46,9 +47,19 @@ class Types extends DashboardSitePageController
         $this->set('pageTitle', t('Edit %s Page Type', $cm->getPageTypeDisplayName()));
     }
 
-    public function view()
+    public function view($typeID = 0)
     {
-        $pagetypes = PageType::getList();
+        $siteType = false;
+        if ($typeID) {
+            $siteType = $this->app->make('site/type')->getByID($typeID);
+        }
+        if (!$siteType) {
+            $siteType = $this->app->make('site/type')->getDefault();
+        } else {
+            $this->set('siteTypeID', $siteType->getSiteTypeID());
+        }
+        $pagetypes = PageType::getList(false, $siteType);
+        $this->set('headerMenu', new Header($siteType));
         $this->set('pagetypes', $pagetypes);
     }
 
@@ -75,7 +86,7 @@ class Types extends DashboardSitePageController
         }
         if (!$this->error->has()) {
             $pagetype->delete();
-            $this->redirect('/dashboard/pages/types', 'page_type_deleted');
+            $this->redirect('/dashboard/pages/types', 'page_type_deleted', $pagetype->getSiteTypeID());
         }
         $this->view();
     }
@@ -101,7 +112,7 @@ class Types extends DashboardSitePageController
         }
         if (!$this->error->has()) {
             $pagetype->duplicate($handle, $name);
-            $this->redirect('/dashboard/pages/types', 'page_type_duplicated');
+            $this->redirect('/dashboard/pages/types', 'page_type_duplicated', $pagetype->getSiteTypeID());
         }
         $this->view();
     }
@@ -165,7 +176,7 @@ class Types extends DashboardSitePageController
             $pagetype->update($data);
             $configuredTarget = $target->configurePageTypePublishTarget($pagetype, $this->post());
             $pagetype->setConfiguredPageTypePublishTargetObject($configuredTarget);
-            $this->redirect('/dashboard/pages/types', 'page_type_updated');
+            $this->redirect('/dashboard/pages/types', 'page_type_updated', $pagetype->getSiteTypeID());
         }
         $this->edit($ptID);
     }

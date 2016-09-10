@@ -1,6 +1,7 @@
 <?php defined('C5_EXECUTE') or die("Access Denied."); ?>
 
 <form method="post" action="<?=$view->action('submit')?>">
+<input type="hidden" name="siteTypeID" value="<?=$siteTypeID?>">
 <div class="ccm-pane-body">
 <?=Loader::element('page_types/form/base');?>
 </div>
