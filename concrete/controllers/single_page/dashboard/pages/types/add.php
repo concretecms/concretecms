@@ -10,6 +10,20 @@ use Concrete\Core\Page\Type\PublishTarget\Type\Type as PageTypePublishTargetType
 
 class Add extends DashboardPageController
 {
+
+    public function view($typeID = 0)
+    {
+        $siteType = false;
+        if ($typeID) {
+            $siteType = $this->app->make('site/type')->getByID($typeID);
+        }
+        if (!$siteType) {
+            $siteType = $this->app->make('site/type')->getDefault();
+        } else {
+            $this->set('siteTypeID', $siteType->getSiteTypeID());
+        }
+    }
+
     public function submit()
     {
         $vs = Loader::helper('validation/strings');
@@ -59,6 +73,14 @@ class Add extends DashboardPageController
         }
 
         if (!$this->error->has()) {
+            $siteType = $this->app->make('site/type')->getByID($this->post('siteTypeID'));
+            $siteTypeID = null;
+            if (!is_object($siteType)) {
+                $siteType = $this->app->make('site/type')->getDefault();
+            } else {
+                $siteTypeID = $siteType->getSiteTypeID();
+            }
+
             $data = array(
                 'handle' => $handle,
                 'name' => $name,
@@ -67,11 +89,12 @@ class Add extends DashboardPageController
                 'ptIsFrequentlyAdded' => $this->post('ptIsFrequentlyAdded'),
                 'allowedTemplates' => $this->post('ptAllowedPageTemplates'),
                 'templates' => $templates,
+                'siteType' => $siteType
             );
             $pt = PageType::add($data);
             $configuredTarget = $target->configurePageTypePublishTarget($pt, $this->post());
             $pt->setConfiguredPageTypePublishTargetObject($configuredTarget);
-            $this->redirect('/dashboard/pages/types', 'page_type_added');
+            $this->redirect('/dashboard/pages/types', 'page_type_added', $siteTypeID);
         }
     }
 }

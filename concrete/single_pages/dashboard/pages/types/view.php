@@ -22,12 +22,6 @@
     $pk = PermissionKey::getByHandle('access_page_type_permissions');
     ?>
 
-    <div class="ccm-dashboard-header-buttons btn-group">
-        <a href="<?=$view->url('/dashboard/pages/types/organize')?>" class="btn btn-default"><?=t('Order &amp; Group')?></a>
-        <a href="<?=$view->url('/dashboard/pages/types/add')?>" class="btn btn-primary"><?=t('Add Page Type')?></a>
-    </div>
-
-
     <?php if (count($pagetypes) > 0) {
     ?>
 
@@ -107,7 +101,7 @@
 } else {
     ?>
 		<p><?=t('You have not created any page types yet.')?></p>
-		<a href="<?=$view->url('/dashboard/pages/types/add')?>" class="btn btn-primary"><?=t('Add Page Type')?></a>
+		<a href="<?=$view->url('/dashboard/pages/types/add', $siteTypeID)?>" class="btn btn-primary"><?=t('Add Page Type')?></a>
 	<?php 
 }
     ?>
