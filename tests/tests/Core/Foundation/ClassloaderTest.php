@@ -119,7 +119,17 @@ class ClassloaderTest extends \PHPUnit_Framework_TestCase
 
         $class = core_class('Core\\Attribute\\Key\\EventKey', 'calendar');
         $this->assertEquals('\\Concrete\\Package\\Calendar\\Src\\Attribute\\Key\\EventKey', $class);
+    }
 
+    public function testCoreClassNonExtended()
+    {
+        $class = overrideable_core_class(
+            'Core\\Editor\\TestingSnippet',
+            DIRNAME_CLASSES . '/Editor/TestingSnippet.php',
+            null
+        );
+
+        $this->assertEquals('\Concrete\Core\Editor\TestingSnippet', $class);
     }
 
     public function testApplicationCoreClassExtensionsAutoloader()
