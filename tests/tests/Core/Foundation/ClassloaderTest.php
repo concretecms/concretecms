@@ -58,10 +58,30 @@ class ClassloaderTest extends \PHPUnit_Framework_TestCase
             // Overrides, Strict autoloader
             ['RecaptchaController.php', 'src/Concrete/Captcha/', 'Application\Concrete\Captcha\RecaptchaController'],
 
-            // Custom Classes
-            
+            // Entity Classes
+            ['TestEntity.php', 'src/Entity/', 'Application\Entity\TestEntity'],
+
+            // Test that application/src/Whatever does NOT work
+            ['TestClass.php', 'src/Testing/', 'Application\Src\Testing\TestClass', false],
+            ['TestClass.php', 'src/Testing/', 'Application\Testing\TestClass', false],
+
         ];
     }
+
+    public function applicationClassesLegacyDataProvider()
+    {
+        return [
+            ['TestClass.php', 'src/Testing/', 'Application\Src\Testing\TestClass'],
+        ];
+    }
+
+    public function applicationClassesLegacyCustomNamespaceDataProvider()
+    {
+        return [
+            ['Foobar', 'TestCustomNamespaceClass.php', 'src/Testing/', 'Foobar\Src\Testing\TestCustomNamespaceClass'],
+        ];
+    }
+
 
     public function coreClassesDataProvider()
     {
@@ -156,13 +176,51 @@ class ClassloaderTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider applicationClassesDataProvider
      */
-    public function testApplicationCoreOverrideAutoloader($file, $destination, $class)
+    public function testApplicationCoreOverrideAutoloader($file, $destination, $class, $exists = true)
     {
         $this->putFileIntoPlace($file, $destination);
         $classExists = $this->classExists($class);
         $this->cleanUpFile($file, $destination);
+        if ($exists) {
+            $this->assertTrue($classExists, sprintf('Class %s failed to load', $class));
+        } else {
+            $this->assertFalse($classExists, sprintf('Class %s loaded', $class));
+        }
+    }
+
+    /**
+     * @dataProvider applicationClassesLegacyDataProvider
+     */
+    public function testApplicationLegacyAutoloader($file, $destination, $class, $exists = true)
+    {
+        $this->putFileIntoPlace($file, $destination);
+        $loader = ClassLoader::getInstance();
+        $loader->enableLegacyNamespace();
+        $loader->enable();
+        $classExists = $this->classExists($class);
+        $this->cleanUpFile($file, $destination);
+        if ($exists) {
+            $this->assertTrue($classExists, sprintf('Class %s failed to load', $class));
+        } else {
+            $this->assertFalse($classExists, sprintf('Class %s loaded', $class));
+        }
+    }
+
+    /**
+     * @dataProvider applicationClassesLegacyCustomNamespaceDataProvider
+     */
+    public function testApplicationLegacyCustomNamespaceAutoloader($namespace, $file, $destination, $class)
+    {
+        $this->putFileIntoPlace($file, $destination);
+        $loader = ClassLoader::getInstance();
+        $loader->enableLegacyNamespace();
+        $loader->setApplicationNamespace($namespace);
+        $loader->enable();
+        $classExists = $this->classExists($class);
+        $this->cleanUpFile($file, $destination);
         $this->assertTrue($classExists, sprintf('Class %s failed to load', $class));
     }
+
 
 
 }
