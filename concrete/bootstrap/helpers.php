@@ -183,7 +183,7 @@ function overrideable_core_class($class, $path, $pkgHandle = null)
             return core_class($class, true);
         }
     }
-
+    
     $r = $env->getRecord($path);
     $prefix = $r->override ? true : $pkgHandle;
 
