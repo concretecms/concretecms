@@ -35,9 +35,20 @@ class ClassLoader
     /**
      * @param boolean $enableLegacyNamespace
      */
-    public function setEnableLegacyNamespace($enableLegacyNamespace)
+    public function enableLegacyNamespace()
     {
-        $this->enableLegacyNamespace = $enableLegacyNamespace;
+        $this->enableLegacyNamespace = true;
+        $this->disable();
+        $this->activateAutoloaders();
+        $this->enable();
+    }
+
+    protected function activateAutoloaders()
+    {
+        $this->loaders = array();
+        $this->setupLegacyAutoloading();
+        $this->setupCoreAutoloading(); // Modified PSR4
+        $this->setupCoreSourceAutoloading(); // Strict PSR4
     }
 
     /**
@@ -54,14 +65,17 @@ class ClassLoader
     public function setApplicationNamespace($applicationNamespace)
     {
         $this->applicationNamespace = $applicationNamespace;
+        $this->disable();
+        $this->activateAutoloaders();
+        $this->enable();
     }
 
 
-    public function __construct()
+    public function __construct($enableLegacyNamespace = false, $applicationNamespace = 'Application')
     {
-        $this->setupLegacyAutoloading();
-        $this->setupCoreAutoloading(); // Modified PSR4
-        $this->setupCoreSourceAutoloading(); // Strict PSR4
+        $this->enableLegacyNamespace = $enableLegacyNamespace;
+        $this->applicationNamespace = $applicationNamespace;
+        $this->activateAutoloaders();
         $this->enableAliasClassAutoloading();
     }
 
