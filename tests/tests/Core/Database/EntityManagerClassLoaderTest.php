@@ -83,7 +83,6 @@ class EntityManagerClassLoaderTest extends \PHPUnit_Framework_TestCase
     public function testLegacyApplicationSrcLocation()
     {
 
-
     }
 
     public function testLegacyPackageSrcLocation()

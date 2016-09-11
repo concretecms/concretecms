@@ -17,7 +17,7 @@ namespace Concrete\Core\Foundation;
  *
  * @author Alexander M. Turek <me@derrabus.de>
  */
-class ModifiedPsr4ClassLoader
+class ModifiedPsr4ClassLoader implements ClassLoaderInterface
 {
     /**
      * @var array
