@@ -43,10 +43,12 @@ abstract class Package implements LocalizablePackageInterface
     protected $fileConfig;
     
     /**
-     * Whether to automatically map core extensions into the packages src/Concrete directory
+     * Whether to automatically map core extensions into the packages src/Concrete directory (and map them to Concrete\Package\MyPackage), or map the entire src/
+     * directory to Concrete\Package\MyPackage\Src (and automatically map core extensions
+     * to Concrete\Package\MyPackage\Src)
      * @var bool
      */
-    protected $pkgAutoloaderMapCoreExtensions = false;
+    protected $pkgEnableLegacyNamespace = false;
 
     /**
      * Array of namespace -> location autoloader entries for the package. Will automatically
@@ -111,9 +113,9 @@ abstract class Package implements LocalizablePackageInterface
     /**
      * @return bool
      */
-    public function providesCoreExtensionAutoloaderMapping()
+    public function enableLegacyNamespace()
     {
-        return $this->pkgAutoloaderMapCoreExtensions;
+        return $this->pkgEnableLegacyNamespace;
     }
 
     /**

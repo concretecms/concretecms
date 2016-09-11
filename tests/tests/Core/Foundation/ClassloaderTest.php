@@ -81,15 +81,17 @@ class ClassloaderTest extends \PHPUnit_Framework_TestCase
             ['amazing_power', 'packages/amazing_power/themes/amazing_fancy/page_theme.php', '/amazing_power/themes/amazing_fancy/', 'Concrete\Package\AmazingPower\Theme\AmazingFancy\PageTheme'],
 
             // Package Src Files, strict autoloader
-            
+            ['fancy_snippet', 'packages/fancy_snippet/src/Concrete/Editor/FancySnippet.php', '/fancy_snippet/src/Concrete/Editor/', 'Concrete\Package\FancySnippet\Editor\FancySnippet'],
+            ['fancy_snippet', 'packages/fancy_snippet/src/Funky/RedHerring.php', '/fancy_snippet/src/Funky/', 'Concrete\Package\FancySnippet\Src\Funky\RedHerring', false],
+            ['authenticator', 'packages/authenticator/src/Entity/Account.php', '/authenticator/src/Entity/', 'Concrete\Package\Authenticator\Entity\Account'],
         ];
     }
-
 
     public function applicationClassesLegacyDataProvider()
     {
         return [
             ['TestClass.php', 'src/Testing/', 'Application\Src\Testing\TestClass'],
+            ['File.php', 'src/File', 'Application\Src\File\File'],
         ];
     }
 

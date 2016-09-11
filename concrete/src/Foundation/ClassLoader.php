@@ -120,8 +120,6 @@ class ClassLoader
             DIR_BASE_CORE . '/' . DIRNAME_CONTROLLERS . '/' . DIRNAME_PAGE_TYPES);
         $loader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Controller', DIR_BASE_CORE . '/' . DIRNAME_CONTROLLERS);
         $loader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Job', DIR_BASE_CORE . '/' . DIRNAME_JOBS);
-        $loader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Express',
-            DIR_APPLICATION . '/config/express/Entity/Concrete/Express');
 
         $loader->addPrefix($this->getApplicationNamespace() . '\\StartingPointPackage',
             DIR_APPLICATION . '/config/install/' . DIRNAME_PACKAGES);
@@ -196,10 +194,14 @@ class ClassLoader
             }
         }
 
-        if ($pkg->providesCoreExtensionAutoloaderMapping()) {
+        if (!$pkg->enableLegacyNamespace()) {
             // We map all src files in the package to the src/Concrete directory
             $loader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Package\\' . camelcase($pkgHandle),
                 DIR_PACKAGES . '/' . $pkgHandle . '/' . DIRNAME_CLASSES . '/Concrete');
+
+            $loader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Package\\' . camelcase($pkgHandle) . '\\Entity',
+                DIR_PACKAGES . '/' . $pkgHandle . '/' . DIRNAME_CLASSES . '/Entity');
+
         } else {
             // legacy Src support
             $loader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Package\\' . camelcase($pkgHandle) . '\\Src',
