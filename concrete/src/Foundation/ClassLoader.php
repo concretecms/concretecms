@@ -125,14 +125,17 @@ class ClassLoader
 
         $loader->addPrefix($this->getApplicationNamespace() . '\\StartingPointPackage',
             DIR_APPLICATION . '/config/install/' . DIRNAME_PACKAGES);
-        $loader->addPrefix($this->getApplicationNamespace() . '\\Attribute', DIR_APPLICATION . '/' . DIRNAME_ATTRIBUTES);
+        $loader->addPrefix($this->getApplicationNamespace() . '\\Attribute',
+            DIR_APPLICATION . '/' . DIRNAME_ATTRIBUTES);
         $loader->addPrefix($this->getApplicationNamespace() . '\\MenuItem', DIR_APPLICATION . '/' . DIRNAME_MENU_ITEMS);
-        $loader->addPrefix($this->getApplicationNamespace() . '\\Authentication', DIR_APPLICATION . '/' . DIRNAME_AUTHENTICATION);
+        $loader->addPrefix($this->getApplicationNamespace() . '\\Authentication',
+            DIR_APPLICATION . '/' . DIRNAME_AUTHENTICATION);
         $loader->addPrefix($this->getApplicationNamespace() . '\\Block', DIR_APPLICATION . '/' . DIRNAME_BLOCKS);
         $loader->addPrefix($this->getApplicationNamespace() . '\\Theme', DIR_APPLICATION . '/' . DIRNAME_THEMES);
         $loader->addPrefix($this->getApplicationNamespace() . '\\Controller\\PageType',
             DIR_APPLICATION . '/' . DIRNAME_CONTROLLERS . '/' . DIRNAME_PAGE_TYPES);
-        $loader->addPrefix($this->getApplicationNamespace() . '\\Controller', DIR_APPLICATION . '/' . DIRNAME_CONTROLLERS);
+        $loader->addPrefix($this->getApplicationNamespace() . '\\Controller',
+            DIR_APPLICATION . '/' . DIRNAME_CONTROLLERS);
         $loader->addPrefix($this->getApplicationNamespace() . '\\Job', DIR_APPLICATION . '/' . DIRNAME_JOBS);
         $this->loaders[] = $loader;
     }
@@ -143,10 +146,12 @@ class ClassLoader
         $loader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Core', DIR_BASE_CORE . '/' . DIRNAME_CLASSES);
 
         // Handle class core extensions like antispam and captcha with Application\Concrete\MyCaptchaLibrary
-        $loader->addPrefix($this->getApplicationNamespace() . '\\Concrete', DIR_APPLICATION . '/' . DIRNAME_CLASSES . '/Concrete');
+        $loader->addPrefix($this->getApplicationNamespace() . '\\Concrete',
+            DIR_APPLICATION . '/' . DIRNAME_CLASSES . '/Concrete');
 
         // Application entities
-        $loader->addPrefix($this->getApplicationNamespace() . '\\Entity', DIR_APPLICATION . '/' . DIRNAME_CLASSES . '/Entity');
+        $loader->addPrefix($this->getApplicationNamespace() . '\\Entity',
+            DIR_APPLICATION . '/' . DIRNAME_CLASSES . '/Entity');
 
         if ($this->enableLegacyNamespace) {
             $loader->addPrefix($this->getApplicationNamespace() . '\\Src', DIR_APPLICATION . '/' . DIRNAME_CLASSES);
@@ -155,7 +160,63 @@ class ClassLoader
         $this->loaders[] = $loader;
     }
 
+    public function registerPackage($pkg)
+    {
+        if (is_string($pkg)) {
+            $pkg = \Package::getClass($pkg);
+        }
 
+        $pkgHandle = $pkg->getPackageHandle();
+
+        $loader = new ModifiedPSR4ClassLoader();
+        $loader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Package\\' . camelcase($pkgHandle) . '\\Attribute',
+            DIR_PACKAGES . '/' . $pkgHandle . '/' . DIRNAME_ATTRIBUTES);
+        $loader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Package\\' . camelcase($pkgHandle) . '\\MenuItem',
+            DIR_PACKAGES . '/' . $pkgHandle . '/' . DIRNAME_MENU_ITEMS);
+        $loader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Package\\' . camelcase($pkgHandle) . '\\Authentication',
+            DIR_PACKAGES . '/' . $pkgHandle . '/' . DIRNAME_AUTHENTICATION);
+        $loader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Package\\' . camelcase($pkgHandle) . '\\Block',
+            DIR_PACKAGES . '/' . $pkgHandle . '/' . DIRNAME_BLOCKS);
+        $loader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Package\\' . camelcase($pkgHandle) . '\\Theme',
+            DIR_PACKAGES . '/' . $pkgHandle . '/' . DIRNAME_THEMES);
+        $loader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Package\\' . camelcase($pkgHandle) . '\\Controller\\PageType',
+            DIR_PACKAGES . '/' . $pkgHandle . '/' . DIRNAME_CONTROLLERS . '/' . DIRNAME_PAGE_TYPES);
+        $loader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Package\\' . camelcase($pkgHandle) . '\\Controller',
+            DIR_PACKAGES . '/' . $pkgHandle . '/' . DIRNAME_CONTROLLERS);
+        $loader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Package\\' . camelcase($pkgHandle) . '\\Job',
+            DIR_PACKAGES . '/' . $pkgHandle . '/' . DIRNAME_JOBS);
+
+        $this->loaders[] = $loader;
+
+        $loader = new Psr4ClassLoader();
+        $loaders = $pkg->getPackageAutoloaderRegistries();
+        if (count($loaders) > 0) {
+            foreach ($loaders as $path => $prefix) {
+                $loader->addPrefix($prefix, DIR_PACKAGES . '/' . $pkgHandle . '/' . $path);
+            }
+        }
+
+        if ($pkg->providesCoreExtensionAutoloaderMapping()) {
+            // We map all src files in the package to the src/Concrete directory
+            $loader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Package\\' . camelcase($pkgHandle),
+                DIR_PACKAGES . '/' . $pkgHandle . '/' . DIRNAME_CLASSES . '/Concrete');
+        } else {
+            // legacy Src support
+            $loader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Package\\' . camelcase($pkgHandle) . '\\Src',
+                DIR_PACKAGES . '/' . $pkgHandle . '/' . DIRNAME_CLASSES);
+        }
+
+        $this->loaders[] = $loader;
+
+        $this->registerPackageController($pkgHandle);
+    }
+
+    public function registerPackageController($pkgHandle)
+    {
+        $this->loaders[] = new MapClassLoader(array(
+            NAMESPACE_SEGMENT_VENDOR . '\\Package\\' . camelcase($pkgHandle) . '\\Controller' => DIR_PACKAGES . '/' . $pkgHandle . '/' . FILENAME_PACKAGE_CONTROLLER,
+        ));
+    }
 
     /**
      * Returns the ClassLoader instance.
