@@ -82,7 +82,6 @@ class Composer extends BackendInterfacePageController
             $ptr->setError($e);
 
             if (!$e->has()) {
-
                 $publishDateTime = false;
                 if ($this->request->request->get('action') == 'schedule') {
                     $dateTime = new DateTime();
@@ -136,23 +135,23 @@ class Composer extends BackendInterfacePageController
         }
         $validator = $pagetype->getPageTypeValidatorObject();
         $e = $validator->validateCreateDraftRequest($pt);
-        $outputControls = array();
+        $outputControls = [];
         if (!$e->has()) {
             $c = $c->getVersionToModify();
             $this->page = $c;
 
-			if ($c->isPageDraft()) {
-				/// set the target
-				$configuredTarget = $pagetype->getPageTypePublishTargetObject();
-				$targetPageID = (int) $configuredTarget->getPageTypePublishTargetConfiguredTargetParentPageID();
-				if (!$targetPageID === 0) {
-					$targetPageID = (int) $this->request->post('cParentID');
-					if ($targetPageID === 0) {
-					    $targetPageID = $c->getPageDraftTargetParentPageID();
-					}
-				}
+            if ($c->isPageDraft()) {
+                /// set the target
+                $configuredTarget = $pagetype->getPageTypePublishTargetObject();
+                $targetPageID = (int) $configuredTarget->getPageTypePublishTargetConfiguredTargetParentPageID();
+                if (!$targetPageID === 0) {
+                    $targetPageID = (int) $this->request->post('cParentID');
+                    if ($targetPageID === 0) {
+                        $targetPageID = $c->getPageDraftTargetParentPageID();
+                    }
+                }
 
-				$c->setPageDraftTargetParentPageID($targetPageID);
+                $c->setPageDraftTargetParentPageID($targetPageID);
             }
 
             $saver = $pagetype->getPageTypeSaverObject();
@@ -160,6 +159,6 @@ class Composer extends BackendInterfacePageController
         }
         $ptr->setError($e);
 
-        return array($ptr, $pagetype, $outputControls);
+        return [$ptr, $pagetype, $outputControls];
     }
 }
