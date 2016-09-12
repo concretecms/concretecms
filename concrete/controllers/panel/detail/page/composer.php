@@ -122,14 +122,16 @@ class Composer extends BackendInterfacePageController
     protected function save()
     {
         $c = $this->page;
-        $ptr = new PageEditResponse($e);
+        $ptr = new PageEditResponse();
         $ptr->setPage($c);
 
         $pagetype = $c->getPageTypeObject();
-        if ($_POST['ptComposerPageTemplateID']) {
-            $pt = PageTemplate::getByID($_POST['ptComposerPageTemplateID']);
+        $pt = null;
+        $ptComposerPageTemplateID = (int) $this->request->post('ptComposerPageTemplateID');
+        if ($ptComposerPageTemplateID !== 0) {
+            $pt = PageTemplate::getByID($ptComposerPageTemplateID);
         }
-        if (!is_object($pt)) {
+        if ($pt === null) {
             $pt = $pagetype->getPageTypeDefaultPageTemplateObject();
         }
         $validator = $pagetype->getPageTypeValidatorObject();
@@ -142,9 +144,12 @@ class Composer extends BackendInterfacePageController
 			if ($c->isPageDraft()) {
 				/// set the target
 				$configuredTarget = $pagetype->getPageTypePublishTargetObject();
-				$targetPageID = $configuredTarget->getPageTypePublishTargetConfiguredTargetParentPageID();
-				if (!$targetPageID) {
-					$targetPageID = $_POST['cParentID'];
+				$targetPageID = (int) $configuredTarget->getPageTypePublishTargetConfiguredTargetParentPageID();
+				if (!$targetPageID === 0) {
+					$targetPageID = (int) $this->request->post('cParentID');
+					if ($targetPageID === 0) {
+					    $targetPageID = $c->getPageDraftTargetParentPageID();
+					}
 				}
 
 				$c->setPageDraftTargetParentPageID($targetPageID);
