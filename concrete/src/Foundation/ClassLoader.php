@@ -51,6 +51,19 @@ class ClassLoader
         $this->setupCoreSourceAutoloading(); // Strict PSR4
     }
 
+    public function reset()
+    {
+        $this->disable();
+        $this->loaders = array();
+        $this->enableLegacyNamespace = false;
+        $this->applicationNamespace = 'Application';
+        $this->setupLegacyAutoloading();
+        $this->setupCoreAutoloading(); // Modified PSR4
+        $this->setupCoreSourceAutoloading(); // Strict PSR4
+        $this->enable();
+    }
+
+
     /**
      * @return string
      */

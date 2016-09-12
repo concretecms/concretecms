@@ -27,10 +27,10 @@ class ClassLoaderTestCase extends \PHPUnit_Framework_TestCase
     {
         $filesystem = new Filesystem();
         $destination = explode('/', $destination);
-        if (count($destination) == 1) {
-            $deleteDirectory = $root . DIRECTORY_SEPARATOR . $destination[0];
-        } else {
+        if ($root == DIR_APPLICATION) {
             $deleteDirectory = $root . DIRECTORY_SEPARATOR . $destination[0] . DIRECTORY_SEPARATOR . $destination[1];
+        } else {
+            $deleteDirectory = $root . DIRECTORY_SEPARATOR . $destination[0];
         }
         if ($filesystem->isFile($deleteDirectory)) {
             $filesystem->delete($deleteDirectory);

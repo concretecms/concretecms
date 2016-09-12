@@ -23,6 +23,14 @@ class ClassloaderTest extends ClassLoaderTestCase
         $coreAutoloader->enable();
     }
 
+    public static function tearDownAfterClass()
+    {
+        parent::tearDownAfterClass();
+        $coreAutoloader = ClassLoader::getInstance();
+        $coreAutoloader->reset();
+    }
+
+
     public function aliasesClassesDataProvider()
     {
         return [
@@ -171,17 +179,6 @@ class ClassloaderTest extends ClassLoaderTestCase
             // Legacy autoloader
             ['Concrete\Core\Legacy\TaskPermission'],
         ];
-    }
-
-    /**
-     * @dataProvider coreClassesDataProvider
-     */
-    public function testDisableClassLoader($class)
-    {
-        // Tests the initial state of the autoloader - basically we're testing whether
-        // classloader->disable() works, because they are all enabled
-        // as part of bootstrap, then disabled as part of setUp of this test.
-        $this->assertFalse(class_exists($class), sprintf('Class %s loaded', $class));
     }
 
     protected function classExists($class)

@@ -83,7 +83,7 @@ class ApplicationAnnotationMetadataDriverTest extends \PHPUnit_Framework_TestCas
                                 ->getMock();
         $configRepoStub->method('get')
             ->will($this->onConsecutiveCalls(
-                    array()
+                    false, array()
                 ));
         $entityManagerConfigFactory = new \Concrete\Core\Database\EntityManagerConfigFactory($this->app, $config, $configRepoStub);
 

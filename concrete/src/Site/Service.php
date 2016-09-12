@@ -6,11 +6,13 @@ use Concrete\Core\Entity\Site\Site;
 use Concrete\Core\Entity\Site\Tree;
 use Concrete\Core\Site\Resolver\ResolverFactory;
 use Doctrine\ORM\EntityManagerInterface;
+use Concrete\Core\Application\Application;
 
 class Service
 {
 
     protected $entityManager;
+    protected $app;
     protected $config;
     protected $resolverFactory;
 
@@ -22,8 +24,10 @@ class Service
         $this->entityManager = $entityManager;
     }
 
-    public function __construct(EntityManagerInterface $entityManager, \Illuminate\Config\Repository $configRepository, ResolverFactory $resolverFactory)
+    public function __construct(EntityManagerInterface $entityManager,
+    Application $app, \Illuminate\Config\Repository $configRepository, ResolverFactory $resolverFactory)
     {
+        $this->app = $app;
         $this->entityManager = $entityManager;
         $this->config = $configRepository;
         $this->resolverFactory = $resolverFactory;
@@ -129,6 +133,10 @@ class Service
         $tree = new Tree();
         $tree->setSiteHomePageID(HOME_CID);
         $site->setSiteTree($tree);
+
+        $service = $this->app->make('site/type');
+        $type = $service->getDefault();
+        $site->setType($type);
 
         $this->entityManager->persist($site);
         $this->entityManager->flush();
