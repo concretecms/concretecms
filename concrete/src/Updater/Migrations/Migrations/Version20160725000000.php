@@ -919,6 +919,12 @@ class Version20160725000000 extends AbstractMigration
         $site = $service->getDefault();
         $em = $this->connection->getEntityManager();
 
+        $type_service = \Core::make('site/type');
+        $type = $type_service->getDefault();
+        if (!is_object($type)) {
+            $type = $type_service->installDefault();
+        }
+
         if (!is_object($site) || $site->getSiteID() < 1) {
             $site = $service->installDefault();
 
@@ -931,12 +937,6 @@ class Version20160725000000 extends AbstractMigration
 
             $em->persist($site);
             $em->flush();
-        }
-
-        $type_service = \Core::make('site/type');
-        $type = $type_service->getDefault();
-        if (!is_object($type)) {
-            $type = $type_service->installDefault();
         }
 
         $site = $service->getDefault();

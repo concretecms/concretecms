@@ -105,7 +105,9 @@ class ApplicationYmlMetadataDriverTest  extends \PHPUnit_Framework_TestCase
                                 ->getMock();
         $configRepoStub->method('get')
             ->will($this->onConsecutiveCalls(
-                    array(),
+                false,
+                array(),
+                false,
                     $setting
                 ));
         $entityManagerConfigFactory = new \Concrete\Core\Database\EntityManagerConfigFactory($this->app, $config, $configRepoStub);

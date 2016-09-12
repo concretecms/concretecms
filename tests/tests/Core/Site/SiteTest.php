@@ -6,6 +6,7 @@ use Concrete\Core\Config\FileLoader;
 use Concrete\Core\Config\FileSaver;
 use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Entity\Site\Site;
+use Concrete\Core\Entity\Site\Type;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Site\Resolver\Resolver;
 use Concrete\Core\Site\Resolver\ResolverFactory;
@@ -55,7 +56,7 @@ class SiteTest extends \PHPUnit_Framework_TestCase
 
         $config = \Core::make('config');
         $factory = new ResolverFactory(\Core::make('app'), new StandardDriver(\Core::make('Concrete\Core\Site\Factory')));
-        $service = new Service($entityManager, $config, $factory);
+        $service = new Service($entityManager, \Core::make('app'), $config, $factory);
 
         $retrieved = $service->getDefault();
         $this->assertInstanceOf('Concrete\Core\Entity\Site\Site', $retrieved);
@@ -85,7 +86,7 @@ class SiteTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue('Testing'));
 
         $factory = new ResolverFactory(\Core::make('app'), new StandardDriver(\Core::make('Concrete\Core\Site\Factory')));
-        $service = new Service($entityManager, $configRepoStub, $factory);
+        $service = new Service($entityManager, \Core::make('app'), $configRepoStub, $factory);
 
         $new = $service->add('testing', 'Testing');
         $this->assertInstanceOf('Concrete\Core\Entity\Site\Site', $new);
@@ -107,9 +108,29 @@ class SiteTest extends \PHPUnit_Framework_TestCase
         $entityManager->expects($this->once())
             ->method('flush');
 
+        $type = new Type();
+
+        $type_service = $this
+            ->getMockBuilder(\Concrete\Core\Site\Type\Service::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $type_service->expects($this->once())
+            ->method('getDefault')
+            ->will($this->returnValue($type));
+
+        $app = $this
+            ->getMockBuilder(Application::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $app->expects($this->once())
+            ->method('make')
+            ->will($this->returnValueMap(array(
+                array('site/type', [], $type_service)
+            )));
+
         $config = \Core::make('config');
-        $factory = new ResolverFactory(\Core::make('app'), new StandardDriver(\Core::make('Concrete\Core\Site\Factory')));
-        $service = new Service($entityManager, $config, $factory);
+        $factory = new ResolverFactory($app, new StandardDriver(\Core::make('Concrete\Core\Site\Factory')));
+        $service = new Service($entityManager, $app, $config, $factory);
         $default = $service->installDefault();
 
         $this->assertInstanceOf('Concrete\Core\Entity\Site\Site', $default);
@@ -145,7 +166,7 @@ class SiteTest extends \PHPUnit_Framework_TestCase
 
         $config = \Core::make('config');
         $factory = new ResolverFactory(\Core::make('app'), new StandardDriver(\Core::make('Concrete\Core\Site\Factory')));
-        $service = new Service($entityManager, $config, $factory);
+        $service = new Service($entityManager, \Core::make('app'), $config, $factory);
         $retrieved = $service->getSite();
 
         $this->assertEquals($default, $retrieved);

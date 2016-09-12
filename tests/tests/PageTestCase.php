@@ -15,6 +15,8 @@ abstract class PageTestCase extends ConcreteDatabaseTestCase
 
     protected $metadatas = array(
         'Concrete\Core\Entity\Site\Site',
+        'Concrete\Core\Entity\Site\Type',
+        'Concrete\Core\Entity\Site\Tree',
         'Concrete\Core\Entity\Multilingual\Section',
         'Concrete\Core\Entity\Page\Relation\MultilingualRelation',
         'Concrete\Core\Entity\Page\PagePath',
@@ -28,6 +30,10 @@ abstract class PageTestCase extends ConcreteDatabaseTestCase
     protected function setUp()
     {
         parent::setUp();
+        $service = \Core::make('site/type');
+        if (!$service->getDefault()) {
+            $service->installDefault();
+        }
         $service = \Core::make('site');
         if (!$service->getDefault()) {
             $service->installDefault();

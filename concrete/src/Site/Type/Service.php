@@ -61,13 +61,6 @@ class Service
         $factory = new Factory();
         $type = $factory->createDefaultEntity();
 
-        /**
-         * @var $site Site
-         */
-        $site = $this->app->make('site')->getDefault();
-        $site->setType($type);
-
-        $this->entityManager->persist($site);
         $this->entityManager->persist($type);
         $this->entityManager->flush();
 

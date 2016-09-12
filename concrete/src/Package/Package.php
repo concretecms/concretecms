@@ -793,7 +793,7 @@ abstract class Package implements LocalizablePackageInterface
 
         // Add additional source path to the default namespace
         // if pkgAutoloaderMapCoreExtensions is true
-        $corePath = $this->pkgAutoloaderMapCoreExtensions ? $this->getPackagePath() . DIRECTORY_SEPARATOR . DIRNAME_CLASSES . DIRECTORY_SEPARATOR . 'Concrete' : '';
+        $corePath = !$this->enableLegacyNamespace() ? $this->getPackagePath() . DIRECTORY_SEPARATOR . DIRNAME_CLASSES . DIRECTORY_SEPARATOR . 'Concrete' : '';
         if(!empty($corePath)){
             $paths[] = $corePath;
         }
