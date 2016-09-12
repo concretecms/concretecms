@@ -95,6 +95,13 @@ class ClassloaderTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
+    public function packageClassesLegacyDataProvider()
+    {
+        return [
+['legacy_foo', 'packages/legacy_foo/src/My/Custom.php', '/legacy_foo/src/My/', 'Concrete\Package\LegacyFoo\Src\My\Custom'],
+        ];
+    }
+
     public function applicationClassesLegacyCustomNamespaceDataProvider()
     {
         return [
@@ -102,6 +109,30 @@ class ClassloaderTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
+    public function packageCustomAutoloadersDataProvider()
+    {
+
+        $package1 = $this->getMockBuilder('Concrete\Core\Package\Package')
+            ->disableOriginalConstructor()
+            ->getMock();
+        $package1->expects($this->any())
+            ->method('getPackageAutoloaderRegistries')
+            ->will($this->returnValue([
+                'src/PortlandLabs/Foo' => 'PortlandLabs\Foo',
+            ]));
+        $package1->expects($this->any())
+            ->method('getPackageHandle')
+            ->will($this->returnValue('advanced_test'));
+
+        return [
+            // Overrides, Modified autoloader
+
+            [$package1, 'packages/advanced_test/src/', '/advanced_test/', [
+                'PortlandLabs\Foo\X\File',
+                'PortlandLabs\Foo\Y\Bar\File'
+            ]]
+        ];
+    }
 
     public function coreClassesDataProvider()
     {
@@ -173,20 +204,26 @@ class ClassloaderTest extends \PHPUnit_Framework_TestCase
         if (!$filesystem->isDirectory($destinationDirectory)) {
             $filesystem->makeDirectory($destinationDirectory, 0755, true);
         }
-        $filesystem->copy(
+        $method = 'copy';
+        if ($filesystem->isDirectory($sourceFile)) {
+            $method = 'copyDirectory';
+        }
+        $filesystem->$method(
             $sourceFile,
             $destinationDirectory . DIRECTORY_SEPARATOR . basename($file)
         );
     }
 
-    protected function cleanUpFile($file, $destinationDirectory)
+    protected function cleanUpFile($root, $destination)
     {
         $filesystem = new Filesystem();
-        $filesystem->delete(
-            $destinationDirectory . DIRECTORY_SEPARATOR . $file
-        );
-        // Remove the directories we made.
-        $filesystem->deleteDirectory($destinationDirectory);
+        $destination = explode('/', $destination);
+        if (count($destination) == 1) {
+            $deleteDirectory = $root . DIRECTORY_SEPARATOR . $destination[0];
+        } else {
+            $deleteDirectory = $root . DIRECTORY_SEPARATOR . $destination[0] . DIRECTORY_SEPARATOR . $destination[1];
+        }
+        $filesystem->deleteDirectory($deleteDirectory);
     }
 
     /**
@@ -198,7 +235,7 @@ class ClassloaderTest extends \PHPUnit_Framework_TestCase
         $destinationDirectory = DIR_APPLICATION . DIRECTORY_SEPARATOR . $destination;
         $this->putFileIntoPlace($file, $destinationDirectory);
         $classExists = $this->classExists($class);
-        $this->cleanUpFile($file, $destinationDirectory);
+        $this->cleanUpFile(DIR_APPLICATION, $destination);
         if ($exists) {
             $this->assertTrue($classExists, sprintf('Class %s failed to load', $class));
         } else {
@@ -218,7 +255,7 @@ class ClassloaderTest extends \PHPUnit_Framework_TestCase
         $loader->enableLegacyNamespace();
         $loader->enable();
         $classExists = $this->classExists($class);
-        $this->cleanUpFile($file, $destinationDirectory);
+        $this->cleanUpFile(DIR_APPLICATION, $destination);
         if ($exists) {
             $this->assertTrue($classExists, sprintf('Class %s failed to load', $class));
         } else {
@@ -239,7 +276,7 @@ class ClassloaderTest extends \PHPUnit_Framework_TestCase
         $loader->setApplicationNamespace($namespace);
         $loader->enable();
         $classExists = $this->classExists($class);
-        $this->cleanUpFile($file, $destinationDirectory);
+        $this->cleanUpFile(DIR_APPLICATION, $destination);
         $this->assertTrue($classExists, sprintf('Class %s failed to load', $class));
     }
 
@@ -255,18 +292,79 @@ class ClassloaderTest extends \PHPUnit_Framework_TestCase
         $loader = ClassLoader::getInstance();
         $loader->enable();
 
-        $pkg = new Package();
-        $pkg->setPackageHandle($pkgHandle);
-        $loader->registerPackage($pkg);
+        $package = $this->getMockBuilder('Concrete\Core\Package\Package')
+            ->disableOriginalConstructor()
+            ->getMock();
+        $package->expects($this->any())
+            ->method('enableLegacyNamespace')
+            ->will($this->returnValue(false));
+        $package->expects($this->any())
+            ->method('getPackageHandle')
+            ->will($this->returnValue($pkgHandle));
+        $loader->registerPackage($package);
 
         $classExists = $this->classExists($class);
-        $this->cleanUpFile($file, $destinationDirectory);
+        $this->cleanUpFile(DIR_PACKAGES, $destination);
         if ($exists) {
             $this->assertTrue($classExists, sprintf('Class %s failed to load', $class));
         } else {
             $this->assertFalse($classExists, sprintf('Class %s loaded', $class));
         }
     }
+
+    /**
+     * @dataProvider packageClassesLegacyDataProvider
+     */
+    public function testPackageLegacyAutoloader($pkgHandle, $file, $destination, $class, $exists = true)
+    {
+        $destination = trim($destination, '/');
+        $destinationDirectory = DIR_PACKAGES . DIRECTORY_SEPARATOR . $destination;
+        $this->putFileIntoPlace($file, $destinationDirectory);
+
+        $loader = ClassLoader::getInstance();
+        $loader->enable();
+
+        $pkg = new Package();
+        $pkg->setPackageHandle($pkgHandle);
+        $loader->registerPackage($pkg);
+
+        $classExists = $this->classExists($class);
+        $this->cleanUpFile(DIR_PACKAGES, $destination);
+        if ($exists) {
+            $this->assertTrue($classExists, sprintf('Class %s failed to load', $class));
+        } else {
+            $this->assertFalse($classExists, sprintf('Class %s loaded', $class));
+        }
+    }
+
+    /**
+     * @dataProvider packageCustomAutoloadersDataProvider
+     */
+    public function testPackageCustomAutoloaders($package, $file, $destination, $classes, $exists = true)
+    {
+        $destination = trim($destination, '/');
+        $destinationDirectory = DIR_PACKAGES . DIRECTORY_SEPARATOR . $destination;
+        $this->putFileIntoPlace($file, $destinationDirectory);
+
+        $loader = ClassLoader::getInstance();
+        $loader->enable();
+        $loader->registerPackage($package);
+
+        $classExists = array();
+        foreach($classes as $class) {
+            $classExists[] = $this->classExists($class);
+        }
+
+        $this->cleanUpFile(DIR_PACKAGES, $destination);
+        foreach($classExists as $return) {
+            if ($exists) {
+                $this->assertTrue($return, sprintf('Class %s failed to load', $class));
+            } else {
+                $this->assertFalse($return, sprintf('Class %s loaded', $class));
+            }
+        }
+    }
+
 
 
 
