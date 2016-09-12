@@ -185,6 +185,7 @@ class ClassLoader
             DIR_PACKAGES . '/' . $pkgHandle . '/' . DIRNAME_JOBS);
 
         $this->loaders[] = $loader;
+        $loader->register();
 
         $loader = new Psr4ClassLoader();
         $loaders = $pkg->getPackageAutoloaderRegistries();
@@ -209,15 +210,18 @@ class ClassLoader
         }
 
         $this->loaders[] = $loader;
+        $loader->register();
 
         $this->registerPackageController($pkgHandle);
     }
 
     public function registerPackageController($pkgHandle)
     {
-        $this->loaders[] = new MapClassLoader(array(
+        $loader = new MapClassLoader(array(
             NAMESPACE_SEGMENT_VENDOR . '\\Package\\' . camelcase($pkgHandle) . '\\Controller' => DIR_PACKAGES . '/' . $pkgHandle . '/' . FILENAME_PACKAGE_CONTROLLER,
         ));
+        $this->loaders[] = $loader;
+        $loader->register();
     }
 
     /**

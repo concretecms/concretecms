@@ -3,9 +3,10 @@ namespace Concrete\Tests\Core\Foundation;
 
 use Concrete\Core\Entity\Package;
 use Concrete\Core\Foundation\ClassLoader;
-use Illuminate\Filesystem\Filesystem;
 
-class ClassloaderTest extends \PHPUnit_Framework_TestCase
+require_once __DIR__ . '/ClassLoaderTestCase.php';
+
+class ClassloaderTest extends ClassLoaderTestCase
 {
 
     public function setUp()
@@ -147,6 +148,7 @@ class ClassloaderTest extends \PHPUnit_Framework_TestCase
             // Modified autoloader
             ['Concrete\Attribute\Address\Controller'],
             ['Concrete\Attribute\SocialLinks\Controller'],
+            ['Concrete\Attribute\Select\Option'],
             ['Concrete\Controller\Backend\Block\Action'],
             ['Concrete\Controller\Dialog\Conversation\Subscribe'],
             ['Concrete\Controller\Frontend\Jobs'],
@@ -195,35 +197,6 @@ class ClassloaderTest extends \PHPUnit_Framework_TestCase
     public function testCoreClassExists($class)
     {
         $this->assertTrue($this->classExists($class), sprintf('Class %s failed to load', $class));
-    }
-
-    protected function putFileIntoPlace($file, $destinationDirectory)
-    {
-        $sourceFile =  dirname(__FILE__) . DIRECTORY_SEPARATOR . 'fixtures' .  DIRECTORY_SEPARATOR . $file;
-        $filesystem = new Filesystem();
-        if (!$filesystem->isDirectory($destinationDirectory)) {
-            $filesystem->makeDirectory($destinationDirectory, 0755, true);
-        }
-        $method = 'copy';
-        if ($filesystem->isDirectory($sourceFile)) {
-            $method = 'copyDirectory';
-        }
-        $filesystem->$method(
-            $sourceFile,
-            $destinationDirectory . DIRECTORY_SEPARATOR . basename($file)
-        );
-    }
-
-    protected function cleanUpFile($root, $destination)
-    {
-        $filesystem = new Filesystem();
-        $destination = explode('/', $destination);
-        if (count($destination) == 1) {
-            $deleteDirectory = $root . DIRECTORY_SEPARATOR . $destination[0];
-        } else {
-            $deleteDirectory = $root . DIRECTORY_SEPARATOR . $destination[0] . DIRECTORY_SEPARATOR . $destination[1];
-        }
-        $filesystem->deleteDirectory($deleteDirectory);
     }
 
     /**
@@ -324,9 +297,16 @@ class ClassloaderTest extends \PHPUnit_Framework_TestCase
         $loader = ClassLoader::getInstance();
         $loader->enable();
 
-        $pkg = new Package();
-        $pkg->setPackageHandle($pkgHandle);
-        $loader->registerPackage($pkg);
+        $package = $this->getMockBuilder('Concrete\Core\Package\Package')
+            ->disableOriginalConstructor()
+            ->getMock();
+        $package->expects($this->any())
+            ->method('enableLegacyNamespace')
+            ->will($this->returnValue(true));
+        $package->expects($this->any())
+            ->method('getPackageHandle')
+            ->will($this->returnValue($pkgHandle));
+        $loader->registerPackage($package);
 
         $classExists = $this->classExists($class);
         $this->cleanUpFile(DIR_PACKAGES, $destination);
