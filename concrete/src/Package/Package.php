@@ -43,12 +43,14 @@ abstract class Package implements LocalizablePackageInterface
     protected $fileConfig;
     
     /**
+     * @deprecated
+     * This will be set to FALSE in 8.1
      * Whether to automatically map core extensions into the packages src/Concrete directory (and map them to Concrete\Package\MyPackage), or map the entire src/
      * directory to Concrete\Package\MyPackage\Src (and automatically map core extensions
      * to Concrete\Package\MyPackage\Src)
      * @var bool
      */
-    protected $pkgEnableLegacyNamespace = false;
+    protected $pkgEnableLegacyNamespace = true;
 
     /**
      * Array of namespace -> location autoloader entries for the package. Will automatically
