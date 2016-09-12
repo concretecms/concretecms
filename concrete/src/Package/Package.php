@@ -117,6 +117,12 @@ abstract class Package implements LocalizablePackageInterface
      */
     public function enableLegacyNamespace()
     {
+        if (isset($this->pkgAutoloaderMapCoreExtensions) && $this->pkgAutoloaderMapCoreExtensions) {
+            // We're no longer using this to denote non-legacy applications, but if a package uses this
+            // that means it's NOT using the legacy namespace.
+            return false;
+        }
+
         return $this->pkgEnableLegacyNamespace;
     }
 

@@ -141,13 +141,17 @@ function core_class($class, $prefix = false)
         if (substr($class, 0, 5) == "Core\\") {
             if ($prefix !== true) {
                 $x = $app->make('Concrete\Core\Package\PackageService')->getClass($prefix);
-                if ($x->enableLegacyNamespace()) {
+                if (!$x->enableLegacyNamespace()) {
                     $class = substr($class, 5);
                 } else {
                     $class = "Src\\" . substr($class, 5);
                 }
             } else {
-                $class = "Concrete\\" . substr($class, 5);
+                if (!Config::get('app.enable_legacy_src_namespace')) {
+                    $class = "Concrete\\" . substr($class, 5);
+                } else {
+                    $class = "Src\\" . substr($class, 5);
+                }
             }
         }
 

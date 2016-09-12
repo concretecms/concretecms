@@ -78,7 +78,7 @@ class PackageService
             // get package objects from the file system
             foreach ($packages as $p) {
                 if (file_exists(DIR_PACKAGES . '/' . $p . '/' . FILENAME_CONTROLLER)) {
-                    $pkg = static::getClass($p);
+                    $pkg = $this->getClass($p);
                     if (!empty($pkg)) {
                         $packagesTemp[] = $pkg;
                     }
@@ -220,11 +220,11 @@ class PackageService
     }
 
     /**
-     * Returns a package's class. Must be run statically because we can't use the injected entity manager
+     * Returns a package's class.
      * @param string $pkgHandle Handle of package
      * @return Package
      */
-    public static function getClass($pkgHandle)
+    public function getClass($pkgHandle)
     {
         $app = \Core::make('app');
         $cache = $app->make('cache/request');
@@ -367,7 +367,7 @@ class PackageService
 
         if (count($packageEntites) > 0) {
             foreach ($packageEntites as $packageEntity) {
-                $p = static::getClass($packageEntity->getPackageHandle());
+                $p = $this->getClass($packageEntity->getPackageHandle());
                 $this->savePackageMetadataDriverToConfig($p);
             }
         }
