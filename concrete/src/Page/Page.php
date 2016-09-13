@@ -2694,7 +2694,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         // now we mark the page as a system page based on this path:
         $systemPages = ['/login', '/register', Config::get('concrete.paths.trash'), STACKS_PAGE_PATH, Config::get('concrete.paths.drafts'), '/members', '/members/*', '/account', '/account/*', Config::get('concrete.paths.trash').'/*', STACKS_PAGE_PATH.'/*', Config::get('concrete.paths.drafts').'/*', '/download_file', '/dashboard', '/dashboard/*', '/page_forbidden', '/page_not_found'];
         $th = Core::make('helper/text');
-        $cParentSiteTreeID = $db->GetOne('select siteTreeID from Pages where cID = ?', array($this->getCollectionParentID()));
+        $cParentSiteTreeID = intval($db->GetOne('select siteTreeID from Pages where cID = ?', array($this->getCollectionParentID())));
         $db->executeQuery('update Pages set siteTreeID = ? where cID = ?', [$cParentSiteTreeID, $cID]);
         foreach ($systemPages as $sp) {
             if ($th->fnmatch($sp, $newPath)) {
