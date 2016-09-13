@@ -46,6 +46,13 @@ class DefaultRunner implements RunInterface, ApplicationAwareInterface
              */
             $app->setupPackages();
 
+            /*
+             * Handle automatic updating. Must come after setupPackages() because some things setup autoloaders in on_start() of their package
+             * controller
+             */
+            $app->handleAutomaticUpdates();
+
+
             // This is a crappy place for this, but it has to come AFTER the packages because sometimes packages
             // want to replace legacy "tools" URLs with the new MVC, and the tools paths are so greedy they don't
             // work unless they come at the end.

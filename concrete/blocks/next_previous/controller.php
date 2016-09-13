@@ -97,7 +97,7 @@ class Controller extends BlockController
         $db = $app->make('database')->connection();
 
         $siteTreeID = \Core::make('site')->getSite()->getSiteTreeID();
-        $systemPages = '(and siteTreeID = ' . $siteTreeID;
+        $systemPages = 'and (siteTreeID = ' . $siteTreeID;
         if (!$this->excludeSystemPages) {
             $systemPages = 'or siteTreeID = 0';
         }
