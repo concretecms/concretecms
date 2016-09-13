@@ -111,7 +111,7 @@ class Stack extends Page implements ExportableInterface
             );
         }
 
-        return $cID ? static::getByID($cID, $cvID) : false;
+        return $cID ? static::getByID($cID, $cvID) : null;
     }
 
     /**
@@ -128,7 +128,7 @@ class Stack extends Page implements ExportableInterface
             return $c;
         }
 
-        return false;
+        return null;
     }
 
     /**
