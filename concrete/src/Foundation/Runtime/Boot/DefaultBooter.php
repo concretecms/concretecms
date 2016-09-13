@@ -191,11 +191,6 @@ class DefaultBooter implements BootInterface, ApplicationAwareInterface
              * ----------------------------------------------------------------------------
              */
             $this->setSystemLocale();
-
-            /*
-             * Handle automatic updating
-             */
-            $app->handleAutomaticUpdates();
         }
     }
 
