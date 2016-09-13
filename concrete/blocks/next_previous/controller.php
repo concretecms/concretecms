@@ -99,7 +99,7 @@ class Controller extends BlockController
         $siteTreeID = \Core::make('site')->getSite()->getSiteTreeID();
         $systemPages = 'and (siteTreeID = ' . $siteTreeID;
         if (!$this->excludeSystemPages) {
-            $systemPages = 'or siteTreeID = 0';
+            $systemPages .= ' or siteTreeID = 0';
         }
         $systemPages .= ')';
         $cID = 1;
