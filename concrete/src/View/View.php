@@ -71,7 +71,14 @@ class View extends AbstractView
         extract($args);
         extract($this->getScopeItems());
         $env = Environment::get();
-        include $env->getPath(DIRNAME_THEMES.'/'.$this->themeHandle.'/'.$file, $this->themePkgHandle);
+        $path = $env->getPath(DIRNAME_THEMES.'/'.$this->themeHandle.'/'.$file, $this->themePkgHandle);
+        if (!file_exists($path)) {
+            $path2 = $env->getPath(DIRNAME_THEMES.'/'.$this->themeHandle.'/'.$file, $this->viewPkgHandle);
+            if (file_exists($path2)) {
+                $path = $path2;
+            }
+        }
+        include $path;
     }
 
     /**
