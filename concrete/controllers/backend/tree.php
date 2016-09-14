@@ -11,9 +11,10 @@ class Tree extends UserInterface
     protected function getTree()
     {
         if (!isset($this->tree)) {
-            $treeID = \Loader::helper('security')->sanitizeInt($_REQUEST['treeID']);
+            $treeID = $this->app->make('helper/security')->sanitizeInt($this->request->request('treeID'));
             $this->tree = \Concrete\Core\Tree\Tree::getByID($treeID);
         }
+
         return $this->tree;
     }
 
@@ -22,15 +23,16 @@ class Tree extends UserInterface
         $tree = $this->getTree();
         $node = $tree->getRootTreeNodeObject();
         $np = new \Permissions($node);
+
         return $np->canViewTreeNode();
     }
 
     public function load()
     {
         $tree = $this->getTree();
-        if (is_array($_REQUEST['treeNodeSelectedIDs'])) {
-            $selectedIDs = array();
-            foreach ($_REQUEST['treeNodeSelectedIDs'] as $nID) {
+        if (is_array($this->request->request('treeNodeSelectedIDs'))) {
+            $selectedIDs = [];
+            foreach ($this->request->request('treeNodeSelectedIDs') as $nID) {
                 $node = Node::getByID($nID);
                 if (is_object($node) && $node->getTreeID() == $tree->getTreeID()) {
                     $selectedIDs[] = $node->getTreeNodeID();
@@ -39,8 +41,9 @@ class Tree extends UserInterface
             $tree->setSelectedTreeNodeIDs($selectedIDs);
         }
 
-        $tree->setRequest($_REQUEST);
+        $tree->setRequest($this->request->request());
         $result = $tree->getJSON();
+
         return new JsonResponse($result);
     }
 }
