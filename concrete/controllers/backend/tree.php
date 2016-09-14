@@ -34,7 +34,7 @@ class Tree extends UserInterface
             $selectedIDs = [];
             foreach ($this->request->request('treeNodeSelectedIDs') as $nID) {
                 $node = Node::getByID($nID);
-                if (is_object($node) && $node->getTreeID() == $tree->getTreeID()) {
+                if ($node !== null && $node->getTreeID() == $tree->getTreeID()) {
                     $selectedIDs[] = $node->getTreeNodeID();
                 }
             }
