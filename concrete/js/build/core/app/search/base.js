@@ -251,7 +251,8 @@
 
 	ConcreteAjaxSearch.prototype.updateResults = function(result) {
 		var cs = this,
-			options = cs.options;
+			options = cs.options,
+			touchTimer = null;
 
 		cs.result = result;
 
@@ -289,6 +290,17 @@
 			}).on('mouseup.concreteSearchResultItem', function(e) {
 				if (!e.metaKey && !e.ctrlKey && !e.shiftKey) {
 					cs.$element.find('.ccm-search-select-selected').not($(this)).removeClass();
+				}
+			}).on('touchstart.concreteSearchResultItem', function(e) {
+				var me = $(this);
+				touchTimer = setTimeout(function() {
+					cs.handleSelectClick(e, me);
+					touchTimer = null;
+				}, 1000);
+			}).on('touchend.concreteSearchResultItem', function(e) {
+				if (touchTimer) {
+					clearTimeout(touchTimer);
+					touchTimer = null;
 				}
 			});
 
