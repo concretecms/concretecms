@@ -80,7 +80,9 @@ class Design extends BackendUIPageController
             $templatesSelect[$pt->getPageTemplateID()] = $pt->getPageTemplateDisplayName();
         }
 
-        $typeList = Type::getList();
+        $tree = $c->getSiteTreeObject();
+        $type = $tree->getSiteType();
+        $typeList = Type::getList(false, $type);
         $typesSelect = array('0' => t('** None'));
         foreach ($typeList as $_pagetype) {
             $typesSelect[$_pagetype->getPageTypeID()] = $_pagetype->getPageTypeDisplayName();

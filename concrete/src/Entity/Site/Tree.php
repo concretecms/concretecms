@@ -1,13 +1,18 @@
 <?php
 namespace Concrete\Core\Entity\Site;
 
+use Concrete\Core\Site\Tree\TreeInterface;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="SiteTrees")
+ * @ORM\InheritanceType("JOINED")
+ * @ORM\DiscriminatorColumn(name="treeType", type="string")
+ * @ORM\Table(
+ *     name="SiteTrees"
+ * )
  */
-class Tree
+abstract class Tree implements TreeInterface
 {
 
     /**
@@ -44,8 +49,6 @@ class Tree
     {
         return $this->siteTreeID;
     }
-
-
 
 
 

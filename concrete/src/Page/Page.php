@@ -1126,6 +1126,12 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         return $this->siteTreeID;
     }
 
+    public function getSiteTreeObject()
+    {
+        $em = \ORM::entityManager();
+        return $em->find('\Concrete\Core\Entity\Site\Tree', $this->getSiteTreeID());
+    }
+
     /**
      * Returns the path for a page from its cID.
      *

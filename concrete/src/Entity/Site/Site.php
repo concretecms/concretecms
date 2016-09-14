@@ -83,7 +83,7 @@ class Site
 
     /**
      * @var Tree
-     * @ORM\OneToOne(targetEntity="Tree", cascade={"all"})
+     * @ORM\OneToOne(targetEntity="SiteTree", cascade={"all"})
      * @ORM\JoinColumn(name="siteTreeID", referencedColumnName="siteTreeID")
      **/
     protected $tree;
