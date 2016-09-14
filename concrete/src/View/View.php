@@ -68,8 +68,12 @@ class View extends AbstractView
 
     public function inc($file, $args = array())
     {
-        extract($args);
-        extract($this->getScopeItems());
+        $__data__ = [
+            'scopedItems' => $this->getScopeItems(),
+        ];
+        if ($args && is_array($args)) {
+            $__data__['scopedItems'] += $args;
+        }
         $env = Environment::get();
         $path = $env->getPath(DIRNAME_THEMES.'/'.$this->themeHandle.'/'.$file, $this->themePkgHandle);
         if (!file_exists($path)) {
@@ -77,8 +81,20 @@ class View extends AbstractView
             if (file_exists($path2)) {
                 $path = $path2;
             }
+            unset($path2);
         }
-        include $path;
+        $__data__['path'] = $path;
+        unset($file);
+        unset($args);
+        unset($env);
+        unset($path);
+        if (!empty($__data__['scopedItems'])) {
+            if (array_key_exists('__data__', $__data__['scopedItems'])) {
+                throw new \Exception(t(/*i18n: %1$s is a variable name, %2$s is a function name*/'Illegal variable name \'%1$s\' in %2$s args.', '__data__', __CLASS__.'::'.__METHOD__));
+            }
+            extract($__data__['scopedItems']);
+        }
+        include $__data__['path'];
     }
 
     /**
