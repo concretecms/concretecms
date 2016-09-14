@@ -228,20 +228,17 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
             }
         }
 
-        if ($collection->getCollectionPath() == '/page_not_found') {
-            $request->setCurrentPage($collection);
-            return $this->controller($collection->getController());
-        }
+        if ($collection->getCollectionPath() != '/page_not_found') {
+            if (!isset($collection->cPathFetchIsCanonical) || !$collection->cPathFetchIsCanonical) {
+                // Handle redirect URL (additional page paths)
+                /** @var Url $url */
+                $url = $this->app->make('url/manager')->resolve([$collection]);
+                $query = $url->getQuery();
+                $query->modify($request->getQueryString());
 
-        if (!isset($collection->cPathFetchIsCanonical) || !$collection->cPathFetchIsCanonical) {
-            // Handle redirect URL (additional page paths)
-            /** @var Url $url */
-            $url = $this->app->make('url/manager')->resolve([$collection]);
-            $query = $url->getQuery();
-            $query->modify($request->getQueryString());
-
-            $url = $url->setQuery($query);
-            return $this->redirect($url, Response::HTTP_MOVED_PERMANENTLY, $headers);
+                $url = $url->setQuery($query);
+                return $this->redirect($url, Response::HTTP_MOVED_PERMANENTLY, $headers);
+            }
         }
 
         // maintenance mode
