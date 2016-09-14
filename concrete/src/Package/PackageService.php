@@ -183,6 +183,9 @@ class PackageService
     {
         $this->localization->pushActiveContext('system');
         try {
+
+            $p->install($data);
+
             if (!empty($p->getPackageMetadataPaths())) {
                 $config = $this->entityManager->getConfiguration();
                 $driverChain = $config->getMetadataDriverImpl();
@@ -200,7 +203,6 @@ class PackageService
 
             $u = new \User();
             $swapper = new ContentSwapper();
-            $p->install($data);
             if ($u->isSuperUser() && $swapper->allowsFullContentSwap($p) && $data['pkgDoFullContentSwap']) {
                 $swapper->swapContent($p, $data);
             }
