@@ -90,10 +90,15 @@
   div.form-group {
 
     position: relative;
-    border-bottom: 1px solid #dcdcdc;
+    border-top: 1px solid #dcdcdc;
+    padding-top: 30px;
     padding-bottom: 30px;
     margin-bottom: 22px;
     font-size: 18px;
+
+    & + div.form-group {
+      border-color: #ededed;
+    }
 
     .help-block {
       display: none;
