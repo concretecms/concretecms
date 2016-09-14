@@ -5,7 +5,6 @@ use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Core\Tree\Type\Group as GroupTree;
 use Concrete\Core\Tree\Node\Type\Group as GroupTreeNode;
 use Group;
-use Loader;
 use GroupList;
 use Concrete\Core\Tree\Node\Node as TreeNode;
 
@@ -26,39 +25,45 @@ class Bulkupdate extends DashboardPageController
                 }
             }
         }
-
         $this->redirect('/dashboard/users/groups', 'bulk_update_complete');
     }
 
     public function move()
     {
         $this->search();
-        $gParentNodeID = Loader::helper('security')->sanitizeInt($_REQUEST['gParentNodeID']);
-        if ($gParentNodeID) {
-            $node = TreeNode::getByID($gParentNodeID);
-        }
-        if (!($node instanceof GroupTreeNode)) {
+        $gParentNodeID = $this->app->make('helper/security')->sanitizeInt($this->request('gParentNodeID'));
+        $gParentNode = $gParentNodeID ? TreeNode::getByID($gParentNodeID) : null;
+        if (!($gParentNode instanceof GroupTreeNode)) {
+            $gParentNode = null;
             $this->error->add(t("Invalid target parent group."));
         }
-        $selectedGroups = array();
-        if (is_array($_POST['gID'])) {
-            foreach ($_POST['gID'] as $gID) {
+        $selectedGroups = [];
+        if (is_array($this->post('gID'))) {
+            foreach ($this->post('gID') as $gID) {
                 $group = Group::getByID($gID);
-                if (is_object($group)) {
-                    $selectedGroups[] = $group;
+                if ($group !== null) {
+                    $groupNode = GroupTreeNode::getTreeNodeByGroupID($group->getGroupID());
+                    if ($groupNode !== null) {
+                        if ($gParentNode !== null) {
+                            $error = $groupNode->checkMove($gParentNode);
+                            if ($error !== null) {
+                                $this->error->add($error);
+                            }
+                        }
+                        $selectedGroups[] = $group;
+                    }
                 }
             }
         }
 
-        if (count($selectedGroups) == 0) {
+        if (empty($selectedGroups)) {
             $this->error->add(t("You must select at least one group to move"));
         }
-
         if (!$this->error->has()) {
-            $gParent = $node->getTreeNodeGroupObject();
+            $gParent = $gParentNode->getTreeNodeGroupObject();
             $this->set('selectedGroups', $selectedGroups);
             $this->set('gParent', $gParent);
-            $this->set('gParentNode', $node);
+            $this->set('gParentNode', $gParentNode);
         }
     }
 
@@ -67,12 +72,12 @@ class Bulkupdate extends DashboardPageController
         $this->requireAsset('core/groups');
         $tree = GroupTree::get();
         $this->set("tree", $tree);
-        $gName = Loader::helper('security')->sanitizeString($_REQUEST['gName']);
-        if (!$gName) {
+        $gName = (string) $this->app->make('helper/security')->sanitizeString($this->request('gName'));
+        if ($gName === '') {
             $this->error->add(t('You must specify a search string.'));
         }
         if (!$this->error->has()) {
-            $gl = new GroupList();
+            $gl = $this->app->make(GroupList::class);
             $gl->filterByKeywords($gName);
             $this->set('groups', $gl->getResults());
         }
