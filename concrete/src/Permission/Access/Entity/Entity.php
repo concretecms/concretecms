@@ -36,7 +36,7 @@ abstract class Entity extends Object
     }
 
     abstract public function getAccessEntityUsers(PermissionAccess $pa);
-
+    abstract public static function getOrCreate($mixed = null);
     abstract public function getAccessEntityTypeLinkHTML();
 
     /**
@@ -78,6 +78,11 @@ abstract class Entity extends Object
         CacheLocal::set('permission_access_entity', $peID, $obj);
 
         return $obj;
+    }
+
+    public static function getByHandle($handle)
+    {
+        return static::getOrCreate();
     }
 
     public static function getForUser($user)

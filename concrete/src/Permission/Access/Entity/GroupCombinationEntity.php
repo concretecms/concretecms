@@ -52,7 +52,7 @@ class GroupCombinationEntity extends Entity
         return $entities;
     }
 
-    public static function getOrCreate($groups)
+    public static function getOrCreate($groups = null)
     {
         $db = Loader::db();
         $petID = $db->GetOne('select petID from PermissionAccessEntityTypes where petHandle = \'group_combination\'');
