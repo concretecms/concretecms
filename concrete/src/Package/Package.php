@@ -2,6 +2,7 @@
 namespace Concrete\Core\Package;
 
 use Concrete\Core\Application\Application;
+use Concrete\Core\Backup\ContentImporter;
 use Concrete\Core\Config\Repository\Liaison;
 use Concrete\Core\Database\DatabaseStructureManager;
 use Concrete\Core\Database\EntityManagerFactory;
@@ -110,6 +111,12 @@ abstract class Package implements LocalizablePackageInterface
     public function __construct(Application $app)
     {
         $this->app = $app;
+    }
+
+    public function installContentFile($file)
+    {
+        $ci = new ContentImporter();
+        $ci->importContentFile($this->getPackagePath() . DIRECTORY_SEPARATOR . $file);
     }
 
     /**
