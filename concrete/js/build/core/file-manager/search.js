@@ -39,119 +39,127 @@
             $undroppables = my.$element.find('tr[data-file-manager-tree-node-type!=file_folder]');
 
 
-        my.$element.find('tr[data-file-manager-tree-node-type]').each(function() {
-            var $this = $(this), dragClass;
-            switch($(this).attr('data-file-manager-tree-node-type')) {
-                case 'file_folder':
-                    dragClass = 'ccm-search-results-folder';
-                    break;
-                case 'file':
-                    dragClass = 'ccm-search-results-file';
-                    break;
-            }
+        // Mobile check, copied from magnific popup
+        var appVersion = navigator.appVersion,
+            isAndroid = (/android/gi).test(appVersion),
+            isIOS = (/iphone|ipad|ipod/gi).test(appVersion),
+            probablyMobile = (isAndroid || isIOS || /(Opera Mini)|Kindle|webOS|BlackBerry|(Opera Mobi)|(Windows Phone)|IEMobile/i.test(navigator.userAgent) );
+
+        if (!probablyMobile) {
+            my.$element.find('tr[data-file-manager-tree-node-type]').each(function() {
+                var $this = $(this), dragClass;
+                switch($(this).attr('data-file-manager-tree-node-type')) {
+                    case 'file_folder':
+                        dragClass = 'ccm-search-results-folder';
+                        break;
+                    case 'file':
+                        dragClass = 'ccm-search-results-file';
+                        break;
+                }
 
 
-            if (dragClass) {
+                if (dragClass) {
 
-                $this.draggable({
-                    delay: 300,
-                    start: function(e) {
-                        my.interactionIsDragging = true;
-                        $('html').addClass('ccm-search-results-dragging');
-                        $undroppables.css('opacity', '0.4');
-                        if (e.altKey) {
-                            my.$element.addClass('ccm-search-results-copy');
-                        }
-                        my.$element.find('.ccm-search-select-hover').removeClass('ccm-search-select-hover');
-                        $(window).on('keydown.concreteSearchResultsCopy', function(e) {
-                            if (e.keyCode == 18) {
+                    $this.draggable({
+                        delay: 300,
+                        start: function(e) {
+                            my.interactionIsDragging = true;
+                            $('html').addClass('ccm-search-results-dragging');
+                            $undroppables.css('opacity', '0.4');
+                            if (e.altKey) {
                                 my.$element.addClass('ccm-search-results-copy');
-                            } else {
-                                my.$element.removeClass('ccm-search-results-copy');
                             }
-                        });
-                        $(window).on('keyup.concreteSearchResultsCopy', function(e) {
-                            if (e.keyCode == 18) {
-                                my.$element.removeClass('ccm-search-results-copy');
+                            my.$element.find('.ccm-search-select-hover').removeClass('ccm-search-select-hover');
+                            $(window).on('keydown.concreteSearchResultsCopy', function(e) {
+                                if (e.keyCode == 18) {
+                                    my.$element.addClass('ccm-search-results-copy');
+                                } else {
+                                    my.$element.removeClass('ccm-search-results-copy');
+                                }
+                            });
+                            $(window).on('keyup.concreteSearchResultsCopy', function(e) {
+                                if (e.keyCode == 18) {
+                                    my.$element.removeClass('ccm-search-results-copy');
+                                }
+                            });
+                        },
+                        stop: function() {
+                            $('html').removeClass('ccm-search-results-dragging');
+                            $(window).unbind('.concreteSearchResultsCopy');
+                            $undroppables.css('opacity', '');
+                            my.$element.removeClass('ccm-search-results-copy');
+                            //$('.ccm-search-result-dragging').removeClass('ccm-search-result-dragging');
+                            my.interactionIsDragging = false;
+                        },
+                        revert: 'invalid',
+                        helper: function() {
+                            var $selected = my.$element.find('.ccm-search-select-selected');
+                            return $('<div class="' + dragClass + ' ccm-draggable-search-item"><span>' + $selected.length + '</span></div>').data('$selected', $selected);
+                        },
+                        cursorAt: {
+                            left: -20,
+                            top: 5
+                        }
+                    });
+
+                }
+            });
+
+            my.$element.find('tr[data-file-manager-tree-node-type=file_folder], ol[data-search-navigation=breadcrumb] a[data-file-manager-tree-node]').droppable({
+                hoverClass: 'ccm-search-select-active-droppable',
+                drop: function (event, ui) {
+
+                    var $sourceItems = ui.helper.data('$selected'),
+                        sourceIDs = [],
+                        destinationID = $(this).data('file-manager-tree-node'),
+                        copyNodes = event.altKey;
+
+                    $sourceItems.each(function () {
+                        var $sourceItem = $(this);
+                        var sourceID = $sourceItem.data('file-manager-tree-node');
+                        if (sourceID == destinationID) {
+                            $sourceItems = $sourceItems.not(this);
+                        } else {
+                            sourceIDs.push($(this).data('file-manager-tree-node'));
+                        }
+                    });
+                    if (sourceIDs.length === 0) {
+                        return;
+                    }
+                    if (!copyNodes) {
+                        $sourceItems.hide();
+                    }
+                    new ConcreteAjaxRequest({
+                        url: CCM_DISPATCHER_FILENAME + '/ccm/system/tree/node/drag_request',
+                        data: {
+                            ccm_token: my.options.upload_token,
+                            copyNodes: copyNodes ? '1' : 0,
+                            sourceTreeNodeIDs: sourceIDs,
+                            treeNodeParentID: destinationID
+                        },
+                        success: function (r) {
+                            if (!copyNodes) {
+                                $sourceItems.remove();
                             }
-                        });
-                    },
-                    stop: function() {
-                        $('html').removeClass('ccm-search-results-dragging');
-                        $(window).unbind('.concreteSearchResultsCopy');
-                        $undroppables.css('opacity', '');
-                        my.$element.removeClass('ccm-search-results-copy');
-                        //$('.ccm-search-result-dragging').removeClass('ccm-search-result-dragging');
-                        my.interactionIsDragging = false;
-                    },
-                    revert: 'invalid',
-                    helper: function() {
-                        var $selected = my.$element.find('.ccm-search-select-selected');
-                        return $('<div class="' + dragClass + ' ccm-draggable-search-item"><span>' + $selected.length + '</span></div>').data('$selected', $selected);
-                    },
-                    cursorAt: {
-                        left: -20,
-                        top: 5
-                    }
-                });
-
-            }
-        });
-
-        my.$element.find('tr[data-file-manager-tree-node-type=file_folder], ol[data-search-navigation=breadcrumb] a[data-file-manager-tree-node]').droppable({
-            hoverClass: 'ccm-search-select-active-droppable',
-            drop: function(event, ui) {
-
-                var $sourceItems = ui.helper.data('$selected'),
-                    sourceIDs = [],
-                    destinationID = $(this).data('file-manager-tree-node'),
-                    copyNodes = event.altKey;
-
-                $sourceItems.each(function() {
-                    var $sourceItem = $(this);
-                    var sourceID = $sourceItem.data('file-manager-tree-node');
-                    if (sourceID == destinationID) {
-                        $sourceItems = $sourceItems.not(this);
-                    } else {
-                        sourceIDs.push($(this).data('file-manager-tree-node'));
-                    }
-                });
-                if (sourceIDs.length === 0) {
-                    return;
-                }
-                if (!copyNodes) {
-                    $sourceItems.hide();
-                }
-                new ConcreteAjaxRequest({
-                    url: CCM_DISPATCHER_FILENAME + '/ccm/system/tree/node/drag_request',
-                    data: {
-                        ccm_token: my.options.upload_token,
-                        copyNodes: copyNodes ? '1' : 0,
-                        sourceTreeNodeIDs: sourceIDs,
-                        treeNodeParentID: destinationID
-                    },
-                    success: function(r) {
-                        if (!copyNodes) {
-                            $sourceItems.remove();
+                            ConcreteAlert.notify({
+                                'message': r.message,
+                                'title': r.title
+                            });
+                        },
+                        error: function (xhr) {
+                            $sourceItems.show();
+                            var msg = xhr.responseText;
+                            if (xhr.responseJSON && xhr.responseJSON.errors) {
+                                msg = xhr.responseJSON.errors.join("<br/>");
+                            }
+                            ConcreteAlert.dialog(ccmi18n.error, msg);
                         }
-                        ConcreteAlert.notify({
-                            'message': r.message,
-                            'title': r.title
-                        });
-                    },
-                    error: function(xhr) {
-                        $sourceItems.show();
-                        var msg = xhr.responseText;
-                        if (xhr.responseJSON && xhr.responseJSON.errors) {
-                            msg = xhr.responseJSON.errors.join("<br/>");
-                        }
-                        ConcreteAlert.dialog(ccmi18n.error, msg);
-                    }
-                });
-            }
+                    });
+                }
 
 
-        });
+            });
+        }
     }
 
     ConcreteFileManager.prototype.setupBreadcrumb = function(result) {
