@@ -16,7 +16,6 @@ class SiteTree extends Tree
 {
 
     /**
-     * @var Tree
      * @ORM\OneToOne(targetEntity="Site", inversedBy="tree")
      * @ORM\JoinColumn(name="siteID", referencedColumnName="siteID")
      **/
