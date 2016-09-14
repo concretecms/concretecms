@@ -8,10 +8,11 @@
 	<?=$this->controller->token->output('update_sitename')?>
 
 	<fieldset>
-	<div class="form-group">
-		<label for="SITE" class="launch-tooltip control-label" data-placement="right" title="<?=t('By default, site name is displayed in the browser title bar. It is also the default name for your project on concrete5.org')?>"><?=t('Site Name')?></label>
-		<?=$form->text('SITE', $site->getSiteName(), array('class' => 'span4'))?>
-	</div>
+		<legend><?= t('Core Properties') ?></legend>
+		<div class="form-group">
+			<label for="SITE" class="launch-tooltip control-label" data-placement="right" title="<?=t('By default, site name is displayed in the browser title bar. It is also the default name for your project on concrete5.org')?>"><?=t('Site Name')?></label>
+			<?=$form->text('SITE', $site->getSiteName(), array('class' => 'span4'))?>
+		</div>
 	</fieldset>
 
 	<fieldset>
