@@ -11,8 +11,8 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 class Controller extends BlockController
 {
-    protected $btInterfaceWidth = "500";
-    protected $btInterfaceHeight = "150";
+    protected $btInterfaceWidth = 500;
+    protected $btInterfaceHeight = 150;
     protected $btTable = 'btSwitchLanguage';
 
     public $helpers = array('form');
@@ -82,14 +82,14 @@ class Controller extends BlockController
             $locale = $al->getLanguage();
         }
         foreach ($ml as $m) {
-            $languages[$m->getCollectionID()] = $m->getLanguageText($locale);
+            $languages[$m->getCollectionID()] = $m->getLanguageText($m->getLocale());
         }
         $this->set('languages', $languages);
         $this->set('languageSections', $ml);
         if (is_object($al)) {
             $this->set('activeLanguage', $al->getCollectionID());
         }
-        $dl = \Core::make('multilingual/detector');
+        $dl = $this->app->make('multilingual/detector');
         $this->set('defaultLocale', $dl->getPreferredSection());
         $this->set('locale', $locale);
         $this->set('cID', $c->getCollectionID());
