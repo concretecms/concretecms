@@ -4,7 +4,6 @@ namespace Concrete\Controller\SinglePage\Dashboard\Users;
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Core\Tree\Type\Group as GroupTree;
 use Concrete\Core\Tree\Node\Type\Group as GroupTreeNode;
-use Loader;
 use Concrete\Core\Tree\Node\Node as TreeNode;
 use Group as ConcreteGroup;
 
@@ -12,14 +11,14 @@ class AddGroup extends DashboardPageController
 {
     public function checkExpirationOptions($g)
     {
-        if ($_POST['gUserExpirationIsEnabled']) {
-            $date = Loader::helper('form/date_time');
-            switch ($_POST['gUserExpirationMethod']) {
+        if ($this->request->post('gUserExpirationIsEnabled')) {
+            $date = $this->app->make('helper/form/date_time');
+            switch ($this->request->post('gUserExpirationMethod')) {
                 case 'SET_TIME':
-                    $g->setGroupExpirationByDateTime($date->translate('gUserExpirationSetDateTime'), $_POST['gUserExpirationAction']);
+                    $g->setGroupExpirationByDateTime($date->translate('gUserExpirationSetDateTime'), $this->request->post('gUserExpirationAction'));
                     break;
                 case 'INTERVAL':
-                    $g->setGroupExpirationByInterval($_POST['gUserExpirationIntervalDays'], $_POST['gUserExpirationIntervalHours'], $_POST['gUserExpirationIntervalMinutes'], $_POST['gUserExpirationAction']);
+                    $g->setGroupExpirationByInterval($this->request->post('gUserExpirationIntervalDays'), $this->request->post('gUserExpirationIntervalHours'), $this->request->post('gUserExpirationIntervalMinutes'), $this->request->post('gUserExpirationAction'));
                     break;
             }
         } else {
@@ -29,7 +28,7 @@ class AddGroup extends DashboardPageController
 
     public function checkBadgeOptions($g)
     {
-        if ($_POST['gIsBadge']) {
+        if ($this->request->post('gIsBadge')) {
             $g->setBadgeOptions($this->post('gBadgeFID'), $this->post('gBadgeDescription'), $this->post('gBadgeCommunityPointValue'));
         } else {
             $g->clearBadgeOptions();
@@ -38,7 +37,7 @@ class AddGroup extends DashboardPageController
 
     public function checkAutomationOptions($g)
     {
-        if ($_POST['gIsAutomated']) {
+        if ($this->request->post('gIsAutomated')) {
             $g->setAutomationOptions($this->post('gCheckAutomationOnRegister'), $this->post('gCheckAutomationOnLogin'), $this->post('gCheckAutomationOnJobRun'));
         } else {
             $g->clearAutomationOptions();
@@ -54,10 +53,10 @@ class AddGroup extends DashboardPageController
 
     public function do_add()
     {
-        $txt = Loader::helper('text');
-        $valt = Loader::helper('validation/token');
-        $gName = $txt->sanitize($_POST['gName']);
-        $gDescription = $_POST['gDescription'];
+        $txt = $this->app->make('helper/text');
+        $valt = $this->app->make('helper/validation/token');
+        $gName = $txt->sanitize($this->request->post('gName'));
+        $gDescription = $this->request->post('gDescription');
 
         if (!$gName) {
             $this->error->add(t("Name required."));
@@ -67,15 +66,16 @@ class AddGroup extends DashboardPageController
             $this->error->add($valt->getErrorMessage());
         }
 
-        if ($_POST['gIsBadge']) {
+        if ($this->request->post('gIsBadge')) {
             if (!$this->post('gBadgeDescription')) {
                 $this->error->add(t('You must specify a description for this badge. It will be displayed publicly.'));
             }
         }
 
-        if (isset($_POST['gParentNodeID'])) {
-            $parentGroupNode = TreeNode::getByID($_POST['gParentNodeID']);
-            if (is_object($parentGroupNode) && $parentGroupNode instanceof GroupTreeNode) {
+        $parentGroup = null;
+        if ($this->request->post('gParentNodeID')) {
+            $parentGroupNode = TreeNode::getByID($this->request->post('gParentNodeID'));
+            if ($parentGroupNode instanceof GroupTreeNode) {
                 $parentGroup = $parentGroupNode->getTreeNodeGroupObject();
             }
         }
@@ -88,7 +88,7 @@ class AddGroup extends DashboardPageController
         }
 
         if (!$this->error->has()) {
-            $g = ConcreteGroup::add($gName, $_POST['gDescription'], $parentGroup);
+            $g = ConcreteGroup::add($gName, $this->request->post('gDescription'), $parentGroup);
             $this->checkExpirationOptions($g);
             $this->checkBadgeOptions($g);
             $this->checkAutomationOptions($g);
