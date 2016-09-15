@@ -144,7 +144,7 @@ class Composer extends BackendInterfacePageController
                 /// set the target
                 $configuredTarget = $pagetype->getPageTypePublishTargetObject();
                 $targetPageID = (int) $configuredTarget->getPageTypePublishTargetConfiguredTargetParentPageID();
-                if (!$targetPageID === 0) {
+                if ($targetPageID === 0) {
                     $targetPageID = (int) $this->request->post('cParentID');
                     if ($targetPageID === 0) {
                         $targetPageID = $c->getPageDraftTargetParentPageID();
