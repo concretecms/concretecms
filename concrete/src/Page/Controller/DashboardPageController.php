@@ -2,6 +2,7 @@
 namespace Concrete\Core\Page\Controller;
 
 use Concrete\Core\Validation\CSRF\Token;
+use Doctrine\ORM\EntityManager;
 use Loader;
 
 class DashboardPageController extends PageController
@@ -12,6 +13,9 @@ class DashboardPageController extends PageController
     public $token;
     protected $helpers = array('form');
 
+    /**
+     * @var EntityManager
+     */
     protected $entityManager;
 
     public function enableNativeMobile()

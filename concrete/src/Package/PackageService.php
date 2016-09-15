@@ -2,6 +2,7 @@
 namespace Concrete\Core\Package;
 
 use Concrete\Core\Application\Application;
+use Concrete\Core\Foundation\ClassLoader;
 use Concrete\Core\Localization\Localization;
 use Concrete\Core\Package\ItemCategory\ItemInterface;
 use Concrete\Core\Package\ItemCategory\Manager;
@@ -184,7 +185,7 @@ class PackageService
         $this->localization->pushActiveContext('system');
         try {
 
-            $p->install($data);
+            ClassLoader::getInstance()->registerPackage($p);
 
             if (!empty($p->getPackageMetadataPaths())) {
                 $config = $this->entityManager->getConfiguration();
@@ -200,6 +201,8 @@ class PackageService
                 $cache = $config->getMetadataCacheImpl();
                 $cache->flushAll();
             }
+
+            $p->install($data);
 
             $u = new \User();
             $swapper = new ContentSwapper();
