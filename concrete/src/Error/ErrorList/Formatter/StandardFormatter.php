@@ -19,9 +19,9 @@ class StandardFormatter extends AbstractFormatter
         return $html;
     }
 
-    public function output()
+    public function render()
     {
-        echo $this->getString();
+        return $this->getString();
     }
 
 

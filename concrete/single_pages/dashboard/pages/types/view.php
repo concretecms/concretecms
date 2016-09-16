@@ -66,6 +66,12 @@
                                 <label class="control-label"><?=t('Handle')?></label>
                                 <input type="text" name="ptHandle" class="form-control">
                             </div>
+							<?php if (count($siteTypes)) { ?>
+								<div class="form-group">
+									<label class="control-label"><?=t('Site Type')?></label>
+									<?=$form->select('siteType', $siteTypes)?>
+								</div>
+							<?php } ?>
                             <?=Loader::helper('validation/token')->output('duplicate_page_type')?>
                         </form>
                         <div class="dialog-buttons">
@@ -152,7 +158,7 @@
                 modal: true,
                 width: 320,
                 title: '<?=t("Copy Page Type")?>',
-                height: 280
+                height: 360
             });
         });
     });

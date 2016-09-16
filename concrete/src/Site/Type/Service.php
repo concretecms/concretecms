@@ -31,6 +31,12 @@ class Service
             ->findOneBy(array('siteTypeID' => $typeID));
     }
 
+    public function getByHandle($typeHandle)
+    {
+        return $this->entityManager->getRepository('Concrete\Core\Entity\Site\Type')
+            ->findOneBy(array('siteTypeHandle' => $typeHandle));
+    }
+
     public function getList()
     {
         return $this->entityManager->getRepository('Concrete\Core\Entity\Site\Type')

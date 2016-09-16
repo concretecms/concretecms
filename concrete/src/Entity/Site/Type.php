@@ -100,7 +100,6 @@ class Type
     public function __construct()
     {
         $this->sites = new ArrayCollection();
-        $this->tree = new Tree();
     }
 
     /**

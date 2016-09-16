@@ -562,8 +562,12 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
         return $count;
     }
 
-    public function duplicate($ptHandle, $ptName)
+    public function duplicate($ptHandle, $ptName, $siteType = null)
     {
+        if (!is_object($siteType)) {
+            $siteType = $this->getSiteTypeObject();
+        }
+
         $data = array(
             'handle' => $ptHandle,
             'name' => $ptName,
@@ -572,7 +576,7 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
             'templates' => $this->getPageTypeSelectedPageTemplateObjects(),
             'ptLaunchInComposer' => $this->doesPageTypeLaunchInComposer(),
             'ptIsFrequentlyAdded' => $this->isPageTypeFrequentlyAdded(),
-            'siteType' => $this->getSiteTypeObject()
+            'siteType' => $siteType
         );
 
         $new = static::add($data);

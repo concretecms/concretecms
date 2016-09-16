@@ -64,6 +64,11 @@ class Manager extends CoreManager
         return new GroupSet();
     }
 
+    public function createGroupDriver()
+    {
+        return new Group();
+    }
+
     public function createUserPointActionDriver()
     {
         return new UserPointAction();

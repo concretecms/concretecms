@@ -2,6 +2,8 @@
 namespace Concrete\Core\Package;
 
 use Concrete\Core\Application\Application;
+use Concrete\Core\Error\ErrorList\ErrorList;
+use Concrete\Core\Foundation\ClassLoader;
 use Concrete\Core\Localization\Localization;
 use Concrete\Core\Package\ItemCategory\ItemInterface;
 use Concrete\Core\Package\ItemCategory\Manager;
@@ -183,6 +185,9 @@ class PackageService
     {
         $this->localization->pushActiveContext('system');
         try {
+
+            ClassLoader::getInstance()->registerPackage($p);
+
             if (!empty($p->getPackageMetadataPaths())) {
                 $config = $this->entityManager->getConfiguration();
                 $driverChain = $config->getMetadataDriverImpl();
@@ -198,9 +203,13 @@ class PackageService
                 $cache->flushAll();
             }
 
+            $response = $p->install($data);
+            if ($response instanceof ErrorList) {
+                return $response;
+            }
+
             $u = new \User();
             $swapper = new ContentSwapper();
-            $p->install($data);
             if ($u->isSuperUser() && $swapper->allowsFullContentSwap($p) && $data['pkgDoFullContentSwap']) {
                 $swapper->swapContent($p, $data);
             }

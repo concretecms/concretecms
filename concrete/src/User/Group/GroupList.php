@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\User\Group;
 
+use Concrete\Core\Entity\Package;
 use Concrete\Core\Search\ItemList\Database\ItemList as DatabaseItemList;
 use Concrete\Core\Search\Pagination\Pagination;
 use Loader;
@@ -34,6 +35,12 @@ class GroupList extends DatabaseItemList
         $expr = $this->query->expr();
         $this->query->andWhere(call_user_func_array([$expr, 'orX'], $expressions));
         $this->query->setParameter('keywords', '%' . $keywords . '%');
+    }
+
+    public function filterByPackage(Package $package)
+    {
+        $this->query->andWhere('pkgID', ':pkgID');
+        $this->query->setParameter('pkgID', $package->getPackageID());
     }
 
     public function filterByExpirable()

@@ -61,6 +61,12 @@ class Types extends DashboardPageController
         $pagetypes = PageType::getList(false, $siteType);
         $this->set('headerMenu', new Header($siteType));
         $this->set('pagetypes', $pagetypes);
+
+        $siteTypes = array();
+        foreach(\Core::make('site/type')->getList() as $siteType) {
+            $siteTypes[$siteType->getSiteTypeID()] = $siteType->getSiteTypeName();
+        }
+        $this->set('siteTypes', $siteTypes);
     }
 
     public function delete($ptID = false)
@@ -110,8 +116,12 @@ class Types extends DashboardPageController
         if (!$vs->handle($handle)) {
             $this->error->add(t('You must specify a valid handle for your page type.'));
         }
+        $siteType = null;
+        if ($this->request->request->has('siteType')) {
+            $siteType = $this->app->make('site/type')->getByID($this->request->request->get('siteType'));
+        }
         if (!$this->error->has()) {
-            $pagetype->duplicate($handle, $name);
+            $pagetype->duplicate($handle, $name, $siteType);
             $this->redirect('/dashboard/pages/types', 'page_type_duplicated', $pagetype->getSiteTypeID());
         }
         $this->view();
