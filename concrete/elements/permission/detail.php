@@ -120,8 +120,11 @@ Loader::element('permission/access/list', array('pkCategoryHandle' => $pkCategor
 
 <script type="text/javascript">
 
-$(function() {
-	
+	var ccm_permissionObjectID = '<?=$permissionKey->getPermissionObject()->getPermissionObjectIdentifier()?>';
+	var ccm_permissionObjectKeyCategoryHandle = '<?=$permissionKey->getPermissionObject()->getPermissionObjectKeyCategoryHandle()?>';
+
+	$(function() {
+
 	ccm_addAccessEntity = function(peID, pdID, accessType) {
 		jQuery.fn.dialog.closeTop();
 		jQuery.fn.dialog.showLoader();
