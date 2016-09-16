@@ -18,8 +18,8 @@ if (isset($error) && $error != '') {
 	<div class="ccm-system-errors alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert">×</button>
 	<?php foreach ($_error as $e) {
     ?>
-		<?php echo $e?><br/>
-	<?php 
+		<div><?php echo $e?></div>
+	<?php
 }
     ?>
 	</div>
