@@ -8,8 +8,6 @@ use Concrete\Core\Multilingual\Page\Section\Section;
 use Concrete\Core\Page\Type\Composer\Control\BlockControl;
 use Concrete\Core\Page\Type\Composer\FormLayoutSetControl;
 use Concrete\Core\Page\Type\Type;
-use Concrete\Core\Permission\AssignableObjectInterface;
-use Concrete\Core\Permission\Key\Key;
 use Concrete\Core\Support\Facade\Route;
 use Concrete\Core\Permission\Access\Entity\PageOwnerEntity;
 use Database;
@@ -48,7 +46,7 @@ use Session;
  * The page object in Concrete encapsulates all the functionality used by a typical page and their contents
  * including blocks, page metadata, page permissions.
  */
-class Page extends Collection implements \Concrete\Core\Permission\ObjectInterface, AssignableObjectInterface
+class Page extends Collection implements \Concrete\Core\Permission\ObjectInterface
 {
     protected $controller;
     protected $blocksAliasedFromMasterCollection = null;
@@ -478,7 +476,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         return $this->getCollectionFilename() && !$this->getPageTemplateID();
     }
 
-    public function assignPermissions($userOrGroup, $permissions = [], $accessType = Key::ACCESS_TYPE_INCLUDE)
+    public function assignPermissions($userOrGroup, $permissions = [], $accessType = PagePermissionKey::ACCESS_TYPE_INCLUDE)
     {
         if ($this->cInheritPermissionsFrom != 'OVERRIDE') {
             $this->setPermissionsToManualOverride();
@@ -2843,7 +2841,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         }
         $siteTreeID = $siteTree->getSiteTreeID();
 
-        $v = [$cID, $siteTreeID, $cParentID, $uID, 'OVERRIDE', 1, $cID, 0];
+        $v = [$cID, $siteTreeID, $cParentID, $uID, 'OVERRIDE', 1, 1, 0];
         $q = 'insert into Pages (cID, siteTreeID, cParentID, uID, cInheritPermissionsFrom, cOverrideTemplatePermissions, cInheritPermissionsFromCID, cDisplayOrder) values (?, ?, ?, ?, ?, ?, ?, ?)';
         $r = $db->prepare($q);
         $r->execute($v);

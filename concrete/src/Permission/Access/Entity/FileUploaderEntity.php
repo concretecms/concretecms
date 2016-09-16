@@ -58,7 +58,7 @@ class FileUploaderEntity extends Entity
         return $entities;
     }
 
-    public static function getOrCreate($mixed = null)
+    public static function getOrCreate()
     {
         $db = Loader::db();
         $petID = $db->GetOne('select petID from PermissionAccessEntityTypes where petHandle = \'file_uploader\'');

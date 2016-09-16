@@ -72,7 +72,7 @@ class PageOwnerEntity extends Entity
         return $entities;
     }
 
-    public static function getOrCreate($mixed = null)
+    public static function getOrCreate()
     {
         $db = Database::connection();
         $petID = $db->fetchColumn('select petID from PermissionAccessEntityTypes where petHandle = \'page_owner\'');
