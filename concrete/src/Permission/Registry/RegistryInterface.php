@@ -1,6 +1,8 @@
 <?php
 namespace Concrete\Core\Permission\Registry;
 
+use Concrete\Core\Permission\Registry\Entry\EntryInterface;
+
 interface RegistryInterface
 {
 
