@@ -9,6 +9,7 @@ class Control extends ElementController
 
     public function __construct(\Concrete\Core\Entity\Express\Control\Control $control)
     {
+        parent::__construct();
         $this->control = $control;
     }
 
