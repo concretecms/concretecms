@@ -121,7 +121,7 @@ $large_font = (bool) Config::get('concrete.accessibility.toolbar_large_font');
         </li>
         <li class="ccm-toolbar-search pull-right hidden-xs hidden-sm">
             <i class="fa fa-search"></i>
-            <input type="search" id="ccm-nav-intelligent-search" tabindex="1" />
+            <input type="search" autocomplete="off" id="ccm-nav-intelligent-search" tabindex="1" />
         </li>
         <li class="pull-right ccm-toolbar-mobile-menu-button visible-xs visible-sm hidden-md hidden-lg">
             <i class="fa fa-bars"></i>
