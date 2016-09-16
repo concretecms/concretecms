@@ -7,6 +7,6 @@ interface FormatterInterface
 {
 
     function __construct(ErrorList $error);
-    function output();
+    function render();
 
 }

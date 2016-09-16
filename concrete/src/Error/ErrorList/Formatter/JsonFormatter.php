@@ -6,9 +6,9 @@ use Concrete\Core\Error\ErrorList\ErrorList;
 class JsonFormatter extends AbstractFormatter
 {
 
-    public function output()
+    public function render()
     {
-       echo json_encode($this->asArray());
+       return json_encode($this->asArray());
     }
 
     public function asArray()

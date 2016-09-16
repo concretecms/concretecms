@@ -148,7 +148,7 @@ class ErrorList implements \ArrayAccess, \JsonSerializable
     public function output()
     {
         $formatter = new StandardFormatter($this);
-        echo $formatter->output();
+        echo $formatter->render();
     }
 
     /**
@@ -157,7 +157,13 @@ class ErrorList implements \ArrayAccess, \JsonSerializable
     public function outputJSON()
     {
         $formatter = new JsonFormatter($this);
-        echo $formatter->output();
+        echo $formatter->render();
+    }
+
+    public function __toString()
+    {
+        $formatter = new StandardFormatter($this);
+        return (string) $formatter->render();
     }
 
     public function jsonSerialize()

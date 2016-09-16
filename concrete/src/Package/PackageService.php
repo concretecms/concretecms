@@ -2,6 +2,7 @@
 namespace Concrete\Core\Package;
 
 use Concrete\Core\Application\Application;
+use Concrete\Core\Error\ErrorList\ErrorList;
 use Concrete\Core\Foundation\ClassLoader;
 use Concrete\Core\Localization\Localization;
 use Concrete\Core\Package\ItemCategory\ItemInterface;
@@ -202,7 +203,10 @@ class PackageService
                 $cache->flushAll();
             }
 
-            $p->install($data);
+            $response = $p->install($data);
+            if ($response instanceof ErrorList) {
+                return $response;
+            }
 
             $u = new \User();
             $swapper = new ContentSwapper();
