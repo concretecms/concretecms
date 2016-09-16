@@ -1,5 +1,5 @@
 <?php
-namespace Concrete\Core\Permission\Registry;
+namespace Concrete\Core\Permission\Registry\Entry;
 
 use Concrete\Core\Permission\Access\Entity\Entity;
 

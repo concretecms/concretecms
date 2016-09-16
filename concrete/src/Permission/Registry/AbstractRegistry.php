@@ -1,7 +1,9 @@
 <?php
 namespace Concrete\Core\Permission\Registry;
 
-abstract class AbstractRegistry
+use Concrete\Core\Permission\Registry\Entry\EntryInterface;
+
+abstract class AbstractRegistry implements RegistryInterface
 {
 
     protected $entries = [];
