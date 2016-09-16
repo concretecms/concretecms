@@ -32,11 +32,7 @@ class UserEntity extends Entity
         return $entities;
     }
 
-    /**
-     * @param UserInfo $ui
-     * @return UserEntity
-     */
-    public static function getOrCreate($ui = null)
+    public static function getOrCreate(UserInfo $ui)
     {
         $db = Loader::db();
         $petID = $db->GetOne('SELECT petID FROM PermissionAccessEntityTypes WHERE petHandle = \'user\'');

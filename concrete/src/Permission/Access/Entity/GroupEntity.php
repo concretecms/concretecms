@@ -39,18 +39,12 @@ class GroupEntity extends Entity
         return static::getOrCreate($g);
     }
 
-    public static function getByHandle($handle)
-    {
-        $group = Group::getByName((string) $handle);
-        return self::getOrCreate($group);
-    }
-
     public static function getAccessEntitiesForUser($user)
     {
         $entities = array();
         $ingids = array();
         $db = Loader::db();
-        foreach ($user->getUserGroups() as $key => $val)     {
+        foreach ($user->getUserGroups() as $key => $val) {
             $ingids[] = $key;
         }
         $instr = implode(',', $ingids);
@@ -67,7 +61,7 @@ class GroupEntity extends Entity
         return $entities;
     }
 
-    public static function getOrCreate($g = null)
+    public static function getOrCreate(Group $g)
     {
         $db = Loader::db();
         $petID = $db->GetOne('select petID from PermissionAccessEntityTypes where petHandle = \'group\'');

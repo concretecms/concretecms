@@ -69,7 +69,7 @@ class GroupSetEntity extends Entity
         return $users;
     }
 
-    public static function getOrCreate($gs = null)
+    public static function getOrCreate(GroupSet $gs)
     {
         $db = Loader::db();
         $petID = $db->GetOne('select petID from PermissionAccessEntityTypes where petHandle = \'group_set\'');
