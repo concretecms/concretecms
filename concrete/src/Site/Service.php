@@ -3,6 +3,7 @@ namespace Concrete\Core\Site;
 
 use Concrete\Core\Entity\Page\Template;
 use Concrete\Core\Entity\Site\Site;
+use Concrete\Core\Entity\Site\SiteTree;
 use Concrete\Core\Entity\Site\Tree;
 use Concrete\Core\Site\Resolver\ResolverFactory;
 use Doctrine\ORM\EntityManagerInterface;
@@ -64,7 +65,7 @@ class Service
 
     public function createHomePage(Site $site, Template $template)
     {
-        $tree = new Tree();
+        $tree = new SiteTree();
         $this->entityManager->persist($tree);
         $this->entityManager->flush();
 
@@ -72,6 +73,7 @@ class Service
         $home->update(['cName' => $site->getSiteName(), 'pTemplateID' => $template->getPageTemplateID()]);
 
         $tree->setSiteHomePageID($home->getCollectionID());
+        $tree->setSite($site);
         $site->setSiteTree($tree);
 
         $this->entityManager->persist($site);
@@ -130,8 +132,10 @@ class Service
         $site->setSiteHandle(array_get($siteConfig, "sites.{$defaultSite}.handle"));
         $site->setIsDefault(true);
 
-        $tree = new Tree();
+        $tree = new SiteTree();
         $tree->setSiteHomePageID(HOME_CID);
+        $tree->setSite($site);
+
         $site->setSiteTree($tree);
 
         $service = $this->app->make('site/type');

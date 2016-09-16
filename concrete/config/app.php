@@ -175,6 +175,7 @@ return array(
         'captcha_library',
         'content_editor_snippet',
         'conversation_rating_type',
+        'group',
         'group_set',
         'job',
         'mail_importer',

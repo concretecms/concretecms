@@ -105,7 +105,7 @@ class DefaultBooter implements BootInterface, ApplicationAwareInterface
 
         /*
          * ----------------------------------------------------------------------------
-         * Legacy Definitions
+         * Simple legacy constants like APP_CHARSET
          * ----------------------------------------------------------------------------
          */
         $this->initializeLegacyDefinitions($config, $app);
@@ -175,6 +175,15 @@ class DefaultBooter implements BootInterface, ApplicationAwareInterface
              * ----------------------------------------------------------------------------
              */
             $this->initializePackages($app);
+
+            /*
+             * ----------------------------------------------------------------------------
+             * Legacy Definitions. This has to come after packages because this
+             * essentially loads the entity manager, and the entity manager loads classes
+             * found in its config, which may be classes that haven't been autoloaded by initialPackages
+             * ----------------------------------------------------------------------------
+             */
+            $this->initializeLegacyURLDefinitions($config, $app);
 
             /**
              * ----------------------------------------------------------------------------
@@ -312,6 +321,15 @@ class DefaultBooter implements BootInterface, ApplicationAwareInterface
     {
         define('APP_VERSION', $config->get('concrete.version'));
         define('APP_CHARSET', $config->get('concrete.charset'));
+        define('DIR_REL', $app['app_relative_path']);
+    }
+
+    /**
+     * @param Repository $config
+     * @param Application $app
+     */
+    private function initializeLegacyURLDefinitions(Repository $config, Application $app)
+    {
         if (!defined('BASE_URL')) {
             try {
                 define('BASE_URL', rtrim((string) $this->app->make('url/canonical'), '/'));
@@ -320,8 +338,8 @@ class DefaultBooter implements BootInterface, ApplicationAwareInterface
                 die(1);
             }
         }
-        define('DIR_REL', $app['app_relative_path']);
     }
+
 
     /**
      * @param Repository $config
