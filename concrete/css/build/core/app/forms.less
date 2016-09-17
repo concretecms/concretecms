@@ -12,19 +12,23 @@
     text-transform: uppercase;
   }
 
-  div.form-group.form-group-last {
-    border-bottom-width: 0px;
-    margin-bottom: 0px;
-    padding-bottom: 0px;
+  fieldset:first-of-type {
+    margin-top: 0px;
   }
-
   fieldset {
+    margin-top: 40px;
     margin-bottom: 0px;
     position: relative; /* we need this for right aligned tooltips */
     legend {
       font-weight: bold;
       border: 0px;
+
+
     }
+  }
+
+  legend + div.form-group {
+    border-top: 1px solid #dcdcdc;
   }
 
   .selectize-control.single .selectize-input {
@@ -91,14 +95,14 @@
   div.form-group {
 
     position: relative;
-    border-top: 1px solid #dcdcdc;
     padding-top: 30px;
     padding-bottom: 30px;
-    margin-bottom: 22px;
+    margin-bottom: 0px;
     font-size: 18px;
+    border-bottom: 1px solid #ededed;
 
-    & + div.form-group {
-      border-color: #ededed;
+    &:last-of-type {
+      border-bottom: 0px;
     }
 
     .help-block {
