@@ -12,6 +12,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
 if (!class_exists(\DoctrineXml\Checker::class)) {
     // Otherwise, lets try to load composer ourselves
     if (!@include(DIR_BASE_CORE . '/' . DIRNAME_VENDOR . '/autoload.php')) {
-        die('Third party libraries not installed. Make sure that composer has required libraries in the concrete/ directory.');
+        echo 'Third party libraries not installed. Make sure that composer has required libraries in the concrete/ directory.';
+        die(1);
     }
 }
