@@ -126,7 +126,9 @@ $tp = new TaskPermission();
             }
         });
 
-        launchEditor(container.find('.editor-content'));
+        if (container.find('.editor-content').length) {
+            launchEditor(container.find('.editor-content'));
+        }
 
         var attachSortDesc = function ($obj) {
             $obj.click(function () {

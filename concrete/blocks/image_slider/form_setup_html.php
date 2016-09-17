@@ -152,7 +152,9 @@ echo Core::make('helper/concrete/ui')->tabs(array(
         attachDelete($('.ccm-delete-image-slider-entry'));
         attachFileManagerLaunch($('.ccm-pick-slide-image'));
         $(function() {  // activate editors
-            launchEditor($('.editor-content'));
+            if ($('.editor-content').length) {
+                launchEditor($('.editor-content'));
+            }
         });
     });
 </script>
