@@ -17,7 +17,7 @@ $currentTime = $dh->formatCustom('Y-m-d H:i:s');
         <div class="ccm-panel-content-inner" id="ccm-menu-page-attributes-list">
             <h5><?php echo t('Date / Time'); ?></h5>
             <div id="ccm-view-as-user-wrapper">
-                <div class="form-group form-group-last">
+                <div class="form-group">
                     <?php echo $fdh->datetime('preview_as_user_datetime', $currentTime, false, true, 'dark-panel-calendar'); ?>
                 </div>
             </div>

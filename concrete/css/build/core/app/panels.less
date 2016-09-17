@@ -152,6 +152,10 @@ div.ccm-panel-content {
     }
   }
 
+  section {
+    padding: 0px;
+  }
+
 }
 
 div.ccm-panel div.ccm-panel-content {
@@ -624,6 +628,12 @@ div.ccm-panel-detail-content {
     right: 0px;
     top: 110px;
   }
+
+  section {
+    padding: 0px;
+  }
+
+
 }
 
 div.ccm-panel-detail {
@@ -682,7 +692,8 @@ div#ccm-panel-detail-page-location {
       padding-right: 40px;
       margin-left: -40px;
       margin-right: -40px;
-      border-bottom-color: #b7cfe4;
+      border-bottom-color: #d1e7fc;
+
       /*
       select.form-control,
       textarea.form-control,
@@ -730,15 +741,11 @@ div#ccm-panel-detail-page-location {
 
   fieldset {
     legend {
-      padding-top: 40px;
-      padding-left: 40px;
-      padding-right: 40px;
-      margin-left: -40px;
-      margin-right: -40px;
-      padding-bottom: 26px;
-
       color: #113455;
-      border-bottom: 1px solid #b7cfe4;
+
+      & + div.form-group {
+        border-top-color: #b7cfe4;
+      }
     }
   }
 }

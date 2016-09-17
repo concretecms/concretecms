@@ -58,8 +58,8 @@ $ih = Loader::helper('concrete/ui');
 <?php } ?>
 
 	<fieldset>
+		<legend><?php echo t('Groups'); ?></legend>
 		<div class="form-group">
-			<legend><?php echo t('Groups'); ?></legend>
 			<label class="control-label"><?php echo t('Place this user into groups'); ?></label>
 
 		<?php foreach ($gArray as $g) {
