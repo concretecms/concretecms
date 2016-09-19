@@ -200,7 +200,7 @@
 						return false;
 					}
 
-					if (!options.chooseNodeInForm && $(e.toElement).hasClass("fancytree-title")) {
+					if (!options.chooseNodeInForm && e.originalEvent.target && $(e.originalEvent.target).hasClass("fancytree-title")) {
 						var $menu = data.node.data.treeNodeMenu;
 						if ($menu) {
 							var menu = new ConcreteMenu($(data.node.span), {
