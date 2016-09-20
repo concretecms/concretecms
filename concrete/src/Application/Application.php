@@ -387,7 +387,7 @@ class Application extends Container
         $globalConfig = $this['config'];
         $siteConfig = $site->getConfigRepository();
 
-        if ($globalConfig->get('concrete.seo.redirect_to_canonical_url') && $siteConfig->get('seo.canonical_url')) {
+        if ($globalConfig->get('concrete.seo.redirect_to_canonical_url') && $site->getSiteCanonicalURL()) {
             $requestUri = $r->getUri();
 
             $path = parse_url($requestUri, PHP_URL_PATH);
@@ -395,7 +395,7 @@ class Application extends Container
 
             $url = UrlImmutable::createFromUrl($requestUri, $trailingSlash);
 
-            $canonical = UrlImmutable::createFromUrl($siteConfig->get('seo.canonical_url'),
+            $canonical = UrlImmutable::createFromUrl($site->getSiteCanonicalURL(),
                 (bool) $siteConfig->get('seo.trailing_slash')
             );
 

@@ -2,10 +2,11 @@
 namespace Concrete\Core\Site\Resolver;
 
 use Concrete\Core\Site\Service;
+use Concrete\Core\Http\Request;
 
 interface DriverInterface
 {
 
-    function getSite(Service $service);
+    function getSite(Service $service, Request $request);
 
 }

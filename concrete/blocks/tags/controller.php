@@ -90,7 +90,9 @@ class Controller extends BlockController
             $av = $c->getAttributeValueObject($ak);
             $controller = $ak->getController();
             $attributeValue = $c->getAttribute($ak->getAttributeKeyHandle());
-            $options = $attributeValue->getSelectedOptions();
+            if (is_object($attributeValue)) {
+                $options = $attributeValue->getSelectedOptions();
+            }
         }
 
         if ($this->targetCID > 0) {
