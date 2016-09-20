@@ -117,7 +117,7 @@
 
         </page>
 
-        <page name="Welcome Back" path="/desktop" custom-path="/account/welcome" filename="/desktop.php" pagetype="" description="" package="">
+        <page name="Welcome Back" path="/desktop" custom-path="/account/welcome" filename="/desktop.php" pagetype="" description="" package="" root="true">
             <attributes>
                 <attributekey handle="desktop_priority">
                     <value>1</value>

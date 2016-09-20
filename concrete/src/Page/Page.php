@@ -2274,17 +2274,17 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         $this->rescanCollectionPath();
     }
 
-    public function duplicateAll($nc, $preserveUserID = false)
+    public function duplicateAll($nc = null, $preserveUserID = false, Site $site = null)
     {
-        $nc2 = $this->duplicate($nc);
-        self::_duplicateAll($this, $nc2, $preserveUserID);
+        $nc2 = $this->duplicate($nc, $preserveUserID, $site);
+        self::_duplicateAll($this, $nc2, $preserveUserID, $site);
 
         return $nc2;
     }
 
     /**
      **/
-    protected function _duplicateAll($cParent, $cNewParent, $preserveUserID = false)
+    protected function _duplicateAll($cParent, $cNewParent, $preserveUserID = false, Site $site = null)
     {
         $db = Database::connection();
         $cID = $cParent->getCollectionID();
@@ -2293,17 +2293,17 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         if ($r) {
             while ($row = $r->fetchRow()) {
                 $tc = self::getByID($row['cID']);
-                $nc = $tc->duplicate($cNewParent, $preserveUserID);
-                $tc->_duplicateAll($tc, $nc, $preserveUserID);
+                $nc = $tc->duplicate($cNewParent, $preserveUserID, $site);
+                $tc->_duplicateAll($tc, $nc, $preserveUserID, $site);
             }
         }
     }
 
-    public function duplicate($nc, $preserveUserID = false)
+    public function duplicate($nc = null, $preserveUserID = false, Site $site = null)
     {
         $db = Database::connection();
         // the passed collection is the parent collection
-        $cParentID = $nc->getCollectionID();
+        $cParentID = is_object($nc) ? $nc->getCollectionID() : 0;
 
         $u = new User();
         $uID = $u->getUserID();
@@ -2331,7 +2331,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         $newC = $cobj->duplicateCollection();
         $newCID = $newC->getCollectionID();
 
-        $siteTreeID = \Core::make('site')->getSite()->getSiteTreeID();
+        $siteTreeID = is_object($site) ? $site->getSiteTreeID() : \Core::make('site')->getSite()->getSiteTreeID();
 
         $v = [$newCID, $siteTreeID, $this->getPageTypeID(), $cParentID, $uID, $this->overrideTemplatePermissions(), $this->getPermissionsCollectionID(), $this->getCollectionInheritance(), $this->cFilename, $this->cPointerID, $this->cPointerExternalLink, $this->cPointerExternalLinkNewWindow, $this->cDisplayOrder, $this->pkgID];
         $q = 'insert into Pages (cID, siteTreeID, ptID, cParentID, uID, cOverrideTemplatePermissions, cInheritPermissionsFromCID, cInheritPermissionsFrom, cFilename, cPointerID, cPointerExternalLink, cPointerExternalLinkNewWindow, cDisplayOrder, pkgID) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';

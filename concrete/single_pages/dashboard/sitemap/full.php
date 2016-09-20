@@ -58,6 +58,7 @@ if ($u->isSuperUser()) {
 <script>
 $(function() {
     $('div#ccm-full-sitemap-container').concreteSitemap({
+        siteTreeID: <?=$site->getSiteTreeID()?>,
         includeSystemPages: $('input[name=includeSystemPages]').is(':checked')
     });
 
@@ -65,6 +66,7 @@ $(function() {
         var $tree = $('div#ccm-full-sitemap-container');
         $tree.fancytree('destroy');
         $tree.concreteSitemap({
+            siteTreeID: <?=$site->getSiteTreeID()?>,
             includeSystemPages: $('input[name=includeSystemPages]').is(':checked')
         });
     });
