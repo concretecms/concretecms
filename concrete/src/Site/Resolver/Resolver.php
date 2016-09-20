@@ -23,4 +23,8 @@ class Resolver
         return $this->driver->getSite($this->service, $this->request);
     }
 
+    public function getActiveSiteForEditing()
+    {
+        return $this->driver->getActiveSiteForEditing($this->service, $this->request);
+    }
 }

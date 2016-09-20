@@ -47,6 +47,17 @@ class DefaultRunner implements RunInterface, ApplicationAwareInterface
             $app->setupPackages();
 
             /*
+             * ----------------------------------------------------------------------------
+             * Legacy Definitions. This has to come after packages because this
+             * essentially loads the entity manager, and the entity manager loads classes
+             * found in its config, which may be classes that haven't been autoloaded by initialPackages. It also
+             * has to come after setupPackages() in case an autoloader is configured in on_start()
+             * ----------------------------------------------------------------------------
+             */
+            $this->initializeLegacyURLDefinitions($app);
+
+
+            /*
              * Handle automatic updating. Must come after setupPackages() because some things setup autoloaders in on_start() of their package
              * controller
              */
@@ -82,6 +93,23 @@ class DefaultRunner implements RunInterface, ApplicationAwareInterface
         $request = Request::createFromGlobals();
         return $this->server->handleRequest($request);
     }
+
+    /**
+     * @param Repository $config
+     * @param Application $app
+     */
+    private function initializeLegacyURLDefinitions(Application $app)
+    {
+        if (!defined('BASE_URL')) {
+            try {
+                define('BASE_URL', rtrim((string) $app->make('url/canonical'), '/'));
+            } catch (\Exception $x) {
+                echo $x->getMessage();
+                die(1);
+            }
+        }
+    }
+
 
     /**
      * Set the application object.

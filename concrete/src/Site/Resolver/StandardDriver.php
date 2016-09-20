@@ -13,5 +13,9 @@ class StandardDriver implements DriverInterface
         return $service->getDefault();
     }
 
+    public function getActiveSiteForEditing(Service $service, Request $request)
+    {
+        return $service->getDefault();
+    }
 
 }
