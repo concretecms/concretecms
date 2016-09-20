@@ -63,25 +63,6 @@ class Service
         return $site;
     }
 
-    public function createHomePage(Site $site, Template $template)
-    {
-        $tree = new SiteTree();
-        $this->entityManager->persist($tree);
-        $this->entityManager->flush();
-
-        $home = \Page::addHomePage($tree);
-        $home->update(['cName' => $site->getSiteName(), 'pTemplateID' => $template->getPageTemplateID()]);
-
-        $tree->setSiteHomePageID($home->getCollectionID());
-        $tree->setSite($site);
-        $site->setSiteTree($tree);
-
-        $this->entityManager->persist($site);
-        $this->entityManager->flush();
-
-        return $home;
-    }
-
     public function getSiteTreeByID($siteTreeID)
     {
         return $this->entityManager->getRepository('Concrete\Core\Entity\Site\Tree')

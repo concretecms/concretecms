@@ -34,6 +34,12 @@ abstract class Tree implements TreeInterface
         return $this->siteHomePageID;
     }
 
+    public function getSiteHomePageObject()
+    {
+        return \Page::getByID($this->siteHomePageID);
+    }
+
+
     /**
      * @param mixed $siteHomePageID
      */

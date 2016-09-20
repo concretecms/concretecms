@@ -46,7 +46,7 @@
             <area name="Main"/>
         </page>
         <page name="Page Forbidden" path="/page_forbidden" filename="/page_forbidden.php" pagetype="" description="" package="" root="true" />
-		<page name="Download File" path="/download_file" filename="/download_file.php" pagetype="" description="" package=""/>
+		<page name="Download File" path="/download_file" filename="/download_file.php" pagetype="" description="" package="" root="true" />
 
     </singlepages>
 
