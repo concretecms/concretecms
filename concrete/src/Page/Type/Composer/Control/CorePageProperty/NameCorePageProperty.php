@@ -2,6 +2,7 @@
 
 namespace Concrete\Core\Page\Type\Composer\Control\CorePageProperty;
 
+use Concrete\Core\Utility\Service\Text;
 use Core;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Attribute\FontAwesomeIconFormatter;
@@ -38,8 +39,8 @@ class NameCorePageProperty extends CorePageProperty
         });
         $this->addPageTypeComposerControlRequestValue('cName', $data['name']);
         if (!count($slug) && $c->isPageDraft()) {
-            $txt = new \URLify();
-            $this->addPageTypeComposerControlRequestValue('cHandle', $txt->filter($data['name']));
+            $txt = new Text();
+            $this->addPageTypeComposerControlRequestValue('cHandle', $txt->urlify($data['name'], \Config::get('concrete.seo.segment_max_length')));
         }
         parent::publishToPage($c, $data, $controls);
     }
