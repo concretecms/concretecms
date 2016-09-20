@@ -200,6 +200,11 @@ class Site
         return $this->getConfigRepository()->save('name', $name);
     }
 
+    public function getSiteCanonicalURL()
+    {
+        return $this->getConfigRepository()->get('seo.canonical_url');
+    }
+
     /**
      * @return mixed
      */

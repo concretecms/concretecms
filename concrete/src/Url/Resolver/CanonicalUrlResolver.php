@@ -62,7 +62,7 @@ class CanonicalUrlResolver implements UrlResolverInterface
         $url = $url->setHost(null);
         $url = $url->setScheme(null);
 
-        if ($config && $configUrl = $config->get('seo.canonical_url')) {
+        if ($config && $configUrl = $site->getSiteCanonicalURL()) {
             $canonical = UrlImmutable::createFromUrl($configUrl, $trailing_slashes);
 
             if ($configSslUrl = $config->get('seo.canonical_ssl_url')) {

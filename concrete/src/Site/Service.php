@@ -87,8 +87,16 @@ class Service
             $page->moveToTrash();
         }
 
+        $tree = $site->getSiteTree();
+        $tree->setSite(null);
+        $this->entityManager->flush();
+
         $this->entityManager->remove($site);
         $this->entityManager->flush();
+
+        $this->entityManager->remove($tree);
+        $this->entityManager->flush();
+
     }
 
     public function getList()

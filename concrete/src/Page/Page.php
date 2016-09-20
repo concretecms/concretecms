@@ -362,10 +362,12 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
                 $cID = $request->request->get('cID');
             }
             $cID = Core::make('helper/security')->sanitizeInt($cID);
-            if (!$cID) {
-                $cID = 1;
+            if ($cID) {
+                $c = self::getByID($cID, 'ACTIVE');
+            } else {
+                $site = \Core::make('site')->getSite();
+                $c = $site->getSiteHomePageObject();
             }
-            $c = self::getByID($cID, 'ACTIVE');
             $c->cPathFetchIsCanonical = true;
         }
 
@@ -2796,6 +2798,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
 
     protected function _associateMasterCollectionAttributes($newCID, $masterCID)
     {
+        /*
         $mc = self::getByID($masterCID, 'ACTIVE');
         $nc = self::getByID($newCID, 'RECENT');
         $db = Database::connection();
@@ -2807,12 +2810,13 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
 
         if ($r) {
             while ($row = $r->fetchRow()) {
-                $db->executeQuery('insert into CollectionAttributeValues (cID, cvID, akID, avID) values (?, ?, ?, ?)', [
-                    $nc->getCollectionID(), $nc->getVersionID(), $row['akID'], $row['avID'],
+                $db->executeQuery('insert into CollectionAttributeValues (cID, cvID, avrID) values (?, ?, ?)', [
+                    $nc->getCollectionID(), $nc->getVersionID(), $row['avrID'],
                 ]);
             }
             $r->free();
         }
+        */
     }
 
     /**
