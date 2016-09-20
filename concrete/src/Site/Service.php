@@ -142,5 +142,9 @@ class Service
         return $this->resolverFactory->createResolver($this)->getSite();
     }
 
+    final public function getActiveSiteForEditing()
+    {
+        return $this->resolverFactory->createResolver($this)->getActiveSiteForEditing();
+    }
 
 }

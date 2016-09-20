@@ -8,5 +8,6 @@ interface DriverInterface
 {
 
     function getSite(Service $service, Request $request);
+    function getActiveSiteForEditing(Service $service, Request $request);
 
 }

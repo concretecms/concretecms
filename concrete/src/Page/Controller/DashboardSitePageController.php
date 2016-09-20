@@ -15,6 +15,6 @@ class DashboardSitePageController extends DashboardPageController
     public function on_start()
     {
         parent::on_start();
-        $this->site = $this->app->make('site')->getSite();
+        $this->site = $this->app->make('site')->getActiveSiteForEditing();
     }
 }

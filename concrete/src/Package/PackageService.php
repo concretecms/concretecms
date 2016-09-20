@@ -187,6 +187,13 @@ class PackageService
         try {
 
             ClassLoader::getInstance()->registerPackage($p);
+            if (method_exists($p, 'validate_install')) {
+                $response = $p->validate_install($data);
+            }
+
+            if (isset($response) && $response instanceof ErrorList && $response->has()) {
+                return $response;
+            }
 
             if (!empty($p->getPackageMetadataPaths())) {
                 $config = $this->entityManager->getConfiguration();
@@ -203,10 +210,7 @@ class PackageService
                 $cache->flushAll();
             }
 
-            $response = $p->install($data);
-            if ($response instanceof ErrorList) {
-                return $response;
-            }
+            $p->install($data);
 
             $u = new \User();
             $swapper = new ContentSwapper();
