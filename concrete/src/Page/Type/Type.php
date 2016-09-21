@@ -905,7 +905,7 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
         if (!$includeInternal) {
             $ptIDs = $db->GetCol('select ptID from PageTypes where siteTypeID = ? and ptIsInternal = 0 order by ptDisplayOrder asc', $v);
         } else {
-            $ptIDs = $db->GetCol('select ptID from PageTypes where siteTypeID = ? order by ptDisplayOrder asc', $v);
+            $ptIDs = $db->GetCol('select ptID from PageTypes order by ptDisplayOrder asc', $v);
         }
 
         return static::returnList($ptIDs);

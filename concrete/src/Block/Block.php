@@ -1611,7 +1611,9 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
 
     public function export($node, $exportType = 'full')
     {
-        if (!$this->isAliasOfMasterCollection()) {
+        if (!$this->isAliasOfMasterCollection() || $this->c->isMasterCollection()) {
+            // We have the OR up here so that master collections that you have duplicated from other
+            // master collections export properly.
             $blockNode = $node->addChild('block');
             $blockNode->addAttribute('type', $this->getBlockTypeHandle());
             $blockNode->addAttribute('name', $this->getBlockName());

@@ -15,7 +15,7 @@ class Entity implements ItemInterface
      * @param $entity ExpressEntity
      * @param \SimpleXMLElement $xml
      */
-    public function export(ExportableInterface $entity, \SimpleXMLElement $xml)
+    public function export($entity, \SimpleXMLElement $xml)
     {
         $node = $xml->addChild('entity');
         $node->addAttribute('id', $entity->getID());

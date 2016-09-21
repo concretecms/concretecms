@@ -15,7 +15,7 @@ class Form implements ItemInterface
      * @param $form \Concrete\Core\Entity\Express\Form
      * @param \SimpleXMLElement $xml
      */
-    public function export(ExportableInterface $form, \SimpleXMLElement $xml)
+    public function export($form, \SimpleXMLElement $xml)
     {
         $node = $xml->addChild('form');
         $node->addAttribute('id', $form->getID());

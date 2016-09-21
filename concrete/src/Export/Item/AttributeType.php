@@ -10,7 +10,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 class AttributeType implements ItemInterface
 {
 
-    public function export(ExportableInterface $type, \SimpleXMLElement $xml)
+    public function export($type, \SimpleXMLElement $xml)
     {
         $db = \Database::connection();
         $atype = $xml->addChild('attributetype');

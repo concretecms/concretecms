@@ -8,6 +8,6 @@ defined('C5_EXECUTE') or die("Access Denied.");
 interface ItemInterface
 {
 
-    public function export(ExportableInterface $item, \SimpleXMLElement $element);
+    public function export($mixed, \SimpleXMLElement $element);
 
 }
