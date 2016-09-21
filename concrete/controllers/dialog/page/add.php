@@ -17,14 +17,16 @@ class Add extends BackendInterfacePageController
 
     public function view()
     {
-        $frequentlyUsed = PageType::getFrequentlyUsedList();
+        $tree = $this->page->getSiteTreeObject();
+        $type = $tree->getSiteType();
+        $frequentlyUsed = PageType::getFrequentlyUsedList($type);
         foreach ($frequentlyUsed as $pt) {
             if ($this->permissions->canAddSubCollection($pt) && $pt->canPublishPageTypeBeneathPage($this->page)) {
                 $this->frequentPageTypes[] = $pt;
             }
         }
 
-        $otherPageTypes = PageType::getInfrequentlyUsedList();
+        $otherPageTypes = PageType::getInfrequentlyUsedList($type);
         foreach ($otherPageTypes as $pt) {
             if ($this->permissions->canAddSubCollection($pt) && $pt->canPublishPageTypeBeneathPage($this->page)) {
                 $this->otherPageTypes[] = $pt;

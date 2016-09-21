@@ -13,7 +13,7 @@ class AttributeKeyControl extends Control
      * @param $control \Concrete\Core\Entity\Express\Control\AttributeKeyControl
      * @param \SimpleXMLElement $xml
      */
-    public function export(ExportableInterface $control, \SimpleXMLElement $xml)
+    public function export($control, \SimpleXMLElement $xml)
     {
         $node = parent::export($control, $xml);
         $key = $control->getAttributeKey();

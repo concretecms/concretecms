@@ -14,7 +14,7 @@ class Control implements ItemInterface
      * @param $control \Concrete\Core\Entity\Express\Control\Control
      * @param \SimpleXMLElement $xml
      */
-    public function export(ExportableInterface $control, \SimpleXMLElement $xml)
+    public function export($control, \SimpleXMLElement $xml)
     {
         $node = $xml->addChild('control');
         $node->addAttribute('id', $control->getID());

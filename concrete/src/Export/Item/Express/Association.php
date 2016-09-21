@@ -14,7 +14,7 @@ class Association implements ItemInterface
      * @param $association \Concrete\Core\Entity\Express\Association
      * @param \SimpleXMLElement $xml
      */
-    public function export(ExportableInterface $association, \SimpleXMLElement $xml)
+    public function export($association, \SimpleXMLElement $xml)
     {
         $node = $xml->addChild('association');
 

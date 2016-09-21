@@ -13,7 +13,7 @@ class AssociationControl extends Control
      * @param $control \Concrete\Core\Entity\Express\Control\AssociationControl
      * @param \SimpleXMLElement $xml
      */
-    public function export(ExportableInterface $control, \SimpleXMLElement $xml)
+    public function export($control, \SimpleXMLElement $xml)
     {
         $node = parent::export($control, $xml);
         $node->addAttribute('association', $control->getAssociation()->getID());

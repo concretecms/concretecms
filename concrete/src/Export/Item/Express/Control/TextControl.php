@@ -14,7 +14,7 @@ class TextControl extends Control
      * @param $control \Concrete\Core\Entity\Express\Control\TextControl
      * @param \SimpleXMLElement $xml
      */
-    public function export(ExportableInterface $control, \SimpleXMLElement $xml)
+    public function export($control, \SimpleXMLElement $xml)
     {
         $node = parent::export($control, $xml);
         $node->addAttribute('type-id', 'text');

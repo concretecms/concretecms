@@ -12,8 +12,14 @@ class Entities extends DashboardPageController
 {
     public function view()
     {
+        // Retrieve all entity manager drivers and show data about them
+        $entityManagerConfigFactory = $this->app->make('Concrete\Core\Database\EntityManagerConfigFactory');
+        $driverChain = $entityManagerConfigFactory->getMetadataDriverImpl();
+        $drivers = $driverChain->getDrivers();
+        $this->set('drivers', $drivers);
     }
 
+    /*
     public function update_entity_settings()
     {
         if ($this->token->validate("update_entity_settings")) {
@@ -71,4 +77,5 @@ class Entities extends DashboardPageController
         $this->set('message', t('Application specific database entities were refreshed.'));
         $this->view();
     }
+    */
 }

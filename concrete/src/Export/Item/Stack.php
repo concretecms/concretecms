@@ -13,7 +13,7 @@ class Stack implements ItemInterface
      * @param \SimpleXMLElement $xml
      * @return mixed
      */
-    public function export(ExportableInterface $stack, \SimpleXMLElement $xml)
+    public function export($stack, \SimpleXMLElement $xml)
     {
         $db = \Database::connection();
         $node = $xml->addChild('stack');
