@@ -11,6 +11,7 @@ use Database;
 use Core;
 use Concrete\Core\Page\Page;
 use PageType;
+use Concrete\Core\Entity\Site\Site
 
 /**
  * Class Stack.
@@ -238,10 +239,11 @@ class Stack extends Page implements ExportableInterface
     /**
      * @param |\Concrete\Core\Page\Collection $nc
      * @param bool $preserveUserID
+     * @param \Concrete\Core\Entity\Site\Site $site
      *
      * @return Stack
      */
-    public function duplicate($nc = null, $preserveUserID = false)
+    public function duplicate($nc = null, $preserveUserID = false, Site $site = null)
     {
         if (!is_object($nc)) {
             $nc = Page::getByID($this->getCollectionParentID());
