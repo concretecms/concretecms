@@ -444,7 +444,6 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
             $pt = static::getByID($ptID);
             $defaultTemplate = $pt->getPageTypeDefaultPageTemplateObject();
             if (isset($node->composer->output->pagetemplate)) {
-                $ci = new ContentImporter();
                 foreach ($node->composer->output->pagetemplate as $pagetemplate) {
                     $handle = (string) $pagetemplate['handle'];
                     $ptt = PageTemplate::getByHandle($handle);
@@ -468,6 +467,7 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
 
                         // now that we have the defaults page, let's import this content into it.
                         if (isset($pagetemplate->page)) {
+                            $ci = new ContentImporter\Importer\Routine\ImportPageContentRoutine();
                             $ci->importPageAreas($xc, $pagetemplate->page);
                         }
                     }

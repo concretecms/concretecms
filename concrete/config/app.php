@@ -202,7 +202,7 @@ return array(
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportBlockTypeSetsRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportConversationEditorsRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportConversationRatingTypesRoutine',
-        'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportConversationFlagTypesTypesRoutine',
+        'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportConversationFlagTypesRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportPageTypePublishTargetTypesRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportPageTypeComposerControlTypesRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportBannedWordsRoutine',
