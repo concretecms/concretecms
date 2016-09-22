@@ -51,7 +51,6 @@ echo Core::make('helper/concrete/ui')->tabs($tabs);
             });
         };
 
-        // check this before pull request
         sliderEntriesContainer.on('change', 'select[data-field=entry-link-select]', function() {
             var container = $(this).closest('.ccm-image-slider-entry-<?php echo $bID?>');
             switch (parseInt($(this).val())) {
@@ -92,7 +91,7 @@ echo Core::make('helper/concrete/ui')->tabs($tabs);
                     sort_order: '<?php echo $row['sortOrder']; ?>'
                 }));
                 sliderEntriesContainer.find('.ccm-image-slider-entry-<?php echo $bID?>:last-child div[data-field=entry-link-page-selector]').concretePageSelector({
-                    'inputName': 'internalLinkCID[]', 'cID': <?php if ($linkType == 1) { ?><?php echo intval($row['internalLinkCID']); ?><?php } else { ?>false<?php } ?>
+                    'inputName': '<?php echo $view->field('internalLinkCID')?>[]', 'cID': <?php if ($linkType == 1) { ?><?php echo intval($row['internalLinkCID']); ?><?php } else { ?>false<?php } ?>
                 });
             <?php }
         } ?>
@@ -127,7 +126,7 @@ echo Core::make('helper/concrete/ui')->tabs($tabs);
             attachDelete(newSlide.find('.ccm-delete-image-slider-entry-<?php echo $bID?>'));
             attachFileManagerLaunch(newSlide.find('.ccm-pick-slide-image'));
             newSlide.find('div[data-field=entry-link-page-selector-select]').concretePageSelector({
-                'inputName': 'internalLinkCID[]'
+                'inputName': '<?php echo $view->field('internalLinkCID')?>[]'
             });
             doSortCount();
         });
@@ -331,7 +330,7 @@ echo Core::make('helper/concrete/ui')->tabs($tabs);
         </div>
         <div class="form-group" >
            <label><?php echo t('Link'); ?></label>
-            <select data-field="entry-link-select" name="linkType[]" class="form-control" style="width: 60%;">
+            <select data-field="entry-link-select" name="<?php echo $view->field('linkType')?>[]" class="form-control" style="width: 60%;">
                 <option value="0" <% if (!link_type) { %>selected<% } %>><?php echo t('None'); ?></option>
                 <option value="1" <% if (link_type == 1) { %>selected<% } %>><?php echo t('Another Page'); ?></option>
                 <option value="2" <% if (link_type == 2) { %>selected<% } %>><?php echo t('External URL'); ?></option>
@@ -339,7 +338,7 @@ echo Core::make('helper/concrete/ui')->tabs($tabs);
         </div>
         <div data-field="entry-link-url" class="form-group hide-slide-link">
            <label><?php echo t('URL:'); ?></label>
-            <textarea name="linkURL[]"><%=link_url%></textarea>
+            <textarea name="<?php echo $view->field('linkURL')?>[]"><%=link_url%></textarea>
         </div>
         <div data-field="entry-link-page-selector" class="form-group hide-slide-link">
            <label><?php echo t('Choose Page:'); ?></label>
