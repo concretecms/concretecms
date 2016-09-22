@@ -11,8 +11,8 @@ if ($c->isEditMode()) {
 				<?php if (count($rows) > 0) { ?>
 					<?php foreach (array_slice($rows, 1) as $row) { ?>
 						<i class="fa fa-circle-thin" aria-hidden="true"></i>
-						<?php } 
-					} 
+						<?php }
+					}
 				?>
 			</div>
         </div>
