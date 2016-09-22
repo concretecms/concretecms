@@ -66,12 +66,35 @@ class View extends AbstractView
         $this->viewRootDirectoryName = $directory;
     }
 
-    public function inc($file, $args = array())
+    public function inc($file, $args = [])
     {
-        extract($args);
-        extract($this->getScopeItems());
+        $__data__ = [
+            'scopedItems' => $this->getScopeItems(),
+        ];
+        if ($args && is_array($args)) {
+            $__data__['scopedItems'] += $args;
+        }
         $env = Environment::get();
-        include $env->getPath(DIRNAME_THEMES.'/'.$this->themeHandle.'/'.$file, $this->themePkgHandle);
+        $path = $env->getPath(DIRNAME_THEMES.'/'.$this->themeHandle.'/'.$file, $this->themePkgHandle);
+        if (!file_exists($path)) {
+            $path2 = $env->getPath(DIRNAME_THEMES.'/'.$this->themeHandle.'/'.$file, $this->viewPkgHandle);
+            if (file_exists($path2)) {
+                $path = $path2;
+            }
+            unset($path2);
+        }
+        $__data__['path'] = $path;
+        unset($file);
+        unset($args);
+        unset($env);
+        unset($path);
+        if (!empty($__data__['scopedItems'])) {
+            if (array_key_exists('__data__', $__data__['scopedItems'])) {
+                throw new \Exception(t(/*i18n: %1$s is a variable name, %2$s is a function name*/'Illegal variable name \'%1$s\' in %2$s args.', '__data__', __CLASS__.'::'.__METHOD__));
+            }
+            extract($__data__['scopedItems']);
+        }
+        include $__data__['path'];
     }
 
     /**
@@ -87,7 +110,7 @@ class View extends AbstractView
         $a = func_get_args();
         $controllerPath = $this->controller->getControllerActionPath();
         array_unshift($a, $controllerPath);
-        $ret = call_user_func_array(array($this, 'url'), $a);
+        $ret = call_user_func_array([$this, 'url'], $a);
 
         return $ret;
     }
@@ -113,7 +136,7 @@ class View extends AbstractView
     {
         $env = Environment::get();
         if ($this->themeHandle) {
-            switch($this->themeHandle) {
+            switch ($this->themeHandle) {
                 case VIEW_CORE_THEME:
                     $this->themeObject = new \Concrete\Theme\Concrete\PageTheme();
                     $this->pkgHandle = false;
@@ -253,12 +276,12 @@ class View extends AbstractView
         }
 
         if (!count($assets)) {
-            return array();
+            return [];
         }
 
         // goes through all assets in this list, creating new URLs and post-processing them where possible.
         $segment = 0;
-        $groupedAssets = array();
+        $groupedAssets = [];
         for ($i = 0; $i < count($assets); ++$i) {
             $asset = $assets[$i];
             $nextasset = isset($assets[$i + 1]) ? $assets[$i + 1] : null;
@@ -280,7 +303,7 @@ class View extends AbstractView
             }
         }
 
-        $return = array();
+        $return = [];
         // now we have a sub assets array with different segments split by whether they can be combined.
 
         foreach ($groupedAssets as $assets) {
@@ -294,7 +317,7 @@ class View extends AbstractView
                 )
             ) {
                 $class = get_class($assets[0]);
-                $assets = call_user_func(array($class, 'process'), $assets);
+                $assets = call_user_func([$class, 'process'], $assets);
             }
             $return = array_merge($return, $assets);
         }
@@ -304,7 +327,7 @@ class View extends AbstractView
 
     protected function replaceEmptyAssetPlaceholders($pageContent)
     {
-        foreach (array('<!--ccm:assets:'.Asset::ASSET_POSITION_HEADER.'//-->', '<!--ccm:assets:'.Asset::ASSET_POSITION_FOOTER.'//-->') as $comment) {
+        foreach (['<!--ccm:assets:'.Asset::ASSET_POSITION_HEADER.'//-->', '<!--ccm:assets:'.Asset::ASSET_POSITION_FOOTER.'//-->'] as $comment) {
             $pageContent = str_replace($comment, '', $pageContent);
         }
 
@@ -313,7 +336,7 @@ class View extends AbstractView
 
     protected function replaceAssetPlaceholders($outputAssets, $pageContent)
     {
-        $outputItems = array();
+        $outputItems = [];
         foreach ($outputAssets as $position => $assets) {
             $output = '';
             $transformed = $this->postProcessAssets($assets);
@@ -343,7 +366,7 @@ class View extends AbstractView
     public static function element($_file, $args = null, $_pkgHandle = null)
     {
         if (is_array($args)) {
-            $collisions = array_intersect(array('_file', '_pkgHandle'), array_keys($args));
+            $collisions = array_intersect(['_file', '_pkgHandle'], array_keys($args));
             if ($collisions) {
                 throw new \Exception(t("Illegal variable name '%s' in element args.", implode(', ', $collisions)));
             }
