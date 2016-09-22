@@ -71,32 +71,37 @@ class Detector
 
     public static function setupSiteInterfaceLocalization(Page $c = null)
     {
-        if (\User::isLoggedIn() && Config::get('concrete.multilingual.keep_users_locale')) {
-            return;
+        $loc = \Localization::getInstance();
+        if (!(\User::isLoggedIn() && Config::get('concrete.multilingual.keep_users_locale'))) {
+            if (!$c) {
+                $c = Page::getCurrentPage();
+            }
+            // don't translate dashboard pages
+            $dh = \Core::make('helper/concrete/dashboard');
+            if ($dh->inDashboard($c)) {
+                return;
+            }
+            $locale = null;
+            $ms = Section::getBySectionOfSite($c);
+            if ($ms) {
+                $locale = $ms->getLocale();
+            }
+            if (!$locale) {
+                if (Config::get('concrete.multilingual.use_previous_locale') && Session::has('previous_locale')) {
+                    $locale = Session::get('previous_locale');
+                }
+                if (!$locale) {
+                    $ms = static::getPreferredSection();
+                    if ($ms) {
+                        $locale = $ms->getLocale();
+                    }
+                }
+            }
+            if ($locale) {
+                $loc->setLocale($locale);
+            }
         }
-        if (!$c) {
-            $c = Page::getCurrentPage();
-        }
-        // don't translate dashboard pages
-        $dh = \Core::make('helper/concrete/dashboard');
-        if ($dh->inDashboard($c)) {
-            return;
-        }
-
-        $ms = Section::getBySectionOfSite($c);
-        if (!is_object($ms)) {
-            $ms = static::getPreferredSection();
-        }
-
-        if (!$ms) {
-            return;
-        }
-
-        $locale = $ms->getLocale();
-
-        if (strlen($locale)) {
-            \Localization::changeLocale($locale);
-        }
+        Session::set('previous_locale', $loc->getLocale());
     }
 
     public static function isEnabled()
