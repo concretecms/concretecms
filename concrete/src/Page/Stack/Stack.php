@@ -11,7 +11,7 @@ use Database;
 use Core;
 use Concrete\Core\Page\Page;
 use PageType;
-use Concrete\Core\Entity\Site\Site
+use Concrete\Core\Entity\Site\Site;
 
 /**
  * Class Stack.
