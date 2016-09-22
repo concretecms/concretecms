@@ -1,6 +1,8 @@
 <?php
 namespace Concrete\Core\Backup;
 
+use Concrete\Core\File\Importer;
+use Concrete\Core\Page\Type\Composer\FormLayoutSetControl;
 use Core;
 
 class ContentImporter
@@ -29,6 +31,11 @@ class ContentImporter
         }
     }
 
+    public static function getMasterCollectionTemporaryBlockIDs()
+    {
+        return self::$mcBlockIDs;
+    }
+
     public static function addMasterCollectionBlockID($b, $id)
     {
         self::$mcBlockIDs[$b->getBlockID()] = $id;
@@ -41,7 +48,7 @@ class ContentImporter
         }
     }
 
-    public static function addPageTypeComposerOutputControlID(PageTypeComposerFormLayoutSetControl $control, $id)
+    public static function addPageTypeComposerOutputControlID(FormLayoutSetControl $control, $id)
     {
         self::$ptComposerOutputControlIDs[$id] = $control->getPageTypeComposerFormLayoutSetControlID();
     }

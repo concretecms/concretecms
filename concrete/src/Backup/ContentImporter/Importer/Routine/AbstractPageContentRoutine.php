@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Backup\ContentImporter\Importer\Routine;
 
+use Concrete\Core\Backup\ContentImporter;
 use Concrete\Core\Block\Block;
 use Concrete\Core\Block\BlockType\BlockType;
 use Concrete\Core\Page\Page;
@@ -25,7 +26,7 @@ abstract class AbstractPageContentRoutine extends AbstractRoutine
                     } else {
                         if ($bx['mc-block-id'] != '') {
                             // we find that block in the master collection block pool and alias it out
-                            $bID = array_search((string) $bx['mc-block-id'], self::$mcBlockIDs);
+                            $bID = array_search((string) $bx['mc-block-id'], ContentImporter::getMasterCollectionTemporaryBlockIDs());
                             if ($bID) {
                                 $mc = Page::getByID($page->getMasterCollectionID(), 'RECENT');
                                 $block = Block::getByID($bID, $mc, (string) $ax['name']);

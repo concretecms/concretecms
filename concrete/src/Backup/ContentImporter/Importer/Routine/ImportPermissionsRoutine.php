@@ -4,6 +4,7 @@ namespace Concrete\Core\Backup\ContentImporter\Importer\Routine;
 use Concrete\Core\Block\BlockType\BlockType;
 use Concrete\Core\Entity\Express\FieldSet;
 use Concrete\Core\Entity\Express\Form;
+use Concrete\Core\Permission\Access\Access;
 use Concrete\Core\Permission\Access\Entity\GroupEntity;
 use Concrete\Core\Permission\Access\Entity\Type;
 use Concrete\Core\Permission\Category;
@@ -56,7 +57,7 @@ class ImportPermissionsRoutine extends AbstractRoutine
                 }
 
                 if (count($assignments)) {
-                    $pa = PermissionAccess::create($pkx);
+                    $pa = Access::create($pkx);
                     foreach ($assignments as $pae) {
                         $pa->addListItem($pae);
                     }
