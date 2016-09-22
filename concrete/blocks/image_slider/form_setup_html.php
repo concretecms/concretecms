@@ -3,10 +3,12 @@
 $fp = FilePermissions::getGlobal();
 $tp = new TaskPermission();
 
-echo Core::make('helper/concrete/ui')->tabs(array(
-    array('slides', t('Slides'), true),
-    array('options', t('Options'))
-));
+$getString = Core::make('helper/validation/identifier')->getString(18);
+$tabs = array(
+    array('slides-'.$getString, t('Slides'), true),
+    array('options-'.$getString, t('Options'))
+);
+echo Core::make('helper/concrete/ui')->tabs($tabs);
 ?>
 <script>
     var CCM_EDITOR_SECURITY_TOKEN = "<?php echo Core::make('helper/validation/token')->generate('editor'); ?>";
@@ -255,7 +257,7 @@ echo Core::make('helper/concrete/ui')->tabs(array(
     }
 </style>
 
-<div id="ccm-tab-content-slides" class="ccm-tab-content">
+<div id="ccm-tab-content-slides-<?php echo $getString?>" class="ccm-tab-content">
     <div class="ccm-image-slider-block-container">
         <div class="ccm-image-slider-entries">
 
@@ -266,7 +268,7 @@ echo Core::make('helper/concrete/ui')->tabs(array(
     </div>
 </div>
 
-<div id="ccm-tab-content-options" class="ccm-tab-content">
+<div id="ccm-tab-content-options-<?php echo $getString?>" class="ccm-tab-content">
     <label class="control-label"><?php echo t('Navigation'); ?></label>
     <div class="form-group">
         <div class="radio">
