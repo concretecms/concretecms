@@ -80,18 +80,20 @@ class Controller extends BlockController
         $c = \Page::getCurrentPage();
         $al = Section::getBySectionOfSite($c);
         $languages = array();
-        $locale = \Localization::activeLocale();
-        if (is_object($al)) {
+        $locale = null;
+        if ($al) {
             $locale = $al->getLanguage();
+        }
+        if (!$locale) {
+            $locale = \Localization::activeLocale();
+            $al = Section::getByLocale($locale);
         }
         foreach ($ml as $m) {
             $languages[$m->getCollectionID()] = $m->getLanguageText($locale);
         }
         $this->set('languages', $languages);
         $this->set('languageSections', $ml);
-        if (is_object($al)) {
-            $this->set('activeLanguage', $al->getCollectionID());
-        }
+        $this->set('activeLanguage', $al? $al->getCollectionID() : null);
         $dl = \Core::make('multilingual/detector');
         $this->set('defaultLocale', $dl->getPreferredSection());
         $this->set('locale', $locale);
