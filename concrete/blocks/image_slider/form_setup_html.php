@@ -279,29 +279,29 @@ echo Core::make('helper/concrete/ui')->tabs($tabs);
         </div>
     </div>
     <div class="form-group">
-        <?php echo $form->label('timeout', t('Slide Duration')); ?>
+        <?php echo $form->label($view->field('timeout'), t('Slide Duration')); ?>
         <div class="input-group" style="width: 150px">
-        <?php echo $form->number('timeout', $timeout ? $timeout : 4000, array('min' => '1', 'max' => '99999'))?><span class="input-group-addon"><?php echo t('ms'); ?></span>
+        <?php echo $form->number($view->field('timeout'), $timeout ? $timeout : 4000, array('min' => '1', 'max' => '99999'))?><span class="input-group-addon"><?php echo t('ms'); ?></span>
         </div>
     </div>
     <div class="form-group">
-        <?php echo $form->label('speed', t('Slide Transition Speed')); ?>
+        <?php echo $form->label($view->field('speed'), t('Slide Transition Speed')); ?>
         <div class="input-group" style="width: 150px">
-        <?php echo $form->number('speed', $speed ? $speed : 500, array('min' => '1', 'max' => '99999'))?><span class="input-group-addon"><?php echo t('ms'); ?></span>
+        <?php echo $form->number($view->field('speed'), $speed ? $speed : 500, array('min' => '1', 'max' => '99999'))?><span class="input-group-addon"><?php echo t('ms'); ?></span>
         </div>
     </div>
     <div class="form-group">
-        <?php echo $form->checkbox('noAnimate', 1, $noAnimate); ?>
-        <?php echo $form->label('noAnimate', t('Disable Automatic Slideshow')); ?>
+        <?php echo $form->checkbox($view->field('noAnimate'), 1, $noAnimate); ?>
+        <?php echo $form->label($view->field('noAnimate'), t('Disable Automatic Slideshow')); ?>
     </div>
     <div class="form-group">
-        <?php echo $form->checkbox('pause', 1, $pause); ?>
-        <?php echo $form->label('pause', t('Pause Slideshow on Hover')); ?>
+        <?php echo $form->checkbox($view->field('pause'), 1, $pause); ?>
+        <?php echo $form->label($view->field('pause'), t('Pause Slideshow on Hover')); ?>
     </div>
     <div class="form-group">
-        <?php echo $form->label('maxWidth', t('Maximum Slide Width (0 means no limit)')); ?>
+        <?php echo $form->label($view->field('maxWidth'), t('Maximum Slide Width (0 means no limit)')); ?>
         <div class="input-group" style="width: 150px">
-        <?php echo $form->number('maxWidth', $maxWidth ? $maxWidth : 0, array('min' => '0', 'max' => '9999'))?><span class="input-group-addon"><?php echo t('px'); ?></span>
+        <?php echo $form->number($view->field('maxWidth'), $maxWidth ? $maxWidth : 0, array('min' => '0', 'max' => '9999'))?><span class="input-group-addon"><?php echo t('px'); ?></span>
         </div>
     </div>
 </div>
