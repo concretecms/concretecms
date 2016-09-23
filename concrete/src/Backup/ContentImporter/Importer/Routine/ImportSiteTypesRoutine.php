@@ -25,10 +25,11 @@ class ImportSiteTypesRoutine extends AbstractRoutine
     {
         if (isset($sx->sitetypes)) {
             foreach ($sx->sitetypes->sitetype as $type) {
+                $pkg = static::getPackageObject($type['package']);
                 $handle = (string) $type['handle'];
                 $site_type = $this->typeService->getByHandle($handle);
                 if (!is_object($site_type)) {
-                    $site_type = $this->typeService->add($handle, (string) $type['name']);
+                    $site_type = $this->typeService->add($handle, (string) $type['name'], $pkg);
                 }
                 $this->entityManager->persist($site_type);
                 $this->entityManager->flush();

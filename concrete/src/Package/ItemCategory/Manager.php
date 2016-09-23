@@ -149,6 +149,11 @@ class Manager extends CoreManager
         return new Theme();
     }
 
+    public function createSiteTypeDriver()
+    {
+        return $this->app->make(SiteType::class);
+    }
+
     public function getPackageItems(Package $package)
     {
         $items = array();

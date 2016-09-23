@@ -64,15 +64,27 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
      *
      * @return Page
      */
-    public static function getByPath($path, $version = 'RECENT')
+    public static function getByPath($path, $version = 'RECENT', Tree $siteTree = null)
     {
         $path = rtrim($path, '/'); // if the path ends in a / remove it.
+        $cache = \Core::make('cache/request');
 
-        $cID = CacheLocal::getEntry('page_id_from_path', $path);
-        if ($cID == false) {
-            $db = Database::connection();
-            $cID = $db->fetchColumn('select cID from PagePaths where cPath = ?', [$path]);
-            CacheLocal::set('page_id_from_path', $path, $cID);
+        if ($siteTree) {
+            $item = $cache->getItem(sprintf('site/page/path/%s/%s', $siteTree->getSiteTreeID(), trim($path, '/')));
+            $cID = $item->get();
+            if ($item->isMiss()) {
+                $db = Database::connection();
+                $cID = $db->fetchColumn('select Pages.cID from PagePaths inner join Pages on Pages.cID = PagePaths.cID where cPath = ? and siteTreeID = ?', [$path, $siteTree->getSiteTreeID()]);
+                $cache->save($item->set($cID));
+            }
+        } else {
+            $item = $cache->getItem(sprintf('page/path/%s', trim($path, '/')));
+            $cID = $item->get();
+            if ($item->isMiss()) {
+                $db = Database::connection();
+                $cID = $db->fetchColumn('select cID from PagePaths where cPath = ?', [$path]);
+                $cache->save($item->set($cID));
+            }
         }
 
         return self::getByID($cID, $version);
@@ -2955,7 +2967,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         //$this->rescanChildrenDisplayOrder();
         $cDisplayOrder = $this->getNextSubPageDisplayOrder();
 
-        $siteTreeID = \Core::make('site')->getSite()->getSiteTreeID();
+        $siteTreeID = $this->getSiteTreeID();
 
         $cInheritPermissionsFromCID = ($this->overrideTemplatePermissions()) ? $this->getPermissionsCollectionID() : $masterCID;
         $cInheritPermissionsFrom = ($this->overrideTemplatePermissions()) ? 'PARENT' : 'TEMPLATE';

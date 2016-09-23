@@ -2,6 +2,7 @@
 namespace Concrete\Core\Site\Type;
 
 use Concrete\Core\Application\Application;
+use Concrete\Core\Entity\Package;
 use Concrete\Core\Entity\Page\Template;
 use Concrete\Core\Entity\Site\Site;
 use Concrete\Core\Entity\Site\Type;
@@ -37,6 +38,12 @@ class Service
             ->findOneBy(array('siteTypeHandle' => $typeHandle));
     }
 
+    public function getByPackage(Package $package)
+    {
+        return $this->entityManager->getRepository('Concrete\Core\Entity\Site\Type')
+            ->findByPackage($package);
+    }
+
     public function getList()
     {
         return $this->entityManager->getRepository('Concrete\Core\Entity\Site\Type')
@@ -49,12 +56,13 @@ class Service
         $this->entityManager->flush();
     }
 
-    public function add($handle, $name)
+    public function add($handle, $name, Package $pkg = null)
     {
         $factory = new Factory();
         $type = $factory->createEntity();
         $type->setSiteTypeHandle($handle);
         $type->setSiteTypeName($name);
+        $type->setPackage($pkg);
 
         $this->entityManager->persist($type);
         $this->entityManager->flush();
