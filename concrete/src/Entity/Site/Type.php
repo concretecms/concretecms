@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Entity\Site;
 
+use Concrete\Core\Entity\PackageTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -12,6 +13,8 @@ class Type
 {
 
     const DEFAULT_TYPE_HANDLE = 'default';
+
+    use PackageTrait;
 
     /**
      * @ORM\Id @ORM\Column(type="integer", options={"unsigned":true})

@@ -6,7 +6,7 @@ abstract class AbstractRoutine implements RoutineInterface
 
     protected static function getPackageObject($pkgHandle)
     {
-        $pkg = false;
+        $pkg = null;
         if ($pkgHandle) {
             $pkgHandle = (string) $pkgHandle;
             $pkg = \Package::getByHandle($pkgHandle);

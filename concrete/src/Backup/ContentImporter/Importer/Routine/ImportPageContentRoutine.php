@@ -15,14 +15,33 @@ class ImportPageContentRoutine extends AbstractPageContentRoutine
         return 'page_content';
     }
 
+    /**
+     * Useful when we're calling this from another routine that imports a new home page.
+     * @param $c
+     */
+    public function setHomePage($c)
+    {
+        $this->home = $c;
+    }
+
     public function import(\SimpleXMLElement $sx)
     {
+
+        $siteTree = null;
+        if (isset($this->home)) {
+            $siteTree = $this->home->getSiteTreeObject();
+        }
+
         if (isset($sx->pages)) {
             foreach ($sx->pages->page as $px) {
                 if ($px['path'] != '') {
-                    $page = Page::getByPath($px['path'], 'RECENT');
+                    $page = Page::getByPath($px['path'], 'RECENT', $siteTree);
                 } else {
-                    $page = Page::getByID(HOME_CID, 'RECENT');
+                    if (isset($this->home)) {
+                        $page = $this->home;
+                    } else {
+                        $page = Page::getByID(HOME_CID, 'RECENT');
+                    }
                 }
                 if (isset($px->area)) {
                     $this->importPageAreas($page, $px);

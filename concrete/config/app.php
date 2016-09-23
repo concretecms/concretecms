@@ -183,6 +183,7 @@ return array(
         'permission_key_category',
         'permission_key',
         'page_template',
+        'site_type',
         'page_type',
         'page_type_composer_control_type',
         'page_type_publish_target_type',

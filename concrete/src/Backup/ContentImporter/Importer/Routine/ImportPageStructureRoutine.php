@@ -10,9 +10,21 @@ use Concrete\Core\User\UserInfo;
 
 class ImportPageStructureRoutine extends AbstractPageStructureRoutine
 {
+
+    protected $home;
+
     public function getHandle()
     {
         return 'page_structure';
+    }
+
+    /**
+     * Useful when we're calling this from another routine that imports a new home page.
+     * @param $c
+     */
+    public function setHomePage($c)
+    {
+        $this->home = $c;
     }
 
     public function import(\SimpleXMLElement $sx)
@@ -26,7 +38,13 @@ class ImportPageStructureRoutine extends AbstractPageStructureRoutine
                 ++$i;
             }
             usort($nodes, array('static', 'setupPageNodeOrder'));
-            $home = Page::getByID(HOME_CID, 'RECENT');
+            $siteTree = null;
+            if (isset($this->home)) {
+                $home = $this->home;
+                $siteTree = $this->home->getSiteTreeObject();
+            } else {
+                $home = Page::getByID(HOME_CID, 'RECENT');
+            }
 
             foreach ($nodes as $px) {
                 $pkg = static::getPackageObject($px['package']);
@@ -54,7 +72,7 @@ class ImportPageStructureRoutine extends AbstractPageStructureRoutine
                 $template = Template::getByHandle($px['template']);
                 if ($px['path'] != '') {
                     // not home page
-                    $page = Page::getByPath($px['path']);
+                    $page = Page::getByPath($px['path'], 'RECENT', $siteTree);
                     if (!is_object($page) || ($page->isError())) {
                         $lastSlash = strrpos((string) $px['path'], '/');
                         $parentPath = substr((string) $px['path'], 0, $lastSlash);
@@ -62,7 +80,7 @@ class ImportPageStructureRoutine extends AbstractPageStructureRoutine
                         if (!$parentPath) {
                             $parent = $home;
                         } else {
-                            $parent = Page::getByPath($parentPath);
+                            $parent = Page::getByPath($parentPath, 'RECENT', $siteTree);
                         }
                         $page = $parent->add($ct, $data);
                     }
