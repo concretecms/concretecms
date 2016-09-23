@@ -366,6 +366,12 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
             'handle' => $ptHandle,
             'name' => $ptName,
         );
+
+        $siteType = (string) $node['site-type'];
+        if ($siteType) {
+            $data['siteType'] = \Core::make('site/type')->getByHandle($siteType);
+        }
+
         if ($defaultPageTemplate) {
             $data['defaultTemplate'] = $defaultPageTemplate;
         }
@@ -485,6 +491,10 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
         $pagetype->addAttribute('package', $this->getPackageHandle());
         if ($this->isPageTypeInternal()) {
             $pagetype->addAttribute('internal', 'true');
+        }
+        $siteType = $this->getSiteTypeObject();
+        if (!$siteType->isDefault()) {
+            $pagetype->addAttribute('site-type', $siteType->getSiteTypeHandle());
         }
         if ($this->doesPageTypeLaunchInComposer()) {
             $pagetype->addAttribute('launch-in-composer', '1');
@@ -672,8 +682,6 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
      */
     public static function add($data, $pkg = false)
     {
-        $siteType = \Core::make('site/type')->getDefault();
-
         $data = $data + array(
             'defaultTemplate' => null,
             'allowedTemplates' => null,
@@ -681,8 +689,11 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
             'internal' => null,
             'ptLaunchInComposer' => null,
             'ptIsFrequentlyAdded' => null,
-            'siteType' => $siteType
-            );
+        );
+
+        if (!isset($data['siteType'])) {
+            $data['siteType'] = \Core::make('site/type')->getDefault();
+        }
 
         $ptHandle = $data['handle'];
         $ptName = $data['name'];

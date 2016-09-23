@@ -195,6 +195,7 @@ return array(
     ),
 
     'importer_routines' => array(
+        'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportSiteTypesRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportGroupsRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportSinglePageStructureRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportStacksStructureRoutine',
