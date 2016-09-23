@@ -8,6 +8,7 @@ abstract class AttributeTestCase extends ConcreteDatabaseTestCase
     protected $metadatas = array(
         'Concrete\Core\Entity\Site\Site',
         'Concrete\Core\Entity\Site\Tree',
+        'Concrete\Core\Entity\Site\SiteTree',
         'Concrete\Core\Entity\Site\Type',
         'Concrete\Core\Entity\Attribute\Category',
         'Concrete\Core\Entity\Attribute\Key\Type\TextType',

@@ -21,6 +21,7 @@ class UserTest extends \UserTestCase
         $this->metadatas[] = 'Concrete\Core\Entity\Site\Site';
         $this->metadatas[] = 'Concrete\Core\Entity\Site\Type';
         $this->metadatas[] = 'Concrete\Core\Entity\Site\Tree';
+        $this->metadatas[] = 'Concrete\Core\Entity\Site\SiteTree';
         $this->tables[] = 'FileStorageLocationTypes';
         parent::setUp();
     }
