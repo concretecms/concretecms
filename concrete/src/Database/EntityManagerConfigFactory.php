@@ -107,7 +107,7 @@ class EntityManagerConfigFactory implements ApplicationAwareInterface, EntityMan
     public function getMetadataDriverImpl()
     {
         // Register the doctrine Annotations
-        \Doctrine\Common\Annotations\AnnotationRegistry::registerFile(DIR_BASE_CORE.'/vendor/doctrine/orm/lib/Doctrine/ORM'.'/Mapping/Driver/DoctrineAnnotations.php');
+        \Doctrine\Common\Annotations\AnnotationRegistry::registerFile('doctrine/orm/lib/Doctrine/ORM/Mapping/Driver/DoctrineAnnotations.php');
 
         $legacyNamespace = $this->getConfigRepository()->get('app.enable_legacy_src_namespace');
         if ($legacyNamespace) {
