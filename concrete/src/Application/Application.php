@@ -6,6 +6,9 @@ use Concrete\Core\Cache\Page\PageCache;
 use Concrete\Core\Cache\Page\PageCacheRecord;
 use Concrete\Core\Cache\OpCache;
 use Concrete\Core\Database\Connection\Connection;
+use Concrete\Core\Database\EntityManager\Driver\DriverInterface;
+use Concrete\Core\Database\EntityManager\Provider\PackageProvider;
+use Concrete\Core\Database\EntityManagerConfigUpdater;
 use Concrete\Core\Entity\Site\Site;
 use Concrete\Core\Foundation\ClassLoader;
 use Concrete\Core\Foundation\EnvironmentDetector;
@@ -286,9 +289,10 @@ class Application extends Container
         $config = $this['config'];
 
         $loc = Localization::getInstance();
+        $entityManager = $this['Doctrine\ORM\EntityManager'];
+        $configUpdater = new EntityManagerConfigUpdater($entityManager);
 
         foreach ($this->packages as $pkg) {
-            // handle updates
             if ($config->get('concrete.updates.enable_auto_update_packages')) {
                 $dbPkg = \Package::getByHandle($pkg->getPackageHandle());
                 $pkgInstalledVersion = $dbPkg->getPackageVersion();
@@ -301,15 +305,25 @@ class Application extends Container
                 }
             }
             $this->make('Concrete\Core\Package\PackageService')->setupLocalization($pkg);
-        }
-        foreach($this->packages as $pkg) {
+
             if (method_exists($pkg, 'on_start')) {
                 $pkg->on_start();
             }
+
+            // Inject the package entity manager into entity manager configuration
+            $provider = $pkg->getEntityManagerProvider();
+            foreach($provider->getDrivers() as $driver) {
+                /**
+                 * @var $driver DriverInterface
+                 */
+                $configUpdater->addDriver($driver);
+            }
+
             if (method_exists($pkg, 'on_after_packages_start')) {
                 $checkAfterStart = true;
             }
         }
+
         $config->set('app.bootstrap.packages_loaded', true);
 
         // After package initialization, the translations adapters need to be

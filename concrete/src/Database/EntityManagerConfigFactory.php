@@ -3,16 +3,20 @@
 namespace Concrete\Core\Database;
 
 use Concrete\Core\Application\ApplicationAwareInterface;
+use Concrete\Core\Database\EntityManager\Driver\ApplicationDriver;
+use Concrete\Core\Database\EntityManager\Driver\CoreDriver;
 
 /**
  * EntityManagerConfigFactory
- *
+ * Responsible for bootstrapping the core concrete5 entity manager (Concrete\Core\Entity) and the application level
+ * entity manager. Sets the stage for the package entity manager once its time for them to come online.
  * @author markus.liechti
+ * @author Andrew Embler
  */
 class EntityManagerConfigFactory implements ApplicationAwareInterface, EntityManagerConfigFactoryInterface
 {
     /**
-     * @var \Concrete\Core\Application\Application 
+     * @var \Concrete\Core\Application\Application
      */
     protected $app;
 
@@ -33,8 +37,11 @@ class EntityManagerConfigFactory implements ApplicationAwareInterface, EntityMan
     /**
      * Constructor
      */
-    public function __construct(\Concrete\Core\Application\Application $app, \Doctrine\ORM\Configuration $configuration, \Illuminate\Config\Repository $configRepository)
-    {
+    public function __construct(
+        \Concrete\Core\Application\Application $app,
+        \Doctrine\ORM\Configuration $configuration,
+        \Illuminate\Config\Repository $configRepository
+    ) {
         $this->setApplication($app);
         $this->configuration = $configuration;
         $this->configRepository = $configRepository;
@@ -53,7 +60,8 @@ class EntityManagerConfigFactory implements ApplicationAwareInterface, EntityMan
      *
      * @param \Illuminate\Config\Repository $configRepository
      */
-    public function setConfigRepository(\Illuminate\Config\Repository $configRepository){
+    public function setConfigRepository(\Illuminate\Config\Repository $configRepository)
+    {
         $this->configRepository = $configRepository;
     }
 
@@ -62,13 +70,14 @@ class EntityManagerConfigFactory implements ApplicationAwareInterface, EntityMan
      *
      * @return \Illuminate\Config\Repository
      */
-    public function getConfigRepository(){
+    public function getConfigRepository()
+    {
         return $this->configRepository;
     }
 
     /**
      * Add driverChain and get orm config
-     * 
+     *
      * @return \Doctrine\ORM\Configuration
      */
     public function getConfiguration()
@@ -80,42 +89,21 @@ class EntityManagerConfigFactory implements ApplicationAwareInterface, EntityMan
     }
 
     /**
-     * Get the cached annotation reader used by packages and core > c5 version 8.0.0
-     * 
-     * @return \Doctrine\Common\Annotations\CachedReader
-     */
-    public function getCachedAnnotationReader()
-    {
-        return $this->app->make('orm/cachedAnnotationReader');
-    }
-
-    /**
-     * Get cached legacy annotation reader used by packages requiring concrete5
-     * version lower than 8.0.0
-     * 
-     * @return \Doctrine\Common\Annotations\CachedReader
-     */
-    public function getCachedSimpleAnnotationReader()
-    {
-        return $this->app->make('orm/cachedSimpleAnnotationReader');
-    }
-
-    /**
-     * 
+     *
      * @return \Doctrine\Common\Persistence\Mapping\Driver\MappingDriverChain
      */
     public function getMetadataDriverImpl()
     {
         // Register the doctrine Annotations
-        \Doctrine\Common\Annotations\AnnotationRegistry::registerFile(DIR_BASE_CORE.'/vendor/doctrine/orm/lib/Doctrine/ORM'.'/Mapping/Driver/DoctrineAnnotations.php');
+        \Doctrine\Common\Annotations\AnnotationRegistry::registerFile(DIR_BASE_CORE . '/vendor/doctrine/orm/lib/Doctrine/ORM' . '/Mapping/Driver/DoctrineAnnotations.php');
 
         $legacyNamespace = $this->getConfigRepository()->get('app.enable_legacy_src_namespace');
         if ($legacyNamespace) {
             \Doctrine\Common\Annotations\AnnotationRegistry::registerAutoloadNamespace('Application\Src',
-                DIR_BASE.'/application/src');
+                DIR_BASE . '/application/src');
         } else {
             \Doctrine\Common\Annotations\AnnotationRegistry::registerAutoloadNamespace('Application\Entity',
-                DIR_BASE.'/application/src/Entity');
+                DIR_BASE . '/application/src/Entity');
         }
         // Remove all unkown annotations from the AnnotationReader used by the SimpleAnnotationReader
         // to prevent fatal errors
@@ -124,101 +112,46 @@ class EntityManagerConfigFactory implements ApplicationAwareInterface, EntityMan
         // initiate the driver chain which will hold all driver instances
         $driverChain = $this->app->make('Doctrine\Common\Persistence\Mapping\Driver\MappingDriverChain');
 
-        // Create Core annotationDriver
-        $coreDirs = array(
-            DIR_BASE_CORE.DIRECTORY_SEPARATOR.DIRNAME_CLASSES . '/' . DIRNAME_ENTITIES,
-        );
-        $annotationDriver = new \Doctrine\ORM\Mapping\Driver\AnnotationDriver($this->getCachedAnnotationReader(),
-            $coreDirs);
-
-        // The default driver only kicks in, if no driver has been found for a specific namespace.
-        // In c5 this shouldn't be the case. If some problems occure with entity
-        // mapping uncommenting the following line maybe helps to fix them.
-        //$driverChain->setDefaultDriver($annotationDriver);
-
-        $annotationDriver->addExcludePaths($this->getConfigRepository()->get('database.proxy_exclusions', array()));
-        $driverChain->addDriver($annotationDriver, 'Concrete\Core\Entity');
+        $coreDriver = new CoreDriver($this->app);
+        $driver = $coreDriver->getDriver();
+        $driver->addExcludePaths($this->getConfigRepository()->get('database.proxy_exclusions', array()));
+        $driverChain->addDriver($driver, $coreDriver->getNamespace());
 
         // Register application metadata driver
-        $this->addApplicationMetadataDriverToDriverChain($driverChain);
-
-        // Register all installed packages in the driverChain
-        $this->addPackageMetadataDriverToDriverChain($driverChain);
+        $config = $this->getConfigRepository();
+        $applicationDriver = new ApplicationDriver($config, $this->app);
+        $driver = $applicationDriver->getDriver();
+        if (is_object($driver)) {
+            // $driver might be null, if there's no application/src/Entity
+            $driverChain->addDriver($applicationDriver->getDriver(), $applicationDriver->getNamespace());
+        }
 
         return $driverChain;
     }
 
-    /**
-     * Register the application metadata driver to the driver chain
-     * Default metadata driver is the annotation driver.
-     * 
-     * Other metadata driver typs (xml and yaml) can be configured in the 
-     * database configruation file: application\config\database.php
-     * 
-     * 'metadatadriver' => array('application' => 'yaml'),
-     * 
-     * @param \Doctrine\Common\Persistence\Mapping\Driver\MappingDriverChain $driverChain
-     */
-    protected function addApplicationMetadataDriverToDriverChain($driverChain)
-    {
-        $legacyNamespace = $this->getConfigRepository()->get('app.enable_legacy_src_namespace');
-        if ($legacyNamespace) {
-            $appEntityPath = DIR_APPLICATION.DIRECTORY_SEPARATOR.DIRNAME_CLASSES;
-            $appNamespace = 'Application\Src';
-        } else {
-            $appEntityPath = DIR_APPLICATION.DIRECTORY_SEPARATOR.DIRNAME_CLASSES.DIRECTORY_SEPARATOR.DIRNAME_ENTITIES;
-            $appNamespace = 'Application\Entity';
-        }
-
-        $xmlConfig  = DIR_APPLICATION.DIRECTORY_SEPARATOR.REL_DIR_METADATA_XML;
-        $ymlConfig  = DIR_APPLICATION.DIRECTORY_SEPARATOR.REL_DIR_METADATA_YAML;
-        
-        $appDriverSettings = $this->getConfigRepository()->get(CONFIG_ORM_METADATA_APPLICATION);
-
-        // Default setting so it comes first
-        if (empty($appDriverSettings) && is_dir($appEntityPath)) {
-            $annotationDriver = new \Doctrine\ORM\Mapping\Driver\AnnotationDriver($this->getCachedAnnotationReader(), $appEntityPath);
-            $driverChain->addDriver($annotationDriver, $appNamespace);
-        } else if ($appDriverSettings === \Package::PACKAGE_METADATADRIVER_XML || $appDriverSettings === 'xml') {
-            if (is_dir($xmlConfig)) {
-                $xmlDriver = new \Doctrine\ORM\Mapping\Driver\XmlDriver($xmlConfig);
-                $driverChain->addDriver($xmlDriver, $appNamespace);
-            }else{
-                // Fallback to default
-                $annotationDriver = new \Doctrine\ORM\Mapping\Driver\AnnotationDriver($this->getCachedAnnotationReader(), $appEntityPath);
-                $driverChain->addDriver($annotationDriver, $appNamespace);
-            }
-        } else if ($appDriverSettings === \Package::PACKAGE_METADATADRIVER_YAML || $appDriverSettings === 'yaml' || $appDriverSettings === 'yml') {
-            if (is_dir($ymlConfig)) {
-                $yamlDriver = new \Doctrine\ORM\Mapping\Driver\YamlDriver($ymlConfig);
-                $driverChain->addDriver($yamlDriver, $appNamespace);
-            }else{
-                // Fallback to default
-                $annotationDriver = new \Doctrine\ORM\Mapping\Driver\AnnotationDriver($this->getCachedAnnotationReader(), $appEntityPath);
-                $driverChain->addDriver($annotationDriver, $appNamespace);
-            }
-        }
-    }
 
     /**
      * Register all metadatadrivers of all installed packages
      * in the driver chain
-     * 
+     *
      * @param \Doctrine\Common\Persistence\Mapping\Driver\MappingDriverChain $driverChain
      */
+    /*
     protected function addPackageMetadataDriverToDriverChain($driverChain)
     {
         $this->registerPkgWithAnnotationMetadataImpl($driverChain);
         $this->registerPkgWithXMLMetadataImpl($driverChain);
         $this->registerPkgWithYamlMetadataImpl($driverChain);
     }
+    */
 
     /**
-     * Register the namespace and the metadata paths of all 
+     * Register the namespace and the metadata paths of all
      * packages with annotations
-     * 
+     *
      * @param \Doctrine\Common\Persistence\Mapping\Driver\MappingDriverChain $driverChain
      */
+    /*
     protected function registerPkgWithAnnotationMetadataImpl($driverChain)
     {
         $driverSettingsLegacy  = $this->getConfigRepository()->get(CONFIG_ORM_METADATA_ANNOTATION_LEGACY);
@@ -259,13 +192,14 @@ class EntityManagerConfigFactory implements ApplicationAwareInterface, EntityMan
             }
         }
     }
-       
+       */
     /**
-     * Register the namespace and the metadata paths of all 
+     * Register the namespace and the metadata paths of all
      * packages with xml metadata
-     * 
+     *
      * @param \Doctrine\Common\Persistence\Mapping\Driver\MappingDriverChain $driverChain
      */
+    /*
     protected function registerPkgWithXMLMetadataImpl($driverChain)
     {
         $driverSettings = $this->getConfigRepository()->get(CONFIG_ORM_METADATA_XML);
@@ -283,14 +217,16 @@ class EntityManagerConfigFactory implements ApplicationAwareInterface, EntityMan
                 }
             }
         }
-    }
+    }*/
+
 
     /**
-     * Register the namespace and the metadata paths of all 
+     * Register the namespace and the metadata paths of all
      * packages with yaml metadata
-     * 
+     *
      * @param \Doctrine\Common\Persistence\Mapping\Driver\MappingDriverChain $driverChain
      */
+    /*
     protected function registerPkgWithYamlMetadataImpl($driverChain)
     {
         $driverSettings = $this->getConfigRepository()->get(CONFIG_ORM_METADATA_YAML);
@@ -308,16 +244,17 @@ class EntityManagerConfigFactory implements ApplicationAwareInterface, EntityMan
                 }
             }
         }
-    }
-    
+    }*/
+
     /**
      * Checks if the mapping paths are valid. If a namespace contains atleast one
-     * invalid mapping path the method returns true. 
+     * invalid mapping path the method returns true.
      * If all is fine, false is returned
-     * 
+     *
      * @param array $paths
      * @return boolean
      */
+    /*
     protected function hasInvalidPaths (array $paths){
         
         $oneInvalidPath = false;
@@ -331,13 +268,14 @@ class EntityManagerConfigFactory implements ApplicationAwareInterface, EntityMan
             }
         }
         return $oneInvalidPath;
-    }
-    
+    }*/
+
     /**
      * Prepend all relativ paths with DIR_BASE
-     * 
+     *
      * @param array $setting
      */
+    /*
     protected function convertRelativeToAbsolutePaths(array $setting)
     {
         $paths = $setting['paths'];
@@ -348,8 +286,8 @@ class EntityManagerConfigFactory implements ApplicationAwareInterface, EntityMan
             }
         }
         return $newPaths;
-    }
-    
+    }*/
+
     /**
      * Register globally ignored annotations
      */
@@ -403,7 +341,7 @@ class EntityManagerConfigFactory implements ApplicationAwareInterface, EntityMan
         \Doctrine\Common\Annotations\AnnotationReader::addGlobalIgnoredName('Table');
         \Doctrine\Common\Annotations\AnnotationReader::addGlobalIgnoredName('UniqueConstraint');
         \Doctrine\Common\Annotations\AnnotationReader::addGlobalIgnoredName('Version');
-        
+
         \Doctrine\Common\Annotations\AnnotationReader::addGlobalIgnoredName('Embeddable');
         \Doctrine\Common\Annotations\AnnotationReader::addGlobalIgnoredName('Embedded');
     }

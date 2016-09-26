@@ -5,6 +5,7 @@ use Concrete\Core\Application\Application;
 use Concrete\Core\Backup\ContentImporter;
 use Concrete\Core\Config\Repository\Liaison;
 use Concrete\Core\Database\DatabaseStructureManager;
+use Concrete\Core\Database\EntityManager\Provider\StandardPackageProvider;
 use Concrete\Core\Database\EntityManagerFactory;
 use Concrete\Core\Database\Schema\Schema;
 use Concrete\Core\Foundation\ClassLoader;
@@ -81,16 +82,6 @@ abstract class Package implements LocalizablePackageInterface
      * @var \Concrete\Core\Database\DatabaseStructureManager
      */
     protected $databaseStructureManager;
-    
-    
-    const PACKAGE_METADATADRIVER_ANNOTATION = 1;
-    const PACKAGE_METADATADRIVER_XML = 2;
-    const PACKAGE_METADATADRIVER_YAML = 3;
-    
-    /**
-     * @var $metadataDriver default is annotaion driver
-     */
-    protected $metadataDriver = self::PACKAGE_METADATADRIVER_ANNOTATION;
 
     /**
      * @return \Concrete\Core\Entity\Package
@@ -352,10 +343,12 @@ abstract class Package implements LocalizablePackageInterface
 
         \Config::clearNamespace($this->getPackageHandle());
         $this->app->make('config/database')->clearNamespace($this->getPackageHandle());
-        
+
+        /*
         if(!empty($this->getPackageMetadataPaths())){
             $this->destroyProxyClasses($this->getPackageEntityManager());
         }
+        */
 
         $em = \ORM::entityManager();
         $em->remove($package);
@@ -609,9 +602,13 @@ abstract class Package implements LocalizablePackageInterface
         return false;
     }
 
+    public function getEntityManagerProvider()
+    {
+        return new StandardPackageProvider($this->app, $this);
+    }
+
     /**
-     * Returns an array of paths directory containing package entities.
-     *
+     * @deprecated
      * @return string
      */
     public function getPackageEntityPaths()
@@ -630,11 +627,12 @@ abstract class Package implements LocalizablePackageInterface
      */
     public function installDatabase()
     {
-        $this->installEntitiesDatabase();
+       // $this->installEntitiesDatabase();
 
         static::installDB($this->getPackagePath() . '/' . FILENAME_PACKAGE_DB);
     }
 
+    /*
     public function installEntitiesDatabase()
     {   
         // if the src folder doesn't exist, we assume, that no entities are present.
@@ -652,6 +650,7 @@ abstract class Package implements LocalizablePackageInterface
         $metadata = $em->getMetadataFactory()->getAllMetadata();
         $em->getProxyFactory()->generateProxyClasses($metadata, $em->getConfiguration()->getProxyDir());
     }
+    */
     
     /**
      * Installs a package's database from an XML file.
