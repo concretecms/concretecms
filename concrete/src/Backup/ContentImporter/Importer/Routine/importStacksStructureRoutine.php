@@ -2,6 +2,7 @@
 namespace Concrete\Core\Backup\ContentImporter\Importer\Routine;
 
 use Concrete\Core\Page\Stack\Folder\Folder;
+use Concrete\Core\Page\Stack\Folder\FolderService;
 use Concrete\Core\Page\Stack\Stack;
 use Concrete\Core\Permission\Category;
 
@@ -14,6 +15,8 @@ class ImportStacksStructureRoutine extends AbstractPageStructureRoutine
 
     public function import(\SimpleXMLElement $sx)
     {
+        $folderService = new FolderService(\Core::make('app'), \Database::connection());
+
         if (isset($sx->stacks)) {
 
             $nodes = array();
@@ -39,15 +42,15 @@ class ImportStacksStructureRoutine extends AbstractPageStructureRoutine
                     $lastSlash = strrpos($path, '/');
                     $parentPath = substr($path, 0, $lastSlash);
                     if ($parentPath) {
-                        $parent = StackFolder::getByPath($parentPath);
+                        $parent = $folderService->getByPath($parentPath);
                     }
                 }
 
                 switch($type) {
                     case 'folder':
-                        $folder = Folder::getByPath($path);
+                        $folder = $folderService->getByPath($path);
                         if (!is_object($folder)) {
-                            Folder::add($name, $parent);
+                            $folderService->add($name, $parent);
                         }
                         break;
                     case 'global_area':

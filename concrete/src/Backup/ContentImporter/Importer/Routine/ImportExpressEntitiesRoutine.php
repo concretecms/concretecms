@@ -6,6 +6,7 @@ use Concrete\Core\Entity\Express\Entity;
 use Concrete\Core\Permission\Category;
 use Concrete\Core\Tree\Type\ExpressEntryResults;
 use Concrete\Core\Validation\BannedWord\BannedWord;
+use Doctrine\ORM\Id\UuidGenerator;
 
 class ImportExpressEntitiesRoutine extends AbstractRoutine
 {
@@ -49,7 +50,7 @@ class ImportExpressEntitiesRoutine extends AbstractRoutine
         }
 
         $em->flush();
-        $em->getClassMetadata('Concrete\Core\Entity\Express\Entity')->setIdGenerator(null);
+        $em->getClassMetadata('Concrete\Core\Entity\Express\Entity')->setIdGenerator(new UuidGenerator());
     }
 
 }
