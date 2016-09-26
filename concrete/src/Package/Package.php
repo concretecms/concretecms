@@ -5,7 +5,8 @@ use Concrete\Core\Application\Application;
 use Concrete\Core\Backup\ContentImporter;
 use Concrete\Core\Config\Repository\Liaison;
 use Concrete\Core\Database\DatabaseStructureManager;
-use Concrete\Core\Database\EntityManager\Provider\StandardPackageProvider;
+use Concrete\Core\Database\EntityManager\Driver\CoreDriver;
+use Concrete\Core\Database\EntityManager\Provider\DefaultPackageProvider;
 use Concrete\Core\Database\EntityManagerFactory;
 use Concrete\Core\Database\Schema\Schema;
 use Concrete\Core\Foundation\ClassLoader;
@@ -13,6 +14,7 @@ use Concrete\Core\Package\ItemCategory\ItemInterface;
 use Concrete\Core\Package\ItemCategory\Manager;
 use Concrete\Core\Page\Theme\Theme;
 use Concrete\Core\Support\Facade\DatabaseORM;
+use Doctrine\Common\Persistence\Mapping\Driver\MappingDriverChain;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\Setup;
 
@@ -97,6 +99,11 @@ abstract class Package implements LocalizablePackageInterface
     public function setPackageEntity(\Concrete\Core\Entity\Package $entity)
     {
         $this->entity = $entity;
+    }
+
+    public function getApplication()
+    {
+        return $this->app;
     }
 
     public function __construct(Application $app)
@@ -344,11 +351,10 @@ abstract class Package implements LocalizablePackageInterface
         \Config::clearNamespace($this->getPackageHandle());
         $this->app->make('config/database')->clearNamespace($this->getPackageHandle());
 
-        /*
-        if(!empty($this->getPackageMetadataPaths())){
-            $this->destroyProxyClasses($this->getPackageEntityManager());
+        $em = $this->getPackageEntityManager();
+        if (is_object($em)) {
+            $this->destroyProxyClasses($em);
         }
-        */
 
         $em = \ORM::entityManager();
         $em->remove($package);
@@ -604,7 +610,7 @@ abstract class Package implements LocalizablePackageInterface
 
     public function getEntityManagerProvider()
     {
-        return new StandardPackageProvider($this->app, $this);
+        return new DefaultPackageProvider($this);
     }
 
     /**
@@ -627,31 +633,23 @@ abstract class Package implements LocalizablePackageInterface
      */
     public function installDatabase()
     {
-       // $this->installEntitiesDatabase();
-
+        $this->installEntitiesDatabase();
         static::installDB($this->getPackagePath() . '/' . FILENAME_PACKAGE_DB);
     }
 
-    /*
     public function installEntitiesDatabase()
     {   
-        // if the src folder doesn't exist, we assume, that no entities are present.
-        if(empty($this->getPackageMetadataPaths())){
-            return;
-        }
-
         $em = $this->getPackageEntityManager();
-
-        // Update database
-        $structure = new DatabaseStructureManager($em);
-        $structure->installDatabase();
+        if (is_object($em)) {
+            $structure = new DatabaseStructureManager($em);
+            $structure->installDatabase();
         
-        // Create or update entity proxies
-        $metadata = $em->getMetadataFactory()->getAllMetadata();
-        $em->getProxyFactory()->generateProxyClasses($metadata, $em->getConfiguration()->getProxyDir());
+            // Create or update entity proxies
+            $metadata = $em->getMetadataFactory()->getAllMetadata();
+            $em->getProxyFactory()->generateProxyClasses($metadata, $em->getConfiguration()->getProxyDir());
+        }
     }
-    */
-    
+
     /**
      * Installs a package's database from an XML file.
      *
@@ -732,201 +730,53 @@ abstract class Package implements LocalizablePackageInterface
      */
     public function upgradeDatabase()
     {
-        $this->destroyProxyClasses($this->getPackageEntityManager());
-        $this->installEntitiesDatabase();
-
+        $em = $this->getPackageEntityManager();
+        if (is_object($em)) {
+            $this->destroyProxyClasses($em);
+            $this->installEntitiesDatabase();
+        }
         static::installDB($this->getPackagePath() . '/' . FILENAME_PACKAGE_DB);
     }
 
     /**
-     * Get the metadatadriver type for the package
-     * 
-     * @return integer
-     */
-    public function getMetadataDriverType()
-    {
-        return $this->metadataDriver;
-    }
-
-    /**
-     * Create the appropriate ORM metadata driver
-     * 
-     * @return Doctrine\Common\Persistence\Mapping\Driver\MappingDriver
-     *          returns eather a AnnotationDriver or a FileDriver
-     */
-    public function getMetadataDriver()
-    {
-        if ($this->metadataDriver === self::PACKAGE_METADATADRIVER_ANNOTATION){
-            if(version_compare($this->getApplicationVersionRequired(), '5.8.0', '<')){
-                // Legacy - uses SimpleAnnotationReader
-                $cachedSimpleAnnotationReader = $this->app->make('orm/cachedSimpleAnnotationReader');
-                $simpleAnnotationDriver = new \Doctrine\ORM\Mapping\Driver\AnnotationDriver($cachedSimpleAnnotationReader, $this->getPackageMetadataPaths());
-                return $simpleAnnotationDriver;
-            }else{
-                // Use default AnnotationReader
-                $cachedAnnotationReader = $this->app->make('orm/cachedAnnotationReader');
-                $annotationDriver = new \Doctrine\ORM\Mapping\Driver\AnnotationDriver($cachedAnnotationReader, $this->getPackageMetadataPaths());
-                return $annotationDriver;
-            }
-        } else if ($this->metadataDriver === self::PACKAGE_METADATADRIVER_XML){
-            $driverImpl = new \Doctrine\ORM\Mapping\Driver\XmlDriver($this->getPackageMetadataPaths());
-
-        } else if ($this->metadataDriver === self::PACKAGE_METADATADRIVER_YAML){
-            $driverImpl = new \Doctrine\ORM\Mapping\Driver\YamlDriver($this->getPackageMetadataPaths());
-        }
-        return $driverImpl;
-    }
-    
-    /**
-     * Get path to the location containing the metadata info
-     * 
-     * @return array 
-     */
-    public function getPackageMetadataPaths()
-    {
-        // annotations entity path
-        $paths = array();
-        if ($this->metadataDriver === self::PACKAGE_METADATADRIVER_ANNOTATION){
-            // Support for the legacy method for backwards compatibility
-            $paths = $this->getPackageEntityPaths();
-        } else if ($this->metadataDriver === self::PACKAGE_METADATADRIVER_XML){
-            // return xml metadata dir
-            $paths =  array($this->getPackagePath() . DIRECTORY_SEPARATOR . REL_DIR_METADATA_XML);
-        } else if ($this->metadataDriver === self::PACKAGE_METADATADRIVER_YAML){
-            // return yaml metadata dir
-            $paths =  array($this->getPackagePath() . DIRECTORY_SEPARATOR . REL_DIR_METADATA_YAML);
-        }
-
-        // Add additional source path to the default namespace
-        // if pkgAutoloaderMapCoreExtensions is true
-        $corePath = !$this->enableLegacyNamespace() ? $this->getPackagePath() . DIRECTORY_SEPARATOR . DIRNAME_CLASSES . DIRECTORY_SEPARATOR . 'Concrete' : '';
-        if(!empty($corePath)){
-            $paths[] = $corePath;
-        }
-
-        $returnPaths = array();
-        foreach($paths as $path) {
-            if (is_dir($path)) {
-                $returnPaths[] = $path;
-            }
-        }
-
-        return $returnPaths;
-    }
-    
-    /**
-     * Get relative paths to the location containing the metadata info
-     * 
-     * @return array 
-     */
-    public function getPackageMetadataRelativePaths()
-    {
-        // annotations entity path
-        $paths = array();
-        if ($this->metadataDriver === self::PACKAGE_METADATADRIVER_ANNOTATION){
-            // Support for the legacy method for backwards compatibility
-            $tmp = $this->getPackageEntityPaths();
-            foreach($tmp as $path) {
-                $paths[] = str_replace($this->getPackagePath(), $this->getRelativePathFromInstallFolder(), $path);
-            }
-        } else if ($this->metadataDriver === self::PACKAGE_METADATADRIVER_XML){
-            // return xml metadata dir
-            $paths =  array($this->getRelativePathFromInstallFolder() . DIRECTORY_SEPARATOR . REL_DIR_METADATA_XML);
-        } else if ($this->metadataDriver === self::PACKAGE_METADATADRIVER_YAML){
-            // return yaml metadata dir
-            $paths =  array($this->getRelativePathFromInstallFolder() . DIRECTORY_SEPARATOR . REL_DIR_METADATA_YAML);
-        }
-
-        // Add additional source path to the default namespace
-        // if pkgAutoloaderMapCoreExtensions is true
-        $coreRelativPath = $this->pkgAutoloaderMapCoreExtensions ? $this->getRelativePathFromInstallFolder() . DIRECTORY_SEPARATOR . DIRNAME_CLASSES . DIRECTORY_SEPARATOR . 'Concrete' : '';
-        if(!empty($coreRelativPath)){
-            $paths[] = $coreRelativPath;
-        }
-
-        $returnPaths = array();
-        foreach($paths as $path) {
-            if (is_dir(DIR_BASE . $path)) {
-                $returnPaths[] = $path;
-            }
-        }
-
-        return $returnPaths;
-    }
-    
-    /**
      * Get the namespace of the package by the package handle
-     * 
+     *
      * @param boolean $withLeadingBacksalsh
      * @return string
      */
     public function getNamespace($withLeadingBacksalsh = false)
-    {   
+    {
         $leadingBkslsh = '';
         if($withLeadingBacksalsh){
             $leadingBkslsh = '\\';
         }
         return $leadingBkslsh . 'Concrete\\Package\\' . camelcase($this->getPackageHandle());
     }
-    
-    /**
-     * Get additional namespaces from the pkgAutoloaderRegistries
-     * if it contains any
-     */
-    public function getAdditionalNamespaces(){
-        
-        $namespaces = array();
-        
-        if(count($this->pkgAutoloaderRegistries) > 0){
-            foreach($this->pkgAutoloaderRegistries as $src => $rawNamespace){
-                
-                // replace / with DIRECTORY_SEPARATOR
-                // prevent a mix between / and \\ in the src string
-                $srcCleand = str_replace('/', DIRECTORY_SEPARATOR, $src);
 
-                $path = $this->getRelativePathFromInstallFolder() . DIRECTORY_SEPARATOR . $srcCleand;
-                
-                $namespace = ltrim($rawNamespace, '\\');
-                $namespaces[] = array(
-                        'namespace' => $namespace,
-                        'paths' => array($path)
-                    );
-            }
-        }
-        return $namespaces;
-    }
-    
     /**
-     * Create a entity manager used for the package installation, 
+     * Create a entity manager used for the package installation,
      * update and unistall process.
-     * 
+     *
      * @return \Doctrine\ORM\EntityManager
      */
     public function getPackageEntityManager()
     {
-        $config = Setup::createConfiguration(true, $this->app->make('config')->get('database.proxy_classes'));
-        
-        // Create a temporary EntityManager with the apropriate metadata driver 
-        // for the package installation
-        // We don't want to accidentially update other packages, so we create
-        // a new EntityManager which contains only the ORM metadata of the specific package
-        if ($this->metadataDriver === self::PACKAGE_METADATADRIVER_ANNOTATION){
-            if(version_compare($this->getApplicationVersionRequired(), '5.8.0', '<')){
-                // Legacy - uses SimpleAnnotationReader
-                $driverImpl = $config->newDefaultAnnotationDriver($this->getPackageMetadataPaths());
-            }else{
-                // Use default AnnotationReader
-                $driverImpl = $config->newDefaultAnnotationDriver($this->getPackageMetadataPaths(), false);
-            }
-        } else if ($this->metadataDriver === self::PACKAGE_METADATADRIVER_XML){
-            $driverImpl = new \Doctrine\ORM\Mapping\Driver\XmlDriver($this->getPackageMetadataPaths());
+        $provider = $this->getEntityManagerProvider();
+        $drivers = $provider->getDrivers();
+        if (count($drivers)) {
+            $config = Setup::createConfiguration(true, $this->app->make('config')->get('database.proxy_classes'));
+            $driverImpl = new MappingDriverChain();
+            $coreDriver = new CoreDriver($this->app);
+            // Add the core driver to it so packages can extend the core and not break.
+            $driverImpl->addDriver($coreDriver->getDriver(), $coreDriver->getNamespace());
 
-        } else if ($this->metadataDriver === self::PACKAGE_METADATADRIVER_YAML){
-            $driverImpl = new \Doctrine\ORM\Mapping\Driver\YamlDriver($this->getPackageMetadataPaths());
+            foreach($drivers as $driver) {
+                $driverImpl->addDriver($driver->getDriver(), $driver->getNamespace());
+            }
+            $config->setMetadataDriverImpl($driverImpl);
+            $em = EntityManager::create(\Database::connection(), $config);
+            return $em;
         }
-        $config->setMetadataDriverImpl($driverImpl);
-        $em = EntityManager::create(\Database::connection(), $config);
-        return $em;
     }
     
     /**
@@ -934,17 +784,16 @@ abstract class Package implements LocalizablePackageInterface
      */
     protected function destroyProxyClasses(\Doctrine\ORM\EntityManagerInterface $em)
     {
-
-        if(empty($this->getPackageMetadataPaths())){
-            return;
-        }
-
         $config = $em->getConfiguration();
         $proxyGenerator = new \Doctrine\Common\Proxy\ProxyGenerator($config->getProxyDir(), $config->getProxyNamespace());
         
         $classes = $em->getMetadataFactory()->getAllMetadata();
         foreach ($classes as $class) {
-
+            // We have to do this check because we include core entities in this list because without it packages that extend
+            // the core will complain.
+            if (strpos($class->getName(), 'Concrete\Core\Entity') === 0) {
+                continue;
+            }
             $proxyFileName = $proxyGenerator->getProxyFileName($class->getName(), $config->getProxyDir());
             if(file_exists($proxyFileName)){
                 @unlink($proxyFileName);

@@ -16,12 +16,16 @@ class EntityManagerConfigUpdater
         $this->entityManager = $entityManager;
     }
 
-    public function addDriver(DriverInterface $driver)
+    protected function getDriverChain()
     {
         $configuration = $this->entityManager->getConfiguration();
         $driverChain = $configuration->getMetadataDriverImpl();
-        print_r($driverChain);exit;
+        return $driverChain;
+    }
 
+    public function addDriver(DriverInterface $driver)
+    {
+        $this->getDriverChain()->addDriver($driver->getDriver(), $driver->getNamespace());
     }
 
 }

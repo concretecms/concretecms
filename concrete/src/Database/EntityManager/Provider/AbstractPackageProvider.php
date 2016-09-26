@@ -15,9 +15,9 @@ abstract class AbstractPackageProvider implements ProviderInterface
     protected $pkg;
     protected $app;
 
-    public function __construct(Application $app, Package $pkg)
+    public function __construct(Package $pkg)
     {
-        $this->app = $app;
+        $this->app = $pkg->getApplication();
         $this->pkg = $pkg;
     }
 
@@ -29,6 +29,23 @@ abstract class AbstractPackageProvider implements ProviderInterface
     protected function getStandardAnnotationReader()
     {
         return $this->app->make('orm/cachedAnnotationReader');
+    }
+
+    protected function getAnnotationReader()
+    {
+        if ($this->packageSupportsLegacyCore()) {
+            $reader = $this->getLegacyAnnotationReader();
+        } else {
+            $reader = $this->getStandardAnnotationReader();
+        }
+        return $reader;
+    }
+
+    protected function packageSupportsLegacyCore()
+    {
+        $concrete5 = '8.0.0a1';
+        $package = $this->pkg->getApplicationVersionRequired();
+        return version_compare($package, $concrete5, '<');
     }
 
 

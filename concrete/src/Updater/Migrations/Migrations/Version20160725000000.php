@@ -186,25 +186,6 @@ class Version20160725000000 extends AbstractMigration
     }
 
 
-    /**
-     * Loop through all installed packages and write the metadata setting for packages
-     * to the database.php config in genereated_overrides
-     */
-    protected function createMetaDataConfigurationForPackages(){
-
-        $r = $this->connection->executeQuery('SELECT * FROM Packages WHERE pkgIsInstalled = 1;');
-        
-        $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
-        $packageService = $app->make('Concrete\Core\Package\PackageService');
-
-        while ($row = $r->fetch()) {
-            $pkgClass = \Concrete\Core\Package\PackageService::getClass($row['pkgHandle']);
-            if(!empty($pkgClass->getPackageMetadataPaths())){
-                $packageService->savePackageMetadataDriverToConfig($pkgClass);
-            }
-        }
-    }
-
     protected function installOtherEntities()
     {
         $entities = array();
@@ -1126,7 +1107,6 @@ class Version20160725000000 extends AbstractMigration
         $this->renameProblematicTables();
         $this->updateDoctrineXmlTables();
         $this->prepareProblematicEntityTables();
-        $this->createMetaDataConfigurationForPackages();
         $this->installEntities(array('Concrete\Core\Entity\File\File', 'Concrete\Core\Entity\File\Version'));
         $this->installOtherEntities();
         $this->installSite();
