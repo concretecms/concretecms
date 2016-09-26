@@ -237,7 +237,7 @@ class PackageService
      * @param string $pkgHandle Handle of package
      * @return Package
      */
-    public function getClass($pkgHandle)
+    public static function getClass($pkgHandle)
     {
         $app = \Core::make('app');
         $cache = $app->make('cache/request');
