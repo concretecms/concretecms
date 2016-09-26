@@ -175,7 +175,7 @@ class PackageService
     public function uninstall(Package $p)
     {
         $p->uninstall();
-        $this->removPackageMetadataDriverFromConfig($p);
+//        $this->removPackageMetadataDriverFromConfig($p);
         $config = $this->entityManager->getConfiguration();
         $cache = $config->getMetadataCacheImpl();
         $cache->flushAll();
@@ -195,6 +195,7 @@ class PackageService
                 return $response;
             }
 
+            /*
             if (!empty($p->getPackageMetadataPaths())) {
                 $config = $this->entityManager->getConfiguration();
                 $driverChain = $config->getMetadataDriverImpl();
@@ -209,6 +210,7 @@ class PackageService
                 $cache = $config->getMetadataCacheImpl();
                 $cache->flushAll();
             }
+            */
 
             $p->install($data);
 

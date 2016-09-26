@@ -44,7 +44,8 @@ class DatabaseServiceProvider extends ServiceProvider
             function($app) {
             $config = $app->make('Doctrine\ORM\Configuration');
             $configRepository = $app->make('config');
-            return new EntityManagerConfigFactory($app, $config, $configRepository);
+            $connection = $app->make('Doctrine\DBAL\Connection');
+            return new EntityManagerConfigFactory($app, $config, $configRepository, $connection);
         });
         $this->app->bind('Concrete\Core\Database\EntityManagerConfigFactoryInterface',
             'Concrete\Core\Database\EntityManagerConfigFactory');
