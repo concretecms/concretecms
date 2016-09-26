@@ -15,7 +15,7 @@ class Controller extends BlockController
     protected $btInterfaceHeight = 150;
     protected $btTable = 'btSwitchLanguage';
 
-    public $helpers = array('form');
+    public $helpers = ['form'];
 
     public function getBlockTypeDescription()
     {
@@ -76,7 +76,7 @@ class Controller extends BlockController
         $ml = Section::getList();
         $c = \Page::getCurrentPage();
         $al = Section::getBySectionOfSite($c);
-        $languages = array();
+        $languages = [];
         $locale = \Localization::activeLocale();
         if (is_object($al)) {
             $locale = $al->getLanguage();
