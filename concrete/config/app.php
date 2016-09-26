@@ -239,7 +239,6 @@ return array(
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportPageTypeTargetsRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportPageTypeDefaultsRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportSinglePageContentRoutine',
-
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportStacksContentRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportPageContentRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportPackagesRoutine',
