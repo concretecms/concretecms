@@ -41,10 +41,10 @@ class DefaultPackageProvider extends AbstractPackageProvider
             }
         } else {
             // We have to add Concrete\Package\Whatever mapping to packages/whatever/src/Concrete
-            $path = $this->pkg->getPackagePath() . DIRECTORY_SEPARATOR . DIRNAME_CLASSES . '/Concrete';
+            $path = $this->pkg->getPackagePath() . DIRECTORY_SEPARATOR . DIRNAME_CLASSES . '/Concrete/' . DIRNAME_ENTITIES;
             if (is_dir($path)) {
                 $driver = new Driver(
-                    $this->pkg->getNamespace(),
+                    $this->pkg->getNamespace() . '\Entity',
                     new AnnotationDriver($reader, $path)
                 );
             }

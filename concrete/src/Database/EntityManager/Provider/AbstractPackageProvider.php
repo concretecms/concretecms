@@ -43,7 +43,7 @@ abstract class AbstractPackageProvider implements ProviderInterface
 
     protected function packageSupportsLegacyCore()
     {
-        $concrete5 = '8.0.0a1';
+        $concrete5 = '5.8.0';
         $package = $this->pkg->getApplicationVersionRequired();
         return version_compare($package, $concrete5, '<');
     }
