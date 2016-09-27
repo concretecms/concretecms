@@ -12,6 +12,7 @@ use Loader;
 use User;
 use UserAttributeKey;
 use Localization;
+use Concrete\Core\Http\ResponseFactoryInterface;
 
 class EditProfile extends AccountPageController
 {
@@ -19,11 +20,10 @@ class EditProfile extends AccountPageController
     {
         $u = new User();
         $profile = UserInfo::getByID($u->getUserID());
-        if (is_object($profile)) {
-            $this->set('profile', $profile);
-        } else {
-            throw new Exception(t('You must be logged in to access this page.'));
+        if (!is_object($profile)) {
+            return $this->app->make(ResponseFactoryInterface::class)->forbidden(t('You must be logged in to access this page.'));
         }
+        $this->set('profile', $profile);
         $locales = array();
         $languages = Localization::getAvailableInterfaceLanguages();
         if (count($languages) > 0) {
