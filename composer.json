@@ -11,6 +11,12 @@
       "*": "dist"
     }
   },
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "https://github.com/concrete5/less.php"
+    }
+  ],
   "require": {
     "php": ">=5.5.9",
     "doctrine/dbal": "2.*",
