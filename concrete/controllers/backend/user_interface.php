@@ -28,10 +28,6 @@ abstract class UserInterface extends Controller
         $this->view->setController($this);
         $request = Request::getInstance();
         $this->request = $request;
-
-        set_exception_handler(function ($exception) {
-            echo $exception->getMessage();
-        });
     }
 
     public function getViewObject()
