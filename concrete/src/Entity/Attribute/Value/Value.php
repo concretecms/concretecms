@@ -122,12 +122,17 @@ abstract class Value implements AttributeValueInterface
      */
     public function getPlainTextValue()
     {
+
+        $controller = $this->getController();
+        if (method_exists($controller, 'getPlainTextValue')) {
+            return $controller->getPlainTextValue();
+        }
+
         if ($this->getValueObject()) {
             return (string) $this->getValueObject();
         }
 
-        // Legacy attribute type support
-        $controller = $this->getController();
+        // Legacy support.
         return $controller->getValue();
     }
 

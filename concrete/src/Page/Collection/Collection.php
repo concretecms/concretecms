@@ -400,6 +400,14 @@ class Collection extends Object implements TrackableInterface
         }
     }
 
+    public function getAttributeValue($akHandle)
+    {
+        if (is_object($this->vObj)) {
+            return $this->vObj->getAttributeValue($akHandle);
+        }
+    }
+
+
     /**
      * @deprecated
      */

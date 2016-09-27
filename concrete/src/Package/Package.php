@@ -49,6 +49,7 @@ abstract class Package implements LocalizablePackageInterface
     /**
      * @deprecated
      * This will be set to FALSE in 8.1
+     * Additionally, if your package requires 8.0 or greater, it will be set to false automatically
      * Whether to automatically map core extensions into the packages src/Concrete directory (and map them to Concrete\Package\MyPackage), or map the entire src/
      * directory to Concrete\Package\MyPackage\Src (and automatically map core extensions
      * to Concrete\Package\MyPackage\Src)
@@ -125,6 +126,12 @@ abstract class Package implements LocalizablePackageInterface
         if (isset($this->pkgAutoloaderMapCoreExtensions) && $this->pkgAutoloaderMapCoreExtensions) {
             // We're no longer using this to denote non-legacy applications, but if a package uses this
             // that means it's NOT using the legacy namespace.
+            return false;
+        }
+
+        $concrete5 = '5.8.0';
+        $package = $this->getApplicationVersionRequired();
+        if (version_compare($package, $concrete5, '>')) {
             return false;
         }
 

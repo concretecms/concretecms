@@ -13,8 +13,8 @@ class Entities extends DashboardPageController
     public function view()
     {
         // Retrieve all entity manager drivers and show data about them
-        $entityManagerConfigFactory = $this->app->make('Concrete\Core\Database\EntityManagerConfigFactory');
-        $driverChain = $entityManagerConfigFactory->getMetadataDriverImpl();
+        $config = $this->getEntityManager()->getConfiguration();
+        $driverChain = $config->getMetadataDriverImpl();
         $drivers = $driverChain->getDrivers();
         $this->set('drivers', $drivers);
     }
