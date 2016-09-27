@@ -37,14 +37,22 @@ class Template
 
     protected static function sort($list)
     {
+        $wrapperList = [];
+        foreach ($list as $item) {
+            $wrapperList[] = ['item' => $item, 'text' => $item->getPageTemplateDisplayName('text')];
+        }
         usort(
-            $list,
-            function ($a, $b) {
-                return strcasecmp($a->getPageTemplateDisplayName('text'), $b->getPageTemplateDisplayName('text'));
+            $wrapperList,
+            function($a, $b) {
+                return strcasecmp($a['text'], $b['text']);
             }
         );
+        $result = [];
+        foreach ($wrapperList as $array) {
+            $result[] = $array['item'];
+        }
 
-        return $list;
+        return $result;
     }
 
     public static function getListByPackage($pkg)
