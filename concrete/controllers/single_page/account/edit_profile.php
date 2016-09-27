@@ -8,7 +8,6 @@ use UserInfo;
 use Exception;
 use Concrete\Core\Authentication\AuthenticationType;
 use Concrete\Core\Authentication\AuthenticationTypeFailureException;
-use Loader;
 use User;
 use UserAttributeKey;
 use Localization;
@@ -24,7 +23,7 @@ class EditProfile extends AccountPageController
             return $this->app->make(ResponseFactoryInterface::class)->forbidden(t('You must be logged in to access this page.'));
         }
         $this->set('profile', $profile);
-        $locales = array();
+        $locales = [];
         $languages = Localization::getAvailableInterfaceLanguages();
         if (count($languages) > 0) {
             array_unshift($languages, 'en_US');
@@ -34,7 +33,7 @@ class EditProfile extends AccountPageController
                 $locales[$lang] = \Punic\Language::getName($lang, $lang);
             }
             asort($locales);
-            $locales = array_merge(array('' => tc('Default locale', '** Default')), $locales);
+            $locales = array_merge(['' => tc('Default locale', '** Default')], $locales);
         }
         $this->set('locales', $locales);
     }
@@ -104,7 +103,7 @@ class EditProfile extends AccountPageController
             }
         }
 
-        /**
+        /*
          * Username validation
          */
         if ($username = $this->post('uName')) {
@@ -137,8 +136,8 @@ class EditProfile extends AccountPageController
             $controller = $uak->getController();
             $validator = $controller->getValidator();
             $response = $validator->validateSaveValueRequest($controller, $this->request, $uak->isAttributeKeyRequiredOnProfile());
-            /**
-             * @var $response ResponseInterface
+            /*
+             * @var ResponseInterface $response
              */
             if (!$response->isValid()) {
                 $error = $response->getErrorObject();
