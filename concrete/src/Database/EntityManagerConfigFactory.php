@@ -123,7 +123,7 @@ class EntityManagerConfigFactory implements ApplicationAwareInterface, EntityMan
         $driver = $applicationDriver->getDriver();
         if (is_object($driver)) {
             // $driver might be null, if there's no application/src/Entity
-            $driverChain->addDriver($applicationDriver->getDriver(), $applicationDriver->getNamespace());
+            $driverChain->addDriver($driver, $applicationDriver->getNamespace());
         }
 
         return $driverChain;
