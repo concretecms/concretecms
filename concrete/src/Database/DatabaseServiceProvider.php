@@ -115,9 +115,9 @@ class DatabaseServiceProvider extends ServiceProvider
         $this->app->bind('orm/cachedAnnotationReader',
             function($app) {
                 $annotationReader = $app->make('Doctrine\Common\Annotations\AnnotationReader');
-                return $annotationReader;
-            }
-        );
+                return new \Doctrine\Common\Annotations\CachedReader($annotationReader,
+                    $app->make('orm/cache'));
+            });
 
         // Create legacy annotation reader used package requiring concrete5
         // version lower than 8.0.0
@@ -126,9 +126,9 @@ class DatabaseServiceProvider extends ServiceProvider
             function($app) {
                 $simpleAnnotationReader = $this->app->make('Doctrine\Common\Annotations\SimpleAnnotationReader');
                 $simpleAnnotationReader->addNamespace('Doctrine\ORM\Mapping');
-                return $simpleAnnotationReader;
-            }
-        );
+                return new \Doctrine\Common\Annotations\CachedReader($simpleAnnotationReader,
+                    $app->make('orm/cache'));
+            });
 
         // Setup doctrine proxy autoloader
         if ($this->app->bound('config')) {
