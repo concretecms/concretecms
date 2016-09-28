@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "3399aaf5b1e66e39a3dbd9be99a5d49d",
-    "content-hash": "cacce29ed142da46dd0713518a6df1b1",
+    "hash": "6eb4f8e53719dc7cfae58a795434c54b",
+    "content-hash": "8a837f245a49a8a7340f88692293f165",
     "packages": [
         {
             "name": "anahkiasen/html-object",
@@ -2121,23 +2121,23 @@
         },
         {
             "name": "oyejorge/less.php",
-            "version": "v1.7.0.10",
+            "version": "v1.7.0.11",
             "source": {
                 "type": "git",
-                "url": "https://github.com/oyejorge/less.php.git",
-                "reference": "a1e2d3c20794b37ac4d0baeb24613e579584033b"
+                "url": "https://github.com/concrete5/less.php.git",
+                "reference": "428aa8de096d9cd34f9105f9fffccbd6e24036be"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/oyejorge/less.php/zipball/a1e2d3c20794b37ac4d0baeb24613e579584033b",
-                "reference": "a1e2d3c20794b37ac4d0baeb24613e579584033b",
+                "url": "https://api.github.com/repos/concrete5/less.php/zipball/428aa8de096d9cd34f9105f9fffccbd6e24036be",
+                "reference": "428aa8de096d9cd34f9105f9fffccbd6e24036be",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3"
             },
             "require-dev": {
-                "phpunit/phpunit": "~4.8.18"
+                "phpunit/phpunit": "~4.8.21"
             },
             "bin": [
                 "bin/lessc"
@@ -2151,11 +2151,19 @@
                     "lessc.inc.php"
                 ]
             },
-            "notification-url": "https://packagist.org/downloads/",
+            "scripts": {
+                "test": [
+                    "phpunit"
+                ]
+            },
             "license": [
                 "Apache-2.0"
             ],
             "authors": [
+                {
+                    "name": "Josh Schmidt",
+                    "homepage": "https://github.com/oyejorge"
+                },
                 {
                     "name": "Matt Agar",
                     "homepage": "https://github.com/agar"
@@ -2163,10 +2171,6 @@
                 {
                     "name": "Martin Jantošovič",
                     "homepage": "https://github.com/Mordred"
-                },
-                {
-                    "name": "Josh Schmidt",
-                    "homepage": "https://github.com/oyejorge"
                 }
             ],
             "description": "PHP port of the Javascript version of LESS http://lesscss.org",
@@ -2179,7 +2183,10 @@
                 "php",
                 "stylesheet"
             ],
-            "time": "2015-12-30 05:47:36"
+            "support": {
+                "source": "https://github.com/concrete5/less.php/tree/v1.7.0.11"
+            },
+            "time": "2016-09-06 17:06:03"
         },
         {
             "name": "pagerfanta/pagerfanta",
