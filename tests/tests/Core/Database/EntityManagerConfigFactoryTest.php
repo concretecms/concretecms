@@ -148,34 +148,6 @@ class EntityManagerConfigFactoryTest extends \PHPUnit_Framework_TestCase
             $driverPaths[0]);
     }
 
-    /**
-     * Test the metadata implementation for entities located under application/src/Entity with YAML driver
-     * Create the directory so we should get the proper driver
-     *
-     * @dataProvider dataProviderGetConfigurationWithApplicationYmlDriver
-     *
-     * @param string|integer $setting
-     */
-    public function testGetConfigurationWithApplicationYmlDriver($setting)
-    {
-
-        $entityManagerConfigFactory = $this->getEntityManagerFactoryWithStubConfigRepository($setting);
-
-        $filesystem = new Filesystem();
-        $filesystem->makeDirectory(DIR_APPLICATION . DIRECTORY_SEPARATOR . REL_DIR_METADATA_YAML);
-
-        // Test if the correct MetadataDriver and MetadataReader are present
-        $drivers = $entityManagerConfigFactory->getMetadataDriverImpl()->getDrivers();
-
-        $filesystem->deleteDirectory(DIR_APPLICATION . DIRECTORY_SEPARATOR . REL_DIR_METADATA_YAML);
-
-        $this->assertArrayHasKey('Application\Entity', $drivers);
-        $defaultDriver = $drivers['Application\Entity'];
-        $this->assertInstanceOf('Doctrine\ORM\Mapping\Driver\YamlDriver',
-            $defaultDriver);
-
-    }
-
     public function dataProviderGetConfigurationWithApplicationYmlDriver()
     {
         return array(
@@ -221,33 +193,6 @@ class EntityManagerConfigFactoryTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    /**
-     * Test the metadata implementation for entities located under application/src/Entity with XML driver
-     * Create the directory so we should get the proper driver
-     *
-     * @dataProvider dataProviderGetConfigurationWithApplicationXmlDriver
-     *
-     * @param string|integer $setting
-     */
-    public function testGetConfigurationWithApplicationXmlDriver($setting)
-    {
-
-        $entityManagerConfigFactory = $this->getEntityManagerFactoryWithStubConfigRepository($setting);
-
-        $filesystem = new Filesystem();
-        $filesystem->makeDirectory(DIR_APPLICATION . DIRECTORY_SEPARATOR . REL_DIR_METADATA_XML);
-
-        // Test if the correct MetadataDriver and MetadataReader are present
-        $drivers = $entityManagerConfigFactory->getMetadataDriverImpl()->getDrivers();
-
-        $filesystem->deleteDirectory(DIR_APPLICATION . DIRECTORY_SEPARATOR . REL_DIR_METADATA_XML);
-
-        $this->assertArrayHasKey('Application\Entity', $drivers);
-        $defaultDriver = $drivers['Application\Entity'];
-        $this->assertInstanceOf('Doctrine\ORM\Mapping\Driver\XmlDriver',
-            $defaultDriver);
-
-    }
 
     /**
      * Create the EntityManagerFactory with stub ConfigRepository option
