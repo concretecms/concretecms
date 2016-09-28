@@ -81,7 +81,6 @@ class ApplicationYmlMetadataDriverTest  extends \PHPUnit_Framework_TestCase
         return array(
             array('yml'),
             array('yaml'),
-            array(3), // equals \Package::PACKAGE_METADATADRIVER_YAML
         );
     }
     
