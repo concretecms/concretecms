@@ -14,14 +14,14 @@ PNotify.prototype.options.styling = {
     closer: "ccm-notification-closer",
     pin_up: false,
     pin_down: false
-}
+};
 PNotify.prototype.options.width = '400px';
 PNotify.prototype.options.addclass = 'ccm-ui';
 PNotify.prototype.options.animate = {
     animate: true,
     in_class: 'fadeIn',
     out_class: 'bounceOutRight'
-}
+};
 PNotify.prototype.options.buttons.closer_hover = false;
 
 !function(global, $) {
@@ -41,12 +41,18 @@ PNotify.prototype.options.buttons.closer_hover = false;
         },*/
 
         dialog : function(title, message, onCloseFn) {
-            $('<div id="ccm-popup-alert" class="ccm-ui"><div id="ccm-popup-alert-message" class="alert alert-danger">' + message + '</div></div>').dialog({
+            var $div = $('<div id="ccm-popup-alert" class="ccm-ui"><div id="ccm-popup-alert-message" class="alert alert-danger">' + message + '</div></div>');
+            $div.dialog({
                 title: title,
                 width: 500,
                 height: 'auto',
                 modal: true,
-                onDestroy: onCloseFn
+                close: function() {
+                	$div.remove();
+                	if (onCloseFn) {
+                		onCloseFn();
+                	}
+                }
             });
         },
 
