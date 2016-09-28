@@ -6,6 +6,7 @@ use Concrete\Core\Package\Package;
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Core;
 use Config;
+use Doctrine\ORM\Tools\SchemaTool;
 use ORM;
 
 class Entities extends DashboardPageController
@@ -19,10 +20,13 @@ class Entities extends DashboardPageController
         $this->set('drivers', $drivers);
     }
 
-    /*
+
     public function update_entity_settings()
     {
-        if ($this->token->validate("update_entity_settings")) {
+        if (!$this->token->validate("update_entity_settings")) {
+            $this->error->add($this->token->getErrorMessage());
+        }
+        if (!$this->error->has()) {
             if ($this->isPost()) {
                 $ddm = $this->post('DOCTRINE_DEV_MODE') == 1 ? 1 : 0;
 
@@ -40,42 +44,35 @@ class Entities extends DashboardPageController
             if ($this->isPost()) {
                 $em = ORM::entityManager();
                 $config = $em->getConfiguration();
+
+                // First, we flush the metadata cache.
                 if (is_object($cache = $config->getMetadataCacheImpl())) {
                     $cache->flushAll();
                 }
-                try {
-                    $packages = Package::getInstalledList();
-                    foreach ($packages as $package) {
-                        $package->installEntitiesDatabase();
-                    }
 
-                    $dbm = new DatabaseStructureManager($em);
-                    $dbm->destroyProxyClasses('ApplicationSrc');
-                    if ($dbm->hasEntities()) {
-                        $dbm->generateProxyClasses();
-                        $dbm->installDatabase();
-                    }
-                    $this->redirect('/dashboard/system/environment/entities', 'entities_refreshed');
-                } catch (\Doctrine\Common\Persistence\Mapping\MappingException $e) {
-                    $drv = $em->getConfiguration()->getMetadataDriverImpl();
-                    $this->error->add(t("The application specific entities directory is missing. Please create it first at: %s.", array_shift($drv->getPaths())));
-                } catch (\Exception $e) {
-                    $this->error->add($e->getMessage());
-                }
+                // Next, we regnerate proxies
+                $metadatas = $em->getMetadataFactory()->getAllMetadata();
+                $em->getProxyFactory()->generateProxyClasses($metadatas, $this->app->make('config')->get('database.proxy_classes'));
+
+                // Finally, we update the schema
+                $tool = new SchemaTool($em);
+                $tool->updateSchema($metadatas, true);
+
+                $this->redirect('/dashboard/system/environment/entities', 'entities_refreshed');
             }
         }
     }
 
     public function entity_settings_updated()
     {
-        $this->set('message', t('Database entities configurations saved.'));
+        $this->set('message', t('Doctrine development settings updated.'));
         $this->view();
     }
 
     public function entities_refreshed()
     {
-        $this->set('message', t('Application specific database entities were refreshed.'));
+        $this->set('message', t('Doctrine cache cleared, proxy classes regenerated, entity database table schema updated.'));
         $this->view();
     }
-    */
+
 }
