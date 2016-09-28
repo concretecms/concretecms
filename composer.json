@@ -2,6 +2,7 @@
   "name": "concrete5/concrete5",
   "license": "MIT",
   "description": "concrete5 open source CMS",
+  "type": "concrete5-update",
   "minimum-stability": "beta",
   "prefer-stable": true,
   "config": {
@@ -13,6 +14,7 @@
   },
   "require": {
     "php": ">=5.5.9",
+    "composer/installers": "~1.0",
     "doctrine/dbal": "2.*",
     "symfony/class-loader": "3.*",
     "symfony/http-foundation": "3.*",
