@@ -15,7 +15,7 @@ class Controller extends BlockController
     protected $btInterfaceHeight = 150;
     protected $btTable = 'btSwitchLanguage';
 
-    public $helpers = array('form');
+    public $helpers = ['form'];
 
     public function getBlockTypeDescription()
     {
@@ -76,19 +76,21 @@ class Controller extends BlockController
         $ml = Section::getList();
         $c = \Page::getCurrentPage();
         $al = Section::getBySectionOfSite($c);
-        $languages = array();
-        $locale = \Localization::activeLocale();
-        if (is_object($al)) {
+        $languages = [];
+        $locale = null;
+        if ($al !== null) {
             $locale = $al->getLanguage();
+        }
+        if (!$locale) {
+            $locale = \Localization::activeLocale();
+            $al = Section::getByLocale($locale);
         }
         foreach ($ml as $m) {
             $languages[$m->getCollectionID()] = $m->getLanguageText($m->getLocale());
         }
         $this->set('languages', $languages);
         $this->set('languageSections', $ml);
-        if (is_object($al)) {
-            $this->set('activeLanguage', $al->getCollectionID());
-        }
+        $this->set('activeLanguage', $al ? $al->getCollectionID() : null);
         $dl = $this->app->make('multilingual/detector');
         $this->set('defaultLocale', $dl->getPreferredSection());
         $this->set('locale', $locale);
