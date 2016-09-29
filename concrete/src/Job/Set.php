@@ -97,8 +97,8 @@ class Set extends Object
 
     /** Returns the display name for this job set (localized and escaped accordingly to $format)
      * @param string $format = 'html'
-     *	Escape the result in html format (if $format is 'html').
-     *	If $format is 'text' or any other value, the display name won't be escaped.
+     *  Escape the result in html format (if $format is 'html').
+     *  If $format is 'text' or any other value, the display name won't be escaped.
      *
      * @return string
      */
