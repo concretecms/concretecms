@@ -2,7 +2,7 @@
 namespace Concrete\Core\Page\Stack;
 
 use Area;
-use Concrete\Core\Entity\Site\SiteTree;
+use Concrete\Core\Entity\Site\Tree;
 use Concrete\Core\Export\ExportableInterface;
 use Concrete\Core\Multilingual\Page\Section\Section;
 use Concrete\Core\Page\Stack\Folder\Folder;
@@ -44,9 +44,9 @@ class Stack extends Page implements ExportableInterface
         }
     }
 
-    public static function getByPath($path, $version = 'RECENT', SiteTree $siteTree = null)
+    public static function getByPath($path, $version = 'RECENT', Tree $siteTree = null)
     {
-        $c = parent::getByPath(STACKS_PAGE_PATH . '/' . trim($path, '/'), $version);
+        $c = parent::getByPath(STACKS_PAGE_PATH . '/' . trim($path, '/'), $version, $siteTree);
         if (static::isValidStack($c)) {
             return $c;
         }
