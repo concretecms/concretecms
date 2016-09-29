@@ -15,9 +15,9 @@ abstract class AbstractPackageProvider implements ProviderInterface
     protected $pkg;
     protected $app;
 
-    public function __construct(Package $pkg)
+    public function __construct(Application $app, Package $pkg)
     {
-        $this->app = $pkg->getApplication();
+        $this->app = $app;
         $this->pkg = $pkg;
     }
 
