@@ -47,7 +47,7 @@ class Archive
     /**
      * Unzips a file at a directory level by concatenating ".zip" onto the end of it.
      * <code>
-     * 	unzip("/path/to/files/themes/mytheme") // will unzip "mytheme.zip"
+     *  unzip("/path/to/files/themes/mytheme") // will unzip "mytheme.zip"
      * </code>.
      *
      * @param string $directory The base name of the file (without extension, assumed to be in the the temporary directory).
