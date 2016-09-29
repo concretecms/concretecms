@@ -9,17 +9,17 @@ use FileSet;
  */
 class FileSetResponse extends Response {
 
-	protected $permissions;
+    protected $permissions;
 
-	public function __call($nm, $args)
-	{
-		if (!isset($this->permissions)) {
-			$filesystem = new Filesystem();
-			$this->permissions = new \Permissions($filesystem->getRootFolder());
-		}
+    public function __call($nm, $args)
+    {
+        if (!isset($this->permissions)) {
+            $filesystem = new Filesystem();
+            $this->permissions = new \Permissions($filesystem->getRootFolder());
+        }
 
-		return call_user_func_array(array($this->permissions, $nm), $args);
-	}
+        return call_user_func_array(array($this->permissions, $nm), $args);
+    }
 
 
 }

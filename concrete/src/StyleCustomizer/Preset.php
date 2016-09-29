@@ -30,24 +30,26 @@ class Preset
         $parser = $l->parseFile($lessFile, false, true);
         $rules = $parser->rules;
         foreach ($rules as $rule) {
-            if ($rule->name == static::PRESET_RULE_NAME) {
-                $o->name = $rule->value->value[0]->value[0]->value;
-            }
-            if ($rule->name == static::PRESET_RULE_ICON) {
-                $method = $rule->value->value[0]->value[0];
-                if ($method instanceof Less_Tree_Call) {
-                    // extract the name and arguments from the method
-                    $color = TreeCallColor::fromTreeCall($method);
-                    if ($color->getName() == static::PRESET_RULE_ICON_FUNCTION) {
-                        $args = $color->getArguments();
-                        $cv1 = ColorStyle::parse($args[0]->value[0]);
-                        $cv2 = ColorStyle::parse($args[1]->value[0]);
-                        $cv3 = ColorStyle::parse($args[2]->value[0]);
-                        $o->color1 = $cv1;
-                        $o->color2 = $cv2;
-                        $o->color3 = $cv3;
+            switch (isset($rule->name) ? $rule->name : '') {
+                case static::PRESET_RULE_NAME:
+                    $o->name = $rule->value->value[0]->value[0]->value;
+                    break;
+                case static::PRESET_RULE_ICON:
+                    $method = $rule->value->value[0]->value[0];
+                    if ($method instanceof Less_Tree_Call) {
+                        // extract the name and arguments from the method
+                        $color = TreeCallColor::fromTreeCall($method);
+                        if ($color->getName() == static::PRESET_RULE_ICON_FUNCTION) {
+                            $args = $color->getArguments();
+                            $cv1 = ColorStyle::parse($args[0]->value[0]);
+                            $cv2 = ColorStyle::parse($args[1]->value[0]);
+                            $cv3 = ColorStyle::parse($args[2]->value[0]);
+                            $o->color1 = $cv1;
+                            $o->color2 = $cv2;
+                            $o->color3 = $cv3;
+                        }
                     }
-                }
+                    break;
             }
         }
 
@@ -81,7 +83,7 @@ class Preset
     /** Returns the display name for this preset (localized and escaped accordingly to $format)
      * @param string $format = 'html'
      *   Escape the result in html format (if $format is 'html').
-     *   If $format is 'text' or any other value, the display name won't be escaped.
+     *   If $format is 'text' or any other value, the display name won't be escaped
      *
      * @return string
      */
