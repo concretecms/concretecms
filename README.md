@@ -24,6 +24,13 @@ Just log in to the documentation site with your concrete5.org account and edit a
 
         composer install
 
+
+## Community Channels
+
+* [Public Slack](https://concrete5.signup.team/)
+* [IRC Channel](https://kiwiirc.com/client/irc.freenode.com/concrete5/)
+* [Forums](https://concrete5.org/community/forums/)
+
 ## Legacy
 
 Looking for legacy versions of concrete5? Head over to [the concrete5-legacy repository](http://github.com/concrete5/concrete5-legacy).
