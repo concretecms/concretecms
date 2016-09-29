@@ -7,6 +7,7 @@ use Concrete\Core\Config\Repository\Liaison;
 use Concrete\Core\Database\DatabaseStructureManager;
 use Concrete\Core\Database\EntityManager\Driver\CoreDriver;
 use Concrete\Core\Database\EntityManager\Provider\DefaultPackageProvider;
+use Concrete\Core\Database\EntityManager\Provider\PackageProviderFactory;
 use Concrete\Core\Database\EntityManagerFactory;
 use Concrete\Core\Database\Schema\Schema;
 use Concrete\Core\Foundation\ClassLoader;
@@ -773,7 +774,8 @@ abstract class Package implements LocalizablePackageInterface
      */
     public function getPackageEntityManager()
     {
-        $provider = $this->getEntityManagerProvider();
+        $providerFactory = new PackageProviderFactory($this->app, $this);
+        $provider = $providerFactory->getEntityManagerProvider();
         $drivers = $provider->getDrivers();
         if (count($drivers)) {
             $config = Setup::createConfiguration(true, $this->app->make('config')->get('database.proxy_classes'));
