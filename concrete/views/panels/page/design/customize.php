@@ -88,6 +88,10 @@ $pk = PermissionKey::getByHandle('customize_themes');
 
         <div style="text-align: center">
             <br/>
+            <button class="btn btn-sm btn-default" id="ccm-panel-page-design-customize-export"><?=t('Export')?> <i class="fa fa-download" aria-hidden="true"></i></button>
+            <button class="btn btn-sm btn-default" id="ccm-panel-page-design-customize-import"><?=t('Import')?> <i class="fa fa-upload" aria-hidden="true"></i></button>
+            <br/>
+            <br/>
             <button class="btn-danger btn" data-panel-detail-action="reset"><?=t('Reset Customizations')?></button>
             <br/>
             <br/>
@@ -254,6 +258,17 @@ $pk = PermissionKey::getByHandle('customize_themes');
         ConcreteEvent.subscribe('StyleCustomizerControlUpdate', function() {
             $('form[data-form=panel-page-design-customize]').submit();
             $('div[data-panel-menu-id=page-design-presets] input[type=radio]').prop('checked', false);
-        })
+        });
+
+        ConcreteStyleCustomizerImportExport.initialize({
+            i18n: <?=json_encode([
+                'Close' => t('Close'),
+                'Cancel' => t('Cancel'),
+                'Apply' => t('Apply'),
+                'CurrentThemeValues' => t('Current Theme Values'),
+                'NewThemeValues' => t('New Theme Values')
+            ])?>
+        });
+
     });
 </script>
