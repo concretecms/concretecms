@@ -120,8 +120,13 @@ Loader::element('permission/access/list', array('pkCategoryHandle' => $pkCategor
 
 <script type="text/javascript">
 
-	var ccm_permissionObjectID = '<?=$permissionKey->getPermissionObject()->getPermissionObjectIdentifier()?>';
-	var ccm_permissionObjectKeyCategoryHandle = '<?=$permissionKey->getPermissionObject()->getPermissionObjectKeyCategoryHandle()?>';
+	<?php
+	$permissionObject = $permissionKey->getPermissionObject();
+	if (is_object($permissionObject)) {
+	?>
+	var ccm_permissionObjectID = '<?=$permissionObject->getPermissionObjectIdentifier()?>';
+	var ccm_permissionObjectKeyCategoryHandle = '<?=$permissionObject->getPermissionObjectKeyCategoryHandle()?>';
+	<?php } ?>
 
 	$(function() {
 
