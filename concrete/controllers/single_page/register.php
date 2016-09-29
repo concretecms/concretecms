@@ -15,8 +15,8 @@ class Register extends PageController
 
     protected $displayUserName = true;
 
-	public function on_start() {
-		if(!in_array(Config::get('concrete.user.registration.type'), array('validate_email', 'enabled'))) {
+    public function on_start() {
+        if(!in_array(Config::get('concrete.user.registration.type'), array('validate_email', 'enabled'))) {
             $this->replace('/page_not_found');
             return;
         }
@@ -60,11 +60,11 @@ class Register extends PageController
                 }
             }
 
-			if (!$vals->email($_POST['uEmail'])) {
-				$e->add(t('Invalid email address provided.'));
-			} elseif (!$valc->isUniqueEmail($_POST['uEmail'])) {
-				$e->add(t("The email address %s is already in use. Please choose another.", $_POST['uEmail']));
-			}
+            if (!$vals->email($_POST['uEmail'])) {
+                $e->add(t('Invalid email address provided.'));
+            } elseif (!$valc->isUniqueEmail($_POST['uEmail'])) {
+                $e->add(t("The email address %s is already in use. Please choose another.", $_POST['uEmail']));
+            }
 
             if ($this->displayUserName) {
                 if (strlen($username) < $config->get('concrete.user.username.minimum')) {
@@ -156,18 +156,18 @@ class Register extends PageController
                     $mh->addParameter('attribs', $attribValues);
                     $mh->addParameter('siteName', tc('SiteName', \Core::make('site')->getSite()->getSiteName()));
 
-					if ($config->get('concrete.user.registration.notification_email')) {
-						$mh->from(Config::get('concrete.user.registration.notification_email'),  t('Website Registration Notification'));
-					} else {
-						$adminUser = UserInfo::getByID(USER_SUPER_ID);
-						if (is_object($adminUser)) {
-							$mh->from($adminUser->getUserEmail(),  t('Website Registration Notification'));
-						}
-					}
+                    if ($config->get('concrete.user.registration.notification_email')) {
+                        $mh->from(Config::get('concrete.user.registration.notification_email'),  t('Website Registration Notification'));
+                    } else {
+                        $adminUser = UserInfo::getByID(USER_SUPER_ID);
+                        if (is_object($adminUser)) {
+                            $mh->from($adminUser->getUserEmail(),  t('Website Registration Notification'));
+                        }
+                    }
 
                     $mh->load('user_register');
-					$mh->sendMail();
-				}
+                    $mh->sendMail();
+                }
 
                 // now we log the user in
                 if ($config->get('concrete.user.registration.email_registration')) {
@@ -183,11 +183,11 @@ class Register extends PageController
                     $rcID = 0;
                 }
 
-				// Call deactivate() separately because someone might be still attaching
-				// to the on_user_deactivate method during the registration.
-				// This used to be in the non-validation case only but with the workflow,
-				// we need to default the new user to inactive (uIsActive=0).
-				$process->deactivate();
+                // Call deactivate() separately because someone might be still attaching
+                // to the on_user_deactivate method during the registration.
+                // This used to be in the non-validation case only but with the workflow,
+                // we need to default the new user to inactive (uIsActive=0).
+                $process->deactivate();
 
                 // now we check whether we need to validate this user's email address
                 if ($config->get('concrete.user.registration.validate_email')) {
@@ -212,14 +212,14 @@ class Register extends PageController
                     //$this->redirect('/register', 'register_success_validate', $rcID);
                     $redirectMethod = 'register_success_validate';
                     $u->logout();
-				} else {
-					$process->markValidated();
-					if (!$process->triggerActivate('register_activate', USER_SUPER_ID)) {
-						$redirectMethod = 'register_pending';
-						$this->set('message', $this->getRegisterPendingMsg());
-						$u->logout();
-					}
-				}
+                } else {
+                    $process->markValidated();
+                    if (!$process->triggerActivate('register_activate', USER_SUPER_ID)) {
+                        $redirectMethod = 'register_pending';
+                        $this->set('message', $this->getRegisterPendingMsg());
+                        $u->logout();
+                    }
+                }
 
                 if (!$u->isError()) {
                     //$this->redirect('/register', 'register_success', $rcID);

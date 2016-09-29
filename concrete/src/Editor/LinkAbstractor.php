@@ -111,63 +111,63 @@ class LinkAbstractor extends Object
         // now we add in support for the files that we view inline
         $dom = new HtmlDomParser();
         $r = $dom->str_get_html($text, true, true, DEFAULT_TARGET_CHARSET, false);
-		if (is_object($r)) {
-			foreach ($r->find('concrete-picture') as $picture) {
-				$fID = $picture->fid;
-				$fo = \File::getByID($fID);
-				if (is_object($fo)) {
-					$style = (string) $picture->style;
-					// move width px to width attribute and height px to height attribute
-					$widthPattern = "/(?:^width|[^-]width):\\s([0-9]+)px;?/i";
-					if (preg_match($widthPattern, $style, $matches)) {
-						$style = preg_replace($widthPattern, '', $style);
-						$picture->width = $matches[1];
-					}
-					$heightPattern = "/(?:^height|[^-]height):\\s([0-9]+)px;?/i";
-					if (preg_match($heightPattern, $style, $matches)) {
-						$style = preg_replace($heightPattern, '', $style);
-						$picture->height = $matches[1];
-					}
-					if ($style === '') {
-						unset($picture->style);
-					} else {
-						$picture->style = $style;
-					}
-					$image = new \Concrete\Core\Html\Image($fo);
-					$tag = $image->getTag();
+        if (is_object($r)) {
+            foreach ($r->find('concrete-picture') as $picture) {
+                $fID = $picture->fid;
+                $fo = \File::getByID($fID);
+                if (is_object($fo)) {
+                    $style = (string) $picture->style;
+                    // move width px to width attribute and height px to height attribute
+                    $widthPattern = "/(?:^width|[^-]width):\\s([0-9]+)px;?/i";
+                    if (preg_match($widthPattern, $style, $matches)) {
+                        $style = preg_replace($widthPattern, '', $style);
+                        $picture->width = $matches[1];
+                    }
+                    $heightPattern = "/(?:^height|[^-]height):\\s([0-9]+)px;?/i";
+                    if (preg_match($heightPattern, $style, $matches)) {
+                        $style = preg_replace($heightPattern, '', $style);
+                        $picture->height = $matches[1];
+                    }
+                    if ($style === '') {
+                        unset($picture->style);
+                    } else {
+                        $picture->style = $style;
+                    }
+                    $image = new \Concrete\Core\Html\Image($fo);
+                    $tag = $image->getTag();
 
-					foreach ($picture->attr as $attr => $val) {
-						if (!in_array($attr, self::$blackListImgAttributes)) {
-							//Apply attributes to child img, if using picture tag.
-							if ($tag instanceof \Concrete\Core\Html\Object\Picture) {
-								foreach ($tag->getChildren() as $child) {
-									if ($child instanceof \HtmlObject\Image) {
-										$child->$attr($val);
-									}
-								}
-							} elseif (is_callable(array($tag, $attr))) {
-								$tag->$attr($val);
-							} else {
-								$tag->setAttribute($attr, $val);
-							}
-						}
-					}
+                    foreach ($picture->attr as $attr => $val) {
+                        if (!in_array($attr, self::$blackListImgAttributes)) {
+                            //Apply attributes to child img, if using picture tag.
+                            if ($tag instanceof \Concrete\Core\Html\Object\Picture) {
+                                foreach ($tag->getChildren() as $child) {
+                                    if ($child instanceof \HtmlObject\Image) {
+                                        $child->$attr($val);
+                                    }
+                                }
+                            } elseif (is_callable(array($tag, $attr))) {
+                                $tag->$attr($val);
+                            } else {
+                                $tag->setAttribute($attr, $val);
+                            }
+                        }
+                    }
 
-					if (!in_array('alt', array_keys($picture->attr))) {
-						if ($tag instanceof \Concrete\Core\Html\Object\Picture) {
-							foreach ($tag->getChildren() as $child) {
-								if ($child instanceof \HtmlObject\Image) {
-									$child->alt('');
-								}
-							}
-						} else {
-							$tag->alt('');
-						}
-					}
+                    if (!in_array('alt', array_keys($picture->attr))) {
+                        if ($tag instanceof \Concrete\Core\Html\Object\Picture) {
+                            foreach ($tag->getChildren() as $child) {
+                                if ($child instanceof \HtmlObject\Image) {
+                                    $child->alt('');
+                                }
+                            }
+                        } else {
+                            $tag->alt('');
+                        }
+                    }
 
-					$picture->outertext = (string)$tag;
-				}
-			}
+                    $picture->outertext = (string)$tag;
+                }
+            }
 
             $text = (string) $r->restore_noise($r);
         }
