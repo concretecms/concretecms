@@ -5,6 +5,10 @@
     $container = $formatter->getLayoutContainerHtmlObject();
     foreach ($columns as $column) {
         $html = $column->getColumnHtmlObject();
-        $container->appendChild($html);
+        if (! empty($container)) {
+            $container->appendChild($html);
+        } else {
+            print $html;
+        }
     }
     echo $container;
