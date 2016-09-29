@@ -368,6 +368,8 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
         $response = $homeController->validateRequest();
         if ($response instanceof \Symfony\Component\HttpFoundation\Response) {
             return $response;
+        } elseif ($response === true) {
+            return $this->controller($homeController);
         } else {
             return $this->notFound('', Response::HTTP_NOT_FOUND, $headers);
         }
