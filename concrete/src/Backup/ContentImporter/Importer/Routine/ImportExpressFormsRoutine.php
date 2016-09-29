@@ -6,6 +6,7 @@ use Concrete\Core\Entity\Express\FieldSet;
 use Concrete\Core\Entity\Express\Form;
 use Concrete\Core\Permission\Category;
 use Concrete\Core\Validation\BannedWord\BannedWord;
+use Doctrine\ORM\Id\UuidGenerator;
 
 class ImportExpressFormsRoutine extends AbstractRoutine
 {
@@ -18,7 +19,6 @@ class ImportExpressFormsRoutine extends AbstractRoutine
     {
         $em = \Database::connection()->getEntityManager();
 
-        $em->getClassMetadata('Concrete\Core\Entity\Express\Control\Control')->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
         $em->getClassMetadata('Concrete\Core\Entity\Express\Form')->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
 
         if (isset($sx->expressentities)) {
@@ -65,7 +65,7 @@ class ImportExpressFormsRoutine extends AbstractRoutine
             }
         }
         $em->flush();
-        $em->getClassMetadata('Concrete\Core\Entity\Express\Control\Control')->setIdGenerator(null);
-        $em->getClassMetadata('Concrete\Core\Entity\Express\Form')->setIdGenerator(null);    }
+        $em->getClassMetadata('Concrete\Core\Entity\Express\Form')->setIdGenerator(new UuidGenerator());
+    }
 
 }

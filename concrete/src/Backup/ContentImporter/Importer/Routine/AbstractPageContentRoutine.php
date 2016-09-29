@@ -27,7 +27,6 @@ abstract class AbstractPageContentRoutine extends AbstractRoutine
                         if ($bx['mc-block-id'] != '') {
                             // we find that block in the master collection block pool and alias it out
                             $bID = array_search((string) $bx['mc-block-id'], ContentImporter::getMasterCollectionTemporaryBlockIDs());
-                            \Log::info('mc block id ' . print_r(ContentImporter::getMasterCollectionTemporaryBlockIDs(), true));
                             if ($bID) {
                                 $mc = Page::getByID($page->getMasterCollectionID(), 'RECENT');
                                 $block = Block::getByID($bID, $mc, (string) $ax['name']);

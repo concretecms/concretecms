@@ -30,6 +30,18 @@ trait ObjectTrait
     }
 
     /**
+     * @param $ak
+     * @return \Concrete\Core\Entity\Attribute\Value\Value
+     */
+    public function getAttributeValue($ak)
+    {
+        $value = $this->getAttributeValueObject($ak);
+        if (is_object($value)) {
+            return $value;
+        }
+    }
+
+    /**
      * @param AttributeKeyInterface | string $ak
      */
     public function clearAttribute($ak)

@@ -3,6 +3,7 @@
 namespace Concrete\Tests\Core\Database;
 
 use Concrete\Core\Support\Facade\Application;
+use Illuminate\Filesystem\Filesystem;
 
 /**
  * EntityManagerConfigFactoryTest
@@ -119,7 +120,7 @@ class EntityManagerConfigFactoryTest extends \PHPUnit_Framework_TestCase
      * Test the metadata implementation for entities located under application/src/Entity with YAML driver
      * In this case the folder application/config/xml is not present so it will fallback to default
      *
-     * @dataProvider dataProviderGetConfigurationWithApplicationYmlDriverFallbackToDefault
+     * @dataProvider dataProviderGetConfigurationWithApplicationYmlDriver
      * 
      * @param string|integer $setting
      */
@@ -130,6 +131,7 @@ class EntityManagerConfigFactoryTest extends \PHPUnit_Framework_TestCase
 
         // Test if the correct MetadataDriver and MetadataReader are present
         $drivers = $entityManagerConfigFactory->getMetadataDriverImpl()->getDrivers();
+
         $this->assertArrayHasKey('Application\Entity', $drivers);
         $defaultAnnotationDriver = $drivers['Application\Entity'];
         $defaultAnnotationReader = $defaultAnnotationDriver->getReader();
@@ -139,18 +141,18 @@ class EntityManagerConfigFactoryTest extends \PHPUnit_Framework_TestCase
             $defaultAnnotationReader,
             'AnnotationReader is not cached. For performance reasons, it should be wrapped in a CachedReader');
 
+
         // Test if the driver contains the default lookup path
         $driverPaths = $defaultAnnotationDriver->getPaths();
         $this->assertEquals(DIR_APPLICATION.DIRECTORY_SEPARATOR.DIRNAME_CLASSES.DIRECTORY_SEPARATOR.DIRNAME_ENTITIES,
             $driverPaths[0]);
     }
 
-    public function dataProviderGetConfigurationWithApplicationYmlDriverFallbackToDefault()
+    public function dataProviderGetConfigurationWithApplicationYmlDriver()
     {
         return array(
             array('yml'),
             array('yaml'),
-            array(3), // equals \Package::PACKAGE_METADATADRIVER_YAML
         );
     }
 
@@ -158,7 +160,7 @@ class EntityManagerConfigFactoryTest extends \PHPUnit_Framework_TestCase
      * Test the metadata implementation for entities located under application/src with Xml driver
      * In this case the folder application/config/xml is not present so it will fallback to default
      *
-     * @dataProvider dataProviderGetConfigurationWithApplicationXmlDriverFallbackToDefault
+     * @dataProvider dataProviderGetConfigurationWithApplicationXmlDriver
      * 
      * @param string|integer $setting
      */
@@ -184,14 +186,14 @@ class EntityManagerConfigFactoryTest extends \PHPUnit_Framework_TestCase
             $driverPaths[0]);
     }
 
-    public function dataProviderGetConfigurationWithApplicationXmlDriverFallbackToDefault()
+    public function dataProviderGetConfigurationWithApplicationXmlDriver()
     {
         return array(
             array('xml'),
-            array(2), // equals \Package::PACKAGE_METADATADRIVER_XML
         );
     }
-       
+
+
     /**
      * Create the EntityManagerFactory with stub ConfigRepository option
      *
