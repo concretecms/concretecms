@@ -4,6 +4,7 @@ namespace Concrete\Core\Backup\ContentImporter\Importer\Routine;
 use Concrete\Core\Block\BlockType\BlockType;
 use Concrete\Core\Permission\Category;
 use Concrete\Core\Validation\BannedWord\BannedWord;
+use Doctrine\ORM\Id\UuidGenerator;
 
 class ImportExpressAssociationsRoutine extends AbstractRoutine
 {
@@ -39,7 +40,7 @@ class ImportExpressAssociationsRoutine extends AbstractRoutine
             }
         }
         $em->flush();
-        $em->getClassMetadata('Concrete\Core\Entity\Express\Association')->setIdGenerator(null);
+        $em->getClassMetadata('Concrete\Core\Entity\Express\Association')->setIdGenerator(new UuidGenerator());
     }
 
 }

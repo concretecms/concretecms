@@ -78,7 +78,6 @@ class ApplicationXmlMetadataDriverTest extends \PHPUnit_Framework_TestCase
     {
         return array(
             array('xml'),
-            array(2), // equals \Package::PACKAGE_METADATADRIVER_XML
         );
     }
 
