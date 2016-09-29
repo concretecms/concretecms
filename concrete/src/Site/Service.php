@@ -5,6 +5,8 @@ use Concrete\Core\Entity\Page\Template;
 use Concrete\Core\Entity\Site\Site;
 use Concrete\Core\Entity\Site\SiteTree;
 use Concrete\Core\Entity\Site\Tree;
+use Concrete\Core\Entity\Site\Type;
+use Concrete\Core\Page\Theme\Theme;
 use Concrete\Core\Site\Resolver\ResolverFactory;
 use Doctrine\ORM\EntityManagerInterface;
 use Concrete\Core\Application\Application;
@@ -49,12 +51,14 @@ class Service
         }
     }
 
-    public function add($handle, $name, $default = false)
+    public function add(Type $type, Theme $theme, $handle, $name, $default = false)
     {
         $factory = new Factory($this->config);
         $site = $factory->createEntity();
         $site->setSiteHandle($handle);
         $site->setIsDefault($default);
+        $site->setType($type);
+        $site->setThemeID($theme->getThemeID());
         $site->getConfigRepository()->save('name', $name);
 
         $this->entityManager->persist($site);
@@ -88,14 +92,18 @@ class Service
         }
 
         $tree = $site->getSiteTree();
-        $tree->setSite(null);
-        $this->entityManager->flush();
+        if (is_object($tree)) {
+            $tree->setSite(null);
+            $this->entityManager->flush();
+        }
 
         $this->entityManager->remove($site);
         $this->entityManager->flush();
 
-        $this->entityManager->remove($tree);
-        $this->entityManager->flush();
+        if (is_object($tree)) {
+            $this->entityManager->remove($tree);
+            $this->entityManager->flush();
+        }
 
     }
 
