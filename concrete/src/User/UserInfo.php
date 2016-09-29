@@ -128,7 +128,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
         $db = $this->connection;
         $v = array($this->getUserID());
         $pkr = new DeleteUserWorkflowRequest();
-        $pkr->setRequestedUserID($this->uID);
+        $pkr->setRequestedUserID($this->getUserID());
         $pkr->setRequesterUserID($requester->getUserID());
         $pkr->trigger();
         return $db->GetOne('select count(uID) from Users where uID = ?', $v) == 0;

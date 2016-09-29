@@ -12,7 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
 class UserValue extends Value
 {
     /**
-     * @ORM\ManyToOne(targetEntity="\Concrete\Core\Entity\User\User"),
+     * @ORM\ManyToOne(targetEntity="\Concrete\Core\Entity\User\User")
      * @ORM\JoinColumn(name="uID", referencedColumnName="uID")
      */
     protected $user;
