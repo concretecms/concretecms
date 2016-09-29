@@ -7,14 +7,19 @@ use Concrete\Core\Database\EntityManager\Provider\ProviderInterface;
 use Concrete\Core\Package\Package;
 use Doctrine\ORM\Mapping\Driver\AnnotationDriver;
 
-class PackageProvider extends AbstractPackageProvider
+/**
+ * A simple, standard package provider; provide a Concrete\Core\Package\Package controller, and a path (or array of
+ * paths) to PHP entity classes. This uses the annotation driver.
+ * Class PackageProvider
+ */
+class StandardPackageProvider extends AbstractPackageProvider
 {
 
     protected $locations = [];
 
-    public function __construct(Package $pkg, $locations = [])
+    public function __construct(Application $app, Package $pkg, $locations)
     {
-        parent::__construct($pkg);
+        parent::__construct($app, $pkg);
         $this->locations = $locations;
     }
 

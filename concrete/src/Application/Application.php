@@ -8,6 +8,7 @@ use Concrete\Core\Cache\OpCache;
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Database\EntityManager\Driver\DriverInterface;
 use Concrete\Core\Database\EntityManager\Provider\PackageProvider;
+use Concrete\Core\Database\EntityManager\Provider\PackageProviderFactory;
 use Concrete\Core\Database\EntityManagerConfigUpdater;
 use Concrete\Core\Entity\Site\Site;
 use Concrete\Core\Foundation\ClassLoader;
@@ -311,7 +312,8 @@ class Application extends Container
             }
 
             // Inject the package entity manager into entity manager configuration
-            $provider = $pkg->getEntityManagerProvider();
+            $providerFactory = new PackageProviderFactory($this, $pkg);
+            $provider = $providerFactory->getEntityManagerProvider();
             foreach($provider->getDrivers() as $driver) {
                 /**
                  * @var $driver DriverInterface

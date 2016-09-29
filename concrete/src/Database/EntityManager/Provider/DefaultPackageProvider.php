@@ -8,9 +8,16 @@ use Concrete\Core\Package\Package;
 use Doctrine\ORM\Mapping\Driver\AnnotationDriver;
 
 /**
- * The standard package entity manager provider works in the following ways
+ * The standard package entity manager provider. If the package enables legacy namespaces, the provider
+ * simply creates a namespace at Concrete\Package\PackageHandle\Src, and considers all classes found at
+ * package/package_handle/src potential entities. If the legacy namespace is not enabled, we look for entities
+ * at Concrete\Package\PackageHandle\Entity, which maps to packages/package_handle/src/Entity. Additionally, by default
+ * any additional autoloader registries are all considered possible entity locations and namespaces.
+ *
+ * Any package that contains Doctrine entities should consider overriding
+ * Concrete\Core\Package\Package::getEntityManagerProvider with a custom method that delivers a tailored
+ * class implementing the of the Concrete\Core\Database\EntityManager\Provider\ProviderInterface interface.
  * Class DefaultPackageProvider
- * @package Concrete\Core\Database\EntityManager\Provider
  */
 class DefaultPackageProvider extends AbstractPackageProvider
 {

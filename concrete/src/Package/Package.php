@@ -615,14 +615,19 @@ abstract class Package implements LocalizablePackageInterface
         return false;
     }
 
-    public function getEntityManagerProvider()
-    {
-        return new DefaultPackageProvider($this);
-    }
-
     /**
      * @deprecated
-     * @return string
+     * This method was limited. It let you specify a location but in V8 with the Doctrine Entity Manager driver chain
+     * we also need to specify namespaces. Instead of specifying entity paths this way, update your
+     * package controller to implement the Concrete\Core\Database\EntityManager\Provider\ProviderAggregateInterface,
+     * and create a method named getEntityManagerProvider that returns an instance of the
+     * Concrete\Core\Database\EntityManager\Provider\ProviderInterface.
+     *
+     * For example, if I want to specify that my package has entities found at src/PortlandLabs\FooBar\Entity, with the
+     * namespace PortlandLabs\FooBar\Entity, my method is simply
+     * public function getEntityManagerProvider() {
+     *     return new StandardPackageProvider($this->app, $this, ['src/MSM/Entity' => 'PortlandLabs\MSM\Entity']);
+     * }
      */
     public function getPackageEntityPaths()
     {
