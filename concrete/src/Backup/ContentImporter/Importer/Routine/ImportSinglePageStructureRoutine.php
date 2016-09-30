@@ -16,11 +16,18 @@ class ImportSinglePageStructureRoutine extends AbstractRoutine
         if (isset($sx->singlepages)) {
             foreach ($sx->singlepages->page as $p) {
                 $pkg = static::getPackageObject($p['package']);
-                $spl = Single::add($p['path'], $pkg);
-                if (is_object($spl)) {
-                    if (isset($p['root']) && $p['root'] == true) {
-                        $spl->moveToRoot();
+
+                if (isset($p['global']) && (string) $p['global'] === 'true') {
+                    $spl = Single::addGlobal($p['path'], $pkg);
+                } else {
+                    $root = false;
+                    if (isset($p['root']) && (string) $p['root'] === 'true') {
+                        $root = true;
                     }
+                    $spl = Single::add($p['path'], $pkg, $root);
+                }
+
+                if (is_object($spl)) {
                     if ($p['name']) {
                         $spl->update(array('cName' => $p['name'], 'cDescription' => $p['description']));
                     }

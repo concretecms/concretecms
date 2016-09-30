@@ -29,7 +29,6 @@ class Controller extends BlockController
     public $displayPages, $displayPagesCID, $displayPagesIncludeSelf, $displaySubPages, $displaySubPageLevels, $displaySubPageLevelsNum, $orderBy, $displayUnavailablePages;
     public $haveRetrievedSelf = false;
     public $haveRetrievedSelfPlus1 = false;
-    public $displaySystemPages = false;
     public $displayUnapproved = false;
     public $ignoreExcludeNav = false;
     protected $btTable = 'btNavigation';
@@ -106,7 +105,6 @@ class Controller extends BlockController
         $args['displayPagesCID'] = isset($args['displayPagesCID']) && $args['displayPagesCID'] ? $args['displayPagesCID'] : 0;
         $args['displaySubPageLevelsNum'] = isset($args['displaySubPageLevelsNum']) && $args['displaySubPageLevelsNum'] > 0 ? $args['displaySubPageLevelsNum'] : 0;
         $args['displayUnavailablePages'] = isset($args['displayUnavailablePages']) && $args['displayUnavailablePages'] ? 1 : 0;
-        $args['displaySystemPages'] = isset($args['displaySystemPages']) && $args['displaySystemPages'] ? 1 : 0;
         parent::save($args);
     }
 
@@ -740,10 +738,6 @@ class Controller extends BlockController
 
     protected function displayPage($tc)
     {
-        if ($tc->isSystemPage() && (!$this->displaySystemPages)) {
-            return false;
-        }
-
         $tcv = $tc->getVersionObject();
         if ((!is_object($tcv)) || (!$tcv->isApproved() && !$this->displayUnapproved)) {
             return false;
