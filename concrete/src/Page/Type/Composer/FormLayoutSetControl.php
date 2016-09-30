@@ -94,7 +94,7 @@ class FormLayoutSetControl extends Object
     {
         $control = $this->getPageTypeComposerControlObject();
         $control->setPageTypeComposerFormLayoutSetControlObject($this);
-        $control->setPageObject($this->page);
+        $control->setPageObject(isset($this->page) ? $this->page : null);
         $control->setTargetParentPageID($this->ptTargetParentPageID);
         $control->render($this->getPageTypeComposerControlDisplayLabel(), $this->getPageTypeComposerFormLayoutSetControlCustomTemplate(), $this->getPageTypeComposerFormLayoutSetControlDisplayDescription());
     }
