@@ -174,19 +174,12 @@ class ZendCacheDriver extends AbstractAdapter implements StorageInterface, Flush
     }
 
     /**
-     * Flush the whole storage.
+     * Flush the whole storage (even when the localization system is not ready).
      *
      * @return bool
      */
     public function flush()
     {
-        $cache = $this->getCache();
-        if ($cache === null) {
-            $result = true;
-        } else {
-            $result = $cache->getItem('zend')->clear();
-        }
-
-        return $result;
+        return $this->app->make($this->finalCacheName)->getItem('zend')->clear();
     }
 }
