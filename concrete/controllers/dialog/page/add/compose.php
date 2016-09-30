@@ -86,7 +86,6 @@ class Compose extends Controller
             $saver->saveForm($d);
             if ($this->request->request('addPageComposeAction') == 'publish'
             || $this->request->request('addPageComposeAction') == 'schedule') {
-
                 $publishDateTime = false;
                 if ($this->request->request->get('addPageComposeAction') == 'schedule') {
                     $dateTime = new DateTime();
