@@ -37,8 +37,8 @@ class ZendCacheDriver extends AbstractAdapter implements StorageInterface, Flush
     protected $cacheLifetime;
 
     /**
-     * @param string $cacheName Name of the cache being used. Defaults to cache.
-     * @param int $cacheLifetime Number of seconds to consider the cache fresh before it expires.
+     * @param string $cacheName Name of the cache being used. Defaults to cache
+     * @param int $cacheLifetime Number of seconds to consider the cache fresh before it expires
      */
     public function __construct($cacheName = 'cache', $cacheLifetime = null)
     {
@@ -61,7 +61,7 @@ class ZendCacheDriver extends AbstractAdapter implements StorageInterface, Flush
      */
     protected function internalGetItem(&$normalizedKey, &$success = null, &$casToken = null)
     {
-        /** @var Cache $cache  */
+        /** @var Cache $cache */
         $cache = Core::make($this->cacheName);
         $item = $cache->getItem('zend/'.$normalizedKey);
         if ($item->isMiss()) {
@@ -87,7 +87,7 @@ class ZendCacheDriver extends AbstractAdapter implements StorageInterface, Flush
      */
     protected function internalSetItem(&$normalizedKey, &$value)
     {
-        /** @var Cache $cache  */
+        /** @var Cache $cache */
         $cache = Core::make($this->cacheName);
         $item = $cache->getItem('zend/'.$normalizedKey);
 
@@ -109,7 +109,7 @@ class ZendCacheDriver extends AbstractAdapter implements StorageInterface, Flush
      */
     protected function internalRemoveItem(&$normalizedKey)
     {
-        /** @var Cache $cache  */
+        /** @var Cache $cache */
         $cache = Core::make($this->cacheName);
         $item = $cache->getItem('zend/'.$normalizedKey);
 
