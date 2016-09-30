@@ -84,15 +84,15 @@ class PageTest extends PageTestCase
 
     public function testSystemPageBoolean()
     {
-        SinglePage::add('/dashboard/reports');
+        SinglePage::addGlobal('/dashboard/reports');
         $reportsPage = Page::getByPath('/dashboard/reports');
         $this->assertEquals(true, $reportsPage->isSystemPage());
 
         $page2 = self::createPage('Awesome Page 2');
         $this->assertEquals(false, $page2->isSystemPage());
 
-        $account = SinglePage::add('/account');
-        SinglePage::add('/account/profile');
+        $account = SinglePage::addGlobal('/account');
+        SinglePage::addGlobal('/account/profile');
         $profile = Page::getByPath('/account/profile');
         $this->assertEquals(true, $account->isSystemPage());
         $this->assertEquals(true, $profile->isSystemPage());
