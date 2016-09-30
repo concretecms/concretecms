@@ -25,6 +25,10 @@ class ImportSinglePageContentRoutine extends AbstractPageContentRoutine
                 if (isset($px->area)) {
                     $this->importPageAreas($page, $px);
                 }
+                if ($page->isError()) {
+                    print $px['path'];
+                    exit;
+                }
                 if (isset($px->attributes)) {
                     foreach ($px->attributes->children() as $attr) {
                         $ak = CollectionKey::getByHandle($attr['handle']);

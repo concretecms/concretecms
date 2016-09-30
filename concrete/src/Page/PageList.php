@@ -51,11 +51,11 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
     protected $isFulltextSearch = false;
 
     /**
-     * Whether to include system pages (login, etc...) in this query.
+     * Whether to include root pages in this query.
      *
      * @var bool
      */
-    protected $includeSystemPages = false;
+    protected $includeRootPages = false;
 
     /**
      * Whether to include aliases in the result set.
@@ -72,6 +72,14 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
     public function setSiteTreeObject($tree)
     {
         $this->siteTree = $tree;
+    }
+
+    /**
+     * @param boolean $includeRootPages
+     */
+    public function includeRootPages()
+    {
+        $this->includeRootPages = true;
     }
 
     public function setPermissionsChecker(\Closure $checker)
@@ -92,11 +100,6 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
     public function includeInactivePages()
     {
         $this->includeInactivePages = true;
-    }
-
-    public function includeSystemPages()
-    {
-        $this->includeSystemPages = true;
     }
 
     public function isFulltextSearch()
@@ -161,8 +164,9 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
         }
 
         if ($this->query->getParameter('cParentID') < 1) {
-            if (!$this->includeSystemPages) {
-                $query->andWhere('p.siteTreeID = :siteTreeID');
+            if (!$this->includeRootPages) {
+                $query->innerJoin('p', 'SiteTrees', 'st', 'p.siteTreeID = st.siteTreeID');
+                $query->andWhere('p.siteTreeID = :siteTreeID and (p.cParentID > 0 or p.cID = st.siteHomePageID)');
             } else {
                 $query->andWhere('(p.siteTreeID = :siteTreeID or p.siteTreeID = 0)');
             }
@@ -578,4 +582,13 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
     {
         $this->setPageVersionToRetrieve(self::PAGE_VERSION_RECENT);
     }
+
+    /**
+     * @deprecated
+     */
+    public function includeSystemPages()
+    {
+        // Nothing
+    }
+
 }

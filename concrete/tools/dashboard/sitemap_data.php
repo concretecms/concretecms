@@ -31,10 +31,10 @@ if ($_REQUEST['displayNodePagination']) {
     $dh->setDisplayNodePagination(false);
 }
 
-if ($_GET['includeSystemPages']) {
-    $dh->setIncludeSystemPages(true);
+if ($_GET['includeRootPages']) {
+    $dh->setIncludeRootPages(true);
 } else {
-    $dh->setIncludeSystemPages(false);
+    $dh->setIncludeRootPages(false);
 }
 
 $cParentID = (isset($_REQUEST['cParentID'])) ? $_REQUEST['cParentID'] : 0;

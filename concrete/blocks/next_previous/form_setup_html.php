@@ -33,14 +33,6 @@ defined('C5_EXECUTE') or die("Access Denied.");
                 ?>
             </label>
          </div>
-        <div class="checkbox">
-            <label>
-                <?php
-                echo $form->checkbox('excludeSystemPages', 1, intval($excludeSystemPages));
-                echo t('Exclude system pages.');
-                ?>
-            </label>
-        </div>
     </div>
 
     <div class="form-group">

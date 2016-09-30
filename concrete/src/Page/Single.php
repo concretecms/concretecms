@@ -122,13 +122,41 @@ class Single
         return $c;
     }
 
+    /**
+     * Adds a single page outside of any site trees. The global=true declaration in content importer XML must come at
+     * on the first URL segment, so we don't have to be smart and check to see if the parents already eixst.
+     * @param $cPath
+     * @param null $pkg
+     * @return mixed
+     */
+    public static function addGlobal($cPath, $pkg = null)
+    {
+        $pathToFile = static::getPathToNode($cPath, $pkg);
+        $txt = Loader::helper('text');
+        $c = CorePage::getByPath("/" . $cPath);
+        if ($c->isError() && $c->getError() == COLLECTION_NOT_FOUND) {
+            // create the page at that point in the tree
+
+            $data = array();
+            $data['handle'] = trim($cPath, '/');
+            $data['name'] = $txt->unhandle($data['handle']);
+            $data['filename'] = $pathToFile;
+            $data['uID'] = USER_SUPER_ID;
+            if ($pkg != null) {
+                $data['pkgID'] = $pkg->getPackageID();
+            }
+
+            return Page::addStatic($data, null, true);
+        }
+    }
+
     /*
      * Adds a new single page at the given path, optionally specify a Package
      * @param string $cPath
      * @param Package $pkg
      * @return Page
      */
-    public static function add($cPath, $pkg = null)
+    public static function add($cPath, $pkg = null, $moveToRoot = false)
     {
         // if we get to this point, we create a special collection
         // without a specific type. This collection has a special cFilename that
@@ -170,7 +198,11 @@ class Single
                     $data['pkgID'] = $pkg->getPackageID();
                 }
 
-                $newC = $parent->addStatic($data);
+                if ($moveToRoot) {
+                    $newC = Page::addStatic($data, null);
+                } else {
+                    $newC = Page::addStatic($data, $parent);
+                }
                 $parent = $newC;
             } else {
                 $parent = $c;

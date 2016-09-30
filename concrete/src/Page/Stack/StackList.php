@@ -19,7 +19,7 @@ class StackList extends PageList
         $this->ignorePermissions();
         $this->filterByPath(STACKS_PAGE_PATH);
         $this->filter(false, '(s.stMultilingualSection is null or s.stMultilingualSection = 0)');
-        $this->includeSystemPages();
+        $this->includeRootPages();
         $this->sortByName();
     }
 

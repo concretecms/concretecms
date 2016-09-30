@@ -40,8 +40,8 @@ if ($u->isSuperUser()) {
 <section>
 	<div class="checkbox">
     	<label>
-    		<input type="checkbox" name="includeSystemPages" <?php if ($includeSystemPages) { ?>checked<?php } ?> value="1" />
-    		<?=t('Include System Pages in Sitemap')?>
+    		<input type="checkbox" name="includeRootPages" <?php if ($includeRootPages) { ?>checked<?php } ?> value="1" />
+    		<?=t('Include Hidden Root Pages in Sitemap')?>
     	</label>
 	</div>
 </section>
@@ -59,15 +59,15 @@ if ($u->isSuperUser()) {
 $(function() {
     $('div#ccm-full-sitemap-container').concreteSitemap({
         siteTreeID: <?=$site->getSiteTreeID()?>,
-        includeSystemPages: $('input[name=includeSystemPages]').is(':checked')
+        includeRootPages: $('input[name=includeRootPages]').is(':checked')
     });
 
-    $('input[name=includeSystemPages]').on('click', function() {
+    $('input[name=includeRootPages]').on('click', function() {
         var $tree = $('div#ccm-full-sitemap-container');
         $tree.fancytree('destroy');
         $tree.concreteSitemap({
             siteTreeID: <?=$site->getSiteTreeID()?>,
-            includeSystemPages: $('input[name=includeSystemPages]').is(':checked')
+            includeRootPages: $('input[name=includeRootPages]').is(':checked')
         });
     });
 });

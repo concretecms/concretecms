@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <concrete5-cif version="1.0">
     <singlepages>
-        <page name="Dashboard" path="/dashboard" filename="/dashboard/view.php" pagetype="" description="" package="" root="true">
+        <page name="Dashboard" path="/dashboard" filename="/dashboard/view.php" pagetype="" description="" package="" global="true">
             <attributes>
                 <attributekey handle="icon_dashboard">
                     <value>fa fa-th-large</value>
