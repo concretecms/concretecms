@@ -2,6 +2,7 @@
 namespace Concrete\Core\Entity\Site;
 
 use Concrete\Core\Site\Tree\TreeInterface;
+use Concrete\Core\Site\TypeInterface;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -12,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
  *     name="SiteTrees"
  * )
  */
-abstract class Tree implements TreeInterface
+abstract class Tree implements TreeInterface, TypeInterface
 {
 
     /**

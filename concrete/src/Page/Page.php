@@ -4,7 +4,7 @@ namespace Concrete\Core\Page;
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Entity\Page\Template as TemplateEntity;
 use Concrete\Core\Entity\Site\Site;
-use Concrete\Core\Entity\Site\Tree;
+use Concrete\Core\Site\Tree\TreeInterface;
 use Concrete\Core\Multilingual\Page\Section\Section;
 use Concrete\Core\Page\Type\Composer\Control\BlockControl;
 use Concrete\Core\Page\Type\Composer\FormLayoutSetControl;
@@ -64,17 +64,17 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
      *
      * @return Page
      */
-    public static function getByPath($path, $version = 'RECENT', Tree $siteTree = null)
+    public static function getByPath($path, $version = 'RECENT', TreeInterface $tree = null)
     {
         $path = rtrim($path, '/'); // if the path ends in a / remove it.
         $cache = \Core::make('cache/request');
 
-        if ($siteTree) {
-            $item = $cache->getItem(sprintf('site/page/path/%s/%s', $siteTree->getSiteTreeID(), trim($path, '/')));
+        if ($tree) {
+            $item = $cache->getItem(sprintf('site/page/path/%s/%s', $tree->getSiteTreeID(), trim($path, '/')));
             $cID = $item->get();
             if ($item->isMiss()) {
                 $db = Database::connection();
-                $cID = $db->fetchColumn('select Pages.cID from PagePaths inner join Pages on Pages.cID = PagePaths.cID where cPath = ? and siteTreeID = ?', [$path, $siteTree->getSiteTreeID()]);
+                $cID = $db->fetchColumn('select Pages.cID from PagePaths inner join Pages on Pages.cID = PagePaths.cID where cPath = ? and siteTreeID = ?', [$path, $tree->getSiteTreeID()]);
                 $cache->save($item->set($cID));
             }
         } else {
@@ -1001,8 +1001,12 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         $p->addAttribute('user', $ui->getUserName());
         $p->addAttribute('description', Core::make('helper/text')->entities($this->getCollectionDescription()));
         $p->addAttribute('package', $this->getPackageHandle());
-        if ($this->getCollectionParentID() == 0 && $this->isSystemPage()) {
-            $p->addAttribute('root', 'true');
+        if ($this->getCollectionParentID() == 0) {
+            if ($this->getSiteTreeID() == 0) {
+                $p->addAttribute('global', 'true');
+            } else {
+                $p->addAttribute('root', 'true');
+            }
         }
 
         $attribs = $this->getSetCollectionAttributes();
@@ -2832,7 +2836,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
      *
      * @return page
      **/
-    public static function addHomePage(Tree $siteTree = null)
+    public static function addHomePage(TreeInterface $siteTree = null)
     {
         // creates the home page of the site
         $db = Database::connection();
@@ -3136,7 +3140,11 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
 
         $siteTreeID = 0;
         if (!$global) {
-            $siteTreeID = \Core::make('site')->getSite()->getSiteTreeID();
+            if (is_object($parent)) {
+                $siteTreeID = $parent->getSiteTreeID();
+            } else {
+                $siteTreeID = \Core::make('site')->getSite()->getSiteTreeID();
+            }
         }
 
         $v = [$cID, $siteTreeID, $cFilename, $cParentID, $cInheritPermissionsFrom, $cOverrideTemplatePermissions, $cInheritPermissionsFromCID, $cDisplayOrder, $uID, $pkgID];

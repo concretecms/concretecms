@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Page;
 
+use Concrete\Core\Entity\Site\Site;
 use Page as CorePage;
 use Loader;
 use Environment;
@@ -173,43 +174,66 @@ class Single
         $pages = explode('/', $cPath);
 
         // instantiate the home collection so we have someplace to add these to
-        $parent = CorePage::getByID(1);
+        $sites = \Core::make('site')->getList();
+        foreach($sites as $site) {
+            /**
+             * @var $site Site
+             */
+            $parent = $site->getSiteHomePageObject();
 
-        // now we iterate through the pages  to ensure that they exist in the system before adding the new guy
+            // now we iterate through the pages  to ensure that they exist in the system before adding the new guy
 
-        $pathPrefix = '';
+            $pathPrefix = '';
+            $checkGlobally = false;
 
-        for ($i = 0; $i < count($pages); ++$i) {
-            $currentPath = $pathPrefix . $pages[$i];
-
-            $pathToFile = static::getPathToNode($currentPath, $pkg);
-
-            // check to see if a page at this point in the tree exists
-            $c = CorePage::getByPath("/" . $currentPath);
-            if ($c->isError() && $c->getError() == COLLECTION_NOT_FOUND) {
-                // create the page at that point in the tree
-
-                $data = array();
-                $data['handle'] = $pages[$i];
-                $data['name'] = $txt->unhandle($data['handle']);
-                $data['filename'] = $pathToFile;
-                $data['uID'] = USER_SUPER_ID;
-                if ($pkg != null) {
-                    $data['pkgID'] = $pkg->getPackageID();
+            for ($i = 0; $i < count($pages); ++$i) {
+                $currentPath = $pathPrefix . $pages[$i];
+                if ($i == 0) {
+                    // First, we check the first path to see if it falls outside of the root already. If it does,
+                    // we're not going to check within the site for them
+                    $rootPage = CorePage::getByPath("/" . $currentPath);
+                    if (!$rootPage->isError() && $rootPage->isSystemPage()) {
+                        // That means we've already added this as a system page, like Dashboard, etc... Which means
+                        // that we add the subsequent pages globally
+                        $checkGlobally = true;
+                    }
                 }
 
-                if ($moveToRoot) {
-                    $newC = Page::addStatic($data, null);
+                $pathToFile = static::getPathToNode($currentPath, $pkg);
+
+                // check to see if a page at this point in the tree exists
+                if (!$checkGlobally) {
+                    $c = CorePage::getByPath("/" . $currentPath, 'RECENT', $site);
                 } else {
-                    $newC = Page::addStatic($data, $parent);
+                    $c = CorePage::getByPath("/" . $currentPath);
                 }
-                $parent = $newC;
-            } else {
-                $parent = $c;
+                if ($c->isError() && $c->getError() == COLLECTION_NOT_FOUND) {
+                    // create the page at that point in the tree
+
+                    $data = array();
+                    $data['handle'] = $pages[$i];
+                    $data['name'] = $txt->unhandle($data['handle']);
+                    $data['filename'] = $pathToFile;
+                    $data['uID'] = USER_SUPER_ID;
+                    if ($pkg != null) {
+                        $data['pkgID'] = $pkg->getPackageID();
+                    }
+
+                    if ($moveToRoot) {
+                        $newC = Page::addStatic($data, null);
+                    } else {
+                        $newC = Page::addStatic($data, $parent);
+                    }
+                    $parent = $newC;
+                } else {
+                    $parent = $c;
+                }
+
+                $pathPrefix = $currentPath . '/';
             }
 
-            $pathPrefix = $currentPath . '/';
         }
+
         $env = Environment::get();
         $env->clearOverrideCache();
 
