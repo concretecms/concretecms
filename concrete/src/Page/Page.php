@@ -3108,7 +3108,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         $db = Database::connection();
         $cParentID = 1;
         $cDisplayOrder = 0;
-        $cInheritPermissionsFromCID = 0;
+        $cInheritPermissionsFromCID = 1;
         $cOverrideTemplatePermissions = 1;
         if (is_object($parent)) {
             $cParentID = $parent->getCollectionID();
