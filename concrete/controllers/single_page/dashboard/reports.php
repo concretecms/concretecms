@@ -6,7 +6,7 @@ use Concrete\Core\Http\ResponseFactoryInterface;
 
 class Reports extends DashboardPageController
 {
-    public function validateRequest()
+    public function view()
     {
         return $this->app->make(ResponseFactoryInterface::class)->redirect(
             $this->app->make('url/manager')->resolve(['/dashboard/reports/forms'])
