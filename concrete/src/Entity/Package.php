@@ -2,7 +2,7 @@
 namespace Concrete\Core\Entity;
 
 use Concrete\Core\Package\LocalizablePackageInterface;
-use Concrete\Core\Package\PackageService;
+use Concrete\Core\Support\Facade\Package as PackageService;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
