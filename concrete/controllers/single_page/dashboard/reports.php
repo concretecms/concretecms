@@ -2,11 +2,14 @@
 namespace Concrete\Controller\SinglePage\Dashboard;
 
 use Concrete\Core\Page\Controller\DashboardPageController;
+use Concrete\Core\Http\ResponseFactoryInterface;
 
 class Reports extends DashboardPageController
 {
-    public function __construct()
+    public function validateRequest()
     {
-        $this->redirect("/dashboard/reports/forms");
+        return $this->app->make(ResponseFactoryInterface::class)->redirect(
+            $this->app->make('url/manager')->resolve(['/dashboard/reports/forms'])
+        );
     }
 }
