@@ -1,7 +1,6 @@
 <?php
 namespace Concrete\Core\Entity\Site;
 
-use Concrete\Core\Site\Tree\TreeInterface;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
