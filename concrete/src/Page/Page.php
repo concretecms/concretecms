@@ -2255,14 +2255,24 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
             $this->activate();
             // if we're moving from the trash, we have to activate recursively
             if ($this->isInTrash()) {
-                $pages = [];
-                $pages = $this->populateRecursivePages($pages, ['cID' => $this->getCollectionID()], $this->getCollectionParentID(), 0, false);
-                foreach ($pages as $page) {
+                $childPages = $this->populateRecursivePages([], ['cID' => $this->getCollectionID()], $this->getCollectionParentID(), 0, false);
+                foreach ($childPages as $page) {
                     $db->executeQuery('update Pages set cIsActive = 1 where cID = ?', [$page['cID']]);
                 }
             }
         }
 
+        if ($nc->getSiteTreeID() != $this->getSiteTreeID()) {
+            $db->executeQuery('update Pages set siteTreeID = ? where cID = ?', [$nc->getSiteTreeID(), $this->getCollectionID()]);
+            if (!isset($childPages)) {
+                $childPages = $this->populateRecursivePages([], ['cID' => $this->getCollectionID()], $this->getCollectionParentID(), 0, false);
+            }
+            foreach ($childPages as $page) {
+                $db->executeQuery('update Pages set siteTreeID = ? where cID = ?', [$nc->getSiteTreeID(), $page['cID']]);
+            }
+        }
+
+        $this->siteTreeID = $nc->getSiteTreeID();
         $this->cParentID = $newCParentID;
         $this->movePageDisplayOrderToBottom();
         // run any event we have for page move. Arguments are

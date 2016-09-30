@@ -12,6 +12,7 @@ use Concrete\Core\Site\Resolver\Resolver;
 use Concrete\Core\Site\Resolver\ResolverFactory;
 use Concrete\Core\Site\Resolver\StandardDriver;
 use Concrete\Core\Site\Service;
+use Concrete\Theme\Elemental\PageTheme;
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
@@ -87,8 +88,10 @@ class SiteTest extends \PHPUnit_Framework_TestCase
 
         $factory = new ResolverFactory(\Core::make('app'), new StandardDriver(\Core::make('Concrete\Core\Site\Factory')));
         $service = new Service($entityManager, \Core::make('app'), $configRepoStub, $factory);
+        $type = new Type();
+        $theme = new PageTheme();
 
-        $new = $service->add('testing', 'Testing');
+        $new = $service->add($type, $theme, 'testing', 'Testing');
         $this->assertInstanceOf('Concrete\Core\Entity\Site\Site', $new);
         $this->assertEquals('testing', $new->getSiteHandle());
         $this->assertEquals('Testing', $new->getSiteName());
