@@ -60,6 +60,7 @@ class Compose extends Controller
         }
         $parent = Page::getByID($cParentID);
 
+        $template = null;
         if ($this->request->request->get('ptComposerPageTemplateID')) {
             $template = Template::getByID($this->request->request->get('ptComposerPageTemplateID'));
         }
