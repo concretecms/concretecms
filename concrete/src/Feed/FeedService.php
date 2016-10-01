@@ -11,6 +11,7 @@ class FeedService
      *
      * @param string $feedurl
      * @param int    $cache - number of seconds to cache the RSS feed data for
+     *
      * @return Reader
      */
     public function load($url, $cache = 3600)
