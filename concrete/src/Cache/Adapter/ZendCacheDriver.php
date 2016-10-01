@@ -6,7 +6,8 @@ use Zend\Cache\Exception;
 use Zend\Cache\Storage\Adapter\AbstractAdapter;
 use Zend\Cache\Storage\StorageInterface;
 use Zend\Cache\Storage\FlushableInterface;
-use Concrete\Core\Support\Facade\Application;
+use Concrete\Core\Application\ApplicationAwareInterface;
+use Concrete\Core\Application\ApplicationAwareTrait;
 
 /**
  * Class ZendCacheDriver
@@ -24,22 +25,14 @@ use Concrete\Core\Support\Facade\Application;
  *
  * \@package Concrete\Core\Cache\Adapter
  */
-class ZendCacheDriver extends AbstractAdapter implements StorageInterface, FlushableInterface
+class ZendCacheDriver extends AbstractAdapter implements StorageInterface, FlushableInterface, ApplicationAwareInterface
 {
+    use ApplicationAwareTrait;
+
     /**
      * @var string Name of the cache being used when the localization is fully initialized
      */
     private $finalCacheName;
-
-    /**
-     * @var \Concrete\Core\Application\Application
-     */
-    protected $app;
-
-    /**
-     * @var \Concrete\Core\Config\Repository\Repository
-     */
-    protected $config;
 
     /**
      * Is the localization system ready?
@@ -60,16 +53,9 @@ class ZendCacheDriver extends AbstractAdapter implements StorageInterface, Flush
     public function __construct($finalCacheName = 'cache', $cacheLifetime = null)
     {
         parent::__construct();
-        $this->setApplication(Application::getFacadeApplication());
         $this->localizationReady = false;
         $this->finalCacheName = $finalCacheName;
         $this->cacheLifetime = $cacheLifetime;
-    }
-
-    public function setApplication(\Concrete\Core\Application\Application $app)
-    {
-        $this->app = $app;
-        $this->config = $app->make('config');
     }
 
     /**
@@ -80,7 +66,7 @@ class ZendCacheDriver extends AbstractAdapter implements StorageInterface, Flush
     protected function isLocalizationReady()
     {
         if (!$this->localizationReady) {
-            if ($this->config->get('app.bootstrap.packages_loaded') === true) {
+            if ($this->app->make('config')->get('app.bootstrap.packages_loaded') === true) {
                 $this->localizationReady = true;
             }
         }
@@ -89,16 +75,31 @@ class ZendCacheDriver extends AbstractAdapter implements StorageInterface, Flush
     }
 
     /**
+     * @param bool $evenIfTranslationsNotReady
+     *
      * @return \Concrete\Core\Cache\Cache|null
      */
-    protected function getCache()
+    protected function getCache($evenIfTranslationsNotReady = false)
     {
-        if ($this->isLocalizationReady()) {
+        if ($evenIfTranslationsNotReady || $this->isLocalizationReady()) {
             return $this->app->make($this->finalCacheName);
         } else {
             return null;
         }
     }
+
+    /**
+     * Returns the final cache key.
+     *
+     * @param string $normalizedKey
+     *
+     * @return string
+     */
+    protected function getCacheKey($normalizedKey)
+    {
+        return 'zend/'.$normalizedKey;
+    }
+
     /**
      * Internal method to get an item.
      *
@@ -112,9 +113,13 @@ class ZendCacheDriver extends AbstractAdapter implements StorageInterface, Flush
      */
     protected function internalGetItem(&$normalizedKey, &$success = null, &$casToken = null)
     {
+        $item = null;
         $cache = $this->getCache();
-        $key = 'zend/'.$normalizedKey;
-        $item = ($cache === null) ? null : $cache->getItem('zend/'.$normalizedKey);
+        if ($cache === null) {
+            $item = null;
+        } else {
+            $item = $cache->getItem($this->getCacheKey($normalizedKey));
+        }
         if ($item === null || $item->isMiss()) {
             $success = false;
 
@@ -164,7 +169,7 @@ class ZendCacheDriver extends AbstractAdapter implements StorageInterface, Flush
     {
         $cache = $this->getCache();
         if ($cache === null) {
-            $result = true;
+            $result = false;
         } else {
             $item = $cache->getItem('zend/'.$normalizedKey);
             $result = $item->clear();
@@ -180,6 +185,6 @@ class ZendCacheDriver extends AbstractAdapter implements StorageInterface, Flush
      */
     public function flush()
     {
-        return $this->app->make($this->finalCacheName)->getItem('zend')->clear();
+        return $this->getCache(true)->getItem('zend')->clear();
     }
 }

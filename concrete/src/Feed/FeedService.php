@@ -3,6 +3,7 @@ namespace Concrete\Core\Feed;
 
 use Concrete\Core\Cache\Adapter\ZendCacheDriver;
 use Zend\Feed\Reader\Reader;
+use Concrete\Core\Support\Facade\Application;
 
 class FeedService
 {
@@ -17,7 +18,9 @@ class FeedService
     public function load($url, $cache = 3600)
     {
         if ($cache !== false) {
-            Reader::setCache(new ZendCacheDriver('cache/expensive', $cache));
+            $app = Application::getFacadeApplication();
+            $driver = $app->make(ZendCacheDriver::class, ['cache/expensive', $cache]);
+            Reader::setCache($driver);
         }
 
         // Load the RSS feed, either from remote URL or from cache

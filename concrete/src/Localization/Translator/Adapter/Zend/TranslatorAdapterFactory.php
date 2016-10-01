@@ -5,6 +5,7 @@ use Concrete\Core\Cache\Adapter\ZendCacheDriver;
 use Concrete\Core\Localization\Translator\TranslatorAdapterFactoryInterface;
 use Concrete\Core\Localization\Translator\Translation\TranslationLoaderRepositoryInterface;
 use Zend\I18n\Translator\Translator;
+use Concrete\Core\Support\Facade\Application;
 
 /**
  * Provides a factory method to create translator objects for the Zend
@@ -30,7 +31,8 @@ class TranslatorAdapterFactory implements TranslatorAdapterFactoryInterface
      */
     public function createTranslatorAdapter($locale)
     {
-        $cache = new ZendCacheDriver('cache/expensive');
+        $app = Application::getFacadeApplication();
+        $cache = $app->build(ZendCacheDriver::class, ['cache/expensive']);
 
         $t = new Translator();
         $t->setCache($cache);
