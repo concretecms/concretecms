@@ -22,9 +22,14 @@ class Extractor
     {
         $translations = new Translations();
         $translations->insert('SiteName', \Core::make('site')->getSite()->getSiteName());
+        $fh = \Core::make('helper/file');
+        \C5TL\Options::setTemporaryDirectory($fh->getTemporaryDirectory());
         $phpParser = new \C5TL\Parser\Php();
         $blockTemplatesParser = new \C5TL\Parser\BlockTemplates();
         $themesPresetsParser = new \C5TL\Parser\ThemePresets();
+        $configFilesParser = new \C5TL\Parser\ConfigFiles();
+
+        $configFilesParser->parseDirectory(DIR_BASE, '');
 
         $processApplication = array(
             DIRNAME_BLOCKS => array($phpParser, $blockTemplatesParser),
@@ -72,6 +77,8 @@ class Extractor
 
     public function getDynamicTranslations()
     {
+        $fh = \Core::make('helper/file');
+        \C5TL\Options::setTemporaryDirectory($fh->getTemporaryDirectory());
         $parser = new \C5TL\Parser\Dynamic();
 
         return $parser->parseRunningConcrete5();
