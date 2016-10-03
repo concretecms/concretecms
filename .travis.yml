@@ -33,3 +33,6 @@ cache:
 
 notifications:
   email: false
+
+slack:
+  secure: BXgqEdwhkmZvij3yB3QwfRea+WF3q1ayDVoqtWsNV1+UahLSDNoLa2tdMHhmJhRfL+8ly4aS9YzJKbuirmP1QyyRUnoAYLQ/5IZ3JpYEefBlJ8KW5ZRhn/CgJKjTKMpLqseXwlladLwnXdRcfH2XFNmF2sHo5W6RtrV8ad6/aSg=
