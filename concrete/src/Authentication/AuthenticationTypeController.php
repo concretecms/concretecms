@@ -33,7 +33,7 @@ abstract class AuthenticationTypeController extends Controller implements Authen
     {
         $c = Page::getByPath('/login');
         $controller = $c->getPageController();
-        $controller->finishAuthentication($this->getAuthenticationType());
+        return $controller->finishAuthentication($this->getAuthenticationType());
     }
 
     /**

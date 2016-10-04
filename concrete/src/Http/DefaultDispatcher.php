@@ -60,7 +60,7 @@ class DefaultDispatcher implements DispatcherInterface
     {
         $session = $this->app['session'];
 
-        if ($session->has('uID') && $session->get('uID') > 0) {
+        if (!$session->has('uID')) {
             User::verifyAuthTypeCookie();
         }
 
