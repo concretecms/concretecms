@@ -104,8 +104,12 @@ class Stack extends Page implements ExportableInterface
                 }
                 $sql .= ' and siteTreeID = ? ';
                 $sql .= ' limit 1';
-                $site = \Core::make('site')->getSite();
-                $q[] = $site->getSiteTreeID();
+                if (!is_object($siteTree)) {
+                    $site = \Core::make('site')->getSite();
+                    $q[] = $site->getSiteTreeID();
+                } else {
+                    $q[] = $siteTree->getSiteTreeID();
+                }
                 $cID = $db->fetchColumn($sql, $q);
                 $cache->save($item->set($cID));
             }
@@ -188,10 +192,11 @@ class Stack extends Page implements ExportableInterface
         return $ms;
     }
 
-    public static function addGlobalArea($area)
+    public static function addGlobalArea($area, TreeInterface $siteTree = null)
     {
-        $site = \Core::make('site')->getSite();
-        $parent = \Page::getByPath(STACKS_PAGE_PATH, 'RECENT', $site);
+        $siteTree = is_object($siteTree) ? $siteTree : \Core::make('site')->getSite()->getSiteTree();
+        $parent = \Page::getByPath(STACKS_PAGE_PATH, 'RECENT', $siteTree);
+        \Log::info('adding area ' . $area . ' to page ' . $parent->getCollectionID());
         return self::addStackToCategory($parent, $area, static::ST_TYPE_GLOBAL_AREA);
     }
 
@@ -212,7 +217,7 @@ class Stack extends Page implements ExportableInterface
      *
      * @return Stack
      */
-    public function duplicate($nc = null, $preserveUserID = false, Site $site = null)
+    public function duplicate($nc = null, $preserveUserID = false, TreeInterface $site = null)
     {
         if (!is_object($nc)) {
             $nc = Page::getByID($this->getCollectionParentID());
@@ -222,14 +227,17 @@ class Stack extends Page implements ExportableInterface
         // we have to do this because we need the area to exist before we try and add something to it.
         Area::getOrCreate($newPage, STACKS_AREA_NAME);
 
+        $siteTreeID = is_object($site) ? $site->getSiteTreeID() : \Core::make('site')->getSite()->getSiteTreeID();
+
         $db = Database::connection();
         $db->executeQuery(
-            'insert into Stacks (stName, cID, stType, stMultilingualSection) values (?, ?, ?, ?)',
+            'insert into Stacks (stName, cID, stType, stMultilingualSection, siteTreeID) values (?, ?, ?, ?, ?)',
             [
                 $newPage->getCollectionName(),
                 $newPage->getCollectionID(),
                 $this->getStackType(),
                 $this->getMultilingualSectionID(),
+                $siteTreeID,
             ]
         );
 

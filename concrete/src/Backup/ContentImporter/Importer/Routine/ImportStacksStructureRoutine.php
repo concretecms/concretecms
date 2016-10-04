@@ -66,7 +66,7 @@ class ImportStacksStructureRoutine extends AbstractPageStructureRoutine implemen
                     case 'global_area':
                         $s = Stack::getByName($name, 'RECENT', $siteTree);
                         if (!is_object($s)) {
-                            Stack::addGlobalArea($name);
+                            Stack::addGlobalArea($name, $siteTree);
                         }
                         break;
                     default:

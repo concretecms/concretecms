@@ -92,12 +92,8 @@ class Service
         }
 
         $tree = $site->getSiteTree();
-        if (is_object($tree)) {
-            $tree->setSite(null);
-            $this->entityManager->flush();
-        }
 
-        $this->entityManager->remove($site);
+        $site->setSiteTree(null);
         $this->entityManager->flush();
 
         if (is_object($tree)) {
@@ -105,6 +101,8 @@ class Service
             $this->entityManager->flush();
         }
 
+        $this->entityManager->remove($site);
+        $this->entityManager->flush();
     }
 
     public function getList()
