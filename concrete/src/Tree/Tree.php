@@ -157,7 +157,7 @@ abstract class Tree extends Object
 
     public function getRequestData()
     {
-        return $this->requestData;
+        return isset($this->requestData) ? $this->requestData : null;
     }
 
     public function setRequest($data)
