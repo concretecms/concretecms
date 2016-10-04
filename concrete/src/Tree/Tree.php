@@ -2,10 +2,12 @@
 namespace Concrete\Core\Tree;
 
 use Concrete\Core\Foundation\Object;
-use Core;
-use Database;
-use Localization;
+use Concrete\Core\Localization\Localization;
 use Gettext\Translations;
+use SimpleXMLElement;
+use Concrete\Core\Tree\Node\Node as TreeNode;
+use Exception;
+use Concrete\Core\Support\Facade\Application;
 
 abstract class Tree extends Object
 {
@@ -27,15 +29,15 @@ abstract class Tree extends Object
      */
     abstract public function getTreeDisplayName($format = 'html');
 
-    abstract public function exportDetails(\SimpleXMLElement $sx);
+    abstract public function exportDetails(SimpleXMLElement $sx);
 
     /**
-     * @param \SimpleXMLElement $sx
+     * @param SimpleXMLElement $sx
      *
      * @return static|null
      * @abstract
      */
-    public static function importDetails(\SimpleXMLElement $sx)
+    public static function importDetails(SimpleXMLElement $sx)
     {
         return null;
     }
@@ -67,7 +69,7 @@ abstract class Tree extends Object
         }
     }
 
-    public function export(\SimpleXMLElement $sx)
+    public function export(SimpleXMLElement $sx)
     {
         $treenode = $sx->addChild('tree');
         $treenode->addAttribute('type', $this->getTreeTypeHandle());
@@ -77,18 +79,19 @@ abstract class Tree extends Object
         $root->export($treenode);
     }
 
-    public static function exportList(\SimpleXMLElement $sx)
+    public static function exportList(SimpleXMLElement $sx)
     {
         $trees = $sx->addChild('trees');
-        $db = Database::connection();
-        $r = $db->Execute('select treeID from Trees order by treeID asc');
-        while ($row = $r->Fetchrow()) {
+        $app = Application::getFacadeApplication();
+        $db = $app->make('database')->connection();
+        $r = $db->executeQuery('select treeID from Trees order by treeID asc');
+        while ($row = $r->fetch()) {
             $tree = static::getByID($row['treeID']);
             $tree->export($trees);
         }
     }
 
-    public static function import(\SimpleXMLElement $sx)
+    public static function import(SimpleXMLElement $sx)
     {
         $type = TreeType::getByHandle((string) $sx['type']);
         $class = $type->getTreeTypeClass();
@@ -104,7 +107,7 @@ abstract class Tree extends Object
 
     public function getRootTreeNodeObject()
     {
-        return \Concrete\Core\Tree\Node\Node::getByID($this->rootTreeNodeID);
+        return TreeNode::getByID($this->rootTreeNodeID);
     }
 
     public function getRootTreeNodeID()
@@ -167,14 +170,15 @@ abstract class Tree extends Object
 
     public function delete()
     {
-        $db = Database::connection();
+        $app = Application::getFacadeApplication();
+        $db = $app->make('database')->connection();
         // delete top level node
         $node = $this->getRootTreeNodeObject();
         if (is_object($node)) {
             $node->delete();
         }
         $this->deleteDetails();
-        $db->Execute('delete from Trees where treeID = ?', [$this->treeID]);
+        $db->executeQuery('delete from Trees where treeID = ?', [$this->treeID]);
     }
 
     public function duplicate()
@@ -183,10 +187,11 @@ abstract class Tree extends Object
         $newRoot = $root->duplicate();
         $type = $this->getTreeTypeObject();
         $tree = $type->addTree($newRoot);
-        $db = Database::connection();
+        $app = Application::getFacadeApplication();
+        $db = $app->make('database')->connection();
         $nodes = $newRoot->getAllChildNodeIDs();
         foreach ($nodes as $nodeID) {
-            $db->Execute('update TreeNodes set treeID = ? where treeNodeID = ?', [$tree->getTreeID(), $nodeID]);
+            $db->executeQuery('update TreeNodes set treeID = ? where treeNodeID = ?', [$tree->getTreeID(), $nodeID]);
         }
 
         return $tree;
@@ -209,17 +214,18 @@ abstract class Tree extends Object
         return [$root->getTreeNodeJSON()];
     }
 
-    protected static function create(\Concrete\Core\Tree\Node\Node $rootNode)
+    protected static function create(TreeNode $rootNode)
     {
-        $db = Database::connection();
-        $date = Core::make('helper/date')->getOverridableNow();
-        $treeTypeHandle = Core::make('helper/text')->uncamelcase(strrchr(get_called_class(), '\\'));
+        $app = Application::getFacadeApplication();
+        $db = $app->make('database')->connection();
+        $date = $app->make('date')->getOverridableNow();
+        $treeTypeHandle = uncamelcase(strrchr(get_called_class(), '\\'));
         $type = TreeType::getByHandle($treeTypeHandle);
-        $db->Execute(
+        $db->executeQuery(
             'insert into Trees (treeDateAdded, rootTreeNodeID, treeTypeID) values (?, ?, ?)',
             [$date, $rootNode->getTreeNodeID(), $type->getTreeTypeID()]
         );
-        $treeID = $db->Insert_ID();
+        $treeID = $db->lastInsertId();
         $rootNode->setTreeNodeTreeID($treeID);
 
         return $treeID;
@@ -227,12 +233,13 @@ abstract class Tree extends Object
 
     final public static function getByID($treeID)
     {
-        $db = Database::connection();
-        $row = $db->GetRow('select * from Trees where treeID = ?', [$treeID]);
-        if (!empty($row)) {
+        $app = Application::getFacadeApplication();
+        $db = $app->make('database')->connection();
+        $row = $db->fetchAssoc('select * from Trees where treeID = ?', [$treeID]);
+        if ($row) {
             $tt = TreeType::getByID($row['treeTypeID']);
             $class = $tt->getTreeTypeClass();
-            $tree = Core::make($class);
+            $tree = $app->make($class);
             $tree->setPropertiesFromArray($row);
             $tree->loadDetails();
 
@@ -251,12 +258,13 @@ abstract class Tree extends Object
         $loc = Localization::getInstance();
         $loc->pushActiveContext('system');
         try {
-            $db = \Database::get();
-            $r = $db->Execute('select treeID from Trees order by treeID asc');
-            while ($row = $r->FetchRow()) {
+            $app = Application::getFacadeApplication();
+            $db = $app->make('database')->connection();
+            $r = $db->executeQuery('select treeID from Trees order by treeID asc');
+            while ($row = $r->fetch()) {
                 try {
                     $tree = static::getByID($row['treeID']);
-                } catch (\Exception $x) {
+                } catch (Exception $x) {
                     $tree = null;
                 }
                 if (isset($tree)) {
@@ -266,13 +274,13 @@ abstract class Tree extends Object
                         $translations->insert('TreeName', $treeName);
                     }
                     $rootNode = $tree->getRootTreeNodeObject();
-                    /* @var $rootNode \Concrete\Core\Tree\Node\Node */
+                    /* @var $rootNode TreeNode */
                     if (isset($rootNode)) {
                         $rootNode->exportTranslations($translations);
                     }
                 }
             }
-        } catch (\Exception $x) {
+        } catch (Exception $x) {
             $loc->popActiveContext();
             throw $x;
         }
