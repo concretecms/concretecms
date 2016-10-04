@@ -124,7 +124,7 @@ abstract class Package implements LocalizablePackageInterface
      *
      * This returns true IF:
      * 1. $this->pkgAutoloaderMapCoreExtensions is false or unset
-     * 2. The required package version > 5.8.0
+     * 2. The required package version > 7.9.9 meaning version 8 or newer
      * 3. $this->pkgEnableLegacyNamespace is true
      *
      * @return bool
@@ -137,7 +137,7 @@ abstract class Package implements LocalizablePackageInterface
             return false;
         }
 
-        $concrete5 = '5.8.0';
+        $concrete5 = '7.9.9';
         $package = $this->getApplicationVersionRequired();
         if (version_compare($package, $concrete5, '>')) {
             return false;
