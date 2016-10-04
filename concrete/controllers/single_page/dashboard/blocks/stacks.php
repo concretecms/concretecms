@@ -6,6 +6,7 @@ use Concrete\Core\Http\Response;
 use Concrete\Core\Multilingual\Page\Section\Section;
 use Concrete\Core\Page\Collection\Version\Version;
 use Concrete\Core\Page\Controller\DashboardPageController;
+use Concrete\Core\Page\Controller\DashboardSitePageController;
 use Concrete\Core\Support\Facade\StackFolder;
 use Concrete\Core\View\AbstractView;
 use Config;
@@ -23,7 +24,7 @@ use Exception;
 use Redirect;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
-class Stacks extends DashboardPageController
+class Stacks extends DashboardSitePageController
 {
     public function view_global_areas()
     {
@@ -266,6 +267,7 @@ class Stacks extends DashboardPageController
     protected function deliverStackList(StackList $list)
     {
         $list->setFoldersFirst(true);
+        $list->filterBySiteTree($this->getSite()->getSiteTree());
         $this->set('list', $list);
         $this->set('stacks', $list->getResults());
     }
