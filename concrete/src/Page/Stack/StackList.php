@@ -3,6 +3,7 @@ namespace Concrete\Core\Page\Stack;
 
 use Concrete\Core\Multilingual\Page\Section\Section;
 use Concrete\Core\Page\Stack\Folder\Folder;
+use Concrete\Core\Site\Tree\TreeInterface;
 use Loader;
 use Concrete\Core\Page\PageList;
 use Concrete\Core\Search\StickyRequest;
@@ -21,6 +22,13 @@ class StackList extends PageList
         $this->filter(false, '(s.stMultilingualSection is null or s.stMultilingualSection = 0)');
         $this->includeRootPages();
         $this->sortByName();
+    }
+
+    public function filterBySiteTree(TreeInterface $tree)
+    {
+        $this->query->andWhere('s.siteTreeID = :stackSiteTreeID');
+        $this->query->setParameter('stackSiteTreeID', $tree->getSiteTreeID());
+
     }
 
     public function setupAutomaticSorting(StickyRequest $request = null)
