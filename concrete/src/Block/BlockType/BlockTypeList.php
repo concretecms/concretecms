@@ -23,7 +23,7 @@ class BlockTypeList extends DatabaseItemList
         $this->includeInternalBlockTypes = true;
     }
 
-    public function get($itemsToGet = 100, $offset = 0)
+    public function get($itemsToGet = 0, $offset = 0)
     {
         if (!$this->includeInternalBlockTypes) {
             $this->filter('btIsInternal', false);
