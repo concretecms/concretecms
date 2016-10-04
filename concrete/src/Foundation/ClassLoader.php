@@ -220,7 +220,8 @@ class ClassLoader
             }
         }
 
-        if (!$pkg->legacyNamespaceEnabled()) {
+        /** @type Package $pkg */
+        if (!$pkg->shouldEnableLegacyNamespace()) {
             // We map all src files in the package to the src/Concrete directory
             $loader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Package\\' . camelcase($pkgHandle),
                 DIR_PACKAGES . '/' . $pkgHandle . '/' . DIRNAME_CLASSES . '/Concrete');
