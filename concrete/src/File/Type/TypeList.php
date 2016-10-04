@@ -2,23 +2,11 @@
 namespace Concrete\Core\File\Type;
 
 use Loader;
-/*
- * \@package Core
- * @subpackage Files
- * @author Andrew Embler <andrew@concrete5.org>
- * @copyright  Copyright (c) 2003-2009 Concrete5. (http://www.concrete5.org)
- * @license    http://www.concrete5.org/license/     MIT License
- *
- */
 
 /*
- * \@package Core
- * @subpackage Files
  * @author Andrew Embler <andrew@concrete5.org>
- * @category Concrete
  * @copyright  Copyright (c) 2003-2009 Concrete5. (http://www.concrete5.org)
  * @license    http://www.concrete5.org/license/     MIT License
- *
  */
 use Concrete\Core\File\Type\Type as FileType;
 
@@ -38,8 +26,8 @@ class TypeList
         return $instance;
     }
 
-    protected $types = array();
-    protected $importerAttributes = array();
+    protected $types = [];
+    protected $importerAttributes = [];
 
     public function define(
         $extension,
@@ -69,7 +57,7 @@ class TypeList
         foreach ($types as $type_name => $type_settings) {
             array_splice($type_settings, 1, 0, $type_name);
 
-            call_user_func_array(array($this, 'define'), $type_settings);
+            call_user_func_array([$this, 'define'], $type_settings);
         }
     }
 
@@ -87,7 +75,7 @@ class TypeList
     {
         foreach ($importer_attributes as $attribute_name => $attribute_settings) {
             array_unshift($attribute_settings, $attribute_name);
-            call_user_func_array(array($this, 'defineImporterAttribute'), $attribute_settings);
+            call_user_func_array([$this, 'defineImporterAttribute'], $attribute_settings);
         }
     }
 
