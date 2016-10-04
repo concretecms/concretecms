@@ -2,12 +2,12 @@
 namespace Concrete\Core\Page\Type\Composer;
 
 use Concrete\Core\Entity\Page\Template;
-use Loader;
 use Concrete\Core\Backup\ContentExporter;
 use Concrete\Core\Foundation\Object;
 use Concrete\Core\Page\Type\Composer\OutputControl as PageTypeComposerOutputControl;
 use Concrete\Core\Page\Type\Composer\FormLayoutSet as PageTypeComposerFormLayoutSet;
 use Concrete\Core\Page\Type\Composer\Control\Type\Type as PageTypeComposerControlType;
+use Concrete\Core\Support\Facade\Application;
 
 class FormLayoutSetControl extends Object
 {
@@ -94,7 +94,7 @@ class FormLayoutSetControl extends Object
     {
         $control = $this->getPageTypeComposerControlObject();
         $control->setPageTypeComposerFormLayoutSetControlObject($this);
-        $control->setPageObject($this->page);
+        $control->setPageObject(isset($this->page) ? $this->page : null);
         $control->setTargetParentPageID($this->ptTargetParentPageID);
         $control->render($this->getPageTypeComposerControlDisplayLabel(), $this->getPageTypeComposerFormLayoutSetControlCustomTemplate(), $this->getPageTypeComposerFormLayoutSetControlDisplayDescription());
     }
@@ -142,10 +142,11 @@ class FormLayoutSetControl extends Object
         }
         $node->addAttribute('custom-label', $this->getPageTypeComposerFormLayoutSetControlCustomLabel());
         $node->addAttribute('description', $this->getPageTypeComposerFormLayoutSetControlDescription());
-        $db = Loader::db();
-        $cnt = $db->GetOne('select count(*) from PageTypeComposerOutputControls where ptComposerFormLayoutSetControlID = ?', array($this->ptComposerFormLayoutSetControlID));
+        $app = Application::getFacadeApplication();
+        $db = $app->make('database')->connection();
+        $cnt = $db->fetchColumn('select count(*) from PageTypeComposerOutputControls where ptComposerFormLayoutSetControlID = ?', [$this->ptComposerFormLayoutSetControlID]);
         if ($cnt > 0) {
-            $ptComposerControlTemporaryID = Loader::helper('validation/identifier')->getString(8);
+            $ptComposerControlTemporaryID = $app->make('helper/validation/identifier')->getString(8);
             ContentExporter::addPageTypeComposerOutputControlID($this, $ptComposerControlTemporaryID);
             $node->addAttribute('output-control-id', $ptComposerControlTemporaryID);
         }
@@ -157,13 +158,15 @@ class FormLayoutSetControl extends Object
 
     public static function getList(PageTypeComposerFormLayoutSet $set)
     {
-        $db = Loader::db();
-        $ptComposerFormLayoutSetControlIDs = $db->GetCol('select ptComposerFormLayoutSetControlID from PageTypeComposerFormLayoutSetControls where ptComposerFormLayoutSetID = ? order by ptComposerFormLayoutSetControlDisplayOrder asc',
-            array($set->getPageTypeComposerFormLayoutSetID())
+        $app = Application::getFacadeApplication();
+        $db = $app->make('database')->connection();
+        $rows = $db->fetchAll(
+            'select ptComposerFormLayoutSetControlID from PageTypeComposerFormLayoutSetControls where ptComposerFormLayoutSetID = ? order by ptComposerFormLayoutSetControlDisplayOrder asc',
+            [$set->getPageTypeComposerFormLayoutSetID()]
         );
-        $list = array();
-        foreach ($ptComposerFormLayoutSetControlIDs as $ptComposerFormLayoutSetControlID) {
-            $control = static::getByID($ptComposerFormLayoutSetControlID);
+        $list = [];
+        foreach ($rows as $row) {
+            $control = static::getByID($row['ptComposerFormLayoutSetControlID']);
             if (is_object($control)) {
                 $list[] = $control;
             }
@@ -174,9 +177,10 @@ class FormLayoutSetControl extends Object
 
     public static function getByID($ptComposerFormLayoutSetControlID)
     {
-        $db = Loader::db();
-        $r = $db->GetRow('select * from PageTypeComposerFormLayoutSetControls where ptComposerFormLayoutSetControlID = ?', array($ptComposerFormLayoutSetControlID));
-        if (is_array($r) && $r['ptComposerFormLayoutSetControlID']) {
+        $app = Application::getFacadeApplication();
+        $db = $app->make('database')->connection();
+        $r = $db->fetchAssoc('select * from PageTypeComposerFormLayoutSetControls where ptComposerFormLayoutSetControlID = ?', [$ptComposerFormLayoutSetControlID]);
+        if ($r && $r['ptComposerFormLayoutSetControlID']) {
             $control = new static();
             $control->setPropertiesFromArray($r);
             $control->ptComposerControlObject = unserialize($r['ptComposerControlObject']);
@@ -194,46 +198,55 @@ class FormLayoutSetControl extends Object
 
     public function updateFormLayoutSetControlDisplayOrder($displayOrder)
     {
-        $db = Loader::db();
-        $db->Execute('update PageTypeComposerFormLayoutSetControls set ptComposerFormLayoutSetControlDisplayOrder = ? where ptComposerFormLayoutSetControlID = ?', array(
-            $displayOrder, $this->ptComposerFormLayoutSetControlID,
-        ));
+        $app = Application::getFacadeApplication();
+        $db = $app->make('database')->connection();
+        $db->executeQuery(
+            'update PageTypeComposerFormLayoutSetControls set ptComposerFormLayoutSetControlDisplayOrder = ? where ptComposerFormLayoutSetControlID = ?',
+            [$displayOrder, $this->ptComposerFormLayoutSetControlID]
+        );
         $this->ptComposerFormLayoutSetControlDisplayOrder = $displayOrder;
     }
 
     public function updateFormLayoutSetControlCustomLabel($label)
     {
-        $db = Loader::db();
-        $db->Execute('update PageTypeComposerFormLayoutSetControls set ptComposerFormLayoutSetControlCustomLabel = ? where ptComposerFormLayoutSetControlID = ?', array(
-            $label, $this->ptComposerFormLayoutSetControlID,
-        ));
+        $app = Application::getFacadeApplication();
+        $db = $app->make('database')->connection();
+        $db->executeQuery(
+            'update PageTypeComposerFormLayoutSetControls set ptComposerFormLayoutSetControlCustomLabel = ? where ptComposerFormLayoutSetControlID = ?',
+            [$label, $this->ptComposerFormLayoutSetControlID]
+        );
         $this->ptComposerFormLayoutSetControlCustomLabel = $label;
     }
 
     public function updateFormLayoutSetControlRequired($required)
     {
-        $db = Loader::db();
-        $db->Execute('update PageTypeComposerFormLayoutSetControls set ptComposerFormLayoutSetControlRequired = ? where ptComposerFormLayoutSetControlID = ?', array(
-            intval($required), $this->ptComposerFormLayoutSetControlID,
-        ));
+        $app = Application::getFacadeApplication();
+        $db = $app->make('database')->connection();
+        $db->executeQuery(
+            'update PageTypeComposerFormLayoutSetControls set ptComposerFormLayoutSetControlRequired = ? where ptComposerFormLayoutSetControlID = ?',
+            [intval($required), $this->ptComposerFormLayoutSetControlID]
+        );
         $this->ptComposerFormLayoutSetControlRequired = $required;
     }
 
     public function updateFormLayoutSetControlCustomTemplate($template)
     {
-        $db = Loader::db();
-        $db->Execute('update PageTypeComposerFormLayoutSetControls set ptComposerFormLayoutSetControlCustomTemplate = ? where ptComposerFormLayoutSetControlID = ?', array(
-            $template, $this->ptComposerFormLayoutSetControlID,
-        ));
+        $app = Application::getFacadeApplication();
+        $db = $app->make('database')->connection();
+        $db->executeQuery(
+            'update PageTypeComposerFormLayoutSetControls set ptComposerFormLayoutSetControlCustomTemplate = ? where ptComposerFormLayoutSetControlID = ?',
+            [$template, $this->ptComposerFormLayoutSetControlID]
+        );
         $this->ptComposerFormLayoutSetControlCustomTemplate = $template;
     }
 
     public function updateFormLayoutSetControlDescription($description)
     {
-        $db = Loader::db();
-        $db->Execute('update PageTypeComposerFormLayoutSetControls set ptComposerFormLayoutSetControlDescription = ? where ptComposerFormLayoutSetControlID = ?', array(
-            $description, $this->ptComposerFormLayoutSetControlID,
-        ));
+        $app = Application::getFacadeApplication();
+        $db = $app->make('database')->connection();
+        $db->executeQuery('update PageTypeComposerFormLayoutSetControls set ptComposerFormLayoutSetControlDescription = ? where ptComposerFormLayoutSetControlID = ?',
+            [$description, $this->ptComposerFormLayoutSetControlID]
+        );
         $this->ptComposerFormLayoutSetControlDescription = $description;
     }
 
@@ -242,8 +255,12 @@ class FormLayoutSetControl extends Object
      */
     public function getPageTypeComposerOutputControlObject(Template $pt)
     {
-        $db = Loader::db();
-        $ptComposerOutputControlID = $db->GetOne('select ptComposerOutputControlID from PageTypeComposerOutputControls where ptComposerFormLayoutSetControlID = ? and pTemplateID = ?', array($this->ptComposerFormLayoutSetControlID, $pt->getPageTemplateID()));
+        $app = Application::getFacadeApplication();
+        $db = $app->make('database')->connection();
+        $ptComposerOutputControlID = $db->fetchColumn(
+            'select ptComposerOutputControlID from PageTypeComposerOutputControls where ptComposerFormLayoutSetControlID = ? and pTemplateID = ?',
+            [$this->ptComposerFormLayoutSetControlID, $pt->getPageTemplateID()]
+        );
         if ($ptComposerOutputControlID) {
             return PageTypeComposerOutputControl::getByID($ptComposerOutputControlID);
         }
@@ -251,16 +268,16 @@ class FormLayoutSetControl extends Object
 
     public function delete()
     {
-        $db = Loader::db();
-        $db->Execute('delete from PageTypeComposerFormLayoutSetControls where ptComposerFormLayoutSetControlID = ?', array($this->ptComposerFormLayoutSetControlID));
-        $db->Execute('delete from PageTypeComposerOutputControls where ptComposerFormLayoutSetControlID = ?', array($this->ptComposerFormLayoutSetControlID));
+        $app = Application::getFacadeApplication();
+        $db = $app->make('database')->connection();
+        $db->executeQuery('delete from PageTypeComposerFormLayoutSetControls where ptComposerFormLayoutSetControlID = ?', [$this->ptComposerFormLayoutSetControlID]);
+        $db->executeQuery('delete from PageTypeComposerOutputControls where ptComposerFormLayoutSetControlID = ?', [$this->ptComposerFormLayoutSetControlID]);
         $set = $this->getPageTypeComposerFormLayoutSetObject();
         $set->rescanFormLayoutSetControlDisplayOrder();
     }
 
     public function duplicate(FormLayoutSet $set)
     {
-        $db = \Database::get();
         $control = $this->getPageTypeComposerControlObject();
         $new = $control->addToPageTypeComposerFormLayoutSet($set);
         $new->updateFormLayoutSetControlRequired($this->isPageTypeComposerFormLayoutSetControlRequired());
