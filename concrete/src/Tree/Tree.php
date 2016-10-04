@@ -9,7 +9,7 @@ use Gettext\Translations;
 
 abstract class Tree extends Object
 {
-    protected $treeNodeSelectedIDs = array();
+    protected $treeNodeSelectedIDs = [];
 
     abstract protected function loadDetails();
 
@@ -21,7 +21,7 @@ abstract class Tree extends Object
     abstract public function getTreeName();
 
     /** Returns the display name for this tree (localized and escaped accordingly to $format)
-     * @param  string $format = 'html' Escape the result in html format (if $format is 'html'). If $format is 'text' or any other value, the display name won't be escaped.
+     * @param  string $format = 'html' Escape the result in html format (if $format is 'html'). If $format is 'text' or any other value, the display name won't be escaped
      *
      * @return string
      */
@@ -92,7 +92,7 @@ abstract class Tree extends Object
     {
         $type = TreeType::getByHandle((string) $sx['type']);
         $class = $type->getTreeTypeClass();
-        $tree = call_user_func_array(array($class, 'importDetails'), array($sx));
+        $tree = call_user_func_array([$class, 'importDetails'], [$sx]);
         $parent = $tree->getRootTreeNodeObject();
         $parent->importChildren($sx);
     }
@@ -174,7 +174,7 @@ abstract class Tree extends Object
             $node->delete();
         }
         $this->deleteDetails();
-        $db->Execute('delete from Trees where treeID = ?', array($this->treeID));
+        $db->Execute('delete from Trees where treeID = ?', [$this->treeID]);
     }
 
     public function duplicate()
@@ -186,7 +186,7 @@ abstract class Tree extends Object
         $db = Database::connection();
         $nodes = $newRoot->getAllChildNodeIDs();
         foreach ($nodes as $nodeID) {
-            $db->Execute('update TreeNodes set treeID = ? where treeNodeID = ?', array($tree->getTreeID(), $nodeID));
+            $db->Execute('update TreeNodes set treeID = ? where treeNodeID = ?', [$tree->getTreeID(), $nodeID]);
         }
 
         return $tree;
@@ -215,9 +215,10 @@ abstract class Tree extends Object
         $date = Core::make('helper/date')->getOverridableNow();
         $treeTypeHandle = Core::make('helper/text')->uncamelcase(strrchr(get_called_class(), '\\'));
         $type = TreeType::getByHandle($treeTypeHandle);
-        $db->Execute('insert into Trees (treeDateAdded, rootTreeNodeID, treeTypeID) values (?, ?, ?)', array(
-            $date, $rootNode->getTreeNodeID(), $type->getTreeTypeID(),
-        ));
+        $db->Execute(
+            'insert into Trees (treeDateAdded, rootTreeNodeID, treeTypeID) values (?, ?, ?)',
+            [$date, $rootNode->getTreeNodeID(), $type->getTreeTypeID()]
+        );
         $treeID = $db->Insert_ID();
         $rootNode->setTreeNodeTreeID($treeID);
 
@@ -227,7 +228,7 @@ abstract class Tree extends Object
     final public static function getByID($treeID)
     {
         $db = Database::connection();
-        $row = $db->GetRow('select * from Trees where treeID = ?', array($treeID));
+        $row = $db->GetRow('select * from Trees where treeID = ?', [$treeID]);
         if (!empty($row)) {
             $tt = TreeType::getByID($row['treeTypeID']);
             $class = $tt->getTreeTypeClass();
