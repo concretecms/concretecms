@@ -540,11 +540,15 @@ class Version
         do {
             $prefix = $importer->generatePrefix();
             $path = $cf->prefix($prefix, $this->getFilename());
-        } while($filesystem->has($path));
-        $filesystem->write($path, $this->getFileResource()->read(), array(
-            'visibility' => AdapterInterface::VISIBILITY_PUBLIC,
-            'mimetype' => Core::make('helper/mime')->mimeFromExtension($fi->getExtension($this->getFilename()))
-        ));
+        } while ($filesystem->has($path));
+        $filesystem->write(
+            $path,
+            $this->getFileResource()->read(),
+            [
+                'visibility' => AdapterInterface::VISIBILITY_PUBLIC,
+                'mimetype' => Core::make('helper/mime')->mimeFromExtension($fi->getExtension($this->getFilename())),
+            ]
+        );
         $this->updateFile($this->getFilename(), $prefix);
     }
 
