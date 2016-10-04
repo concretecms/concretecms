@@ -55,7 +55,7 @@ class FolderItemList extends ItemList implements PermissionableListItemInterface
     public function getTotalResults()
     {
         $u = new \User();
-        if ($this->permissionsChecker === -1) {
+        if (isset($this->permissionsChecker) && $this->permissionsChecker === -1) {
             $query = $this->deliverQueryObject();
 
             return $query->select('count(distinct n.treeNodeID)')->setMaxResults(1)->execute()->fetchColumn();
@@ -67,7 +67,7 @@ class FolderItemList extends ItemList implements PermissionableListItemInterface
     protected function createPaginationObject()
     {
         $u = new \User();
-        if ($this->permissionsChecker === -1) {
+        if (isset($this->permissionsChecker) && $this->permissionsChecker === -1) {
             $adapter = new DoctrineDbalAdapter($this->deliverQueryObject(), function ($query) {
                 $query->select('count(distinct n.treeNodeID)')->setMaxResults(1);
             });
