@@ -25,19 +25,31 @@ class ClassLoader
     protected $applicationNamespace = 'Application';
 
     /**
+     * Returns the status of the legacy namespace
      * @return boolean
      */
-    public function isEnableLegacyNamespace()
+    public function legacyNamespaceEnabled()
     {
         return $this->enableLegacyNamespace;
     }
 
     /**
-     * @param boolean $enableLegacyNamespace
+     * Set legacy namespaces to enabled. This method unsets and resets this loader.
      */
     public function enableLegacyNamespace()
     {
         $this->enableLegacyNamespace = true;
+        $this->disable();
+        $this->activateAutoloaders();
+        $this->enable();
+    }
+
+    /**
+     * Set legacy namespaces to disabled. This method unsets and resets this loader.
+     */
+    public function disableLegacyNamespace()
+    {
+        $this->enableLegacyNamespace = false;
         $this->disable();
         $this->activateAutoloaders();
         $this->enable();
@@ -164,7 +176,7 @@ class ClassLoader
         $loader->addPrefix($this->getApplicationNamespace() . '\\Entity',
             DIR_APPLICATION . '/' . DIRNAME_CLASSES . '/Entity');
 
-        if ($this->enableLegacyNamespace) {
+        if ($this->legacyNamespaceEnabled()) {
             $loader->addPrefix($this->getApplicationNamespace() . '\\Src', DIR_APPLICATION . '/' . DIRNAME_CLASSES);
         }
 
@@ -208,7 +220,7 @@ class ClassLoader
             }
         }
 
-        if (!$pkg->enableLegacyNamespace()) {
+        if (!$pkg->legacyNamespaceEnabled()) {
             // We map all src files in the package to the src/Concrete directory
             $loader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Package\\' . camelcase($pkgHandle),
                 DIR_PACKAGES . '/' . $pkgHandle . '/' . DIRNAME_CLASSES . '/Concrete');
