@@ -7,7 +7,7 @@ use Concrete\Core\Support\Facade\Application;
 use Illuminate\Filesystem\Filesystem;
 
 /**
- * Description of ApplicationDriverTest
+ * ApplicationDriverTest
  *
  * @author Markus Liechti <markus@liechti.io>
  * @group orm_setup
