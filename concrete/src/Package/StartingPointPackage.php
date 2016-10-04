@@ -192,7 +192,7 @@ class StartingPointPackage extends BasePackage
     public function install_dashboard()
     {
         $ci = new ContentImporter();
-        $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/dashboard.xml');
+        $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/single_pages/dashboard.xml');
     }
 
     public function install_gathering()
@@ -216,7 +216,8 @@ class StartingPointPackage extends BasePackage
     public function install_required_single_pages()
     {
         $ci = new ContentImporter();
-        $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/login_registration.xml');
+        $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/single_pages/global.xml');
+        $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/single_pages/root.xml');
     }
 
     public function install_image_editor()
@@ -296,8 +297,6 @@ class StartingPointPackage extends BasePackage
 
     public function install_desktops()
     {
-        $ci = new ContentImporter();
-        $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/desktops.xml');
         $desktop = \Page::getByPath('/dashboard/welcome');
         $desktop->movePageDisplayOrderToTop();
     }
@@ -412,6 +411,8 @@ class StartingPointPackage extends BasePackage
 
         // Install conversation default email
         \Conversation::setDefaultSubscribedUsers([$superuser]);
+        $ci = new ContentImporter();
+        $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/conversation.xml');
     }
 
     public function make_directories()

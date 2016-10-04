@@ -125,6 +125,13 @@ class Site implements TreeInterface
         }
     }
 
+    public function getSiteTreeObject()
+    {
+        if (is_object($this->tree)) {
+            return $this->tree;
+        }
+    }
+
     public function getSiteHomePageObject()
     {
         if (is_object($this->tree)) {

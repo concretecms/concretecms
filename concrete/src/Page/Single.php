@@ -2,6 +2,7 @@
 namespace Concrete\Core\Page;
 
 use Concrete\Core\Entity\Site\Site;
+use Concrete\Core\Site\Tree\TreeInterface;
 use Page as CorePage;
 use Loader;
 use Environment;
@@ -147,8 +148,76 @@ class Single
                 $data['pkgID'] = $pkg->getPackageID();
             }
 
-            return Page::addStatic($data, null, true);
+            $c = Page::addStatic($data, null);
+            $c->moveToRoot();
         }
+    }
+
+    public static function createPageInTree($cPath, TreeInterface $tree, $moveToRoot = false, $pkg = null)
+    {
+        $txt = Loader::helper('text');
+        // trim off a leading / if there is one
+        $cPath = trim($cPath, '/');
+
+        // now we grab the parent collection, if there is a static one.
+
+        $pages = explode('/', $cPath);
+
+        $parent = $tree->getSiteTreeObject()->getSiteHomePageObject();
+
+        // now we iterate through the pages  to ensure that they exist in the system before adding the new guy
+
+        $pathPrefix = '';
+        $checkGlobally = false;
+
+        for ($i = 0; $i < count($pages); ++$i) {
+            $currentPath = $pathPrefix . $pages[$i];
+            if ($i == 0) {
+                // First, we check the first path to see if it falls outside of the root already. If it does,
+                // we're not going to check within the site for them
+                $rootPage = CorePage::getByPath("/" . $currentPath);
+                if (!$rootPage->isError() && $rootPage->isSystemPage()) {
+                    // That means we've already added this as a system page, like Dashboard, etc... Which means
+                    // that we add the subsequent pages globally
+                    $checkGlobally = true;
+                }
+            }
+
+            $pathToFile = static::getPathToNode($currentPath, $pkg);
+
+            // check to see if a page at this point in the tree exists
+            if (!$checkGlobally) {
+                $c = CorePage::getByPath("/" . $currentPath, 'RECENT', $tree);
+            } else {
+                $c = CorePage::getByPath("/" . $currentPath);
+            }
+            if ($c->isError() && $c->getError() == COLLECTION_NOT_FOUND) {
+                // create the page at that point in the tree
+
+                $data = array();
+                $data['handle'] = $pages[$i];
+                $data['name'] = $txt->unhandle($data['handle']);
+                $data['filename'] = $pathToFile;
+                $data['uID'] = USER_SUPER_ID;
+                if ($pkg != null) {
+                    $data['pkgID'] = $pkg->getPackageID();
+                }
+
+                if ($moveToRoot) {
+                    $newC = Page::addStatic($data, $tree);
+                    $newC->moveToRoot(); // change cparent ID back to 0
+                } else {
+                    $newC = Page::addStatic($data, $parent);
+                }
+                $parent = $newC;
+            } else {
+                $parent = $c;
+            }
+
+            $pathPrefix = $currentPath . '/';
+        }
+
+        return $parent;
     }
 
     /*
@@ -159,78 +228,16 @@ class Single
      */
     public static function add($cPath, $pkg = null, $moveToRoot = false)
     {
-        // if we get to this point, we create a special collection
-        // without a specific type. This collection has a special cFilename that
-        // points to the passed node
-        $db = Loader::db();
-        $txt = Loader::helper('text');
         Loader::helper('concrete/ui')->clearInterfaceItemsCache();
-
-        // trim off a leading / if there is one
-        $cPath = trim($cPath, '/');
-
-        // now we grab the parent collection, if there is a static one.
-
-        $pages = explode('/', $cPath);
 
         // instantiate the home collection so we have someplace to add these to
         $sites = \Core::make('site')->getList();
+        /**
+         * @var $site Site
+         */
         foreach($sites as $site) {
-            /**
-             * @var $site Site
-             */
-            $parent = $site->getSiteHomePageObject();
 
-            // now we iterate through the pages  to ensure that they exist in the system before adding the new guy
-
-            $pathPrefix = '';
-            $checkGlobally = false;
-
-            for ($i = 0; $i < count($pages); ++$i) {
-                $currentPath = $pathPrefix . $pages[$i];
-                if ($i == 0) {
-                    // First, we check the first path to see if it falls outside of the root already. If it does,
-                    // we're not going to check within the site for them
-                    $rootPage = CorePage::getByPath("/" . $currentPath);
-                    if (!$rootPage->isError() && $rootPage->isSystemPage()) {
-                        // That means we've already added this as a system page, like Dashboard, etc... Which means
-                        // that we add the subsequent pages globally
-                        $checkGlobally = true;
-                    }
-                }
-
-                $pathToFile = static::getPathToNode($currentPath, $pkg);
-
-                // check to see if a page at this point in the tree exists
-                if (!$checkGlobally) {
-                    $c = CorePage::getByPath("/" . $currentPath, 'RECENT', $site);
-                } else {
-                    $c = CorePage::getByPath("/" . $currentPath);
-                }
-                if ($c->isError() && $c->getError() == COLLECTION_NOT_FOUND) {
-                    // create the page at that point in the tree
-
-                    $data = array();
-                    $data['handle'] = $pages[$i];
-                    $data['name'] = $txt->unhandle($data['handle']);
-                    $data['filename'] = $pathToFile;
-                    $data['uID'] = USER_SUPER_ID;
-                    if ($pkg != null) {
-                        $data['pkgID'] = $pkg->getPackageID();
-                    }
-
-                    if ($moveToRoot) {
-                        $newC = Page::addStatic($data, null);
-                    } else {
-                        $newC = Page::addStatic($data, $parent);
-                    }
-                    $parent = $newC;
-                } else {
-                    $parent = $c;
-                }
-
-                $pathPrefix = $currentPath . '/';
-            }
+            $parent = static::createPageInTree($cPath, $site, $moveToRoot, $pkg);
 
         }
 

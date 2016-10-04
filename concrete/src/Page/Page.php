@@ -49,7 +49,7 @@ use Session;
  * The page object in Concrete encapsulates all the functionality used by a typical page and their contents
  * including blocks, page metadata, page permissions.
  */
-class Page extends Collection implements \Concrete\Core\Permission\ObjectInterface, AssignableObjectInterface
+class Page extends Collection implements \Concrete\Core\Permission\ObjectInterface, AssignableObjectInterface, TreeInterface
 {
     protected $controller;
     protected $blocksAliasedFromMasterCollection = null;
@@ -3107,14 +3107,14 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         return $lifetime;
     }
 
-    public static function addStatic($data, Page $parent = null, $global = false)
+    public static function addStatic($data, TreeInterface $parent = null)
     {
         $db = Database::connection();
         $cParentID = 1;
         $cDisplayOrder = 0;
         $cInheritPermissionsFromCID = 1;
         $cOverrideTemplatePermissions = 1;
-        if (is_object($parent)) {
+        if ($parent instanceof Page) {
             $cParentID = $parent->getCollectionID();
             $parent->rescanChildrenDisplayOrder();
             $cDisplayOrder = $parent->getNextSubPageDisplayOrder();
@@ -3139,12 +3139,8 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         $cInheritPermissionsFrom = 'PARENT';
 
         $siteTreeID = 0;
-        if (!$global) {
-            if (is_object($parent)) {
-                $siteTreeID = $parent->getSiteTreeID();
-            } else {
-                $siteTreeID = \Core::make('site')->getSite()->getSiteTreeID();
-            }
+        if (is_object($parent)) {
+            $siteTreeID = $parent->getSiteTreeID();
         }
 
         $v = [$cID, $siteTreeID, $cFilename, $cParentID, $cInheritPermissionsFrom, $cOverrideTemplatePermissions, $cInheritPermissionsFromCID, $cDisplayOrder, $uID, $pkgID];
@@ -3159,9 +3155,6 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
 
         $pc = self::getByID($cID);
         $pc->rescanCollectionPath();
-        if (!is_object($parent)) {
-            $pc->moveToRoot(); // change cparent ID back to 0
-        }
 
         return $pc;
     }

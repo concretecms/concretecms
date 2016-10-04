@@ -85,9 +85,9 @@ class GlobalArea extends Area
             $contentSource = Stack::MULTILINGUAL_CONTENT_SOURCE_DEFAULT;
         }
         if ($cp->canViewPageVersions()) {
-            $stack = Stack::getByName($this->arHandle, 'RECENT', $contentSource);
+            $stack = Stack::getByName($this->arHandle, 'RECENT', null, $contentSource);
         } else {
-            $stack = Stack::getByName($this->arHandle, 'ACTIVE', $contentSource);
+            $stack = Stack::getByName($this->arHandle, 'ACTIVE', null, $contentSource);
         }
 
         return $stack;
@@ -120,9 +120,9 @@ class GlobalArea extends Area
             $contentSource = Stack::MULTILINGUAL_CONTENT_SOURCE_DEFAULT;
         }
         if ($cp->canViewPageVersions()) {
-            $stack = Stack::getByName($this->arHandle, 'RECENT', $contentSource);
+            $stack = Stack::getByName($this->arHandle, 'RECENT', null, $contentSource);
         } else {
-            $stack = Stack::getByName($this->arHandle, 'ACTIVE', $contentSource);
+            $stack = Stack::getByName($this->arHandle, 'ACTIVE', null, $contentSource);
         }
         $blocksTmp = array();
         if (is_object($stack)) {
