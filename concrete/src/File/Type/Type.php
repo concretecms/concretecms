@@ -201,7 +201,7 @@ class Type
      */
     public function setName($value)
     {
-        $this->name = (string) $name;
+        $this->name = (string) $value;
 
         return $this;
     }
