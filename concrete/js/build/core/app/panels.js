@@ -291,7 +291,13 @@ function ConcretePanel(options) {
         };
 
         if (options.url) {
-            $content.load(options.url + '?cID=' + CCM_CID + options.data, function () {
+            var url = options.url + '?cID=' + CCM_CID, data = null;
+            if ($.isPlainObject(options.data)) {
+                data = options.data;
+            } else {
+                url += options.data;
+            }
+            $content.load(url, data, function () {
                 jQuery.fn.dialog.hideLoader();
                 $content.find('.launch-tooltip').tooltip({'container': '#ccm-tooltip-holder'});
                 $content.find('a[data-help-notification-toggle]').concreteHelpLauncher();

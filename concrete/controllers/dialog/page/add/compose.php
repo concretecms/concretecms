@@ -9,7 +9,6 @@ use Concrete\Core\Page\Type\Type;
 use Concrete\Core\View\DialogView;
 use Page;
 use Permissions;
-use Core;
 
 class Compose extends Controller
 {
@@ -18,7 +17,7 @@ class Compose extends Controller
     public function view($ptID, $cParentID)
     {
         $pagetype = Type::getByID($ptID);
-        $e = Core::make('error');
+        $e = $this->app->make('error');
         if (is_object($pagetype)) {
             $ptp = new Permissions($pagetype);
             if (!$ptp->canAddPageType()) {
@@ -50,7 +49,7 @@ class Compose extends Controller
 
     public function submit()
     {
-        $e = Core::make('error');
+        $e = $this->app->make('error');
         $pagetype = Type::getByID($this->request->request->get('ptID'));
         if (is_object($pagetype)) {
             $configuredTarget = $pagetype->getPageTypePublishTargetObject();
@@ -61,6 +60,7 @@ class Compose extends Controller
         }
         $parent = Page::getByID($cParentID);
 
+        $template = null;
         if ($this->request->request->get('ptComposerPageTemplateID')) {
             $template = Template::getByID($this->request->request->get('ptComposerPageTemplateID'));
         }
@@ -86,7 +86,6 @@ class Compose extends Controller
             $saver->saveForm($d);
             if ($this->request->request('addPageComposeAction') == 'publish'
             || $this->request->request('addPageComposeAction') == 'schedule') {
-
                 $publishDateTime = false;
                 if ($this->request->request->get('addPageComposeAction') == 'schedule') {
                     $dateTime = new DateTime();
