@@ -97,7 +97,7 @@ class Controller extends GenericOauth2TypeController
             }
         }
 
-        parent::completeAuthentication($u);
+        return parent::completeAuthentication($u);
     }
 
     public function isValid()
