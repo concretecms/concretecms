@@ -451,14 +451,33 @@ class Version
         }
     }
 
+    /**
+     * Get the file type name.
+     *
+     * @return string
+     */
     public function getType()
     {
         $ftl = $this->getTypeObject();
-        if (is_object($ftl)) {
-            return $ftl->getName();
-        }
+
+        return $ftl->getName();
     }
 
+    /**
+     * Get the file type display name (localized).
+     *
+     * @return string
+     */
+    public function getDisplayType()
+    {
+        $ftl = $this->getTypeObject();
+
+        return $ftl->getDisplayName();
+    }
+
+    /**
+     * @return \Concrete\Core\File\Type\Type
+     */
     public function getTypeObject()
     {
         $fh = Core::make('helper/file');
@@ -1103,7 +1122,7 @@ class Version
     public function canView()
     {
         $to = $this->getTypeObject();
-        if (is_object($to) && $to->getView() != '') {
+        if ($to->getView() != '') {
             return true;
         }
 
@@ -1113,18 +1132,23 @@ class Version
     public function canEdit()
     {
         $to = $this->getTypeObject();
-        if (is_object($to) && $to->getEditor() != '') {
+        if ($to->getEditor() != '') {
             return true;
         }
 
         return false;
     }
 
+    /**
+     * Get the localized name of the generic category type.
+     *
+     * @return string
+     */
     public function getGenericTypeText()
     {
         $to = $this->getTypeObject();
 
-        return $to->getGenericTypeText($to->getGenericType());
+        return $to->getGenericDisplayType();
     }
 
     //takes a string of comma or new line delimited tags, and puts them in the appropriate format

@@ -1,15 +1,15 @@
 <?php
 namespace Concrete\Core\File\Type;
 
-use Loader;
+use Concrete\Core\File\Type\Type as FileType;
+use Concrete\Core\Support\Facade\Application;
+use stdClass;
 
-/*
+/**
  * @author Andrew Embler <andrew@concrete5.org>
  * @copyright  Copyright (c) 2003-2009 Concrete5. (http://www.concrete5.org)
  * @license    http://www.concrete5.org/license/     MIT License
  */
-use Concrete\Core\File\Type\Type as FileType;
-
 class TypeList
 {
     /**
@@ -26,32 +26,47 @@ class TypeList
         return $instance;
     }
 
+    /**
+     * @var FileType[]
+     */
     protected $types = [];
+
+    /**
+     * @var stdClass[]
+     */
     protected $importerAttributes = [];
 
-    public function define(
-        $extension,
-        $name,
-        $type,
-        $customImporter = false,
-        $inlineFileViewer = false,
-        $editor = false,
-        $pkgHandle = false
-    ) {
+    /**
+     * Register a file type.
+     *
+     * @param string $extension Comma-separated list of file extensions (lower case and without leading dots)
+     * @param string $name File type name
+     * @param int $type Generic file type (one of the \Concrete\Core\File\Type\Type\Type::T_... constants)
+     * @param string $customImporter The handle of the custom importer
+     * @param string $inlineFileViewer The handle of the inline viewer
+     * @param string $editor The hHandle of the editor
+     * @param string $pkgHandle The handle of the owner package
+     */
+    public function define($extension, $name, $type, $customImporter = '', $inlineFileViewer = '', $editor = '', $pkgHandle = '')
+    {
         $ext = explode(',', $extension);
         foreach ($ext as $e) {
-            $ft = new FileType();
-            $ft->name = $name;
-            $ft->extension = $e;
-            $ft->customImporter = $customImporter;
-            $ft->editor = $editor;
-            $ft->type = strtolower($type);
-            $ft->view = $inlineFileViewer;
-            $ft->pkgHandle = $pkgHandle;
-            $this->types[$e] = $ft;
+            $this->types[strtolower($e)] = (new FileType())
+                ->setName($name)
+                ->setExtension($e)
+                ->setCustomImporter($customImporter)
+                ->setEditor($editor)
+                ->setGenericType($type)
+                ->setView($inlineFileViewer)
+                ->setPackageHandle($pkgHandle);
         }
     }
 
+    /**
+     * Register multiple file types.
+     *
+     * @param array $types Keys are the type names, values are the other parameters accepted by the define() method
+     */
     public function defineMultiple(array $types)
     {
         foreach ($types as $type_name => $type_settings) {
@@ -63,7 +78,7 @@ class TypeList
 
     public function defineImporterAttribute($akHandle, $akName, $akType, $akIsEditable)
     {
-        $obj = new \stdClass();
+        $obj = new stdClass();
         $obj->akHandle = $akHandle;
         $obj->akName = $akName;
         $obj->akType = $akType;
@@ -79,27 +94,35 @@ class TypeList
         }
     }
 
-    public function getImporterAttribute($akHandle)
+    /**
+     * @param string $akHandle
+     *
+     * @return stdClass|null
+     */
+    public static function getImporterAttribute($akHandle)
     {
         $ftl = static::getInstance();
 
-        return $ftl->importerAttributes[$akHandle];
+        return isset($ftl->importerAttributes[$akHandle]) ? $ftl->importerAttributes[$akHandle] : null;
     }
 
     /**
      * Can take an extension or a filename
      * Returns any registered information we have for the particular file type, based on its registration.
+     *
+     * @return FileType
      */
     public static function getType($ext)
     {
         $ftl = static::getInstance();
         if (strpos($ext, '.') !== false) {
             // filename
-            $h = Loader::helper('file');
+            $app = Application::getFacadeApplication();
+            $h = $app->make('helper/file');
             $ext = $h->getExtension($ext);
         }
         $ext = strtolower($ext);
-        if (is_object($ftl->types[$ext])) {
+        if (isset($ftl->types[$ext])) {
             return $ftl->types[$ext];
         } else {
             $ft = new FileType(); // generic
