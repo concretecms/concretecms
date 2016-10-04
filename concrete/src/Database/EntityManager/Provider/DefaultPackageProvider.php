@@ -37,7 +37,7 @@ class DefaultPackageProvider extends AbstractPackageProvider
 
         $reader = $this->getAnnotationReader();
 
-        if ($this->pkg->enableLegacyNamespace()) {
+        if ($this->pkg->shouldEnableLegacyNamespace()) {
             // The legacy of the legacies.
             $path = $this->pkg->getPackagePath() . DIRECTORY_SEPARATOR . DIRNAME_CLASSES;
             if (is_dir($path)) {

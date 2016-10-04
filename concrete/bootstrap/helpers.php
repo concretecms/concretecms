@@ -141,7 +141,7 @@ function core_class($class, $prefix = false)
         if (substr($class, 0, 5) == "Core\\") {
             if ($prefix !== true) {
                 $x = $app->make('Concrete\Core\Package\PackageService')->getClass($prefix);
-                if (!$x->enableLegacyNamespace()) {
+                if (!$x->shouldEnableLegacyNamespace()) {
                     $class = substr($class, 5);
                 } else {
                     $class = "Src\\" . substr($class, 5);
@@ -187,7 +187,7 @@ function overrideable_core_class($class, $path, $pkgHandle = null)
             return core_class($class, true);
         }
     }
-    
+
     $r = $env->getRecord($path);
     $prefix = $r->override ? true : $pkgHandle;
 
