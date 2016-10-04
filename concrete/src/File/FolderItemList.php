@@ -5,30 +5,30 @@ use Concrete\Core\Search\ItemList\Database\ItemList;
 use Concrete\Core\Search\Pagination\Pagination;
 use Concrete\Core\Search\Pagination\PermissionablePagination;
 use Concrete\Core\Search\PermissionableListItemInterface;
-use Concrete\Core\Search\StickyRequest;
 use Concrete\Core\Tree\Node\Node;
 use Concrete\Core\Tree\Node\Type\FileFolder;
 use Pagerfanta\Adapter\DoctrineDbalAdapter;
+use Closure;
+use Concrete\Core\Permission\Checker as Permissions;
 
 class FolderItemList extends ItemList implements PermissionableListItemInterface
 {
-
     protected $parent;
     protected $itemsPerPage = 100;
 
-    protected $autoSortColumns = array(
+    protected $autoSortColumns = [
         'folderItemName',
         'folderItemModified',
         'folderItemType',
-        'folderItemSize'
-    );
+        'folderItemSize',
+    ];
 
     protected function getAttributeKeyClassName()
     {
         return '\\Concrete\\Core\\Attribute\\Key\\FileKey';
     }
 
-    public function setPermissionsChecker(\Closure $checker)
+    public function setPermissionsChecker(Closure $checker)
     {
         $this->permissionsChecker = $checker;
     }
@@ -49,13 +49,11 @@ class FolderItemList extends ItemList implements PermissionableListItemInterface
             ->innerJoin('n', 'TreeNodeTypes', 'nt', 'nt.treeNodeTypeID = n.treeNodeTypeID')
             ->leftJoin('n', 'TreeFileNodes', 'tf', 'tf.treeNodeID = n.treeNodeID')
             ->leftJoin('tf', 'FileVersions', 'fv', 'tf.fID = fv.fID and fv.fvIsApproved = 1');
-
     }
 
     public function getTotalResults()
     {
-        $u = new \User();
-        if ($this->permissionsChecker === -1) {
+        if (isset($this->permissionsChecker) && $this->permissionsChecker === -1) {
             $query = $this->deliverQueryObject();
 
             return $query->select('count(distinct n.treeNodeID)')->setMaxResults(1)->execute()->fetchColumn();
@@ -66,8 +64,7 @@ class FolderItemList extends ItemList implements PermissionableListItemInterface
 
     protected function createPaginationObject()
     {
-        $u = new \User();
-        if ($this->permissionsChecker === -1) {
+        if (isset($this->permissionsChecker) && $this->permissionsChecker === -1) {
             $adapter = new DoctrineDbalAdapter($this->deliverQueryObject(), function ($query) {
                 $query->select('count(distinct n.treeNodeID)')->setMaxResults(1);
             });
@@ -93,11 +90,12 @@ class FolderItemList extends ItemList implements PermissionableListItemInterface
             if ($this->permissionsChecker === -1) {
                 return true;
             } else {
-                return call_user_func_array($this->permissionsChecker, array($mixed));
+                return call_user_func_array($this->permissionsChecker, [$mixed]);
             }
         }
 
-        $fp = new \Permissions($mixed);
+        $fp = new Permissions($mixed);
+
         return $fp->canViewTreeNode();
     }
 
@@ -112,7 +110,6 @@ class FolderItemList extends ItemList implements PermissionableListItemInterface
         $this->query->setParameter('fvType', $type);
     }
 
-
     public function deliverQueryObject()
     {
         if (!isset($this->parent)) {
@@ -121,6 +118,7 @@ class FolderItemList extends ItemList implements PermissionableListItemInterface
         }
         $this->query->andWhere('n.treeNodeParentID = :treeNodeParentID');
         $this->query->setParameter('treeNodeParentID', $this->parent->getTreeNodeID());
+
         return parent::deliverQueryObject();
     }
 
@@ -133,6 +131,4 @@ class FolderItemList extends ItemList implements PermissionableListItemInterface
     {
         $this->sortBy('folderItemType', 'asc');
     }
-
-
 }
