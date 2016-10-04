@@ -30,6 +30,11 @@ class ContentImporter
         $this->import($sx);
     }
 
+    public function importXml(\SimpleXMLElement $xml)
+    {
+        $this->import($xml);
+    }
+
     protected function import(\SimpleXMLElement $element)
     {
         $manager = Core::make('import/item/manager');

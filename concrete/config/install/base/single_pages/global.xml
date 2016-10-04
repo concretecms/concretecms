@@ -2,13 +2,6 @@
 <concrete5-cif version="1.0">
 
     <singlepages>
-        <page name="Drafts" path="/!drafts" filename="/!drafts/view.php" pagetype="" description="" package="" global="true">
-            <attributes>
-                <attributekey handle="icon_dashboard">
-                    <value>fa fa-edit</value>
-                </attributekey>
-            </attributes>
-        </page>
         <page name="Trash" path="/!trash" filename="/!trash/view.php" pagetype="" description="" package="" global="true">
             <attributes>
                 <attributekey handle="icon_dashboard">

@@ -4,6 +4,7 @@ namespace Concrete\Core\Page;
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Entity\Page\Template as TemplateEntity;
 use Concrete\Core\Entity\Site\Site;
+use Concrete\Core\Page\Stack\Stack;
 use Concrete\Core\Site\Tree\TreeInterface;
 use Concrete\Core\Multilingual\Page\Section\Section;
 use Concrete\Core\Page\Type\Composer\Control\BlockControl;
@@ -2311,18 +2312,23 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     {
         $db = Database::connection();
         $cID = $cParent->getCollectionID();
-        $q = 'select cID from Pages where cParentID = ? order by cDisplayOrder asc';
+        $q = 'select cID, ptHandle from Pages p left join PageTypes pt on p.ptID = pt.ptID where cParentID = ? order by cDisplayOrder asc';
         $r = $db->executeQuery($q, [$cID]);
         if ($r) {
             while ($row = $r->fetchRow()) {
-                $tc = self::getByID($row['cID']);
+                // This is a terrible hack.
+                if ($row['ptHandle'] = STACKS_PAGE_TYPE) {
+                    $tc = Stack::getByID($row['cID']);
+                } else {
+                    $tc = self::getByID($row['cID']);
+                }
                 $nc = $tc->duplicate($cNewParent, $preserveUserID, $site);
                 $tc->_duplicateAll($tc, $nc, $preserveUserID, $site);
             }
         }
     }
 
-    public function duplicate($nc = null, $preserveUserID = false, Site $site = null)
+    public function duplicate($nc = null, $preserveUserID = false, TreeInterface $site = null)
     {
         $db = Database::connection();
         // the passed collection is the parent collection
