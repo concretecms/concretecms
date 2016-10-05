@@ -298,7 +298,7 @@ class ClassloaderTest extends ClassLoaderTestCase
             ->disableOriginalConstructor()
             ->getMock();
         $package->expects($this->any())
-            ->method('enableLegacyNamespace')
+            ->method('shouldEnableLegacyNamespace')
             ->will($this->returnValue(true));
         $package->expects($this->any())
             ->method('getPackageHandle')
