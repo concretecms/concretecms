@@ -18,9 +18,9 @@ class MultilingualRelation extends Relation
     protected $mpLocale = '';
 
     /**
-     * @ORM\Column(type="string", length=32)
+     * @ORM\Column(type="string", length=32, nullable=true)
      */
-    protected $mpLanguage;
+    protected $mpLanguage = '';
 
     /**
      * @return mixed

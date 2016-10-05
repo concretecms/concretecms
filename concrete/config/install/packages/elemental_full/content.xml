@@ -187,7 +187,6 @@
                                                 <previousLabel><![CDATA[Last Post]]></previousLabel>
                                                 <parentLabel><![CDATA[]]></parentLabel>
                                                 <loopSequence><![CDATA[0]]></loopSequence>
-                                                <excludeSystemPages><![CDATA[1]]></excludeSystemPages>
                                                 <orderBy><![CDATA[chrono_desc]]></orderBy>
                                             </record>
                                         </data>

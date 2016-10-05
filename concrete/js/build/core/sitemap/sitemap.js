@@ -13,7 +13,7 @@
 			cParentID: 0,
 			siteTreeID: 0,
 			cookieId: 'ConcreteSitemap',
-			includeSystemPages: false,
+			includeRootPages: false,
             displaySingleLevel: false,
 			persist: true,
 			minExpandLevel: false,
@@ -93,7 +93,7 @@
 				'cParentID': my.options.cParentID,
 				'siteTreeID': my.options.siteTreeID,
 				'displaySingleLevel': my.options.displaySingleLevel ? 1 : 0,
-				'includeSystemPages': my.options.includeSystemPages ? 1 : 0
+				'includeRootPages': my.options.includeRootPages ? 1 : 0
 			}, my.options.ajaxData);
 
 			var extensions = ["glyph", "dnd"];
@@ -403,7 +403,7 @@
 				'siteTreeID': options.siteTreeID,
 				'cParentID': node.data.cID,
 				'displaySingleLevel': true,
-				'includeSystemPages': options.includeSystemPages ? 1 : 0
+				'includeRootPages': options.includeRootPages ? 1 : 0
 			}, options.ajaxData);
 
 			jQuery.fn.dialog.showLoader();
@@ -426,7 +426,7 @@
 				ajaxData = $.extend({
 					cParentID: node.data.cID,
 					'siteTreeID': options.siteTreeID,
-					'includeSystemPages': options.includeSystemPages ? 1 : 0,
+					'includeRootPages': options.includeRootPages ? 1 : 0,
 					'displayNodePagination': options.displayNodePagination ? 1 : 0
 				}, options.ajaxData),
 				params = {
