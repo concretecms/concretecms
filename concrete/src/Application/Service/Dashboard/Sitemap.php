@@ -24,7 +24,7 @@ class Sitemap
     /**
      * @var bool
      */
-    protected $includeRootPages;
+    protected $includeSystemPages;
 
     /**
      * @param bool $autoOpen
@@ -37,22 +37,22 @@ class Sitemap
     /**
      * @return bool
      */
-    public function includeRootPages()
+    public function includeSystemPages()
     {
-        if (!isset($this->includeRootPages)) {
-            $this->includeRootPages = Cookie::get('includeRootPages');
+        if (!isset($this->includeSystemPages)) {
+            $this->includeSystemPages = Cookie::get('includeSystemPages');
         }
 
-        return $this->includeRootPages;
+        return $this->includeSystemPages;
     }
 
     /**
-     * @param bool $rootPages
+     * @param bool $systemPages
      */
-    public function setIncludeRootPages($rootPages)
+    public function setIncludeSystemPages($systemPages)
     {
-        $this->includeRootPages = $rootPages;
-        Cookie::set('includeRootPages', $rootPages);
+        $this->includeSystemPages = $systemPages;
+        Cookie::set('includeSystemPages', $systemPages);
     }
 
     /**
@@ -78,8 +78,8 @@ class Sitemap
         });
         $pl->includeAliases();
         $pl->sortByDisplayOrder();
-        if ($this->includeRootPages()) {
-            $pl->includeRootPages();
+        if ($this->includeSystemPages()) {
+            $pl->includeSystemPages();
             $pl->includeInactivePages();
         }
         if (!is_object($parent)) {

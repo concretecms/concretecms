@@ -150,6 +150,7 @@ class Single
 
             $c = Page::addStatic($data, null);
             $c->moveToRoot();
+            return $c;
         }
     }
 
@@ -176,7 +177,7 @@ class Single
                 // First, we check the first path to see if it falls outside of the root already. If it does,
                 // we're not going to check within the site for them
                 $rootPage = CorePage::getByPath("/" . $currentPath);
-                if (!$rootPage->isError() && $rootPage->isSystemPage()) {
+                if (!$rootPage->isError() && $rootPage->getSiteTreeID() == 0) {
                     // That means we've already added this as a system page, like Dashboard, etc... Which means
                     // that we add the subsequent pages globally
                     $checkGlobally = true;

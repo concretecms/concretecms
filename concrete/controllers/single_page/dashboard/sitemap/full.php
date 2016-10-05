@@ -11,7 +11,7 @@ class Full extends DashboardSitePageController
     {
         $this->requireAsset('core/sitemap');
         $dh = Loader::helper('concrete/dashboard/sitemap');
-        $this->set('includeRootPages', $dh->includeRootPages());
+        $this->set('includeSystemPages', $dh->includeSystemPages());
         $this->set('site', $this->getSite());
     }
 }
