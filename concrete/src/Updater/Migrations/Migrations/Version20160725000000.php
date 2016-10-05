@@ -164,6 +164,7 @@ class Version20160725000000 extends AbstractMigration
         // Update tables that still exist in db.xml
         \Concrete\Core\Database\Schema\Schema::refreshCoreXMLSchema(array(
             'Pages',
+            'Stacks',
             'PageTypes',
             'NotificationPermissionSubscriptionList',
             'NotificationPermissionSubscriptionListCustom',
@@ -785,6 +786,15 @@ class Version20160725000000 extends AbstractMigration
             $bt->refresh();
         }
 
+        $bt = BlockType::getByHandle('next_previous');
+        if (is_object($bt)) {
+            $bt->refresh();
+        }
+
+        $bt = BlockType::getByHandle('autonav');
+        if (is_object($bt)) {
+            $bt->refresh();
+        }
     }
 
     protected function addTreeNodeTypes()
@@ -870,7 +880,7 @@ class Version20160725000000 extends AbstractMigration
         SinglePage::add('/account/messages');
 
         $ci = new ContentImporter();
-        $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/desktops.xml');
+        $ci->importContentFile(DIR_BASE_CORE . '/config/install/upgrade/desktops.xml');
 
         $desktop = Page::getByPath('/dashboard/welcome');
         $desktop->movePageDisplayOrderToTop();
@@ -922,6 +932,7 @@ class Version20160725000000 extends AbstractMigration
 
         $site = $service->getDefault();
         $this->connection->executeQuery('update Pages set siteTreeID = ? where cIsSystemPage = 0', [$site->getSiteTreeID()]);
+        $this->connection->executeQuery('update Stacks set siteTreeID = ?', [$site->getSiteTreeID()]);
         $this->connection->executeQuery('update PageTypes set siteTypeID = ? where ptIsInternal = 0', [$type->getSiteTypeID()]);
         // migrate social links
         $links = $em->getRepository('Concrete\Core\Entity\Sharing\SocialNetwork\Link')
@@ -1101,6 +1112,34 @@ class Version20160725000000 extends AbstractMigration
         }
     }
 
+    protected function setupSinglePages()
+    {
+        $siteTreeID = \Core::make('site')->getSite()->getSiteTreeID();
+        $pages = array(
+            // global pages
+            array('/dashboard/view.php', 0, 0),
+            array('/!trash/view.php', 0, 0),
+            array('/login/view.php', 0, 0),
+            array('/register/view.php', 0, 0),
+            array('/account/view.php', 0, 0),
+            array('/page_forbidden.php', 0, 0),
+            array('/download_file.php', 0, 0),
+            // root pages
+            array('/!drafts/view.php', $siteTreeID, 0),
+            array('/!stacks/view.php', $siteTreeID, 0),
+            array('/page_not_found.php', $siteTreeID, 0),
+        );
+        foreach($pages as $record) {
+            $this->connection->executeQuery('update Pages set siteTreeID = ?, cParentID = ? where cFilename = ?', array($record[1], $record[2], $record[0]));
+        }
+
+        // Delete members page if profiles not enabled
+        if (!\Config::get('concrete.user.profiles_enabled')) {
+            $c = \Page::getByPath('/members');
+            $c->moveToTrash();
+        }
+    }
+
     public function up(Schema $schema)
     {
         $this->connection->Execute('set foreign_key_checks = 0');
@@ -1123,6 +1162,7 @@ class Version20160725000000 extends AbstractMigration
         $this->addTreeNodeTypes();
         $this->installDesktops();
         $this->updateJobs();
+        $this->setupSinglePages();
         $this->addNotifications();
         $this->splittedTrackingCode();
         $this->cleanupOldPermissions();
