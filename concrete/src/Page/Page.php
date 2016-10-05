@@ -58,6 +58,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     protected $cPointerExternalLinkNewWindow = null;
     protected $isMasterCollection = null;
     protected $cInheritPermissionsFromCID = null;
+
     /**
      * @param string $path /path/to/page
      * @param string $version ACTIVE or RECENT
@@ -123,8 +124,6 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         $this->loadError(COLLECTION_INIT); // init collection until we populate.
     }
 
-    /**
-     */
     protected function populatePage($cInfo, $where, $cvID)
     {
         $db = Database::connection();
@@ -189,6 +188,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     {
         return '\\Concrete\\Core\\Permission\\Assignment\\PageAssignment';
     }
+
     public function getPermissionObjectKeyCategoryHandle()
     {
         return 'page';
@@ -451,6 +451,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
             }
         }
     }
+
     /**
      * Gets the user that is editing the current page.
      * $return string $name.
@@ -626,6 +627,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     {
         return $this->getPageController();
     }
+
     /**
      * @private
      */
@@ -681,7 +683,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         $q = 'select PagePaths.cPath from PagePaths where cID = ?';
         $v = [$_cParentID];
         if ($_cParentID > 1) {
-            $q .=  ' and ppIsCanonical = ?';
+            $q .= ' and ppIsCanonical = ?';
             $v[] = 1;
         }
         $cPath = $db->fetchColumn($q, $v);
@@ -1147,6 +1149,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     public function getSiteTreeObject()
     {
         $em = \ORM::entityManager();
+
         return $em->find('\Concrete\Core\Entity\Site\Tree', $this->getSiteTreeID());
     }
 
@@ -2295,8 +2298,6 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         return $nc2;
     }
 
-    /**
-     **/
     protected function _duplicateAll($cParent, $cNewParent, $preserveUserID = false, Site $site = null)
     {
         $db = Database::connection();
@@ -2559,7 +2560,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         $newPath = '';
         if ($this->cParentID > 0) {
             /**
-             * @var $db Connection
+             * @var Connection
              */
             $db = \Database::connection();
             /* @var $em \Doctrine\ORM\EntityManager */
@@ -2579,7 +2580,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
                     [
                         $newPath,
                         $cID,
-                        $this->getSiteTreeID()
+                        $this->getSiteTreeID(),
                     ]
                 );
                 if (empty($result)) {
@@ -2717,7 +2718,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         // now we mark the page as a system page based on this path:
         $systemPages = ['/login', '/register', Config::get('concrete.paths.trash'), STACKS_PAGE_PATH, Config::get('concrete.paths.drafts'), '/members', '/members/*', '/account', '/account/*', Config::get('concrete.paths.trash').'/*', STACKS_PAGE_PATH.'/*', Config::get('concrete.paths.drafts').'/*', '/download_file', '/dashboard', '/dashboard/*', '/page_forbidden', '/page_not_found'];
         $th = Core::make('helper/text');
-        $cParentSiteTreeID = intval($db->GetOne('select siteTreeID from Pages where cID = ?', array($this->getCollectionParentID())));
+        $cParentSiteTreeID = intval($db->GetOne('select siteTreeID from Pages where cID = ?', [$this->getCollectionParentID()]));
         $db->executeQuery('update Pages set siteTreeID = ? where cID = ?', [$cParentSiteTreeID, $cID]);
         foreach ($systemPages as $sp) {
             if ($th->fnmatch($sp, $newPath)) {

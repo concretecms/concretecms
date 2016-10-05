@@ -8,6 +8,7 @@ use Core;
 class Css extends \Concrete\Controller\Backend\UserInterface\Page
 {
     protected $viewPath = '/dialogs/page/design/css';
+
     public function view()
     {
         $this->requireAsset('ace');
