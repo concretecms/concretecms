@@ -2324,7 +2324,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         if ($r) {
             while ($row = $r->fetchRow()) {
                 // This is a terrible hack.
-                if ($row['ptHandle'] = STACKS_PAGE_TYPE) {
+                if ($row['ptHandle'] === STACKS_PAGE_TYPE) {
                     $tc = Stack::getByID($row['cID']);
                 } else {
                     $tc = self::getByID($row['cID']);
