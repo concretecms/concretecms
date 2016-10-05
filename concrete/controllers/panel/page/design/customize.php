@@ -140,7 +140,7 @@ class Customize extends BackendInterfacePageController
             $vl = $this->getValueListFromRequest($pThemeID);
             $pt = PageTheme::getByID($pThemeID);
             $vl->save();
-            $sccRecord = false;
+            $sccRecord = null;
             if ($this->request->request->has('sccRecordID')) {
                 $sccRecord = \Concrete\Core\StyleCustomizer\CustomCssRecord::getByID($this->request->request->get('sccRecordID'));
             }
@@ -178,7 +178,7 @@ class Customize extends BackendInterfacePageController
             $vl = $this->getValueListFromRequest($pThemeID);
             $pt = PageTheme::getByID($pThemeID);
             $vl->save();
-            $sccRecord = false;
+            $sccRecord = null;
             if ($this->request->request->has('sccRecordID')) {
                 $sccRecord = \Concrete\Core\StyleCustomizer\CustomCssRecord::getByID($this->request->request->get('sccRecordID'));
             }

@@ -1,7 +1,8 @@
 <?php
 namespace Concrete\Controller\Dialog\Page\Design;
 
-use Concrete\Core\StyleCustomizer\CustomCssRecord;
+use Concrete\Core\Entity\StyleCustomizer\CustomCssRecord;
+use Concrete\Core\StyleCustomizer\CustomCssRecord as CustomCssRecordService;
 use Core;
 
 class Css extends \Concrete\Controller\Backend\UserInterface\Page
@@ -14,8 +15,8 @@ class Css extends \Concrete\Controller\Backend\UserInterface\Page
         $value = '';
 
         if ($this->request->query->has('sccRecordID')) {
-            $sccRecord = CustomCssRecord::getByID($this->request->query->get('sccRecordID'));
-            if (is_object($sccRecord)) {
+            $sccRecord = $this->app->make(CustomCssRecordService::class)->getByID((int) $this->request->query->get('sccRecordID'));
+            if ($sccRecord !== null) {
                 $value = $sccRecord->getValue();
                 $sccRecordID = $sccRecord->getRecordID();
             }
