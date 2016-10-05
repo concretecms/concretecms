@@ -51,11 +51,13 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
     protected $isFulltextSearch = false;
 
     /**
-     * Whether to include root pages in this query.
+     * Whether to include system pages in this query. NOTE: There really isn't
+     * a reason to set this to true unless you're doing something pretty custom
+     * or deep in the core
      *
      * @var bool
      */
-    protected $includeRootPages = false;
+    protected $includeSystemPages = false;
 
     /**
      * Whether to include aliases in the result set.
@@ -75,11 +77,11 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
     }
 
     /**
-     * @param boolean $includeRootPages
+     * @param boolean $includeSystemPages
      */
-    public function includeRootPages()
+    public function includeSystemPages()
     {
-        $this->includeRootPages = true;
+        $this->includeSystemPages = true;
     }
 
     public function setPermissionsChecker(\Closure $checker)
@@ -156,22 +158,28 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
             $query->setParameter('cIsActive', true);
         }
 
-        if (is_object($this->siteTree)) {
-            $tree = $this->siteTree;
-        } else {
-            $site = \Core::make("site")->getSite();
-            $tree = $site->getSiteTree();
-        }
 
         if ($this->query->getParameter('cParentID') < 1) {
-            if (!$this->includeRootPages) {
-                $query->innerJoin('p', 'SiteTrees', 'st', 'p.siteTreeID = st.siteTreeID');
-                $query->andWhere('p.siteTreeID = :siteTreeID and (p.cParentID > 0 or p.cID = st.siteHomePageID)');
+            // If we aren't filtering by parent ID we have to include the site tree ID.
+            if (is_object($this->siteTree)) {
+                $tree = $this->siteTree;
+            } else {
+                $site = \Core::make("site")->getSite();
+                $tree = $site->getSiteTree();
+            }
+
+            $query->setParameter('siteTreeID', $tree->getSiteTreeID());
+
+            // Now, we determine whether we should show the pages in this site tree that are system or not
+
+            if (!$this->includeSystemPages) {
+                $query->andWhere('p.siteTreeID = :siteTreeID');
+                $query->andWhere('p.cIsSystemPage = :cIsSystemPage');
+                $query->setParameter('cIsSystemPage', false);
             } else {
                 $query->andWhere('(p.siteTreeID = :siteTreeID or p.siteTreeID = 0)');
             }
 
-            $query->setParameter('siteTreeID', $tree->getSiteTreeID());
         }
 
         return $query;
@@ -581,14 +589,6 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
     public function displayUnapprovedPages()
     {
         $this->setPageVersionToRetrieve(self::PAGE_VERSION_RECENT);
-    }
-
-    /**
-     * @deprecated
-     */
-    public function includeSystemPages()
-    {
-        // Nothing
     }
 
 }

@@ -18,16 +18,18 @@ class StackList extends PageList
         $this->foldersFirst = false;
         $this->query->leftJoin('p', 'Stacks', 's', 's.cID = p.cID');
         $this->ignorePermissions();
+        /*
         $this->filterByPath(STACKS_PAGE_PATH);
         $this->filter(false, '(s.stMultilingualSection is null or s.stMultilingualSection = 0)');
-        $this->includeRootPages();
+        */
+        $this->includeSystemPages();
         $this->sortByName();
     }
 
-    public function filterBySiteTree(TreeInterface $tree)
+    public function setSiteTreeObject(TreeInterface $tree)
     {
-        $this->query->andWhere('s.siteTreeID = :stackSiteTreeID');
-        $this->query->setParameter('stackSiteTreeID', $tree->getSiteTreeID());
+        parent::setSiteTreeObject($tree);
+        $this->query->andWhere('s.siteTreeID = :siteTreeID');
 
     }
 
