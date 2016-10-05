@@ -36,7 +36,7 @@ use Concrete\Core\Permission\Access\Entity\Entity as PermissionAccessEntity;
 use Concrete\Core\Permission\Access\Entity\GroupEntity as GroupPermissionAccessEntity;
 use Concrete\Core\Permission\Access\Entity\GroupCombinationEntity as GroupCombinationPermissionAccessEntity;
 use Concrete\Core\Permission\Access\Entity\UserEntity as UserPermissionAccessEntity;
-use Concrete\Core\StyleCustomizer\CustomCssRecord;
+use Concrete\Core\Entity\StyleCustomizer\CustomCssRecord;
 use Area;
 use Concrete\Core\Entity\Page\PagePath;
 use Queue;
@@ -1789,19 +1789,16 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         $this->writePageThemeCustomizations();
     }
 
-    public function setCustomStyleObject(\Concrete\Core\Page\Theme\Theme $pt, \Concrete\Core\StyleCustomizer\Style\ValueList $valueList, $selectedPreset = false, $customCssRecord = false)
+    public function setCustomStyleObject(\Concrete\Core\Page\Theme\Theme $pt, \Concrete\Core\StyleCustomizer\Style\ValueList $valueList, $selectedPreset = false, CustomCssRecord $customCssRecord = null)
     {
         $db = Database::connection();
         $db->delete('CollectionVersionThemeCustomStyles', ['cID' => $this->getCollectionID(), 'cvID' => $this->getVersionID()]);
-        $sccRecordID = 0;
-        if ($customCssRecord instanceof CustomCssRecord) {
-            $sccRecordID = $customCssRecord->getRecordID();
-        }
         $preset = false;
         if ($selectedPreset) {
             $preset = $selectedPreset->getPresetHandle();
         }
-        if ($customCssRecord instanceof CustomCssRecord) {
+        $sccRecordID = 0;
+        if ($customCssRecord !== null) {
             $sccRecordID = $customCssRecord->getRecordID();
         }
         $db->insert(

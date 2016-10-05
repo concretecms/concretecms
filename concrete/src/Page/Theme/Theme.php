@@ -15,7 +15,7 @@ use PageTemplate;
 use Concrete\Core\Page\Theme\GridFramework\GridFramework;
 use Concrete\Core\Page\Single as SinglePage;
 use Concrete\Core\StyleCustomizer\Preset;
-use Concrete\Core\StyleCustomizer\CustomCssRecord;
+use Concrete\Core\Entity\StyleCustomizer\CustomCssRecord;
 use Localization;
 
 /**
@@ -386,22 +386,16 @@ class Theme extends Object
         return null;
     }
 
-    public function setCustomStyleObject(
-        \Concrete\Core\StyleCustomizer\Style\ValueList $valueList,
-        $selectedPreset = false,
-        $customCssRecord = false
-    ) {
+    public function setCustomStyleObject(\Concrete\Core\StyleCustomizer\Style\ValueList $valueList, $selectedPreset = false, CustomCssRecord $customCssRecord = null)
+    {
         $db = Loader::db();
         $db->delete('PageThemeCustomStyles', array('pThemeID' => $this->getThemeID()));
-        $sccRecordID = 0;
-        if ($customCssRecord instanceof CustomCssRecord) {
-            $sccRecordID = $customCssRecord->getRecordID();
-        }
         $preset = false;
         if ($selectedPreset) {
             $preset = $selectedPreset->getPresetHandle();
         }
-        if ($customCssRecord instanceof CustomCssRecord) {
+        $sccRecordID = 0;
+        if ($customCssRecord !== null) {
             $sccRecordID = $customCssRecord->getRecordID();
         }
         $db->insert(
