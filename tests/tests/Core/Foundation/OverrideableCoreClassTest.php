@@ -98,14 +98,14 @@ class OverrideableCoreClassTest extends ClassLoaderTestCase
             ->disableOriginalConstructor()
             ->getMock();
         $legacyPackage->expects($this->any())
-            ->method('enableLegacyNamespace')
+            ->method('shouldEnableLegacyNamespace')
             ->will($this->returnValue(true));
 
         $package = $this->getMockBuilder('Concrete\Core\Package\Package')
             ->disableOriginalConstructor()
             ->getMock();
         $package->expects($this->any())
-            ->method('enableLegacyNamespace')
+            ->method('shouldEnableLegacyNamespace')
             ->will($this->returnValue(false));
 
 
@@ -174,14 +174,14 @@ class OverrideableCoreClassTest extends ClassLoaderTestCase
             ->disableOriginalConstructor()
             ->getMock();
         $legacyPackage->expects($this->any())
-            ->method('enableLegacyNamespace')
+            ->method('shouldEnableLegacyNamespace')
             ->will($this->returnValue(true));
 
         $package = $this->getMockBuilder('Concrete\Core\Package\Package')
             ->disableOriginalConstructor()
             ->getMock();
         $package->expects($this->any())
-            ->method('enableLegacyNamespace')
+            ->method('shouldEnableLegacyNamespace')
             ->will($this->returnValue(false));
 
 
