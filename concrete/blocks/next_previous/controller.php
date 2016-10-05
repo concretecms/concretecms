@@ -77,11 +77,9 @@ class Controller extends BlockController
     {
         $args += [
             'loopSequence' => 0,
-            'excludeSystemPages' => 0,
         ];
 
         $args['loopSequence'] = intval($args['loopSequence']);
-        $args['excludeSystemPages'] = intval($args['excludeSystemPages']);
 
         parent::save($args);
     }
@@ -97,28 +95,23 @@ class Controller extends BlockController
         $db = $app->make('database')->connection();
 
         $siteTreeID = \Core::make('site')->getSite()->getSiteTreeID();
-        $systemPages = 'and (siteTreeID = ' . $siteTreeID;
-        if (!$this->excludeSystemPages) {
-            $systemPages .= ' or siteTreeID = 0';
-        }
-        $systemPages .= ')';
         $cID = 1;
         $currentPage = Page::getCurrentPage();
 
         while ($cID > 0) {
             switch ($this->orderBy) {
                 case 'chrono_desc':
-                    $cID = $db->GetOne('select Pages.cID from Pages inner join CollectionVersions cv on Pages.cID = cv.cID where cvIsApproved = 1 and cvDatePublic > ? and cParentID = ? ' . $systemPages . ' order by cvDatePublic asc', [$currentPage->getCollectionDatePublic(), $currentPage->getCollectionParentID()]);
+                    $cID = $db->GetOne('select Pages.cID from Pages inner join CollectionVersions cv on Pages.cID = cv.cID where cvIsApproved = 1 and cvDatePublic > ? and cParentID = ? order by cvDatePublic asc', [$currentPage->getCollectionDatePublic(), $currentPage->getCollectionParentID()]);
                     break;
                 case 'chrono_asc':
-                    $cID = $db->GetOne('select Pages.cID from Pages inner join CollectionVersions cv on Pages.cID = cv.cID where cvIsApproved = 1 and cvDatePublic < ? and cParentID = ? ' . $systemPages . ' order by cvDatePublic desc', [$currentPage->getCollectionDatePublic(), $currentPage->getCollectionParentID()]);
+                    $cID = $db->GetOne('select Pages.cID from Pages inner join CollectionVersions cv on Pages.cID = cv.cID where cvIsApproved = 1 and cvDatePublic < ? and cParentID = ?  order by cvDatePublic desc', [$currentPage->getCollectionDatePublic(), $currentPage->getCollectionParentID()]);
                     break;
                 case 'display_desc':
-                    $cID = $db->GetOne('select cID from Pages where cDisplayOrder < ? and cParentID = ? ' . $systemPages . ' order by cDisplayOrder desc', [$currentPage->getCollectionDisplayOrder(), $currentPage->getCollectionParentID()]);
+                    $cID = $db->GetOne('select cID from Pages where cDisplayOrder < ? and cParentID = ? order by cDisplayOrder desc', [$currentPage->getCollectionDisplayOrder(), $currentPage->getCollectionParentID()]);
                     break;
                 case 'display_asc':
                 default:
-                    $cID = $db->GetOne('select cID from Pages where cDisplayOrder > ? and cParentID = ? ' . $systemPages . ' order by cDisplayOrder asc', [$currentPage->getCollectionDisplayOrder(), $currentPage->getCollectionParentID()]);
+                    $cID = $db->GetOne('select cID from Pages where cDisplayOrder > ? and cParentID = ? order by cDisplayOrder asc', [$currentPage->getCollectionDisplayOrder(), $currentPage->getCollectionParentID()]);
                     break;
             }
 
@@ -139,7 +132,7 @@ class Controller extends BlockController
             $parent = Page::getByID($c->getCollectionParentID(), 'ACTIVE');
             switch ($this->orderBy) {
                 case 'chrono_desc':
-                    return $parent->getFirstChild('cvDatePublic asc', $this->excludeSystemPages);
+                    return $parent->getFirstChild('cvDatePublic asc');
                     break;
                 case 'chrono_asc':
                     return $parent->getFirstChild('cvDatePublic desc');
@@ -149,7 +142,7 @@ class Controller extends BlockController
                     break;
                 case 'display_asc':
                 default:
-                    return $parent->getFirstChild('cDisplayOrder asc', $this->excludeSystemPages);
+                    return $parent->getFirstChild('cDisplayOrder asc');
                     break;
             }
         }
@@ -167,27 +160,23 @@ class Controller extends BlockController
         $app = Facade::getFacadeApplication();
         $db = $app->make('database')->connection();
 
-        $systemPages = '';
-        if ($this->excludeSystemPages) {
-            $systemPages = 'and cIsSystemPage = 0';
-        }
         $cID = 1;
         $currentPage = Page::getCurrentPage();
 
         while ($cID > 0) {
             switch ($this->orderBy) {
                 case 'chrono_desc':
-                    $cID = $db->GetOne('select Pages.cID from Pages inner join CollectionVersions cv on Pages.cID = cv.cID where cvIsApproved = 1 and cvDatePublic < ? and cParentID = ? ' . $systemPages . ' order by cvDatePublic desc', [$currentPage->getCollectionDatePublic(), $currentPage->getCollectionParentID()]);
+                    $cID = $db->GetOne('select Pages.cID from Pages inner join CollectionVersions cv on Pages.cID = cv.cID where cvIsApproved = 1 and cvDatePublic < ? and cParentID = ?  order by cvDatePublic desc', [$currentPage->getCollectionDatePublic(), $currentPage->getCollectionParentID()]);
                     break;
                 case 'chrono_asc':
-                    $cID = $db->GetOne('select Pages.cID from Pages inner join CollectionVersions cv on Pages.cID = cv.cID where cvIsApproved = 1 and cvDatePublic > ? and cParentID = ? ' . $systemPages . ' order by cvDatePublic asc', [$currentPage->getCollectionDatePublic(), $currentPage->getCollectionParentID()]);
+                    $cID = $db->GetOne('select Pages.cID from Pages inner join CollectionVersions cv on Pages.cID = cv.cID where cvIsApproved = 1 and cvDatePublic > ? and cParentID = ?  order by cvDatePublic asc', [$currentPage->getCollectionDatePublic(), $currentPage->getCollectionParentID()]);
                     break;
                 case 'display_desc':
-                    $cID = $db->GetOne('select cID from Pages where cDisplayOrder > ? and cParentID = ? ' . $systemPages . ' order by cDisplayOrder asc', [$currentPage->getCollectionDisplayOrder(), $currentPage->getCollectionParentID()]);
+                    $cID = $db->GetOne('select cID from Pages where cDisplayOrder > ? and cParentID = ? order by cDisplayOrder asc', [$currentPage->getCollectionDisplayOrder(), $currentPage->getCollectionParentID()]);
                     break;
                 case 'display_asc':
                 default:
-                    $cID = $db->GetOne('select cID from Pages where cDisplayOrder < ? and cParentID = ? ' . $systemPages . ' order by cDisplayOrder desc', [$currentPage->getCollectionDisplayOrder(), $currentPage->getCollectionParentID()]);
+                    $cID = $db->GetOne('select cID from Pages where cDisplayOrder < ? and cParentID = ? order by cDisplayOrder desc', [$currentPage->getCollectionDisplayOrder(), $currentPage->getCollectionParentID()]);
                     break;
             }
 
@@ -211,10 +200,10 @@ class Controller extends BlockController
                     return $parent->getFirstChild('cvDatePublic desc');
                     break;
                 case 'chrono_asc':
-                    return $parent->getFirstChild('cvDatePublic asc', $this->excludeSystemPages);
+                    return $parent->getFirstChild('cvDatePublic asc');
                     break;
                 case 'display_desc':
-                    return $parent->getFirstChild('cDisplayOrder asc', $this->excludeSystemPages);
+                    return $parent->getFirstChild('cDisplayOrder asc');
                     break;
                 case 'display_asc':
                 default:

@@ -6,13 +6,14 @@ use Concrete\Core\Attribute\ObjectTrait;
 use Concrete\Core\Entity\Attribute\Key\SiteKey;
 use Concrete\Core\Entity\Attribute\Value\SiteValue;
 use Concrete\Core\Site\Config\Liaison;
+use Concrete\Core\Site\Tree\TreeInterface;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
  * @ORM\Table(name="Sites")
  */
-class Site
+class Site implements TreeInterface
 {
 
     use ObjectTrait;
@@ -121,6 +122,13 @@ class Site
     {
         if (is_object($this->tree)) {
             return $this->tree->getSiteTreeID();
+        }
+    }
+
+    public function getSiteTreeObject()
+    {
+        if (is_object($this->tree)) {
+            return $this->tree;
         }
     }
 

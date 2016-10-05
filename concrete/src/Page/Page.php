@@ -4,7 +4,8 @@ namespace Concrete\Core\Page;
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Entity\Page\Template as TemplateEntity;
 use Concrete\Core\Entity\Site\Site;
-use Concrete\Core\Entity\Site\Tree;
+use Concrete\Core\Page\Stack\Stack;
+use Concrete\Core\Site\Tree\TreeInterface;
 use Concrete\Core\Multilingual\Page\Section\Section;
 use Concrete\Core\Page\Type\Composer\Control\BlockControl;
 use Concrete\Core\Page\Type\Composer\FormLayoutSetControl;
@@ -49,7 +50,7 @@ use Session;
  * The page object in Concrete encapsulates all the functionality used by a typical page and their contents
  * including blocks, page metadata, page permissions.
  */
-class Page extends Collection implements \Concrete\Core\Permission\ObjectInterface, AssignableObjectInterface
+class Page extends Collection implements \Concrete\Core\Permission\ObjectInterface, AssignableObjectInterface, TreeInterface
 {
     protected $controller;
     protected $blocksAliasedFromMasterCollection = null;
@@ -65,17 +66,17 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
      *
      * @return Page
      */
-    public static function getByPath($path, $version = 'RECENT', Tree $siteTree = null)
+    public static function getByPath($path, $version = 'RECENT', TreeInterface $tree = null)
     {
         $path = rtrim($path, '/'); // if the path ends in a / remove it.
         $cache = \Core::make('cache/request');
 
-        if ($siteTree) {
-            $item = $cache->getItem(sprintf('site/page/path/%s/%s', $siteTree->getSiteTreeID(), trim($path, '/')));
+        if ($tree) {
+            $item = $cache->getItem(sprintf('site/page/path/%s/%s', $tree->getSiteTreeID(), trim($path, '/')));
             $cID = $item->get();
             if ($item->isMiss()) {
                 $db = Database::connection();
-                $cID = $db->fetchColumn('select Pages.cID from PagePaths inner join Pages on Pages.cID = PagePaths.cID where cPath = ? and siteTreeID = ?', [$path, $siteTree->getSiteTreeID()]);
+                $cID = $db->fetchColumn('select Pages.cID from PagePaths inner join Pages on Pages.cID = PagePaths.cID where cPath = ? and siteTreeID = ?', [$path, $tree->getSiteTreeID()]);
                 $cache->save($item->set($cID));
             }
         } else {
@@ -1003,8 +1004,12 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         $p->addAttribute('user', $ui->getUserName());
         $p->addAttribute('description', Core::make('helper/text')->entities($this->getCollectionDescription()));
         $p->addAttribute('package', $this->getPackageHandle());
-        if ($this->getCollectionParentID() == 0 && $this->isSystemPage()) {
-            $p->addAttribute('root', 'true');
+        if ($this->getCollectionParentID() == 0) {
+            if ($this->getSiteTreeID() == 0) {
+                $p->addAttribute('global', 'true');
+            } else {
+                $p->addAttribute('root', 'true');
+            }
         }
 
         $attribs = $this->getSetCollectionAttributes();
@@ -1097,7 +1102,6 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         $path->setPagePathIsCanonical(true);
         $em->persist($path);
         $em->flush();
-        $this->rescanSystemPageStatus();
     }
 
     public function getPagePaths()
@@ -1681,16 +1685,10 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
      *
      * @return Page
      */
-    public function getFirstChild($sortColumn = 'cDisplayOrder asc', $excludeSystemPages = false)
+    public function getFirstChild($sortColumn = 'cDisplayOrder asc')
     {
-        if ($excludeSystemPages) {
-            $systemPages = ' and siteTreeID = 0';
-        } else {
-            $systemPages = '';
-        }
-
         $db = Database::connection();
-        $cID = $db->fetchColumn('select Pages.cID from Pages inner join CollectionVersions on Pages.cID = CollectionVersions.cID where cvIsApproved = 1 and cParentID = ? '.$systemPages." order by {$sortColumn}", [$this->cID]);
+        $cID = $db->fetchColumn("select Pages.cID from Pages inner join CollectionVersions on Pages.cID = CollectionVersions.cID where cvIsApproved = 1 and cParentID = ? order by {$sortColumn}", [$this->cID]);
         if ($cID > 1) {
             return self::getByID($cID, 'ACTIVE');
         }
@@ -2262,14 +2260,24 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
             $this->activate();
             // if we're moving from the trash, we have to activate recursively
             if ($this->isInTrash()) {
-                $pages = [];
-                $pages = $this->populateRecursivePages($pages, ['cID' => $this->getCollectionID()], $this->getCollectionParentID(), 0, false);
-                foreach ($pages as $page) {
+                $childPages = $this->populateRecursivePages([], ['cID' => $this->getCollectionID()], $this->getCollectionParentID(), 0, false);
+                foreach ($childPages as $page) {
                     $db->executeQuery('update Pages set cIsActive = 1 where cID = ?', [$page['cID']]);
                 }
             }
         }
 
+        if ($nc->getSiteTreeID() != $this->getSiteTreeID()) {
+            $db->executeQuery('update Pages set siteTreeID = ? where cID = ?', [$nc->getSiteTreeID(), $this->getCollectionID()]);
+            if (!isset($childPages)) {
+                $childPages = $this->populateRecursivePages([], ['cID' => $this->getCollectionID()], $this->getCollectionParentID(), 0, false);
+            }
+            foreach ($childPages as $page) {
+                $db->executeQuery('update Pages set siteTreeID = ? where cID = ?', [$nc->getSiteTreeID(), $page['cID']]);
+            }
+        }
+
+        $this->siteTreeID = $nc->getSiteTreeID();
         $this->cParentID = $newCParentID;
         $this->movePageDisplayOrderToBottom();
         // run any event we have for page move. Arguments are
@@ -2302,18 +2310,23 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     {
         $db = Database::connection();
         $cID = $cParent->getCollectionID();
-        $q = 'select cID from Pages where cParentID = ? order by cDisplayOrder asc';
+        $q = 'select cID, ptHandle from Pages p left join PageTypes pt on p.ptID = pt.ptID where cParentID = ? order by cDisplayOrder asc';
         $r = $db->executeQuery($q, [$cID]);
         if ($r) {
             while ($row = $r->fetchRow()) {
-                $tc = self::getByID($row['cID']);
+                // This is a terrible hack.
+                if ($row['ptHandle'] = STACKS_PAGE_TYPE) {
+                    $tc = Stack::getByID($row['cID']);
+                } else {
+                    $tc = self::getByID($row['cID']);
+                }
                 $nc = $tc->duplicate($cNewParent, $preserveUserID, $site);
                 $tc->_duplicateAll($tc, $nc, $preserveUserID, $site);
             }
         }
     }
 
-    public function duplicate($nc = null, $preserveUserID = false, Site $site = null)
+    public function duplicate($nc = null, $preserveUserID = false, TreeInterface $site = null)
     {
         $db = Database::connection();
         // the passed collection is the parent collection
@@ -2607,7 +2620,6 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
                 $ppIsAutoGenerated = false;
             }
             $this->setCanonicalPagePath($newPath, $ppIsAutoGenerated);
-            $this->rescanSystemPageStatus();
             $this->cPath = $newPath;
             $this->refreshCache();
 
@@ -2710,22 +2722,13 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         }
     }
 
+    /**
+     * Deprecated, does nothing any longer.
+     * @deprecated
+     */
     public function rescanSystemPageStatus()
     {
-        $cID = ($this->getCollectionPointerOriginalID() > 0) ? $this->getCollectionPointerOriginalID() : $this->getCollectionID();
-        $db = Database::connection();
-        $newPath = $db->fetchColumn('select cPath from PagePaths where cID = ? and ppIsCanonical = 1', [$cID]);
-        // now we mark the page as a system page based on this path:
-        $systemPages = ['/login', '/register', Config::get('concrete.paths.trash'), STACKS_PAGE_PATH, Config::get('concrete.paths.drafts'), '/members', '/members/*', '/account', '/account/*', Config::get('concrete.paths.trash').'/*', STACKS_PAGE_PATH.'/*', Config::get('concrete.paths.drafts').'/*', '/download_file', '/dashboard', '/dashboard/*', '/page_forbidden', '/page_not_found'];
-        $th = Core::make('helper/text');
-        $cParentSiteTreeID = intval($db->GetOne('select siteTreeID from Pages where cID = ?', [$this->getCollectionParentID()]));
-        $db->executeQuery('update Pages set siteTreeID = ? where cID = ?', [$cParentSiteTreeID, $cID]);
-        foreach ($systemPages as $sp) {
-            if ($th->fnmatch($sp, $newPath)) {
-                $db->executeQuery('update Pages set siteTreeID = 0 where cID = ?', [$cID]);
-                $this->siteTreeID = 0;
-            }
-        }
+        return false;
     }
 
     public function isInTrash()
@@ -2736,9 +2739,8 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     public function moveToRoot()
     {
         $db = Database::connection();
-        $db->executeQuery('update Pages set cParentID = 0, siteTreeID = 0 where cID = ?', [$this->getCollectionID()]);
+        $db->executeQuery('update Pages set cParentID = 0 where cID = ?', [$this->getCollectionID()]);
         $this->cParentID = 0;
-        $this->rescanSystemPageStatus();
     }
 
     public function deactivate()
@@ -2838,7 +2840,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
      *
      * @return page
      **/
-    public static function addHomePage(Tree $siteTree = null)
+    public static function addHomePage(TreeInterface $siteTree = null)
     {
         // creates the home page of the site
         $db = Database::connection();
@@ -3109,10 +3111,20 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         return $lifetime;
     }
 
-    public function addStatic($data)
+    public static function addStatic($data, TreeInterface $parent = null)
     {
         $db = Database::connection();
-        $cParentID = $this->getCollectionID();
+        $cParentID = 1;
+        $cDisplayOrder = 0;
+        $cInheritPermissionsFromCID = 1;
+        $cOverrideTemplatePermissions = 1;
+        if ($parent instanceof Page) {
+            $cParentID = $parent->getCollectionID();
+            $parent->rescanChildrenDisplayOrder();
+            $cDisplayOrder = $parent->getNextSubPageDisplayOrder();
+            $cInheritPermissionsFromCID = $parent->getPermissionsCollectionID();
+            $cOverrideTemplatePermissions = $parent->overrideTemplatePermissions();
+        }
 
         if (isset($data['pkgID'])) {
             $pkgID = $data['pkgID'];
@@ -3127,16 +3139,15 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         $cobj = parent::addCollection($data);
         $cID = $cobj->getCollectionID();
 
-        $this->rescanChildrenDisplayOrder();
-        $cDisplayOrder = $this->getNextSubPageDisplayOrder();
-
         // These get set to parent by default here, but they can be overridden later
-        $cInheritPermissionsFromCID = $this->getPermissionsCollectionID();
         $cInheritPermissionsFrom = 'PARENT';
 
-        $siteTreeID = \Core::make('site')->getSite()->getSiteTreeID();
+        $siteTreeID = 0;
+        if (is_object($parent)) {
+            $siteTreeID = $parent->getSiteTreeID();
+        }
 
-        $v = [$cID, $siteTreeID, $cFilename, $cParentID, $cInheritPermissionsFrom, $this->overrideTemplatePermissions(), $cInheritPermissionsFromCID, $cDisplayOrder, $uID, $pkgID];
+        $v = [$cID, $siteTreeID, $cFilename, $cParentID, $cInheritPermissionsFrom, $cOverrideTemplatePermissions, $cInheritPermissionsFromCID, $cDisplayOrder, $uID, $pkgID];
         $q = 'insert into Pages (cID, siteTreeID, cFilename, cParentID, cInheritPermissionsFrom, cOverrideTemplatePermissions, cInheritPermissionsFromCID, cDisplayOrder, uID, pkgID) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
         $r = $db->prepare($q);
         $res = $r->execute($v);

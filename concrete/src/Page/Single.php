@@ -1,6 +1,8 @@
 <?php
 namespace Concrete\Core\Page;
 
+use Concrete\Core\Entity\Site\Site;
+use Concrete\Core\Site\Tree\TreeInterface;
 use Page as CorePage;
 use Loader;
 use Environment;
@@ -122,21 +124,38 @@ class Single
         return $c;
     }
 
-    /*
-     * Adds a new single page at the given path, optionally specify a Package
-     * @param string $cPath
-     * @param Package $pkg
-     * @return Page
+    /**
+     * Adds a single page outside of any site trees. The global=true declaration in content importer XML must come at
+     * on the first URL segment, so we don't have to be smart and check to see if the parents already eixst.
+     * @param $cPath
+     * @param null $pkg
+     * @return mixed
      */
-    public static function add($cPath, $pkg = null)
+    public static function addGlobal($cPath, $pkg = null)
     {
-        // if we get to this point, we create a special collection
-        // without a specific type. This collection has a special cFilename that
-        // points to the passed node
-        $db = Loader::db();
+        $pathToFile = static::getPathToNode($cPath, $pkg);
         $txt = Loader::helper('text');
-        Loader::helper('concrete/ui')->clearInterfaceItemsCache();
+        $c = CorePage::getByPath("/" . $cPath);
+        if ($c->isError() && $c->getError() == COLLECTION_NOT_FOUND) {
+            // create the page at that point in the tree
 
+            $data = array();
+            $data['handle'] = trim($cPath, '/');
+            $data['name'] = $txt->unhandle($data['handle']);
+            $data['filename'] = $pathToFile;
+            $data['uID'] = USER_SUPER_ID;
+            if ($pkg != null) {
+                $data['pkgID'] = $pkg->getPackageID();
+            }
+
+            $c = Page::addStatic($data, null);
+            $c->moveToRoot();
+        }
+    }
+
+    public static function createPageInTree($cPath, TreeInterface $tree, $moveToRoot = false, $pkg = null)
+    {
+        $txt = Loader::helper('text');
         // trim off a leading / if there is one
         $cPath = trim($cPath, '/');
 
@@ -144,20 +163,34 @@ class Single
 
         $pages = explode('/', $cPath);
 
-        // instantiate the home collection so we have someplace to add these to
-        $parent = CorePage::getByID(1);
+        $parent = $tree->getSiteTreeObject()->getSiteHomePageObject();
 
         // now we iterate through the pages  to ensure that they exist in the system before adding the new guy
 
         $pathPrefix = '';
+        $checkGlobally = false;
 
         for ($i = 0; $i < count($pages); ++$i) {
             $currentPath = $pathPrefix . $pages[$i];
+            if ($i == 0) {
+                // First, we check the first path to see if it falls outside of the root already. If it does,
+                // we're not going to check within the site for them
+                $rootPage = CorePage::getByPath("/" . $currentPath);
+                if (!$rootPage->isError() && $rootPage->isSystemPage()) {
+                    // That means we've already added this as a system page, like Dashboard, etc... Which means
+                    // that we add the subsequent pages globally
+                    $checkGlobally = true;
+                }
+            }
 
             $pathToFile = static::getPathToNode($currentPath, $pkg);
 
             // check to see if a page at this point in the tree exists
-            $c = CorePage::getByPath("/" . $currentPath);
+            if (!$checkGlobally) {
+                $c = CorePage::getByPath("/" . $currentPath, 'RECENT', $tree);
+            } else {
+                $c = CorePage::getByPath("/" . $currentPath);
+            }
             if ($c->isError() && $c->getError() == COLLECTION_NOT_FOUND) {
                 // create the page at that point in the tree
 
@@ -170,7 +203,12 @@ class Single
                     $data['pkgID'] = $pkg->getPackageID();
                 }
 
-                $newC = $parent->addStatic($data);
+                if ($moveToRoot) {
+                    $newC = Page::addStatic($data, $tree);
+                    $newC->moveToRoot(); // change cparent ID back to 0
+                } else {
+                    $newC = Page::addStatic($data, $parent);
+                }
                 $parent = $newC;
             } else {
                 $parent = $c;
@@ -178,6 +216,31 @@ class Single
 
             $pathPrefix = $currentPath . '/';
         }
+
+        return $parent;
+    }
+
+    /*
+     * Adds a new single page at the given path, optionally specify a Package
+     * @param string $cPath
+     * @param Package $pkg
+     * @return Page
+     */
+    public static function add($cPath, $pkg = null, $moveToRoot = false)
+    {
+        Loader::helper('concrete/ui')->clearInterfaceItemsCache();
+
+        // instantiate the home collection so we have someplace to add these to
+        $sites = \Core::make('site')->getList();
+        /**
+         * @var $site Site
+         */
+        foreach($sites as $site) {
+
+            $parent = static::createPageInTree($cPath, $site, $moveToRoot, $pkg);
+
+        }
+
         $env = Environment::get();
         $env->clearOverrideCache();
 

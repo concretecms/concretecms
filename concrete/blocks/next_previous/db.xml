@@ -14,9 +14,6 @@
     <field name="loopSequence" type="integer">
       <default value="1"/>
     </field>
-    <field name="excludeSystemPages" type="integer">
-      <default value="1"/>
-    </field>
     <field name="orderBy" type="string" size="20">
       <default value="display_asc"/>
     </field>

@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Backup;
 
+use Concrete\Core\Backup\ContentImporter\Importer\Routine\SpecifiableHomePageRoutineInterface;
 use Concrete\Core\File\Importer;
 use Concrete\Core\Page\Type\Composer\FormLayoutSetControl;
 use Core;
@@ -10,11 +11,17 @@ class ContentImporter
 
     protected static $mcBlockIDs = array();
     protected static $ptComposerOutputControlIDs = array();
+    protected $home;
 
     public function importContentFile($file)
     {
         $sx = simplexml_load_file($file);
         $this->import($sx);
+    }
+
+    public function setHomePage($c)
+    {
+        $this->home = $c;
     }
 
     public function importContentString($string)
@@ -23,10 +30,18 @@ class ContentImporter
         $this->import($sx);
     }
 
+    public function importXml(\SimpleXMLElement $xml)
+    {
+        $this->import($xml);
+    }
+
     protected function import(\SimpleXMLElement $element)
     {
         $manager = Core::make('import/item/manager');
         foreach ($manager->getImporterRoutines() as $routine) {
+            if (isset($this->home) && $routine instanceof SpecifiableHomePageRoutineInterface) {
+                $routine->setHomePage($this->home);
+            }
             $routine->import($element);
         }
     }
