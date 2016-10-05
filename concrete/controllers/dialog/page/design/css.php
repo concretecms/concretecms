@@ -3,7 +3,7 @@ namespace Concrete\Controller\Dialog\Page\Design;
 
 use Concrete\Core\Entity\StyleCustomizer\CustomCssRecord;
 use Concrete\Core\StyleCustomizer\CustomCssRecord as CustomCssRecordService;
-use Core;
+use Concrete\Core\Http\ResponseFactoryInterface;
 
 class Css extends \Concrete\Controller\Backend\UserInterface\Page
 {
@@ -41,7 +41,7 @@ class Css extends \Concrete\Controller\Backend\UserInterface\Page
             $ax = new \stdClass();
             $ax->sccRecordID = $record->getRecordID();
 
-            Core::make('helper/ajax')->sendResult($ax);
+            return $this->app->make(ResponseFactoryInterface::class)->json($ax);
         }
     }
 }
