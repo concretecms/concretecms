@@ -222,10 +222,8 @@ class PageListTest extends \PageTestCase
 
     public function testFilterByActiveAndSystem()
     {
-        \SinglePage::addGlobal(Config::get('concrete.paths.trash'));
 
-        $results = $this->list->getResults();
-        $this->assertEquals(13, count($results));
+        \SinglePage::addGlobal(Config::get('concrete.paths.trash'));
 
         $c = Page::getByPath('/test-page-2');
         $c->moveToTrash();
@@ -233,16 +231,13 @@ class PageListTest extends \PageTestCase
         $results = $this->list->getResults();
         $this->assertEquals(11, count($results));
 
-        $totalResults = $this->list->getTotalResults();
-        $this->assertEquals(11, $totalResults);
-        $pagination = $this->list->getPagination();
-        $this->assertEquals(11, $pagination->getTotalResults());
-        $results = $this->list->getResults();
-        $this->assertEquals(11, count($results));
-
-        $this->list->includeRootPages();
+        $this->list->includeSystemPages(); // This includes the items inside trash because we're stupid.
         $totalResults = $this->list->getTotalResults();
         $this->assertEquals(12, $totalResults);
+        $pagination = $this->list->getPagination();
+        $this->assertEquals(12, $pagination->getTotalResults());
+        $results = $this->list->getResults();
+        $this->assertEquals(12, count($results));
 
         $this->list->includeInactivePages();
         $totalResults = $this->list->getTotalResults();
@@ -252,6 +247,7 @@ class PageListTest extends \PageTestCase
         $results = $this->list->getResults();
         $this->assertEquals(14, count($results));
     }
+
 
     public function testAliases()
     {
