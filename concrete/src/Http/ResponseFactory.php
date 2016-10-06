@@ -15,9 +15,7 @@ use Concrete\Core\Page\Controller\PageController;
 use Concrete\Core\Page\Event;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Permission\Checker;
-use Concrete\Core\Permission\Key\Key;
 use Concrete\Core\Routing\RedirectResponse;
-use Concrete\Core\Routing\RouterInterface;
 use Concrete\Core\User\User;
 use Concrete\Core\View\View;
 use Detection\MobileDetect;
@@ -246,7 +244,7 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
         // maintenance mode
         if ($collection->getCollectionPath() != '/login') {
             $smm = $this->config->get('concrete.maintenance_mode');
-            if ($smm == 1 && !Key::getByHandle('view_in_maintenance_mode')->validate() && ($_SERVER['REQUEST_METHOD'] != 'POST' || Loader::helper('validation/token')->validate() == false)) {
+            if ($smm == 1 && !PermissionKey::getByHandle('view_in_maintenance_mode')->validate() && ($_SERVER['REQUEST_METHOD'] != 'POST' || Loader::helper('validation/token')->validate() == false)) {
                 $v = new View('/frontend/maintenance_mode');
 
                 $router = $this->app->make(RouterInterface::class);
