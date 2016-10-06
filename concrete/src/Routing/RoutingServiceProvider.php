@@ -10,7 +10,7 @@ class RoutingServiceProvider extends Provider
      */
     public function register()
     {
-        $this->app->singleton(RouterInterface::class);
-        $this->app->bind(RouterInterface::class, Router::class);
+        $this->app->singleton('Concrete\Core\Routing\Router');
+        $this->app->bind('Concrete\Core\Routing\RouterInterface', 'Concrete\Core\Routing\Router');
     }
 }
