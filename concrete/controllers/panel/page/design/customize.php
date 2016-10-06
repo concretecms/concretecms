@@ -3,14 +3,16 @@ namespace Concrete\Controller\Panel\Page\Design;
 
 use Concrete\Controller\Backend\UserInterface\Page as BackendInterfacePageController;
 use Concrete\Core\Page\PageList;
-use Permissions;
-use Page;
-use PermissionKey;
-use PageTheme;
-use PageEditResponse;
-use Request;
-use Response;
-use Core;
+use Concrete\Core\Page;
+use Concrete\Core\Permission\Key\Key as PermissionKey;
+use Concrete\Core\Page\Theme\Theme as PageTheme;
+use Concrete\Core\Page\EditResponse as PageEditResponse;
+use Concrete\Core\Http\Request;
+use Concrete\Core\Http\Response;
+use Concrete\Core\StyleCustomizer\Style\ValueList;
+use Concrete\Core\StyleCustomizer\CustomCssRecord as CustomCssRecordService;
+use URL;
+use Exception;
 
 class Customize extends BackendInterfacePageController
 {
@@ -92,7 +94,7 @@ class Customize extends BackendInterfacePageController
             $this->set('styleSets', $styleList->getSets());
             $this->set('theme', $pt);
         } else {
-            throw new \Exception(t('Invalid or non-customizable theme.'));
+            throw new Exception(t('Invalid or non-customizable theme.'));
         }
     }
 
@@ -100,7 +102,7 @@ class Customize extends BackendInterfacePageController
     {
         $pt = PageTheme::getByID($pThemeID);
         $styles = $pt->getThemeCustomizableStyleList();
-        $vl = \Concrete\Core\StyleCustomizer\Style\ValueList::loadFromRequest($this->request->request, $styles);
+        $vl = ValueList::loadFromRequest($this->request->request, $styles);
 
         return $vl;
     }
@@ -140,9 +142,9 @@ class Customize extends BackendInterfacePageController
             $vl = $this->getValueListFromRequest($pThemeID);
             $pt = PageTheme::getByID($pThemeID);
             $vl->save();
-            $sccRecord = false;
+            $sccRecord = null;
             if ($this->request->request->has('sccRecordID')) {
-                $sccRecord = \Concrete\Core\StyleCustomizer\CustomCssRecord::getByID($this->request->request->get('sccRecordID'));
+                $sccRecord = $this->app->make(CustomCssRecordService::class)->getByID($this->request->request->get('sccRecordID'));
             }
             $preset = false;
             if ($this->request->request->has('handle')) {
@@ -167,7 +169,7 @@ class Customize extends BackendInterfacePageController
             $pt->setCustomStyleObject($vl, $preset, $sccRecord);
             $r = new PageEditResponse();
             $r->setPage($this->page);
-            $r->setRedirectURL(\URL::to($this->page));
+            $r->setRedirectURL(URL::to($this->page));
             $r->outputJSON();
         }
     }
@@ -178,9 +180,9 @@ class Customize extends BackendInterfacePageController
             $vl = $this->getValueListFromRequest($pThemeID);
             $pt = PageTheme::getByID($pThemeID);
             $vl->save();
-            $sccRecord = false;
+            $sccRecord = null;
             if ($this->request->request->has('sccRecordID')) {
-                $sccRecord = \Concrete\Core\StyleCustomizer\CustomCssRecord::getByID($this->request->request->get('sccRecordID'));
+                $sccRecord = $this->app->make(CustomCssRecordService::class)->getByID($this->request->request->get('sccRecordID'));
             }
             $preset = false;
             if ($this->request->request->has('handle')) {
@@ -192,7 +194,7 @@ class Customize extends BackendInterfacePageController
 
             $r = new PageEditResponse();
             $r->setPage($this->page);
-            $r->setRedirectURL(\URL::to($this->page));
+            $r->setRedirectURL(URL::to($this->page));
             $r->outputJSON();
         }
     }
@@ -204,7 +206,7 @@ class Customize extends BackendInterfacePageController
             $nvc->resetCustomThemeStyles();
             $r = new PageEditResponse();
             $r->setPage($this->page);
-            $r->setRedirectURL(\URL::to($this->page));
+            $r->setRedirectURL(URL::to($this->page));
             $r->outputJSON();
         }
     }
@@ -219,7 +221,7 @@ class Customize extends BackendInterfacePageController
 
             $r = new PageEditResponse();
             $r->setPage($this->page);
-            $r->setRedirectURL(\URL::to($this->page));
+            $r->setRedirectURL(URL::to($this->page));
             $r->outputJSON();
         }
     }

@@ -1,12 +1,14 @@
 <?php
 namespace Concrete\Controller\Dialog\Page\Design;
 
-use Concrete\Core\StyleCustomizer\CustomCssRecord;
-use Core;
+use Concrete\Core\Entity\StyleCustomizer\CustomCssRecord;
+use Concrete\Core\StyleCustomizer\CustomCssRecord as CustomCssRecordService;
+use Concrete\Core\Http\ResponseFactoryInterface;
 
 class Css extends \Concrete\Controller\Backend\UserInterface\Page
 {
     protected $viewPath = '/dialogs/page/design/css';
+
     public function view()
     {
         $this->requireAsset('ace');
@@ -14,8 +16,8 @@ class Css extends \Concrete\Controller\Backend\UserInterface\Page
         $value = '';
 
         if ($this->request->query->has('sccRecordID')) {
-            $sccRecord = CustomCssRecord::getByID($this->request->query->get('sccRecordID'));
-            if (is_object($sccRecord)) {
+            $sccRecord = $this->app->make(CustomCssRecordService::class)->getByID((int) $this->request->query->get('sccRecordID'));
+            if ($sccRecord !== null) {
                 $value = $sccRecord->getValue();
                 $sccRecordID = $sccRecord->getRecordID();
             }
@@ -39,7 +41,7 @@ class Css extends \Concrete\Controller\Backend\UserInterface\Page
             $ax = new \stdClass();
             $ax->sccRecordID = $record->getRecordID();
 
-            Core::make('helper/ajax')->sendResult($ax);
+            return $this->app->make(ResponseFactoryInterface::class)->json($ax);
         }
     }
 }
