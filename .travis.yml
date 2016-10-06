@@ -4,15 +4,15 @@ sudo: false
 env:
   - COMPOSER_DISABLE_XDEBUG_WARN=1
 
-php:
-  - 5.5
-  - 5.6
-  - 7.0
-  - 7.1
-  - hhvm
-  - nightly
-
 matrix:
+  include:
+    - php: 5.5
+    - php: 5.6
+    - php: 7.0
+      env: CODESTYLE="yes"
+      env: CODESTYLE="no"
+    - php: 7.1
+    - php: hhvm
   allow_failures:
     - php: hhvm
     - php: 7.1
@@ -24,7 +24,14 @@ before_script:
   - mysql -e "SET GLOBAL sql_mode = 'STRICT_TRANS_TABLES,STRICT_ALL_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION,ONLY_FULL_GROUP_BY'"
   - phpunit --version
 
-script: phpunit
+script:
+  # Run PHPUnit if we're not checking code style
+  - if [[ $CODESTYLE != "yes" ]]; then phpunit; fi
+  # Run PHPCS if codestyle checking is set to YES
+  # Check for short php opening tags "<?" in all .php files. Ignore css and javascript
+  - if [[ $CODESTYLE == "yes" ]]; then ./concrete/vendor/bin/phpcs -p -s --colors --report=full --standard=psr2 --sniffs=Generic.PHP.DisallowShortOpenTagSniff --ignore="*.js,*.css,*.less,concrete/vendor/*" concrete; fi
+  # Check for lines indented using tabs in concrete/src and concrete/controllers
+  - if [[ $CODESTYLE == "yes" ]]; then ./concrete/vendor/bin/phpcs -p -s --colors --report=full --standard=psr2 --sniffs=Generic.WhiteSpace.DisallowTabIndent concrete/src concrete/controllers; fi;
 
 cache:
   directories:

@@ -70,5 +70,8 @@
     "psr-4": {
       "Concrete\\Tests\\": "../../tests/tests"
     }
+  },
+  "require-dev": {
+    "squizlabs/php_codesniffer": "^2.7"
   }
 }
