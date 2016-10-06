@@ -37,7 +37,7 @@ use Concrete\Core\Permission\Access\Entity\Entity as PermissionAccessEntity;
 use Concrete\Core\Permission\Access\Entity\GroupEntity as GroupPermissionAccessEntity;
 use Concrete\Core\Permission\Access\Entity\GroupCombinationEntity as GroupCombinationPermissionAccessEntity;
 use Concrete\Core\Permission\Access\Entity\UserEntity as UserPermissionAccessEntity;
-use Concrete\Core\StyleCustomizer\CustomCssRecord;
+use Concrete\Core\Entity\StyleCustomizer\CustomCssRecord;
 use Area;
 use Concrete\Core\Entity\Page\PagePath;
 use Queue;
@@ -126,8 +126,6 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         $this->loadError(COLLECTION_INIT); // init collection until we populate.
     }
 
-    /**
-     */
     protected function populatePage($cInfo, $where, $cvID)
     {
         $db = Database::connection();
@@ -192,6 +190,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     {
         return '\\Concrete\\Core\\Permission\\Assignment\\PageAssignment';
     }
+
     public function getPermissionObjectKeyCategoryHandle()
     {
         return 'page';
@@ -454,6 +453,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
             }
         }
     }
+
     /**
      * Gets the user that is editing the current page.
      * $return string $name.
@@ -629,6 +629,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     {
         return $this->getPageController();
     }
+
     /**
      * @private
      */
@@ -684,7 +685,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         $q = 'select PagePaths.cPath from PagePaths where cID = ?';
         $v = [$_cParentID];
         if ($_cParentID > 1) {
-            $q .=  ' and ppIsCanonical = ?';
+            $q .= ' and ppIsCanonical = ?';
             $v[] = 1;
         }
         $cPath = $db->fetchColumn($q, $v);
@@ -1158,6 +1159,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     public function getSiteTreeObject()
     {
         $em = \ORM::entityManager();
+
         return $em->find('\Concrete\Core\Entity\Site\Tree', $this->getSiteTreeID());
     }
 
@@ -1794,19 +1796,16 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         $this->writePageThemeCustomizations();
     }
 
-    public function setCustomStyleObject(\Concrete\Core\Page\Theme\Theme $pt, \Concrete\Core\StyleCustomizer\Style\ValueList $valueList, $selectedPreset = false, $customCssRecord = false)
+    public function setCustomStyleObject(\Concrete\Core\Page\Theme\Theme $pt, \Concrete\Core\StyleCustomizer\Style\ValueList $valueList, $selectedPreset = false, CustomCssRecord $customCssRecord = null)
     {
         $db = Database::connection();
         $db->delete('CollectionVersionThemeCustomStyles', ['cID' => $this->getCollectionID(), 'cvID' => $this->getVersionID()]);
-        $sccRecordID = 0;
-        if ($customCssRecord instanceof CustomCssRecord) {
-            $sccRecordID = $customCssRecord->getRecordID();
-        }
         $preset = false;
         if ($selectedPreset) {
             $preset = $selectedPreset->getPresetHandle();
         }
-        if ($customCssRecord instanceof CustomCssRecord) {
+        $sccRecordID = 0;
+        if ($customCssRecord !== null) {
             $sccRecordID = $customCssRecord->getRecordID();
         }
         $db->insert(
@@ -2313,8 +2312,6 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         return $nc2;
     }
 
-    /**
-     **/
     protected function _duplicateAll($cParent, $cNewParent, $preserveUserID = false, Site $site = null)
     {
         $db = Database::connection();
@@ -2582,7 +2579,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         $newPath = '';
         if ($this->cParentID > 0) {
             /**
-             * @var $db Connection
+             * @var Connection
              */
             $db = \Database::connection();
             /* @var $em \Doctrine\ORM\EntityManager */
@@ -2602,7 +2599,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
                     [
                         $newPath,
                         $cID,
-                        $this->getSiteTreeID()
+                        $this->getSiteTreeID(),
                     ]
                 );
                 if (empty($result)) {

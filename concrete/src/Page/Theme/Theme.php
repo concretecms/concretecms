@@ -15,18 +15,20 @@ use PageTemplate;
 use Concrete\Core\Page\Theme\GridFramework\GridFramework;
 use Concrete\Core\Page\Single as SinglePage;
 use Concrete\Core\StyleCustomizer\Preset;
-use Concrete\Core\StyleCustomizer\CustomCssRecord;
+use Concrete\Core\Entity\StyleCustomizer\CustomCssRecord;
 use Localization;
 
 /**
  * A page's theme is a pointer to a directory containing templates, CSS files and optionally PHP includes, images and JavaScript files.
  * Themes inherit down the tree when a page is added, but can also be set at the site-wide level (thereby overriding any previous choices.).
- *
- * \@package Pages and Collections
- * @subpackages Themes
  */
 class Theme extends Object
 {
+    const E_THEME_INSTALLED = 1;
+    const THEME_EXTENSION = '.php';
+    const THEME_CUSTOMIZABLE_STYLESHEET_EXTENSION = '.less';
+    const FILENAME_TYPOGRAPHY_CSS = 'typography.css';
+
     protected $pThemeName;
     protected $pThemeID;
     protected $pThemeDescription;
@@ -36,12 +38,6 @@ class Theme extends Object
     protected $pThemeURL;
     protected $pThemeIsPreview = false;
     protected $pkgID;
-
-    const E_THEME_INSTALLED = 1;
-    const THEME_EXTENSION = '.php';
-    const THEME_CUSTOMIZABLE_STYLESHEET_EXTENSION = '.less';
-    const FILENAME_TYPOGRAPHY_CSS = 'typography.css';
-
     protected $stylesheetCachePath;
     protected $stylesheetCacheRelativePath = REL_DIR_FILES_CACHE;
 
@@ -73,7 +69,7 @@ class Theme extends Object
 
         $db = Loader::db();
         $r = $db->query('select pThemeID from PageThemes'.$where);
-        $themes = array();
+        $themes = [];
         while ($row = $r->fetchRow()) {
             $pl = static::getByID($row['pThemeID']);
             $themes[] = $pl;
@@ -99,14 +95,18 @@ class Theme extends Object
     {
         $r = ResponseAssetGroup::get();
         $args = func_get_args();
-        call_user_func_array(array($r, 'requireAsset'), $args);
+        call_user_func_array([$r, 'requireAsset'], $args);
     }
 
+    /**
+     * scans the directory for available themes. For those who don't want to go through the hassle of uploading.
+     *
+     * @param bool $filterInstalled
+     *
+     * @return static[]
+     */
     public static function getAvailableThemes($filterInstalled = true)
     {
-        // scans the directory for available themes. For those who don't want to go through
-        // the hassle of uploading
-
         $db = Loader::db();
         $dh = Loader::helper('file');
 
@@ -114,7 +114,7 @@ class Theme extends Object
         if ($filterInstalled) {
             // strip out themes we've already installed
             $handles = $db->GetCol('select pThemeHandle from PageThemes');
-            $themesTemp = array();
+            $themesTemp = [];
             foreach ($themes as $t) {
                 if (!in_array($t, $handles)) {
                     $themesTemp[] = $t;
@@ -124,7 +124,7 @@ class Theme extends Object
         }
 
         if (count($themes) > 0) {
-            $themesTemp = array();
+            $themesTemp = [];
             // get theme objects from the file system
             foreach ($themes as $t) {
                 $th = static::getByFileHandle($t);
@@ -227,7 +227,7 @@ class Theme extends Object
      */
     public function getThemeCustomizableStylePresets()
     {
-        $presets = array();
+        $presets = [];
         $env = Environment::get();
         if ($this->isThemeCustomizable()) {
             $directory = $env->getPath(
@@ -274,7 +274,7 @@ class Theme extends Object
     public function resetThemeCustomStyles()
     {
         $db = Loader::db();
-        $db->delete('PageThemeCustomStyles', array('pThemeID' => $this->getThemeID()));
+        $db->delete('PageThemeCustomStyles', ['pThemeID' => $this->getThemeID()]);
         $sheets = $this->getThemeCustomizableStyleSheets();
         foreach ($sheets as $sheet) {
             $sheet->clearOutputFile();
@@ -288,7 +288,7 @@ class Theme extends Object
 
     public function getThemeCustomizableStyleSheets()
     {
-        $sheets = array();
+        $sheets = [];
         $env = Environment::get();
         if ($this->isThemeCustomizable()) {
             $directory = $env->getPath(
@@ -328,7 +328,7 @@ class Theme extends Object
      *
      * @param string $stylesheet The LESS stylesheet to compile
      *
-     * @return string The path to the stylesheet.
+     * @return string The path to the stylesheet
      */
     public function getStylesheet($stylesheet)
     {
@@ -345,8 +345,7 @@ class Theme extends Object
         $path = $stylesheet->getOutputRelativePath();
         if ($this->isThemePreviewRequest()) {
             $path .= '?ts='.time();
-        }
-        else {
+        } else {
             $path .= '?ts='.filemtime($stylesheet->getOutputPath());
         }
 
@@ -359,7 +358,7 @@ class Theme extends Object
     public function getThemeCustomStyleObject()
     {
         $db = Loader::db();
-        $row = $db->FetchAssoc('select * from PageThemeCustomStyles where pThemeID = ?', array($this->getThemeID()));
+        $row = $db->FetchAssoc('select * from PageThemeCustomStyles where pThemeID = ?', [$this->getThemeID()]);
         if (isset($row['pThemeID'])) {
             $o = new \Concrete\Core\Page\CustomStyle();
             $o->setThemeID($this->getThemeID());
@@ -386,32 +385,26 @@ class Theme extends Object
         return null;
     }
 
-    public function setCustomStyleObject(
-        \Concrete\Core\StyleCustomizer\Style\ValueList $valueList,
-        $selectedPreset = false,
-        $customCssRecord = false
-    ) {
+    public function setCustomStyleObject(\Concrete\Core\StyleCustomizer\Style\ValueList $valueList, $selectedPreset = false, CustomCssRecord $customCssRecord = null)
+    {
         $db = Loader::db();
-        $db->delete('PageThemeCustomStyles', array('pThemeID' => $this->getThemeID()));
-        $sccRecordID = 0;
-        if ($customCssRecord instanceof CustomCssRecord) {
-            $sccRecordID = $customCssRecord->getRecordID();
-        }
+        $db->delete('PageThemeCustomStyles', ['pThemeID' => $this->getThemeID()]);
         $preset = false;
         if ($selectedPreset) {
             $preset = $selectedPreset->getPresetHandle();
         }
-        if ($customCssRecord instanceof CustomCssRecord) {
+        $sccRecordID = 0;
+        if ($customCssRecord !== null) {
             $sccRecordID = $customCssRecord->getRecordID();
         }
         $db->insert(
             'PageThemeCustomStyles',
-            array(
+            [
                 'pThemeID' => $this->getThemeID(),
                 'sccRecordID' => $sccRecordID,
                 'preset' => $preset,
                 'scvlID' => $valueList->getValueListID(),
-            )
+            ]
         );
 
         // now we reset all cached css files in this theme
@@ -437,7 +430,7 @@ class Theme extends Object
     public static function getByHandle($pThemeHandle)
     {
         $where = 'pThemeHandle = ?';
-        $args = array($pThemeHandle);
+        $args = [$pThemeHandle];
         $pt = static::populateThemeQuery($where, $args);
 
         return $pt;
@@ -451,7 +444,7 @@ class Theme extends Object
     public static function getByID($pThemeID)
     {
         $where = 'pThemeID = ?';
-        $args = array($pThemeID);
+        $args = [$pThemeID];
         $pt = static::populateThemeQuery($where, $args);
 
         return $pt;
@@ -529,11 +522,11 @@ class Theme extends Object
     {
         $dh = Loader::helper('file');
         $templateList = PageTemplate::getList();
-        $pts = array();
+        $pts = [];
         foreach ($templateList as $pt) {
             $pts[] = $pt->getPageTemplateHandle();
         }
-        $files = array();
+        $files = [];
         $filesTmp = $dh->getDirectoryContents($this->pThemeDirectory);
         foreach ($filesTmp as $f) {
             if (strrchr($f, '.') == static::THEME_EXTENSION) {
@@ -584,7 +577,7 @@ class Theme extends Object
         if (is_file($pageThemeFile)) {
             try {
                 $cn = '\\Theme\\'.camelcase($pThemeHandle).'\\PageTheme';
-                $classNames = array();
+                $classNames = [];
                 if (strlen($pkgHandle)) {
                     $classNames[] = '\\Concrete\\Package\\'.camelcase($pkgHandle).$cn;
                 } else {
@@ -668,7 +661,7 @@ class Theme extends Object
                 $pkg = \Concrete\Core\Package\Package::getByID($pkgID);
             }
             $db = Loader::db();
-            $cnt = $db->getOne('select count(pThemeID) from PageThemes where pThemeHandle = ?', array($pThemeHandle));
+            $cnt = $db->getOne('select count(pThemeID) from PageThemes where pThemeHandle = ?', [$pThemeHandle]);
             if ($cnt > 0) {
                 throw new \Exception(static::E_THEME_INSTALLED);
             }
@@ -686,7 +679,7 @@ class Theme extends Object
                 $pThemeDescription = $res->pThemeDescription;
                 $db->query(
                     'insert into PageThemes (pThemeHandle, pThemeName, pThemeDescription, pkgID) values (?, ?, ?, ?)',
-                    array($pThemeHandle, $pThemeName, $pThemeDescription, $pkgID)
+                    [$pThemeHandle, $pThemeName, $pThemeDescription, $pkgID]
                 );
 
                 $env = Environment::get();
@@ -711,10 +704,10 @@ class Theme extends Object
             $this->getPackageHandle()
         );
         if ($r->exists()) {
-            $db->Execute('update PageThemes set pThemeHasCustomClass = 1 where pThemeID = ?', array($this->pThemeID));
+            $db->Execute('update PageThemes set pThemeHasCustomClass = 1 where pThemeID = ?', [$this->pThemeID]);
             $this->pThemeHasCustomClass = true;
         } else {
-            $db->Execute('update PageThemes set pThemeHasCustomClass = 0 where pThemeID = ?', array($this->pThemeID));
+            $db->Execute('update PageThemes set pThemeHasCustomClass = 0 where pThemeID = ?', [$this->pThemeID]);
             $this->pThemeHasCustomClass = false;
         }
     }
@@ -732,7 +725,7 @@ class Theme extends Object
     /** Returns the display name for this theme (localized and escaped accordingly to $format)
      * @param string $format = 'html'
      *                       Escape the result in html format (if $format is 'html').
-     *                       If $format is 'text' or any other value, the display name won't be escaped.
+     *                       If $format is 'text' or any other value, the display name won't be escaped
      *
      * @return string
      */
@@ -886,6 +879,7 @@ class Theme extends Object
     public static function getSiteTheme()
     {
         $site = \Core::make('site')->getSite();
+
         return static::getByID($site->getThemeID());
     }
 
@@ -893,7 +887,7 @@ class Theme extends Object
     {
         $db = Loader::db();
 
-        $db->query('delete from PageThemes where pThemeID = ?', array($this->pThemeID));
+        $db->query('delete from PageThemes where pThemeID = ?', [$this->pThemeID]);
         $env = Environment::get();
         $env->clearOverrideCache();
     }
@@ -926,27 +920,27 @@ class Theme extends Object
 
     public function getThemeBlockClasses()
     {
-        return array();
+        return [];
     }
 
     public function getThemeAreaClasses()
     {
-        return array();
+        return [];
     }
 
     public function getThemeEditorClasses()
     {
-        return array();
+        return [];
     }
 
     public function getThemeDefaultBlockTemplates()
     {
-        return array();
+        return [];
     }
 
     public function getThemeResponsiveImageMap()
     {
-        return array();
+        return [];
     }
 
     public function getThemeGatheringGridItemMargin()
