@@ -7,11 +7,9 @@ php:
   - 7.0
   - 7.1
   - hhvm
-
+  - nightly
 env:
   - COMPOSER_DISABLE_XDEBUG_WARN=1
-
-
 
 matrix:
   include:
@@ -19,7 +17,6 @@ matrix:
       env: CODESTYLE="yes"
   allow_failures:
     - php: hhvm
-    - php: 7.1
     - php: nightly
 
 before_script:
