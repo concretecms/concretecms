@@ -79,8 +79,8 @@
   "scripts": {
     "test": "phpunit",
     "phpcs": [
-      "php ./concrete/vendor/bin/phpcs -p -s --report=full --standard=psr2 --sniffs=Generic.WhiteSpace.DisallowTabIndent,Generic.PHP.DisallowShortOpenTagSniff concrete/src concrete/controllers",
-      "php ./concrete/vendor/bin/phpcs -p -s --report=full --standard=psr2 --sniffs=Generic.PHP.DisallowShortOpenTagSniff --ignore=\"*.js,*.css,*.less,concrete/vendor/*,concrete/src/*,concrete/controllers/*\" concrete"
+      "php ./concrete/vendor/bin/phpcs -p -s --report=full --standard=psr2 --sniffs=Generic.WhiteSpace.DisallowTabIndent,Generic.PHP.DisallowShortOpenTag concrete/src concrete/controllers",
+      "php ./concrete/vendor/bin/phpcs -p -s --report=full --standard=psr2 --sniffs=Generic.PHP.DisallowShortOpenTag --ignore=\"*.js,*.css,*.less,concrete/vendor/*,concrete/src/*,concrete/controllers/*\" concrete"
     ]
   }
 }
