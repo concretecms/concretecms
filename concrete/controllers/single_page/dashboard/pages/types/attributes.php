@@ -45,7 +45,7 @@ class Attributes extends DashboardPageController
             if (is_object($ak)) {
                 $controller = $ak->getController();
                 $val = $controller->createAttributeValueFromRequest();
-                $this->defaultPage->setAttribute($ak, $val);
+                $val = $this->defaultPage->setAttribute($ak, $val);
             }
         } else {
             $this->error->add(Loader::helper('validation/token')->getErrorMessage());
