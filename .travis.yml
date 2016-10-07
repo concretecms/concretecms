@@ -26,11 +26,8 @@ before_script:
   - phpunit --version
 
 script:
-  # Run PHPUnit if we're not checking code style
-  - if [[ $CODESTYLE != "yes" ]]; then composer test; fi
-  # Run PHPCS if codestyle checking is set to YES
-  # Check for short php opening tags "<?" in all .php files. Ignore css and javascript
-  - if [[ $CODESTYLE == "yes" ]]; then composer phpcs concrete; fi
+  # Run PHPUnit if we're not checking code style, otherwise run phpcs
+  - if [[ $CODESTYLE != "yes" ]]; then composer test; else composer phpcs; fi
 cache:
   directories:
     - vendor
