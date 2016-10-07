@@ -36,6 +36,12 @@ class Service
         $this->resolverFactory = $resolverFactory;
     }
 
+    public function getByType(Type $type)
+    {
+        return $this->entityManager->getRepository('Concrete\Core\Entity\Site\Site')
+            ->findByType($type);
+    }
+
     public function getDefault()
     {
         $factory = new Factory($this->config);
