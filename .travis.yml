@@ -27,13 +27,10 @@ before_script:
 
 script:
   # Run PHPUnit if we're not checking code style
-  - if [[ $CODESTYLE != "yes" ]]; then phpunit; fi
+  - if [[ $CODESTYLE != "yes" ]]; then composer test; fi
   # Run PHPCS if codestyle checking is set to YES
   # Check for short php opening tags "<?" in all .php files. Ignore css and javascript
-  - if [[ $CODESTYLE == "yes" ]]; then ./concrete/vendor/bin/phpcs -p -s --colors --report=full --standard=psr2 --sniffs=Generic.PHP.DisallowShortOpenTagSniff --ignore="*.js,*.css,*.less,concrete/vendor/*" concrete; fi
-  # Check for lines indented using tabs in concrete/src and concrete/controllers
-  - if [[ $CODESTYLE == "yes" ]]; then ./concrete/vendor/bin/phpcs -p -s --colors --report=full --standard=psr2 --sniffs=Generic.WhiteSpace.DisallowTabIndent concrete/src concrete/controllers; fi;
-
+  - if [[ $CODESTYLE == "yes" ]]; then composer phpcs concrete; fi
 cache:
   directories:
     - vendor
