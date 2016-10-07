@@ -5,12 +5,14 @@
   "minimum-stability": "beta",
   "prefer-stable": true,
   "config": {
+    "process-timeout": 0,
     "optimize-autoloader": true,
     "vendor-dir": "./concrete/vendor",
     "preferred-install": {
       "*": "dist"
     }
   },
+  "bin": [ "concrete/bin/concrete5" ],
   "repositories": [
     {
       "type": "vcs",
