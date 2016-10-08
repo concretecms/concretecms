@@ -5,12 +5,14 @@
   "minimum-stability": "beta",
   "prefer-stable": true,
   "config": {
+    "process-timeout": 0,
     "optimize-autoloader": true,
     "vendor-dir": "./concrete/vendor",
     "preferred-install": {
       "*": "dist"
     }
   },
+  "bin": [ "concrete/bin/concrete5" ],
   "repositories": [
     {
       "type": "vcs",
@@ -70,5 +72,19 @@
     "psr-4": {
       "Concrete\\Tests\\": "../../tests/tests"
     }
+  },
+  "require-dev": {
+    "squizlabs/php_codesniffer": "^2.7"
+  },
+  "scripts": {
+    "test": "phpunit",
+    "phpcs": [
+      "./concrete/vendor/bin/phpcs -p -s --colors --report=full --standard=psr2 --sniffs=Generic.WhiteSpace.DisallowTabIndent,Generic.PHP.DisallowShortOpenTag concrete/src concrete/controllers",
+      "./concrete/vendor/bin/phpcs -p -s --colors --report=full --standard=psr2 --sniffs=Generic.PHP.DisallowShortOpenTag --ignore=\"*.js,*.css,*.less,concrete/vendor/*,concrete/src/*,concrete/controllers/*\" concrete"
+    ],
+    "phpcsw": [
+      ".\\concrete\\vendor\\bin\\phpcs -p -s --report=full --standard=psr2 --sniffs=Generic.WhiteSpace.DisallowTabIndent,Generic.PHP.DisallowShortOpenTag concrete/src concrete/controllers",
+      ".\\concrete\\vendor\\bin\\phpcs -p -s --report=full --standard=psr2 --sniffs=Generic.PHP.DisallowShortOpenTag --ignore=\"*.js,*.css,*.less,concrete/vendor/*,concrete/src/*,concrete/controllers/*\" concrete"
+    ]
   }
 }
