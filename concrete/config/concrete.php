@@ -313,7 +313,7 @@ return array(
          */
         'enabled' => true,
         'default' => array(
-            'address' => 'concrete5-noreply@' . (isset($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : 'localhost'),
+            'address' => 'concrete5-noreply@concrete5',
             'name' => '',
         ),
         'form_block' => array(
