@@ -1155,16 +1155,10 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
             $p->setPageDraftTargetParentPageID($cParentID);
         }
 
-        // we have to publish the controls to the page. i'm not sure why
         $controls = PageTypeComposerControl::getList($this);
-        $outputControls = array();
         foreach ($controls as $cn) {
-            $cn->publishToPage($p, array(), $controls);
+            $cn->onPageDraftCreate($p);
         }
-
-        // now we need to clear out the processed controls in case we
-        // save again in the same request
-        CorePagePropertyPageTypeComposerControl::clearComposerRequestProcessControls();
 
         return $p;
     }

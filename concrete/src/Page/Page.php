@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Page;
 
+use Concrete\Core\Attribute\Key\CollectionKey;
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Entity\Page\Template as TemplateEntity;
 use Concrete\Core\Entity\Site\Site;
@@ -2851,25 +2852,13 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
 
     protected function _associateMasterCollectionAttributes($newCID, $masterCID)
     {
-        /*
         $mc = self::getByID($masterCID, 'ACTIVE');
         $nc = self::getByID($newCID, 'RECENT');
-        $db = Database::connection();
-
-        $mcID = $mc->getCollectionID();
-
-        $q = 'select * from CollectionAttributeValues where cID = ?';
-        $r = $db->executeQuery($q, [$mcID]);
-
-        if ($r) {
-            while ($row = $r->fetchRow()) {
-                $db->executeQuery('insert into CollectionAttributeValues (cID, cvID, avrID) values (?, ?, ?)', [
-                    $nc->getCollectionID(), $nc->getVersionID(), $row['avrID'],
-                ]);
-            }
-            $r->free();
+        $attributes = CollectionKey::getAttributeValues($mc);
+        foreach($attributes as $attribute) {
+            $value = $attribute->getValueObject();
+            $nc->setAttribute($attribute->getAttributeKey(), $value);
         }
-        */
     }
 
     /**

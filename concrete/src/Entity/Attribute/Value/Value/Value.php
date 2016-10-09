@@ -55,6 +55,12 @@ abstract class Value
         return $this->avID;
     }
 
+    public function __clone()
+    {
+        if ($this->avID) {
+            $this->avID = null;
+        }
+    }
 
     public function __construct()
     {

@@ -50,6 +50,11 @@ class BlockControl extends Control
         $b->deleteBlock();
     }
 
+    public function onPageDraftCreate(Page $c)
+    {
+        return $this->publishToPage($c, [], []);
+    }
+
     public function getPageTypeComposerControlBlockObject(Page $c)
     {
         $app = Application::getFacadeApplication();

@@ -40,6 +40,11 @@ abstract class Control extends Object
         return false;
     }
 
+    public function onPageDraftCreate(Page $c)
+    {
+        return false;
+    }
+
     public function setPageTypeComposerControlName($ptComposerControlName)
     {
         $this->ptComposerControlName = $ptComposerControlName;
