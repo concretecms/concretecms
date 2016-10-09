@@ -331,7 +331,7 @@ echo Core::make('helper/concrete/ui')->tabs($tabs);
         <div class="form-group" >
             <label><?php echo t('Description'); ?></label>
             <div class="editor-edit-content"></div>
-            <textarea id="ccm-slide-<%= _.uniqueId() %>" style="display: none" class="editor-content editor-content-<?php echo $bID?>" name="<?php echo $view->field('description'); ?>[]"><%=description%></textarea>
+            <textarea id="ccm-slide-editor-<%= _.uniqueId() %>" style="display: none" class="editor-content editor-content-<?php echo $bID?>" name="<?php echo $view->field('description'); ?>[]"><%=description%></textarea>
         </div>
         <div class="form-group" >
            <label><?php echo t('Link'); ?></label>
