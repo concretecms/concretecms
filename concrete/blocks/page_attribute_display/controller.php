@@ -79,7 +79,7 @@ class Controller extends BlockController
                         $image = Core::make('html/image', array($content));
                         $content = (string) $image->getTag();
                     }
-                } else {
+                } else if (is_object($content_alt)) {
                     $content = $content_alt->getDisplayValue();
                 }
                 break;
