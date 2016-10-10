@@ -387,7 +387,9 @@
                 </attributekey>
             </attributes>
         </page>
-
+        <page name="Search Blocks" path="/dashboard/blocks/search" filename="/dashboard/blocks/types/search.php" pagetype=""
+              description="Search for blocks in your site." package="">
+        </page>
         <page name="Extend concrete5" path="/dashboard/extend" filename="/dashboard/extend/view.php" pagetype=""
               description=""
               package="">
