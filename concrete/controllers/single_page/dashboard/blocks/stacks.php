@@ -267,17 +267,16 @@ class Stacks extends DashboardSitePageController
     protected function deliverStackList(StackList $list)
     {
         $list->setFoldersFirst(true);
-        $list->filterBySiteTree($this->getSite()->getSiteTree());
+        $list->setSiteTreeObject($this->getSite()->getSiteTree());
         $this->set('list', $list);
         $this->set('stacks', $list->getResults());
     }
 
     public function view()
     {
-        $parent = Page::getByPath(STACKS_PAGE_PATH);
+        $parent = Page::getByPath(STACKS_PAGE_PATH, 'RECENT', $this->getSite());
         $stm = new StackList();
         $stm->excludeGlobalAreas();
-        $stm->filterByParentID($parent->getCollectionID());
         $this->deliverStackList($stm);
         $this->set('canMoveStacks', $this->canMoveStacks($parent));
         $this->set('showGlobalAreasFolder', true);
