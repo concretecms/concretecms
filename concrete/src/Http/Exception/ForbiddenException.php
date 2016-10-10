@@ -12,7 +12,7 @@ use Concrete\Core\Http\Response;
 class ForbiddenException extends HttpResponseException
 {
 
-    public function __construct($message, array $headers, $previous)
+    public function __construct($message, array $headers = [], \Exception $previous = null)
     {
         parent::__construct($message, Response::HTTP_FORBIDDEN, $headers, $previous);
     }

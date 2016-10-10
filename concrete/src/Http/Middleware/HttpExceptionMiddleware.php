@@ -37,7 +37,7 @@ class HttpExceptionMiddleware implements MiddlewareInterface
             return $this->handleRedirect($e);
         } catch (ForbiddenException $e) {
             // Forbidden
-            return $this->handleForbidden($e);
+            return $this->handleForbidden($e, $request);
         } catch (UserFacingException $e) {
             // Generic error to output
             return $this->handleUserFacingException($e);
@@ -49,9 +49,9 @@ class HttpExceptionMiddleware implements MiddlewareInterface
         return $this->factory->redirect($e->getRedirectUrl(), $e->getStatus(), $e->getHeaders());
     }
 
-    private function handleForbidden(ForbiddenException $e)
+    private function handleForbidden(ForbiddenException $e, Request $request)
     {
-        return $this->factory->forbidden($e->getRedirectUrl(), $e->getStatus(), $e->getHeaders());
+        return $this->factory->forbidden($request->getRequestUri(), $e->getStatus(), $e->getHeaders());
     }
 
     private function handleUserFacingException(UserFacingException $e)
