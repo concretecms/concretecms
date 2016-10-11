@@ -1,17 +1,26 @@
 <?php
 namespace Concrete\Core\Page\Controller;
 
-use Concrete\Core\Validation\CSRF\Token;
 use Doctrine\ORM\EntityManager;
-use Loader;
+use Concrete\Core\Cookie\CookieJar;
+use Concrete\Core\Application\Service\DashboardMenu;
 
 class DashboardPageController extends PageController
 {
+    /**
+     * @var \Concrete\Core\Error\ErrorList\ErrorList
+     */
     protected $error;
 
-    /** @var Token */
+    /**
+     * @var \Concrete\Core\Validation\CSRF\Token
+     */
     public $token;
-    protected $helpers = array('form');
+
+    /**
+     * @var string[]
+     */
+    protected $helpers = ['form'];
 
     /**
      * @var EntityManager
@@ -28,20 +37,20 @@ class DashboardPageController extends PageController
 
     public function on_start()
     {
-        $this->token = Loader::helper('validation/token');
-        $this->error = Loader::helper('validation/error');
-        $this->set('interface', Loader::helper('concrete/ui'));
-        $this->set('dashboard', Loader::helper('concrete/dashboard'));
+        $this->token = $this->app->make('helper/validation/token');
+        $this->error = $this->app->make('helper/validation/error');
+        $this->set('interface', $this->app->make('helper/concrete/ui'));
+        $this->set('dashboard', $this->app->make('helper/concrete/dashboard'));
 
-        $this->entityManager = \Core::make('Doctrine\ORM\EntityManager');
+        $this->entityManager = $this->app->make(EntityManager::class);
 
         $hideDashboardPanel = false;
-        if (\Cookie::has('dashboardPanelStatus') && \Cookie::get('dashboardPanelStatus') == 'closed') {
+        $cookie = $this->app->make(CookieJar::class);
+        if ($cookie->has('dashboardPanelStatus') && $cookie->get('dashboardPanelStatus') === 'closed') {
             $hideDashboardPanel = true;
         }
         $this->set('hideDashboardPanel', $hideDashboardPanel);
-        \Core::make('helper/concrete/dashboard');
-        $dh = \Concrete\Core\Application\Service\DashboardMenu::getMine();
+        $dh = DashboardMenu::getMine();
         if ($dh->contains($this->getPageObject())) {
             $this->set("_bookmarked", true);
         } else {
@@ -52,7 +61,7 @@ class DashboardPageController extends PageController
     public function on_before_render()
     {
         $pageTitle = $this->get('pageTitle');
-        if (!$pageTitle) {
+        if ($pageTitle === null || $pageTitle === '' || $pageTitle === false) {
             $this->set('pageTitle', $this->c->getCollectionName());
         }
         $this->set('token', $this->token);

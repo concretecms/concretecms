@@ -14,6 +14,7 @@ use Concrete\Core\Entity\Attribute\Category;
 use Concrete\Core\Entity\Attribute\SetKey;
 use Concrete\Core\Entity\Attribute\Type;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Exception;
 
 abstract class DashboardAttributesPageController extends DashboardPageController
 {
@@ -159,7 +160,7 @@ abstract class DashboardAttributesPageController extends DashboardPageController
         $entity = $this->getCategoryObject();
         try {
             if (!$this->token->validate('delete_attribute')) {
-                throw new \Exception($this->token->getErrorMessage());
+                throw new Exception($this->token->getErrorMessage());
             }
 
             $this->entityManager->remove($key);
@@ -168,12 +169,12 @@ abstract class DashboardAttributesPageController extends DashboardPageController
             if ($onComplete instanceof \Closure) {
                 $onComplete();
             }
-
-            $this->flash('success', t('Attribute deleted successfully.'));
-            $this->redirect($successURL);
         } catch (Exception $e) {
             $this->error = $e;
+            return;
         }
+        $this->flash('success', t('Attribute deleted successfully.'));
+        $this->redirect($successURL);
     }
 
     public function sort_attribute_set()

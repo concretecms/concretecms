@@ -50,7 +50,7 @@ class PreviewAsUser extends Controller
 
             $response = new \Response();
             $response->setContent($view->render());
-            $response->send();
+            return $response;
         }
     }
 }
