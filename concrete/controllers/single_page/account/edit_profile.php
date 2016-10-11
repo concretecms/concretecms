@@ -8,10 +8,10 @@ use UserInfo;
 use Exception;
 use Concrete\Core\Authentication\AuthenticationType;
 use Concrete\Core\Authentication\AuthenticationTypeFailureException;
-use Loader;
 use User;
 use UserAttributeKey;
 use Localization;
+use Concrete\Core\Http\ResponseFactoryInterface;
 
 class EditProfile extends AccountPageController
 {
@@ -19,12 +19,11 @@ class EditProfile extends AccountPageController
     {
         $u = new User();
         $profile = UserInfo::getByID($u->getUserID());
-        if (is_object($profile)) {
-            $this->set('profile', $profile);
-        } else {
-            throw new Exception(t('You must be logged in to access this page.'));
+        if (!is_object($profile)) {
+            return $this->app->make(ResponseFactoryInterface::class)->forbidden(t('You must be logged in to access this page.'));
         }
-        $locales = array();
+        $this->set('profile', $profile);
+        $locales = [];
         $languages = Localization::getAvailableInterfaceLanguages();
         if (count($languages) > 0) {
             array_unshift($languages, 'en_US');
@@ -34,7 +33,7 @@ class EditProfile extends AccountPageController
                 $locales[$lang] = \Punic\Language::getName($lang, $lang);
             }
             asort($locales);
-            $locales = array_merge(array('' => tc('Default locale', '** Default')), $locales);
+            $locales = array_merge(['' => tc('Default locale', '** Default')], $locales);
         }
         $this->set('locales', $locales);
     }
@@ -104,7 +103,7 @@ class EditProfile extends AccountPageController
             }
         }
 
-        /**
+        /*
          * Username validation
          */
         if ($username = $this->post('uName')) {
@@ -137,8 +136,8 @@ class EditProfile extends AccountPageController
             $controller = $uak->getController();
             $validator = $controller->getValidator();
             $response = $validator->validateSaveValueRequest($controller, $this->request, $uak->isAttributeKeyRequiredOnProfile());
-            /**
-             * @var $response ResponseInterface
+            /*
+             * @var ResponseInterface $response
              */
             if (!$response->isValid()) {
                 $error = $response->getErrorObject();
