@@ -14,12 +14,16 @@ class AttributeKeyField extends AbstractField
 
     public function getKey()
     {
-        return 'attribute_key_' . $this->attributeKey->getAttributeKeyHandle();
+        if ($this->attributeKey !== null) {
+            return 'attribute_key_' . $this->attributeKey->getAttributeKeyHandle();
+        }
     }
 
     public function getDisplayName()
     {
-        return $this->attributeKey->getAttributeKeyDisplayName();
+        if ($this->attributeKey !== null) {
+            return $this->attributeKey->getAttributeKeyDisplayName();
+        }
     }
 
     public function __construct(Key $attributeKey)
@@ -30,24 +34,30 @@ class AttributeKeyField extends AbstractField
 
     public function renderSearchField()
     {
-        return $this->attributeKey->render(new BasicSearchContext(), null, true);
+        if ($this->attributeKey !== null) {
+            return $this->attributeKey->render(new BasicSearchContext(), null, true);
+        }
     }
 
     public function filterList(ItemList $list)
     {
-        $type = $this->attributeKey->getAttributeType();
-        $cnt = $type->getController();
-        $cnt->setRequestArray($this->data);
-        $cnt->setAttributeKey($this->attributeKey);
-        $cnt->searchForm($list);
+        if ($this->attributeKey !== null) {
+            $type = $this->attributeKey->getAttributeType();
+            $cnt = $type->getController();
+            $cnt->setRequestArray($this->data);
+            $cnt->setAttributeKey($this->attributeKey);
+            $cnt->searchForm($list);
+        }
     }
 
     public function loadDataFromRequest(array $request)
     {
-        // We need to do this because of the request whitelist + the weird request
-        // namespacing we do with attribute forms.
-        $this->data['akID'][$this->attributeKey->getAttributeKeyID()]
-            = $request['akID'][$this->attributeKey->getAttributeKeyID()];
+        if ($this->attributeKey !== null) {
+            // We need to do this because of the request whitelist + the weird request
+            // namespacing we do with attribute forms.
+            $this->data['akID'][$this->attributeKey->getAttributeKeyID()]
+                = $request['akID'][$this->attributeKey->getAttributeKeyID()];
+        }
     }
 
     public function __sleep()
