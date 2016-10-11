@@ -97,12 +97,15 @@ class Stack extends Page implements ExportableInterface
                 $sql = 'select cID from Stacks where stName = ?';
                 $q = array($stackName);
                 if ($ms) {
-                    $sql .= ' and (stMultilingualSection = ? or stMultilingualSection = 0) order by stMultilingualSection desc';
+                    $sql .= ' and (stMultilingualSection = ? or stMultilingualSection = 0)';
                     $q[] = $ms->getCollectionID();
                 } else {
                     $sql .= ' and stMultilingualSection = 0';
                 }
-                $sql .= ' and siteTreeID = ? ';
+                $sql .= ' and siteTreeID = ?';
+                if ($ms) {
+                    $sql .= ' order by stMultilingualSection desc';
+                }
                 $sql .= ' limit 1';
                 if (!is_object($siteTree)) {
                     $site = \Core::make('site')->getSite();
