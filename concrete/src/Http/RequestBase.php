@@ -148,6 +148,31 @@ class RequestBase extends SymfonyRequest
     }
 
     /**
+     * Current request path - overrides getPath (useful when replacing controllers).
+     *
+     * @var string|null
+     */
+    protected $requestPath = null;
+
+    /**
+     * Set the request path (useful when replacing controllers) - overrides getPath if not null.
+     *
+     * @param string|null $requestPath
+     */
+    public function setRequestPath($requestPath)
+    {
+        $this->requestPath = $requestPath;
+    }
+
+    /**
+     * @return string
+     */
+    public function getRequestPath()
+    {
+        return ($this->requestPath === null) ? $this->getPath() : $this->requestPath;
+    }
+
+    /**
      * Returns the full path for a request.
      *
      * @return string

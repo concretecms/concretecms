@@ -46,13 +46,19 @@ class PageController extends Controller
      */
     public function replace($var)
     {
-        if (!($var instanceof Page)) {
-            $var = Page::getByPath($var);
+        $request = Request::getInstance();
+        if ($var instanceof Page) {
+            $page = $var;
+            $path = $var->getCollectionPath();
+            $request->setRequestPath($path);
+        } else {
+            $path = $var;
+            $page = Page::getByPath($path);
+            $request->setRequestPath($path);
         }
 
-        $request = Request::getInstance();
-        $request->setCurrentPage($var);
-        $controller = $var->getPageController();
+        $request->setCurrentPage($page);
+        $controller = $page->getPageController();
         $this->replacement = $controller;
     }
 
@@ -157,7 +163,7 @@ class PageController extends Controller
 
     public function setupRequestActionAndParameters(Request $request)
     {
-        $task = substr($request->getPath(), strlen($this->c->getCollectionPath()) + 1);
+        $task = substr($request->getRequestPath(), strlen($this->c->getCollectionPath()) + 1);
         $task = str_replace('-/', '', $task);
         $taskparts = explode('/', $task);
         if (isset($taskparts[0]) && $taskparts[0] !== '') {
