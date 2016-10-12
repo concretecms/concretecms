@@ -341,7 +341,6 @@ abstract class Package implements LocalizablePackageInterface
         $em->persist($package);
         $em->flush();
 
-        ClassLoader::getInstance()->registerPackage($this);
         $this->installDatabase();
 
         $env = \Environment::get();
