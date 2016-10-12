@@ -91,14 +91,6 @@ class CanonicalUrlResolver implements UrlResolverInterface
                     }
                 }
             }
-        } else {
-            $host = $this->request->getHost();
-            $scheme = $this->request->getScheme();
-            if ($scheme && $host) {
-                $url = $url->setScheme($scheme)
-                    ->setHost($host)
-                    ->setPort($this->request->getPort());
-            }
         }
 
         if ($relative_path = $this->app['app_relative_path']) {
