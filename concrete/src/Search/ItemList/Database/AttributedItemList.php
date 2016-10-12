@@ -13,6 +13,9 @@ abstract class  AttributedItemList extends ItemList
     public function filterByAttribute($handle, $value, $comparison = '=')
     {
         $ak = call_user_func_array(array($this->getAttributeKeyClassName(), 'getByHandle'), array($handle));
+        if (!is_object($ak)) {
+            throw new \Exception(t('Unable to find attribute %s', $handle));
+        }
         $ak->getController()->filterByAttribute($this, $value, $comparison);
     }
 

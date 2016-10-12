@@ -305,21 +305,15 @@ class Application extends Container
                     $loc->popActiveContext();
                 }
             }
-            $this->make('Concrete\Core\Package\PackageService')->setupLocalization($pkg);
+
+            $service = $this->make('Concrete\Core\Package\PackageService');
+            $service->setupLocalization($pkg);
 
             if (method_exists($pkg, 'on_start')) {
                 $pkg->on_start();
             }
 
-            // Inject the package entity manager into entity manager configuration
-            $providerFactory = new PackageProviderFactory($this, $pkg);
-            $provider = $providerFactory->getEntityManagerProvider();
-            foreach($provider->getDrivers() as $driver) {
-                /**
-                 * @var $driver DriverInterface
-                 */
-                $configUpdater->addDriver($driver);
-            }
+            $service->bootPackageEntityManager($pkg);
 
             if (method_exists($pkg, 'on_after_packages_start')) {
                 $checkAfterStart = true;

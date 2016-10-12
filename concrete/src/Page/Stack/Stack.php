@@ -221,7 +221,7 @@ class Stack extends Page implements ExportableInterface
         if (!is_object($nc)) {
             $nc = Page::getByID($this->getCollectionParentID());
         }
-        $newPage = parent::duplicate($nc, $preserveUserID);
+        $newPage = parent::duplicate($nc, $preserveUserID, $site);
 
         // we have to do this because we need the area to exist before we try and add something to it.
         Area::getOrCreate($newPage, STACKS_AREA_NAME);
