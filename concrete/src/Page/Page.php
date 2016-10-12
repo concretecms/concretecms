@@ -2480,6 +2480,10 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
 
         $db->executeQuery('delete from Pages where cID = ?', [$cID]);
 
+        $db->executeQuery('delete from MultilingualPageRelations where cID = ?', [$cID]);
+
+        $db->executeQuery('delete from SiblingPageRelations where cID = ?', [$cID]);
+
         $db->executeQuery('delete from Pages where cPointerID = ?', [$cID]);
 
         $db->executeQuery('delete from Areas WHERE cID = ?', [$cID]);

@@ -92,13 +92,16 @@ class Service
     public function delete(Site $site)
     {
 
-        $page = $site->getSiteHomePageObject();
-        if (is_object($page)) {
-            $page->moveToTrash();
+        $r = $this->entityManager->getConnection()
+            ->executeQuery('select cID from Pages where siteTreeID = ? and cParentID = 0', [$site->getSiteTreeID()]);
+        while ($row = $r->fetch()) {
+            $page = \Page::getByID($row['cID']);
+            if (is_object($page) && !$page->isError()) {
+                $page->moveToTrash();
+            }
         }
 
         $tree = $site->getSiteTree();
-
         $site->setSiteTree(null);
         $this->entityManager->flush();
 
