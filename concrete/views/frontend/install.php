@@ -7,7 +7,7 @@ if ($install_config) {
 }
 ?>
 
-<div class="ccm-ui-fieldless">
+<div>
 
 <style type="text/css">@import "<?=ASSETS_URL_CSS?>/views/install.css";</style>
 <script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/bootstrap/tooltip.js"></script>
