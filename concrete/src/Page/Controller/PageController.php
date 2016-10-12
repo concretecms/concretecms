@@ -50,13 +50,13 @@ class PageController extends Controller
             $page = $var;
             $path = $var->getCollectionPath();
         } else {
-            $path = $var;
+            $path = (string) $var;
             $page = Page::getByPath($path);
         }
 
         $request = Request::getInstance();
         $request->setCurrentPage($page);
-        $request->setRequestPath($path);
+        $request->setCurrentPath($path);
         $controller = $page->getPageController();
         $this->replacement = $controller;
     }
@@ -162,7 +162,7 @@ class PageController extends Controller
 
     public function setupRequestActionAndParameters(Request $request)
     {
-        $task = substr($request->getRequestPath(), strlen($this->c->getCollectionPath()) + 1);
+        $task = substr($request->getCurrentPath(), strlen($this->c->getCollectionPath()) + 1);
         $task = str_replace('-/', '', $task);
         $taskparts = explode('/', $task);
         if (isset($taskparts[0]) && $taskparts[0] !== '') {
