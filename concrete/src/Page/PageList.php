@@ -11,6 +11,7 @@ use Concrete\Core\Entity\Package;
 use Page as ConcretePage;
 use Concrete\Core\Entity\Page\Template as TemplateEntity;
 use Pagerfanta\Adapter\DoctrineDbalAdapter;
+use Concrete\Core\Site\Tree\TreeInterface;
 
 /**
  * An object that allows a filtered list of pages to be returned.
@@ -71,7 +72,7 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
      */
     protected $includeInactivePages = false;
 
-    public function setSiteTreeObject($tree)
+    public function setSiteTreeObject(TreeInterface $tree)
     {
         $this->siteTree = $tree;
     }
