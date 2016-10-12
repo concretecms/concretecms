@@ -4,7 +4,6 @@ namespace Concrete\Attribute\Number;
 use Concrete\Core\Attribute\FontAwesomeIconFormatter;
 use Concrete\Core\Entity\Attribute\Key\Type\NumberType;
 use Concrete\Core\Entity\Attribute\Value\Value\NumberValue;
-use Loader;
 use Concrete\Core\Attribute\Controller as AttributeTypeController;
 
 class Controller extends AttributeTypeController
@@ -40,7 +39,7 @@ class Controller extends AttributeTypeController
 
     public function search()
     {
-        $f = Loader::helper('form');
+        $f = $this->app->make('helper/form');
         $html = $f->number($this->field('from'), $this->request('from'));
         $html .= ' ' . t('to') . ' ';
         $html .= $f->number($this->field('to'), $this->request('to'));
@@ -54,7 +53,7 @@ class Controller extends AttributeTypeController
         } else {
             $value = null;
         }
-        echo Loader::helper('form')->number($this->field('value'), $value, ['style' => 'width:80px']);
+        echo $this->app->make('helper/form')->number($this->field('value'), $value, ['style' => 'width:80px']);
     }
 
     public function validateForm($p)
