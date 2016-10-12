@@ -21,6 +21,13 @@ class PageController extends Controller
     protected $parameters = array();
     protected $replacement = null;
 
+    /**
+    * Custom request path - overrides Request::getPath() (useful when replacing controllers).
+    *
+    * @var string|null
+    */
+    protected $customRequestPath = null;
+
     public function supportsPageCache()
     {
         return $this->supportsPageCache;
@@ -55,9 +62,11 @@ class PageController extends Controller
         }
 
         $request = Request::getInstance();
-        $request->setCurrentPage($page);
-        $request->setCurrentPath($path);
         $controller = $page->getPageController();
+        $request->setCurrentPage($page);
+        if (is_callable([$controller, 'setCustomRequestPath'])) {
+            $controller->setCustomRequestPath($path);
+        }
         $this->replacement = $controller;
     }
 
@@ -69,6 +78,26 @@ class PageController extends Controller
     public function getReplacement()
     {
         return $this->replacement;
+    }
+
+    /**
+     * Set the custom request path (useful when replacing controllers).
+     *
+     * @param string|null $requestPath Set to null to use the default request path
+     */
+    public function setCustomRequestPath($requestPath)
+    {
+        $this->customRequestPath = ($requestPath === null) ? null : (string) $requestPath;
+    }
+
+    /**
+     * Get the custom request path (useful when replacing controllers).
+     *
+     * @return string|null Returns null if no custom request path, a string otherwise
+     */
+    public function getCustomRequestPath()
+    {
+        return $this->customRequestPath;
     }
 
     public function getSets()
@@ -162,7 +191,11 @@ class PageController extends Controller
 
     public function setupRequestActionAndParameters(Request $request)
     {
-        $task = substr($request->getCurrentPath(), strlen($this->c->getCollectionPath()) + 1);
+        $requestPath = $this->getCustomRequestPath();
+        if ($requestPath === null) {
+            $requestPath = $request->getPath();
+        }
+        $task = substr($requestPath, strlen($this->c->getCollectionPath()) + 1);
         $task = str_replace('-/', '', $task);
         $taskparts = explode('/', $task);
         if (isset($taskparts[0]) && $taskparts[0] !== '') {
