@@ -1067,7 +1067,7 @@ class Collection extends Object implements TrackableInterface
 
             // now we grab all the blocks we're going to need
             $cvList = implode(',', $cvList);
-            $q = "select bID, cvID, arHandle, cbDisplayOrder, cbOverrideAreaPermissions, cbIncludeAll from CollectionVersionBlocks where cID = '{$this->cID}' and cvID in ({$cvList})";
+            $q = "select bID, cvID, arHandle, cbDisplayOrder, cbOverrideAreaPermissions, cbIncludeAll, cbRelationID from CollectionVersionBlocks where cID = '{$this->cID}' and cvID in ({$cvList})";
             $r = $db->query($q);
             while ($row = $r->fetchRow()) {
                 $v = array(
@@ -1076,11 +1076,12 @@ class Collection extends Object implements TrackableInterface
                     $row['bID'],
                     $row['arHandle'],
                     $row['cbDisplayOrder'],
+                    $row['cbRelationID'],
                     0,
                     $row['cbOverrideAreaPermissions'],
                     $row['cbIncludeAll'],
                 );
-                $q = 'insert into CollectionVersionBlocks (cID, cvID, bID, arHandle, cbDisplayOrder, isOriginal, cbOverrideAreaPermissions, cbIncludeAll) values (?, ?, ?, ?, ?, ?, ?, ?)';
+                $q = 'insert into CollectionVersionBlocks (cID, cvID, bID, arHandle, cbDisplayOrder, cbRelationID, isOriginal, cbOverrideAreaPermissions, cbIncludeAll) values (?, ?, ?, ?, ?, ?, ?, ?, ?)';
                 $db->query($q, $v);
                 if ($row['cbOverrideAreaPermissions'] != 0) {
                     $q2 = "select paID, pkID from BlockPermissionAssignments where cID = '{$this->cID}' and bID = '{$row['bID']}' and cvID = '{$row['cvID']}'";
