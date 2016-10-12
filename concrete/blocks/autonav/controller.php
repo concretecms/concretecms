@@ -361,7 +361,7 @@ class Controller extends BlockController
                 break;
             case 'top':
                 // top level actually has ID 1 as its parent, since the home page is effectively alone at the top
-                $cParentID = 1;
+                $cParentID = \Core::make('site')->getSite()->getSiteHomePageID();
                 break;
             case 'above':
                 $cParentID = $this->getParentParentID();
