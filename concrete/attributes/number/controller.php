@@ -9,10 +9,10 @@ use Concrete\Core\Attribute\Controller as AttributeTypeController;
 
 class Controller extends AttributeTypeController
 {
-    protected $searchIndexFieldDefinition = array(
+    protected $searchIndexFieldDefinition = [
         'type' => 'decimal',
-        'options' => array('precision' => 14, 'scale' => 4, 'default' => 0, 'notnull' => false),
-    );
+        'options' => ['precision' => 14, 'scale' => 4, 'default' => 0, 'notnull' => false],
+    ];
 
     public function getIconFormatter()
     {
@@ -54,7 +54,7 @@ class Controller extends AttributeTypeController
         } else {
             $value = null;
         }
-        echo Loader::helper('form')->number($this->field('value'), $value, array('style' => 'width:80px'));
+        echo Loader::helper('form')->number($this->field('value'), $value, ['style' => 'width:80px']);
     }
 
     public function validateForm($p)
