@@ -51,6 +51,8 @@ class Controller extends AttributeTypeController
     {
         if (is_object($this->attributeValue)) {
             $value = $this->getAttributeValue()->getValue();
+        } else {
+            $value = null;
         }
         echo Loader::helper('form')->number($this->field('value'), $value, array('style' => 'width:80px'));
     }
