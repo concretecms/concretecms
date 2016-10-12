@@ -46,18 +46,17 @@ class PageController extends Controller
      */
     public function replace($var)
     {
-        $request = Request::getInstance();
         if ($var instanceof Page) {
             $page = $var;
             $path = $var->getCollectionPath();
-            $request->setRequestPath($path);
         } else {
             $path = $var;
             $page = Page::getByPath($path);
-            $request->setRequestPath($path);
         }
 
+        $request = Request::getInstance();
         $request->setCurrentPage($page);
+        $request->setRequestPath($path);
         $controller = $page->getPageController();
         $this->replacement = $controller;
     }
