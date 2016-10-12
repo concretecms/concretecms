@@ -135,7 +135,10 @@ class Site implements TreeInterface
     public function getSiteHomePageObject()
     {
         if (is_object($this->tree)) {
-            return \Page::getByID($this->tree->getSiteHomePageID());
+            $page = \Page::getByID($this->tree->getSiteHomePageID());
+            if (is_object($page) && !$page->isError()) {
+                return $page;
+            }
         }
     }
 
