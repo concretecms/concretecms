@@ -25,7 +25,7 @@ echo Core::make('helper/concrete/ui')->tabs($tabs);
             $obj.click(function() {
                 var deleteIt = confirm('<?php echo t('Are you sure?'); ?>');
                 if (deleteIt === true) {
-                    slideID = $(this).closest('.ccm-image-slider-entry').find('.editor-content').attr('id');
+                    var slideID = $(this).closest('.ccm-image-slider-entry').find('.editor-content').attr('id');
                     if (typeof CKEDITOR === 'object') {
                         CKEDITOR.instances[slideID].destroy();
                     }
