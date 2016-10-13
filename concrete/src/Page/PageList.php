@@ -11,6 +11,7 @@ use Concrete\Core\Entity\Package;
 use Page as ConcretePage;
 use Concrete\Core\Entity\Page\Template as TemplateEntity;
 use Pagerfanta\Adapter\DoctrineDbalAdapter;
+use Concrete\Core\Site\Tree\TreeInterface;
 
 /**
  * An object that allows a filtered list of pages to be returned.
@@ -71,7 +72,7 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
      */
     protected $includeInactivePages = false;
 
-    public function setSiteTreeObject($tree)
+    public function setSiteTreeObject(TreeInterface $tree)
     {
         $this->siteTree = $tree;
     }
@@ -159,18 +160,18 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
         }
 
 
+        if (is_object($this->siteTree)) {
+            $tree = $this->siteTree;
+        } else {
+            $site = \Core::make("site")->getSite();
+            $tree = $site->getSiteTree();
+        }
+
+        // Note, we might not use this. We have to set the parameter even if we don't use it because
+        // StackList (which extends PageList) needs to have it available.
+        $query->setParameter('siteTreeID', $tree->getSiteTreeID());
+
         if ($this->query->getParameter('cParentID') < 1) {
-            // If we aren't filtering by parent ID we have to include the site tree ID.
-            if (is_object($this->siteTree)) {
-                $tree = $this->siteTree;
-            } else {
-                $site = \Core::make("site")->getSite();
-                $tree = $site->getSiteTree();
-            }
-
-            $query->setParameter('siteTreeID', $tree->getSiteTreeID());
-
-            // Now, we determine whether we should show the pages in this site tree that are system or not
 
             if (!$this->includeSystemPages) {
                 $query->andWhere('p.siteTreeID = :siteTreeID');
