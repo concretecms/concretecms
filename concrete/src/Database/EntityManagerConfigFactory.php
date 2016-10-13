@@ -5,6 +5,7 @@ namespace Concrete\Core\Database;
 use Concrete\Core\Application\ApplicationAwareInterface;
 use Concrete\Core\Database\EntityManager\Driver\ApplicationDriver;
 use Concrete\Core\Database\EntityManager\Driver\CoreDriver;
+use Concrete\Core\Application\ApplicationAwareTrait;
 
 /**
  * EntityManagerConfigFactory
@@ -15,10 +16,7 @@ use Concrete\Core\Database\EntityManager\Driver\CoreDriver;
  */
 class EntityManagerConfigFactory implements ApplicationAwareInterface, EntityManagerConfigFactoryInterface
 {
-    /**
-     * @var \Concrete\Core\Application\Application
-     */
-    protected $app;
+    use ApplicationAwareTrait;
 
     /**
      * Doctrine ORM config
@@ -45,14 +43,6 @@ class EntityManagerConfigFactory implements ApplicationAwareInterface, EntityMan
         $this->setApplication($app);
         $this->configuration = $configuration;
         $this->configRepository = $configRepository;
-    }
-
-    /**
-     * @param \Concrete\Core\Application\Application $application
-     */
-    public function setApplication(\Concrete\Core\Application\Application $application)
-    {
-        $this->app = $application;
     }
 
     /**

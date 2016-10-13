@@ -8,13 +8,11 @@ use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Url\Components\Path;
 use Concrete\Core\Url\UrlInterface;
 use League\Url\Url;
+use Concrete\Core\Application\ApplicationAwareTrait;
 
 class PathUrlResolver implements UrlResolverInterface, ApplicationAwareInterface
 {
-    /**
-     * @var Application
-     */
-    protected $app;
+    use ApplicationAwareTrait;
 
     /**
      * @var \Concrete\Core\Config\Repository\Repository
@@ -43,16 +41,6 @@ class PathUrlResolver implements UrlResolverInterface, ApplicationAwareInterface
         $this->config = $repository;
         $this->canonical = $canonical_resolver;
         $this->dashboard = $dashboard;
-    }
-
-    /**
-     * Set the application object.
-     *
-     * @param \Concrete\Core\Application\Application $application
-     */
-    public function setApplication(Application $application)
-    {
-        $this->app = $application;
     }
 
     /**
