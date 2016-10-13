@@ -6,11 +6,11 @@ use Concrete\Core\Application\ApplicationAwareInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Controller\ControllerResolver as SymfonyControllerResolver;
+use Concrete\Core\Application\ApplicationAwareTrait;
 
 class ApplicationAwareControllerResolver extends SymfonyControllerResolver implements ApplicationAwareInterface
 {
-    /** @var Application */
-    protected $app;
+    use ApplicationAwareTrait;
 
     /** @var \Psr\Log\LoggerInterface */
     protected $logger;
@@ -19,16 +19,6 @@ class ApplicationAwareControllerResolver extends SymfonyControllerResolver imple
     {
         $this->setApplication($app);
         $this->logger = $logger;
-    }
-
-    /**
-     * Set the application object.
-     *
-     * @param \Concrete\Core\Application\Application $application
-     */
-    public function setApplication(Application $application)
-    {
-        $this->app = $application;
     }
 
     /**
