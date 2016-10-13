@@ -15,19 +15,11 @@ use Concrete\Core\Support\Facade\Facade;
 use Concrete\Core\User\User;
 use Illuminate\Config\Repository;
 use Symfony\Component\HttpFoundation\Response;
+use Concrete\Core\Application\ApplicationAwareTrait;
 
 class DefaultBooter implements BootInterface, ApplicationAwareInterface
 {
-    /** @var Application */
-    protected $app;
-
-    /**
-     * @param Application $application
-     */
-    public function setApplication(Application $application)
-    {
-        $this->app = $application;
-    }
+    use ApplicationAwareTrait;
 
     /**
      * Boot up
