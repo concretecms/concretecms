@@ -14,6 +14,7 @@ use Concrete\Core\Page\Collection\Version\Version;
 use Concrete\Core\Page\Controller\PageController;
 use Concrete\Core\Page\Event;
 use Concrete\Core\Page\Page;
+use Concrete\Core\Page\Relation\Menu\Item\RelationListItem;
 use Concrete\Core\Permission\Checker;
 use Concrete\Core\Permission\Key\Key;
 use Concrete\Core\Routing\RedirectResponse;
@@ -344,6 +345,11 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
         $pe->setUser($u);
         $pe->setRequest($request);
         $this->app['director']->dispatch('on_page_view', $pe);
+
+        // Core menu items
+        $item = new RelationListItem();
+        $menu = $this->app->make('helper/concrete/ui/menu');
+        $menu->addMenuItem($item);
 
         $controller = $collection->getPageController();
 

@@ -361,7 +361,7 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
                     if ($cnt->displayItem()) {
                         $cnt->registerViewAssets();
                         ?>
-                        <li class="pull-left"><?= $cnt->getMenuItemLinkElement() ?></li>
+                        <li class="pull-left hidden-xs"><?= $cnt->getMenuItemLinkElement() ?></li>
                         <?php
                     }
                 }
@@ -400,16 +400,13 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
                     </a>
                 </li>
                 <?php
-                if ($cp->canEditPageMultilingualSettings() && $app->make('multilingual/detector')->isEnabled()) {
-                    $section = \Concrete\Core\Multilingual\Page\Section\Section::getCurrentSection();
-                    $ch = $app->make('multilingual/interface/flag');
-                    if (is_object($section)) {
+                $items = $ihm->getPageHeaderMenuItems('right');
+                foreach ($items as $ih) {
+                    $cnt = $ih->getController();
+                    if ($cnt->displayItem()) {
+                        $cnt->registerViewAssets();
                         ?>
-                        <li class="pull-right hidden-xs">
-                            <a href="#" data-panel-url="<?= URL::to('/ccm/system/panels/multilingual') ?>" title="<?= t('Navigate this page in other languages') ?>" data-launch-panel="multilingual">
-                                <?php echo $ch->getFlagIcon($section->getIcon()); ?><span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-add-page"><?=$section->getLanguageText()?></span>
-                            </a>
-                        </li>
+                        <li class="pull-right hidden-xs"><?= $cnt->getMenuItemLinkElement() ?></li>
                         <?php
                     }
                 }
@@ -418,18 +415,6 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
                     <i class="fa fa-search"></i>
                     <input type="search" id="ccm-nav-intelligent-search" autocomplete="off" tabindex="1"/>
                 </li>
-                <?php
-                $items = $ihm->getPageHeaderMenuItems('right');
-                foreach ($items as $ih) {
-                    $cnt = $ih->getController();
-                    if ($cnt->displayItem()) {
-                        $cnt->registerViewAssets();
-                        ?>
-                        <li class="pull-right"><?= $cnt->getMenuItemLinkElement() ?></li>
-                        <?php
-                    }
-                }
-                ?>
             </ul>
         </div>
         <?php

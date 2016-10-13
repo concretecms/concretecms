@@ -3,6 +3,7 @@ namespace Concrete\Core\Multilingual\Service\UserInterface;
 
 use Concrete\Core\Multilingual\Page\Section\Section;
 use Database;
+use HtmlObject\Image;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
@@ -39,7 +40,8 @@ class Flag
                 if ($filePathOnly) {
                     return $icon;
                 } else {
-                    return '<img class="ccm-region-flag" id="ccm-region-flag-' . $region . '" src="' . $icon . '" alt="' . $region . '" />';
+                    $img = new Image($icon, $region, ['id' => 'ccm-region-flag-' . $region, 'class' => 'ccm-region-flag']);
+                    return $img;
                 }
             }
         }
