@@ -16,10 +16,10 @@ class Section
     protected $cID;
 
     /**
-     * @ORM\ManyToOne(targetEntity="\Concrete\Core\Entity\Site\Site")
-     * @ORM\JoinColumn(name="siteID", referencedColumnName="siteID")
-     */
-    protected $site;
+     * @ORM\ManyToOne(targetEntity="\Concrete\Core\Entity\Site\Tree", cascade={"all"})
+     * @ORM\JoinColumn(name="siteTreeID", referencedColumnName="siteTreeID")
+     **/
+    protected $tree;
 
     /**
      * @ORM\Column(type="string", length=32)
@@ -49,18 +49,19 @@ class Section
     /**
      * @return mixed
      */
-    public function getSite()
+    public function getSiteTree()
     {
-        return $this->site;
+        return $this->tree;
     }
 
     /**
-     * @param mixed $site
+     * @param mixed $tree
      */
-    public function setSite($site)
+    public function setSiteTree($tree)
     {
-        $this->site = $site;
+        $this->tree = $tree;
     }
+
 
     /**
      * @return mixed

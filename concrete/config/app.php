@@ -396,10 +396,10 @@ return array(
         "/ccm/system/page/create/{ptID}" => array('\Concrete\Controller\Backend\Page::create'),
         "/ccm/system/page/create/{ptID}/{parentID}" => array('\Concrete\Controller\Backend\Page::create'),
         "/ccm/system/page/get_json" => array('\Concrete\Controller\Backend\Page::getJSON'),
-        "/ccm/system/page/multilingual/assign" => array('\Concrete\Controller\Backend\Page\Multilingual::assign'),
-        "/ccm/system/page/multilingual/create_new" => array('\Concrete\Controller\Backend\Page\Multilingual::create_new'),
-        "/ccm/system/page/multilingual/ignore" => array('\Concrete\Controller\Backend\Page\Multilingual::ignore'),
-        "/ccm/system/page/multilingual/unmap" => array('\Concrete\Controller\Backend\Page\Multilingual::unmap'),
+        "/ccm/system/page/multilingual/assign" => array('\Concrete\Controller\Backend\Multilingual::assign'),
+        "/ccm/system/page/multilingual/create_new" => array('\Concrete\Controller\Backend\Multilingual::create_new'),
+        "/ccm/system/page/multilingual/ignore" => array('\Concrete\Controller\Backend\Multilingual::ignore'),
+        "/ccm/system/page/multilingual/unmap" => array('\Concrete\Controller\Backend\Multilingual::unmap'),
         "/ccm/system/page/select_sitemap" => array('\Concrete\Controller\Backend\Page\SitemapSelector::view'),
 
         /*
@@ -516,7 +516,7 @@ return array(
         "/ccm/system/panels/dashboard" => array('\Concrete\Controller\Panel\Dashboard::view'),
         "/ccm/system/panels/dashboard/add_favorite" => array('\Concrete\Controller\Panel\Dashboard::addFavorite'),
         "/ccm/system/panels/dashboard/remove_favorite" => array('\Concrete\Controller\Panel\Dashboard::removeFavorite'),
-        "/ccm/system/panels/multilingual" => array('\Concrete\Controller\Panel\Multilingual::view'),
+        "/ccm/system/panels/page/relations" => array('\Concrete\Controller\Panel\PageRelations::view'),
         "/ccm/system/panels/page" => array('\Concrete\Controller\Panel\Page::view'),
         "/ccm/system/panels/page/attributes" => array('\Concrete\Controller\Panel\Page\Attributes::view'),
         "/ccm/system/panels/page/check_in" => array('\Concrete\Controller\Panel\Page\CheckIn::__construct'),
