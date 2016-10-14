@@ -1,23 +1,22 @@
 <?php
 namespace Concrete\Core\Controller;
 
-use Concrete\Core\Application\Application;
 use Concrete\Core\Application\ApplicationAwareInterface;
 use Concrete\Core\Http\ResponseAssetGroup;
 use Core;
 use Request;
 use View;
+use Concrete\Core\Application\ApplicationAwareTrait;
 
 abstract class AbstractController implements ApplicationAwareInterface
 {
+    use ApplicationAwareTrait;
+
     protected $helpers = array();
     protected $sets = array();
     protected $action;
     protected $request;
     protected $parameters;
-
-    /** @var Application */
-    protected $app;
 
     public function __construct()
     {
@@ -178,15 +177,5 @@ abstract class AbstractController implements ApplicationAwareInterface
     public function request($key = null)
     {
         return Request::request($key);
-    }
-
-    /**
-     * Set the application object.
-     *
-     * @param \Concrete\Core\Application\Application $application
-     */
-    public function setApplication(Application $application)
-    {
-        $this->app = $application;
     }
 }
