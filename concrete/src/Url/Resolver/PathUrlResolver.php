@@ -5,6 +5,7 @@ use Concrete\Core\Application\Application;
 use Concrete\Core\Application\ApplicationAwareInterface;
 use Concrete\Core\Application\Service\Dashboard;
 use Concrete\Core\Config\Repository\Repository;
+use Concrete\Core\Page\Page;
 use Concrete\Core\Url\Components\Path;
 use Concrete\Core\Url\UrlInterface;
 use League\Url\Url;
@@ -44,13 +45,35 @@ class PathUrlResolver implements UrlResolverInterface, ApplicationAwareInterface
     }
 
     /**
-     * {@inheritdoc}
+     * Resolve url's from any type of input.
+     *
+     * This method MUST either return a `\League\URL\URL` when a url is resolved
+     * or null when a url cannot be resolved.
+     *
+     * If the arguments list contains a page object, we will use that to determine the canonical URL
+     *
+     * @param array                    $arguments A list of the arguments
+     * @param \League\URL\URLInterface $resolved
+     *
+     * @return \League\URL\URLInterface
      */
     public function resolve(array $arguments, $resolved = null)
     {
         if ($resolved) {
             // We don't need to do any post processing on urls.
             return $resolved;
+        }
+
+        $page = null;
+        foreach ($arguments as $key => $argument) {
+            if ($argument instanceof Page) {
+                $page = $argument;
+                break;
+            }
+        }
+
+        if ($page) {
+            unset($arguments[$key]);
         }
 
         $args = $arguments;
@@ -60,8 +83,7 @@ class PathUrlResolver implements UrlResolverInterface, ApplicationAwareInterface
                 method_exists($path, '__toString'))
         ) {
             $path = rtrim($path, '/');
-
-            $url = $this->canonical->resolve(array());
+            $url = $this->canonical->resolve([$page]);
             $url = $this->handlePath($url, $path, $args);
 
             return $url;
