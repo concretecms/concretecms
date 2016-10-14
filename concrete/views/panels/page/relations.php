@@ -3,17 +3,20 @@ defined('C5_EXECUTE') or die("Access Denied.");
 ?>
 
 <div class="ccm-panel-content-inner">
-    <h5><?=t("Currently Viewing")?></h5>
-    <ul class="item-select-list">
-        <?php
-        $relatedID = $currentSection->getTranslatedPageID($c);
-        $icon = $ih->getSectionFlagIcon($currentSection);
-        $locale = $currentSection->getLocale();
-        ?>
-        <li class="ccm-panel-multilingual-current-section"><span><?=$icon?> <?=$c->getCollectionName()?></span></li>
-    </ul>
+    <?php if ($siblingRelations) { ?>
+        <h5><?=t('Sibling Pages')?></h5>
+        <ul class="item-select-list">
+        <?php foreach($siblingRelations as $relation) {
+            $relatedPage = $relation->getPageObject();
+            ?>
 
-    <h5><?=t('Mapped in Other Sections')?></h5>
+            <li><a href="<?=$relatedPage->getCollectionLink()?>"><i class="fa fa-file-o"></i> <?=$relatedPage->getCollectionName()?></a></li>
+
+        <?php } ?>
+        </ul>
+    <?php } ?>
+
+    <h5><?=t('Multilingual Relations')?></h5>
     <ul class="item-select-list">
         <?php foreach ($list as $m) {
     $relatedID = $m->getTranslatedPageID($c);
@@ -27,7 +30,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
     $relatedPage = Page::getByID($relatedID, 'RECENT');
     ?>
                     <a href="<?=$relatedPage->getCollectionLink()?>"><?=$icon?> <?=$relatedPage->getCollectionName()?></a>
-                <?php 
+                <?php
 } else {
     ?>
                     <a href="#" class="ccm-panel-multilingual-section-no-mappings" data-launch-multilingual-menu="<?=$m->getCollectionID()?>"><?=$icon?> <span><?=t('None Created')?></span></a>
@@ -36,11 +39,11 @@ defined('C5_EXECUTE') or die("Access Denied.");
                             <ul class="dropdown-menu">
                                 <?php if ($cParentRelatedID || $c->isPageDraft()) { ?>
                                     <li><a href="#" data-multilingual-create-page="<?=$m->getCollectionID()?>"><?=t('Create Page')?></a></li>
-                                <?php 
+                                <?php
 } else {
     ?>
                                     <li class="disabled"><a href="#" title="<?=t('Parent page does not exist. Create the parent page in this tree first.')?>"><?=t('Create Page')?></a></li>
-                                <?php 
+                                <?php
 }
     ?>
                                 <li class="divider"></li>
@@ -48,11 +51,11 @@ defined('C5_EXECUTE') or die("Access Denied.");
                             </ul>
                         </div>
                     </div>
-                <?php 
+                <?php
 }
     ?>
             </li>
-        <?php 
+        <?php
 } ?>
     </ul>
 </div>

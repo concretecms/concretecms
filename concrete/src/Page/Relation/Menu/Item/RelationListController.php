@@ -3,6 +3,7 @@
 namespace Concrete\Core\Page\Relation\Menu\Item;
 
 
+use Concrete\Controller\Panel\PageRelations;
 use Concrete\Core\Application\Service\Dashboard;
 use Concrete\Core\Application\UserInterface\Menu\Item\Controller;
 use Concrete\Core\Multilingual\Service\UserInterface\Flag;
@@ -33,23 +34,10 @@ class RelationListController extends Controller
      */
     public function displayItem()
     {
-        $cp = new \Permissions($this->page);
-        $config = $this->app->make('config');
-        if ($config->get('concrete.interface.panel.page_relations')) {
-            return true;
-        }
 
-        if (
-            $this->app->make('multilingual/detector')->isEnabled()
-            && is_object($this->multilingualSection)
-            && !$this->dashboard->inDashboard($this->page)
-            && $cp->canEditPageMultilingualSettings()) {
-
-            return true;
-
-        }
-
-        return false;
+        $controller = new PageRelations();
+        $controller->setPageObject($this->page);
+        return $controller->canAccessPanel();
     }
 
 
@@ -57,9 +45,9 @@ class RelationListController extends Controller
     {
 
         $link = new Link('#', '');
-        $link->setAttribute('data-panel-url', \URL::to('/ccm/system/panels/multilingual'));
+        $link->setAttribute('data-panel-url', \URL::to('/ccm/system/panels/page/relations'));
         $link->setAttribute('title', t('Navigate this page in other languages'));
-        $link->setAttribute('data-launch-panel', 'multilingual');
+        $link->setAttribute('data-launch-panel', 'page_relations');
 
         $icon = $this->flagService->getFlagIcon($this->multilingualSection->getIcon());
 

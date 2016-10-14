@@ -3,6 +3,7 @@ namespace Concrete\Core\Multilingual\Page\Section;
 
 use Concrete\Core\Entity\Site\Site;
 use Concrete\Core\Page\Page;
+use Concrete\Core\Site\Tree\TreeInterface;
 use Database;
 use Concrete\Core\Multilingual\Page\Event;
 use Gettext\Translations;
@@ -32,7 +33,7 @@ class Section extends Page
         return 'multilingual_section';
     }
 
-    public static function assign(Site $site, $c, $language, $country, $numPlurals = null, $pluralRule = '', $pluralCases = [])
+    public static function assign(TreeInterface $tree, $c, $language, $country, $numPlurals = null, $pluralRule = '', $pluralCases = [])
     {
         $pluralRule = (string) $pluralRule;
         if (empty($numPlurals) || ($pluralRule === '') || (empty($pluralCases))) {
@@ -57,7 +58,7 @@ class Section extends Page
         }
 
         $country = (string) $country;
-        $section->setSite($site);
+        $section->setSiteTree($tree->getSiteTreeObject());
         $section->setPageID($c->getCollectionID());
         $section->setLanguage($language);
         $section->setCountry($country);
@@ -107,15 +108,15 @@ class Section extends Page
      *
      * @return Section|false
      */
-    public static function getByLanguage($language, Site $site = null)
+    public static function getByLanguage($language, TreeInterface $treeInterface = null)
     {
-        if (!is_object($site)) {
-            $site = \Site::getSite();
+        if (!is_object($treeInterface)) {
+            $treeInterface = \Site::getSite();
         }
 
         $em = Database::get()->getEntityManager();
         $section = $em->getRepository('Concrete\Core\Entity\Multilingual\Section')
-            ->findOneBy(['site' => $site, 'msLanguage' => $language]);
+            ->findOneBy(['tree' => $treeInterface->getSiteTreeObject(), 'msLanguage' => $language]);
 
         if (is_object($section)) {
             $obj = parent::getByID($section->getPageID(), 'RECENT');
@@ -132,11 +133,11 @@ class Section extends Page
      *
      * @return Section|false
      */
-    public static function getByLocale($locale, Site $site = null)
+    public static function getByLocale($locale, TreeInterface $treeInterface = null)
     {
         if ($locale) {
-            if (!$site) {
-                $site = \Core::make('site')->getSite();
+            if (!$treeInterface) {
+                $treeInterface = \Core::make('site')->getSite();
             }
             $locale = explode('_', $locale);
             if (!isset($locale[1])) {
@@ -144,7 +145,7 @@ class Section extends Page
             }
             $em = Database::get()->getEntityManager();
             $section = $em->getRepository('Concrete\Core\Entity\Multilingual\Section')
-                ->findOneBy(['site' => $site, 'msLanguage' => $locale[0], 'msCountry' => $locale[1]]);
+                ->findOneBy(['tree' => $treeInterface->getSiteTreeObject(), 'msLanguage' => $locale[0], 'msCountry' => $locale[1]]);
 
             if (is_object($section)) {
                 $obj = parent::getByID($section->getPageID(), 'RECENT');
@@ -229,7 +230,7 @@ class Section extends Page
                 $pages = array_reverse($pages);
                 $pages[] = $parent;
                 $pages[] = $page;
-                $ids = self::getIDList();
+                $ids = self::getIDList($page->getSiteTreeObject());
                 $returnID = false;
                 foreach ($pages as $pc) {
                     if (in_array($pc->getCollectionID(), $ids)) {
@@ -605,31 +606,34 @@ class Section extends Page
         \Events::dispatch('on_multilingual_page_ignore', $pde);
     }
 
-    public static function getIDList(Site $site = null)
+    public static function getIDList(TreeInterface $treeInterface = null)
     {
-        if (!$site) {
-            $site = \Site::getSite();
-        }
-        static $ids;
-        if (isset($ids)) {
-            return $ids;
+        if (!$treeInterface) {
+            $treeInterface = \Site::getSite();
         }
 
-        $em = Database::get()->getEntityManager();
-        $sites = $em->getRepository('Concrete\Core\Entity\Multilingual\Section')
-            ->findBySite($site);
+        $cache = \Core::make('cache/request');
+        $item = $cache->getItem(sprintf('multilingual/section/ids/%s', $treeInterface->getSiteTreeID()));
+        if ($item->isMiss()) {
+            $em = Database::get()->getEntityManager();
+            $sections = $em->getRepository('Concrete\Core\Entity\Multilingual\Section')
+                ->findByTree($treeInterface->getSiteTreeObject());
 
-        $ids = [];
-        foreach ($sites as $site) {
-            $ids[] = $site->getPageID();
+            $ids = [];
+            foreach ($sections as $section) {
+                $ids[] = $section->getPageID();
+            }
+            $cache->save($item->set($ids));
+        } else {
+            $ids = $item->get();
         }
 
         return $ids;
     }
 
-    public static function getList(Site $site = null)
+    public static function getList(TreeInterface $tree = null)
     {
-        $ids = self::getIDList($site);
+        $ids = self::getIDList($tree);
         $pages = [];
         if ($ids && is_array($ids)) {
             foreach ($ids as $cID) {
@@ -650,9 +654,7 @@ class Section extends Page
      */
     public function getTranslatedPageID($page)
     {
-        $db = Database::get();
         $ids = static::getIDList();
-        $locale = explode('_', $this->getLocale());
         if (in_array($page->getCollectionID(), $ids)) {
             return $this->section->getPageID();
         }

@@ -50,4 +50,9 @@ abstract class Relation
         $this->cID = $cID;
     }
 
+    public function getPageObject()
+    {
+        return \Page::getByID($this->cID, 'ACTIVE');
+    }
+
 }

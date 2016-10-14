@@ -45,7 +45,7 @@ $dh = Loader::helper('concrete/dashboard');
             $panelSitemap = URL::to('/ccm/system/panels/sitemap');
             $panelAdd = URL::to('/ccm/system/panels/add');
             $panelCheckIn = URL::to('/ccm/system/panels/page/check_in');
-            $panelMultilingual = URL::to('/ccm/system/panels/multilingual');
+            $panelRelations = URL::to('/ccm/system/panels/page/relations');
 
             $js = <<<EOL
 <script type="text/javascript">$(function() {
@@ -53,7 +53,7 @@ $dh = Loader::helper('concrete/dashboard');
 	ConcretePanelManager.register({'identifier': 'dashboard', 'position': 'right', url: '{$panelDashboard}'});
 	ConcretePanelManager.register({'identifier': 'page', url: '{$panelPage}'});
 	ConcretePanelManager.register({'identifier': 'sitemap', 'position': 'right', url: '{$panelSitemap}'});
-	ConcretePanelManager.register({'identifier': 'multilingual', 'position': 'right', url: '{$panelMultilingual}'});
+	ConcretePanelManager.register({'identifier': 'page_relations', 'position': 'right', url: '{$panelRelations}'});
 	ConcretePanelManager.register({'identifier': 'add-block', 'translucent': false, 'position': 'left', url: '{$panelAdd}', pinable: true});
 	ConcretePanelManager.register({'identifier': 'check-in', 'position': 'left', url: '{$panelCheckIn}'});
 	ConcreteToolbar.start();

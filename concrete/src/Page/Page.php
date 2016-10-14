@@ -2228,6 +2228,14 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         return $b;
     }
 
+    public function getPageRelations()
+    {
+        $em = \Database::connection()->getEntityManager();
+        $relations = $em->getRepository('Concrete\Core\Entity\Page\Relation\SiblingRelation')
+            ->findBy(['cID' => $this->getCollectionID()]);
+        return $relations;
+    }
+
     public function move($nc)
     {
         $db = Database::connection();
