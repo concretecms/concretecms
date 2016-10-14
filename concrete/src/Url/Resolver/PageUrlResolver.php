@@ -21,7 +21,10 @@ class PageUrlResolver implements UrlResolverInterface
             return $resolved;
         }
 
-        $page = array_shift($arguments);
+        if ($arguments) {
+            $page = head($arguments);
+        }
+
         if ($page && $page instanceof \Concrete\Core\Page\Page) {
 
             if ($externalUrl = $page->getCollectionPointerExternalLink()) {

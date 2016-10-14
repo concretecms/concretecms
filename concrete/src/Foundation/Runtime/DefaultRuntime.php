@@ -1,20 +1,19 @@
 <?php
 namespace Concrete\Core\Foundation\Runtime;
 
-use Concrete\Core\Application\Application;
 use Concrete\Core\Application\ApplicationAwareInterface;
 use Concrete\Core\Foundation\Runtime\Boot\BootInterface;
 use Concrete\Core\Foundation\Runtime\Run\RunInterface;
 use Symfony\Component\HttpFoundation\Response;
+use Concrete\Core\Application\ApplicationAwareTrait;
 
 class DefaultRuntime implements RuntimeInterface, ApplicationAwareInterface
 {
     const STATUS_INACTIVE = 0;
     const STATUS_ACTIVE = 1;
     const STATUS_ENDED = 2;
-
-    /** @var  Application */
-    protected $app;
+    
+    use ApplicationAwareTrait;
 
     /** @var string */
     protected $boot_class;
@@ -37,16 +36,6 @@ class DefaultRuntime implements RuntimeInterface, ApplicationAwareInterface
     {
         $this->boot_class = $boot_class;
         $this->run_class = $run_class;
-    }
-
-    /**
-     * Set the application object.
-     *
-     * @param \Concrete\Core\Application\Application $application
-     */
-    public function setApplication(Application $application)
-    {
-        $this->app = $application;
     }
 
     /**
