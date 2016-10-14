@@ -81,18 +81,15 @@ div.form-group-highlight {
     &:hover {
       background-color: #ffffff !important;
     }
-
   }
 
   div.form-group {
     border-bottom-width: 0px;
     margin-bottom: 0px;
   }
-
 }
 
 div.form-group {
-
   position: relative;
   padding-top: 30px;
   padding-bottom: 30px;
@@ -109,7 +106,9 @@ div.form-group {
     font-size: 12px;
   }
 
-  &.has-error, &.has-warning, &.has-success {
+  &.has-error,
+  &.has-warning,
+  &.has-success {
     div.selectize-input,
     select.form-control,
     input.form-control,
@@ -126,9 +125,11 @@ div.form-group {
     input.form-control,
     textarea.form-control {
       background-color: lighten(#a94442, 50%);
+
       &:hover {
         background-color: lighten(#a94442, 47%);
       }
+
       &:focus {
         background-color: lighten(#a94442, 45%) !important;
       }
@@ -141,9 +142,11 @@ div.form-group {
     input.form-control,
     textarea.form-control {
       background-color: lighten(#3c763d, 50%);
+
       &:hover {
         background-color: lighten(#3c763d, 47%);
       }
+
       &:focus {
         background-color: lighten(#3c763d, 45%) !important;
       }
@@ -156,191 +159,63 @@ div.form-group {
     input.form-control,
     textarea.form-control {
       background-color: lighten(#8a6d3b, 50%);
+
       &:hover {
         background-color: lighten(#8a6d3b, 47%);
       }
+
       &:focus {
         background-color: lighten(#8a6d3b, 45%) !important;
       }
     }
   }
 
+  select.form-control {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+  }
+
   div.selectize-input,
   select.form-control,
   input.form-control,
   textarea.form-control {
-    .transition(0.1s linear background-color);
-
-    /*
-    padding: 2px;
-    */
     color: #606060;
-    .box-shadow(none);
     font-size: 18px;
     padding: 3px 12px;
-
     .border-radius(2px);
-    -webkit-appearance: none;
-    appearance: none;
-    -moz-appearance: none;
-    /*
-    * Ok, we HAD overflow: inherit for some reason, but it was causing problems when editing address attributes
-    * in the express form block. So now we've disabled it. If we figure out why we needed it in the first place
-    * we can put it back in and perhaps figure out how both approaches can coexist.
-    overflow: inherit; // needed for selectize ?
-    border: 1px solid #f1f1f1;
-    */
-    /*
-    border: 1px solid transparent;
-    border-top: 1px solid transparent;
-    border-right: 1px solid transparent;
-    border-left: 1px solid transparent;
-    border-bottom: 1px dotted #c1c1c1;
-    */
-
-    border-color: transparent;
-    background-color: #f2f2f2;
 
     &:focus {
-      outline: 0px;
-      background-color: darken(#f2f2f2, 5%) !important;
-      /*
-      background-color: transparent;
-      */
-      /*border-color: transparent*/
-
       + .help-block {
         display: block;
       }
     }
-
-    &:hover {
-      background-color: darken(#f2f2f2, 3%);
-      border-color: transparent;
-    }
-
-    &:disabled {
-      cursor: not-allowed;
-      .opacity(0.8);
-      color: #aaa;
-      background-color: #f2f2f2;
-    }
-
-
-
   }
 
   .input-group {
     .input-group-addon {
-      border-color: transparent;
-      background-color: transparent;
       padding-right: 10px;
     }
   }
-  select.form-control {
 
+  select.form-control {
     padding-right: 30px;
-    background: #f2f2f2 url(../images/icons/select_arrow_down.svg) no-repeat right 10px top 8px;
+    background: #ffffff url(../images/icons/select_arrow_down.svg) no-repeat right 10px top 8px;
     background-size: 16px 16px;
 
     &:disabled {
       background-image: url(../images/icons/select_arrow_down_disabled.svg);
     }
-
   }
-
 }
 
-div.checkbox, div.radio {
+div.checkbox,
+div.radio {
   label {
     color: #606060;
     font-size: 18px;
   }
 }
-
-input[type=checkbox], input[type=radio] {
-
-  .transition(0.1s linear background-color);
-  border: 1px solid #e1e1e1;
-  position: relative;
-  appearance: none;
-  -webkit-appearance: none;
-  display: inline-block;
-  color: transparent;
-  .box-shadow(none);
-
-  &:disabled {
-    .opacity(0.8);
-  }
-
-  &:focus {
-    outline: 0px;
-  }
-
-  &:hover {
-    background-color: #f2f2f2;
-  }
-
-
-  &:after {
-    .transition(0.1s linear all);
-    position: absolute;
-    font-family: FontAwesome;
-    content: @fa-var-check;
-  }
-
-  &:checked {
-    background-color: #e5e5e5;
-  }
-
-  &:checked:after {
-    color: darken(#f2f2f2, 50%);
-  }
-
-}
-
-input[type=checkbox] {
-
-  padding: 6px;
-  margin-top: 6px;
-  font-size: 12px;
-
-  .border-radius(2px);
-
-  &:indeterminate {
-    background-color: #bdbdbd;
-  }
-
-  &:indeterminate:after {
-    content: @fa-var-minus;
-    position: absolute;
-    top: 1px;
-    left: 1.5px;
-    color: #fff;
-  }
-
-  &:after {
-    top: 0px;
-    left: 0px;
-  }
-
-}
-
-
-input[type=radio] {
-  padding: 6px;
-  margin-top: 6px;
-  font-size: 5px;
-
-  .border-radius(8px);
-
-  &:after {
-    top: 3.5px;
-    left: 4px;
-    content: @fa-var-circle;
-  }
-}
-
 
 div.form-inline {
   div.form-group {
