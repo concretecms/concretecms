@@ -2,16 +2,33 @@
 
 namespace Concrete\Core\Application\UserInterface\ContextMenu;
 
-use Concrete\Core\Application\UserInterface\ContextMenu\Item\ConditionalItemInterface;
+use Concrete\Core\Application\UserInterface\ContextMenu\Item\ItemGroupInterface;
+use Concrete\Core\Application\UserInterface\ContextMenu\Modifier\ModifierInterface;
 
 abstract class AbstractManager implements ManagerInterface
 {
 
-    protected $runtimeItems = array();
+    /**
+     * @var ModifierInterface[]
+     */
+    protected $modifiers = array();
 
-    public function addMenuItem(ConditionalItemInterface $item)
+    public function addMenuModifier(ModifierInterface $modifier)
     {
-        $this->runtimeItems[] = $item;
+        $this->modifiers[] = $modifier;
     }
+
+    /**
+     * @param MenuInterface $menu
+     * @return \HtmlObject\Element
+     */
+    final public function deliverMenu(ModifiableMenuInterface $menu)
+    {
+        foreach($this->modifiers as $modifier) {
+            $modifier->modifyMenu($menu);
+        }
+        return $menu->getMenuElement();
+    }
+
 
 }
