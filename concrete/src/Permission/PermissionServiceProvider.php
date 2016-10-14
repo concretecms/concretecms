@@ -9,6 +9,6 @@ class PermissionServiceProvider extends ServiceProvider
 {
     public function register()
     {
-        $this->app->singleton('Concrete\Core\Permission\Inheritance\BlockRegistry');
+        $this->app->singleton('Concrete\Core\Permission\Inheritance\Registry\BlockRegistry');
     }
 }
