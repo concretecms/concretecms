@@ -62,5 +62,5 @@ abstract class Tree implements TreeInterface, TypeInterface
         return $this;
     }
 
-
+    abstract public function getDisplayName();
 }

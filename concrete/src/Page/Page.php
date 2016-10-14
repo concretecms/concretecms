@@ -5,6 +5,7 @@ use Concrete\Core\Attribute\Key\CollectionKey;
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Entity\Page\Template as TemplateEntity;
 use Concrete\Core\Entity\Site\Site;
+use Concrete\Core\Entity\Site\SiteTree;
 use Concrete\Core\Page\Stack\Stack;
 use Concrete\Core\Site\Tree\TreeInterface;
 use Concrete\Core\Multilingual\Page\Section\Section;
@@ -2231,8 +2232,17 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     public function getPageRelations()
     {
         $em = \Database::connection()->getEntityManager();
-        $relations = $em->getRepository('Concrete\Core\Entity\Page\Relation\SiblingRelation')
-            ->findBy(['cID' => $this->getCollectionID()]);
+        $r = $em->getRepository('Concrete\Core\Entity\Page\Relation\SiblingRelation');
+        $relation = $r->findOneBy(['cID' => $this->getCollectionID()]);
+        $relations = array();
+        if (is_object($relation)) {
+            $allRelations = $r->findBy(['mpRelationID' => $relation->getPageRelationID()]);
+            foreach($allRelations as $relation) {
+                if ($relation->getPageID() != $this->getCollectionID() && $relation->getPageObject()->getSiteTreeObject() instanceof SiteTree) {
+                    $relations[] = $relation;
+                }
+            }
+        }
         return $relations;
     }
 

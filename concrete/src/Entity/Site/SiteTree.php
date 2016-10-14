@@ -41,5 +41,9 @@ class SiteTree extends Tree
         return $this->getSite()->getType();
     }
 
+    public function getDisplayName()
+    {
+        return $this->site->getSiteName();
+    }
 
 }
