@@ -1,11 +1,12 @@
 <?php
-namespace Concrete\Core\Block;
+namespace Concrete\Core\Block\Menu;
 
 use Concrete\Core\Application\Application;
 use Concrete\Core\Application\UserInterface\ContextMenu\Item\DialogLinkItem;
 use Concrete\Core\Application\UserInterface\ContextMenu\Item\DividerItem;
 use Concrete\Core\Application\UserInterface\ContextMenu\Item\LinkItem;
 use Concrete\Core\Area\Area;
+use Concrete\Core\Block\Block;
 use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Entity\File\File as FileEntity;
 use Concrete\Core\Page\Page;
@@ -15,19 +16,11 @@ use Concrete\Core\Application\UserInterface\ContextMenu\Menu as ContextMenu;
 class Menu extends ContextMenu
 {
 
-    protected $app;
-    protected $config;
-
-    public function __construct(Application $app)
+    public function __construct(Application $app, $config, Block $b, Page $c, Area $a)
     {
         parent::__construct();
-        $this->app = $app;
-        $this->config = $app->make('config');
-    }
-
-    public function buildMenu(Block $b, Page $c, Area $a)
-    {
         $p = new \Permissions($b);
+
         $this->setAttribute('data-block-menu', 'block-menu-b' . $b->getBlockID());
         $this->setAttribute('class', 'ccm-edit-mode-block-menu');
 
@@ -53,12 +46,12 @@ class Menu extends ContextMenu
             $editInline = true;
         }
 
-        $canDesign = ($p->canEditBlockDesign() && $this->config->get('concrete.design.enable_custom') == true);
-        $canModifyGroups = ($p->canEditBlockPermissions() && $this->config->get('concrete.permissions.model') != 'simple' && (!$a->isGlobalArea()));
+        $canDesign = ($p->canEditBlockDesign() && $config->get('concrete.design.enable_custom') == true);
+        $canModifyGroups = ($p->canEditBlockPermissions() && $config->get('concrete.permissions.model') != 'simple' && (!$a->isGlobalArea()));
         $canEditName = $p->canEditBlockName();
         $canEditCacheSettings = $p->canEditBlockCacheSettings();
         $canEditCustomTemplate = $p->canEditBlockCustomTemplate();
-        $canScheduleGuestAccess = ($this->config->get('concrete.permissions.model') != 'simple' && $p->canGuestsViewThisBlock() && $p->canScheduleGuestAccess() && (!$a->isGlobalArea()));
+        $canScheduleGuestAccess = ($config->get('concrete.permissions.model') != 'simple' && $p->canGuestsViewThisBlock() && $p->canScheduleGuestAccess() && (!$a->isGlobalArea()));
         $canAliasBlockOut = ($c->isMasterCollection() && !$a->isGlobalArea());
         if ($canAliasBlockOut) {
             $ct = PageType::getByID($c->getPageTypeID());
@@ -118,7 +111,7 @@ class Menu extends ContextMenu
         if ($b->getBlockTypeHandle() != BLOCK_HANDLE_LAYOUT_PROXY && $b->getBlockTypeHandle() != BLOCK_HANDLE_PAGE_TYPE_OUTPUT_PROXY) {
             $this->addItem(new LinkItem('javascript:void(0)', t('Copy to Clipboard'), [
                 'data-menu-action' => 'block_scrapbook',
-                'data-token' => $this->app->make('token')->generate('tools/clipboard/to')
+                'data-token' => $app->make('token')->generate('tools/clipboard/to')
             ]));
         }
 

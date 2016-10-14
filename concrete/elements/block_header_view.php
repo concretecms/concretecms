@@ -104,10 +104,9 @@ if ($showMenu) {
         </ul>
 
         <div class="ccm-ui">
-
             <?php
-            $menu = $app->make('Concrete\Core\Block\Menu');
-            $menu->buildMenu($b, $c, $a);
+            $factory = $app->make('Concrete\Core\Block\Menu\Manager');
+            $menu = $factory->getMenu([$b, $c, $a]);
             print $menu->getMenuElement();
             ?>
         </div>

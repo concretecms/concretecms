@@ -2,6 +2,7 @@
 namespace Concrete\Controller\Panel;
 
 use Concrete\Controller\Backend\UserInterface\Page as BackendInterfacePageController;
+use Concrete\Core\Entity\Site\SiteTree;
 use Concrete\Core\Multilingual\Page\Section\Section;
 use Core;
 
@@ -19,7 +20,7 @@ class PageRelations extends BackendInterfacePageController
                 $ml[] = $m;
             }
         }
-        $this->set('list', $ml);
+        $this->set('multilingualSectionList', $ml);
         $this->set('currentSection', $currentSection);
 
         $this->set('ih', Core::make('multilingual/interface/flag'));
@@ -39,21 +40,24 @@ class PageRelations extends BackendInterfacePageController
     {
         $app = \Core::make("app");
         $config = $app->make('config');
-        if ($config->get('concrete.interface.panel.page_relations')) {
-            return true;
+        if (!$config->get('concrete.interface.panel.page_relations')) {
+            return false;
         }
 
-        $currentSection = Section::getCurrentSection();
         $dashboard = $app->make('helper/concrete/dashboard');
 
         if (
             $app->make('multilingual/detector')->isEnabled()
-            && is_object($currentSection)
+            && is_object(Section::getCurrentSection())
             && !$dashboard->inDashboard($this->page)
             && $this->permissions->canEditPageMultilingualSettings()) {
 
             return true;
 
+        }
+
+        if (!$dashboard->inDashboard($this->page) && count($this->page->getPageRelations()) > 0) {
+            return true;
         }
 
         return false;
