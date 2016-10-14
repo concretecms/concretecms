@@ -16,10 +16,52 @@ use Concrete\Core\Application\UserInterface\ContextMenu\Menu as ContextMenu;
 class Menu extends ContextMenu
 {
 
+    protected $permissions;
+    protected $block;
+    protected $page;
+    protected $area;
+
+    /**
+     * @return \Permissions
+     */
+    public function getPermissions()
+    {
+        return $this->permissions;
+    }
+
+    /**
+     * @return Block
+     */
+    public function getBlock()
+    {
+        return $this->block;
+    }
+
+    /**
+     * @return Page
+     */
+    public function getPage()
+    {
+        return $this->page;
+    }
+
+    /**
+     * @return Area
+     */
+    public function getArea()
+    {
+        return $this->area;
+    }
+
     public function __construct(Application $app, $config, Block $b, Page $c, Area $a)
     {
         parent::__construct();
         $p = new \Permissions($b);
+
+        $this->permissions = $p;
+        $this->block = $b;
+        $this->page = $c;
+        $this->area = $a;
 
         $this->setAttribute('data-block-menu', 'block-menu-b' . $b->getBlockID());
         $this->setAttribute('class', 'ccm-edit-mode-block-menu');

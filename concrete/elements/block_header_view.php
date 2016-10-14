@@ -107,7 +107,7 @@ if ($showMenu) {
             <?php
             $factory = $app->make('Concrete\Core\Block\Menu\Manager');
             $menu = $factory->getMenu([$b, $c, $a]);
-            print $menu->getMenuElement();
+            print $factory->deliverMenu($menu);
             ?>
         </div>
 
