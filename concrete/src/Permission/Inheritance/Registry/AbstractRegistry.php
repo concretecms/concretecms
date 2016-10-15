@@ -16,12 +16,6 @@ abstract class AbstractRegistry implements RegistryInterface
         $this->entries[] = $entry;
     }
 
-    public function getEntries($pkCategoryHandle)
-    {
-        $entries = [];
-        return $entries;
-    }
-
     public function getEntry($pkCategoryHandle, $pkHandle)
     {
         foreach($this->entries as $entry) {

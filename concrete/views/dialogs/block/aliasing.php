@@ -3,7 +3,7 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
 ?>
 <div class="ccm-ui">
 
-<?php if (count($cList) == 0) { ?>
+<?php if ($total == 0) { ?>
 
     <?=t("There are no pages of this type added to your website.")?>
 
