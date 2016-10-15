@@ -10,6 +10,7 @@ use Concrete\Core\Block\Block;
 use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Entity\File\File as FileEntity;
 use Concrete\Core\Page\Page;
+use Concrete\Core\Page\Type\Type;
 use Concrete\Core\Tree\Menu\Item\DeleteItem;
 use Concrete\Core\Application\UserInterface\ContextMenu\Menu as ContextMenu;
 
@@ -96,7 +97,7 @@ class Menu extends ContextMenu
         $canScheduleGuestAccess = ($config->get('concrete.permissions.model') != 'simple' && $p->canGuestsViewThisBlock() && $p->canScheduleGuestAccess() && (!$a->isGlobalArea()));
         $canAliasBlockOut = ($c->isMasterCollection() && !$a->isGlobalArea());
         if ($canAliasBlockOut) {
-            $ct = PageType::getByID($c->getPageTypeID());
+            $ct = Type::getByID($c->getPageTypeID());
         }
 
         $isAlias = $b->isAlias();
