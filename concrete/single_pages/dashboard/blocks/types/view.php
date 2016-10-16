@@ -13,7 +13,7 @@
 <p><?=$num?></p>
 
 <h5><?php echo t('Usage Count on Active Pages')?></h5>
-<p><?php echo $numActive?></p>
+<p><a href="<?=$view->action('search', $bt->getBlockTypeID())?>"><?php echo $numActive?></a></p>
 
 <?php if ($bt->isBlockTypeInternal()) {
     ?>

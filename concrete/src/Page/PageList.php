@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Page;
 
+use Concrete\Core\Entity\Block\BlockType\BlockType;
 use Concrete\Core\Entity\Site\Site;
 use Concrete\Core\Entity\Site\Tree;
 use Concrete\Core\Search\ItemList\Database\AttributedItemList as DatabaseItemList;
@@ -490,6 +491,17 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
         $this->query->innerJoin('av', 'TopicAttributeSelectedTopics', 'atst', 'av.avID = atst.avID');
         $this->query->andWhere('atst.treeNodeID = :TopicNodeID');
         $this->query->setParameter('TopicNodeID', $treeNodeID);
+    }
+
+    public function filterByBlockType(BlockType $bt)
+    {
+        $this->query->select('distinct p.cID');
+        $btID = $bt->getBlockTypeID();
+        $this->query->innerJoin('cv', 'CollectionVersionBlocks', 'cvb',
+            'cv.cID = cvb.cID and cv.cvID = cvb.cvID');
+        $this->query->innerJoin('cvb', 'Blocks', 'b', 'cvb.bID = b.bID');
+        $this->query->andWhere('b.btID = :btID');
+        $this->query->setParameter('btID', $btID);
     }
 
     /**
