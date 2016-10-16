@@ -1,8 +1,11 @@
 <?php
 namespace Concrete\Controller\SinglePage\Dashboard\Blocks;
 
+use Concrete\Core\Entity\Search\Query;
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Core\Entity\Block\BlockType\BlockType as BlockTypeEntity;
+use Concrete\Core\Page\Search\Field\Field\ContainsBlockTypeField;
+use Concrete\Core\Page\Search\SearchProvider;
 use Loader;
 use Environment;
 use BlockTypeList;
@@ -118,6 +121,24 @@ class Types extends DashboardPageController
             $this->set('error', $this->error);
         }
         $this->inspect($btID);
+    }
+
+    public function search($btID = 0)
+    {
+        $bt = BlockType::getByID($btID);
+        if (is_object($bt)) {
+            /**
+             * @var $provider SearchProvider
+             */
+            $provider = $this->app->make('Concrete\Core\Page\Search\SearchProvider');
+            $query = new Query();
+            $field = new ContainsBlockTypeField(['btID' => $btID]);
+            $query->setFields([$field]);
+            $query->setColumns($provider->getDefaultColumnSet());
+            $provider->setSessionCurrentQuery($query);
+            $this->redirect('/dashboard/sitemap/search');
+            exit;
+        }
     }
 
     public function inspect($btID = 0)
