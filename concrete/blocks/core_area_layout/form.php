@@ -27,7 +27,7 @@
 			<optgroup label="<?=t('Presets')?>">
 			  	<?php foreach ($presets as $pr) {
     ?>
-				    <option value="<?=$pr->getIdentifier()?>" <?php if (is_object($selectedPreset) && $selectedPreset->getIdentifier() == $pr->getIdentifier()) {
+				    <option value="<?=$pr->getIdentifier()?>" <?php if (isset($selectedPreset) && is_object($selectedPreset) && $selectedPreset->getIdentifier() == $pr->getIdentifier()) {
     ?>selected<?php 
 }
     ?>><?=$pr->getName()?></option>
