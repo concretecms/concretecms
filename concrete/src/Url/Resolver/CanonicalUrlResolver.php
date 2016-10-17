@@ -47,7 +47,8 @@ class CanonicalUrlResolver implements UrlResolverInterface
      */
     public function resolve(array $arguments, $resolved = null)
     {
-
+        $config = null;
+        $page = null;
 
         // Canonical urls for pages can be different than for the entire site
         if (count($arguments) && head($arguments) instanceof Page) {
