@@ -178,6 +178,13 @@ class StartingPointPackage extends BasePackage
             Group::getByID(GUEST_GROUP_ID),
             ['add_express_entries']
         );
+
+        // Set the root node to allow guests to view entries, so that blocks like express
+        // entry list and express entry details work.
+        $node->assignPermissions(
+            Group::getByID(GUEST_GROUP_ID),
+            ['view_express_entries']
+        );
     }
 
     public function install_attributes()
