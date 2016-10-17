@@ -9,37 +9,7 @@ if (!$sh->canRead()) {
 $v = View::getInstance();
 $v->requireAsset('core/sitemap');
 
-/*
-$txt = Loader::helper('text');
-$args = $_REQUEST;
-foreach($args as $key => $value) {
-    if (is_array($value)) {
-        foreach ($value as $index => $id) {
-            $value[$index] = intval($id);
-        }
-    } else {
-        $args[$key] = $txt->entities($value);
-    }
-}
-
-if (isset($select_mode)) {
-    $args['select_mode'] = $select_mode;
-}
-$args['selectedPageID'] = $_REQUEST['cID'];
-if (is_array($args['selectedPageID'])) {
-    $args['selectedPageID'] = implode(',',$args['selectedPageID']);
-}
-$args['sitemapCombinedMode'] = $sitemapCombinedMode;
-if (!isset($args['select_mode'])) {
-    $args['select_mode'] = 'select_page';
-}
-if ($args['select_mode'] == 'select_page') {
-    $args['reveal'] = $args['selectedPageID'];
-}
-
-$args['display_mode'] = 'full';
-$args['instance_id'] = time();
-*/
+$site = \Core::make("site")->getSite();
 ?>
 
 <div class="ccm-sitemap-overlay"></div>
@@ -48,6 +18,7 @@ $args['instance_id'] = time();
 <script type="text/javascript">
     $(function () {
         $('.ccm-sitemap-overlay').concreteSitemap({
+            siteTreeID: <?=$site->getSiteTreeID()?>,
             onClickNode: function (node) {
                 ConcreteEvent.publish('SitemapSelectPage', {
                     cID: node.data.cID,
