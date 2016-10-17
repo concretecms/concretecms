@@ -4,15 +4,14 @@ namespace Concrete\Attribute\Number;
 use Concrete\Core\Attribute\FontAwesomeIconFormatter;
 use Concrete\Core\Entity\Attribute\Key\Type\NumberType;
 use Concrete\Core\Entity\Attribute\Value\Value\NumberValue;
-use Loader;
 use Concrete\Core\Attribute\Controller as AttributeTypeController;
 
 class Controller extends AttributeTypeController
 {
-    protected $searchIndexFieldDefinition = array(
+    protected $searchIndexFieldDefinition = [
         'type' => 'decimal',
-        'options' => array('precision' => 14, 'scale' => 4, 'default' => 0, 'notnull' => false),
-    );
+        'options' => ['precision' => 14, 'scale' => 4, 'default' => 0, 'notnull' => false],
+    ];
 
     public function getIconFormatter()
     {
@@ -40,7 +39,7 @@ class Controller extends AttributeTypeController
 
     public function search()
     {
-        $f = Loader::helper('form');
+        $f = $this->app->make('helper/form');
         $html = $f->number($this->field('from'), $this->request('from'));
         $html .= ' ' . t('to') . ' ';
         $html .= $f->number($this->field('to'), $this->request('to'));
@@ -51,8 +50,10 @@ class Controller extends AttributeTypeController
     {
         if (is_object($this->attributeValue)) {
             $value = $this->getAttributeValue()->getValue();
+        } else {
+            $value = null;
         }
-        echo Loader::helper('form')->number($this->field('value'), $value, array('style' => 'width:80px'));
+        echo $this->app->make('helper/form')->number($this->field('value'), $value, ['style' => 'width:80px']);
     }
 
     public function validateForm($p)
