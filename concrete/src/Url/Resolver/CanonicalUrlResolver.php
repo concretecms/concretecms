@@ -108,6 +108,9 @@ class CanonicalUrlResolver implements UrlResolverInterface
                     }
                 }
             }
+            elseif (intval($canonical->getPort()->get()) > 0) {
+                $url = $url->setPort($canonical->getPort());
+            }
         }
 
         if ($relative_path = $this->app['app_relative_path']) {
