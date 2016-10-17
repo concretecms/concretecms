@@ -19,7 +19,7 @@ $req = ResponseAssetGroup::get();
 $req->requireAsset('core/imageeditor');
 
 /** @var ImageEditor $editor */
-if (!$editor) {
+if (!isset($editor) || !$editor) {
     $editor = \Core::make('editor/image/core');
 }
 
