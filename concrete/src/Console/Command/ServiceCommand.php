@@ -48,6 +48,8 @@ Return codes for the check operation:
 Return codes for the update operation:
   0 operation completed successfully
   1 errors occurred
+
+More info at http://documentation.concrete5.org/developers/appendix/cli-commands#c5-service
 EOT
         ;
         $this
@@ -71,7 +73,7 @@ EOT
             if ($service === null) {
                 $msg = 'Unknown web server handle: '.$input->getArgument('service');
                 $msg .= PHP_EOL;
-                $msg .= 'Valid handles: '.implode($manager->getExtensions());
+                $msg .= 'Valid handles: '.implode(', ', $manager->getExtensions());
                 throw new Exception($msg);
             }
             $operation = $input->getArgument('operation');
