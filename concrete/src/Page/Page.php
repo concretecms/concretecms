@@ -434,16 +434,21 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
             return $this->isCheckedOutCache;
         }
 
-        $dh = Core::make('helper/date');
-
-        $q = 'select cIsCheckedOut, '.$dh->getOverridableNow(true)." - UNIX_TIMESTAMP(cCheckedOutDatetimeLastEdit) as timeout from Pages where cID = '{$this->cID}'";
+        $q = "select cIsCheckedOut, cCheckedOutDatetimeLastEdit from Pages where cID = '{$this->cID}'";
         $r = $db->executeQuery($q);
+
+        // If cCheckedOutDatetimeLastEdit is present, get the time span in seconds since it's last edit.
+        if (! empty($row['cCheckedOutDatetimeLastEdit'])) {
+            $dh = Core::make('helper/date');
+            $timeSinceCheckout = ($dh->getOverridableNow(true) - strtotime($row['cCheckedOutDatetimeLastEdit']));
+        }
+
         if ($r) {
             $row = $r->fetchRow();
             if ($row['cIsCheckedOut'] == 0) {
                 return false;
             } else {
-                if ($row['timeout'] > CHECKOUT_TIMEOUT) {
+                if (isset($timeSinceCheckout) && $timeSinceCheckout > CHECKOUT_TIMEOUT) {
                     $this->forceCheckIn();
                     $this->isCheckedOutCache = false;
 
