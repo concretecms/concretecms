@@ -14,7 +14,7 @@ class ProgressList extends UserList
 
     public function __construct()
     {
-        $this->setQuery('SELECT DISTINCT u.uID, u.uName, wp.wpID FROM Users u INNER JOIN UserWorkflowProgress uwp ON uwp.uID = u.uID INNER JOIN WorkflowProgress wp ON wp.wpID = uwp.wpID');
+        $this->setQuery('SELECT DISTINCT u.uID, u.uName, wp.wpID, wp.wpDateLastAction, wp.wpCurrentStatus FROM Users u INNER JOIN UserWorkflowProgress uwp ON uwp.uID = u.uID INNER JOIN WorkflowProgress wp ON wp.wpID = uwp.wpID');
         $this->filter('wpIsCompleted', 0);
     }
 
