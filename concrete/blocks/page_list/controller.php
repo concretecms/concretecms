@@ -338,6 +338,12 @@ class Controller extends BlockController
                 $e->add(t('Your RSS feed must have a valid description.'));
             }
         }
+        if ($args['rss']) {
+            $canonicalURL = $this->app->make('site')->getSite()->getSiteCanonicalURL();
+            if (!$canonicalURL) {
+                $e->add(t('In order to enable RSS you must specify the website canonical URL.'));
+            }
+        }
 
         return $e;
     }
