@@ -198,33 +198,48 @@ input.ccm-activate-date-time {
  */
 div.ccm-item-selector {
   .border-radius(2px);
-  color: #606060;
-  background-color: #f2f2f2;
+  color: #ffffff;
+  background-color: #3f9edc;
+  text-align: center;
   font-size: 18px;
-
   padding: 8px 12px 8px 8px;
   .transition(0.1s linear all);
 
+  &:before,
+  &:after {
+      content: "";
+      display: table;
+  }
+
+  &:after {
+      clear: both;
+  }
+
   &:hover {
-    background-color: darken(#f2f2f2, 3%);
+    background-color: #2a6496;
   }
 
   div.ccm-item-selector-item-selected-thumbnail {
     margin-right: 10px; float: left;
 
     img {
-      max-width: 20px;
-      max-height: 20px;
+      max-width: 60px;
+      max-height: 60px;
     }
   }
 
   a {
-    color: #606060;
+    color: #ffffff;
     display: block;
+
     &:hover {
-      color: #606060;
+      color: #ffffff;
       text-decoration: none;
     }
+  }
+
+  .ccm-item-selector-item-selected-title {
+    text-align: left;
   }
 /*  border: 1px solid #dedede;
   .border-radius(4px);
