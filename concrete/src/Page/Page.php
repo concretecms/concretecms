@@ -62,6 +62,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     protected $isMasterCollection = null;
     protected $cInheritPermissionsFromCID = null;
     protected $cIsSystemPage = false;
+    protected $siteTreeID;
 
     /**
      * @param string $path /path/to/page
