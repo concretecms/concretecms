@@ -397,10 +397,10 @@ return array(
         "/ccm/system/page/create/{ptID}" => array('\Concrete\Controller\Backend\Page::create'),
         "/ccm/system/page/create/{ptID}/{parentID}" => array('\Concrete\Controller\Backend\Page::create'),
         "/ccm/system/page/get_json" => array('\Concrete\Controller\Backend\Page::getJSON'),
-        "/ccm/system/page/multilingual/assign" => array('\Concrete\Controller\Backend\Multilingual::assign'),
-        "/ccm/system/page/multilingual/create_new" => array('\Concrete\Controller\Backend\Multilingual::create_new'),
-        "/ccm/system/page/multilingual/ignore" => array('\Concrete\Controller\Backend\Multilingual::ignore'),
-        "/ccm/system/page/multilingual/unmap" => array('\Concrete\Controller\Backend\Multilingual::unmap'),
+        "/ccm/system/page/multilingual/assign" => array('\Concrete\Controller\Backend\Page\Multilingual::assign'),
+        "/ccm/system/page/multilingual/create_new" => array('\Concrete\Controller\Backend\Page\Multilingual::create_new'),
+        "/ccm/system/page/multilingual/ignore" => array('\Concrete\Controller\Backend\Page\Multilingual::ignore'),
+        "/ccm/system/page/multilingual/unmap" => array('\Concrete\Controller\Backend\Page\Multilingual::unmap'),
         "/ccm/system/page/select_sitemap" => array('\Concrete\Controller\Backend\Page\SitemapSelector::view'),
 
         /*
