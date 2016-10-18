@@ -167,6 +167,19 @@ class Install extends Controller
 
     public function setup()
     {
+        $config = $this->app['config'];
+        $passwordMinLength = (int) $config->get('concrete.user.password.minimum', 5);
+        $passwordMaxLength = (int) $config->get('concrete.user.password.maximum');
+        $passwordAttributes = [
+            'autocomplete' => 'off',
+        ];
+        if ($passwordMinLength > 0) {
+            $passwordAttributes['required'] = 'required';
+        }
+        if ($passwordMaxLength > 0) {
+            $passwordAttributes['maxlength'] = $passwordMaxLength;
+        }
+        $this->set('passwordAttributes', $passwordAttributes);
     }
 
     public function select_language()
@@ -429,6 +442,7 @@ class Install extends Controller
             $this->set('error', $ex);
             $error->add($ex);
         }
+        $this->setup();
 
         return $error;
     }
