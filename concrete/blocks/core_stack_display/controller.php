@@ -106,6 +106,10 @@ class Controller extends BlockController implements TrackableInterface
 
     public function runAction($action, $parameters = array())
     {
+        if ('on_page_view' === $action) {
+            $this->on_page_view($parameters[0]);
+        }
+        
         $b = $this->findBlockForAction($action, $parameters);
         if (empty($b)) {
             return;
