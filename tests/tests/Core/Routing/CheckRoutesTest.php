@@ -1,5 +1,5 @@
 <?php
-namespace Concrete\Tests\Core\Routin;
+namespace Concrete\Tests\Core\Routing;
 
 use PHPUnit_Framework_TestCase;
 use Concrete\Core\Support\Facade\Application;
