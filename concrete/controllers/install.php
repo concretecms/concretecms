@@ -46,7 +46,7 @@ class Install extends Controller
 
     /**
      * Handle of the site_install_user.php file.
-     * 
+     *
      * @var resource|null|false
      */
     protected $fpu;
@@ -175,9 +175,16 @@ class Install extends Controller
         ];
         if ($passwordMinLength > 0) {
             $passwordAttributes['required'] = 'required';
-        }
-        if ($passwordMaxLength > 0) {
-            $passwordAttributes['maxlength'] = $passwordMaxLength;
+            if ($passwordMaxLength > 0) {
+                $passwordAttributes['placeholder'] = t('between %1$s and %2$s characters long', $passwordMinLength, $passwordMaxLength);
+                $passwordAttributes['pattern'] = '.{'.$passwordMinLength.','.$passwordMaxLength.'}';
+            } else {
+                $passwordAttributes['placeholder'] = t('at least %s characters', $passwordMinLength);
+                $passwordAttributes['pattern'] = '.{'.$passwordMinLength.',}';
+            }
+        } elseif ($passwordMaxLength > 0) {
+            $passwordAttributes['placeholder'] = t('up to %s characters', $passwordMaxLength);
+            $passwordAttributes['pattern'] = '.{0,'.$passwordMaxLength.'}';
         }
         $this->set('passwordAttributes', $passwordAttributes);
     }
