@@ -4,7 +4,7 @@ namespace Concrete\Controller\Panel;
 use Concrete\Controller\Backend\UserInterface as BackendInterfaceController;
 use Loader;
 use PageType;
-use Page;
+use Page as ConcretePage;
 use Permissions;
 
 class Sitemap extends BackendInterfaceController
@@ -46,7 +46,7 @@ class Sitemap extends BackendInterfaceController
     {
         $this->requireAsset('core/sitemap');
 
-        $drafts = Page::getDrafts();
+        $drafts = ConcretePage::getDrafts();
         $mydrafts = array();
         foreach ($drafts as $d) {
             $dp = new Permissions($d);
