@@ -3190,7 +3190,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
 
         $uID = USER_SUPER_ID;
         $data['uID'] = $uID;
-        $cobj = parent::addCollection($data);
+        $cobj = parent::createCollection($data);
         $cID = $cobj->getCollectionID();
 
         // These get set to parent by default here, but they can be overridden later
