@@ -6,12 +6,13 @@ use Concrete\Core\Config\Renderer;
 use Concrete\Core\Error\ErrorList\ErrorList;
 use Concrete\Core\Localization\Localization as Localization;
 use Controller;
-use Config;
 use Exception;
 use Hautelook\Phpass\PasswordHash;
-use Core;
 use StartingPointPackage;
 use View;
+use Database;
+use ReflectionObject;
+use stdClass;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
@@ -36,7 +37,18 @@ class Install extends Controller
      */
     protected $auto_attach = false;
 
+    /**
+     * Handle of the site_install.php file.
+     *
+     * @var resource|null|false
+     */
     protected $fp;
+
+    /**
+     * Handle of the site_install_user.php file.
+     * 
+     * @var resource|null|false
+     */
     protected $fpu;
 
     public $helpers = ['form', 'html'];
@@ -69,7 +81,7 @@ class Install extends Controller
             if (defined('SITE_INSTALL_LOCALE') && Localization::activeLocale() !== SITE_INSTALL_LOCALE) {
                 Localization::changeLocale(SITE_INSTALL_LOCALE);
             }
-            $e = Core::make('helper/validation/error');
+            $e = $this->app->make('helper/validation/error');
             $e = $this->validateDatabase($e);
             if (defined('INSTALL_STARTING_POINT') && INSTALL_STARTING_POINT) {
                 $spName = INSTALL_STARTING_POINT;
@@ -103,7 +115,7 @@ class Install extends Controller
         } else {
             $DB_SERVER = isset($_POST['DB_SERVER']) ? $_POST['DB_SERVER'] : null;
             $DB_DATABASE = isset($_POST['DB_DATABASE']) ? $_POST['DB_DATABASE'] : null;
-            $db = \Database::getFactory()->createConnection(
+            $db = Database::getFactory()->createConnection(
                 [
                     'host' => $DB_SERVER,
                     'user' => isset($_POST['DB_USERNAME']) ? $_POST['DB_USERNAME'] : null,
@@ -127,7 +139,7 @@ class Install extends Controller
                     }
 
                     try {
-                        $support = $db->GetAll('show engines');
+                        $support = $db->fetchAll('show engines');
                         $supported = false;
                         foreach ($support as $engine) {
                             $engine = array_change_key_case($engine, CASE_LOWER);
@@ -138,7 +150,7 @@ class Install extends Controller
                         if (!$supported) {
                             $e->add(t('Your MySQL database does not support InnoDB database tables. These are required.'));
                         }
-                    } catch (\Exception $exception) {
+                    } catch (Exception $exception) {
                         // we're going to just proceed and hope for the best.
                     }
                 }
@@ -175,7 +187,7 @@ class Install extends Controller
         $this->setRequiredItems();
         $this->setOptionalItems();
 
-        if (\Core::isInstalled()) {
+        if ($this->app->isInstalled()) {
             throw new Exception(t('concrete5 is already installed.'));
         }
         if (!isset($_COOKIE['CONCRETE5_INSTALL_TEST'])) {
@@ -199,7 +211,7 @@ class Install extends Controller
         $this->set('xmlTest', function_exists('xml_parse') && function_exists('simplexml_load_file'));
         $this->set('fileWriteTest', $this->testFileWritePermissions());
         $this->set('aspTagsTest', ini_get('asp_tags') == false);
-        $rf = new \ReflectionObject($this);
+        $rf = new ReflectionObject($this);
         $rp = $rf->getProperty('docCommentCanary');
         $this->set('docCommentTest', (bool) $rp->getDocComment());
 
@@ -208,7 +220,7 @@ class Install extends Controller
             $this->set('memoryTest', 1);
             $this->set('memoryBytes', 0);
         } else {
-            $val = Core::make('helper/number')->getBytes($memoryLimit);
+            $val = $this->app->make('helper/number')->getBytes($memoryLimit);
             $this->set('memoryBytes', $val);
             if ($val < 25165824) {
                 $this->set('memoryTest', -1);
@@ -231,7 +243,7 @@ class Install extends Controller
 
     private function testFileWritePermissions()
     {
-        $e = Core::make('helper/validation/error');
+        $e = $this->app->make('helper/validation/error');
         if (!is_writable(DIR_CONFIG_SITE)) {
             $e->add(t('Your configuration directory config/ does not appear to be writable by the web server.'));
         }
@@ -273,7 +285,7 @@ class Install extends Controller
 
     public function test_url($num1, $num2)
     {
-        $js = Core::make('helper/json');
+        $js = $this->app->make('helper/json');
         $num = $num1 + $num2;
         echo $js->encode(['response' => $num]);
         exit;
@@ -285,8 +297,8 @@ class Install extends Controller
         require DIR_CONFIG_SITE . '/site_install.php';
         @include DIR_CONFIG_SITE . '/site_install_user.php';
 
-        $jsx = Core::make('helper/json');
-        $js = new \stdClass();
+        $jsx = $this->app->make('helper/json');
+        $js = new stdClass();
 
         try {
             if ($spl === null) {
@@ -323,10 +335,10 @@ class Install extends Controller
      */
     public function configure()
     {
-        $error = \Core::make('helper/validation/error');
+        $error = $this->app->make('helper/validation/error');
         /* @var $error \Concrete\Core\Error\Error */
         try {
-            $val = Core::make('helper/validation/form');
+            $val = $this->app->make('helper/validation/form');
             $val->setData($this->post());
             $val->addRequired("SITE", t("Please specify your site's name"));
             $val->addRequiredEmail("uEmail", t('Please specify a valid email address'));
@@ -336,7 +348,7 @@ class Install extends Controller
             $password = $_POST['uPassword'];
             $passwordConfirm = $_POST['uPasswordConfirm'];
 
-            Core::make('validator/password')->isValid($password, $error);
+            $this->app->make('validator/password')->isValid($password, $error);
 
             if ($password) {
                 if ($password != $passwordConfirm) {
@@ -356,7 +368,7 @@ class Install extends Controller
             if ($val->test() && (!$error->has())) {
 
                 // write the config file
-                $vh = Core::make('helper/validation/identifier');
+                $vh = $this->app->make('helper/validation/identifier');
                 $this->fp = @fopen(DIR_CONFIG_SITE . '/site_install.php', 'w+');
                 $this->fpu = @fopen(DIR_CONFIG_SITE . '/site_install_user.php', 'w+');
                 if ($this->fp) {
@@ -385,7 +397,8 @@ class Install extends Controller
                 }
 
                 if ($this->fpu) {
-                    $hasher = new PasswordHash(Config::get('concrete.user.password.hash_cost_log2'), Config::get('concrete.user.password.hash_portable'));
+                    $config = $this->app->make('config');
+                    $hasher = new PasswordHash($config->get('concrete.user.password.hash_cost_log2'), $config->get('concrete.user.password.hash_portable'));
                     $configuration = "<?php\n";
                     $configuration .= "define('INSTALL_USER_EMAIL', " . var_export((string) $_POST['uEmail'], true) . ");\n";
                     $configuration .= "define('INSTALL_USER_PASSWORD_HASH', " . var_export((string) $hasher->HashPassword($_POST['uPassword']), true) . ");\n";

@@ -193,7 +193,7 @@ if (isset($successMessage)) {
                 <fieldset>
                     <legend><?=t('Sample Content')?></legend>
                     <?php
-                    $uh = Loader::helper('concrete/urls');
+                    $uh = Core::make('helper/concrete/urls');
                     ?>
                     <table class="table" id="sample-content-selector">
                         <tbody>
