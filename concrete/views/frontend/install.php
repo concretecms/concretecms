@@ -1,6 +1,8 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
 
+/* @var Concrete\Core\Form\Service\Form $form */
+
 $install_config = Config::get('install_overrides');
 if ($install_config) {
     $_POST = $install_config;
@@ -150,7 +152,7 @@ if (isset($successMessage)) {
                     <legend><?=t('Site Information')?></legend>
                     <div class="form-group">
                         <label for="SITE" class="control-label"><?=t('Site Name')?>:</label>
-                        <?=$form->text('SITE', ['autofocus' => 'autofocus'])?>
+                        <?=$form->text('SITE', ['autofocus' => 'autofocus', 'required' => 'required'])?>
                     </div>
                 </fieldset>
 
@@ -158,15 +160,15 @@ if (isset($successMessage)) {
                     <legend><?=t('Administrator Information')?></legend>
                     <div class="form-group">
                         <label for="uEmail" class="control-label"><?=t('Email Address')?>:</label>
-                        <?=$form->email('uEmail')?>
+                        <?=$form->email('uEmail', ['required' => 'required'])?>
                     </div>
                     <div class="form-group">
                         <label for="uPassword" class="control-label"><?=t('Password')?>:</label>
-                        <?=$form->password('uPassword', ['autocomplete' => 'off'])?>
+                        <?=$form->password('uPassword', $passwordAttributes)?>
                     </div>
                     <div class="form-group">
                         <label for="uPasswordConfirm" class="control-label"><?=t('Confirm Password')?>:</label>
-                        <?=$form->password('uPasswordConfirm', ['autocomplete' => 'off'])?>
+                        <?=$form->password('uPasswordConfirm', $passwordAttributes)?>
                     </div>
                 </fieldset>
 
@@ -174,7 +176,7 @@ if (isset($successMessage)) {
                     <legend><?=t('Database Information')?></legend>
                     <div class="form-group">
                         <label class="control-label" for="DB_SERVER"><?=t('Server')?>:</label>
-                        <?=$form->text('DB_SERVER')?>
+                        <?=$form->text('DB_SERVER', ['required' => 'required'])?>
                     </div>
                     <div class="form-group">
                         <label class="control-label" for="DB_USERNAME"><?=t('MySQL Username')?>:</label>
@@ -186,7 +188,7 @@ if (isset($successMessage)) {
                     </div>
                     <div class="form-group">
                         <label class="control-label" for="DB_DATABASE"><?=t('Database Name')?>:</label>
-                        <?=$form->text('DB_DATABASE')?>
+                        <?=$form->text('DB_DATABASE', ['required' => 'required'])?>
                     </div>
                 </fieldset>
 
