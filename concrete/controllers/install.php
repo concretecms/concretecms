@@ -13,6 +13,7 @@ use View;
 use Database;
 use ReflectionObject;
 use stdClass;
+use Concrete\Core\Url\UrlImmutable;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
@@ -187,6 +188,28 @@ class Install extends Controller
             $passwordAttributes['pattern'] = '.{0,'.$passwordMaxLength.'}';
         }
         $this->set('passwordAttributes', $passwordAttributes);
+        $canonicalUrl = '';
+        $canonicalUrlChecked = false;
+        $canonicalSSLUrl = '';
+        $canonicalSSLUrlChecked = false;
+        $uri = $this->request->getUri();
+        if (preg_match('/^(https?)(:.+?)(?:\/'.preg_quote(DISPATCHER_FILENAME, '%').')?\/install(?:$|\/|\?)/i', $uri, $m)) {
+            $canonicalUrl = 'http'.rtrim($m[2], '/');
+            $canonicalSSLUrl = 'https'.rtrim($m[2], '/');
+            switch (strtolower($m[1])) {
+                case 'http':
+                    $canonicalUrlChecked = true;
+                    break;
+                case 'http':
+                    $canonicalSSLUrlChecked = true;
+                    break;
+            }
+        }
+        $this->set('setInitialState', $this->request->post('SITE') === null);
+        $this->set('canonicalUrl', $canonicalUrl);
+        $this->set('canonicalUrlChecked', $canonicalUrlChecked);
+        $this->set('canonicalSSLUrl', $canonicalSSLUrl);
+        $this->set('canonicalSSLUrlChecked', $canonicalSSLUrlChecked);
     }
 
     public function select_language()
@@ -356,9 +379,10 @@ class Install extends Controller
     public function configure()
     {
         $error = $this->app->make('helper/validation/error');
-        /* @var $error \Concrete\Core\Error\Error */
+        /* @var $error \Concrete\Core\Error\ErrorList\ErrorList */
         try {
             $val = $this->app->make('helper/validation/form');
+            /* @var \Concrete\Core\Form\Service\Validation $val */
             $val->setData($this->post());
             $val->addRequired("SITE", t("Please specify your site's name"));
             $val->addRequiredEmail("uEmail", t('Please specify a valid email address'));
@@ -385,6 +409,28 @@ class Install extends Controller
             $error = $this->validateDatabase($error);
             $error = $this->validateSampleContent($error);
 
+            if ($this->post('canonicalUrlChecked') === '1') {
+                try {
+                    $url = UrlImmutable::createFromUrl($this->post('canonicalUrl'));
+                    if (strcasecmp('http', $url->getScheme()) !== 0) {
+                        throw new Exception('The HTTP canonical URL must have the http:// scheme');
+                    }
+                    $canonicalUrl = (string) $url;
+                } catch (Exception $x) {
+                    $error->add($x);
+                }
+            } else {
+                $canonicalUrl = '';
+            }
+            if ($this->post('canonicalSSLUrlChecked') === '1') {
+                $url = UrlImmutable::createFromUrl($this->post('canonicalSSLUrl'));
+                if (strcasecmp('https', $url->getScheme()) !== 0) {
+                    throw new Exception('The SSL canonical URL must have the https:// scheme');
+                }
+                $canonicalSSLUrl = (string) $url;
+            } else {
+                $canonicalSSLUrl = '';
+            }
             if ($val->test() && (!$error->has())) {
 
                 // write the config file
@@ -406,6 +452,8 @@ class Install extends Controller
                             ],
                         ],
                     ];
+                    $config['canonical-url'] = $canonicalUrl;
+                    $config['canonical-ssl-url'] = $canonicalSSLUrl;
 
                     $renderer = new Renderer($config);
                     fwrite($this->fp, $renderer->render());

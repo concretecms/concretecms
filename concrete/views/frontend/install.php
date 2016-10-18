@@ -133,6 +133,30 @@ if (isset($successMessage)) {
                 $(this).parent().parent().find('tr').removeClass();
                 $(this).parent().addClass('package-selected');
             });
+            function updateCanonicalURLState() {
+                $.each([
+                    [$('#canonicalUrlChecked').is(':checked'), $('#canonicalUrl')],
+                    [$('#canonicalSSLUrlChecked').is(':checked'), $('#canonicalSSLUrl')]
+                ], function() {
+                    if (this[0]) {
+                       this[1].attr('required', 'required');
+                       this[1].removeAttr('disabled');
+                    } else {
+                        this[1].removeAttr('required');
+                        this[1].attr('disabled', 'disabled');
+                    }
+                });
+            }
+            $('#canonicalUrlChecked,#canonicalSSLUrlChecked').change(updateCanonicalURLState);
+            <?php
+            if ($setInitialState) {
+                ?>
+                $('#canonicalUrlChecked').prop('checked', <?=$canonicalUrlChecked ? 'true' : 'false'?>);
+                $('#canonicalSSLUrlChecked').prop('checked', <?=$canonicalSSLUrlChecked ? 'true' : 'false'?>);
+                <?php
+            }
+            ?>
+            updateCanonicalURLState();
         });
     </script>
 
@@ -150,10 +174,28 @@ if (isset($successMessage)) {
 
                 <fieldset>
                     <legend><?=t('Site Information')?></legend>
+
                     <div class="form-group">
                         <label for="SITE" class="control-label"><?=t('Site Name')?>:</label>
                         <?=$form->text('SITE', ['autofocus' => 'autofocus', 'required' => 'required'])?>
                     </div>
+
+                    <div class="form-group">
+                        <label class="control-label">
+                            <?=$form->checkbox('canonicalUrlChecked', '1')?>
+                            <?=t('Set canonical URL for HTTP')?>:
+                        </label>
+                        <?=$form->url('canonicalUrl', h($canonicalUrl), ['pattern' => 'http:.+', 'placeholder' => 'http://'])?>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label">
+                            <?=$form->checkbox('canonicalSSLUrlChecked', '1')?>
+                            <?=t('Set canonical URL over SSL')?>:
+                        </label>
+                        <?=$form->url('canonicalSSLUrl', h($canonicalSSLUrl), ['pattern' => 'https:.+', 'placeholder' => 'https://'])?>
+                    </div>
+
                 </fieldset>
 
                 <fieldset>
