@@ -150,7 +150,7 @@ if (isset($successMessage)) {
                     <legend><?=t('Site Information')?></legend>
                     <div class="form-group">
                         <label for="SITE" class="control-label"><?=t('Site Name')?>:</label>
-                        <?=$form->text('SITE', array('class' => '', 'autofocus' => 'autofocus'))?>
+                        <?=$form->text('SITE', array('autofocus' => 'autofocus'))?>
                     </div>
                 </fieldset>
 
@@ -158,15 +158,15 @@ if (isset($successMessage)) {
                     <legend><?=t('Administrator Information')?></legend>
                     <div class="form-group">
                         <label for="uEmail" class="control-label"><?=t('Email Address')?>:</label>
-                        <?=$form->email('uEmail', array('class' => ''))?>
+                        <?=$form->email('uEmail')?>
                     </div>
                     <div class="form-group">
                         <label for="uPassword" class="control-label"><?=t('Password')?>:</label>
-                        <?=$form->password('uPassword', array('class' => '', 'autocomplete' => 'off'))?>
+                        <?=$form->password('uPassword', array('autocomplete' => 'off'))?>
                     </div>
                     <div class="form-group">
                         <label for="uPasswordConfirm" class="control-label"><?=t('Confirm Password')?>:</label>
-                        <?=$form->password('uPasswordConfirm', array('class' => '', 'autocomplete' => 'off'))?>
+                        <?=$form->password('uPasswordConfirm', array('autocomplete' => 'off'))?>
                     </div>
                 </fieldset>
 
@@ -174,19 +174,19 @@ if (isset($successMessage)) {
                     <legend><?=t('Database Information')?></legend>
                     <div class="form-group">
                         <label class="control-label" for="DB_SERVER"><?=t('Server')?>:</label>
-                        <?=$form->text('DB_SERVER', array('class' => ''))?>
+                        <?=$form->text('DB_SERVER')?>
                     </div>
                     <div class="form-group">
                         <label class="control-label" for="DB_USERNAME"><?=t('MySQL Username')?>:</label>
-                        <?=$form->text('DB_USERNAME', array('class' => ''))?>
+                        <?=$form->text('DB_USERNAME')?>
                     </div>
                     <div class="form-group">
                         <label class="control-label" for="DB_PASSWORD"><?=t('MySQL Password')?>:</label>
-                        <?=$form->password('DB_PASSWORD', array('class' => '', 'autocomplete' => 'off'))?>
+                        <?=$form->password('DB_PASSWORD', array('autocomplete' => 'off'))?>
                     </div>
                     <div class="form-group">
                         <label class="control-label" for="DB_DATABASE"><?=t('Database Name')?>:</label>
-                        <?=$form->text('DB_DATABASE', array('class' => ''))?>
+                        <?=$form->text('DB_DATABASE')?>
                     </div>
                 </fieldset>
 
