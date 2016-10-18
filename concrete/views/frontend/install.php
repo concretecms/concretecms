@@ -6,7 +6,6 @@ if ($install_config) {
     $_POST = $install_config;
 }
 ?>
-<style type="text/css">@import "<?=ASSETS_URL_CSS?>/views/install.css";</style>
 <script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/bootstrap/tooltip.js"></script>
 <script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/jquery-cookie.js"></script>
 <script type="text/javascript">

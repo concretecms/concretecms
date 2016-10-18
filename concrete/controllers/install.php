@@ -166,6 +166,7 @@ class Install extends Controller
      */
     public function on_start()
     {
+        $this->addHeaderItem('<link href="'.ASSETS_URL_CSS.'/views/install.css" rel="stylesheet" type="text/css" media="all" />');
         if (isset($_POST['locale']) && $_POST['locale']) {
             $loc = Localization::changeLocale($_POST['locale']);
             $this->set('locale', $_POST['locale']);
