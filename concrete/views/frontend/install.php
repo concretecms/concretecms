@@ -6,9 +6,6 @@ if ($install_config) {
     $_POST = $install_config;
 }
 ?>
-
-<div>
-
 <style type="text/css">@import "<?=ASSETS_URL_CSS?>/views/install.css";</style>
 <script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/bootstrap/tooltip.js"></script>
 <script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/jquery-cookie.js"></script>
@@ -215,7 +212,7 @@ if (isset($successMessage)) {
                                     </td>
                                     <td class="sample-content-description">
                                         <h4><?=$spl->getPackageName()?></h4>
-                                        <p><?=$spl->getPackageDescription()?>
+                                        <p><?=$spl->getPackageDescription()?></p>
                                     </td>
                                 </tr>
                                 <?php
@@ -247,6 +244,8 @@ if (isset($successMessage)) {
 
             </form>
 
+        </div>
+    </div>
     <?php
 } elseif (isset($locale) || count($locales) == 0) {
     ?>
@@ -333,7 +332,7 @@ if (isset($successMessage)) {
                             }
                             ?>
                         </td>
-                        <td width="100%">
+                        <td style="width: 100%">
                             <?=t(/*i18n: %s is the php version*/'PHP %s', $phpVmin)?>
                         </td>
                         <td>
@@ -351,7 +350,7 @@ if (isset($successMessage)) {
                             <i id="ccm-test-js-success" class="fa fa-check" style="display: none"></i>
                             <i class="fa fa-exclamation-circle"></i>
                         </td>
-                        <td width="100%">
+                        <td style="width: 100%">
                             <?=t('JavaScript Enabled')?>
                         </td>
                         <td class="ccm-test-js">
@@ -372,7 +371,7 @@ if (isset($successMessage)) {
                             }
                             ?>
                         </td>
-                        <td width="100%">
+                        <td style="width: 100%">
                             <?=t('MySQL PDO Extension Enabled')?>
                         </td>
                         <td>
@@ -389,7 +388,7 @@ if (isset($successMessage)) {
                         <td>
                             <i id="ccm-test-request-loading"  class="fa fa-spinner fa-spin"></i>
                         </td>
-                        <td width="100%">
+                        <td style="width: 100%">
                             <?=t('Supports concrete5 request URLs')?>
                         </td>
                         <td>
@@ -410,7 +409,7 @@ if (isset($successMessage)) {
                             }
                             ?>
                         </td>
-                        <td width="100%">
+                        <td style="width: 100%">
                             <?=t('JSON Extension Enabled')?>
                         </td>
                         <td>
@@ -437,7 +436,7 @@ if (isset($successMessage)) {
                             }
                             ?>
                         </td>
-                        <td width="100%">
+                        <td style="width: 100%">
                             <?php echo t('DOM Extension Enabled')?>
                         </td>
                         <td>
@@ -464,7 +463,7 @@ if (isset($successMessage)) {
                             }
                             ?>
                         </td>
-                        <td width="100%">
+                        <td style="width: 100%">
                             <?=t('ASP Style Tags Disabled')?>
                         </td>
                         <td>
@@ -476,6 +475,7 @@ if (isset($successMessage)) {
                             }
                         ?></td>
                     </tr>
+                </tbody>
             </table>
 
         </div>
@@ -483,152 +483,153 @@ if (isset($successMessage)) {
         <div class="col-sm-5">
 
             <table class="table table-striped requirements-table">
-                <tr>
-                    <td>
-                        <?php
-                        if ($imageTest) {
-                            ?>
-                            <i class="fa fa-check"></i>
+                <tbody>
+                    <tr>
+                        <td>
                             <?php
-                        } else {
+                            if ($imageTest) {
+                                ?>
+                                <i class="fa fa-check"></i>
+                                <?php
+                            } else {
+                                ?>
+                                <i class="fa fa-exclamation-circle"></i>
+                                <?php
+                            }
                             ?>
-                            <i class="fa fa-exclamation-circle"></i>
+                        </td>
+                        <td style="width: 100%">
+                            <?=t('Image Manipulation Available')?>
+                        </td>
+                        <td>
                             <?php
-                        }
-                        ?>
-                    </td>
-                    <td width="100%">
-                        <?=t('Image Manipulation Available')?>
-                    </td>
-                    <td>
-                        <?php
-                        if (!$imageTest) {
+                            if (!$imageTest) {
+                                ?>
+                                <i class="fa fa-question-circle launch-tooltip" title="<?=t('concrete5 requires GD library 2.0.1 with JPEG, PNG and GIF support. Doublecheck that your installation has support for all these image types.')?>"></i>
+                                <?php
+                            }
                             ?>
-                            <i class="fa fa-question-circle launch-tooltip" title="<?=t('concrete5 requires GD library 2.0.1 with JPEG, PNG and GIF support. Doublecheck that your installation has support for all these image types.')?>"></i>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
                             <?php
-                        }
-                        ?>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <?php
-                        if ($xmlTest) {
+                            if ($xmlTest) {
+                                ?>
+                                <i class="fa fa-check"></i>
+                                <?php
+                            } else {
+                                ?>
+                                <i class="fa fa-exclamation-circle"></i>
+                                <?php
+                            }
                             ?>
-                            <i class="fa fa-check"></i>
+                        </td>
+                        <td style="width: 100%">
+                            <?=t('XML Support')?>
+                        </td>
+                        <td>
                             <?php
-                        } else {
+                            if (!$xmlTest) {
+                                ?>
+                                <i class="fa fa-question-circle launch-tooltip" title="<?=t('concrete5 requires PHP XML Parser and SimpleXML extensions')?>"></i>
+                                <?php
+                            }
                             ?>
-                            <i class="fa fa-exclamation-circle"></i>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
                             <?php
-                        }
-                        ?>
-                    </td>
-                    <td width="100%">
-                        <?=t('XML Support')?>
-                    </td>
-                    <td>
-                        <?php
-                        if (!$xmlTest) {
+                            if ($fileWriteTest) {
+                                ?>
+                                <i class="fa fa-check"></i>
+                                <?php
+                            } else {
+                                ?>
+                                <i class="fa fa-exclamation-circle"></i>
+                                <?php
+                            }
                             ?>
-                            <i class="fa fa-question-circle launch-tooltip" title="<?=t('concrete5 requires PHP XML Parser and SimpleXML extensions')?>"></i>
+                        </td>
+                        <td style="width: 100%">
+                            <?=t('Writable Files and Configuration Directories')?>
+                        </td>
+                        <td>
                             <?php
-                        }
-                        ?>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <?php
-                        if ($fileWriteTest) {
+                            if (!$fileWriteTest) {
+                                ?>
+                                <i class="fa fa-question-circle launch-tooltip" title="<?=t('The packages/, application/config/ and application/files/ directories must be writable by your web server.')?>"></i>
+                                <?php
+                            }
                             ?>
-                            <i class="fa fa-check"></i>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <i id="ccm-test-cookies-enabled-loading" class="fa fa-spinner fa-spin"></i>
+                        </td>
+                        <td style="width: 100%">
+                            <?=t('Cookies Enabled')?>
+                        </td>
+                        <td>
+                            <i id="ccm-test-cookies-enabled-tooltip" class="fa fa-question-circle launch-tooltip" title="<?=t('Cookies must be enabled in your browser to install concrete5.')?>"></i>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
                             <?php
-                        } else {
+                            if ($i18nTest) {
+                                ?>
+                                <i class="fa fa-check"></i>
+                                <?php
+                            } else {
+                                ?>
+                                <i class="fa fa-exclamation-circle"></i>
+                                <?php
+                            }
                             ?>
-                            <i class="fa fa-exclamation-circle"></i>
+                        </td>
+                        <td style="width: 100%">
+                            <?=t('Internationalization Support')?>
+                        </td>
+                        <td>
                             <?php
-                        }
-                        ?>
-                    </td>
-                    <td width="100%">
-                        <?=t('Writable Files and Configuration Directories')?>
-                    </td>
-                    <td>
-                        <?php
-                        if (!$fileWriteTest) {
+                            if (!$i18nTest) {
+                                ?>
+                                <i class="fa fa-question-circle launch-tooltip" title="<?=t('You must enable ctype and multibyte string (mbstring) support in PHP.')?>"></i>
+                                <?php
+                            }
                             ?>
-                            <i class="fa fa-question-circle launch-tooltip" title="<?=t('The packages/, application/config/ and application/files/ directories must be writable by your web server.')?>"></i>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
                             <?php
-                        }
-                        ?>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <i id="ccm-test-cookies-enabled-loading" class="fa fa-spinner fa-spin"></i>
-                    </td>
-                    <td width="100%">
-                        <?=t('Cookies Enabled')?>
-                    </td>
-                    <td>
-                        <i id="ccm-test-cookies-enabled-tooltip" class="fa fa-question-circle launch-tooltip" title="<?=t('Cookies must be enabled in your browser to install concrete5.')?>"></i>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <?php
-                        if ($i18nTest) {
+                            if ($docCommentTest) {
+                                ?>
+                                <i class="fa fa-check"></i>
+                                <?php
+                            } else {
+                                ?>
+                                <i class="fa fa-exclamation-circle"></i>
+                                <?php
+                            }
                             ?>
-                            <i class="fa fa-check"></i>
+                        </td>
+                        <td style="width: 100%">
+                            <?=t('PHP Comments Preserved')?>
+                        <td>
                             <?php
-                        } else {
+                            if (!$docCommentTest) {
+                                ?>
+                                <i class="fa fa-question-circle launch-tooltip" title="<?=t('concrete5 is not compatible with opcode caches that strip PHP comments. Certain configurations of eAccelerator and Zend opcode caching may use this behavior, and it must be disabled.')?>"></i>
+                                <?php
+                            }
                             ?>
-                            <i class="fa fa-exclamation-circle"></i>
-                            <?php
-                        }
-                        ?>
-                    </td>
-                    <td width="100%">
-                        <?=t('Internationalization Support')?>
-                    </td>
-                    <td>
-                        <?php
-                        if (!$i18nTest) {
-                            ?>
-                            <i class="fa fa-question-circle launch-tooltip" title="<?=t('You must enable ctype and multibyte string (mbstring) support in PHP.')?>"></i>
-                            <?php
-                        }
-                        ?>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <?php
-                        if ($docCommentTest) {
-                            ?>
-                            <i class="fa fa-check"></i>
-                            <?php
-                        } else {
-                            ?>
-                            <i class="fa fa-exclamation-circle"></i>
-                            <?php
-                        }
-                        ?>
-                    </td>
-                    <td width="100%">
-                        <?=t('PHP Comments Preserved')?>
-                    <td>
-                        <?php
-                        if (!$docCommentTest) {
-                            ?>
-                            <i class="fa fa-question-circle launch-tooltip" title="<?=t('concrete5 is not compatible with opcode caches that strip PHP comments. Certain configurations of eAccelerator and Zend opcode caching may use this behavior, and it must be disabled.')?>">
-                            </td>
-                            <?php
-                        }
-                        ?>
-                    </td>
-                </tr>
+                        </td>
+                    </tr>
+                </tbody>
             </table>
 
         </div>
@@ -662,7 +663,7 @@ if (isset($successMessage)) {
                             }
                             ?>
                         </td>
-                        <td width="100%">
+                        <td style="width: 100%">
                             <?=t('Remote File Importing Available')?>
                         </td>
                         <td>
@@ -675,6 +676,7 @@ if (isset($successMessage)) {
                             ?>
                         </td>
                     </tr>
+                </tbody>
             </table>
 
         </div>
@@ -697,7 +699,7 @@ if (isset($successMessage)) {
                             }
                             ?>
                         </td>
-                        <td width="100%">
+                        <td style="width: 100%">
                             <?=t('Zip Support')?>
                         </td>
                         <td>
@@ -710,6 +712,7 @@ if (isset($successMessage)) {
                             ?>
                         </td>
                     </tr>
+                </tbody>
             </table>
 
         </div>
@@ -747,7 +750,7 @@ if (isset($successMessage)) {
                             }
                             ?>
                         </td>
-                        <td width="100%">
+                        <td style="width: 100%">
                             <?php
                             if ($memoryTest === -1) {
                                 ?>
@@ -777,6 +780,7 @@ if (isset($successMessage)) {
                             ?>
                         </td>
                     </tr>
+                </tbody>
             </table>
 
         </div>
@@ -838,7 +842,7 @@ if (isset($successMessage)) {
         <div class="col-sm-8 col-sm-offset-2">
 
             <div id="ccm-install-intro">
-                <form method="post"action="<?=$view->url('/install', 'select_language')?>">
+                <form method="post" action="<?=$view->url('/install', 'select_language')?>">
                     <fieldset>
                         <div class="form-group">
                             <label for="locale" class="control-label"><?=t('Language')?></label>
@@ -859,6 +863,3 @@ if (isset($successMessage)) {
 
     <?php
 }
-?>
-
-</div>
