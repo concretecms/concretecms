@@ -150,7 +150,7 @@ if (isset($successMessage)) {
                     <legend><?=t('Site Information')?></legend>
                     <div class="form-group">
                         <label for="SITE" class="control-label"><?=t('Site Name')?>:</label>
-                        <?=$form->text('SITE', array('autofocus' => 'autofocus'))?>
+                        <?=$form->text('SITE', ['autofocus' => 'autofocus'])?>
                     </div>
                 </fieldset>
 
@@ -162,11 +162,11 @@ if (isset($successMessage)) {
                     </div>
                     <div class="form-group">
                         <label for="uPassword" class="control-label"><?=t('Password')?>:</label>
-                        <?=$form->password('uPassword', array('autocomplete' => 'off'))?>
+                        <?=$form->password('uPassword', ['autocomplete' => 'off'])?>
                     </div>
                     <div class="form-group">
                         <label for="uPasswordConfirm" class="control-label"><?=t('Confirm Password')?>:</label>
-                        <?=$form->password('uPasswordConfirm', array('autocomplete' => 'off'))?>
+                        <?=$form->password('uPasswordConfirm', ['autocomplete' => 'off'])?>
                     </div>
                 </fieldset>
 
@@ -182,7 +182,7 @@ if (isset($successMessage)) {
                     </div>
                     <div class="form-group">
                         <label class="control-label" for="DB_PASSWORD"><?=t('MySQL Password')?>:</label>
-                        <?=$form->password('DB_PASSWORD', array('autocomplete' => 'off'))?>
+                        <?=$form->password('DB_PASSWORD', ['autocomplete' => 'off'])?>
                     </div>
                     <div class="form-group">
                         <label class="control-label" for="DB_DATABASE"><?=t('Database Name')?>:</label>
