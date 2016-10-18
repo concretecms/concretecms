@@ -39,7 +39,7 @@ class Install extends Controller
     protected $fp;
     protected $fpu;
 
-    public $helpers = array('form', 'html');
+    public $helpers = ['form', 'html'];
 
     public function getViewObject()
     {
@@ -104,12 +104,12 @@ class Install extends Controller
             $DB_SERVER = isset($_POST['DB_SERVER']) ? $_POST['DB_SERVER'] : null;
             $DB_DATABASE = isset($_POST['DB_DATABASE']) ? $_POST['DB_DATABASE'] : null;
             $db = \Database::getFactory()->createConnection(
-                array(
+                [
                     'host' => $DB_SERVER,
                     'user' => isset($_POST['DB_USERNAME']) ? $_POST['DB_USERNAME'] : null,
                     'password' => isset($_POST['DB_PASSWORD']) ? $_POST['DB_PASSWORD'] : null,
                     'database' => $DB_DATABASE,
-                )
+                ]
             );
 
             if ($DB_SERVER && $DB_DATABASE) {
@@ -275,7 +275,7 @@ class Install extends Controller
     {
         $js = Core::make('helper/json');
         $num = $num1 + $num2;
-        echo $js->encode(array('response' => $num));
+        echo $js->encode(['response' => $num]);
         exit;
     }
 
@@ -292,7 +292,7 @@ class Install extends Controller
             if ($spl === null) {
                 throw new Exception(t('Invalid starting point: %s', $pkgHandle));
             }
-            call_user_func(array($spl, $routine));
+            call_user_func([$spl, $routine]);
             $js->error = false;
         } catch (Exception $e) {
             $js->error = true;
@@ -360,20 +360,20 @@ class Install extends Controller
                 $this->fp = @fopen(DIR_CONFIG_SITE . '/site_install.php', 'w+');
                 $this->fpu = @fopen(DIR_CONFIG_SITE . '/site_install_user.php', 'w+');
                 if ($this->fp) {
-                    $config = isset($_POST['SITE_CONFIG']) ? ((array) $_POST['SITE_CONFIG']) : array();
-                    $config['database'] = array(
+                    $config = isset($_POST['SITE_CONFIG']) ? ((array) $_POST['SITE_CONFIG']) : [];
+                    $config['database'] = [
                         'default-connection' => 'concrete',
-                        'connections' => array(
-                            'concrete' => array(
+                        'connections' => [
+                            'concrete' => [
                                 'driver' => 'c5_pdo_mysql',
                                 'server' => $_POST['DB_SERVER'],
                                 'database' => $_POST['DB_DATABASE'],
                                 'username' => $_POST['DB_USERNAME'],
                                 'password' => $_POST['DB_PASSWORD'],
                                 'charset' => 'utf8',
-                            ),
-                        ),
-                    );
+                            ],
+                        ],
+                    ];
 
                     $renderer = new Renderer($config);
                     fwrite($this->fp, $renderer->render());
