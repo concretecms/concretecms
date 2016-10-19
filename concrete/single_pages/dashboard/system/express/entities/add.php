@@ -8,16 +8,16 @@
             <div class="input-group">
                 <?=$form->text('name', '', ['autofocus' => 'autofocus'])?>
                 <span class="input-group-addon"><i class="fa fa-asterisk"></i></span>
-                <p class="help-block"><?=t('The name is how your entity will appear in the Dashboard. It may only contain letters.')?></p>
             </div>
+            <p class="help-block"><?=t('The name is how your entity will appear in the Dashboard. It may only contain letters.')?></p>
         </div>
         <div class="form-group <?php if ($error->containsField('handle')) { ?>has-error<?php } ?>">
             <label for="name" class="control-label"><?=t('Handle')?></label>
             <div class="input-group">
                 <?=$form->text('handle')?>
                 <span class="input-group-addon"><i class="fa fa-asterisk"></i></span>
-                <p class="help-block"><?=t('A unique string consisting of lowercase letters and underscores only.')?></p>
             </div>
+            <p class="help-block"><?=t('A unique string consisting of lowercase letters and underscores only.')?></p>
         </div>
         <div class="form-group">
             <label for="name" class="control-label"><?=t('Description')?></label>
