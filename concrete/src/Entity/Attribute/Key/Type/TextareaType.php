@@ -10,11 +10,6 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class TextareaType extends Type
 {
-    public function getAttributeValue()
-    {
-        return new TextareaValue();
-    }
-
     /**
      * @ORM\Column(type="string")
      */

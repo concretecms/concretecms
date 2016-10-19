@@ -53,11 +53,6 @@ class TopicsType extends Type
         $this->akTopicParentNodeID = $parentNodeID;
     }
 
-    public function getAttributeValue()
-    {
-        return new TopicsValue();
-    }
-
     public function getTopicTreeObject()
     {
         return Tree::getByID($this->topicTreeID);

@@ -10,9 +10,5 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class RatingType extends Type
 {
-    public function getAttributeValue()
-    {
-        return new RatingValue();
-    }
 
 }

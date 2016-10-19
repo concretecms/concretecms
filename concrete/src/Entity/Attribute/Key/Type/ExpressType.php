@@ -33,9 +33,4 @@ class ExpressType extends Type
         $this->entity = $entity;
     }
 
-    public function getAttributeValue()
-    {
-        return new ExpressValue();
-    }
-
 }
