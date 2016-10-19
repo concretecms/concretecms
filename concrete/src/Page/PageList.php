@@ -153,7 +153,7 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
             case self::PAGE_VERSION_RECENT_UNAPPROVED:
                 $query
                     ->andWhere('cvID = (select max(cvID) from CollectionVersions where cID = cv.cID)')
-                    ->andWhere('cvIsApproved is null or cvIsApproved <> 1');
+                    ->andWhere('cvIsApproved = 0');
                 break;
             case self::PAGE_VERSION_ACTIVE:
             default:
