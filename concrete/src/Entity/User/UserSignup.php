@@ -19,10 +19,15 @@ class UserSignup implements SubjectInterface
     protected $usID;
 
     /**
-     * @ORM\ManyToOne(targetEntity="\Concrete\Core\Entity\User\User"),
+     * @ORM\OneToOne(targetEntity="\Concrete\Core\Entity\User\User", inversedBy="signup"),
      * @ORM\JoinColumn(name="uID", referencedColumnName="uID")
      */
     protected $user;
+
+    /**
+     * @ORM\OneToMany(targetEntity="\Concrete\Core\Entity\Notification\UserSignupNotification", mappedBy="signup", cascade={"remove"}),
+     */
+    protected $notifications;
 
     /**
      * @ORM\ManyToOne(targetEntity="\Concrete\Core\Entity\User\User"),

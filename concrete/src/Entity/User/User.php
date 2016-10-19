@@ -27,6 +27,11 @@ class User
     protected $alerts;
 
     /**
+     * @ORM\OneToOne(targetEntity="\Concrete\Core\Entity\User\UserSignup", mappedBy="user", cascade={"remove"})
+     */
+    protected $signup;
+
+    /**
      * @ORM\OneToMany(targetEntity="\Concrete\Core\Entity\Attribute\Value\UserValue", cascade={"remove"}, mappedBy="user")
      * @ORM\JoinColumn(name="uID", referencedColumnName="uID")
      */
