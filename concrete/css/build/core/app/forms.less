@@ -1,288 +1,83 @@
 .ccm-ui {
-  label.control-label {
-    font-size: 13px;
-    letter-spacing: 1px;
-    /*
-    color: #999;
-    */
-    color: #4290be;
-    font-weight: 600;
-    margin-bottom: 5px;
-    display: inline-block;
-    text-transform: uppercase;
+
+  // Remove input control box shadow
+  .form-control {
+    box-shadow: none;
+
+    // Remove focus box shadow
+    &:focus {
+      box-shadow: none !important; // need import because of other classes like has-warning
+    }
   }
 
+  // Make control labels blue
+  label.control-label {
+    color: #4290be;
+  }
+
+  // Fieldset: Make the legend bold, move it down, make it blue, add the full width border
   fieldset:first-of-type {
     margin-top: 0px;
   }
+
   fieldset {
-    margin-top: 40px;
-    margin-bottom: 0px;
+    margin-top: 2em;
     position: relative; /* we need this for right aligned tooltips */
     legend {
+      margin-bottom: 0px;
       font-weight: bold;
       border: 0px;
+    }
 
+    // Note the full width border has to be added to the form-group
+    // element, because legend can't span the full content area because it is lame
 
+    legend + .form-group {
+      border-top: 1px solid #dcdcdc;
+      margin-top: 1.2em;
+      padding-top: 1.2em;
     }
   }
 
-  legend + div.form-group {
-    border-top: 1px solid #dcdcdc;
-  }
 
-  .selectize-control.single .selectize-input {
-    padding-right: 30px;
-    background: #f2f2f2 url(../images/icons/select_arrow_down.svg) no-repeat right 10px top 8px;
-    background-size: 16px 16px;
-
-    &:after {
-      display: none;
-    }
-
-    &.input-active {
-      background: darken(#f2f2f2, 5%) url(../images/icons/select_arrow_up.svg) no-repeat right 10px top 8px;
-      background-size: 16px 16px;
-
-    }
-  }
-
-  .selectize-control .selectize-input {
-    &.focus {
-      background-color: darken(#f2f2f2, 5%) !important;
-    }
-  }
-
-  .selectize-control.multi div.item {
-    background-color: darken(#f2f2f2, 10%);
-  }
-}
-
-
-div.form-group-highlight {
-  background-color: #e7e7e7;
-  margin-left: -26px;
-  margin-right: -26px;
-  padding-left: 26px;
-  padding-right: 26px;
-  padding-bottom: 8px;
-  padding-top: 10px;
-  margin-top: 8px;
-  margin-bottom: 10px;
-
-  div.selectize-input,
-  select.form-control,
-  input.form-control,
-  textarea.form-control {
-    &:focus {
-      background-color: #ffffff !important;
-    }
-
-    &:hover {
-      background-color: #ffffff !important;
-    }
-  }
-
-  div.form-group {
-    border-bottom-width: 0px;
-    margin-bottom: 0px;
-  }
-}
-
-div.form-group {
-  position: relative;
-  padding-top: 30px;
-  padding-bottom: 30px;
-  margin-bottom: 0px;
-  font-size: 18px;
-  border-bottom: 1px solid #ededed;
-
-  &:last-of-type {
-    border-bottom: 0px;
-  }
-
-  .help-block {
-    display: none;
-    font-size: 12px;
-  }
-
-  &.has-error,
-  &.has-warning,
-  &.has-success {
-    div.selectize-input,
-    select.form-control,
-    input.form-control,
-    textarea.form-control {
-      outline: 0px;
-      .box-shadow(none);
-      border-color: transparent;
-    }
-  }
-
-  &.has-error {
-    div.selectize-input,
-    select.form-control,
-    input.form-control,
-    textarea.form-control {
-      background-color: lighten(#a94442, 50%);
-
-      &:hover {
-        background-color: lighten(#a94442, 47%);
-      }
-
-      &:focus {
-        background-color: lighten(#a94442, 45%) !important;
-      }
-    }
-  }
-
-  &.has-success {
-    div.selectize-input,
-    select.form-control,
-    input.form-control,
-    textarea.form-control {
-      background-color: lighten(#3c763d, 50%);
-
-      &:hover {
-        background-color: lighten(#3c763d, 47%);
-      }
-
-      &:focus {
-        background-color: lighten(#3c763d, 45%) !important;
-      }
-    }
-  }
-
-  &.has-warning {
-    div.selectize-input,
-    select.form-control,
-    input.form-control,
-    textarea.form-control {
-      background-color: lighten(#8a6d3b, 50%);
-
-      &:hover {
-        background-color: lighten(#8a6d3b, 47%);
-      }
-
-      &:focus {
-        background-color: lighten(#8a6d3b, 45%) !important;
-      }
-    }
-  }
-
+  // Select menu appearance update
   select.form-control {
     -webkit-appearance: none;
     -moz-appearance: none;
     appearance: none;
-  }
 
-  div.selectize-input,
-  select.form-control,
-  input.form-control,
-  textarea.form-control {
-    color: #606060;
-    font-size: 18px;
-    padding: 3px 12px;
-    .border-radius(2px);
-
-    &:focus {
-      + .help-block {
-        display: block;
-      }
-    }
-  }
-
-  .input-group {
-    .input-group-addon {
-      padding-right: 10px;
-    }
-  }
-
-  select.form-control {
     padding-right: 30px;
-    background: #ffffff url(../images/icons/select_arrow_down.svg) no-repeat right 10px top 8px;
+    background: #ffffff url(../images/icons/select_arrow_down.svg) no-repeat right 10px top 10px;
     background-size: 16px 16px;
 
     &:disabled {
       background-image: url(../images/icons/select_arrow_down_disabled.svg);
     }
   }
-}
 
-div.checkbox,
-div.radio {
-  label {
-    color: #606060;
-    font-size: 18px;
+  // Less intrusive help
+  .help-block {
+    font-size: 14px;
+    color: #888;
   }
-}
 
-div.form-inline {
-  div.form-group {
-    margin: 0px !important;
-    border-bottom-width: 0px !important;
-    padding: 0px !important;
-  }
-}
+  // Buttons - add transition
+  .btn {
+    outline: none;
+    .transition(.3s);
 
-
-div.ccm-ui {
-
-  ul.nav-tabs {
-    padding-left: 10px;
-    margin-left: -26px;
-    margin-right: -26px;
-    margin-bottom: 0px;
-    > li {
-      margin-bottom: 0px;
-      a {
-        font-size: 13px;
-        padding: 10px 15px;
-        -webkit-font-smoothing: antialiased;
-      }
+    &.btn-primary {
+      font-weight: bold;
     }
 
-    > li.active:after {
-      text-align: center;
-      content: "\f0d7";
-      font-family: FontAwesome;
-      font-size: 16px;
-      position: absolute;
-      bottom: -15px;
-
-      left: 0px;
-      width: 100%;
-      color: #48b4fb;
-      text-align: center;
+    &:focus {
+      outline: none;
     }
 
-    > li > a {
-      &,
-      &:hover,
-      &:focus {
-        outline: none;
-        color: #999;
-        border-width: 0px !important;
-      }
-    }
-    > li > a:hover {
-      background-color: transparent;
-      text-decoration: underline;
-    }
-    > li.active > a {
-      &,
-      &:hover,
-      &:focus {
-        color: #48b4fb;
-        font-weight: bold;
-        text-decoration: none;
-        background-color: transparent;
-        outline: none;
-        border-width: 0px !important;
-        position: relative;
-      }
+    &:active,
+    &.active {
+      box-shadow: none;
     }
   }
 
 }
-
