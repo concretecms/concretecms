@@ -7,7 +7,7 @@ use Permissions;
 use Loader;
 use Redirect;
 use Page as ConcretePage;
-use User;
+use User as ConcreteUser;
 use Concrete\Core\Page\EditResponse as PageEditResponse;
 use Core;
 
@@ -49,7 +49,7 @@ class Page extends Controller
             $c = ConcretePage::getByID($cID);
             $cp = new Permissions($c);
             if ($cp->canViewToolbar()) {
-                $u = new User();
+                $u = new ConcreteUser();
                 $u->unloadCollectionEdit();
             }
 
