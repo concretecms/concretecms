@@ -21,6 +21,7 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
 {
     const PAGE_VERSION_ACTIVE = 1;
     const PAGE_VERSION_RECENT = 2;
+    const PAGE_VERSION_RECENT_UNAPPROVED = 3;
 
     protected function getAttributeKeyClassName()
     {
@@ -145,10 +146,19 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
                 ->andWhere('p.cIsTemplate = 0');
         }
 
-        if ($this->pageVersionToRetrieve == self::PAGE_VERSION_RECENT) {
-            $query->andWhere('cvID = (select max(cvID) from CollectionVersions where cID = cv.cID)');
-        } else {
-            $query->andWhere('cvIsApproved = 1');
+        switch ($this->pageVersionToRetrieve) {
+            case self::PAGE_VERSION_RECENT:
+                $query->andWhere('cvID = (select max(cvID) from CollectionVersions where cID = cv.cID)');
+                break;
+            case self::PAGE_VERSION_RECENT_UNAPPROVED:
+                $query
+                    ->andWhere('cvID = (select max(cvID) from CollectionVersions where cID = cv.cID)')
+                    ->andWhere('cvIsApproved is null or cvIsApproved <> 1');
+                break;
+            case self::PAGE_VERSION_ACTIVE:
+            default:
+                $query->andWhere('cvIsApproved = 1');
+                break;
         }
 
         if ($this->isFulltextSearch) {
