@@ -16,7 +16,7 @@ class UserSignupNotification extends Notification
 {
 
     /**
-     * @ORM\ManyToOne(targetEntity="\Concrete\Core\Entity\User\UserSignup", cascade={"persist", "remove"}),
+     * @ORM\ManyToOne(targetEntity="\Concrete\Core\Entity\User\UserSignup", cascade={"persist", "remove"}, inversedBy="notifications"),
      * @ORM\JoinColumn(name="usID", referencedColumnName="usID")
      */
     protected $signup;
