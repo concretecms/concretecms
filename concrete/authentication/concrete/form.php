@@ -6,16 +6,17 @@ $form = Core::make('helper/form');
 <form method="post" action="<?= URL::to('/login', 'authenticate', $this->getAuthenticationTypeHandle()) ?>">
 
 	<div class="form-group">
-		<input name="uName" class="form-control col-sm-12" placeholder="<?=Config::get('concrete.user.registration.email_registration') ? t('Email Address') : t('Username')?>" autofocus="autofocus" />
+		<label class="control-label"><?=Config::get('concrete.user.registration.email_registration') ? t('Email Address') : t('Username')?></label>
+		<input name="uName" class="form-control" autofocus="autofocus" />
 	</div>
 
 	<div class="form-group">
-		<label>&nbsp;</label>
-		<input name="uPassword" class="form-control" type="password" placeholder="<?=t('Password')?>" />
+		<label class="control-label"><?=t('Password')?></label>
+		<input name="uPassword" class="form-control" type="password" />
 	</div>
 
 	<div class="checkbox">
-		<label style="font-weight:normal">
+		<label>
 			<input type="checkbox" name="uMaintainLogin" value="1">
 			<?= t('Stay signed in for two weeks') ?>
 		</label>

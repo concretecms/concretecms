@@ -10,11 +10,6 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class DateTimeType extends Type
 {
-    public function getAttributeValue()
-    {
-        return new DateTimeValue();
-    }
-
     /**
      * @ORM\Column(type="string")
      */

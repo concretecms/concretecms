@@ -10,8 +10,8 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Exception;
 use Database;
 use Config;
-use Core;
 use StartingPointPackage;
+use Concrete\Core\Support\Facade\Application;
 
 class InstallCommand extends Command
 {
@@ -25,6 +25,8 @@ class InstallCommand extends Command
             ->addOption('db-password', null, InputOption::VALUE_REQUIRED, 'Database password')
             ->addOption('db-database', null, InputOption::VALUE_REQUIRED, 'Database name')
             ->addOption('site', null, InputOption::VALUE_REQUIRED, 'Name of the site', 'concrete5 Site')
+            ->addOption('canonical-url', null, InputOption::VALUE_REQUIRED, 'Canonical URL', '')
+            ->addOption('canonical-ssl-url', null, InputOption::VALUE_REQUIRED, 'Canonical URL over SSL', '')
             ->addOption('starting-point', null, InputOption::VALUE_REQUIRED, 'Starting point to use', 'elemental_blank')
             ->addOption('admin-email', null, InputOption::VALUE_REQUIRED, 'Email of the admin user of the install', 'admin@example.com')
             ->addOption('admin-password', null, InputOption::VALUE_REQUIRED, 'Password of the admin user of the install')
@@ -50,6 +52,7 @@ EOT
     {
         $rc = 0;
         try {
+            $app = Application::getFacadeApplication();
             $options = $input->getOptions();
             if (isset($options['config'])) {
                 if (!is_file($options['config'])) {
@@ -105,7 +108,7 @@ EOT
             Database::setDefaultConnection('install');
             Config::set('database.connections.install', array());
 
-            $cnt = new \Concrete\Controller\Install();
+            $cnt = $app->make(\Concrete\Controller\Install::class);
 
             $force_attach = $input->getOption('force-attach');
             $auto_attach = $force_attach || $input->getOption('attach');
@@ -113,7 +116,7 @@ EOT
 
             $cnt->on_start();
             $fileWriteErrors = clone $cnt->fileWriteErrors;
-            $e = Core::make('helper/validation/error');
+            $e = $app->make('helper/validation/error');
             if (!$cnt->get('imageTest')) {
                 $e->add('GD library must be enabled to install concrete5.');
             }
@@ -142,6 +145,14 @@ EOT
                 $_POST['SAMPLE_CONTENT'] = $options['starting-point'];
                 $_POST['uEmail'] = $options['admin-email'];
                 $_POST['uPasswordConfirm'] = $_POST['uPassword'] = $options['admin-password'];
+                if ($options['canonical-url']) {
+                    $_POST['canonicalUrlChecked'] = '1';
+                    $_POST['canonicalUrl'] = $options['canonical-url'];
+                }
+                if ($options['canonical-ssl-url']) {
+                    $_POST['canonicalSSLUrlChecked'] = '1';
+                    $_POST['canonicalSSLUrl'] = $options['canonical-ssl-url'];
+                }
                 $e = $cnt->configure();
             }
             if ($e->has()) {
@@ -152,7 +163,7 @@ EOT
 
                 if (!$force_attach && $cnt->isAutoAttachEnabled()) {
                     /** @var Connection $db */
-                    $db = \Core::make('database')->connection();
+                    $db = $app->make('database')->connection();
 
                     if ($db->query('show tables')->rowCount()) {
                         $attach_mode = true;
