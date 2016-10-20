@@ -107,7 +107,7 @@ class BasicThumbnailer
         $src = REL_DIR_FILES_CACHE . '/' . $filename;
         $abspath = Config::get('concrete.cache.directory') . '/' . $filename;
         $thumb = new \stdClass;
-        if (isset($abspath) && file_exists($abspath) && is_file($abspath)) {
+        if (isset($abspath) && is_file($abspath)) {
             $thumb->src = $src;
             $dimensions = getimagesize($abspath);
             $thumb->width = $dimensions[0];
