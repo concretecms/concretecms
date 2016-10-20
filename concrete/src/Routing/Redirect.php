@@ -2,6 +2,8 @@
 namespace Concrete\Core\Routing;
 
 use Core;
+use League\Url\Url;
+use League\Url\UrlInterface;
 use Request;
 use Page;
 
@@ -25,7 +27,7 @@ class Redirect
     {
         // Is what we're providing a URL object?
         $args = func_get_args();
-        if (is_object($args[0])) {
+        if (is_object($args[0]) && $args[0] instanceof UrlInterface) {
             $url = $args[0];
         } else {
             $url = call_user_func_array('\URL::to', func_get_args());
