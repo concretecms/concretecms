@@ -7,6 +7,7 @@ use Page;
 use Permissions;
 use Concrete\Core\Entity\File\File as FileEntity;
 use Concrete\Core\File\File;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 class DownloadFile extends PageController
 {
@@ -115,13 +116,42 @@ class DownloadFile extends PageController
     }
 
     /**
+     * Track a download against session
      * @param \Concrete\Core\Entity\File\File $file
+     * @param $rcID
+     */
+    private function trackDownload(FileEntity $file, $rcID)
+    {
+        // Never track requests that are only requesting a range
+        if ($this->request->headers->get('content-range')) {
+            return;
+        }
+
+        /** @var Session $session */
+        $session = $this->app['session'];
+        $download = $session->get('download_throttle');
+
+        // Earliest download we won't count happened an hour ago
+        $earliest = time() - 3600;
+        if (!$download || $download['id'] != $file->getFileID() || $download['time'] < $earliest) {
+            $download = [
+                'id' => $file->getFileID(),
+                'time' => time()
+            ];
+
+            $session->set('download_throttle', $download);
+            $file->trackDownload($rcID);
+        }
+    }
+
+    /**
+     * @param FileEntity $file
      * @param null|int $rcID
      */
-    protected function download(\Concrete\Core\Entity\File\File $file, $rcID = null)
+    protected function download(FileEntity $file, $rcID = null)
     {
         $filename = $file->getFilename();
-        $file->trackDownload($rcID);
+        $this->trackDownload($file, $rcID);
         $fsl = $file->getFileStorageLocationObject();
         $configuration = $fsl->getConfigurationObject();
         $fv = $file->getVersion();
@@ -141,7 +171,7 @@ class DownloadFile extends PageController
      */
     protected function force_download($file, $rcID = null)
     {
-        $file->trackDownload($rcID);
+        $this->trackDownload($file, $rcID);
 
         // Magic call to approved FileVersion
         return $file->forceDownload();
