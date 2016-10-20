@@ -15,7 +15,7 @@
   border-radius: .25em;
 
   // Add hover effects, but only for links
-  &[href] {
+  a& {
     &:hover,
     &:focus {
       color: @label-link-hover-color;
@@ -30,18 +30,10 @@
   }
 
   // Quick fix for labels in buttons
-  /* concrete5 */
-  /*
   .btn & {
     position: relative;
     top: -1px;
   }
-  */
-}
-
-.btn .label {
-    position: relative;
-    top: -1px;
 }
 
 // Colors

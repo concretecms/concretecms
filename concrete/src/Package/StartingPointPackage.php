@@ -470,6 +470,14 @@ class StartingPointPackage extends BasePackage
             @chmod(DIR_CONFIG_SITE . '/app.php', Config::get('concrete.filesystem.permissions.file'));
         }
 
+        $siteConfig = \Site::getDefault()->getConfigRepository();
+        if (isset($site_install['canonical-url']) && $site_install['canonical-url']) {
+            $siteConfig->save('seo.canonical_url', $site_install['canonical-url']);
+        }
+        if (isset($site_install['canonical-ssl-url']) && $site_install['canonical-ssl-url']) {
+            $siteConfig->save('seo.canonical_ssl_url', $site_install['canonical-ssl-url']);
+        }
+
         @unlink(DIR_CONFIG_SITE . '/site_install.php');
         @unlink(DIR_CONFIG_SITE . '/site_install_user.php');
 

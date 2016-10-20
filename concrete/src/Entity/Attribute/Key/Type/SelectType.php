@@ -40,11 +40,6 @@ class SelectType extends Type
         $this->list = $list;
     }
 
-    public function getAttributeValue()
-    {
-        return new SelectValue();
-    }
-
     /**
      * @ORM\Column(type="boolean")
      */

@@ -26,8 +26,11 @@ $dh = Loader::helper('concrete/dashboard');
 
         $editMode = $c->isEditMode();
         $tools = REL_DIR_FILES_TOOLS_REQUIRED;
+        $htmlTagClasses = 'ccm-toolbar-visible';
+
         if ($c->isEditMode()) {
             $startEditMode = 'new Concrete.EditMode();';
+            $htmlTagClasses .= ' ccm-edit-mode';
         } else {
             $startEditMode = '';
         }
@@ -49,7 +52,7 @@ $dh = Loader::helper('concrete/dashboard');
 
             $js = <<<EOL
 <script type="text/javascript">$(function() {
-	$('html').addClass('ccm-toolbar-visible');
+	$('html').addClass('$htmlTagClasses');
 	ConcretePanelManager.register({'identifier': 'dashboard', 'position': 'right', url: '{$panelDashboard}'});
 	ConcretePanelManager.register({'identifier': 'page', url: '{$panelPage}'});
 	ConcretePanelManager.register({'identifier': 'sitemap', 'position': 'right', url: '{$panelSitemap}'});
