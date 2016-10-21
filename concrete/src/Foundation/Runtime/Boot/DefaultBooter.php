@@ -380,8 +380,11 @@ class DefaultBooter implements BootInterface, ApplicationAwareInterface
     private function checkInstall(Application $app, Request $request)
     {
         if (!$app->isInstalled()) {
-            if (!$request->matches('/install/*') &&
-                $request->getPath() != '/install') {
+            if (
+                !$request->matches('/install/*')
+                && $request->getPath() != '/install'
+                && !$request->matches('/ccm/assets/localization/*')
+            ) {
                 $manager = $app->make('Concrete\Core\Url\Resolver\Manager\ResolverManager');
                 $response = new RedirectResponse($manager->resolve(array('install')));
 
