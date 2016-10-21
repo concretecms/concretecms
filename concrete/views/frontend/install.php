@@ -1016,16 +1016,13 @@ if (isset($successMessage)) {
 
     <div id="ccm-install-intro">
         <form method="post" id="ccm-install-language-form" action="<?= $view->url('/install', 'select_language') ?>">
-        <div class="panel panel-info">
-            <div class="panel-heading"><?= t('Language') ?></div>
-            <div class="form-group">
-                <div class="input-group-lg input-group">
-                    <?= $form->select('locale', $locales, 'en_US'); ?>
-                    <div class="input-group-btn">
-                        <button type="submit" class="btn btn-primary">
-                            <i class="fa fa-arrow-right"></i>
-                        </button>
-                    </div>
+        <div class="form-group">
+            <div class="input-group-lg input-group">
+                <?= $form->select('locale', $locales, 'en_US'); ?>
+                <div class="input-group-btn">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fa fa-arrow-right"></i>
+                    </button>
                 </div>
             </div>
         </div>
