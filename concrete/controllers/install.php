@@ -101,7 +101,7 @@ class Install extends Controller
                 $this->set(
                     'successMessage',
                     t(
-                        'Congratulations. concrete5 has been installed. You have been logged in as <b>%s</b> with the password you chose. If you wish to change this password, you may do so from the users area of the dashboard.',
+                        'concrete5 has been installed. You have been logged in as <b>%s</b> with the password you chose. If you wish to change this password, you may do so from the users area of the dashboard.',
                         USER_SUPER
                     )
                 );
@@ -177,7 +177,7 @@ class Install extends Controller
         if ($passwordMinLength > 0) {
             $passwordAttributes['required'] = 'required';
             if ($passwordMaxLength > 0) {
-                $passwordAttributes['placeholder'] = t('between %1$s and %2$s characters long', $passwordMinLength, $passwordMaxLength);
+                $passwordAttributes['placeholder'] = t('Between %1$s and %2$s Characters', $passwordMinLength, $passwordMaxLength);
                 $passwordAttributes['pattern'] = '.{'.$passwordMinLength.','.$passwordMaxLength.'}';
             } else {
                 $passwordAttributes['placeholder'] = t('at least %s characters', $passwordMinLength);
@@ -196,14 +196,14 @@ class Install extends Controller
         if (preg_match('/^(https?)(:.+?)(?:\/'.preg_quote(DISPATCHER_FILENAME, '%').')?\/install(?:$|\/|\?)/i', $uri, $m)) {
             $canonicalUrl = 'http'.rtrim($m[2], '/');
             $canonicalSSLUrl = 'https'.rtrim($m[2], '/');
-            switch (strtolower($m[1])) {
+            /*switch (strtolower($m[1])) {
                 case 'http':
                     $canonicalUrlChecked = true;
                     break;
                 case 'http':
                     $canonicalSSLUrlChecked = true;
                     break;
-            }
+            }*/
         }
         $this->set('setInitialState', $this->request->post('SITE') === null);
         $this->set('canonicalUrl', $canonicalUrl);
@@ -222,6 +222,8 @@ class Install extends Controller
     public function on_start()
     {
         $this->addHeaderItem('<link href="'.ASSETS_URL_CSS.'/views/install.css" rel="stylesheet" type="text/css" media="all" />');
+        $this->requireAsset('core/app');
+        $this->requireAsset('javascript', 'bootstrap/collapse');
         if (isset($_POST['locale']) && $_POST['locale']) {
             $loc = Localization::changeLocale($_POST['locale']);
             $this->set('locale', $_POST['locale']);
@@ -454,6 +456,7 @@ class Install extends Controller
                     ];
                     $config['canonical-url'] = $canonicalUrl;
                     $config['canonical-ssl-url'] = $canonicalSSLUrl;
+                    $config['session-handler'] = $_POST['sessionHandler'];
 
                     $renderer = new Renderer($config);
                     fwrite($this->fp, $renderer->render());
