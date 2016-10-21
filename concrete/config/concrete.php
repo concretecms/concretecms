@@ -558,6 +558,7 @@ return array(
         'background_feed' => '//backgroundimages.concrete5.org/wallpaper',
         'background_feed_secure' => 'https://backgroundimages.concrete5.org/wallpaper',
         'background_info' => 'http://backgroundimages.concrete5.org/get_image_data.php',
+        'videos' => 'https://www.youtube.com/user/concrete5cms/videos',
         'help' => array(
             'developer' => 'http://www.concrete5.org/documentation/developers/5.7/',
             'user' => 'http://www.concrete5.org/documentation/using-concrete5-7',

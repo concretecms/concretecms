@@ -844,6 +844,10 @@ return array(
             array('javascript', 'js/bootstrap/popover.js'),
             array('css', 'css/app.css', array('minify' => false)),
         ),
+        'bootstrap/collapse' => array(
+            array('javascript', 'js/bootstrap/collapse.js'),
+            array('css', 'css/app.css', array('minify' => false)),
+        ),
         'bootstrap/alert' => array(
             array('javascript', 'js/bootstrap/alert.js'),
             array('css', 'css/app.css', array('minify' => false)),
