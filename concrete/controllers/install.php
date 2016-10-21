@@ -260,6 +260,10 @@ class Install extends Controller
         $rp = $rf->getProperty('docCommentCanary');
         $this->set('docCommentTest', (bool) $rp->getDocComment());
 
+        $memoryThresoldMin = 24 * 1024 * 1024;
+        $memoryThresold = 64 * 1024 * 1024;
+        $this->set('memoryThresoldMin', $memoryThresoldMin);
+        $this->set('memoryThresold', $memoryThresold);
         $memoryLimit = ini_get('memory_limit');
         if ($memoryLimit == -1) {
             $this->set('memoryTest', 1);
@@ -267,9 +271,9 @@ class Install extends Controller
         } else {
             $val = $this->app->make('helper/number')->getBytes($memoryLimit);
             $this->set('memoryBytes', $val);
-            if ($val < 25165824) {
+            if ($val < $memoryThresoldMin) {
                 $this->set('memoryTest', -1);
-            } elseif ($val >= 67108864) {
+            } elseif ($val >= $memoryThresold) {
                 $this->set('memoryTest', 1);
             } else {
                 $this->set('memoryTest', 0);
