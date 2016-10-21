@@ -472,14 +472,14 @@ if (isset($successMessage)) {
                         $('form[data-form=continue-to-installation]').show();
                     } else {
                         $("#install-errors").show();
-                        $('form[data-form=rerun-tests').show();
+                        $('form[data-form=rerun-tests]').show();
                     }
                     $("#ccm-test-request-tooltip").hide();
                 } else {
                     $("#ccm-test-request-loading").attr('class', 'fa fa-exclamation-circle');
                     $("#ccm-test-request-tooltip").show();
                     $("#install-errors").show();
-                    $('form[data-form=rerun-tests').show();
+                    $('form[data-form=rerun-tests]').show();
                 }
             });
         });
@@ -1013,7 +1013,7 @@ if (isset($successMessage)) {
             <li class="active"><?= t('Choose Language') ?></li>
         </ul>
     </div>
-
+n
     <div id="ccm-install-intro">
         <form method="post" id="ccm-install-language-form" action="<?= $view->url('/install', 'select_language') ?>">
         <div class="form-group">
