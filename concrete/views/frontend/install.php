@@ -37,6 +37,12 @@ if (isset($successMessage)) {
     ?>
     <script type="text/javascript">
         $(function () {
+            var inviteToStayHere = false;
+            window.onbeforeunload = function() {
+                if (inviteToStayHere) {
+                    return <?=json_encode(t("concrete5 installation is still in progress: you shouldn't close this page at the moment"))?>;
+                }
+            };
             NProgress.configure({ showSpinner: false });
             <?php
             for ($i = 1; $i <= count($installRoutines); ++$i) {
@@ -53,44 +59,49 @@ if (isset($successMessage)) {
                 $.ajax(
                     '<?=$view->url("/install", "run_routine", $installPackage, $routine->getMethod())?>',
                     {
-                        dataType: 'json',
-                        error: function (r) {
-                            $("#install-progress-errors").append('<div class="alert alert-danger">' + r.responseText + '</div>');
-                            $("#interstitial-message").addClass('animated fadeOut');
-                            $("#install-progress-error-wrapper").addClass('animated fadeIn');
-                        },
-                        success: function (r) {
-                            if (r.error) {
-                                $("#install-progress-errors").append('<div class="alert alert-danger">' + r.message + '</div>');
-                                $("#interstitial-message").addClass('animated fadeOut');
-                                $("#install-progress-error-wrapper").addClass('animated fadeIn');
-                            } else {
-                                NProgress.set(<?=$routine->getProgress()/100?>);
-                                <?php
-                                if ($i < count($installRoutines)) {
-                                ?>
-                                ccm_installRoutine<?=$i + 1?>();
-                                <?php
-                                } else {
-                                ?>
-                                $("#install-progress-summary").html('<?=t('All Done.')?>');
-                                NProgress.done();
-                                $('button[data-button=installation-complete]').prop('disabled', false).html('Edit Your Site <i class="fa fa-thumbs-up"></i>');
+                        dataType: 'json'
+                    }
+                )
+                .fail(function (r) {
+                    inviteToStayHere = false;
+                    $("#install-progress-errors").append('<div class="alert alert-danger">' + r.responseText + '</div>');
+                    $("#interstitial-message").addClass('animated fadeOut');
+                    $("#install-progress-error-wrapper").addClass('animated fadeIn');
+                })
+                .done(function (r) {
+                    if (r.error) {
+                        inviteToStayHere = false;
+                        $("#install-progress-errors").append('<div class="alert alert-danger">' + r.message + '</div>');
+                        $("#interstitial-message").addClass('animated fadeOut');
+                        $("#install-progress-error-wrapper").addClass('animated fadeIn');
+                    } else {
+                        NProgress.set(<?=$routine->getProgress()/100?>);
+                        <?php
+                        if ($i < count($installRoutines)) {
+                        ?>
+                        ccm_installRoutine<?=$i + 1?>();
+                        <?php
+                        } else {
+                        ?>
+                        inviteToStayHere = false;
+                        $("#install-progress-summary").html('<?=t('All Done.')?>');
+                        NProgress.done();
+                        $('button[data-button=installation-complete]').prop('disabled', false).html('Edit Your Site <i class="fa fa-thumbs-up"></i>');
 
-                                setTimeout(function() {
-                                    $("#interstitial-message").hide();
-                                    $("#success-message").show().addClass('animated fadeInDown');
-                                },500);
-                                <?php
-                                }
-                                ?>
-                            }
+                        setTimeout(function() {
+                            $("#interstitial-message").hide();
+                            $("#success-message").show().addClass('animated fadeInDown');
+                        },500);
+                        <?php
                         }
-                    });
+                        ?>
+                    }
+                });
             }
             <?php
             }
             ?>
+            inviteToStayHere = true;
             ccm_installRoutine1();
         });
     </script>
