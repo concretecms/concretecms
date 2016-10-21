@@ -1016,7 +1016,7 @@ if (isset($successMessage)) {
 
     <div id="ccm-install-intro">
         <form method="post" id="ccm-install-language-form" action="<?= $view->url('/install', 'select_language') ?>">
-        <div class="panel panel-default">
+        <div class="panel panel-info">
             <div class="panel-heading"><?= t('Language') ?></div>
             <div class="form-group">
                 <div class="input-group-lg input-group">
