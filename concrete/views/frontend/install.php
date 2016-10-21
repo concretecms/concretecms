@@ -53,40 +53,41 @@ if (isset($successMessage)) {
                 $.ajax(
                     '<?=$view->url("/install", "run_routine", $installPackage, $routine->getMethod())?>',
                     {
-                        dataType: 'json',
-                        error: function (r) {
-                            $("#install-progress-errors").append('<div class="alert alert-danger">' + r.responseText + '</div>');
-                            $("#interstitial-message").addClass('animated fadeOut');
-                            $("#install-progress-error-wrapper").addClass('animated fadeIn');
-                        },
-                        success: function (r) {
-                            if (r.error) {
-                                $("#install-progress-errors").append('<div class="alert alert-danger">' + r.message + '</div>');
-                                $("#interstitial-message").addClass('animated fadeOut');
-                                $("#install-progress-error-wrapper").addClass('animated fadeIn');
-                            } else {
-                                NProgress.set(<?=$routine->getProgress()/100?>);
-                                <?php
-                                if ($i < count($installRoutines)) {
-                                ?>
-                                ccm_installRoutine<?=$i + 1?>();
-                                <?php
-                                } else {
-                                ?>
-                                $("#install-progress-summary").html('<?=t('All Done.')?>');
-                                NProgress.done();
-                                $('button[data-button=installation-complete]').prop('disabled', false).html('Edit Your Site <i class="fa fa-thumbs-up"></i>');
+                        dataType: 'json'
+                    }
+                )
+                .fail(function (r) {
+                    $("#install-progress-errors").append('<div class="alert alert-danger">' + r.responseText + '</div>');
+                    $("#interstitial-message").addClass('animated fadeOut');
+                    $("#install-progress-error-wrapper").addClass('animated fadeIn');
+                })
+                .done(function (r) {
+                    if (r.error) {
+                        $("#install-progress-errors").append('<div class="alert alert-danger">' + r.message + '</div>');
+                        $("#interstitial-message").addClass('animated fadeOut');
+                        $("#install-progress-error-wrapper").addClass('animated fadeIn');
+                    } else {
+                        NProgress.set(<?=$routine->getProgress()/100?>);
+                        <?php
+                        if ($i < count($installRoutines)) {
+                        ?>
+                        ccm_installRoutine<?=$i + 1?>();
+                        <?php
+                        } else {
+                        ?>
+                        $("#install-progress-summary").html('<?=t('All Done.')?>');
+                        NProgress.done();
+                        $('button[data-button=installation-complete]').prop('disabled', false).html('Edit Your Site <i class="fa fa-thumbs-up"></i>');
 
-                                setTimeout(function() {
-                                    $("#interstitial-message").hide();
-                                    $("#success-message").show().addClass('animated fadeInDown');
-                                },500);
-                                <?php
-                                }
-                                ?>
-                            }
+                        setTimeout(function() {
+                            $("#interstitial-message").hide();
+                            $("#success-message").show().addClass('animated fadeInDown');
+                        },500);
+                        <?php
                         }
-                    });
+                        ?>
+                    }
+                });
             }
             <?php
             }
