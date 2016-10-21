@@ -838,8 +838,10 @@ if (isset($successMessage)) {
                                 if ($memoryTest === -1) {
                                     ?>
                                     <span class="text-danger">
-                        <?= t('concrete5 will not install with less than 24MB of RAM. Your memory limit is currently %sMB. Please increase your memory_limit using ini_set.',
-                            round(Core::make('helper/number')->formatSize($memoryBytes, 'MB'), 2)) ?>
+                        <?= t('concrete5 will not install with less than %1$s of RAM. Your memory limit is currently %2$s. Please increase your memory_limit using ini_set.',
+                            Core::make('helper/number')->formatSize($memoryThresoldMin),
+                            Core::make('helper/number')->formatSize($memoryBytes)
+                        ) ?>
                     </span>
                                     <?php
                                 }
@@ -848,8 +850,10 @@ if (isset($successMessage)) {
                                 if ($memoryTest === 0) {
                                     ?>
                                     <span class="text-warning">
-                        <?= t('concrete5 runs best with at least 64MB of RAM. Your memory limit is currently %sMB. You may experience problems uploading and resizing large images, and may have to install concrete5 without sample content.',
-                            round(Core::make('helper/number')->formatSize($memoryBytes, 'MB'), 2)) ?>
+                        <?= t('concrete5 runs best with at least %1$s of RAM. Your memory limit is currently %2$s. You may experience problems uploading and resizing large images, and may have to install concrete5 without sample content.',
+                            Core::make('helper/number')->formatSize($memoryThresold),
+                            Core::make('helper/number')->formatSize($memoryBytes)
+                        ) ?>
                     </span>
                                     <?php
                                 }
@@ -858,8 +862,8 @@ if (isset($successMessage)) {
                                 if ($memoryTest === 1) {
                                     ?>
                                     <span class="text-success">
-                        <?= t('Memory limit %sMB.',
-                            round(Core::make('helper/number')->formatSize($memoryBytes, 'MB'), 2)) ?>
+                        <?= t('Memory limit %s.',
+                            Core::make('helper/number')->formatSize($memoryBytes)) ?>
                     </span>
                                     <?php
                                 }
