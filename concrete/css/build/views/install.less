@@ -1,13 +1,5 @@
 @import "../vendor/bootstrap/variables.less";
 
-div#ccm-backdrop {
-  background-color: rgba(255,255,255,0.75);
-  -webkit-backdrop-filter: blur(5px);
-  width: 100%;
-  height: 100%;
-  position: fixed;
-}
-
 table#sample-content-selector td {
     cursor: pointer;
   padding-top: 0px;
@@ -57,6 +49,20 @@ div#ccm-install-intro {
   top: 50%;
   left: 50%;
   transform: translateX(-50%) translateY(-50%);
+}
+
+form#ccm-install-language-form {
+  div.form-group {
+    margin-bottom: 0px;
+
+    button.btn {
+      border-top-right-radius: 0px !important;
+    }
+  }
+
+  div.panel-default {
+    border-bottom-color: transparent;
+  }
 }
 
 div.ccm-install-title {

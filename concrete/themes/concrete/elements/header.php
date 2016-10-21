@@ -46,7 +46,6 @@ $config = $site->getConfigRepository();
 ?>
 </head>
 <body>
-<div id="ccm-backdrop"></div>
 
 <div class="ccm-ui">
 
