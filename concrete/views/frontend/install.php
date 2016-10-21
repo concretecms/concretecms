@@ -37,6 +37,12 @@ if (isset($successMessage)) {
     ?>
     <script type="text/javascript">
         $(function () {
+            var inviteToStayHere = false;
+            window.onbeforeunload = function() {
+                if (inviteToStayHere) {
+                    return <?=json_encode(t("concrete5 installation is still in progress: you shouldn't close this page at the moment"))?>;
+                }
+            };
             NProgress.configure({ showSpinner: false });
             <?php
             for ($i = 1; $i <= count($installRoutines); ++$i) {
@@ -57,12 +63,14 @@ if (isset($successMessage)) {
                     }
                 )
                 .fail(function (r) {
+                	inviteToStayHere = false;
                     $("#install-progress-errors").append('<div class="alert alert-danger">' + r.responseText + '</div>');
                     $("#interstitial-message").addClass('animated fadeOut');
                     $("#install-progress-error-wrapper").addClass('animated fadeIn');
                 })
                 .done(function (r) {
                     if (r.error) {
+                    	inviteToStayHere = false;
                         $("#install-progress-errors").append('<div class="alert alert-danger">' + r.message + '</div>');
                         $("#interstitial-message").addClass('animated fadeOut');
                         $("#install-progress-error-wrapper").addClass('animated fadeIn');
@@ -75,6 +83,7 @@ if (isset($successMessage)) {
                         <?php
                         } else {
                         ?>
+                        inviteToStayHere = false;
                         $("#install-progress-summary").html('<?=t('All Done.')?>');
                         NProgress.done();
                         $('button[data-button=installation-complete]').prop('disabled', false).html('Edit Your Site <i class="fa fa-thumbs-up"></i>');
@@ -92,6 +101,7 @@ if (isset($successMessage)) {
             <?php
             }
             ?>
+            inviteToStayHere = true;
             ccm_installRoutine1();
         });
     </script>
