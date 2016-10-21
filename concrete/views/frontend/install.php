@@ -1015,9 +1015,10 @@ if (isset($successMessage)) {
     </div>
 
     <div id="ccm-install-intro">
-        <form method="post" action="<?= $view->url('/install', 'select_language') ?>">
+        <form method="post" id="ccm-install-language-form" action="<?= $view->url('/install', 'select_language') ?>">
+        <div class="panel panel-default">
+            <div class="panel-heading"><?= t('Language') ?></div>
             <div class="form-group">
-                <label for="locale" class="control-label"><?= t('Language') ?></label>
                 <div class="input-group-lg input-group">
                     <?= $form->select('locale', $locales, 'en_US'); ?>
                     <div class="input-group-btn">
@@ -1027,6 +1028,7 @@ if (isset($successMessage)) {
                     </div>
                 </div>
             </div>
+        </div>
         </form>
     </div>
 
