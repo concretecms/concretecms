@@ -63,14 +63,14 @@ if (isset($successMessage)) {
                     }
                 )
                 .fail(function (r) {
-                	inviteToStayHere = false;
+                    inviteToStayHere = false;
                     $("#install-progress-errors").append('<div class="alert alert-danger">' + r.responseText + '</div>');
                     $("#interstitial-message").addClass('animated fadeOut');
                     $("#install-progress-error-wrapper").addClass('animated fadeIn');
                 })
                 .done(function (r) {
                     if (r.error) {
-                    	inviteToStayHere = false;
+                        inviteToStayHere = false;
                         $("#install-progress-errors").append('<div class="alert alert-danger">' + r.message + '</div>');
                         $("#interstitial-message").addClass('animated fadeOut');
                         $("#install-progress-error-wrapper").addClass('animated fadeIn');
