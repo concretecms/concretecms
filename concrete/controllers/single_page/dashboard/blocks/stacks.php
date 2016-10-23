@@ -276,6 +276,7 @@ class Stacks extends DashboardSitePageController
     {
         $parent = Page::getByPath(STACKS_PAGE_PATH, 'RECENT', $this->getSite());
         $stm = new StackList();
+        $stm->filterByParentID($parent->getCollectionID());
         $stm->excludeGlobalAreas();
         $this->deliverStackList($stm);
         $this->set('canMoveStacks', $this->canMoveStacks($parent));

@@ -3,6 +3,8 @@
 <?php
 if (isset($c) && is_object($c)) {
     Loader::element('footer_required');
+} else {
+    View::getInstance()->markFooterAssetPosition();
 }
 ?>
 

@@ -151,32 +151,30 @@ class Key extends Facade implements AttributeKeyInterface
      */
     protected function saveAttribute($attributeValue, $passedValue = false)
     {
-        /** @var \Concrete\Core\Attribute\Type $at */
-        $at = $this->getAttributeType();
-        $at->getController()->setAttributeKey($this);
-        $at->getController()->setAttributeValue($attributeValue);
+        $controller = $this->getController();
+
         if ($passedValue) {
-            $at->getController()->saveValue($passedValue);
+            $value = $controller->createAttributeValue($passedValue);
         } else {
-            $controller = $this->getController();
             $value = $controller->createAttributeValueFromRequest();
-            if (!($value instanceof EmptyRequestAttributeValue)) {
-                // This is a new v8 attribute type
+        }
 
-                $attributeValue->setValue($value);
+        if (!($value instanceof EmptyRequestAttributeValue)) {
+            // This is a new v8 attribute type
 
-                $orm = \Database::connection()->getEntityManager();
-                $orm->persist($value);
-                $orm->flush();
+            $attributeValue->setValue($value);
 
-                $category = $this->legacyAttributeKey->getAttributeCategory()->getController();
-                $indexer = $category->getSearchIndexer();
-                if ($indexer) {
-                    $indexer->indexEntry($category, $attributeValue, $this);
-                }
+            $orm = \Database::connection()->getEntityManager();
+            $orm->persist($value);
+            $orm->flush();
 
-                return $attributeValue;
+            $category = $this->legacyAttributeKey->getAttributeCategory()->getController();
+            $indexer = $category->getSearchIndexer();
+            if ($indexer) {
+                $indexer->indexEntry($category, $attributeValue, $this);
             }
+
+            return $attributeValue;
         }
     }
 
