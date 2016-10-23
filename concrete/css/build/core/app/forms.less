@@ -1,14 +1,5 @@
 .ccm-ui {
 
-  // Remove input control box shadow
-  .form-control {
-    box-shadow: none;
-
-    // Remove focus box shadow
-    &:focus {
-      box-shadow: none !important; // need import because of other classes like has-warning
-    }
-  }
 
   // Make control labels blue
   label.control-label {
@@ -39,45 +30,10 @@
     }
   }
 
-
-  // Select menu appearance update
-  select.form-control {
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-
-    padding-right: 30px;
-    background: #ffffff url(../images/icons/select_arrow_down.svg) no-repeat right 10px top 10px;
-    background-size: 16px 16px;
-
-    &:disabled {
-      background-image: url(../images/icons/select_arrow_down_disabled.svg);
-    }
-  }
-
   // Less intrusive help
   .help-block {
     font-size: 14px;
     color: #888;
-  }
-
-  // Buttons - add transition
-  .btn {
-    outline: none;
-    .transition(.3s);
-
-    &.btn-primary {
-      font-weight: bold;
-    }
-
-    &:focus {
-      outline: none;
-    }
-
-    &:active,
-    &.active {
-      box-shadow: none;
-    }
   }
 
 }

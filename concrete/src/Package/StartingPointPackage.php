@@ -463,6 +463,12 @@ class StartingPointPackage extends BasePackage
         file_put_contents(DIR_CONFIG_SITE . '/database.php', $renderer->render());
         @chmod(DIR_CONFIG_SITE . '/database.php', Config::get('concrete.filesystem.permissions.file'));
 
+        if (isset($site_install['session-handler']) && $site_install['session-handler']) {
+            $config->save('concrete.session.handler', $site_install['session-handler']);
+        }
+
+        unset($site_install['session-handler']);
+
         $renderer = new Renderer($site_install);
 
         if (!file_exists(DIR_CONFIG_SITE . '/app.php')) {

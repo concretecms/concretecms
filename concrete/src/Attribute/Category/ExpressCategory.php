@@ -33,6 +33,14 @@ class ExpressCategory extends AbstractCategory
         return $mixed->getID();
     }
 
+    public function getSearchableIndexedList()
+    {
+        return $this->getAttributeRepository()->findBy([
+            'entity' => $this->expressEntity,
+            'akIsSearchableIndexed' => true
+        ]);
+    }
+
     public function getSearchIndexFieldDefinition()
     {
         return [

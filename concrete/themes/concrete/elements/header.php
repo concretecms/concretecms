@@ -6,9 +6,9 @@
     <?php
 $view->requireAsset('css', 'bootstrap');
 $view->requireAsset('css', 'font-awesome');
-$view->requireAsset('javascript', 'jquery');
 $view->requireAsset('javascript', 'bootstrap/alert');
 $view->requireAsset('javascript', 'bootstrap/transition');
+$view->requireAsset('javascript', 'jquery');
 $view->addHeaderItem('<meta name="viewport" content="width=device-width, initial-scale=1">');
 
 $showLogo = true;
@@ -46,6 +46,7 @@ $config = $site->getConfigRepository();
 ?>
 </head>
 <body>
+
 <div class="ccm-ui">
 
 <?php if ($showLogo) {

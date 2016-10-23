@@ -17,7 +17,4 @@
             <directory>tests/tests/Localization/</directory>
         </testsuite>
     </testsuites>
-    <listeners>
-        <listener class="\MyBuilder\PhpunitAccelerator\TestListener"/>
-    </listeners>
 </phpunit>

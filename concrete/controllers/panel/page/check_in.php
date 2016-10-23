@@ -115,10 +115,11 @@ class CheckIn extends BackendInterfacePageController
             } else {
                 if ($this->request->request->get('action') == 'discard') {
                     if ($c->isPageDraft() && $this->permissions->canDeletePage()) {
-                        $this->page->delete();
                         $u = new User();
                         $cID = $u->getPreviousFrontendPageID();
+                        $this->page->delete();
                         $pr->setRedirectURL(DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $cID);
+                        $pr->outputJSON();
                     } else {
                         if ($v->canDiscard()) {
                             $v->discard();
