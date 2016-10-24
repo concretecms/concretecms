@@ -33,6 +33,16 @@ abstract class Association implements ExportableInterface
     protected $target_entity;
 
     /**
+     * @ORM\Column(type="boolean")
+     **/
+    protected $is_owned_by_association = false;
+
+    /**
+     * @ORM\Column(type="boolean")
+     **/
+    protected $is_owning_association = false;
+
+    /**
      * @ORM\OneToMany(targetEntity="\Concrete\Core\Entity\Express\Entry\Association",
      *     mappedBy="association", cascade={"remove"})
      */
@@ -68,6 +78,38 @@ abstract class Association implements ExportableInterface
     public function setId($id)
     {
         $this->id = $id;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function isOwningAssociation()
+    {
+        return $this->is_owning_association;
+    }
+
+    /**
+     * @param mixed $is_owning_association
+     */
+    public function setIsOwningAssociation($is_owning_association)
+    {
+        $this->is_owning_association = $is_owning_association;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function isOwnedByAssociation()
+    {
+        return $this->is_owned_by_association;
+    }
+
+    /**
+     * @param mixed $is_owned_by_association
+     */
+    public function setIsOwnedByAssociation($is_owned_by_association)
+    {
+        $this->is_owned_by_association = $is_owned_by_association;
     }
 
     /**

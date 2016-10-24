@@ -50,6 +50,13 @@
                     <label for="name" class="control-label"><?= t('Owned By') ?></label>
                     <?= $form->select('owned_by', $entities) ?>
                 </div>
+                <div class="form-group" style="display: none" data-group="owned_by_type">
+                    <label for="name" class="control-label"><?= t('Owning Type') ?></label>
+                    <?= $form->select('owning_type', array(
+                       'many' => t('Many'),
+                    'one' => t('One')
+                    )); ?>
+                </div>
             </div>
         </div>
     </div>
@@ -62,3 +69,15 @@
         </div>
     </div>
 </form>
+
+<script type="text/javascript">
+    $(function() {
+        $('select[name=owned_by]').on('change', function() {
+            if ($(this).val()) {
+                $('div[data-group=owned_by_type]').show();
+            } else {
+                $('div[data-group=owned_by_type]').hide();
+            }
+        }).trigger('change');
+    });
+</script>

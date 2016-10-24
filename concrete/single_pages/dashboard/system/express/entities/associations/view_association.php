@@ -52,3 +52,12 @@
 
 <h4><?=t('Target Property Name')?></h4>
 <p><?=$association->getTargetPropertyName()?></p>
+
+<?php if ($association->isOwningAssociation()) { ?>
+<h4><?=t('Association Type')?></h4>
+<p><?=t('Owning')?></p>
+    <?php } else if ($association->isOwnedByAssociation()) { ?>
+    <h4><?=t('Association Type')?></h4>
+    <p><?=t('Owned By')?></p>
+
+<?php } ?>

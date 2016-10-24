@@ -50,11 +50,6 @@ class Entity implements CategoryObjectInterface, ObjectInterface, ExportableInte
     protected $description;
 
     /**
-     * @ORM\OneToOne(targetEntity="Entity")
-     **/
-    protected $owned_by;
-
-    /**
      * @ORM\Column(type="object", nullable=true)
      */
     protected $result_column_set;
@@ -191,15 +186,11 @@ class Entity implements CategoryObjectInterface, ObjectInterface, ExportableInte
      */
     public function getOwnedBy()
     {
-        return $this->owned_by;
-    }
-
-    /**
-     * @param mixed $owned_by
-     */
-    public function setOwnedBy($owned_by)
-    {
-        $this->owned_by = $owned_by;
+        foreach($this->associations as $association) {
+            if ($association->isOwnedByAssociation()) {
+                return $association->getTargetEntity();
+            }
+        }
     }
 
     /**

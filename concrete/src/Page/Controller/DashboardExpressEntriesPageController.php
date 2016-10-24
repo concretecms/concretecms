@@ -12,7 +12,7 @@ use Concrete\Core\Tree\Type\ExpressEntryResults;
 abstract class DashboardExpressEntriesPageController extends DashboardPageController
 {
 
-    protected function getBackToListURL(Entity $entity)
+    protected function getBackURL(Entity $entity)
     {
         return \URL::to($this->getPageObject()
             ->getCollectionPath(), 'view', $entity->getEntityResultsNodeID());
@@ -24,6 +24,11 @@ abstract class DashboardExpressEntriesPageController extends DashboardPageContro
             ->getCollectionPath(), 'edit_entry', $entry->getID());
     }
 
+    protected function getViewEntryURL(Entry $entry)
+    {
+        return \URL::to($this->getPageObject()
+            ->getCollectionPath(), 'view_entry', $entry->getID());
+    }
 
     protected function getResultsTreeNodeObject()
     {
@@ -112,7 +117,7 @@ abstract class DashboardExpressEntriesPageController extends DashboardPageContro
         }
         if (!$this->error->has()) {
             $entity = $entry->getEntity();
-            $url = $this->getBackToListURL($entity);
+            $url = $this->getBackURL($entity);
             $this->entityManager->remove($entry);
             $this->entityManager->flush();
             $this->flash('success', t('Entry deleted successfully.'));
@@ -130,14 +135,20 @@ abstract class DashboardExpressEntriesPageController extends DashboardPageContro
             throw new \Exception(t('Access Denied'));
         }
 
-        $renderer = \Core::make('Concrete\Core\Express\Form\StandardViewRenderer');
+        $renderer = \Core::make('Concrete\Core\Express\Form\DashboardRenderer');
         $this->set('entry', $entry);
         $this->set('entity', $entry->getEntity());
         $entity = $entry->getEntity();
         $this->entityManager->refresh($entity); // sometimes this isn't eagerly loaded (?)
         $this->set('expressForm', $entity->getDefaultViewForm());
         $this->set('renderer', $renderer);
-        $this->set('backURL', $this->getBackToListURL($entry->getEntity()));
+        if ($entity->getOwnedBy()) {
+            // the back url is the detail of what is the owner
+            $ownerEntry = $entry->getOwnedByEntry();
+            $this->set('backURL', $this->getViewEntryURL($ownerEntry));
+        } else {
+            $this->set('backURL', $this->getBackURL($entry->getEntity()));
+        }
         if ($permissions->canEditExpressEntry()) {
             $this->set('editURL', $this->getEditEntryURL($entry));
         }
@@ -146,6 +157,13 @@ abstract class DashboardExpressEntriesPageController extends DashboardPageContro
         } else {
             $this->set('allowDelete', false);
         }
+        $subEntities = array();
+        foreach($entry->getEntity()->getAssociations() as $association) {
+            if ($association->isOwningAssociation()) {
+                $subEntities[] = $association->getTargetEntity();
+            }
+        }
+        $this->set('subEntities', $subEntities);
         $this->render('/dashboard/express/entries/view_entry', false);
     }
 
@@ -166,7 +184,7 @@ abstract class DashboardExpressEntriesPageController extends DashboardPageContro
         $this->entityManager->refresh($entity); // sometimes this isn't eagerly loaded (?)
         $this->set('expressForm', $entity->getDefaultEditForm());
         $this->set('renderer', $renderer);
-        $this->set('backURL', $this->getBackToListURL($entry->getEntity()));
+        $this->set('backURL', $this->getBackURL($entry->getEntity()));
         $this->render('/dashboard/express/entries/update', false);
     }
 
@@ -211,7 +229,7 @@ abstract class DashboardExpressEntriesPageController extends DashboardPageContro
                     $this->flash('success', t('%s added successfully.', $entity->getName()));
                 }
 
-                $this->redirect($this->getBackToListURL($entity));
+                $this->redirect($this->getBackURL($entity));
             }
         } else {
             throw new \Exception(t('Invalid form.'));

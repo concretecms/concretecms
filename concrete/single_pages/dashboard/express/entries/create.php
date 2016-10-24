@@ -7,7 +7,6 @@ if (is_object($expressForm)) {
 
     <form method="post" action="<?=$view->action('submit', $entity->getId())?>">
 
-
     <?php
         echo $renderer->render($expressForm); ?>
 

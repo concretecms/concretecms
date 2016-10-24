@@ -14,6 +14,27 @@
         <?=$form->text('inversed_property_name', $association->getInversedByPropertyName())?>
     </div>
 
+    <div class="form-group">
+        <label class="control-label"><?=t('Owning Association')?></label>
+        <div class="radio">
+            <label><?=$form->radio('is_owning_association', 1, $association->isOwningAssociation())?> <?=t('Yes')?></label>
+        </div>
+        <div class="radio">
+            <label><?=$form->radio('is_owning_association', 0, $association->isOwningAssociation())?> <?=t('No')?></label>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label"><?=t('Owned By Association')?></label>
+        <div class="radio">
+            <label><?=$form->radio('is_owned_by_association', 1, $association->isOwnedByAssociation())?> <?=t('Yes')?></label>
+        </div>
+        <div class="radio">
+            <label><?=$form->radio('is_owned_by_association', 0, $association->isOwnedByAssociation())?> <?=t('No')?></label>
+        </div>
+    </div>
+
+
 
     <div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
