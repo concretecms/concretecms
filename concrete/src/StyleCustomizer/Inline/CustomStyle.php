@@ -13,4 +13,5 @@ abstract class CustomStyle
     abstract public function getCSS();
     abstract public function getContainerClass();
     abstract public function getCustomStyleClass();
+    abstract public function getCustomStyleID();
 }

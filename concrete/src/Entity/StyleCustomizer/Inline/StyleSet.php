@@ -43,6 +43,27 @@ class StyleSet
     /**
      * @ORM\Column(type="string", nullable=true)
      */
+    protected $customId;
+
+    /**
+     * @param mixed $customId
+     */
+    public function setCustomId($customId)
+    {
+        $this->customId = $customId;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCustomId()
+    {
+        return $this->customId;
+    }
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
     protected $backgroundColor;
 
     /**
@@ -734,6 +755,7 @@ class StyleSet
         $node->addChild('boxShadowSpread', $this->getBoxShadowSpread());
         $node->addChild('boxShadowColor', $this->getBoxShadowColor());
         $node->addChild('customClass', $this->getCustomClass());
+        $node->addChild('customId', $this->getCustomId());
         $node->addChild('hideOnExtraSmallDevice', $this->getHideOnExtraSmallDevice());
         $node->addChild('hideOnSmallDevice', $this->getHideOnSmallDevice());
         $node->addChild('hideOnMediumDevice', $this->getHideOnMediumDevice());
