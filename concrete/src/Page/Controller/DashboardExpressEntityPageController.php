@@ -6,6 +6,7 @@ use Concrete\Core\Entity\Express\Entry;
 use Concrete\Core\Express\Entry\Manager;
 use Concrete\Core\Express\Event\Event;
 use Concrete\Core\Express\Form\Control\SaveHandler\SaveHandlerInterface;
+use Concrete\Core\Express\Form\OwnedEntityForm;
 use Concrete\Core\Express\Form\Validator;
 use Concrete\Core\Tree\Node\Node;
 use Concrete\Core\Tree\Node\Type\Category;
@@ -55,14 +56,15 @@ abstract class DashboardExpressEntityPageController extends DashboardExpressEntr
             throw new \Exception(t('You do not have access to add entries of this entity type.'));
         }
         $this->set('entity', $entity);
-        if (is_object($entry) && $entry->getEntity() == $entity->getOwnedBy()) {
-            $this->set('owning_entry', $entry);
-        }
         $form = $entity->getDefaultEditForm();
-        $renderer = \Core::make('Concrete\Core\Express\Form\StandardFormRenderer');
-        $this->set('expressForm', $form);
+        if (is_object($entry) && $entry->getEntity() == $entity->getOwnedBy()) {
+            $form = new OwnedEntityForm($form, $entry);
+            $this->set('backURL', $this->getViewEntryURL($entry));
+        } else {
+            $this->set('backURL', $this->getBackURL($entity));
+        }
+        $renderer = \Core::make('Concrete\Core\Express\Form\StandardFormRenderer', ['form' => $form]);
         $this->set('renderer', $renderer);
-        $this->set('backURL', $this->getBackURL($entity));
         $this->render('/dashboard/express/entries/create', false);
     }
 

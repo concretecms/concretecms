@@ -2,6 +2,7 @@
 namespace Concrete\Core\Entity\Express;
 
 use Concrete\Core\Export\ExportableInterface;
+use Concrete\Core\Express\Form\FormInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Concrete\Core\Export\Item\Express\Form as FormExporter;
@@ -10,7 +11,7 @@ use Concrete\Core\Export\Item\Express\Form as FormExporter;
  * @ORM\Entity
  * @ORM\Table(name="ExpressForms")
  */
-class Form implements \JsonSerializable, ExportableInterface
+class Form implements \JsonSerializable, ExportableInterface, FormInterface
 {
     /**
      * @ORM\Id @ORM\Column(type="guid")

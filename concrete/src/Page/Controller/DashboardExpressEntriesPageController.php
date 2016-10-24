@@ -18,6 +18,16 @@ abstract class DashboardExpressEntriesPageController extends DashboardPageContro
             ->getCollectionPath(), 'view', $entity->getEntityResultsNodeID());
     }
 
+    protected function getCreateURL(Entity $entity, Entry $ownedBy = null)
+    {
+        $ownedByID = null;
+        if (is_object($ownedBy)) {
+            $ownedByID = $ownedBy->getID();
+        }
+        return \URL::to($this->getPageObject()
+            ->getCollectionPath(), 'create_entry', $entity->getID(), $ownedByID);
+    }
+
     protected function getEditEntryURL(Entry $entry)
     {
         return \URL::to($this->getPageObject()
@@ -135,17 +145,18 @@ abstract class DashboardExpressEntriesPageController extends DashboardPageContro
             throw new \Exception(t('Access Denied'));
         }
 
-        $renderer = \Core::make('Concrete\Core\Express\Form\DashboardRenderer');
         $this->set('entry', $entry);
         $this->set('entity', $entry->getEntity());
         $entity = $entry->getEntity();
         $this->entityManager->refresh($entity); // sometimes this isn't eagerly loaded (?)
-        $this->set('expressForm', $entity->getDefaultViewForm());
+        $renderer = \Core::make('Concrete\Core\Express\Form\DashboardRenderer', ['form' => $entity->getDefaultViewForm()]);
         $this->set('renderer', $renderer);
         if ($entity->getOwnedBy()) {
             // the back url is the detail of what is the owner
             $ownerEntry = $entry->getOwnedByEntry();
-            $this->set('backURL', $this->getViewEntryURL($ownerEntry));
+            if (is_object($ownerEntry)) {
+                $this->set('backURL', $this->getViewEntryURL($ownerEntry));
+            }
         } else {
             $this->set('backURL', $this->getBackURL($entry->getEntity()));
         }
@@ -177,12 +188,11 @@ abstract class DashboardExpressEntriesPageController extends DashboardPageContro
             throw new \Exception(t('Access Denied'));
         }
 
-        $renderer = \Core::make('Concrete\Core\Express\Form\StandardFormRenderer');
         $this->set('entry', $entry);
         $this->set('entity', $entry->getEntity());
         $entity = $entry->getEntity();
         $this->entityManager->refresh($entity); // sometimes this isn't eagerly loaded (?)
-        $this->set('expressForm', $entity->getDefaultEditForm());
+        $renderer = \Core::make('Concrete\Core\Express\Form\StandardFormRenderer', ['form' => $entity->getDefaultEditForm()]);
         $this->set('renderer', $renderer);
         $this->set('backURL', $this->getBackURL($entry->getEntity()));
         $this->render('/dashboard/express/entries/update', false);
@@ -223,13 +233,16 @@ abstract class DashboardExpressEntriesPageController extends DashboardPageContro
                 if (is_object($entry)) { // update
                     $manager->saveEntryAttributesForm($form, $entry);
                     $this->flash('success', t('%s updated successfully.', $entity->getName()));
+                    $this->redirect($this->getBackURL($entity));
                 } else {
                     $entry = $manager->addEntry($entity);
                     $manager->saveEntryAttributesForm($form, $entry);
                     $this->flash('success', t('%s added successfully.', $entity->getName()));
+
+                    $this->entityManager->refresh($entry);
+                    $this->redirect($this->getCreateURL($entity, $entry->getOwnedByEntry()));
                 }
 
-                $this->redirect($this->getBackURL($entity));
             }
         } else {
             throw new \Exception(t('Invalid form.'));

@@ -29,10 +29,10 @@ class StandardViewRenderer extends AbstractRenderer
         return '</fieldset>';
     }
 
-    public function render(Form $form, Entry $entry = null)
+    public function render(Entry $entry = null)
     {
         $html = $this->getFormOpenTag();
-        foreach ($form->getFieldSets() as $fieldSet) {
+        foreach ($this->getForm()->getFieldSets() as $fieldSet) {
             $html .= $this->renderFieldSet($fieldSet, $entry);
         }
 

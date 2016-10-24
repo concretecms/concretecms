@@ -32,12 +32,12 @@
 
 <?php
 
-if (is_object($expressForm)) {
+if (is_object($renderer)) {
     ?>
 
 
     <?php
-        echo $renderer->render($expressForm, $entry);
+        echo $renderer->render($entry);
     ?>
 
 <?php 
