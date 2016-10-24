@@ -9,6 +9,7 @@ use Concrete\Core\Express\Form\Context\ContextInterface;
 use Concrete\Core\Express\Form\Control\EntityPropertyControlView;
 use Concrete\Core\Express\Form\Control\RendererInterface;
 use Concrete\Core\Express\Form\Control\Template\Template;
+use Concrete\Core\Express\Form\OwnedEntityForm;
 use Concrete\Core\Express\Form\RendererFactory;
 
 class AssociationControlFormRenderer extends AbstractControlRenderer
@@ -42,7 +43,7 @@ class AssociationControlFormRenderer extends AbstractControlRenderer
         if ($control->getAssociation()->isOwningAssociation()) {
             return;
         }
-        
+
         $template = new Template('association/' . $this->getFormFieldElement($control));
 
         $association = $control->getAssociation();
@@ -57,6 +58,13 @@ class AssociationControlFormRenderer extends AbstractControlRenderer
                 if ($relatedAssociation->getAssociation()->getID() == $association->getID()) {
                     $view->addScopeItem('selectedEntities', $relatedAssociation->getSelectedEntries());
                 }
+            }
+        } else {
+            // Is this an owned entity? In which case we get the association from the owning entity
+            $renderer = $context->getFormRenderer();
+            $form = $renderer->getForm();
+            if ($form instanceof OwnedEntityForm) {
+                $view->addScopeItem('selectedEntities', array($form->getOwningEntry()));
             }
         }
 

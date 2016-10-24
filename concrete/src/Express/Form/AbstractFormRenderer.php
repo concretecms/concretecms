@@ -35,17 +35,17 @@ abstract class AbstractFormRenderer extends AbstractRenderer implements FormRend
         return $this->application->make('token')->output('express_form', true);
     }
 
-    protected function getFormIdentifierField(Form $form)
+    protected function getFormIdentifierField(FormInterface $form)
     {
         return '<input type="hidden" name="express_form_id" value="' . $form->getId() . '">';
     }
 
-    public function render(Form $form, Entry $entry = null)
+    public function render(Entry $entry = null)
     {
         $html = $this->getFormOpenTag();
-        $html .= $this->getFormIdentifierField($form);
+        $html .= $this->getFormIdentifierField($this->getForm());
         $html .= $this->getCsrfTokenField();
-        foreach ($form->getFieldSets() as $fieldSet) {
+        foreach ($this->getForm()->getFieldSets() as $fieldSet) {
             $html .= $this->renderFieldSet($fieldSet, $entry);
         }
 

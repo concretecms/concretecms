@@ -14,15 +14,22 @@ abstract class AbstractRenderer implements RendererInterface
 {
     protected $entityManager;
     protected $application;
+    protected $form;
 
     abstract protected function getFieldSetOpenTag(FieldSet $fieldSet);
     abstract protected function getFieldSetCloseTag(FieldSet $fieldSet);
     abstract protected function getContext();
 
-    public function __construct(Application $application, EntityManagerInterface $entityManager)
+    public function getForm()
+    {
+        return $this->form;
+    }
+
+    public function __construct(FormInterface $form, Application $application, EntityManagerInterface $entityManager)
     {
         $this->entityManager = $entityManager;
         $this->application = $application;
+        $this->form = $form;
     }
 
     protected function getFormOpenTag()
