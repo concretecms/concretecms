@@ -36,6 +36,13 @@ class AssociationControlFormRenderer extends AbstractControlRenderer
      */
     public function render(ContextInterface $context, Control $control, Entry $entry = null)
     {
+
+        // Is this an owning entity? If so, we don't render anything
+        // because the entity is edited separately
+        if ($control->getAssociation()->isOwningAssociation()) {
+            return;
+        }
+        
         $template = new Template('association/' . $this->getFormFieldElement($control));
 
         $association = $control->getAssociation();

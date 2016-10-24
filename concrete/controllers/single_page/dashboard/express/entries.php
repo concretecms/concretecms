@@ -23,7 +23,7 @@ class Entries extends DashboardExpressEntityPageController
         return $this->entity;
     }
 
-    protected function getBackToListURL(Entity $entity)
+    protected function getBackURL(Entity $entity)
     {
         return \URL::to($this->getPageObject()
             ->getCollectionPath(), 'view', $entity->getID(),

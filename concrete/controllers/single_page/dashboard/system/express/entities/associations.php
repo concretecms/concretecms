@@ -149,6 +149,17 @@ class Associations extends DashboardPageController
 
             $association->setInversedByPropertyName($this->request->request->get('inversed_property_name'));
             $association->setTargetPropertyName($this->request->request->get('target_property_name'));
+            if ($this->request->request->get('is_owned_by_association')) {
+                $association->setIsOwnedByAssociation(true);
+            } else {
+                $association->setIsOwnedByAssociation(false);
+            }
+            if ($this->request->request->get('is_owning_association')) {
+                $association->setIsOwningAssociation(true);
+            } else {
+                $association->setIsOwningAssociation(false);
+            }
+
             $this->entityManager->persist($association);
             $this->entityManager->flush();
 

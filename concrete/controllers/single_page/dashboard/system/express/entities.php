@@ -61,16 +61,20 @@ class Entities extends DashboardPageController
                 if ($owned_by = $this->request->request->get('owned_by')) {
                     $owned_by = $this->entityManager->find('\Concrete\Core\Entity\Express\Entity', $owned_by);
                     if (is_object($owned_by)) {
-                        $entity->setOwnedBy($owned_by);
+                        // Create the owned by relationship
+                        $builder = \Core::make('express/builder/association');
+                        if ($this->request->request->get('owning_type') == 'many') {
+                            $builder->addOneToMany(
+                                $owned_by, $entity, $entity->getPluralHandle(), $owned_by->getHandle(), true
+                            );
+                        } else {
+                            $builder->addOneToOne(
+                                $owned_by, $entity, $entity->getHandle(), $owned_by->getHandle(), true
+                            );
+                        }
+                        $this->entityManager->persist($entity);
+                        $this->entityManager->flush();
                     }
-
-                    // Create the owned by relationship
-                    $builder = \Core::make('express/builder/association');
-                    $builder->addManyToOne(
-                        $entity, $owned_by, $owned_by->getHandle(), $entity->getPluralHandle()
-                    );
-                    $this->entityManager->persist($entity);
-                    $this->entityManager->flush();
                 }
 
                 $indexer = $entity->getAttributeKeyCategory()->getSearchIndexer();
@@ -181,7 +185,6 @@ class Entities extends DashboardPageController
             $this->set('defaultViewFormID', $defaultViewFormID);
             $this->set('ownedByID', $ownedByID);
             $this->set('forms', $forms);
-            $this->set('entities', $entities);
             $this->set('entity', $this->entity);
             $this->set('pageTitle', t('Edit Entity'));
             $this->render('/dashboard/system/express/entities/edit');
@@ -250,13 +253,6 @@ class Entities extends DashboardPageController
 
             if ($this->request->request->get('supports_custom_display_order')) {
                 $entity->setSupportsCustomDisplayOrder(true);
-            }
-
-            if ($owned_by = $this->request->request->get('owned_by')) {
-                $owned_by = $this->entityManager->find('\Concrete\Core\Entity\Express\Entity', $owned_by);
-                if (is_object($owned_by)) {
-                    $entity->setOwnedBy($owned_by);
-                }
             }
 
             $this->entityManager->persist($entity);

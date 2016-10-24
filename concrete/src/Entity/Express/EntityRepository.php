@@ -7,7 +7,14 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository
 {
     public function findPublicEntities()
     {
-        return $this->findBy(array('include_in_public_list' => true, 'owned_by' => null));
+        $entities = $this->findBy(array('include_in_public_list' => true));
+        $return = array();
+        foreach($entities as $entity) {
+            if (!$entity->getOwnedBy()) {
+                $return[] = $entity;
+            }
+        }
+        return $return;
     }
 
     public function findExpressForms()

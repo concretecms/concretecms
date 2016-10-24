@@ -18,12 +18,17 @@ class ObjectAssociationBuilder
         $this->application = $application;
     }
 
-    protected function addAssociation(Association $association, Entity $subject, Entity $target, $target_property = null, $inversed_by = null)
+    protected function addAssociation(Association $association, Entity $subject, Entity $target, $target_property = null, $inversed_by = null, $is_owning_association = null)
     {
         $association->setSourceEntity($subject);
         $association->setTargetEntity($target);
         $association->setTargetPropertyName($target_property);
         $association->setInversedByPropertyName($inversed_by);
+        if ($is_owning_association === true) {
+            $association->setIsOwningAssociation(true);
+        } else if ($is_owning_association === false) {
+            $association->setIsOwnedByAssociation(true);
+        }
         $subject->getAssociations()->add($association);
     }
 
@@ -39,14 +44,19 @@ class ObjectAssociationBuilder
         }
     }
 
-    public function addOneToMany(Entity $subject, Entity $target, $subject_property = null, $inversed_by = null)
+    public function addOneToMany(Entity $subject, Entity $target, $subject_property = null, $inversed_by = null, $is_owning_association = null)
     {
         $this->addAssociation(new OneToManyAssociation(),
-            $subject, $target, $subject_property, $inversed_by);
+            $subject, $target, $subject_property, $inversed_by, $is_owning_association);
 
         if ($inversed_by) {
+            if (isset($is_owning_association) && $is_owning_association === true) {
+                // That means the first association is the, so for this association we reset
+                // the variable to a hard false
+                $is_owning_association = false;
+            }
             $this->addAssociation(new ManyToOneAssociation(),
-                $target, $subject, $inversed_by, $subject_property);
+                $target, $subject, $inversed_by, $subject_property, $is_owning_association);
         }
     }
 
@@ -79,7 +89,7 @@ class ObjectAssociationBuilder
         $subject->getAssociations()->add($association);
     }
 
-    public function addOneToOne(Entity $subject, Entity $target, $subject_property = null, $target_property = null)
+    public function addOneToOne(Entity $subject, Entity $target, $subject_property = null, $target_property = null, $is_owning_association = null)
     {
         $association = new OneToOneAssociation();
         $association->setAssociationType(ManyToManyAssociation::TYPE_OWNING);
@@ -87,6 +97,9 @@ class ObjectAssociationBuilder
         $association->setTargetEntity($target);
         $association->setTargetPropertyName($target_property);
         $association->setInversedByPropertyName($subject_property);
+        if ($is_owning_association) {
+            $association->setIsOwningAssociation(true);
+        }
         $subject->getAssociations()->add($association);
 
         $association = new OneToOneAssociation();
@@ -95,6 +108,9 @@ class ObjectAssociationBuilder
         $association->setTargetEntity($subject);
         $association->setTargetPropertyName($subject_property);
         $association->setInversedByPropertyName($target_property);
+        if ($is_owning_association) {
+            $association->setIsOwnedByAssociation(true);
+        }
         $target->getAssociations()->add($association);
     }
 }

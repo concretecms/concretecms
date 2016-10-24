@@ -184,6 +184,14 @@ class Entry implements \JsonSerializable, ObjectInterface
         }
     }
 
+    public function getOwnedByEntry()
+    {
+        foreach($this->associations as $association) {
+            if ($association->getAssociation()->isOwnedByAssociation()) {
+                return $association->getSelectedEntries()[0];
+            }
+        }
+    }
     public function __construct()
     {
         $this->attributes = new ArrayCollection();

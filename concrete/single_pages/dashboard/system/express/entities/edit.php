@@ -55,10 +55,6 @@
                             <?= t('This entity supports custom display ordering via Dashboard interfaces.') ?>
                         </label></div>
                 </div>
-                <div class="form-group">
-                    <label for="name" class="control-label"><?= t('Owned By') ?></label>
-                    <?= $form->select('owned_by', $entities, $ownedByID) ?>
-                </div>
             </fieldset>
             <fieldset>
                 <legend><?=t('Views')?></legend>

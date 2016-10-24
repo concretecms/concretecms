@@ -39,23 +39,30 @@ abstract class DashboardExpressEntityPageController extends DashboardExpressEntr
         $this->renderList($folder);
     }
 
-    public function create_entry($id = null)
+    public function create_entry($id = null, $owner_entry_id = null)
     {
         $r = $this->entityManager->getRepository('\Concrete\Core\Entity\Express\Entity');
         $entity = $r->findOneById($id);
         if (!is_object($entity)) {
             $this->redirect('/dashboard/express/entries');
         }
+        if ($owner_entry_id) {
+            $r = $this->entityManager->getRepository('\Concrete\Core\Entity\Express\Entry');
+            $entry = $r->findOneById($owner_entry_id);
+        }
         $permissions = new \Permissions($entity);
         if (!$permissions->canAddExpressEntries()) {
             throw new \Exception(t('You do not have access to add entries of this entity type.'));
         }
         $this->set('entity', $entity);
+        if (is_object($entry) && $entry->getEntity() == $entity->getOwnedBy()) {
+            $this->set('owning_entry', $entry);
+        }
         $form = $entity->getDefaultEditForm();
         $renderer = \Core::make('Concrete\Core\Express\Form\StandardFormRenderer');
         $this->set('expressForm', $form);
         $this->set('renderer', $renderer);
-        $this->set('backURL', $this->getBackToListURL($entity));
+        $this->set('backURL', $this->getBackURL($entity));
         $this->render('/dashboard/express/entries/create', false);
     }
 
