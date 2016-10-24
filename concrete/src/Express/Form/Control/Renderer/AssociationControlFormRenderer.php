@@ -11,6 +11,7 @@ use Concrete\Core\Express\Form\Control\RendererInterface;
 use Concrete\Core\Express\Form\Control\Template\Template;
 use Concrete\Core\Express\Form\OwnedEntityForm;
 use Concrete\Core\Express\Form\RendererFactory;
+use Concrete\Core\Express\Search\SearchProvider;
 
 class AssociationControlFormRenderer extends AbstractControlRenderer
 {
@@ -38,17 +39,21 @@ class AssociationControlFormRenderer extends AbstractControlRenderer
     public function render(ContextInterface $context, Control $control, Entry $entry = null)
     {
 
-        // Is this an owning entity? If so, we don't render anything
-        // because the entity is edited separately
-        if ($control->getAssociation()->isOwningAssociation()) {
-            return;
+        $element = $this->getFormFieldElement($control);
+        // Is this an owning entity with display order? If so, we render a separate reordering control
+        $association = $control->getAssociation();
+        if ($association->isOwningAssociation()) {
+            if ($association->getTargetEntity()->supportsCustomDisplayOrder()) {
+                $element = 'select_multiple_reorder';
+            } else {
+                return false;
+            }
         }
 
-        $template = new Template('association/' . $this->getFormFieldElement($control));
-
-        $association = $control->getAssociation();
-        $entity = $control->getAssociation()->getTargetEntity();
+        $template = new Template('association/' . $element);
+        $entity = $association->getTargetEntity();
         $list = new EntryList($entity);
+
         $entities = $list->getResults();
         $view = new EntityPropertyControlView($context);
 

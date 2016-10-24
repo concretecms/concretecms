@@ -22,6 +22,13 @@ class Manager
         $this->entityManager = $entityManager;
     }
 
+    /**
+     * @TODO This function needs to do a better job of computing display order when in use by an
+     * owned entity. The problem is if you have an entity like Service owned by Category then if you add
+     * four categories with 40 services total, you'll get display order from 0 to 39; when in reality it should
+     * be split between the owned entities so that categories bound to service 1 go from 0 to 9, from service 2
+     * go from 0 to 10, etc...
+     */
     protected function getNewDisplayOrder(Entity $entity)
     {
         $query = $this->entityManager->createQuery('select max(e.exEntryDisplayOrder) as displayOrder from \Concrete\Core\Entity\Express\Entry e where e.entity = :entity');
@@ -45,6 +52,13 @@ class Manager
         $this->entityManager->persist($entry);
         $this->entityManager->flush();
         return $entry;
+    }
+
+    public function deleteEntry(Entry $entry)
+    {
+        // Get all associations that reference this entry.
+        $this->entityManager->remove($entry);
+        $this->entityManager->flush();
     }
 
     public function saveEntryAttributesForm(Form $form, Entry $entry)
