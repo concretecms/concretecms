@@ -126,10 +126,11 @@ abstract class DashboardExpressEntriesPageController extends DashboardPageContro
             $this->error->add($this->token->getErrorMessage());
         }
         if (!$this->error->has()) {
-            $entity = $entry->getEntity();
-            $url = $this->getBackURL($entity);
-            $this->entityManager->remove($entry);
-            $this->entityManager->flush();
+            $url = $this->getBackURL($entry->getEntity());
+
+            $manager = new Manager($this->entityManager, $this->request);
+            $manager->deleteEntry($entry);
+
             $this->flash('success', t('Entry deleted successfully.'));
             $this->redirect($url);
         }

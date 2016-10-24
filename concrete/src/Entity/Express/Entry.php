@@ -6,7 +6,6 @@ use Concrete\Core\Entity\Attribute\Value\ExpressValue;
 use Concrete\Core\Entity\Express\Entry\Association as EntryAssociation;
 use Concrete\Core\Permission\ObjectInterface;
 use Doctrine\Common\Collections\ArrayCollection;
-use DoctrineProxies\__CG__\Concrete\Core\Entity\Attribute\Key\ExpressKey;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -153,6 +152,15 @@ class Entry implements \JsonSerializable, ObjectInterface
     protected $associations;
 
     /**
+     * @ORM\ManyToMany(targetEntity="\Concrete\Core\Entity\Express\Entry\Association", mappedBy="selectedEntries")
+     * @ORM\JoinTable(name="ExpressEntityAssociationSelectedEntries",
+     * joinColumns={@ORM\JoinColumn(name="exSelectedEntryID", referencedColumnName="exEntryID")},
+     * inverseJoinColumns={@ORM\JoinColumn(name="id", referencedColumnName="id")  }
+     * )
+     */
+    protected $containing_associations;
+
+    /**
      * @return mixed
      */
     public function getAssociations()
@@ -188,7 +196,7 @@ class Entry implements \JsonSerializable, ObjectInterface
     {
         foreach($this->associations as $association) {
             if ($association->getAssociation()->isOwnedByAssociation()) {
-                return $association->getSelectedEntries()[0];
+                return $association->getEntry();
             }
         }
     }
@@ -196,6 +204,7 @@ class Entry implements \JsonSerializable, ObjectInterface
     {
         $this->attributes = new ArrayCollection();
         $this->associations = new ArrayCollection();
+        $this->containing_associations = new ArrayCollection();
         $this->exEntryDateCreated = new \DateTime();
     }
 

@@ -18,10 +18,11 @@ class EntryList extends DatabaseItemList implements PermissionableListItemInterf
     {
         $this->category = $entity->getAttributeKeyCategory();
         $this->entity = $entity;
+        parent::__construct(null);
         if ($entity->supportsCustomDisplayOrder()) {
             $this->setItemsPerPage(-1);
+            $this->sortByDisplayOrderAscending();
         }
-        parent::__construct(null);
     }
 
     protected function getAttributeKeyClassName()

@@ -2,11 +2,13 @@
 namespace Concrete\Core\Entity\Express\Entry;
 
 use Concrete\Core\Entity\Express\Entry;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\InheritanceType("JOINED")
+ * @ORM\InheritanceType("SINGLE_TABLE")
  * @ORM\DiscriminatorColumn(name="type", type="string")
  * @ORM\Table(name="ExpressEntityEntryAssociations")
  */
@@ -29,6 +31,15 @@ abstract class Association
      * @ORM\ManyToOne(targetEntity="\Concrete\Core\Entity\Express\Association")
      */
     protected $association;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="\Concrete\Core\Entity\Express\Entry", cascade={"persist"}, inversedBy="containing_associations")
+     * @ORM\JoinTable(name="ExpressEntityAssociationSelectedEntries",
+     * joinColumns={@ORM\JoinColumn(name="id", referencedColumnName="id")},
+     * inverseJoinColumns={@ORM\JoinColumn(name="exSelectedEntryID", referencedColumnName="exEntryID")  }
+     * )
+     */
+    protected $selectedEntries;
 
     /**
      * @return \Concrete\Core\Entity\Express\Association
@@ -78,7 +89,48 @@ abstract class Association
         $this->entry = $entry;
     }
 
-    abstract public function getSelectedEntries();
-    abstract public function removeSelectedEntry(Entry $entry);
+    public function getSelectedEntriesCollection()
+    {
+        return $this->selectedEntries;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSelectedEntries()
+    {
+        // I would use criteria for this but once again Doctrine fails
+        if ($this->getAssociation()->isOwningAssociation() && $this->getAssociation()->getTargetEntity()->supportsCustomDisplayOrder()) {
+            $entries = $this->getSelectedEntriesCollection()->toArray();
+            usort($entries, function($a, $b) {
+                return $a->getEntryDisplayOrder() - $b->getEntryDisplayOrder();
+            });
+            return new ArrayCollection($entries);
+        }
+        return $this->getSelectedEntriesCollection();
+    }
+
+    /**
+     * @param mixed $selectedEntries
+     */
+    public function setSelectedEntries($selectedEntries)
+    {
+        $this->selectedEntries = $selectedEntries;
+    }
+
+    public function __construct()
+    {
+        $this->selectedEntries = new ArrayCollection();
+    }
+
+    public function removeSelectedEntry(Entry $entry)
+    {
+        foreach($this->getSelectedEntries() as $selectedEntry) {
+            if ($selectedEntry->getId() == $entry->getID()) {
+                $this->selectedEntries->removeElement($selectedEntry);
+            }
+        }
+    }
+
 
 }
