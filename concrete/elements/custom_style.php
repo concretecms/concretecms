@@ -32,6 +32,7 @@ $boxShadowBlur = '';
 $boxShadowSpread = '';
 $boxShadowColor = '';
 $customClass = '';
+$customID = '';
 $sliderMin = \Config::get('concrete.limits.style_customizer.size_min', -50);
 $sliderMax = \Config::get('concrete.limits.style_customizer.size_max', 200);
 
@@ -65,6 +66,7 @@ if (is_object($set)) {
     $boxShadowSpread = $set->getBoxShadowSpread();
     $boxShadowColor = $set->getBoxShadowColor();
     $customClass = $set->getCustomClass();
+    $customID = $set->getCustomID();
 }
 
 $repeatOptions = array(
@@ -401,6 +403,14 @@ $form = Core::make('helper/form');
                     <?= $form->selectMultiple('customClass', $customClassesSelect, $customClassesSelected);?>
                 </div>
                 <hr/>
+
+                <?php if ($style instanceof \Concrete\Core\Block\CustomStyle) { ?>
+                    <div>
+                        <?= t('Custom ID'); ?>
+                        <?= $form->text('customID', $customID, array('style' => 'height: 38px; font-size: 16px; margin-bottom: 0;')); ?>
+                    </div>
+                    <hr/>
+                <?php } ?>
 
                 <?php if ($style instanceof \Concrete\Core\Block\CustomStyle && $canEditCustomTemplate) { ?>
                     <div class="ccm-inline-select-container">
