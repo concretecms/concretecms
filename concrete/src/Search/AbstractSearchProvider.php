@@ -3,6 +3,8 @@ namespace Concrete\Core\Search;
 
 use Concrete\Core\Application\EditResponse;
 use Concrete\Core\Entity\Search\Query;
+use Concrete\Core\Search\Column\AttributeKeyColumn;
+use Concrete\Core\Search\Column\Set;
 use Concrete\Core\Search\Result\Result as SearchResult;
 use Symfony\Component\HttpFoundation\Session\Session;
 
@@ -24,6 +26,18 @@ abstract class AbstractSearchProvider implements ProviderInterface, SessionQuery
     public function clearSessionCurrentQuery()
     {
         $this->session->remove('search/' . $this->getSessionNamespace() . '/query');
+    }
+
+    public function getAllColumnSet()
+    {
+        $columnSet = new Set();
+        foreach($this->getAvailableColumnSet()->getColumns() as $column) {
+            $columnSet->addColumn($column);
+        }
+        foreach($this->getCustomAttributeKeys() as $ak) {
+            $columnSet->addColumn(new AttributeKeyColumn($ak));
+        }
+        return $columnSet;
     }
 
     public function getSessionCurrentQuery()

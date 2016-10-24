@@ -5,14 +5,9 @@ use Concrete\Core\Tree\Node\Type\ExpressEntryResults;
 
 class EntityRepository extends \Doctrine\ORM\EntityRepository
 {
-    public function findByIncludeInPublicList($find = null)
+    public function findPublicEntities()
     {
-        if ($find === null) {
-            return $this->findBy(array());
-        } else {
-            $find = $find ? true : false;
-        }
-        return $this->findBy(array('include_in_public_list' => $find));
+        return $this->findBy(array('include_in_public_list' => true, 'owned_by' => null));
     }
 
     public function findExpressForms()

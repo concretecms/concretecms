@@ -35,9 +35,24 @@ class Entity implements CategoryObjectInterface, ObjectInterface, ExportableInte
     protected $handle;
 
     /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $plural_handle;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    protected $supports_custom_display_order = false;
+
+    /**
      * @ORM\Column(type="text", nullable=true)
      */
     protected $description;
+
+    /**
+     * @ORM\OneToOne(targetEntity="Entity")
+     **/
+    protected $owned_by;
 
     /**
      * @ORM\Column(type="object", nullable=true)
@@ -137,6 +152,54 @@ class Entity implements CategoryObjectInterface, ObjectInterface, ExportableInte
     public function setHandle($handle)
     {
         $this->handle = $handle;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPluralHandle()
+    {
+        return $this->plural_handle;
+    }
+
+    /**
+     * @param mixed $plural_handle
+     */
+    public function setPluralHandle($plural_handle)
+    {
+        $this->plural_handle = $plural_handle;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function supportsCustomDisplayOrder()
+    {
+        return $this->supports_custom_display_order;
+    }
+
+    /**
+     * @param mixed $supports_custom_display_order
+     */
+    public function setSupportsCustomDisplayOrder($supports_custom_display_order)
+    {
+        $this->supports_custom_display_order = $supports_custom_display_order;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getOwnedBy()
+    {
+        return $this->owned_by;
+    }
+
+    /**
+     * @param mixed $owned_by
+     */
+    public function setOwnedBy($owned_by)
+    {
+        $this->owned_by = $owned_by;
     }
 
     /**

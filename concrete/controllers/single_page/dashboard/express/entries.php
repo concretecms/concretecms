@@ -47,7 +47,7 @@ class Entries extends DashboardExpressEntityPageController
                 $this->set('headerMenu', $header);
             }
         } else {
-            $this->set('entities', $r->findByIncludeInPublicList(true));
+            $this->set('entities', $r->findPublicEntities());
         }
     }
 

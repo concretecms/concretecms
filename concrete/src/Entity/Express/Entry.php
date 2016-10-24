@@ -73,6 +73,11 @@ class Entry implements \JsonSerializable, ObjectInterface
     protected $exEntryID;
 
     /**
+     * @ORM\Column(type="integer")
+     */
+    protected $exEntryDisplayOrder = 0;
+
+    /**
      * @ORM\Column(type="datetime")
      */
     protected $exEntryDateCreated;
@@ -118,6 +123,22 @@ class Entry implements \JsonSerializable, ObjectInterface
     public function setAttributes($attributes)
     {
         $this->attributes = $attributes;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEntryDisplayOrder()
+    {
+        return $this->exEntryDisplayOrder;
+    }
+
+    /**
+     * @param mixed $exEntryDisplayOrder
+     */
+    public function setEntryDisplayOrder($exEntryDisplayOrder)
+    {
+        $this->exEntryDisplayOrder = $exEntryDisplayOrder;
     }
 
     /**

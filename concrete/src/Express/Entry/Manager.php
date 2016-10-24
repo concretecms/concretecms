@@ -7,6 +7,7 @@ use Concrete\Core\Entity\Express\Form;
 use Concrete\Core\Express\Event\Event;
 use Concrete\Core\Express\Form\Control\SaveHandler\SaveHandlerInterface;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Query;
 use Symfony\Component\HttpFoundation\Request;
 
 class Manager
@@ -21,11 +22,28 @@ class Manager
         $this->entityManager = $entityManager;
     }
 
+    protected function getNewDisplayOrder(Entity $entity)
+    {
+        $query = $this->entityManager->createQuery('select max(e.exEntryDisplayOrder) as displayOrder from \Concrete\Core\Entity\Express\Entry e where e.entity = :entity');
+        $query->setParameter('entity', $entity);
+        $displayOrder = $query->getOneOrNullResult(Query::HYDRATE_SINGLE_SCALAR);
+        if (!$displayOrder) {
+            $displayOrder = 1;
+        } else {
+            ++$displayOrder;
+        }
+        return $displayOrder;
+    }
+
     public function addEntry(Entity $entity)
     {
         $entry = new Entry();
         $entry->setEntity($entity);
+        if ($entity->supportsCustomDisplayOrder()) {
+            $entry->setEntryDisplayOrder($this->getNewDisplayOrder($entity));
+        }
         $this->entityManager->persist($entry);
+        $this->entityManager->flush();
         return $entry;
     }
 

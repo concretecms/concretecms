@@ -1,7 +1,8 @@
 <?php defined('C5_EXECUTE') or die("Access Denied."); ?>
 
 <div class="ccm-dashboard-header-buttons btn-group">
-    <a href="<?=URL::to('/dashboard/express/entities/associations', $entity->getID())?>" class="btn btn-default"><?=t("Back to Object")?></a>
+    <a href="<?=URL::to('/dashboard/system/express/entities/associations', $entity->getID())?>" class="btn btn-default"><?=t("Back to Object")?></a>
+    <a href="<?=URL::to('/dashboard/system/express/entities/associations', 'edit', $association->getID())?>" class="btn btn-default"><?=t("Edit Details")?></a>
     <button type="button" class="btn btn-danger" data-action="delete-association"><?= t('Delete Association') ?></button>
 </div>
 
@@ -41,7 +42,13 @@
 <p><?=$formatter->getTypeDisplayName()?></p>
 
 <h4><?=t('Source Object')?></h4>
-<p><a href="<?=URL::to('/dashboard/express/entities', 'view_entity', $entity->getID())?>"><?=$entity->getName()?></a></p>
+<p><a href="<?=URL::to('/dashboard/system/express/entities', 'view_entity', $entity->getID())?>"><?=$entity->getName()?></a></p>
+
+<h4><?=t('Inversed Property Name')?></h4>
+<p><?=$association->getInversedByPropertyName()?></p>
 
 <h4><?=t('Target Object')?></h4>
-<p><a href="<?=URL::to('/dashboard/express/entities', 'view_entity', $association->getTargetEntity()->getID())?>"><?=$association->getTargetEntity()->getName()?></a></p>
+<p><a href="<?=URL::to('/dashboard/system/express/entities', 'view_entity', $association->getTargetEntity()->getID())?>"><?=$association->getTargetEntity()->getName()?></a></p>
+
+<h4><?=t('Target Property Name')?></h4>
+<p><?=$association->getTargetPropertyName()?></p>

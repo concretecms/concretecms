@@ -1126,6 +1126,7 @@ return array(
                 array('javascript', 'core/events'),
                 array('javascript', 'bootstrap/dropdown'),
                 array('javascript', 'bootstrap/tooltip'),
+                array('javascript', 'bootstrap/collapse'),
                 array('javascript', 'bootstrap/popover'),
                 array('javascript', 'bootstrap/transition'),
                 array('javascript', 'bootstrap/alert'),

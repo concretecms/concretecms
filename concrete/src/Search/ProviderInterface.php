@@ -11,6 +11,7 @@ interface ProviderInterface
     function getDefaultColumnSet();
     function getCurrentColumnSet();
     function getAvailableColumnSet();
+    function getAllColumnSet();
     function createSearchResultObject($columns, $list);
 
     function getCustomAttributeKeys();
