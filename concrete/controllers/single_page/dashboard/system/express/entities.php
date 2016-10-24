@@ -36,7 +36,12 @@ class Entities extends DashboardPageController
                 $entity = new Entity();
                 $entity->setName($this->request->request->get('name'));
                 $entity->setHandle($this->request->request->get('handle'));
+                $entity->setPluralHandle($this->request->request->get('plural_handle'));
                 $entity->setDescription($this->request->request->get('description'));
+
+                if ($this->request->request->get('supports_custom_display_order')) {
+                    $entity->setSupportsCustomDisplayOrder(true);
+                }
 
                 $form = new Form();
                 $form->setEntity($entity);
@@ -53,6 +58,21 @@ class Entities extends DashboardPageController
                 $this->entityManager->persist($entity);
                 $this->entityManager->flush();
 
+                if ($owned_by = $this->request->request->get('owned_by')) {
+                    $owned_by = $this->entityManager->find('\Concrete\Core\Entity\Express\Entity', $owned_by);
+                    if (is_object($owned_by)) {
+                        $entity->setOwnedBy($owned_by);
+                    }
+
+                    // Create the owned by relationship
+                    $builder = \Core::make('express/builder/association');
+                    $builder->addManyToOne(
+                        $entity, $owned_by, $owned_by->getHandle(), $entity->getPluralHandle()
+                    );
+                    $this->entityManager->persist($entity);
+                    $this->entityManager->flush();
+                }
+
                 $indexer = $entity->getAttributeKeyCategory()->getSearchIndexer();
                 if (is_object($indexer)) {
                     $indexer->createRepository($entity->getAttributeKeyCategory());
@@ -63,6 +83,13 @@ class Entities extends DashboardPageController
             }
         }
 
+        $r = $this->entityManager->getRepository('\Concrete\Core\Entity\Express\Entity');
+        $entities = $r->findAll(array(), array('name' => 'asc'));
+        $select = ['' => t('** Choose Entity')];
+        foreach($entities as $entity) {
+            $select[$entity->getID()] = $entity->getName();
+        }
+        $this->set('entities', $select);
         $this->render('/dashboard/system/express/entities/add');
     }
 
@@ -133,6 +160,11 @@ class Entities extends DashboardPageController
             $forms = array('' => t('** Select Form'));
             $defaultViewFormID = 0;
             $defaultEditFormID = 0;
+            $ownedByID = 0;
+            $entities = array('' => t('** No Owner'));
+            foreach($r->findAll() as $ownedByEntity) {
+                $entities[$ownedByEntity->getID()] = $ownedByEntity->getName();
+            }
             foreach($this->entity->getForms() as $form) {
                 $forms[$form->getID()] = $form->getName();
             }
@@ -142,9 +174,14 @@ class Entities extends DashboardPageController
             if (is_object($this->entity->getDefaultEditForm())) {
                 $defaultEditFormID = $this->entity->getDefaultEditForm()->getID();
             }
+            if (is_object($this->entity->getOwnedBy())) {
+                $ownedByID = $this->entity->getOwnedBy()->getID();
+            }
             $this->set('defaultEditFormID', $defaultEditFormID);
             $this->set('defaultViewFormID', $defaultViewFormID);
+            $this->set('ownedByID', $ownedByID);
             $this->set('forms', $forms);
+            $this->set('entities', $entities);
             $this->set('entity', $this->entity);
             $this->set('pageTitle', t('Edit Entity'));
             $this->render('/dashboard/system/express/entities/edit');
@@ -179,6 +216,10 @@ class Entities extends DashboardPageController
         if (!$this->request->request->get('entity_results_node_id')) {
             $this->error->add(t('You must choose where the results for your entity are going live.'));
         }
+
+        if ($this->request->request->get('owned_by') && $this->request->request->get('owned_by') == $this->entity->getID()) {
+            $this->error->add(t('An entity cannot own itself.'));
+        }
         $viewForm = null;
         $editForm = null;
         foreach($this->entity->getForms() as $form) {
@@ -201,9 +242,23 @@ class Entities extends DashboardPageController
 
             $entity->setName($name);
             $entity->setHandle($handle);
+            $entity->setPluralHandle($this->request->request->get('plural_handle'));
             $entity->setDescription($this->request->request->get('description'));
             $entity->setDefaultViewForm($viewForm);
             $entity->setDefaultEditForm($editForm);
+            $entity->setSupportsCustomDisplayOrder(false);
+
+            if ($this->request->request->get('supports_custom_display_order')) {
+                $entity->setSupportsCustomDisplayOrder(true);
+            }
+
+            if ($owned_by = $this->request->request->get('owned_by')) {
+                $owned_by = $this->entityManager->find('\Concrete\Core\Entity\Express\Entity', $owned_by);
+                if (is_object($owned_by)) {
+                    $entity->setOwnedBy($owned_by);
+                }
+            }
+
             $this->entityManager->persist($entity);
             $this->entityManager->flush();
 

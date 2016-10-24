@@ -18,6 +18,9 @@ class EntryList extends DatabaseItemList implements PermissionableListItemInterf
     {
         $this->category = $entity->getAttributeKeyCategory();
         $this->entity = $entity;
+        if ($entity->supportsCustomDisplayOrder()) {
+            $this->setItemsPerPage(-1);
+        }
         parent::__construct(null);
     }
 
@@ -43,8 +46,12 @@ class EntryList extends DatabaseItemList implements PermissionableListItemInterf
     public function getTotalResults()
     {
         $query = $this->deliverQueryObject();
-
         return $query->select('count(distinct e.exEntryID)')->setMaxResults(1)->execute()->fetchColumn();
+    }
+
+    public function sortByDisplayOrderAscending()
+    {
+        $this->query->orderBy('e.exEntryDisplayOrder', 'asc');
     }
 
     public function filterByKeywords($keywords)

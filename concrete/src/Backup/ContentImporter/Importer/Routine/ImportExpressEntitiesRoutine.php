@@ -28,6 +28,7 @@ class ImportExpressEntitiesRoutine extends AbstractRoutine
                     $entity = new Entity();
                     $entity->setId((string) $entityNode['id']);
                 }
+                $entity->setPluralHandle((string) $entityNode['plural_handle']);
                 $entity->setHandle((string) $entityNode['handle']);
                 $entity->setDescription((string) $entityNode['description']);
                 $entity->setName((string) $entityNode['name']);

@@ -586,6 +586,15 @@
             </attributes>
         </page>
 
+        <page name="Customize Search" path="/dashboard/system/express/entities/order_entries"
+              filename="/dashboard/system/express/entities/order_entries.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="exclude_nav">
+                    <value><![CDATA[1]]></value>
+                </attributekey>
+            </attributes>
+        </page>
+
         <page name="Custom Entry Locations" path="/dashboard/system/express/entries"
               filename="/dashboard/system/express/entries.php" pagetype="" description="" package="">
         </page>

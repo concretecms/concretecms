@@ -21,6 +21,11 @@ class ExpressCategory extends AbstractCategory
             . 'ExpressSearchIndexAttributes';
     }
 
+    public function getExpressEntity()
+    {
+        return $this->expressEntity;
+    }
+
     public function getSearchIndexer()
     {
         $indexer = $this->application->make('Concrete\Core\Attribute\Category\SearchIndexer\ExpressSearchIndexer');
