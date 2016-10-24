@@ -86,7 +86,7 @@ if (isset($successMessage)) {
                         inviteToStayHere = false;
                         $("#install-progress-summary").html('<?=t('All Done.')?>');
                         NProgress.done();
-                        $('button[data-button=installation-complete]').prop('disabled', false).html('Edit Your Site <i class="fa fa-thumbs-up"></i>');
+                        $('button[data-button=installation-complete]').prop('disabled', false).html(<?=json_encode(t('Edit Your Site').' <i class="fa fa-thumbs-up"></i>')?>);
 
                         setTimeout(function() {
                             $("#interstitial-message").hide();
