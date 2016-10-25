@@ -5,7 +5,7 @@
     <?php
     if (!empty($selectedEntities) && count($selectedEntities)) { ?>
         <ul class="item-select-list" data-sortable-list="items">
-            <?php foreach($entities as $entry) { ?>
+            <?php foreach($selectedEntities as $entry) { ?>
                 <li>
                     <input type="hidden" name="express_association_<?=$control->getID()?>[]" value="<?=$entry->getID()?>">
                     <?=$formatter->getEntryDisplayName($control, $entry)?>
