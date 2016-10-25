@@ -23,6 +23,7 @@ class URLTest extends PHPUnit_Framework_TestCase
     {
         $service = Core::make('helper/navigation');
         $page = new Page();
+        $page->siteTree = new \Concrete\Core\Entity\Site\SiteTree();
         $page->cPath = '/path/to/my/page';
         $page->error = false;
         $dashboard = new Page();
@@ -30,6 +31,8 @@ class URLTest extends PHPUnit_Framework_TestCase
         $dashboard->error = false;
         $this->page = $page;
         $this->dashboard = $dashboard;
+        $page->siteTree = new \Concrete\Core\Entity\Site\SiteTree();
+        $dashboard->siteTree = new \Concrete\Core\Entity\Site\SiteTree();
         $this->service = $service;
         Config::set('concrete.seo.url_rewriting', false);
         Config::set('concrete.seo.url_rewriting_all', false);
@@ -296,6 +299,7 @@ class URLTest extends PHPUnit_Framework_TestCase
         $home = new Page();
         $home->cID = 1;
         $home->cPath = '';
+        $home->siteTree = new \Concrete\Core\Entity\Site\SiteTree();
 
         $url = \URL::to($home);
         $this->assertEquals('http://www.dummyco.com/path/to/server/index.php', (string) $url);
@@ -306,6 +310,7 @@ class URLTest extends PHPUnit_Framework_TestCase
         $page = new Page();
         $page->cPath = null;
         $page->cID = 777;
+        $page->siteTree = new \Concrete\Core\Entity\Site\SiteTree();
 
         $url = \URL::to($page);
         $this->assertEquals('http://www.dummyco.com/path/to/server/index.php?cID=777', (string) $url);
