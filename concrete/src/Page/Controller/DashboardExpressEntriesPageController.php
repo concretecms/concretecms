@@ -6,12 +6,10 @@ use Concrete\Core\Entity\Express\Entry;
 use Concrete\Core\Express\Entry\Manager;
 use Concrete\Core\Express\Form\Validator;
 use Concrete\Core\Tree\Node\Node;
-use Concrete\Core\Tree\Node\Type\Category;
 use Concrete\Core\Tree\Type\ExpressEntryResults;
 
 abstract class DashboardExpressEntriesPageController extends DashboardPageController
 {
-
     protected function getBackToListURL(Entity $entity)
     {
         return \URL::to($this->getPageObject()
@@ -24,10 +22,10 @@ abstract class DashboardExpressEntriesPageController extends DashboardPageContro
             ->getCollectionPath(), 'edit_entry', $entry->getID());
     }
 
-
     protected function getResultsTreeNodeObject()
     {
         $tree = ExpressEntryResults::get();
+
         return $tree->getRootTreeNodeObject();
     }
 
@@ -95,6 +93,7 @@ abstract class DashboardExpressEntriesPageController extends DashboardPageContro
         if (count($breadcrumb) == 1) {
             array_pop($breadcrumb);
         }
+
         return $breadcrumb;
     }
 
@@ -194,7 +193,6 @@ abstract class DashboardExpressEntriesPageController extends DashboardPageContro
             if (!$permissions->canEditExpressEntry()) {
                 $this->error->add(t('You do not have access to edit entries of this entity type.'));
             }
-
         }
 
         if (is_object($form)) {
@@ -216,10 +214,5 @@ abstract class DashboardExpressEntriesPageController extends DashboardPageContro
         } else {
             throw new \Exception(t('Invalid form.'));
         }
-
     }
-
-
-
-
 }
