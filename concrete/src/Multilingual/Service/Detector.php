@@ -112,8 +112,15 @@ class Detector
      */
     public static function isEnabled()
     {
-        $result = false;
         $app = Facade::getFacadeApplication();
+        $cache = $app->make('cache/request');
+        $item = $cache->getItem('multilingual/enabled');
+        if (!$item->isMiss()) {
+            return $item->get();
+        }
+
+        $item->lock();
+        $result = false;
         if ($app->isInstalled()) {
             $db = $app->make('database')->connection();
             if ($db->executeQuery('select cID from MultilingualSections limit 1')->fetchColumn()) {
@@ -121,6 +128,7 @@ class Detector
             }
         }
 
+        $cache->save($item->set($result));
         return $result;
     }
 }
