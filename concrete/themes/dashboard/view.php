@@ -94,14 +94,14 @@ if (!empty($_error)) {
 if (isset($message)) {
     ?>
 	<div class="ccm-ui" id="ccm-dashboard-result-message">
-		<div class="alert alert-info"><button type="button" class="close" data-dismiss="alert">×</button><?=nl2br(h($message))?></div>
+		<div class="alert alert-info"><button type="button" class="close" data-dismiss="alert">×</button><?=(isset($messageIsHTML) && $messageIsHTML) ? $message : nl2br(h($message))?></div>
 	</div>
 	<?php
 
 } elseif (isset($success)) {
     ?>
 	<div class="ccm-ui" id="ccm-dashboard-result-message">
-		<div class="alert alert-success"><button type="button" class="close" data-dismiss="alert">×</button><?=nl2br(h($success))?></div>
+		<div class="alert alert-success"><button type="button" class="close" data-dismiss="alert">×</button><?=(isset($successIsHTML) && $successIsHTML) ? $success : nl2br(h($success))?></div>
 	</div>
 	<?php
 }

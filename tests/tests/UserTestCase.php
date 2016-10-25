@@ -14,6 +14,7 @@ abstract class UserTestCase extends ConcreteDatabaseTestCase
 
     protected $metadatas = array(
         'Concrete\Core\Entity\User\User',
+        'Concrete\Core\Entity\User\UserSignup',
         'Concrete\Core\Entity\Attribute\Category',
         'Concrete\Core\Entity\Attribute\Key\Key',
         'Concrete\Core\Entity\Attribute\Key\UserValue',
