@@ -241,7 +241,7 @@ abstract class DashboardExpressEntriesPageController extends DashboardPageContro
                     $this->flash('success', t('%s added successfully.', $entity->getName()));
 
                     $this->entityManager->refresh($entry);
-                    $this->redirect($this->getCreateURL($entity, $entry->getOwnedByEntry()));
+                    $this->redirect($this->getViewEntryURL($entry));
                 }
 
             }
