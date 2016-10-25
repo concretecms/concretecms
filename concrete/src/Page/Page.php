@@ -63,6 +63,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     protected $cInheritPermissionsFromCID = null;
     protected $cIsSystemPage = false;
     protected $siteTreeID;
+    public $siteTree;
 
     /**
      * @param string $path /path/to/page
@@ -1166,9 +1167,11 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
 
     public function getSiteTreeObject()
     {
-        $em = \ORM::entityManager();
-
-        return $em->find('\Concrete\Core\Entity\Site\Tree', $this->getSiteTreeID());
+        if (!isset($this->siteTree)) {
+            $em = \ORM::entityManager();
+            $this->siteTree = $em->find('\Concrete\Core\Entity\Site\Tree', $this->getSiteTreeID());
+        }
+        return $this->siteTree;
     }
 
     /**
