@@ -71,7 +71,7 @@ class Install extends Controller
 
     protected function getLocales()
     {
-        return Localization::getAvailableInterfaceLanguageDescriptions();
+        return Localization::getAvailableInterfaceLanguageDescriptions(null);
     }
 
     protected function testAndRunInstall()
