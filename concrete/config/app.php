@@ -316,7 +316,6 @@ return array(
         "/ccm/system/dialogs/page/add_external/submit" => array('\Concrete\Controller\Dialog\Page\AddExternal::submit'),
         "/ccm/system/dialogs/page/add/compose/{ptID}/{cParentID}" => array('\Concrete\Controller\Dialog\Page\Add\Compose::view'),
         "/ccm/system/dialogs/page/add/compose/submit" => array('\Concrete\Controller\Dialog\Page\Add\Compose::submit'),
-        "/ccm/system/dialogs/page/add/submit" => array('\Concrete\Controller\Dialog\Page\Add::submit'),
         "/ccm/system/dialogs/page/attributes" => array('\Concrete\Controller\Dialog\Page\Attributes::view'),
         "/ccm/system/dialogs/page/bulk/properties" => array('\Concrete\Controller\Dialog\Page\Bulk\Properties::view'),
         "/ccm/system/dialogs/page/bulk/properties/clear_attribute" => array('\Concrete\Controller\Dialog\Page\Bulk\Properties::clearAttribute'),
@@ -506,9 +505,6 @@ return array(
 
 
         "/ccm/system/search/groups/submit" => array('\Concrete\Controller\Search\Groups::submit'),
-
-        "/ccm/system/search/users/field/{field}" => array('\Concrete\Controller\Search\Users::field'),
-        "/ccm/system/search/users/submit" => array('\Concrete\Controller\Search\Users::submit'),
 
         /*
          * Panels - top level
