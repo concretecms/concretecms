@@ -10,8 +10,6 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 class Detector
 {
-    protected static $enabled;
-
     /**
      * Returns the preferred section based on session, cookie,
      * user object, default browser (if allowed), and finally
@@ -107,18 +105,30 @@ class Detector
         }
     }
 
+    /**
+     * Check if there's some multilingual section.
+     *
+     * @return bool
+     */
     public static function isEnabled()
     {
-        if (!isset(self::$enabled)) {
-            $app = Facade::getFacadeApplication();
-            if (!$app->isInstalled()) {
-                return false;
-            }
-            $db = $app->make('database')->getEntityManager();
-            $sections = $db->getRepository('Concrete\Core\Entity\Multilingual\Section')->findAll();
-            self::$enabled = count($sections) > 0;
+        $app = Facade::getFacadeApplication();
+        $cache = $app->make('cache/request');
+        $item = $cache->getItem('multilingual/enabled');
+        if (!$item->isMiss()) {
+            return $item->get();
         }
 
-        return self::$enabled;
+        $item->lock();
+        $result = false;
+        if ($app->isInstalled()) {
+            $db = $app->make('database')->connection();
+            if ($db->executeQuery('select cID from MultilingualSections limit 1')->fetchColumn()) {
+                $result = true;
+            }
+        }
+
+        $cache->save($item->set($result));
+        return $result;
     }
 }

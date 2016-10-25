@@ -54,11 +54,13 @@ if (count($attribs) > 0) {
             <ul class="item-select-list ccm-sortable-attribute-set-list-wrapper" attribute-set-id="<?=$as->getAttributeSetID()?>" id="asID_<?=$as->getAttributeSetID()?>">
 			<?php
             foreach ($setattribs as $ak) {
+                $controller = $ak->getController();
+                $formatter = $controller->getIconFormatter();
                 ?>
                 <li class="ccm-attribute" id="akID_<?=$ak->getAttributeKeyID()?>">
                     <a href="<?=URL::to($editURL, 'edit', $ak->getAttributeKeyID())?>" title="<?php echo t('Handle')?>: <?php echo $ak->getAttributeKeyHandle();
                 ?>">
-                        <img class="ccm-attribute-icon" src="<?=$ak->getAttributeKeyIconSRC()?>" width="16" height="16" />
+                        <?=$formatter->getListIconElement()?>
                         <?=$ak->getAttributeKeyDisplayName()?>
                     </a>
                     <i class="ccm-item-select-list-sort"></i>
@@ -86,11 +88,13 @@ if (count($attribs) > 0) {
 				<ul class="ccm-attribute-list-wrapper item-select-list">
 				<?php
                 foreach ($unsetattribs as $ak) {
+                    $controller = $ak->getController();
+                    $formatter = $controller->getIconFormatter();
                     ?>
                     <li class="ccm-attribute">
                         <a href="<?=URL::to($editURL, 'edit', $ak->getAttributeKeyID())?>" title="<?php echo t('Handle')?>: <?php echo $ak->getAttributeKeyHandle();
                     ?>">
-                            <img class="ccm-attribute-icon" src="<?=$ak->getAttributeKeyIconSRC()?>" width="16" height="16" />
+                            <?=$formatter->getListIconElement()?>
                             <?=$ak->getAttributeKeyDisplayName()?>
                         </a>
                     </li>
@@ -109,10 +113,14 @@ if (count($attribs) > 0) {
         ?>">
 		<?php
         foreach ($attribs as $ak) {
+            $controller = $ak->getController();
+            $formatter = $controller->getIconFormatter();
             ?>
             <li class="ccm-attribute" id="akID_<?=$ak->getAttributeKeyID()?>">
 			    <a href="<?=URL::to($editURL, 'edit', $ak->getAttributeKeyID())?>" title="<?php echo t('Handle')?>: <?php echo $ak->getAttributeKeyHandle();
-            ?>"><img class="ccm-attribute-icon" src="<?=$ak->getAttributeKeyIconSRC()?>" width="16" height="16" /> <?=$ak->getAttributeKeyDisplayName()?></a>
+            ?>">
+                    <?=$formatter->getListIconElement()?>
+                    <?=$ak->getAttributeKeyDisplayName()?></a>
                 <?php if ($sortable) {
     ?><i class="ccm-item-select-list-sort"></i><?php 
 }
