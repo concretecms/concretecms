@@ -1,7 +1,6 @@
 <?php
 namespace Concrete\Core\Url\Resolver;
 
-use Concrete\Core\Entity\Site\SiteTree;
 use Concrete\Core\Url\Url;
 
 class PageUrlResolver implements UrlResolverInterface
@@ -31,29 +30,23 @@ class PageUrlResolver implements UrlResolverInterface
                 return Url::createFromUrl($externalUrl);
             }
 
-            $site = null;
-            $tree = $page->getSiteTreeObject();
-            if ($tree instanceof SiteTree) {
-                $site = $tree->getSite();
-            }
-
             if ($path = $page->getCollectionPath()) {
-                return $this->resolveWithResolver($path, $arguments, $site);
+                return $this->resolveWithResolver($path, $arguments);
             }
 
             // if there's no path but it's the home page
             if ($page->getCollectionID() == HOME_CID) {
-                return $this->resolveWithResolver("/", $arguments, $site);
+                return $this->resolveWithResolver("/", $arguments);
             }
 
             // otherwise, it's a page object with no path yet, which happens when pages aren't yet approved
-            return $this->resolveWithResolver('/?cID=' . $page->getCollectionID(), $arguments, $site);
+            return $this->resolveWithResolver('/?cID=' . $page->getCollectionID(), $arguments);
         }
 
         return null;
     }
 
-    protected function resolveWithResolver($path, $arguments, $site = null)
+    protected function resolveWithResolver($path, $arguments)
     {
         array_unshift($arguments, $path);
 

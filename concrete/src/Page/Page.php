@@ -2326,7 +2326,10 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         $pe->setNewParentPageObject($newParent);
         Events::dispatch('on_page_move', $pe);
 
-        Section::registerMove($this, $oldParent, $newParent);
+        $multilingual = \Core::make('multilingual/detector');
+        if ($multilingual->isEnabled()) {
+            Section::registerMove($this, $oldParent, $newParent);
+        }
 
         // now that we've moved the collection, we rescan its path
         $this->rescanCollectionPath();

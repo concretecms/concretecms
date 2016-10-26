@@ -55,6 +55,6 @@ class TopicsType extends Type
 
     public function getTopicTreeObject()
     {
-        return Tree::getByID($this->topicTreeID);
+        return Tree::getByID($this->akTopicTreeID);
     }
 }
