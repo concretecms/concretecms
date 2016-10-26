@@ -1905,6 +1905,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         $pkgID = $this->getPackageID();
         $cFilename = $this->getCollectionFilename();
         $pTemplateID = $this->getPageTemplateID();
+        $ptID = $this->getPageTypeID();
         $existingPageTemplateID = $pTemplateID;
 
         $cCacheFullPageContent = $this->cCacheFullPageContent;
@@ -1934,6 +1935,9 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         }
         if (isset($data['pTemplateID'])) {
             $pTemplateID = $data['pTemplateID'];
+        }
+        if (isset($data['ptID'])) {
+            $ptID = $data['ptID'];
         }
 
         if (!$cDatePublic) {
@@ -2026,7 +2030,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         // load new version object
         $this->loadVersionObject($cvID);
 
-        $db->executeQuery('update Pages set uID = ?, pkgID = ?, cFilename = ?, cCacheFullPageContent = ?, cCacheFullPageContentLifetimeCustom = ?, cCacheFullPageContentOverrideLifetime = ? where cID = ?', [$uID, $pkgID, $cFilename, $cCacheFullPageContent, $cCacheFullPageContentLifetimeCustom, $cCacheFullPageContentOverrideLifetime, $this->cID]);
+        $db->executeQuery('update Pages set ptID = ?, uID = ?, pkgID = ?, cFilename = ?, cCacheFullPageContent = ?, cCacheFullPageContentLifetimeCustom = ?, cCacheFullPageContentOverrideLifetime = ? where cID = ?', [$ptID, $uID, $pkgID, $cFilename, $cCacheFullPageContent, $cCacheFullPageContentLifetimeCustom, $cCacheFullPageContentOverrideLifetime, $this->cID]);
 
         $cache = PageCache::getLibrary();
         $cache->purge($this);
