@@ -398,20 +398,6 @@ $form = Core::make('helper/form');
 
             <div class="ccm-inline-design-dropdown-menu dropdown-menu">
                 <h3><?=t('Advanced')?></h3>
-                <div>
-                    <?=t('Custom Class')?>
-                    <?= $form->selectMultiple('customClass', $customClassesSelect, $customClassesSelected);?>
-                </div>
-                <hr/>
-
-                <?php if ($style instanceof \Concrete\Core\Block\CustomStyle) { ?>
-                    <div>
-                        <?= t('Custom ID'); ?>
-                        <?= $form->text('customID', $customID, array('style' => 'height: 38px; font-size: 16px; margin-bottom: 0;')); ?>
-                    </div>
-                    <hr/>
-                <?php } ?>
-
                 <?php if ($style instanceof \Concrete\Core\Block\CustomStyle && $canEditCustomTemplate) { ?>
                     <div class="ccm-inline-select-container">
                         <?=t('Custom Template')?>
@@ -423,6 +409,20 @@ $form = Core::make('helper/form');
                             <?php } ?>
                         </select>
                      </div>
+                    <hr/>
+                <?php } ?>
+
+                <div>
+                    <?=t('Custom Class')?>
+                    <?= $form->selectMultiple('customClass', $customClassesSelect, $customClassesSelected);?>
+                </div>
+                <hr/>
+
+                <?php if ($style instanceof \Concrete\Core\Block\CustomStyle) { ?>
+                    <div>
+                        <?= t('Custom ID'); ?>
+                        <?= $form->text('customID', $customID, array('style' => 'height: 38px; font-size: 16px; margin-bottom: 0;')); ?>
+                    </div>
                     <hr/>
                 <?php } ?>
 
