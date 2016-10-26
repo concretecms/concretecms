@@ -43,6 +43,10 @@ class ContentImporter
                 $routine->setHomePage($this->home);
             }
             $routine->import($element);
+            if (isset($this->home) && $routine instanceof SpecifiableHomePageRoutineInterface) {
+                // Unset the home page on each item post import
+                $routine->setHomePage(null);
+            }
         }
     }
 

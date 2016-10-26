@@ -3,7 +3,7 @@ namespace Concrete\Core\Entity\Site;
 
 use Concrete\Core\Application\Application;
 use Concrete\Core\Attribute\ObjectTrait;
-use Concrete\Core\Entity\Attribute\Key\SiteKey;
+use Concrete\Core\Attribute\Key\SiteKey;
 use Concrete\Core\Entity\Attribute\Value\SiteValue;
 use Concrete\Core\Site\Config\Liaison;
 use Concrete\Core\Site\Tree\TreeInterface;
