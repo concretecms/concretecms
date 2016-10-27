@@ -870,7 +870,7 @@
         </stack>
     </stacks>
     <pages>
-        <page name="Home" path="" filename="" pagetype="page" template="full" user="admin" description="" package="">
+        <page name="Home" path="" filename="" template="full" user="admin" description="" package="">
             <attributes>
                 <attributekey handle="exclude_nav">
                     <value>1</value>

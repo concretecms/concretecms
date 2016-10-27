@@ -4,6 +4,7 @@ namespace Concrete\Core\Package;
 
 use Concrete\Core\Backup\ContentImporter;
 use Concrete\Core\File\FileList;
+use Concrete\Core\Page\Page;
 use Concrete\Core\Page\PageList;
 use Concrete\Core\Page\Stack\StackList;
 use Concrete\Core\Page\Type\Type;
@@ -73,6 +74,12 @@ class ContentSwapper
             foreach ($pageTypes as $ct) {
                 $ct->delete();
             }
+
+            // Set the page type of the home page to 0, because
+            // if it has a type the type will be gone since we just
+            // deleted it
+            $home = Page::getByID(HOME_CID);
+            $home->setPageType(null);
 
             // now we add in any files that this package has
             if (is_dir($package->getPackagePath() . '/content_files')) {
