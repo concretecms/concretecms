@@ -3,11 +3,8 @@
 <?php if (($this->controller->getTask() == 'submit' || $this->controller->getTask() == 'edit') && is_object($pagetype)) {
     ?>
 
-<form class="form-horizontal" method="post" action="<?=$view->action('submit', $pagetype->getPageTypeID())?>">
-<div class="ccm-pane-body">
-<?=Loader::element('page_types/form/base', array('pagetype' => $pagetype));
-    ?>
-</div>
+<form method="post" action="<?=$view->action('submit', $pagetype->getPageTypeID())?>">
+<?=View::element('page_types/form/base', array('pagetype' => $pagetype)); ?>
 <div class="ccm-dashboard-form-actions-wrapper">
 <div class="ccm-dashboard-form-actions">
 	<a href="<?=$view->url('/dashboard/pages/types')?>" class="btn btn-default pull-left"><?=t('Cancel')?></a>

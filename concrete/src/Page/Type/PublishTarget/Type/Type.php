@@ -246,12 +246,15 @@ abstract class Type extends Object
         return $rec->exists();
     }
 
-    public function includeOptionsForm($pagetype = false)
+    public function includeOptionsForm($pagetype = false, $siteType = false)
     {
+        if (is_object($pagetype)) {
+            $siteType = $pagetype->getSiteTypeObject();
+        }
         Loader::element(
             DIRNAME_PAGE_TYPES . '/' . DIRNAME_ELEMENTS_PAGE_TYPES_PUBLISH_TARGET_TYPES . '/' . $this->getPageTypePublishTargetTypeHandle(
             ),
-            array('type' => $this, 'pagetype' => $pagetype),
+            array('type' => $this, 'pagetype' => $pagetype, 'sitetype' => $siteType),
             $this->getPackageHandle()
         );
     }
