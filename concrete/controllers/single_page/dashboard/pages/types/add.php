@@ -19,9 +19,9 @@ class Add extends DashboardPageController
         }
         if (!$siteType) {
             $siteType = $this->app->make('site/type')->getDefault();
-        } else {
-            $this->set('siteTypeID', $siteType->getSiteTypeID());
         }
+
+        $this->set('siteType', $siteType);
     }
 
     public function submit()
