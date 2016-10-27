@@ -35,7 +35,7 @@ class PageUrlResolver implements UrlResolverInterface
             }
 
             // if there's no path but it's the home page
-            if ($page->getCollectionID() == HOME_CID) {
+            if ($page->isHomePage()) {
                 return $this->resolveWithResolver("/", $arguments);
             }
 
