@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Site;
 
+use Concrete\Core\Attribute\Key\SiteKey;
 use Concrete\Core\Entity\Page\Template;
 use Concrete\Core\Entity\Site\Site;
 use Concrete\Core\Entity\Site\SiteTree;
@@ -91,6 +92,13 @@ class Service
 
     public function delete(Site $site)
     {
+
+        $attributes = SiteKey::getAttributeValues($site);
+        foreach($attributes as $av) {
+            $this->entityManager->remove($av);
+        }
+
+        $this->entityManager->flush();
 
         $r = $this->entityManager->getConnection()
             ->executeQuery('select cID from Pages where siteTreeID = ? and cParentID = 0', [$site->getSiteTreeID()]);
