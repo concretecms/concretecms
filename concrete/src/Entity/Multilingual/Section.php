@@ -16,7 +16,7 @@ class Section
     protected $cID;
 
     /**
-     * @ORM\ManyToOne(targetEntity="\Concrete\Core\Entity\Site\Tree", cascade={"all"})
+     * @ORM\ManyToOne(targetEntity="\Concrete\Core\Entity\Site\Tree")
      * @ORM\JoinColumn(name="siteTreeID", referencedColumnName="siteTreeID")
      **/
     protected $tree;
