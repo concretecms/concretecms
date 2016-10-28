@@ -113,7 +113,7 @@ class Option extends Object {
         $r = $db->Execute('select ID from atSelectOptions order by ID asc');
         while ($row = $r->FetchRow()) {
             $opt = static::getByID($row['ID']);
-            $translations->insert('SelectAttributeValue', $opt->getSelectAttributeOptionValue());
+            $translations->insert('SelectAttributeValue', $opt->getSelectAttributeOptionValue(false));
         }
         return $translations;
     }
