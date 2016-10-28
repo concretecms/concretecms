@@ -2,102 +2,100 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 $pk = PermissionKey::getByHandle('customize_themes');
 ?>
-
-
 <section id="ccm-panel-page-design-customize">
     <form data-form="panel-page-design-customize" target="ccm-page-preview-frame" method="post" action="<?=$controller->action("preview", $theme->getThemeID())?>">
-    <header><a href="" data-panel-navigation="back" class="ccm-panel-back"><span class="fa fa-chevron-left"></span></a> <a href="" data-panel-navigation="back"><?=t('Customize Theme')?></a></header>
-
-    <?php if (count($presets) > 1) {
-    ?>
-
-    <div class="ccm-panel-content-inner">
-
-    <div class="list-group" data-panel-menu-id="page-design-presets"  data-panel-menu="collapsible-list-group">
-        <div class="list-group-item list-group-item-header"><?=t('Preset')?></div>
+        <header><a href="" data-panel-navigation="back" class="ccm-panel-back"><span class="fa fa-chevron-left"></span></a> <a href="" data-panel-navigation="back"><?=t('Customize Theme')?></a></header>
         <?php
-        $i = 0;
-    foreach ($presets as $preset) {
-        $selected = false;
-        if (is_object($selectedPreset) && $selectedPreset->getPresetHandle() == $preset->getPresetHandle()) {
-            $selected = true;
-        }
-        ?>
-            <label class="list-group-item clearfix"><input type="radio" class="ccm-flat-radio" value="<?=$preset->getPresetHandle()?>" name="handle" <?php if ($selected) {
-    ?>checked="checked"<?php 
-}
-        ?> /> <?=$preset->getPresetDisplayName()?>
-                <?=$preset->getPresetIconHTML()?>
-            </label>
-            <?php if ($i == 0) {
-    ?>
-                <div class="list-group-item-collapse-wrapper">
-            <?php 
-}
-        ?>
-        <?php  ++$i;
-    }
-    ?>
-
-            </div>
-
-        <a class="list-group-item list-group-item-collapse" href="#"><span><?=t('Expand')?></span></a>
-    </div>
-
-    </div>
-
-    <?php 
-} ?>
-
-    <?php
-    // output basic values –these are ones we don't have any
-    // kind of special mapping for and that don't appear in our customizer style sets.
-    foreach ($valueList->getValues() as $value) {
-        if ($value instanceof \Concrete\Core\StyleCustomizer\Style\Value\BasicValue) {
+        if (count($presets) > 1) {
             ?>
-           <input type="hidden" name="<?=$value->getVariable()?>" value="<?=$value->getValue()?>" />
-        <?php 
-        }
-    }
-    ?>
-    <div id="ccm-panel-page-design-customize-list">
-    <?php foreach ($styleSets as $set) {
-    ?>
-        <div class="ccm-panel-page-design-customize-style-set">
-            <h5 class="ccm-panel-page-design-customize-style-set-collapse"><?=$set->getDisplayName()?></h5>
-            <ul class="list-unstyled">
-            <?php foreach ($set->getStyles() as $style) {
-    ?>
-                <li><?=$style->getDisplayName()?>
-                <?php
-                $value = $style->getValueFromList($valueList);
-    ?>
-                <?=$style->render($value)?>
-                </li>
+            <div class="ccm-panel-content-inner">
+                <div class="list-group" data-panel-menu-id="page-design-presets"  data-panel-menu="collapsible-list-group">
+                    <div class="list-group-item list-group-item-header"><?=t('Preset')?></div>
+                    <?php
+                    $i = 0;
+                    foreach ($presets as $preset) {
+                        $selected = false;
+                        if (is_object($selectedPreset) && $selectedPreset->getPresetHandle() == $preset->getPresetHandle()) {
+                            $selected = true;
+                        }
+                        ?>
+                        <label class="list-group-item clearfix">
+                            <input type="radio" class="ccm-flat-radio" value="<?=$preset->getPresetHandle()?>" name="handle" <?php if ($selected) { ?>checked="checked"<?php } ?> />
+                            <?=$preset->getPresetDisplayName()?>
+                            <?=$preset->getPresetIconHTML()?>
+                        </label>
+                        <?php
+                        if ($i == 0) {
+                            ?>
+                            <div class="list-group-item-collapse-wrapper">
+                            <?php
+                        }
+                        ++$i;
+                    }
+                    ?>
+                    </div>
+                    <a class="list-group-item list-group-item-collapse" href="#"><span><?=t('Expand')?></span></a>
+                </div>
+            </div>
             <?php 
-}
-    ?>
-            </ul>
+        }
+        // output basic values –these are ones we don't have any
+        // kind of special mapping for and that don't appear in our customizer style sets.
+        foreach ($valueList->getValues() as $value) {
+            if ($value instanceof \Concrete\Core\StyleCustomizer\Style\Value\BasicValue) {
+                ?>
+                <input type="hidden" name="<?=$value->getVariable()?>" value="<?=$value->getValue()?>" />
+                <?php
+            }
+        }
+        ?>
+        <div id="ccm-panel-page-design-customize-list">
+            <?php
+            foreach ($styleSets as $set) {
+                ?>
+                <div class="ccm-panel-page-design-customize-style-set">
+                    <h5 class="ccm-panel-page-design-customize-style-set-collapse"><?=$set->getDisplayName()?></h5>
+                    <ul class="list-unstyled">
+                        <?php
+                        foreach ($set->getStyles() as $style) {
+                            ?>
+                            <li>
+                                <?php
+                                echo $style->getDisplayName();
+                                $value = $style->getValueFromList($valueList);
+                                echo $style->render($value);
+                                ?>
+                            </li>
+                            <?php
+                        }
+                        ?>
+                    </ul>
+                </div>
+                <?php
+            }
+            ?>
+            <div class="ccm-panel-page-design-customize-style-set">
+                <h5 class="ccm-panel-page-design-customize-style-set-collapse"><?=t('Advanced')?></h5>
+                <ul class="list-unstyled">
+                    <li>
+                        <?=t('Custom CSS')?>
+                        <input type="hidden" name="sccRecordID" value="<?=$sccRecordID?>" />
+                        <span class="ccm-style-customizer-display-swatch-wrapper" data-custom-css-selector="custom"><span class="ccm-style-customizer-display-swatch"><i class="fa fa-cog"></i></span></span>
+                    </li>
+                </ul>
+            </div>
         </div>
-    <?php 
-} ?>
-    <div class="ccm-panel-page-design-customize-style-set">
-        <h5 class="ccm-panel-page-design-customize-style-set-collapse"><?=t('Advanced')?></h5>
-        <ul class="list-unstyled">
-            <li>
-                <?=t('Custom CSS')?>
-                <input type="hidden" name="sccRecordID" value="<?=$sccRecordID?>" />
-                <span class="ccm-style-customizer-display-swatch-wrapper" data-custom-css-selector="custom"><span class="ccm-style-customizer-display-swatch"><i class="fa fa-cog"></i></span></span>
-            </li>
-        </ul>
-    </div>
-    </div>
 
-    <div style="text-align: center">
-        <br/>
-       <button class="btn-danger btn" data-panel-detail-action="reset"><?=t('Reset Customizations')?></button>
-        <br/><br/>
-   </div>
+        <div style="text-align: center">
+            <br/>
+            <button class="btn btn-sm btn-default" id="ccm-panel-page-design-customize-export"><?=t('Export')?> <i class="fa fa-download" aria-hidden="true"></i></button>
+            <button class="btn btn-sm btn-default" id="ccm-panel-page-design-customize-import"><?=t('Import')?> <i class="fa fa-upload" aria-hidden="true"></i></button>
+            <br/>
+            <br/>
+            <button class="btn-danger btn" data-panel-detail-action="reset"><?=t('Reset Customizations')?></button>
+            <br/>
+            <br/>
+        </div>
 
     </form>
 </section>
@@ -105,7 +103,6 @@ $pk = PermissionKey::getByHandle('customize_themes');
 <div class="ccm-panel-detail-form-actions">
     <button class="pull-right btn btn-success" type="button" data-panel-detail-action="customize-design-submit"><?=t('Save Changes')?></button>
 </div>
-
 
 <script type="text/javascript">
 
@@ -157,18 +154,20 @@ $pk = PermissionKey::getByHandle('customize_themes');
     $(function() {
         panel = ConcretePanelManager.getByIdentifier('page');
         $('button[data-panel-detail-action=customize-design-submit]').on('click', function() {
-            <?php if ($pk->can()) {
-    ?>
+            <?php
+            if ($pk->can()) {
+                ?>
                 panel.showPanelConfirmationMessage('page-design-customize-apply', "<?=t('Apply this design to just this page, or your entire site?')?>", [
                     {'class': 'btn btn-primary pull-right', 'onclick': 'ConcretePageDesignPanel.applyDesignToSite()', 'style': 'margin-left: 10px', 'text': '<?=t("Entire Site")?>'},
                     {'class': 'btn btn-default pull-right', 'onclick': 'ConcretePageDesignPanel.applyDesignToPage()', 'text': '<?=t("This Page")?>'}
                 ]);
-            <?php 
-} else {
-    ?>
+                <?php
+            } else {
+                ?>
                 ConcretePageDesignPanel.applyDesignToPage();
-            <?php 
-} ?>
+                <?php
+            }
+            ?>
             return false;
         });
         $('div[data-panel-menu-id=page-design-presets]').on('change', $('input[type=radio]'), function() {
@@ -238,18 +237,20 @@ $pk = PermissionKey::getByHandle('customize_themes');
 
         })
         $('button[data-panel-detail-action=reset]').unbind().on('click', function() {
-            <?php if ($pk->can()) {
-    ?>
+            <?php
+            if ($pk->can()) {
+                ?>
                 panel.showPanelConfirmationMessage('page-design-customize-apply', "<?=t('Reset the theme customizations for just this page, or your entire site?')?>", [
                     {'class': 'btn btn-primary pull-right', 'onclick': 'ConcretePageDesignPanel.resetSiteDesign()', 'style': 'margin-left: 10px', 'text': '<?=t("Entire Site")?>'},
                     {'class': 'btn btn-default pull-right', 'onclick': 'ConcretePageDesignPanel.resetPageDesign()', 'text': '<?=t("This Page")?>'}
                 ]);
-            <?php 
-} else {
-    ?>
+                <?php 
+            } else {
+                ?>
                 ConcretePageDesignPanel.resetPageDesign();
-            <?php 
-} ?>
+                <?php
+            }
+            ?>
             return false;
         });
 
@@ -257,6 +258,17 @@ $pk = PermissionKey::getByHandle('customize_themes');
         ConcreteEvent.subscribe('StyleCustomizerControlUpdate', function() {
             $('form[data-form=panel-page-design-customize]').submit();
             $('div[data-panel-menu-id=page-design-presets] input[type=radio]').prop('checked', false);
-        })
+        });
+
+        ConcreteStyleCustomizerImportExport.initialize({
+            i18n: <?=json_encode([
+                'Close' => t('Close'),
+                'Cancel' => t('Cancel'),
+                'Apply' => t('Apply'),
+                'CurrentThemeValues' => t('Current Theme Values'),
+                'NewThemeValues' => t('New Theme Values')
+            ])?>
+        });
+
     });
 </script>
