@@ -278,7 +278,7 @@ function array_to_object($o, $array)
  * @param $o
  * @param bool $maxDepth
  */
-function var_dump_safe($o, $maxDepth = true)
+function var_dump_safe($o, $echo = true, $maxDepth = true)
 {
-    return Doctrine\Common\Util\Debug::dump($o, $maxDepth);
+    return Doctrine\Common\Util\Debug::dump($o, $maxDepth, true, $echo);
 }

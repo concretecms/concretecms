@@ -2,6 +2,7 @@
 namespace Concrete\Core\Permission\Registry\Entry;
 
 use Concrete\Core\Permission\Access\Entity\Entity;
+use Concrete\Core\Permission\AssignableObjectInterface;
 
 abstract class AbstractEntry implements EntryInterface
 {
