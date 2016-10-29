@@ -302,7 +302,7 @@ class URLTest extends PHPUnit_Framework_TestCase
         $home->siteTree = new \Concrete\Core\Entity\Site\SiteTree();
 
         $url = \URL::to($home);
-        $this->assertEquals('http://www.dummyco.com/path/to/server/index.php', (string) $url);
+        $this->assertEquals('http://www.dummyco.com/path/to/server/index.php?cID='.$home->cID, (string) $url);
 
         $url = \URL::to('/');
         $this->assertEquals('http://www.dummyco.com/path/to/server/index.php', (string) $url);
