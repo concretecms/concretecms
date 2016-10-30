@@ -267,7 +267,7 @@ class Stacks extends DashboardSitePageController
     protected function deliverStackList(StackList $list)
     {
         $list->setFoldersFirst(true);
-        $list->setSiteTreeObject($this->getSite()->getSiteTree());
+        $list->setSiteTreeObject($this->getSite()->getSiteTreeObject());
         $this->set('list', $list);
         $this->set('stacks', $list->getResults());
     }

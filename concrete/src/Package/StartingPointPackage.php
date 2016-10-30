@@ -5,6 +5,7 @@ use AuthenticationType;
 use Concrete\Core\Backup\ContentImporter;
 use Concrete\Core\Config\Renderer;
 use Concrete\Core\Database\DatabaseStructureManager;
+use Concrete\Core\Entity\Site\Locale;
 use Concrete\Core\File\Filesystem;
 use Concrete\Core\File\Service\File;
 use Concrete\Core\Mail\Importer\MailImporter;
@@ -500,12 +501,9 @@ class StartingPointPackage extends BasePackage
     public function install_site()
     {
         \Core::make('site/type')->installDefault();
-        $site = \Site::installDefault();
+        $site = \Site::installDefault(SITE_INSTALL_LOCALE);
         $site->getConfigRepository()->save('name', SITE);
 
-        if (defined('SITE_INSTALL_LOCALE') && SITE_INSTALL_LOCALE != '' && SITE_INSTALL_LOCALE != 'en_US') {
-            Config::save('concrete.locale', SITE_INSTALL_LOCALE);
-        }
         Config::save('concrete.version_installed', APP_VERSION);
         Config::save('concrete.misc.login_redirect', 'DESKTOP');
     }

@@ -83,12 +83,17 @@ var ConcreteDashboard = function() {
 			if (!width) {
 				width = 320;
 			}
+			if ($(this).attr('data-dialog-title')) {
+				var title = $(this).attr('data-dialog-title');
+			} else {
+				var title = $(this).text();
+			}
 			var element = 'div[data-dialog-wrapper=' + $(this).attr('data-dialog') + ']';
 			jQuery.fn.dialog.open({
 				element: element,
 				modal: true,
 				width: width,
-				title: $(this).attr('data-dialog-title'),
+				title: title,
 				height: 'auto'
 			});
 		});

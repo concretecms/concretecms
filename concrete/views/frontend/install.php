@@ -346,7 +346,7 @@ if (isset($successMessage)) {
                         <div class="row">
 
                             <div class="col-sm-6">
-                                <h4><?=t('URLs & Session')?></h4>
+                                <h4><?=t('URLs')?></h4>
 
                                 <div class="form-group">
                                     <label class="control-label">
@@ -363,12 +363,6 @@ if (isset($successMessage)) {
                                     </label>
                                     <?=$form->url('canonicalSSLUrl', h($canonicalSSLUrl), ['pattern' => 'https:.+', 'placeholder' => 'https://'])?>
                                 </div>
-
-                                <div class="form-group">
-                                    <label class="control-label" for="sessionHandler"><?=t('Session Handler')?></label>
-                                    <?=$form->select('sessionHandler', ['' => t('Default Handler (Recommended)'), 'database' => t('Database')])?>
-                                </div>
-
                             </div>
                             <div class="col-sm-6">
 
@@ -397,7 +391,41 @@ if (isset($successMessage)) {
                                 </table>
                             </div>
                         </div>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <h4><?=t('Session')?></h4>
 
+
+                                <div class="form-group">
+                                    <label class="control-label" for="sessionHandler"><?=t('Session Handler')?></label>
+                                    <?=$form->select('sessionHandler', ['' => t('Default Handler (Recommended)'), 'database' => t('Database')])?>
+                                </div>
+
+                            </div>
+                            <div class="col-sm-6">
+                                <h4><?=t('Locale')?></h4>
+
+                                <div class="form-group">
+                                    <label class="control-label" for="sessionHandler"><?=t('Language')?></label>
+                                    <?=$form->select('siteLocaleLanguage', $languages, $computedSiteLocaleLanguage)?>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="control-label" for="sessionHandler"><?=t('Country')?></label>
+                                    <select name="siteLocaleCountry" class="form-control">
+                                        <optgroup label="<?=t('** Recommended Countries')?>"></optgroup>
+                                        <?php foreach($recommendedCountries as $key => $value) { ?>
+                                            <option value="<?=$key?>" <?php if ($computedSiteLocaleCountry == $key || isset($_POST['siteLocaleCountry']) && $_POST['siteLocaleCountry'] == $key) { ?>selected<?php } ?>><?=$value?></option>
+                                        <?php } ?>
+                                        <optgroup label="<?=t('** Other Countries')?>"></optgroup>
+                                        <?php foreach($otherCountries as $key => $value) { ?>
+                                            <option value="<?=$key?>" <?php if ($computedSiteLocaleCountry == $key || isset($_POST['siteLocaleCountry']) && $_POST['siteLocaleCountry'] == $key) { ?>selected<?php } ?>><?=$value?></option>
+                                        <?php } ?>
+                                </div>
+
+
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -175,7 +175,7 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
             $tree = $this->siteTree;
         } else {
             $site = \Core::make("site")->getSite();
-            $tree = $site->getSiteTree();
+            $tree = $site->getSiteTreeObject();
         }
 
         // Note, we might not use this. We have to set the parameter even if we don't use it because

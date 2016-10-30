@@ -197,7 +197,7 @@ class Stack extends Page implements ExportableInterface
 
     public static function addGlobalArea($area, TreeInterface $siteTree = null)
     {
-        $siteTree = is_object($siteTree) ? $siteTree : \Core::make('site')->getSite()->getSiteTree();
+        $siteTree = is_object($siteTree) ? $siteTree : \Core::make('site')->getSite()->getSiteTreeObject();
         $parent = \Page::getByPath(STACKS_PAGE_PATH, 'RECENT', $siteTree);
         return self::addStackToCategory($parent, $area, static::ST_TYPE_GLOBAL_AREA);
     }

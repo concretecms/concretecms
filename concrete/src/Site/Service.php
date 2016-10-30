@@ -3,6 +3,7 @@ namespace Concrete\Core\Site;
 
 use Concrete\Core\Attribute\Key\SiteKey;
 use Concrete\Core\Entity\Page\Template;
+use Concrete\Core\Entity\Site\Locale;
 use Concrete\Core\Entity\Site\Site;
 use Concrete\Core\Entity\Site\SiteTree;
 use Concrete\Core\Entity\Site\Tree;
@@ -108,16 +109,6 @@ class Service
                 $page->moveToTrash();
             }
         }
-
-        $tree = $site->getSiteTree();
-        $site->setSiteTree(null);
-        $this->entityManager->flush();
-
-        if (is_object($tree)) {
-            $this->entityManager->remove($tree);
-            $this->entityManager->flush();
-        }
-
         $this->entityManager->remove($site);
         $this->entityManager->flush();
     }
@@ -134,7 +125,7 @@ class Service
         return $list;
     }
 
-    public function installDefault()
+    public function installDefault($locale)
     {
         $siteConfig = $this->config->get('site');
         $defaultSite = array_get($siteConfig, 'default');
@@ -144,11 +135,19 @@ class Service
         $site->setSiteHandle(array_get($siteConfig, "sites.{$defaultSite}.handle"));
         $site->setIsDefault(true);
 
+        $data = explode('_', $locale);
+        $locale = new Locale();
+        $locale->setSite($site);
+        $locale->setIsDefault(true);
+        $locale->setLanguage($data[0]);
+        $locale->setCountry($data[1]);
+
         $tree = new SiteTree();
         $tree->setSiteHomePageID(HOME_CID);
         $tree->setSite($site);
+        $locale->setSiteTree($tree);
 
-        $site->setSiteTree($tree);
+        $site->getLocales()->add($locale);
 
         $service = $this->app->make('site/type');
         $type = $service->getDefault();

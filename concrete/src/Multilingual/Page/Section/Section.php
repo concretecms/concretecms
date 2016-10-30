@@ -271,20 +271,6 @@ class Section extends Page
         return static::getByLocale($default_locale);
     }
 
-    public function getLanguageText($locale = null)
-    {
-        try {
-            if (!$locale) {
-                $locale = \Localization::activeLocale();
-            }
-            $text = Language::getName($this->section->getLanguage(), $locale);
-        } catch (\Exception $e) {
-            $text = $this->section->getLanguage();
-        }
-
-        return $text;
-    }
-
     public function getIcon()
     {
         return $this->section->getCountry();

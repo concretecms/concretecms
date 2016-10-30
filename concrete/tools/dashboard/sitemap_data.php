@@ -70,7 +70,7 @@ if (isset($_REQUEST['displaySingleLevel']) && $_REQUEST['displaySingleLevel']) {
         if (isset($_REQUEST['siteTreeID']) && $_REQUEST['siteTreeID'] > 0) {
             $tree = $service->getSiteTreeByID($_REQUEST['siteTreeID']);
         } else {
-            $tree = $service->getActiveSiteForEditing()->getSiteTree();
+            $tree = $service->getActiveSiteForEditing()->getSiteTreeObject();
         }
         $nodes = $dh->getSubNodes($tree);
     }

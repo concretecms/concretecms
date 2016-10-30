@@ -79,9 +79,6 @@ class Install extends Controller
         if (file_exists(DIR_CONFIG_SITE . '/site_install_user.php')) {
             require DIR_CONFIG_SITE . '/site_install.php';
             @include DIR_CONFIG_SITE . '/site_install_user.php';
-            if (defined('SITE_INSTALL_LOCALE') && Localization::activeLocale() !== SITE_INSTALL_LOCALE) {
-                Localization::changeLocale(SITE_INSTALL_LOCALE);
-            }
             $e = $this->app->make('helper/validation/error');
             $e = $this->validateDatabase($e);
             if (defined('INSTALL_STARTING_POINT') && INSTALL_STARTING_POINT) {
@@ -205,6 +202,32 @@ class Install extends Controller
                     break;
             }*/
         }
+        $countries = array();
+        $ll = $this->app->make('localization/languages');
+        $cl = $this->app->make('lists/countries');
+        $computedSiteLocaleLanguage = Localization::activeLanguage();
+        $computedSiteLocaleCountry = null;
+        $recommendedCountryValues = $cl->getCountriesForLanguage($computedSiteLocaleLanguage);
+        $otherCountries = array();
+        foreach($cl->getCountries() as $code => $country) {
+            if (!in_array($code, $recommendedCountryValues)) {
+                $otherCountries[$code] = $country;
+            }
+        }
+        $recommendedCountries = array();
+        foreach($recommendedCountryValues as $country) {
+            if (!$computedSiteLocaleCountry) {
+                $computedSiteLocaleCountry = $country;
+            }
+            $recommendedCountries[$country] = $cl->getCountryName($country);
+        }
+        $languages = $ll->getLanguageList();
+        $this->set('languages', $languages);
+        $this->set('countries', $countries);
+        $this->set('computedSiteLocaleLanguage', $computedSiteLocaleLanguage);
+        $this->set('computedSiteLocaleCountry', $computedSiteLocaleCountry);
+        $this->set('recommendedCountries', $recommendedCountries);
+        $this->set('otherCountries', $otherCountries);
         $this->set('setInitialState', $this->request->post('SITE') === null);
         $this->set('canonicalUrl', $canonicalUrl);
         $this->set('canonicalUrlChecked', $canonicalUrlChecked);
@@ -479,9 +502,8 @@ class Install extends Controller
                     $configuration .= "define('INSTALL_USER_PASSWORD_HASH', " . var_export((string) $hasher->HashPassword($_POST['uPassword']), true) . ");\n";
                     $configuration .= "define('INSTALL_STARTING_POINT', " . var_export((string) $this->post('SAMPLE_CONTENT'), true) . ");\n";
                     $configuration .= "define('SITE', " . var_export((string) $_POST['SITE'], true) . ");\n";
-                    if (Localization::activeLocale() != '' && Localization::activeLocale() != 'en_US') {
-                        $configuration .= "define('SITE_INSTALL_LOCALE', " . var_export((string) Localization::activeLocale(), true) . ");\n";
-                    }
+                    $locale = $this->post('siteLocaleLanguage') . '_' . $this->post('siteLocaleCountry');
+                    $configuration .= "define('SITE_INSTALL_LOCALE', " . var_export($locale, true) . ");\n";
                     $res = fwrite($this->fpu, $configuration);
                     fclose($this->fpu);
                     chmod(DIR_CONFIG_SITE . '/site_install_user.php', 0700);
