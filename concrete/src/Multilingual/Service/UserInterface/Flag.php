@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Multilingual\Service\UserInterface;
 
+use Concrete\Core\Entity\Site\Locale;
 use Concrete\Core\Multilingual\Page\Section\Section;
 use Database;
 use HtmlObject\Image;
@@ -54,6 +55,13 @@ class Flag
         $icon = $section->getCountry();
         return self::getFlagIcon($icon, $filePathOnly);
     }
+
+    public static function getLocaleFlagIcon(Locale $locale, $filePathOnly = false)
+    {
+        $icon = $locale->getCountry();
+        return self::getFlagIcon($icon, $filePathOnly);
+    }
+
 
     public static function getDashboardSitemapIconSRC($page)
     {

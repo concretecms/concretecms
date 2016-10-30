@@ -33,7 +33,7 @@ class InstallCommand extends Command
             ->addOption('demo-username', null, InputOption::VALUE_REQUIRED, 'Additional user username', 'demo')
             ->addOption('demo-password', null, InputOption::VALUE_REQUIRED, 'Additional user password')
             ->addOption('demo-email', null, InputOption::VALUE_REQUIRED, 'Additional user email', 'demo@example.com')
-            ->addOption('default-locale', null, InputOption::VALUE_REQUIRED, 'The default site locale (eg en_US)')
+            ->addOption('locale', null, InputOption::VALUE_REQUIRED, 'The default site locale (eg en_US)')
             ->addOption('config', null, InputOption::VALUE_REQUIRED, 'Use configuration file for installation')
             ->addOption('attach', null, InputOption::VALUE_NONE, 'Attach if database contains an existing concrete5 instance')
             ->addOption('force-attach', null, InputOption::VALUE_NONE, 'Always attach')
@@ -71,32 +71,15 @@ EOT
             if (file_exists(DIR_CONFIG_SITE.'/database.php')) {
                 throw new Exception('concrete5 is already installed.');
             }
-            if (isset($options['default-locale'])) {
-                if ($options['default-locale'] === 'en_US') {
-                    $options['default-locale'] = null;
-                } else {
-                    $availableLocales = array_filter(
-                        scandir(DIR_BASE . '/application/languages'),
-                        function ($item) {
-                            if (strpos($item, '.') === 0) {
-                                return false;
-                            }
-                            $fullPath = DIR_BASE . '/application/languages/' . $item;
-                            if (!is_dir($fullPath)) {
-                                return false;
-                            }
-                            if (!is_file($fullPath . '/LC_MESSAGES/messages.mo')) {
-                                return false;
-                            }
-
-                            return true;
-                        }
-                    );
-                    if (!in_array($options['default-locale'], $availableLocales, true)) {
-                        throw new Exception("'{$options['default-locale']}' is not a valid locale identifier.\nAvailable locales: " . ($availableLocales ? implode(', ', $availableLocales) : 'no locale found'));
-                    }
-                }
+            if (isset($options['locale'])) {
+                $locale = explode('_', $options['locale']);
+                $_POST['siteLocaleLanguage'] = $locale[0];
+                $_POST['siteLocaleCountry'] = $locale[1];
+            } else {
+                $_POST['siteLocaleLanguage'] = 'en';
+                $_POST['siteLocaleCountry'] = 'US';
             }
+
             Database::extend('install', function () use ($options) {
                 return Database::getFactory()->createConnection(array(
                     'host' => $options['db-server'],
@@ -186,9 +169,6 @@ EOT
             } catch (Exception $ex) {
                 $cnt->reset();
                 throw $ex;
-            }
-            if (isset($options['default-locale'])) {
-                Config::save('concrete.locale', $options['default-locale']);
             }
             if (
                 isset($options['demo-username']) && isset($options['demo-password']) && isset($options['demo-email'])

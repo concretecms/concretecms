@@ -15,10 +15,10 @@ class SiteTree extends Tree
 {
 
     /**
-     * @ORM\OneToOne(targetEntity="Site", inversedBy="tree")
-     * @ORM\JoinColumn(name="siteID", referencedColumnName="siteID")
+     * @ORM\OneToOne(targetEntity="\Concrete\Core\Entity\Site\Locale", inversedBy="tree")
+     * @ORM\JoinColumn(name="siteLocaleID", referencedColumnName="siteLocaleID")
      **/
-    protected $site;
+    protected $locale;
 
     /**
      * @return mixed

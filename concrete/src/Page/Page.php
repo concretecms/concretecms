@@ -2923,7 +2923,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
 
         if (!is_object($siteTree)) {
             $site = \Core::make('site')->getSite();
-            $siteTree = $site->getSiteTree();
+            $siteTree = $site->getSiteTreeObject();
         }
         $siteTreeID = $siteTree->getSiteTreeID();
 

@@ -1,6 +1,9 @@
 <?php
 namespace Concrete\Controller\SinglePage\Dashboard\System\Multilingual;
 
+use Concrete\Core\Entity\Site\Locale;
+use Concrete\Core\Entity\Site\SiteTree;
+use Concrete\Core\Multilingual\Service\UserInterface\Flag;
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Core\Page\Controller\DashboardSitePageController;
 use Core;
@@ -8,11 +11,86 @@ use Concrete\Core\Multilingual\Page\Section\Section;
 use Localization;
 use Loader;
 use Page;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
 class Setup extends DashboardSitePageController
 {
+
+    public function view()
+    {
+        $this->set('locales', $this->site->getLocales());
+        $this->set('flag', $this->app->make(Flag::class));
+        $cl = $this->app->make('helper/lists/countries');
+        $ll = $this->app->make('localization/languages');
+        $languages = $ll->getLanguageList();
+        $this->set('languages', $languages);
+        $this->set('countries', $cl->getCountries());
+    }
+
+    public function get_countries_for_language()
+    {
+        $cl = $this->app->make('helper/lists/countries');
+        $result = array();
+        $language = $this->request->query->get('language');
+        if (is_string($language) && strlen($language)) {
+            $cl = Core::Make('lists/countries');
+            $result = $cl->getCountriesForLanguage($language);
+        }
+        return new JsonResponse($result);
+    }
+
+    public function load_icon()
+    {
+        $ch = $this->app->make(Flag::class);
+        $msCountry = $this->request->request->get('msCountry');
+        $flag = $ch->getFlagIcon($msCountry);
+        if ($flag) {
+            $html = $flag;
+        } else {
+            $html = "<div><strong>" . t('None') . "</strong></div>";
+        }
+        echo $html;
+        exit;
+    }
+
+    public function add_content_section()
+    {
+        if (!$this->token->validate('add_content_section')) {
+            $this->error->add($this->token->getErrorMessage());
+        }
+        if (!$this->request->request->get('msLanguage')) {
+            $this->error->add(t('You must specify a valid language.'));
+        }
+        if (!$this->request->request->get('msCountry')) {
+            $this->error->add(t('You must specify a valid country.'));
+        }
+        if ($this->post('msLanguage')) {
+            $combination = $this->post('msLanguage') . '_' . $this->post('msCountry');
+            foreach($this->site->getLocales() as $locale) {
+                if ($locale->getLocale() == $combination) {
+                    $this->error->add(t('This language/region combination already exists.'));
+                }
+            }
+        }
+        if (!$this->error->has()) {
+            $locale = new Locale();
+            $tree = new SiteTree();
+            $locale->setCountry($this->request->request->get('msCountry'));
+            $locale->setLanguage($this->request->request->get('msLanguage'));
+            $locale->setSite($this->getSite());
+            $locale->setSiteTree($tree);
+            $this->entityManager->persist($locale);
+            $this->entityManager->flush();
+            $this->flash('success', t('Locale added successfully.'));
+            return new JsonResponse($locale);
+        } else {
+            return new JsonResponse($this->error);
+        }
+    }
+
+    /*
     public $helpers = array('form');
     protected $pagesToCopy = array();
 
@@ -100,35 +178,6 @@ class Setup extends DashboardSitePageController
         }
     }
 
-    public function get_countries_for_language()
-    {
-        $result = array();
-        $language = $this->get('language');
-        if (is_string($language) && strlen($language)) {
-            $cl = Core::Make('lists/countries');
-            $result = $cl->getCountriesForLanguage($language);
-        }
-        echo json_encode($result);
-        die();
-    }
-
-    public function load_icon()
-    {
-        $ll = Core::make('localization/languages');
-        $ch = Core::make('multilingual/interface/flag');
-        $msCountry = $this->post('msCountry');
-
-        $flag = $ch->getFlagIcon($msCountry);
-        if ($flag) {
-            $html = $flag;
-        } else {
-            $html = "<div><strong>" . t('None') . "</strong></div>";
-        }
-
-        echo $html;
-        exit;
-    }
-
     public function multilingual_content_enabled()
     {
         $this->set('message', t('Multilingual content enabled'));
@@ -200,5 +249,5 @@ class Setup extends DashboardSitePageController
         }
         $this->view();
     }
-
+    */
 }

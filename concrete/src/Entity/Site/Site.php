@@ -7,6 +7,8 @@ use Concrete\Core\Attribute\Key\SiteKey;
 use Concrete\Core\Entity\Attribute\Value\SiteValue;
 use Concrete\Core\Site\Config\Liaison;
 use Concrete\Core\Site\Tree\TreeInterface;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -70,6 +72,7 @@ class Site implements TreeInterface
     public function __construct($appConfigRepository)
     {
         $this->updateSiteConfigRepository($appConfigRepository);
+        $this->locales = new ArrayCollection();
     }
 
     public function updateSiteConfigRepository($appConfigRepository)
@@ -83,10 +86,10 @@ class Site implements TreeInterface
     }
 
     /**
-     * @ORM\OneToOne(targetEntity="SiteTree", cascade={"all"}, mappedBy="site")
-     * @ORM\JoinColumn(name="siteTreeID", referencedColumnName="siteTreeID")
+     * @ORM\OneToMany(targetEntity="Locale", cascade={"all"}, mappedBy="site")
+     * @ORM\JoinColumn(name="siteLocaleID", referencedColumnName="siteLocaleID")
      **/
-    protected $tree;
+    protected $locales;
 
     /**
      * @ORM\ManyToOne(targetEntity="Type", inversedBy="sites")
@@ -113,32 +116,53 @@ class Site implements TreeInterface
     /**
      * @return mixed
      */
+    public function getLocales()
+    {
+        return $this->locales;
+    }
+
+    /**
+     * @param mixed $locales
+     */
+    public function setLocales($locales)
+    {
+        $this->locales = $locales;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getSiteHomePageID()
     {
-        return $this->tree->getSiteHomePageID();
+        $tree = $this->getSiteTreeObject();
+        if (is_object($tree)) {
+            return $tree->getSiteHomePageID();
+        }
     }
 
     public function getSiteTreeID()
     {
-        if (is_object($this->tree)) {
-            return $this->tree->getSiteTreeID();
+        $tree = $this->getSiteTreeObject();
+        if (is_object($tree)) {
+            return $tree->getSiteTreeID();
         }
     }
 
     public function getSiteTreeObject()
     {
-        if (is_object($this->tree)) {
-            return $this->tree;
+        $criteria = Criteria::create();
+        $criteria->where(Criteria::expr()->eq('msIsDefault', true));
+        $locale = $this->locales->matching($criteria)[0];
+        if (is_object($locale)) {
+            return $locale->getSiteTree();
         }
     }
 
     public function getSiteHomePageObject()
     {
-        if (is_object($this->tree)) {
-            $page = \Page::getByID($this->tree->getSiteHomePageID());
-            if (is_object($page) && !$page->isError()) {
-                return $page;
-            }
+        $tree = $this->getSiteTreeObject();
+        if (is_object($tree)) {
+            return $tree->getSiteHomePageObject();
         }
     }
 
