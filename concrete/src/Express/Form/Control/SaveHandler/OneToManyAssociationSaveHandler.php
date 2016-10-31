@@ -23,6 +23,7 @@ class OneToManyAssociationSaveHandler extends ManyAssociationSaveHandler
                 }
                 $this->entityManager->flush();
             }
+            return;
         }
 
         if (count($associatedEntries)) {

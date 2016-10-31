@@ -66,10 +66,12 @@ $result = json_encode($result);
                         $(this).removeClass('ccm-search-select-hover');
                     });
 
+                    concreteSearch.$element.unbind('click.expressEntries');
                     concreteSearch.$element.on('click.expressEntries', 'tr[data-entity-id]', function(e) {
                         e.stopPropagation();
                         ConcreteEvent.publish('SelectExpressEntry', {
-                            exEntryID: $(this).attr('data-entity-id')
+                            exEntryID: $(this).attr('data-entity-id'),
+                            event: e
                         });
                         return false;
                     });
