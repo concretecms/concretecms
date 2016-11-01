@@ -1,7 +1,7 @@
 <?php defined('C5_EXECUTE') or die("Access Denied."); ?>
 
 <div class="ccm-dashboard-header-buttons">
-    <button class="btn btn-primary" data-dialog="add-locale"><?= t('Add Locale') ?></button>
+    <button class="btn btn-primary" data-dialog-width="600" data-dialog="add-locale"><?= t('Add Locale') ?></button>
 </div>
 
 <h3><?= t('Locales') ?></h3>
@@ -39,22 +39,108 @@
     <?php } ?>
 </table>
 
+<?php
+$defaultLocales = array();
+$defaultLocaleID = 0;
+foreach ($locales as $locale) {
+    $defaultLocales[$locale->getSiteLocaleID()] = sprintf('%s (%s)', $locale->getLanguageText(), $locale->getLocale());
+    if ($locale->getIsDefault()) {
+        $defaultLocaleID = $locale->getSiteLocaleID();
+    }
+}
+?>
+    <h3><?php echo t('Settings')?></h3>
+    <form method="post" action="<?php echo $this->action('set_default')?>">
+        <div class="form-group">
+            <label class="control-label"><?php echo t('Default Locale'); ?></label>
+            <?=$form->select('defaultLocale', $defaultLocales, $defaultLocaleID, array('required' => 'required'));?>
+        </div>
+
+        <div class="form-group">
+            <div class="checkbox">
+                <label>
+                    <?php echo $form->checkbox('useBrowserDetectedLocale', 1, $useBrowserDetectedLocale)?>
+                    <span><?php echo t('Attempt to use visitor\'s locale based on their browser information.') ?></span>
+                </label>
+            </div>
+            <div class="checkbox">
+                <label>
+                    <?php echo $form->checkbox('redirectHomeToDefaultLocale', 1, $redirectHomeToDefaultLocale)?>
+                    <span><?php echo t('Redirect home page to default locale.') ?></span>
+                </label>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label"><?php echo t('Site interface source locale');
+                ?></label>
+            <div class="form-inline">
+                <?php
+                echo $form->select('defaultSourceLanguage', array_merge(array('' => t('*** Unknown or mixed language')), $languages), $defaultSourceLanguage);
+                ?>
+
+                <?php
+                echo $form->select('defaultSourceCountry', array_merge(array('' => t('*** Undetermined country')), $countries), $defaultSourceCountry);
+                ?>
+            </div>
+            <script>
+                $(document).ready(function() {
+                    new ccmCountryForLanguageLister($('#defaultSourceLanguage'), $('#defaultSourceCountry'));
+                });
+            </script>
+        </div>
+
+        <div class="form-group">
+            <?php echo Loader::helper('validation/token')->output('set_default')?>
+            <button class="btn btn-default pull-left" type="submit" name="save"><?=t('Save Settings')?></button>
+        </div>
+    </form>
+
+
 <div style="display: none">
     <div data-dialog-wrapper="add-locale">
         <form data-dialog-form="add-locale" action="<?= $view->action('add_content_section') ?>">
-            <div class="form-group">
-                <?php echo $form->label('msLanguage', t('Choose Language')) ?>
-                <?php echo $form->select('msLanguage', $languages); ?>
-            </div>
-            <div class="form-group">
-                <?php echo $form->label('msCountry', t('Choose Country')) ?>
-                <?php echo $form->select('msCountry',
-                    array_merge(array('' => t('*** Undetermined country')), $countries)); ?>
-            </div>
-            <div class="form-group">
-                <label class="control-label"><?php echo t('Language Icon') ?></label>
-                <div id="ccm-multilingual-language-icon"><?php echo t('None') ?></div>
-            </div>
+            <fieldset>
+                <legend><?=t('Locale')?></legend>
+                <div class="row">
+                    <div class="col-md-5">
+                        <div class="form-group">
+                            <?php echo $form->label('msLanguage', t('Choose Language')) ?>
+                            <?php echo $form->select('msLanguage', $languages); ?>
+                        </div>
+                    </div>
+                    <div class="col-md-5">
+                    <div class="form-group">
+                        <?php echo $form->label('msCountry', t('Choose Country')) ?>
+                        <?php echo $form->select('msCountry',
+                            array_merge(array('' => t('** None Selected')), $countries)); ?>
+                    </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label class="control-label"><?php echo t('Icon') ?></label>
+                            <div id="ccm-multilingual-language-icon"><?php echo t('None') ?></div>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+            <fieldset>
+                <legend><?=t('Home Page')?></legend>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <?=$form->label('template', t('Template'))?>
+                            <?=$form->select('template', $templates)?>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <?=$form->label('homePageName', t('Page Name'))?>
+                            <?=$form->text('homePageName')?>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
             <div class="dialog-buttons">
                 <button class="btn btn-default pull-left" data-dialog-action="cancel"><?= t('Cancel') ?></button>
                 <button class="btn btn-primary pull-right" data-dialog-action="submit"><?= t('Add Locale') ?></button>
@@ -100,7 +186,7 @@
                 }
             });
             var selectedCountry = $country.val();
-            $country.empty().append($('<option value="" />').text(<?php echo json_encode(t('*** Undetermined country')); ?>));
+            $country.empty().append($('<option value="" />').text(<?php echo json_encode(t('** None Selected')); ?>));
             if (preferredCountries.length) {
                 var otherCountries = [];
                 $.each(sortedCountries, function (_, countryCode) {

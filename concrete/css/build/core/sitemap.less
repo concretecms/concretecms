@@ -3,16 +3,38 @@
 @import "include/variables.less";
 @import "include/mixins.less";
 
-div.ccm-tree-sitemap {
+div.ccm-ui {
+    div.ccm-sitemap-tree {
 
-    span.fa-home {
-        color: #9fb9d3;
+        span.fa-home {
+            color: #9fb9d3;
+        }
+
+        ul.fancytree-container {
+            background-color: transparent;
+            font-size: 14px;
+
+        }
+
     }
 
-    ul.fancytree-container {
-        background-color: transparent;
-        font-size: 14px;
+    div.ccm-sitemap-locales-wrapper {
+        margin-bottom: 1em;
 
+        ul.nav-tabs {
+            li {
+                img {
+                    position: relative;
+                    top: -1px;
+                }
+                a:hover {
+                    text-decoration: none;
+
+                    span {
+                        text-decoration: underline;
+                    }
+                }
+            }
+        }
     }
-
 }

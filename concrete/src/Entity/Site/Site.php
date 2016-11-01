@@ -8,7 +8,6 @@ use Concrete\Core\Entity\Attribute\Value\SiteValue;
 use Concrete\Core\Site\Config\Liaison;
 use Concrete\Core\Site\Tree\TreeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -148,11 +147,18 @@ class Site implements TreeInterface
         }
     }
 
+    public function getDefaultLocale()
+    {
+        foreach($this->locales as $locale) {
+            if ($locale->getIsDefault()) {
+                return $locale;
+            }
+        }
+    }
+
     public function getSiteTreeObject()
     {
-        $criteria = Criteria::create();
-        $criteria->where(Criteria::expr()->eq('msIsDefault', true));
-        $locale = $this->locales->matching($criteria)[0];
+        $locale = $this->getDefaultLocale();
         if (is_object($locale)) {
             return $locale->getSiteTree();
         }
@@ -204,22 +210,6 @@ class Site implements TreeInterface
     public function setIsDefault($siteIsDefault)
     {
         $this->siteIsDefault = $siteIsDefault;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getSiteTree()
-    {
-        return $this->tree;
-    }
-
-    /**
-     * @param mixed $tree
-     */
-    public function setSiteTree($tree)
-    {
-        $this->tree = $tree;
     }
 
     /**

@@ -1,13 +1,14 @@
 <?php
 namespace Concrete\Core\Entity\Site;
 
+use Concrete\Core\Multilingual\Service\UserInterface\Flag;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
  * @ORM\Table(name="SiteLocales")
  */
-class Locale implements \JsonSerializable
+class Locale
 {
 
     /**
@@ -217,14 +218,6 @@ class Locale implements \JsonSerializable
         }
 
         return $text;
-    }
-
-    public function jsonSerialize()
-    {
-        return [
-            'id' => $this->getSiteLocaleID(),
-            'locale' => $this->getLocale()
-        ];
     }
 
 }

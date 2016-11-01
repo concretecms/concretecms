@@ -65,6 +65,7 @@ if (isset($_REQUEST['displaySingleLevel']) && $_REQUEST['displaySingleLevel']) {
     }
     if ($cParentID) {
         $nodes = $dh->getSubNodes($cParentID);
+        echo json_encode($nodes);
     } else {
         $service = \Core::make('site');
         if (isset($_REQUEST['siteTreeID']) && $_REQUEST['siteTreeID'] > 0) {
@@ -73,7 +74,15 @@ if (isset($_REQUEST['displaySingleLevel']) && $_REQUEST['displaySingleLevel']) {
             $tree = $service->getActiveSiteForEditing()->getSiteTreeObject();
         }
         $nodes = $dh->getSubNodes($tree);
-    }
+        $locales = null;
+        if ($tree instanceof \Concrete\Core\Entity\Site\SiteTree) {
+            $locales = $tree->getLocaleCollection();
+        }
 
+        echo json_encode([
+            'children' => $nodes,
+            'locales' => $locales
+        ]);
+    }
 }
-echo Core::make('helper/json')->encode($nodes);
+
