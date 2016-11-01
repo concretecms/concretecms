@@ -27,11 +27,11 @@ class Controller extends DefaultController
         return $type;
     }
 
-    public function getDisplaySanitizedValue()
+    public function getDisplayValue()
     {
         $this->load();
         if ($this->akTextPlaceholder == 'text') {
-            return parent::getDisplaySanitizedValue();
+            return parent::getDisplayValue();
         }
 
         return htmLawed(parent::getValue(), array('safe' => 1, 'deny_attribute' => 'style'));
@@ -98,7 +98,7 @@ class Controller extends DefaultController
         return $akey;
     }
 
-    public function saveValue($value)
+    public function createAttributeValue($value)
     {
         $av = new TextValue();
         $av->setValue($value);

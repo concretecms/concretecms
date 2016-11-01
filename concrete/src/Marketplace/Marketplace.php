@@ -73,7 +73,7 @@ class Marketplace
         if (empty($pkg)) {
             $error->add(t('An error occurred while downloading the package.'));
         }
-        if ($pkg == Package::E_PACKAGE_INVALID_APP_VERSION) {
+        if ($pkg == \Package::E_PACKAGE_INVALID_APP_VERSION) {
             $error->add(t('This package isn\'t currently available for this version of concrete5 . Please contact the maintainer of this package for assistance.'));
         }
 
@@ -226,7 +226,7 @@ class Marketplace
                 }
                 $url = $frameURL . Config::get('concrete.urls.paths.marketplace.connect') . '/-/' . $connectMethod;
                 $url = $url . '?ts=' . time() . '&csiBaseURL=' . $csiBaseURL . '&csiURL=' . $csiURL . '&csToken=' . $csToken . '&csReferrer=' . $csReferrer . '&csName=' . htmlspecialchars(
-                        Config::get('concrete.site'),
+                        \Core::make('site')->getSite()->getSiteName(),
                         ENT_QUOTES,
                         APP_CHARSET);
             } else {

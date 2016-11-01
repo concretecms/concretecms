@@ -7,9 +7,9 @@ return array(
      *
      * @var string
      */
-    'version' => '8.0.0a4',
-    'version_installed' => '8.0.0a4',
-    'version_db' => '20160420000000', // the key of the latest database migration
+    'version' => '8.0.0b6',
+    'version_installed' => '8.0.0b6',
+    'version_db' => '20160725000000', // the key of the latest database migration
 
     /*
      * Installation status
@@ -17,13 +17,6 @@ return array(
      * @var bool
      */
     'installed' => true,
-
-    /*
-     * The current Site Name
-     *
-     * @var string concrete.core.site
-     */
-    'site' => 'concrete5',
 
     /*
      * The current Locale
@@ -58,7 +51,7 @@ return array(
          *
          * @var string (message|debug)
          */
-        'detail' => 'message',
+        'detail' => 'debug',
     ),
 
     /*
@@ -88,6 +81,24 @@ return array(
         'extensions' => '*.flv;*.jpg;*.gif;*.jpeg;*.ico;*.docx;*.xla;*.png;*.psd;*.swf;*.doc;*.txt;*.xls;*.xlsx;' .
             '*.csv;*.pdf;*.tiff;*.rtf;*.m4a;*.mov;*.wmv;*.mpeg;*.mpg;*.wav;*.3gp;*.avi;*.m4v;*.mp4;*.mp3;*.qt;*.ppt;' .
             '*.pptx;*.kml;*.xml;*.svg;*.webm;*.ogg;*.ogv',
+    ),
+
+    /*
+     * ------------------------------------------------------------------------
+     * Interface settings
+     * ------------------------------------------------------------------------
+     */
+    'interface' => array(
+
+        'panel' => array(
+
+            /**
+             * Enable the page relations panel
+             */
+            'page_relations' => false,
+
+        ),
+
     ),
 
     /*
@@ -306,66 +317,6 @@ return array(
         ),
     ),
 
-    'editor' => array(
-        'concrete' => array(
-            'enable_filemanager' => true,
-            'enable_sitemap' => true,
-        ),
-        'ckeditor4' => array(
-            'plugins' => array(
-                'selected' => array(
-                    'autogrow',
-                    'a11yhelp',
-                    'basicstyles',
-                    'colorbutton',
-                    'colordialog',
-                    'contextmenu',
-                    'concrete5link',
-                    'concrete5styles',
-                    'dialogadvtab',
-                    'divarea',
-                    'elementspath',
-                    'enterkey',
-                    'entities',
-                    'floatingspace',
-                    'font',
-                    'format',
-                    'htmlwriter',
-                    'image',
-                    'indentblock',
-                    'indentlist',
-                    'justify',
-                    'link',
-                    'list',
-                    'liststyle',
-                    'magicline',
-                    'removeformat',
-                    'resize',
-                    'showblocks',
-                    'showborders',
-                    'sourcearea',
-                    'sourcedialog',
-                    'stylescombo',
-                    'tab',
-                    'table',
-                    'tableresize',
-                    'tabletools',
-                    'toolbar',
-                    'undo',
-                    'wysiwygarea'
-                )
-            )
-        ),
-        'plugins' => array(
-            'selected' => array(
-                'concrete5lightbox',
-                'undoredo',
-                'specialcharacters',
-                'table',
-            ),
-        ),
-    ),
-
 /*
      * ------------------------------------------------------------------------
      * Email settings
@@ -380,7 +331,7 @@ return array(
          */
         'enabled' => true,
         'default' => array(
-            'address' => 'concrete5-noreply@' . (isset($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : 'localhost'),
+            'address' => 'concrete5-noreply@concrete5',
             'name' => '',
         ),
         'form_block' => array(
@@ -502,7 +453,6 @@ return array(
 
     'updates' => array(
 
-        'enable_auto_update_core' => true,
         'enable_auto_update_packages' => false,
         'enable_permissions_protection' => true,
         'check_threshold' => 172800,
@@ -608,6 +558,7 @@ return array(
         'background_feed' => '//backgroundimages.concrete5.org/wallpaper',
         'background_feed_secure' => 'https://backgroundimages.concrete5.org/wallpaper',
         'background_info' => 'http://backgroundimages.concrete5.org/get_image_data.php',
+        'videos' => 'https://www.youtube.com/user/concrete5cms/videos',
         'help' => array(
             'developer' => 'http://www.concrete5.org/documentation/developers/5.7/',
             'user' => 'http://www.concrete5.org/documentation/using-concrete5-7',
@@ -742,11 +693,6 @@ return array(
          * Gravatar Settings
          * --------------------------------------------------------------------
          */
-        'gravatar' => array(
-            'enabled' => false,
-            'max_level' => 0,
-            'image_set' => 0,
-        ),
         'group' => array(
 
             'badge' => array(
@@ -755,13 +701,6 @@ return array(
             ),
 
         ),
-
-        /*
-         * Enable public user profiles
-         *
-         * @var bool
-         */
-        'profiles_enabled' => false,
 
         'username' => array(
             'maximum' => 64,
@@ -910,7 +849,7 @@ return array(
         'canonical_url' => null,
         'canonical_ssl_url' => null,
         'trailing_slash' => false,
-        'title_format' => '%1$s :: %2$s',
+        'title_format' => '%2$s :: %1$s',
         'title_segment_separator' => ' :: ',
         'page_path_separator' => '-',
         'group_name_separator' => ' / ',
@@ -928,7 +867,7 @@ return array(
     ),
     'limits' => array(
         'sitemap_pages' => 100,
-        'delete_pages' => 10,
+        'delete_pages' => 100,
         'copy_pages' => 10,
         'page_search_index_batch' => 200,
         'job_queue_batch' => 10,

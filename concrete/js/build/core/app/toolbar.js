@@ -41,7 +41,7 @@ var ConcreteToolbar = function() {
 			return false;
 		});
 
-		$('#ccm-notification-page-alert-workflow form, #ccm-notification-user-alert-workflow form').ajaxForm({
+		$('form[data-form=workflow]').ajaxForm({
 			dataType: 'json',
 			beforeSubmit: function() {
 				jQuery.fn.dialog.showLoader();

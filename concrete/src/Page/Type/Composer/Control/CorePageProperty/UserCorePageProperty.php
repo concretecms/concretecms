@@ -1,16 +1,18 @@
 <?php
+
 namespace Concrete\Core\Page\Type\Composer\Control\CorePageProperty;
 
 use Core;
 use UserInfo;
-use Page;
+use Concrete\Core\Page\Page;
+use Concrete\Core\Attribute\FontAwesomeIconFormatter;
 
 class UserCorePageProperty extends CorePageProperty
 {
     public function __construct()
     {
         $this->setCorePagePropertyHandle('user');
-        $this->setPageTypeComposerControlIconSRC(ASSETS_URL . '/attributes/text/icon.png');
+        $this->setPageTypeComposerControlIconFormatter(new FontAwesomeIconFormatter('file-text'));
     }
 
     public function getPageTypeComposerControlName()
@@ -20,6 +22,12 @@ class UserCorePageProperty extends CorePageProperty
 
     public function publishToPage(Page $c, $data, $controls)
     {
+        if (!is_array($data)) {
+            $data = [];
+        }
+        $data += [
+            'user' => null,
+        ];
         if (Core::make('helper/validation/numbers')->integer($data['user'])) {
             $this->addPageTypeComposerControlRequestValue('uID', $data['user']);
         }

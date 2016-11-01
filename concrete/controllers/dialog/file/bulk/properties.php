@@ -74,14 +74,14 @@ class Properties extends BackendInterfaceController
                 foreach ($this->files as $f) {
                     $fv = $f->getVersionToModify();
                     $controller = $ak->getController();
-                    $value = $controller->getAttributeValueFromRequest();
+                    $value = $controller->createAttributeValueFromRequest();
                     $fv->setAttribute($ak, $value);
                     $f->reindex();
                 }
 
                 $fr->setFiles($this->files);
                 $val = $f->getAttributeValueObject($ak);
-                $fr->setAdditionalDataAttribute('value',  $val->getValue('displaySanitized', 'display'));
+                $fr->setAdditionalDataAttribute('value',  $val->getDisplayValue());
                 $fr->setMessage(t('Files updated successfully.'));
             }
         }

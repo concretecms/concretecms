@@ -5,8 +5,12 @@ class AreaLayoutTest extends ConcreteDatabaseTestCase
 {
     protected $tables = array('AreaLayoutPresets', 'AreaLayouts', 'AreaLayoutColumns',
         'AreaLayoutCustomColumns', 'AreaLayoutThemeGridColumns', 'PageThemes', 'Pages', 'Collections',
-        'CollectionVersions', 'PagePaths', );
+        'CollectionVersions', );
     protected $fixtures = array();
+
+    protected $metadatas = array(
+        'Concrete\Core\Entity\Page\PagePath',
+    );
 
     public function testCustomAreaLayoutContainer()
     {
@@ -35,6 +39,10 @@ class AreaLayoutTest extends ConcreteDatabaseTestCase
         $layout->addLayoutColumn()->setAreaLayoutColumnSpan(6);
 
         $elemental = \Concrete\Core\Page\Theme\Theme::add('elemental');
+        $service = \Core::make('site');
+        if (!$service->getDefault()) {
+            $service->installDefault();
+        }
         Page::addHomePage();
         Core::make('cache/request')->disable();
         $c = Page::getByID(1);

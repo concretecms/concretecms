@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Application\Service\Dashboard;
 
+use Concrete\Core\Entity\Site\Tree;
 use Config;
 use PageList;
 use TaskPermission;
@@ -67,7 +68,7 @@ class Sitemap
      *
      * @return array
      */
-    public function getSubNodes($cID, $onGetNode = null)
+    public function getSubNodes($parent, $onGetNode = null)
     {
         $pl = new PageList();
         $pl->setPermissionsChecker(function ($page) {
@@ -81,7 +82,13 @@ class Sitemap
             $pl->includeSystemPages();
             $pl->includeInactivePages();
         }
-        $pl->filterByParentID($cID);
+        if (!is_object($parent)) {
+            $cID = $parent;
+        } else if ($parent instanceof Tree) {
+            $pl->setSiteTreeObject($parent);
+            $cID = 0;
+        }
+        $pl->filterByParentID($cID); // Either 0 or cParentID
         $pl->setPageVersionToRetrieve(\Concrete\Core\Page\PageList::PAGE_VERSION_RECENT);
 
         if ($cID == 1) {
@@ -162,7 +169,7 @@ class Sitemap
 
         $numSubpages = ($c->getNumChildren()  > 0) ? $c->getNumChildren()  : '';
 
-        $cvName = ($c->getCollectionName()) ? $c->getCollectionName() : '(No Title)';
+        $cvName = ($c->getCollectionName() !== '') ? $c->getCollectionName() : '(No Title)';
         $cvName = ($c->isSystemPage() || $cID == 1) ? t($cvName) : $cvName;
 
         $isInTrash = $c->isInTrash();
@@ -178,6 +185,7 @@ class Sitemap
         if ($c->getAttribute('icon_dashboard')) {
             $cIconClass = $c->getAttribute('icon_dashboard'); // use markup with custom class name rather than image
         } else {
+            $cIconClass = null;
             $cIcon = $c->getCollectionIcon();
             if (!$cIcon) {
                 if ($cID == 1) {
@@ -216,18 +224,19 @@ class Sitemap
         $node->title = $cvName;
         $node->link = $c->getCollectionLink();
         if ($numSubpages > 0) {
-            $node->isLazy = true;
+            $node->lazy = true;
         }
         if ($cIconClass) {
-            $node->iconClass = $cIconClass;
+            $node->icon = $cIconClass;
         } else {
             $node->icon = $cIcon;
         }
         if ($cID == HOME_CID) {
             $node->addClass = 'ccm-page-home';
+            $node->expanded = true;
         }
         if ($nodeOpen) {
-            $node->expand = true;
+            $node->expanded = true;
         }
         $node->cAlias = $cAlias;
         $node->isInTrash = $isInTrash;

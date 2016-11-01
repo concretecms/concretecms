@@ -31,11 +31,13 @@ class ApplicationServiceProvider extends ServiceProvider
             'help/panel' => '\Concrete\Core\Application\Service\UserInterface\Help\PanelManager',
         );
 
+        $this->app->singleton('Concrete\Core\Block\Menu\Manager');
+
         foreach ($singletons as $key => $value) {
             $this->app->singleton($key, $value);
         }
 
-        $this->app->bind('error', 'Concrete\Core\Error\ErrorBag\ErrorBag');
+        $this->app->bind('error', 'Concrete\Core\Error\ErrorList\ErrorList');
 
         $this->app->bindShared('environment', function ($app) {
             $env = Environment::get();

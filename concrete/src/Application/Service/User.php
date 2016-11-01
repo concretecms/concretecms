@@ -36,7 +36,7 @@ class User
 
     /**
      * @param string $password
-     * @param null|\Concrete\Core\Error\ErrorBag\ErrorBag $errorObj
+     * @param null|\Concrete\Core\Error\ErrorList\ErrorList $errorObj
      *
      * @return bool
      *

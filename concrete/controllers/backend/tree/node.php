@@ -53,7 +53,17 @@ class Node extends UserInterface
     public function load_starting()
     {
         $node = $this->loadNode();
-        return new JsonResponse($node->getTreeNodeJSON());
+
+        $r = array();
+        foreach ($node->getChildNodes() as $childnode) {
+            $json = $childnode->getTreeNodeJSON();
+            if ($json) {
+                $r[] = $json;
+            }
+        }
+        $node = $node->getTreeNodeJSON();
+        $node->children = $r;
+        return new JsonResponse([$node]);
     }
 
     /**

@@ -3,7 +3,7 @@ namespace Concrete\Core\Permission\Assignment;
 
 use Concrete\Core\File\Set\Set;
 use Concrete\Core\Permission\Key\Key;
-use PermissionAccess;
+use Concrete\Core\Permission\Access\Access;
 use FileSet;
 use Concrete\Core\Entity\File\File;
 use Database;
@@ -49,7 +49,7 @@ class FileAssignment extends TreeNodeAssignment
                 )
             );
             if ($r) {
-                return PermissionAccess::getByID($r, $this->pk, false);
+                return Access::getByID($r, $this->pk, false);
             }
         } else if (isset($this->inheritedPermissions[$this->pk->getPermissionKeyHandle()])) {
             $pk = Key::getByHandle($this->inheritedPermissions[$this->pk->getPermissionKeyHandle()]);
@@ -66,7 +66,7 @@ class FileAssignment extends TreeNodeAssignment
         $db->Execute('update FilePermissionAssignments set paID = 0 where pkID = ? and fID = ?', array($this->pk->getPermissionKeyID(), $this->permissionObject->getFileID()));
     }
 
-    public function assignPermissionAccess(PermissionAccess $pa)
+    public function assignPermissionAccess(Access $pa)
     {
         $db = Database::connection();
         $db->Replace('FilePermissionAssignments', array('fID' => $this->getPermissionObject()->getFileID(), 'paID' => $pa->getPermissionAccessID(), 'pkID' => $this->pk->getPermissionKeyID()), array('fID', 'pkID'), true);

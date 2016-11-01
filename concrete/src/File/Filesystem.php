@@ -21,11 +21,29 @@ class Filesystem
      */
     public function create()
     {
-        NodeType::add('file');
-        NodeType::add('file_folder');
-        NodeType::add('search_preset');
-        TreeType::add('file_manager');
-        return FileManager::add();
+        $type = NodeType::getByHandle('file');
+        if (!is_object($type)) {
+            NodeType::add('file');
+        }
+        $type = NodeType::getByHandle('file_folder');
+        if (!is_object($type)) {
+            NodeType::add('file_folder');
+        }
+        $type = NodeType::getByHandle('search_preset');
+        if (!is_object($type)) {
+            NodeType::add('search_preset');
+        }
+        $type = TreeType::getByHandle('file_manager');
+        if (!is_object($type)) {
+            TreeType::add('file_manager');
+        }
+
+        $manager = FileManager::get();
+        if (!is_object($manager)) {
+            $manager = FileManager::add();
+        }
+
+        return $manager;
     }
 
     public function setDefaultPermissions(FileManager $tree)
@@ -43,7 +61,9 @@ class Filesystem
     public function getRootFolder()
     {
         $tree = FileManager::get();
-        return $tree->getRootTreeNodeObject();
+        if (is_object($tree)) {
+            return $tree->getRootTreeNodeObject();
+        }
     }
 
     public function addFolder(FileFolder $folder, $name)

@@ -114,7 +114,7 @@ jQuery.fn.dialog.open = function(options) {
         'escapeClose': true,
         'width': w,
         'height': h,
-        'dialogClass': 'ccm-ui-fieldless',
+        'dialogClass': 'ccm-ui',
         'resizable': true,
 
         'create': function() {
@@ -160,7 +160,7 @@ jQuery.fn.dialog.open = function(options) {
 
         },
         'beforeClose': function() {
-            var nd = $(".ui-dialog").length;
+            var nd = $(".ui-dialog:visible").length;
             if (nd == 1) {
                 $("body").css("overflow", $('body').attr('data-last-overflow'));
             }
@@ -231,7 +231,15 @@ jQuery.fn.dialog.activateDialogContents = function($dialog) {
     $dialog.find('button[data-dialog-action=cancel]').on('click', function() {
         jQuery.fn.dialog.closeTop();
     });
-    $dialog.find('[data-dialog-form]').concreteAjaxForm();
+    $dialog.find('[data-dialog-form]').each(function() {
+        var $form = $(this),
+            options = {};
+        if ($(this).attr("data-dialog-form-processing") == 'progressive') {
+            options.progressiveOperation = true;
+            options.progressiveOperationElement = 'div[data-dialog-form-element=progress-bar]';
+        }
+        $(this).concreteAjaxForm(options);
+    });
 
 
     $dialog.find('button[data-dialog-action=submit]').on('click', function() {
@@ -312,13 +320,12 @@ jQuery.fn.dialog.replaceTop = function(html) {
 }
 
 jQuery.fn.dialog.showLoader = function(text) {
-    $('body').addClass('ccm-loading');
+    NProgress.start();
 }
 
 jQuery.fn.dialog.hideLoader = function() {
-    $('body').removeClass('ccm-loading');
+    NProgress.done();
 }
-
 
 jQuery.fn.dialog.closeTop = function() {
     $dialog = jQuery.fn.dialog.getTop();
@@ -328,4 +335,6 @@ jQuery.fn.dialog.closeTop = function() {
 jQuery.fn.dialog.closeAll = function() {
     $($(".ui-dialog-content").get().reverse()).jqdialog('close');
 }
+
+$.ui.dialog.prototype._focusTabbable = $.noop;
 

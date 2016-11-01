@@ -3,9 +3,9 @@ namespace Concrete\Attribute\Email;
 
 use Concrete\Core\Attribute\FontAwesomeIconFormatter;
 use Concrete\Core\Attribute\DefaultController;
-use Concrete\Core\Error\ErrorBag\Error\Error;
-use Concrete\Core\Error\ErrorBag\Error\FieldNotPresentError;
-use Concrete\Core\Error\ErrorBag\Field\AttributeField;
+use Concrete\Core\Error\ErrorList\Error\Error;
+use Concrete\Core\Error\ErrorList\Error\FieldNotPresentError;
+use Concrete\Core\Error\ErrorList\Field\AttributeField;
 
 class Controller extends DefaultController
 {

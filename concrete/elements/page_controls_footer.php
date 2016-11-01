@@ -36,7 +36,9 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
 
     
     if ($cih->showHelpOverlay()) {
+        print '<div style="display: none">';
         View::element('help/dialog/introduction');
+        print '</div>';
         $v = View::getInstance();
         $v->addFooterItem('<script type="text/javascript">$(function() { new ConcreteHelpDialog().open(); });</script>');
         $cih->trackHelpOverlayDisplayed();
@@ -163,7 +165,7 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
                                                 dialog-height="280"
                                                 dialog-modal="false"
                                                 dialog-title="<?= t('Caching') ?>"
-                                                href="<?= URL::to('/ccm/system/panels/details/page/caching') ?>?cID=<?= $cID ?>>"
+                                                href="<?= URL::to('/ccm/system/panels/details/page/caching') ?>?cID=<?= $cID ?>"
                                             ><?= t('Caching') ?></a>
                                         </li>
                                         <?php
@@ -262,10 +264,7 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
                     ?>
                     <li class="pull-left">
                         <a href="<?php echo URL::to('/dashboard/pages/types/output', $c->getPageTypeID()); ?>">
-                            <i class="fa fa-arrow-left"></i>
-                            <span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-edit-mode">
-                                <?php echo tc('toolbar', 'Exit Edit Defaults'); ?>
-                            </span>
+                            <i class="fa fa-arrow-left"></i><span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-edit-mode"><?php echo tc('toolbar', 'Exit Edit Defaults'); ?></span>
                          </a>
                      </li>
                      <?php
@@ -287,8 +286,7 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
                                 data-panel-url="<?= URL::to('/ccm/system/panels/page/check_in') ?>"
                                 title="<?= t('Exit Edit Mode') ?>"
                             >
-                                <i class="fa fa-pencil"></i>
-                                <span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-edit-mode"><?= tc('toolbar', 'Exit Edit Mode') ?></span>
+                                <i class="fa fa-pencil"></i><span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-edit-mode"><?= tc('toolbar', 'Exit Edit Mode') ?></span>
                             </a>
                         </li>
                         <?php
@@ -301,8 +299,7 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
                                 href="<?= DIR_REL ?>/<?= DISPATCHER_FILENAME ?>?cID=<?= $cID ?>&ctask=check-out<?= $token ?>"
                                 title="<?= t('Edit This Page') ?>"
                             >
-                                <i class="fa fa-pencil"></i>
-                                <span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-edit-mode"><?= tc('toolbar', 'Edit Mode') ?></span>
+                                <i class="fa fa-pencil"></i><span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-edit-mode"><?= tc('toolbar', 'Edit Mode') ?></span>
                             </a>
                         </li>
                         <?php
@@ -331,15 +328,11 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
                                 }
                                 ?>
 
-                                <i class="fa fa-cog"></i>
-                                <span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-settings">
-                                    <?php
+                                <i class="fa fa-cog"></i><span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-settings"><?php
                                     if ($hasComposer) {
                                         ?><?= tc('toolbar', 'Composer') ?> / <?php
                                     }
-                                    ?>
-                                    <?= tc('toolbar', 'Page Settings') ?>
-                                </span>
+                                    ?><?= tc('toolbar', 'Page Settings') ?></span>
                             </a>
                         </li>
                         <?php
@@ -351,13 +344,11 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
                     <li data-guide-toolbar-action="add-content" class="ccm-toolbar-add pull-left hidden-xs">
                         <?php if ($c->isEditMode()) { ?>
                             <a href="#" data-launch-panel="add-block" data-panel-url="<?= URL::to('/ccm/system/panels/add') ?>" title="<?= t('Add Content to The Page') ?>">
-                                <i class="fa fa-plus"></i>
-                                <span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-add"><?= tc('toolbar', 'Add Content') ?></span>
+                                <i class="fa fa-plus"></i><span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-add"><?= tc('toolbar', 'Add Content') ?></span>
                             </a>
                         <?php } else { ?>
                             <a href="<?= DIR_REL ?>/<?= DISPATCHER_FILENAME ?>?cID=<?= $cID ?>&ctask=check-out-add-block<?= $token ?>" title="<?= t('Add Content to The Page') ?>">
-                                <i class="fa fa-plus"></i>
-                                <span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-add"><?= tc('toolbar', 'Add Content') ?></span>
+                                <i class="fa fa-plus"></i><span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-add"><?= tc('toolbar', 'Add Content') ?></span>
                             </a>
                         <?php } ?>
                     </li>
@@ -370,7 +361,7 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
                     if ($cnt->displayItem()) {
                         $cnt->registerViewAssets();
                         ?>
-                        <li class="pull-left"><?= $cnt->getMenuItemLinkElement() ?></li>
+                        <li class="pull-left hidden-xs"><?= $cnt->getMenuItemLinkElement() ?></li>
                         <?php
                     }
                 }
@@ -389,8 +380,7 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
                     ?>
                     <li data-guide-toolbar-action="dashboard" class="pull-right hidden-xs ">
                         <a href="<?= URL::to('/dashboard') ?>" data-launch-panel="dashboard" title="<?= t('Dashboard – Change Site-wide Settings') ?>">
-                            <i class="fa fa-sliders"></i>
-                            <span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-site-settings"><?= tc('toolbar', 'Dashboard') ?></span>
+                            <i class="fa fa-sliders"></i><span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-site-settings"><?= tc('toolbar', 'Dashboard') ?></span>
                         </a>
                     </li>
                     <?php
@@ -398,8 +388,7 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
                     ?>
                     <li class="pull-right hidden-xs">
                         <a href="<?=URL::to('/login', 'logout', $valt->generate('logout'))?>" title="<?=t('Sign Out')?>">
-                            <i class="fa fa-sign-out"></i>
-                            <span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-site-settings"><?= tc('toolbar', 'Sign Out') ?></span>
+                            <i class="fa fa-sign-out"></i><span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-site-settings"><?= tc('toolbar', 'Sign Out') ?></span>
                         </a>
                     </li>
                     <?php
@@ -407,29 +396,8 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
                 ?>
                 <li data-guide-toolbar-action="sitemap" class="pull-right hidden-xs">
                     <a href="#" data-panel-url="<?= URL::to('/ccm/system/panels/sitemap') ?>" title="<?= t('Add Pages and Navigate Your Site') ?>" data-launch-panel="sitemap">
-                        <i class="fa fa-files-o"></i>
-                        <span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-add-page"><?= tc('toolbar', 'Pages') ?></span>
+                        <i class="fa fa-files-o"></i><span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-add-page"><?= tc('toolbar', 'Pages') ?></span>
                     </a>
-                </li>
-                <?php
-                if ($cp->canEditPageMultilingualSettings() && $app->make('multilingual/detector')->isEnabled()) {
-                    $section = \Concrete\Core\Multilingual\Page\Section\Section::getCurrentSection();
-                    $ch = $app->make('multilingual/interface/flag');
-                    if (is_object($section)) {
-                        ?>
-                        <li class="pull-right hidden-xs">
-                            <a href="#" data-panel-url="<?= URL::to('/ccm/system/panels/multilingual') ?>" title="<?= t('Navigate this page in other languages') ?>" data-launch-panel="multilingual">
-                                <?php echo $ch->getFlagIcon($section->getIcon()); ?>
-                                <span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-add-page"><?=$section->getLanguageText()?></span>
-                            </a>
-                        </li>
-                        <?php
-                    }
-                }
-                ?>
-                <li data-guide-toolbar-action="intelligent-search" class="ccm-toolbar-search pull-right hidden-xs">
-                    <i class="fa fa-search"></i>
-                    <input type="search" id="ccm-nav-intelligent-search" autocomplete="off" tabindex="1"/>
                 </li>
                 <?php
                 $items = $ihm->getPageHeaderMenuItems('right');
@@ -438,11 +406,15 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
                     if ($cnt->displayItem()) {
                         $cnt->registerViewAssets();
                         ?>
-                        <li class="pull-right"><?= $cnt->getMenuItemLinkElement() ?></li>
+                        <li class="pull-right hidden-xs"><?= $cnt->getMenuItemLinkElement() ?></li>
                         <?php
                     }
                 }
                 ?>
+                <li data-guide-toolbar-action="intelligent-search" class="ccm-toolbar-search pull-right hidden-xs">
+                    <i class="fa fa-search"></i>
+                    <input type="search" id="ccm-nav-intelligent-search" autocomplete="off" tabindex="1"/>
+                </li>
             </ul>
         </div>
         <?php
@@ -452,9 +424,9 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
         if ($pageInUseBySomeoneElse) {
             echo $cih->notify(array(
                 'title' => t('Editing Unavailable.'),
-                'message' => t("%s is currently editing this page.", $c->getCollectionCheckedOutUserName()),
+                'text' => t("%s is currently editing this page.", $c->getCollectionCheckedOutUserName()),
                 'type' => 'info',
-                'icon' => 'exclamation-sign',
+                'icon' => 'fa fa-exclamation-circle',
             ));
         } else {
             if ($c->getCollectionPointerID() > 0) {
@@ -466,9 +438,9 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
                 }
                 echo $cih->notify(array(
                     'title' => t('Page Alias.'),
-                    'message' => t("This page is an alias of one that actually appears elsewhere."),
+                    'text' => t("This page is an alias of one that actually appears elsewhere."),
                     'type' => 'info',
-                    'icon' => 'info-sign',
+                    'icon' => 'fa fa-info-circle',
                     'buttons' => $buttons,
                 ));
             }
@@ -476,64 +448,48 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
 
             if (is_array($workflowList) && !empty($workflowList)) {
                 ?>
-                <div id="ccm-notification-page-alert-workflow" class="ccm-notification ccm-notification-info">
-                    <div class="ccm-notification-inner-wrapper">
-                        <?php
-                        foreach ($workflowList as $i => $wl) {
-                            $wr = $wl->getWorkflowRequestObject();
-                            $wf = $wl->getWorkflowObject();
-                            ?>
-                            <form method="post" action="<?= $wl->getWorkflowProgressFormAction() ?>" id="ccm-notification-page-alert-form-<?= $i ?>">
-                                <i class="ccm-notification-icon fa fa-info-circle"></i>
-                                <div class="ccm-notification-inner">
-                                    <p><?= $wf->getWorkflowProgressCurrentDescription($wl) ?></p>
-                                    <?php
-                                    $actions = $wl->getWorkflowProgressActions();
-                                    if (!empty($actions)) {
-                                        ?>
-                                        <div class="btn-group">
-                                        <?php
-                                        foreach ($actions as $act) {
-                                            if ($act->getWorkflowProgressActionURL() != '') {
-                                                ?>
-                                                <a href="<?= $act->getWorkflowProgressActionURL() ?>" <?php
-                                            } else {
-                                                ?>
-                                                <button type="submit" name="action_<?= $act->getWorkflowProgressActionTask() ?>"
-                                                <?php
-                                            }
-                                            if (!empty($act->getWorkflowProgressActionExtraButtonParameters())) {
-                                                foreach ($act->getWorkflowProgressActionExtraButtonParameters() as $key => $value) {
-                                                    ?>
-                                                    <?= $key ?>="<?= $value ?>"
-                                                    <?php
-                                                }
-                                            }
-                                            ?>
-                                            class="btn btn-xs <?= $act->getWorkflowProgressActionStyleClass() ?>">
-                                                <?= $act->getWorkflowProgressActionStyleInnerButtonLeftHTML() ?>
-                                                <?= $act->getWorkflowProgressActionLabel() ?>
-                                                <?= $act->getWorkflowProgressActionStyleInnerButtonRightHTML() ?>
-                                            <?php
-                                            if ($act->getWorkflowProgressActionURL() != '') {
-                                                ?></a><?php
-                                            } else {
-                                                ?></button><?php
-                                            }
-                                        }
-                                        ?>
-                                        </div>
-                                        <?php
-                                    }
-                                    ?>
-                                </div>
-                            </form>
+                    <?php
+                    foreach ($workflowList as $i => $wl) {
+                        $wr = $wl->getWorkflowRequestObject();
+                        $wf = $wl->getWorkflowObject();
+                        $form = '<form data-form="workflow" method="post" action="' . $wl->getWorkflowProgressFormAction() . '">';
+                        $text = $wf->getWorkflowProgressCurrentDescription($wl);
+
+                        $actions = $wl->getWorkflowProgressActions();
+                        $buttons = [];
+                        if (!empty($actions)) { ?>
                             <?php
+                            foreach ($actions as $act) {
+                                $parameters = 'class="btn btn-xs ' . $act->getWorkflowProgressActionStyleClass() . '" ';
+                                if (!empty($act->getWorkflowProgressActionExtraButtonParameters())) {
+                                    foreach ($act->getWorkflowProgressActionExtraButtonParameters() as $key => $value) {
+                                        $parameters .= $key . '="' . $value . '" ';
+                                    }
+                                }
+
+                                $inner = $act->getWorkflowProgressActionStyleInnerButtonLeftHTML() . ' ' .
+                                $act->getWorkflowProgressActionLabel() . ' ' .
+                                $act->getWorkflowProgressActionStyleInnerButtonRightHTML();
+
+                                if ($act->getWorkflowProgressActionURL() != '') {
+                                    $button = '<a href="' . $act->getWorkflowProgressActionURL() . '" ' . $parameters . '>' . $inner . '</a>';
+                                } else {
+                                    $button = '<button type="submit" name="action_' . $act->getWorkflowProgressActionTask() . '" ' . $parameters . '>' . $inner . '</button>';
+                                }
+
+                                $buttons[] = $button;
+                            }
                         }
-                        ?>
-                    </div>
-                    <div class="ccm-notification-actions"><a href="#" data-dismiss-alert="page-alert"><?= t('Hide') ?></a></div>
-                </div>
+
+                        echo $cih->notify(array(
+                            'text' => $text,
+                            'type' => 'info',
+                            'form' => $form,
+                            'icon' => 'fa fa-info-circle',
+                            'buttons' => $buttons
+                        ));
+                    }
+                    ?>
                 <?php
             }
 
@@ -543,9 +499,9 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
                         if ($c->isPageDraft()) {
                             echo $cih->notify(array(
                                 'title' => t('Page Draft.'),
-                                'message' => t("This is an un-published draft."),
+                                'text' => t("This is an un-published draft."),
                                 'type' => 'info',
-                                'icon' => 'exclamation',
+                                'icon' => 'fa fa-exclamation-circle',
                             ));
                         } else {
                             $buttons = array();
@@ -573,9 +529,9 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
                             }
                             echo $cih->notify(array(
                                 'title' => t('Page is Pending Approval.'),
-                                'message' => t("This page is newer than what appears to visitors on your live site."),
+                                'text' => t("This page is newer than what appears to visitors on your live site."),
                                 'type' => 'info',
-                                'icon' => 'cog',
+                                'icon' => 'fa fa-cog',
                                 'buttons' => $buttons,
                             ));
                         }
@@ -588,9 +544,9 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
                             $button = '<a href="' . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $cID . '&ctask=publish-now' . $token . '" class="btn btn-primary btn-xs">Publish Now</a>';
                             echo $cih->notify(array(
                                 'title' => t('Publish Pending.'),
-                                'message' => $message,
+                                'text' => $message,
                                 'type' => 'info',
-                                'icon' => 'cog',
+                                'icon' => 'fa fa-cog',
                                 'buttons' => array($button),
                             ));
                         }

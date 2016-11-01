@@ -57,7 +57,7 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
         foreach ($uaks as $ua) {
             ?>
 		<div>
-			<h4><?php echo $ua->getKeyName()?></h4>
+			<h4><?php echo $ua->getAttributeKeyDisplayName()?></h4>
 			<?php
             $r = $profile->getAttribute($ua, 'displaySanitized', 'display');
             if ($r) {

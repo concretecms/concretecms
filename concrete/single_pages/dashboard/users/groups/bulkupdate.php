@@ -139,9 +139,9 @@ $(function() {
 }
     ?>
           'removeNodesByKey': ['<?=$guestGroupNode->getTreeNodeID()?>','<?=$registeredGroupNode->getTreeNodeID()?>'],
-          'onSelect': function(select, node) {
-             if (select) {
-                $('input[name=gParentNodeID]').val(node.data.key);
+          'onSelect': function(nodes) {
+             if (nodes.length) {
+                $('input[name=gParentNodeID]').val(nodes[0]);
              } else {
                 $('input[name=gParentNodeID]').val('');
              }

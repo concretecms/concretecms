@@ -3,6 +3,7 @@ namespace Concrete\Core\Entity\Attribute\Key\Type;
 
 use Concrete\Core\Entity\Attribute\Value\Value\SelectValue;
 use Concrete\Core\Entity\Attribute\Value\Value\SelectValueOptionList;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -37,11 +38,6 @@ class SelectType extends Type
     public function setOptionList($list)
     {
         $this->list = $list;
-    }
-
-    public function getAttributeValue()
-    {
-        return new SelectValue();
     }
 
     /**
@@ -105,6 +101,28 @@ class SelectType extends Type
     public function setDisplayOrder($displayOrder)
     {
         $this->akSelectOptionDisplayOrder = $displayOrder;
+    }
+
+    public function mergeAndPersist(EntityManagerInterface $entityManager)
+    {
+        $tempOptions = array();
+
+        foreach($this->list->getOptions() as $option) {
+            if (!$option->getSelectAttributeOptionID()) {
+                $tempOptions[] = $option;
+                $this->list->getOptions()->removeElement($option);
+            }
+        }
+
+        $key_type = $entityManager->merge($this);
+
+        foreach($tempOptions as $option) {
+            $option->setOptionList($key_type->list);
+            $key_type->list->getOptions()->add($option);
+        }
+
+        $entityManager->persist($key_type);
+        return $key_type;
     }
 
 }

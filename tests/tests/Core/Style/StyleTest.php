@@ -145,19 +145,19 @@ class StyleTest extends \PHPUnit_Framework_TestCase
         $pt = new PageTheme();
         $pt->setThemeHandle('elemental');
         $pt->setThemeDirectory($env->getPath(DIRNAME_THEMES . '/elemental'));
-        $pt->setThemeURL($env->getURL(DIRNAME_THEMES . '/elmental'));
+        $pt->setThemeURL($env->getURL(DIRNAME_THEMES . '/elemental'));
 
         $sheets = $pt->getThemeCustomizableStyleSheets();
         $this->assertTrue(count($sheets) == 1);
         $this->assertTrue($sheets[0] instanceof \Concrete\Core\StyleCustomizer\Stylesheet);
 
         $css = $sheets[0]->getCss();
-        $this->assertTrue(strpos($css, "background-image: url('/path/to/server/concrete/themes/elemental/images/background-slider-default.png')") !== false);
+        $this->assertTrue(strpos($css, "background-image:url('/path/to/server/concrete/themes/elemental/images/background-slider-default.png')") !== false);
 
         $sheets[0]->setValueList($list);
         $css = $sheets[0]->getCss();
-        $this->assertTrue(strpos($css, "background-image: url('/path/to/server/concrete/themes/elemental/images/testingit.jpg')") !== false);
-        $this->assertTrue(strpos($css, 'font-family: "Testing Font Family"') !== false);
+        $this->assertTrue(strpos($css, "background-image:url('/path/to/server/concrete/themes/elemental/images/testingit.jpg')") !== false);
+        $this->assertTrue(strpos($css, 'font-family:"Testing Font Family"') !== false);
 
         $sheet = $pt->getStylesheetObject('typography.less');
         $sheet->setValueList($list);

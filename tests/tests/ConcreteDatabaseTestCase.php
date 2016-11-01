@@ -120,6 +120,7 @@ class ConcreteDatabaseTestCase extends PHPUnit_Extensions_Database_TestCase
 
     public function tearDown()
     {
+        parent::tearDown();
         if (count($this->tables)) {
             if (in_array('BlockTypes', $this->tables)) {
                 $this->tables[] = 'btCoreScrapbookDisplay';
@@ -152,9 +153,7 @@ class ConcreteDatabaseTestCase extends PHPUnit_Extensions_Database_TestCase
             $sm->uninstallDatabaseFor($metadatas);
         }
 
-
         \CacheLocal::flush();
 
-        parent::tearDown();
     }
 }

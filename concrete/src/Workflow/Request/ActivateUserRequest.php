@@ -97,7 +97,7 @@ class ActivateUserRequest extends UserRequest
         $mh->addParameter('user', $ui);
         $mh->addParameter('uName', $ui->getUserName());
         $mh->addParameter('uEmail', $ui->getUserEmail());
-        $mh->addParameter('siteName', Config::get('concrete.site'));
+        $mh->addParameter('siteName', \Core::make('site')->getSite()->getSiteName());
         $mh->load('user_registered_approval_complete');
         $mh->sendMail();
     }

@@ -7,7 +7,7 @@ use Database;
 use Group as UserGroup;
 use Concrete\Core\Permission\Access\Entity\GroupEntity as GroupPermissionAccessEntity;
 use Concrete\Core\Permission\Key\CategoryTreeNodeKey as CategoryTreeNodePermissionKey;
-use PermissionAccess;
+use Concrete\Core\Permission\Access\Access as PermissionAccess;
 
 class Topic extends Tree
 {

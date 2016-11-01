@@ -4,9 +4,10 @@ namespace Concrete\Core\Entity\Express\Control;
 use Concrete\Controller\Element\Dashboard\Express\Control\TextOptions;
 use Concrete\Core\Entity\Express\Entity;
 use Concrete\Core\Entity\Express\Entry;
-use Concrete\Core\Express\Form\Control\Form\TextEntityPropertyControlFormRenderer;
+use Concrete\Core\Express\Form\Context\ContextInterface;
+use Concrete\Core\Express\Form\Control\Renderer\TextEntityPropertyControlRenderer;
+use Concrete\Core\Express\Form\Control\Template\Template;
 use Concrete\Core\Express\Form\Control\Type\SaveHandler\TextControlSaveHandler;
-use Concrete\Core\Express\Form\Control\View\TextEntityPropertyControlViewRenderer;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -16,44 +17,69 @@ use Doctrine\ORM\Mapping as ORM;
 class TextControl extends Control
 {
     /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $headline;
+
+    /**
      * @ORM\Column(type="text", nullable=true)
      */
-    protected $text;
+    protected $body;
 
     /**
      * @return mixed
      */
-    public function getText()
+    public function getHeadline()
     {
-        return $this->text;
+        return $this->headline;
     }
 
     /**
-     * @param mixed $text
+     * @param mixed $headline
      */
-    public function setText($text)
+    public function setHeadline($headline)
     {
-        $this->text = $text;
+        $this->headline = $headline;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getBody()
+    {
+        return $this->body;
+    }
+
+    /**
+     * @param mixed $body
+     */
+    public function setBody($body)
+    {
+        $this->body = $body;
+    }
+
 
     public function getControlSaveHandler()
     {
         return new TextControlSaveHandler();
     }
 
-    public function getFormControlRenderer(Entry $entry = null)
+    public function getControlRenderer(ContextInterface $context)
     {
-        return new TextEntityPropertyControlFormRenderer($entry);
-    }
-
-    public function getViewControlRenderer(Entry $entry)
-    {
-        return new TextEntityPropertyControlViewRenderer($entry);
+        return new TextEntityPropertyControlRenderer();
     }
 
     public function getControlLabel()
     {
-        return t('Text');
+        if ($this->getHeadline()) {
+            $label = $this->getHeadline();
+        } else if ($this->getBody()) {
+            $text = \Core::make('helper/text');
+            $label = $text->sanitize($this->getBody(), 32);
+        }
+
+        $label .= ' ' . t('(Text)');
+        return $label;
     }
 
     public function getType()
@@ -65,4 +91,11 @@ class TextControl extends Control
     {
         return new TextOptions($this);
     }
+
+    public function getExporter()
+    {
+        return new \Concrete\Core\Export\Item\Express\Control\TextControl();
+    }
+
+
 }

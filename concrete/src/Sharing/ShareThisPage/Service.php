@@ -28,7 +28,7 @@ class Service extends SocialNetworkService
                 case 'facebook':
                     return "https://www.facebook.com/sharer/sharer.php?u=$url";
                 case 'twitter':
-                    return "https://www.twitter.com/intent/tweet?url=$url";
+                    return "https://twitter.com/intent/tweet?url=$url";
                 case 'linkedin':
                     $title = urlencode($c->getCollectionName());
 
@@ -42,7 +42,7 @@ class Service extends SocialNetworkService
                 case 'print':
                     return "javascript:window.print();";
                 case 'email':
-                    $body = rawurlencode(t("Check out this article on %s:\n\n%s\n%s", tc('SiteName', Config::get('concrete.site')), $c->getCollectionName(), urldecode($url)));
+                    $body = rawurlencode(t("Check out this article on %s:\n\n%s\n%s", tc('SiteName', \Core::make('site')->getSite()->getSiteName()), $c->getCollectionName(), urldecode($url)));
                     $subject = rawurlencode(t('Thought you\'d enjoy this article.'));
 
                     return "mailto:?body={$body}&subject={$subject}";

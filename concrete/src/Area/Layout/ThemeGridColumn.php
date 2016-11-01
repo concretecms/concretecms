@@ -148,11 +148,11 @@ class ThemeGridColumn extends Column
         $element = new Element('div');
         $element->addClass($this->getAreaLayoutColumnClass());
         $gf = $this->arLayout->getThemeGridFrameworkObject();
-        if ($gf->hasPageThemeGridFrameworkOffsetClasses() && $this->getAreaLayoutColumnOffset()) {
+        if (is_object($gf) && $gf->hasPageThemeGridFrameworkOffsetClasses() && $this->getAreaLayoutColumnOffset()) {
             $element->addClass($this->getAreaLayoutColumnOffsetClass());
         }
         $element->setValue($contents);
-        if ($this->getAreaLayoutColumnOffset() > 0 && (!$gf->hasPageThemeGridFrameworkOffsetClasses())) {
+        if (is_object($gf) && $this->getAreaLayoutColumnOffset() > 0 && (!$gf->hasPageThemeGridFrameworkOffsetClasses())) {
             $collection = new Collection();
             $offset = new Element('div');
             $offset->addClass($this->getAreaLayoutColumnOffsetClass())

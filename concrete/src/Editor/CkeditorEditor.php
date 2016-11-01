@@ -2,7 +2,7 @@
 namespace Concrete\Core\Editor;
 
 
-use Concrete\Core\Config\Repository\Repository;
+use Illuminate\Config\Repository;
 use Concrete\Core\Http\Request;
 use Concrete\Core\Http\ResponseAssetGroup;
 use Concrete\Core\Localization\Localization;
@@ -28,7 +28,7 @@ class CkeditorEditor implements EditorInterface
     protected $pluginManager;
     protected $styles;
 
-    public function __construct(Repository $config, $pluginManager, $styles)
+    public function __construct($config, $pluginManager, $styles)
     {
         $this->assets = ResponseAssetGroup::get();
         $this->pluginManager = $pluginManager;
@@ -38,6 +38,19 @@ class CkeditorEditor implements EditorInterface
 
     protected function getEditorScript($identifier, $options = array())
     {
+        $jsFunc = $this->getEditorInitJSFunction($options);
+        $html = <<<EOL
+        <script type="text/javascript">
+        $(function() {
+            var initEditor = {$jsFunc};
+            initEditor('#{$identifier}');
+         });
+        </script>
+EOL;
+        return $html;
+    }
+
+    public function getEditorInitJSFunction($options = array()) {
         $pluginManager = $this->pluginManager;
 
         if ($this->allowFileManager()) {
@@ -61,6 +74,7 @@ class CkeditorEditor implements EditorInterface
                 'language' => $this->getLanguageOption(),
                 'customConfig' => '',
                 'allowedContent' => true,
+                'baseFloatZIndex' => 1990, /* Must come below modal variable in variables.less */
                 'image2_captionedClass' => 'content-editor-image-captioned',
                 'image2_alignClasses' => array(
                     'content-editor-image-left',
@@ -71,25 +85,33 @@ class CkeditorEditor implements EditorInterface
         );
         $options = json_encode($options);
         $removeEmptyIcon = '$removeEmpty[\'i\']';
-        $html = <<<EOL
-        <script type="text/javascript">
-        var CCM_EDITOR_SECURITY_TOKEN = "{$this->token}";
-        $(function() {
+
+        $jsfunc = <<<EOL
+        function(identifier) {
+            window.CCM_EDITOR_SECURITY_TOKEN = "{$this->token}";
             CKEDITOR.dtd.{$removeEmptyIcon} = false;
             if (CKEDITOR.stylesSet.get('concrete5styles') === null) {
                 CKEDITOR.stylesSet.add('concrete5styles', {$this->getStylesJson()});
             }
-            var ckeditor = $('#{$identifier}').ckeditor({$options}).editor;
+            var ckeditor = $(identifier).ckeditor({$options}).editor;
             ckeditor.on('blur',function(){
                 return false;
             });
             ckeditor.on('remove', function(){
                 $(this).destroy();
             });
-        });
-        </script>
+        }
 EOL;
-        return $html;
+        return $jsfunc;
+    }
+
+    public function outputInlineEditorInitJSFunction() {
+
+        if ($this->getPluginManager()->isSelected('autogrow')) {
+            $this->getPluginManager()->deselect('autogrow');
+        }
+
+        return $this->getEditorInitJSFunction();
     }
 
     public function outputPageInlineEditor($key, $content = null)
@@ -118,6 +140,17 @@ EOL;
         return $html;
     }
 
+    public function outputStandardEditorInitJSFunction() {
+        $options = array(
+            'disableAutoInline' => true,
+        );
+        if ($this->getPluginManager()->isSelected('sourcearea')) {
+            $this->getPluginManager()->deselect('sourcedialog');
+        }
+
+        return $this->getEditorInitJSFunction($options);
+    }
+
     public function outputStandardEditor($key, $content = null)
     {
         $options = array(
@@ -143,8 +176,8 @@ EOL;
 
     public function saveOptionsForm(Request $request)
     {
-        $this->config->save('concrete.editor.concrete.enable_filemanager', $request->request->get('enable_filemanager'));
-        $this->config->save('concrete.editor.concrete.enable_sitemap', $request->request->get('enable_sitemap'));
+        $this->config->save('editor.concrete.enable_filemanager', $request->request->get('enable_filemanager'));
+        $this->config->save('editor.concrete.enable_sitemap', $request->request->get('enable_sitemap'));
 
         $plugins = array();
         $post = $request->request->get('plugin');
@@ -156,7 +189,7 @@ EOL;
             }
         }
 
-        $this->config->save('concrete.editor.ckeditor4.plugins.selected', $plugins);
+        $this->config->save('editor.ckeditor4.plugins.selected', $plugins);
     }
 
     public function requireEditorAssets()

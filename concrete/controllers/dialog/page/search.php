@@ -2,6 +2,7 @@
 namespace Concrete\Controller\Dialog\Page;
 
 use Concrete\Controller\Backend\UserInterface as BackendInterfaceController;
+use Concrete\Controller\Element\Search\Pages\Header;
 use Loader;
 
 class Search extends BackendInterfaceController
@@ -17,11 +18,16 @@ class Search extends BackendInterfaceController
 
     public function view()
     {
-        $this->set('timestamp', time());
-        $cnt = new \Concrete\Controller\Search\Pages();
-        $cnt->search();
-        $result = Loader::helper('json')->encode($cnt->getSearchResultObject()->getJSONObject());
-        $this->set('result', $result);
-        $this->set('searchController', $cnt);
+        $search = $this->app->make('Concrete\Controller\Search\Pages');
+        $result = $search->getCurrentSearchObject();
+
+        if (is_object($result)) {
+            $this->set('result', $result);
+        }
+
+        $header = new Header();
+        $this->set('header', $header);
+        $this->requireAsset('core/sitemap');
     }
+
 }

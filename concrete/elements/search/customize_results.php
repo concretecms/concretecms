@@ -5,6 +5,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
  */
 $available = $provider->getAvailableColumnSet();
 $current = $provider->getCurrentColumnSet();
+$all = $provider->getAllColumnSet();
 $list = $provider->getCustomAttributeKeys();
 $form = Core::make('helper/form');
 
@@ -56,10 +57,13 @@ $form = Core::make('helper/form');
 
 		<p><?=t('Click and drag to change column order.')?></p>
 
-		<ul class="list-unstyled" data-search-column-list="<?=$type?>">
+		<ul class="item-select-list" data-search-column-list="<?=$type?>">
 			<?php foreach ($current->getColumns() as $col) {
 				?>
-				<li style="cursor: move" data-field-order-column="<?=$col->getColumnKey()?>"><input type="hidden" name="column[]" value="<?=$col->getColumnKey()?>" /><?=$col->getColumnName()?></li>
+				<li style="cursor: move" data-field-order-column="<?=$col->getColumnKey()?>"><input type="hidden" name="column[]" value="<?=$col->getColumnKey()?>" /><?=$col->getColumnName()?>
+
+					<i class="ccm-item-select-list-sort ui-sortable-handle"></i>
+				</li>
 				<?php
 			} ?>
 		</ul>
@@ -71,10 +75,10 @@ $form = Core::make('helper/form');
 
 		<div class="form-group">
 			<label class="control-label" for="fSearchDefaultSort"><?=t('Default Column')?></label>
-			<select <?php if (count($current->getSortableColumns()) == 0) {
+			<select <?php if (count($all->getSortableColumns()) == 0) {
 					?>disabled="true"<?php
 			} ?> class="form-control" data-search-select-default-column="<?=$type?>" id="fSearchDefaultSort" name="fSearchDefaultSort">
-				<?php foreach ($current->getSortableColumns() as $col) {
+				<?php foreach ($all->getSortableColumns() as $col) {
 					?>
 					<option id="<?=$col->getColumnKey()?>" value="<?=$col->getColumnKey()?>" <?php if ($col->getColumnKey() == $ds->getColumnKey()) {
 						?> selected="true" <?php
@@ -87,7 +91,7 @@ $form = Core::make('helper/form');
 
 		<div class="form-group">
 			<label class="control-label" for="fSearchDefaultSortDirection"><?=t('Direction')?></label>
-			<select <?php if (count($current->getSortableColumns()) == 0) {
+			<select <?php if (count($all->getSortableColumns()) == 0) {
 					?>disabled="true"<?php
 			} ?> class="form-control" data-search-select-default-column-direction="<?=$type?>"
 					name="fSearchDefaultSortDirection">
@@ -107,8 +111,6 @@ $form = Core::make('helper/form');
 <script type="text/javascript">
 	$(function() {
 		var $form = $('section[data-section=customize-results]'),
-			$selectDefault = $form.find('select[data-search-select-default-column]'),
-			$selectDefaultDirection = $form.find('select[data-search-select-default-column-direction]'),
 			$columns = $form.find('ul[data-search-column-list]');
 
 		$('ul[data-search-column-list]').sortable({
@@ -121,18 +123,10 @@ $form = Core::make('helper/form');
 
 			if ($(this).prop('checked')) {
 				if ($form.find('li[data-field-order-column=\'' + id + '\']').length == 0) {
-					$selectDefault.append($('<option>', {'value': id, 'text': label}));
-					$selectDefault.prop('disabled', false);
-					$selectDefaultDirection.prop('disabled', false);
 					$columns.append('<li data-field-order-column="' + id + '"><input type="hidden" name="column[]" value="' + id + '" />' + label + '<\/li>');
 				}
 			} else {
 				$columns.find('li[data-field-order-column=\'' + id + '\']').remove();
-				$selectDefault.find('option[value=\'' + id + '\']').remove();
-				if ($columns.find('li').length == 0) {
-					$selectDefault.prop('disabled', true);
-					$selectDefaultDirection.prop('disabled', true);
-				}
 			}
 		});
 

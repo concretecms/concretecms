@@ -62,7 +62,7 @@ class SubArea extends Area
             }
         }
         $a = Area::get($this->c, $row['arHandle']);
-        $item->set($a);
+        $cache->save($item->set($a));
 
         return $a;
     }

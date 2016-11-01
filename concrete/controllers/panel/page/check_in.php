@@ -32,20 +32,7 @@ class CheckIn extends BackendInterfacePageController
 
             $this->set('publishDate', $v->getPublishDate());
             $this->set('publishErrors', $this->checkForPublishing());
-            $this->set('timezone', $this->getTimezone());
         }
-    }
-
-    private function getTimezone()
-    {
-        if (Config::get('concrete.misc.user_timezones')) {
-            $user = new User();
-            $userInfo = $user->getUserInfoObject();
-
-            return $userInfo->getUserTimezone();
-        }
-
-        return Config::get('app.timezone');
     }
 
     protected function checkForPublishing()
@@ -118,20 +105,21 @@ class CheckIn extends BackendInterfacePageController
                         $pkr->scheduleVersion($publishDateTime);
                     }
 
-                    $response = $pkr->trigger();
-
                     if ($c->isPageDraft()) {
                         $pagetype = $c->getPageTypeObject();
-                        $pagetype->publish($c);
+                        $pagetype->publish($c, $pkr);
+                    } else {
+                        $pkr->trigger();
                     }
                 }
             } else {
                 if ($this->request->request->get('action') == 'discard') {
                     if ($c->isPageDraft() && $this->permissions->canDeletePage()) {
-                        $this->page->delete();
                         $u = new User();
                         $cID = $u->getPreviousFrontendPageID();
+                        $this->page->delete();
                         $pr->setRedirectURL(DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $cID);
+                        $pr->outputJSON();
                     } else {
                         if ($v->canDiscard()) {
                             $v->discard();

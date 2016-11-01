@@ -80,6 +80,8 @@ if (Config::get('concrete.white_label.background_image') !== 'none' && !Config::
     <style type="text/css">
         div.ccm-dashboard-welcome {
             background-image: url(<?=$imagePath?>);
+            background-repeat: no-repeat;
+            background-position: center center;
         }
     </style>
 <?php } ?>

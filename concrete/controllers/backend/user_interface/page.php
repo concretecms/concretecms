@@ -16,6 +16,9 @@ abstract class Page extends \Concrete\Controller\Backend\UserInterface
     {
         $request = $this->request;
         $cID = $request->query->get('cID');
+        if (!$cID) {
+            $cID = $request->request->get('cID');
+        }
         if ($cID) {
             $page = ConcretePage::getByID($cID);
         }

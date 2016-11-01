@@ -3,11 +3,8 @@
 <?php if (($this->controller->getTask() == 'submit' || $this->controller->getTask() == 'edit') && is_object($pagetype)) {
     ?>
 
-<form class="form-horizontal" method="post" action="<?=$view->action('submit', $pagetype->getPageTypeID())?>">
-<div class="ccm-pane-body">
-<?=Loader::element('page_types/form/base', array('pagetype' => $pagetype));
-    ?>
-</div>
+<form method="post" action="<?=$view->action('submit', $pagetype->getPageTypeID())?>">
+<?=View::element('page_types/form/base', array('pagetype' => $pagetype)); ?>
 <div class="ccm-dashboard-form-actions-wrapper">
 <div class="ccm-dashboard-form-actions">
 	<a href="<?=$view->url('/dashboard/pages/types')?>" class="btn btn-default pull-left"><?=t('Cancel')?></a>
@@ -21,12 +18,6 @@
 } else {
     $pk = PermissionKey::getByHandle('access_page_type_permissions');
     ?>
-
-    <div class="ccm-dashboard-header-buttons btn-group">
-        <a href="<?=$view->url('/dashboard/pages/types/organize')?>" class="btn btn-default"><?=t('Order &amp; Group')?></a>
-        <a href="<?=$view->url('/dashboard/pages/types/add')?>" class="btn btn-primary"><?=t('Add Page Type')?></a>
-    </div>
-
 
     <?php if (count($pagetypes) > 0) {
     ?>
@@ -72,6 +63,12 @@
                                 <label class="control-label"><?=t('Handle')?></label>
                                 <input type="text" name="ptHandle" class="form-control">
                             </div>
+							<?php if (count($siteTypes)) { ?>
+								<div class="form-group">
+									<label class="control-label"><?=t('Site Type')?></label>
+									<?=$form->select('siteType', $siteTypes)?>
+								</div>
+							<?php } ?>
                             <?=Loader::helper('validation/token')->output('duplicate_page_type')?>
                         </form>
                         <div class="dialog-buttons">
@@ -107,7 +104,7 @@
 } else {
     ?>
 		<p><?=t('You have not created any page types yet.')?></p>
-		<a href="<?=$view->url('/dashboard/pages/types/add')?>" class="btn btn-primary"><?=t('Add Page Type')?></a>
+		<a href="<?=$view->url('/dashboard/pages/types/add', $siteTypeID)?>" class="btn btn-primary"><?=t('Add Page Type')?></a>
 	<?php 
 }
     ?>
@@ -158,7 +155,7 @@
                 modal: true,
                 width: 320,
                 title: '<?=t("Copy Page Type")?>',
-                height: 280
+                height: 360
             });
         });
     });

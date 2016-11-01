@@ -2,6 +2,7 @@
 namespace Concrete\Core\Workflow\Progress;
 
 use Concrete\Core\Foundation\Object;
+use Concrete\Core\Workflow\HistoryEntry\HistoryEntry;
 use Concrete\Core\Workflow\Request\Request;
 use Loader;
 use UserInfo;
@@ -33,7 +34,7 @@ class History extends Object
 
             return $d->getDescription() . ' ' . t('Originally requested by %s.', $ui->getUserName());
         }
-        if ($this->object instanceof WorkflowHistoryEntry) {
+        if ($this->object instanceof HistoryEntry) {
             $d = $this->object->getWorkflowProgressHistoryDescription();
 
             return $d;

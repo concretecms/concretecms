@@ -24,9 +24,9 @@ class SizeField extends AbstractField
     {
         $form = \Core::make('helper/form');
         $html = '';
-        $html .= $form->text('size_from', $this->data['size_from']);
+        $html .= $form->number('size_from', $this->data['size_from'], array('min' => 0));
         $html .= t('to');
-        $html .= $form->text('size_to', $this->data['size_to']);
+        $html .= $form->number('size_to', $this->data['size_to'], array('min' => 1));
         $html .= t('KB');
         return $html;
     }

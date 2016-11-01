@@ -1,18 +1,24 @@
 {
   "name": "concrete5/concrete5",
+  "license": "MIT",
   "description": "concrete5 open source CMS",
   "minimum-stability": "beta",
   "prefer-stable": true,
+  "config": {
+    "process-timeout": 0,
+    "optimize-autoloader": true,
+    "vendor-dir": "./concrete/vendor",
+    "preferred-install": {
+      "*": "dist"
+    }
+  },
+  "bin": [ "concrete/bin/concrete5" ],
   "repositories": [
     {
       "type": "vcs",
-      "url": "https://github.com/mlocati/zendframework2-i18n-v3"
+      "url": "https://github.com/concrete5/less.php"
     }
   ],
-  "config": {
-    "optimize-autoloader": true,
-    "vendor-dir": "./concrete/vendor"
-  },
   "require": {
     "php": ">=5.5.9",
     "doctrine/dbal": "2.*",
@@ -33,7 +39,7 @@
     "natxet/cssmin": "3.*",
     "tedivm/jshrink": "1.*",
     "michelf/php-markdown": "1.*",
-    "filp/whoops": "1.*",
+    "filp/whoops": "2.*",
     "pagerfanta/pagerfanta": "1.*",
     "htmlawed/htmlawed": "1.*",
     "mobiledetect/mobiledetectlib": "2.*",
@@ -44,26 +50,41 @@
     "dapphp/securimage": "3.*",
     "anahkiasen/html-object": "1.*",
     "primal/color": "1.0.*@dev",
-    "zendframework/zend-queue": "dev-master",
-    "zendframework/zend-mail": "2.2.*",
-    "zendframework/zend-cache": "2.2.*",
-    "zendframework/zend-http": "2.2.*",
-    "zendframework/zend-feed": "2.2.*",
-    "zendframework/zend-i18n": "2.2.*",
+    "concrete5/zend-queue": "dev-master",
+    "zendframework/zend-mail": "2.7.*",
+    "zendframework/zend-cache": "2.7.*",
+    "zendframework/zend-http": "2.5.*",
+    "zendframework/zend-feed": "2.7.*",
+    "zendframework/zend-i18n": "2.7.*",
     "nesbot/carbon": "1.*",
     "egulias/email-validator": "1.*",
     "punic/punic": "1.*",
     "tedivm/stash": "0.14.*",
     "lusitanian/oauth": "0.8.*",
     "oryzone/oauth-user-data": "~1.0@dev",
-    "mlocati/concrete5-translation-library": "1.*",
+    "mlocati/concrete5-translation-library": "1.5.*",
     "league/url": "3.3.*",
     "concrete5/doctrine-xml": "1.*",
-    "symfony/yaml":"3.*"
+    "symfony/yaml":"3.*",
+    "ocramius/proxy-manager": "^1.0"
   },
   "autoload-dev": {
     "psr-4": {
       "Concrete\\Tests\\": "../../tests/tests"
     }
+  },
+  "require-dev": {
+    "squizlabs/php_codesniffer": "^2.7"
+  },
+  "scripts": {
+    "test": "phpunit",
+    "phpcs": [
+      "./concrete/vendor/bin/phpcs -p -s --colors --report=full --standard=psr2 --sniffs=Generic.WhiteSpace.DisallowTabIndent,Generic.PHP.DisallowShortOpenTag concrete/src concrete/controllers",
+      "./concrete/vendor/bin/phpcs -p -s --colors --report=full --standard=psr2 --sniffs=Generic.PHP.DisallowShortOpenTag --ignore=\"*.js,*.css,*.less,concrete/vendor/*,concrete/src/*,concrete/controllers/*\" concrete"
+    ],
+    "phpcsw": [
+      ".\\concrete\\vendor\\bin\\phpcs -p -s --report=full --standard=psr2 --sniffs=Generic.WhiteSpace.DisallowTabIndent,Generic.PHP.DisallowShortOpenTag concrete/src concrete/controllers",
+      ".\\concrete\\vendor\\bin\\phpcs -p -s --report=full --standard=psr2 --sniffs=Generic.PHP.DisallowShortOpenTag --ignore=\"*.js,*.css,*.less,concrete/vendor/*,concrete/src/*,concrete/controllers/*\" concrete"
+    ]
   }
 }

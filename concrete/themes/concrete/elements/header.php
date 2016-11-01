@@ -6,9 +6,9 @@
     <?php
 $view->requireAsset('css', 'bootstrap');
 $view->requireAsset('css', 'font-awesome');
-$view->requireAsset('javascript', 'jquery');
 $view->requireAsset('javascript', 'bootstrap/alert');
 $view->requireAsset('javascript', 'bootstrap/transition');
+$view->requireAsset('javascript', 'jquery');
 $view->addHeaderItem('<meta name="viewport" content="width=device-width, initial-scale=1">');
 
 $showLogo = true;
@@ -27,14 +27,18 @@ if (isset($c) && is_object($c)) {
 }
 
 $showAccount = false;
-if (Config::get('concrete.user.profiles_enabled') && Core::isInstalled()) {
-    $account = Page::getByPath('/account');
-    if (is_object($account) && !$account->isError()) {
-        $cp = new Permissions($account);
-        if ($cp->canRead()) {
-            $request = Request::getInstance();
-            if ($request->matches('/account*')) {
-                $showAccount = true;
+if (Core::isInstalled()) {
+$site = Core::make("site")->getSite();
+$config = $site->getConfigRepository();
+    if (is_object($site) && $config->get('user.profiles_enabled')) {
+        $account = Page::getByPath('/account');
+        if (is_object($account) && !$account->isError()) {
+            $cp = new Permissions($account);
+            if ($cp->canRead()) {
+                $request = Request::getInstance();
+                if ($request->matches('/account*')) {
+                    $showAccount = true;
+                }
             }
         }
     }
@@ -42,6 +46,7 @@ if (Config::get('concrete.user.profiles_enabled') && Core::isInstalled()) {
 ?>
 </head>
 <body>
+
 <div class="ccm-ui">
 
 <?php if ($showLogo) {
@@ -60,10 +65,7 @@ if (Config::get('concrete.user.profiles_enabled') && Core::isInstalled()) {
         </li>
         <li class="pull-right">
             <a href="<?=URL::to('/')?>">
-                <i class="fa fa-home"></i>
-                <span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-site-settings">
-                    <?=tc('toolbar', 'Return to Website') ?>
-                </span>
+                <i class="fa fa-home"></i><span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-site-settings"><?=tc('toolbar', 'Return to Website') ?></span>
             </a>
         </li>
         <li class="pull-right">

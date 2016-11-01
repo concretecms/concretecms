@@ -5,13 +5,14 @@ use Concrete\Core\Application\EditResponse;
 use Concrete\Core\Multilingual\Page\Section\Section;
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Core\Multilingual\Page\Section\Translation;
+use Concrete\Core\Page\Controller\DashboardSitePageController;
 use Core;
 use Database;
 use Config;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
-class TranslateInterface extends DashboardPageController
+class TranslateInterface extends DashboardSitePageController
 {
     public $helpers = array('form');
 
@@ -19,6 +20,7 @@ class TranslateInterface extends DashboardPageController
     {
         $extractor = Core::make('multilingual/extractor');
         $this->set('extractor', $extractor);
+        $this->set('site', $this->getSite());
         $this->set('app', $this->app);
     }
     public function reloaded()
@@ -67,8 +69,9 @@ class TranslateInterface extends DashboardPageController
                 $baseTranslations = $extractor->extractTranslatableSiteStrings();
 
                 // $translations contains all of our site translations.
-                $list = Section::getList();
-                $defaultSourceLocale = Config::get('concrete.multilingual.default_source_locale');
+                $list = Section::getList($this->getSite());
+                $defaultSourceLocale = $this->getSite()
+                    ->getConfigRepository()->get('multilingual.default_source_locale');
                 foreach ($list as $section) {
                     /* @var $section \Concrete\Core\Multilingual\Page\Section\Section */
                     if ($section->getLocale() != $defaultSourceLocale) {
@@ -95,7 +98,7 @@ class TranslateInterface extends DashboardPageController
         }
         if ($this->post('action') == 'export') {
             if (Core::make('token')->validate()) {
-                $defaultSourceLocale = Config::get('concrete.multilingual.default_source_locale');
+                $defaultSourceLocale = $this->getSite()->getConfigRepository()->get('multilingual.default_source_locale');
                 $list = Section::getList();
                 foreach ($list as $section) {
                     if ($section->getLocale() != $defaultSourceLocale) {
@@ -163,7 +166,7 @@ class TranslateInterface extends DashboardPageController
             }
             $section = Section::getByLocale($localeCode);
             if (is_object($section) && (!$section->isError())) {
-                if ($section->getLocale() == Config::get('concrete.multilingual.default_source_locale')) {
+                if ($section->getLocale() == $this->site->getConfigRepository()->get('multilingual.default_source_locale')) {
                     $section = null;
                 }
             } else {

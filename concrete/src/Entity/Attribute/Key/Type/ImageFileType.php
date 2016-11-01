@@ -14,11 +14,6 @@ class ImageFileType extends Type
     const TYPE_FILE_MANAGER = 0;
     const TYPE_HTML_INPUT = 5;
 
-    public function getAttributeValue()
-    {
-        return new ImageFileValue();
-    }
-
     /**
      * @ORM\Column(type="integer")
      */

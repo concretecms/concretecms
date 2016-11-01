@@ -7,14 +7,15 @@ use Concrete\Core\Multilingual\Page\Section\Processor\MultilingualProcessorTarge
 use Concrete\Core\Multilingual\Page\Section\Processor\Processor;
 use Concrete\Core\Multilingual\Page\Section\Section;
 use Concrete\Core\Page\Controller\DashboardPageController;
+use Concrete\Core\Page\Controller\DashboardSitePageController;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
-class Copy extends DashboardPageController
+class Copy extends DashboardSitePageController
 {
     public function view()
     {
-        $this->set('pages', Section::getList());
+        $this->set('pages', Section::getList($this->getSite()));
     }
 
     public function tree_copied()

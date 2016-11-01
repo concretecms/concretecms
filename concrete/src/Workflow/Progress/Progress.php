@@ -1,7 +1,9 @@
 <?php
 namespace Concrete\Core\Workflow\Progress;
 
+use Concrete\Core\Entity\Notification\WorkflowProgressNotification;
 use Concrete\Core\Foundation\Object;
+use Concrete\Core\Notification\Subject\SubjectInterface;
 use Concrete\Core\Workflow\Workflow;
 use Concrete\Core\Workflow\Request\Request as WorkflowRequest;
 use Concrete\Core\Workflow\EmptyWorkflow;
@@ -17,13 +19,24 @@ use Symfony\Component\EventDispatcher\GenericEvent;
  *
  * @method static Progress add(string $wpCategoryHandle, Workflow $wf, WorkflowRequest $wr) Deprecated method. Use Progress::create instead.
  */
-abstract class Progress extends Object
+abstract class Progress extends Object implements SubjectInterface
 {
+    protected $wrID = null;
     protected $wpID;
     protected $wpDateAdded;
     protected $wfID;
     protected $response;
     protected $wpDateLastAction;
+
+    public function getNotificationDate()
+    {
+        return \Core::make('date')->toDateTime($this->wpDateAdded);
+    }
+
+    public function getUsersToExcludeFromNotification()
+    {
+        return array();
+    }
 
     /**
      * Gets the Workflow object attached to this WorkflowProgress object.
@@ -146,6 +159,17 @@ abstract class Progress extends Object
         $wp = self::getByID($db->lastInsertId());
         $wp->addWorkflowProgressHistoryObject($wr);
 
+
+        if (!($wf instanceof EmptyWorkflow)) {
+            $application = \Core::getFacadeApplication();
+            $type = $application->make('manager/notification/types')->driver('workflow_progress');
+            $notifier = $type->getNotifier();
+            $subscription = $type->getSubscription($wp);
+            $notified = $notifier->getUsersToNotify($subscription, $wp);
+            $notification = $type->createNotification($wp);
+            $notifier->notify($notified, $notification);
+        }
+
         return $wp;
     }
 
@@ -158,6 +182,19 @@ abstract class Progress extends Object
         $cnt = $db->fetchColumn('select count(wpID) from WorkflowProgress where wrID = ?', array($this->wrID));
         if ($cnt == 0) {
             $wr->delete();
+
+            if (!($this->getWorkflowObject() instanceof EmptyWorkflow)) {
+                // Remove the associated notification
+                $em = $db->getEntityManager();
+                $r = $em->getRepository('Concrete\Core\Entity\Notification\WorkflowProgressNotification');
+                $notification = $r->findOneBy(array('wpID' => $this->getWorkflowProgressID()));
+                if (is_object($notification)) {
+                    // The refresh is needed because the relation is lazy loaded
+                    $em->refresh($notification);
+                    $em->remove($notification);
+                    $em->flush();
+                }
+            }
         }
     }
 
@@ -170,9 +207,7 @@ abstract class Progress extends Object
         }
         $class = '\\Core\\Workflow\\Progress\\' . Core::make('helper/text')->camelcase($r['wpCategoryHandle']) . 'Progress';
 
-        if ($r['pkgID']) {
-            $pkgHandle = PackageList::getHandle($r['pkgID']);
-        }
+        $pkgHandle = $r['pkgID'] ? PackageList::getHandle($r['pkgID']) : null;
         $class = core_class($class, $pkgHandle);
         $wp = Core::make($class);
         $wp->setPropertiesFromArray($r);
@@ -277,8 +312,16 @@ abstract class Progress extends Object
 
     public function markCompleted()
     {
+        $wf = $this->getWorkflowObject();
+
         $db = Database::connection();
         $db->executeQuery('update WorkflowProgress set wpIsCompleted = 1 where wpID = ?', array($this->wpID));
+
+        if (!($wf instanceof EmptyWorkflow)) {
+            $application = \Core::getFacadeApplication();
+            $type = $application->make('manager/notification/types')->driver('workflow_progress');
+            $type->clearNotification($this);
+        }
     }
 
     abstract public function getPendingWorkflowProgressList();

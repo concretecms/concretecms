@@ -1,159 +1,146 @@
 <?php defined('C5_EXECUTE') or die("Access Denied."); ?>
 
-<?php if (in_array($this->controller->getTask(), array('update_set', 'update_set_groups', 'edit', 'delete_set'))) {
-    ?>
+<?php if (in_array($this->controller->getTask(), array('update_set', 'update_set_groups', 'edit', 'delete_set'))) { ?>
 
-		<div class="row">
-            <div class="col-md-8">
+    <div class="ccm-dashboard-header-buttons">
+        <button class="btn btn-danger" data-launch-dialog="delete-set"><?=t("Delete Group Set")?></button>
+    </div>
 
-                <form method="post" action="<?php echo $view->action('update_set')?>">
-                    <input type="hidden" name="gsID" value="<?php echo $set->getGroupSetID()?>" />
-                    <?php echo Loader::helper('validation/token')->output('update_set')?>
+    <form method="post" action="<?php echo $view->action('update_set'); ?>">
+        <?php echo Loader::helper('validation/token')->output('update_set'); ?>
+        <input type="hidden" name="gsID" value="<?php echo $set->getGroupSetID(); ?>">
 
-                    <fieldset>
-                        <legend><?=t('Details')?></legend>
-                        <div class="form-group">
-                            <?php echo $form->label('gsName', t('Name'))?>
-                            <?php echo $form->text('gsName', $set->getGroupSetName())?>
-                        </div>
-                        <div class="form-group">
-                            <?php echo $form->submit('submit', t('Update Set'), array('class' => 'btn btn-primary'))?>
-                        </div>
-                    </fieldset>
-                </form>
-
-                <form method="post" action="<?php echo $view->action('update_set_groups')?>">
-                    <?php echo Loader::helper('validation/token')->output('update_set_groups')?>
-                    <input type="hidden" name="gsID" value="<?php echo $set->getGroupSetID()?>" />
-
-                    <fieldset>
-                        <legend><?=t('Groups')?></legend>
-                        <?php
-                        $list = $set->getGroups();
-    if (count($groups) > 0) {
-        ?>
-
-                            <div class="control-group">
-                                <?php foreach ($groups as $g) {
-    ?>
-                                    <div class="checkbox">
-                                        <label>
-                                            <?php echo $form->checkbox('gID[]', $g->getGroupID(), $set->contains($g)) ?>
-                                            <span><?php echo $g->getGroupDisplayName()?></span>
-                                        </label>
-                                    </div>
-                                <?php 
-}
-        ?>
-                            </div>
-
-                            <div class="control-group">
-                                <?php echo $form->submit('submit', t('Update Groups'), array('class' => 'btn btn-primary'))?>
-                            </div>
-                        <?php 
-    } else {
-        ?>
-                            <div class="control-group">
-                                <p><?php echo t('No groups found.')?></p>
-                            </div>
-                        <?php 
-    }
-    ?>
-                    </fieldset>
-                </form>
-
+        <div class="form-group">
+            <?php echo $form->label('gsName', t('Name')); ?>
+            <?php echo $form->text('gsName', $set->getGroupSetName()); ?>
+            <br>
+        </div>
+        <div class="form-group">
+            <label class="control-label"><?php echo t('Groups'); ?></label>
+            <?php
+            $list = $set->getGroups();
+            if (count($groups) > 0) { ?>
+                <?php foreach ($groups as $g) { ?>
+                <div class="checkbox">
+                    <label>
+                        <?php echo $form->checkbox('gID[]', $g->getGroupID(), $set->contains($g)) ?>
+                        <span><?php echo $g->getGroupDisplayName(); ?></span>
+                    </label>
+                </div>
+                <?php } ?>
+            <?php
+            } else { ?>
+            <div class="control-group">
+                <p><?php echo t('No groups found.'); ?></p>
             </div>
-
-            <div class="col-md-4">
-
-                <form method="post" action="<?php echo $view->action('delete_set')?>">
-                    <?php echo Loader::helper('validation/token')->output('delete_set')?>
-                    <input type="hidden" name="gsID" value="<?php echo $set->getGroupSetID()?>" />
-                    <fieldset>
-                        <legend><?=t('Delete Set')?></legend>
-                        <div class="form-group">
-                            <span class="help-block"><?php echo t('Warning, this cannot be undone. No groups will be deleted but they will no longer be grouped together.')?></span>
-                        </div>
-                        <div class="form-group">
-                            <?php echo $form->submit('submit', t('Delete Group Set'), array('class' => 'btn btn-danger'))?>
-                        </div>
-                    </fieldset>
-                </form>
-
+            <?php } ?>
+        </div>
+        <div class="ccm-dashboard-form-actions-wrapper">
+            <div class="ccm-dashboard-form-actions">
+                <a href="<?=URL::to('/dashboard/users/group_sets')?>" class="btn pull-left btn-default"><?=t('Cancel')?></a>
+                <button type="submit" class="btn btn-primary pull-right"><?=t('Update Set')?></button>
             </div>
-		</div>
+        </div>
 
-<?php 
+    </form>
+
+
+    <div style="display: none">
+        <div data-dialog="delete-set">
+            <form method="post" action="<?php echo $view->action('delete_set'); ?>">
+                <?php echo Loader::helper('validation/token')->output('delete_set'); ?>
+                <input type="hidden" name="gsID" value="<?php echo $set->getGroupSetID(); ?>">
+                <p><?=t('Are you sure you want to delete this group set? This cannot be undone.')?></p>
+                <div class="dialog-buttons">
+                    <button class="btn btn-default pull-left" onclick="jQuery.fn.dialog.closeTop()"><?=t('Cancel')?></button>
+                    <button class="btn btn-danger pull-right" onclick="$('div[data-dialog=delete-set] form').submit()"><?=t('Delete Set')?></button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+            <?php
 } else {
-    ?>
-    <div class="row">
-        <div class="col-md-12">
-        <?php if (Config::get('concrete.permissions.model') == 'advanced') {
-    ?>
-            <div>
-                <?php if (count($groupSets) > 0) {
-    ?>
+?>
 
-                    <ul class="item-select-list" id="ccm-group-list">
-                        <?php foreach ($groupSets as $gs) {
-    ?>
-                            <li>
-                                <a href="<?php echo $view->url('/dashboard/users/group_sets', 'edit', $gs->getGroupSetID())?>">
-                                    <i class="fa fa-users"></i> <?php echo $gs->getGroupSetDisplayName()?>
-                                </a>
-                            </li>
-                        <?php 
-}
-    ?>
-                    </ul>
+    <?php if (Config::get('concrete.permissions.model') == 'advanced') { ?>
 
-                <?php 
-} else {
-    ?>
-                    <p><?php echo t('You have not added any group sets.')?></p>
-                <?php 
-}
-    ?>
-            </div>
+        <div class="ccm-dashboard-header-buttons">
+            <button class="btn btn-primary" data-launch-dialog="add-set"><?=t("Add Group Set")?></button>
+        </div>
+        <?php if (count($groupSets) > 0) { ?>
+        <ul class="item-select-list" id="ccm-group-list">
+            <?php foreach ($groupSets as $gs) { ?>
+                <li>
+                    <a href="<?php echo $view->url('/dashboard/users/group_sets', 'edit', $gs->getGroupSetID()); ?>">
+                        <i class="fa fa-users"></i> <?php echo $gs->getGroupSetDisplayName(); ?>
+                    </a>
+                </li>
+            <?php } ?>
+        </ul>
+        <?php
+        } else {
+        ?>
+        <p><?php echo t('You have not added any group sets.'); ?></p>
+        <?php } ?>
 
-            <form method="post" action="<?php echo $view->action('add_set')?>">
-                <?php echo Loader::helper('validation/token')->output('add_set')?>
+    <div style="display: None">
+        <div data-dialog="add-set">
+            <form method="post" action="<?php echo $view->action('add_set'); ?>">
+                <?php echo Loader::helper('validation/token')->output('add_set'); ?>
                 <fieldset>
-                    <legend><?=t('Add Set')?></legend>
-                    <input type="hidden" name="categoryID" value="<?php echo $categoryID?>" />
+                    <legend><?php echo t('Add Set'); ?></legend>
+                    <input type="hidden" name="categoryID" value="<?php echo $categoryID?>">
 
-                    <div class="control-group">
-                        <?php echo $form->label('gsName', t('Name'))?>
-                        <div class="controls">
-                            <?php echo $form->text('gsName')?>
+                    <div class="form-group">
+                        <?php echo $form->label('gsName', t('Name')); ?>
+                        <?php echo $form->text('gsName'); ?>
+                    </div>
+
+                    <div class="form-group" style="margin-top: 10px;">
+                        <label class="control-label"><?php echo t('Groups'); ?></label>
+                        <?php foreach ($groups as $g) { ?>
+                        <div class="checkbox">
+                            <label><?php echo $form->checkbox('gID[]', $g->getGroupID()); ?> <span><?php echo $g->getGroupDisplayName(); ?></span></label>
                         </div>
-                    </div>
-
-                    <div class="control-group" style="margin-top: 10px;">
-                        <label><?=t('Groups')?></label>
-                        <?php foreach ($groups as $g) {
-    ?>
-                            <div class="checkbox">
-                                <label><?=$form->checkbox('gID[]', $g->getGroupID())?> <span><?=$g->getGroupDisplayName()?></span></label>
-                            </div>
-                        <?php 
-}
-    ?>
+                        <?php } ?>
                     </div>
 
                     <div class="control-group">
-                        <?php echo $form->submit('submit', t('Add Set'), array('class' => 'btn btn-primary'))?>
+                        <?php echo $form->submit('submit', t('Add Set'), array('class' => 'btn btn-primary')); ?>
                     </div>
                 </fieldset>
             </form>
-        <?php 
-} else {
-    ?>
-            <p><?=t('You must enable <a href="%s">advanced permissions</a> to use group sets.', $view->url('/dashboard/system/permissions/advanced'))?></p>
-        <?php 
-}
-    ?>
-            </div>
         </div>
-<?php 
-} ?>
+    </div>
+
+    <?php
+    } else {
+    ?>
+        <p><?php echo t('You must enable <a href="%s">advanced permissions</a> to use group sets.', $view->url('/dashboard/system/permissions/advanced')); ?></p>
+    <?php
+    }
+    ?>
+<?php
+}
+?>
+
+
+<script type="text/javascript">
+    $('[data-launch-dialog]').on('click', function() {
+        var $element = $('div[data-dialog=' + $(this).attr('data-launch-dialog') + ']');
+        if ($(this).attr('data-dialog-title')) {
+            var title = $(this).attr('data-dialog-title');
+        } else {
+            var title = $(this).text();
+        }
+        jQuery.fn.dialog.open({
+            element: $element,
+            modal: true,
+            width: 320,
+            title: title,
+            height: 'auto'
+        });
+    });
+</script>

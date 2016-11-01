@@ -19,11 +19,11 @@ class PageControllerTest extends PageTestCase
         $home = Page::getByID(HOME_CID);
         $pt = PageType::getByID(1);
         $template = PageTemplate::getByID(1);
-        $page = $home->add($pt, array(
+        $page = $home->add($pt, [
             'uID' => 1,
             'cName' => 'Test page',
             'pTemplateID' => $template->getPageTemplateID(),
-        ));
+        ]);
 
         return $page;
     }
@@ -31,17 +31,17 @@ class PageControllerTest extends PageTestCase
     protected function addPage2()
     {
         $home = Page::getByID(HOME_CID);
-        PageType::add(array(
+        PageType::add([
             'handle' => 'alternate',
             'name' => 'Alternate',
-        ));
+        ]);
         $pt = PageType::getByID(2);
         $template = PageTemplate::getByID(1);
-        $page = $home->add($pt, array(
+        $page = $home->add($pt, [
             'uID' => 1,
             'cName' => 'Test page',
             'pTemplateID' => $template->getPageTemplateID(),
-        ));
+        ]);
 
         return $page;
     }
@@ -145,6 +145,7 @@ class PageControllerTest extends PageTestCase
         @rmdir($root . '/awesome_package/' . DIRNAME_PAGES . '/testerson/foo');
         @rmdir($root . '/awesome_package/' . DIRNAME_PAGES . '/testerson');
         @rmdir($root . '/awesome_package/' . DIRNAME_PAGES);
+        @rmdir($root . '/awesome_package/' . DIRNAME_CONTROLLERS);
         @rmdir($root . '/awesome_package');
 
         $this->assertEquals('Concrete\Package\AwesomePackage\Controller\SinglePage\Testerson\Foo', get_class($controller));
@@ -174,6 +175,7 @@ class PageControllerTest extends PageTestCase
         @unlink($root . '/awesome_package/' . DIRNAME_CONTROLLERS . '/' . DIRNAME_PAGE_CONTROLLERS . '/testerson/foo.php');
         @rmdir($root . '/awesome_package/' . DIRNAME_CONTROLLERS . '/' . DIRNAME_PAGE_CONTROLLERS . '/testerson');
         @rmdir($root . '/awesome_package/' . DIRNAME_CONTROLLERS . '/' . DIRNAME_PAGE_CONTROLLERS);
+        @rmdir($root . '/awesome_package/' . DIRNAME_CONTROLLERS);
         @unlink($root . '/awesome_package/' . DIRNAME_PAGES . '/testerson/foo.php');
         @rmdir($root . '/awesome_package/' . DIRNAME_PAGES . '/testerson');
         @rmdir($root . '/awesome_package/' . DIRNAME_PAGES);

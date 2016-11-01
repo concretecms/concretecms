@@ -5,7 +5,7 @@ use Concrete\Core\Page\Controller\DashboardPageController;
 use Loader;
 use PermissionKey;
 use TaskPermission;
-use PermissionAccess;
+use Concrete\Core\Permission\Access\Access as PermissionAccess;
 
 class Users extends DashboardPageController
 {

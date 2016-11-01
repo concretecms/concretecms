@@ -22,7 +22,7 @@ class PagePath
     protected $ppID;
 
     /**
-     * @ORM\Column(columnDefinition="integer unsigned")
+     * @ORM\Column(type="integer", options={"unsigned": true})
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     protected $cID;

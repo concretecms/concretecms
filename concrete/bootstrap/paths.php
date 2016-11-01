@@ -7,10 +7,10 @@ defined('C5_EXECUTE') or define('C5_EXECUTE', md5(uniqid()));
  * Assets (Images, JS, etc....) URLs
  * ----------------------------------------------------------------------------
  */
-if (defined('APP_UPDATED_PASSTHRU') && APP_UPDATED_PASSTHRU) {
-    $ap = $app['app_relative_path'] . '/' . DIRNAME_UPDATES . '/' . $updates['core'] . '/' . DIRNAME_CORE;
-} else {
+if (APP_UPDATED_PASSTHRU === false) {
     $ap = $app['app_relative_path'] . '/' . DIRNAME_CORE;
+} else {
+    $ap = $app['app_relative_path'] . '/' . DIRNAME_UPDATES . '/' . APP_UPDATED_PASSTHRU . '/' . DIRNAME_CORE;
 }
 
 define('ASSETS_URL', $ap);
@@ -32,12 +32,12 @@ define('REL_DIR_PACKAGES_CORE', ASSETS_URL . '/packages');
 define('REL_DIR_FILES_PAGE_TEMPLATE_ICONS', ASSETS_URL_IMAGES . '/icons/page_templates');
 define('REL_DIR_FILES_UPLOADED_STANDARD', REL_DIR_APPLICATION . '/files');
 define('REL_DIR_AL_ICONS', ASSETS_URL_IMAGES . '/icons/filetypes');
-define('REL_DIR_FILES_AVATARS', '/avatars');
+const REL_DIR_FILES_AVATARS = '/avatars';
 define('REL_DIR_LANGUAGES_SITE_INTERFACE', REL_DIR_APPLICATION . '/' . DIRNAME_LANGUAGES . '/' . DIRNAME_LANGUAGES_SITE_INTERFACE);
 define('BLOCK_TYPE_GENERIC_ICON', ASSETS_URL_IMAGES . '/icons/icon_block_type_generic.png');
 define('PACKAGE_GENERIC_ICON', ASSETS_URL_IMAGES . '/icons/icon_package_generic.png');
 define('ASSETS_URL_THEMES_NO_THUMBNAIL', ASSETS_URL_IMAGES . '/spacer.gif');
-define('AL_ICON_DEFAULT', ASSETS_URL_IMAGES . '/icons/filetypes/default.png');
+define('AL_ICON_DEFAULT', ASSETS_URL_IMAGES . '/icons/filetypes/default.svg');
 
 /*
  * ----------------------------------------------------------------------------

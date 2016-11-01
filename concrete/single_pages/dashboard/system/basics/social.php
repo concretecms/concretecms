@@ -8,13 +8,13 @@
     $url = '';
     $ssHandle = '';
     $action = $view->action('add_link');
-    $token = 'add_link';
+    $tokenString = 'add_link';
     $buttonText = t('Add');
     if (is_object($link)) {
         $url = $link->getURL();
         $ssHandle = $link->getServiceHandle();
         $action = $view->action('edit_link', $link->getID());
-        $token = 'edit_link';
+        $tokenString = 'edit_link';
         $buttonText = t('Save');
     }
     ?>
@@ -58,7 +58,7 @@
     </script>
 
     <form method="post" class="form-horizontal" action="<?=$action?>">
-        <?=$this->controller->token->output($token)?>
+        <?=$this->controller->token->output($tokenString)?>
 
         <div class="form-group">
             <?=$form->label('ssHandle', t('Service'), array('class' => 'col-md-2'))?>

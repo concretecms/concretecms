@@ -52,6 +52,22 @@ var ConcreteDashboard = function() {
 		}
 	}
 
+	var setupTables = function() {
+		$('table.ccm-search-results-table tr[data-details-url]').each(function() {
+			$(this).hover(
+				function() {
+					$(this).addClass('ccm-search-select-hover');
+				},
+				function() {
+					$(this).removeClass('ccm-search-select-hover');
+				}
+				)
+				.on('click', function() {
+					window.location.href = $(this).data('details-url');
+				});
+		});
+	}
+
 	var setupTooltips = function() {
 		if ($("#ccm-tooltip-holder").length == 0) {
 			$('<div />').attr('id','ccm-tooltip-holder').attr('class', 'ccm-ui').prependTo(document.body);
@@ -61,13 +77,49 @@ var ConcreteDashboard = function() {
 
     var setupDialogs = function() {
         $('.dialog-launch').dialog();
+
+		$('div#ccm-dashboard-page').on('click', '[data-dialog]', function() {
+			var width = $(this).attr('data-dialog-width');
+			if (!width) {
+				width = 320;
+			}
+			var element = 'div[data-dialog-wrapper=' + $(this).attr('data-dialog') + ']';
+			jQuery.fn.dialog.open({
+				element: element,
+				modal: true,
+				width: width,
+				title: $(this).attr('data-dialog-title'),
+				height: 'auto'
+			});
+		});
+
     };
 
-    return {
+	var setupSelects = function() {
+		$('select[data-select=bootstrap]').bootstrapSelectToButton();
+	};
+
+	var setupHeaderMenu = function() {
+		var $buttons = $('.ccm-dashboard-header-buttons'),
+			$menu = $('header div.ccm-dashboard-header-menu');
+		if ($buttons.length) {
+			if ($buttons.parent().get(0).nodeName.toLowerCase() == 'form') {
+				$menu.append($buttons.parent());
+			} else {
+				$menu.append($buttons);
+			}
+		}
+	};
+
+
+	return {
 		start: function(options) {
 			setupTooltips();
 			setupResultMessages();
+			setupHeaderMenu();
             setupDialogs();
+			setupSelects();
+			setupTables();
 			setupFavorites();
 		}
 

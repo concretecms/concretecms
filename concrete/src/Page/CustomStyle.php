@@ -12,9 +12,9 @@ class CustomStyle
     protected $presetHandle;
     protected $sccRecordID;
 
-    public function setThemeID($ptThemeID)
+    public function setThemeID($pThemeID)
     {
-        $this->ptThemeID = $ptThemeID;
+        $this->pThemeID = $pThemeID;
     }
 
     public function setValueListID($valueListID)

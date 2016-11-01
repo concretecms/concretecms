@@ -61,7 +61,9 @@ class AuthorFormatter
         if (is_object($ui)) {
             return $ui->getUserAvatar()->output();
         } else {
-            return \Core::make('Concrete\Core\User\Avatar\EmptyAvatar')->output();
+            $av = \Core::make('Concrete\Core\User\Avatar\AnonymousAvatar');
+            $av->setAlt($this->author->getName());
+            return $av->output();
         }
     }
 }

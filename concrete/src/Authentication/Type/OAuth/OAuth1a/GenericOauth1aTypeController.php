@@ -4,7 +4,7 @@ namespace Concrete\Core\Authentication\Type\OAuth\OAuth1a;
 use Concrete\Core\Authentication\Type\OAuth\GenericOauthTypeController;
 use Concrete\Core\Routing\RedirectResponse;
 use OAuth\Common\Exception\Exception;
-use User;
+use Concrete\Core\User\User;
 
 abstract class GenericOauth1aTypeController extends GenericOauthTypeController
 {
@@ -32,7 +32,7 @@ abstract class GenericOauth1aTypeController extends GenericOauthTypeController
             try {
                 $user = $this->attemptAuthentication();
                 if ($user) {
-                    $this->completeAuthentication($user);
+                    return $this->completeAuthentication($user)->send();
                 } else {
                     $this->showError(
                         t('No local user account associated with this user, please log in with a local account and connect your account from your user profile.'));

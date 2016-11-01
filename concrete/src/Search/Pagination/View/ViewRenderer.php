@@ -1,12 +1,12 @@
 <?php
+
 namespace Concrete\Core\Search\Pagination\View;
-
 use Concrete\Core\Search\Pagination\Pagination;
-use Request;
-use URL;
-
+use Concrete\Core\Search\Pagination\View\ViewInterface;
+use \Core;
 class ViewRenderer
 {
+
     protected $view;
     protected $pagination;
     protected $routeCollectionFunction;
@@ -15,27 +15,26 @@ class ViewRenderer
     {
         $this->view = $paginationView;
         $this->pagination = $pagination;
-        $list = $pagination->getItemListObject();
-        $this->routeCollectionFunction = function ($page) use ($list) {
-            $request = Request::getInstance();
-            $url = URL::to($request->getRequestUri());
-            $query = $url->getQuery();
-
-            $args = array(
-                $list->getQueryPaginationPageParameter() => $page,
-                $list->getQuerySortColumnParameter() => $list->getActiveSortColumn(),
-                $list->getQuerySortDirectionParameter() => $list->getActiveSortDirection(),
-            );
-
-            $query->modify($args);
-            $url = $url->setQuery($query);
-
-            return (string) $url;
-        };
     }
 
     protected function getRouteCollectionFunction()
     {
+        if (!$this->routeCollectionFunction) {
+            $urlHelper = Core::make('helper/url');;
+            $list = $this->pagination->getItemListObject();
+            // Note: We had been using the URL library per a pull request by someone, but it
+            // was breaking pagination in the sitemap flat view so that has been reverted.
+            $this->routeCollectionFunction = function ($page) use ($list, $urlHelper) {
+                $args = array(
+                    $list->getQueryPaginationPageParameter() => $page,
+                    $list->getQuerySortColumnParameter() => $list->getActiveSortColumn(),
+                    $list->getQuerySortDirectionParameter() => $list->getActiveSortDirection(),
+                );
+                $url = $urlHelper->setVariable($args);
+                return h($url);
+            };
+        }
+
         return $this->routeCollectionFunction;
     }
 
@@ -46,7 +45,7 @@ class ViewRenderer
     {
         return $this->view->render(
             $this->pagination,
-            $this->routeCollectionFunction,
+            $this->getRouteCollectionFunction(),
             array_merge($this->view->getArguments(), $args)
         );
     }

@@ -3,7 +3,7 @@ namespace Concrete\Core\Page\Type\Composer\Control\CorePageProperty;
 
 use Loader;
 use Environment;
-use Page;
+use Concrete\Core\Page\Page;
 use Controller;
 
 abstract class CorePageProperty extends \Concrete\Core\Page\Type\Composer\Control\Control
@@ -17,7 +17,7 @@ abstract class CorePageProperty extends \Concrete\Core\Page\Type\Composer\Contro
     {
     }
 
-    public function clearComposerRequestProcessControls()
+    public static function clearComposerRequestProcessControls()
     {
         self::$ptComposerRequestControlsProcessed = array();
     }

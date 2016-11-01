@@ -6,13 +6,9 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="SocialLinkAttributeKeyTypes")
+ * @ORM\Table(name="SocialLinksAttributeKeyTypes")
  */
 class SocialLinksType extends Type
 {
-    public function getAttributeValue()
-    {
-        return new SocialLinksValue();
-    }
 
 }

@@ -3,13 +3,20 @@ namespace Concrete\Core\StyleCustomizer\Style;
 
 use Environment;
 
+/**
+ * @method static Value[] getValuesFromVariables($rules = [])
+ */
 abstract class Style
 {
     protected $variable;
     protected $name;
 
     abstract public function render($value = false);
-    abstract public function getValuesFromVariables($rules = array());
+    /*
+     * This is commented out only because PHP raises a "strict standards" warning,
+     * but child classes MUST implement it (see also https://bugs.php.net/bug.php?id=72993 ).
+     * abstract public static function getValuesFromVariables($rules = []);
+     */
     abstract public function getValueFromRequest(\Symfony\Component\HttpFoundation\ParameterBag $request);
 
     public function getValueFromList(\Concrete\Core\StyleCustomizer\Style\ValueList $list)

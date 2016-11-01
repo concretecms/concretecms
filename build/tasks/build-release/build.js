@@ -10,7 +10,7 @@ module.exports = function(grunt, config, parameters, done) {
 			fs = require('fs');
 		process.stdout.write('Installng PHP dependencies with Composer... ');
 		exec(
-			'composer install --prefer-dist --no-dev',
+			'composer install --no-dev',
 			{
 				cwd: workFolder
 			},

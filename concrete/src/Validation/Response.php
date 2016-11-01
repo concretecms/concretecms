@@ -2,7 +2,7 @@
 
 namespace Concrete\Core\Validation;
 
-use Concrete\Core\Error\ErrorBag\ErrorBag;
+use Concrete\Core\Error\ErrorList\ErrorList;
 
 class Response implements ResponseInterface
 {
@@ -13,7 +13,7 @@ class Response implements ResponseInterface
     public function __construct()
     {
         $this->setIsValid(true);
-        $this->setErrorObject(new ErrorBag());
+        $this->setErrorObject(new ErrorList());
     }
 
     /**

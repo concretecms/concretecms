@@ -1,4 +1,4 @@
-<?php defined('C5_EXECUTE') or die("Access Denied."); ?> 
+<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
 
 <?php
 
@@ -41,7 +41,7 @@
 <?php if ($title) {
     ?>
 	<h3><?=h($title)?></h3>
-<?php 
+<?php
 } ?>
 
 <div class="ccm-search-block-tag-cloud-wrapper ">
@@ -53,10 +53,10 @@
         $akct = $tags[$i];
         $qs = urlencode($akc->field('atSelectOptionID') . '[]') . '=' . urlencode($akct->getSelectAttributeOptionID());
         ?>
-		<li><a style="font-size: <?=$tagSizes[$akct->getSelectAttributeOptionUsageCount()]?>px !important" href="<?=$view->url($resultTargetURL)?>?<?=$qs?>"><?=$akct->getSelectAttributeOptionValue()?></a>
+		<li><a style="font-size: <?=$tagSizes[$akct->getSelectAttributeOptionUsageCount()]?>px !important" href="<?=$view->url($resultTarget)?>?<?=$qs?>"><?=$akct->getSelectAttributeOptionValue()?></a>
 		<span>(<?=$akct->getSelectAttributeOptionUsageCount()?>)</span>
 		</li>
-<?php 
+<?php
     } ?>
 </ul>
 

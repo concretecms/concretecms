@@ -8,14 +8,13 @@
         backupStaticAttributes="false">
     <testsuites>
         <testsuite name="Tests">
-            <directory>tests/tests/Core/</directory>
             <directory>tests/tests/Asset/</directory>
-            <directory>tests/tests/Block/</directory>
             <directory>tests/tests/Attribute/</directory>
+            <directory>tests/tests/AttributeValue/</directory>
+            <directory>tests/tests/Block/</directory>
+            <directory>tests/tests/CodingStyle/</directory>
+            <directory>tests/tests/Core/</directory>
             <directory>tests/tests/Localization/</directory>
         </testsuite>
     </testsuites>
-    <listeners>
-        <listener class="\MyBuilder\PhpunitAccelerator\TestListener"/>
-    </listeners>
 </phpunit>

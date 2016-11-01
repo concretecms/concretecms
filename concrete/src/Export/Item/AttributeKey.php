@@ -12,7 +12,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 class AttributeKey implements ItemInterface
 {
 
-    public function export(ExportableInterface $key, \SimpleXMLElement $xml)
+    public function export($key, \SimpleXMLElement $xml)
     {
         /**
          * @var $key Key

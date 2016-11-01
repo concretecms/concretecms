@@ -6,6 +6,10 @@ abstract class AttributeTestCase extends ConcreteDatabaseTestCase
 {
     protected $fixtures = array();
     protected $metadatas = array(
+        'Concrete\Core\Entity\Site\Site',
+        'Concrete\Core\Entity\Site\Tree',
+        'Concrete\Core\Entity\Site\SiteTree',
+        'Concrete\Core\Entity\Site\Type',
         'Concrete\Core\Entity\Attribute\Category',
         'Concrete\Core\Entity\Attribute\Key\Type\TextType',
         'Concrete\Core\Entity\Attribute\Key\Type\TextareaType',
@@ -23,6 +27,7 @@ abstract class AttributeTestCase extends ConcreteDatabaseTestCase
         'Concrete\Core\Entity\Attribute\Key\UserValue',
         'Concrete\Core\Entity\Attribute\Key\UserKey',
     );
+
     protected $object;
     protected $keys = array();
     protected $keyObjects = array();
@@ -44,6 +49,11 @@ abstract class AttributeTestCase extends ConcreteDatabaseTestCase
     protected function setUp()
     {
         parent::setUp();
+        $service = \Core::make('site');
+        if (!$service->getDefault()) {
+            $service->installDefault();
+        }
+
         $this->installAttributeCategoryAndObject();
         AttributeType::add('boolean', 'Boolean');
         AttributeType::add('textarea', 'Textarea');

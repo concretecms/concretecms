@@ -5,10 +5,10 @@ use Concrete\Core\Application\Application;
 use Concrete\Core\Attribute\Category\CategoryInterface;
 use Concrete\Core\Entity\Attribute\Key\Key;
 use Concrete\Core\Entity\Attribute\Value\Value;
-use Concrete\Core\Error\ErrorBag\Error\ErrorInterface;
-use Concrete\Core\Error\ErrorBag\Error\FieldNotPresentError;
-use Concrete\Core\Error\ErrorBag\ErrorBag;
-use Concrete\Core\Error\ErrorBag\Field\Field;
+use Concrete\Core\Error\ErrorList\Error\ErrorInterface;
+use Concrete\Core\Error\ErrorList\Error\FieldNotPresentError;
+use Concrete\Core\Error\ErrorList\ErrorList;
+use Concrete\Core\Error\ErrorList\Field\Field;
 use Concrete\Core\Validation\Response;
 use Concrete\Core\Entity\Attribute\Type as TypeEntity;
 use Symfony\Component\HttpFoundation\Request;
@@ -35,7 +35,7 @@ class StandardValidator implements ValidatorInterface
         if (method_exists($controller, 'validateForm')) {
             $controller->setRequest($request);
             $validateResponse = $controller->validateForm($controller->post());
-            if ($validateResponse instanceof ErrorBag) {
+            if ($validateResponse instanceof ErrorList) {
                 foreach($validateResponse->getList() as $error) {
                     if (!($error instanceof FieldNotPresentError) || $includeFieldNotPresentErrors) {
                         $response->getErrorObject()->add($error);
@@ -64,7 +64,7 @@ class StandardValidator implements ValidatorInterface
         $response = new Response();
         if (method_exists($controller, 'validateValue')) {
             $validateResponse = $controller->validateValue();
-            if ($validateResponse instanceof ErrorBag) {
+            if ($validateResponse instanceof ErrorList) {
                 foreach($validateResponse->getList() as $error) {
                     $response->getErrorObject()->add($error);
                 }
@@ -120,7 +120,7 @@ class StandardValidator implements ValidatorInterface
         }
 
         $controllerResponse = $controller->validateKey($request->request->all());
-        if ($controllerResponse instanceof ErrorBag) {
+        if ($controllerResponse instanceof ErrorList) {
             $error->add($controllerResponse);
         }
 

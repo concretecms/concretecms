@@ -40,9 +40,7 @@ class Duration extends AbstractRepetition
         $dateStart = $dt->translate('pdStartDate');
         $dateEnd = $dt->translate('pdEndDate');
 
-        $pdEnablePermissionDuration = $_REQUEST['pdEnablePermissionDuration'];
-
-        if ($pdEnablePermissionDuration && ($dateStart || $dateEnd)) {
+        if ($dateStart || $dateEnd) {
             // create a Duration object
             $pd = new self();
 

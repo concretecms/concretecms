@@ -10,13 +10,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class AddressType extends Type
 {
-    public function getAttributeValue()
-    {
-        return new AddressValue();
-    }
-
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", nullable=true)
      */
     protected $akDefaultCountry = '';
 

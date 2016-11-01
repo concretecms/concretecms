@@ -13,6 +13,7 @@
 			'onUpdateResults': false,
             'bulkParameterName': 'item',
 			'selectMode': false,
+			'appendToOuterDialog': false,
 			'searchMethod': 'post'
 		}, options);
 		this.$element = $element;
@@ -22,6 +23,10 @@
 		this.$resultsPagination = this.$results.find('div.ccm-search-results-pagination');
 		this.$menuTemplate = $element.find('script[data-template=search-results-menu]');
 		this.$searchFieldRowTemplate = $element.find('script[data-template=search-field-row]');
+
+		this.$headerSearchInput = $element.find('div[data-header] input');
+		this.$advancedSearchButton = $element.find('a[data-launch-dialog=advanced-search]');
+		this.$resetSearchButton = $element.find('a[data-button-action=clear-search]');
 
 		this.options = options;
 
@@ -40,10 +45,9 @@
 
 		this.setupSearch();
 		this.setupCheckboxes();
-		this.setupBulkActions();
 		this.setupSort();
 		this.setupPagination();
-        this.setupSelect2();
+        this.setupSelectize();
 		this.setupAdvancedSearch();
 		this.setupCustomizeColumns();
 		this.updateResults(options.result);
@@ -53,6 +57,16 @@
 		}
 	}
 
+	ConcreteAjaxSearch.prototype.setupResetButton = function(result) {
+		var my = this;
+		if (result.query) {
+			my.$headerSearchInput.prop('disabled', true);
+			my.$headerSearchInput.attr('placeholder', '');
+			my.$advancedSearchButton.html(ccmi18n_filemanager.edit);
+			my.$resetSearchButton.show();
+		}
+	};
+
 	ConcreteAjaxSearch.prototype.ajaxUpdate = function(url, data, callback) {
 		var cs = this;
 		$.concreteAjax({
@@ -60,6 +74,7 @@
 			data: data,
 			method: cs.options.searchMethod,
 			success: function(r) {
+				cs.scrollToTop();
 				if (!callback) {
 					cs.updateResults(r);
 				} else {
@@ -69,6 +84,17 @@
 		})
 	}
 
+	ConcreteAjaxSearch.prototype.scrollToTop = function() {
+		var cs = this,
+			$dialog = cs.$element.closest(".ui-dialog-content");
+
+		if ($dialog.length) {
+			$dialog.scrollTop(0);
+		} else {
+			window.scrollTo(0, 0);
+		}
+	}
+
 	ConcreteAjaxSearch.prototype.getSearchData = function() {
 		var cs = this;
 		var $form = cs.$element.find('form[data-search-form]');
@@ -76,10 +102,12 @@
 		return data;
 	}
 
-	ConcreteAjaxSearch.prototype.setupSelect2 = function() {
-        var selects = this.$element.find('.select2-select');
+	ConcreteAjaxSearch.prototype.setupSelectize = function() {
+        var selects = this.$element.find('.selectize-select');
         if (selects.length) {
-            selects.select2();
+        	selects.selectize({
+        		plugins: ['remove_button']
+        	});
         }
     }
 
@@ -223,7 +251,8 @@
 
 	ConcreteAjaxSearch.prototype.updateResults = function(result) {
 		var cs = this,
-			options = cs.options;
+			options = cs.options,
+			touchTimer = null;
 
 		cs.result = result;
 
@@ -238,6 +267,9 @@
 				});
 			}
 		}
+
+		cs.setupResetButton(result);
+
 		if (options.selectMode == 'multiple') {
 			// We enable item selection, click to select single, command click for
 			// multiple, shift click for range
@@ -256,14 +288,26 @@
 			}).on('mousedown.concreteSearchResultItem', function(e) {
 				cs.handleSelectClick(e, $(this));
 			}).on('mouseup.concreteSearchResultItem', function(e) {
-				if (!e.metaKey && !e.shiftKey) {
+				if (!e.metaKey && !e.ctrlKey && !e.shiftKey) {
 					cs.$element.find('.ccm-search-select-selected').not($(this)).removeClass();
+				}
+			}).on('touchstart.concreteSearchResultItem', function(e) {
+				var me = $(this);
+				touchTimer = setTimeout(function() {
+					cs.handleSelectClick(e, me);
+					touchTimer = null;
+				}, 1000);
+			}).on('touchend.concreteSearchResultItem', function(e) {
+				if (touchTimer) {
+					clearTimeout(touchTimer);
+					touchTimer = null;
 				}
 			});
 
 		} else {
 			cs.setupMenus(result);
 		}
+		cs.setupBulkActions();
 		if (options.onUpdateResults) {
 			options.onUpdateResults(this);
 		}
@@ -275,8 +319,9 @@
 
 	ConcreteAjaxSearch.prototype.setupAdvancedSearch = function() {
 		var cs = this;
-		cs.$advancedFields = cs.$element.find('div.ccm-search-fields-advanced');
+		// OLD SEARCH
 
+		cs.$advancedFields = cs.$element.find('div.ccm-search-fields-advanced');
 		cs.$element.on('click', 'a[data-search-toggle=advanced]', function() {
 			cs.$advancedFields.append(cs._templateAdvancedSearchFieldRow());
 			return false;
@@ -303,7 +348,119 @@
 			return false;
 		});
 
+		// NEW SEARCH
+		cs.$advancedSearchButton.on('click', function() {
+			var url = $(this).attr('href');
+			$.fn.dialog.open({
+				width: 620,
+				height: 500,
+				href: url,
+				modal: true,
+				title: ccmi18n.search,
+				onOpen: function() {
+					cs.setupAdvancedSearchDialog();
+				}
+			});
+			return false;
+		});
 
+	}
+
+	ConcreteAjaxSearch.prototype.setupAdvancedSearchDialog = function() {
+		var my = this;
+		var $container = $('div[data-container=search-fields]');
+		var renderFieldRowTemplate = _.template(
+			$('script[data-template=search-field-row]').html()
+		);
+		var defaultQuery = $('script[data-template=default-query]').html();
+		if (defaultQuery) {
+			defaultQuery = JSON.parse(defaultQuery);
+		}
+		$('button[data-button-action=add-field]').on('click', function() {
+			$container.append(
+				renderFieldRowTemplate()
+			);
+		});
+
+		if (my.result.query) {
+			$.each(my.result.query.fields, function(i, field) {
+				$container.append(
+					renderFieldRowTemplate({'field': field})
+				);
+			});
+		} else if (defaultQuery) {
+			$.each(defaultQuery.fields, function(i, field) {
+				$container.append(
+					renderFieldRowTemplate({'field': field})
+				);
+			});
+		}
+
+		$container.find('select.selectize-select').selectize({
+			plugins: ['remove_button']
+    	});
+		$container.on('change', 'select.ccm-search-choose-field', function() {
+			var key = $(this).val();
+			var $content = $(this).parent().find('div.form-group');
+			if (key) {
+				$.concreteAjax({
+					url: $(this).attr('data-action'),
+					data: {
+						'field': key
+					},
+					success: function(r) {
+						_.each(r.assets.css, function(css) {
+							ccm_addHeaderItem(css, 'CSS');
+						});
+						_.each(r.assets.javascript, function(javascript) {
+							ccm_addHeaderItem(javascript, 'JAVASCRIPT');
+						});
+						$content.html(r.element);
+						$content.find('select.selectize-select').selectize({
+			        		plugins: ['remove_button']
+			        	});
+					}
+				});
+			}
+		});
+		$container.on('click', 'a[data-search-remove=search-field]', function(e) {
+			e.preventDefault();
+			var $row = $(this).parent();
+			$row.remove();
+		});
+
+		$('button[data-button-action=save-search-preset]').on('click.saveSearchPreset', function() {
+			jQuery.fn.dialog.open({
+				element: 'div[data-dialog=save-search-preset]:first',
+				modal: true,
+				width: 320,
+				title: 'Save Preset',
+				height: 'auto'
+			});
+		});
+
+		var $presetForm = $('form[data-form=save-preset]');
+		var $form = $('form[data-form=advanced-search]');
+		$('button[data-button-action=save-search-preset-submit]').on('click.saveSearchPresetSubmit', function() {
+			var $presetForm = $('form[data-form=save-preset]');
+			$presetForm.trigger('submit');
+		});
+
+		$presetForm.on('submit', function() {
+			var formData = $form.serializeArray();
+			formData = formData.concat($presetForm.serializeArray());
+			$.concreteAjax({
+				data: formData,
+				url: $presetForm.attr('action'),
+				success: function(r) {
+					jQuery.fn.dialog.closeAll();
+					ConcreteEvent.publish('SavedSearchCreated', {search: r});
+				}
+			});
+			return false;
+		});
+
+		my.setupSearch();
 	}
 
 	ConcreteAjaxSearch.prototype.setupSort = function() {
@@ -320,6 +477,7 @@
 	}
 
 	ConcreteAjaxSearch.prototype.setupSearch = function() {
+		// OLD SEARCH
 		var cs = this;
 		if (cs._templateSearchForm) {
 			cs.$element.find('[data-search-element=wrapper]').html(cs._templateSearchForm());
@@ -329,6 +487,50 @@
 			data.push({'name': 'submitSearch', 'value': '1'});
 			cs.ajaxUpdate($(this).attr('action'), data);
 			return false;
+		});
+
+		// NEW SEARCH
+		cs.$element.find('div[data-header] form').on('submit', function() {
+			var data = $(this).serializeArray();
+			data.push({'name': 'submitSearch', 'value': '1'});
+			cs.ajaxUpdate($(this).attr('action'), data);
+			cs.$advancedSearchButton.hide();
+			cs.$resetSearchButton.addClass('ccm-header-reset-search-right').show();
+
+			return false;
+		});
+
+		// If we're calling this from a dialog, we move it out to the top of the dialog so it can display properly
+		if (cs.options.appendToOuterDialog) {
+			var $container = cs.$element.closest('div.ui-dialog');
+			if ($container.length) {
+				cs.$element.find('div[data-header]').insertBefore($container.find('.ui-dialog-content'));
+			}
+		}
+
+		$('form[data-form=advanced-search]').concreteAjaxForm({
+			'success': function(r) {
+				cs.updateResults(r);
+				jQuery.fn.dialog.closeTop();
+				cs.$advancedSearchButton.html(ccmi18n_filemanager.edit);
+				cs.$resetSearchButton.show();
+				cs.$headerSearchInput.prop('disabled', true).val('');
+				cs.$headerSearchInput.attr('placeholder', '');
+			}
+		});
+		cs.$resetSearchButton.on('click', function(e) {
+			cs.$element.find('div[data-header] input').val('');
+			e.preventDefault();
+			$.concreteAjax({
+				url: $(this).attr('data-button-action-url'),
+				success: function(r) {
+					cs.updateResults(r);
+					cs.$headerSearchInput.prop('disabled', false);
+					cs.$headerSearchInput.attr('placeholder', ccmi18n.search);
+					cs.$advancedSearchButton.html(ccmi18n.advanced).show();
+					cs.$resetSearchButton.removeClass('ccm-header-reset-search-right').hide();
+				}
+			});
 		});
 	}
 
@@ -370,6 +572,12 @@
                 }
             });
         }
+
+		if (type == 'progressive') {
+			ccm_triggerProgressiveOperation($option.attr('data-bulk-action-url'), itemIDs,	$option.attr('data-bulk-action-title'), function() {
+				cs.refreshResults();
+			});
+		}
 		cs.publish('SearchBulkActionSelect', {value: value, option: $option, items: $items});
 	}
 

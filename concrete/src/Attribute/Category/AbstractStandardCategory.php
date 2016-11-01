@@ -13,7 +13,7 @@ use Concrete\Core\Entity\Attribute\Type as AttributeType;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\HttpFoundation\Request;
 
-abstract class AbstractStandardCategory extends AbstractCategory
+abstract class AbstractStandardCategory extends AbstractCategory implements StandardCategoryInterface
 {
 
     use StandardCategoryTrait {

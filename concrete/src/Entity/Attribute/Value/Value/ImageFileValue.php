@@ -27,7 +27,10 @@ class ImageFileValue extends Value implements FileProviderInterface
 
     public function getFileObjects()
     {
-        return array($this->getFileObject());
+        if (is_object($this->file)) {
+            return array($this->file);
+        }
+        return array();
     }
 
     public function getValue()
@@ -46,5 +49,13 @@ class ImageFileValue extends Value implements FileProviderInterface
     public function setFileObject($file)
     {
         $this->file = $file;
+    }
+
+    public function __toString()
+    {
+        if (is_object($this->file)) {
+            return (string) \URL::to('/download_file', $this->file->getFileID());
+        }
+        return '';
     }
 }

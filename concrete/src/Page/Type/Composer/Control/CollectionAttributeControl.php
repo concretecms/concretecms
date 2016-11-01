@@ -4,7 +4,7 @@ namespace Concrete\Core\Page\Type\Composer\Control;
 use Concrete\Core\Validation\ResponseInterface;
 use Controller;
 use CollectionAttributeKey;
-use Page;
+use Concrete\Core\Page\Page;
 use Environment;
 
 class CollectionAttributeControl extends Control
@@ -91,6 +91,23 @@ class CollectionAttributeControl extends Control
             if (is_object($ak)) {
                 return $c->getAttributeValueObject($ak);
             }
+        } else {
+            $control = $this->getPageTypeComposerFormLayoutSetControlObject();
+            if (is_object($control)) {
+                $set = $control->getPageTypeComposerFormLayoutSetObject();
+                if (is_object($set)) {
+                    $type = $set->getPageTypeObject();
+                    // Does this page type have default attributes for this
+                    // attribute ?
+                    $defaults = $type->getPageTypePageTemplateDefaultPageObject();
+                    if (is_object($defaults)) {
+                        $value = $defaults->getAttributeValue($this->getAttributeKeyObject());
+                        if (is_object($value)) {
+                            return $value;
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -130,7 +147,7 @@ class CollectionAttributeControl extends Control
         $ak = $this->getAttributeKeyObject();
         if (is_object($ak)) {
             $controller = $ak->getController();
-            $value = $controller->getAttributeValueFromRequest();
+            $value = $controller->createAttributeValueFromRequest();
             $c->setAttribute($ak, $value);
         }
     }

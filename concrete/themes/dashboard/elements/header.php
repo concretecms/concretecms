@@ -49,7 +49,7 @@ $large_font = (bool) Config::get('concrete.accessibility.toolbar_large_font');
 </head>
 <body <?php if (isset($bodyClass)) { ?>class="<?=$bodyClass?>"<?php } ?>>
 
-<div id="ccm-dashboard-page" class="<?php if ($view->section('/account')) { ?>ccm-dashboard-my-account<?php } ?> ccm-ui ccm-ui-fieldless">
+<div id="ccm-dashboard-page" class="<?php if ($view->section('/account')) { ?>ccm-dashboard-my-account<?php } ?> ccm-ui">
     <div class="ccm-mobile-menu-overlay ccm-mobile-menu-overlay-dashboard hidden-md hidden-lg">
         <div class="ccm-mobile-menu-main">
             <ul class="ccm-mobile-menu-entries">
@@ -76,12 +76,30 @@ $large_font = (bool) Config::get('concrete.accessibility.toolbar_large_font');
         <li class="ccm-logo pull-left"><span><?=Loader::helper('concrete/ui')->getToolbarLogoSRC()?></span></li>
         <li class="ccm-toolbar-account pull-left">
             <a href="<?=$backLink?>">
-                <i class="fa fa-arrow-left"></i>
-                <span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-return">
-                    <?= tc('toolbar', 'Return to Website') ?>
-                </span>
+                <i class="fa fa-arrow-left"></i><span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-return"><?= tc('toolbar', 'Return to Website') ?></span>
             </a>
         </li>
+        <?php
+        $ihm = Core::make("helper/concrete/ui/menu");
+        $cih = Core::make('helper/concrete/ui');
+        $items = $ihm->getPageHeaderMenuItems('left');
+        foreach ($items as $ih) {
+            $cnt = $ih->getController();
+            if ($cnt->displayItem()) {
+                $cnt->registerViewAssets();
+                ?>
+                <li class="pull-left"><?= $cnt->getMenuItemLinkElement() ?></li>
+                <?php
+            }
+        }
+
+        if ($cih->showWhiteLabelMessage()) {
+            ?>
+            <li class="pull-left visible-xs visible-lg" id="ccm-white-label-message"><?= t('Powered by <a href="%s">concrete5</a>.', Config::get('concrete.urls.concrete5')) ?></li>
+            <?php
+        }
+        ?>
+
         <li class="pull-right hidden-xs hidden-sm">
             <a href="<?=URL::to('/dashboard')?>"
                 data-launch-panel="dashboard"
@@ -103,11 +121,23 @@ $large_font = (bool) Config::get('concrete.accessibility.toolbar_large_font');
         </li>
         <li class="ccm-toolbar-search pull-right hidden-xs hidden-sm">
             <i class="fa fa-search"></i>
-            <input type="search" id="ccm-nav-intelligent-search" tabindex="1" />
+            <input type="search" autocomplete="off" id="ccm-nav-intelligent-search" tabindex="1" />
         </li>
         <li class="pull-right ccm-toolbar-mobile-menu-button visible-xs visible-sm hidden-md hidden-lg">
             <i class="fa fa-bars"></i>
         </li>
+        <?php
+        $items = $ihm->getPageHeaderMenuItems('right');
+        foreach ($items as $ih) {
+            $cnt = $ih->getController();
+            if ($cnt->displayItem()) {
+                $cnt->registerViewAssets();
+                ?>
+                <li class="pull-right"><?= $cnt->getMenuItemLinkElement() ?></li>
+                <?php
+            }
+        }
+        ?>
     </ul>
 </div>
 <?php
@@ -139,7 +169,7 @@ if (!$hideDashboardPanel) {
             </div>
         </div>
     </div>
-    <?php 
+    <?php
 }
 ?>
 

@@ -26,7 +26,7 @@ class Set extends Object
         if (isset($row['btsID'])) {
             $akc = new static();
             $akc->setPropertiesFromArray($row);
-            $item->set($akc);
+            $cache->save($item->set($akc));
 
             return $akc;
         }

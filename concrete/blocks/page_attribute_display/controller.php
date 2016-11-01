@@ -65,6 +65,7 @@ class Controller extends BlockController
                 break;
             default:
                 $content = $c->getAttribute($this->attributeHandle);
+                $content_alt = $c->getAttributeValue($this->attributeHandle);
                 if (is_object($content) && $content instanceof \Concrete\Core\Entity\File\File) {
                     if ($this->thumbnailWidth > 0 || $this->thumbnailHeight > 0) {
                         $im = Core::make('helper/image');
@@ -78,10 +79,8 @@ class Controller extends BlockController
                         $image = Core::make('html/image', array($content));
                         $content = (string) $image->getTag();
                     }
-                } else {
-                    if (!is_scalar($content) && (!is_object($content) || !method_exists($content, '__toString'))) {
-                        $content = $c->getAttribute($this->attributeHandle, 'displaySanitized');
-                    }
+                } else if (is_object($content_alt)) {
+                    $content = $content_alt->getDisplayValue();
                 }
                 break;
         }

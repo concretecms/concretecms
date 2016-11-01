@@ -30,7 +30,7 @@ class Ajax
         if (@ob_get_length()) {
             @ob_end_clean();
         }
-        if ($error instanceof \Concrete\Core\Error\ErrorBag\ErrorBag) {
+        if ($error instanceof \Concrete\Core\Error\ErrorList\ErrorList) {
             $error->outputJSON();
         } else {
             header($_SERVER['SERVER_PROTOCOL'] . ' 400 Bad Request', true, 400);

@@ -3,6 +3,7 @@ namespace Concrete\Core\Page\Stack;
 
 use Concrete\Core\Multilingual\Page\Section\Section;
 use Concrete\Core\Page\Stack\Folder\Folder;
+use Concrete\Core\Site\Tree\TreeInterface;
 use Loader;
 use Concrete\Core\Page\PageList;
 use Concrete\Core\Search\StickyRequest;
@@ -21,6 +22,12 @@ class StackList extends PageList
         $this->filter(false, '(s.stMultilingualSection is null or s.stMultilingualSection = 0)');
         $this->includeSystemPages();
         $this->sortByName();
+    }
+
+    public function setSiteTreeObject(TreeInterface $tree)
+    {
+        parent::setSiteTreeObject($tree);
+        $this->query->andWhere('s.siteTreeID = :siteTreeID or s.siteTreeID is null');
     }
 
     public function setupAutomaticSorting(StickyRequest $request = null)
@@ -90,63 +97,4 @@ class StackList extends PageList
         return $stack ?: parent::getResult($queryRow);
     }
 
-    /*
-    public function filterByPageLanguage(\Concrete\Core\Page\Page $page)
-    {
-        $ms = Section::getBySectionOfSite($page);
-        if (!is_object($ms)) {
-            $ms = static::getPreferredSection();
-        }
-
-        if (is_object($ms)) {
-            $this->filterByLanguageSection($ms);
-        }
-    }
-
-    public function filterByLanguageSection(Section $ms)
-    {
-        $this->filter('stMultilingualSection', $ms->getCollectionID());
-    }
-    */
-
-    /*
-    public static function export(\SimpleXMLElement $x)
-    {
-        $db = Loader::db();
-        $r = $db->Execute('select stName, cID, stType from Stacks order by stName asc');
-        if ($r->NumRows()) {
-            $gas = $x->addChild('stacks');
-            while ($row = $r->FetchRow()) {
-                $stack = Stack::getByName($row['stName']);
-                if (is_object($stack)) {
-                    $stack->export($gas);
-                }
-            }
-        }
-    }
-
-    public static function rescanMultilingualStacks()
-    {
-        $sl = new static();
-        $stacks = $sl->get();
-        foreach ($stacks as $stack) {
-            $section = $stack->getMultilingualSection();
-            if (!$section) {
-                $section = false;
-                $parent = \Page::getByID($stack->getCollectionParentID());
-                if ($parent->getCollectionPath() == STACKS_PAGE_PATH) {
-                    // this is the default
-                    $section = Section::getDefaultSection();
-                } elseif ($parent->getPageTypeHandle() == STACK_CATEGORY_PAGE_TYPE) {
-                    $locale = $parent->getCollectionHandle();
-                    $section = Section::getByLocale($locale);
-                }
-
-                if ($section) {
-                    $stack->updateMultilingualSection($section);
-                }
-            }
-        }
-    }
-    */
 }

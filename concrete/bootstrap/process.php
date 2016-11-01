@@ -1,6 +1,7 @@
 <?php
 
 defined('C5_EXECUTE') or die("Access Denied.");
+use Concrete\Core\Block\Events\BlockDelete;
 use Concrete\Core\Page\Stack\Pile\PileContent;
 
 # Filename: _process.php
@@ -24,53 +25,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 }
 
 $securityHelper = Loader::helper('security');
-
-if (isset($_REQUEST['btask']) && $_REQUEST['btask'] && $valt->validate()) {
-
-    // these are tasks dealing with blocks (moving up, down, removing)
-
-    switch ($_REQUEST['btask']) {
-
-        case 'remove':
-            $a = Area::get($c, $_REQUEST['arHandle']);
-            if (is_object($a)) {
-                $ax = $a;
-                $cx = $c;
-                if ($a->isGlobalArea()) {
-                    $ax = STACKS_AREA_NAME;
-                    $cx = Stack::getByName($_REQUEST['arHandle']);
-                }
-
-                $b = Block::getByID($_REQUEST['bID'], $cx, $ax);
-                $p = new Permissions($b); // might be block-level, or it might be area level
-                // we're removing a particular block of content
-                if ($p->canDeleteBlock()) {
-                    $nvc = $cx->getVersionToModify();
-
-                    if ($a->isGlobalArea()) {
-                        $xvc = $c->getVersionToModify(); // we need to create a new version of THIS page as well.
-                        $xvc->relateVersionEdits($nvc);
-                    }
-
-                    $b->loadNewCollection($nvc);
-
-                    $b->deleteBlock();
-                    $nvc->rescanDisplayOrder($_REQUEST['arHandle']);
-
-                    if (isset($_POST['isAjax'])) {
-                        exit;
-                    }
-
-                    $cID = $securityHelper->sanitizeInt($_GET['cID']);
-
-                    header(
-                        'Location: ' . \Core::getApplicationURL() . '/' . DISPATCHER_FILENAME . '?cID=' . $cID . '&mode=edit' . $step);
-                    exit;
-                }
-            }
-            break;
-    }
-}
 
 if (isset($_GET['atask']) && $_GET['atask'] && $valt->validate()) {
     switch ($_GET['atask']) {
@@ -250,14 +204,23 @@ if (isset($_REQUEST['processBlock']) && $_REQUEST['processBlock'] && $valt->vali
                             $b->setBlockAreaObject($ax);
                             $bt = BlockType::getByHandle($b->getBlockTypeHandle());
                             if ($ap->canAddBlock($bt)) {
-                                $btx = BlockType::getByHandle(BLOCK_HANDLE_SCRAPBOOK_PROXY);
+
                                 $nvc = $cx->getVersionToModify();
                                 if ($a->isGlobalArea()) {
                                     $xvc = $c->getVersionToModify(); // we need to create a new version of THIS page as well.
                                     $xvc->relateVersionEdits($nvc);
                                 }
-                                $data['bOriginalID'] = $bID;
-                                $nb = $nvc->addBlock($btx, $ax, $data);
+
+                                if (!$bt->isCopiedWhenPropagated()) {
+                                    $btx = BlockType::getByHandle(BLOCK_HANDLE_SCRAPBOOK_PROXY);
+
+                                    $data['bOriginalID'] = $bID;
+                                    $nb = $nvc->addBlock($btx, $ax, $data);
+                                } else {
+                                    $nb = $b->duplicate($nvc);
+                                    $nb->move($nvc, $ax);
+                                }
+
                                 $nb->refreshCache();
                             }
                         }
@@ -267,15 +230,24 @@ if (isset($_REQUEST['processBlock']) && $_REQUEST['processBlock'] && $valt->vali
                         $b = Block::getByID($_REQUEST['bID']);
                         $b->setBlockAreaObject($ax);
                         $bt = BlockType::getByHandle($b->getBlockTypeHandle());
+
                         if ($ap->canAddBlock($bt)) {
-                            $btx = BlockType::getByHandle(BLOCK_HANDLE_SCRAPBOOK_PROXY);
+
                             $nvc = $cx->getVersionToModify();
                             if ($a->isGlobalArea()) {
                                 $xvc = $c->getVersionToModify(); // we need to create a new version of THIS page as well.
                                 $xvc->relateVersionEdits($nvc);
                             }
-                            $data['bOriginalID'] = $_REQUEST['bID'];
-                            $nb = $nvc->addBlock($btx, $ax, $data);
+
+                            if (!$bt->isCopiedWhenPropagated()) {
+                                $btx = BlockType::getByHandle(BLOCK_HANDLE_SCRAPBOOK_PROXY);
+                                $data['bOriginalID'] = $_REQUEST['bID'];
+                                $nb = $nvc->addBlock($btx, $ax, $data);
+                            } else {
+                                $nb = $b->duplicate($nvc);
+                                $nb->move($nvc, $ax);
+                            }
+
                             $nb->refreshCache();
                         }
                     }

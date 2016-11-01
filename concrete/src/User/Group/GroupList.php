@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\User\Group;
 
+use Concrete\Core\Entity\Package;
 use Concrete\Core\Search\ItemList\Database\ItemList as DatabaseItemList;
 use Concrete\Core\Search\Pagination\Pagination;
 use Loader;
@@ -12,7 +13,7 @@ class GroupList extends DatabaseItemList
 {
     protected $includeAllGroups = false;
 
-    protected $autoSortColumns = array('gName', 'gID');
+    protected $autoSortColumns = ['gName', 'gID'];
 
     public function includeAllGroups()
     {
@@ -26,14 +27,20 @@ class GroupList extends DatabaseItemList
      */
     public function filterByKeywords($keywords)
     {
-        $expressions = array(
+        $expressions = [
             $this->query->expr()->like('g.gName', ':keywords'),
             $this->query->expr()->like('g.gDescription', ':keywords'),
-        );
+        ];
 
         $expr = $this->query->expr();
-        $this->query->andWhere(call_user_func_array(array($expr, 'orX'), $expressions));
+        $this->query->andWhere(call_user_func_array([$expr, 'orX'], $expressions));
         $this->query->setParameter('keywords', '%' . $keywords . '%');
+    }
+
+    public function filterByPackage(Package $package)
+    {
+        $this->query->andWhere('pkgID = :pkgID');
+        $this->query->setParameter('pkgID', $package->getPackageID());
     }
 
     public function filterByExpirable()
@@ -49,9 +56,9 @@ class GroupList extends DatabaseItemList
     {
         if (Config::get('concrete.permissions.model') != 'simple') {
             // there's gotta be a more reasonable way than this but right now i'm not sure what that is.
-            $excludeGroupIDs = array(GUEST_GROUP_ID, REGISTERED_GROUP_ID);
+            $excludeGroupIDs = [GUEST_GROUP_ID, REGISTERED_GROUP_ID];
             $db = Loader::db();
-            $r = $db->Execute('select gID from Groups where gID > ?', array(REGISTERED_GROUP_ID));
+            $r = $db->Execute('select gID from Groups where gID > ?', [REGISTERED_GROUP_ID]);
             while ($row = $r->FetchRow()) {
                 $g = Group::getByID($row['gID']);
                 $gp = new Permissions($g);
@@ -60,7 +67,7 @@ class GroupList extends DatabaseItemList
                 }
             }
             $this->query->andWhere(
-                $this->query->expr()->notIn('g.gId', array_map(array($db, 'quote'), $excludeGroupIDs))
+                $this->query->expr()->notIn('g.gId', array_map([$db, 'quote'], $excludeGroupIDs))
             );
         }
     }
@@ -108,7 +115,7 @@ class GroupList extends DatabaseItemList
     protected function createPaginationObject()
     {
         $adapter = new DoctrineDbalAdapter($this->deliverQueryObject(), function ($query) {
-            $query->select('count(g.gID)')->setMaxResults(1);
+            $query->resetQueryPart('orderBy')->select('count(g.gID)')->setMaxResults(1);
         });
         $pagination = new Pagination($this, $adapter);
 

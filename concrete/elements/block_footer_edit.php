@@ -30,7 +30,6 @@ if (is_array($extraParams)) { // defined within the area/content classes
 
 	</form>
 
-
 <?php
 $cont = $bt->getController();
 if ($b->getBlockTypeHandle() == BLOCK_HANDLE_SCRAPBOOK_PROXY) {

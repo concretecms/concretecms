@@ -83,6 +83,7 @@ module.exports = function(grunt) {
         ccm_app: {
             dest: '<%= DIR_BASE %>/concrete/js/app.js',
             src: [
+                '<%= DIR_BASE %>/concrete/js/build/vendor/pnotify/pnotify.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/app/json.js',
                 '<%= DIR_BASE %>/concrete/js/build/vendor/jquery-form/jquery-form.js',
                 '<%= DIR_BASE %>/concrete/js/build/vendor/jquery-mousewheel/jquery.mousewheel.js',
@@ -112,6 +113,8 @@ module.exports = function(grunt) {
                 '<%= DIR_BASE %>/concrete/js/build/core/app/custom-style.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/app/tabs.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/app/toolbar.js',
+                '<%= DIR_BASE %>/concrete/js/build/vendor/jquery-bootstrap-select-to-button/jquery-bootstrap-select-to-button.js',
+                '<%= DIR_BASE %>/concrete/js/build/vendor/nprogress/nprogress.js',
                 '<%= DIR_BASE %>/concrete/js/build/vendor/tourist/tourist.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/app/help/dialog.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/app/help/launcher.js',
@@ -163,6 +166,16 @@ module.exports = function(grunt) {
             src: '<%= DIR_BASE %>/concrete/js/build/vendor/select2/select2.js'
         },
 
+        /**
+         * Don't do this one: it doesn't work through Grunt. I had to include the min file from
+         * the GitHub repository directly
+
+        selectize: {
+            dest: '<%= DIR_BASE %>/concrete/js/selectize.js',
+            src: '<%= DIR_BASE %>/concrete/js/build/vendor/selectize/selectize.js'
+        },
+         */
+
         bootstrap_alert: {
             dest: '<%= DIR_BASE %>/concrete/js/bootstrap/alert.js',
             src: '<%= DIR_BASE %>/concrete/js/build/vendor/bootstrap/alert.js'
@@ -187,6 +200,12 @@ module.exports = function(grunt) {
             dest: '<%= DIR_BASE %>/concrete/js/bootstrap/tooltip.js',
             src: '<%= DIR_BASE %>/concrete/js/build/vendor/bootstrap/tooltip.js'
         },
+
+        bootstrap_collapse: {
+            dest: '<%= DIR_BASE %>/concrete/js/bootstrap/collapse.js',
+            src: '<%= DIR_BASE %>/concrete/js/build/vendor/bootstrap/collapse.js'
+        },
+
 
         bootstrap_transition: {
             dest: '<%= DIR_BASE %>/concrete/js/bootstrap/transition.js',
@@ -234,6 +253,11 @@ module.exports = function(grunt) {
         dropzone: {
             dest: '<%= DIR_BASE %>/concrete/js/dropzone.js',
             src: '<%= DIR_BASE %>/concrete/js/build/vendor/dropzone/dropzone.js'
+        },
+
+        core_composer: {
+            dest: '<%= DIR_BASE %>/concrete/js/composer-save-coordinator.js',
+            src: '<%= DIR_BASE %>/concrete/js/build/core/composer/save-coordinator.js'
         },
 
         jquery_form: {
@@ -293,6 +317,21 @@ module.exports = function(grunt) {
             ]
         },
 
+        ccm_users: {
+            dest: '<%= DIR_BASE %>/concrete/js/users.js',
+            src: [
+                '<%= DIR_BASE %>/concrete/js/build/core/user/selector.js'
+            ]
+        },
+
+        ccm_notification: {
+            dest: '<%= DIR_BASE %>/concrete/js/notification.js',
+            src: [
+                '<%= DIR_BASE %>/concrete/js/build/core/notification/notification.js'
+            ]
+        },
+
+
         ccm_tree: {
             dest: '<%= DIR_BASE %>/concrete/js/tree.js',
             src: '<%= DIR_BASE %>/concrete/js/build/core/tree.js'
@@ -340,9 +379,9 @@ module.exports = function(grunt) {
             dest: '<%= DIR_BASE %>/concrete/js/jquery-awesome-rating.js',
             src: '<%= DIR_BASE %>/concrete/js/build/vendor/jquery-awesome-rating/jquery-awesome-rating.js'
         },
-        dynatree: {
-            dest: '<%= DIR_BASE %>/concrete/js/dynatree.js',
-            src: '<%= DIR_BASE %>/concrete/js/build/vendor/dynatree/dynatree.js'
+        fancytree: {
+            dest: '<%= DIR_BASE %>/concrete/js/fancytree.js',
+            src: '<%= DIR_BASE %>/concrete/js/build/vendor/jquery-fancytree/jquery.fancytree-all.js'
         },
         account: {
             dest: '<%= DIR_BASE %>/concrete/js/account.js',
@@ -374,11 +413,16 @@ module.exports = function(grunt) {
     };
 
     // List of the CSS files to be generated
+    // Note –bootstrap dies in here when attempting to be built with grunt css; something about
+    // its minified syntax being included within the other app.less file. So if you need to build
+    // bootstrap uncomment this, run grunt css:debug, get it working, then comment the line back out
+    // and run grunt css
     var css = {
-        '<%= DIR_BASE %>/concrete/css/build/vendor/bootstrap/bootstrap.css': '<%= DIR_BASE %>/concrete/css/build/vendor/bootstrap/bootstrap.less',
+        //'<%= DIR_BASE %>/concrete/css/build/vendor/bootstrap/bootstrap.css': '<%= DIR_BASE %>/concrete/css/build/vendor/bootstrap/bootstrap.less',
         '<%= DIR_BASE %>/concrete/css/app.css': '<%= DIR_BASE %>/concrete/css/build/core/app/app.less',
         '<%= DIR_BASE %>/concrete/css/editable-fields.css': '<%= DIR_BASE %>/concrete/css/build/core/editable-fields.less',
         '<%= DIR_BASE %>/concrete/css/select2.css': '<%= DIR_BASE %>/concrete/css/build/core/select2.less',
+        '<%= DIR_BASE %>/concrete/css/selectize.css': '<%= DIR_BASE %>/concrete/css/build/vendor/selectize/selectize.bootstrap3.less',
         '<%= DIR_BASE %>/concrete/css/dropzone.css': '<%= DIR_BASE %>/concrete/css/build/vendor/dropzone/dropzone.less',
         '<%= DIR_BASE %>/concrete/css/jquery-ui.css': '<%= DIR_BASE %>/concrete/css/build/vendor/jquery-ui/jquery-ui.less',
         '<%= DIR_BASE %>/concrete/css/jquery-magnific-popup.css': '<%= DIR_BASE %>/concrete/css/build/vendor/jquery-magnific-popup/jquery-magnific-popup.less',
@@ -391,7 +435,7 @@ module.exports = function(grunt) {
         '<%= DIR_BASE %>/concrete/css/spectrum.css': '<%= DIR_BASE %>/concrete/css/build/vendor/spectrum/spectrum.less',
         '<%= DIR_BASE %>/concrete/css/image-editor.css': '<%= DIR_BASE %>/concrete/css/build/core/image-editor/image-editor.less',
         '<%= DIR_BASE %>/concrete/css/account.css': '<%= DIR_BASE %>/concrete/css/build/core/account.less',
-        '<%= DIR_BASE %>/concrete/css/dynatree.css': '<%= DIR_BASE %>/concrete/css/build/vendor/dynatree/dynatree.less',
+        '<%= DIR_BASE %>/concrete/css/fancytree.css': '<%= DIR_BASE %>/concrete/css/build/vendor/jquery-fancytree/fancytree-bootstrap.less',
         '<%= DIR_BASE %>/concrete/css/sitemap.css': '<%= DIR_BASE %>/concrete/css/build/core/sitemap.less',
         '<%= DIR_BASE %>/concrete/css/file-manager.css': '<%= DIR_BASE %>/concrete/css/build/core/file-manager.less',
         '<%= DIR_BASE %>/concrete/css/conversations.css': '<%= DIR_BASE %>/concrete/css/build/core/conversations.less',
@@ -447,10 +491,7 @@ module.exports = function(grunt) {
         jsTargets.release.push('uglify:' + key + '_release');
         target.options = {compress: {warnings: true}};
         target.options.mangle = false;
-        target.options.sourceMap = js[key].dest + '.map';
-        target.options.sourceMappingURL = target.options.sourceMap.replace(/<%=\s*DIR_BASE\s*%>/g, '<%= DIR_REL %>');
-        target.options.sourceMapRoot = '<%= DIR_REL %>/';
-        target.options.sourceMapPrefix = 1 + config.DIR_BASE.replace(/\/\/+/g, '/').replace(/[^\/]/g, '').length;
+        target.options.sourceMap = true;
         config.uglify[key + '_debug'] = target;
         jsTargets.debug.push('newer:uglify:' + key + '_debug');
     }

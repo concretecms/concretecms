@@ -2,6 +2,7 @@
 namespace Concrete\Controller\Panel\Detail\Page;
 
 use Concrete\Controller\Backend\UserInterface\Page as BackendInterfacePageController;
+use Concrete\Core\Attribute\Context\AttributePanelContext;
 use Concrete\Core\Http\ResponseAssetGroup;
 use Concrete\Core\Workflow\Request\ApprovePageRequest;
 use PageEditResponse;
@@ -40,9 +41,9 @@ class Attributes extends BackendInterfacePageController
         $av = new AttributeTypeView($ak);
         if ($mode == 'edit') {
             $caValue = $this->page->getAttributeValueObject($ak);
-            $ak->render('form', $caValue);
+            $ak->render(new AttributePanelContext(), $caValue);
         } else {
-            echo $av->render('form');
+            echo $av->render(new AttributePanelContext());
         }
         $html = ob_get_contents();
         ob_end_clean();
@@ -112,7 +113,7 @@ class Attributes extends BackendInterfacePageController
                     // Is this item in the selectedAKIDs array? If so then it is being saved
                     if (in_array($ak->getAttributeKeyID(), $selected)) {
                         $controller = $ak->getController();
-                        $value = $controller->getAttributeValueFromRequest();
+                        $value = $controller->createAttributeValueFromRequest();
                         $nvc->setAttribute($ak, $value);
                     } else {
                         // it is being removed
@@ -126,7 +127,7 @@ class Attributes extends BackendInterfacePageController
                 if ($akID > 0 && in_array($akID, $asl->getAttributesAllowedArray())) {
                     $ak = CollectionAttributeKey::getByID($akID);
                     $controller = $ak->getController();
-                    $value = $controller->getAttributeValueFromRequest();
+                    $value = $controller->createAttributeValueFromRequest();
                     $nvc->setAttribute($ak, $value);
                 }
             }

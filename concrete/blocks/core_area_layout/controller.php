@@ -59,7 +59,7 @@ class Controller extends BlockController
         if ($this->arLayoutID) {
             $arLayout = AreaLayout::getByID($this->arLayoutID);
             $b = $this->getBlockObject();
-            if (is_object($b)) {
+            if (is_object($arLayout) && is_object($b)) {
                 $arLayout->setBlockObject($b);
             }
 

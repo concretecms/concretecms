@@ -7,8 +7,15 @@ use Concrete\Core\Search\Result\Result as SearchResult;
 
 interface ProviderInterface
 {
+    function getBaseColumnSet();
+    function getDefaultColumnSet();
     function getCurrentColumnSet();
     function getAvailableColumnSet();
+    function getAllColumnSet();
+    function createSearchResultObject($columns, $list);
+
     function getCustomAttributeKeys();
-    function getSessionNamespace();
+    function getSearchResultFromQuery(Query $query);
+    function getItemList();
+
 }

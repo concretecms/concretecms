@@ -152,6 +152,10 @@ div.ccm-panel-content {
     }
   }
 
+  section {
+    padding: 0px;
+  }
+
 }
 
 div.ccm-panel div.ccm-panel-content {
@@ -292,8 +296,20 @@ div#ccm-panel-dashboard {
       background-color: #c6cbcf;
       margin-top: 20px;
       margin-bottom: 20px;
-      margin-left: 22px;
-      margin-right: -30px;
+      margin-left: 0px;
+      margin-right: 0px;
+    }
+
+    ul {
+      li.nav-divider.package-page-divider {
+        margin-right: 25px;
+      }
+
+      ul {
+        li.nav-divider.package-page-divider {
+          margin-left: -20px;
+        }
+      }
     }
 
   }
@@ -341,13 +357,10 @@ div#ccm-panel-dashboard {
   }
 
   div.ccm-panel-dashboard-footer {
-    margin-left: 40px;
-    margin-top: 20px;
-
-    margin-bottom: 40px;
-
     border-top: 1px solid #c6cbcf;
     padding-top: 20px;
+    padding-left: 20px;
+    margin: 20px 15px 40px 20px;
     font-size: @font-size-small;
     p {
       line-height: @line-height-small;
@@ -615,14 +628,12 @@ div.ccm-panel-detail-content {
     right: 0px;
     top: 110px;
   }
-}
 
-@media (min-width: @screen-md) {
-  div.ccm-panel-detail-content {
-    form.ccm-panel-detail-content-form {
-      width: 600px;
-    }
+  section {
+    padding: 0px;
   }
+
+
 }
 
 div.ccm-panel-detail {
@@ -658,7 +669,21 @@ div#ccm-panel-detail-page-location {
   background-color: #f3fbff;
 
   div.ccm-panel-detail-content {
+
+    ul.nav-tabs {
+      margin-left: 0px;
+      margin-right: 0px;
+      padding-left: 25px;
+    }
+
     background-color: #f3fbff;
+
+    div.form-group-highlight {
+      margin-left: -40px;
+      margin-right: -40px;
+      padding-left: 40px;
+      padding-right: 40px;
+    }
 
     div.form-group {
 
@@ -667,8 +692,7 @@ div#ccm-panel-detail-page-location {
       padding-right: 40px;
       margin-left: -40px;
       margin-right: -40px;
-      border-bottom: 1px solid #b7cfe4;
-
+      border-bottom-color: #d1e7fc;
 
       /*
       select.form-control,
@@ -686,26 +710,22 @@ div#ccm-panel-detail-page-location {
     */
 
 
-      .select2-choices {
-        background-color: #e5edf1;
-        &:hover {
-          background-color: darken(#e5edf1, 3%);
-        }
-      }
 
       label.control-label {
         color: #548fc8;
       }
 
+      /*
       div.ccm-item-selector, div.ccm-file-selector {
         background-color: #e5edf1;
         &:hover {
           background-color: darken(#e5edf1, 3%);
         }
       }
+      */
     }
 
-    ul.dynatree-container {
+    ul.fancytree-container {
       background-color: #e5edf1;
     }
   }
@@ -722,6 +742,10 @@ div#ccm-panel-detail-page-location {
   fieldset {
     legend {
       color: #113455;
+
+      & + div.form-group {
+        border-top-color: #b7cfe4;
+      }
     }
   }
 }
@@ -833,24 +857,6 @@ div#ccm-panel-detail-form-actions-wrapper {
     background-color: rgba(40,40,40,0.85);
     padding: 20px 25px 20px 25px;
     .border-radius(4px);
-
-    .btn-primary {
-      background-color: #4cb8ff;
-      border-color: #4cb8ff;
-      &:hover {
-        border-color: darken(#4cb8ff, 5%);
-        background-color: darken(#4cb8ff, 5%);
-      }
-    }
-    .btn-default {
-      background-color: #656565;
-      border-color: #656565;
-      color: #fff;
-      &:hover {
-        border-color: darken(#656565, 5%);
-        background-color: darken(#656565, 5%);
-      }
-    }
 
   }
 }
@@ -999,15 +1005,8 @@ div.ccm-panel-header-accordion-dropdown-visible {
  */
 .ccm-panel-dark() {
 
-  input[type=checkbox], input[type=radio] {
-    border: 1px solid #444;
-  }
-
-  input[type=checkbox]:checked:after, input[type=radio]:checked:after {
-    color: #3baaf7;
-  }
-
   background-color: #2a2c30;
+
   div.ccm-panel-shadow-layer {
     .box-shadow(inset -10px 10px 10px rgba(20, 20, 20, 0.3));
   }
@@ -1031,12 +1030,32 @@ div.ccm-panel-header-accordion-dropdown-visible {
     color: #2aa9dd;
   }
 
-  div.ccm-panel-content-inner {
+  div.ccm-panel-content {
     textarea, input, select {
-      border: 1px solid @panel-border-color;
-      background-color: #4c4e53;
+      border-color: #444;
+      background-color: #444;
       color: #bababa;
+
+      &:hover {
+        border-color: lighten(#3A3C41, 3%);
+        background-color: lighten(#3A3C41, 3%);
+      }
+
+      &:focus {
+        border-color: lighten(#3A3C41, 10%) !important;
+        background-color: lighten(#3A3C41, 10%) !important;
+      }
+
     }
+
+    input[type=checkbox], input[type=radio] {
+      color: transparent;
+      &:checked:after {
+        color: darken(#f2f2f2, 20%);
+      }
+    }
+
+
   }
 
   .pager {
@@ -1097,6 +1116,142 @@ div.ccm-panel-header-accordion-dropdown-visible {
 }
 
 /**
+ * Dark Panel Date Select
+ */
+div#ccm-check-in-schedule-wrapper,
+div#ccm-view-as-user-wrapper {
+  span.ccm-input-date-wrapper {
+    margin-bottom: 8px;
+    display: block;
+  }
+
+  input.ccm-input-date {
+    // TODO not happy about that
+    width: 100% !important;
+  }
+
+  .ccm-input-time-wrapper {
+    white-space: nowrap;
+    select {
+      width: 74px !important;
+
+      &:last-child {
+        margin-right: 0 !important;
+      }
+    }
+  }
+
+  .separator {
+    padding-left: 1px;
+    padding-right: 4px;
+  }
+}
+
+/**
+ * Dark Panel Calendar
+ */
+div.dark-panel-calendar {
+  border: 1px solid #2a2c30;
+  background: @panel-form-element-bg-color;
+  color: @panel-form-element-text-color;
+
+  div.ui-datepicker-header {
+    background: none;
+    background-color: #2a2c30;
+    border: none;
+    color: @panel-form-element-text-color;
+  }
+
+  .ui-datepicker-prev span,
+  .ui-datepicker-next span,
+  .ui-datepicker-prev-hover span,
+  .ui-datepicker-next-hover span {
+    background-size: 16px 16px;
+    background-repeat: no-repeat;
+  }
+
+  .ui-datepicker-prev span {
+    background: url(../images/icons/dark_calendar_left_arrow.svg);
+    background-position-x: -1px;
+  }
+
+  .ui-datepicker-next span {
+    background: url(../images/icons/dark_calendar_right_arrow.svg);
+    background-position-x: 1px;
+  }
+
+  .ui-datepicker-prev-hover span {
+    background: url(../images/icons/dark_calendar_left_arrow_hover.svg);
+    background-position-x: -1px;
+  }
+
+  .ui-datepicker-next-hover span {
+    background: url(../images/icons/dark_calendar_right_arrow_hover.svg);
+    background-position-x: 1px;
+  }
+
+  .ui-datepicker-prev-hover,
+  .ui-datepicker-next-hover {
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
+
+  .ui-datepicker-prev-hover {
+    top: 2px;
+    left: 2px;
+  }
+
+  .ui-datepicker-next-hover {
+    top: 2px;
+    right: 2px;
+  }
+
+  .ui-icon {
+    width: 16px;
+    height: 16px;
+  }
+
+  select.ui-datepicker-year {
+    background-color: @panel-form-element-bg-color;
+    border: none;
+    color: #bababa;
+  }
+
+  table.ui-datepicker-calendar {
+    th span,
+    td a {
+      color: @panel-form-element-text-color;
+      text-align: center;
+    }
+
+    .ui-state-default {
+      border: none;
+      background: none;
+    }
+
+    .ui-state-highlight,
+    .ui-state-active,
+    .ui-state-hover {
+      color: #ffffff;
+      border-radius: 2px;
+    }
+
+    .ui-state-active {
+      background-color: #37393f;
+    }
+
+    .ui-state-highlight {
+      background: #2aa9dd;
+    }
+
+    .ui-state-hover {
+      background: #3473aa;
+    }
+  }
+}
+
+/**
  * Panel Confirmation
  */
 div.ccm-panel-confirmation-wrapper {
@@ -1117,7 +1272,7 @@ div.ccm-panel-confirmation-wrapper {
     .opacity(0.4);
     .translate(0, 0);
     .transition(all 0.3s ease-out);
-    
+
     p {
       font-size: @font-size-large;
       line-height: 32px;
@@ -1197,5 +1352,39 @@ div.ccm-panel-header-search {
   }
 }
 
+
+div.ccm-panel-header-accordion {
+
+  nav {
+
+    ul.ccm-panel-header-accordion-dropdown:after {
+      border-color: #999 transparent;
+    }
+
+    li > a:hover {
+      background-color: #111215;
+    }
+
+    li > a {
+      color: #2aa9dd;
+    }
+
+    span {
+      color: #999;
+      background-color: #202226;
+      &:hover {
+        background-color: #111215;
+      }
+    }
+  }
+}
+
+div.ccm-panel-header-accordion-dropdown-visible {
+  nav {
+    ul {
+      height: 220px !important;
+    }
+  }
+}
 
 

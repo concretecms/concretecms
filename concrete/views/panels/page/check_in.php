@@ -1,7 +1,6 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");
 $v = $c->getVersionObject();
 $require_version_comments = (bool) Config::get('concrete.misc.require_version_comments');
-$datetime = loader::helper('form/date_time');
 ?>
 
 <div class="ccm-panel-content-inner">
@@ -13,28 +12,10 @@ $datetime = loader::helper('form/date_time');
 <div class="ccm-panel-check-in-comments"><textarea name="comments" id="ccm-check-in-comments"<?php echo $require_version_comments ? ' required="required"' : ''; ?>></textarea></div>
 
 <?php if ($cp->canApprovePageVersions()) {
-    if ($c->isPageDraft()) {
-        $publishTitle = t('Publish Page');
-    } else {
-        $publishTitle = t('Publish Changes');
-        $pk = PermissionKey::getByHandle('approve_page_versions');
-        $pk->setPermissionObject($c);
-        $pa = $pk->getPermissionAccessObject();
-        $workflows = array();
-        $canApproveWorkflow = true;
-        if (is_object($pa)) {
-            $workflows = $pa->getWorkflows();
-        }
-        foreach ($workflows as $wf) {
-            if (!$wf->canApproveWorkflow()) {
-                $canApproveWorkflow = false;
-            }
-        }
 
-        if (count($workflows) > 0 && !$canApproveWorkflow) {
-            $publishTitle = t('Submit to Workflow');
-        }
-    }
+    $composer = Core::make('helper/concrete/composer');
+    $publishTitle = $composer->getPublishButtonTitle($c);
+
     ?>
 <div class="ccm-panel-check-in-publish">
     <?php $publishAction = (is_object($publishErrors) && $publishErrors->has()) ? false : true ?>
@@ -47,31 +28,19 @@ $datetime = loader::helper('form/date_time');
             <i class="fa fa-clock-o"></i>
         </button>
     </div>
-    <?php if ($canApproveWorkflow): ?>
-        <div id="ccm-check-in-schedule-wrapper">
-            <h5>Scheduled Publish</h5>
-            <a href="#" class="remove">Remove</a>
-            <div class="form-group datetime-group">
-                <?= $datetime->datetime('check-in-scheduler', $publishDate, false, true,
-                    'check-in-scheduler-calendar'); ?>
-            </div>
-            <div class="form-group submit-group">
-                <span class="timezone"><?=$timezone ?></span>
-                <button type="submit" name="action" value="schedule"
-                        class="btn btn-primary ccm-check-in-schedule " <?=$publishAction ?: 'disabled' ?>>
-                    Schedule
-                </button>
-            </div>
-        </div>
-    <?php endif ?>
-    <br/>
+    <div id="ccm-check-in-schedule-wrapper">
+        <?php $composer->displayPublishScheduleSettings($c); ?>
+    </div>
+    <br/><br/>
 
-        <div class="small">
-        <?php foreach ($publishErrors->getList() as $error): ?>
-            <div class="text-warning"><strong><i class="fa fa-warning"></i> <?=$error?></strong></div>
-            <br/>
-        <?php endforeach; ?>
-        </div>
+        <?php if (count($publishErrors->getList())) { ?>
+            <div class="small">
+            <?php foreach ($publishErrors->getList() as $error): ?>
+                <div class="text-warning"><strong><i class="fa fa-warning"></i> <?=$error?></strong></div>
+                <br/>
+            <?php endforeach; ?>
+            </div>
+        <?php } ?>
 
         <?php $pagetype = PageType::getByID($c->getPageTypeID()); ?>
         <?php if (count($publishErrors->getList()) && (is_object($pagetype))): ?>

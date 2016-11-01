@@ -69,14 +69,15 @@ class DoctrineCacheDriver extends CacheProvider
      */
     protected function doSave($id, $data, $lifeTime = 0)
     {
-        if (!$this->getC5Cache()->isEnabled()) {
+        $cache = $this->getC5Cache();
+        if (!$cache->isEnabled()) {
             return false;
         }
         if ($lifeTime === 0) {
             $lifeTime = null;
         }
 
-        return $this->getC5Cache()->getItem('doctrine/' . $id)->set($data, $lifeTime);
+        return $cache->save($cache->getItem('doctrine/' . $id)->set($data, $lifeTime));
     }
 
     /**

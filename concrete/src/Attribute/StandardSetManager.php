@@ -89,12 +89,16 @@ class StandardSetManager implements SetManagerInterface
             $displayOrder = count($keys);
         }
 
-        $setKey = new SetKey();
-        $setKey->setAttributeKey($key);
-        $setKey->setAttributeSet($set);
-        $setKey->setDisplayOrder($displayOrder);
-        $set->getAttributeKeyCollection()->add($setKey);
-        $this->entityManager->persist($setKey);
-        $this->entityManager->flush();
+        $r = $this->entityManager->getRepository('Concrete\Core\Entity\Attribute\SetKey');
+        $setKey = $r->findOneBy(array('attribute_key' => $key, 'set' => $set));
+        if (!is_object($setKey)) {
+            $setKey = new SetKey();
+            $setKey->setAttributeKey($key);
+            $setKey->setAttributeSet($set);
+            $setKey->setDisplayOrder($displayOrder);
+            $set->getAttributeKeyCollection()->add($setKey);
+            $this->entityManager->persist($setKey);
+            $this->entityManager->flush();
+        }
     }
 }

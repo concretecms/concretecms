@@ -25,21 +25,13 @@ class Controller extends BlockController
 
     public function view()
     {
-        $categories = Category::getList();
-        $items = [];
-        foreach($categories as $category) {
-            $list = $category->getPendingWorkflowProgressList();
-            if (is_object($list)) {
-                foreach($list->get() as $it) {
-                    $wp = $it->getWorkflowProgressObject();
-                    $wf = $wp->getWorkflowObject();
-                    if ($wf->canApproveWorkflowProgressObject($wp)) {
-                        $items[] = $wp;
-                    }
-                }
-            }
-        }
-        $this->set('items', $items);
+        $this->requireAsset('core/notification');
+        $u = new \User();
+        $entityManager = $this->app->make('Doctrine\ORM\EntityManager');
+        $r = $entityManager->getRepository('Concrete\Core\Entity\Notification\NotificationAlert');
+        $alerts = $r->findMyAlerts($u);
+        $this->set('items', $alerts);
+        $this->set('token', $this->app->make('token'));
 
     }
 

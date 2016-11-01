@@ -6,6 +6,7 @@ class PathUrlResolverTest extends ResolverTestCase
 {
     protected function setUp()
     {
+        parent::setUp();
         $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
         $this->urlResolver = $app->make('Concrete\Core\Url\Resolver\PathUrlResolver');
     }
@@ -40,8 +41,8 @@ class PathUrlResolverTest extends ResolverTestCase
         $path = '/some/path/to/something';
 
         $this->assertEquals(
-            $this->canonicalUrlWithPath($path),
-            $this->urlResolver->resolve(
+            (string) $this->canonicalUrlWithPath($path),
+            (string) $this->urlResolver->resolve(
                 array(new \Concrete\Core\Url\Components\Path($path))));
     }
 
@@ -58,8 +59,8 @@ class PathUrlResolverTest extends ResolverTestCase
         $segments = explode('/', trim($path, '/'));
 
         $this->assertEquals(
-            $this->canonicalUrlWithPath($path),
-            $this->urlResolver->resolve($segments));
+            (string) $this->canonicalUrlWithPath($path),
+            (string) $this->urlResolver->resolve($segments));
     }
 
     public function testFragmentAndQuery()

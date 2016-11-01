@@ -2,11 +2,13 @@
 namespace Concrete\Core\Entity\Express;
 
 use Concrete\Core\Attribute\CategoryObjectInterface;
+use Concrete\Core\Export\ExportableInterface;
 use Concrete\Core\Express\Search\ColumnSet\ColumnSet;
 use Concrete\Core\Express\Search\ColumnSet\DefaultSet;
 use Concrete\Core\Permission\ObjectInterface;
 use Concrete\Core\Tree\Node\Node;
 use Doctrine\Common\Collections\ArrayCollection;
+use Concrete\Core\Export\Item\Express\Entity as EntityExporter;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -14,11 +16,11 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="ExpressEntities")
  * @ORM\HasLifecycleCallbacks
  */
-class Entity implements CategoryObjectInterface, ObjectInterface
+class Entity implements CategoryObjectInterface, ObjectInterface, ExportableInterface
 {
     /**
-     * @ORM\Id @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
+     * @ORM\Id @ORM\Column(type="guid")
+     * @ORM\GeneratedValue(strategy="UUID")
      */
     protected $id;
 
@@ -31,6 +33,16 @@ class Entity implements CategoryObjectInterface, ObjectInterface
      * @ORM\Column(type="string", unique=true)
      */
     protected $handle;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $plural_handle;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    protected $supports_custom_display_order = false;
 
     /**
      * @ORM\Column(type="text", nullable=true)
@@ -68,12 +80,12 @@ class Entity implements CategoryObjectInterface, ObjectInterface
     protected $forms;
 
     /**
-     * @ORM\OneToOne(targetEntity="Form", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity="Form", cascade={"persist"})
      **/
     protected $default_view_form;
 
     /**
-     * @ORM\OneToOne(targetEntity="Form", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity="Form", cascade={"persist"})
      **/
     protected $default_edit_form;
 
@@ -103,7 +115,6 @@ class Entity implements CategoryObjectInterface, ObjectInterface
         $this->forms = new ArrayCollection();
         $this->associations = new ArrayCollection();
         $this->entries = new ArrayCollection();
-        $this->result_column_set = new DefaultSet($this->getAttributeKeyCategory());
     }
 
     /**
@@ -136,6 +147,50 @@ class Entity implements CategoryObjectInterface, ObjectInterface
     public function setHandle($handle)
     {
         $this->handle = $handle;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPluralHandle()
+    {
+        return $this->plural_handle;
+    }
+
+    /**
+     * @param mixed $plural_handle
+     */
+    public function setPluralHandle($plural_handle)
+    {
+        $this->plural_handle = $plural_handle;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function supportsCustomDisplayOrder()
+    {
+        return $this->supports_custom_display_order;
+    }
+
+    /**
+     * @param mixed $supports_custom_display_order
+     */
+    public function setSupportsCustomDisplayOrder($supports_custom_display_order)
+    {
+        $this->supports_custom_display_order = $supports_custom_display_order;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getOwnedBy()
+    {
+        foreach($this->associations as $association) {
+            if ($association->isOwnedByAssociation()) {
+                return $association->getTargetEntity();
+            }
+        }
     }
 
     /**
@@ -191,7 +246,12 @@ class Entity implements CategoryObjectInterface, ObjectInterface
      */
     public function getResultColumnSet()
     {
-        return $this->result_column_set;
+        $set = $this->result_column_set;
+        if (is_object($set)) {
+            return $set;
+        } else {
+            return new DefaultSet($this->getAttributeKeyCategory());
+        }
     }
 
     /**
@@ -330,7 +390,7 @@ class Entity implements CategoryObjectInterface, ObjectInterface
 
     public function getAttributeKeyCategory()
     {
-        return \Core::make('\Concrete\Core\Attribute\Category\ExpressCategory', array($this));
+        return \Core::make('\Concrete\Core\Attribute\Category\ExpressCategory', array('entity' => $this));
     }
 
     public function getPermissionObjectIdentifier()
@@ -351,6 +411,11 @@ class Entity implements CategoryObjectInterface, ObjectInterface
     public function getPermissionObjectKeyCategoryHandle()
     {
         return false;
+    }
+
+    public function getExporter()
+    {
+        return new EntityExporter();
     }
 
 }

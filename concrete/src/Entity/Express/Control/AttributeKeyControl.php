@@ -1,10 +1,11 @@
 <?php
 namespace Concrete\Core\Entity\Express\Control;
 
+use Concrete\Core\Entity\Attribute\Key\Key;
 use Concrete\Core\Entity\Express\Entity;
 use Concrete\Core\Entity\Express\Entry;
-use Concrete\Core\Express\Form\Control\Form\AttributeKeyControlFormRenderer;
-use Concrete\Core\Express\Form\Control\View\AttributeKeyControlViewRenderer;
+use Concrete\Core\Express\Form\Context\ContextInterface;
+use Concrete\Core\Express\Form\Control\Renderer\AttributeKeyControlRenderer;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -20,7 +21,7 @@ class AttributeKeyControl extends Control
     protected $attribute_key;
 
     /**
-     * @return mixed
+     * @return Key
      */
     public function getAttributeKey()
     {
@@ -35,14 +36,9 @@ class AttributeKeyControl extends Control
         $this->attribute_key = $attribute_key;
     }
 
-    public function getFormControlRenderer(Entry $entry = null)
+    public function getControlRenderer(ContextInterface $context)
     {
-        return new AttributeKeyControlFormRenderer($entry);
-    }
-
-    public function getViewControlRenderer(Entry $entry)
-    {
-        return new AttributeKeyControlViewRenderer($entry);
+        return new AttributeKeyControlRenderer();
     }
 
     public function getControlLabel()
@@ -61,4 +57,10 @@ class AttributeKeyControl extends Control
         $data['attributeType'] = $this->getAttributeKey()->getAttributeTypeHandle();
         return $data;
     }
+
+    public function getExporter()
+    {
+        return new \Concrete\Core\Export\Item\Express\Control\AttributeKeyControl();
+    }
+
 }

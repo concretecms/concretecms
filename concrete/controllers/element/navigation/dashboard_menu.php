@@ -49,23 +49,17 @@ class DashboardMenu extends Menu
         return implode(' ' , $classes);
     }
 
-    public function displayDivider(Page $page, Page $next = null)
-    {
-        if ($page->getAttribute('is_desktop')) {
-            return true;
-        }
-
-        if ($page->getPackageID() == 0 && is_object($next) && $next->getPackageID() > 0) {
-            return true;
-        }
-    }
-
     public function getChildPages($parent)
     {
         $pages = parent::getChildPages($parent);
         if ($parent->getCollectionPath() == '/dashboard/welcome') {
             // Add My Account to the List
             $pages[] = Page::getByPath('/account');
+            $site = \Core::make("site")->getSite();
+            $config = $site->getConfigRepository();
+            if (is_object($site) && $config->get('user.profiles_enabled')) {
+                $pages[] = Page::getByPath('/members/profile');
+            }
         }
         return $pages;
     }

@@ -26,7 +26,7 @@ class Bulk extends DashboardPageController
             if ($prevLocale !== $locale) {
                 \Localization::changeLocale($locale);
             }
-            $names[$locale] = tc('SiteName', $this->app->make('config')->get('concrete.site'));
+            $names[$locale] = tc('SiteName', $this->app->make('site')->getSite()->getSiteName());
             if ($prevLocale !== $locale) {
                 \Localization::changeLocale($prevLocale);
             }
@@ -62,7 +62,7 @@ class Bulk extends DashboardPageController
             }
             $siteName = $this->getSiteNameForLocale($locale);
         } else {
-            $siteName = $this->app->make('config')->get('concrete.site');
+            $siteName = $this->app->make('site')->getSite()->getSiteName();
         }
 
         return $siteName;
@@ -88,9 +88,15 @@ class Bulk extends DashboardPageController
 
     public function saveRecord()
     {
+        $cID = $this->post('cID');
+
+        if (!$this->token->validate('save_seo_record_' . $cID)) {
+            $error = t('Invalid CSRF token. Please refresh and try again.');
+            return JsonResponse::create(array('message' => $error));
+        }
+
         $text = $this->app->make('helper/text');
         $success = t('success');
-        $cID = $this->post('cID');
         $c = Page::getByID($cID);
         if (!$c || $c->isError()) {
             throw new \RuntimeException(t('Unable to find the specified page'));

@@ -9,6 +9,7 @@ use Concrete\Core\Backup\ContentImporter\ValueInspector\InspectionRoutine\PageTy
 use Concrete\Core\Backup\ContentImporter\ValueInspector\InspectionRoutine\PictureRoutine;
 use Concrete\Core\Backup\ContentImporter\ValueInspector\ValueInspector;
 use Concrete\Core\Foundation\Service\Provider as ServiceProvider;
+use Concrete\Core\Backup\ContentImporter\Importer\Manager as ImporterManager;
 
 class ContentImporterServiceProvider extends ServiceProvider
 {
@@ -40,5 +41,17 @@ class ContentImporterServiceProvider extends ServiceProvider
                 return $inspector;
             }
         );
+
+        $this->app->bindshared(
+            'import/item/manager',
+            function ($app) {
+                $importer = $app->make(ImporterManager::class);
+                foreach($app->make('config')->get('app.importer_routines') as $routine) {
+                    $importer->registerImporterRoutine($app->make($routine));
+                }
+                return $importer;
+            }
+        );
+
     }
 }

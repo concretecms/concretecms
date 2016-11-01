@@ -16,7 +16,7 @@ class ErrorTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($e, $e1);
 
         $e = new \Concrete\Core\Error\Error();
-        $this->assertInstanceOf('Concrete\Core\Error\ErrorBag\ErrorBag', $e);
+        $this->assertInstanceOf('Concrete\Core\Error\ErrorList\ErrorList', $e);
     }
 
     public function testBasicErrorFunctionality()
@@ -28,7 +28,7 @@ class ErrorTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(true, $e->has());
         $text = $e->getList()[0];
         $this->assertEquals('This is a test.', (string) $text);
-        $this->assertInstanceOf('Concrete\Core\Error\ErrorBag\Error\Error', $text);
+        $this->assertInstanceOf('Concrete\Core\Error\ErrorList\Error\Error', $text);
         ob_start();
         $e->outputJSON();
         $output = ob_get_contents();
@@ -51,9 +51,9 @@ class ErrorTest extends PHPUnit_Framework_TestCase
         $e = \Core::make('error');
         $e->add('This is a standard error', 'first_name');
         $error = $e->getList()[0];
-        $this->assertInstanceOf('Concrete\Core\Error\ErrorBag\Error\Error', $error);
+        $this->assertInstanceOf('Concrete\Core\Error\ErrorList\Error\Error', $error);
         $field = $error->getField();
-        $this->assertInstanceOf('Concrete\Core\Error\ErrorBag\Field\Field', $field);
+        $this->assertInstanceOf('Concrete\Core\Error\ErrorList\Field\Field', $field);
         $this->assertEquals('first_name', $field->getFieldElementName());
         $this->assertEquals('first_name', $field->getDisplayName());
         $this->assertEquals('This is a standard error', $error->getMessage());
@@ -65,13 +65,13 @@ class ErrorTest extends PHPUnit_Framework_TestCase
     public function testFullErrorSyntax()
     {
         $e = \Core::make('error');
-        $field = new \Concrete\Core\Error\ErrorBag\Field\Field('last_name', 'Last Name');
-        $error = new \Concrete\Core\Error\ErrorBag\Error\Error('This is my error', $field);
+        $field = new \Concrete\Core\Error\ErrorList\Field\Field('last_name', 'Last Name');
+        $error = new \Concrete\Core\Error\ErrorList\Error\Error('This is my error', $field);
         $e->add($error);
         $error = $e->getList()[0];
-        $this->assertInstanceOf('Concrete\Core\Error\ErrorBag\Error\Error', $error);
+        $this->assertInstanceOf('Concrete\Core\Error\ErrorList\Error\Error', $error);
         $field = $error->getField();
-        $this->assertInstanceOf('Concrete\Core\Error\ErrorBag\Field\Field', $field);
+        $this->assertInstanceOf('Concrete\Core\Error\ErrorList\Field\Field', $field);
         $this->assertEquals('last_name', $field->getFieldElementName());
         $this->assertEquals('Last Name', $field->getDisplayName());
         $this->assertEquals('This is my error', $error->getMessage());
@@ -80,12 +80,27 @@ class ErrorTest extends PHPUnit_Framework_TestCase
     public function testFieldNotFoundError()
     {
         $e = \Core::make('error');
-        $field = new \Concrete\Core\Error\ErrorBag\Field\Field('last_name', 'Last Name');
-        $error = new \Concrete\Core\Error\ErrorBag\Error\FieldNotPresentError($field);
+        $field = new \Concrete\Core\Error\ErrorList\Field\Field('last_name', 'Last Name');
+        $error = new \Concrete\Core\Error\ErrorList\Error\FieldNotPresentError($field);
         $e->add($error);
         $error = $e->getList()[0];
         $this->assertEquals('The field Last Name is required.', (string) $error);
     }
+
+    public function testContainsField()
+    {
+        $e = \Core::make('error');
+        $e->add('Handle is wrong, dummy!', 'handle');
+        $e->add('Name is wrong.', 'name');
+        $this->assertTrue($e->containsField('handle'));
+
+        $field = new \Concrete\Core\Error\ErrorList\Field\Field('name', 'Name');
+        $this->assertTrue($e->containsField('handle'));
+
+        $this->assertFalse($e->containsField('description'));
+
+    }
+
 
 
 }

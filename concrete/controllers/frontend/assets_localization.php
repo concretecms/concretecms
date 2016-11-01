@@ -25,6 +25,7 @@ var ccmi18n = {
   cancel: <?=json_encode(t('Cancel'))?>,
   collapse: <?=json_encode(t('Collapse'))?>,
   error: <?=json_encode(t('Error'))?>,
+  deleteBlockConfirm: <?=json_encode(t('Delete Block'))?>,
   deleteBlock: <?=json_encode(t('Block Deleted'))?>,
   deleteBlockMsg: <?=json_encode(t('The block has been removed successfully.'))?>,
   addBlock: <?=json_encode(t('Add Block'))?>,
@@ -105,6 +106,7 @@ var ccmi18n = {
   user_delete: <?=json_encode(t('Delete'))?>,
   user_group_remove: <?=json_encode(t('Remove From Group'))?>,
   user_group_add: <?=json_encode(t('Add to Group'))?>,
+  chooseUser: <?=json_encode(t('Choose a User'))?>,
   none: <?=json_encode(t('None'))?>,
   editModeMsg: <?=json_encode(t('Let\'s start editing a page.'))?>,
   editMode: <?=json_encode(t('Edit Mode'))?>,
@@ -463,14 +465,14 @@ jQuery.each(jQuery.Redactor.opts.langs.en, function(key, value) {
 
     }
 
-    public static function getDynatreeJavascript($setResponseHeaders = true)
+    public static function getFancytreeJavascript($setResponseHeaders = true)
     {
         if ($setResponseHeaders) {
             static::sendJavascriptHeader();
         }
         ?>
-jQuery.ui.dynatree.prototype.options.strings.loading = <?=json_encode(t('Loading...'))?>;
-jQuery.ui.dynatree.prototype.options.strings.loadError = <?=json_encode(t('Load error!'))?>;
+jQuery.ui.fancytree.prototype.options.strings.loading = <?=json_encode(t('Loading...'))?>;
+jQuery.ui.fancytree.prototype.options.strings.loadError = <?=json_encode(t('Load error!'))?>;
 <?php
 
     }

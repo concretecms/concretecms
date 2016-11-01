@@ -11,7 +11,7 @@ use Loader;
 use Concrete\Core\Foundation\Object;
 use PageTemplate;
 use PermissionKey;
-use PermissionAccess;
+use Concrete\Core\Permission\Access\Access as PermissionAccess;
 use Concrete\Core\Permission\Access\Entity\PageOwnerEntity as PageOwnerPermissionAccessEntity;
 use Concrete\Core\Page\Type\Composer\FormLayoutSet as PageTypeComposerFormLayoutSet;
 use Concrete\Core\Page\Type\Composer\Control\Type\Type as PageTypeComposerControlType;
@@ -20,7 +20,7 @@ use Concrete\Core\Backup\ContentImporter;
 use Concrete\Core\Package\PackageList;
 use CollectionVersion;
 use Collection;
-use Page;
+use Concrete\Core\Page\Page;
 use Config;
 use User;
 use Package;
@@ -34,7 +34,6 @@ use Concrete\Core\Page\Type\Composer\Control\CorePageProperty\CorePageProperty a
 
 class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
 {
-    protected $ptDraftVersionsToSave = 10;
     protected $ptDefaultPageTemplateID = 0;
 
     public function getPageTypeID()
@@ -45,6 +44,17 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
     public function getPageTypeName()
     {
         return $this->ptName;
+    }
+
+    public function getSiteTypeID()
+    {
+        return $this->siteTypeID;
+    }
+
+    public function getSiteTypeObject()
+    {
+        $em = \Database::connection()->getEntityManager();
+        return $em->find('Concrete\Core\Entity\Site\Type', $this->getSiteTypeID());
     }
 
     public function getPageTypeDisplayName($format = 'html')
@@ -152,7 +162,7 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
         }
     }
 
-    public function publish(Page $c)
+    public function publish(Page $c, $requestOrDateTime = null)
     {
         $this->stripEmptyPageTypeComposerControls($c);
         $parent = Page::getByID($c->getPageDraftTargetParentPageID());
@@ -172,11 +182,19 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
         }
 
         $u = new User();
-        $v = CollectionVersion::get($c, 'RECENT');
-        $pkr = new ApprovePagePageWorkflowRequest();
-        $pkr->setRequestedPage($c);
-        $pkr->setRequestedVersionID($v->getVersionID());
-        $pkr->setRequesterUserID($u->getUserID());
+        if (!($requestOrDateTime instanceof ApprovePagePageWorkflowRequest)) {
+            $v = CollectionVersion::get($c, 'RECENT');
+            $pkr = new ApprovePagePageWorkflowRequest();
+            $pkr->setRequestedPage($c);
+            $pkr->setRequestedVersionID($v->getVersionID());
+            $pkr->setRequesterUserID($u->getUserID());
+            if ($requestOrDateTime) {
+                // That means it's a date time
+                $pkr->scheduleVersion($requestOrDateTime);
+            }
+        } else {
+            $pkr = $requestOrDateTime;
+        }
         $pkr->trigger();
 
         $u->unloadCollectionEdit($c);
@@ -188,59 +206,12 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
         \Events::dispatch('on_page_type_publish', $ev);
     }
 
+    /**
+     * @deprecated
+     */
     public function savePageTypeComposerForm(Page $c)
     {
-        $controls = PageTypeComposerControl::getList($this);
-        $outputControls = array();
-        foreach ($controls as $cn) {
-            $data = $cn->getRequestValue();
-            $cn->publishToPage($c, $data, $controls);
-            $outputControls[] = $cn;
-        }
-
-        // set page name from controls
-        // now we see if there's a page name field in there
-        $containsPageNameControl = false;
-        foreach ($outputControls as $cn) {
-            if ($cn instanceof NameCorePageProperty) {
-                $containsPageNameControl = true;
-                break;
-            }
-        }
-        if (!$containsPageNameControl) {
-            foreach ($outputControls as $cn) {
-                if ($cn->canPageTypeComposerControlSetPageName()) {
-                    $pageName = $cn->getPageTypeComposerControlPageNameValue($c);
-                    $c->updateCollectionName($pageName);
-                }
-            }
-        }
-
-        // remove all but the most recent X drafts.
-        $vl = new VersionList($c);
-        $vl->setItemsPerPage(-1);
-        // this will ensure that we only ever keep X versions.
-        $vArray = $vl->getPage();
-        if (count($vArray) > $this->ptDraftVersionsToSave) {
-            for ($i = $this->ptDraftVersionsToSave; $i < count($vArray); ++$i) {
-                $v = $vArray[$i];
-                @$v->delete();
-            }
-        }
-
-        $c = Page::getByID($c->getCollectionID(), 'RECENT');
-        $controls = array();
-        foreach ($outputControls as $oc) {
-            $oc->setPageObject($c);
-            $controls[] = $oc;
-        }
-
-        $ev = new Event($c);
-        $ev->setPageType($this);
-        $ev->setArgument('controls', $controls);
-        \Events::dispatch('on_page_type_save_composer_form', $ev);
-
-        return $controls;
+        return $this->getPageTypeSaverObject()->saveForm($c);
     }
 
     public function getPageTypeSelectedPageTemplateObjects()
@@ -299,8 +270,9 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
             $cobj = Collection::createCollection($data);
             $cID = $cobj->getCollectionID();
 
-            $v2 = array($cID, 1, $this->getPageTypeID());
-            $q2 = "insert into Pages (cID, cIsTemplate, ptID) values (?, ?, ?)";
+            $site = \Core::make('site')->getSite();
+            $v2 = array($cID, 1, $this->getPageTypeID(), $site->getSiteTreeID());
+            $q2 = "insert into Pages (cID, cIsTemplate, ptID, siteTreeID) values (?, ?, ?, ?)";
             $r2 = $db->prepare($q2);
             $res2 = $db->execute($r2, $v2);
 
@@ -394,6 +366,12 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
             'handle' => $ptHandle,
             'name' => $ptName,
         );
+
+        $siteType = (string) $node['site-type'];
+        if ($siteType) {
+            $data['siteType'] = \Core::make('site/type')->getByHandle($siteType);
+        }
+
         if ($defaultPageTemplate) {
             $data['defaultTemplate'] = $defaultPageTemplate;
         }
@@ -472,7 +450,6 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
             $pt = static::getByID($ptID);
             $defaultTemplate = $pt->getPageTypeDefaultPageTemplateObject();
             if (isset($node->composer->output->pagetemplate)) {
-                $ci = new ContentImporter();
                 foreach ($node->composer->output->pagetemplate as $pagetemplate) {
                     $handle = (string) $pagetemplate['handle'];
                     $ptt = PageTemplate::getByHandle($handle);
@@ -496,6 +473,7 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
 
                         // now that we have the defaults page, let's import this content into it.
                         if (isset($pagetemplate->page)) {
+                            $ci = new ContentImporter\Importer\Routine\ImportPageContentRoutine();
                             $ci->importPageAreas($xc, $pagetemplate->page);
                         }
                     }
@@ -513,6 +491,10 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
         $pagetype->addAttribute('package', $this->getPackageHandle());
         if ($this->isPageTypeInternal()) {
             $pagetype->addAttribute('internal', 'true');
+        }
+        $siteType = $this->getSiteTypeObject();
+        if (!$siteType->isDefault()) {
+            $pagetype->addAttribute('site-type', $siteType->getSiteTypeHandle());
         }
         if ($this->doesPageTypeLaunchInComposer()) {
             $pagetype->addAttribute('launch-in-composer', '1');
@@ -590,8 +572,12 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
         return $count;
     }
 
-    public function duplicate($ptHandle, $ptName)
+    public function duplicate($ptHandle, $ptName, $siteType = null)
     {
+        if (!is_object($siteType)) {
+            $siteType = $this->getSiteTypeObject();
+        }
+
         $data = array(
             'handle' => $ptHandle,
             'name' => $ptName,
@@ -600,6 +586,7 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
             'templates' => $this->getPageTypeSelectedPageTemplateObjects(),
             'ptLaunchInComposer' => $this->doesPageTypeLaunchInComposer(),
             'ptIsFrequentlyAdded' => $this->isPageTypeFrequentlyAdded(),
+            'siteType' => $siteType
         );
 
         $new = static::add($data);
@@ -703,8 +690,15 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
             'ptLaunchInComposer' => null,
             'ptIsFrequentlyAdded' => null,
         );
+
+        if (!isset($data['siteType'])) {
+            $data['siteType'] = \Core::make('site/type')->getDefault();
+        }
+
         $ptHandle = $data['handle'];
         $ptName = $data['name'];
+        $siteTypeID = $data['siteType']->getSiteTypeID();
+
         $ptDefaultPageTemplateID = 0;
         $ptIsFrequentlyAdded = 0;
         $ptLaunchInComposer = 0;
@@ -747,7 +741,7 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
         }
 
         $db->Execute(
-            'insert into PageTypes (ptName, ptHandle, ptDefaultPageTemplateID, ptAllowedPageTemplates, ptIsInternal, ptLaunchInComposer, ptDisplayOrder, ptIsFrequentlyAdded, pkgID) values (?, ?, ?, ?, ?, ?, ?, ?, ?)',
+            'insert into PageTypes (ptName, ptHandle, ptDefaultPageTemplateID, ptAllowedPageTemplates, ptIsInternal, ptLaunchInComposer, ptDisplayOrder, ptIsFrequentlyAdded, siteTypeID, pkgID) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
             array(
                 $ptName,
                 $ptHandle,
@@ -757,6 +751,7 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
                 $ptLaunchInComposer,
                 $ptDisplayOrder,
                 $ptIsFrequentlyAdded,
+                $siteTypeID,
                 $pkgID,
             )
         );
@@ -910,13 +905,18 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
         }
     }
 
-    public static function getList($includeInternal = false)
+    public static function getList($includeInternal = false, $siteType = null)
     {
         $db = Loader::db();
+        if (!$siteType) {
+            $site = \Core::make('site')->getDefault();
+            $siteType = $site->getType();
+        }
+        $v = array($siteType->getSiteTypeID());
         if (!$includeInternal) {
-            $ptIDs = $db->GetCol('select ptID from PageTypes where ptIsInternal = false order by ptDisplayOrder asc');
+            $ptIDs = $db->GetCol('select ptID from PageTypes where siteTypeID = ? and ptIsInternal = 0 order by ptDisplayOrder asc', $v);
         } else {
-            $ptIDs = $db->GetCol('select ptID from PageTypes order by ptDisplayOrder asc');
+            $ptIDs = $db->GetCol('select ptID from PageTypes order by ptDisplayOrder asc', $v);
         }
 
         return static::returnList($ptIDs);
@@ -938,18 +938,28 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
         return $list;
     }
 
-    public static function getFrequentlyUsedList()
+    public static function getFrequentlyUsedList($siteType = null)
     {
+        if (!is_object($siteType)) {
+            $site = \Core::make('site')->getDefault();
+            $siteType = $site->getType();
+        }
+
         $db = Loader::db();
-        $ptIDs = $db->GetCol('select ptID from PageTypes where ptIsInternal = 0 and ptIsFrequentlyAdded = 1 order by ptDisplayOrder asc');
+        $ptIDs = $db->GetCol('select ptID from PageTypes where ptIsInternal = 0 and ptIsFrequentlyAdded = 1 and siteTypeID = ? order by ptDisplayOrder asc', [$siteType->getSiteTypeID()]);
 
         return static::returnList($ptIDs);
     }
 
-    public static function getInfrequentlyUsedList()
+    public static function getInfrequentlyUsedList($siteType = null)
     {
+        if (!is_object($siteType)) {
+            $site = \Core::make('site')->getDefault();
+            $siteType = $site->getType();
+        }
+
         $db = Loader::db();
-        $ptIDs = $db->GetCol('select ptID from PageTypes where ptIsInternal = 0 and ptIsFrequentlyAdded = 0 order by ptDisplayOrder asc');
+        $ptIDs = $db->GetCol('select ptID from PageTypes where ptIsInternal = 0 and ptIsFrequentlyAdded = 0 and siteTypeID = ? order by ptDisplayOrder asc', [$siteType->getSiteTypeID()]);
 
         return static::returnList($ptIDs);
     }
@@ -1007,7 +1017,7 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
             $cm = new static();
             $cm->setPropertiesFromArray($r);
             $cm->ptPublishTargetObject = unserialize($r['ptPublishTargetObject']);
-            $item->set($cm);
+            $cache->save($item->set($cm));
 
             return $cm;
         }
@@ -1114,6 +1124,19 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
         }
     }
 
+    /**
+     * @return \Concrete\Core\Page\Type\Saver\SaverInterface|null
+     */
+    public function getPageTypeSaverObject()
+    {
+        if ($this->ptHandle) {
+            $saver = \Core::make('manager/page_type/saver')->driver($this->ptHandle);
+            $saver->setPageTypeObject($this);
+            return $saver;
+        }
+    }
+
+
     public function createDraft(\Concrete\Core\Entity\Page\Template $pt, $u = false)
     {
         if (!is_object($u)) {
@@ -1122,9 +1145,8 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
         $db = Loader::db();
         $ptID = $this->getPageTypeID();
         $parent = Page::getByPath(Config::get('concrete.paths.drafts'));
-        $data = array('cvIsApproved' => 0);
+        $data = array('cvIsApproved' => 0, 'cIsActive' => false, 'cAcquireComposerOutputControls' => true);
         $p = $parent->add($this, $data, $pt);
-        $p->deactivate();
 
         // now we setup in the initial configurated page target
         $target = $this->getPageTypePublishTargetObject();
@@ -1133,16 +1155,10 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
             $p->setPageDraftTargetParentPageID($cParentID);
         }
 
-        // we have to publish the controls to the page. i'm not sure why
         $controls = PageTypeComposerControl::getList($this);
-        $outputControls = array();
         foreach ($controls as $cn) {
-            $cn->publishToPage($p, array(), $controls);
+            $cn->onPageDraftCreate($p);
         }
-
-        // now we need to clear out the processed controls in case we
-        // save again in the same request
-        CorePagePropertyPageTypeComposerControl::clearComposerRequestProcessControls();
 
         return $p;
     }
@@ -1150,13 +1166,31 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
     public function renderComposerOutputForm($page = null, $targetPage = null)
     {
         $env = \Environment::get();
-        $rec = $env->getRecord(
+        $elementController = $env->getRecord(
+            DIRNAME_CONTROLLERS . '/element/page_type/composer/form/output/form/' . $this->getPageTypeHandle() . '.php',
+            $this->getPackageHandle()
+        );
+        $element = $env->getRecord(
             DIRNAME_ELEMENTS . '/' . DIRNAME_PAGE_TYPES . '/composer/form/output/form/' . $this->getPageTypeHandle() . '.php',
             $this->getPackageHandle()
         );
-        if ($rec->exists()) {
+        if ($elementController->exists()) {
+            $elementController = core_class('Controller\\Element\\PageType\\Composer\\Form\\Output\\Form\\'
+                . camelcase($this->getPageTypeHandle()), $this->getPackageHandle());
+
+            $elementController = \Core::make($elementController);
+            $elementController->setPageTypeObject($this);
+            if (is_object($page)) {
+                $elementController->setPageObject($page);
+            }
+            if (is_object($targetPage)) {
+                $elementController->setTargetPageObject($targetPage);
+            }
+            $elementController->setPackageHandle($this->getPackageHandle());
+            $elementController->render();
+        } else if ($element->exists()) {
             $pagetype = $this;
-            include $rec->file;
+            include $element->file;
         } else {
             Loader::element('page_types/composer/form/output/form', array(
                 'pagetype' => $this,

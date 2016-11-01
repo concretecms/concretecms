@@ -10,13 +10,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class TextType extends Type
 {
-    public function getAttributeValue()
-    {
-        return new TextValue();
-    }
-
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", nullable=true)
      */
     protected $akTextPlaceholder = '';
 

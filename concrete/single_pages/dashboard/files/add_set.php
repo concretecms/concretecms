@@ -6,11 +6,9 @@
     	
 		<?=$validation_token->output('file_sets_add');?>
 
-		<div class="control-group">
+		<div class="form-group">
 			<?=Loader::helper("form")->label('file_set_name', t('Name'))?>
-			<div class="controls">
-				<?=$form->text('file_set_name', '', array('class' => 'span4'))?>
-			</div>
+			<?=$form->text('file_set_name', '', array('autofocus' => 'autofocus'))?>
 		</div>
 	</div>
 

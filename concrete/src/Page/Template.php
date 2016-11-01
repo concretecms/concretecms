@@ -2,10 +2,7 @@
 namespace Concrete\Core\Page;
 
 use PageType;
-use Concrete\Core\Support\Facade\Database;
-use Concrete\Core\Package\PackageList;
 use Core;
-use Doctrine\ORM\Mapping as ORM;
 
 class Template
 {
@@ -21,9 +18,10 @@ class Template
     public static function getByHandle($pTemplateHandle)
     {
         $em = \ORM::entityManager();
+
         return $em->getRepository('\Concrete\Core\Entity\Page\Template')
             ->findOneBy(
-                array('pTemplateHandle' => $pTemplateHandle)
+                ['pTemplateHandle' => $pTemplateHandle]
             );
     }
 
@@ -31,20 +29,29 @@ class Template
     {
         if ($pTemplateID) {
             $em = \ORM::entityManager();
+
             return $em->find('\Concrete\Core\Entity\Page\Template', $pTemplateID);
         }
     }
 
     protected static function sort($list)
     {
+        $wrapperList = [];
+        foreach ($list as $item) {
+            $wrapperList[] = ['item' => $item, 'text' => $item->getPageTemplateDisplayName('text')];
+        }
         usort(
-            $list,
+            $wrapperList,
             function ($a, $b) {
-                return strcasecmp($a->getPageTemplateDisplayName('text'), $b->getPageTemplateDisplayName('text'));
+                return strcasecmp($a['text'], $b['text']);
             }
         );
+        $result = [];
+        foreach ($wrapperList as $array) {
+            $result[] = $array['item'];
+        }
 
-        return $list;
+        return $result;
     }
 
     public static function getListByPackage($pkg)
@@ -52,7 +59,7 @@ class Template
         $em = \ORM::entityManager();
         $list = $em->getRepository('\Concrete\Core\Entity\Page\Template')
             ->findBy(
-                array('pkgID' => $pkg->getPackageID())
+                ['pkgID' => $pkg->getPackageID()]
             );
         $list = self::sort($list);
 
@@ -62,9 +69,9 @@ class Template
     public static function getList($includeInternal = false)
     {
         $em = \ORM::entityManager();
-        $args = array('pTemplateIsInternal' => $includeInternal);
+        $args = ['pTemplateIsInternal' => $includeInternal];
         $list = $em->getRepository('\Concrete\Core\Entity\Page\Template')->findBy(
-            $args, array('pTemplateID' => 'asc')
+            $args, ['pTemplateID' => 'asc']
         );
         $list = self::sort($list);
 
@@ -107,5 +114,4 @@ class Template
 
         return $f->getDirectoryContents(DIR_FILES_PAGE_TEMPLATE_ICONS);
     }
-
 }

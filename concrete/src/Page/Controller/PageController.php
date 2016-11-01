@@ -3,12 +3,13 @@ namespace Concrete\Core\Page\Controller;
 
 use Concrete\Core\Block\Block;
 use Concrete\Core\Block\BlockController;
+use Concrete\Core\Controller\Controller;
 use Concrete\Core\Foundation\Environment;
+use Concrete\Core\Html\Service\Html;
+use Concrete\Core\Http\Request;
+use Concrete\Core\Page\Page;
 use Concrete\Core\Routing\Redirect;
-use Page;
-use Request;
-use Controller;
-use Core;
+use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Page\View\PageView;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -18,18 +19,19 @@ class PageController extends Controller
     protected $action;
     protected $passThruBlocks = array();
     protected $parameters = array();
+    protected $replacement = null;
 
     public function supportsPageCache()
     {
         return $this->supportsPageCache;
     }
 
-    public function __construct(\Concrete\Core\Page\Page $c)
+    public function __construct(Page $c)
     {
         parent::__construct();
         $this->c = $c;
         $this->view = new PageView($this->c);
-        $this->set('html', Core::make('\Concrete\Core\Html\Service\Html'));
+        $this->set('html', Application::getFacadeApplication()->make(HTML::class));
     }
 
     /**
@@ -44,29 +46,35 @@ class PageController extends Controller
      */
     public function replace($var)
     {
-        if (!($var instanceof \Concrete\Core\Page\Page)) {
-            $var = \Page::getByPath($var);
+        if (!($var instanceof Page)) {
+            $var = Page::getByPath($var);
         }
 
-        $request = \Request::getInstance();
+        $request = Request::getInstance();
         $request->setCurrentPage($var);
         $controller = $var->getPageController();
-        $controller->on_start();
-        $controller->runAction('view');
-        $controller->on_before_render();
-        $view = $controller->getViewObject();
-        echo $view->render();
-        exit;
+        $this->replacement = $controller;
+    }
+
+    public function isReplaced()
+    {
+        return !!$this->replacement;
+    }
+
+    public function getReplacement()
+    {
+        return $this->replacement;
     }
 
     public function getSets()
     {
         $sets = parent::getSets();
-        $session = Core::make('session');
+        $session = Application::getFacadeApplication()->make('session');
         if ($session->getFlashBag()->has('page_message')) {
             $value = $session->getFlashBag()->get('page_message');
             foreach ($value as $message) {
                 $sets[$message[0]] = $message[1];
+                $sets[$message[0].'IsHTML'] = isset($message[2]) && $message[2];
             }
         }
 
@@ -104,10 +112,10 @@ class PageController extends Controller
         return $this->c;
     }
 
-    public function flash($key, $value)
+    public function flash($key, $value, $isHTML = false)
     {
-        $session = Core::make('session');
-        $session->getFlashBag()->add('page_message', array($key, $value));
+        $session = Application::getFacadeApplication()->make('session');
+        $session->getFlashBag()->add('page_message', array($key, $value, $isHTML));
     }
 
     public function getTheme()

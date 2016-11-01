@@ -66,7 +66,10 @@ class Stylesheet
 
     public function clearOutputFile()
     {
-        @unlink($this->getOutputPath());
+        $filename = $this->getOutputPath();
+        if (file_exists($filename)) {
+            @unlink($filename);
+        }
     }
 
     public function outputFileExists()

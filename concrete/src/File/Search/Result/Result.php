@@ -59,9 +59,10 @@ class Result extends SearchResult
             'data-bulk-action-dialog-height' => '400',
         ]));
 
+
         $menu->addItem(new LinkItem('#', t('Rescan'), [
-            'data-bulk-action-type' => 'ajax',
-            'data-bulk-action-url' => \URL::to('/ccm/system/file/rescan')
+            'data-bulk-action-type' => 'progressive',
+            'data-bulk-action-url' => \URL::to('/ccm/system/file/rescan_multiple')
         ]));
 
         $menu->addItem(new LinkItem('#', t('Storage Location'), [

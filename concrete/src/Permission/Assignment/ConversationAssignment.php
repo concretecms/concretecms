@@ -2,8 +2,8 @@
 namespace Concrete\Core\Permission\Assignment;
 
 use Concrete\Core\Conversation\Message\Message;
-use PermissionAccess;
-use Conversation;
+use Concrete\Core\Permission\Access\Access;
+use Concrete\Core\Conversation\Conversation;
 use Database;
 
 class ConversationAssignment extends Assignment
@@ -39,7 +39,7 @@ class ConversationAssignment extends Assignment
             )
         );
 
-        return PermissionAccess::getByID($r, $this->pk);
+        return Access::getByID($r, $this->pk);
     }
 
     public function clearPermissionAssignment()
@@ -56,7 +56,7 @@ class ConversationAssignment extends Assignment
         );
     }
 
-    public function assignPermissionAccess(PermissionAccess $pa)
+    public function assignPermissionAccess(Access $pa)
     {
         $cnvID = 0;
         if (is_object($this->permissionObject)) {

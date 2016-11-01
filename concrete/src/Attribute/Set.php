@@ -9,4 +9,14 @@ class Set extends Facade
     {
         return 'Concrete\Core\Attribute\SetFactory';
     }
+
+    /**
+     * @deprecated
+     */
+    public static function exportTranslations()
+    {
+        $factory = static::getFacadeRoot();
+        $translations = $factory->exportTranslations();
+        return $translations;
+    }
 }

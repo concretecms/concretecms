@@ -1,7 +1,10 @@
 <?php
 namespace Concrete\Core\Entity\Express;
 
+use Concrete\Core\Export\ExportableInterface;
+use Concrete\Core\Express\Form\Context\ContextInterface;
 use Doctrine\ORM\Mapping as ORM;
+use Concrete\Core\Export\Item\Express\Association as AssociationExporter;
 
 /**
  * @ORM\Entity
@@ -9,13 +12,13 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\DiscriminatorColumn(name="type", type="string")
  * @ORM\Table(name="ExpressEntityAssociations")
  */
-abstract class Association
+abstract class Association implements ExportableInterface
 {
     abstract public function getAssociationBuilder();
 
     /**
-     * @ORM\Id @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
+     * @ORM\Id @ORM\Column(type="guid")
+     * @ORM\GeneratedValue(strategy="UUID")
      */
     protected $id;
 
@@ -28,6 +31,23 @@ abstract class Association
      * @ORM\OneToOne(targetEntity="Entity")
      **/
     protected $target_entity;
+
+    /**
+     * @ORM\Column(type="boolean")
+     **/
+    protected $is_owned_by_association = false;
+
+    /**
+     * @ORM\Column(type="boolean")
+     **/
+    protected $is_owning_association = false;
+
+    /**
+     * @ORM\OneToMany(targetEntity="\Concrete\Core\Entity\Express\Entry\Association",
+     *     mappedBy="association", cascade={"remove"})
+     */
+    protected $entry;
+
 
     /**
      * @ORM\OneToMany(targetEntity="\Concrete\Core\Entity\Express\Control\AssociationControl", mappedBy="association", cascade={"remove"})
@@ -58,6 +78,38 @@ abstract class Association
     public function setId($id)
     {
         $this->id = $id;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function isOwningAssociation()
+    {
+        return $this->is_owning_association;
+    }
+
+    /**
+     * @param mixed $is_owning_association
+     */
+    public function setIsOwningAssociation($is_owning_association)
+    {
+        $this->is_owning_association = $is_owning_association;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function isOwnedByAssociation()
+    {
+        return $this->is_owned_by_association;
+    }
+
+    /**
+     * @param mixed $is_owned_by_association
+     */
+    public function setIsOwnedByAssociation($is_owned_by_association)
+    {
+        $this->is_owned_by_association = $is_owned_by_association;
     }
 
     /**
@@ -144,4 +196,9 @@ abstract class Association
 
     abstract public function getFormatter();
     abstract public function getSaveHandler();
+
+    public function getExporter()
+    {
+        return new AssociationExporter();
+    }
 }

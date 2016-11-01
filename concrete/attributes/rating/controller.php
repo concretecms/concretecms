@@ -22,9 +22,8 @@ class Controller extends AttributeTypeController
 
     public function getDisplayValue()
     {
-        $value = $this->getValue() / 20;
         $rt = $this->app->make('helper/rating');
-        return $rt->outputDisplay($value);
+        return $rt->outputDisplay($this->getValue());
     }
 
     public function form()
@@ -46,7 +45,7 @@ class Controller extends AttributeTypeController
         return $list;
     }
 
-    public function saveValue($rating)
+    public function createAttributeValue($rating)
     {
         $value = new RatingValue();
         if ($rating == '') {
@@ -57,9 +56,10 @@ class Controller extends AttributeTypeController
         return $value;
     }
 
-    public function saveForm($data)
+    public function createAttributeValueFromRequest()
     {
-        return $this->saveValue($data['value'] * 20);
+        $data = $this->post();
+        return $this->createAttributeValue($data['value'] * 20);
     }
 
     public function search()

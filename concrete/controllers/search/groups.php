@@ -11,10 +11,11 @@ use URL;
 
 class Groups extends Controller
 {
-    protected $fields = array();
+    protected $fields = [];
 
     public function __construct()
     {
+        parent::__construct();
         $this->groupList = new GroupList();
     }
 
@@ -25,14 +26,15 @@ class Groups extends Controller
             return false;
         }
 
-        if ($_REQUEST['filter'] == 'assign') {
+        if ($this->request->request('filter') == 'assign') {
             $this->groupList->filterByAssignable();
         } else {
             $this->groupList->includeAllGroups();
         }
 
-        if (isset($_REQUEST['keywords'])) {
-            $this->groupList->filterByKeywords($_REQUEST['keywords']);
+        $keywords = $this->request->request('keywords');
+        if (isset($keywords)) {
+            $this->groupList->filterByKeywords($keywords);
         }
 
         $this->groupList->sortBy('gID', 'asc');

@@ -23,7 +23,7 @@ class Entries extends DashboardExpressEntityPageController
         return $this->entity;
     }
 
-    protected function getBackToListURL(Entity $entity)
+    protected function getBackURL(Entity $entity)
     {
         return \URL::to($this->getPageObject()
             ->getCollectionPath(), 'view', $entity->getID(),
@@ -47,7 +47,7 @@ class Entries extends DashboardExpressEntityPageController
                 $this->set('headerMenu', $header);
             }
         } else {
-            $this->set('entities', $r->findByIncludeInPublicList(true));
+            $this->set('entities', $r->findPublicEntities());
         }
     }
 

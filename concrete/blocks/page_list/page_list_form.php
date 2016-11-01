@@ -203,15 +203,20 @@ $form = Loader::helper('form/page_selector');
                     </label>
                 </div>
 
-                <div class="checkbox">
-                    <label>
-                        <input type="checkbox" name="enableExternalFiltering" value="1" <?php if ($enableExternalFiltering) {
-                        ?>checked<?php
-                        } ?> />
-                        <?= t('Enable Other Blocks to Filter This Page List.') ?>
-                    </label>
-                </div>
-            </div>
+        <div class="checkbox">
+            <label>
+                <input type="checkbox" name="ignorePermissions"
+                       value="1" <?php if ($ignorePermissions == 1) { ?> checked <?php } ?> />
+                <?= t('Ignore page permissions.') ?>
+            </label>
+        </div>
+
+            <div class="checkbox">
+            <label>
+                <input type="checkbox" name="enableExternalFiltering" value="1" <?php if ($enableExternalFiltering) { ?>checked<?php } ?> />
+                <?= t('Enable Other Blocks to Filter This Page List.') ?>
+            </label>
+        </div>
 
         </fieldset>
 
@@ -561,9 +566,9 @@ $form = Loader::helper('form/page_selector');
                 'treeID': chosenTree,
                 'chooseNodeInForm': true,
                 'selectNodesByKey': [<?=intval($customTopicTreeNodeID)?>],
-                'onSelect' : function(select, node) {
-                    if (select) {
-                        $('input[name=customTopicTreeNodeID]').val(node.data.key);
+                'onSelect' : function(nodes) {
+                    if (nodes.length) {
+                        $('input[name=customTopicTreeNodeID]').val(nodes[0]);
                     } else {
                         $('input[name=customTopicTreeNodeID]').val('');
                     }

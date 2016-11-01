@@ -20,6 +20,9 @@ if (isset($authType) && $authType) {
 if (!isset($authTypeElement)) {
     $authTypeElement = null;
 }
+if (!isset($authTypeParams)) {
+    $authTypeParams = null;
+}
 $image = date('Ymd') . '.jpg';
 
 /* @var Key[] $required_attributes */

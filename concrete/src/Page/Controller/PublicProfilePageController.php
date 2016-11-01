@@ -10,7 +10,10 @@ class PublicProfilePageController extends CorePageController
     {
         parent::on_start();
 
-        if (!Config::get('concrete.user.profiles_enabled')) {
+        $site = \Core::make('site')->getSite();
+        $config = $site->getConfigRepository();
+
+        if (!$config->get('user.profiles_enabled')) {
             $this->replace('/page_not_found');
         }
     }

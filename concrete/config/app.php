@@ -107,9 +107,10 @@ return array(
         'core_content_importer' => '\Concrete\Core\Backup\ContentImporter\ContentImporterServiceProvider',
         'core_manager_grid_framework' => '\Concrete\Core\Page\Theme\GridFramework\ManagerServiceProvider',
         'core_manager_pagination_view' => '\Concrete\Core\Search\Pagination\View\ManagerServiceProvider',
-        'core_manager_page_type_validator' => '\Concrete\Core\Page\Type\Validator\ManagerServiceProvider',
+        'core_manager_page_type' => '\Concrete\Core\Page\Type\ManagerServiceProvider',
         'core_manager_layout_preset_provider' => '\Concrete\Core\Area\Layout\Preset\Provider\ManagerServiceProvider',
-        'core_manager_file_search_fields' => '\Concrete\Core\File\Search\Field\ManagerServiceProvider',
+        'core_manager_search_fields' => '\Concrete\Core\Search\Field\ManagerServiceProvider',
+        'core_permissions' => '\Concrete\Core\Permission\PermissionServiceProvider',
         'core_database' => '\Concrete\Core\Database\DatabaseServiceProvider',
         'core_form' => '\Concrete\Core\Form\FormServiceProvider',
         'core_session' => '\Concrete\Core\Session\SessionServiceProvider',
@@ -118,12 +119,14 @@ return array(
         'core_events' => '\Concrete\Core\Events\EventsServiceProvider',
         'core_whoops' => '\Concrete\Core\Error\Provider\WhoopsServiceProvider',
         'core_logging' => '\Concrete\Core\Logging\LoggingServiceProvider',
+        'core_notification' => '\Concrete\Core\Notification\NotificationServiceProvider',
         'core_cache' => '\Concrete\Core\Cache\CacheServiceProvider',
         'core_url' => '\Concrete\Core\Url\UrlServiceProvider',
         'core_devices' => '\Concrete\Core\Device\DeviceServiceProvider',
         'core_imageeditor' => '\Concrete\Core\ImageEditor\EditorServiceProvider',
         'core_user' => '\Concrete\Core\User\UserServiceProvider',
         'core_service_manager' => '\Concrete\Core\Service\Manager\ServiceManagerServiceProvider',
+        'core_site' => '\Concrete\Core\Site\ServiceProvider',
 
         // Authentication
         'core_oauth' => '\Concrete\Core\Authentication\Type\OAuth\ServiceProvider',
@@ -153,6 +156,7 @@ return array(
         'ORM' => '\Concrete\Core\Support\Facade\DatabaseORM',
         'Events' => '\Concrete\Core\Support\Facade\Events',
         'Route' => '\Concrete\Core\Support\Facade\Route',
+        'Site' => '\Concrete\Core\Support\Facade\Site',
         'UserInfo' => '\Concrete\Core\Support\Facade\UserInfo',
         'Log' => '\Concrete\Core\Support\Facade\Log',
         'Image' => '\Concrete\Core\Support\Facade\Image',
@@ -172,6 +176,7 @@ return array(
         'captcha_library',
         'content_editor_snippet',
         'conversation_rating_type',
+        'group',
         'group_set',
         'job',
         'mail_importer',
@@ -179,6 +184,7 @@ return array(
         'permission_key_category',
         'permission_key',
         'page_template',
+        'site_type',
         'page_type',
         'page_type_composer_control_type',
         'page_type_publish_target_type',
@@ -188,6 +194,58 @@ return array(
         'user_point_action',
         'workflow_progress_category',
         'workflow_type',
+    ),
+
+    'importer_routines' => array(
+        'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportSiteTypesRoutine',
+        'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportGroupsRoutine',
+        'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportSinglePageStructureRoutine',
+        'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportStacksStructureRoutine',
+        'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportBlockTypesRoutine',
+        'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportBlockTypeSetsRoutine',
+        'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportConversationEditorsRoutine',
+        'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportConversationRatingTypesRoutine',
+        'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportConversationFlagTypesRoutine',
+        'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportPageTypePublishTargetTypesRoutine',
+        'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportPageTypeComposerControlTypesRoutine',
+        'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportBannedWordsRoutine',
+        'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportSocialLinksRoutine',
+        'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportTreesRoutine',
+        'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportFileImportantThumbnailTypesRoutine',
+        'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportFeaturesRoutine',
+        'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportFeatureCategoriesRoutine',
+        'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportGatheringDataSourcesRoutine',
+        'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportGatheringItemTemplateTypesRoutine',
+        'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportGatheringItemTemplatesRoutine',
+        'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportAttributeCategoriesRoutine',
+        'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportAttributeTypesRoutine',
+        'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportWorkflowTypesRoutine',
+        'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportWorkflowProgressCategoriesRoutine',
+        'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportAttributesRoutine',
+        'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportAttributeSetsRoutine',
+        'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportExpressEntitiesRoutine',
+        'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportExpressAssociationsRoutine',
+        'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportExpressFormsRoutine',
+        'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportExpressRelationsRoutine',
+        'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportThemesRoutine',
+        'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportPermissionKeyCategoriesRoutine',
+        'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportPermissionAccessEntityTypesRoutine',
+        'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportPermissionsRoutine',
+        'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportJobsRoutine',
+        'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportJobSetsRoutine',
+        'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportPageTemplatesRoutine',
+        'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportPageTypesBaseRoutine',
+        'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportPageStructureRoutine',
+        'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportPageFeedsRoutine',
+        'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportPageTypeTargetsRoutine',
+        'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportPageTypeDefaultsRoutine',
+        'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportSinglePageContentRoutine',
+        'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportStacksContentRoutine',
+        'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportPageContentRoutine',
+        'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportPackagesRoutine',
+        'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportConfigValuesRoutine',
+        'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportSystemCaptchaLibrariesRoutine',
+        'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportSystemContentEditorSnippetsRoutine',
     ),
 
     /*
@@ -219,6 +277,9 @@ return array(
         "/ccm/system/dialogs/block/permissions/detail/" => array('\Concrete\Controller\Dialog\Block\Permissions::viewDetail'),
         "/ccm/system/dialogs/block/permissions/guest_access/" => array('\Concrete\Controller\Dialog\Block\Permissions\GuestAccess::__construct'),
         "/ccm/system/dialogs/block/permissions/list/" => array('\Concrete\Controller\Dialog\Block\Permissions::viewList'),
+        "/ccm/system/dialogs/block/delete/" => array('\Concrete\Controller\Dialog\Block\Delete::view'),
+        "/ccm/system/dialogs/block/delete/submit/" => array('\Concrete\Controller\Dialog\Block\Delete::submit'),
+        "/ccm/system/dialogs/block/delete/submit_all/" => array('\Concrete\Controller\Dialog\Block\Delete::submit_all'),
 
         "/ccm/system/dialogs/file/upload_complete" => array('\Concrete\Controller\Dialog\File\UploadComplete::view'),
         "/ccm/system/dialogs/file/bulk/delete" => array('\Concrete\Controller\Dialog\File\Bulk\Delete::view'),
@@ -243,6 +304,7 @@ return array(
         "/ccm/system/dialogs/file/search" => array('\Concrete\Controller\Dialog\File\Search::view'),
         "/ccm/system/dialogs/file/thumbnails" => array('\Concrete\Controller\Dialog\File\Thumbnails::view'),
         "/ccm/system/dialogs/file/thumbnails/edit" => array('\Concrete\Controller\Dialog\File\Thumbnails\Edit::view'),
+        "/ccm/system/dialogs/file/usage/{fID}" => array('\Concrete\Controller\Dialog\File\Usage::view'),
 
         "/ccm/system/dialogs/group/search" => array('\Concrete\Controller\Dialog\Group\Search::view'),
 
@@ -254,7 +316,6 @@ return array(
         "/ccm/system/dialogs/page/add_external/submit" => array('\Concrete\Controller\Dialog\Page\AddExternal::submit'),
         "/ccm/system/dialogs/page/add/compose/{ptID}/{cParentID}" => array('\Concrete\Controller\Dialog\Page\Add\Compose::view'),
         "/ccm/system/dialogs/page/add/compose/submit" => array('\Concrete\Controller\Dialog\Page\Add\Compose::submit'),
-        "/ccm/system/dialogs/page/add/submit" => array('\Concrete\Controller\Dialog\Page\Add::submit'),
         "/ccm/system/dialogs/page/attributes" => array('\Concrete\Controller\Dialog\Page\Attributes::view'),
         "/ccm/system/dialogs/page/bulk/properties" => array('\Concrete\Controller\Dialog\Page\Bulk\Properties::view'),
         "/ccm/system/dialogs/page/bulk/properties/clear_attribute" => array('\Concrete\Controller\Dialog\Page\Bulk\Properties::clearAttribute'),
@@ -277,12 +338,23 @@ return array(
         "/ccm/system/dialogs/page/search/customize/submit" => array('\Concrete\Controller\Dialog\Page\Search\Customize::submit'),
         "/ccm/system/dialogs/page/seo" => array('\Concrete\Controller\Dialog\Page\Seo::view'),
 
+        "/ccm/system/dialogs/page/advanced_search" => array('\Concrete\Controller\Dialog\Page\AdvancedSearch::view'),
+        "/ccm/system/dialogs/page/advanced_search/add_field" => array('\Concrete\Controller\Dialog\Page\AdvancedSearch::addField'),
+        "/ccm/system/dialogs/page/advanced_search/submit" => array('\Concrete\Controller\Dialog\Page\AdvancedSearch::submit'),
+        "/ccm/system/dialogs/page/advanced_search/save_preset" => array('\Concrete\Controller\Dialog\Page\AdvancedSearch::savePreset'),
+
         "/ccm/system/dialogs/user/bulk/properties" => array('\Concrete\Controller\Dialog\User\Bulk\Properties::view'),
         "/ccm/system/dialogs/user/bulk/properties/clear_attribute" => array('\Concrete\Controller\Dialog\User\Bulk\Properties::clearAttribute'),
         "/ccm/system/dialogs/user/bulk/properties/update_attribute" => array('\Concrete\Controller\Dialog\User\Bulk\Properties::updateAttribute'),
         "/ccm/system/dialogs/user/search" => array('\Concrete\Controller\Dialog\User\Search::view'),
         "/ccm/system/dialogs/user/search/customize" => array('\Concrete\Controller\Dialog\User\Search\Customize::view'),
         "/ccm/system/dialogs/user/search/customize/submit" => array('\Concrete\Controller\Dialog\User\Search\Customize::submit'),
+
+        "/ccm/system/dialogs/user/advanced_search" => array('\Concrete\Controller\Dialog\User\AdvancedSearch::view'),
+        "/ccm/system/dialogs/user/advanced_search/add_field" => array('\Concrete\Controller\Dialog\User\AdvancedSearch::addField'),
+        "/ccm/system/dialogs/user/advanced_search/submit" => array('\Concrete\Controller\Dialog\User\AdvancedSearch::submit'),
+        "/ccm/system/dialogs/user/advanced_search/save_preset" => array('\Concrete\Controller\Dialog\User\AdvancedSearch::savePreset'),
+
         /*
          * Conversations
          */
@@ -303,6 +375,7 @@ return array(
         "/ccm/system/file/duplicate" => array('\Concrete\Controller\Backend\File::duplicate'),
         "/ccm/system/file/get_json" => array('\Concrete\Controller\Backend\File::getJSON'),
         "/ccm/system/file/rescan" => array('\Concrete\Controller\Backend\File::rescan'),
+        "/ccm/system/file/rescan_multiple" => array('\Concrete\Controller\Backend\File::rescanMultiple'),
         "/ccm/system/file/star" => array('\Concrete\Controller\Backend\File::star'),
         "/ccm/system/file/upload" => array('\Concrete\Controller\Backend\File::upload'),
         "/ccm/system/file/folder/add" => array('\Concrete\Controller\Backend\File\Folder::add'),
@@ -313,6 +386,7 @@ return array(
          */
         "/ccm/system/user/add_group" => array('\Concrete\Controller\Backend\User::addGroup'),
         "/ccm/system/user/remove_group" => array('\Concrete\Controller\Backend\User::removeGroup'),
+        "/ccm/system/user/get_json" => array('\Concrete\Controller\Backend\User::getJSON'),
 
         /*
          * Page actions - non UI
@@ -356,6 +430,11 @@ return array(
         // end removing lines
         "/ccm/system/upgrade/" => array('\Concrete\Controller\Upgrade::view'),
         "/ccm/system/upgrade/submit" => array('\Concrete\Controller\Upgrade::submit'),
+
+        /*
+         * Notification
+         */
+        "/ccm/system/notification/alert/archive/" => array('\Concrete\Controller\Backend\Notification\Alert::archive'),
 
         /*
          * General Attribute
@@ -413,11 +492,19 @@ return array(
         "/ccm/system/search/files/current" => array('\Concrete\Controller\Search\Files::searchCurrent'),
         "/ccm/system/search/files/preset/{presetID}" => array('\Concrete\Controller\Search\Files::searchPreset'),
         "/ccm/system/search/files/clear" => array('\Concrete\Controller\Search\Files::clearSearch'),
+        "/ccm/system/search/pages/basic" => array('\Concrete\Controller\Search\Pages::searchBasic'),
+        "/ccm/system/search/pages/current" => array('\Concrete\Controller\Search\Pages::searchCurrent'),
+        "/ccm/system/search/pages/preset/{presetID}" => array('\Concrete\Controller\Search\Pages::searchPreset'),
+        "/ccm/system/search/pages/clear" => array('\Concrete\Controller\Search\Pages::clearSearch'),
+
+
+        "/ccm/system/search/users/basic" => array('\Concrete\Controller\Search\Users::searchBasic'),
+        "/ccm/system/search/users/current" => array('\Concrete\Controller\Search\Users::searchCurrent'),
+        "/ccm/system/search/users/preset/{presetID}" => array('\Concrete\Controller\Search\Users::searchPreset'),
+        "/ccm/system/search/users/clear" => array('\Concrete\Controller\Search\Users::clearSearch'),
+
+
         "/ccm/system/search/groups/submit" => array('\Concrete\Controller\Search\Groups::submit'),
-        "/ccm/system/search/pages/field/{field}" => array('\Concrete\Controller\Search\Pages::field'),
-        "/ccm/system/search/pages/submit" => array('\Concrete\Controller\Search\Pages::submit'),
-        "/ccm/system/search/users/field/{field}" => array('\Concrete\Controller\Search\Users::field'),
-        "/ccm/system/search/users/submit" => array('\Concrete\Controller\Search\Users::submit'),
 
         /*
          * Panels - top level
@@ -426,7 +513,7 @@ return array(
         "/ccm/system/panels/dashboard" => array('\Concrete\Controller\Panel\Dashboard::view'),
         "/ccm/system/panels/dashboard/add_favorite" => array('\Concrete\Controller\Panel\Dashboard::addFavorite'),
         "/ccm/system/panels/dashboard/remove_favorite" => array('\Concrete\Controller\Panel\Dashboard::removeFavorite'),
-        "/ccm/system/panels/multilingual" => array('\Concrete\Controller\Panel\Multilingual::view'),
+        "/ccm/system/panels/page/relations" => array('\Concrete\Controller\Panel\PageRelations::view'),
         "/ccm/system/panels/page" => array('\Concrete\Controller\Panel\Page::view'),
         "/ccm/system/panels/page/attributes" => array('\Concrete\Controller\Panel\Page\Attributes::view'),
         "/ccm/system/panels/page/check_in" => array('\Concrete\Controller\Panel\Page\CheckIn::__construct'),
@@ -497,7 +584,7 @@ return array(
         '/ccm/assets/localization/core/js' => array('\Concrete\Controller\Frontend\AssetsLocalization::getCoreJavascript'),
         '/ccm/assets/localization/select2/js' => array('\Concrete\Controller\Frontend\AssetsLocalization::getSelect2Javascript'),
         '/ccm/assets/localization/redactor/js' => array('\Concrete\Controller\Frontend\AssetsLocalization::getRedactorJavascript'),
-        '/ccm/assets/localization/dynatree/js' => array('\Concrete\Controller\Frontend\AssetsLocalization::getDynatreeJavascript'),
+        '/ccm/assets/localization/fancytree/js' => array('\Concrete\Controller\Frontend\AssetsLocalization::getFancytreeJavascript'),
         '/ccm/assets/localization/imageeditor/js' => array('\Concrete\Controller\Frontend\AssetsLocalization::getImageEditorJavascript'),
         '/ccm/assets/localization/jquery/ui/js' => array('\Concrete\Controller\Frontend\AssetsLocalization::getJQueryUIJavascript'),
         '/ccm/assets/localization/translator/js' => array('\Concrete\Controller\Frontend\AssetsLocalization::getTranslatorJavascript'),
@@ -518,53 +605,53 @@ return array(
             VIEW_CORE_THEME,
             VIEW_CORE_THEME_TEMPLATE_BACKGROUND_IMAGE,
         ),
-        '/register' => VIEW_CORE_THEME,
-        '/maintenance_mode' => VIEW_CORE_THEME,
-        '/upgrade' => VIEW_CORE_THEME,
+        '/register'         => VIEW_CORE_THEME,
+        '/frontend/maintenance_mode' => VIEW_CORE_THEME,
+        '/upgrade'          => VIEW_CORE_THEME
     ),
 
     /*
      * File Types
      */
     'file_types' => array(
-        t('JPEG') => array('jpg,jpeg,jpe', FileType::T_IMAGE, 'image', 'image', 'image'),
-        t('GIF') => array('gif', FileType::T_IMAGE, 'image', 'image', 'image'),
-        t('PNG') => array('png', FileType::T_IMAGE, 'image', 'image', 'image'),
-        t('Windows Bitmap') => array('bmp', FileType::T_IMAGE, 'image'),
-        t('TIFF') => array('tif,tiff', FileType::T_IMAGE, 'image'),
-        t('HTML') => array('htm,html', FileType::T_IMAGE),
-        t('Flash') => array('swf', FileType::T_IMAGE, 'image'),
-        t('Icon') => array('ico', FileType::T_IMAGE),
-        t('SVG') => array('svg', FileType::T_IMAGE),
-        t('Windows Video') => array('asf,wmv', FileType::T_VIDEO, false, 'video'),
-        t('Quicktime') => array('mov,qt', FileType::T_VIDEO, false, 'video'),
-        t('AVI') => array('avi', FileType::T_VIDEO, false, 'video'),
-        t('3GP') => array('3gp', FileType::T_VIDEO, false, 'video'),
-        t('Plain Text') => array('txt', FileType::T_TEXT, false, 'text'),
-        t('CSV') => array('csv', FileType::T_TEXT, false, 'text'),
-        t('XML') => array('xml', FileType::T_TEXT),
-        t('PHP') => array('php', FileType::T_TEXT),
-        t('MS Word') => array('doc,docx', FileType::T_DOCUMENT),
-        t('Stylesheet') => array('css', FileType::T_TEXT),
-        t('MP4') => array('mp4', FileType::T_VIDEO),
-        t('FLV') => array('flv', FileType::T_VIDEO, 'flv'),
-        t('MP3') => array('mp3', FileType::T_AUDIO, false, 'audio'),
-        t('MP4 Audio') => array('m4a', FileType::T_AUDIO, false, 'audio'),
-        t('Realaudio') => array('ra,ram', FileType::T_AUDIO),
-        t('Windows Audio') => array('wma', FileType::T_AUDIO),
-        t('Rich Text') => array('rtf', FileType::T_DOCUMENT),
-        t('JavaScript') => array('js', FileType::T_TEXT),
-        t('PDF') => array('pdf', FileType::T_DOCUMENT),
-        t('Photoshop') => array('psd', FileType::T_IMAGE),
-        t('MPEG') => array('mpeg,mpg', FileType::T_VIDEO),
-        t('MS Excel') => array('xla,xls,xlsx,xlt,xlw', FileType::T_DOCUMENT),
-        t('MS Powerpoint') => array('pps,ppt,pptx,pot', FileType::T_DOCUMENT),
-        t('TAR Archive') => array('tar', FileType::T_APPLICATION),
-        t('Zip Archive') => array('zip', FileType::T_APPLICATION),
-        t('GZip Archive') => array('gz,gzip', FileType::T_APPLICATION),
-        t('OGG') => array('ogg', FileType::T_AUDIO),
-        t('OGG Video') => array('ogv', FileType::T_VIDEO),
-        t('WebM') => array('webm', FileType::T_VIDEO),
+        'JPEG' => array('jpg,jpeg,jpe', FileType::T_IMAGE, 'image', 'image', 'image'),
+        'GIF' => array('gif', FileType::T_IMAGE, 'image', 'image', 'image'),
+        'PNG' => array('png', FileType::T_IMAGE, 'image', 'image', 'image'),
+        'Windows Bitmap' => array('bmp', FileType::T_IMAGE, 'image'),
+        'TIFF' => array('tif,tiff', FileType::T_IMAGE, 'image'),
+        'HTML' => array('htm,html', FileType::T_IMAGE),
+        'Flash' => array('swf', FileType::T_IMAGE, 'image'),
+        'Icon' => array('ico', FileType::T_IMAGE),
+        'SVG' => array('svg', FileType::T_IMAGE),
+        'Windows Video' => array('asf,wmv', FileType::T_VIDEO, false, 'video'),
+        'Quicktime' => array('mov,qt', FileType::T_VIDEO, false, 'video'),
+        'AVI' => array('avi', FileType::T_VIDEO, false, 'video'),
+        '3GP' => array('3gp', FileType::T_VIDEO, false, 'video'),
+        'Plain Text' => array('txt', FileType::T_TEXT, false, 'text'),
+        'CSV' => array('csv', FileType::T_TEXT, false, 'text'),
+        'XML' => array('xml', FileType::T_TEXT),
+        'PHP' => array('php', FileType::T_TEXT),
+        'MS Word' => array('doc,docx', FileType::T_DOCUMENT),
+        'Stylesheet' => array('css', FileType::T_TEXT),
+        'MP4' => array('mp4', FileType::T_VIDEO),
+        'FLV' => array('flv', FileType::T_VIDEO, 'flv'),
+        'MP3' => array('mp3', FileType::T_AUDIO, false, 'audio'),
+        'MP4 Audio' => array('m4a', FileType::T_AUDIO, false, 'audio'),
+        'Realaudio' => array('ra,ram', FileType::T_AUDIO),
+        'Windows Audio' => array('wma', FileType::T_AUDIO),
+        'Rich Text' => array('rtf', FileType::T_DOCUMENT),
+        'JavaScript' => array('js', FileType::T_TEXT),
+        'PDF' => array('pdf', FileType::T_DOCUMENT),
+        'Photoshop' => array('psd', FileType::T_IMAGE),
+        'MPEG' => array('mpeg,mpg', FileType::T_VIDEO),
+        'MS Excel' => array('xla,xls,xlsx,xlt,xlw', FileType::T_DOCUMENT),
+        'MS Powerpoint' => array('pps,ppt,pptx,pot', FileType::T_DOCUMENT),
+        'TAR Archive' => array('tar', FileType::T_APPLICATION),
+        'Zip Archive' => array('zip', FileType::T_APPLICATION),
+        'GZip Archive' => array('gz,gzip', FileType::T_APPLICATION),
+        'OGG' => array('ogg', FileType::T_AUDIO),
+        'OGG Video' => array('ogv', FileType::T_VIDEO),
+        'WebM' => array('webm', FileType::T_VIDEO),
     ),
 
     /*
@@ -616,6 +703,10 @@ return array(
             array('javascript-localized', '/ccm/assets/localization/select2/js'),
             array('css', 'css/select2.css', array('minify' => false)),
         ),
+        'selectize' => array(
+            array('javascript', 'js/selectize.js', array('minify' => false, 'combine' => false)),
+            array('css', 'css/selectize.css', array('minify' => false)),
+        ),
         'underscore' => array(
             array('javascript', 'js/underscore.js', array('minify' => false)),
         ),
@@ -650,6 +741,9 @@ return array(
         'spectrum' => array(
             array('javascript', 'js/spectrum.js', array('minify' => false)),
             array('css', 'css/spectrum.css', array('minify' => false)),
+        ),
+        'core/composer-save-coordinator' => array(
+            array('javascript', 'js/composer-save-coordinator.js', array('minify' => false)),
         ),
         'font-awesome' => array(
             array('css', 'css/font-awesome.css', array('minify' => false)),
@@ -722,10 +816,17 @@ return array(
         'background-check' => array(
             array('javascript', 'js/background-check.js'),
         ),
+        /*
         'dynatree' => array(
             array('javascript', 'js/dynatree.js', array('minify' => false)),
             array('javascript-localized', '/ccm/assets/localization/dynatree/js', array('minify' => false)),
             array('css', 'css/dynatree.css', array('minify' => false)),
+        ),
+        */
+        'fancytree' => array(
+            array('javascript', 'js/fancytree.js', array('minify' => false, 'version' => '2.18.0')),
+            array('javascript-localized', '/ccm/assets/localization/fancytree/js', array('minify' => false)),
+            array('css', 'css/fancytree.css', array('minify' => false)),
         ),
         'bootstrap/dropdown' => array(
             array('javascript', 'js/bootstrap/dropdown.js'),
@@ -737,6 +838,10 @@ return array(
         ),
         'bootstrap/popover' => array(
             array('javascript', 'js/bootstrap/popover.js'),
+            array('css', 'css/app.css', array('minify' => false)),
+        ),
+        'bootstrap/collapse' => array(
+            array('javascript', 'js/bootstrap/collapse.js'),
             array('css', 'css/app.css', array('minify' => false)),
         ),
         'bootstrap/alert' => array(
@@ -796,6 +901,12 @@ return array(
             array('javascript', 'js/sitemap.js', array('minify' => false)),
             array('css', 'css/sitemap.css', array('minify' => false)),
         ),
+        'core/users' => array(
+            array('javascript', 'js/users.js', array('minify' => false)),
+        ),
+        'core/notification' => array(
+            array('javascript', 'js/notification.js', array('minify' => false)),
+        ),
         'core/tree' => array(
             array('javascript', 'js/tree.js', array('minify' => false)),
         ),
@@ -848,11 +959,20 @@ return array(
                 array('css', 'jquery/visualize'),
             ),
         ),
+        /**
+         * @deprecated
+         */
         'select2' => array(
             array(
                 array('javascript', 'select2'),
                 array('javascript-localized', 'select2'),
                 array('css', 'select2'),
+            ),
+        ),
+        'selectize' => array(
+            array(
+                array('javascript', 'selectize'),
+                array('css', 'selectize'),
             ),
         ),
         'dropzone' => array(
@@ -871,6 +991,11 @@ return array(
         'ace' => array(
             array(
                 array('javascript', 'ace'),
+            ),
+        ),
+        'core/notification' => array(
+            array(
+                array('javascript', 'core/notification'),
             ),
         ),
         'core/colorpicker' => array(
@@ -934,11 +1059,11 @@ return array(
                 array('css', 'font-awesome'),
             ),
         ),
-        'dynatree' => array(
+        'fancytree' => array(
             array(
-                array('javascript', 'dynatree'),
-                array('javascript-localized', 'dynatree'),
-                array('css', 'dynatree'),
+                array('javascript', 'fancytree'),
+                array('javascript-localized', 'fancytree'),
+                array('css', 'fancytree'),
             ),
         ),
         'core/app' => array(
@@ -997,6 +1122,7 @@ return array(
                 array('javascript', 'core/events'),
                 array('javascript', 'bootstrap/dropdown'),
                 array('javascript', 'bootstrap/tooltip'),
+                array('javascript', 'bootstrap/collapse'),
                 array('javascript', 'bootstrap/popover'),
                 array('javascript', 'bootstrap/transition'),
                 array('javascript', 'bootstrap/alert'),
@@ -1017,15 +1143,14 @@ return array(
                 array('css', 'core/app'),
                 array('css', 'jquery/ui'),
                 array('css', 'core/file-manager'),
-                array('css', 'select2'),
+                array('css', 'selectize'),
                 array('javascript', 'core/events'),
                 array('javascript', 'bootstrap/tooltip'),
                 array('javascript', 'underscore'),
                 array('javascript', 'backbone'),
                 array('javascript', 'jquery/ui'),
                 array('javascript-localized', 'jquery/ui'),
-                array('javascript', 'select2'),
-                array('javascript-localized', 'select2'),
+                array('javascript', 'selectize'),
                 array('javascript-localized', 'core/localization'),
                 array('javascript', 'core/app'),
                 array('javascript', 'jquery/fileupload'),
@@ -1040,13 +1165,22 @@ return array(
                 array('javascript', 'backbone'),
                 array('javascript', 'jquery/ui'),
                 array('javascript-localized', 'jquery/ui'),
-                array('javascript', 'dynatree'),
-                array('javascript-localized', 'dynatree'),
+                array('javascript', 'fancytree'),
+                array('javascript', 'selectize'),
+                array('javascript-localized', 'fancytree'),
                 array('javascript-localized', 'core/localization'),
                 array('javascript', 'core/app'),
                 array('javascript', 'core/sitemap'),
-                array('css', 'dynatree'),
+                array('css', 'fancytree'),
+                array('css', 'selectize'),
                 array('css', 'core/sitemap'),
+            ),
+        ),
+        'core/users' => array(
+            array(
+                array('javascript', 'core/events'),
+                array('javascript', 'underscore'),
+                array('javascript', 'core/users'),
             ),
         ),
         'core/express' => array(
@@ -1061,10 +1195,10 @@ return array(
                 array('javascript', 'underscore'),
                 array('javascript', 'jquery/ui'),
                 array('javascript-localized', 'jquery/ui'),
-                array('javascript', 'dynatree'),
-                array('javascript-localized', 'dynatree'),
+                array('javascript', 'fancytree'),
+                array('javascript-localized', 'fancytree'),
                 array('javascript', 'core/tree'),
-                array('css', 'dynatree'),
+                array('css', 'fancytree'),
             ),
         ),
         'core/tree' => array(
@@ -1073,10 +1207,10 @@ return array(
                 array('javascript', 'underscore'),
                 array('javascript', 'jquery/ui'),
                 array('javascript-localized', 'jquery/ui'),
-                array('javascript', 'dynatree'),
-                array('javascript-localized', 'dynatree'),
+                array('javascript', 'fancytree'),
+                array('javascript-localized', 'fancytree'),
                 array('javascript', 'core/tree'),
-                array('css', 'dynatree'),
+                array('css', 'fancytree'),
             ),
         ),
         'core/groups' => array(
@@ -1085,10 +1219,10 @@ return array(
                 array('javascript', 'underscore'),
                 array('javascript', 'jquery/ui'),
                 array('javascript-localized', 'jquery/ui'),
-                array('javascript', 'dynatree'),
-                array('javascript-localized', 'dynatree'),
+                array('javascript', 'fancytree'),
+                array('javascript-localized', 'fancytree'),
                 array('javascript', 'core/tree'),
-                array('css', 'dynatree'),
+                array('css', 'fancytree'),
             ),
         ),
         'core/gathering' => array(
@@ -1157,4 +1291,14 @@ return array(
         'verifyPeer' => true,
         'connectionTimeout' => 5,
     ),
+
+    // HTTP middleware for processing http requests
+    'middleware' => [
+        [
+            'priority' => 1,
+            'class' => \Concrete\Core\Http\Middleware\ApplicationMiddleware::class
+        ],
+        'core_cookie' => \Concrete\Core\Http\Middleware\CookieMiddleware::class,
+        'core_xframeoptions' => \Concrete\Core\Http\Middleware\FrameOptionsMiddleware::class
+    ]
 );

@@ -12,7 +12,8 @@ class Result
     protected $list;
     protected $baseURL;
     protected $breadcrumb;
-    protected $query;
+    protected $query; // This is a search request, it gets rid of folders, etc...
+    protected $filters; // These are search filters - they display folders, don't display a "reset search" label, etc...
 
     /** @var \Concrete\Core\Search\Pagination\Pagination */
     protected $pagination;
@@ -20,6 +21,22 @@ class Result
     protected $items;
     protected $fields;
     protected $columns;
+
+    /**
+     * @return mixed
+     */
+    public function getFilters()
+    {
+        return $this->filters;
+    }
+
+    /**
+     * @param mixed $filters
+     */
+    public function setFilters($filters)
+    {
+        $this->filters = $filters;
+    }
 
     /**
      * @return mixed
@@ -175,6 +192,7 @@ class Result
         }
         $obj->paginationTemplate = $html;
         $obj->fields = $this->fields;
+        $obj->filters = $this->filters;
         $obj->query = $this->query;
         $obj->bulkMenus = $this->getSearchResultBulkMenus();
         $obj->baseUrl = (string) $this->getBaseURL();

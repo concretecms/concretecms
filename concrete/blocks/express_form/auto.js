@@ -11,7 +11,8 @@ $(function() {
     ConcreteBlockForm.prototype.setupEvents = function(data) {
         var my = this;
 
-        Concrete.event.bind('block.express_form.add_control', function(e, data) {
+        Concrete.event.unbind('add_control.block_express_form');
+        Concrete.event.bind('add_control.block_express_form', function(e, data) {
 
             var $tabEdit = $('#ccm-tab-content-form-edit'),
                 $list = $tabEdit.find('ul');
@@ -21,8 +22,8 @@ $(function() {
 
 
         });
-
-        Concrete.event.bind('block.express_form.update_control', function(e, data) {
+        Concrete.event.unbind('update_control.block_express_form');
+        Concrete.event.bind('update_control.block_express_form', function(e, data) {
 
             var $tabEdit = $('#ccm-tab-content-form-edit'),
                 $control = $tabEdit.find('[data-form-control-id=' + data.control.id + ']');
@@ -34,6 +35,18 @@ $(function() {
 
         });
 
+    }
+
+    ConcreteBlockForm.prototype.destroyContents = function($element) {
+        if (typeof CKEDITOR != 'undefined') {
+            for (name in CKEDITOR.instances) {
+                var instance = CKEDITOR.instances[name];
+                if ($.contains($element.get(0), instance.container.$)) {
+                    instance.destroy(true);
+                }
+            }
+        }
+        $element.children().remove().hide();
     }
 
     ConcreteBlockForm.prototype.init = function(data) {
@@ -64,8 +77,11 @@ $(function() {
             'typeContent': null
         }));
 
-        var $types = $('div[data-group=attribute-types]'),
-            $typeData = $('div[data-group=attribute-type-data]');
+        var $types = $('div[data-group=field-types]'),
+            $typeData = $('div[data-group=field-type-data]'),
+            $controlName = $('div[data-group=control-name]'),
+            $controlRequired = $('div[data-group=control-required]'),
+            $addQuestionGroup = $('div[data-group=add-question]');
 
         $tabAdd.on('click', 'button[data-action=add-question]', function() {
             var $form = $tabAdd.find(':input');
@@ -80,7 +96,7 @@ $(function() {
                     $tabAdd.find('input[name=question]').val('');
                     $tabAdd.find('input[name=required][value=0]').prop('checked', true);
                     $tabAdd.find('div.alert-success').show().addClass("animated fadeIn");
-                    Concrete.event.publish('block.express_form.add_control', {
+                    Concrete.event.publish('add_control.block_express_form', {
                         'control': r,
                         'controlTemplate': controlTemplate
                     });
@@ -108,9 +124,10 @@ $(function() {
 
                     $editQuestion.hide();
                     $fields.show();
-                    $editQuestionInner.html('');
+                    my.destroyContents($editQuestionInner);
 
-                    Concrete.event.publish('block.express_form.update_control', {
+
+                    Concrete.event.publish('update_control.block_express_form', {
                         'control': r,
                         'controlTemplate': controlTemplate
                     });
@@ -140,7 +157,7 @@ $(function() {
                 $editQuestionInner = $tabEdit.find('[data-view=edit-question-inner]');
 
             $editQuestion.hide();
-            $editQuestionInner.html('');
+            my.destroyContents($editQuestionInner);
             $fields.show();
         });
 
@@ -148,6 +165,7 @@ $(function() {
             var $control = $(this).closest('[data-form-control-id]');
             $.concreteAjax({
                 url: $control.attr('data-action'),
+                type: 'get',
                 data: {'control': $control.attr('data-form-control-id')},
                 success: function(r) {
                     var $fields = $tabEdit.find('[data-view=form-fields]'),
@@ -155,7 +173,13 @@ $(function() {
                         $editQuestionInner = $tabEdit.find('[data-view=edit-question-inner]');
 
                     $fields.hide();
-                    $editQuestion.show();
+
+                    _.each(r.assets.css, function(css) {
+                        ccm_addHeaderItem(css, 'CSS');
+                    });
+                    _.each(r.assets.javascript, function(javascript) {
+                        ccm_addHeaderItem(javascript, 'JAVASCRIPT');
+                    });
 
                     $editQuestionInner.html(questionTemplate({
                         'id': r.id,
@@ -166,12 +190,14 @@ $(function() {
                         'typeContent': r.typeContent
                     }));
 
-                    _.each(r.assets.css, function(css) {
-                        ccm_addHeaderItem(css, 'CSS');
-                    });
-                    _.each(r.assets.javascript, function(javascript) {
-                        ccm_addHeaderItem(javascript, 'JAVASCRIPT');
-                    });
+                    $editQuestion.show();
+
+                    if (r.showControlName) {
+                        $editQuestion.find('div[data-group=control-name]').show();
+                    }
+                    if (r.showControlRequired) {
+                        $editQuestion.find('div[data-group=control-required]').show();
+                    }
                 }
             });
         });
@@ -187,23 +213,33 @@ $(function() {
         });
 
         $types.find('select').on('change', function() {
-            $typeData.html('').hide();
+            my.destroyContents($typeData);
+            $controlName.hide();
+            $controlRequired.hide();
+            $addQuestionGroup.hide();
             var value = $(this).val();
             if (value) {
                 $types.find('i.fa-refresh').show();
                 $.concreteAjax({
                     url: $types.attr('data-action'),
-                    data: {'atID': value},
+                    data: {'id': value},
                     loader: false,
                     success: function(r) {
-                        $typeData.html(r.content);
-                        $typeData.show();
                         _.each(r.assets.css, function(css) {
                             ccm_addHeaderItem(css, 'CSS');
                         });
                         _.each(r.assets.javascript, function(javascript) {
                             ccm_addHeaderItem(javascript, 'JAVASCRIPT');
                         });
+                        if (r.showControlName) {
+                            $controlName.show();
+                        }
+                        if (r.showControlRequired) {
+                            $controlRequired.show();
+                        }
+                        $typeData.html(r.content);
+                        $typeData.show();
+                        $addQuestionGroup.show();
                     },
                     complete: function() {
                         $types.find('i.fa-refresh').hide();
@@ -214,7 +250,7 @@ $(function() {
 
         if (data.controls) {
             _.each(data.controls, function(control) {
-                Concrete.event.publish('block.express_form.add_control', {
+                Concrete.event.publish('add_control.block_express_form', {
                     'control': control,
                     'controlTemplate': controlTemplate
                 });
@@ -224,13 +260,13 @@ $(function() {
         $('[data-tree]').each(function() {
             $(this).concreteTree({
                 ajaxData: {
-                    displayOnly: 'category'
+                    displayOnly: 'express_entry_category'
                 },
                 treeNodeParentID: $(this).attr('data-root-tree-node-id'),
                 selectNodesByKey: [$('input[name=resultsFolder]').val()],
-                onSelect : function(select, node) {
-                    if (select) {
-                        $('input[name=resultsFolder]').val(node.data.key);
+                onSelect : function(nodes) {
+                    if (nodes.length) {
+                        $('input[name=resultsFolder]').val(nodes[0]);
                     } else {
                         $('input[name=resultsFolder]').val('');
                     }
@@ -256,7 +292,7 @@ $(function() {
         }
         $controls.each(function() {
             var $control = $(this);
-            if ($control.attr('data-form-control-attribute-type') == 'email') {
+            if ($control.attr('data-form-control-field-type') == 'email') {
                 controls.push({
                    key: $control.attr('data-form-control-id'),
                    value: $control.attr('data-form-control-label')
@@ -272,7 +308,7 @@ $(function() {
     }
 
 
-    Concrete.event.bind('block.express_form.open', function(e, data) {
+    Concrete.event.bind('open.block_express_form', function(e, data) {
 
         var form = new ConcreteBlockForm(data);
 

@@ -18,10 +18,15 @@ class Set extends Object
     /**
      * @return JobSet[]
      */
-    public static function getList()
-    {
+    public static function getList($scheduledOnly = false) {
         $db = Loader::db();
-        $r = $db->Execute('select jsID, pkgID, jsName, jDateLastRun, isScheduled, scheduledInterval, scheduledValue from JobSets order by jsName asc');
+
+        if ($scheduledOnly) {
+            $q = "select jsID, pkgID, jsName, jDateLastRun, isScheduled, scheduledInterval, scheduledValue from JobSets where isScheduled = 1 order by jsName asc";
+        } else {
+            $q = "select jsID, pkgID, jsName, jDateLastRun, isScheduled, scheduledInterval, scheduledValue from JobSets order by jsName asc";
+        }
+        $r = $db->Execute($q);
         $list = array();
         while ($row = $r->FetchRow()) {
             $js = new JobSet();
@@ -92,8 +97,8 @@ class Set extends Object
 
     /** Returns the display name for this job set (localized and escaped accordingly to $format)
      * @param string $format = 'html'
-     *	Escape the result in html format (if $format is 'html').
-     *	If $format is 'text' or any other value, the display name won't be escaped.
+     *  Escape the result in html format (if $format is 'html').
+     *  If $format is 'text' or any other value, the display name won't be escaped.
      *
      * @return string
      */

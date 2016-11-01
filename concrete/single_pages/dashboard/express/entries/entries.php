@@ -14,7 +14,11 @@
             ConcreteEvent.subscribe('SelectExpressEntry', function(e, data) {
                 var url = '<?=$view->action('view_entry', 'ENTRY_ID')?>';
                 url = url.replace('ENTRY_ID', data.exEntryID);
-                window.location.href = url;
+                if (data.event.metaKey) {
+                    window.open(url);
+                } else {
+                    window.location.href = url;
+                }
             });
         });
     </script>

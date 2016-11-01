@@ -1,17 +1,89 @@
 <?php
 namespace Concrete\Core\Attribute\Key;
 
+use Concrete\Core\Attribute\AttributeKeyInterface;
 use Concrete\Core\Attribute\Category\LegacyCategory;
+use Concrete\Core\Attribute\Value\EmptyRequestAttributeValue;
+use Concrete\Core\Entity\Attribute\Key\LegacyKey;
+use Concrete\Core\Entity\Attribute\Value\LegacyValue;
 use Concrete\Core\Support\Facade\Facade;
 
-class Key extends Facade
+class Key extends Facade implements AttributeKeyInterface
 {
     public static function getFacadeAccessor()
     {
         return 'Concrete\Core\Attribute\Key\Factory';
     }
 
+    /**
+     * @deprecated
+     * Move to new location.
+     */
+    public static function exportTranslations()
+    {
+        $factory = static::getFacadeRoot();
+        $translations = $factory->exportTranslations();
+        return $translations;
+    }
+
+    // EVERYTHING BELOW THIS IS DEPRECATED AND WILL BE REMOVED AT SOME POINT
+    // THE ONLY REASON IT IS HERE IS TO FACILITATE CUSTOM ATTRIBUTE KEY CATEGORIES
+    // IN 5.7 THAT EXTEND THIS FILE.
+
+    /**
+     * @var LegacyKey
+     */
     protected $legacyAttributeKey;
+
+    /**
+     * @deprecated
+     */
+    public function getController()
+    {
+        return $this->legacyAttributeKey->getController();
+    }
+
+    public function __toString()
+    {
+        return (string) $this->legacyAttributeKey->getAttributeKeyID();
+    }
+
+    /**
+     * @deprecated
+     */
+    public function getAttributeKeyID()
+    {
+        return $this->legacyAttributeKey->getAttributeKeyID();
+    }
+
+    /**
+     * @deprecated
+     */
+    public function getAttributeKeyHandle()
+    {
+        return $this->legacyAttributeKey->getAttributeKeyHandle();
+    }
+
+    /**
+     * @deprecated
+     */
+    public function getAttributeType()
+    {
+        return $this->legacyAttributeKey->getAttributeType();
+    }
+
+    /**
+     * @deprecated
+     */
+    public function isAttributeKeySearchable()
+    {
+        return $this->legacyAttributeKey->isAttributeKeySearchable();
+    }
+
+    public function getSearchIndexer()
+    {
+        return $this->legacyAttributeKey->getSearchIndexer();
+    }
 
     /**
      * This is how old attribute keys used to install themselves. They extended
@@ -65,5 +137,118 @@ class Key extends Facade
     {
         return array_to_object($this, $array);
     }
+
+    /**
+     * @deprecated
+     */
+    public function saveAttributeForm($o)
+    {
+        return $this->saveAttribute($o);
+    }
+
+    /**
+     * @deprecated
+     */
+    protected function saveAttribute($attributeValue, $passedValue = false)
+    {
+        $controller = $this->getController();
+
+        if ($passedValue) {
+            $value = $controller->createAttributeValue($passedValue);
+        } else {
+            $value = $controller->createAttributeValueFromRequest();
+        }
+
+        if (!($value instanceof EmptyRequestAttributeValue)) {
+            // This is a new v8 attribute type
+
+            $attributeValue->setValue($value);
+
+            $orm = \Database::connection()->getEntityManager();
+            $orm->persist($value);
+            $orm->flush();
+
+            $category = $this->legacyAttributeKey->getAttributeCategory()->getController();
+            $indexer = $category->getSearchIndexer();
+            if ($indexer) {
+                $indexer->indexEntry($category, $attributeValue, $this);
+            }
+
+            return $attributeValue;
+        }
+    }
+
+
+    /**
+     * @deprecated
+     */
+    public function addAttributeValue()
+    {
+        $value = new LegacyValue();
+        $value->setAttributeKey($this->legacyAttributeKey);
+        $orm = \Database::connection()->getEntityManager();
+        $orm->persist($value);
+        $orm->flush();
+        return $value;
+    }
+
+    /**
+     * @deprecated
+     */
+    public function getSearchIndexFieldDefinition()
+    {
+        return $this->searchIndexFieldDefinition;
+    }
+
+    /**
+     * @deprecated
+     */
+    public function getIndexedSearchTable()
+    {
+        return false;
+    }
+
+    /**
+     * @deprecated
+     */
+    public function setAttribute($o, $value)
+    {
+        $this->saveAttribute($o, $value);
+    }
+
+    /**
+     * @deprecated
+     */
+    public function reindex($table, $columnHeaders, $attribs, $rs = null)
+    {
+        /** @var \Concrete\Core\Database\Connection $db */
+        $db = \Database::connection();
+        $sm = $db->getSchemaManager();
+
+        /** @var \Doctrine\DBAL\Schema\Column[] $columns */
+        $columns = $sm->listTableColumns($table);
+
+        $attribs->rewind();
+        while ($attribs->valid()) {
+            $column = 'ak_' . $attribs->key();
+            if (is_array($attribs->current())) {
+                foreach ($attribs->current() as $key => $value) {
+                    $col = $column . '_' . $key;
+                    if (isset($columns[strtolower($col)])) {
+                        $columnHeaders[$col] = $value;
+                    }
+                }
+            } else {
+                if (isset($columns[strtolower($column)])) {
+                    $columnHeaders[$column] = $attribs->current();
+                }
+            }
+
+            $attribs->next();
+        }
+
+        $db->insert($table, $columnHeaders);
+    }
+
 
 }

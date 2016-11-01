@@ -41,11 +41,11 @@ class Controller extends DefaultController
         return $type;
     }
 
-    public function getDisplaySanitizedValue()
+    public function getDisplayValue()
     {
         $this->load();
         if ($this->akTextareaDisplayMode == 'text') {
-            return parent::getDisplaySanitizedValue();
+            return parent::getDisplayValue();
         }
 
         return htmLawed(parent::getValue(), array('safe' => 1, 'deny_attribute' => 'style'));
@@ -116,7 +116,7 @@ class Controller extends DefaultController
         return $akey;
     }
 
-    public function saveValue($value)
+    public function createAttributeValue($value)
     {
         $av = new TextareaValue();
         $av->setValue($value);

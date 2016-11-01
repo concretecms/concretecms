@@ -8,9 +8,7 @@
       <unsigned/>
       <key/>
     </field>
-    <field name="exFormID" type="integer">
-      <unsigned/>
-      <default value="0"/>
+    <field name="exFormID" type="guid">
     </field>
     <field name="submitLabel" type="string" size="255">
       <default value="Submit"/>

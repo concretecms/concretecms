@@ -1,12 +1,23 @@
 <?php
 namespace Concrete\Core\Permission\Assignment;
 
-use PermissionAccess;
+use Concrete\Core\Permission\Key\Key;
+use Concrete\Core\Permission\Access\Access;
 use Core;
 use Loader;
 
 class PageAssignment extends Assignment
 {
+
+    // These are permissions that come from "Edit Page Type Draft" permissions
+    protected $inheritedPageTypeDraftPermissions = array(
+        'view_page' => 'edit_page_type_drafts',
+        'view_page_versions' => 'edit_page_type_drafts',
+        'view_page_in_sitemap' => 'edit_page_type_drafts',
+        'edit_page_contents' => 'edit_page_type_drafts',
+        'edit_page_properties' => 'edit_page_type_drafts',
+    );
+
     public function getPermissionAccessObject()
     {
         $cache = Core::make('cache/request');
@@ -21,9 +32,21 @@ class PageAssignment extends Assignment
 
         $db = Loader::db();
         $r = $db->GetOne('select paID from PagePermissionAssignments where cID = ? and pkID = ?', array($this->getPermissionObject()->getPermissionsCollectionID(), $this->pk->getPermissionKeyID()));
-        $pa = $r ? PermissionAccess::getByID($r, $this->pk, false) : null;
+        $pa = $r ? Access::getByID($r, $this->pk, false) : null;
 
-        $item->set($pa);
+        if (is_object($pa)) {
+            if ($this->getPermissionObject()->isPageDraft() && $this->getPermissionObject()->getCollectionInheritance() == 'PARENT' && is_object($pageType = $this->getPermissionObject()->getPageTypeObject()) && isset($this->inheritedPageTypeDraftPermissions[$this->pk->getPermissionKeyHandle()])) {
+                $pk = Key::getByHandle($this->inheritedPageTypeDraftPermissions[$this->pk->getPermissionKeyHandle()]);
+                $pk->setPermissionObject($pageType);
+                $access = $pk->getPermissionAccessObject();
+                if (is_object($access)) {
+                    $list_items = $access->getAccessListItems();
+                    $pa->setListItems($list_items);
+                }
+            }
+        }
+
+        $cache->save($item->set($pa));
 
         return $pa;
     }
@@ -41,7 +64,7 @@ class PageAssignment extends Assignment
         $cache->delete($identifier);
     }
 
-    public function assignPermissionAccess(PermissionAccess $pa)
+    public function assignPermissionAccess(Access $pa)
     {
         $db = Loader::db();
         $db->Replace('PagePermissionAssignments', array('cID' => $this->getPermissionObject()->getPermissionsCollectionID(), 'paID' => $pa->getPermissionAccessID(), 'pkID' => $this->pk->getPermissionKeyID()), array('cID', 'pkID'), true);

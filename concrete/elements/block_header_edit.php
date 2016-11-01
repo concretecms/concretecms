@@ -78,9 +78,12 @@ if (isset($message) && is_object($message) && !$bt->supportsInlineEdit()) {
     ?>class="ccm-ui"<?php 
 } else {
     ?>data-container="inline-toolbar"<?php 
-} ?>>
+}
 
-<form method="post" id="ccm-block-form" class="validate" action="<?=$dialogController->action('submit')?>" enctype="multipart/form-data">
+$method = 'submit';
+?>>
+
+<form method="post" id="ccm-block-form" class="validate" action="<?=$dialogController->action($method)?>" enctype="multipart/form-data">
 
 <?php foreach ($this->controller->getJavaScriptStrings() as $key => $val) {
     ?>
