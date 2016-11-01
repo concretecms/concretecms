@@ -4,21 +4,7 @@ $sh = Loader::helper('concrete/dashboard/sitemap');
 ?>
 
 <?php if ($sh->canRead()) { ?>
-<form action="<?=URL::to('/dashboard/sitemap/search')?>"  class="ccm-search-fields-none ccm-search-fields">
-    <div class="form-group">
-        <div class="ccm-search-main-lookup-field">
-            <i class="fa fa-search"></i>
-			<?=$form->search('cKeywords', array('placeholder' => t('Name')))?>
-			<input type="hidden" name="submitSearch" value="1">
-            <button type="submit" class="ccm-search-field-hidden-submit" tabindex="-1"><?=t('Search')?></button>
-        </div>
-        <ul class="ccm-search-form-advanced list-inline">
-            <li><a href="<?=URL::to('/dashboard/sitemap/search')?>"><?=t('Advanced Search')?></a>
-        </ul>
-    </div>
-</form>
 
-<div class="ccm-dashboard-content-full">
 <?php
 $u = new User();
 if ($u->isSuperUser()) {
@@ -32,7 +18,7 @@ if ($u->isSuperUser()) {
 	<?php }
     }
 }
-?>
+    ?>
 
 <div id="ccm-full-sitemap-container"></div>
 <hr/>
@@ -46,7 +32,6 @@ if ($u->isSuperUser()) {
 	</div>
 </section>
 
-</div>
 <?php
 } else {
 ?>

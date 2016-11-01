@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Entity\Site;
 
+use Concrete\Core\Localization\Locale\LocaleCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -21,29 +22,40 @@ class SiteTree extends Tree
     protected $locale;
 
     /**
-     * @return mixed
+     * @return Locale
      */
-    public function getSite()
+    public function getLocale()
     {
-        return $this->site;
+        return $this->locale;
     }
 
     /**
-     * @param mixed $site
+     * @param mixed $locale
      */
-    public function setSite($site)
+    public function setLocale($locale)
     {
-        $this->site = $site;
+        $this->locale = $locale;
     }
+
+    public function getSite()
+    {
+        return $this->getLocale()->getSite();
+    }
+
 
     public function getSiteType()
     {
-        return $this->getSite()->getType();
+        return $this->getLocale()->getSite()->getType();
     }
 
     public function getDisplayName()
     {
-        return $this->site->getSiteName();
+        return $this->getLocale()->getSite()->getSiteName();
     }
 
+    public function getLocaleCollection()
+    {
+        $collection = new LocaleCollection($this);
+        return $collection;
+    }
 }

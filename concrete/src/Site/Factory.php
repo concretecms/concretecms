@@ -2,6 +2,7 @@
 namespace Concrete\Core\Site;
 
 use Concrete\Core\Application\Application;
+use Concrete\Core\Entity\Site\Locale;
 use Concrete\Core\Entity\Site\Site;
 use Concrete\Core\Entity\Site\SiteTree;
 use Concrete\Core\Entity\Site\Tree;
@@ -38,11 +39,15 @@ class Factory
         $tree = new SiteTree();
         $tree->setSiteHomePageID(HOME_CID);
 
+        $locale = new Locale();
+        $locale->setLanguage('en');
+        $locale->setCountry('US');
+
         $site = new Site($this->config);
         $site->setSiteHandle('default');
         $site->setIsDefault(true);
         $site->setSiteTree($tree);
-        $tree->setSite($site);
+        $tree->setLocale($locale);
 
         return $site;
     }

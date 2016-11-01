@@ -144,7 +144,7 @@ class Service
 
         $tree = new SiteTree();
         $tree->setSiteHomePageID(HOME_CID);
-        $tree->setSite($site);
+        $tree->setLocale($locale);
         $locale->setSiteTree($tree);
 
         $site->getLocales()->add($locale);

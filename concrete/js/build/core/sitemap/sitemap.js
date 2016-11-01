@@ -26,6 +26,7 @@
 		}, options);
 		my.options = options;
 		my.$element = $element;
+		my.$sitemap = null;
 		my.setupTree();
 		my.setupTreeEvents();
 
@@ -36,9 +37,37 @@
 
 	ConcreteSitemap.prototype = {
 
+		sitemapTemplate: '<div class="ccm-sitemap-wrapper"><div class="ccm-sitemap-locales-wrapper"></div><div class="ccm-sitemap-tree"></div></div>',
+		localesWrapperTemplate: '<ul class="nav nav-tabs ccm-sitemap-locales"></ul>',
+		localeTemplate: '<li <% if (selectedLocale) { %>class="active"<% } %>><a href="#" data-locale-site-tree="<%=treeID%>"><img src="<%=icon%>"> <span><%=localeDisplayName%></span></a></li>',
+
 		getTree: function() {
 			var my = this;
-			return my.$element.fancytree('getTree');
+			return my.$sitemap.fancytree('getTree');
+		},
+
+		setupLocales: function(locales) {
+			var my = this;
+			if (!my.$element.find('div.ccm-sitemap-locales-wrapper ul').length) {
+				var $menu = $(my.localesWrapperTemplate);
+				var _locale =  _.template(my.localeTemplate);
+				for (var i = 0; i < locales.length; i++) {
+					var data = locales[i];
+					$menu.append(_locale(data));
+				}
+
+				$menu.find('a[data-locale-site-tree]').on('click', function(e) {
+					e.preventDefault();
+					var treeID = $(this).attr('data-locale-site-tree');
+					var source = my.getTree().options.source;
+					$menu.find('li').removeClass('active');
+					$(this).parent().addClass('active');
+					my.options.siteTreeID = treeID;
+					source.data.siteTreeID = treeID;
+					my.getTree().reload(source);
+				});
+				my.$element.find('div.ccm-sitemap-locales-wrapper').append($menu);
+			}
 		},
 
 		setupTree: function() {
@@ -101,8 +130,11 @@
 				extensions.push("persist");
 			}
 
-    		$(my.$element).addClass('ccm-tree-sitemap');
-    		$(my.$element).fancytree({
+			var _sitemap = _.template(my.sitemapTemplate);
+
+			my.$element.append(_sitemap);
+			my.$sitemap = my.$element.find('div.ccm-sitemap-tree');
+    		$(my.$sitemap).fancytree({
 				extensions: extensions,
 				glyph: {
 					map: {
@@ -139,15 +171,17 @@
 						my.options.init.call();
 					}
 					if (my.options.displayNodePagination) {
-						my.setupNodePagination(my.$element, my.options.cParentID);
+						my.setupNodePagination(my.$sitemap, my.options.cParentID);
 					}
+
+					my.setupLocales(my.getTree().data.locales);
 				},
 				/*
                 renderNode: function(event, data) {
 					if (my.options.selectMode != false) {
 						$(span).find('.fa').remove();
 					}
-                    my.$element.children('.ccm-pagination-bound').remove();
+                    my.$sitemap.children('.ccm-pagination-bound').remove();
                 },*/
 
 				selectMode: treeSelectMode,
@@ -274,7 +308,7 @@
 			}
             ConcreteEvent.unsubscribe('SitemapDeleteRequestComplete.sitemap');
 			ConcreteEvent.subscribe('SitemapDeleteRequestComplete.sitemap', function(e) {
-	 			var node = my.$element.fancytree('getActiveNode');
+	 			var node = my.$sitemap.fancytree('getActiveNode');
 				var parent = node.parent;
 				my.reloadNode(parent);
 			});
@@ -369,7 +403,7 @@
     		if (pg.length) {
     			pg.find('a').unbind('click').on('click', function() {
 					var href = $(this).attr('href');
-					var root = my.$element.fancytree('getRootNode');
+					var root = my.$sitemap.fancytree('getRootNode');
 					jQuery.fn.dialog.showLoader();
 					$.ajax({
 						dataType: 'json',
@@ -378,7 +412,7 @@
 							jQuery.fn.dialog.hideLoader();
 							root.removeChildren();
 							root.addChildren(data);
-							my.setupNodePagination(my.$element);
+							my.setupNodePagination(my.$sitemap);
 						}
 					});
 					return false;
@@ -395,8 +429,8 @@
 
             (my.options.onDisplaySingleLevel || $.noop).call(this, node);
 
-    		var root = my.$element.fancytree('getRootNode');
-			//my.$element.fancytree('option', 'minExpandLevel', minExpandLevel);
+    		var root = my.$sitemap.fancytree('getRootNode');
+			//my.$sitemap.fancytree('option', 'minExpandLevel', minExpandLevel);
 			var ajaxData = $.extend({
                 'dataType': 'json',
 				'displayNodePagination': options.displayNodePagination ? 1 : 0,
@@ -415,7 +449,7 @@
 					jQuery.fn.dialog.hideLoader();
 					root.removeChildren();
 					root.addChildren(data);
-                    my.setupNodePagination(my.$element, node.data.key);
+                    my.setupNodePagination(my.$sitemap, node.data.key);
                 }
             });
     	},
