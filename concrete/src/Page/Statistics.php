@@ -123,7 +123,7 @@ class Statistics
     public static function getTotalPagesCreated($date)
     {
         $db = Loader::db();
-        $num = $db->GetOne('select count(Pages.cID) from Pages inner join Collections on Pages.cID = Collections.cID where cDateAdded >= ? and cDateAdded <= ? and cIsSystemPage = 0 and cIsTemplate = 0', array($date . ' 00:00:00', $date . ' 23:59:59'));
+        $num = $db->GetOne('select count(Pages.cID) from Pages inner join Collections on Pages.cID = Collections.cID where cDateAdded >= ? and cDateAdded <= ? and siteTreeID > 0 and cIsTemplate = 0', array($date . ' 00:00:00', $date . ' 23:59:59'));
 
         return $num;
     }

@@ -192,7 +192,7 @@ class RequestBase extends SymfonyRequest
         if ($key == null) {
             return $_REQUEST;
         }
-        $req = self::createFromGlobals();
+        $req = static::getInstance();
         if ($req->query->has($key)) {
             return $req->query->get($key);
         } else {

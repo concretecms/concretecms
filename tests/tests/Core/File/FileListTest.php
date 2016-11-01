@@ -14,7 +14,6 @@ class FileListTest extends \FileStorageTestCase
     protected function setUp()
     {
         $this->tables = array_merge($this->tables, array(
-            'Users',
             'PermissionAccessEntityTypes',
             'FileAttributeValues',
             'FileImageThumbnailTypes',
@@ -28,6 +27,7 @@ class FileListTest extends \FileStorageTestCase
             'Concrete\Core\Entity\Attribute\Key\Type\Type',
             'Concrete\Core\Entity\Attribute\Key\FileKey',
             'Concrete\Core\Entity\Attribute\Value\FileValue',
+            'Concrete\Core\Entity\User\User',
             'Concrete\Core\Entity\Attribute\Key\Key',
             'Concrete\Core\Entity\Attribute\Value\Value',
             'Concrete\Core\Entity\Attribute\Value\Value\NumberValue',

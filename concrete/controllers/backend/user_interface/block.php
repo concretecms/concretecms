@@ -11,12 +11,31 @@ abstract class Block extends Page
     protected $area;
     protected $block;
 
+    protected function getEditResponse($b, $e = null)
+    {
+        $pr = new \Concrete\Core\Page\EditResponse();
+        $pr->setPage($this->page);
+        $pr->setAdditionalDataAttribute('aID', intval($this->area->getAreaID()));
+        $pr->setAdditionalDataAttribute('arHandle', $this->area->getAreaHandle());
+        $pr->setAdditionalDataAttribute('bID', intval($b->getBlockID()));
+        if ($e) {
+            $pr->setError($e);
+        }
+        return $pr;
+    }
+
     public function on_start()
     {
         parent::on_start();
         $request = $this->request;
         $arHandle = $request->query->get('arHandle');
+        if (!$arHandle) {
+            $arHandle = $request->request->get('arHandle');
+        }
         $bID = $request->query->get('bID');
+        if (!$bID) {
+            $bID = $request->request->get('bID');
+        }
         $a = \Area::get($this->page, $arHandle);
         if (!is_object($a)) {
             throw new \Exception('Invalid Area');
@@ -82,7 +101,7 @@ abstract class Block extends Page
             $ob = \Block::getByID($cnt->getOriginalBlockID());
             $ob->loadNewCollection($nvc);
             if (!is_object($ax)) {
-                $ax = Area::getOrCreate($cx, $ax);
+                $ax = \Area::getOrCreate($cx, $ax);
             }
             $ob->setBlockAreaObject($ax);
             $nb = $ob->duplicate($nvc);

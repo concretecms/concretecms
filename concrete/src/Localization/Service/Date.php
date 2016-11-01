@@ -285,10 +285,10 @@ class Date
                     }
                     if ($request && $request->hasCustomRequestUser()) {
                         $u = $request->getCustomRequestUser();
-                    } elseif (User::isLoggedIn()) {
+                    } else {
                         $u = new User();
                     }
-                    if ($u) {
+                    if (is_object($u) && $u->isRegistered()) {
                         $tz = $u->getUserTimezone();
                     }
                 }
@@ -400,11 +400,17 @@ class Date
      *
      * @return string Returns an empty string if $value couldn't be parsed, the localized string otherwise
      */
-    public function formatDate($value = 'now', $longDate = false, $toTimezone = 'user')
+    public function formatDate($value = 'now', $format = 'short', $toTimezone = 'user')
     {
+        // legacy
+        if ($format === true) {
+            $format = 'medium';
+        } else if ($format === false) {
+            $format = 'short';
+        }
         return Calendar::formatDate(
             $this->toDateTime($value, $toTimezone),
-            $longDate ? 'medium' : 'short'
+            $format
         );
     }
 

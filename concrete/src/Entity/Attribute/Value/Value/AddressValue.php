@@ -10,39 +10,53 @@ use Doctrine\ORM\Mapping as ORM;
 class AddressValue extends Value
 {
     /**
+     * Note: It's the public portion of this property that is deprecated.
+     * @deprecated
      * @ORM\Column(type="string", nullable=true)
      */
-    protected $address1;
+    public $address1;
 
     /**
+     * Note: It's the public portion of this property that is deprecated.
+     * @deprecated
      * @ORM\Column(type="string", nullable=true)
      */
-    protected $address2;
+    public $address2;
 
     /**
+     * Note: It's the public portion of this property that is deprecated.
+     * @deprecated
      * @ORM\Column(type="string", nullable=true)
      */
-    protected $address3;
+    public $address3;
 
     /**
+     * Note: It's the public portion of this property that is deprecated.
+     * @deprecated
      * @ORM\Column(type="string", nullable=true)
      */
-    protected $city;
+    public $city;
 
     /**
+     * Note: It's the public portion of this property that is deprecated.
+     * @deprecated
      * @ORM\Column(type="string", nullable=true)
      */
-    protected $state_province;
+    public $state_province;
 
     /**
+     * Note: It's the public portion of this property that is deprecated.
+     * @deprecated
      * @ORM\Column(type="string", nullable=true)
      */
-    protected $country;
+    public $country;
 
     /**
+     * Note: It's the public portion of this property that is deprecated.
+     * @deprecated
      * @ORM\Column(type="string", nullable=true)
      */
-    protected $postal_code;
+    public $postal_code;
 
     /**
      * @return mixed

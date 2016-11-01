@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Core\Authentication;
 
-use User;
+use Concrete\Core\User\User;
 use Page;
 use Controller;
 
@@ -33,7 +33,7 @@ abstract class AuthenticationTypeController extends Controller implements Authen
     {
         $c = Page::getByPath('/login');
         $controller = $c->getPageController();
-        $controller->finishAuthentication($this->getAuthenticationType());
+        return $controller->finishAuthentication($this->getAuthenticationType());
     }
 
     /**

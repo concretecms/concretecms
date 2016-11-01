@@ -10,9 +10,5 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class NumberType extends Type
 {
-    public function getAttributeValue()
-    {
-        return new NumberValue();
-    }
 
 }

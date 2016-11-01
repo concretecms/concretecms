@@ -40,11 +40,6 @@
       <default value="0"/>
       <notnull/>
     </field>
-    <field name="displaySystemPages" type="smallint">
-      <unsigned/>
-      <default value="0"/>
-      <notnull/>
-    </field>
   </table>
 
 </schema>

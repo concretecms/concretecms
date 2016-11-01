@@ -1,20 +1,58 @@
 /**
  * Simple alert using dialog class.
  */
-
+PNotify.prototype.options.styling = {
+    container: "ccm-notification",
+    notice: "ccm-notification-warning",
+    notice_icon: "glyphicon glyphicon-exclamation-sign",
+    info: "ccm-notification-info",
+    info_icon: "glyphicon glyphicon-info-sign",
+    success: "ccm-notification-success",
+    success_icon: "glyphicon glyphicon-ok-sign",
+    error: "ccm-notification-danger",
+    error_icon: "glyphicon glyphicon-warning-sign",
+    closer: "ccm-notification-closer",
+    pin_up: false,
+    pin_down: false
+};
+PNotify.prototype.options.width = '400px';
+PNotify.prototype.options.addclass = 'ccm-ui';
+PNotify.prototype.options.animate = {
+    animate: true,
+    in_class: 'fadeIn',
+    out_class: 'bounceOutRight'
+};
+PNotify.prototype.options.buttons.closer_hover = false;
 
 !function(global, $) {
     'use strict';
 
     var ConcreteAlert = {
 
+        /*
+        defaultStack: {
+            dir1: "down",
+            dir2: "left",
+            push: "bottom",
+            spacing1: 36,
+            spacing2: 36,
+            context: $("body"),
+            modal: false
+        },*/
+
         dialog : function(title, message, onCloseFn) {
-            $('<div id="ccm-popup-alert" class="ccm-ui"><div id="ccm-popup-alert-message" class="alert alert-danger">' + message + '</div></div>').dialog({
+            var $div = $('<div id="ccm-popup-alert" class="ccm-ui"><div id="ccm-popup-alert-message" class="alert alert-danger">' + message + '</div></div>');
+            $div.dialog({
                 title: title,
                 width: 500,
                 height: 'auto',
                 modal: true,
-                onDestroy: onCloseFn
+                close: function() {
+                	$div.remove();
+                	if (onCloseFn) {
+                		onCloseFn();
+                	}
+                }
             });
         },
 
@@ -29,8 +67,8 @@
 
         error: function(defaults) {
             var options = $.extend({
-                type: 'danger',
-                icon: 'times'
+                type: 'error',
+                icon: 'exclamation-circle'
             }, defaults);
 
             return this.notify(options);
@@ -47,40 +85,20 @@
                 callback: function() {}
             }, defaults);
 
-            var messageText = '',
-                $appendTo = (options.appendTo) ? $(options.appendTo) : $(document.body);
+            var notifyOptions = {
+                text: options.message,
+                icon: 'fa fa-' + options.icon,
+                type: options.type,
+                delay: options.delay,
+                after_close: options.callback
+            };
 
             if (options.title) {
-                messageText = '<h3>' + options.title + '</h3>' + options.message;
-            } else {
-                messageText = '<h3>' + options.message + '</h3>';
+                notifyOptions.title = options.title;
             }
 
-            var elem = $('<div id="ccm-notification-hud" class="ccm-ui ccm-notification ccm-notification-' + options.type + '"><i class="ccm-notification-icon fa fa-' + options.icon + '"></i><div class="ccm-notification-inner">' + messageText + '</div></div>').
-            appendTo($appendTo).delay(5).queue(function() {
-                $(this).addClass('animated fadeIn');
-                $(this).dequeue();
-            });
+            new PNotify(notifyOptions);
 
-            var removeElem = _.once(function() {
-                    elem.queue(function () {
-                        $(this).css('opacity', 1);
-                        $(this).dequeue();
-                    }).delay(1).queue(function () {
-                        $(this).addClass('animated bounceOutRight');
-                        $(this).dequeue();
-                    }).delay(1000).queue(function () {
-                        $(this).remove();
-                        $(this).dequeue();
-                        options.callback();
-                    });
-                }),
-                timeout = setTimeout(removeElem, options.delay);
-
-            elem.click(function() {
-                removeElem();
-                clearTimeout(timeout);
-            });
         }
 
     };

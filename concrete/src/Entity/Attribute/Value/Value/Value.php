@@ -12,6 +12,9 @@ use Doctrine\ORM\Mapping as ORM;
  */
 abstract class Value
 {
+
+    abstract public function __toString();
+
     /**
      * @ORM\Id @ORM\Column(type="integer", options={"unsigned":true})
      * @ORM\GeneratedValue(strategy="AUTO")
@@ -19,7 +22,7 @@ abstract class Value
     protected $avID;
 
     /**
-     * @ORM\OneToMany(targetEntity="\Concrete\Core\Entity\Attribute\Value\Value", mappedBy="value")
+     * @ORM\OneToMany(targetEntity="\Concrete\Core\Entity\Attribute\Value\Value", mappedBy="value", cascade={"remove"})
      **/
     protected $attribute_values;
 
@@ -47,49 +50,21 @@ abstract class Value
         return $this;
     }
 
+    public function getAttributeValueID()
+    {
+        return $this->avID;
+    }
+
+    public function __clone()
+    {
+        if ($this->avID) {
+            $this->avID = null;
+        }
+    }
+
     public function __construct()
     {
         $this->attribute_values = new ArrayCollection();
     }
 
-    public function getDisplaySanitizedValue()
-    {
-        $controller = $this->getAttributeKey()->getController();
-        if (method_exists($controller, 'getDisplaySanitizedValue')) {
-            $controller->setAttributeValue($this);
-
-            return $controller->getDisplaySanitizedValue();
-        }
-
-        return $this->getDisplayValue();
-    }
-
-    public function getDisplayValue()
-    {
-        $controller = $this->getAttributeKey()->getController();
-        if (method_exists($controller, 'getDisplayValue')) {
-            $controller->setAttributeValue($this);
-
-            return $controller->getDisplayValue();
-        }
-
-        return $this;
-    }
-
-    public function getSearchIndexValue()
-    {
-        $controller = $this->getAttributeKey()->getController();
-        if (method_exists($controller, 'getSearchIndexValue')) {
-            $controller->setAttributeValue($this);
-
-            return $controller->getSearchIndexValue();
-        }
-
-        return $this;
-    }
-
-    public function __toString()
-    {
-        return (string) $this->getDisplayValue();
-    }
 }

@@ -14,5 +14,6 @@ class ExpressServiceProvider extends ServiceProvider
         $this->app->bindShared('express/control/type/manager', function () use ($app) {
             return $app->make('Concrete\Core\Express\Form\Control\Type\Manager');
         });
+        $this->app->singleton('Concrete\Core\Express\Association\Applier');
     }
 }

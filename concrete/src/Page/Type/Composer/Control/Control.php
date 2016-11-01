@@ -1,20 +1,23 @@
 <?php
+
 namespace Concrete\Core\Page\Type\Composer\Control;
 
 use Concrete\Core\Page\Type\Type;
 use Loader;
 use Concrete\Core\Foundation\Object;
-use Page;
+use Concrete\Core\Page\Page;
 use Controller;
 use Concrete\Core\Page\Type\Composer\FormLayoutSet as PageTypeComposerFormLayoutSet;
 use Concrete\Core\Page\Type\Composer\FormLayoutSetControl as PageTypeComposerFormLayoutSetControl;
 use Concrete\Core\Page\Type\Composer\Control\Type\Type as PageTypeComposerControlType;
+use HtmlObject\Element;
 
 abstract class Control extends Object
 {
     protected $ptComposerControlIdentifier;
     protected $ptComposerControlName;
     protected $ptComposerControlIconSRC;
+    protected $ptComposerControlIconFormatter;
     protected $ptComposerControl;
     protected $ptComposerControlRequiredByDefault = false;
     protected $ptComposerControlRequiredOnThisRequest = false;
@@ -37,6 +40,11 @@ abstract class Control extends Object
         return false;
     }
 
+    public function onPageDraftCreate(Page $c)
+    {
+        return false;
+    }
+
     public function setPageTypeComposerControlName($ptComposerControlName)
     {
         $this->ptComposerControlName = $ptComposerControlName;
@@ -51,17 +59,17 @@ abstract class Control extends Object
     {
         $this->ptComposerControlCustomLabel = $label;
     }
-    
+
     public function getPageTypeComposerControlCustomLabel()
     {
         return $this->ptComposerControlCustomLabel;
     }
-    
+
     public function setPageTypeComposerControlDescription($description)
     {
         $this->ptComposerControlDescription = $description;
     }
-    
+
     public function getPageTypeComposerControlDescription()
     {
         return $this->ptComposerControlDescription;
@@ -71,7 +79,7 @@ abstract class Control extends Object
     {
         $this->page = $page;
     }
-    
+
     public function getPageObject()
     {
         return $this->page;
@@ -96,7 +104,7 @@ abstract class Control extends Object
     {
         return $this->ptComposerControlName;
     }
-    
+
     public function getPageTypeComposerControlDisplayName($format = 'html')
     {
         $value = $this->getPageTypeComposerControlName();
@@ -114,9 +122,21 @@ abstract class Control extends Object
         $this->ptComposerControlIconSRC = $ptComposerControlIconSRC;
     }
 
-    public function getPageTypeComposerControlIconSRC()
+    public function setPageTypeComposerControlIconFormatter($ptComposerControlIconFormatter)
     {
-        return $this->ptComposerControlIconSRC;
+        $this->ptComposerControlIconFormatter = $ptComposerControlIconFormatter;
+    }
+
+    public function getPageTypeComposerControlIcon()
+    {
+        if (isset($this->ptComposerControlIconSRC)) {
+            $img = new Element('img');
+            $img->src($this->ptComposerControlIconSRC);
+
+            return $img;
+        } else {
+            return $this->ptComposerControlIconFormatter->getListIconElement();
+        }
     }
 
     public function setPageTypeComposerControlIdentifier($ptComposerControlIdentifier)
@@ -151,7 +171,7 @@ abstract class Control extends Object
 
     public function field($key)
     {
-        return 'ptComposer[' . $this->ptComposerFormLayoutSetControlObject->getPageTypeComposerFormLayoutSetControlID(). '][' . $key . ']';
+        return 'ptComposer['.$this->ptComposerFormLayoutSetControlObject->getPageTypeComposerFormLayoutSetControlID().']['.$key.']';
     }
 
     public function getRequestValue($args = false)

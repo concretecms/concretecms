@@ -5,7 +5,7 @@ use \Concrete\Core\Page\Type\PublishTarget\Type\Type as PageTypePublishTargetTyp
 $form = Loader::helper('form');
 $templates = array();
 $ag = \Concrete\Core\Http\ResponseAssetGroup::get();
-$ag->requireAsset('select2');
+$ag->requireAsset('selectize');
 $pagetemplates = PageTemplate::getList();
 foreach ($pagetemplates as $pt) {
     $templates[$pt->getPageTemplateID()] = $pt->getPageTemplateDisplayName();
@@ -22,6 +22,7 @@ $ptIsFrequentlyAdded = 1;
 $token = 'add_page_type';
 if (is_object($pagetype)) {
     $token = 'update_page_type';
+	$siteType = $pagetype->getSiteTypeObject();
     $ptName = $pagetype->getPageTypeName();
     $ptHandle = $pagetype->getPageTypeHandle();
     $ptLaunchInComposer = $pagetype->doesPageTypeLaunchInComposer();
@@ -36,6 +37,8 @@ if (is_object($pagetype)) {
 ?>
 
 <?=Loader::helper('validation/token')->output($token)?>
+<input type="hidden" name="siteTypeID" value="<?=$siteType->getSiteTypeID()?>">
+
 	<div class="form-group">
 		<?=$form->label('ptName', t('Page Type Name'))?>
     	<?=$form->text('ptName', $ptName, array('class' => 'span5'))?>
@@ -47,7 +50,7 @@ if (is_object($pagetype)) {
 	</div>
 
 	<div class="form-group">
-		<?=$form->label('ptPageTemplateID', t('Default Page Template'))?>
+		<?=$form->label('ptDefaultPageTemplateID', t('Default Page Template'))?>
 		<?=$form->select('ptDefaultPageTemplateID', $templates, $ptDefaultPageTemplateID, array('class' => 'span5'))?>
 	</div>
 
@@ -85,7 +88,7 @@ if (is_object($pagetype)) {
     }
     ?>
             <div class="radio"><label><?=$form->radio('ptPublishTargetTypeID', $t->getPageTypePublishTargetTypeID(), $selected)?><?=$t->getPageTypePublishTargetTypeDisplayName()?></label></div>
-        <?php 
+        <?php
 } ?>
 	</div>
 
@@ -94,17 +97,20 @@ if (is_object($pagetype)) {
         ?>
 
 		<div style="display: none" data-page-type-publish-target-type-id="<?=$t->getPageTypePublishTargetTypeID()?>">
-			<?php $t->includeOptionsForm($pagetype);
+			<?php $t->includeOptionsForm($pagetype, $siteType);
         ?>
 		</div>
 
-	<?php 
+	<?php
     }
 } ?>
 
 <script type="text/javascript">
 $(function() {
-	$('#ptPageTemplateID').removeClass('form-control').select2();
+    $('#ptPageTemplateID').removeClass('form-control').selectize({
+        plugins: ['remove_button']
+    });
+
 	$('input[name=ptPublishTargetTypeID]').on('click', function() {
 		$('div[data-page-type-publish-target-type-id]').hide();
 		var ptPublishTargetTypeID = $('input[name=ptPublishTargetTypeID]:checked').val();

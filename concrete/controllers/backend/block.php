@@ -2,10 +2,12 @@
 namespace Concrete\Controller\Backend;
 
 use Concrete\Controller\Backend\UserInterface\Block as BackendInterfaceBlockController;
+use Concrete\Core\Block\Events\BlockDelete;
 use Concrete\Core\Block\View\BlockView;
 use Concrete\Core\View\DialogView;
 use Core;
 use Localization;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class Block extends BackendInterfaceBlockController
 {
@@ -28,6 +30,7 @@ class Block extends BackendInterfaceBlockController
         $this->set('bv', $bv);
         $this->view = new DialogView('/backend/block');
     }
+
 
     protected function canAccess()
     {

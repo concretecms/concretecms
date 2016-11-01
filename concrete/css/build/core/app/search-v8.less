@@ -1,0 +1,283 @@
+/**
+ * These are search forms for the new style search in v8 (file manager)
+ */
+div.ccm-header-search-form + div.ui-dialog-content {
+  .border-top-radius(0px);
+}
+
+div.ccm-header-search-form {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+
+  width: auto;
+
+  div.ccm-header-search-form-input {
+    position: relative;
+    input.form-control {
+      .border-top-left-radius(4px) !important;
+      .border-bottom-left-radius(4px) !important;
+      .border-top-right-radius(0px) !important;
+      .border-bottom-right-radius(0px) !important;
+    }
+  }
+
+  span.input-group-btn {
+    border-left: 0px;
+  }
+
+  input {
+    border-right-width: 0px !important;
+  }
+
+  form {
+    position: relative;
+
+    a.ccm-header-reset-search,
+    a.ccm-header-launch-advanced-search {
+      position: absolute;
+      top: 10px;
+      font-size: 14px;
+      z-index: @index-level-search-reset;
+    }
+
+    a.ccm-header-reset-search {
+      left: 10px;
+      &.ccm-header-reset-search-right {
+        right: 10px;
+        left: auto;
+
+      }
+    }
+
+    a.ccm-header-launch-advanced-search {
+      color: #aaa;
+      right: 10px;
+
+    }
+
+    a.ccm-header-reset-search {
+      color: #09f;
+      display: none;
+    }
+
+    a.ccm-header-launch-advanced-search +
+    input.form-control {
+      width: 310px;
+      padding-right: 110px;
+    }
+
+    input[type=text].form-control {
+      width: 200px;
+    }
+  }
+
+}
+
+ul.ccm-header-search-navigation {
+  li {
+    display: inline-block;
+    margin-left: 20px;
+    font-size: 14px;
+  }
+  list-style: none;
+  text-align: right;
+  padding: 4px 0px 10px 0px;
+  a {
+    color: #777;
+    .transition(0.1s linear all);
+  }
+  a:focus, a:hover {
+    text-decoration: none;
+    color: #333;
+    outline: none;
+  }
+  a.link-primary {
+    color: #09f;
+  }
+  a#ccm-file-manager-upload {
+
+    position: relative;
+
+    input[type=file] {
+      position: absolute;
+      .opacity(0);
+      top:  0px;
+      left: 0px;
+      width: 100%;
+      height: 20px;
+      border: 1px solid black;
+      cursor: pointer;
+    }
+
+    color: #09f;
+    &:hover {
+      color: #2b507b;
+    }
+  }
+}
+
+div.ui-dialog {
+  div.ccm-header-search-form {
+    float: none;
+    position: relative;
+    width: auto;
+    box-sizing: content-box;
+    height: 34px;
+    padding-top: 4px;
+    padding-bottom: 4px;
+    background-color: rgba(71, 181, 251, 0.11);
+    .border-top-radius(4px);
+
+    ul.ccm-header-search-navigation {
+      text-align: left;
+      position: absolute;
+      top: 0px;
+      left: -240px;
+    }
+
+    form {
+      position: absolute;
+      right: 4px;
+      width: 369px;
+    }
+  }
+
+  div.table-responsive {
+    margin: -20px -26px -20px -26px;
+  }
+  div.ccm-search-results-breadcrumb {
+    display: inline-block;
+    position: absolute;
+    height: 15px;
+    top: 10px;
+    left: 10px;
+    ol {
+      margin-bottom: 0px;
+      li a, li span {
+        position: static;
+        font-size: 14px !important;
+        font-weight: normal;
+      }
+    }
+  }
+
+  div.ui-dialog-titlebar {
+    span {
+      margin-right: 20px;
+    }
+  }
+}
+
+/**
+ * Breadcrumb
+ */
+div.ccm-search-results-breadcrumb {
+  -webkit-font-smoothing: antialiased;
+
+  ol.breadcrumb {
+    background-color: transparent;
+    padding: 0px;
+    position: relative;
+    margin-bottom: -20px;
+
+    > li a {
+      color: #777;
+      .transition(0.1s linear all);
+    }
+    > li > a {
+      &:hover, &:focus {
+        text-decoration: none;
+        color: #333;
+        outline: none;
+      }
+    }
+
+    > li.active a {
+      color: #333;
+    }
+
+    > li.ccm-search-select-active-droppable a,
+    > li a.ccm-search-select-active-droppable {
+      color: #09f;
+    }
+
+    > li + li:before {
+      content: ">";
+      font-size: 11px;
+      color: #999;
+      font-style: normal;
+      text-decoration: inherit;
+      position: relative;
+      top: -2px;
+      padding-right: 8px;
+      left: 0px;
+    }
+  }
+
+}
+
+/**
+ * Draggable table row items
+ */
+div.ccm-draggable-search-item {
+
+  position: relative;
+
+  &:after {
+    font-family: FontAwesome;
+    font-style: normal;
+    text-decoration: inherit;
+    font-size: 24px;
+    color: #666;
+    display: inline-block;
+  }
+
+  &.ccm-search-results-stack {
+    &:after {
+      content: "\f1b3";
+    }
+  }
+
+  &.ccm-search-results-folder {
+    &:after {
+      content: "\f07b";
+    }
+  }
+
+  &.ccm-search-results-file {
+    &:after {
+      content: "\f016";
+    }
+  }
+
+  span {
+    display: inline-block;
+    background-color: #0099ff;
+    color: #fff;
+    width: 20px;
+    height: 20px;
+    text-align: center;
+    font-weight: bold;
+    .border-radius(10px);
+    top: -2px;
+    right: 18px;
+    position: absolute;
+
+  }
+}
+
+html.ccm-search-results-dragging {
+  div.ccm-search-results-breadcrumb {
+    ol.breadcrumb {
+      > li a:hover {
+        text-decoration: none !important;
+      }
+    }
+  }
+}
+
+
+.ccm-search-results-copy {
+  cursor: copy !important;
+}

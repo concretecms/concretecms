@@ -156,7 +156,7 @@ class Controller extends GenericOauth1aTypeController
 
             $user = $this->createUser();
             if ($user && !$user->isError()) {
-                $this->completeAuthentication($user);
+                return $this->completeAuthentication($user);
             }
         }
 

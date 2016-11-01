@@ -12,15 +12,12 @@
 			'selectMode': '2',
 			'minExpandLevel': '1',
 			'checkbox': true,
-			'onSelect' : function(select, node) {
-                 if (select) {
-                    var element = $('.topics_<?php echo $akID ?> .hidden-value-container input[data-node-id=' + node.data.key + ']');
-                    if (!element.length) {
-                        $('.topics_<?php echo $akID ?> .hidden-value-container').append('<input data-node-id="' + node.data.key + '" name="topics_<?php echo $akID ?>[]" type="hidden" value="'+node.data.key+'">');
-                    }
-                 } else {
-                    $('.topics_<?php echo $akID ?> input[value='+node.data.key+']').remove();
-                 }
+			'onSelect' : function(nodes) {
+				var element = $('.topics_<?php echo $akID ?> .hidden-value-container');
+				element.html('');
+				$.each(nodes, function(i, node) {
+					$('.topics_<?php echo $akID ?> .hidden-value-container').append('<input data-node-id="' + node + '" name="topics_<?php echo $akID ?>[]" type="hidden" value="'+node+'">');
+				});
              }
 		});
 	});

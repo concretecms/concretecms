@@ -5,23 +5,27 @@ use Concrete\Core\Application\Application;
 use Concrete\Core\Application\ApplicationAwareInterface;
 use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Http\Request;
+use Concrete\Core\Http\Server;
+use Concrete\Core\Http\ServerInterface;
 use Concrete\Core\Permission\Key\Key;
 use Concrete\Core\Support\Facade\Events;
+use Concrete\Core\Application\ApplicationAwareTrait;
 
 class DefaultRunner implements RunInterface, ApplicationAwareInterface
 {
-    /** @var Application */
-    protected $app;
+    use ApplicationAwareTrait;
 
     /** @var Repository */
     protected $config;
 
-    /** @var Request */
-    protected $request;
+    /**
+     * @var \Concrete\Core\Http\ServerInterface
+     */
+    private $server;
 
-    public function __construct(Request $request)
+    public function __construct(ServerInterface $server)
     {
-        $this->request = $request;
+        $this->server = $server;
     }
 
     /**
@@ -30,7 +34,6 @@ class DefaultRunner implements RunInterface, ApplicationAwareInterface
     public function run()
     {
         $app = $this->app;
-        $request = $this->request;
 
         include DIR_APPLICATION . '/bootstrap/app.php';
 
@@ -42,6 +45,35 @@ class DefaultRunner implements RunInterface, ApplicationAwareInterface
              * ----------------------------------------------------------------------------
              */
             $app->setupPackages();
+
+            /*
+             * ----------------------------------------------------------------------------
+             * Legacy Definitions. This has to come after packages because this
+             * essentially loads the entity manager, and the entity manager loads classes
+             * found in its config, which may be classes that haven't been autoloaded by initialPackages. It also
+             * has to come after setupPackages() in case an autoloader is configured in on_start()
+             * ----------------------------------------------------------------------------
+             */
+            $this->initializeLegacyURLDefinitions($app);
+
+
+            /*
+             * Handle automatic updating. Must come after setupPackages() because some things setup autoloaders in on_start() of their package
+             * controller
+             */
+            $app->handleAutomaticUpdates();
+
+
+            // This is a crappy place for this, but it has to come AFTER the packages because sometimes packages
+            // want to replace legacy "tools" URLs with the new MVC, and the tools paths are so greedy they don't
+            // work unless they come at the end.
+            $this->registerLegacyRoutes();
+
+            /* ----------------------------------------------------------------------------
+             * Register legacy routes
+             * ----------------------------------------------------------------------------
+             */
+            $this->registerLegacyRoutes();
 
             /*
              * ----------------------------------------------------------------------------
@@ -58,21 +90,37 @@ class DefaultRunner implements RunInterface, ApplicationAwareInterface
          */
         Events::dispatch('on_before_dispatch');
 
-        /*
-         * ----------------------------------------------------------------------------
-         * Get the response to the current request
-         * ----------------------------------------------------------------------------
-         */
-        return $app->dispatch($request);
+        $request = Request::createFromGlobals();
+        return $this->server->handleRequest($request);
     }
 
     /**
-     * Set the application object.
-     *
-     * @param \Concrete\Core\Application\Application $application
+     * @param Repository $config
+     * @param Application $app
      */
-    public function setApplication(Application $application)
+    private function initializeLegacyURLDefinitions(Application $app)
     {
-        $this->app = $application;
+        if (!defined('BASE_URL')) {
+            try {
+                define('BASE_URL', rtrim((string) $app->make('url/canonical'), '/'));
+            } catch (\Exception $x) {
+                echo $x->getMessage();
+                die(1);
+            }
+        }
     }
+
+    protected function registerLegacyRoutes()
+    {
+        \Route::register("/tools/blocks/{btHandle}/{tool}",
+            '\Concrete\Core\Legacy\Controller\ToolController::displayBlock',
+            'blockTool',
+            array('tool' => '[A-Za-z0-9_/.]+')
+        );
+        \Route::register("/tools/{tool}", '\Concrete\Core\Legacy\Controller\ToolController::display',
+            '   tool',
+            array('tool' => '[A-Za-z0-9_/.]+')
+        );
+    }
+
 }

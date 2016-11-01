@@ -7,6 +7,8 @@
  */
 namespace Concrete\Tests\Core\User;
 
+use Concrete\Core\Conversation\Message\Author;
+use Concrete\Core\Conversation\Message\AuthorFormatter;
 use Concrete\Core\File\StorageLocation\StorageLocation;
 use Concrete\Core\File\StorageLocation\Type\Type;
 use Core;
@@ -16,6 +18,10 @@ class UserTest extends \UserTestCase
     protected function setUp()
     {
         $this->metadatas[] = 'Concrete\Core\Entity\File\StorageLocation\StorageLocation';
+        $this->metadatas[] = 'Concrete\Core\Entity\Site\Site';
+        $this->metadatas[] = 'Concrete\Core\Entity\Site\Type';
+        $this->metadatas[] = 'Concrete\Core\Entity\Site\Tree';
+        $this->metadatas[] = 'Concrete\Core\Entity\Site\SiteTree';
         $this->tables[] = 'FileStorageLocationTypes';
         parent::setUp();
     }
@@ -69,7 +75,11 @@ class UserTest extends \UserTestCase
 
     public function testGravatar()
     {
-        \Config::set('concrete.user.gravatar.enabled', true);
+
+        $site = \Core::make('site')->installDefault();
+
+        $site->getConfigRepository()->set('user.gravatar.enabled', true);
+
         $service = Core::make('user/registration');
         $ui = $service->create(array('uName' => 'andrew', 'uEmail' => 'andrew@concrete5.org'));
         $this->assertFalse($ui->hasAvatar());
@@ -79,11 +89,12 @@ class UserTest extends \UserTestCase
         $this->assertInstanceOf('Concrete\Core\User\Avatar\Gravatar', $avatar);
         $this->assertEquals('//www.gravatar.com/avatar/90c2803fabd994378063e84dd9a3ed92?s=80&d=mm&r=g', $avatar->getPath());
 
-        \Config::clear('concrete.user.gravatar.enabled');
+        $site->getConfigRepository()->clear('user.gravatar.enabled');
     }
 
     public function testAvatar()
     {
+        $site = \Core::make('site')->installDefault();
         $type = Type::add('default', t('Default'));
         $configuration = $type->getConfigurationObject();
         $fsl = StorageLocation::add($configuration, 'Default', true);
@@ -117,19 +128,35 @@ class UserTest extends \UserTestCase
         $this->assertFalse($ui->hasAvatar());
     }
 
+    public function testEmptyAvatar()
+    {
+        $author = new Author();
+        $author->setName('Andrew');
+
+        $formatter = new AuthorFormatter($author);
+        $avatar = $formatter->getAvatar();
+
+        $this->assertEquals(
+            '<img src="/path/to/server/concrete/images/avatar_none.png" alt="Andrew" class="u-avatar">',
+            $avatar
+        );
+    }
+
     public function testPublicProfileLink()
     {
-        \Config::set('concrete.user.profiles_enabled', false);
+        $site = \Core::make('site')->installDefault();
+
+        $site->getConfigRepository()->set('user.profiles_enabled', false);
 
         $service = Core::make('user/registration');
         $ui = $service->create(array('uName' => 'andrew', 'uEmail' => 'andrew@concrete5.org'));
         $this->assertEquals(null, $ui->getUserPublicProfileUrl());
 
-        \Config::set('concrete.user.profiles_enabled', true);
+        $site->getConfigRepository()->set('user.profiles_enabled', true);
         $this->assertInstanceOf('Concrete\Core\Url\UrlInterface', $ui->getUserPublicProfileUrl());
         $url = (string) $ui->getUserPublicProfileUrl();
         $this->assertEquals('http://www.dummyco.com/path/to/server/index.php/members/profile/view/1', $url);
 
-        \Config::clear('concrete.user.profiles_enabled');
+        $site->getConfigRepository()->clear('user.profiles_enabled');
     }
 }

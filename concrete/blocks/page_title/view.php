@@ -17,5 +17,5 @@ if ($useFilterTitle) {
 }
 
 if ($title) {
-    echo "<$formatting  class=\"page-title\">" . h($title) . "<$formatting>";
+    echo "<$formatting  class=\"page-title\">" . h($title) . "</$formatting>";
 }

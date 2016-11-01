@@ -8,7 +8,7 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
 <?php if ($c->isEditMode() && $controller->isBlockEmpty()) {
     ?>
     <div class="ccm-edit-mode-disabled-item"><?=t('Empty Page List Block.')?></div>
-<?php 
+<?php
 } else {
     ?>
 
@@ -118,11 +118,11 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
     ?>
                         <?php echo $title;
     ?>
-                    <?php 
+                    <?php
 } else {
     ?>
                         <a href="<?php echo $url ?>" target="<?php echo $target ?>"><?php echo $title ?></a>
-                    <?php 
+                    <?php
 }
     ?>
                 </div>
@@ -171,5 +171,5 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
 <?php endif;
     ?>
 
-<?php 
+<?php
 } ?>

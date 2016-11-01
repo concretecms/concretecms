@@ -24,7 +24,7 @@ class ValidationServiceProvider extends ServiceProvider
         );
         $registers = array(
             'helper/validation/token' => '\Concrete\Core\Validation\CSRF\Token',
-            'helper/validation/error' => '\Concrete\Core\Error\ErrorBag\ErrorBag',
+            'helper/validation/error' => '\Concrete\Core\Error\ErrorList\ErrorList',
             'token' => '\Concrete\Core\Validation\CSRF\Token',
         );
 

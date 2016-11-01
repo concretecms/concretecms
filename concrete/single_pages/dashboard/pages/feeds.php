@@ -6,7 +6,7 @@
     || $controller->getTask() == 'edit_feed'
     || $controller->getTask() == 'delete_feed') {
     $action = $view->action('add_feed');
-    $token = 'add_feed';
+    $tokenString = 'add_feed';
     $pfTitle = '';
     $pfDescription = '';
     $pfHandle = '';
@@ -40,7 +40,7 @@
             $imageFile = File::getByID($iconFID);
         }
         $action = $view->action('edit_feed', $feed->getID());
-        $token = 'edit_feed';
+        $tokenString = 'edit_feed';
         $button = t('Update');
     }
     ?>
@@ -85,7 +85,7 @@
     </script>
 
     <form method="post" class="form-stacked" action="<?=$action?>">
-        <?=$this->controller->token->output($token)?>
+        <?=$this->controller->token->output($tokenString)?>
         <div class="form-group">
             <?=$form->label('pfTitle', t('Title'))?>
             <?=$form->text('pfTitle', $pfTitle)?>
@@ -224,9 +224,9 @@
                     'treeID': chosenTree,
                     'chooseNodeInForm': true,
                     'selectNodesByKey': [<?=intval($customTopicTreeNodeID)?>],
-                    'onSelect' : function(select, node) {
-                        if (select) {
-                            $('input[name=customTopicTreeNodeID]').val(node.data.key);
+                    'onSelect' : function(nodes) {
+                        if (nodes.length) {
+                            $('input[name=customTopicTreeNodeID]').val(nodes[0]);
                         } else {
                             $('input[name=customTopicTreeNodeID]').val('');
                         }

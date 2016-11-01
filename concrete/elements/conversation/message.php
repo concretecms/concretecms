@@ -14,7 +14,9 @@ if ($message->isConversationMessageDeleted()) {
     $class .= ' ccm-conversation-message-deleted';
 }
 
-if ($dateFormat == 'custom' && $customDateFormat) {
+if (!isset($dateFormat)) {
+    $dateFormat = 'default';
+} elseif ($dateFormat == 'custom' && $customDateFormat) {
     $dateFormat = array($customDateFormat);
 }
 if (!$message->isConversationMessageApproved()) {
@@ -22,7 +24,7 @@ if (!$message->isConversationMessageApproved()) {
 }
 $cnvMessageID = $message->getConversationMessageID();
 $cnvID = $message->getConversationID();
-$c = Page::getByID($_REQUEST['cID']);
+$c = Page::getByID(\Request::request('cID'));
 $cnvMessageURL = urlencode($c->getCollectionLink(true) . '#cnv' . $cnvID . 'Message' . $cnvMessageID);
 
 if ((!$message->isConversationMessageDeleted() && $message->isConversationMessageApproved()) || $message->conversationMessageHasActiveChildren()) {
@@ -148,7 +150,7 @@ if ((!$message->isConversationMessageDeleted() && $message->isConversationMessag
     ?>
               <li class="ccm-conversation-social-share"><span class="ccm-conversation-message-divider">|</span></li>
               <li class="ccm-conversation-social-share">
-                  <a class="ccm-conversation-message-control-icon share-popup" href="http://twitter.com/intent/tweet?url=<?php echo $cnvMessageURL?>" title="<?=t('Share message URL on Twitter.')?>"><i class="fa fa-twitter"></i></a>
+                  <a class="ccm-conversation-message-control-icon share-popup" href="https://twitter.com/intent/tweet?url=<?php echo $cnvMessageURL?>" title="<?=t('Share message URL on Twitter.')?>"><i class="fa fa-twitter"></i></a>
               </li>
               <li class="ccm-conversation-social-share">
                   <a class="ccm-conversation-message-control-icon share-popup" href="http://www.facebook.com/sharer.php?u=<?php echo $cnvMessageURL?>" title="<?=t('Share message URL on Facebook.')?>"><i class="fa fa-facebook"></i></a>

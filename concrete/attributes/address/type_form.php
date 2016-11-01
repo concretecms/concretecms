@@ -43,3 +43,25 @@ if (isset($_POST['akHasCustomCountries'])) {
 <label for="akDefaultCountry"><?=t('Default Country')?></label>
 <?=$form->select('akDefaultCountry', $countries, $akDefaultCountry, array('classes' => 'form-control'))?>
 </fieldset>
+
+<script type="text/javascript">
+    ccm_attributeTypeAddressCountries = function(obj) {
+        if (!obj) {
+            var obj = $("input[name=akHasCustomCountries][checked=checked]");
+        }
+        if (obj.attr('value') == 1) {
+            $("#akCustomCountries").attr('disabled' , false);
+        } else {
+            $("#akCustomCountries").attr('disabled' , true);
+            $("#akCustomCountries option").attr('selected', true);
+        }
+    }
+
+    $(function() {
+        $("input[name=akHasCustomCountries]").click(function() {
+            ccm_attributeTypeAddressCountries($(this));
+        });
+
+        ccm_attributeTypeAddressCountries();
+    });
+</script>

@@ -7,7 +7,7 @@ use Config;
 use Exception;
 use Database;
 use Core;
-use User;
+use Concrete\Core\User\User;
 use UserInfo;
 use View;
 use Session;
@@ -194,7 +194,7 @@ class Controller extends AuthenticationTypeController
 
                 //generate hash that'll be used to authenticate user, allowing them to change their password
                 $h = new \Concrete\Core\User\ValidationHash();
-                $uHash = $h->add($oUser->uID, intval(UVTYPE_CHANGE_PASSWORD), true);
+                $uHash = $h->add($oUser->getUserID(), intval(UVTYPE_CHANGE_PASSWORD), true);
                 $changePassURL = View::url(
                         '/login',
                         'callback',
@@ -221,7 +221,7 @@ class Controller extends AuthenticationTypeController
                     $mh->from($fromEmail, $fromName);
                 }
 
-                $mh->addParameter('siteName', tc('SiteName', Config::get('concrete.site')));
+                $mh->addParameter('siteName', tc('SiteName', \Core::make('site')->getSite()->getSiteName()));
                 $mh->load('forgot_password');
                 @$mh->sendMail();
             } catch (\Exception $e) {
@@ -366,7 +366,7 @@ class Controller extends AuthenticationTypeController
         $app = Application::getFacadeApplication();
         $db = $app['database']->connection();
 
-        return $db->GetOne('select ulsPasswordReset from Users where uName = ?', array($this->post('uName')));
+        return $db->GetOne('select uIsPasswordReset from Users where uName = ?', array($this->post('uName')));
     }
 
     public function v($hash = '')

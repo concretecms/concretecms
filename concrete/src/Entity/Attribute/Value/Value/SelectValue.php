@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  * @ORM\Table(name="SelectAttributeValues")
  */
-class SelectValue extends Value
+class SelectValue extends Value implements \Iterator
 {
     /**
      * @ORM\ManyToMany(targetEntity="SelectValueOption", inversedBy="values", cascade={"persist"})
@@ -48,4 +48,53 @@ class SelectValue extends Value
     {
         $this->selectedOptions = $selectedOptions;
     }
+
+    public function __toString()
+    {
+        $str = '';
+        $i = 0;
+        /**
+         * @var $option SelectValueOption
+         */
+        foreach ($this->selectedOptions as $option) {
+            $str .= $option->getSelectAttributeOptionValue();
+            $i++;
+            if ($i < count($this->selectedOptions)) {
+                $str .= "\n";
+            }
+        }
+        return $str;
+    }
+
+    public function rewind()
+    {
+        $this->selectedOptions->getIterator()->rewind();
+    }
+
+    public function valid()
+    {
+        $this->selectedOptions->getIterator()->valid();
+    }
+
+
+    public function current()
+    {
+        return $this->selectedOptions->getIterator()->current();
+    }
+
+    public function key()
+    {
+        return $this->selectedOptions->getIterator()->key();
+    }
+
+    public function next()
+    {
+        $this->selectedOptions->getIterator()->next();
+    }
+
+    public function count()
+    {
+        return $this->selectedOptions->getIterator()->count();
+    }
+
 }

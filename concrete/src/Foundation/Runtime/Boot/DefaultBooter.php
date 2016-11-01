@@ -15,19 +15,11 @@ use Concrete\Core\Support\Facade\Facade;
 use Concrete\Core\User\User;
 use Illuminate\Config\Repository;
 use Symfony\Component\HttpFoundation\Response;
+use Concrete\Core\Application\ApplicationAwareTrait;
 
 class DefaultBooter implements BootInterface, ApplicationAwareInterface
 {
-    /** @var Application */
-    protected $app;
-
-    /**
-     * @param Application $application
-     */
-    public function setApplication(Application $application)
-    {
-        $this->app = $application;
-    }
+    use ApplicationAwareTrait;
 
     /**
      * Boot up
@@ -105,7 +97,7 @@ class DefaultBooter implements BootInterface, ApplicationAwareInterface
 
         /*
          * ----------------------------------------------------------------------------
-         * Legacy Definitions
+         * Simple legacy constants like APP_CHARSET
          * ----------------------------------------------------------------------------
          */
         $this->initializeLegacyDefinitions($config, $app);
@@ -117,6 +109,7 @@ class DefaultBooter implements BootInterface, ApplicationAwareInterface
          * ----------------------------------------------------------------------------
          */
         $app->setupFilesystem();
+
         /*
          * ----------------------------------------------------------------------------
          * Registries for theme paths, assets, routes and file types.
@@ -190,11 +183,6 @@ class DefaultBooter implements BootInterface, ApplicationAwareInterface
              * ----------------------------------------------------------------------------
              */
             $this->setSystemLocale();
-
-            /*
-             * Handle automatic updating
-             */
-            $app->handleAutomaticUpdates();
         }
     }
 
@@ -316,12 +304,6 @@ class DefaultBooter implements BootInterface, ApplicationAwareInterface
     {
         define('APP_VERSION', $config->get('concrete.version'));
         define('APP_CHARSET', $config->get('concrete.charset'));
-        try {
-            define('BASE_URL', (string) $this->app->make('url/canonical'));
-        } catch (\Exception $x) {
-            echo $x->getMessage();
-            die(1);
-        }
         define('DIR_REL', $app['app_relative_path']);
     }
 
@@ -398,8 +380,11 @@ class DefaultBooter implements BootInterface, ApplicationAwareInterface
     private function checkInstall(Application $app, Request $request)
     {
         if (!$app->isInstalled()) {
-            if (!$request->matches('/install/*') &&
-                $request->getPath() != '/install') {
+            if (
+                !$request->matches('/install/*')
+                && $request->getPath() != '/install'
+                && !$request->matches('/ccm/assets/localization/*')
+            ) {
                 $manager = $app->make('Concrete\Core\Url\Resolver\Manager\ResolverManager');
                 $response = new RedirectResponse($manager->resolve(array('install')));
 

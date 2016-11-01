@@ -42,19 +42,46 @@ ConcretePageComposerDetail = {
 	},
 
 	enableAutosave: function() {
-		var my = this;
-		my.interval = setInterval(function() {
-			ConcretePageComposerDetail.saveDraft();
-		}, my.timeout);
+		this.saver.resetIdleTimer();
 	},
 
 	disableAutosave: function() {
-		var my = this;
-	   	clearInterval(my.interval);
+		this.saver.disableIdleTimer();
+	},
+
+	updateWatchers: function() {
+		var newElements = this.$form.find('button,input,keygen,output,select,textarea').not(this.watching),
+			my = this;
+
+		if (!this.watching.length) {
+			newElements = newElements.add(this.$form);
+		}
+
+		this.watching = this.watching.add(newElements);
+
+		newElements.bind('change', function() {
+			my.saver.requestSave();
+		});
+
+		newElements.bind('keyup', function() {
+			my.saver.requestSave(true);
+		});
 	},
 
 	start: function() {
 		var my = this;
+		this.watching = $();
+		my.updateWatchers();
+
+		this.saver = this.$form.saveCoordinator(function(coordinater, data, success) {
+			my.updateWatchers();
+			my.saveDraft(function() {
+				success();
+			});
+		},{
+			idleTimeout: 1
+		}).data('SaveCoordinator');
+
 	    $('button[data-page-type-composer-form-btn=discard]').on('click', function() {
 			if (confirm('<?=t('This will remove this draft and it cannot be undone. Are you sure?')?>')) {
 		    	my.disableAutosave();
@@ -98,22 +125,9 @@ ConcretePageComposerDetail = {
             }).submit();
         });
 
-        $('button[data-page-type-composer-form-btn=publish]').on('click', function() {
-	    	my.disableAutosave();
-	    	var submitSuccess = false;
-			my.$form.concreteAjaxForm({
-				url: '<?=$controller->action('publish')?>',
-				success: function(r) {
-                    submitSuccess = true;
-					window.location.href = r.redirectURL;
-				},
-				complete: function() {
-					if (!submitSuccess) {
-				    	my.enableAutosave();
-					}
-					jQuery.fn.dialog.hideLoader();
-				}
-			}).submit();
+		$('button[data-page-type-composer-form-btn=publish]').on('click', function() {
+			var data = my.$form.serializeArray();
+			ConcreteEvent.fire('PanelComposerPublish', {data: data});
 		});
 
 		ConcreteEvent.subscribe('PanelCloseDetail',function(e, panelDetail) {
@@ -122,10 +136,31 @@ ConcretePageComposerDetail = {
 			}
 		});
 
-		ConcreteEvent.subscribe('AjaxRequestError',function(r) {
+		ConcreteEvent.subscribe('PanelComposerPublish',function(e, data) {
+
 			my.disableAutosave();
+			var submitSuccess = false;
+			$.concreteAjax({
+				data: data.data,
+				url: '<?=$controller->action('publish')?>',
+				success: function(r) {
+					submitSuccess = true;
+					window.location.href = r.redirectURL;
+				},
+				complete: function() {
+					if (!submitSuccess) {
+						my.enableAutosave();
+					}
+					jQuery.fn.dialog.hideLoader();
+				}
+			});
 		});
 
+		ConcreteEvent.subscribe('AjaxRequestError',function(r) {
+			my.saver.disable();
+		});
+
+		this.saver.enable();
 	    my.enableAutosave();
 	}
 

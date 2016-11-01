@@ -27,7 +27,7 @@
 			<optgroup label="<?=t('Presets')?>">
 			  	<?php foreach ($presets as $pr) {
     ?>
-				    <option value="<?=$pr->getIdentifier()?>" <?php if (is_object($selectedPreset) && $selectedPreset->getIdentifier() == $pr->getIdentifier()) {
+				    <option value="<?=$pr->getIdentifier()?>" <?php if (isset($selectedPreset) && is_object($selectedPreset) && $selectedPreset->getIdentifier() == $pr->getIdentifier()) {
     ?>selected<?php 
 }
     ?>><?=$pr->getName()?></option>
@@ -131,9 +131,9 @@ $(function() {
 			area = editor.getAreaByID(<?=$a->getAreaID()?>),
 			block = area.getBlockByID(<?=$b->getBlockID()?>);
 
-		ConcreteEvent.subscribe('EditModeBlockDeleteComplete', function() {
+		ConcreteEvent.subscribe('EditModeBlockDeleteAfterComplete', function() {
 			editor.destroyInlineEditModeToolbars();
-			ConcreteEvent.unsubscribe('EditModeBlockDeleteComplete');
+			ConcreteEvent.unsubscribe('EditModeBlockDeleteAfterComplete');
 		});
 
 		Concrete.event.fire('EditModeBlockDelete', {message: '<?=$deleteMessage?>', block: block, event: e});

@@ -1,55 +1,8 @@
-<?php if (is_object($user)) {
+<?php if (isset($user) && is_object($user)) {
     $token_validator = \Core::make('helper/validation/token');
 
     $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service\Date */
     ?>
-
-    <?php if (is_array($workflowList) && count($workflowList) > 0) { ?>
-        <div id="ccm-notification-user-alert-workflow" class="ccm-notification ccm-notification-info">
-            <div class="ccm-notification-inner-wrapper">
-                <?php foreach ($workflowList as $i => $wl) { ?>
-                    <?php $wr = $wl->getWorkflowRequestObject();
-                    $wf = $wl->getWorkflowObject(); ?>
-
-                    <form method="post" action="<?= $wl->getWorkflowProgressFormAction() ?>"
-                          id="ccm-notification-user-alert-form-<?= $i ?>">
-                        <i class="ccm-notification-icon fa fa-info-circle"></i>
-
-                        <div class="ccm-notification-inner">
-                            <p><?= $wf->getWorkflowProgressCurrentDescription($wl) ?></p>
-                            <?php $actions = $wl->getWorkflowProgressActions(false); ?>
-                            <?php if (count($actions) > 0) { ?>
-                                <div class="btn-group">
-                                    <?php foreach ($actions as $act) { ?>
-                                        <?php if ($act->getWorkflowProgressActionURL() != '') { ?>
-                                            <a href="<?= $act->getWorkflowProgressActionURL() ?>"
-                                        <?php } else { ?>
-                                            <button type="submit"
-                                                    name="action_<?= $act->getWorkflowProgressActionTask() ?>"
-                                         <?php } ?>
-
-                                        <?php if (count($act->getWorkflowProgressActionExtraButtonParameters()) > 0) { ?>
-                                            <?php foreach ($act->getWorkflowProgressActionExtraButtonParameters() as $key => $value) { ?>
-                                                <?= $key ?>="<?= $value ?>"
-                                            <?php } ?>
-                                        <?php } ?>
-
-                                        class="btn btn-xs <?= $act->getWorkflowProgressActionStyleClass() ?>"><?= $act->getWorkflowProgressActionStyleInnerButtonLeftHTML() ?> <?= $act->getWorkflowProgressActionLabel() ?> <?= $act->getWorkflowProgressActionStyleInnerButtonRightHTML() ?>
-                                        <?php if ($act->getWorkflowProgressActionURL() != '') { ?>
-                                            </a>
-                                        <?php } else { ?>
-                                            </button>
-                                        <?php } ?>
-                                    <?php } ?>
-                                </div>
-                            <?php } ?>
-                        </div>
-                    </form>
-                <?php } ?>
-            </div>
-            <div class="ccm-notification-actions"><a href="#" data-dismiss-alert="page-alert"><?= t('Hide') ?></a></div>
-        </div>
-    <?php } ?>
 
     <style type="text/css">
         div[data-container=editable-fields] section {
@@ -60,53 +13,6 @@
             clear: both;
         }
     </style>
-
-    <form action="<?= $view->action('update_status', $user->getUserID()) ?>" method="post">
-        <?= $token_validator->output() ?>
-        <div class="ccm-dashboard-header-buttons btn-group">
-            <?php if (Config::get('concrete.user.registration.validate_email') == true && $canActivateUser) {
-    ?>
-                <?php if ($user->isValidated() < 1) {
-    ?>
-                    <button type="submit" name="task" value="validate"
-                            class="btn btn-default"><?= t('Mark Email as Valid') ?></button>
-                <?php
-}
-    ?>
-            <?php
-}
-    ?>
-
-            <?php if ($canActivateUser) { ?>
-                <?php if ($user->isActive()) { ?>
-                    <?php if (!in_array("deactivate", $workflowRequestActions)) { ?>
-                        <button type="submit" name="task" value="deactivate"
-                                class="btn btn-default"><?= t('Deactivate User') ?></button>
-                    <?php } ?>
-                <?php } else { ?>
-                    <?php if ((!in_array("activate", $workflowRequestActions) && !in_array("register_activate", $workflowRequestActions))) { ?>
-                        <button type="submit" name="task" value="activate"
-                            class="btn btn-default"><?= t('Activate User') ?></button>
-                    <?php } ?>
-                <?php } ?>
-            <?php } ?>
-
-            <?php if ($canSignInAsUser) {
-    ?>
-                <button type="submit" name="task" value="sudo"
-                        class="btn btn-default"><?= t('Sign in As User') ?></button>
-            <?php
-}
-    ?>
-            <?php if ($canDeleteUser) {
-    ?>
-                <button type="submit" name="task" value="delete" class="btn btn-danger"><?= t('Delete') ?></button>
-            <?php
-}
-    ?>
-        </div>
-    </form>
-
 
     <div data-container="editable-fields">
 
@@ -184,7 +90,7 @@
                         <div class="col-md-4"><p><?= t('Last IP Address') ?></p></div>
                         <div class="col-md-8"><p><?= $user->getLastIPAddress() ?></p></div>
                     </div>
-                    <?php if (ENABLE_USER_TIMEZONE) {
+                    <?php if (Config::get('concrete.misc.user_timezones')) {
     $uTimezone = $user->getUserTimezone();
     if (empty($uTimezone)) {
         $uTimezone = date_default_timezone_get();
@@ -424,14 +330,24 @@
     $tp = Loader::helper('concrete/user');
     if ($tp->canAccessUserSearchInterface()) {
         ?>
-        <div class="ccm-dashboard-content-full" data-search="users">
-            <?php Loader::element('users/search', array('controller' => $searchController)) ?>
+
+        <div class="ccm-dashboard-content-full">
+            <?php Loader::element('users/search', array('result' => $result))?>
         </div>
 
-        <div class="ccm-dashboard-header-buttons">
-            <a href="<?php echo View::url('/dashboard/users/add') ?>"
-               class="btn btn-primary"><?php echo t("Add User") ?></a>
-        </div>
+        <script type="text/javascript">
+            $(function() {
+                $('#ccm-dashboard-content').concreteAjaxSearch({
+                    result: <?=json_encode($result->getJSONObject())?>,
+                    onLoad: function (concreteSearch) {
+                        concreteSearch.$element.on('click', 'a[data-user-id]', function () {
+                            window.location.href = '<?=rtrim(URL::to('/dashboard/users/search', 'view'), '/')?>/' + $(this).attr('data-user-id');
+                            return false;
+                        });
+                    }
+                });
+            });
+        </script>
 
     <?php
     } else {

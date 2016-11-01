@@ -13,9 +13,9 @@
                  <?php 
 }
     ?>
-                'onSelect' : function(select, node) {
-                     if (select) {
-                        $('input[data-topic-search-field=<?=$attributeKey->getAttributeKeyID()?>]').val(node.data.key);
+                'onSelect' : function(nodes) {
+                     if (nodes.length) {
+                        $('input[data-topic-search-field=<?=$attributeKey->getAttributeKeyID()?>]').val(nodes[0]);
                      } else {
                          $('input[data-topic-search-field=<?=$attributeKey->getAttributeKeyID()?>]').val('');
                      }

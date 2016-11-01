@@ -1,10 +1,12 @@
 <?php
+
 namespace Concrete\Core\Entity;
 
 use Concrete\Core\Package\LocalizablePackageInterface;
 use Concrete\Core\Package\PackageService;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
+use Concrete\Core\Support\Facade\Application;
 
 /**
  * @ORM\Entity
@@ -188,7 +190,9 @@ class Package implements LocalizablePackageInterface
 
     public function getController()
     {
-        return PackageService::getClass($this->getPackageHandle());
+        $app = Application::getFacadeApplication();
+
+        return $app->make(PackageService::class)->getClass($this->getPackageHandle());
     }
 
     public function __call($method, $arguments)

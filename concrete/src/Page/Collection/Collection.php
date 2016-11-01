@@ -14,6 +14,7 @@ use Concrete\Core\Foundation\Object as Object;
 use Concrete\Core\Gathering\Item\Page as PageGatheringItem;
 use Concrete\Core\Page\Collection\Version\VersionList;
 use Concrete\Core\Page\Search\IndexedSearch;
+use Concrete\Core\Statistics\UsageTracker\TrackableInterface;
 use Concrete\Core\StyleCustomizer\Inline\StyleSet;
 use Concrete\Core\Block\CustomStyle as BlockCustomStyle;
 use Concrete\Core\Area\CustomStyle as AreaCustomStyle;
@@ -25,7 +26,7 @@ use Permissions;
 use Stack;
 use User;
 
-class Collection extends Object
+class Collection extends Object implements TrackableInterface
 {
     public $cID;
     protected $vObj;
@@ -321,7 +322,10 @@ class Collection extends Object
             // Retrieve the attribute values for the current page
             $category = \Core::make('Concrete\Core\Attribute\Category\PageCategory');
             $indexer = $category->getSearchIndexer();
-            $indexer->indexEntry($category, $this);
+            $values = $category->getAttributeValues($this);
+            foreach($values as $value) {
+                $indexer->indexEntry($category, $value, $this);
+            }
 
             if ($index == false) {
                 $index = new IndexedSearch();
@@ -395,6 +399,14 @@ class Collection extends Object
             return $this->vObj->getAttribute($akHandle, $displayMode);
         }
     }
+
+    public function getAttributeValue($akHandle)
+    {
+        if (is_object($this->vObj)) {
+            return $this->vObj->getAttributeValue($akHandle);
+        }
+    }
+
 
     /**
      * @deprecated
@@ -856,16 +868,24 @@ class Collection extends Object
             $newBlockDisplayOrder = $this->getCollectionAreaDisplayOrder($arHandle);
         }
 
+        $cbRelationID = $db->GetOne('select max(cbRelationID) as cbRelationID from CollectionVersionBlocks');
+        if (!$cbRelationID) {
+            $cbRelationID = 1;
+        } else {
+            ++$cbRelationID;
+        }
+
         $v = array(
             $cID,
             $vObj->getVersionID(),
             $nb->getBlockID(),
             $arHandle,
+            $cbRelationID,
             $newBlockDisplayOrder,
             1,
             intval($bt->includeAll()),
         );
-        $q = 'insert into CollectionVersionBlocks (cID, cvID, bID, arHandle, cbDisplayOrder, isOriginal, cbIncludeAll) values (?, ?, ?, ?, ?, ?, ?)';
+        $q = 'insert into CollectionVersionBlocks (cID, cvID, bID, arHandle, cbRelationID, cbDisplayOrder, isOriginal, cbIncludeAll) values (?, ?, ?, ?, ?, ?, ?, ?)';
 
         $res = $db->Execute($q, $v);
 
@@ -1047,7 +1067,7 @@ class Collection extends Object
 
             // now we grab all the blocks we're going to need
             $cvList = implode(',', $cvList);
-            $q = "select bID, cvID, arHandle, cbDisplayOrder, cbOverrideAreaPermissions, cbIncludeAll from CollectionVersionBlocks where cID = '{$this->cID}' and cvID in ({$cvList})";
+            $q = "select bID, cvID, arHandle, cbDisplayOrder, cbOverrideAreaPermissions, cbIncludeAll, cbRelationID from CollectionVersionBlocks where cID = '{$this->cID}' and cvID in ({$cvList})";
             $r = $db->query($q);
             while ($row = $r->fetchRow()) {
                 $v = array(
@@ -1056,11 +1076,12 @@ class Collection extends Object
                     $row['bID'],
                     $row['arHandle'],
                     $row['cbDisplayOrder'],
+                    $row['cbRelationID'],
                     0,
                     $row['cbOverrideAreaPermissions'],
                     $row['cbIncludeAll'],
                 );
-                $q = 'insert into CollectionVersionBlocks (cID, cvID, bID, arHandle, cbDisplayOrder, isOriginal, cbOverrideAreaPermissions, cbIncludeAll) values (?, ?, ?, ?, ?, ?, ?, ?)';
+                $q = 'insert into CollectionVersionBlocks (cID, cvID, bID, arHandle, cbDisplayOrder, cbRelationID, isOriginal, cbOverrideAreaPermissions, cbIncludeAll) values (?, ?, ?, ?, ?, ?, ?, ?, ?)';
                 $db->query($q, $v);
                 if ($row['cbOverrideAreaPermissions'] != 0) {
                     $q2 = "select paID, pkID from BlockPermissionAssignments where cID = '{$this->cID}' and bID = '{$row['bID']}' and cvID = '{$row['cvID']}'";

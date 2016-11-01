@@ -43,7 +43,9 @@ class DatabaseServiceProvider extends ServiceProvider
         $this->app->bind('Concrete\Core\Database\EntityManagerConfigFactory',
             function($app) {
             $config = $app->make('Doctrine\ORM\Configuration');
-            return new EntityManagerConfigFactory($app, $config);
+            $configRepository = $app->make('config');
+            $connection = $app->make('Doctrine\DBAL\Connection');
+            return new EntityManagerConfigFactory($app, $config, $configRepository, $connection);
         });
         $this->app->bind('Concrete\Core\Database\EntityManagerConfigFactoryInterface',
             'Concrete\Core\Database\EntityManagerConfigFactory');
@@ -104,7 +106,7 @@ class DatabaseServiceProvider extends ServiceProvider
             $proxyDir  = $app->make('config')->get('database.proxy_classes');
             $cache     = $app->make('orm/cache');
             $config    = \Doctrine\ORM\Tools\Setup::createConfiguration(
-                    $isDevMode, $proxyDir, $cache);
+                $isDevMode, $proxyDir, $cache);
             return $config;
         });
 
@@ -112,43 +114,28 @@ class DatabaseServiceProvider extends ServiceProvider
         // Accessed by PackageService and the EntityManagerConfigFactory
         $this->app->bind('orm/cachedAnnotationReader',
             function($app) {
-            $annotationReader = $app->make('Doctrine\Common\Annotations\AnnotationReader');
-            return new \Doctrine\Common\Annotations\CachedReader($annotationReader,
-                $app->make('orm/cache'));
-        });
+                $annotationReader = $app->make('Doctrine\Common\Annotations\AnnotationReader');
+                return new \Doctrine\Common\Annotations\CachedReader($annotationReader,
+                    $app->make('orm/cache'));
+            });
 
         // Create legacy annotation reader used package requiring concrete5
         // version lower than 8.0.0
         // Accessed by PackageService and the EntityManagerConfigFactory
         $this->app->bind('orm/cachedSimpleAnnotationReader',
             function($app) {
-            $simpleAnnotationReader = $this->app->make('Doctrine\Common\Annotations\SimpleAnnotationReader');
-            $simpleAnnotationReader->addNamespace('Doctrine\ORM\Mapping');
-            return new \Doctrine\Common\Annotations\CachedReader($simpleAnnotationReader,
-                $app->make('orm/cache'));
-        });
+                $simpleAnnotationReader = $this->app->make('Doctrine\Common\Annotations\SimpleAnnotationReader');
+                $simpleAnnotationReader->addNamespace('Doctrine\ORM\Mapping');
+                return new \Doctrine\Common\Annotations\CachedReader($simpleAnnotationReader,
+                    $app->make('orm/cache'));
+            });
 
-//        // ---------------------------------------------------------
-//        // Set the default bindings for EntityManagerConfigFactory
-//        
-//        // Bind the correct Cache to the EntityMangerConfigFactory
-//        $this->app->when('EntityManagerConfigFactory')
-//                ->needs('CacheProvider')
-//                ->give(function($app){
-//                    // Set cache based on doctrine dev mode
-//                    $isDevMode = $app->make('config')->get('concrete.cache.doctrine_dev_mode');
-//                    if ($isDevMode) {
-//                        $cache = $this->app->make('Doctrine\Common\Cache\ArrayCache');
-//                    } else {
-//                        $cache = new \Concrete\Core\Cache\Adapter\DoctrineCacheDriver('cache/expensive');
-//                    } 
-//                    return $cache;
-//        });
-//        
-//        // Bind the correct mapping driver to the EntityManagerConfigFactory
-//        $this->app->when('EntityManagerConfigFactory')
-//                ->needs('MappingDriver')
-//                ->give('Doctrine\Common\Persistence\Mapping\Driver\MappingDriverChain');
+        // Setup doctrine proxy autoloader
+        if ($this->app->bound('config')) {
+            $proxyDir = $this->app->make('config')->get('database.proxy_classes');
+            $proxyNamespace = "DoctrineProxies";
+            \Doctrine\Common\Proxy\Autoloader::register($proxyDir, $proxyNamespace);
+        }
     }
 
     /**

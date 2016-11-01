@@ -43,11 +43,12 @@ if (isset($_REQUEST['displaySingleLevel']) && $_REQUEST['displaySingleLevel']) {
     $parent = Page::getByID($c->getCollectionParentID());
     if (is_object($parent) && !$parent->isError()) {
         $n = $dh->getNode($parent->getCollectionID());
-        $n->iconHTML = '<i class="fa fa-angle-double-up"></i>';
-        $n->icon = true;
+        $n->icon = 'fa fa-angle-double-up';
+        $n->expanded = true;
         $n->displaySingleLevel = true;
 
         $p = $dh->getNode($cParentID);
+        $p->expanded = true;
         $p->children = $dh->getSubNodes($cParentID);
         $n->children = array($p);
     } else {
@@ -62,6 +63,17 @@ if (isset($_REQUEST['displaySingleLevel']) && $_REQUEST['displaySingleLevel']) {
             $dh->setExpandedNodes($openNodeArray);
         }
     }
-    $nodes = $dh->getSubNodes($cParentID);
+    if ($cParentID) {
+        $nodes = $dh->getSubNodes($cParentID);
+    } else {
+        $service = \Core::make('site');
+        if (isset($_REQUEST['siteTreeID']) && $_REQUEST['siteTreeID'] > 0) {
+            $tree = $service->getSiteTreeByID($_REQUEST['siteTreeID']);
+        } else {
+            $tree = $service->getActiveSiteForEditing()->getSiteTree();
+        }
+        $nodes = $dh->getSubNodes($tree);
+    }
+
 }
 echo Core::make('helper/json')->encode($nodes);

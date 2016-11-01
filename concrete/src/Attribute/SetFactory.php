@@ -4,6 +4,7 @@ namespace Concrete\Core\Attribute;
 use Concrete\Core\Entity\Attribute\Key\Key;
 use Concrete\Core\Entity\Package;
 use Doctrine\ORM\EntityManager;
+use Gettext\Translations;
 
 /**
  * Factory class for creating and retrieving instances of the Attribute type entity.
@@ -67,4 +68,19 @@ class SetFactory
 
         return $type;
     }
+
+    /**
+     * @deprecated
+     */
+    public function exportTranslations()
+    {
+        $translations = new Translations();
+        $sets = $this->entityManager->getRepository('\Concrete\Core\Entity\Attribute\Set')
+            ->findAll();
+        foreach($sets as $set) {
+            $translations->insert('AttributeSet', $set->getAttributeSetName());
+        }
+        return $translations;
+    }
+
 }

@@ -36,9 +36,4 @@ class BooleanType extends Type
         $this->akCheckedByDefault = $isCheckedByDefault;
     }
 
-    public function getAttributeValue()
-    {
-        return new BooleanValue();
-    }
-
 }

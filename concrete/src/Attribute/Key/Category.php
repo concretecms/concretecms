@@ -30,4 +30,15 @@ class Category extends Facade
     {
         return 'Concrete\Core\Attribute\Category\CategoryService';
     }
+
+    /**
+     * @deprecated
+     */
+    public static function exportTranslations()
+    {
+        $factory = static::getFacadeRoot();
+        $translations = $factory->exportTranslations();
+        return $translations;
+    }
+
 }

@@ -17,7 +17,9 @@ return Symfony\CS\Config\Config::create()
         // Don't force an empty line before namespace declaration
         '-single_blank_line_before_namespace',
         'no_blank_lines_before_namespace',
-		  '-blankline_after_open_tag',
+        '-blankline_after_open_tag',
+        // Use the short array syntax
+        'short_array_syntax',
     ))
     ->finder(
         Symfony\CS\Finder\DefaultFinder::create()

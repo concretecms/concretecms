@@ -2,6 +2,7 @@
 namespace Concrete\Core\Attribute\Category\SearchIndexer;
 
 use Concrete\Core\Attribute\AttributeKeyInterface;
+use Concrete\Core\Attribute\AttributeValueInterface;
 use Concrete\Core\Attribute\Category\CategoryInterface;
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Entity\Attribute\Value\Value;
@@ -25,27 +26,30 @@ class StandardSearchIndexer implements SearchIndexerInterface
         return true;
     }
 
-    public function indexEntry(CategoryInterface $category, $mixed)
+    public function indexEntry(CategoryInterface $category, AttributeValueInterface $value, $subject)
     {
         if ($this->isValid($category)) {
-
-            // Regenerate based on values.
-            $values = $category->getAttributeValues($mixed);
-
-            foreach ($values as $value) {
-                /**
-                 * @var $value Value
-                 */
-                $attributeIndexer = $value->getAttributeKey()->getSearchIndexer();
-                $attributeIndexer->indexEntry($category, $value, $mixed);
-            }
+            $attributeIndexer = $value->getAttributeKey()->getSearchIndexer();
+            $attributeIndexer->indexEntry($category, $value, $subject);
         }
     }
+
+    public function clearIndexEntry(CategoryInterface $category, AttributeValueInterface $value, $subject)
+    {
+        if ($this->isValid($category)) {
+            $attributeIndexer = $value->getAttributeKey()->getSearchIndexer();
+            $attributeIndexer->clearIndexEntry($category, $value, $subject);
+        }
+    }
+
 
     public function createRepository(CategoryInterface $category)
     {
         $schema = new Schema();
         if ($this->isValid($category)) {
+            /**
+             * @var $category StandardSearchIndexerInterface
+             */
             if (!$this->connection->tableExists($category->getIndexedSearchTable())) {
                 $table = $schema->createTable($category->getIndexedSearchTable());
                 $details = $category->getSearchIndexFieldDefinition();
@@ -67,11 +71,11 @@ class StandardSearchIndexer implements SearchIndexerInterface
         }
     }
 
-    public function updateRepository(CategoryInterface $category, AttributeKeyInterface $key, $previousHandle = null)
+    public function updateRepositoryColumns(CategoryInterface $category, AttributeKeyInterface $key, $previousHandle = null)
     {
         if ($this->isValid($category)) {
             $attributeIndexer = $key->getSearchIndexer();
-            $attributeIndexer->addSearchKey($category, $key, $previousHandle);
+            $attributeIndexer->updateSearchIndexKeyColumns($category, $key, $previousHandle);
         }
     }
 }

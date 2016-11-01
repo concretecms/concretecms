@@ -5,13 +5,12 @@ use Concrete\Core\Attribute\FontAwesomeIconFormatter;
 use Concrete\Core\Entity\Attribute\Key\Type\BooleanType;
 use Concrete\Core\Entity\Attribute\Value\Value\BooleanValue;
 use Core;
-use Database;
 use Concrete\Core\Search\ItemList\Database\AttributedItemList;
 use Concrete\Core\Attribute\Controller as AttributeTypeController;
 
 class Controller extends AttributeTypeController
 {
-    protected $searchIndexFieldDefinition = array('type' => 'boolean', 'options' => array('default' => 0, 'notnull' => false));
+    protected $searchIndexFieldDefinition = ['type' => 'boolean', 'options' => ['default' => 0, 'notnull' => false]];
 
     public function getIconFormatter()
     {
@@ -21,6 +20,7 @@ class Controller extends AttributeTypeController
     public function searchForm($list)
     {
         $list->filterByAttribute($this->attributeKey->getAttributeKeyHandle(), $this->request('value'));
+
         return $list;
     }
 
@@ -46,6 +46,7 @@ class Controller extends AttributeTypeController
         $this->load();
         $type = $akey->addChild('type');
         $type->addAttribute('checked', $this->akCheckedByDefault);
+
         return $akey;
     }
 
@@ -62,13 +63,6 @@ class Controller extends AttributeTypeController
         return $type;
     }
 
-    public function getDisplayValue()
-    {
-        $v = $this->attributeValue->getValue();
-
-        return ($v == 1) ? t('Yes') : t('No');
-    }
-
     protected function load()
     {
         $ak = $this->getAttributeKey();
@@ -83,6 +77,7 @@ class Controller extends AttributeTypeController
 
     public function form()
     {
+        $checked = false;
         if (is_object($this->attributeValue)) {
             $value = $this->getAttributeValue()->getValue();
             $checked = $value == 1 ? true : false;
@@ -92,21 +87,7 @@ class Controller extends AttributeTypeController
                 $checked = true;
             }
         }
-
-        $cb = Core::make('helper/form')->checkbox($this->field('value'), 1, $checked);
-        $this->set('checkbox', $cb);
-    }
-
-    public function composer()
-    {
-        echo '<div class="ccm-attribute ccm-attribute-boolean checkbox"><label>';
-        $this->form();
-        echo '</label></div>';
-    }
-
-    public function search()
-    {
-        echo '<div class="ccm-attribute ccm-attribute-boolean checkbox"><label>' . Core::make('helper/form')->checkbox($this->field('value'), 1, $this->request('value') == 1) . ' ' . $this->attributeKey->getAttributeKeyDisplayName() . '</label></div>';
+        $this->set('checked', $checked);
     }
 
     public function type_form()
@@ -116,7 +97,7 @@ class Controller extends AttributeTypeController
     }
 
     // run when we call setAttribute(), instead of saving through the UI
-    public function saveValue($value)
+    public function createAttributeValue($value)
     {
         $v = new BooleanValue();
         $value = ($value == false || $value == '0') ? false : true;
@@ -147,12 +128,15 @@ class Controller extends AttributeTypeController
         }
 
         $type->setIsCheckedByDefault($akCheckedByDefault);
+
         return $type;
     }
 
-    public function saveForm($data)
+    public function createAttributeValueFromRequest()
     {
-        return $this->saveValue(isset($data['value']) ? $data['value'] : false);
+        $data = $this->post();
+
+        return $this->createAttributeValue(isset($data['value']) ? $data['value'] : false);
     }
 
     // if this gets run we assume we need it to be validated/checked

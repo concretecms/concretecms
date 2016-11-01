@@ -39,7 +39,6 @@ abstract class DashboardAttributesPageController extends DashboardPageController
         $this->set('headerMenu', $this->getHeaderMenu($entity));
 
         $this->set('attributeView', $list);
-        $this->set('pageTitle', t('Attributes'));
     }
 
     protected function getHeaderMenu(CategoryObjectInterface $category)

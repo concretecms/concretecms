@@ -28,7 +28,7 @@ class Logs extends DashboardPageController
 
     public function view($page = 0)
     {
-        $this->requireAsset('select2');
+        $this->requireAsset('selectize');
 
         $levels = array();
         foreach (Log::getLevels() as $level) {

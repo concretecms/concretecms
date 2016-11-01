@@ -64,7 +64,7 @@ if (is_array($image)) {
 		<li class="dropdown">
 		<a class="dropdown-toggle" id="drop4" role="button" data-toggle="dropdown" href="#">Share</a>
 			<ul id="menu1" class="dropdown-menu" role="menu" aria-labelledby="drop4">
-			<li><a class="shareTweet" target="_blank" href="http://twitter.com/intent/tweet?url=http://fivesevenmagic:8888#cnvMessage1">Twitter</a></li>
+			<li><a class="shareTweet" target="_blank" href="https://twitter.com/intent/tweet?url=http://fivesevenmagic:8888#cnvMessage1">Twitter</a></li>
 			<li><a class="shareFacebook" target="_blank" href="http://www.facebook.com/sharer.php?u=http://fivesevenmagic:8888#cnvMessage1">Facebook</a></li>
 			<li><a data-message-id="1" rel="http://fivesevenmagic:8888#cnvMessage1" data-dialog-title="Link" class="share-permalink" href="#">Link</a></li>
 			</ul>
@@ -101,7 +101,7 @@ if (is_array($image)) {
 		<li class="dropdown">
 		<a class="dropdown-toggle" id="drop4" role="button" data-toggle="dropdown" href="#">Share</a>
 			<ul id="menu1" class="dropdown-menu" role="menu" aria-labelledby="drop4">
-			<li><a class="shareTweet" target="_blank" href="http://twitter.com/intent/tweet?url=http://fivesevenmagic:8888#cnvMessage2">Twitter</a></li>
+			<li><a class="shareTweet" target="_blank" href="https://twitter.com/intent/tweet?url=http://fivesevenmagic:8888#cnvMessage2">Twitter</a></li>
 			<li><a class="shareFacebook" target="_blank" href="http://www.facebook.com/sharer.php?u=http://fivesevenmagic:8888#cnvMessage2">Facebook</a></li>
 			<li><a data-message-id="2" rel="http://fivesevenmagic:8888#cnvMessage2" data-dialog-title="Link" class="share-permalink" href="#">Link</a></li>
 			</ul>
@@ -138,7 +138,7 @@ if (is_array($image)) {
 		<li class="dropdown">
 		<a class="dropdown-toggle" id="drop4" role="button" data-toggle="dropdown" href="#">Share</a>
 			<ul id="menu1" class="dropdown-menu" role="menu" aria-labelledby="drop4">
-			<li><a class="shareTweet" target="_blank" href="http://twitter.com/intent/tweet?url=http://fivesevenmagic:8888#cnvMessage3">Twitter</a></li>
+			<li><a class="shareTweet" target="_blank" href="https://twitter.com/intent/tweet?url=http://fivesevenmagic:8888#cnvMessage3">Twitter</a></li>
 			<li><a class="shareFacebook" target="_blank" href="http://www.facebook.com/sharer.php?u=http://fivesevenmagic:8888#cnvMessage3">Facebook</a></li>
 			<li><a data-message-id="3" rel="http://fivesevenmagic:8888#cnvMessage3" data-dialog-title="Link" class="share-permalink" href="#">Link</a></li>
 			</ul>

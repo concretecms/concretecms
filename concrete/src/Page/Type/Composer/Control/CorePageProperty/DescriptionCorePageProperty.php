@@ -1,15 +1,17 @@
 <?php
+
 namespace Concrete\Core\Page\Type\Composer\Control\CorePageProperty;
 
 use Core;
-use Page;
+use Concrete\Core\Page\Page;
+use Concrete\Core\Attribute\FontAwesomeIconFormatter;
 
 class DescriptionCorePageProperty extends CorePageProperty
 {
     public function __construct()
     {
         $this->setCorePagePropertyHandle('description');
-        $this->setPageTypeComposerControlIconSRC(ASSETS_URL . '/attributes/textarea/icon.png');
+        $this->setPageTypeComposerControlIconFormatter(new FontAwesomeIconFormatter('font'));
     }
 
     public function getPageTypeComposerControlName()
@@ -19,6 +21,12 @@ class DescriptionCorePageProperty extends CorePageProperty
 
     public function publishToPage(Page $c, $data, $controls)
     {
+        if (!is_array($data)) {
+            $data = [];
+        }
+        $data += [
+            'description' => null,
+        ];
         $this->addPageTypeComposerControlRequestValue('cDescription', $data['description']);
         parent::publishToPage($c, $data, $controls);
     }
@@ -32,7 +40,7 @@ class DescriptionCorePageProperty extends CorePageProperty
         } else {
             $description = $this->getPageTypeComposerControlDraftValue();
         }
-        
+
         /** @var \Concrete\Core\Utility\Service\Validation\Strings $stringValidator */
         $stringValidator = Core::make('helper/validation/strings');
         if (!$stringValidator->notempty($description)) {

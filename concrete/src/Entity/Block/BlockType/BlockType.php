@@ -85,8 +85,9 @@ class BlockType
      * @ORM\Column(type="integer")
      */
     protected $btInterfaceWidth;
+
     /**
-     * @ORM\Column(columnDefinition="integer unsigned")
+     * @ORM\Column(type="integer", options={"unsigned": true})
      */
     protected $pkgID = 0;
 

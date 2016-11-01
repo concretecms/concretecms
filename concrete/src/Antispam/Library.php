@@ -232,9 +232,14 @@ class Library extends Object
      */
     public function getController()
     {
-        $class = core_class('Core\\Antispam\\' . Core::make('helper/text')->camelcase($this->saslHandle) . 'Controller', $this->getPackageHandle());
-        $cl = Core::make($class);
 
+        $class = overrideable_core_class('Core\\Antispam\\'
+            . camelcase($this->saslHandle) . 'Controller', DIRNAME_CLASSES . '/Antispam/'
+            . camelcase($this->saslHandle) . 'Controller.php',
+            $this->getPackageHandle()
+        );
+        $app = Facade::getFacadeApplication();
+        $cl = $app->make($class);
         return $cl;
     }
 }

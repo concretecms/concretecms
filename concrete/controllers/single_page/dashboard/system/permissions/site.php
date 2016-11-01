@@ -5,7 +5,7 @@ use Concrete\Core\Page\Controller\DashboardPageController;
 use Config;
 use Core;
 use PermissionKey;
-use PermissionAccess;
+use Concrete\Core\Permission\Access\Access as PermissionAccess;
 use GroupList;
 use Page;
 use Group;

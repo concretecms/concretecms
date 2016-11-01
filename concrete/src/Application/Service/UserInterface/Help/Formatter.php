@@ -22,7 +22,7 @@ EOT;
         $ok = t('Ok');
         $hideAll = t('Hide All');
         $html = <<<EOT
-        <div class="ccm-notification-help ccm-notification" data-help-notification="{$identifier}">
+        <div class="ccm-notification-help" data-help-notification="{$identifier}">
             <i class="ccm-notification-icon fa fa-info-circle"></i>
             <div class="ccm-notification-inner dialog-help">{$content}</div>
             <div class="ccm-notification-actions">

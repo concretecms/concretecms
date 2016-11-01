@@ -282,14 +282,20 @@ defined('C5_EXECUTE') or die("Access Denied.");
             $set = $sets[$i];
             ?>
             <div class="ccm-panel-add-block-set">
+                <?php
+                /** @var \Concrete\Core\Block\BlockType\BlockType[] $blocktypes */
+                $blocktypes = $types[$set->getBlockTypeSetName()];
+                if (!$blocktypes) {
+                    $blocktypes = array();
+                }
+                ?>
+
+                <?php if (count($blocktypes)) { ?>
                 <header><?= $set->getBlockTypeSetDisplayName() ?></header>
+                <?php } ?>
+
                 <ul>
                     <?php
-                    /** @var \Concrete\Core\Block\BlockType\BlockType[] $blocktypes */
-                    $blocktypes = $types[$set->getBlockTypeSetName()];
-                    if (!$blocktypes) {
-                        $blocktypes = array();
-                    }
                     if (count($blocktypes)) {
                         usort(
                             $blocktypes,
@@ -331,10 +337,6 @@ defined('C5_EXECUTE') or die("Access Denied.");
                             <?php
                         }
                         ?>
-                        <?php
-                    } else {
-                        ?>
-                        <p><?= t('No block types available.') ?></p>
                         <?php
                     }
                     ?>
@@ -388,7 +390,9 @@ defined('C5_EXECUTE') or die("Access Denied.");
             <?php
         } ?>
 
-        <?php if (Config::get('concrete.marketplace.enabled')) {
+        <?php
+        $p = new \Permissions();
+        if (Config::get('concrete.marketplace.enabled') && $p->canInstallPackages()) {
             ?>
             <div class="ccm-marketplace-btn-wrapper">
                 <button type="button" onclick="window.location.href='<?= URL::to('/dashboard/extend/addons') ?>'"

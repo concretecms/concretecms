@@ -6,7 +6,8 @@ use Environment;
 use Events;
 use Loader;
 use PageCache;
-use PageTemplate;
+use Concrete\Core\Entity\Page\Template;
+use Concrete\Core\Page\Template as PageTemplate;
 use PageTheme;
 use Permissions;
 use URL;
@@ -33,7 +34,7 @@ class PageView extends View
     /**
      * Called from previewing functions, this lets us override the page's template with one of our own choosing.
      */
-    public function setCustomPageTemplate(PageTemplate $pt)
+    public function setCustomPageTemplate(Template $pt)
     {
         $this->pTemplateID = $pt->getPageTemplateID();
     }
@@ -49,7 +50,7 @@ class PageView extends View
     public function setCustomPageTheme(PageTheme $pt)
     {
         $this->themeObject = $pt;
-        $this->pkgHandle = $pt->getPackageHandle();
+        $this->themePkgHandle = $pt->getPackageHandle();
     }
 
     public function renderSinglePageByFilename($cFilename, $pkgHandle = null)
@@ -58,24 +59,24 @@ class PageView extends View
         $cFilename = trim($cFilename, '/');
 
         // if we have this exact template in the theme, we use that as the outer wrapper and we don't do an inner content file
-        $exactThemeTemplate = $env->getRecord(DIRNAME_THEMES . '/' . $this->themeHandle . '/' . $cFilename, $this->pkgHandle);
+        $exactThemeTemplate = $env->getRecord(DIRNAME_THEMES . '/' . $this->themeHandle . '/' . $cFilename, $this->themePkgHandle);
         if ($exactThemeTemplate->exists()) {
             $this->setViewTemplate($exactThemeTemplate->file);
         } else {
             // use a content wrapper from themes/core if specified
             // e.g. $this->render('your/page', 'none') would use themes/core/none.php to print the $innerContent without a wrapper
-            $coreThemeTemplate = $env->getRecord(DIRNAME_THEMES . '/' . DIRNAME_THEMES_CORE . '/' . $this->pkgHandle . '.php');
+            $coreThemeTemplate = $env->getRecord(DIRNAME_THEMES . '/' . DIRNAME_THEMES_CORE . '/' . $this->themePkgHandle . '.php');
             if ($coreThemeTemplate->exists()) {
                 $this->setViewTemplate($coreThemeTemplate->file);
             } else {
                 // check for other themes or in a package if one was specified
-                $themeTemplate = $env->getRecord(DIRNAME_THEMES . '/' . $this->themeHandle . '/' . $this->controller->getThemeViewTemplate(), $this->pkgHandle);
+                $themeTemplate = $env->getRecord(DIRNAME_THEMES . '/' . $this->themeHandle . '/' . $this->controller->getThemeViewTemplate(), $this->themePkgHandle);
                 if ($themeTemplate->exists()) {
                     $this->setViewTemplate($themeTemplate->file);
                 } else {
                     // fall back to the active theme wrapper if nothing else was found
-                    $fallbackTheme = Theme::getByHandle($this->themeHandle);
-                    $fallbackPkgHandle = ($fallbackTheme instanceof Theme) ? $fallbackTheme->getPackageHandle() : $this->pkgHandle;
+                    $fallbackTheme = PageTheme::getByHandle($this->themeHandle);
+                    $fallbackPkgHandle = ($fallbackTheme instanceof PageTheme) ? $fallbackTheme->getPackageHandle() : $this->themePkgHandle;
                     $fallbackTemplate = $env->getRecord(DIRNAME_THEMES . '/' . $this->themeHandle . '/' . $this->controller->getThemeViewTemplate(), $fallbackPkgHandle);
                     $path = $fallbackTemplate->file;
                     if (basename($path) != FILENAME_THEMES_VIEW) {
@@ -122,13 +123,13 @@ class PageView extends View
             if ($pt) {
                 $rec = $env->getRecord(
                     DIRNAME_THEMES . '/' . $this->themeHandle . '/' . $pt->getPageTemplateHandle() . '.php',
-                    $this->pkgHandle);
+                    $this->themePkgHandle);
             }
             if ($rec && $rec->exists()) {
                 $this->setViewTemplate(
                     $env->getPath(
                         DIRNAME_THEMES . '/' . $this->themeHandle . '/' . $pt->getPageTemplateHandle() . '.php',
-                        $this->pkgHandle));
+                        $this->themePkgHandle));
             } else {
                 $rec = $env->getRecord(
                     DIRNAME_PAGE_TEMPLATES . '/' . $this->c->getPageTypeHandle() . '.php',
@@ -141,12 +142,12 @@ class PageView extends View
                     $this->setViewTemplate(
                         $env->getPath(
                             DIRNAME_THEMES . '/' . $this->themeHandle . '/' . $this->controller->getThemeViewTemplate(),
-                            $this->pkgHandle));
+                            $this->themePkgHandle));
                 } else {
                     $this->setViewTemplate(
                         $env->getPath(
                             DIRNAME_THEMES . '/' . $this->themeHandle . '/' . FILENAME_THEMES_DEFAULT,
-                            $this->pkgHandle));
+                            $this->themePkgHandle));
                 }
             }
         }
@@ -159,8 +160,13 @@ class PageView extends View
         }
 
         if ($this->c->hasPageThemeCustomizations()) {
+            // page has theme customizations, check if we need to serve an uncached version of the style sheet,
+            // either because caching is deactivated or because the version is not approved yet
             if ($this->c->getVersionObject()->isApproved()) {
-                return URL::to('/ccm/system/css/page', $this->c->getCollectionID(), $stylesheet);
+                // approved page, return handler script if caching is deactivated
+                if (!Config::get('concrete.cache.theme_css')) {
+                    return URL::to('/ccm/system/css/page', $this->c->getCollectionID(), $stylesheet);
+                }
             } else {
                 // this means that we're potentially viewing customizations that haven't been approved yet. So we're going to
                 // pipe them all through a handler script, basically uncaching them.
@@ -183,6 +189,20 @@ class PageView extends View
                 $relative);
             if ($sheetObject->outputFileExists()) {
                 return $sheetObject->getOutputRelativePath();
+            } else {
+                // cache output file doesn't exist, check if page has theme customizations
+                if ($this->c->hasPageThemeCustomizations()) {
+                    // build style sheet with page theme customizations
+                    $style = $this->c->getCustomStyleObject();
+                    if (is_object($style)) {
+                        $scl = $style->getValueList();
+                        $sheetObject->setValueList($scl);
+                        // write cache output file
+                        $sheetObject->output();
+                        // return cache output file
+                        return $sheetObject->getOutputRelativePath();
+                    }
+                }
             }
 
             return $this->themeObject->getStylesheet($stylesheet);
@@ -210,7 +230,7 @@ class PageView extends View
             if (!$dh->inDashboard()
                 && $this->c->getCollectionPath() != '/page_not_found'
                 && $this->c->getCollectionPath() != '/download_file'
-                && $this->c->isActive() && !$this->c->isMasterCollection()) {
+                && !$this->c->isMasterCollection()) {
                 $u = new User();
                 $u->markPreviousFrontendPage($this->c);
             }

@@ -126,7 +126,7 @@ class InlineStyleSetTest extends ConcreteDatabaseTestCase
             'boxShadowHorizontal' => '50px',
             'boxShadowVertical' => '55px',
             'boxShadowSpread' => '60px',
-            'customClass' => 'testclass',
+            'customClass' => ['testclass'],
             'backgroundSize' => 'auto',
             'backgroundPosition' => 'left top',
         );

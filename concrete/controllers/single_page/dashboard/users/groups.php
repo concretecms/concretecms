@@ -19,7 +19,7 @@ class Groups extends DashboardPageController
         $this->set('tree', $tree);
         $this->requireAsset('core/groups');
 
-        $cnt = new SearchGroupsController();
+        $cnt = $this->app->make(SearchGroupsController::class);
         $cnt->search();
         $this->set('searchController', $cnt);
 

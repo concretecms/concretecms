@@ -4,7 +4,7 @@ namespace Concrete\Controller\Panel;
 use Concrete\Controller\Backend\UserInterface as BackendInterfaceController;
 use Loader;
 use PageType;
-use Page;
+use Page as ConcretePage;
 use Permissions;
 
 class Sitemap extends BackendInterfaceController
@@ -12,12 +12,15 @@ class Sitemap extends BackendInterfaceController
     protected $viewPath = '/panels/sitemap';
     protected $frequentPageTypes = array();
     protected $otherPageTypes = array();
+    protected $site;
 
     public function on_start()
     {
         $sh = Loader::helper('concrete/dashboard/sitemap');
         $this->canViewSitemap = $sh->canRead();
-        $frequentlyUsed = PageType::getFrequentlyUsedList();
+        $this->site = \Core::make('site')->getSite();
+        $type = $this->site->getType();
+        $frequentlyUsed = PageType::getFrequentlyUsedList($type);
         foreach ($frequentlyUsed as $pt) {
             $ptp = new Permissions($pt);
             if ($ptp->canAddPageType()) {
@@ -25,7 +28,7 @@ class Sitemap extends BackendInterfaceController
             }
         }
 
-        $otherPageTypes = PageType::getInfrequentlyUsedList();
+        $otherPageTypes = PageType::getInfrequentlyUsedList($type);
         foreach ($otherPageTypes as $pt) {
             $ptp = new Permissions($pt);
             if ($ptp->canAddPageType()) {
@@ -43,7 +46,7 @@ class Sitemap extends BackendInterfaceController
     {
         $this->requireAsset('core/sitemap');
 
-        $drafts = Page::getDrafts();
+        $drafts = ConcretePage::getDrafts();
         $mydrafts = array();
         foreach ($drafts as $d) {
             $dp = new Permissions($d);
@@ -56,5 +59,6 @@ class Sitemap extends BackendInterfaceController
         $this->set('otherPageTypes', $this->otherPageTypes);
         $this->set('drafts', $mydrafts);
         $this->set('canViewSitemap', $this->canViewSitemap);
+        $this->set('site', $this->site);
     }
 }

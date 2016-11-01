@@ -79,6 +79,6 @@ class CacheLocal
             $object = clone $object;
         }
 
-        return $cache->getItem(self::key($type, $id))->set($object);
+        return $cache->save($cache->getItem(self::key($type, $id))->set($object));
     }
 }

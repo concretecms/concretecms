@@ -142,6 +142,12 @@ abstract class Asset implements AssetInterface
         return $result;
     }
 
+    public function getAssetPointer()
+    {
+        $pointer = new AssetPointer($this->getAssetType(), $this->getAssetHandle());
+        return $pointer;
+    }
+
     /**
      * @return string
      */

@@ -11,6 +11,7 @@ class Menu extends ElementController
 
     public function __construct(Entity $entity)
     {
+        parent::__construct();
         $this->currentEntity = $entity;
     }
 

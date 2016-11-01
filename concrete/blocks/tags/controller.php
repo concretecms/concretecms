@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Block\Tags;
 
-use Concrete\Attribute\Select\Option;
+use Concrete\Core\Entity\Attribute\Value\Value\SelectValueOption;
 use Concrete\Core\Block\BlockController;
 use CollectionAttributeKey;
 use Page;
@@ -72,11 +72,11 @@ class Controller extends BlockController
             $controller = $type->getController();
             $controller->setAttributeKey($ak);
             $items = $controller->getOptions();
-            $options = new \Concrete\Attribute\Select\OptionList();
-            if ($this->cloudCount > 0 && $items instanceof \Concrete\Attribute\Select\OptionList && $items->count()) {
+            $options = array();
+            if ($this->cloudCount > 0 && count($items) > 0) {
                 $i = 1;
                 foreach ($items as $item) {
-                    $options->add($item);
+                    $options[] = $item;
                     if ($i >= $this->cloudCount) {
                         break;
                     }
@@ -89,7 +89,10 @@ class Controller extends BlockController
             $c = Page::getCurrentPage();
             $av = $c->getAttributeValueObject($ak);
             $controller = $ak->getController();
-            $options = $c->getAttribute($ak->getAttributeKeyHandle());
+            $attributeValue = $c->getAttribute($ak->getAttributeKeyHandle());
+            if (is_object($attributeValue)) {
+                $options = $attributeValue->getSelectedOptions();
+            }
         }
 
         if ($this->targetCID > 0) {
@@ -120,7 +123,7 @@ class Controller extends BlockController
             if (!$this->isValidStack($c)) {
                 $nvc = $c->getVersionToModify();
                 $controller = $ak->getController();
-                $value = $controller->getAttributeValueFromRequest();
+                $value = $controller->createAttributeValueFromRequest();
                 $nvc->setAttribute($ak, $value);
                 $nvc->refreshCache();
             }
@@ -130,7 +133,7 @@ class Controller extends BlockController
         parent::save($args);
     }
 
-    public function getTagLink(Option $option = null)
+    public function getTagLink(SelectValueOption $option = null)
     {
         $target = $this->get('target');
         if (!is_object($target)) {

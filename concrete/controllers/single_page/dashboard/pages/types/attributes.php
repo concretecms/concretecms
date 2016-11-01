@@ -44,8 +44,8 @@ class Attributes extends DashboardPageController
             $ak = CollectionKey::getByID(Loader::helper('security')->sanitizeInt($_REQUEST['name']));
             if (is_object($ak)) {
                 $controller = $ak->getController();
-                $val = $controller->getAttributeValueFromRequest();
-                $this->defaultPage->setAttribute($ak, $val);
+                $val = $controller->createAttributeValueFromRequest();
+                $val = $this->defaultPage->setAttribute($ak, $val);
             }
         } else {
             $this->error->add(Loader::helper('validation/token')->getErrorMessage());
@@ -54,7 +54,7 @@ class Attributes extends DashboardPageController
             $sr->setError($this->error);
         } else {
             $sr->setMessage(t('Attribute saved successfully.'));
-            $sr->setAdditionalDataAttribute('value',  $val->getValue('displaySanitized', 'display'));
+            $sr->setAdditionalDataAttribute('value',  $val->getDisplayValue());
         }
         $sr->outputJSON();
     }

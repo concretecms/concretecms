@@ -1,19 +1,23 @@
 <?php
-
 defined('C5_EXECUTE') or die("Access Denied.");
 
 $c = Page::getCurrentPage();
+$site = Core::make('site')->getSite();
+
 if (is_object($c)) {
     $cp = new Permissions($c);
     View::element('page_controls_footer', array('cp' => $cp, 'c' => $c));
 }
 
-$_trackingCodePosition = Config::get('concrete.seo.tracking.code_position');
-if (empty($disableTrackingCode) && (empty($_trackingCodePosition) || $_trackingCodePosition === 'bottom')) {
-    echo Config::get('concrete.seo.tracking.code');
+if (empty($disableTrackingCode)) {
+    print $site->getConfigRepository()->get('seo.tracking.code.footer');
 }
+
+$dh = Core::make('helper/concrete/dashboard');
 
 View::getInstance()->markFooterAssetPosition();
 
 // user profile menu
-View::element('account/menu');
+if (!$dh->inDashboard($c)) {
+    View::element('account/menu');
+}

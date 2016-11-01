@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Core\Permission\Assignment;
 
-use PermissionAccess;
+use Concrete\Core\Permission\Access\Access;
 use Loader;
 
 class PageTypeAssignment extends Assignment
@@ -13,7 +13,7 @@ class PageTypeAssignment extends Assignment
             $this->permissionObject->getPageTypeID(), $this->pk->getPermissionKeyID(),
         ));
 
-        return PermissionAccess::getByID($r, $this->pk);
+        return Access::getByID($r, $this->pk);
     }
 
     public function clearPermissionAssignment()
@@ -22,7 +22,7 @@ class PageTypeAssignment extends Assignment
         $db->Execute('update PageTypePermissionAssignments set paID = 0 where pkID = ? and ptID = ?', array($this->pk->getPermissionKeyID(), $this->permissionObject->getPageTypeID()));
     }
 
-    public function assignPermissionAccess(PermissionAccess $pa)
+    public function assignPermissionAccess(Access $pa)
     {
         $db = Loader::db();
         $db->Replace('PageTypePermissionAssignments', array('ptID' => $this->getPermissionObject()->getPageTypeID(), 'paID' => $pa->getPermissionAccessID(), 'pkID' => $this->pk->getPermissionKeyID()), array('ptID', 'pkID'), true);

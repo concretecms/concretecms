@@ -1,8 +1,11 @@
 <?php
 namespace Concrete\Block\Content;
 
+use Concrete\Core\Backup\ContentImporter\ValueInspector\InspectionRoutine\PictureRoutine;
 use Concrete\Core\Block\BlockController;
 use Concrete\Core\Editor\LinkAbstractor;
+use Concrete\Core\File\Tracker\FileTrackableInterface;
+use Concrete\Core\Statistics\UsageTracker\AggregateTracker;
 
 /**
  * The controller for the content block.
@@ -14,7 +17,7 @@ use Concrete\Core\Editor\LinkAbstractor;
  * @copyright  Copyright (c) 2003-2012 Concrete5. (http://www.concrete5.org)
  * @license    http://www.concrete5.org/license/     MIT License
  */
-class Controller extends BlockController
+class Controller extends BlockController implements FileTrackableInterface
 {
     protected $btTable = 'btContentLocal';
     protected $btInterfaceWidth = "600";
@@ -29,6 +32,11 @@ class Controller extends BlockController
 
     public $content;
 
+    /**
+     * @var \Concrete\Core\Statistics\UsageTracker\AggregateTracker
+     */
+    protected $tracker;
+
     public function getBlockTypeDescription()
     {
         return t("HTML/WYSIWYG Editor Content.");
@@ -37,6 +45,12 @@ class Controller extends BlockController
     public function getBlockTypeName()
     {
         return t("Content");
+    }
+
+    public function __construct($obj=null, AggregateTracker $tracker=null)
+    {
+        parent::__construct($obj);
+        $this->tracker = $tracker;
     }
 
     public function getContent()
@@ -102,5 +116,35 @@ class Controller extends BlockController
             $args['content'] = LinkAbstractor::translateTo($args['content']);
         }
         parent::save($args);
+        $this->tracker->track($this);
     }
+
+    /**
+     * Tell the tracker to forget us when we are deleted
+     */
+    public function delete()
+    {
+        parent::delete();
+        $this->tracker->forget($this);
+    }
+
+    public function getUsedFiles()
+    {
+        $files = [];
+        $matches = [];
+        if (preg_match_all('/\<concrete-picture[^>]*?fID\s*=\s*[\'"]([^\'"]*?)[\'"]/i', $this->content, $matches)) {
+            list(,$ids) = $matches;
+            foreach ($ids as $id) {
+                $files[] = intval($id);
+            }
+        }
+
+        return $files;
+    }
+
+    public function getUsedCollection()
+    {
+        return $this->getCollectionObject();
+    }
+
 }

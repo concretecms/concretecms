@@ -2,6 +2,7 @@
 namespace Concrete\Controller\Panel\Detail\Page;
 
 use Concrete\Controller\Backend\UserInterface\Page as BackendInterfacePageController;
+use Concrete\Core\Form\Service\Widget\DateTime;
 use PageEditResponse;
 use PageType;
 use View;
@@ -21,6 +22,7 @@ class Composer extends BackendInterfacePageController
 
     public function view()
     {
+        $this->requireAsset('javascript', 'core/composer-save-coordinator');
         $pagetype = PageType::getByID($this->page->getPageTypeID());
         $id = $this->page->getCollectionID();
         $saveURL = View::url('/dashboard/composer/write', 'save', 'draft', $id);
@@ -80,7 +82,13 @@ class Composer extends BackendInterfacePageController
             $ptr->setError($e);
 
             if (!$e->has()) {
-                $pagetype->publish($c);
+                $publishDateTime = false;
+                if ($this->request->request->get('action') == 'schedule') {
+                    $dateTime = new DateTime();
+                    $publishDateTime = $dateTime->translate('check-in-scheduler');
+                }
+
+                $pagetype->publish($c, $publishDateTime);
                 $ptr->setRedirectURL(Loader::helper('navigation')->getLinkToCollection($c));
             }
             $ptr->outputJSON();
@@ -113,35 +121,44 @@ class Composer extends BackendInterfacePageController
     protected function save()
     {
         $c = $this->page;
-        $ptr = new PageEditResponse($e);
+        $ptr = new PageEditResponse();
         $ptr->setPage($c);
 
         $pagetype = $c->getPageTypeObject();
-        if ($_POST['ptComposerPageTemplateID']) {
-            $pt = PageTemplate::getByID($_POST['ptComposerPageTemplateID']);
+        $pt = null;
+        $ptComposerPageTemplateID = (int) $this->request->post('ptComposerPageTemplateID');
+        if ($ptComposerPageTemplateID !== 0) {
+            $pt = PageTemplate::getByID($ptComposerPageTemplateID);
         }
-        if (!is_object($pt)) {
+        if ($pt === null) {
             $pt = $pagetype->getPageTypeDefaultPageTemplateObject();
         }
         $validator = $pagetype->getPageTypeValidatorObject();
         $e = $validator->validateCreateDraftRequest($pt);
-        $outputControls = array();
+        $outputControls = [];
         if (!$e->has()) {
             $c = $c->getVersionToModify();
             $this->page = $c;
 
-            /// set the target
-            $configuredTarget = $pagetype->getPageTypePublishTargetObject();
-            $targetPageID = $configuredTarget->getPageTypePublishTargetConfiguredTargetParentPageID();
-            if (!$targetPageID) {
-                $targetPageID = $_POST['cParentID'];
+            if ($c->isPageDraft()) {
+                /// set the target
+                $configuredTarget = $pagetype->getPageTypePublishTargetObject();
+                $targetPageID = (int) $configuredTarget->getPageTypePublishTargetConfiguredTargetParentPageID();
+                if ($targetPageID === 0) {
+                    $targetPageID = (int) $this->request->post('cParentID');
+                    if ($targetPageID === 0) {
+                        $targetPageID = $c->getPageDraftTargetParentPageID();
+                    }
+                }
+
+                $c->setPageDraftTargetParentPageID($targetPageID);
             }
 
-            $c->setPageDraftTargetParentPageID($targetPageID);
-            $outputControls = $pagetype->savePageTypeComposerForm($c);
+            $saver = $pagetype->getPageTypeSaverObject();
+            $outputControls = $saver->saveForm($c);
         }
         $ptr->setError($e);
 
-        return array($ptr, $pagetype, $outputControls);
+        return [$ptr, $pagetype, $outputControls];
     }
 }

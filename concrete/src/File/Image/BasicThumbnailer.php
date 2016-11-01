@@ -142,7 +142,7 @@ class BasicThumbnailer
 
         $abspath = '/cache/' . $filename;
         if (!$filesystem->has($abspath)) {
-            if ($obj instanceof File) {
+            if ($obj instanceof File && $fr->exists()) {
                 $image = \Image::load($fr->read());
             } else {
                 $image = \Image::open($obj);
@@ -163,7 +163,7 @@ class BasicThumbnailer
             //try and get it locally, otherwise use http
             $dimensions = getimagesize($abspath);
         } catch (\Exception $e) {
-            $dimensions = getimagesize($src);
+            //$dimensions = getimagesize($src);
         }
         $thumb->width = $dimensions[0];
         $thumb->height = $dimensions[1];

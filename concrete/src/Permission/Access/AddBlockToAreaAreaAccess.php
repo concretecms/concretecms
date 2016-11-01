@@ -25,10 +25,20 @@ class AddBlockToAreaAreaAccess extends AreaAccess
         return $newPA;
     }
 
-    public function getAccessListItems($accessType = AreaPermissionKey::ACCESS_TYPE_INCLUDE, $filterEntities = array())
+    public function getAccessListItems($accessType = AreaPermissionKey::ACCESS_TYPE_INCLUDE, $filterEntities = array(), $checkCache = true)
     {
+
+        if ($checkCache) {
+            $cache = \Core::make('cache/request');
+            $item = $cache->getItem($this->getCacheIdentifier($accessType, $filterEntities));
+            if (!$item->isMiss()) {
+                return $item->get();
+            }
+            $item->lock();
+        }
+
         $db = Database::connection();
-        $list = parent::getAccessListItems($accessType, $filterEntities);
+        $list = parent::getAccessListItems($accessType, $filterEntities, false);
         $pobj = $this->getPermissionObjectToCheck();
         foreach ($list as $l) {
             $pe = $l->getAccessEntityObject();
@@ -49,6 +59,10 @@ class AddBlockToAreaAreaAccess extends AreaAccess
                 }
                 $l->setBlockTypesAllowedArray($btIDs);
             }
+        }
+
+        if ($checkCache) {
+            $cache->save($item->set($list));
         }
 
         return $list;

@@ -9,7 +9,7 @@ if (!empty($top)) {
         } ?>
         <ul class="nav">
             <?php
-            $walk = function ($pages) use (&$walk, &$view, $c) {
+            $walk = function ($pages) use (&$walk, &$view) {
                 $n = count($pages);
                 if ($n > 0) {
                     for ($i = 0; $i < $n; $i++) {
@@ -24,15 +24,18 @@ if (!empty($top)) {
                                 if (!empty($children)) {
                                     ?>
                                     <ul>
-                                        <?php $walk($children, $view, $c); ?>
+                                        <?php $walk($children); ?>
                                     </ul><?php
                                 }
                             }
                             ?>
                         </li>
+
                         <?php
-                        if ($view->controller->displayDivider($page, $next)) {
-                            ?><li class="nav-divider"></li><?php
+                        if ($page->getAttribute('is_desktop')) {
+                            echo '<li class="nav-divider"></li>';
+                        } elseif (is_object($next) && $next->getPackageID() > 0 && $page->getPackageID() == 0) {
+                            echo '<li class="nav-divider package-page-divider"></li>';
                         }
                     }
                 }

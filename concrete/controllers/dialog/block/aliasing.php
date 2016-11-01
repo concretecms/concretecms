@@ -20,10 +20,77 @@ class Aliasing extends BackendInterfaceBlockController
         $pl->filterByPageTypeID($ct->getPageTypeID());
         $pl->filterByPageTemplate($template);
         $pl->ignorePermissions();
-        $pages = $pl->getResults();
-        $this->set('cList', $pages);
+        $this->set('total', $pl->getTotalResults());
     }
 
+    public function submit()
+    {
+        if ($this->validateAction() && $this->canAccess()) {
+            $a = \Area::get($this->page, $_GET['arHandle']);
+            $c = $this->page;
+            if (is_object($a)) {
+                $b = \Block::getByID($_GET['bID'], $c, $a);
+                $p = new \Permissions($b);
+                if ($p->canAdminBlock() && $c->isMasterCollection()) {
+                    $name = sprintf('update_defaults_%s', $b->getBlockID());
+                    $queue = \Queue::get($name);
+
+                    if ($_POST['process']) {
+                        $obj = new \stdClass();
+                        $messages = $queue->receive(20);
+                        foreach ($messages as $key => $p) {
+                            $record = unserialize($p->body);
+
+                            $page = \Page::getByID($record['cID'], $record['cvID']);
+                            if ($record['action'] == 'add_alias') {
+                                $this->block->alias($page);
+                            } else if ($record['action'] == 'update_forked_alias') {
+                                $forked = \Block::getByID($record['bID'], $page, $record['arHandle']);
+                                if (is_object($forked) && !$forked->isError()) {
+                                    // take the current block that is in defaults, and replace the block on the page
+                                    // with that block.
+                                    $existingDisplayOrder = $forked->getBlockDisplayOrder();
+                                    $bt = $b->getBlockTypeObject();
+
+                                    // Now we delete the existing forked block.
+                                    $forked->deleteBlock();
+
+                                    if ($bt->isCopiedWhenPropagated()) {
+                                        $b = $this->block->duplicate($page, true);
+                                    } else {
+                                        $this->block->alias($page);
+                                        $b = \Block::getByID($this->block->getBlockID(), $page, $record['arHandle']);
+                                    }
+
+                                    $b->setAbsoluteBlockDisplayOrder($existingDisplayOrder);
+                                    $page->rescanDisplayOrder($record['arHandle']);
+                                }
+                            }
+                            $queue->deleteMessage($p);
+
+                        }
+                        $obj->totalItems = $queue->count();
+                        if ($queue->count() == 0) {
+                            $queue->deleteQueue($name);
+                        }
+                        $obj->bID = $b->getBlockID();
+                        $obj->aID = $a->getAreaID();
+                        $obj->message = t('All child blocks updated successfully.');
+                        echo json_encode($obj);
+                        $this->app->shutdown();
+                    } else {
+                        $queue = $this->block->queueForDefaultsAliasing($_POST['addBlock'], $queue);
+                    }
+
+                    $totalItems = $queue->count();
+                    \View::element('progress_bar', array('totalItems' => $totalItems, 'totalItemsSummary' => t2("%d pages", "%d pages", $totalItems)));
+                }
+            }
+        }
+        $this->app->shutdown();
+    }
+
+    /*
     public function submit()
     {
         if ($this->validateAction() && $this->canAccess()) {
@@ -70,6 +137,7 @@ class Aliasing extends BackendInterfaceBlockController
             }
         }
     }
+    */
 
     protected function canAccess()
     {

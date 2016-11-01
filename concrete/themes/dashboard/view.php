@@ -14,60 +14,21 @@ $this->inc('elements/header.php');
         </a>
     <?php } ?>
     <h1><?=(isset($pageTitle) && $pageTitle) ? t($pageTitle) : '&nbsp;' ?></h1>
+    <?php echo Core::make('helper/concrete/ui/help')->display('dashboard', $c->getCollectionPath()); ?>
+
+    <div class="ccm-dashboard-header-menu">
+
+        <?php if (isset($headerMenu) && $headerMenu instanceof \Concrete\Core\Controller\ElementController) { ?>
+            <?php echo $headerMenu->render(); ?>
+        <?php } ?>
+
+    </div>
+
     <?php
-    echo Core::make('helper/concrete/ui/help')->display('dashboard', $c->getCollectionPath());
+    echo '<div class="ccm-search-results-breadcrumb">'; // We output the DIV even if it's empty because some pages might add to it via javascript
 
-    if (isset($headerMenu) && $headerMenu instanceof \Concrete\Core\Controller\ElementController) {
-        $headerMenu->render();
-    }
-
-    ?>
-</header>
-
-<?php
-$_error = array();
-if (isset($error)) {
-    if ($error instanceof Exception) {
-        $_error[] = $error->getMessage();
-    } elseif ($error instanceof \Concrete\Core\Error\ErrorBag\ErrorBag) {
-        if ($error->has()) {
-            $_error = $error->getList();
-        }
-    } else {
-        $_error = $error;
-    }
-}
-if (!empty($_error)) {
-    ?>
-	<div class="ccm-ui"  id="ccm-dashboard-result-message">
-		<?php View::element('system_errors', array('format' => 'block', 'error' => $_error));
-    ?>
-	</div>
-	<?php
-
-}
-
-if (isset($message)) {
-    ?>
-	<div class="ccm-ui" id="ccm-dashboard-result-message">
-		<div class="alert alert-info"><button type="button" class="close" data-dismiss="alert">×</button><?=nl2br(h($message))?></div>
-	</div>
-	<?php
-
-} elseif (isset($success)) {
-    ?>
-	<div class="ccm-ui" id="ccm-dashboard-result-message">
-		<div class="alert alert-success"><button type="button" class="close" data-dismiss="alert">×</button><?=nl2br(h($success))?></div>
-	</div>
-	<?php
-}
-
-echo $innerContent;
-
-echo '<div class="ccm-search-results-breadcrumb">'; // We output the DIV even if it's empty because some pages might add to it via javascript
-
-if (isset($breadcrumb) && (!empty($breadcrumb))) {
-    ?>
+    if (isset($breadcrumb) && (!empty($breadcrumb))) {
+        ?>
         <ol class="breadcrumb">
             <?php
             foreach ($breadcrumb as $value) {
@@ -99,9 +60,52 @@ if (isset($breadcrumb) && (!empty($breadcrumb))) {
             }
             ?>
         </ol>
-    <?php
+        <?php
+    }
+
+    echo '</div>';
+    ?>
+
+</header>
+
+<?php
+$_error = array();
+if (isset($error)) {
+    if ($error instanceof Exception) {
+        $_error[] = $error->getMessage();
+    } elseif ($error instanceof \Concrete\Core\Error\ErrorList\ErrorList) {
+        if ($error->has()) {
+            $_error = $error->getList();
+        }
+    } else {
+        $_error = $error;
+    }
+}
+if (!empty($_error)) {
+    ?>
+	<div class="ccm-ui"  id="ccm-dashboard-result-message">
+		<?php View::element('system_errors', array('format' => 'block', 'error' => $_error));
+    ?>
+	</div>
+	<?php
+
 }
 
-echo '</div>';
+if (isset($message)) {
+    ?>
+	<div class="ccm-ui" id="ccm-dashboard-result-message">
+		<div class="alert alert-info"><button type="button" class="close" data-dismiss="alert">×</button><?=(isset($messageIsHTML) && $messageIsHTML) ? $message : nl2br(h($message))?></div>
+	</div>
+	<?php
+
+} elseif (isset($success)) {
+    ?>
+	<div class="ccm-ui" id="ccm-dashboard-result-message">
+		<div class="alert alert-success"><button type="button" class="close" data-dismiss="alert">×</button><?=(isset($successIsHTML) && $successIsHTML) ? $success : nl2br(h($success))?></div>
+	</div>
+	<?php
+}
+
+echo $innerContent;
 
 $this->inc('elements/footer.php');

@@ -11,7 +11,7 @@ class TypeStyle extends Style
     public function render($style = false)
     {
         $fh = Core::make('helper/form/font');
-        $args = array();
+        $args = [];
         if (is_object($style)) {
             $args['fontFamily'] = $style->getFontFamily();
             $color = $style->getColor();
@@ -44,7 +44,7 @@ class TypeStyle extends Style
                 $args['lineHeightUnit'] = $lineHeight->getUnit();
             }
         }
-        echo $fh->output($this->getVariable(), $args, array());
+        echo $fh->output($this->getVariable(), $args, []);
     }
 
     public function getValueFromRequest(\Symfony\Component\HttpFoundation\ParameterBag $request)
@@ -120,9 +120,9 @@ class TypeStyle extends Style
         return $tv;
     }
 
-    public function getValuesFromVariables($rules = array())
+    public static function getValuesFromVariables($rules = [])
     {
-        $values = array();
+        $values = [];
 
         foreach ($rules as $rule) {
             $ruleName = isset($rule->name) ? $rule->name : '';

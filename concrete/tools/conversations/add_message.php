@@ -61,14 +61,17 @@ if (!is_object($pageObj)) {
 if (!is_object($blockObj)) {
     $ve->add(t('Invalid Page.'));
 }
-
+$attachmentIDs = Request::post('attachments');
+if (!is_array($attachmentIDs)) {
+    $attachmentIDs = [];
+}
 if (is_object($blockObj)) {
-    if ($_POST['attachments'] && count($_POST['attachments'])) {
+    if (!empty($attachmentIDs)) {
         if (is_object($pp) && !$pp->canAddConversationMessageAttachments()) {
             $ve->add(t('You do not have permission to add attachments.'));
         } else {
             $maxFiles = $u->isRegistered() ? $blockObj->getController()->maxFilesRegistered : $blockObj->getController()->maxFilesGuest;
-            if ($maxFiles > 0 && count($_POST['attachments']) > $maxFiles) {
+            if ($maxFiles > 0 && count($attachmentIDs) > $maxFiles) {
                 $ve->add(t('You have too many attachments.'));
             }
         }
@@ -82,6 +85,7 @@ if (!$vs->notempty($_POST['cnvMessageBody'])) {
     $ve->add(t('Your message cannot be empty.'));
 }
 
+$parent = null;
 if (Loader::helper('validation/numbers')->integer($_POST['cnvMessageParentID']) && $_POST['cnvMessageParentID'] > 0) {
     $parent = ConversationMessage::getByID($_POST['cnvMessageParentID']);
     if (!is_object($parent)) {
@@ -105,10 +109,8 @@ if ($ve->has()) {
             $msg->approve();
         }
     }
-    if ($_POST['attachments'] && count($_POST['attachments'])) {
-        foreach ($_POST['attachments'] as $attachmentID) {
-            $msg->attachFile(File::getByID($attachmentID));
-        }
+    foreach ($attachmentIDs as $attachmentID) {
+        $msg->attachFile(File::getByID($attachmentID));
     }
     $ax->sendResult($msg);
 }

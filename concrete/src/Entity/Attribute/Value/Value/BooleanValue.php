@@ -29,4 +29,9 @@ class BooleanValue extends Value
     {
         $this->value = $value;
     }
+
+    public function __toString()
+    {
+        return ($this->value) ? t('Yes') : t('No');
+    }
 }

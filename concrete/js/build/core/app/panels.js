@@ -41,6 +41,10 @@ function ConcretePanel(options) {
         return this.options.url;
     };
 
+    this.getCurrentURL = function () {
+        return this.options.currentUrl;
+    };
+
     this.getIdentifier = function () {
         return this.options.identifier;
     };
@@ -112,6 +116,8 @@ function ConcretePanel(options) {
                 }, 250);
                 $panel.find('.ccm-panel-content-visible').removeClass('ccm-panel-content-visible').addClass('ccm-panel-slide-left');
                 $(this).removeClass('ccm-panel-content-appearing').addClass('ccm-panel-content-visible');
+
+                obj.options.currentUrl = url;
                 obj.onPanelLoad(this);
             });
             $(this).removeClass('ccm-panel-menu-item-active');
@@ -259,7 +265,7 @@ function ConcretePanel(options) {
         }).appendTo(document.body);
 
         var $content = $('<div />', {
-            class: 'ccm-ui ccm-ui-fieldless ccm-panel-detail-content'
+            class: 'ccm-ui ccm-panel-detail-content'
         }).appendTo($detail);
 
         $('div.ccm-page')
@@ -285,7 +291,13 @@ function ConcretePanel(options) {
         };
 
         if (options.url) {
-            $content.load(options.url + '?cID=' + CCM_CID + options.data, function () {
+            var url = options.url + '?cID=' + CCM_CID, data = null;
+            if ($.isPlainObject(options.data)) {
+                data = options.data;
+            } else {
+                url += options.data;
+            }
+            $content.load(url, data, function () {
                 jQuery.fn.dialog.hideLoader();
                 $content.find('.launch-tooltip').tooltip({'container': '#ccm-tooltip-holder'});
                 $content.find('a[data-help-notification-toggle]').concreteHelpLauncher();
@@ -355,7 +367,10 @@ function ConcretePanel(options) {
                 $accordion.toggleClass('ccm-panel-header-accordion-dropdown-visible');
             });
             $(this).find('>nav ul a').unbind('.accordion').on('click.accordion', function () {
-                var url = obj.getURL();
+                var url = obj.getCurrentURL();
+                if (!url) {
+                    url = obj.getURL();
+                }
                 var $content = $panel.find('.ccm-panel-content');
                 $accordion.removeClass('ccm-panel-header-accordion-dropdown-visible');
                 $title.html($(this).text());
@@ -523,7 +538,7 @@ var ConcretePanelManager = (function ConcretePanelManagerGenerator() {
                 }).appendTo($(document.body));
 
                 $('<div />', {
-                    'class': 'ccm-panel-content-wrapper ccm-ui ccm-ui-fieldless'
+                    'class': 'ccm-panel-content-wrapper ccm-ui'
                 }).appendTo($('#' + panel.getDOMID()));
             }
         },

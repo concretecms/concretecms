@@ -64,6 +64,11 @@ class Manager extends CoreManager
         return new GroupSet();
     }
 
+    public function createGroupDriver()
+    {
+        return new Group();
+    }
+
     public function createUserPointActionDriver()
     {
         return new UserPointAction();
@@ -142,6 +147,11 @@ class Manager extends CoreManager
     public function createThemeDriver()
     {
         return new Theme();
+    }
+
+    public function createSiteTypeDriver()
+    {
+        return $this->app->make(SiteType::class);
     }
 
     public function getPackageItems(Package $package)

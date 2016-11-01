@@ -14,6 +14,7 @@ class Application extends \Symfony\Component\Console\Application
 
     public function setupDefaultCommands()
     {
+        $this->add(new Command\InfoCommand());
         $this->add(new Command\InstallCommand());
         $this->add(new Command\TranslatePackageCommand());
         $this->add(new Command\GenerateIDESymbolsCommand());

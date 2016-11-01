@@ -27,7 +27,9 @@
         my.$element.append(my._chooseTemplate);
         my.$element.on('click', 'div.ccm-file-selector-choose-new', function() {
             ConcreteFileManager.launchDialog(function(data) {
-                my.loadFile(data.fID);
+                my.loadFile(data.fID, function() {
+                    my.$element.closest('form').trigger('change');
+                });
             }, dialogOpts);
             return false;
         });
@@ -44,15 +46,15 @@
 
         chooseTemplate: '<div class="ccm-file-selector-choose-new">' +
             '<input type="hidden" name="<%=options.inputName%>" value="0" /><%=options.chooseText%></div>',
-        loadingTemplate: '<div class="ccm-file-selector-loading"><img src="' + CCM_IMAGE_PATH + '/throbber_white_16.gif" /></div>',
+        loadingTemplate: '<div class="ccm-file-selector-loading"><input type="hidden" name="<%=inputName%>" value="<%=fID%>"><img src="' + CCM_IMAGE_PATH + '/throbber_white_16.gif" /></div>',
         fileLoadedTemplate: '<div class="ccm-file-selector-file-selected"><input type="hidden" name="<%=inputName%>" value="<%=file.fID%>" />' +
             '<div class="ccm-file-selector-file-selected-thumbnail"><%=file.resultsThumbnailImg%></div>' +
             '<div class="ccm-file-selector-file-selected-title"><div><%=file.title%></div></div><div class="clearfix"></div>' +
             '</div>',
 
-        loadFile: function(fID) {
+        loadFile: function(fID, callback) {
             var my = this;
-            my.$element.html(my._loadingTemplate);
+            my.$element.html(my._loadingTemplate({'inputName': my.options.inputName, 'fID': fID}));
             ConcreteFileManager.getFileDetails(fID, function(r) {
                 var file = r.files[0];
                 my.$element.html(my._fileLoadedTemplate({'inputName': my.options.inputName, 'file': file}));
@@ -68,6 +70,9 @@
                         concreteMenu.show(event);
                     }
                 });
+                if (callback) {
+                    callback(r);
+                }
             });
         }
 

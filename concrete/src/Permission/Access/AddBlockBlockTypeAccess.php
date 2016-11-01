@@ -2,7 +2,7 @@
 namespace Concrete\Core\Permission\Access;
 
 use Database;
-use Page;
+use Concrete\Core\Page\Page;
 use PermissionKey;
 
 class AddBlockBlockTypeAccess extends BlockTypeAccess
@@ -64,10 +64,20 @@ class AddBlockBlockTypeAccess extends BlockTypeAccess
         }
     }
 
-    public function getAccessListItems($accessType = PermissionKey::ACCESS_TYPE_INCLUDE, $filterEntities = array())
+    public function getAccessListItems($accessType = PermissionKey::ACCESS_TYPE_INCLUDE, $filterEntities = array(), $checkCache = true)
     {
+
+        if ($checkCache) {
+            $cache = \Core::make('cache/request');
+            $item = $cache->getItem($this->getCacheIdentifier($accessType, $filterEntities));
+            if (!$item->isMiss()) {
+                return $item->get();
+            }
+            $item->lock();
+        }
+
         $db = Database::connection();
-        $list = parent::getAccessListItems($accessType, $filterEntities);
+        $list = parent::getAccessListItems($accessType, $filterEntities, false);
         foreach ($list as $l) {
             $pe = $l->getAccessEntityObject();
             if (isset($this->permissionObjectToCheck) && ($this->permissionObjectToCheck instanceof Page) && ($l->getAccessType() == PermissionKey::ACCESS_TYPE_INCLUDE)) {
@@ -84,6 +94,11 @@ class AddBlockBlockTypeAccess extends BlockTypeAccess
                 $l->setBlockTypesAllowedArray($btIDs);
             }
         }
+
+        if ($checkCache) {
+            $cache->save($item->set($list));
+        }
+
 
         return $list;
     }

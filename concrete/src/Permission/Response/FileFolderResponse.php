@@ -12,6 +12,14 @@ class FileFolderResponse extends TreeNodeResponse
         return $this->validate('search_file_folder');
     }
 
+    /**
+     * @deprecated
+     */
+    public function canAccessFileManager()
+    {
+        return $this->canSearchFiles();
+    }
+
     public function canSearchFiles()
     {
         return $this->validate('search_file_folder');

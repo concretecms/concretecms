@@ -9,12 +9,10 @@ use Doctrine\Common\Collections\ArrayCollection;
 use FileSet;
 use League\Flysystem\AdapterInterface;
 use Loader;
-use CacheLocal;
 use Core;
 use User;
 use Events;
 use Page;
-use Database;
 use PermissionKey;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -69,9 +67,10 @@ class File implements \Concrete\Core\Permission\ObjectInterface
     public $ocID = 0;
 
     /**
-     * @ORM\Column(type="integer", options={"unsigned": true})
-     */
-    public $uID = 0;
+     * @ORM\ManyToOne(targetEntity="\Concrete\Core\Entity\User\User")
+     * @ORM\JoinColumn(name="uID", referencedColumnName="uID")
+     **/
+    public $author;
 
     /**
      * @ORM\Column(type="integer", options={"unsigned": true})
@@ -99,7 +98,7 @@ class File implements \Concrete\Core\Permission\ObjectInterface
             return null;
         }
 
-        return call_user_func_array(array($fv, $nm), $a);
+        return call_user_func_array([$fv, $nm], $a);
     }
 
     public function getPermissionResponseClassName()
@@ -155,7 +154,10 @@ class File implements \Concrete\Core\Permission\ObjectInterface
     {
         $category = \Core::make('Concrete\Core\Attribute\Category\FileCategory');
         $indexer = $category->getSearchIndexer();
-        $indexer->indexEntry($category, $this);
+        $values = $category->getAttributeValues($this);
+        foreach ($values as $value) {
+            $indexer->indexEntry($category, $value, $this);
+        }
     }
 
     protected function save()
@@ -234,7 +236,7 @@ class File implements \Concrete\Core\Permission\ObjectInterface
     public function resetPermissions($fOverrideSetPermissions = 0)
     {
         $db = Loader::db();
-        $db->Execute("delete from FilePermissionAssignments where fID = ?", array($this->fID));
+        $db->Execute("delete from FilePermissionAssignments where fID = ?", [$this->fID]);
         if ($fOverrideSetPermissions) {
             $permissions = PermissionKey::getList('file');
             foreach ($permissions as $pk) {
@@ -246,22 +248,27 @@ class File implements \Concrete\Core\Permission\ObjectInterface
         $this->save();
     }
 
+    /**
+     * Returns the user ID of the author of the file (if available).
+     *
+     * @return int|null
+     */
     public function getUserID()
     {
-        return $this->uID;
+        return $this->author ? $this->author->getUserID() : null;
     }
 
-    public function setUserID($uID)
+    public function setUser(\Concrete\Core\Entity\User\User $user)
     {
-        $this->uID = $uID;
+        $this->author = $user;
         $this->save();
     }
 
     public function getFileSets()
     {
         $db = Loader::db();
-        $fsIDs = $db->Execute("select fsID from FileSetFiles where fID = ?", array($this->getFileID()));
-        $filesets = array();
+        $fsIDs = $db->Execute("select fsID from FileSetFiles where fID = ?", [$this->getFileID()]);
+        $filesets = [];
         while ($row = $fsIDs->FetchRow()) {
             $fs = FileSet::getByID($row['fsID']);
             if (is_object($fs)) {
@@ -280,7 +287,7 @@ class File implements \Concrete\Core\Permission\ObjectInterface
         $db = Loader::db();
         $r = $db->GetOne(
             "select fsfID from FileSetFiles fsf inner join FileSets fs on fs.fsID = fsf.fsID where fsf.fID = ? and fs.uID = ? and fs.fsType = ?",
-            array($this->getFileID(), $u->getUserID(), FileSet::TYPE_STARRED)
+            [$this->getFileID(), $u->getUserID(), FileSet::TYPE_STARRED]
         );
 
         return $r > 0;
@@ -294,6 +301,23 @@ class File implements \Concrete\Core\Permission\ObjectInterface
     public function getDateAdded()
     {
         return $this->fDateAdded;
+    }
+
+    public function createNewVersion($copyUnderlyingFile = false)
+    {
+        $fv = $this->getRecentVersion();
+        $fav = $this->getApprovedVersion();
+        $fv2 = $fv->duplicate();
+
+        if ($fv->getFileVersionID() == $fav->getFileVersionID()) {
+            $fv2->approve();
+        }
+
+        if ($copyUnderlyingFile) {
+            $fv2->duplicateUnderlyingFile();
+        }
+
+        return $fv2;
     }
 
     /**
@@ -350,7 +374,6 @@ class File implements \Concrete\Core\Permission\ObjectInterface
 
         $em->persist($this);
         $em->flush();
-
     }
 
     public function getFileFolderObject()
@@ -361,7 +384,8 @@ class File implements \Concrete\Core\Permission\ObjectInterface
     public function getFileNodeObject()
     {
         $db = \Database::connection();
-        $treeNodeID = $db->GetOne('select treeNodeID from TreeFileNodes where fID = ?', array($this->getFileID()));
+        $treeNodeID = $db->GetOne('select treeNodeID from TreeFileNodes where fID = ?', [$this->getFileID()]);
+
         return Node::getByID($treeNodeID);
     }
 
@@ -404,6 +428,8 @@ class File implements \Concrete\Core\Permission\ObjectInterface
                 $em->persist($cloneVersion);
                 $em->flush();
 
+                $cloneVersion->duplicateUnderlyingFile();
+
                 foreach ($version->getAttributes() as $value) {
                     $value = clone $value;
                     $value->setVersion($cloneVersion);
@@ -416,10 +442,10 @@ class File implements \Concrete\Core\Permission\ObjectInterface
                     $prefix = $importer->generatePrefix();
                     $path = $cf->prefix($prefix, $version->getFilename());
                 } while ($filesystem->has($path));
-                $filesystem->write($path, $version->getFileResource()->read(), array(
+                $filesystem->write($path, $version->getFileResource()->read(), [
                     'visibility' => AdapterInterface::VISIBILITY_PUBLIC,
                     'mimetype' => Core::make('helper/mime')->mimeFromExtension($fi->getExtension($version->getFilename())),
-                ));
+                ]);
                 $cloneVersion->updateFile($version->getFilename(), $prefix);
                 $nf->versions->add($cloneVersion);
             }
@@ -428,12 +454,11 @@ class File implements \Concrete\Core\Permission\ObjectInterface
         $em->persist($nf);
         $em->flush();
 
-
-        $v = array($this->fID);
+        $v = [$this->fID];
         $q = "select fID, paID, pkID from FilePermissionAssignments where fID = ?";
         $r = $db->query($q, $v);
         while ($row = $r->fetchRow()) {
-            $v = array($nf->getFileID(), $row['paID'], $row['pkID']);
+            $v = [$nf->getFileID(), $row['paID'], $row['pkID']];
             $q = "insert into FilePermissionAssignments (fID, paID, pkID) values (?, ?, ?)";
             $db->query($q, $v);
         }
@@ -451,16 +476,17 @@ class File implements \Concrete\Core\Permission\ObjectInterface
         // object going into the query, so none of them are ever marked as cacheable, which means we always
         // run the query even though we've run it multiple times in the same request. So we're going to
         // step between doctrine this time.
-        $item = \Core::make('cache/request')->getItem('file/version/approved/' . $this->getFileID());
+        $cache = \Core::make('cache/request');
+        $item = $cache->getItem('file/version/approved/' . $this->getFileID());
         if (!$item->isMiss()) {
             return $item->get();
         }
 
         $em = \ORM::entityManager();
         $r = $em->getRepository('\Concrete\Core\Entity\File\Version');
-        $fv = $r->findOneBy(array('file' => $this, 'fvIsApproved' => true));
+        $fv = $r->findOneBy(['file' => $this, 'fvIsApproved' => true]);
 
-        $item->set($fv);
+        $cache->save($item->set($fv));
 
         return $fv;
     }
@@ -470,7 +496,7 @@ class File implements \Concrete\Core\Permission\ObjectInterface
         $db = Loader::db();
         $r = $db->GetOne(
             "select fsfID from FileSetFiles where fID = ? and fsID = ?",
-            array($this->getFileID(), $fs->getFileSetID())
+            [$this->getFileID(), $fs->getFileSetID()]
         );
 
         return $r > 0;
@@ -494,23 +520,22 @@ class File implements \Concrete\Core\Permission\ObjectInterface
 
         // Delete the tree node for the file.
         if ($removeNode) {
-            $nodeID = $db->fetchColumn('select treeNodeID from TreeFileNodes where fID = ?', array($this->getFileID()));
+            $nodeID = $db->fetchColumn('select treeNodeID from TreeFileNodes where fID = ?', [$this->getFileID()]);
             if ($nodeID) {
                 $node = Node::getByID($nodeID);
                 $node->delete();
             }
         }
 
-
         $versions = $this->getVersionList();
         foreach ($versions as $fv) {
             $fv->delete(true);
         }
 
-        $db->Execute("delete from FileSetFiles where fID = ?", array($this->fID));
-        $db->Execute("delete from FileSearchIndexAttributes where fID = ?", array($this->fID));
-        $db->Execute("delete from DownloadStatistics where fID = ?", array($this->fID));
-        $db->Execute("delete from FilePermissionAssignments where fID = ?", array($this->fID));
+        $db->Execute("delete from FileSetFiles where fID = ?", [$this->fID]);
+        $db->Execute("delete from FileSearchIndexAttributes where fID = ?", [$this->fID]);
+        $db->Execute("delete from DownloadStatistics where fID = ?", [$this->fID]);
+        $db->Execute("delete from FilePermissionAssignments where fID = ?", [$this->fID]);
 
         $query = $em->createQuery('select fav from Concrete\Core\Entity\Attribute\Value\Value\ImageFileValue fav inner join fav.file f where f.fID = :fID');
         $query->setParameter('fID', $this->getFileID());
@@ -540,8 +565,8 @@ class File implements \Concrete\Core\Permission\ObjectInterface
         $r = $em->getRepository('\Concrete\Core\Entity\File\Version');
 
         return $r->findOneBy(
-            array('file' => $this),
-            array('fvID' => 'desc')
+            ['file' => $this],
+            ['fvID' => 'desc']
         );
     }
 
@@ -562,7 +587,7 @@ class File implements \Concrete\Core\Permission\ObjectInterface
         $em = \ORM::entityManager();
         $r = $em->getRepository('\Concrete\Core\Entity\File\Version');
 
-        return $r->findOneBy(array('file' => $this, 'fvID' => $fvID));
+        return $r->findOneBy(['file' => $this, 'fvID' => $fvID]);
     }
 
     /**
@@ -577,7 +602,7 @@ class File implements \Concrete\Core\Permission\ObjectInterface
     {
         $db = Loader::db();
 
-        return $db->GetOne('select count(*) from DownloadStatistics where fID = ?', array($this->getFileID()));
+        return $db->GetOne('select count(*) from DownloadStatistics where fID = ?', [$this->getFileID()]);
     }
 
     public function getDownloadStatistics($limit = 20)
@@ -591,7 +616,7 @@ class File implements \Concrete\Core\Permission\ObjectInterface
         if (is_object($this) && $this instanceof self) {
             return $db->getAll(
                 "SELECT * FROM DownloadStatistics WHERE fID = ? ORDER BY timestamp desc {$limitString}",
-                array($this->getFileID())
+                [$this->getFileID()]
             );
         } else {
             return $db->getAll("SELECT * FROM DownloadStatistics ORDER BY timestamp desc {$limitString}");
@@ -621,7 +646,7 @@ class File implements \Concrete\Core\Permission\ObjectInterface
             $db = Loader::db();
             $db->Execute(
                 'insert into DownloadStatistics (fID, fvID, uID, rcID) values (?, ?, ?, ?)',
-                array($this->fID, intval($fvID), $uID, $rcID)
+                [$this->fID, intval($fvID), $uID, $rcID]
             );
         }
     }

@@ -38,8 +38,16 @@ $c = Page::getCurrentPage();
             class="list-group-item<?=($c->getCollectionPath() == '/dashboard/system/express/entities/customize_search') ? ' active' : ''?>"
             href="<?=URL::to('/dashboard/system/express/entities/customize_search', $entity->getId())?>"
         >
-            <?=t('Customize Search')?>
+            <?=t('Customize Search/Listing')?>
         </a>
+        <?php if ($entity->supportsCustomDisplayOrder()) { ?>
+            <a
+                class="list-group-item<?=($c->getCollectionPath() == '/dashboard/system/express/entities/order_entries') ? ' active' : ''?>"
+                href="<?=URL::to('/dashboard/system/express/entities/order_entries', $entity->getId())?>"
+            >
+                <?=t('Re-Order Entries')?>
+            </a>
+        <?php } ?>
         <a
             class="list-group-item"
             href="<?=URL::to('/dashboard/express/entries', $entity->getId())?>"

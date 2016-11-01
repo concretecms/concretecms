@@ -12,7 +12,7 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
 	<?php foreach ($pageViews as $day => $total) {
     ?>
 		<th><?=$day?></th>
-	<?php 
+	<?php
 } ?>
 </tr>
 </thead>
@@ -22,7 +22,7 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
 	<?php foreach ($pageViews as $total) {
     ?>
 		<td><?=$total?></td>
-	<?php 
+	<?php
 } ?>
 </tr>
 </table>
@@ -36,7 +36,7 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
 	<?php foreach ($userRegistrations as $day => $total) {
     ?>
 		<th><?=$day?></th>
-	<?php 
+	<?php
 } ?>
 </tr>
 </thead>
@@ -46,7 +46,7 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
 	<?php foreach ($userRegistrations as $total) {
     ?>
 		<td><?=$total?></td>
-	<?php 
+	<?php
 } ?>
 </tr>
 </table>
@@ -60,7 +60,7 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
 	<?php foreach ($newPages as $day => $total) {
     ?>
 		<th><?=$day?></th>
-	<?php 
+	<?php
 } ?>
 </tr>
 </thead>
@@ -70,7 +70,7 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
 	<?php foreach ($newPages as $total) {
     ?>
 		<td><?=$total?></td>
-	<?php 
+	<?php
 } ?>
 </tr>
 </table>
@@ -97,7 +97,7 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
 	<tr>
 		<td colspan="3" style="text-align: center"><?=t('No files have been downloaded.')?></td>
 	</tr>
-<?php 
+<?php
 } else {
     ?>
 <?php
@@ -128,7 +128,7 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
             echo t('Anonymous');
         } else {
             $downloadUI = UserInfo::getById($uID);
-            if ($downloadUI instanceof UserInfo) {
+			if($downloadUI instanceof \Concrete\Core\User\UserInfo) {
                 echo $downloadUI->getUserName();
             } else {
                 echo t('Deleted User');
@@ -138,10 +138,10 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
 		</td>
 		<td><?=$dh->formatDateTime($download['timestamp'])?></td>
 	</tr>
-	<?php 
+	<?php
     }
     ?>
-<?php 
+<?php
 } ?>
 </table>
 

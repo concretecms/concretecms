@@ -1,6 +1,8 @@
 <?php
 namespace Concrete\Core\Url\Resolver;
 
+use Concrete\Core\Url\Url;
+
 class PageUrlResolver implements UrlResolverInterface
 {
     /** @var UrlResolverInterface */
@@ -18,14 +20,22 @@ class PageUrlResolver implements UrlResolverInterface
             return $resolved;
         }
 
-        $page = array_shift($arguments);
-        if ($page && $page instanceof \Concrete\Core\Page\Page) {
+        if ($arguments) {
+            $page = head($arguments);
+        }
+
+        if (isset($page) && $page instanceof \Concrete\Core\Page\Page) {
+
+            if ($externalUrl = $page->getCollectionPointerExternalLink()) {
+                return Url::createFromUrl($externalUrl);
+            }
+
             if ($path = $page->getCollectionPath()) {
                 return $this->resolveWithResolver($path, $arguments);
             }
 
             // if there's no path but it's the home page
-            if ($page->getCollectionID() == HOME_CID) {
+            if ($page->isHomePage()) {
                 return $this->resolveWithResolver("/", $arguments);
             }
 
@@ -36,10 +46,10 @@ class PageUrlResolver implements UrlResolverInterface
         return null;
     }
 
-    protected function resolveWithResolver($path, $arguments, $resolved = null)
+    protected function resolveWithResolver($path, $arguments)
     {
         array_unshift($arguments, $path);
 
-        return $this->pathUrlResolver->resolve($arguments, $resolved);
+        return $this->pathUrlResolver->resolve($arguments);
     }
 }

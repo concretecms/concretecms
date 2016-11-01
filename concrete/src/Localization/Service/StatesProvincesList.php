@@ -89,7 +89,6 @@ class StatesProvincesList
                 ),
 
                 'AU' => array(
-                    'AAT' => tc('Australian State', 'Australian Antarctic Territory'),
                     'ACT' => tc('Australian State', 'Australian Capital Territory'),
                     'NSW' => tc('Australian State', 'New South Wales'),
                     'NT' => tc('Australian State', 'Northern Territory'),

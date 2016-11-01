@@ -2,26 +2,26 @@
 
 <?php
 
-if (is_object($expressForm)) {
+if (is_object($renderer)) {
     ?>
 
     <form method="post" action="<?=$view->action('submit', $entity->getId())?>">
 
-
     <?php
-        echo $renderer->render($expressForm);
-    ?>
+        echo $renderer->render(); ?>
 
         <div class="ccm-dashboard-form-actions-wrapper">
             <div class="ccm-dashboard-form-actions">
-                <?php if ($backURL) { ?>
+                <?php if ($backURL) {
+    ?>
                     <a class="pull-left btn btn-default" href="<?=$backURL?>"><?=t('Back')?></a>
-                <?php } ?>
+                <?php 
+} ?>
                 <button class="pull-right btn btn-primary" type="submit"><?=t('Add %s', $entity->getName())?></button>
             </div>
         </div>
 
-
+    </form>
 <?php
 
 } else {

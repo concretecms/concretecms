@@ -1,23 +1,33 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
 $cmpp = new Permissions($pagetype);
-$cp = new Permissions($page)
+$cp = new Permissions($page);
+$v = $page->getVersionObject();
+$publishDate = $v->getPublishDate();
 ?>
 
 <?php if ($cp->canApprovePageVersions()) {
-    if ($page->isPageDraft()) {
-        $publishTitle = t('Publish');
-    } else {
-        $publishTitle = t('Publish');
-        $pk = PermissionKey::getByHandle('approve_page_versions');
-        $pk->setPermissionObject($page);
-        $pa = $pk->getPermissionAccessObject();
-        if (is_object($pa) && count($pa->getWorkflows()) > 0) {
-            $publishTitle = t('Submit');
-        }
-    }
+
+    $composer = Core::make('helper/concrete/composer');
+    $publishTitle = $composer->getPublishButtonTitle($page);
+
     ?>
-    <button type="button" data-page-type-composer-form-btn="publish" class="btn btn-primary pull-right"><?=$publishTitle?></button>
+
+    <div class="pull-right btn-group" data-page-type-composer-form-btns="publish">
+        <button type="button" style="" data-page-type-composer-form-btn="publish" class="btn btn-primary"><?=$publishTitle?></button>
+        <button style="padding-right: 5px; padding-left: 5px;" data-page-type-composer-form-btn="schedule" type="button" class="btn btn-primary <?php if ($publishDate) { ?>active<?php } ?>">
+            <i class="fa fa-clock-o"></i>
+        </button>
+    </div>
+
+    <div style="display: none">
+        <div data-dialog="schedule-page">
+
+            <?php $composer->displayPublishScheduleSettings($page); ?>
+
+        </div>
+    </div>
+
     <?php
 
 } ?>
@@ -57,7 +67,29 @@ $cp = new Permissions($page)
     button[data-page-type-composer-form-btn=preview] {
         margin-left: 10px;
     }
-    button[data-page-type-composer-form-btn=publish] {
+    div[data-page-type-composer-form-btns=publish] {
         margin-left: 10px;
     }
 </style>
+
+<script type="text/javascript">
+    $(function() {
+        $('button[data-page-type-composer-form-btn=schedule]').on('click', function() {
+            jQuery.fn.dialog.open({
+                element: 'div[data-dialog=schedule-page]',
+                modal: true,
+                width: 460,
+                title: '<?=t('Schedule Publishing')?>',
+                height: 'auto',
+                onOpen: function() {
+                    $('.ccm-check-in-schedule').on('click', function() {
+                        var data = $('form[data-panel-detail-form=compose]').serializeArray();
+                        var data = data.concat($('div[data-dialog=schedule-page] :input').serializeArray());
+                        data.push({'name': 'action', 'value': 'schedule'});
+                        ConcreteEvent.fire('PanelComposerPublish', {data: data});
+                    });
+                }
+            });
+        });
+    });
+</script>

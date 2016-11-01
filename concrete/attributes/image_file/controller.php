@@ -4,9 +4,9 @@ namespace Concrete\Attribute\ImageFile;
 use Concrete\Core\Attribute\FontAwesomeIconFormatter;
 use Concrete\Core\Entity\Attribute\Key\Type\ImageFileType;
 use Concrete\Core\Entity\Attribute\Value\Value\ImageFileValue;
-use Concrete\Core\Error\ErrorBag\Error\Error;
-use Concrete\Core\Error\ErrorBag\Error\FieldNotPresentError;
-use Concrete\Core\Error\ErrorBag\Field\AttributeField;
+use Concrete\Core\Error\ErrorList\Error\Error;
+use Concrete\Core\Error\ErrorList\Error\FieldNotPresentError;
+use Concrete\Core\Error\ErrorList\Field\AttributeField;
 use Concrete\Core\File\Importer;
 use Core;
 use File;
@@ -70,11 +70,6 @@ class Controller extends AttributeTypeController
         }
     }
 
-    public function getDisplaySanitizedValue()
-    {
-        return $this->getDisplayValue();
-    }
-
     public function exportValue(\SimpleXMLElement $akn)
     {
         $av = $akn->addChild('value');
@@ -96,7 +91,13 @@ class Controller extends AttributeTypeController
 
     public function getSearchIndexValue()
     {
-        return $this->attributeValue->getFileID();
+        $value = $this->getAttributeValue();
+        if (is_object($value)) {
+            $value = $value->getValue();
+            if (is_object($value)) {
+                return $value->getFileID();
+            }
+        }
     }
 
     public function search()
@@ -143,14 +144,14 @@ class Controller extends AttributeTypeController
             if ($fID) {
                 $f = File::getByID($fID);
                 if (is_object($f)) {
-                    return $this->saveValue($f);
+                    return $this->createAttributeValue($f);
                 }
             }
         }
     }
 
     // run when we call setAttribute(), instead of saving through the UI
-    public function saveValue($obj)
+    public function createAttributeValue($obj)
     {
         if ($obj && !is_object($obj)) {
             $obj = File::getByID($obj);
@@ -176,8 +177,8 @@ class Controller extends AttributeTypeController
     public function validateForm($data)
     {
         if ($this->getAttributeKeyType()->isModeFileManager()) {
-            if (Core::make('helper/validation/numbers')->integer($data['value'])) {
-                $f = File::getByID($data['value']);
+            if (intval($data['value']) > 0) {
+                $f = File::getByID(intval($data['value']));
                 if (is_object($f) && !$f->isError()) {
                     return true;
                 } else {
@@ -213,12 +214,13 @@ class Controller extends AttributeTypeController
         }
     }
 
-    public function saveForm($data)
+    public function createAttributeValueFromRequest()
     {
+        $data = $this->post();
         if ($this->getAttributeKeyType()->isModeFileManager()) {
             if ($data['value'] > 0) {
                 $f = File::getByID($data['value']);
-                return $this->saveValue($f);
+                return $this->createAttributeValue($f);
             }
         }
         if ($this->getAttributeKeyType()->isModeHtmlInput()) {
@@ -229,10 +231,11 @@ class Controller extends AttributeTypeController
                 $importer = new Importer();
                 $f = $importer->import($tmp_name, $name);
                 if (is_object($f)) {
-                    return $this->saveValue($f->getFile());
+                    return $this->createAttributeValue($f->getFile());
                 }
             }
         }
+        return $this->createAttributeValue(null);
     }
 
     public function createAttributeKeyType()

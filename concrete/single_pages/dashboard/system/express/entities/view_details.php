@@ -22,5 +22,10 @@
         <h3><?=t('Description')?></h3>
         <p><?=$entity->getDescription()?></p>
 
+        <?php if ($owned_by = $entity->getOwnedBy()) { ?>
+            <h3><?=t('Owned By')?></h3>
+            <p><a href="<?=URL::to('/dashboard/system/express/entities', 'view_entity', $owned_by->getID())?>"><?=$owned_by->getName()?></a></p>
+        <?php } ?>
+
     </div>
 </div>

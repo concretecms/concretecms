@@ -17,9 +17,6 @@ class ErrorView extends CoreView
         throw new \Exception(t('Action is not available here.'));
     }
 
-    protected function setupController()
-    {
-    }
     protected function runControllerTask()
     {
     }

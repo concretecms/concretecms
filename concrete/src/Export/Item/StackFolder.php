@@ -13,7 +13,7 @@ class StackFolder implements ItemInterface
      * @param \SimpleXMLElement $xml
      * @return mixed
      */
-    public function export(ExportableInterface $folder, \SimpleXMLElement $xml)
+    public function export($folder, \SimpleXMLElement $xml)
     {
         $page = $folder->getPage();
         $node = $xml->addChild('folder');

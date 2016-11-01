@@ -4,6 +4,7 @@ namespace Concrete\Controller\SinglePage;
 use Concrete\Core\Authentication\AuthenticationType;
 use Concrete\Core\Authentication\AuthenticationTypeFailureException;
 use Concrete\Core\Page\Desktop\DesktopList;
+use Concrete\Core\Routing\Redirect;
 use Concrete\Core\Routing\RedirectResponse;
 use Localization;
 use Page;
@@ -110,7 +111,7 @@ class Login extends PageController
                 $at = AuthenticationType::getByHandle($type);
                 $user = $at->controller->authenticate();
                 if ($user && $user->isLoggedIn()) {
-                    $this->finishAuthentication($at);
+                    return $this->finishAuthentication($at);
                 }
             } catch (\exception $e) {
                 $this->error->add($e->getMessage());
@@ -180,8 +181,7 @@ class Login extends PageController
             $session->set('uRequiredAttributeUserAuthenticationType', $type->getAuthenticationTypeHandle());
 
             $this->view();
-            echo $this->getViewObject()->render();
-            exit;
+            return $this->getViewObject()->render();
         }
 
         $u->setLastAuthType($type);
@@ -189,7 +189,7 @@ class Login extends PageController
         $ue = new \Concrete\Core\User\Event\User($u);
         $this->app->make('director')->dispatch('on_user_login', $ue);
 
-        $this->chooseRedirect();
+        return $this->chooseRedirect();
     }
 
     public function on_start()
@@ -292,11 +292,9 @@ class Login extends PageController
             } while (false);
 
             if ($rUrl) {
-                $r = new RedirectResponse($rUrl);
-                $r->send();
-                exit;
+                return new RedirectResponse($rUrl);
             } else {
-                $this->redirect('/');
+                return Redirect::to('/');
             }
         } else {
             $this->error->add(t('User is not registered. Check your authentication controller.'));
@@ -366,7 +364,7 @@ class Login extends PageController
             if (count($saveAttributes) > 0) {
                 $ui->saveUserAttributesForm($saveAttributes);
             }
-            $this->finishAuthentication($at);
+            return $this->finishAuthentication($at);
         } catch (\Exception $e) {
             $this->error->add($e->getMessage());
         }

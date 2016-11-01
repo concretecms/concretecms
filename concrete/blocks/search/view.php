@@ -9,7 +9,7 @@ if (!isset($query) || !is_string($query)) {
     $query = '';
 }
 
-?><form action="<?=$view->url($resultTargetURL)?>" method="get" class="ccm-search-block-form"><?php
+?><form action="<?=$view->url($resultTarget)?>" method="get" class="ccm-search-block-form"><?php
     if (isset($title) && ($title !== '')) {
         ?><h3><?=h($title)?></h3><?php
 

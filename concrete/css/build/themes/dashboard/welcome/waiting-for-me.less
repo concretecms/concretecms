@@ -59,6 +59,14 @@ div.ccm-block-desktop-waiting-for-me {
       margin-top: 5px;
       padding-left: 25px;
       font-size: 0.9em;
+
+      div.ccm-block-desktop-waiting-for-me-author-comment {
+        margin-top: 0px;
+        color: #999;
+        margin-top: 5px;
+        border-left: 5px solid #efefef;
+        padding-left: 10px;
+      }
     }
 
     div.ccm-block-desktop-waiting-for-me-menu {
@@ -67,21 +75,56 @@ div.ccm-block-desktop-waiting-for-me {
       right: 20px;
 
       .btn {
-        .transition(all 0.1s linear);
         border-color: #c6c6c6;
-        .border-radius(18px);
-        padding: 8px 10px 8px 10px;
         .box-shadow(none);
 
+        display:block;
+        width:40px !important;
+        height:40px;
+        padding: 0px;
+        line-height:50px;
+        border-radius: 50%;
+        text-align:center;
+        text-decoration:none;
+        font-size:20px;
+        font-weight:bold;
+        position: relative;
+        .transition(none);
+
+        i {
+          position: absolute;
+          top: 9px;
+          left: 9px;
+          color: #ccc;
+          -webkit-text-stroke: 2px #fff;
+        }
+
+        &:hover {
+          i {
+            -webkit-text-stroke: 2px #ebebeb !important;
+          }
+        }
         &:active {
           .box-shadow(none);
         }
+      }
 
+      &.open {
+        .btn {
+          i {
+            -webkit-text-stroke: 2px #ebebeb !important;
+          }
+        }
+      }
+
+      .btn-waiting-for-me-archive {
         i {
-          .transition(all 0.1s linear);
-          line-height: 0px;
-          font-size: 12px;
-          color: #999;
+          .opacity(0.7);
+          top: 11px;
+          left: 11px;
+          height: 16px;
+          width: 16px;
+          background: transparent url(../../images/icons/icon_close.png) no-repeat scroll;
         }
       }
     }

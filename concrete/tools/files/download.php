@@ -8,7 +8,7 @@ $vh = Loader::helper('validation/identifier');
 $form = Loader::helper('form');
 
 $fp = FilePermissions::getGlobal();
-if (!$fp->canSearchFileSet()) {
+if (!$fp->canSearchFiles()) {
     die(t("Unable to search file sets."));
 }
 

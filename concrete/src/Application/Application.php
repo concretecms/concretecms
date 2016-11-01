@@ -6,10 +6,16 @@ use Concrete\Core\Cache\Page\PageCache;
 use Concrete\Core\Cache\Page\PageCacheRecord;
 use Concrete\Core\Cache\OpCache;
 use Concrete\Core\Database\Connection\Connection;
+use Concrete\Core\Database\EntityManager\Driver\DriverInterface;
+use Concrete\Core\Database\EntityManager\Provider\PackageProvider;
+use Concrete\Core\Database\EntityManager\Provider\PackageProviderFactory;
+use Concrete\Core\Database\EntityManagerConfigUpdater;
+use Concrete\Core\Entity\Site\Site;
 use Concrete\Core\Foundation\ClassLoader;
 use Concrete\Core\Foundation\EnvironmentDetector;
 use Concrete\Core\Foundation\Runtime\DefaultRuntime;
 use Concrete\Core\Foundation\Runtime\RuntimeInterface;
+use Concrete\Core\Http\DispatcherInterface;
 use Concrete\Core\Localization\Localization;
 use Concrete\Core\Logging\Query\Logger;
 use Concrete\Core\Routing\DispatcherRouteCallback;
@@ -94,6 +100,18 @@ class Application extends Container
     }
 
     /**
+     * @param \Concrete\Core\Http\Request $request
+     * @deprecated Use the dispatcher object to dispatch
+     */
+    public function dispatch(Request $request)
+    {
+        /** @var DispatcherInterface $dispatcher */
+        $dispatcher = $this->make(DispatcherInterface::class);
+
+        return $dispatcher->dispatch($request);
+    }
+
+    /**
      * Utility method for clearing all application caches.
      */
     public function clearCaches()
@@ -137,6 +155,8 @@ class Application extends Container
 
         // Clear precompiled script bytecode caches
         OpCache::clear();
+
+        \Events::dispatch('on_cache_flush_end');
     }
 
     /**
@@ -168,7 +188,7 @@ class Application extends Container
 
                 // job sets
                 if (!strlen($url)) {
-                    $jSets = JobSet::getList();
+                    $jSets = JobSet::getList(true);
                     if (is_array($jSets) && count($jSets)) {
                         foreach ($jSets as $set) {
                             if ($set->isScheduledForNow()) {
@@ -232,13 +252,10 @@ class Application extends Container
     public function handleAutomaticUpdates()
     {
         $config = $this['config'];
-
-        if ($config->get('concrete.updates.enable_auto_update_core')) {
-            $installed = $config->get('concrete.version_installed');
-            $core = $config->get('concrete.version');
-            if ($core && $installed && version_compare($installed, $core, '<')) {
-                Update::updateToCurrentVersion();
-            }
+        $installed = $config->get('concrete.version_db_installed');
+        $core = $config->get('concrete.version_db');
+        if ($installed < $core) {
+            Update::updateToCurrentVersion();
         }
     }
 
@@ -262,6 +279,7 @@ class Application extends Container
             }
         }
     }
+
     /**
      * Run startup and localization events on any installed packages.
      */
@@ -272,9 +290,10 @@ class Application extends Container
         $config = $this['config'];
 
         $loc = Localization::getInstance();
+        $entityManager = $this['Doctrine\ORM\EntityManager'];
+        $configUpdater = new EntityManagerConfigUpdater($entityManager);
 
         foreach ($this->packages as $pkg) {
-            // handle updates
             if ($config->get('concrete.updates.enable_auto_update_packages')) {
                 $dbPkg = \Package::getByHandle($pkg->getPackageHandle());
                 $pkgInstalledVersion = $dbPkg->getPackageVersion();
@@ -286,16 +305,21 @@ class Application extends Container
                     $loc->popActiveContext();
                 }
             }
-            $this->make('Concrete\Core\Package\PackageService')->setupLocalization($pkg);
-        }
-        foreach($this->packages as $pkg) {
+
+            $service = $this->make('Concrete\Core\Package\PackageService');
+            $service->setupLocalization($pkg);
+
             if (method_exists($pkg, 'on_start')) {
                 $pkg->on_start();
             }
+
+            $service->bootPackageEntityManager($pkg);
+
             if (method_exists($pkg, 'on_after_packages_start')) {
                 $checkAfterStart = true;
             }
         }
+
         $config->set('app.bootstrap.packages_loaded', true);
 
         // After package initialization, the translations adapters need to be
@@ -339,9 +363,10 @@ class Application extends Container
      *
      * @return \Concrete\Core\Routing\RedirectResponse
      */
-    public function handleURLSlashes(SymfonyRequest $request)
+    public function handleURLSlashes(SymfonyRequest $request, Site $site)
     {
-        $trailing_slashes = $this['config']['concrete.seo.trailing_slash'];
+        $siteConfig = $site->getConfigRepository();
+        $trailing_slashes = $siteConfig->get('seo.trailing_slash');
         $path = $request->getPathInfo();
 
         // If this isn't the homepage
@@ -367,15 +392,21 @@ class Application extends Container
      *
      * @return \Concrete\Core\Routing\RedirectResponse
      */
-    public function handleCanonicalURLRedirection(SymfonyRequest $r)
+    public function handleCanonicalURLRedirection(SymfonyRequest $r, Site $site)
     {
-        $config = $this['config'];
+        $globalConfig = $this['config'];
+        $siteConfig = $site->getConfigRepository();
 
-        if ($config->get('concrete.seo.redirect_to_canonical_url') && $config->get('concrete.seo.canonical_url')) {
-            $url = UrlImmutable::createFromUrl($r->getUri());
+        if ($globalConfig->get('concrete.seo.redirect_to_canonical_url') && $siteConfig->get('seo.canonical_url')) {
+            $requestUri = $r->getUri();
 
-            $canonical = UrlImmutable::createFromUrl($config->get('concrete.seo.canonical_url'),
-                (bool) $config->get('concrete.seo.trailing_slash')
+            $path = parse_url($requestUri, PHP_URL_PATH);
+            $trailingSlash = substr($path, -1) === '/';
+
+            $url = UrlImmutable::createFromUrl($requestUri, $trailingSlash);
+
+            $canonical = UrlImmutable::createFromUrl($siteConfig->get('seo.canonical_url'),
+                (bool) $siteConfig->get('seo.trailing_slash')
             );
 
             // Set the parts of the current URL that are specified in the canonical URL, including host,
@@ -392,8 +423,8 @@ class Application extends Container
 
             // Uh oh, it didn't match. before we redirect to the canonical URL, let's check to see if we have an SSL
             // URL
-            if ($config->get('concrete.seo.canonical_ssl_url')) {
-                $ssl = UrlImmutable::createFromUrl($config->get('concrete.seo.canonical_ssl_url'));
+            if ($siteConfig->get('seo.canonical_ssl_url')) {
+                $ssl = UrlImmutable::createFromUrl($siteConfig->get('seo.canonical_ssl_url'));
 
                 $new = $url->setScheme($ssl->getScheme()->get());
                 $new = $new->setHost($ssl->getHost()->get());
@@ -409,91 +440,6 @@ class Application extends Container
             $response = new RedirectResponse($new, '301');
 
             return $response;
-        }
-    }
-
-    /**
-     * Inspects the request and determines what to serve.
-     */
-    public function dispatch(Request $request)
-    {
-        // This is a crappy place for this, but it has to come AFTER the packages because sometimes packages
-        // want to replace legacy "tools" URLs with the new MVC, and the tools paths are so greedy they don't
-        // work unless they come at the end.
-        $this->registerLegacyRoutes();
-
-        $path = rawurldecode($request->getPathInfo());
-
-        if (substr($path, 0, 3) == '../' || substr($path, -3) == '/..' || strpos($path, '/../') ||
-            substr($path, 0, 3) == '..\\' || substr($path, -3) == '\\..' || strpos($path, '\\..\\')) {
-            throw new \RuntimeException(t('Invalid path traversal. Please make this request with a valid HTTP client.'));
-        }
-
-        if ($this->installed) {
-            $response = $this->getEarlyDispatchResponse();
-        }
-        if (!isset($response)) {
-            $collection = Route::getList();
-            $context = new \Symfony\Component\Routing\RequestContext();
-            $context->fromRequest($request);
-            $matcher = new UrlMatcher($collection, $context);
-            $path = rtrim($request->getPathInfo(), '/') . '/';
-            try {
-                $request->attributes->add($matcher->match($path));
-                $matched = $matcher->match($path);
-                $route = $collection->get($matched['_route']);
-                Route::setRequest($request);
-                $response = Route::execute($route, $matched);
-            } catch (ResourceNotFoundException $e) {
-                $callback = new DispatcherRouteCallback('dispatcher');
-                $response = $callback->execute($request);
-            }
-        }
-
-        return $response;
-    }
-
-    protected function registerLegacyRoutes()
-    {
-        \Route::register("/tools/blocks/{btHandle}/{tool}",
-            '\Concrete\Core\Legacy\Controller\ToolController::displayBlock',
-            'blockTool',
-            array('tool' => '[A-Za-z0-9_/.]+')
-        );
-        \Route::register("/tools/{tool}", '\Concrete\Core\Legacy\Controller\ToolController::display',
-        '   tool',
-            array('tool' => '[A-Za-z0-9_/.]+')
-        );
-    }
-
-    protected function getEarlyDispatchResponse()
-    {
-        if (!User::isLoggedIn()) {
-            User::verifyAuthTypeCookie();
-        }
-        if (User::isLoggedIn()) {
-            // check to see if this is a valid user account
-            $u = new User();
-            $valid = $u->checkLogin();
-            if (!$valid) {
-                $isActive = $u->isActive();
-                $u->logout();
-                if ($u->isError()) {
-                    switch ($u->getError()) {
-                        case USER_SESSION_EXPIRED:
-                            return Redirect::to('/login', 'session_invalidated')->send();
-                            break;
-                    }
-                } elseif (!$isActive) {
-                    return Redirect::to('/login', 'account_deactivated')->send();
-                } else {
-                    $v = new View('/frontend/user_error');
-                    $v->setViewTheme('concrete');
-                    $contents = $v->render();
-
-                    return new Response($contents, 403);
-                }
-            }
         }
     }
 
@@ -516,7 +462,7 @@ class Application extends Container
     /**
      * Detect the application's current environment.
      *
-     * @param  array|string|callable  $environments
+     * @param  array|string|Callable  $environments
      *
      * @return string
      */

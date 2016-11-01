@@ -7,7 +7,7 @@ use Concrete\Core\Routing\RedirectResponse;
 use OAuth\Common\Exception\Exception;
 use OAuth\Common\Http\Exception\TokenResponseException;
 use OAuth\OAuth2\Service\AbstractService;
-use User;
+use Concrete\Core\User\User;
 
 abstract class GenericOauth2TypeController extends GenericOauthTypeController
 {
@@ -42,7 +42,7 @@ abstract class GenericOauth2TypeController extends GenericOauthTypeController
             try {
                 $user = $this->attemptAuthentication();
                 if ($user) {
-                    $this->completeAuthentication($user);
+                    return $this->completeAuthentication($user);
                 } else {
                     $this->showError(
                         t('No local user account associated with this user, please log in with a local account and connect your account from your user profile.'));

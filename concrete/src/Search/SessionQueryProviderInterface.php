@@ -11,5 +11,7 @@ interface SessionQueryProviderInterface
     function setSessionCurrentQuery(Query $query);
     function getSessionCurrentQuery();
     function clearSessionCurrentQuery();
+    function getSessionNamespace();
+
 
 }

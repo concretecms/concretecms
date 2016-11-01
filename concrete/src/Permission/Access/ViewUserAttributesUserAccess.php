@@ -63,7 +63,7 @@ class ViewUserAttributesUserAccess extends UserAccess
         return $newPA;
     }
 
-    public function getAccessListItems($accessType = PermissionKey::ACCESS_TYPE_INCLUDE, $filterEntities = array())
+    public function getAccessListItems($accessType = PermissionKey::ACCESS_TYPE_INCLUDE, $filterEntities = array(), $checkCache = true)
     {
         $db = Database::connection();
         $list = parent::getAccessListItems($accessType, $filterEntities);

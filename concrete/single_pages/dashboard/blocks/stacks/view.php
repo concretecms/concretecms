@@ -61,26 +61,9 @@ if (isset($neutralStack)) {
 
         if (!$hasPendingPageApproval) {
             $vo = $stackToEdit->getVersionObject();
+            $composer = Core::make('helper/concrete/composer');
             if ($cpc->canApprovePageVersions()) {
-                $publishTitle = t('Approve Changes');
-                $pk = PermissionKey::getByHandle('approve_page_versions');
-                $pk->setPermissionObject($stackToEdit);
-                $pa = $pk->getPermissionAccessObject();
-
-                $workflows = array();
-                $canApproveWorkflow = true;
-                if (is_object($pa)) {
-                    $workflows = $pa->getWorkflows();
-                }
-                foreach ($workflows as $wf) {
-                    if (!$wf->canApproveWorkflow()) {
-                        $canApproveWorkflow = false;
-                    }
-                }
-
-                if (count($workflows > 0) && !$canApproveWorkflow) {
-                    $publishTitle = t('Submit to Workflow');
-                }
+                $publishTitle = $composer->getPublishButtonTitle($stackToEdit);
                 $showApprovalButton = true;
             }
         }
@@ -195,9 +178,10 @@ var showApprovalButton = function() {
 };
 
 $(function() {
-    var editor = new Concrete.EditMode({notify: false}), ConcreteEvent = Concrete.event;
+    var ConcreteEvent = Concrete.event;
 
     ConcreteEvent.on('ClipboardAddBlock', function(event, data) {
+        var editor = Concrete.getEditMode();
         var area = editor.getAreaByID(<?=$a->getAreaID()?>);
         block = new Concrete.DuplicateBlock(data.$launcher, editor);
         block.addToDragArea(_.last(area.getDragAreas()));
@@ -205,6 +189,7 @@ $(function() {
     });
 
     ConcreteEvent.on('AddBlockListAddBlock', function(event, data) {
+        var editor = Concrete.getEditMode();
         var area = editor.getAreaByID(<?=$a->getAreaID()?>);
         blockType = new Concrete.BlockType(data.$launcher, editor);
         blockType.addToDragArea(_.last(area.getDragAreas()));
@@ -226,7 +211,7 @@ $(function() {
         Concrete.getEditMode().scanBlocks();
     });
 
-    ConcreteEvent.on('EditModeBlockDelete', function(event, data) {
+    ConcreteEvent.on('EditModeBlockDeleteAfterComplete', function(event, data) {
         showApprovalButton();
         _.defer(function() {
             Concrete.getEditMode().scanBlocks();

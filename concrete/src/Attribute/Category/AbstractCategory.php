@@ -6,6 +6,8 @@ use Concrete\Core\Attribute\AttributeValueInterface;
 use Concrete\Core\Attribute\Category\SearchIndexer\StandardSearchIndexerInterface;
 use Concrete\Core\Attribute\Key\ImportLoader\StandardImportLoader;
 use Concrete\Core\Attribute\Key\RequestLoader\StandardRequestLoader;
+use Concrete\Core\Attribute\Set;
+use Concrete\Core\Attribute\SetFactory;
 use Concrete\Core\Entity\Attribute\Key\Key;
 use Concrete\Core\Entity\Package;
 use Doctrine\ORM\EntityManager;
@@ -101,18 +103,25 @@ abstract class AbstractCategory implements CategoryInterface, StandardSearchInde
          * Note: Do not type hint $pkg because old versions might not send the right object in.
          * LEGACY SUPPORT
          */
+        $asID = false;
         if (is_string($key_type)) {
             $key_type = \Concrete\Core\Attribute\Type::getByHandle($key_type);
         }
         if ($key_type instanceof \Concrete\Core\Entity\Attribute\Type) {
             $key_type = $key_type->getController()->getAttributeKeyType();
-            // $key is actually an array.
-            $handle = $key['akHandle'];
-            $name = $key['akName'];
-            $key = $this->createAttributeKey();
-            $key->setAttributeKeyHandle($handle);
-            $key->setAttributeKeyName($name);
+            if (is_array($key)) {
+                $handle = $key['akHandle'];
+                $name = $key['akName'];
+                if (isset($key['asID'])) {
+                    $asID = $key['asID'];
+                }
+                $key = $this->createAttributeKey();
+                $key->setAttributeKeyHandle($handle);
+                $key->setAttributeKeyName($name);
+            }
         }
+        /* end legacy support */
+
         $key_type->setAttributeKey($key);
         $key->setAttributeKeyType($key_type);
 
@@ -122,11 +131,21 @@ abstract class AbstractCategory implements CategoryInterface, StandardSearchInde
         // Modify the category's search indexer.
         $indexer = $this->getSearchIndexer();
         if (is_object($indexer)) {
-            $indexer->updateRepository($this, $key);
+            $indexer->updateRepositoryColumns($this, $key);
         }
 
         $this->entityManager->persist($key);
         $this->entityManager->flush();
+
+        /* legacy support, attribute set */
+        if ($asID) {
+            $manager = $this->getSetManager();
+            $factory = new SetFactory($this->entityManager);
+            $set = $factory->getByID($asID);
+            if (is_object($set)) {
+                $manager->addKey($set, $key);
+            }
+        }
 
         return $key;
     }
@@ -139,6 +158,10 @@ abstract class AbstractCategory implements CategoryInterface, StandardSearchInde
 
         $controller = $type->getController();
 
+        $this->entityManager->persist($key);
+        $this->entityManager->flush();
+
+        $controller->setAttributeKey($key);
         $key_type = $controller->saveKey($request->request->all());
         if (!is_object($key_type)) {
             $key_type = $controller->getAttributeKeyType();
@@ -179,7 +202,7 @@ abstract class AbstractCategory implements CategoryInterface, StandardSearchInde
         // Modify the category's search indexer.
         $indexer = $this->getSearchIndexer();
         if (is_object($indexer)) {
-            $indexer->updateRepository($this, $key, $previousHandle);
+            $indexer->updateRepositoryColumns($this, $key, $previousHandle);
         }
 
         $this->entityManager->persist($key);
@@ -223,20 +246,22 @@ abstract class AbstractCategory implements CategoryInterface, StandardSearchInde
 
     public function deleteValue(AttributeValueInterface $attribute)
     {
+        // Handle legacy attributes with these three lines.
         $controller = $attribute->getAttributeKey()->getController();
+        $controller->setAttributeValue($attribute);
         $controller->deleteValue();
 
         /*
          * @var Value
          */
         $value = $attribute->getValueObject();
-        $this->entityManager->remove($attribute);
-
-        $this->entityManager->flush();
-
-        $this->entityManager->refresh($value);
-        if (count($value->getAttributeValues()) < 1) {
-            $this->entityManager->remove($value);
+        if (is_object($value)) {
+            $this->entityManager->remove($attribute);
+            $this->entityManager->flush();
+            $this->entityManager->refresh($value);
+            if (count($value->getAttributeValues()) < 1) {
+                $this->entityManager->remove($value);
+            }
         }
     }
 

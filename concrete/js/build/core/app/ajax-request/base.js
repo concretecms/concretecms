@@ -29,7 +29,7 @@
 
 			options.success = function(r) {
 				my.success(r, my, successCallback);
-			}
+			};
 
 			my.before(my);
 			$.ajax(options);
@@ -41,11 +41,25 @@
 			}
 		},
 
+		errorResponseToString: function(r) {
+			var result = r.responseText;
+			if (r.responseJSON) {
+				var json = r.responseJSON;
+				if ($.isArray(json.errors) && json.errors.length > 0 && typeof json.errors[0] === 'string') {
+					result = json.errors.join('\n');
+				} else if (typeof json.error === 'string' && json.error !== '') {
+					result = json.error;
+				}
+			}
+
+			return result;
+		},
+
 		error: function(r, my) {
 			ConcreteEvent.fire('AjaxRequestError', {
 				'response': r
 			});
-			ConcreteAlert.dialog('Error', r.responseText);
+			ConcreteAlert.dialog('Error', my.errorResponseToString(r));
 		},
 
 		validateResponse: function(r) {
@@ -61,22 +75,25 @@
 
 		success: function(r, my, callback) {
 			if (my.options.dataType != 'json' || my.validateResponse(r)) {
-				callback(r);
+				if (callback) {
+					callback(r);
+				}
 			}
 		},
 
 		complete: function(my) {
 			jQuery.fn.dialog.hideLoader();
 		}
-	}
+	};
 
 	// static method
 	ConcreteAjaxRequest.validateResponse = ConcreteAjaxRequest.prototype.validateResponse;
+	ConcreteAjaxRequest.errorResponseToString = ConcreteAjaxRequest.prototype.errorResponseToString;
 
 	// jQuery Plugin
 	$.concreteAjax = function(options) {
 		new ConcreteAjaxRequest(options);
-	}
+	};
 
 	global.ConcreteAjaxRequest = ConcreteAjaxRequest;
 

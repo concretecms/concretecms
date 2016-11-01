@@ -75,7 +75,7 @@ class Category extends TreeNode
     {
         $obj = parent::getTreeNodeJSON();
         if (is_object($obj)) {
-            $obj->isFolder = true;
+            $obj->folder = true;
             $p = new \Permissions($this);
             $data = $this->getTreeObject()->getRequestData();
             if (is_array($data) && $data['allowFolderSelection']) {
@@ -83,6 +83,7 @@ class Category extends TreeNode
             } else {
                 $obj->hideCheckbox = true;
             }
+            $obj->icon = 'fa fa-folder';
             $obj->canAddTopicTreeNode = $p->canAddTopicTreeNode();
             $obj->canAddCategoryTreeNode = $p->canAddCategoryTreeNode();
 

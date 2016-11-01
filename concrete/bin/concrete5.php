@@ -25,7 +25,7 @@ if (!defined('DIR_BASE')) {
     if (!isset($DIR_BASE)) {
         // Try to detect the webroot directory starting from the filename of the currently executing script
         // (useful with symlinked concrete directories)
-        foreach (array('PHP_SELF', 'SCRIPT_NAME', 'SCRIPT_FILENAME', 'PATH_TRANSLATED') as $key) {
+        foreach (['PHP_SELF', 'SCRIPT_NAME', 'SCRIPT_FILENAME', 'PATH_TRANSLATED'] as $key) {
             // Check if the key is valid
             if (!isset($_SERVER[$key])) {
                 continue;
@@ -64,22 +64,23 @@ if (!defined('DIR_BASE')) {
     unset($DIR_BASE);
 }
 
-if (!isset($DIR_BASE_CORE)) {
+if (!defined('APP_UPDATED_PASSTHRU')) {
     // Check for an updated core available
-    $update = DIR_BASE.'/application/config/update.php';
-    if (is_file($update)) {
-        $update = (array) include $update;
-        if (isset($update['core']) && is_dir(DIR_BASE.'/updates/'.$update['core'].'/concrete')) {
-            $DIR_BASE_CORE = DIR_BASE.'/updates/'.$update['core'].'/concrete';
-            require $DIR_BASE_CORE.'/bin/concrete5.php';
-
-            return;
+    $updates = DIR_BASE.'/application/config/update.php';
+    if (is_file($updates)) {
+        $updates = (array) include $updates;
+        if (isset($updates['core']) && is_dir(DIR_BASE.'/updates/'.$updates['core'].'/concrete')) {
+            define('APP_UPDATED_PASSTHRU', $updates['core']);
         }
     }
-    $DIR_BASE_CORE = DIR_BASE.'/concrete';
+    unset($updates);
+    if (defined('APP_UPDATED_PASSTHRU')) {
+        return require DIR_BASE.'/updates/'.APP_UPDATED_PASSTHRU.'/concrete/bin/concrete5.php';
+    }
+    define('APP_UPDATED_PASSTHRU', false);
 }
-unset($update);
-
-define('APP_UPDATED_PASSTHRU', true);
-
-$cms = require $DIR_BASE_CORE . '/dispatcher.php';
+if (APP_UPDATED_PASSTHRU === false) {
+    return require DIR_BASE.'/concrete/dispatcher.php';
+} else {
+    return require DIR_BASE.'/updates/'.APP_UPDATED_PASSTHRU.'/concrete/dispatcher.php';
+}

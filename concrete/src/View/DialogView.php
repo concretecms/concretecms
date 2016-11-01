@@ -2,6 +2,7 @@
 namespace Concrete\Core\View;
 
 use Concrete\Core\Asset\Asset;
+use Concrete\Core\Asset\Output\JavascriptFormatter;
 use View as ConcreteView;
 use Concrete\Core\Asset\CssAsset;
 use Concrete\Core\Asset\JavascriptAsset;
@@ -17,23 +18,12 @@ class DialogView extends ConcreteView
 
     public function outputAssetIntoView($item)
     {
-        $str = '';
-        if ($item instanceof CssAsset) {
-            $str .= '<script type="text/javascript">';
-            $str .= 'ccm_addHeaderItem("' . $item->getAssetURL() . '", "CSS")';
-            $str .= '</script>';
-        } elseif ($item instanceof JavascriptInlineAsset) {
-            $str .= '<script type="text/javascript">';
-            $str .= $item->getAssetURL();
-            $str .= '</script>';
-        } elseif ($item instanceof JavascriptAsset) {
-            $str .= '<script type="text/javascript">';
-            $str .= 'ccm_addHeaderItem("' . $item->getAssetURL() . '", "JAVASCRIPT")';
-            $str .= '</script>';
+        if ($item instanceof Asset) {
+            $formatter = new JavascriptFormatter();
+            print $formatter->output($item);
         } else {
-            $str = $item;
+            print $item . "\n";
         }
-        echo $str . "\n";
     }
 
     public function getScopeItems()

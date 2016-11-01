@@ -124,7 +124,7 @@ $(function() {
 
 	ConcreteEvent.subscribe('FileManagerUploadCompleteDialogClose', function(e, data) {
 		if (data.filemanager) {
-			data.filemanager.reloadFolder();
+			data.filemanager.refreshResults();
 		}
 	});
 

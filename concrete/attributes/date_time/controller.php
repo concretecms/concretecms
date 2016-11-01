@@ -36,22 +36,6 @@ class Controller extends AttributeTypeController
         return $this->attributeValue->getValue()->format('Y-m-d H:i:s');
     }
 
-    public function getDisplayValue()
-    {
-        $this->load();
-        $v = $this->getValue();
-        if (empty($v)) {
-            return '';
-        }
-        $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service\Date */
-        if ($this->akDateDisplayMode == 'date') {
-            // Don't use user's timezone to avoid showing wrong dates
-            return $dh->formatDate($v, false, 'system');
-        } else {
-            return $dh->formatDateTime($v);
-        }
-    }
-
     public function searchForm($list)
     {
         $dateFrom = $this->request('from');
@@ -72,19 +56,23 @@ class Controller extends AttributeTypeController
     {
         $this->load();
         $dt = Loader::helper('form/date_time');
-        $caValue = $this->getValue();
-        $html = Loader::helper('html');
         switch ($this->akDateDisplayMode) {
             case 'text':
                 $form = Loader::helper('form');
                 echo $form->text($this->field('value'), $this->getDisplayValue());
                 break;
             case 'date':
+                $data = $this->post();
+                $value = $dt->translate('value', $data);
+                $caValue = $value ? $value : $this->getDisplayValue();
                 $this->requireAsset('jquery/ui');
                 echo $dt->date($this->field('value'), $caValue == null ? '' : $caValue);
                 break;
             default:
                 $this->requireAsset('jquery/ui');
+                $data = $this->post();
+                $value = $dt->translate('value', $data);
+                $caValue = $value ? $value : $this->getDisplayValue();
                 echo $dt->datetime($this->field('value'), $caValue == null ? '' : $caValue);
                 break;
         }
@@ -150,7 +138,7 @@ class Controller extends AttributeTypeController
         echo $html;
     }
 
-    public function saveValue($value)
+    public function createAttributeValue($value)
     {
         if ($value != '') {
             $value = date('Y-m-d H:i:s', strtotime($value));
@@ -163,18 +151,19 @@ class Controller extends AttributeTypeController
         return $av;
     }
 
-    public function saveForm($data)
+    public function createAttributeValueFromRequest()
     {
         $this->load();
+        $data = $this->post();
         $dt = Loader::helper('form/date_time');
         switch ($this->akDateDisplayMode) {
             case 'text':
-                return $this->saveValue($data['value']);
+                return $this->createAttributeValue($data['value']);
                 break;
             case 'date':
             case 'date_time':
                 $value = $dt->translate('value', $data);
-                return $this->saveValue($value);
+                return $this->createAttributeValue($value);
                 break;
         }
     }

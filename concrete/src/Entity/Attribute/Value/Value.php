@@ -41,6 +41,11 @@ abstract class Value implements AttributeValueInterface
         return $this->attribute_key;
     }
 
+    public function getAttributeValueID()
+    {
+        return $this->avrID;
+    }
+
     /**
      * @param mixed $attribute_key
      */
@@ -57,7 +62,7 @@ abstract class Value implements AttributeValueInterface
     public function getController()
     {
         $controller = $this->getAttributeKey()->getController();
-        $controller->setAttributeValue($this->value);
+        $controller->setAttributeValue($this);
 
         return $controller;
     }
@@ -73,20 +78,77 @@ abstract class Value implements AttributeValueInterface
     public function getValue($mode = false)
     {
         $value = $this->value;
-        if (is_object($value)) {
-            if ($mode != false) {
-                $controller = $this->getController();
-                $modes = func_get_args();
-                foreach ($modes as $mode) {
-                    $method = 'get' . camelcase($mode) . 'Value';
-                    if (method_exists($controller, $method)) {
-                        return $controller->{$method}();
-                    }
-                }
-            }
+
+        // legacy
+        if ($mode == 'displaySanitized' || $mode == 'display') {
+            return $this->getDisplayValue();
         }
 
-        return $value->getValue();
+        // Otherwise, we get the default "value" response for the attribute value type, which could be text, could be true/false, could be a
+        // file object.
+        if (is_object($value)) {
+            return $value->getValue();
+        }
+
+        $controller = $this->getController();
+        return $controller->getValue();
+    }
+
+    /**
+     * @deprecated
+     */
+    public function getDisplaySanitizedValue()
+    {
+        return $this->getDisplayValue();
+    }
+
+    /**
+     * Returns content that can be displayed on profile pages, elsewhere. Filters
+     * problematic content (sanitizes)
+     * @return mixed
+     */
+    public function getDisplayValue()
+    {
+        $controller = $this->getController();
+        if (method_exists($controller, 'getDisplayValue')) {
+            return $controller->getDisplayValue();
+        }
+        return $this->getValue();
+    }
+
+    /**
+     * Returns content that is useful in plain text contexts.
+     * @return string
+     */
+    public function getPlainTextValue()
+    {
+
+        $controller = $this->getController();
+        if (method_exists($controller, 'getPlainTextValue')) {
+            return $controller->getPlainTextValue();
+        }
+
+        if ($this->getValueObject()) {
+            return (string) $this->getValueObject();
+        }
+
+        // Legacy support.
+        return $controller->getValue();
+    }
+
+    /**
+     * Returns the attribute in the context of search indexing (for search index
+     * database tables)
+     * @return $this
+     */
+    public function getSearchIndexValue()
+    {
+        $controller = $this->getController();
+        if (method_exists($controller, 'getSearchIndexValue')) {
+            return $controller->getSearchIndexValue();
+        }
+
+        return $this;
     }
 
     /**
@@ -99,6 +161,6 @@ abstract class Value implements AttributeValueInterface
 
     public function __toString()
     {
-        return (string) $this->getValueObject()->getDisplayValue();
+        return (string) $this->getDisplayValue();
     }
 }

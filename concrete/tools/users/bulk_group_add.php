@@ -27,36 +27,36 @@ $gl = new GroupList();
 $g1 = $gl->getResults();
 
 if ($_POST['task'] == 'group_add') {
-    // build the group array
-    $groupIDs = $_REQUEST['groupIDs'];
-    $groups = array();
-    if (is_array($groupIDs) && count($groupIDs)) {
-        foreach ($groupIDs as $gID) {
-            $groups[] = Group::getByID($gID);
-        }
-    }
+	// build the group array
+	$groupIDs = $_REQUEST['groupIDs'];
+	$groups = array();
+	if(is_array($groupIDs) && count($groupIDs)) {
+		foreach($groupIDs as $gID) {
+			$groups[] = Group::getByID($gID);
+		}
+	}
 
-    foreach ($users as $ui) {
-        if ($ui instanceof UserInfo) {
-            $u = $ui->getUserObject();
-            foreach ($groups as $g) {
-                $gp = new Permissions($g);
-                if ($gp->canAssignGroup()) {
-                    if (!$u->inGroup($g)) { // avoid messing up group enter times
-                        $u->enterGroup($g);
-                    }
-                }
-            }
-        }
-    }
-    echo Loader::helper('json')->encode(array('error' => false));
-    exit;
+	foreach($users as $ui) {
+		if($ui instanceof \Concrete\Core\User\UserInfo) {
+			$u = $ui->getUserObject();
+			foreach($groups as $g) {
+				$gp = new Permissions($g);
+				if ($gp->canAssignGroup()) {
+					if(!$u->inGroup($g)) { // avoid messing up group enter times
+						$u->enterGroup($g);
+					}
+				}
+			}
+		}
+	}
+	echo Loader::helper('json')->encode(array('error'=>false));
+	exit;
 }
 
 if (!isset($_REQUEST['reload'])) {
     ?>
 	<div id="ccm-user-bulk-group-add-wrapper">
-<?php 
+<?php
 } ?>
 
 	<div id="ccm-user-activate" class="ccm-ui">
@@ -71,17 +71,17 @@ if (!isset($_REQUEST['reload'])) {
 			<div class="clearfix">
 				<?=$form->label('groupIDs', t('Add the users below to Group(s)'))?>
 				<div class="input">
-					<select multiple name="groupIDs[]" class="select2-select" data-placeholder="<?php echo t('Select Group(s)');?>" >
+					<select multiple name="groupIDs[]" class="selectize-select" data-placeholder="<?php echo t('Select Group(s)');?>" >
 						<?php foreach ($g1 as $gRow) {
     $g = Group::getByID($gRow['gID']);
     $gp = new Permissions($g);
     if ($gp->canAssignGroup()) {
         ?>
 							<option value="<?=$g->getGroupID()?>"  <?php if (is_array($_REQUEST['groupIDs']) && in_array($g->getGroupID(), $_REQUEST['groupIDs'])) {
-    ?> selected="selected" <?php 
+    ?> selected="selected" <?php
 }
         ?>><?=$g->getGroupDisplayName()?></option>
-						<?php 
+						<?php
     }
 }?>
 					</select>
@@ -91,23 +91,23 @@ if (!isset($_REQUEST['reload'])) {
 			
 			<?php Loader::element('users/confirm_list', array('users' => $users)); ?>
 		</form>
-	
 
-	
+
+
 	</div>
 	<div class="dialog-buttons">
-		<?=$ih->button_js(t('Cancel'), 'jQuery.fn.dialog.closeTop()', 'left', 'btn')?>	
+		<?=$ih->button_js(t('Cancel'), 'jQuery.fn.dialog.closeTop()', 'left', 'btn')?>
 		<?=$ih->button_js(t('Save'), 'ccm_userBulkGroupAdd()', 'right', 'btn primary')?>
 	</div>
 <?php
 if (!isset($_REQUEST['reload'])) {
     ?>
 </div>
-<?php 
+<?php
 } ?>
 
 <script type="text/javascript">
-ccm_userBulkGroupAdd = function() { 
+ccm_userBulkGroupAdd = function() {
 	jQuery.fn.dialog.showLoader();
 	$("#ccm-user-bulk-group-add").ajaxSubmit(function(resp) {
 		jQuery.fn.dialog.closeTop();
@@ -123,6 +123,6 @@ ccm_userBulkGroupAdd = function() {
 	});
 };
 $(function() { 
-	$(".select2-select").select2();
+	$(".selectize-select").selectize();
 });
 </script>

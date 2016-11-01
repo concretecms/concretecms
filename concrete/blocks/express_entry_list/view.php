@@ -34,7 +34,7 @@ if ($entity) { ?>
                     <?php foreach($tableSearchProperties as $ak) { ?>
                         <h4><?=$ak->getAttributeKeyDisplayName()?></h4>
                         <div>
-                        <?=$ak->render('search', null, true)?>
+                        <?=$ak->render(new \Concrete\Core\Attribute\Context\BasicSearchContext(), null, true)?>
                         </div>
                     <?php } ?>
                 </div>

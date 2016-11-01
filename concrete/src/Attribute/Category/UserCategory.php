@@ -118,7 +118,7 @@ class UserCategory extends AbstractStandardCategory
     {
         $r = $this->entityManager->getRepository('\Concrete\Core\Entity\Attribute\Value\UserValue');
         $values = $r->findBy(array(
-            'uID' => $user->getUserID(),
+            'user' => $user,
         ));
 
         return $values;
@@ -128,7 +128,7 @@ class UserCategory extends AbstractStandardCategory
     {
         $r = $this->entityManager->getRepository('\Concrete\Core\Entity\Attribute\Value\UserValue');
         $value = $r->findOneBy(array(
-            'uID' => $user->getUserID(),
+            'user' => $user,
             'attribute_key' => $key,
         ));
 
