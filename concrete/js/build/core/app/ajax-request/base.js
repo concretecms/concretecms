@@ -82,7 +82,9 @@
 		},
 
 		complete: function(my) {
-			jQuery.fn.dialog.hideLoader();
+			if (my.options.loader) {
+				jQuery.fn.dialog.hideLoader();
+			}
 		}
 	};
 

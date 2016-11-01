@@ -12,6 +12,7 @@ class PageRelations extends BackendInterfacePageController
 
     public function view()
     {
+        $this->requireAsset('core/sitemap');
         $mlist = Section::getList();
         $ml = array();
         $currentSection = Section::getCurrentSection();
@@ -39,11 +40,6 @@ class PageRelations extends BackendInterfacePageController
     protected function canAccess()
     {
         $app = \Core::make("app");
-        $config = $app->make('config');
-        if (!$config->get('concrete.interface.panel.page_relations')) {
-            return false;
-        }
-
         $dashboard = $app->make('helper/concrete/dashboard');
 
         if (

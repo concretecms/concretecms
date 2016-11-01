@@ -48,9 +48,10 @@ $(function() {
     });
 
     $('input[name=includeSystemPages]').on('click', function() {
-        var $tree = $('div#ccm-full-sitemap-container');
+        var $tree = $('div#ccm-full-sitemap-container div.ccm-sitemap-tree');
         $tree.fancytree('destroy');
-        $tree.concreteSitemap({
+
+        $('#ccm-full-sitemap-container').html('').concreteSitemap({
             siteTreeID: <?=$site->getSiteTreeID()?>,
             includeSystemPages: $('input[name=includeSystemPages]').is(':checked')
         });
