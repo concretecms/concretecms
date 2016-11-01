@@ -34,14 +34,14 @@ class PageUrlResolverTest extends ResolverTestCase
             ->willReturn(HOME_CID);
 
         $this->assertEquals(
-            (string) $this->canonicalUrlWithPath('/'),
+            (string) $this->canonicalUrlWithPath('/')->setQuery('cID='.HOME_CID),
             (string) $this->urlResolver->resolve([$page]));
     }
 
     public function testUnapproved()
     {
         $page = $this->createMockFromClass('\Concrete\Core\Page\Page');
-        $page->expects($this->exactly(2))
+        $page->expects($this->once())
             ->method('getCollectionID')
             ->willReturn(1337);
 
