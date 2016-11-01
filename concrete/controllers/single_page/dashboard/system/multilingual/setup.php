@@ -172,91 +172,15 @@ class Setup extends DashboardSitePageController
         $this->view();
     }
 
-    /*
-    public $helpers = array('form');
-    protected $pagesToCopy = array();
-
-    public function add_content_section()
-    {
-        if (Loader::helper('validation/token')->validate('add_content_section')) {
-            if ((!Loader::helper('validation/numbers')->integer($this->post('pageID'))) || $this->post('pageID') < 1) {
-                $this->error->add(t('You must specify a page for this multilingual content section.'));
-            } else {
-                $pc = Page::getByID($this->post('pageID'));
-            }
-
-            if (!$this->error->has()) {
-                $lc = Section::getByID($this->post('pageID'));
-                if (is_object($lc)) {
-                    $this->error->add(t('A multilingual section page at this location already exists.'));
-                }
-            }
-
-            if (!$this->error->has()) {
-                if ($this->post('msLanguage')) {
-                    $combination = $this->post('msLanguage') . '_' . $this->post('msCountry');
-                    $locale = Section::getByLocale($combination, $this->getSite());
-                    if (is_object($locale)) {
-                        $this->error->add(t('This language/region combination already exists.'));
-                    }
-                }
-            }
-
-            if (!$this->error->has()) {
-                Section::assign($this->getSite(), $pc, $this->post('msLanguage'), $this->post('msCountry'));
-                $this->redirect('/dashboard/system/multilingual/setup', 'multilingual_content_updated');
-            }
-        } else {
-            $this->error->add(Loader::helper('validation/token')->getErrorMessage());
-        }
-        $this->view();
-    }
-
-    protected function populateCopyArray($startingPage)
-    {
-        $db = Loader::db();
-        if ($startingPage->isAlias()) {
-            $cID = $startingPage->getCollectionPointerOriginalID();
-        } else {
-            $cID = $startingPage->getCollectionID();
-        }
-
-        $q = "select cID from Pages where cParentID = ? order by cDisplayOrder asc";
-        $r = $db->query($q, array($cID));
-        while ($row = $r->fetchRow()) {
-            $c = Page::getByID($row['cID'], 'RECENT');
-            if (!$c->getAttribute('multilingual_exclude_from_copy')) {
-                $this->pagesToCopy[] = $c;
-                $this->populateCopyArray($c);
-            }
-        }
-    }
-
-    public function multilingual_content_enabled()
-    {
-        $this->set('message', t('Multilingual content enabled'));
-        $this->view();
-    }
-
-    public function multilingual_content_updated()
-    {
-        $this->set('message', t('Multilingual content updated'));
-        $this->view();
-    }
-
-    public function locale_section_removed()
-    {
-        $this->set('message', t('Section removed.'));
-        $this->view();
-    }
-
-    public function remove_locale_section($sectionID = false, $token = false)
+    public function remove_locale_section($localeID = false, $token = false)
     {
         if (Loader::helper('validation/token')->validate('', $token)) {
-            $lc = Section::getByID($sectionID);
+            $service = new Service($this->entityManager);
+            $lc = $service->getByID($localeID);
             if (is_object($lc)) {
-                $lc->unassign();
-                $this->redirect('/dashboard/system/multilingual/setup', 'locale_section_removed');
+                $service->delete($lc);
+                $this->flash('success', t('Section removed.'));
+                $this->redirect('/dashboard/system/multilingual/setup', 'view');
             } else {
                 $this->error->add(t('Invalid section'));
             }
@@ -265,5 +189,5 @@ class Setup extends DashboardSitePageController
         }
         $this->view();
     }
-    */
+
 }

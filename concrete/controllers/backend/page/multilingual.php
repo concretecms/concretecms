@@ -59,7 +59,7 @@ class Multilingual extends Page
             }
             Section::relatePage($this->page, $destPage, $ms->getLocale());
             $ih = Core::make('multilingual/interface/flag');
-            $icon = $ih->getSectionFlagIcon($ms);
+            $icon = (string) $ih->getSectionFlagIcon($ms);
             $pr->setAdditionalDataAttribute('name', $destPage->getCollectionName());
             $pr->setAdditionalDataAttribute('link', $destPage->getCollectionLink());
             $pr->setAdditionalDataAttribute('icon', $icon);
@@ -114,7 +114,7 @@ class Multilingual extends Page
                         $pr->setMessage(t('Unapproved page created. You must publish this page before it is live.'));
                     }
                     $ih = Core::make('multilingual/interface/flag');
-                    $icon = $ih->getSectionFlagIcon($ms);
+                    $icon = (string) $ih->getSectionFlagIcon($ms);
                     $pr->setAdditionalDataAttribute('name', $newPage->getCollectionName());
                     $pr->setAdditionalDataAttribute('link', $newPage->getCollectionLink());
                     $pr->setAdditionalDataAttribute('icon', $icon);

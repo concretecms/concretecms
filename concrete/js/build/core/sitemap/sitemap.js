@@ -48,6 +48,9 @@
 
 		setupLocales: function(locales) {
 			var my = this;
+			if (locales.length < 2) {
+				return;
+			}
 			if (!my.$element.find('div.ccm-sitemap-locales-wrapper ul').length) {
 				var $menu = $(my.localesWrapperTemplate);
 				var _locale =  _.template(my.localeTemplate);

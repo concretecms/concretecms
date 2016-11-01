@@ -1,7 +1,9 @@
 <?php
 namespace Concrete\Core\Multilingual\Page\Section;
 
+use Concrete\Core\Entity\Site\Locale;
 use Concrete\Core\Entity\Site\Site;
+use Concrete\Core\Entity\Site\SiteTree;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Site\Tree\TreeInterface;
 use Database;
@@ -13,15 +15,41 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 class Section extends Page
 {
-    /**
-     * @var \Concrete\Core\Entity\Multilingual\Section
-     */
-    protected $section;
 
-    protected function setSectionEntity($section)
+    public static function isMultilingualSection($cID)
     {
-        $this->section = $section;
+        if (is_object($cID)) {
+            $cID = $cID->getCollectionID();
+        }
+
+        if ($cID) {
+            $entity = self::getLocaleFromHomePageID($cID);
+
+            return is_object($entity);
+        }
     }
+
+    protected static function getLocaleFromHomePageID($cID)
+    {
+        $em = Database::get()->getEntityManager();
+        $tree = $em->getRepository('Concrete\Core\Entity\Site\SiteTree')
+            ->findOneBySiteHomePageID($cID);
+        if (is_object($tree)) {
+            return $em->getRepository('Concrete\Core\Entity\Site\Locale')
+                ->findOneByTree($tree);
+        }
+    }
+
+
+    protected function setLocale($locale)
+    {
+        $this->locale = $locale;
+    }
+
+    /**
+     * @var Locale
+     */
+    protected $locale;
 
     public function getPermissionResponseClassName()
     {
@@ -31,54 +59,6 @@ class Section extends Page
     public function getPermissionObjectKeyCategoryHandle()
     {
         return 'multilingual_section';
-    }
-
-    public static function assign(TreeInterface $tree, $c, $language, $country, $numPlurals = null, $pluralRule = '', $pluralCases = [])
-    {
-        $pluralRule = (string) $pluralRule;
-        if (empty($numPlurals) || ($pluralRule === '') || (empty($pluralCases))) {
-            $locale = $language;
-            if ($country !== '') {
-                $locale .= '_' . $country;
-            }
-            $localeInfo = \Gettext\Languages\Language::getById($locale);
-            if ($localeInfo) {
-                $numPlurals = count($localeInfo->categories);
-                $pluralRule = $localeInfo->formula;
-                $pluralCases = [];
-                foreach ($localeInfo->categories as $category) {
-                    $pluralCases[] = $category->id.'@'.$category->examples;
-                }
-            }
-        }
-        $em = Database::get()->getEntityManager();
-        $section = $em->find('Concrete\Core\Entity\Multilingual\Section', $c->getCollectionID());
-        if (!is_object($section)) {
-            $section = new \Concrete\Core\Entity\Multilingual\Section();
-        }
-
-        $country = (string) $country;
-        $section->setSiteTree($tree->getSiteTreeObject());
-        $section->setPageID($c->getCollectionID());
-        $section->setLanguage($language);
-        $section->setCountry($country);
-
-        if ((!empty($numPlurals)) && ($pluralRule !== '') && (!empty($pluralCases))) {
-            $section->setPluralRule($pluralRule);
-            $section->setNumPlurals($numPlurals);
-            $pluralCases = is_array($pluralCases) ? implode("\n", $pluralCases) : $pluralCases;
-            $section->setPluralCases($pluralCases);
-        }
-
-        $em->persist($section);
-        $em->flush();
-    }
-
-    public function unassign()
-    {
-        $em = Database::get()->getEntityManager();
-        $em->remove($this->section);
-        $em->flush();
     }
 
     /**
@@ -92,15 +72,266 @@ class Section extends Page
      */
     public static function getByID($cID, $cvID = 'RECENT')
     {
-        $entity = self::getSectionEntity($cID);
+        $entity = self::getLocaleFromHomePageID($cID);
         if ($entity) {
             $obj = parent::getByID($cID, $cvID);
-            $obj->setSectionEntity($entity);
+            $obj->setLocale($entity);
 
             return $obj;
         }
 
         return false;
+    }
+
+    /**
+     * @param Page $page
+     *
+     * @return Section
+     */
+    public static function getBySectionOfSite($page)
+    {
+        $identifier = sprintf('/multilingual/section/%s', $page->getCollectionID());
+        $cache = \Core::make('cache/request');
+        $item = $cache->getItem($identifier);
+        if (!$item->isMiss()) {
+            $returnID = $item->get();
+        } else {
+            $item->lock();
+            $tree = $page->getSiteTreeObject();
+            $returnID = false;
+            if ($tree instanceof SiteTree) {
+                $returnID = $tree->getSiteHomePageID();
+            }
+
+            $cache->save($item->set($returnID));
+        }
+
+        if ($returnID) {
+            return static::getByID($returnID);
+        }
+    }
+
+
+    public function getLanguageText($locale = null)
+    {
+        return $this->locale->getLanguageText($locale);
+    }
+
+    public function getLanguage()
+    {
+        return $this->locale->getLanguage();
+    }
+
+    public function getIcon()
+    {
+        return $this->locale->getCountry();
+    }
+
+    public function getCountry()
+    {
+        return $this->locale->getCountry();
+    }
+
+    /**
+     * Returns the number of plural forms.
+     *
+     * @return int
+     *
+     * @example For Japanese: returns 1
+     * @example For English: returns 2
+     * @example For French: returns 2
+     * @example For Russian returns 3
+     */
+    public function getNumberOfPluralForms()
+    {
+        return (int) $this->locale->getNumPlurals();
+    }
+
+    /**
+     * Returns the rule to determine which plural we should use (in gettext notation).
+     *
+     * @return string
+     *
+     * @example For Japanese: returns '0'
+     * @example For English: returns 'n != 1'
+     * @example For French: returns 'n > 1'
+     * @example For Russian returns '(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2)'
+     */
+    public function getPluralsRule()
+    {
+        return (string) $this->locale->getPluralRule();
+    }
+
+    /**
+     * Returns the plural cases for the language; array keys are the case name, array values are some examples for that case.
+     *
+     * @return array
+     *
+     * @example For Japanese: returns
+     *     'other' => '0~15, 100, 1000, 10000, 100000, 1000000, …'
+     * @example For English: returns
+     *     'one' => '1',
+     *     'other' => '0, 2~16, 100, 1000, 10000, 100000, 1000000, …'
+     * @example For French: returns
+     *     'one' => '0, 1',
+     *     'other' => '2~17, 100, 1000, 10000, 100000, 1000000, …'
+     * @example For Russian returns
+     *     'one' => '1, 21, 31, 41, 51, 61, 71, 81, 101, 1001, …',
+     *     'few' => '2~4, 22~24, 32~34, 42~44, 52~54, 62, 102, 1002, …',
+     *     'other' => '0, 5~19, 100, 1000, 10000, 100000, 1000000, …',
+     */
+    public function getPluralsCases()
+    {
+        return (array) $this->locale->getPluralCases();
+    }
+
+    public static function getIDList(Site $site = null)
+    {
+        if (!$site) {
+            $site = \Site::getSite();
+        }
+
+        $cache = \Core::make('cache/request');
+        $item = $cache->getItem(sprintf('multilingual/section/ids/%s', $site->getSiteID()));
+        if ($item->isMiss()) {
+            $ids = [];
+            foreach($site->getLocales() as $locale) {
+                $tree = $locale->getSiteTree();
+                if (is_object($tree)) {
+                    $ids[] = $tree->getSiteHomePageID();
+                }
+            }
+            $cache->save($item->set($ids));
+        } else {
+            $ids = $item->get();
+        }
+
+        return $ids;
+    }
+
+    public static function getList(Site $site = null)
+    {
+        $ids = self::getIDList($site);
+        $pages = [];
+        if ($ids && is_array($ids)) {
+            foreach ($ids as $cID) {
+                $obj = self::getByID($cID);
+                if (is_object($obj)) {
+                    $pages[] = $obj;
+                }
+            }
+        }
+
+        return $pages;
+    }
+
+    public static function getRelatedCollectionIDForLocale($cID, $locale)
+    {
+        $mpRelationID = self::getMultilingualPageRelationID($cID);
+
+        if (!$mpRelationID) {
+            return null;
+        }
+
+        $relatedCID = self::getCollectionIDForLocale($mpRelationID, $locale);
+
+        return $relatedCID;
+    }
+
+    public static function getMultilingualPageRelationID($cID)
+    {
+        $db = Database::get();
+
+        $mpRelationID = $db->getOne(
+            'select mpRelationID from MultilingualPageRelations where cID = ?',
+            [$cID]
+        );
+
+        return $mpRelationID;
+    }
+
+    public static function isAssigned($page)
+    {
+        $mpRelationID = self::getMultilingualPageRelationID($page->getCollectionID());
+
+        return $mpRelationID > 0;
+    }
+
+
+    public static function getCollectionIDForLocale($mpRelationID, $locale)
+    {
+        $db = Database::get();
+
+        $cID = $db->GetOne(
+            'select cID from MultilingualPageRelations where mpRelationID = ? and mpLocale = ?',
+            [$mpRelationID, $locale]
+        );
+
+        return $cID;
+    }
+
+    public static function registerDuplicate($newPage, $oldPage)
+    {
+        $db = Database::get();
+
+        $mpRelationID = self::getMultilingualPageRelationID($oldPage->getCollectionID());
+
+        if (static::isMultilingualSection($newPage)) {
+            $ms = static::getByID($newPage->getCollectionID());
+        } else {
+            $ms = static::getBySectionOfSite($newPage);
+        }
+        if (static::isMultilingualSection($oldPage)) {
+            $msx = static::getByID($oldPage->getCollectionID());
+        } else {
+            $msx = static::getBySectionOfSite($oldPage);
+        }
+        $isNew = false;
+        if (is_object($ms)) {
+            if (!$mpRelationID) {
+                $isNew = true;
+                $mpRelationID = $db->GetOne('select max(mpRelationID) as mpRelationID from MultilingualPageRelations');
+                if (!$mpRelationID) {
+                    $mpRelationID = 1;
+                } else {
+                    ++$mpRelationID;
+                }
+
+                // adding in a check to see if old page was part of a language section or neutral.
+                if (is_object($msx)) {
+                    $db->Execute(
+                        'insert into MultilingualPageRelations (mpRelationID, cID, mpLanguage, mpLocale) values (?, ?, ?, ?)',
+                        [
+                            $mpRelationID,
+                            $oldPage->getCollectionID(),
+                            $msx->getLanguage(),
+                            $msx->getLocale(),
+                        ]
+                    );
+                }
+            }
+
+            $v = [$mpRelationID, $newPage->getCollectionID(), $ms->getLocale()];
+
+            if (!$isNew) {
+                $cID = self::getCollectionIDForLocale($mpRelationID, $ms->getLocale());
+
+                if ($cID > 0) {
+                    $db->Execute(
+                        'delete from MultilingualPageRelations where mpRelationID = ? and mpLocale = ?',
+                        [$mpRelationID, $ms->getLocale()]
+                    );
+                }
+            }
+
+            $v[] = $ms->getLanguage();
+
+            $db->Execute('insert into MultilingualPageRelations (mpRelationID, cID, mpLocale, mpLanguage) values (?, ?, ?, ?)', $v);
+
+            $pde = new Event($newPage);
+            $pde->setLocale($ms->getLocale());
+            \Events::dispatch('on_multilingual_page_relate', $pde);
+        }
     }
 
     /**
@@ -115,12 +346,15 @@ class Section extends Page
         }
 
         $em = Database::get()->getEntityManager();
-        $section = $em->getRepository('Concrete\Core\Entity\Multilingual\Section')
+        /**
+         * @var $section Locale
+         */
+        $section = $em->getRepository('Concrete\Core\Entity\Site\Locale')
             ->findOneBy(['tree' => $treeInterface->getSiteTreeObject(), 'msLanguage' => $language]);
 
         if (is_object($section)) {
-            $obj = parent::getByID($section->getPageID(), 'RECENT');
-            $obj->setSectionEntity($section);
+            $obj = parent::getByID($section->getSiteTree()->getSiteHomePageID(), 'RECENT');
+            $obj->setLocale($section);
 
             return $obj;
         }
@@ -133,23 +367,25 @@ class Section extends Page
      *
      * @return Section|false
      */
-    public static function getByLocale($locale, TreeInterface $treeInterface = null)
+    public static function getByLocale($locale, Site $site = null)
     {
+        if (!$site) {
+            $site = \Core::make('site')->getSite();
+        }
         if ($locale) {
-            if (!$treeInterface) {
-                $treeInterface = \Core::make('site')->getSite();
+            if (!is_object($locale)) {
+                $locale = explode('_', $locale);
+                if (!isset($locale[1])) {
+                    $locale[1] = '';
+                }
+                $em = Database::get()->getEntityManager();
+                $locale = $em->getRepository('Concrete\Core\Entity\Site\Locale')
+                    ->findOneBy(['site' => $site, 'msLanguage' => $locale[0], 'msCountry' => $locale[1]]);
             }
-            $locale = explode('_', $locale);
-            if (!isset($locale[1])) {
-                $locale[1] = '';
-            }
-            $em = Database::get()->getEntityManager();
-            $section = $em->getRepository('Concrete\Core\Entity\Multilingual\Section')
-                ->findOneBy(['tree' => $treeInterface->getSiteTreeObject(), 'msLanguage' => $locale[0], 'msCountry' => $locale[1]]);
 
-            if (is_object($section)) {
-                $obj = parent::getByID($section->getPageID(), 'RECENT');
-                $obj->setSectionEntity($section);
+            if (is_object($locale)) {
+                $obj = parent::getByID($locale->getSiteTree()->getSiteHomePageID(), 'RECENT');
+                $obj->setLocale($locale);
 
                 return $obj;
             }
@@ -191,73 +427,14 @@ class Section extends Page
         return $section;
     }
 
-    /**
-     * @param Page $page
-     *
-     * @return Section
-     */
-    public static function getBySectionOfSite($page)
+    public function getLocaleObject()
     {
-        $identifier = sprintf('/multilingual/section/%s', $page->getCollectionID());
-        $cache = \Core::make('cache/request');
-        $item = $cache->getItem($identifier);
-        if (!$item->isMiss()) {
-            $returnID = $item->get();
-        } else {
-            $item->lock();
-            $returnID = null;
-            if ($page->getPageTypeHandle() == STACKS_PAGE_TYPE) {
-                $parent = Page::getByID($page->getCollectionParentID());
-                if ($parent->getCollectionPath() == STACKS_PAGE_PATH) {
-                    // this is the default multilingual section.
-                    return static::getDefaultSection();
-                } else {
-                    // this is a stack category page type
-                    $locale = $parent->getCollectionHandle();
-
-                    return static::getByLocale($locale);
-                }
-            } else {
-                if ($page->isPageDraft() && $page->getPageDraftTargetParentPageID()) {
-                    $cParentID = $page->getPageDraftTargetParentPageID();
-                } else {
-                    $cParentID = $page->getCollectionParentID();
-                }
-
-                $parent = \Page::getByID($cParentID);
-                $nav = \Core::make('helper/navigation');
-                $pages = $nav->getTrailToCollection($parent);
-                $pages = array_reverse($pages);
-                $pages[] = $parent;
-                $pages[] = $page;
-                $ids = self::getIDList($page->getSiteTreeObject());
-                $returnID = false;
-                foreach ($pages as $pc) {
-                    if (in_array($pc->getCollectionID(), $ids)) {
-                        $returnID = $pc->getCollectionID();
-                    }
-                }
-            }
-            $cache->save($item->set($returnID));
-        }
-
-        if ($returnID) {
-            return static::getByID($returnID);
-        }
-    }
-
-    public function getLanguage()
-    {
-        return $this->section->getLanguage();
+        return $this->locale;
     }
 
     public function getLocale()
     {
-        $locale = $this->getLanguage();
-        if ($this->getCountry()) {
-            $locale .= '_' . $this->getCountry();
-        }
-
+        $locale = $this->locale->getLocale();
         return $locale;
     }
 
@@ -266,72 +443,16 @@ class Section extends Page
         if (!is_object($site)) {
             $site = \Site::getSite();
         }
-        $default_locale = $site->getConfigRepository()->get('multilingual.default_locale');
+
+        $default_locale = $site->getDefaultLocale();
 
         return static::getByLocale($default_locale);
     }
 
-    public function getIcon()
+    public static function unregisterPage($page)
     {
-        return $this->section->getCountry();
-    }
-
-    public function getCountry()
-    {
-        return $this->section->getCountry();
-    }
-
-    /**
-     * Returns the number of plural forms.
-     *
-     * @return int
-     *
-     * @example For Japanese: returns 1
-     * @example For English: returns 2
-     * @example For French: returns 2
-     * @example For Russian returns 3
-     */
-    public function getNumberOfPluralForms()
-    {
-        return (int) $this->section->getNumPlurals();
-    }
-
-    /**
-     * Returns the rule to determine which plural we should use (in gettext notation).
-     *
-     * @return string
-     *
-     * @example For Japanese: returns '0'
-     * @example For English: returns 'n != 1'
-     * @example For French: returns 'n > 1'
-     * @example For Russian returns '(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2)'
-     */
-    public function getPluralsRule()
-    {
-        return (string) $this->section->getPluralRule();
-    }
-
-    /**
-     * Returns the plural cases for the language; array keys are the case name, array values are some examples for that case.
-     *
-     * @return array
-     *
-     * @example For Japanese: returns
-     *     'other' => '0~15, 100, 1000, 10000, 100000, 1000000, …'
-     * @example For English: returns
-     *     'one' => '1',
-     *     'other' => '0, 2~16, 100, 1000, 10000, 100000, 1000000, …'
-     * @example For French: returns
-     *     'one' => '0, 1',
-     *     'other' => '2~17, 100, 1000, 10000, 100000, 1000000, …'
-     * @example For Russian returns
-     *     'one' => '1, 21, 31, 41, 51, 61, 71, 81, 101, 1001, …',
-     *     'few' => '2~4, 22~24, 32~34, 42~44, 52~54, 62, 102, 1002, …',
-     *     'other' => '0, 5~19, 100, 1000, 10000, 100000, 1000000, …',
-     */
-    public function getPluralsCases()
-    {
-        return (array) $this->section->getPluralCases();
+        $db = Database::get();
+        $db->Execute('delete from MultilingualPageRelations where cID = ?', [$page->getCollectionID()]);
     }
 
     public static function registerPage($page)
@@ -365,20 +486,6 @@ class Section extends Page
                 \Events::dispatch('on_multilingual_page_relate', $pde);
 
                 return $mpRelationID;
-            }
-        }
-    }
-
-    public static function unregisterPage($page)
-    {
-        if (static::isMultilingualSection($page)) {
-            $entity = static::getSectionEntity($page->getCollectionID());
-            $db = Database::get();
-            if (is_object($entity)) {
-                $em = $db->getEntityManager();
-                $em->remove($entity);
-                $em->flush();
-                $db->Execute('delete from MultilingualPageRelations where cID = ?', [$page->getCollectionID()]);
             }
         }
     }
@@ -445,137 +552,14 @@ class Section extends Page
         }
     }
 
-    public static function isAssigned($page)
-    {
-        $mpRelationID = self::getMultilingualPageRelationID($page->getCollectionID());
-
-        return $mpRelationID > 0;
-    }
-
-    public static function getMultilingualPageRelationID($cID)
-    {
-        $db = Database::get();
-
-        $mpRelationID = $db->getOne(
-            'select mpRelationID from MultilingualPageRelations where cID = ?',
-            [$cID]
-        );
-
-        return $mpRelationID;
-    }
-
-    public static function getCollectionIDForLocale($mpRelationID, $locale)
-    {
-        $db = Database::get();
-
-        $cID = $db->GetOne(
-            'select cID from MultilingualPageRelations where mpRelationID = ? and mpLocale = ?',
-            [$mpRelationID, $locale]
-        );
-
-        return $cID;
-    }
-
-    public static function getRelatedCollectionIDForLocale($cID, $locale)
-    {
-        $mpRelationID = self::getMultilingualPageRelationID($cID);
-
-        if (!$mpRelationID) {
-            return null;
-        }
-
-        $relatedCID = self::getCollectionIDForLocale($mpRelationID, $locale);
-
-        return $relatedCID;
-    }
-
-    public static function registerDuplicate($newPage, $oldPage)
-    {
-        $db = Database::get();
-
-        $mpRelationID = self::getMultilingualPageRelationID($oldPage->getCollectionID());
-
-        if (static::isMultilingualSection($newPage)) {
-            $ms = static::getByID($newPage->getCollectionID());
-        } else {
-            $ms = static::getBySectionOfSite($newPage);
-        }
-        if (static::isMultilingualSection($oldPage)) {
-            $msx = static::getByID($oldPage->getCollectionID());
-        } else {
-            $msx = static::getBySectionOfSite($oldPage);
-        }
-        if (is_object($ms)) {
-            if (!$mpRelationID) {
-                $mpRelationID = $db->GetOne('select max(mpRelationID) as mpRelationID from MultilingualPageRelations');
-                if (!$mpRelationID) {
-                    $mpRelationID = 1;
-                } else {
-                    ++$mpRelationID;
-                }
-
-                // adding in a check to see if old page was part of a language section or neutral.
-                if (is_object($msx)) {
-                    $db->Execute(
-                        'insert into MultilingualPageRelations (mpRelationID, cID, mpLanguage, mpLocale) values (?, ?, ?, ?)',
-                        [
-                            $mpRelationID,
-                            $oldPage->getCollectionID(),
-                            $msx->getLanguage(),
-                            $msx->getLocale(),
-                        ]
-                    );
-                }
-            }
-
-            $v = [$mpRelationID, $newPage->getCollectionID(), $ms->getLocale()];
-
-            $cID = self::getCollectionIDForLocale($mpRelationID, $ms->getLocale());
-
-            if ($cID > 0) {
-                $db->Execute(
-                    'delete from MultilingualPageRelations where mpRelationID = ? and mpLocale = ?',
-                    [$mpRelationID, $ms->getLocale()]
-                );
-            }
-
-            $db->Execute('insert into MultilingualPageRelations (mpRelationID, cID, mpLocale) values (?, ?, ?)', $v);
-
-            $pde = new Event($newPage);
-            $pde->setLocale($ms->getLocale());
-            \Events::dispatch('on_multilingual_page_relate', $pde);
-        }
-    }
-
     public function isDefaultMultilingualSection(Site $site = null)
     {
         if (!is_object($site)) {
             $site = \Site::getSite();
         }
-        $default_locale = $site->getConfigRepository()->get('multilingual.default_locale');
 
-        return $this->getLocale() == $default_locale;
-    }
-
-    protected static function getSectionEntity($cID)
-    {
-        $em = Database::get()->getEntityManager();
-        $entity = $em->find('Concrete\Core\Entity\Multilingual\Section', $cID);
-
-        return $entity;
-    }
-
-    public static function isMultilingualSection($cID)
-    {
-        if (is_object($cID)) {
-            $cID = $cID->getCollectionID();
-        }
-
-        if ($cID) {
-            $entity = self::getSectionEntity($cID);
-
-            return is_object($entity);
-        }
+        $default_locale = $site->getDefaultLocale();
+        return $this->getLocale() == $default_locale->getLocale();
     }
 
     public static function ignorePageRelation($page, $locale)
@@ -592,46 +576,6 @@ class Section extends Page
         \Events::dispatch('on_multilingual_page_ignore', $pde);
     }
 
-    public static function getIDList(TreeInterface $treeInterface = null)
-    {
-        if (!$treeInterface) {
-            $treeInterface = \Site::getSite();
-        }
-
-        $cache = \Core::make('cache/request');
-        $item = $cache->getItem(sprintf('multilingual/section/ids/%s', $treeInterface->getSiteTreeID()));
-        if ($item->isMiss()) {
-            $em = Database::get()->getEntityManager();
-            $sections = $em->getRepository('Concrete\Core\Entity\Multilingual\Section')
-                ->findByTree($treeInterface->getSiteTreeObject());
-
-            $ids = [];
-            foreach ($sections as $section) {
-                $ids[] = $section->getPageID();
-            }
-            $cache->save($item->set($ids));
-        } else {
-            $ids = $item->get();
-        }
-
-        return $ids;
-    }
-
-    public static function getList(TreeInterface $tree = null)
-    {
-        $ids = self::getIDList($tree);
-        $pages = [];
-        if ($ids && is_array($ids)) {
-            foreach ($ids as $cID) {
-                $obj = self::getByID($cID);
-                if (is_object($obj)) {
-                    $pages[] = $obj;
-                }
-            }
-        }
-
-        return $pages;
-    }
 
     /**
      * Receives a page in a different language tree, and tries to return the corresponding page in the current language tree.
@@ -642,7 +586,7 @@ class Section extends Page
     {
         $ids = static::getIDList();
         if (in_array($page->getCollectionID(), $ids)) {
-            return $this->section->getPageID();
+            return $this->locale->getSiteTree()->getSiteHomePageID();
         }
 
         $mpRelationID = self::getMultilingualPageRelationID($page->getCollectionID());
@@ -683,4 +627,53 @@ class Section extends Page
 
         return $translations;
     }
+    
+    /*
+
+    public static function assign(TreeInterface $tree, $c, $language, $country, $numPlurals = null, $pluralRule = '', $pluralCases = [])
+    {
+        $pluralRule = (string) $pluralRule;
+        if (empty($numPlurals) || ($pluralRule === '') || (empty($pluralCases))) {
+            $locale = $language;
+            if ($country !== '') {
+                $locale .= '_' . $country;
+            }
+            $localeInfo = \Gettext\Languages\Language::getById($locale);
+            if ($localeInfo) {
+                $numPlurals = count($localeInfo->categories);
+                $pluralRule = $localeInfo->formula;
+                $pluralCases = [];
+                foreach ($localeInfo->categories as $category) {
+                    $pluralCases[] = $category->id.'@'.$category->examples;
+                }
+            }
+        }
+        $em = Database::get()->getEntityManager();
+        $section = $em->find('Concrete\Core\Entity\Multilingual\Section', $c->getCollectionID());
+        if (!is_object($section)) {
+            $section = new \Concrete\Core\Entity\Multilingual\Section();
+        }
+
+        $country = (string) $country;
+        $section->setSiteTree($tree->getSiteTreeObject());
+        $section->setPageID($c->getCollectionID());
+        $section->setLanguage($language);
+        $section->setCountry($country);
+
+        if ((!empty($numPlurals)) && ($pluralRule !== '') && (!empty($pluralCases))) {
+            $section->setPluralRule($pluralRule);
+            $section->setNumPlurals($numPlurals);
+            $pluralCases = is_array($pluralCases) ? implode("\n", $pluralCases) : $pluralCases;
+            $section->setPluralCases($pluralCases);
+        }
+
+        $em->persist($section);
+        $em->flush();
+    }
+
+
+    */
+
+
+
 }

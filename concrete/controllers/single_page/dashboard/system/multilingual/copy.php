@@ -15,7 +15,7 @@ class Copy extends DashboardSitePageController
 {
     public function view()
     {
-        $this->set('pages', Section::getList($this->getSite()));
+        $this->set('locales', $this->getSite()->getLocales());
     }
 
     public function tree_copied()
@@ -52,37 +52,6 @@ class Copy extends DashboardSitePageController
                 }
                 $totalItems = $processor->getTotalTasks();
                 \View::element('progress_bar', array('totalItems' => $totalItems, 'totalItemsSummary' => t2("%d task", "%d tasks", $totalItems)));
-                /*
-                                $q = Queue::get('rescan_multilingual_section');
-                                if ($_POST['process']) {
-                                    $obj = new \stdClass;
-                                    $messages = $q->receive(\Config::get('concrete.limits.copy_pages'));
-                                    foreach($messages as $key => $p) {
-                                        // delete the page here
-                                        $page = unserialize($p->body);
-                                        $oc = \Page::getByID($page['cID']);
-
-
-                                        $q->deleteMessage($p);
-                                    }
-
-                                    $obj->totalItems = $q->count();
-                                    print json_encode($obj);
-                                    if ($q->count() == 0) {
-                                        $q->deleteQueue('rescan_multilingual_section');
-                                    }
-                                    exit;
-
-                                } else if ($q->count() == 0) {
-                                    $oc = Section::getByID($_REQUEST['locale']);
-                                    if (is_object($oc) && !$oc->isError()) {
-                                        $oc->queueForDeletionRequest($q, false);
-                                    }
-                                }
-                                $totalItems = $q->count();
-                                \View::element('progress_bar', array('totalItems' => $totalItems, 'totalItemsSummary' => t2("%d page", "%d pages", $totalItems)));
-                                */
-
                 exit;
             }
         }

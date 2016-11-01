@@ -31,4 +31,16 @@ class Service
         $this->entityManager->flush();
     }
 
+    public function delete(Locale $locale)
+    {
+        $tree = $locale->getSiteTree();
+        if (is_object($tree)) {
+            $locale->setSiteTree(null);
+            $this->entityManager->remove($tree);
+            $this->entityManager->flush();
+        }
+        $this->entityManager->remove($locale);
+        $this->entityManager->flush();
+    }
+
 }

@@ -18,7 +18,6 @@ abstract class PageTestCase extends ConcreteDatabaseTestCase
         'Concrete\Core\Entity\Site\Type',
         'Concrete\Core\Entity\Site\Tree',
         'Concrete\Core\Entity\Site\SiteTree',
-        'Concrete\Core\Entity\Multilingual\Section',
         'Concrete\Core\Entity\Page\Relation\MultilingualRelation',
         'Concrete\Core\Entity\Page\Relation\SiblingRelation',
         'Concrete\Core\Entity\Page\PagePath',

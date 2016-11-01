@@ -96,6 +96,9 @@ PNotify.prototype.options.buttons.closer_hover = false;
             if (options.title) {
                 notifyOptions.title = options.title;
             }
+            if (options.hide === false) {
+                notifyOptions.hide = options.hide;
+            }
 
             new PNotify(notifyOptions);
 

@@ -5,6 +5,9 @@
 ccm_triggerProgressiveOperation = function(url, params, dialogTitle, onComplete, onError, $element) {
 	// $element lets us pass in a DOM object to get the progress bar, as opposed to popping open a dedicated dialog for it.
 	$('#ccm-dialog-progress-bar').remove();
+	if (!$element) {
+		NProgress.set(0);
+	}
 	$.concreteAjax({
 		loader: false,
 		url: url,
@@ -12,8 +15,8 @@ ccm_triggerProgressiveOperation = function(url, params, dialogTitle, onComplete,
 		data: params,
 		dataType: 'html',
 		success: function(r) {
-			jQuery.fn.dialog.hideLoader();
 			if (!$element) {
+				/*
 				$('<div id="ccm-dialog-progress-bar" />').appendTo(document.body).html(r).jqdialog({
 					autoOpen: false,
 					height: 200,
@@ -28,6 +31,24 @@ ccm_triggerProgressiveOperation = function(url, params, dialogTitle, onComplete,
 					}
 				});
 				$("#ccm-dialog-progress-bar").jqdialog('open');
+				*/
+				var $bar = $(r);
+				var totalItems = $bar.find('[data-total-items]').attr('data-total-items');
+				var pnotify = new PNotify({
+					text: '<div data-total-items="' + totalItems + '"><span id="ccm-progressive-operation-status">1</span> of ' + totalItems + '</div>',
+					hide: false,
+					title: dialogTitle,
+					buttons: {
+						closer: false
+					},
+					type: 'info',
+					icon: 'fa fa-refresh fa-spin'
+				});
+
+				ccm_doProgressiveOperation(url, params, totalItems, onComplete, onError, pnotify);
+
+
+
 			} else {
 				$element.html(r);
 				var totalItems = $('#ccm-progressive-operation-progress-bar').attr('data-total-items');
@@ -37,11 +58,17 @@ ccm_triggerProgressiveOperation = function(url, params, dialogTitle, onComplete,
 	});
 }
 
-ccm_doProgressiveOperation = function(url, params, totalItems, onComplete, onError, $element) {
+ccm_doProgressiveOperation = function(url, params, totalItems, onComplete, onError, container) {
 	params.push({
 		'name': 'process',
 		'value': '1'
 	});
+	var pnotify, $element;
+	if (container instanceof jQuery) {
+		$element = container;
+	} else {
+		pnotify = container;
+	}
 	params['process'] = true;
 	$.ajax({
 		url: url,
@@ -54,52 +81,72 @@ ccm_doProgressiveOperation = function(url, params, totalItems, onComplete, onErr
 					var text = ccmi18n.requestTimeout;
 					break;
 				default:
-					var text = xhr.responseText;
+					var text = ConcreteAjaxRequest.errorResponseToString(xhr);
 					break;
-			}
-			if (!$element) {
-				$('#ccm-dialog-progress-bar').dialog('option', 'height', 200);
-				$('#ccm-dialog-progress-bar').dialog('option', 'closeOnEscape', true);
-				$('.ui-dialog-titlebar-close').show();
 			}
 			if ($element) {
 				$element.html('<div class="alert alert-error">' + text + '</div>');
 			} else {
-				$('#ccm-progressive-operation-progress-bar').html('<div class="alert alert-error">' + text + '</div>');
+				pnotify.remove();
+				NProgress.remove();
+				ConcreteAlert.error({
+					message: text,
+					title: ccmi18n.error,
+					hide: false,
+					buttons: {
+						closer: false
+					}
+				});
 			}
 		},
 
 		success: function(r) {
 			if (r.error) {
-				if (!$element) {
-					$('#ccm-dialog-progress-bar').dialog('option', 'height', 200);
-					$('#ccm-dialog-progress-bar').dialog('option', 'closeOnEscape', true);
-					$('.ui-dialog-titlebar-close').show();
-				}
 				var text = r.message;
-				$('#ccm-progressive-operation-progress-bar').html('<div class="alert alert-error">' + text + '</div>');
+				if ($element) {
+					$('#ccm-progressive-operation-progress-bar').html('<div class="alert alert-error">' + text + '</div>');
+				} else {
+					pnotify.remove();
+					NProgress.remove();
+					ConcreteAlert.error({
+						message: text,
+						title: ccmi18n.error,
+						hide: false,
+						buttons: {
+							closer: false
+						}
+					});
+
+				}
 				if (typeof(onError) == 'function') {
 					onError(r);
 				}
 			} else {
 				var totalItemsLeft = r.totalItems;
 				// update the percentage
-				var pct = Math.round(((totalItems - totalItemsLeft) / totalItems) * 100);
+				var pct = (totalItems - totalItemsLeft) / totalItems;
 				$('#ccm-progressive-operation-status').html(1);
 				if ((totalItems - totalItemsLeft) > 0) {
 					$('#ccm-progressive-operation-status').html(totalItems - totalItemsLeft);
 				}
-				$('#ccm-progressive-operation-progress-bar div.progress-bar').width(pct + '%');
+				if ($element) {
+					pct = Math.round(pct * 100);
+					$('#ccm-progressive-operation-progress-bar div.progress-bar').width(pct + '%');
+				} else {
+					NProgress.set(pct);
+				}
 				if (totalItemsLeft > 0) {
 					setTimeout(function() {
-						ccm_doProgressiveOperation(url, params, totalItems, onComplete, onError);
+						ccm_doProgressiveOperation(url, params, totalItems, onComplete, onError, container);
 					}, 250);
 				} else {
 					setTimeout(function() {
 						// give the animation time to catch up.
-						$('#ccm-progressive-operation-progress-bar div.bar').width('0%');
-						if (!$element) {
-							$('#ccm-dialog-progress-bar').dialog('close');
+						if ($element) {
+							$('#ccm-progressive-operation-progress-bar div.bar').width('0%');
+						} else {
+							NProgress.done();
+							pnotify.remove();
 						}
 						if (typeof(onComplete) == 'function') {
 							onComplete(r);

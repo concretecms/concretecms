@@ -122,8 +122,8 @@ class Detector
         $item->lock();
         $result = false;
         if ($app->isInstalled()) {
-            $db = $app->make('database')->connection();
-            if ($db->executeQuery('select cID from MultilingualSections limit 1')->fetchColumn()) {
+            $site = $app->make('site')->getSite();
+            if (count($site->getLocales()) > 1) {
                 $result = true;
             }
         }
