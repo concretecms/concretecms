@@ -250,9 +250,7 @@ if (isset($successMessage)) {
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <h4 class="panel-title">
-                        <a role="button" data-toggle="collapse" href="#site">
-                            <?= t('Site') ?>
-                        </a>
+                        <?= t('Site') ?>
                     </h4>
                 </div>
                 <div id="site" class="panel-collapse collapse in">
@@ -294,9 +292,7 @@ if (isset($successMessage)) {
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <h4 class="panel-title">
-                        <a role="button" data-toggle="collapse" href="#database">
-                            <?= t('Database') ?>
-                        </a>
+                        <?= t('Database') ?>
                     </h4>
                 </div>
                 <div id="database" class="panel-collapse collapse in">
