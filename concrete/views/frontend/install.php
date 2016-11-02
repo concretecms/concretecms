@@ -421,9 +421,8 @@ if (isset($successMessage)) {
                                         <?php foreach($otherCountries as $key => $value) { ?>
                                             <option value="<?=$key?>" <?php if ($computedSiteLocaleCountry == $key || isset($_POST['siteLocaleCountry']) && $_POST['siteLocaleCountry'] == $key) { ?>selected<?php } ?>><?=$value?></option>
                                         <?php } ?>
+                                    </select>
                                 </div>
-
-
                             </div>
                         </div>
                     </div>

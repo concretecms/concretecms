@@ -627,52 +627,6 @@ class Section extends Page
 
         return $translations;
     }
-    
-    /*
-
-    public static function assign(TreeInterface $tree, $c, $language, $country, $numPlurals = null, $pluralRule = '', $pluralCases = [])
-    {
-        $pluralRule = (string) $pluralRule;
-        if (empty($numPlurals) || ($pluralRule === '') || (empty($pluralCases))) {
-            $locale = $language;
-            if ($country !== '') {
-                $locale .= '_' . $country;
-            }
-            $localeInfo = \Gettext\Languages\Language::getById($locale);
-            if ($localeInfo) {
-                $numPlurals = count($localeInfo->categories);
-                $pluralRule = $localeInfo->formula;
-                $pluralCases = [];
-                foreach ($localeInfo->categories as $category) {
-                    $pluralCases[] = $category->id.'@'.$category->examples;
-                }
-            }
-        }
-        $em = Database::get()->getEntityManager();
-        $section = $em->find('Concrete\Core\Entity\Multilingual\Section', $c->getCollectionID());
-        if (!is_object($section)) {
-            $section = new \Concrete\Core\Entity\Multilingual\Section();
-        }
-
-        $country = (string) $country;
-        $section->setSiteTree($tree->getSiteTreeObject());
-        $section->setPageID($c->getCollectionID());
-        $section->setLanguage($language);
-        $section->setCountry($country);
-
-        if ((!empty($numPlurals)) && ($pluralRule !== '') && (!empty($pluralCases))) {
-            $section->setPluralRule($pluralRule);
-            $section->setNumPlurals($numPlurals);
-            $pluralCases = is_array($pluralCases) ? implode("\n", $pluralCases) : $pluralCases;
-            $section->setPluralCases($pluralCases);
-        }
-
-        $em->persist($section);
-        $em->flush();
-    }
-
-
-    */
 
 
 

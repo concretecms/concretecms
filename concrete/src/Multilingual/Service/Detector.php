@@ -72,8 +72,7 @@ class Detector
         }
 
         $site = \Site::getSite();
-        $config = $site->getConfigRepository();
-        return Section::getByLocale($config->get('multilingual.default_locale'));
+        return Section::getByLocale($site->getDefaultLocale());
     }
 
     public static function setupSiteInterfaceLocalization(Page $c = null)

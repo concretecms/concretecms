@@ -504,6 +504,7 @@ class Install extends Controller
                     $configuration .= "define('SITE', " . var_export((string) $_POST['SITE'], true) . ");\n";
                     $locale = $this->post('siteLocaleLanguage') . '_' . $this->post('siteLocaleCountry');
                     $configuration .= "define('SITE_INSTALL_LOCALE', " . var_export($locale, true) . ");\n";
+                    $configuration .= "define('APP_INSTALL_LANGUAGE', " . var_export($this->post('locale'), true) . ");\n";
                     $res = fwrite($this->fpu, $configuration);
                     fclose($this->fpu);
                     chmod(DIR_CONFIG_SITE . '/site_install_user.php', 0700);
