@@ -63,7 +63,7 @@ if (isset($_REQUEST['displaySingleLevel']) && $_REQUEST['displaySingleLevel']) {
             $dh->setExpandedNodes($openNodeArray);
         }
     }
-    if ($cParentID) {
+    if ($cParentID || $_REQUEST['reloadNode']) {
         $nodes = $dh->getSubNodes($cParentID);
         echo json_encode($nodes);
     } else {

@@ -1,7 +1,8 @@
 <?php defined('C5_EXECUTE') or die("Access Denied."); ?>
 
 <div class="ccm-dashboard-header-buttons">
-    <button class="btn btn-primary" data-dialog-width="600" data-dialog="add-locale"><?= t('Add Locale') ?></button>
+    <button class="btn btn-primary" data-dialog-width="400" data-dialog-height="500"
+            data-dialog="add-locale"><?= t('Add Locale') ?></button>
 </div>
 
 <h3><?= t('Locales') ?></h3>
@@ -29,36 +30,41 @@
             <td><?php echo $flag->getLocaleFlagIcon($locale) ?></td>
             <td><?php if (is_object($home)) { ?><a
                     href="<?= $home->getCollectionLink() ?>"><?= $home->getCollectionName() ?></a>
-                <?php } else { ?><span class="text-warning"><?=t('None Created.')?></span>
-            <?php } ?></td>
+                <?php } else { ?><span class="text-warning"><?= t('None Created.') ?></span>
+                <?php } ?></td>
             <td><?php echo $locale->getLanguageText() ?></td>
             <td><?php echo $locale->getLocale() ?></td>
-            <td><?php if (!$locale->getIsDefault()) { ?><a data-dialog-title="<?=t('Delete Locale')?>" data-dialog="delete-section-<?=$locale->getSiteLocaleID()?>" href="#" class="icon-link"><i
-                        class="fa fa-trash"></i></a><?php } ?></td>
+            <td><?php if (!$locale->getIsDefault()) { ?><a data-dialog-title="<?= t('Delete Locale') ?>"
+                                                           data-dialog="delete-section-<?= $locale->getSiteLocaleID() ?>"
+                                                           href="#" class="icon-link"><i
+                            class="fa fa-trash"></i></a><?php } ?></td>
         </tr>
     <?php } ?>
 </table>
 
 <?php
-foreach($locales as $locale) {
-    if (!$locale->getIsDefault() && $u->isSuperUser()) {?>
-    <div style="display: none">
-        <div data-dialog-wrapper="delete-section-<?=$locale->getSiteLocaleID()?>">
-            <?php if ($u->isSuperUser()) { ?>
-            <form data-form="delete-locale-<?=$locale->getSiteLocaleID()?>" method="post" action="<?=$view->action('remove_locale_section')?>">
-                <?=$token->output('remove_locale_section')?>
-                <input type="hidden" name="siteLocaleID" value="<?=$locale->getSiteLocaleID()?>">
-                <p><?=t('Delete this multilingual section? This will remove the entire site tree and its content from your website.')?></p>
-                <div class="dialog-buttons">
-                    <button class="btn btn-default" data-dialog-action="cancel"><?=t('Cancel')?></button>
-                    <button class="btn btn-danger pull-right" onclick="$('form[data-form=delete-locale-<?=$locale->getSiteLocaleID()?>]').submit()" type="submit"><?=t('Delete')?></button>
-                </div>
-            </form>
-            <?php } else { ?>
-                <p><?=t('Only the super user may remove a multilingual section.')?></p>
-            <?php } ?>
+foreach ($locales as $locale) {
+    if (!$locale->getIsDefault() && $u->isSuperUser()) { ?>
+        <div style="display: none">
+            <div data-dialog-wrapper="delete-section-<?= $locale->getSiteLocaleID() ?>">
+                <?php if ($u->isSuperUser()) { ?>
+                    <form data-form="delete-locale-<?= $locale->getSiteLocaleID() ?>" method="post"
+                          action="<?= $view->action('remove_locale_section') ?>">
+                        <?= $token->output('remove_locale_section') ?>
+                        <input type="hidden" name="siteLocaleID" value="<?= $locale->getSiteLocaleID() ?>">
+                        <p><?= t('Delete this multilingual section? This will remove the entire site tree and its content from your website.') ?></p>
+                        <div class="dialog-buttons">
+                            <button class="btn btn-default" data-dialog-action="cancel"><?= t('Cancel') ?></button>
+                            <button class="btn btn-danger pull-right"
+                                    onclick="$('form[data-form=delete-locale-<?= $locale->getSiteLocaleID() ?>]').submit()"
+                                    type="submit"><?= t('Delete') ?></button>
+                        </div>
+                    </form>
+                <?php } else { ?>
+                    <p><?= t('Only the super user may remove a multilingual section.') ?></p>
+                <?php } ?>
+            </div>
         </div>
-    </div>
     <?php } ?>
 <?php } ?>
 <?php
@@ -71,96 +77,88 @@ foreach ($locales as $locale) {
     }
 }
 ?>
-    <h3><?php echo t('Settings')?></h3>
-    <form method="post" action="<?php echo $this->action('set_default')?>">
-        <div class="form-group">
-            <label class="control-label"><?php echo t('Default Locale'); ?></label>
-            <?=$form->select('defaultLocale', $defaultLocales, $defaultLocaleID, array('required' => 'required'));?>
-        </div>
+<h3><?php echo t('Settings') ?></h3>
+<form method="post" action="<?php echo $this->action('set_default') ?>">
+    <div class="form-group">
+        <label class="control-label"><?php echo t('Default Locale'); ?></label>
+        <?= $form->select('defaultLocale', $defaultLocales, $defaultLocaleID, array('required' => 'required')); ?>
+    </div>
 
-        <div class="form-group">
-            <div class="checkbox">
-                <label>
-                    <?php echo $form->checkbox('useBrowserDetectedLocale', 1, $useBrowserDetectedLocale)?>
-                    <span><?php echo t('Attempt to use visitor\'s locale based on their browser information.') ?></span>
-                </label>
-            </div>
-            <div class="checkbox">
-                <label>
-                    <?php echo $form->checkbox('redirectHomeToDefaultLocale', 1, $redirectHomeToDefaultLocale)?>
-                    <span><?php echo t('Redirect home page to default locale.') ?></span>
-                </label>
-            </div>
+    <div class="form-group">
+        <div class="checkbox">
+            <label>
+                <?php echo $form->checkbox('useBrowserDetectedLocale', 1, $useBrowserDetectedLocale) ?>
+                <span><?php echo t('Attempt to use visitor\'s locale based on their browser information.') ?></span>
+            </label>
         </div>
-
-        <div class="form-group">
-            <label class="control-label"><?php echo t('Site interface source locale');
-                ?></label>
-            <div class="form-inline">
-                <?php
-                echo $form->select('defaultSourceLanguage', array_merge(array('' => t('*** Unknown or mixed language')), $languages), $defaultSourceLanguage);
-                ?>
-
-                <?php
-                echo $form->select('defaultSourceCountry', array_merge(array('' => t('*** Undetermined country')), $countries), $defaultSourceCountry);
-                ?>
-            </div>
-            <script>
-                $(document).ready(function() {
-                    new ccmCountryForLanguageLister($('#defaultSourceLanguage'), $('#defaultSourceCountry'));
-                });
-            </script>
+        <div class="checkbox">
+            <label>
+                <?php echo $form->checkbox('redirectHomeToDefaultLocale', 1, $redirectHomeToDefaultLocale) ?>
+                <span><?php echo t('Redirect home page to default locale.') ?></span>
+            </label>
         </div>
+    </div>
 
-        <div class="form-group">
-            <?php echo Loader::helper('validation/token')->output('set_default')?>
-            <button class="btn btn-default pull-left" type="submit" name="save"><?=t('Save Settings')?></button>
+    <div class="form-group">
+        <label class="control-label"><?php echo t('Site interface source locale');
+            ?></label>
+        <div class="form-inline">
+            <?php
+            echo $form->select('defaultSourceLanguage',
+                array_merge(array('' => t('*** Unknown or mixed language')), $languages), $defaultSourceLanguage);
+            ?>
+
+            <?php
+            echo $form->select('defaultSourceCountry',
+                array_merge(array('' => t('*** Undetermined country')), $countries), $defaultSourceCountry);
+            ?>
         </div>
-    </form>
+        <script>
+            $(document).ready(function () {
+                new ccmCountryForLanguageLister($('#defaultSourceLanguage'), $('#defaultSourceCountry'));
+            });
+        </script>
+    </div>
+
+    <div class="form-group">
+        <?php echo Loader::helper('validation/token')->output('set_default') ?>
+        <button class="btn btn-default pull-left" type="submit" name="save"><?= t('Save Settings') ?></button>
+    </div>
+</form>
 
 
 <div style="display: none">
     <div data-dialog-wrapper="add-locale">
         <form data-dialog-form="add-locale" action="<?= $view->action('add_content_section') ?>">
             <fieldset>
-                <legend><?=t('Locale')?></legend>
-                <div class="row">
-                    <div class="col-md-5">
-                        <div class="form-group">
-                            <?php echo $form->label('msLanguage', t('Choose Language')) ?>
-                            <?php echo $form->select('msLanguage', $languages); ?>
-                        </div>
-                    </div>
-                    <div class="col-md-5">
-                    <div class="form-group">
-                        <?php echo $form->label('msCountry', t('Choose Country')) ?>
-                        <?php echo $form->select('msCountry',
-                            array_merge(array('' => t('** None Selected')), $countries)); ?>
-                    </div>
-                    </div>
-                    <div class="col-md-2">
-                        <div class="form-group">
-                            <label class="control-label"><?php echo t('Icon') ?></label>
-                            <div id="ccm-multilingual-language-icon"><?php echo t('None') ?></div>
-                        </div>
-                    </div>
+                <legend><?= t('Locale') ?></legend>
+                <div class="form-group">
+                    <?php echo $form->label('msLanguage', t('Choose Language')) ?>
+                    <?php echo $form->select('msLanguage', $languages); ?>
+                </div>
+                <div class="form-group">
+                    <?php echo $form->label('msCountry', t('Choose Country')) ?>
+                    <?php echo $form->select('msCountry',
+                        array_merge(array('' => t('** None Selected')), $countries)); ?>
+                </div>
+                <div class="form-group">
+                    <label class="control-label"><?php echo t('Icon') ?></label>
+                    <div id="ccm-multilingual-language-icon"><?php echo t('None') ?></div>
                 </div>
             </fieldset>
             <fieldset>
-                <legend><?=t('Home Page')?></legend>
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <?=$form->label('template', t('Template'))?>
-                            <?=$form->select('template', $templates)?>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <?=$form->label('homePageName', t('Page Name'))?>
-                            <?=$form->text('homePageName')?>
-                        </div>
-                    </div>
+                <legend><?= t('Home Page') ?></legend>
+                <div class="form-group">
+                    <?= $form->label('template', t('Template')) ?>
+                    <?= $form->select('template', $templates) ?>
+                </div>
+                <div class="form-group">
+                    <?= $form->label('homePageName', t('Page Name')) ?>
+                    <?= $form->text('homePageName') ?>
+                </div>
+                <div class="form-group">
+                    <?= $form->label('URL Slug', t('URL Slug')) ?>
+                    <?= $form->text('urlSlug') ?>
                 </div>
             </fieldset>
             <div class="dialog-buttons">

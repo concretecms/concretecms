@@ -67,6 +67,9 @@ class Service
                     $pluralCases[] = $category->id . '@' . $category->examples;
                 }
                 $pluralCases = is_array($pluralCases) ? implode("\n", $pluralCases) : $pluralCases;
+                $l->setNumPlurals($numPlurals);
+                $l->setPluralCases($pluralCases);
+                $l->setPluralRule($pluralRule);
             }
         }
 
@@ -77,26 +80,23 @@ class Service
             $l->setPluralCases($pluralCases);
         }
 
-        $l->setNumPlurals($numPlurals);
-        $l->setPluralCases($pluralCases);
-        $l->setPluralRule($pluralRule);
         return $l;
     }
 
-    public function addHomePage(Locale $locale, Template $template, $name)
+    public function addHomePage(Locale $locale, Template $template, $name, $url_slug = null)
     {
         $tree = $locale->getSiteTree();
         $home = Page::addHomePage($tree);
-        $home->update([
-            'cName' => $name,
-            'pTemplateID' => $template->getPageTemplateID(),
-            'cHandle' => $locale->getLocale()
-        ]);
         $tree->setLocale($locale);
         $tree->setSiteHomePageID($home->getCollectionID());
         $this->entityManager->persist($tree);
         $this->entityManager->flush();
-
+        $home->update([
+            'cName' => $name,
+            'pTemplateID' => $template->getPageTemplateID(),
+            'cHandle' => $url_slug ? $url_slug : $locale->getLocale()
+        ]);
+        $home->rescanCollectionPath();
         return $home;
     }
 
