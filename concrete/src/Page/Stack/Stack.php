@@ -77,7 +77,7 @@ class Stack extends Page implements ExportableInterface
      *
      * @return Page
      */
-    public static function getByName($stackName, $cvID = 'RECENT', TreeInterface $siteTree = null, $multilingualContentSource = self::MULTILINGUAL_CONTENT_SOURCE_CURRENT)
+    public static function getByName($stackName, $cvID = 'RECENT', Site $site = null, $multilingualContentSource = self::MULTILINGUAL_CONTENT_SOURCE_CURRENT)
     {
         $c = Page::getCurrentPage();
         if (is_object($c) && (!$c->isError())) {
@@ -107,12 +107,10 @@ class Stack extends Page implements ExportableInterface
                     $sql .= ' order by stMultilingualSection desc';
                 }
                 $sql .= ' limit 1';
-                if (!is_object($siteTree)) {
+                if (!is_object($site)) {
                     $site = \Core::make('site')->getSite();
-                    $q[] = $site->getSiteTreeID();
-                } else {
-                    $q[] = $siteTree->getSiteTreeID();
                 }
+                $q[] = $site->getDefaultLocale()->getSiteTree()->getSiteTreeID();
                 $cID = $db->fetchColumn($sql, $q);
                 $cache->save($item->set($cID));
             }
@@ -488,27 +486,29 @@ class Stack extends Page implements ExportableInterface
      */
     public function addLocalizedStack(Section $section)
     {
-        $name = $section->getLocale();
         $neutralStack = $this->getNeutralStack();
         if ($neutralStack === null) {
             $neutralStack = $this;
         }
+        $name = $neutralStack->getCollectionName();
         $neutralStackPage = Page::getByID($neutralStack->getCollectionID());
         $localizedStackPage = $neutralStackPage->duplicate($neutralStackPage);
         $localizedStackPage->update([
             'cName' => $name,
         ]);
+        $siteTreeID = $neutralStack->getSiteTreeID();
         // we have to do this because we need the area to exist before we try and add something to it.
         Area::getOrCreate($localizedStackPage, STACKS_AREA_NAME);
         $localizedStackCID = $localizedStackPage->getCollectionID();
         $db = Database::connection();
         $db->executeQuery('
-            insert into Stacks (stName, cID, stType, stMultilingualSection) values (?, ?, ?, ?)',
+            insert into Stacks (stName, cID, stType, stMultilingualSection, siteTreeID) values (?, ?, ?, ?, ?)',
             [
                 $name,
                 $localizedStackCID,
                 $this->getStackType(),
                 $section->getCollectionID(),
+                $siteTreeID
             ]
         );
         $localizedStack = static::getByID($localizedStackCID);
