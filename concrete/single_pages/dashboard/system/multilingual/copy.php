@@ -88,10 +88,10 @@ use Concrete\Core\Multilingual\Page\Section\Section as MultilingualSection;
     <fieldset>
         <legend><?php echo t('Rescan Multilingual Tree') ?></legend>
         <?php
-        if ($u->isSuperUser() && !$includesHome) {
+        if ($u->isSuperUser()) {
             ?>
             <form method="post" id="ccm-internationalization-rescan-tree" action="#">
-                <?php if (count($pages) > 1) {
+                <?php if (count($locales) > 1) {
                     ?>
                     <p><?php echo t('Scans all blocks within the selected section. Any links to pages within another multilingual section will be updated to link to the pages within the selected tree. Any blocks within the scanned section that reference pages in another multilingual section will be updated to point to the page within the selected tree.') ?></p>
                     <div class="form-group">
@@ -146,10 +146,6 @@ use Concrete\Core\Multilingual\Page\Section\Section as MultilingualSection;
         } elseif (!$u->isSuperUser()) {
             ?>
             <p><?= t('Only the super user may rescan the links inside a multilingual tree.') ?></p>
-            <?php
-        } elseif ($includesHome) {
-            ?>
-            <p><?= t('Since one of your multilingual sections is the home page, you may not rescan the links in your site tree using this tool.') ?></p>
             <?php
         }
         ?>

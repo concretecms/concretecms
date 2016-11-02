@@ -90,6 +90,9 @@ class Setup extends DashboardSitePageController
         if (!$this->request->request->get('msCountry')) {
             $this->error->add(t('You must specify a valid country.'));
         }
+        if (!$this->request->request->get('urlSlug')) {
+            $this->error->add(t('You must specify a valid URL Slug for the home page.'));
+        }
         $template = null;
         if ($this->request->request->has('template')) {
             $template = Template::getByID($this->request->request->get('template'));
@@ -109,7 +112,7 @@ class Setup extends DashboardSitePageController
         if (!$this->error->has()) {
             $service = new Service($this->entityManager);
             $locale = $service->add($this->getSite(), $this->request->request->get('msLanguage'), $this->request->request->get('msCountry'));
-            $service->addHomePage($locale, $template, $this->request->request->get('homePageName'));
+            $service->addHomePage($locale, $template, $this->request->request->get('homePageName'), $this->request->request->get('urlSlug'));
             $this->flash('success', t('Locale added successfully.'));
             return new JsonResponse($locale);
         } else {

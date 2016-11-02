@@ -40,6 +40,11 @@ class StackList extends PageList
         }
     }
 
+    public function filterByLanguageSection(Section $ms)
+    {
+        $this->filter('stMultilingualSection', $ms->getCollectionID());
+    }
+
     /**
      * Should we list stack folders first?
      *

@@ -461,8 +461,9 @@
 			var my = this,
 				options = my.options,
 				ajaxData = $.extend({
-					cParentID: node.data.cID,
+					'cParentID': node.data.cID ? node.data.cID : 0,
 					'siteTreeID': options.siteTreeID,
+					'reloadNode': 1,
 					'includeSystemPages': options.includeSystemPages ? 1 : 0,
 					'displayNodePagination': options.displayNodePagination ? 1 : 0
 				}, options.ajaxData),

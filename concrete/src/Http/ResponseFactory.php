@@ -264,7 +264,7 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
         }
 
         if ($collection->getCollectionPointerExternalLink() != '') {
-            return $this->redirect($collection);
+            return $this->redirect($collection->getCollectionPointerExternalLink());
         }
 
         $cp = new Checker($collection);
@@ -319,19 +319,28 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
             return $response;
         }
 
-        // Now we check to see if we're on the home page, and if it multilingual is enabled,
-        // and if so, whether we should redirect to the default language page.
+
         $dl = $cms->make('multilingual/detector');
-        if ($dl->isEnabled()) {
-            if ($collection->getCollectionID() == $site->getSiteHomePageID() &&
-                $site->getConfigRepository()->get('multilingual.redirect_home_to_default_locale')) {
+        if ($collection->getCollectionID() == $site->getSiteHomePageID()) {
+            // We are on the home page. However, if that home page has a canonical
+            // path that isn't blank, we are going to redirect to it.
+            if (!$request->getPath()
+                && $request->isMethod('GET')
+                && !$request->query->has('cID')
+                && $collection->getCollectionPath() != '') {
+                 return $this->redirect(\URL::to($collection));
+            }
+
+            if ($dl->isEnabled() && $site->getConfigRepository()->get('multilingual.redirect_home_to_default_locale')) {
                 // Let's retrieve the default language
                 $ms = $dl->getPreferredSection();
                 if (is_object($ms) && $ms->getCollectionID() != $site->getSiteHomePageID()) {
                     return $this->redirect($ms);
                 }
             }
+        }
 
+        if ($dl->isEnabled()) {
             $dl->setupSiteInterfaceLocalization($collection);
         }
 
