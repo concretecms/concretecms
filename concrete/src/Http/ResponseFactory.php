@@ -319,29 +319,30 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
             return $response;
         }
 
-
         $dl = $cms->make('multilingual/detector');
-        if ($collection->getCollectionID() == $site->getSiteHomePageID()) {
-            // We are on the home page. However, if that home page has a canonical
-            // path that isn't blank, we are going to redirect to it.
-            if (!$request->getPath()
-                && $request->isMethod('GET')
-                && !$request->query->has('cID')
-                && $collection->getCollectionPath() != '') {
-                 return $this->redirect(\URL::to($collection));
-            }
+        if ($dl->isEnabled()) {
+            $dl->setupSiteInterfaceLocalization($collection);
+        }
 
+        if (!$request->getPath()
+            && $request->isMethod('GET')
+            && !$request->query->has('cID')) {
+            // This is a request to the home page –http://www.mysite.com/
+
+            // First, we check to see if we need to redirect to a default multilingual section.
             if ($dl->isEnabled() && $site->getConfigRepository()->get('multilingual.redirect_home_to_default_locale')) {
                 // Let's retrieve the default language
                 $ms = $dl->getPreferredSection();
-                if (is_object($ms) && $ms->getCollectionID() != $site->getSiteHomePageID()) {
-                    return $this->redirect($ms);
+                if (is_object($ms)) {
+                    return $this->redirect(\URL::to($ms));
                 }
             }
-        }
 
-        if ($dl->isEnabled()) {
-            $dl->setupSiteInterfaceLocalization($collection);
+            // Otherwise, let's check to see if our home page, which we have loaded already, has a path (like /en)
+            // If it does, we'll redirect to the path.
+            if ($collection->getCollectionPath() != '') {
+                return $this->redirect(\URL::to($collection));
+            }
         }
 
         $request->setCurrentPage($collection);
