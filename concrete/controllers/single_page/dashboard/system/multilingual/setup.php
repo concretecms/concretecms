@@ -9,6 +9,7 @@ use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Core\Page\Controller\DashboardSitePageController;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Page\Template;
+use Concrete\Core\User\User;
 use Core;
 use Concrete\Core\Multilingual\Page\Section\Section;
 use Localization;
@@ -106,28 +107,9 @@ class Setup extends DashboardSitePageController
             }
         }
         if (!$this->error->has()) {
-            $tree = new SiteTree();
-            $this->entityManager->persist($tree);
-            $this->entityManager->flush();
-
-            $locale = new Locale();
-            $locale->setCountry($this->request->request->get('msCountry'));
-            $locale->setLanguage($this->request->request->get('msLanguage'));
-            $locale->setSite($this->getSite());
-            $locale->setSiteTree($tree);
-            $this->entityManager->persist($locale);
-            $this->entityManager->flush();
-
-            $home = Page::addHomePage($tree);
-            $home->update([
-                'cName' => $this->request->request->get('homePageName'),
-                'cHandle' => $locale->getLocale()
-            ]);
-            $tree->setLocale($locale);
-            $tree->setSiteHomePageID($home->getCollectionID());
-            $this->entityManager->persist($tree);
-            $this->entityManager->flush();
-
+            $service = new Service($this->entityManager);
+            $locale = $service->add($this->getSite(), $this->request->request->get('msLanguage'), $this->request->request->get('msCountry'));
+            $service->addHomePage($locale, $template, $this->request->request->get('homePageName'));
             $this->flash('success', t('Locale added successfully.'));
             return new JsonResponse($locale);
         } else {
@@ -172,21 +154,32 @@ class Setup extends DashboardSitePageController
         $this->view();
     }
 
-    public function remove_locale_section($localeID = false, $token = false)
+    public function remove_locale_section()
     {
-        if (Loader::helper('validation/token')->validate('', $token)) {
-            $service = new Service($this->entityManager);
-            $lc = $service->getByID($localeID);
-            if (is_object($lc)) {
-                $service->delete($lc);
-                $this->flash('success', t('Section removed.'));
-                $this->redirect('/dashboard/system/multilingual/setup', 'view');
-            } else {
-                $this->error->add(t('Invalid section'));
-            }
-        } else {
-            $this->error->add(Loader::helper('validation/token')->getErrorMessage());
+        if (!$this->token->validate('remove_locale_section')) {
+            $this->error->add($this->token->getErrorMessage());
         }
+
+        $u = new User();
+        if (!$u->isSuperUser()) {
+            $this->error->add(t("Only the super user may remove a multilingual section."));
+        }
+
+        $service = new Service($this->entityManager);
+        /**
+         * @var $locale Locale
+         */
+        $locale = $service->getByID($this->post('siteLocaleID'));
+        if (!is_object($locale)) {
+            $this->error->add(t("Invalid locale object."));
+        }
+
+        if (!$this->error->has()) {
+            $service->delete($locale);
+            $this->flash('success', t('Section removed.'));
+            $this->redirect('/dashboard/system/multilingual/setup', 'view');
+        }
+
         $this->view();
     }
 

@@ -33,7 +33,8 @@ class InstallCommand extends Command
             ->addOption('demo-username', null, InputOption::VALUE_REQUIRED, 'Additional user username', 'demo')
             ->addOption('demo-password', null, InputOption::VALUE_REQUIRED, 'Additional user password')
             ->addOption('demo-email', null, InputOption::VALUE_REQUIRED, 'Additional user email', 'demo@example.com')
-            ->addOption('locale', null, InputOption::VALUE_REQUIRED, 'The default site locale (eg en_US)')
+            ->addOption('language', null, InputOption::VALUE_REQUIRED, 'The default concrete5 interface language (eg en_US)')
+            ->addOption('site-locale', null, InputOption::VALUE_REQUIRED, 'The default site locale (eg en_US)')
             ->addOption('config', null, InputOption::VALUE_REQUIRED, 'Use configuration file for installation')
             ->addOption('attach', null, InputOption::VALUE_NONE, 'Attach if database contains an existing concrete5 instance')
             ->addOption('force-attach', null, InputOption::VALUE_NONE, 'Always attach')
@@ -71,13 +72,17 @@ EOT
             if (file_exists(DIR_CONFIG_SITE.'/database.php')) {
                 throw new Exception('concrete5 is already installed.');
             }
-            if (isset($options['locale'])) {
+            if (isset($options['site-locale'])) {
                 $locale = explode('_', $options['locale']);
                 $_POST['siteLocaleLanguage'] = $locale[0];
                 $_POST['siteLocaleCountry'] = $locale[1];
             } else {
                 $_POST['siteLocaleLanguage'] = 'en';
                 $_POST['siteLocaleCountry'] = 'US';
+            }
+
+            if (isset($options['language'])) {
+                $_POST['locale'] = $options['language'];
             }
 
             Database::extend('install', function () use ($options) {

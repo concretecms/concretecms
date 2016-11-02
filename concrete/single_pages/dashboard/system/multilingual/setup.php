@@ -18,6 +18,7 @@
     /**
      * @var $locale \Concrete\Core\Entity\Site\Locale
      */
+    $u = new User();
     foreach ($locales as $locale) {
         $home = null;
         if (is_object($locale->getSiteTree())) {
@@ -32,13 +33,34 @@
             <?php } ?></td>
             <td><?php echo $locale->getLanguageText() ?></td>
             <td><?php echo $locale->getLocale() ?></td>
-            <td><a href="<?php echo $this->action('remove_locale_section', $locale->getSiteLocaleID(),
-                    Loader::helper('validation/token')->generate()) ?>" class="icon-link"><i
-                        class="fa fa-trash"></i></a></td>
+            <td><?php if (!$locale->getIsDefault()) { ?><a data-dialog-title="<?=t('Delete Locale')?>" data-dialog="delete-section-<?=$locale->getSiteLocaleID()?>" href="#" class="icon-link"><i
+                        class="fa fa-trash"></i></a><?php } ?></td>
         </tr>
     <?php } ?>
 </table>
 
+<?php
+foreach($locales as $locale) {
+    if (!$locale->getIsDefault() && $u->isSuperUser()) {?>
+    <div style="display: none">
+        <div data-dialog-wrapper="delete-section-<?=$locale->getSiteLocaleID()?>">
+            <?php if ($u->isSuperUser()) { ?>
+            <form data-form="delete-locale-<?=$locale->getSiteLocaleID()?>" method="post" action="<?=$view->action('remove_locale_section')?>">
+                <?=$token->output('remove_locale_section')?>
+                <input type="hidden" name="siteLocaleID" value="<?=$locale->getSiteLocaleID()?>">
+                <p><?=t('Delete this multilingual section? This will remove the entire site tree and its content from your website.')?></p>
+                <div class="dialog-buttons">
+                    <button class="btn btn-default" data-dialog-action="cancel"><?=t('Cancel')?></button>
+                    <button class="btn btn-danger pull-right" onclick="$('form[data-form=delete-locale-<?=$locale->getSiteLocaleID()?>]').submit()" type="submit"><?=t('Delete')?></button>
+                </div>
+            </form>
+            <?php } else { ?>
+                <p><?=t('Only the super user may remove a multilingual section.')?></p>
+            <?php } ?>
+        </div>
+    </div>
+    <?php } ?>
+<?php } ?>
 <?php
 $defaultLocales = array();
 $defaultLocaleID = 0;

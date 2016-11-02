@@ -504,6 +504,10 @@ class StartingPointPackage extends BasePackage
         $site = \Site::installDefault(SITE_INSTALL_LOCALE);
         $site->getConfigRepository()->save('name', SITE);
 
+        if (defined('APP_INSTALL_LANGUAGE') && APP_INSTALL_LANGUAGE != '' && APP_INSTALL_LANGUAGE != 'en_US') {
+            Config::save('concrete.locale', APP_INSTALL_LANGUAGE);
+        }
+
         Config::save('concrete.version_installed', APP_VERSION);
         Config::save('concrete.misc.login_redirect', 'DESKTOP');
     }
