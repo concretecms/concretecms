@@ -23,8 +23,8 @@ class EnvironmentDetector
      */
     public function detect($environments, $consoleArgs = null)
     {
-        if ($consoleArgs) {
-            return $this->detectConsoleEnvironment($environments, $consoleArgs);
+        if ($consoleArgs && $env = $this->detectConsoleEnvironment($environments, $consoleArgs)) {
+            return $env;
         } elseif ($env = $this->detectClosureEnvironment($environments)) {
             return $env;
         } elseif ($env = $this->detectVariableEnvironment($environments)) {
@@ -71,8 +71,6 @@ class EnvironmentDetector
         // will check the environment as a "web" request like a typical HTTP request.
         if (!is_null($value = $this->getEnvironmentArgument($args))) {
             return head(array_slice(explode('=', $value), 1));
-        } else {
-            return $this->detectVariableEnvironment($environments);
         }
     }
 
