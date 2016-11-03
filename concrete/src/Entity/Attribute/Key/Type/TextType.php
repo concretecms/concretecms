@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="TextAttributeKeyTypes")
+ * @ORM\Table(name="atTextSettings")
  */
 class TextType extends Type
 {

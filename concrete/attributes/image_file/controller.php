@@ -242,4 +242,10 @@ class Controller extends AttributeTypeController
     {
         return new ImageFileType();
     }
+
+    protected function retrieveAttributeKeyType()
+    {
+        return $this->entityManager->find(ImageFileType::class, $this->attributeKey);
+    }
+
 }

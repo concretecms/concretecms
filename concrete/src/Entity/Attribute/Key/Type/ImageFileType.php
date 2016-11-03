@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="ImageFileAttributeKeyTypes")
+ * @ORM\Table(name="atFileSettings")
  */
 class ImageFileType extends Type
 {

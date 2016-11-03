@@ -188,4 +188,10 @@ class Controller extends AttributeTypeController
     {
         return new DateTimeType();
     }
+
+    protected function retrieveAttributeKeyType()
+    {
+        return $this->entityManager->find(DateTimeType::class, $this->attributeKey);
+    }
+
 }

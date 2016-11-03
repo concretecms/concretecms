@@ -117,11 +117,6 @@ class Controller extends DefaultController
         return $type;
     }
 
-    public function createAttributeKeyType()
-    {
-        return new TextType();
-    }
-
     public function getIconFormatter()
     {
         return new FontAwesomeIconFormatter('file-text');

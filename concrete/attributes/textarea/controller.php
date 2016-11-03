@@ -139,4 +139,10 @@ class Controller extends DefaultController
     {
         return new TextareaType();
     }
+
+    protected function retrieveAttributeKeyType()
+    {
+        return $this->entityManager->find(TextareaType::class, $this->attributeKey);
+    }
+
 }

@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="SelectAttributeKeyTypes")
+ * @ORM\Table(name="atSelectSettings")
  */
 class SelectType extends Type
 {

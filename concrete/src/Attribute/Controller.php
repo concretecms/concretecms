@@ -4,6 +4,7 @@ namespace Concrete\Core\Attribute;
 use Concrete\Core\Attribute\Value\EmptyRequestAttributeValue;
 use Concrete\Core\Controller\AbstractController;
 use Concrete\Core\Entity\Attribute\Key\Type\LegacyType;
+use Concrete\Core\Entity\Attribute\Key\Type\NoOptionsType;
 use Concrete\Core\Entity\Attribute\Key\Type\TextType;
 use Concrete\Core\Search\ItemList\Database\AttributedItemList;
 use Core;
@@ -300,7 +301,12 @@ class Controller extends AbstractController
 
     public function createAttributeKeyType()
     {
-        return new LegacyType();
+        return new NoOptionsType();
+    }
+
+    protected function retrieveAttributeKeyType()
+    {
+        return $this->entityManager->find('Concrete\Core\Entity\Attribute\Key\Type\NoOptionsType', $this->attributeKey);
     }
 
     /*
@@ -315,12 +321,11 @@ class Controller extends AbstractController
 
     public function getAttributeKeyType()
     {
-        if ($this->attributeKey && is_object($this->attributeKey->getAttributeKeyType())) {
-            return $this->attributeKey->getAttributeKeyType();
+        if ($this->attributeKey) {
+            return $this->retrieveAttributeKeyType();
         } else {
             $key_type = $this->createAttributeKeyType();
             $key_type->setAttributeTypeHandle($this->getAttributeType()->getAttributeTypeHandle());
-
             return $key_type;
         }
     }

@@ -34,11 +34,6 @@ class Controller extends DefaultController
         return new FontAwesomeIconFormatter('envelope');
     }
 
-    public function createAttributeKeyType()
-    {
-        return new TextType();
-    }
-
     public function validateForm($data)
     {
         if (!$data['value']) {

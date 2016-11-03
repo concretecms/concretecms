@@ -770,4 +770,10 @@ class Controller extends AttributeTypeController
     {
         return new SelectType();
     }
+
+    protected function retrieveAttributeKeyType()
+    {
+        return $this->entityManager->find(SelectType::class, $this->attributeKey);
+    }
+
 }

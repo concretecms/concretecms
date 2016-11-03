@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="AddressAttributeKeyTypes")
+ * @ORM\Table(name="atAddressSettings")
  */
 class AddressType extends Type
 {
