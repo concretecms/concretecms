@@ -17,7 +17,7 @@ class SelectedTopic
 
     /**
      * @ORM\ManyToOne(targetEntity="TopicsValue")
-     * @ORM\JoinColumn(name="avID", referencedColumnName="avID")
+     * @ORM\JoinColumn(name="avValueID", referencedColumnName="avValueID")
      */
     protected $value;
 

@@ -13,7 +13,7 @@ class TopicsValue extends Value
 {
     /**
      * @ORM\OneToMany(targetEntity="\Concrete\Core\Entity\Attribute\Value\Value\SelectedTopic", mappedBy="value", cascade={"all"})
-     * @ORM\JoinColumn(name="avID", referencedColumnName="avID")
+     * @ORM\JoinColumn(name="avValueID", referencedColumnName="avValueID")
      */
     protected $topics;
 

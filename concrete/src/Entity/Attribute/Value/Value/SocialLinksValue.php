@@ -14,7 +14,7 @@ class SocialLinksValue extends Value
     /**
      * @ORM\OneToMany(targetEntity="\Concrete\Core\Entity\Attribute\Value\Value\SelectedSocialLink",
      *     cascade={"persist", "remove"}, mappedBy="value")
-     * @ORM\JoinColumn(name="avID", referencedColumnName="avID")
+     * @ORM\JoinColumn(name="avValueID", referencedColumnName="avValueID")
      */
     protected $links;
 

@@ -497,8 +497,8 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
         }
         $this->query->innerJoin('cv', 'CollectionAttributeValues', 'cavTopics',
             'cv.cID = cavTopics.cID and cv.cvID = cavTopics.cvID');
-        $this->query->innerJoin('cavTopics', 'AttributeValues', 'av', 'cavTopics.avrID = av.avrID');
-        $this->query->innerJoin('av', 'TopicAttributeSelectedTopics', 'atst', 'av.avID = atst.avID');
+        $this->query->innerJoin('cavTopics', 'AttributeValues', 'av', 'cavTopics.avID = av.avID');
+        $this->query->innerJoin('av', 'TopicAttributeSelectedTopics', 'atst', 'av.avValueID = atst.avValueID');
         $this->query->andWhere('atst.treeNodeID = :TopicNodeID');
         $this->query->setParameter('TopicNodeID', $treeNodeID);
     }

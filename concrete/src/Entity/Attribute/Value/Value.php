@@ -19,7 +19,7 @@ abstract class Value implements AttributeValueInterface
      * @ORM\Id @ORM\Column(type="integer", options={"unsigned":true})
      * @ORM\GeneratedValue(strategy="AUTO")
      */
-    protected $avrID;
+    protected $avID;
 
     /**
      * @ORM\ManyToOne(targetEntity="\Concrete\Core\Entity\Attribute\Key\Key")
@@ -29,7 +29,7 @@ abstract class Value implements AttributeValueInterface
 
     /**
      * @ORM\ManyToOne(targetEntity="\Concrete\Core\Entity\Attribute\Value\Value\Value", cascade={"persist"}, inversedBy="attribute_values")
-     * @ORM\JoinColumn(name="avID", referencedColumnName="avID")
+     * @ORM\JoinColumn(name="avValueID", referencedColumnName="avValueID")
      **/
     protected $value;
 
@@ -43,7 +43,7 @@ abstract class Value implements AttributeValueInterface
 
     public function getAttributeValueID()
     {
-        return $this->avrID;
+        return $this->avID;
     }
 
     /**
