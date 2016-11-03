@@ -103,15 +103,15 @@ class LegacyCategory implements CategoryInterface, StandardSearchIndexerInterfac
         $loader->load($key, $request);
 
         $controller = $key->getController();
-        $key_type = $controller->saveKey($request->request->all());
-        if (!is_object($key_type)) {
-            $key_type = $controller->getAttributeKeyType();
+        $settings = $controller->saveKey($request->request->all());
+        if (!is_object($settings)) {
+            $settings = $controller->getAttributeKeySettings();
         }
-        $key_type->setAttributeKey($key);
-        $this->entityManager->persist($key_type);
+        $settings->setAttributeKey($key);
+        $this->entityManager->persist($settings);
         $this->entityManager->flush();
 
-        $key->setAttributeKeyType($key_type);
+        $key->setAttributeKeySettings($settings);
 
 
         // Modify the category's search indexer.
@@ -179,9 +179,9 @@ class LegacyCategory implements CategoryInterface, StandardSearchIndexerInterfac
         }
 
         $controller = $type->getController();
-        $key_type = $controller->saveKey($args);
-        if (!is_object($key_type)) {
-            $key_type = $controller->getAttributeKeyType();
+        $settings = $controller->saveKey($args);
+        if (!is_object($settings)) {
+            $settings = $controller->getAttributeKeySettings();
         }
         // $key is actually an array.
         $handle = $args['akHandle'];
@@ -190,12 +190,12 @@ class LegacyCategory implements CategoryInterface, StandardSearchIndexerInterfac
         $key->setAttributeKeyHandle($handle);
         $key->setAttributeKeyName($name);
         $key->setAttributeType($type);
-        $key_type->setAttributeKey($key);
+        $settings->setAttributeKey($key);
 
-        $this->entityManager->persist($key_type);
+        $this->entityManager->persist($settings);
         $this->entityManager->flush();
 
-        $key->setAttributeKeyType($key_type);
+        $key->setAttributeKeySettings($settings);
         $key->setAttributeCategory($this->getCategoryEntity());
 
         if (is_object($pkg)) {

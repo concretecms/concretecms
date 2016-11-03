@@ -1,5 +1,5 @@
 <?php
-namespace Concrete\Core\Entity\Attribute\Key\Type;
+namespace Concrete\Core\Entity\Attribute\Key\Settings;
 
 use Concrete\Core\Entity\Attribute\Value\Value\ExpressValue;
 use Doctrine\ORM\Mapping as ORM;
@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  * @ORM\Table(name="atExpressSettings")
  */
-class ExpressType extends Type
+class ExpressSettings extends Settings
 {
 
     /**

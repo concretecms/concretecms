@@ -1,5 +1,5 @@
 <?php
-namespace Concrete\Core\Entity\Attribute\Key\Type;
+namespace Concrete\Core\Entity\Attribute\Key\Settings;
 
 use Concrete\Core\Entity\Attribute\Value\Value\TopicsValue;
 use Concrete\Core\Tree\Tree;
@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  * @ORM\Table(name="atTopicSettings")
  */
-class TopicsType extends Type
+class TopicsSettings extends Settings
 {
     /**
      * @ORM\Column(type="integer")

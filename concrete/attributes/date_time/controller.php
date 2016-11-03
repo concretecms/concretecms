@@ -2,6 +2,7 @@
 namespace Concrete\Attribute\DateTime;
 
 use Concrete\Core\Attribute\FontAwesomeIconFormatter;
+use Concrete\Core\Entity\Attribute\Key\Settings\DateTimeSettings;
 use Concrete\Core\Entity\Attribute\Key\Type\DateTimeType;
 use Concrete\Core\Entity\Attribute\Value\Value\DateTimeValue;
 use Loader;
@@ -21,7 +22,7 @@ class Controller extends AttributeTypeController
 
     public function saveKey($data)
     {
-        $type = $this->getAttributeKeyType();
+        $type = $this->getAttributeKeySettings();
         $type->setMode($data['akDateDisplayMode']);
         return $type;
     }
@@ -89,7 +90,7 @@ class Controller extends AttributeTypeController
 
     public function importKey(\SimpleXMLElement $akey)
     {
-        $type = $this->getAttributeKeyType();
+        $type = $this->getAttributeKeySettings();
         if (isset($akey->type)) {
             $type->setDisplayMode((string) $akey->type['mode']);
         }
@@ -175,7 +176,7 @@ class Controller extends AttributeTypeController
             return false;
         }
 
-        $type = $ak->getAttributeKeyType();
+        $type = $ak->getAttributeKeySettings();
         /*
          * @var $type DateTimeType
          */
@@ -184,14 +185,14 @@ class Controller extends AttributeTypeController
         $this->set('akDateDisplayMode', $this->akDateDisplayMode);
     }
 
-    public function createAttributeKeyType()
+    public function createAttributeKeySettings()
     {
-        return new DateTimeType();
+        return new DateTimeSettings();
     }
 
-    protected function retrieveAttributeKeyType()
+    protected function retrieveAttributeKeySettings()
     {
-        return $this->entityManager->find(DateTimeType::class, $this->attributeKey);
+        return $this->entityManager->find(DateTimeSettings::class, $this->attributeKey);
     }
 
 }

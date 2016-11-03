@@ -3,6 +3,7 @@ namespace Concrete\Attribute\Express;
 
 use Concrete\Core\Attribute\FontAwesomeIconFormatter;
 use Concrete\Core\Attribute\Controller as AttributeTypeController;
+use Concrete\Core\Entity\Attribute\Key\Settings\ExpressSettings;
 use Concrete\Core\Entity\Attribute\Key\Type\ExpressType;
 use Concrete\Core\Entity\Attribute\Value\Value\ExpressValue;
 use Doctrine\ORM\Query\Expr;
@@ -23,7 +24,7 @@ class Controller extends AttributeTypeController
         /**
          * @var $type ExpressType
          */
-        $type = $this->getAttributeKeyType();
+        $type = $this->getAttributeKeySettings();
         $id = $data['exEntityID'];
         $entity = $this->entityManager->getRepository('Concrete\Core\Entity\Express\Entity')
             ->findOneById($id);
@@ -108,7 +109,7 @@ class Controller extends AttributeTypeController
 
     protected function getEntity()
     {
-        $type = $this->getAttributeKeyType();
+        $type = $this->getAttributeKeySettings();
         if (is_object($type)) {
             return $type->getEntity();
         }
@@ -131,14 +132,14 @@ class Controller extends AttributeTypeController
         $this->set('entities', $entities);
     }
 
-    public function createAttributeKeyType()
+    public function createAttributeKeySettings()
     {
-        return new ExpressType();
+        return new ExpressSettings();
     }
 
-    protected function retrieveAttributeKeyType()
+    protected function retrieveAttributeKeySettings()
     {
-        return $this->entityManager->find(ExpressType::class, $this->attributeKey);
+        return $this->entityManager->find(ExpressSettings::class, $this->attributeKey);
     }
 
 }

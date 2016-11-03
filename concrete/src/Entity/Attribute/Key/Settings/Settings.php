@@ -1,5 +1,5 @@
 <?php
-namespace Concrete\Core\Entity\Attribute\Key\Type;
+namespace Concrete\Core\Entity\Attribute\Key\Settings;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping as ORM;
@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\MappedSuperClass
  */
-abstract class Type
+abstract class Settings
 {
     /**
      * @ORM\Column(type="string", nullable=true)
@@ -71,9 +71,9 @@ abstract class Type
 
     public function mergeAndPersist(EntityManagerInterface $entityManager)
     {
-        $key_type = $entityManager->merge($this);
-        $entityManager->persist($key_type);
-        return $key_type;
+        $settings = $entityManager->merge($this);
+        $entityManager->persist($settings);
+        return $settings;
     }
 
     public function createController()

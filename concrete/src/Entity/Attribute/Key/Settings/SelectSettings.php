@@ -1,5 +1,5 @@
 <?php
-namespace Concrete\Core\Entity\Attribute\Key\Type;
+namespace Concrete\Core\Entity\Attribute\Key\Settings;
 
 use Concrete\Core\Entity\Attribute\Value\Value\SelectValue;
 use Concrete\Core\Entity\Attribute\Value\Value\SelectValueOptionList;
@@ -10,7 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  * @ORM\Table(name="atSelectSettings")
  */
-class SelectType extends Type
+class SelectSettings extends Settings
 {
 
     public function __construct()
@@ -114,15 +114,15 @@ class SelectType extends Type
             }
         }
 
-        $key_type = $entityManager->merge($this);
+        $settings = $entityManager->merge($this);
 
         foreach($tempOptions as $option) {
-            $option->setOptionList($key_type->list);
-            $key_type->list->getOptions()->add($option);
+            $option->setOptionList($settings->list);
+            $settings->list->getOptions()->add($option);
         }
 
-        $entityManager->persist($key_type);
-        return $key_type;
+        $entityManager->persist($settings);
+        return $settings;
     }
 
 }

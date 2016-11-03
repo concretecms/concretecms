@@ -21,9 +21,9 @@ class Option
     public static function add($ak, $value, $isEndUserAdded = 0)
     {
         /**
-         * @var $type SelectType
+         * @var $type SelectSettings
          */
-        $type = $ak->getAttributeKeyType();
+        $type = $ak->getAttributeKeySettings();
         $list = $type->getOptionList();
 
         $option = new SelectValueOption();
