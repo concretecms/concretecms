@@ -70,7 +70,7 @@ class Key implements AttributeKeyInterface, ExportableInterface
 
     /**
      * @ORM\OneToMany(targetEntity="\Concrete\Core\Entity\Attribute\Value\Value", mappedBy="attribute_key", cascade={"remove"})
-     * @ORM\JoinColumn(name="avValueID", referencedColumnName="avValueID")
+     * @ORM\JoinColumn(name="avID", referencedColumnName="avID")
      **/
     protected $attribute_values;
 

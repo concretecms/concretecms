@@ -12,11 +12,13 @@ use Doctrine\ORM\Mapping as ORM;
 class PageValue extends Value
 {
     /**
+     * @ORM\Id
      * @ORM\Column(type="integer", options={"unsigned": true})
      **/
     protected $cID;
 
     /**
+     * @ORM\Id
      * @ORM\Column(type="integer", options={"unsigned": true})
      **/
     protected $cvID;

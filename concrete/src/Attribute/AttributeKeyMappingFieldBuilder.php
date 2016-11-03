@@ -28,7 +28,7 @@ class AttributeKeyMappingFieldBuilder implements BuilderInterface
         $associationBuilder->cascadeAll();
         $associationBuilder->addJoinColumn(
             $namingStrategy->joinColumnName($this->key->getAttributeKeyHandle()),
-            'avValueID'
+            'avID'
         );
 
         return $associationBuilder->build();

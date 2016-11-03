@@ -12,6 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
 class SiteValue extends Value
 {
     /**
+     * @ORM\Id
      * @ORM\ManyToOne(targetEntity="\Concrete\Core\Entity\Site\Site")
      * @ORM\JoinColumn(name="siteID", referencedColumnName="siteID")
      */

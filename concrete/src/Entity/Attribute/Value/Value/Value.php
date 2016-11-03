@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  * @ORM\InheritanceType("JOINED")
  * @ORM\DiscriminatorColumn(name="type", type="string")
- * @ORM\Table(name="AttributeValueValues")
+ * @ORM\Table(name="AttributeValues")
  */
 abstract class Value
 {
@@ -19,31 +19,7 @@ abstract class Value
      * @ORM\Id @ORM\Column(type="integer", options={"unsigned":true})
      * @ORM\GeneratedValue(strategy="AUTO")
      */
-    protected $avValueID;
-
-    /**
-     * @ORM\OneToMany(targetEntity="\Concrete\Core\Entity\Attribute\Value\Value", mappedBy="value", cascade={"remove"})
-     **/
-    protected $attribute_values;
-
-    /**
-     * @return mixed
-     */
-    public function getAttributeKey()
-    {
-        $values = $this->getAttributeValues();
-        if ($values->containsKey(0)) {
-            return $values->get(0)->getAttributeKey();
-        }
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getAttributeValues()
-    {
-        return $this->attribute_values;
-    }
+    protected $avID;
 
     public function getValue()
     {
@@ -52,19 +28,15 @@ abstract class Value
 
     public function getAttributeValueID()
     {
-        return $this->avValueID;
+        return $this->avID;
     }
 
     public function __clone()
     {
-        if ($this->avValueID) {
-            $this->avValueID = null;
+        if ($this->avID) {
+            $this->avID = null;
         }
     }
 
-    public function __construct()
-    {
-        $this->attribute_values = new ArrayCollection();
-    }
 
 }

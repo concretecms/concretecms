@@ -41,29 +41,34 @@ class UserCategory extends AbstractStandardCategory
         );
     }
 
-    public function getAttributeRepository()
+    public function getAttributeKeyRepository()
     {
         return $this->entityManager->getRepository('\Concrete\Core\Entity\Attribute\Key\UserKey');
     }
 
+    public function getAttributeValueRepository()
+    {
+        return $this->entityManager->getRepository('\Concrete\Core\Entity\Attribute\Value\UserValue');
+    }
+
     public function getMemberListList()
     {
-        return $this->getAttributeRepository()->getMemberListList();
+        return $this->getAttributeKeyRepository()->getMemberListList();
     }
 
     public function getPublicProfileList()
     {
-        return $this->getAttributeRepository()->getPublicProfileList();
+        return $this->getAttributeKeyRepository()->getPublicProfileList();
     }
 
     public function getRegistrationList()
     {
-        return $this->getAttributeRepository()->getRegistrationList();
+        return $this->getAttributeKeyRepository()->getRegistrationList();
     }
 
     public function getEditableInProfileList()
     {
-        return $this->getAttributeRepository()->getEditableInProfileList();
+        return $this->getAttributeKeyRepository()->getEditableInProfileList();
     }
 
     /**

@@ -38,7 +38,8 @@ abstract class AbstractCategory implements CategoryInterface, StandardSearchInde
     /**
      * @return EntityRepository
      */
-    abstract public function getAttributeRepository();
+    abstract public function getAttributeKeyRepository();
+    abstract public function getAttributeValueRepository();
     abstract public function createAttributeKey();
 
     public function getByID($akID)
@@ -54,7 +55,7 @@ abstract class AbstractCategory implements CategoryInterface, StandardSearchInde
 
     public function getList()
     {
-        return $this->getAttributeRepository()->findBy(array(
+        return $this->getAttributeKeyRepository()->findBy(array(
             'akIsSearchable' => true,
             'akIsInternal' => false,
         ));
@@ -62,28 +63,28 @@ abstract class AbstractCategory implements CategoryInterface, StandardSearchInde
 
     public function getSearchableList()
     {
-        return $this->getAttributeRepository()->findBy(array(
+        return $this->getAttributeKeyRepository()->findBy(array(
             'akIsSearchable' => true,
         ));
     }
 
     public function getSearchableIndexedList()
     {
-        return $this->getAttributeRepository()->findBy(array(
+        return $this->getAttributeKeyRepository()->findBy(array(
             'akIsSearchableIndexed' => true,
         ));
     }
 
     public function getAttributeKeyByHandle($handle)
     {
-        return $this->getAttributeRepository()->findOneBy(array(
+        return $this->getAttributeKeyRepository()->findOneBy(array(
             'akHandle' => $handle,
         ));
     }
 
     public function getAttributeKeyByID($akID)
     {
-        return $this->getAttributeRepository()->findOneBy(array(
+        return $this->getAttributeKeyRepository()->findOneBy(array(
             'akID' => $akID,
         ));
     }
@@ -259,7 +260,8 @@ abstract class AbstractCategory implements CategoryInterface, StandardSearchInde
             $this->entityManager->remove($attribute);
             $this->entityManager->flush();
             $this->entityManager->refresh($value);
-            if (count($value->getAttributeValues()) < 1) {
+            $values = $this->getAttributeValueRepository()->findBy(['value' => $value]);
+            if (count($values) < 1) {
                 $this->entityManager->remove($value);
             }
         }

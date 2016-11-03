@@ -40,7 +40,7 @@ class ExpressCategory extends AbstractCategory
 
     public function getSearchableIndexedList()
     {
-        return $this->getAttributeRepository()->findBy([
+        return $this->getAttributeKeyRepository()->findBy([
             'entity' => $this->expressEntity,
             'akIsSearchableIndexed' => true
         ]);
@@ -80,9 +80,14 @@ class ExpressCategory extends AbstractCategory
         return new ExpressKey();
     }
 
-    public function getAttributeRepository()
+    public function getAttributeKeyRepository()
     {
         return $this->entityManager->getRepository('\Concrete\Core\Entity\Attribute\Key\ExpressKey');
+    }
+
+    public function getAttributeValueRepository()
+    {
+        return $this->entityManager->getRepository('\Concrete\Core\Entity\Attribute\Value\ExpressValue');
     }
 
     public function allowAttributeSets()
@@ -92,7 +97,7 @@ class ExpressCategory extends AbstractCategory
 
     public function getList()
     {
-        return $this->getAttributeRepository()->findBy(['entity' => $this->expressEntity]);
+        return $this->getAttributeKeyRepository()->findBy(['entity' => $this->expressEntity]);
     }
 
     public function getAttributeTypes()

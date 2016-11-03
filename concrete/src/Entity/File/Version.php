@@ -45,17 +45,7 @@ use Imagine\Image\Box;
  */
 class Version
 {
-    use ObjectTrait {
-        setAttribute as setFileVersionAttribute;
-    }
-
-    public function setAttribute($ak, $value)
-    {
-        $value = $this->setFileVersionAttribute($ak, $value);
-        if (is_object($value)) {
-            $this->attributes->add($value);
-        }
-    }
+    use ObjectTrait;
 
     const UT_REPLACE_FILE = 1;
     const UT_TITLE = 2;
@@ -67,7 +57,6 @@ class Version
 
     public function __construct()
     {
-        $this->attributes = new ArrayCollection();
         $this->fvDateAdded = new \DateTime();
         $this->fvActivateDateTime = new \DateTime();
     }
@@ -128,15 +117,6 @@ class Version
      * @ORM\Column(type="string", nullable=true)
      */
     protected $fvExtension = null;
-
-    /**
-     * @ORM\OneToMany(targetEntity="\Concrete\Core\Entity\Attribute\Value\FileValue",  mappedBy="version")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="fID", referencedColumnName="fID"),
-     *   @ORM\JoinColumn(name="fvID", referencedColumnName="fvID")
-     * })
-     */
-    protected $attributes;
 
     /**
      * @ORM\Column(type="integer")
@@ -283,7 +263,7 @@ class Version
 
         $category = \Core::make('Concrete\Core\Attribute\Category\FileCategory');
 
-        foreach ($this->attributes as $attribute) {
+        foreach ($this->getAttributes() as $attribute) {
             $category->deleteValue($attribute);
         }
 
@@ -417,7 +397,7 @@ class Version
 
         $this->deny();
 
-        foreach ($this->attributes as $value) {
+        foreach ($this->getAttributes() as $value) {
             $value = clone $value;
             /*
              * @var $value AttributeValue
@@ -782,10 +762,8 @@ class Version
         if (is_object($ak)) {
             $handle = $ak->getAttributeKeyHandle();
         }
-        foreach ($this->attributes as $value) {
-            if ($value->getAttributeKey()->getAttributeKeyHandle() == $handle) {
-                return $value;
-            }
+        if (is_object($ak)) {
+            $value = $this->getObjectAttributeCategory()->getAttributeValue($ak, $this);
         }
 
         if ($createIfNotExists) {
@@ -1033,7 +1011,7 @@ class Version
      */
     public function getAttributes()
     {
-        return $this->attributes;
+        return $this->getObjectAttributeCategory()->getAttributeValues($this);
     }
 
     /**

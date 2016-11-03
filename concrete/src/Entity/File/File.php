@@ -537,17 +537,6 @@ class File implements \Concrete\Core\Permission\ObjectInterface
         $db->Execute("delete from DownloadStatistics where fID = ?", [$this->fID]);
         $db->Execute("delete from FilePermissionAssignments where fID = ?", [$this->fID]);
 
-        $query = $em->createQuery('select fav from Concrete\Core\Entity\Attribute\Value\Value\ImageFileValue fav inner join fav.file f where f.fID = :fID');
-        $query->setParameter('fID', $this->getFileID());
-        $values = $query->getResult();
-        foreach ($values as $value) {
-            $attributeValues = $value->getAttributeValues();
-            foreach ($attributeValues as $attributeValue) {
-                $em->remove($attributeValue);
-            }
-            $em->remove($value);
-        }
-
         // now from the DB
         $em = \ORM::entityManager();
         $em->remove($this);

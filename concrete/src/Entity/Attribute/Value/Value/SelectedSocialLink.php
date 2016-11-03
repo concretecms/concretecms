@@ -17,7 +17,7 @@ class SelectedSocialLink
 
     /**
      * @ORM\ManyToOne(targetEntity="SocialLinksValue")
-     * @ORM\JoinColumn(name="avValueID", referencedColumnName="avValueID")
+     * @ORM\JoinColumn(name="avID", referencedColumnName="avID")
      */
     protected $value;
 
