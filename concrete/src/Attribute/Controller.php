@@ -3,6 +3,7 @@ namespace Concrete\Core\Attribute;
 
 use Concrete\Core\Attribute\Value\EmptyRequestAttributeValue;
 use Concrete\Core\Controller\AbstractController;
+use Concrete\Core\Entity\Attribute\Key\Settings\EmptySettings;
 use Concrete\Core\Entity\Attribute\Key\Type\LegacyType;
 use Concrete\Core\Entity\Attribute\Key\Type\NoOptionsType;
 use Concrete\Core\Entity\Attribute\Key\Type\TextType;
@@ -299,14 +300,14 @@ class Controller extends AbstractController
         return $e;
     }
 
-    public function createAttributeKeyType()
+    public function createAttributeKeySettings()
     {
-        return new NoOptionsType();
+        return new EmptySettings();
     }
 
-    protected function retrieveAttributeKeyType()
+    protected function retrieveAttributeKeySettings()
     {
-        return $this->entityManager->find('Concrete\Core\Entity\Attribute\Key\Type\NoOptionsType', $this->attributeKey);
+        return $this->entityManager->find('Concrete\Core\Entity\Attribute\Key\Settings\EmptySettings', $this->attributeKey);
     }
 
     /*
@@ -319,14 +320,14 @@ class Controller extends AbstractController
         }
     }
 
-    public function getAttributeKeyType()
+    public function getAttributeKeySettings()
     {
         if ($this->attributeKey) {
-            return $this->retrieveAttributeKeyType();
+            return $this->retrieveAttributeKeySettings();
         } else {
-            $key_type = $this->createAttributeKeyType();
-            $key_type->setAttributeTypeHandle($this->getAttributeType()->getAttributeTypeHandle());
-            return $key_type;
+            $settings = $this->createAttributeKeySettings();
+            $settings->setAttributeTypeHandle($this->getAttributeType()->getAttributeTypeHandle());
+            return $settings;
         }
     }
 

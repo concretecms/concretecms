@@ -26,6 +26,8 @@ class Key implements AttributeKeyInterface, ExportableInterface
 {
     use PackageTrait;
 
+    protected $settings;
+
     /**
      * @ORM\Id @ORM\Column(type="integer", options={"unsigned":true})
      * @ORM\GeneratedValue(strategy="AUTO")
@@ -172,17 +174,17 @@ class Key implements AttributeKeyInterface, ExportableInterface
     /**
      * @return mixed
      */
-    public function getAttributeKeyType()
+    public function getAttributeKeySettings()
     {
-        return $this->getController()->getAttributeKeyType();
+        return $this->getController()->getAttributeKeySettings();
     }
 
     /**
      * @param mixed $type
      */
-    public function setAttributeKeyType($key_type)
+    public function setAttributeKeySettings($settings)
     {
-        $this->key_type = $key_type; // This allows us to pass it around more easily
+        $this->settings = $settings; // This allows us to pass it around more easily
     }
 
     /**

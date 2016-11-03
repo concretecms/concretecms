@@ -98,18 +98,18 @@ abstract class AbstractCategory implements CategoryInterface, StandardSearchInde
         $this->entityManager->flush();
     }
 
-    public function add($key_type, $key, $pkg = null)
+    public function add($settings, $key, $pkg = null)
     {
         /*
          * Note: Do not type hint $pkg because old versions might not send the right object in.
          * LEGACY SUPPORT
          */
         $asID = false;
-        if (is_string($key_type)) {
-            $key_type = \Concrete\Core\Attribute\Type::getByHandle($key_type);
+        if (is_string($settings)) {
+            $settings = \Concrete\Core\Attribute\Type::getByHandle($settings);
         }
-        if ($key_type instanceof \Concrete\Core\Entity\Attribute\Type) {
-            $key_type = $key_type->getController()->getAttributeKeyType();
+        if ($settings instanceof \Concrete\Core\Entity\Attribute\Type) {
+            $settings = $settings->getController()->getAttributeKeySettings();
             if (is_array($key)) {
                 $handle = $key['akHandle'];
                 $name = $key['akName'];
@@ -121,14 +121,14 @@ abstract class AbstractCategory implements CategoryInterface, StandardSearchInde
                 $key->setAttributeKeyName($name);
             }
         }
-        $key->setAttributeType($key_type->getAttributeType());
+        $key->setAttributeType($settings->getAttributeType());
         /* end legacy support */
         $this->entityManager->persist($key);
         $this->entityManager->flush();
 
-        $key_type->setAttributeKey($key);
-        $key->setAttributeKeyType($key_type);
-        $this->entityManager->persist($key_type);
+        $settings->setAttributeKey($key);
+        $key->setAttributeKeySettings($settings);
+        $this->entityManager->persist($settings);
         $this->entityManager->flush();
 
         if (is_object($pkg)) {
@@ -168,11 +168,11 @@ abstract class AbstractCategory implements CategoryInterface, StandardSearchInde
         $this->entityManager->flush();
 
         $controller->setAttributeKey($key);
-        $key_type = $controller->saveKey($request->request->all());
-        if (!is_object($key_type)) {
-            $key_type = $controller->getAttributeKeyType();
+        $settings = $controller->saveKey($request->request->all());
+        if (!is_object($settings)) {
+            $settings = $controller->getAttributeKeySettings();
         }
-        return $this->add($key_type, $key);
+        return $this->add($settings, $key);
     }
 
     public function import(AttributeType $type, \SimpleXMLElement $element, Package $package = null)
@@ -182,11 +182,11 @@ abstract class AbstractCategory implements CategoryInterface, StandardSearchInde
         $loader->load($key, $element);
 
         $controller = $type->getController();
-        $key_type = $controller->importKey($element);
-        if (!is_object($key_type)) {
-            $key_type = $controller->getAttributeKeyType();
+        $settings = $controller->importKey($element);
+        if (!is_object($settings)) {
+            $settings = $controller->getAttributeKeySettings();
         }
-        return $this->add($key_type, $key, $package);
+        return $this->add($settings, $key, $package);
     }
 
     // Update
@@ -198,12 +198,12 @@ abstract class AbstractCategory implements CategoryInterface, StandardSearchInde
         $loader->load($key, $request);
 
         $controller = $key->getController();
-        $key_type = $controller->saveKey($request->request->all());
-        if (!is_object($key_type)) {
-            $key_type = $controller->getAttributeKeyType();
+        $settings = $controller->saveKey($request->request->all());
+        if (!is_object($settings)) {
+            $settings = $controller->getAttributeKeySettings();
         }
-        $key_type->setAttributeKey($key);
-        $key->setAttributeKeyType($key_type);
+        $settings->setAttributeKey($key);
+        $key->setAttributeKeyType($settings);
 
         // Modify the category's search indexer.
         $indexer = $this->getSearchIndexer();

@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Attribute;
 
+use Concrete\Core\Entity\Attribute\Key\Settings\TextSettings;
 use Concrete\Core\Entity\Attribute\Key\Type\TextType;
 use Concrete\Core\Entity\Attribute\Value\Value\TextValue;
 use Core;
@@ -53,14 +54,14 @@ class DefaultController extends AttributeTypeController
         return $av;
     }
 
-    public function createAttributeKeyType()
+    public function createAttributeKeySettings()
     {
-        return new TextType();
+        return new TextSettings();
     }
 
-    protected function retrieveAttributeKeyType()
+    protected function retrieveAttributeKeySettings()
     {
-        return $this->entityManager->find(TextType::class, $this->attributeKey);
+        return $this->entityManager->find(TextSettings::class, $this->attributeKey);
     }
 
     public function createAttributeValueFromRequest()

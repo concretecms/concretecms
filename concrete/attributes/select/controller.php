@@ -2,6 +2,7 @@
 namespace Concrete\Attribute\Select;
 
 use Concrete\Core\Attribute\FontAwesomeIconFormatter;
+use Concrete\Core\Entity\Attribute\Key\Settings\SelectSettings;
 use Concrete\Core\Entity\Attribute\Key\Type\SelectType;
 use Concrete\Core\Entity\Attribute\Value\Value\SelectValue;
 use Concrete\Core\Entity\Attribute\Value\Value\SelectValueOption;
@@ -56,10 +57,10 @@ class Controller extends AttributeTypeController
             return false;
         }
 
-        /*
-         * @var SelectType
+        /**
+         * @var $type SelectSettings
          */
-        $type = $ak->getAttributeKeyType();
+        $type = $ak->getAttributeKeySettings();
         if (is_object($type)) {
 
             $this->akSelectAllowMultipleValues = $type->getAllowMultipleValues();
@@ -106,9 +107,9 @@ class Controller extends AttributeTypeController
     public function setAllowedMultipleValues($allow)
     {
         /**
-         * @var $type SelectType
+         * @var $type SelectSettings
          */
-        $type = $this->getAttributeKey()->getAttributeKeyType();
+        $type = $this->getAttributeKey()->getAttributeKeySettings();
         $type->setAllowMultipleValues($allow);
         $this->entityManager->persist($type);
         $this->entityManager->flush();
@@ -117,9 +118,9 @@ class Controller extends AttributeTypeController
     public function setAllowOtherValues($allow)
     {
         /**
-         * @var $type SelectType
+         * @var $type SelectSettings
          */
-        $type = $this->getAttributeKey()->getAttributeKeyType();
+        $type = $this->getAttributeKey()->getAttributeKeySettings();
         $type->setAllowOtherValues($allow);
         $this->entityManager->persist($type);
         $this->entityManager->flush();
@@ -128,9 +129,9 @@ class Controller extends AttributeTypeController
     public function setOptionDisplayOrder($order)
     {
         /**
-         * @var $type SelectType
+         * @var $type SelectSettings
          */
-        $type = $this->getAttributeKey()->getAttributeKeyType();
+        $type = $this->getAttributeKey()->getAttributeKeySettings();
         $type->setDisplayOrder($order);
         $this->entityManager->persist($type);
         $this->entityManager->flush();
@@ -139,9 +140,9 @@ class Controller extends AttributeTypeController
     public function setOptions($options)
     {
         /**
-         * @var $type SelectType
+         * @var $type SelectSettings
          */
-        $type = $this->getAttributeKey()->getAttributeKeyType();
+        $type = $this->getAttributeKey()->getAttributeKeySettings();
         $list = new SelectValueOptionList();
         $list->setOptions($options);
         $type->setOptionList($list);
@@ -151,7 +152,7 @@ class Controller extends AttributeTypeController
 
     public function importKey(\SimpleXMLElement $akey)
     {
-        $type = $this->getAttributeKeyType();
+        $type = $this->getAttributeKeySettings();
         if (isset($akey->type)) {
             $akSelectAllowMultipleValues = $akey->type['allow-multiple-values'];
             $akSelectOptionDisplayOrder = $akey->type['display-order'];
@@ -268,7 +269,7 @@ class Controller extends AttributeTypeController
 
         $akSelectAllowMultipleValues = $this->akSelectAllowMultipleValues;
         $akSelectAllowOtherValues = $this->akSelectAllowOtherValues;
-        $keyType = $this->attributeKey->getAttributeKeyType();
+        $keyType = $this->attributeKey->getAttributeKeySettings();
         $optionList = $keyType->getOptionList();
         if (!$akSelectAllowMultipleValues && !$akSelectAllowOtherValues) {
             // select list. Only one option possible. No new options.
@@ -384,7 +385,7 @@ class Controller extends AttributeTypeController
         $orm = \Database::connection()->getEntityManager();
         $repository = $orm->getRepository('\Concrete\Core\Entity\Attribute\Value\Value\SelectValueOption');
         if ($attributeKey) {
-            $existingList = $attributeKey->getAttributeKeyType()->getOptionList();
+            $existingList = $attributeKey->getAttributeKeySettings()->getOptionList();
         }
         if (isset($existingList) && is_object($existingList)) {
             $option = $repository->findOneBy(array(
@@ -546,7 +547,7 @@ class Controller extends AttributeTypeController
     {
         $em = \Database::get()->getEntityManager();
         $r = $em->getRepository('\Concrete\Core\Entity\Attribute\Value\Value\SelectValueOption');
-        $type = $this->attributeKey->getAttributeKeyType();
+        $type = $this->attributeKey->getAttributeKeySettings();
 
         $values = explode(',', $value);
         $response = array();
@@ -643,7 +644,7 @@ class Controller extends AttributeTypeController
             return array();
         }
 
-        if (!is_object($this->attributeKey->getAttributeKeyType())) {
+        if (!is_object($this->attributeKey->getAttributeKeySettings())) {
             return array();
         }
 
@@ -651,7 +652,7 @@ class Controller extends AttributeTypeController
             $this->load();
         }
 
-        $type = $this->attributeKey->getAttributeKeyType();
+        $type = $this->attributeKey->getAttributeKeySettings();
 
         $em = \Database::get()->getEntityManager();
         $r = $em->getRepository('\Concrete\Core\Entity\Attribute\Value\Value\SelectValueOption');
@@ -683,7 +684,7 @@ class Controller extends AttributeTypeController
     public function saveKey($data)
     {
 
-        $type = $this->getAttributeKeyType();
+        $type = $this->getAttributeKeySettings();
         $optionList = $type->getOptionList();
 
         $orm = $this->entityManager;
@@ -766,14 +767,14 @@ class Controller extends AttributeTypeController
         return $this->akSelectOptionDisplayOrder;
     }
 
-    public function createAttributeKeyType()
+    public function createAttributeKeySettings()
     {
-        return new SelectType();
+        return new SelectSettings();
     }
 
-    protected function retrieveAttributeKeyType()
+    protected function retrieveAttributeKeySettings()
     {
-        return $this->entityManager->find(SelectType::class, $this->attributeKey);
+        return $this->entityManager->find(SelectSettings::class, $this->attributeKey);
     }
 
 }

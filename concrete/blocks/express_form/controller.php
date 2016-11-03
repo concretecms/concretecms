@@ -254,7 +254,7 @@ class Controller extends BlockController
                         return new JsonResponse($e);
                     }
                     $controller = $type->getController();
-                    $key = $this->saveAttributeKeyType($controller, $key, $post);
+                    $key = $this->saveAttributeKeySettings($controller, $key, $post);
 
                     $control->setAttributeKey($key);
                 }
@@ -282,15 +282,14 @@ class Controller extends BlockController
         }
     }
 
-    protected function saveAttributeKeyType($controller, ExpressKey $key, $post)
+    protected function saveAttributeKeySettings($controller, ExpressKey $key, $post)
     {
-        $key_type = $controller->saveKey($post);
-        if (!is_object($key_type)) {
-            $key_type = $controller->getAttributeKeyType();
+        $settings = $controller->saveKey($post);
+        if (!is_object($settings)) {
+            $settings = $controller->getAttributeKeySettings();
         }
-        $key_type->setAttributeKey($key);
-        $key->setAttributeKeyType($key_type);
-        $key->setAttributeType($key_type->getAttributeType());
+        $settings->setAttributeKey($key);
+        $key->setAttributeKeySettings($settings);
         return $key;
     }
 
@@ -333,7 +332,7 @@ class Controller extends BlockController
                         $control->setIsRequired(false);
                     }
                     $controller = $key->getController();
-                    $key = $this->saveAttributeKeyType($controller, $key, $post);
+                    $key = $this->saveAttributeKeySettings($controller, $key, $post);
                     $control->setAttributeKey($key);
                 }
                 break;
@@ -463,11 +462,10 @@ class Controller extends BlockController
                                 $key->setAttributeKeyHandle((new AttributeKeyHandleGenerator($attributeKeyCategory))->generate($key));
 
                                 // Key Type
-                                $existing_key_type = $key->getAttributeKeyType();
-                                $key_type = $control->getAttributeKey()->getAttributeKeyType();
-                                $key_type->setAttributeKey($key);
-                                $key_type = $key_type->mergeAndPersist($entityManager);
-                                $key->setAttributeKeyType($key_type);
+                                $settings = $control->getAttributeKey()->getAttributeKeySettings();
+                                $settings->setAttributeKey($key);
+                                $settings = $settings->mergeAndPersist($entityManager);
+                                $key->setAttributeKeySettings($settings);
 
                                 // Required
                                 $existingControl->setIsRequired($control->isRequired());

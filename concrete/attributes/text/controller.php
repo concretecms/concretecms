@@ -3,6 +3,7 @@ namespace Concrete\Attribute\Text;
 
 use Concrete\Core\Attribute\FontAwesomeIconFormatter;
 use Concrete\Core\Attribute\DefaultController;
+use Concrete\Core\Entity\Attribute\Key\Settings\TextSettings;
 use Concrete\Core\Entity\Attribute\Key\Type\TextType;
 use Core;
 use Database;
@@ -16,7 +17,7 @@ class Controller extends DefaultController
 
     public function saveKey($data)
     {
-        $type = $this->getAttributeKeyType();
+        $type = $this->getAttributeKeySettings();
         $data += array(
             'akTextPlaceholder' => null,
         );
@@ -81,11 +82,10 @@ class Controller extends DefaultController
             return false;
         }
 
-        $type = $ak->getAttributeKeyType();
-        /*
-         * @var $type TextType
+        $type = $ak->getAttributeKeySettings();
+        /**
+         * @var $type TextSettings
          */
-
         $this->akTextPlaceholder = $type->getPlaceholder();
         $this->set('akTextPlaceholder', $type->getPlaceholder());
     }
@@ -108,7 +108,7 @@ class Controller extends DefaultController
 
     public function importKey(\SimpleXMLElement $akey)
     {
-        $type = $this->getAttributeKeyType();
+        $type = $this->getAttributeKeySettings();
         if (isset($akey->type)) {
             $data['akTextPlaceholder'] = $akey->type['placeholder'];
             $type->setPlaceholder((string) $akey->type['placeholder']);

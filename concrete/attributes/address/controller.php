@@ -4,6 +4,7 @@ namespace Concrete\Attribute\Address;
 use Concrete\Core\Attribute\Context\BasicFormContext;
 use Concrete\Core\Attribute\Controller as AttributeTypeController;
 use Concrete\Core\Attribute\FontAwesomeIconFormatter;
+use Concrete\Core\Entity\Attribute\Key\Settings\AddressSettings;
 use Concrete\Core\Entity\Attribute\Key\Type\AddressType;
 use Concrete\Core\Entity\Attribute\Value\Value\AddressValue;
 use Core;
@@ -251,7 +252,7 @@ class Controller extends AttributeTypeController
 
     public function importKey(\SimpleXMLElement $akey)
     {
-        $type = $this->getAttributeKeyType();
+        $type = $this->getAttributeKeySettings();
         if (isset($akey->type)) {
             $type->setHasCustomCountries((bool) $akey->type['custom-countries']);
             $type->setDefaultCountry((string) $akey->type['default-country']);
@@ -269,7 +270,7 @@ class Controller extends AttributeTypeController
 
     public function saveKey($data)
     {
-        $type = $this->getAttributeKeyType();
+        $type = $this->getAttributeKeySettings();
 
         $akCustomCountries = $data['akCustomCountries'];
         $akHasCustomCountries = $data['akHasCustomCountries'];
@@ -294,7 +295,7 @@ class Controller extends AttributeTypeController
             return false;
         }
 
-        $type = $ak->getAttributeKeyType();
+        $type = $ak->getAttributeKeySettings();
         /*
          * @var $type AddressType
          */
@@ -338,8 +339,8 @@ class Controller extends AttributeTypeController
         $this->set('key', $this->attributeKey);
     }
 
-    public function createAttributeKeyType()
+    public function createAttributeKeySettings()
     {
-        return new AddressType();
+        return new AddressSettings();
     }
 }

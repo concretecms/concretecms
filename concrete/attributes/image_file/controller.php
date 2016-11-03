@@ -2,7 +2,7 @@
 namespace Concrete\Attribute\ImageFile;
 
 use Concrete\Core\Attribute\FontAwesomeIconFormatter;
-use Concrete\Core\Entity\Attribute\Key\Type\ImageFileType;
+use Concrete\Core\Entity\Attribute\Key\Settings\ImageFileSettings;
 use Concrete\Core\Entity\Attribute\Value\Value\ImageFileValue;
 use Concrete\Core\Error\ErrorList\Error\Error;
 use Concrete\Core\Error\ErrorList\Error\FieldNotPresentError;
@@ -25,14 +25,14 @@ class Controller extends AttributeTypeController
     public function saveKey($data)
     {
         /**
-         * @var $type ImageFileType
+         * @var $type ImageFileSettings
          */
-        $type = $this->getAttributeKeyType();
+        $type = $this->getAttributeKeySettings();
         $data += array(
             'mode' => null,
         );
         $mode = $data['mode'];
-        if ($mode == ImageFileType::TYPE_HTML_INPUT) {
+        if ($mode == ImageFileSettings::TYPE_HTML_INPUT) {
             $type->setModeToHtmlInput();
         } else {
             $type->setModeToFileManager();
@@ -43,16 +43,16 @@ class Controller extends AttributeTypeController
     public function type_form()
     {
         $this->set('form', \Core::make('helper/form'));
-        $this->set('mode', $this->getAttributeKeyType()->getMode());
+        $this->set('mode', $this->getAttributeKeySettings()->getMode());
     }
 
 
     public function exportKey($akey)
     {
         /**
-         * @var $type ImageFileType
+         * @var $type ImageFileSettings
          */
-        $type = $this->getAttributeKeyType();
+        $type = $this->getAttributeKeySettings();
         if ($type->isModeHtmlInput()) {
             $mode = 'html_input';
         } else {
@@ -113,16 +113,16 @@ class Controller extends AttributeTypeController
         if (is_object($this->attributeValue)) {
             $bf = $this->getValue();
         }
-        $this->set('mode', $this->getAttributeKeyType()->getMode());
+        $this->set('mode', $this->getAttributeKeySettings()->getMode());
         $this->set('file', $bf);
 
     }
 
     public function importKey(\SimpleXMLElement $akey)
     {
-        $type = $this->getAttributeKeyType();
+        $type = $this->getAttributeKeySettings();
         /**
-         * @var $type ImageFileType
+         * @var $type ImageFileSettings
          */
         if (isset($akey->type)) {
             $mode = (string) $akey->type['mode'];
@@ -176,7 +176,7 @@ class Controller extends AttributeTypeController
 
     public function validateForm($data)
     {
-        if ($this->getAttributeKeyType()->isModeFileManager()) {
+        if ($this->getAttributeKeySettings()->isModeFileManager()) {
             if (intval($data['value']) > 0) {
                 $f = File::getByID(intval($data['value']));
                 if (is_object($f) && !$f->isError()) {
@@ -190,7 +190,7 @@ class Controller extends AttributeTypeController
                 return new FieldNotPresentError(new AttributeField($this->getAttributeKey()));
             }
         }
-        if ($this->getAttributeKeyType()->isModeHtmlInput()) {
+        if ($this->getAttributeKeySettings()->isModeHtmlInput()) {
             $tmp_name = $_FILES['akID']['tmp_name'][$this->attributeKey->getAttributeKeyID()]['value'];
             $name = $_FILES['akID']['name'][$this->attributeKey->getAttributeKeyID()]['value'];
             if (!empty($tmp_name) && is_uploaded_file($tmp_name)) {
@@ -217,13 +217,13 @@ class Controller extends AttributeTypeController
     public function createAttributeValueFromRequest()
     {
         $data = $this->post();
-        if ($this->getAttributeKeyType()->isModeFileManager()) {
+        if ($this->getAttributeKeySettings()->isModeFileManager()) {
             if ($data['value'] > 0) {
                 $f = File::getByID($data['value']);
                 return $this->createAttributeValue($f);
             }
         }
-        if ($this->getAttributeKeyType()->isModeHtmlInput()) {
+        if ($this->getAttributeKeySettings()->isModeHtmlInput()) {
             // import the file.
             $tmp_name = $_FILES['akID']['tmp_name'][$this->attributeKey->getAttributeKeyID()]['value'];
             $name = $_FILES['akID']['name'][$this->attributeKey->getAttributeKeyID()]['value'];
@@ -238,14 +238,14 @@ class Controller extends AttributeTypeController
         return $this->createAttributeValue(null);
     }
 
-    public function createAttributeKeyType()
+    public function createAttributeKeySettings()
     {
-        return new ImageFileType();
+        return new ImageFileSettings();
     }
 
-    protected function retrieveAttributeKeyType()
+    protected function retrieveAttributeKeySettings()
     {
-        return $this->entityManager->find(ImageFileType::class, $this->attributeKey);
+        return $this->entityManager->find(ImageFileSettings::class, $this->attributeKey);
     }
 
 }

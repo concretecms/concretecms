@@ -1,5 +1,5 @@
 <?php
-namespace Concrete\Core\Entity\Attribute\Key\Type;
+namespace Concrete\Core\Entity\Attribute\Key\Settings;
 
 use Concrete\Core\Entity\Attribute\Value\Value\DateTimeValue;
 use Doctrine\ORM\Mapping as ORM;
@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  * @ORM\Table(name="atDateTimeSettings")
  */
-class DateTimeType extends Type
+class DateTimeSettings extends Settings
 {
     /**
      * @ORM\Column(type="string")
