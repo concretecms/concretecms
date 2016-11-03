@@ -121,8 +121,4 @@ class Controller extends AttributeTypeController
         $this->set('services', ServiceList::get());
     }
 
-    public function createAttributeKeyType()
-    {
-        return new SocialLinksType();
-    }
 }

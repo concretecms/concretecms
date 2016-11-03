@@ -108,6 +108,9 @@ class LegacyCategory implements CategoryInterface, StandardSearchIndexerInterfac
             $key_type = $controller->getAttributeKeyType();
         }
         $key_type->setAttributeKey($key);
+        $this->entityManager->persist($key_type);
+        $this->entityManager->flush();
+
         $key->setAttributeKeyType($key_type);
 
 
@@ -186,7 +189,11 @@ class LegacyCategory implements CategoryInterface, StandardSearchIndexerInterfac
         $key = new LegacyKey();
         $key->setAttributeKeyHandle($handle);
         $key->setAttributeKeyName($name);
+        $key->setAttributeType($type);
         $key_type->setAttributeKey($key);
+
+        $this->entityManager->persist($key_type);
+        $this->entityManager->flush();
 
         $key->setAttributeKeyType($key_type);
         $key->setAttributeCategory($this->getCategoryEntity());

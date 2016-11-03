@@ -2,7 +2,6 @@
 namespace Concrete\Attribute\Rating;
 
 use Concrete\Core\Attribute\FontAwesomeIconFormatter;
-use Concrete\Core\Entity\Attribute\Key\Type\RatingType;
 use Concrete\Core\Entity\Attribute\Value\Value\RatingValue;
 use Loader;
 use Concrete\Core\Attribute\Controller as AttributeTypeController;
@@ -68,8 +67,4 @@ class Controller extends AttributeTypeController
         echo $rt->rating($this->field('value'), $this->request('value'));
     }
 
-    public function createAttributeKeyType()
-    {
-        return new RatingType();
-    }
 }

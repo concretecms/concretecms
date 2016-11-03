@@ -121,10 +121,15 @@ abstract class AbstractCategory implements CategoryInterface, StandardSearchInde
                 $key->setAttributeKeyName($name);
             }
         }
+        $key->setAttributeType($key_type->getAttributeType());
         /* end legacy support */
+        $this->entityManager->persist($key);
+        $this->entityManager->flush();
 
         $key_type->setAttributeKey($key);
         $key->setAttributeKeyType($key_type);
+        $this->entityManager->persist($key_type);
+        $this->entityManager->flush();
 
         if (is_object($pkg)) {
             $key->setPackage($pkg);

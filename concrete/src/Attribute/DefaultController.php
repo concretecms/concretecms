@@ -58,6 +58,11 @@ class DefaultController extends AttributeTypeController
         return new TextType();
     }
 
+    protected function retrieveAttributeKeyType()
+    {
+        return $this->entityManager->find(TextType::class, $this->attributeKey);
+    }
+
     public function createAttributeValueFromRequest()
     {
         $data = $this->post();

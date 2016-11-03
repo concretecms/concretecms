@@ -86,8 +86,4 @@ class Controller extends AttributeTypeController
         }
     }
 
-    public function createAttributeKeyType()
-    {
-        return new NumberType();
-    }
 }

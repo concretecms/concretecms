@@ -5,41 +5,21 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity
- * @ORM\InheritanceType("JOINED")
- * @ORM\DiscriminatorColumn(name="type", type="string")
- * @ORM\Table(
- *     name="AttributeKeyTypes"
- * )
+ * @ORM\MappedSuperClass
  */
 abstract class Type
 {
-    /**
-     * @ORM\Id @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    protected $akTypeID;
-
     /**
      * @ORM\Column(type="string", nullable=true)
      */
     protected $akTypeHandle;
 
     /**
-     * @ORM\OneToOne(targetEntity="\Concrete\Core\Entity\Attribute\Key\Key", inversedBy="key_type")
+     * @ORM\Id
+     * @ORM\OneToOne(targetEntity="\Concrete\Core\Entity\Attribute\Key\Key")
      * @ORM\JoinColumn(name="akID", referencedColumnName="akID")
      */
     protected $key;
-
-    public function getKeyTypeID()
-    {
-        return $this->akTypeID;
-    }
-
-    public function setKeyTypeID($akTypeID)
-    {
-        $this->akTypeID = $akTypeID;
-    }
 
     /**
      * @return mixed

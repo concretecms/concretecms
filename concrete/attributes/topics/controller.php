@@ -370,4 +370,10 @@ class Controller extends AttributeTypeController
     {
         return new TopicsType();
     }
+
+    protected function retrieveAttributeKeyType()
+    {
+        return $this->entityManager->find(TopicsType::class, $this->attributeKey);
+    }
+
 }

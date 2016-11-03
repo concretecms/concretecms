@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="ExpressAttributeKeyTypes")
+ * @ORM\Table(name="atExpressSettings")
  */
 class ExpressType extends Type
 {

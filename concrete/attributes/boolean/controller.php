@@ -149,4 +149,10 @@ class Controller extends AttributeTypeController
     {
         return new BooleanType();
     }
+
+    protected function retrieveAttributeKeyType()
+    {
+        return $this->entityManager->find(BooleanType::class, $this->attributeKey);
+    }
+
 }

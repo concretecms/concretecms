@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="BooleanAttributeKeyTypes")
+ * @ORM\Table(name="atBooleanSettings")
  */
 class BooleanType extends Type
 {

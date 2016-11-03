@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="DateTimeAttributeKeyTypes")
+ * @ORM\Table(name="atDateTimeSettings")
  */
 class DateTimeType extends Type
 {

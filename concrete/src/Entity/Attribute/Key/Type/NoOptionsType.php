@@ -6,9 +6,9 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="LegacyAttributeKeyTypes")
+ * @ORM\Table(name="atSettings")
  */
-class LegacyType extends Type
+class NoOptionsType extends Type
 {
 
 }

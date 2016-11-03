@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="TopicsAttributeKeyTypes")
+ * @ORM\Table(name="atTopicSettings")
  */
 class TopicsType extends Type
 {

@@ -135,4 +135,10 @@ class Controller extends AttributeTypeController
     {
         return new ExpressType();
     }
+
+    protected function retrieveAttributeKeyType()
+    {
+        return $this->entityManager->find(ExpressType::class, $this->attributeKey);
+    }
+
 }

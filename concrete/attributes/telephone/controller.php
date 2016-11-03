@@ -26,11 +26,6 @@ class Controller extends DefaultController
         echo $this->app->make('helper/form')->telephone($this->field('value'), $value, array('class' => 'span5'));
     }
 
-    public function createAttributeKeyType()
-    {
-        return new TextType();
-    }
-
     public function getIconFormatter()
     {
         return new FontAwesomeIconFormatter('phone');
