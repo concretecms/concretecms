@@ -3,6 +3,7 @@ namespace Concrete\Core\Entity\Attribute\Value;
 
 use Concrete\Core\Attribute\AttributeValueInterface;
 use Concrete\Core\Entity\Attribute\Key\Key;
+use Concrete\Core\Entity\Attribute\Value\Value\LegacyValue;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -77,7 +78,7 @@ abstract class Value implements AttributeValueInterface
 
         // Otherwise, we get the default "value" response for the attribute value type, which could be text, could be true/false, could be a
         // file object.
-        if (is_object($value)) {
+        if (is_object($value) && !($value instanceof LegacyValue)) {
             return $value->getValue();
         }
 
