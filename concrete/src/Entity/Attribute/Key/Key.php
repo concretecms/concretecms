@@ -302,4 +302,12 @@ class Key implements AttributeKeyInterface, ExportableInterface
         $set->addKey($this);
     }
 
+    /**
+     * @deprecated
+     */
+    public function getAttributeValueIDList()
+    {
+        return array();
+    }
+
 }
