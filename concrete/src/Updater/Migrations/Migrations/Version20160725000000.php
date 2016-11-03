@@ -50,15 +50,6 @@ class Version20160725000000 extends AbstractMigration
         if (!$this->connection->tableExists('_AttributeValues')) {
             $this->connection->Execute('alter table AttributeValues rename _AttributeValues');
         }
-        if (!$this->connection->tableExists('_CollectionAttributeValues')) {
-            $this->connection->Execute('alter table CollectionAttributeValues rename _CollectionAttributeValues');
-        }
-        if (!$this->connection->tableExists('_FileAttributeValues')) {
-            $this->connection->Execute('alter table FileAttributeValues rename _FileAttributeValues');
-        }
-        if (!$this->connection->tableExists('_UserAttributeValues')) {
-            $this->connection->Execute('alter table UserAttributeValues rename _UserAttributeValues');
-        }
         if (!$this->connection->tableExists('_TreeTopicNodes')) {
             $this->connection->Execute('alter table TreeTopicNodes rename _TreeTopicNodes');
         }
@@ -287,147 +278,137 @@ class Version20160725000000 extends AbstractMigration
             $this->importAttributeKeyType($row['atID'], $row['akID']);
             switch ($akCategory) {
                 case 'pagekey':
-                    $rb = $this->connection->executeQuery("select * from _CollectionAttributeValues where akID = ?", array($row['akID']));
+                    $rb = $this->connection->executeQuery("select * from CollectionAttributeValues where akID = ?", array($row['akID']));
                     while ($rowB = $rb->fetch()) {
-                        $this->addAttributeValue($row['atID'], $row['akID'], $rowB['avID'], 'page');
-                        $this->connection->insert('CollectionAttributeValues', [
-                            'cID' => $rowB['cID'],
-                            'cvID' => $rowB['cvID'],
-                            'avID' => $rowB['avID'],
-                        ]);
+                        $this->addAttributeValue($row['atID'], $row['akID'], $rowB['avID']);
                     }
                     break;
                 case 'filekey':
-                    $rb = $this->connection->executeQuery("select * from _FileAttributeValues where akID = ?", array($row['akID']));
+                    $rb = $this->connection->executeQuery("select * from FileAttributeValues where akID = ?", array($row['akID']));
                     while ($rowB = $rb->fetch()) {
-                        $this->addAttributeValue($row['atID'], $row['akID'], $rowB['avID'], 'page');
-                        $this->connection->insert('FileAttributeValues', [
-                            'fID' => $rowB['fID'],
-                            'fvID' => $rowB['fvID'],
-                            'avID' => $rowB['avID'],
-                        ]);
+                        $this->addAttributeValue($row['atID'], $row['akID'], $rowB['avID']);
                     }
                     break;
                 case 'userkey':
-                    $rb = $this->connection->executeQuery("select * from _UserAttributeValues where akID = ?", array($row['akID']));
+                    $rb = $this->connection->executeQuery("select * from UserAttributeValues where akID = ?", array($row['akID']));
                     while ($rowB = $rb->fetch()) {
-                        $this->addAttributeValue($row['atID'], $row['akID'], $rowB['avID'], 'page');
-                        $this->connection->insert('UserAttributeValues', [
-                            'avID' => $rowB['avID'],
-                            'uID' => $rowB['uID']
-                        ]);
+                        $this->addAttributeValue($row['atID'], $row['akID'], $rowB['avID']);
                     }
                     break;
             }
         }
     }
 
-    protected function loadAttributeValue($atHandle, $avID, $avValueID)
+    protected function loadAttributeValue($atHandle, $avID)
     {
         switch ($atHandle) {
             case 'address':
                 $row = $this->connection->fetchAssoc('select * from atAddress where avID = ?', [$avID]);
-                $row['avValueID'] = $avValueID;
-                unset($row['avID']);
-                $this->connection->insert('AddressAttributeValues', $row);
+                if (!$this->connection->fetchColumn('select count(avID) from AddressAttributeValues where avID = ?', [$avID])) {
+                    $this->connection->insert('AddressAttributeValues', $row);
+                }
                 break;
             case 'boolean':
                 $value = $this->connection->fetchColumn('select value from atBoolean where avID = ?', [$avID]);
-                $this->connection->insert('BooleanAttributeValues', ['value' => $value, 'avValueID' => $avValueID]);
+                if (!$this->connection->fetchColumn('select count(avID) from BooleanAttributeValues where avID = ?', [$avID])) {
+                    $this->connection->insert('BooleanAttributeValues', ['value' => $value, 'avID' => $avID]);
+                }
                 break;
             case 'date_time':
                 $row = $this->connection->fetchAssoc('select * from atDateTime where avID = ?', [$avID]);
-                $row['avValueID'] = $avValueID;
-                unset($row['avID']);
-                $this->connection->insert('DateTimeAttributeValues', $row);
+                if (!$this->connection->fetchColumn('select count(avID) from DateTimeAttributeValues where avID = ?', [$avID])) {
+                    $this->connection->insert('DateTimeAttributeValues', $row);
+                }
                 break;
             case 'image_file':
                 $row = $this->connection->fetchAssoc('select * from atFile where avID = ?', [$avID]);
-                $row['avValueID'] = $avValueID;
-                unset($row['avID']);
-                $this->connection->insert('ImageFileAttributeValues', $row);
+                if (!$this->connection->fetchColumn('select count(avID) from ImageFileAttributeValues where avID = ?', [$avID])) {
+                    $this->connection->insert('ImageFileAttributeValues', $row);
+                }
                 break;
             case 'number':
             case 'rating':
                 $row = $this->connection->fetchAssoc('select * from atNumber where avID = ?', [$avID]);
-                $row['avValueID'] = $avValueID;
-                unset($row['avID']);
-                $this->connection->insert('NumberAttributeValues', $row);
+                if (!$this->connection->fetchColumn('select count(avID) from NumberAttributeValues where avID = ?', [$avID])) {
+                    $this->connection->insert('NumberAttributeValues', $row);
+                }
                 break;
             case 'select':
-                $this->connection->insert('SelectAttributeValues', array('avValueID' => $avValueID));
+                if (!$this->connection->fetchColumn('select count(avID) from SelectAttributeValues where avID = ?', [$avID])) {
+                    $this->connection->insert('SelectAttributeValues', array('avID' => $avID));
+                }
                 $options = $this->connection->fetchAll('select * from atSelectOptionsSelected where avID = ?', [$avID]);
                 foreach ($options as $option) {
-                    $this->connection->insert('SelectAttributeValueSelectedOptions', array(
-                        'avSelectOptionID' => $option['atSelectOptionID'],
-                        'avValueID' => $avValueID,
-                    ));
+                    if (!$this->connection->fetchColumn('select count(avSelectOptionID) from SelectAttributeValueSelectedOptions where avSelectOptionID = ?', [$option['atSelectOptionID']])) {
+                        $this->connection->insert('SelectAttributeValueSelectedOptions', array(
+                            'avSelectOptionID' => $option['atSelectOptionID'],
+                            'avID' => $avID,
+                        ));
+                    }
                 }
                 break;
             case 'social_links':
-                $this->connection->insert('SocialLinksAttributeValues', array('avValueID' => $avValueID));
-                $links = $this->connection->fetchAll('select * from atSocialLinks where avValueID = ?', [$avID]);
+                if (!$this->connection->fetchColumn('select count(avID) from SocialLinksAttributeValues where avID = ?', [$avID])) {
+                    $this->connection->insert('SocialLinksAttributeValues', array('avID' => $avID));
+                }
+                $links = $this->connection->fetchAll('select * from atSocialLinks where avID = ?', [$avID]);
                 foreach ($links as $link) {
                     $this->connection->insert('SocialLinksAttributeSelectedLinks', array(
                         'service' => $link['service'],
                         'serviceInfo' => $link['serviceInfo'],
-                        'avValueID' => $avValueID,
+                        'avID' => $avID,
                     ));
                 }
                 break;
             case 'text':
                 $row = $this->connection->fetchAssoc('select * from atDefault where avID = ?', [$avID]);
-                $row['avValueID'] = $avValueID;
-                unset($row['avID']);
-                $this->connection->insert('TextAttributeValues', $row);
+                if (!$this->connection->fetchColumn('select count(avID) from TextAttributeValues where avID = ?', [$avID])) {
+                    $this->connection->insert('TextAttributeValues', $row);
+                }
                 break;
             case 'textarea':
                 $row = $this->connection->fetchAssoc('select * from atDefault where avID = ?', [$avID]);
-                $row['avValueID'] = $avValueID;
-                unset($row['avID']);
-                $this->connection->insert('TextareaAttributeValues', $row);
+                if (!$this->connection->fetchColumn('select count(avID) from TextareaAttributeValues where avID = ?', [$avID])) {
+                    $this->connection->insert('TextareaAttributeValues', $row);
+                }
                 break;
             case 'topics':
-                $this->connection->insert('TopicAttributeValues', array('avValueID' => $avValueID));
+                if (!$this->connection->fetchColumn('select count(avID) from TopicAttributeValues where avID = ?', [$avID])) {
+                    $this->connection->insert('TopicAttributeValues', array('avID' => $avID));
+                }
                 $topics = $this->connection->fetchAll('select * from atSelectedTopics where avID = ?', [$avID]);
                 foreach ($topics as $topic) {
                     $this->connection->insert('TopicAttributeSelectedTopics', array(
                         'treeNodeID' => $topic['TopicNodeID'],
-                        'avValueID' => $avValueID,
+                        'avID' => $avID,
                     ));
                 }
                 break;
         }
     }
 
-    protected function addAttributeValue($atID, $akID, $avID, $type)
+    protected function addAttributeValue($atID, $akID, $avID)
     {
         // Create AttributeValueValue Record.
         // Retrieve type
         $atHandle = $this->connection->fetchColumn('select atHandle from AttributeTypes where atID = ?', array($atID));
         if ($atHandle) {
-            $type = $type . 'value';
-            $avValueID = null;
             if (in_array($atHandle, array(
                 'address', 'boolean', 'date_time', 'email', 'express', 'image_file',
                 'number', 'rating', 'select', 'social_links', 'telephone', 'text', 'textarea',
                 'topics', 'url'
             ))) {
-                $valueType = strtolower(preg_replace("/[^A-Za-z]/", '', $atHandle)) . 'value';
+                $type = strtolower(preg_replace("/[^A-Za-z]/", '', $atHandle)) . 'value';
+                $this->loadAttributeValue($atHandle, $avID);
 
-                $this->connection->insert('AttributeValueValues', ['type' => $valueType]);
-                $avValueID = $this->connection->lastInsertId();
-
-                $this->loadAttributeValue($atHandle, $avID, $avValueID);
+                // Create AttributeValue record
+                if (!$this->connection->fetchColumn('select count(avID) from AttributeValues where avID = ?', [$avID])) {
+                    $this->connection->insert('AttributeValues', [
+                        'avID' => $avID,
+                        'type' => $type,
+                    ]);
+                }
             }
-
-            // Create AttributeValue record
-            $this->connection->insert('AttributeValues', [
-                'akID' => $akID,
-                'avValueID' => $avValueID,
-                'type' => $type,
-            ]);
-
         }
     }
 

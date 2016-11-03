@@ -37,15 +37,20 @@ class PageCategory extends AbstractStandardCategory
         );
     }
 
-    public function getAttributeRepository()
+    public function getAttributeKeyRepository()
     {
         return $this->entityManager->getRepository('\Concrete\Core\Entity\Attribute\Key\PageKey');
     }
 
+    public function getAttributeValueRepository()
+    {
+        return $this->entityManager->getRepository('\Concrete\Core\Entity\Attribute\Value\PageValue');
+    }
+
+
     public function getAttributeValues($page)
     {
-        $r = $this->entityManager->getRepository('\Concrete\Core\Entity\Attribute\Value\PageValue');
-        $values = $r->findBy(array(
+        $values = $this->getAttributeValueRepository()->findBy(array(
             'cID' => $page->getCollectionID(),
             'cvID' => $page->getVersionID(),
         ));
@@ -55,8 +60,7 @@ class PageCategory extends AbstractStandardCategory
 
     public function getAttributeValue(Key $key, $page)
     {
-        $r = $this->entityManager->getRepository('\Concrete\Core\Entity\Attribute\Value\PageValue');
-        $value = $r->findOneBy(array(
+        $value = $this->getAttributeValueRepository()->findOneBy(array(
             'cID' => $page->getCollectionID(),
             'cvID' => $page->getVersionID(),
             'attribute_key' => $key,

@@ -13,7 +13,7 @@ class TopicsValue extends Value
 {
     /**
      * @ORM\OneToMany(targetEntity="\Concrete\Core\Entity\Attribute\Value\Value\SelectedTopic", mappedBy="value", cascade={"all"})
-     * @ORM\JoinColumn(name="avValueID", referencedColumnName="avValueID")
+     * @ORM\JoinColumn(name="avID", referencedColumnName="avID")
      */
     protected $topics;
 
@@ -24,7 +24,6 @@ class TopicsValue extends Value
      */
     public function __construct()
     {
-        parent::__construct();
         $this->topics = new ArrayCollection();
     }
 

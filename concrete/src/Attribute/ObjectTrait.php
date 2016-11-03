@@ -93,7 +93,6 @@ trait ObjectTrait
         }
 
         if ($value) {
-            $value->getAttributeValues()->add($attributeValue);
             $attributeValue->setValue($value);
         }
 

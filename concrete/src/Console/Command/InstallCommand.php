@@ -194,7 +194,7 @@ EOT
             }
             $output->writeln('<info>Installation Complete!</info>');
         } catch (Exception $x) {
-            $output->writeln('<error>'.$x->getMessage().'</error>');
+            $output->writeln('<error>'.$x->getMessage() . '('. $x->getTraceAsString().')</error>');
             $rc = 1;
         }
 

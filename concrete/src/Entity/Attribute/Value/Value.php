@@ -6,30 +6,21 @@ use Concrete\Core\Entity\Attribute\Key\Key;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity
- * @ORM\InheritanceType("JOINED")
- * @ORM\DiscriminatorColumn(name="type", type="string")
- * @ORM\Table(
- *     name="AttributeValues"
- * )
+ * @ORM\MappedSuperClass
  */
 abstract class Value implements AttributeValueInterface
 {
-    /**
-     * @ORM\Id @ORM\Column(type="integer", options={"unsigned":true})
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    protected $avID;
 
     /**
+     * @ORM\Id
      * @ORM\ManyToOne(targetEntity="\Concrete\Core\Entity\Attribute\Key\Key")
      * @ORM\JoinColumn(name="akID", referencedColumnName="akID")
      **/
     protected $attribute_key;
 
     /**
-     * @ORM\ManyToOne(targetEntity="\Concrete\Core\Entity\Attribute\Value\Value\Value", cascade={"persist"}, inversedBy="attribute_values")
-     * @ORM\JoinColumn(name="avValueID", referencedColumnName="avValueID")
+     * @ORM\ManyToOne(targetEntity="\Concrete\Core\Entity\Attribute\Value\Value\Value", cascade={"persist"})
+     * @ORM\JoinColumn(name="avID", referencedColumnName="avID")
      **/
     protected $value;
 
@@ -43,7 +34,7 @@ abstract class Value implements AttributeValueInterface
 
     public function getAttributeValueID()
     {
-        return $this->avID;
+        return $this->value->getAttributeValueID();
     }
 
     /**
