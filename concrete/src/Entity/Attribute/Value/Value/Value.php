@@ -19,7 +19,7 @@ abstract class Value
      * @ORM\Id @ORM\Column(type="integer", options={"unsigned":true})
      * @ORM\GeneratedValue(strategy="AUTO")
      */
-    protected $avID;
+    protected $avValueID;
 
     /**
      * @ORM\OneToMany(targetEntity="\Concrete\Core\Entity\Attribute\Value\Value", mappedBy="value", cascade={"remove"})
@@ -52,13 +52,13 @@ abstract class Value
 
     public function getAttributeValueID()
     {
-        return $this->avID;
+        return $this->avValueID;
     }
 
     public function __clone()
     {
-        if ($this->avID) {
-            $this->avID = null;
+        if ($this->avValueID) {
+            $this->avValueID = null;
         }
     }
 

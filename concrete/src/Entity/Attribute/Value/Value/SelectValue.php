@@ -13,7 +13,7 @@ class SelectValue extends Value implements \Iterator
     /**
      * @ORM\ManyToMany(targetEntity="SelectValueOption", inversedBy="values", cascade={"persist"})
      * @ORM\JoinTable(name="SelectAttributeValueSelectedOptions",
-     * joinColumns={@ORM\JoinColumn(name="avID", referencedColumnName="avID")},
+     * joinColumns={@ORM\JoinColumn(name="avValueID", referencedColumnName="avValueID")},
      * inverseJoinColumns={@ORM\JoinColumn(name="avSelectOptionID", referencedColumnName="avSelectOptionID")}
      * )
      */

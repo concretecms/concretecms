@@ -14,7 +14,7 @@ class ExpressValue extends Value
     /**
      * @ORM\ManyToMany(targetEntity="\Concrete\Core\Entity\Express\Entry", inversedBy="values", cascade={"persist"})
      * @ORM\JoinTable(name="ExpressAttributeValueSelectedEntries",
-     * joinColumns={@ORM\JoinColumn(name="avID", referencedColumnName="avID")},
+     * joinColumns={@ORM\JoinColumn(name="avValueID", referencedColumnName="avValueID")},
      * inverseJoinColumns={@ORM\JoinColumn(name="exEntryID", referencedColumnName="exEntryID")}
      * )
      */

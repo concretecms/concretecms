@@ -29,7 +29,7 @@ class Value extends Object implements AttributeValueInterface
         // object
         $orm = \Database::connection()->getEntityManager();
         $r = $orm->getRepository('Concrete\Core\Entity\Attribute\Value\LegacyValue');
-        $value = $r->findOneBy(['avrID' => $this->getAttributeValueID()]);
+        $value = $r->findOneBy(['avID' => $this->getAttributeValueID()]);
         if (is_object($value)) {
             return $value->getValueObject();
         }
@@ -42,7 +42,7 @@ class Value extends Object implements AttributeValueInterface
     {
         $orm = \Database::connection()->getEntityManager();
         $r = $orm->getRepository('Concrete\Core\Entity\Attribute\Value\LegacyValue');
-        $attributeValue = $r->findOneBy(['avrID' => $this->getAttributeValueID()]);
+        $attributeValue = $r->findOneBy(['avID' => $this->getAttributeValueID()]);
         if (is_object($attributeValue)) {
             $attributeValue->setValue($value);
         }
@@ -50,21 +50,21 @@ class Value extends Object implements AttributeValueInterface
         $orm->flush();
     }
 
-    public static function getByID($avrID)
+    public static function getByID($avID)
     {
         $av = new static();
-        $av->load($avrID);
-        if ($av->getAttributeValueID() == $avrID) {
+        $av->load($avID);
+        if ($av->getAttributeValueID() == $avID) {
             return $av;
         }
     }
 
-    protected function load($avrID)
+    protected function load($avID)
     {
         $db = Loader::db();
 //        $row = $db->GetRow('select avID, akID, uID, avDateAdded, atID from AttributeValues where avID = ?', array($avID));
-        $row = $db->GetRow('select avrID, akID from AttributeValues where avrID = ?', array($avrID));
-        if (is_array($row) && $row['avrID'] == $avrID) {
+        $row = $db->GetRow('select avID, akID from AttributeValues where avID = ?', array($avID));
+        if (is_array($row) && $row['avID'] == $avID) {
             $this->setPropertiesFromArray($row);
             $this->attributeKey = Key::getByID($row['akID']);
             $this->attributeType = $this->getAttributeTypeObject();
@@ -135,7 +135,7 @@ class Value extends Object implements AttributeValueInterface
 
     public function getAttributeValueID()
     {
-        return $this->avrID;
+        return $this->avID;
     }
     public function getAttributeValueUserID()
     {
