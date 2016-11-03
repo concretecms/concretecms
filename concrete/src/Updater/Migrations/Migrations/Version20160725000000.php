@@ -13,6 +13,7 @@ use Concrete\Core\Entity\Attribute\Key\Type\BooleanType;
 use Concrete\Core\Entity\Attribute\Key\Type\NumberType;
 use Concrete\Core\File\Filesystem;
 use Concrete\Core\File\Set\Set;
+use Concrete\Core\Multilingual\Page\Section\Section;
 use Concrete\Core\Page\Template;
 use Concrete\Core\Permission\Access\Access;
 use Concrete\Core\Permission\Access\Entity\GroupEntity;
@@ -34,8 +35,15 @@ use Concrete\Core\Support\Facade\Facade;
 
 class Version20160725000000 extends AbstractMigration
 {
+
+    protected function output($message)
+    {
+        $this->version->getConfiguration()->getOutputWriter()->write($message);
+    }
+
     protected function renameProblematicTables()
     {
+        $this->output(t('Renaming problematic tables...'));
         if (!$this->connection->tableExists('_AttributeKeys')) {
             $this->connection->Execute('alter table AttributeKeys rename _AttributeKeys');
         }
@@ -58,6 +66,7 @@ class Version20160725000000 extends AbstractMigration
 
     protected function migrateOldPermissions()
     {
+        $this->output(t('Migrating old permissions...'));
         $this->connection->Execute('update PermissionKeys set pkHandle = ? where pkHandle = ?', array(
             'view_category_tree_node', 'view_topic_category_tree_node',
         ));
@@ -80,6 +89,7 @@ class Version20160725000000 extends AbstractMigration
 
     protected function migrateFileManagerPermissions()
     {
+        $this->output(t('Migrating file manager permissions...'));
         $filesystem = new Filesystem();
         $root = $filesystem->getRootFolder();
         $this->migrateFileSetManagerPermissions(0, $root);
@@ -108,6 +118,7 @@ class Version20160725000000 extends AbstractMigration
 
     protected function migrateFileSetManagerPermissions($fsID, FileFolder $folder)
     {
+        $this->output(t('Migrating file set permissions...'));
         $r = $this->connection->executeQuery('select fpa.*, pk.pkHandle from FileSetPermissionAssignments fpa inner join PermissionKeys pk on fpa.pkID = pk.pkID where fsID = ?', array($fsID));
         $permissionsMap = array(
             'view_file_set_file' => 'view_file_folder_file',
@@ -152,15 +163,11 @@ class Version20160725000000 extends AbstractMigration
                 $pt->assignPermissionAccess($pa);
             }
         }
-
-        // Loop through all file sets that have custom permissions and create folders from them,
-        // preserving the file permssions on the folders themselves
-
-
     }
 
     protected function updateDoctrineXmlTables()
     {
+        $this->output(t('Updating tables found in doctrine xml...'));
         // Update tables that still exist in db.xml
         \Concrete\Core\Database\Schema\Schema::refreshCoreXMLSchema(array(
             'Pages',
@@ -180,6 +187,7 @@ class Version20160725000000 extends AbstractMigration
 
     protected function prepareProblematicEntityTables()
     {
+        $this->output(t('Preparing problematic entity database tables...'));
         // Remove the weird primary keys from the Files table
         $this->connection->executeQuery('alter table Files drop primary key, add primary key (fID)');
 
@@ -222,6 +230,7 @@ class Version20160725000000 extends AbstractMigration
         $existingMetadata = $cmf->getAllMetadata();
         foreach($existingMetadata as $meta) {
             if (in_array($meta->getName(), $entities)) {
+                $this->output(t('Installing entity %s...', $meta->getName()));
                 $metadatas[] = $meta;
             }
         }
@@ -234,6 +243,7 @@ class Version20160725000000 extends AbstractMigration
         // loop through all old attributes and make sure to import them into the new system
         $r = $this->connection->executeQuery('select ak.*, akCategoryHandle from _AttributeKeys ak inner join AttributeKeyCategories akc on ak.akCategoryID = akc.akCategoryID;');
         while ($row = $r->fetch()) {
+            $this->output(t('Migrating attribute key %s', $row['akHandle']));
             $table = false;
             $akCategory = null;
             switch ($row['akCategoryHandle']) {
@@ -395,13 +405,20 @@ class Version20160725000000 extends AbstractMigration
         // Retrieve type
         $atHandle = $this->connection->fetchColumn('select atHandle from AttributeTypes where atID = ?', array($atID));
         if ($atHandle) {
-            $valueType = strtolower(preg_replace("/[^A-Za-z]/", '', $atHandle)) . 'value';
             $type = $type . 'value';
+            $avID = null;
+            if (in_array($atHandle, array(
+                'address', 'boolean', 'date_time', 'email', 'express', 'image_file',
+                'number', 'rating', 'select', 'social_links', 'telephone', 'text', 'textarea',
+                'topics', 'url'
+            ))) {
+                $valueType = strtolower(preg_replace("/[^A-Za-z]/", '', $atHandle)) . 'value';
 
-            $this->connection->insert('AttributeValueValues', ['type' => $valueType]);
-            $avID = $this->connection->lastInsertId();
+                $this->connection->insert('AttributeValueValues', ['type' => $valueType]);
+                $avID = $this->connection->lastInsertId();
 
-            $this->loadAttributeValue($atHandle, $legacyAVID, $avID);
+                $this->loadAttributeValue($atHandle, $legacyAVID, $avID);
+            }
 
             // Create AttributeValue record
             $this->connection->insert('AttributeValues', [
@@ -418,8 +435,17 @@ class Version20160725000000 extends AbstractMigration
     {
         $row = $this->connection->fetchAssoc('select * from AttributeTypes where atID = ?', array($atID));
         if ($row['atID']) {
+            $this->output(t('Importing attribute key type %s...', $row['atHandle']));
             $akTypeID = $this->connection->fetchColumn("select akTypeID from AttributeKeyTypes where akID = ?", array($akID));
-            $type = strtolower(preg_replace("/[^A-Za-z]/", '', $row['atHandle'])) . 'type';
+            if (in_array($row['atHandle'], array(
+                'address', 'boolean', 'date_time', 'email', 'express', 'image_file',
+                'number', 'rating', 'select', 'social_links', 'telephone', 'text', 'textarea',
+                'topics', 'url'
+            ))) {
+                $type = strtolower(preg_replace("/[^A-Za-z]/", '', $row['atHandle'])) . 'type';
+            } else {
+                $type = 'legacytype';
+            }
             if (!$akTypeID) {
                 $this->connection->insert('AttributeKeyTypes', ['akTypeHandle' => $row['atHandle'], 'akID' => $akID, 'type' => $type]);
                 $akTypeID = $this->connection->lastInsertId();
@@ -577,6 +603,7 @@ class Version20160725000000 extends AbstractMigration
 
     protected function addDashboard()
     {
+        $this->output(t('Updating Dashboard...'));
         $page = Page::getByPath('/dashboard/express');
         if (!is_object($page) || $page->isError()) {
             $sp = SinglePage::add('/dashboard/express');
@@ -657,6 +684,7 @@ class Version20160725000000 extends AbstractMigration
 
     protected function addBlockTypes()
     {
+        $this->output(t('Adding block types...'));
         $desktopSet = \Concrete\Core\Block\BlockType\Set::getByHandle('core_desktop');
         if (!is_object($desktopSet)) {
             $desktopSet = \Concrete\Core\Block\BlockType\Set::add('core_desktop', 'Desktop');
@@ -799,6 +827,7 @@ class Version20160725000000 extends AbstractMigration
 
     protected function addTreeNodeTypes()
     {
+        $this->output(t('Adding tree node types...'));
         $this->connection->Execute('update TreeNodeTypes set treeNodeTypeHandle = ? where treeNodeTypeHandle = ?', array(
             'category', 'topic_category',
         ));
@@ -828,6 +857,7 @@ class Version20160725000000 extends AbstractMigration
 
     protected function installDesktops()
     {
+        $this->output(t('Installing Desktops...'));
         $template = Template::getByHandle('desktop');
         if (!is_object($template)) {
             Template::add('desktop', t('Desktop'), FILENAME_PAGE_TEMPLATE_DEFAULT_ICON, null, true);
@@ -890,6 +920,7 @@ class Version20160725000000 extends AbstractMigration
 
     protected function updateWorkflows()
     {
+        $this->output(t('Updating Workflows...'));
         $page = \Page::getByPath("/dashboard/workflow");
         if (is_object($page) && !$page->isError()) {
             $page->moveToTrash();
@@ -902,6 +933,7 @@ class Version20160725000000 extends AbstractMigration
 
     protected function installSite()
     {
+        $this->output(t('Installing Site object...'));
 
         /**
          * @var $service Service
@@ -917,7 +949,11 @@ class Version20160725000000 extends AbstractMigration
         }
 
         if (!is_object($site) || $site->getSiteID() < 1) {
-            $site = $service->installDefault();
+            $locale = 'en_US';
+            if (\Config::get('concrete.multilingual.default_locale')) {
+                $locale = \Config::get('concrete.multilingual.default_locale');
+            }
+            $site = $service->installDefault($locale);
 
             // migrate name
             $site->setSiteName(\Config::get('concrete.site'));
@@ -1016,6 +1052,7 @@ class Version20160725000000 extends AbstractMigration
 
     protected function splittedTrackingCode()
     {
+        $this->output(t('Updating tracking code...'));
         $service = \Core::make('site');
         $site = $service->getDefault();
         $config = $site->getConfigRepository();
@@ -1041,6 +1078,7 @@ class Version20160725000000 extends AbstractMigration
 
     protected function addPermissions()
     {
+        $this->output(t('Adding permissions...'));
 
         CacheLocal::delete('permission_keys', false);
 
@@ -1052,11 +1090,13 @@ class Version20160725000000 extends AbstractMigration
 
     protected function cleanupOldPermissions()
     {
+        $this->output(t('Cleaning old permissions...'));
         $this->connection->Execute('delete from PermissionKeys where pkHandle = ?', array('_add_file'));
     }
 
     protected function updateTopics()
     {
+        $this->output(t('Updating topics...'));
         $r = $this->connection->executeQuery('select * from _TreeTopicNodes');
         while ($row = $r->fetch()) {
             $this->connection->executeQuery(
@@ -1068,6 +1108,7 @@ class Version20160725000000 extends AbstractMigration
 
     protected function updateFileManager()
     {
+        $this->output(t('Migrating to new file manager...'));
         $filesystem = new Filesystem();
         $folder = $filesystem->getRootFolder();
         if (!is_object($folder)) {
@@ -1077,7 +1118,9 @@ class Version20160725000000 extends AbstractMigration
 
             $r = $this->connection->executeQuery('select fID from Files');
             while ($row = $r->fetch()) {
-                $f = \Concrete\Core\File\File::getByID($row['fID']);
+                // This is a performance hack
+                $f = new \Concrete\Core\Entity\File\File();
+                $f->fID = $row['fID'];
                 File::add($f, $folder);
             }
         }
@@ -1085,6 +1128,7 @@ class Version20160725000000 extends AbstractMigration
 
     public function addNotifications()
     {
+        $this->output(t('Adding notifications...'));
         $adminGroupEntity = GroupEntity::getOrCreate(\Group::getByID(ADMIN_GROUP_ID));
         $adminUserEntity = UserEntity::getOrCreate(\UserInfo::getByID(USER_SUPER_ID));
         $pk = Key::getByHandle('notify_in_notification_center');
@@ -1095,18 +1139,9 @@ class Version20160725000000 extends AbstractMigration
         $pt->assignPermissionAccess($pa);
     }
 
-    /**
-     * This shouldn't be necessary - we should have just done this with internal migrations between betas
-     * but we didn't so this is what we have to do.
-     * @return mixed
-     */
-    protected function updatingFromVersion7()
-    {
-        return version_compare(\Config::get("concrete.version_installed"), '8.0.0a1', '<');
-    }
-
     protected function updateJobs()
     {
+        $this->output(t('Updating jobs...'));
         if (!$job = \Job::getByHandle('update_statistics')) {
             \Job::installByHandle('update_statistics');
         }
@@ -1114,6 +1149,7 @@ class Version20160725000000 extends AbstractMigration
 
     protected function setupSinglePages()
     {
+        $this->output(t('Updating single pages...'));
         $siteTreeID = \Core::make('site')->getSite()->getSiteTreeID();
         $pages = array(
             // global pages
@@ -1139,6 +1175,92 @@ class Version20160725000000 extends AbstractMigration
             $c->moveToTrash();
         }
     }
+
+    protected function installLocales()
+    {
+        $this->output(t('Updating locales and multilingual sections...'));
+        // Update home page so it has no handle. This way we won't make links like /home/services unless
+        // people really want that.
+        $home = Page::getByID(HOME_CID, 'RECENT');
+        $home->update(['cHandle' => '']);
+
+        // Loop through all multilingual sections
+        $r = $this->connection->executeQuery('select * from MultilingualSections');
+        $sections = array();
+        while ($row = $r->fetch()) {
+            $sections[] = $row;
+        }
+
+        $em = $this->connection->getEntityManager();
+        $service = new \Concrete\Core\Localization\Locale\Service($em);
+        $site = \Core::make('site')->getSite();
+
+        $redirectToDefaultLocale = \Config::get('concrete.multilingual.redirect_home_to_default_locale');
+        $defaultLocale = \Config::get('concrete.multilingual.default_locale');
+        $sectionsIncludeHome = false;
+        foreach($sections as $section) {
+            if ($section['cID'] == 1) {
+                $sectionsIncludeHome = true;
+            }
+        }
+
+        // Now we have a valid locale object.
+        // Case 1: Home Page redirects to default locale, default locale inside the home page. 99% of sites.
+        if (!$sectionsIncludeHome && $redirectToDefaultLocale) {
+            // Move the home page outside site trees.
+            $this->output(t('Moving home page to outside of site trees...'));
+            $this->connection->executeQuery('update Pages set siteTreeID = 0 where cID = 1');
+        }
+
+        foreach($sections as $section) {
+
+            $sectionPage = \Page::getByID($section['cID']);
+            $this->output(t('Migrating multilingual section: %s...', $sectionPage->getCollectionName()));
+            // Create a locale for this section
+
+            if ($site->getDefaultLocale()->getLocale() != $section['msLanguage'] . '_' . $section['msCountry']) {
+                // We don't create the locale if it's the default, because we've already created it.
+                $locale = $service->add($site, $section['msLanguage'], $section['msCountry']);
+            } else {
+                $locale = $em->getRepository('Concrete\Core\Entity\Site\Locale')->findOneBy([
+                    'msLanguage' => $section['msLanguage'], 'msCountry' => $section['msCountry']
+                ]);
+            }
+
+            // Now that we have the locale, let's take the multilingual section and make it the
+            // home page for the newly created site tree
+            if ($section['cID'] != 1) {
+                $tree = $locale->getSiteTree();
+                if (!$redirectToDefaultLocale && $locale->getLocale() == $site->getDefaultLocale()->getLocale()) {
+                    // Case 2: This is our default locale (/en perhaps) but it is contained within a home
+                    // page that we do not redirect from. So we want to actually make the HOME page
+                    // the multilingual section – which is already is automatically.
+
+                    // We actually do nothing in this case since this is all already set up automatically earlier.
+                } else{
+                    $this->output(t('Setting pages for section %s to site tree %s...', $sectionPage->getCollectionName(), $tree->getSiteTreeID()));
+                    $tree->setSiteHomePageID($section['cID']);
+                    $em->persist($tree);
+                    $em->flush();
+                    $this->connection->executeQuery('update Pages set cParentID = 0, siteTreeID = ? where cID = ?', [
+                        $tree->getSiteTreeID(), $section['cID']
+                    ]);
+                    // Now we set all pages in this site tree to the new site tree ID.
+                    $children = $sectionPage->getCollectionChildrenArray();
+                    foreach($children as $cID) {
+                        $this->connection->executeQuery('update Pages set siteTreeID = ? where cID = ?', [
+                            $tree->getSiteTreeID(), $cID
+                        ]);
+                    }
+                }
+            }
+        }
+
+        // Case 3 - Home page is the default locale.
+        // We don't have to do anything to fulfill this since it's already been taken care of by the previous migrations.
+
+    }
+
 
     public function up(Schema $schema)
     {
@@ -1166,6 +1288,7 @@ class Version20160725000000 extends AbstractMigration
         $this->addNotifications();
         $this->splittedTrackingCode();
         $this->cleanupOldPermissions();
+        $this->installLocales();
         $this->connection->Execute('set foreign_key_checks = 1');
     }
 

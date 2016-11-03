@@ -42,11 +42,11 @@ class Factory
         $locale = new Locale();
         $locale->setLanguage('en');
         $locale->setCountry('US');
+        $locale->setSiteTree($tree);
 
         $site = new Site($this->config);
         $site->setSiteHandle('default');
         $site->setIsDefault(true);
-        $site->setSiteTree($tree);
         $tree->setLocale($locale);
 
         return $site;

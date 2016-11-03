@@ -53,6 +53,11 @@ class DefaultController extends AttributeTypeController
         return $av;
     }
 
+    public function createAttributeKeyType()
+    {
+        return new TextType();
+    }
+
     public function createAttributeValueFromRequest()
     {
         $data = $this->post();

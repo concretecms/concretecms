@@ -3,6 +3,7 @@ namespace Concrete\Core\Attribute;
 
 use Concrete\Core\Attribute\Value\EmptyRequestAttributeValue;
 use Concrete\Core\Controller\AbstractController;
+use Concrete\Core\Entity\Attribute\Key\Type\LegacyType;
 use Concrete\Core\Entity\Attribute\Key\Type\TextType;
 use Concrete\Core\Search\ItemList\Database\AttributedItemList;
 use Core;
@@ -299,7 +300,7 @@ class Controller extends AbstractController
 
     public function createAttributeKeyType()
     {
-        return new TextType();
+        return new LegacyType();
     }
 
     /*

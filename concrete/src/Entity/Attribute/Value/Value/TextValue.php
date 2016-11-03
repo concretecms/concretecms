@@ -10,7 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
 class TextValue extends Value
 {
     /**
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="text", nullable=true)
      */
     protected $value = '';
 

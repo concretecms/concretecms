@@ -25,7 +25,7 @@ class LocaleCollection implements \JsonSerializable
         $name = $locale->getLanguageText();
         foreach($this->getLocales() as $otherLocale) {
             if ($otherLocale->getSiteLocaleID() != $locale->getSiteLocaleID() && $otherLocale->getLanguage () == $locale->getLanguage()) {
-                $name = sprintf('%s (%s)', $locale->getLanguageText, $this->countries->getCountryName($locale->getCountry()));
+                $name = sprintf('%s (%s)', $locale->getLanguageText(), $this->countries->getCountryName($locale->getCountry()));
             }
         }
         return $name;
