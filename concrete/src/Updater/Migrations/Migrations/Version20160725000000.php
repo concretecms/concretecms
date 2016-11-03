@@ -304,32 +304,32 @@ class Version20160725000000 extends AbstractMigration
         switch ($atHandle) {
             case 'address':
                 $row = $this->connection->fetchAssoc('select * from atAddress where avID = ?', [$avID]);
-                if (!$this->connection->fetchColumn('select count(avID) from AddressAttributeValues where avID = ?', [$avID])) {
+                if ($row && !$this->connection->fetchColumn('select count(avID) from AddressAttributeValues where avID = ?', [$avID])) {
                     $this->connection->insert('AddressAttributeValues', $row);
                 }
                 break;
             case 'boolean':
                 $value = $this->connection->fetchColumn('select value from atBoolean where avID = ?', [$avID]);
-                if (!$this->connection->fetchColumn('select count(avID) from BooleanAttributeValues where avID = ?', [$avID])) {
+                if ($row && !$this->connection->fetchColumn('select count(avID) from BooleanAttributeValues where avID = ?', [$avID])) {
                     $this->connection->insert('BooleanAttributeValues', ['value' => $value, 'avID' => $avID]);
                 }
                 break;
             case 'date_time':
                 $row = $this->connection->fetchAssoc('select * from atDateTime where avID = ?', [$avID]);
-                if (!$this->connection->fetchColumn('select count(avID) from DateTimeAttributeValues where avID = ?', [$avID])) {
+                if ($row && !$this->connection->fetchColumn('select count(avID) from DateTimeAttributeValues where avID = ?', [$avID])) {
                     $this->connection->insert('DateTimeAttributeValues', $row);
                 }
                 break;
             case 'image_file':
                 $row = $this->connection->fetchAssoc('select * from atFile where avID = ?', [$avID]);
-                if (!$this->connection->fetchColumn('select count(avID) from ImageFileAttributeValues where avID = ?', [$avID])) {
+                if ($row && !$this->connection->fetchColumn('select count(avID) from ImageFileAttributeValues where avID = ?', [$avID])) {
                     $this->connection->insert('ImageFileAttributeValues', $row);
                 }
                 break;
             case 'number':
             case 'rating':
                 $row = $this->connection->fetchAssoc('select * from atNumber where avID = ?', [$avID]);
-                if (!$this->connection->fetchColumn('select count(avID) from NumberAttributeValues where avID = ?', [$avID])) {
+                if ($row && !$this->connection->fetchColumn('select count(avID) from NumberAttributeValues where avID = ?', [$avID])) {
                     $this->connection->insert('NumberAttributeValues', $row);
                 }
                 break;
@@ -362,13 +362,13 @@ class Version20160725000000 extends AbstractMigration
                 break;
             case 'text':
                 $row = $this->connection->fetchAssoc('select * from atDefault where avID = ?', [$avID]);
-                if (!$this->connection->fetchColumn('select count(avID) from TextAttributeValues where avID = ?', [$avID])) {
+                if ($row && !$this->connection->fetchColumn('select count(avID) from TextAttributeValues where avID = ?', [$avID])) {
                     $this->connection->insert('TextAttributeValues', $row);
                 }
                 break;
             case 'textarea':
                 $row = $this->connection->fetchAssoc('select * from atDefault where avID = ?', [$avID]);
-                if (!$this->connection->fetchColumn('select count(avID) from TextareaAttributeValues where avID = ?', [$avID])) {
+                if ($row && !$this->connection->fetchColumn('select count(avID) from TextareaAttributeValues where avID = ?', [$avID])) {
                     $this->connection->insert('TextareaAttributeValues', $row);
                 }
                 break;
@@ -400,14 +400,16 @@ class Version20160725000000 extends AbstractMigration
             ))) {
                 $type = strtolower(preg_replace("/[^A-Za-z]/", '', $atHandle)) . 'value';
                 $this->loadAttributeValue($atHandle, $avID);
+            } else {
+                $type = 'legacyvalue';
+            }
 
-                // Create AttributeValue record
-                if (!$this->connection->fetchColumn('select count(avID) from AttributeValues where avID = ?', [$avID])) {
-                    $this->connection->insert('AttributeValues', [
-                        'avID' => $avID,
-                        'type' => $type,
-                    ]);
-                }
+            // Create AttributeValue record
+            if (!$this->connection->fetchColumn('select count(avID) from AttributeValues where avID = ?', [$avID])) {
+                $this->connection->insert('AttributeValues', [
+                    'avID' => $avID,
+                    'type' => $type,
+                ]);
             }
         }
     }
