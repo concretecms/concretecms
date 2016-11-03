@@ -122,8 +122,9 @@ class DownloadFile extends PageController
      */
     private function trackDownload(FileEntity $file, $rcID)
     {
-        // Never track requests that are only requesting a range
-        if ($this->request->headers->get('content-range')) {
+        // Never track requests that are only requesting a range 
+        // https://tools.ietf.org/html/rfc7233#section-3.1
+        if ($this->request->headers->has('Range')) {
             return;
         }
 
