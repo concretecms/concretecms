@@ -21,14 +21,18 @@ $pt = $c->getCollectionThemeObject();
 if ($showMenu) {
     ?>
     <div data-container="block">
-<?php 
+<?php
 } ?>
 
 <?php if (is_object($css) && $b->getBlockTypeHandle() == BLOCK_HANDLE_LAYOUT_PROXY) {
     ?>
     <?php // in this instance, the css container comes OUTSIDE any theme container ?>
-    <div class="<?=$css->getContainerClass() ?>" >
-<?php 
+    <div class="<?php echo $css->getContainerClass(); ?>"
+    <?php if ($css->getCustomStyleID()) { ?>
+    id="<?php echo $css->getCustomStyleID(); ?>"
+    <?php } ?>
+    >
+<?php
 } ?>
 
 <?php
@@ -85,15 +89,19 @@ if ($showMenu) {
         data-launch-block-menu="block-menu-b<?=$b->getBlockID()?>-<?=$a->getAreaID()?>"
         data-dragging-avatar="<?=h('<p><img src="' . Loader::helper('concrete/urls')->getBlockTypeIconURL($btw) . '" /><span>' . t($btw->getBlockTypeName()) . '</span></p>')?>"
         <?php if ($btw->getBlockTypeHandle() == BLOCK_HANDLE_LAYOUT_PROXY) {
-    ?> data-block-menu-handle="none"<?php 
+    ?> data-block-menu-handle="none"<?php
 }
     ?>
         >
 
     <?php if (is_object($css) && $b->getBlockTypeHandle() != BLOCK_HANDLE_LAYOUT_PROXY) {
     ?>
-    <div class="<?=$css->getContainerClass() ?>" >
-    <?php 
+    <div class="<?php echo $css->getContainerClass(); ?>"
+    <?php if ($css->getCustomStyleID()) { ?>
+    id="<?php echo $css->getCustomStyleID(); ?>"
+    <?php } ?>
+    >
+    <?php
 }
     ?>
 
@@ -101,7 +109,7 @@ if ($showMenu) {
             <?php if ($p->canEditBlock() && $btw->getBlockTypeHandle() != BLOCK_HANDLE_LAYOUT_PROXY) {
     ?>
                 <li><a data-inline-command="move-block" href="#"><i class="fa fa-arrows"></i></a></li>
-            <?php 
+            <?php
 }
     ?>
         </ul>
@@ -114,14 +122,18 @@ if ($showMenu) {
             ?>
         </div>
 
-<?php 
+<?php
 } else {
     ?>
     <?php if (is_object($css) && $b->getBlockTypeHandle() != BLOCK_HANDLE_LAYOUT_PROXY) {
     ?>
-    <div class="<?=$css->getContainerClass() ?>" >
-    <?php 
+    <div class="<?php echo $css->getContainerClass(); ?>"
+    <?php if ($css->getCustomStyleID()) { ?>
+    id="<?php echo $css->getCustomStyleID(); ?>"
+    <?php } ?>
+    >
+    <?php
 }
     ?>
-<?php 
+<?php
 } ?>
