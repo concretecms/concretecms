@@ -59,8 +59,8 @@ abstract class Package implements LocalizablePackageInterface
     protected $pkgEnableLegacyNamespace = true;
 
     /**
-     * Array of namespace -> location autoloader entries for the package. Will automatically
-     * be added to the class loader.
+     * Array of location -> namespace autoloader entries for the package. Will automatically
+     * be added to the class loader. (e.g. array('src/PortlandLabs' => \PortlandLabs'))
      * @var array
      */
     protected $pkgAutoloaderRegistries = array();
