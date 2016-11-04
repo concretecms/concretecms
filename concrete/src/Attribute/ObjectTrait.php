@@ -70,16 +70,18 @@ trait ObjectTrait
 
         $this->clearAttribute($ak);
 
-        // Create the generic value. This gets joined to any specific Attribute value objects later on.
-        $genericValue = new Value();
-        $orm->persist($genericValue);
-        $orm->flush();
-
         // Create the attribute category value.
         $attributeValue = $this->getAttributeValueObject($ak, true);
         $orm->persist($attributeValue);
         $orm->flush();
 
+        // Create the generic value. This gets joined to any specific Attribute value objects later on.
+        $genericValue = new Value();
+        $genericValue->setAttributeKey($attributeValue->getAttributeKey());
+        $orm->persist($genericValue);
+        $orm->flush();
+
+        // Set the generic value to the attribute category value.
         $attributeValue->setGenericValue($genericValue);
         $orm->persist($attributeValue);
         $orm->flush();

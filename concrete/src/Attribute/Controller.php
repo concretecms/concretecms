@@ -83,6 +83,11 @@ class Controller extends AbstractController
 
     public function deleteKey()
     {
+        $settings = $this->retrieveAttributeKeySettings();
+        if (is_object($settings)) {
+            $this->entityManager->remove($settings);
+            $this->entityManager->flush();
+        }
     }
 
     public function deleteValue()

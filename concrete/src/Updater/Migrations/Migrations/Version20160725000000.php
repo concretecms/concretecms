@@ -399,6 +399,7 @@ class Version20160725000000 extends AbstractMigration
             // Create AttributeValue record
             if (!$this->connection->fetchColumn('select count(avID) from AttributeValues where avID = ?', [$avID])) {
                 $this->connection->insert('AttributeValues', [
+                    'akID' => $akID,
                     'avID' => $avID,
                 ]);
             }

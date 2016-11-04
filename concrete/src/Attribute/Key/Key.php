@@ -187,6 +187,7 @@ class Key extends Facade implements AttributeKeyInterface
     {
         $orm = \Database::connection()->getEntityManager();
         $genericValue = new Value();
+        $genericValue->setAttributeKey($this->legacyAttributeKey);
         $orm->persist($genericValue);
         $orm->flush();
 

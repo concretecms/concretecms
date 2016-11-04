@@ -256,7 +256,16 @@ abstract class AbstractCategory implements CategoryInterface, StandardSearchInde
         foreach ($setKeys as $setKey) {
             $this->entityManager->remove($setKey);
         }
-        $this->entityManager->remove($key);
+
+        // Delete any attribute values found attached to this key
+        $genericValues = $this->entityManager->getRepository('\Concrete\Core\Entity\Attribute\Value\Value\Value')
+            ->findBy(['attribute_key' => $key]);
+        foreach($genericValues as $genericValue) {
+            $values = $this->getAttributeValueRepository()->findBy(['generic_value' => $genericValue]);
+            foreach($values as $attributeValue) {
+                $this->deleteValue($attributeValue);
+            }
+        }
 
         $this->entityManager->remove($key);
         $this->entityManager->flush();
