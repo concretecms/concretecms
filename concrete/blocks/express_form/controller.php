@@ -208,8 +208,8 @@ class Controller extends BlockController
                 }
 
                 $c = \Page::getCurrentPage();
-                $url = \URL::to($c);
-                $r = Redirect::to($url, 'form_success', $this->bID);
+                $url = \URL::to($c, 'form_success', $this->bID);
+                $r = Redirect::to($url);
                 $r->setTargetUrl($r->getTargetUrl() . '#form' . $this->bID);
                 return $r;
 

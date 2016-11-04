@@ -51,7 +51,7 @@ class Controller extends AttributeTypeController
 
     public function createAttributeValue($rating)
     {
-        $value = new RatingValue();
+        $value = new NumberValue();
         if ($rating == '') {
             $rating = 0;
         }

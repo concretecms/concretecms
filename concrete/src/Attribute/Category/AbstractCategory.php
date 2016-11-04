@@ -203,7 +203,7 @@ abstract class AbstractCategory implements CategoryInterface, StandardSearchInde
             $settings = $controller->getAttributeKeySettings();
         }
         $settings->setAttributeKey($key);
-        $key->setAttributeKeyType($settings);
+        $key->setAttributeKeySettings($settings);
 
         // Modify the category's search indexer.
         $indexer = $this->getSearchIndexer();
