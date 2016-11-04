@@ -1,6 +1,6 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
-$this->inc('elements/header.php');
+$view->inc('elements/header.php');
 ?>
 
 <header class="ccm-dashboard-page-header">
@@ -106,6 +106,12 @@ if (isset($message)) {
 	<?php
 }
 
-echo $innerContent;
+?>
+<div id="ccm-dashboard-content-inner">
 
-$this->inc('elements/footer.php');
+    <?php echo $innerContent; ?>
+
+</div>
+
+<?
+$view->inc('elements/footer.php');
