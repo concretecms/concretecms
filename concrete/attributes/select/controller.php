@@ -31,6 +31,11 @@ class Controller extends AttributeTypeController
         return new FontAwesomeIconFormatter('list-alt');
     }
 
+    public function getAttributeValueObject()
+    {
+        return $this->entityManager->find(SelectValue::class, $this->attributeValue->getGenericValue());
+    }
+
     public function type_form()
     {
         $this->set('form', Core::make('helper/form'));

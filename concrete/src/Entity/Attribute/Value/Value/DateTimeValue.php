@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  * @ORM\Table(name="DateTimeAttributeValues")
  */
-class DateTimeValue extends Value
+class DateTimeValue extends AbstractValue
 {
     /**
      * @ORM\Column(type="datetime", nullable=true)

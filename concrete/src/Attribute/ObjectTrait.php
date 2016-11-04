@@ -79,7 +79,7 @@ trait ObjectTrait
         $orm->flush();
         $controller->setAttributeValue($attributeValue);
 
-        if (!($value instanceof Value)) {
+        if (!($value instanceof AttributeValue\AbstractValue)) {
             if ($value instanceof EmptyRequestAttributeValue) {
                 // LEGACY SUPPORT
                 // If the passed $value object == EmptyRequestAttributeValue, we know we are dealing
@@ -88,12 +88,24 @@ trait ObjectTrait
                 $controller->saveForm($controller->post());
                 unset($value);
             } else {
+                /**
+                 * @var $value AttributeValue\AbstractValue
+                 */
                 $value = $controller->createAttributeValue($value);
             }
         }
 
         if ($value) {
-            $attributeValue->setValue($value);
+            $genericValue = new Value();
+            $orm->persist($genericValue);
+            $orm->flush();
+
+            $value->setGenericValue($genericValue);
+
+            $orm->persist($value);
+            $orm->flush();
+
+            $attributeValue->setGenericValue($genericValue);
         }
 
         $orm->persist($attributeValue);

@@ -6,25 +6,16 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\InheritanceType("JOINED")
- * @ORM\DiscriminatorColumn(name="type", type="string")
  * @ORM\Table(name="AttributeValues")
  */
-abstract class Value
+class Value
 {
-
-    abstract public function __toString();
 
     /**
      * @ORM\Id @ORM\Column(type="integer", options={"unsigned":true})
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $avID;
-
-    public function getValue()
-    {
-        return $this;
-    }
 
     public function getAttributeValueID()
     {

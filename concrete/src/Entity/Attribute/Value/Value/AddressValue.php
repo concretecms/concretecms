@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  * @ORM\Table(name="AddressAttributeValues")
  */
-class AddressValue extends Value
+class AddressValue extends AbstractValue
 {
     /**
      * Note: It's the public portion of this property that is deprecated.

@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
  *     name="LegacyAttributeValues"
  * )
  */
-class LegacyValue extends Value
+class LegacyValue extends AbstractValue
 {
 
 }

@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
  *     name="CollectionAttributeValues"
  * )
  */
-class PageValue extends Value
+class PageValue extends AbstractValue
 {
     /**
      * @ORM\Id

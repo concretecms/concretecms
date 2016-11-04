@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  * @ORM\Table(name="ImageFileAttributeValues")
  */
-class ImageFileValue extends Value implements FileProviderInterface
+class ImageFileValue extends AbstractValue implements FileProviderInterface
 {
     /**
      * @ORM\ManyToOne(targetEntity="\Concrete\Core\Entity\File\File")

@@ -8,7 +8,7 @@ use Concrete\Core\Support\Facade\Application;
  * @ORM\Entity
  * @ORM\Table(name="atLegacy")
  */
-class LegacyValue extends Value
+class LegacyValue extends AbstractValue
 {
 
     public function __toString()

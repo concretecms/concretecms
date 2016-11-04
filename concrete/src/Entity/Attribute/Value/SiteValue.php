@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
  *     name="SiteAttributeValues"
  * )
  */
-class SiteValue extends Value
+class SiteValue extends AbstractValue
 {
     /**
      * @ORM\Id

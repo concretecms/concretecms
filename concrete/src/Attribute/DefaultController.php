@@ -39,6 +39,11 @@ class DefaultController extends AttributeTypeController
         return Core::make('helper/text')->entities($this->getValue());
     }
 
+    public function getAttributeValueObject()
+    {
+        return $this->entityManager->find(TextValue::class, $this->attributeValue->getGenericValue());
+    }
+
     public function search()
     {
         $f = Core::make('helper/form');

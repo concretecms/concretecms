@@ -33,6 +33,12 @@ class Controller extends AttributeTypeController
         );
     }
 
+    public function getAttributeValueObject()
+    {
+        return $this->entityManager->find(AddressValue::class, $this->attributeValue->getGenericValue());
+    }
+
+
     public function searchForm($list)
     {
         $address1 = $this->request('address1');
