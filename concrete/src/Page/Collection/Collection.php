@@ -1107,9 +1107,12 @@ class Collection extends Object implements TrackableInterface
             $list = CollectionKey::getAttributeValues($this->vObj);
             $em = \Database::connection()->getEntityManager();
             foreach($list as $av) {
+                /**
+                 * @var $av PageValue
+                 */
                 $cav = new PageValue();
                 $cav->setPageID($newCID);
-                $cav->setValue($av->getValueObject());
+                $cav->setGenericValue($av->getGenericValue());
                 $cav->setVersionID($this->vObj->getVersionID());
                 $cav->setAttributeKey($av->getAttributeKey());
                 $em->persist($cav);
