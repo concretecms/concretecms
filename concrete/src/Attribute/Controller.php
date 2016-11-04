@@ -327,13 +327,15 @@ class Controller extends AbstractController
 
     public function getAttributeKeySettings()
     {
+        $settings = null;
         if ($this->attributeKey) {
-            return $this->retrieveAttributeKeySettings();
-        } else {
+            $settings = $this->retrieveAttributeKeySettings();
+        }
+        if (!is_object($settings)) {
             $settings = $this->createAttributeKeySettings();
             $settings->setAttributeTypeHandle($this->getAttributeType()->getAttributeTypeHandle());
-            return $settings;
         }
+        return $settings;
     }
 
     public function getIconFormatter()
