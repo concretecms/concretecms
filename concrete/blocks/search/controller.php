@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Block\Search;
 
+use Concrete\Core\Attribute\Key\CollectionKey;
 use Database;
 use CollectionAttributeKey;
 use Concrete\Core\Page\PageList;
@@ -255,8 +256,10 @@ class Controller extends BlockController
             $ipl->filterByPath($this->baseSearchPath);
         }
 
-        // TODO fix this
-        //$ipl->filter(false, '(ak_exclude_search_index = 0 or ak_exclude_search_index is null)');
+        $cak = CollectionKey::getByHandle('exclude_search_index');
+        if (is_object($cak)) {
+            $ipl->filterByExcludeSearchIndex(false);
+        }
 
         $pagination = $ipl->getPagination();
         $results = $pagination->getCurrentPageResults();
