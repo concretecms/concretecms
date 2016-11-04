@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="ImageFileAttributeValues")
+ * @ORM\Table(name="atFile")
  */
 class ImageFileValue extends AbstractValue implements FileProviderInterface
 {

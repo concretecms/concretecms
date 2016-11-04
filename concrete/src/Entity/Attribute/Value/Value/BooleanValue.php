@@ -5,7 +5,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="BooleanAttributeValues")
+ * @ORM\Table(name="atBoolean")
  */
 class BooleanValue extends AbstractValue
 {

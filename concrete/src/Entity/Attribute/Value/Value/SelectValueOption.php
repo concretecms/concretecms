@@ -5,7 +5,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="SelectAttributeValueOptions")
+ * @ORM\Table(name="atSelectOptions")
  */
 class SelectValueOption
 {

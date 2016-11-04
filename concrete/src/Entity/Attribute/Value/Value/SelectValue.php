@@ -6,13 +6,13 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="SelectAttributeValues")
+ * @ORM\Table(name="atSelect")
  */
 class SelectValue extends AbstractValue implements \Iterator
 {
     /**
      * @ORM\ManyToMany(targetEntity="SelectValueOption", inversedBy="values", cascade={"persist"})
-     * @ORM\JoinTable(name="SelectAttributeValueSelectedOptions",
+     * @ORM\JoinTable(name="atSelectOptionsSelected",
      * joinColumns={@ORM\JoinColumn(name="avID", referencedColumnName="avID")},
      * inverseJoinColumns={@ORM\JoinColumn(name="avSelectOptionID", referencedColumnName="avSelectOptionID")}
      * )

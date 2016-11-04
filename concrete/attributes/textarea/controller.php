@@ -4,10 +4,9 @@ namespace Concrete\Attribute\Textarea;
 use Concrete\Core\Attribute\DefaultController;
 use Concrete\Core\Attribute\FontAwesomeIconFormatter;
 use Concrete\Core\Entity\Attribute\Key\Settings\TextareaSettings;
-use Concrete\Core\Entity\Attribute\Key\Type\TextareaType;
+use Concrete\Core\Entity\Attribute\Value\Value\TextValue;
 use Core;
 use Database;
-use Concrete\Core\Entity\Attribute\Value\Value\TextareaValue;
 
 class Controller extends DefaultController
 {
@@ -111,7 +110,7 @@ class Controller extends DefaultController
 
     public function getAttributeValueObject()
     {
-        return $this->entityManager->find(TextareaValue::class, $this->attributeValue->getGenericValue());
+        return $this->entityManager->find(TextValue::class, $this->attributeValue->getGenericValue());
     }
 
     public function exportKey($akey)
@@ -124,7 +123,7 @@ class Controller extends DefaultController
 
     public function createAttributeValue($value)
     {
-        $av = new TextareaValue();
+        $av = new TextValue();
         $av->setValue($value);
 
         return $av;
