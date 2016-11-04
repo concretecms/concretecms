@@ -7,7 +7,7 @@
 		options = options || {};
 		options = $.extend({
 			width: 800,
-			height: 400,
+			height: 450,
 			title: 'Help',
 			dialogClass: 'ccm-dialog-slim ccm-dialog-help-wrapper'
 		}, options);
