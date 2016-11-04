@@ -59,6 +59,8 @@ class StyleSet
         $o->setBoxShadowBlur((string) $node->boxShadowBlur);
         $o->setBoxShadowColor((string) $node->boxShadowColor);
         $o->setCustomClass((string) $node->customClass);
+        $o->setCustomID((string) $node->customID);
+
         $o->save();
 
         return $o;
@@ -204,6 +206,11 @@ class StyleSet
 
         if (isset($r['customClass']) && is_array($r['customClass'])) {
             $set->setCustomClass(implode(' ', $r['customClass']));
+            $return = true;
+        }
+
+        if (isset($r['customID']) && trim($r['customID'])) {
+            $set->setCustomID(trim($r['customID']));
             $return = true;
         }
 
