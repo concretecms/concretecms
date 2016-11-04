@@ -281,7 +281,8 @@ ul.ccm-page-type-composer-item-controls a:hover {
 ul.ccm-page-type-composer-item-controls {
 	padding: 0;
 	margin: 0;
-	width: 60px;
+	width: 100px;
+	text-align: right; 
 }
 
 .panel-heading:hover > .ccm-page-type-composer-item-controls li,
