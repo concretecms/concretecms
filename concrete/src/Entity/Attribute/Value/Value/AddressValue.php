@@ -5,7 +5,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="AddressAttributeValues")
+ * @ORM\Table(name="atAddress")
  */
 class AddressValue extends AbstractValue
 {

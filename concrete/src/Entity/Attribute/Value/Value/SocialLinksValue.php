@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="SocialLinkAttributeValues")
+ * @ORM\Table(name="atSocialLinks")
  */
 class SocialLinksValue extends AbstractValue
 {

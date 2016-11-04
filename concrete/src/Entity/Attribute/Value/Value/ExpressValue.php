@@ -7,13 +7,13 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="ExpressAttributeValues")
+ * @ORM\Table(name="atExpress")
  */
 class ExpressValue extends AbstractValue
 {
     /**
      * @ORM\ManyToMany(targetEntity="\Concrete\Core\Entity\Express\Entry", inversedBy="values", cascade={"persist"})
-     * @ORM\JoinTable(name="ExpressAttributeValueSelectedEntries",
+     * @ORM\JoinTable(name="atExpressSelectedEntries",
      * joinColumns={@ORM\JoinColumn(name="avID", referencedColumnName="avID")},
      * inverseJoinColumns={@ORM\JoinColumn(name="exEntryID", referencedColumnName="exEntryID")}
      * )

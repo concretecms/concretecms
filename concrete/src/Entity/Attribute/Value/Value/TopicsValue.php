@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="TopicAttributeValues")
+ * @ORM\Table(name="atTopic")
  */
 class TopicsValue extends AbstractValue
 {
