@@ -8,10 +8,9 @@ $ag->requireAsset('core/lightbox');
         <div class="row">
             <div class="col-xs-8">
                 <h2><?=t('Learn the basics.')?></h2>
-                <div class="spacer-row-4"></div>
-                <div class="container-fluid">
+                <div class="spacer-row-2"></div>
                     <div class="row">
-                    <div class="col-xs-offset-1 col-xs-11">
+                    <div class="col-xs-12">
                         <div class="ccm-dialog-help-item">
                             <h4><?=t('Use the toolbar')?></h4>
                             <ol class="breadcrumb">
@@ -23,7 +22,7 @@ $ag->requireAsset('core/lightbox');
                             <h4><?=t('Add & Change Content')?></h4>
                             <ol class="breadcrumb">
                                 <li><a href="https://www.youtube.com/watch?v=Y1VmBVffLM0" data-lightbox="iframe"><?=t('Watch Video')?></a></li>
-                                <li class="hidden-xs"><a href="#" data-launch-guide="change-content"><?=t('Guide: Change Content')?></a></li>
+                                <li class="hidden-xs"><a href="#" data-launch-guide="change-content"><?=t(' Change Content')?></a></li>
                                 <li class="hidden-xs"><a href="#" data-launch-guide="add-content"><?=t('Guide: Add Content')?></a></li>
                             </ol>
                         </div>
@@ -50,11 +49,10 @@ $ag->requireAsset('core/lightbox');
                         </div>
                     </div>
                     </div>
-                </div>
             </div>
             <div class="col-xs-4 col-accented">
                 <h2><?=t('More help.')?></h2>
-                <div class="spacer-row-4"></div>
+                <div class="spacer-row-2"></div>
 
                 <div class="ccm-dialog-help-item">
                 <ol class="ccm-dialog-help-item-icon-row">
