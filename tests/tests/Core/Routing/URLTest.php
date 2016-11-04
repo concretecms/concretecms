@@ -321,7 +321,7 @@ class URLTest extends PHPUnit_Framework_TestCase
         $page = new Page();
         $page->cPath = null;
         $page->cID = 777;
-        $page->siteTree = new \Concrete\Core\Entity\Site\SiteTree();
+        $page->siteTree = $siteTree;
 
         $url = \URL::to($page);
         $this->assertEquals('http://www.dummyco.com/path/to/server/index.php?cID=777', (string) $url);
