@@ -253,7 +253,7 @@ if (isset($successMessage)) {
                         <?= t('Site') ?>
                     </h4>
                 </div>
-                <div id="site" class="panel-collapse collapse in">
+                <div id="site" class="">
                     <div class="panel-body">
                         <div class="row">
                             <div class="col-md-6">
@@ -288,8 +288,34 @@ if (isset($successMessage)) {
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <?= t('Starting Point') ?>
+                    </h4>
+                </div>
+                <div id="starting-point" class="">
+                    <div class="panel-body">
+                        <div class="row">
+                            <?php
+                            $availableSampleContent = StartingPointPackage::getAvailableList();
+                            foreach ($availableSampleContent as $spl) {
+                                $pkgHandle = $spl->getPackageHandle();
+                                ?>
+                                <div class="col-md-6">
+                                    <div class="radio">
+                                        <label>
+                                            <?=$form->radio('SAMPLE_CONTENT', $pkgHandle, ($pkgHandle == 'elemental_full' || count($availableSampleContent) == 1))?>
+                                            <strong><?=$spl->getPackageName()?></strong><br/>
+                                            <?=$spl->getPackageDescription()?>
+                                        </label>
+                                    </div>
+                                </div>
+                                <?php
+                            }
+                            ?>
+                        </div>
+                    </div>
+                </div>
                 <div class="panel-heading">
                     <h4 class="panel-title">
                         <?= t('Database') ?>
@@ -336,13 +362,14 @@ if (isset($successMessage)) {
                         </a>
                     </h4>
                 </div>
+
                 <div id="advanced" class="panel-collapse collapse">
                     <div class="panel-body">
 
                         <div class="row">
 
                             <div class="col-sm-6">
-                                <h4><?=t('URLs')?></h4>
+                                <h4><?=t('URLs & Session')?></h4>
 
                                 <div class="form-group">
                                     <label class="control-label">
@@ -359,39 +386,6 @@ if (isset($successMessage)) {
                                     </label>
                                     <?=$form->url('canonicalSSLUrl', h($canonicalSSLUrl), ['pattern' => 'https:.+', 'placeholder' => 'https://'])?>
                                 </div>
-                            </div>
-                            <div class="col-sm-6">
-
-                                <h4><?=t('Starting Point')?></h4>
-
-                                <table class="table" id="sample-content-selector">
-                                    <tbody>
-                                    <?php
-                                    $availableSampleContent = StartingPointPackage::getAvailableList();
-                                    foreach ($availableSampleContent as $spl) {
-                                        $pkgHandle = $spl->getPackageHandle();
-                                        ?>
-                                        <tr>
-                                            <td>
-                                                <?=$form->radio('SAMPLE_CONTENT', $pkgHandle, ($pkgHandle == 'elemental_full' || count($availableSampleContent) == 1))?>
-                                            </td>
-                                            <td class="sample-content-description">
-                                                <label class="control-label"><?=$spl->getPackageName()?></label>
-                                                <p><?=$spl->getPackageDescription()?></p>
-                                            </td>
-                                        </tr>
-                                        <?php
-                                    }
-                                    ?>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-sm-6">
-                                <h4><?=t('Session')?></h4>
-
-
                                 <div class="form-group">
                                     <label class="control-label" for="sessionHandler"><?=t('Session Handler')?></label>
                                     <?=$form->select('sessionHandler', ['' => t('Default Handler (Recommended)'), 'database' => t('Database')])?>
