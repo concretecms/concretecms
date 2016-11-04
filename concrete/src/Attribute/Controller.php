@@ -333,7 +333,6 @@ class Controller extends AbstractController
         }
         if (!is_object($settings)) {
             $settings = $this->createAttributeKeySettings();
-            $settings->setAttributeTypeHandle($this->getAttributeType()->getAttributeTypeHandle());
         }
         return $settings;
     }

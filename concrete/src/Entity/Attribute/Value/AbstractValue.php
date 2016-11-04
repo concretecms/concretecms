@@ -64,7 +64,9 @@ abstract class AbstractValue implements AttributeValueInterface
      */
     final public function getValueObject()
     {
-        return $this->getController()->getAttributeValueObject();
+        if ($this->generic_value) {
+            return $this->getController()->getAttributeValueObject();
+        }
     }
 
     public function getValue($mode = false)

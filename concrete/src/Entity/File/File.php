@@ -2,6 +2,9 @@
 namespace Concrete\Core\Entity\File;
 
 use Carbon\Carbon;
+use Concrete\Core\Attribute\Category\AbstractCategory;
+use Concrete\Core\Attribute\Category\CategoryService;
+use Concrete\Core\Attribute\Key\Category;
 use Concrete\Core\File\Importer;
 use Concrete\Core\Tree\Node\Node;
 use Concrete\Core\Tree\Node\Type\FileFolder;
@@ -536,6 +539,22 @@ class File implements \Concrete\Core\Permission\ObjectInterface
         $db->Execute("delete from FileSearchIndexAttributes where fID = ?", [$this->fID]);
         $db->Execute("delete from DownloadStatistics where fID = ?", [$this->fID]);
         $db->Execute("delete from FilePermissionAssignments where fID = ?", [$this->fID]);
+
+        $query = $em->createQuery('select fav from Concrete\Core\Entity\Attribute\Value\Value\ImageFileValue fav inner join fav.file f where f.fID = :fID');
+        $query->setParameter('fID', $this->getFileID());
+        $values = $query->getResult();
+        foreach ($values as $genericValue) {
+            foreach(Category::getList() as $category) {
+                $category = $category->getController();
+                /**
+                 * @var $category AbstractCategory
+                 */
+                $values = $category->getAttributeValueRepository()->findBy(['generic_value' => $genericValue]);
+                foreach($values as $attributeValue) {
+                    $category->deleteValue($attributeValue);
+                }
+            }
+        }
 
         // now from the DB
         $em = \ORM::entityManager();

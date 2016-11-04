@@ -85,7 +85,7 @@ if ($downloadUrl !== $url) {
 <?php if ($fv->getTypeObject()->getGenericType() == \Concrete\Core\File\Type\Type::T_IMAGE) {
     try {
         $thumbnails = $fv->getThumbnails();
-    } catch (InvalidDimensionException $e) {
+    } catch (\Concrete\Core\File\Exception\InvalidDimensionException $e) {
         ?>
         <div class="row">
 

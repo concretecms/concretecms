@@ -9,8 +9,6 @@ use Concrete\Core\Block\BlockType\BlockType;
 use Concrete\Core\Cache\Cache;
 use Concrete\Core\Cache\CacheLocal;
 use Concrete\Core\Entity\Attribute\Key\PageKey;
-use Concrete\Core\Entity\Attribute\Key\Type\BooleanType;
-use Concrete\Core\Entity\Attribute\Key\Type\NumberType;
 use Concrete\Core\File\Filesystem;
 use Concrete\Core\File\Set\Set;
 use Concrete\Core\Multilingual\Page\Section\Section;
@@ -49,6 +47,27 @@ class Version20160725000000 extends AbstractMigration
         }
         if (!$this->connection->tableExists('_AttributeValues')) {
             $this->connection->Execute('alter table AttributeValues rename _AttributeValues');
+        }
+        if (!$this->connection->tableExists('_atAddressSettings')) {
+            $this->connection->Execute('alter table atAddressSettings rename _atAddressSettings');
+        }
+        if (!$this->connection->tableExists('_atAddressCustomCountries')) {
+            $this->connection->Execute('alter table atAddressCustomCountries rename _atAddressCustomCountries');
+        }
+        if (!$this->connection->tableExists('_atSelectSettings')) {
+            $this->connection->Execute('alter table atSelectSettings rename _atSelectSettings');
+        }
+        if (!$this->connection->tableExists('_atSelectOptions')) {
+            $this->connection->Execute('alter table atSelectOptions rename _atSelectOptions');
+        }
+        if (!$this->connection->tableExists('_atSocialLinks')) {
+            $this->connection->Execute('alter table atSocialLinks rename _atSocialLinks');
+        }
+        if (!$this->connection->tableExists('_atSelectOptionsSelected')) {
+            $this->connection->Execute('alter table atSelectOptionsSelected rename _atSelectOptionsSelected');
+        }
+        if (!$this->connection->tableExists('_atSelectedTopics')) {
+            $this->connection->Execute('alter table atSelectedTopics rename _atSelectedTopics');
         }
         if (!$this->connection->tableExists('_TreeTopicNodes')) {
             $this->connection->Execute('alter table TreeTopicNodes rename _TreeTopicNodes');
@@ -275,7 +294,7 @@ class Version20160725000000 extends AbstractMigration
                 }
             }
 
-            $this->importAttributeKeyType($row['atID'], $row['akID']);
+            $this->importAttributeKeySettings($row['atID'], $row['akID']);
             switch ($akCategory) {
                 case 'pagekey':
                     $rb = $this->connection->executeQuery("select * from CollectionAttributeValues where akID = ?", array($row['akID']));
@@ -299,48 +318,33 @@ class Version20160725000000 extends AbstractMigration
         }
     }
 
-    protected function loadAttributeValue($atHandle, $avID)
+    protected function migrateAttributeValue($atHandle, $avID)
     {
         switch ($atHandle) {
             case 'address':
-                $row = $this->connection->fetchAssoc('select * from atAddress where avID = ?', [$avID]);
-                if ($row && !$this->connection->fetchColumn('select count(avID) from AddressAttributeValues where avID = ?', [$avID])) {
-                    $this->connection->insert('AddressAttributeValues', $row);
-                }
+                // Nothing to do here.
                 break;
             case 'boolean':
-                $value = $this->connection->fetchColumn('select value from atBoolean where avID = ?', [$avID]);
-                if ($row && !$this->connection->fetchColumn('select count(avID) from BooleanAttributeValues where avID = ?', [$avID])) {
-                    $this->connection->insert('BooleanAttributeValues', ['value' => $value, 'avID' => $avID]);
-                }
+                // Nothing to do here.
                 break;
             case 'date_time':
-                $row = $this->connection->fetchAssoc('select * from atDateTime where avID = ?', [$avID]);
-                if ($row && !$this->connection->fetchColumn('select count(avID) from DateTimeAttributeValues where avID = ?', [$avID])) {
-                    $this->connection->insert('DateTimeAttributeValues', $row);
-                }
+                // Nothing to do here.
                 break;
             case 'image_file':
-                $row = $this->connection->fetchAssoc('select * from atFile where avID = ?', [$avID]);
-                if ($row && !$this->connection->fetchColumn('select count(avID) from ImageFileAttributeValues where avID = ?', [$avID])) {
-                    $this->connection->insert('ImageFileAttributeValues', $row);
-                }
+                // Nothing to do here.
                 break;
             case 'number':
             case 'rating':
-                $row = $this->connection->fetchAssoc('select * from atNumber where avID = ?', [$avID]);
-                if ($row && !$this->connection->fetchColumn('select count(avID) from NumberAttributeValues where avID = ?', [$avID])) {
-                    $this->connection->insert('NumberAttributeValues', $row);
-                }
+            // Nothing to do here.
                 break;
             case 'select':
-                if (!$this->connection->fetchColumn('select count(avID) from SelectAttributeValues where avID = ?', [$avID])) {
-                    $this->connection->insert('SelectAttributeValues', array('avID' => $avID));
+                if (!$this->connection->fetchColumn('select count(avID) from atSelect where avID = ?', [$avID])) {
+                    $this->connection->insert('atSelect', array('avID' => $avID));
                 }
-                $options = $this->connection->fetchAll('select * from atSelectOptionsSelected where avID = ?', [$avID]);
+                $options = $this->connection->fetchAll('select * from _atSelectOptionsSelected where avID = ?', [$avID]);
                 foreach ($options as $option) {
-                    if (!$this->connection->fetchColumn('select count(avSelectOptionID) from SelectAttributeValueSelectedOptions where avSelectOptionID = ?', [$option['atSelectOptionID']])) {
-                        $this->connection->insert('SelectAttributeValueSelectedOptions', array(
+                    if (!$this->connection->fetchColumn('select count(avSelectOptionID) from atSelectOptionsSelected where avSelectOptionID = ?', [$option['atSelectOptionID']])) {
+                        $this->connection->insert('atSelectOptionsSelected', array(
                             'avSelectOptionID' => $option['atSelectOptionID'],
                             'avID' => $avID,
                         ));
@@ -348,12 +352,12 @@ class Version20160725000000 extends AbstractMigration
                 }
                 break;
             case 'social_links':
-                if (!$this->connection->fetchColumn('select count(avID) from SocialLinksAttributeValues where avID = ?', [$avID])) {
-                    $this->connection->insert('SocialLinksAttributeValues', array('avID' => $avID));
+                if (!$this->connection->fetchColumn('select count(avID) from atSocialLinks where avID = ?', [$avID])) {
+                    $this->connection->insert('atSocialLinks', array('avID' => $avID));
                 }
-                $links = $this->connection->fetchAll('select * from atSocialLinks where avID = ?', [$avID]);
+                $links = $this->connection->fetchAll('select * from _atSocialLinks where avID = ?', [$avID]);
                 foreach ($links as $link) {
-                    $this->connection->insert('SocialLinksAttributeSelectedLinks', array(
+                    $this->connection->insert('atSelectedSocialLinks', array(
                         'service' => $link['service'],
                         'serviceInfo' => $link['serviceInfo'],
                         'avID' => $avID,
@@ -361,24 +365,18 @@ class Version20160725000000 extends AbstractMigration
                 }
                 break;
             case 'text':
-                $row = $this->connection->fetchAssoc('select * from atDefault where avID = ?', [$avID]);
-                if ($row && !$this->connection->fetchColumn('select count(avID) from TextAttributeValues where avID = ?', [$avID])) {
-                    $this->connection->insert('TextAttributeValues', $row);
-                }
+                // Nothing to do here.
                 break;
             case 'textarea':
-                $row = $this->connection->fetchAssoc('select * from atDefault where avID = ?', [$avID]);
-                if ($row && !$this->connection->fetchColumn('select count(avID) from TextareaAttributeValues where avID = ?', [$avID])) {
-                    $this->connection->insert('TextareaAttributeValues', $row);
-                }
+                // Nothing to do here.
                 break;
             case 'topics':
-                if (!$this->connection->fetchColumn('select count(avID) from TopicAttributeValues where avID = ?', [$avID])) {
-                    $this->connection->insert('TopicAttributeValues', array('avID' => $avID));
+                if (!$this->connection->fetchColumn('select count(avID) from atTopic where avID = ?', [$avID])) {
+                    $this->connection->insert('atTopic', array('avID' => $avID));
                 }
-                $topics = $this->connection->fetchAll('select * from atSelectedTopics where avID = ?', [$avID]);
+                $topics = $this->connection->fetchAll('select * from _atSelectedTopics where avID = ?', [$avID]);
                 foreach ($topics as $topic) {
-                    $this->connection->insert('TopicAttributeSelectedTopics', array(
+                    $this->connection->insert('atSelectedTopics', array(
                         'treeNodeID' => $topic['TopicNodeID'],
                         'avID' => $avID,
                     ));
@@ -393,107 +391,65 @@ class Version20160725000000 extends AbstractMigration
         // Retrieve type
         $atHandle = $this->connection->fetchColumn('select atHandle from AttributeTypes where atID = ?', array($atID));
         if ($atHandle) {
-            if (in_array($atHandle, array(
-                'address', 'boolean', 'date_time', 'email', 'express', 'image_file',
-                'number', 'rating', 'select', 'social_links', 'telephone', 'text', 'textarea',
-                'topics', 'url'
-            ))) {
-                $type = strtolower(preg_replace("/[^A-Za-z]/", '', $atHandle)) . 'value';
-                $this->loadAttributeValue($atHandle, $avID);
-            } else {
-                $type = 'legacyvalue';
-            }
+            $this->migrateAttributeValue($atHandle, $avID);
 
             // Create AttributeValue record
             if (!$this->connection->fetchColumn('select count(avID) from AttributeValues where avID = ?', [$avID])) {
                 $this->connection->insert('AttributeValues', [
                     'avID' => $avID,
-                    'type' => $type,
                 ]);
             }
         }
     }
 
-    protected function importAttributeKeyType($atID, $akID)
+    protected function importAttributeKeySettings($atID, $akID)
     {
         $row = $this->connection->fetchAssoc('select * from AttributeTypes where atID = ?', array($atID));
         if ($row['atID']) {
-            $this->output(t('Importing attribute key type %s...', $row['atHandle']));
-            $akTypeID = $this->connection->fetchColumn("select akTypeID from AttributeKeyTypes where akID = ?", array($akID));
-            if (in_array($row['atHandle'], array(
-                'address', 'boolean', 'date_time', 'email', 'express', 'image_file',
-                'number', 'rating', 'select', 'social_links', 'telephone', 'text', 'textarea',
-                'topics', 'url'
-            ))) {
-                $type = strtolower(preg_replace("/[^A-Za-z]/", '', $row['atHandle'])) . 'type';
-            } else {
-                $type = 'legacytype';
-            }
-            if (!$akTypeID) {
-                $this->connection->insert('AttributeKeyTypes', ['akTypeHandle' => $row['atHandle'], 'akID' => $akID, 'type' => $type]);
-                $akTypeID = $this->connection->lastInsertId();
-            }
+            $this->output(t('Importing attribute key settings %s...', $row['atHandle']));
             switch ($row['atHandle']) {
                 case 'address':
-                    $count = $this->connection->fetchColumn('select count(*) from AddressAttributeKeyTypes where akTypeID = ?', array($akTypeID));
+                    $count = $this->connection->fetchColumn('select count(*) from atAddressSettings where akID = ?', array($akID));
                     if (!$count) {
-                        $rowA = $this->connection->fetchAssoc('select * from atAddressSettings where akID = ?', array($akID));
+                        $rowA = $this->connection->fetchAssoc('select * from _atAddressSettings where akID = ?', array($akID));
                         if ($rowA['akID']) {
                             $countries = $this->connection->fetchAll('select * from atAddressCustomCountries where akID = ?', array($akID));
                             if (!$countries) {
                                 $countries = array();
                             }
-                            $this->connection->insert('AddressAttributeKeyTypes', [
+                            $this->connection->insert('atAddressSettings', [
                                 'akHasCustomCountries' => $rowA['akHasCustomCountries'],
                                 'akDefaultCountry' => $rowA['akDefaultCountry'],
                                 'customCountries' => json_encode($countries),
-                                'akTypeID' => $akTypeID,
+                                'akID' => $akID,
                             ]);
                         }
                     }
                     break;
                 case 'boolean':
-                    $count = $this->connection->fetchColumn('select count(*) from BooleanAttributeKeyTypes where akTypeID = ?', array($akTypeID));
-                    if (!$count) {
-                        $rowA = $this->connection->fetchAssoc('select * from atBooleanSettings where akID = ?', array($akID));
-                        if ($rowA['akID']) {
-                            $this->connection->insert('BooleanAttributeKeyTypes', [
-                                'akCheckedByDefault' => $rowA['akCheckedByDefault'],
-                                'akTypeID' => $akTypeID,
-                            ]);
-                        }
-                    }
+                    // Nothing to do here.
                     break;
                 case 'date_time':
-                    $count = $this->connection->fetchColumn('select count(*) from DateTimeAttributeKeyTypes where akTypeID = ?', array($akTypeID));
-                    if (!$count) {
-                        $rowA = $this->connection->fetchAssoc('select * from atDateTimeSettings where akID = ?', array($akID));
-                        if ($rowA['akID']) {
-                            $this->connection->insert('DateTimeAttributeKeyTypes', [
-                                'akDateDisplayMode' => $rowA['akDateDisplayMode'],
-                                'akTypeID' => $akTypeID,
-                            ]);
-                        }
-                    }
+                    // Nothing to do here.
                     break;
                 case 'select':
-                    $count = $this->connection->fetchColumn('select count(*) from SelectAttributeKeyTypes where akTypeID = ?', array($akTypeID));
+                    $count = $this->connection->fetchColumn('select count(*) from atSelectSettings where akID = ?', array($akID));
                     if (!$count) {
-                        $rowA = $this->connection->fetchAssoc('select * from atSelectSettings where akID = ?', array($akID));
+                        $rowA = $this->connection->fetchAssoc('select * from _atSelectSettings where akID = ?', array($akID));
                         if ($rowA['akID']) {
-                            $this->connection->insert('SelectAttributeValueOptionLists', []);
+                            $this->connection->insert('atSelectOptionLists', []);
                             $listID = $this->connection->lastInsertId();
-                            $this->connection->insert('SelectAttributeKeyTypes', [
+                            $this->connection->insert('atSelectSettings', [
                                 'akSelectAllowMultipleValues' => $rowA['akSelectAllowMultipleValues'],
                                 'akSelectOptionDisplayOrder' => $rowA['akSelectOptionDisplayOrder'],
                                 'akSelectAllowOtherValues' => $rowA['akSelectAllowOtherValues'],
                                 'avSelectOptionListID' => $listID,
-                                'akTypeID' => $akTypeID,
+                                'akID' => $akID,
                             ]);
 
-                            $options = $this->connection->fetchAll('select * from atSelectOptions where akID = ?', array($akID));
+                            $options = $this->connection->fetchAll('select * from _atSelectOptions where akID = ?', array($akID));
                             foreach ($options as $option) {
-                                $this->connection->insert('SelectAttributeValueOptions', [
+                                $this->connection->insert('atSelectOptions', [
                                     'isEndUserAdded' => $option['isEndUserAdded'],
                                     'displayOrder' => $option['displayOrder'],
                                     'value' => $option['value'],
@@ -505,59 +461,25 @@ class Version20160725000000 extends AbstractMigration
                     }
                     break;
                 case 'image_file':
-                    $count = $this->connection->fetchColumn('select count(*) from ImageFileAttributeKeyTypes where akTypeID = ?', array($akTypeID));
-                    if (!$count) {
-                        $this->connection->insert('ImageFileAttributeKeyTypes', ['akFileManagerMode' => 0, 'akTypeID' => $akTypeID]);
-                    }
+                    // Nothing to do here.
                     break;
                 case 'number':
-                    $count = $this->connection->fetchColumn('select count(*) from NumberAttributeKeyTypes where akTypeID = ?', array($akTypeID));
-                    if (!$count) {
-                        $this->connection->insert('NumberAttributeKeyTypes', ['akTypeID' => $akTypeID]);
-                    }
+                    // Nothing to do here.
                     break;
                 case 'rating':
-                    $count = $this->connection->fetchColumn('select count(*) from RatingAttributeKeyTypes where akTypeID = ?', array($akTypeID));
-                    if (!$count) {
-                        $this->connection->insert('RatingAttributeKeyTypes', ['akTypeID' => $akTypeID]);
-                    }
+                    // Nothing to do here.
                     break;
                 case 'social_links':
-                    $count = $this->connection->fetchColumn('select count(*) from SocialLinksAttributeKeyTypes where akTypeID = ?', array($akTypeID));
-                    if (!$count) {
-                        $this->connection->insert('SocialLinksAttributeKeyTypes', ['akTypeID' => $akTypeID]);
-                    }
+                    // Nothing to do here.
                     break;
                 case 'text':
-                    $count = $this->connection->fetchColumn('select count(*) from TextAttributeKeyTypes where akTypeID = ?', array($akTypeID));
-                    if (!$count) {
-                        $this->connection->insert('TextAttributeKeyTypes', ['akTypeID' => $akTypeID]);
-                    }
+                    // Nothing to do here.
                     break;
                 case 'textarea':
-                    $count = $this->connection->fetchColumn('select count(*) from TextareaAttributeKeyTypes where akTypeID = ?', array($akTypeID));
-                    if (!$count) {
-                        $rowA = $this->connection->fetchAssoc('select * from atTextareaSettings where akID = ?', array($akID));
-                        if ($rowA['akID']) {
-                            $this->connection->insert('TextareaAttributeKeyTypes', [
-                                'akTextareaDisplayMode' => $rowA['akTextareaDisplayMode'],
-                                'akTypeID' => $akTypeID,
-                            ]);
-                        }
-                    }
+                    // Nothing to do here.
                     break;
                 case 'topics':
-                    $count = $this->connection->fetchColumn('select count(*) from TopicsAttributeKeyTypes where akTypeID = ?', array($akTypeID));
-                    if (!$count) {
-                        $rowA = $this->connection->fetchAssoc('select * from atTopicSettings where akID = ?', array($akID));
-                        if ($rowA['akID']) {
-                            $this->connection->insert('TopicsAttributeKeyTypes', [
-                                'akTopicParentNodeID' => $rowA['akTopicParentNodeID'],
-                                'akTopicTreeID' => $rowA['akTopicTreeID'],
-                                'akTypeID' => $akTypeID,
-                            ]);
-                        }
-                    }
+                    // Nothing to do here.
                     break;
             }
         }
@@ -857,21 +779,19 @@ class Version20160725000000 extends AbstractMigration
         $category = Category::getByHandle('collection')->getController();
         $attribute = CollectionKey::getByHandle('is_desktop');
         if (!is_object($attribute)) {
-            $type = new BooleanType();
             $key = new PageKey();
             $key->setAttributeKeyHandle('is_desktop');
             $key->setAttributeKeyName('Is Desktop');
             $key->setIsAttributeKeyInternal(true);
-            $category->add($type, $key);
+            $category->add('boolean', $key);
         }
         $attribute = CollectionKey::getByHandle('desktop_priority');
         if (!is_object($attribute)) {
-            $type = new NumberType();
             $key = new PageKey();
             $key->setAttributeKeyHandle('desktop_priority');
             $key->setAttributeKeyName('Desktop Priority');
             $key->setIsAttributeKeyInternal(true);
-            $category->add($type, $key);
+            $category->add('number', $key);
         }
 
         $desktop = Page::getByPath('/dashboard/welcome');
