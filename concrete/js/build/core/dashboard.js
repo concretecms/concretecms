@@ -125,7 +125,7 @@ var ConcreteDashboard = function() {
 		start: function(options) {
 			setupTooltips();
 			setupResultMessages();
-			setupHeaderMenu();
+			//setupHeaderMenu();
             setupDialogs();
 			setupSelects();
 			setupTables();
