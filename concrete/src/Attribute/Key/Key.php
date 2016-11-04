@@ -6,6 +6,7 @@ use Concrete\Core\Attribute\Category\LegacyCategory;
 use Concrete\Core\Attribute\Value\EmptyRequestAttributeValue;
 use Concrete\Core\Entity\Attribute\Key\LegacyKey;
 use Concrete\Core\Entity\Attribute\Value\LegacyValue;
+use Concrete\Core\Entity\Attribute\Value\Value\AbstractValue;
 use Concrete\Core\Entity\Attribute\Value\Value\Value;
 use Concrete\Core\Support\Facade\Facade;
 
@@ -153,6 +154,21 @@ class Key extends Facade implements AttributeKeyInterface
     protected function saveAttribute($attributeValue, $passedValue = false)
     {
         $controller = $this->getController();
+        $orm = \Database::connection()->getEntityManager();
+
+        $genericValue = $orm->find('Concrete\Core\Entity\Attribute\Value\Value\Value', $attributeValue->getAttributeValueID());
+
+        if (is_object($genericValue)) {
+            // delete the attribute value value
+            $legacyValue = new LegacyValue();
+            $legacyValue->setAttributeKey($this->legacyAttributeKey);
+            $legacyValue->setGenericValue($genericValue);
+            $valueValue = $legacyValue->getValueObject();
+            if (is_object($valueValue)) {
+                $orm->remove($valueValue);
+            }
+            $orm->flush();
+        }
 
         if ($passedValue) {
             $value = $controller->createAttributeValue($passedValue);
@@ -160,12 +176,13 @@ class Key extends Facade implements AttributeKeyInterface
             $value = $controller->createAttributeValueFromRequest();
         }
 
+        /**
+         * @var $value AbstractValue
+         */
         if (!($value instanceof EmptyRequestAttributeValue)) {
             // This is a new v8 attribute type
 
-            $attributeValue->setValue($value);
-
-            $orm = \Database::connection()->getEntityManager();
+            $value->setGenericValue($genericValue);
             $orm->persist($value);
             $orm->flush();
 
@@ -194,9 +211,6 @@ class Key extends Facade implements AttributeKeyInterface
         $value = new LegacyValue();
         $value->setAttributeKey($this->legacyAttributeKey);
         $value->setGenericValue($genericValue);
-        $orm->persist($value);
-        $orm->flush();
-
         return $value;
     }
 

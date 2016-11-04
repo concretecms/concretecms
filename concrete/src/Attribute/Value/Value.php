@@ -5,6 +5,7 @@ namespace Concrete\Core\Attribute\Value;
 
 use Concrete\Core\Attribute\AttributeValueInterface;
 use Concrete\Core\Attribute\Key\Key;
+use Concrete\Core\Entity\Attribute\Value\LegacyValue;
 use Concrete\Core\Foundation\Object;
 use Loader;
 
@@ -27,27 +28,12 @@ class Value extends Object implements AttributeValueInterface
     {
         // First, retrieve the corresponding LegacyAttributeValue for this
         // object
+        $lv = new LegacyValue();
         $orm = \Database::connection()->getEntityManager();
-        $r = $orm->getRepository('Concrete\Core\Entity\Attribute\Value\LegacyValue');
-        $value = $r->findOneBy(['avID' => $this->getAttributeValueID()]);
-        if (is_object($value)) {
-            return $value->getValueObject();
-        }
-    }
-
-    /**
-     * @param \Concrete\Core\Entity\Attribute\Value\Value\Value $value
-     */
-    public function setValue(\Concrete\Core\Entity\Attribute\Value\Value\Value $value)
-    {
-        $orm = \Database::connection()->getEntityManager();
-        $r = $orm->getRepository('Concrete\Core\Entity\Attribute\Value\LegacyValue');
-        $attributeValue = $r->findOneBy(['avID' => $this->getAttributeValueID()]);
-        if (is_object($attributeValue)) {
-            $attributeValue->setValue($value);
-        }
-        $orm->persist($attributeValue);
-        $orm->flush();
+        $genericValue = $orm->find('Concrete\Core\Entity\Attribute\Value\Value\Value', $this->getAttributeValueID());
+        $lv->setGenericValue($genericValue);
+        $lv->setAttributeKey($this->attributeKey);
+        return $lv->getValueObject();
     }
 
     public static function getByID($avID)
