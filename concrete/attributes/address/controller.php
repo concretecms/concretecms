@@ -5,7 +5,6 @@ use Concrete\Core\Attribute\Context\BasicFormContext;
 use Concrete\Core\Attribute\Controller as AttributeTypeController;
 use Concrete\Core\Attribute\FontAwesomeIconFormatter;
 use Concrete\Core\Entity\Attribute\Key\Settings\AddressSettings;
-use Concrete\Core\Entity\Attribute\Key\Type\AddressType;
 use Concrete\Core\Entity\Attribute\Value\Value\AddressValue;
 use Core;
 use Database;

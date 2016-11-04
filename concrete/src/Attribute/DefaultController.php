@@ -2,7 +2,6 @@
 namespace Concrete\Core\Attribute;
 
 use Concrete\Core\Entity\Attribute\Key\Settings\TextSettings;
-use Concrete\Core\Entity\Attribute\Key\Type\TextType;
 use Concrete\Core\Entity\Attribute\Value\Value\TextValue;
 use Core;
 use Concrete\Core\Attribute\Controller as AttributeTypeController;

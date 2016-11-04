@@ -3,7 +3,6 @@ namespace Concrete\Attribute\Email;
 
 use Concrete\Core\Attribute\FontAwesomeIconFormatter;
 use Concrete\Core\Attribute\DefaultController;
-use Concrete\Core\Entity\Attribute\Key\Type\TextType;
 use Concrete\Core\Error\ErrorList\Error\Error;
 use Concrete\Core\Error\ErrorList\Error\FieldNotPresentError;
 use Concrete\Core\Error\ErrorList\Field\AttributeField;

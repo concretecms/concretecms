@@ -4,7 +4,6 @@ namespace Concrete\Attribute\Express;
 use Concrete\Core\Attribute\FontAwesomeIconFormatter;
 use Concrete\Core\Attribute\Controller as AttributeTypeController;
 use Concrete\Core\Entity\Attribute\Key\Settings\ExpressSettings;
-use Concrete\Core\Entity\Attribute\Key\Type\ExpressType;
 use Concrete\Core\Entity\Attribute\Value\Value\ExpressValue;
 use Doctrine\ORM\Query\Expr;
 

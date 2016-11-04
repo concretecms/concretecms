@@ -17,7 +17,6 @@ class ContextText extends PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $key = new \Concrete\Core\Entity\Attribute\Key\PageKey();
         $type = $this->getMockBuilder('Concrete\Core\Entity\Attribute\Type')
             ->getMock();
         $controller = new $controller($entityManager);
@@ -32,11 +31,15 @@ class ContextText extends PHPUnit_Framework_TestCase
 
         $key_type = $this->getMockBuilder($key_type)
             ->getMock();
-        $key_type->expects($this->any())
+        $key = $this->getMockBuilder('Concrete\Core\Entity\Attribute\Key\PageKey')
+            ->getMock();
+        $key->expects($this->any())
             ->method('getAttributeType')
             ->will($this->returnValue($type));
+        $key->expects($this->any())
+            ->method('getAttributeKeySettings')
+            ->will($this->returnValue($key_type));
 
-        $key->setAttributeKeyType($key_type);
         return $key;
     }
 
@@ -45,7 +48,7 @@ class ContextText extends PHPUnit_Framework_TestCase
 
         $key = $this->getKey(
             'Concrete\Attribute\Text\Controller',
-            'Concrete\Core\Entity\Attribute\Key\Type\TextType',
+            'Concrete\Core\Entity\Attribute\Key\Settings\TextSettings',
             'text'
         );
         $av = new \Concrete\Core\Attribute\View($key);
@@ -64,7 +67,7 @@ class ContextText extends PHPUnit_Framework_TestCase
 
         $key = $this->getKey(
             'Concrete\Attribute\Address\Controller',
-            'Concrete\Core\Entity\Attribute\Key\Type\AddressType',
+            'Concrete\Core\Entity\Attribute\Key\Settings\AddressSettings',
             'address'
         );
         $av = new \Concrete\Core\Attribute\View($key);

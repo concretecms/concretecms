@@ -3,7 +3,6 @@ namespace Concrete\Attribute\Boolean;
 
 use Concrete\Core\Attribute\FontAwesomeIconFormatter;
 use Concrete\Core\Entity\Attribute\Key\Settings\BooleanSettings;
-use Concrete\Core\Entity\Attribute\Key\Type\BooleanType;
 use Concrete\Core\Entity\Attribute\Value\Value\BooleanValue;
 use Core;
 use Concrete\Core\Search\ItemList\Database\AttributedItemList;

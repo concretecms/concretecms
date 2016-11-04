@@ -50,19 +50,19 @@ class SearchFieldManagerTest extends \PHPUnit_Framework_TestCase
 
         $type = new \Concrete\Core\Entity\Attribute\Type();
         $type->setAttributeTypeHandle('text');
-        $key_type = new \Concrete\Core\Entity\Attribute\Key\Type\TextType();
+        $key_settings = new \Concrete\Core\Entity\Attribute\Key\Settings\TextSettings();
         $first_name = new \Concrete\Core\Entity\Attribute\Key\FileKey();
         $first_name->setAttributeKeyHandle('first_name');
         $first_name->setAttributeKeyName(t('First Name'));
-        $first_name->setAttributeKeyType($key_type);
+        $first_name->setAttributeKeySettings($key_settings);
 
         $type = new \Concrete\Core\Entity\Attribute\Type();
         $type->setAttributeTypeHandle('boolean');
-        $key_type = new \Concrete\Core\Entity\Attribute\Key\Type\BooleanType();
+        $key_settings = new \Concrete\Core\Entity\Attribute\Key\Settings\BooleanSettings();
         $boolean = new \Concrete\Core\Entity\Attribute\Key\FileKey();
         $boolean->setAttributeKeyHandle('is_awesome');
         $boolean->setAttributeKeyName(t('Is Awesome'));
-        $boolean->setAttributeKeyType($key_type);
+        $boolean->setAttributeKeySettings($key_settings);
 
         $attributes = [$first_name, $boolean];
 

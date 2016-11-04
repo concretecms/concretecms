@@ -2,7 +2,6 @@
 namespace Concrete\Attribute\SocialLinks;
 
 use Concrete\Core\Attribute\FontAwesomeIconFormatter;
-use Concrete\Core\Entity\Attribute\Key\Type\SocialLinksType;
 use Concrete\Core\Entity\Attribute\Value\Value\SelectedSocialLink;
 use Concrete\Core\Entity\Attribute\Value\Value\SocialLinksValue;
 use Loader;
