@@ -6,6 +6,7 @@ use Concrete\Core\Attribute\Category\LegacyCategory;
 use Concrete\Core\Attribute\Value\EmptyRequestAttributeValue;
 use Concrete\Core\Entity\Attribute\Key\LegacyKey;
 use Concrete\Core\Entity\Attribute\Value\LegacyValue;
+use Concrete\Core\Entity\Attribute\Value\Value\Value;
 use Concrete\Core\Support\Facade\Facade;
 
 class Key extends Facade implements AttributeKeyInterface
@@ -184,11 +185,17 @@ class Key extends Facade implements AttributeKeyInterface
      */
     public function addAttributeValue()
     {
+        $orm = \Database::connection()->getEntityManager();
+        $genericValue = new Value();
+        $orm->persist($genericValue);
+        $orm->flush();
+
         $value = new LegacyValue();
         $value->setAttributeKey($this->legacyAttributeKey);
-        $orm = \Database::connection()->getEntityManager();
+        $value->setGenericValue($genericValue);
         $orm->persist($value);
         $orm->flush();
+
         return $value;
     }
 

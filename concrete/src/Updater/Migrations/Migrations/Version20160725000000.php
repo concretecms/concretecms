@@ -50,12 +50,14 @@ class Version20160725000000 extends AbstractMigration
         }
         if (!$this->connection->tableExists('_atAddressSettings')) {
             $this->connection->Execute('alter table atAddressSettings rename _atAddressSettings');
+            $this->connection->Execute('alter table _atAddressSettings drop primary key, add primary key (akID)');
         }
         if (!$this->connection->tableExists('_atAddressCustomCountries')) {
             $this->connection->Execute('alter table atAddressCustomCountries rename _atAddressCustomCountries');
         }
         if (!$this->connection->tableExists('_atSelectSettings')) {
             $this->connection->Execute('alter table atSelectSettings rename _atSelectSettings');
+            $this->connection->Execute('alter table _atSelectSettings drop primary key, add primary key (akID)');
         }
         if (!$this->connection->tableExists('_atSelectOptions')) {
             $this->connection->Execute('alter table atSelectOptions rename _atSelectOptions');
@@ -279,6 +281,7 @@ class Version20160725000000 extends AbstractMigration
                 'akHandle' => $row['akHandle'],
                 'akIsSearchable' => $row['akIsSearchable'],
                 'akIsSearchableIndexed' => $row['akIsSearchableIndexed'],
+                'atID' => $row['atID'],
                 'akIsInternal' => $row['akIsInternal'],
                 'pkgID' => $pkgID,
                 'akCategory' => $akCategory,
@@ -343,7 +346,7 @@ class Version20160725000000 extends AbstractMigration
                 }
                 $options = $this->connection->fetchAll('select * from _atSelectOptionsSelected where avID = ?', [$avID]);
                 foreach ($options as $option) {
-                    if (!$this->connection->fetchColumn('select count(avSelectOptionID) from atSelectOptionsSelected where avSelectOptionID = ?', [$option['atSelectOptionID']])) {
+                    if (!$this->connection->fetchColumn('select count(avSelectOptionID) from atSelectOptionsSelected where avSelectOptionID = ? and avID = ?', [$option['atSelectOptionID'], $avID])) {
                         $this->connection->insert('atSelectOptionsSelected', array(
                             'avSelectOptionID' => $option['atSelectOptionID'],
                             'avID' => $avID,

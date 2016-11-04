@@ -70,13 +70,21 @@ trait ObjectTrait
 
         $this->clearAttribute($ak);
 
-        // Create the attribute value. Note, normally it would not be necessary to persist
-        // This right after creating, but legacy attributes need the attribute value object in their
-        // controller in order to save their data.
+        // Create the generic value. This gets joined to any specific Attribute value objects later on.
+        $genericValue = new Value();
+        $orm->persist($genericValue);
+        $orm->flush();
+
+        // Create the attribute category value.
         $attributeValue = $this->getAttributeValueObject($ak, true);
-        $controller = $attributeValue->getAttributeKey()->getController();
         $orm->persist($attributeValue);
         $orm->flush();
+
+        $attributeValue->setGenericValue($genericValue);
+        $orm->persist($attributeValue);
+        $orm->flush();
+
+        $controller = $attributeValue->getAttributeKey()->getController();
         $controller->setAttributeValue($attributeValue);
 
         if (!($value instanceof AttributeValue\AbstractValue)) {
@@ -95,21 +103,12 @@ trait ObjectTrait
             }
         }
 
+
         if ($value) {
-            $genericValue = new Value();
-            $orm->persist($genericValue);
-            $orm->flush();
-
             $value->setGenericValue($genericValue);
-
             $orm->persist($value);
             $orm->flush();
-
-            $attributeValue->setGenericValue($genericValue);
         }
-
-        $orm->persist($attributeValue);
-        $orm->flush();
 
         $category = $this->getObjectAttributeCategory();
         $indexer = $category->getSearchIndexer();
