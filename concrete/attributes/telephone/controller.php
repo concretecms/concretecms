@@ -3,7 +3,6 @@ namespace Concrete\Attribute\Telephone;
 
 use Concrete\Core\Attribute\FontAwesomeIconFormatter;
 use Concrete\Core\Attribute\DefaultController;
-use Concrete\Core\Entity\Attribute\Key\Type\TextType;
 
 class Controller extends DefaultController
 {

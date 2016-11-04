@@ -8,6 +8,7 @@ use Concrete\Core\Entity\Site\Site;
 use Concrete\Core\Entity\Site\SiteTree;
 use Concrete\Core\Entity\Site\Tree;
 use Concrete\Core\Entity\Site\Type;
+use Concrete\Core\Localization\Localization;
 use Concrete\Core\Page\Theme\Theme;
 use Concrete\Core\Site\Resolver\ResolverFactory;
 use Doctrine\ORM\EntityManagerInterface;
@@ -125,8 +126,12 @@ class Service
         return $list;
     }
 
-    public function installDefault($locale)
+    public function installDefault($locale = null)
     {
+        if (!$locale) {
+            $locale = Localization::BASE_LOCALE;
+        }
+
         $siteConfig = $this->config->get('site');
         $defaultSite = array_get($siteConfig, 'default');
 

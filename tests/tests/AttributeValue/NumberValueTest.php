@@ -14,7 +14,6 @@ class NumberValueTest extends ConcreteDatabaseTestCase
     protected $metadatas = [
         NumberValue::class,
         \Concrete\Core\Entity\Attribute\Value\Value\Value::class,
-        \Concrete\Core\Entity\Attribute\Value\Value\RatingValue::class,
     ];
 
     public function renderProvider()
@@ -47,9 +46,9 @@ class NumberValueTest extends ConcreteDatabaseTestCase
     {
         $avID = isset($avID) ? $avID + 1 : 1;
         $db = Database::connection();
-        $db->executeQuery('insert into AttributeValueValues (type) values (?)', ['numbervalue']);
+        $db->executeQuery('insert into AttributeValues (avID) values (?)', [$avID]);
         $avID = $db->lastInsertId();
-        $db->executeQuery('insert into NumberAttributeValues (avID, value) values (?, ?)', [$avID, $value]);
+        $db->executeQuery('insert into atNumber (avID, value) values (?, ?)', [$avID, $value]);
         $em = ORM::entityManager();
         $repo = $em->getRepository(NumberValue::class);
         $entity = $repo->find($avID);

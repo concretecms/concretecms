@@ -5,11 +5,11 @@ class ValidationTest extends PHPUnit_Framework_TestCase
 
     public function testAttributeKeyErrorFunctionality()
     {
-        $key_type = new \Concrete\Core\Entity\Attribute\Key\Type\TextType();
+        $settings = new \Concrete\Core\Entity\Attribute\Key\Settings\TextSettings();
         $key = new \Concrete\Core\Entity\Attribute\Key\UserKey();
         $key->setAttributeKeyID(1);
         $key->setAttributeKeyName('First Name');
-        $key->setAttributeKeyType($key_type);
+        $key->setAttributeKeySettings($settings);
         $controller = \Core::make('\Concrete\Attribute\Text\Controller');
         $controller->setAttributeKey($key);
 
@@ -38,11 +38,11 @@ class ValidationTest extends PHPUnit_Framework_TestCase
     public function testEmailAddressAttribute()
     {
         // Testing a missing attribute and an attribute with an error.
-        $key_type = new \Concrete\Core\Entity\Attribute\Key\Type\TextType();
+        $settings = new \Concrete\Core\Entity\Attribute\Key\Settings\TextSettings();
         $key = new \Concrete\Core\Entity\Attribute\Key\UserKey();
         $key->setAttributeKeyID(1);
         $key->setAttributeKeyName('Email Address');
-        $key->setAttributeKeyType($key_type);
+        $key->setAttributeKeySettings($settings);
         $controller = \Core::make('\Concrete\Attribute\Email\Controller');
         $controller->setAttributeKey($key);
 
@@ -84,11 +84,11 @@ class ValidationTest extends PHPUnit_Framework_TestCase
 
     public function testAddress()
     {
-        $key_type = new \Concrete\Core\Entity\Attribute\Key\Type\AddressType();
+        $settings = new \Concrete\Core\Entity\Attribute\Key\Settings\AddressSettings();
         $key = new \Concrete\Core\Entity\Attribute\Key\UserKey();
         $key->setAttributeKeyID(1);
         $key->setAttributeKeyName('Contact Address');
-        $key->setAttributeKeyType($key_type);
+        $key->setAttributeKeySettings($settings);
         $controller = \Core::make('\Concrete\Attribute\Address\Controller');
         $controller->setAttributeKey($key);
         $validator = $controller->getValidator();
@@ -118,11 +118,11 @@ class ValidationTest extends PHPUnit_Framework_TestCase
 
     public function testBoolean()
     {
-        $key_type = new \Concrete\Core\Entity\Attribute\Key\Type\BooleanType();
+        $settings = new \Concrete\Core\Entity\Attribute\Key\Settings\BooleanSettings();
         $key = new \Concrete\Core\Entity\Attribute\Key\UserKey();
         $key->setAttributeKeyID(1);
         $key->setAttributeKeyName('Is Featured');
-        $key->setAttributeKeyType($key_type);
+        $key->setAttributeKeySettings($settings);
         $controller = \Core::make('\Concrete\Attribute\Boolean\Controller');
         $controller->setAttributeKey($key);
         $validator = $controller->getValidator();
@@ -148,11 +148,11 @@ class ValidationTest extends PHPUnit_Framework_TestCase
 
     public function testDateTime()
     {
-        $key_type = new \Concrete\Core\Entity\Attribute\Key\Type\BooleanType();
+        $settings = new \Concrete\Core\Entity\Attribute\Key\Settings\BooleanSettings();
         $key = new \Concrete\Core\Entity\Attribute\Key\UserKey();
         $key->setAttributeKeyID(1);
         $key->setAttributeKeyName('Is Featured');
-        $key->setAttributeKeyType($key_type);
+        $key->setAttributeKeySettings($settings);
         $controller = \Core::make('\Concrete\Attribute\Boolean\Controller');
         $controller->setAttributeKey($key);
         $validator = $controller->getValidator();

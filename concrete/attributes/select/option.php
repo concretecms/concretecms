@@ -2,7 +2,6 @@
 namespace Concrete\Attribute\Select;
 
 use Concrete\Core\Entity\Attribute\Key\Key;
-use Concrete\Core\Entity\Attribute\Key\Type\SelectType;
 use Concrete\Core\Entity\Attribute\Value\Value\SelectValueOption;
 
 

@@ -2,7 +2,6 @@
 namespace Concrete\Attribute\Number;
 
 use Concrete\Core\Attribute\FontAwesomeIconFormatter;
-use Concrete\Core\Entity\Attribute\Key\Type\NumberType;
 use Concrete\Core\Entity\Attribute\Value\Value\NumberValue;
 use Concrete\Core\Attribute\Controller as AttributeTypeController;
 

@@ -3,7 +3,6 @@ namespace Concrete\Attribute\DateTime;
 
 use Concrete\Core\Attribute\FontAwesomeIconFormatter;
 use Concrete\Core\Entity\Attribute\Key\Settings\DateTimeSettings;
-use Concrete\Core\Entity\Attribute\Key\Type\DateTimeType;
 use Concrete\Core\Entity\Attribute\Value\Value\DateTimeValue;
 use Loader;
 use Core;

@@ -9,6 +9,11 @@ class AreaLayoutTest extends ConcreteDatabaseTestCase
     protected $fixtures = array();
 
     protected $metadatas = array(
+        'Concrete\Core\Entity\Site\Locale',
+        'Concrete\Core\Entity\Site\Site',
+        'Concrete\Core\Entity\Site\Type',
+        'Concrete\Core\Entity\Site\Tree',
+        'Concrete\Core\Entity\Site\SiteTree',
         'Concrete\Core\Entity\Page\PagePath',
     );
 
@@ -39,6 +44,10 @@ class AreaLayoutTest extends ConcreteDatabaseTestCase
         $layout->addLayoutColumn()->setAreaLayoutColumnSpan(6);
 
         $elemental = \Concrete\Core\Page\Theme\Theme::add('elemental');
+        $service = \Core::make('site/type');
+        if (!$service->getDefault()) {
+            $service->installDefault();
+        }
         $service = \Core::make('site');
         if (!$service->getDefault()) {
             $service->installDefault();
