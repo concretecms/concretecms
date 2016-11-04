@@ -128,7 +128,7 @@ class SelectValueOption
 
     public function getSelectAttributeOptionDisplayValue($format = 'html')
     {
-        $value = tc('SelectAttributeValue', $this->getSelectAttributeOptionValue(false));
+        $value = tc('SelectAttributeValue', $this->getSelectAttributeOptionValue());
         switch ($format) {
             case 'html':
                 return h($value);
