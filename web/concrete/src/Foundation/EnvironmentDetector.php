@@ -21,14 +21,14 @@ class EnvironmentDetector {
      */
     public function detect($environments, $consoleArgs = null)
     {
-        if ($consoleArgs)
-        {
-            return $this->detectConsoleEnvironment($environments, $consoleArgs);
+        if ($consoleArgs && $env = $this->detectConsoleEnvironment($environments, $consoleArgs)) {
+            return $env;
+        } elseif ($env = $this->detectClosureEnvironment($environments)) {
+            return $env;
+        } elseif ($env = $this->detectVariableEnvironment($environments)) {
+            return $env;
         }
-        else
-        {
-            return $this->detectVariableEnvironment($environments);
-        }
+        return $this->detectWebEnvironment($environments);
     }
 
     /**
@@ -39,14 +39,6 @@ class EnvironmentDetector {
      */
     protected function detectWebEnvironment($environments)
     {
-        // If the given environment is just a Closure, we will defer the environment check
-        // to the Closure the developer has provided, which allows them to totally swap
-        // the webs environment detection logic with their own custom Closure's code.
-        if ($environments instanceof Closure)
-        {
-            return call_user_func($environments);
-        }
-
         foreach ($environments as $environment => $hosts)
         {
             // To determine the current environment, we'll simply iterate through the possible
@@ -77,10 +69,6 @@ class EnvironmentDetector {
         {
             return head(array_slice(explode('=', $value), 1));
         }
-        else
-        {
-            return $this->detectVariableEnvironment($environments);
-        }
     }
 
     /**
@@ -93,10 +81,27 @@ class EnvironmentDetector {
     {
         if (($env = $this->getEnvironmentFromVariable()) !== false) {
             return $env;
-        } else {
-            return $this->detectWebEnvironment($environments);
         }
     }
+
+    /**
+     * Set the application environment from the passed closure in case a closure
+     * was passed.
+     *
+     * @param mixed $environments
+     *
+     * @return string|null
+     */
+    protected function detectClosureEnvironment($environments)
+    {
+        // If the given environment is just a Closure, we will defer the environment check
+        // to the Closure the developer has provided, which allows them to totally swap
+        // the webs environment detection logic with their own custom Closure's code.
+        if ($environments instanceof Closure) {
+            return call_user_func($environments);
+        }
+    }
+
 
     /**
      * Get the environment argument from the console.
@@ -114,7 +119,7 @@ class EnvironmentDetector {
 
     /**
      * Gets the environment from the CONCRETE5_ENV environment variable.
-     * 
+     *
      * @return string|bool
      */
     protected function getEnvironmentFromVariable()
