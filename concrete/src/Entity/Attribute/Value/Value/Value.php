@@ -22,6 +22,11 @@ class Value
         return $this->avID;
     }
 
+    public function __toString()
+    {
+        return (string) $this->avID;
+    }
+
     public function __clone()
     {
         if ($this->avID) {

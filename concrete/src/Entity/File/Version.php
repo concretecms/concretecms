@@ -758,19 +758,20 @@ class Version
      */
     public function getAttributeValueObject($ak, $createIfNotExists = false)
     {
-        $handle = $ak;
-        if (is_object($ak)) {
-            $handle = $ak->getAttributeKeyHandle();
+        if (!is_object($ak)) {
+            $ak = FileKey::getByHandle($ak);
         }
+        $value = false;
         if (is_object($ak)) {
             $value = $this->getObjectAttributeCategory()->getAttributeValue($ak, $this);
         }
 
-        if ($createIfNotExists) {
+        if ($value) {
+            return $value;
+        } elseif ($createIfNotExists) {
             if (!is_object($ak)) {
                 $ak = FileKey::getByHandle($ak);
             }
-
             $attributeValue = new FileValue();
             $attributeValue->setVersion($this);
             $attributeValue->setAttributeKey($ak);

@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Entity\Attribute\Key\Settings;
 
+use Concrete\Core\Entity\Attribute\Type;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -9,10 +10,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 abstract class Settings
 {
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
-    protected $akTypeHandle;
+
+    protected $type;
 
     /**
      * @ORM\Id
@@ -20,29 +19,6 @@ abstract class Settings
      * @ORM\JoinColumn(name="akID", referencedColumnName="akID")
      */
     protected $key;
-
-    /**
-     * @return mixed
-     */
-    public function getAttributeTypeHandle()
-    {
-        if (isset($this->akTypeHandle)) {
-            return $this->akTypeHandle; // By allowing the controllers to set this, we can create attributes that extend the built-in key types
-        } else {
-            // attempt to determine it dynamically
-            $class = substr(get_called_class(), strrpos(get_called_class(), '\\') + 1);
-            $class = substr($class, 0, strpos($class, 'Type'));
-            return uncamelcase($class);
-        }
-    }
-
-    /**
-     * @param mixed $akTypeHandle
-     */
-    public function setAttributeTypeHandle($akTypeHandle)
-    {
-        $this->akTypeHandle = $akTypeHandle;
-    }
 
     /**
      * @return mixed
@@ -65,9 +41,20 @@ abstract class Settings
      */
     public function getAttributeType()
     {
-        $factory = \Core::make('Concrete\Core\Attribute\TypeFactory');
-        return $factory->getByHandle($this->getAttributeTypeHandle());
+        if (!isset($this->type)) {
+            $this->type = $this->key->getAttributeType();
+        }
+        return $this->type;
     }
+
+    /**
+     * @param mixed $type
+     */
+    public function setAttributeType(Type $type)
+    {
+        $this->type = $type;
+    }
+
 
     public function mergeAndPersist(EntityManagerInterface $entityManager)
     {

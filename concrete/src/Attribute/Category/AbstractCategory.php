@@ -9,6 +9,8 @@ use Concrete\Core\Attribute\Key\RequestLoader\StandardRequestLoader;
 use Concrete\Core\Attribute\Set;
 use Concrete\Core\Attribute\SetFactory;
 use Concrete\Core\Entity\Attribute\Key\Key;
+use Concrete\Core\Entity\Attribute\Key\Settings\Settings;
+use Concrete\Core\Entity\Attribute\Type;
 use Concrete\Core\Entity\Package;
 use Doctrine\ORM\EntityManager;
 use Concrete\Core\Entity\Attribute\Type as AttributeType;
@@ -98,42 +100,49 @@ abstract class AbstractCategory implements CategoryInterface, StandardSearchInde
         $this->entityManager->flush();
     }
 
-    public function add($settings, $key, $pkg = null)
+    public function add($o, $key, $pkg = null)
     {
-        /*
-         * Note: Do not type hint $pkg because old versions might not send the right object in.
-         * LEGACY SUPPORT
-         */
+
+        if (is_string($o)) {
+            $type = \Concrete\Core\Attribute\Type::getByHandle($o);
+        } else if ($o instanceof Settings) {
+            $settings = $o;
+            $type = $settings->getAttributeType();
+        } else {
+            $type = $o;
+        }
+
+        if (!isset($settings)) {
+            $settings = $type->getController()->getAttributeKeySettings();
+        }
+
+        // Legacy array support for $key
         $asID = false;
-        if (is_string($settings)) {
-            $settings = \Concrete\Core\Attribute\Type::getByHandle($settings);
-        }
-        if ($settings instanceof \Concrete\Core\Entity\Attribute\Type) {
-            $settings = $settings->getController()->getAttributeKeySettings();
-            if (is_array($key)) {
-                $handle = $key['akHandle'];
-                $name = $key['akName'];
-                if (isset($key['asID'])) {
-                    $asID = $key['asID'];
-                }
-                $key = $this->createAttributeKey();
-                $key->setAttributeKeyHandle($handle);
-                $key->setAttributeKeyName($name);
+        if (is_array($key)) {
+            $handle = $key['akHandle'];
+            $name = $key['akName'];
+            if (isset($key['asID'])) {
+                $asID = $key['asID'];
             }
+            $key = $this->createAttributeKey();
+            $key->setAttributeKeyHandle($handle);
+            $key->setAttributeKeyName($name);
         }
-        $key->setAttributeType($settings->getAttributeType());
-        /* end legacy support */
+
+        $key->setAttributeType($type);
         $this->entityManager->persist($key);
         $this->entityManager->flush();
 
         $settings->setAttributeKey($key);
         $key->setAttributeKeySettings($settings);
+
         $this->entityManager->persist($settings);
         $this->entityManager->flush();
 
         if (is_object($pkg)) {
             $key->setPackage($pkg);
         }
+
         // Modify the category's search indexer.
         $indexer = $this->getSearchIndexer();
         if (is_object($indexer)) {
@@ -144,6 +153,7 @@ abstract class AbstractCategory implements CategoryInterface, StandardSearchInde
         $this->entityManager->flush();
 
         /* legacy support, attribute set */
+
         if ($asID) {
             $manager = $this->getSetManager();
             $factory = new SetFactory($this->entityManager);
@@ -172,6 +182,7 @@ abstract class AbstractCategory implements CategoryInterface, StandardSearchInde
         if (!is_object($settings)) {
             $settings = $controller->getAttributeKeySettings();
         }
+        $settings->setAttributeType($type);
         return $this->add($settings, $key);
     }
 
@@ -186,6 +197,7 @@ abstract class AbstractCategory implements CategoryInterface, StandardSearchInde
         if (!is_object($settings)) {
             $settings = $controller->getAttributeKeySettings();
         }
+        $settings->setAttributeType($type);
         return $this->add($settings, $key, $package);
     }
 
