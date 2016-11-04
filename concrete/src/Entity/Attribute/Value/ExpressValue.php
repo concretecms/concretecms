@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
  *     name="ExpressEntityEntryAttributeValues"
  * )
  */
-class ExpressValue extends Value
+class ExpressValue extends AbstractValue
 {
     /**
      * @ORM\Id

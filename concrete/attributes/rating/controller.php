@@ -2,6 +2,7 @@
 namespace Concrete\Attribute\Rating;
 
 use Concrete\Core\Attribute\FontAwesomeIconFormatter;
+use Concrete\Core\Entity\Attribute\Value\Value\NumberValue;
 use Concrete\Core\Entity\Attribute\Value\Value\RatingValue;
 use Loader;
 use Concrete\Core\Attribute\Controller as AttributeTypeController;
@@ -18,6 +19,10 @@ class Controller extends AttributeTypeController
         return new FontAwesomeIconFormatter('star');
     }
 
+    public function getAttributeValueObject()
+    {
+        return $this->entityManager->find(NumberValue::class, $this->attributeValue->getGenericValue());
+    }
 
     public function getDisplayValue()
     {

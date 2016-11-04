@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  * @ORM\Table(name="SelectAttributeValues")
  */
-class SelectValue extends Value implements \Iterator
+class SelectValue extends AbstractValue implements \Iterator
 {
     /**
      * @ORM\ManyToMany(targetEntity="SelectValueOption", inversedBy="values", cascade={"persist"})

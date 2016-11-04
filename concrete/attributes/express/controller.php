@@ -19,6 +19,11 @@ class Controller extends AttributeTypeController
         return new FontAwesomeIconFormatter('database');
     }
 
+    public function getAttributeValueObject()
+    {
+        return $this->entityManager->find(ExpressValue::class, $this->attributeValue->getGenericValue());
+    }
+
     public function saveKey($data)
     {
         /**

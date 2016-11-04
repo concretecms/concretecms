@@ -18,7 +18,7 @@ class Controller extends AbstractController
 
     /** @var \Concrete\Core\Attribute\Key\Key */
     protected $attributeKey;
-    /** @var \Concrete\Core\Attribute\Value\Value */
+    /** @var \Concrete\Core\Entity\Attribute\Value\AbstractValue */
     protected $attributeValue;
     protected $searchIndexFieldDefinition;
     protected $requestArray = false;
@@ -318,6 +318,11 @@ class Controller extends AbstractController
         if (is_object($this->attributeValue)) {
             return $this->attributeValue->getAttributeValueID();
         }
+    }
+
+    public function getAttributeValueObject()
+    {
+        return null;
     }
 
     public function getAttributeKeySettings()

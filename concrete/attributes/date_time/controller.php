@@ -139,6 +139,11 @@ class Controller extends AttributeTypeController
         echo $html;
     }
 
+    public function getAttributeValueObject()
+    {
+        return $this->entityManager->find(DateTimeValue::class, $this->attributeValue->getGenericValue());
+    }
+
     public function createAttributeValue($value)
     {
         if ($value != '') {

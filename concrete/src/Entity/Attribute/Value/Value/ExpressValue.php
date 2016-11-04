@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  * @ORM\Table(name="ExpressAttributeValues")
  */
-class ExpressValue extends Value
+class ExpressValue extends AbstractValue
 {
     /**
      * @ORM\ManyToMany(targetEntity="\Concrete\Core\Entity\Express\Entry", inversedBy="values", cascade={"persist"})

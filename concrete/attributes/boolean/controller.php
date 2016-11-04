@@ -133,6 +133,11 @@ class Controller extends AttributeTypeController
         return $type;
     }
 
+    public function getAttributeValueObject()
+    {
+        return $this->entityManager->find(BooleanValue::class, $this->attributeValue->getGenericValue());
+    }
+
     public function createAttributeValueFromRequest()
     {
         $data = $this->post();

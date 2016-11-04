@@ -109,6 +109,11 @@ class Controller extends DefaultController
         $this->set('akTextareaDisplayMode', $type->getMode());
     }
 
+    public function getAttributeValueObject()
+    {
+        return $this->entityManager->find(TextareaValue::class, $this->attributeValue->getGenericValue());
+    }
+
     public function exportKey($akey)
     {
         $this->load();

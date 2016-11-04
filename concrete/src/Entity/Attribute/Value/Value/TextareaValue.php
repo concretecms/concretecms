@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  * @ORM\Table(name="TextareaAttributeValues")
  */
-class TextareaValue extends Value
+class TextareaValue extends AbstractValue
 {
     /**
      * @ORM\Column(type="text", nullable=true)

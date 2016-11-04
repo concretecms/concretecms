@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\MappedSuperClass
  */
-abstract class Value implements AttributeValueInterface
+abstract class AbstractValue implements AttributeValueInterface
 {
 
     /**
@@ -23,7 +23,7 @@ abstract class Value implements AttributeValueInterface
      * @ORM\ManyToOne(targetEntity="\Concrete\Core\Entity\Attribute\Value\Value\Value", cascade={"persist"})
      * @ORM\JoinColumn(name="avID", referencedColumnName="avID")
      **/
-    protected $value;
+    protected $generic_value;
 
     /**
      * @return Key
@@ -35,7 +35,7 @@ abstract class Value implements AttributeValueInterface
 
     public function getAttributeValueID()
     {
-        return $this->value->getAttributeValueID();
+        return $this->generic_value->getAttributeValueID();
     }
 
     /**
@@ -64,12 +64,16 @@ abstract class Value implements AttributeValueInterface
      */
     final public function getValueObject()
     {
-        return $this->value;
+        return $this->getController()->getAttributeValueObject();
     }
 
     public function getValue($mode = false)
     {
-        $value = $this->value;
+        if (!is_object($this->generic_value)) {
+            return null;
+        }
+
+        $value = $this->getValueObject();
 
         // legacy
         if ($mode == 'displaySanitized' || $mode == 'display') {
@@ -78,6 +82,7 @@ abstract class Value implements AttributeValueInterface
 
         // Otherwise, we get the default "value" response for the attribute value type, which could be text, could be true/false, could be a
         // file object.
+
         if (is_object($value) && !($value instanceof LegacyValue)) {
             return $value->getValue();
         }
@@ -146,9 +151,17 @@ abstract class Value implements AttributeValueInterface
     /**
      * @param mixed $value
      */
-    public function setValue($value)
+    public function setGenericValue($value)
     {
-        $this->value = $value;
+        $this->generic_value = $value;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getGenericValue()
+    {
+        return $this->generic_value;
     }
 
     public function __toString()

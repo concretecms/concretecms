@@ -8,7 +8,7 @@ use Concrete\Core\Support\Facade\Application;
  * @ORM\Entity
  * @ORM\Table(name="NumberAttributeValues")
  */
-class NumberValue extends Value
+class NumberValue extends AbstractValue
 {
     /**
      * @ORM\Column(type="decimal", precision=14, scale=4, nullable=true)

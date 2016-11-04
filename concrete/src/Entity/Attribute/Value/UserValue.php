@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
  *     name="UserAttributeValues"
  * )
  */
-class UserValue extends Value
+class UserValue extends AbstractValue
 {
     /**
      * @ORM\Id

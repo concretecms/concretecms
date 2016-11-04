@@ -11,7 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
  *     name="FileAttributeValues"
  * )
  */
-class FileValue extends Value
+class FileValue extends AbstractValue
 {
     /**
      * @ORM\Id

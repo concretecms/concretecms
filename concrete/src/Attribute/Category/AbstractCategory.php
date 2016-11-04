@@ -265,7 +265,7 @@ abstract class AbstractCategory implements CategoryInterface, StandardSearchInde
             $this->entityManager->remove($attribute);
             $this->entityManager->flush();
             $this->entityManager->refresh($value);
-            $values = $this->getAttributeValueRepository()->findBy(['value' => $value]);
+            $values = $this->getAttributeValueRepository()->findBy(['generic_value' => $value]);
             if (count($values) < 1) {
                 $this->entityManager->remove($value);
             }
