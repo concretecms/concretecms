@@ -67,6 +67,9 @@ if ($showMenu) {
     $aID = $a->getAreaID();
     $btHandle = $btw->getBlockTypeHandle();
     if ($btw->getBlockTypeHandle() == BLOCK_HANDLE_SCRAPBOOK_PROXY) {
+        $_bi = $b->getInstance();
+        $_bo = Block::getByID($_bi->getOriginalBlockID());
+        $btOriginal = \Concrete\Core\Block\BlockType\BlockType::getByHandle($_bo->getBlockTypeHandle());
         $btHandle = $btOriginal->getBlockTypeHandle();
     }
 

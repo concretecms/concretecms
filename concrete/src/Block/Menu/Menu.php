@@ -7,6 +7,7 @@ use Concrete\Core\Application\UserInterface\ContextMenu\Item\DividerItem;
 use Concrete\Core\Application\UserInterface\ContextMenu\Item\LinkItem;
 use Concrete\Core\Area\Area;
 use Concrete\Core\Block\Block;
+use Concrete\Core\Block\BlockType\BlockType;
 use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Entity\File\File as FileEntity;
 use Concrete\Core\Page\Page;
