@@ -113,5 +113,5 @@ if (isset($message)) {
 
 </div>
 
-<?
+<?php
 $view->inc('elements/footer.php');
