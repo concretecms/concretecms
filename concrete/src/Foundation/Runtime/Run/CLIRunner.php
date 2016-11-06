@@ -27,6 +27,10 @@ class CLIRunner implements RunInterface, ApplicationAwareInterface
         $console = $this->console;
         $this->app->instance('console', $console);
 
+        $app = $this->app; // useful in bootstrap/app.php
+
+        include DIR_APPLICATION . '/bootstrap/app.php';
+
         if ($this->app->isInstalled()) {
             $this->app->setupPackageAutoloaders();
             $this->app->setupPackages();
