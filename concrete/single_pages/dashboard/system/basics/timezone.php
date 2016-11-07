@@ -9,24 +9,25 @@ $d = Loader::helper('concrete/dashboard');
 
     <?php echo $this->controller->token->output('update_timezone') ?>
 
-    <div class="alert alert-info"><?= t(
-            'With this setting enabled, users may specify their own time zone in their user profile, and content timestamps will be adjusted accordingly. Without this setting enabled, content timestamps appear in server time.') ?></div>
-
     <div class="form-group">
+        <label class="control-label">
+            <?php echo t('Local User Time') ?>
+        </label>
         <div class="checkbox">
             <label>
                 <input type="checkbox" name="user_timezones"
                        value="1" <?php if ($user_timezones) {
     ?> checked <?php 
 } ?> />
-                <?php echo t('Enable user defined time zones.') ?>
+                <span class="launch-tooltip control-label" data-placement="right" title="<?= t(
+                    'With this setting enabled, users may specify their own time zone in their user profile, and content timestamps will be adjusted accordingly. Without this setting enabled, content timestamps appear in server time.') ?>"><?php echo t('Enable user defined time zones.') ?></span>
             </label>
         </div>
     </div>
 
     <div class="form-group">
         <label class="control-label">
-            <?php echo t('Server Timezone:') ?>
+            <?php echo t('Server Timezone') ?>
         </label>
         <select class="form-control" name="timezone">
             <?php
