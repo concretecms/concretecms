@@ -44,14 +44,14 @@ class Schema
         return $parser;
     }
 
-    public static function refreshCoreXMLSchema($tables)
+    public static function getCoreXMLSchema($tables = array())
     {
         $xml = simplexml_load_file(DIR_BASE_CORE . '/config/db.xml');
         $output = new \SimpleXMLElement('<schema xmlns="http://www.concrete5.org/doctrine-xml/0.5" />');
         $th = \Core::make('helper/text');
         foreach ($xml->table as $t) {
             $name = (string) $t['name'];
-            if (in_array($name, $tables)) {
+            if (in_array($name, $tables) || count($tables) == 0) {
                 $th->appendXML($output, $t);
             }
         }
@@ -61,11 +61,17 @@ class Schema
         $parser = static::getSchemaParser($output);
         $parser->setIgnoreExistingTables(false);
         $toSchema = $parser->parse($db);
+        return $toSchema;
+    }
+
+    public static function refreshCoreXMLSchema($tables = array())
+    {
+        $db = \Database::get();
+        $toSchema = static::getCoreXMLSchema($tables);
         $fromSchema = $db->getSchemaManager()->createSchema();
         $comparator = new \Doctrine\DBAL\Schema\Comparator();
         $schemaDiff = $comparator->compare($fromSchema, $toSchema);
         $saveQueries = $schemaDiff->toSaveSql($db->getDatabasePlatform());
-
         foreach ($saveQueries as $query) {
             $db->query($query);
         }
