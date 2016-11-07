@@ -31,16 +31,8 @@ defined('C5_EXECUTE') or die("Access Denied.");
             </label>
         </div>
 
-            <button class="btn btn-default" style="position: absolute; top: -50px; right: 20px" type="submit"><?=t('Save')?></button>
-
         </div>
     </fieldset>
-</form>
-
-<div class="spacer-row-6"></div>
-
-<form method="post" id="entities-refresh-form" action="<?= $view->action('refresh_entities') ?>"  style="position: relative">
-    <?= $this->controller->token->output('refresh_entities') ?>
 
     <fieldset>
         <legend><?=t("Entities")?></legend>
@@ -53,7 +45,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
                 <div class="col-md-1"><span class="text-muted"><?=t('Paths')?></span></div>
                 <div class="col-md-11">
                     <?php foreach($driver->getPaths() as $path) { ?>
-                       <small><?=$path?></small>
+                       <?=$path?>
                     <?php } ?>
                 </div>
             </div>
@@ -61,7 +53,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
             <div class="row">
                 <div class="col-md-1"><span class="text-muted"><?=t('Driver')?></span></div>
                 <div class="col-md-11">
-                    <small><?=get_class($driver)?></small>
+                    <?=get_class($driver)?>
                 </div>
             </div>
 
@@ -69,8 +61,14 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
         <?php } ?>
 
-            <button class="btn btn-default" style="position: absolute; top: -50px; right: 20px" type="submit"><?=tc('Doctrine', 'Refresh Entities')?></button>
-
         </div>
     </fieldset>
+
+    <div class="ccm-dashboard-form-actions-wrapper">
+        <div class="ccm-dashboard-form-actions">
+            <button class="pull-left btn btn-danger" name="refresh" value="1" type="submit" ><?=t('Refresh Entities')?></button>
+            <button class="pull-right btn btn-primary" type="submit" ><?=t('Save')?></button>
+        </div>
+    </div>
+
 </form>
