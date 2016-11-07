@@ -13,7 +13,6 @@
       <default value="1"/>
     </field>
     <field name="paginate" type="boolean">
-      <unsigned/>
       <default value="1"/>
       <notnull/>
     </field>
@@ -31,12 +30,10 @@
       <notnull/>
     </field>
     <field name="enableOrdering" type="boolean">
-      <unsigned/>
       <default value="1"/>
       <notnull/>
     </field>
     <field name="enableCommentRating" type="boolean">
-      <unsigned/>
       <default value="1"/>
       <notnull/>
     </field>

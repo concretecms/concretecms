@@ -359,9 +359,6 @@ class StartingPointPackage extends BasePackage
         $db->Execute('ALTER TABLE Groups ADD INDEX (`gPath` (255))');
         $db->Execute('ALTER TABLE SignupRequests ADD INDEX (`ipFrom` (32))');
         $db->Execute('ALTER TABLE UserBannedIPs ADD UNIQUE INDEX (ipFrom (32), ipTo(32))');
-        $db->Execute(
-            'ALTER TABLE QueueMessages ADD FOREIGN KEY (`queue_id`) REFERENCES `Queues` (`queue_id`) ON DELETE CASCADE ON UPDATE CASCADE'
-        );
     }
 
     public function add_users()

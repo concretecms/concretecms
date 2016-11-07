@@ -16,12 +16,10 @@
       <default value="5"/>
     </field>
     <field name="showSummary" type="boolean">
-      <unsigned/>
       <default value="1"/>
       <notnull/>
     </field>
     <field name="launchInNewWindow" type="boolean">
-      <unsigned/>
       <default value="1"/>
       <notnull/>
     </field>

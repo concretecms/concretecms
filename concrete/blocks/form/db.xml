@@ -18,7 +18,6 @@
     </field>
     <field name="thankyouMsg" type="text" size="65535"/>
     <field name="notifyMeOnSubmission" type="boolean">
-      <unsigned/>
       <default value="0"/>
       <notnull/>
     </field>
@@ -100,6 +99,7 @@
     </field>
     <field name="created" type="timestamp">
       <deftimestamp/>
+      <notnull/>
     </field>
     <field name="uID" type="integer">
       <unsigned/>

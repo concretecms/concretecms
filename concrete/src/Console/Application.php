@@ -25,6 +25,7 @@ class Application extends \Symfony\Component\Console\Application
         $this->add(new Command\ExecCommand());
         $this->add(new Command\ServiceCommand());
         if (Core::make('app')->isInstalled()) {
+            $this->add(new Command\CompareSchemaCommand());
             $this->add(new Command\ClearCacheCommand());
             $this->add(new Command\InstallPackageCommand());
             $this->add(new Command\UninstallPackageCommand());
