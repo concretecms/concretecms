@@ -10,6 +10,7 @@ class BlockStyleTest extends PageTestCase
         $this->metadatas = array_merge($this->metadatas,
             array(
                 'Concrete\Core\Entity\Page\Template',
+                'Concrete\Core\Entity\StyleCustomizer\Inline\StyleSet',
                 'Concrete\Core\Entity\Block\BlockType\BlockType',
             )
         );

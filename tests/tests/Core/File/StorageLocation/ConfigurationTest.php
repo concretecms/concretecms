@@ -6,8 +6,8 @@ use Concrete\Core\File\StorageLocation\Type\Type;
 class ConfigurationTest extends \ConcreteDatabaseTestCase
 {
     protected $fixtures = array();
-    protected $tables = array(
-        'FileStorageLocationTypes',
+    protected $metadatas = array(
+        'Concrete\Core\Entity\File\StorageLocation\Type\Type',
     );
 
     protected function getStorageDirectory()
