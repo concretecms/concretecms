@@ -38,6 +38,7 @@ class FileAttributeTest extends \AttributeTestCase
             'Concrete\Core\Entity\Attribute\Key\Key',
             'Concrete\Core\Entity\Attribute\Value\Value\NumberValue',
             'Concrete\Core\Entity\Attribute\Value\FileValue',
+            'Concrete\Core\Entity\File\StorageLocation\Type\Type',
             'Concrete\Core\Entity\File\StorageLocation\StorageLocation',
         ));
         parent::setUp();
