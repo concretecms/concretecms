@@ -109,7 +109,7 @@ $view->inc('elements/header.php');
     }
 
     ?>
-    
+
     <?php echo $innerContent; ?>
 
 </div>
