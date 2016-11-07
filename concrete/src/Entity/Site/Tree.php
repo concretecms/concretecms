@@ -60,6 +60,14 @@ abstract class Tree implements TreeInterface, TypeInterface
         return $this->siteTreeID;
     }
 
+    /**
+     * @param mixed $siteTreeID
+     */
+    public function setSiteTreeID($siteTreeID)
+    {
+        $this->siteTreeID = $siteTreeID;
+    }
+
     public function getSiteTreeObject()
     {
         return $this;
