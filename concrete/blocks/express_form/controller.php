@@ -688,6 +688,7 @@ class Controller extends BlockController
                 $obj->showControlRequired = true;
                 $obj->showControlName = true;
                 $obj->type = 'attribute_key|' . $type->getAttributeTypeID();
+                $obj->typeDisplayName = $type->getAttributeTypeDisplayName();
             } else {
 
                 $controller = $control->getControlOptionsController();

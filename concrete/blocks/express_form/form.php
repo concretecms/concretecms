@@ -188,18 +188,23 @@
 
     <div class="form-group" data-action="<?=$view->action('get_type_form')?>" data-group="field-types">
         <?=$form->label('type', t('Answer Type'))?>
-        &nbsp; <i class="fa fa-refresh fa-spin" style="display: none"></i>
-        <select name="type" class="form-control">
-            <option value=""><?=t('** Choose Field')?></option>
-        <% _.each(types, function(group) { %>
-            <optgroup label="<%=group.label%>">
-                <% _.each(group.fields, function(type) { %>
-                    <option value="<%=type.id%>" <% if (selectedType == type.id) { %>selected<% } %>><%=_.escape(type.displayName)%></option>
-                <% }); %>
-            </optgroup>
-        <% }); %>
-        </select>
 
+        <% if (!id) { %>
+            &nbsp; <i class="fa fa-refresh fa-spin" style="display: none"></i>
+            <select name="type" class="form-control">
+                <option value=""><?=t('** Choose Field')?></option>
+            <% _.each(types, function(group) { %>
+                <optgroup label="<%=group.label%>">
+                    <% _.each(group.fields, function(type) { %>
+                        <option value="<%=type.id%>" <% if (selectedType == type.id) { %>selected<% } %>><%=_.escape(type.displayName)%></option>
+                    <% }); %>
+                </optgroup>
+            <% }); %>
+            </select>
+        <% } else { %>
+            <input type="hidden" name="type" value="<%=selectedType%>">
+            <div><strong><%=selectedTypeDisplayName%></strong></div>
+        <% } %>
     </div>
 
     <div class="form-group" data-group="control-name" style="display: none">
