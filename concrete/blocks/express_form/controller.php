@@ -248,6 +248,7 @@ class Controller extends BlockController
                     if ($post['required']) {
                         $control->setIsRequired(true);
                     }
+                    $key->setAttributeType($type);
                     if (!$post['question']) {
                         $e = \Core::make('error');
                         $e->add(t('You must give this question a name.'));
@@ -431,6 +432,7 @@ class Controller extends BlockController
         // Now, let's loop through our request controls
         $indexKeys = array();
         $position = 0;
+
         foreach($requestControls as $id) {
 
             if (isset($sessionControls[$id])) {
@@ -439,10 +441,28 @@ class Controller extends BlockController
                     // Possibility 1: This is a new control.
                     if ($control instanceof AttributeKeyControl) {
                         $key = $control->getAttributeKey();
+                        $type = $key->getAttributeType();
+                        $settings = $key->getAttributeKeySettings();
+
+                        // We have to merge entities back into the entity manager because they have been
+                        // serialized. First type, because if we merge key first type gets screwed
+                        $type = $entityManager->merge($type);
+
+                        // Now key, because we need key to set as the primary key for settings.
+                        $key = $entityManager->merge($key);
+                        $key->setAttributeType($type);
                         $key->setEntity($entity);
                         $key->setAttributeKeyHandle((new AttributeKeyHandleGenerator($attributeKeyCategory))->generate($key));
-                        $control->setAttributeKey($key);
                         $entityManager->persist($key);
+                        $entityManager->flush();
+
+                        // Now attribute settings.
+                        $settings->setAttributeKey($key);
+                        $settings = $entityManager->merge($settings);
+                        $entityManager->persist($settings);
+                        $entityManager->flush();
+
+                        $control->setAttributeKey($key);
                         $indexKeys[] = $key;
                     }
 
@@ -462,6 +482,9 @@ class Controller extends BlockController
                                 $key->setAttributeKeyHandle((new AttributeKeyHandleGenerator($attributeKeyCategory))->generate($key));
 
                                 // Key Type
+                                $type = $control->getAttributeKey()->getAttributeType();
+                                $type = $entityManager->merge($type);
+                                $key->setAttributeType($type);
                                 $settings = $control->getAttributeKey()->getAttributeKeySettings();
                                 $settings->setAttributeKey($key);
                                 $settings = $settings->mergeAndPersist($entityManager);

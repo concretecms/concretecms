@@ -60,13 +60,16 @@ class PageListTopicTest extends PageTestCase
         $type->setTopicTreeID($node->getTreeID());
         $type->setTopicTreeID($node->getTreeID());
         $type->setParentNodeID($node->getTreeNodeID());
-        $type->setAttributeType($attributeType);
 
         $category = \Concrete\Core\Attribute\Key\Category::add('collection');
 
         $key = $category->createAttributeKey();
         $key->setAttributeKeyHandle('topics');
         $key->setAttributeKeyName('Topics');
+        $key->setAttributeType($attributeType);
+
+        $type->setAttributeKey($key);
+
         $topics = $category->add($type, $key);
     }
     public function testFilterByTopic()

@@ -724,8 +724,6 @@ class Controller extends AttributeTypeController
             }
         }
 
-        $orm->flush();
-
         // Now we add the options
 
         foreach ($selectedPostValues as $option) {
