@@ -176,6 +176,10 @@ class Key implements AttributeKeyInterface, ExportableInterface
      */
     public function getAttributeKeySettings()
     {
+        if (isset($this->settings)) {
+            return $this->settings;
+        }
+
         return $this->getController()->getAttributeKeySettings();
     }
 

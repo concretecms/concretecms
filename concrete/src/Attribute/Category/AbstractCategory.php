@@ -100,20 +100,11 @@ abstract class AbstractCategory implements CategoryInterface, StandardSearchInde
         $this->entityManager->flush();
     }
 
-    public function add($o, $key, $pkg = null)
+    public function add($type, $key, $settings, $pkg = null)
     {
 
-        if (is_string($o)) {
+        if (is_string($type)) {
             $type = \Concrete\Core\Attribute\Type::getByHandle($o);
-        } else if ($o instanceof Settings) {
-            $settings = $o;
-            $type = $settings->getAttributeType();
-        } else {
-            $type = $o;
-        }
-
-        if (!isset($settings)) {
-            $settings = $type->getController()->getAttributeKeySettings();
         }
 
         // Legacy array support for $key
@@ -128,6 +119,17 @@ abstract class AbstractCategory implements CategoryInterface, StandardSearchInde
             $key->setAttributeKeyHandle($handle);
             $key->setAttributeKeyName($name);
         }
+
+        // Legacy support for third parameter which used to be package
+        if ($settings instanceof Package || $settings instanceof \Concrete\Core\Package\Package) {
+            $pkg = $settings;
+            unset($settings);
+        }
+
+        if (!isset($settings)) {
+            $settings = $type->getController()->getAttributeKeySettings();
+        }
+
 
         $key->setAttributeType($type);
         $this->entityManager->persist($key);
@@ -182,8 +184,7 @@ abstract class AbstractCategory implements CategoryInterface, StandardSearchInde
         if (!is_object($settings)) {
             $settings = $controller->getAttributeKeySettings();
         }
-        $settings->setAttributeType($type);
-        return $this->add($settings, $key);
+        return $this->add($type, $key, $settings);
     }
 
     public function import(AttributeType $type, \SimpleXMLElement $element, Package $package = null)
@@ -197,8 +198,7 @@ abstract class AbstractCategory implements CategoryInterface, StandardSearchInde
         if (!is_object($settings)) {
             $settings = $controller->getAttributeKeySettings();
         }
-        $settings->setAttributeType($type);
-        return $this->add($settings, $key, $package);
+        return $this->add($type, $key, $settings, $package);
     }
 
     // Update
@@ -215,7 +215,9 @@ abstract class AbstractCategory implements CategoryInterface, StandardSearchInde
             $settings = $controller->getAttributeKeySettings();
         }
         $settings->setAttributeKey($key);
-        $key->setAttributeKeySettings($settings);
+
+        $this->entityManager->persist($settings);
+        $this->entityManager->flush();
 
         // Modify the category's search indexer.
         $indexer = $this->getSearchIndexer();

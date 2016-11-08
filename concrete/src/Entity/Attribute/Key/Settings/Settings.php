@@ -11,8 +11,6 @@ use Doctrine\ORM\Mapping as ORM;
 abstract class Settings
 {
 
-    protected $type;
-
     /**
      * @ORM\Id
      * @ORM\OneToOne(targetEntity="\Concrete\Core\Entity\Attribute\Key\Key")
@@ -41,20 +39,8 @@ abstract class Settings
      */
     public function getAttributeType()
     {
-        if (!isset($this->type)) {
-            $this->type = $this->key->getAttributeType();
-        }
-        return $this->type;
+        return $this->key->getAttributeType();
     }
-
-    /**
-     * @param mixed $type
-     */
-    public function setAttributeType(Type $type)
-    {
-        $this->type = $type;
-    }
-
 
     public function mergeAndPersist(EntityManagerInterface $entityManager)
     {
