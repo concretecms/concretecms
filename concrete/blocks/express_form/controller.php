@@ -476,19 +476,25 @@ class Controller extends BlockController
                     foreach($existingControls as $existingControl) {
                         if ($existingControl->getId() == $id) {
                             if ($control instanceof AttributeKeyControl) {
+                                $settings = $control->getAttributeKey()->getAttributeKeySettings();
                                 $key = $existingControl->getAttributeKey();
+                                $type = $key->getAttributeType();
+                                $type = $entityManager->merge($type);
+
                                 // question name
                                 $key->setAttributeKeyName($control->getAttributeKey()->getAttributeKeyName());
                                 $key->setAttributeKeyHandle((new AttributeKeyHandleGenerator($attributeKeyCategory))->generate($key));
 
                                 // Key Type
+                                $key = $entityManager->merge($key);
+                                $key->setAttributeType($type);
+
                                 $type = $control->getAttributeKey()->getAttributeType();
                                 $type = $entityManager->merge($type);
                                 $key->setAttributeType($type);
                                 $settings = $control->getAttributeKey()->getAttributeKeySettings();
                                 $settings->setAttributeKey($key);
                                 $settings = $settings->mergeAndPersist($entityManager);
-                                $key->setAttributeKeySettings($settings);
 
                                 // Required
                                 $existingControl->setIsRequired($control->isRequired());

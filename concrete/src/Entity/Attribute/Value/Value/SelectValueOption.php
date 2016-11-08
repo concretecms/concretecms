@@ -32,6 +32,11 @@ class SelectValueOption
     protected $isEndUserAdded = false;
 
     /**
+     * @ORM\Column(type="boolean")
+     */
+    protected $isDeleted = false;
+
+    /**
      * @ORM\Column(type="integer")
      */
     protected $displayOrder = 0;
@@ -55,6 +60,22 @@ class SelectValueOption
     public function setOptionList($list)
     {
         $this->list = $list;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function isOptionDeleted()
+    {
+        return $this->isDeleted;
+    }
+
+    /**
+     * @param mixed $isDeleted
+     */
+    public function setIsOptionDeleted($isDeleted)
+    {
+        $this->isDeleted = $isDeleted;
     }
 
     /**

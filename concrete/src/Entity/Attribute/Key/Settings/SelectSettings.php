@@ -103,7 +103,6 @@ class SelectSettings extends Settings
         $this->akSelectOptionDisplayOrder = $displayOrder;
     }
 
-    /*
     public function mergeAndPersist(EntityManagerInterface $entityManager)
     {
         $tempOptions = array();
@@ -124,6 +123,6 @@ class SelectSettings extends Settings
 
         $entityManager->persist($settings);
         return $settings;
-    }*/
+    }
 
 }
