@@ -126,7 +126,7 @@ abstract class AbstractCategory implements CategoryInterface, StandardSearchInde
             unset($settings);
         }
 
-        if (!isset($settings)) {
+        if (!$settings) {
             $settings = $type->getController()->getAttributeKeySettings();
         }
 

@@ -56,10 +56,10 @@ class PageListTopicTest extends PageTestCase
 
         $attributeType = \Concrete\Core\Attribute\Type::getByHandle('topics');
 
-        $type = new \Concrete\Core\Entity\Attribute\Key\Settings\TopicsSettings();
-        $type->setTopicTreeID($node->getTreeID());
-        $type->setTopicTreeID($node->getTreeID());
-        $type->setParentNodeID($node->getTreeNodeID());
+        $settings = new \Concrete\Core\Entity\Attribute\Key\Settings\TopicsSettings();
+        $settings->setTopicTreeID($node->getTreeID());
+        $settings->setTopicTreeID($node->getTreeID());
+        $settings->setParentNodeID($node->getTreeNodeID());
 
         $category = \Concrete\Core\Attribute\Key\Category::add('collection');
 
@@ -68,9 +68,9 @@ class PageListTopicTest extends PageTestCase
         $key->setAttributeKeyName('Topics');
         $key->setAttributeType($attributeType);
 
-        $type->setAttributeKey($key);
+        $settings->setAttributeKey($key);
 
-        $topics = $category->add($type, $key);
+        $topics = $category->add($attributeType, $key, $settings);
     }
     public function testFilterByTopic()
     {
