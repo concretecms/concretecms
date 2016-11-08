@@ -116,17 +116,7 @@ class Entities extends DashboardPageController
             $this->error->add($this->token->getErrorMessage());
         }
         if (!$this->error->has()) {
-            /**
-             * @var $entity Entity
-             */
-            $entity->setDefaultEditForm(null);
-            $entity->setDefaultViewForm(null);
-            foreach($entity->getForms() as $form) {
-                // fuck off, doctrine
-                $this->entityManager->remove($form);
-            }
-            $this->entityManager->flush();
-
+            // Note there's very little logic here because Concrete\Core\Express\Entity\Listener takes care of it
             $this->entityManager->remove($entity);
             $this->entityManager->flush();
             $this->flash('success', t('Entity deleted successfully.'));

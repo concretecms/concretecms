@@ -140,19 +140,7 @@ class LegacyCategory implements CategoryInterface, StandardSearchIndexerInterfac
 
     public function deleteKey(Key $key)
     {
-        $controller = $key->getController();
-        $controller->deleteKey();
-
-        // Delete from any attribute sets
-        $r = $this->entityManager->getRepository('\Concrete\Core\Entity\Attribute\SetKey');
-        $setKeys = $r->findBy(array('attribute_key' => $key));
-        foreach ($setKeys as $setKey) {
-            $this->entityManager->remove($setKey);
-        }
-        $this->entityManager->remove($key);
-
-        $this->entityManager->remove($key);
-        $this->entityManager->flush();
+        return;
     }
 
     public function deleteValue(AttributeValueInterface $value)
@@ -199,7 +187,7 @@ class LegacyCategory implements CategoryInterface, StandardSearchIndexerInterfac
         $this->entityManager->flush();
 
         $key->setAttributeKeySettings($settings);
-        $key->setAttributeCategory($this->getCategoryEntity());
+        $key->setAttributeCategoryEntity($this->getCategoryEntity());
 
         if (is_object($pkg)) {
             $key->setPackage($pkg);

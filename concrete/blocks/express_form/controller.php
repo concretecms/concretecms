@@ -86,16 +86,13 @@ class Controller extends BlockController
         parent::delete();
         $entity = $this->getFormEntity()->getEntity();
         $entityManager = \Core::make('database/orm')->entityManager();
-
-        $entity->setDefaultEditForm(null);
-        $entity->setDefaultViewForm(null);
-        foreach($entity->getForms() as $form) {
-            // fuck off, doctrine (redux)
-            $entityManager->remove($form);
+        // Important – are other blocks in the system using this form? If so, we don't want to delete it!
+        $db = $entityManager->getConnection();
+        $r = $db->fetchColumn('select count(bID) from btExpressForm where bID <> ? and exFormID = ?', [$this->bID, $this->exFormID]);
+        if ($r == 0) {
+            $entityManager->remove($entity);
+            $entityManager->flush();
         }
-        $entityManager->flush();
-        $entityManager->remove($entity);
-        $entityManager->flush();
     }
 
 
