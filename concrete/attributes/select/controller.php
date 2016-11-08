@@ -662,6 +662,7 @@ class Controller extends AttributeTypeController
         $r = $em->getRepository('\Concrete\Core\Entity\Attribute\Value\Value\SelectValueOption');
         $builder = $r->createQueryBuilder('v');
         $builder->where('v.list = :list');
+        $builder->andWhere('v.isDeleted = false');
         if ($keywords) {
             $builder->andWhere($builder->expr()->like('v.value', ':value'));
             $builder->setParameter('value', $keywords  . '%');
@@ -717,21 +718,19 @@ class Controller extends AttributeTypeController
 
         $selectedPostValues = $this->getSelectValuesFromPost();
 
-
-        foreach ($optionList->getOptions() as $iopt) {
-            if (!in_array($iopt, $selectedPostValues)) {
-                $orm->remove($iopt);
+        // handle removing existing options that aren't in the post.
+        foreach ($optionList->getOptions() as $option) {
+            if (!in_array($option, $selectedPostValues)) {
+                $option->setIsOptionDeleted(true);
             }
         }
 
-        // Now we add the options
-
+        // handle adding the options.
         foreach ($selectedPostValues as $option) {
-            /*
-             * @var $option SelectValueOption
-             */
-            $option->setOptionList($optionList);
-            $optionList->getOptions()->add($option);
+            if (!$option->getSelectAttributeOptionID()) { // this is a new option.
+                $option->setOptionList($optionList);
+                $optionList->getOptions()->add($option);
+            }
         }
 
         $type->setOptionList($optionList);
