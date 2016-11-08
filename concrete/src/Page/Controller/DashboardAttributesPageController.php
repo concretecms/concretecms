@@ -162,8 +162,8 @@ abstract class DashboardAttributesPageController extends DashboardPageController
                 throw new \Exception($this->token->getErrorMessage());
             }
 
-            $category = $entity->getAttributeKeyCategory();
-            $category->deleteKey($key);
+            $this->entityManager->remove($key);
+            $this->entityManager->flush();
 
             if ($onComplete instanceof \Closure) {
                 $onComplete();

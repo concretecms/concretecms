@@ -186,7 +186,7 @@ class Key extends Facade implements AttributeKeyInterface
             $orm->persist($value);
             $orm->flush();
 
-            $category = $this->legacyAttributeKey->getAttributeCategory()->getController();
+            $category = $this->legacyAttributeKey->getAttributeCategory();
             $indexer = $category->getSearchIndexer();
             if ($indexer) {
                 $indexer->indexEntry($category, $attributeValue, $this);

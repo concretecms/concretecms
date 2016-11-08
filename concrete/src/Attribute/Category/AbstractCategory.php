@@ -130,7 +130,6 @@ abstract class AbstractCategory implements CategoryInterface, StandardSearchInde
             $settings = $type->getController()->getAttributeKeySettings();
         }
 
-
         $key->setAttributeType($type);
         $this->entityManager->persist($key);
         $this->entityManager->flush();
@@ -249,49 +248,28 @@ abstract class AbstractCategory implements CategoryInterface, StandardSearchInde
 
     public function deleteKey(Key $key)
     {
-        $controller = $key->getController();
-        $controller->deleteKey();
-
-        // Delete from any attribute sets
-        $r = $this->entityManager->getRepository('\Concrete\Core\Entity\Attribute\SetKey');
-        $setKeys = $r->findBy(array('attribute_key' => $key));
-        foreach ($setKeys as $setKey) {
-            $this->entityManager->remove($setKey);
-        }
-
-        // Delete any attribute values found attached to this key
-        $genericValues = $this->entityManager->getRepository('\Concrete\Core\Entity\Attribute\Value\Value\Value')
-            ->findBy(['attribute_key' => $key]);
-        foreach($genericValues as $genericValue) {
-            $values = $this->getAttributeValueRepository()->findBy(['generic_value' => $genericValue]);
-            foreach($values as $attributeValue) {
-                $this->deleteValue($attributeValue);
-            }
-        }
-
-        $this->entityManager->remove($key);
-        $this->entityManager->flush();
+        return;
     }
 
-    public function deleteValue(AttributeValueInterface $attribute)
+    public function deleteValue(AttributeValueInterface $attributeValue)
     {
         // Handle legacy attributes with these three lines.
-        $controller = $attribute->getAttributeKey()->getController();
-        $controller->setAttributeValue($attribute);
+        $controller = $attributeValue->getAttributeKey()->getController();
+        $controller->setAttributeValue($attributeValue);
         $controller->deleteValue();
 
-        /*
-         * @var Value
-         */
-        $value = $attribute->getValueObject();
-        if (is_object($value)) {
-            $this->entityManager->remove($attribute);
-            $this->entityManager->flush();
-            $this->entityManager->refresh($value);
-            $values = $this->getAttributeValueRepository()->findBy(['generic_value' => $value]);
-            if (count($values) < 1) {
-                $this->entityManager->remove($value);
+        $genericValue = $attributeValue->getGenericValue();
+        if (is_object($genericValue)) {
+            $genericValues = $this->getAttributeValueRepository()->findBy(['generic_value' => $genericValue]);
+            if (count($genericValues) == 1) {
+                $value = $attributeValue->getValueObject();
+                if (is_object($value)) {
+                    $this->entityManager->remove($value);
+                    $this->entityManager->flush();
+                }
+                $this->entityManager->remove($genericValue);
             }
+            $this->entityManager->remove($attributeValue);
         }
     }
 

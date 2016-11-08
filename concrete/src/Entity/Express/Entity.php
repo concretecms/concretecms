@@ -14,7 +14,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity(repositoryClass="\Concrete\Core\Entity\Express\EntityRepository")
  * @ORM\Table(name="ExpressEntities")
- * @ORM\HasLifecycleCallbacks
+ * @ORM\EntityListeners({"\Concrete\Core\Express\Entity\Listener"})
  */
 class Entity implements CategoryObjectInterface, ObjectInterface, ExportableInterface
 {
@@ -98,15 +98,6 @@ class Entity implements CategoryObjectInterface, ObjectInterface, ExportableInte
      * @ORM\Column(type="datetime")
      */
     protected $created_date;
-
-    /** @ORM\PostRemove */
-    public function afterRemove()
-    {
-        $node = Node::getByID($this->getEntityResultsNodeId());
-        if (is_object($node)) {
-            $node->delete();
-        }
-    }
 
     public function __construct()
     {

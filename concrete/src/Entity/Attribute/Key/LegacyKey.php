@@ -32,16 +32,15 @@ class LegacyKey extends Key
 
     public function update($args)
     {
-        $category = $this->getAttributeCategory();
-        $controller = $category->getController();
+        $controller = $this->getAttributeCategory();
         return $controller->updateFromRequest($this, \Request::getInstance());
     }
 
     public function delete()
     {
-        $category = $this->getAttributeCategory();
-        $controller = $category->getController();
-        $controller->deleteKey($this);
+        $em = \Database::connection()->getEntityManager();
+        $em->remove($this);
+        $em->flush();
     }
 
 

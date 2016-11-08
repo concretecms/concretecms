@@ -60,6 +60,16 @@ class ExpressCategory extends AbstractCategory
         ];
     }
 
+    public function deleteKey(Key $key)
+    {
+        $controls = $this->entityManager->getRepository('Concrete\Core\Entity\Express\Control\AttributeKeyControl')
+            ->findBy(['attribute_key' => $key]);
+        foreach($controls as $control) {
+            $this->entityManager->remove($control);
+        }
+        $this->entityManager->flush();
+    }
+
     public function getSetManager()
     {
         if (!isset($this->setManager)) {

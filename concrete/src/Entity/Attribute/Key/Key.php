@@ -15,6 +15,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  * @ORM\InheritanceType("JOINED")
  * @ORM\DiscriminatorColumn(name="akCategory", type="string")
+ * @ORM\EntityListeners({"\Concrete\Core\Attribute\Key\Listener"})
  * @ORM\Table(
  *     name="AttributeKeys",
  *     indexes={
@@ -221,20 +222,21 @@ class Key implements AttributeKeyInterface, ExportableInterface
         return false;
     }
 
-    /**
-     * This is redundant given we already have the handle but we're actually adding this
-     * for backward compatibility so we have an akCategoryID association column.
-     * @return Category
-     */
-    public function getAttributeCategory()
+    public function getAttributeCategoryEntity()
     {
         return $this->category;
+    }
+
+    public function getAttributeCategory()
+    {
+        $manager = \Core::make('manager/attribute/category');
+        return $manager->driver($this->getAttributeKeyCategoryHandle());
     }
 
     /**
      * @param mixed $category
      */
-    public function setAttributeCategory($category)
+    public function setAttributeCategoryEntity($category)
     {
         $this->category = $category;
     }
