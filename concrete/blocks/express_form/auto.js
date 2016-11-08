@@ -186,6 +186,7 @@ $(function() {
                         'question': r.question,
                         'isRequired': r.isRequired,
                         'selectedType': r.type,
+                        'selectedTypeDisplayName': r.typeDisplayName,
                         'types': data.types,
                         'typeContent': r.typeContent
                     }));

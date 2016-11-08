@@ -211,6 +211,11 @@ class Controller extends AttributeTypeController
         return $akey;
     }
 
+    protected function retrieveAttributeKeySettings()
+    {
+        return $this->entityManager->find(AddressSettings::class, $this->attributeKey);
+    }
+
     public function exportValue(\SimpleXMLElement $akn)
     {
         $avn = $akn->addChild('value');
