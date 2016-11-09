@@ -16,6 +16,4 @@ interface ProviderInterface
      * @return DriverInterface[]
      */
     function getDrivers();
-
-
 }

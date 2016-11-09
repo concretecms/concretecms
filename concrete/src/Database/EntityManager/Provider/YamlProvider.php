@@ -46,13 +46,10 @@ class YamlProvider implements ProviderInterface
     }
     
     /**
-     * Get Drivers
-     * 
-     * @return array
+     * {@inheritDoc}
      */
     public function getDrivers()
     {
-        \Doctrine\Common\Util\Debug::dump($this->drivers);
         return $this->drivers;
     }
     
