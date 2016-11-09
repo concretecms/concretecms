@@ -32,7 +32,7 @@ class SelectValueOption
     protected $isEndUserAdded = false;
 
     /**
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(type="boolean", options={"default": 0})
      */
     protected $isDeleted = false;
 
