@@ -71,7 +71,7 @@ abstract class AbstractPackageProvider implements ProviderInterface
     /**
      * Package supports legacy core
      * 
-     * @return boolean
+     * @return bool
      */
     protected function packageSupportsLegacyCore()
     {
