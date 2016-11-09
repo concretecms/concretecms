@@ -27,9 +27,7 @@ class Driver implements DriverInterface
     }
     
     /**
-     * Get doctrine Driver
-     * 
-     * @return \Doctrine\Common\Persistence\Mapping\DriverMappingDriver
+     * {@inheritDoc}
      */
     public function getDriver()
     {
@@ -37,9 +35,7 @@ class Driver implements DriverInterface
     }
     
     /**
-     * Get namespace
-     * 
-     * @return string
+     * {@inheritDoc}
      */
     public function getNamespace()
     {

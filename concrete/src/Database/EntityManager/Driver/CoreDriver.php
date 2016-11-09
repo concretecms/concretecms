@@ -6,14 +6,26 @@ use Doctrine\ORM\Mapping\Driver\AnnotationDriver;
 
 class CoreDriver implements DriverInterface
 {
-
+    /**
+     * @var Application 
+     */
     protected $app;
-
+    
+    /**
+     * Constructor
+     * 
+     * @param Application $app
+     */
     public function __construct(Application $app)
     {
         $this->app = $app;
     }
-
+    
+    /**
+     * Get the AnnotationDriver
+     * 
+     * @return AnnotationDriver
+     */
     public function getDriver()
     {
         $annotationDriver = new AnnotationDriver($this->app->make('orm/cachedAnnotationReader'), [
@@ -21,7 +33,10 @@ class CoreDriver implements DriverInterface
         ]);
         return $annotationDriver;
     }
-
+    
+    /**
+     * {@inheritDoc}
+     */
     public function getNamespace()
     {
         return 'Concrete\Core\Entity';
