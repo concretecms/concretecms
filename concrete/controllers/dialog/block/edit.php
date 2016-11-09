@@ -41,65 +41,6 @@ class Edit extends BackendInterfaceBlockController
         return $e;
     }
 
-    /*
-    public function submit_master()
-    {
-        if ($this->validateAction() && $this->canAccess() && $this->page->isMasterCollection()) {
-            $b = $this->getBlockToEdit();
-            $e = $this->validateBlock($b);
-            $pr = $this->getEditResponse($b, $e);
-
-            if (!is_object($e) || ($e instanceof \Concrete\Core\Error\ErrorList\ErrorList && !$e->has())) {
-
-                $name = sprintf('update_defaults_%s', $b->getBlockID());
-                $queue = Queue::get($name);
-
-                if ($_POST['process']) {
-                    $obj = new \stdClass();
-                    $messages = $queue->receive(20);
-                    foreach ($messages as $key => $p) {
-                        $block = unserialize($p->body);
-                        // Get a block object for the related block
-                        $page = Page::getByID($block['cID'], $block['cvID']);
-                        $approve = $page->getVersionObject()->isApproved();
-                        $child = Block::getByID($block['bID'], $page, $block['arHandle']);
-                        $nvc = $page->getVersionToModify();
-                        $child->loadNewCollection($nvc);
-
-                        // Update the block on the page.
-                        if ($child->isAlias()) {
-                            $nb = $child->duplicate($nvc);
-                            $child->deleteBlock();
-                            $child = $nb;
-                        }
-
-                        if ($approve) {
-                            $nvc->getVersionObject()->approve();
-                        }
-
-                        $child->update($block['data']);
-                        $queue->deleteMessage($p);
-
-                    }
-                    $obj->totalItems = $queue->count();
-                    if ($queue->count() == 0) {
-                        $queue->deleteQueue($name);
-                    }
-                    $obj->bID = $b->getBlockID();
-                    $obj->aID = $this->area->getAreaID();
-                    echo json_encode($obj);
-                    $this->app->shutdown();
-                } else {
-                    $queue = $b->queueForDefaultsUpdate($_POST, $queue);
-                }
-
-                $totalItems = $queue->count();
-                View::element('progress_bar', array('totalItems' => $totalItems, 'totalItemsSummary' => t2("%d block", "%d blocks", $totalItems)));
-                $this->app->shutdown();
-            }
-        }
-    }
-    */
 
     public function submit()
     {
