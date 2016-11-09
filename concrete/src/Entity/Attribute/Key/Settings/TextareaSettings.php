@@ -10,7 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
 class TextareaSettings extends Settings
 {
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", nullable=true)
      */
     protected $akTextareaDisplayMode = '';
 
