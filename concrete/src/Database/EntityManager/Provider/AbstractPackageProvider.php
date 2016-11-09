@@ -4,7 +4,6 @@ namespace Concrete\Core\Database\EntityManager\Provider;
 use Concrete\Core\Application\Application;
 use Concrete\Core\Database\EntityManager\Provider\ProviderInterface;
 use Concrete\Core\Package\Package;
-use Doctrine\ORM\Mapping\Driver\AnnotationDriver;
 
 abstract class AbstractPackageProvider implements ProviderInterface
 {
@@ -13,24 +12,52 @@ abstract class AbstractPackageProvider implements ProviderInterface
      * @var Package
      */
     protected $pkg;
+    
+    /**
+     *
+     * @var Application
+     */
     protected $app;
-
+    
+    /**
+     * Constructor
+     * 
+     * @param Application $app
+     * @param Package $pkg
+     */
     public function __construct(Application $app, Package $pkg)
     {
         $this->app = $app;
         $this->pkg = $pkg;
     }
-
+    
+    /**
+     * Get LegacyAnnotationReader
+     * 
+     * @return \Doctrine\Common\Annotations\CachedReader with a 
+     *         \Doctrine\Common\Annotations\SimpleAnnotationReader
+     */
     protected function getLegacyAnnotationReader()
     {
         return $this->app->make('orm/cachedSimpleAnnotationReader');
     }
 
+    /**
+     * Get StandardAnnotationReader
+     * 
+     * @return \Doctrine\Common\Annotations\CachedReader with a
+     *         \Doctrine\Common\Annotations\AnnotationReader
+     */
     protected function getStandardAnnotationReader()
     {
         return $this->app->make('orm/cachedAnnotationReader');
     }
-
+    
+    /**
+     * Get the correct AnnotationReader based on the packages support for LegacyCore
+     * 
+     * @return \Doctrine\Common\Annotations\CachedReader
+     */
     protected function getAnnotationReader()
     {
         if ($this->packageSupportsLegacyCore()) {
@@ -40,15 +67,16 @@ abstract class AbstractPackageProvider implements ProviderInterface
         }
         return $reader;
     }
-
+    
+    /**
+     * Package supports legacy core
+     * 
+     * @return boolean
+     */
     protected function packageSupportsLegacyCore()
     {
         $concrete5 = '5.8.0';
         $package = $this->pkg->getApplicationVersionRequired();
         return version_compare($package, $concrete5, '<');
     }
-
-
-
-
 }

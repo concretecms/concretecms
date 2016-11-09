@@ -48,9 +48,7 @@ class XmlProvider implements ProviderInterface
     }
     
     /**
-     * Get Drivers
-     * 
-     * @return array
+     * {@inheritDoc}
      */
     public function getDrivers()
     {
