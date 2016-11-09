@@ -149,6 +149,11 @@ class Manager extends CoreManager
         return new Theme();
     }
 
+    public function createWorkflowDriver()
+    {
+        return new Workflow();
+    }
+
     public function createSiteTypeDriver()
     {
         return $this->app->make(SiteType::class);

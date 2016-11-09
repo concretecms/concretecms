@@ -3928,6 +3928,11 @@
       <default value="0"/>
       <notnull/>
     </field>
+    <field name="pkgID" type="integer" size="10">
+      <unsigned/>
+      <default value="0"/>
+      <notnull/>
+    </field>
     <index name="wfName">
       <unique/>
       <col>wfName</col>
@@ -3935,6 +3940,9 @@
     <index name="wftID">
       <col>wftID</col>
       <col>wfID</col>
+    </index>
+    <index name="pkgID">
+      <col>pkgID</col>
     </index>
   </table>
 

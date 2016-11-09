@@ -131,12 +131,33 @@ abstract class Workflow extends Object implements \Concrete\Core\Permission\Obje
         return $workflows;
     }
 
-    public static function add(Type $wt, $name)
+    public static function getListByPackage(\Concrete\Core\Entity\Package $pkg)
+    {
+        $workflows = array();
+        $db = Loader::db();
+        $r = $db->Execute("select wfID from Workflows where pkgID = ? order by wfName asc", [$pkg->getPackageID()]);
+        while ($row = $r->FetchRow()) {
+            $wf = static::getByID($row['wfID']);
+            if (is_object($wf)) {
+                $workflows[] = $wf;
+            }
+        }
+
+        return $workflows;
+    }
+
+
+    public static function add(Type $wt, $name, \Concrete\Core\Entity\Package $pkg = null)
     {
         $db = Loader::db();
         $wfID = $db->getOne('SELECT wfID FROM Workflows WHERE wfName=?', array($name));
         if (!$wfID) {
-            $db->Execute('insert into Workflows (wftID, wfName) values (?, ?)', array($wt->getWorkflowTypeID(), $name));
+            $pkgID = 0;
+            if (is_object($pkg)) {
+                $pkgID = $pkg->getPackageID();
+            }
+
+            $db->Execute('insert into Workflows (wftID, wfName, pkgID) values (?, ?, ?)', array($wt->getWorkflowTypeID(), $name, $pkgID));
             $wfID = $db->Insert_ID();
         }
 
@@ -170,6 +191,15 @@ abstract class Workflow extends Object implements \Concrete\Core\Permission\Obje
 
                 return $obj;
             }
+        }
+    }
+
+    public static function getByName($wfName)
+    {
+        $db = Loader::db();
+        $wfID = $db->GetOne('select wfID from Workflows where wfName = ?', array($wfName));
+        if ($wfID) {
+            return static::getByID($wfID);
         }
     }
 

@@ -194,6 +194,7 @@ return array(
         'user_point_action',
         'workflow_progress_category',
         'workflow_type',
+        'workflow',
     ),
 
     'importer_routines' => array(
@@ -221,6 +222,7 @@ return array(
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportAttributeTypesRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportWorkflowTypesRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportWorkflowProgressCategoriesRoutine',
+        'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportWorkflowsRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportAttributesRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportAttributeSetsRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportExpressEntitiesRoutine',
