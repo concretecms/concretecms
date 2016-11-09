@@ -52,9 +52,21 @@ defined('C5_EXECUTE') or die("Access Denied.");
             <div class="row">
                 <div class="col-md-1"><span class="text-muted"><?=t('Paths')?></span></div>
                 <div class="col-md-11">
-                    <?php foreach($driver->getPaths() as $path) { ?>
+                    <?php 
+                    
+                    if($driver instanceof \Doctrine\Common\Persistence\Mapping\Driver\AnnotationDriver){
+                        $paths = $driver->getPaths();
+                    }elseif($driver instanceof \Doctrine\Common\Persistence\Mapping\Driver\FileDriver){
+                        $paths = $driver->getLocator()->getPaths();
+                    }else{
+                        $paths = [];
+                    }
+                    
+                    if(!empty($paths)){
+                    foreach($paths as $path) { ?>
                        <small><?=$path?></small>
-                    <?php } ?>
+                    <?php }
+                    } ?>
                 </div>
             </div>
 
