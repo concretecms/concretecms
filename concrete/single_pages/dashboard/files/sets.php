@@ -9,7 +9,7 @@ $dh = Core::make('helper/date');
 
 	<script type="text/javascript">
 		deleteFileSet = function() {
-			if (confirm('<?=t('Are you sure you want to permanently remove this file set?')?>')) { 
+			if (confirm('<?=t('Are you sure you want to permanently remove this file set?')?>')) {
 				location.href = "<?=$view->url('/dashboard/files/sets', 'delete', $fs->getFileSetID(), Core::make('helper/validation/token')->generate('delete_file_set'))?>";
 			}
 		}
@@ -67,16 +67,16 @@ $dh = Core::make('helper/date');
                             <td data-key="filename"><?=$f->getFileName()?></td>
                             <td data-key="added" data-sort="<?=$f->getDateAdded()->getTimestamp()?>" ><?=$dh->formatDateTime($f->getDateAdded()->getTimestamp())?></td>
                         </tr>
-                    <?php 
+                    <?php
 }
         ?>
                 </tbody>
             </table>
-		<?php 
+		<?php
     } else {
         ?>
 			<div class="alert alert-info"><?=t('There are no files in this set.')?></div>
-		<?php 
+		<?php
     }
     ?>
 
@@ -87,10 +87,8 @@ $dh = Core::make('helper/date');
 		</div>
 		</div>
 	</form>
-	
-	
-	<script type="text/javascript">
 
+	<script>
 	$(function() {
         var baseClass="ccm-results-list-active-sort-"; // asc desc
 
@@ -98,7 +96,7 @@ $dh = Core::make('helper/date');
         {
             $(".ccm-search-results-table thead tr th").removeClass(baseClass + 'asc');
             $(".ccm-search-results-table thead tr th").removeClass(baseClass + 'desc');
-            $(".ccm-search-results-table thead tr th a").css("color", "#93bfd5");
+            $(".ccm-search-results-table thead tr th a").css("color", "#999");
         }
 
         function ccmFileSetDoSort()
@@ -112,8 +110,13 @@ $dh = Core::make('helper/date');
             var sortableList = $('.ccm-file-set-file-list');
             var listItems = $('tr', sortableList);
 
-            if ( asc ) $parent.addClass( baseClass + 'desc' );
-            else $parent.addClass( baseClass + 'asc' );
+            if (asc) {
+                $parent.addClass( baseClass + 'desc' );
+                $(".ccm-search-results-table thead tr th." + baseClass + "desc a").css("color", "#333");
+            } else {
+                $parent.addClass( baseClass + 'asc' );
+                $(".ccm-search-results-table thead tr th." + baseClass + "asc a").css("color", "#333");
+            }
 
             listItems.sort( function( a, b ) {
                 var aTD = $('td[data-key=' + key + ']', $(a) );
@@ -145,11 +148,11 @@ $dh = Core::make('helper/date');
                 ret.width( elem.outerWidth() );
                 retChilds = $(ret.children());
                 elemChilds = $(elem.children());
-                
-                for ( i = 0; i < elemChilds.length; i++ ) 
+
+                for ( i = 0; i < elemChilds.length; i++ )
                     $(retChilds[i]).width( $(elemChilds[i]).outerWidth() );
 
-                return ret; 
+                return ret;
             },
             placeholder: "ccm-file-set-file-placeholder",
             stop: function(e,ui) {
@@ -159,16 +162,16 @@ $dh = Core::make('helper/date');
 
 
 	});
-	
+
 	</script>
-	
+
 	<style type="text/css">
 	    .ccm-file-set-file-list:hover {cursor: move}
         .ccm-file-set-file-placeholder { background-color: #ffd !important;  }
         .ccm-file-set-file-placeholder td { background:transparent !important; }
 	</style>
 
-<?php 
+<?php
 } else {
     ?>
 
