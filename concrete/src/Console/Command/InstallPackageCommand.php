@@ -84,6 +84,8 @@ EOT
                 throw new Exception(implode("\n", $test->getList()));
             }
 
+            $output->write('Preconditions good. Installing...');
+
             $r = Package::install($pkg, []);
             if ($r instanceof ErrorList) {
                 throw new Exception(implode("\n", $r->getList()));

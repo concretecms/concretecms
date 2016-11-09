@@ -271,6 +271,8 @@ abstract class AbstractCategory implements CategoryInterface, StandardSearchInde
             }
             $this->entityManager->remove($attributeValue);
         }
+
+        $this->entityManager->flush();
     }
 
     public function getRequestLoader()
