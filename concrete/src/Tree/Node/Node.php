@@ -6,6 +6,7 @@ use Concrete\Core\Permission\Access\Access;
 use Concrete\Core\Permission\Access\Entity\GroupCombinationEntity;
 use Concrete\Core\Permission\Access\Entity\GroupEntity;
 use Concrete\Core\Permission\Access\Entity\UserEntity;
+use Concrete\Core\Permission\AssignableObjectTrait;
 use Concrete\Core\Permission\Key\Key;
 use Concrete\Core\Permission\Key\TreeNodeKey;
 use Concrete\Core\Tree\Tree;
@@ -22,6 +23,9 @@ use Concrete\Core\Tree\Node\Exception\MoveException;
 
 abstract class Node extends Object implements \Concrete\Core\Permission\ObjectInterface
 {
+
+    use AssignableObjectTrait;
+
     abstract public function loadDetails();
 
     /** Returns the display name for this tree node (localized and escaped accordingly to $format)
@@ -313,38 +317,10 @@ abstract class Node extends Object implements \Concrete\Core\Permission\ObjectIn
         }
     }
 
-    public function assignPermissions($userOrGroup, $permissions = [], $accessType = TreeNodeKey::ACCESS_TYPE_INCLUDE)
+    public function executeBeforePermissionAssignment()
     {
         if (!$this->overrideParentTreeNodePermissions()) {
             $this->setTreeNodePermissionsToOverride();
-        }
-
-        if (is_array($userOrGroup)) {
-            $pe = GroupCombinationEntity::getOrCreate($userOrGroup);
-            // group combination
-        } else {
-            if ($userOrGroup instanceof User || $userOrGroup instanceof UserInfo) {
-                $pe = UserEntity::getOrCreate($userOrGroup);
-            } else {
-                // group;
-                $pe = GroupEntity::getOrCreate($userOrGroup);
-            }
-        }
-
-        foreach ($permissions as $pkHandle) {
-            $pk = Key::getByHandle($pkHandle);
-            $pk->setPermissionObject($this);
-            $pa = $pk->getPermissionAccessObject();
-            if (!is_object($pa)) {
-                $pa = Access::create($pk);
-            } else {
-                if ($pa->isPermissionAccessInUse()) {
-                    $pa = $pa->duplicate();
-                }
-            }
-            $pa->addListItem($pe, false, $accessType);
-            $pt = $pk->getPermissionAssignmentObject();
-            $pt->assignPermissionAccess($pa);
         }
     }
 

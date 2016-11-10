@@ -58,6 +58,9 @@ class Assignment
         $pa->markAsInUse();
     }
 
+    /**
+     * @return Access
+     */
     public function getPermissionAccessObject()
     {
         $cache = \Core::make('cache/request');

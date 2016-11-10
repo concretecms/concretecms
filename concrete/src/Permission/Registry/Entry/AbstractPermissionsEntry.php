@@ -4,8 +4,16 @@ namespace Concrete\Core\Permission\Registry\Entry;
 use Concrete\Core\Permission\Access\Entity\Entity;
 use Concrete\Core\Permission\AssignableObjectInterface;
 
-abstract class AbstractEntry implements EntryInterface
+abstract class AbstractPermissionsEntry implements EntryInterface
 {
+
+    public function apply(AssignableObjectInterface $object)
+    {
+        $entity = $this->getAccessEntity();
+        if (is_object($entity)) {
+            $object->assignPermissions($entity, $this->getPermissionKeyHandles());
+        }
+    }
 
     protected $permissions = [];
     protected $entity;
