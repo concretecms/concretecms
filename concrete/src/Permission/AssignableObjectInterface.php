@@ -5,7 +5,7 @@ use Concrete\Core\Permission\Key\Key;
 
 interface AssignableObjectInterface
 {
-    function assignPermissions($userOrGroup, $permissions, $accessType = Key::ACCESS_TYPE_INCLUDE);
+    function assignPermissions($userOrGroup, $permissions, $accessType = Key::ACCESS_TYPE_INCLUDE, $cascadeToChildren = true);
     function executeBeforePermissionAssignment();
 
 }

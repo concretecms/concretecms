@@ -11,11 +11,11 @@ use Concrete\Core\Permission\Key\Key;
 
 trait AssignableObjectTrait
 {
-    abstract public function executeBeforePermissionAssignment();
+    abstract public function executeBeforePermissionAssignment($cascadeToChildren = true);
 
-    public function assignPermissions($userOrGroup, $permissions = [], $accessType = Key::ACCESS_TYPE_INCLUDE)
+    public function assignPermissions($userOrGroup, $permissions = [], $accessType = Key::ACCESS_TYPE_INCLUDE, $cascadeToChildren = true)
     {
-        $this->executeBeforePermissionAssignment();
+        $this->executeBeforePermissionAssignment($cascadeToChildren);
         if (is_array($userOrGroup)) {
             $pe = GroupCombinationEntity::getOrCreate($userOrGroup);
             // group combination
@@ -30,6 +30,9 @@ trait AssignableObjectTrait
 
         foreach ($permissions as $pkHandle) {
             $pk = Key::getByHandle($pkHandle);
+            if (!is_object($pk)) {
+                print $pkHandle;
+            }
             $pk->setPermissionObject($this);
             $pa = $pk->getPermissionAccessObject();
             if (!is_object($pa)) {
