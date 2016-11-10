@@ -78,11 +78,11 @@ if (isset($_REQUEST['displaySingleLevel']) && $_REQUEST['displaySingleLevel']) {
         if ($tree instanceof \Concrete\Core\Entity\Site\SiteTree) {
             $locales = $tree->getLocaleCollection();
         }
-
-        echo json_encode([
-            'children' => $nodes,
-            'locales' => $locales
-        ]);
     }
 }
+
+echo json_encode([
+    'children' => $nodes,
+    'locales' => $locales
+]);
 
