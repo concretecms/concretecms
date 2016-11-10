@@ -40,14 +40,16 @@ class Controller extends BlockController
         $this->set('pagetypes', $types);
     }
 
-    public function getDateLink($dateArray = null)
+    public function getDateLink($dateArray = null, $long = false)
     {
         if ($this->cTargetID) {
             $c = \Page::getByID($this->cTargetID);
         } else {
             $c = \Page::getCurrentPage();
         }
-        if ($dateArray) {
+        if ($dateArray && $long) {
+            return \URL::page($c, 'filter_by_date', $dateArray['year'], $dateArray['month']);
+        } else if ($dateArray) {
             return \URL::page($c, $dateArray['year'], $dateArray['month']);
         } else {
             return \URL::page($c);

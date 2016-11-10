@@ -13,7 +13,7 @@
 
             <?php foreach ($dates as $date) {
     ?>
-                <li><a href="<?=$view->controller->getDateLink($date)?>"
+                <li><a href="<?=$view->controller->getDateLink($date, true)?>"
                         <?php if ($view->controller->isSelectedDate($date)) {
     ?>
                             class="ccm-block-date-navigation-date-selected"
