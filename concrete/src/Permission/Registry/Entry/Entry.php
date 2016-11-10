@@ -3,7 +3,7 @@ namespace Concrete\Core\Permission\Registry\Entry;
 
 use Concrete\Core\Permission\Access\Entity\Entity;
 
-class Entry extends AbstractEntry
+class Entry extends AbstractPermissionsEntry
 {
 
     public function __construct(Entity $entity, $permissions)

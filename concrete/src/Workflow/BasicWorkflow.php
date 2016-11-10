@@ -1,6 +1,8 @@
 <?php
 namespace Concrete\Core\Workflow;
 
+use Concrete\Core\Permission\AssignableObjectInterface;
+use Concrete\Core\Permission\AssignableObjectTrait;
 use Concrete\Core\Permission\Key\Key;
 use Concrete\Core\Workflow\HistoryEntry\BasicHistoryEntry as BasicWorkflowHistoryEntry;
 use Concrete\Core\Workflow\Progress\Action\ApprovalAction as WorkflowProgressApprovalAction;
@@ -13,8 +15,16 @@ use PermissionKey;
 use User;
 use UserInfo;
 
-class BasicWorkflow extends \Concrete\Core\Workflow\Workflow
+class BasicWorkflow extends \Concrete\Core\Workflow\Workflow implements AssignableObjectInterface
 {
+
+    use AssignableObjectTrait;
+
+    public function executeBeforePermissionAssignment()
+    {
+        return;
+    }
+
     public function getPermissionAssignmentClassName()
     {
         return '\\Concrete\\Core\\Permission\\Assignment\\BasicWorkflowAssignment';

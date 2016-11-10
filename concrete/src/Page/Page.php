@@ -7,6 +7,7 @@ use Concrete\Core\Entity\Page\Template as TemplateEntity;
 use Concrete\Core\Entity\Site\Site;
 use Concrete\Core\Entity\Site\SiteTree;
 use Concrete\Core\Page\Stack\Stack;
+use Concrete\Core\Permission\AssignableObjectTrait;
 use Concrete\Core\Site\Tree\TreeInterface;
 use Concrete\Core\Multilingual\Page\Section\Section;
 use Concrete\Core\Page\Type\Composer\Control\BlockControl;
@@ -65,6 +66,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     protected $siteTreeID;
     public $siteTree;
 
+    use AssignableObjectTrait;
     /**
      * @param string $path /path/to/page
      * @param string $version ACTIVE or RECENT
@@ -512,37 +514,11 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         return $this->getCollectionFilename() && !$this->getPageTemplateID();
     }
 
-    public function assignPermissions($userOrGroup, $permissions = [], $accessType = Key::ACCESS_TYPE_INCLUDE)
+    public function executeBeforePermissionAssignment()
     {
         if ($this->cInheritPermissionsFrom != 'OVERRIDE') {
             $this->setPermissionsToManualOverride();
             $this->clearPagePermissions();
-        }
-
-        if (is_array($userOrGroup)) {
-            $pe = GroupCombinationPermissionAccessEntity::getOrCreate($userOrGroup);
-            // group combination
-        } elseif ($userOrGroup instanceof User || $userOrGroup instanceof \Concrete\Core\User\UserInfo) {
-            $pe = UserPermissionAccessEntity::getOrCreate($userOrGroup);
-        } elseif ($userOrGroup instanceof PermissionAccessEntity) {
-            $pe = $userOrGroup;
-        } else {
-            // group;
-            $pe = GroupPermissionAccessEntity::getOrCreate($userOrGroup);
-        }
-
-        foreach ($permissions as $pkHandle) {
-            $pk = PagePermissionKey::getByHandle($pkHandle);
-            $pk->setPermissionObject($this);
-            $pa = $pk->getPermissionAccessObject();
-            if (!is_object($pa)) {
-                $pa = PermissionAccess::create($pk);
-            } elseif ($pa->isPermissionAccessInUse()) {
-                $pa = $pa->duplicate();
-            }
-            $pa->addListItem($pe, false, $accessType);
-            $pt = $pk->getPermissionAssignmentObject();
-            $pt->assignPermissionAccess($pa);
         }
     }
 

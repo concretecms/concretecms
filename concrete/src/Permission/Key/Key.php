@@ -450,6 +450,9 @@ abstract class Key extends Object
         }
     }
 
+    /**
+     * @return PermissionAssignment
+     */
     public function getPermissionAssignmentObject()
     {
         if (is_object($this->permissionObject)) {
