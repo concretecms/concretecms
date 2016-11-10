@@ -6,6 +6,7 @@ use Concrete\Core\Permission\Access\Access;
 use Concrete\Core\Permission\Access\Entity\GroupCombinationEntity;
 use Concrete\Core\Permission\Access\Entity\GroupEntity;
 use Concrete\Core\Permission\Access\Entity\UserEntity;
+use Concrete\Core\Permission\AssignableObjectInterface;
 use Concrete\Core\Permission\AssignableObjectTrait;
 use Concrete\Core\Permission\Key\Key;
 use Concrete\Core\Permission\Key\TreeNodeKey;
@@ -21,7 +22,7 @@ use stdClass;
 use Gettext\Translations;
 use Concrete\Core\Tree\Node\Exception\MoveException;
 
-abstract class Node extends Object implements \Concrete\Core\Permission\ObjectInterface
+abstract class Node extends Object implements \Concrete\Core\Permission\ObjectInterface, AssignableObjectInterface
 {
 
     use AssignableObjectTrait;
@@ -317,9 +318,15 @@ abstract class Node extends Object implements \Concrete\Core\Permission\ObjectIn
         }
     }
 
-    public function executeBeforePermissionAssignment()
+    public function executeBeforePermissionAssignment($cascadeToChildren = true)
     {
         if (!$this->overrideParentTreeNodePermissions()) {
+            if (!$cascadeToChildren) {
+                $this->populateDirectChildrenOnly();
+                foreach($this->getChildNodes() as $child) {
+                    $child->setTreeNodePermissionsToOverride();
+                }
+            }
             $this->setTreeNodePermissionsToOverride();
         }
     }
