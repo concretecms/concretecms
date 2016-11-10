@@ -2,34 +2,42 @@
 namespace Concrete\Core\File\StorageLocation;
 
 use Concrete\Core\File\StorageLocation\Configuration\ConfigurationInterface;
+use Concrete\Core\Support\Facade\Application;
 use Database;
 use Doctrine\ORM\Mapping as ORM;
 
+/**
+ * Class StorageLocation
+ * @deprecated Functionality moved to StorageLocationFactory
+ * @package Concrete\Core\File\StorageLocation
+ */
 class StorageLocation
 {
 
+    /**
+     * @deprecated use:
+     *     $location = $storageLocationFactory->create($configuration, $fslName);
+     *     $storageLocationFactory->persist($location);
+     *
+     * @param \Concrete\Core\File\StorageLocation\Configuration\ConfigurationInterface $configuration
+     * @param string $fslName
+     * @param bool $fslIsDefault
+     * @return \Concrete\Core\Entity\File\StorageLocation\StorageLocation
+     */
     public static function add(ConfigurationInterface $configuration, $fslName, $fslIsDefault = false)
     {
-        $default = self::getDefault();
+        $app = Application::getFacadeApplication();
+        /** @var StorageLocationFactory $factory */
+        $factory = $app[StorageLocationFactory::class];
 
-        $em = \ORM::entityManager();
-        $o = new \Concrete\Core\Entity\File\StorageLocation\StorageLocation();
-        $o->setName($fslName);
-        $o->setIsDefault($fslIsDefault);
-        $o->setConfigurationObject($configuration);
-        $em->persist($o);
+        $location = $factory->create($configuration, $fslName, $fslIsDefault);
+        $location->setIsDefault($fslIsDefault);
 
-        if ($fslIsDefault && is_object($default)) {
-            $default->setIsDefault(false);
-            $em->persist($default);
-        }
-
-        $em->flush();
-
-        return $o;
+        return $factory->persist($location);
     }
 
     /**
+     * @deprecated use FileStorageFactory::fetchByID()
      * @param int $id
      * @return null|StorageLocation
      * @throws \Doctrine\ORM\ORMException
@@ -38,34 +46,28 @@ class StorageLocation
      */
     public static function getByID($id)
     {
-        $em = \ORM::entityManager();
-        $r = $em->find('\Concrete\Core\Entity\File\StorageLocation\StorageLocation', intval($id));
-
-        return $r;
+        $app = Application::getFacadeApplication();
+        return $app[StorageLocationFactory::class]->fetchByID($id);
     }
 
     /**
+     * @deprecated use FileStorageFactory::fetchList()
      * @return StorageLocation[]
      */
     public static function getList()
     {
-        $em = \ORM::entityManager();
-        return $em->getRepository('\Concrete\Core\Entity\File\StorageLocation\StorageLocation')->findBy(
-            array(), array('fslID' => 'asc')
-        );
+        $app = Application::getFacadeApplication();
+        return $app[StorageLocationFactory::class]->fetchList();
     }
 
     /**
+     * @deprecated use StorageLocationFactory::fetchDefault()
      * @return StorageLocation
      */
     public static function getDefault()
     {
-        $em = \ORM::entityManager();
-        $location = $em->getRepository('\Concrete\Core\Entity\File\StorageLocation\StorageLocation')->findOneBy(
-            array('fslIsDefault' => true,
-            ));
-
-        return $location;
+        $app = Application::getFacadeApplication();
+        return $app[StorageLocationFactory::class]->fetchDefault();
     }
 
 
