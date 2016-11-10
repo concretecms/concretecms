@@ -4348,6 +4348,9 @@
     <field name="path" type="text">
       <notnull/>
     </field>
+    <field name="isBuilt" type="boolean">
+      <notnull/>
+    </field>
 
     <index name="thumbnailPathID">
       <unique/>
