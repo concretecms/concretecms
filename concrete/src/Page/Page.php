@@ -523,7 +523,6 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
                 }
             }
             $this->setPermissionsToManualOverride();
-            $this->clearPagePermissions();
         }
     }
 

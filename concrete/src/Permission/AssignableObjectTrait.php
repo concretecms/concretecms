@@ -30,9 +30,6 @@ trait AssignableObjectTrait
 
         foreach ($permissions as $pkHandle) {
             $pk = Key::getByHandle($pkHandle);
-            if (!is_object($pk)) {
-                print $pkHandle;
-            }
             $pk->setPermissionObject($this);
             $pa = $pk->getPermissionAccessObject();
             if (!is_object($pa)) {

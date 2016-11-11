@@ -1,10 +1,8 @@
 <?php
-namespace Concrete\Core\Permission\Registry\Entry;
+namespace Concrete\Core\Permission\Registry\Entry\Access;
 
-use Concrete\Core\Permission\Access\Entity\GroupEntity;
-use Concrete\Core\Permission\AssignableObjectInterface;
 use Concrete\Core\Permission\Key\Key;
-use Concrete\Core\User\Group\Group;
+use Concrete\Core\Permission\Registry\Entry\Access\Entity\EntityInterface;
 use Concrete\Core\Workflow\Workflow;
 
 class WorkflowEntry implements EntryInterface
@@ -19,11 +17,11 @@ class WorkflowEntry implements EntryInterface
         $this->workflowName = $workflowName;
     }
 
-    public function apply(AssignableObjectInterface $object)
+    public function apply($mixed)
     {
-        $key = Key::getByHandle($this->pkHandle);
-        $key->setPermissionObject($object);
         $workflow = Workflow::getByName($this->workflowName);
+        $key = Key::getByHandle($this->pkHandle);
+        $key->setPermissionObject($mixed->getPermissionObject());
         $assignment = $key->getPermissionAssignmentObject();
         $access = $assignment->getPermissionAccessObject();
         if (is_object($access)) {
@@ -31,4 +29,6 @@ class WorkflowEntry implements EntryInterface
         }
     }
 
+
 }
+
