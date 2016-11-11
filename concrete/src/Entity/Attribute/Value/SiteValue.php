@@ -9,9 +9,10 @@ use Doctrine\ORM\Mapping as ORM;
  *     name="SiteAttributeValues"
  * )
  */
-class SiteValue extends Value
+class SiteValue extends AbstractValue
 {
     /**
+     * @ORM\Id
      * @ORM\ManyToOne(targetEntity="\Concrete\Core\Entity\Site\Site")
      * @ORM\JoinColumn(name="siteID", referencedColumnName="siteID")
      */

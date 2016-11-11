@@ -6,5 +6,10 @@ use Concrete\Core\Entity\Express\Form;
 
 interface RendererInterface
 {
-    public function render(Form $form, Entry $entry = null);
+    /**
+     * @return FormInterface
+     */
+    public function getForm();
+
+    public function render(Entry $entry = null);
 }

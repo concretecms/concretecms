@@ -15,6 +15,7 @@ class PageAssignment extends Assignment
         'view_page_versions' => 'edit_page_type_drafts',
         'view_page_in_sitemap' => 'edit_page_type_drafts',
         'edit_page_contents' => 'edit_page_type_drafts',
+        'edit_page_properties' => 'edit_page_type_drafts',
     );
 
     public function getPermissionAccessObject()

@@ -74,14 +74,13 @@ abstract class Block extends Page
             $cx = \Stack::getByName($_REQUEST['arHandle']);
         }
 
-        $b = \Block::getByID($_REQUEST['bID'], $cx, $ax);
         $nvc = $cx->getVersionToModify();
         if ($this->area->isGlobalArea()) {
             $xvc = $this->page->getVersionToModify(); // we need to create a new version of THIS page as well.
             $xvc->relateVersionEdits($nvc);
         }
 
-        $b->loadNewCollection($nvc);
+        $b = \Block::getByID($_REQUEST['bID'], $nvc, $ax);
 
         if ($b->getBlockTypeHandle() == BLOCK_HANDLE_SCRAPBOOK_PROXY) {
             // if we're editing a scrapbook display block, we add a new block in this position for the real block type

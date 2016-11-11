@@ -70,16 +70,26 @@ trait ObjectTrait
 
         $this->clearAttribute($ak);
 
-        // Create the attribute value. Note, normally it would not be necessary to persist
-        // This right after creating, but legacy attributes need the attribute value object in their
-        // controller in order to save their data.
+        // Create the attribute category value.
         $attributeValue = $this->getAttributeValueObject($ak, true);
-        $controller = $attributeValue->getAttributeKey()->getController();
         $orm->persist($attributeValue);
         $orm->flush();
+
+        // Create the generic value. This gets joined to any specific Attribute value objects later on.
+        $genericValue = new Value();
+        $genericValue->setAttributeKey($attributeValue->getAttributeKey());
+        $orm->persist($genericValue);
+        $orm->flush();
+
+        // Set the generic value to the attribute category value.
+        $attributeValue->setGenericValue($genericValue);
+        $orm->persist($attributeValue);
+        $orm->flush();
+
+        $controller = $attributeValue->getAttributeKey()->getController();
         $controller->setAttributeValue($attributeValue);
 
-        if (!($value instanceof Value)) {
+        if (!($value instanceof AttributeValue\AbstractValue)) {
             if ($value instanceof EmptyRequestAttributeValue) {
                 // LEGACY SUPPORT
                 // If the passed $value object == EmptyRequestAttributeValue, we know we are dealing
@@ -88,17 +98,19 @@ trait ObjectTrait
                 $controller->saveForm($controller->post());
                 unset($value);
             } else {
+                /**
+                 * @var $value AttributeValue\AbstractValue
+                 */
                 $value = $controller->createAttributeValue($value);
             }
         }
 
-        if ($value) {
-            $value->getAttributeValues()->add($attributeValue);
-            $attributeValue->setValue($value);
-        }
 
-        $orm->persist($attributeValue);
-        $orm->flush();
+        if ($value) {
+            $value->setGenericValue($genericValue);
+            $orm->persist($value);
+            $orm->flush();
+        }
 
         $category = $this->getObjectAttributeCategory();
         $indexer = $category->getSearchIndexer();

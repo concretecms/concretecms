@@ -10,8 +10,8 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Exception;
 use Database;
 use Config;
-use Core;
 use StartingPointPackage;
+use Concrete\Core\Support\Facade\Application;
 
 class InstallCommand extends Command
 {
@@ -25,13 +25,16 @@ class InstallCommand extends Command
             ->addOption('db-password', null, InputOption::VALUE_REQUIRED, 'Database password')
             ->addOption('db-database', null, InputOption::VALUE_REQUIRED, 'Database name')
             ->addOption('site', null, InputOption::VALUE_REQUIRED, 'Name of the site', 'concrete5 Site')
+            ->addOption('canonical-url', null, InputOption::VALUE_REQUIRED, 'Canonical URL', '')
+            ->addOption('canonical-ssl-url', null, InputOption::VALUE_REQUIRED, 'Canonical URL over SSL', '')
             ->addOption('starting-point', null, InputOption::VALUE_REQUIRED, 'Starting point to use', 'elemental_blank')
             ->addOption('admin-email', null, InputOption::VALUE_REQUIRED, 'Email of the admin user of the install', 'admin@example.com')
             ->addOption('admin-password', null, InputOption::VALUE_REQUIRED, 'Password of the admin user of the install')
             ->addOption('demo-username', null, InputOption::VALUE_REQUIRED, 'Additional user username', 'demo')
             ->addOption('demo-password', null, InputOption::VALUE_REQUIRED, 'Additional user password')
             ->addOption('demo-email', null, InputOption::VALUE_REQUIRED, 'Additional user email', 'demo@example.com')
-            ->addOption('default-locale', null, InputOption::VALUE_REQUIRED, 'The default site locale (eg en_US)')
+            ->addOption('language', null, InputOption::VALUE_REQUIRED, 'The default concrete5 interface language (eg en_US)')
+            ->addOption('site-locale', null, InputOption::VALUE_REQUIRED, 'The default site locale (eg en_US)')
             ->addOption('config', null, InputOption::VALUE_REQUIRED, 'Use configuration file for installation')
             ->addOption('attach', null, InputOption::VALUE_NONE, 'Attach if database contains an existing concrete5 instance')
             ->addOption('force-attach', null, InputOption::VALUE_NONE, 'Always attach')
@@ -39,6 +42,8 @@ class InstallCommand extends Command
 Returns codes:
   0 operation completed successfully
   1 errors occurred
+
+More info at http://documentation.concrete5.org/developers/appendix/cli-commands#c5-install
 EOT
             )
         ;
@@ -48,6 +53,7 @@ EOT
     {
         $rc = 0;
         try {
+            $app = Application::getFacadeApplication();
             $options = $input->getOptions();
             if (isset($options['config'])) {
                 if (!is_file($options['config'])) {
@@ -66,32 +72,19 @@ EOT
             if (file_exists(DIR_CONFIG_SITE.'/database.php')) {
                 throw new Exception('concrete5 is already installed.');
             }
-            if (isset($options['default-locale'])) {
-                if ($options['default-locale'] === 'en_US') {
-                    $options['default-locale'] = null;
-                } else {
-                    $availableLocales = array_filter(
-                        scandir(DIR_BASE . '/application/languages'),
-                        function ($item) {
-                            if (strpos($item, '.') === 0) {
-                                return false;
-                            }
-                            $fullPath = DIR_BASE . '/application/languages/' . $item;
-                            if (!is_dir($fullPath)) {
-                                return false;
-                            }
-                            if (!is_file($fullPath . '/LC_MESSAGES/messages.mo')) {
-                                return false;
-                            }
-
-                            return true;
-                        }
-                    );
-                    if (!in_array($options['default-locale'], $availableLocales, true)) {
-                        throw new Exception("'{$options['default-locale']}' is not a valid locale identifier.\nAvailable locales: " . ($availableLocales ? implode(', ', $availableLocales) : 'no locale found'));
-                    }
-                }
+            if (isset($options['site-locale'])) {
+                $locale = explode('_', $options['locale']);
+                $_POST['siteLocaleLanguage'] = $locale[0];
+                $_POST['siteLocaleCountry'] = $locale[1];
+            } else {
+                $_POST['siteLocaleLanguage'] = 'en';
+                $_POST['siteLocaleCountry'] = 'US';
             }
+
+            if (isset($options['language'])) {
+                $_POST['locale'] = $options['language'];
+            }
+
             Database::extend('install', function () use ($options) {
                 return Database::getFactory()->createConnection(array(
                     'host' => $options['db-server'],
@@ -103,7 +96,7 @@ EOT
             Database::setDefaultConnection('install');
             Config::set('database.connections.install', array());
 
-            $cnt = new \Concrete\Controller\Install();
+            $cnt = $app->make(\Concrete\Controller\Install::class);
 
             $force_attach = $input->getOption('force-attach');
             $auto_attach = $force_attach || $input->getOption('attach');
@@ -111,7 +104,7 @@ EOT
 
             $cnt->on_start();
             $fileWriteErrors = clone $cnt->fileWriteErrors;
-            $e = Core::make('helper/validation/error');
+            $e = $app->make('helper/validation/error');
             if (!$cnt->get('imageTest')) {
                 $e->add('GD library must be enabled to install concrete5.');
             }
@@ -140,6 +133,14 @@ EOT
                 $_POST['SAMPLE_CONTENT'] = $options['starting-point'];
                 $_POST['uEmail'] = $options['admin-email'];
                 $_POST['uPasswordConfirm'] = $_POST['uPassword'] = $options['admin-password'];
+                if ($options['canonical-url']) {
+                    $_POST['canonicalUrlChecked'] = '1';
+                    $_POST['canonicalUrl'] = $options['canonical-url'];
+                }
+                if ($options['canonical-ssl-url']) {
+                    $_POST['canonicalSSLUrlChecked'] = '1';
+                    $_POST['canonicalSSLUrl'] = $options['canonical-ssl-url'];
+                }
                 $e = $cnt->configure();
             }
             if ($e->has()) {
@@ -150,7 +151,7 @@ EOT
 
                 if (!$force_attach && $cnt->isAutoAttachEnabled()) {
                     /** @var Connection $db */
-                    $db = \Core::make('database')->connection();
+                    $db = $app->make('database')->connection();
 
                     if ($db->query('show tables')->rowCount()) {
                         $attach_mode = true;
@@ -174,9 +175,6 @@ EOT
                 $cnt->reset();
                 throw $ex;
             }
-            if (isset($options['default-locale'])) {
-                Config::save('concrete.locale', $options['default-locale']);
-            }
             if (
                 isset($options['demo-username']) && isset($options['demo-password']) && isset($options['demo-email'])
                 &&
@@ -196,7 +194,7 @@ EOT
             }
             $output->writeln('<info>Installation Complete!</info>');
         } catch (Exception $x) {
-            $output->writeln('<error>'.$x->getMessage().'</error>');
+            $output->writeln('<error>'.$x->getMessage() . '('. $x->getTraceAsString().')</error>');
             $rc = 1;
         }
 

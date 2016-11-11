@@ -110,6 +110,7 @@ return array(
         'core_manager_page_type' => '\Concrete\Core\Page\Type\ManagerServiceProvider',
         'core_manager_layout_preset_provider' => '\Concrete\Core\Area\Layout\Preset\Provider\ManagerServiceProvider',
         'core_manager_search_fields' => '\Concrete\Core\Search\Field\ManagerServiceProvider',
+        'core_permissions' => '\Concrete\Core\Permission\PermissionServiceProvider',
         'core_database' => '\Concrete\Core\Database\DatabaseServiceProvider',
         'core_form' => '\Concrete\Core\Form\FormServiceProvider',
         'core_session' => '\Concrete\Core\Session\SessionServiceProvider',
@@ -193,6 +194,7 @@ return array(
         'user_point_action',
         'workflow_progress_category',
         'workflow_type',
+        'workflow',
     ),
 
     'importer_routines' => array(
@@ -220,6 +222,7 @@ return array(
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportAttributeTypesRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportWorkflowTypesRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportWorkflowProgressCategoriesRoutine',
+        'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportWorkflowsRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportAttributesRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportAttributeSetsRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportExpressEntitiesRoutine',
@@ -315,7 +318,6 @@ return array(
         "/ccm/system/dialogs/page/add_external/submit" => array('\Concrete\Controller\Dialog\Page\AddExternal::submit'),
         "/ccm/system/dialogs/page/add/compose/{ptID}/{cParentID}" => array('\Concrete\Controller\Dialog\Page\Add\Compose::view'),
         "/ccm/system/dialogs/page/add/compose/submit" => array('\Concrete\Controller\Dialog\Page\Add\Compose::submit'),
-        "/ccm/system/dialogs/page/add/submit" => array('\Concrete\Controller\Dialog\Page\Add::submit'),
         "/ccm/system/dialogs/page/attributes" => array('\Concrete\Controller\Dialog\Page\Attributes::view'),
         "/ccm/system/dialogs/page/bulk/properties" => array('\Concrete\Controller\Dialog\Page\Bulk\Properties::view'),
         "/ccm/system/dialogs/page/bulk/properties/clear_attribute" => array('\Concrete\Controller\Dialog\Page\Bulk\Properties::clearAttribute'),
@@ -506,9 +508,6 @@ return array(
 
         "/ccm/system/search/groups/submit" => array('\Concrete\Controller\Search\Groups::submit'),
 
-        "/ccm/system/search/users/field/{field}" => array('\Concrete\Controller\Search\Users::field'),
-        "/ccm/system/search/users/submit" => array('\Concrete\Controller\Search\Users::submit'),
-
         /*
          * Panels - top level
          */
@@ -516,7 +515,7 @@ return array(
         "/ccm/system/panels/dashboard" => array('\Concrete\Controller\Panel\Dashboard::view'),
         "/ccm/system/panels/dashboard/add_favorite" => array('\Concrete\Controller\Panel\Dashboard::addFavorite'),
         "/ccm/system/panels/dashboard/remove_favorite" => array('\Concrete\Controller\Panel\Dashboard::removeFavorite'),
-        "/ccm/system/panels/multilingual" => array('\Concrete\Controller\Panel\Multilingual::view'),
+        "/ccm/system/panels/page/relations" => array('\Concrete\Controller\Panel\PageRelations::view'),
         "/ccm/system/panels/page" => array('\Concrete\Controller\Panel\Page::view'),
         "/ccm/system/panels/page/attributes" => array('\Concrete\Controller\Panel\Page\Attributes::view'),
         "/ccm/system/panels/page/check_in" => array('\Concrete\Controller\Panel\Page\CheckIn::__construct'),
@@ -843,6 +842,10 @@ return array(
             array('javascript', 'js/bootstrap/popover.js'),
             array('css', 'css/app.css', array('minify' => false)),
         ),
+        'bootstrap/collapse' => array(
+            array('javascript', 'js/bootstrap/collapse.js'),
+            array('css', 'css/app.css', array('minify' => false)),
+        ),
         'bootstrap/alert' => array(
             array('javascript', 'js/bootstrap/alert.js'),
             array('css', 'css/app.css', array('minify' => false)),
@@ -1121,6 +1124,7 @@ return array(
                 array('javascript', 'core/events'),
                 array('javascript', 'bootstrap/dropdown'),
                 array('javascript', 'bootstrap/tooltip'),
+                array('javascript', 'bootstrap/collapse'),
                 array('javascript', 'bootstrap/popover'),
                 array('javascript', 'bootstrap/transition'),
                 array('javascript', 'bootstrap/alert'),

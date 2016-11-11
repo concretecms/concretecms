@@ -45,17 +45,7 @@ use Imagine\Image\Box;
  */
 class Version
 {
-    use ObjectTrait {
-        setAttribute as setFileVersionAttribute;
-    }
-
-    public function setAttribute($ak, $value)
-    {
-        $value = $this->setFileVersionAttribute($ak, $value);
-        if (is_object($value)) {
-            $this->attributes->add($value);
-        }
-    }
+    use ObjectTrait;
 
     const UT_REPLACE_FILE = 1;
     const UT_TITLE = 2;
@@ -67,7 +57,6 @@ class Version
 
     public function __construct()
     {
-        $this->attributes = new ArrayCollection();
         $this->fvDateAdded = new \DateTime();
         $this->fvActivateDateTime = new \DateTime();
     }
@@ -128,15 +117,6 @@ class Version
      * @ORM\Column(type="string", nullable=true)
      */
     protected $fvExtension = null;
-
-    /**
-     * @ORM\OneToMany(targetEntity="\Concrete\Core\Entity\Attribute\Value\FileValue",  mappedBy="version")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="fID", referencedColumnName="fID"),
-     *   @ORM\JoinColumn(name="fvID", referencedColumnName="fvID")
-     * })
-     */
-    protected $attributes;
 
     /**
      * @ORM\Column(type="integer")
@@ -283,7 +263,7 @@ class Version
 
         $category = \Core::make('Concrete\Core\Attribute\Category\FileCategory');
 
-        foreach ($this->attributes as $attribute) {
+        foreach ($this->getAttributes() as $attribute) {
             $category->deleteValue($attribute);
         }
 
@@ -417,7 +397,7 @@ class Version
 
         $this->deny();
 
-        foreach ($this->attributes as $value) {
+        foreach ($this->getAttributes() as $value) {
             $value = clone $value;
             /*
              * @var $value AttributeValue
@@ -451,14 +431,33 @@ class Version
         }
     }
 
+    /**
+     * Get the file type name.
+     *
+     * @return string
+     */
     public function getType()
     {
         $ftl = $this->getTypeObject();
-        if (is_object($ftl)) {
-            return $ftl->getName();
-        }
+
+        return $ftl->getName();
     }
 
+    /**
+     * Get the file type display name (localized).
+     *
+     * @return string
+     */
+    public function getDisplayType()
+    {
+        $ftl = $this->getTypeObject();
+
+        return $ftl->getDisplayName();
+    }
+
+    /**
+     * @return \Concrete\Core\File\Type\Type
+     */
     public function getTypeObject()
     {
         $fh = Core::make('helper/file');
@@ -540,11 +539,15 @@ class Version
         do {
             $prefix = $importer->generatePrefix();
             $path = $cf->prefix($prefix, $this->getFilename());
-        } while($filesystem->has($path));
-        $filesystem->write($path, $this->getFileResource()->read(), array(
-            'visibility' => AdapterInterface::VISIBILITY_PUBLIC,
-            'mimetype' => Core::make('helper/mime')->mimeFromExtension($fi->getExtension($this->getFilename()))
-        ));
+        } while ($filesystem->has($path));
+        $filesystem->write(
+            $path,
+            $this->getFileResource()->read(),
+            [
+                'visibility' => AdapterInterface::VISIBILITY_PUBLIC,
+                'mimetype' => Core::make('helper/mime')->mimeFromExtension($fi->getExtension($this->getFilename())),
+            ]
+        );
         $this->updateFile($this->getFilename(), $prefix);
     }
 
@@ -755,21 +758,20 @@ class Version
      */
     public function getAttributeValueObject($ak, $createIfNotExists = false)
     {
-        $handle = $ak;
-        if (is_object($ak)) {
-            $handle = $ak->getAttributeKeyHandle();
+        if (!is_object($ak)) {
+            $ak = FileKey::getByHandle($ak);
         }
-        foreach ($this->attributes as $value) {
-            if ($value->getAttributeKey()->getAttributeKeyHandle() == $handle) {
-                return $value;
-            }
+        $value = false;
+        if (is_object($ak)) {
+            $value = $this->getObjectAttributeCategory()->getAttributeValue($ak, $this);
         }
 
-        if ($createIfNotExists) {
+        if ($value) {
+            return $value;
+        } elseif ($createIfNotExists) {
             if (!is_object($ak)) {
                 $ak = FileKey::getByHandle($ak);
             }
-
             $attributeValue = new FileValue();
             $attributeValue->setVersion($this);
             $attributeValue->setAttributeKey($ak);
@@ -1010,7 +1012,7 @@ class Version
      */
     public function getAttributes()
     {
-        return $this->attributes;
+        return $this->getObjectAttributeCategory()->getAttributeValues($this);
     }
 
     /**
@@ -1099,7 +1101,7 @@ class Version
     public function canView()
     {
         $to = $this->getTypeObject();
-        if (is_object($to) && $to->getView() != '') {
+        if ($to->getView() != '') {
             return true;
         }
 
@@ -1109,18 +1111,23 @@ class Version
     public function canEdit()
     {
         $to = $this->getTypeObject();
-        if (is_object($to) && $to->getEditor() != '') {
+        if ($to->getEditor() != '') {
             return true;
         }
 
         return false;
     }
 
+    /**
+     * Get the localized name of the generic category type.
+     *
+     * @return string
+     */
     public function getGenericTypeText()
     {
         $to = $this->getTypeObject();
 
-        return $to->getGenericTypeText($to->getGenericType());
+        return $to->getGenericDisplayType();
     }
 
     //takes a string of comma or new line delimited tags, and puts them in the appropriate format

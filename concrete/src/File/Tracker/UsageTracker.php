@@ -56,7 +56,7 @@ class UsageTracker implements TrackerInterface
 
         if ($trackable instanceof BlockController) {
             if ($collection = $trackable->getCollectionObject()) {
-                $this->trackBlocks($trackable->getCollectionObject(), [$trackable->getBlockObject()]);
+                $this->trackBlocks($trackable->getCollectionObject(), [$trackable]);
                 $tracked = true;
             }
         }
@@ -166,8 +166,12 @@ class UsageTracker implements TrackerInterface
     {
         $this->trackTrackables(
             $collection,
-            $this->getTrackables($blocks, function (Block $block) {
-                return $block->getController();
+            $this->getTrackables($blocks, function ($block) {
+                if ($block instanceof Block) {
+                    return $block->getController();
+                }
+
+                return $block;
             }),
             function (Collection $collection, BlockController $controller, $fileId) {
                 $this->persist(

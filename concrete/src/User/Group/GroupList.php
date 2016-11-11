@@ -39,7 +39,7 @@ class GroupList extends DatabaseItemList
 
     public function filterByPackage(Package $package)
     {
-        $this->query->andWhere('pkgID', ':pkgID');
+        $this->query->andWhere('pkgID = :pkgID');
         $this->query->setParameter('pkgID', $package->getPackageID());
     }
 

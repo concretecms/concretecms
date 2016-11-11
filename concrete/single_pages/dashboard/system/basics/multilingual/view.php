@@ -9,7 +9,7 @@
 } else {
     ?>
 
-<form method="post" class="form-horizontal" action="<?=$view->action('save_interface_language')?>">
+<form method="post" action="<?=$view->action('save_interface_language')?>">
     <fieldset>
 
         <div class="form-group">
@@ -26,7 +26,10 @@
             </div>
         </div>
 
-        <br/>
+        <div class="alert alert-info">
+            <p><?=t('Additional languages can be downloaded from <a href="%s">concrete5.org</a>.', 'http://www.concrete5.org/developers/translate')?></p>
+        </div>
+
         <?=Loader::helper('validation/token')->output('save_interface_language')?>
     </fieldset>
     <div class="ccm-dashboard-form-actions-wrapper">

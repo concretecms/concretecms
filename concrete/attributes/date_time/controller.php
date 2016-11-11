@@ -2,7 +2,7 @@
 namespace Concrete\Attribute\DateTime;
 
 use Concrete\Core\Attribute\FontAwesomeIconFormatter;
-use Concrete\Core\Entity\Attribute\Key\Type\DateTimeType;
+use Concrete\Core\Entity\Attribute\Key\Settings\DateTimeSettings;
 use Concrete\Core\Entity\Attribute\Value\Value\DateTimeValue;
 use Loader;
 use Core;
@@ -21,7 +21,7 @@ class Controller extends AttributeTypeController
 
     public function saveKey($data)
     {
-        $type = $this->getAttributeKeyType();
+        $type = $this->getAttributeKeySettings();
         $type->setMode($data['akDateDisplayMode']);
         return $type;
     }
@@ -89,7 +89,7 @@ class Controller extends AttributeTypeController
 
     public function importKey(\SimpleXMLElement $akey)
     {
-        $type = $this->getAttributeKeyType();
+        $type = $this->getAttributeKeySettings();
         if (isset($akey->type)) {
             $type->setDisplayMode((string) $akey->type['mode']);
         }
@@ -138,6 +138,11 @@ class Controller extends AttributeTypeController
         echo $html;
     }
 
+    public function getAttributeValueObject()
+    {
+        return $this->entityManager->find(DateTimeValue::class, $this->attributeValue->getGenericValue());
+    }
+
     public function createAttributeValue($value)
     {
         if ($value != '') {
@@ -175,7 +180,7 @@ class Controller extends AttributeTypeController
             return false;
         }
 
-        $type = $ak->getAttributeKeyType();
+        $type = $ak->getAttributeKeySettings();
         /*
          * @var $type DateTimeType
          */
@@ -184,8 +189,14 @@ class Controller extends AttributeTypeController
         $this->set('akDateDisplayMode', $this->akDateDisplayMode);
     }
 
-    public function createAttributeKeyType()
+    public function createAttributeKeySettings()
     {
-        return new DateTimeType();
+        return new DateTimeSettings();
     }
+
+    protected function retrieveAttributeKeySettings()
+    {
+        return $this->entityManager->find(DateTimeSettings::class, $this->attributeKey);
+    }
+
 }

@@ -5,6 +5,7 @@ namespace Concrete\Core\Attribute\Value;
 
 use Concrete\Core\Attribute\AttributeValueInterface;
 use Concrete\Core\Attribute\Key\Key;
+use Concrete\Core\Entity\Attribute\Value\LegacyValue;
 use Concrete\Core\Foundation\Object;
 use Loader;
 
@@ -27,44 +28,29 @@ class Value extends Object implements AttributeValueInterface
     {
         // First, retrieve the corresponding LegacyAttributeValue for this
         // object
+        $lv = new LegacyValue();
         $orm = \Database::connection()->getEntityManager();
-        $r = $orm->getRepository('Concrete\Core\Entity\Attribute\Value\LegacyValue');
-        $value = $r->findOneBy(['avrID' => $this->getAttributeValueID()]);
-        if (is_object($value)) {
-            return $value->getValueObject();
-        }
+        $genericValue = $orm->find('Concrete\Core\Entity\Attribute\Value\Value\Value', $this->getAttributeValueID());
+        $lv->setGenericValue($genericValue);
+        $lv->setAttributeKey($this->attributeKey);
+        return $lv->getValueObject();
     }
 
-    /**
-     * @param \Concrete\Core\Entity\Attribute\Value\Value\Value $value
-     */
-    public function setValue(\Concrete\Core\Entity\Attribute\Value\Value\Value $value)
-    {
-        $orm = \Database::connection()->getEntityManager();
-        $r = $orm->getRepository('Concrete\Core\Entity\Attribute\Value\LegacyValue');
-        $attributeValue = $r->findOneBy(['avrID' => $this->getAttributeValueID()]);
-        if (is_object($attributeValue)) {
-            $attributeValue->setValue($value);
-        }
-        $orm->persist($attributeValue);
-        $orm->flush();
-    }
-
-    public static function getByID($avrID)
+    public static function getByID($avID)
     {
         $av = new static();
-        $av->load($avrID);
-        if ($av->getAttributeValueID() == $avrID) {
+        $av->load($avID);
+        if ($av->getAttributeValueID() == $avID) {
             return $av;
         }
     }
 
-    protected function load($avrID)
+    protected function load($avID)
     {
         $db = Loader::db();
 //        $row = $db->GetRow('select avID, akID, uID, avDateAdded, atID from AttributeValues where avID = ?', array($avID));
-        $row = $db->GetRow('select avrID, akID from AttributeValues where avrID = ?', array($avrID));
-        if (is_array($row) && $row['avrID'] == $avrID) {
+        $row = $db->GetRow('select avID, akID from AttributeValues where avID = ?', array($avID));
+        if (is_array($row) && $row['avID'] == $avID) {
             $this->setPropertiesFromArray($row);
             $this->attributeKey = Key::getByID($row['akID']);
             $this->attributeType = $this->getAttributeTypeObject();
@@ -135,7 +121,7 @@ class Value extends Object implements AttributeValueInterface
 
     public function getAttributeValueID()
     {
-        return $this->avrID;
+        return $this->avID;
     }
     public function getAttributeValueUserID()
     {

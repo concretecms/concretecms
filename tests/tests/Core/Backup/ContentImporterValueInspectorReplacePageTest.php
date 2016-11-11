@@ -16,8 +16,8 @@ class ContentImporterValueInspectorReplacePageTest extends PageTestCase
 
     protected function setUp()
     {
-        $this->tables = array_merge($this->tables, array(
-            'PageFeeds'
+        $this->metadatas = array_merge($this->metadatas, array(
+            'Concrete\Core\Entity\Page\Feed'
         ));
         parent::setUp();
     }
@@ -36,6 +36,8 @@ class ContentImporterValueInspectorReplacePageTest extends PageTestCase
         $feed = new \Concrete\Core\Entity\Page\Feed();
         $feed->setHandle('blog');
         $feed->setParentID(1);
+        $feed->setTitle('Title');
+        $feed->setDescription('');
         \ORM::entityManager('core')->persist($feed);
         \ORM::entityManager('core')->flush();
 

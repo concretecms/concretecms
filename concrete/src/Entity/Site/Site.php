@@ -3,16 +3,18 @@ namespace Concrete\Core\Entity\Site;
 
 use Concrete\Core\Application\Application;
 use Concrete\Core\Attribute\ObjectTrait;
-use Concrete\Core\Entity\Attribute\Key\SiteKey;
+use Concrete\Core\Attribute\Key\SiteKey;
 use Concrete\Core\Entity\Attribute\Value\SiteValue;
 use Concrete\Core\Site\Config\Liaison;
+use Concrete\Core\Site\Tree\TreeInterface;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
  * @ORM\Table(name="Sites")
  */
-class Site
+class Site implements TreeInterface
 {
 
     use ObjectTrait;
@@ -69,6 +71,7 @@ class Site
     public function __construct($appConfigRepository)
     {
         $this->updateSiteConfigRepository($appConfigRepository);
+        $this->locales = new ArrayCollection();
     }
 
     public function updateSiteConfigRepository($appConfigRepository)
@@ -82,10 +85,10 @@ class Site
     }
 
     /**
-     * @ORM\OneToOne(targetEntity="SiteTree", cascade={"all"}, mappedBy="site")
-     * @ORM\JoinColumn(name="siteTreeID", referencedColumnName="siteTreeID")
+     * @ORM\OneToMany(targetEntity="Locale", cascade={"all"}, mappedBy="site")
+     * @ORM\JoinColumn(name="siteLocaleID", referencedColumnName="siteLocaleID")
      **/
-    protected $tree;
+    protected $locales;
 
     /**
      * @ORM\ManyToOne(targetEntity="Type", inversedBy="sites")
@@ -112,22 +115,60 @@ class Site
     /**
      * @return mixed
      */
+    public function getLocales()
+    {
+        return $this->locales;
+    }
+
+    /**
+     * @param mixed $locales
+     */
+    public function setLocales($locales)
+    {
+        $this->locales = $locales;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getSiteHomePageID()
     {
-        return $this->tree->getSiteHomePageID();
+        $tree = $this->getSiteTreeObject();
+        if (is_object($tree)) {
+            return $tree->getSiteHomePageID();
+        }
     }
 
     public function getSiteTreeID()
     {
-        if (is_object($this->tree)) {
-            return $this->tree->getSiteTreeID();
+        $tree = $this->getSiteTreeObject();
+        if (is_object($tree)) {
+            return $tree->getSiteTreeID();
+        }
+    }
+
+    public function getDefaultLocale()
+    {
+        foreach($this->locales as $locale) {
+            if ($locale->getIsDefault()) {
+                return $locale;
+            }
+        }
+    }
+
+    public function getSiteTreeObject()
+    {
+        $locale = $this->getDefaultLocale();
+        if (is_object($locale)) {
+            return $locale->getSiteTree();
         }
     }
 
     public function getSiteHomePageObject()
     {
-        if (is_object($this->tree)) {
-            return \Page::getByID($this->tree->getSiteHomePageID());
+        $tree = $this->getSiteTreeObject();
+        if (is_object($tree)) {
+            return $tree->getSiteHomePageObject();
         }
     }
 
@@ -169,22 +210,6 @@ class Site
     public function setIsDefault($siteIsDefault)
     {
         $this->siteIsDefault = $siteIsDefault;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getSiteTree()
-    {
-        return $this->tree;
-    }
-
-    /**
-     * @param mixed $tree
-     */
-    public function setSiteTree($tree)
-    {
-        $this->tree = $tree;
     }
 
     /**

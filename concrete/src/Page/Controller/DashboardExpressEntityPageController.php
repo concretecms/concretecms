@@ -6,6 +6,7 @@ use Concrete\Core\Entity\Express\Entry;
 use Concrete\Core\Express\Entry\Manager;
 use Concrete\Core\Express\Event\Event;
 use Concrete\Core\Express\Form\Control\SaveHandler\SaveHandlerInterface;
+use Concrete\Core\Express\Form\OwnedEntityForm;
 use Concrete\Core\Express\Form\Validator;
 use Concrete\Core\Tree\Node\Node;
 use Concrete\Core\Tree\Node\Type\Category;
@@ -39,12 +40,16 @@ abstract class DashboardExpressEntityPageController extends DashboardExpressEntr
         $this->renderList($folder);
     }
 
-    public function create_entry($id = null)
+    public function create_entry($id = null, $owner_entry_id = null)
     {
         $r = $this->entityManager->getRepository('\Concrete\Core\Entity\Express\Entity');
         $entity = $r->findOneById($id);
         if (!is_object($entity)) {
             $this->redirect('/dashboard/express/entries');
+        }
+        if ($owner_entry_id) {
+            $r = $this->entityManager->getRepository('\Concrete\Core\Entity\Express\Entry');
+            $entry = $r->findOneById($owner_entry_id);
         }
         $permissions = new \Permissions($entity);
         if (!$permissions->canAddExpressEntries()) {
@@ -52,10 +57,14 @@ abstract class DashboardExpressEntityPageController extends DashboardExpressEntr
         }
         $this->set('entity', $entity);
         $form = $entity->getDefaultEditForm();
-        $renderer = \Core::make('Concrete\Core\Express\Form\StandardFormRenderer');
-        $this->set('expressForm', $form);
+        if (is_object($entry) && $entry->getEntity() == $entity->getOwnedBy()) {
+            $form = new OwnedEntityForm($form, $entry);
+            $this->set('backURL', $this->getViewEntryURL($entry));
+        } else {
+            $this->set('backURL', $this->getBackURL($entity));
+        }
+        $renderer = \Core::make('Concrete\Core\Express\Form\StandardFormRenderer', ['form' => $form]);
         $this->set('renderer', $renderer);
-        $this->set('backURL', $this->getBackToListURL($entity));
         $this->render('/dashboard/express/entries/create', false);
     }
 

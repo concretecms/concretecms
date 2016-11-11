@@ -31,5 +31,8 @@ class ExpressKey extends Key
         $this->entity = $entity;
     }
 
-
+    public function getAttributeCategory()
+    {
+        return $this->entity->getAttributeKeyCategory();
+    }
 }

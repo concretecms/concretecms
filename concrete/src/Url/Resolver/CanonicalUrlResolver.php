@@ -2,7 +2,9 @@
 namespace Concrete\Core\Url\Resolver;
 
 use Concrete\Core\Application\Application;
+use Concrete\Core\Entity\Site\SiteTree;
 use Concrete\Core\Http\Request;
+use Concrete\Core\Page\Page;
 use Concrete\Core\Url\Url;
 use Concrete\Core\Url\UrlImmutable;
 
@@ -35,6 +37,9 @@ class CanonicalUrlResolver implements UrlResolverInterface
      * This method MUST either return a `\League\URL\URL` when a url is resolved
      * or null when a url cannot be resolved.
      *
+     * If the first argument provided is a page object, we will use that object to determine the site tree
+     * (and thus the canonical url) to use.
+     *
      * @param array $arguments A list of the arguments
      * @param \League\URL\URLInterface $resolved
      *
@@ -42,12 +47,25 @@ class CanonicalUrlResolver implements UrlResolverInterface
      */
     public function resolve(array $arguments, $resolved = null)
     {
-        if ($this->cached) {
+        $config = null;
+        $page = null;
+
+        // Canonical urls for pages can be different than for the entire site
+        if (count($arguments) && head($arguments) instanceof Page) {
+            /** @var Page $page */
+            $page = head($arguments);
+            $tree = $page->getSiteTreeObject();
+
+            if ($tree instanceof SiteTree && $site = $tree->getSite()) {
+                $config = $site->getConfigRepository();
+            }
+
+        } elseif ($this->cached) {
             return $this->cached;
         }
 
-        $config = null;
-        if ($this->app->isInstalled()) {
+        // Get the config from the current site tree
+        if ($config === null && $this->app->isInstalled()) {
             $site = $this->app['site']->getSite();
             if (is_object($site)) {
                 $config = $site->getConfigRepository();
@@ -91,13 +109,8 @@ class CanonicalUrlResolver implements UrlResolverInterface
                     }
                 }
             }
-        } else {
-            $host = $this->request->getHost();
-            $scheme = $this->request->getScheme();
-            if ($scheme && $host) {
-                $url = $url->setScheme($scheme)
-                    ->setHost($host)
-                    ->setPort($this->request->getPort());
+            elseif (intval($canonical->getPort()->get()) > 0) {
+                $url = $url->setPort($canonical->getPort());
             }
         }
 
@@ -105,9 +118,12 @@ class CanonicalUrlResolver implements UrlResolverInterface
             $url = $url->setPath($relative_path);
         }
 
-        $this->cached = $url;
+        // Don't cache page specific canonical urls
+        if (!$page) {
+            $this->cached = $url;
+        }
 
-        return $this->cached;
+        return $url;
     }
 
     /**

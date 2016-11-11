@@ -5,7 +5,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="SelectAttributeValueOptions")
+ * @ORM\Table(name="atSelectOptions")
  */
 class SelectValueOption
 {
@@ -32,6 +32,11 @@ class SelectValueOption
     protected $isEndUserAdded = false;
 
     /**
+     * @ORM\Column(type="boolean", options={"default": 0})
+     */
+    protected $isDeleted = false;
+
+    /**
      * @ORM\Column(type="integer")
      */
     protected $displayOrder = 0;
@@ -55,6 +60,22 @@ class SelectValueOption
     public function setOptionList($list)
     {
         $this->list = $list;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function isOptionDeleted()
+    {
+        return $this->isDeleted;
+    }
+
+    /**
+     * @param mixed $isDeleted
+     */
+    public function setIsOptionDeleted($isDeleted)
+    {
+        $this->isDeleted = $isDeleted;
     }
 
     /**
@@ -128,7 +149,7 @@ class SelectValueOption
 
     public function getSelectAttributeOptionDisplayValue($format = 'html')
     {
-        $value = tc('SelectAttributeValue', $this->getSelectAttributeOptionValue(false));
+        $value = tc('SelectAttributeValue', $this->getSelectAttributeOptionValue());
         switch ($format) {
             case 'html':
                 return h($value);

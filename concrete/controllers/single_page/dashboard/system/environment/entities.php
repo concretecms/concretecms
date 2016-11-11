@@ -30,49 +30,32 @@ class Entities extends DashboardPageController
             if ($this->isPost()) {
                 $ddm = $this->post('DOCTRINE_DEV_MODE') == 1 ? 1 : 0;
 
-                Config::save('concrete.cache.doctrine_dev_mode', (bool) $ddm);
-                $this->redirect('/dashboard/system/environment/entities', 'entity_settings_updated');
+                if ($this->request->request->get('refresh')) {
+                    $em = ORM::entityManager();
+                    $config = $em->getConfiguration();
+
+                    // First, we flush the metadata cache.
+                    if (is_object($cache = $config->getMetadataCacheImpl())) {
+                        $cache->flushAll();
+                    }
+
+                    // Next, we regnerate proxies
+                    $metadatas = $em->getMetadataFactory()->getAllMetadata();
+                    $em->getProxyFactory()->generateProxyClasses($metadatas, $this->app->make('config')->get('database.proxy_classes'));
+
+                    // Finally, we update the schema
+                    $tool = new SchemaTool($em);
+                    $tool->updateSchema($metadatas, true);
+                    $this->flash('success', t('Doctrine cache cleared, proxy classes regenerated, entity database table schema updated.'));
+                    $this->redirect('/dashboard/system/environment/entities', 'view');
+                } else {
+                    Config::save('concrete.cache.doctrine_dev_mode', (bool) $ddm);
+                    $this->flash('success', t('Doctrine development settings updated.'));
+                }
+                $this->redirect('/dashboard/system/environment/entities', 'view');
             }
         } else {
             $this->set('error', array($this->token->getErrorMessage()));
         }
     }
-
-    public function refresh_entities()
-    {
-        if ($this->token->validate("refresh_entities")) {
-            if ($this->isPost()) {
-                $em = ORM::entityManager();
-                $config = $em->getConfiguration();
-
-                // First, we flush the metadata cache.
-                if (is_object($cache = $config->getMetadataCacheImpl())) {
-                    $cache->flushAll();
-                }
-
-                // Next, we regnerate proxies
-                $metadatas = $em->getMetadataFactory()->getAllMetadata();
-                $em->getProxyFactory()->generateProxyClasses($metadatas, $this->app->make('config')->get('database.proxy_classes'));
-
-                // Finally, we update the schema
-                $tool = new SchemaTool($em);
-                $tool->updateSchema($metadatas, true);
-
-                $this->redirect('/dashboard/system/environment/entities', 'entities_refreshed');
-            }
-        }
-    }
-
-    public function entity_settings_updated()
-    {
-        $this->set('message', t('Doctrine development settings updated.'));
-        $this->view();
-    }
-
-    public function entities_refreshed()
-    {
-        $this->set('message', t('Doctrine cache cleared, proxy classes regenerated, entity database table schema updated.'));
-        $this->view();
-    }
-
 }

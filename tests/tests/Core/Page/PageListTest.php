@@ -222,7 +222,8 @@ class PageListTest extends \PageTestCase
 
     public function testFilterByActiveAndSystem()
     {
-        \SinglePage::add(Config::get('concrete.paths.trash'));
+
+        \SinglePage::addGlobal(Config::get('concrete.paths.trash'));
 
         $c = Page::getByPath('/test-page-2');
         $c->moveToTrash();
@@ -246,6 +247,7 @@ class PageListTest extends \PageTestCase
         $results = $this->list->getResults();
         $this->assertEquals(14, count($results));
     }
+
 
     public function testAliases()
     {

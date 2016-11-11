@@ -13,7 +13,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 class Controller extends Package{
 
     protected $pkgHandle = 'test_metadatadriver_additional_namespace';
-    protected $appVersionRequired = '5.8.0';
+    protected $appVersionRequired = '8.0.0';
     protected $pkgVersion = '0.0.1';
 
     // The value we want to test

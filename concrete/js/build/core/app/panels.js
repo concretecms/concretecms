@@ -265,7 +265,7 @@ function ConcretePanel(options) {
         }).appendTo(document.body);
 
         var $content = $('<div />', {
-            class: 'ccm-ui ccm-ui-fieldless ccm-panel-detail-content'
+            class: 'ccm-ui ccm-panel-detail-content'
         }).appendTo($detail);
 
         $('div.ccm-page')
@@ -291,7 +291,13 @@ function ConcretePanel(options) {
         };
 
         if (options.url) {
-            $content.load(options.url + '?cID=' + CCM_CID + options.data, function () {
+            var url = options.url + '?cID=' + CCM_CID, data = null;
+            if ($.isPlainObject(options.data)) {
+                data = options.data;
+            } else {
+                url += options.data;
+            }
+            $content.load(url, data, function () {
                 jQuery.fn.dialog.hideLoader();
                 $content.find('.launch-tooltip').tooltip({'container': '#ccm-tooltip-holder'});
                 $content.find('a[data-help-notification-toggle]').concreteHelpLauncher();
@@ -532,7 +538,7 @@ var ConcretePanelManager = (function ConcretePanelManagerGenerator() {
                 }).appendTo($(document.body));
 
                 $('<div />', {
-                    'class': 'ccm-panel-content-wrapper ccm-ui ccm-ui-fieldless'
+                    'class': 'ccm-panel-content-wrapper ccm-ui'
                 }).appendTo($('#' + panel.getDOMID()));
             }
         },

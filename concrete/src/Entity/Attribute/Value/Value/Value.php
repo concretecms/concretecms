@@ -6,14 +6,10 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\InheritanceType("JOINED")
- * @ORM\DiscriminatorColumn(name="type", type="string")
- * @ORM\Table(name="AttributeValueValues")
+ * @ORM\Table(name="AttributeValues")
  */
-abstract class Value
+class Value
 {
-
-    abstract public function __toString();
 
     /**
      * @ORM\Id @ORM\Column(type="integer", options={"unsigned":true})
@@ -22,43 +18,45 @@ abstract class Value
     protected $avID;
 
     /**
-     * @ORM\OneToMany(targetEntity="\Concrete\Core\Entity\Attribute\Value\Value", mappedBy="value", cascade={"remove"})
+     * This is needed for backward compatibility –but it also might be handy if you need to figure out what kind of
+     * attribute something is but we don't want a direct association due to performance concerns
+     * @ORM\ManyToOne(targetEntity="\Concrete\Core\Entity\Attribute\Key\Key")
+     * @ORM\JoinColumn(name="akID", referencedColumnName="akID")
      **/
-    protected $attribute_values;
-
-    /**
-     * @return mixed
-     */
-    public function getAttributeKey()
-    {
-        $values = $this->getAttributeValues();
-        if ($values->containsKey(0)) {
-            return $values->get(0)->getAttributeKey();
-        }
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getAttributeValues()
-    {
-        return $this->attribute_values;
-    }
-
-    public function getValue()
-    {
-        return $this;
-    }
+    protected $attribute_key;
 
     public function getAttributeValueID()
     {
         return $this->avID;
     }
 
-
-    public function __construct()
+    /**
+     * @return mixed
+     */
+    public function getAttributeKey()
     {
-        $this->attribute_values = new ArrayCollection();
+        return $this->attribute_key;
     }
+
+    /**
+     * @param mixed $attribute_key
+     */
+    public function setAttributeKey($attribute_key)
+    {
+        $this->attribute_key = $attribute_key;
+    }
+
+    public function __toString()
+    {
+        return (string) $this->avID;
+    }
+
+    public function __clone()
+    {
+        if ($this->avID) {
+            $this->avID = null;
+        }
+    }
+
 
 }

@@ -247,7 +247,7 @@ class Feed
     /**
      * @ORM\Column(type="integer", options={"unsigned":true})
      */
-    protected $ptID;
+    protected $ptID = 0;
 
     /**
      * @ORM\Column(type="boolean")

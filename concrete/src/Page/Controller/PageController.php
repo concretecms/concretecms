@@ -74,6 +74,7 @@ class PageController extends Controller
             $value = $session->getFlashBag()->get('page_message');
             foreach ($value as $message) {
                 $sets[$message[0]] = $message[1];
+                $sets[$message[0].'IsHTML'] = isset($message[2]) && $message[2];
             }
         }
 
@@ -111,10 +112,10 @@ class PageController extends Controller
         return $this->c;
     }
 
-    public function flash($key, $value)
+    public function flash($key, $value, $isHTML = false)
     {
         $session = Application::getFacadeApplication()->make('session');
-        $session->getFlashBag()->add('page_message', array($key, $value));
+        $session->getFlashBag()->add('page_message', array($key, $value, $isHTML));
     }
 
     public function getTheme()

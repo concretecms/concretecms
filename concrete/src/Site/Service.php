@@ -1,11 +1,14 @@
 <?php
 namespace Concrete\Core\Site;
 
+use Concrete\Core\Attribute\Key\SiteKey;
 use Concrete\Core\Entity\Page\Template;
+use Concrete\Core\Entity\Site\Locale;
 use Concrete\Core\Entity\Site\Site;
 use Concrete\Core\Entity\Site\SiteTree;
 use Concrete\Core\Entity\Site\Tree;
 use Concrete\Core\Entity\Site\Type;
+use Concrete\Core\Localization\Localization;
 use Concrete\Core\Page\Theme\Theme;
 use Concrete\Core\Site\Resolver\ResolverFactory;
 use Doctrine\ORM\EntityManagerInterface;
@@ -34,6 +37,12 @@ class Service
         $this->entityManager = $entityManager;
         $this->config = $configRepository;
         $this->resolverFactory = $resolverFactory;
+    }
+
+    public function getByType(Type $type)
+    {
+        return $this->entityManager->getRepository('Concrete\Core\Entity\Site\Site')
+            ->findByType($type);
     }
 
     public function getDefault()
@@ -86,25 +95,23 @@ class Service
     public function delete(Site $site)
     {
 
-        $page = $site->getSiteHomePageObject();
-        if (is_object($page)) {
-            $page->moveToTrash();
+        $attributes = SiteKey::getAttributeValues($site);
+        foreach($attributes as $av) {
+            $this->entityManager->remove($av);
         }
 
-        $tree = $site->getSiteTree();
-        if (is_object($tree)) {
-            $tree->setSite(null);
-            $this->entityManager->flush();
-        }
-
-        $this->entityManager->remove($site);
         $this->entityManager->flush();
 
-        if (is_object($tree)) {
-            $this->entityManager->remove($tree);
-            $this->entityManager->flush();
+        $r = $this->entityManager->getConnection()
+            ->executeQuery('select cID from Pages where siteTreeID = ? and cParentID = 0', [$site->getSiteTreeID()]);
+        while ($row = $r->fetch()) {
+            $page = \Page::getByID($row['cID']);
+            if (is_object($page) && !$page->isError()) {
+                $page->moveToTrash();
+            }
         }
-
+        $this->entityManager->remove($site);
+        $this->entityManager->flush();
     }
 
     public function getList()
@@ -119,8 +126,12 @@ class Service
         return $list;
     }
 
-    public function installDefault()
+    public function installDefault($locale = null)
     {
+        if (!$locale) {
+            $locale = Localization::BASE_LOCALE;
+        }
+
         $siteConfig = $this->config->get('site');
         $defaultSite = array_get($siteConfig, 'default');
 
@@ -129,11 +140,19 @@ class Service
         $site->setSiteHandle(array_get($siteConfig, "sites.{$defaultSite}.handle"));
         $site->setIsDefault(true);
 
+        $data = explode('_', $locale);
+        $locale = new Locale();
+        $locale->setSite($site);
+        $locale->setIsDefault(true);
+        $locale->setLanguage($data[0]);
+        $locale->setCountry($data[1]);
+
         $tree = new SiteTree();
         $tree->setSiteHomePageID(HOME_CID);
-        $tree->setSite($site);
+        $tree->setLocale($locale);
+        $locale->setSiteTree($tree);
 
-        $site->setSiteTree($tree);
+        $site->getLocales()->add($locale);
 
         $service = $this->app->make('site/type');
         $type = $service->getDefault();

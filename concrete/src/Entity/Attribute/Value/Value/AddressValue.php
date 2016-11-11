@@ -5,9 +5,9 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="AddressAttributeValues")
+ * @ORM\Table(name="atAddress")
  */
-class AddressValue extends Value
+class AddressValue extends AbstractValue
 {
     /**
      * Note: It's the public portion of this property that is deprecated.

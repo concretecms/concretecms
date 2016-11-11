@@ -5,7 +5,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="TopicAttributeSelectedTopics")
+ * @ORM\Table(name="atSelectedTopics")
  */
 class SelectedTopic
 {

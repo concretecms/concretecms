@@ -22,6 +22,8 @@ abstract class FileStorageTestCase extends ConcreteDatabaseTestCase
     protected $metadatas = array(
         'Concrete\Core\Entity\File\File',
         'Concrete\Core\Entity\File\Version',
+        'Concrete\Core\Entity\File\StorageLocation\Type\Type',
+        'Concrete\Core\Entity\File\Image\Thumbnail\Type\Type',
         'Concrete\Core\Entity\File\StorageLocation\StorageLocation'
     );
 

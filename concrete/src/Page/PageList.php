@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Page;
 
+use Concrete\Core\Entity\Block\BlockType\BlockType;
 use Concrete\Core\Entity\Site\Site;
 use Concrete\Core\Entity\Site\Tree;
 use Concrete\Core\Search\ItemList\Database\AttributedItemList as DatabaseItemList;
@@ -11,6 +12,7 @@ use Concrete\Core\Entity\Package;
 use Page as ConcretePage;
 use Concrete\Core\Entity\Page\Template as TemplateEntity;
 use Pagerfanta\Adapter\DoctrineDbalAdapter;
+use Concrete\Core\Site\Tree\TreeInterface;
 
 /**
  * An object that allows a filtered list of pages to be returned.
@@ -19,6 +21,7 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
 {
     const PAGE_VERSION_ACTIVE = 1;
     const PAGE_VERSION_RECENT = 2;
+    const PAGE_VERSION_RECENT_UNAPPROVED = 3;
 
     protected function getAttributeKeyClassName()
     {
@@ -51,7 +54,9 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
     protected $isFulltextSearch = false;
 
     /**
-     * Whether to include system pages (login, etc...) in this query.
+     * Whether to include system pages in this query. NOTE: There really isn't
+     * a reason to set this to true unless you're doing something pretty custom
+     * or deep in the core
      *
      * @var bool
      */
@@ -69,9 +74,17 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
      */
     protected $includeInactivePages = false;
 
-    public function setSiteTreeObject($tree)
+    public function setSiteTreeObject(TreeInterface $tree)
     {
         $this->siteTree = $tree;
+    }
+
+    /**
+     * @param boolean $includeSystemPages
+     */
+    public function includeSystemPages()
+    {
+        $this->includeSystemPages = true;
     }
 
     public function setPermissionsChecker(\Closure $checker)
@@ -92,11 +105,6 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
     public function includeInactivePages()
     {
         $this->includeInactivePages = true;
-    }
-
-    public function includeSystemPages()
-    {
-        $this->includeSystemPages = true;
     }
 
     public function isFulltextSearch()
@@ -138,10 +146,19 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
                 ->andWhere('p.cIsTemplate = 0');
         }
 
-        if ($this->pageVersionToRetrieve == self::PAGE_VERSION_RECENT) {
-            $query->andWhere('cvID = (select max(cvID) from CollectionVersions where cID = cv.cID)');
-        } else {
-            $query->andWhere('cvIsApproved = 1');
+        switch ($this->pageVersionToRetrieve) {
+            case self::PAGE_VERSION_RECENT:
+                $query->andWhere('cvID = (select max(cvID) from CollectionVersions where cID = cv.cID)');
+                break;
+            case self::PAGE_VERSION_RECENT_UNAPPROVED:
+                $query
+                    ->andWhere('cvID = (select max(cvID) from CollectionVersions where cID = cv.cID)')
+                    ->andWhere('cvIsApproved = 0');
+                break;
+            case self::PAGE_VERSION_ACTIVE:
+            default:
+                $query->andWhere('cvIsApproved = 1');
+                break;
         }
 
         if ($this->isFulltextSearch) {
@@ -153,21 +170,28 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
             $query->setParameter('cIsActive', true);
         }
 
+
         if (is_object($this->siteTree)) {
             $tree = $this->siteTree;
         } else {
             $site = \Core::make("site")->getSite();
-            $tree = $site->getSiteTree();
+            $tree = $site->getSiteTreeObject();
         }
 
+        // Note, we might not use this. We have to set the parameter even if we don't use it because
+        // StackList (which extends PageList) needs to have it available.
+        $query->setParameter('siteTreeID', $tree->getSiteTreeID());
+
         if ($this->query->getParameter('cParentID') < 1) {
+
             if (!$this->includeSystemPages) {
                 $query->andWhere('p.siteTreeID = :siteTreeID');
+                $query->andWhere('p.cIsSystemPage = :cIsSystemPage');
+                $query->setParameter('cIsSystemPage', false);
             } else {
                 $query->andWhere('(p.siteTreeID = :siteTreeID or p.siteTreeID = 0)');
             }
 
-            $query->setParameter('siteTreeID', $tree->getSiteTreeID());
         }
 
         return $query;
@@ -473,10 +497,21 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
         }
         $this->query->innerJoin('cv', 'CollectionAttributeValues', 'cavTopics',
             'cv.cID = cavTopics.cID and cv.cvID = cavTopics.cvID');
-        $this->query->innerJoin('cavTopics', 'AttributeValues', 'av', 'cavTopics.avrID = av.avrID');
-        $this->query->innerJoin('av', 'TopicAttributeSelectedTopics', 'atst', 'av.avID = atst.avID');
+        $this->query->innerJoin('cavTopics', 'AttributeValues', 'av', 'cavTopics.avID = av.avID');
+        $this->query->innerJoin('av', 'atSelectedTopics', 'atst', 'av.avID = atst.avID');
         $this->query->andWhere('atst.treeNodeID = :TopicNodeID');
         $this->query->setParameter('TopicNodeID', $treeNodeID);
+    }
+
+    public function filterByBlockType(BlockType $bt)
+    {
+        $this->query->select('distinct p.cID');
+        $btID = $bt->getBlockTypeID();
+        $this->query->innerJoin('cv', 'CollectionVersionBlocks', 'cvb',
+            'cv.cID = cvb.cID and cv.cvID = cvb.cvID');
+        $this->query->innerJoin('cvb', 'Blocks', 'b', 'cvb.bID = b.bID');
+        $this->query->andWhere('b.btID = :btID');
+        $this->query->setParameter('btID', $btID);
     }
 
     /**
@@ -578,4 +613,5 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
     {
         $this->setPageVersionToRetrieve(self::PAGE_VERSION_RECENT);
     }
+
 }

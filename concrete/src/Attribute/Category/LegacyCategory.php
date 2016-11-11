@@ -103,12 +103,15 @@ class LegacyCategory implements CategoryInterface, StandardSearchIndexerInterfac
         $loader->load($key, $request);
 
         $controller = $key->getController();
-        $key_type = $controller->saveKey($request->request->all());
-        if (!is_object($key_type)) {
-            $key_type = $controller->getAttributeKeyType();
+        $settings = $controller->saveKey($request->request->all());
+        if (!is_object($settings)) {
+            $settings = $controller->getAttributeKeySettings();
         }
-        $key_type->setAttributeKey($key);
-        $key->setAttributeKeyType($key_type);
+        $settings->setAttributeKey($key);
+        $this->entityManager->persist($settings);
+        $this->entityManager->flush();
+
+        $key->setAttributeKeySettings($settings);
 
 
         // Modify the category's search indexer.
@@ -137,19 +140,7 @@ class LegacyCategory implements CategoryInterface, StandardSearchIndexerInterfac
 
     public function deleteKey(Key $key)
     {
-        $controller = $key->getController();
-        $controller->deleteKey();
-
-        // Delete from any attribute sets
-        $r = $this->entityManager->getRepository('\Concrete\Core\Entity\Attribute\SetKey');
-        $setKeys = $r->findBy(array('attribute_key' => $key));
-        foreach ($setKeys as $setKey) {
-            $this->entityManager->remove($setKey);
-        }
-        $this->entityManager->remove($key);
-
-        $this->entityManager->remove($key);
-        $this->entityManager->flush();
+        return;
     }
 
     public function deleteValue(AttributeValueInterface $value)
@@ -176,9 +167,9 @@ class LegacyCategory implements CategoryInterface, StandardSearchIndexerInterfac
         }
 
         $controller = $type->getController();
-        $key_type = $controller->saveKey($args);
-        if (!is_object($key_type)) {
-            $key_type = $controller->getAttributeKeyType();
+        $settings = $controller->saveKey($args);
+        if (!is_object($settings)) {
+            $settings = $controller->getAttributeKeySettings();
         }
         // $key is actually an array.
         $handle = $args['akHandle'];
@@ -186,10 +177,17 @@ class LegacyCategory implements CategoryInterface, StandardSearchIndexerInterfac
         $key = new LegacyKey();
         $key->setAttributeKeyHandle($handle);
         $key->setAttributeKeyName($name);
-        $key_type->setAttributeKey($key);
+        $key->setAttributeType($type);
+        $this->entityManager->persist($key);
+        $this->entityManager->flush();
 
-        $key->setAttributeKeyType($key_type);
-        $key->setAttributeCategory($this->getCategoryEntity());
+        $settings->setAttributeKey($key);
+
+        $this->entityManager->persist($settings);
+        $this->entityManager->flush();
+
+        $key->setAttributeKeySettings($settings);
+        $key->setAttributeCategoryEntity($this->getCategoryEntity());
 
         if (is_object($pkg)) {
             $key->setPackage($pkg);

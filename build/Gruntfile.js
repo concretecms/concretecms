@@ -201,6 +201,12 @@ module.exports = function(grunt) {
             src: '<%= DIR_BASE %>/concrete/js/build/vendor/bootstrap/tooltip.js'
         },
 
+        bootstrap_collapse: {
+            dest: '<%= DIR_BASE %>/concrete/js/bootstrap/collapse.js',
+            src: '<%= DIR_BASE %>/concrete/js/build/vendor/bootstrap/collapse.js'
+        },
+
+
         bootstrap_transition: {
             dest: '<%= DIR_BASE %>/concrete/js/bootstrap/transition.js',
             src: '<%= DIR_BASE %>/concrete/js/build/vendor/bootstrap/transition.js'
@@ -407,8 +413,12 @@ module.exports = function(grunt) {
     };
 
     // List of the CSS files to be generated
+    // Note –bootstrap dies in here when attempting to be built with grunt css; something about
+    // its minified syntax being included within the other app.less file. So if you need to build
+    // bootstrap uncomment this, run grunt css:debug, get it working, then comment the line back out
+    // and run grunt css
     var css = {
-        '<%= DIR_BASE %>/concrete/css/build/vendor/bootstrap/bootstrap.css': '<%= DIR_BASE %>/concrete/css/build/vendor/bootstrap/bootstrap.less',
+//        '<%= DIR_BASE %>/concrete/css/build/vendor/bootstrap/bootstrap.css': '<%= DIR_BASE %>/concrete/css/build/vendor/bootstrap/bootstrap.less',
         '<%= DIR_BASE %>/concrete/css/app.css': '<%= DIR_BASE %>/concrete/css/build/core/app/app.less',
         '<%= DIR_BASE %>/concrete/css/editable-fields.css': '<%= DIR_BASE %>/concrete/css/build/core/editable-fields.less',
         '<%= DIR_BASE %>/concrete/css/select2.css': '<%= DIR_BASE %>/concrete/css/build/core/select2.less',
@@ -584,13 +594,9 @@ module.exports = function(grunt) {
         require('./tasks/build-release/clean.js')(grunt, config, parameters, this.async());
     });
 
-    /*
-
     grunt.registerTask('build-release-remove-short-tags', 'Build process: remove short tags.', function() {
         require('./tasks/build-release/remove-short-tags.js')(grunt, config, parameters, this.async());
     });
-
-    */
 
     grunt.registerTask('build-release-translations', 'Build process: downloading Translations.', function() {
         require('./tasks/build-release/translations.js')(grunt, config, parameters, this.async());

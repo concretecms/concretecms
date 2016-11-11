@@ -9,11 +9,11 @@ use Concrete\Core\Http\Server;
 use Concrete\Core\Http\ServerInterface;
 use Concrete\Core\Permission\Key\Key;
 use Concrete\Core\Support\Facade\Events;
+use Concrete\Core\Application\ApplicationAwareTrait;
 
 class DefaultRunner implements RunInterface, ApplicationAwareInterface
 {
-    /** @var Application */
-    protected $app;
+    use ApplicationAwareTrait;
 
     /** @var Repository */
     protected $config;
@@ -108,17 +108,6 @@ class DefaultRunner implements RunInterface, ApplicationAwareInterface
                 die(1);
             }
         }
-    }
-
-
-    /**
-     * Set the application object.
-     *
-     * @param \Concrete\Core\Application\Application $application
-     */
-    public function setApplication(Application $application)
-    {
-        $this->app = $application;
     }
 
     protected function registerLegacyRoutes()

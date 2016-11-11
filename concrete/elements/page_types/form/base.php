@@ -22,6 +22,7 @@ $ptIsFrequentlyAdded = 1;
 $token = 'add_page_type';
 if (is_object($pagetype)) {
     $token = 'update_page_type';
+	$siteType = $pagetype->getSiteTypeObject();
     $ptName = $pagetype->getPageTypeName();
     $ptHandle = $pagetype->getPageTypeHandle();
     $ptLaunchInComposer = $pagetype->doesPageTypeLaunchInComposer();
@@ -36,6 +37,8 @@ if (is_object($pagetype)) {
 ?>
 
 <?=Loader::helper('validation/token')->output($token)?>
+<input type="hidden" name="siteTypeID" value="<?=$siteType->getSiteTypeID()?>">
+
 	<div class="form-group">
 		<?=$form->label('ptName', t('Page Type Name'))?>
     	<?=$form->text('ptName', $ptName, array('class' => 'span5'))?>
@@ -94,7 +97,7 @@ if (is_object($pagetype)) {
         ?>
 
 		<div style="display: none" data-page-type-publish-target-type-id="<?=$t->getPageTypePublishTargetTypeID()?>">
-			<?php $t->includeOptionsForm($pagetype);
+			<?php $t->includeOptionsForm($pagetype, $siteType);
         ?>
 		</div>
 

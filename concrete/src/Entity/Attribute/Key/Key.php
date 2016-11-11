@@ -15,6 +15,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  * @ORM\InheritanceType("JOINED")
  * @ORM\DiscriminatorColumn(name="akCategory", type="string")
+ * @ORM\EntityListeners({"\Concrete\Core\Attribute\Key\Listener"})
  * @ORM\Table(
  *     name="AttributeKeys",
  *     indexes={
@@ -25,6 +26,8 @@ use Doctrine\ORM\Mapping as ORM;
 class Key implements AttributeKeyInterface, ExportableInterface
 {
     use PackageTrait;
+
+    protected $settings;
 
     /**
      * @ORM\Id @ORM\Column(type="integer", options={"unsigned":true})
@@ -58,22 +61,17 @@ class Key implements AttributeKeyInterface, ExportableInterface
     protected $akIsSearchableIndexed = false;
 
     /**
-     * @ORM\OneToOne(targetEntity="\Concrete\Core\Entity\Attribute\Key\Type\Type", mappedBy="key", cascade={"persist", "remove"})
-     */
-    protected $key_type;
-
-    /**
      * @ORM\OneToMany(targetEntity="\Concrete\Core\Entity\Attribute\SetKey", mappedBy="attribute_key", cascade={"remove"}),
      * @ORM\JoinColumn(name="akID", referencedColumnName="akID")
      */
     protected $set_keys;
 
     /**
-     * @ORM\OneToMany(targetEntity="\Concrete\Core\Entity\Attribute\Value\Value", mappedBy="attribute_key", cascade={"remove"})
-     * @ORM\JoinColumn(name="avID", referencedColumnName="avID")
-     **/
-    protected $attribute_values;
-
+     * @var \Concrete\Core\Entity\Attribute\Type
+     * @ORM\ManyToOne(targetEntity="\Concrete\Core\Entity\Attribute\Type"),
+     * @ORM\JoinColumn(name="atID", referencedColumnName="atID")
+     */
+    protected $type;
 
     /**
      * @ORM\ManyToOne(targetEntity="\Concrete\Core\Entity\Attribute\Category")
@@ -177,37 +175,46 @@ class Key implements AttributeKeyInterface, ExportableInterface
     /**
      * @return mixed
      */
-    public function getAttributeKeyType()
+    public function getAttributeKeySettings()
     {
-        return $this->key_type;
+        if (isset($this->settings)) {
+            return $this->settings;
+        }
+
+        return $this->getController()->getAttributeKeySettings();
     }
 
     /**
      * @param mixed $type
      */
-    public function setAttributeKeyType($key_type)
+    public function setAttributeKeySettings($settings)
     {
-        $this->key_type = $key_type;
+        $this->settings = $settings; // This allows us to pass it around more easily
+    }
+
+    /**
+     * @param \Concrete\Core\Entity\Attribute\Type $type
+     */
+    public function setAttributeType($type)
+    {
+        $this->type = $type;
     }
 
     public function getAttributeType()
     {
-        return $this->getAttributeKeyType()->getAttributeType();
+        return $this->type;
     }
 
     public function getAttributeTypeHandle()
     {
-        return $this->getAttributeKeyType()->getAttributeType()->getAttributeTypeHandle();
+        return $this->type->getAttributeTypeHandle();
     }
 
     public function getController()
     {
-        $type = $this->getAttributeKeyType();
-        if ($type) {
-            $controller = $type->getAttributeType()->getController();
-            $controller->setAttributeKey($this);
-            return $controller;
-        }
+        $controller = $this->type->getController();
+        $controller->setAttributeKey($this);
+        return $controller;
     }
 
     public function getAttributeKeyCategoryHandle()
@@ -215,20 +222,21 @@ class Key implements AttributeKeyInterface, ExportableInterface
         return false;
     }
 
-    /**
-     * This is redundant given we already have the handle but we're actually adding this
-     * for backward compatibility so we have an akCategoryID association column.
-     * @return Category
-     */
-    public function getAttributeCategory()
+    public function getAttributeCategoryEntity()
     {
         return $this->category;
+    }
+
+    public function getAttributeCategory()
+    {
+        $manager = \Core::make('manager/attribute/category');
+        return $manager->driver($this->getAttributeKeyCategoryHandle());
     }
 
     /**
      * @param mixed $category
      */
-    public function setAttributeCategory($category)
+    public function setAttributeCategoryEntity($category)
     {
         $this->category = $category;
     }
@@ -300,6 +308,14 @@ class Key implements AttributeKeyInterface, ExportableInterface
             $set = Set::getByHandle($set);
         }
         $set->addKey($this);
+    }
+
+    /**
+     * @deprecated
+     */
+    public function getAttributeValueIDList()
+    {
+        return array();
     }
 
 }

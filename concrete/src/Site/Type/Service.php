@@ -56,6 +56,11 @@ class Service
         $this->entityManager->flush();
     }
 
+    public function import($handle, $name, Package $pkg = null)
+    {
+        return $this->add($handle, $name, $pkg);
+    }
+
     public function add($handle, $name, Package $pkg = null)
     {
         $factory = new Factory();

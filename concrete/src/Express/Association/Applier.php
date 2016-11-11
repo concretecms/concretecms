@@ -23,6 +23,9 @@ class Applier
             $oneAssociation = new Entry\OneAssociation();
             $oneAssociation->setAssociation($association);
             $oneAssociation->setEntry($entry);
+        } else {
+            // We clear out the one association
+            $oneAssociation->getSelectedEntries()->remove(0);
         }
 
         $oneAssociation->setSelectedEntry($associatedEntry);
@@ -39,8 +42,8 @@ class Applier
             $manyAssociation->setAssociation($inversedAssocation);
         }
         $manyAssociation->setEntry($associatedEntry);
-        if (!$manyAssociation->getSelectedEntries()->contains($entry)) {
-            $manyAssociation->getSelectedEntries()->add($entry);
+        if (!$manyAssociation->getSelectedEntriesCollection()->contains($entry)) {
+            $manyAssociation->getSelectedEntriesCollection()->add($entry);
         }
         $this->entityManager->persist($manyAssociation);
         $this->entityManager->flush();
@@ -57,6 +60,7 @@ class Applier
         }
         $manyAssociation->setSelectedEntries($associatedEntries);
         $this->entityManager->persist($manyAssociation);
+        $this->entityManager->flush();
 
         // Now, we go to the inverse side, and we get all possible entries. We loop through them to see whether they're in the associated entries array
         $entity = $association->getTargetEntity();
@@ -70,6 +74,9 @@ class Applier
                     ->findOneBy(['target_property_name' => $association->getInversedByPropertyName()]);
                 $oneAssociation = new Entry\OneAssociation();
                 $oneAssociation->setAssociation($inversedAssocation);
+            } else {
+                // We clear out the one association
+                $oneAssociation->getSelectedEntriesCollection()->remove(0);
             }
             $oneAssociation->setEntry($possibleResult);
             if (in_array($possibleResult, $associatedEntries)) {
@@ -109,8 +116,8 @@ class Applier
                 $manyAssociation->setAssociation($inversedAssocation);
             }
             $manyAssociation->setEntry($associatedEntry);
-            if (!$manyAssociation->getSelectedEntries()->contains($entry)) {
-                $manyAssociation->getSelectedEntries()->add($entry);
+            if (!$manyAssociation->getSelectedEntriesCollection()->contains($entry)) {
+                $manyAssociation->getSelectedEntriesCollection()->add($entry);
             }
             $this->entityManager->persist($manyAssociation);
         }
@@ -125,6 +132,9 @@ class Applier
             $oneAssociation = new Entry\OneAssociation();
             $oneAssociation->setAssociation($association);
             $oneAssociation->setEntry($entry);
+        } else {
+            // We clear out the one association
+            $oneAssociation->getSelectedEntriesCollection()->remove(0);
         }
 
         $oneAssociation->setSelectedEntry($associatedEntry);
@@ -137,6 +147,9 @@ class Applier
                 ->findOneBy(['target_property_name' => $association->getInversedByPropertyName()]);
             $oneAssociation = new Entry\OneAssociation();
             $oneAssociation->setAssociation($inversedAssocation);
+        } else {
+            // We clear out the one association
+            $oneAssociation->getSelectedEntriesCollection()->remove(0);
         }
         $oneAssociation->setEntry($associatedEntry);
         $oneAssociation->setSelectedEntry($entry);
@@ -153,7 +166,7 @@ class Applier
                 'Concrete\Core\Entity\Express\Association')
                 ->findOneBy(['target_property_name' => $association->getInversedByPropertyName()]);
 
-            $associatedEntries = $entryAssociation->getSelectedEntries();
+            $associatedEntries = $entryAssociation->getSelectedEntriesCollection();
             foreach($associatedEntries as $associatedEntry) {
                 $associatedEntryAssociation = $associatedEntry->getAssociation($inversedAssocation);
                 if (is_object($associatedEntryAssociation)) {

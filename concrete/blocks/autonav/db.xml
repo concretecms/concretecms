@@ -20,7 +20,6 @@
       <notnull/>
     </field>
     <field name="displayPagesIncludeSelf" type="boolean">
-      <unsigned/>
       <default value="0"/>
       <notnull/>
     </field>
@@ -36,12 +35,6 @@
       <notnull/>
     </field>
     <field name="displayUnavailablePages" type="boolean">
-      <unsigned/>
-      <default value="0"/>
-      <notnull/>
-    </field>
-    <field name="displaySystemPages" type="smallint">
-      <unsigned/>
       <default value="0"/>
       <notnull/>
     </field>

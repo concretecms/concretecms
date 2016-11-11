@@ -4,6 +4,7 @@
     <label class="control-label"><?=$label?></label>
     <?php
     if (!empty($entities)) {
+        $selectedEntity = $selectedEntities[0];
         ?>
         <select class="form-control" name="express_association_<?=$control->getId()?>">
             <option value=""><?=t('** Choose %s', $control->getControlLabel())?></option>
@@ -12,7 +13,7 @@
                 ?>
                 <option
                     value="<?=$entity->getId()?>"
-                    <?php if (is_array($selectedEntities) && in_array($entity, $selectedEntities)) { ?>selected<?php } ?>
+                    <?php if (is_object($selectedEntity) && $selectedEntity->getID() == $entity->getID()) { ?>selected<?php } ?>
                 >
                     <?=$formatter->getEntryDisplayName($control, $entity)?>
                 </option>

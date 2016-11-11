@@ -7,9 +7,9 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="TopicAttributeValues")
+ * @ORM\Table(name="atTopic")
  */
-class TopicsValue extends Value
+class TopicsValue extends AbstractValue
 {
     /**
      * @ORM\OneToMany(targetEntity="\Concrete\Core\Entity\Attribute\Value\Value\SelectedTopic", mappedBy="value", cascade={"all"})
@@ -24,7 +24,6 @@ class TopicsValue extends Value
      */
     public function __construct()
     {
-        parent::__construct();
         $this->topics = new ArrayCollection();
     }
 

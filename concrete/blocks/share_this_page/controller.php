@@ -59,7 +59,7 @@ class Controller extends BlockController
 
     protected function getSelectedServices()
     {
-        $links = array();
+        $this->services = array();
         $db = Database::get();
         $services = $db->GetCol('select service from btShareThisPage where bID = ? order by displayOrder asc',
             array($this->bID)

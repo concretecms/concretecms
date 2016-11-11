@@ -24,8 +24,9 @@ class ImporterTest extends \FileStorageTestCase
             'FileVersionLog',
         ));
         $this->metadatas = array_merge($this->metadatas, array(
-            'Concrete\Core\Entity\Attribute\Key\Type\NumberType',
-            'Concrete\Core\Entity\Attribute\Key\Type\Type',
+            'Concrete\Core\Entity\Attribute\Key\Settings\NumberSettings',
+            'Concrete\Core\Entity\Attribute\Key\Settings\Settings',
+            'Concrete\Core\Entity\Attribute\Key\Settings\EmptySettings',
             'Concrete\Core\Entity\Attribute\Key\FileKey',
             'Concrete\Core\Entity\Attribute\Value\FileValue',
             'Concrete\Core\Entity\Attribute\Key\Key',

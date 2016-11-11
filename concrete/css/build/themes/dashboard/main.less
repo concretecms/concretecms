@@ -63,9 +63,9 @@ div#ccm-dashboard-content {
   > header {
     margin-left: -97px;
     margin-right: -50px;
-    margin-bottom: 30px;
     padding: 39px 80px 39px 97px;
     position: relative;
+    font-size: 14px;
 
     h1 {
       font-size: 22px;
@@ -79,7 +79,7 @@ div#ccm-dashboard-content {
 
     background-color: #f3f3f3;
     /**
-     * since moving from margin to padding we dont' need this anymore
+     * since moving from margin to padding wte dont' need this anymore
 
     margin-bottom: 30px;
     */
@@ -150,50 +150,9 @@ div#ccm-dashboard-content {
 
   }
 
-  header + div.ccm-dashboard-content-full {
-    margin-top: -30px;
-  }
-
   /**
-   * Kind of weird, these are both meant to position the menus at the
-   * exact same place, but one is inside <header> which has position
-   * relative so it can't have as much top, and one is in the page,
-   * so it has more top
-   */
-  div.ccm-dashboard-header-menu {
-    position: absolute;
-    top: 34px;
-    right: 50px;
-
-    div.ccm-dashboard-header-buttons {
-      display: block !important;
-    }
-  }
-
-  div.ccm-dashboard-header-buttons {
-    display: none; /* So we don't show buttons until they get moved into the header menu */
-  }
-  /*
-   * Not needed any longer. If the legacy header buttons appears in the page we move its contents into the header menu
-   */
-  /*
-  div.ccm-dashboard-header-buttons {
-    position: absolute;
-    top: 82px;
-    right: 50px;
-  }
-
-  header {
-    div.ccm-dashboard-header-buttons {
-      top: 35px;
-    }
-
-  }
-
-*/
-
-  /**
- * Form updates for dashboard
+ * Form updates for dashboard. Note, you have to opt into
+ * the negative margin updates by placing them into a fieldset
  */
   fieldset {
     legend {
@@ -309,10 +268,6 @@ div#ccm-dashboard-content {
       margin-right: -20px;
       padding: 39px 20px 39px 20px;
 
-      h1 {
-        margin-bottom: 20px;
-      }
-
       a.ccm-dashboard-page-header-bookmark {
         display: none;
       }
@@ -357,16 +312,6 @@ div#ccm-dashboard-content {
       padding-right: 15px !important;
     }
 
-    /*
-    div.ccm-dashboard-header-buttons {
-      top: 118px;
-    }
-    */
-
-    div.ccm-dashboard-header-menu {
-      top: 70px;
-    }
-
     > form div.form-group {
       padding-left: 20px;
       padding-right: 20px;
@@ -376,13 +321,14 @@ div#ccm-dashboard-content {
 
   }
 
-  div.ccm-dashboard-header-menu {
-    right: auto;
-    left: 20px;
-  }
-
 }
 
+div#ccm-dashboard-content-inner {
+  padding-top: 30px;
+  div.ccm-dashboard-content-full {
+    margin-top: -30px;
+  }
+}
 div.ccm-dashboard-my-account {
   div#ccm-dashboard-content {
     > header {
@@ -425,6 +371,7 @@ div.ccm-system-errors {
   }
 }
 
+@import "./header.less";
 @import "./welcome.less";
 @import "./welcome/site-activity.less";
 @import "./welcome/rss-displayer.less";

@@ -134,10 +134,17 @@ if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScre
         }
     }
     $thisURL = $view->url('/dashboard/extend/install');
-    $availableArray = $pkgAvailableArray;
-    usort($availableArray, function ($a, $b) {
-        return strcasecmp($a->getPackageName(), $b->getPackageName());
+    $sortMe = [];
+    foreach ($pkgAvailableArray as $p) {
+        $sortMe[] = ['name' => $p->getPackageName(), 'pkg' => $p];
+    }
+    usort($sortMe, function (array $a, array $b) {
+        return strcasecmp($a['name'], $b['name']);
     });
+    $availableArray = [];
+    foreach ($sortMe as $p) {
+        $availableArray[] = $p['pkg'];
+    }
     // Load featured add-ons from the marketplace.
     if ($mi !== null && $mi->isConnected() && Config::get('concrete.marketplace.enabled') && $tp->canInstallPackages()) {
         $purchasedBlocksSource = Marketplace::getAvailableMarketplaceItems();

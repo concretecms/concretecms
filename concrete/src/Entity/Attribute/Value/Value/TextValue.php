@@ -5,12 +5,12 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="TextAttributeValues")
+ * @ORM\Table(name="atDefault")
  */
-class TextValue extends Value
+class TextValue extends AbstractValue
 {
     /**
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="text", nullable=true)
      */
     protected $value = '';
 

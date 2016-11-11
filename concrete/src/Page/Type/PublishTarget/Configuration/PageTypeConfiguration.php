@@ -31,6 +31,15 @@ class PageTypeConfiguration extends Configuration
         $this->selectorFormFactor = $selectorFormFactor;
     }
 
+    public function getDefaultParentPageID()
+    {
+        $db = \Database::connection();
+        $ids = $db->GetCol('select cID from Pages where ptID = ? and cIsTemplate = 0 and cIsActive = 1', [$this->getPageTypeID()]);
+        if (count($ids) == 1) {
+            return $ids[0];
+        }
+    }
+
     /**
      * @return mixed
      */

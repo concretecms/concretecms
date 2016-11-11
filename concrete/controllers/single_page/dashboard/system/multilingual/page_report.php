@@ -18,7 +18,7 @@ class PageReport extends DashboardSitePageController
         $list = MultilingualSection::getList($this->getSite());
         $sections = array();
         usort($list, function ($item) {
-           if ($item->getLocale() == $this->getSite()->getConfigRepository()->get('multilingual.default_locale')) {
+           if ($item->getLocale() == $this->getSite()->getDefaultLocale()->getLocale()) {
                return -1;
            } else {
                return 1;

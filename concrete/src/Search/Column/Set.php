@@ -11,6 +11,15 @@ class Set
         $this->columns[] = $col;
     }
 
+    public function removeColumnByKey($key)
+    {
+        foreach($this->columns as $i => $column) {
+            if ($key == $column->getColumnKey()) {
+                unset($this->columns[$i]);
+            }
+        }
+    }
+
     public function __sleep()
     {
         return array('columns', 'defaultSortColumn');

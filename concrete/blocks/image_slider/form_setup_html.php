@@ -25,6 +25,11 @@ echo Core::make('helper/concrete/ui')->tabs($tabs);
             $obj.click(function() {
                 var deleteIt = confirm('<?php echo t('Are you sure?'); ?>');
                 if (deleteIt === true) {
+                    var slideID = $(this).closest('.ccm-image-slider-entry').find('.editor-content').attr('id');
+                    if (typeof CKEDITOR === 'object') {
+                        CKEDITOR.instances[slideID].destroy();
+                    }
+
                     $(this).closest('.ccm-image-slider-entry-<?php echo $bID?>').remove();
                     doSortCount();
                 }
@@ -326,7 +331,7 @@ echo Core::make('helper/concrete/ui')->tabs($tabs);
         <div class="form-group" >
             <label><?php echo t('Description'); ?></label>
             <div class="editor-edit-content"></div>
-            <textarea style="display: none" class="editor-content editor-content-<?php echo $bID?>" name="<?php echo $view->field('description'); ?>[]"><%=description%></textarea>
+            <textarea id="ccm-slide-editor-<%= _.uniqueId() %>" style="display: none" class="editor-content editor-content-<?php echo $bID?>" name="<?php echo $view->field('description'); ?>[]"><%=description%></textarea>
         </div>
         <div class="form-group" >
            <label><?php echo t('Link'); ?></label>

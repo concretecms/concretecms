@@ -14,7 +14,6 @@ class ProgressList extends PageList
     public function __construct()
     {
         $this->includeInactivePages();
-        $this->includeSystemPages();
         $this->displayUnapprovedPages();
         $this->ignoreAliases();
         parent::setBaseQuery(', pwp.wpID, wp.wpCurrentStatus');

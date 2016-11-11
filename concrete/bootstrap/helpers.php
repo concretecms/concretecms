@@ -141,7 +141,7 @@ function core_class($class, $prefix = false)
         if (substr($class, 0, 5) == "Core\\") {
             if ($prefix !== true) {
                 $x = $app->make('Concrete\Core\Package\PackageService')->getClass($prefix);
-                if (!$x->enableLegacyNamespace()) {
+                if (!$x->shouldEnableLegacyNamespace()) {
                     $class = substr($class, 5);
                 } else {
                     $class = "Src\\" . substr($class, 5);
@@ -187,7 +187,7 @@ function overrideable_core_class($class, $path, $pkgHandle = null)
             return core_class($class, true);
         }
     }
-    
+
     $r = $env->getRecord($path);
     $prefix = $r->override ? true : $pkgHandle;
 
@@ -278,7 +278,7 @@ function array_to_object($o, $array)
  * @param $o
  * @param bool $maxDepth
  */
-function var_dump_safe($o, $maxDepth = true)
+function var_dump_safe($o, $echo = true, $maxDepth = true)
 {
-    return Doctrine\Common\Util\Debug::dump($o, $maxDepth);
+    return Doctrine\Common\Util\Debug::dump($o, $maxDepth, true, $echo);
 }

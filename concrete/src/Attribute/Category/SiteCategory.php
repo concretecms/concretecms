@@ -43,15 +43,20 @@ class SiteCategory extends AbstractStandardCategory
         );
     }
 
-    public function getAttributeRepository()
+    public function getAttributeKeyRepository()
     {
         return $this->entityManager->getRepository('\Concrete\Core\Entity\Attribute\Key\SiteKey');
     }
 
+    public function getAttributeValueRepository()
+    {
+        return $this->entityManager->getRepository('\Concrete\Core\Entity\Attribute\Value\SiteValue');
+    }
+
+
     public function getAttributeValues($site)
     {
-        $r = $this->entityManager->getRepository('\Concrete\Core\Entity\Attribute\Value\SiteValue');
-        $values = $r->findBy(array(
+        $values = $this->getAttributeValueRepository()->findBy(array(
             'site' => $site,
         ));
         return $values;

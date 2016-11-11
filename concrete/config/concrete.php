@@ -7,9 +7,9 @@ return array(
      *
      * @var string
      */
-    'version' => '8.0.0b6',
-    'version_installed' => '8.0.0b6',
-    'version_db' => '20160725000000', // the key of the latest database migration
+    'version' => '8.0.0RC2',
+    'version_installed' => '8.0.0RC2',
+    'version_db' => '20161109000000', // the key of the latest database migration
 
     /*
      * Installation status
@@ -81,6 +81,24 @@ return array(
         'extensions' => '*.flv;*.jpg;*.gif;*.jpeg;*.ico;*.docx;*.xla;*.png;*.psd;*.swf;*.doc;*.txt;*.xls;*.xlsx;' .
             '*.csv;*.pdf;*.tiff;*.rtf;*.m4a;*.mov;*.wmv;*.mpeg;*.mpg;*.wav;*.3gp;*.avi;*.m4v;*.mp4;*.mp3;*.qt;*.ppt;' .
             '*.pptx;*.kml;*.xml;*.svg;*.webm;*.ogg;*.ogv',
+    ),
+
+    /*
+     * ------------------------------------------------------------------------
+     * Interface settings
+     * ------------------------------------------------------------------------
+     */
+    'interface' => array(
+
+        'panel' => array(
+
+            /**
+             * Enable the page relations panel
+             */
+            'page_relations' => false,
+
+        ),
+
     ),
 
     /*
@@ -313,7 +331,7 @@ return array(
          */
         'enabled' => true,
         'default' => array(
-            'address' => 'concrete5-noreply@' . (isset($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : 'localhost'),
+            'address' => 'concrete5-noreply@concrete5',
             'name' => '',
         ),
         'form_block' => array(
@@ -540,6 +558,7 @@ return array(
         'background_feed' => '//backgroundimages.concrete5.org/wallpaper',
         'background_feed_secure' => 'https://backgroundimages.concrete5.org/wallpaper',
         'background_info' => 'http://backgroundimages.concrete5.org/get_image_data.php',
+        'videos' => 'https://www.youtube.com/user/concrete5cms/videos',
         'help' => array(
             'developer' => 'http://www.concrete5.org/documentation/developers/5.7/',
             'user' => 'http://www.concrete5.org/documentation/using-concrete5-7',
