@@ -2,16 +2,21 @@
 namespace Concrete\Core\Console\Command;
 
 use Concrete\Core\Package\Routine\AttachModeCompatibleRoutineInterface;
+use Concrete\Core\Support\Facade\Application;
+use Config;
+use Database;
 use Doctrine\DBAL\Connection;
+use Exception;
+use StartingPointPackage;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Helper\QuestionHelper;
+use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Exception;
-use Database;
-use Config;
-use StartingPointPackage;
-use Concrete\Core\Support\Facade\Application;
+use Symfony\Component\Console\Question\ChoiceQuestion;
+use Symfony\Component\Console\Question\ConfirmationQuestion;
+use Symfony\Component\Console\Question\Question;
 
 class InstallCommand extends Command
 {
@@ -38,6 +43,7 @@ class InstallCommand extends Command
             ->addOption('config', null, InputOption::VALUE_REQUIRED, 'Use configuration file for installation')
             ->addOption('attach', null, InputOption::VALUE_NONE, 'Attach if database contains an existing concrete5 instance')
             ->addOption('force-attach', null, InputOption::VALUE_NONE, 'Always attach')
+            ->addOption('interactive', 'i', InputOption::VALUE_NONE, 'Install using interactive (wizard) mode')
             ->setHelp(<<<EOT
 Returns codes:
   0 operation completed successfully
@@ -45,8 +51,7 @@ Returns codes:
 
 More info at http://documentation.concrete5.org/developers/appendix/cli-commands#c5-install
 EOT
-            )
-        ;
+            );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -55,9 +60,9 @@ EOT
         try {
             $app = Application::getFacadeApplication();
             $options = $input->getOptions();
-            if (isset($options['config'])) {
+            if (isset($options['config']) && $options['config'] && strtolower($options['config']) !== 'none') {
                 if (!is_file($options['config'])) {
-                    throw new Exception('Unable to find the configuration file '.$options['config']);
+                    throw new Exception('Unable to find the configuration file ' . $options['config']);
                 }
                 $configOptions = include $options['config'];
                 if (!is_array($configOptions)) {
@@ -69,7 +74,7 @@ EOT
                     }
                 }
             }
-            if (file_exists(DIR_CONFIG_SITE.'/database.php')) {
+            if (file_exists(DIR_CONFIG_SITE . '/database.php')) {
                 throw new Exception('concrete5 is already installed.');
             }
             if (isset($options['site-locale'])) {
@@ -115,14 +120,14 @@ EOT
                 $e->add('SimpleXML and DOM must be enabled to install concrete5.');
             }
             if (!$cnt->get('phpVtest')) {
-                $e->add('concrete5 requires PHP '.$cnt->getMinimumPhpVersion().' or greater.');
+                $e->add('concrete5 requires PHP ' . $cnt->getMinimumPhpVersion() . ' or greater.');
             }
             if (is_object($fileWriteErrors)) {
                 $e->add($fileWriteErrors);
             }
             $spl = StartingPointPackage::getClass($options['starting-point']);
             if ($spl === null) {
-                $e->add('Invalid starting-point: '.$options['starting-point']);
+                $e->add('Invalid starting-point: ' . $options['starting-point']);
             }
             if (!$e->has()) {
                 $_POST['DB_SERVER'] = $options['db-server'];
@@ -194,10 +199,218 @@ EOT
             }
             $output->writeln('<info>Installation Complete!</info>');
         } catch (Exception $x) {
-            $output->writeln('<error>'.$x->getMessage() . '('. $x->getTraceAsString().')</error>');
+            $output->writeln('<error>' . $x->getMessage() . '(' . $x->getTraceAsString() . ')</error>');
             $rc = 1;
         }
 
         return $rc;
     }
+
+    /**
+     * @param \Symfony\Component\Console\Input\InputInterface $input
+     * @param \Symfony\Component\Console\Output\OutputInterface $output
+     */
+    protected function interact(InputInterface $input, OutputInterface $output)
+    {
+        // If we're in interactive mode, fire up the wizard
+        if ($input->getOption('interactive')) {
+            /** @var QuestionHelper $helper */
+            $helper = $this->getHelper('question');
+
+            // Get the wizard generator
+            $wizard = $this->getWizard($input);
+            $hidden = [];
+
+            // Loop over the questions
+            foreach ($wizard as $key => $question) {
+                if ($question->isHidden()) {
+                    // If this question is hidden, lets store its key for later
+                    $hidden[] = $key;
+                }
+
+                // Set the option value to the result of asking the question
+                $input->setOption($key, $helper->ask($input, $output, $question));
+            }
+
+            // Lets output a table with the provided options for review
+            $table = new Table($output);
+            foreach ($this->getDefinition()->getOptions() as $option) {
+                if ($option->isValueRequired()) {
+                    $name = $option->getName();
+                    $value = $input->getOption($name) ?: '';
+
+                    // If this question had hidden output, lets not show it now
+                    if ($value && in_array($name, $hidden)) {
+                        $value = '<options=bold>HIDDEN</>';
+                    }
+
+                    $table->addRow([$name, $value]);
+                }
+            }
+
+            $table->setHeaders(['Question', 'Value']);
+            $table->render();
+
+            $confirm = new ConfirmationQuestion('Would you like to install with these settings? [ y / <options=bold>N</> ]: ',
+                false);
+
+            // Cancel if they said no
+            if (!$helper->ask($input, $output, $confirm)) {
+                $output->writeln('Installation cancelled.');
+                exit;
+            }
+
+            // Add a bit of padding
+            $output->writeln('');
+        }
+    }
+
+    /**
+     * Do some procedural work to a row in the wizard step list to turn it into a proper question
+     * @param $row
+     * @param \Symfony\Component\Console\Input\InputInterface $input
+     * @return \Symfony\Component\Console\Question\Question
+     */
+    private function getQuestion($row, InputInterface $input)
+    {
+        $definition = $this->getDefinition();
+
+        // Define default values
+        $row = (array)$row;
+        $default = null;
+        $mutator = null;
+
+        // Grab the key which is always first
+        $key = array_shift($row);
+
+        // If there's more stuff, this is probably the default value
+        if ($row) {
+            $default = array_shift($row);
+        }
+
+        // If the default value is callable, it's probably actually the mutator
+        if (is_callable($default)) {
+            $mutator = $default;
+            $default = null;
+        } elseif ($row) { // Otherwise if there's still items, the mutator is last.
+            $mutator = array_shift($row);
+        }
+
+        // If a value is provided already, use that as the default
+        if ($provided = $input->getOption($key)) {
+            $default = $provided;
+        }
+
+        // If we don't have a default, use the default from the InputOption
+        $option = $definition->getOption($key);
+        if (!$default) {
+            $default = $option->getDefault();
+        }
+
+        // Create the new question deriving the question from the info we have
+        $question = new Question($this->getQuestionString($option, $default), $default);
+
+        // If we have a callable mutator, lets let it modify or replace the question
+        if (is_callable($mutator)) {
+            $question = $mutator($question, $input, $option);
+        }
+
+        return $question;
+    }
+
+    /**
+     * A wizard generator
+     * @param $input
+     * @return \Generator|Question[]
+     */
+    private function getWizard(InputInterface $input)
+    {
+        $questions = $this->wizardSteps();
+
+        // Loop over the questions, parse them, then yield them out
+        foreach ($questions as $question) {
+            $question = (array)$question;
+            yield $question[0] => $this->getQuestion($question, $input);
+        }
+    }
+
+    /**
+     * Take an option and return a question string
+     * @param \Symfony\Component\Console\Input\InputOption $option
+     * @param $default
+     * @return string
+     */
+    private function getQuestionString(InputOption $option, $default)
+    {
+        if ($default) {
+            return sprintf("%s? [Default: <options=bold>%s</>]: ", $option->getDescription(), $default);
+        }
+
+        return sprintf("%s?: ", $option->getDescription());
+    }
+
+    /**
+     * An array of steps
+     * Items: [ "option-name", "default-value", function($question, $input, $option) : $question ]
+     * @return array
+     */
+    private function wizardSteps()
+    {
+        return [
+            ['db-server', '127.0.0.1'],
+            'db-database',
+            'db-username',
+            [
+                'db-password',
+                function (Question $question, InputInterface $input) {
+                    return $question->setHidden(true);
+                }
+            ],
+            ['site', 'concrete5'],
+            'canonical-url',
+            'canonical-ssl-url',
+            [
+                'starting-point',
+                'elemental_blank',
+                function (Question $question, InputInterface $input) {
+                    return new ChoiceQuestion($question->getQuestion(), ['elemental_full', 'elemental_blank'],
+                        $question->getDefault());
+                }
+            ],
+            'admin-email',
+            [
+                'admin-password',
+                function (Question $question, InputInterface $input) {
+                    $question->setNormalizer(function ($answer) {
+                        $error = new \ArrayObject();
+                        if (Application::getFacadeApplication()->make('validator/password')->isValid($answer, $error)) {
+                            return $answer;
+                        }
+
+                        throw new \Exception(implode("\n", $error->getArrayCopy()));
+                    });
+                    return $question->setHidden(true);
+                }
+            ],
+            'demo-username',
+            'demo-email',
+            [
+                'demo-password',
+                function (Question $question, InputInterface $input) {
+                    return $question->setHidden(true);
+                }
+            ],
+            ['language', 'en_US'],
+            [
+                'site-locale',
+                function (Question $question, InputInterface $input, InputOption $option) {
+                    $newDefault = $input->getOption('language');
+                    $newQuestion = $this->getQuestionString($option, $newDefault);
+                    return new Question($newQuestion, $newDefault);
+                }
+            ],
+            ['config', 'none']
+        ];
+    }
+
 }
