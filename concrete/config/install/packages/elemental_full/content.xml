@@ -187,7 +187,6 @@
                                                 <previousLabel><![CDATA[Last Post]]></previousLabel>
                                                 <parentLabel><![CDATA[]]></parentLabel>
                                                 <loopSequence><![CDATA[0]]></loopSequence>
-                                                <excludeSystemPages><![CDATA[1]]></excludeSystemPages>
                                                 <orderBy><![CDATA[chrono_desc]]></orderBy>
                                             </record>
                                         </data>
@@ -871,7 +870,7 @@
         </stack>
     </stacks>
     <pages>
-        <page name="Home" path="" filename="" pagetype="page" template="full" user="admin" description="" package="">
+        <page name="Home" path="" filename="" template="full" user="admin" description="" package="">
             <attributes>
                 <attributekey handle="exclude_nav">
                     <value>1</value>

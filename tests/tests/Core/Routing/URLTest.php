@@ -21,8 +21,14 @@ class URLTest extends PHPUnit_Framework_TestCase
      */
     public function setUp()
     {
+        $locale = new \Concrete\Core\Entity\Site\Locale();
+        $locale->setCountry('US');
+        $locale->setLanguage('en');
+        $siteTree = new \Concrete\Core\Entity\Site\SiteTree();
+        $siteTree->setLocale($locale);
         $service = Core::make('helper/navigation');
         $page = new Page();
+        $page->siteTree = $siteTree;
         $page->cPath = '/path/to/my/page';
         $page->error = false;
         $dashboard = new Page();
@@ -30,6 +36,8 @@ class URLTest extends PHPUnit_Framework_TestCase
         $dashboard->error = false;
         $this->page = $page;
         $this->dashboard = $dashboard;
+        $page->siteTree = $siteTree;
+        $dashboard->siteTree = $siteTree;
         $this->service = $service;
         Config::set('concrete.seo.url_rewriting', false);
         Config::set('concrete.seo.url_rewriting_all', false);
@@ -293,12 +301,19 @@ class URLTest extends PHPUnit_Framework_TestCase
 
     public function testPagesWithNoPaths()
     {
+        $locale = new \Concrete\Core\Entity\Site\Locale();
+        $locale->setCountry('US');
+        $locale->setLanguage('en');
+        $siteTree = new \Concrete\Core\Entity\Site\SiteTree();
+        $siteTree->setLocale($locale);
+
         $home = new Page();
         $home->cID = 1;
         $home->cPath = '';
+        $home->siteTree = $siteTree;
 
         $url = \URL::to($home);
-        $this->assertEquals('http://www.dummyco.com/path/to/server/index.php', (string) $url);
+        $this->assertEquals('http://www.dummyco.com/path/to/server/index.php?cID='.$home->cID, (string) $url);
 
         $url = \URL::to('/');
         $this->assertEquals('http://www.dummyco.com/path/to/server/index.php', (string) $url);
@@ -306,6 +321,7 @@ class URLTest extends PHPUnit_Framework_TestCase
         $page = new Page();
         $page->cPath = null;
         $page->cID = 777;
+        $page->siteTree = $siteTree;
 
         $url = \URL::to($page);
         $this->assertEquals('http://www.dummyco.com/path/to/server/index.php?cID=777', (string) $url);

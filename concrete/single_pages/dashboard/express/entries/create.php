@@ -2,14 +2,13 @@
 
 <?php
 
-if (is_object($expressForm)) {
+if (is_object($renderer)) {
     ?>
 
     <form method="post" action="<?=$view->action('submit', $entity->getId())?>">
 
-
     <?php
-        echo $renderer->render($expressForm); ?>
+        echo $renderer->render(); ?>
 
         <div class="ccm-dashboard-form-actions-wrapper">
             <div class="ccm-dashboard-form-actions">

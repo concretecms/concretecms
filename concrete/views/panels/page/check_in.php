@@ -31,14 +31,16 @@ $require_version_comments = (bool) Config::get('concrete.misc.require_version_co
     <div id="ccm-check-in-schedule-wrapper">
         <?php $composer->displayPublishScheduleSettings($c); ?>
     </div>
-    <br/>
+    <br/><br/>
 
-        <div class="small">
-        <?php foreach ($publishErrors->getList() as $error): ?>
-            <div class="text-warning"><strong><i class="fa fa-warning"></i> <?=$error?></strong></div>
-            <br/>
-        <?php endforeach; ?>
-        </div>
+        <?php if (count($publishErrors->getList())) { ?>
+            <div class="small">
+            <?php foreach ($publishErrors->getList() as $error): ?>
+                <div class="text-warning"><strong><i class="fa fa-warning"></i> <?=$error?></strong></div>
+                <br/>
+            <?php endforeach; ?>
+            </div>
+        <?php } ?>
 
         <?php $pagetype = PageType::getByID($c->getPageTypeID()); ?>
         <?php if (count($publishErrors->getList()) && (is_object($pagetype))): ?>

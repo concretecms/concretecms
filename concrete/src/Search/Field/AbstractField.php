@@ -15,6 +15,13 @@ abstract class AbstractField implements FieldInterface
         return '';
     }
 
+    public function __construct($data = null)
+    {
+        if (is_array($data)) {
+            $this->data = $data;
+        }
+    }
+
     public function jsonSerialize()
     {
 

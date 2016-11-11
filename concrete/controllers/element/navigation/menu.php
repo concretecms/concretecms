@@ -84,7 +84,6 @@ class Menu extends ElementController
         $list = new PageList();
         $list->filterByExcludeNav(false);
         $list->sortByDisplayOrder();
-        $list->includeSystemPages();
         $list->filterByParentID($parent->getCollectionID());
         $pages = $list->getResults();
         return $pages;

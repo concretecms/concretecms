@@ -1,14 +1,13 @@
 <?php
 namespace Concrete\Core\Foundation\Runtime\Run;
 
-use Concrete\Core\Application\Application;
 use Concrete\Core\Application\ApplicationAwareInterface;
 use Concrete\Core\Console\Application as ConsoleApplication;
+use Concrete\Core\Application\ApplicationAwareTrait;
 
 class CLIRunner implements RunInterface, ApplicationAwareInterface
 {
-    /** @var Application */
-    protected $app;
+    use ApplicationAwareTrait;
 
     /** @var ConsoleApplication */
     protected $console;
@@ -28,6 +27,10 @@ class CLIRunner implements RunInterface, ApplicationAwareInterface
         $console = $this->console;
         $this->app->instance('console', $console);
 
+        $app = $this->app; // useful in bootstrap/app.php
+
+        include DIR_APPLICATION . '/bootstrap/app.php';
+
         if ($this->app->isInstalled()) {
             $this->app->setupPackageAutoloaders();
             $this->app->setupPackages();
@@ -40,15 +43,5 @@ class CLIRunner implements RunInterface, ApplicationAwareInterface
         $console->run();
 
         \Events::dispatch('on_after_console_run');
-    }
-
-    /**
-     * Set the application object.
-     *
-     * @param \Concrete\Core\Application\Application $application
-     */
-    public function setApplication(Application $application)
-    {
-        $this->app = $application;
     }
 }

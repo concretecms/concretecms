@@ -20,8 +20,7 @@ class Aliasing extends BackendInterfaceBlockController
         $pl->filterByPageTypeID($ct->getPageTypeID());
         $pl->filterByPageTemplate($template);
         $pl->ignorePermissions();
-        $pages = $pl->getResults();
-        $this->set('cList', $pages);
+        $this->set('total', $pl->getTotalResults());
     }
 
     public function submit()

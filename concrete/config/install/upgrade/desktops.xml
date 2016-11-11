@@ -1,0 +1,149 @@
+<?xml version="1.0"?>
+<concrete5-cif version="1.0">
+    <singlepages>
+
+        <page name="Welcome" path="/dashboard/welcome" filename="/dashboard/welcome.php" description="" package="">
+            <attributes>
+                <attributekey handle="desktop_priority">
+                    <value>2</value>
+                </attributekey>
+                <attributekey handle="is_desktop">
+                    <value>1</value>
+                </attributekey>
+                <attributekey handle="exclude_nav">
+                    <value>0</value>
+                </attributekey>
+            </attributes>
+            <area name="Main">
+                <blocks>
+                    <block type="desktop_app_status" name=""/>
+                    <block type="core_area_layout" name="">
+                        <arealayout type="theme-grid" columns="12">
+                            <columns>
+                                <column span="4" offset="0">
+                                    <block type="desktop_latest_form" name=""/>
+                                </column>
+                                <column span="4" offset="0">
+                                    <block type="desktop_featured_addon" name=""/>
+                                </column>
+                                <column span="4" offset="0">
+                                    <block type="desktop_site_activity" name="">
+                                        <data>
+                                            <type>form_submissions</type>
+                                            <type>survey_results</type>
+                                            <type>signups</type>
+                                            <type>conversation_messages</type>
+                                            <type>workflow</type>
+                                        </data>
+                                    </block>
+                                </column>
+                            </columns>
+                        </arealayout>
+                    </block>
+                    <block type="core_area_layout" name="">
+                        <arealayout type="theme-grid" columns="12">
+                            <columns>
+
+                                <column span="4" offset="0">
+                                    <block type="rss_displayer" name="">
+                                        <data table="btRssDisplay">
+                                            <record>
+                                                <title>Tutorials</title>
+                                                <url>http://documentation.concrete5.org/rss/tutorials</url>
+                                                <dateFormat>longDate</dateFormat>
+                                                <itemsToDisplay>1</itemsToDisplay>
+                                                <showSummary>1</showSummary>
+                                                <launchInNewWindow>1</launchInNewWindow>
+                                            </record>
+                                        </data>
+                                    </block>
+                                </column>
+                                <column span="8" offset="0">
+                                    <block type="desktop_featured_theme" name=""/>
+                                </column>
+                            </columns>
+                        </arealayout>
+                    </block>
+                    <block type="core_area_layout" name="">
+                        <arealayout type="theme-grid" columns="12">
+                            <columns>desktop_newsflow_latest
+                                <column span="4" offset="0">
+                                    <block type="desktop_newsflow_latest" name="">
+                                        <data table="btDesktopNewsflowLatest">
+                                            <record>
+                                                <slot>A</slot>
+                                            </record>
+                                        </data>
+                                    </block>
+                                </column>
+                                <column span="4" offset="0">
+                                    <block type="desktop_newsflow_latest" name="">
+                                        <data table="btDesktopNewsflowLatest">
+                                            <record>
+                                                <slot>B</slot>
+                                            </record>
+                                        </data>
+                                    </block>
+                                </column>
+                                <column span="4" offset="0">
+                                    <block type="desktop_newsflow_latest" name="">
+                                        <data table="btDesktopNewsflowLatest">
+                                            <record>
+                                                <slot>C</slot>
+                                            </record>
+                                        </data>
+                                    </block>
+                                </column>
+                            </columns>
+                        </arealayout>
+                    </block>
+                    <block type="rss_displayer" name="">
+                        <style>
+                            <customClass>concrete5-org-stories</customClass>
+                        </style>
+                        <data table="btRssDisplay">
+                            <record>
+                                <title>News from concrete5.org</title>
+                                <url>http://www.concrete5.org/rss/blog</url>
+                                <dateFormat>longDate</dateFormat>
+                                <itemsToDisplay>3</itemsToDisplay>
+                                <showSummary>1</showSummary>
+                                <launchInNewWindow>1</launchInNewWindow>
+                            </record>
+                        </data>
+                    </block>
+                </blocks>
+            </area>
+
+        </page>
+
+        <page name="Welcome Back" path="/desktop" root="true" custom-path="/account/welcome" filename="/desktop.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="desktop_priority">
+                    <value>1</value>
+                </attributekey>
+                <attributekey handle="is_desktop">
+                    <value>1</value>
+                </attributekey>
+                <attributekey handle="exclude_nav">
+                    <value>1</value>
+                </attributekey>
+            </attributes>
+            <area name="Main">
+                <blocks>
+                    <block type="desktop_waiting_for_me" />
+                </blocks>
+            </area>
+        </page>
+    </singlepages>
+
+    <pages>
+    <page name="Waiting for Me" path="/dashboard/welcome/me" filename="" pagetype="" template="desktop" description="" package="">
+        <area name="Main">
+            <blocks>
+                <block type="desktop_waiting_for_me" />
+            </blocks>
+        </area>
+    </page>
+    </pages>
+</concrete5-cif>

@@ -41,12 +41,12 @@ abstract class Package implements LocalizablePackageInterface
      * @var \Concrete\Core\Config\Repository\Liaison
      */
     protected $config;
-    
+
     /**
      * @var \Concrete\Core\Config\Repository\Liaison
      */
     protected $fileConfig;
-    
+
     /**
      * @deprecated
      * This will be set to FALSE in 8.1
@@ -59,14 +59,14 @@ abstract class Package implements LocalizablePackageInterface
     protected $pkgEnableLegacyNamespace = true;
 
     /**
-     * Array of namespace -> location autoloader entries for the package. Will automatically
-     * be added to the class loader.
+     * Array of location -> namespace autoloader entries for the package. Will automatically
+     * be added to the class loader. (e.g. array('src/PortlandLabs' => \PortlandLabs'))
      * @var array
      */
     protected $pkgAutoloaderRegistries = array();
 
     protected $appVersionRequired = '5.7.0';
-    
+
     protected $pkgAllowsFullContentSwap = false;
 
     protected $pkgContentProvidesFileThumbnails = false;
@@ -120,9 +120,16 @@ abstract class Package implements LocalizablePackageInterface
     }
 
     /**
+     * Should this pacakge enable legacy namespaces
+     *
+     * This returns true IF:
+     * 1. $this->pkgAutoloaderMapCoreExtensions is false or unset
+     * 2. The required package version > 7.9.9 meaning version 8 or newer
+     * 3. $this->pkgEnableLegacyNamespace is true
+     *
      * @return bool
      */
-    public function enableLegacyNamespace()
+    public function shouldEnableLegacyNamespace()
     {
         if (isset($this->pkgAutoloaderMapCoreExtensions) && $this->pkgAutoloaderMapCoreExtensions) {
             // We're no longer using this to denote non-legacy applications, but if a package uses this
@@ -130,7 +137,7 @@ abstract class Package implements LocalizablePackageInterface
             return false;
         }
 
-        $concrete5 = '5.8.0';
+        $concrete5 = '7.9.9';
         $package = $this->getApplicationVersionRequired();
         if (version_compare($package, $concrete5, '>')) {
             return false;
@@ -176,7 +183,7 @@ abstract class Package implements LocalizablePackageInterface
 
         return $this->fileConfig;
     }
-    
+
     /**
      * Returns custom autoloader prefixes registered by the class loader.
      * @return array Keys represent the namespace, not relative to the package's namespace. Values are the path, and are relative to the package directory.
@@ -288,16 +295,16 @@ abstract class Package implements LocalizablePackageInterface
 
         return $dirp . '/' . $this->pkgHandle;
     }
-    
+
     /**
      * Returns the path starting from c5 installation folder to the package folder
-     * 
+     *
      * @return string
      */
     public function getRelativePathFromInstallFolder(){
         return DIRECTORY_SEPARATOR . DIRNAME_PACKAGES . DIRECTORY_SEPARATOR . $this->getPackageHandle();
     }
-    
+
 
     public function getTranslationFile($locale)
     {
@@ -334,7 +341,6 @@ abstract class Package implements LocalizablePackageInterface
         $em->persist($package);
         $em->flush();
 
-        ClassLoader::getInstance()->registerPackage($this);
         $this->installDatabase();
 
         $env = \Environment::get();
@@ -651,12 +657,12 @@ abstract class Package implements LocalizablePackageInterface
     }
 
     public function installEntitiesDatabase()
-    {   
+    {
         $em = $this->getPackageEntityManager();
         if (is_object($em)) {
             $structure = new DatabaseStructureManager($em);
             $structure->installDatabase();
-        
+
             // Create or update entity proxies
             $metadata = $em->getMetadataFactory()->getAllMetadata();
             $em->getProxyFactory()->generateProxyClasses($metadata, $em->getConfiguration()->getProxyDir());
@@ -792,15 +798,15 @@ abstract class Package implements LocalizablePackageInterface
             return $em;
         }
     }
-    
+
     /**
-     * Destroys all proxies related to a package 
+     * Destroys all proxies related to a package
      */
     protected function destroyProxyClasses(\Doctrine\ORM\EntityManagerInterface $em)
     {
         $config = $em->getConfiguration();
         $proxyGenerator = new \Doctrine\Common\Proxy\ProxyGenerator($config->getProxyDir(), $config->getProxyNamespace());
-        
+
         $classes = $em->getMetadataFactory()->getAllMetadata();
         foreach ($classes as $class) {
             // We have to do this check because we include core entities in this list because without it packages that extend
@@ -814,7 +820,7 @@ abstract class Package implements LocalizablePackageInterface
             }
         }
     }
-    
+
     /**
      * @deprecated
      */

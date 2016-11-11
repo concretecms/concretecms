@@ -21,6 +21,11 @@ class ExpressCategory extends AbstractCategory
             . 'ExpressSearchIndexAttributes';
     }
 
+    public function getExpressEntity()
+    {
+        return $this->expressEntity;
+    }
+
     public function getSearchIndexer()
     {
         $indexer = $this->application->make('Concrete\Core\Attribute\Category\SearchIndexer\ExpressSearchIndexer');
@@ -31,6 +36,14 @@ class ExpressCategory extends AbstractCategory
     public function getIndexedSearchPrimaryKeyValue($mixed)
     {
         return $mixed->getID();
+    }
+
+    public function getSearchableIndexedList()
+    {
+        return $this->getAttributeKeyRepository()->findBy([
+            'entity' => $this->expressEntity,
+            'akIsSearchableIndexed' => true
+        ]);
     }
 
     public function getSearchIndexFieldDefinition()
@@ -45,6 +58,16 @@ class ExpressCategory extends AbstractCategory
             ],
             'primary' => ['exEntryID'],
         ];
+    }
+
+    public function deleteKey(Key $key)
+    {
+        $controls = $this->entityManager->getRepository('Concrete\Core\Entity\Express\Control\AttributeKeyControl')
+            ->findBy(['attribute_key' => $key]);
+        foreach($controls as $control) {
+            $this->entityManager->remove($control);
+        }
+        $this->entityManager->flush();
     }
 
     public function getSetManager()
@@ -67,9 +90,14 @@ class ExpressCategory extends AbstractCategory
         return new ExpressKey();
     }
 
-    public function getAttributeRepository()
+    public function getAttributeKeyRepository()
     {
         return $this->entityManager->getRepository('\Concrete\Core\Entity\Attribute\Key\ExpressKey');
+    }
+
+    public function getAttributeValueRepository()
+    {
+        return $this->entityManager->getRepository('\Concrete\Core\Entity\Attribute\Value\ExpressValue');
     }
 
     public function allowAttributeSets()
@@ -79,7 +107,7 @@ class ExpressCategory extends AbstractCategory
 
     public function getList()
     {
-        return $this->getAttributeRepository()->findBy(['entity' => $this->expressEntity]);
+        return $this->getAttributeKeyRepository()->findBy(['entity' => $this->expressEntity]);
     }
 
     public function getAttributeTypes()

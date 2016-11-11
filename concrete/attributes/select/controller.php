@@ -2,7 +2,7 @@
 namespace Concrete\Attribute\Select;
 
 use Concrete\Core\Attribute\FontAwesomeIconFormatter;
-use Concrete\Core\Entity\Attribute\Key\Type\SelectType;
+use Concrete\Core\Entity\Attribute\Key\Settings\SelectSettings;
 use Concrete\Core\Entity\Attribute\Value\Value\SelectValue;
 use Concrete\Core\Entity\Attribute\Value\Value\SelectValueOption;
 use Concrete\Core\Entity\Attribute\Value\Value\SelectValueOptionList;
@@ -28,6 +28,11 @@ class Controller extends AttributeTypeController
     public function getIconFormatter()
     {
         return new FontAwesomeIconFormatter('list-alt');
+    }
+
+    public function getAttributeValueObject()
+    {
+        return $this->entityManager->find(SelectValue::class, $this->attributeValue->getGenericValue());
     }
 
     public function type_form()
@@ -56,10 +61,10 @@ class Controller extends AttributeTypeController
             return false;
         }
 
-        /*
-         * @var SelectType
+        /**
+         * @var $type SelectSettings
          */
-        $type = $ak->getAttributeKeyType();
+        $type = $ak->getAttributeKeySettings();
         if (is_object($type)) {
 
             $this->akSelectAllowMultipleValues = $type->getAllowMultipleValues();
@@ -106,9 +111,9 @@ class Controller extends AttributeTypeController
     public function setAllowedMultipleValues($allow)
     {
         /**
-         * @var $type SelectType
+         * @var $type SelectSettings
          */
-        $type = $this->getAttributeKey()->getAttributeKeyType();
+        $type = $this->getAttributeKey()->getAttributeKeySettings();
         $type->setAllowMultipleValues($allow);
         $this->entityManager->persist($type);
         $this->entityManager->flush();
@@ -117,9 +122,9 @@ class Controller extends AttributeTypeController
     public function setAllowOtherValues($allow)
     {
         /**
-         * @var $type SelectType
+         * @var $type SelectSettings
          */
-        $type = $this->getAttributeKey()->getAttributeKeyType();
+        $type = $this->getAttributeKey()->getAttributeKeySettings();
         $type->setAllowOtherValues($allow);
         $this->entityManager->persist($type);
         $this->entityManager->flush();
@@ -128,9 +133,9 @@ class Controller extends AttributeTypeController
     public function setOptionDisplayOrder($order)
     {
         /**
-         * @var $type SelectType
+         * @var $type SelectSettings
          */
-        $type = $this->getAttributeKey()->getAttributeKeyType();
+        $type = $this->getAttributeKey()->getAttributeKeySettings();
         $type->setDisplayOrder($order);
         $this->entityManager->persist($type);
         $this->entityManager->flush();
@@ -139,9 +144,9 @@ class Controller extends AttributeTypeController
     public function setOptions($options)
     {
         /**
-         * @var $type SelectType
+         * @var $type SelectSettings
          */
-        $type = $this->getAttributeKey()->getAttributeKeyType();
+        $type = $this->getAttributeKey()->getAttributeKeySettings();
         $list = new SelectValueOptionList();
         $list->setOptions($options);
         $type->setOptionList($list);
@@ -151,7 +156,7 @@ class Controller extends AttributeTypeController
 
     public function importKey(\SimpleXMLElement $akey)
     {
-        $type = $this->getAttributeKeyType();
+        $type = $this->getAttributeKeySettings();
         if (isset($akey->type)) {
             $akSelectAllowMultipleValues = $akey->type['allow-multiple-values'];
             $akSelectOptionDisplayOrder = $akey->type['display-order'];
@@ -268,7 +273,7 @@ class Controller extends AttributeTypeController
 
         $akSelectAllowMultipleValues = $this->akSelectAllowMultipleValues;
         $akSelectAllowOtherValues = $this->akSelectAllowOtherValues;
-        $keyType = $this->attributeKey->getAttributeKeyType();
+        $keyType = $this->attributeKey->getAttributeKeySettings();
         $optionList = $keyType->getOptionList();
         if (!$akSelectAllowMultipleValues && !$akSelectAllowOtherValues) {
             // select list. Only one option possible. No new options.
@@ -384,7 +389,7 @@ class Controller extends AttributeTypeController
         $orm = \Database::connection()->getEntityManager();
         $repository = $orm->getRepository('\Concrete\Core\Entity\Attribute\Value\Value\SelectValueOption');
         if ($attributeKey) {
-            $existingList = $attributeKey->getAttributeKeyType()->getOptionList();
+            $existingList = $attributeKey->getAttributeKeySettings()->getOptionList();
         }
         if (isset($existingList) && is_object($existingList)) {
             $option = $repository->findOneBy(array(
@@ -546,7 +551,7 @@ class Controller extends AttributeTypeController
     {
         $em = \Database::get()->getEntityManager();
         $r = $em->getRepository('\Concrete\Core\Entity\Attribute\Value\Value\SelectValueOption');
-        $type = $this->attributeKey->getAttributeKeyType();
+        $type = $this->attributeKey->getAttributeKeySettings();
 
         $values = explode(',', $value);
         $response = array();
@@ -591,7 +596,7 @@ class Controller extends AttributeTypeController
     public function getOptionUsageArray($parentPage = false, $limit = 9999)
     {
         $db = Database::get();
-        $q = "select SelectAttributeValueOptions.value, SelectAttributeValueOptions.avSelectOptionID, count(SelectAttributeValueOptions.avSelectOptionID) as total from Pages inner join CollectionVersions on (Pages.cID = CollectionVersions.cID and CollectionVersions.cvIsApproved = 1) inner join CollectionAttributeValues on (CollectionVersions.cID = CollectionAttributeValues.cID and CollectionVersions.cvID = CollectionAttributeValues.cvID) inner join AttributeValues on CollectionAttributeValues.avrID = AttributeValues.avrID inner join SelectAttributeValueSelectedOptions on (SelectAttributeValueSelectedOptions.avID = AttributeValues.avID) inner join SelectAttributeValueOptions on SelectAttributeValueSelectedOptions.avSelectOptionID = SelectAttributeValueOptions.avSelectOptionID where Pages.cIsActive = 1 and AttributeValues.akID = ? ";
+        $q = "select atSelectOptions.value, atSelectOptions.avSelectOptionID, count(atSelectOptions.avSelectOptionID) as total from Pages inner join CollectionVersions on (Pages.cID = CollectionVersions.cID and CollectionVersions.cvIsApproved = 1) inner join CollectionAttributeValues on (CollectionVersions.cID = CollectionAttributeValues.cID and CollectionVersions.cvID = CollectionAttributeValues.cvID) inner join atSelectOptionsSelected on (atSelectOptionsSelected.avID = CollectionAttributeValues.avID) inner join atSelectOptions on atSelectOptionsSelected.avSelectOptionID = atSelectOptions.avSelectOptionID where Pages.cIsActive = 1 and CollectionAttributeValues.akID = ? ";
         $v = array($this->attributeKey->getAttributeKeyID());
         if (is_object($parentPage)) {
             $v[] = $parentPage->getCollectionID();
@@ -643,7 +648,7 @@ class Controller extends AttributeTypeController
             return array();
         }
 
-        if (!is_object($this->attributeKey->getAttributeKeyType())) {
+        if (!is_object($this->attributeKey->getAttributeKeySettings())) {
             return array();
         }
 
@@ -651,12 +656,13 @@ class Controller extends AttributeTypeController
             $this->load();
         }
 
-        $type = $this->attributeKey->getAttributeKeyType();
+        $type = $this->attributeKey->getAttributeKeySettings();
 
         $em = \Database::get()->getEntityManager();
         $r = $em->getRepository('\Concrete\Core\Entity\Attribute\Value\Value\SelectValueOption');
         $builder = $r->createQueryBuilder('v');
         $builder->where('v.list = :list');
+        $builder->andWhere('v.isDeleted = false');
         if ($keywords) {
             $builder->andWhere($builder->expr()->like('v.value', ':value'));
             $builder->setParameter('value', $keywords  . '%');
@@ -683,7 +689,7 @@ class Controller extends AttributeTypeController
     public function saveKey($data)
     {
 
-        $type = $this->getAttributeKeyType();
+        $type = $this->getAttributeKeySettings();
         $optionList = $type->getOptionList();
 
         $orm = $this->entityManager;
@@ -712,23 +718,19 @@ class Controller extends AttributeTypeController
 
         $selectedPostValues = $this->getSelectValuesFromPost();
 
-
-        foreach ($optionList->getOptions() as $iopt) {
-            if (!in_array($iopt, $selectedPostValues)) {
-                $orm->remove($iopt);
+        // handle removing existing options that aren't in the post.
+        foreach ($optionList->getOptions() as $option) {
+            if (!in_array($option, $selectedPostValues)) {
+                $option->setIsOptionDeleted(true);
             }
         }
 
-        $orm->flush();
-
-        // Now we add the options
-
+        // handle adding the options.
         foreach ($selectedPostValues as $option) {
-            /*
-             * @var $option SelectValueOption
-             */
-            $option->setOptionList($optionList);
-            $optionList->getOptions()->add($option);
+            if (!$option->getSelectAttributeOptionID()) { // this is a new option.
+                $option->setOptionList($optionList);
+                $optionList->getOptions()->add($option);
+            }
         }
 
         $type->setOptionList($optionList);
@@ -766,8 +768,14 @@ class Controller extends AttributeTypeController
         return $this->akSelectOptionDisplayOrder;
     }
 
-    public function createAttributeKeyType()
+    public function createAttributeKeySettings()
     {
-        return new SelectType();
+        return new SelectSettings();
     }
+
+    protected function retrieveAttributeKeySettings()
+    {
+        return $this->entityManager->find(SelectSettings::class, $this->attributeKey);
+    }
+
 }

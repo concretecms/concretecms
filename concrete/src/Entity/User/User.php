@@ -21,9 +21,21 @@ class User
     protected $uID;
 
     /**
-     * @ORM\ManyToMany(targetEntity="\Concrete\Core\Entity\Notification\Notification", mappedBy="subscribers", cascade={"remove"})
+     * @ORM\OneToMany(targetEntity="\Concrete\Core\Entity\Notification\NotificationAlert", cascade={"remove"}, mappedBy="user")
+     * @ORM\JoinColumn(name="uID", referencedColumnName="uID")
      */
-    protected $notifications;
+    protected $alerts;
+
+    /**
+     * @ORM\OneToOne(targetEntity="\Concrete\Core\Entity\User\UserSignup", mappedBy="user", cascade={"remove"})
+     */
+    protected $signup;
+
+    /**
+     * @ORM\OneToMany(targetEntity="\Concrete\Core\Entity\Attribute\Value\UserValue", cascade={"remove"}, mappedBy="user")
+     * @ORM\JoinColumn(name="uID", referencedColumnName="uID")
+     */
+    protected $attributes;
 
     /**
      * @ORM\Column(type="string", length=64, unique=true)

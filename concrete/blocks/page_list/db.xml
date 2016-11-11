@@ -19,29 +19,24 @@
       <notnull/>
     </field>
     <field name="cThis" type="boolean">
-      <unsigned/>
       <default value="0"/>
       <notnull/>
     </field>
     <field name="cThisParent" type="boolean">
-      <unsigned/>
       <default value="0"/>
       <notnull/>
     </field>
     <field name="useButtonForLink" type="boolean">
-      <unsigned/>
       <default value="0"/>
       <notnull/>
     </field>
     <field name="buttonLinkText" type="string" size="255"/>
     <field name="pageListTitle" type="string" size="255"/>
     <field name="filterByRelated" type="boolean">
-      <unsigned/>
       <default value="0"/>
       <notnull/>
     </field>
     <field name="filterByCustomTopic" type="boolean">
-      <unsigned/>
       <default value="0"/>
       <notnull/>
     </field>
@@ -68,42 +63,34 @@
       <notnull/>
     </field>
     <field name="includeName" type="boolean">
-      <unsigned/>
       <default value="1"/>
       <notnull/>
     </field>
     <field name="includeDescription" type="boolean">
-      <unsigned/>
       <default value="1"/>
       <notnull/>
     </field>
     <field name="includeDate" type="boolean">
-      <unsigned/>
       <default value="0"/>
       <notnull/>
     </field>
     <field name="includeAllDescendents" type="boolean">
-      <unsigned/>
       <default value="0"/>
       <notnull/>
     </field>
     <field name="paginate" type="boolean">
-      <unsigned/>
       <default value="0"/>
       <notnull/>
     </field>
     <field name="displayAliases" type="boolean">
-      <unsigned/>
       <default value="1"/>
       <notnull/>
     </field>
     <field name="ignorePermissions" type="boolean">
-      <unsigned/>
       <default value="0"/>
       <notnull/>
     </field>
     <field name="enableExternalFiltering" type="boolean">
-      <unsigned/>
       <default value="0"/>
       <notnull/>
     </field>

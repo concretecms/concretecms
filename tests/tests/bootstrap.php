@@ -43,7 +43,7 @@ $r = new \Concrete\Core\Http\Request(
     array(),
     array(),
     array(),
-    array('HTTP_HOST' => 'www.dummyco.com', 'SCRIPT_NAME' => '/path/to/server/index.php')
+    array('HTTP_HOST' => 'www.requestdomain.com', 'SCRIPT_NAME' => '/path/to/server/index.php')
 );
 define('BASE_URL', 'http://www.dummyco.com/path/to/server');
 \Concrete\Core\Http\Request::setInstance($r);
@@ -81,6 +81,7 @@ if (!$cn->isConnected()) {
 $cn->query('DROP DATABASE IF EXISTS concrete5_tests');
 $cn->query('CREATE DATABASE concrete5_tests');
 $cn->close();
+
 
 /*
  * Kill this because it plays hell with phpunit.

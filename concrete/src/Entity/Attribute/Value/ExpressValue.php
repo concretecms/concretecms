@@ -9,9 +9,10 @@ use Doctrine\ORM\Mapping as ORM;
  *     name="ExpressEntityEntryAttributeValues"
  * )
  */
-class ExpressValue extends Value
+class ExpressValue extends AbstractValue
 {
     /**
+     * @ORM\Id
      * @ORM\ManyToOne(targetEntity="\Concrete\Core\Entity\Express\Entry")
      * @ORM\JoinColumn(name="exEntryID", referencedColumnName="exEntryID"),
      */

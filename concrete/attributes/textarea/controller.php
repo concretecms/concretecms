@@ -3,10 +3,10 @@ namespace Concrete\Attribute\Textarea;
 
 use Concrete\Core\Attribute\DefaultController;
 use Concrete\Core\Attribute\FontAwesomeIconFormatter;
-use Concrete\Core\Entity\Attribute\Key\Type\TextareaType;
+use Concrete\Core\Entity\Attribute\Key\Settings\TextareaSettings;
+use Concrete\Core\Entity\Attribute\Value\Value\TextValue;
 use Core;
 use Database;
-use Concrete\Core\Entity\Attribute\Value\Value\TextareaValue;
 
 class Controller extends DefaultController
 {
@@ -23,7 +23,7 @@ class Controller extends DefaultController
 
     public function saveKey($data)
     {
-        $type = $this->getAttributeKeyType();
+        $type = $this->getAttributeKeySettings();
         $data += array(
             'akTextareaDisplayMode' => null,
         );
@@ -99,13 +99,18 @@ class Controller extends DefaultController
             return false;
         }
 
-        $type = $ak->getAttributeKeyType();
-        /*
-         * @var $type TextareaType
+        $type = $ak->getAttributeKeySettings();
+        /**
+         * @var $type TextareaSettings
          */
 
         $this->akTextareaDisplayMode = $type->getMode();
         $this->set('akTextareaDisplayMode', $type->getMode());
+    }
+
+    public function getAttributeValueObject()
+    {
+        return $this->entityManager->find(TextValue::class, $this->attributeValue->getGenericValue());
     }
 
     public function exportKey($akey)
@@ -118,7 +123,7 @@ class Controller extends DefaultController
 
     public function createAttributeValue($value)
     {
-        $av = new TextareaValue();
+        $av = new TextValue();
         $av->setValue($value);
 
         return $av;
@@ -126,7 +131,7 @@ class Controller extends DefaultController
 
     public function importKey(\SimpleXMLElement $akey)
     {
-        $type = $this->getAttributeKeyType();
+        $type = $this->getAttributeKeySettings();
         if (isset($akey->type)) {
             $data['akTextareaDisplayMode'] = $akey->type['mode'];
             $type->setMode((string) $akey->type['mode']);
@@ -135,8 +140,14 @@ class Controller extends DefaultController
         return $type;
     }
 
-    public function createAttributeKeyType()
+    public function createAttributeKeySettings()
     {
-        return new TextareaType();
+        return new TextareaSettings();
     }
+
+    protected function retrieveAttributeKeySettings()
+    {
+        return $this->entityManager->find(TextareaSettings::class, $this->attributeKey);
+    }
+
 }

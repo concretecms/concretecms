@@ -8,7 +8,7 @@ use Concrete\Core\Page\Type\Type;
 use Concrete\Core\Permission\Category;
 use Concrete\Core\User\UserInfo;
 
-class ImportPageStructureRoutine extends AbstractPageStructureRoutine
+class ImportPageStructureRoutine extends AbstractPageStructureRoutine implements SpecifiableHomePageRoutineInterface
 {
 
     protected $home;

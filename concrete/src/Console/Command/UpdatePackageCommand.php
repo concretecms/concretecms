@@ -23,6 +23,8 @@ class UpdatePackageCommand extends Command
 Returns codes:
   0 operation completed successfully
   1 errors occurred
+
+More info at http://documentation.concrete5.org/developers/appendix/cli-commands#c5-package-update
 EOT
             )
         ;

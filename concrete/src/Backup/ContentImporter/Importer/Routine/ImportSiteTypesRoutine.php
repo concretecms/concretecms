@@ -29,7 +29,7 @@ class ImportSiteTypesRoutine extends AbstractRoutine
                 $handle = (string) $type['handle'];
                 $site_type = $this->typeService->getByHandle($handle);
                 if (!is_object($site_type)) {
-                    $site_type = $this->typeService->add($handle, (string) $type['name'], $pkg);
+                    $site_type = $this->typeService->import($handle, (string) $type['name'], $pkg);
                 }
                 $this->entityManager->persist($site_type);
                 $this->entityManager->flush();

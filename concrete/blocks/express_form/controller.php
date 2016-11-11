@@ -86,16 +86,13 @@ class Controller extends BlockController
         parent::delete();
         $entity = $this->getFormEntity()->getEntity();
         $entityManager = \Core::make('database/orm')->entityManager();
-
-        $entity->setDefaultEditForm(null);
-        $entity->setDefaultViewForm(null);
-        foreach($entity->getForms() as $form) {
-            // fuck off, doctrine (redux)
-            $entityManager->remove($form);
+        // Important – are other blocks in the system using this form? If so, we don't want to delete it!
+        $db = $entityManager->getConnection();
+        $r = $db->fetchColumn('select count(bID) from btExpressForm where bID <> ? and exFormID = ?', [$this->bID, $this->exFormID]);
+        if ($r == 0) {
+            $entityManager->remove($entity);
+            $entityManager->flush();
         }
-        $entityManager->flush();
-        $entityManager->remove($entity);
-        $entityManager->flush();
     }
 
 
@@ -208,8 +205,8 @@ class Controller extends BlockController
                 }
 
                 $c = \Page::getCurrentPage();
-                $url = \URL::to($c);
-                $r = Redirect::to($url, 'form_success', $this->bID);
+                $url = \URL::to($c, 'form_success', $this->bID);
+                $r = Redirect::to($url);
                 $r->setTargetUrl($r->getTargetUrl() . '#form' . $this->bID);
                 return $r;
 
@@ -248,13 +245,14 @@ class Controller extends BlockController
                     if ($post['required']) {
                         $control->setIsRequired(true);
                     }
+                    $key->setAttributeType($type);
                     if (!$post['question']) {
                         $e = \Core::make('error');
                         $e->add(t('You must give this question a name.'));
                         return new JsonResponse($e);
                     }
                     $controller = $type->getController();
-                    $key = $this->saveAttributeKeyType($controller, $key, $post);
+                    $key = $this->saveAttributeKeySettings($controller, $key, $post);
 
                     $control->setAttributeKey($key);
                 }
@@ -282,14 +280,14 @@ class Controller extends BlockController
         }
     }
 
-    protected function saveAttributeKeyType($controller, ExpressKey $key, $post)
+    protected function saveAttributeKeySettings($controller, ExpressKey $key, $post)
     {
-        $key_type = $controller->saveKey($post);
-        if (!is_object($key_type)) {
-            $key_type = $controller->getAttributeKeyType();
+        $settings = $controller->saveKey($post);
+        if (!is_object($settings)) {
+            $settings = $controller->getAttributeKeySettings();
         }
-        $key_type->setAttributeKey($key);
-        $key->setAttributeKeyType($key_type);
+        $settings->setAttributeKey($key);
+        $key->setAttributeKeySettings($settings);
         return $key;
     }
 
@@ -332,7 +330,7 @@ class Controller extends BlockController
                         $control->setIsRequired(false);
                     }
                     $controller = $key->getController();
-                    $key = $this->saveAttributeKeyType($controller, $key, $post);
+                    $key = $this->saveAttributeKeySettings($controller, $key, $post);
                     $control->setAttributeKey($key);
                 }
                 break;
@@ -431,6 +429,7 @@ class Controller extends BlockController
         // Now, let's loop through our request controls
         $indexKeys = array();
         $position = 0;
+
         foreach($requestControls as $id) {
 
             if (isset($sessionControls[$id])) {
@@ -439,10 +438,28 @@ class Controller extends BlockController
                     // Possibility 1: This is a new control.
                     if ($control instanceof AttributeKeyControl) {
                         $key = $control->getAttributeKey();
+                        $type = $key->getAttributeType();
+                        $settings = $key->getAttributeKeySettings();
+
+                        // We have to merge entities back into the entity manager because they have been
+                        // serialized. First type, because if we merge key first type gets screwed
+                        $type = $entityManager->merge($type);
+
+                        // Now key, because we need key to set as the primary key for settings.
+                        $key = $entityManager->merge($key);
+                        $key->setAttributeType($type);
                         $key->setEntity($entity);
                         $key->setAttributeKeyHandle((new AttributeKeyHandleGenerator($attributeKeyCategory))->generate($key));
-                        $control->setAttributeKey($key);
                         $entityManager->persist($key);
+                        $entityManager->flush();
+
+                        // Now attribute settings.
+                        $settings->setAttributeKey($key);
+                        $settings = $entityManager->merge($settings);
+                        $entityManager->persist($settings);
+                        $entityManager->flush();
+
+                        $control->setAttributeKey($key);
                         $indexKeys[] = $key;
                     }
 
@@ -456,18 +473,25 @@ class Controller extends BlockController
                     foreach($existingControls as $existingControl) {
                         if ($existingControl->getId() == $id) {
                             if ($control instanceof AttributeKeyControl) {
+                                $settings = $control->getAttributeKey()->getAttributeKeySettings();
                                 $key = $existingControl->getAttributeKey();
+                                $type = $key->getAttributeType();
+                                $type = $entityManager->merge($type);
+
                                 // question name
                                 $key->setAttributeKeyName($control->getAttributeKey()->getAttributeKeyName());
                                 $key->setAttributeKeyHandle((new AttributeKeyHandleGenerator($attributeKeyCategory))->generate($key));
 
                                 // Key Type
-                                $existing_key_type = $key->getAttributeKeyType();
-                                $key_type = $control->getAttributeKey()->getAttributeKeyType();
-                                $key_type->setKeyTypeID($existing_key_type->getKeyTypeID());
-                                $key_type->setAttributeKey($key);
-                                $key_type = $key_type->mergeAndPersist($entityManager);
-                                $key->setAttributeKeyType($key_type);
+                                $key = $entityManager->merge($key);
+                                $key->setAttributeType($type);
+
+                                $type = $control->getAttributeKey()->getAttributeType();
+                                $type = $entityManager->merge($type);
+                                $key->setAttributeType($type);
+                                $settings = $control->getAttributeKey()->getAttributeKeySettings();
+                                $settings->setAttributeKey($key);
+                                $settings = $settings->mergeAndPersist($entityManager);
 
                                 // Required
                                 $existingControl->setIsRequired($control->isRequired());
@@ -667,6 +691,7 @@ class Controller extends BlockController
                 $obj->showControlRequired = true;
                 $obj->showControlName = true;
                 $obj->type = 'attribute_key|' . $type->getAttributeTypeID();
+                $obj->typeDisplayName = $type->getAttributeTypeDisplayName();
             } else {
 
                 $controller = $control->getControlOptionsController();

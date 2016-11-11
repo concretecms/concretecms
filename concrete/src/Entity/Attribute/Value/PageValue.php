@@ -9,14 +9,16 @@ use Doctrine\ORM\Mapping as ORM;
  *     name="CollectionAttributeValues"
  * )
  */
-class PageValue extends Value
+class PageValue extends AbstractValue
 {
     /**
+     * @ORM\Id
      * @ORM\Column(type="integer", options={"unsigned": true})
      **/
     protected $cID;
 
     /**
+     * @ORM\Id
      * @ORM\Column(type="integer", options={"unsigned": true})
      **/
     protected $cvID;

@@ -18,11 +18,12 @@ class UserTest extends \UserTestCase
     protected function setUp()
     {
         $this->metadatas[] = 'Concrete\Core\Entity\File\StorageLocation\StorageLocation';
+        $this->metadatas[] = 'Concrete\Core\Entity\File\StorageLocation\Type\Type';
         $this->metadatas[] = 'Concrete\Core\Entity\Site\Site';
+        $this->metadatas[] = 'Concrete\Core\Entity\Site\Locale';
         $this->metadatas[] = 'Concrete\Core\Entity\Site\Type';
         $this->metadatas[] = 'Concrete\Core\Entity\Site\Tree';
         $this->metadatas[] = 'Concrete\Core\Entity\Site\SiteTree';
-        $this->tables[] = 'FileStorageLocationTypes';
         parent::setUp();
     }
 

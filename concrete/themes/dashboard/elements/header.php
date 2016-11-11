@@ -49,7 +49,7 @@ $large_font = (bool) Config::get('concrete.accessibility.toolbar_large_font');
 </head>
 <body <?php if (isset($bodyClass)) { ?>class="<?=$bodyClass?>"<?php } ?>>
 
-<div id="ccm-dashboard-page" class="<?php if ($view->section('/account')) { ?>ccm-dashboard-my-account<?php } ?> ccm-ui ccm-ui-fieldless">
+<div id="ccm-dashboard-page" class="<?php if ($view->section('/account')) { ?>ccm-dashboard-my-account<?php } ?> ccm-ui">
     <div class="ccm-mobile-menu-overlay ccm-mobile-menu-overlay-dashboard hidden-md hidden-lg">
         <div class="ccm-mobile-menu-main">
             <ul class="ccm-mobile-menu-entries">
@@ -169,7 +169,7 @@ if (!$hideDashboardPanel) {
             </div>
         </div>
     </div>
-    <?php 
+    <?php
 }
 ?>
 

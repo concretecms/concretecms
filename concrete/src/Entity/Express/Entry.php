@@ -6,7 +6,6 @@ use Concrete\Core\Entity\Attribute\Value\ExpressValue;
 use Concrete\Core\Entity\Express\Entry\Association as EntryAssociation;
 use Concrete\Core\Permission\ObjectInterface;
 use Doctrine\Common\Collections\ArrayCollection;
-use DoctrineProxies\__CG__\Concrete\Core\Entity\Attribute\Key\ExpressKey;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -73,6 +72,11 @@ class Entry implements \JsonSerializable, ObjectInterface
     protected $exEntryID;
 
     /**
+     * @ORM\Column(type="integer")
+     */
+    protected $exEntryDisplayOrder = 0;
+
+    /**
      * @ORM\Column(type="datetime")
      */
     protected $exEntryDateCreated;
@@ -121,6 +125,22 @@ class Entry implements \JsonSerializable, ObjectInterface
     }
 
     /**
+     * @return mixed
+     */
+    public function getEntryDisplayOrder()
+    {
+        return $this->exEntryDisplayOrder;
+    }
+
+    /**
+     * @param mixed $exEntryDisplayOrder
+     */
+    public function setEntryDisplayOrder($exEntryDisplayOrder)
+    {
+        $this->exEntryDisplayOrder = $exEntryDisplayOrder;
+    }
+
+    /**
      * @ORM\OneToMany(targetEntity="\Concrete\Core\Entity\Attribute\Value\ExpressValue", mappedBy="entry", cascade={"all"})
      * @ORM\JoinColumn(name="exEntryID", referencedColumnName="exEntryID")
      */
@@ -130,6 +150,15 @@ class Entry implements \JsonSerializable, ObjectInterface
      * @ORM\OneToMany(targetEntity="\Concrete\Core\Entity\Express\Entry\Association", mappedBy="entry", cascade={"all"})
      */
     protected $associations;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="\Concrete\Core\Entity\Express\Entry\Association", mappedBy="selectedEntries")
+     * @ORM\JoinTable(name="ExpressEntityAssociationSelectedEntries",
+     * joinColumns={@ORM\JoinColumn(name="exSelectedEntryID", referencedColumnName="exEntryID")},
+     * inverseJoinColumns={@ORM\JoinColumn(name="id", referencedColumnName="id")  }
+     * )
+     */
+    protected $containing_associations;
 
     /**
      * @return mixed
@@ -163,10 +192,19 @@ class Entry implements \JsonSerializable, ObjectInterface
         }
     }
 
+    public function getOwnedByEntry()
+    {
+        foreach($this->associations as $association) {
+            if ($association->getAssociation()->isOwnedByAssociation()) {
+                return $association->getEntry();
+            }
+        }
+    }
     public function __construct()
     {
         $this->attributes = new ArrayCollection();
         $this->associations = new ArrayCollection();
+        $this->containing_associations = new ArrayCollection();
         $this->exEntryDateCreated = new \DateTime();
     }
 

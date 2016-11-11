@@ -2,6 +2,8 @@
 namespace Concrete\Core\Package;
 
 use Concrete\Core\Application\Application;
+use Concrete\Core\Database\EntityManager\Provider\PackageProviderFactory;
+use Concrete\Core\Database\EntityManagerConfigUpdater;
 use Concrete\Core\Error\ErrorList\ErrorList;
 use Concrete\Core\Foundation\ClassLoader;
 use Concrete\Core\Localization\Localization;
@@ -167,6 +169,14 @@ class PackageService
         }
     }
 
+    public function bootPackageEntityManager(Package $p)
+    {
+        $configUpdater = new EntityManagerConfigUpdater($this->entityManager);
+        $providerFactory = new PackageProviderFactory($this->application, $p);
+        $provider = $providerFactory->getEntityManagerProvider();
+        $configUpdater->addProvider($provider);
+    }
+
     public function uninstall(Package $p)
     {
         $p->uninstall();
@@ -181,6 +191,7 @@ class PackageService
         try {
 
             ClassLoader::getInstance()->registerPackage($p);
+
             if (method_exists($p, 'validate_install')) {
                 $response = $p->validate_install($data);
             }
@@ -189,6 +200,7 @@ class PackageService
                 return $response;
             }
 
+            $this->bootPackageEntityManager($p);
             $p->install($data);
 
             $u = new \User();
@@ -216,7 +228,7 @@ class PackageService
      * @param string $pkgHandle Handle of package
      * @return Package
      */
-    public static function getClass($pkgHandle)
+    public function getClass($pkgHandle)
     {
         $app = \Core::make('app');
         $cache = $app->make('cache/request');

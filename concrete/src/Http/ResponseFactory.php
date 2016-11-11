@@ -14,8 +14,11 @@ use Concrete\Core\Page\Collection\Version\Version;
 use Concrete\Core\Page\Controller\PageController;
 use Concrete\Core\Page\Event;
 use Concrete\Core\Page\Page;
+use Concrete\Core\Page\Relation\Menu\Item\RelationListItem;
 use Concrete\Core\Permission\Checker;
+use Concrete\Core\Permission\Key\Key;
 use Concrete\Core\Routing\RedirectResponse;
+use Concrete\Core\Routing\RouterInterface;
 use Concrete\Core\User\User;
 use Concrete\Core\View\View;
 use Detection\MobileDetect;
@@ -244,7 +247,7 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
         // maintenance mode
         if ($collection->getCollectionPath() != '/login') {
             $smm = $this->config->get('concrete.maintenance_mode');
-            if ($smm == 1 && !PermissionKey::getByHandle('view_in_maintenance_mode')->validate() && ($_SERVER['REQUEST_METHOD'] != 'POST' || Loader::helper('validation/token')->validate() == false)) {
+            if ($smm == 1 && !Key::getByHandle('view_in_maintenance_mode')->validate() && ($_SERVER['REQUEST_METHOD'] != 'POST' || Loader::helper('validation/token')->validate() == false)) {
                 $v = new View('/frontend/maintenance_mode');
 
                 $router = $this->app->make(RouterInterface::class);
@@ -261,7 +264,7 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
         }
 
         if ($collection->getCollectionPointerExternalLink() != '') {
-            return $this->redirect($collection);
+            return $this->redirect($collection->getCollectionPointerExternalLink());
         }
 
         $cp = new Checker($collection);
@@ -316,20 +319,30 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
             return $response;
         }
 
-        // Now we check to see if we're on the home page, and if it multilingual is enabled,
-        // and if so, whether we should redirect to the default language page.
         $dl = $cms->make('multilingual/detector');
         if ($dl->isEnabled()) {
-            if ($collection->getCollectionID() == $site->getSiteHomePageID() &&
-                $site->getConfigRepository()->get('multilingual.redirect_home_to_default_locale')) {
+            $dl->setupSiteInterfaceLocalization($collection);
+        }
+
+        if (!$request->getPath()
+            && $request->isMethod('GET')
+            && !$request->query->has('cID')) {
+            // This is a request to the home page –http://www.mysite.com/
+
+            // First, we check to see if we need to redirect to a default multilingual section.
+            if ($dl->isEnabled() && $site->getConfigRepository()->get('multilingual.redirect_home_to_default_locale')) {
                 // Let's retrieve the default language
                 $ms = $dl->getPreferredSection();
-                if (is_object($ms) && $ms->getCollectionID() != $site->getSiteHomePageID()) {
-                    return $this->redirect($ms);
+                if (is_object($ms)) {
+                    return $this->redirect(\URL::to($ms));
                 }
             }
 
-            $dl->setupSiteInterfaceLocalization($collection);
+            // Otherwise, let's check to see if our home page, which we have loaded already, has a path (like /en)
+            // If it does, we'll redirect to the path.
+            if ($collection->getCollectionPath() != '') {
+                return $this->redirect(\URL::to($collection));
+            }
         }
 
         $request->setCurrentPage($collection);
@@ -342,6 +355,11 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
         $pe->setUser($u);
         $pe->setRequest($request);
         $this->app['director']->dispatch('on_page_view', $pe);
+
+        // Core menu items
+        $item = new RelationListItem();
+        $menu = $this->app->make('helper/concrete/ui/menu');
+        $menu->addMenuItem($item);
 
         $controller = $collection->getPageController();
 

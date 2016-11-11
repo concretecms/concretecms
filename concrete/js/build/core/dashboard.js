@@ -83,13 +83,22 @@ var ConcreteDashboard = function() {
 			if (!width) {
 				width = 320;
 			}
+			var height = $(this).attr('data-dialog-height');
+			if (!height) {
+				height = 'auto';
+			}
+			if ($(this).attr('data-dialog-title')) {
+				var title = $(this).attr('data-dialog-title');
+			} else {
+				var title = $(this).text();
+			}
 			var element = 'div[data-dialog-wrapper=' + $(this).attr('data-dialog') + ']';
 			jQuery.fn.dialog.open({
 				element: element,
 				modal: true,
 				width: width,
-				title: $(this).attr('data-dialog-title'),
-				height: 'auto'
+				title: title,
+				height: height
 			});
 		});
 
@@ -116,7 +125,7 @@ var ConcreteDashboard = function() {
 		start: function(options) {
 			setupTooltips();
 			setupResultMessages();
-			setupHeaderMenu();
+			//setupHeaderMenu();
             setupDialogs();
 			setupSelects();
 			setupTables();

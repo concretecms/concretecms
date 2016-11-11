@@ -114,7 +114,7 @@ jQuery.fn.dialog.open = function(options) {
         'escapeClose': true,
         'width': w,
         'height': h,
-        'dialogClass': 'ccm-ui ccm-ui-fieldless',
+        'dialogClass': 'ccm-ui',
         'resizable': true,
 
         'create': function() {

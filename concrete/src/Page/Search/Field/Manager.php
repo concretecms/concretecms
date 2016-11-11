@@ -2,6 +2,7 @@
 namespace Concrete\Core\Page\Search\Field;
 
 use Concrete\Core\Attribute\Category\PageCategory;
+use Concrete\Core\Page\Search\Field\Field\ContainsBlockTypeField;
 use Concrete\Core\Page\Search\Field\Field\DateAddedField;
 use Concrete\Core\Page\Search\Field\Field\DateLastModifiedField;
 use Concrete\Core\Page\Search\Field\Field\DatePublicField;
@@ -37,7 +38,8 @@ class Manager extends FieldManager
             new VersionStatusField(),
             new PermissionsInheritanceField(),
             new DateLastModifiedField(),
-            new DatePublicField()
+            new DatePublicField(),
+            new ContainsBlockTypeField()
         ]);
         $attributes = [];
         foreach($fileCategory->getSearchableList() as $key) {

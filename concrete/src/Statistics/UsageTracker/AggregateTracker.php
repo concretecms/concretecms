@@ -1,9 +1,9 @@
 <?php
 namespace Concrete\Core\Statistics\UsageTracker;
 
-use Concrete\Core\Application\Application;
 use Concrete\Core\Application\ApplicationAwareInterface;
 use InvalidArgumentException;
+use Concrete\Core\Application\ApplicationAwareTrait;
 
 /**
  * Class PolyTracker
@@ -13,6 +13,8 @@ use InvalidArgumentException;
 final class AggregateTracker implements TrackerManagerInterface, ApplicationAwareInterface
 {
 
+    use ApplicationAwareTrait;
+
     /** @var TrackerInterface[] */
     protected $trackers = [];
 
@@ -21,19 +23,6 @@ final class AggregateTracker implements TrackerManagerInterface, ApplicationAwar
 
     /** @var string[] */
     protected $map = [];
-
-    /** @var Application */
-    protected $app;
-
-    /**
-     * Set the application object.
-     *
-     * @param \Concrete\Core\Application\Application $application
-     */
-    public function setApplication(Application $application)
-    {
-        $this->app = $application;
-    }
 
     /**
      * Track a trackable object

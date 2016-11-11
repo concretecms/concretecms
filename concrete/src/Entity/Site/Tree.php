@@ -2,6 +2,7 @@
 namespace Concrete\Core\Entity\Site;
 
 use Concrete\Core\Site\Tree\TreeInterface;
+use Concrete\Core\Site\TypeInterface;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -12,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
  *     name="SiteTrees"
  * )
  */
-abstract class Tree implements TreeInterface
+abstract class Tree implements TreeInterface, TypeInterface
 {
 
     /**
@@ -36,7 +37,10 @@ abstract class Tree implements TreeInterface
 
     public function getSiteHomePageObject()
     {
-        return \Page::getByID($this->siteHomePageID);
+        $home = \Page::getByID($this->siteHomePageID);
+        if (is_object($home) && !$home->isError()) {
+            return $home;
+        }
     }
 
 
@@ -56,6 +60,18 @@ abstract class Tree implements TreeInterface
         return $this->siteTreeID;
     }
 
+    /**
+     * @param mixed $siteTreeID
+     */
+    public function setSiteTreeID($siteTreeID)
+    {
+        $this->siteTreeID = $siteTreeID;
+    }
 
+    public function getSiteTreeObject()
+    {
+        return $this;
+    }
 
+    abstract public function getDisplayName();
 }

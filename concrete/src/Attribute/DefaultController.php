@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Core\Attribute;
 
-use Concrete\Core\Entity\Attribute\Key\Type\TextType;
+use Concrete\Core\Entity\Attribute\Key\Settings\TextSettings;
 use Concrete\Core\Entity\Attribute\Value\Value\TextValue;
 use Core;
 use Concrete\Core\Attribute\Controller as AttributeTypeController;
@@ -38,6 +38,11 @@ class DefaultController extends AttributeTypeController
         return Core::make('helper/text')->entities($this->getValue());
     }
 
+    public function getAttributeValueObject()
+    {
+        return $this->entityManager->find(TextValue::class, $this->attributeValue->getGenericValue());
+    }
+
     public function search()
     {
         $f = Core::make('helper/form');
@@ -51,6 +56,16 @@ class DefaultController extends AttributeTypeController
         $av->setValue($value);
 
         return $av;
+    }
+
+    public function createAttributeKeySettings()
+    {
+        return new TextSettings();
+    }
+
+    protected function retrieveAttributeKeySettings()
+    {
+        return $this->entityManager->find(TextSettings::class, $this->attributeKey);
     }
 
     public function createAttributeValueFromRequest()

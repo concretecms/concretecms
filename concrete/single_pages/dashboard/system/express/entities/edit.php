@@ -20,32 +20,50 @@
             <fieldset>
                 <legend><?=t("Basics")?></legend>
                 <div class="form-group">
-                    <label for="name"><?=t('Name')?></label>
+                    <label for="name" class="control-label"><?=t('Name')?></label>
                     <div class="input-group">
                         <?=$form->text('name', $entity->getName())?>
                         <span class="input-group-addon"><i class="fa fa-asterisk"></i></span>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="name"><?=t('Handle')?></label>
+                    <label for="name" class="control-label"><?=t('Handle')?></label>
                     <div class="input-group">
                         <?=$form->text('handle', $entity->getHandle())?>
                         <span class="input-group-addon"><i class="fa fa-asterisk"></i></span>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="name"><?=t('Description')?></label>
+                    <label for="name" class="control-label"><?=t('Plural Handle')?></label>
+                    <div class="input-group">
+                        <?=$form->text('plural_handle', $entity->getPluralHandle())?>
+                        <span class="input-group-addon"><i class="fa fa-asterisk"></i></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="name" class="control-label"><?=t('Description')?></label>
                     <?=$form->textarea('description', $entity->getDescription(), array('rows' => 5))?>
+                </div>
+            </fieldset>
+
+            <fieldset>
+                <legend><?=t('Advanced')?></legend>
+                <div class="form-group">
+                    <label for="name" class="control-label"><?= t('Custom Dispay Order') ?></label>
+                    <div class="checkbox"><label>
+                            <?= $form->checkbox('supports_custom_display_order', 1, $entity->supportsCustomDisplayOrder()) ?>
+                            <?= t('This entity supports custom display ordering via Dashboard interfaces.') ?>
+                        </label></div>
                 </div>
             </fieldset>
             <fieldset>
                 <legend><?=t('Views')?></legend>
                 <div class="form-group">
-                    <label for="name"><?=t('Default Edit Form')?></label>
+                    <label for="name" class="control-label"><?=t('Default Edit Form')?></label>
                     <?=$form->select('default_edit_form_id', $forms, $defaultEditFormID)?>
                 </div>
                 <div class="form-group">
-                    <label for="name"><?=t('Default View Form')?></label>
+                    <label for="name" class="control-label"><?=t('Default View Form')?></label>
                     <?=$form->select('default_view_form_id', $forms, $defaultViewFormID)?>
                 </div>
 

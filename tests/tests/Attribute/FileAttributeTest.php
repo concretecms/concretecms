@@ -33,11 +33,12 @@ class FileAttributeTest extends \AttributeTestCase
         $this->metadatas = array_merge($this->metadatas, array(
             'Concrete\Core\Entity\File\Version',
             'Concrete\Core\Entity\File\File',
-            'Concrete\Core\Entity\Attribute\Key\Type\NumberType',
+            'Concrete\Core\Entity\Attribute\Key\Settings\NumberSettings',
             'Concrete\Core\Entity\Attribute\Key\FileKey',
             'Concrete\Core\Entity\Attribute\Key\Key',
             'Concrete\Core\Entity\Attribute\Value\Value\NumberValue',
             'Concrete\Core\Entity\Attribute\Value\FileValue',
+            'Concrete\Core\Entity\File\StorageLocation\Type\Type',
             'Concrete\Core\Entity\File\StorageLocation\StorageLocation',
         ));
         parent::setUp();

@@ -6,7 +6,7 @@ use Concrete\Core\Application\UserInterface\ContextMenu\Item\ItemInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use HtmlObject\Element;
 
-abstract class AbstractMenu implements MenuInterface
+abstract class AbstractMenu implements ModifiableMenuInterface
 {
 
     protected $items;

@@ -7,9 +7,9 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="SocialLinkAttributeValues")
+ * @ORM\Table(name="atSocialLinks")
  */
-class SocialLinksValue extends Value
+class SocialLinksValue extends AbstractValue
 {
     /**
      * @ORM\OneToMany(targetEntity="\Concrete\Core\Entity\Attribute\Value\Value\SelectedSocialLink",
@@ -20,7 +20,6 @@ class SocialLinksValue extends Value
 
     public function __construct()
     {
-        parent::__construct();
         $this->links = new ArrayCollection();
     }
 

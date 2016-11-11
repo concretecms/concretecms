@@ -1,14 +1,15 @@
 <?php
 namespace Concrete\Core\Console\Command;
 
+use Concrete\Core\Error\ErrorList\ErrorList;
 use Concrete\Core\Package\ContentSwapper;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Package;
 use Exception;
+use Concrete\Core\Support\Facade\Package;
 
 class InstallPackageCommand extends Command
 {
@@ -24,6 +25,8 @@ class InstallPackageCommand extends Command
 Returns codes:
   0 operation completed successfully
   1 errors occurred
+
+More info at http://documentation.concrete5.org/developers/appendix/cli-commands#c5-package-install
 EOT
             )
         ;
@@ -80,12 +83,15 @@ EOT
             if (is_object($test)) {
                 throw new Exception(implode("\n", $test->getList()));
             }
-            $output->writeln('<info>good.</info>');
 
-            $output->write('Installing package... ');
-            $pkgInstalled = $pkg->install($packageOptions);
-            $output->writeln('<info>done.</info>');
+            $output->write('Preconditions good. Installing...');
 
+            $r = Package::install($pkg, []);
+            if ($r instanceof ErrorList) {
+                throw new Exception(implode("\n", $r->getList()));
+            }
+
+            $output->writeln('<info>Package Installed.</info>');
             $swapper = new ContentSwapper();
 
             if ($swapper->allowsFullContentSwap($pkg) && $input->getOption('full-content-swap')) {

@@ -7,7 +7,7 @@ $ip = Loader::helper('validation/ip');
 
 <div class="ccm-dashboard-header-buttons">
     <div class="ccm-header-search-form ccm-ui">
-        <form role="form" data-search-form="logs" action="<?=$controller->action('view')?>" class="ccm-search-fields">
+        <form role="form" action="<?=$controller->action('view')?>">
             <div class="input-group">
                 <input type="text" class="form-control" autocomplete="off" name="cmpMessageKeywords" value="<?=h($_REQUEST['cmpMessageKeywords'])?>" placeholder="<?=t('Keywords')?>">
                 <span class="input-group-btn">

@@ -17,7 +17,6 @@
             <default value="400px" />
         </field>
         <field name="scrollwheel" type="boolean">
-            <unsigned/>
             <default value="1" />
             <notnull/>
         </field>

@@ -2,7 +2,7 @@
 namespace Concrete\Attribute\Boolean;
 
 use Concrete\Core\Attribute\FontAwesomeIconFormatter;
-use Concrete\Core\Entity\Attribute\Key\Type\BooleanType;
+use Concrete\Core\Entity\Attribute\Key\Settings\BooleanSettings;
 use Concrete\Core\Entity\Attribute\Value\Value\BooleanValue;
 use Core;
 use Concrete\Core\Search\ItemList\Database\AttributedItemList;
@@ -52,7 +52,7 @@ class Controller extends AttributeTypeController
 
     public function importKey(\SimpleXMLElement $akey)
     {
-        $type = $this->getAttributeKeyType();
+        $type = $this->getAttributeKeySettings();
         if (isset($akey->type)) {
             $checked = (string) $akey->type['checked'];
             if ($checked != '') {
@@ -71,7 +71,7 @@ class Controller extends AttributeTypeController
         }
 
         $this->akCheckedByDefault = $ak
-            ->getAttributeKeyType()->isCheckedByDefault();
+            ->getAttributeKeySettings()->isCheckedByDefault();
         $this->set('akCheckedByDefault', $this->akCheckedByDefault);
     }
 
@@ -120,7 +120,7 @@ class Controller extends AttributeTypeController
 
     public function saveKey($data)
     {
-        $type = $this->getAttributeKeyType();
+        $type = $this->getAttributeKeySettings();
 
         $akCheckedByDefault = 0;
         if (isset($data['akCheckedByDefault']) && $data['akCheckedByDefault']) {
@@ -130,6 +130,11 @@ class Controller extends AttributeTypeController
         $type->setIsCheckedByDefault($akCheckedByDefault);
 
         return $type;
+    }
+
+    public function getAttributeValueObject()
+    {
+        return $this->entityManager->find(BooleanValue::class, $this->attributeValue->getGenericValue());
     }
 
     public function createAttributeValueFromRequest()
@@ -145,8 +150,14 @@ class Controller extends AttributeTypeController
         return isset($data['value']) && $data['value'] == 1;
     }
 
-    public function createAttributeKeyType()
+    public function createAttributeKeySettings()
     {
-        return new BooleanType();
+        return new BooleanSettings();
     }
+
+    protected function retrieveAttributeKeySettings()
+    {
+        return $this->entityManager->find(BooleanSettings::class, $this->attributeKey);
+    }
+
 }

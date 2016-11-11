@@ -2,7 +2,6 @@
 namespace Concrete\Attribute\Select;
 
 use Concrete\Core\Entity\Attribute\Key\Key;
-use Concrete\Core\Entity\Attribute\Key\Type\SelectType;
 use Concrete\Core\Entity\Attribute\Value\Value\SelectValueOption;
 
 
@@ -21,9 +20,9 @@ class Option
     public static function add($ak, $value, $isEndUserAdded = 0)
     {
         /**
-         * @var $type SelectType
+         * @var $type SelectSettings
          */
-        $type = $ak->getAttributeKeyType();
+        $type = $ak->getAttributeKeySettings();
         $list = $type->getOptionList();
 
         $option = new SelectValueOption();

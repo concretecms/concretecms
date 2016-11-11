@@ -7,14 +7,16 @@ abstract class AttributeTestCase extends ConcreteDatabaseTestCase
     protected $fixtures = array();
     protected $metadatas = array(
         'Concrete\Core\Entity\Site\Site',
+        'Concrete\Core\Entity\Site\Locale',
         'Concrete\Core\Entity\Site\Tree',
         'Concrete\Core\Entity\Site\SiteTree',
         'Concrete\Core\Entity\Site\Type',
         'Concrete\Core\Entity\Attribute\Category',
-        'Concrete\Core\Entity\Attribute\Key\Type\TextType',
-        'Concrete\Core\Entity\Attribute\Key\Type\TextareaType',
-        'Concrete\Core\Entity\Attribute\Key\Type\BooleanType',
-        'Concrete\Core\Entity\Attribute\Key\Type\Type',
+        'Concrete\Core\Entity\Attribute\Key\Settings\TextSettings',
+        'Concrete\Core\Entity\Attribute\Key\Settings\TextareaSettings',
+        'Concrete\Core\Entity\Attribute\Key\Settings\BooleanSettings',
+        'Concrete\Core\Entity\Attribute\Key\Settings\EmptySettings',
+        'Concrete\Core\Entity\Attribute\Key\Settings\Settings',
         'Concrete\Core\Entity\Attribute\Key\Key',
         'Concrete\Core\Entity\Attribute\Key\PageKey',
         'Concrete\Core\Entity\Attribute\Type',
@@ -51,7 +53,7 @@ abstract class AttributeTestCase extends ConcreteDatabaseTestCase
         parent::setUp();
         $service = \Core::make('site');
         if (!$service->getDefault()) {
-            $service->installDefault();
+            $service->installDefault('en_US');
         }
 
         $this->installAttributeCategoryAndObject();

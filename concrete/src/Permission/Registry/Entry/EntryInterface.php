@@ -1,10 +1,11 @@
 <?php
 namespace Concrete\Core\Permission\Registry\Entry;
 
+use Concrete\Core\Permission\AssignableObjectInterface;
+
 interface EntryInterface
 {
 
-    function getAccessEntity();
-    function getPermissionKeyHandles();
+    function apply(AssignableObjectInterface $object);
 
 }

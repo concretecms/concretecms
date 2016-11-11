@@ -59,7 +59,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			<thead>
 			<tr>
 				<th></th>
-				<?php if (!$isHome) { 
+				<?php if (!$isHome) {
 					?>
 				<th><?=t('Canonical')?></th>
 				<?php

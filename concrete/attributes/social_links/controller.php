@@ -2,7 +2,6 @@
 namespace Concrete\Attribute\SocialLinks;
 
 use Concrete\Core\Attribute\FontAwesomeIconFormatter;
-use Concrete\Core\Entity\Attribute\Key\Type\SocialLinksType;
 use Concrete\Core\Entity\Attribute\Value\Value\SelectedSocialLink;
 use Concrete\Core\Entity\Attribute\Value\Value\SocialLinksValue;
 use Loader;
@@ -24,6 +23,10 @@ class Controller extends AttributeTypeController
         return false;
     }
 
+    public function getAttributeValueObject()
+    {
+        return $this->entityManager->find(SocialLinksValue::class, $this->attributeValue->getGenericValue());
+    }
 
     public function createAttributeValueFromRequest()
     {
@@ -121,8 +124,4 @@ class Controller extends AttributeTypeController
         $this->set('services', ServiceList::get());
     }
 
-    public function createAttributeKeyType()
-    {
-        return new SocialLinksType();
-    }
 }

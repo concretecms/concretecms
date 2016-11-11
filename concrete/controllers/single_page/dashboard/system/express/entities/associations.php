@@ -21,10 +21,8 @@ class Associations extends DashboardPageController
         $entity = $this->repository->findOneById($id);
         if (is_object($entity)) {
             $this->set('entity', $entity);
-            $entities = array();
-            foreach ($this->repository->findAll() as $targetEntity) {
-                $entities[$targetEntity->getID()] = $targetEntity->getName();
-            }
+            $entities = $this->repository->findAll();
+            $this->set('entities', $entities);
             $types = array('' => t('** Select Type'));
             $validTypes = [
                 'ManyToOne' => t('Many to One'),
@@ -33,15 +31,19 @@ class Associations extends DashboardPageController
                 'ManyToMany' => t('Many to Many'),
             ];
             $types += $validTypes;
-            $this->set('entities', $entities);
             $this->set('types', $types);
             $this->set('pageTitle', t('Add Association'));
 
             if ($this->request->isMethod('POST')) {
+
+                $entityIDs = array();
+                foreach($entities as $targetEntity) {
+                    $entityIDs[] = $targetEntity->getID();
+                }
                 if (!$this->token->validate('add_association')) {
                     $this->error->add($this->token->getErrorMessage());
                 }
-                if (!in_array($this->request->request->get('target_entity'), array_keys($entities))) {
+                if (!in_array($this->request->request->get('target_entity'), $entityIDs)) {
                     $this->error->add(t('Invalid target entity.'));
                 }
                 if (!in_array($this->request->request->get('type'), array_keys($validTypes))) {
@@ -106,6 +108,12 @@ class Associations extends DashboardPageController
         }
     }
 
+    public function edit($id = null)
+    {
+        $this->view_association_details($id);
+        $this->render('/dashboard/system/express/entities/associations/edit');
+    }
+
     public function delete_association($id = null)
     {
         $this->view($id);
@@ -126,6 +134,42 @@ class Associations extends DashboardPageController
             $this->view_association_details($this->request->request->get('association_id'));
         }
     }
+
+    public function save_association($id = null)
+    {
+        $this->view($id);
+        $association = $this->associationRepository->findOneById($this->request->request->get('association_id'));
+        if (!is_object($association)) {
+            $this->error->add(t('Invalid association object.'));
+        }
+        if (!$this->token->validate()) {
+            $this->error->add($this->token->getErrorMessage());
+        }
+        if (!$this->error->has()) {
+
+            $association->setInversedByPropertyName($this->request->request->get('inversed_property_name'));
+            $association->setTargetPropertyName($this->request->request->get('target_property_name'));
+            if ($this->request->request->get('is_owned_by_association')) {
+                $association->setIsOwnedByAssociation(true);
+            } else {
+                $association->setIsOwnedByAssociation(false);
+            }
+            if ($this->request->request->get('is_owning_association')) {
+                $association->setIsOwningAssociation(true);
+            } else {
+                $association->setIsOwningAssociation(false);
+            }
+
+            $this->entityManager->persist($association);
+            $this->entityManager->flush();
+
+            $this->flash('success', t('Association saved successfully.'));
+            $this->redirect('/dashboard/system/express/entities/associations', 'view_association_details', $association->getID());
+        } else {
+            $this->view_association_details($this->request->request->get('association_id'));
+        }
+    }
+
 
     public function view_association_details($id = null)
     {

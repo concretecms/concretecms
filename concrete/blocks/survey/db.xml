@@ -52,6 +52,7 @@
     <field name="ipAddress" type="string" size="128"/>
     <field name="timestamp" type="timestamp">
       <deftimestamp/>
+      <notnull/>
     </field>
     <index name="optionID">
       <col>optionID</col>

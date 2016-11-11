@@ -5,9 +5,9 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="DateTimeAttributeValues")
+ * @ORM\Table(name="atDateTime")
  */
-class DateTimeValue extends Value
+class DateTimeValue extends AbstractValue
 {
     /**
      * @ORM\Column(type="datetime", nullable=true)

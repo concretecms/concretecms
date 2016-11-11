@@ -9,6 +9,8 @@ use Concrete\Core\Attribute\Key\RequestLoader\StandardRequestLoader;
 use Concrete\Core\Attribute\Set;
 use Concrete\Core\Attribute\SetFactory;
 use Concrete\Core\Entity\Attribute\Key\Key;
+use Concrete\Core\Entity\Attribute\Key\Settings\Settings;
+use Concrete\Core\Entity\Attribute\Type;
 use Concrete\Core\Entity\Package;
 use Doctrine\ORM\EntityManager;
 use Concrete\Core\Entity\Attribute\Type as AttributeType;
@@ -38,7 +40,8 @@ abstract class AbstractCategory implements CategoryInterface, StandardSearchInde
     /**
      * @return EntityRepository
      */
-    abstract public function getAttributeRepository();
+    abstract public function getAttributeKeyRepository();
+    abstract public function getAttributeValueRepository();
     abstract public function createAttributeKey();
 
     public function getByID($akID)
@@ -54,7 +57,7 @@ abstract class AbstractCategory implements CategoryInterface, StandardSearchInde
 
     public function getList()
     {
-        return $this->getAttributeRepository()->findBy(array(
+        return $this->getAttributeKeyRepository()->findBy(array(
             'akIsSearchable' => true,
             'akIsInternal' => false,
         ));
@@ -62,28 +65,28 @@ abstract class AbstractCategory implements CategoryInterface, StandardSearchInde
 
     public function getSearchableList()
     {
-        return $this->getAttributeRepository()->findBy(array(
+        return $this->getAttributeKeyRepository()->findBy(array(
             'akIsSearchable' => true,
         ));
     }
 
     public function getSearchableIndexedList()
     {
-        return $this->getAttributeRepository()->findBy(array(
+        return $this->getAttributeKeyRepository()->findBy(array(
             'akIsSearchableIndexed' => true,
         ));
     }
 
     public function getAttributeKeyByHandle($handle)
     {
-        return $this->getAttributeRepository()->findOneBy(array(
+        return $this->getAttributeKeyRepository()->findOneBy(array(
             'akHandle' => $handle,
         ));
     }
 
     public function getAttributeKeyByID($akID)
     {
-        return $this->getAttributeRepository()->findOneBy(array(
+        return $this->getAttributeKeyRepository()->findOneBy(array(
             'akID' => $akID,
         ));
     }
@@ -97,37 +100,50 @@ abstract class AbstractCategory implements CategoryInterface, StandardSearchInde
         $this->entityManager->flush();
     }
 
-    public function add($key_type, $key, $pkg = null)
+    public function add($type, $key, $settings, $pkg = null)
     {
-        /*
-         * Note: Do not type hint $pkg because old versions might not send the right object in.
-         * LEGACY SUPPORT
-         */
-        $asID = false;
-        if (is_string($key_type)) {
-            $key_type = \Concrete\Core\Attribute\Type::getByHandle($key_type);
-        }
-        if ($key_type instanceof \Concrete\Core\Entity\Attribute\Type) {
-            $key_type = $key_type->getController()->getAttributeKeyType();
-            if (is_array($key)) {
-                $handle = $key['akHandle'];
-                $name = $key['akName'];
-                if (isset($key['asID'])) {
-                    $asID = $key['asID'];
-                }
-                $key = $this->createAttributeKey();
-                $key->setAttributeKeyHandle($handle);
-                $key->setAttributeKeyName($name);
-            }
-        }
-        /* end legacy support */
 
-        $key_type->setAttributeKey($key);
-        $key->setAttributeKeyType($key_type);
+        if (is_string($type)) {
+            $type = \Concrete\Core\Attribute\Type::getByHandle($o);
+        }
+
+        // Legacy array support for $key
+        $asID = false;
+        if (is_array($key)) {
+            $handle = $key['akHandle'];
+            $name = $key['akName'];
+            if (isset($key['asID'])) {
+                $asID = $key['asID'];
+            }
+            $key = $this->createAttributeKey();
+            $key->setAttributeKeyHandle($handle);
+            $key->setAttributeKeyName($name);
+        }
+
+        // Legacy support for third parameter which used to be package
+        if ($settings instanceof Package || $settings instanceof \Concrete\Core\Package\Package) {
+            $pkg = $settings;
+            unset($settings);
+        }
+
+        if (!$settings) {
+            $settings = $type->getController()->getAttributeKeySettings();
+        }
+
+        $key->setAttributeType($type);
+        $this->entityManager->persist($key);
+        $this->entityManager->flush();
+
+        $settings->setAttributeKey($key);
+        $key->setAttributeKeySettings($settings);
+
+        $this->entityManager->persist($settings);
+        $this->entityManager->flush();
 
         if (is_object($pkg)) {
             $key->setPackage($pkg);
         }
+
         // Modify the category's search indexer.
         $indexer = $this->getSearchIndexer();
         if (is_object($indexer)) {
@@ -138,6 +154,7 @@ abstract class AbstractCategory implements CategoryInterface, StandardSearchInde
         $this->entityManager->flush();
 
         /* legacy support, attribute set */
+
         if ($asID) {
             $manager = $this->getSetManager();
             $factory = new SetFactory($this->entityManager);
@@ -162,11 +179,11 @@ abstract class AbstractCategory implements CategoryInterface, StandardSearchInde
         $this->entityManager->flush();
 
         $controller->setAttributeKey($key);
-        $key_type = $controller->saveKey($request->request->all());
-        if (!is_object($key_type)) {
-            $key_type = $controller->getAttributeKeyType();
+        $settings = $controller->saveKey($request->request->all());
+        if (!is_object($settings)) {
+            $settings = $controller->getAttributeKeySettings();
         }
-        return $this->add($key_type, $key);
+        return $this->add($type, $key, $settings);
     }
 
     public function import(AttributeType $type, \SimpleXMLElement $element, Package $package = null)
@@ -176,11 +193,11 @@ abstract class AbstractCategory implements CategoryInterface, StandardSearchInde
         $loader->load($key, $element);
 
         $controller = $type->getController();
-        $key_type = $controller->importKey($element);
-        if (!is_object($key_type)) {
-            $key_type = $controller->getAttributeKeyType();
+        $settings = $controller->importKey($element);
+        if (!is_object($settings)) {
+            $settings = $controller->getAttributeKeySettings();
         }
-        return $this->add($key_type, $key, $package);
+        return $this->add($type, $key, $settings, $package);
     }
 
     // Update
@@ -192,12 +209,14 @@ abstract class AbstractCategory implements CategoryInterface, StandardSearchInde
         $loader->load($key, $request);
 
         $controller = $key->getController();
-        $key_type = $controller->saveKey($request->request->all());
-        if (!is_object($key_type)) {
-            $key_type = $controller->getAttributeKeyType();
+        $settings = $controller->saveKey($request->request->all());
+        if (!is_object($settings)) {
+            $settings = $controller->getAttributeKeySettings();
         }
-        $key_type->setAttributeKey($key);
-        $key->setAttributeKeyType($key_type);
+        $settings->setAttributeKey($key);
+
+        $this->entityManager->persist($settings);
+        $this->entityManager->flush();
 
         // Modify the category's search indexer.
         $indexer = $this->getSearchIndexer();
@@ -229,40 +248,31 @@ abstract class AbstractCategory implements CategoryInterface, StandardSearchInde
 
     public function deleteKey(Key $key)
     {
-        $controller = $key->getController();
-        $controller->deleteKey();
-
-        // Delete from any attribute sets
-        $r = $this->entityManager->getRepository('\Concrete\Core\Entity\Attribute\SetKey');
-        $setKeys = $r->findBy(array('attribute_key' => $key));
-        foreach ($setKeys as $setKey) {
-            $this->entityManager->remove($setKey);
-        }
-        $this->entityManager->remove($key);
-
-        $this->entityManager->remove($key);
-        $this->entityManager->flush();
+        return;
     }
 
-    public function deleteValue(AttributeValueInterface $attribute)
+    public function deleteValue(AttributeValueInterface $attributeValue)
     {
         // Handle legacy attributes with these three lines.
-        $controller = $attribute->getAttributeKey()->getController();
-        $controller->setAttributeValue($attribute);
+        $controller = $attributeValue->getAttributeKey()->getController();
+        $controller->setAttributeValue($attributeValue);
         $controller->deleteValue();
 
-        /*
-         * @var Value
-         */
-        $value = $attribute->getValueObject();
-        if (is_object($value)) {
-            $this->entityManager->remove($attribute);
-            $this->entityManager->flush();
-            $this->entityManager->refresh($value);
-            if (count($value->getAttributeValues()) < 1) {
-                $this->entityManager->remove($value);
+        $genericValue = $attributeValue->getGenericValue();
+        if (is_object($genericValue)) {
+            $genericValues = $this->getAttributeValueRepository()->findBy(['generic_value' => $genericValue]);
+            if (count($genericValues) == 1) {
+                $value = $attributeValue->getValueObject();
+                if (is_object($value)) {
+                    $this->entityManager->remove($value);
+                    $this->entityManager->flush();
+                }
+                $this->entityManager->remove($genericValue);
             }
+            $this->entityManager->remove($attributeValue);
         }
+
+        $this->entityManager->flush();
     }
 
     public function getRequestLoader()

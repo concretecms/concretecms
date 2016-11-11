@@ -14,7 +14,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity(repositoryClass="\Concrete\Core\Entity\Express\EntityRepository")
  * @ORM\Table(name="ExpressEntities")
- * @ORM\HasLifecycleCallbacks
+ * @ORM\EntityListeners({"\Concrete\Core\Express\Entity\Listener"})
  */
 class Entity implements CategoryObjectInterface, ObjectInterface, ExportableInterface
 {
@@ -33,6 +33,16 @@ class Entity implements CategoryObjectInterface, ObjectInterface, ExportableInte
      * @ORM\Column(type="string", unique=true)
      */
     protected $handle;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $plural_handle;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    protected $supports_custom_display_order = false;
 
     /**
      * @ORM\Column(type="text", nullable=true)
@@ -89,15 +99,6 @@ class Entity implements CategoryObjectInterface, ObjectInterface, ExportableInte
      */
     protected $created_date;
 
-    /** @ORM\PostRemove */
-    public function afterRemove()
-    {
-        $node = Node::getByID($this->getEntityResultsNodeId());
-        if (is_object($node)) {
-            $node->delete();
-        }
-    }
-
     public function __construct()
     {
         $this->created_date = new \DateTime();
@@ -137,6 +138,50 @@ class Entity implements CategoryObjectInterface, ObjectInterface, ExportableInte
     public function setHandle($handle)
     {
         $this->handle = $handle;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPluralHandle()
+    {
+        return $this->plural_handle;
+    }
+
+    /**
+     * @param mixed $plural_handle
+     */
+    public function setPluralHandle($plural_handle)
+    {
+        $this->plural_handle = $plural_handle;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function supportsCustomDisplayOrder()
+    {
+        return $this->supports_custom_display_order;
+    }
+
+    /**
+     * @param mixed $supports_custom_display_order
+     */
+    public function setSupportsCustomDisplayOrder($supports_custom_display_order)
+    {
+        $this->supports_custom_display_order = $supports_custom_display_order;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getOwnedBy()
+    {
+        foreach($this->associations as $association) {
+            if ($association->isOwnedByAssociation()) {
+                return $association->getTargetEntity();
+            }
+        }
     }
 
     /**

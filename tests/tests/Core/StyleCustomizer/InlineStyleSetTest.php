@@ -127,6 +127,7 @@ class InlineStyleSetTest extends ConcreteDatabaseTestCase
             'boxShadowVertical' => '55px',
             'boxShadowSpread' => '60px',
             'customClass' => ['testclass'],
+            'customID' => 'testid',
             'backgroundSize' => 'auto',
             'backgroundPosition' => 'left top',
         );
@@ -160,5 +161,6 @@ class InlineStyleSetTest extends ConcreteDatabaseTestCase
         $this->assertEquals('55px', $set->getBoxShadowVertical());
         $this->assertEquals('60px', $set->getBoxShadowSpread());
         $this->assertEquals('testclass', $set->getCustomClass());
+        $this->assertEquals('testid', $set->getCustomID());
     }
 }

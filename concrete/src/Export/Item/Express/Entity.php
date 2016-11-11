@@ -20,6 +20,7 @@ class Entity implements ItemInterface
         $node = $xml->addChild('entity');
         $node->addAttribute('id', $entity->getID());
         $node->addAttribute('handle', $entity->getHandle());
+        $node->addAttribute('plural_handle', $entity->getPluralHandle());
         $node->addAttribute('name', $entity->getName());
         $node->addAttribute('include_in_public_list', $entity->getIncludeInPublicList() ? '1' : '');
         $node->addAttribute('description', h($entity->getDescription()));

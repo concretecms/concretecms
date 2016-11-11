@@ -2,7 +2,7 @@
 namespace Concrete\Attribute\Topics;
 
 use Concrete\Core\Attribute\FontAwesomeIconFormatter;
-use Concrete\Core\Entity\Attribute\Key\Type\TopicsType;
+use Concrete\Core\Entity\Attribute\Key\Settings\TopicsSettings;
 use Concrete\Core\Entity\Attribute\Value\Value\SelectedTopic;
 use Concrete\Core\Entity\Attribute\Value\Value\TopicsValue;
 use Concrete\Core\Search\ItemList\Database\AttributedItemList;
@@ -25,6 +25,11 @@ class Controller extends AttributeTypeController
     public function getIconFormatter()
     {
         return new FontAwesomeIconFormatter('tag');
+    }
+
+    public function getAttributeValueObject()
+    {
+        return $this->entityManager->find(TopicsValue::class, $this->attributeValue->getGenericValue());
     }
 
     public function filterByAttribute(AttributedItemList $list, $value, $comparison = '=')
@@ -58,7 +63,7 @@ class Controller extends AttributeTypeController
 
     public function saveKey($data)
     {
-        $type = $this->getAttributeKeyType();
+        $type = $this->getAttributeKeySettings();
         $data += array(
             'akTopicParentNodeID' => null,
             'akTopicTreeID' => null,
@@ -115,9 +120,9 @@ class Controller extends AttributeTypeController
     public function setNodes($akTopicParentNodeID, $akTopicTreeID)
     {
         /**
-         * @var $type TopicsType
+         * @var $type TopicsSettings
          */
-        $type = $this->getAttributeKey()->getAttributeKeyType();
+        $type = $this->getAttributeKey()->getAttributeKeySettings();
         $type->setParentNodeID($akTopicParentNodeID);
         $type->setTopicTreeID($akTopicTreeID);
         $this->entityManager->persist($type);
@@ -170,7 +175,7 @@ class Controller extends AttributeTypeController
 
     public function importKey(\SimpleXMLElement $key)
     {
-        $type = $this->getAttributeKeyType();
+        $type = $this->getAttributeKeySettings();
         $name = (string) $key->tree['name'];
         $tree = \Concrete\Core\Tree\Type\Topic::getByName($name);
         $node = $tree->getNodeByDisplayPath((string) $key->tree['path']);
@@ -346,8 +351,8 @@ class Controller extends AttributeTypeController
         if (!is_object($ak)) {
             return false;
         }
-        $this->akTopicParentNodeID = $ak->getAttributeKeyType()->getParentNodeID();
-        $this->akTopicTreeID = $ak->getAttributeKeyType()->getTopicTreeID();
+        $this->akTopicParentNodeID = $ak->getAttributeKeySettings()->getParentNodeID();
+        $this->akTopicTreeID = $ak->getAttributeKeySettings()->getTopicTreeID();
     }
 
     public function duplicateKey($newAK)
@@ -366,8 +371,14 @@ class Controller extends AttributeTypeController
         );
     }
 
-    public function createAttributeKeyType()
+    public function createAttributeKeySettings()
     {
-        return new TopicsType();
+        return new TopicsSettings();
     }
+
+    protected function retrieveAttributeKeySettings()
+    {
+        return $this->entityManager->find(TopicsSettings::class, $this->attributeKey);
+    }
+
 }

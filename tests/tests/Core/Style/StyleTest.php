@@ -145,7 +145,7 @@ class StyleTest extends \PHPUnit_Framework_TestCase
         $pt = new PageTheme();
         $pt->setThemeHandle('elemental');
         $pt->setThemeDirectory($env->getPath(DIRNAME_THEMES . '/elemental'));
-        $pt->setThemeURL($env->getURL(DIRNAME_THEMES . '/elmental'));
+        $pt->setThemeURL($env->getURL(DIRNAME_THEMES . '/elemental'));
 
         $sheets = $pt->getThemeCustomizableStyleSheets();
         $this->assertTrue(count($sheets) == 1);

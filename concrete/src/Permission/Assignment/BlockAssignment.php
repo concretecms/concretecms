@@ -5,6 +5,7 @@ use Concrete\Core\Permission\Access\Access;
 use Concrete\Core\Block\Block;
 use Area;
 use Concrete\Core\Area\SubArea;
+use Concrete\Core\Permission\Inheritance\Registry\RegistryInterface;
 use PermissionKey;
 use Page;
 use Database;
@@ -12,28 +13,6 @@ use Database;
 class BlockAssignment extends Assignment
 {
     protected $permissionObjectToCheck;
-    protected $inheritedAreaPermissions = array(
-        'view_block' => 'view_area',
-        'edit_block' => 'edit_area_contents',
-        'edit_block_custom_template' => 'edit_area_contents',
-        'edit_block_design' => 'edit_area_contents',
-        'edit_block_permissions' => 'edit_area_permissions',
-        'schedule_guest_access' => 'schedule_area_contents_guest_access',
-        'edit_block_name' => 'edit_area_contents',
-        'edit_block_cache_settings' => 'edit_area_contents',
-        'delete_block' => 'delete_area_contents',
-    );
-    protected $inheritedPagePermissions = array(
-        'view_block' => 'view_page',
-        'edit_block' => 'edit_page_contents',
-        'edit_block_custom_template' => 'edit_page_contents',
-        'edit_block_design' => 'edit_page_contents',
-        'edit_block_permissions' => 'edit_page_permissions',
-        'edit_block_name' => 'edit_page_contents',
-        'edit_block_cache_settings' => 'edit_page_contents',
-        'schedule_guest_access' => 'schedule_page_contents_guest_access',
-        'delete_block' => 'edit_page_contents',
-    );
 
     /**
      * @param Block $b
@@ -73,6 +52,10 @@ class BlockAssignment extends Assignment
 
     public function getPermissionAccessObject()
     {
+        /**
+         * @var $registry RegistryInterface
+         */
+        $registry = \Core::make('Concrete\Core\Permission\Inheritance\Registry\BlockRegistry');
         $db = Database::connection();
         if ($this->permissionObjectToCheck instanceof Block) {
             $co = $this->permissionObjectToCheck->getBlockCollectionObject();
@@ -88,12 +71,12 @@ class BlockAssignment extends Assignment
             if ($paID) {
                 $pae = Access::getByID($paID, $this->pk, false);
             }
-        } elseif ($this->permissionObjectToCheck instanceof Area && isset($this->inheritedAreaPermissions[$this->pk->getPermissionKeyHandle()])) {
-            $pk = PermissionKey::getByHandle($this->inheritedAreaPermissions[$this->pk->getPermissionKeyHandle()]);
+        } elseif ($this->permissionObjectToCheck instanceof Area && $registry->getEntry('area', $this->pk->getPermissionKeyHandle())) {
+            $pk = PermissionKey::getByHandle($registry->getEntry('area', $this->pk->getPermissionKeyHandle())->getInheritedFromPermissionKeyHandle());
             $pk->setPermissionObject($this->permissionObjectToCheck);
             $pae = $pk->getPermissionAccessObject();
-        } elseif ($this->permissionObjectToCheck instanceof Page && isset($this->inheritedPagePermissions[$this->pk->getPermissionKeyHandle()])) {
-            $pk = PermissionKey::getByHandle($this->inheritedPagePermissions[$this->pk->getPermissionKeyHandle()]);
+        } elseif ($this->permissionObjectToCheck instanceof Page && $registry->getEntry('page', $this->pk->getPermissionKeyHandle())) {
+            $pk = PermissionKey::getByHandle($registry->getEntry('page', $this->pk->getPermissionKeyHandle())->getInheritedFromPermissionKeyHandle());
             $pk->setPermissionObject($this->permissionObjectToCheck);
             $pae = $pk->getPermissionAccessObject();
         }

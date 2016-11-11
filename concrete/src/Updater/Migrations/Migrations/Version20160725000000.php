@@ -9,10 +9,9 @@ use Concrete\Core\Block\BlockType\BlockType;
 use Concrete\Core\Cache\Cache;
 use Concrete\Core\Cache\CacheLocal;
 use Concrete\Core\Entity\Attribute\Key\PageKey;
-use Concrete\Core\Entity\Attribute\Key\Type\BooleanType;
-use Concrete\Core\Entity\Attribute\Key\Type\NumberType;
 use Concrete\Core\File\Filesystem;
 use Concrete\Core\File\Set\Set;
+use Concrete\Core\Multilingual\Page\Section\Section;
 use Concrete\Core\Page\Template;
 use Concrete\Core\Permission\Access\Access;
 use Concrete\Core\Permission\Access\Entity\GroupEntity;
@@ -34,22 +33,43 @@ use Concrete\Core\Support\Facade\Facade;
 
 class Version20160725000000 extends AbstractMigration
 {
+
+    protected function output($message)
+    {
+        $this->version->getConfiguration()->getOutputWriter()->write($message);
+    }
+
     protected function renameProblematicTables()
     {
+        $this->output(t('Renaming problematic tables...'));
         if (!$this->connection->tableExists('_AttributeKeys')) {
             $this->connection->Execute('alter table AttributeKeys rename _AttributeKeys');
         }
         if (!$this->connection->tableExists('_AttributeValues')) {
             $this->connection->Execute('alter table AttributeValues rename _AttributeValues');
         }
-        if (!$this->connection->tableExists('_CollectionAttributeValues')) {
-            $this->connection->Execute('alter table CollectionAttributeValues rename _CollectionAttributeValues');
+        if (!$this->connection->tableExists('_atAddressSettings')) {
+            $this->connection->Execute('alter table atAddressSettings rename _atAddressSettings');
+            $this->connection->Execute('alter table _atAddressSettings drop primary key, add primary key (akID)');
         }
-        if (!$this->connection->tableExists('_FileAttributeValues')) {
-            $this->connection->Execute('alter table FileAttributeValues rename _FileAttributeValues');
+        if (!$this->connection->tableExists('_atAddressCustomCountries')) {
+            $this->connection->Execute('alter table atAddressCustomCountries rename _atAddressCustomCountries');
         }
-        if (!$this->connection->tableExists('_UserAttributeValues')) {
-            $this->connection->Execute('alter table UserAttributeValues rename _UserAttributeValues');
+        if (!$this->connection->tableExists('_atSelectSettings')) {
+            $this->connection->Execute('alter table atSelectSettings rename _atSelectSettings');
+            $this->connection->Execute('alter table _atSelectSettings drop primary key, add primary key (akID)');
+        }
+        if (!$this->connection->tableExists('_atSelectOptions')) {
+            $this->connection->Execute('alter table atSelectOptions rename _atSelectOptions');
+        }
+        if (!$this->connection->tableExists('_atSocialLinks')) {
+            $this->connection->Execute('alter table atSocialLinks rename _atSocialLinks');
+        }
+        if (!$this->connection->tableExists('_atSelectOptionsSelected')) {
+            $this->connection->Execute('alter table atSelectOptionsSelected rename _atSelectOptionsSelected');
+        }
+        if (!$this->connection->tableExists('_atSelectedTopics')) {
+            $this->connection->Execute('alter table atSelectedTopics rename _atSelectedTopics');
         }
         if (!$this->connection->tableExists('_TreeTopicNodes')) {
             $this->connection->Execute('alter table TreeTopicNodes rename _TreeTopicNodes');
@@ -58,6 +78,7 @@ class Version20160725000000 extends AbstractMigration
 
     protected function migrateOldPermissions()
     {
+        $this->output(t('Migrating old permissions...'));
         $this->connection->Execute('update PermissionKeys set pkHandle = ? where pkHandle = ?', array(
             'view_category_tree_node', 'view_topic_category_tree_node',
         ));
@@ -80,6 +101,7 @@ class Version20160725000000 extends AbstractMigration
 
     protected function migrateFileManagerPermissions()
     {
+        $this->output(t('Migrating file manager permissions...'));
         $filesystem = new Filesystem();
         $root = $filesystem->getRootFolder();
         $this->migrateFileSetManagerPermissions(0, $root);
@@ -108,6 +130,7 @@ class Version20160725000000 extends AbstractMigration
 
     protected function migrateFileSetManagerPermissions($fsID, FileFolder $folder)
     {
+        $this->output(t('Migrating file set permissions...'));
         $r = $this->connection->executeQuery('select fpa.*, pk.pkHandle from FileSetPermissionAssignments fpa inner join PermissionKeys pk on fpa.pkID = pk.pkID where fsID = ?', array($fsID));
         $permissionsMap = array(
             'view_file_set_file' => 'view_file_folder_file',
@@ -152,18 +175,15 @@ class Version20160725000000 extends AbstractMigration
                 $pt->assignPermissionAccess($pa);
             }
         }
-
-        // Loop through all file sets that have custom permissions and create folders from them,
-        // preserving the file permssions on the folders themselves
-
-
     }
 
     protected function updateDoctrineXmlTables()
     {
+        $this->output(t('Updating tables found in doctrine xml...'));
         // Update tables that still exist in db.xml
         \Concrete\Core\Database\Schema\Schema::refreshCoreXMLSchema(array(
             'Pages',
+            'Stacks',
             'PageTypes',
             'NotificationPermissionSubscriptionList',
             'NotificationPermissionSubscriptionListCustom',
@@ -179,6 +199,7 @@ class Version20160725000000 extends AbstractMigration
 
     protected function prepareProblematicEntityTables()
     {
+        $this->output(t('Preparing problematic entity database tables...'));
         // Remove the weird primary keys from the Files table
         $this->connection->executeQuery('alter table Files drop primary key, add primary key (fID)');
 
@@ -221,6 +242,7 @@ class Version20160725000000 extends AbstractMigration
         $existingMetadata = $cmf->getAllMetadata();
         foreach($existingMetadata as $meta) {
             if (in_array($meta->getName(), $entities)) {
+                $this->output(t('Installing entity %s...', $meta->getName()));
                 $metadatas[] = $meta;
             }
         }
@@ -233,6 +255,7 @@ class Version20160725000000 extends AbstractMigration
         // loop through all old attributes and make sure to import them into the new system
         $r = $this->connection->executeQuery('select ak.*, akCategoryHandle from _AttributeKeys ak inner join AttributeKeyCategories akc on ak.akCategoryID = akc.akCategoryID;');
         while ($row = $r->fetch()) {
+            $this->output(t('Migrating attribute key %s', $row['akHandle']));
             $table = false;
             $akCategory = null;
             switch ($row['akCategoryHandle']) {
@@ -258,6 +281,7 @@ class Version20160725000000 extends AbstractMigration
                 'akHandle' => $row['akHandle'],
                 'akIsSearchable' => $row['akIsSearchable'],
                 'akIsSearchableIndexed' => $row['akIsSearchableIndexed'],
+                'atID' => $row['atID'],
                 'akIsInternal' => $row['akIsInternal'],
                 'pkgID' => $pkgID,
                 'akCategory' => $akCategory,
@@ -273,92 +297,70 @@ class Version20160725000000 extends AbstractMigration
                 }
             }
 
-            $this->importAttributeKeyType($row['atID'], $row['akID']);
+            $this->importAttributeKeySettings($row['atID'], $row['akID']);
             switch ($akCategory) {
                 case 'pagekey':
-                    $rb = $this->connection->executeQuery("select * from _CollectionAttributeValues where akID = ?", array($row['akID']));
+                    $rb = $this->connection->executeQuery("select * from CollectionAttributeValues where akID = ?", array($row['akID']));
                     while ($rowB = $rb->fetch()) {
-                        $avrID = $this->addAttributeValue($row['atID'], $row['akID'], $rowB['avID'], 'page');
-                        if ($avrID) {
-                            $this->connection->insert('CollectionAttributeValues', [
-                                'cID' => $rowB['cID'],
-                                'cvID' => $rowB['cvID'],
-                                'avrID' => $avrID,
-                            ]);
-                        }
+                        $this->addAttributeValue($row['atID'], $row['akID'], $rowB['avID']);
                     }
                     break;
                 case 'filekey':
-                    $rb = $this->connection->executeQuery("select * from _FileAttributeValues where akID = ?", array($row['akID']));
+                    $rb = $this->connection->executeQuery("select * from FileAttributeValues where akID = ?", array($row['akID']));
                     while ($rowB = $rb->fetch()) {
-                        $avrID = $this->addAttributeValue($row['atID'], $row['akID'], $rowB['avID'], 'page');
-                        if ($avrID) {
-                            $this->connection->insert('FileAttributeValues', [
-                                'fID' => $rowB['fID'],
-                                'fvID' => $rowB['fvID'],
-                                'avrID' => $avrID,
-                            ]);
-                        }
+                        $this->addAttributeValue($row['atID'], $row['akID'], $rowB['avID']);
                     }
                     break;
                 case 'userkey':
-                    $rb = $this->connection->executeQuery("select * from _UserAttributeValues where akID = ?", array($row['akID']));
+                    $rb = $this->connection->executeQuery("select * from UserAttributeValues where akID = ?", array($row['akID']));
                     while ($rowB = $rb->fetch()) {
-                        $avrID = $this->addAttributeValue($row['atID'], $row['akID'], $rowB['avID'], 'page');
-                        if ($avrID) {
-                            $this->connection->insert('UserAttributeValues', [
-                                'avrID' => $avrID,
-                            ]);
-                        }
+                        $this->addAttributeValue($row['atID'], $row['akID'], $rowB['avID']);
                     }
                     break;
             }
         }
     }
 
-    protected function loadAttributeValue($atHandle, $legacyAVID, $avID)
+    protected function migrateAttributeValue($atHandle, $avID)
     {
         switch ($atHandle) {
             case 'address':
-                $row = $this->connection->fetchAssoc('select * from atAddress where avID = ?', [$legacyAVID]);
-                $row['avID'] = $avID;
-                $this->connection->insert('AddressAttributeValues', $row);
+                // Nothing to do here.
                 break;
             case 'boolean':
-                $value = $this->connection->fetchColumn('select value from atBoolean where avID = ?', [$legacyAVID]);
-                $this->connection->insert('BooleanAttributeValues', ['value' => $value, 'avID' => $avID]);
+                // Nothing to do here.
                 break;
             case 'date_time':
-                $row = $this->connection->fetchAssoc('select * from atDateTime where avID = ?', [$legacyAVID]);
-                $row['avID'] = $avID;
-                $this->connection->insert('DateTimeAttributeValues', $row);
+                // Nothing to do here.
                 break;
             case 'image_file':
-                $row = $this->connection->fetchAssoc('select * from atFile where avID = ?', [$legacyAVID]);
-                $row['avID'] = $avID;
-                $this->connection->insert('ImageFileAttributeValues', $row);
+                // Nothing to do here.
                 break;
             case 'number':
             case 'rating':
-                $row = $this->connection->fetchAssoc('select * from atNumber where avID = ?', [$legacyAVID]);
-                $row['avID'] = $avID;
-                $this->connection->insert('NumberAttributeValues', $row);
+            // Nothing to do here.
                 break;
             case 'select':
-                $this->connection->insert('SelectAttributeValues', array('avID' => $avID));
-                $options = $this->connection->fetchAll('select * from atSelectOptionsSelected where avID = ?', [$legacyAVID]);
+                if (!$this->connection->fetchColumn('select count(avID) from atSelect where avID = ?', [$avID])) {
+                    $this->connection->insert('atSelect', array('avID' => $avID));
+                }
+                $options = $this->connection->fetchAll('select * from _atSelectOptionsSelected where avID = ?', [$avID]);
                 foreach ($options as $option) {
-                    $this->connection->insert('SelectAttributeValueSelectedOptions', array(
-                        'avSelectOptionID' => $option['atSelectOptionID'],
-                        'avID' => $avID,
-                    ));
+                    if (!$this->connection->fetchColumn('select count(avSelectOptionID) from atSelectOptionsSelected where avSelectOptionID = ? and avID = ?', [$option['atSelectOptionID'], $avID])) {
+                        $this->connection->insert('atSelectOptionsSelected', array(
+                            'avSelectOptionID' => $option['atSelectOptionID'],
+                            'avID' => $avID,
+                        ));
+                    }
                 }
                 break;
             case 'social_links':
-                $this->connection->insert('SocialLinksAttributeValues', array('avID' => $avID));
-                $links = $this->connection->fetchAll('select * from atSocialLinks where avID = ?', [$legacyAVID]);
+                if (!$this->connection->fetchColumn('select count(avID) from atSocialLinks where avID = ?', [$avID])) {
+                    $this->connection->insert('atSocialLinks', array('avID' => $avID));
+                }
+                $links = $this->connection->fetchAll('select * from _atSocialLinks where avID = ?', [$avID]);
                 foreach ($links as $link) {
-                    $this->connection->insert('SocialLinksAttributeSelectedLinks', array(
+                    $this->connection->insert('atSelectedSocialLinks', array(
                         'service' => $link['service'],
                         'serviceInfo' => $link['serviceInfo'],
                         'avID' => $avID,
@@ -366,20 +368,18 @@ class Version20160725000000 extends AbstractMigration
                 }
                 break;
             case 'text':
-                $row = $this->connection->fetchAssoc('select * from atDefault where avID = ?', [$legacyAVID]);
-                $row['avID'] = $avID;
-                $this->connection->insert('TextAttributeValues', $row);
+                // Nothing to do here.
                 break;
             case 'textarea':
-                $row = $this->connection->fetchAssoc('select * from atDefault where avID = ?', [$legacyAVID]);
-                $row['avID'] = $avID;
-                $this->connection->insert('TextareaAttributeValues', $row);
+                // Nothing to do here.
                 break;
             case 'topics':
-                $this->connection->insert('TopicAttributeValues', array('avID' => $avID));
-                $topics = $this->connection->fetchAll('select * from atSelectedTopics where avID = ?', [$legacyAVID]);
+                if (!$this->connection->fetchColumn('select count(avID) from atTopic where avID = ?', [$avID])) {
+                    $this->connection->insert('atTopic', array('avID' => $avID));
+                }
+                $topics = $this->connection->fetchAll('select * from _atSelectedTopics where avID = ?', [$avID]);
                 foreach ($topics as $topic) {
-                    $this->connection->insert('TopicAttributeSelectedTopics', array(
+                    $this->connection->insert('atSelectedTopics', array(
                         'treeNodeID' => $topic['TopicNodeID'],
                         'avID' => $avID,
                     ));
@@ -388,102 +388,72 @@ class Version20160725000000 extends AbstractMigration
         }
     }
 
-    protected function addAttributeValue($atID, $akID, $legacyAVID, $type)
+    protected function addAttributeValue($atID, $akID, $avID)
     {
         // Create AttributeValueValue Record.
         // Retrieve type
         $atHandle = $this->connection->fetchColumn('select atHandle from AttributeTypes where atID = ?', array($atID));
         if ($atHandle) {
-            $valueType = strtolower(preg_replace("/[^A-Za-z]/", '', $atHandle)) . 'value';
-            $type = $type . 'value';
-
-            $this->connection->insert('AttributeValueValues', ['type' => $valueType]);
-            $avID = $this->connection->lastInsertId();
-
-            $this->loadAttributeValue($atHandle, $legacyAVID, $avID);
+            $this->migrateAttributeValue($atHandle, $avID);
 
             // Create AttributeValue record
-            $this->connection->insert('AttributeValues', [
-                'akID' => $akID,
-                'avID' => $avID,
-                'type' => $type,
-            ]);
-
-            return $this->connection->lastInsertId();
+            if (!$this->connection->fetchColumn('select count(avID) from AttributeValues where avID = ?', [$avID])) {
+                $this->connection->insert('AttributeValues', [
+                    'akID' => $akID,
+                    'avID' => $avID,
+                ]);
+            }
         }
     }
 
-    protected function importAttributeKeyType($atID, $akID)
+    protected function importAttributeKeySettings($atID, $akID)
     {
         $row = $this->connection->fetchAssoc('select * from AttributeTypes where atID = ?', array($atID));
         if ($row['atID']) {
-            $akTypeID = $this->connection->fetchColumn("select akTypeID from AttributeKeyTypes where akID = ?", array($akID));
-            $type = strtolower(preg_replace("/[^A-Za-z]/", '', $row['atHandle'])) . 'type';
-            if (!$akTypeID) {
-                $this->connection->insert('AttributeKeyTypes', ['akTypeHandle' => $row['atHandle'], 'akID' => $akID, 'type' => $type]);
-                $akTypeID = $this->connection->lastInsertId();
-            }
+            $this->output(t('Importing attribute key settings %s...', $row['atHandle']));
             switch ($row['atHandle']) {
                 case 'address':
-                    $count = $this->connection->fetchColumn('select count(*) from AddressAttributeKeyTypes where akTypeID = ?', array($akTypeID));
+                    $count = $this->connection->fetchColumn('select count(*) from atAddressSettings where akID = ?', array($akID));
                     if (!$count) {
-                        $rowA = $this->connection->fetchAssoc('select * from atAddressSettings where akID = ?', array($akID));
+                        $rowA = $this->connection->fetchAssoc('select * from _atAddressSettings where akID = ?', array($akID));
                         if ($rowA['akID']) {
                             $countries = $this->connection->fetchAll('select * from atAddressCustomCountries where akID = ?', array($akID));
                             if (!$countries) {
                                 $countries = array();
                             }
-                            $this->connection->insert('AddressAttributeKeyTypes', [
+                            $this->connection->insert('atAddressSettings', [
                                 'akHasCustomCountries' => $rowA['akHasCustomCountries'],
                                 'akDefaultCountry' => $rowA['akDefaultCountry'],
                                 'customCountries' => json_encode($countries),
-                                'akTypeID' => $akTypeID,
+                                'akID' => $akID,
                             ]);
                         }
                     }
                     break;
                 case 'boolean':
-                    $count = $this->connection->fetchColumn('select count(*) from BooleanAttributeKeyTypes where akTypeID = ?', array($akTypeID));
-                    if (!$count) {
-                        $rowA = $this->connection->fetchAssoc('select * from atBooleanSettings where akID = ?', array($akID));
-                        if ($rowA['akID']) {
-                            $this->connection->insert('BooleanAttributeKeyTypes', [
-                                'akCheckedByDefault' => $rowA['akCheckedByDefault'],
-                                'akTypeID' => $akTypeID,
-                            ]);
-                        }
-                    }
+                    // Nothing to do here.
                     break;
                 case 'date_time':
-                    $count = $this->connection->fetchColumn('select count(*) from DateTimeAttributeKeyTypes where akTypeID = ?', array($akTypeID));
-                    if (!$count) {
-                        $rowA = $this->connection->fetchAssoc('select * from atDateTimeSettings where akID = ?', array($akID));
-                        if ($rowA['akID']) {
-                            $this->connection->insert('DateTimeAttributeKeyTypes', [
-                                'akDateDisplayMode' => $rowA['akDateDisplayMode'],
-                                'akTypeID' => $akTypeID,
-                            ]);
-                        }
-                    }
+                    // Nothing to do here.
                     break;
                 case 'select':
-                    $count = $this->connection->fetchColumn('select count(*) from SelectAttributeKeyTypes where akTypeID = ?', array($akTypeID));
+                    $count = $this->connection->fetchColumn('select count(*) from atSelectSettings where akID = ?', array($akID));
                     if (!$count) {
-                        $rowA = $this->connection->fetchAssoc('select * from atSelectSettings where akID = ?', array($akID));
+                        $rowA = $this->connection->fetchAssoc('select * from _atSelectSettings where akID = ?', array($akID));
                         if ($rowA['akID']) {
-                            $this->connection->insert('SelectAttributeValueOptionLists', []);
+                            $this->connection->insert('atSelectOptionLists', []);
                             $listID = $this->connection->lastInsertId();
-                            $this->connection->insert('SelectAttributeKeyTypes', [
+                            $this->connection->insert('atSelectSettings', [
                                 'akSelectAllowMultipleValues' => $rowA['akSelectAllowMultipleValues'],
                                 'akSelectOptionDisplayOrder' => $rowA['akSelectOptionDisplayOrder'],
                                 'akSelectAllowOtherValues' => $rowA['akSelectAllowOtherValues'],
                                 'avSelectOptionListID' => $listID,
-                                'akTypeID' => $akTypeID,
+                                'akID' => $akID,
                             ]);
 
-                            $options = $this->connection->fetchAll('select * from atSelectOptions where akID = ?', array($akID));
+                            $options = $this->connection->fetchAll('select * from _atSelectOptions where akID = ?', array($akID));
                             foreach ($options as $option) {
-                                $this->connection->insert('SelectAttributeValueOptions', [
+                                $this->connection->insert('atSelectOptions', [
                                     'isEndUserAdded' => $option['isEndUserAdded'],
                                     'displayOrder' => $option['displayOrder'],
                                     'value' => $option['value'],
@@ -495,59 +465,25 @@ class Version20160725000000 extends AbstractMigration
                     }
                     break;
                 case 'image_file':
-                    $count = $this->connection->fetchColumn('select count(*) from ImageFileAttributeKeyTypes where akTypeID = ?', array($akTypeID));
-                    if (!$count) {
-                        $this->connection->insert('ImageFileAttributeKeyTypes', ['akFileManagerMode' => 0, 'akTypeID' => $akTypeID]);
-                    }
+                    // Nothing to do here.
                     break;
                 case 'number':
-                    $count = $this->connection->fetchColumn('select count(*) from NumberAttributeKeyTypes where akTypeID = ?', array($akTypeID));
-                    if (!$count) {
-                        $this->connection->insert('NumberAttributeKeyTypes', ['akTypeID' => $akTypeID]);
-                    }
+                    // Nothing to do here.
                     break;
                 case 'rating':
-                    $count = $this->connection->fetchColumn('select count(*) from RatingAttributeKeyTypes where akTypeID = ?', array($akTypeID));
-                    if (!$count) {
-                        $this->connection->insert('RatingAttributeKeyTypes', ['akTypeID' => $akTypeID]);
-                    }
+                    // Nothing to do here.
                     break;
                 case 'social_links':
-                    $count = $this->connection->fetchColumn('select count(*) from SocialLinksAttributeKeyTypes where akTypeID = ?', array($akTypeID));
-                    if (!$count) {
-                        $this->connection->insert('SocialLinksAttributeKeyTypes', ['akTypeID' => $akTypeID]);
-                    }
+                    // Nothing to do here.
                     break;
                 case 'text':
-                    $count = $this->connection->fetchColumn('select count(*) from TextAttributeKeyTypes where akTypeID = ?', array($akTypeID));
-                    if (!$count) {
-                        $this->connection->insert('TextAttributeKeyTypes', ['akTypeID' => $akTypeID]);
-                    }
+                    // Nothing to do here.
                     break;
                 case 'textarea':
-                    $count = $this->connection->fetchColumn('select count(*) from TextareaAttributeKeyTypes where akTypeID = ?', array($akTypeID));
-                    if (!$count) {
-                        $rowA = $this->connection->fetchAssoc('select * from atTextareaSettings where akID = ?', array($akID));
-                        if ($rowA['akID']) {
-                            $this->connection->insert('TextareaAttributeKeyTypes', [
-                                'akTextareaDisplayMode' => $rowA['akTextareaDisplayMode'],
-                                'akTypeID' => $akTypeID,
-                            ]);
-                        }
-                    }
+                    // Nothing to do here.
                     break;
                 case 'topics':
-                    $count = $this->connection->fetchColumn('select count(*) from TopicsAttributeKeyTypes where akTypeID = ?', array($akTypeID));
-                    if (!$count) {
-                        $rowA = $this->connection->fetchAssoc('select * from atTopicSettings where akID = ?', array($akID));
-                        if ($rowA['akID']) {
-                            $this->connection->insert('TopicsAttributeKeyTypes', [
-                                'akTopicParentNodeID' => $rowA['akTopicParentNodeID'],
-                                'akTopicTreeID' => $rowA['akTopicTreeID'],
-                                'akTypeID' => $akTypeID,
-                            ]);
-                        }
-                    }
+                    // Nothing to do here.
                     break;
             }
         }
@@ -576,6 +512,7 @@ class Version20160725000000 extends AbstractMigration
 
     protected function addDashboard()
     {
+        $this->output(t('Updating Dashboard...'));
         $page = Page::getByPath('/dashboard/express');
         if (!is_object($page) || $page->isError()) {
             $sp = SinglePage::add('/dashboard/express');
@@ -656,6 +593,7 @@ class Version20160725000000 extends AbstractMigration
 
     protected function addBlockTypes()
     {
+        $this->output(t('Adding block types...'));
         $desktopSet = \Concrete\Core\Block\BlockType\Set::getByHandle('core_desktop');
         if (!is_object($desktopSet)) {
             $desktopSet = \Concrete\Core\Block\BlockType\Set::add('core_desktop', 'Desktop');
@@ -785,10 +723,20 @@ class Version20160725000000 extends AbstractMigration
             $bt->refresh();
         }
 
+        $bt = BlockType::getByHandle('next_previous');
+        if (is_object($bt)) {
+            $bt->refresh();
+        }
+
+        $bt = BlockType::getByHandle('autonav');
+        if (is_object($bt)) {
+            $bt->refresh();
+        }
     }
 
     protected function addTreeNodeTypes()
     {
+        $this->output(t('Adding tree node types...'));
         $this->connection->Execute('update TreeNodeTypes set treeNodeTypeHandle = ? where treeNodeTypeHandle = ?', array(
             'category', 'topic_category',
         ));
@@ -818,6 +766,7 @@ class Version20160725000000 extends AbstractMigration
 
     protected function installDesktops()
     {
+        $this->output(t('Installing Desktops...'));
         $template = Template::getByHandle('desktop');
         if (!is_object($template)) {
             Template::add('desktop', t('Desktop'), FILENAME_PAGE_TEMPLATE_DEFAULT_ICON, null, true);
@@ -834,21 +783,19 @@ class Version20160725000000 extends AbstractMigration
         $category = Category::getByHandle('collection')->getController();
         $attribute = CollectionKey::getByHandle('is_desktop');
         if (!is_object($attribute)) {
-            $type = new BooleanType();
             $key = new PageKey();
             $key->setAttributeKeyHandle('is_desktop');
             $key->setAttributeKeyName('Is Desktop');
             $key->setIsAttributeKeyInternal(true);
-            $category->add($type, $key);
+            $category->add('boolean', $key);
         }
         $attribute = CollectionKey::getByHandle('desktop_priority');
         if (!is_object($attribute)) {
-            $type = new NumberType();
             $key = new PageKey();
             $key->setAttributeKeyHandle('desktop_priority');
             $key->setAttributeKeyName('Desktop Priority');
             $key->setIsAttributeKeyInternal(true);
-            $category->add($type, $key);
+            $category->add('number', $key);
         }
 
         $desktop = Page::getByPath('/dashboard/welcome');
@@ -870,7 +817,7 @@ class Version20160725000000 extends AbstractMigration
         SinglePage::add('/account/messages');
 
         $ci = new ContentImporter();
-        $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/desktops.xml');
+        $ci->importContentFile(DIR_BASE_CORE . '/config/install/upgrade/desktops.xml');
 
         $desktop = Page::getByPath('/dashboard/welcome');
         $desktop->movePageDisplayOrderToTop();
@@ -880,6 +827,7 @@ class Version20160725000000 extends AbstractMigration
 
     protected function updateWorkflows()
     {
+        $this->output(t('Updating Workflows...'));
         $page = \Page::getByPath("/dashboard/workflow");
         if (is_object($page) && !$page->isError()) {
             $page->moveToTrash();
@@ -892,6 +840,7 @@ class Version20160725000000 extends AbstractMigration
 
     protected function installSite()
     {
+        $this->output(t('Installing Site object...'));
 
         /**
          * @var $service Service
@@ -907,7 +856,11 @@ class Version20160725000000 extends AbstractMigration
         }
 
         if (!is_object($site) || $site->getSiteID() < 1) {
-            $site = $service->installDefault();
+            $locale = 'en_US';
+            if (\Config::get('concrete.multilingual.default_locale')) {
+                $locale = \Config::get('concrete.multilingual.default_locale');
+            }
+            $site = $service->installDefault($locale);
 
             // migrate name
             $site->setSiteName(\Config::get('concrete.site'));
@@ -922,6 +875,7 @@ class Version20160725000000 extends AbstractMigration
 
         $site = $service->getDefault();
         $this->connection->executeQuery('update Pages set siteTreeID = ? where cIsSystemPage = 0', [$site->getSiteTreeID()]);
+        $this->connection->executeQuery('update Stacks set siteTreeID = ?', [$site->getSiteTreeID()]);
         $this->connection->executeQuery('update PageTypes set siteTypeID = ? where ptIsInternal = 0', [$type->getSiteTypeID()]);
         // migrate social links
         $links = $em->getRepository('Concrete\Core\Entity\Sharing\SocialNetwork\Link')
@@ -1005,6 +959,7 @@ class Version20160725000000 extends AbstractMigration
 
     protected function splittedTrackingCode()
     {
+        $this->output(t('Updating tracking code...'));
         $service = \Core::make('site');
         $site = $service->getDefault();
         $config = $site->getConfigRepository();
@@ -1030,6 +985,7 @@ class Version20160725000000 extends AbstractMigration
 
     protected function addPermissions()
     {
+        $this->output(t('Adding permissions...'));
 
         CacheLocal::delete('permission_keys', false);
 
@@ -1041,11 +997,13 @@ class Version20160725000000 extends AbstractMigration
 
     protected function cleanupOldPermissions()
     {
+        $this->output(t('Cleaning old permissions...'));
         $this->connection->Execute('delete from PermissionKeys where pkHandle = ?', array('_add_file'));
     }
 
     protected function updateTopics()
     {
+        $this->output(t('Updating topics...'));
         $r = $this->connection->executeQuery('select * from _TreeTopicNodes');
         while ($row = $r->fetch()) {
             $this->connection->executeQuery(
@@ -1057,6 +1015,7 @@ class Version20160725000000 extends AbstractMigration
 
     protected function updateFileManager()
     {
+        $this->output(t('Migrating to new file manager...'));
         $filesystem = new Filesystem();
         $folder = $filesystem->getRootFolder();
         if (!is_object($folder)) {
@@ -1066,7 +1025,9 @@ class Version20160725000000 extends AbstractMigration
 
             $r = $this->connection->executeQuery('select fID from Files');
             while ($row = $r->fetch()) {
-                $f = \Concrete\Core\File\File::getByID($row['fID']);
+                // This is a performance hack
+                $f = new \Concrete\Core\Entity\File\File();
+                $f->fID = $row['fID'];
                 File::add($f, $folder);
             }
         }
@@ -1074,6 +1035,7 @@ class Version20160725000000 extends AbstractMigration
 
     public function addNotifications()
     {
+        $this->output(t('Adding notifications...'));
         $adminGroupEntity = GroupEntity::getOrCreate(\Group::getByID(ADMIN_GROUP_ID));
         $adminUserEntity = UserEntity::getOrCreate(\UserInfo::getByID(USER_SUPER_ID));
         $pk = Key::getByHandle('notify_in_notification_center');
@@ -1084,22 +1046,128 @@ class Version20160725000000 extends AbstractMigration
         $pt->assignPermissionAccess($pa);
     }
 
-    /**
-     * This shouldn't be necessary - we should have just done this with internal migrations between betas
-     * but we didn't so this is what we have to do.
-     * @return mixed
-     */
-    protected function updatingFromVersion7()
-    {
-        return version_compare(\Config::get("concrete.version_installed"), '8.0.0a1', '<');
-    }
-
     protected function updateJobs()
     {
+        $this->output(t('Updating jobs...'));
         if (!$job = \Job::getByHandle('update_statistics')) {
             \Job::installByHandle('update_statistics');
         }
     }
+
+    protected function setupSinglePages()
+    {
+        $this->output(t('Updating single pages...'));
+        $siteTreeID = \Core::make('site')->getSite()->getSiteTreeID();
+        $pages = array(
+            // global pages
+            array('/dashboard/view.php', 0, 0),
+            array('/!trash/view.php', 0, 0),
+            array('/login/view.php', 0, 0),
+            array('/register/view.php', 0, 0),
+            array('/account/view.php', 0, 0),
+            array('/page_forbidden.php', 0, 0),
+            array('/download_file.php', 0, 0),
+            // root pages
+            array('/!drafts/view.php', $siteTreeID, 0),
+            array('/!stacks/view.php', $siteTreeID, 0),
+            array('/page_not_found.php', $siteTreeID, 0),
+        );
+        foreach($pages as $record) {
+            $this->connection->executeQuery('update Pages set siteTreeID = ?, cParentID = ? where cFilename = ?', array($record[1], $record[2], $record[0]));
+        }
+
+        // Delete members page if profiles not enabled
+        if (!\Config::get('concrete.user.profiles_enabled')) {
+            $c = \Page::getByPath('/members');
+            $c->moveToTrash();
+        }
+    }
+
+    protected function installLocales()
+    {
+        $this->output(t('Updating locales and multilingual sections...'));
+        // Update home page so it has no handle. This way we won't make links like /home/services unless
+        // people really want that.
+        $home = Page::getByID(HOME_CID, 'RECENT');
+        $home->update(['cHandle' => '']);
+
+        // Loop through all multilingual sections
+        $r = $this->connection->executeQuery('select * from MultilingualSections');
+        $sections = array();
+        while ($row = $r->fetch()) {
+            $sections[] = $row;
+        }
+
+        $em = $this->connection->getEntityManager();
+        $service = new \Concrete\Core\Localization\Locale\Service($em);
+        $site = \Core::make('site')->getSite();
+
+        $redirectToDefaultLocale = \Config::get('concrete.multilingual.redirect_home_to_default_locale');
+        $defaultLocale = \Config::get('concrete.multilingual.default_locale');
+        $sectionsIncludeHome = false;
+        foreach($sections as $section) {
+            if ($section['cID'] == 1) {
+                $sectionsIncludeHome = true;
+            }
+        }
+
+        // Now we have a valid locale object.
+        // Case 1: Home Page redirects to default locale, default locale inside the home page. 99% of sites.
+        if (!$sectionsIncludeHome && $redirectToDefaultLocale) {
+            // Move the home page outside site trees.
+            $this->output(t('Moving home page to outside of site trees...'));
+            $this->connection->executeQuery('update Pages set siteTreeID = 0 where cID = 1');
+        }
+
+        foreach($sections as $section) {
+
+            $sectionPage = \Page::getByID($section['cID']);
+            $this->output(t('Migrating multilingual section: %s...', $sectionPage->getCollectionName()));
+            // Create a locale for this section
+
+            if ($site->getDefaultLocale()->getLocale() != $section['msLanguage'] . '_' . $section['msCountry']) {
+                // We don't create the locale if it's the default, because we've already created it.
+                $locale = $service->add($site, $section['msLanguage'], $section['msCountry']);
+            } else {
+                $locale = $em->getRepository('Concrete\Core\Entity\Site\Locale')->findOneBy([
+                    'msLanguage' => $section['msLanguage'], 'msCountry' => $section['msCountry']
+                ]);
+            }
+
+            // Now that we have the locale, let's take the multilingual section and make it the
+            // home page for the newly created site tree
+            if ($section['cID'] != 1) {
+                $tree = $locale->getSiteTree();
+                if (!$redirectToDefaultLocale && $locale->getLocale() == $site->getDefaultLocale()->getLocale()) {
+                    // Case 2: This is our default locale (/en perhaps) but it is contained within a home
+                    // page that we do not redirect from. So we want to actually make the HOME page
+                    // the multilingual section – which is already is automatically.
+
+                    // We actually do nothing in this case since this is all already set up automatically earlier.
+                } else{
+                    $this->output(t('Setting pages for section %s to site tree %s...', $sectionPage->getCollectionName(), $tree->getSiteTreeID()));
+                    $tree->setSiteHomePageID($section['cID']);
+                    $em->persist($tree);
+                    $em->flush();
+                    $this->connection->executeQuery('update Pages set cParentID = 0, siteTreeID = ? where cID = ?', [
+                        $tree->getSiteTreeID(), $section['cID']
+                    ]);
+                    // Now we set all pages in this site tree to the new site tree ID.
+                    $children = $sectionPage->getCollectionChildrenArray();
+                    foreach($children as $cID) {
+                        $this->connection->executeQuery('update Pages set siteTreeID = ? where cID = ?', [
+                            $tree->getSiteTreeID(), $cID
+                        ]);
+                    }
+                }
+            }
+        }
+
+        // Case 3 - Home page is the default locale.
+        // We don't have to do anything to fulfill this since it's already been taken care of by the previous migrations.
+
+    }
+
 
     public function up(Schema $schema)
     {
@@ -1123,9 +1191,11 @@ class Version20160725000000 extends AbstractMigration
         $this->addTreeNodeTypes();
         $this->installDesktops();
         $this->updateJobs();
+        $this->setupSinglePages();
         $this->addNotifications();
         $this->splittedTrackingCode();
         $this->cleanupOldPermissions();
+        $this->installLocales();
         $this->connection->Execute('set foreign_key_checks = 1');
     }
 

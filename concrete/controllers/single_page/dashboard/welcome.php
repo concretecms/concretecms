@@ -8,6 +8,6 @@ class Welcome extends DashboardPageController
 {
     public function view()
     {
-        $this->setThemeViewTemplate('dialog.php');
+        $this->setThemeViewTemplate('desktop.php');
     }
 }

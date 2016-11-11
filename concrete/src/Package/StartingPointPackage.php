@@ -5,6 +5,7 @@ use AuthenticationType;
 use Concrete\Core\Backup\ContentImporter;
 use Concrete\Core\Config\Renderer;
 use Concrete\Core\Database\DatabaseStructureManager;
+use Concrete\Core\Entity\Site\Locale;
 use Concrete\Core\File\Filesystem;
 use Concrete\Core\File\Service\File;
 use Concrete\Core\Mail\Importer\MailImporter;
@@ -178,6 +179,13 @@ class StartingPointPackage extends BasePackage
             Group::getByID(GUEST_GROUP_ID),
             ['add_express_entries']
         );
+
+        // Set the root node to allow guests to view entries, so that blocks like express
+        // entry list and express entry details work.
+        $node->assignPermissions(
+            Group::getByID(GUEST_GROUP_ID),
+            ['view_express_entries']
+        );
     }
 
     public function install_attributes()
@@ -192,7 +200,7 @@ class StartingPointPackage extends BasePackage
     public function install_dashboard()
     {
         $ci = new ContentImporter();
-        $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/dashboard.xml');
+        $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/single_pages/dashboard.xml');
     }
 
     public function install_gathering()
@@ -216,7 +224,8 @@ class StartingPointPackage extends BasePackage
     public function install_required_single_pages()
     {
         $ci = new ContentImporter();
-        $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/login_registration.xml');
+        $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/single_pages/global.xml');
+        $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/single_pages/root.xml');
     }
 
     public function install_image_editor()
@@ -296,8 +305,6 @@ class StartingPointPackage extends BasePackage
 
     public function install_desktops()
     {
-        $ci = new ContentImporter();
-        $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/desktops.xml');
         $desktop = \Page::getByPath('/dashboard/welcome');
         $desktop->movePageDisplayOrderToTop();
     }
@@ -339,6 +346,7 @@ class StartingPointPackage extends BasePackage
             $configuration = new Configuration();
             $version = $configuration->getVersion(Config::get('concrete.version_db'));
             $version->markMigrated();
+            $configuration->registerPreviousMigratedVersions();
         } catch (\Exception $e) {
             throw new \Exception(t('Unable to install database: %s', $db->ErrorMsg() ? $db->ErrorMsg() : $e->getMessage()));
         }
@@ -352,9 +360,6 @@ class StartingPointPackage extends BasePackage
         $db->Execute('ALTER TABLE Groups ADD INDEX (`gPath` (255))');
         $db->Execute('ALTER TABLE SignupRequests ADD INDEX (`ipFrom` (32))');
         $db->Execute('ALTER TABLE UserBannedIPs ADD UNIQUE INDEX (ipFrom (32), ipTo(32))');
-        $db->Execute(
-            'ALTER TABLE QueueMessages ADD FOREIGN KEY (`queue_id`) REFERENCES `Queues` (`queue_id`) ON DELETE CASCADE ON UPDATE CASCADE'
-        );
     }
 
     public function add_users()
@@ -412,6 +417,8 @@ class StartingPointPackage extends BasePackage
 
         // Install conversation default email
         \Conversation::setDefaultSubscribedUsers([$superuser]);
+        $ci = new ContentImporter();
+        $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/conversation.xml');
     }
 
     public function make_directories()
@@ -455,11 +462,25 @@ class StartingPointPackage extends BasePackage
         file_put_contents(DIR_CONFIG_SITE . '/database.php', $renderer->render());
         @chmod(DIR_CONFIG_SITE . '/database.php', Config::get('concrete.filesystem.permissions.file'));
 
+        if (isset($site_install['session-handler']) && $site_install['session-handler']) {
+            $config->save('concrete.session.handler', $site_install['session-handler']);
+        }
+
+        unset($site_install['session-handler']);
+
         $renderer = new Renderer($site_install);
 
         if (!file_exists(DIR_CONFIG_SITE . '/app.php')) {
             file_put_contents(DIR_CONFIG_SITE . '/app.php', $renderer->render());
             @chmod(DIR_CONFIG_SITE . '/app.php', Config::get('concrete.filesystem.permissions.file'));
+        }
+
+        $siteConfig = \Site::getDefault()->getConfigRepository();
+        if (isset($site_install['canonical-url']) && $site_install['canonical-url']) {
+            $siteConfig->save('seo.canonical_url', $site_install['canonical-url']);
+        }
+        if (isset($site_install['canonical-ssl-url']) && $site_install['canonical-ssl-url']) {
+            $siteConfig->save('seo.canonical_ssl_url', $site_install['canonical-ssl-url']);
         }
 
         @unlink(DIR_CONFIG_SITE . '/site_install.php');
@@ -478,12 +499,13 @@ class StartingPointPackage extends BasePackage
     public function install_site()
     {
         \Core::make('site/type')->installDefault();
-        $site = \Site::installDefault();
+        $site = \Site::installDefault(SITE_INSTALL_LOCALE);
         $site->getConfigRepository()->save('name', SITE);
 
-        if (defined('SITE_INSTALL_LOCALE') && SITE_INSTALL_LOCALE != '' && SITE_INSTALL_LOCALE != 'en_US') {
-            Config::save('concrete.locale', SITE_INSTALL_LOCALE);
+        if (defined('APP_INSTALL_LANGUAGE') && APP_INSTALL_LANGUAGE != '' && APP_INSTALL_LANGUAGE != 'en_US') {
+            Config::save('concrete.locale', APP_INSTALL_LANGUAGE);
         }
+
         Config::save('concrete.version_installed', APP_VERSION);
         Config::save('concrete.misc.login_redirect', 'DESKTOP');
     }

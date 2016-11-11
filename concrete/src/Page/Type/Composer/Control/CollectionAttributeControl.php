@@ -91,6 +91,23 @@ class CollectionAttributeControl extends Control
             if (is_object($ak)) {
                 return $c->getAttributeValueObject($ak);
             }
+        } else {
+            $control = $this->getPageTypeComposerFormLayoutSetControlObject();
+            if (is_object($control)) {
+                $set = $control->getPageTypeComposerFormLayoutSetObject();
+                if (is_object($set)) {
+                    $type = $set->getPageTypeObject();
+                    // Does this page type have default attributes for this
+                    // attribute ?
+                    $defaults = $type->getPageTypePageTemplateDefaultPageObject();
+                    if (is_object($defaults)) {
+                        $value = $defaults->getAttributeValue($this->getAttributeKeyObject());
+                        if (is_object($value)) {
+                            return $value;
+                        }
+                    }
+                }
+            }
         }
     }
 

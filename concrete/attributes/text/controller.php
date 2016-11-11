@@ -3,7 +3,7 @@ namespace Concrete\Attribute\Text;
 
 use Concrete\Core\Attribute\FontAwesomeIconFormatter;
 use Concrete\Core\Attribute\DefaultController;
-use Concrete\Core\Entity\Attribute\Key\Type\TextType;
+use Concrete\Core\Entity\Attribute\Key\Settings\TextSettings;
 use Core;
 use Database;
 use Concrete\Core\Entity\Attribute\Value\Value\TextValue;
@@ -16,7 +16,7 @@ class Controller extends DefaultController
 
     public function saveKey($data)
     {
-        $type = $this->getAttributeKeyType();
+        $type = $this->getAttributeKeySettings();
         $data += array(
             'akTextPlaceholder' => null,
         );
@@ -29,12 +29,7 @@ class Controller extends DefaultController
 
     public function getDisplayValue()
     {
-        $this->load();
-        if ($this->akTextPlaceholder == 'text') {
-            return parent::getDisplayValue();
-        }
-
-        return htmLawed(parent::getValue(), array('safe' => 1, 'deny_attribute' => 'style'));
+        return h($this->getValue());
     }
 
     public function form()
@@ -49,11 +44,12 @@ class Controller extends DefaultController
 
     public function composer()
     {
+        $this->load();
         $value = null;
         if (is_object($this->attributeValue)) {
             $value = $this->app->make('helper/text')->entities($this->getAttributeValue()->getValue());
         }
-        echo $this->app->make('helper/form')->text($this->field('value'), $value, array('class' => 'span5'));
+        echo $this->app->make('helper/form')->text($this->field('value'), $value, array('class' => 'span5', 'placeholder' => $this->akTextPlaceholder));
     }
 
     public function searchForm($list)
@@ -81,11 +77,10 @@ class Controller extends DefaultController
             return false;
         }
 
-        $type = $ak->getAttributeKeyType();
-        /*
-         * @var $type TextType
+        $type = $ak->getAttributeKeySettings();
+        /**
+         * @var $type TextSettings
          */
-
         $this->akTextPlaceholder = $type->getPlaceholder();
         $this->set('akTextPlaceholder', $type->getPlaceholder());
     }
@@ -108,18 +103,13 @@ class Controller extends DefaultController
 
     public function importKey(\SimpleXMLElement $akey)
     {
-        $type = $this->getAttributeKeyType();
+        $type = $this->getAttributeKeySettings();
         if (isset($akey->type)) {
             $data['akTextPlaceholder'] = $akey->type['placeholder'];
             $type->setPlaceholder((string) $akey->type['placeholder']);
         }
 
         return $type;
-    }
-
-    public function createAttributeKeyType()
-    {
-        return new TextType();
     }
 
     public function getIconFormatter()

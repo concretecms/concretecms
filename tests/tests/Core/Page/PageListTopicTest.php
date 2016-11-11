@@ -21,11 +21,11 @@ class PageListTopicTest extends PageTestCase
         $this->metadatas = array_merge($this->metadatas, array(
             'Concrete\Core\Entity\Attribute\Type',
             'Concrete\Core\Entity\Attribute\Category',
-            'Concrete\Core\Entity\Attribute\Key\Type\Type',
+            'Concrete\Core\Entity\Attribute\Key\Settings\Settings',
             'Concrete\Core\Entity\Attribute\Value\Value\Value',
             'Concrete\Core\Entity\Attribute\Value\Value\TopicsValue',
             'Concrete\Core\Entity\Attribute\Value\Value\SelectedTopic',
-            'Concrete\Core\Entity\Attribute\Key\Type\TopicsType',
+            'Concrete\Core\Entity\Attribute\Key\Settings\TopicsSettings',
             'Concrete\Core\Entity\Page\Feed',
         ));
 
@@ -54,17 +54,23 @@ class PageListTopicTest extends PageTestCase
         \Concrete\Core\Tree\Node\Type\Topic::add('Test Topic', $node);
         $node = $tree->getRootTreeNodeObject();
 
-        $type = new \Concrete\Core\Entity\Attribute\Key\Type\TopicsType();
-        $type->setTopicTreeID($node->getTreeID());
-        $type->setTopicTreeID($node->getTreeID());
-        $type->setParentNodeID($node->getTreeNodeID());
+        $attributeType = \Concrete\Core\Attribute\Type::getByHandle('topics');
+
+        $settings = new \Concrete\Core\Entity\Attribute\Key\Settings\TopicsSettings();
+        $settings->setTopicTreeID($node->getTreeID());
+        $settings->setTopicTreeID($node->getTreeID());
+        $settings->setParentNodeID($node->getTreeNodeID());
 
         $category = \Concrete\Core\Attribute\Key\Category::add('collection');
 
         $key = $category->createAttributeKey();
         $key->setAttributeKeyHandle('topics');
         $key->setAttributeKeyName('Topics');
-        $topics = $category->add($type, $key);
+        $key->setAttributeType($attributeType);
+
+        $settings->setAttributeKey($key);
+
+        $topics = $category->add($attributeType, $key, $settings);
     }
     public function testFilterByTopic()
     {

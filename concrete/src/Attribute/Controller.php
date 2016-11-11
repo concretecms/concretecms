@@ -3,7 +3,7 @@ namespace Concrete\Core\Attribute;
 
 use Concrete\Core\Attribute\Value\EmptyRequestAttributeValue;
 use Concrete\Core\Controller\AbstractController;
-use Concrete\Core\Entity\Attribute\Key\Type\TextType;
+use Concrete\Core\Entity\Attribute\Key\Settings\EmptySettings;
 use Concrete\Core\Search\ItemList\Database\AttributedItemList;
 use Core;
 use Concrete\Core\Attribute\View as AttributeTypeView;
@@ -15,7 +15,7 @@ class Controller extends AbstractController
 
     /** @var \Concrete\Core\Attribute\Key\Key */
     protected $attributeKey;
-    /** @var \Concrete\Core\Attribute\Value\Value */
+    /** @var \Concrete\Core\Entity\Attribute\Value\AbstractValue */
     protected $attributeValue;
     protected $searchIndexFieldDefinition;
     protected $requestArray = false;
@@ -80,6 +80,11 @@ class Controller extends AbstractController
 
     public function deleteKey()
     {
+        $settings = $this->retrieveAttributeKeySettings();
+        if (is_object($settings)) {
+            $this->entityManager->remove($settings);
+            $this->entityManager->flush();
+        }
     }
 
     public function deleteValue()
@@ -297,9 +302,14 @@ class Controller extends AbstractController
         return $e;
     }
 
-    public function createAttributeKeyType()
+    public function createAttributeKeySettings()
     {
-        return new TextType();
+        return new EmptySettings();
+    }
+
+    protected function retrieveAttributeKeySettings()
+    {
+        return $this->entityManager->find('Concrete\Core\Entity\Attribute\Key\Settings\EmptySettings', $this->attributeKey);
     }
 
     /*
@@ -312,16 +322,21 @@ class Controller extends AbstractController
         }
     }
 
-    public function getAttributeKeyType()
+    public function getAttributeValueObject()
     {
-        if ($this->attributeKey && is_object($this->attributeKey->getAttributeKeyType())) {
-            return $this->attributeKey->getAttributeKeyType();
-        } else {
-            $key_type = $this->createAttributeKeyType();
-            $key_type->setAttributeTypeHandle($this->getAttributeType()->getAttributeTypeHandle());
+        return null;
+    }
 
-            return $key_type;
+    public function getAttributeKeySettings()
+    {
+        $settings = null;
+        if ($this->attributeKey) {
+            $settings = $this->retrieveAttributeKeySettings();
         }
+        if (!is_object($settings)) {
+            $settings = $this->createAttributeKeySettings();
+        }
+        return $settings;
     }
 
     public function getIconFormatter()

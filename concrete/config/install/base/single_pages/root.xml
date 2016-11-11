@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<concrete5-cif version="1.0">
+
+    <singlepages>
+
+        <page name="Drafts" path="/!drafts" filename="/!drafts/view.php" pagetype="" description="" package="" root="true">
+            <attributes>
+                <attributekey handle="icon_dashboard">
+                    <value>fa fa-edit</value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Stacks" path="/!stacks" filename="/!stacks/view.php" pagetype="" description="" package="" root="true">
+            <attributes>
+                <attributekey handle="icon_dashboard">
+                    <value>fa fa-th</value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Page Not Found" path="/page_not_found" filename="/page_not_found.php" pagetype="" description="" package="" root="true" >
+            <area name="Main"/>
+        </page>
+
+        <page name="Welcome Back" path="/desktop" custom-path="/account/welcome" filename="/desktop.php" pagetype="" description="" package="" root="true">
+            <attributes>
+                <attributekey handle="desktop_priority">
+                    <value>1</value>
+                </attributekey>
+                <attributekey handle="is_desktop">
+                    <value>1</value>
+                </attributekey>
+                <attributekey handle="exclude_nav">
+                    <value>1</value>
+                </attributekey>
+            </attributes>
+            <area name="Main">
+                <blocks>
+                    <block type="desktop_waiting_for_me" />
+                </blocks>
+            </area>
+        </page>
+
+
+    </singlepages>
+
+</concrete5-cif>
