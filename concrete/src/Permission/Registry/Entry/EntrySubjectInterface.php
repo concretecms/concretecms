@@ -1,9 +1,8 @@
 <?php
 namespace Concrete\Core\Permission\Registry\Entry;
 
-interface EntryInterface
+interface EntrySubjectInterface
 {
 
-    function apply($mixed);
 
 }
