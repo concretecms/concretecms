@@ -26,12 +26,12 @@ abstract class AbstractStandardCategory extends AbstractCategory implements Stan
         $this->deleteCategory();
     }
 
-    public function add($settings, $key, $pkg = null)
+    public function add($type, $key, $settings, $pkg = null)
     {
         /**
          * @var $key Key
          */
-        $key = parent::add($settings, $key, $pkg);
+        $key = parent::add($type, $key, $settings, $pkg);
         $key->setAttributeCategoryEntity($this->getCategoryEntity());
         $this->entityManager->persist($key);
         $this->entityManager->flush();
