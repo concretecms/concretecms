@@ -3,7 +3,6 @@ namespace Concrete\Core\Database\EntityManager\Provider;
 
 use Concrete\Core\Database\EntityManager\Provider\ProviderInterface;
 use Concrete\Core\Database\EntityManager\Driver\Driver;
-use Concrete\Core\Package\Package;
 use Doctrine\ORM\Mapping\Driver\XmlDriver;
 
 /**
@@ -31,12 +30,12 @@ class XmlProvider implements ProviderInterface
     /**
      * Constructor
      * 
-     * @param Package $pkg
+     * @param ProviderInterface $pkg
      * @param boolean $useDefaultSettings  if it's set to false, no default 
      *                                      mapping information will be added to 
      *                                      the drivers array
      */
-    public function __construct(Package $pkg, $useDefaultSettings = true)
+    public function __construct(ProviderInterface $pkg, $useDefaultSettings = true)
     {
         if($useDefaultSettings){
             $defaultNamespace = $pkg->getNamespace() . '\Entity';

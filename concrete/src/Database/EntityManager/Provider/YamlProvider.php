@@ -3,7 +3,6 @@ namespace Concrete\Core\Database\EntityManager\Provider;
 
 use Concrete\Core\Database\EntityManager\Provider\ProviderInterface;
 use Concrete\Core\Database\EntityManager\Driver\Driver;
-use Concrete\Core\Package\Package;
 use Doctrine\ORM\Mapping\Driver\YamlDriver;
 
 /**
@@ -24,7 +23,7 @@ class YamlProvider implements ProviderInterface
     /**
      * @var array
      */
-    protected $drivers = [];
+    protected $drivers = array();
     
     /**
      * Constructor
@@ -34,7 +33,7 @@ class YamlProvider implements ProviderInterface
      *                                      mapping information will be added to 
      *                                      the drivers array
      */
-    public function __construct(Package $pkg, $useDefaultSettings = true)
+    public function __construct(ProviderInterface $pkg, $useDefaultSettings = true)
     {
         if($useDefaultSettings){
             $defaultNamespace = $pkg->getNamespace() . '\Entity';
