@@ -104,7 +104,7 @@ abstract class AbstractCategory implements CategoryInterface, StandardSearchInde
     {
 
         if (is_string($type)) {
-            $type = \Concrete\Core\Attribute\Type::getByHandle($o);
+            $type = \Concrete\Core\Attribute\Type::getByHandle($type);
         }
 
         // Legacy array support for $key
