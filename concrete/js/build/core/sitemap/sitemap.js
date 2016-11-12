@@ -391,7 +391,7 @@
 
 				my.reloadNode(reloadNode, function() {
 					if (!destNode.bExpanded) {
-						destNode.expand(true);
+						destNode.setExpanded(true, {noAnimation: true});
 					}
 				});
 			});
