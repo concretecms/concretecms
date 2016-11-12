@@ -8,7 +8,7 @@
             <?= $form->text('name', '', ['autofocus' => 'autofocus']) ?>
             <span class="input-group-addon"><i class="fa fa-asterisk"></i></span>
         </div>
-        <p class="help-block"><?= t('The name is how your entity will appear in the Dashboard. It may only contain letters.') ?></p>
+        <p class="help-block"><?= t('The name is how your entity will appear in the Dashboard.') ?></p>
     </div>
     <div class="form-group <?php if ($error->containsField('handle')) { ?>has-error<?php } ?>">
         <label for="name" class="control-label"><?= t('Handle') ?></label>
