@@ -1,5 +1,5 @@
 <?php
-namespace Concrete\Package\TestMetadatadriverXml;
+namespace Concrete\Tests\Core\Database\EntityManager\Provider\Fixtures;
 
 use Concrete\Core\Database\EntityManager\Provider\XmlProvider;
 use Concrete\Core\Package\Package;
@@ -10,12 +10,12 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 /**
  * Controller test addon - testing metadatadriver with legacy annotation driver
  *
- * @author markus.liechti
+ * @author @author Markus Liechti <markus@liechti.io>
  */
-class Controller extends Package implements ProviderInterface{
+class PackageControllerXml extends Package implements ProviderInterface{
 
     protected $pkgHandle = 'test_metadatadriver_xml';
-    protected $appVersionRequired = '8.0.0';
+    protected $appVersionRequired = '5.8.0';
     protected $pkgVersion = '0.0.1';
 
     public function getPackageDescription() {
@@ -33,8 +33,8 @@ class Controller extends Package implements ProviderInterface{
      * @return XmlProvider
      */
     public function getDrivers(){
-        $relPath = $this->getRelativePathFromInstallFolder() . REL_DIR_METADATA_XML;
-        return new XmlProvider($relPath);
+        
+        $xmlProvider = new XmlProvider($this);
+        return $xmlProvider->getDrivers();
     }
-
 }

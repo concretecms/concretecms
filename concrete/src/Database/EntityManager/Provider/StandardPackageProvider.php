@@ -3,7 +3,6 @@ namespace Concrete\Core\Database\EntityManager\Provider;
 
 use Concrete\Core\Application\Application;
 use Concrete\Core\Database\EntityManager\Driver\Driver;
-use Concrete\Core\Database\EntityManager\Provider\ProviderInterface;
 use Concrete\Core\Package\Package;
 use Doctrine\ORM\Mapping\Driver\AnnotationDriver;
 
@@ -14,15 +13,28 @@ use Doctrine\ORM\Mapping\Driver\AnnotationDriver;
  */
 class StandardPackageProvider extends AbstractPackageProvider
 {
-
+    
+    /**
+     * @var array
+     */
     protected $locations = [];
-
+    
+    /**
+     * Constructor
+     * 
+     * @param Application $app
+     * @param Package $pkg
+     * @param array $locations
+     */
     public function __construct(Application $app, Package $pkg, $locations)
     {
         parent::__construct($app, $pkg);
         $this->locations = $locations;
     }
-
+    
+    /**
+     * {@inheritDoc}
+     */
     public function getDrivers()
     {
         $drivers = [];
@@ -33,5 +45,4 @@ class StandardPackageProvider extends AbstractPackageProvider
         }
         return $drivers;
     }
-
 }
