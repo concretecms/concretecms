@@ -49,8 +49,10 @@ class Update
                 Marketplace::checkPackageUpdates();
             }
             $update = static::getLatestAvailableUpdate();
-            $versionNum = $update->getVersion();
-
+            $versionNum = null;
+            if (is_object($update)) {
+                $versionNum = $update->getVersion();
+            }
             if ($versionNum) {
                 Config::save('concrete.misc.latest_version', $versionNum);
             } else {
