@@ -25,7 +25,7 @@ class XmlProvider implements ProviderInterface
        /**
      * @var array
      */
-    protected $dirvers = [];
+    protected $drivers = [];
     
     /**
      * Constructor
