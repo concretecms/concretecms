@@ -66,6 +66,7 @@ class Install extends Controller
     {
         $locales = $this->getLocales();
         $this->set('locales', $locales);
+        $this->set('backgroundFade', 500);
         $this->testAndRunInstall();
     }
 
@@ -246,6 +247,7 @@ class Install extends Controller
     {
         $this->addHeaderItem('<link href="'.ASSETS_URL_CSS.'/views/install.css" rel="stylesheet" type="text/css" media="all" />');
         $this->requireAsset('core/app');
+        $this->requireAsset('javascript', 'backstretch');
         $this->requireAsset('javascript', 'bootstrap/collapse');
         if (isset($_POST['locale']) && $_POST['locale']) {
             $loc = Localization::changeLocale($_POST['locale']);
