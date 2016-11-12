@@ -74,9 +74,9 @@ class SiteTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $entityManager->expects($this->once())
+        $entityManager->expects($this->any())
             ->method('persist');
-        $entityManager->expects($this->once())
+        $entityManager->expects($this->any())
             ->method('flush');
 
         $configRepoStub = $this->getMockBuilder('Concrete\Core\Config\Repository\Repository')
@@ -106,9 +106,9 @@ class SiteTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $entityManager->expects($this->once())
+        $entityManager->expects($this->any())
             ->method('persist');
-        $entityManager->expects($this->once())
+        $entityManager->expects($this->any())
             ->method('flush');
 
         $type = new Type();
