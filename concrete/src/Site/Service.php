@@ -60,7 +60,7 @@ class Service
         }
     }
 
-    public function add(Type $type, Theme $theme, $handle, $name, $default = false)
+    public function add(Type $type, Theme $theme, $handle, $name, $locale, $default = false)
     {
         $factory = new Factory($this->config);
         $site = $factory->createEntity();
@@ -72,6 +72,18 @@ class Service
 
         $this->entityManager->persist($site);
         $this->entityManager->flush();
+
+        $data = explode('_', $locale);
+        $locale = new Locale();
+        $locale->setSite($site);
+        $locale->setIsDefault(true);
+        $locale->setLanguage($data[0]);
+        $locale->setCountry($data[1]);
+
+        $this->entityManager->persist($locale);
+        $this->entityManager->flush();
+
+        $this->entityManager->refresh($site);
 
         return $site;
     }
