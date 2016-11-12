@@ -9,18 +9,22 @@ use Concrete\Core\Tree\Type\FileManager;
 
 class FileFolder implements ObjectInterface
 {
-    protected $nodePath;
+    protected $folder;
 
-    public function __construct($nodePath)
+    public function __construct($folder)
     {
-        $this->nodePath = $nodePath;
+        $this->folder = $folder;
     }
 
     public function getPermissionObject()
     {
+        if (is_object($this->folder)) {
+            return $this->folder;
+        }
+
         $tree = FileManager::get();
-        if ($this->nodePath) {
-            $node = $tree->getNodeByPath($this->nodePath);
+        if ($this->folder) {
+            $node = $tree->getNodeByDisplayPath($this->folder);
         } else {
             $node = $tree->getRootTreeNodeObject();
         }

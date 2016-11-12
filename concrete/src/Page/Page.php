@@ -514,15 +514,17 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         return $this->getCollectionFilename() && !$this->getPageTemplateID();
     }
 
-    public function executeBeforePermissionAssignment($cascadeToChildren = true)
+    public function setPermissionsToOverride()
     {
         if ($this->cInheritPermissionsFrom != 'OVERRIDE') {
-            if (!$cascadeToChildren) {
-                foreach($this->getCollectionChildren() as $child) {
-                    $child->setPermissionsToManualOverride();
-                }
-            }
             $this->setPermissionsToManualOverride();
+        }
+    }
+
+    public function setChildPermissionsToOverride()
+    {
+        foreach($this->getCollectionChildren() as $child) {
+            $child->setPermissionsToManualOverride();
         }
     }
 

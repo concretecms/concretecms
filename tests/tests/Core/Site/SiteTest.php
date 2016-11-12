@@ -91,7 +91,7 @@ class SiteTest extends \PHPUnit_Framework_TestCase
         $type = new Type();
         $theme = new PageTheme();
 
-        $new = $service->add($type, $theme, 'testing', 'Testing');
+        $new = $service->add($type, $theme, 'testing', 'Testing', 'en_US');
         $this->assertInstanceOf('Concrete\Core\Entity\Site\Site', $new);
         $this->assertEquals('testing', $new->getSiteHandle());
         $this->assertEquals('Testing', $new->getSiteName());

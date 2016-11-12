@@ -7,18 +7,26 @@ use Concrete\Core\Permission\Access\Entity\GroupEntity as GroupAccessEntity;
 class GroupEntity implements EntityInterface
 {
 
-    protected $groupName;
+    protected $group;
 
-    public function __construct($groupName)
+    public function __construct($group)
     {
-        $this->groupName = $groupName;
+        $this->group = $group;
     }
 
     public function getAccessEntity()
     {
-        $group = Group::getByName($this->groupName);
-        $entity = GroupAccessEntity::getOrCreate($group);
-        return $entity;
+        $group = $this->group;
+        if (!is_object($group)) {
+            $group = Group::getByName($this->group);
+            if (!is_object($group)) {
+                $group = Group::getByPath($this->group);
+            }
+        }
+        if (is_object($group)) {
+            $entity = GroupAccessEntity::getOrCreate($group);
+            return $entity;
+        }
     }
 
 }

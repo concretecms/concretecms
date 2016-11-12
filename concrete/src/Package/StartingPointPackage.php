@@ -538,11 +538,24 @@ class StartingPointPackage extends BasePackage
         $u = new User();
         $u->saveConfig('NEWSFLOW_LAST_VIEWED', 'FIRSTRUN');
 
-        $home = Page::getByID(1, "RECENT");
-        $home->assignPermissions($g1, ['view_page']);
-        $home->assignPermissions(
+        // login
+        $login = Page::getByPath('/login', "RECENT");
+        $login->assignPermissions($g1, ['view_page']);
+
+        // register
+        $register = Page::getByPath('/register', "RECENT");
+        $register->assignPermissions($g1, ['view_page']);
+
+        // dashboard
+        $dashboard = Page::getByPath('/dashboard', "RECENT");
+        $dashboard->assignPermissions($g3, ['view_page']);
+
+        // drafts
+        $drafts = Page::getByPath('/!drafts', "RECENT");
+        $drafts->assignPermissions(
             $g3,
             [
+                'view_page',
                 'view_page_versions',
                 'view_page_in_sitemap',
                 'preview_page_as_user',
@@ -563,24 +576,11 @@ class StartingPointPackage extends BasePackage
             ]
         );
 
-        // login
-        $login = Page::getByPath('/login', "RECENT");
-        $login->assignPermissions($g1, ['view_page']);
-
-        // register
-        $register = Page::getByPath('/register', "RECENT");
-        $register->assignPermissions($g1, ['view_page']);
-
-        // dashboard
-        $dashboard = Page::getByPath('/dashboard', "RECENT");
-        $dashboard->assignPermissions($g3, ['view_page']);
-
-        // drafts
-        $drafts = Page::getByPath('/!drafts', "RECENT");
-        $drafts->assignPermissions(
+        $home = Page::getByID(1, "RECENT");
+        $home->assignPermissions($g1, ['view_page']);
+        $home->assignPermissions(
             $g3,
             [
-                'view_page',
                 'view_page_versions',
                 'view_page_in_sitemap',
                 'preview_page_as_user',
