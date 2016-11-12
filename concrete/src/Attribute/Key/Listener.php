@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Core\Attribute\Key;
 
-use Concrete\Core\Entity\Attribute\Key\Key;
+use Concrete\Core\Entity\Attribute\Key\Key as AttributeKey;
 use Concrete\Core\Entity\Express\Entity;
 use Concrete\Core\Tree\Node\Node;
 use Doctrine\ORM\Event\LifecycleEventArgs;
@@ -9,7 +9,7 @@ use Doctrine\ORM\Event\LifecycleEventArgs;
 class Listener
 {
 
-    public function preRemove(Key $key, LifecycleEventArgs $event)
+    public function preRemove(AttributeKey $key, LifecycleEventArgs $event)
     {
         $em = $event->getEntityManager();
         $category = $key->getAttributeCategory();
