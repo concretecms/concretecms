@@ -20,16 +20,17 @@ if ($install_config) {
             });
         });
     </script>
+    <script type="text/javascript">
+    $(function() {
+        $.backstretch("<?=$imagePath?>", {
+            fade: <?=intval($backgroundFade)?>
+        });
+    });
+    </script>
 
     <div class="ccm-install-version">
         <span class="label label-info"><?= t('Version %s', Config::get('concrete.version')) ?></span>
     </div>
-
-    <style type="text/css">
-        body {
-            background-image: url("<?=$imagePath?>");
-        }
-    </style>
 
 <?php
 
@@ -87,6 +88,7 @@ if (isset($successMessage)) {
                         $("#install-progress-summary").html('<?=t('All Done.')?>');
                         NProgress.done();
                         $('button[data-button=installation-complete]').prop('disabled', false).html(<?=json_encode(t('Edit Your Site').' <i class="fa fa-thumbs-up"></i>')?>);
+                        $('div.ccm-install-title ul.breadcrumb li.active').text('<?=t('Installation Complete.')?>');
 
                         setTimeout(function() {
                             $("#interstitial-message").hide();
@@ -240,9 +242,7 @@ if (isset($successMessage)) {
 
     <div class="row">
         <div class="col-sm-10 col-sm-offset-1">
-
-            <div class="spacer-row-3"></div>
-
+            
         <form action="<?= $view->url('/install', 'configure') ?>" method="post">
 
 
