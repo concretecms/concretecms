@@ -3,6 +3,7 @@ namespace Concrete\Attribute\Select;
 
 use Concrete\Core\Entity\Attribute\Key\Key;
 use Concrete\Core\Entity\Attribute\Value\Value\SelectValueOption;
+use Gettext\Translations;
 
 
 /**
@@ -49,6 +50,20 @@ class Option
         $em = \Database::connection()->getEntityManager();
         $controller = new \Concrete\Attribute\Select\Controller($em);
         return $controller->getOptionByValue($value, $ak);
+    }
+
+    public static function exportTranslations()
+    {
+        $translations = new Translations();
+        $em = \Database::connection()->getEntityManager();
+        $options = $em->getRepository(SelectValueOption::class)->findAll();
+        /**
+         * @var $option SelectValueOption
+         */
+        foreach($options as $option) {
+            $translations->insert('SelectAttributeValue', $option->getSelectAttributeOptionValue());
+        }
+        return $translations;
     }
 
 
