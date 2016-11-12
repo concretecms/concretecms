@@ -119,11 +119,6 @@ class Category implements CategoryObjectInterface
         $this->types = new ArrayCollection();
     }
 
-    public function associateAttributeKeyType(Type $type)
-    {
-        $this->types->add($type);
-    }
-
     public function getAttributeKeyCategory()
     {
         return $this->getController();
@@ -165,4 +160,14 @@ class Category implements CategoryObjectInterface
     {
         return (string) $this->getAttributeKeyCategoryID();
     }
+
+    /**
+     * @deprecated
+     */
+    public function associateAttributeKeyType(Type $type)
+    {
+        $this->getController()->associateAttributeKeyType($type);
+    }
+
+
 }
