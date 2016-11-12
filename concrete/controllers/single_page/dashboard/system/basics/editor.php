@@ -13,8 +13,10 @@ class Editor extends DashboardSitePageController
         $this->set('plugins', $plugins);
         $this->set('manager', $manager);
 
-        $this->set('filemanager', \Config::get('concrete.editor.concrete.enable_filemanager'));
-        $this->set('sitemap', \Config::get('concrete.editor.concrete.enable_sitemap'));
+        $this->set('filemanager', \Config::get('site.sites.default.editor.concrete.enable_filemanager'));
+        $this->set('sitemap', \Config::get('site.sites.default.editor.concrete.enable_sitemap'));
+
+        $this->set('selected_hidden', \Config::get('site.sites.default.editor.ckeditor4.plugins.selected_hidden'));
     }
 
     public function saved()

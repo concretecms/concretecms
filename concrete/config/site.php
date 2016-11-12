@@ -34,7 +34,6 @@ return [
                             'autogrow',
                             'a11yhelp',
                             'basicstyles',
-                            'colorbutton',
                             'colordialog',
                             'contextmenu',
                             'concrete5link',
@@ -45,7 +44,6 @@ return [
                             'enterkey',
                             'entities',
                             'floatingspace',
-                            'font',
                             'format',
                             'htmlwriter',
                             'image',
@@ -70,6 +68,18 @@ return [
                             'toolbar',
                             'undo',
                             'wysiwygarea'
+                        ],
+                        'selected_hidden' => [
+                            'concrete5filemanager',
+                            'concrete5inline',
+                            'concrete5uploadimage',
+                            'dialogadvtab',
+                            'divarea',
+                            'floatingspace',
+                            'normalizeonchange',
+                            'resize',
+                            'toolbar',
+                            'wysiwygarea',
                         ]
                     ]
                 ],
