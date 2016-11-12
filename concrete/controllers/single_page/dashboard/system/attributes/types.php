@@ -31,7 +31,7 @@ class Types extends DashboardPageController
             if (is_array($this->post($cat->getAttributeKeyCategoryHandle()))) {
                 foreach ($this->post($cat->getAttributeKeyCategoryHandle()) as $id) {
                     $type = Type::getByID($id);
-                    $cat->associateAttributeKeyType($type);
+                    $cat->getAttributeTypes()->add($type);
                 }
             }
             $this->entityManager->persist($cat);

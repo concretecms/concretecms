@@ -165,4 +165,15 @@ class Type implements ExportableInterface
         }
     }
 
+    /**
+     * @deprecated
+     * You shouldnt have to call this, the package uninstaller itself will take care of this
+     */
+    public function delete()
+    {
+        $em = \Database::connection()->getEntityManager();
+        $em->remove($this);
+        $em->flush();
+    }
+
 }

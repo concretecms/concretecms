@@ -21,6 +21,13 @@ class AttributeType extends AbstractCategory
 
     public function removeItem($type)
     {
+        $keys = $this->entityManager->getRepository('Concrete\Core\Entity\Attribute\Key\Key')
+            ->findByType($type);
+        foreach($keys as $key) {
+            $this->entityManager->remove($key);
+            $this->entityManager->flush();
+        }
+
         $this->entityManager->remove($type);
         $this->entityManager->flush();
     }
