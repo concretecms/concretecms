@@ -20,9 +20,19 @@ class BasicWorkflow extends \Concrete\Core\Workflow\Workflow implements Assignab
 
     use AssignableObjectTrait;
 
-    public function executeBeforePermissionAssignment()
+    public function executeBeforePermissionAssignment($cascadeToChildren = true)
     {
         return;
+    }
+
+    public function setChildPermissionsToOverride()
+    {
+        return false;
+    }
+
+    public function setPermissionsToOverride()
+    {
+        return false;
     }
 
     public function getPermissionAssignmentClassName()
