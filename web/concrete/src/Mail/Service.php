@@ -395,6 +395,8 @@ class Service
      * @param bool $resetData Whether or not to reset the service to its default values.
      *
      * @throws \Exception
+     *
+     * @return bool
      */
     public function sendMail($resetData = true)
     {
@@ -492,10 +494,12 @@ class Service
         }
         $mail->setBody($body);
 
+        $sent = false;
         try {
             if (Config::get('concrete.email.enabled')) {
                 $transport->send($mail);
             }
+            $sent = true;
         } catch (Exception $e) {
             if ($this->getTesting()) {
                 throw $e;
@@ -533,5 +537,7 @@ class Service
         if ($resetData) {
             $this->reset();
         }
+
+        return $sent;
     }
 }
