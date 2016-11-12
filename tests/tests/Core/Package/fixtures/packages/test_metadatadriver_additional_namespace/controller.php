@@ -1,5 +1,8 @@
 <?php
+
 namespace Concrete\Package\TestMetadatadriverAdditionalNamespace;
+
+use Concrete\Core\Package\Package;
 
 defined('C5_EXECUTE') or die(_("Access Denied."));
 /**
@@ -7,7 +10,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
  *
  * @author Markus Liechti <markus@liechti.io>
  */
-class Controller extends \Concrete\Core\Package\Package{
+class Controller extends Package{
 
     protected $pkgHandle = 'test_metadatadriver_additional_namespace';
     protected $appVersionRequired = '8.0.0';
@@ -18,7 +21,7 @@ class Controller extends \Concrete\Core\Package\Package{
         'src/PortlandLabs/Concrete5/MigrationTool' => '\PortlandLabs\Concrete5\MigrationTool',
         'src/Dummy' => '\Dummy'
     );
-
+    
     public function getPackageDescription() {
         return t("Test addon registers entities via the default annotation driver and adds additional namespaces");
     }

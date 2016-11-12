@@ -1,13 +1,16 @@
 <?php
 namespace Concrete\Package\TestMetadatadriverAnnotationLegacy;
 
+use Concrete\Core\Package\Package;
+
 defined('C5_EXECUTE') or die(_("Access Denied."));
+
 /**
  * Controller test addon - testing metadatadriver with legacy annotation driver
  *
  * @author markus.liechti
  */
-class Controller extends \Concrete\Core\Package\Package{
+class Controller extends Package{
 
     protected $pkgHandle = 'test_metadatadriver_annotation_legacy';
     protected $appVersionRequired = '5.7.4';

@@ -1,23 +1,29 @@
 <?php
-namespace Concrete\Package\TestMetadatadriverYaml;
+namespace Concrete\Tests\Core\Database\EntityManager\Provider\Fixtures;
 
 use Concrete\Core\Database\EntityManager\Provider\YamlProvider;
-use Concrete\Core\Package\Package;
 use Concrete\Core\Database\EntityManager\Provider\ProviderInterface;
+use Concrete\Core\Package\Package;
+use Concrete\Core\Application\Application;
 
 defined('C5_EXECUTE') or die(_("Access Denied."));
 
 /**
  * Controller test addon - testing metadatadriver with legacy annotation driver
  *
- * @author markus.liechti
+ * @author Markus Liechti <markus@liechti.io>
  */
-class Controller extends Package implements ProviderInterface{
+class PackageControllerYaml extends Package implements ProviderInterface{
 
     protected $pkgHandle = 'test_metadatadriver_yaml';
-    protected $appVersionRequired = '8.0.0';
+    protected $appVersionRequired = '5.8.0';
     protected $pkgVersion = '0.0.1';
 
+    public function __construct(Application $app)
+    {
+        parent::__construct($app);
+    }
+    
     public function getPackageDescription() {
         return t("Test addon registers entities via the yaml driver");
     }
@@ -27,13 +33,13 @@ class Controller extends Package implements ProviderInterface{
     }
     
     /**
-     * Return customized metadata driver wrapped in a XMLProvider for doctrine orm
+     * Return customized metadata driver wrapped in a YamlProvider for doctrine orm
      * Path: {package}/config/yaml
      * 
      * @return YamlProvider
      */
     public function getDrivers(){
-        $relPath = $this->getRelativePathFromInstallFolder() . REL_DIR_METADATA_YAML;
-        return new YamlProvider($relPath);
+        $yamlProvider = new YamlProvider($this);
+        return $yamlProvider->getDrivers();
     }
 }

@@ -1,10 +1,7 @@
 <?php
 namespace Concrete\Core\Database\EntityManager\Provider;
 
-use Concrete\Core\Application\Application;
 use Concrete\Core\Database\EntityManager\Driver\Driver;
-use Concrete\Core\Database\EntityManager\Provider\ProviderInterface;
-use Concrete\Core\Package\Package;
 use Doctrine\ORM\Mapping\Driver\AnnotationDriver;
 
 /**
@@ -21,7 +18,9 @@ use Doctrine\ORM\Mapping\Driver\AnnotationDriver;
  */
 class DefaultPackageProvider extends AbstractPackageProvider
 {
-
+    /**
+     * {@inheritDoc}
+     */
     public function getDrivers()
     {
         // First, we check to see if this package has a custom deprecated getPackageEntityPath method. If so

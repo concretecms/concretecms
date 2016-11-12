@@ -3,28 +3,50 @@ namespace Concrete\Core\Database\EntityManager\Driver;
 
 use Concrete\Core\Application\Application;
 use Concrete\Core\Config\Repository\Repository;
-use Concrete\Core\Package\Package;
 use Doctrine\ORM\Mapping\Driver\AnnotationDriver;
 use Doctrine\ORM\Mapping\Driver\XmlDriver;
 use Doctrine\ORM\Mapping\Driver\YamlDriver;
 
 class ApplicationDriver implements DriverInterface
 {
-
+    
+    /**
+     * @var Application 
+     */
     protected $app;
+    
+    /**
+     * @var Repository 
+     */
     protected $config;
-
+    
+    /**
+     * Constructor
+     * 
+     * @param Repository $config
+     * @param Application $app
+     */
     public function __construct(Repository $config, Application $app)
     {
         $this->app = $app;
         $this->config = $config;
     }
-
+    
+    /**
+     * Does support legacy namespace with src
+     * 
+     * @return bool
+     */
     private function isLegacy()
     {
         return $this->config->get('app.enable_legacy_src_namespace');
     }
-
+    
+    /**
+     * Return the correct MappingDriver base on the application config
+     * 
+     * @return XmlDriver|YamlDriver|AnnotationDriver
+     */
     public function getDriver()
     {
         $config = $this->config;
@@ -63,7 +85,13 @@ class ApplicationDriver implements DriverInterface
             }
         }
     }
-
+    
+    /**
+     * Get eather the default application namespace, 
+     * or the legacy appliation namespace
+     * 
+     * @return string
+     */
     public function getNamespace()
     {
         if ($this->isLegacy()) {
@@ -72,7 +100,4 @@ class ApplicationDriver implements DriverInterface
             return 'Application\Entity';
         }
     }
-
-
 }
-
