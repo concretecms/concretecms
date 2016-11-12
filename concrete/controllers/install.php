@@ -78,6 +78,7 @@ class Install extends Controller
     protected function testAndRunInstall()
     {
         if (file_exists(DIR_CONFIG_SITE . '/site_install_user.php')) {
+            $this->set('backgroundFade', 0);
             require DIR_CONFIG_SITE . '/site_install.php';
             @include DIR_CONFIG_SITE . '/site_install_user.php';
             $e = $this->app->make('helper/validation/error');
@@ -263,7 +264,7 @@ class Install extends Controller
         if (!isset($_COOKIE['CONCRETE5_INSTALL_TEST'])) {
             setcookie('CONCRETE5_INSTALL_TEST', '1', 0, DIR_REL . '/');
         }
-
+        $this->set('backgroundFade', 0);
         $this->set('pageTitle', t('Install concrete5'));
     }
 
