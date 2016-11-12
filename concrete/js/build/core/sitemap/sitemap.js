@@ -138,6 +138,8 @@
 			my.$element.append(_sitemap);
 			my.$sitemap = my.$element.find('div.ccm-sitemap-tree');
     		$(my.$sitemap).fancytree({
+				tabindex: null,
+				titlesTabbable: false,
 				extensions: extensions,
 				glyph: {
 					map: {
