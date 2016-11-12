@@ -11,11 +11,18 @@ use Concrete\Core\Permission\Key\Key;
 
 trait AssignableObjectTrait
 {
-    abstract public function executeBeforePermissionAssignment($cascadeToChildren = true);
+    public function assignPermissions(
+        $userOrGroup,
+        $permissions = [],
+        $accessType = Key::ACCESS_TYPE_INCLUDE,
+        $cascadeToChildren = true
+    ) {
+        if (!$cascadeToChildren) {
+            $this->setChildPermissionsToOverride();
+        }
 
-    public function assignPermissions($userOrGroup, $permissions = [], $accessType = Key::ACCESS_TYPE_INCLUDE, $cascadeToChildren = true)
-    {
-        $this->executeBeforePermissionAssignment($cascadeToChildren);
+        $this->setPermissionsToOverride();
+
         if (is_array($userOrGroup)) {
             $pe = GroupCombinationEntity::getOrCreate($userOrGroup);
             // group combination

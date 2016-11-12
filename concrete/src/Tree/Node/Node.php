@@ -318,17 +318,17 @@ abstract class Node extends Object implements \Concrete\Core\Permission\ObjectIn
         }
     }
 
-    public function executeBeforePermissionAssignment($cascadeToChildren = true)
+    public function setChildPermissionsToOverride()
     {
-        if (!$this->overrideParentTreeNodePermissions()) {
-            if (!$cascadeToChildren) {
-                $this->populateDirectChildrenOnly();
-                foreach($this->getChildNodes() as $child) {
-                    $child->setTreeNodePermissionsToOverride();
-                }
-            }
-            $this->setTreeNodePermissionsToOverride();
+        $this->populateDirectChildrenOnly();
+        foreach($this->getChildNodes() as $child) {
+            $child->setTreeNodePermissionsToOverride();
         }
+    }
+
+    public function setPermissionsToOverride()
+    {
+        $this->setTreeNodePermissionsToOverride();
     }
 
     public function setTreeNodePermissionsToGlobal()
@@ -354,30 +354,32 @@ abstract class Node extends Object implements \Concrete\Core\Permission\ObjectIn
 
     public function setTreeNodePermissionsToOverride()
     {
-        $db = Database::connection();
-        // grab all children
-        $this->populateChildren();
-        $childNodeIDs = $this->getAllChildNodeIDs();
+        if (!$this->overrideParentTreeNodePermissions()) {
+            $db = Database::connection();
+            // grab all children
+            $this->populateChildren();
+            $childNodeIDs = $this->getAllChildNodeIDs();
 
-        $db->executeQuery('delete from TreeNodePermissionAssignments where treeNodeID = ?', [$this->treeNodeID]);
-        // copy permissions from the page to the area
-        $permissions = PermissionKey::getList($this->getPermissionObjectKeyCategoryHandle());
-        foreach ($permissions as $pk) {
-            $pk->setPermissionObject($this);
-            $pk->copyFromParentNodeToCurrentNode();
-        }
+            $db->executeQuery('delete from TreeNodePermissionAssignments where treeNodeID = ?', [$this->treeNodeID]);
+            // copy permissions from the page to the area
+            $permissions = PermissionKey::getList($this->getPermissionObjectKeyCategoryHandle());
+            foreach ($permissions as $pk) {
+                $pk->setPermissionObject($this);
+                $pk->copyFromParentNodeToCurrentNode();
+            }
 
-        $db->executeQuery('update TreeNodes set treeNodeOverridePermissions = 1, inheritPermissionsFromTreeNodeID = ? where treeNodeID = ?', [$this->treeNodeID, $this->treeNodeID]);
-        $this->treeNodeOverridePermissions = true;
-        $this->inheritPermissionsFromTreeNodeID = $this->treeNodeID;
+            $db->executeQuery('update TreeNodes set treeNodeOverridePermissions = 1, inheritPermissionsFromTreeNodeID = ? where treeNodeID = ?', [$this->treeNodeID, $this->treeNodeID]);
+            $this->treeNodeOverridePermissions = true;
+            $this->inheritPermissionsFromTreeNodeID = $this->treeNodeID;
 
-        if (count($childNodeIDs) > 0) {
-            $db->executeQuery(
-                'update TreeNodes set inheritPermissionsFromTreeNodeID = ? where treeNodeID in (' . implode(',', $childNodeIDs) . ') and treeNodeOverridePermissions = 0',
-                [
-                    $this->treeNodeID,
-                ]
-            );
+            if (count($childNodeIDs) > 0) {
+                $db->executeQuery(
+                    'update TreeNodes set inheritPermissionsFromTreeNodeID = ? where treeNodeID in (' . implode(',', $childNodeIDs) . ') and treeNodeOverridePermissions = 0',
+                    [
+                        $this->treeNodeID,
+                    ]
+                );
+            }
         }
     }
 

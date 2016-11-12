@@ -25,6 +25,16 @@ class BasicWorkflow extends \Concrete\Core\Workflow\Workflow implements Assignab
         return;
     }
 
+    public function setChildPermissionsToOverride()
+    {
+        return false;
+    }
+
+    public function setPermissionsToOverride()
+    {
+        return false;
+    }
+
     public function getPermissionAssignmentClassName()
     {
         return '\\Concrete\\Core\\Permission\\Assignment\\BasicWorkflowAssignment';
