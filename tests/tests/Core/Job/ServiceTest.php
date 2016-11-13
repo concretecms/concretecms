@@ -81,8 +81,8 @@ class ServiceTest extends Base
             $event_triggered = true;
         });
 
-        $this->service->install('index_search')
-            ->uninstall();
+        $job = $this->service->install('index_search');
+        $this->service->uninstall($job);
 
         $this->assertTrue($event_triggered);
 

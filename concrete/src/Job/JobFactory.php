@@ -63,7 +63,7 @@ class JobFactory
     /**
      * @param int $jID
      *
-     * @return null|Job
+     * @return Job|null
      */
     public function getByID($jID)
     {
@@ -82,7 +82,7 @@ class JobFactory
     /**
      * @param string $jHandle
      *
-     * @return null|Job
+     * @return Job|null
      */
     public function getByHandle($jHandle)
     {
@@ -111,7 +111,7 @@ class JobFactory
 
         // Get existing jobs
         $existingJobHandles = [];
-        $existingJobs = $this->getList();
+        $existingJobs = $this->installed();
         foreach ($existingJobs as $j) {
             $existingJobHandles[] = $j->getJobHandle();
         }
@@ -157,7 +157,7 @@ class JobFactory
      * @param string $jHandle
      * @param array  $jobData
      *
-     * @return null|Job
+     * @return Job|null
      */
     protected function getJobObjByHandle($jHandle = '', $jobData = [])
     {
@@ -226,7 +226,7 @@ class JobFactory
     }
 
     /**
-     * Return list of Jobs from a specific package.
+     * Return a list of Jobs from a specific package.
      *
      * @param object $pkg
      *
@@ -237,7 +237,7 @@ class JobFactory
         $list = [];
 
         $db = $this->app['database']->connection();
-        $r = $db->executeQuery("ELECT jHandle FROM Jobs WHERE pkgID = ? ORDER BY jHandle ASC", [
+        $r = $db->executeQuery("SELECT jHandle FROM Jobs WHERE pkgID = ? ORDER BY jHandle ASC", [
             $pkg->getPackageID(),
         ]);
 
@@ -246,33 +246,5 @@ class JobFactory
         }
 
         return $list;
-    }
-
-    /**
-     * @deprecated Use 'fromPackage($pkg)'
-     *
-     * @param $pkg
-     *
-     * @return array
-     */
-    public function getListByPackage($pkg)
-    {
-        return $this->fromPackage($pkg);
-    }
-
-    /**
-     * @deprecated Use 'installed' and 'scheduled' methods instead.
-     *
-     * @param bool $scheduledOnly
-     *
-     * @return Job[]
-     */
-    public function getList($scheduledOnly = false)
-    {
-        if ($scheduledOnly) {
-            return $this->scheduled();
-        } else {
-            return $this->installed();
-        }
     }
 }

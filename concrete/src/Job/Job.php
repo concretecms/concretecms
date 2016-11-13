@@ -9,6 +9,15 @@ use Database;
 use Events;
 use Exception;
 
+/**
+ * Class Job
+ *
+ * Example of how to retrieve a job:
+ * $factory = $app->make(JobFactory::class);
+ * $job = $factory->getByID(1);
+ *
+ * @package Concrete\Core\Job
+ */
 abstract class Job extends Object
 {
     const JOB_SUCCESS = 0;
@@ -33,10 +42,9 @@ abstract class Job extends Object
 
     /**
      * DO NOT USE THIS METHOD
+     *
      * Instead override the application bindings.
      * This method only exists to enable legacy static methods on the real application instance.
-     *
-     * @deprecated Create a job using $app->make('job');
      *
      * @param Application $app
      */
@@ -301,53 +309,23 @@ abstract class Job extends Object
     }
 
     /**
+     * @deprecated
+     *
      * @return Job $this
      */
     public function install()
     {
-        $db = static::$app['database'];
-        $jobExists = $db->fetchColumn("SELECT count(1) FROM Jobs WHERE jHandle=?", [
-            $this->jHandle,
-        ]);
-
-        $values = [
-            $this->getJobName(),
-            $this->getJobDescription(),
-            $this->jNotUninstallable,
-            $this->jHandle,
-        ];
-
-        if ($jobExists) {
-            $db->executeQuery("INSERT INTO Jobs SET jName=?, jDescription=?, jDateInstalled=NOW(), jNotUninstallable=? WHERE jHandle=?", $values);
-        } else {
-            $db->executeQuery("INSERT INTO Jobs (jName, jDescription, jDateInstalled, jNotUninstallable, jHandle) VALUES(?,?,NOW(),?,?)", $values);
-        }
-
-        $je = new Event($this);
-        Events::dispatch('on_job_install', $je);
-
-        $this->jID = $db->lastInsertId();
-
-        return $this;
+        return self::$app->make(Service::class)->install($this->jHandle);
     }
 
     /**
+     * @deprecated
+     *
      * @return bool
      */
     public function uninstall()
     {
-        $je = new Event($this);
-        $je = Events::dispatch('on_job_uninstall', $je);
-        if (!$je) {
-            return false;
-        }
-
-        $db = static::$app['database'];
-        $db->query("DELETE FROM Jobs WHERE jHandle=?", [
-            $this->jHandle,
-        ]);
-
-        return true;
+        return self::$app->make(Service::class)->uninstall($this->jHandle);
     }
 
     /**
@@ -495,7 +473,13 @@ abstract class Job extends Object
      */
     public static function getList($scheduledOnly = false)
     {
-        return self::$app->make(JobFactory::class)->getList($scheduledOnly);
+        $factory = self::$app->make(JobFactory::class);
+
+        if ($scheduledOnly) {
+            return $factory->scheduled();
+        }
+
+        return $factory->installed();
     }
 
     /**
@@ -558,7 +542,7 @@ abstract class Job extends Object
      */
     public static function getListByPackage($pkg)
     {
-        return self::$app->make(JobFactory::class)->getListByPackage($pkg);
+        return self::$app->make(JobFactory::class)->installed($pkg);
     }
 
     /**

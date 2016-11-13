@@ -73,6 +73,33 @@ class Service
         return $job;
     }
 
+	/**
+     * @param Job|string $jobObjectOrHandle
+     *
+     * @return bool
+     */
+    public function uninstall($jobObjectOrHandle)
+    {
+        $job = $jobObjectOrHandle;
+
+        if ($jobObjectOrHandle instanceof Job) {
+            $job = $this->factory->getByHandle($job->getJobHandle());
+        }
+
+        $jobEvent = new Event($job);
+        $eventResult = $this->app['director']->dispatch('on_job_uninstall', $jobEvent);
+        if (!$eventResult) {
+            return false;
+        }
+
+        $db = $this->app['database'];
+        $db->query("DELETE FROM Jobs WHERE jHandle=?", [
+            $job->getJobHandle(),
+        ]);
+
+        return true;
+    }
+
     /**
      * Returns an instance of the job if it has not been installed yet.
      *
