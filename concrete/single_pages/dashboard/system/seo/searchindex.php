@@ -3,7 +3,6 @@ use \Concrete\Core\Page\Search\IndexedSearch;
 
 ?>
 	<form method="post" id="ccm-search-index-manage" action="<?=$view->action('')?>">
-		<div class="ccm-pane-body">
 			<?php echo $this->controller->token->output('update_search_index');?>
 			<fieldset>
 			<legend><?=t('Indexing Method')?></legend>
@@ -15,7 +14,7 @@ use \Concrete\Core\Page\Search\IndexedSearch;
             echo $form->select('SEARCH_INDEX_AREA_METHOD', $methods, IndexedSearch::getSearchableAreaAction(), array('class' => 'xlarge'));?>
 			</div>
 			</fieldset>
-
+		<hr/>
 			<fieldset>
 			<legend><?=t('Areas')?></legend>
 			<div class="form-group">
@@ -30,7 +29,6 @@ use \Concrete\Core\Page\Search\IndexedSearch;
 			</div>
 			</fieldset>
 
-		</div>
 		<div class="ccm-dashboard-form-actions-wrapper">
             <div class="ccm-dashboard-form-actions">
 			<button class="btn btn-danger ccm-button-left" name="reindex" value="1" onclick="return confirm('<?=t('Once the index is clear, you must reindex your site from the Automated Jobs page.')?>')"><?=t('Clear Search Index')?></button>
