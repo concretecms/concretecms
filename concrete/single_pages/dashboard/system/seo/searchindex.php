@@ -5,18 +5,18 @@ use \Concrete\Core\Page\Search\IndexedSearch;
 	<form method="post" id="ccm-search-index-manage" action="<?=$view->action('')?>">
 			<?php echo $this->controller->token->output('update_search_index');?>
 			<fieldset>
-			<legend><?=t('Indexing Method')?></legend>
+			<label class="control-label"><?=t('Indexing Method')?></label>
 			<div class="form-group">
 			<?php $methods = array(
-                'whitelist' => t('Whitelist: Selected areas are only areas indexed.'),
-                'blacklist' => t('Blacklist: Every area but the selected areas are indexed.'),
+                'whitelist' => t('Whitelist - only use the selected areas below when searching content.'),
+                'blacklist' => t('Blacklist - skip the selected areas below when searching content.'),
             );
             echo $form->select('SEARCH_INDEX_AREA_METHOD', $methods, IndexedSearch::getSearchableAreaAction(), array('class' => 'xlarge'));?>
 			</div>
 			</fieldset>
 		<hr/>
 			<fieldset>
-			<legend><?=t('Areas')?></legend>
+				<label class="control-label"><?=t('Areas')?></label>
 			<div class="form-group">
 
 			<?php foreach ($areas as $a) {
