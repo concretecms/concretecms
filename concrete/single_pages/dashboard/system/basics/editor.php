@@ -16,15 +16,19 @@
 	</fieldset>
 	<fieldset>
 		<p class="lead"><?=t('Editor Plugins')?></p>
-		<?php foreach ($plugins as $key => $plugin) {
-    ?>
+		<?php
+		foreach ($plugins as $key => $plugin) {
+			if (!in_array($key, $selected_hidden)) {
+		?>
 		<div class="checkbox">
 			<label>
 				<?=$form->checkbox('plugin[]', $key, $manager->isSelected($key))?> <?=$plugin->getName()?>
 			</label>
 		</div>
-		<?php 
-} ?>
+		<?php
+			}
+		}
+		?>
 	</fieldset>
 	<div class="ccm-dashboard-form-actions-wrapper">
 		<div class="ccm-dashboard-form-actions">
