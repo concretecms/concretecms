@@ -6,21 +6,18 @@
     color: #4290be;
   }
 
-  // Fieldset: Make the legend bold, move it down, make it blue, add the full width border
-  fieldset:first-of-type {
-    margin-top: 0px;
-  }
-
   fieldset {
-    margin-top: 2em;
     position: relative; /* we need this for right aligned tooltips */
     legend {
       font-weight: bold;
       border: 0px;
 
-      padding-bottom: 1em;
+     // padding-bottom: 1em;
+      /* let's disable this AGAIN, and instead if you wnnt lines after your legends use an hr tag
+      because otherwise we can't go full width
       border-bottom: 1px solid #dcdcdc; // Re-added back to this because there are lots of cases where legend + .form-group won't work and then we lose the line.
       margin-bottom: 1em;
+      */
     }
 
     /*
@@ -31,6 +28,10 @@
       margin-top: 1.2em;
       padding-top: 1.2em;
     }*/
+  }
+
+  fieldset + hr {
+    margin-top: 0px;
   }
 
   // Less intrusive help
