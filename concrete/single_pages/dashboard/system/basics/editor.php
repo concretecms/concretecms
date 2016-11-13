@@ -2,7 +2,7 @@
 <form method="post" class="ccm-dashboard-content-form" action="<?=$view->action('submit')?>">
 	<?=$this->controller->token->output('submit')?>
 	<fieldset>
-		<p class="lead"><?=t('concrete5 Extensions')?></p>
+		<label class="control-label"><?=t('concrete5 Extensions')?></label>
 		<div class="checkbox">
 			<label>
 				<?=$form->checkbox('enable_filemanager', 1, $filemanager)?> <?=t('Enable file selection from file manager.')?>
@@ -14,8 +14,9 @@
 			</label>
 		</div>
 	</fieldset>
+	<hr/>
 	<fieldset>
-		<p class="lead"><?=t('Editor Plugins')?></p>
+		<label class="control-label"><?=t('Editor Plugins')?></label>
 		<?php
 		foreach ($plugins as $key => $plugin) {
 			if (!in_array($key, $selected_hidden)) {
