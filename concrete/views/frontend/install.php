@@ -683,6 +683,34 @@ if (isset($successMessage)) {
                                 }
                                 ?></td>
                         </tr>
+                        <tr>
+                            <td>
+                                <?php
+                                if ($finfoTest) {
+                                    ?>
+                                    <i class="fa fa-check"></i>
+                                    <?php
+                                } else {
+                                    ?>
+                                    <i class="fa fa-exclamation-circle"></i>
+                                    <?php
+                                }
+                                ?>
+                            </td>
+                            <td style="width: 100%">
+                                <?= t('Fileinfo Extension Enabled') ?>
+                            </td>
+                            <td>
+                                <?php
+                                if (!$finfoTest) {
+                                    ?>
+                                    <i class="fa fa-question-circle launch-tooltip"
+                                       title="<?= t('You must enable the PHP Fileinfo extension.') ?>"></i>
+                                    <?php
+                                }
+                                ?></td>
+                        </tr>
+
                         </tbody>
                     </table>
 

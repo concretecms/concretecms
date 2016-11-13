@@ -282,6 +282,7 @@ class Install extends Controller
         $this->set('xmlTest', function_exists('xml_parse') && function_exists('simplexml_load_file'));
         $this->set('fileWriteTest', $this->testFileWritePermissions());
         $this->set('aspTagsTest', ini_get('asp_tags') == false);
+        $this->set('finfoTest', function_exists('finfo_open'));
         $rf = new ReflectionObject($this);
         $rp = $rf->getProperty('docCommentCanary');
         $this->set('docCommentTest', (bool) $rp->getDocComment());
