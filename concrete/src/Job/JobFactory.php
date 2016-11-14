@@ -1,28 +1,23 @@
 <?php
 namespace Concrete\Core\Job;
 
-use Concrete\Core\Application\Application;
+use Concrete\Core\Application\ApplicationAwareInterface;
+use Concrete\Core\Application\ApplicationAwareTrait;
+use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Package\PackageList;
+use Illuminate\Filesystem\Filesystem;
 
-class JobFactory
+class JobFactory implements ApplicationAwareInterface
 {
-    /** @var \Concrete\Core\Application\Application */
-    private $app;
 
-    public function __construct(Application $app)
-    {
-        $this->app = $app;
-    }
+    use ApplicationAwareTrait;
 
     /**
      * Return list of installed Jobs.
-     *
-     * @return Job[]
+     * @return \Iterator|Job[]
      */
     public function installed()
     {
-        $jobs = [];
-
         $db = $this->app['database']->connection();
         $q = "SELECT jID FROM Jobs ORDER BY jDateLastRun, jID";
         $r = $db->query($q);
@@ -30,39 +25,75 @@ class JobFactory
         while ($row = $r->fetchRow($q)) {
             $j = $this->getByID($row['jID']);
             if (is_object($j)) {
-                $jobs[] = $j;
+                yield $j;
             }
         }
-
-        return $jobs;
     }
 
     /**
      * Return list of scheduled Jobs.
-     *
-     * @return Job[]
+     * @return \Iterator|Job[]
      */
     public function scheduled()
     {
-        $jobs = [];
-
-        $db = $this->app['database']->connection();
+        $db = $this->app->make(Connection::class);
         $q = "SELECT jID FROM Jobs WHERE isScheduled = 1 ORDER BY jDateLastRun, jID";
         $r = $db->query($q);
 
         while ($row = $r->fetchRow($q)) {
             $j = $this->getByID($row['jID']);
             if (is_object($j)) {
-                $jobs[] = $j;
+                yield $j;
             }
         }
-
-        return $jobs;
     }
 
     /**
-     * @param int $jID
+     * Scan job directories for job classes.
      *
+     * @param bool $includeConcreteDirJobs
+     * @return \Iterator|Job[]
+     */
+    public function getNotInstalledJobs($includeConcreteDirJobs = true)
+    {
+        // Get existing jobs
+        $existingJobHandles = [];
+        $existingJobs = $this->installed();
+        foreach ($existingJobs as $j) {
+            $existingJobHandles[$j->getJobHandle()] = true;
+        }
+
+        $jobClassLocations = $this->getJobClassLocations($includeConcreteDirJobs);
+
+        $file = $this->app->make(Filesystem::class);
+        foreach ($jobClassLocations as $location) {
+            // If the location doesn't exist, just continue
+            if (!$file->exists($location) || !$file->isDirectory($location)) {
+                continue;
+            }
+
+            // Get all files in the directory
+            $files = $file->allFiles($location);
+            foreach ($files as $fileInfo) {
+                if (strtolower($file->extension($fileInfo)) == 'php') {
+                    $handle = $file->name($fileInfo);
+
+                    // If the job is already installed, lets skip it
+                    if (isset($existingJobHandles[$handle])) {
+                        continue;
+                    }
+
+                    if ($job = $this->populateJobObject($handle, [], false)) {
+                        yield $handle => $job;
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Get a job object by its ID
+     * @param int $jID
      * @return Job|null
      */
     public function getByID($jID)
@@ -76,17 +107,21 @@ class JobFactory
             return null;
         }
 
-        return $this->getJobObjByHandle($jobData['jHandle'], $jobData);
+        return $this->populateJobObject($jobData['jHandle'], $jobData);
     }
 
     /**
-     * @param string $jHandle
+     * Get an installed job by handle
+     * If you want to get a job that is not installed, use ->
      *
+     * @param string $jHandle
      * @return Job|null
      */
     public function getByHandle($jHandle)
     {
         $db = $this->app['database']->connection();
+
+        // Make sure that this job is installed
         $jobData = $db->fetchAssoc("SELECT * FROM Jobs WHERE jHandle=?", [
             $jHandle,
         ]);
@@ -95,94 +130,43 @@ class JobFactory
             return null;
         }
 
-        return $this->getJobObjByHandle($jobData['jHandle'], $jobData);
+        return $this->populateJobObject($jobData['jHandle'], $jobData);
     }
 
     /**
-     * Scan job directories for job classes.
-     *
-     * @param bool $includeConcreteDirJobs
-     *
-     * @return array
-     */
-    public function getNotInstalledJobs($includeConcreteDirJobs = true)
-    {
-        $jobObjects = [];
-
-        // Get existing jobs
-        $existingJobHandles = [];
-        $existingJobs = $this->installed();
-        foreach ($existingJobs as $j) {
-            $existingJobHandles[] = $j->getJobHandle();
-        }
-
-        $jobClassLocations = $this->getJobClassLocations($includeConcreteDirJobs);
-
-        foreach ($jobClassLocations as $jobClassLocation) {
-            // Open a known directory, and proceed to read its contents
-            if (!is_dir($jobClassLocation)) {
-                continue;
-            }
-
-            if ($dh = opendir($jobClassLocation)) {
-                while (($file = readdir($dh)) !== false) {
-                    if (substr($file, strlen($file) - 4) != '.php') {
-                        continue;
-                    }
-
-                    $alreadyInstalled = 0;
-                    foreach ($existingJobHandles as $existingJobHandle) {
-                        if (substr($file, 0, strlen($file) - 4) == $existingJobHandle) {
-                            $alreadyInstalled = 1;
-                            break;
-                        }
-                    }
-                    if ($alreadyInstalled) {
-                        continue;
-                    }
-
-                    $jHandle = substr($file, 0, strlen($file) - 4);
-                    $className = $this->getClassName($jHandle);
-                    $jobObjects[$jHandle] = $this->app->make($className);
-                    $jobObjects[$jHandle]->jHandle = $jHandle;
-                }
-                closedir($dh);
-            }
-        }
-
-        return $jobObjects;
-    }
-
-    /**
+     * Populate a job object given a handle
      * @param string $jHandle
-     * @param array  $jobData
-     *
-     * @return Job|null
+     * @param array $jobData
+     * @param bool $checkInstalled If this is false, populating package jobs won't work properly
+     * @return \Concrete\Core\Job\Job|null
      */
-    protected function getJobObjByHandle($jHandle = '', $jobData = [])
+    protected function populateJobObject($jHandle = '', $jobData = [], $checkInstalled = true)
     {
         $jcl = $this->getJobClassLocations();
         $pkgHandle = null;
 
-        //check for the job file in the various locations
-        $db = $this->app['database']->connection();
-        $pkgID = $db->fetchColumn("SELECT pkgID FROM Jobs WHERE jHandle = ?", [
-            $jHandle,
-        ]);
+        if ($checkInstalled) {
+            //check for the job file in the various locations
+            $db = $this->app['database']->connection();
+            $pkgID = $db->fetchColumn("SELECT pkgID FROM Jobs WHERE jHandle = ?", [
+                $jHandle,
+            ]);
 
-        if ($pkgID > 0) {
-            $pkgHandle = PackageList::getHandle($pkgID);
-            if ($pkgHandle) {
-                $jcl[] = DIR_PACKAGES.'/'.$pkgHandle.'/'.DIRNAME_JOBS;
-                $jcl[] = DIR_PACKAGES_CORE.'/'.$pkgHandle.'/'.DIRNAME_JOBS;
+            if ($pkgID > 0) {
+                $pkgHandle = PackageList::getHandle($pkgID);
+                if ($pkgHandle) {
+                    $jcl[] = DIR_PACKAGES . '/' . $pkgHandle . '/' . DIRNAME_JOBS;
+                    $jcl[] = DIR_PACKAGES_CORE . '/' . $pkgHandle . '/' . DIRNAME_JOBS;
+                }
             }
         }
 
         foreach ($jcl as $jobClassLocation) {
             //load the file & class, then run the job
-            $path = $jobClassLocation.'/'.$jHandle.'.php';
+            $path = $jobClassLocation . '/' . $jHandle . '.php';
             if (file_exists($path)) {
                 $className = $this->getClassName($jHandle, $pkgHandle);
+
                 $j = $this->app->make($className);
                 $j->jHandle = $jHandle;
                 if (count($jobData)) {
@@ -197,8 +181,8 @@ class JobFactory
     }
 
     /**
+     * Get the available locations for job classes. This does not include packages
      * @param bool $includeConcreteDirJobs
-     *
      * @return array
      */
     protected function getJobClassLocations($includeConcreteDirJobs = true)
@@ -213,38 +197,21 @@ class JobFactory
     }
 
     /**
-     * @param string      $jHandle
+     * Determine a job's proper class name
+     * @param string $handle
      * @param null|string $pkgHandle
-     *
      * @return string
      */
-    protected function getClassName($jHandle, $pkgHandle = null)
+    protected function getClassName($handle, $pkgHandle = null)
     {
-        $class = overrideable_core_class('Job\\'.camelcase($jHandle), DIRNAME_JOBS.'/'.$jHandle.'.php', $pkgHandle);
+        $className = camelcase($handle);
+        $fqn = overrideable_core_class(
+            "Job\\{$className}",
+            DIRNAME_JOBS . "/{$handle}.php",
+            $pkgHandle
+        );
 
-        return $class;
+        return $fqn;
     }
 
-    /**
-     * Return a list of Jobs from a specific package.
-     *
-     * @param object $pkg
-     *
-     * @return Job[]
-     */
-    public function fromPackage($pkg)
-    {
-        $list = [];
-
-        $db = $this->app['database']->connection();
-        $r = $db->executeQuery("SELECT jHandle FROM Jobs WHERE pkgID = ? ORDER BY jHandle ASC", [
-            $pkg->getPackageID(),
-        ]);
-
-        while ($row = $r->fetchAssoc()) {
-            $list[] = $this->getJobObjByHandle($row['jHandle']);
-        }
-
-        return $list;
-    }
 }
