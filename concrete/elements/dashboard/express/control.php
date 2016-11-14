@@ -19,6 +19,9 @@ $c = Page::getCurrentPage();
 		<?php 
         } ?>
 	</td>
+        <td>
+		<span class="text-muted"><?php if ($control->isRequired()) { echo t('Required'); } ?></span>
+	</td>
 	<td>
 		<ul class="ccm-item-set-controls">
 			<li><a href="#" data-command="move-control" style="cursor: move"><i class="fa fa-arrows"></i></a></li>
