@@ -1,194 +1,282 @@
 <?php
 namespace Concrete\Core\Job;
 
+use Concrete\Core\Application\Application;
 use Concrete\Core\Foundation\Object;
-use Loader;
 use Concrete\Core\Package\PackageList;
-use Config;
 use Core;
+use Database;
 use Events;
+use Exception;
 
+/**
+ * Abstract Job class
+ * This class can be extended to create schedulable tasks in concrete5.
+ * Typically a job only needs to define `getJobName,
+ *
+ * @package Concrete\Core\Job
+ */
 abstract class Job extends Object
 {
+
+    // Job results
     const JOB_SUCCESS = 0;
     const JOB_ERROR_EXCEPTION_GENERAL = 1;
 
+    // Job Statuses
+    const JOB_STATUS_ENABLED = 'ENABLED';
+    const JOB_STATUS_RUNNING = 'RUNNING';
+    const JOB_STATUS_ERROR = 'ERROR';
+    const JOB_STATUS_DISABLED_ERROR = 'DISABLED_ERROR';
+    const JOB_STATUS_DISABLED = 'DISABLED';
+
+    /** @var int|null The package ID that installed this job */
+    protected $pkgID;
+
+    /** @var int The last status code */
+    protected $jLastStatusCode;
+
+    /** @var string The last status string */
+    protected $jLastStatusText;
+
+    /**
+     * @var string[] Available statuses
+     */
+    public $availableJStatus = [
+        self::JOB_STATUS_ENABLED,
+        self::JOB_STATUS_RUNNING,
+        self::JOB_STATUS_ERROR,
+        self::JOB_STATUS_DISABLED_ERROR,
+        self::JOB_STATUS_DISABLED,
+    ];
+
+    /** @var int Job ID */
+    public $jID = 0;
+
+    /** @var string Job Status, see $job->availableJStatus for statuses */
+    public $jStatus = self::JOB_STATUS_ENABLED;
+
+    /** @var string A date string */
+    public $jDateLastRun;
+
+    /** @var string */
+    public $jHandle = '';
+
+    /** @var bool */
+    public $jNotUninstallable = false;
+
+    /** @var bool */
+    public $isScheduled = false;
+
+    /** @var string hours|days|weeks|months */
+    public $scheduledInterval = 'days';
+
+    /** @var int */
+    public $scheduledValue = 0;
+
+    /** @var Application */
+    private static $staticApp;
+
+    /**
+     * Run this job's task.
+     * Use this method to provide functionality to your job
+     * @return void
+     */
     abstract public function run();
+
+    /**
+     * Get the current job name
+     * @return string
+     */
     abstract public function getJobName();
+
+    /**
+     * Get this job's description
+     * @return string
+     */
     abstract public function getJobDescription();
 
+    /**
+     * @return string
+     */
     public function getJobHandle()
     {
         return $this->jHandle;
     }
+
+    /**
+     * @return int
+     */
     public function getJobID()
     {
         return $this->jID;
     }
-    public function getPackageHandle()
-    {
-        return PackageList::getHandle($this->pkgID);
-    }
-    public function getJobLastStatusCode()
-    {
-        return $this->jLastStatusCode;
-    }
+
+    /**
+     * Did this job fail the last time it ran
+     * @return bool
+     */
     public function didFail()
     {
-        return in_array($this->jLastStatusCode, array(
+        return in_array($this->jLastStatusCode, [
             static::JOB_ERROR_EXCEPTION_GENERAL,
-        ));
+        ]);
     }
+
+    /**
+     * Is this job uninstallable
+     * @return bool
+     */
     public function canUninstall()
     {
         return $this->jNotUninstallable != 1;
     }
 
+    /**
+     * Does this job support queuing
+     * We just return whether or not this job is an instance of QueueableJob
+     * @return bool
+     */
     public function supportsQueue()
     {
         return $this instanceof QueueableJob;
     }
 
-    //==========================================================
-    // JOB MANAGEMENT - do not override anything below this line
-    //==========================================================
-
-    //meta variables
-    protected $jobClassLocations = array();
-
-    //Other Job Variables
-    public $jID = 0;
-    public $jStatus = 'ENABLED';
-    public $availableJStatus = array('ENABLED', 'RUNNING', 'ERROR', 'DISABLED_ERROR', 'DISABLED');
-    public $jDateLastRun;
-    public $jHandle = '';
-    public $jNotUninstallable = 0;
-
-    public $isScheduled = 0;
-    public $scheduledInterval = 'days'; // hours|days|weeks|months
-    public $scheduledValue = 0;
-
-    /*
-    final public __construct(){
-        //$this->jHandle="example_job_file.php";
-    }
-    */
-
-    public static function jobClassLocations()
-    {
-        return array(DIR_FILES_JOBS, DIR_FILES_JOBS_CORE);
-    }
-
-    public function getJobDateLastRun()
+    /**
+     * Get the last date that this job ran
+     * @return string DateTime
+     */
+    public function getDateLastRun()
     {
         return $this->jDateLastRun;
     }
-    public function getJobStatus()
+
+    /**
+     * Set the last date that this job ran
+     * @param string $datetime
+     * @return self $this
+     */
+    public function setDateLastRun($datetime)
+    {
+        $this->jDateLastRun = $datetime;
+
+        return $this;
+    }
+
+    /**
+     * Get the current status
+     * @return string
+     */
+    public function getStatus()
     {
         return $this->jStatus;
     }
-    public function getJobLastStatusText()
+
+    /**
+     * Get the last status code returned
+     * @return int
+     */
+    public function getLastStatusCode()
+    {
+        return $this->jLastStatusCode;
+    }
+
+    /**
+     * Get the last status text returned
+     * @return string
+     */
+    public function getLastStatusText()
     {
         return $this->jLastStatusText;
     }
 
-    // authenticateRequest checks against your site's job security token and a custom auth field to make
-    // sure that this is a request that is coming either from something cronned by the site owner
-    // or from the dashboard
+    /**
+     * authenticateRequest checks against your site's job security token and a custom auth field to make
+     * sure that this is a request that is coming either from something cronned by the site owner
+     * or from the dashboard.
+     *
+     * @param string $auth
+     * @return bool
+     */
     public static function authenticateRequest($auth)
     {
-        // this is a little tricky. We have TWO ways of doing this
-        // 1. Does the security token for jobs md5 correctly? If so, good.
+        $auth_from_config = Core::make(Service::class)->generateAuth();
 
-        $val = \Core::make('config/database')->get('concrete.security.token.jobs') . ':' . DIRNAME_JOBS;
-        if (md5($val) == $auth) {
-            return true;
+        if ($auth_from_config !== $auth) {
+            return false;
         }
+
+        return true;
     }
-
-    public static function generateAuth()
-    {
-        $val = \Core::make('config/database')->get('concrete.security.token.jobs') . ':' . DIRNAME_JOBS;
-
-        return md5($val);
-    }
-
-    public static function exportList($xml)
-    {
-        $jobs = static::getList();
-        if (count($jobs) > 0) {
-            $jx = $xml->addChild('jobs');
-            foreach ($jobs as $j) {
-                $ch = $jx->addChild('job');
-                $ch->addAttribute('handle', $j->getJobHandle());
-                $ch->addAttribute('package', $j->getPackageHandle());
-            }
-        }
-    }
-
-    // Job Retrieval
-    // ==============
 
     /**
-     * @param bool $scheduledOnly
-     *
-     * @return Job[]
+     * Reset this job so that it can run again
+     * @return self
      */
-    public static function getList($scheduledOnly = false)
-    {
-        $db = Loader::db();
-
-        if ($scheduledOnly) {
-            $q = "SELECT jID FROM Jobs WHERE isScheduled = 1 ORDER BY jDateLastRun, jID";
-        } else {
-            $q = "SELECT jID FROM Jobs ORDER BY jDateLastRun, jID";
-        }
-        $r = $db->Execute($q);
-        $jobs = array();
-        while ($row = $r->FetchRow()) {
-            $j = static::getByID($row['jID']);
-            if (is_object($j)) {
-                $jobs[] = $j;
-            }
-        }
-
-        return $jobs;
-    }
-
     public function reset()
     {
-        $db = Loader::db();
-        $db->Execute('update Jobs set jLastStatusCode = 0, jStatus = \'ENABLED\' where jID = ?', array($this->jID));
+        $this->jStatus = self::JOB_STATUS_ENABLED;
+
+        $db = static::$staticApp['database'];
+        $db->executeQuery("UPDATE Jobs SET jLastStatusCode = 0, jStatus = ? WHERE jID = ?", [
+            $this->jStatus,
+            $this->jID,
+        ]);
+
+        return $this;
     }
 
+    /**
+     * Mark this job as having started
+     * @return self
+     */
     public function markStarted()
     {
         $je = new Event($this);
-        Events::dispatch('on_before_job_execute', $je);
 
-        $db = Loader::db();
+        static::$staticApp['director']->dispatch('on_before_job_execute', $je);
+
         $timestampH = date('Y-m-d g:i:s A');
-        $timestamp = date('Y-m-d H:i:s');
         $this->jDateLastRun = $timestampH;
-        $rs = $db->query("UPDATE Jobs SET jStatus='RUNNING', jDateLastRun=? WHERE jHandle=?", array($timestamp, $this->jHandle));
+        $this->jStatus = self::JOB_STATUS_RUNNING;
+
+        $db = static::$staticApp['database'];
+        $db->executeQuery("UPDATE Jobs SET jStatus=?, jDateLastRun=NOW() WHERE jHandle=?", [
+            $this->jStatus,
+            $this->jHandle,
+        ]);
+
+        return $this;
     }
 
+    /**
+     * Mark this job as having completed
+     * @param int $resultCode
+     * @param bool|string $resultMsg
+     *
+     * @return JobResult
+     */
     public function markCompleted($resultCode = 0, $resultMsg = false)
     {
-        $db = Loader::db();
-        if (!$resultMsg) {
-            $resultMsg = t('The Job was run successfully.');
-        }
-        if (!$resultCode) {
-            $resultCode = 0;
-        }
-        $jStatus = 'ENABLED';
-        if ($this->didFail()) {
-            $jStatus = 'ERROR';
-        }
+        $resultMsg = $resultMsg ?: t('The Job was run successfully.');
+        $resultCode = $resultCode ?: 0;
+        $jStatus = $this->didFail() ? self::JOB_STATUS_ERROR : self::JOB_STATUS_ENABLED;
         $timestamp = date('Y-m-d H:i:s');
-        $rs = $db->query("UPDATE Jobs SET jStatus=?, jLastStatusCode = ?, jLastStatusText=? WHERE jHandle=?", array($jStatus, $resultCode, $resultMsg, $this->jHandle));
-        $rs = $db->query("INSERT INTO JobsLog (jID, jlMessage, jlTimestamp, jlError) VALUES(?,?,?,?)", array($this->jID, $resultMsg, $timestamp, $resultCode));
+
+        $db = static::$staticApp['database'];
+        $db->executeQuery("UPDATE Jobs SET jStatus=?, jLastStatusCode = ?, jLastStatusText=? WHERE jHandle=?", [
+            $jStatus,
+            $resultCode,
+            $resultMsg,
+            $this->jHandle,
+        ]);
+
+        $db->executeQuery("INSERT INTO JobsLog (jID, jlMessage, jlTimestamp, jlError) VALUES(?,?,?,?)", [
+            $this->jID,
+            $resultMsg,
+            $timestamp,
+            $resultCode,
+        ]);
 
         $je = new Event($this);
         Events::dispatch('on_job_execute', $je);
@@ -196,7 +284,7 @@ abstract class Job extends Object
         $obj = new JobResult();
         $obj->error = $resultCode;
         $obj->result = $resultMsg;
-        $obj->jDateLastRun = Core::make('helper/date')->formatDateTime('now', true, true);
+        $obj->jDateLastRun = static::$staticApp->make('helper/date')->formatDateTime('now', true, true);
         $obj->jHandle = $this->getJobHandle();
         $obj->jID = $this->getJobID();
 
@@ -207,252 +295,70 @@ abstract class Job extends Object
         return $obj;
     }
 
-    public static function getByID($jID = 0)
-    {
-        $db = Loader::db();
-        $jobData = $db->getRow("SELECT * FROM Jobs WHERE jID=".intval($jID));
-        if (!$jobData || !$jobData['jHandle']) {
-            return null;
-        }
-
-        return static::getJobObjByHandle($jobData['jHandle'], $jobData);
-    }
-
-    public static function getByHandle($jHandle = '')
-    {
-        $db = Loader::db();
-        $jobData = $db->getRow('SELECT * FROM Jobs WHERE jHandle=?', array($jHandle));
-        if (!$jobData || !$jobData['jHandle']) {
-            return null;
-        }
-
-        return static::getJobObjByHandle($jobData['jHandle'], $jobData);
-    }
-
-    public static function getJobObjByHandle($jHandle = '', $jobData = array())
-    {
-        $jcl = static::jobClassLocations();
-        $pkgHandle = null;
-        //check for the job file in the various locations
-        $db = Loader::db();
-        $pkgID = $db->GetOne('select pkgID from Jobs where jHandle = ?', $jHandle);
-        if ($pkgID > 0) {
-            $pkgHandle = PackageList::getHandle($pkgID);
-            if ($pkgHandle) {
-                $jcl[] = DIR_PACKAGES . '/' . $pkgHandle . '/' . DIRNAME_JOBS;
-                $jcl[] = DIR_PACKAGES_CORE . '/' . $pkgHandle . '/' . DIRNAME_JOBS;
-            }
-        }
-
-        foreach ($jcl as $jobClassLocation) {
-            //load the file & class, then run the job
-            $path = $jobClassLocation.'/'.$jHandle.'.php';
-            if (file_exists($path)) {
-                $className = static::getClassName($jHandle, $pkgHandle);
-                $j = Core::make($className);
-                $j->jHandle = $jHandle;
-                if (intval($jobData['jID']) > 0) {
-                    $j->setPropertiesFromArray($jobData);
-                }
-
-                return $j;
-            }
-        }
-
-        return null;
-    }
-
-    protected static function getClassName($jHandle, $pkgHandle = null)
-    {
-        $class = overrideable_core_class('Job\\' . camelcase($jHandle), DIRNAME_JOBS . '/' . $jHandle . '.php', $pkgHandle);
-
-        return $class;
-    }
-
-    //Scan job directories for job classes
-    public static function getAvailableList($includeConcreteDirJobs = 1)
-    {
-        $jobObjs = array();
-
-        //get existing jobs
-        $existingJobHandles = array();
-        $existingJobs = static::getList();
-        foreach ($existingJobs as $j) {
-            $existingJobHandles[] = $j->getJobHandle();
-        }
-
-        if (!$includeConcreteDirJobs) {
-            $jobClassLocations = array(DIR_FILES_JOBS);
-        } else {
-            $jobClassLocations = static::jobClassLocations();
-        }
-
-        foreach ($jobClassLocations as $jobClassLocation) {
-            // Open a known directory, and proceed to read its contents
-            if (is_dir($jobClassLocation)) {
-                if ($dh = opendir($jobClassLocation)) {
-                    while (($file = readdir($dh)) !== false) {
-                        if (substr($file, strlen($file) - 4) != '.php') {
-                            continue;
-                        }
-
-                        $alreadyInstalled = 0;
-                        foreach ($existingJobHandles as $existingJobHandle) {
-                            if (substr($file, 0, strlen($file) - 4) == $existingJobHandle) {
-                                $alreadyInstalled = 1;
-                                break;
-                            }
-                        }
-                        if ($alreadyInstalled) {
-                            continue;
-                        }
-
-                        $jHandle = substr($file, 0, strlen($file) - 4);
-                        $className = static::getClassName($jHandle);
-                        $jobObjs[$jHandle] = Core::make($className);
-                        $jobObjs[$jHandle]->jHandle = $jHandle;
-                    }
-                    closedir($dh);
-                }
-            }
-        }
-
-        return $jobObjs;
-    }
-
-    // Running Jobs
-    // ==============
-
-    /*
-    public static function runAllJobs()
-    {
-        //loop through all installed jobs
-        $jobs = Job::getList();
-        foreach ($jobs as $j) {
-            $j->executeJob();
-        }
-    }
-    */
-
+    /**
+     * Run the job
+     * @return JobResult
+     */
     public function executeJob()
     {
+        $error = '';
         $this->markStarted();
+
         try {
             $resultMsg = $this->run();
-            if (strlen($resultMsg) == 0) {
+
+            if (strlen($resultMsg) === 0) {
                 $resultMsg = t('The Job was run successfully.');
             }
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $resultMsg = $e->getMessage();
             $error = static::JOB_ERROR_EXCEPTION_GENERAL;
         }
-
-        $je = new Event($this);
-        Events::dispatch('on_job_execute', $je);
 
         $obj = $this->markCompleted($error, $resultMsg);
 
         return $obj;
     }
 
-    public function setJobStatus($jStatus = 'ENABLED')
+    /**
+     * Set the current status
+     * @param string $jStatus
+     * @return self
+     */
+    public function setJobStatus($jStatus = self::JOB_STATUS_ENABLED)
     {
-        $db = Loader::db();
         if (!in_array($jStatus, $this->availableJStatus)) {
-            $jStatus = 'ENABLED';
-        }
-        $rs = $db->query("UPDATE Jobs SET jStatus=? WHERE jHandle=?", array($jStatus, $this->jHandle));
-    }
-
-    public static function installByHandle($jHandle = '')
-    {
-        $availableJobs = static::getAvailableList();
-        foreach ($availableJobs as $availableJobHandle => $availableJobObj) {
-            if ($availableJobHandle != $jHandle) {
-                continue;
-            }
-            $availableJobObj->install();
-        }
-    }
-
-    public static function getListByPackage($pkg)
-    {
-        $db = Loader::db();
-        $list = array();
-        $r = $db->Execute('select jHandle from Jobs where pkgID = ? order by jHandle asc', array($pkg->getPackageID()));
-        while ($row = $r->FetchRow()) {
-            $list[] = static::getJobObjByHandle($row['jHandle']);
-        }
-        $r->Close();
-
-        return $list;
-    }
-
-    public static function installByPackage($jHandle, $pkg)
-    {
-        $className = static::getClassName($jHandle, $pkg->getPackageHandle());
-        if (class_exists($className)) {
-            $j = Core::make($className);
-            $db = Loader::db();
-            $db->Execute('insert into Jobs (jName, jDescription, jDateInstalled, jNotUninstallable, jHandle, pkgID) values (?, ?, ?, ?, ?, ?)',
-                array($j->getJobName(), $j->getJobDescription(), Loader::helper('date')->getOverridableNow(), 0, $jHandle, $pkg->getPackageID()));
-
-            $je = new Event($j);
-            Events::dispatch('on_job_install', $je);
-            $j->jID = $db->Insert_ID();
-
-            return $j;
-        }
-    }
-
-    public function install()
-    {
-        $db = Loader::db();
-        $jobExists = $db->getOne('SELECT count(*) FROM Jobs WHERE jHandle=?', array($this->jHandle));
-        $vals = array($this->getJobName(), $this->getJobDescription(),  date('Y-m-d H:i:s'), $this->jNotUninstallable, $this->jHandle);
-        if ($jobExists) {
-            $db->query('UPDATE Jobs SET jName=?, jDescription=?, jDateInstalled=?, jNotUninstallable=? WHERE jHandle=?', $vals);
-        } else {
-            $db->query('INSERT INTO Jobs (jName, jDescription, jDateInstalled, jNotUninstallable, jHandle) VALUES(?,?,?,?,?)', $vals);
+            $jStatus = self::JOB_STATUS_ENABLED;
         }
 
-        $je = new Event($this);
-        Events::dispatch('on_job_install', $je);
-    }
+        $this->jStatus = $jStatus;
 
-    public function uninstall()
-    {
-        $je = new Event($this);
-        $je = Events::dispatch('on_job_uninstall', $je);
-        if (!$je) {
-            return false;
-        }
+        $db = static::$staticApp['database'];
+        $db->executeQuery("UPDATE Jobs SET jStatus=? WHERE jHandle=?", [
+            $this->jStatus,
+            $this->jHandle,
+        ]);
 
-        $db = Loader::db();
-        $db->query('DELETE FROM Jobs WHERE jHandle=?', array($this->jHandle));
+        return $this;
     }
 
     /**
-     * Removes Job log entries.
+     * Check if this job is scheduled and should run now
+     * @return bool
      */
-    public static function clearLog()
-    {
-        $db = Loader::db();
-        $db->Execute("delete from JobsLog");
-    }
-
     public function isScheduledForNow()
     {
-        if (!$this->isScheduled) {
+        if (!$this->isScheduled()) {
             return false;
         }
-        if ($this->scheduledValue <= 0) {
+
+        if ($this->getScheduledValue() <= 0) {
             return false;
         }
 
         $last_run = strtotime($this->jDateLastRun);
         $seconds = 1;
-        switch ($this->scheduledInterval) {
+        switch ($this->getScheduledInterval()) {
             case "minutes":
                 $seconds = 60;
                 break;
@@ -469,27 +375,313 @@ abstract class Job extends Object
                 $seconds = 60 * 60 * 24 * 7 * 30;
                 break;
         }
-        $gap = $this->scheduledValue * $seconds;
-        if ($last_run < (time() - $gap)) {
-            return true;
-        } else {
+
+        $gap = $this->getScheduledValue() * $seconds;
+        if ($last_run > (time() - $gap)) {
             return false;
         }
+
+        return true;
     }
 
+    /**
+     * Check if this job is scheduled
+     * @return bool
+     */
+    public function isScheduled()
+    {
+        return (bool) $this->isScheduled;
+    }
+
+    /**
+     * Get the scheduled interval for this job
+     * E.g. "weeks" or "minutes".
+     *
+     * @return string
+     */
+    public function getScheduledInterval()
+    {
+        return $this->scheduledInterval;
+    }
+
+    /**
+     * Get the scheduled value
+     * @return int
+     */
+    public function getScheduledValue()
+    {
+        return (int) $this->scheduledValue;
+    }
+
+    /**
+     * Examples:
+     * - setSchedule(1, "days", 7);
+     * - setSchedule(1, "minutes", 45);.
+     *
+     * @param bool $scheduled
+     * @param string $interval
+     * @param int $value
+     *
+     * @return Job|false
+     */
     public function setSchedule($scheduled, $interval, $value)
     {
-        $this->isScheduled = $scheduled ? 1 : 0;
-        $this->scheduledInterval = Loader::helper('security')->sanitizeString($interval);
-        $this->scheduledValue = $value;
-        if ($this->getJobID()) {
-            $db = Loader::db();
-            $db->query("UPDATE Jobs SET isScheduled = ?, scheduledInterval = ?, scheduledValue = ? WHERE jID = ?",
-            array($this->isScheduled, $this->scheduledInterval, $this->scheduledValue, $this->getJobID()));
-
-            return true;
-        } else {
+        if (!$this->getJobID()) {
             return false;
         }
+
+        $this->isScheduled = $scheduled ? 1 : 0;
+        $this->scheduledInterval = static::$staticApp->make('helper/security')->sanitizeString($interval);
+        $this->scheduledValue = intval($value);
+
+        $db = static::$staticApp['database'];
+        $db->query("UPDATE Jobs SET isScheduled = ?, scheduledInterval = ?, scheduledValue = ? WHERE jID = ?", [
+            $this->isScheduled,
+            $this->scheduledInterval,
+            $this->scheduledValue,
+            $this->getJobID(),
+        ]);
+
+        return $this;
+    }
+
+    /**
+     * Set the scheduled status of this job
+     * @param bool $scheduled Is this job scheduled
+     * @return Job $this
+     */
+    public function setIsScheduled($scheduled = true)
+    {
+        $this->isScheduled = $scheduled ? 1 : 0;
+
+        $db = static::$staticApp['database'];
+        $db->query("UPDATE Jobs SET isScheduled = ? WHERE jID = ?", [
+            $this->isScheduled,
+            $this->getJobID(),
+        ]);
+
+        return $this;
+    }
+
+    /**
+     * Get the package ID associated with this job.
+     * @return int|null
+     */
+    public function getPackageID()
+    {
+        return $this->pkgID ? (int) $this->pkgID : null;
+    }
+
+    /**
+     * @param int $pkgID
+     * @return $this
+     */
+    public function setPackageID($pkgID)
+    {
+        $this->pkgID = $pkgID;
+
+        return $this;
+    }
+
+
+    /**
+     * Deprecated Legacy Methods
+     */
+
+    /**
+     * DO NOT USE THIS METHOD
+     *
+     * @deprecated
+     *
+     * Instead override the application bindings.
+     * This method only exists to enable legacy static methods on the real application instance.
+     *
+     * @param Application $app
+     */
+    public static function setStaticApplicationObject(Application $app)
+    {
+        static::$staticApp = $app;
+    }
+
+    /**
+     * @return Job $this
+     * @deprecated Use \Concrete\Core\Job\Service to manage jobs
+     */
+    public function install()
+    {
+        return self::$staticApp->make(Service::class)->install($this->jHandle);
+    }
+
+    /**
+     * @return bool
+     * @deprecated Use \Concrete\Core\Job\Service to manage jobs
+     */
+    public function uninstall()
+    {
+        return self::$staticApp->make(Service::class)->uninstall($this->jHandle);
+    }
+
+    /**
+     * @param bool $scheduledOnly
+     * @return Job[]
+     *
+     * @deprecated Use \Concrete\Core\Job\JobFactory to get job objects
+     */
+    public static function getList($scheduledOnly = false)
+    {
+        $factory = self::$staticApp->make(JobFactory::class);
+
+        if ($scheduledOnly) {
+            return $factory->scheduled();
+        }
+
+        return $factory->installed();
+    }
+
+    /**
+     * @param int $jID
+     * @return null|Job
+     *
+     * @deprecated Use \Concrete\Core\Job\JobFactory to get job objects
+     */
+    public static function getByID($jID = 0)
+    {
+        return self::$staticApp->make(JobFactory::class)->getByID($jID);
+    }
+
+    /**
+     * @param string $jHandle
+     * @return null|Job
+     *
+     * @deprecated Use \Concrete\Core\Job\JobFactory to get job objects
+     */
+    public static function getByHandle($jHandle = '')
+    {
+        return self::$staticApp->make(JobFactory::class)->getByHandle($jHandle);
+    }
+
+    /**
+     * @param string $jHandle
+     * @param array $jobData
+     * @return null|Job
+     *
+     * @deprecated Use \Concrete\Core\Job\JobFactory to get job objects
+     */
+    public static function getJobObjByHandle($jHandle = '', $jobData = [])
+    {
+        return self::$staticApp->make(JobFactory::class)->getJobByHandle($jHandle, $jobData);
+    }
+
+    /**
+     * @param bool $includeConcreteDirJobs
+     * @return array
+     *
+     * @deprecated See $JobFactory->getNotInstalledJobs();
+     */
+    public static function getAvailableList($includeConcreteDirJobs = true)
+    {
+        return self::$staticApp->make(JobFactory::class)->getNotInstalledJobs($includeConcreteDirJobs);
+    }
+
+    /**
+     * @param $pkg
+     * @return array
+     *
+     * @deprecated See $JobFactory->installed($package);
+     */
+    public static function getListByPackage($pkg)
+    {
+        return self::$staticApp->make(JobFactory::class)->installed($pkg);
+    }
+
+    /**
+     * @param $jHandle
+     * @param $pkg
+     * @return null|Job
+     *
+     * @deprecated Use \Concrete\Core\Job\Service to manage jobs
+     */
+    public static function installByPackage($jHandle, $pkg)
+    {
+        return self::$staticApp->make(Service::class)->install($jHandle, $pkg);
+    }
+
+    /**
+     * @param string $jHandle
+     * @return Job
+     * @deprecated Use \Concrete\Core\Job\Service to manage jobs
+     */
+    public static function installByHandle($jHandle = '')
+    {
+        return self::$staticApp->make(Service::class)->install($jHandle);
+    }
+
+    /**
+     * @deprecated Use \Concrete\Core\Job\Service to manage jobs
+     */
+    public static function clearLog()
+    {
+        return self::$staticApp->make(Service::class)->clearLog();
+    }
+
+    /**
+     * @return string
+     * @deprecated Use \Concrete\Core\Job\Service to manage jobs
+     */
+    public static function generateAuth()
+    {
+        return self::$staticApp->make(Service::class)->generateAuth();
+    }
+
+    /**
+     * @param $xml
+     *
+     * @deprecated Use \Concrete\Core\Job\Service to manage jobs
+     */
+    public static function exportList($xml)
+    {
+        return self::$staticApp->make(Service::class)->exportList($xml);
+    }
+
+    /**
+     * @return bool|mixed
+     *
+     * @deprecated This job likely doesn't know the handle. Instead use $job->getPackageID() and determine the handle manually
+     */
+    public function getPackageHandle()
+    {
+        return PackageList::getHandle($this->pkgID);
+    }
+
+    /**
+     * @deprecated Use is $job->getDateLastRun();
+     */
+    public function getJobDateLastRun()
+    {
+        return $this->getDateLastRun();
+    }
+
+    /**
+     * @deprecated Use is $job->getLastStatusCode();
+     */
+    public function getJobLastStatusCode()
+    {
+        return $this->getLastStatusCode();
+    }
+
+    /**
+     * @deprecated Use $job->getLastStatusText();
+     */
+    public function getJobLastStatusText()
+    {
+        return $this->getLastStatusText();
+    }
+
+    /**
+     * @deprecated Use $job->getStatus();
+     */
+    public function getJobStatus()
+    {
+        return $this->getStatus();
     }
 }
