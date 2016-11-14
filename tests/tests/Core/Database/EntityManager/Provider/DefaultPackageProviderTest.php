@@ -5,7 +5,7 @@ namespace Concrete\Tests\Core\Database\EntityManager\Provider;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Database\EntityManager\Provider\DefaultPackageProvider;
 use Concrete\Tests\Core\Database\EntityManager\Provider\Fixtures\PackageControllerWithgetPackageEntityPath;
-use Concrete\Tests\Core\Database\EntityManager\Provider\Fixtures\PackageControllerXml;
+use Concrete\Tests\Core\Database\EntityManager\Provider\Fixtures\PackageControllerDefault;
 
 /**
  * PackageProviderFactoryTest
@@ -51,12 +51,8 @@ class DefaultPackageProviderTest extends \PHPUnit_Framework_TestCase
     {
         $package = new PackageControllerDefault($this->app);
         $dpp = new DefaultPackageProvider($this->app, $package);
-        
         $drivers = $dpp->getDrivers();
-        
         $this->assertInternalType('array',$drivers);
-        
-        var_dump($drivers);
         $this->assertEmpty($drivers);
     }
     
