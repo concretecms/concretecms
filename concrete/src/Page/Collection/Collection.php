@@ -14,10 +14,12 @@ use Concrete\Core\Foundation\Object as Object;
 use Concrete\Core\Gathering\Item\Page as PageGatheringItem;
 use Concrete\Core\Page\Collection\Version\VersionList;
 use Concrete\Core\Page\Search\IndexedSearch;
+use Concrete\Core\Search\Index\IndexManagerInterface;
 use Concrete\Core\Statistics\UsageTracker\TrackableInterface;
 use Concrete\Core\StyleCustomizer\Inline\StyleSet;
 use Concrete\Core\Block\CustomStyle as BlockCustomStyle;
 use Concrete\Core\Area\CustomStyle as AreaCustomStyle;
+use Concrete\Core\Support\Facade\Application;
 use Config;
 use Loader;
 use Page;
@@ -40,13 +42,16 @@ class Collection extends Object implements TrackableInterface
 
     public static function reindexPendingPages()
     {
+        $app = Application::getFacadeApplication();
+
+        /** @var IndexManagerInterface $indexStack */
+        $indexStack = $app->make(IndexManagerInterface::class);
+
         $num = 0;
-        $db = Loader::db();
-        $r = $db->Execute('select cID from PageSearchIndex where cRequiresReindex = 1');
-        while ($row = $r->FetchRow()) {
-            $pc = Page::getByID($row['cID']);
-            $pc->reindex(false, true);
-            ++$num;
+        $db = $app['database']->connection();
+        $r = $db->execute('select cID from PageSearchIndex where cRequiresReindex = 1');
+        while ($id = $r->fetchColumn()) {
+            $indexStack->index(\Concrete\Core\Page\Page::class, $id);
         }
         Config::save('concrete.misc.do_page_reindex_check', false);
 

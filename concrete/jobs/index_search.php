@@ -1,13 +1,13 @@
 <?php
 namespace Concrete\Job;
 
-use Concrete\Core\Cache\Cache;
-use Job as AbstractJob;
-use Concrete\Core\Page\Search\IndexedSearch;
+use Concrete\Core\Application\ApplicationAwareInterface;
+use Concrete\Core\Application\ApplicationAwareTrait;
 
-class IndexSearch extends AbstractJob
+class IndexSearch extends IndexSearchAll implements ApplicationAwareInterface
 {
-    public $jNotUninstallable = 1;
+
+    use ApplicationAwareTrait;
 
     public function getJobName()
     {
@@ -17,42 +17,32 @@ class IndexSearch extends AbstractJob
     public function getJobDescription()
     {
         return t(
-            "Index the site to allow searching to work quickly and accurately. Only reindexes pages that have changed since last indexing."
+            "Index the site to allow searching to work quickly and accurately"
         );
     }
 
-    public function run()
+    /**
+     * Get Pages to add to the queue
+     * @return \Iterator
+     */
+    protected function pagesToQueue()
     {
-        Cache::disableAll();
+        $qb = $this->connection->createQueryBuilder();
+        $timeout = $this->app['config']->get('concrete.misc.page_search_index_lifetime');
 
-        $is = new IndexedSearch();
-        if ($_GET['force'] == 1) {
-            $attributes = \CollectionAttributeKey::getList();
-            $attributes = array_merge($attributes, \FileAttributeKey::getList());
-            $attributes = array_merge($attributes, \UserAttributeKey::getList());
-            foreach ($attributes as $ak) {
-                $ak->updateSearchIndex();
-            }
+        //'( or psi.cID is null or psi.cDateLastIndexed is null)'
+        $statement = $qb->select('p.cID')
+            ->from('Pages', 'p')
+            ->leftJoin('p', 'Collections', 'c', 'p.cID = c.cID')
+            ->leftJoin('p', 'PageSearchIndex', 's', 'p.cID = s.cID')
+            ->where('c.cDateModified > s.cDateLastIndexed')
+            ->orWhere('UNIX_TIMESTAMP(NOW()) - UNIX_TIMESTAMP(s.cDateLastIndexed) > ' . $timeout)
+            ->orWhere('s.cID is null')
+            ->orWhere('s.cDateLastIndexed is null')->execute();
 
-            $result = $is->reindexAll(true);
-        } else {
-            $result = $is->reindexAll();
-        }
-
-        if ($result->count == 0) {
-            return t('Indexing complete. Index is up to date');
-        } elseif ($result->count == $is->searchBatchSize) {
-            return t(
-                'Index partially updated. %s pages indexed (maximum number.) Re-run this job to continue this process.',
-                $result->count
-            );
-        } else {
-            return t('Index updated.') . ' ' . t2(
-                '%d page required reindexing.',
-                '%d pages required reindexing.',
-                $result->count,
-                $result->count
-            );
+        while ($id = $statement->fetchColumn()) {
+            yield $id;
         }
     }
+
 }
