@@ -2,7 +2,9 @@
 namespace Concrete\Core\Sharing\ShareThisPage;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Sharing\SocialNetwork\Service as SocialNetworkService;
-use Config;
+use Request,
+    Config,
+    URL;
 
 class Service extends SocialNetworkService
 {
@@ -20,7 +22,7 @@ class Service extends SocialNetworkService
     public function getServiceLink(Page $c = null)
     {
         if (!is_object($c)) {
-            $req = \Request::getInstance();
+            $req = Request::getInstance();
             $c   = $req->getCurrentPage();
             $url = urlencode($req->getUri());
         } elseif (!$c->isError()) {
