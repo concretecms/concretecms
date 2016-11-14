@@ -8,7 +8,7 @@ class JobServiceProvider extends ServiceProvider
     public function register()
     {
         // Supply the deprecated static session accessor with a real application object
-        Job::setApplicationObject($this->app);
+        Job::setStaticApplicationObject($this->app);
 
         $this->app->bind('job', JobFactory::class);
     }

@@ -10,48 +10,91 @@ use Events;
 use Exception;
 
 /**
- * Class Job
- *
- * Example of how to retrieve a job:
- * $factory = $app->make(JobFactory::class);
- * $job = $factory->getByID(1);
+ * Abstract Job class
+ * This class can be extended to create schedulable tasks in concrete5.
+ * Typically a job only needs to define `getJobName,
  *
  * @package Concrete\Core\Job
  */
 abstract class Job extends Object
 {
+
+    // Job results
     const JOB_SUCCESS = 0;
     const JOB_ERROR_EXCEPTION_GENERAL = 1;
 
+    // Job Statuses
     const JOB_STATUS_ENABLED = 'ENABLED';
     const JOB_STATUS_RUNNING = 'RUNNING';
     const JOB_STATUS_ERROR = 'ERROR';
     const JOB_STATUS_DISABLED_ERROR = 'DISABLED_ERROR';
     const JOB_STATUS_DISABLED = 'DISABLED';
 
+    /** @var int|null The package ID that installed this job */
     protected $pkgID;
+
+    /** @var int The last status code */
     protected $jLastStatusCode;
+
+    /** @var string The last status string */
     protected $jLastStatusText;
 
-    abstract public function run();
-    abstract public function getJobName();
-    abstract public function getJobDescription();
+    /**
+     * @var string[] Available statuses
+     */
+    public $availableJStatus = [
+        self::JOB_STATUS_ENABLED,
+        self::JOB_STATUS_RUNNING,
+        self::JOB_STATUS_ERROR,
+        self::JOB_STATUS_DISABLED_ERROR,
+        self::JOB_STATUS_DISABLED,
+    ];
+
+    /** @var int Job ID */
+    public $jID = 0;
+
+    /** @var string Job Status, see $job->availableJStatus for statuses */
+    public $jStatus = self::JOB_STATUS_ENABLED;
+
+    /** @var string A date string */
+    public $jDateLastRun;
+
+    /** @var string */
+    public $jHandle = '';
+
+    /** @var bool */
+    public $jNotUninstallable = false;
+
+    /** @var bool */
+    public $isScheduled = false;
+
+    /** @var string hours|days|weeks|months */
+    public $scheduledInterval = 'days';
+
+    /** @var int */
+    public $scheduledValue = 0;
 
     /** @var Application */
-    protected static $app;
+    private static $staticApp;
 
     /**
-     * DO NOT USE THIS METHOD
-     *
-     * Instead override the application bindings.
-     * This method only exists to enable legacy static methods on the real application instance.
-     *
-     * @param Application $app
+     * Run this job's task.
+     * Use this method to provide functionality to your job
+     * @return void
      */
-    public static function setApplicationObject(Application $app)
-    {
-        static::$app = $app;
-    }
+    abstract public function run();
+
+    /**
+     * Get the current job name
+     * @return string
+     */
+    abstract public function getJobName();
+
+    /**
+     * Get this job's description
+     * @return string
+     */
+    abstract public function getJobDescription();
 
     /**
      * @return string
@@ -70,6 +113,7 @@ abstract class Job extends Object
     }
 
     /**
+     * Did this job fail the last time it ran
      * @return bool
      */
     public function didFail()
@@ -80,6 +124,7 @@ abstract class Job extends Object
     }
 
     /**
+     * Is this job uninstallable
      * @return bool
      */
     public function canUninstall()
@@ -88,6 +133,8 @@ abstract class Job extends Object
     }
 
     /**
+     * Does this job support queuing
+     * We just return whether or not this job is an instance of QueueableJob
      * @return bool
      */
     public function supportsQueue()
@@ -95,28 +142,8 @@ abstract class Job extends Object
         return $this instanceof QueueableJob;
     }
 
-    //==========================================================
-    // JOB MANAGEMENT - do not override anything below this line
-    //==========================================================
-
-    //Other Job Variables
-    public $availableJStatus = [
-        self::JOB_STATUS_ENABLED,
-        self::JOB_STATUS_RUNNING,
-        self::JOB_STATUS_ERROR,
-        self::JOB_STATUS_DISABLED_ERROR,
-        self::JOB_STATUS_DISABLED,
-    ];
-    public $jID = 0;
-    public $jStatus = self::JOB_STATUS_ENABLED;
-    public $jDateLastRun;
-    public $jHandle = '';
-    public $jNotUninstallable = 0;
-    public $isScheduled = 0;
-    public $scheduledInterval = 'days'; // hours|days|weeks|months
-    public $scheduledValue = 0;
-
     /**
+     * Get the last date that this job ran
      * @return string DateTime
      */
     public function getDateLastRun()
@@ -125,9 +152,9 @@ abstract class Job extends Object
     }
 
     /**
+     * Set the last date that this job ran
      * @param string $datetime
-     *
-     * @return Job $this
+     * @return self $this
      */
     public function setDateLastRun($datetime)
     {
@@ -137,8 +164,7 @@ abstract class Job extends Object
     }
 
     /**
-     * E.g. 'RUNNING'.
-     *
+     * Get the current status
      * @return string
      */
     public function getStatus()
@@ -146,12 +172,17 @@ abstract class Job extends Object
         return $this->jStatus;
     }
 
+    /**
+     * Get the last status code returned
+     * @return int
+     */
     public function getLastStatusCode()
     {
         return $this->jLastStatusCode;
     }
 
     /**
+     * Get the last status text returned
      * @return string
      */
     public function getLastStatusText()
@@ -165,7 +196,6 @@ abstract class Job extends Object
      * or from the dashboard.
      *
      * @param string $auth
-     *
      * @return bool
      */
     public static function authenticateRequest($auth)
@@ -180,13 +210,14 @@ abstract class Job extends Object
     }
 
     /**
-     * @return Job $this
+     * Reset this job so that it can run again
+     * @return self
      */
     public function reset()
     {
         $this->jStatus = self::JOB_STATUS_ENABLED;
 
-        $db = static::$app['database'];
+        $db = static::$staticApp['database'];
         $db->executeQuery("UPDATE Jobs SET jLastStatusCode = 0, jStatus = ? WHERE jID = ?", [
             $this->jStatus,
             $this->jID,
@@ -196,19 +227,20 @@ abstract class Job extends Object
     }
 
     /**
-     * @return Job $this
+     * Mark this job as having started
+     * @return self
      */
     public function markStarted()
     {
         $je = new Event($this);
 
-        static::$app['director']->dispatch('on_before_job_execute', $je);
+        static::$staticApp['director']->dispatch('on_before_job_execute', $je);
 
         $timestampH = date('Y-m-d g:i:s A');
         $this->jDateLastRun = $timestampH;
         $this->jStatus = self::JOB_STATUS_RUNNING;
 
-        $db = static::$app['database'];
+        $db = static::$staticApp['database'];
         $db->executeQuery("UPDATE Jobs SET jStatus=?, jDateLastRun=NOW() WHERE jHandle=?", [
             $this->jStatus,
             $this->jHandle,
@@ -218,6 +250,7 @@ abstract class Job extends Object
     }
 
     /**
+     * Mark this job as having completed
      * @param int $resultCode
      * @param bool|string $resultMsg
      *
@@ -230,7 +263,7 @@ abstract class Job extends Object
         $jStatus = $this->didFail() ? self::JOB_STATUS_ERROR : self::JOB_STATUS_ENABLED;
         $timestamp = date('Y-m-d H:i:s');
 
-        $db = static::$app['database'];
+        $db = static::$staticApp['database'];
         $db->executeQuery("UPDATE Jobs SET jStatus=?, jLastStatusCode = ?, jLastStatusText=? WHERE jHandle=?", [
             $jStatus,
             $resultCode,
@@ -251,7 +284,7 @@ abstract class Job extends Object
         $obj = new JobResult();
         $obj->error = $resultCode;
         $obj->result = $resultMsg;
-        $obj->jDateLastRun = static::$app->make('helper/date')->formatDateTime('now', true, true);
+        $obj->jDateLastRun = static::$staticApp->make('helper/date')->formatDateTime('now', true, true);
         $obj->jHandle = $this->getJobHandle();
         $obj->jID = $this->getJobID();
 
@@ -263,6 +296,7 @@ abstract class Job extends Object
     }
 
     /**
+     * Run the job
      * @return JobResult
      */
     public function executeJob()
@@ -287,9 +321,9 @@ abstract class Job extends Object
     }
 
     /**
+     * Set the current status
      * @param string $jStatus
-     *
-     * @return Job $this
+     * @return self
      */
     public function setJobStatus($jStatus = self::JOB_STATUS_ENABLED)
     {
@@ -299,7 +333,7 @@ abstract class Job extends Object
 
         $this->jStatus = $jStatus;
 
-        $db = static::$app['database'];
+        $db = static::$staticApp['database'];
         $db->executeQuery("UPDATE Jobs SET jStatus=? WHERE jHandle=?", [
             $this->jStatus,
             $this->jHandle,
@@ -309,26 +343,7 @@ abstract class Job extends Object
     }
 
     /**
-     * @deprecated
-     *
-     * @return Job $this
-     */
-    public function install()
-    {
-        return self::$app->make(Service::class)->install($this->jHandle);
-    }
-
-    /**
-     * @deprecated
-     *
-     * @return bool
-     */
-    public function uninstall()
-    {
-        return self::$app->make(Service::class)->uninstall($this->jHandle);
-    }
-
-    /**
+     * Check if this job is scheduled and should run now
      * @return bool
      */
     public function isScheduledForNow()
@@ -370,6 +385,7 @@ abstract class Job extends Object
     }
 
     /**
+     * Check if this job is scheduled
      * @return bool
      */
     public function isScheduled()
@@ -378,6 +394,7 @@ abstract class Job extends Object
     }
 
     /**
+     * Get the scheduled interval for this job
      * E.g. "weeks" or "minutes".
      *
      * @return string
@@ -388,6 +405,7 @@ abstract class Job extends Object
     }
 
     /**
+     * Get the scheduled value
      * @return int
      */
     public function getScheduledValue()
@@ -413,10 +431,10 @@ abstract class Job extends Object
         }
 
         $this->isScheduled = $scheduled ? 1 : 0;
-        $this->scheduledInterval = static::$app->make('helper/security')->sanitizeString($interval);
+        $this->scheduledInterval = static::$staticApp->make('helper/security')->sanitizeString($interval);
         $this->scheduledValue = intval($value);
 
-        $db = static::$app['database'];
+        $db = static::$staticApp['database'];
         $db->query("UPDATE Jobs SET isScheduled = ?, scheduledInterval = ?, scheduledValue = ? WHERE jID = ?", [
             $this->isScheduled,
             $this->scheduledInterval,
@@ -428,15 +446,15 @@ abstract class Job extends Object
     }
 
     /**
-     * @param bool $scheduled
-     *
+     * Set the scheduled status of this job
+     * @param bool $scheduled Is this job scheduled
      * @return Job $this
      */
     public function setIsScheduled($scheduled = true)
     {
         $this->isScheduled = $scheduled ? 1 : 0;
 
-        $db = static::$app['database'];
+        $db = static::$staticApp['database'];
         $db->query("UPDATE Jobs SET isScheduled = ? WHERE jID = ?", [
             $this->isScheduled,
             $this->getJobID(),
@@ -446,11 +464,12 @@ abstract class Job extends Object
     }
 
     /**
-     * @return int
+     * Get the package ID associated with this job.
+     * @return int|null
      */
     public function getPackageID()
     {
-        return (int) $this->pkgID;
+        return $this->pkgID ? (int) $this->pkgID : null;
     }
 
     /**
@@ -464,16 +483,53 @@ abstract class Job extends Object
         return $this;
     }
 
+
     /**
+     * Deprecated Legacy Methods
+     */
+
+    /**
+     * DO NOT USE THIS METHOD
+     *
      * @deprecated
      *
-     * @param bool $scheduledOnly
+     * Instead override the application bindings.
+     * This method only exists to enable legacy static methods on the real application instance.
      *
+     * @param Application $app
+     */
+    public static function setStaticApplicationObject(Application $app)
+    {
+        static::$staticApp = $app;
+    }
+
+    /**
+     * @return Job $this
+     * @deprecated Use \Concrete\Core\Job\Service to manage jobs
+     */
+    public function install()
+    {
+        return self::$staticApp->make(Service::class)->install($this->jHandle);
+    }
+
+    /**
+     * @return bool
+     * @deprecated Use \Concrete\Core\Job\Service to manage jobs
+     */
+    public function uninstall()
+    {
+        return self::$staticApp->make(Service::class)->uninstall($this->jHandle);
+    }
+
+    /**
+     * @param bool $scheduledOnly
      * @return Job[]
+     *
+     * @deprecated Use \Concrete\Core\Job\JobFactory to get job objects
      */
     public static function getList($scheduledOnly = false)
     {
-        $factory = self::$app->make(JobFactory::class);
+        $factory = self::$staticApp->make(JobFactory::class);
 
         if ($scheduledOnly) {
             return $factory->scheduled();
@@ -483,127 +539,114 @@ abstract class Job extends Object
     }
 
     /**
-     * @deprecated
-     *
      * @param int $jID
-     *
      * @return null|Job
+     *
+     * @deprecated Use \Concrete\Core\Job\JobFactory to get job objects
      */
     public static function getByID($jID = 0)
     {
-        return self::$app->make(JobFactory::class)->getByID($jID);
+        return self::$staticApp->make(JobFactory::class)->getByID($jID);
     }
 
     /**
-     * @deprecated
-     *
      * @param string $jHandle
-     *
      * @return null|Job
+     *
+     * @deprecated Use \Concrete\Core\Job\JobFactory to get job objects
      */
     public static function getByHandle($jHandle = '')
     {
-        return self::$app->make(JobFactory::class)->getByHandle($jHandle);
+        return self::$staticApp->make(JobFactory::class)->getByHandle($jHandle);
     }
 
     /**
-     * @deprecated
-     *
      * @param string $jHandle
      * @param array $jobData
-     *
      * @return null|Job
+     *
+     * @deprecated Use \Concrete\Core\Job\JobFactory to get job objects
      */
     public static function getJobObjByHandle($jHandle = '', $jobData = [])
     {
-        return self::$app->make(JobFactory::class)->getJobObjByHandle($jHandle, $jobData);
+        return self::$staticApp->make(JobFactory::class)->getJobByHandle($jHandle, $jobData);
     }
 
     /**
-     * @deprecated
-     *
-     * Scan job directories for job classes.
-     *
      * @param bool $includeConcreteDirJobs
-     *
      * @return array
+     *
+     * @deprecated See $JobFactory->getNotInstalledJobs();
      */
     public static function getAvailableList($includeConcreteDirJobs = true)
     {
-        return self::$app->make(JobFactory::class)->getNotInstalledJobs($includeConcreteDirJobs);
+        return self::$staticApp->make(JobFactory::class)->getNotInstalledJobs($includeConcreteDirJobs);
     }
 
     /**
-     * @deprecated
-     *
      * @param $pkg
-     *
      * @return array
+     *
+     * @deprecated See $JobFactory->installed($package);
      */
     public static function getListByPackage($pkg)
     {
-        return self::$app->make(JobFactory::class)->installed($pkg);
+        return self::$staticApp->make(JobFactory::class)->installed($pkg);
     }
 
     /**
-     * @deprecated
-     *
      * @param $jHandle
      * @param $pkg
-     *
      * @return null|Job
+     *
+     * @deprecated Use \Concrete\Core\Job\Service to manage jobs
      */
     public static function installByPackage($jHandle, $pkg)
     {
-        return self::$app->make(Service::class)->install($jHandle, $pkg);
+        return self::$staticApp->make(Service::class)->install($jHandle, $pkg);
     }
 
     /**
-     * @deprecated
-     *
      * @param string $jHandle
+     * @return Job
+     * @deprecated Use \Concrete\Core\Job\Service to manage jobs
      */
     public static function installByHandle($jHandle = '')
     {
-        return self::$app->make(Service::class)->install($jHandle);
+        return self::$staticApp->make(Service::class)->install($jHandle);
     }
 
     /**
-     * @deprecated
-     *
-     * Removes Job log entries.
+     * @deprecated Use \Concrete\Core\Job\Service to manage jobs
      */
     public static function clearLog()
     {
-        return self::$app->make(Service::class)->clearLog();
+        return self::$staticApp->make(Service::class)->clearLog();
     }
 
     /**
-     * @deprecated
-     *
      * @return string
+     * @deprecated Use \Concrete\Core\Job\Service to manage jobs
      */
     public static function generateAuth()
     {
-        return self::$app->make(Service::class)->generateAuth();
+        return self::$staticApp->make(Service::class)->generateAuth();
     }
 
     /**
-     * @deprecated
-     *
      * @param $xml
+     *
+     * @deprecated Use \Concrete\Core\Job\Service to manage jobs
      */
     public static function exportList($xml)
     {
-        return self::$app->make(Service::class)->exportList($xml);
+        return self::$staticApp->make(Service::class)->exportList($xml);
     }
 
     /**
-     * @deprecated
-     *
-     * This shouldn't be coupled with the Job class.
-     *
      * @return bool|mixed
+     *
+     * @deprecated This job likely doesn't know the handle. Instead use $job->getPackageID() and determine the handle manually
      */
     public function getPackageHandle()
     {
@@ -611,11 +654,7 @@ abstract class Job extends Object
     }
 
     /**
-     * @deprecated
-     *
-     * Use getDateLastRun()
-     *
-     * @return string DateTime
+     * @deprecated Use is $job->getDateLastRun();
      */
     public function getJobDateLastRun()
     {
@@ -623,9 +662,7 @@ abstract class Job extends Object
     }
 
     /**
-     * @deprecated
-     *
-     * @return mixed
+     * @deprecated Use is $job->getLastStatusCode();
      */
     public function getJobLastStatusCode()
     {
@@ -633,9 +670,7 @@ abstract class Job extends Object
     }
 
     /**
-     * @deprecated
-     *
-     * @return string
+     * @deprecated Use $job->getLastStatusText();
      */
     public function getJobLastStatusText()
     {
@@ -643,9 +678,7 @@ abstract class Job extends Object
     }
 
     /**
-     * @deprecated
-     *
-     * @return string
+     * @deprecated Use $job->getStatus();
      */
     public function getJobStatus()
     {
