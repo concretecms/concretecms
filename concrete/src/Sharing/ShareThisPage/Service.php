@@ -3,7 +3,8 @@ namespace Concrete\Core\Sharing\ShareThisPage;
 
 use Concrete\Core\Page\Page;
 use Concrete\Core\Sharing\SocialNetwork\Service as SocialNetworkService;
-use Config;
+use Request;
+use URL;
 
 class Service extends SocialNetworkService
 {
@@ -20,19 +21,27 @@ class Service extends SocialNetworkService
     public function getServiceLink(Page $c = null)
     {
         if (!is_object($c)) {
-            $c = \Page::getCurrentPage();
+            $req = Request::getInstance();
+            $c = $req->getCurrentPage();
+            $url = urlencode($req->getUri());
+        } elseif (!$c->isError()) {
+            $url = urlencode(URL::to($c));
         }
+
         if (is_object($c) && !$c->isError()) {
-            $url = urlencode($c->getCollectionLink(true));
+            $title = $c->getCollectionName();
+        } else {
+            $title = \Core::make('site')->getSite()->getSiteName();
+        }
+
+        if (!empty($url)) {
             switch ($this->getHandle()) {
                 case 'facebook':
                     return "https://www.facebook.com/sharer/sharer.php?u=$url";
                 case 'twitter':
                     return "https://twitter.com/intent/tweet?url=$url";
                 case 'linkedin':
-                    $title = urlencode($c->getCollectionName());
-
-                    return "https://www.linkedin.com/shareArticle?mini-true&url={$url}&title={$title}";
+                    return "https://www.linkedin.com/shareArticle?mini-true&url={$url}&title=".urlencode($title);
                 case 'pinterest':
                     return "https://www.pinterest.com/pin/create/button?url=$url";
                 case 'google_plus':
@@ -42,7 +51,7 @@ class Service extends SocialNetworkService
                 case 'print':
                     return "javascript:window.print();";
                 case 'email':
-                    $body = rawurlencode(t("Check out this article on %s:\n\n%s\n%s", tc('SiteName', \Core::make('site')->getSite()->getSiteName()), $c->getCollectionName(), urldecode($url)));
+                    $body = rawurlencode(t("Check out this article on %s:\n\n%s\n%s", tc('SiteName', \Core::make('site')->getSite()->getSiteName()), $title, urldecode($url)));
                     $subject = rawurlencode(t('Thought you\'d enjoy this article.'));
 
                     return "mailto:?body={$body}&subject={$subject}";
