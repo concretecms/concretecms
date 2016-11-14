@@ -40,15 +40,15 @@ class Service
      */
     public function reset()
     {
-        $this->headers = array();
-        $this->to = array();
-        $this->replyto = array();
-        $this->cc = array();
-        $this->bcc = array();
-        $this->from = array();
-        $this->data = array();
+        $this->headers = [];
+        $this->to = [];
+        $this->replyto = [];
+        $this->cc = [];
+        $this->bcc = [];
+        $this->from = [];
+        $this->data = [];
         $this->subject = '';
-        $this->attachments = array();
+        $this->attachments = [];
         $this->template = '';
         $this->body = false;
         $this->bodyHTML = false;
@@ -57,20 +57,20 @@ class Service
 
     public static function getMailerObject()
     {
-        $response = array();
+        $response = [];
         $response['mail'] = new Message();
         $response['mail']->setEncoding(APP_CHARSET);
 
         if (strcasecmp(Config::get('concrete.mail.method'), 'smtp') == 0) {
-            $config = array(
+            $config = [
                 'host' => Config::get('concrete.mail.methods.smtp.server'),
-            );
+            ];
 
             $username = Config::get('concrete.mail.methods.smtp.username');
             $password = Config::get('concrete.mail.methods.smtp.password');
             if ($username != '') {
                 $config['connection_class'] = 'login';
-                $config['connection_config'] = array();
+                $config['connection_config'] = [];
                 $config['connection_config']['username'] = $username;
                 $config['connection_config']['password'] = $password;
             }
@@ -283,7 +283,7 @@ class Service
      */
     public function from($email, $name = null)
     {
-        $this->from = array($email, $name);
+        $this->from = [$email, $name];
     }
 
     /**
@@ -297,10 +297,10 @@ class Service
         if (strpos($email, ',') > 0) {
             $email = explode(',', $email);
             foreach ($email as $em) {
-                $this->to[] = array($em, $name);
+                $this->to[] = [$em, $name];
             }
         } else {
-            $this->to[] = array($email, $name);
+            $this->to[] = [$email, $name];
         }
     }
 
@@ -317,10 +317,10 @@ class Service
         if (strpos($email, ',') > 0) {
             $email = explode(',', $email);
             foreach ($email as $em) {
-                $this->cc[] = array($em, $name);
+                $this->cc[] = [$em, $name];
             }
         } else {
-            $this->cc[] = array($email, $name);
+            $this->cc[] = [$email, $name];
         }
     }
 
@@ -337,10 +337,10 @@ class Service
         if (strpos($email, ',') > 0) {
             $email = explode(',', $email);
             foreach ($email as $em) {
-                $this->bcc[] = array($em, $name);
+                $this->bcc[] = [$em, $name];
             }
         } else {
-            $this->bcc[] = array($email, $name);
+            $this->bcc[] = [$email, $name];
         }
     }
 
@@ -355,10 +355,10 @@ class Service
         if (strpos($email, ',') > 0) {
             $email = explode(',', $email);
             foreach ($email as $em) {
-                $this->replyto[] = array($em, $name);
+                $this->replyto[] = [$em, $name];
             }
         } else {
-            $this->replyto[] = array($email, $name);
+            $this->replyto[] = [$email, $name];
         }
     }
 
@@ -392,9 +392,11 @@ class Service
     /**
      * Sends the email.
      *
-     * @param bool $resetData Whether or not to reset the service to its default values.
+     * @param bool $resetData Whether or not to reset the service to its default values
      *
      * @throws \Exception
+     *
+     * @return bool
      */
     public function sendMail($resetData = true)
     {
@@ -413,7 +415,7 @@ class Service
             }
         }
         if (!isset($from)) {
-            $from = array(Config::get('concrete.email.default.address'), Config::get('concrete.email.default.name'));
+            $from = [Config::get('concrete.email.default.address'), Config::get('concrete.email.default.name')];
             $fromStr = Config::get('concrete.email.default.address');
         }
 
@@ -467,12 +469,11 @@ class Service
             $html->type = Mime::TYPE_HTML;
             $html->charset = APP_CHARSET;
             $alternatives->addPart($html);
-            $alternativesPath           = new MimePart($alternatives->generateMessage());
-            $alternativesPath->charset  = 'UTF-8';
-            $alternativesPath->type     = 'multipart/alternative';
+            $alternativesPath = new MimePart($alternatives->generateMessage());
+            $alternativesPath->charset = 'UTF-8';
+            $alternativesPath->type = 'multipart/alternative';
             $alternativesPath->boundary = $alternatives->getMime()->boundary();
             $body->addPart($alternativesPath);
-
         } elseif ($this->body !== false) {
             $text = new MimePart($this->body);
             $text->type = 'text/plain';
@@ -495,10 +496,12 @@ class Service
         }
         $mail->setBody($body);
 
+        $sent = false;
         try {
             if (Config::get('concrete.email.enabled')) {
                 $transport->send($mail);
             }
+            $sent = true;
         } catch (Exception $e) {
             if ($this->getTesting()) {
                 throw $e;
@@ -536,5 +539,7 @@ class Service
         if ($resetData) {
             $this->reset();
         }
+
+        return $sent;
     }
 }
