@@ -2,6 +2,9 @@
 namespace Concrete\Core\Page\Search;
 
 use Concrete\Core\Cache\Cache;
+use Concrete\Core\Page\Page;
+use Concrete\Core\Search\Index\IndexManagerInterface;
+use Concrete\Core\Support\Facade\Application;
 use Loader;
 use Config;
 use PageList;
@@ -160,6 +163,9 @@ class IndexedSearch
     {
         Cache::disableAll();
 
+        /** @var IndexManagerInterface $indexStack */
+        $indexStack = Application::getFacadeApplication()->make(IndexManagerInterface::class);
+
         $db = Loader::db();
 
         if ($fullReindex) {
@@ -179,16 +185,7 @@ class IndexedSearch
 
         $num = 0;
         foreach ($pages as $c) {
-
-            // make sure something is approved
-            $cv = $c->getVersionObject();
-            if (!$cv->cvIsApproved) {
-                continue;
-            }
-
-            $c->reindex($this, true);
-            ++$num;
-            unset($c);
+            $indexStack->index(Page::class, $c);
         }
 
         $pnum = Collection::reindexPendingPages();
