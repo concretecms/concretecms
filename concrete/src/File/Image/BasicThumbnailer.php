@@ -1,15 +1,26 @@
 <?php
 namespace Concrete\Core\File\Image;
 
+use Concrete\Core\Application\ApplicationAwareInterface;
+use Concrete\Core\Application\ApplicationAwareTrait;
+use Concrete\Core\Entity\File\StorageLocation\StorageLocation;
+use Concrete\Core\File\Image\Thumbnail\Path\Resolver;
+use Concrete\Core\File\Image\Thumbnail\ThumbnailerInterface;
+use Concrete\Core\File\Image\Thumbnail\Type\CustomThumbnail;
 use Concrete\Core\File\StorageLocation\StorageLocationInterface;
 use Config;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Image;
 use Imagine\Image\Box;
 use Imagine\Image\ImageInterface;
 use Concrete\Core\Entity\File\File;
 
-class BasicThumbnailer
+class BasicThumbnailer implements ThumbnailerInterface, ApplicationAwareInterface
 {
+
+    use ApplicationAwareTrait;
+
     protected $jpegCompression;
 
     /**
@@ -28,17 +39,26 @@ class BasicThumbnailer
     public function getStorageLocation()
     {
         if ($this->storageLocation === null) {
-            $this->setStorageLocation(StorageLocation::getDefault());
+            /** @var EntityManagerInterface $orm */
+            $orm = $this->app['database/orm']->entityManager();
+            $storageLocation = $orm->getRepository(StorageLocation::class)->findOneBy([ 'fslIsDefault' => true ]);
+
+            if ($storageLocation) {
+                $this->storageLocation = $storageLocation;
+            }
         }
+
         return $this->storageLocation;
     }
 
     /**
-     * @param StorageLocationInterface $storageLocation
+     * @param \Concrete\Core\File\StorageLocation\StorageLocationInterface $storageLocation
+     * @return self
      */
     public function setStorageLocation(StorageLocationInterface $storageLocation)
     {
         $this->storageLocation = $storageLocation;
+        return $this;
     }
 
     /**
@@ -67,10 +87,14 @@ class BasicThumbnailer
 
         return $this->jpegCompression;
     }
+
     /**
-     * Deprecated. Use the Image facade instead.
-     *
-     * @deprecated
+     * Create a thumbnail
+     * @param \Imagine\Image\ImagineInterface|string $mixed
+     * @param string $newPath
+     * @param int $width
+     * @param int $height
+     * @param bool $fit
      */
     public function create($mixed, $newPath, $width, $height, $fit = false)
     {
@@ -124,6 +148,7 @@ class BasicThumbnailer
         $storage = $this->getStorageLocation();
         $filesystem = $storage->getFileSystemObject();
         $configuration = $storage->getConfigurationObject();
+        $version = null;
 
         $fh = \Core::make('helper/file');
         if ($obj instanceof File) {
@@ -132,6 +157,7 @@ class BasicThumbnailer
                 $fID = $obj->getFileID();
                 $filename = md5(implode(':', array($fID, $maxWidth, $maxHeight, $crop, $fr->getTimestamp())))
                   . '.' . $fh->getExtension($fr->getPath());
+                $version = $obj->getVersion();
             } catch (\Exception $e) {
                 $filename = '';
             }
@@ -141,6 +167,17 @@ class BasicThumbnailer
         }
 
         $abspath = '/cache/' . $filename;
+
+        if ($version) {
+            // Use a path resolver to get the path
+            /** @var Resolver $resolver */
+            $resolver = $this->app[Resolver::class];
+            $abspath = $resolver->getPath($version, new CustomThumbnail($maxWidth, $maxHeight, $abspath, $cor));
+        }
+
+        $src = $configuration->getPublicURLToFile($abspath);
+
+        /** Attempt to create the image */
         if (!$filesystem->has($abspath)) {
             if ($obj instanceof File && $fr->exists()) {
                 $image = \Image::load($fr->read());
@@ -155,9 +192,9 @@ class BasicThumbnailer
                 $crop);
         }
 
-        $src = $configuration->getPublicURLToFile($abspath);
         $thumb = new \stdClass();
         $thumb->src = $src;
+
         //this is terrible
         try {
             //try and get it locally, otherwise use http

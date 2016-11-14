@@ -36,7 +36,6 @@ class DefaultRunner implements RunInterface, ApplicationAwareInterface
         $app = $this->app;
 
         include DIR_APPLICATION . '/bootstrap/app.php';
-
         if ($this->app->isInstalled()) {
             /*
              * ----------------------------------------------------------------------------
