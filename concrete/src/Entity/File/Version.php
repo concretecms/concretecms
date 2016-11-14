@@ -719,6 +719,7 @@ class Version
         $thumbnails = [];
         $types = Type::getVersionList();
         $width = $this->getAttribute('width');
+        $height = $this->getAttribute('height');
         $file = $this->getFile();
 
         if (!$width || $width < 0) {
@@ -726,7 +727,11 @@ class Version
         }
 
         foreach ($types as $type) {
-            if ($width <= $type->getWidth()) {
+            if ($width < $type->getWidth()) {
+                continue;
+            }
+
+            if ($width == $type->getWidth() && (!$type->getHeight() || $height <= $type->getHeight())) {
                 continue;
             }
 
@@ -787,7 +792,8 @@ class Version
         }
 
         $app = Facade::getFacadeApplication();
-        $width = $this->getAttribute('width');
+        $imagewidth = $this->getAttribute('width');
+        $imageheight = $this->getAttribute('height');
         $types = Type::getVersionList();
 
         $fr = $this->getFileResource();
@@ -808,18 +814,29 @@ class Version
             }
             $image = $imageLibrary->load($fr->read());
             /* @var \Imagine\Imagick\Image $image */
-            if (!$width) {
-                $width = $image->getSize()->getWidth();
+            if (!$imagewidth) {
+                $imagewidth = $image->getSize()->getWidth();
+            }
+            if (!$imageheight) {
+                $imageheight = $image->getSize()->getHeight();
             }
             foreach ($types as $type) {
 
                 // delete the file if it exists
                 $this->deleteThumbnail($type);
 
-                if ($width <= $type->getWidth()) {
+                // if image is smaller than width, don't create thumbnail
+                if ($imagewidth < $type->getWidth()) {
                     continue;
                 }
 
+                // if image is the same width as thumbnail, and there's no thumbnail height set,
+                // or if a thumbnail height set and the image has a smaller or equal height, don't create thumbnail
+                if ($imagewidth == $type->getWidth() && (!$type->getHeight() || $imageheight <= $type->getHeight())) {
+                    continue;
+                }
+
+                // otherwise file is bigger than thumbnail in some way, proceed to create thumbnail
                 $filesystem = $this->getFile()
                     ->getFileStorageLocationObject()
                     ->getFileSystemObject();
