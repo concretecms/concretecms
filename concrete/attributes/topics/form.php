@@ -22,7 +22,7 @@
 		});
 	});
 	</script>
-	<fieldset class="topics_<?php echo $akID ?>">
+	<div class="topics_<?php echo $akID ?>">
 		<div class="tree-view-template_<?php echo $akID?>">
 		</div>
 		<div class="dynamic-container">
@@ -37,5 +37,5 @@
             }
         } ?>
 		</div>
-	</fieldset>
+	</div>
 </div>
