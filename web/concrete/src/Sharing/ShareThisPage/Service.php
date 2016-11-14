@@ -23,13 +23,13 @@ class Service extends SocialNetworkService
             $req = \Request::getInstance();
             $c   = $req->getCurrentPage();
             $url = urlencode($req->getUri());
-        }elseif(!$c->isError()) {
+        } elseif (!$c->isError()) {
             $url = urlencode(URL::to($c));
         }
 
-        if(is_object($c) && !$c->isError()) {
+        if (is_object($c) && !$c->isError()) {
             $title = $c->getCollectionName();
-        }else{
+        } else {
             $title = Config::get('concrete.site');
         }
 
