@@ -9,7 +9,6 @@ use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Controller\Controller;
 use Concrete\Core\Localization\Localization;
 use Concrete\Core\Page\Collection\Collection;
-use Concrete\Core\Page\Collection\Response\ResponseFactoryInterface as CollectionResponseFactoryInterface;
 use Concrete\Core\Page\Collection\Version\Version;
 use Concrete\Core\Page\Controller\PageController;
 use Concrete\Core\Page\Event;
@@ -23,7 +22,6 @@ use Concrete\Core\User\User;
 use Concrete\Core\View\View;
 use Detection\MobileDetect;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
 
 class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInterface
