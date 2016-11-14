@@ -5,7 +5,7 @@ namespace Concrete\Core\Http;
 use Concrete\Core\Controller\Controller;
 use Concrete\Core\Page\Collection\Collection;
 use Concrete\Core\View\View;
-use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 use JsonSerializable;
 
 interface ResponseFactoryInterface
@@ -16,7 +16,7 @@ interface ResponseFactoryInterface
      * @param string $content The body of the response
      * @param int $code The response code
      * @param array $headers Optional headers to include
-     * @return Response
+     * @return SymfonyResponse
      */
     public function create($content, $code = Response::HTTP_OK, array $headers = array());
 
@@ -25,7 +25,7 @@ interface ResponseFactoryInterface
      * @param array|object|JsonSerializable $data The json data
      * @param int $code The response code
      * @param array $headers Optional headers to include
-     * @return Response
+     * @return SymfonyResponse
      */
     public function json($data, $code = Response::HTTP_OK, array $headers = array());
 
@@ -34,7 +34,7 @@ interface ResponseFactoryInterface
      * @param string $content The body of the response
      * @param int $code The response code
      * @param array $headers Optional headers to include
-     * @return Response
+     * @return SymfonyResponse
      */
     public function notFound($content, $code = Response::HTTP_NOT_FOUND, $headers = array());
 
@@ -43,7 +43,7 @@ interface ResponseFactoryInterface
      * @param string $content The body of the response
      * @param int $code The response code
      * @param array $headers Optional headers to include
-     * @return Response
+     * @return SymfonyResponse
      */
     public function error($content, $code = Response::HTTP_INTERNAL_SERVER_ERROR, $headers = array());
 
@@ -52,7 +52,7 @@ interface ResponseFactoryInterface
      * @param string $requestUrl The url that this requests used. This will be used to redirect after login
      * @param int $code The response code
      * @param array $headers Optional headers to include
-     * @return Response
+     * @return SymfonyResponse
      */
     public function forbidden($requestUrl, $code = Response::HTTP_FORBIDDEN, $headers = array());
 
@@ -61,7 +61,7 @@ interface ResponseFactoryInterface
      * @param string $to The URL to redirect to
      * @param int $code The response code
      * @param array $headers Optional headers to include
-     * @return Response
+     * @return SymfonyResponse
      */
     public function redirect($to, $code = Response::HTTP_MOVED_PERMANENTLY, $headers = array());
 
@@ -70,7 +70,7 @@ interface ResponseFactoryInterface
      * @param \Concrete\Core\View\View $view
      * @param int $code
      * @param array $headers
-     * @return Response
+     * @return SymfonyResponse
      */
     public function view(View $view, $code = Response::HTTP_OK, $headers = array());
 
@@ -79,7 +79,7 @@ interface ResponseFactoryInterface
      * @param Controller $controller
      * @param int $code
      * @param array $headers
-     * @return Response
+     * @return SymfonyResponse
      */
     public function controller(Controller $controller, $code = Response::HTTP_OK, $headers = array());
 
@@ -88,7 +88,7 @@ interface ResponseFactoryInterface
      * @param Collection $collection
      * @param int $code
      * @param array $headers
-     * @return Response
+     * @return SymfonyResponse
      */
     public function collection(Collection $collection, $code = Response::HTTP_OK, $headers = array());
 
