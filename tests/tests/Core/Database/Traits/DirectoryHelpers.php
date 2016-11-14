@@ -6,7 +6,7 @@ namespace Concrete\Tests\Core\Database\Traits;
  */
 trait DirectoryHelpers
 {
-        /**
+    /**
      * Clean up and shorten absolut folder paths, 
      * so they can be passed with assert methods
      * 
