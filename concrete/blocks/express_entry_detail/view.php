@@ -4,7 +4,7 @@
 if (isset($entry) && is_object($entry)) { ?>
 
 <?php
-echo $renderer->render($expressForm, $entry);
+echo $renderer->render($entry);
 ?>
 
 

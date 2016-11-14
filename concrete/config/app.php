@@ -897,7 +897,6 @@ return array(
         ),
         'core/express' => array(
             array('javascript', 'js/express.js', array('minify' => false)),
-            array('css', 'css/express.css', array('minify' => false)),
         ),
         'core/sitemap' => array(
             array('javascript', 'js/sitemap.js', array('minify' => false)),

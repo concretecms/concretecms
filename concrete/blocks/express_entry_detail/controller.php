@@ -75,9 +75,8 @@ class Controller extends BlockController
             }
 
             $form = $this->entityManager->find('Concrete\Core\Entity\Express\Form', $this->exFormID);
-            $renderer = $this->app->make('Concrete\Core\Express\Form\StandardViewRenderer');
+            $renderer = $this->app->make('Concrete\Core\Express\Form\StandardViewRenderer', ['form' => $form]);
             $this->set('renderer', $renderer);
-            $this->set('expressForm', $form);
         }
     }
 
