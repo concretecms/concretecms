@@ -26,7 +26,7 @@ abstract class AbstractStandardCategory extends AbstractCategory implements Stan
         $this->deleteCategory();
     }
 
-    public function add($type, $key, $settings, $pkg = null)
+    public function add($type, $key, $settings = null, $pkg = null)
     {
         /**
          * @var $key Key

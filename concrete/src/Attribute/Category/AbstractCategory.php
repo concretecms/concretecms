@@ -100,7 +100,7 @@ abstract class AbstractCategory implements CategoryInterface, StandardSearchInde
         $this->entityManager->flush();
     }
 
-    public function add($type, $key, $settings, $pkg = null)
+    public function add($type, $key, $settings = null, $pkg = null)
     {
 
         if (is_string($type)) {
