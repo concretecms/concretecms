@@ -6,9 +6,15 @@
     color: #4290be;
   }
 
+  fieldset:last-of-type {
+    margin-bottom: 0px;
+    border-bottom: 0px;
+  }
   fieldset {
     position: relative; /* we need this for right aligned tooltips */
-    margin-bottom: 0px;
+    margin-bottom: 3em;
+    padding-bottom: 2em;
+    border-bottom: 1px solid #dcdcdc;
     legend {
       font-weight: bold;
       border: 0px;
@@ -31,14 +37,11 @@
     }*/
   }
 
-  fieldset + hr {
-    margin-top: 0px;
-  }
-
   // Less intrusive help
   .help-block {
     font-size: 14px;
     color: #888;
   }
+
 
 }

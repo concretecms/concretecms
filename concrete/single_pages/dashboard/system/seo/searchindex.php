@@ -14,7 +14,6 @@ use \Concrete\Core\Page\Search\IndexedSearch;
             echo $form->select('SEARCH_INDEX_AREA_METHOD', $methods, IndexedSearch::getSearchableAreaAction(), array('class' => 'xlarge'));?>
 			</div>
 			</fieldset>
-		<hr/>
 			<fieldset>
 				<label class="control-label"><?=t('Areas')?></label>
 			<div class="form-group">

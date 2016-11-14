@@ -21,9 +21,7 @@ if (is_object($targetPage)) {
 
     <input type="hidden" name="ptID" value="<?=$pagetype->getPageTypeID()?>" />
 
-<?php
-$i = 0;
-foreach ($fieldsets as $cfl) {
+<?php foreach ($fieldsets as $cfl) {
     ?>
 	<fieldset>
 		<?php if ($cfl->getPageTypeComposerFormLayoutSetDisplayName()) {
@@ -50,16 +48,11 @@ foreach ($fieldsets as $cfl) {
         ?>
 		<?php 
     }
-
     ?>
 
 	</fieldset>
 
-    <?php if ($i + 1 < count($fieldsets)) { ?>
-        <hr/>
-    <?php } ?>
-
-    <?php
+<?php
 } ?>
 
 </div>
