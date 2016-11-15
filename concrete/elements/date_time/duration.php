@@ -171,35 +171,52 @@ for ($i = 0; $i < count($values); $i++) {
 
 <div id="ccm-permissions-access-entity-dates">
 
-    <div class="form-inline">
-        <div class="form-group">
-            <?= $dt->date('pdStartDate', $pdStartDate); ?>
+    <div class="form-group">
+        <div class="row">
+            <div class="col-sm-6 ccm-date-time-date-group">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <label class="control-label"><?=t('From')?></label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6" data-column="start-date">
+                        <?= $dt->date('pdStartDate', $pdStartDate); ?>
+                    </div>
+                    <div class="col-sm-6" id="pdStartDate_tw">
+                        <select class="form-control" name="pdStartDateSelectTime" data-select="time">
+                            <?php foreach($values as $value) { ?>
+                                <option value="<?=$value?>"><?=$value?></option>
+                            <?php } ?>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 ccm-date-time-date-group">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <label class="control-label"><?=t('To')?></label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6" data-column="end-date">
+                        <?= $dt->date('pdEndDate', $pdEndDate); ?>
+                    </div>
+                    <div class="col-sm-6"id="pdEndDate_tw">
+                        <select class="form-control" name="pdEndDateSelectTime" data-select="time">
+                            <?php foreach($values as $value) { ?>
+                                <option value="<?=$value?>"><?=$value?></option>
+                            <?php } ?>
+                        </select>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="form-group" id="pdStartDate_tw">
-            <select style="width: 140px" class="form-control" name="pdStartDateSelectTime" data-select="time">
-                <?php foreach($values as $value) { ?>
-                    <option value="<?=$value?>"><?=$value?></option>
-                <?php } ?>
-            </select>
-        </div>
-        <div class="form-inline-separator"><i class="fa fa-long-arrow-right"></i></div>
-        <div class="form-group">
-            <?= $dt->date('pdEndDate', $pdEndDate); ?>
-        </div>
-        <div class="form-group" id="pdEndDate_tw">
-            <select class="form-control" name="pdEndDateSelectTime" data-select="time">
-                <?php foreach($values as $value) { ?>
-                    <option value="<?=$value?>"><?=$value?></option>
-                <?php } ?>
-            </select>
+        <div class="row">
         </div>
     </div>
 
-
     <style type="text/css">
-        div.form-inline div.form-group input.ccm-input-date {
-            width: 120px;
-        }
         div.form-inline-separator {
             font-size: 18px;
             color: #999;
@@ -235,25 +252,27 @@ for ($i = 0; $i < count($values); $i++) {
 
 <div id="ccm-permissions-access-entity-repeat" style="display: none">
 
-    <div class="form-inline">
+    <div class="row">
+        <div class="col-sm-3">
+            <label><?= $form->checkbox('pdStartDateAllDayActivate', 1,
+                        $pdStartDateAllDay) ?> <?= t(
+                        "All Day") ?></label>
+        </div>
+        <div class="col-sm-3">
+            <label><?= $form->checkbox('pdRepeat', 1, $pdRepeats) ?> <?= t('Repeat Event') ?></label>
+        </div>
+        <div class="col-sm-6">
+            <div class="pull-right text-muted">
+                <?=$service->getTimeZoneDisplayName($timezone)?>
+            </div>
+        </div>
+    </div>
 
-    <div class="form-group" style="width: 100px">
-        <label><?= $form->checkbox('pdStartDateAllDayActivate', 1,
-                    $pdStartDateAllDay) ?> <?= t(
-                    "All Day") ?></label>
-    </div>
-    <div class="form-group">
-        <label><?= $form->checkbox('pdRepeat', 1, $pdRepeats) ?> <?= t('Repeat Event') ?></label>
-    </div>
-    <div class="pull-right text-muted">
-        <?=$service->getTimeZoneDisplayName($timezone)?>
-    </div>
-
-
-    </div>
 </div>
 
-<div id="ccm-permissions-access-entity-repeat-selector" style="display: none">
+    <hr/>
+
+    <div id="ccm-permissions-access-entity-repeat-selector" style="display: none">
 
 
     <div class="form-group">
@@ -502,9 +521,13 @@ for ($i = 0; $i < count($values); $i++) {
         $('#pdEndDateAllDayActivate').attr('disabled', false);
 
         if ($("input[name=pdStartDateAllDayActivate]").is(':checked')) {
+            $('div[data-column=start-date]').removeClass().addClass('col-sm-12');
+            $('div[data-column=end-date]').removeClass().addClass('col-sm-12');
             $('#pdStartDate_tw').hide();
             $('#pdEndDate_tw').hide();
         } else {
+            $('div[data-column=start-date]').removeClass().addClass('col-sm-6');
+            $('div[data-column=end-date]').removeClass().addClass('col-sm-6');
             $('#pdStartDate_tw').show();
             $('#pdEndDate_tw').show();
         }
