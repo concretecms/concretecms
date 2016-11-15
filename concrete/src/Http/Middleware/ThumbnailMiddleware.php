@@ -37,20 +37,23 @@ class ThumbnailMiddleware implements MiddlewareInterface, ApplicationAwareInterf
     {
         $response = $frame->next($request);
 
-        if ($response->getStatusCode() == 200) {
-            /* @var Connection $database */
-            try {
-                $database = $this->app->make('database')->connection();
-            } catch (\InvalidArgumentException $e) {
-                // Don't die here if there's no available database connection
-            }
-
-            if ($database) {
+        if ($this->app->isInstalled()) {
+            if ($response->getStatusCode() == 200) {
+                /* @var Connection $database */
                 try {
-                    $paths = $database->fetchAll('SELECT * FROM FileImageThumbnailPaths WHERE isBuilt=0 LIMIT 5');
-                    $this->generateThumbnails($paths, $database);
-                } catch (InvalidFieldNameException $e) {
-                    // Ignore this, user probably needs to run an upgrade.
+                    $database = $this->app->make('database')->connection();
+                } catch (\InvalidArgumentException $e) {
+                    // Don't die here if there's no available database connection
+                    $database = null;
+                }
+
+                if ($database) {
+                    try {
+                        $paths = $database->fetchAll('SELECT * FROM FileImageThumbnailPaths WHERE isBuilt=0 LIMIT 5');
+                        $this->generateThumbnails($paths, $database);
+                    } catch (InvalidFieldNameException $e) {
+                        // Ignore this, user probably needs to run an upgrade.
+                    }
                 }
             }
         }
