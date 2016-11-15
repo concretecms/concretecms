@@ -103,7 +103,7 @@
     ?>data-editable-field-type="xeditable"
                                         data-source="<?= $view->action('get_timezones') ?>"
                                         data-url="<?= $view->action('update_timezone', $user->getUserID()) ?>"
-                                        data-type="select2" data-name="uTimezone"
+                                        data-type="select" data-name="uTimezone"
                                         data-value="<?= h($uTimezone) ?>"<?php
 }
     ?>><?= $dh->getTimezoneDisplayName($uTimezone) ?></span>
