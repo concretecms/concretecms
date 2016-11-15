@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Http\Middleware;
 
 use Concrete\Core\Application\Application;
@@ -14,7 +13,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Class ThumbnailMiddleware
- * Middleware used to populate thumbnails at the end of each request
+ * Middleware used to populate thumbnails at the end of each request.
  *
  * This middleware requires the following to be defined on the Application:
  * "database" DatabaseManager
@@ -24,13 +23,14 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class ThumbnailMiddleware implements MiddlewareInterface, ApplicationAwareInterface
 {
-
     use ApplicationAwareTrait;
 
     /**
-     * Process the request and return a response
+     * Process the request and return a response.
+     *
      * @param \Symfony\Component\HttpFoundation\Request $request
      * @param DelegateInterface $frame
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function process(Request $request, DelegateInterface $frame)
@@ -38,7 +38,7 @@ class ThumbnailMiddleware implements MiddlewareInterface, ApplicationAwareInterf
         $response = $frame->next($request);
 
         if ($response->getStatusCode() == 200) {
-            /** @var Connection $database */
+            /* @var Connection $database */
             try {
                 $database = $this->app->make('database')->connection();
             } catch (\InvalidArgumentException $e) {
@@ -60,7 +60,7 @@ class ThumbnailMiddleware implements MiddlewareInterface, ApplicationAwareInterf
 
     private function generateThumbnails($paths, Connection $database)
     {
-        $database->transactional(function(Connection $database) use ($paths) {
+        $database->transactional(function (Connection $database) use ($paths) {
             foreach ($paths as $thumbnail) {
                 /** @var EntityManagerInterface $orm */
                 $orm = $this->app->make('database/orm')->entityManager();
@@ -72,7 +72,7 @@ class ThumbnailMiddleware implements MiddlewareInterface, ApplicationAwareInterf
 
                     /** @var BasicThumbnailer $thumbnailer */
                     $thumbnailer = $this->app->make(BasicThumbnailer::class);
-                    $thumbnailer->getThumbnail($file, $width, $height, !!$crop);
+                    $thumbnailer->getThumbnail($file, $width, $height, (bool) $crop);
 
                     $database->query(
                         'UPDATE FileImageThumbnailPaths set isBuilt=1 where fileID=? AND fileVersionID=? AND thumbnailTypeHandle=? AND path=?',
@@ -80,7 +80,7 @@ class ThumbnailMiddleware implements MiddlewareInterface, ApplicationAwareInterf
                             $thumbnail['fileID'],
                             $thumbnail['fileVersionID'],
                             $thumbnail['thumbnailTypeHandle'],
-                            $thumbnail['path']
+                            $thumbnail['path'],
                         ])->execute();
                 }
             }
@@ -95,5 +95,4 @@ class ThumbnailMiddleware implements MiddlewareInterface, ApplicationAwareInterf
             return array_pad(array_slice($matches, 1), 3, 0);
         }
     }
-
 }
