@@ -74,6 +74,10 @@ class Menu extends ContextMenu
         $aID = $a->getAreaID();
         $heightPlus = 20;
         $btHandle = $btw->getBlockTypeHandle();
+        $editInline = false;
+        if ($btw->supportsInlineEdit()) {
+            $editInline = true;
+        }
         if ($btw->getBlockTypeHandle() == BLOCK_HANDLE_SCRAPBOOK_PROXY) {
             $_bi = $b->getInstance();
             $_bo = Block::getByID($_bi->getOriginalBlockID());
@@ -85,10 +89,6 @@ class Menu extends ContextMenu
             }
         }
 
-        $editInline = false;
-        if ($btw->supportsInlineEdit()) {
-            $editInline = true;
-        }
 
         $canDesign = ($p->canEditBlockDesign() && $config->get('concrete.design.enable_custom') == true);
         $canModifyGroups = ($p->canEditBlockPermissions() && $config->get('concrete.permissions.model') != 'simple' && (!$a->isGlobalArea()));
