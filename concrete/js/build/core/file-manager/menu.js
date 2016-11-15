@@ -26,7 +26,7 @@
 			parent = ConcreteMenu.prototype,
 			fID = $menu.attr('data-search-file-menu'),
 			container = my.options.container;
-
+		
 		parent.setupMenuOptions($menu);
 		$menu.find('a[data-file-manager-action=clear]').on('click', function() {
 			var menu = ConcreteMenuManager.getActiveMenu();
