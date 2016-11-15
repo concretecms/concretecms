@@ -78,7 +78,7 @@ EOT
                 throw new Exception('concrete5 is already installed.');
             }
             if (isset($options['site-locale'])) {
-                $locale = explode('_', $options['locale']);
+                $locale = explode('_', $options['site-locale']);
                 $_POST['siteLocaleLanguage'] = $locale[0];
                 $_POST['siteLocaleCountry'] = $locale[1];
             } else {
