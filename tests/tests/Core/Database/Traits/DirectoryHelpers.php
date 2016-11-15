@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Tests\Core\Database\Traits;
 
 /**
@@ -6,6 +7,7 @@ namespace Concrete\Tests\Core\Database\Traits;
  */
 trait DirectoryHelpers
 {
+
     /**
      * Clean up and shorten absolut folder paths, 
      * so they can be passed with assert methods
@@ -18,15 +20,23 @@ trait DirectoryHelpers
      * @param type $folderPath
      * @return string
      */
-    private function folderPathCleaner($folderPath)
+    private function folderPathCleaner($folderPath, $returnLastFolders = 2)
     {
         //J:\xampp\htdocs\concrete5800/packages/test_metadatadriver_yaml\config\yaml
         $folderPathCleaned = str_replace("\\", "/", $folderPath);
 
-        $linkParts = explode('/',rtrim($folderPathCleaned,'/'));
+        $linkParts = explode('/', rtrim($folderPathCleaned, '/'));
         $count = count($linkParts);
 
-        $shortenedPath = $linkParts[$count-2].'/'.$linkParts[$count-1];
-        return $shortenedPath;
+        $shortenedPath = '';
+
+        for ($i = 2; $i >= 1; $i--) {
+            $shortenedPath .= $linkParts[$count - $i] . '/';
+        }
+
+        //$shortenedPath = $linkParts[$count-2].'/'.$linkParts[$count-1];
+        var_dump(rtrim($shortenedPath, '/'));
+        return rtrim($shortenedPath, '/');
     }
+
 }
