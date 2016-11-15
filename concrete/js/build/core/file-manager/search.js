@@ -420,7 +420,7 @@
                 $(this).parent().append($list);
 
                 var fileMenu = new ConcreteFileMenu();
-                fileMenu.setupMenuOptions($(this).parent());
+                fileMenu.setupMenuOptions($(this).next('ul'));
 
                 ConcreteEvent.publish('ConcreteMenuShow', {menu: my, menuElement: $(this).parent()});
             }
