@@ -56,6 +56,9 @@ if (isset($_REQUEST['displaySingleLevel']) && $_REQUEST['displaySingleLevel']) {
         $n->children = $dh->getSubNodes($cParentID);
     }
     $nodes[] = $n;
+    echo json_encode([
+        'children' => $nodes,
+    ]);
 } else {
     if (isset($_COOKIE['ConcreteSitemap-expand'])) {
         $openNodeArray = explode(',', str_replace('_', '', $_COOKIE['ConcreteSitemap-expand']));
