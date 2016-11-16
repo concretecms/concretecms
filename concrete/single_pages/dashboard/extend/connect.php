@@ -5,7 +5,7 @@
     if ($mi->hasConnectionError() && $mi->getConnectionError() == Marketplace::E_MARKETPLACE_SUPPORT_MANUALLY_DISABLED) {
         ?>
 		<p><?=t("External marketplace support has been disabled for this website.")?></p>
-	<?php 
+	<?php
     } else {
         ?>
 		<style type="text/css">
@@ -13,6 +13,6 @@
 		div.ccm-pane-body div.ccm-error { padding:15px 20px; };
 		</style>
 		<?php
-        echo $mi->getMarketplaceFrame('100%', '300', false, h($startStep));
+        echo $mi->getMarketplaceFrame('100%', '400', false, h($startStep));
     }
 ?>
