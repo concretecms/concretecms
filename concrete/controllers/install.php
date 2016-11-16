@@ -487,7 +487,7 @@ class Install extends Controller
                     ];
                     $config['canonical-url'] = $canonicalUrl;
                     $config['canonical-ssl-url'] = $canonicalSSLUrl;
-                    $config['session-handler'] = $_POST['sessionHandler'];
+                    $config['session-handler'] = isset($_POST['sessionHandler']) ? $_POST['sessionHandler'] : null;
 
                     $renderer = new Renderer($config);
                     fwrite($this->fp, $renderer->render());
