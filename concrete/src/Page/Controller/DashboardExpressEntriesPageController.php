@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\Page\Controller;
 
 use Concrete\Core\Entity\Express\Entity;
@@ -10,7 +11,6 @@ use Concrete\Core\Tree\Type\ExpressEntryResults;
 
 abstract class DashboardExpressEntriesPageController extends DashboardPageController
 {
-
     protected function getBackURL(Entity $entity)
     {
         return \URL::to($this->getPageObject()
@@ -23,6 +23,7 @@ abstract class DashboardExpressEntriesPageController extends DashboardPageContro
         if (is_object($ownedBy)) {
             $ownedByID = $ownedBy->getID();
         }
+
         return \URL::to($this->getPageObject()
             ->getCollectionPath(), 'create_entry', $entity->getID(), $ownedByID);
     }
@@ -75,7 +76,7 @@ abstract class DashboardExpressEntriesPageController extends DashboardPageContro
             $this->set('searchController', $search);
             $this->set('entity', $entity);
             $this->render('/dashboard/express/entries/entries', false);
-        } else {
+        } elseif (!is_null($parent)) {
             $parent->populateDirectChildrenOnly();
             $this->set('nodes', $parent->getChildNodes());
             $this->render('/dashboard/express/entries/folder', false);
@@ -171,7 +172,7 @@ abstract class DashboardExpressEntriesPageController extends DashboardPageContro
             $this->set('allowDelete', false);
         }
         $subEntities = array();
-        foreach($entry->getEntity()->getAssociations() as $association) {
+        foreach ($entry->getEntity()->getAssociations() as $association) {
             if ($association->isOwningAssociation()) {
                 $subEntities[] = $association->getTargetEntity();
             }
@@ -249,7 +250,6 @@ abstract class DashboardExpressEntriesPageController extends DashboardPageContro
                     $this->flash('success', t('%s updated successfully.', $entity->getName()));
                     $this->redirect($this->getBackURL($entity));
                 }
-
             }
         } else {
             throw new \Exception(t('Invalid form.'));
