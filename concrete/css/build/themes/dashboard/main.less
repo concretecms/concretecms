@@ -323,10 +323,12 @@ div#ccm-dashboard-content {
 
 div#ccm-dashboard-content-inner {
   padding-top: 30px;
-  div.ccm-dashboard-content-full {
-    margin-top: -30px;
-  }
 }
+
+div#ccm-dashboard-content header + div#ccm-dashboard-content-inner div.ccm-dashboard-content-full:first-child {
+  margin-top: -30px;
+}
+
 div.ccm-dashboard-my-account {
   div#ccm-dashboard-content {
     > header {

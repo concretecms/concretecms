@@ -2442,7 +2442,9 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
             $args = [];
             if ($index > 1) {
                 $args['cName'] = $newCollectionName;
-                $args['cHandle'] = $nc2->getCollectionHandle().'-'.$index;
+                if ($nc2->getCollectionHandle()) {
+                    $args['cHandle'] = $nc2->getCollectionHandle().'-'.$index;
+                }
             }
             $nc2->update($args);
 

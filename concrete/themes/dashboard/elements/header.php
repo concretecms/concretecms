@@ -53,17 +53,11 @@ $large_font = (bool) Config::get('concrete.accessibility.toolbar_large_font');
     <div class="ccm-mobile-menu-overlay ccm-mobile-menu-overlay-dashboard hidden-md hidden-lg">
         <div class="ccm-mobile-menu-main">
             <ul class="ccm-mobile-menu-entries">
-                <li><i class="fa fa-sliders mobile-leading-icon"></i><a href="<?=URL::to('/dashboard')?>"><?php echo t('Dashboard') ?><i class="fa fa-caret-down"></i></a>
-                    <ul class="list-unstyled">
-                        <li class="last-li"><a href="<?=View::url('/dashboard/sitemap') ?>"><?php echo t('Sitemap'); ?></a></li>
-                        <li class="last-li"><a href="<?=View::url('/dashboard/files') ?>"><?php echo t('Files'); ?></a></li>
-                        <li class="last-li"><a href="<?=View::url('/dashboard/users') ?>"><?php echo t('Members'); ?></a></li>
-                        <li class="last-li"><a href="<?=View::url('/dashboard/reports') ?>"><?php echo t('Reports'); ?></a></li>
-                        <li class="last-li"><a href="<?=View::url('/dashboard/pages') ?>"><?php echo t('Pages & Themes'); ?></a></li>
-                        <li class="last-li"><a href="<?=View::url('/dashboard/blocks/stacks') ?>"><?php echo t('Stacks & Blocks'); ?></a></li>
-                        <li class="last-li"><a href="<?=View::url('/dashboard/extend') ?>"><?php echo t('Extend concrete5'); ?></a></li>
-                        <li class="last-li"><a href="<?=View::url('/dashboard/system') ?>"><?php echo t('System & Settings'); ?></a></li>
-                    </ul>
+                <li>
+                    <?php
+                    $dashboardMenu = new \Concrete\Controller\Element\Navigation\DashboardMobileMenu($c);
+                    $dashboardMenu->render();
+                    ?>
                 </li>
                 <li>
                     <i class="fa fa-sign-out mobile-leading-icon"></i><a href="<?= URL::to('/login', 'logout', $valt->generate('logout')); ?>"><?= t('Sign Out'); ?></a>

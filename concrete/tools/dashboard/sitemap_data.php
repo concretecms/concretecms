@@ -56,6 +56,9 @@ if (isset($_REQUEST['displaySingleLevel']) && $_REQUEST['displaySingleLevel']) {
         $n->children = $dh->getSubNodes($cParentID);
     }
     $nodes[] = $n;
+    echo json_encode([
+        'children' => $nodes,
+    ]);
 } else {
     if (isset($_COOKIE['ConcreteSitemap-expand'])) {
         $openNodeArray = explode(',', str_replace('_', '', $_COOKIE['ConcreteSitemap-expand']));
@@ -78,11 +81,11 @@ if (isset($_REQUEST['displaySingleLevel']) && $_REQUEST['displaySingleLevel']) {
         if ($tree instanceof \Concrete\Core\Entity\Site\SiteTree) {
             $locales = $tree->getLocaleCollection();
         }
+
+        echo json_encode([
+            'children' => $nodes,
+            'locales' => $locales
+        ]);
     }
 }
-
-echo json_encode([
-    'children' => $nodes,
-    'locales' => $locales
-]);
 

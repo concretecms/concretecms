@@ -11,7 +11,7 @@ class Menu extends ElementController
 
     protected $currentPage;
     protected $startingParentPage;
-    protected $trail;
+    protected $trail = [];
     protected $title;
     protected $wrapperClass;
 
@@ -31,15 +31,17 @@ class Menu extends ElementController
         $this->wrapperClass = $wrapperClass;
     }
 
-    public function __construct(Page $startingParentPage, Page $currentPage)
+    public function __construct(Page $startingParentPage, Page $currentPage = null)
     {
         parent::__construct();
         $this->startingParentPage = $startingParentPage;
-        $this->trail = array($currentPage->getCollectionID());
-        $cParentID = Page::getCollectionParentIDFromChildID($currentPage->getCollectionID());
-        while($cParentID > 0) {
-            $this->trail[] = $cParentID;
-            $cParentID = Page::getCollectionParentIDFromChildID($cParentID);
+        if (is_object($currentPage)) {
+            $this->trail = array($currentPage->getCollectionID());
+            $cParentID = Page::getCollectionParentIDFromChildID($currentPage->getCollectionID());
+            while($cParentID > 0) {
+                $this->trail[] = $cParentID;
+                $cParentID = Page::getCollectionParentIDFromChildID($cParentID);
+            }
         }
 
         // pop off the dashboard node
@@ -54,6 +56,9 @@ class Menu extends ElementController
 
     public function displayChildPages(Page $page)
     {
+        if (!is_object($this->currentPage)) {
+            return false;
+        }
         if ($page->getCollectionID() == $this->currentPage->getCollectionID()) {
             return true;
         }
@@ -65,7 +70,7 @@ class Menu extends ElementController
     public function getMenuItemClass(Page $page)
     {
         $classes = [];
-        if ($page->getCollectionID() == $this->currentPage->getCollectionID()) {
+        if (is_object($this->currentPage) && $page->getCollectionID() == $this->currentPage->getCollectionID()) {
             $classes[] = 'nav-selected';
         }
         if (in_array($page->getCollectionID(), $this->trail)) {
@@ -91,7 +96,8 @@ class Menu extends ElementController
 
     public function view()
     {
-        $this->set('top', $this->getChildPages($this->startingParentPage));
+        $pages = $this->getChildPages($this->startingParentPage);
+        $this->set('top', $pages);
         $this->set('title', $this->title);
         $this->set('wrapperClass', $this->wrapperClass);
     }
