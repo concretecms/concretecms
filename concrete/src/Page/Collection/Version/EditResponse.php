@@ -43,6 +43,7 @@ class EditResponse extends PageEditResponse
             $obj->cvID = $v->getVersionID();
             $obj->cvIsApproved = $v->isApproved() && !$v->getPublishDate();
             $obj->cvIsScheduled = $v->getPublishDate() != null;
+            $obj->cvPublishDate = $dateHelper->formatDateTime($v->getPublishDate());
             $obj->cpCanDeletePageVersions = $cpCanDeletePageVersions;
             $obj->cvDateVersionCreated = $dateHelper->formatDateTime($v->getVersionDateCreated());
             $obj->cvAuthorUserName = $v->getVersionAuthorUserName();
