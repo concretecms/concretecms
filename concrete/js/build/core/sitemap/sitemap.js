@@ -48,6 +48,10 @@
 
 		setupLocales: function(locales) {
 			var my = this;
+			if (!locales) {
+				return;
+			}
+
 			if (locales.length < 2) {
 				return;
 			}

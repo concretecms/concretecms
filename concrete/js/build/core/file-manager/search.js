@@ -228,14 +228,17 @@
                 imageMaxWidth:($maxWidth > 0 ? $maxWidth : 1920),
                 imageMaxHeight:($maxHeight > 0 ? $maxHeight : 1080),
                 error: function(r) {
-                    var message = r.responseText;
+                    var message = r.responseText,
+                        name = this.files[0].name;
+
                     try {
                         message = jQuery.parseJSON(message).errors;
-                        var name = this.files[0].name;
                         _(message).each(function(error) {
                             errors.push({ name:name, error:error });
                         });
-                    } catch (e) {}
+                    } catch (e) {
+                        errors.push({name: name, error: message});
+                    }
                 },
                 progressall: function(e, data) {
                     var progress = parseInt(data.loaded / data.total * 100, 10);
@@ -417,7 +420,7 @@
                 $(this).parent().append($list);
 
                 var fileMenu = new ConcreteFileMenu();
-                fileMenu.setupMenuOptions($(this).parent());
+                fileMenu.setupMenuOptions($(this).next('ul'));
 
                 ConcreteEvent.publish('ConcreteMenuShow', {menu: my, menuElement: $(this).parent()});
             }

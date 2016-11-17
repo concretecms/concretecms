@@ -556,10 +556,7 @@ class File implements \Concrete\Core\Permission\ObjectInterface
             }
         }
 
-        // now from the DB
-        $em = \ORM::entityManager();
-        $em->remove($this);
-        $em->flush();
+        $db->Execute("delete from Files where fID = ?", [$this->fID]);
     }
 
     /**
