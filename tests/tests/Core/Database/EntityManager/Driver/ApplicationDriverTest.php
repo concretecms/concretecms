@@ -5,6 +5,7 @@ namespace Concrete\Tests\Core\Database\EntityManager\Driver;
 use Concrete\Core\Database\EntityManager\Driver\ApplicationDriver;
 use Concrete\Core\Support\Facade\Application;
 use Illuminate\Filesystem\Filesystem;
+use Exception;
 
 /**
  * ApplicationDriverTest
@@ -286,7 +287,7 @@ class ApplicationDriverTest extends \PHPUnit_Framework_TestCase
     /**
      * Clean up if a Exception is thrown
      */
-    protected function onNotSuccessfulTest($e)
+    protected function onNotSuccessfulTest(Exception $e)
     {
         $this->cleanupFolderSystem();
         $this->cleanupConfig();
