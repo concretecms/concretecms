@@ -394,7 +394,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
                 $c = self::getByID($cID, 'ACTIVE');
             } else {
                 $site = \Core::make('site')->getSite();
-                $c = $site->getSiteHomePageObject();
+                $c = $site->getSiteHomePageObject('ACTIVE');
             }
             $c->cPathFetchIsCanonical = true;
         }
