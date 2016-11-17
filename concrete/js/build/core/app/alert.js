@@ -47,6 +47,7 @@ PNotify.prototype.options.buttons.closer_hover = false;
                 width: 500,
                 height: 'auto',
                 modal: true,
+                dialogClass: 'ccm-ui',
                 close: function() {
                 	$div.remove();
                 	if (onCloseFn) {
