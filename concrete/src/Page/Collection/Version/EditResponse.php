@@ -41,7 +41,8 @@ class EditResponse extends PageEditResponse
         foreach ($this->versions as $v) {
             $obj = new stdClass();
             $obj->cvID = $v->getVersionID();
-            $obj->cvIsApproved = $v->isApproved();
+            $obj->cvIsApproved = $v->isApproved() && !$v->getPublishDate();
+            $obj->cvIsScheduled = $v->getPublishDate() != null;
             $obj->cpCanDeletePageVersions = $cpCanDeletePageVersions;
             $obj->cvDateVersionCreated = $dateHelper->formatDateTime($v->getVersionDateCreated());
             $obj->cvAuthorUserName = $v->getVersionAuthorUserName();

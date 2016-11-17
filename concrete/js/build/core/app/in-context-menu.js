@@ -15,6 +15,7 @@
             'menuLauncherHoverClass': 'ccm-menu-item-hover',
             'menuLauncherHoverParentClass': 'ccm-parent-menu-item-hover',
             'enabled': true,
+            'enableClickProxy': true,
             'onHide': false
         }, options);
 
@@ -24,12 +25,14 @@
             my.$launcher = false;
         } else {
             my.$launcher = (options.handle == 'this') ? my.$element : $(options.handle);
-            my.$launcher.each(function () {
-                var $specificLauncher = $(this);
-                $specificLauncher.on('mousemove.concreteMenu', function (e) {
-                    my.hoverProxy(e, $(this));
+            if (my.options.enableClickProxy) {
+                my.$launcher.each(function () {
+                    var $specificLauncher = $(this);
+                    $specificLauncher.on('mousemove.concreteMenu', function (e) {
+                        my.hoverProxy(e, $(this));
+                    });
                 });
-            });
+            }
         }
         my.$menu = $(options.menu);
         my.setup();
@@ -44,25 +47,37 @@
         setup: function () {
             var my = this, options = my.options, global = ConcreteMenuManager;
 
-            if (!global.$clickProxy) {
-                global.$clickProxy = $("<div />", {'id': 'ccm-menu-click-proxy'});
-                global.$clickProxy.on('mouseout.concreteMenuProxy', function (e) {
-                    var menu = global.hoverMenu;
-                    menu.mouseout(e);
+            if (options.enableClickProxy) {
+                if (!global.$clickProxy) {
+                    global.$clickProxy = $("<div />", {'id': 'ccm-menu-click-proxy'});
+                    global.$clickProxy.on('mouseout.concreteMenuProxy', function (e) {
+                        var menu = global.hoverMenu;
+                        menu.mouseout(e);
+                    });
+                    global.$clickProxy.on('mouseover.concreteMenuProxy', function (e) {
+                        var menu = global.hoverMenu;
+                        menu.mouseover(e);
+                    });
+                    global.$clickProxy.on('click.concreteMenuProxy', function (e) {
+                        var menu = global.hoverMenu;
+                        menu.show(e);
+                    });
+                    $(document.body).append(global.$clickProxy);
+                }
+                if (!global.$highlighter) {
+                    global.$highlighter = $("<div />", {'id': 'ccm-menu-highlighter'});
+                    $(document.body).append(global.$highlighter);
+                }
+            } else if (my.$launcher) {
+                my.$launcher.on('mouseover.concreteMenu', function (e) {
+                    my.mouseover(e);
                 });
-                global.$clickProxy.on('mouseover.concreteMenuProxy', function (e) {
-                    var menu = global.hoverMenu;
-                    menu.mouseover(e);
+                my.$launcher.on('mouseout.concreteMenu', function (e) {
+                    my.mouseout(e);
                 });
-                global.$clickProxy.on('click.concreteMenuProxy', function (e) {
-                    var menu = global.hoverMenu;
-                    menu.show(e);
+                my.$launcher.on('click.concreteMenu', function (e) {
+                    my.show(e);
                 });
-                $(document.body).append(global.$clickProxy);
-            }
-            if (!global.$highlighter) {
-                global.$highlighter = $("<div />", {'id': 'ccm-menu-highlighter'});
-                $(document.body).append(global.$highlighter);
             }
             if (!global.$container) {
                 global.$container = $("<div />", {'id': 'ccm-popover-menu-container', 'class': 'ccm-ui'});
@@ -146,15 +161,21 @@
                 posX = e.pageX + 2,
                 posY = e.pageY + 2;
 
+            if (global.getActiveMenu() == my) {
+                return false;
+            }
+
             $menu.on('contextmenu', function() {
                 return false;
             });
             e.stopPropagation();
-            $highlighter.removeClass();
-            my.positionAt($highlighter, $launcher);
-            _.defer(function () {
-                $highlighter.addClass(options.highlightClassName)
-            });
+            if (options.enableClickProxy) {
+                $highlighter.removeClass();
+                my.positionAt($highlighter, $launcher);
+                _.defer(function () {
+                    $highlighter.addClass(options.highlightClassName)
+                });
+            }
 
             $element.addClass(options.menuActiveClass);
             $element.parents('*').slice(0, 3).addClass(options.menuActiveParentClass);
@@ -262,12 +283,16 @@
             _.defer(function () {
                 my.$element.removeClass(my.options.menuActiveClass);
                 my.$element.parents('*').slice(0, 3).removeClass(my.options.menuActiveParentClass);
-                global.$highlighter.removeClass();
-                global.$container.removeClass().addClass('ccm-ui').html('');
+                if (my.options.enableClickProxy) {
+                    global.$highlighter.removeClass();
+                    global.$container.removeClass().addClass('ccm-ui').html('');
+                }
             });
 
-            global.$clickProxy.css(reset);
-            global.$highlighter.css(reset);
+            if (my.options.enableClickProxy) {
+                global.$clickProxy.css(reset);
+                global.$highlighter.css(reset);
+            }
 
             ConcreteMenuManager.activeMenu = false;
 
