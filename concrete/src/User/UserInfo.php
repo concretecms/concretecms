@@ -398,6 +398,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
 
             if ($testChange) {
                 $ue = new \Concrete\Core\User\Event\UserInfoWithPassword($this);
+                $ue->setUserPassword($data['uPassword']);
                 Events::dispatch('on_user_change_password', $ue);
             }
 
