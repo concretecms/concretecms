@@ -164,7 +164,9 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
     {
         $request = $this->request;
 
-        $controller->on_start();
+        if ($response = $controller->on_start()) {
+            return $response;
+        }
 
         if ($controller instanceof PageController) {
             $controller->setupRequestActionAndParameters($request);
