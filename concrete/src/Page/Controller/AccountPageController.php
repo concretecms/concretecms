@@ -15,7 +15,7 @@ class AccountPageController extends CorePageController
     {
         $u = new \User();
         if (!$u->isRegistered()) {
-            $this->replace('/login');
+            return $this->replace('/login');
         }
 
         $dh = \Core::make('helper/concrete/dashboard');
