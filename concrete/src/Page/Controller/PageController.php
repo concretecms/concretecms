@@ -21,6 +21,9 @@ class PageController extends Controller
     protected $parameters = array();
     protected $replacement = null;
 
+    /** @var \Concrete\Core\Page\Page The current page */
+    public $c;
+
     public function supportsPageCache()
     {
         return $this->supportsPageCache;
