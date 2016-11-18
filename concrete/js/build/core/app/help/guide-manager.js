@@ -21,6 +21,7 @@
             $('.ccm-dialog-help-wrapper').hide();
 
             this.showOverlay();
+            this.raiseToolbar();
         },
 
         showOverlay: function() {
@@ -30,8 +31,16 @@
             }
             $('.ui-widget-overlay').addClass('animated fadeIn').show();
 
+        },
+
+        raiseToolbar: function() {
             // move the toolbar to above the widget overlay
             $('#ccm-toolbar').addClass('ccm-toolbar-tour-guide');
+        },
+
+        lowerToolbar: function() {
+            // move the toolbar back
+            $('#ccm-toolbar').removeClass('ccm-toolbar-tour-guide');
         },
 
         hideOverlay: function() {
@@ -41,18 +50,17 @@
                 $(this).dequeue();
             });
 
-            // move the toolbar back
-            $('#ccm-toolbar').removeClass('ccm-toolbar-tour-guide');
         },
 
         exitToolbarGuideMode: function() {
-            this.hideOverlay();
 
             // if the help dialog is active, show it
             if ($('.ccm-dialog-help-wrapper').length) {
                 $('.ccm-dialog-help-wrapper').show();
+            } else {
+                this.hideOverlay();
             }
-
+            this.lowerToolbar();
         },
 
         launchGuideOnRefresh: function(guide) {
