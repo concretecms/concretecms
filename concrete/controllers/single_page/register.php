@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Controller\SinglePage;
 
+use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Page\Controller\PageController;
 use Concrete\Core\Validation\ResponseInterface;
 use Config;
@@ -16,9 +17,11 @@ class Register extends PageController
     protected $displayUserName = true;
 
     public function on_start() {
-        if(!in_array(Config::get('concrete.user.registration.type'), array('validate_email', 'enabled'))) {
-            $this->replace('/page_not_found');
-            return;
+        $allowedTypes = ['validate_email', 'enabled', 'manual_approve'];
+        $currentType = $this->app->make(Repository::class)->get('concrete.user.registration.type');
+
+        if(!in_array($currentType, $allowedTypes)) {
+            return $this->replace('/page_not_found');
         }
         $u = new User();
         $this->set('u', $u);
@@ -165,7 +168,12 @@ class Register extends PageController
                         }
                     }
 
-                    $mh->load('user_register');
+                    if ($config->get('concrete.user.registration.type') == 'manual_approve') {
+                        $mh->load('user_register_approval_required');
+                    } else {
+                        $mh->load('user_register');
+                    }
+
                     $mh->sendMail();
                 }
 
@@ -211,6 +219,21 @@ class Register extends PageController
 
                     //$this->redirect('/register', 'register_success_validate', $rcID);
                     $redirectMethod = 'register_success_validate';
+                    $u->logout();
+                } elseif ($config->get('concrete.user.registration.approval')) {
+                    $ui = UserInfo::getByID($u->getUserID());
+                    $ui->deactivate();
+                    // Email to the user when he/she registered but needs approval
+                    $mh = $this->app->make('mail');
+                    $mh->addParameter('uEmail', $this->post('uEmail'));
+                    $mh->addParameter('site', tc('SiteName', $config->get('concrete.site')));
+                    $mh->to($this->post('uEmail'));
+                    $mh->load('user_register_approval_required_to_user');
+                    $mh->sendMail();
+
+                    //$this->redirect('/register', 'register_pending', $rcID);
+                    $redirectMethod = 'register_pending';
+                    $this->set('message', $this->getRegisterPendingMsg());
                     $u->logout();
                 } else {
                     $process->markValidated();
