@@ -10,6 +10,7 @@ use Concrete\Core\Entity\Attribute\Key\FileKey;
 use Concrete\Core\Entity\Attribute\Key\Key;
 use Concrete\Core\Entity\Attribute\Key\LegacyKey;
 use Concrete\Core\Entity\Attribute\Type;
+use Concrete\Core\Entity\Attribute\Value\LegacyValue;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -140,7 +141,28 @@ class LegacyCategory implements CategoryInterface, StandardSearchIndexerInterfac
 
     public function deleteKey(Key $key)
     {
-        return;
+        $values = $this->entityManager->getRepository('\Concrete\Core\Entity\Attribute\Value\Value\Value')
+            ->findBy(['attribute_key' => $key]);
+        $controller = $key->getController();
+
+        foreach($values as $genericValue) {
+
+            $legacyValue = new LegacyValue();
+            $legacyValue->setGenericValue($genericValue);
+            $legacyValue->setAttributeKey($key);
+
+            $controller->setAttributeValue($legacyValue);
+            $controller->deleteValue();
+
+            $value = $legacyValue->getValueObject();
+            if (is_object($value)) {
+                $this->entityManager->remove($value);
+                $this->entityManager->flush();
+            }
+
+            $this->entityManager->remove($genericValue);
+            $this->entityManager->flush();
+        }
     }
 
     public function deleteValue(AttributeValueInterface $value)
