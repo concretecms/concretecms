@@ -96,6 +96,7 @@ class SessionFactory implements SessionFactoryInterface
                 'db_data_col' => 'sessionValue',
                 'db_time_col' => 'sessionTime',
                 'db_lifetime_col' => 'sessionLifeTime',
+                'lock_mode' => PdoSessionHandler::LOCK_ADVISORY
             ));
         } else {
             $savePath = $config->get('concrete.session.save_path') ?: null;
