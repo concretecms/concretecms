@@ -136,7 +136,15 @@ class Controller extends AbstractController
         }
         /** @var \Concrete\Core\Form\Service\Form $form */
         $form = Core::make('helper/form');
-        echo $form->label($this->field('value'), $text);
+        echo $form->label($this->getLabelID(), $text);
+    }
+
+    /**
+     * Get the ID to use for label elements
+     */
+    public function getLabelID()
+    {
+        return $this->field('value');
     }
 
     /**
