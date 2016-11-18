@@ -169,6 +169,9 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
         }
 
         if ($controller instanceof PageController) {
+            if ($controller->isReplaced()) {
+                return $this->controller($controller->getReplacement(), $code, $headers);
+            }
             $controller->setupRequestActionAndParameters($request);
 
             $response = $controller->validateRequest();
@@ -190,11 +193,9 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
             }
 
         } else {
-            $controller->runAction('view');
-        }
-
-        if ($controller->isReplaced()) {
-            return $this->controller($controller->getReplacement());
+            if ($response = $controller->runAction('view')) {
+                return $response;
+            }
         }
 
         $view = $controller->getViewObject();
@@ -326,7 +327,8 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
 
         if (!$request->getPath()
             && $request->isMethod('GET')
-            && !$request->query->has('cID')) {
+            && !$request->query->has('cID')
+        ) {
             // This is a request to the home page –http://www.mysite.com/
 
             // First, we check to see if we need to redirect to a default multilingual section.
@@ -392,7 +394,6 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
             return $this->notFound('', Response::HTTP_NOT_FOUND, $headers);
         }
     }
-
 
     /**
      * Check to see if we should change the localization context
