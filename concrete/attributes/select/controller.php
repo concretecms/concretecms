@@ -778,4 +778,9 @@ class Controller extends AttributeTypeController
         return $this->entityManager->find(SelectSettings::class, $this->attributeKey);
     }
 
+    public function getLabelID()
+    {
+        return $this->field('atSelectOptionValue');
+    }
+
 }
