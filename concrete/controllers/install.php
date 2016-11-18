@@ -276,7 +276,7 @@ class Install extends Controller
             && function_exists('imagegif')
             && function_exists('imagejpeg'));
         $this->set('mysqlTest', extension_loaded('pdo_mysql'));
-        $this->set('i18nTest', function_exists('ctype_lower'));
+        $this->set('i18nTest', function_exists('ctype_lower') && extension_loaded('mbstring'));
         $this->set('domTest', extension_loaded('dom'));
         $this->set('jsonTest', extension_loaded('json'));
         $this->set('xmlTest', function_exists('xml_parse') && function_exists('simplexml_load_file'));
