@@ -34,3 +34,4 @@ Just log in to the documentation site with your concrete5.org account and edit a
 ## Legacy
 
 Looking for legacy versions of concrete5? Head over to [the concrete5-legacy repository](http://github.com/concrete5/concrete5-legacy).
+
