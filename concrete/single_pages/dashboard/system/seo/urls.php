@@ -27,19 +27,16 @@ defined('C5_EXECUTE') or die("Access Denied.");
         <legend><?= t('Canonical URLs') ?></legend>
         <div class="form-group">
             <label class="control-label" for="canonical_url"><?= t('Canonical URL') ?></label>
-            <input type="text" class="form-control" placeholder="http://domain.com" value="<?= $canonical_url ?>"
-                   name="canonical_url">
+            <?=$form->text('canonical_url', $canonical_url, ['placeholder' => 'http://domain.com'])?>
         </div>
 
         <div class="form-group">
-            <label class="control-label" for="canonical_ssl_url"><?= t('SSL URL') ?></label>
-            <input type="text" class="form-control" placeholder="https://domain.com" value="<?= $canonical_ssl_url ?>"
-                   name="canonical_ssl_url">
+            <label class="control-label" for="canonical_ssl_url"><?= t('Separate SSL URL') ?></label>
+            <?=$form->text('canonical_ssl_url', $canonical_ssl_url, ['placeholder' => 'http://domain.com'])?>
+
         </div>
         <div class="form-group">
-            <label class="control-label" for="redirect_to_canonical_url"><?= t('URL Redirection') ?> <i
-                    class="fa fa-question-circle launch-tooltip"
-                    title="<?= t('If checked, this site will only be available at the host, port and SSL combination chosen above.') ?>"></i></label>
+            <label class="control-label launch-tooltip" title="<?= t('If checked, this site will only be available at the host, port and SSL combination chosen above.') ?>" for="redirect_to_canonical_url"><?= t('URL Redirection') ?></label>
 
             <div class="checkbox">
                 <label>
