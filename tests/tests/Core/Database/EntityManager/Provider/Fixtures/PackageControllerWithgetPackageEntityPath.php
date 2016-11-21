@@ -8,6 +8,7 @@ use Concrete\Core\Package\Package;
 /**
  * Controller test addon - testing legacy annotation driver 
  * with deprecated getPackageEntityPath() method
+ * and no adjustemens
  *
  * @author Markus Liechti <markus@liechti.io>
  */
@@ -17,6 +18,8 @@ class PackageControllerWithgetPackageEntityPath extends Package
     protected $pkgHandle = 'test_metadatadriver_legacy_with_getpackageentitypath';
     protected $appVersionRequired = '5.7.0';
     protected $pkgVersion = '0.0.1';
+    // just making jure that test will not break after version 8.1.0
+    protected $pkgEnableLegacyNamespace = true;
 
     public function __construct(Application $app)
     {
@@ -35,7 +38,9 @@ class PackageControllerWithgetPackageEntityPath extends Package
 
     public function getPackageEntityPath()
     {
-        return 'foo/bar';
+        // This file path should be ignored by the DefaultPackageProvider
+        return $this->getRelativePath() . DIRECTORY_SEPARATOR . DIRNAME_CLASSES
+                . DIRECTORY_SEPARATOR . 'Entities';
     }
 
 }
