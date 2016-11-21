@@ -38,20 +38,21 @@ class DefaultPackageProviderTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test packages with getPackageEntityPath() method
+     * Test packages with removed getPackageEntityPath() method
      * 
      * @covers DefaultPackageProvider::getDrivers
      */
-//    public function testGetDriversWithGetPackageEntityPath()
-//    {
-//        $package = new PackageControllerWithgetPackageEntityPath($this->app);
-//        $dpp = new DefaultPackageProvider($this->app, $package);
-//        $drivers = $dpp->getDrivers();
-//        $this->assertInternalType('array', $drivers);
-//        $c5Driver = $drivers[0];
-//        $this->assertInstanceOf('Concrete\Core\Database\EntityManager\Driver\Driver', $c5Driver);
-//        $this->assertInstanceOf('Doctrine\ORM\Mapping\Driver\AnnotationDriver', $c5Driver->getDriver());     
-//    }
+    public function testGetDriversWithGetPackageEntityPath()
+    {
+        $package = new PackageControllerWithgetPackageEntityPath($this->app);
+        $dpp = new DefaultPackageProvider($this->app, $package);
+        $drivers = $dpp->getDrivers();
+        $this->assertInternalType('array', $drivers);
+        $c5Driver = $drivers[0];
+        $this->assertInstanceOf('Concrete\Core\Database\EntityManager\Driver\Driver', $c5Driver);
+        $this->assertInstanceOf('Doctrine\ORM\Mapping\Driver\AnnotationDriver', $c5Driver->getDriver());
+        $this->assertEquals($package->getNamespace() . '\Src', $c5Driver->getNamespace());
+    }
 
     /**
      * Test package with default driver and not existing source directory
