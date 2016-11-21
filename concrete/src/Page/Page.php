@@ -358,7 +358,10 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
             $site = \Core::make('site')->getSite();
             $treeIDs = [0];
             foreach($site->getLocales() as $locale) {
-                $treeIDs[] = $locale->getSiteLocaleID();
+                $tree = $locale->getSiteTree();
+                if (is_object($tree)) {
+                    $treeIDs[] = $tree->getSiteTreeID();
+                }
             }
 
             $treeIDs = implode(',', $treeIDs);
