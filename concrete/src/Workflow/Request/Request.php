@@ -132,6 +132,10 @@ abstract class Request extends Object
             }
         }
 
+        if (isset($wp)) {
+            return $wp->getWorkflowProgressResponseObject();
+        }
+
         if ($workflowsStarted == 0) {
             $defaultWorkflow = new EmptyWorkflow();
             $wp = $this->addWorkflowProgress($defaultWorkflow);
