@@ -27,7 +27,7 @@ class PageUrlResolver implements UrlResolverInterface
         if (isset($page) && $page instanceof \Concrete\Core\Page\Page) {
 
             if ($externalUrl = $page->getCollectionPointerExternalLink()) {
-                return Url::createFromUrl($externalUrl);
+                return $externalUrl;
             }
 
             if ($path = $page->getCollectionPath()) {
