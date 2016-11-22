@@ -7,6 +7,6 @@ if ($mode == \Concrete\Core\Entity\Attribute\Key\Settings\ImageFileSettings::TYP
 
 } else { ?>
 
-    <input type="file" name="<?=$view->field('value')?>">
+    <input type="file" name="<?=$view->field('value')?>" id="<?=$view->field('value')?>">
 
 <?php } ?>
