@@ -40,6 +40,7 @@ class Application extends \Symfony\Component\Console\Application
         $this->add(new Command\ResetCommand());
         if (Core::make('app')->isInstalled()) {
             $this->add(new Command\JobCommand());
+            $this->add(new Command\UpdateCommand());
         }
     }
 
