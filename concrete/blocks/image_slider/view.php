@@ -26,14 +26,16 @@ $(document).ready(function(){
         $("#ccm-image-slider-<?php echo $bID ?>").responsiveSlides({
             prevText: "",   // String: Text for the "previous" button
             nextText: "",
-            <?php if ($navigationType == 0) {
-    ?>
-            nav:true,
-            <?php
-} else {
-    ?>
-            pager: true,
-            <?php } ?>
+		<?php if ($navigationType == 0) {?>
+		nav:true,
+		<?php
+		}elseif($navigationType == 1) {?> 
+		pager: true,
+		<?php }
+		else{?>
+		nav:true,
+		pager: true,
+		<?php }?>
             <?php if ($timeout) { echo "timeout: $timeout,"; } ?>
             <?php if ($speed) { echo "speed: $speed,"; } ?>
             <?php if ($pause) { echo "pause: true,"; } ?>
