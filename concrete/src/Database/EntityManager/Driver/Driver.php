@@ -18,7 +18,7 @@ class Driver implements DriverInterface
      * Constructor
      * 
      * @param string $namespace
-     * @param \Doctrine\Common\Persistence\Mapping\DriverMappingDriver $driver
+     * @param \Doctrine\Common\Persistence\Mapping\Driver\MappingDriver $driver
      */
     public function __construct($namespace, MappingDriver $driver)
     {

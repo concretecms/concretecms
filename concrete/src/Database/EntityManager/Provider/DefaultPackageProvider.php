@@ -23,11 +23,12 @@ class DefaultPackageProvider extends AbstractPackageProvider
      */
     public function getDrivers()
     {
-        // First, we check to see if this package has a custom deprecated getPackageEntityPath method. If so
-        // We return a single annotation driver using legacy annotations, pointing to that entity path.
-        if (method_exists($this->pkg, 'getPackageEntityPath')) {
-            return new AnnotationDriver($this->getLegacyAnnotationReader(), $this->pkg->getPackageEntityPath());
-        }
+
+        // The support for a custom Entity path location using the method 
+        // 'getPackageEntityPath' was removed in version 8.0.0. Even though 
+        // packages using this method still will to work in version 8.0.0, please
+        // make sure to migrate your package by using one of the 
+        // PackageProvider classes
 
         // Now, we check to see if no src/ directory exists. If none exists, we return no entity manager
         if (!is_dir($this->pkg->getPackagePath() . DIRECTORY_SEPARATOR . DIRNAME_CLASSES)) {
