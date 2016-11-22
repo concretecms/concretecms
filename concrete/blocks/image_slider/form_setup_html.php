@@ -277,11 +277,14 @@ echo Core::make('helper/concrete/ui')->tabs($tabs);
     <label class="control-label"><?php echo t('Navigation'); ?></label>
     <div class="form-group">
         <div class="radio">
-            <label><input type="radio" name="<?php echo $view->field('navigationType'); ?>" value="0" <?php echo $navigationType > 0 ? '' : 'checked'; ?> /><?php echo t('Arrows'); ?></label>
-        </div>
-        <div class="radio">
-            <label><input type="radio" name="<?php echo $view->field('navigationType'); ?>" value="1" <?php echo $navigationType > 0 ? 'checked' : ''; ?> /><?php echo t('Bullets'); ?></label>
-        </div>
+			<label><input type="radio" name="<?php echo $view->field('navigationType'); ?>" value="0" <?php echo $navigationType > 0 ? '' : 'checked'; ?> /><?php echo t('Arrows'); ?></label>
+		</div>
+		<div class="radio">
+			<label><input type="radio" name="<?php echo $view->field('navigationType'); ?>" value="1" <?php echo $navigationType == 1 ? 'checked' : ''; ?> /><?php echo t('Bullets'); ?></label>
+		</div>
+		<div class="radio">
+			<label><input type="radio" name="<?php echo $view->field('navigationType'); ?>" value="2" <?php echo $navigationType == 2 ? 'checked' : ''; ?> /><?php echo t('Arrows & Bullets'); ?></label>
+		</div>
     </div>
     <div class="form-group">
         <?php echo $form->label($view->field('timeout'), t('Slide Duration')); ?>
