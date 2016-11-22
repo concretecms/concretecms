@@ -3,6 +3,7 @@ namespace Concrete\Core\Updater;
 
 use Concrete\Core\Cache\Cache;
 use Concrete\Core\Database\DatabaseStructureManager;
+use Concrete\Core\Updater\Migrations\Configuration;
 use Core;
 use Marketplace;
 use Config;
@@ -187,7 +188,7 @@ class Update
     /**
      * Upgrade the current core version to the latest locally available by running the applicable migrations.
      */
-    public static function updateToCurrentVersion()
+    public static function updateToCurrentVersion(Configuration $configuration = null)
     {
         $cms = Core::make('app');
         $cms->clearCaches();
@@ -197,7 +198,10 @@ class Update
         $dbm->destroyProxyClasses('ConcreteCore');
         $dbm->generateProxyClasses();
 
-        $configuration = new \Concrete\Core\Updater\Migrations\Configuration();
+        if (!$configuration) {
+            $configuration = new \Concrete\Core\Updater\Migrations\Configuration();
+        }
+
         $configuration->registerPreviousMigratedVersions();
         $migrations = $configuration->getMigrationsToExecute('up', $configuration->getLatestVersion());
         foreach ($migrations as $migration) {
