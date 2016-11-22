@@ -121,11 +121,11 @@ class Urls extends DashboardSitePageController
                 $this->error->add($this->token->getErrorMessage());
             }
 
-            if (!($this->post('canonical_url') &&
-                (
+            if ($this->post('canonical_url') &&
+                !(
                     strpos(strtolower($this->post('canonical_url')), 'http://') === 0 ||
                     strpos(strtolower($this->post('canonical_url')), 'https://') === 0
-                ))) {
+                )) {
                 $this->error->add(t('The canonical URL provided must start with "http://" or "https://".'));
             }
             if ($this->post('canonical_ssl_url') && strpos(strtolower($this->post('canonical_ssl_url')), 'https://') !== 0) {
