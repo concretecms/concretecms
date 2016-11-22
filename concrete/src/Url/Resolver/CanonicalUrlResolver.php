@@ -112,6 +112,15 @@ class CanonicalUrlResolver implements UrlResolverInterface
             elseif (intval($canonical->getPort()->get()) > 0) {
                 $url = $url->setPort($canonical->getPort());
             }
+        } else {
+            // This fallthrough is dangerous. Make sure that you define your canonical URL so that we don't have to guess!
+            $host = $this->request->getHost();
+            $scheme = $this->request->getScheme();
+            if ($scheme && $host) {
+                $url = $url->setScheme($scheme)
+                    ->setHost($host)
+                    ->setPort($this->request->getPort());
+            }
         }
 
         if ($relative_path = $this->app['app_relative_path']) {
