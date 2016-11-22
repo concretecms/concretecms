@@ -2449,16 +2449,16 @@
         },
         {
             "name": "punic/punic",
-            "version": "1.6.3",
+            "version": "1.6.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/punic/punic.git",
-                "reference": "5805b35d6a574f754b49be1f539aaf3ae6484808"
+                "reference": "c6a779cb0349948f093d40b9f6a4fe5c6f8a6a36"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/punic/punic/zipball/5805b35d6a574f754b49be1f539aaf3ae6484808",
-                "reference": "5805b35d6a574f754b49be1f539aaf3ae6484808",
+                "url": "https://api.github.com/repos/punic/punic/zipball/c6a779cb0349948f093d40b9f6a4fe5c6f8a6a36",
+                "reference": "c6a779cb0349948f093d40b9f6a4fe5c6f8a6a36",
                 "shasum": ""
             },
             "require": {
@@ -2510,7 +2510,7 @@
                 "translations",
                 "unicode"
             ],
-            "time": "2015-06-16 13:04:27"
+            "time": "2016-11-21 19:58:31"
         },
         {
             "name": "sunra/php-simple-html-dom-parser",
