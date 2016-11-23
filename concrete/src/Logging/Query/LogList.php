@@ -28,7 +28,7 @@ class LogList extends ItemList
     {
         $query = $this->deliverQueryObject();
 
-        return $query->select('count(ql.query)')->setMaxResults(1)->execute()->fetchColumn();
+        return $query->resetQueryParts(['groupBy', 'orderBy'])->select('count(distinct ql.query)')->setMaxResults(1)->execute()->fetchColumn();
     }
 
     /**
@@ -39,9 +39,7 @@ class LogList extends ItemList
     protected function createPaginationObject()
     {
         $adapter = new DoctrineDbalAdapter($this->deliverQueryObject(), function ($query) {
-            $query->resetQueryParts()->select('count(distinct query)')
-                ->from('SystemDatabaseQueryLog', 'ql')
-                ->setMaxResults(1);
+            $query->resetQueryParts(['groupBy', 'orderBy'])->select('count(distinct ql.query)')->setMaxResults(1);
         });
         $pagination = new Pagination($this, $adapter);
 

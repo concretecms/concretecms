@@ -104,7 +104,7 @@ class GroupList extends DatabaseItemList
     {
         $query = $this->deliverQueryObject();
 
-        return $query->select('count(g.gID)')->setMaxResults(1)->execute()->fetchColumn();
+        return $query->resetQueryParts(['groupBy', 'orderBy'])->select('count(distinct g.gID)')->setMaxResults(1)->execute()->fetchColumn();
     }
 
     /**
@@ -115,7 +115,7 @@ class GroupList extends DatabaseItemList
     protected function createPaginationObject()
     {
         $adapter = new DoctrineDbalAdapter($this->deliverQueryObject(), function ($query) {
-            $query->resetQueryPart('orderBy')->select('count(g.gID)')->setMaxResults(1);
+            $query->resetQueryParts(['groupBy', 'orderBy'])->select('count(distinct g.gID)')->setMaxResults(1);
         });
         $pagination = new Pagination($this, $adapter);
 
