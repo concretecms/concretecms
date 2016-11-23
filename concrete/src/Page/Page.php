@@ -1936,14 +1936,14 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         if (!isset($data['cHandle']) && ($this->getCollectionHandle() != '')) {
             // No passed cHandle, and there is an existing handle.
             $cHandle = $this->getCollectionHandle();
-        } elseif (!Core::make('helper/validation/strings')->notempty($data['cHandle']) && !$isHomePage) {
+        } elseif (!$isHomePage && !Core::make('helper/validation/strings')->notempty($data['cHandle'])) {
             // no passed cHandle, and no existing handle
             // make the handle out of the title
             $cHandle = $txt->urlify($cName);
             $cHandle = str_replace('-', Config::get('concrete.seo.page_path_separator'), $cHandle);
         } else {
             // passed cHandle, no existing handle
-            $cHandle = $txt->slugSafeString($data['cHandle']); // we DON'T run urlify
+            $cHandle = isset($data['cHandle']) ? $txt->slugSafeString($data['cHandle']) : ''; // we DON'T run urlify
             $cHandle = str_replace('-', Config::get('concrete.seo.page_path_separator'), $cHandle);
         }
         $cName = $txt->sanitize($cName);
