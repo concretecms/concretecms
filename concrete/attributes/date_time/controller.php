@@ -16,7 +16,7 @@ class Controller extends AttributeTypeController
 
     public function getIconFormatter()
     {
-        return new FontAwesomeIconFormatter('calendar');
+        return new FontAwesomeIconFormatter('clock-o');
     }
 
     public function saveKey($data)
