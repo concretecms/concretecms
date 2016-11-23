@@ -6,7 +6,7 @@ use Localization;
 
 class CountryList
 {
-    protected $countries = array();
+    protected $countries = [];
 
     public function __construct()
     {
