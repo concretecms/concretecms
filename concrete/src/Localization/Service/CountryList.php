@@ -63,6 +63,10 @@ class CountryList
      */
     public function getCountriesForLanguage($languageCode)
     {
-        return \Punic\Territory::getTerritoriesForLanguage($languageCode);
+        $territories = \Punic\Territory::getTerritoriesForLanguage($languageCode);
+        $excludedTerritories = ['IM', 'JE'];
+        $result = array_diff($territories, $excludedTerritories);
+
+        return array_values($result);
     }
 }
