@@ -207,20 +207,20 @@ class Install extends Controller
                     break;
             }*/
         }
-        $countries = array();
+        $countries = [];
         $ll = $this->app->make('localization/languages');
         $cl = $this->app->make('lists/countries');
         $computedSiteLocaleLanguage = Localization::activeLanguage();
         $computedSiteLocaleCountry = null;
         $recommendedCountryValues = $cl->getCountriesForLanguage($computedSiteLocaleLanguage);
-        $otherCountries = array();
-        foreach($cl->getCountries() as $code => $country) {
+        $otherCountries = [];
+        foreach ($cl->getCountries() as $code => $country) {
             if (!in_array($code, $recommendedCountryValues)) {
                 $otherCountries[$code] = $country;
             }
         }
-        $recommendedCountries = array();
-        foreach($recommendedCountryValues as $country) {
+        $recommendedCountries = [];
+        foreach ($recommendedCountryValues as $country) {
             if (!$computedSiteLocaleCountry) {
                 $computedSiteLocaleCountry = $country;
             }
