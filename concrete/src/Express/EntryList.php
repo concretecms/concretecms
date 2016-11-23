@@ -47,7 +47,7 @@ class EntryList extends DatabaseItemList implements PermissionableListItemInterf
     public function getTotalResults()
     {
         $query = $this->deliverQueryObject();
-        return $query->select('count(distinct e.exEntryID)')->setMaxResults(1)->execute()->fetchColumn();
+        return $query->resetQueryParts(['groupBy', 'orderBy'])->select('count(distinct e.exEntryID)')->setMaxResults(1)->execute()->fetchColumn();
     }
 
     public function sortByDisplayOrderAscending()
@@ -77,7 +77,7 @@ class EntryList extends DatabaseItemList implements PermissionableListItemInterf
     protected function createPaginationObject()
     {
         $adapter = new DoctrineDbalAdapter($this->deliverQueryObject(), function ($query) {
-            $query->select('count(distinct e.exEntryID)')->setMaxResults(1);
+            $query->resetQueryParts(['groupBy', 'orderBy'])->select('count(distinct e.exEntryID)')->setMaxResults(1);
         });
         $pagination = new Pagination($this, $adapter);
 

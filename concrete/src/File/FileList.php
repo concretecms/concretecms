@@ -71,7 +71,7 @@ class FileList extends DatabaseItemList implements PermissionableListItemInterfa
         if ($this->permissionsChecker === -1) {
             $query = $this->deliverQueryObject();
 
-            return $query->select('count(distinct f.fID)')->setMaxResults(1)->execute()->fetchColumn();
+            return $query->resetQueryParts(['groupBy', 'orderBy'])->select('count(distinct f.fID)')->setMaxResults(1)->execute()->fetchColumn();
         } else {
             return -1; // unknown
         }
@@ -81,7 +81,7 @@ class FileList extends DatabaseItemList implements PermissionableListItemInterfa
     {
         if ($this->permissionsChecker === -1) {
             $adapter = new DoctrineDbalAdapter($this->deliverQueryObject(), function ($query) {
-                $query->select('count(distinct f.fID)')->setMaxResults(1);
+                $query->resetQueryParts(['groupBy', 'orderBy'])->select('count(distinct f.fID)')->setMaxResults(1);
             });
             $pagination = new Pagination($this, $adapter);
         } else {
