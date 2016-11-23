@@ -68,13 +68,7 @@ class Update
      * Retrieves the info about the latest available information.
      * The effective request to the remote server is done just once per request.
      *
-     * @return \stdClass Return an \stdClass instance with these properties:
-     * <ul>
-     * <li>false|string notes</li>
-     * <li>false|string url</li>
-     * <li>false|string date</li>
-     * <li>null|string version</li>
-     * </ul>
+     * @return RemoteApplicationUpdate|null
      */
     public static function getApplicationUpdateInformation()
     {
@@ -92,13 +86,7 @@ class Update
     /**
      * Retrieves the info about the latest available information.
      *
-     * @return \stdClass Return an \stdClass instance with these properties:
-     * <ul>
-     * <li>false|string notes</li>
-     * <li>false|string url</li>
-     * <li>false|string date</li>
-     * <li>null|string version</li>
-     * </ul>
+     * @return RemoteApplicationUpdate|null
      */
     protected static function getLatestAvailableUpdate()
     {
