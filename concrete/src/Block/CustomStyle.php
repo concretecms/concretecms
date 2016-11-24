@@ -147,6 +147,7 @@ class CustomStyle extends AbstractCustomStyle
 
     public function getCustomStyleID()
     {
+        $id = null;
         if (is_object($this->set)) {
             if ($this->set->getCustomID()) {
                 $id = $this->set->getCustomID();
