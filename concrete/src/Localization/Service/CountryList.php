@@ -6,7 +6,7 @@ use Localization;
 
 class CountryList
 {
-    protected $countries = array();
+    protected $countries = [];
 
     public function __construct()
     {
@@ -63,6 +63,10 @@ class CountryList
      */
     public function getCountriesForLanguage($languageCode)
     {
-        return \Punic\Territory::getTerritoriesForLanguage($languageCode);
+        $territories = \Punic\Territory::getTerritoriesForLanguage($languageCode);
+        $validCountryCodes = array_keys($this->getCountries());
+        $result = array_intersect($territories, $validCountryCodes);
+
+        return array_values($result);
     }
 }
