@@ -81,6 +81,9 @@ class Install extends Controller
             $this->set('backgroundFade', 0);
             require DIR_CONFIG_SITE . '/site_install.php';
             @include DIR_CONFIG_SITE . '/site_install_user.php';
+            if (defined('APP_INSTALL_LANGUAGE') && APP_INSTALL_LANGUAGE !== 'en_US') {
+                Localization::changeLocale(APP_INSTALL_LANGUAGE);
+            }
             $e = $this->app->make('helper/validation/error');
             $e = $this->validateDatabase($e);
             if (defined('INSTALL_STARTING_POINT') && INSTALL_STARTING_POINT) {
@@ -204,20 +207,20 @@ class Install extends Controller
                     break;
             }*/
         }
-        $countries = array();
+        $countries = [];
         $ll = $this->app->make('localization/languages');
         $cl = $this->app->make('lists/countries');
         $computedSiteLocaleLanguage = Localization::activeLanguage();
         $computedSiteLocaleCountry = null;
         $recommendedCountryValues = $cl->getCountriesForLanguage($computedSiteLocaleLanguage);
-        $otherCountries = array();
-        foreach($cl->getCountries() as $code => $country) {
+        $otherCountries = [];
+        foreach ($cl->getCountries() as $code => $country) {
             if (!in_array($code, $recommendedCountryValues)) {
                 $otherCountries[$code] = $country;
             }
         }
-        $recommendedCountries = array();
-        foreach($recommendedCountryValues as $country) {
+        $recommendedCountries = [];
+        foreach ($recommendedCountryValues as $country) {
             if (!$computedSiteLocaleCountry) {
                 $computedSiteLocaleCountry = $country;
             }
@@ -372,7 +375,9 @@ class Install extends Controller
         $spl = StartingPointPackage::getClass($pkgHandle);
         require DIR_CONFIG_SITE . '/site_install.php';
         @include DIR_CONFIG_SITE . '/site_install_user.php';
-
+        if (defined('APP_INSTALL_LANGUAGE') && APP_INSTALL_LANGUAGE !== 'en_US') {
+            Localization::changeLocale(APP_INSTALL_LANGUAGE);
+        }
         $jsx = $this->app->make('helper/json');
         $js = new stdClass();
 
