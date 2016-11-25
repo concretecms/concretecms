@@ -62,7 +62,7 @@ if ($canUpgrade) {
         ?>
                         <p><?=t('No add-ons installed.')?></p>
 
-                    <?php 
+                    <?php
     }
     foreach ($list as $pkg) {
         ?>
@@ -79,7 +79,7 @@ if ($canUpgrade) {
                             </div>
                         </div>
 
-                    <?php 
+                    <?php
     }
     ?>
 
@@ -225,7 +225,7 @@ if ($canUpgrade) {
         </script>
 
 
-    <?php 
+    <?php
 } else {
     ?>
 
@@ -266,11 +266,6 @@ if ($canUpgrade) {
             <h2><?= t('Apply Downloaded Update') ?></h2>
         <?php if (count($updates)) {
     ?>
-            <div class="alert alert-warning">
-                <i class="fa fa-warning"></i> <?= t(
-                    'Make sure you <a href="%s">backup your database</a> before updating.',
-                    $view->url('/dashboard/system/backup/backup')) ?>
-            </div>
             <?php
             $ih = Loader::helper('concrete/ui');
     ?>
@@ -307,16 +302,16 @@ if ($canUpgrade) {
     ?>
             <p><?=t('No updates are ready to be installed.')?></p>
 
-        <?php 
+        <?php
 }
     ?>
-    <?php 
+    <?php
 }
     ?>
 
-<?php 
+<?php
 } else {
     ?>
     <p><?=t('You do not have permission to upgrade this installation of concrete5.')?></p>
-<?php 
+<?php
 } ?>
