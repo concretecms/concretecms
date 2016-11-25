@@ -25,13 +25,13 @@ if (isset($_REQUEST['task']) && $_REQUEST['task'] == 'save_sitemap_display_mode'
 }
 */
 
-if ($_REQUEST['displayNodePagination']) {
+if (isset($_REQUEST['displayNodePagination']) && $_REQUEST['displayNodePagination']) {
     $dh->setDisplayNodePagination(true);
 } else {
     $dh->setDisplayNodePagination(false);
 }
 
-if ($_GET['includeSystemPages']) {
+if (isset($_GET['includeSystemPages']) && $_GET['includeSystemPages']) {
     $dh->setIncludeSystemPages(true);
 } else {
     $dh->setIncludeSystemPages(false);
@@ -66,7 +66,7 @@ if (isset($_REQUEST['displaySingleLevel']) && $_REQUEST['displaySingleLevel']) {
             $dh->setExpandedNodes($openNodeArray);
         }
     }
-    if ($cParentID || $_REQUEST['reloadNode']) {
+    if ($cParentID || (isset($_REQUEST['reloadNode']) && $_REQUEST['reloadNode'])) {
         $nodes = $dh->getSubNodes($cParentID);
         echo json_encode($nodes);
     } else {
