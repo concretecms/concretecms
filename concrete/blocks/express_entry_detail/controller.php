@@ -6,6 +6,7 @@ use \Concrete\Core\Block\BlockController;
 use Concrete\Core\Express\Entry\Search\Result\Result;
 use Concrete\Core\Express\EntryList;
 use Concrete\Core\Search\Result\ItemColumn;
+use Concrete\Core\Support\Facade\Express;
 use Concrete\Core\Support\Facade\Facade;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
@@ -52,10 +53,7 @@ class Controller extends BlockController
                 $this->set('entity', $entity);
             }
             if ($this->exSpecificEntryID) {
-                $entry = $this->entityManager->find('Concrete\Core\Entity\Express\Entry', $this->exSpecificEntryID);
-                if (is_object($entity)) {
-                    $this->set('entry', $entry);
-                }
+                $this->set('entry', Express::getEntry($this->exSpecificEntryID));
             }
         }
 
@@ -68,10 +66,7 @@ class Controller extends BlockController
             $this->set('entity', $entity);
 
             if ($this->entryMode == 'S' && $this->exSpecificEntryID) {
-                $entry = $this->entityManager->find('Concrete\Core\Entity\Express\Entry', $this->exSpecificEntryID);
-                if (is_object($entity)) {
-                    $this->set('entry', $entry);
-                }
+                $this->set('entry', Express::getEntry($this->exSpecificEntryID));
             }
 
             $form = $this->entityManager->find('Concrete\Core\Entity\Express\Form', $this->exFormID);
