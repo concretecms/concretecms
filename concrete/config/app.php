@@ -155,6 +155,7 @@ return array(
         'Database' => '\Concrete\Core\Support\Facade\Database',
         'ORM' => '\Concrete\Core\Support\Facade\DatabaseORM',
         'Events' => '\Concrete\Core\Support\Facade\Events',
+        'Express' => '\Concrete\Core\Support\Facade\Express',
         'Route' => '\Concrete\Core\Support\Facade\Route',
         'Site' => '\Concrete\Core\Support\Facade\Site',
         'UserInfo' => '\Concrete\Core\Support\Facade\UserInfo',

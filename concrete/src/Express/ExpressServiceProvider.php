@@ -15,5 +15,8 @@ class ExpressServiceProvider extends ServiceProvider
             return $app->make('Concrete\Core\Express\Form\Control\Type\Manager');
         });
         $this->app->singleton('Concrete\Core\Express\Association\Applier');
+        $this->app->singleton('express', function() use ($app) {
+           return $app->make('Concrete\Core\Express\ObjectManager');
+        });
     }
 }
