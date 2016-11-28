@@ -319,8 +319,7 @@ class Controller extends AttributeTypeController
 
     public function validateValue()
     {
-        $val = $this->getValue();
-
+        $val = $this->getAttributeValue()->getValue();
         return is_array($val) && count($val) > 0;
     }
 

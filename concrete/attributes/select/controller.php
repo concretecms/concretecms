@@ -474,7 +474,7 @@ class Controller extends AttributeTypeController
 
     public function validateValue()
     {
-        return is_object($value = $this->getValue()) && ((string) $value != '');
+        return is_object($value = $this->getAttributeValue()->getValue()) && ((string) $value != '');
     }
 
     public function validateForm($p)
