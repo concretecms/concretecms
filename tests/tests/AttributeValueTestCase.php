@@ -7,6 +7,7 @@ abstract class AttributeValueTestCase extends ConcreteDatabaseTestCase
     protected $fixtures = array();
     protected $metadatas = array(
         'Concrete\Core\Entity\Site\Site',
+        'Concrete\Core\Entity\Site\Type',
         'Concrete\Core\Entity\Site\Locale',
         'Concrete\Core\Entity\Site\Tree',
         'Concrete\Core\Entity\Site\SiteTree',
@@ -42,6 +43,12 @@ abstract class AttributeValueTestCase extends ConcreteDatabaseTestCase
     protected function setUp()
     {
         parent::setUp();
+
+        $service = \Core::make('site/type');
+        if (!$service->getDefault()) {
+            $service->installDefault();
+        }
+
         $service = \Core::make('site');
         if (!$service->getDefault()) {
             $service->installDefault('en_US');
@@ -63,6 +70,11 @@ abstract class AttributeValueTestCase extends ConcreteDatabaseTestCase
      */
     public function testBaseAttributeValueGet($input, $expectedBaseValue)
     {
+        // because of stupid !@#!@ phpunit.
+        if ($input instanceof Closure) {
+            $input = $input();
+        }
+
         $this->object->setAttribute($this->getAttributeKeyHandle(), $input);
         $baseValue = $this->object->getAttribute($this->getAttributeKeyHandle());
         $baseValue = $this->prepareBaseValueAfterRetrieving($baseValue);
@@ -80,6 +92,11 @@ abstract class AttributeValueTestCase extends ConcreteDatabaseTestCase
      */
     public function testDisplayAttributeValues($input, $expectedDisplayValue)
     {
+        // because of stupid !@#!@ phpunit.
+        if ($input instanceof Closure) {
+            $input = $input();
+        }
+
         $this->object->setAttribute($this->getAttributeKeyHandle(), $input);
         $displayValue1 = $this->object->getAttribute($this->getAttributeKeyHandle(), 'display');
         $displayValue2 = $this->object->getAttribute($this->getAttributeKeyHandle(), 'displaySanitized');
@@ -103,6 +120,11 @@ abstract class AttributeValueTestCase extends ConcreteDatabaseTestCase
      */
     public function testPlainTextAttributeValues($input, $expectedPlainTextOutput)
     {
+        // because of stupid !@#!@ phpunit.
+        if ($input instanceof Closure) {
+            $input = $input();
+        }
+
         $this->object->setAttribute($this->getAttributeKeyHandle(), $input);
         $value = $this->object->getAttributeValueObject($this->getAttributeKeyHandle());
         $plainTextValue = $value->getPlainTextValue();
@@ -115,6 +137,11 @@ abstract class AttributeValueTestCase extends ConcreteDatabaseTestCase
      */
     public function testSearchIndexAttributeValues($input, $expectedSearchIndexValue)
     {
+        // because of stupid !@#!@ phpunit.
+        if ($input instanceof Closure) {
+            $input = $input();
+        }
+
         $this->object->setAttribute($this->getAttributeKeyHandle(), $input);
         $value = $this->object->getAttributeValueObject($this->getAttributeKeyHandle());
         $searchIndexValue = $value->getSearchIndexValue();
