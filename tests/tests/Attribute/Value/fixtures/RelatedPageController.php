@@ -22,11 +22,36 @@ class Controller extends \Concrete\Attribute\Number\Controller
         // not used by test.
     }
 
+    public function getSearchIndexValue()
+    {
+        $value = $this->getValue();
+        if (is_object($value)) {
+            return $value->getCollectionID();
+        }
+    }
+
+    public function getDisplayValue()
+    {
+        $value = $this->getValue();
+        if (is_object($value)) {
+            return $value->getCollectionName();
+        }
+    }
+
+    public function getPlainTextValue()
+    {
+        $value = $this->getValue();
+        if (is_object($value)) {
+            return $value->getCollectionName();
+        }
+    }
+
+
     public function getValue()
     {
         $value = $this->getAttributeValue()->getValueObject();
         if ($value) {
-            return Page::getByID(intval($value));
+            return Page::getByID($value->getValue());
         }
     }
 

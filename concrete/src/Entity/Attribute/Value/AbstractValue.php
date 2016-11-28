@@ -81,6 +81,13 @@ abstract class AbstractValue implements AttributeValueInterface
             return $this->getDisplayValue();
         }
 
+        $controller = $this->getController();
+        if (method_exists($controller, 'getValue')) {
+            // allow the controller to determine the value response. This is useful for attributes that use built in data types
+            // like number but want to return special objects (e.g. a page object, an event object)
+            return $controller->getValue();
+        }
+
         // Otherwise, we get the default "value" response for the attribute value type, which could be text, could be true/false, could be a
         // file object.
 
@@ -88,8 +95,6 @@ abstract class AbstractValue implements AttributeValueInterface
             return $value->getValue();
         }
 
-        $controller = $this->getController();
-        return $controller->getValue();
     }
 
     /**

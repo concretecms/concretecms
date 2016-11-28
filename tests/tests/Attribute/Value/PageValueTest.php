@@ -80,7 +80,9 @@ class PageValueTest extends \AttributeValueTestCase
                 function() {
                     return \Page::getByID(1);
                 },
-                1,
+                function() {
+                    return \Page::getByID(1);
+                },
             )
         );
     }
@@ -92,7 +94,7 @@ class PageValueTest extends \AttributeValueTestCase
                 function() {
                     return \Page::getByID(1);
                 },
-                1,
+                'Home',
             )
         );
     }
@@ -104,7 +106,7 @@ class PageValueTest extends \AttributeValueTestCase
                 function() {
                     return \Page::getByID(1);
                 },
-                1,
+                'Home',
             )
         );
     }
