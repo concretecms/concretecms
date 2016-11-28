@@ -74,6 +74,9 @@ abstract class AttributeValueTestCase extends ConcreteDatabaseTestCase
         if ($input instanceof Closure) {
             $input = $input();
         }
+        if ($expectedBaseValue instanceof Closure) {
+            $expectedBaseValue = $expectedBaseValue();
+        }
 
         $this->object->setAttribute($this->getAttributeKeyHandle(), $input);
         $baseValue = $this->object->getAttribute($this->getAttributeKeyHandle());
@@ -95,6 +98,9 @@ abstract class AttributeValueTestCase extends ConcreteDatabaseTestCase
         // because of stupid !@#!@ phpunit.
         if ($input instanceof Closure) {
             $input = $input();
+        }
+        if ($expectedDisplayValue instanceof Closure) {
+            $expectedDisplayValue = $expectedDisplayValue();
         }
 
         $this->object->setAttribute($this->getAttributeKeyHandle(), $input);
@@ -124,6 +130,9 @@ abstract class AttributeValueTestCase extends ConcreteDatabaseTestCase
         if ($input instanceof Closure) {
             $input = $input();
         }
+        if ($expectedPlainTextOutput instanceof Closure) {
+            $expectedPlainTextOutput = $expectedPlainTextOutput();
+        }
 
         $this->object->setAttribute($this->getAttributeKeyHandle(), $input);
         $value = $this->object->getAttributeValueObject($this->getAttributeKeyHandle());
@@ -140,6 +149,9 @@ abstract class AttributeValueTestCase extends ConcreteDatabaseTestCase
         // because of stupid !@#!@ phpunit.
         if ($input instanceof Closure) {
             $input = $input();
+        }
+        if ($expectedSearchIndexValue instanceof Closure) {
+            $expectedSearchIndexValue = $expectedSearchIndexValue();
         }
 
         $this->object->setAttribute($this->getAttributeKeyHandle(), $input);

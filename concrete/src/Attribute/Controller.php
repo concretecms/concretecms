@@ -91,13 +91,6 @@ class Controller extends AbstractController
     {
     }
 
-    public function getValue()
-    {
-        if (is_object($this->attributeValue)) {
-            return $this->attributeValue->getValue();
-        }
-    }
-
     public function exportValue(\SimpleXMLElement $akv)
     {
         $val = $this->attributeValue->getValue();
