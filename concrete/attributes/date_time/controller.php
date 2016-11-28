@@ -99,8 +99,7 @@ class Controller extends AttributeTypeController
 
     public function validateValue()
     {
-        $v = $this->getValue();
-
+        $v = $this->getAttributeValue()->getValue();
         return $v != false;
     }
 

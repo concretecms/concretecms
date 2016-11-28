@@ -66,11 +66,11 @@ class Controller extends AttributeTypeController
     
     public function exportValue(\SimpleXMLElement $akn)
     {
-        $services = $this->getValue();
-        foreach ($services as $service => $serviceInfo) {
+        $services = $this->getValue()->getSelectedLinks();
+        foreach ($services as $link) {
             $av = $akn->addChild('link');
-            $av->addAttribute('service', $service);
-            $av->addAttribute('detail', $serviceInfo);
+            $av->addAttribute('service', $link->getService());
+            $av->addAttribute('detail', $link->getServiceInfo());
         }
     }
 

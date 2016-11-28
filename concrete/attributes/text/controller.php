@@ -29,7 +29,7 @@ class Controller extends DefaultController
 
     public function getDisplayValue()
     {
-        return h($this->getValue());
+        return h($this->getAttributeValue()->getValue());
     }
 
     public function form()

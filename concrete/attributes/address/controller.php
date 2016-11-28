@@ -119,7 +119,7 @@ class Controller extends AttributeTypeController
 
     public function validateValue()
     {
-        $v = $this->getValue();
+        $v = $this->getAttributeValue()->getValue();
         if (!is_object($v)) {
             return false;
         }
@@ -146,7 +146,7 @@ class Controller extends AttributeTypeController
 
     public function getDisplayValue()
     {
-        $value = $this->getValue(); // Address value, convert to string
+        $value = $this->getAttributeValue()->getValue();
         $v = Core::make('helper/text')->entities($value);
         $ret = nl2br($v);
         return $ret;
