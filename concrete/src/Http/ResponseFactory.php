@@ -167,6 +167,9 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
         $controller->on_start();
 
         if ($controller instanceof PageController) {
+            if ($controller->isReplaced()) {
+                return $this->controller($controller->getReplacement(), $code, $headers);
+            }
             $controller->setupRequestActionAndParameters($request);
 
             $response = $controller->validateRequest();
@@ -189,10 +192,6 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
 
         } else {
             $controller->runAction('view');
-        }
-
-        if ($controller->isReplaced()) {
-            return $this->controller($controller->getReplacement());
         }
 
         $view = $controller->getViewObject();
