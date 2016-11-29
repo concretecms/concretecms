@@ -8,7 +8,10 @@ $cp = false;
 $isEditMode = false;
 $isArrangeMode = false;
 $scc = false;
-$defaultPageTitle = isset($pageTitle) && $pageTitle ? $pageTitle : null;
+if (!isset($pageTitle) || !is_string($pageTitle) || $pageTitle === '') {
+    $pageTitle = null;
+}
+$defaultPageTitle = $pageTitle;
 $app = Application::getFacadeApplication();
 $config = $app->make('site')->getSite()->getConfigRepository();
 $appConfig = $app->make('config');
@@ -29,10 +32,10 @@ if (is_object($c)) {
      * 3. It comes from getCollectionName()
      * In the case of 3, we also pass it through page title format.
      */
-    if (!$defaultPageTitle) {
+    if ($pageTitle === null) {
         // we aren't getting it dynamically.
         $pageTitle = $c->getAttribute('meta_title');
-        if (!$pageTitle) {
+        if (!is_string($pageTitle) || $pageTitle === '') {
             $seo = $app->make('helper/seo');
             if (!$seo->hasCustomTitle()) {
                 $pageTitle = $c->getCollectionName();
@@ -65,9 +68,6 @@ if (is_object($c)) {
     }
 } else {
     $cID = 1;
-    if (!isset($pageTitle)) {
-        $pageTitle = null;
-    }
 }
 $metaTags = [];
 $metaTags['charset'] = sprintf('<meta http-equiv="content-type" content="text/html; charset=%s"/>', APP_CHARSET);
