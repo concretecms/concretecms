@@ -17,19 +17,15 @@ if (is_object($c)) {
     $isArrangeMode = $c->isArrangeMode();
     $styleObject = false;
 
-/*
- * Handle page title
- */
     /*
      * Handle page title
+     *
+     * We can set a title 3 ways:
+     * 1. It comes through programmatically as $pageTitle. If this is the case then we pass it through, no questions asked
+     * 2. It comes from meta title
+     * 3. It comes from getCollectionName()
+     * In the case of 3, we also pass it through page title format.
      */
-
-    // We can set a title 3 ways:
-    // 1. It comes through programmatically as $pageTitle. If this is the case then we pass it through, no questions asked
-    // 2. It comes from meta title
-    // 3. It comes from getCollectionName()
-    // In the case of 3, we also pass it through page title format.
-
     if (!$defaultPageTitle) {
         // we aren't getting it dynamically.
         $pageTitle = $c->getCollectionAttributeValue('meta_title');
