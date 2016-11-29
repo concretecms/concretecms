@@ -148,7 +148,7 @@ if ($u->isRegistered()) {
     $v->requireAsset('core/account');
     $v->addFooterItem('<script type="text/javascript">$(function() { ccm_enableUserProfileMenu(); });</script>');
 }
-if (is_object($cp)) {
+if ($cp) {
     View::element('page_controls_header', ['cp' => $cp, 'c' => $c]);
     $cih = $app->make('helper/concrete/ui');
     if ($cih->showNewsflowOverlay()) {
