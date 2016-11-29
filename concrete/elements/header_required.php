@@ -70,13 +70,13 @@ if (is_object($c)) {
         $pageTitle = null;
     }
 }
-$metaTags = array();
+$metaTags = [];
 $metaTags['charset'] = sprintf('<meta http-equiv="content-type" content="text/html; charset=%s"/>', APP_CHARSET);
 if (trim($pageDescription) != '') {
     $metaTags['description'] = sprintf('<meta name="description" content="%s"/>', htmlspecialchars($pageDescription, ENT_COMPAT, APP_CHARSET));
 }
 $pageMetaKeywords = !isset($pageMetaKeywords) || !$pageMetaKeywords ? $c->getCollectionAttributeValue('meta_keywords') : $pageMetaKeywords;
-if (trim($pageMetaKeywords) != ''){
+if (trim($pageMetaKeywords) != '') {
     $metaTags['keywords'] = sprintf('<meta name="keywords" content="%s"/>', htmlspecialchars($pageMetaKeywords, ENT_COMPAT, APP_CHARSET));
 }
 if ($c->getCollectionAttributeValue('exclude_search_index')) {
@@ -90,7 +90,7 @@ if (($modernIconFID = intval($config->get('misc.modern_tile_thumbnail_fid'))) &&
         $metaTags['msapplication-TileColor'] = sprintf('<meta name="msapplication-TileColor" content="%s"/>', $modernIconBGColor);
     }
 }
-$linkTags = array();
+$linkTags = [];
 if (($favIconFID = intval($config->get('misc.favicon_fid'))) && ($favIconFile = File::getByID($favIconFID)) && is_object($favIconFile)) {
     $favIconFileURL = $favIconFile->getURL();
     $linkTags['shortcut icon'] = sprintf('<link rel="shortcut icon" href="%s" type="image/x-icon"/>', $favIconFileURL);
@@ -139,7 +139,7 @@ if ($u->isRegistered()) {
     $v->addFooterItem('<script type="text/javascript">$(function() { ccm_enableUserProfileMenu(); });</script>');
 }
 if (is_object($cp)) {
-    View::element('page_controls_header', array('cp' => $cp, 'c' => $c));
+    View::element('page_controls_header', ['cp' => $cp, 'c' => $c]);
     $cih = Core::make('helper/concrete/ui');
     if ($cih->showNewsflowOverlay()) {
         $v->addFooterItem('<script type="text/javascript">$(function() { new ConcreteNewsflowDialog().open(); });</script>');
