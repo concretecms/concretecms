@@ -31,7 +31,7 @@ if (is_object($c)) {
      */
     if (!$defaultPageTitle) {
         // we aren't getting it dynamically.
-        $pageTitle = $c->getCollectionAttributeValue('meta_title');
+        $pageTitle = $c->getAttribute('meta_title');
         if (!$pageTitle) {
             $pageTitle = $c->getCollectionName();
             if ($c->isSystemPage()) {
@@ -131,7 +131,7 @@ if (!empty($linkTags)) {
 </script>
 
 <?php
-$v = View::getInstance();
+$v = View::getRequestInstance();
 $u = new User();
 if ($u->isRegistered()) {
     $v->requireAsset('core/account');
