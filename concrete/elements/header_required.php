@@ -154,9 +154,12 @@ if ($cp) {
     if ($cih->showNewsflowOverlay()) {
         $v->addFooterItem('<script type="text/javascript">$(function() { new ConcreteNewsflowDialog().open(); });</script>');
     }
-    if (array_get($_COOKIE, 'ccmLoadAddBlockWindow') && $c->isEditMode()) {
-        $v->addFooterItem('<script type="text/javascript">$(function() { setTimeout(function() { $("a[data-launch-panel=add-block]").click()}, 100); });</script>', 'CORE');
-        setcookie("ccmLoadAddBlockWindow", false, -1, DIR_REL . '/');
+    if ($isEditMode) {
+        $cookie = $app->make('cookie');
+        if ($cookie->get('ccmLoadAddBlockWindow')) {
+            $v->addFooterItem('<script type="text/javascript">$(function() { setTimeout(function() { $("a[data-launch-panel=add-block]").click()}, 100); });</script>', 'CORE');
+            $cookie->clear('ccmLoadAddBlockWindow');
+        }
     }
 }
 $v->markHeaderAssetPosition();
