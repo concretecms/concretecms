@@ -35,7 +35,7 @@ class DefaultController extends AttributeTypeController
 
     public function getDisplayValue()
     {
-        return Core::make('helper/text')->entities($this->getValue());
+        return Core::make('helper/text')->entities($this->attributeValue->getValue());
     }
 
     public function getAttributeValueObject()
@@ -76,7 +76,7 @@ class DefaultController extends AttributeTypeController
 
     public function validateValue()
     {
-        return $this->getValue() != '';
+        return $this->attributeValue->getValue() != '';
     }
 
     public function validateForm($data)
