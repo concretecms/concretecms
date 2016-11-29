@@ -9,7 +9,7 @@ if (!$sh->canRead()) {
 $v = View::getInstance();
 $v->requireAsset('core/sitemap');
 
-$site = \Core::make("site")->getSite();
+$site = \Core::make("site")->getActiveSiteForEditing();
 ?>
 
 <div class="ccm-sitemap-overlay"></div>

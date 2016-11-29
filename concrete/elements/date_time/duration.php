@@ -186,7 +186,7 @@ for ($i = 0; $i < count($values); $i++) {
                     <div class="col-sm-6" id="pdStartDate_tw">
                         <select class="form-control" name="pdStartDateSelectTime" data-select="time">
                             <?php foreach($values as $value) { ?>
-                                <option value="<?=$value?>"><?=$value?></option>
+                                <option value="<?=$value?>" <?php if ($selectedStartTime == $value) { ?>selected<?php }?>><?=$value?></option>
                             <?php } ?>
                         </select>
                     </div>
