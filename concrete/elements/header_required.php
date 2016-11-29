@@ -91,20 +91,20 @@ if ($c->getAttribute('exclude_search_index')) {
     $metaTags['robots'] = sprintf('<meta name="robots" content="%s"/>', 'noindex');
 }
 $metaTags['generator'] = sprintf('<meta name="generator" content="%s"/>', 'concrete5' . ($appConfig->get('concrete.misc.app_version_display_in_header') ? ' - ' . APP_VERSION : null));
-if (($modernIconFID = intval($config->get('misc.modern_tile_thumbnail_fid'))) && ($modernIconFile = File::getByID($modernIconFID)) && is_object($modernIconFile)) {
+if (($modernIconFID = (int) $config->get('misc.modern_tile_thumbnail_fid')) && ($modernIconFile = File::getByID($modernIconFID))) {
     $metaTags['msapplication-TileImage'] = sprintf('<meta name="msapplication-TileImage" content="%s"/>', $modernIconFile->getURL());
-    $modernIconBGColor = strval($config->get('misc.modern_tile_thumbnail_bgcolor'));
-    if (strlen($modernIconBGColor)) {
+    $modernIconBGColor = (string) $config->get('misc.modern_tile_thumbnail_bgcolor');
+    if ($modernIconBGColor !== '') {
         $metaTags['msapplication-TileColor'] = sprintf('<meta name="msapplication-TileColor" content="%s"/>', $modernIconBGColor);
     }
 }
 $linkTags = [];
-if (($favIconFID = intval($config->get('misc.favicon_fid'))) && ($favIconFile = File::getByID($favIconFID)) && is_object($favIconFile)) {
+if (($favIconFID = (int) $config->get('misc.favicon_fid')) && ($favIconFile = File::getByID($favIconFID))) {
     $favIconFileURL = $favIconFile->getURL();
     $linkTags['shortcut icon'] = sprintf('<link rel="shortcut icon" href="%s" type="image/x-icon"/>', $favIconFileURL);
     $linkTags['icon'] = sprintf('<link rel="icon" href="%s" type="image/x-icon"/>', $favIconFileURL);
 }
-if (($appleIconFID = intval($config->get('misc.iphone_home_screen_thumbnail_fid'))) && ($appleIconFile = File::getByID($appleIconFID)) && is_object($appleIconFile)) {
+if (($appleIconFID = (int) $config->get('misc.iphone_home_screen_thumbnail_fid')) && ($appleIconFile = File::getByID($appleIconFID))) {
     $linkTags['apple-touch-icon'] = sprintf('<link rel="apple-touch-icon" href="%s"/>', $appleIconFile->getURL());
 }
 
