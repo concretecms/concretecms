@@ -4,6 +4,7 @@ namespace Concrete\Core\Attribute\Category;
 use Concrete\Core\Application\Application;
 use Concrete\Core\Attribute\AttributeValueInterface;
 use Concrete\Core\Attribute\Category\SearchIndexer\StandardSearchIndexerInterface;
+use Concrete\Core\Attribute\Key\ImportLoader\StandardImportLoader;
 use Concrete\Core\Attribute\Key\RequestLoader\StandardRequestLoader;
 use Concrete\Core\Attribute\Set;
 use Concrete\Core\Entity\Attribute\Key\FileKey;
@@ -11,6 +12,7 @@ use Concrete\Core\Entity\Attribute\Key\Key;
 use Concrete\Core\Entity\Attribute\Key\LegacyKey;
 use Concrete\Core\Entity\Attribute\Type;
 use Concrete\Core\Entity\Attribute\Value\LegacyValue;
+use Concrete\Core\Entity\Package;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -65,6 +67,12 @@ class LegacyCategory implements CategoryInterface, StandardSearchIndexerInterfac
         $class = $this->getLegacyKeyClass();
         $o = new $class();
         return $o->getSearchIndexFieldDefinition();
+    }
+
+    public function getAttributeKeyByHandle($akHandle)
+    {
+        $r = $this->entityManager->getRepository('Concrete\Core\Entity\Attribute\Key\LegacyKey');
+        return $r->findOneBy(['akHandle' => $akHandle]);
     }
 
     public function getList()
@@ -132,6 +140,43 @@ class LegacyCategory implements CategoryInterface, StandardSearchIndexerInterfac
         $this->entityManager->flush();
 
         return $key;
+    }
+
+    public function import(Type $type, \SimpleXMLElement $element, Package $package = null)
+    {
+        $loader = new StandardImportLoader();
+        $key = new LegacyKey();
+        $key->setAttributeType($type);
+        $key->setAttributeCategoryEntity($this->getCategoryEntity());
+        if (is_object($package)) {
+            $key->setPackage($package);
+        }
+        $loader->load($key, $element);
+
+        $controller = $type->getController();
+        $settings = $controller->importKey($element);
+        if (!is_object($settings)) {
+            $settings = $controller->getAttributeKeySettings();
+        }
+
+        $this->entityManager->persist($key);
+        $this->entityManager->flush();
+
+        $settings->setAttributeKey($key);
+        $key->setAttributeKeySettings($settings);
+
+        $this->entityManager->persist($settings);
+        $this->entityManager->flush();
+
+        // Modify the category's search indexer.
+        $indexer = $this->getSearchIndexer();
+        if (is_object($indexer)) {
+            $indexer->updateRepositoryColumns($this, $key);
+        }
+
+        $this->entityManager->persist($key);
+        $this->entityManager->flush();
+
     }
 
     public function getAttributeKeyByID($akID)

@@ -219,7 +219,7 @@ class Controller extends AttributeTypeController
     public function exportValue(\SimpleXMLElement $akn)
     {
         $avn = $akn->addChild('value');
-        $address = $this->getValue();
+        $address = $this->getAttributeValue()->getValue();
         $avn->addAttribute('address1', $address->getAddress1());
         $avn->addAttribute('address2', $address->getAddress2());
         $avn->addAttribute('city', $address->getCity());
