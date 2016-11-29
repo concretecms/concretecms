@@ -465,7 +465,6 @@ for ($i = 0; $i < count($values); $i++) {
 
     ccm_accessEntityCalculateRepeatOptions = function () {
 
-        return;
         var startDate = ccm_getSelectedStartDate();
         var endDate = ccm_getSelectedEndDate();
 
@@ -478,7 +477,7 @@ for ($i = 0; $i < count($values); $i++) {
             $('select[name=pdRepeatPeriod] option[value=daily]').attr('disabled', false);
             $("#ccm-permissions-access-entity-dates-repeat-weekly-dow").show();
         }
-        $('input[name=pdStartRepeatDate]').val($("#pdStartDate_dt_pub").val());
+        $('input[name=pdStartRepeatDate]').val($("#pdStartDate_pub").val());
         switch (startDate.getDay()) {
             case 0:
                 $("#ccm-permissions-access-entity-dates-repeat-weekly-dow input[value=0]").attr('checked', true);
