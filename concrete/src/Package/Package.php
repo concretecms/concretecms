@@ -14,6 +14,7 @@ use Concrete\Core\Page\Theme\Theme;
 use Doctrine\Common\Persistence\Mapping\Driver\MappingDriverChain;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\Setup;
+use Gettext\Translations;
 
 abstract class Package implements LocalizablePackageInterface
 {
@@ -840,5 +841,29 @@ abstract class Package implements LocalizablePackageInterface
         if ($this->getPackageEntity()) {
             return $this->getPackageEntity()->getPackageID();
         }
+    }
+
+    /**
+     * Override this method in your package controller to add strings to the translator, so that you can translate dynamically generated strings.
+     *
+     * @param Translations $translations
+     *
+     * @example
+     * If you add to this method these two strings:
+     *
+     * <code>
+     * $translations->insert('', 'String without context');
+     * $translations->insert('MyContext', 'String with context');
+     * </code>
+     *
+     * Then you'll be able to translate these two strings in the Translator and write translated strings with:
+     *
+     * <code>
+     * echo t('String without contex');
+     * echo tc('MyContext', 'String with contex');
+     * </code>
+     */
+    public function getTranslatableStrings(Translations $translations)
+    {
     }
 }
