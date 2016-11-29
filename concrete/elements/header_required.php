@@ -127,11 +127,12 @@ $pageTitle = $event->getArgument('pageTitle');
 echo implode(PHP_EOL, $metaTags);
 if (!empty($linkTags)) {
     echo implode(PHP_EOL, $linkTags);
-} ?>
+}
+?>
 
 <script type="text/javascript">
     var CCM_DISPATCHER_FILENAME = "<?php echo DIR_REL . '/' . DISPATCHER_FILENAME; ?>";
-    var CCM_CID = "<?php echo $cID ? $cID : 0; ?>";
+    var CCM_CID = <?php echo $cID ? $cID : 0; ?>;
     var CCM_EDIT_MODE = <?php echo $isEditMode ? 'true' : 'false'; ?>;
     var CCM_ARRANGE_MODE = <?php echo $isArrangeMode ? 'true' : 'false'; ?>;
     var CCM_IMAGE_PATH = "<?php echo ASSETS_URL_IMAGES; ?>";
