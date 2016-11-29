@@ -136,8 +136,8 @@ if (!empty($linkTags)) {
     var CCM_ARRANGE_MODE = <?php echo $isArrangeMode ? 'true' : 'false'; ?>;
     var CCM_IMAGE_PATH = "<?php echo ASSETS_URL_IMAGES; ?>";
     var CCM_TOOLS_PATH = "<?php echo REL_DIR_FILES_TOOLS_REQUIRED; ?>";
-    var CCM_APPLICATION_URL = "<?php echo \Core::getApplicationURL(); ?>";
-    var CCM_REL = "<?php echo \Core::getApplicationRelativePath(); ?>";
+    var CCM_APPLICATION_URL = "<?php echo rtrim((string) $app->make('url/canonical'), '/'); ?>";
+    var CCM_REL = "<?php echo $app->make('app_relative_path'); ?>";
 </script>
 
 <?php
