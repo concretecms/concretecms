@@ -114,7 +114,7 @@ $event->setArgument('metaTags', $metaTags);
 $event->setArgument('linkTags', $linkTags);
 $event->setArgument('pageTitle', $pageTitle);
 $event->setArgument('defaultPageTitle', $defaultPageTitle);
-Events::dispatch('on_header_required_ready', $event);
+$app->make('director')->dispatch('on_header_required_ready', $event);
 $metaTags = $event->getArgument('metaTags');
 $linkTags = $event->getArgument('linkTags');
 $pageTitle = $event->getArgument('pageTitle');
