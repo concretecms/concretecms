@@ -14,6 +14,9 @@ if (!isset($pageTitle) || !is_string($pageTitle) || $pageTitle === '') {
 if (!isset($pageDescription)) {
     $pageDescription = null;
 }
+if (!isset($pageMetaKeywords)) {
+    $pageMetaKeywords = null;
+}
 $defaultPageTitle = $pageTitle;
 $app = Application::getFacadeApplication();
 $config = $app->make('site')->getSite()->getConfigRepository();
@@ -62,6 +65,9 @@ if (is_object($c)) {
         }
         $pageDescription = trim($pageDescription);
     }
+    if (!$pageMetaKeywords) {
+        $pageMetaKeywords = trim($c->getAttribute('meta_keywords'));
+    }
     if ($c->hasPageThemeCustomizations()) {
         $styleObject = $c->getCustomStyleObject();
     } elseif (($pt = $c->getCollectionThemeObject()) && is_object($pt)) {
@@ -78,8 +84,7 @@ $metaTags['charset'] = sprintf('<meta http-equiv="content-type" content="text/ht
 if ($pageDescription) {
     $metaTags['description'] = sprintf('<meta name="description" content="%s"/>', htmlspecialchars($pageDescription, ENT_COMPAT, APP_CHARSET));
 }
-$pageMetaKeywords = !isset($pageMetaKeywords) || !$pageMetaKeywords ? $c->getCollectionAttributeValue('meta_keywords') : $pageMetaKeywords;
-if (trim($pageMetaKeywords) != '') {
+if ($pageMetaKeywords) {
     $metaTags['keywords'] = sprintf('<meta name="keywords" content="%s"/>', htmlspecialchars($pageMetaKeywords, ENT_COMPAT, APP_CHARSET));
 }
 if ($c->getCollectionAttributeValue('exclude_search_index')) {
