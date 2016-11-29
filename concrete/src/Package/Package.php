@@ -6,22 +6,17 @@ use Concrete\Core\Backup\ContentImporter;
 use Concrete\Core\Config\Repository\Liaison;
 use Concrete\Core\Database\DatabaseStructureManager;
 use Concrete\Core\Database\EntityManager\Driver\CoreDriver;
-use Concrete\Core\Database\EntityManager\Provider\DefaultPackageProvider;
 use Concrete\Core\Database\EntityManager\Provider\PackageProviderFactory;
-use Concrete\Core\Database\EntityManagerFactory;
 use Concrete\Core\Database\Schema\Schema;
-use Concrete\Core\Foundation\ClassLoader;
 use Concrete\Core\Package\ItemCategory\ItemInterface;
 use Concrete\Core\Package\ItemCategory\Manager;
 use Concrete\Core\Page\Theme\Theme;
-use Concrete\Core\Support\Facade\DatabaseORM;
 use Doctrine\Common\Persistence\Mapping\Driver\MappingDriverChain;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\Setup;
 
 abstract class Package implements LocalizablePackageInterface
 {
-
     protected $DIR_PACKAGES_CORE = DIR_PACKAGES_CORE;
     protected $DIR_PACKAGES = DIR_PACKAGES;
     protected $REL_DIR_PACKAGES_CORE = REL_DIR_PACKAGES_CORE;
@@ -54,16 +49,18 @@ abstract class Package implements LocalizablePackageInterface
      * Whether to automatically map core extensions into the packages src/Concrete directory (and map them to Concrete\Package\MyPackage), or map the entire src/
      * directory to Concrete\Package\MyPackage\Src (and automatically map core extensions
      * to Concrete\Package\MyPackage\Src)
+     *
      * @var bool
      */
     protected $pkgEnableLegacyNamespace = true;
 
     /**
      * Array of location -> namespace autoloader entries for the package. Will automatically
-     * be added to the class loader. (e.g. array('src/PortlandLabs' => \PortlandLabs'))
+     * be added to the class loader. (e.g. array('src/PortlandLabs' => \PortlandLabs')).
+     *
      * @var array
      */
-    protected $pkgAutoloaderRegistries = array();
+    protected $pkgAutoloaderRegistries = [];
 
     protected $appVersionRequired = '5.7.0';
 
@@ -95,6 +92,7 @@ abstract class Package implements LocalizablePackageInterface
         if (!isset($this->entity)) {
             $this->entity = $this->app->make('Concrete\Core\Package\PackageService')->getByHandle($this->getPackageHandle());
         }
+
         return $this->entity;
     }
 
@@ -120,7 +118,7 @@ abstract class Package implements LocalizablePackageInterface
     }
 
     /**
-     * Should this pacakge enable legacy namespaces
+     * Should this pacakge enable legacy namespaces.
      *
      * This returns true IF:
      * 1. $this->pkgAutoloaderMapCoreExtensions is false or unset
@@ -186,7 +184,8 @@ abstract class Package implements LocalizablePackageInterface
 
     /**
      * Returns custom autoloader prefixes registered by the class loader.
-     * @return array Keys represent the namespace, not relative to the package's namespace. Values are the path, and are relative to the package directory.
+     *
+     * @return array Keys represent the namespace, not relative to the package's namespace. Values are the path, and are relative to the package directory
      */
     public function getPackageAutoloaderRegistries()
     {
@@ -297,19 +296,20 @@ abstract class Package implements LocalizablePackageInterface
     }
 
     /**
-     * Returns the path starting from c5 installation folder to the package folder
+     * Returns the path starting from c5 installation folder to the package folder.
      *
      * @return string
      */
-    public function getRelativePathFromInstallFolder(){
+    public function getRelativePathFromInstallFolder()
+    {
         return DIRECTORY_SEPARATOR . DIRNAME_PACKAGES . DIRECTORY_SEPARATOR . $this->getPackageHandle();
     }
-
 
     public function getTranslationFile($locale)
     {
         $path = $this->getPackagePath() . '/' . DIRNAME_LANGUAGES;
         $languageFile = "$path/$locale/LC_MESSAGES/messages.mo";
+
         return $languageFile;
     }
 
@@ -350,13 +350,12 @@ abstract class Package implements LocalizablePackageInterface
         return $package;
     }
 
-
     public function uninstall()
     {
         $manager = new Manager($this->app);
         $categories = $manager->getPackageItemCategories();
         $package = $this->getPackageEntity();
-        foreach($categories as $category) {
+        foreach ($categories as $category) {
             if ($category->hasItems($package)) {
                 $category->removeItems($package);
             }
@@ -410,7 +409,6 @@ abstract class Package implements LocalizablePackageInterface
         return \Concrete\Core\Support\Facade\Package::getInstalledHandles();
     }
 
-
     /**
      * @deprecated
      */
@@ -419,7 +417,6 @@ abstract class Package implements LocalizablePackageInterface
         // this should go through the facade instead
         return \Concrete\Core\Support\Facade\Package::getByHandle($pkgHandle);
     }
-
 
     /**
      * @deprecated
@@ -466,8 +463,6 @@ abstract class Package implements LocalizablePackageInterface
         return \Concrete\Core\Support\Facade\Package::getClass($pkgHandle);
     }
 
-
-
     /**
      * This is the pre-test routine that packages run through before they are installed. Any errors that come here are
      * to be returned in the form of an array so we can show the user. If it's all good we return true.
@@ -479,7 +474,7 @@ abstract class Package implements LocalizablePackageInterface
      */
     public function testForInstall($testForAlreadyInstalled = true)
     {
-        $errors = array();
+        $errors = [];
 
         // Step 1 does that package exist ?
         if ((!is_dir(DIR_PACKAGES . '/' . $this->getPackageHandle()) && (!is_dir(
@@ -501,15 +496,16 @@ abstract class Package implements LocalizablePackageInterface
         if (count($errors) == 0) {
             // test minimum application version requirement
             if (version_compare(APP_VERSION, $this->getApplicationVersionRequired(), '<')) {
-                $errors[] = array(self::E_PACKAGE_VERSION, $this->getApplicationVersionRequired());
+                $errors[] = [self::E_PACKAGE_VERSION, $this->getApplicationVersionRequired()];
             }
         }
 
         if (count($errors) > 0) {
             $e = $this->app->make('error');
-            foreach($errors as $error) {
+            foreach ($errors as $error) {
                 $e->add($this->getErrorText($error));
             }
+
             return $e;
         } else {
             return true;
@@ -518,7 +514,7 @@ abstract class Package implements LocalizablePackageInterface
 
     protected function getErrorText($result)
     {
-        $errorText = array(
+        $errorText = [
             self::E_PACKAGE_INSTALLED => t("You've already installed that package."),
             self::E_PACKAGE_NOT_FOUND => t("Invalid Package."),
             self::E_PACKAGE_VERSION => t("This package requires concrete5 version %s or greater."),
@@ -534,9 +530,9 @@ abstract class Package implements LocalizablePackageInterface
                 'This package isn\'t currently available for this version of concrete5. Please contact the maintainer of this package for assistance.'
             ),
             self::E_PACKAGE_THEME_ACTIVE => t('This package contains the active site theme, please change the theme before uninstalling.'),
-        );
+        ];
 
-        $testResultsText = array();
+        $testResultsText = [];
         if (is_array($result)) {
             $et = $errorText[$result[0]];
             array_shift($result);
@@ -555,15 +551,15 @@ abstract class Package implements LocalizablePackageInterface
      */
     public function testForUninstall()
     {
-        $errors = array();
+        $errors = [];
         $manager = new Manager($this->app);
 
         /**
-         * @var $driver ItemInterface
+         * @var ItemInterface
          */
         $driver = $manager->driver('theme');
         $themes = $driver->getItems($this->getPackageEntity());
-        /** @var Theme[] $themes */
+/** @var Theme[] $themes */
 
         // Step 1, check for active themes
         $active_theme = Theme::getSiteTheme();
@@ -576,9 +572,10 @@ abstract class Package implements LocalizablePackageInterface
 
         if (count($errors) > 0) {
             $e = $this->app->make('error');
-            foreach($errors as $error) {
+            foreach ($errors as $error) {
                 $e->add($this->getErrorText($error));
             }
+
             return $e;
         } else {
             return true;
@@ -602,6 +599,7 @@ abstract class Package implements LocalizablePackageInterface
             if (!$ret) {
                 $e = \Core::make('error');
                 $e->add($this->getErrorText(self::E_PACKAGE_MIGRATE_BACKUP));
+
                 return $e;
             } else {
                 $this->backedUpFname = $trashName;
@@ -640,10 +638,10 @@ abstract class Package implements LocalizablePackageInterface
     {
         // Support for the legacy method for backwards compatibility
         if (method_exists($this, 'getPackageEntityPath')) {
-            return array($this->getPackageEntityPath());
+            return [$this->getPackageEntityPath()];
         }
         // If we're using a legacy package, we scan the entire src directory
-        return array($this->getPackagePath() . DIRECTORY_SEPARATOR . DIRNAME_CLASSES);
+        return [$this->getPackagePath() . DIRECTORY_SEPARATOR . DIRNAME_CLASSES];
     }
 
     /**
@@ -734,7 +732,7 @@ abstract class Package implements LocalizablePackageInterface
         // now we refresh all blocks
         $manager = new Manager($this->app);
         $items = $manager->driver('block_type')->getItems($this->getPackageEntity());
-        foreach($items as $item) {
+        foreach ($items as $item) {
             $item->refresh();
         }
 
@@ -758,17 +756,19 @@ abstract class Package implements LocalizablePackageInterface
     }
 
     /**
-     * Get the namespace of the package by the package handle
+     * Get the namespace of the package by the package handle.
      *
-     * @param boolean $withLeadingBacksalsh
+     * @param bool $withLeadingBacksalsh
+     *
      * @return string
      */
     public function getNamespace($withLeadingBacksalsh = false)
     {
         $leadingBkslsh = '';
-        if($withLeadingBacksalsh){
+        if ($withLeadingBacksalsh) {
             $leadingBkslsh = '\\';
         }
+
         return $leadingBkslsh . 'Concrete\\Package\\' . camelcase($this->getPackageHandle());
     }
 
@@ -790,17 +790,18 @@ abstract class Package implements LocalizablePackageInterface
             // Add the core driver to it so packages can extend the core and not break.
             $driverImpl->addDriver($coreDriver->getDriver(), $coreDriver->getNamespace());
 
-            foreach($drivers as $driver) {
+            foreach ($drivers as $driver) {
                 $driverImpl->addDriver($driver->getDriver(), $driver->getNamespace());
             }
             $config->setMetadataDriverImpl($driverImpl);
             $em = EntityManager::create(\Database::connection(), $config);
+
             return $em;
         }
     }
 
     /**
-     * Destroys all proxies related to a package
+     * Destroys all proxies related to a package.
      */
     protected function destroyProxyClasses(\Doctrine\ORM\EntityManagerInterface $em)
     {
@@ -815,7 +816,7 @@ abstract class Package implements LocalizablePackageInterface
                 continue;
             }
             $proxyFileName = $proxyGenerator->getProxyFileName($class->getName(), $config->getProxyDir());
-            if(file_exists($proxyFileName)){
+            if (file_exists($proxyFileName)) {
                 @unlink($proxyFileName);
             }
         }
@@ -831,7 +832,7 @@ abstract class Package implements LocalizablePackageInterface
 
     /**
      * @deprecated
-     * This should be handled by the Concrete\Core\Entity\Package object, not by this object.
+     * This should be handled by the Concrete\Core\Entity\Package object, not by this object
      */
     public function getPackageID()
     {
@@ -840,5 +841,4 @@ abstract class Package implements LocalizablePackageInterface
             return $this->getPackageEntity()->getPackageID();
         }
     }
-
 }
