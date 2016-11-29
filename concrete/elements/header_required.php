@@ -1,4 +1,6 @@
 <?php
+use Concrete\Core\Support\Facade\Application;
+
 defined('C5_EXECUTE') or die("Access Denied.");
 
 $c = Page::getCurrentPage();
@@ -7,8 +9,8 @@ $isEditMode = false;
 $isArrangeMode = false;
 $scc = false;
 $defaultPageTitle = isset($pageTitle) && $pageTitle ? $pageTitle : null;
-
-$config = \Core::make('site')->getSite()->getConfigRepository();
+$app = Application::getFacadeApplication();
+$config = $app->make('site')->getSite()->getConfigRepository();
 
 if (is_object($c)) {
     $cp = new Permissions($c);
@@ -34,11 +36,11 @@ if (is_object($c)) {
             if ($c->isSystemPage()) {
                 $pageTitle = t($pageTitle);
             }
-            $seo = Core::make('helper/seo');
+            $seo = $app->make('helper/seo');
             if (!$seo->hasCustomTitle()) {
                 $seo->addTitleSegmentBefore($pageTitle);
             }
-            $seo->setSiteName(tc('SiteName', \Core::make('site')->getSite()->getSiteName()));
+            $seo->setSiteName(tc('SiteName', $app->make('site')->getSite()->getSiteName()));
             $seo->setTitleFormat(Config::get('concrete.seo.title_format'));
             $seo->setTitleSegmentSeparator(Config::get('concrete.seo.title_segment_separator'));
             $pageTitle = $seo->getTitle();
@@ -136,7 +138,7 @@ if ($u->isRegistered()) {
 }
 if (is_object($cp)) {
     View::element('page_controls_header', ['cp' => $cp, 'c' => $c]);
-    $cih = Core::make('helper/concrete/ui');
+    $cih = $app->make('helper/concrete/ui');
     if ($cih->showNewsflowOverlay()) {
         $v->addFooterItem('<script type="text/javascript">$(function() { new ConcreteNewsflowDialog().open(); });</script>');
     }
