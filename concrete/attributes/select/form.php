@@ -1,24 +1,14 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");
-
-/*
- * Checkbox list.
+	
+/**
+ * Select2 Multiple Menu
  */
 if ($akSelectAllowMultipleValues && !$akSelectAllowOtherValues) {
-    $form = Loader::helper('form');
-    $options = $controller->getOptions();
-    foreach ($options as $opt) {
-        ?>
-
-		<div class="checkbox"><label>
-				<?=$form->checkbox($view->field('atSelectOptionValue') . '[]', $opt->getSelectAttributeOptionID(), in_array($opt->getSelectAttributeOptionID(), $selectedOptionIDs));
-        ?>
-				<?=$opt->getSelectAttributeOptionDisplayValue()?>
-			</label>
-		</div>
-
-
-	<?php
-    }
+	$value = ($_SERVER['REQUEST_METHOD'] == 'POST') ? $controller->request('atSelectOptionValue') : implode(',', array_values($selectedOptions));
+	foreach($controller->getOptions() as $option) {
+		$options[] = ['id' => $option->getSelectAttributeOptionID(), 'text' => $option->getSelectAttributeOptionDisplayValue()];
+	}
+	echo '<input type="hidden" data-select-and-add="'.$akID.'" style="width: 100%" name="'.$view->field('atSelectOptionValue').'" value="'.$value.'" />';
 }
 
 /*

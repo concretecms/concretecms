@@ -285,16 +285,19 @@ class Controller extends AttributeTypeController
             }
         } else {
             if ($akSelectAllowMultipleValues && !$akSelectAllowOtherValues) {
-                // checkbox list.  No new options.
-                $options = array();
-                if (is_array($data['atSelectOptionValue'])) {
-                    foreach ($data['atSelectOptionValue'] as $optionID) {
-                        $option = $this->getOptionByID($optionID);
-                        if (is_object($option)) {
-                            $options[] = $option;
-                        }
-                    }
-                }
+				// Select2 list.  No new options.
+				$options = array();
+				if (!empty($data['atSelectOptionValue'])) {
+					// Explode values
+					$optionIDs = explode(',', $data['atSelectOptionValue']);
+					foreach ($optionIDs as $optionID) {
+						// Get option by id
+						$option = Option::getByID($optionID);
+						// Add option to array
+						if ($option instanceof Option)
+							$options[] = $option;
+					}
+				}
                 return $this->createAttributeValue($options);
             } else {
                 if (!$akSelectAllowMultipleValues && $akSelectAllowOtherValues) {
