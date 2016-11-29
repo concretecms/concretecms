@@ -33,12 +33,12 @@ if (is_object($c)) {
         // we aren't getting it dynamically.
         $pageTitle = $c->getAttribute('meta_title');
         if (!$pageTitle) {
-            $pageTitle = $c->getCollectionName();
-            if ($c->isSystemPage()) {
-                $pageTitle = t($pageTitle);
-            }
             $seo = $app->make('helper/seo');
             if (!$seo->hasCustomTitle()) {
+                $pageTitle = $c->getCollectionName();
+                if ($c->isSystemPage()) {
+                    $pageTitle = t($pageTitle);
+                }
                 $seo->addTitleSegmentBefore($pageTitle);
             }
             $seo->setSiteName(tc('SiteName', $app->make('site')->getSite()->getSiteName()));
