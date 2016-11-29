@@ -1,5 +1,6 @@
 <?php
 use Concrete\Core\Support\Facade\Application;
+use Symfony\Component\EventDispatcher\GenericEvent;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
@@ -109,7 +110,7 @@ if (($appleIconFID = (int) $config->get('misc.iphone_home_screen_thumbnail_fid')
 }
 
 // Generate and dispatch an event, to let other Add-Ons make use of the available (meta) tags/page title
-$event = new \Symfony\Component\EventDispatcher\GenericEvent();
+$event = new GenericEvent();
 $event->setArgument('metaTags', $metaTags);
 $event->setArgument('linkTags', $linkTags);
 $event->setArgument('pageTitle', $pageTitle);
