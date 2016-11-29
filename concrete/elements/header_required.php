@@ -166,7 +166,7 @@ $v->markHeaderAssetPosition();
 if (empty($disableTrackingCode)) {
     echo $config->get('seo.tracking.code.header');
 }
-if (isset($scc) && is_object($scc)) {
+if ($scc) {
     ?>
     <style type="text/css"><?php echo $scc->getValue(); ?></style>
     <?php
