@@ -79,6 +79,7 @@ if (is_object($c)) {
     }
 } else {
     $cID = 1;
+    $c = null;
 }
 $metaTags = [];
 $metaTags['charset'] = sprintf('<meta http-equiv="content-type" content="text/html; charset=%s"/>', APP_CHARSET);
@@ -88,7 +89,7 @@ if ($pageDescription) {
 if ($pageMetaKeywords) {
     $metaTags['keywords'] = sprintf('<meta name="keywords" content="%s"/>', htmlspecialchars($pageMetaKeywords, ENT_COMPAT, APP_CHARSET));
 }
-if ($c->getAttribute('exclude_search_index')) {
+if ($c !== null && $c->getAttribute('exclude_search_index')) {
     $metaTags['robots'] = sprintf('<meta name="robots" content="%s"/>', 'noindex');
 }
 $metaTags['generator'] = sprintf('<meta name="generator" content="%s"/>', 'concrete5' . ($appConfig->get('concrete.misc.app_version_display_in_header') ? ' - ' . APP_VERSION : null));
@@ -171,4 +172,6 @@ if ($scc) {
     <style type="text/css"><?php echo $scc->getValue(); ?></style>
     <?php
 }
-echo $c->getAttribute('header_extra_content');
+if (!c !== null) {
+    echo $c->getAttribute('header_extra_content');
+}
