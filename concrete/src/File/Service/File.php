@@ -182,17 +182,17 @@ class File
 
         foreach ($iterator as $path) {
             if ($path->isDir()) {
-                if (!rmdir($path->__toString())) {
+                if (!@rmdir($path->__toString())) {
                     return false;
                 }
             } else {
-                if (!unlink($path->__toString())) {
+                if (!@unlink($path->__toString())) {
                     return false;
                 }
             }
         }
         if ($inc) {
-            if (!rmdir($source)) {
+            if (!@rmdir($source)) {
                 return false;
             }
         }
