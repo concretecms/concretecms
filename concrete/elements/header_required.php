@@ -11,6 +11,9 @@ $scc = false;
 if (!isset($pageTitle) || !is_string($pageTitle) || $pageTitle === '') {
     $pageTitle = null;
 }
+if (!isset($pageDescription)) {
+    $pageDescription = null;
+}
 $defaultPageTitle = $pageTitle;
 $app = Application::getFacadeApplication();
 $config = $app->make('site')->getSite()->getConfigRepository();
@@ -51,12 +54,13 @@ if (is_object($c)) {
         }
     }
 
-    if (!isset($pageDescription) || !$pageDescription) {
+    if (!$pageDescription) {
         // we aren't getting it dynamically.
         $pageDescription = $c->getAttribute('meta_description');
         if (!$pageDescription) {
             $pageDescription = $c->getCollectionDescription();
         }
+        $pageDescription = trim($pageDescription);
     }
     if ($c->hasPageThemeCustomizations()) {
         $styleObject = $c->getCustomStyleObject();
@@ -71,7 +75,7 @@ if (is_object($c)) {
 }
 $metaTags = [];
 $metaTags['charset'] = sprintf('<meta http-equiv="content-type" content="text/html; charset=%s"/>', APP_CHARSET);
-if (trim($pageDescription) != '') {
+if ($pageDescription) {
     $metaTags['description'] = sprintf('<meta name="description" content="%s"/>', htmlspecialchars($pageDescription, ENT_COMPAT, APP_CHARSET));
 }
 $pageMetaKeywords = !isset($pageMetaKeywords) || !$pageMetaKeywords ? $c->getCollectionAttributeValue('meta_keywords') : $pageMetaKeywords;
