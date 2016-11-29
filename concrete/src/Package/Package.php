@@ -859,8 +859,8 @@ abstract class Package implements LocalizablePackageInterface
      * Then you'll be able to translate these two strings in the Translator and write translated strings with:
      *
      * <code>
-     * echo t('String without contex');
-     * echo tc('MyContext', 'String with contex');
+     * echo t('String without context');
+     * echo tc('MyContext', 'String with context');
      * </code>
      */
     public function getTranslatableStrings(Translations $translations)
