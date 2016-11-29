@@ -11,6 +11,7 @@ $scc = false;
 $defaultPageTitle = isset($pageTitle) && $pageTitle ? $pageTitle : null;
 $app = Application::getFacadeApplication();
 $config = $app->make('site')->getSite()->getConfigRepository();
+$appConfig = $app->make('config');
 
 if (is_object($c)) {
     $cp = new Permissions($c);
@@ -41,8 +42,8 @@ if (is_object($c)) {
                 $seo->addTitleSegmentBefore($pageTitle);
             }
             $seo->setSiteName(tc('SiteName', $app->make('site')->getSite()->getSiteName()));
-            $seo->setTitleFormat(Config::get('concrete.seo.title_format'));
-            $seo->setTitleSegmentSeparator(Config::get('concrete.seo.title_segment_separator'));
+            $seo->setTitleFormat($appConfig->get('concrete.seo.title_format'));
+            $seo->setTitleSegmentSeparator($appConfig->get('concrete.seo.title_segment_separator'));
             $pageTitle = $seo->getTitle();
         }
     }
@@ -80,7 +81,7 @@ if (trim($pageMetaKeywords) != '') {
 if ($c->getCollectionAttributeValue('exclude_search_index')) {
     $metaTags['robots'] = sprintf('<meta name="robots" content="%s"/>', 'noindex');
 }
-$metaTags['generator'] = sprintf('<meta name="generator" content="%s"/>', 'concrete5' . (Config::get('concrete.misc.app_version_display_in_header') ? ' - ' . APP_VERSION : null));
+$metaTags['generator'] = sprintf('<meta name="generator" content="%s"/>', 'concrete5' . ($appConfig->get('concrete.misc.app_version_display_in_header') ? ' - ' . APP_VERSION : null));
 if (($modernIconFID = intval($config->get('misc.modern_tile_thumbnail_fid'))) && ($modernIconFile = File::getByID($modernIconFID)) && is_object($modernIconFile)) {
     $metaTags['msapplication-TileImage'] = sprintf('<meta name="msapplication-TileImage" content="%s"/>', $modernIconFile->getURL());
     $modernIconBGColor = strval($config->get('misc.modern_tile_thumbnail_bgcolor'));
