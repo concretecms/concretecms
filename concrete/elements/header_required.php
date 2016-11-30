@@ -20,7 +20,8 @@ if (!isset($pageMetaKeywords)) {
 }
 $defaultPageTitle = $pageTitle;
 $app = Application::getFacadeApplication();
-$config = $app->make('site')->getSite()->getConfigRepository();
+$site = $app->make('site')->getSite();
+$config = $site->getConfigRepository();
 $appConfig = $app->make('config');
 
 if (is_object($c)) {
@@ -51,7 +52,7 @@ if (is_object($c)) {
                 }
                 $seo->addTitleSegmentBefore($pageTitle);
             }
-            $seo->setSiteName(tc('SiteName', $app->make('site')->getSite()->getSiteName()));
+            $seo->setSiteName(tc('SiteName', $site->getSiteName()));
             $seo->setTitleFormat($appConfig->get('concrete.seo.title_format'));
             $seo->setTitleSegmentSeparator($appConfig->get('concrete.seo.title_segment_separator'));
             $pageTitle = $seo->getTitle();
