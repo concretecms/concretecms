@@ -120,6 +120,10 @@ class StandardSearchIndexer implements SearchIndexerInterface
     public function clearIndexEntry(CategoryInterface $category, AttributeValueInterface $value, $subject)
     {
         $key = $value->getAttributeKey();
+        if (!$key->isAttributeKeySearchable()) {
+            return false; // if it's not searchable there won't be the right columns in the database
+        }
+
         $definition = $key->getController()->getSearchIndexFieldDefinition();
         if (!$definition) {
             return false;
