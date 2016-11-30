@@ -148,15 +148,14 @@ $alternateHreflangTags = $event->getArgument('alternateHreflangTags');
 <title><?php echo htmlspecialchars($pageTitle, ENT_COMPAT, APP_CHARSET); ?></title>
 
 <?php
-echo implode(PHP_EOL, $metaTags);
+echo implode(PHP_EOL, $metaTags).PHP_EOL;
 if (!empty($linkTags)) {
-    echo implode(PHP_EOL, $linkTags);
+    echo implode(PHP_EOL, $linkTags).PHP_EOL;
 }
 if (!empty($alternateHreflangTags)) {
-    echo implode(PHP_EOL, $alternateHreflangTags);
+    echo implode(PHP_EOL, $alternateHreflangTags).PHP_EOL;
 }
 ?>
-
 <script type="text/javascript">
     var CCM_DISPATCHER_FILENAME = "<?php echo DIR_REL . '/' . DISPATCHER_FILENAME; ?>";
     var CCM_CID = <?php echo $cID ? $cID : 0; ?>;
