@@ -74,7 +74,7 @@ class SessionFactory implements SessionFactoryInterface
             }
 
             $lifetime = $config->get('concrete.session.max_lifetime');
-            $options['gc_max_lifetime'] = $lifetime;
+            $options['gc_maxlifetime'] = $lifetime;
             $storage->setOptions($options);
         }
 
