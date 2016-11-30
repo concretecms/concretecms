@@ -95,7 +95,7 @@ class Identifier
             $bytes = random_bytes($length);
         } else {
             $hash = new PasswordHash(8, false);
-            $bytes = $hash->get_random_bytes(7);
+            $bytes = $hash->get_random_bytes($length);
         }
 
         return substr(bin2hex($bytes), 0, $length);
