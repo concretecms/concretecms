@@ -198,6 +198,6 @@ if ($scc) {
     <style type="text/css"><?php echo $scc->getValue(); ?></style>
     <?php
 }
-if (!c !== null) {
+if ($c !== null) {
     echo $c->getAttribute('header_extra_content');
 }
