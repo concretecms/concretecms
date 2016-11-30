@@ -58,7 +58,6 @@ abstract class AbstractCategory implements CategoryInterface, StandardSearchInde
     public function getList()
     {
         return $this->getAttributeKeyRepository()->findBy(array(
-            'akIsSearchable' => true,
             'akIsInternal' => false,
         ));
     }

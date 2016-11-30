@@ -31,7 +31,7 @@ class SearchProvider extends AbstractSearchProvider
 
     public function getCustomAttributeKeys()
     {
-        return $this->userCategory->getList();
+        return $this->userCategory->getSearchableList();
     }
 
     public function getBaseColumnSet()
