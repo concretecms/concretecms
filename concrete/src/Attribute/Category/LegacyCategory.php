@@ -80,7 +80,6 @@ class LegacyCategory implements CategoryInterface, StandardSearchIndexerInterfac
         $r = $this->entityManager->getRepository('Concrete\Core\Entity\Attribute\Key\LegacyKey');
         $attributes = $r->findBy(array(
             'category' => $this->getCategoryEntity(),
-            'akIsSearchable' => true,
             'akIsInternal' => false,
         ));
         $return = array();
