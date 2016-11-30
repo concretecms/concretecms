@@ -1,6 +1,7 @@
 <?php
 use Concrete\Core\Support\Facade\Application;
 use Symfony\Component\EventDispatcher\GenericEvent;
+use Concrete\Core\Multilingual\Page\Section\Section;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
@@ -110,6 +111,25 @@ if (($favIconFID = (int) $config->get('misc.favicon_fid')) && ($favIconFile = Fi
 if (($appleIconFID = (int) $config->get('misc.iphone_home_screen_thumbnail_fid')) && ($appleIconFile = File::getByID($appleIconFID))) {
     $linkTags['apple-touch-icon'] = sprintf('<link rel="apple-touch-icon" href="%s"/>', $appleIconFile->getURL());
 }
+$alternateHreflangTags = [];
+if ($c !== null && $config->get('multilingual.set_alternate_hreflang') && !$c->isAdminArea() && $app->make('multilingual/detector')->isEnabled()) {
+    $multilingualSection = Section::getBySectionOfSite($c);
+    if ($multilingualSection) {
+        $urlManager = $app->make('url/manager');
+        foreach (Section::getList($site) as $ms) {
+            if ($ms->getCollectionID() != $multilingualSection->getCollectionID()) {
+                $relatedID = $ms->getTranslatedPageID($c);
+                if ($relatedID) {
+                    $relatedPage = Page::getByID($relatedID);
+                    if ($relatedPage && !$relatedPage->isError()) {
+                        $url = $urlManager->resolve([$relatedPage]);
+                        $alternateHreflangTags[] = '<link rel="alternate" hreflang="'.str_replace('_', '-', $ms->getLocale()).'" href="'.$url.'" />';
+                    }
+                }
+            }
+        }
+    }
+}
 
 // Generate and dispatch an event, to let other Add-Ons make use of the available (meta) tags/page title
 $event = new GenericEvent();
@@ -117,10 +137,12 @@ $event->setArgument('metaTags', $metaTags);
 $event->setArgument('linkTags', $linkTags);
 $event->setArgument('pageTitle', $pageTitle);
 $event->setArgument('defaultPageTitle', $defaultPageTitle);
+$event->setArgument('alternateHreflangTags', $alternateHreflangTags);
 $app->make('director')->dispatch('on_header_required_ready', $event);
 $metaTags = $event->getArgument('metaTags');
 $linkTags = $event->getArgument('linkTags');
 $pageTitle = $event->getArgument('pageTitle');
+$alternateHreflangTags = $event->getArgument('alternateHreflangTags');
 ?>
 
 <title><?php echo htmlspecialchars($pageTitle, ENT_COMPAT, APP_CHARSET); ?></title>
@@ -129,6 +151,9 @@ $pageTitle = $event->getArgument('pageTitle');
 echo implode(PHP_EOL, $metaTags);
 if (!empty($linkTags)) {
     echo implode(PHP_EOL, $linkTags);
+}
+if (!empty($alternateHreflangTags)) {
+    echo implode(PHP_EOL, $alternateHreflangTags);
 }
 ?>
 
