@@ -20,7 +20,7 @@ Helpful Links:
 
 Before submitting pull requests, please be sure to read these pages:
 
-- Adopting a common coding style makes developers life easier and may be helpful in finding some kind of bugs. Furthermore, like @aembler once said, we have to be good citizens: speaking the same dialect is useful for everybody. So, please be sure to consult the [Coding-Style Guidelines](http://www.concrete5.org/documentation/developers/5.7/background/coding-style-guidelines).
+- Adopting a common coding style makes developers life easier and may be helpful in finding some kind of bugs. Furthermore, like @aembler once said, we have to be good citizens: speaking the same dialect is useful for everybody. So, please be sure to consult the [Coding-Style Guidelines](http://documentation.concrete5.org/developers/background/coding-style-guidelines).
 
   One easy, secure and fast way to fix coding style problems is using [php-cs-fixer](http://cs.sensiolabs.org/). To fix a file simply call
 
