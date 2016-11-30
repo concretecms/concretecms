@@ -560,8 +560,8 @@ return array(
         'background_info' => 'http://backgroundimages.concrete5.org/get_image_data.php',
         'videos' => 'https://www.youtube.com/user/concrete5cms/videos',
         'help' => array(
-            'developer' => 'http://www.concrete5.org/documentation/developers/5.7/',
-            'user' => 'http://www.concrete5.org/documentation/using-concrete5-7',
+            'developer' => 'http://documentation.concrete5.org/developers',
+            'user' => 'http://documentation.concrete5.org/editors',
             'forum' => 'http://www.concrete5.org/community/forums',
         ),
         'paths' => array(
