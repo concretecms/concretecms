@@ -9,6 +9,8 @@ use Marketplace;
 use Config;
 use Localization;
 use ORM;
+use Exception;
+use Concrete\Core\Support\Facade\Application;
 
 class Update
 {
@@ -91,42 +93,25 @@ class Update
      */
     protected static function getLatestAvailableUpdate()
     {
+        $update = null;
         if (function_exists('curl_init')) {
-            $curl_handle = @curl_init();
-
-            // Check to see if there are proxy settings
-            if (Config::get('concrete.proxy.host') != null) {
-                @curl_setopt($curl_handle, CURLOPT_PROXY, Config::get('concrete.proxy.host'));
-                @curl_setopt($curl_handle, CURLOPT_PROXYPORT, Config::get('concrete.proxy.port'));
-
-                // Check if there is a username/password to access the proxy
-                if (Config::get('concrete.proxy.user') != null) {
-                    @curl_setopt(
-                        $curl_handle,
-                        CURLOPT_PROXYUSERPWD,
-                        Config::get('concrete.proxy.user') . ':' . Config::get('concrete.proxy.password')
-                    );
-                }
+            $app = Application::getFacadeApplication();
+            $config = $app->make('config');
+            $client = $app->make('curl', [$config->get('concrete.updates.services.get_available_updates')]);
+            $client->getRequest()
+                ->setMethod('POST')
+                ->getPost()
+                    ->set('LOCALE', Localization::activeLocale())
+                    ->set('BASE_URL_FU', Application::getApplicationURL())
+                    ->set('APP_VERSION', APP_VERSION);
+            try {
+                $response = $client->send();
+                $update = RemoteApplicationUpdateFactory::getFromJSON($response->getBody());
+            } catch (Exception $x) {
             }
-
-            @curl_setopt($curl_handle, CURLOPT_URL, Config::get('concrete.updates.services.get_available_updates'));
-            @curl_setopt($curl_handle, CURLOPT_CONNECTTIMEOUT, 2);
-            @curl_setopt($curl_handle, CURLOPT_RETURNTRANSFER, 1);
-            @curl_setopt($curl_handle, CURLOPT_POST, true);
-            @curl_setopt($curl_handle, CURLOPT_SSL_VERIFYPEER, Config::get('app.curl.verifyPeer'));
-            $loc = Localization::getInstance();
-            @curl_setopt(
-                $curl_handle,
-                CURLOPT_POSTFIELDS,
-                'LOCALE=' . $loc->activeLocale(
-                ) . '&BASE_URL_FULL=' . Core::getApplicationURL() . '&APP_VERSION=' . APP_VERSION
-            );
-            $body = @curl_exec($curl_handle);
-
-            $update = RemoteApplicationUpdateFactory::getFromJSON($body);
-
-            return $update;
         }
+
+        return $update;
     }
 
     /**
