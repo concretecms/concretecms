@@ -52,10 +52,10 @@ if (!$error->has()) {
 
         // validate URL
         try {
-            $request = new \Zend\Http\Request();
+            $client = $app->make('http/client');
+            $request = $client->getRequest();
             $request->setUri($this_url);
-            $client = new \Zend\Http\Client();
-            $response = $client->dispatch($request);
+            $response = $client->send();
             $incoming_urls[] = $this_url;
         } catch (\Exception $e) {
             $error->add($e->getMessage());
@@ -79,10 +79,10 @@ if (!$error->has()) {
     // itterate over each incoming URL adding if relevant
     foreach ($incoming_urls as $this_url) {
         // try to D/L the provided file
-        $request = new \Zend\Http\Request();
+        $client = $app->make('http/client');
+        $request = $client->getRequest();
         $request->setUri($this_url);
-        $client = new \Zend\Http\Client();
-        $response = $client->dispatch($request);
+        $response = $client->send();
         if ($response->isSuccess()) {
             $headers = $response->getHeaders();
             $contentType = $headers->get('ContentType')->getFieldValue();
