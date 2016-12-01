@@ -11,6 +11,11 @@
 
 /* global define, URL, webkitURL, FileReader */
 
+/*
+ * concrete5
+ * the downsamplingRatio value is hard coded to 0.5 (the default is 1)
+ */
+
 ;(function ($) {
   'use strict'
 
@@ -267,7 +272,11 @@
         destHeight *= pixelRatio
         canvas.getContext('2d').scale(pixelRatio, pixelRatio)
       }
-      downsamplingRatio = options.downsamplingRatio
+
+      // concrete5
+      // downsamplingRatio = options.downsamplingRatio
+      downsamplingRatio = 0.5
+
       if (downsamplingRatio > 0 && downsamplingRatio < 1 &&
             destWidth < sourceWidth && destHeight < sourceHeight) {
         while (sourceWidth * downsamplingRatio > destWidth) {
