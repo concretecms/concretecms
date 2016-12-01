@@ -42,6 +42,7 @@ use Symfony\Component\Routing\Matcher\UrlMatcher;
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 use User;
 use View;
+use Exception;
 
 class Application extends Container
 {
@@ -202,14 +203,11 @@ class Application extends Container
                     }
                 }
 
-                if (strlen($url)) {
-                    $ch = curl_init($url);
-                    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-                    curl_setopt($ch, CURLOPT_HEADER, 0);
-                    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 1);
-                    curl_setopt($ch, CURLOPT_TIMEOUT, 1);
-                    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, $config->get('app.curl.verifyPeer'));
-                    $res = curl_exec($ch);
+                if (strlen($url) && function_exists('curl_init')) {
+                    try {
+                        $this->make('curl', [$url])->send();
+                    } catch (Exception $x) {
+                    }
                 }
             }
         }
