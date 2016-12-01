@@ -12,10 +12,10 @@ class HttpServiceProvider extends ServiceProvider
 {
     public function register()
     {
-        $singletons = array(
+        $singletons = [
             'helper/ajax' => '\Concrete\Core\Http\Service\Ajax',
             'helper/json' => '\Concrete\Core\Http\Service\Json',
-        );
+        ];
 
         foreach ($singletons as $key => $value) {
             $this->app->singleton($key, $value);
@@ -28,7 +28,7 @@ class HttpServiceProvider extends ServiceProvider
         $this->app->bind(StackInterface::class, MiddlewareStack::class);
         $this->app->bind(DelegateInterface::class, MiddlewareDelegate::class);
         $this->app->bind(DispatcherInterface::class, DefaultDispatcher::class);
-        $this->app->singleton(ServerInterface::class, function($app) {
+        $this->app->singleton(ServerInterface::class, function ($app) {
             $server = $app->build(DefaultServer::class);
 
             $config = $app['config'];

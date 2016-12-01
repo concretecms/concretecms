@@ -18,7 +18,7 @@ class Update
      * These operations are done only the first time or after at least APP_VERSION_LATEST_THRESHOLD seconds since the previous check.
      *
      * @return string|null Returns the latest available core version (eg. '5.7.3.1').
-     * If we can't retrieve the latest version and if this never succeeded previously, this function returns null.
+     * If we can't retrieve the latest version and if this never succeeded previously, this function returns null
      */
     public static function getLatestAvailableVersionNumber()
     {
