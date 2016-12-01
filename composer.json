@@ -69,7 +69,7 @@
     "concrete5/zend-queue": "dev-master",
     "zendframework/zend-mail": "2.7.*",
     "zendframework/zend-cache": "2.7.*",
-    "zendframework/zend-http": "2.5.*",
+    "zendframework/zend-http": "2.6.*",
     "zendframework/zend-feed": "2.7.*",
     "zendframework/zend-i18n": "2.7.*",
     "nesbot/carbon": "1.*",
