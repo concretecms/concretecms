@@ -92,13 +92,13 @@ class Identifier
     public function getString($length = 12)
     {
         if (function_exists('random_bytes')) {
-            $bytes = random_bytes($length);
+            $bytes = random_bytes($length / 2);
         } else {
             $hash = new PasswordHash(8, false);
-            $bytes = $hash->get_random_bytes($length);
+            $bytes = $hash->get_random_bytes($length / 2);
         }
 
-        return substr(bin2hex($bytes), 0, $length);
+        return bin2hex($bytes);
     }
 
     public function deleteKey($table, $keyCol, $uHash)
