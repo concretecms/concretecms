@@ -3,16 +3,19 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 
 use \Concrete\Core\File\EditResponse as FileEditResponse;
+use Concrete\Core\Support\Facade\Application;
+
+$app = Application::getFacadeApplication();
 
 $u = new User();
 
-$cf = Loader::helper('file');
+$cf = $app->make('helper/file');
 $fp = FilePermissions::getGlobal();
 if (!$fp->canAddFiles()) {
     die(t("Unable to add files."));
 }
 
-$error = Loader::helper('validation/error');
+$error = $app->make('helper/validation/error');
 
 if (isset($_REQUEST['fID'])) {
     // we are replacing a file
@@ -27,9 +30,9 @@ if (isset($_REQUEST['fID'])) {
 
 $r = new FileEditResponse();
 
-$valt = Loader::helper('validation/token');
-$file = Loader::helper('file');
-Loader::helper('mime');
+$valt = $app->make('helper/validation/token');
+$file = $app->make('helper/file');
+$app->make('helper/mime');
 
 // load all the incoming fields into an array
 $incoming_urls = array();
@@ -92,7 +95,7 @@ if (!$error->has()) {
                 $fname = $matches[1];
             } elseif ($contentType) {
                 // use mimetype from http response
-                $fextension = Core::make("helper/mime")->mimeToExtension($contentType);
+                $fextension = $app->make('helper/mime')->mimeToExtension($contentType);
                 if ($fextension === false) {
                     $error->add(t('Unknown mime-type: %s', $contentType));
                 } else {
