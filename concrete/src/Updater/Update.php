@@ -93,21 +93,19 @@ class Update
     protected static function getLatestAvailableUpdate()
     {
         $update = null;
-        if (function_exists('curl_init')) {
-            $app = Application::getFacadeApplication();
-            $config = $app->make('config');
-            $client = $app->make('curl', [$config->get('concrete.updates.services.get_available_updates')]);
-            $client->getRequest()
-                ->setMethod('POST')
-                ->getPost()
-                    ->set('LOCALE', Localization::activeLocale())
-                    ->set('BASE_URL_FU', Application::getApplicationURL())
-                    ->set('APP_VERSION', APP_VERSION);
-            try {
-                $response = $client->send();
-                $update = RemoteApplicationUpdateFactory::getFromJSON($response->getBody());
-            } catch (Exception $x) {
-            }
+        $app = Application::getFacadeApplication();
+        $config = $app->make('config');
+        $client = $app->make('http/client')->setUri($config->get('concrete.updates.services.get_available_updates'));
+        $client->getRequest()
+            ->setMethod('POST')
+            ->getPost()
+                ->set('LOCALE', Localization::activeLocale())
+                ->set('BASE_URL_FU', Application::getApplicationURL())
+                ->set('APP_VERSION', APP_VERSION);
+        try {
+            $response = $client->send();
+            $update = RemoteApplicationUpdateFactory::getFromJSON($response->getBody());
+        } catch (Exception $x) {
         }
 
         return $update;
