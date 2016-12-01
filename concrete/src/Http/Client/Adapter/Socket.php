@@ -2,6 +2,8 @@
 namespace Concrete\Core\Http\Client\Adapter;
 
 use Zend\Http\Client\Adapter\Proxy as ZendProxySocket;
+use Zend\Http\Client\Adapter\Exception\TimeoutException as ZendTimeoutException;
+use Concrete\Core\File\Exception\RequestTimeoutException;
 
 class Socket extends ZendProxySocket
 {
@@ -25,5 +27,21 @@ class Socket extends ZendProxySocket
             $options['timeout'] = $timeout;
         }
         parent::setOptions($options);
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @throws RequestTimeoutException
+     *
+     * @see ZendProxySocket::_checkSocketReadTimeout()
+     */
+    protected function _checkSocketReadTimeout()
+    {
+        try {
+            parent::_checkSocketReadTimeout();
+        } catch (ZendTimeoutException $x) {
+            throw new RequestTimeoutException(t('Request timed out.'));
+        }
     }
 }
