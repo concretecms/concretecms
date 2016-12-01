@@ -1,5 +1,5 @@
 <?php
-namespace Concrete\Core\Http;
+namespace Concrete\Core\Http\Client\Adapter;
 
 use Zend\Http\Client\Adapter\Curl as ZendCurl;
 use Concrete\Core\File\Exception\RequestTimeoutException;
