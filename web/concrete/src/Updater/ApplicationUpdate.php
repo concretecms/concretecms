@@ -153,6 +153,9 @@ class ApplicationUpdate
         }
         $overrides = id(Environment::get())->getOverrideList();
         $request->getPost()->set('overrides', $overrides);
+        $info = \Core::make('\Concrete\Core\System\Info');
+        $info = $info->getJSONOBject();
+        $request->getPost()->set('environment', json_encode($info));
 
         $client = new Client();
         $client->setMethod('POST');
