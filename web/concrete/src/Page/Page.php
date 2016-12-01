@@ -48,6 +48,9 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     protected $blocksAliasedFromMasterCollection = null;
     protected $cIsSystemPage = false;
     protected $cPointerOriginalID = null;
+
+    public $cParentID;
+
     /**
      * @param string $path /path/to/page
      * @param string $version ACTIVE or RECENT
