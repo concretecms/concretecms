@@ -1291,9 +1291,18 @@ return array(
             ),
         ),
     ),
+    // cURL options
     'curl' => array(
+        // FALSE to stop cURL from verifying the peer's certificate.
         'verifyPeer' => true,
+        // The name of a file holding one or more certificates to verify the peer with (used only if verifyPeer is not falsy).
+        'caInfo' => '',
+        // A directory that holds multiple CA certificates to verify the peer with (used only if verifyPeer is not falsy).
+        'caPath' => '',
+        // The number of seconds to wait while trying to connect. Use 0 to wait indefinitely.
         'connectionTimeout' => 5,
+        // The maximum number of seconds to allow cURL functions to execute.
+        'responseTimeout' => 30,
     ),
 
     // HTTP middleware for processing http requests
