@@ -30,7 +30,7 @@ class HttpServiceProvider extends ServiceProvider
         $this->app->singleton(ServerInterface::class, function($app) {
             $server = $app->build(DefaultServer::class);
 
-            $config = $this->app['config'];
+            $config = $app['config'];
             foreach ($config->get('app.middleware') as $middleware) {
                 if (is_array($middleware)) {
                     $server->addMiddleware($app->make($middleware['class']), $middleware['priority']);
