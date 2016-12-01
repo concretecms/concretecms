@@ -5,10 +5,6 @@ use Concrete\Core\Block\BlockType\BlockType;
 use Concrete\Core\Cache\Page\PageCache;
 use Concrete\Core\Cache\Page\PageCacheRecord;
 use Concrete\Core\Cache\OpCache;
-use Concrete\Core\Database\Connection\Connection;
-use Concrete\Core\Database\EntityManager\Driver\DriverInterface;
-use Concrete\Core\Database\EntityManager\Provider\PackageProvider;
-use Concrete\Core\Database\EntityManager\Provider\PackageProviderFactory;
 use Concrete\Core\Database\EntityManagerConfigUpdater;
 use Concrete\Core\Entity\Site\Site;
 use Concrete\Core\Foundation\ClassLoader;
@@ -18,7 +14,6 @@ use Concrete\Core\Foundation\Runtime\RuntimeInterface;
 use Concrete\Core\Http\DispatcherInterface;
 use Concrete\Core\Localization\Localization;
 use Concrete\Core\Logging\Query\Logger;
-use Concrete\Core\Routing\DispatcherRouteCallback;
 use Concrete\Core\Routing\RedirectResponse;
 use Concrete\Core\Updater\Update;
 use Concrete\Core\Url\Url;
@@ -35,12 +30,8 @@ use Concrete\Core\Support\Facade\Package;
 use Page;
 use Redirect;
 use Concrete\Core\Http\Request;
-use Route;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Exception\ResourceNotFoundException;
-use Symfony\Component\Routing\Matcher\UrlMatcher;
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
-use User;
 use View;
 use Exception;
 
@@ -48,7 +39,7 @@ class Application extends Container
 {
     protected $installed = null;
     protected $environment = null;
-    protected $packages = array();
+    protected $packages = [];
 
     /**
      * Turns off the lights.
@@ -57,7 +48,7 @@ class Application extends Container
      *      Add `'jobs' => true` to disable scheduled jobs
      *      Add `'log_queries' => true` to disable query logging
      */
-    public function shutdown($options = array())
+    public function shutdown($options = [])
     {
         \Events::dispatch('on_shutdown');
 
@@ -75,7 +66,7 @@ class Application extends Container
                 (!isset($options['log_queries']) || $options['log_queries'] == false)) {
                 $connection = Database::getActiveConnection();
                 if ($logger->shouldLogQueries($r)) {
-                    $loggers = array();
+                    $loggers = [];
                     $configuration = $connection->getConfiguration();
                     $loggers[] = $configuration->getSQLLogger();
                     $configuration->setSQLLogger(null);
@@ -102,6 +93,7 @@ class Application extends Container
 
     /**
      * @param \Concrete\Core\Http\Request $request
+     *
      * @deprecated Use the dispatcher object to dispatch
      */
     public function dispatch(Request $request)
@@ -142,7 +134,8 @@ class Application extends Container
         $sql = $connection->getDatabasePlatform()->getTruncateTableSQL('FileImageThumbnailPaths');
         try {
             $connection->executeUpdate($sql);
-        } catch(\Exception $e) {}
+        } catch (Exception $e) {
+        }
 
         // clear the environment overrides cache
         $env = \Environment::get();
@@ -220,7 +213,7 @@ class Application extends Container
     {
         if ($this->installed === null) {
             if (!$this->isShared('config')) {
-                throw new \Exception('Attempting to check install status before application initialization.');
+                throw new Exception('Attempting to check install status before application initialization.');
             }
 
             $this->installed = $this->make('config')->get('concrete.installed');
@@ -373,7 +366,6 @@ class Application extends Container
             // If the trailing slash doesn't match the config, return a redirect response
             if (($trailing_slashes && substr($path, -1) != '/') ||
                 (!$trailing_slashes && substr($path, -1) == '/')) {
-
                 $parsed_url = Url::createFromUrl($request->getUri(),
                 $trailing_slashes ? Url::TRAILING_SLASHES_ENABLED : Url::TRAILING_SLASHES_DISABLED);
 
@@ -460,7 +452,7 @@ class Application extends Container
     /**
      * Detect the application's current environment.
      *
-     * @param  array|string|Callable  $environments
+     * @param  array|string|callable  $environments
      *
      * @return string
      */
@@ -487,11 +479,12 @@ class Application extends Container
      *
      * @param  string $concrete
      * @param  array $parameters
+     *
      * @return mixed
      *
      * @throws BindingResolutionException
      */
-    public function build($concrete, array $parameters = array())
+    public function build($concrete, array $parameters = [])
     {
         $object = parent::build($concrete, $parameters);
         if (is_object($object) && $object instanceof ApplicationAwareInterface) {

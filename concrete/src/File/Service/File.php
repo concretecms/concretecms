@@ -319,10 +319,10 @@ class File
                     $response = $client->send();
                 } catch (RequestTimeoutException $x) {
                     throw $x;
-                }
-                catch (Exception $x) {
+                } catch (Exception $x) {
                     $response = null;
                 }
+
                 return $response ? $response->getBody() : false;
             }
         } else {
@@ -463,10 +463,10 @@ class File
     /**
      * Try to set the executable bit of a file.
      *
-     * @param string $file The full path.
+     * @param string $file The full path
      * @param string $who One of 'user', 'group', 'all'
      *
-     * @throws Exception Throws an exception in case of errors.
+     * @throws Exception Throws an exception in case of errors
      */
     public function makeExecutable($file, $who = 'all')
     {
