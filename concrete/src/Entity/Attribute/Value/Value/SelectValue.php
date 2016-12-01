@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  * @ORM\Table(name="atSelect")
  */
-class SelectValue extends AbstractValue implements \Iterator
+class SelectValue extends AbstractValue implements \IteratorAggregate
 {
     /**
      * @ORM\ManyToMany(targetEntity="SelectValueOption", inversedBy="values", cascade={"persist"})
@@ -65,35 +65,8 @@ class SelectValue extends AbstractValue implements \Iterator
         return $str;
     }
 
-    public function rewind()
+    public function getIterator()
     {
-        $this->selectedOptions->getIterator()->rewind();
+        return $this->selectedOptions->getIterator();
     }
-
-    public function valid()
-    {
-        $this->selectedOptions->getIterator()->valid();
-    }
-
-
-    public function current()
-    {
-        return $this->selectedOptions->getIterator()->current();
-    }
-
-    public function key()
-    {
-        return $this->selectedOptions->getIterator()->key();
-    }
-
-    public function next()
-    {
-        $this->selectedOptions->getIterator()->next();
-    }
-
-    public function count()
-    {
-        return $this->selectedOptions->getIterator()->count();
-    }
-
 }
