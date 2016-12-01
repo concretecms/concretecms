@@ -312,19 +312,17 @@ class File
     {
         $url = @parse_url($file);
         if (isset($url['scheme']) && isset($url['host'])) {
-            if (function_exists('curl_init')) {
-                $app = Application::getFacadeApplication();
-                $client = $app->make('curl', [$file]);
-                try {
-                    $response = $client->send();
-                } catch (RequestTimeoutException $x) {
-                    throw $x;
-                } catch (Exception $x) {
-                    $response = null;
-                }
-
-                return $response ? $response->getBody() : false;
+            $app = Application::getFacadeApplication();
+            $client = $app->make('http/client')->setUri($file);
+            try {
+                $response = $client->send();
+            } catch (RequestTimeoutException $x) {
+                throw $x;
+            } catch (Exception $x) {
+                $response = null;
             }
+
+            return $response ? $response->getBody() : false;
         } else {
             $contents = @file_get_contents($file);
             if ($contents !== false) {

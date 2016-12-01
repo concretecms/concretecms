@@ -196,9 +196,9 @@ class Application extends Container
                     }
                 }
 
-                if (strlen($url) && function_exists('curl_init')) {
+                if (strlen($url)) {
                     try {
-                        $this->make('curl', [$url])->send();
+                        $this->make('http/client')->setUri($url)->send();
                     } catch (Exception $x) {
                     }
                 }
