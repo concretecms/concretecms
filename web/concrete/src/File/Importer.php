@@ -49,9 +49,7 @@ class Importer
             $this->addImportProcessor($resizeProcessor);
             $this->addImportProcessor($qualityProcessor);
         }
-        
-        $autorotateProcessor = new AutorotateImageProcessor();
-        $this->addImportProcessor($autorotateProcessor);
+        $this->addImportProcessor(new AutorotateImageProcessor());
     }
 
     /**
