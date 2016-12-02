@@ -70,7 +70,7 @@ class Factory
     {
         $options = $this->getOptions($config);
 
-        return $this->createFromOptions($options, $adapter = null);
+        return $this->createFromOptions($options, $adapter);
     }
 
     /**
