@@ -3,6 +3,8 @@ namespace Concrete\Core\Http\Client\Adapter;
 
 use Zend\Http\Client\Adapter\Curl as ZendCurl;
 use Concrete\Core\File\Exception\RequestTimeoutException;
+use Zend\Http\Client\Adapter\Exception\TimeoutException as ZendTimeoutException;
+use Zend\Http\Client\Adapter\Exception\RuntimeException as ZendRuntimeException;
 
 class Curl extends ZendCurl
 {
@@ -32,7 +34,9 @@ class Curl extends ZendCurl
     {
         try {
             return parent::write($method, $uri, $httpVersion, $headers, $body);
-        } catch (\Zend\Http\Client\Adapter\Exception\RuntimeException $x) {
+        } catch (ZendTimeoutException $x) {
+            throw new RequestTimeoutException(t('Request timed out.'));
+        } catch (ZendRuntimeException $x) {
             if (@curl_errno($this->curl) === static::ERROR_OPERATION_TIMEDOUT) {
                 throw new RequestTimeoutException(t('Request timed out.'));
             }
