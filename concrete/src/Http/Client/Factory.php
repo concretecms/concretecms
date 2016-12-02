@@ -9,17 +9,15 @@ class Factory
      * @param Repository $config
      *
      * @return array {
-     *
-     *    @var bool $sslverifypeer [always]
-     *    @var string $proxyhost [optional]
-     *    @var int $proxyport [optional]
-     *    @var string $proxyuser [optional]
-     *    @var string $proxypass [optional]
-     *    @var int $connectiontimeout [optional]
-     *    @var int $responsetimeout [optional]
-     *
-     *    @param string $sslcafile [optional]
-     *    @param string $sslcapath [optional]
+     *     @var bool $sslverifypeer [always]
+     *     @var string $proxyhost [optional]
+     *     @var int $proxyport [optional]
+     *     @var string $proxyuser [optional]
+     *     @var string $proxypass [optional]
+     *     @var int $connectiontimeout [optional]
+     *     @var int $responsetimeout [optional]
+     *     @var string $sslcafile [optional]
+     *     @var string $sslcapath [optional]
      * }
      */
     protected function getOptions(Repository $config)
@@ -61,9 +59,39 @@ class Factory
     }
 
     /**
-     * @return \Concrete\Core\Http\Client\Client
+     * Create a new HTTP Client instance starting from configuration.
+     *
+     * @param Repository $config
+     * @param string|object|null $adapter
+     *
+     * @return Client
      */
     public function createFromConfig(Repository $config, $adapter = null)
+    {
+        $options = $this->getOptions($config);
+
+        return $this->createFromOptions($options, $adapter = null);
+    }
+
+    /**
+     * Create a new HTTP Client instance starting from configuration.
+     *
+     * @param array $options {
+     *     @var bool $sslverifypeer
+     *     @var string $proxyhost
+     *     @var int $proxyport
+     *     @var string $proxyuser
+     *     @var string $proxypass
+     *     @var int $connectiontimeout
+     *     @var int $responsetimeout
+     *     @var string $sslcafile
+     *     @var string $sslcapath
+     * }
+     * @param string|object|null $adapter
+     *
+     * @return Client
+     */
+    public function createFromOptions(array $options, $adapter = null)
     {
         if ($adapter === null) {
             if (function_exists('curl_init')) {
@@ -72,7 +100,6 @@ class Factory
                 $adapter = Adapter\Socket::class;
             }
         }
-        $options = $this->getOptions($config);
         $options['adapter'] = $adapter;
         $client = new Client(null, $options);
         $adapter = $client->getAdapter();
