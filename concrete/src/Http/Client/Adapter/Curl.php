@@ -43,6 +43,7 @@ class Curl extends ZendCurl
             throw $x;
         }
     }
+
     /**
      * No error.
      * All fine. Proceed as usual.
