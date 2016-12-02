@@ -24,7 +24,7 @@ class AutorotateImageProcessor implements ProcessorInterface
         $fr = $version->getFileResource();
         $imagine = Image::getFacadeRoot()->setMetadataReader(new ExifMetadataReader());
         $image = $imagine->load($fr->read());
-        $transformation = new Transformation();
+        $transformation = new Transformation($imagine);
         $transformation->applyFilter($image, new Autorotate());
 
         $version->updateContents($image->get($ext));
