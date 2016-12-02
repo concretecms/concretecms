@@ -46,16 +46,16 @@ class ServiceProvider extends Provider
                         if ($controller instanceof GenericOauthTypeController) {
                             switch ($action) {
                                 case 'attempt_auth':
-                                    $controller->handle_authentication_attempt();
+                                    return $controller->handle_authentication_attempt();
                                     break;
                                 case 'callback':
-                                    $controller->handle_authentication_callback();
+                                    return $controller->handle_authentication_callback();
                                     break;
                                 case 'attempt_attach':
-                                    $controller->handle_attach_attempt();
+                                    return $controller->handle_attach_attempt();
                                     break;
                                 case 'attach_callback':
-                                    $controller->handle_attach_callback();
+                                    return $controller->handle_attach_callback();
                                     break;
                             }
                         }
