@@ -101,6 +101,10 @@ class Factory
             }
         }
         $options['adapter'] = $adapter;
+        if (isset($options['sslverifypeer']) && !$options['sslverifypeer']) {
+            $options['sslcafile'] = null;
+            $options['sslcapath'] = null;
+        }
         $client = new Client(null, $options);
         $adapter = $client->getAdapter();
         if ($adapter instanceof \Zend\Http\Client\Adapter\Curl) {
