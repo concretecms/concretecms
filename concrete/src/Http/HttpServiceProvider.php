@@ -45,6 +45,7 @@ class HttpServiceProvider extends ServiceProvider
         // Response Factory
         $this->app->bind(ResponseFactoryInterface::class, ResponseFactory::class);
 
+        // HTTP Client
         $this->app->bind(Client\Client::class, function ($app) {
             $factory = $app->make(Client\Factory::class);
 

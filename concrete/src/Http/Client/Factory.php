@@ -108,7 +108,7 @@ class Factory
                 $adapter->setCurlOption(CURLOPT_CAINFO, $options['sslcafile']);
             }
             if (isset($options['sslcapath'])) {
-                $adapter->setCurlOption(CURLOPT_CAPATH, $options['capath']);
+                $adapter->setCurlOption(CURLOPT_CAPATH, $options['sslcapath']);
             }
         }
 
