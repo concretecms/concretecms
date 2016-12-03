@@ -112,7 +112,7 @@ abstract class Request extends Object
         }
 
         if (!$pk->canPermissionKeyTriggerWorkflow()) {
-            throw new Exception(t('This permission key cannot start a workflow.'));
+            throw new \Exception(t('This permission key cannot start a workflow.'));
         }
 
         $pa = $pk->getPermissionAccessObject();
