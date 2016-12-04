@@ -92,11 +92,13 @@ class HttpClientTest extends PHPUnit_Framework_TestCase
             $adapterClass = $al[0];
             $result[] = [
                 $adapterClass,
+                '/this/file/does/not/exist',
                 '/this/directory/does/not/exist',
                 false,
             ];
             $result[] = [
                 $adapterClass,
+                __FILE__,
                 __DIR__,
                 false,
             ];
@@ -118,6 +120,7 @@ class HttpClientTest extends PHPUnit_Framework_TestCase
             }
             $result[] = [
                 $adapterClass,
+                'invalid',
                 $certsFolder,
                 true,
             ];
@@ -129,12 +132,13 @@ class HttpClientTest extends PHPUnit_Framework_TestCase
     /**
      * @dataProvider sslOptionsProvider
      */
-    public function testSSLOptions($adapterClass, $caPath, $shouldBeOK)
+    public function testSSLOptions($adapterClass, $caFile, $caPath, $shouldBeOK)
     {
         $this->checkValidAdapter($adapterClass, true);
 
         $client = self::$app->make(Factory::class)->createFromOptions([
             'sslverifypeer' => false,
+            'sslcafile' => $caFile,
             'sslcapath' => $caPath,
         ], $adapterClass);
         $error = null;
@@ -150,6 +154,7 @@ class HttpClientTest extends PHPUnit_Framework_TestCase
         }
         $client = self::$app->make(Factory::class)->createFromOptions([
             'sslverifypeer' => true,
+            'sslcafile' => $shouldBeOK ? null : $caFile,
             'sslcapath' => $caPath,
         ], $adapterClass);
         $error = null;
