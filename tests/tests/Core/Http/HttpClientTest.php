@@ -9,6 +9,7 @@ use Concrete\Core\Support\Facade\Application;
 use Exception;
 use PHPUnit_Framework_TestCase;
 use Zend\Http\Client\Adapter\Exception\InitializationException as ZendInitializationException;
+use Concrete\Core\File\Exception\RequestTimeoutException;
 
 class HttpClientTest extends PHPUnit_Framework_TestCase
 {
@@ -169,5 +170,28 @@ class HttpClientTest extends PHPUnit_Framework_TestCase
         } else {
             $this->assertTrue($error !== null, 'sslverifypeer turned on with incorrect SSL parameters should fail');
         }
+    }
+
+    /**
+     * @dataProvider adapterListProvider
+     */
+    public function testTimeoutOptions($adapterClass)
+    {
+        $this->checkValidAdapter($adapterClass, true);
+        // URL of a big file
+        $client = self::$app->make(Factory::class)->createFromOptions([
+            'ssltransport' => 'tls',
+            'sslverifypeer' => false,
+            'connectiontimeout' => 5,
+            'executetimeout' => 1,
+        ], $adapterClass);
+        $error = null;
+        try {
+            $client->setMethod('GET')->setUri('https://github.com/concrete5/concrete5/archive/8.0.zip')->send();
+        } catch (Exception $x) {
+            $error = $x;
+        }
+        $this->assertTrue($error !== null, 'Trying to download a big file with a tiny executetimeout should fail');
+        $this->assertTrue(get_class($error) === RequestTimeoutException::class);
     }
 }
