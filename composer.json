@@ -82,7 +82,8 @@
     "league/url": "3.3.*",
     "concrete5/doctrine-xml": "1.*",
     "symfony/yaml":"3.*",
-    "ocramius/proxy-manager": "^1.0"
+    "ocramius/proxy-manager": "^1.0",
+    "paragonie/random_compat": "^2.0"
   },
   "autoload-dev": {
     "psr-4": {
