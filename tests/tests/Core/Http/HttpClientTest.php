@@ -137,6 +137,7 @@ class HttpClientTest extends PHPUnit_Framework_TestCase
         $this->checkValidAdapter($adapterClass, true);
 
         $client = self::$app->make(Factory::class)->createFromOptions([
+            'ssltransport' => 'tls',
             'sslverifypeer' => false,
             'sslcafile' => $caFile,
             'sslcapath' => $caPath,
@@ -147,12 +148,13 @@ class HttpClientTest extends PHPUnit_Framework_TestCase
         } catch (Exception $x) {
             $error = $x;
         }
-        $this->assertNull($error);
+        $this->assertTrue($error === null, 'sslverifypeer turned off should always succeed');
 
         if ($shouldBeOK && $caPath == $certsFolder = self::SKIP_VALID_CERTS) {
             $this->markTestSkipped('Unable to find a local folder containing CA certificates');
         }
         $client = self::$app->make(Factory::class)->createFromOptions([
+            'ssltransport' => 'tls',
             'sslverifypeer' => true,
             'sslcafile' => $shouldBeOK ? null : $caFile,
             'sslcapath' => $caPath,
@@ -164,9 +166,9 @@ class HttpClientTest extends PHPUnit_Framework_TestCase
             $error = $x;
         }
         if ($shouldBeOK) {
-            $this->assertNull($error);
+            $this->assertTrue($error === null, 'sslverifypeer turned on with correct SSL parameters should succeed');
         } else {
-            $this->assertInstanceOf(ZendRuntimeException::class, $error);
+            $this->assertTrue($error !== null, 'sslverifypeer turned on with incorrect SSL parameters should fail');
         }
     }
 }
