@@ -91,14 +91,20 @@ class Identifier
      */
     public function getString($length = 12)
     {
-        if (function_exists('random_bytes')) {
-            $bytes = random_bytes($length / 2);
-        } else {
-            $hash = new PasswordHash(8, false);
-            $bytes = $hash->get_random_bytes($length / 2);
+        $size = ceil($length / 2);
+
+        try {
+            if (function_exists('random_bytes')) {
+                $bytes = random_bytes($size);
+            } else {
+                $hash = new PasswordHash(8, false);
+                $bytes = $hash->get_random_bytes($size);
+            }
+        } catch (\Exception $e) {
+            die('Could not generate a random string.');
         }
 
-        return bin2hex($bytes);
+        return substr(bin2hex($bytes), 0, $length);
     }
 
     public function deleteKey($table, $keyCol, $uHash)
