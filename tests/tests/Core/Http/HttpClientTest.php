@@ -187,7 +187,7 @@ class HttpClientTest extends PHPUnit_Framework_TestCase
         ], $adapterClass);
         $error = null;
         try {
-            $client->setMethod('GET')->setUri('https://github.com/concrete5/concrete5/archive/8.0.zip')->send();
+            $client->setMethod('GET')->setUri('http://de.releases.ubuntu.com/16.04.1/ubuntu-16.04.1-server-i386.iso')->send();
         } catch (Exception $x) {
             $error = $x;
         }
