@@ -13,7 +13,7 @@ class AutorotateImageProcessor implements ProcessorInterface
     public function shouldProcess(Version $version)
     {
         return function_exists('exif_read_data')
-                && $version->getTypeObject()->getGenericType() == FileType::T_IMAGE;
+                && $version->getTypeObject()->getName() == 'JPEG';
     }
 
     public function process(Version $version)
