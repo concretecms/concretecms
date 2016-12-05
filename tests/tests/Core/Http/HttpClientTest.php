@@ -9,7 +9,6 @@ use Concrete\Core\Support\Facade\Application;
 use Exception;
 use PHPUnit_Framework_TestCase;
 use Zend\Http\Client\Adapter\Exception\InitializationException as ZendInitializationException;
-use Zend\Http\Client\Adapter\Exception\RuntimeException as ZendRuntimeException;
 
 class HttpClientTest extends PHPUnit_Framework_TestCase
 {

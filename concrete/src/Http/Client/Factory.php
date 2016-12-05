@@ -2,10 +2,13 @@
 namespace Concrete\Core\Http\Client;
 
 use Concrete\Core\Config\Repository\Repository;
+use Concrete\Core\Support\Facade\Application;
 
 class Factory
 {
     /**
+     * Read the HTTP Client configuration.
+     *
      * @param Repository $config
      *
      * @return array {
@@ -14,17 +17,19 @@ class Factory
      *     @var int $proxyport [optional]
      *     @var string $proxyuser [optional]
      *     @var string $proxypass [optional]
-     *     @var int $connectiontimeout [optional]
-     *     @var int $responsetimeout [optional]
-     *     @var string $sslcafile [optional]
-     *     @var string $sslcapath [optional]
+     *     ... and all other options set in app.curl
      * }
      */
     protected function getOptions(Repository $config)
     {
-        $result = [
-            'sslverifypeer' => (bool) $config->get('app.curl.verifyPeer'),
-        ];
+        $result = $config->get('app.curl');
+        if (!is_array($result)) {
+            $result = [];
+        }
+        if (isset($result['verifyPeer'])) {
+            $result['sslverifypeer'] = (bool) $result['verifyPeer'];
+        }
+        unset($result['verifyPeer']);
         $proxyHost = $config->get('concrete.proxy.host');
         if ($proxyHost) {
             $result['proxyhost'] = $proxyHost;
@@ -37,22 +42,6 @@ class Factory
                 $result['proxyuser'] = $proxyUser;
                 $result['proxypass'] = (string) $config->get('concrete.proxy.password');
             }
-        }
-        $connectionTimeout = $config->get('app.curl.connectionTimeout');
-        if (is_numeric($connectionTimeout)) {
-            $result['connectiontimeout'] = (int) $connectionTimeout;
-        }
-        $responseTimeout = $config->get('app.curl.responseTimeout');
-        if (is_numeric($responseTimeout)) {
-            $result['responsetimeout'] = (int) $responseTimeout;
-        }
-        $cainfo = $config->get('app.curl.caInfo');
-        if (is_string($cainfo) && $cainfo !== '') {
-            $result['sslcafile'] = $cainfo;
-        }
-        $capath = $config->get('app.curl.caPath');
-        if (is_string($capath) && $capath !== '') {
-            $result['sslcapath'] = $path;
         }
 
         return $result;
@@ -76,25 +65,17 @@ class Factory
     /**
      * Create a new HTTP Client instance starting from configuration.
      *
-     * @param array $options {
-     *     @var bool $sslverifypeer
-     *     @var string $proxyhost
-     *     @var int $proxyport
-     *     @var string $proxyuser
-     *     @var string $proxypass
-     *     @var int $connectiontimeout
-     *     @var int $responsetimeout
-     *     @var string $sslcafile
-     *     @var string $sslcapath
-     * }
-     * @param string|object|null $adapter
+     * @param array $options See the app.curl values at concrete/config/app.php, plus the proxy options (proxyhost, proxyport, proxyuser, proxypass)
+     * @param mixed $adapter The adapter to use (defaults to Curl adapter if curl extension is installed, otherwise we'll use the Socket adapter)
      *
      * @return Client
      */
     public function createFromOptions(array $options, $adapter = null)
     {
-        if ($adapter === null) {
-            if (function_exists('curl_init')) {
+        if (!$adapter) {
+            if (isset($options['adapter']) && $options['adapter']) {
+                $adapter = $options['adapter'];
+            } elseif (function_exists('curl_init')) {
                 $adapter = Adapter\Curl::class;
             } else {
                 $adapter = Adapter\Socket::class;
@@ -105,16 +86,10 @@ class Factory
             $options['sslcafile'] = null;
             $options['sslcapath'] = null;
         }
-        $client = new Client(null, $options);
-        $adapter = $client->getAdapter();
-        if ($adapter instanceof \Zend\Http\Client\Adapter\Curl) {
-            if (isset($options['sslcafile'])) {
-                $adapter->setCurlOption(CURLOPT_CAINFO, $options['sslcafile']);
-            }
-            if (isset($options['sslcapath'])) {
-                $adapter->setCurlOption(CURLOPT_CAPATH, $options['sslcapath']);
-            }
+        if (!isset($options['streamtmpdir']) || !$options['streamtmpdir']) {
+            $options['streamtmpdir'] = Application::getFacadeApplication()->make('helper/file')->getTemporaryDirectory();
         }
+        $client = new Client(null, $options);
 
         return $client;
     }
