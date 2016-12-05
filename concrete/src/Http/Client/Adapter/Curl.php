@@ -20,8 +20,14 @@ class Curl extends ZendCurl
         if (isset($this->config['connectiontimeout'])) {
             curl_setopt($this->curl, CURLOPT_CONNECTTIMEOUT, $this->config['connectiontimeout']);
         }
-        if (isset($this->config['responsetimeout'])) {
-            curl_setopt($this->curl, CURLOPT_TIMEOUT, $this->config['responsetimeout']);
+        if (isset($this->config['executetimeout'])) {
+            curl_setopt($this->curl, CURLOPT_TIMEOUT, $this->config['executetimeout']);
+        }
+        if (isset($this->config['sslcafile'])) {
+            curl_setopt($this->curl, CURLOPT_CAINFO, $this->config['sslcafile']);
+        }
+        if (isset($this->config['sslcapath'])) {
+            curl_setopt($this->curl, CURLOPT_CAPATH, $this->config['sslcapath']);
         }
     }
 

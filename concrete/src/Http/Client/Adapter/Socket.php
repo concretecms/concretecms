@@ -3,6 +3,7 @@ namespace Concrete\Core\Http\Client\Adapter;
 
 use Zend\Http\Client\Adapter\Proxy as ZendProxySocket;
 use Zend\Http\Client\Adapter\Exception\TimeoutException as ZendTimeoutException;
+use Zend\Http\Client\Adapter\Exception\RuntimeException as ZendRumtimeException;
 use Concrete\Core\File\Exception\RequestTimeoutException;
 
 class Socket extends ZendProxySocket
@@ -10,23 +11,21 @@ class Socket extends ZendProxySocket
     /**
      * {@inheritdoc}
      *
-     * @see ZendProxySocket::setOptions()
+     * @see ZendProxySocket::connect()
      */
-    public function setOptions($options = [])
+    public function connect($host, $port = 80, $secure = false)
     {
-        $timeout = null;
-        if (isset($options['connectiontimeout'])) {
-            $timeout = ($timeout === null) ? $options['connectiontimeout'] : max($timeout, $options['connectiontimeout']);
-            unset($options['connectiontimeout']);
+        $timeout = $this->config['timeout'] ? $this->config['timeout'] : null;
+        if (isset($this->config['connectiontimeout'])) {
+            $this->config['timeout'] = $this->config['connectiontimeout'];
         }
-        if (isset($options['responsetimeout'])) {
-            $timeout = ($timeout === null) ? $options['responsetimeout'] : max($timeout, $options['responsetimeout']);
-            unset($options['responsetimeout']);
+        parent::connect($host, $port, $secure);
+        $this->config['timeout'] = $timeout;
+        if (isset($this->config['executetimeout'])) {
+            if (!stream_set_timeout($this->socket, (int) $this->config['executetimeout'])) {
+                throw new ZendRumtimeException('Unable to set the connection timeout');
+            }
         }
-        if ($timeout !== null) {
-            $options['timeout'] = $timeout;
-        }
-        parent::setOptions($options);
     }
 
     /**
