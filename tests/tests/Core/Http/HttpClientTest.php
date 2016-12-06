@@ -9,7 +9,6 @@ use Concrete\Core\Support\Facade\Application;
 use Exception;
 use PHPUnit_Framework_TestCase;
 use Zend\Http\Client\Adapter\Exception\InitializationException as ZendInitializationException;
-use Concrete\Core\File\Exception\RequestTimeoutException;
 
 class HttpClientTest extends PHPUnit_Framework_TestCase
 {
@@ -175,23 +174,87 @@ class HttpClientTest extends PHPUnit_Framework_TestCase
     /**
      * @dataProvider adapterListProvider
      */
-    public function testTimeoutOptions($adapterClass)
+    public function testNormalizingOptions($adapterClass)
     {
         $this->checkValidAdapter($adapterClass, true);
-        // URL of a big file
+
         $client = self::$app->make(Factory::class)->createFromOptions([
+            'SSL-VERIFYPEER' => true,
+            'proxyHost' => 'host',
+            'proxy-port' => '12345',
+            'PROXY USER' => 'me',
+            'PROXY.PASS' => null,
+            '   S S L C A F I L E ' => null,
+            'sslcapath' => null,
+            'connect Timeout' => 5,
+            'keepalive' => false,
+            'maxredirects' => 5,
+            'rfc3986strict' => '1',
+            'sslcert' => null,
+            'sslpassphrase' => null,
+            'storeresponse' => 0,
+            'strictredirects' => 'yes',
+            'user agent' => 'Test User Agent',
+            'encodecookies' => '',
+            'httpversion' => '1.1',
             'ssltransport' => 'tls',
-            'sslverifypeer' => false,
-            'connectiontimeout' => 5,
-            'executetimeout' => 1,
+            'sslallowselfsigned' => 1,
+            'persistent' => '',
+            'unknownKey' => 'Unknown value',
         ], $adapterClass);
-        $error = null;
-        try {
-            $client->setMethod('GET')->setUri('http://de.releases.ubuntu.com/16.04.1/ubuntu-16.04.1-server-i386.iso')->send();
-        } catch (Exception $x) {
-            $error = $x;
+        $adapterOptions = $client->getAdapter()->getConfig();
+        $expectedOptions = [
+            'sslverifypeer' => true,
+            'proxyhost' => 'host',
+            'proxyport' => 12345,
+            'proxyuser' => 'me',
+            'proxypass' => '',
+            'sslcafile' => null,
+            'sslcapath' => null,
+            'connecttimeout' => 5,
+            'executetimeout' => 60,
+            'keepalive' => false,
+            'maxredirects' => 5,
+            'rfc3986strict' => true,
+            'sslcert' => null,
+            'sslpassphrase' => null,
+            'storeresponse' => false,
+            'streamtmpdir' => self::$app->make('helper/file')->getTemporaryDirectory(),
+            'strictredirects' => true,
+            'useragent' => 'Test User Agent',
+            'encodecookies' => true,
+            'httpversion' => '1.1',
+            'ssltransport' => 'tls',
+            'sslallowselfsigned' => true,
+            'persistent' => false,
+        ];
+        if ($adapterClass === Curl::class) {
+            $expectedOptions['curloptions'] = [
+                CURLOPT_SSL_VERIFYPEER => $expectedOptions['sslverifypeer'],
+                CURLOPT_PROXY => $expectedOptions['proxyhost'],
+                CURLOPT_PROXYPORT => $expectedOptions['proxyport'],
+                CURLOPT_PROXYUSERPWD => $expectedOptions['proxyuser'].':'.$expectedOptions['proxypass'],
+            ];
+            unset($expectedOptions['sslverifypeer']);
+            unset($expectedOptions['proxyhost']);
+            unset($expectedOptions['proxyport']);
+            unset($expectedOptions['proxyuser']);
+            unset($expectedOptions['proxypass']);
+            ksort($expectedOptions['curloptions']);
+        } elseif ($adapterClass === Socket::class) {
+            foreach (array_keys($expectedOptions) as $key) {
+                if (preg_match('/^(proxy)(.+)$/', $key, $matches)) {
+                    $expectedOptions[$matches[1].'_'.$matches[2]] = $expectedOptions[$key];
+                    unset($expectedOptions[$key]);
+                }
+            }
         }
-        $this->assertTrue($error !== null, 'Trying to download a big file with a tiny executetimeout should fail');
-        $this->assertTrue(get_class($error) === RequestTimeoutException::class);
+        if (isset($adapterOptions['curloptions'])) {
+            ksort($adapterOptions['curloptions']);
+        }
+        foreach ($expectedOptions as $key => $value) {
+            $this->assertArrayHasKey($key, $adapterOptions);
+            $this->assertSame($value, $adapterOptions[$key], 'Checking key '.$key);
+        }
     }
 }
