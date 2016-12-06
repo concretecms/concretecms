@@ -28,10 +28,11 @@
     "symfony/http-kernel": "3.*",
     "doctrine/orm": "2.*",
     "doctrine/migrations": "1.*",
+    "doctrine/annotations": "1.2.*",
     "league/flysystem": "1.*",
     "symfony/event-dispatcher": "3.*",
     "symfony/serializer": "3.*",
-    "illuminate/container": "5.*",
+    "illuminate/container": "5.2.*",
     "illuminate/config": "4.*",
     "patchwork/utf8": "1.*",
     "oyejorge/less.php": "v1.*",
@@ -74,10 +75,12 @@
     }
   },
   "require-dev": {
-    "squizlabs/php_codesniffer": "^2.7"
+    "squizlabs/php_codesniffer": "^2.7",
+    "phpunit/phpunit": "^4.8",
+    "phpunit/dbunit": "^2.0"
   },
   "scripts": {
-    "test": "phpunit",
+    "test": "concrete/vendor/bin/phpunit",
     "phpcs": [
       "./concrete/vendor/bin/phpcs -p -s --colors --report=full --standard=psr2 --sniffs=Generic.WhiteSpace.DisallowTabIndent,Generic.PHP.DisallowShortOpenTag concrete/src concrete/controllers",
       "./concrete/vendor/bin/phpcs -p -s --colors --report=full --standard=psr2 --sniffs=Generic.PHP.DisallowShortOpenTag --ignore=\"*.js,*.css,*.less,concrete/vendor/*,concrete/src/*,concrete/controllers/*\" concrete"
