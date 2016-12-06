@@ -1,7 +1,6 @@
 <?php
 namespace Concrete\Core\Utility\Service;
 
-use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Support\Facade\Application;
 use Hautelook\Phpass\PasswordHash;
 
@@ -34,7 +33,7 @@ class Identifier
     public function generateFromBase($string, $table, $key)
     {
         $foundRecord = false;
-        $db = Application::make(Connection::class);
+        $db = Application::make('Concrete\Core\Database\Connection\Connection');
         $i = '';
         $_string = '';
         while ($foundRecord == false) {
@@ -68,7 +67,7 @@ class Identifier
     public function generate($table, $key, $length = 12, $lowercase = false)
     {
         $foundHash = false;
-        $db = Application::make(Connection::class);
+        $db = Application::make('Concrete\Core\Database\Connection\Connection');
         while ($foundHash == false) {
             $string = $this->getString($length);
             if ($lowercase) {
@@ -103,7 +102,7 @@ class Identifier
 
     public function deleteKey($table, $keyCol, $uHash)
     {
-        $db = Application::make(Connection::class);
+        $db = Application::make('Concrete\Core\Database\Connection\Connection');
         $db->Execute("DELETE FROM " . $table . " WHERE " . $keyCol . "=?", array($uHash));
     }
 }
