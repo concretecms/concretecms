@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\File\Image;
 
+use Concrete\Core\File\StorageLocation\Configuration\DefaultConfiguration;
 use Concrete\Core\File\StorageLocation\StorageLocationInterface;
 use Config;
 use Image;
@@ -158,15 +159,25 @@ class BasicThumbnailer
         $src = $configuration->getPublicURLToFile($abspath);
         $thumb = new \stdClass();
         $thumb->src = $src;
-        //this is terrible
+
+        // this is a hack, but we shouldn't go out on the network if we don't have to. We should probably
+        // add a method to the configuration to handle this. The file storage locations should be able to handle
+        // thumbnails.
+        if ($configuration instanceof DefaultConfiguration) {
+            $dimensionsPath = $configuration->getRootPath() . $abspath;
+        } else {
+            $dimensionsPath = $src;
+        }
+
         try {
             //try and get it locally, otherwise use http
-            $dimensions = getimagesize($abspath);
+            $dimensions = getimagesize($dimensionsPath);
+            $thumb->width = $dimensions[0];
+            $thumb->height = $dimensions[1];
         } catch (\Exception $e) {
-            //$dimensions = getimagesize($src);
+
         }
-        $thumb->width = $dimensions[0];
-        $thumb->height = $dimensions[1];
+
         return $thumb;
     }
 
