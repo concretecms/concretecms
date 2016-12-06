@@ -172,7 +172,7 @@ class BasicThumbnailer implements ThumbnailerInterface, ApplicationAwareInterfac
             // Use a path resolver to get the path
             /** @var Resolver $resolver */
             $resolver = $this->app[Resolver::class];
-            $abspath = $resolver->getPath($version, new CustomThumbnail($maxWidth, $maxHeight, $abspath, $cor));
+            $abspath = $resolver->getPath($version, new CustomThumbnail($maxWidth, $maxHeight, $abspath, $crop));
         }
 
         $src = $configuration->getPublicURLToFile($abspath);
