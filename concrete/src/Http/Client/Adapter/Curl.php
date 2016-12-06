@@ -15,10 +15,11 @@ class Curl extends ZendCurl
      */
     public function connect($host, $port = 80, $secure = false)
     {
+        $timeut = isset($this->config['timeout']) ? $this->config['timeout'] : null;
         unset($this->config['timeout']);
         parent::connect($host, $port, $secure);
-        if (isset($this->config['connectiontimeout'])) {
-            curl_setopt($this->curl, CURLOPT_CONNECTTIMEOUT, $this->config['connectiontimeout']);
+        if (isset($this->config['connecttimeout'])) {
+            curl_setopt($this->curl, CURLOPT_CONNECTTIMEOUT, $this->config['connecttimeout']);
         }
         if (isset($this->config['executetimeout'])) {
             curl_setopt($this->curl, CURLOPT_TIMEOUT, $this->config['executetimeout']);
@@ -29,6 +30,7 @@ class Curl extends ZendCurl
         if (isset($this->config['sslcapath'])) {
             curl_setopt($this->curl, CURLOPT_CAPATH, $this->config['sslcapath']);
         }
+        $this->config['timeout'] = $timeut;
     }
 
     /**

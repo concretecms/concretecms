@@ -30,18 +30,118 @@ class Factory
             $result['sslverifypeer'] = (bool) $result['verifyPeer'];
         }
         unset($result['verifyPeer']);
-        $proxyHost = $config->get('concrete.proxy.host');
-        if ($proxyHost) {
-            $result['proxyhost'] = $proxyHost;
-            $proxyPort = $config->get('concrete.proxy.port');
-            if ($proxyPort && is_numeric($proxyPort)) {
-                $result['proxyport'] = $proxyPort;
+        $result['proxyhost'] = $config->get('concrete.proxy.host');
+        $result['proxyport'] = $config->get('concrete.proxy.port');
+        $result['proxyuser'] = $config->get('concrete.proxy.user');
+        $result['proxypass'] = $config->get('concrete.proxy.password');
+
+        return $result;
+    }
+
+    /**
+     * Normalize the Zend HTTP Client options.
+     *
+     * @param array $options
+     *
+     * @return array
+     */
+    protected function normalizeOptions(array $options)
+    {
+        // Default values
+        $result = [
+            'sslverifypeer' => true,
+            'proxyhost' => '',
+            'proxyport' => 8080,
+            'proxyuser' => '',
+            'proxypass' => '',
+            'sslcafile' => null,
+            'sslcapath' => null,
+            'connecttimeout' => 5,
+            'executetimeout' => 60,
+            'keepalive' => false,
+            'maxredirects' => 5,
+            'rfc3986strict' => false,
+            'sslcert' => null,
+            'sslpassphrase' => null,
+            'storeresponse' => true,
+            'streamtmpdir' => null,
+            'strictredirects' => false,
+            'useragent' => 'concrete5 CMS',
+            'encodecookies' => true,
+            'httpversion' => '1.1',
+            'ssltransport' => 'tls',
+            'sslallowselfsigned' => false,
+            'persistent' => false,
+        ];
+        // Normalize the given options
+        foreach ($options as $key => $value) {
+            // Normalize the option key (exactly like Zend Http Client)
+            $key = str_replace(['-', '_', ' ', '.'], '', strtolower($key));
+            switch ($key) {
+                // Not nullable boolean values
+                case 'sslverifypeer':
+                case 'keepalive':
+                case 'rfc3986strict':
+                case 'storeresponse':
+                case 'strictredirects':
+                case 'encodecookies':
+                case 'sslallowselfsigned':
+                case 'persistent':
+                    if ($value !== null && $value !== '') {
+                        $result[$key] = (bool) $value;
+                    }
+                    break;
+                // Not nullable integer values
+                case 'proxyport':
+                case 'connecttimeout':
+                case 'executetimeout':
+                case 'maxredirects':
+                    if (is_int($value) || is_float($value) || (is_string($value) && is_numeric($value))) {
+                        $result[$key] = (int) $value;
+                    }
+                    break;
+                // Strings thay may be empty
+                case 'proxyhost':
+                case 'proxyuser':
+                case 'proxypass':
+                case 'sslpassphrase':
+                case 'useragent':
+                    $result[$key] = is_string($value) ? $value : '';
+                    break;
+                // Strings thay can't be empty
+                case 'sslcafile':
+                case 'sslcapath':
+                case 'sslcert':
+                case 'httpversion':
+                case 'ssltransport':
+                case 'streamtmpdir':
+                    if (is_string($value) && $value !== '') {
+                        $result[$key] = $value;
+                    }
+                    break;
+                // Pass through
+                default:
+                    $result[$key] = $value;
+                    break;
             }
-            $proxyUser = $config->get('concrete.proxy.user');
-            if (is_string($proxyUser) && $proxyUser !== '') {
-                $result['proxyuser'] = $proxyUser;
-                $result['proxypass'] = (string) $config->get('concrete.proxy.password');
-            }
+        }
+        // Set the temporary directory
+        if ($result['streamtmpdir'] === null) {
+            $result['streamtmpdir'] = Application::getFacadeApplication()->make('helper/file')->getTemporaryDirectory();
+        }
+        // Fix proxy options (Zend uses some of these values even if they are null)
+        if ($result['proxyhost'] === '') {
+            unset($result['proxyhost']);
+            unset($result['proxyport']);
+            unset($result['proxyuser']);
+            unset($result['proxypass']);
+        } elseif ($result['proxyuser'] === '') {
+            unset($result['proxyuser']);
+            unset($result['proxypass']);
+        }
+        // Don't set sslpassphrase is sslcert is not set (Zend tries to set the sslpassphrase even if no sslcert has been specified)
+        if ($result['sslcert'] === null) {
+            $result['sslpassphrase'] = null;
         }
 
         return $result;
@@ -72,6 +172,7 @@ class Factory
      */
     public function createFromOptions(array $options, $adapter = null)
     {
+        $options = $this->normalizeOptions($options);
         if (!$adapter) {
             if (isset($options['adapter']) && $options['adapter']) {
                 $adapter = $options['adapter'];
@@ -85,9 +186,6 @@ class Factory
         if (isset($options['sslverifypeer']) && !$options['sslverifypeer']) {
             $options['sslcafile'] = null;
             $options['sslcapath'] = null;
-        }
-        if (!isset($options['streamtmpdir']) || !$options['streamtmpdir']) {
-            $options['streamtmpdir'] = Application::getFacadeApplication()->make('helper/file')->getTemporaryDirectory();
         }
         $client = new Client(null, $options);
 

@@ -16,8 +16,8 @@ class Socket extends ZendProxySocket
     public function connect($host, $port = 80, $secure = false)
     {
         $timeout = $this->config['timeout'] ? $this->config['timeout'] : null;
-        if (isset($this->config['connectiontimeout'])) {
-            $this->config['timeout'] = $this->config['connectiontimeout'];
+        if (isset($this->config['connecttimeout'])) {
+            $this->config['timeout'] = $this->config['connecttimeout'];
         }
         parent::connect($host, $port, $secure);
         $this->config['timeout'] = $timeout;
