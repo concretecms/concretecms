@@ -1289,18 +1289,18 @@ return array(
             ),
         ),
     ),
-    // cURL options
+    // HTTP Client options
     'curl' => array(
-        // FALSE to stop cURL from verifying the peer's certificate.
+        // FALSE to stop from verifying the peer's certificate.
         'verifyPeer' => true,
         // The name of a file holding one or more certificates to verify the peer with (used only if verifyPeer is not falsy).
-        'sslcafile' => '',
+        'sslcafile' => null,
         // A directory that holds multiple CA certificates to verify the peer with (used only if verifyPeer is not falsy).
-        'sslcapath' => '',
+        'sslcapath' => null,
         // The number of seconds to wait while trying to connect. Use 0 to wait indefinitely.
-        'connectionTimeout' => 5,
-        // The maximum number of seconds to allow cURL functions to execute.
-        'executeTimeout' => 30,
+        'connecttimeout' => 5,
+        // The maximum number of seconds to allow response from remote server.
+        'executetimeout' => 60,
         // Whether to enable keep-alive connections with the server. Useful and might improve performance if several consecutive requests to the same server are performed
         'keepalive' => false,
         // Maximum number of redirections to follow (0 = none)
@@ -1323,8 +1323,6 @@ return array(
         'encodecookies' => true,
         // HTTP protocol version (usually '1.1' or '1.0')
         'httpversion' => '1.1',
-        // Enables proxied connections to use SSL even if the proxy connection itself does not (applicable only to Socket adapters)
-        'sslusecontext' => false,
         // SSL transport layer ['ssl', 'sslv2', 'sslv3', 'tls'] (applicable only to Socket adapters)
         'ssltransport' => 'tls',
         // Whether to allow self-signed certificates (applicable only to Socket adapters)
