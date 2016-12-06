@@ -27,7 +27,7 @@ if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScre
         <?php
         echo $app->make('helper/validation/token')->output('install_options_selected');
         echo View::element('dashboard/install', null, $pkg->getPackageHandle());
-        $swapper = new Concrete\Core\Package\ContentSwapper();
+        $swapper = $pkg->getContentSwapper();
         if ($swapper->allowsFullContentSwap($pkg)) {
             ?>
             <h4><?=t('Clear this Site?')?></h4>
