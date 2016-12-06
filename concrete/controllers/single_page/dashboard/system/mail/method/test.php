@@ -58,9 +58,11 @@ class Test extends DashboardPageController
                 }
                 $mail->setBody($body);
                 $mail->sendMail();
-                $this->redirect('/dashboard/system/mail/method/test/', 'successful', rawurlencode($mailRecipient));
             } catch (Exception $x) {
                 $this->error->add(t('The following error was found while trying to send the test email:') . '<br />' . nl2br(h($x->getMessage())));
+            }
+            if (!$this->error->has()) {
+                $this->redirect('/dashboard/system/mail/method/test/', 'successful', rawurlencode($mailRecipient));
             }
         }
         $this->set('mailRecipient', $mailRecipient);

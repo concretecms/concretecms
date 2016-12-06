@@ -611,10 +611,9 @@ class Stacks extends DashboardSitePageController
         foreach ($moveFolders as $moveFolder) {
             $moveFolder->getPage()->move($destinationPage);
         }
-        JsonResponse::create(
+        return JsonResponse::create(
             t2('%d item has been moved under the folder %s', '%d items have been moved under the folder %s', count($sourceIDs), count($sourceIDs), h($destinationPage->getCollectionName()))
-        )->send();
-        exit;
+        );
     }
 
     public function duplicate($cID)

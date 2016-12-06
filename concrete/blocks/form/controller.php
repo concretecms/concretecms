@@ -610,8 +610,7 @@ class Controller extends BlockController
                     $url = $response->getTargetUrl() . "?surveySuccess=1&qsid=".$this->questionSetId."#formblock".$this->bID;
                     $response->setTargetUrl($url);
                 }
-                $response->send();
-                exit;
+                return $response;
             }
         }
     }
