@@ -469,6 +469,18 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
         return array($method, $parameters);
     }
 
+    /**
+     * Check if a block action must match the associated block ID
+     *
+     * @param string $method The action name (eg 'action_...')
+     *
+     * @return bool
+     */
+    protected function blockActionMustMatchBlockID($method)
+    {
+        return false;
+    }
+
     public function isValidControllerTask($method, $parameters = array())
     {
         if (strpos($method, 'action_') !== 0) { // gotta start with action_
@@ -480,7 +492,14 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
                 // how do we get <= 1? If it's 1, that means that the method has one fewer param. That's ok because
                 // certain older blocks don't know that the last param ought to be a $bID. If they're equal it's zero
                 // which is best. and if they're greater that's ok too.
-                return true;
+                if ($this->blockActionMustMatchBlockID($method)) {
+                    $bID = array_pop($parameters);
+                    if ((is_string($bID) || is_int($bID)) && $bID == $this->bID) {
+                        return true;
+                    }
+                } else {
+                    return true;
+                }
             }
         }
 
