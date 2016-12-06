@@ -6,6 +6,7 @@ use Concrete\Core\Authentication\AuthenticationTypeFailureException;
 use Concrete\Core\Page\Desktop\DesktopList;
 use Concrete\Core\Routing\Redirect;
 use Concrete\Core\Routing\RedirectResponse;
+use Concrete\Core\Url\Url;
 use Localization;
 use Page;
 use PageController;
@@ -291,11 +292,18 @@ class Login extends PageController
                 break;
             } while (false);
 
-            if ($rUrl) {
-                return new RedirectResponse($rUrl);
-            } else {
-                return Redirect::to('/');
+            if (!$rUrl) {
+                $rUrl = $navigation->getLinkToCollection(Page::getByID(HOME_CID));
             }
+
+            $response = new RedirectResponse((string) $rUrl);
+
+            // Disable caching for response
+            $response = $response->setMaxAge(0)->setSharedMaxAge(0)->setPrivate();
+            $response->headers->addCacheControlDirective('must-revalidate', true);
+            $response->headers->addCacheControlDirective('no-store', true);
+
+            return $response;
         } else {
             $this->error->add(t('User is not registered. Check your authentication controller.'));
             $u->logout();
