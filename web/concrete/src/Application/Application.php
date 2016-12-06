@@ -292,6 +292,8 @@ class Application extends Container
             }
             $pkg->setupPackageLocalization();
         }
+        $config->set('app.bootstrap.packages_loaded', true);
+        \Localization::setupSiteLocalization();
         foreach($this->packages as $pkg) {
             if (method_exists($pkg, 'on_start')) {
                 $pkg->on_start();
@@ -300,8 +302,6 @@ class Application extends Container
                 $checkAfterStart = true;
             }
         }
-        $config->set('app.bootstrap.packages_loaded', true);
-        \Localization::setupSiteLocalization();
 
         if ($checkAfterStart) {
             foreach($this->packages as $pkg) {

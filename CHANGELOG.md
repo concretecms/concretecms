@@ -1,3 +1,9 @@
+# 5.7.5.10
+
+* Minor bug fixes
+* Fixed insecure use of non-random str_shuffle when creating user tokens
+* Improvements to update process for version 8.
+ 
 # 5.7.5.9
 
 ## New Features
