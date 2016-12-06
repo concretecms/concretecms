@@ -72,6 +72,8 @@ class Extractor
                     DIRNAME_PACKAGES.'/'.$dirname,
                     $translations
                 );
+                $packageController = $package->getController();
+                $packageController->getTranslatableStrings($translations);
             }
         }
 
