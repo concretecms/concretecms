@@ -3,7 +3,6 @@ namespace Concrete\Controller\SinglePage\Dashboard\Extend;
 
 use Concrete\Core\Error\ErrorList\ErrorList;
 use Concrete\Core\Package\BrokenPackage;
-use Concrete\Core\Package\ContentSwapper;
 use Concrete\Core\Package\ItemCategory\Manager;
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Loader;

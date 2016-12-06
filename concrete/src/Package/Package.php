@@ -113,6 +113,11 @@ abstract class Package implements LocalizablePackageInterface
         $this->app = $app;
     }
 
+    public function getContentSwapper()
+    {
+        return new ContentSwapper();
+    }
+
     public function installContentFile($file)
     {
         $ci = new ContentImporter();

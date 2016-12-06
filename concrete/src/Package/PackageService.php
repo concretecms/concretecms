@@ -204,7 +204,7 @@ class PackageService
             $p->install($data);
 
             $u = new \User();
-            $swapper = new ContentSwapper();
+            $swapper = $p->getContentSwapper();
             if ($u->isSuperUser() && $swapper->allowsFullContentSwap($p) && $data['pkgDoFullContentSwap']) {
                 $swapper->swapContent($p, $data);
             }
