@@ -45,6 +45,7 @@ var ConcreteDashboard = function() {
 							$link.attr('data-bookmark-action', 'remove-favorite');
 							$link.html('<i class="fa fa-lg fa-bookmark"></i>');
 						}
+						$link.off('click');
 						setupFavorites();
 					}
 				});
