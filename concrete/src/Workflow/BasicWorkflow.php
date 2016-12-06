@@ -130,6 +130,7 @@ class BasicWorkflow extends \Concrete\Core\Workflow\Workflow implements Assignab
                 // In that case, we transparently approve it, and skip the entry notification step.
                 $wpr = $req->approve($wp);
                 $wp->delete();
+                return $wpr;
 
             } else {
 

@@ -68,6 +68,8 @@ class ExpressCategory extends AbstractCategory
             $this->entityManager->remove($control);
         }
         $this->entityManager->flush();
+
+        parent::deleteKey($key);
     }
 
     public function getSetManager()

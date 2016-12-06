@@ -27,12 +27,6 @@ class Listener
         foreach ($setKeys as $setKey) {
             $em->remove($setKey);
         }
-
-        // Delete any attribute values found attached to this key
-        $values = $category->getAttributeValueRepository()->findBy(['attribute_key' => $key]);
-        foreach($values as $attributeValue) {
-            $category->deleteValue($attributeValue);
-        }
     }
 
 

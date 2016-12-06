@@ -44,11 +44,12 @@ if (!defined('APP_UPDATED_PASSTHRU')) {
     if (file_exists($update_file)) {
         $updates = (array) include $update_file;
         if (isset($updates['core'])) {
-            define('APP_UPDATED_PASSTHRU', $updates['core']);
-            if (is_dir(DIR_BASE . '/' . DIRNAME_UPDATES . '/' . APP_UPDATED_PASSTHRU)) {
-                require DIR_BASE . '/' . DIRNAME_UPDATES . '/' . APP_UPDATED_PASSTHRU . '/' . DIRNAME_CORE . '/' . 'dispatcher.php';
-            } elseif (file_exists(DIRNAME_UPDATES . '/' . APP_UPDATED_PASSTHRU . '/' . DIRNAME_CORE . '/' . 'dispatcher.php')) {
-                require DIRNAME_UPDATES . '/' . APP_UPDATED_PASSTHRU . '/' . DIRNAME_CORE . '/' . 'dispatcher.php';
+            define('APP_UPDATED_PASSTHRU', true);
+            define('DIRNAME_APP_UPDATED', $updates['core']);
+            if (is_dir(DIR_BASE . '/' . DIRNAME_UPDATES . '/' . DIRNAME_APP_UPDATED)) {
+                require DIR_BASE . '/' . DIRNAME_UPDATES . '/' . DIRNAME_APP_UPDATED . '/' . DIRNAME_CORE . '/' . 'dispatcher.php';
+            } elseif (file_exists(DIRNAME_UPDATES . '/' . DIRNAME_APP_UPDATED . '/' . DIRNAME_CORE . '/' . 'dispatcher.php')) {
+                require DIRNAME_UPDATES . '/' . DIRNAME_APP_UPDATED . '/' . DIRNAME_CORE . '/' . 'dispatcher.php';
             } else {
                 die(sprintf('Invalid "%s" defined. Please remove it from %s.', 'update.core', $update_file));
             }
@@ -56,6 +57,10 @@ if (!defined('APP_UPDATED_PASSTHRU')) {
         }
     }
     define('APP_UPDATED_PASSTHRU', false);
+}
+
+if (!defined('DIRNAME_APP_UPDATED') && isset($updates['core'])) {
+    define('DIRNAME_APP_UPDATED', $updates['core']);
 }
 
 /*

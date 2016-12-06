@@ -120,11 +120,19 @@ class Urls extends DashboardSitePageController
             if (!$this->token->validate('save_urls')) {
                 $this->error->add($this->token->getErrorMessage());
             }
-            if ($this->post('canonical_url') && strpos(strtolower($this->post('canonical_url')), 'http://') !== 0) {
-                $this->error->add(t('The canonical URL provided must start with "http://".'));
+
+            if ($this->post('canonical_url') &&
+                !(
+                    strpos(strtolower($this->post('canonical_url')), 'http://') === 0 ||
+                    strpos(strtolower($this->post('canonical_url')), 'https://') === 0
+                )) {
+                $this->error->add(t('The canonical URL provided must start with "http://" or "https://".'));
             }
             if ($this->post('canonical_ssl_url') && strpos(strtolower($this->post('canonical_ssl_url')), 'https://') !== 0) {
                 $this->error->add(t('The SSL canonical URL provided must start with "https://".'));
+            }
+            if ($this->post('canonical_ssl_url') && strpos(strtolower($this->post('canonical_url')), 'https://') === 0) {
+                $this->error->add(t('If your canonical URL is an SSL URL, you may not specify a separate SSL URL.'));
             }
             if (!$this->error->has()) {
                 $globalConfig = $this->app->make('config');

@@ -164,11 +164,11 @@ class Site implements TreeInterface
         }
     }
 
-    public function getSiteHomePageObject()
+    public function getSiteHomePageObject($version = 'RECENT')
     {
         $tree = $this->getSiteTreeObject();
         if (is_object($tree)) {
-            return $tree->getSiteHomePageObject();
+            return $tree->getSiteHomePageObject($version);
         }
     }
 
