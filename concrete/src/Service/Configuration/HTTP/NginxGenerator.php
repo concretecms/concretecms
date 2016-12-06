@@ -44,16 +44,16 @@ class NginxGenerator extends Generator implements GeneratorInterface
 
                 return <<<EOT
 location $DIR_REL/ {
-	set \$do_rewrite 1
+	set \$do_rewrite 1;
 	if (-f \$request_filename) {
-		set \$do_rewrite 0
-	)
+		set \$do_rewrite 0;
+	}
 	if (-f \$request_filename/index.html) {
-		set \$do_rewrite 0
-	)
+		set \$do_rewrite 0;
+	}
 	if (-f \$request_filename/index.php) {
-		set \$do_rewrite 0
-	)
+		set \$do_rewrite 0;
+	}
 	if (\$do_rewrite = "1") {
 		rewrite ^/(.*)\$ /$DISPATCHER_FILENAME/\$1 last;
 	}
