@@ -6,23 +6,30 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
 ?>
 
 <script>	
-	$(document).ready(function(){	
+	document.addEventListener('DOMContentLoaded', function () {	
 		var mySwiper = new Swiper ('.swiper-container', {
-			//SWIPER OPTIONS. Read more her: http://idangero.us/swiper/api/
+			// API: http://idangero.us/swiper/api/
+			// Demos: http://idangero.us/swiper/demos/
 			
-			//A.slider speed
+			//General
+			speed: 300,
+			autoHeight: false,
+			initialSlide: 0,
+			
+			//A.Autoplay
 			autoplay: false,
-			speed: 500,
 			
 			//B.Slides grid
 			spaceBetween: 20,
 			centeredSlides: true,
 			
-			//C.Navigation arrows
+			//C.Navigation controls
+			//c.1. arrows
 			nextButton: '.swiper-button-next',
 			prevButton: '.swiper-button-prev',
 
-			// If we need pagination (String with type of pagination. Can be "bullets", "fraction", "progress" or "custom")
+			// c.2. pagination
+			// Can be "bullets", "fraction", "progress" or "custom"
 			pagination: '.swiper-pagination',
 			paginationClickable: true,
 			paginationType: 'bullets',
@@ -31,7 +38,7 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
 			grabCursor: true,
 			
 			//E. Clicks: Set to true and click on any slide will produce transition to this slide
-			slideToClickedSlide: true,
+			slideToClickedSlide: false,
 			
 			//F. a11y // Option to enable keyboard accessibility to provide foucsable navigation buttons and basic ARIA for screen readers
 			a11y: true,
@@ -50,11 +57,11 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
 			//J. Freemode
 			freeMode: false,
 			
-			//L. EFFECTS / Could be "slide", "fade", "cube", "coverflow" or "flip"
+			//K. EFFECTS / Could be "slide", "fade", "cube", "coverflow" or "flip"
 			effect: 'slide',
 			
-			// Responsive Layout parameters
-			slidesPerView: 3, // Dont work with "effect: fade;"
+			//L. Responsive Layout parameters
+			slidesPerView: 3, // Dont work fine with "effect: fade;"
 			spaceBetween: 30,
 			// Responsive breakpoints
 			breakpoints: {
