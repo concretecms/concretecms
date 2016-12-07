@@ -9,6 +9,9 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
 	document.addEventListener('DOMContentLoaded', function () {	
 	Macy.init({
 		//docs: https://github.com/bigbitecreative/macy.js
+		//Notes:
+		// Currently only one instance of macy is supported per page. But that will be subject to change in later versions
+		// Browser support for all major browsers including IE9+
 		container: '.ccm-block-page-list-pages',
 		trueOrder: true,
 		waitForImages: false,
