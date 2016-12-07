@@ -22,6 +22,12 @@ class PageController extends Controller
     protected $replacement = null;
 
     /**
+     * array of method names that can't be called through the url
+     * @var array
+     */
+    protected $restrictedMethods = array();
+
+    /**
      * Custom request path - overrides Request::getPath() (useful when replacing controllers).
      * @var string|null
      */
@@ -226,7 +232,7 @@ class PageController extends Controller
                     && strpos($method, '__') !== 0
                     && $r->isPublic()
                     && !$r->isConstructor()
-
+                    && (is_array($this->restrictedMethods) && !in_array($method, $this->restrictedMethods))
                 ) {
                     $foundTask = true;
                 }
