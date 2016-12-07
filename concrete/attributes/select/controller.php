@@ -12,6 +12,7 @@ use Core;
 use Database;
 use Concrete\Core\Attribute\Controller as AttributeTypeController;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\QueryBuilder;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 class Controller extends AttributeTypeController
@@ -474,7 +475,7 @@ class Controller extends AttributeTypeController
 
     public function validateValue()
     {
-        return is_object($value = $this->getValue()) && ((string) $value != '');
+        return is_object($value = $this->getAttributeValue()->getValue()) && ((string) $value != '');
     }
 
     public function validateForm($p)
@@ -667,23 +668,32 @@ class Controller extends AttributeTypeController
             $builder->andWhere($builder->expr()->like('v.value', ':value'));
             $builder->setParameter('value', $keywords  . '%');
         }
+        $builder->setParameter('list', $type->getOptionList());
+        $options = array();
         switch ($this->akSelectOptionDisplayOrder) {
             case 'popularity_desc':
                 /**
-                 * @TODO make this work again - there is currently no field.
-                 * @TODO It used to be done with a group by on the selected options table.
+                 * @var $builder QueryBuilder
                  */
-                $builder->orderBy('v.popularity', 'asc');
+                $builder->addSelect("count(va.generic_value) as total");
+                $builder->leftJoin('v.values', 'va');
+                $builder->groupBy('v.avSelectOptionID');
+                $builder->orderBy('total', 'desc');
+                $r =  $builder->getQuery()->getResult();
+                foreach($r as $option) {
+                    $options[] = $option[0];
+                }
                 break;
             case 'alpha_asc':
                 $builder->orderBy('v.value', 'asc');
+                $options =  $builder->getQuery()->getResult();
                 break;
             default:
                 $builder->orderBy('v.displayOrder', 'asc');
+                $options =  $builder->getQuery()->getResult();
                 break;
         }
-        $builder->setParameter('list', $type->getOptionList());
-        return $builder->getQuery()->getResult();
+        return $options;
     }
 
     public function saveKey($data)
@@ -776,6 +786,11 @@ class Controller extends AttributeTypeController
     protected function retrieveAttributeKeySettings()
     {
         return $this->entityManager->find(SelectSettings::class, $this->attributeKey);
+    }
+
+    public function getLabelID()
+    {
+        return $this->field('atSelectOptionValue');
     }
 
 }

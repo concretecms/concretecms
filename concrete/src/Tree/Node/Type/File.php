@@ -82,7 +82,7 @@ class File extends TreeNode
     {
         $f = $this->getTreeNodeFileObject();
         if (is_object($f)) {
-            return $f->getVersion()->getDateAdded();
+            return $f->getDateAdded();
         }
     }
 
@@ -93,8 +93,10 @@ class File extends TreeNode
             $file = $this->getTreeNodeFileObject();
             if (is_object($file)) {
                 $json = $file->getJSONObject();
-                foreach($json as $key => $value) {
-                    $obj->{$key} = $value;
+                if (is_object($json)) {
+                    foreach($json as $key => $value) {
+                        $obj->{$key} = $value;
+                    }
                 }
             }
 

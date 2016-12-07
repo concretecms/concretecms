@@ -18,7 +18,55 @@ class AttributeKeyHandleGeneratorTest extends ConcreteDatabaseTestCase
 
         $handle = $generator->generate($entity);
         $this->assertEquals('teacher', $handle);
+    }
 
+    public function testMultibyteHandle()
+    {
+        $em = \Database::connection()->getEntityManager();
+
+        $entity = new \Concrete\Core\Entity\Express\Entity();
+        $entity->setName('Teacher');
+        $entity->setHandle('teacher');
+        $entity->setEntityResultsNodeId(0);
+
+        $em->persist($entity);
+        $em->flush();
+
+        $category = $entity->getAttributeKeyCategory();
+        $generator = new \Concrete\Core\Express\Attribute\AttributeKeyHandleGenerator($category);
+
+        $key1 = new \Concrete\Core\Entity\Attribute\Key\ExpressKey();
+        $key1->setAttributeKeyName('コンクリート');
+        $key1->setAttributeKeyHandle($entity);
+        $key1->setEntity($entity);
+        $handle1 = $generator->generate($key1);
+        $key1->setAttributeKeyHandle($handle1);
+
+        $em->persist($key1);
+        $em->flush();
+
+        $key2 = new \Concrete\Core\Entity\Attribute\Key\ExpressKey();
+        $key2->setAttributeKeyName('コンテンツ');
+        $key2->setEntity($entity);
+        $handle2 = $generator->generate($key2);
+        $key2->setAttributeKeyHandle($handle2);
+
+        $em->persist($key2);
+        $em->flush();
+
+        $key3 = new \Concrete\Core\Entity\Attribute\Key\ExpressKey();
+        $key3->setAttributeKeyName('コンテンツ');
+        $key3->setEntity($entity);
+        $handle3 = $generator->generate($key3);
+        $key3->setAttributeKeyHandle($handle3);
+
+        $em->persist($key3);
+        $em->flush();
+
+
+        $this->assertEquals('attribute_key', $handle1);
+        $this->assertEquals('attribute_key_2', $handle2);
+        $this->assertEquals('attribute_key_3', $handle3);
     }
 
     public function testHandle()

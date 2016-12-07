@@ -58,7 +58,6 @@ abstract class AbstractCategory implements CategoryInterface, StandardSearchInde
     public function getList()
     {
         return $this->getAttributeKeyRepository()->findBy(array(
-            'akIsSearchable' => true,
             'akIsInternal' => false,
         ));
     }
@@ -248,7 +247,11 @@ abstract class AbstractCategory implements CategoryInterface, StandardSearchInde
 
     public function deleteKey(Key $key)
     {
-        return;
+        // Delete any attribute values found attached to this key
+        $values = $this->getAttributeValueRepository()->findBy(['attribute_key' => $key]);
+        foreach($values as $attributeValue) {
+            $this->deleteValue($attributeValue);
+        }
     }
 
     public function deleteValue(AttributeValueInterface $attributeValue)

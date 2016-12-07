@@ -64,7 +64,7 @@ class Controller extends AttributeTypeController
 
     public function getDisplayValue()
     {
-        $f = $this->getValue();
+        $f = $this->getAttributeValue()->getValue();
         if (is_object($f)) {
             return '<a href="' . $f->getDownloadURL() . '">' . $f->getTitle() . '</a>';
         }
@@ -73,7 +73,7 @@ class Controller extends AttributeTypeController
     public function exportValue(\SimpleXMLElement $akn)
     {
         $av = $akn->addChild('value');
-        $fo = $this->getValue();
+        $fo = $this->getAttributeValue()->getValue();
         if (is_object($fo)) {
             $av->addChild('fID', ContentExporter::replaceFileWithPlaceHolder($fo->getFileID()));
         } else {
@@ -93,7 +93,7 @@ class Controller extends AttributeTypeController
     {
         $value = $this->getAttributeValue();
         if (is_object($value)) {
-            $value = $value->getValue();
+            $value = $this->getAttributeValue()->getValue();
             if (is_object($value)) {
                 return $value->getFileID();
             }
@@ -111,7 +111,7 @@ class Controller extends AttributeTypeController
     {
         $bf = false;
         if (is_object($this->attributeValue)) {
-            $bf = $this->getValue();
+            $bf = $this->getAttributeValue()->getValue();
         }
         $this->set('mode', $this->getAttributeKeySettings()->getMode());
         $this->set('file', $bf);
@@ -165,7 +165,7 @@ class Controller extends AttributeTypeController
 
     public function validateValue()
     {
-        $f = $this->getValue();
+        $f = $this->getAttributeValue()->getValue();
         if (!is_object($f)) {
             $e = Core::make('helper/validation/error');
             $e->add(t('You must specify a valid file for %s', $this->attributeKey->getAttributeKeyDisplayName()));

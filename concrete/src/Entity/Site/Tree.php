@@ -35,9 +35,9 @@ abstract class Tree implements TreeInterface, TypeInterface
         return $this->siteHomePageID;
     }
 
-    public function getSiteHomePageObject()
+    public function getSiteHomePageObject($version = 'RECENT')
     {
-        $home = \Page::getByID($this->siteHomePageID);
+        $home = \Page::getByID($this->siteHomePageID, $version);
         if (is_object($home) && !$home->isError()) {
             return $home;
         }

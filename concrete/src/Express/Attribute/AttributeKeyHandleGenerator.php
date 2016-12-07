@@ -37,10 +37,13 @@ class AttributeKeyHandleGenerator implements AttributeKeyHandleGeneratorInterfac
     public function generate(Key $key)
     {
         $name = $key->getAttributeKeyName();
-        $entity = $key->getEntity();
 
         $text = \Core::make('helper/text');
-        $baseHandle = substr($text->handle($name), 0, 42);
+        $handle = $text->handle($name);
+        if (!$handle) {
+            $handle = 'attribute_key';
+        }
+        $baseHandle = substr($handle, 0, 42);
 
         if ($this->handleIsAvailable($baseHandle, $key)) {
             return $baseHandle;

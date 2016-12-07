@@ -31,7 +31,7 @@ class SearchProvider extends AbstractSearchProvider implements QueryableInterfac
 
     public function getCustomAttributeKeys()
     {
-        return $this->category->getList();
+        return $this->category->getSearchableList();
     }
 
     public function getAvailableColumnSet()

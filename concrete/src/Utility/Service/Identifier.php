@@ -1,7 +1,9 @@
 <?php
 namespace Concrete\Core\Utility\Service;
 
-use Loader;
+use Concrete\Core\Database\Connection\Connection;
+use Concrete\Core\Support\Facade\Application;
+use Hautelook\Phpass\PasswordHash;
 
 /**
  * \@package Helpers
@@ -24,7 +26,6 @@ use Loader;
  */
 class Identifier
 {
-    private $letters = 'abcefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
 
     /**
      * Like generate() below, but simply appends an ever increasing number to what you provide
@@ -33,12 +34,13 @@ class Identifier
     public function generateFromBase($string, $table, $key)
     {
         $foundRecord = false;
-        $db = Loader::db();
+        $db = Application::make(Connection::class);
         $i = '';
         $_string = '';
         while ($foundRecord == false) {
             $_string = $string . $i;
-            $cnt = $db->GetOne("select count(" . $key . ") as total from " . $table . " where " . $key . " = ?", array($_string));
+            $cnt = $db->GetOne("select count(" . $key . ") as total from " . $table . " where " . $key . " = ?",
+                array($_string));
             if ($cnt < 1) {
                 $foundRecord = true;
             } else {
@@ -66,13 +68,14 @@ class Identifier
     public function generate($table, $key, $length = 12, $lowercase = false)
     {
         $foundHash = false;
-        $db = Loader::db();
+        $db = Application::make(Connection::class);
         while ($foundHash == false) {
             $string = $this->getString($length);
             if ($lowercase) {
                 $string = strtolower($string);
             }
-            $cnt = $db->GetOne("select count(" . $key . ") as total from " . $table . " where " . $key . " = ?", array($string));
+            $cnt = $db->GetOne("select count(" . $key . ") as total from " . $table . " where " . $key . " = ?",
+                array($string));
             if ($cnt < 1) {
                 $foundHash = true;
             }
@@ -81,17 +84,32 @@ class Identifier
         return $string;
     }
 
+    /**
+     * Generate a cryptographically secure random string
+     * @param int $length
+     * @return string
+     */
     public function getString($length = 12)
     {
-        $str = str_repeat($this->letters, 10);
-        $hash = substr(str_shuffle($str), 0, $length);
+        $size = ceil($length / 2);
 
-        return $hash;
+        try {
+            if (function_exists('random_bytes')) {
+                $bytes = random_bytes($size);
+            } else {
+                $hash = new PasswordHash(8, false);
+                $bytes = $hash->get_random_bytes($size);
+            }
+        } catch (\Exception $e) {
+            die('Could not generate a random string.');
+        }
+
+        return substr(bin2hex($bytes), 0, $length);
     }
 
     public function deleteKey($table, $keyCol, $uHash)
     {
-        $db = Loader::db();
-        $db->Execute("DELETE FROM ".$table." WHERE ".$keyCol."=?", array($uHash));
+        $db = Application::make(Connection::class);
+        $db->Execute("DELETE FROM " . $table . " WHERE " . $keyCol . "=?", array($uHash));
     }
 }

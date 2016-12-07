@@ -33,6 +33,13 @@ $h = Loader::helper('concrete/ui');
         </div>
         <div class="radio">
             <label>
+                <input type="radio" name="registration_type" value="manual_approve"
+                       style="" <?php echo ($registration_type == "manual_approve") ? 'checked' : '' ?> />
+                <span><?php echo t('On - approve manually') ?></span>
+            </label>
+        </div>
+        <div class="radio">
+            <label>
                 <input type="radio" name="registration_type" value="validate_email"
                        style="" <?php echo ($registration_type == "validate_email") ? 'checked' : '' ?> />
                 <span><?php echo t('Validate - anyone can create an account from Login page, once validated by email') ?></span>

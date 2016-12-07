@@ -323,23 +323,27 @@ class Version extends Object implements \Concrete\Core\Permission\ObjectInterfac
             $cvIsNew,
             $this->pThemeID,
             $this->pTemplateID,
-            $this->cvPublishDate,
+            null,
         );
-        $q = "insert into CollectionVersions (cID, cvID, cvName, cvHandle, cvDescription, cvDatePublic, " .
-             "cvDateCreated, cvComments, cvAuthorUID, cvIsNew, pThemeID, pTemplateID, cvPublishDate) " .
-             "values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        // important: cvPublishDate used to be the same for the new version as it is for the current , but it made it
+        // impossible to create a version that wasn't scheduled once you scheduled a version so I'm turning it off for
+        // now - AE
 
-        $db->executeQuery($q, $v);
+       $q = "insert into CollectionVersions (cID, cvID, cvName, cvHandle, cvDescription, cvDatePublic, " .
+            "cvDateCreated, cvComments, cvAuthorUID, cvIsNew, pThemeID, pTemplateID, cvPublishDate) " .
+            "values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-        $category = $this->getObjectAttributeCategory();
-        $values = $category->getAttributeValues($this);
-        $em = $app->make('Doctrine\ORM\EntityManagerInterface');
+       $db->executeQuery($q, $v);
 
-        foreach ($values as $value) {
-            $value = clone $value;
-            /*
-             * @var $value PageValue
-             */
+       $category = $this->getObjectAttributeCategory();
+       $values = $category->getAttributeValues($this);
+       $em = $app->make('Doctrine\ORM\EntityManagerInterface');
+
+       foreach ($values as $value) {
+           $value = clone $value;
+           /*
+            * @var $value PageValue
+            */
             $value->setVersionID($newVID);
             $em->persist($value);
         }

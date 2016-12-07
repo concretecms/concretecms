@@ -49,6 +49,7 @@ class Category implements CategoryObjectInterface
 
     /**
      * @ORM\OneToMany(targetEntity="Set", mappedBy="category", cascade={"remove"})
+     * @ORM\OrderBy({"asDisplayOrder" = "ASC"})
      * @ORM\JoinColumn(name="akCategoryID", referencedColumnName="asID")
      */
     protected $sets;
