@@ -230,7 +230,11 @@ class Key implements AttributeKeyInterface, ExportableInterface
     public function getAttributeCategory()
     {
         $manager = \Core::make('manager/attribute/category');
-        return $manager->driver($this->getAttributeKeyCategoryHandle());
+        $category = $manager->driver($this->getAttributeKeyCategoryHandle());
+        if (is_object($this->category)) {
+            $category->setCategoryEntity($this->category);
+        }
+        return $category;
     }
 
     /**
