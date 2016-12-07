@@ -506,6 +506,14 @@ return array(
         'file' => 'sitemap.xml',
         'frequency' => 'weekly',
         'priority' => 0.5,
+        'pings' => array(
+            'enabled' => true,
+            'timeout' => 10,
+            'search_engines' => array(
+                'http://www.google.com/webmasters/sitemaps/ping?sitemap=%s',
+                'http://www.bing.com/webmaster/ping.aspx?siteMap=%s',
+            ),
+        )
     ),
 
     /*
