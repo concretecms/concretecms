@@ -104,10 +104,28 @@ class GenerateSitemap extends AbstractJob
             @fclose($hFile);
             unset($hFile);
 
+            // Ping sitemap to search engines.
+            $endpointsPinged = 0;
+            $lastPing = Config::get('concrete.sitemap_xml.pings.last_ping', 0);
+            $endpoints = Config::get('concrete.sitemap_xml.pings.search_engines', array());
+            $pingsEnabled = Config::get('concrete.sitemap_xml.pings.enabled', false);
+
+            // Limit pings to once every 5 minutes.
+            if ($pingsEnabled && $lastPing < (time() - 300)) {
+                foreach ($endpoints as $endpoint) {
+                    $url = sprintf($endpoint, $urlName);
+                    if ($this->pingSearchEngine($url)) {
+                        $endpointsPinged++;
+                    }
+                }
+                Config::save('concrete.sitemap_xml.pings.last_ping', time());
+            }
+
             return t(
-                '%1$s file saved (%2$d pages).',
+                '%1$s file saved (%2$d pages). %3$d search engines pinged.',
                 sprintf('<a href="%s" target="_blank">%s</a>', $urlName, preg_replace('/^https?:\/\//i', '', $urlName)),
-                $addedPages
+                $addedPages,
+                $endpointsPinged
             );
         } catch (\Exception $x) {
             if (isset($hFile) && $hFile) {
@@ -222,5 +240,29 @@ class GenerateSitemap extends AbstractJob
         }
 
         return true;
+    }
+
+    protected function pingSearchEngine($endpointUrl)
+    {
+        $result = null;
+
+        $context  = stream_context_create(array(
+            'http' => array(
+                'method' => 'GET',
+                'user_agent' => 'concrete5/'.APP_VERSION,
+                'timeout' => Config::get('concrete.sitemap_xml.pings.timeout', 10),
+            )
+        ));
+
+        try {
+            $fp = fopen($endpointUrl, 'r', false, $context);
+            $data = stream_get_meta_data($fp);
+            fclose($fp);
+            $result = strpos($data['wrapper_data'][0], '200') > -1;
+        } catch(Exception $ex) {
+            $result = false;
+        }
+
+        return $result;
     }
 }
