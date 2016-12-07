@@ -7,6 +7,7 @@ use Concrete\Core\Entity\Page\Template as TemplateEntity;
 use Concrete\Core\Entity\Site\Site;
 use Concrete\Core\Entity\Site\SiteTree;
 use Concrete\Core\Page\Stack\Stack;
+use Concrete\Core\Page\Theme\Theme;
 use Concrete\Core\Permission\AssignableObjectTrait;
 use Concrete\Core\Site\Tree\TreeInterface;
 use Concrete\Core\Multilingual\Page\Section\Section;
@@ -1309,12 +1310,9 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
      */
     public function getCollectionThemeID()
     {
-        if ($this->vObj->pThemeID < 1 && $this->cID != HOME_CID) {
-            $c = self::getByID(HOME_CID);
-
-            return $c->getCollectionThemeID();
-        } else {
-            return $this->vObj->pThemeID;
+        $theme = $this->getCollectionThemeObject();
+        if (is_object($theme)) {
+            return $theme->getThemeID();
         }
     }
 
@@ -1353,7 +1351,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     /**
      * Returns Collection's theme object.
      *
-     * @return PageTheme
+     * @return Theme
      */
     public function getCollectionThemeObject()
     {
