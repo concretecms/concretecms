@@ -245,16 +245,13 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
     <?php endif;
     ?>
 	
-	<!-- If we need pagination -->
-		<div class="swiper-pagination"></div>
-		<div class="nav-wrapper">
-			<!-- If we need navigation buttons -->
-			<div class="swiper-button-prev"></div>
-			<div class="swiper-button-next"></div>
-			
-			
-		</div>
-		
+	<!-- Swiper. If we need pagination -->
+	<div class="swiper-pagination"></div>
+	<div class="nav-wrapper">
+		<!-- Swiper. If we need navigation buttons -->
+		<div class="swiper-button-prev"></div>
+		<div class="swiper-button-next"></div>	
+	</div>
 
 </div><!-- end .ccm-block-page-list -->
 
