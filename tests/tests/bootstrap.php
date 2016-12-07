@@ -16,6 +16,7 @@ require_once 'ConcreteDatabaseTestCase.php';
 require_once 'BlockTypeTestCase.php';
 require_once 'PageTestCase.php';
 require_once 'AttributeTestCase.php';
+require_once 'AttributeValueTestCase.php';
 require_once 'FileStorageTestCase.php';
 require_once 'UserTestCase.php';
 

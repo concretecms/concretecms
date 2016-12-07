@@ -27,14 +27,14 @@ class Controller extends AttributeTypeController
     public function getDisplayValue()
     {
         $rt = $this->app->make('helper/rating');
-        return $rt->outputDisplay($this->getValue());
+        return $rt->outputDisplay($this->attributeValue->getValue());
     }
 
     public function form()
     {
         $caValue = 0;
         if (is_object($this->attributeValue)) {
-            $caValue = $this->getValue() / 20;
+            $caValue = $this->attributeValue->getValue() / 20;
         }
         $rt = Loader::helper('form/rating');
         echo $rt->rating($this->field('value'), $caValue);

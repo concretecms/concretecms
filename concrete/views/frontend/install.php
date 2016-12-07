@@ -39,6 +39,20 @@ if (isset($successMessage)) {
     <script type="text/javascript">
         $(function () {
             var inviteToStayHere = false;
+
+            showFailure = function(message) {
+                NProgress.done();
+                inviteToStayHere = false;
+                $("#install-progress-errors").append('<div class="alert alert-danger">' + message + '</div>');
+                $("#ccm-install-intro").hide();
+                $("#install-progress-error-wrapper").show();
+                $('button[data-button=installation-complete]').prop('disabled', false).html(<?=json_encode(t('Back'))?>).on('click', function() {
+                    window.location.href='<?= $view->url('/install')?>';
+                });
+                $("#install-progress-summary").html('<span class="text-danger"><?=t('An error occurred.')?></span>');
+                $('div.ccm-install-title ul.breadcrumb li.active').text('<?=t('Installation Failed.')?>');
+            }
+
             window.onbeforeunload = function() {
                 if (inviteToStayHere) {
                     return <?=json_encode(t("concrete5 installation is still in progress: you shouldn't close this page at the moment"))?>;
@@ -64,17 +78,11 @@ if (isset($successMessage)) {
                     }
                 )
                 .fail(function (r) {
-                    inviteToStayHere = false;
-                    $("#install-progress-errors").append('<div class="alert alert-danger">' + r.responseText + '</div>');
-                    $("#interstitial-message").addClass('animated fadeOut');
-                    $("#install-progress-error-wrapper").addClass('animated fadeIn');
+                    showFailure(r.responseText);
                 })
                 .done(function (r) {
                     if (r.error) {
-                        inviteToStayHere = false;
-                        $("#install-progress-errors").append('<div class="alert alert-danger">' + r.message + '</div>');
-                        $("#interstitial-message").addClass('animated fadeOut');
-                        $("#install-progress-error-wrapper").addClass('animated fadeIn');
+                        showFailure(r.message);
                     } else {
                         NProgress.set(<?=$routine->getProgress()/100?>);
                         <?php
@@ -175,15 +183,12 @@ if (isset($successMessage)) {
             </div>
         </div>
 
-        <div id="install-progress-error-wrapper">
-            <div id="install-progress-errors">
-            </div>
-            <div id="install-progress-back">
-                <input type="button" class="btn" onclick="window.location.href='<?= $view->url('/install') ?>'"
-                       value="<?= t('Back') ?>"/>
-            </div>
-        </div>
+    </div>
 
+    <div id="install-progress-error-wrapper">
+        <div class="spacer-row-6"></div>
+        <div id="install-progress-errors">
+        </div>
     </div>
 
     <div class="ccm-install-actions">

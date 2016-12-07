@@ -18,7 +18,12 @@ class FolderSet extends Set
             case 'file':
                 $file = $node->getTreeNodeFileObject();
                 if (is_object($file)) {
-                    return $file->getTypeObject()->getGenericDisplayType();
+                    $type = $file->getTypeObject();
+                    if (is_object($type)) {
+                        return $type->getGenericDisplayType();
+                    } else {
+                        return t('Unknown');
+                    }
                 }
                 break;
         }

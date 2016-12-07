@@ -58,9 +58,6 @@
 /* overlay because it makes it ambiguous whether help is available in the lefthand panel or not */
 @index-level-page-help: 840;
 
-/* Show the toolbar over the dialog/widget overlay – used during help guided tours */
-@index-level-toolbar-tour-guide: 1400;
-
 /* Dashboard Help Notifications – has to come BELOW the modal dialog stuff, because it's not really an ephemeral notification */
 /* also has to come below the dashboard toolbar */
 @index-level-dashboard-help: 990;
@@ -85,6 +82,9 @@
 @lightbox-content: 2400;
 @lightbox-arrows: 2400;
 
+/* Show the toolbar over the dialog/widget overlay – used during help guided tours. Has to come above index level dialog because jQuery UI assigns that to the widget overlay */
+@index-level-toolbar-tour-guide: 2100;
+
 
 /* Redactor dropdown –can be either inline OR in a dialog box so we have to come above dialog. Hopefully this doesn't
 cause other problems */
@@ -108,6 +108,7 @@ cause other problems */
 @index-level-menu-panel-and-dialog: 5000;
 @index-level-dialog-hover: 5000;
 @index-level-editor-full-screen: 5000;
+@index-level-tooltip-in-menu: 5001; /* tooltips that live on the same plane as menus */
 
 /* Edit Response HUDs - should come above modal dialog stuff. */
 @index-level-hud-underlay: 5199;

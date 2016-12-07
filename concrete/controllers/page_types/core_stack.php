@@ -1,37 +1,50 @@
 <?php
 namespace Concrete\Controller\PageType;
 
+use Concrete\Core\Http\ResponseFactory;
 use Concrete\Core\Page\Controller\PageTypeController;
-use Loader;
-use Page;
-use Permissions;
-use View;
+use Concrete\Core\Page\Page;
+use Concrete\Core\Permission\Checker as Permissions;
 
 class CoreStack extends PageTypeController
 {
+
+    /**
+     * @var \Concrete\Core\Http\ResponseFactory
+     */
+    private $factory;
+
+    public function __construct(\Concrete\Core\Page\Page $c, ResponseFactory $factory)
+    {
+        parent::__construct($c);
+        $this->factory = $factory;
+    }
+
     public function on_start()
     {
-        $c = Page::getByPath('/dashboard/blocks/stacks');
-        $cp = new Permissions($c);
-        if ($cp->canViewPage()) {
-            $c = Page::getCurrentPage();
-            $pcp = new Permissions($c);
-            if ((!$pcp->canViewPageVersions()) || ($_GET['vtask'] != 'view_versions' && $_GET['vtask'] != 'compare')) {
-                $cID = $c->getCollectionID();
-                $this->redirect('/dashboard/blocks/stacks', 'view_details', $cID);
+        $stacksPage = Page::getByPath('/dashboard/blocks/stacks');
+        $stacksPerms = new Permissions($stacksPage);
+
+        // Make sure we can view the stacks page
+        if ($stacksPerms->canViewPage()) {
+            $currentPage = $this->c;
+            $currentPagePerms = new Permissions($currentPage);
+            $viewTask = $this->request->get('vtask');
+
+            // If the current user can't view this pages versions, or if vtask is not one of the available tasks
+            if (!$currentPagePerms->canViewPageVersions() || !in_array($viewTask, ['view_versions', 'compare'])) {
+                $url = $stacksPage->getPageController()->action('view_details', $currentPage->getCollectionID());
+
+                // Redirect to the stacks page
+                return $this->factory->redirect($url);
             } else {
+                // Otherwise set the current theme and render normally
                 $this->theme = 'dashboard';
             }
-        } else {
-            global $c; // ugh
-            $v = View::getInstance();
-            $c = new Page();
-            $c->loadError(COLLECTION_NOT_FOUND);
-            $v->setCollectionObject($c);
-            $this->c = $c;
-            $cont = Loader::controller("/page_not_found");
-            $v->setController($cont);
-            $v->render('/page_not_found');
         }
+
+        // If we can't view the stacks page, send a 404
+        return $this->factory->notFound('');
     }
+
 }

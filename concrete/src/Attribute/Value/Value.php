@@ -24,16 +24,19 @@ class Value extends Object implements AttributeValueInterface
         return $controller;
     }
 
-    public function getValueObject()
+    protected function getAttributeValue()
     {
-        // First, retrieve the corresponding LegacyAttributeValue for this
-        // object
         $lv = new LegacyValue();
         $orm = \Database::connection()->getEntityManager();
         $genericValue = $orm->find('Concrete\Core\Entity\Attribute\Value\Value\Value', $this->getAttributeValueID());
         $lv->setGenericValue($genericValue);
         $lv->setAttributeKey($this->attributeKey);
-        return $lv->getValueObject();
+        return $lv;
+    }
+
+    public function getValueObject()
+    {
+        return $this->getAttributeValue()->getValueObject();
     }
 
     public static function getByID($avID)
@@ -79,17 +82,11 @@ class Value extends Object implements AttributeValueInterface
 
     public function getValue($mode = false)
     {
-        $value = $this->getValueObject();
+        $value = $this->getAttributeValue();
         $controller = $this->getController();
         if (is_object($value)) {
             if ($mode != false) {
-                $modes = func_get_args();
-                foreach ($modes as $mode) {
-                    $method = 'get' . camelcase($mode) . 'Value';
-                    if (method_exists($controller, $method)) {
-                        return $controller->{$method}();
-                    }
-                }
+                return $value->getValue($mode);
             } else {
                 return $value->getValue();
             }

@@ -24,6 +24,13 @@ interface CategoryInterface
     public function getAttributeValues($mixed);
     public function getAttributeValue(Key $key, $mixed);
 
+    /**
+     * Run when a key is deleted. Note this does NOT delete the source key entity. That is done simply by removing
+     * the key through Doctrine. Doctrine then calls the Concrete\Core\Attribute\Key\Listener::preRemove method,
+     * which runs this.
+     * @param Key $key
+     * @return mixed
+     */
     public function deleteKey(Key $key);
     public function deleteValue(AttributeValueInterface $value);
     public function delete();

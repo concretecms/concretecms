@@ -7,6 +7,7 @@ use Concrete\Core\Entity\File\StorageLocation\StorageLocation;
 use Concrete\Core\File\Image\Thumbnail\Path\Resolver;
 use Concrete\Core\File\Image\Thumbnail\ThumbnailerInterface;
 use Concrete\Core\File\Image\Thumbnail\Type\CustomThumbnail;
+use Concrete\Core\File\StorageLocation\Configuration\DefaultConfiguration;
 use Concrete\Core\File\StorageLocation\StorageLocationInterface;
 use Config;
 use Doctrine\ORM\EntityManager;
@@ -195,15 +196,24 @@ class BasicThumbnailer implements ThumbnailerInterface, ApplicationAwareInterfac
         $thumb = new \stdClass();
         $thumb->src = $src;
 
-        //this is terrible
+        // this is a hack, but we shouldn't go out on the network if we don't have to. We should probably
+        // add a method to the configuration to handle this. The file storage locations should be able to handle
+        // thumbnails.
+        if ($configuration instanceof DefaultConfiguration) {
+            $dimensionsPath = $configuration->getRootPath() . $abspath;
+        } else {
+            $dimensionsPath = $src;
+        }
+
         try {
             //try and get it locally, otherwise use http
-            $dimensions = getimagesize($abspath);
+            $dimensions = getimagesize($dimensionsPath);
+            $thumb->width = $dimensions[0];
+            $thumb->height = $dimensions[1];
         } catch (\Exception $e) {
-            //$dimensions = getimagesize($src);
+
         }
-        $thumb->width = $dimensions[0];
-        $thumb->height = $dimensions[1];
+
         return $thumb;
     }
 

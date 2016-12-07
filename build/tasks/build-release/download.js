@@ -1,7 +1,7 @@
 /* jshint unused:vars, undef:true, node:true */
 
 module.exports = function(grunt, config, parameters, done) {
-	var zipUrl = parameters.releaseSourceZip || 'https://github.com/concrete5/concrete5/archive/develop.zip';
+	var zipUrl = parameters.releaseSourceZip || 'https://github.com/concrete5/concrete5/archive/release/8.0.1.zip';
 	var workFolder = parameters.releaseWorkFolder || './release';
 	function endForError(e) {
 		process.stderr.write(e.message || e);

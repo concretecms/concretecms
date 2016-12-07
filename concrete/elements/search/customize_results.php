@@ -123,7 +123,7 @@ $form = Core::make('helper/form');
 
 			if ($(this).prop('checked')) {
 				if ($form.find('li[data-field-order-column=\'' + id + '\']').length == 0) {
-					$columns.append('<li data-field-order-column="' + id + '"><input type="hidden" name="column[]" value="' + id + '" />' + label + '<\/li>');
+					$columns.append('<li data-field-order-column="' + id + '"><input type="hidden" name="column[]" value="' + id + '" />' + label + '<i class="ccm-item-select-list-sort ui-sortable-handle"></i><\/li>');
 				}
 			} else {
 				$columns.find('li[data-field-order-column=\'' + id + '\']').remove();

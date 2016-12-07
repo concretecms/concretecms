@@ -16,5 +16,6 @@ interface SetManagerInterface
     function allowAttributeSets();
     function getAttributeSets();
     function getUnassignedAttributeKeys();
+    function updateAttributeSetDisplayOrder($sets);
 
 }

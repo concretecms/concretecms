@@ -7,9 +7,9 @@ return array(
      *
      * @var string
      */
-    'version' => '8.0.0RC2',
-    'version_installed' => '8.0.0RC2',
-    'version_db' => '20161109000000', // the key of the latest database migration
+    'version' => '8.0.1',
+    'version_installed' => '8.0.1',
+    'version_db' => '20161203000000', // the key of the latest database migration
 
     /*
      * Installation status
@@ -51,7 +51,7 @@ return array(
          *
          * @var string (message|debug)
          */
-        'detail' => 'debug',
+        'detail' => 'message',
     ),
 
     /*
@@ -648,7 +648,7 @@ return array(
             /*
              * Registration type
              *
-             * @var string The type (disabled|enabled|validate_email)
+             * @var string The type (disabled|enabled|validate_email|manual_approve)
              */
             'type' => 'disabled',
 

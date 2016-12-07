@@ -9,7 +9,7 @@ use Concrete\Core\Page\PageList;
 use Concrete\Core\Page\Stack\StackList;
 use Concrete\Core\Page\Type\Type;
 
-class ContentSwapper
+class ContentSwapper implements ContentSwapperInterface
 {
 
     public function allowsFullContentSwap(Package $package)
