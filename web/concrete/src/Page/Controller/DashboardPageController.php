@@ -11,6 +11,10 @@ class DashboardPageController extends PageController
     /** @var Error */
     protected $error;
 
+    protected $restrictedMethods = array(
+        'enableNativeMobile'
+    );
+
     /** @var Token */
     public $token;
     protected $helpers = array('form');
