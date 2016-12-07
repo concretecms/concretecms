@@ -210,11 +210,24 @@ class PageController extends Controller
         }
 
         $foundTask = false;
+        $restrictedControllers = array(
+            'Concrete\Core\Controller\Controller',
+            'Concrete\Core\Controller\AbstractController',
+            'Concrete\Core\Page\Controller\PageController'
+
+        );
         try {
             $r = new \ReflectionMethod(get_class($this), $method);
             $cl = $r->getDeclaringClass();
             if (is_object($cl)) {
-                if ($cl->getName() != 'Concrete\Core\Controller\Controller' && strpos($method, 'on_') !== 0 && strpos($method, '__') !== 0 && $r->isPublic()) {
+                if (
+                    !in_array($cl->getName(), $restrictedControllers)
+                    && strpos($method, 'on_') !== 0
+                    && strpos($method, '__') !== 0
+                    && $r->isPublic()
+                    && !$r->isConstructor()
+
+                ) {
                     $foundTask = true;
                 }
             }
