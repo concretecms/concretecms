@@ -91,6 +91,15 @@
 				},
 				pk: '_x' // we have to include this otherwise xeditable doesn't work.
 			});
+			$field.on('hidden', function() {
+				var $parent = $field.parent();
+				if (typeof CKEDITOR != 'undefined') {
+					for (name in CKEDITOR.instances) {
+						var instance = CKEDITOR.instances[name];
+						instance.destroy(true);
+					}
+				}
+			});
 		},
 
 		setupImageField: function($field) {

@@ -48,7 +48,7 @@ class Controller extends DefaultController
             return parent::getDisplayValue();
         }
 
-        return htmLawed(parent::getValue(), array('safe' => 1, 'deny_attribute' => 'style'));
+        return htmLawed($this->getAttributeValue()->getValue(), array('safe' => 1, 'deny_attribute' => 'style'));
     }
 
     public function form($additionalClass = false)
