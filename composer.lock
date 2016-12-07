@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "8f93ab5f168b097db97657c68352ea52",
-    "content-hash": "aea468923dac9338561c3f3b2103a3dd",
+    "hash": "1707d9586a9b441bc187421b2561db22",
+    "content-hash": "686ea97b7cd672cbbf878bab3775e531",
     "packages": [
         {
             "name": "anahkiasen/html-object",
@@ -1103,16 +1103,16 @@
         },
         {
             "name": "hautelook/phpass",
-            "version": "0.3.4",
+            "version": "0.3.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/hautelook/phpass.git",
-                "reference": "f0217d804225822f9bdb0d392839029b0fcb0914"
+                "reference": "b4cbd9b67ed3ef5672ec79d8e0c46d24bd844abd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/hautelook/phpass/zipball/f0217d804225822f9bdb0d392839029b0fcb0914",
-                "reference": "f0217d804225822f9bdb0d392839029b0fcb0914",
+                "url": "https://api.github.com/repos/hautelook/phpass/zipball/b4cbd9b67ed3ef5672ec79d8e0c46d24bd844abd",
+                "reference": "b4cbd9b67ed3ef5672ec79d8e0c46d24bd844abd",
                 "shasum": ""
             },
             "require": {
