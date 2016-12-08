@@ -207,11 +207,13 @@ class Controller extends BlockController implements ConversationFeatureInterface
         );
         if ($values['attachmentOverridesEnabled']) {
             $conversation->setConversationAttachmentOverridesEnabled(intval($values['attachmentOverridesEnabled']));
+            if ($values['attachmentsEnabled']) {
+                $conversation->setConversationAttachmentsEnabled(1);
+            } else {
+                $conversation->setConversationAttachmentsEnabled(0);
+            }
         } else {
             $conversation->setConversationAttachmentOverridesEnabled(0);
-        }
-        if ($values['attachmentsEnabled']) {
-            $conversation->setConversationAttachmentsEnabled(intval($values['attachmentsEnabled']));
         }
         if (!$values['itemsPerPage']) {
             $values['itemsPerPage'] = 0;
