@@ -843,7 +843,7 @@ if (isset($successMessage)) {
                                 if (!$i18nTest) {
                                     ?>
                                     <i class="fa fa-question-circle launch-tooltip"
-                                       title="<?= t('You must enable ctype and multibyte string (mbstring) support in PHP.') ?>"></i>
+                                       title="<?= t('You must enable ctype, iconv and multibyte string (mbstring) support in PHP.') ?>"></i>
                                     <?php
                                 }
                                 ?>
