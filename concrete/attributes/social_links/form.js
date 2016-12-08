@@ -1,8 +1,8 @@
 var ConcreteSocialLinksAttribute = {
 
-    init: function() {
-        $('.ccm-social-link-attribute-add-service').click(function() {
-            $($('.ccm-social-link-attribute').get(0)).
+    init: function(akID) {
+        $('.ccm-attribute-form-wrapper[data-id=' + akID + '] .ccm-social-link-attribute-add-service').click(function() {
+            $(this).closest('.ccm-attribute-form-wrapper').find('.ccm-social-link-attribute').first().
                 clone().
                 appendTo($('.ccm-social-link-attribute-wrapper')).
                 find('input').
