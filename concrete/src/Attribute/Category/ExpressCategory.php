@@ -46,6 +46,15 @@ class ExpressCategory extends AbstractCategory
         ]);
     }
 
+    public function getSearchableList()
+    {
+        return $this->getAttributeKeyRepository()->findBy([
+            'entity' => $this->expressEntity,
+            'akIsSearchable' => true
+        ]);
+    }
+
+
     public function getSearchIndexFieldDefinition()
     {
         return [
@@ -68,6 +77,8 @@ class ExpressCategory extends AbstractCategory
             $this->entityManager->remove($control);
         }
         $this->entityManager->flush();
+
+        parent::deleteKey($key);
     }
 
     public function getSetManager()

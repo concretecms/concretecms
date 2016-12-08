@@ -324,4 +324,20 @@ class Info
     {
         return $this->phpSettings;
     }
+
+    public function getJSONOBject()
+    {
+        $o = new \stdClass();
+        $o->phpSettings = $this->phpSettings;
+        $o->phpExtensions = $this->phpExtensions;
+        $o->phpVersion = $this->phpVersion;
+        $o->serverAPI = $this->serverAPI;
+        $o->serverSoftware = $this->serverSoftware;
+        $o->cache = $this->cache;
+        $o->overrides = $this->overrides;
+        $o->packages = $this->packages;
+        $o->coreVersions = $this->coreVersions;
+        return $o;
+    }
+
 }

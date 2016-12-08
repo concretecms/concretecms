@@ -19,5 +19,6 @@ $akc = AttributeKeyCategory::getByID($_POST['categoryID']);
 $uats = $_REQUEST['asID'];
 
 if (is_array($uats)) {
-    $akc->updateAttributeSetDisplayOrder($uats);
+    $manager = $akc->getController()->getSetManager();
+    $manager->updateAttributeSetDisplayOrder($uats);
 }

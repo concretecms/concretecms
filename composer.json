@@ -2,6 +2,22 @@
   "name": "concrete5/concrete5",
   "license": "MIT",
   "description": "concrete5 open source CMS",
+  "type": "project",
+  "keywords": [ "concrete5", "CMS", "concreteCMS" ],
+  "homepage": "https://www.concrete5.org/",
+  "support": {
+    "issues": "https://www.concrete5.org/developers/bugs/",
+    "docs": "https://documentation.concrete5.org/",
+    "irc": "irc://irc.freenode.org/concrete5",
+    "source": "http://documentation.concrete5.org/api/",
+    "forum": "https://www.concrete5.org/community/forums/",
+    "slack": "https://www.concrete5.org/slack"
+  },
+  "archive": {
+    "exclude": [
+      "/tests", "/build", "/.github", "/.gitattributes", "/.travis.yml", "/CONTRIBUTING.md", "/phpunit.xml"
+    ]
+  },
   "minimum-stability": "beta",
   "prefer-stable": true,
   "config": {
@@ -45,7 +61,7 @@
     "mobiledetect/mobiledetectlib": "2.*",
     "monolog/monolog": "1.*",
     "sunra/php-simple-html-dom-parser": "1.*",
-    "hautelook/phpass": "0.3.4",
+    "hautelook/phpass": "0.3.*",
     "voku/urlify": "1.0.*",
     "dapphp/securimage": "3.*",
     "anahkiasen/html-object": "1.*",
@@ -66,7 +82,8 @@
     "league/url": "3.3.*",
     "concrete5/doctrine-xml": "1.*",
     "symfony/yaml":"3.*",
-    "ocramius/proxy-manager": "^1.0"
+    "ocramius/proxy-manager": "^1.0",
+    "paragonie/random_compat": "^2.0"
   },
   "autoload-dev": {
     "psr-4": {

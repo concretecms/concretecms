@@ -466,6 +466,7 @@ class Controller extends BlockController
                     $control->setFieldSet($field_set);
                     $control->setPosition($position);
                     $entityManager->persist($control);
+                    $entityManager->flush();
 
 
                 } else {

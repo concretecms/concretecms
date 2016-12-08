@@ -40,7 +40,10 @@ class SetFactory
         return $r->findOneBy(array('asID' => $asID));
     }
 
-    public function getByAttributeKey(Key $key)
+    /**
+     * @param $key Key
+     */
+    public function getByAttributeKey($key)
     {
         $r = $this->entityManager->getRepository('\Concrete\Core\Entity\Attribute\SetKey');
         $query = $r->createQueryBuilder('sk')

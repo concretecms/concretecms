@@ -4,6 +4,8 @@ namespace Concrete\Core\Entity\Express;
 use Concrete\Core\Attribute\ObjectTrait;
 use Concrete\Core\Entity\Attribute\Value\ExpressValue;
 use Concrete\Core\Entity\Express\Entry\Association as EntryAssociation;
+use Concrete\Core\Entity\Express\Entry\ManyAssociation;
+use Concrete\Core\Entity\Express\Entry\OneAssociation;
 use Concrete\Core\Permission\ObjectInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -16,6 +18,39 @@ class Entry implements \JsonSerializable, ObjectInterface
 {
 
     use ObjectTrait;
+
+    /**
+     * Returns either an attribute (if passed an attribute handle) or the content
+     * of an association, if it matches an association.
+     * @param $nm
+     * @param $a
+     * @return $mixed
+     */
+    public function __call($nm, $a)
+    {
+        if (substr($nm, 0, 3) == 'get') {
+            $nm = preg_replace('/(?!^)[[:upper:]]/', '_\0', $nm);
+            $nm = strtolower($nm);
+            $identifier = str_replace('get_', '', $nm);
+
+            // check for association
+            $association = $this->getAssociation($identifier);
+            if ($association instanceof ManyAssociation) {
+                $collection = $association->getSelectedEntries();
+                if (is_object($collection)) {
+                    return $collection->toArray();
+                } else {
+                    return array();
+                }
+            } else if ($association instanceof OneAssociation) {
+                return $association->getSelectedEntry();
+            }
+
+            // Assume attribute otherwise
+            return $this->getAttribute($identifier);
+        }
+        return null;
+    }
 
     public function getPermissionObjectIdentifier()
     {

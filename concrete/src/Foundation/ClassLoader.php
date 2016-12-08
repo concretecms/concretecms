@@ -213,12 +213,6 @@ class ClassLoader
         $loader->register();
 
         $loader = new Psr4ClassLoader();
-        $loaders = $pkg->getPackageAutoloaderRegistries();
-        if (count($loaders) > 0) {
-            foreach ($loaders as $path => $prefix) {
-                $loader->addPrefix($prefix, DIR_PACKAGES . '/' . $pkgHandle . '/' . $path);
-            }
-        }
 
         /** @type Package $pkg */
         if (!$pkg->shouldEnableLegacyNamespace()) {
@@ -239,6 +233,7 @@ class ClassLoader
         $loader->register();
 
         $this->registerPackageController($pkgHandle);
+        $this->registerPackageCustomAutoloaders($pkg);
     }
 
     public function registerPackageController($pkgHandle)
@@ -249,6 +244,27 @@ class ClassLoader
         $this->loaders[] = $loader;
         $loader->register();
     }
+
+    public function registerPackageCustomAutoloaders($pkg)
+    {
+        if (is_string($pkg)) {
+            $pkg = \Package::getClass($pkg);
+        }
+
+        $pkgHandle = $pkg->getPackageHandle();
+
+        $loader = new Psr4ClassLoader();
+        $loaders = $pkg->getPackageAutoloaderRegistries();
+        if (count($loaders) > 0) {
+            foreach ($loaders as $path => $prefix) {
+                $loader->addPrefix($prefix, DIR_PACKAGES . '/' . $pkgHandle . '/' . $path);
+            }
+        }
+
+        $this->loaders[] = $loader;
+        $loader->register();
+    }
+
 
     /**
      * Returns the ClassLoader instance.

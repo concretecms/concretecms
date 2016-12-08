@@ -2,8 +2,8 @@
 namespace Concrete\Controller\SinglePage\Dashboard\Extend;
 
 use Concrete\Core\Error\ErrorList\ErrorList;
+use Concrete\Core\Foundation\ClassLoader;
 use Concrete\Core\Package\BrokenPackage;
-use Concrete\Core\Package\ContentSwapper;
 use Concrete\Core\Package\ItemCategory\Manager;
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Loader;
@@ -115,6 +115,8 @@ class Install extends DashboardPageController
             if ($p instanceof BrokenPackage) {
                 $this->error->add($p->getInstallErrorMessage());
             } elseif (is_object($p)) {
+                $loader = new ClassLoader();
+                $loader->registerPackageCustomAutoloaders($p);
                 if (
                     (!$p->showInstallOptionsScreen()) ||
                     Loader::helper('validation/token')->validate('install_options_selected')

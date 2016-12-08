@@ -31,6 +31,7 @@ class Controller extends BlockController
     public $haveRetrievedSelfPlus1 = false;
     public $displayUnapproved = false;
     public $ignoreExcludeNav = false;
+    protected $homePageID;
     protected $btTable = 'btNavigation';
     protected $btInterfaceWidth = "800";
     protected $btInterfaceHeight = "350";
@@ -66,6 +67,9 @@ class Controller extends BlockController
                 $this->cID = $c->getCollectionID();
             }
             $this->cParentID = $c->getCollectionParentID();
+            $this->homePageID = $c->getSiteHomePageID();
+        } else {
+            $this->homePageID = HOME_CID;
         }
 
         parent::__construct($obj);
@@ -163,12 +167,13 @@ class Controller extends BlockController
         $inspectC = $c;
         $selectedPathCIDs = array($inspectC->getCollectionID());
         $parentCIDnotZero = true;
+
         while ($parentCIDnotZero) {
-            $cParentID = $inspectC->cParentID;
+            $cParentID = $inspectC->getCollectionParentID();
             if (!intval($cParentID)) {
                 $parentCIDnotZero = false;
             } else {
-                if ($cParentID != HOME_CID) {
+                if ($cParentID != $this->homePageID) {
                     $selectedPathCIDs[] = $cParentID; //Don't want home page in nav-path-selected
                 }
                 $inspectC = Page::getById($cParentID, 'ACTIVE');
@@ -361,7 +366,7 @@ class Controller extends BlockController
                 break;
             case 'top':
                 // top level actually has ID 1 as its parent, since the home page is effectively alone at the top
-                $cParentID = \Core::make('site')->getSite()->getSiteHomePageID();
+                $cParentID = $this->homePageID;
                 break;
             case 'above':
                 $cParentID = $this->getParentParentID();

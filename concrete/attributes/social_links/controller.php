@@ -66,18 +66,18 @@ class Controller extends AttributeTypeController
     
     public function exportValue(\SimpleXMLElement $akn)
     {
-        $services = $this->getValue();
-        foreach ($services as $service => $serviceInfo) {
+        $services = $this->attributeValue->getValue()->getSelectedLinks();
+        foreach ($services as $link) {
             $av = $akn->addChild('link');
-            $av->addAttribute('service', $service);
-            $av->addAttribute('detail', $serviceInfo);
+            $av->addAttribute('service', $link->getService());
+            $av->addAttribute('detail', $link->getServiceInfo());
         }
     }
 
     public function getDisplayValue()
     {
         $html = '';
-        $services = $this->getValue()->getSelectedLinks();
+        $services = $this->attributeValue->getValue()->getSelectedLinks();
         if (count($services) > 0) {
             $env = Environment::get();
             $url = $env->getURL(DIRNAME_ATTRIBUTES . '/social_links/view.css');

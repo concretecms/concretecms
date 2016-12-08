@@ -32,7 +32,7 @@ class DefaultSet extends Available
         }
         $this->removeColumnByKey('e.exEntryDisplayOrder'); // It shouldn't be in the set
         $i = 0;
-        foreach($category->getList() as $ak) {
+        foreach($category->getSearchableList() as $ak) {
             $this->addColumn(new AttributeKeyColumn($ak));
             $i++;
             if ($i == 2) {

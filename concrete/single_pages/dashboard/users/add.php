@@ -2,7 +2,7 @@
 $ih = Loader::helper('concrete/ui');
 ?>
 
-<form method="post" class="form-horizontal" action="<?php echo $view->action('submit'); ?>">
+<form method="post" action="<?php echo $view->action('submit'); ?>">
 	<fieldset>
 		<legend><?php echo t('Basic Details'); ?></legend>
 		<div class="form-group">

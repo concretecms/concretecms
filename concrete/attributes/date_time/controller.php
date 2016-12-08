@@ -16,7 +16,7 @@ class Controller extends AttributeTypeController
 
     public function getIconFormatter()
     {
-        return new FontAwesomeIconFormatter('calendar');
+        return new FontAwesomeIconFormatter('clock-o');
     }
 
     public function saveKey($data)
@@ -99,8 +99,7 @@ class Controller extends AttributeTypeController
 
     public function validateValue()
     {
-        $v = $this->getValue();
-
+        $v = $this->getAttributeValue()->getValue();
         return $v != false;
     }
 

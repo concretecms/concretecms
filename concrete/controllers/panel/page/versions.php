@@ -128,15 +128,18 @@ class Versions extends BackendInterfacePageController
                     foreach ($_POST['cvID'] as $cvID) {
                         $v = CollectionVersion::get($c, $cvID);
                         if (is_object($v)) {
-                            if (!$v->isApproved() && $versions > 1) {
-                                $r->addCollectionVersion($v);
-                                $v->delete();
-                                $versions--;
-                            } elseif ($versions <= 1) {
+                            if ($versions == 1) {
                                 $e = Loader::helper('validation/error');
                                 $e->add(t('You cannot delete all page versions.'));
                                 $r = new PageEditResponse($e);
-                                break;
+                            } else if ($v->isApproved() && !$v->getPublishDate()) {
+                                $e = Loader::helper('validation/error');
+                                $e->add(t('You cannot delete the active version.'));
+                                $r = new PageEditResponse($e);
+                            } else {
+                                $r->addCollectionVersion($v);
+                                $v->delete();
+                                $versions--;
                             }
                         }
                     }

@@ -41,7 +41,7 @@ class SearchProvider extends AbstractSearchProvider
 
     public function getCustomAttributeKeys()
     {
-        return $this->category->getList();
+        return $this->category->getSearchableList();
     }
 
     public function getAvailableColumnSet()

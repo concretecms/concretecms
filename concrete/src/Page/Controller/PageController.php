@@ -21,6 +21,21 @@ class PageController extends Controller
     protected $parameters = array();
     protected $replacement = null;
 
+    /**
+     * array of method names that can't be called through the url
+     * @var array
+     */
+    protected $restrictedMethods = array();
+
+    /**
+     * Custom request path - overrides Request::getPath() (useful when replacing controllers).
+     * @var string|null
+     */
+    protected $customRequestPath = null;
+
+    /** @var \Concrete\Core\Page\Page The current page */
+    public $c;
+
     public function supportsPageCache()
     {
         return $this->supportsPageCache;
@@ -46,14 +61,41 @@ class PageController extends Controller
      */
     public function replace($var)
     {
-        if (!($var instanceof Page)) {
-            $var = Page::getByPath($var);
+        if ($var instanceof Page) {
+            $page = $var;
+            $path = $var->getCollectionPath();
+        } else {
+            $path = (string) $var;
+            $page = Page::getByPath($path);
         }
 
         $request = Request::getInstance();
-        $request->setCurrentPage($var);
-        $controller = $var->getPageController();
+        $controller = $page->getPageController();
+        $request->setCurrentPage($page);
+        if (is_callable([$controller, 'setCustomRequestPath'])) {
+            $controller->setCustomRequestPath($path);
+        }
         $this->replacement = $controller;
+    }
+
+    /**
+     * Set the custom request path (useful when replacing controllers).
+     *
+     * @param string|null $requestPath Set to null to use the default request path
+     */
+    public function setCustomRequestPath($requestPath)
+    {
+        $this->customRequestPath = ($requestPath === null) ? null : (string) $requestPath;
+    }
+
+    /**
+     * Get the custom request path (useful when replacing controllers).
+     *
+     * @return string|null Returns null if no custom request path, a string otherwise
+     */
+    public function getCustomRequestPath()
+    {
+        return $this->customRequestPath;
     }
 
     public function isReplaced()
@@ -158,7 +200,11 @@ class PageController extends Controller
 
     public function setupRequestActionAndParameters(Request $request)
     {
-        $task = substr($request->getPath(), strlen($this->c->getCollectionPath()) + 1);
+        $requestPath = $this->getCustomRequestPath();
+        if ($requestPath === null) {
+            $requestPath = $request->getPath();
+        }
+        $task = substr($requestPath, strlen($this->c->getCollectionPath()) + 1);
         $task = str_replace('-/', '', $task);
         $taskparts = explode('/', $task);
         if (isset($taskparts[0]) && $taskparts[0] !== '') {
@@ -170,11 +216,24 @@ class PageController extends Controller
         }
 
         $foundTask = false;
+        $restrictedControllers = array(
+            'Concrete\Core\Controller\Controller',
+            'Concrete\Core\Controller\AbstractController',
+            'Concrete\Core\Page\Controller\PageController'
+
+        );
         try {
             $r = new \ReflectionMethod(get_class($this), $method);
             $cl = $r->getDeclaringClass();
             if (is_object($cl)) {
-                if ($cl->getName() != 'Concrete\Core\Controller\Controller' && strpos($method, 'on_') !== 0 && strpos($method, '__') !== 0 && $r->isPublic()) {
+                if (
+                    !in_array($cl->getName(), $restrictedControllers)
+                    && strpos($method, 'on_') !== 0
+                    && strpos($method, '__') !== 0
+                    && $r->isPublic()
+                    && !$r->isConstructor()
+                    && (is_array($this->restrictedMethods) && !in_array($method, $this->restrictedMethods))
+                ) {
                     $foundTask = true;
                 }
             }

@@ -186,7 +186,7 @@ for ($i = 0; $i < count($values); $i++) {
                     <div class="col-sm-6" id="pdStartDate_tw">
                         <select class="form-control" name="pdStartDateSelectTime" data-select="time">
                             <?php foreach($values as $value) { ?>
-                                <option value="<?=$value?>"><?=$value?></option>
+                                <option value="<?=$value?>" <?php if ($selectedStartTime == $value) { ?>selected<?php }?>><?=$value?></option>
                             <?php } ?>
                         </select>
                     </div>
@@ -465,7 +465,6 @@ for ($i = 0; $i < count($values); $i++) {
 
     ccm_accessEntityCalculateRepeatOptions = function () {
 
-        return;
         var startDate = ccm_getSelectedStartDate();
         var endDate = ccm_getSelectedEndDate();
 
@@ -478,7 +477,7 @@ for ($i = 0; $i < count($values); $i++) {
             $('select[name=pdRepeatPeriod] option[value=daily]').attr('disabled', false);
             $("#ccm-permissions-access-entity-dates-repeat-weekly-dow").show();
         }
-        $('input[name=pdStartRepeatDate]').val($("#pdStartDate_dt_pub").val());
+        $('input[name=pdStartRepeatDate]').val($("#pdStartDate_pub").val());
         switch (startDate.getDay()) {
             case 0:
                 $("#ccm-permissions-access-entity-dates-repeat-weekly-dow input[value=0]").attr('checked', true);

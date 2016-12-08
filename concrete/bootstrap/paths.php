@@ -10,7 +10,7 @@ defined('C5_EXECUTE') or define('C5_EXECUTE', md5(uniqid()));
 if (APP_UPDATED_PASSTHRU === false) {
     $ap = $app['app_relative_path'] . '/' . DIRNAME_CORE;
 } else {
-    $ap = $app['app_relative_path'] . '/' . DIRNAME_UPDATES . '/' . APP_UPDATED_PASSTHRU . '/' . DIRNAME_CORE;
+    $ap = $app['app_relative_path'] . '/' . DIRNAME_UPDATES . '/' . DIRNAME_APP_UPDATED . '/' . DIRNAME_CORE;
 }
 
 define('ASSETS_URL', $ap);

@@ -70,17 +70,18 @@ if (!defined('APP_UPDATED_PASSTHRU')) {
     if (is_file($updates)) {
         $updates = (array) include $updates;
         if (isset($updates['core']) && is_dir(DIR_BASE.'/updates/'.$updates['core'].'/concrete')) {
-            define('APP_UPDATED_PASSTHRU', $updates['core']);
+            define('APP_UPDATED_PASSTHRU', true);
+            define('DIRNAME_APP_UPDATED', $updates['core']);
         }
     }
     unset($updates);
     if (defined('APP_UPDATED_PASSTHRU')) {
-        return require DIR_BASE.'/updates/'.APP_UPDATED_PASSTHRU.'/concrete/bin/concrete5.php';
+        return require DIR_BASE.'/updates/'.DIRNAME_APP_UPDATED.'/concrete/bin/concrete5.php';
     }
     define('APP_UPDATED_PASSTHRU', false);
 }
 if (APP_UPDATED_PASSTHRU === false) {
     return require DIR_BASE.'/concrete/dispatcher.php';
 } else {
-    return require DIR_BASE.'/updates/'.APP_UPDATED_PASSTHRU.'/concrete/dispatcher.php';
+    return require DIR_BASE.'/updates/'.DIRNAME_APP_UPDATED.'/concrete/dispatcher.php';
 }

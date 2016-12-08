@@ -63,7 +63,7 @@ class SitemapSelector extends UserInterface
             // this is an open node request
             $nodes = $dh->getSubNodes($this->request->query->get('cParentID'), $callback);
         } else {
-            $nodes = $dh->getNode($this->request->query->get('startingPoint'), true, $callback);
+            $nodes = [$dh->getNode($this->request->query->get('startingPoint'), true, $callback)];
         }
 
         return new JsonResponse($nodes);

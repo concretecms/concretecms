@@ -11,7 +11,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		<button type="button" data-submit="delete-block-form" class="btn btn-danger pull-right"><?=t('Delete')?></button>
 		</div>
 
-		<p class="lead"><?=t('Are you sure you wish to this block?')?></p>
+		<p class="lead"><?=t('Are you sure you wish to delete this block?')?></p>
 
 		<?php if ($isMasterCollection) { ?>
 

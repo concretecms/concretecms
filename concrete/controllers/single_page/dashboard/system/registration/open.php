@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Controller\SinglePage\Dashboard\System\Registration;
 
+use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Config;
 use Loader;
@@ -15,39 +16,50 @@ class Open extends DashboardPageController
             $this->error->add($this->token->getErrorMessage());
         }
 
-        if (!$this->error->has() && $this->isPost()) {
-            Config::save('concrete.user.registration.email_registration', ($this->post('email_as_username') ? true : false));
+        $config = $this->app->make(Repository::class);
 
-            Config::save('concrete.user.registration.type', $this->post('registration_type'));
-            Config::save('concrete.user.registration.captcha', ($this->post('enable_registration_captcha')) ? true : false);
+        if (!$this->error->has() && $this->isPost()) {
+            $config->save('concrete.user.registration.email_registration', ($this->post('email_as_username') ? true : false));
+
+            $config->save('concrete.user.registration.type', $this->post('registration_type'));
+            $config->save('concrete.user.registration.captcha', ($this->post('enable_registration_captcha')) ? true : false);
+            $security = $this->app->make('helper/security');
 
             switch ($this->post('registration_type')) {
                 case "enabled":
-                    Config::save('concrete.user.registration.enabled', true);
-                    Config::save('concrete.user.registration.validate_email', false);
-                    Config::save('concrete.user.registration.notification', $this->post('register_notification'));
-                    Config::save(
+                    $config->save('concrete.user.registration.enabled', true);
+                    $config->save('concrete.user.registration.validate_email', false);
+                    $config->save('concrete.user.registration.notification', $this->post('register_notification'));
+                    $config->save(
                         'concrete.user.registration.notification_email',
-                        Loader::helper('security')->sanitizeEmail(
-                            $this->post('register_notification_email')));
+                        $security->sanitizeEmail($this->post('register_notification_email')));
                     break;
 
                 case "validate_email":
-                    Config::save('concrete.user.registration.enabled', true);
-                    Config::save('concrete.user.registration.validate_email', true);
-                    Config::save('concrete.user.registration.notification', $this->post('register_notification'));
-                    Config::save(
+                    $config->save('concrete.user.registration.enabled', true);
+                    $config->save('concrete.user.registration.validate_email', true);
+                    $config->save('concrete.user.registration.notification', $this->post('register_notification'));
+                    $config->save(
                         'concrete.user.registration.notification_email',
-                        Loader::helper('security')->sanitizeEmail(
-                            $this->post('register_notification_email')));
+                        $security->sanitizeEmail($this->post('register_notification_email')));
+                    break;
+
+                case "manual_approve":
+                    $config->save('concrete.user.registration.enabled', true);
+                    $config->save('concrete.user.registration.approval', true);
+                    $config->save('concrete.user.registration.validate_email', false);
+                    $config->save('concrete.user.registration.notification', $this->post('register_notification'));
+                    $config->save(
+                        'concrete.user.registration.notification_email',
+                        $security->sanitizeEmail($this->post('register_notification_email')));
                     break;
 
                 default: // disabled
-                    Config::save('concrete.user.registration.enabled', false);
-                    Config::save('concrete.user.registration.notification', false);
+                    $config->save('concrete.user.registration.enabled', false);
+                    $config->save('concrete.user.registration.notification', false);
                     break;
             }
-            Config::save('concrete.user.registration.type', $this->post('registration_type'));
+            $config->save('concrete.user.registration.type', $this->post('registration_type'));
             $this->redirect('/dashboard/system/registration/open', 1);
         }
     }
@@ -57,14 +69,16 @@ class Open extends DashboardPageController
         if ($updated) {
             $this->set('message', t('Registration settings have been saved.'));
         }
-        $type = Config::get('concrete.user.registration.type');
+
+        $config = $this->app->make(Repository::class);
+        $type = $config->get('concrete.user.registration.type');
         if (!$type) {
             $type = 'disabled';
         }
-        $this->set('email_as_username', Config::get('concrete.user.registration.email_registration'));
+        $this->set('email_as_username', $config->get('concrete.user.registration.email_registration'));
         $this->set('registration_type', $type);
-        $this->set('enable_registration_captcha', Config::get('concrete.user.registration.captcha'));
-        $this->set('register_notification', (bool) Config::get('concrete.user.registration.notification'));
-        $this->set('register_notification_email', Config::get('concrete.user.registration.notification_email'));
+        $this->set('enable_registration_captcha', $config->get('concrete.user.registration.captcha'));
+        $this->set('register_notification', (bool) $config->get('concrete.user.registration.notification'));
+        $this->set('register_notification_email', $config->get('concrete.user.registration.notification_email'));
     }
 }

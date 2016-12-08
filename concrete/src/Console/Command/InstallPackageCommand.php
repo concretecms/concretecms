@@ -2,7 +2,6 @@
 namespace Concrete\Core\Console\Command;
 
 use Concrete\Core\Error\ErrorList\ErrorList;
-use Concrete\Core\Package\ContentSwapper;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputArgument;
@@ -92,7 +91,7 @@ EOT
             }
 
             $output->writeln('<info>Package Installed.</info>');
-            $swapper = new ContentSwapper();
+            $swapper = $pkg->getContentSwapper();
 
             if ($swapper->allowsFullContentSwap($pkg) && $input->getOption('full-content-swap')) {
                 $output->write('Performing full content swap... ');

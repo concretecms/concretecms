@@ -84,7 +84,7 @@ class Controller extends AttributeTypeController
     public function getDisplayValue()
     {
         $html = '';
-        foreach($this->getValue()->getSelectedEntries() as $entry) {
+        foreach($this->attributeValue->getValue()->getSelectedEntries() as $entry) {
             $html .= '<div>';
             $entity = $entry->getEntity();
             $columns = $entity->getResultColumnSet();
