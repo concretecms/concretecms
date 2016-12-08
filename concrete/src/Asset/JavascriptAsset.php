@@ -75,7 +75,7 @@ class JavascriptAsset extends Asset
                         if ($asset->assetSupportsMinification()) {
                             $contents = \JShrink\Minifier::minify($contents);
                         }
-                        $js .= $contents."\n\n";
+                        $js .= $contents.";\n\n";
                     }
                 }
                 @file_put_contents($cacheFile, $js);
