@@ -214,7 +214,7 @@ class Customize extends BackendInterfacePageController
     public function reset_site_customizations($pThemeID)
     {
         if ($this->validateAction()) {
-            Page::resetAllCustomStyles();
+            \Concrete\Core\Page\Page::resetAllCustomStyles();
 
             $pt = PageTheme::getByID($pThemeID);
             $pt->resetThemeCustomStyles();
