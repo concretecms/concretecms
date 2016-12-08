@@ -60,10 +60,8 @@ class Info
 
     public function __construct()
     {
-        $currentLocale = Localization::activeLocale();
-        if ($currentLocale != 'en_US') {
-            Localization::changeLocale('en_US');
-        }
+        $loc = Localization::getInstance();
+        $loc->pushActiveContext('system');
         try {
             $app = Facade::getFacadeApplication();
             $config = $app->make('config');
@@ -76,14 +74,14 @@ class Info
 
             $this->coreRootDirectory = DIR_BASE_CORE;
 
-            $versions = ['Core Version - '.$config->get('concrete.version')];
+            $versions = array('Core Version - '.$config->get('concrete.version'));
             if ($this->installed) {
                 $versions[] = 'Version Installed - '.$config->get('concrete.version_installed');
             }
             $versions[] = 'Database Version - '.$config->get('concrete.version_db');
             $this->coreVersions = implode("\n", $versions);
 
-            $packages = [];
+            $packages = array();
             if ($this->installed) {
                 foreach (PackageList::get()->getPackages() as $p) {
                     if ($p->isPackageInstalled()) {
@@ -101,7 +99,7 @@ class Info
                 $this->overrides = implode(', ', $overrides);
             }
 
-            $cache = [
+            $cache = array(
                 sprintf('Block Cache - %s', $config->get('concrete.cache.blocks') ? 'On' : 'Off'),
                 sprintf('Overrides Cache - %s', $config->get('concrete.cache.overrides') ? 'On' : 'Off'),
                 sprintf('Full Page Caching - %s',
@@ -115,7 +113,7 @@ class Info
                         'Off'
                         )
                     ),
-            ];
+            );
             if ($config->get('concrete.cache.full_page_lifetime')) {
                 $cache[] = sprintf("Full Page Cache Lifetime - %s",
                     $config->get('concrete.cache.full_page_lifetime') == 'default' ?
@@ -152,7 +150,7 @@ class Info
             ob_start();
             phpinfo();
             $buffer = ob_get_clean();
-            $phpinfo = [];
+            $phpinfo = array();
             if ($app->isRunThroughCommandLineInterface()) {
                 $section = null;
                 foreach (preg_split('/[\r\n]+/', $buffer) as $line) {
@@ -171,30 +169,30 @@ class Info
                             break;
                         default:
                             if ($section !== null) {
-                                $phpinfo[$section][$chunks[0]] = [$chunks[1], $chunks[2]];
+                                $phpinfo[$section][$chunks[0]] = array($chunks[1], $chunks[2]);
                             }
                             break;
                     }
                 }
             } else {
                 $section = 'phpinfo';
-                $phpinfo[$section] = [];
+                $phpinfo[$section] = array();
                 if (preg_match_all('#(?:<h2>(?:<a name=".*?">)?(.*?)(?:</a>)?</h2>)|(?:<tr(?: class=".*?")?><t[hd](?: class=".*?")?>(.*?)\s*</t[hd]>(?:<t[hd](?: class=".*?")?>(.*?)\s*</t[hd]>(?:<t[hd](?: class=".*?")?>(.*?)\s*</t[hd]>)?)?</tr>)#s', $buffer, $matches, PREG_SET_ORDER)) {
                     foreach ($matches as $match) {
                         if ($match[1] !== null && $match[1] !== '') {
                             $section = $match[1];
-                            $phpinfo[$section] = [];
+                            $phpinfo[$section] = array();
                         } elseif (isset($match[3])) {
-                            $phpinfo[$section][$match[2]] = isset($match[4]) ? [$match[3], $match[4]] : $match[3];
+                            $phpinfo[$section][$match[2]] = isset($match[4]) ? array($match[3], $match[4]) : $match[3];
                         } else {
                             $phpinfo[$section][] = $match[2];
                         }
                     }
                 }
             }
-            $phpSettings = [
+            $phpSettings = array(
                 "max_execution_time - $maxExecutionTime",
-            ];
+            );
             foreach ($phpinfo as $name => $section) {
                 foreach ($section as $key => $val) {
                     if (preg_match('/.*max_execution_time*/', $key)) {
@@ -213,13 +211,10 @@ class Info
                 }
             }
             $this->phpSettings = implode("\n", $phpSettings);
-            if ($currentLocale != 'en_US') {
-                Localization::changeLocale($currentLocale);
-            }
+
+            $loc->popActiveContext();
         } catch (\Exception $x) {
-            if ($currentLocale != 'en_US') {
-                Localization::changeLocale($currentLocale);
-            }
+            $loc->popActiveContext();
             throw $x;
         }
     }
@@ -344,4 +339,5 @@ class Info
         $o->coreVersions = $this->coreVersions;
         return $o;
     }
+
 }
