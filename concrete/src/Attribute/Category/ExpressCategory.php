@@ -54,7 +54,6 @@ class ExpressCategory extends AbstractCategory
         ]);
     }
 
-
     public function getSearchIndexFieldDefinition()
     {
         return [
