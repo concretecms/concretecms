@@ -69,7 +69,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 <script type="text/template" data-template="express-attribute-form-list">
     <select name="exFormID" class="form-control">
     <% _.each(forms, function(form) { %>
-        <option value="<%=form.exFormID%>"><%=form.exFormName%></option>
+        <option value="<%=form.exFormID%>" <% if (exFormID == form.exFormID) { %>selected<% } %>><%=form.exFormName%></option>
     <% }); %>
     </select>
 </script>
@@ -78,5 +78,6 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 
 <script type="application/javascript">
     Concrete.event.publish('block.express_entry_detail.open', {
+        exFormID: '<?=$exFormID?>'
     });
 </script>

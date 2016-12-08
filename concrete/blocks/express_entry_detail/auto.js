@@ -3,6 +3,7 @@ $(function() {
     function ConcreteExpressEntryDetailBlockForm(options) {
         'use strict';
         this.options = $.extend({
+            exFormID: 0
         }, options);
         this.$container = $('#ccm-block-express-entry-detail-edit');
         this._selectFormTemplate = _.template($('script[data-template=express-attribute-form-list]').html());
@@ -29,7 +30,7 @@ $(function() {
         }).trigger('change');
     }
 
-    ConcreteExpressEntryDetailBlockForm.prototype.updateForms = function(exEntityID) {
+    ConcreteExpressEntryDetailBlockForm.prototype.updateForms = function(exEntityID, exFormID) {
         var my = this;
         if (exEntityID) {
             $.concreteAjax({
@@ -53,12 +54,17 @@ $(function() {
             var exEntityID = $(this).find('option:selected').attr('data-entity-id');
             my.updateForms(exEntityID);
         });
+
+        var entryMode = my.$container.find('select[name=entryMode]').val();
+        if (entryMode == 'A') {
+            my.$container.find('select[name=exEntryAttributeKeyHandle]').trigger('change');
+        }
     }
 
-    ConcreteExpressEntryDetailBlockForm.prototype.setForms = function(forms, selected) {
+    ConcreteExpressEntryDetailBlockForm.prototype.setForms = function(forms) {
         var my = this,
             $formsContainer = my.$container.find('div[data-container=express-entry-detail-form]');
-        $formsContainer.html(my._selectFormTemplate({forms: forms, selected: selected}));
+        $formsContainer.html(my._selectFormTemplate({forms: forms, exFormID: my.options.exFormID}));
     }
 
     ConcreteExpressEntryDetailBlockForm.prototype.init = function() {
