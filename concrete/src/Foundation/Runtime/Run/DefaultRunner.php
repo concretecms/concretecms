@@ -75,6 +75,13 @@ class DefaultRunner implements RunInterface, ApplicationAwareInterface
              */
             $this->registerLegacyRoutes();
 
+            /* ----------------------------------------------------------------------------
+             * Register legacy config values
+             * ----------------------------------------------------------------------------
+             */
+            $this->registerLegacyConfigValues();
+
+
             /*
              * ----------------------------------------------------------------------------
              * Load all permission keys into our local cache.
@@ -108,6 +115,12 @@ class DefaultRunner implements RunInterface, ApplicationAwareInterface
                 die(1);
             }
         }
+    }
+
+    protected function registerLegacyConfigValues()
+    {
+        $config = $this->app->make('config');
+        $config->set('concrete.site', $this->app->make('site')->getSite()->getSiteName());
     }
 
     protected function registerLegacyRoutes()
