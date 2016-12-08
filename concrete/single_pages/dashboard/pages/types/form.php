@@ -100,14 +100,14 @@ use \Concrete\Core\Page\Type\Composer\FormLayoutSetControl as PageTypeComposerFo
 			</table>
 		</div>
 
-	<?php 
+	<?php
     }
     ?>
-<?php 
+<?php
 } else {
     ?>
 	<p><?=t('You have not added any composer form layout control sets.')?></p>
-<?php 
+<?php
 } ?>
 
 </div>
@@ -282,17 +282,22 @@ ul.ccm-page-type-composer-item-controls {
 	padding: 0;
 	margin: 0;
 	width: 100px;
-	text-align: right; 
-}
-
-.panel-heading:hover > .ccm-page-type-composer-item-controls li,
-.ccm-page-type-composer-form-layout-control-set-control:hover .ccm-page-type-composer-item-controls li {
-	display: inline-block;
+	text-align: right;
 }
 
 .ccm-page-type-composer-item-controls li {
-	display: none;
+    display: inline-block;
 	list-style-type: none;
+}
+
+.ccm-page-type-composer-item-controls li a {
+    opacity: 0.5;
+}
+
+.ccm-page-type-composer-item-controls li a:hover,
+.ccm-page-type-composer-item-controls li a:focus,
+.ccm-page-type-composer-item-controls li a:active {
+    opacity: 1.0;
 }
 
 th, td {
