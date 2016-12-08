@@ -2,6 +2,7 @@
 namespace Concrete\Block\ExpressEntryDetail;
 
 use Concrete\Controller\Element\Search\CustomizeResults;
+use Concrete\Core\Attribute\Key\CollectionKey;
 use \Concrete\Core\Block\BlockController;
 use Concrete\Core\Express\Entry\Search\Result\Result;
 use Concrete\Core\Express\EntryList;
@@ -61,18 +62,34 @@ class Controller extends BlockController
 
     public function view()
     {
-        $entity = $this->entityManager->find('Concrete\Core\Entity\Express\Entity', $this->exEntityID);
-        if (is_object($entity)) {
-            $this->set('entity', $entity);
-
-            if ($this->entryMode == 'S' && $this->exSpecificEntryID) {
-                $this->set('entry', Express::getEntry($this->exSpecificEntryID));
+        $c = \Page::getCurrentPage();
+        if ($this->entryMode == 'A') {
+            $ak = CollectionKey::getByHandle($this->exEntryAttributeKeyHandle);
+            if (is_object($ak)) {
+                $settings = $ak->getAttributeKeySettings();
+                $value = $c->getAttribute($ak);
+                if (is_object($settings)) {
+                    $this->set('entity', $settings->getEntity());
+                }
+                if (is_object($value)) {
+                    $this->set('entry', $value->getSelectedEntries()[0]);
+                }
             }
+        } else {
+            $entity = $this->entityManager->find('Concrete\Core\Entity\Express\Entity', $this->exEntityID);
+            if (is_object($entity)) {
+                $this->set('entity', $entity);
 
-            $form = $this->entityManager->find('Concrete\Core\Entity\Express\Form', $this->exFormID);
-            $renderer = $this->app->make('Concrete\Core\Express\Form\StandardViewRenderer', ['form' => $form]);
-            $this->set('renderer', $renderer);
+                if ($this->entryMode == 'S' && $this->exSpecificEntryID) {
+                    $this->set('entry', Express::getEntry($this->exSpecificEntryID));
+                }
+
+            }
         }
+        $form = $this->entityManager->find('Concrete\Core\Entity\Express\Form', $this->exFormID);
+        $renderer = $this->app->make('Concrete\Core\Express\Form\StandardViewRenderer', ['form' => $form]);
+        $this->set('renderer', $renderer);
+
     }
 
     public function action_view_express_entity($exEntryID = null)
@@ -122,6 +139,13 @@ class Controller extends BlockController
             $entities[$entity->getID()] = $entity->getName();
         }
         $this->set('entities', $entities);
+        $keys = CollectionKey::getList();
+        foreach ($keys as $ak) {
+            if ($ak->getAttributeTypeHandle() == 'express') {
+                $attributeKeys[] = $ak;
+            }
+        }
+        $this->set('expressAttributes', $attributeKeys);
     }
 
 }
