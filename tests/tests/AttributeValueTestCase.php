@@ -26,6 +26,7 @@ abstract class AttributeValueTestCase extends ConcreteDatabaseTestCase
         'Collections',
         'CollectionVersions',
         'Pages',
+        'PageThemes'
     );
 
     abstract public function getAttributeTypeHandle();
