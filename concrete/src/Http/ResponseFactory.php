@@ -124,7 +124,8 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
         $item = '/page_forbidden';
         $c = Page::getByPath($item);
         if (is_object($c) && !$c->isError()) {
-            return $this->collection($c, $code, $headers);
+            $this->request->setCurrentPage($c);
+            return $this->controller($c->getPageController(), $code, $headers);
         }
 
         $cnt = $this->app->make(PageForbidden::class);
