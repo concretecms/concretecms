@@ -27,7 +27,7 @@ class FileTreeNodeResponse extends TreeNodeResponse
     {
         $checker = $this->getPermissionsCheckerObject();
         if (is_object($checker)) {
-            return $checker->validate('view_file');
+            return $checker->canViewFileInFileManager();
         }
     }
 
