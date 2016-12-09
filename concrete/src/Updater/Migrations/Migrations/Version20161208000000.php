@@ -15,8 +15,12 @@ class Version20161208000000 extends AbstractMigration
 
     protected function updateBlocks()
     {
-        $this->output(t('Refreshing express details block.'));
+        $this->output(t('Refreshing blocks.'));
         $bt = BlockType::getByHandle('express_entry_detail');
+        if (is_object($bt)) {
+            $bt->refresh();
+        }
+        $bt = BlockType::getByHandle('page_attribute_display');
         if (is_object($bt)) {
             $bt->refresh();
         }
