@@ -100,14 +100,14 @@ use \Concrete\Core\Page\Type\Composer\FormLayoutSetControl as PageTypeComposerFo
 			</table>
 		</div>
 
-	<?php 
+	<?php
     }
     ?>
-<?php 
+<?php
 } else {
     ?>
 	<p><?=t('You have not added any composer form layout control sets.')?></p>
-<?php 
+<?php
 } ?>
 
 </div>
@@ -251,53 +251,3 @@ $(function() {
 
 });
 </script>
-
-<style type="text/css">
-
-div.ccm-page-type-composer-form-layout-control-set {
-	margin-top: 20px;
-}
-
-div.ccm-page-type-composer-form-layout-control-set:last-child {
-	margin-bottom: 20px;
-}
-
-.panel-heading .ccm-page-type-composer-item-controls {
-	float: right;
-}
-
-ul.ccm-page-type-composer-item-controls a {
-	color: #333;
-}
-
-ul.ccm-page-type-composer-item-controls a i {
-	position: relative;
-}
-
-ul.ccm-page-type-composer-item-controls a:hover {
-	text-decoration: none;
-}
-
-ul.ccm-page-type-composer-item-controls {
-	padding: 0;
-	margin: 0;
-	width: 100px;
-	text-align: right; 
-}
-
-.panel-heading:hover > .ccm-page-type-composer-item-controls li,
-.ccm-page-type-composer-form-layout-control-set-control:hover .ccm-page-type-composer-item-controls li {
-	display: inline-block;
-}
-
-.ccm-page-type-composer-item-controls li {
-	display: none;
-	list-style-type: none;
-}
-
-th, td {
-	padding-left: 15px !important;
-	padding-right: 15px !important;
-}
-
-</style>
