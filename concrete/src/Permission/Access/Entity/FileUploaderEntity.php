@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Permission\Access\Entity;
 
+use Concrete\Core\Permission\Access\FileFolderAccess;
 use Loader;
 use Concrete\Core\Permission\Access\Access as PermissionAccess;
 use Config;
@@ -21,7 +22,7 @@ class FileUploaderEntity extends Entity
 
     public function validate(PermissionAccess $pae)
     {
-        if ($pae instanceof FileSetPermissionAccess) {
+        if ($pae instanceof FileFolderAccess) {
             return true;
         }
         if ($pae instanceof FilePermissionAccess) {

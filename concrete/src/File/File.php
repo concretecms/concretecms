@@ -5,6 +5,7 @@ use Carbon\Carbon;
 use Concrete\Core\Entity\File\Version;
 use Concrete\Core\Tree\Node\Node;
 use Concrete\Core\Tree\Node\Type\FileFolder;
+use Concrete\Core\User\UserInfo;
 use Doctrine\Common\Collections\ArrayCollection;
 use FileSet;
 use League\Flysystem\AdapterInterface;
@@ -81,7 +82,6 @@ class File
         }
 
         $f = new \Concrete\Core\Entity\File\File();
-        $f->uID = $uID;
         $f->storageLocation = $fsl;
         $f->fDateAdded = new Carbon($date);
         $f->folderTreeNodeID = $folder->getTreeNodeID();
@@ -90,6 +90,16 @@ class File
         $em = \ORM::entityManager();
         $em->persist($f);
         $em->flush();
+
+        if ($uID > 0) {
+            $ui = UserInfo::getByID($uID);
+            if (is_object($ui)) {
+                $ue = $ui->getEntityObject();
+                if (is_object($ue)) {
+                    $f->setUser($ue);
+                }
+            }
+        }
 
         $node = \Concrete\Core\Tree\Node\Type\File::add($f, $folder);
 

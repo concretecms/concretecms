@@ -159,7 +159,7 @@ function ConcretePanel(options) {
         });
 
         var myButtons = [
-            {'class': 'btn pull-left btn-link', 'type': 'button', 'data-panel-confirmation-action': 'cancel', 'text': ccmi18n.cancel}
+            {'class': 'btn pull-left btn-sm btn-link', 'type': 'button', 'data-panel-confirmation-action': 'cancel', 'text': ccmi18n.cancel}
         ];
         for (var i = 0; i < buttons.length; i++) {
             myButtons.push(buttons[i]);

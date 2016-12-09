@@ -15,6 +15,7 @@
 			<unsigned/>
 			<key/>
 		</field>
+		<field name="exEntryAttributeKeyHandle" type="string" size="255"/>
 		<field name="exFormID" type="guid">
 			<key/>
 		</field>
