@@ -36,4 +36,9 @@ class ExpressSetManager implements SetManagerInterface
         return array();
     }
 
+    public function updateAttributeSetDisplayOrder($sets)
+    {
+        return false;
+    }
+
 }
