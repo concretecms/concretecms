@@ -270,6 +270,9 @@ class Version20160725000000 extends AbstractMigration
                 case 'user':
                     $akCategory = 'userkey';
                     break;
+                default:
+                    $akCategory = 'legacykey';
+                    break;
             }
             $pkgID = null;
             if ($row['pkgID']) {
@@ -285,6 +288,7 @@ class Version20160725000000 extends AbstractMigration
                 'akIsInternal' => $row['akIsInternal'],
                 'pkgID' => $pkgID,
                 'akCategory' => $akCategory,
+                'akCategoryID' => $row['akCategoryID']
             );
             $keyCount = $this->connection->fetchColumn("select count(*) from AttributeKeys where akID = ?", array($row['akID']));
             if (!$keyCount) {
@@ -417,7 +421,7 @@ class Version20160725000000 extends AbstractMigration
                     if (!$count) {
                         $rowA = $this->connection->fetchAssoc('select * from _atAddressSettings where akID = ?', array($akID));
                         if ($rowA['akID']) {
-                            $countries = $this->connection->fetchAll('select * from atAddressCustomCountries where akID = ?', array($akID));
+                            $countries = $this->connection->fetchAll('select * from _atAddressCustomCountries where akID = ?', array($akID));
                             if (!$countries) {
                                 $countries = array();
                             }
