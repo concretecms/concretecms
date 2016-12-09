@@ -26,6 +26,15 @@ class Version20161208000000 extends AbstractMigration
         }
     }
 
+    protected function updateDoctrineXmlTables()
+    {
+        $this->output(t('Updating tables found in doctrine xml...'));
+        // Update tables that still exist in db.xml
+        \Concrete\Core\Database\Schema\Schema::refreshCoreXMLSchema(array(
+            'TreeSearchQueryNodes',
+        ));
+    }
+
     protected function updateEmptyFileAttributes()
     {
         $this->output(t('Updating old empty file attributes.'));
@@ -36,6 +45,7 @@ class Version20161208000000 extends AbstractMigration
     {
         $this->updateBlocks();
         $this->updateEmptyFileAttributes();
+        $this->updateDoctrineXmlTables();
     }
 
     public function down(Schema $schema)
