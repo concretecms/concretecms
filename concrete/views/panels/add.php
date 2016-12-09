@@ -63,7 +63,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
                      data-supports-inline-add="no"
                      data-btID="0"
                      data-dragging-avatar="<?= h(
-                         '<p><img src="/concrete/images/stack.png" /><span>' . t('Stack') . '</span></p>'
+                         '<p><img src="' . ASSETS_URL_IMAGES . "/stack.png" . '" /><span>' . t('Stack') . '</span></p>'
                      ) ?>"
                      data-block-id="<?= intval($stack->getCollectionID()) ?>">
                     <div class="stack-name">
