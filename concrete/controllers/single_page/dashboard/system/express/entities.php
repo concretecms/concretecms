@@ -49,12 +49,6 @@ class Entities extends DashboardPageController
                 $entity->setDefaultEditForm($form);
                 $entity->setDefaultViewForm($form);
 
-                // Create a results node
-                $tree = ExpressEntryResults::get();
-                $node = $tree->getRootTreeNodeObject();
-                $node = \Concrete\Core\Tree\Node\Type\ExpressEntryResults::add($entity->getName(), $node);
-
-                $entity->setEntityResultsNodeId($node->getTreeNodeID());
                 $this->entityManager->persist($entity);
                 $this->entityManager->flush();
 
@@ -75,11 +69,6 @@ class Entities extends DashboardPageController
                         $this->entityManager->persist($entity);
                         $this->entityManager->flush();
                     }
-                }
-
-                $indexer = $entity->getAttributeKeyCategory()->getSearchIndexer();
-                if (is_object($indexer)) {
-                    $indexer->createRepository($entity->getAttributeKeyCategory());
                 }
 
                 $this->flash('success', t('Object added successfully.'));

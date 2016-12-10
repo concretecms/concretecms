@@ -1,6 +1,8 @@
 <?php
 namespace Concrete\Core\Express;
 
+use Concrete\Core\Entity\Express\Entity;
+use Concrete\Core\Entity\Package;
 use Doctrine\ORM\EntityManagerInterface;
 
 class ObjectManager
@@ -24,6 +26,26 @@ class ObjectManager
         } else {
             return $list->getResults();
         }
+    }
+
+    public function buildObject($handle, $plural_handle, $name, Package $pkg = null)
+    {
+        $entity = new Entity();
+        $entity->setHandle($handle);
+        $entity->setPluralHandle($plural_handle);
+        $entity->setName($name);
+        if ($pkg) {
+            $entity->setPackage($pkg);
+        }
+        return $entity;
+    }
+
+    public function addObject($handle, $plural_handle, $name, Package $pkg = null)
+    {
+        $entity = $this->buildObject($handle, $name, $plural_handle, $pkg);
+        $this->entityManager->persist($entity);
+        $this->entityManager->flush();
+        return $entity;
     }
 
     public function getEntry($entryID)
