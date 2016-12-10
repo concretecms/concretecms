@@ -90,6 +90,16 @@ class FormLayoutSet extends Object
         }
     }
 
+    public static function getBySetName($pageType, $setName) {
+        $db = Loader::db();
+        $r = $db->GetRow('select * from PageTypeComposerFormLayoutSets where ptComposerFormLayoutSetName = ? AND ptID = ? ', array($setName, $pageType->ptID));
+        if (is_array($r) && $r['ptComposerFormLayoutSetName']) {
+            $set = new static;
+            $set->setPropertiesFromArray($r);
+            return $set;
+        }
+    }
+
     public function export($fxml)
     {
         $node = $fxml->addChild('set');
