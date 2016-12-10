@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Config;
 
+use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Foundation\Service\Provider;
 
 class ConfigServiceProvider extends Provider
@@ -23,11 +24,14 @@ class ConfigServiceProvider extends Provider
      */
     private function registerFileConfig()
     {
-        $this->app->singleton('config', function ($app) {
+        $provider = $this;
+        $this->app->singleton('config', function ($app) use ($provider) {
             $loader = $app->make('Concrete\Core\Config\FileLoader');
             $saver = $app->make('Concrete\Core\Config\FileSaver');
 
-            return $app->build('Concrete\Core\Config\Repository\Repository', array($loader, $saver, $app->environment()));
+            /** @var Repository $repository */
+            $repository = $app->build('Concrete\Core\Config\Repository\Repository', array($loader, $saver, $app->environment()));
+            return $provider->applyAfterLoad($repository);
         });
     }
 
@@ -42,5 +46,26 @@ class ConfigServiceProvider extends Provider
 
             return $app->build('Concrete\Core\Config\Repository\Repository', array($loader, $saver, $app->environment()));
         });
+    }
+
+    private function applyAfterLoad(Repository $repository)
+    {
+        // Shim `concrete.site` using the default site name
+        $repository->afterLoading(null, function($repo, $group, $items) {
+            // If we're loading the "concrete" group "config/concrete.php"
+            if ($group == 'concrete') {
+                // And there's no site defined
+                if (!array_get($items, 'site')) {
+                    $site = $repo->get('site.default');
+
+                    // Set the site to whatever is set in the site config
+                    $items['site'] = $repo->get("site.sites.{$site}.name");
+                }
+            }
+
+            return $items;
+        });
+
+        return $repository;
     }
 }
