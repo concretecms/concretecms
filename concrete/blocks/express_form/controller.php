@@ -399,11 +399,6 @@ class Controller extends BlockController
             $entityManager->persist($field_set);
             $entityManager->flush();
 
-            $indexer = $entity->getAttributeKeyCategory()->getSearchIndexer();
-            if (is_object($indexer)) {
-                $indexer->createRepository($entity->getAttributeKeyCategory());
-            }
-
         } else {
             // We check save the order as well as potentially deleting orphaned controls.
             $form = $entityManager->getRepository('Concrete\Core\Entity\Express\Form')

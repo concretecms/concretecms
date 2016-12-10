@@ -175,6 +175,7 @@ return array(
         'authentication_type',
         'block_type',
         'block_type_set',
+        'express_entity',
         'captcha_library',
         'content_editor_snippet',
         'conversation_rating_type',
