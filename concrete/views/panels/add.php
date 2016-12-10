@@ -263,7 +263,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
         <?php
         $types = array();
         foreach ($blockTypes as $bt) {
-            if (!$cp->canAddBlockType($bt)) {
+            if (!$cp->canAddBlockType($bt) && $bt->getBlockTypeHandle() != BLOCK_HANDLE_PAGE_TYPE_OUTPUT_PROXY) {
                 continue;
             }
 
