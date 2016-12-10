@@ -2,11 +2,12 @@
 namespace Concrete\Core\Cache\Adapter;
 
 use Concrete\Core\Cache\Cache;
-use Core;
 use Zend\Cache\Exception;
 use Zend\Cache\Storage\Adapter\AbstractAdapter;
 use Zend\Cache\Storage\StorageInterface;
 use Zend\Cache\Storage\FlushableInterface;
+use Concrete\Core\Application\ApplicationAwareInterface;
+use Concrete\Core\Application\ApplicationAwareTrait;
 
 /**
  * Class ZendCacheDriver
@@ -24,12 +25,21 @@ use Zend\Cache\Storage\FlushableInterface;
  *
  * \@package Concrete\Core\Cache\Adapter
  */
-class ZendCacheDriver extends AbstractAdapter implements StorageInterface, FlushableInterface
+class ZendCacheDriver extends AbstractAdapter implements StorageInterface, FlushableInterface, ApplicationAwareInterface
 {
+    use ApplicationAwareTrait;
+
     /**
-     * @var string Name of the cache being used
+     * @var string Name of the cache being used when the localization is fully initialized
      */
-    private $cacheName;
+    private $finalCacheName;
+
+    /**
+     * Is the localization system ready?
+     *
+     * @var bool
+     */
+    private $localizationReady;
 
     /**
      * @var int Number of seconds to consider the cache fresh before it expires
@@ -37,15 +47,57 @@ class ZendCacheDriver extends AbstractAdapter implements StorageInterface, Flush
     protected $cacheLifetime;
 
     /**
-     * @param string $cacheName Name of the cache being used. Defaults to cache.
-     * @param int $cacheLifetime Number of seconds to consider the cache fresh before it expires.
+     * @param string $finalCacheName Name of the cache being used when the localization is fully initialized. Defaults to cache
+     * @param int $cacheLifetime Number of seconds to consider the cache fresh before it expires
      */
-    public function __construct($cacheName = 'cache', $cacheLifetime = null)
+    public function __construct($finalCacheName = 'cache', $cacheLifetime = null)
     {
         parent::__construct();
-
-        $this->cacheName = $cacheName;
+        $this->localizationReady = false;
+        $this->finalCacheName = $finalCacheName;
         $this->cacheLifetime = $cacheLifetime;
+    }
+
+    /**
+     * Is the localization system ready?
+     *
+     * @return bool
+     */
+    protected function isLocalizationReady()
+    {
+        if (!$this->localizationReady) {
+            if ($this->app->make('config')->get('app.bootstrap.packages_loaded') === true) {
+                $this->localizationReady = true;
+            }
+        }
+
+        return $this->localizationReady;
+    }
+
+    /**
+     * @param bool $evenIfTranslationsNotReady
+     *
+     * @return \Concrete\Core\Cache\Cache|null
+     */
+    protected function getCache($evenIfTranslationsNotReady = false)
+    {
+        if ($evenIfTranslationsNotReady || $this->isLocalizationReady()) {
+            return $this->app->make($this->finalCacheName);
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * Returns the final cache key.
+     *
+     * @param string $normalizedKey
+     *
+     * @return string
+     */
+    protected function getCacheKey($normalizedKey)
+    {
+        return 'zend/'.$normalizedKey;
     }
 
     /**
@@ -61,10 +113,14 @@ class ZendCacheDriver extends AbstractAdapter implements StorageInterface, Flush
      */
     protected function internalGetItem(&$normalizedKey, &$success = null, &$casToken = null)
     {
-        /** @var Cache $cache  */
-        $cache = Core::make($this->cacheName);
-        $item = $cache->getItem('zend/'.$normalizedKey);
-        if ($item->isMiss()) {
+        $item = null;
+        $cache = $this->getCache();
+        if ($cache === null) {
+            $item = null;
+        } else {
+            $item = $cache->getItem($this->getCacheKey($normalizedKey));
+        }
+        if ($item === null || $item->isMiss()) {
             $success = false;
 
             return null;
@@ -87,12 +143,14 @@ class ZendCacheDriver extends AbstractAdapter implements StorageInterface, Flush
      */
     protected function internalSetItem(&$normalizedKey, &$value)
     {
-        /** @var Cache $cache  */
-        $cache = Core::make($this->cacheName);
-        $item = $cache->getItem('zend/'.$normalizedKey);
-
-        if ($result = $item->set($value, $this->cacheLifetime)) {
-            $item->save();
+        $cache = $this->getCache();
+        if ($cache === null) {
+            $result = false;
+        } else {
+            $item = $cache->getItem('zend/'.$normalizedKey);
+            if ($result = $item->set($value, $this->cacheLifetime)) {
+                $item->save();
+            }
         }
 
         return $result;
@@ -109,20 +167,24 @@ class ZendCacheDriver extends AbstractAdapter implements StorageInterface, Flush
      */
     protected function internalRemoveItem(&$normalizedKey)
     {
-        /** @var Cache $cache  */
-        $cache = Core::make($this->cacheName);
-        $item = $cache->getItem('zend/'.$normalizedKey);
+        $cache = $this->getCache();
+        if ($cache === null) {
+            $result = false;
+        } else {
+            $item = $cache->getItem('zend/'.$normalizedKey);
+            $result = $item->clear();
+        }
 
-        return $item->clear();
+        return $result;
     }
 
     /**
-     * Flush the whole storage.
+     * Flush the whole storage (even when the localization system is not ready).
      *
      * @return bool
      */
     public function flush()
     {
-        return Core::make($this->cacheName)->getItem('zend')->clear();
+        return $this->getCache(true)->getItem('zend')->clear();
     }
 }
