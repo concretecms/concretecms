@@ -301,15 +301,15 @@ class PageController extends Controller
             foreach ($blocks as $b) {
                 $controller = $b->getController();
                 list($method, $parameters) = $controller->getPassThruActionAndParameters($this->parameters);
-                // [NOUR] if it's a proxyblock let's grab that
+                // If it's a proxyblock let's grab that
                 if (is_object($b->getProxyBlock())) {
                     $b = $b->getProxyBlock();
                 }
-                // [NOUR] let's add the block's ID at the end of the parameters array
+                // Let's add the block's ID at the end of the parameters array
                 // so we can implement the bID checking routine in the block's isValidControllerTask() function
                 $parameters[] = $b->getBlockID();
                 if ($controller->isValidControllerTask($method, $parameters)) {
-                    // [NOUR] it was a valid block task, let's remove the bID we added in the parameters array and run the task
+                    // It was a valid block task, let's remove the bID we added in the parameters array and run the task
                     array_pop($parameters);
                     $controller->on_start();
                     $response = $controller->runAction($method, $parameters);
