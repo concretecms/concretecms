@@ -487,7 +487,7 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
                 // certain older blocks don't know that the last param ought to be a $bID. If they're equal it's zero
                 // which is best. and if they're greater that's ok too.
                 $bID = array_pop($parameters);
-                if ((is_string($bID) || is_int($bID)) && $bID == $this->bID) {
+                if (((is_string($bID) || is_int($bID)) && $bID == $this->bID) || $bID === 'blockAdd' || $bID === 'blockEdit') {
                     return true;
                 }
             }

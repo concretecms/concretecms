@@ -106,6 +106,7 @@ class BlockView extends AbstractView
                     urlencode($this->area->getAreaHandle()),
                     $this->blockType->getBlockTypeID(),
                     $task,
+                    "blockAdd"
                 );
 
                 return call_user_func_array(array('\URL', 'to'), $arguments);
@@ -123,6 +124,7 @@ class BlockView extends AbstractView
                         urlencode($this->area->getAreaHandle()),
                         $b->getBlockID(),
                         $task,
+                        "blockEdit"
                     );
 
                     return call_user_func_array(array('\URL', 'to'), $arguments);
