@@ -20,7 +20,8 @@ class PageController extends Controller
     protected $passThruBlocks = array();
     protected $parameters = array();
     protected $replacement = null;
-
+    protected $request;
+    
     /**
      * array of method names that can't be called through the url
      * @var array
@@ -200,6 +201,7 @@ class PageController extends Controller
 
     public function setupRequestActionAndParameters(Request $request)
     {
+        $this->request = $request;
         $requestPath = $this->getCustomRequestPath();
         if ($requestPath === null) {
             $requestPath = $request->getPath();
