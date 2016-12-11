@@ -320,25 +320,54 @@ class PageController extends Controller
                 // let's check that we're dealing with a valid task
                 if ($controller->isValidControllerTask($method, $parameters)) {
                         // pretty good. Let's get rid of the strings we added in BlockView.php ("blockAdd" or "blockEdit")
-                        // in both the local $this->parameters variable and $parameters variable we're sending to the task function
-                        // then run the task
-                        array_pop($this->parameters);
-                        array_pop($parameters);
-                        $controller->on_start();
-                        $response = $controller->runAction($method, $parameters);
-                        if ($response instanceof Response) {
-                            return $response;
-                        }
-                        // old school blocks have already terminated at this point. They are redirecting
-                        // or exiting. But new blocks like topics, etc... can actually rely on their $set
-                        // data persisting and being passed into the view.
+    public function validateRequest()
+    {
+        $valid = true;
+        if (!$this->isValidControllerTask($this->action, $this->parameters)) {
+            // This is not a page tas let's check blocks'
+            $valid = false;
+            
+            // check if we are dealing with a task called by a block's add or edit mode
+            // 2 checks are used: presence of a specific path OR presence of a specific parameter
+            $blockAddRequest = ((strpos($this->request->getPath(), '/ccm/system/block/action/add') !== false) || (array_slice($this->parameters, -1)[0] === "blockAdd"));
+            $blockEditRequest = ((strpos($this->request->getPath(), '/ccm/system/block/action/edit') !== false) || (array_slice($this->parameters, -1)[0] === "blockEdit"));
+            
+            // If we are dealing with a block in add or edit mode, let's do this
+            if ($blockAddRequest || $blockEditRequest) {
+                // in Add mode, let's grab the block type's controller
+                if ($blockAddRequest) {
+                    $controller = BlockType::getByID($this->parameters[7])->controller;
+                }
+                // In edit mode, let's grab the block's controller
+                if ($blockEditRequest) {
+                    $controller = Block::getByID($this->parameters[7])->getController();
+                }
+                // let's remove everything in this->parameters that is not what we need. We need the task and its parameters
+                // everything before that is just the different components of the path
+                list($method, $parameters) = $controller->getPassThruActionAndParameters(array_slice($this->parameters, 8));
 
-                        // so if we make it down here we have to return true –so that we don't fire a 404.
-                        $valid = true;
-
-                        // then, we need to save the persisted data that may have been set.
-                        $controller->setPassThruBlockController($this);
+                // let's check that we're dealing with a valid task
+                if ($controller->isValidControllerTask($method, $parameters)) {
+                    // pretty good. Let's get rid of the strings we added in BlockView.php ("blockAdd" or "blockEdit")
+                    // in both the local $this->parameters variable and $parameters variable we're sending to the task function
+                    // then run the task
+                    array_pop($this->parameters);
+                    array_pop($parameters);
+                    $controller->on_start();
+                    $response = $controller->runAction($method, $parameters);
+                    if ($response instanceof Response) {
+                        return $response;
                     }
+                    // old school blocks have already terminated at this point. They are redirecting
+                    // or exiting. But new blocks like topics, etc... can actually rely on their $set
+                    // data persisting and being passed into the view.
+
+                    // so if we make it down here we have to return true –so that we don't fire a 404.
+                    $valid = true;
+
+                    // then, we need to save the persisted data that may have been set.
+                    $controller->setPassThruBlockController($this);
+                }
             } else {
                 // We're not in add or edit mode so it must be a view for a block from the page
                 $blocks = array_merge($this->getPageObject()->getBlocks(), $this->getPageObject()->getGlobalBlocks());
@@ -373,7 +402,6 @@ class PageController extends Controller
                     }
                 }
             }
-            
 
             if (!$valid) {
                 // finally, we check additional page paths.
