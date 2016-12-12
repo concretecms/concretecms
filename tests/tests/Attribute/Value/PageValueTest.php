@@ -14,6 +14,7 @@ class PageValueTest extends \AttributeValueTestCase
             'PermissionKeyCategories',
             'PermissionKeys',
             'PageTypePublishTargetTypes',
+            'PageThemes',
         ));
 
         $this->metadatas = array_merge($this->metadatas, array(
