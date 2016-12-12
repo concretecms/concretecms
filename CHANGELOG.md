@@ -1,49 +1,199 @@
-# 5.7.5.10
-
-* Minor bug fixes
-* Fixed insecure use of non-random str_shuffle when creating user tokens
-* Improvements to update process for version 8.
- 
-# 5.7.5.9
+# 8.0.2
 
 ## New Features
 
-* Rescan files through the file manager now scans 5 at a time, works through the queue.
-* Added option to ignore page permissions to the Page List block
-
-## Behavioral Improvements
-
-* When rescanning files, if there are image upload handlers like constrain image or JPEG quality processing, these will run again (allowing you to bulk rescan and constrain large images that have been uploaded through the file manager.)
-* More reliable theme css caching (thanks fabian)
-* Installed packages will now have their strings included in the “Translate Site” interface.
-* Add WCAG label to Share This Page default view (thanks uimatters)
-* When you create a new page through the multilingual page panel, the new page’s approved version is unapproved, allowing administrators time to edit the page’s language to reflect the new section of the site.
+* Added the ability to use the express attribute to specify express entries in the Express Entry Detail block.
 
 ## Bug Fixes
 
-* Google Maps now requires an API key – this functionality has been added to the Google Maps block (thanks MrKarlDilkington)
-* Fixed bug where composer deleted old page versions on published pages.
-* Fix namespace of UserInfo (thanks jaromirdalecky)
-* Conversation block can now be appropriately translated based on the area of the site it appears in (thanks lehik)
-* Image Slider bug fixes (these were not included in the previous update.)
-* Fixes minor security vulnerability with pagination parameters
-* “Edit Page Type Drafts” page type permission now controls who can access a particular page draft (as it should have).
-* AutoNav ignore exclude Nav wasn’t working when set programmatically (thanks fabian, rikzuiderlicht)
-* More reliable theme customization caching (thanks fabian)
-* Fixed bug: Permissions Bug: Completely new admins get 404 on first draft creation 
-* Image slider block: Fix smaller than full size slides to center on page (thanks cryophallian)
- 
+* Fixed site name not rendering in many themes (those that used Config::get(‘concrete.site’) to retrieve it.)
+* Fixed inability to set a site to private or members only.
+* Fixed error message complaining about methods in missing in the ExpressSetManager interface that made it impossible to work with Express objects in the Dashboard.
+* Fixed error that kept sites with legacy attribute categories (like Vivid Store) from upgrading properly.
+* Fixed Page Attribute Display block not having access to delimiter field after upgrade from 5.7.
+* Fixed ability to save file search queries in site updated from 5.7.
+* Fixed https://www.concrete5.org/developers/bugs/8-0-1/conversation-block-attachments-can-not-be-disabled/
+* Fixed https://www.concrete5.org/developers/bugs/8-0-1/file-attributes-with-no-file-selected-cause-errors-after-upgradi/
+
+# 8.0.1
+
+## Bug Fixes
+
+* Fixed bug where files were not viewable by anyone other than admin after upgrade from 5.7.5.10.
+* Fixed bug where select attribute wouldn’t sort by popularity (and would die with a SQL error.)
+* Fixed bug where tracking code was not preserved after upgrade from 5.7.5.10.
+* Fixed bug where users could not be deleted after upgrade from 5.7.5.10
+* Debug is no longer the default setting for error reporting.
+* Fixed inability to sort attribute sets, bugs with editing legacy attribute sets.
+* Fixed problems with saving legacy attributes.
+* Made file manager behave better in cases where a file record somehow had no versions.
+* Fixed error where adding a form block would fail intermittently 
+* Fixed typos in the automatically generated Nginx configuration for pretty URL handling (thanks chemett)
+
+# 8.0
+
+## New Features
+
+
+* Express: Extensible, Custom Data Objects that can be created by Editors. Easily search, sort, manage permissions on and display these objects in the front-end and the Dashboard.
+* User Desktops: a fully customizable landing page for users when they login to the system, available even if user profiles are not. Functions within the Dashboard or outside of it. 
+* Revamped Waiting for Me: can include a large number of notification types (like user signup, workflow, form submissions, private messages, concrete5 updates and more) and is extendable by third parties.
+
+
+## Block Improvements
+
+
+* Completely overhauled Form block: now powered by Express, form block fields are attribute-based. This means they can be added to with new attributes. Additionally, you can intersperse text with form controls. The Form block creates Express entities in the Dashboard, which you can grant permissions to, related to other entities, and more.
+* More control over page defaults – ability to choose whether to delete all blocks based on defaults or just the unforked versions, and the ability to publish updates to page defaults over previously forked versions of defaults blocks.
+* Added the ability to add a delimiter to multiple items displayed by the Page Attribute Display block (thanks cryophallion)
+* Add topic, tag, and date filtering to the Page Title block (thanks MrKarlDilkington)
+* Add an option to list pages at the current level in Page List (thanks juhotalus)
+* Fix image slider composer view (thanks ob7)
+
+
+## Page Improvements
+
+
+* Page versions can now be scheduled for approval in the future.
+
+
+## File Improvements
+
+
+* Revamped file manager, with support for folders, better support for saved searches, and more.
+* Automatically generated thumbnails now work with storage locations (thanks Mnkras)
+* New attractive file type icons that better match concrete5’s current UI (thanks Freepik – http://www.flaticon.com/authors/freepik)
+* SVG files now will create thumbnails when uploaded if the system has ImageMagick installed (thanks mlocati)
+
+
+## Stack Improvements
+
+
+* Stack Folders: Stacks now support folders, which should enable developers to use stacks more efficiently. 
+
+
+## Dashboard Improvements
+
+
+* Dashboard Favorites are now Chooseable via the Bookmark Icon in the Dashboard Header
+
+
+## User Improvements
+
+
+* User approval is now handled through the use of concrete5 workflow. Enable workflows on user activation to control how users register for your concrete5 site. Control which administrators can edit which users. (thanks Mainio!)
+* All user passwords can be globally reset from the Dashboard. Users will have to reauthenticate immediately, and change their password immediately.
+
+
+## SEO Improvements
+
+
+* There are now separate tracking codes for header and footer locations (thanks MrKarlDillkington, mlocati)
+
+
+## Multilingual 
+
+
+* Multilingual stacks and global areas work nicely with folders.
+* Drafts now use the target page location property to determine their locale and language, allowing you to create related drafts for different languages.
+* Multilingual sites now appear as their own trees in a tabbed sitemap, rather than within the main site.
+
+
+## Permissions/Workflow Improvements
+
+
+* Waiting for Me Workflow List now shows all workflow types instead of just Pages, is fully extendable, more attractive, and available outside of the Dashboard via  Desktop Block.
+
+## Attribute Updates
+
+
+* Added Telephone, URL and Email Address attributes
+* Image/File attribute now has an “HTML Input” display mode.
+* Text attributes now have a placeholder as an option (thanks avdevs)
+* Custom attributes can now be globally applied to your site, and easily accessed By Calling \Site::getSite()->getAttribute(‘attribute_handle’);
+
+
+
+
+## Other Improvements
+
+
+* Updated installation process; more attractive, gives users something to do while installation is ocurring, added the ability to specify canonical URL and session handler during installation (thanks mlocati)
+* If a site is running on an updated core, the database migrations will automatically be run (saves potential database until the update has to be run manually)
+* The command line installer now features an interactive mode when used with -i
+* Better checking of .htaccess status when updating pretty URLs (thanks mlocati)
+* You can now add page redirects for the home page (thanks edtrist)
+* Code cleanup and optimization (thanks a3020, mlocati, Korvinszanto)
+* Invalidate browser cache when CSS files are edited (thanks joostrijneveld)
+* Switch Site name and page title on default (thanks katzueno)
+* We added ID back to the custom style panel for blocks (thanks MrKarlDilkington)
+* Improvements to composer autosave behavior.
+* We now use relative URLs when the canonical URL isn’t set.
+* Nicer display of image slider in edit mode (thanks Siton-Design)
+* Fixed linking to twitter tweets so they don’t redirect (thanks clarkwinkelmann)
+
+
+## Bug Fixes
+
+
+* Big thanks to olsgreen for fixing a long standing bug with page edit mode checking and timestamps, leading to a fix of buggy edit mode behaviors like layouts not rendering post add, edit mode not being respected, etc... 
+* Bug fixes to Image Slider (thanks MrKarlDilkington)
+* https://www.concrete5.org/developers/bugs/5-7-5-8/file-manager-edit-image-doesnt-work-when-jscss-cache-is-on-becau/ (thanks mlocati)
+* Fixed bug where custom styles in stacks weren’t showing up if the stack was added to the front-end (thanks olsgreen)
+* Added  CSRF Tokens to Legacy Form Block (thanks ryantyler)
+* Tiny issue: Add missing "/" in $title end tag (thanks Siton-Design)
+* Fix issue to generate thumbnail of vertical long image (thanks hissy)
+* Fix: loop Setting not working in youtube block (thanks jordif)
+* Fix: Switching from a theme with grid support to one without grid support errors out (thanks olsgreen)
+* Bug fixes with thumbnail creation logic when the width of the image exactly matches the width of the thumbnail (thanks Mesuva)
+
+
 ## Developer Updates
 
-* Added event for modifying page meta tags and title attribute in header_required.php (thanks mlocati)
-* More reliable adding of pages programmatically (will automatically strip composer output controls from pages created programmatically)
-* Adds events for add, edit, and delete for blocks on a page
 
-# 5.7.5.8
+* Symfony components updated to version 3.
+* Font Awesome icon set updated to version 4.5.
+* Search block URLs support URL Resolver so they can be overridden (thanks ahukkanen)
+* Completely new translation subsystem, with better support for language contexts, and an improved API (thanks ahukkanen and mlocati)
+* Bootstrap components updated to 3.3.7.
+* Updated Laravel Dependency Injection Component to version 5.
+* Zend Framework libraries updated to their latest versions
+* Added on_form_submission event for Legacy form (thanks Jozzeh) 
+* Additional commands added to command line tool (thanks mlocati)
+* jQuery UI updated to 1.11.4
 
-* German, Japanese and Russian languages are now included
-* Image Slider Bug Fixes
-* Using blank alt tags in Image Slider, Image and Content blocks if no alt is provided, rather than the HtmlObject default “#” ones.
+
+### Important Backward Compatibility Notes
+
+
+* When deleting database tables in v8, you may have some trouble. This is due to foreign key constraints. See: https://github.com/concrete5/concrete5/issues/3797
+
+
+https://github.com/concrete5/concrete5/issues/3299
+
+
+## Credits
+
+
+In addition to the credits above, the following users have been very helpful fixing bugs, testing beta releases, and helping whip the 8.0 interface into shape
+
+
+Edtrist, mlocati, MrKarlDilkington
+
+# 5.7.5.12
+
+## Bug Fixes
+
+* Fixed bug with Environment Information not working on PHP below 5.4.
+
+# 5.7.5.11
+
+## Bug Fixes
+
+* Works again properly on PHP 5.3.
+* Fixed bug that made upgrading impossible on PHP < 5.5.9.
+* Fixed page not found error when clicking on a topic list to filter the page list in the blog.
+* Controller bug fixes and security updates.
 
 # 5.7.5.7
 

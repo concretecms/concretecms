@@ -1,4 +1,5 @@
 <?php
+
 class IPAddressTest extends PHPUnit_Framework_TestCase
 {
     /**
@@ -132,6 +133,6 @@ class IPAddressTest extends PHPUnit_Framework_TestCase
     public function testIpType($ip, $expected)
     {
         $this->object->setIp($ip);
-        $this->assertEquals($expected, ($this->object->isIPv4())?(4):($this->object->isIPv6()?6:0));
+        $this->assertEquals($expected, ($this->object->isIPv4()) ? (4) : ($this->object->isIPv6() ? 6 : 0));
     }
 }

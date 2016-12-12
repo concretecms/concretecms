@@ -1,5 +1,5 @@
 module.exports = function(grunt, config, parameters, done) {
-	var workFolder = parameters.releaseWorkFolder || './release/source/web';
+	var workFolder = parameters.releaseWorkFolder || './release/source';
 	function endForError(e) {
 		process.stderr.write(e.message || e);
 		done(false);

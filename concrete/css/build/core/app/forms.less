@@ -1,0 +1,47 @@
+.ccm-ui {
+
+
+  // Make control labels blue
+  label.control-label {
+    color: #4290be;
+  }
+
+  fieldset:last-of-type {
+    margin-bottom: 0px;
+    border-bottom: 0px;
+  }
+  fieldset {
+    position: relative; /* we need this for right aligned tooltips */
+    margin-bottom: 3em;
+    padding-bottom: 2em;
+    border-bottom: 1px solid #dcdcdc;
+    legend {
+      font-weight: bold;
+      border: 0px;
+
+     // padding-bottom: 1em;
+      /* let's disable this AGAIN, and instead if you wnnt lines after your legends use an hr tag
+      because otherwise we can't go full width
+      border-bottom: 1px solid #dcdcdc; // Re-added back to this because there are lots of cases where legend + .form-group won't work and then we lose the line.
+      margin-bottom: 1em;
+      */
+    }
+
+    /*
+    // Note the full width border has to be added to the form-group
+    // element, because legend can't span the full content area because it is lame
+    legend + .form-group {
+      border-top: 1px solid #dcdcdc;
+      margin-top: 1.2em;
+      padding-top: 1.2em;
+    }*/
+  }
+
+  // Less intrusive help
+  .help-block {
+    font-size: 14px;
+    color: #888;
+  }
+
+
+}

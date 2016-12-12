@@ -1,13 +1,12 @@
 <?php
 
-class LocalizationTest extends \PHPUnit_Framework_TestCase
+use Concrete\Tests\Localization\LocalizationTestsBase;
+
+class LocalizationTest extends LocalizationTestsBase
 {
     public function testGeneratedPO()
     {
-        $translationsFolder = DIR_APPLICATION.'/'.DIRNAME_LANGUAGES;
-        if (!is_dir($translationsFolder)) {
-            mkdir($translationsFolder);
-        }
+        $translationsFolder = static::getTranslationsFolder();
 
         // Extract the translatable strings and create the template .pot file
         $potFile = $translationsFolder.'/messages.pot';
@@ -42,6 +41,7 @@ Stack trace:
 $stack
 EOT
                     );
+
                     return;
                 }
             }

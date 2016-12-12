@@ -1,0 +1,36 @@
+.preview-panel-form {
+
+    .guest-button,
+    .user-button,
+    .guest-button.active,
+    .user-button.active {
+        color: #ffffff;
+        -webkit-transition: none;
+        transition: none;
+    }
+
+    .guest-button,
+    .user-button {
+        background: #3a3c41;
+        border-color: #3a3c41;
+
+        &:hover {
+            color: #ffffff;
+            background: lighten(#3a3c41, 5%);
+            border-color: lighten(#3a3c41, 5%);
+        }
+    }
+
+    .guest-button.active,
+    .user-button.active {
+        background: #696d77;
+        border-color: #696d77;
+
+        &:hover {
+            background: lighten(#696d77, 10%);
+            border-color: lighten(#696d77, 10%);
+        }
+    }
+
+}
+

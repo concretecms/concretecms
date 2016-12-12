@@ -1,0 +1,122 @@
+/* Base page */
+@index-level-base: 1;
+
+/* Dashboard form actions wrapper */
+@index-level-dashboard-form-actions-wrapper: 100;
+
+/* Menus In Page */
+@index-level-in-context-area-handle: 2;
+@index-level-in-context-menu-highlighter: 400;
+@index-level-in-context-click-proxy: 500;
+
+/* Checkboxes and stars in search results above menus */
+@index-level-search-results-checkboxes: 550;
+@index-level-search-results-stars: 550;
+@index-level-search-reset: 550;
+
+
+/* Inline Editing in Page */
+@index-level-inline-commands: 600;
+
+/* Inline Editing with Editable Fields */
+@index-level-editable-field: 600;
+@index-level-editable-field-proxy: 625;
+@index-level-editable-field-commands: 650;
+
+/* Dropdown Menus */
+@index-level-in-context-menu: 700;
+@index-level-inline-dropdowns: 700;
+
+/* Status Bar (below concrete5 toolbar and panels) */
+@index-level-status-bar: 800;
+
+/* Page alert (blue boxes) –similar to dashboard help but at the page level. Should come below the dialog overlay and the intelligent search */
+@index-level-page-alert: 840;
+
+/* Panels */
+@index-level-panel-overlay: 850; /* this is the overlay over the main content. must come below the panel z-index */
+@index-level-panel-detail: 870;
+@index-level-panel-detail-form-actions: 880;
+@index-level-panel: 900;
+@index-level-panel-hover: 950;
+@index-level-panel-dialog: 950;
+@index-level-panel-select-widget: 950;
+@index-level-panel-alert: 980;
+@index-level-panel-help: 1200; //panel help has to come above page help
+
+/* Draggables */
+@index-level-draggable-content-item: 1000;
+
+/* Main concrete5 toolbar */
+@index-level-main-bar: 1000;
+
+/* Disable Toolbar (over toolbar) */
+@index-level-toolbar-disabled: 1100;
+
+/* Page help – below panel detail and below widget overlay */
+/* USED to come above widget overlay so we could show it while the dashboard panel is open, but moved to below panel
+/* overlay because it makes it ambiguous whether help is available in the lefthand panel or not */
+@index-level-page-help: 840;
+
+/* Dashboard Help Notifications – has to come BELOW the modal dialog stuff, because it's not really an ephemeral notification */
+/* also has to come below the dashboard toolbar */
+@index-level-dashboard-help: 990;
+
+/* Inline Editing Toolbar - has to come above disabled toolbar */
+@index-level-inline-toolbar: 1150;
+
+/* Main concrete5 toolbar - has to come above dashboard help notifications because of stupid webkit compositing */
+@index-level-main-bar-loading: 1160;
+
+/* Intelligent Search */
+@index-level-intelligent-search: 1200;
+
+/* Dialogs */
+@index-level-modal-overlay: 1500;
+@index-level-dialog: 2000;
+
+/* Magnific Popup –has to come above dialogs because it might get called from a dialog*/
+@lightbox-overlay: 2100;
+@lightbox-overlay-wrap: 2200;
+@lightbox-loader: 2300;
+@lightbox-content: 2400;
+@lightbox-arrows: 2400;
+
+/* Show the toolbar over the dialog/widget overlay – used during help guided tours. Has to come above index level dialog because jQuery UI assigns that to the widget overlay */
+@index-level-toolbar-tour-guide: 2100;
+
+
+/* Redactor dropdown –can be either inline OR in a dialog box so we have to come above dialog. Hopefully this doesn't
+cause other problems */
+@index-level-redactor-toolbar-dropdown: 2500;
+
+/* Dialog Content */
+@index-level-dialog-content: 3000;
+@index-level-dialog-content-click-proxy: 3200;
+
+/* Search Checkboxes */
+@index-level-search-checkbox: 3400;
+
+/* Dialog Chrome */
+@index-level-dialog-options: 3800;
+@index-level-dialog-title-bar: 3900;
+@index-level-dialog-footer-bar: 3900;
+@index-level-dialog-title-bar-search: 4000;
+
+/* Tooltips and hovers in dialogs */
+@index-level-tooltip-holder: 5000;
+@index-level-menu-panel-and-dialog: 5000;
+@index-level-dialog-hover: 5000;
+@index-level-editor-full-screen: 5000;
+@index-level-tooltip-in-menu: 5001; /* tooltips that live on the same plane as menus */
+
+/* Edit Response HUDs - should come above modal dialog stuff. */
+@index-level-hud-underlay: 5199;
+@index-level-hud: 5200;
+
+/* Dashboard panels */
+@panel-border-color: #101114;
+@panel-form-element-bg-color: #4c4e53;
+@panel-form-element-text-color: #bababa;
+@panel-normal-text-color: #676767;
+@panel-datepicker-highlight-day-color: #828282;

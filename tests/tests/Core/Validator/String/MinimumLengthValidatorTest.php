@@ -3,7 +3,6 @@ namespace Concrete\Core\Tests\Validator\String;
 
 class MinimumLengthValidatorTest extends \PHPUnit_Framework_TestCase
 {
-
     public function testIsValid()
     {
         $validator = new \Concrete\Core\Validator\String\MinimumLengthValidator(0);
@@ -21,7 +20,7 @@ class MinimumLengthValidatorTest extends \PHPUnit_Framework_TestCase
     {
         $validator = new \Concrete\Core\Validator\String\MinimumLengthValidator(5);
 
-        $this->assertFalse($validator->isValid('1234', $error = new \ArrayObject));
+        $this->assertFalse($validator->isValid('1234', $error = new \ArrayObject()));
         $this->assertNotEmpty($error);
     }
 
@@ -32,5 +31,4 @@ class MinimumLengthValidatorTest extends \PHPUnit_Framework_TestCase
         $this->setExpectedException('InvalidArgumentException');
         $validator->isValid($validator);
     }
-
 }

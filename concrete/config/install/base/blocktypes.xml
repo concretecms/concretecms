@@ -1,0 +1,124 @@
+<?xml version="1.0"?>
+<concrete5-cif version="1.0">
+
+    <blocktypes>
+        <blocktype handle="core_area_layout" package=""/>
+        <blocktype handle="core_page_type_composer_control_output" package=""/>
+        <blocktype handle="core_scrapbook_display" package=""/>
+        <blocktype handle="core_stack_display" package=""/>
+        <!--
+        <blocktype handle="core_gathering_display" package=""/>
+        <blocktype handle="core_gathering" package=""/>
+        //-->
+        <blocktype handle="core_conversation" package=""/>
+        <blocktype handle="desktop_app_status" package=""/>
+        <!--
+        <blocktype handle="core_conversation_message" package=""/>
+        //-->
+        <blocktype handle="desktop_newsflow_latest" package=""/>
+        <blocktype handle="desktop_site_activity" package=""/>
+        <blocktype handle="desktop_featured_addon" package=""/>
+        <blocktype handle="desktop_featured_theme" package=""/>
+        <blocktype handle="desktop_latest_form" package=""/>
+        <blocktype handle="desktop_waiting_for_me" package=""/>
+        <blocktype handle="autonav" package=""/>
+        <blocktype handle="content" package=""/>
+        <blocktype handle="date_navigation" package=""/>
+        <blocktype handle="external_form" package=""/>
+        <blocktype handle="file" package=""/>
+        <blocktype handle="page_attribute_display" package=""/>
+        <blocktype handle="express_entry_list" package=""/>
+        <blocktype handle="express_entry_detail" package=""/>
+        <blocktype handle="express_form" package=""/>
+        <blocktype handle="form" package=""/>
+        <blocktype handle="page_title" package=""/>
+        <blocktype handle="feature" package=""/>
+        <blocktype handle="topic_list" package=""/>
+        <blocktype handle="social_links" package=""/>
+        <blocktype handle="testimonial" package=""/>
+        <blocktype handle="share_this_page" package=""/>
+        <blocktype handle="google_map" package=""/>
+        <blocktype handle="html" package=""/>
+        <blocktype handle="horizontal_rule" package=""/>
+        <!-- <blocktype handle="discussion" package=""/>//-->
+        <blocktype handle="image" package=""/>
+        <blocktype handle="faq" package=""/>
+        <blocktype handle="next_previous" package=""/>
+        <blocktype handle="page_list" package=""/>
+        <blocktype handle="rss_displayer" package=""/>
+        <blocktype handle="search" package=""/>
+        <blocktype handle="image_slider" package=""/>
+        <blocktype handle="survey" package=""/>
+        <blocktype handle="switch_language" package=""/>
+        <blocktype handle="tags" package=""/>
+        <blocktype handle="video" package=""/>
+        <blocktype handle="youtube" package=""/>
+    </blocktypes>
+
+	<systemcontenteditorsnippets>
+		<snippet handle="page_name" name="Page Name" package="" activated="1"/>
+		<snippet handle="user_name" name="User Name" package="" activated="1"/>
+	</systemcontenteditorsnippets>
+
+    <blocktypesets>
+        <blocktypeset handle="basic" name="Basic" package="">
+            <blocktype handle="content"/>
+            <blocktype handle="html"/>
+            <blocktype handle="image"/>
+            <blocktype handle="file"/>
+            <blocktype handle="horizontal_rule"/>
+            <blocktype handle="feature"/>
+        </blocktypeset>
+        <blocktypeset handle="navigation" name="Navigation" package="">
+            <blocktype handle="autonav"/>
+            <blocktype handle="page_title"/>
+            <!--
+            <blocktype handle="core_gathering"/>
+
+            //-->
+            <blocktype handle="faq"/>
+            <blocktype handle="page_list"/>
+            <blocktype handle="next_previous"/>
+            <blocktype handle="date_navigation"/>
+            <blocktype handle="tags"/>
+            <blocktype handle="topic_list"/>
+            <blocktype handle="rss_displayer"/>
+            <blocktype handle="switch_language"/>
+        </blocktypeset>
+        <blocktypeset handle="form" name="Forms" package="">
+            <blocktype handle="express_form"/>
+            <blocktype handle="search"/>
+            <blocktype handle="external_form"/>
+        </blocktypeset>
+        <blocktypeset handle="express" name="Express" package="">
+            <blocktype handle="express_entry_list"/>
+            <blocktype handle="express_entry_detail"/>
+        </blocktypeset>
+        <blocktypeset handle="social" name="Social Networking" package="">
+            <blocktype handle="survey"/>
+            <blocktype handle="core_conversation" />
+            <blocktype handle="social_links" />
+            <blocktype handle="testimonial" />
+            <blocktype handle="discussion"/>
+            <blocktype handle="share_this_page" />
+        </blocktypeset>
+        <blocktypeset handle="multimedia" name="Multimedia" package="">
+            <blocktype handle="page_attribute_display"/>
+            <blocktype handle="image_slider"/>
+            <blocktype handle="video"/>
+            <blocktype handle="youtube"/>
+            <blocktype handle="google_map"/>
+        </blocktypeset>
+        <blocktypeset handle="core_desktop" name="Desktop" package="">
+            <blocktype handle="desktop_app_status"/>
+            <blocktype handle="desktop_site_activity"/>
+            <blocktype handle="desktop_featured_addon"/>
+            <blocktype handle="desktop_featured_theme"/>
+            <blocktype handle="desktop_latest_form"/>
+            <blocktype handle="desktop_waiting_for_me"/>
+            <blocktype handle="desktop_newsflow_latest"/>
+        </blocktypeset>
+
+    </blocktypesets>
+
+</concrete5-cif>

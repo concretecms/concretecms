@@ -4,21 +4,18 @@
  * Created by PhpStorm.
  * User: andrew
  * Date: 6/10/14
- * Time: 7:47 AM
+ * Time: 7:47 AM.
  */
-
 class SomethingCoolPageTypeValidator extends \Concrete\Core\Page\Type\Validator\StandardValidator
 {
-
 }
 
 class PageTypeValidatorTest extends \PHPUnit_Framework_TestCase
 {
-
     public function testPageTypeValidatorManagerLoading()
     {
         $manager = Core::make('manager/page_type/validator');
-        $manager->extend('something_cool', function($app) {
+        $manager->extend('something_cool', function ($app) {
             return new SomethingCoolPageTypeValidator();
         });
 
@@ -39,7 +36,5 @@ class PageTypeValidatorTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('SomethingCoolPageTypeValidator', $type1->getPageTypeValidatorObject());
         $this->assertInstanceOf('\Concrete\Core\Page\Type\Validator\StandardValidator', $type2->getPageTypeValidatorObject());
         $this->assertInstanceOf('\Concrete\Core\Page\Type\Type', $type2->getPageTypeValidatorObject()->getPageTypeObject());
-
     }
-
 }

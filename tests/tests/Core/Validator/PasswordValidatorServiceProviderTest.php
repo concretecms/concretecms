@@ -3,7 +3,6 @@ namespace Concrete\Core\Tests\Validator;
 
 class PasswordValidatorServiceProviderTest extends \PHPUnit_Framework_TestCase
 {
-
     public function testIsInstance()
     {
         $app = \Core::make('app');
@@ -23,5 +22,4 @@ class PasswordValidatorServiceProviderTest extends \PHPUnit_Framework_TestCase
 
         $this->assertTrue($app->bound('validator/password'));
     }
-
 }

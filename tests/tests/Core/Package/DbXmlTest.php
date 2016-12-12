@@ -6,7 +6,6 @@ use Package;
 
 class DbXmlTest extends \PHPUnit_Framework_TestCase
 {
-
     /**
      * Tests that the table is properly updated according to the updated
      * database schema XML file when the database table already exists.
@@ -51,5 +50,4 @@ class DbXmlTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($tbl->hasColumn('newColumn'));
         $this->assertFalse($tbl->hasColumn('testColumn'));
     }
-
 }

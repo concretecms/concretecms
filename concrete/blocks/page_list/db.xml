@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema
+  xmlns="http://www.concrete5.org/doctrine-xml/0.5"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.concrete5.org/doctrine-xml/0.5 http://concrete5.github.io/doctrine-xml/doctrine-xml-0.5.xsd">
+
+  <table name="btPageList">
+    <field name="bID" type="integer">
+      <unsigned/>
+      <key/>
+    </field>
+    <field name="num" type="smallint">
+      <unsigned/>
+      <notnull/>
+    </field>
+    <field name="orderBy" type="string" size="32" comment="Was enum, display_asc','display_desc','chrono_asc','chrono_desc','alpha_asc','alpha_desc','score_asc','score_desc'"/>
+    <field name="cParentID" type="integer">
+      <unsigned/>
+      <default value="1"/>
+      <notnull/>
+    </field>
+    <field name="cThis" type="boolean">
+      <default value="0"/>
+      <notnull/>
+    </field>
+    <field name="cThisParent" type="boolean">
+      <default value="0"/>
+      <notnull/>
+    </field>
+    <field name="useButtonForLink" type="boolean">
+      <default value="0"/>
+      <notnull/>
+    </field>
+    <field name="buttonLinkText" type="string" size="255"/>
+    <field name="pageListTitle" type="string" size="255"/>
+    <field name="filterByRelated" type="boolean">
+      <default value="0"/>
+      <notnull/>
+    </field>
+    <field name="filterByCustomTopic" type="boolean">
+      <default value="0"/>
+      <notnull/>
+    </field>
+    <field name="filterDateOption" type="string" size="25" comment="('all','today','past','future','between')">
+      <default value="all"/>
+    </field>
+    <field name="filterDateDays" type="integer">
+      <unsigned/>
+      <default value="0"/>
+      <notnull/>
+    </field>
+
+    <field name="filterDateStart" type="string" size="20">
+    </field>
+    <field name="filterDateEnd" type="string" size="20">
+    </field>
+
+
+    <field name="relatedTopicAttributeKeyHandle" type="string" size="255"/>
+    <field name="customTopicAttributeKeyHandle" type="string" size="255"/>
+    <field name="customTopicTreeNodeID" type="integer">
+      <unsigned/>
+      <default value="0"/>
+      <notnull/>
+    </field>
+    <field name="includeName" type="boolean">
+      <default value="1"/>
+      <notnull/>
+    </field>
+    <field name="includeDescription" type="boolean">
+      <default value="1"/>
+      <notnull/>
+    </field>
+    <field name="includeDate" type="boolean">
+      <default value="0"/>
+      <notnull/>
+    </field>
+    <field name="includeAllDescendents" type="boolean">
+      <default value="0"/>
+      <notnull/>
+    </field>
+    <field name="paginate" type="boolean">
+      <default value="0"/>
+      <notnull/>
+    </field>
+    <field name="displayAliases" type="boolean">
+      <default value="1"/>
+      <notnull/>
+    </field>
+    <field name="ignorePermissions" type="boolean">
+      <default value="0"/>
+      <notnull/>
+    </field>
+    <field name="enableExternalFiltering" type="boolean">
+      <default value="0"/>
+      <notnull/>
+    </field>
+    <field name="ptID" type="smallint">
+      <unsigned/>
+    </field>
+    <field name="pfID" type="integer">
+      <default value="0"/>
+    </field>
+    <field name="truncateSummaries" type="integer">
+      <default value="0"/>
+    </field>
+    <field name="displayFeaturedOnly" type="boolean">
+      <default value="0"/>
+    </field>
+    <field name="noResultsMessage" type="string" size="255"/>
+    <field name="displayThumbnail" type="boolean">
+      <default value="0"/>
+    </field>
+    <field name="truncateChars" type="integer">
+      <default value="128"/>
+    </field>
+    <index name="ptID">
+      <col>ptID</col>
+    </index>
+  </table>
+
+</schema>

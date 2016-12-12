@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema
+  xmlns="http://www.concrete5.org/doctrine-xml/0.5"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.concrete5.org/doctrine-xml/0.5 http://concrete5.github.io/doctrine-xml/doctrine-xml-0.5.xsd">
+
+  <table name="btRssDisplay">
+    <field name="bID" type="integer">
+      <unsigned/>
+      <key/>
+    </field>
+    <field name="title" type="string" size="255"/>
+    <field name="url" type="string" size="255"/>
+    <field name="dateFormat" type="string" size="100"/>
+    <field name="itemsToDisplay" type="integer">
+      <unsigned/>
+      <default value="5"/>
+    </field>
+    <field name="showSummary" type="boolean">
+      <default value="1"/>
+      <notnull/>
+    </field>
+    <field name="launchInNewWindow" type="boolean">
+      <default value="1"/>
+      <notnull/>
+    </field>
+  </table>
+
+</schema>

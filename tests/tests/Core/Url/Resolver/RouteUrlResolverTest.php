@@ -4,7 +4,6 @@ require_once __DIR__ . "/ResolverTestCase.php";
 
 class RouteUrlResolverTest extends ResolverTestCase
 {
-
     /**
      * @var \Symfony\Component\Routing\RouteCollection
      */
@@ -12,6 +11,8 @@ class RouteUrlResolverTest extends ResolverTestCase
 
     protected function setUp()
     {
+        parent::setUp();
+
         $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
 
         $path_url_resolver = $app->make('Concrete\Core\Url\Resolver\PathUrlResolver');
@@ -26,7 +27,7 @@ class RouteUrlResolverTest extends ResolverTestCase
     }
 
     /**
-     * Make sure that we can actually resolve a basic route
+     * Make sure that we can actually resolve a basic route.
      */
     public function testRoute()
     {
@@ -38,11 +39,11 @@ class RouteUrlResolverTest extends ResolverTestCase
         $this->routeList->add($name, $route);
         $url = $this->canonicalUrlWithPath($path);
 
-        $this->assertEquals((string)$url, (string)$this->urlResolver->resolve(array("route/{$name}")));
+        $this->assertEquals((string) $url, (string) $this->urlResolver->resolve(array("route/{$name}")));
     }
 
     /**
-     * Test routes that have inline parameters
+     * Test routes that have inline parameters.
      */
     public function testRouteWithParameters()
     {
@@ -56,13 +57,13 @@ class RouteUrlResolverTest extends ResolverTestCase
         $this->routeList->add($name, $route);
         $url = $this->canonicalUrlWithPath(str_replace("{parameter}", $value, $path));
 
-        $this->assertEquals((string)$url, (string)$this->urlResolver->resolve(array("route/{$name}", array(
-            'parameter' => $value
+        $this->assertEquals((string) $url, (string) $this->urlResolver->resolve(array("route/{$name}", array(
+            'parameter' => $value,
         ))));
     }
 
     /**
-     * Test not finding a named route in the list
+     * Test not finding a named route in the list.
      */
     public function testRouteMiss()
     {
@@ -71,12 +72,11 @@ class RouteUrlResolverTest extends ResolverTestCase
     }
 
     /**
-     * Test not matching the expected syntax
+     * Test not matching the expected syntax.
      */
     public function testNoMatch()
     {
         $resolved = uniqid();
         $this->assertEquals($this->urlResolver->resolve(array('no match'), $resolved), $resolved);
     }
-
 }

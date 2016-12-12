@@ -1,5 +1,6 @@
 module.exports = function(grunt) {
     var fs = require('fs');
+    var path = require('path');
     var extend = require('util')._extend;
 
     var parameters = null;
@@ -17,7 +18,7 @@ module.exports = function(grunt) {
     var config = {};
 
     config.DIR_REL = ('DIR_REL' in parameters) ? parameters.DIR_REL : '';
-    config.DIR_BASE = ('DIR_BASE' in parameters) ? parameters.DIR_BASE : '../web';
+    config.DIR_BASE = ('DIR_BASE' in parameters) ? parameters.DIR_BASE : path.join(__dirname, '..');
 
     // Options for the tool that will merge the files
     var concatOptions = {
@@ -82,12 +83,13 @@ module.exports = function(grunt) {
         ccm_app: {
             dest: '<%= DIR_BASE %>/concrete/js/app.js',
             src: [
+                '<%= DIR_BASE %>/concrete/js/build/vendor/pnotify/pnotify.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/app/json.js',
                 '<%= DIR_BASE %>/concrete/js/build/vendor/jquery-form/jquery-form.js',
                 '<%= DIR_BASE %>/concrete/js/build/vendor/jquery-mousewheel/jquery.mousewheel.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/app/concrete5.js',
-                '<%= DIR_BASE %>/concrete/js/build/core/app/concrete5-const.js',
                 '<%= DIR_BASE %>/concrete/js/build/vendor/jquery-liveupdate/jquery-liveupdate.js',
+                '<%= DIR_BASE %>/concrete/js/build/vendor/autosize/autosize.js',
                 '<%= DIR_BASE %>/concrete/js/build/vendor/jquery-pep/jquery-pep.js',
                 //needs some handholding
                 // '<%= DIR_BASE %>/concrete/js/build/vendor/retinajs/retinajs.js',
@@ -105,11 +107,14 @@ module.exports = function(grunt) {
                 '<%= DIR_BASE %>/concrete/js/build/core/app/in-context-menu.js',
                 '<%= DIR_BASE %>/concrete/js/build/vendor/jquery-liveupdate/quicksilver.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/app/remote-marketplace.js',
+                '<%= DIR_BASE %>/concrete/js/build/core/app/search/table.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/app/search/base.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/app/progressive-operations.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/app/custom-style.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/app/tabs.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/app/toolbar.js',
+                '<%= DIR_BASE %>/concrete/js/build/vendor/jquery-bootstrap-select-to-button/jquery-bootstrap-select-to-button.js',
+                '<%= DIR_BASE %>/concrete/js/build/vendor/nprogress/nprogress.js',
                 '<%= DIR_BASE %>/concrete/js/build/vendor/tourist/tourist.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/app/help/dialog.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/app/help/launcher.js',
@@ -133,7 +138,8 @@ module.exports = function(grunt) {
                 '<%= DIR_BASE %>/concrete/js/build/core/app/edit-mode/blocktype.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/app/edit-mode/stack.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/app/edit-mode/duplicateblock.js',
-                '<%= DIR_BASE %>/concrete/js/build/core/app/edit-mode/stackblock.js'
+                '<%= DIR_BASE %>/concrete/js/build/core/app/edit-mode/stackblock.js',
+                '<%= DIR_BASE %>/concrete/js/build/core/stacks/menu.js'
             ]
         },
         filemanager: {
@@ -141,14 +147,34 @@ module.exports = function(grunt) {
             src: [
                 '<%= DIR_BASE %>/concrete/js/build/core/file-manager/search.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/file-manager/selector.js',
-                '<%= DIR_BASE %>/concrete/js/build/core/file-manager/menu.js'
+                '<%= DIR_BASE %>/concrete/js/build/core/file-manager/menu.js',
+                '<%= DIR_BASE %>/concrete/js/build/core/file-manager/header.js'
             ]
         },
+
+        express: {
+            dest: '<%= DIR_BASE %>/concrete/js/express.js',
+            src: [
+                '<%= DIR_BASE %>/concrete/js/build/core/express/search.js',
+                '<%= DIR_BASE %>/concrete/js/build/core/express/selector.js'
+            ]
+        },
+
 
         select2: {
             dest: '<%= DIR_BASE %>/concrete/js/select2.js',
             src: '<%= DIR_BASE %>/concrete/js/build/vendor/select2/select2.js'
         },
+
+        /**
+         * Don't do this one: it doesn't work through Grunt. I had to include the min file from
+         * the GitHub repository directly
+
+        selectize: {
+            dest: '<%= DIR_BASE %>/concrete/js/selectize.js',
+            src: '<%= DIR_BASE %>/concrete/js/build/vendor/selectize/selectize.js'
+        },
+         */
 
         bootstrap_alert: {
             dest: '<%= DIR_BASE %>/concrete/js/bootstrap/alert.js',
@@ -174,6 +200,12 @@ module.exports = function(grunt) {
             dest: '<%= DIR_BASE %>/concrete/js/bootstrap/tooltip.js',
             src: '<%= DIR_BASE %>/concrete/js/build/vendor/bootstrap/tooltip.js'
         },
+
+        bootstrap_collapse: {
+            dest: '<%= DIR_BASE %>/concrete/js/bootstrap/collapse.js',
+            src: '<%= DIR_BASE %>/concrete/js/build/vendor/bootstrap/collapse.js'
+        },
+
 
         bootstrap_transition: {
             dest: '<%= DIR_BASE %>/concrete/js/bootstrap/transition.js',
@@ -223,6 +255,11 @@ module.exports = function(grunt) {
             src: '<%= DIR_BASE %>/concrete/js/build/vendor/dropzone/dropzone.js'
         },
 
+        core_composer: {
+            dest: '<%= DIR_BASE %>/concrete/js/composer-save-coordinator.js',
+            src: '<%= DIR_BASE %>/concrete/js/build/core/composer/save-coordinator.js'
+        },
+
         jquery_form: {
             dest: '<%= DIR_BASE %>/concrete/js/jquery-form.js',
             src: '<%= DIR_BASE %>/concrete/js/build/vendor/jquery-form/jquery-form.js'
@@ -259,7 +296,6 @@ module.exports = function(grunt) {
             src: '<%= DIR_BASE %>/concrete/js/build/vendor/kinetic/kinetic.js'
         },
 
-
         jquery_backstretch: {
             dest: '<%= DIR_BASE %>/concrete/js/backstretch.js',
             src: '<%= DIR_BASE %>/concrete/js/build/vendor/backstretch/backstretch.js'
@@ -281,14 +317,24 @@ module.exports = function(grunt) {
             ]
         },
 
-        ccm_topics: {
-            dest: '<%= DIR_BASE %>/concrete/js/topics.js',
-            src: '<%= DIR_BASE %>/concrete/js/build/core/topics.js'
+        ccm_users: {
+            dest: '<%= DIR_BASE %>/concrete/js/users.js',
+            src: [
+                '<%= DIR_BASE %>/concrete/js/build/core/user/selector.js'
+            ]
         },
 
-        ccm_groups: {
-            dest: '<%= DIR_BASE %>/concrete/js/groups.js',
-            src: '<%= DIR_BASE %>/concrete/js/build/core/groups.js'
+        ccm_notification: {
+            dest: '<%= DIR_BASE %>/concrete/js/notification.js',
+            src: [
+                '<%= DIR_BASE %>/concrete/js/build/core/notification/notification.js'
+            ]
+        },
+
+
+        ccm_tree: {
+            dest: '<%= DIR_BASE %>/concrete/js/tree.js',
+            src: '<%= DIR_BASE %>/concrete/js/build/core/tree.js'
         },
 
         ccm_layouts: {
@@ -333,9 +379,9 @@ module.exports = function(grunt) {
             dest: '<%= DIR_BASE %>/concrete/js/jquery-awesome-rating.js',
             src: '<%= DIR_BASE %>/concrete/js/build/vendor/jquery-awesome-rating/jquery-awesome-rating.js'
         },
-        dynatree: {
-            dest: '<%= DIR_BASE %>/concrete/js/dynatree.js',
-            src: '<%= DIR_BASE %>/concrete/js/build/vendor/dynatree/dynatree.js'
+        fancytree: {
+            dest: '<%= DIR_BASE %>/concrete/js/fancytree.js',
+            src: '<%= DIR_BASE %>/concrete/js/build/vendor/jquery-fancytree/jquery.fancytree-all.js'
         },
         account: {
             dest: '<%= DIR_BASE %>/concrete/js/account.js',
@@ -367,11 +413,16 @@ module.exports = function(grunt) {
     };
 
     // List of the CSS files to be generated
+    // Note –bootstrap dies in here when attempting to be built with grunt css; something about
+    // its minified syntax being included within the other app.less file. So if you need to build
+    // bootstrap uncomment this, run grunt css:debug, get it working, then comment the line back out
+    // and run grunt css
     var css = {
-        '<%= DIR_BASE %>/concrete/css/build/vendor/bootstrap/bootstrap.css': '<%= DIR_BASE %>/concrete/css/build/vendor/bootstrap/bootstrap.less',
+//        '<%= DIR_BASE %>/concrete/css/build/vendor/bootstrap/bootstrap.css': '<%= DIR_BASE %>/concrete/css/build/vendor/bootstrap/bootstrap.less',
         '<%= DIR_BASE %>/concrete/css/app.css': '<%= DIR_BASE %>/concrete/css/build/core/app/app.less',
         '<%= DIR_BASE %>/concrete/css/editable-fields.css': '<%= DIR_BASE %>/concrete/css/build/core/editable-fields.less',
         '<%= DIR_BASE %>/concrete/css/select2.css': '<%= DIR_BASE %>/concrete/css/build/core/select2.less',
+        '<%= DIR_BASE %>/concrete/css/selectize.css': '<%= DIR_BASE %>/concrete/css/build/vendor/selectize/selectize.bootstrap3.less',
         '<%= DIR_BASE %>/concrete/css/dropzone.css': '<%= DIR_BASE %>/concrete/css/build/vendor/dropzone/dropzone.less',
         '<%= DIR_BASE %>/concrete/css/jquery-ui.css': '<%= DIR_BASE %>/concrete/css/build/vendor/jquery-ui/jquery-ui.less',
         '<%= DIR_BASE %>/concrete/css/jquery-magnific-popup.css': '<%= DIR_BASE %>/concrete/css/build/vendor/jquery-magnific-popup/jquery-magnific-popup.less',
@@ -384,14 +435,13 @@ module.exports = function(grunt) {
         '<%= DIR_BASE %>/concrete/css/spectrum.css': '<%= DIR_BASE %>/concrete/css/build/vendor/spectrum/spectrum.less',
         '<%= DIR_BASE %>/concrete/css/image-editor.css': '<%= DIR_BASE %>/concrete/css/build/core/image-editor/image-editor.less',
         '<%= DIR_BASE %>/concrete/css/account.css': '<%= DIR_BASE %>/concrete/css/build/core/account.less',
-        '<%= DIR_BASE %>/concrete/css/dynatree.css': '<%= DIR_BASE %>/concrete/css/build/vendor/dynatree/dynatree.less',
+        '<%= DIR_BASE %>/concrete/css/fancytree.css': '<%= DIR_BASE %>/concrete/css/build/vendor/jquery-fancytree/fancytree-bootstrap.less',
         '<%= DIR_BASE %>/concrete/css/sitemap.css': '<%= DIR_BASE %>/concrete/css/build/core/sitemap.less',
         '<%= DIR_BASE %>/concrete/css/file-manager.css': '<%= DIR_BASE %>/concrete/css/build/core/file-manager.less',
         '<%= DIR_BASE %>/concrete/css/conversations.css': '<%= DIR_BASE %>/concrete/css/build/core/conversations.less',
         '<%= DIR_BASE %>/concrete/css/gathering/display.css': '<%= DIR_BASE %>/concrete/css/build/core/gathering/display.less',
         '<%= DIR_BASE %>/concrete/css/gathering/base.css': '<%= DIR_BASE %>/concrete/css/build/core/gathering/base.less',
         '<%= DIR_BASE %>/concrete/css/redactor.css': '<%= DIR_BASE %>/concrete/css/build/vendor/redactor/redactor.less',
-        '<%= DIR_BASE %>/concrete/css/topics.css': '<%= DIR_BASE %>/concrete/css/build/core/topics.less',
         '<%= DIR_BASE %>/concrete/themes/elemental/css/bootstrap-modified.css': '<%= DIR_BASE %>/concrete/themes/elemental/css/build/bootstrap-3.2.0/bootstrap.less',
         '<%= DIR_BASE %>/concrete/css/frontend/pagination.css': '<%= DIR_BASE %>/concrete/css/build/core/frontend/pagination.less',
         '<%= DIR_BASE %>/concrete/css/translator.css': '<%= DIR_BASE %>/concrete/css/build/core/translator.less'
@@ -441,10 +491,7 @@ module.exports = function(grunt) {
         jsTargets.release.push('uglify:' + key + '_release');
         target.options = {compress: {warnings: true}};
         target.options.mangle = false;
-        target.options.sourceMap = js[key].dest + '.map';
-        target.options.sourceMappingURL = target.options.sourceMap.replace(/<%=\s*DIR_BASE\s*%>/g, '<%= DIR_REL %>');
-        target.options.sourceMapRoot = '<%= DIR_REL %>/';
-        target.options.sourceMapPrefix = 1 + config.DIR_BASE.replace(/\/\/+/g, '/').replace(/[^\/]/g, '').length;
+        target.options.sourceMap = true;
         config.uglify[key + '_debug'] = target;
         jsTargets.debug.push('newer:uglify:' + key + '_debug');
     }
@@ -495,17 +542,36 @@ module.exports = function(grunt) {
         require('./tasks/generate-constants.js')(grunt, config, parameters, this.async());
     });
 
+    grunt.registerTask('gitskip-on:js', 'Force GIT to consider built JS assets as unchanged', function() {
+        require('./tasks/git-skipper.js')(grunt, config, parameters, 'js', true, this.async());
+    });
+    grunt.registerTask('gitskip-off:js', 'Allow GIT to consider built JS assets', function() {
+        require('./tasks/git-skipper.js')(grunt, config, parameters, 'js', false, this.async());
+    });
+    grunt.registerTask('gitskip-on:css', 'Force GIT to consider built CSS assets as unchanged', function() {
+        require('./tasks/git-skipper.js')(grunt, config, parameters, 'css', true, this.async());
+    });
+    grunt.registerTask('gitskip-off:css', 'Allow GIT to consider built CSS assets', function() {
+        require('./tasks/git-skipper.js')(grunt, config, parameters, 'css', false, this.async());
+    });
+    grunt.registerTask('gitskip-on', 'Force GIT to consider built CSS/JS assets as unchanged', function() {
+        require('./tasks/git-skipper.js')(grunt, config, parameters, 'all', true, this.async());
+    });
+    grunt.registerTask('gitskip-off', 'Allow GIT to consider built CSS/JS assets', function() {
+        require('./tasks/git-skipper.js')(grunt, config, parameters, 'all', false, this.async());
+    });
+
     grunt.registerTask('jsOnly:debug', jsTargets.debug);
     grunt.registerTask('jsOnly:release', jsTargets.release );
 
     //grunt.registerTask('js:debug', ['generate-constants', 'jsOnly:debug' ]);
     //grunt.registerTask('js:release', ['generate-constants', 'jsOnly:release' ]);
-    grunt.registerTask('js:debug', ['jsOnly:debug' ]);
-    grunt.registerTask('js:release', ['jsOnly:release' ]);
+    grunt.registerTask('js:debug', ['jsOnly:debug', 'gitskip-on:js']);
+    grunt.registerTask('js:release', ['jsOnly:release', 'gitskip-off:js']);
     grunt.registerTask('js', 'js:release');
 
-    grunt.registerTask('css:debug', 'less:debug');
-    grunt.registerTask('css:release', 'less:release');
+    grunt.registerTask('css:debug', ['less:debug', 'gitskip-on:css']);
+    grunt.registerTask('css:release', ['less:release', 'gitskip-off:css']);
     grunt.registerTask('css', 'css:release');
 
     grunt.registerTask('debug', ['js:debug', 'css:debug']);

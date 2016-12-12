@@ -1,0 +1,430 @@
+<?xml version="1.0"?>
+<concrete5-cif version="1.0">
+
+    <permissioncategories>
+        <category handle="page" package=""/>
+        <category handle="single_page" package=""/>
+        <category handle="stack" package=""/>
+        <category handle="user" package=""/>
+        <category handle="file_folder" package=""/>
+        <!--<category handle="file_node" package=""/>//-->
+        <!-- TODO: Kill file and replace with file tree node //-->
+        <category handle="file" package=""/>
+        <category handle="area" package=""/>
+        <category handle="block_type" package=""/>
+        <category handle="block" package=""/>
+        <category handle="admin" package=""/>
+        <category handle="notification" package=""/>
+        <category handle="sitemap" package=""/>
+        <category handle="marketplace_newsflow" package=""/>
+        <category handle="basic_workflow" package=""/>
+        <category handle="page_type" package=""/>
+        <category handle="gathering" package=""/>
+        <category handle="group_tree_node" package=""/>
+        <category handle="express_tree_node" package=""/>
+        <category handle="category_tree_node" package=""/>
+        <category handle="topic_tree_node" package=""/>
+        <category handle="conversation" package=""/>
+        <category handle="conversation_message" package=""/>
+        <category handle="multilingual_section" package=""/>
+    </permissioncategories>
+
+    <permissionkeys>
+        <permissionkey handle="view_page" name="View" description="Can see a page exists and read its content." package="" category="page"/>
+        <permissionkey handle="view_page_versions" name="View Versions" description="Can view the page versions dialog and read past versions of a page." package="" category="page"/>
+        <permissionkey handle="view_page_in_sitemap" name="View Page in Sitemap" description="Controls whether a user can see a page in the sitemap or intelligent search." package="" category="page"/>
+        <permissionkey handle="preview_page_as_user" name="Preview Page As User" description="Ability to see what this page will look like at a specific time in the future as a specific user." package="" category="page"/>
+        <permissionkey handle="edit_page_properties" has-custom-class="true" name="Edit Properties" description="Ability to change anything in the Page Properties menu." package="" category="page"/>
+        <permissionkey handle="edit_page_contents" name="Edit Contents" description="Ability to make edits to at least some of the content in the page. You can lock down different block areas and specific blocks by clicking Permissions on them as well. " package="" category="page"/>
+        <permissionkey handle="edit_page_speed_settings" name="Edit Speed Settings" description="Ability to change caching settings." package="" category="page"/>
+        <permissionkey handle="edit_page_theme" has-custom-class="true" name="Change Theme" description="Ability to change just the theme for this page." package="" category="page"/>
+        <permissionkey handle="edit_page_template" name="Change Page Template" description="Ability to change just the page template for this page." package="" category="page"/>
+        <permissionkey handle="edit_page_page_type" name="Edit Page Type" description="Change the type of an existing page." package="" category="page"/>
+        <permissionkey handle="edit_page_permissions" name="Edit Permissions" description="Ability to change permissions for this page. Warning: by granting this a user could give themselves more access." package="" can-trigger-workflow="true" category="page"/>
+        <permissionkey handle="delete_page" name="Delete" package="" description="Ability to move this page to the site's Trash." category="page" can-trigger-workflow="true" />
+        <permissionkey handle="delete_page_versions" name="Delete Versions" package="" description="Ability to remove old versions of this page." category="page" can-trigger-workflow="true" />
+        <permissionkey handle="approve_page_versions" name="Approve Changes" package="" description="Can publish an unapproved version of the page." category="page" can-trigger-workflow="true" />
+        <permissionkey handle="add_subpage" has-custom-class="true" name="Add Sub-Page" package="" description="Can add a page beneath the current page." category="page"/>
+        <permissionkey handle="move_or_copy_page" name="Move or Copy Page" description="Can move or copy this page to another location." package="" category="page" can-trigger-workflow="true" />
+        <permissionkey handle="schedule_page_contents_guest_access" name="Schedule Guest Access" description="Can control scheduled guest access to this page." package="" category="page"/>
+        <permissionkey handle="edit_page_multilingual_settings" name="Edit Multilingual Settings" description="Controls whether a user can see the multilingual settings menu, re-map a page or set a page as ignored in multilingual settings." package="" category="page"/>
+        <!-- block types //-->
+        <permissionkey handle="add_block" has-custom-class="true" name="Add Block" description="Can add a block to any area on the site. If someone is added here they can add blocks to any area (unless that area has permissions that override these global permissions.)" package="" category="block_type">
+            <access>
+                <group name="Administrators"/>
+            </access>
+        </permissionkey>
+        <permissionkey handle="add_stack" name="Add Stack" package="" description="Can add a stack or block from a stack to any area on the site. If someone is added here they can add stacks to any area (unless that area has permissions that override these global permissions.)" category="block_type">
+            <access>
+                <group name="Administrators"/>
+            </access>
+        </permissionkey>
+
+        <!-- areas //-->
+        <permissionkey handle="view_area" name="View Area" package="" description="Can view the area and its contents." category="area"/>
+        <permissionkey handle="edit_area_contents" name="Edit Area Contents" description="Can edit blocks within this area." package="" category="area"/>
+        <permissionkey handle="add_block_to_area" has-custom-class="true" name="Add Block to Area" description="Can add blocks to this area. This setting overrides the global Add Block permission for this area." package="" category="area"/>
+        <permissionkey handle="add_stack_to_area" name="Add Stack to Area" package="" description="Can add stacks to this area. This setting overrides the global Add Stack permission for this area." category="area"/>
+        <permissionkey handle="add_layout_to_area" name="Add Layouts to Area" package="" description="Controls whether users get the ability to add layouts to a particular area." category="area"/>
+        <permissionkey handle="edit_area_design" name="Edit Area Design" package="" description="Controls whether users see design controls and can modify an area's custom CSS." category="area"/>
+        <permissionkey handle="edit_area_permissions" name="Edit Area Permissions" package="" description="Controls whether users can access the permissions on an area. Custom area permissions could override those of the page." category="area"/>
+        <permissionkey handle="delete_area_contents" name="Delete Area Contents" package="" description="Controls whether users can delete blocks from this area." category="area"/>
+        <permissionkey handle="schedule_area_contents_guest_access" name="Schedule Guest Access" description="Controls whether users can schedule guest access permissions on blocks in this area. Guest Access is a shortcut for granting permissions just to the Guest Group." package="" category="area" />
+
+        <!-- blocks //-->
+        <permissionkey handle="view_block" name="View Block" package="" category="block" description="Controls whether users can view this block in the page." />
+        <permissionkey handle="edit_block" name="Edit Block" package="" category="block" description="Controls whether users can edit this block. This overrides any area or page permissions." />
+        <permissionkey handle="edit_block_custom_template" name="Change Custom Template" description="Controls whether users can change the custom template on this block. This overrides any area or page permissions." package="" category="block"/>
+        <permissionkey handle="edit_block_cache_settings" name="Edit Cache Settings" description="Controls whether users can change the block cache settings for this block instance." package="" category="block"/>
+        <permissionkey handle="edit_block_name" name="Edit Name" description="Controls whether users can change the block's name (rarely used.)" package="" category="block"/>
+        <permissionkey handle="delete_block" name="Delete Block" package="" category="block" description="Controls whether users can delete this block. This overrides any area or page permissions." />
+        <permissionkey handle="edit_block_design" name="Edit Design" package="" description="Controls whether users can set custom design properties or CSS on this block." category="block"/>
+        <permissionkey handle="edit_block_permissions" name="Edit Permissions" package="" category="block" description="Controls whether users can change permissions on this block, potentially granting themselves or others greater access." />
+        <permissionkey handle="schedule_guest_access" name="Schedule Guest Access" description="Controls whether users can schedule guest access permissions on this block. Guest Access is a shortcut for granting permissions just to the Guest Group." package="" category="block"/>
+
+        <!-- files //-->
+        <permissionkey handle="view_file_folder_file" name="View Files" description="View files within folder in the site." package="" category="file_folder"/>
+        <permissionkey handle="search_file_folder" name="Search File Folder" description="See this file folder in the file manager" package="" category="file_folder"/>
+        <permissionkey handle="edit_file_folder" name="Edit File Folder" description="Edit a file folder." package="" category="file_folder"/>
+        <permissionkey handle="edit_file_folder_file_properties" name="Edit File Properties" description="Can edit a file's properties." package="" category="file_folder"/>
+        <permissionkey handle="edit_file_folder_file_contents" name="Edit File Contents" description="Can edit or replace files in folder." package="" category="file_folder"/>
+        <permissionkey handle="copy_file_folder_files" name="Copy File" description="Can copy files in file folder." package="" category="file_folder"/>
+        <permissionkey handle="edit_file_folder_permissions" name="Edit File Access" description="Can edit access to file folder." package="" category="file_folder"/>
+        <permissionkey handle="delete_file_folder" name="Delete File Set" description="Can delete file folder." package="" category="file_folder"/>
+        <permissionkey handle="delete_file_folder_files" name="Delete File" description="Can delete files in folder." package="" category="file_folder"/>
+        <permissionkey handle="add_file" has-custom-class="true" name="Add File" description="Can add files to folder." package="" category="file_folder"/>
+
+
+        <permissionkey handle="view_file" name="View Files" description="Can view and download files." package="" category="file"/>
+        <permissionkey handle="view_file_in_file_manager" name="View File in File Manager" description="Can access the File Manager." package="" category="file"/>
+        <permissionkey handle="edit_file_properties" name="Edit File Properties" description="Can edit a file's properties." package="" category="file"/>
+        <permissionkey handle="edit_file_contents" name="Edit File Contents" description="Can edit or replace files." package="" category="file"/>
+        <permissionkey handle="copy_file" name="Copy File" description="Can copy file." package="" category="file"/>
+        <permissionkey handle="edit_file_permissions" name="Edit File Access" description="Can edit access to file." package="" category="file"/>
+        <permissionkey handle="delete_file" name="Delete File" description="Can delete file." package="" category="file"/>
+
+        <!-- workflow //-->
+        <permissionkey handle="approve_basic_workflow_action" name="Approve or Deny" description="Grant ability to approve workflow." package="" category="basic_workflow" />
+        <permissionkey handle="notify_on_basic_workflow_entry" name="Notify on Entry" description="Notify approvers that a change has entered the workflow." package="" category="basic_workflow" />
+        <permissionkey handle="notify_on_basic_workflow_approve" name="Notify on Approve" description="Notify approvers that a change has been approved." package="" category="basic_workflow" />
+        <permissionkey handle="notify_on_basic_workflow_deny" name="Notify on Deny" description="Notify approvers that a change has been denied." package="" category="basic_workflow" />
+
+        <!-- page type (composer) //-->
+        <permissionkey handle="add_page_type" name="Add Pages of This Type" description="" package="" category="page_type" />
+        <permissionkey handle="edit_page_type" name="Edit Page Type" description="" package="" category="page_type" />
+        <permissionkey handle="delete_page_type" name="Delete Page Type" description="" package="" category="page_type" />
+        <permissionkey handle="edit_page_type_permissions" name="Edit Page Type Permissions" description="" package="" category="page_type" />
+        <permissionkey handle="edit_page_type_drafts" name="Edit Page Type Drafts" description="" package="" category="page_type" />
+        <!--<permissionkey handle="edit_page_draft" name="Edit Page Draft" description="" package="" category="page_draft" />//-->
+
+        <!-- topics //-->
+        <permissionkey handle="view_topic_tree_node" name="View Topic Tree Node" description="" package="" category="topic_tree_node" />
+        <permissionkey handle="view_category_tree_node" name="View Category Tree Node" description="" package="" category="category_tree_node" />
+
+        <!-- conversations //-->
+        <permissionkey handle="add_conversation_message" name="Add Message to Conversation" has-custom-class="true" description="" package="" category="conversation" />
+        <permissionkey handle="add_conversation_message_attachments" name="Add Message Attachments" description="" package="" category="conversation" />
+        <permissionkey handle="edit_conversation_permissions" name="Edit Conversation Permissions" description="" package="" category="conversation" />
+        <permissionkey handle="delete_conversation_message" name="Delete Message" description="" package="" category="conversation" />
+        <permissionkey handle="edit_conversation_message" name="Edit Message" description="" package="" category="conversation" />
+        <permissionkey handle="rate_conversation_message" name="Rate Message" description="" package="" category="conversation" />
+        <permissionkey handle="flag_conversation_message" name="Flag Message" description="" package="" category="conversation" />
+        <permissionkey handle="approve_conversation_message" name="Approve Message" description="" package="" category="conversation" />
+
+        <!-- users //-->
+        <permissionkey handle="edit_user_properties" has-custom-class="true" name="Edit User Details" package="" category="user">
+            <access>
+                <group name="Administrators"/>
+            </access>
+        </permissionkey>
+
+        <permissionkey handle="view_user_attributes" has-custom-class="true" name="View User Attributes" package="" category="user">
+            <access>
+                <group name="Administrators"/>
+            </access>
+        </permissionkey>
+
+        <permissionkey handle="activate_user" name="Activate/Deactivate User" package="" category="user" can-trigger-workflow="true">
+            <access>
+                <group name="Administrators"/>
+            </access>
+        </permissionkey>
+
+        <permissionkey handle="sudo" name="Sign in as User" package="" category="user">
+        </permissionkey>
+
+        <permissionkey handle="upgrade" name="Upgrade concrete5" package="" category="admin">
+            <access>
+                <group name="Administrators"/>
+            </access>
+        </permissionkey>
+
+        <permissionkey handle="access_group_search" name="Access Group Search" package="" category="user">
+            <access>
+                <group name="Administrators"/>
+            </access>
+        </permissionkey>
+
+        <permissionkey handle="delete_user" name="Delete User" package="" category="user" can-trigger-workflow="true">
+            <access>
+                <group name="Administrators"/>
+            </access>
+        </permissionkey>
+
+        <permissionkey handle="notify_in_notification_center" has-custom-class="true" name="Notify in Notification Center" description="Controls who receives updates in the notification center." package="" category="notification"/>
+
+        <!-- express //-->
+
+        <permissionkey handle="view_express_entries" name="View Entries" package="" category="express_tree_node">
+        </permissionkey>
+        <permissionkey handle="add_express_entries" name="Add Entry" package="" category="express_tree_node">
+        </permissionkey>
+        <permissionkey handle="edit_express_entries" name="Edit Entry" package="" category="express_tree_node">
+        </permissionkey>
+        <permissionkey handle="delete_express_entries" name="Delete Entry" package="" category="express_tree_node">
+        </permissionkey>
+
+        <!-- groups //-->
+
+        <permissionkey handle="search_users_in_group" name="Search User Group" package="" category="group_tree_node">
+        </permissionkey>
+
+        <permissionkey handle="edit_group" name="Edit Group" package="" category="group_tree_node">
+        </permissionkey>
+
+        <permissionkey handle="assign_group" name="Assign Group" package="" category="group_tree_node">
+        </permissionkey>
+
+
+        <permissionkey handle="add_sub_group" name="Add Child Group" package="" category="group_tree_node">
+        </permissionkey>
+
+
+        <permissionkey handle="edit_group_permissions" name="Edit Group Permissions" package="" category="group_tree_node">
+        </permissionkey>
+
+        <permissionkey handle="access_page_type_permissions" name="Access Page Type Permissions" package="" category="admin">
+            <access>
+                <group name="Administrators"/>
+            </access>
+        </permissionkey>
+
+        <permissionkey handle="access_task_permissions" name="Access Task Permissions" package="" category="admin">
+        </permissionkey>
+
+        <permissionkey handle="access_sitemap" name="Access Sitemap" package="" category="sitemap">
+            <access>
+                <group name="Administrators"/>
+            </access>
+        </permissionkey>
+
+        <permissionkey handle="access_page_defaults" name="Access Page Type Defaults" package="" category="admin">
+            <access>
+                <group name="Administrators"/>
+            </access>
+        </permissionkey>
+
+        <permissionkey handle="customize_themes" name="Customize Themes" package="" category="admin">
+            <access>
+                <group name="Administrators"/>
+            </access>
+        </permissionkey>
+
+        <permissionkey handle="manage_layout_presets" name="Manage Layout Presets" package="" category="admin">
+            <access>
+                <group name="Administrators"/>
+            </access>
+        </permissionkey>
+
+        <permissionkey handle="empty_trash" name="Empty Trash" package="" category="admin">
+            <access>
+                <group name="Administrators"/>
+            </access>
+        </permissionkey>
+
+        <permissionkey handle="add_topic_tree" name="Add Topic Tree" package="" category="admin">
+            <access>
+                <group name="Administrators"/>
+            </access>
+        </permissionkey>
+
+        <permissionkey handle="remove_topic_tree" name="Remove Topic Tree" package="" category="admin">
+            <access>
+                <group name="Administrators"/>
+            </access>
+        </permissionkey>
+
+        <permissionkey handle="view_in_maintenance_mode" name="View Site in Maintenance Mode" description="Ability to see and use the website when concrete5 is in maintenance mode." package="" category="admin">
+            <access>
+                <group name="Administrators"/>
+            </access>
+        </permissionkey>
+
+        <permissionkey handle="uninstall_packages" name="Uninstall Packages" package="" category="marketplace_newsflow">
+            <access>
+                <group name="Administrators"/>
+            </access>
+        </permissionkey>
+
+        <permissionkey handle="install_packages" name="Install Packages" package="" category="marketplace_newsflow">
+            <access>
+                <group name="Administrators"/>
+            </access>
+        </permissionkey>
+
+        <permissionkey handle="view_newsflow" name="View Newsflow" package="" category="marketplace_newsflow">
+            <access>
+                <group name="Administrators"/>
+            </access>
+        </permissionkey>
+
+        <permissionkey handle="access_user_search_export" name="Export Site Users" description="Controls whether a user can export site users or not" package="" category="user">
+            <access>
+                <group name="Administrators"/>
+            </access>
+        </permissionkey>
+
+        <permissionkey handle="access_user_search" name="Access User Search" description="Controls whether a user can view the search user interface." package="" category="user">
+            <access>
+                <group name="Administrators"/>
+            </access>
+        </permissionkey>
+
+    </permissionkeys>
+
+    <systemcaptcha>
+        <library handle="securimage" name="SecurImage (Default)" package="" activated="1"/>
+    </systemcaptcha>
+
+    <workflowtypes>
+        <workflowtype handle="basic" name="Basic Workflow" package=""/>
+    </workflowtypes>
+
+    <permissionaccessentitytypes>
+        <permissionaccessentitytype handle="group" name="Group" package="">
+        	<categories>
+		        <category handle="page" />
+		        <category handle="user" />
+		        <category handle="file_folder" />
+		        <category handle="file" />
+		        <category handle="area" />
+		        <category handle="block_type" />
+		        <category handle="block" />
+                <category handle="notification" />
+		        <category handle="admin" />
+		        <category handle="sitemap" />
+		        <category handle="marketplace_newsflow" />
+		        <category handle="basic_workflow" />
+                <category handle="page_type" />
+                <category handle="gathering" />
+                <category handle="express_tree_node" />
+                <category handle="group_tree_node" />
+                <category handle="category_tree_node" />
+                <category handle="topic_tree_node" />
+                <category handle="conversation" />
+                <category handle="conversation_message" />
+                <category handle="multilingual_section" />
+			</categories>
+        </permissionaccessentitytype>
+        <permissionaccessentitytype handle="user" name="User" package="">
+			<categories>
+		        <category handle="page" />
+		        <category handle="user" />
+		        <category handle="file_folder" />
+		        <category handle="file" />
+		        <category handle="area" />
+		        <category handle="block_type" />
+		        <category handle="block" />
+                <category handle="notification" />
+		        <category handle="admin" />
+		        <category handle="sitemap" />
+		        <category handle="marketplace_newsflow" />
+		        <category handle="basic_workflow" />
+                <category handle="page_type" />
+                <category handle="gathering" />
+                <category handle="group_tree_node" />
+                <category handle="express_tree_node" />
+                <category handle="category_tree_node" />
+                <category handle="topic_tree_node" />
+                <category handle="conversation" />
+                <category handle="conversation_message" />
+                <category handle="multilingual_section" />
+			</categories>
+        </permissionaccessentitytype>
+        <permissionaccessentitytype handle="group_set" name="Group Set" package="">
+			<categories>
+		        <category handle="page" />
+		        <category handle="user" />
+		        <category handle="file_folder" />
+		        <category handle="file" />
+		        <category handle="area" />
+		        <category handle="block_type" />
+		        <category handle="block" />
+                <category handle="notification" />
+		        <category handle="admin" />
+		        <category handle="sitemap" />
+		        <category handle="marketplace_newsflow" />
+		        <category handle="basic_workflow" />
+                <category handle="page_type" />
+                <category handle="gathering" />
+                <category handle="group_tree_node" />
+                <category handle="express_tree_node" />
+                <category handle="category_tree_node" />
+                <category handle="topic_tree_node" />
+                <category handle="conversation" />
+                <category handle="conversation_message" />
+			</categories>
+        </permissionaccessentitytype>
+        <permissionaccessentitytype handle="group_combination" name="Group Combination" package="">
+			<categories>
+		        <category handle="page" />
+		        <category handle="user" />
+		        <category handle="file_folder" />
+		        <category handle="file" />
+		        <category handle="area" />
+		        <category handle="block_type" />
+		        <category handle="block" />
+                <category handle="notification" />
+		        <category handle="admin" />
+		        <category handle="sitemap" />
+		        <category handle="marketplace_newsflow" />
+		        <category handle="basic_workflow" />
+                <category handle="page_type" />
+                <category handle="gathering" />
+                <category handle="group_tree_node" />
+                <category handle="express_tree_node" />
+                <category handle="category_tree_node" />
+                <category handle="topic_tree_node" />
+                <category handle="conversation" />
+                <category handle="conversation_message" />
+                <category handle="multilingual_section" />
+			</categories>
+
+        </permissionaccessentitytype>
+        <permissionaccessentitytype handle="page_owner" name="Page Owner" package="">
+            <categories>
+                <category handle="page" />
+                <category handle="page_type" />
+            </categories>
+        </permissionaccessentitytype>
+        <permissionaccessentitytype handle="file_uploader" name="File Uploader" package="">
+            <categories>
+                <category handle="file_folder" />
+                <category handle="file" />
+            </categories>
+        </permissionaccessentitytype>
+        <permissionaccessentitytype handle="conversation_message_author" name="Message Author" package="">
+            <categories>
+                <category handle="conversation" />
+                <category handle="conversation_message" />
+            </categories>
+        </permissionaccessentitytype>
+    </permissionaccessentitytypes>
+
+    <workflowprogresscategories>
+        <category handle="page" package=""/>
+        <category handle="file" package=""/>
+        <category handle="user" package=""/>
+    </workflowprogresscategories>
+
+</concrete5-cif>

@@ -1,4 +1,5 @@
-[![Build Status](http://img.shields.io/travis/concrete5/concrete5/develop.svg)](https://travis-ci.org/concrete5/concrete5)
+[![Build Status](http://img.shields.io/travis/concrete5/concrete5/release/8.0.svg)](https://travis-ci.org/concrete5/concrete5)
+[![Issues Ready To Start](https://badge.waffle.io/concrete5/concrete5.png?label=Accepted:Ready%20to%20start&title=Ready)](https://github.com/concrete5/concrete5/labels/accepted%3Aready%20to%20start)
 
 Welcome to the official repository for concrete5 development! concrete5 is an open source CMS built by people from 
 around the world. Want to get involved? Check out our [contributor guide](https://github.com/concrete5/concrete5/blob/develop/CONTRIBUTING.md) for more info.
@@ -14,24 +15,21 @@ Just log in to the documentation site with your concrete5.org account and edit a
 
 ## Installation
 
-1. Make sure your development environment enables PHP short tags.
-2. Clone the repository
+1. Clone the repository
 
         git clone https://github.com/concrete5/concrete5.git
         cd concrete5/
 
-3. Use [Composer](https://getcomposer.org/) to install the third party dependencies in `/web/concrete`
+2. Use [Composer](https://getcomposer.org/) to install the third party dependencies
 
-        cd web/concrete
         composer install
-        cd ../../
 
-4. Use [npm](https://www.npmjs.org/) to install [grunt](http://gruntjs.com/) to the build directory and install the command line interface in `/build`
 
-        cd build
-        npm install -g grunt-cli
-        npm install
-        cd ../
+## Community Channels
+
+* [Public Slack](https://concrete5.signup.team/)
+* [IRC Channel](https://kiwiirc.com/client/irc.freenode.com/concrete5/)
+* [Forums](https://concrete5.org/community/forums/)
 
 ## Legacy
 

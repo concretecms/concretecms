@@ -3,11 +3,19 @@
 
 class AreaLayoutTest extends ConcreteDatabaseTestCase
 {
-
-    protected $tables = array('AreaLayoutPresets','AreaLayouts','AreaLayoutColumns',
+    protected $tables = array('AreaLayoutPresets', 'AreaLayouts', 'AreaLayoutColumns',
         'AreaLayoutCustomColumns', 'AreaLayoutThemeGridColumns', 'PageThemes', 'Pages', 'Collections',
-        'CollectionVersions', 'PagePaths');
+        'CollectionVersions', );
     protected $fixtures = array();
+
+    protected $metadatas = array(
+        'Concrete\Core\Entity\Site\Locale',
+        'Concrete\Core\Entity\Site\Site',
+        'Concrete\Core\Entity\Site\Type',
+        'Concrete\Core\Entity\Site\Tree',
+        'Concrete\Core\Entity\Site\SiteTree',
+        'Concrete\Core\Entity\Page\PagePath',
+    );
 
     public function testCustomAreaLayoutContainer()
     {
@@ -24,7 +32,6 @@ class AreaLayoutTest extends ConcreteDatabaseTestCase
         $formatter = $layout->getFormatter();
         $this->assertInstanceOf('\Concrete\Core\Area\Layout\Formatter\CustomFormatter', $formatter);
         $this->assertEquals('<div class="ccm-layout-column-wrapper" id="ccm-layout-column-wrapper-1"></div>', (string) $formatter->getLayoutContainerHtmlObject());
-
     }
 
     public function testThemeGridAreaLayoutContainer()
@@ -37,6 +44,14 @@ class AreaLayoutTest extends ConcreteDatabaseTestCase
         $layout->addLayoutColumn()->setAreaLayoutColumnSpan(6);
 
         $elemental = \Concrete\Core\Page\Theme\Theme::add('elemental');
+        $service = \Core::make('site/type');
+        if (!$service->getDefault()) {
+            $service->installDefault();
+        }
+        $service = \Core::make('site');
+        if (!$service->getDefault()) {
+            $service->installDefault();
+        }
         Page::addHomePage();
         Core::make('cache/request')->disable();
         $c = Page::getByID(1);
@@ -57,9 +72,5 @@ class AreaLayoutTest extends ConcreteDatabaseTestCase
         $this->assertEquals('<div class="row"></div>', (string) $formatter->getLayoutContainerHtmlObject());
 
         $req->clearCurrentPage();
-
     }
-
-
-
 }

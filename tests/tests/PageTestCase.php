@@ -1,34 +1,60 @@
 <?php
 
-use \Concrete\Core\Block\View\BlockView;
 use Concrete\Core\Attribute\Key\Category;
-abstract class PageTestCase extends ConcreteDatabaseTestCase {
 
+abstract class PageTestCase extends ConcreteDatabaseTestCase
+{
     protected $fixtures = array();
-    protected $tables = array('Pages', 'PageThemes', 'PagePaths', 'PermissionKeys', 'PermissionKeyCategories', 'PageTypes',
-        'PageTemplates', 'Collections', 'CollectionVersions', 'CollectionVersionFeatureAssignments',
-        'CollectionAttributeValues', 'CollectionVersionBlockStyles', 'CollectionVersionThemeCustomStyles',
-        'CollectionVersionRelatedEdits', 'CollectionVersionAreaStyles', 'MultilingualSections', 'MultilingualPageRelations',
-        'PagePermissionAssignments', 'PermissionAccessEntityTypes', 'CollectionVersionBlocks', 'Areas', 'PageSearchIndex', 'ConfigStore',
+    protected $tables = array('Pages', 'PageThemes', 'PermissionKeys', 'PermissionKeyCategories', 'PageTypes',
+        'Collections', 'CollectionVersions', 'CollectionVersionFeatureAssignments',
+        'CollectionVersionBlockStyles', 'CollectionVersionThemeCustomStyles',
+        'CollectionVersionRelatedEdits', 'CollectionVersionAreaStyles', 'PermissionAccessEntityTypes',
+        'PagePermissionAssignments', 'CollectionVersionBlocks', 'Areas', 'PageSearchIndex', 'ConfigStore',
         'GatheringDataSources', 'Logs', 'PageTypePublishTargetTypes', 'AttributeKeyCategories',
-        'PageTypeComposerOutputBlocks'); // so brutal
+        'PageTypeComposerOutputBlocks', ); // so brutal
 
-    protected function setUp() {
+    protected $metadatas = array(
+        'Concrete\Core\Entity\Site\Site',
+        'Concrete\Core\Entity\Site\Locale',
+        'Concrete\Core\Entity\Site\Type',
+        'Concrete\Core\Entity\Site\Tree',
+        'Concrete\Core\Entity\Site\SiteTree',
+        'Concrete\Core\Entity\Page\Relation\MultilingualRelation',
+        'Concrete\Core\Entity\Page\Relation\SiblingRelation',
+        'Concrete\Core\Entity\Page\PagePath',
+        'Concrete\Core\Entity\Page\Template',
+        'Concrete\Core\Entity\Attribute\Key\PageKey',
+        'Concrete\Core\Entity\Attribute\Value\PageValue',
+        'Concrete\Core\Entity\Attribute\Value\Value',
+        'Concrete\Core\Entity\Attribute\Key\Key',
+    );
+
+    protected function setUp()
+    {
         parent::setUp();
-        Category::add('collection');
+        $service = \Core::make('site/type');
+        if (!$service->getDefault()) {
+            $service->installDefault();
+        }
+        $service = \Core::make('site');
+        if (!$service->getDefault()) {
+            $service->installDefault();
+        }
+
         Page::addHomePage();
         PageTemplate::add('full', 'Full');
         PageType::add(array(
                 'handle' => 'basic',
-                'name' => 'Basic'
+                'name' => 'Basic',
             ));
+
     }
 
     protected static function createPage($name, $parent = false, $type = false, $template = false)
     {
         if ($parent === false) {
             $parent = Page::getByID(HOME_CID);
-        } else if (is_string($parent)) {
+        } elseif (is_string($parent)) {
             $parent = Page::getByPath($parent);
         }
 
@@ -53,10 +79,10 @@ abstract class PageTestCase extends ConcreteDatabaseTestCase {
         }
 
         $page = $parent->add($pt, array(
-            'cName'=> $name,
-            'pTemplateID' => $template->getPageTemplateID()
+            'cName' => $name,
+            'pTemplateID' => $template->getPageTemplateID(),
         ));
+
         return $page;
     }
-
 }

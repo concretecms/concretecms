@@ -8,7 +8,6 @@ use Concrete\Core\Session\SessionFactoryInterface;
 
 class SessionFactoryTest extends \PHPUnit_Framework_TestCase
 {
-
     /** @var Application */
     protected $app;
 
@@ -40,7 +39,7 @@ class SessionFactoryTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * This should be removed and moved into a request middleware layer, lets just make sure it happens here for now
+     * This should be removed and moved into a request middleware layer, lets just make sure it happens here for now.
      */
     public function testAddedToRequest()
     {
@@ -71,5 +70,4 @@ class SessionFactoryTest extends \PHPUnit_Framework_TestCase
         $native_handler = $method->invokeArgs($this->factory, array($config));
         $this->assertInstanceOf('Concrete\Core\Session\Storage\Handler\NativeFileSessionHandler', $native_handler);
     }
-
 }

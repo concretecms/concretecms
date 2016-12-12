@@ -1,0 +1,134 @@
+div.ccm-block-desktop-waiting-for-me {
+
+  border: 1px solid #dddfdf;
+  background-color: #fff;
+  padding: 20px;
+
+  h3 {
+    padding-bottom: 5px;
+    margin-top: 0px;
+    margin-bottom: 0px;
+    border-bottom: 1px solid #d6d6d8;
+    font-weight: normal;
+  }
+
+  p {
+    margin-top: 20px;
+  }
+
+  div.ccm-block-desktop-waiting-for-me-item {
+    padding-top: 20px;
+    padding-bottom: 20px;
+    margin-left: -20px;
+    margin-right: -20px;
+    padding-left: 20px;
+    padding-right: 20px;
+    position: relative;
+    .transition(all 0.1s linear);
+
+    &.ccm-block-desktop-waiting-for-me-menu-active {
+      background-color: #f5f5f5;
+
+      .dropdown-toggle {
+        .box-shadow(none);
+      }
+      .btn {
+        border-color: transparent !important;
+        background-color: #e6e6e6 !important;
+        i {
+          color: #28647e !important;
+        }
+      }
+    }
+
+    div.ccm-block-desktop-waiting-for-me-icon {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+
+      i {
+        color: #b2b1b7;
+      }
+    }
+
+    div.ccm-block-desktop-waiting-for-me-details {
+      padding-left: 25px;
+    }
+
+    div.ccm-block-desktop-waiting-for-me-about {
+      margin-top: 5px;
+      padding-left: 25px;
+      font-size: 0.9em;
+
+      div.ccm-block-desktop-waiting-for-me-author-comment {
+        margin-top: 0px;
+        color: #999;
+        margin-top: 5px;
+        border-left: 5px solid #efefef;
+        padding-left: 10px;
+      }
+    }
+
+    div.ccm-block-desktop-waiting-for-me-menu {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+
+      .btn {
+        border-color: #c6c6c6;
+        .box-shadow(none);
+
+        display:block;
+        width:40px !important;
+        height:40px;
+        padding: 0px;
+        line-height:50px;
+        border-radius: 50%;
+        text-align:center;
+        text-decoration:none;
+        font-size:20px;
+        font-weight:bold;
+        position: relative;
+        .transition(none);
+
+        i {
+          position: absolute;
+          top: 9px;
+          left: 9px;
+          color: #ccc;
+          -webkit-text-stroke: 2px #fff;
+        }
+
+        &:hover {
+          i {
+            -webkit-text-stroke: 2px #ebebeb !important;
+          }
+        }
+        &:active {
+          .box-shadow(none);
+        }
+      }
+
+      &.open {
+        .btn {
+          i {
+            -webkit-text-stroke: 2px #ebebeb !important;
+          }
+        }
+      }
+
+      .btn-waiting-for-me-archive {
+        i {
+          .opacity(0.7);
+          top: 11px;
+          left: 11px;
+          height: 16px;
+          width: 16px;
+          background: transparent url(../../images/icons/icon_close.png) no-repeat scroll;
+        }
+      }
+    }
+
+
+  }
+}

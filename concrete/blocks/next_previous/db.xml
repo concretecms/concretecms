@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema
+  xmlns="http://www.concrete5.org/doctrine-xml/0.5"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.concrete5.org/doctrine-xml/0.5 http://concrete5.github.io/doctrine-xml/doctrine-xml-0.5.xsd">
+
+  <table name="btNextPrevious">
+    <field name="bID" type="integer">
+      <unsigned/>
+      <key/>
+    </field>
+    <field name="nextLabel" type="string" size="128"/>
+    <field name="previousLabel" type="string" size="128"/>
+    <field name="parentLabel" type="string" size="128"/>
+    <field name="loopSequence" type="integer">
+      <default value="1"/>
+    </field>
+    <field name="orderBy" type="string" size="20">
+      <default value="display_asc"/>
+    </field>
+  </table>
+
+</schema>

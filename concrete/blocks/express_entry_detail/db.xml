@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema
+		xmlns="http://www.concrete5.org/doctrine-xml/0.5"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.concrete5.org/doctrine-xml/0.5 http://concrete5.github.io/doctrine-xml/doctrine-xml-0.5.xsd">
+
+	<table name="btExpressEntryDetail">
+		<field name="bID" type="integer">
+			<unsigned/>
+			<key/>
+		</field>
+		<field name="exEntityID" type="guid">
+			<key/>
+		</field>
+		<field name="exSpecificEntryID" type="integer">
+			<unsigned/>
+			<key/>
+		</field>
+		<field name="exEntryAttributeKeyHandle" type="string" size="255"/>
+		<field name="exFormID" type="guid">
+			<key/>
+		</field>
+		<field name="entryMode" type="string" size="1">
+			<default value="S"/>
+		</field>
+	</table>
+
+</schema>

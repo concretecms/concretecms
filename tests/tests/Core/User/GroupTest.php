@@ -3,19 +3,18 @@
  * Created by PhpStorm.
  * User: andrew
  * Date: 6/28/14
- * Time: 10:30 AM
+ * Time: 10:30 AM.
  */
-
 namespace Concrete\Tests\Core\User;
+
 use Concrete\Core\User\Group\Group;
-use Concrete\Core\User\UserInfo;
 use Concrete\Core\User\UserList;
 use Concrete\Core\Tree\Type\Group as GroupTreeType;
 use Concrete\Core\Tree\TreeType;
 use Concrete\Core\Tree\Node\NodeType as TreeNodeType;
 
-class GroupTest extends \UserTestCase {
-
+class GroupTest extends \UserTestCase
+{
     protected function setUp()
     {
         parent::setUp();
@@ -41,7 +40,7 @@ class GroupTest extends \UserTestCase {
 
     public function testAutomatedGroupsBase()
     {
-        require_once(dirname(__FILE__) . '/fixtures/TestGroup.php');
+        require_once dirname(__FILE__) . '/fixtures/TestGroup.php';
         $g = Group::add('Test Group', ''); // gonna pull all users with vowels in their names in this group.
         $g->setAutomationOptions(true, false, false);
 
@@ -57,7 +56,7 @@ class GroupTest extends \UserTestCase {
             array('qqwenz', 'testuser5@concrete5.org'),
             array('mmnvb', 'testuser6@concrete5.org'),
         );
-        foreach($users as $user) {
+        foreach ($users as $user) {
             $this->createUser($user[0], $user[1]);
         }
 
@@ -73,7 +72,6 @@ class GroupTest extends \UserTestCase {
 
         $this->assertEquals(3, count($users1));
         $this->assertEquals(4, count($users2));
-
     }
 
     public function testUpdateGroup()
@@ -93,4 +91,3 @@ class GroupTest extends \UserTestCase {
         $this->assertEquals('/New Group for Rescan', $newPath);
     }
 }
- 

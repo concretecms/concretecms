@@ -1,4 +1,5 @@
 <?php
+
 use Concrete\Core\Config\FileLoader;
 use Concrete\Core\Config\FileSaver;
 use Concrete\Core\Config\Repository\Repository;
@@ -6,7 +7,6 @@ use Illuminate\Filesystem\Filesystem;
 
 class FileRepositoryTest extends \ConcreteDatabaseTestCase
 {
-
     /** @var Filesystem */
     protected $files;
 
@@ -45,5 +45,4 @@ class FileRepositoryTest extends \ConcreteDatabaseTestCase
 
         $this->files->deleteDirectory(DIR_APPLICATION . "/config/generated_overrides/{$namespace}/");
     }
-
 }

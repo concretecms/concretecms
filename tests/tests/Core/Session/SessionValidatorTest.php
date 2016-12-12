@@ -1,16 +1,13 @@
 <?php
-
 namespace Concrete\Tests\Core\Session;
 
 use Concrete\Core\Http\Request;
 use Concrete\Core\Session\SessionValidator;
 use Concrete\Core\Support\Facade\Application;
-use Monolog\Logger;
 use Symfony\Component\HttpFoundation\Session\Session;
 
 class SessionValidatorTest extends \PHPUnit_Framework_TestCase
 {
-
     /** @var \Concrete\Core\Application\Application */
     protected $app;
 
@@ -37,22 +34,22 @@ class SessionValidatorTest extends \PHPUnit_Framework_TestCase
             ->getMock();
 
         $mock->expects($this->any())
-            ->method('has')->willReturnCallback(function($key) use (&$store) {
+            ->method('has')->willReturnCallback(function ($key) use (&$store) {
                 return array_get($store, $key) !== null;
             });
 
         $mock->expects($this->any())
-            ->method('get')->willReturnCallback(function($key, $default=null) use (&$store) {
+            ->method('get')->willReturnCallback(function ($key, $default = null) use (&$store) {
                 return array_get($store, $key, $default);
             });
 
         $mock->expects($this->any())
-            ->method('set')->willReturnCallback(function($key, $value) use (&$store) {
+            ->method('set')->willReturnCallback(function ($key, $value) use (&$store) {
                 return $store[$key] = $value;
             });
 
         $mock->expects($this->any())
-            ->method('all')->willReturnCallback(function() use (&$store) {
+            ->method('all')->willReturnCallback(function () use (&$store) {
                 return $store;
             });
 
@@ -76,7 +73,7 @@ class SessionValidatorTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals($this->session->all(), array(
             'CLIENT_REMOTE_ADDR' => '111.112.113.114',
-            'CLIENT_HTTP_USER_AGENT' => 'TESTING'));
+            'CLIENT_HTTP_USER_AGENT' => 'TESTING', ));
     }
 
     public function testInvalidatesOnInvalidIP()
@@ -114,5 +111,4 @@ class SessionValidatorTest extends \PHPUnit_Framework_TestCase
         $this->session->expects($this->once())->method('invalidate');
         $this->validator->handleSessionValidation($this->session);
     }
-
 }

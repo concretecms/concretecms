@@ -8,7 +8,6 @@ use Illuminate\Filesystem\Filesystem;
 
 class LiaisonTest extends PHPUnit_Framework_TestCase
 {
-
     /** @var Liaison */
     protected $liaison;
 
@@ -53,12 +52,10 @@ class LiaisonTest extends PHPUnit_Framework_TestCase
         $this->assertTrue($this->liaison->has('test.has'));
         $this->assertFalse($this->liaison->has('test.hasnt'));
     }
-
 }
 
 class LiaisonLoader implements LoaderInterface
 {
-
     public function addNamespace($namespace, $hint)
     {
         return;
@@ -88,17 +85,14 @@ class LiaisonLoader implements LoaderInterface
     {
         return array();
     }
-
 }
 
 class LiaisonSaver implements SaverInterface
 {
-
     public $saved = false;
 
     public function save($item, $value, $environment, $group, $namespace = null)
     {
         $this->saved = "{$namespace}::{$group}.{$item}";
     }
-
 }

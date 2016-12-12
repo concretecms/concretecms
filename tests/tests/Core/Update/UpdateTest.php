@@ -1,12 +1,17 @@
 <?php
 
-class UpdateTest extends ConcreteDatabaseTestCase {
-
+class UpdateTest extends ConcreteDatabaseTestCase
+{
     protected $fixtures = array();
-    protected $tables = array('Blocks', 'BlockTypes', 'CollectionVersionBlocks', 'Files', 'Logs', 'SystemDatabaseMigrations', 'Widgets');
+    protected $tables = array('Blocks', 'CollectionVersionBlocks', 'Logs', 'SystemDatabaseMigrations', 'Widgets');
 
+    protected $metadatas = array(
+        'Concrete\Core\Entity\Block\BlockType\BlockType',
+        'Concrete\Core\Entity\File\File',
+    );
     public function testCurrentMigration()
     {
+        \Concrete\Core\Block\BlockType\BlockType::installBlockType('core_scrapbook_display');
         $directory = dirname(__FILE__) . '/fixtures/';
         $configuration = new \Concrete\Core\Updater\Migrations\Configuration(false);
         $configuration->setMigrationsDirectory($directory);
@@ -69,13 +74,13 @@ class UpdateTest extends ConcreteDatabaseTestCase {
         $this->assertFalse($newLogs->hasColumn('testcolumn'));
 
         $migrations = $configuration->getMigrationsToExecute('up', '20140908095447');
-        foreach($migrations as $migration) {
+        foreach ($migrations as $migration) {
             $migration->execute('up');
         }
 
         $this->assertTrue($db->tableExists('Widgets'));
         $bt = BlockType::getByHandle('file');
-        $this->assertInstanceOf('\Concrete\Core\Block\BlockType\BlockType', $bt);
+        $this->assertInstanceOf('\Concrete\Core\Entity\Block\BlockType\BlockType', $bt);
         $this->assertEquals(2, $bt->getBlockTypeID()); // because we cleared it out once already.
 
         $ids = $db->GetOne('select count(btID) from BlockTypes');

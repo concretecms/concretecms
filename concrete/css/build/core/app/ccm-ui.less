@@ -1,0 +1,25 @@
+.ccm-ui {
+  font-family: sans-serif; // 1
+  -webkit-font-smoothing: antialiased;
+  -webkit-text-size-adjust: 100%; // 2
+  -ms-text-size-adjust: 100%; // 2
+  margin: 0;
+  font-family: @font-family-base;
+  font-size: @font-size-base;
+  line-height: @line-height-base;
+  color: @text-color;
+  box-sizing: border-box;
+
+  li {
+    margin-left: 0px;
+  }
+
+  .radio + .radio,
+  .checkbox + .checkbox {
+    margin-top: -5px; // Move up sibling radios or checkboxes for tighter spacing
+  }
+
+  fieldset {
+    margin-bottom: 10px;
+  }
+}

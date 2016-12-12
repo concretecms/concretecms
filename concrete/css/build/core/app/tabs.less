@@ -1,0 +1,64 @@
+div.ccm-ui {
+
+  ul.nav-tabs {
+    padding-left: 10px;
+    margin-left: -26px;
+    margin-right: -26px;
+    margin-bottom: 0px;
+    > li {
+      margin-bottom: 0px;
+      a {
+        padding: 10px 15px;
+        -webkit-font-smoothing: antialiased;
+      }
+    }
+
+    > li.active:after {
+      text-align: center;
+      content: "\f0d7";
+      font-family: FontAwesome;
+      position: absolute;
+      bottom: -15px;
+
+      left: 0px;
+      width: 100%;
+      color: #48b4fb;
+      text-align: center;
+    }
+
+    > li > a {
+      &,
+      &:hover,
+      &:focus {
+        outline: none;
+        color: #999;
+        border-width: 0px !important;
+      }
+    }
+    > li > a:hover {
+      background-color: transparent;
+      text-decoration: underline;
+    }
+    > li.active > a {
+      &,
+      &:hover,
+      &:focus {
+        color: #48b4fb;
+        font-weight: bold;
+        text-decoration: none;
+        background-color: transparent;
+        outline: none;
+        border-width: 0px !important;
+        position: relative;
+      }
+    }
+  }
+
+  .ccm-tab-content {
+    padding-top: 20px;
+    display: none;
+  }
+
+}
+
+

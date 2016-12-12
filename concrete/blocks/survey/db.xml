@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema
+  xmlns="http://www.concrete5.org/doctrine-xml/0.5"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.concrete5.org/doctrine-xml/0.5 http://concrete5.github.io/doctrine-xml/doctrine-xml-0.5.xsd">
+
+  <table name="btSurvey">
+    <field name="bID" type="integer">
+      <unsigned/>
+      <key/>
+    </field>
+    <field name="question" type="string" size="255">
+      <default value=""/>
+    </field>
+    <field name="requiresRegistration" type="integer">
+      <default value="0"/>
+    </field>
+  </table>
+
+  <table name="btSurveyOptions">
+    <field name="optionID" type="integer">
+      <unsigned/>
+      <autoincrement/>
+      <key/>
+    </field>
+    <field name="bID" type="integer"/>
+    <field name="optionName" type="string" size="255"/>
+    <field name="displayOrder" type="integer">
+      <default value="0"/>
+    </field>
+    <index name="bID">
+      <col>bID</col>
+      <col>displayOrder</col>
+    </index>
+  </table>
+
+  <table name="btSurveyResults">
+    <field name="resultID" type="integer">
+      <unsigned/>
+      <autoincrement/>
+      <key/>
+    </field>
+    <field name="optionID" type="integer">
+      <unsigned/>
+      <default value="0"/>
+    </field>
+    <field name="uID" type="integer">
+      <unsigned/>
+      <default value="0"/>
+    </field>
+    <field name="bID" type="integer"/>
+    <field name="cID" type="integer"/>
+    <field name="ipAddress" type="string" size="128"/>
+    <field name="timestamp" type="timestamp">
+      <deftimestamp/>
+      <notnull/>
+    </field>
+    <index name="optionID">
+      <col>optionID</col>
+    </index>
+    <index name="cID">
+      <col>cID</col>
+      <col>optionID</col>
+      <col>bID</col>
+    </index>
+    <index name="bID">
+      <col>bID</col>
+      <col>cID</col>
+      <col>uID</col>
+    </index>
+    <index name="uID">
+      <col>uID</col>
+    </index>
+  </table>
+
+</schema>

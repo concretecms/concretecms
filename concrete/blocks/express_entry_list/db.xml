@@ -1,0 +1,71 @@
+<?xml version="1.0"?>
+<schema version="0.3">
+	<table name="btExpressEntryList">
+		<field name="bID" type="I">
+			<key />
+			<unsigned />
+		</field>
+
+		<field name="exEntityID" type="C">
+			<notnull />
+		</field>
+
+		<field name="detailPage" type="I">
+			<unsigned />
+			<notnull />
+			<default value="0" />
+		</field>
+
+
+		<field name="linkedProperties" type="C" size="X">
+		</field>
+
+		<field name="searchProperties" type="C" size="X">
+		</field>
+
+		<field name="columns" type="X2">
+
+		</field>
+
+		<field name="displayLimit" type="i">
+			<default value="20"/>
+		</field> 		
+		
+		<field name="enableSearch" type="i">
+			<default value="0"/>
+		</field>
+
+		<field name="enableKeywordSearch" type="i">
+			<default value="0"/>
+		</field>
+
+		<field name="headerBackgroundColor" type="C" size="32">
+			<default value=""/>
+		</field>
+
+		<field name="headerBackgroundColorActiveSort" type="C" size="32">
+			<default value=""/>
+		</field>
+
+		<field name="headerTextColor" type="C" size="32">
+			<default value=""/>
+		</field>
+
+		<field name="tableName" type="C" size="255">
+			<default value=""/>
+		</field>		
+		
+		<field name="tableDescription" type="C" size="255">
+			<default value=""/>
+		</field>
+
+		<field name="tableStriped" type="I1" size="1">
+			<default value="0"/>
+		</field>
+
+		<field name="rowBackgroundColorAlternate" type="C" size="32">
+			<default value=""/>
+		</field>
+
+	</table>
+</schema>

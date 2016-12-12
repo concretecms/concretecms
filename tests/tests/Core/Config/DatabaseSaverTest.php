@@ -4,7 +4,6 @@ use Concrete\Core\Config\DatabaseSaver;
 
 class DatabaseSaverTest extends ConcreteDatabaseTestCase
 {
-
     /** @var DatabaseSaver */
     protected $saver;
 
@@ -29,7 +28,7 @@ class DatabaseSaverTest extends ConcreteDatabaseTestCase
             'SELECT configValue FROM Config WHERE configItem=? AND configGroup=?',
             array($item, $group));
 
-        $array = (array)$result->fetch();
+        $array = (array) $result->fetch();
         $saved_value = array_shift($array);
 
         $this->assertEquals($value, $saved_value, "Failed to save.");
@@ -49,7 +48,7 @@ class DatabaseSaverTest extends ConcreteDatabaseTestCase
             'SELECT configValue FROM Config WHERE configItem=? AND configGroup=?',
             array($item, $group1));
 
-        $array = (array)$result->fetch();
+        $array = (array) $result->fetch();
         $saved_value = array_shift($array);
 
         $this->assertEquals($value1, $saved_value, "Failed to save.");
@@ -58,16 +57,17 @@ class DatabaseSaverTest extends ConcreteDatabaseTestCase
             'SELECT configValue FROM Config WHERE configItem=? AND configGroup=?',
             array($item, $group2));
 
-        $array = (array)$result->fetch();
+        $array = (array) $result->fetch();
         $saved_value = array_shift($array);
 
         $this->assertEquals($value2, $saved_value, "Failed to save.");
     }
 
-    public function testSavingArray() {
+    public function testSavingArray()
+    {
         $array = array(
             'test' => true,
-            'test2' => true
+            'test2' => true,
         );
 
         $this->saver->save('testing', $array, '', 'test');
@@ -77,18 +77,17 @@ class DatabaseSaverTest extends ConcreteDatabaseTestCase
             'SELECT configValue FROM Config WHERE configItem=? AND configGroup=?',
             array('testing.test', 'test'));
 
-        $array = (array)$result->fetch();
+        $array = (array) $result->fetch();
         $saved_value1 = array_shift($array);
 
         $result = $db->executeQuery(
             'SELECT configValue FROM Config WHERE configItem=? AND configGroup=?',
             array('testing.test', 'test'));
 
-        $array = (array)$result->fetch();
+        $array = (array) $result->fetch();
         $saved_value2 = array_shift($array);
 
-
-        $this->assertTrue($saved_value1 === $saved_value2 && !!$saved_value1 == true, 'Failed to save array.');
+        $this->assertTrue($saved_value1 === $saved_value2 && (bool) $saved_value1 == true, 'Failed to save array.');
     }
 
     public function testSavingArrayOverArray()
@@ -103,9 +102,9 @@ class DatabaseSaverTest extends ConcreteDatabaseTestCase
             'SELECT configValue FROM Config WHERE configItem LIKE ? AND configGroup=?',
             array('test.array%', $group));
 
-        $array = array_map(function($item) {
+        $array = array_map(function ($item) {
             return $item['configValue'];
-        }, (array)$result->fetchAll());
+        }, (array) $result->fetchAll());
 
         $this->assertEquals(array(1), $array, "Saver doesn't save correctly");
     }
@@ -124,10 +123,9 @@ class DatabaseSaverTest extends ConcreteDatabaseTestCase
             'SELECT configValue FROM Config WHERE configItem=? AND configGroup=? AND configNamespace=?',
             array($item, $group, $namespace));
 
-        $array = (array)$result->fetch();
+        $array = (array) $result->fetch();
         $saved_value = array_shift($array);
 
         $this->assertEquals($value, $saved_value, "Failed to save namespaced item.");
     }
-
 }

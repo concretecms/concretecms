@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema
+  xmlns="http://www.concrete5.org/doctrine-xml/0.5"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.concrete5.org/doctrine-xml/0.5 http://concrete5.github.io/doctrine-xml/doctrine-xml-0.5.xsd">
+
+  <table name="btContentFile">
+    <field name="bID" type="integer">
+      <unsigned/>
+      <key/>
+    </field>
+    <field name="fID" type="integer">
+      <unsigned/>
+    </field>
+    <field name="fileLinkText" type="string" size="255"/>
+    <field name="filePassword" type="string" size="255"/>
+    <field name="forceDownload" type="boolean">
+      <default value="0"/>
+      <notnull/>
+    </field>
+    <index name="fID">
+      <col>fID</col>
+    </index>
+  </table>
+
+</schema>

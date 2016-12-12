@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema
+  xmlns="http://www.concrete5.org/doctrine-xml/0.5"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.concrete5.org/doctrine-xml/0.5 http://concrete5.github.io/doctrine-xml/doctrine-xml-0.5.xsd">
+
+  <table name="btForm">
+    <field name="bID" type="integer">
+      <unsigned/>
+      <key/>
+    </field>
+    <field name="questionSetId" type="integer">
+      <unsigned/>
+      <default value="0"/>
+    </field>
+    <field name="surveyName" type="string" size="255"/>
+    <field name="submitText" type="string" size="255">
+      <default value="Submit"/>
+    </field>
+    <field name="thankyouMsg" type="text" size="65535"/>
+    <field name="notifyMeOnSubmission" type="boolean">
+      <default value="0"/>
+      <notnull/>
+    </field>
+    <field name="recipientEmail" type="string" size="255"/>
+    <field name="displayCaptcha" type="integer">
+      <default value="1"/>
+    </field>
+    <field name="redirectCID" type="integer">
+      <default value="0"/>
+    </field>
+    <field name="addFilesToSet" type="integer">
+      <default value="0"/>
+    </field>
+    <index name="questionSetIdForeign">
+      <col>questionSetId</col>
+    </index>
+  </table>
+
+  <table name="btFormQuestions">
+    <field name="qID" type="integer">
+      <unsigned/>
+      <autoincrement/>
+      <key/>
+    </field>
+    <field name="msqID" type="integer">
+      <unsigned/>
+      <default value="0"/>
+    </field>
+    <field name="bID" type="integer">
+      <unsigned/>
+      <default value="0"/>
+    </field>
+    <field name="questionSetId" type="integer">
+      <unsigned/>
+      <default value="0"/>
+    </field>
+    <field name="question" type="string" size="255"/>
+    <field name="inputType" type="string" size="255"/>
+    <field name="options" type="text" size="65535"/>
+    <field name="position" type="integer">
+      <unsigned/>
+      <default value="1000"/>
+    </field>
+    <field name="width" type="integer">
+      <unsigned/>
+      <default value="50"/>
+    </field>
+    <field name="height" type="integer">
+      <unsigned/>
+      <default value="3"/>
+    </field>
+    <field name="defaultDate" type="string" size="255">
+      <default value=""/>
+    </field>
+    <field name="required" type="integer">
+      <default value="0"/>
+    </field>
+    <index name="questionSetId">
+      <col>questionSetId</col>
+    </index>
+    <index name="msqID">
+      <col>msqID</col>
+    </index>
+    <index name="bID">
+      <col>bID</col>
+      <col>questionSetId</col>
+    </index>
+  </table>
+
+  <table name="btFormAnswerSet">
+    <field name="asID" type="integer">
+      <unsigned/>
+      <autoincrement/>
+      <key/>
+    </field>
+    <field name="questionSetId" type="integer">
+      <unsigned/>
+      <default value="0"/>
+    </field>
+    <field name="created" type="timestamp">
+      <deftimestamp/>
+      <notnull/>
+    </field>
+    <field name="uID" type="integer">
+      <unsigned/>
+      <default value="0"/>
+    </field>
+    <index name="questionSetId">
+      <col>questionSetId</col>
+    </index>
+    <index name="uID">
+      <col>uID</col>
+    </index>
+  </table>
+
+  <table name="btFormAnswers">
+    <field name="aID" type="integer">
+      <unsigned/>
+      <autoincrement/>
+      <key/>
+    </field>
+    <field name="asID" type="integer">
+      <unsigned/>
+      <default value="0"/>
+    </field>
+    <field name="msqID" type="integer">
+      <unsigned/>
+      <default value="0"/>
+    </field>
+    <field name="answer" type="string" size="255"/>
+    <field name="answerLong" type="text" size="65535"/>
+    <index name="asID">
+      <col>asID</col>
+    </index>
+    <index name="msqID">
+      <col>msqID</col>
+    </index>
+  </table>
+
+</schema>

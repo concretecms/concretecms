@@ -1,0 +1,197 @@
+@import "../../vendor/tourist/tourist.less";
+
+div.ccm-dialog-help-item {
+  margin-bottom: 30px;
+  a:focus, a:active {
+    outline: none;
+    text-decoration: none;
+  }
+  ol.breadcrumb {
+    padding: 0px;
+    background: none;
+
+    > li + li::before {
+      content: "|\00a0";
+      color: #999;
+      padding: 0px 5px;
+    }
+  }
+}
+
+
+ol.ccm-dialog-help-item-icon-row {
+  padding: 0px;
+  margin: 0px 0px 10px 0px;
+  li {
+    display: inline-block;
+    margin-right: 10px;
+
+    i {
+      .opacity(.5);
+    }
+  }
+}
+
+/** toolbar guide */
+div#ccm-toolbar {
+  .tour-highlight {
+
+    a, &.ccm-toolbar-search {
+      background-color: #D6E6EE;
+      #gradient .vertical(#D6E6EE, #B8DCEE);
+      color: #136CC0;
+    }
+
+  }
+}
+
+
+// in page help
+
+/**
+ * Help launcher
+ */
+div.ccm-notification-help-launcher {
+  position: fixed;
+  top: 82px;
+  right: 0px;
+  z-index: @index-level-page-help;
+
+  div.ccm-panel-detail-content & {
+    z-index: @index-level-panel-help;
+  }
+
+  -webkit-font-smoothing: antialiased;
+  .transition-transform(cubic-bezier(0.190, 1.000, 0.220, 1.000) 0.5s);
+
+  html.ccm-panel-open.ccm-panel-right & {
+    .translate(-320px, 0);
+  }
+
+  a {
+    .border-left-radius(3px);
+    background-color: #335B8A;
+    color: #fff;
+    display: block;
+    height: 40px;
+    width: 40px;
+    .transition(all 0.1s ease-in-out);
+
+    -webkit-animation-duration:0.2s;
+    -moz-animation-duration:0.2s;
+    -ms-animation-duration:0.2s;
+    -o-animation-duration:0.2s;
+    animation-duration:0.2s;
+
+  }
+
+  a:hover, a:active, a:focus {
+    color: #fff;
+    background-color: #163251;
+  }
+
+  i {
+    margin-left: 9px;
+    vertical-align: middle;
+    font-size: 26px;
+    font-weight: normal;
+    line-height: 40px;
+  }
+}
+
+div.ccm-notification-help {
+  display: none;
+
+  div.ccm-panel-detail-content & {
+    margin-top: -28px; // not sure why – some of the style in these panels gets a little weird.
+  }
+
+  -webkit-animation-duration:0.2s;
+  -moz-animation-duration:0.2s;
+  -ms-animation-duration:0.2s;
+  -o-animation-duration:0.2s;
+  animation-duration:0.2s;
+  -webkit-font-smoothing: antialiased;
+
+  .transition-transform(cubic-bezier(0.190, 1.000, 0.220, 1.000) 0.5s);
+
+  html.ccm-panel-open.ccm-panel-right & {
+    .translate(-320px, 0);
+  }
+
+  position: fixed;
+  right: 0px;
+  top: 83px;
+  .border-right-radius(0px);
+  z-index: @index-level-page-help;
+
+}
+
+
+div.ccm-notification-help {
+
+  max-width: 90%;
+  font-family: @font-family-sans-serif;
+  font-size: @font-size-base;
+  z-index: @index-level-hud;
+  -webkit-font-smoothing: antialiased;
+  .border-radius(3px);
+  i.ccm-notification-icon {
+    font-size: 16px;
+    position: absolute;
+    top: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 11px 12px;
+    width: 40px;
+    height: 40px;
+    text-align: center;
+    left: 20px;
+    .border-radius(40px);
+  }
+
+  div.ccm-notification-inner {
+    width: 360px;
+    max-width: 100%;
+    padding: 30px 30px 30px 80px;
+  }
+
+
+  background-color: rgba(19, 72, 125, 0.9);
+  color: #adeef7;
+  h3 {
+    color: #fff;
+    font-size: @font-size-base * 1.2;
+    font-weight: 300;
+    margin: 0px 0px 10px 0px;
+    padding: 0px;
+  }
+  .ccm-notification-icon {
+    color: #fff;
+  }
+
+  div.ccm-notification-actions {
+    font-size: @font-size-small;
+    font-weight: 400;
+    background-color: rgba(17, 47, 76, 0.9);
+    border-top: 1px solid #002a53;
+    .border-bottom-radius(3px);
+    text-align: right;
+    a {
+      display: inline-block;
+      text-align: center;
+      padding: 6px 10px 6px 10px;
+      margin-left: 0px;
+      border-left: 1px solid #002a53;
+      color: #88aee7;
+      &.ccm-notification-actions-dismiss-single {
+        color: #ffff00;
+      }
+
+    }
+    a, a:hover {
+      text-decoration: none;
+      color: #fff;
+    }
+
+  }
+}

@@ -1,0 +1,165 @@
+/**
+ * Add block
+ */
+div#ccm-panel-add-block {
+	.ccm-panel-dark();
+
+    div.ccm-panel-header-search {
+      input {
+        background-color: #333539;
+        color: #b8bbc4;
+        .placeholder(#777);
+      }
+    }
+
+	div.ccm-panel-add-block-set {
+
+		clear: both;
+
+		header {
+			font-size: 13px;
+			line-height: 13px;
+			padding: 0px;
+			border-top: 1px solid #474645;
+			padding-top: 5px;
+			color: #2aa9dd;
+		}
+
+		ul {
+          margin-left: 0px;
+          padding-left: 0px;
+          li {
+              list-style-type: none;
+              float: left;
+              display: block;
+              margin: 0px 20px 20px 0px;
+              position: relative;
+          }
+
+          .ccm-icon-item-grid-available {
+              display: block;
+          }
+        }
+	}
+
+	a.ccm-panel-add-block-draggable-block-type:hover {
+		cursor: move;
+		.box-shadow(0px 0px 2px 0px #fff);
+	}
+
+
+	div#ccm-panel-add-block-clipboard-list {
+
+		div.ccm-panel-add-block-clipboard-item {
+			border-top: 2px groove #424854;
+			.transition(all 0.5s cubic-bezier(0.190, 1.000, 0.220, 1.000));
+			.opacity(1);
+			border-top: 2px groove #424854;
+			position: relative;
+
+			> a {
+				position: absolute;
+				top: 10px;
+				right: 15px;
+				color: #424854;
+			}
+
+			> a:hover {
+				color: #d1322d;
+				text-decoration: none;
+			}
+		}
+
+		div.ccm-panel-add-block-clipboard-item:last-child {
+			border-bottom: 2px groove #424854;
+		}
+
+		div.ccm-panel-add-block-clipboard-item-delete {
+			.opacity(0);
+			.translate3d(-100%, 0, 0);
+			max-height: 0px;
+			padding: 0px;
+			border: 0px;
+		}
+
+	}
+
+}
+
+div.ccm-panel-add-block-clipboard-item {
+
+	padding: 10px 15px 10px 40px;
+	max-height: 200px;
+
+	div.ccm-panel-add-block-clipboard-item-inner {
+		max-height: 140px;
+		margin-bottom: 10px;
+		padding-right: 25px;
+		color: #b4bfcb;
+		overflow: hidden;
+		font-size: @font-size-base;
+	}
+
+	font-size: @font-size-small;
+	color: #4b5662;
+}
+
+div#ccm-panel-add-block-dragging {
+	div.ccm-panel-add-block-clipboard-item {
+		width: 265px;
+		background-color: #161c22;
+		.border-radius(4px);
+
+		> a {
+			display: none;
+		}
+	}
+}
+
+a.ccm-panel-add-block-draggable-block-type {
+	display: block;
+	height: 90px;
+	width: 90px;
+	line-height: 0px;
+	padding: 2px;
+	box-sizing: padding-box;
+	text-align: center;
+	background-color: #161c22;
+	.border-radius(4px);
+
+	span {
+		position: absolute;
+		left: 0px;
+		bottom: 0px;
+		width: 100%;
+		text-align: center;
+		display: block;
+		color: #8f969a;
+		background-color: #000;
+		font-size: 12px;
+		line-height: 14px;
+		padding-left: 2px;
+		padding-right: 2px;
+		padding-top: 6px;
+		padding-bottom: 6px;
+		.border-bottom-radius(4px);
+		text-overflow: ellipsis;
+		overflow: hidden;		
+	}
+
+	img {
+		margin-top: 15px;
+		height: 24px;
+		width: auto;
+	}
+}
+
+#ccm-panel-add-block-dragging {
+	> a, > div {
+		cursor: move;
+		.rotate(5deg);
+		z-index: @index-level-draggable-content-item;
+	}
+}
+
+

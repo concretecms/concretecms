@@ -11,26 +11,26 @@ __MACOSX
 composer.phar
 
 # ignore the config
-/web/application/config/*
+/application/config/*
 
 # ignore everything but the index.html
-/web/application/files/*
-!/web/application/files/index.html
+/application/files/*
+!/application/files/index.html
 
-/web/concrete/vendor
+/concrete/vendor
 
 # ignore updates folder
-/web/updates/*
+/updates/*
 
 # ignore packages folder
-/web/packages/*
-/web/concrete/packages/*
+/packages/*
+/concrete/packages/*
 
 # more stuff
-/web/application/languages/*
+/application/languages/*
 
 # ignore sitemap.xml
-/web/sitemap.xml
+/sitemap.xml
 
 # ignore the error log and .htaccess and others
 error_log
@@ -47,8 +47,8 @@ error_log
 /.buildpath
 
 # ignore JavaScript source maps
-/web/concrete/js/*.js.map
-/web/concrete/js/bootstrap/*.js.map
+/concrete/js/*.js.map
+/concrete/js/bootstrap/*.js.map
 
 # ignore node modules used for building
 /build/node_modules
@@ -60,76 +60,3 @@ error_log
 __IDE_SYMBOLS__.php
 .phpstorm.meta.php
 
-
-# Built assets
-# JS
-/web/concrete/js/frontend
-/web/concrete/js/account.js
-/web/concrete/js/app.js
-/web/concrete/js/backstretch.js
-/web/concrete/js/bootstrap-editable.js
-/web/concrete/js/bootstrap/alert.js
-/web/concrete/js/bootstrap/button.js
-/web/concrete/js/bootstrap/dropdown.js
-/web/concrete/js/bootstrap/popover.js
-/web/concrete/js/bootstrap/tooltip.js
-/web/concrete/js/bootstrap/transition.js
-/web/concrete/js/conversations.js
-/web/concrete/js/dashboard.js
-/web/concrete/js/dropzone.js
-/web/concrete/js/dynatree.js
-/web/concrete/js/events.js
-/web/concrete/js/file-manager.js
-/web/concrete/js/gathering.js
-/web/concrete/js/groups.js
-/web/concrete/js/frontend/parallax-image.js
-/web/concrete/js/help.js
-/web/concrete/js/backbone.js
-/web/concrete/js/image-editor.js
-/web/concrete/js/jquery-cookie.js
-/web/concrete/js/jquery-tristate.js
-/web/concrete/js/jquery-fileupload.js
-/web/concrete/js/jquery-form.js
-/web/concrete/js/jquery-magnific-popup.js
-/web/concrete/js/kinetic.js
-/web/concrete/js/layouts.js
-/web/concrete/js/redactor.js
-/web/concrete/js/jquery-awesome-rating.js
-/web/concrete/js/sitemap.js
-/web/concrete/js/spectrum.js
-/web/concrete/js/style-customizer.js
-/web/concrete/js/topics.js
-/web/concrete/js/underscore.js
-/web/concrete/js/lightbox.js
-/web/concrete/js/select2.js
-/web/concrete/js/translator.js
-/web/concrete/js/textcounter.js
-
-# CSS
-/web/concrete/css/select2.css
-/web/concrete/css/account.css
-/web/concrete/css/app.css
-/web/concrete/css/conversations.css
-/web/concrete/css/dynatree.css
-/web/concrete/css/editable-fields.css
-/web/concrete/css/file-manager.css
-/web/concrete/css/font-awesome.css
-/web/concrete/css/frontend/pagination.css
-/web/concrete/css/gathering/base.css
-/web/concrete/css/gathering/display.css
-/web/concrete/css/image-editor.css
-/web/concrete/css/jquery-magnific-popup.css
-/web/concrete/css/help.css
-/web/concrete/css/jquery-awesome-rating.css
-/web/concrete/css/jquery-ui.css
-/web/concrete/css/dropzone.css
-/web/concrete/css/redactor.css
-/web/concrete/css/sitemap.css
-/web/concrete/css/spectrum.css
-/web/concrete/css/style-customizer.css
-/web/concrete/css/topics.css
-/web/concrete/css/views/install.css
-/web/concrete/themes/concrete/main.css
-/web/concrete/themes/dashboard/main.css
-/web/concrete/themes/elemental/css/bootstrap-modified.css
-/web/concrete/css/translator.css

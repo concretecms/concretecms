@@ -1,0 +1,200 @@
+
+// Slim theme
+
+div.ccm-dialog-slim {
+
+  height: 100%;
+
+  div.ui-dialog-titlebar {
+    background: none;
+    border-bottom: 0px;
+    padding-top: 0px;
+    padding-bottom: 0px;
+
+    span.ui-dialog-title {
+      display: none;
+    }
+  }
+
+  div.ui-dialog-content {
+    padding: 0px;
+    height: 100%;
+
+    > div {
+      height: 100%;
+    }
+  }
+
+  button.ui-dialog-titlebar-close {
+    top: 10px !important;
+    right: 5px !important;
+  }
+
+  div.container-fluid,
+  div.row {
+    height: 100%;
+  }
+  div.col-accented {
+    background-color: #e9e9e9;
+    min-height: 100%;
+    overflow: auto;
+  }
+
+  div[class^="col-"] {
+    padding: 20px;
+  }
+
+  h1, h2, h3, h4, h5 {
+    margin-bottom: 0px;
+    margin-top: 0px;
+  }
+
+  h3, h4, h5 {
+    font-weight: bold;
+  }
+
+}
+
+
+// V8 Theme
+
+div.ui-dialog {
+
+  background-color: transparent !important;
+  background-image: none !important;
+  border-width: 0px !important;
+  box-shadow: none;
+  max-width: 100%;
+
+  .border-radius(4px);
+  padding: 0px;
+
+  .ui-dialog-title {
+    margin: 0px;
+  }
+
+  .ui-dialog-titlebar {
+
+    padding: 0px 0px 5px 0px;
+    font-size: 24px;
+    border: 0px;
+    -webkit-font-smoothing: antialiased;
+    background-image: none;
+    border-bottom: 0px;
+    background-color: transparent;
+
+    .ui-dialog-title {
+      font-weight: normal;
+    }
+
+      button, a {
+    color: #aaa;
+    background-color: transparent;
+    border: 0px !important;
+    opacity: 1;
+	position: absolute;
+    font-size: 18px;
+    line-height: 18px;
+    overflow: hidden;
+  }
+
+  .ui-dialog-titlebar-close {
+    height: 20px;
+    width: 20px;
+	margin: 0px;
+    background: transparent url(../images/icons/icon_close.png) no-repeat scroll;
+    right: 0px;
+    top: 11px;
+    padding: 0px;
+
+    span.ui-icon {
+      display: none;
+    }
+
+  }
+
+  .ui-dialog-titlebar-help {
+    right: 32px;
+    height: 20px;
+    width: 20px;
+    top: 9px;
+	margin: 0px;
+    padding: 0px;
+    i {
+      .transition(opacity linear 0.1s);
+    }
+  }
+
+  }
+
+  .ui-dialog-content {
+    background-color: #fff;
+    overflow: auto;
+    .border-top-radius(4px);
+    box-sizing: content-box;
+
+    div.form-group {
+
+      padding-left: 26px;
+      padding-right: 26px;
+      margin-left: -26px;
+      margin-right: -26px;
+    }
+
+    div.well {
+      div.form-group {
+        margin-left: 0px;
+        margin-right: 0px;
+        padding-left: 0px;
+        padding-right: 0px;
+      }
+    }
+
+    hr {
+      border-color: #dcdcdc;
+      padding-left: 26px;
+      padding-right: 26px;
+      margin-left: -26px;
+      margin-right: -26px;
+    }
+
+  }
+
+  .ui-dialog-buttonpane {
+    margin-top: 0px;
+    overflow: hidden;
+    background-image: none;
+    background-color: #48b4fb;
+    padding: 10px 10px 10px 10px;
+    border-width: 0px;
+
+
+    .btn-primary {
+      border-color: darken(@btn-primary-bg, 15%);
+      background-color: darken(@btn-primary-bg, 15%);
+      &:hover {
+        background-color: darken(@btn-primary-bg, 25%);
+      }
+    }
+
+    .btn-default {
+      border-color: #3f9edc;
+      background-color: #3f9edc;
+      color:#fff;
+      &:hover {
+        background-color: #3585B9;
+      }
+    }
+
+    .btn-success {
+      border-color: darken(@btn-primary-bg, 15%);
+      /* yes - btn success in dialogs is now just an alias to btn primary */
+      background-color: darken(@btn-primary-bg, 15%);
+      &:hover {
+        background-color: darken(@btn-primary-bg, 25%);
+      }
+
+    }
+  }
+
+}

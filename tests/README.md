@@ -11,13 +11,25 @@ Install PHPUnit through Pear, MacPorts, or whatever system you use. It is availa
 Or download it.
 
 
-## Step 3: Install concrete5
+## Step 3: Setup concrete5
 
-Configure a web server to point to the `web` directory of your copy of the repository, and install concrete5, choosing the option to install `Sample Content with Blog`.
-Do __NOT__ link to a production version because it's possible that some files or database values may be modified.
+As described [here](../README.md#installation)
 
 
-## Step 4: Run the tests!
+## Step 4: Setup the database
+
+The test system expects to have access to a MySQL installation on the same computer where the tests will be executed.
+The tests needs to have administration rights on MySQL in order to create and drop the test database and the tables inside it.
+You need to create a MySQL account with login `travis` and an empty password:
+
+```sql
+CREATE USER 'travis'@'localhost' IDENTIFIED BY '';
+GRANT ALL ON *.* TO 'travis'@'localhost' WITH GRANT OPTION;
+FLUSH PRIVILEGES;
+```
+
+
+## Step 5: Run the tests!
 
 For example
 

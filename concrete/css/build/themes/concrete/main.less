@@ -1,0 +1,87 @@
+@import "../../vendor/bootstrap/variables.less";
+// Modify this for custom colors, font-sizes, etc
+@import "../../vendor/bootstrap/mixins.less";
+@import "../../vendor/bootstrap/grid.less";
+
+img.ccm-captcha-image {display: block; margin: 0px auto}
+
+body {
+  margin: 0px;
+}
+
+div#ccm-theme-wrapper {
+  width: 640px;
+  margin: 0px auto 0px auto;
+  background: #fff;
+  padding: 20px;
+}
+
+div.container {
+  padding-top: 50px;
+}
+
+div#ccm-account-menu {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+
+.login-page {
+  h1 {
+    padding: 0;
+    text-align: center;
+    color: white !important;
+    font-size: 60px !important;
+    text-shadow: 3px 3px 7px rgba(0, 0, 0, .2);
+    font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+    font-weight: 300 !important;
+    margin-bottom: 20px !important;
+  }
+
+  .login-form {
+    height: 460px;
+  }
+
+  .login-row {
+    height: 100%;
+  }
+
+  .types {
+    color: #9b9b9b;
+    padding: 15px 35px;
+    background-color: rgba(0, 0, 0, .7);
+    height: 100%;
+  }
+
+  .controls {
+    color: #9b9b9b;
+    background-color: rgba(0, 0, 0, .9);
+    padding: 35px;
+    height: 100%;
+    font-size: 16px;
+    font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+    font-weight: 300;
+  }
+
+  .controls hr {
+    border-color: #9b9b9b;
+  }
+
+  ul.auth-types > li.active {
+    color: white;
+    font-weight: normal;
+  }
+}
+
+.ccm-page-background-credit {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  text-align: right;
+  padding: 10px 30px;
+  color: #989898;
+  background-color: rgba(0, 0, 0, .5);
+}
+
+@import "account.less";

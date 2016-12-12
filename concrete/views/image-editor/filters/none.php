@@ -1,0 +1,1 @@
+<?= t('Remove all filters');

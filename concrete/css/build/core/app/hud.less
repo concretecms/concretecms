@@ -1,0 +1,243 @@
+.ccm-notification {
+  max-width: 90%;
+  font-family: @font-family-sans-serif;
+  font-size: @font-size-base;
+  -webkit-font-smoothing: antialiased;
+  .border-radius(3px);
+  padding: 30px 30px 30px 0px;
+  top: 45px;
+
+  div.ui-pnotify-icon {
+    font-size: 16px;
+    position: absolute;
+    top: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 11px 12px;
+    width: 40px;
+    height: 40px;
+    text-align: center;
+    left: 20px;
+    .border-radius(40px);
+  }
+
+  h4.ui-pnotify-title {
+    font-size: @font-size-base * 1.2;
+    font-weight: 300;
+    margin: 0px 0px 10px 70px;
+    padding: 0px;
+  }
+
+  div.ui-pnotify-text {
+    margin-left: 70px;
+  }
+
+  span.ccm-notification-closer {
+
+    position: absolute;
+    top: 0px;
+    right: 5px;
+
+    &:after {
+      content: "\f00d";
+      font-family: FontAwesome;
+    }
+  }
+
+  div.ccm-notification-inner-buttons {
+    margin-top: 10px;
+
+    a, button {
+      border: 0px;
+      outline: 0px;
+    }
+
+    .btn-default {
+      background-color: rgba(255, 255, 255, 0.4);
+    }
+  }
+}
+
+div.ccm-notification-info {
+  background-color: rgba(19, 72, 125, 0.9);
+  color: #adeef7;
+  h3 {
+    color: #fff;
+  }
+  .ccm-notification-icon {
+    color: #fff;
+  }
+}
+
+div.ccm-notification-success {
+  color: #ffffff;
+  background-color: rgba(15, 190, 102, 0.9);
+  h3 {
+    color: #fff;
+  }
+  i {
+    color: #fff;
+  }
+}
+
+div.ccm-notification-danger {
+  color: #fff;
+  background-color: rgba(190, 62, 62, 0.90);
+}
+
+
+div.ccm-notification-page-alert {
+  z-index: @index-level-page-alert;
+  @media (min-width: @screen-sm-min) {
+    right: 60px;
+  }
+}
+
+
+  /* In-page HUD */
+
+/*
+.ccm-notification {
+  max-width: 90%;
+  font-family: @font-family-sans-serif;
+  font-size: @font-size-base;
+  z-index: @index-level-hud;
+  -webkit-font-smoothing: antialiased;
+  .border-radius(3px);
+  i.ccm-notification-icon {
+    font-size: 16px;
+    position: absolute;
+    top: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 11px 12px;
+    width: 40px;
+    height: 40px;
+    text-align: center;
+    left: 20px;
+    .border-radius(40px);
+  }
+
+  form {
+    position: relative;
+  }
+
+  div.ccm-notification-inner-wrapper {
+    max-height: 320px;
+    overflow: auto;
+  }
+
+  div.ccm-notification-inner {
+    h3 {
+      font-size: @font-size-base * 1.2;
+      font-weight: 300;
+      margin: 0px 0px 10px 0px;
+      padding: 0px;
+    }
+
+  }
+}
+
+div.ccm-notification-inner {
+  width: 360px;
+  max-width: 100%;
+  padding: 30px 30px 30px 80px;
+}
+
+div.ccm-notification-actions {
+  font-size: @font-size-small;
+  font-weight: 400;
+  background-color: rgba(17, 47, 76, 0.9);
+  border-top: 1px solid #002a53;
+  .border-bottom-radius(3px);
+  text-align: right;
+  a {
+    display: inline-block;
+    text-align: center;
+    padding: 6px 10px 6px 10px;
+    margin-left: 0px;
+  }
+  a, a:hover {
+    text-decoration: none;
+  }
+
+}
+
+div#ccm-notification-hud {
+  position: fixed;
+  top: 110px;
+  right: 0px;
+  z-index: @index-level-hud;
+  .opacity(0);
+}
+
+div#ccm-notification-page-alert, div#ccm-notification-page-alert-workflow {
+  position: fixed;
+  top: 110px;
+  right: 10px;
+  z-index: @index-level-page-alert;
+  @media (min-width: @screen-sm-min) {
+    right: 60px;
+  }
+}
+
+div#ccm-notification-user-alert-workflow {
+  margin-bottom: 50px;
+  position: fixed;
+  top: 100px;
+  right: 50px;
+  width: 400px;
+}
+
+div#ccm-notification-page-alert-workflow {
+  div.ccm-notification-inner {
+    width: 440px;
+  }
+}
+
+*/
+
+/**
+ * Colors
+ */
+
+/*
+
+div.ccm-notification-help,
+div.ccm-notification-info {
+  background-color: rgba(19, 72, 125, 0.9);
+  color: #adeef7;
+  h3 {
+    color: #fff;
+  }
+  .ccm-notification-icon {
+    color: #fff;
+  }
+
+  form {
+    border-bottom: 1px solid #002a53;
+  }
+  div.ccm-notification-actions {
+    a {
+      border-left: 1px solid #002a53;
+      color: #88aee7;
+
+      &.ccm-notification-actions-dismiss-single {
+        color: #ffff00;
+      }
+
+    }
+    a:hover {
+      color: #fff;
+    }
+  }
+}
+
+
+*/
+
+
+/**
+ * Error dialogs
+ */
+div#ccm-popup-alert-message {
+  word-wrap: break-word;
+}

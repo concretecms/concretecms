@@ -1,0 +1,541 @@
+/**
+ * Highlighter
+ */
+
+div#ccm-menu-click-proxy {
+  opacity: 0;
+  height: 0px;
+  width: 0px;
+  position: absolute;
+  cursor: pointer;
+  z-index: @index-level-in-context-click-proxy;
+  background: url(data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7);
+}
+
+div#ccm-menu-highlighter {
+  z-index: @index-level-in-context-menu-highlighter;
+  height: 0px;
+  width: 0px;
+  position: absolute;
+  background-color: transparent;
+  .transition(background-color 0.5s cubic-bezier(0.190, 1.000, 0.220, 1.000));
+}
+
+/**
+ * Blocks AND areas
+ */
+div.ccm-block-edit, div.ccm-area, div.ccm-area-disabled {
+  position: relative;
+  opacity: 1;
+  .clearfix();
+}
+
+/**
+ * sorting blocks in page
+ */
+div.ccm-block-type-sorting {
+  border: 1px solid darken(@wellBackground, 7%);
+  .box-shadow(0px 0px 2px 0px rgba(0, 0, 0, 0.5));
+  overflow: hidden;
+  padding: 10px;
+  background-color: rgba(128, 128, 128, 0.1);
+  .rotate(5deg);
+}
+
+/**
+ * Blocks
+ */
+
+div.ccm-block-edit {
+  position: relative;
+  opacity: 1;
+  .clear_float();
+  min-height: 16px;
+
+  .transition(outline-color 0.5s cubic-bezier(0.190, 1.000, 0.220, 1.000));
+  outline: 1px solid transparent;
+  outline-offset: -1px;
+}
+
+div.ccm-block-edit.ccm-menu-item-hover, div.ccm-block-edit.ccm-block-highlight {
+  outline: 1px solid #59ec59;
+
+  > div.ccm-custom-style-container > ul.ccm-edit-mode-inline-commands,
+  > ul.ccm-edit-mode-inline-commands {
+    float: none;
+    list-style-type: none;
+    margin: 0px !important;
+    opacity: 1;
+  }
+}
+
+div.ccm-global-area {
+  div.ccm-block-edit.ccm-menu-item-hover, div.ccm-block-edit.ccm-block-highlight {
+    outline: 1px solid #80d0ec;
+  }
+}
+
+/**
+ * Areas
+  */
+
+div.ccm-area {
+  /* margin-bottom: 50px; */
+  .transition(outline-color 0.5s cubic-bezier(0.190, 1.000, 0.220, 1.000));
+  outline: 1px solid transparent;
+  outline-offset: -1px;
+
+  /**
+   * draggable blocks into area
+   */
+
+  .ccm-area-block-dropzone-active {
+    margin-top: -8px;
+    margin-bottom: -8px;
+
+    .ccm-area-block-dropzone-inner {
+      height: 10px;
+      margin-top: 2px;
+      margin-bottom: 2px;
+      border: 2px solid rgba(0, 0, 0, 0);
+    }
+  }
+
+  .ccm-area-block-dropzone-over {
+
+    .ccm-area-block-dropzone-inner {
+      border: 2px solid #0c6;
+    }
+  }
+
+}
+
+div.ccm-area:hover,
+div.ccm-area.ccm-parent-menu-item-hover,
+div.ccm-area.ccm-parent-menu-item-active,
+div.ccm-area.ccm-area-accepts-blocks,
+div.ccm-area.ccm-area-highlight,
+div.ccm-area.ccm-menu-item-hover {
+  outline: 1px solid #e6e6e6;
+
+  > div.ccm-area-footer {
+    display: block;
+    opacity: 1;
+  }
+}
+
+div.ccm-area-footer {
+  opacity: 0;
+  .transition(opacity 0.5s cubic-bezier(0.190, 1.000, 0.220, 1.000));
+  position: absolute;
+  bottom: -35px;
+  left: 0px;
+  padding-top: 15px;
+  z-index: @index-level-in-context-area-handle;
+  padding-left: 20px;
+  white-space: nowrap;
+  max-width: 100%;
+
+  div.ccm-area-footer-handle {
+    display: inline-block;
+    border-left: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
+    border-right: 1px solid #ccc;
+    padding: 8px 15px 8px 15px;
+    color: #666;
+    height: 35px;
+    font-size: @baseFontSize !important;
+    background-color: #f5f5f5;
+    max-width: 100%;
+
+    > span {
+      text-overflow: ellipsis;
+      overflow: hidden;
+      display: block;
+    }
+
+    i {
+      vertical-align: middle;
+    }
+  }
+}
+
+/**
+ * Hovering over areas
+ */
+div.ccm-menu-item-hover {
+  > div.ccm-area-footer {
+    > div.ccm-area-footer-handle {
+      span {
+        opacity: 1 !important;
+      }
+    }
+  }
+}
+
+/**
+ * Empty areas
+ */
+div.ccm-area[data-total-blocks="0"] {
+
+  outline: 1px solid #e6e6e6;
+  outline-offset: -1px;
+  min-height: 50px;
+
+}
+
+/**
+ * Empty areas - firefox stupidity
+ */
+@-moz-document url-prefix() {
+  div.ccm-area[data-total-blocks="0"] {
+    border:1px solid #e6e6e6;
+    outline:none!important;
+  }
+}
+
+div.ccm-area[data-total-blocks="0"].ccm-area-drag-block-type-over, div.ccm-area[data-total-blocks="0"].ccm-menu-item-hover {
+
+  outline: 1px solid #0c6;
+
+  div.ccm-area-footer-handle {
+    border-color: #0c6;
+    span {
+      opacity: 1 !important;
+    }
+  }
+
+  &.ccm-global-area {
+    outline-color: #80d0ec;
+    div.ccm-area-footer-handle {
+      border-color: #80d0ec;
+
+    }
+  }
+}
+
+/**
+ * Clicking on areas
+ */
+div.ccm-area.ccm-area-highlight {
+
+  outline: 1px solid #59ec59;
+  outline-offset: -1px;
+
+  > div.ccm-area-footer {
+
+    div.ccm-area-footer-handle {
+      border-left: 1px solid #59ec59;
+      border-bottom: 1px solid #59ec59;
+      border-right: 1px solid #59ec59;
+      color: #000;
+    }
+  }
+
+  &.ccm-global-area-highlight {
+    outline: 1px solid #80d0ec;
+
+    > div.ccm-area-footer {
+
+      div.ccm-area-footer-handle {
+        border-left: 1px solid #80d0ec;
+        border-bottom: 1px solid #80d0ec;
+        border-right: 1px solid #80d0ec;
+        color: #000;
+      }
+    }
+  }
+}
+
+div.ccm-area[data-total-blocks="0"].ccm-area-highlight {
+  outline: 1px solid #59ec59;
+  &.ccm-global-area-highlight {
+    outline-color: #80d0ec;
+  }
+}
+
+div#ccm-menu-highlighter.ccm-area-highlight {
+  background-color: #ffff76;
+  opacity: 0.1;
+
+  &.ccm-global-area-highlight {
+    background-color: #93ffdb;
+  }
+}
+
+/**
+ * Inline edit mode tweaks
+ */
+div.ccm-area.ccm-area-inline-edit-disabled {
+  outline-color: transparent;
+  div.ccm-area-footer {
+    display: none;
+  }
+
+  div.ccm-block-edit {
+    .opacity(0.4);
+  }
+
+  div.ccm-block-edit-layout {
+    .opacity(1); // layouts shouldn't be affected by this
+  }
+
+  div.ccm-block-edit-inline-active {
+    outline: 1px solid #5eed5e;
+    outline-offset: -1px;
+    .opacity(1);
+  }
+
+}
+
+/**
+ * Clicking on blocks
+ */
+div#ccm-menu-highlighter.ccm-block-highlight {
+  background-color: #59ec59;
+  opacity: 0.4;
+
+  &.ccm-global-area-block-highlight {
+    outline: 1px solid #80d0ec;
+    background-color: rgb(128, 208, 236);
+  }
+}
+
+
+/**
+ * Inline commands
+ */
+ul.ccm-edit-mode-inline-commands {
+  list-style-type: none;
+  opacity: 0;
+  position: absolute;
+  padding: 0px !important;
+  margin: 0px !important;
+  top: 1px;
+  right: 1px;
+  height: 20px !important;
+  background-color: #fff;
+  z-index: @index-level-inline-commands; // has to be over the click proxy
+  li {
+    display: inline-block;
+    line-height: 20px !important;
+    height: 20px !important;
+    padding: 0px !important;
+    margin: 0px !important;
+
+    a {
+      cursor: move;
+      position: relative;
+      color: #333 !important;
+      display: inline-block;
+      font-weight: lighter;
+      width: 20px !important;
+      height: 20px !important;
+      line-height: 20px !important;
+      text-align: center;
+      color: #666 !important;
+
+      i {
+        position: absolute;
+        top: 3px;
+        left: 3px;
+        font-size: 14px !important;
+        vertical-align: middle;
+      }
+    }
+
+    a:hover {
+      text-decoration: none !important;
+    }
+
+  }
+
+}
+
+ul.ccm-edit-mode-inline-commands:hover {
+  .opacity(1);
+}
+
+/**
+ * In page menus
+ */
+#ccm-popover-menu-container div.popover {
+
+  &.ccm-popover-inverse {
+    background-color: rgba(0, 0, 0, 0.6) !important;
+    ul.dropdown-menu {
+      background-color: rgba(0, 0, 0, 0.6) !important;
+      li {
+        span {
+          color: #444245;
+        }
+        a {
+          color: #7f7f81;
+          &:hover {
+            color: #c5c5c7 !important;
+          }
+        }
+
+        &.divider {
+          background-color: #444;
+        }
+      }
+    }
+  }
+
+  ul.dropdown-menu {
+
+    position: static;
+    display: block;
+    margin: 0px !important;
+    float: none !important;
+    padding: 0px;
+    border: 0px;
+    .box-shadow(none) !important;
+
+    li:last-child a {
+      .border-bottom-radius(4px);
+    }
+
+    li:first-child a {
+      .border-top-radius(4px);
+    }
+
+    li {
+
+      display: block;
+
+      a, span {
+        text-decoration: none !important;
+        padding: 3px 12px !important;
+        color: #999;
+        display: block;
+      }
+      a:hover {
+        color: #000;
+        background-image: none !important;
+        background-color: transparent !important;
+      }
+
+      font-family: @baseFontFamily !important;
+      font-size: 14px !important;
+      line-height: @baseLineHeight !important;
+
+    }
+
+    .divider {
+      margin: 9px 1px !important;
+    }
+  }
+
+}
+
+.ccm-ui div.popover ul.dropdown-menu a:hover {
+  color: @dropdownLinkColor !important;
+  text-decoration: none !important;
+}
+
+/*
+ * Edit mode drag areas - The green hover state things
+ */
+div.ccm-area-drag-area {
+  -webkit-transition: outline-width 0.5s cubic-bezier(0.190, 1.000, 0.220, 1.000), outline-color 0.5s cubic-bezier(0.190, 1.000, 0.220, 1.000);
+  outline-width: 0;
+  outline-style: solid;
+  text-indent: -10000em;
+  line-height: 0px;
+  font-size: 0px;
+  outline-color: rgb(170, 255, 170);
+
+  &.ccm-area-drag-area-contender {
+    background-color: rgba(221, 255, 221, 0.5);
+    outline: solid 5px rgba(221, 255, 221, .7) !important;
+  }
+  &.ccm-area-drag-area-selectable {
+    outline-width: 10px !important;
+  }
+}
+
+/* Global area color */
+div.ccm-global-area {
+  > .ccm-area-block-list {
+    > div.ccm-area-drag-area {
+      border-color: rgb(128, 208, 236);
+      outline-color: rgb(203, 234, 255);
+    }
+  }
+}
+
+
+html.ccm-panel-add-block, html.ccm-block-dragging {
+  div.ccm-area-drag-area {
+    outline-width: 2px;
+  }
+}
+
+/**
+ * Empty areas
+ */
+div.ccm-area[data-total-blocks="0"] {
+  div.ccm-area-drag-area {
+    text-indent: 0;
+    text-align: center;
+    padding: 18px;
+    font-size: 14px;
+    line-height: 14px;
+    color: #bbb;
+  }
+}
+
+a.ccm-block-edit-drag, a.ccm-panel-add-block-draggable-block-type-dragger {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 90px;
+  height: 90px;
+  z-index: 1000000;
+  cursor: -moz-grab;
+  cursor: -webkit-grab;
+  cursor: grab;
+
+  &.pep-active {
+    cursor: -moz-grabbing;
+    cursor: -webkit-grabbing;
+    cursor: grabbing;
+  }
+}
+
+body {
+  > a.ccm-block-edit-drag,
+  > a.ccm-panel-add-block-draggable-block-type-dragger {
+    cursor: -moz-grabbing;
+    cursor: -webkit-grabbing;
+    cursor: grabbing;
+  }
+}
+
+
+/**
+ * Disabled edit mode blocks
+ */
+div.ccm-edit-mode-disabled-item {
+  border: 1px solid #dadada;
+  background-color: #f1f1f1;
+  text-align: center;
+  padding: 10px;
+  color: #666;
+  font-family: @font-family-sans-serif;
+  font-size: @font-size-base;
+  font-weight: 200;
+}
+
+
+div.ccm-block-edit {
+  > div.ccm-block-cover {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+}

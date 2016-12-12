@@ -3,19 +3,27 @@
  * Created by PhpStorm.
  * User: andrew
  * Date: 6/28/14
- * Time: 10:30 AM
+ * Time: 10:30 AM.
  */
-
 namespace Concrete\Tests\Core\User;
+
+use Concrete\Core\Conversation\Message\Author;
+use Concrete\Core\Conversation\Message\AuthorFormatter;
 use Concrete\Core\File\StorageLocation\StorageLocation;
 use Concrete\Core\File\StorageLocation\Type\Type;
 use Core;
 
 class UserTest extends \UserTestCase
 {
-    protected function setUp() {
-        $this->tables[] = 'FileStorageLocations';
-        $this->tables[] = 'FileStorageLocationTypes';
+    protected function setUp()
+    {
+        $this->metadatas[] = 'Concrete\Core\Entity\File\StorageLocation\StorageLocation';
+        $this->metadatas[] = 'Concrete\Core\Entity\File\StorageLocation\Type\Type';
+        $this->metadatas[] = 'Concrete\Core\Entity\Site\Site';
+        $this->metadatas[] = 'Concrete\Core\Entity\Site\Locale';
+        $this->metadatas[] = 'Concrete\Core\Entity\Site\Type';
+        $this->metadatas[] = 'Concrete\Core\Entity\Site\Tree';
+        $this->metadatas[] = 'Concrete\Core\Entity\Site\SiteTree';
         parent::setUp();
     }
 
@@ -23,16 +31,15 @@ class UserTest extends \UserTestCase
     {
         $ui = \UserInfo::add(array(
             'uName' => 'andrew',
-            'uEmail' => 'andrew@concrete5.org'
+            'uEmail' => 'andrew@concrete5.org',
         ));
         $this->assertEquals(1, $ui->getUserID());
         $this->assertEquals('andrew', $ui->getUserName());
         $this->assertEquals('andrew@concrete5.org', $ui->getUserEmail());
 
-
         $ui = \Concrete\Core\User\UserInfo::add(array(
             'uName' => 'andrew2',
-            'uEmail' => 'andrew2@concrete5.org'
+            'uEmail' => 'andrew2@concrete5.org',
         ));
         $this->assertEquals(2, $ui->getUserID());
         $this->assertEquals('andrew2', $ui->getUserName());
@@ -43,13 +50,12 @@ class UserTest extends \UserTestCase
     {
         $ui = \UserInfo::register(array(
             'uName' => 'andrew',
-            'uEmail' => 'andrew@concrete5.org'
+            'uEmail' => 'andrew@concrete5.org',
         ));
         $this->assertEquals(1, $ui->getUserID());
         $this->assertEquals('andrew', $ui->getUserName());
         $this->assertEquals('andrew@concrete5.org', $ui->getUserEmail());
     }
-
 
     public function testCreateSuperUserLegacy()
     {
@@ -70,7 +76,11 @@ class UserTest extends \UserTestCase
 
     public function testGravatar()
     {
-        \Config::set('concrete.user.gravatar.enabled', true);
+
+        $site = \Core::make('site')->installDefault();
+
+        $site->getConfigRepository()->set('user.gravatar.enabled', true);
+
         $service = Core::make('user/registration');
         $ui = $service->create(array('uName' => 'andrew', 'uEmail' => 'andrew@concrete5.org'));
         $this->assertFalse($ui->hasAvatar());
@@ -80,12 +90,12 @@ class UserTest extends \UserTestCase
         $this->assertInstanceOf('Concrete\Core\User\Avatar\Gravatar', $avatar);
         $this->assertEquals('//www.gravatar.com/avatar/90c2803fabd994378063e84dd9a3ed92?s=80&d=mm&r=g', $avatar->getPath());
 
-        \Config::clear('concrete.user.gravatar.enabled');
-
+        $site->getConfigRepository()->clear('user.gravatar.enabled');
     }
 
     public function testAvatar()
     {
+        $site = \Core::make('site')->installDefault();
         $type = Type::add('default', t('Default'));
         $configuration = $type->getConfigurationObject();
         $fsl = StorageLocation::add($configuration, 'Default', true);
@@ -102,7 +112,7 @@ class UserTest extends \UserTestCase
 
         $ui->update(array('uHasAvatar' => true));
         // This is lame, I know.
-        $ui = Core::make('Concrete\Core\User\UserInfoFactory')->getByID(1);
+        $ui = Core::make('Concrete\Core\User\UserInfoRepository')->getByID(1);
         $this->assertTrue($ui->hasAvatar());
         $avatar = $ui->getUserAvatar();
         $this->assertEquals('http://www.dummyco.com/path/to/server/application/files/avatars/1.jpg',
@@ -115,26 +125,39 @@ class UserTest extends \UserTestCase
         $service->removeAvatar($ui);
 
         // I KNOW I KNOW This is lame
-        $ui = Core::make('Concrete\Core\User\UserInfoFactory')->getByID(1);
+        $ui = Core::make('Concrete\Core\User\UserInfoRepository')->getByID(1);
         $this->assertFalse($ui->hasAvatar());
+    }
+
+    public function testEmptyAvatar()
+    {
+        $author = new Author();
+        $author->setName('Andrew');
+
+        $formatter = new AuthorFormatter($author);
+        $avatar = $formatter->getAvatar();
+
+        $this->assertEquals(
+            '<img src="/path/to/server/concrete/images/avatar_none.png" alt="Andrew" class="u-avatar">',
+            $avatar
+        );
     }
 
     public function testPublicProfileLink()
     {
-        \Config::set('concrete.user.profiles_enabled', false);
+        $site = \Core::make('site')->installDefault();
+
+        $site->getConfigRepository()->set('user.profiles_enabled', false);
 
         $service = Core::make('user/registration');
         $ui = $service->create(array('uName' => 'andrew', 'uEmail' => 'andrew@concrete5.org'));
         $this->assertEquals(null, $ui->getUserPublicProfileUrl());
 
-        \Config::set('concrete.user.profiles_enabled', true);
+        $site->getConfigRepository()->set('user.profiles_enabled', true);
         $this->assertInstanceOf('Concrete\Core\Url\UrlInterface', $ui->getUserPublicProfileUrl());
         $url = (string) $ui->getUserPublicProfileUrl();
         $this->assertEquals('http://www.dummyco.com/path/to/server/index.php/members/profile/view/1', $url);
 
-        \Config::clear('concrete.user.profiles_enabled');
-
+        $site->getConfigRepository()->clear('user.profiles_enabled');
     }
-
 }
- 

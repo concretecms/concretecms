@@ -1,20 +1,27 @@
 <?php
-
 namespace Concrete\Tests\Core\User;
 
 use Concrete\Core\User\Group\Group;
 use Concrete\Core\User\Point\Action\Action;
 use Concrete\Core\User\Point\EntryList;
 
-class UserPointTest extends \ConcreteDatabaseTestCase {
-
+class UserPointTest extends \ConcreteDatabaseTestCase
+{
     protected $tables = array('UserPointActions', 'Groups', 'TreeTypes', 'Trees', 'TreeNodes', 'TreeGroupNodes',
-    'Users', 'UserGroups', 'UserPointHistory');
+    'UserGroups', 'UserPointHistory', 'PermissionKeys', 'PermissionKeyCategories');
 
+    protected $metadatas = array(
+        'Concrete\Core\Entity\Site\Site',
+        'Concrete\Core\Entity\Site\Locale',
+        'Concrete\Core\Entity\Site\Type',
+        'Concrete\Core\Entity\Site\Tree',
+        'Concrete\Core\Entity\Site\SiteTree',
+        'Concrete\Core\Entity\User\User',
+        'Concrete\Core\Entity\User\UserSignup'
+    );
 
     public function testUserPointActionWithGroup()
     {
-
         $g = \Group::add('Test Group', 'Test Group Description');
 
         Action::add('test_action', t('Test Action'), 4, $g);
@@ -25,39 +32,12 @@ class UserPointTest extends \ConcreteDatabaseTestCase {
         $this->assertEquals(4, $action->getUserPointActionDefaultPoints());
         $this->assertInstanceOf('\Concrete\Core\User\Group\Group', $action->getUserPointActionBadgeGroupObject());
         $this->assertEquals($g->getGroupID(), $action->getUserPointActionBadgeGroupObject()->getGroupID());
-
-    }
-
-    public function testUserPointActionWithNoGroup()
-    {
-        Action::add('test_action', t('Test Action'), 2, false);
-        $action = Action::getByHandle('test_action');
-        /* @var $action \Concrete\Core\User\Point\Action\Action */
-
-        $this->assertEquals(2, $action->getUserPointActionDefaultPoints());
-        $this->assertEquals(null, $action->getUserPointActionBadgeGroupObject());
-    }
-
-    public function testCustomUserPointAction()
-    {
-        Action::add('won_badge', t('Won a Badge'), 5, false);
-        $action2 = Action::getByID(1);
-        $action3 = Action::getByHandle('won_badge');
-
-        /* @var $action2 \Concrete\Core\User\Point\Action\WonBadgeAction */
-        /* @var $action3 \Concrete\Core\User\Point\Action\WonBadgeAction */
-        $this->assertTrue($action2->hasCustomClass());
-        $this->assertInstanceOf('\Concrete\Core\User\Point\Action\WonBadgeAction', $action2);
-        $this->assertEquals(5, $action2->getUserPointActionDefaultPoints());
-        $this->assertEquals(null, $action2->getUserPointActionBadgeGroupObject());
-        $this->assertInstanceOf('\Concrete\Core\User\Point\Action\WonBadgeAction', $action3);
-        $this->assertEquals(5, $action3->getUserPointActionDefaultPoints());
-        $this->assertEquals(null, $action3->getUserPointActionBadgeGroupObject());
     }
 
     public function testAddingBadgeToUser()
     {
         \Cache::disableAll();
+        \Site::installDefault();
         \Config::set('concrete.email.enabled', false);
         \Config::set('concrete.log.emails', false);
         Action::add('won_badge', t('Won a Badge'), 5, false);
@@ -88,6 +68,32 @@ class UserPointTest extends \ConcreteDatabaseTestCase {
         $this->assertInstanceOf('\Concrete\Core\User\Point\Action\WonBadgeAction', $result->getUserPointEntryActionObject());
         $this->assertInstanceOf('\Concrete\Core\User\Point\Action\WonBadgeActionDescription', $result->getUserPointEntryDescriptionObject());
     }
+    public function testUserPointActionWithNoGroup()
+    {
+        Action::add('test_action', t('Test Action'), 2, false);
+        $action = Action::getByHandle('test_action');
+        /* @var $action \Concrete\Core\User\Point\Action\Action */
+
+        $this->assertEquals(2, $action->getUserPointActionDefaultPoints());
+        $this->assertEquals(null, $action->getUserPointActionBadgeGroupObject());
+    }
+
+    public function testCustomUserPointAction()
+    {
+        Action::add('won_badge', t('Won a Badge'), 5, false);
+        $action2 = Action::getByID(1);
+        $action3 = Action::getByHandle('won_badge');
+
+        /* @var $action2 \Concrete\Core\User\Point\Action\WonBadgeAction */
+        /* @var $action3 \Concrete\Core\User\Point\Action\WonBadgeAction */
+        $this->assertTrue($action2->hasCustomClass());
+        $this->assertInstanceOf('\Concrete\Core\User\Point\Action\WonBadgeAction', $action2);
+        $this->assertEquals(5, $action2->getUserPointActionDefaultPoints());
+        $this->assertEquals(null, $action2->getUserPointActionBadgeGroupObject());
+        $this->assertInstanceOf('\Concrete\Core\User\Point\Action\WonBadgeAction', $action3);
+        $this->assertEquals(5, $action3->getUserPointActionDefaultPoints());
+        $this->assertEquals(null, $action3->getUserPointActionBadgeGroupObject());
+    }
+
 
 }
- 

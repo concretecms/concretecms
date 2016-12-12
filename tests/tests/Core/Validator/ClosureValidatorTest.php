@@ -3,7 +3,6 @@ namespace Concrete\Core\Tests\Validator;
 
 class ClosureValidatorTest extends \PHPUnit_Framework_TestCase
 {
-
     public function testIsValid()
     {
         $obj = $this;
@@ -13,14 +12,15 @@ class ClosureValidatorTest extends \PHPUnit_Framework_TestCase
         $ran = false;
 
         $closure_validator = null;
-        $closure_validator = new \Concrete\Core\Validator\ClosureValidator(function(){}, function(){});
+        $closure_validator = new \Concrete\Core\Validator\ClosureValidator(function () {}, function () {});
 
-        $closure_validator->setValidatorClosure(function($validator, $mixed, $error) use (&$closure_validator, $test_value, $error_mock, &$ran, $obj) {
+        $closure_validator->setValidatorClosure(function ($validator, $mixed, $error) use (&$closure_validator, $test_value, $error_mock, &$ran, $obj) {
             $obj->assertEquals($error_mock, $error);
             $obj->assertEquals($test_value, $mixed);
             $obj->assertEquals($validator, $closure_validator);
 
             $ran = true;
+
             return true;
         });
 
@@ -34,17 +34,17 @@ class ClosureValidatorTest extends \PHPUnit_Framework_TestCase
         $ran = false;
 
         $closure_validator = null;
-        $closure_validator = new \Concrete\Core\Validator\ClosureValidator(function(){}, function(){});
+        $closure_validator = new \Concrete\Core\Validator\ClosureValidator(function () {}, function () {});
 
-        $closure_validator->setRequirementsClosure(function($validator) use (&$closure_validator, &$ran, $obj) {
+        $closure_validator->setRequirementsClosure(function ($validator) use (&$closure_validator, &$ran, $obj) {
             $obj->assertEquals($validator, $closure_validator);
 
             $ran = true;
+
             return array('test');
         });
 
         $this->assertEquals(array('test'), $closure_validator->getRequirementStrings());
         $this->assertTrue($ran, 'Requirements Closure didn\'t fire.');
     }
-
 }

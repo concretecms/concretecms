@@ -4,6 +4,7 @@ class ConcreteDatabaseTestCase extends PHPUnit_Extensions_Database_TestCase
 {
     /** @var PHPUnit_Extensions_Database_DB_DefaultDatabaseConnection */
     private static $conn = null;
+    private static $db = null;
     protected $tables = array();
     protected $fixtures = array();
 
@@ -42,7 +43,7 @@ class ConcreteDatabaseTestCase extends PHPUnit_Extensions_Database_TestCase
                 'database' => $connection_config['database'],
             ));
             self::$conn = $this->createDefaultDBConnection($db->getWrappedConnection(), 'test');
-            $this->db = $db;
+            self::$db = $db;
         }
 
         return self::$conn;
@@ -93,22 +94,47 @@ class ConcreteDatabaseTestCase extends PHPUnit_Extensions_Database_TestCase
             }
         }
 
+        $sm = \Core::make('Concrete\Core\Database\DatabaseStructureManager');
+        $metadatas = $this->getMetaDatas();
+        if (count($metadatas)) {
+            $sm->installDatabaseFor($metadatas);
+        }
+
         return $compositeDs;
+    }
+
+    protected function getMetaDatas()
+    {
+        $metadatas = array();
+        if (isset($this->metadatas) && is_array($this->metadatas)) {
+            $em = self::$db->getEntityManager();
+            $cmf = $em->getMetadataFactory();
+            foreach ($cmf->getAllMetadata() as $meta) {
+                if (in_array($meta->getName(), $this->metadatas)) {
+                    $metadatas[] = $meta;
+                }
+            }
+        }
+        return $metadatas;
     }
 
     public function tearDown()
     {
+        parent::tearDown();
         if (count($this->tables)) {
             if (in_array('BlockTypes', $this->tables)) {
                 $this->tables[] = 'btCoreScrapbookDisplay';
             }
-
+            $conn = $this->getConnection();
+            $pdo = $conn->getConnection();
+            $pdo->exec('set foreign_key_checks = 0');
             foreach ($this->tables as $table) {
                 // drop table
                 $conn = $this->getConnection();
                 $pdo = $conn->getConnection();
                 $pdo->exec("DROP TABLE IF EXISTS `$table`;");
             }
+            $pdo->exec('set foreign_key_checks = 1');
         }
 
         $allTables = $this->getDataSet($this->fixtures)->getTableNames();
@@ -121,8 +147,13 @@ class ConcreteDatabaseTestCase extends PHPUnit_Extensions_Database_TestCase
 
         \ORM::entityManager('core')->clear();
 
+        $sm = \Core::make('Concrete\Core\Database\DatabaseStructureManager');
+        $metadatas = $this->getMetaDatas();
+        if (count($metadatas)) {
+            $sm->uninstallDatabaseFor($metadatas);
+        }
+
         \CacheLocal::flush();
 
-        parent::tearDown();
     }
 }

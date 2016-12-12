@@ -1,0 +1,76 @@
+/**
+ * Add block
+ */
+div#ccm-panel-check-in {
+
+    form#ccm-check-in {
+        width: 240px;
+    }
+
+    .ccm-panel-dark();
+
+    h5 {
+        display: inline;
+        border-bottom: 1px dotted #e7e7e7;
+    }
+
+    textarea {
+        width: 100%;
+        height: 60px;
+    }
+
+    div.ccm-panel-check-in-comments {
+        padding-bottom: 25px;
+        padding-top: 10px;
+    }
+
+    div.ccm-panel-check-in-publish {
+        margin-bottom: 30px;
+
+        button#ccm-check-in-publish {
+            width: 190px;
+        }
+
+        button#ccm-check-in-schedule {
+            width: 51px;
+        }
+
+        h5 {
+            border-bottom: none;
+        }
+
+        div#ccm-check-in-schedule-wrapper {
+            display: none;
+
+            .form-group {
+                margin-top: 16px;
+            }
+
+            .datetime-group {
+                margin-bottom: 0;
+            }
+
+            .submit-group {
+                margin-top: 0;
+            }
+
+            .remove {
+                display: block;
+                float: right;
+                color: @panel-normal-text-color;
+            }
+
+            button.ccm-check-in-schedule {
+                width: auto;
+            }
+
+            .timezone {
+                font-size: 11px;
+                color: @panel-normal-text-color;
+                display: block;
+                margin: 4px 0 10px 0;
+            }
+        }
+    }
+}
+

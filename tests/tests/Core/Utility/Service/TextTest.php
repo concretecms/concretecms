@@ -89,11 +89,11 @@ class TextTest extends ConcreteDatabaseTestCase
 
     /**
      * Test for many rounds with a language, that has no map associated
-     * This causes a "regular expression is too large" error on old versions
+     * This causes a "regular expression is too large" error on old versions.
      */
     public function testUrlify_regexTooLarge()
     {
-        for ($i = 0; $i < 1000; $i++) {
+        for ($i = 0; $i < 1000; ++$i) {
             $this->object->urlify('Lo siento, no hablo español.', 60, -1);
         }
     }

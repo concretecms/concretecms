@@ -1,0 +1,15 @@
+## YAML Template.
+Concrete\Package\TestMetadatadriverYaml\Src\Entity\Entity:
+    type: entity
+    table: testYamlEntities
+    gedmo: 
+        translation:
+            locale: locale
+    id:
+        id:
+            type: integer
+            generator:
+                strategy: AUTO
+    fields:
+        name:
+            type: string

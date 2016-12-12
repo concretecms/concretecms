@@ -1,0 +1,387 @@
+@import "../../core/include/variables.less";
+@import "../../core/include/mixins.less";
+// Modify this for custom colors, font-sizes, etc
+@import "../../vendor/bootstrap/variables.less";
+// Modify this for custom colors, font-sizes, etc
+@import "../../vendor/bootstrap/mixins.less";
+@import "../../vendor/bootstrap/grid.less";
+
+body {
+  background-color: #fff;
+  margin: 0px;
+}
+
+html.ccm-panel-right {
+  div#ccm-dashboard-content {
+    margin-right: 320px;
+
+    div.ccm-dashboard-form-actions-wrapper {
+      padding: 0px 335px 15px 15px;
+    }
+  }
+}
+
+div#ccm-dashboard-content {
+
+  padding-top: 48px;
+  padding-bottom: 80px; /* so form buttons always work */
+
+  tr {
+    &.ccm-theme-active {
+      td {
+        background-color: #ddf4fb !important;
+      }
+    }
+  }
+
+  .transition(margin cubic-bezier(0.190, 1.000, 0.220, 1.000) 0.5s);
+
+  .ccm-dashboard-section-menu {
+    padding-bottom: 85px;
+    li {
+      margin-bottom: 4px;
+    }
+    h2 {
+      display: block;
+      width: 100%;
+      padding: 0;
+      margin-bottom: 10px;
+      font-size: 21px;
+      font-weight: 200;
+      margin-top: 0px;
+      line-height: inherit;
+      color: #333;
+      border-bottom: 1px solid #e5e5e5;
+    }
+  }
+
+  position: relative;
+  padding-right: 50px;
+  padding-left: 97px;
+  padding-bottom: 100px;
+
+  > header {
+    margin-left: -97px;
+    margin-right: -50px;
+    padding: 39px 80px 39px 97px;
+    position: relative;
+    font-size: 14px;
+
+    h1 {
+      font-size: 22px;
+      font-weight: 600;
+      font-weight: normal;
+      display: inline-block;
+      margin-top: 0px;
+      margin-bottom: 0px;
+      color: #105192;
+    }
+
+    background-color: #f3f3f3;
+    /**
+     * since moving from margin to padding wte dont' need this anymore
+
+    margin-bottom: 30px;
+    */
+
+    a.ccm-dashboard-page-header-bookmark {
+      position: absolute;
+      left: 72px;
+      top: 41px;
+      color: rgba(16,81,146,0.3);
+      &:focus {
+        outline: none;
+      }
+    }
+  }
+
+  form.ccm-dashboard-content-form {
+    margin-bottom: 120px;
+  }
+
+  div.ccm-dashboard-form-actions-wrapper {
+    position: fixed;
+    bottom: 0px;
+    left: 0px;
+    width: 100%;
+    padding: 0px 15px 15px 15px;
+    z-index: @index-level-dashboard-form-actions-wrapper;
+
+    .transition(cubic-bezier(0.190, 1.000, 0.220, 1.000) 0.5s);
+
+    div.ccm-dashboard-form-actions {
+      .clearfix;
+      background-color: rgba(40,40,40,0.85);
+      padding: 20px;
+      .border-radius(4px);
+    }
+  }
+
+  div.ccm-dashboard-content-full {
+    margin-left: -97px;
+    margin-right: -50px;
+
+    section {
+      margin-left: 97px;
+    }
+
+    div.ccm-dashboard-content-full-inner {
+      /* so stupid */
+      padding-left: 97px;
+      padding-right: 50px;
+      padding-top: 30px;
+    }
+
+    form.ccm-search-fields {
+      &.ccm-search-fields-none {
+        margin-left: 0px;
+        margin-top: 10px;
+        border-bottom: 1px solid #efefef;
+        margin-bottom: 20px;
+        padding-bottom: 10px;
+        div.ccm-search-main-lookup-field {
+          margin-left: 67px;
+        }
+        ul.ccm-search-form-advanced {
+          top: 20px;
+        }
+      }
+    }
+
+  }
+
+  /**
+ * Form updates for dashboard. Note, you have to opt into
+ * the negative margin updates by placing them into a fieldset
+ */
+  fieldset {
+    legend {
+      color: #113455;
+    }
+    padding-left: 97px;
+    padding-right: 50px;
+    margin-left: -97px;
+    margin-right: -50px;
+
+  }
+
+}
+
+
+/**
+ * Result Messages
+ */
+div#ccm-dashboard-content {
+  div#ccm-dashboard-result-message {
+  }
+}
+
+/**
+ * Header Help
+ */
+
+div#ccm-dashboard-content {
+  div.ccm-notification-help-launcher {
+
+    top: 31px;
+
+    html.ccm-panel-open.ccm-panel-right & {
+      .translate(0, 0);
+    }
+
+    position: absolute;
+    z-index: @index-level-dashboard-help;
+
+  }
+
+  div.ccm-notification-help {
+    position: absolute;
+    top: 31px;
+    z-index: @index-level-dashboard-help;
+    html.ccm-panel-open.ccm-panel-right & {
+      .translate(0, 0);
+    }
+  }
+}
+
+
+/**
+ * Connect to community
+ */
+div#ccm-dashboard-content {
+  iframe.ccm-marketplace-frame-connect {
+    margin-left: -97px;
+  }
+}
+
+/**
+ * Add Functionality
+ * - based on the Bootstrap 3 media.less Media object
+ */
+.ccm-ui {
+  // clear floats
+  .media-row {
+    overflow: hidden;
+    zoom: 1;
+  }
+
+  // proper spacing between instances of .media-row
+  .media-row {
+    margin-left: -5px;
+    margin-top: 10px;
+    padding: 5px 5px 0px 5px;
+  }
+  .media-row:first-child {
+    margin-top: 0;
+  }
+
+  // .media-row image alignment
+  .media-row {
+    > .pull-left {
+     margin-right: 10px;
+    }
+    > .pull-right {
+     margin-left: 10px;
+    }
+  }
+
+  // add background hover
+  .media-row:hover {
+    background: #f1f1f1;
+  }
+}
+
+/**
+ * Phones
+ */
+
+@media (max-width: @screen-md) {
+  div#ccm-dashboard-content {
+    margin-right: 0px !important; /* because the panel is gone */
+    padding-left: 20px; /* not enough width to do 97px */
+    padding-right: 20px;
+
+    header {
+      margin-left: -20px; /* because it's only 20px instead of 97 */
+      margin-right: -20px;
+      padding: 39px 20px 39px 20px;
+
+      a.ccm-dashboard-page-header-bookmark {
+        display: none;
+      }
+
+      div.ccm-dashboard-header-menu {
+        position: static;
+        left: auto;
+        right: auto;
+        top: auto;
+      }
+
+      div.ccm-header-search-form {
+        position: static;
+        right: auto;
+        top: auto;
+
+        form {
+
+          input[type=text].form-control {
+            width: 100%;
+          }
+
+        }
+      }
+
+    }
+    div.ccm-dashboard-content-full {
+      margin-left: -20px; /* because it's only 20px instead of 97 */
+      margin-right: -20px;
+
+      section {
+        margin-left: 20px;
+      }
+
+
+      div.ccm-search-main-lookup-field {
+        margin-left: 20px !important;
+      }
+
+    }
+    div.ccm-dashboard-form-actions-wrapper {
+      padding-right: 15px !important;
+    }
+
+    > form div.form-group {
+      padding-left: 20px;
+      padding-right: 20px;
+      margin-left: -20px;
+      margin-right: -20px;
+    }
+
+  }
+
+}
+
+div#ccm-dashboard-content-inner {
+  padding-top: 30px;
+}
+
+div#ccm-dashboard-content header + div#ccm-dashboard-content-inner div.ccm-dashboard-content-full:first-child {
+  margin-top: -30px;
+}
+
+div.ccm-dashboard-my-account {
+  div#ccm-dashboard-content {
+    > header {
+      background: #000;
+
+      > h1 {
+        color: #7d8791;
+      }
+    }
+
+    > h2 {
+      font-weight: 200;
+      -webkit-font-smoothing: antialiased;
+      font-size: 24px;
+    }
+  }
+}
+
+
+select[data-select=bootstrap] {
+  display: none;
+}
+
+select[data-select=bootstrap] +
+  div.btn-group {
+    span.caret {
+      margin-left: 2px !important;
+    }
+  }
+
+div.ccm-dashboard-dialog-wrapper {
+  display: none;
+}
+
+div.ccm-system-errors {
+  ul.ccm-error {
+    list-style-type: none;
+    padding: 0px;
+    margin: 0px;
+  }
+}
+
+@import "./header.less";
+@import "./welcome.less";
+@import "./welcome/site-activity.less";
+@import "./welcome/rss-displayer.less";
+@import "./welcome/newsflow.less";
+@import "./welcome/latest-form.less";
+@import "./welcome/marketplace.less";
+@import "./welcome/waiting-for-me.less";
+@import "./users.less";
+@import "./sitemap.less";
+@import "./attributes.less";
+@import "./form-and-set-builder.less";
+@import "./multilingual.less";
+@import "./update.less";

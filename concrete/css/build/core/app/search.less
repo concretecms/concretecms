@@ -1,0 +1,537 @@
+/*
+ * Search Fields, including action select menu, keyword search bar, advanced search
+ */
+
+.ccm-ui {
+  form.ccm-search-fields {
+    position: relative;
+    padding-top: 10px;
+    padding-bottom: 0px; /* the ccm-search-fields-row has a margin on the bottom */
+
+    select.ccm-search-bulk-action, select.ccm-search-choose-field {
+      border: 0px;
+      box-shadow: none !important;
+      -webkit-appearance: none;
+      padding: 0px;
+      margin: 0px;
+      color: #999;
+      height: auto;
+      width: 200px;
+      height: 34px;
+      vertical-align: top;
+      display: inline-block;
+      outline: none !important;
+      .border-radius(0px);
+      padding-right: 15px;
+      background: transparent url(../images/icons/arrow_down.png) no-repeat center right;
+    }
+
+    select.ccm-search-choose-field {
+      color: #999;
+      margin-right: 40px;
+    }
+
+    div.ccm-search-main-lookup-field {
+      position: relative;
+
+      i {
+        position: absolute;
+        top: 8px;
+        left: 5px;
+      }
+
+      input {
+        border: 0px;
+        color: #3784d6;
+        font-weight: 200;
+        font-size: @font-size-large;
+        outline: none !important;
+        .border-radius(0px);
+        .box-shadow(none);
+        margin-left: 30px;
+        width: ~"calc(100% - 30px)";
+      }
+    }
+
+    ul.ccm-search-form-advanced {
+      a {
+        color: #afafaf;
+
+        &:hover {
+          color: #777;
+        }
+
+      }
+
+      li {
+        margin-left: 20px;
+      }
+
+      position: absolute;
+      right: 18px;
+      top: -20px;
+
+      @media (min-width: @screen-md-min) {
+        right: 48px;
+      }
+
+      font-size: @font-size-small;
+    }
+
+    button.ccm-search-field-hidden-submit {
+      border: 0 none;
+      height: 0;
+      position: absolute;
+      width: 0;
+      padding: 0;
+      margin: 0;
+      overflow: hidden;
+    }
+  }
+
+}
+
+div.ccm-search-fields-submit {
+  .clearfix();
+  margin-bottom: 30px;
+}
+
+form.ccm-search-fields-none {
+  div.ccm-search-fields-row {
+    padding-left: 0px;
+
+    &:first-of-type {
+      margin-top: -10px;
+    }
+  }
+}
+
+div.ccm-search-fields-row {
+  min-height: 34px;
+  margin-bottom: 10px;
+  padding: 0px 0px 10px 0px;
+  position: relative;
+
+  @media (min-width: @screen-sm-min) {
+    padding-left: 97px;
+  }
+
+  div.form-group {
+
+    label.control-label {
+      width: 200px;
+      color: #999;
+      line-height: 34px;
+      vertical-align: top;
+      margin-right: 40px;
+      margin-bottom: 0px;
+      font-size: @font-size-base !important;
+      font-weight: normal;
+    }
+
+    margin-bottom: 0px;
+
+  }
+
+  div.ccm-search-field-content {
+    padding-left: 10px;
+    display: inline-block;
+    div.ccm-search-main-lookup-field {
+      border-left: 0px;
+    }
+
+  }
+
+}
+
+div.ccm-search-field-content {
+  .clearfix();
+
+  // Logs level selectize input override
+  .selectize-control.form-control {
+    border: none;
+    padding: 0px;
+  }
+
+}
+
+/**
+ * Advanced Search
+ */
+div.ccm-search-fields-advanced {
+  div.ccm-search-fields-row {
+
+    a.ccm-search-remove-field {
+      color: #aaa;
+      position: absolute;
+      right: -4px;
+      top: -2px;
+      padding: 8px;
+
+      &:hover {
+        color: #666;
+        text-decoration: none;
+      }
+    }
+  }
+}
+
+/**
+ * Advanced Search Dialogs
+ */
+div.ccm-search-fields-advanced-dialog {
+
+  div.ccm-search-fields-advanced-dialog-field-list {
+
+  }
+
+}
+
+/**
+ * Search results
+ */
+
+table.ccm-search-results-table {
+
+  width: 100%;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -webkit-font-smoothing: antialiased;
+
+
+  span.ccm-search-results-checkbox {
+    display: block;
+    text-align: right;
+    padding-top: 0px;
+    padding-bottom: 0px;
+    white-space: nowrap;
+
+
+    select.ccm-search-bulk-action {
+      font-size: 11px;
+      display: inline-block;
+      width: auto;
+      margin-right: 10px;
+      padding-top: 2px !important;
+      padding-bottom: 2px !important;
+      padding-left: 10px;
+      padding-right: 10px;
+    }
+  }
+
+  thead {
+
+    th {
+
+      &:first-child {
+        @media (min-width: @screen-sm-min) {
+          padding-left: 82px; /* 97 - 15 */
+        }
+      }
+
+      input[type=checkbox], input[type=radio] {
+        vertical-align: middle;
+        border-color: #ccc;
+      }
+
+      span.ccm-search-results-checkbox {
+        input {
+          margin-top: 0px;
+        }
+      }
+
+      background-color: #e7e7e7;
+      color: #999;
+      font-weight: normal;
+
+      &.ccm-results-list-active-sort-desc a,
+      &.ccm-results-list-active-sort-asc a {
+        color: #333;
+        background: #e7e7e7;
+        white-space: nowrap;
+        &:after {
+          vertical-align: middle;
+          content: "";
+          width: 0;
+          height: 0;
+          display: inline-block;
+          margin-left: 10px;
+        }
+      }
+
+      &.ccm-results-list-active-sort-desc a:after {
+        content: "\f078";
+        font-family: FontAwesome;
+        font-style: normal;
+        text-decoration: inherit;
+        font-size: 9px;
+        display: inline-block;
+        position: relative;
+        top: -6px;
+        left: 10px;
+      }
+
+      &.ccm-results-list-active-sort-asc a:after {
+        content: "\f077";
+        font-family: FontAwesome;
+        font-style: normal;
+        text-decoration: inherit;
+        font-size: 9px;
+        display: inline-block;
+        position: relative;
+        top: -6px;
+        left: 10px;
+      }
+
+      a {
+        color: #999;
+        display: block;
+
+        &:active, &:focus {
+          outline: 0px !important;
+          text-decoration: none;
+          color:  #999;
+        }
+
+        &:hover {
+          text-decoration: none;
+          color: #333;
+        }
+      }
+
+      span.ccm-search-results-checkbox {
+        display: block;
+        text-align: right;
+      }
+
+      a, span {
+        padding: 15px 0px 15px 15px;
+        display: block;
+        /* not sure why this was here, it was causing columns to not go the whole width in the sort row
+          display: inline-block;
+          */
+      }
+
+      button.btn-menu-launcher {
+        .ccm-ui.btn-sm;
+        background-color: transparent;
+        border: 1px solid #aaa;
+        i {
+          color: #aaa;
+        }
+        &:active, &:focus {
+          outline: 0px !important;
+        }
+      }
+
+      button.btn-menu-launcher[disabled] {
+        i {
+          color: #ccc;
+        }
+        border: 1px solid #ccc;
+      }
+
+    }
+  }
+
+  tbody {
+
+    td {
+
+      &:first-child {
+        @media (min-width: @screen-sm-min) {
+          padding-left: 97px;
+        }
+      }
+      border-bottom: 1px solid #dbdbdb;
+      font-size: 13px;
+
+      .transition(all 0.1s);
+
+      input[type=checkbox], input[type=radio] {
+        position: relative;
+        z-index: @index-level-search-results-checkboxes;
+      }
+
+      padding: 15px 0px 15px 15px;
+
+      color: #999;
+      background-color: #fff;
+
+      &.ccm-search-results-name {
+        width: 300px;
+      }
+
+    }
+
+    td.ccm-search-results-icon {
+      width: 16px;
+      text-align: right;
+    }
+
+    td.ccm-search-results-menu-launcher {
+
+      a {
+        .transition(all 0.1s);
+        color: #999;
+      }
+
+
+      &.ccm-parent-menu-item-hover,
+      &.ccm-parent-menu-item-active {
+        a {
+          color: #000;
+        }
+      }
+    }
+
+    tr.ccm-menu-item-hover {
+      td {
+        background-color: rgba(222, 235, 241, 0.6);
+        color: #000;
+      }
+    }
+
+    tr.ccm-menu-item-active,
+    tr.ccm-parent-menu-item-active,
+    tr.ccm-search-select-selected {
+      td {
+        cursor: pointer;
+        background-color: rgba(222, 235, 241, 1.0);
+        color: #000;
+      }
+    }
+
+    tr.ccm-search-select-hover,
+    tr.ccm-parent-menu-item-hover {
+      td {
+        cursor: pointer;
+        background-color: #edf7fe !important;
+        color: #000;
+      }
+    }
+
+    tr.ccm-search-select-active-droppable {
+      td {
+        background-color: rgba(222, 235, 241, 1.0);
+        color: #000;
+      }
+    }
+
+    tr.ccm-search-results-folder {
+      td.ccm-search-results-name {
+        color: #333;
+        font-weight: bold;
+      }
+      td.ccm-search-results-icon {
+        color: #333;
+      }
+    }
+  }
+}
+
+div.ccm-search-results-none {
+  font-size: @font-size-large;
+  margin-top: 60px;
+  text-align: center;
+}
+
+div.ccm-search-results-pagination {
+  margin-top: 20px;
+  text-align: center;
+}
+
+/*
+table.ccm-search-results-table-icon {
+
+  thead {
+
+    th {
+
+      &:first-child {
+        @media (min-width: @screen-sm-min) {
+          padding-left: 70px;
+        }
+      }
+    }
+  }
+
+  tbody {
+
+    td {
+
+      &:first-child {
+        @media (min-width: @screen-sm-min) {
+          padding-left: 70px;
+        }
+      }
+    }
+  }
+
+}
+// Responsive - Adjust for medium & smaller screens
+@media (max-width: @screen-md-max) {
+
+  .ccm-ui table.ccm-search-results-table {
+
+    thead tr th, tbody tr td {
+      padding-left: 2px;
+      padding-right: 2px;
+      span, a {
+        padding-left: 8px;
+        padding-right: 8px;
+      }
+    }
+  }
+}
+
+@media (max-width: @screen-md-max) {
+
+  .ccm-ui {
+    form.ccm-search-fields {
+      select.ccm-search-bulk-action, select.ccm-search-choose-field {
+        width: 120px;
+      }
+    }
+
+    div.ccm-search-fields-row {
+      div.form-group {
+        label.control-label {
+          width: 120px;
+        }
+      }
+    }
+
+  }
+
+}
+
+@media (max-width: @screen-xs-max) {
+
+  .ccm-ui {
+    form.ccm-search-fields {
+
+      div.ccm-search-fields-row {
+        div.ccm-search-field-content {
+          padding-left: 0px;
+        }
+      }
+    }
+  }
+
+  form.ccm-search-fields {
+
+    select.ccm-search-bulk-action, select.ccm-search-choose-field {
+      display: block;
+    }
+  }
+
+  div.ccm-search-fields-row {
+    div.form-group {
+      label.control-label {
+        display: block;
+      }
+    }
+  }
+}
+*/

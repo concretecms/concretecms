@@ -1,0 +1,20 @@
+.cke_panel {
+    z-index: 10050 !important;
+}
+
+.cke_editable_inline {
+    padding: 0 5px;
+}
+
+.cke_editable {
+    min-height: 300px;
+}
+
+.cke_dialog_background_cover {
+    background-color: transparent !important;
+}
+
+.cke_source {
+    white-space: pre-wrap !important;
+}
+
