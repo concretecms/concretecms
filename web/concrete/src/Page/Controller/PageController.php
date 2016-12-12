@@ -20,6 +20,12 @@ class PageController extends Controller
     protected $passThruBlocks = array();
     protected $parameters = array();
 
+    /**
+     * array of method names that can't be called through the url
+     * @var array
+     */
+    protected $restrictedMethods = array();
+
     public function supportsPageCache()
     {
         return $this->supportsPageCache;
@@ -166,11 +172,24 @@ class PageController extends Controller
         }
 
         $foundTask = false;
+        $restrictedControllers = array(
+            'Concrete\Core\Controller\Controller',
+            'Concrete\Core\Controller\AbstractController',
+            'Concrete\Core\Page\Controller\PageController'
+
+        );
         try {
             $r = new \ReflectionMethod(get_class($this), $method);
             $cl = $r->getDeclaringClass();
             if (is_object($cl)) {
-                if ($cl->getName() != 'Concrete\Core\Controller\Controller' && strpos($method, 'on_') !== 0 && strpos($method, '__') !== 0 && $r->isPublic()) {
+                if (
+                    !in_array($cl->getName(), $restrictedControllers)
+                    && strpos($method, 'on_') !== 0
+                    && strpos($method, '__') !== 0
+                    && $r->isPublic()
+                    && !$r->isConstructor()
+                    && (is_array($this->restrictedMethods) && !in_array($method, $this->restrictedMethods))
+                ) {
                     $foundTask = true;
                 }
             }
