@@ -1,4 +1,4 @@
-[![Build Status](http://img.shields.io/travis/concrete5/concrete5/develop.svg)](https://travis-ci.org/concrete5/concrete5)
+[![Build Status](http://img.shields.io/travis/concrete5/concrete5/5.7.x.svg)](https://travis-ci.org/concrete5/concrete5)
 
 Welcome to the official repository for concrete5 development! concrete5 is an open source CMS built by people from 
 around the world. Want to get involved? Check out our [contributor guide](https://github.com/concrete5/concrete5/blob/develop/CONTRIBUTING.md) for more info.
