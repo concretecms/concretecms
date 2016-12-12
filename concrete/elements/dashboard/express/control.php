@@ -12,12 +12,17 @@ $c = Page::getCurrentPage();
 	<td style="width: 100%;">
 		<span class="text-muted"><?= $type_name ?></span>
 		<?php
-
-        if ($final_label != $original_label) {
-            ?>
+                if ($final_label != $original_label) {
+                ?>
 			<span class="text-muted">(<?= $original_label ?>)</span>
 		<?php 
-        } ?>
+                } ?>    
+                <span class="text-muted">
+                <?php 
+                if ($control->isRequired()){ ?>
+                    &ensp;[<?= t('Required');?>]
+                <?php } ?>
+                </span>
 	</td>
         <td>
 		<span class="text-muted"><?php if ($control->isRequired()) { echo t('Required'); } ?></span>
