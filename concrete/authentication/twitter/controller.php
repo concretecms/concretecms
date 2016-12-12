@@ -126,9 +126,7 @@ class Controller extends GenericOauth1aTypeController
             $flashbag->set('username', parent::getUsername());
             $flashbag->set('token', $this->getToken());
 
-            $response = \Redirect::to('/login/callback/twitter/handle_register/', id(new Token())->generate('twitter_register'));
-            $response->send();
-            exit;
+            $this->redirect('/login/callback/twitter/handle_register/', id(new Token())->generate('twitter_register'));
         }
 
         return null;
@@ -149,7 +147,6 @@ class Controller extends GenericOauth1aTypeController
         if (!$token_helper->validate('twitter_register', $token) && !$token_helper->validate('twitter_register') ||
             !$this->token) {
             $this->redirect('/login/');
-            exit;
         }
         if (\Request::request('uEmail', false)) {
             $this->email = \Request::request('uEmail');

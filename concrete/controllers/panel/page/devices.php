@@ -57,8 +57,7 @@ class Devices extends BackendInterfacePageController
             \Request::setInstance($request);
 
             $response->setContent($content);
-            $response->send();
-            exit;
+            return $response;
         }
     }
 }

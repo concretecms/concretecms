@@ -19,6 +19,7 @@ use Concrete\Core\Permission\Key\Key;
 use Concrete\Core\Routing\RedirectResponse;
 use Concrete\Core\Routing\RouterInterface;
 use Concrete\Core\User\User;
+use Concrete\Core\View\ErrorView;
 use Concrete\Core\View\View;
 use Detection\MobileDetect;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -109,7 +110,8 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
      */
     public function error($content, $code = Response::HTTP_INTERNAL_SERVER_ERROR, $headers = array())
     {
-        return $this->create($content, $code, $headers);
+        $view = new ErrorView($content);
+        return $this->create($view->render(), $code, $headers);
     }
 
     /**

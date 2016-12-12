@@ -76,9 +76,11 @@ class Types extends DashboardPageController
         if ($tp->canInstallPackages()) {
             try {
                 $resp = BlockType::installBlockType($btHandle);
-                $this->redirect('/dashboard/blocks/types', 'installed');
             } catch (\Exception $e) {
                 $this->error->add($e);
+            }
+            if (!$this->error->has()) {
+                $this->redirect('/dashboard/blocks/types', 'installed');
             }
         } else {
             $this->error->add(t('You do not have permission to install custom block types or add-ons.'));
