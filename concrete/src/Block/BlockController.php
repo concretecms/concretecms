@@ -486,8 +486,11 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
                 // how do we get <= 1? If it's 1, that means that the method has one fewer param. That's ok because
                 // certain older blocks don't know that the last param ought to be a $bID. If they're equal it's zero
                 // which is best. and if they're greater that's ok too.
+                // sometimes we will get the bID to work with but sometimes (add mode) the bID is not accessible
+                // in those situations the mode (add or edit) is indicated by the presence of a string blockAdd or blockEdit
+                // Now let's see if the action is for this block instance
                 $bID = array_pop($parameters);
-                if ((is_string($bID) || is_int($bID)) && $bID == $this->bID) {
+                if (((is_string($bID) || is_int($bID)) && $bID == $this->bID) || $bID === 'blockAdd' || $bID === 'blockEdit') {
                     return true;
                 }
             }

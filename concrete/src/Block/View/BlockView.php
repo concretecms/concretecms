@@ -98,6 +98,8 @@ class BlockView extends AbstractView
      */
     public function action($task)
     {
+        // both strings 'blockAdd' and 'blockEdit' are used to indicate the status of the block
+        // later on when checking a task's validity
         try {
             if ($this->viewToRender == 'add') {
                 $c = $this->area->getAreaCollectionObject();
@@ -106,6 +108,7 @@ class BlockView extends AbstractView
                     urlencode($this->area->getAreaHandle()),
                     $this->blockType->getBlockTypeID(),
                     $task,
+                    'blockAdd',
                 );
 
                 return call_user_func_array(array('\URL', 'to'), $arguments);
@@ -123,6 +126,7 @@ class BlockView extends AbstractView
                         urlencode($this->area->getAreaHandle()),
                         $b->getBlockID(),
                         $task,
+                        'blockEdit',
                     );
 
                     return call_user_func_array(array('\URL', 'to'), $arguments);
