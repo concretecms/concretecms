@@ -19,7 +19,7 @@ class Listener
         $entity->setDefaultViewForm(null);
         $em->persist($entity);
 
-        foreach($entity->getForms() as $form) {
+        foreach ($entity->getForms() as $form) {
             $em->remove($form);
         }
 
@@ -27,7 +27,7 @@ class Listener
 
         // Delete the keys
         $category = $entity->getAttributeKeyCategory();
-        foreach($category->getList() as $key) {
+        foreach ($category->getList() as $key) {
             $em->remove($key);
         }
 
@@ -35,10 +35,11 @@ class Listener
 
         try {
             $list = new EntryList($entity);
-            foreach($list->getResults() as $result) {
+            foreach ($list->getResults() as $result) {
                 $em->remove($result);
             }
-        } catch(\Exception $e) {}
+        } catch (\Exception $e) {
+        }
 
         $em->flush();
 
@@ -50,10 +51,10 @@ class Listener
             // Create a results node
             $tree = ExpressEntryResultsTree::get();
             if (is_object($tree)) {
-				$node = $tree->getRootTreeNodeObject();
-				$node = ExpressEntryResultsNode::add($entity->getName(), $node);
-				$entity->setEntityResultsNodeId($node->getTreeNodeID());
-			}
+                $node = $tree->getRootTreeNodeObject();
+                $node = ExpressEntryResultsNode::add($entity->getName(), $node);
+                $entity->setEntityResultsNodeId($node->getTreeNodeID());
+            }
         }
 
         $indexer = $entity->getAttributeKeyCategory()->getSearchIndexer();

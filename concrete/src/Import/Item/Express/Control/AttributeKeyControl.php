@@ -4,7 +4,6 @@ namespace Concrete\Core\Import\Item\Express\Control;
 use Concrete\Core\Application\Application;
 use Concrete\Core\Attribute\Category\ExpressCategory;
 use Concrete\Core\Attribute\TypeFactory;
-use Concrete\Core\Entity\Express\Control\AssociationControl;
 use Concrete\Core\Entity\Express\Entity;
 use Concrete\Core\Export\ExportableInterface;
 use Concrete\Core\Import\ImportableInterface;
