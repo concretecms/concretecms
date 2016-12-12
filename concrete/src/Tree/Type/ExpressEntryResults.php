@@ -66,11 +66,13 @@ class ExpressEntryResults extends Tree
         $permissions = ['view_express_entries', 'add_express_entries', 'edit_express_entries', 'delete_express_entries'];
         foreach($permissions as $handle) {
             $pk = ExpressTreeNodeKey::getByHandle($handle);
-            $pk->setPermissionObject($rootNode);
-            $pa = Access::create($pk);
-            $pa->addListItem($adminGroupEntity);
-            $pt = $pk->getPermissionAssignmentObject();
-            $pt->assignPermissionAccess($pa);
+            if (is_object($pk)) {
+                $pk->setPermissionObject($rootNode);
+                $pa = Access::create($pk);
+                $pa->addListItem($adminGroupEntity);
+                $pt = $pk->getPermissionAssignmentObject();
+                $pt->assignPermissionAccess($pa);
+            }
         }
 
         return $tree;

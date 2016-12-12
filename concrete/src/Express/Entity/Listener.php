@@ -49,9 +49,11 @@ class Listener
         if (!$entity->getEntityResultsNodeId()) {
             // Create a results node
             $tree = ExpressEntryResultsTree::get();
-            $node = $tree->getRootTreeNodeObject();
-            $node = ExpressEntryResultsNode::add($entity->getName(), $node);
-            $entity->setEntityResultsNodeId($node->getTreeNodeID());
+            if (is_object($tree)) {
+				$node = $tree->getRootTreeNodeObject();
+				$node = ExpressEntryResultsNode::add($entity->getName(), $node);
+				$entity->setEntityResultsNodeId($node->getTreeNodeID());
+			}
         }
 
         $indexer = $entity->getAttributeKeyCategory()->getSearchIndexer();

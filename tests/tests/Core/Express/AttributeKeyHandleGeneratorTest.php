@@ -9,6 +9,11 @@ class AttributeKeyHandleGeneratorTest extends ConcreteDatabaseTestCase
         'Concrete\Core\Entity\Attribute\Key\ExpressKey',
     ];
 
+    protected $tables = array(
+        'Trees',
+        'TreeTypes',
+    );
+
     public function testExpressHandleGenerator()
     {
         $entity = new \Concrete\Core\Entity\Express\Entity();
