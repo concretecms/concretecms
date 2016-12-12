@@ -32,7 +32,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 					<p><?=t('Approved by')?> <%-cvApproverUserName%></p>
 				<% } %>
 				<% if (cvIsScheduled == 1) { %>
-				<p><?=t('Scheduled by')?> <%-cvApproverUserName%> <?=t(' for ')?> <%-cvPublishDate%></p>
+				<p><?=t('Scheduled by')?> <%-cvApproverUserName%> <?=tc(/*i18n: In the sentence Scheduled by USERNAME for DATE/TIME*/'ScheduledByFor', ' for ')?> <%-cvPublishDate%></p>
 				<% } %>
 			</div>
 			<div class="ccm-popover-inverse popover fade" data-menu="ccm-panel-page-versions-version-menu-<%-cvID%>">
