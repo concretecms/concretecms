@@ -367,8 +367,13 @@ class Controller extends AttributeTypeController
                     }
                 }
             } else {
-                if (is_array($value)) {
-                    $value = $value[0];
+                if (is_foreachable($value)) {
+                    if(is_array($value)){
+                        $value = reset($value);
+                    } else {
+                        $value->rewind();
+                        $value = $value->current();
+                    }
                 }
 
                 if ($value instanceof Option) {

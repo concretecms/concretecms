@@ -1135,8 +1135,10 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
 
         // we have to publish the controls to the page. i'm not sure why
         $controls = PageTypeComposerControl::getList($this);
+        $defaultsPage = $this->getPageTypePageTemplateDefaultPageObject();
         $outputControls = array();
         foreach ($controls as $cn) {
+            $cn->page = $defaultsPage;
             $cn->publishToPage($p, array(), $controls);
         }
 

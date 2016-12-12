@@ -264,3 +264,12 @@ function var_dump_safe($o, $maxDepth = true)
 {
     return Doctrine\Common\Util\Debug::dump($o, $maxDepth);
 }
+
+/**
+ * @param mixed $var
+ * @return boolean
+ */
+function is_foreachable($var)
+{
+    return is_array($var) || $var instanceof Iterator;
+}
