@@ -15,10 +15,6 @@
 * Fixed https://www.concrete5.org/developers/bugs/8-0-1/conversation-block-attachments-can-not-be-disabled/
 * Fixed https://www.concrete5.org/developers/bugs/8-0-1/file-attributes-with-no-file-selected-cause-errors-after-upgradi/
 
-# 5.7.5.12
-
-## Bug Fixes
-
 # 8.0.1
 
 ## Bug Fixes
@@ -33,21 +29,6 @@
 * Made file manager behave better in cases where a file record somehow had no versions.
 * Fixed error where adding a form block would fail intermittently 
 * Fixed typos in the automatically generated Nginx configuration for pretty URL handling (thanks chemett)
-
-# 5.7.5.12
-
-## Bug Fixes
-
-* Fixed bug with Environment Information not working on PHP below 5.4.
-
-# 5.7.5.11
-
-## Bug Fixes
-
-* Works again properly on PHP 5.3.
-* Fixed bug that made upgrading impossible on PHP < 5.5.9.
-* Fixed page not found error when clicking on a topic list to filter the page list in the blog.
-* Controller bug fixes and security updates.
 
 # 8.0
 
@@ -198,6 +179,21 @@ In addition to the credits above, the following users have been very helpful fix
 
 
 Edtrist, mlocati, MrKarlDilkington
+
+# 5.7.5.12
+
+## Bug Fixes
+
+* Fixed bug with Environment Information not working on PHP below 5.4.
+
+# 5.7.5.11
+
+## Bug Fixes
+
+* Works again properly on PHP 5.3.
+* Fixed bug that made upgrading impossible on PHP < 5.5.9.
+* Fixed page not found error when clicking on a topic list to filter the page list in the blog.
+* Controller bug fixes and security updates.
 
 # 5.7.5.7
 
