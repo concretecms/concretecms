@@ -4,6 +4,7 @@ namespace Concrete\Core\File;
 use Concrete\Core\File\ImportProcessor\ConstrainImageProcessor;
 use Concrete\Core\File\ImportProcessor\ProcessorInterface;
 use Concrete\Core\File\ImportProcessor\SetJPEGQualityProcessor;
+use Concrete\Core\File\ImportProcessor\AutorotateImageProcessor;
 use Concrete\Core\File\StorageLocation\StorageLocation;
 use League\Flysystem\AdapterInterface;
 use Loader;
@@ -48,6 +49,7 @@ class Importer
             $this->addImportProcessor($resizeProcessor);
             $this->addImportProcessor($qualityProcessor);
         }
+        $this->addImportProcessor(new AutorotateImageProcessor);
     }
 
     /**
