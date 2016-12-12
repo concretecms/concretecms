@@ -31,6 +31,9 @@ if ($showMenu) {
     <?php if ($css->getCustomStyleID()) { ?>
     id="<?php echo $css->getCustomStyleID(); ?>"
     <?php } ?>
+    <?php if ($css->getCustomStyleElementAttribute()) { ?>
+    <?php echo $css->getCustomStyleElementAttribute(); ?>
+    <?php } ?>
     >
 <?php
 } ?>
@@ -100,6 +103,9 @@ if ($showMenu) {
     <?php if ($css->getCustomStyleID()) { ?>
     id="<?php echo $css->getCustomStyleID(); ?>"
     <?php } ?>
+    <?php if ($css->getCustomStyleElementAttribute()) { ?>
+    <?php echo $css->getCustomStyleElementAttribute(); ?>
+    <?php } ?>
     >
     <?php
 }
@@ -130,6 +136,9 @@ if ($showMenu) {
     <div class="<?php echo $css->getContainerClass(); ?>"
     <?php if ($css->getCustomStyleID()) { ?>
     id="<?php echo $css->getCustomStyleID(); ?>"
+    <?php } ?>
+    <?php if ($css->getCustomStyleElementAttribute()) { ?>
+    <?php echo $css->getCustomStyleElementAttribute(); ?>
     <?php } ?>
     >
     <?php
