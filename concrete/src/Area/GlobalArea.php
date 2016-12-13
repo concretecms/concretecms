@@ -102,11 +102,9 @@ class GlobalArea extends Area
         $ax = Area::get($stack, STACKS_AREA_NAME);
 
         $db = Loader::db();
-        $r = $db->GetOne('select count(b.bID) from CollectionVersionBlocks cvb inner join Blocks b on cvb.bID = b.bID inner join BlockTypes bt on b.btID = bt.btID where cID = ? and cvID = ? and arHandle = ?',
+        return (int) $db->GetOne('select count(b.bID) from CollectionVersionBlocks cvb inner join Blocks b on cvb.bID = b.bID inner join BlockTypes bt on b.btID = bt.btID where cID = ? and cvID = ? and arHandle = ?',
             array($stack->getCollectionID(), $stack->getVersionID(), $ax->getAreaHandle())
         );
-
-        return $r;
     }
 
     /**
