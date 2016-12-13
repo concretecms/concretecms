@@ -1,3 +1,35 @@
+# 8.0.2
+
+## New Features
+
+* Added the ability to use the express attribute to specify express entries in the Express Entry Detail block.
+
+## Bug Fixes
+
+* Fixed site name not rendering in many themes (those that used Config::get(‘concrete.site’) to retrieve it.)
+* Fixed inability to set a site to private or members only.
+* Fixed error message complaining about methods in missing in the ExpressSetManager interface that made it impossible to work with Express objects in the Dashboard.
+* Fixed error that kept sites with legacy attribute categories (like Vivid Store) from upgrading properly.
+* Fixed Page Attribute Display block not having access to delimiter field after upgrade from 5.7.
+* Fixed ability to save file search queries in site updated from 5.7.
+* Fixed https://www.concrete5.org/developers/bugs/8-0-1/conversation-block-attachments-can-not-be-disabled/
+* Fixed https://www.concrete5.org/developers/bugs/8-0-1/file-attributes-with-no-file-selected-cause-errors-after-upgradi/
+
+# 8.0.1
+
+## Bug Fixes
+
+* Fixed bug where files were not viewable by anyone other than admin after upgrade from 5.7.5.10.
+* Fixed bug where select attribute wouldn’t sort by popularity (and would die with a SQL error.)
+* Fixed bug where tracking code was not preserved after upgrade from 5.7.5.10.
+* Fixed bug where users could not be deleted after upgrade from 5.7.5.10
+* Debug is no longer the default setting for error reporting.
+* Fixed inability to sort attribute sets, bugs with editing legacy attribute sets.
+* Fixed problems with saving legacy attributes.
+* Made file manager behave better in cases where a file record somehow had no versions.
+* Fixed error where adding a form block would fail intermittently 
+* Fixed typos in the automatically generated Nginx configuration for pretty URL handling (thanks chemett)
+
 # 8.0
 
 ## New Features
@@ -147,6 +179,21 @@ In addition to the credits above, the following users have been very helpful fix
 
 
 Edtrist, mlocati, MrKarlDilkington
+
+# 5.7.5.12
+
+## Bug Fixes
+
+* Fixed bug with Environment Information not working on PHP below 5.4.
+
+# 5.7.5.11
+
+## Bug Fixes
+
+* Works again properly on PHP 5.3.
+* Fixed bug that made upgrading impossible on PHP < 5.5.9.
+* Fixed page not found error when clicking on a topic list to filter the page list in the blog.
+* Controller bug fixes and security updates.
 
 # 5.7.5.7
 

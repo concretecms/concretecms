@@ -3,11 +3,7 @@ namespace Concrete\Core\Import\Item\Express\Control;
 
 use Concrete\Core\Application\Application;
 use Concrete\Core\Attribute\Category\ExpressCategory;
-use Concrete\Core\Attribute\TypeFactory;
-use Concrete\Core\Entity\Express\Control\AssociationControl;
 use Concrete\Core\Entity\Express\Entity;
-use Concrete\Core\Export\ExportableInterface;
-use Concrete\Core\Import\ImportableInterface;
 use Concrete\Core\Import\Item\Express\ItemInterface;
 use Doctrine\ORM\EntityManager;
 
@@ -32,16 +28,16 @@ class AttributeKeyControl implements ItemInterface
     public function import(\SimpleXMLElement $xml, Entity $entity)
     {
         $control = new \Concrete\Core\Entity\Express\Control\AttributeKeyControl();
-        $control->setCustomLabel((string) $xml['custom-label']);
-        if (((string) $xml['required']) == '1') {
+        $control->setCustomLabel((string)$xml['custom-label']);
+        if (((string)$xml['required']) == '1') {
             $control->setIsRequired(true);
         }
-        $control->setId((string) $xml['id']);
+        $control->setId((string)$xml['id']);
         $category = new ExpressCategory($entity, $this->application, $this->entityManager);
 
         if (isset($xml->attributekey)) {
             $ak = $xml->attributekey;
-            $type = $this->application->make('Concrete\Core\Attribute\TypeFactory')->getByHandle((string) $ak['type']);
+            $type = $this->application->make('Concrete\Core\Attribute\TypeFactory')->getByHandle((string)$ak['type']);
             $key = $category->import($type, $ak);
             $control->setAttributeKey($key);
         }
