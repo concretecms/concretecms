@@ -135,7 +135,6 @@ class ObjectBuilderTest extends ConcreteDatabaseTestCase
 
     public function testCreateObjectAndForm()
     {
-        /*
         $student = Express::buildObject('student', 'students', 'Student', $this->pkg);
         $student->addAttribute('text', 'First Name');
         $student->addAttribute('text', 'Last Name');
@@ -148,8 +147,34 @@ class ObjectBuilderTest extends ConcreteDatabaseTestCase
             ->addAttributeKeyControl('last_name')
             ->addTextControl('', 'This is just some basic explanatory text.')
             ->addAttributeKeyControl('bio');
-        $form->save();
-        */
+        $form = $form->save();
+
+        $this->assertInstanceOf('Concrete\Core\Entity\Express\Form', $form);
+        $this->assertEquals('Form', $form->getName());
+        $this->assertNotEquals('', $form->getID());
+
+        $this->assertEquals(1, count($form->getFieldSets()));
+        $fieldsets = $form->getFieldSets();
+        $this->assertEquals('Basics', $fieldsets[0]->getTitle());
+
+        $controls = $fieldsets[0]->getControls();
+
+        $this->assertEquals(4, count($controls));
+
+        $this->assertInstanceOf('Concrete\Core\Entity\Express\Control\AttributeKeyControl', $controls[0]);
+        $this->assertInstanceOf('Concrete\Core\Entity\Express\Control\AttributeKeyControl', $controls[1]);
+        $this->assertInstanceOf('Concrete\Core\Entity\Express\Control\TextControl', $controls[2]);
+        $this->assertInstanceOf('Concrete\Core\Entity\Express\Control\AttributeKeyControl', $controls[3]);
+
+        $this->assertEquals('', $controls[2]->getHeadline());
+        $this->assertEquals('This is just some basic explanatory text.', $controls[2]->getBody());
+
+        $key = $controls[3]->getAttributeKey();
+        $this->assertEquals('Bio', $key->getAttributeKeyName());
+
+        $type = $key->getAttributeType();
+        $this->assertInstanceOf('Concrete\Core\Entity\Attribute\Type', $type);
+        $this->assertEquals('textarea', $type->getAttributeTypeHandle());
     }
 
 }

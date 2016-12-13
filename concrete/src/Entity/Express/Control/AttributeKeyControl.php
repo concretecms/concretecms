@@ -6,6 +6,7 @@ use Concrete\Core\Entity\Express\Entity;
 use Concrete\Core\Entity\Express\Entry;
 use Concrete\Core\Express\Form\Context\ContextInterface;
 use Concrete\Core\Express\Form\Control\Renderer\AttributeKeyControlRenderer;
+use Concrete\Core\Express\ObjectBuilder;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -63,4 +64,16 @@ class AttributeKeyControl extends Control
         return new \Concrete\Core\Export\Item\Express\Control\AttributeKeyControl();
     }
 
+    public function build(ObjectBuilder $builder)
+    {
+        // before we have built the object we have a proxy attribute key
+        // object that just has the attribute key handle
+        $akHandle = $this->attribute_key->getAttributeKeyHandle();
+        foreach($builder->getEntity()->getAttributes() as $ak) {
+            if ($akHandle == $ak->getAttributeKeyHandle()) {
+                $this->setAttributeKey($ak);
+            }
+        }
+        return $this;
+    }
 }

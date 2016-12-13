@@ -34,6 +34,22 @@ class ObjectBuilder
         $this->entityManager = $entityManager;
     }
 
+    /**
+     * @return EntityManagerInterface
+     */
+    public function getEntityManager()
+    {
+        return $this->entityManager;
+    }
+
+    /**
+     * @return Entity
+     */
+    public function getEntity()
+    {
+        return $this->entity;
+    }
+
     public function createObject($name)
     {
         $this->entity = new Entity();
@@ -64,6 +80,11 @@ class ObjectBuilder
         $this->entityManager->flush();
 
         return $this->entity;
+    }
+
+    public function buildForm($formName)
+    {
+        return new ObjectBuilder\FormBuilder($this, $formName);
     }
 
     public function addAttribute($type_handle, $name, $handle = null, Settings $settings = null)

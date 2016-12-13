@@ -62,16 +62,19 @@ class ExpressEntryResults extends Tree
         $treeID = parent::create($rootNode);
         $tree = self::getByID($treeID);
 
-        $adminGroupEntity = GroupEntity::getOrCreate(ConcreteGroup::getByID(ADMIN_GROUP_ID));
-        $permissions = ['view_express_entries', 'add_express_entries', 'edit_express_entries', 'delete_express_entries'];
-        foreach($permissions as $handle) {
-            $pk = ExpressTreeNodeKey::getByHandle($handle);
-            if (is_object($pk)) {
-                $pk->setPermissionObject($rootNode);
-                $pa = Access::create($pk);
-                $pa->addListItem($adminGroupEntity);
-                $pt = $pk->getPermissionAssignmentObject();
-                $pt->assignPermissionAccess($pa);
+        $adminGroup = ConcreteGroup::getByID(ADMIN_GROUP_ID);
+        if (is_object($adminGroup)) {
+            $adminGroupEntity = GroupEntity::getOrCreate($adminGroup);
+            $permissions = ['view_express_entries', 'add_express_entries', 'edit_express_entries', 'delete_express_entries'];
+            foreach($permissions as $handle) {
+                $pk = ExpressTreeNodeKey::getByHandle($handle);
+                if (is_object($pk)) {
+                    $pk->setPermissionObject($rootNode);
+                    $pa = Access::create($pk);
+                    $pa->addListItem($adminGroupEntity);
+                    $pt = $pk->getPermissionAssignmentObject();
+                    $pt->assignPermissionAccess($pa);
+                }
             }
         }
 
