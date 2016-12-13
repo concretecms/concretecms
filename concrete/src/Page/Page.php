@@ -2800,7 +2800,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
                     $topPath = '/' . $fragments[1];
                     $c = \Page::getByPath($topPath);
                     if (is_object($c) && !$c->isError()) {
-                        if ($c->getCollectionParentID() == 0) {
+                        if ($c->getCollectionParentID() == 0 && !$c->isHomePage()) {
                             $systemPage = true;
                         }
                     }
