@@ -43,6 +43,7 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
     protected $btCacheBlockOutputLifetime = 0;
     protected $btCacheBlockOutputOnPost = false;
     protected $btCacheBlockOutputForRegisteredUsers = false;
+    protected $btCacheBlockOutputClearOnActions  = array();
     protected $bActionCID;
     protected $btExportPageColumns = [];
     protected $btExportFileColumns = [];
@@ -762,6 +763,11 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
         return $this->btIgnorePageThemeGridFrameworkContainer;
     }
 
+    public function getCacheBlockOutputClearActions()
+    {
+        return $this->btCacheBlockOutputClearOnActions;
+    }
+    
     /**
      * Returns a key/value array of strings that is used to translate items when used in javascript.
      */

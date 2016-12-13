@@ -644,4 +644,48 @@ class BlockType
             $this->controller = Facade::getFacadeApplication()->build($class, [$this]);
         }
     }
+    
+    public final function clearCache()
+    {
+        $app = Facade::getFacadeApplication();
+
+        $btID = $this->getBlockTypeID();
+        $db = $app['database']->connection();
+
+        $pageCache = \PageCache::getLibrary();
+        $cache = $app->make('cache/request');
+        if ($cache->isEnabled()) {
+            $qb = $db->createQueryBuilder();
+            $cIDs = $qb->select('cvb.cID')->from('CollectionVersionBlocksOutputCache', 'cvb')
+                    ->innerJoin('cvb', 'Blocks', 'b', 'b.bID = cvb.bID')
+                    ->where($qb->expr()->eq('b.btID', ':btID'))
+                    ->setParameter(':btID', $btID)
+                    ->execute()->fetchAll();
+            foreach ($cIDs as $cID) {
+                $cache->delete('page/' . $cID['cID']);
+                $pageCache->purge(Page::getByID($cID['cID']));
+            }
+        }
+
+        $sm = $db->getSchemaManager();
+        $blocksTable = $sm->listTableDetails('Blocks');
+        if ($blocksTable->hasColumn('btCachedBlockRecord')) {
+            $qb = $db->createQueryBuilder();
+            $qb->update('Blocks')->set('btCachedBlockRecord', 'null')
+                ->where($qb->expr()->eq('btID', ':btID'))
+                ->setParameter(':btID', $btID)
+                ->execute();
+        }
+
+        $qb = $db->createQueryBuilder();
+        $subQb = $db->createQueryBuilder();
+        $qb->delete('CollectionVersionBlocksOutputCache')
+            ->where($qb->expr()->comparison('bID', 'IN', '(' .
+                    $subQb->select('b.bID')->from('Blocks', 'b')
+                    ->where($subQb->expr()->eq('b.btID', ':btID'))
+                    ->getSQL() . ')'))
+            ->setParameter(':btID', $btID)
+            ->execute();
+    }
+
 }
