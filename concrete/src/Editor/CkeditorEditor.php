@@ -209,9 +209,15 @@ EOL;
         $plugins = array();
         $post = $request->request->get('plugin');
         $selected_hidden = $this->config->get('editor.ckeditor4.plugins.selected_hidden');
-        $post = array_merge($selected_hidden, $post);
         if (is_array($post)) {
+            $post = array_merge($selected_hidden, $post);
             foreach ($post as $plugin) {
+                if ($this->pluginManager->isAvailable($plugin)) {
+                    $plugins[] = $plugin;
+                }
+            }
+        } else {
+            foreach ($selected_hidden as $plugin) {
                 if ($this->pluginManager->isAvailable($plugin)) {
                     $plugins[] = $plugin;
                 }
