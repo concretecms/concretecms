@@ -25,7 +25,9 @@ class CacheCleaner implements ApplicationAwareInterface
         $actionNames = is_array($actionNames) ? $actionNames : [$actionNames];
         foreach ($actionNames as $actionName) {
             $btList = $config->get('concrete.block_cache_cleaner.' . $actionName, []);
-            $config->save('concrete.block_cache_cleaner.' . $actionName, $btList + [$btHandle]);
+            if(!in_array($btHandle, $btList)){
+                $config->save('concrete.block_cache_cleaner.' . $actionName, $btList + [$btHandle]);
+            }
         }
     }
 
@@ -35,9 +37,9 @@ class CacheCleaner implements ApplicationAwareInterface
     public function unregisterBlockType($btHandle)
     {
         $config = $this->app->make('config');
-        $registerItems = $config->get('concrete.block_cache_cleaner', []);
+        $registeredItems = $config->get('concrete.block_cache_cleaner', []);
 
-        foreach ($registerItems as $actionName => $btList) {
+        foreach ($registeredItems as $actionName => $btList) {
             if (in_array($btHandle, $btList)) {
                 unset($btList[$btHandle]);
                 $config->save('concrete.block_cache_cleaner.' . $actionName, $btList);
@@ -46,15 +48,19 @@ class CacheCleaner implements ApplicationAwareInterface
         }
     }
 
+    /**
+     * Clear cache for all instances and Clean up related pages cache
+     * @param string $actionName
+     */
     public function clear($actionName)
     {
         $config = $this->app->make('config');
-        $btList = $config->get('concrete.block_cache_cleaner.' . $actionName, []);
+        $registeredItems = $config->get('concrete.block_cache_cleaner.' . $actionName, []);
         
-        if (!empty($btList)) {
+        if (!empty($registeredItems)) {
             $em = $this->app->make('Doctrine\ORM\EntityManager');
             $btRepo = $em->getRepository('\Concrete\Core\Entity\Block\BlockType\BlockType');
-            foreach ($btList as $btHandle) {
+            foreach ($registeredItems as $btHandle) {
                 $bt = $btRepo->findOneBy(['btHandle' => $btHandle]);
                 if (is_object($bt)) {
                     $bt->clearCache();

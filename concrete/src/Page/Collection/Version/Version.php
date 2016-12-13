@@ -491,7 +491,7 @@ class Version extends Object implements \Concrete\Core\Permission\ObjectInterfac
         $c->reindex(false, $doReindexImmediately);
         $c->writePageThemeCustomizations();
         $this->refreshCache();
-        \Core::make('cache/cleaner/selective')->clear('page_add_update');
+        $app->make('cache/block/cleaner')->clear('page_add_update');
     }
 
     public function discard()

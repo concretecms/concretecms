@@ -16,6 +16,6 @@ class CacheServiceProvider extends ServiceProvider
         $this->app->singleton('cache', '\Concrete\Core\Cache\Level\ObjectCache');
         $this->app->singleton('cache/request', '\Concrete\Core\Cache\Level\RequestCache');
         $this->app->singleton('cache/expensive', '\Concrete\Core\Cache\Level\ExpensiveCache');
-        $this->app->singleton('cache/cleaner/selective', '\Concrete\Core\Cache\Block\CacheCleaner');
+        $this->app->singleton('cache/block/cleaner', '\Concrete\Core\Cache\Block\CacheCleaner');
     }
 }

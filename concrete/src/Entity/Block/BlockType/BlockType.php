@@ -11,6 +11,7 @@ use Concrete\Core\Filesystem\TemplateFile;
 use Concrete\Core\Package\PackageList;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Support\Facade\Facade;
+use Concrete\Core\Page\Page;
 use Core;
 use Database as DB;
 use Environment;
@@ -504,6 +505,7 @@ class BlockType
         $bta = $app->build($class);
 
         $this->loadFromController($bta);
+        $this->setupAutoCacheCleanActions($bta);
 
         $em = \ORM::entityManager();
         $em->persist($this);
@@ -538,14 +540,17 @@ class BlockType
         $this->btIgnorePageThemeGridFrameworkContainer = $bta->ignorePageThemeGridFrameworkContainer();
         $this->btInterfaceHeight = $bta->getInterfaceHeight();
         $this->btInterfaceWidth = $bta->getInterfaceWidth();
-        $this->setupAutoCacheCleanActions($bta);
     }
     
-    protected function setupAutoCacheCleanActions($bta)
+    /**
+     * Register BlockType in Caching Cleaner
+     * @param \Concrete\Core\Block\BlockController $bta
+     */
+    public function setupAutoCacheCleanActions($bta)
     {
         if (!empty($bta->getCacheBlockOutputClearActions())) {
             $app = Facade::getFacadeApplication();
-            $cacheCleaner = $app->make('cache/cleaner/selective');
+            $cacheCleaner = $app->make('cache/block/cleaner');
             $cacheCleaner->registerBlockType($bta->getCacheBlockOutputClearActions(), $this->btHandle);
         }
     }
@@ -555,7 +560,9 @@ class BlockType
      */
     public function delete()
     {
-        $db = Loader::db();
+        $app = Facade::getFacadeApplication();
+        $db = $app->make('database')->connection();
+        
         $r = $db->Execute(
                 'select cID, cvID, b.bID, arHandle
                 from CollectionVersionBlocks cvb
@@ -585,6 +592,10 @@ class BlockType
 
         //Remove gaps in display order numbering (to avoid future sorting errors)
         BlockTypeList::resetBlockTypeDisplayOrder('btDisplayOrder');
+        
+        // Unregister BlockType from Caching Cleaner
+        $cacheCleaner = $app->make('cache/block/cleaner');
+        $cacheCleaner->unregisterBlockType($this->btHandle);
     }
 
     /**
@@ -660,7 +671,7 @@ class BlockType
         $app = Facade::getFacadeApplication();
 
         $btID = $this->getBlockTypeID();
-        $db = $app['database']->connection();
+        $db = $app->make('database')->connection();
 
         $pageCache = \PageCache::getLibrary();
         $cache = $app->make('cache/request');
