@@ -538,6 +538,16 @@ class BlockType
         $this->btIgnorePageThemeGridFrameworkContainer = $bta->ignorePageThemeGridFrameworkContainer();
         $this->btInterfaceHeight = $bta->getInterfaceHeight();
         $this->btInterfaceWidth = $bta->getInterfaceWidth();
+        $this->setupAutoCacheCleanActions($bta);
+    }
+    
+    protected function setupAutoCacheCleanActions($bta)
+    {
+        if (!empty($bta->getCacheBlockOutputClearActions())) {
+            $app = Facade::getFacadeApplication();
+            $cacheCleaner = $app->make('cache/cleaner/selective');
+            $cacheCleaner->registerBlockType($bta->getCacheBlockOutputClearActions(), $this->btHandle);
+        }
     }
 
     /**
