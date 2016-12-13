@@ -22,6 +22,11 @@ class ObjectBuilderTest extends ConcreteDatabaseTestCase
 
     protected $metadatas = [
         'Concrete\Core\Entity\Express\Entity',
+        'Concrete\Core\Entity\Express\Form',
+        'Concrete\Core\Entity\Express\FieldSet',
+        'Concrete\Core\Entity\Express\Control\Control',
+        'Concrete\Core\Entity\Express\Control\AttributeKeyControl',
+        'Concrete\Core\Entity\Express\Control\TextControl',
         'Concrete\Core\Entity\Package',
         'Concrete\Core\Entity\Attribute\Type',
         'Concrete\Core\Entity\Attribute\Key\ExpressKey',
@@ -34,8 +39,6 @@ class ObjectBuilderTest extends ConcreteDatabaseTestCase
     protected function setUp()
     {
         parent::setUp();
-
-        \Concrete\Core\User\Group\Group::add('Administrators', '', null, null, ADMIN_GROUP_ID);
 
         \Concrete\Core\Tree\Node\NodeType::add('category');
         \Concrete\Core\Tree\Node\NodeType::add('express_entry_category');
@@ -132,21 +135,21 @@ class ObjectBuilderTest extends ConcreteDatabaseTestCase
 
     public function testCreateObjectAndForm()
     {
-    /*
+        /*
         $student = Express::buildObject('student', 'students', 'Student', $this->pkg);
         $student->addAttribute('text', 'First Name');
         $student->addAttribute('text', 'Last Name');
         $student->addAttribute('textarea', 'Bio');
-        $student->buildForm()
-            ->addFieldset('Basics')
+        $student->save();
+
+        $form = $student->buildForm('Form');
+        $form->addFieldset('Basics')
             ->addAttributeKeyControl('first_name')
             ->addAttributeKeyControl('last_name')
             ->addTextControl('', 'This is just some basic explanatory text.')
-            ->addAttributeKeyControl('textarea')
-            ->save();
-        $student->save();
+            ->addAttributeKeyControl('bio');
+        $form->save();
         */
-
     }
 
 }
