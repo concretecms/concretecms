@@ -7,6 +7,7 @@ use Concrete\Core\Entity\Attribute\Value\Value\DateTimeValue;
 use Loader;
 use Core;
 use Concrete\Core\Attribute\Controller as AttributeTypeController;
+use DateTime;
 
 class Controller extends AttributeTypeController
 {
@@ -59,12 +60,12 @@ class Controller extends AttributeTypeController
         switch ($this->akDateDisplayMode) {
             case 'text':
                 $form = Loader::helper('form');
-                echo $form->text($this->field('value'), $this->getDisplayValue());
+                echo $form->text($this->field('value'), $this->getSystemDisplayValue());
                 break;
             case 'date':
                 $data = $this->post();
                 $value = $dt->translate('value', $data);
-                $caValue = $value ? $value : $this->getDisplayValue();
+                $caValue = $value ? $value : $this->getSystemDisplayValue();
                 $this->requireAsset('jquery/ui');
                 echo $dt->date($this->field('value'), $caValue == null ? '' : $caValue);
                 break;
@@ -72,7 +73,7 @@ class Controller extends AttributeTypeController
                 $this->requireAsset('jquery/ui');
                 $data = $this->post();
                 $value = $dt->translate('value', $data);
-                $caValue = $value ? $value : $this->getDisplayValue();
+                $caValue = $value ? $value : $this->getSystemDisplayValue();
                 echo $dt->datetime($this->field('value'), $caValue == null ? '' : $caValue);
                 break;
         }
@@ -198,4 +199,42 @@ class Controller extends AttributeTypeController
         return $this->entityManager->find(DateTimeSettings::class, $this->attributeKey);
     }
 
+    /**
+     * Retrieve the date/time value in the "system" format ('Y-m-d H:i:s' for date/time, 'Y-m-d' for date).
+     *
+     * @return string
+     */
+    protected function getSystemDisplayValue()
+    {
+        if (!isset($this->akDateDisplayMode)) {
+            $this->load();
+        }
+        if ($this->akDateDisplayMode === 'text') {
+            $result = $this->getDisplayValue();
+        } else {
+            $result = '';
+            if ($this->attributeValue) {
+                $valueObject = $this->attributeValue->getValueObject();
+                if ($valueObject !== null) {
+                    $dateTime = $valueObject->getValue();
+                    if ($dateTime instanceof DateTime) {
+                        
+                        /* @var \Concrete\Core\Entity\Attribute\Value\Value\DateTimeValue $valueObject */
+                        switch ($this->akDateDisplayMode) {
+                            case 'text':
+                            case 'date':
+                                $result = $dateTime->format('Y-m-d');
+                                break;
+                            default:
+                                $result = $dateTime->format('Y-m-d H:i:s');
+                                break;
+                        }
+                    }
+                }
+            }
+        }
+
+        return $result;
+    }
+    
 }

@@ -13,7 +13,7 @@ class DateTime
      *
      * @return string|false $dateTime In case of success returns the timestamp (in the format 'Y-m-d H:i:s' or 'Y-m-d'), otherwise returns false ($field value is not in the array) or '' (if $field value is empty).
      * If $field has both date and time, the resulting value will be converted fro user timezone to system timezone.
-     * If $field has only date and not time, no timezone conversion will occur.
+     * If $field has only date and not time, no timezone conversion will occur
      */
     public function translate($field, $arr = null)
     {
@@ -244,7 +244,7 @@ EOS;
             $timestamp = strtotime($dh->formatCustom('Y-m-d'));
         }
         if ($timestamp) {
-            $defaultDateJs = 'new Date(' . implode(', ', array(date('Y', $timestamp), date('n', $timestamp) - 1, date('j', $timestamp))) . ')';
+            $defaultDateJs = 'new Date(' . implode(', ', [date('Y', $timestamp), date('n', $timestamp) - 1, date('j', $timestamp)]) . ')';
         } else {
             $defaultDateJs = '""';
         }
