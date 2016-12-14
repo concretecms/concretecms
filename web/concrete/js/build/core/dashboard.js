@@ -27,11 +27,16 @@ var ConcreteDashboard = function() {
         $('.dialog-launch').dialog();
     };
 
-    return {
+	var setupSelects = function() {
+		$('select[data-select=bootstrap]').bootstrapSelectToButton();
+	};
+
+	return {
 		start: function(options) {
 			setupTooltips();
 			setupResultMessages();
             setupDialogs();
+			setupSelects();
 
 		}
 

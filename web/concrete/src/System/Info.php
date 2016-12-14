@@ -60,8 +60,10 @@ class Info
 
     public function __construct()
     {
-        $loc = Localization::getInstance();
-        $loc->pushActiveContext('system');
+        $currentLocale = Localization::activeLocale();
+        if ($currentLocale != 'en_US') {
+            Localization::changeLocale('en_US');
+        }
         try {
             $app = Facade::getFacadeApplication();
             $config = $app->make('config');
@@ -212,9 +214,13 @@ class Info
             }
             $this->phpSettings = implode("\n", $phpSettings);
 
-            $loc->popActiveContext();
+            if ($currentLocale != 'en_US') {
+                Localization::changeLocale($currentLocale);
+            }
         } catch (\Exception $x) {
-            $loc->popActiveContext();
+            if ($currentLocale != 'en_US') {
+                Localization::changeLocale($currentLocale);
+            }
             throw $x;
         }
     }
