@@ -15,9 +15,9 @@ class Legacy extends DashboardPageController
 
     public function view()
     {
-        if ($_REQUEST['all']) {
+        if ($this->request->get('all')) {
             $this->pageSize = 100000;
-            $_REQUEST['page'] = 1;
+            $this->request->attributes->set('page', 1);
         }
         $this->loadSurveyResponses();
     }
@@ -129,28 +129,28 @@ class Legacy extends DashboardPageController
         $tempMiniSurvey = new MiniSurvey();
         $pageBase = \URL::to($c);
 
-        if ($_REQUEST['action'] == 'deleteForm') {
+        if ($this->request->get('action') == 'deleteForm') {
             if (!Loader::helper('validation/token')->validate('deleteForm')) {
                 $this->error->add(t('Invalid Token.'));
             } else {
-                $this->deleteForm($_REQUEST['bID'], $_REQUEST['qsID']);
+                $this->deleteForm($this->request->get('bID'), $this->request->get('qsID'));
             }
         }
 
-        if ($_REQUEST['action'] == 'deleteFormAnswers') {
+        if ($this->request->get('action') == 'deleteFormAnswers') {
             if (!Loader::helper('validation/token')->validate('deleteFormAnswers')) {
                 $this->error->add(t('Invalid Token.'));
             } else {
-                $this->deleteFormAnswers($_REQUEST['qsID']);
+                $this->deleteFormAnswers($this->request->get('qsID'));
                 $this->redirect('/dashboard/reports/forms');
             }
         }
 
-        if ($_REQUEST['action'] == 'deleteResponse') {
+        if ($this->request->get('action') == 'deleteResponse') {
             if (!Loader::helper('validation/token')->validate('deleteResponse')) {
                 $this->error->add(t('Invalid Token.'));
             } else {
-                $this->deleteAnswers($_REQUEST['asid']);
+                $this->deleteAnswers($this->request->get('asid'));
             }
         }
 
@@ -166,8 +166,8 @@ class Legacy extends DashboardPageController
         }
 
         //load requested survey response
-        if (!empty($_REQUEST['qsid'])) {
-            $questionSet = intval(preg_replace('/[^[:alnum:]]/', '', $_REQUEST['qsid']));
+        if ($this->request->get('qsid')) {
+            $questionSet = intval(preg_replace('/[^[:alnum:]]/', '', $this->request->get('qsid')));
 
             //get Survey Questions
             $questionsRS = MiniSurvey::loadQuestions($questionSet);
@@ -182,9 +182,9 @@ class Legacy extends DashboardPageController
             //pagination
             $pageBaseSurvey = $pageBase . '?qsid=' . $questionSet;
             $paginator = Loader::helper('pagination');
-            $sortBy = $_REQUEST['sortBy'];
+            $sortBy = $this->request->get('sortBy');
             $paginator->init(
-                (int) $_REQUEST['page'], $answerSetCount, $pageBaseSurvey . '&page=%pageNum%&sortBy=' . $sortBy,
+                (int) $this->request->get('page'), $answerSetCount, $pageBaseSurvey . '&page=%pageNum%&sortBy=' . $sortBy,
                 $this->pageSize
             );
 
