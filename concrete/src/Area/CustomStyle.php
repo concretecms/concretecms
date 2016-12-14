@@ -137,4 +137,28 @@ class CustomStyle extends AbstractCustomStyle
 
         return implode(' ', $classes);
     }
+
+    public function getCustomStyleID()
+    {
+        $id = null;
+        if (is_object($this->set)) {
+            if ($this->set->getCustomID()) {
+                $id = $this->set->getCustomID();
+            }
+        }
+
+        return $id;
+    }
+
+    public function getCustomStyleElementAttribute()
+    {
+        $elementAttribute = null;
+        if (is_object($this->set)) {
+            if ($this->set->getCustomElementAttribute()) {
+                $elementAttribute = $this->set->getCustomElementAttribute();
+            }
+        }
+
+        return $elementAttribute;
+    }
 }

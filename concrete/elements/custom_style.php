@@ -420,19 +420,17 @@ $form = Core::make('helper/form');
                 </div>
                 <hr/>
 
-                <?php if ($style instanceof \Concrete\Core\Block\CustomStyle) { ?>
-                    <div>
-                        <?= t('Custom ID'); ?>
-                        <?= $form->text('customID', $customID, array('style' => 'height: 38px; font-size: 16px; margin-bottom: 0;')); ?>
-                    </div>
-                    <hr/>
+                <div>
+                    <?= t('Custom ID'); ?>
+                    <?= $form->text('customID', $customID, array('style' => 'height: 38px; font-size: 16px; margin-bottom: 0;')); ?>
+                </div>
+                <hr/>
 
-                    <div>
-                        <?= t('Custom Element Attribute'); ?>
-                        <?= $form->textarea('customElementAttribute', $customElementAttribute, array('style' => 'height: 38px; font-size: 16px; margin: 5px 0 0 0;')); ?>
-                    </div>
-                    <hr>
-                <?php } ?>
+                <div>
+                    <?= t('Custom Element Attribute'); ?>
+                    <?= $form->textarea('customElementAttribute', $customElementAttribute, array('style' => 'height: 38px; font-size: 16px; margin: 5px 0 0 0;')); ?>
+                </div>
+                <hr>
 
                 <?php if ($displayBlockContainerSettings) { ?>
                     <div class="ccm-inline-select-container">
