@@ -194,6 +194,11 @@ class Legacy extends DashboardPageController
                 $limit = '';
             }
             $answerSets = FormBlockStatistics::buildAnswerSetsArray($questionSet, $sortBy, $limit);
+        } else {
+            $questions = null;
+            $answerSets = null;
+            $paginator = null;
+            $questionSet = null;
         }
         $this->set('questions', $questions);
         $this->set('answerSets', $answerSets);
