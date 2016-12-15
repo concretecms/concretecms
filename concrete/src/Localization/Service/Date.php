@@ -7,6 +7,7 @@ use Localization;
 use User;
 use Core;
 use Config;
+use Punic\Comparer;
 
 class Date
 {
@@ -195,7 +196,8 @@ class Date
                 }
                 $result[$timezoneID] = $timezoneName;
             }
-            natcasesort($result);
+            $comparer = new Comparer();
+            $comparer->sort($result, true);
             $cache[$locale] = $result;
         }
 
