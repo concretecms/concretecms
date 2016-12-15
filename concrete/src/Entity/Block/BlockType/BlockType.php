@@ -18,7 +18,6 @@ use Environment;
 use Loader;
 use Localization;
 use Package;
-use Page;
 use User;
 use Doctrine\ORM\Mapping as ORM;
 
