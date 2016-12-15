@@ -69,7 +69,7 @@ class Controller extends AttributeTypeController
                     $dh = $this->app->make('helper/date');
                     /* @var \Concrete\Core\Localization\Service\Date $dh */
                     $value = $dh->formatCustom(
-                        t(/*i18n: Short date/time format: see http://www.php.net/manual/en/function.date.php */ 'n/j/Y g.i'),
+                        t(/*i18n: Short date/time format: see http://www.php.net/manual/en/function.date.php */ 'n/j/Y g.i A'),
                         $datetime
                     );
                 }
@@ -184,7 +184,7 @@ class Controller extends AttributeTypeController
                     $dh = $this->app->make('helper/date');
                     try {
                         $datetime = DateTime::createFromFormat(
-                            t(/*i18n: Short date/time format: see http://www.php.net/manual/en/function.date.php */ 'n/j/Y g.i'),
+                            t(/*i18n: Short date/time format: see http://www.php.net/manual/en/function.date.php */ 'n/j/Y g.i A'),
                             $data['value'],
                             $dh->getTimezone('user')
                          );
