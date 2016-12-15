@@ -1,273 +1,355 @@
 <?php
 namespace Concrete\Core\Form\Service\Widget;
 
-use Core;
+use Concrete\Core\Support\Facade\Application;
+use DateTime as PHPDateTime;
+use Exception;
 
 class DateTime
 {
     /**
      * Takes a "field" and grabs all the corresponding disparate fields from $_POST and translates into a timestamp.
+     * If $field has both date and time, the resulting value will be converted from the user timezone to the system timezone.
+     * If $field has only date and not time, no timezone conversion will occur.
      *
      * @param string $field The name of the field to translate
-     * @param array $arr = null The array containing the value. If null (default) we'll use $_POST
+     * @param array $arr The array containing the value. If null (default) we'll use $_POST
+     * @param bool $asDateTime Set to true to get a DateTime object, false (default) for a string representation
      *
-     * @return string|false $dateTime In case of success returns the timestamp (in the format 'Y-m-d H:i:s' or 'Y-m-d'), otherwise returns false ($field value is not in the array) or '' (if $field value is empty).
-     * If $field has both date and time, the resulting value will be converted fro user timezone to system timezone.
-     * If $field has only date and not time, no timezone conversion will occur
+     * @return \DateTime|string|null In case of success returns the timestamp (in the format 'Y-m-d H:i:s' or 'Y-m-d' if $asDateTime is false) or the DateTime instance (if $asDateTime is true); if the date/time was not received we'll return null (if $field value is empty)
      */
-    public function translate($field, $arr = null)
+    public function translate($field, $arr = null, $asDateTime = false)
     {
-        if ($arr == null) {
+        $app = Application::getFacadeApplication();
+        $dh = $app->make('helper/date');
+        /* @var \Concrete\Core\Localization\Service\Date $dh */
+        if ($arr === null) {
             $arr = $_POST;
         }
-        $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service\Date */
-        $date = null;
-        if (isset($arr[$field . '_dt'])) {
-            $value = $arr[$field . '_dt'];
-            if (strlen(trim($value)) === 0) {
-                return '';
+        // Example of $field: akID[5][value]
+        if (preg_match('/^([^\[\]]+)\[([^\[\]]+)(?:\]\[([^\[\]]+))*\]$/', $field, $matches)) {
+            // Example: $matches === ['akID[5][test]', 'akID', '5', 'value']
+            array_shift($matches);
+            while (isset($matches[1]) && is_array($arr)) {
+                $key = array_shift($matches);
+                $arr = isset($arr[$key]) ? $arr[$key] : null;
             }
-            $h = @intval($arr[$field . '_h']);
-            $m = @intval($arr[$field . '_m']);
-            if ($h < 12 && isset($arr[$field . '_a']) && ($arr[$field . '_a'] === 'PM')) {
-                $h += 12;
-            }
-            $value .= ' ' . substr("0$h", -2) . ':' . substr("0$m", -2);
-            try {
-                $date = new \DateTime($value, $dh->getTimezone('user'));
-            } catch (\Exception $foo) {
-            }
-        } elseif (isset($arr[$field])) {
-            $value = $arr[$field];
-            if (strlen(trim($value)) === 0) {
-                return '';
-            }
-            try {
-                $date = new \DateTime($value, $dh->getTimezone('system'));
-            } catch (\Exception $foo) {
+            $field = $matches[0];
+        }
+
+        $datetime = null;
+        if (is_array($arr)) {
+            $systemTimezone = $dh->getTimezone('system');
+            if (isset($arr[$field . '_dt'])) {
+                $value = $arr[$field . '_dt'];
+                if (is_string($value) && trim($value) !== '') {
+                    $h = isset($arr[$field . '_h']) ? (int) $arr[$field . '_h'] : 0;
+                    $m = isset($arr[$field . '_m']) ? (int) $arr[$field . '_m'] : 0;
+                    if (isset($arr[$field . '_a'])) {
+                        if ($arr[$field . '_a'] === 'AM' && $h === 12) {
+                            $h = 0;
+                        } elseif ($arr[$field . '_a'] === 'PM' && $h < 12) {
+                            $h += 12;
+                        }
+                    }
+                    $value .= ' ' . substr("0$h", -2) . ':' . substr("0$m", -2);
+                    try {
+                        $datetime = new PHPDateTime($value, $dh->getTimezone('user'));
+                    } catch (Exception $foo) {
+                    }
+                    $datetime->setTimezone($systemTimezone);
+                }
+            } elseif (isset($arr[$field])) {
+                $value = $arr[$field];
+                if (is_string($value) && trim($value) !== '') {
+                    try {
+                        $datetime = new PHPDateTime($value, $systemTimezone);
+                    } catch (Exception $foo) {
+                    }
+                }
             }
         }
 
-        return $date ? $dh->formatCustom('Y-m-d H:i:s', $date, 'system') : null;
+        if ($datetime === null || $asDateTime) {
+            $result = $datetime;
+        } else {
+            $result = $datetime->format('Y-m-d H:i:s');
+        }
+
+        return $result;
     }
 
     /**
-     * Creates form fields and JavaScript calendar includes for a particular item
-     * <code>
-     *     $dh->datetime('yourStartDate', '2008-07-12 3:00:00');
-     * </code>.
+     * Creates form fields and JavaScript calendar includes for a particular item (date/time string representations will be converted from the user system-zone to the time-zone).
      *
-     * @param string $prefix
-     * @param string $value
-     * @param bool $includeActivation
-     * @param bool $calendarAutoStart
+     * @param string $field The field prefix (will be used as $field parameter in the translate method)
+     * @param \DateTime|string $value The initial value
+     * @param bool $includeActivation Set to true to include a checkbox to enable/disable the date/time fields
+     * @param bool $calendarAutoStart Set to false to avoid initializing the Javascript calendar
+     * @param string $classes A list of space-separated classes to add to the ui-datepicker-div container
+     *
+     * @return string
      */
-    public function datetime($prefix, $value = null, $includeActivation = false, $calendarAutoStart = true,
-                             $classes = null)
+    public function datetime($field, $value = null, $includeActivation = false, $calendarAutoStart = true, $classes = null)
     {
-        if (substr($prefix, -1) == ']') {
-            $prefix = substr($prefix, 0, strlen($prefix) - 1);
-            $_activate = $prefix . '_activate]';
-            $_dt = $prefix . '_dt]';
-            $_h = $prefix . '_h]';
-            $_m = $prefix . '_m]';
-            $_a = $prefix . '_a]';
+        $app = Application::getFacadeApplication();
+        $dh = $app->make('helper/date');
+        /* @var \Concrete\Core\Localization\Service\Date $dh */
+
+        // Calculate the field names
+        if (substr($field, -1) === ']') {
+            $prefix = substr($field, 0, -1);
+            $fieldActivate = $prefix . '_activate]';
+            $fieldDate = $prefix . '_dt]';
+            $fieldHours = $prefix . '_h]';
+            $fieldMinutes = $prefix . '_m]';
+            $fieldAMPM = $prefix . '_a]';
         } else {
-            $_activate = $prefix . '_activate';
-            $_dt = $prefix . '_dt';
-            $_h = $prefix . '_h';
-            $_m = $prefix . '_m';
-            $_a = $prefix . '_a';
+            $checkPostField = $field;
+            $checkPostData = $_POST;
+            $fieldActivate = $field . '_activate';
+            $fieldDate = $field . '_dt';
+            $fieldHours = $field . '_h';
+            $fieldMinutes = $field . '_m';
+            $fieldAMPM = $field . '_a';
+        }
+        $id = trim(preg_replace('/[^0-9A-Za-z-]+/', '_', $field), '_');
+
+        // Set the initial date/time value
+        $dateTime = null;
+        $requestValue = $this->translate($field, null, true);
+        if ($requestValue !== null) {
+            $dateTime = $requestValue;
+            $dateTime->setTimezone($dh->getTimezone('user'));
+        } else {
+            if ($value) {
+                if ($value instanceof PHPDateTime) {
+                    $dateTime = clone $value;
+                    $dateTime->setTimezone($dh->getTimezone('user'));
+                } else {
+                    try {
+                        $dateTime = $dh->toDateTime($value, 'user', 'system');
+                    } catch (Exception $x) {
+                    }
+                }
+            }
         }
 
-        $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service\Date */
+        // Determine the date/time parts
         $timeFormat = $dh->getTimeFormat();
-        list($dateYear, $dateMonth, $dateDay, $timeHour, $timeMinute) = explode(',', $dh->formatCustom('Y,n,j,G,i', $value ? $value : 'now'));
-        $timeMinute = intval($timeMinute);
-        if ($timeFormat == 12) {
+        if ($dateTime === null) {
+            $now = new PHPDateTime('now', $dh->getTimezone('user'));
+            $timeHour = (int) $now->format('G');
+            $timeMinute = (int) $now->format('i');
+        } else {
+            $timeHour = (int) $dateTime->format('G');
+            $timeMinute = (int) $dateTime->format('i');
+        }
+        if ($timeFormat === 12) {
             $timeAMPM = ($timeHour < 12) ? 'AM' : 'PM';
             $timeHour = ($timeHour % 12);
-            if ($timeHour == 0) {
+            if ($timeHour === 0) {
                 $timeHour = 12;
             }
         }
-        if ($value === '') {
-            $defaultDateJs = '""';
-        } else {
-            $defaultDateJs = "new Date($dateYear, $dateMonth - 1, $dateDay)";
-        }
-        $id = preg_replace("/[^0-9A-Za-z-]/", "_", $prefix);
-        $html = '';
-        $disabled = false;
-        $html .= '<div class="form-inline">';
 
+        // Build HTML
+        $shownDateFormat = t(/*i18n: Short date format: see http://www.php.net/manual/en/function.date.php */ 'n/j/Y');
+        $disabled = '';
+        $html = '<div class="form-inline">';
         if ($includeActivation) {
-            if ($value) {
-                $activated = 'checked';
+            $html .= '<input type="checkbox" id="' . $id . '_activate" class="ccm-activate-date-time" ccm-date-time-id="' . $id . '" name="' . $fieldActivate . '"';
+            if ($dateTime === null) {
+                $disabled = ' disabled="disabled"';
             } else {
-                $disabled = 'disabled';
+                $html .= ' checked="checked"';
             }
-            $html .= '<input type="checkbox" id="' . $id . '_activate" class="ccm-activate-date-time" ccm-date-time-id="' . $id . '" name="' . $_activate . '" ' . $activated . ' />';
+            $html .= ' />';
         }
-
-        $html .= '<span class="ccm-input-date-wrapper" id="' . $id . '_dw"><input id="' . $id . '_dt_pub" class="form-control ccm-input-date"  ' . $disabled . ' /><input id="' . $id . '_dt" name="' . $_dt . '" type="hidden" ' . $disabled . ' /></span>';
+        $html .= '<span class="ccm-input-date-wrapper" id="' . $id . '_dw">';
+        $html .= '<input type="text" id="' . $id . '_dt_pub" class="form-control ccm-input-date"' . $disabled;
+        if (!$calendarAutoStart && $dateTime !== null) {
+            $html .= ' value="' . h($dateTime->format($shownDateFormat)) . '"';
+        }
+        $html .= ' />';
+        $html .= '<input type="hidden" id="' . $id . '_dt" name="' . $fieldDate . '"' . $disabled;
+        if (!$calendarAutoStart && $dateTime !== null) {
+            $html .= ' value="' . h($dateTime->format('Y-m-d')) . '"';
+        }
+        $html .= ' />';
+        $html .= '</span>';
         $html .= '<span class="ccm-input-time-wrapper form-inline" id="' . $id . '_tw">';
-        $html .= '<select class="form-control" id="' . $id . '_h" name="' . $_h . '" ' . $disabled . '>';
-
-        $hourStart = ($timeFormat == 12) ? 1 : 0;
-        $hourEnd = ($timeFormat == 12) ? 12 : 23;
+        $html .= '<select class="form-control" id="' . $id . '_h" name="' . $fieldHours . '"' . $disabled . '>';
+        $hourStart = ($timeFormat === 12) ? 1 : 0;
+        $hourEnd = ($timeFormat === 12) ? 12 : 23;
         for ($i = $hourStart; $i <= $hourEnd; ++$i) {
-            if ($i == $timeHour) {
-                $selected = 'selected';
-            } else {
-                $selected = '';
+            $html .= '<option value="' . $i . '"';
+            if ($i === $timeHour) {
+                $html .= ' selected="selected"';
             }
-            $html .= '<option value="' . $i . '" ' . $selected . '>' . $i . '</option>';
-        }
-        $html .= '</select><span class="separator">:</span>';
-        $html .= '<select class="form-control"  id="' . $id . '_m" name="' . $_m . '" ' . $disabled . '>';
-        for ($i = 0; $i <= 59; ++$i) {
-            if ($i == $timeMinute) {
-                $selected = 'selected';
-            } else {
-                $selected = '';
-            }
-            $html .= '<option value="' . sprintf('%02d', $i) . '" ' . $selected . '>' . sprintf('%02d', $i) . '</option>';
+            $html .= '>' . $i . '</option>';
         }
         $html .= '</select>';
-        if ($timeFormat == 12) {
-            $html .= '<select class="form-control" id="' . $id . '_a" name="' . $_a . '" ' . $disabled . '>';
-            $html .= '<option value="AM" ';
-            if ($timeAMPM == 'AM') {
-                $html .= 'selected';
+        $html .= '<span class="separator">:</span>';
+        $html .= '<select class="form-control"  id="' . $id . '_m" name="' . $fieldMinutes . '"' . $disabled . '>';
+        for ($i = 0; $i < 60; ++$i) {
+            $html .= '<option value="' . sprintf('%02d', $i) . '"';
+            if ($i === $timeMinute) {
+                $html .= ' selected="selected"';
+            }
+            $html .= '>' . sprintf('%02d', $i) . '</option>';
+        }
+        $html .= '</select>';
+        if ($timeFormat === 12) {
+            $html .= '<select class="form-control" id="' . $id . '_a" name="' . $fieldAMPM . '"' . $disabled . '>';
+            $html .= '<option value="AM"';
+            if ($timeAMPM === 'AM') {
+                $html .= ' selected="selected"';
             }
             $html .= '>';
             // This prints out the translation of "AM" in the current language
-            $html .= $dh->date('A', mktime(1), 'app');
+            $html .= $dh->date('A', mktime(1), 'system');
             $html .= '</option>';
-            $html .= '<option value="PM" ';
-            if ($timeAMPM == 'PM') {
-                $html .= 'selected';
+            $html .= '<option value="PM"';
+            if ($timeAMPM === 'PM') {
+                $html .= ' selected="selected"';
             }
             $html .= '>';
             // This prints out the translation of "PM" in the current language
-            $html .= $dh->date('A', mktime(13), 'app');
+            $html .= $dh->date('A', mktime(13), 'system');
             $html .= '</option>';
             $html .= '</select>';
         }
-        $html .= '</span></div>';
+        $html .= '</span>';
+        $html .= '</div>';
 
-        $beforeShow = '';
-        if ($classes) {
-            $beforeShow = <<<EOT
-                beforeShow: function(input, inst) {
-                    $('#ui-datepicker-div').addClass("$classes");
-                },
+        // Create the Javascript for the calendar
+        if ($calendarAutoStart) {
+            $dateFormat = json_encode($dh->getJQueryUIDatePickerFormat($shownDateFormat));
+            if ($classes) {
+                $beforeShow = 'beforeShow: function() { $(\'#ui-datepicker-div\').addClass(' . json_encode((string) $classes) . '); },';
+            } else {
+                $beforeShow = '';
+            }
+            if ($dateTime === null) {
+                $defaultDateJs = "''";
+            } else {
+                $defaultDateJs = 'new Date('. implode(', ', [$dateTime->format('Y'), $dateTime->format('n') - 1, (int) $dateTime->format('j')]) . ')';
+            }
+            $html .= <<<EOT
+<script type="text/javascript">
+$(function() {
+  $('#{$id}_dt_pub').datepicker({
+    dateFormat: $dateFormat,
+    altFormat: 'yy-mm-dd',
+    altField: '#{$id}_dt',
+    changeYear: true,
+    showAnim: 'fadeIn',
+    $beforeShow
+    onClose: function(dateText, inst) {
+      if(!dateText) {
+        $(inst.settings.altField).val('');
+      }
+    }
+  }).datepicker('setDate', $defaultDateJs);
+})
+</script>
 EOT;
         }
 
-        $jh = Core::make('helper/json'); /* @var $jh \Concrete\Core\Http\Service\Json */
-        if ($calendarAutoStart) {
-            $html .= '<script type="text/javascript">$(function () {
-                $("#' . $id . '_dt_pub").datepicker({
-                    dateFormat: ' . $jh->encode($dh->getJQueryUIDatePickerFormat(t(/*i18n: Short date format: see http://www.php.net/manual/en/function.date.php */ 'n/j/Y'))) . ',
-                    altFormat: "yy-mm-dd",
-                    altField: "#' . $id . '_dt",
-                    changeYear: true,
-                    showAnim: \'fadeIn\',
-                    ' . $beforeShow . '
-                    onClose: function(dateText, inst) {
-                        if(dateText == "") {
-                            var altField = $(inst.settings["altField"]);
-                            if(altField.length) {
-                                altField.val(dateText);
-                            }
-                        }
-                    }
-                }).datepicker("setDate" , ' . $defaultDateJs . '); })</script>';
-        }
-        // first we add a calendar input
-
+        // Add the Javascript to handle the activation
         if ($includeActivation) {
-            $html .= <<<EOS
-			<script type="text/javascript">$("#{$id}_activate").click(function () {
-				if ($(this).get(0).checked) {
-					$("#{$id}_dw input").each(function () {
-						$(this).get(0).disabled = false;
-					});
-					$("#{$id}_tw select").each(function () {
-						$(this).get(0).disabled = false;
-					});
-				} else {
-					$("#{$id}_dw input").each(function () {
-						$(this).get(0).disabled = true;
-					});
-					$("#{$id}_tw select").each(function () {
-						$(this).get(0).disabled = true;
-					});
-				}
-			});
-			</script>
-EOS;
+            $html .= <<<EOT
+<script type="text/javascript">
+$(function() {
+  $('#{$id}_activate').click(function() {
+    if ($(this).get(0).checked) {
+      $('#{$id}_dw input,#{$id}_tw select').removeAttr('disabled');
+    } else {
+      $('#{$id}_dw input,#{$id}_tw select').attr('disabled', 'disabled');
+    }
+  });
+});
+</script>
+EOT;
         }
 
         return $html;
     }
 
     /**
-     * Creates form fields and JavaScript calendar includes for a particular item but includes only calendar controls (no time.)
-     * <code>
-     *     $dh->date('yourStartDate', '2008-07-12 3:00:00');
-     * </code>.
+     * Creates form fields and JavaScript calendar includes for a particular item but includes only calendar controls (no time, so no time-zone conversions will be applied).
      *
-     * @param string $prefix
-     * @param string $value
-     * @param bool $includeActivation
-     * @param bool $calendarAutoStart
+     * @param string $field The field name (will be used as $field parameter in the translate method)
+     * @param \DateTime|string $value The initial value (set to null for no value, empty string for the current date)
+     * @param bool $calendarAutoStart Set to false to avoid initializing the Javascript calendar
      */
     public function date($field, $value = null, $calendarAutoStart = true)
     {
-        $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service\Date */
-        $fh = Core::make("helper/form");
-        $id = preg_replace("/[^0-9A-Za-z-]/", "_", $field);
+        $app = Application::getFacadeApplication();
+        $dh = $app->make('helper/date');
+        /* @var \Concrete\Core\Localization\Service\Date $dh */
+        $fh = $app->make('helper/form');
+        /* @var \Concrete\Core\Form\Service\Form $fh */
 
-        $requestValue = $fh->getRequestValue($field);
+        // Calculate the field names
+        $id = trim(preg_replace('/[^0-9A-Za-z-]+/', '_', $field), '_');
 
-        if ($requestValue !== false) {
-            $timestamp = empty($requestValue) ? false : @strtotime($requestValue);
+        // Set the initial date/time value
+        $dateTime = null;
+        $requestValue = $this->translate($field, null, true);
+        if ($requestValue !== null) {
+            $dateTime = $requestValue;
         } elseif ($value) {
-            $timestamp = @strtotime($value);
-        } elseif ($value === '') {
-            $timestamp = false;
-        } else {
-            // Today (in the user's timezone)
-            $timestamp = strtotime($dh->formatCustom('Y-m-d'));
+            if (!$value instanceof PHPDateTime) {
+                try {
+                    $dateTime = $dh->toDateTime($value);
+                } catch (Exception $x) {
+                }
+            }
+        } elseif ($value !== '') {
+            $dateTime = new PHPDateTime('now', $dh->getTimezone('user'));
         }
-        if ($timestamp) {
-            $defaultDateJs = 'new Date(' . implode(', ', [date('Y', $timestamp), date('n', $timestamp) - 1, date('j', $timestamp)]) . ')';
-        } else {
-            $defaultDateJs = '""';
+
+        // Build HTML
+        $shownDateFormat = t(/*i18n: Short date format: see http://www.php.net/manual/en/function.date.php */ 'n/j/Y');
+        $html = '<div class="form-inline">';
+        $html .= '<span class="ccm-input-date-wrapper" id="' . $id . '_dw">';
+        $html .= '<input type="text" id="' . $id . '_pub" class="form-control ccm-input-date"';
+        if (!$calendarAutoStart && $dateTime !== null) {
+            $html .= ' value="' . h($dateTime->format($shownDateFormat)) . '"';
         }
-        $html = '';
-        $html .= '<div><span class="ccm-input-date-wrapper" id="' . $id . '_dw"><input id="' . $id . '_pub" type="text" class="form-control ccm-input-date"  /><input id="' . $id . '" name="' . $field . '" type="hidden"  /></span></div>';
-        $jh = Core::make('helper/json'); /* @var $jh \Concrete\Core\Http\Service\Json */
+        $html .= '/>';
+        $html .= '<input type="hidden" id="' . $id . '" name="' . $field . '" />';
+        $html .= '</span>';
+        $html .= '</div>';
+
+        // Create the Javascript for the calendar
         if ($calendarAutoStart) {
-            $html .= '<script type="text/javascript">$(function () {
-                $("#' . $id . '_pub").datepicker({
-                    dateFormat: ' . $jh->encode($dh->getJQueryUIDatePickerFormat(t(/*i18n: Short date format: see http://www.php.net/manual/en/function.date.php */ 'n/j/Y'))) . ',
-                    altFormat: "yy-mm-dd",
-                    altField: "#' . $id . '",
-                    changeYear: true,
-                    showAnim: \'fadeIn\',
-                    onClose: function(dateText, inst) {
-                        if(dateText == "") {
-                            var altField = $(inst.settings["altField"]);
-                            if(altField.length) {
-                                altField.val(dateText);
-                            }
-                        }
-                    }
-                }).datepicker( "setDate" , ' . $defaultDateJs . ' ); });</script>';
+            $dateFormat = json_encode($dh->getJQueryUIDatePickerFormat($shownDateFormat));
+            if ($dateTime === null) {
+                $defaultDateJs = "''";
+            } else {
+                $defaultDateJs = 'new Date('. implode(', ', [$dateTime->format('Y'), $dateTime->format('n') - 1, (int) $dateTime->format('j')]) . ')';
+            }
+            $html .= <<<EOT
+<script type="text/javascript">
+$(function() {
+  $('#{$id}_pub").datepicker({
+    dateFormat: $dateFormat,
+    altFormat: "yy-mm-dd",
+    altField: '#{$id}',
+    changeYear: true,
+    showAnim: 'fadeIn',
+    onClose: function(dateText, inst) {
+      if(!dateText) {
+        $(inst.settings.altField).val('');
+      }
+    }
+  }).datepicker('setDate', $defaultDateJs);
+});
+</script>
+EOT;
         }
 
         return $html;
