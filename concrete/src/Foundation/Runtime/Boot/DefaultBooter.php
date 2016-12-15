@@ -260,7 +260,7 @@ class DefaultBooter implements BootInterface, ApplicationAwareInterface
             $config->set('app.server_timezone', @date_default_timezone_get());
         }
 
-        @date_default_timezone_set($config->get('app.timezone'));
+        @date_default_timezone_set($config->get('app.server_timezone'));
     }
 
     /**
