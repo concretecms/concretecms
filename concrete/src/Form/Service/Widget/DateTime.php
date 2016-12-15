@@ -263,7 +263,7 @@ EOT;
 <script type="text/javascript">
 $(function() {
   $('#{$id}_activate').click(function() {
-    if ($(this).get(0).checked) {
+    if ($(this).is(':checked')) {
       $('#{$id}_dw input,#{$id}_tw select').removeAttr('disabled');
     } else {
       $('#{$id}_dw input,#{$id}_tw select').attr('disabled', 'disabled');
@@ -335,9 +335,9 @@ EOT;
             $html .= <<<EOT
 <script type="text/javascript">
 $(function() {
-  $('#{$id}_pub").datepicker({
+  $('#{$id}_pub').datepicker({
     dateFormat: $dateFormat,
-    altFormat: "yy-mm-dd",
+    altFormat: 'yy-mm-dd',
     altField: '#{$id}',
     changeYear: true,
     showAnim: 'fadeIn',
