@@ -69,7 +69,7 @@ class Date
      * If you're not working with timestamps you may want to use the formatCustom method.
      *
      * @param string $mask The PHP format mask
-     * @param bool|int $timestamp Use false for the current date/time, otherwise a valid Unix timestamp (we assume it's in the system timezone).
+     * @param bool|int $timestamp Use false for the current date/time, otherwise a valid Unix timestamp (we assume it's in the system timezone)
      * @param string $toTimezone The destination timezone.<br />
      * Special values are:<ul>
      *    <li>'system' (default) for the current system timezone</li>
@@ -112,13 +112,13 @@ class Date
      */
     public function getTimezones()
     {
-        static $cache = array();
+        static $cache = [];
         $locale = Localization::activeLocale();
         if (array_key_exists($locale, $cache)) {
             $result = $cache[$locale];
         } else {
-            $result = array();
-            $continentNames = array(
+            $result = [];
+            $continentNames = [
                 'Africa' => \Punic\Territory::getName('002'),
                 'Asia' => \Punic\Territory::getName('142'),
                 'America' => \Punic\Territory::getName('019'),
@@ -129,7 +129,7 @@ class Date
                 'Europe' => \Punic\Territory::getName('150'),
                 'Indian' => t('Indian Ocean'),
                 'Pacific' => t('Pacific Ocean'),
-            );
+            ];
             foreach (\DateTimeZone::listIdentifiers() as $timezoneID) {
                 switch ($timezoneID) {
                     case 'UTC':
@@ -157,7 +157,7 @@ class Date
                                 }
                             }
                             if (strlen($city)) {
-                                $chunks = array($chunks[0], $city);
+                                $chunks = [$chunks[0], $city];
                             }
                         }
                         $timezoneName = implode('/', $chunks);
@@ -351,7 +351,7 @@ class Date
      *    <li>'app' for the app's timezone</li>
      *    <li>Other values: one of the PHP supported time zones (see http://us1.php.net/manual/en/timezones.php )</li>
      * </ul>
-     * @param string $fromTimezone The original timezone of $value (useful only if $value is a string like '2000-12-31 23:59'); it accepts the same values as $toTimezone.
+     * @param string $fromTimezone The original timezone of $value (useful only if $value is a string like '2000-12-31 23:59'); it accepts the same values as $toTimezone
      *
      * @return \DateTime|null Returns the \DateTime instance (or null if $value couldn't be parsed)
      */
@@ -373,7 +373,7 @@ class Date
      * </ul>
      *
      * @return int|null Returns the difference in days (less than zero if $dateFrom if greater than $dateTo).
-     * Returns null if one of both the dates can't be parsed.
+     * Returns null if one of both the dates can't be parsed
      */
     public function getDeltaDays($from, $to, $timezone = 'user')
     {
@@ -412,9 +412,10 @@ class Date
         // legacy
         if ($format === true) {
             $format = 'medium';
-        } else if ($format === false) {
+        } elseif ($format === false) {
             $format = 'short';
         }
+
         return Calendar::formatDate(
             $this->toDateTime($value, $toTimezone),
             $format
@@ -567,7 +568,7 @@ class Date
      *     <li>'app' for the app's timezone</li>
      *     <li>Other values: one of the PHP supported time zones (see http://us1.php.net/manual/en/timezones.php )</li>
      * </ul>
-     * @param string $fromTimezone The original timezone of $value (useful only if $value is a string like '2000-12-31 23:59'); it accepts the same values as $toTimezone.
+     * @param string $fromTimezone The original timezone of $value (useful only if $value is a string like '2000-12-31 23:59'); it accepts the same values as $toTimezone
      *
      * @return string Returns an empty string if $value couldn't be parsed, the localized string otherwise
      */
@@ -593,9 +594,9 @@ class Date
                 'n/j/Y'
             );
         // Special chars that need to be escaped in the DatePicker format string
-        $datepickerSpecials = array('d', 'o', 'D', 'm', 'M', 'y', '@', '!', '\'');
+        $datepickerSpecials = ['d', 'o', 'D', 'm', 'M', 'y', '@', '!', '\''];
         // Map from php to DatePicker format
-        $map = array(
+        $map = [
             'j' => 'd',
             'd' => 'dd',
             'z' => 'o',
@@ -607,7 +608,7 @@ class Date
             'F' => 'MM',
             'y' => 'y',
             'Y' => 'yy',
-        );
+        ];
         $datepickerFormat = '';
         $escaped = false;
         for ($i = 0; $i < strlen($phpFormat); ++$i) {
