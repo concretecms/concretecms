@@ -8,6 +8,7 @@ use User;
 use Core;
 use Config;
 use Punic\Comparer;
+use Punic\Misc;
 
 class Date
 {
@@ -99,6 +100,24 @@ class Date
                     Calendar::convertPhpToIsoFormat($mask)
                 );
             }
+        }
+
+        return $result;
+    }
+
+    /**
+     * Retrieve the display name (localized) of a time zone given its PHP identifier.
+     *
+     * @param string $timezoneID
+     *
+     * @return string
+     */
+    public function getTimezoneName($timezoneID)
+    {
+        $result = '';
+        if (is_string($timezoneID) && $timezoneID !== '') {
+            $names = $this->getTimezones();
+            $result = isset($names[$timezoneID]) ? $names[$timezoneID] : $timezoneID;
         }
 
         return $result;
@@ -343,26 +362,27 @@ class Date
         $diff = $diff - $hours * $secondsPerHour;
         $minutes = floor($diff / $secondsPerMinute);
         $seconds = $diff - $minutes * $secondsPerMinute;
+        $chunks = [];
         if ($days > 0) {
-            $description = t2('%d day', '%d days', $days, $days);
+            $chunks[] = t2('%d day', '%d days', $days, $days);
             if ($precise) {
-                $description .= ', ' . t2('%d hour', '%d hours', $hours, $hours);
+                $chunks[] = t2('%d hour', '%d hours', $hours, $hours);
             }
         } elseif ($hours > 0) {
-            $description = t2('%d hour', '%d hours', $hours, $hours);
+            $chunks[] =t2('%d hour', '%d hours', $hours, $hours);
             if ($precise) {
-                $description .= ', ' . t2('%d minute', '%d minutes', $minutes, $minutes);
+                $chunks[] = t2('%d minute', '%d minutes', $minutes, $minutes);
             }
         } elseif ($minutes > 0) {
-            $description = t2('%d minute', '%d minutes', $minutes, $minutes);
+            $chunks[] =t2('%d minute', '%d minutes', $minutes, $minutes);
             if ($precise) {
-                $description .= ', ' . t2('%d second', '%d seconds', $seconds, $seconds);
+                $chunks[] = t2('%d second', '%d seconds', $seconds, $seconds);
             }
         } else {
-            $description = t2('%d second', '%d seconds', $seconds, $seconds);
+            $chunks[] = t2('%d second', '%d seconds', $seconds, $seconds);
         }
 
-        return $description;
+        return Misc::join($chunks);
     }
 
     /**
