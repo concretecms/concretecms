@@ -1,7 +1,6 @@
 <?php
 namespace Concrete\Core\Editor;
 
-
 use Illuminate\Config\Repository;
 use Concrete\Core\Http\Request;
 use Concrete\Core\Http\ResponseAssetGroup;
@@ -11,8 +10,6 @@ use URL;
 
 class CkeditorEditor implements EditorInterface
 {
-
-
     protected $assets;
     /**
      * @var Repository
@@ -36,7 +33,7 @@ class CkeditorEditor implements EditorInterface
         $this->styles = $styles;
     }
 
-    protected function getEditorScript($identifier, $options = array())
+    protected function getEditorScript($identifier, $options = [])
     {
         $jsFunc = $this->getEditorInitJSFunction($options);
         $html = <<<EOL
@@ -47,10 +44,12 @@ class CkeditorEditor implements EditorInterface
          });
         </script>
 EOL;
+
         return $html;
     }
 
-    public function getEditorInitJSFunction($options = array()) {
+    public function getEditorInitJSFunction($options = [])
+    {
         $pluginManager = $this->pluginManager;
 
         if ($this->allowFileManager()) {
@@ -66,21 +65,21 @@ EOL;
 
         $options = array_merge(
             $options,
-            array(
+            [
                 'plugins' => implode(',', $plugins),
                 'stylesSet' => 'concrete5styles',
                 'filebrowserBrowseUrl' => 'a',
-                'uploadUrl' => (string)URL::to('/ccm/system/file/upload'),
+                'uploadUrl' => (string) URL::to('/ccm/system/file/upload'),
                 'language' => $this->getLanguageOption(),
                 'customConfig' => '',
                 'allowedContent' => true,
                 'baseFloatZIndex' => 1990, /* Must come below modal variable in variables.less */
                 'image2_captionedClass' => 'content-editor-image-captioned',
-                'image2_alignClasses' => array(
+                'image2_alignClasses' => [
                     'content-editor-image-left',
                     'content-editor-image-center',
-                    'content-editor-image-right'
-                ),
+                    'content-editor-image-right',
+                ],
                 'toolbarGroups' => [
                     ['name' => 'mode', 'groups' => ['mode']],
                     ['name' => 'document', 'groups' => ['document']],
@@ -107,8 +106,8 @@ EOL;
                     ['name' => 'tools', 'groups' => ['tools']],
                     ['name' => 'others', 'groups' => ['others']],
                     ['name' => 'about', 'groups' => ['about']],
-                ]
-            )
+                ],
+            ]
         );
         $options = json_encode($options);
         $removeEmptyIcon = '$removeEmpty[\'i\']';
@@ -129,11 +128,12 @@ EOL;
             });
         }
 EOL;
+
         return $jsfunc;
     }
 
-    public function outputInlineEditorInitJSFunction() {
-
+    public function outputInlineEditorInitJSFunction()
+    {
         if ($this->getPluginManager()->isSelected('autogrow')) {
             $this->getPluginManager()->deselect('autogrow');
         }
@@ -159,18 +159,20 @@ EOL;
         );
         $html .= $this->getEditorScript(
             $identifier,
-            array(
+            [
                 'startupFocus' => true,
-                'disableAutoInline' => true
-            )
+                'disableAutoInline' => true,
+            ]
         );
+
         return $html;
     }
 
-    public function outputStandardEditorInitJSFunction() {
-        $options = array(
+    public function outputStandardEditorInitJSFunction()
+    {
+        $options = [
             'disableAutoInline' => true,
-        );
+        ];
         if ($this->getPluginManager()->isSelected('sourcearea')) {
             $this->getPluginManager()->deselect('sourcedialog');
         }
@@ -180,9 +182,9 @@ EOL;
 
     public function outputStandardEditor($key, $content = null)
     {
-        $options = array(
+        $options = [
             'disableAutoInline' => true,
-        );
+        ];
         if ($this->getPluginManager()->isSelected('sourcearea')) {
             $this->getPluginManager()->deselect('sourcedialog');
         }
@@ -198,6 +200,7 @@ EOL;
             $identifier,
             $options
         );
+
         return $html;
     }
 
@@ -206,7 +209,7 @@ EOL;
         $this->config->save('editor.concrete.enable_filemanager', $request->request->get('enable_filemanager'));
         $this->config->save('editor.concrete.enable_sitemap', $request->request->get('enable_sitemap'));
 
-        $plugins = array();
+        $plugins = [];
         $post = $request->request->get('plugin');
         $selected_hidden = $this->config->get('editor.ckeditor4.plugins.selected_hidden');
         if (is_array($post)) {
@@ -252,6 +255,7 @@ EOL;
         } elseif (file_exists($langPath . strtolower(Localization::activeLanguage()) . '.js')) {
             $useLanguage = strtolower(Localization::activeLanguage());
         }
+
         return $useLanguage;
     }
 
@@ -293,12 +297,10 @@ EOL;
         $this->allowSitemap = $allow;
     }
 
-
     public function getPluginManager()
     {
         return $this->pluginManager;
     }
-
 
     public function setToken($token)
     {
@@ -315,6 +317,7 @@ EOL;
 
     /**
      * @param bool $autogenerate When true, will generate a new identifier, when false will use the object's set identifier
+     *
      * @return string
      */
     public function getIdentifier($autogenerate = true)
@@ -322,6 +325,7 @@ EOL;
         if ($autogenerate) {
             return 'cke-' . (new Identifier())->getString(32);
         }
+
         return $this->identifier;
     }
 }
