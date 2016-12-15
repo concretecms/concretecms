@@ -1,26 +1,47 @@
-<?php defined('C5_EXECUTE') or die("Access Denied.");
-
-// Helpers
-$h = Loader::helper('concrete/ui');
-$d = Loader::helper('concrete/dashboard');
+<?php
+defined('C5_EXECUTE') or die('Access Denied.');
 ?>
-
-<form method="post" id="user-timezone-form" action="<?php echo $view->action('update') ?>">
-
-    <?php echo $this->controller->token->output('update_timezone') ?>
+<form method="POST" id="user-timezone-form" action="<?= $view->action('update') ?>">
+    <?php $token->output('update_timezone') ?>
 
     <div class="form-group">
         <label class="control-label">
-            <?php echo t('Local User Time') ?>
+            <?php echo t('Default Timezone') ?>
+            <span class="launch-tooltip control-label" data-placement="right" title="<?= t(
+                'This will control the default timezone that will be used to display date/times.'
+            ) ?>"><i class="fa fa-question-circle"></i></span>
+        </label>
+        <select class="form-control" name="timezone">
+            <?php
+            foreach ($timezones as $areaName => $namedTimezones) {
+                ?>
+                <optgroup label="<?= h($areaName) ?>">
+                    <?php
+                    foreach ($namedTimezones as $tzID => $tzName) {
+                        ?>
+                        <option value="<?= h($tzID) ?>"<?= strcasecmp($tzID, $timezone) === 0 ? ' selected="selected"' : '' ?>>
+                            <?= h($tzName) ?>
+                        </option>
+                        <?php
+                    } ?>
+                </optgroup>
+                <?php
+            }
+            ?>
+        </select>
+        
+    </div>
+
+    <div class="form-group">
+        <label class="control-label">
+            <?php echo t('User-Specific Timezones') ?>
         </label>
         <div class="checkbox">
             <label>
-                <input type="checkbox" name="user_timezones"
-                       value="1" <?php if ($user_timezones) {
-    ?> checked <?php 
-} ?> />
+                <input type="checkbox" name="user_timezones" value="1"<?= $user_timezones ? ' checked="checked"' : '' ?> />
                 <span class="launch-tooltip control-label" data-placement="right" title="<?= t(
-                    'With this setting enabled, users may specify their own time zone in their user profile, and content timestamps will be adjusted accordingly. Without this setting enabled, content timestamps appear in server time.') ?>"><?php echo t('Enable user defined time zones.') ?></span>
+                    'With this setting enabled, users may specify their own time zone in their user profile, and content timestamps will be adjusted accordingly. Without this setting enabled, content timestamps appear in server time.'
+                ) ?>"><?php echo t('Enable user defined time zones.') ?></span>
             </label>
         </div>
     </div>
@@ -29,28 +50,21 @@ $d = Loader::helper('concrete/dashboard');
         <label class="control-label">
             <?php echo t('Server Timezone') ?>
         </label>
-        <select class="form-control" name="timezone">
+        <div>
+            <?= t('PHP time zone: %s', h($serverTimezone)) ?>
+        </div>
+        <div>
+            <?= t('Database time zone: %s', $dbTimezoneOk ? ('<span class="text-success">'.tc('TimeZone', 'same as PHP').'</span>') : ('<span class="text-danger">'.t('TIMEZONE MISMATCH!').'</span>'))?>
             <?php
-            foreach ($timezones as $zone => $tzg) {
+            if (!$dbTimezoneOk) {
                 ?>
-                <optgroup label="<?= h($zone) ?>">
-                    <?php
-                    foreach ($tzg as $tz) {
-                        ?>
-                        <option value="<?= h($tz) ?>"
-                            <?= strtolower($tz) === strtolower($timezone) ? 'selected' : '' ?>>
-                            <?= h($tz) ?>
-                        </option>
-                    <?php
-
-                    }
-                ?>
-                </optgroup>
-            <?php
-
+                <div class="alert alert-warning">
+                    <?= $dbDeltaDescription ?>
+                </div>
+                <?php
             }
             ?>
-        </select>
+        </div>
     </div>
 
     <div class="ccm-dashboard-form-actions-wrapper">
