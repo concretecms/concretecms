@@ -69,7 +69,14 @@ class Date
      * If you're not working with timestamps you may want to use the formatCustom method.
      *
      * @param string $mask The PHP format mask
-     * @param bool|int $timestamp Use false for the current date/time, otherwise a valid Unix timestamp.
+     * @param bool|int $timestamp Use false for the current date/time, otherwise a valid Unix timestamp (we assume it's in the system timezone).
+     * @param string $toTimezone The destination timezone.<br />
+     * Special values are:<ul>
+     *    <li>'system' (default) for the current system timezone</li>
+     *    <li>'user' for the user's timezone</li>
+     *    <li>'app' for the app's timezone</li>
+     *    <li>Other values: one of the PHP supported time zones (see http://us1.php.net/manual/en/timezones.php )</li>
+     * </ul>
      *
      * @return string
      *
