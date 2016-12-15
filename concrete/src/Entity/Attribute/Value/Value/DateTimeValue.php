@@ -2,6 +2,7 @@
 namespace Concrete\Core\Entity\Attribute\Value\Value;
 
 use Doctrine\ORM\Mapping as ORM;
+use Concrete\Core\Support\Facade\Application;
 
 /**
  * @ORM\Entity
@@ -32,16 +33,15 @@ class DateTimeValue extends AbstractValue
 
     public function __toString()
     {
+        $result = '';
         $v = $this->value;
-        if (empty($v)) {
-            return '';
+        if ($this->value) {
+            $app = Application::getFacadeApplication();
+            $dh = $app->make('helper/date');
+            /* @var \Concrete\Core\Localization\Service\Date $dh */
+            $result = $dh->formatDateTime($this->value);
         }
-        $dh = \Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service\Date */
-        if ($this->akDateDisplayMode == 'date') {
-            // Don't use user's timezone to avoid showing wrong dates
-            return $dh->formatDate($v, false, 'system');
-        } else {
-            return $dh->formatDateTime($v);
-        }
+
+        return $result;
     }
 }
