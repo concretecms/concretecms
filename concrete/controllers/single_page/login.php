@@ -6,11 +6,9 @@ use Concrete\Core\Authentication\AuthenticationTypeFailureException;
 use Concrete\Core\Page\Desktop\DesktopList;
 use Concrete\Core\Routing\Redirect;
 use Concrete\Core\Routing\RedirectResponse;
-use Concrete\Core\Url\Url;
 use Localization;
 use Page;
 use PageController;
-use Permissions;
 use User;
 use UserAttributeKey;
 use UserInfo;
@@ -18,8 +16,8 @@ use View;
 
 class Login extends PageController
 {
-    public $helpers = array('form');
-    protected $locales = array();
+    public $helpers = ['form'];
+    protected $locales = [];
 
     public function on_before_render()
     {
@@ -182,6 +180,7 @@ class Login extends PageController
             $session->set('uRequiredAttributeUserAuthenticationType', $type->getAuthenticationTypeHandle());
 
             $this->view();
+
             return $this->getViewObject()->render();
         }
 
@@ -210,19 +209,19 @@ class Login extends PageController
             $this->set("uName", trim($txt->email($_GET['uName'])));
         }
 
-        $languages = array();
-        $locales = array();
+        $languages = [];
+        $locales = [];
         if ($config->get('concrete.i18n.choose_language_login')) {
             $languages = Localization::getAvailableInterfaceLanguages();
             if (count($languages) > 0) {
                 array_unshift($languages, 'en_US');
             }
-            $locales = array();
+            $locales = [];
             foreach ($languages as $lang) {
                 $locales[$lang] = \Punic\Language::getName($lang, $lang);
             }
             asort($locales);
-            $locales = array_merge(array('' => tc('Default locale', '** Default')), $locales);
+            $locales = array_merge(['' => tc('Default locale', '** Default')], $locales);
         }
         $this->locales = $locales;
         $this->set('locales', $locales);
@@ -282,7 +281,6 @@ class Login extends PageController
                 }
 
                 if ($login_redirect_mode == 'DESKTOP') {
-
                     $desktop = DesktopList::getMyDesktop();
                     if (is_object($desktop)) {
                         $rUrl = $navigation->getLinkToCollection($desktop);
@@ -353,13 +351,13 @@ class Login extends PageController
                         return $ak->isAttributeKeyRequiredOnRegister() && !is_object($ui->getAttributeValueObject($ak));
                     }));
 
-            $saveAttributes = array();
+            $saveAttributes = [];
             foreach ($unfilled as $attribute) {
                 $controller = $attribute->getController();
                 $validator = $controller->getValidator();
                 $response = $validator->validateSaveValueRequest($controller, $this->request);
                 /**
-                 * @var $response ResponseInterface
+                 * @var ResponseInterface
                  */
                 if ($response->isValid()) {
                     $saveAttributes[] = $attribute;
@@ -372,6 +370,7 @@ class Login extends PageController
             if (count($saveAttributes) > 0) {
                 $ui->saveUserAttributesForm($saveAttributes);
             }
+
             return $this->finishAuthentication($at);
         } catch (\Exception $e) {
             $this->error->add($e->getMessage());
