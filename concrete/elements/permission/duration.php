@@ -139,7 +139,7 @@ for ($i = 0; $i < 7; ++$i) {
             <label for="pdRepeatPeriodDaysEvery" class="control-label"><?= t('Repeat every') ?></label>
             <div>
                 <div class="form-inline">
-                    <?
+                    <?php
                     $range = range(1, 30);
                     echo $form->select(
                         'pdRepeatPeriodDaysEvery',
