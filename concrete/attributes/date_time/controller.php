@@ -38,7 +38,9 @@ class Controller extends AttributeTypeController
 
     public function getSearchIndexValue()
     {
-        return $this->attributeValue->getValue()->format('Y-m-d H:i:s');
+        $datetime = $this->getDateTime();
+
+        return ($datetime === null) ? '' : $datetime->format('Y-m-d H:i:s');
     }
 
     public function searchForm($list)
