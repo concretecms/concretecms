@@ -134,7 +134,7 @@ class Date
                 switch ($timezoneID) {
                     case 'UTC':
                     case 'GMT':
-                        $timezoneName = t('Greenwich Mean Time');
+                        $timezoneName = t(/*i18n: %s is an acronym like UTC, GMT, ... */'Greenwich Mean Time (%s)', $timezoneID);
                         break;
                     default:
                         $chunks = explode('/', $timezoneID);
@@ -145,14 +145,44 @@ class Date
                             $city = \Punic\Calendar::getTimezoneExemplarCity($timezoneID, false);
                             if (!strlen($city)) {
                                 switch ($timezoneID) {
-                                    case 'Antarctica/South_Pole':
-                                        $city = t('South Pole');
+                                    case 'America/Fort_Nelson':
+                                        $city = tc(/*i18n: Canadian territory */'Territory', 'Fort_Nelson');
                                         break;
                                     case 'America/Montreal':
-                                        $city = t('Montreal');
+                                        $city = tc(/*i18n: Canadian city */'Territory', 'Montreal');
                                         break;
                                     case 'America/Shiprock':
-                                        $city = t('Shiprock');
+                                        $city = tc(/*i18n: Territory in New Mexico (USA) */'Territory', 'Shiprock');
+                                        break;
+                                    case 'Antarctica/South_Pole':
+                                        $city = tc(/*i18n: The South Pole */'Territory', 'South Pole');
+                                        break;
+                                    case 'Asia/Atyrau':
+                                        $city = tc(/*i18n: Kazakh territory */'Territory', 'Atyrau');
+                                        break;
+                                    case 'Asia/Barnaul':
+                                        $city = tc(/*i18n: Russian city */'Territory', 'Barnaul');
+                                        break;
+                                    case 'Asia/Famagusta':
+                                        $city = tc(/*i18n: City in Cyprus Island */'Territory', 'Famagusta');
+                                        break;
+                                    case 'Asia/Tomsk':
+                                        $city = tc(/*i18n: Russian city */'Territory', 'Tomsk');
+                                        break;
+                                    case 'Asia/Yangon':
+                                        $city = tc(/*i18n: Burmese city */'Territory', 'Yangon');
+                                        break;
+                                    case 'Europe/Astrakhan':
+                                        $city = tc(/*i18n: Russian city */'Territory', 'Astrakhan');
+                                        break;
+                                    case 'Europe/Kirov':
+                                        $city = tc(/*i18n: Russian city */'Territory', 'Kirov');
+                                        break;
+                                    case 'Europe/Saratov':
+                                        $city = tc(/*i18n: Russian city */'Territory', 'Saratov');
+                                        break;
+                                    case 'Europe/Ulyanovsk':
+                                        $city = tc(/*i18n: Russian city */'Territory', 'Ulyanovsk');
                                         break;
                                 }
                             }
@@ -170,6 +200,78 @@ class Date
         }
 
         return $result;
+    }
+
+    /**
+     * Returns the list of timezones with translated names, grouped by region.
+     *
+     * @return array
+     *
+     * @example
+     * <pre>[
+     *     'Africa' => [
+     *         'Africa/Abidjan' => 'Abidjan',
+     *         'Africa/Addis_Ababa' => 'Addis Abeba',
+     *     ],
+     *     'Americas' => [
+     *         'America/North_Dakota/Beulah' => 'Beulah, North Dakota',
+     *     ],
+     *     'Antarctica' => [
+     *         'Antarctica/McMurdo' => 'McMurdo',
+     *     ],
+     *     'Arctic' => [
+     *         ...
+     *     ],
+     *     'Asia' => [
+     *         ....
+     *     ],
+     *     'Atlantic Ocean' => [
+     *         ....
+     *     ],
+     *     'Australia' => [
+     *         ....
+     *     ],
+     *     'Europe' => [
+     *         ....
+     *     ],
+     *     'Indian Ocean' => [
+     *         ....
+     *     ],
+     *     'Pacific Ocean' => [
+     *         ....
+     *     ],
+     *     'Others' => [
+     *         'UTC' => 'Greenwich Mean Time (UTC)',
+     *     ],
+     *  ]</pre>
+     *
+     * @see http://www.php.net/datetimezone.listidentifiers.php
+     */
+    public function getGroupedTimezones()
+    {
+        $groups = [];
+        $generics = [];
+        $genericGroupName = tc('GenericTimezonesGroupName', 'Others');
+        foreach ($this->getTimezones() as $id => $fullName) {
+            $chunks = explode('/', $fullName, 2);
+            if (!isset($chunks[1])) {
+                array_unshift($chunks, $genericGroupName);
+            }
+            list($groupName, $territoryName) = $chunks;
+            if ($groupName === $genericGroupName) {
+                $generics[$id] = $territoryName;
+            } else {
+                if (!isset($groups[$groupName])) {
+                    $groups[$groupName] = [];
+                }
+                $groups[$groupName][$id] = $territoryName;
+            }
+        }
+        if (!empty($generics)) {
+            $groups[$genericGroupName] = $generics;
+        }
+
+        return $groups;
     }
 
     /**
