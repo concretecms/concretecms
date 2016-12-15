@@ -15,10 +15,11 @@ class Timezone extends DashboardPageController
         $this->set('timezone', $config->get('app.timezone'));
         $this->set('timezones', $dh->getGroupedTimezones());
         $phpTimezone = $config->get('app.server_timezone');
-        $this->set('serverTimezone', $dh->getTimezoneName($phpTimezone));
+        $this->set('serverTimezonePHP', $dh->getTimezoneName($phpTimezone));
         $deltaError = null;
         $db = $this->app->make(Connection::class);
         /* @var Connection $db */
+        $this->set('serverTimezoneDB', $db->fetchColumn('select @@time_zone'));
         $tsNow = time();
         $ts180Days = $tsNow + 180 * 24 * 60 * 60;
         $rs = $db->executeQuery("select FROM_UNIXTIME($tsNow) as d0, FROM_UNIXTIME($ts180Days) as d1");

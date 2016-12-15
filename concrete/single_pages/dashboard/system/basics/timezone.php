@@ -51,20 +51,23 @@ defined('C5_EXECUTE') or die('Access Denied.');
             <?php echo t('Server Timezone') ?>
         </label>
         <div>
-            <?= t('PHP time zone: %s', h($serverTimezone)) ?>
+            <?= t('PHP time zone: %s', h($serverTimezonePHP)) ?>
         </div>
         <div>
-            <?= t('Database time zone: %s', $dbTimezoneOk ? ('<span class="text-success">'.tc('TimeZone', 'same as PHP').'</span>') : ('<span class="text-danger">'.t('TIMEZONE MISMATCH!').'</span>'))?>
-            <?php
-            if (!$dbTimezoneOk) {
-                ?>
-                <div class="alert alert-warning">
-                    <?= $dbDeltaDescription ?>
-                </div>
-                <?php
-            }
-            ?>
+            <?= t('Database time zone: %s', h($serverTimezoneDB)) ?>
         </div>
+        <div>
+            <?= t('Server tests: %s', $dbTimezoneOk ? ('<span class="text-success">'.tc('TimeZone', 'success.').'</span>') : ('<span class="text-danger">'.t('TIMEZONE MISMATCH!').'</span>')) ?>
+        </div>
+        <?php
+        if (!$dbTimezoneOk) {
+            ?>
+            <div class="alert alert-warning">
+                <?= $dbDeltaDescription ?>
+            </div>
+            <?php
+        }
+        ?>
     </div>
 
     <div class="ccm-dashboard-form-actions-wrapper">
