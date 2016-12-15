@@ -10,22 +10,22 @@ use URL;
 
 class CkeditorEditor implements EditorInterface
 {
-    protected $assets;
-    /**
-     * @var Repository
-     */
+    /** @var Repository */
     protected $config;
+
+    /** @var PluginManager */
+    protected $pluginManager;
+
+    /** @var ResponseAssetGroup */
+    protected $assets;
+
     protected $identifier;
     protected $token;
     protected $allowFileManager;
     protected $allowSitemap;
-    /**
-     * @var PluginManager
-     */
-    protected $pluginManager;
     protected $styles;
 
-    public function __construct($config, $pluginManager, $styles)
+    public function __construct(Repository $config, PluginManager $pluginManager, $styles)
     {
         $this->assets = ResponseAssetGroup::get();
         $this->pluginManager = $pluginManager;
@@ -33,9 +33,16 @@ class CkeditorEditor implements EditorInterface
         $this->styles = $styles;
     }
 
+    /**
+     * @param string $identifier
+     * @param array $options
+     *
+     * @return string
+     */
     protected function getEditorScript($identifier, $options = [])
     {
         $jsFunc = $this->getEditorInitJSFunction($options);
+
         $html = <<<EOL
         <script type="text/javascript">
         $(function() {
@@ -48,6 +55,11 @@ EOL;
         return $html;
     }
 
+    /**
+     * @param array $options
+     *
+     * @return string
+     */
     public function getEditorInitJSFunction($options = [])
     {
         $pluginManager = $this->pluginManager;
@@ -109,6 +121,7 @@ EOL;
                 ],
             ]
         );
+
         $options = json_encode($options);
         $removeEmptyIcon = '$removeEmpty[\'i\']';
 
@@ -132,6 +145,9 @@ EOL;
         return $jsfunc;
     }
 
+    /**
+     * @return string
+     */
     public function outputInlineEditorInitJSFunction()
     {
         if ($this->getPluginManager()->isSelected('autogrow')) {
@@ -141,6 +157,12 @@ EOL;
         return $this->getEditorInitJSFunction();
     }
 
+    /**
+     * @param string $key
+     * @param string|null $content
+     *
+     * @return string
+     */
     public function outputPageInlineEditor($key, $content = null)
     {
         if ($this->getPluginManager()->isSelected('autogrow')) {
@@ -149,14 +171,16 @@ EOL;
 
         $this->getPluginManager()->select('concrete5inline');
         $identifier = $this->getIdentifier();
+
         $html = sprintf(
-            '<textarea id="%s_content" style="display:none;" name="%s"></textarea>
-            <div contenteditable="true" id="%s">%s</div>',
+            '<textarea id="%s_content" style="display:none;" name="%s"></textarea>' .
+            '<div contenteditable="true" id="%s">%s</div>',
             $identifier,
             $key,
             $identifier,
             $content
         );
+
         $html .= $this->getEditorScript(
             $identifier,
             [
@@ -168,23 +192,18 @@ EOL;
         return $html;
     }
 
-    public function outputStandardEditorInitJSFunction()
-    {
-        $options = [
-            'disableAutoInline' => true,
-        ];
-        if ($this->getPluginManager()->isSelected('sourcearea')) {
-            $this->getPluginManager()->deselect('sourcedialog');
-        }
-
-        return $this->getEditorInitJSFunction($options);
-    }
-
+    /**
+     * @param string $key
+     * @param string|null $content
+     *
+     * @return string
+     */
     public function outputStandardEditor($key, $content = null)
     {
         $options = [
             'disableAutoInline' => true,
         ];
+
         if ($this->getPluginManager()->isSelected('sourcearea')) {
             $this->getPluginManager()->deselect('sourcedialog');
         }
@@ -196,6 +215,7 @@ EOL;
             $key,
             $content
         );
+
         $html .= $this->getEditorScript(
             $identifier,
             $options
@@ -204,6 +224,25 @@ EOL;
         return $html;
     }
 
+    /**
+     * @return string
+     */
+    public function outputStandardEditorInitJSFunction()
+    {
+        $options = [
+            'disableAutoInline' => true,
+        ];
+
+        if ($this->getPluginManager()->isSelected('sourcearea')) {
+            $this->getPluginManager()->deselect('sourcedialog');
+        }
+
+        return $this->getEditorInitJSFunction($options);
+    }
+
+    /**
+     * @param Request $request
+     */
     public function saveOptionsForm(Request $request)
     {
         $this->config->save('editor.concrete.enable_filemanager', $request->request->get('enable_filemanager'));
@@ -211,16 +250,16 @@ EOL;
 
         $plugins = [];
         $post = $request->request->get('plugin');
-        $selected_hidden = $this->config->get('editor.ckeditor4.plugins.selected_hidden');
+        $selectedHidden = $this->config->get('editor.ckeditor4.plugins.selected_hidden');
         if (is_array($post)) {
-            $post = array_merge($selected_hidden, $post);
+            $post = array_merge($selectedHidden, $post);
             foreach ($post as $plugin) {
                 if ($this->pluginManager->isAvailable($plugin)) {
                     $plugins[] = $plugin;
                 }
             }
         } else {
-            foreach ($selected_hidden as $plugin) {
+            foreach ($selectedHidden as $plugin) {
                 if ($this->pluginManager->isAvailable($plugin)) {
                     $plugins[] = $plugin;
                 }
@@ -234,7 +273,9 @@ EOL;
     {
         $this->assets->requireAsset('core/file-manager');
         $this->assets->requireAsset('editor/ckeditor4');
+
         $plugins = $this->pluginManager->getSelectedPluginObjects();
+
         foreach ($plugins as $plugin) {
             /** @var Plugin $plugin */
             $group = $plugin->getRequiredAssets();
@@ -243,12 +284,15 @@ EOL;
     }
 
     /**
-     * @return string Returns the CKEditor language configuration
+     * Returns the CKEditor language configuration
+     *
+     * @return string
      */
     protected function getLanguageOption()
     {
         $langPath = DIR_BASE_CORE . '/js/ckeditor4/vendor/lang/';
         $useLanguage = 'en';
+
         $language = strtolower(str_replace('_', '-', Localization::activeLocale()));
         if (file_exists($langPath . $language . '.js')) {
             $useLanguage = $language;
@@ -260,18 +304,32 @@ EOL;
     }
 
     /**
-     * @return string A JSON Encoded string of styles
+     * Returns a JSON Encoded string of styles
+     *
+     * @return string
      */
     public function getStylesJson()
     {
         return json_encode($this->styles);
     }
 
+    /**
+     * @param string $key
+     * @param string $content
+     *
+     * @return string
+     */
     public function outputPageComposerEditor($key, $content)
     {
         return $this->outputStandardEditor($key, $content);
     }
 
+    /**
+     * @param string $key
+     * @param string $content
+     *
+     * @return string
+     */
     public function outputBlockEditModeEditor($key, $content)
     {
         return $this->outputStandardEditor($key, $content);
@@ -287,21 +345,33 @@ EOL;
         return $this->allowSitemap;
     }
 
+    /**
+     * @param bool $allow
+     */
     public function setAllowFileManager($allow)
     {
         $this->allowFileManager = $allow;
     }
 
+    /**
+     * @param bool $allow
+     */
     public function setAllowSitemap($allow)
     {
         $this->allowSitemap = $allow;
     }
 
+    /**
+     * @return PluginManager
+     */
     public function getPluginManager()
     {
         return $this->pluginManager;
     }
 
+    /**
+     * @param string $token
+     */
     public function setToken($token)
     {
         $this->token = $token;
