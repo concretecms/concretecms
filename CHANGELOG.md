@@ -1,3 +1,24 @@
+# 8.0.3
+
+## Behavioral Improvements
+
+* Fixed rendering of fatal errors so that it uses the proper stylesheets.
+
+## Bug Fixes
+
+* Fixed bug where activating a theme only changed the home page.
+* Fixed error where all pages added to a multilingual site were showing as system pages.
+* Fixed bug where attributes in the application/attributes directory couldn’t be installed.
+* Bug fixes with attribute validation.
+* Fixed error exception when creating a new page type failed validation
+* Fixed bug where Express Forms could not be added on sites that were upgraded from 5.7.
+* File Date modified in file manager now shows the proper date (instead of the date added)
+* Fixed bug where attempting to delete Express entries or entities that had values attached to express attribute types would trigger an error.
+* Attribute search fields in advanced search dialogs now select their options properly.
+* Fix misnamed config value concrete.file\_manager.images.use\_exif\_data\_to\_rotate\_images (was named concrete.file\_manager.images.use\_exim\_data\_to\_rotate\_images)
+* Fix bug with Legacy Form not being able to be saved under certain conditions.
+* Fixed: Entering a new Express Data Object with the existing Handle will cause error
+
 # 8.0.2
 
 ## New Features
