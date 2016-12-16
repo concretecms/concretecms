@@ -31,7 +31,7 @@ use Concrete\Core\Page\Single as SinglePage;
 use Concrete\Block\ExpressForm\Controller as ExpressFormBlockController;
 use Concrete\Core\Support\Facade\Facade;
 
-class Version20161210000000 extends AbstractMigration
+class Version20161216100000 extends AbstractMigration
 {
 
     protected function output($message)

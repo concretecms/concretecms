@@ -13,6 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity(repositoryClass="\Concrete\Core\Entity\Express\EntryRepository")
  * @ORM\Table(name="ExpressEntityEntries")
+ * @ORM\EntityListeners({"\Concrete\Core\Express\Entry\Listener"})
  */
 class Entry implements \JsonSerializable, ObjectInterface
 {

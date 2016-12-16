@@ -31,9 +31,9 @@ class Controller extends AttributeTypeController
         return new FontAwesomeIconFormatter('list-alt');
     }
 
-    public function getAttributeValueObject()
+    public function getAttributeValueClass()
     {
-        return $this->entityManager->find(SelectValue::class, $this->attributeValue->getGenericValue());
+        return SelectValue::class;
     }
 
     public function type_form()
@@ -778,14 +778,9 @@ class Controller extends AttributeTypeController
         return $this->akSelectOptionDisplayOrder;
     }
 
-    public function createAttributeKeySettings()
+    public function getAttributeKeySettingsClass()
     {
-        return new SelectSettings();
-    }
-
-    protected function retrieveAttributeKeySettings()
-    {
-        return $this->entityManager->find(SelectSettings::class, $this->attributeKey);
+        return SelectSettings::class;
     }
 
     public function getLabelID()
