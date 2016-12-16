@@ -240,7 +240,7 @@ class Controller extends AttributeTypeController
 
     public function getAttributeValueClass()
     {
-        return DateTimeValue::class;
+        return ImageFileValue::class;
     }
 
     public function getAttributeKeySettingsClass()

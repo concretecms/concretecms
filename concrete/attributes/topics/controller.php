@@ -27,9 +27,9 @@ class Controller extends AttributeTypeController
         return new FontAwesomeIconFormatter('tag');
     }
 
-    public function getAttributeValueObject()
+    public function getAttributeValueClass()
     {
-        return $this->entityManager->find(TopicsValue::class, $this->attributeValue->getGenericValue());
+        return TopicsValue::class;
     }
 
     public function filterByAttribute(AttributedItemList $list, $value, $comparison = '=')
