@@ -370,14 +370,9 @@ class Controller extends AttributeTypeController
         );
     }
 
-    public function createAttributeKeySettings()
+    public function getAttributeKeySettingsClass()
     {
-        return new TopicsSettings();
-    }
-
-    protected function retrieveAttributeKeySettings()
-    {
-        return $this->entityManager->find(TopicsSettings::class, $this->attributeKey);
+        return TopicsSettings::class;
     }
 
 }

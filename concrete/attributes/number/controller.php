@@ -22,9 +22,9 @@ class Controller extends AttributeTypeController
         return floatval($this->attributeValue->getValue());
     }
 
-    public function getAttributeValueObject()
+    public function getAttributeValueClass()
     {
-        return $this->entityManager->find(NumberValue::class, $this->attributeValue->getGenericValue());
+        return NumberValue::class;
     }
 
     public function searchForm($list)

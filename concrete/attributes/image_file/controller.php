@@ -238,19 +238,14 @@ class Controller extends AttributeTypeController
         return $this->createAttributeValue(null);
     }
 
-    public function getAttributeValueObject()
+    public function getAttributeValueClass()
     {
-        return $this->entityManager->find(ImageFileValue::class, $this->attributeValue->getGenericValue());
+        return DateTimeValue::class;
     }
 
-    public function createAttributeKeySettings()
+    public function getAttributeKeySettingsClass()
     {
-        return new ImageFileSettings();
-    }
-
-    protected function retrieveAttributeKeySettings()
-    {
-        return $this->entityManager->find(ImageFileSettings::class, $this->attributeKey);
+        return ImageFileSettings::class;
     }
 
 }

@@ -1,5 +1,9 @@
 <?php
 
+$classLoader = new \Symfony\Component\ClassLoader\Psr4ClassLoader();
+$classLoader->addPrefix('PropCo', DIR_APPLICATION . '/' . DIRNAME_CLASSES . '/PropCo');
+$classLoader->register();
+
 /*
  * ----------------------------------------------------------------------------
  * # Custom Application Handler
