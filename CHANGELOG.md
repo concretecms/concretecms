@@ -1,3 +1,23 @@
+# 5.7.5.13 Release Notes
+
+## Bug Fixes
+
+* Once again, Environment Information is now available in the Dashboard.
+
+## Developer Updates
+
+* Added jQuery Select to Dropdown menu support in the Dashboard; just add data-select=”bootstrap” to your select menus.
+
+# 5.7.5.12 Release Notes
+
+* Fixed bug with Environment Information not working on PHP below 5.4.
+
+# 5.7.5.11 Release Notes
+
+* Works again properly on PHP 5.3.
+* Fixed page not found error when clicking on a topic list to filter the page list in the blog.
+* Controller bug fixes and security updates.
+
 # 5.7.5.10
 
 * Minor bug fixes
