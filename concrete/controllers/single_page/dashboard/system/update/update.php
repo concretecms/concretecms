@@ -1,5 +1,5 @@
 <?php
-namespace Concrete\Controller\SinglePage\Dashboard\System\Backup;
+namespace Concrete\Controller\SinglePage\Dashboard\System\Update;
 
 use Concrete\Controller\Upgrade;
 use Concrete\Core\Page\Controller\DashboardPageController;
@@ -34,7 +34,7 @@ class Update extends DashboardPageController
     {
         Config::clear('concrete.misc.latest_version');
         \Concrete\Core\Updater\Update::getLatestAvailableVersionNumber();
-        $this->redirect('/dashboard/system/backup/update');
+        $this->redirect('/dashboard/system/update/update');
     }
 
     public function on_start()
