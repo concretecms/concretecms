@@ -3,6 +3,7 @@ namespace Concrete\Core\StyleCustomizer\Inline;
 
 use Concrete\Core\Page\Theme\GridFramework\GridFramework;
 use Database;
+use Exception;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -216,8 +217,22 @@ class StyleSet
         }
 
         if (isset($r['customElementAttribute']) && trim($r['customElementAttribute'])) {
-            $set->setCustomElementAttribute(trim($r['customElementAttribute']));
-            $return = true;
+            // strip class attributes
+            $pattern = '/(class\s*=\s*["\'][^\'"]*["\'])/i';
+            $customElementAttribute = preg_replace($pattern, '', $r['customElementAttribute']);
+            // strip ID attributes
+            $pattern = '/(id\s*=\s*["\'][^\'"]*["\'])/i';
+            $customElementAttribute = preg_replace($pattern, '', $customElementAttribute);
+            // don't save if there are odd numbers of single/double quotes
+            $singleQuoteCount = preg_match_all('/([\'])/i', $customElementAttribute);
+            $doubleQuoteCount = preg_match_all('/(["])/i', $customElementAttribute);
+
+            if ($singleQuoteCount % 2 == 0 && $doubleQuoteCount % 2 == 0 ) {
+                $set->setCustomElementAttribute(trim($customElementAttribute));
+                $return = true;
+            } else {
+                throw new Exception(t('Custom Element Attribute input: unclosed quote(s)'));
+            }
         }
 
         if ($return) {
