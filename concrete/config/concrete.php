@@ -492,7 +492,7 @@ return array(
 
     'file_manager' => array(
         'images' => array(
-            'use_exim_data_to_rotate_images' => false,
+            'use_exif_data_to_rotate_images' => false,
             'manipulation_library' => 'gd'
         ),
         'results' => 10
