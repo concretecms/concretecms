@@ -40,7 +40,7 @@
                     <p class="help-block"><?=t('An internal description. This is not publicly displayed.')?></p>
                 </div>
                 <div class="form-group">
-                    <label for="name" class="control-label"><?= t('Custom Dispay Order') ?></label>
+                    <label for="name" class="control-label"><?= t('Custom Display Order') ?></label>
                     <div class="checkbox"><label>
                             <?= $form->checkbox('supports_custom_display_order', 1) ?>
                             <?= t('This entity supports custom display ordering via Dashboard interfaces.') ?>
