@@ -45,7 +45,7 @@ $draft = $control->getPageObject();
         });
         var $urlSlugField = $('div[data-composer-field=url_slug] input');
         if ($urlSlugField.length) {
-            $('div[data-composer-field=name] input').on('keyup', function() {
+            $('div[data-composer-field=name] input').on('input', function() {
                 var input = $(this);
                 var send = {
                     token: '<?=Loader::helper('validation/token')->generate('get_url_slug')?>',
