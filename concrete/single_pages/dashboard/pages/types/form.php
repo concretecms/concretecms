@@ -39,15 +39,15 @@ use \Concrete\Core\Page\Type\Composer\FormLayoutSetControl as PageTypeComposerFo
     foreach ($sets as $set) {
         ?>
 
-		<div class="ccm-page-type-composer-form-layout-control-set panel panel-default" data-page-type-composer-form-layout-control-set-id="<?= $set->getPageTypeComposerFormLayoutSetID()?>">
+		<div class="ccm-item-set panel panel-default" data-page-type-composer-form-layout-control-set-id="<?= $set->getPageTypeComposerFormLayoutSetID()?>">
 			<div class="panel-heading">
-				<ul class="ccm-page-type-composer-item-controls">
+				<ul class="ccm-item-set-controls">
 					<li><a href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/page_types/composer/form/add_control?ptComposerFormLayoutSetID=<?=$set->getPageTypeComposerFormLayoutSetID()?>" dialog-title="<?=t('Add Form Control')?>" dialog-width="640" dialog-height="400" data-command="add-form-set-control"><i class="fa fa-plus"></i></a></li>
 					<li><a href="#" data-command="move_set" style="cursor: move"><i class="fa fa-arrows"></i></a></li>
 					<li><a href="#" data-edit-set="<?=$set->getPageTypeComposerFormLayoutSetID()?>"><i class="fa fa-pencil"></i></a></li>
 					<li><a href="#" data-delete-set="<?=$set->getPageTypeComposerFormLayoutSetID()?>"><i class="fa fa-trash-o"></i></a></li>
 				</ul>
-				<div class="ccm-page-type-composer-form-layout-control-set-name" ><?php
+				<div class="ccm-item-set-name" ><?php
                     if ($set->getPageTypeComposerFormLayoutSetDisplayName()) {
                         echo $set->getPageTypeComposerFormLayoutSetDisplayName();
                     } else {
@@ -90,7 +90,7 @@ use \Concrete\Core\Page\Type\Composer\FormLayoutSetControl as PageTypeComposerFo
 			</div>
 
 			<table class="table table-hover" style="width: 100%;">
-				<tbody class="ccm-page-type-composer-form-layout-control-set-inner">
+				<tbody class="ccm-item-set-inner">
 					<?php $controls = PageTypeComposerFormLayoutSetControl::getList($set);
         foreach ($controls as $cnt) {
             echo Loader::element('page_types/composer/form/layout_set/control', array('control' => $cnt));
@@ -173,7 +173,7 @@ $(function() {
 	});
 	$('div.ccm-pane-body').sortable({
 		handle: 'a[data-command=move_set]',
-		items: '.ccm-page-type-composer-form-layout-control-set',
+		items: '.ccm-item-set',
 		cursor: 'move',
 		axis: 'y',
 		stop: function() {
@@ -184,7 +184,7 @@ $(function() {
 				'name': 'ptID',
 				'value': <?=$pagetype->getPageTypeID()?>
 			}];
-			$('.ccm-page-type-composer-form-layout-control-set').each(function() {
+			$('.ccm-item-set').each(function() {
 				formData.push({'name': 'ptComposerFormLayoutSetID[]', 'value': $(this).attr('data-page-type-composer-form-layout-control-set-id')});
 			});
 			$.ajax({
@@ -200,9 +200,9 @@ $(function() {
 	$('a[data-command=add-form-set-control]').dialog();
 	$('a[data-command=edit-form-set-control]').dialog();
 
-	$('.ccm-page-type-composer-form-layout-control-set-inner').sortable({
+	$('.ccm-item-set-inner').sortable({
 		handle: 'a[data-command=move-set-control]',
-		items: '.ccm-page-type-composer-form-layout-control-set-control',
+		items: '.ccm-item-set-control',
 		cursor: 'move',
 		axis: 'y',
 		helper: function(e, ui) { // prevent table columns from collapsing
@@ -223,7 +223,7 @@ $(function() {
 				'value': $(this).parent().parent().attr('data-page-type-composer-form-layout-control-set-id')
 			}];
 
-			$(this).find('.ccm-page-type-composer-form-layout-control-set-control').each(function() {
+			$(this).find('.ccm-item-set-control').each(function() {
 				formData.push({'name': 'ptComposerFormLayoutSetControlID[]', 'value': $(this).attr('data-page-type-composer-form-layout-control-set-control-id')});
 			});
 
@@ -237,7 +237,7 @@ $(function() {
 		}
 	});
 
-	$('.ccm-page-type-composer-form-layout-control-set-inner').on('click', 'a[data-delete-set-control]', function() {
+	$('.ccm-item-set-inner').on('click', 'a[data-delete-set-control]', function() {
 		var ptComposerFormLayoutSetControlID = $(this).attr('data-delete-set-control');
         jQuery.fn.dialog.open({
             element: 'div[data-delete-set-control-dialog=' + ptComposerFormLayoutSetControlID + ']',
