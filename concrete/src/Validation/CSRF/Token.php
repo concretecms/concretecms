@@ -40,7 +40,7 @@ class Token
     /**
      * Create the HTML code of a token.
      *
-     * @param string $action An optional identiier of the token
+     * @param string $action An optional identifier of the token
      * @param bool $return Set to true to return the generated code, false to print it out
      *
      * @return string|void
@@ -59,7 +59,7 @@ class Token
     /**
      * Generates a token for a given action. This is a token in the form of time:hash, where hash is md5(time:userID:action:pepper).
      *
-     * @param string $action An optional identiier of the token
+     * @param string $action An optional identifier of the token
      * @param int $time The UNIX timestamp to be used to determine the token expiration
      *
      * @return string
@@ -82,7 +82,7 @@ class Token
     }
 
     /**
-     * Generate a token and returns it as a query string variable (eg 'ccm_token=...').
+     * Generate a token and return it as a query string variable (eg 'ccm_token=...').
      *
      * @param string $action
      *
