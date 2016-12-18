@@ -101,17 +101,19 @@ class Token
             $request = $app->make(Request::class);
             $token = $request->get('ccm_token');
         }
-        $parts = explode(':', $token);
-        if ($parts[0]) {
-            $time = $parts[0];
-            $hash = $parts[1];
-            $compHash = $this->generate($action, $time);
-            $now = time();
-
-            if (substr($compHash, strpos($compHash, ':') + 1) == $hash) {
-                $diff = $now - $time;
-                //hash is only valid if $diff is less than VALID_HASH_TIME_RECORD
-                return $diff <= static::VALID_HASH_TIME_THRESHOLD;
+        if (is_string($token)) {
+            $parts = explode(':', $token);
+            if ($parts[0] && isset($parts[1])) {
+                $time = $parts[0];
+                $hash = $parts[1];
+                $compHash = $this->generate($action, $time);
+                $now = time();
+    
+                if (substr($compHash, strpos($compHash, ':') + 1) == $hash) {
+                    $diff = $now - $time;
+                    //hash is only valid if $diff is less than VALID_HASH_TIME_RECORD
+                    return $diff <= static::VALID_HASH_TIME_THRESHOLD;
+                }
             }
         }
 
