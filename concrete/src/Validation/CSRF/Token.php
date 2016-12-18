@@ -1,8 +1,9 @@
 <?php
 namespace Concrete\Core\Validation\CSRF;
 
-use Config;
-use User;
+use Concrete\Core\Support\Facade\Application;
+use Concrete\Core\User\User;
+use Concrete\Core\Http\Request;
 
 class Token
 {
@@ -57,10 +58,11 @@ class Token
         if (!$uID) {
             $uID = 0;
         }
-        if ($time == null) {
+        if (!$time) {
             $time = time();
         }
-        $config = \Core::make('config/database');
+        $app = Application::getFacadeApplication();
+        $config = $app->make('config/database');
         $hash = $time . ':' . md5($time . ':' . $uID . ':' . $action . ':' . $config->get('concrete.security.token.validation'));
 
         return $hash;
@@ -95,7 +97,9 @@ class Token
     public function validate($action = '', $token = null)
     {
         if ($token == null) {
-            $token = isset($_REQUEST['ccm_token']) ? $_REQUEST['ccm_token'] : '';
+            $app = Application::getFacadeApplication();
+            $request = $app->make(Request::class);
+            $token = $request->get('ccm_token');
         }
         $parts = explode(':', $token);
         if ($parts[0]) {
