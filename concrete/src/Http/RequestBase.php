@@ -211,4 +211,20 @@ class RequestBase extends SymfonyRequest
     {
         return isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] == 'POST';
     }
+
+    /**
+     * Check if the request is an Ajax call.
+     *
+     * @return bool
+     */
+    public function isAjax()
+    {
+        $result = false;
+        $requestedWith = $this->server->get('HTTP_X_REQUESTED_WITH');
+        if (is_string($requestedWith) && strcasecmp($requestedWith, 'xmlhttprequest') === 0) {
+            $result = true;
+        }
+
+        return $result;
+    }
 }
