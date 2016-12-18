@@ -6,10 +6,17 @@ use User;
 
 class Token
 {
-    const VALID_HASH_TIME_THRESHOLD = 86400; // 24 hours (in seconds)
+    /**
+     * Duration (in seconds) of a token.
+     *
+     * @var int
+     */
+    const VALID_HASH_TIME_THRESHOLD = 86400; // 24 hours
 
     /**
-     * For localization we can't just store this as a constant, unfortunately.
+     * Get the error message to be shown to the users when a token is not valid.
+     *
+     * @return string
      */
     public function getErrorMessage()
     {
@@ -17,12 +24,12 @@ class Token
     }
 
     /**
-     * Prints out a generated token as a hidden form field.
+     * Create the HTML code of a token.
      *
-     * @param string $action
-     * @param bool   $return
+     * @param string $action An optional identiier of the token
+     * @param bool $return Set to true to return the generated code, false to print it out
      *
-     * @return string
+     * @return string|void
      */
     public function output($action = '', $return = false)
     {
@@ -36,11 +43,10 @@ class Token
     }
 
     /**
-     * Generates a unique token for a given action. This is a token in the form of
-     * time:hash, where hash is md5(time:userID:action:pepper).
+     * Generates a token for a given action. This is a token in the form of time:hash, where hash is md5(time:userID:action:pepper).
      *
-     * @param string $action
-     * @param int    $time
+     * @param string $action An optional identiier of the token
+     * @param int $time The UNIX timestamp to be used to determine the token expiration
      *
      * @return string
      */
@@ -61,7 +67,7 @@ class Token
     }
 
     /**
-     * Returns a generated token as a query string variable.
+     * Generate a token and returns it as a query string variable (eg 'ccm_token=...').
      *
      * @param string $action
      *
@@ -75,12 +81,14 @@ class Token
     }
 
     /**
-     * Validates against a given action. Basically, we check the passed hash to see if
+     * Validate a token against a given action.
+     *
+     * Basically, we check the passed hash to see if:
      * a. the hash is valid. That means it computes in the time:action:pepper format
      * b. the time included next to the hash is within the threshold.
      *
-     * @param string $action
-     * @param string $token
+     * @param string $action The action that should be associated to the token
+     * @param string $token The token to be validated (if empty we'll retrieve it from the current request)
      *
      * @return bool
      */
