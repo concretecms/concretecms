@@ -28,7 +28,13 @@ class Token
      */
     public function getErrorMessage()
     {
-        return t("Invalid form token. Please reload this form and submit again.");
+        $app = Application::getFacadeApplication();
+        $request = $app->make(Request::class);
+        if ($request->isAjax()) {
+            return t("Invalid token. Please reload the page and retry.");
+        } else {
+            return t("Invalid form token. Please reload this form and submit again.");
+        }
     }
 
     /**
