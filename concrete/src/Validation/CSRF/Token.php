@@ -15,6 +15,13 @@ class Token
     const VALID_HASH_TIME_THRESHOLD = 86400; // 24 hours
 
     /**
+     * The default name of the token parameters.
+     *
+     * @var string
+     */
+    const DEFAULT_TOKEN_NAME = 'ccm_token';
+
+    /**
      * Get the error message to be shown to the users when a token is not valid.
      *
      * @return string
@@ -35,7 +42,7 @@ class Token
     public function output($action = '', $return = false)
     {
         $hash = $this->generate($action);
-        $token = '<input type="hidden" name="ccm_token" value="' . $hash . '" />';
+        $token = '<input type="hidden" name="' . static::DEFAULT_TOKEN_NAME . '" value="' . $hash . '" />';
         if (!$return) {
             echo $token;
         } else {
@@ -79,7 +86,7 @@ class Token
     {
         $hash = $this->generate($action);
 
-        return 'ccm_token=' . $hash;
+        return static::DEFAULT_TOKEN_NAME . '=' . $hash;
     }
 
     /**
@@ -99,7 +106,7 @@ class Token
         if ($token == null) {
             $app = Application::getFacadeApplication();
             $request = $app->make(Request::class);
-            $token = $request->get('ccm_token');
+            $token = $request->get(static::DEFAULT_TOKEN_NAME);
         }
         if (is_string($token)) {
             $parts = explode(':', $token);
@@ -108,7 +115,7 @@ class Token
                 $hash = $parts[1];
                 $compHash = $this->generate($action, $time);
                 $now = time();
-    
+
                 if (substr($compHash, strpos($compHash, ':') + 1) == $hash) {
                     $diff = $now - $time;
                     //hash is only valid if $diff is less than VALID_HASH_TIME_RECORD
