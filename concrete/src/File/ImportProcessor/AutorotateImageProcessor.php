@@ -10,6 +10,16 @@ use Concrete\Core\Support\Facade\Application;
 
 class AutorotateImageProcessor implements ProcessorInterface
 {
+    /**
+     * @var \Concrete\Core\Application\Application
+     */
+    protected $app;
+    
+    public function __construct()
+    {
+        $this->app = Application::getFacadeApplication();
+    }
+    
     public function shouldProcess(Version $version)
     {
         return function_exists('exif_read_data')
@@ -20,8 +30,7 @@ class AutorotateImageProcessor implements ProcessorInterface
     {
         $fr = $version->getFileResource();
         
-        $app = Application::getFacadeApplication();
-        $imagine = $app->make(Image::getFacadeAccessor());
+        $imagine = $this->app->make(Image::getFacadeAccessor());
         $imagine->setMetadataReader(new ExifMetadataReader);
         $image = $imagine->load($fr->read());
         
