@@ -49,7 +49,10 @@ class Importer
             $this->addImportProcessor($resizeProcessor);
             $this->addImportProcessor($qualityProcessor);
         }
-        $this->addImportProcessor(new AutorotateImageProcessor);
+        
+        if (Config::get('concrete.file_manager.images.use_exif_data_to_rotate_images')) {
+            $this->addImportProcessor(new AutorotateImageProcessor);
+        }
     }
 
     /**
