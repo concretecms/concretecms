@@ -21,7 +21,7 @@ switch (Config::get('concrete.cache.full_page_lifetime')) {
         $globalSettingLifetime = Loader::helper('date')->describeInterval(Config::get('concrete.cache.lifetime'));
         break;
     case 'custom':
-        $globalSettingLifetime = Loader::helper('date')->describeInterval(Config::get('concrete.cache.full_page_lifetime_value'));
+        $globalSettingLifetime = Loader::helper('date')->describeInterval(Config::get('concrete.cache.full_page_lifetime_value') * 60);
         break;
     case 'forever':
         $globalSettingLifetime = t('Until manually cleared');
