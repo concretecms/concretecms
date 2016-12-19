@@ -10,6 +10,7 @@ module.exports = function(grunt, config, parameters, done) {
 				'.gitignore',
 				'.gitmodules',
 				'.php_cs',
+				'.php_cs.dist',
 				'.scrutinizer.yml',
 				'.travis.install.sh',
 				'.travis.yml',

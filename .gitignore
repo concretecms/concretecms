@@ -60,3 +60,9 @@ error_log
 __IDE_SYMBOLS__.php
 .phpstorm.meta.php
 
+# ignore custom php-cs-fixer configuration file
+/.php_cs
+
+# ignore php-cs-fixer cache file
+/.php_cs.cache
+
