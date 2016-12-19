@@ -134,7 +134,7 @@ class StorageLocation implements StorageLocationInterface
 
     public function delete()
     {
-        $default = self::getDefault();
+        $default = \Concrete\Core\File\StorageLocation\StorageLocation::getDefault();
         $db = Database::get();
 
         $fIDs = $db->GetCol('select fID from Files where fslID = ?', array($this->getID()));
