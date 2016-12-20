@@ -10,6 +10,7 @@ use Concrete\Core\Express\Form\Control\Template\Template;
 use Concrete\Core\Express\Form\Control\Type\SaveHandler\ControlSaveHandler;
 use Concrete\Core\Export\Item\Express\Control as ControlExporter;
 use Concrete\Core\Express\Form\Control\Type\TypeInterface;
+use Concrete\Core\Express\ObjectBuilder;
 use Concrete\Core\Import\ImportableInterface;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -169,6 +170,11 @@ abstract class Control implements \JsonSerializable, ExportableInterface
         $manager = \Core::make('express/control/type/manager');
 
         return $manager->driver($this->getType());
+    }
+
+    public function build(ObjectBuilder $builder)
+    {
+        return $this;
     }
 
 }

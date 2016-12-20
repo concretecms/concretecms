@@ -10,10 +10,12 @@ class PageValueTest extends \AttributeValueTestCase
 
         $this->tables = array_merge($this->tables, array(
             'PageTypes',
+            'PageThemes',
             'PermissionAccessEntityTypes',
             'PermissionKeyCategories',
             'PermissionKeys',
             'PageTypePublishTargetTypes',
+            'PageThemes',
         ));
 
         $this->metadatas = array_merge($this->metadatas, array(

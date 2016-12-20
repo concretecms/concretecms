@@ -299,6 +299,7 @@ class Area extends Object implements \Concrete\Core\Permission\ObjectInterface
      * Returns the total number of blocks in an area.
      *
      * @param Page $c must be passed if the display() method has not been run on the area object yet.
+     * @return int
      */
     public function getTotalBlocksInArea($c = false)
     {
@@ -333,21 +334,21 @@ class Area extends Object implements \Concrete\Core\Permission\ObjectInterface
             $r += $sr;
         }
 
-        return $r;
+        return (int) $r;
     }
 
     /**
      * Returns the amount of actual blocks in the area, does not exclude core blocks or layouts, does not recurse.
+     *
+     * @return int
      */
     public function getTotalBlocksInAreaEditMode()
     {
         $db = Database::connection();
-        $r = $db->fetchColumn(
+        return (int) $db->fetchColumn(
             'select count(b.bID) from CollectionVersionBlocks cvb inner join Blocks b on cvb.bID = b.bID inner join BlockTypes bt on b.btID = bt.btID where cID = ? and cvID = ? and arHandle = ?',
             array($this->c->getCollectionID(), $this->c->getVersionID(), $this->arHandle)
         );
-
-        return $r;
     }
 
     /**

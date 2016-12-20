@@ -108,9 +108,9 @@ class Controller extends DefaultController
         $this->set('akTextareaDisplayMode', $type->getMode());
     }
 
-    public function getAttributeValueObject()
+    public function getAttributeValueClass()
     {
-        return $this->entityManager->find(TextValue::class, $this->attributeValue->getGenericValue());
+        return TextValue::class;
     }
 
     public function exportKey($akey)
@@ -140,14 +140,9 @@ class Controller extends DefaultController
         return $type;
     }
 
-    public function createAttributeKeySettings()
+    public function getAttributeKeySettingsClass()
     {
-        return new TextareaSettings();
-    }
-
-    protected function retrieveAttributeKeySettings()
-    {
-        return $this->entityManager->find(TextareaSettings::class, $this->attributeKey);
+        return TextareaSettings::class;
     }
 
 }

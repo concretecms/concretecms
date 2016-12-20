@@ -2,6 +2,7 @@
 namespace Concrete\Core\Entity\Express;
 
 use Concrete\Core\Attribute\CategoryObjectInterface;
+use Concrete\Core\Entity\PackageTrait;
 use Concrete\Core\Export\ExportableInterface;
 use Concrete\Core\Express\Search\ColumnSet\ColumnSet;
 use Concrete\Core\Express\Search\ColumnSet\DefaultSet;
@@ -18,6 +19,9 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Entity implements CategoryObjectInterface, ObjectInterface, ExportableInterface
 {
+
+    use PackageTrait;
+
     /**
      * @ORM\Id @ORM\Column(type="guid")
      * @ORM\GeneratedValue(strategy="UUID")

@@ -41,12 +41,6 @@ class ImportExpressEntitiesRoutine extends AbstractRoutine
                 $node = $tree->getNodeByDisplayPath((string) $entityNode['results-folder']);
                 $node = \Concrete\Core\Tree\Node\Type\ExpressEntryResults::add((string) $entityNode['name'], $node);
                 $entity->setEntityResultsNodeId($node->getTreeNodeID());
-
-                $indexer = $entity->getAttributeKeyCategory()->getSearchIndexer();
-                if (is_object($indexer)) {
-                    $indexer->createRepository($entity->getAttributeKeyCategory());
-                }
-
                 $em->persist($entity);            }
         }
 

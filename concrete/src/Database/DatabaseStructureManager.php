@@ -5,6 +5,7 @@ use Doctrine\Common\Persistence\Mapping\MappingException;
 use Doctrine\DBAL\Schema\SchemaDiff;
 use Doctrine\ORM\EntityManager;
 use Core;
+use Doctrine\ORM\Tools\SchemaTool;
 
 class DatabaseStructureManager
 {
@@ -378,5 +379,26 @@ class DatabaseStructureManager
         } catch (MappingException $e) {
             // we don't want them complaining about a src directory not being in the package.
         }
+    }
+
+    /**
+     * Clears cache, regenerates all proxy classes, and updates metadatas in all entity managers
+     */
+    public function refreshEntities()
+    {
+        $config = $this->entityManager->getConfiguration();
+
+        // First, we flush the metadata cache.
+        if (is_object($cache = $config->getMetadataCacheImpl())) {
+            $cache->flushAll();
+        }
+
+        // Next, we regnerate proxies
+        $metadatas = $this->entityManager->getMetadataFactory()->getAllMetadata();
+        $this->entityManager->getProxyFactory()->generateProxyClasses($metadatas, \Config::get('database.proxy_classes'));
+
+        // Finally, we update the schema
+        $tool = new SchemaTool($this->entityManager);
+        $tool->updateSchema($metadatas, true);
     }
 }

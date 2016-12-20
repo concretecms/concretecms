@@ -175,6 +175,7 @@ EOT;
                     altField: "#' . $id . '_dt",
                     changeYear: true,
                     showAnim: \'fadeIn\',
+                    yearRange: "c-100:c+10",
                     ' . $beforeShow . '
                     onClose: function(dateText, inst) {
                         if(dateText == "") {
@@ -259,6 +260,7 @@ EOS;
                     altField: "#' . $id . '",
                     changeYear: true,
                     showAnim: \'fadeIn\',
+                    yearRange: "c-100:c+10",
                     onClose: function(dateText, inst) {
                         if(dateText == "") {
                             var altField = $(inst.settings["altField"]);

@@ -1,3 +1,24 @@
+# 8.0.3
+
+## Behavioral Improvements
+
+* Fixed rendering of fatal errors so that it uses the proper stylesheets.
+
+## Bug Fixes
+
+* Fixed bug where activating a theme only changed the home page.
+* Fixed error where all pages added to a multilingual site were showing as system pages.
+* Fixed bug where attributes in the application/attributes directory couldn’t be installed.
+* Bug fixes with attribute validation.
+* Fixed error exception when creating a new page type failed validation
+* Fixed bug where Express Forms could not be added on sites that were upgraded from 5.7.
+* File Date modified in file manager now shows the proper date (instead of the date added)
+* Fixed bug where attempting to delete Express entries or entities that had values attached to express attribute types would trigger an error.
+* Attribute search fields in advanced search dialogs now select their options properly.
+* Fix misnamed config value concrete.file\_manager.images.use\_exif\_data\_to\_rotate\_images (was named concrete.file\_manager.images.use\_exim\_data\_to\_rotate\_images)
+* Fix bug with Legacy Form not being able to be saved under certain conditions.
+* Fixed: Entering a new Express Data Object with the existing Handle will cause error
+
 # 8.0.2
 
 ## New Features
@@ -15,10 +36,6 @@
 * Fixed https://www.concrete5.org/developers/bugs/8-0-1/conversation-block-attachments-can-not-be-disabled/
 * Fixed https://www.concrete5.org/developers/bugs/8-0-1/file-attributes-with-no-file-selected-cause-errors-after-upgradi/
 
-# 5.7.5.12
-
-## Bug Fixes
-
 # 8.0.1
 
 ## Bug Fixes
@@ -31,23 +48,8 @@
 * Fixed inability to sort attribute sets, bugs with editing legacy attribute sets.
 * Fixed problems with saving legacy attributes.
 * Made file manager behave better in cases where a file record somehow had no versions.
-* Fixed error where adding a form block would fail intermittently 
+* Fixed error where adding a form block would fail intermittently
 * Fixed typos in the automatically generated Nginx configuration for pretty URL handling (thanks chemett)
-
-# 5.7.5.12
-
-## Bug Fixes
-
-* Fixed bug with Environment Information not working on PHP below 5.4.
-
-# 5.7.5.11
-
-## Bug Fixes
-
-* Works again properly on PHP 5.3.
-* Fixed bug that made upgrading impossible on PHP < 5.5.9.
-* Fixed page not found error when clicking on a topic list to filter the page list in the blog.
-* Controller bug fixes and security updates.
 
 # 8.0
 
@@ -198,6 +200,31 @@ In addition to the credits above, the following users have been very helpful fix
 
 
 Edtrist, mlocati, MrKarlDilkington
+
+# 5.7.5.13 Release Notes
+
+## Bug Fixes
+
+* Once again, Environment Information is now available in the Dashboard.
+
+## Developer Updates
+
+* Added jQuery Select to Dropdown menu support in the Dashboard; just add data-select=”bootstrap” to your select menus.
+
+# 5.7.5.12
+
+## Bug Fixes
+
+* Fixed bug with Environment Information not working on PHP below 5.4.
+
+# 5.7.5.11
+
+## Bug Fixes
+
+* Works again properly on PHP 5.3.
+* Fixed bug that made upgrading impossible on PHP < 5.5.9.
+* Fixed page not found error when clicking on a topic list to filter the page list in the blog.
+* Controller bug fixes and security updates.
 
 # 5.7.5.7
 

@@ -154,6 +154,12 @@ class Manager extends CoreManager
         return new Workflow();
     }
 
+    public function createExpressEntityDriver()
+    {
+        return $this->app->make(ExpressEntity::class);
+    }
+
+
     public function createSiteTypeDriver()
     {
         return $this->app->make(SiteType::class);

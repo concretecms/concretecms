@@ -59,7 +59,7 @@
         <?php if ($pagination->haveToPaginate()) {
     ?>
 
-            <?=$pagination->renderDefaultView();
+            <?=$pagination->renderView('dashboard');
     ?>
 
         <?php 

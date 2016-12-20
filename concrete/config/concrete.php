@@ -7,9 +7,9 @@ return array(
      *
      * @var string
      */
-    'version' => '8.0.2',
-    'version_installed' => '8.0.2',
-    'version_db' => '20161208000000', // the key of the latest database migration
+    'version' => '8.1.0a1',
+    'version_installed' => '8.1.0a1',
+    'version_db' => '20161216100000', // the key of the latest database migration
 
     /*
      * Installation status
@@ -492,7 +492,7 @@ return array(
 
     'file_manager' => array(
         'images' => array(
-            'use_exim_data_to_rotate_images' => false,
+            'use_exif_data_to_rotate_images' => false,
             'manipulation_library' => 'gd'
         ),
         'results' => 10

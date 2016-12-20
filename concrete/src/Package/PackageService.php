@@ -50,7 +50,7 @@ class PackageService
     public function getInstalledList()
     {
         $r = $this->entityManager->getRepository('\Concrete\Core\Entity\Package');
-        return $r->findAll(array('pkgIsInstalled' => true), array('pkgDateInstalled', 'asc'));
+        return $r->findBy(array('pkgIsInstalled' => true), array('pkgDateInstalled' => 'asc'));
     }
 
     /**
