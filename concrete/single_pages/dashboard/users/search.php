@@ -1,7 +1,5 @@
 <?php
 if (isset($user) && is_object($user)) {
-    $token_validator = \Core::make('helper/validation/token');
-
     $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service\Date */
     ?>
 
@@ -215,7 +213,7 @@ if (isset($user) && is_object($user)) {
         <div style="display: none">
             <div data-dialog="change-password" class="ccm-ui">
                 <form data-dialog-form="change-password" action="<?= $view->action('change_password', $user->getUserID()) ?>">
-                    <?= $token_validator->output('change_password') ?>
+                    <?= $token->output('change_password') ?>
 
                     <div class="form-group">
                         <?= $form->label('uPassword', t('Password')) ?>
@@ -261,7 +259,7 @@ if (isset($user) && is_object($user)) {
             $('div[data-container=editable-fields]').concreteEditableFieldContainer({
                 url: '<?=$view->action('save', $user->getUserID())?>',
                 data: {
-                    ccm_token: '<?=$token_validator->generate()?>'
+                    ccm_token: '<?=$token->generate()?>'
                 }
             });
 
@@ -278,7 +276,7 @@ if (isset($user) && is_object($user)) {
                     data: {
                         gID: data.gID,
                         uID: '<?=$user->getUserID()?>',
-                        ccm_token: '<?= $token_validator->generate('add_group') ?>'
+                        ccm_token: '<?= $token->generate('add_group') ?>'
                     },
                     success: function (r) {
                         $('div[data-container=group-list]').append(
@@ -312,7 +310,7 @@ if (isset($user) && is_object($user)) {
                     data: {
                         gID: $(this).attr('data-group-id'),
                         uID: '<?=$user->getUserID()?>',
-                        ccm_token: '<?= $token_validator->generate('remove_group') ?>'
+                        ccm_token: '<?= $token->generate('remove_group') ?>'
                     },
                     success: function (r) {
                         $('div[data-container=group-list] div[data-group-id=' + r.group.gID + ']').queue(function () {
