@@ -136,6 +136,7 @@ if (isset($user) && is_object($user)) {
                                 data-url="<?= $view->action('update_language', $user->getUserID()) ?>"
                                 data-type="select"
                                 data-name="uDefaultLanguage"
+                                data-value="<?= h($user->getUserDefaultLanguage()) ?>"
                                 <?php
                             }
                             ?>
