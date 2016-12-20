@@ -193,7 +193,7 @@ if (isset($user) && is_object($user)) {
         <section>
             <h4><?= t('Other Attributes') ?></h4>
             <?php
-            Loader::element('attribute/editable_list', [
+            View::element('attribute/editable_list', [
                 'attributes' => $attributes,
                 'object' => $user,
                 'saveAction' => $view->action('update_attribute', $user->getUserID()),
@@ -333,12 +333,13 @@ if (isset($user) && is_object($user)) {
     </script>
     <?php
 } else {
-    $tp = Loader::helper('concrete/user');
+    $tp = Core::make('helper/concrete/user');
+    dd($tp);
     if ($tp->canAccessUserSearchInterface()) {
         ?>
 
         <div class="ccm-dashboard-content-full">
-            <?php Loader::element('users/search', ['result' => $result])?>
+            <?php View::element('users/search', ['result' => $result])?>
         </div>
 
         <script type="text/javascript">
