@@ -139,7 +139,7 @@ if (isset($user) && is_object($user)) {
                                 <?php
                             }
                             ?>
-                            ><?= h($user->getUserDefaultLanguage()) ?></span></p></div>
+                            ><?= h(Punic\Language::getName($user->getUserDefaultLanguage())) ?></span></p></div>
                         </div>
                         <?php
                     }
