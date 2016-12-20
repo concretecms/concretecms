@@ -194,16 +194,16 @@ if (isset($user) && is_object($user)) {
         <section>
             <h4><?= t('Other Attributes') ?></h4>
             <?php
-            Loader::element('attribute/editable_list', array(
+            Loader::element('attribute/editable_list', [
                 'attributes' => $attributes,
                 'object' => $user,
                 'saveAction' => $view->action('update_attribute', $user->getUserID()),
                 'clearAction' => $view->action('clear_attribute', $user->getUserID()),
-                'permissionsArguments' => array('attributes' => $allowedEditAttributes),
+                'permissionsArguments' => ['attributes' => $allowedEditAttributes],
                 'permissionsCallback' => function ($ak, $permissionsArguments) {
                     return is_array($permissionsArguments['attributes']) && in_array($ak->getAttributeKeyID(), $permissionsArguments['attributes']);
                 },
-            ));
+            ]);
             ?>
         </section>
 
@@ -219,12 +219,12 @@ if (isset($user) && is_object($user)) {
 
                     <div class="form-group">
                         <?= $form->label('uPassword', t('Password')) ?>
-                        <?= $form->password('uPassword', array('autocomplete' => 'off')) ?>
+                        <?= $form->password('uPassword', ['autocomplete' => 'off']) ?>
                     </div>
 
                     <div class="form-group">
                         <?= $form->label('uPasswordConfirm', t('Confirm Password')) ?>
-                        <?= $form->password('uPasswordConfirm', array('autocomplete' => 'off')) ?>
+                        <?= $form->password('uPasswordConfirm', ['autocomplete' => 'off']) ?>
                     </div>
 
                     <div class="dialog-buttons">
@@ -339,7 +339,7 @@ if (isset($user) && is_object($user)) {
         ?>
 
         <div class="ccm-dashboard-content-full">
-            <?php Loader::element('users/search', array('result' => $result))?>
+            <?php Loader::element('users/search', ['result' => $result])?>
         </div>
 
         <script type="text/javascript">
