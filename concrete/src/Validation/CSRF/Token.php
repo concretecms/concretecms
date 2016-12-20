@@ -30,7 +30,7 @@ class Token
     {
         $app = Application::getFacadeApplication();
         $request = $app->make(Request::class);
-        if ($request->isAjax()) {
+        if (strcasecmp($request->server->get('HTTP_X_REQUESTED_WITH', ''), 'xmlhttprequest') === 0) {
             return t("Invalid token. Please reload the page and retry.");
         } else {
             return t("Invalid form token. Please reload this form and submit again.");

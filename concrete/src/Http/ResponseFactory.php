@@ -76,7 +76,7 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
      */
     public function notFound($content, $code = Response::HTTP_NOT_FOUND, $headers = array())
     {
-        if ($this->request->isAjax()) {
+        if (strcasecmp($this->request->server->get('HTTP_X_REQUESTED_WITH', ''), 'xmlhttprequest') === 0) {
             $loc = $this->localization;
             $changeContext = $this->shouldChangeContext();
             if ($changeContext) {
