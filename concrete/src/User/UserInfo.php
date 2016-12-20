@@ -352,7 +352,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
             if (isset($data['uTimezone'])) {
                 $uTimezone = $data['uTimezone'];
             }
-            if (isset($data['uDefaultLanguage']) && $data['uDefaultLanguage'] != '') {
+            if (isset($data['uDefaultLanguage'])) {
                 $uDefaultLanguage = $data['uDefaultLanguage'];
             }
 
