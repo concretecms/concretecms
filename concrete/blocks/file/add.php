@@ -7,7 +7,7 @@ $al = Loader::helper('concrete/asset_library');
 	<?=$al->file('ccm-b-file', 'fID', t('Choose File'));?>
 </div>
 <div class="form-group">
-	<?=$form->label('fileLinkText', t('Link'))?>
+	<?=$form->label('fileLinkText', t('Link Text'))?>
 	<?=$form->text('fileLinkText')?>
 </div>
 <div class="form-group">
