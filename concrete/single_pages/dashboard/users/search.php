@@ -334,7 +334,6 @@ if (isset($user) && is_object($user)) {
     <?php
 } else {
     $tp = Core::make('helper/concrete/user');
-    dd($tp);
     if ($tp->canAccessUserSearchInterface()) {
         ?>
 
