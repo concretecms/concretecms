@@ -27,11 +27,23 @@ return PhpCsFixer\Config::create()
         'no_blank_lines_before_namespace' => true,
         'blank_line_after_opening_tag' => false,
 
+        // Ensure there is no code on the same line as the PHP open tag.
+        'linebreak_after_opening_tag' => true,
+
         // Don't vertically align phpdoc tags
         'phpdoc_align' => false,
 
+        // Phpdoc should contain @param for all params
+        'phpdoc_add_missing_param_annotation' => ['only_untyped' => false],
+
+        // Annotations in phpdocs should be ordered (parameters, then throws, then return).
+        'phpdoc_order' => true,
+
         // Allow double-quoted strings, don't force single-quoted strings
         'single_quote' => false,
+
+		// Replaces intval, floatval, doubleval, strval and boolval function calls with according type casting operator.
+		modernize_types_casting => true,
     ])
     ->setFinder(
         PhpCsFixer\Finder::create()
