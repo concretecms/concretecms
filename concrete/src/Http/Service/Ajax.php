@@ -2,9 +2,28 @@
 namespace Concrete\Core\Http\Service;
 
 use Exception;
+use Concrete\Core\Http\Request;
 
 class Ajax
 {
+    /**
+     * Check if a request is an Ajax call.
+     *
+     * @param Request $request
+     *
+     * @return bool
+     */
+    public function isAjaxRequest(Request $request)
+    {
+        $result = false;
+        $requestedWith = $request->server->get('HTTP_X_REQUESTED_WITH');
+        if (is_string($requestedWith) && strcasecmp($requestedWith, 'XMLHttpRequest') === 0) {
+            $result = true;
+        }
+
+        return $result;
+    }
+
     /**
      * Sends a result to the client and ends the execution.
      *

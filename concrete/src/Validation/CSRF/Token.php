@@ -4,6 +4,7 @@ namespace Concrete\Core\Validation\CSRF;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\User\User;
 use Concrete\Core\Http\Request;
+use Concrete\Core\Http\Service\Ajax;
 
 class Token
 {
@@ -30,7 +31,8 @@ class Token
     {
         $app = Application::getFacadeApplication();
         $request = $app->make(Request::class);
-        if (strcasecmp($request->server->get('HTTP_X_REQUESTED_WITH', ''), 'xmlhttprequest') === 0) {
+        $ajax = $app->make(Ajax::class);
+        if ($ajax->isAjaxRequest($request)) {
             return t("Invalid token. Please reload the page and retry.");
         } else {
             return t("Invalid form token. Please reload this form and submit again.");
