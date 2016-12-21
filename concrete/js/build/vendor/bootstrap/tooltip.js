@@ -11,6 +11,26 @@
 +function ($) {
   'use strict';
 
+  /* concrete5 START */
+  function getParentZIndex($e) {
+    var position, value;
+    while ($e.length && $e[0] !== document) {
+      switch ($e.css('position')) {
+        case 'absolute':
+        case 'relative':
+        case 'fixed':
+          value = parseInt($e.css('zIndex'), 10);
+          if (!isNaN(value) && value !== 0) {
+            return value;
+          }
+          break;
+      }
+      $e = $e.parent();
+    }
+    return 0;
+  }
+  /* concrete5 END */
+
   // TOOLTIP PUBLIC CLASS DEFINITION
   // ===============================
 
@@ -205,6 +225,12 @@
         .data('bs.' + this.type, this)
 
       this.options.container ? $tip.appendTo(this.options.container) : $tip.insertAfter(this.$element)
+      /* concrete5 START */
+      var zIndex = getParentZIndex(this.options.container || this.$element);
+      if (zIndex && zIndex >= parseInt($tip.css('z-index'), 10)) {
+        $tip.css('z-index', zIndex + 1);
+      }
+      /* concrete5 END */
       this.$element.trigger('inserted.bs.' + this.type)
 
       var pos          = this.getPosition()
