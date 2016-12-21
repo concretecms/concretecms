@@ -146,6 +146,11 @@ class Types extends DashboardPageController
         }
         if (!$vs->handle($handle)) {
             $this->error->add(t('You must specify a valid handle for your page type.'));
+        } else {
+            $type2 = PageType::getByHandle($handle);
+            if (is_object($type2) && $type2->getPageTypeID() != $pagetype->getPageTypeID()) {
+                $this->error->add(t('You must specify a unique handle for your page type.'));
+            }
         }
         $defaultTemplate = PageTemplate::getByID($this->post('ptDefaultPageTemplateID'));
         if (!is_object($defaultTemplate)) {

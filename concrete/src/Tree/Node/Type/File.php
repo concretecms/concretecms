@@ -82,7 +82,10 @@ class File extends TreeNode
     {
         $f = $this->getTreeNodeFileObject();
         if (is_object($f)) {
-            return $f->getDateAdded();
+            $version = $f->getVersion();
+            if (is_object($version)) {
+                return $version->getDateAdded();
+            }
         }
     }
 

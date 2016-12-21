@@ -44,14 +44,14 @@ if ($cp->canViewPage()) {
 			<li><a href="#" data-control-type-id="<?=$t->getPageTypeComposerControlTypeID()?>" data-control-identifier="<?=$cnt->getPageTypeComposerControlIdentifier()?>">
                     <?=$cnt->getPageTypeComposerControlIcon()?>
                     <?=$cnt->getPageTypeComposerControlDisplayName()?></a></li>
-		<?php 
+		<?php
         }
         ?>
 	</ul>
 	</div>
 
 
-	<?php 
+	<?php
     }
     ?>
 
@@ -86,7 +86,7 @@ $(function() {
 			success: function(html) {
 				jQuery.fn.dialog.hideLoader();
 				jQuery.fn.dialog.closeTop();
-				$('div[data-page-type-composer-form-layout-control-set-id=<?=$set->getPageTypeComposerFormLayoutSetID()?>] tbody.ccm-page-type-composer-form-layout-control-set-inner').append(html);
+				$('div[data-page-type-composer-form-layout-control-set-id=<?=$set->getPageTypeComposerFormLayoutSetID()?>] tbody.ccm-item-set-inner').append(html);
 				$('a[data-command=edit-form-set-control]').dialog();
 			}
 		});

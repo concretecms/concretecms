@@ -23,9 +23,9 @@ class Controller extends AttributeTypeController
         return false;
     }
 
-    public function getAttributeValueObject()
+    public function getAttributeValueClass()
     {
-        return $this->entityManager->find(SocialLinksValue::class, $this->attributeValue->getGenericValue());
+        return SocialLinksValue::class;
     }
 
     public function createAttributeValueFromRequest()

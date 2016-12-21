@@ -72,9 +72,9 @@ class Add extends DashboardPageController
             }
         }
 
+        $siteTypeID = null;
         if (!$this->error->has()) {
             $siteType = $this->app->make('site/type')->getByID($this->post('siteTypeID'));
-            $siteTypeID = null;
             if (!is_object($siteType)) {
                 $siteType = $this->app->make('site/type')->getDefault();
             } else {
@@ -96,5 +96,6 @@ class Add extends DashboardPageController
             $pt->setConfiguredPageTypePublishTargetObject($configuredTarget);
             $this->redirect('/dashboard/pages/types', 'page_type_added', $siteTypeID);
         }
+        $this->view($siteTypeID);
     }
 }

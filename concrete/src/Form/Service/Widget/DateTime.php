@@ -245,6 +245,7 @@ $(function() {
     altField: '#{$id}_dt',
     changeYear: true,
     showAnim: 'fadeIn',
+    yearRange: 'c-100:c+10',
     $beforeShow
     onClose: function(dateText, inst) {
       if(!dateText) {
@@ -341,6 +342,7 @@ $(function() {
     altField: '#{$id}',
     changeYear: true,
     showAnim: 'fadeIn',
+    yearRange: 'c-100:c+10',
     onClose: function(dateText, inst) {
       if(!dateText) {
         $(inst.settings.altField).val('');

@@ -131,11 +131,10 @@ class Controller extends AttributeTypeController
         return $type;
     }
 
-    public function getAttributeValueObject()
+    public function getAttributeValueClass()
     {
-        return $this->entityManager->find(BooleanValue::class, $this->attributeValue->getGenericValue());
+        return BooleanValue::class;
     }
-
     public function createAttributeValueFromRequest()
     {
         $data = $this->post();
@@ -149,14 +148,9 @@ class Controller extends AttributeTypeController
         return isset($data['value']) && $data['value'] == 1;
     }
 
-    public function createAttributeKeySettings()
+    public function getAttributeKeySettingsClass()
     {
-        return new BooleanSettings();
-    }
-
-    protected function retrieveAttributeKeySettings()
-    {
-        return $this->entityManager->find(BooleanSettings::class, $this->attributeKey);
+        return BooleanSettings::class;
     }
 
 }

@@ -17,7 +17,7 @@ class Controller extends BlockController
 
     protected $btExportFileColumns = array('fID');
 
-    /** 
+    /**
      * Used for localization. If we want to localize the name/description we have to include this.
      */
     public function getBlockTypeDescription()
@@ -74,7 +74,7 @@ class Controller extends BlockController
             $e->add(t('You must select a file.'));
         }
         if (trim($args['fileLinkText']) == '') {
-            $e->add(t('You must give your file a link.'));
+            $e->add(t('You must enter the link text.'));
         }
 
         return $e;

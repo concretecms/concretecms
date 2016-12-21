@@ -153,9 +153,9 @@ class Controller extends AttributeTypeController
         echo $html;
     }
 
-    public function getAttributeValueObject()
+    public function getAttributeValueClass()
     {
-        return $this->entityManager->find(DateTimeValue::class, $this->attributeValue->getGenericValue());
+        return DateTimeValue::class;
     }
 
     public function createAttributeValue($value)
@@ -225,14 +225,9 @@ class Controller extends AttributeTypeController
         $this->set('akDateDisplayMode', $this->akDateDisplayMode);
     }
 
-    public function createAttributeKeySettings()
+    public function getAttributeKeySettingsClass()
     {
-        return new DateTimeSettings();
-    }
-
-    protected function retrieveAttributeKeySettings()
-    {
-        return $this->entityManager->find(DateTimeSettings::class, $this->attributeKey);
+        return DateTimeSettings::class;
     }
 
     /**

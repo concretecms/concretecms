@@ -15,6 +15,10 @@ class Listener
     public function preRemove(Entity $entity, LifecycleEventArgs $event)
     {
         $em = $event->getEntityManager();
+        $db = $em->getConnection();
+
+        $db->Execute('delete from atExpressSettings where exEntityID = ?', array($entity->getID()));
+
         $entity->setDefaultEditForm(null);
         $entity->setDefaultViewForm(null);
         $em->persist($entity);

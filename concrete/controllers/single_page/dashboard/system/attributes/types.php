@@ -11,9 +11,7 @@ class Types extends DashboardPageController
     public function add_attribute_type()
     {
         $pat = PendingType::getByHandle($this->post('atHandle'));
-        if (is_object($pat)) {
-            $pat->install();
-        }
+        $pat = Type::add($pat->getAttributeTypeHandle(), $pat->getAttributeTypeName());
         $this->redirect('dashboard/system/attributes/types', 'saved', 'attribute_type_added');
     }
 

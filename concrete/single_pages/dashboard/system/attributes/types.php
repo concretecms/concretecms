@@ -66,10 +66,11 @@ $types = PendingAttributeType::getList(); ?>
 					<span>
 		        		<form id="attribute_type_install_form_<?=$at->getAttributeTypeHandle()?>" style="margin: 0px" method="post" action="<?=$view->action('add_attribute_type')?>">
                             <?php
+							$controller = $at->getController();
+							$formatter = $controller->getIconFormatter();
                             echo $form->hidden("atHandle", $at->getAttributeTypeHandle());
+							print $formatter->getListIconElement();
     ?>
-                        <img src="<?=$at->getAttributeTypeIconSRC()?>" />
-
                         <?=$at->getAttributeTypeDisplayName()?>
 
                         <?=$ch->submit(t("Install"), 'submit', 'right', 'btn-default btn-xs')?>

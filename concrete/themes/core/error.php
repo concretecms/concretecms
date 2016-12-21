@@ -34,7 +34,8 @@
     </div>
 </div>
 
-<?php Loader::element('footer_required'); ?>
-
+<?php
+$view->markFooterAssetPosition();
+?>
 </body>
 </html>

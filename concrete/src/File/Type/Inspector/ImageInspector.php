@@ -14,7 +14,7 @@ class ImageInspector extends Inspector
     {
         $fr = $fv->getFileResource();
         $imagine = Core::make(Image::getFacadeAccessor());
-        if (\Config::get('concrete.file_manager.images.use_exim_data_to_rotate_images')) {
+        if (\Config::get('concrete.file_manager.images.use_exif_data_to_rotate_images')) {
             try {
                 $imagine->setMetadataReader(new ExifMetadataReader());
             } catch (NotSupportedException $e) {
@@ -32,7 +32,7 @@ class ImageInspector extends Inspector
         $fv->setAttribute($at2, $data->getHeight());
 
         // Set image aspect ratio if we can.
-        if (\Config::get('concrete.file_manager.images.use_exim_data_to_rotate_images')) {
+        if (\Config::get('concrete.file_manager.images.use_exif_data_to_rotate_images')) {
             $metadata = $image->metadata();
             if (isset($metadata['ifd0.Orientation'])) {
                 \Log::info('EXIF data found: '. $metadata['ifd0.Orientation']);

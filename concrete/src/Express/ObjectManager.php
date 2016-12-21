@@ -50,6 +50,12 @@ class ObjectManager
             ->findOneBy(['exEntryID' => $entryID]);
     }
 
+    public function getObjectByHandle($entityHandle)
+    {
+        return $this->entityManager
+            ->getRepository('Concrete\Core\Entity\Express\Entity')
+            ->findOneByHandle($entityHandle);
+    }
 
 
 }
