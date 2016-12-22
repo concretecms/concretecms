@@ -785,6 +785,13 @@ return array(
              * @var bool|string DENY, SAMEORIGIN, ALLOW-FROM uri
              */
             'x_frame_options' => 'SAMEORIGIN',
+
+            /**
+             * Enable the CSRF middleware
+             *
+             * @var bool true to enable the middleware
+             */
+            'csrf_middleware' => false,
         ),
     ),
 

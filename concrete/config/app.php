@@ -1304,6 +1304,7 @@ return array(
         ],
         'core_cookie' => \Concrete\Core\Http\Middleware\CookieMiddleware::class,
         'core_xframeoptions' => \Concrete\Core\Http\Middleware\FrameOptionsMiddleware::class,
-        'core_thumbnails' => \Concrete\Core\Http\Middleware\ThumbnailMiddleware::class
+        'core_thumbnails' => \Concrete\Core\Http\Middleware\ThumbnailMiddleware::class,
+        'core_csrf' => \Concrete\Core\Http\Middleware\CSRFMiddleware::class
     ]
 );
