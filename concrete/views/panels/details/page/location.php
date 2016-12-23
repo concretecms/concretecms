@@ -74,8 +74,8 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 		<button class="btn btn-info pull-right" type="button" data-action="add-url"><?=t('Add URL')?></button>
 
-		<div class="clearfix"></div>
-		<p class="help-block"><?=t('Note: Additional page paths are not versioned. They will be available immediately.')?></p>
+		<br/><br/>
+		<span class="help-block"><?=t('Note: Additional page paths are not versioned. They will be available immediately.')?></span>
 
 		</div>
 
