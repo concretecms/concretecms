@@ -25,7 +25,7 @@ if (!defined('DIR_BASE')) {
     if (!isset($DIR_BASE)) {
         // Try to detect the webroot directory starting from the filename of the currently executing script
         // (useful with symlinked concrete directories)
-        foreach (['PHP_SELF', 'SCRIPT_NAME', 'SCRIPT_FILENAME', 'PATH_TRANSLATED'] as $key) {
+        foreach (array('PHP_SELF', 'SCRIPT_NAME', 'SCRIPT_FILENAME', 'PATH_TRANSLATED') as $key) {
             // Check if the key is valid
             if (!isset($_SERVER[$key])) {
                 continue;
