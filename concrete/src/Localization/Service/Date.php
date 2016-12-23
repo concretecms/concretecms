@@ -435,6 +435,14 @@ class Date
     }
 
     /**
+     * @return string
+     */
+    public function getUserTimeZoneID()
+    {
+        return $this->getTimezoneID('user');
+    }
+
+    /**
      * Returns a \DateTimeZone instance for a specified timezone identifier.
      *
      * @param string $timezone The timezone to retrieve. Special values are:<ul>
