@@ -141,10 +141,7 @@
     }
     ?>
 	
-<div class="ccm-pane-footer">
-<?=$actionList->displayPagingV2();
-    ?>
-</div>
+<?=$actionList->displayPagingV2();?>
 
 <?php 
 } ?>
