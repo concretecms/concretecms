@@ -1,9 +1,9 @@
 <?php
 
-return array(
-    'drivers' => array(
+return [
+    'drivers' => [
         'c5_pdo_mysql' => '\Concrete\Core\Database\Driver\PDOMySqlConcrete5\Driver',
-    ),
+    ],
 
     /*
      * The location of the doctrine Proxy Classes
@@ -13,7 +13,7 @@ return array(
     /*
      * Paths to exclude from the doctrine proxy classes
      */
-    'proxy_exclusions' => array(
+    'proxy_exclusions' => [
         DIR_BASE_CORE . '/' . DIRNAME_CLASSES . '/Support/',
-    ),
-);
+    ],
+];

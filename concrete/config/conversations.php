@@ -9,20 +9,20 @@
  * @namespace null
  * -----------------------------------------------------------------------------
  */
-return array(
+return [
     'attachments_enabled' => true,
     'attachments_pending_file_set' => 'Conversation Messages (Pending)',
     'attachments_file_set' => 'Conversation Messages',
     'subscription_enabled' => false,
-    'files' => array(
+    'files' => [
         'allowed_types' => '*.jpg;*.gif;*.jpeg;*.png;*.doc;*.docx;*.zip',
-        'guest' => array(
+        'guest' => [
             'max_size' => 1,
             'max' => 3,
-        ),
-        'registered' => array(
+        ],
+        'registered' => [
             'max_size' => 10,
             'max' => 5,
-        ),
-    ),
-);
+        ],
+    ],
+];
