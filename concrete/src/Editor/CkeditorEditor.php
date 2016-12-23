@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Core\Editor;
 
-use Illuminate\Config\Repository;
+use Concrete\Core\Site\Config\Liaison as Repository;
 use Concrete\Core\Http\Request;
 use Concrete\Core\Http\ResponseAssetGroup;
 use Concrete\Core\Localization\Localization;
