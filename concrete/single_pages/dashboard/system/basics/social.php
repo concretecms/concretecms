@@ -94,7 +94,6 @@
 
     <?php if (count($links) > 0) {
     ?>
-        <div class="col-md-8">
         <table class="table table-striped">
         <?php foreach ($links as $link) {
     $service = $link->getServiceObject();
@@ -108,9 +107,7 @@
 }
     ?>
         </table>
-        </div>
-
-    <?php 
+    <?php
 } else {
     ?>
         <p><?=t("You have not added any social links.")?></p>
