@@ -66,9 +66,11 @@ if (is_object($mui)) {
 
 			</div>
 
-			<strong><?=$subject?></strong>
-			<time><?=$dateAdded?></time>
-			<br/><br/>
+			<div id="ccm-private-message-subject-time">
+				<strong><?=$subject?></strong>
+				<time><?=$dateAdded?></time>
+			</div>
+			<br/>
 
 			<div>
 			<?=$msg->getFormattedMessageBody()?>
@@ -79,8 +81,6 @@ if (is_object($mui)) {
 		<?php
 			break;
 		case 'view_mailbox': ?>
-
-			<a href="<?=URL::to('/account')?>" class="btn btn-default pull-right" /><?=t('Back to Account')?></a>
 
 			<?=Loader::helper('concrete/ui')->tabs(array(
 			array($view->action('view_mailbox', 'inbox'), t('Inbox'), $mailbox == 'inbox'),
@@ -150,6 +150,12 @@ if (is_object($mui)) {
 		</tbody>
 		</table>
 
+		<div class="ccm-dashboard-form-actions-wrapper">
+		    <div class="ccm-dashboard-form-actions">
+				<a href="<?=URL::to('/account')?>" class="btn btn-default pull-left" /><?=t('Back to Account')?></a>
+			</div>
+		</div>
+
 
 		<?php
 
@@ -217,8 +223,12 @@ $subject = $text->entities($msgSubject);
 				<?=$form->textarea('msgBody', $msgBody, array('rows' => 8, 'class' => 'span5'))?>
 			</div>
 
-			<?=$form->submit('button_submit', t('Send Message'), array('class' => 'pull-right btn btn-primary'))?>
-			<?=$form->submit('button_cancel', t('Cancel'), array('class' => 'btn-default', 'onclick' => 'window.location.href=\'' . $backURL . '\'; return false'))?>
+			<div class="ccm-dashboard-form-actions-wrapper">
+			    <div class="ccm-dashboard-form-actions">
+					<?=$form->submit('button_submit', t('Send Message'), array('class' => 'pull-right btn btn-primary'))?>
+					<?=$form->submit('button_cancel', t('Cancel'), array('class' => 'btn-default', 'onclick' => 'window.location.href=\'' . $backURL . '\'; return false'))?>
+				</div>
+			</div>
 
 			<?=$valt->output('validate_send_message');?>
 
@@ -261,8 +271,10 @@ $subject = $text->entities($msgSubject);
 			</tr>
 			</table>
 
-			<div class="form-actions">
-				<a href="<?=URL::to('/account')?>" class="btn btn-default" /><?=t('Back to Account')?></a>
+			<div class="ccm-dashboard-form-actions-wrapper">
+			    <div class="ccm-dashboard-form-actions">
+					<a href="<?=URL::to('/account')?>" class="btn btn-default" /><?=t('Back to Account')?></a>
+				</div>
 			</div>
 
 		<?php
