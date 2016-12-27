@@ -122,7 +122,7 @@ foreach ($locales as $locale) {
 
     <div class="form-group">
         <?php echo Loader::helper('validation/token')->output('set_default') ?>
-        <button class="btn btn-default pull-left" type="submit" name="save"><?= t('Save Settings') ?></button>
+        <button class="btn btn-default" type="submit" name="save"><?= t('Save Settings') ?></button>
     </div>
 </form>
 

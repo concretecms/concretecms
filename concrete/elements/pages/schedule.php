@@ -8,13 +8,10 @@ if (isset($page) && is_object($page)) {
     $publishDate = $v->getPublishDate();
 }
 
-if (Config::get('concrete.misc.user_timezones')) {
-    $user = new User();
-    $userInfo = $user->getUserInfoObject();
-    $timezone = $userInfo->getUserTimezone();
-} else {
-    $timezone = Config::get('app.timezone');
-} ?>
+$dateService = Core::make('date');
+$timezone = $dateService->getUserTimeZoneID();
+$timezone = $dateService->getTimezoneDisplayName($timezone);
+?>
 
 <div class="form-group form-group-last">
     <label class="control-label"><?=t('Date/Time')?></label>

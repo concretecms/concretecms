@@ -85,10 +85,10 @@ if (is_object($discussion)) {
 				</div>
 				<div class="ccm-discussion-topic-details">
 					<h3><a href="<?=Loader::helper('navigation')->getLinkToCollection($t)?>"><?=$t->getCollectionName()?></a></h3>
-					<p><?=t('Topic Posted on %s.', $dh->formatDateTime($t->getCollectionDatePublic(), true))?>
+					<p><?=t(/*i18n: %s is a date/time*/'Topic Posted on %s.', $dh->formatDateTime($t->getCollectionDatePublic(), true))?>
 					<?php if ($replies > 0) {
     ?>
-						<?=t('Last Message Posted on %s.', $dh->formatDateTime($cnv->getConversationDateLastMessage(), true))?>
+						<?=t(/*i18n: %s is a date/time*/'Last Message Posted on %s.', $dh->formatDateTime($cnv->getConversationDateLastMessage(), true))?>
 					<?php 
 }
     ?>

@@ -5,11 +5,11 @@ if (!defined('DIR_BASE')) {
         // Try to detect the webroot directory starting from the current working directory
         // (useful with CLI scripts started from a common launcher)
         $dir = rtrim(str_replace(DIRECTORY_SEPARATOR, '/', getcwd()), '/');
-        if (is_dir($dir.'/web')) {
+        if (is_dir($dir . '/web')) {
             $dir .= '/web';
         }
         while (@is_dir($dir)) {
-            if (is_file($dir.'/index.php') && is_file($dir.'/concrete/bootstrap/configure.php')) {
+            if (is_file($dir . '/index.php') && is_file($dir . '/concrete/bootstrap/configure.php')) {
                 $DIR_BASE = $dir;
                 break;
             }
@@ -25,7 +25,7 @@ if (!defined('DIR_BASE')) {
     if (!isset($DIR_BASE)) {
         // Try to detect the webroot directory starting from the filename of the currently executing script
         // (useful with symlinked concrete directories)
-        foreach (['PHP_SELF', 'SCRIPT_NAME', 'SCRIPT_FILENAME', 'PATH_TRANSLATED'] as $key) {
+        foreach (array('PHP_SELF', 'SCRIPT_NAME', 'SCRIPT_FILENAME', 'PATH_TRANSLATED') as $key) {
             // Check if the key is valid
             if (!isset($_SERVER[$key])) {
                 continue;
@@ -66,22 +66,22 @@ if (!defined('DIR_BASE')) {
 
 if (!defined('APP_UPDATED_PASSTHRU')) {
     // Check for an updated core available
-    $updates = DIR_BASE.'/application/config/update.php';
+    $updates = DIR_BASE . '/application/config/update.php';
     if (is_file($updates)) {
         $updates = (array) include $updates;
-        if (isset($updates['core']) && is_dir(DIR_BASE.'/updates/'.$updates['core'].'/concrete')) {
+        if (isset($updates['core']) && is_dir(DIR_BASE . '/updates/' . $updates['core'] . '/concrete')) {
             define('APP_UPDATED_PASSTHRU', true);
             define('DIRNAME_APP_UPDATED', $updates['core']);
         }
     }
     unset($updates);
     if (defined('APP_UPDATED_PASSTHRU')) {
-        return require DIR_BASE.'/updates/'.DIRNAME_APP_UPDATED.'/concrete/bin/concrete5.php';
+        return require DIR_BASE . '/updates/' . DIRNAME_APP_UPDATED . '/concrete/bin/concrete5.php';
     }
     define('APP_UPDATED_PASSTHRU', false);
 }
 if (APP_UPDATED_PASSTHRU === false) {
-    return require DIR_BASE.'/concrete/dispatcher.php';
+    return require DIR_BASE . '/concrete/dispatcher.php';
 } else {
-    return require DIR_BASE.'/updates/'.DIRNAME_APP_UPDATED.'/concrete/dispatcher.php';
+    return require DIR_BASE . '/updates/' . DIRNAME_APP_UPDATED . '/concrete/dispatcher.php';
 }
