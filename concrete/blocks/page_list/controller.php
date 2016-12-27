@@ -357,7 +357,7 @@ class Controller extends BlockController
                 $parameters[1] = intval($parameters[1]);
             }
         } else {
-            $parameters = $method = null;
+            return parent::getPassThruActionAndParameters($parameters);
         }
 
         return [$method, $parameters];
