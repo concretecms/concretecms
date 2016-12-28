@@ -31,13 +31,13 @@
                 if (options.selected) {
                     if (options.mode == 'multiple') {
                         $.each(options.selected, function(i, cID) {
-                            var node = my.$element.fancytree('getTree').getNodeByKey(String(cID));
+                            var node = my.$element.find('.ccm-sitemap-tree').fancytree('getTree').getNodeByKey(String(cID));
                             if (node) {
                                 node.setSelected(true);
                             }
                         });
                     } else {
-                        var tree = my.$element.fancytree('getTree');
+                        var tree = my.$element.find('.ccm-sitemap-tree').fancytree('getTree');
                         var node = tree.getNodeByKey(String(options.selected));
                         if (node) {
                             node.setSelected(true);
