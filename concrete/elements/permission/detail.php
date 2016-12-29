@@ -37,20 +37,20 @@ $tabs = array();
      ?>
 	<?=Loader::helper('concrete/ui')->tabs($tabs);
      ?>
-<?php 
+<?php
  } ?>
-	
+
 <?php if ($permissionKey->getPermissionKeyDisplayDescription()) {
     ?>
 <div class="dialog-help">
 <?=$permissionKey->getPermissionKeyDisplayDescription()?>
 </div>
-<?php 
+<?php
 } ?>
 
 
 <div id="ccm-tab-content-access-types" <?php if (count($tabs) > 0) {
-    ?>class="ccm-tab-content"<?php 
+    ?>class="ccm-tab-content"<?php
 } ?>>
 <?php
 $pkCategoryHandle = $permissionKey->getPermissionKeyCategoryHandle();
@@ -66,18 +66,18 @@ Loader::element('permission/access/list', array('pkCategoryHandle' => $pkCategor
     ?>
 	<?php Loader::packageElement('permission/keys/' . $permissionKey->getPermissionKeyHandle(), $permissionKey->getPackageHandle(), array('permissionAccess' => $pa));
     ?>
-<?php 
+<?php
 } else {
     ?>
 	<?php Loader::element('permission/keys/' . $permissionKey->getPermissionKeyHandle(), array('permissionAccess' => $pa));
     ?>
-<?php 
+<?php
 }
     ?>
 
 </div>
 
-<?php 
+<?php
 } ?>
 
 <?php if ($permissionKey->canPermissionKeyTriggerWorkflow() && count($workflows) > 0) {
@@ -89,30 +89,30 @@ Loader::element('permission/access/list', array('pkCategoryHandle' => $pkCategor
         $workflowIDs[] = $swf->getWorkflowID();
     }
     ?>
-		
+
 	<div id="ccm-tab-content-workflow" class="ccm-tab-content">
 			<div class="form-group">
     			<label class="control-label"><?=t('Attach Workflow to this Permission')?></label>
 				<?php foreach ($workflows as $wf) {
     ?>
 					<div class="checkbox"><label><input type="checkbox" name="wfID[]" value="<?=$wf->getWorkflowID()?>" <?php if (count($wf->getRestrictedToPermissionKeyHandles()) > 0 && (!in_array($permissionKey->getPermissionKeyHandle(), $wf->getRestrictedToPermissionKeyHandles()))) {
-    ?> disabled="disabled" <?php 
+    ?> disabled="disabled" <?php
 }
     ?>
 					<?php if (in_array($wf->getWorkflowID(), $workflowIDs)) {
-    ?> checked="checked" <?php 
+    ?> checked="checked" <?php
 }
     ?> /> <?=$wf->getWorkflowDisplayName()?></label></div>
-				<?php 
+				<?php
 }
     ?>
 			</div>
 	</div>
-<?php 
+<?php
 } ?>
 
 	<div class="dialog-buttons">
-		<a href="javascript:void(0)" class="btn btn-default pull-left" onclick="jQuery.fn.dialog.closeTop()"><?=t('Cancel')?></a>
+		<button href="javascript:void(0)" class="btn btn-default pull-left" onclick="jQuery.fn.dialog.closeTop()"><?=t('Cancel')?></button>
 		<button type="submit" class="btn btn-primary pull-right" onclick="$('#ccm-permissions-detail-form').submit()"><?=t('Save')?> <i class="icon-ok-sign icon-white"></i></button>
 	</div>
 </form>
@@ -133,21 +133,21 @@ Loader::element('permission/access/list', array('pkCategoryHandle' => $pkCategor
 	ccm_addAccessEntity = function(peID, pdID, accessType) {
 		jQuery.fn.dialog.closeTop();
 		jQuery.fn.dialog.showLoader();
-	
+
 		if (ccm_permissionDialogURL.indexOf('?') > 0) {
 			var qs = '&';
 		} else {
 			var qs = '?';
 		}
-	
-		$.get('<?=$permissionKey->getPermissionAssignmentObject()->getPermissionKeyToolsURL("add_access_entity")?>&paID=<?=$pa->getPermissionAccessID()?>&pdID=' + pdID + '&accessType=' + accessType + '&peID=' + peID, function(r) { 
-			$.get(ccm_permissionDialogURL + qs + 'paID=<?=$pa->getPermissionAccessID()?>&message=entity_added&pkID=<?=$permissionKey->getPermissionKeyID()?>', function(r) { 
+
+		$.get('<?=$permissionKey->getPermissionAssignmentObject()->getPermissionKeyToolsURL("add_access_entity")?>&paID=<?=$pa->getPermissionAccessID()?>&pdID=' + pdID + '&accessType=' + accessType + '&peID=' + peID, function(r) {
+			$.get(ccm_permissionDialogURL + qs + 'paID=<?=$pa->getPermissionAccessID()?>&message=entity_added&pkID=<?=$permissionKey->getPermissionKeyID()?>', function(r) {
 				jQuery.fn.dialog.replaceTop(r);
 				jQuery.fn.dialog.hideLoader();
 			});
 		});
 	}
-	
+
 	ccm_deleteAccessEntityAssignment = function(peID) {
 		jQuery.fn.dialog.showLoader();
 
@@ -156,9 +156,9 @@ Loader::element('permission/access/list', array('pkCategoryHandle' => $pkCategor
 		} else {
 			var qs = '?';
 		}
-		
-		$.get('<?=$permissionKey->getPermissionAssignmentObject()->getPermissionKeyToolsURL("remove_access_entity")?>&paID=<?=$pa->getPermissionAccessID()?>&peID=' + peID, function() { 
-			$.get(ccm_permissionDialogURL + qs + 'paID=<?=$pa->getPermissionAccessID()?>&message=entity_removed&pkID=<?=$permissionKey->getPermissionKeyID()?>', function(r) { 
+
+		$.get('<?=$permissionKey->getPermissionAssignmentObject()->getPermissionKeyToolsURL("remove_access_entity")?>&paID=<?=$pa->getPermissionAccessID()?>&peID=' + peID, function() {
+			$.get(ccm_permissionDialogURL + qs + 'paID=<?=$pa->getPermissionAccessID()?>&message=entity_removed&pkID=<?=$permissionKey->getPermissionKeyID()?>', function(r) {
 				jQuery.fn.dialog.replaceTop(r);
 				jQuery.fn.dialog.hideLoader();
 			});
@@ -174,7 +174,7 @@ Loader::element('permission/access/list', array('pkCategoryHandle' => $pkCategor
 			var gc = $('#ccm-permission-grid-cell-<?=$permissionKey->getPermissionKeyID()?>');
 			if (gc.length > 0) {
 				gc.load('<?=$permissionKey->getPermissionAssignmentObject()->getPermissionKeyToolsURL("display_access_cell")?>&paID=<?=$pa->getPermissionAccessID()?>', function() {
-					$('#ccm-permission-grid-name-<?=$permissionKey->getPermissionKeyID()?> a').attr('data-paID', '<?=$pa->getPermissionAccessID()?>');	
+					$('#ccm-permission-grid-name-<?=$permissionKey->getPermissionKeyID()?> a').attr('data-paID', '<?=$pa->getPermissionAccessID()?>');
 					if (typeof(ccm_submitPermissionsDetailFormPost) != 'undefined') {
 						ccm_submitPermissionsDetailFormPost();
 					}
@@ -187,17 +187,17 @@ Loader::element('permission/access/list', array('pkCategoryHandle' => $pkCategor
 		});
 		return false;
 	}
-	
+
 	<?php if (isset($_REQUEST['message']) && $_REQUEST['message'] == 'custom_options_saved') {
     ?>
 		$('a[data-tab=custom-options]').click();
-	<?php 
+	<?php
 } ?>
 
 	<?php if (isset($_REQUEST['message']) && $_REQUEST['message'] == 'workflows_saved') {
     ?>
 		$('a[data-tab=workflow]').click();
-	<?php 
+	<?php
 } ?>
 
 
