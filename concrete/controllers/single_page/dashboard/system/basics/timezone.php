@@ -19,7 +19,6 @@ class Timezone extends DashboardPageController
         $phpTimezone = $config->get('app.server_timezone');
         $this->set('serverTimezonePHP', $dh->getTimezoneName($phpTimezone));
         $db = $this->app->make(Connection::class);
-        /* @var Connection $db */
         $this->set('serverTimezoneDB', $db->fetchColumn('select @@time_zone'));
         $deltaError = $this->getDeltaTimezone($phpTimezone);
         if ($deltaError === null) {
@@ -131,25 +130,11 @@ class Timezone extends DashboardPageController
      */
     protected function getDeltaTimezone($phpTimezone)
     {
-        static $databaseData;
         if (!($phpTimezone instanceof DateTimeZone)) {
             $phpTimezone = new DateTimeZone($phpTimezone);
         }
-        $db = $this->app->make(Connection::class);
-        // Let's check 3 different days (with an interval of about 4 months),
-        // to be sure we also check potential daylight saving time changes.
-        $timestamps = [
-            time(),
-            time() + 120 * 24 * 60 * 60,
-            time() + 240 * 24 * 60 * 60,
-        ];
-        if (!isset($databaseData) || ($timestamps[0] - $databaseData['timestamp']) > 10) {
-            $databaseData = [
-                'timestamp' => $timestamps[0],
-                'datetimes' => $this->getDatabaseDatetimes($timestamps),
-            ];
-        }
-        $databaseDatetimes = $databaseData['datetimes'];
+        $data = $this->getTimestamps();
+        extract($data);
         $sometimesSame = false;
         $maxDeltaMinutes = 0;
         foreach ($timestamps as $index => $timestamp) {
@@ -176,27 +161,43 @@ class Timezone extends DashboardPageController
     }
 
     /**
-     * @param int[] $timestamps
-     *
-     * @return string[]
+     * @return array {
+     *     @var int[] $timestamps
+     *     @var string[] $databaseDatetimes
+     * }
      */
-    protected function getDatabaseDatetimes(array $timestamps)
+    protected function getTimestamps()
     {
-        $db = $this->app->make(Connection::class);
-        /* @var Connection $db */
-        $sql = 'SELECT ';
-        foreach ($timestamps as $index => $timestamp) {
-            if ($index > 0) {
-                $sql .= ', ';
+        $cache = $this->app->make('cache/request')->getItem('ccm/timezone/test-timestamps');
+        if ($cache->isMiss()) {
+            // Let's check the timestamp at solstices,
+            // to be sure we also check potential daylight saving time changes.
+            $timestamps = [
+                mktime(12, 0, 0, 6, 21, date('Y')),
+                mktime(12, 0, 0, 12, 21, date('Y')),
+            ];
+            $db = $this->app->make(Connection::class);
+            $sql = 'SELECT ';
+            foreach ($timestamps as $index => $timestamp) {
+                if ($index > 0) {
+                    $sql .= ', ';
+                }
+                $sql .= "FROM_UNIXTIME($timestamp) as datetime_$index";
             }
-            $sql .= "FROM_UNIXTIME($timestamp) as datetime_$index";
-        }
-        $rs = $db->executeQuery($sql);
-        $row = $rs->fetch();
-        $rs->closeCursor();
-        $result = [];
-        foreach (array_keys($timestamps) as $index) {
-            $result[$index] = $row["datetime_$index"];
+            $rs = $db->executeQuery($sql);
+            $row = $rs->fetch();
+            $rs->closeCursor();
+            $databaseDatetimes = [];
+            foreach (array_keys($timestamps) as $index) {
+                $databaseDatetimes[$index] = $row["datetime_$index"];
+            }
+            $result = [
+                'timestamps' => $timestamps,
+                'databaseDatetimes' => $databaseDatetimes,
+            ];
+            $cache->set($result)->expiresAfter(60)->save();
+        } else {
+            $result = $cache->get();
         }
 
         return $result;
