@@ -1,26 +1,21 @@
 <?php
 
 return [
-
     'default' => 'default',
 
     'sites' => [
-
         'default' => [
-
             'handle' => 'default',
 
             'name' => 'concrete5',
 
             'user' => [
-
                 'profiles_enabled' => false,
                 'gravatar' => [
                     'enabled' => false,
                     'max_level' => 0,
                     'image_set' => 0,
                 ],
-
             ],
 
             'editor' => [
@@ -67,7 +62,7 @@ return [
                             'tabletools',
                             'toolbar',
                             'undo',
-                            'wysiwygarea'
+                            'wysiwygarea',
                         ],
                         'selected_hidden' => [
                             'concrete5filemanager',
@@ -80,8 +75,8 @@ return [
                             'resize',
                             'toolbar',
                             'wysiwygarea',
-                        ]
-                    ]
+                        ],
+                    ],
                 ],
                 'plugins' => [
                     'selected' => [
@@ -92,8 +87,6 @@ return [
                     ],
                 ],
             ],
-
         ],
-
     ],
 ];
