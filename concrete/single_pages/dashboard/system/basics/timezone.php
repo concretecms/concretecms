@@ -92,11 +92,11 @@ defined('C5_EXECUTE') or die('Access Denied.');
     </div>
 
 </form>
-<?
+<?php
 if (isset($compatibleTimezones) && !empty($compatibleTimezones)) {
     ?>
-    <div id="user-timezone-autofix-dialog" style="display: none" title="<?=t('Select time zone')?>">
-        <form method="POST" action="<?= $view->action('setSystemTimezone') ?>" class="ccm-ui">
+    <div id="user-timezone-autofix-dialog" style="display: none" class="ccm-ui" title="<?=t('Select time zone')?>">
+        <form method="POST" action="<?= $view->action('setSystemTimezone') ?>" class="ccm-ui" id="user-timezone-autofix-form">
             <?php $token->output('set_system_timezone') ?>
             <div class="form-group">
                 <select class="form-control" size="15" name="new-timezone">
@@ -108,6 +108,10 @@ if (isset($compatibleTimezones) && !empty($compatibleTimezones)) {
                 </select>
             </div>
         </form>
+        <div class="dialog-buttons">
+            <button type="button" onclick="jQuery.fn.dialog.closeTop()" class="btn btn-default pull-left"><?=t('Cancel')?></button>
+            <button type="button" onclick="$('#user-timezone-autofix-form').submit()" class="btn btn-primary pull-right"><?=t('Save')?></button>
+        </div>
     </div>
     <?php
 }
@@ -121,27 +125,10 @@ $(document).ready(function() {
             window.alert(<?=json_encode("No PHP compatible time zone is compatible with the database time zone.\nYou should change the database default timezone.")?>);
             return;
         }
-        $dlg.dialog({
-            modal: true,
+        jQuery.fn.dialog.open({
+            element: $dlg,
             resizable: false,
-            buttons: [
-            	{
-                    text: <?=json_encode(t('Cancel'))?>,
-                    click: function() {
-                        $dlg.dialog('close');
-                    }
-            	},
-            	{
-                    text: <?=json_encode(t('Apply'))?>,
-                    click: function() {
-                        if (!$dlg.find('[name="new-timezone"]').val()) {
-                        	window.alert(<?=json_encode("Please select one of the listed time zones.")?>);
-                            return;
-                        }
-                        $dlg.find('form').submit();
-                    }
-            	}
-            ]
+            height: 370
         });
     });
 });
