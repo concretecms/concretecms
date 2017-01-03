@@ -43,35 +43,37 @@ $dh = Core::make('helper/date');
             <span class="help-block"><?=t('Click and drag to reorder the files in this set. New files added to this set will automatically be appended to the end.')?></span>
             <div class="ccm-spacer">&nbsp;</div>
 
-            <table class="ccm-search-results-table">
-                <thead>
-                    <tr>
-                        <th></th>
-                        <th><span><?=t('Thumbnail')?></span></th>
-                        <th><a href="javascript:void(0)" class="sort-link" data-sort="type"    ><?=t('Type')?></a></th>
-                        <th><a href="javascript:void(0)" class="sort-link" data-sort="title"   ><?=t('Title')?></a></th>
-                        <th><a href="javascript:void(0)" class="sort-link" data-sort="filename"><?=t('File name')?></a></th>
-                        <th><a href="javascript:void(0)" class="sort-link" data-sort="added"   ><?=t('Added')?></a></th>
-                    </tr>
-                </thead>
-
-                <tbody class="ccm-file-set-file-list">
-
-                    <?php foreach ($files as $f) {
-    ?>
-                        <tr id="fID_<?=$f->getFileID()?>" class="">
-                            <td><i class="fa fa-arrows-v"></i></td>
-                            <td class="ccm-file-manager-search-results-thumbnail"><?=$f->getListingThumbnailImage()?><input type="hidden" name="fsDisplayOrder[]" value="<?=$f->getFileID()?>" /></td>
-                            <td data-key="type" ><?=$f->getGenericTypetext()?>/<?=$f->getType()?></td>
-                            <td data-key="title"><?=$f->getTitle()?></td>
-                            <td data-key="filename"><?=$f->getFileName()?></td>
-                            <td data-key="added" data-sort="<?=$f->getDateAdded()->getTimestamp()?>" ><?=$dh->formatDateTime($f->getDateAdded()->getTimestamp())?></td>
+            <div class="table-responsive">
+                <table class="ccm-search-results-table compact-results">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th><span><?=t('Thumbnail')?></span></th>
+                            <th><a href="javascript:void(0)" class="sort-link" data-sort="type"    ><?=t('Type')?></a></th>
+                            <th><a href="javascript:void(0)" class="sort-link" data-sort="title"   ><?=t('Title')?></a></th>
+                            <th><a href="javascript:void(0)" class="sort-link" data-sort="filename"><?=t('File name')?></a></th>
+                            <th><a href="javascript:void(0)" class="sort-link" data-sort="added"   ><?=t('Added')?></a></th>
                         </tr>
-                    <?php
-}
+                    </thead>
+
+                    <tbody class="ccm-file-set-file-list">
+
+                        <?php foreach ($files as $f) {
         ?>
-                </tbody>
-            </table>
+                            <tr id="fID_<?=$f->getFileID()?>" class="">
+                                <td><i class="fa fa-arrows-v"></i></td>
+                                <td class="ccm-file-manager-search-results-thumbnail"><?=$f->getListingThumbnailImage()?><input type="hidden" name="fsDisplayOrder[]" value="<?=$f->getFileID()?>" /></td>
+                                <td data-key="type" ><?=$f->getGenericTypetext()?>/<?=$f->getType()?></td>
+                                <td data-key="title"><?=$f->getTitle()?></td>
+                                <td data-key="filename"><?=$f->getFileName()?></td>
+                                <td data-key="added" data-sort="<?=$f->getDateAdded()->getTimestamp()?>" ><?=$dh->formatDateTime($f->getDateAdded()->getTimestamp())?></td>
+                            </tr>
+                        <?php
+    }
+            ?>
+                    </tbody>
+                </table>
+            </div>
 		<?php
     } else {
         ?>
