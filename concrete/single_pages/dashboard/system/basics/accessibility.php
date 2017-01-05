@@ -10,6 +10,12 @@
     </div>
     <div class="checkbox">
         <label>
+            <input name="show_tooltips" value="1" type="checkbox" <?= $show_tooltips ? 'checked' : '' ?> />
+            <?= t('Enable Prominent Toolbar Tooltips') ?>
+        </label>
+    </div>
+    <div class="checkbox">
+        <label>
             <input name="increase_font_size" value="1" type="checkbox" <?= $increase_font_size ? 'checked' : '' ?> />
             <?= t('Increase Toolbar Font Size') ?>
         </label>

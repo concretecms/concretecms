@@ -534,6 +534,13 @@ return array(
          * @var bool
          */
         'display_help_system' => true,
+
+        /*
+         * Show tooltips in the concrete5 toolbars
+         *
+         * @var bool
+         */
+        'toolbar_tooltips' => true,
     ),
 
     /*
