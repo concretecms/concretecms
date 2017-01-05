@@ -285,7 +285,7 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
                     } elseif ($permissions->canEditPageContents()) {
                         ?>
                         <li data-guide-toolbar-action="edit-page" class="ccm-toolbar-page-edit pull-left hidden-xs">
-                            <a
+                            <a class="launch-tooltip" data-toggle="tooltip" data-placement="bottom" data-delay='{ "show": 500, "hide": 0 }'
                                 <?php if ($c->isMasterCollection()) { ?>data-disable-panel="check-in"<?php } ?>
                                 data-toolbar-action="check-out"
                                 href="<?= DIR_REL ?>/<?= DISPATCHER_FILENAME ?>?cID=<?= $cID ?>&ctask=check-out<?= $token ?>"
@@ -308,7 +308,7 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
                         $hasComposer = is_object($pagetype) && $cp->canEditPageContents();
                         ?>
                         <li data-guide-toolbar-action="page-settings" class="pull-left hidden-xs">
-                            <a
+                            <a class="launch-tooltip" data-toggle="tooltip" data-placement="bottom" data-delay='{ "show": 500, "hide": 0 }'
                                 href="#"
                                 data-launch-panel="page"
                                 data-panel-url="<?= URL::to('/ccm/system/panels/page') ?>"
@@ -339,7 +339,7 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
                                 <i class="fa fa-plus"></i><span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-add"><?= tc('toolbar', 'Add Content') ?></span>
                             </a>
                         <?php } else { ?>
-                            <a href="<?= DIR_REL ?>/<?= DISPATCHER_FILENAME ?>?cID=<?= $cID ?>&ctask=check-out-add-block<?= $token ?>" title="<?= t('Add Content to The Page') ?>">
+                            <a href="<?= DIR_REL ?>/<?= DISPATCHER_FILENAME ?>?cID=<?= $cID ?>&ctask=check-out-add-block<?= $token ?>" class="launch-tooltip" data-toggle="tooltip" data-placement="bottom" data-delay='{ "show": 500, "hide": 0 }' title="<?= t('Add Content to The Page') ?>">
                                 <i class="fa fa-plus"></i><span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-add"><?= tc('toolbar', 'Add Content') ?></span>
                             </a>
                         <?php } ?>
