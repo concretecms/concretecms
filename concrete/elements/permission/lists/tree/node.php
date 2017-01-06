@@ -36,7 +36,7 @@ if (!isset($disableDialog) || !$disableDialog) {
 		?>
 	</div>
 
-<?php 
+<?php
 	}
 
 } else {
@@ -62,18 +62,18 @@ foreach ($permissions as $pk) {
     ?>
 	<tr>
 	<td class="ccm-permission-grid-name" id="ccm-permission-grid-name-<?=$pk->getPermissionKeyID()?>"><strong><?php if ($enablePermissions) {
-    ?><a dialog-title="<?=$pk->getPermissionKeyDisplayName()?>" data-pkID="<?=$pk->getPermissionKeyID()?>" data-paID="<?=$pk->getPermissionAccessID()?>" onclick="ccm_permissionLaunchDialog(this)" href="javascript:void(0)"><?php 
+    ?><a dialog-title="<?=$pk->getPermissionKeyDisplayName()?>" data-pkID="<?=$pk->getPermissionKeyID()?>" data-paID="<?=$pk->getPermissionAccessID()?>" onclick="ccm_permissionLaunchDialog(this)" href="javascript:void(0)"><?php
 }
     ?><?=$pk->getPermissionKeyDisplayName()?><?php if ($enablePermissions) {
-    ?></a><?php 
+    ?></a><?php
 }
     ?></strong></td>
 	<td id="ccm-permission-grid-cell-<?=$pk->getPermissionKeyID()?>" <?php if ($enablePermissions) {
-    ?>class="ccm-permission-grid-cell"<?php 
+    ?>class="ccm-permission-grid-cell"<?php
 }
     ?>><?=Loader::element('permission/labels', array('pk' => $pk))?></td>
 </tr>
-<?php 
+<?php
 } ?>
 <?php if ($enablePermissions) {
     ?>
@@ -83,7 +83,7 @@ foreach ($permissions as $pk) {
 	<?=Loader::element('permission/clipboard', array('pkCategory' => $cat))?>
 	</td>
 </tr>
-<?php 
+<?php
 } ?>
 
 </table>
@@ -95,15 +95,15 @@ foreach ($permissions as $pk) {
 	<?php if (!isset($disableDialog) || !$disableDialog) { ?>
 
 		<div id="topics-tree-node-permissions-buttons" class="dialog-buttons">
-		<a href="javascript:void(0)" onclick="jQuery.fn.dialog.closeTop()" class="btn btn-default pull-left"><?=t('Cancel')?></a>
+		<button href="javascript:void(0)" onclick="jQuery.fn.dialog.closeTop()" class="btn btn-default pull-left"><?=t('Cancel')?></button>
 		<button onclick="$('#ccm-permission-list-form').submit()" class="btn btn-primary pull-right"><?=t('Save')?> <i class="icon-ok-sign icon-white"></i></button>
 	</div>
 	<?php } ?>
-<?php 
+<?php
 } else {
     ?>
 	<div class="dialog-buttons"></div>
-<?php 
+<?php
 } ?>
 
 </div>
@@ -121,7 +121,7 @@ ccm_permissionLaunchDialog = function(link) {
 		modal: true,
 		width: 500,
 		height: 380
-	});		
+	});
 }
 
 <?php if (!isset($disableDialog) || !$disableDialog) { ?>
