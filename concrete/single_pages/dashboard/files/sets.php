@@ -177,9 +177,10 @@ $dh = Core::make('helper/date');
 } else {
     ?>
 
-    <div class="ccm-dashboard-content-full">
 
         <?php if (count($fileSets) > 0) { ?>
+
+        <div class="ccm-dashboard-content-full">
             <div class="table-responsive">
                 <table class="ccm-search-results-table">
                     <thead>
@@ -209,7 +210,9 @@ $dh = Core::make('helper/date');
                 ?>
             <?php } ?>
 
-    <?php
+        </div>
+
+        <?php
     } else { ?>
         <section>
 
@@ -239,7 +242,6 @@ $dh = Core::make('helper/date');
         </div>
 
 
-    </div>
 <?php } ?>
 
 
