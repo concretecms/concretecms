@@ -30,10 +30,12 @@ defined('C5_EXECUTE') or die('Access Denied.');
             </label>
             <div>
                 <?php if (!$dbTimezoneOk) { ?>
-                    <div class="text-warning"><i class="fa fa-warning"></i>
-                        <?= $dbDeltaDescription ?><br />
-                        <a href="#" id="user-timezone-autofix" class="btn btn-warning"><?=t('Fix PHP timezone')?></a>
-                    </div>
+                    <p class="text-warning"><i class="fa fa-warning"></i>
+                        <?= $dbDeltaDescription ?>
+                    </p>
+                    <p>
+                        <a href="#" id="user-timezone-autofix" class="btn btn-warning btn-sm"><?=t('Fix PHP timezone')?></a>
+                    </p>
                 <?php } else { ?>
                     <div class="text-success"><i class="fa fa-check"></i>
                         <?=t('Success. These time zone values match.')?>
