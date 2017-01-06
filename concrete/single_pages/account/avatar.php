@@ -15,14 +15,12 @@ $save_url = $save_url->setQuery(array(
 			<br /><br />
 			<a href="http://www.adobe.com/shockwave/download/download.cgi?P1_Prod_Version=ShockwaveFlash">Download the Flash Player here</a>.
 		</div>
-		<?php if ($profile->hasAvatar()) {
-    ?>
+		<?php if ($profile->hasAvatar()) { ?>
 			<form method="post" action="<?php echo $view->action('delete')?>">
 				<?=Core::make('token')->output('delete_avatar')?>
-				<button type="submit" class="btn btn-danger"><?php echo t('Remove your user avatar')?> <i class="icon-trash icon-white"></i></button>
+				<button type="submit" class="btn btn-danger"><?php echo t('Remove your user avatar')?> <i class="fa fa-trash icon-white"></i></button>
 			</form>
-		<?php 
-} ?>
+		<?php } ?>
 
 		<script type="text/javascript">
 		ThumbnailBuilder_onSaveCompleted = function() {
@@ -65,6 +63,8 @@ $save_url = $save_url->setQuery(array(
 
     <br/>
 
-    <div class="form-actions">
-        <a href="<?=URL::to('/account')?>" class="btn btn-default" /><?=t('Back to Account')?></a>
+    <div class="ccm-dashboard-form-actions-wrapper">
+        <div class="ccm-dashboard-form-actions">
+            <a href="<?=URL::to('/account')?>" class="btn btn-default" /><?=t('Back to Account')?></a>
+        </div>
     </div>
