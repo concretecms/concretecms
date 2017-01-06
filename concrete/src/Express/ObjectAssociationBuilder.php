@@ -60,22 +60,22 @@ class ObjectAssociationBuilder
         }
     }
 
-    public function addManyToMany(Entity $subject, Entity $target, $subject_property = null, $target_property = null)
+    public function addManyToMany(Entity $subject, Entity $target, $subject_property = null, $inversed_by = null)
     {
         $association = new ManyToManyAssociation();
         $association->setAssociationType(ManyToManyAssociation::TYPE_OWNING);
         $association->setSourceEntity($subject);
         $association->setTargetEntity($target);
-        $association->setTargetPropertyName($target_property);
-        $association->setInversedByPropertyName($subject_property);
+        $association->setTargetPropertyName($subject_property);
+        $association->setInversedByPropertyName($inversed_by);
         $subject->getAssociations()->add($association);
 
         $association = new ManyToManyAssociation();
         $association->setAssociationType(ManyToManyAssociation::TYPE_INVERSE);
         $association->setSourceEntity($target);
         $association->setTargetEntity($subject);
-        $association->setTargetPropertyName($subject_property);
-        $association->setInversedByPropertyName($target_property);
+        $association->setTargetPropertyName($inversed_by);
+        $association->setInversedByPropertyName($subject_property);
         $target->getAssociations()->add($association);
     }
 

@@ -13,6 +13,11 @@ class CollectionAttributeControl extends Control
     protected $ak = false;
     protected $ptComposerControlTypeHandle = 'collection_attribute';
 
+    public function __sleep()
+    {
+        return array('akID');
+    }
+
     public function setAttributeKeyID($akID)
     {
         $this->akID = $akID;
