@@ -30,7 +30,7 @@ if (!isset($disableDialog) || !$disableDialog) {
 		<?php if ($node->getTreeNodeParentID() > 0) {
 		?>
 		<br/><br/>
-			<a href="javascript:void(0)" class="btn btn-sm btn-warning" onclick="TopicsPermissions.setTreeNodePermissionsToInherit()"><?=t('Revert to Parent Permisisons')?></a>
+			<a href="javascript:void(0)" class="btn btn-sm btn-warning" onclick="TopicsPermissions.setTreeNodePermissionsToInherit()"><?=t('Revert to Parent Permissions')?></a>
 		<?php
 	}
 		?>
