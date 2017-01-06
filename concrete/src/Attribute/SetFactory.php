@@ -5,6 +5,7 @@ use Concrete\Core\Entity\Attribute\Key\Key;
 use Concrete\Core\Entity\Package;
 use Doctrine\ORM\EntityManager;
 use Gettext\Translations;
+use Concrete\Core\Entity\Attribute\Set;
 
 /**
  * Factory class for creating and retrieving instances of the Attribute type entity.
@@ -60,16 +61,16 @@ class SetFactory
 
     public function add($atHandle, $atName, $pkg = null)
     {
-        $type = new AttributeType();
-        $type->setAttributeTypeName($atName);
-        $type->setAttributeTypeHandle($atHandle);
+        $set = new Set();
+        $set->setAttributeSetHandle($atHandle);
+        $set->setAttributeSetName($atName);
         if ($pkg) {
-            $type->setPackage($pkg);
+            $set->setPackage($pkg);
         }
-        $this->entityManager->persist($type);
+        $this->entityManager->persist($set);
         $this->entityManager->flush();
 
-        return $type;
+        return $set;
     }
 
     /**
