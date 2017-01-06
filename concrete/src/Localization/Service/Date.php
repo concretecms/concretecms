@@ -166,7 +166,7 @@ class Date
                             if (!strlen($city)) {
                                 switch ($timezoneID) {
                                     case 'America/Fort_Nelson':
-                                        $city = tc(/*i18n: Canadian territory */'Territory', 'Fort_Nelson');
+                                        $city = tc(/*i18n: Canadian territory */'Territory', 'Fort Nelson');
                                         break;
                                     case 'America/Montreal':
                                         $city = tc(/*i18n: Canadian city */'Territory', 'Montreal');
