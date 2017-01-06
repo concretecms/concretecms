@@ -31,7 +31,8 @@ defined('C5_EXECUTE') or die('Access Denied.');
             <div>
                 <?php if (!$dbTimezoneOk) { ?>
                     <div class="text-warning"><i class="fa fa-warning"></i>
-                        <?= $dbDeltaDescription ?>
+                        <?= $dbDeltaDescription ?><br />
+                        <a href="#" id="user-timezone-autofix" class="btn btn-warning"><?=t('Fix PHP timezone')?></a>
                     </div>
                 <?php } else { ?>
                     <div class="text-success"><i class="fa fa-check"></i>
@@ -91,3 +92,44 @@ defined('C5_EXECUTE') or die('Access Denied.');
     </div>
 
 </form>
+<?php
+if (isset($compatibleTimezones) && !empty($compatibleTimezones)) {
+    ?>
+    <div id="user-timezone-autofix-dialog" style="display: none" class="ccm-ui" title="<?=t('Select time zone')?>">
+        <form method="POST" action="<?= $view->action('setSystemTimezone') ?>" class="ccm-ui" id="user-timezone-autofix-form">
+            <?php $token->output('set_system_timezone') ?>
+            <div class="form-group">
+                <select class="form-control" size="15" name="new-timezone">
+                    <?php
+                    foreach ($compatibleTimezones as $timezoneID => $timezoneName) {
+                        ?><option value="<?=h($timezoneID)?>"><?=h($timezoneName)?></option><?php
+                    }
+                    ?>
+                </select>
+            </div>
+        </form>
+        <div class="dialog-buttons">
+            <button type="button" onclick="jQuery.fn.dialog.closeTop()" class="btn btn-default pull-left"><?=t('Cancel')?></button>
+            <button type="button" onclick="$('#user-timezone-autofix-form').submit()" class="btn btn-primary pull-right"><?=t('Save')?></button>
+        </div>
+    </div>
+    <?php
+}
+?>
+<script>
+$(document).ready(function() {
+    $('#user-timezone-autofix').on('click', function(e) {
+        e.preventDefault();
+        var $dlg = $('#user-timezone-autofix-dialog');
+        if ($dlg.length === 0) {
+            window.alert(<?=json_encode("No PHP compatible time zone is compatible with the database time zone.\nYou should change the database default timezone.")?>);
+            return;
+        }
+        jQuery.fn.dialog.open({
+            element: $dlg,
+            resizable: false,
+            height: 370
+        });
+    });
+});
+</script>
