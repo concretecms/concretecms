@@ -53,7 +53,7 @@ $('#check-all-incoming').click(function (event) {
 $(function() {
     var $dropzone = $('#ccm-tab-content-local form').dropzone({
         sending: function() {
-            $('[data-button=launch-upload-complete]').prop('disabled', true);
+            $('[data-button=launch-upload-complete]').hide();
             totalStarted++;
         },
         success: function(data, r) {
@@ -64,7 +64,7 @@ $(function() {
         complete: function() {
             totalCompleted++;
             if (totalCompleted == totalStarted && totalCompleted > 0) {
-                $('[data-button=launch-upload-complete]').prop('disabled', false);
+                $('[data-button=launch-upload-complete]').show();
             }
         }
     });
@@ -198,7 +198,7 @@ ConcreteFileImportDialog = {
 
     <div id="dialog-buttons-local" style="display: none">
         <button class="btn btn-default" onclick="jQuery.fn.dialog.closeTop()"><?=t("Close")?></button>
-        <button class="btn btn-success pull-right" data-button="launch-upload-complete" onclick="ConcreteFileImportDialog.loadDropzoneFiles()" disabled><?=t("View Uploaded")?></button>
+        <button class="btn btn-success pull-right" data-button="launch-upload-complete" onclick="ConcreteFileImportDialog.loadDropzoneFiles()" style="display: none"><?=t("Edit Properties and Sets")?></button>
     </div>
 
     <div id="dialog-buttons-incoming" style="display: none">
