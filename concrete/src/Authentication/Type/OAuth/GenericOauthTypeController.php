@@ -419,7 +419,7 @@ abstract class GenericOauthTypeController extends AuthenticationTypeController
      *
      * @return int|null
      */
-    public function bindUser(\User $user, $binding)
+    public function bindUser(User $user, $binding)
     {
         return $this->bindUserID(intval($user->getUserID(), 10), $binding);
     }
