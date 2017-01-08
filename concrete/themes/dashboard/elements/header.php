@@ -42,6 +42,7 @@ if (!$frontendPageID) {
 }
 
 $show_titles = (bool) Config::get('concrete.accessibility.toolbar_titles');
+$show_tooltips = (bool) Config::get('concrete.accessibility.toolbar_tooltips');
 $large_font = (bool) Config::get('concrete.accessibility.toolbar_large_font');
 
 ?>
@@ -69,7 +70,8 @@ $large_font = (bool) Config::get('concrete.accessibility.toolbar_large_font');
     <ul>
         <li class="ccm-logo pull-left"><span><?=Loader::helper('concrete/ui')->getToolbarLogoSRC()?></span></li>
         <li class="ccm-toolbar-account pull-left">
-            <a href="<?=$backLink?>">
+            <a <?php if ($show_tooltips) { ?>class="launch-tooltip"<?php } ?> data-toggle="tooltip" data-placement="bottom" data-delay='{ "show": 500, "hide": 0 }' title="<?= t('Back to Website') ?>"
+               href="<?=$backLink?>">
                 <i class="fa fa-arrow-left"></i><span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-return"><?= tc('toolbar', 'Return to Website') ?></span>
             </a>
         </li>
@@ -95,9 +97,18 @@ $large_font = (bool) Config::get('concrete.accessibility.toolbar_large_font');
         ?>
 
         <li class="pull-right hidden-xs hidden-sm">
-            <a href="<?=URL::to('/dashboard')?>"
+            <?php
+                $dashboardPanelClasses = array();
+                if ($show_tooltips) {
+                    $dashboardPanelClasses[] = 'launch-tooltip';
+                }
+                if (!$hideDashboardPanel) {
+                    $dashboardPanelClasses[] = 'ccm-launch-panel-active';
+                }
+                $dashboardPanelClass = implode(' ', $dashboardPanelClasses);
+            ?>
+            <a class="<?=$dashboardPanelClass?>" data-placement="bottom" data-delay='{ "show": 500, "hide": 0 }' href="<?= URL::to('/dashboard') ?>" title="<?= t('Dashboard – Change Site-wide Settings') ?>"
                 data-launch-panel="dashboard"
-                <?= $hideDashboardPanel ? '' : ' class="ccm-launch-panel-active"' ?>
                 data-panel-url="<?=URL::to('/system/panels/dashboard')?>">
                 <i class="fa fa-sliders"></i>
                 <span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-site-settings">
@@ -106,7 +117,7 @@ $large_font = (bool) Config::get('concrete.accessibility.toolbar_large_font');
             </a>
         </li>
         <li class="pull-right hidden-xs hidden-sm">
-            <a href="#" data-panel-url="<?=URL::to('/system/panels/sitemap')?>" data-launch-panel="sitemap">
+            <a <?php if ($show_tooltips) { ?>class="launch-tooltip"<?php } ?>  data-toggle="tooltip" data-placement="bottom" data-delay='{ "show": 500, "hide": 0 }' href="#" data-panel-url="<?= URL::to('/ccm/system/panels/sitemap') ?>" title="<?= t('Add Pages and Navigate Your Site') ?>" data-launch-panel="sitemap">
                 <i class="fa fa-files-o"></i>
                 <span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-add-page">
                     <?= tc('toolbar', 'Pages') ?>

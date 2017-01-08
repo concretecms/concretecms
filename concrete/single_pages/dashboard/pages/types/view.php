@@ -14,7 +14,7 @@
 
 </form>
 
-<?php 
+<?php
 } else {
     $pk = PermissionKey::getByHandle('access_page_type_permissions');
     ?>
@@ -42,13 +42,13 @@
 	    			<a href="<?=$view->url('/dashboard/pages/types/form', $cm->getPageTypeID())?>" class="btn btn-default btn-xs"><?=t('Edit Form')?></a>
 		    		<a href="<?=$view->url('/dashboard/pages/types/output', $cm->getPageTypeID())?>" class="btn btn-default btn-xs"><?=t('Output')?></a>
                     <a href="<?=$view->url('/dashboard/pages/types/attributes', $cm->getPageTypeID())?>" class="btn btn-default btn-xs"><?=t('Attributes')?></a>
-                <?php 
+                <?php
 }
     ?>
                 <?php if ($cmp->canEditPageTypePermissions()) {
     ?>
 					<a href="<?=$view->url('/dashboard/pages/types/permissions', $cm->getPageTypeID())?>" class="btn btn-default btn-xs"><?=t('Permissions')?></a>
-				<?php 
+				<?php
 }
     ?>
                 <a href="#" data-duplicate="<?=$cm->getPageTypeID()?>" class="btn btn-default btn-xs"><?=t('Copy')?></a>
@@ -81,7 +81,7 @@
                 <?php if ($cmp->canDeletePageType()) {
     ?>
     				<a href="#" data-delete="<?=$cm->getPageTypeID()?>" class="btn btn-default btn-xs btn-danger"><?=t('Delete')?></a>
-                <?php 
+                <?php
 }
     ?>
 				<div style="display: none">
@@ -90,26 +90,30 @@
 						<?=t("Delete this page type? This cannot be undone.")?>
 						<?=Loader::helper('validation/token')->output('delete_page_type')?>
 						</form>
+                        <div class="dialog-buttons">
+                            <button onclick="jQuery.fn.dialog.closeTop()" class="btn btn-default pull-left"><?=t('Cancel')?></button>
+                            <button onclick="$('form[data-delete-form=<?=$cm->getPageTypeID()?>]').submit()" class="btn btn-danger pull-right"><?=t('Delete')?></button>
+                        </div>
 					</div>
 				</div>
 			</td>
 		</tr>
-		<?php 
+		<?php
 }
     ?>
 	</tbody>
 	</table>
 
-	<?php 
+	<?php
 } else {
     ?>
 		<p><?=t('You have not created any page types yet.')?></p>
 		<a href="<?=$view->url('/dashboard/pages/types/add', $siteTypeID)?>" class="btn btn-primary"><?=t('Add Page Type')?></a>
-	<?php 
+	<?php
 }
     ?>
 
-	<style type="text/css">
+	<style>
 	td.page-type-name {
 		width: 100%;
 	}
@@ -120,33 +124,17 @@
 	}
 	</style>
 
-	<script type="text/javascript">
+	<script>
 	$(function() {
 		$('a[data-delete]').on('click', function() {
 			var ptID = $(this).attr('data-delete');
-			$('div[data-delete-dialog=' + ptID + ']').dialog({
-				modal: true,
-				width: 320,
-				dialogClass: 'ccm-ui',
-				title: '<?=t("Delete Page Type")?>',
-				height: 320,
-				buttons: [
-					{
-						'text': '<?=t("Cancel")?>',
-						'class': 'btn pull-left',
-						'click': function() {
-							$(this).dialog('close');
-						}
-					},
-					{
-						'text': '<?=t("Delete")?>',
-						'class': 'btn pull-right btn-danger',
-						'click': function() {
-							$('form[data-delete-form=' + ptID + ']').submit();
-						}
-					}
-				]
-			});
+            jQuery.fn.dialog.open({
+                element: 'div[data-delete-dialog=' + ptID + ']',
+                modal: true,
+                width: 410,
+                title: '<?=t("Delete Page Type")?>',
+                height: 150
+            });
 		});
         $('a[data-duplicate]').on('click', function() {
             var ptID = $(this).attr('data-duplicate');
@@ -161,5 +149,5 @@
     });
 	</script>
 
-<?php 
+<?php
 } ?>

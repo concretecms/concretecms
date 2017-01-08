@@ -3,6 +3,7 @@ namespace Concrete\Block\PageAttributeDisplay;
 
 use Concrete\Core\Block\BlockController;
 use Concrete\Core\Attribute\Key\CollectionKey as CollectionAttributeKey;
+use Concrete\Core\Entity\Attribute\Value\Value\SelectValue;
 use Core;
 
 defined('C5_EXECUTE') or die('Access Denied.');
@@ -79,6 +80,9 @@ class Controller extends BlockController
                         $image = Core::make('html/image', array($content));
                         $content = (string) $image->getTag();
                     }
+                } else if ($content instanceof SelectValue) {
+                    // so stupid. This entire block should be done in a better way.
+                    // we pass our $content object down below so it can be spit.
                 } else if (is_object($content_alt)) {
                     $content = $content_alt->getDisplayValue();
                 }

@@ -57,21 +57,7 @@ class SetFactory
 
         return array_unique($sets);
     }
-
-    public function add($atHandle, $atName, $pkg = null)
-    {
-        $type = new AttributeType();
-        $type->setAttributeTypeName($atName);
-        $type->setAttributeTypeHandle($atHandle);
-        if ($pkg) {
-            $type->setPackage($pkg);
-        }
-        $this->entityManager->persist($type);
-        $this->entityManager->flush();
-
-        return $type;
-    }
-
+    
     /**
      * @deprecated
      */
