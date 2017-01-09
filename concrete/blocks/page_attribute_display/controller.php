@@ -77,7 +77,7 @@ class Controller extends BlockController
                         ); //<-- set these 2 numbers to max width and height of thumbnails
                         $content = "<img src=\"{$thumb->src}\" width=\"{$thumb->width}\" height=\"{$thumb->height}\" alt=\"\" />";
                     } else {
-                        $image = Core::make('html/image', array($content));
+                        $image = Core::make('html/image', [$content]);
                         $content = (string) $image->getTag();
                     }
                 } elseif (is_object($content_alt)) {
@@ -97,9 +97,9 @@ class Controller extends BlockController
             $content = $this->getPlaceHolderText($this->attributeHandle);
         }
 
-        if(!empty($this->delimiter)) {
+        if (!empty($this->delimiter)) {
             $parts = explode("\n", $content);
-            if(count($parts)>1){
+            if (count($parts) > 1) {
                 switch ($this->delimiter) {
                     case 'comma':
                         $delimiter = ',';
@@ -167,13 +167,13 @@ class Controller extends BlockController
 
     public function getAvailablePageValues()
     {
-        return array(
+        return [
             'rpv_pageName' => t('Page Name'),
             'rpv_pageDescription' => t('Page Description'),
             'rpv_pageDateCreated' => t('Page Date Created'),
             'rpv_pageDatePublic' => t('Page Date Published'),
             'rpv_pageDateLastModified' => t('Page Date Modified'),
-        );
+        ];
     }
 
     public function getAvailableAttributes()
@@ -235,7 +235,7 @@ class Controller extends BlockController
     public function view()
     {
         $templateHandle = $this->getTemplateHandle();
-        if (in_array($templateHandle, array('date_time', 'boolean'))) {
+        if (in_array($templateHandle, ['date_time', 'boolean'])) {
             $this->render('templates/' . $templateHandle);
         }
     }
