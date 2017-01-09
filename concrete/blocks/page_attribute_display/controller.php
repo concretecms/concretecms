@@ -80,11 +80,14 @@ class Controller extends BlockController
                         $image = Core::make('html/image', array($content));
                         $content = (string) $image->getTag();
                     }
-                } else if ($content instanceof SelectValue) {
-                    // so stupid. This entire block should be done in a better way.
-                    // we pass our $content object down below so it can be spit.
-                } else if (is_object($content_alt)) {
-                    $content = $content_alt->getDisplayValue();
+                } elseif (is_object($content_alt)) {
+                    if (is_array($content) && $content[0] instanceof \Concrete\Core\Tree\Node\Type\Topic) {
+                        $content = str_replace(', ', "\n", $content_alt->getDisplayValue());
+                    } elseif ($content instanceof SelectValue) {
+                        $content = (string) $content;
+                    } else {
+                        $content = $content_alt->getDisplayValue();
+                    }
                 }
                 break;
         }
@@ -93,7 +96,7 @@ class Controller extends BlockController
         if (!strlen(trim(strip_tags($content))) && ($c->isMasterCollection() || $is_stack)) {
             $content = $this->getPlaceHolderText($this->attributeHandle);
         }
-        
+
         if(!empty($this->delimiter)) {
             $parts = explode("\n", $content);
             if(count($parts)>1){
