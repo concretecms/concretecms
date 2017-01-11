@@ -11,10 +11,6 @@ $form = Loader::helper('form');
 $ag = \Concrete\Core\Http\ResponseAssetGroup::get();
 $ag->requireAsset('dropzone');
 
-$fp = FilePermissions::getGlobal();
-if (!$fp->canAddFiles()) {
-    die(t("Unable to add files."));
-}
 
 $folder = null;
 if (isset($_REQUEST['currentFolder'])) {
@@ -23,6 +19,17 @@ if (isset($_REQUEST['currentFolder'])) {
         $folder = $node;
     }
 }
+
+if ($folder) {
+    $fp = new Permissions($folder);
+} else {
+    $fp = FilePermissions::getGlobal();
+}
+
+if (!$fp->canAddFiles()) {
+    die(t("Unable to add files."));
+}
+
 
 $types = $fp->getAllowedFileExtensions();
 $ocID = 0;

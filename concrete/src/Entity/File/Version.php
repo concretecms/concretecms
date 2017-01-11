@@ -1095,6 +1095,7 @@ class Version
         $r->canDeleteFile = $fp->canDeleteFile();
         $r->canReplaceFile = $fp->canEditFileContents();
         $r->canEditFileContents = $fp->canEditFileContents();
+        $r->canViewFileInFileManager = $fp->canRead();
         $r->canRead = $fp->canRead();
         $r->canViewFile = $this->canView();
         $r->canEditFile = $this->canEdit();
