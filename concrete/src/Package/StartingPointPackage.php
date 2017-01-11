@@ -148,19 +148,6 @@ class StartingPointPackage extends BasePackage
         Page::addHomePage();
     }
 
-    /*
-    public function precache()
-    {
-        $c = Page::getByPath('/dashboard/home');
-        $blocks = $c->getBlocks();
-        foreach ($blocks as $b) {
-            $bi = $b->getInstance();
-            $bi->setupAndRun('view');
-        }
-        Core::make('helper/concrete/ui')->cacheInterfaceItems();
-    }
-    */
-
     public function install_data_objects()
     {
         \Concrete\Core\Tree\Node\NodeType::add('category');
