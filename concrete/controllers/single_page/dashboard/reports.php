@@ -5,8 +5,8 @@ use Concrete\Core\Page\Controller\DashboardPageController;
 
 class Reports extends DashboardPageController
 {
-    public function __construct()
+    public function view()
     {
-        $this->redirect("/dashboard/reports/forms");
+        $this->redirect('/dashboard/reports/forms');
     }
 }
