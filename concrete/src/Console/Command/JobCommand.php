@@ -21,6 +21,7 @@ class JobCommand extends Command
             ->setDescription(t('Run a concrete5 job'))
             ->addOption('set', null, InputOption::VALUE_NONE, t('Find jobs by set instead of job handle'))
             ->addOption('list', null, InputOption::VALUE_NONE, t('List available jobs'))
+            ->addOption('env', null, InputOption::VALUE_REQUIRED, 'The environment (if not specified, we\'ll work with the configuration item valid for all environments)')
             ->addArgument(
                 'jobs',
                 InputArgument::IS_ARRAY,

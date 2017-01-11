@@ -14,6 +14,7 @@ class ClearCacheCommand extends Command
         $this
             ->setName('c5:clear-cache')
             ->setDescription('Clear the concrete5 cache')
+            ->addOption('env', null, InputOption::VALUE_REQUIRED, 'The environment (if not specified, we\'ll work with the configuration item valid for all environments)')
             ->setHelp(<<<EOT
 Returns codes:
   0 operation completed successfully

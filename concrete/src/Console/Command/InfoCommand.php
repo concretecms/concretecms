@@ -15,6 +15,7 @@ class InfoCommand extends Command
         $this
             ->setName('c5:info')
             ->setDescription('Get server and concrete5 detailed informations.')
+            ->addOption('env', null, InputOption::VALUE_REQUIRED, 'The environment (if not specified, we\'ll work with the configuration item valid for all environments)')
             ->setHelp(<<<EOT
 Returns codes:
   0 operation completed successfully

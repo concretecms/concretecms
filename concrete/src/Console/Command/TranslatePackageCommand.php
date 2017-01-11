@@ -23,6 +23,7 @@ class TranslatePackageCommand extends Command
             ->addOption('contact', 'c', InputOption::VALUE_REQUIRED, 'Contact information to be put in the language files to report bugs to (eg the "Report-Msgid-Bugs-To" gettext header)', '')
             ->addOption('translator', 't', InputOption::VALUE_REQUIRED, 'Translator to be put in the language files (eg the "Last-Translator" gettext header)', '')
             ->addOption('exclude-3rdparty', 'x', InputOption::VALUE_NONE, 'Specify this option to avoid parsing 3rd party folders')
+            ->addOption('env', null, InputOption::VALUE_REQUIRED, 'The environment (if not specified, we\'ll work with the configuration item valid for all environments)')
             ->setDescription('Creates or updates translations of a concrete5 package')
             ->setHelp(<<<EOT
 If the locale option(s) is not specified, we'll generate/update translations for the currently defined locales for the package.

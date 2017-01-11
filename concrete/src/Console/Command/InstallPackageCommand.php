@@ -20,6 +20,7 @@ class InstallPackageCommand extends Command
             ->setDescription('Install a concrete5 package')
             ->addArgument('package', InputArgument::REQUIRED, 'The handle of the package to be installed')
             ->addArgument('package-options', InputArgument::IS_ARRAY, 'List of key-value pairs to pass to the package install routine (example: foo=bar baz=foo)')
+            ->addOption('env', null, InputOption::VALUE_REQUIRED, 'The environment (if not specified, we\'ll work with the configuration item valid for all environments)')
             ->setHelp(<<<EOT
 Returns codes:
   0 operation completed successfully
