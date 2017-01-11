@@ -123,7 +123,8 @@ class EditorServiceProvider extends ServiceProvider
         $assetList->register(
             'javascript',
             'editor/ckeditor4',
-            $vendorAssetDir . 'ckeditor.js'
+            $vendorAssetDir . 'ckeditor.js',
+            ['combine' => false, 'minify' => false]
         );
         $assetList->register(
             'css',
