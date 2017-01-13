@@ -103,7 +103,12 @@ if (!$error) {
                         }
                     } else {
                         foreach ($originalPages as $oc) {
-                            $nc2 = $oc->duplicate($dc);
+                            if ($oc->isAlias()) {
+                                $nc2ID = $oc->addCollectionAlias($dc);
+                                $nc2 = \Page::getByID($nc2ID);
+                            } else {
+                                $nc2 = $oc->duplicate($dc);
+                            }
                             if (is_object($nc2)) {
                                 $successMessage .= '"' . $oc->getCollectionName() . '" '.t('was successfully copied beneath').' "' . $dc->getCollectionName() . '" ';
                             }
