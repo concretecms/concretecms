@@ -188,39 +188,31 @@ class PackageService
     public function install(Package $p, $data)
     {
         $this->localization->pushActiveContext('system');
-        try {
+        ClassLoader::getInstance()->registerPackage($p);
 
-            ClassLoader::getInstance()->registerPackage($p);
-
-            if (method_exists($p, 'validate_install')) {
-                $response = $p->validate_install($data);
-            }
-
-            if (isset($response) && $response instanceof ErrorList && $response->has()) {
-                return $response;
-            }
-
-            $this->bootPackageEntityManager($p);
-            $p->install($data);
-
-            $u = new \User();
-            $swapper = $p->getContentSwapper();
-            if ($u->isSuperUser() && $swapper->allowsFullContentSwap($p) && $data['pkgDoFullContentSwap']) {
-                $swapper->swapContent($p, $data);
-            }
-            if (method_exists($p, 'on_after_swap_content')) {
-                $p->on_after_swap_content($data);
-            }
-            $this->localization->popActiveContext();
-            $pkg = $this->getByHandle($p->getPackageHandle());
-
-            return $p;
-        } catch (\Exception $e) {
-            $this->localization->popActiveContext();
-            $error = $this->application->make('error');
-            $error->add($e);
-            return $error;
+        if (method_exists($p, 'validate_install')) {
+            $response = $p->validate_install($data);
         }
+
+        if (isset($response) && $response instanceof ErrorList && $response->has()) {
+            return $response;
+        }
+
+        $this->bootPackageEntityManager($p);
+        $p->install($data);
+
+        $u = new \User();
+        $swapper = $p->getContentSwapper();
+        if ($u->isSuperUser() && $swapper->allowsFullContentSwap($p) && $data['pkgDoFullContentSwap']) {
+            $swapper->swapContent($p, $data);
+        }
+        if (method_exists($p, 'on_after_swap_content')) {
+            $p->on_after_swap_content($data);
+        }
+        $this->localization->popActiveContext();
+        $pkg = $this->getByHandle($p->getPackageHandle());
+
+        return $p;
     }
 
     /**
