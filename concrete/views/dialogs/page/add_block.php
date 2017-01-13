@@ -11,7 +11,7 @@ if ($url != '') {
 <?php 
 }
 $identifier = strtoupper('BLOCK_CONTROLLER_' . $btHandle);
-if (is_array($headerItems[$identifier])) {
+if (isset($headerItems) && is_array($headerItems[$identifier])) {
     foreach ($headerItems[$identifier] as $item) {
         if ($item instanceof CSSOutputObject) {
             $type = 'CSS';
