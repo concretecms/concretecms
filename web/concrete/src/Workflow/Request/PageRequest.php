@@ -13,7 +13,8 @@ abstract class PageRequest extends Request
 {
     public function setRequestedPage($c)
     {
-        $this->cID = $c->getCollectionID();
+        $cID = ($c->getCollectionPointerOriginalID() > 0) ? $c->getCollectionPointerOriginalID() : $c->getCollectionID();
+        $this->cID = $cID;
     }
 
     public function getRequestedPageID()
