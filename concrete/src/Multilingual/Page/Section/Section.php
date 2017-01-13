@@ -451,12 +451,18 @@ class Section extends Page
 
     public static function unregisterPage($page)
     {
+        if ($page->isAlias()) {
+            return;
+        }
         $db = Database::get();
         $db->Execute('delete from MultilingualPageRelations where cID = ?', [$page->getCollectionID()]);
     }
 
     public static function registerPage($page)
     {
+        if ($page->isAlias()) {
+            return;
+        }
         if (\Core::make('multilingual/detector')->isEnabled()) {
             $db = Database::get();
             $ms = static::getBySectionOfSite($page);
@@ -492,6 +498,10 @@ class Section extends Page
 
     public static function registerMove($page, $oldParent, $newParent)
     {
+        if ($page->isAlias()) {
+            return;
+        }
+
         if (static::isMultilingualSection($newParent)) {
             $ms = static::getByID($newParent->getCollectionID());
         } else {

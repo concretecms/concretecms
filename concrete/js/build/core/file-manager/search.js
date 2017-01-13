@@ -268,17 +268,7 @@
                     if (errors.length) {
                         ConcreteAlert.dialog(ccmi18n_filemanager.uploadFailed, error_template({errors: errors}));
                     } else {
-                        var canAdd = false;
-                        _.each(files, function(file) {
-                            if (file.canEditFileProperties) {
-                                canAdd = true;
-                            }
-                        });
-                        if (canAdd) {
-                            my._launchUploadCompleteDialog(files);
-                        } else {
-                            my.reloadFolder();
-                        }
+                        my._launchUploadCompleteDialog(files);
                         files = [];
                     }
                 }
@@ -299,7 +289,10 @@
                 height: 500,
                 modal: true,
                 title: ccmi18n_filemanager.addFiles,
-                href: CCM_DISPATCHER_FILENAME + '/tools/required/files/import?currentFolder=' + my.currentFolder
+                href: CCM_DISPATCHER_FILENAME + '/tools/required/files/import?currentFolder=' + my.currentFolder,
+                onClose: function() {
+                    my.reloadFolder();
+                }
             });
         });
 

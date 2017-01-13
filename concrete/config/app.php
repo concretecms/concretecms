@@ -1189,8 +1189,16 @@ return array(
         ),
         'core/express' => array(
             array(
-                array('css', 'core/express'),
+                array('javascript', 'underscore'),
+                array('javascript', 'backbone'),
+                array('javascript', 'core/events'),
+                array('javascript', 'jquery/ui'),
+                array('javascript-localized', 'core/localization'),
+                array('javascript-localized', 'jquery/ui'),
+                array('javascript', 'core/app'),
                 array('javascript', 'core/express'),
+                array('css', 'core/app'),
+                array('css', 'core/express'),
             ),
         ),
         'core/topics' => array(

@@ -14,16 +14,22 @@ class Properties extends BackendInterfaceController
     protected $viewPath = '/dialogs/file/bulk/properties';
     protected $controllerActionPath = '/ccm/system/dialogs/file/bulk/properties';
     protected $files;
-    protected $canEdit = false;
+    protected $canAccess = false;
 
     protected function canAccess()
     {
-        return $this->canEdit;
+        return $this->canAccess;
     }
 
     protected function setFiles($files)
     {
         $this->files = $files;
+    }
+
+    protected function checkPermissions($file)
+    {
+        $fp = new Permissions($file);
+        return $fp->canEditFileProperties();
     }
 
     public function on_start()
@@ -43,15 +49,14 @@ class Properties extends BackendInterfaceController
         }
 
         if (count($this->files) > 0) {
-            $this->canEdit = true;
+            $this->canAccess = true;
             foreach ($this->files as $f) {
-                $fp = new Permissions($f);
-                if (!$fp->canEditFileProperties()) {
-                    $this->canEdit = false;
+                if (!$this->checkPermissions($f)) {
+                    $this->canAccess = false;
                 }
             }
         } else {
-            $this->canEdit = false;
+            $this->canAccess = false;
         }
     }
 
@@ -70,7 +75,7 @@ class Properties extends BackendInterfaceController
         $fr = new FileEditResponse();
         $ak = FileAttributeKey::get($_REQUEST['name']);
         if ($this->validateAction()) {
-            if ($this->canEdit) {
+            if ($this->canAccess) {
                 foreach ($this->files as $f) {
                     $fv = $f->getVersionToModify();
                     $controller = $ak->getController();
@@ -93,7 +98,7 @@ class Properties extends BackendInterfaceController
         $fr = new FileEditResponse();
         $ak = FileAttributeKey::get($_REQUEST['akID']);
         if ($this->validateAction()) {
-            if ($this->canEdit) {
+            if ($this->canAccess) {
                 foreach ($this->files as $f) {
                     $fv = $f->getVersionToModify();
                     $fv->clearAttribute($ak);

@@ -2264,7 +2264,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
 
         $cDateModified = $dh->getOverridableNow();
 //      if ($this->getPermissionsCollectionID() != $this->getCollectionID() && $this->getPermissionsCollectionID() != $this->getMasterCollectionID()) {
-        if ($this->getPermissionsCollectionID() != $this->getCollectionID()) {
+        if ($this->getPermissionsCollectionID() != $cID) {
             // implicitly, we're set to inherit the permissions of wherever we are in the site.
             // as such, we'll change to inherit whatever permissions our new parent has
             $npID = $nc->getPermissionsCollectionID();
@@ -2273,8 +2273,8 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
                 //as well as all collections beneath it that are set to inherit from this parent
                 // first we do this one
                 $q = 'update Pages set cInheritPermissionsFromCID = ? where cID = ?';
-                $r = $db->executeQuery($q, [$npID, $this->cID]);
-                $this->updatePermissionsCollectionID($this->getCollectionID(), $npID);
+                $r = $db->executeQuery($q, [$npID, $cID]);
+                $this->updatePermissionsCollectionID($cID, $npID);
             }
         }
 
@@ -2291,7 +2291,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
             $this->activate();
             // if we're moving from the trash, we have to activate recursively
             if ($this->isInTrash()) {
-                $childPages = $this->populateRecursivePages([], ['cID' => $this->getCollectionID()], $this->getCollectionParentID(), 0, false);
+                $childPages = $this->populateRecursivePages([], ['cID' => $cID], $this->getCollectionParentID(), 0, false);
                 foreach ($childPages as $page) {
                     $db->executeQuery('update Pages set cIsActive = 1 where cID = ?', [$page['cID']]);
                 }
@@ -2299,9 +2299,9 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         }
 
         if ($nc->getSiteTreeID() != $this->getSiteTreeID()) {
-            $db->executeQuery('update Pages set siteTreeID = ? where cID = ?', [$nc->getSiteTreeID(), $this->getCollectionID()]);
+            $db->executeQuery('update Pages set siteTreeID = ? where cID = ?', [$nc->getSiteTreeID(), $cID]);
             if (!isset($childPages)) {
-                $childPages = $this->populateRecursivePages([], ['cID' => $this->getCollectionID()], $this->getCollectionParentID(), 0, false);
+                $childPages = $this->populateRecursivePages([], ['cID' => $cID], $this->getCollectionParentID(), 0, false);
             }
             foreach ($childPages as $page) {
                 $db->executeQuery('update Pages set siteTreeID = ? where cID = ?', [$nc->getSiteTreeID(), $page['cID']]);
@@ -2722,7 +2722,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     {
         //this line was added to allow changing the display order of aliases
         if (!intval($cID)) {
-            $cID = $this->getCollectionID();
+            $cID = ($this->getCollectionPointerOriginalID() > 0) ? $this->getCollectionPointerOriginalID() : $this->cID;
         }
         $db = Database::connection();
         $db->executeQuery('update Pages set cDisplayOrder = ? where cID = ?', [$do, $cID]);
