@@ -2273,7 +2273,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
                 //as well as all collections beneath it that are set to inherit from this parent
                 // first we do this one
                 $q = 'update Pages set cInheritPermissionsFromCID = ? where cID = ?';
-                $r = $db->executeQuery($q, [$npID, $this->cID]);
+                $r = $db->executeQuery($q, [$npID, $cID]);
                 $this->updatePermissionsCollectionID($cID, $npID);
             }
         }
