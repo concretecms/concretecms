@@ -703,7 +703,7 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
      */
     public function getBlockTypeHelp()
     {
-        return $this->btHelpContent;
+        return isset($this->btHelpContent) ? $this->btHelpContent : null;
     }
 
     public function isCopiedWhenPropagated()
