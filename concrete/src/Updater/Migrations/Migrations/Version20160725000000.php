@@ -868,7 +868,10 @@ class Version20160725000000 extends AbstractMigration
             $locale = 'en_US';
             if (\Config::get('concrete.multilingual.default_locale')) {
                 $locale = \Config::get('concrete.multilingual.default_locale');
+            } else if (\Config::get('concrete.locale')) { // default app language
+                $locale = \Config::get('concrete.locale');
             }
+
             $site = $service->installDefault($locale);
 
             // migrate name
