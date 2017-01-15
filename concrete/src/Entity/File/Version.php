@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\Entity\File;
 
 use Carbon\Carbon;
@@ -16,7 +17,6 @@ use Concrete\Core\File\Importer;
 use Concrete\Core\File\Menu;
 use Concrete\Core\File\Type\TypeList as FileTypeList;
 use Concrete\Core\Http\FlysystemFileResponse;
-use Doctrine\Common\Collections\ArrayCollection;
 use League\Flysystem\AdapterInterface;
 use League\Flysystem\FileNotFoundException;
 use Core;
@@ -180,7 +180,7 @@ class Version
 
     public static function cleanTags($tagsStr)
     {
-        $tagsArray = explode("\n", str_replace(["\r", ","], "\n", $tagsStr));
+        $tagsArray = explode("\n", str_replace(["\r", ','], "\n", $tagsStr));
         $cleanTags = [];
         foreach ($tagsArray as $tag) {
             if (!strlen(trim($tag))) {
@@ -189,7 +189,7 @@ class Version
             $cleanTags[] = trim($tag);
         }
         //the leading and trailing line break char is for searching: fvTag like %\ntag\n%
-        return "\n" . implode("\n", $cleanTags) . "\n";
+        return "\n".implode("\n", $cleanTags)."\n";
     }
 
     public function setFilename($filename)
@@ -268,7 +268,7 @@ class Version
             $category->deleteValue($attribute);
         }
 
-        $db->Execute("DELETE FROM FileVersionLog WHERE fID = ? AND fvID = ?", [$this->getFileID(), $this->fvID]);
+        $db->Execute('DELETE FROM FileVersionLog WHERE fID = ? AND fvID = ?', [$this->getFileID(), $this->fvID]);
 
         $types = Type::getVersionList();
 
@@ -307,25 +307,27 @@ class Version
         }
     }
 
-	/**
-	 * Move the thumbnails for the current file version to a new storage location
-	 *
-	 * @param string $type
-	 * @param StorageLocation $location
-	 */
-    public function updateThumbnailStorageLocation($type, StorageLocation $location) {
-	    if (!($type instanceof ThumbnailTypeVersion)) {
-		    $type = ThumbnailTypeVersion::getByHandle($type);
-	    }
-	    $fsl = $this->getFile()->getFileStorageLocationObject()->getFileSystemObject();
-	    $path = $type->getFilePath($this);
-	    $manager = new \League\Flysystem\MountManager([
-		    'current' => $fsl,
-		    'new' => $location->getFileSystemObject(),
-	    ]);
-	    try {
-		    $manager->move('current://' . $path, 'new://' . $path);
-	    } catch (FileNotFoundException $e) {}
+    /**
+     * Move the thumbnails for the current file version to a new storage location.
+     *
+     * @param string          $type
+     * @param StorageLocation $location
+     */
+    public function updateThumbnailStorageLocation($type, StorageLocation $location)
+    {
+        if (!($type instanceof ThumbnailTypeVersion)) {
+            $type = ThumbnailTypeVersion::getByHandle($type);
+        }
+        $fsl = $this->getFile()->getFileStorageLocationObject()->getFileSystemObject();
+        $path = $type->getFilePath($this);
+        $manager = new \League\Flysystem\MountManager([
+            'current' => $fsl,
+            'new' => $location->getFileSystemObject(),
+        ]);
+        try {
+            $manager->move('current://'.$path, 'new://'.$path);
+        } catch (FileNotFoundException $e) {
+        }
     }
 
     /**
@@ -523,7 +525,7 @@ class Version
                     break;
                 case self::UT_EXTENDED_ATTRIBUTE:
                     $val = $db->GetOne(
-                        "SELECT akName FROM AttributeKeys WHERE akID = ?",
+                        'SELECT akName FROM AttributeKeys WHERE akID = ?',
                         [$a['fvUpdateTypeAttributeID']]
                     );
                     if ($val != '') {
@@ -673,7 +675,7 @@ class Version
         $fo = $this->getFile();
         $fo->reindex();
 
-        \Core::make('cache/request')->delete('file/version/approved/' . $this->getFileID());
+        \Core::make('cache/request')->delete('file/version/approved/'.$this->getFileID());
     }
 
     /**
@@ -951,7 +953,7 @@ class Version
             $baseSrc = $this->getThumbnailURL($type->getBaseVersion());
             $doubledSrc = $this->getThumbnailURL($type->getDoubledVersion());
 
-            return '<img src="' . $baseSrc . '" data-at2x="' . $doubledSrc . '" />';
+            return '<img src="'.$baseSrc.'" data-at2x="'.$doubledSrc.'" />';
         } else {
             return $this->getTypeObject()->getThumbnail();
         }

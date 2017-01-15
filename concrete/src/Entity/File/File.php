@@ -1,9 +1,9 @@
 <?php
+
 namespace Concrete\Core\Entity\File;
 
 use Carbon\Carbon;
 use Concrete\Core\Attribute\Category\AbstractCategory;
-use Concrete\Core\Attribute\Category\CategoryService;
 use Concrete\Core\Attribute\Key\Category;
 use Concrete\Core\File\Image\Thumbnail\Type\Type;
 use Concrete\Core\File\Importer;
@@ -99,7 +99,7 @@ class File implements \Concrete\Core\Permission\ObjectInterface
     {
         $fv = $this->getApprovedVersion();
         if (is_null($fv)) {
-            return null;
+            return;
         }
 
         return call_user_func_array([$fv, $nm], $a);
@@ -191,16 +191,16 @@ class File implements \Concrete\Core\Permission\ObjectInterface
         $list = $this->getVersionList();
         try {
             foreach ($list as $fv) {
-	            $manager = new \League\Flysystem\MountManager([
-		            'current' => $currentFilesystem,
-		            'new' => $newFileSystem,
-	            ]);
-	            $fp = $fh->prefix($fv->getPrefix(), $fv->getFilename());
-	            $manager->move('current://' . $fp, 'new://' . $fp);
+                $manager = new \League\Flysystem\MountManager([
+                    'current' => $currentFilesystem,
+                    'new' => $newFileSystem,
+                ]);
+                $fp = $fh->prefix($fv->getPrefix(), $fv->getFilename());
+                $manager->move('current://'.$fp, 'new://'.$fp);
 
                 $thumbs = Type::getVersionList();
                 foreach ($thumbs as $type) {
-                	$fv->updateThumbnailStorageLocation($type, $newLocation);
+                    $fv->updateThumbnailStorageLocation($type, $newLocation);
                 }
             }
         } catch (\Exception $e) {
@@ -248,7 +248,7 @@ class File implements \Concrete\Core\Permission\ObjectInterface
     public function resetPermissions($fOverrideSetPermissions = 0)
     {
         $db = Loader::db();
-        $db->Execute("delete from FilePermissionAssignments where fID = ?", [$this->fID]);
+        $db->Execute('delete from FilePermissionAssignments where fID = ?', [$this->fID]);
         if ($fOverrideSetPermissions) {
             $permissions = PermissionKey::getList('file');
             foreach ($permissions as $pk) {
@@ -279,7 +279,7 @@ class File implements \Concrete\Core\Permission\ObjectInterface
     public function getFileSets()
     {
         $db = Loader::db();
-        $fsIDs = $db->Execute("select fsID from FileSetFiles where fID = ?", [$this->getFileID()]);
+        $fsIDs = $db->Execute('select fsID from FileSetFiles where fID = ?', [$this->getFileID()]);
         $filesets = [];
         while ($row = $fsIDs->FetchRow()) {
             $fs = FileSet::getByID($row['fsID']);
@@ -298,7 +298,7 @@ class File implements \Concrete\Core\Permission\ObjectInterface
         }
         $db = Loader::db();
         $r = $db->GetOne(
-            "select fsfID from FileSetFiles fsf inner join FileSets fs on fs.fsID = fsf.fsID where fsf.fID = ? and fs.uID = ? and fs.fsType = ?",
+            'select fsfID from FileSetFiles fsf inner join FileSets fs on fs.fsID = fsf.fsID where fsf.fID = ? and fs.uID = ? and fs.fsType = ?',
             [$this->getFileID(), $u->getUserID(), FileSet::TYPE_STARRED]
         );
 
@@ -467,11 +467,11 @@ class File implements \Concrete\Core\Permission\ObjectInterface
         $em->flush();
 
         $v = [$this->fID];
-        $q = "select fID, paID, pkID from FilePermissionAssignments where fID = ?";
+        $q = 'select fID, paID, pkID from FilePermissionAssignments where fID = ?';
         $r = $db->query($q, $v);
         while ($row = $r->fetchRow()) {
             $v = [$nf->getFileID(), $row['paID'], $row['pkID']];
-            $q = "insert into FilePermissionAssignments (fID, paID, pkID) values (?, ?, ?)";
+            $q = 'insert into FilePermissionAssignments (fID, paID, pkID) values (?, ?, ?)';
             $db->query($q, $v);
         }
 
@@ -489,7 +489,7 @@ class File implements \Concrete\Core\Permission\ObjectInterface
         // run the query even though we've run it multiple times in the same request. So we're going to
         // step between doctrine this time.
         $cache = \Core::make('cache/request');
-        $item = $cache->getItem('file/version/approved/' . $this->getFileID());
+        $item = $cache->getItem('file/version/approved/'.$this->getFileID());
         if (!$item->isMiss()) {
             return $item->get();
         }
@@ -507,7 +507,7 @@ class File implements \Concrete\Core\Permission\ObjectInterface
     {
         $db = Loader::db();
         $r = $db->GetOne(
-            "select fsfID from FileSetFiles where fID = ? and fsID = ?",
+            'select fsfID from FileSetFiles where fID = ? and fsID = ?',
             [$this->getFileID(), $fs->getFileSetID()]
         );
 
@@ -544,28 +544,28 @@ class File implements \Concrete\Core\Permission\ObjectInterface
             $fv->delete(true);
         }
 
-        $db->Execute("delete from FileSetFiles where fID = ?", [$this->fID]);
-        $db->Execute("delete from FileSearchIndexAttributes where fID = ?", [$this->fID]);
-        $db->Execute("delete from DownloadStatistics where fID = ?", [$this->fID]);
-        $db->Execute("delete from FilePermissionAssignments where fID = ?", [$this->fID]);
+        $db->Execute('delete from FileSetFiles where fID = ?', [$this->fID]);
+        $db->Execute('delete from FileSearchIndexAttributes where fID = ?', [$this->fID]);
+        $db->Execute('delete from DownloadStatistics where fID = ?', [$this->fID]);
+        $db->Execute('delete from FilePermissionAssignments where fID = ?', [$this->fID]);
 
         $query = $em->createQuery('select fav from Concrete\Core\Entity\Attribute\Value\Value\ImageFileValue fav inner join fav.file f where f.fID = :fID');
         $query->setParameter('fID', $this->getFileID());
         $values = $query->getResult();
         foreach ($values as $genericValue) {
-            foreach(Category::getList() as $category) {
+            foreach (Category::getList() as $category) {
                 $category = $category->getController();
-                /**
+                /*
                  * @var $category AbstractCategory
                  */
                 $values = $category->getAttributeValueRepository()->findBy(['generic_value' => $genericValue]);
-                foreach($values as $attributeValue) {
+                foreach ($values as $attributeValue) {
                     $category->deleteValue($attributeValue);
                 }
             }
         }
 
-        $db->Execute("delete from Files where fID = ?", [$this->fID]);
+        $db->Execute('delete from Files where fID = ?', [$this->fID]);
     }
 
     /**
@@ -624,7 +624,7 @@ class File implements \Concrete\Core\Permission\ObjectInterface
         $db = Loader::db();
         $limitString = '';
         if ($limit != false) {
-            $limitString = 'limit ' . intval($limit);
+            $limitString = 'limit '.intval($limit);
         }
 
         if (is_object($this) && $this instanceof self) {
