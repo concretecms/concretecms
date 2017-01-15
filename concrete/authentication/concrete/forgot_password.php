@@ -2,7 +2,7 @@
 
 <div class="forgotPassword">
 	<form method="post" action="<?= URL::to('/login', 'callback', $authType->getAuthenticationTypeHandle(), 'forgot_password') ?>">
-        <?php $token->output(); ?>
+		<?php $token->output(); ?>
 		<h4><?= t('Forgot Your Password?') ?></h4>
 		<div class="ccm-message"><?= isset($intro_msg) ? $intro_msg : '' ?></div>
 		<div class='help-block'>
