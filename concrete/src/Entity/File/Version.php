@@ -307,6 +307,12 @@ class Version
         }
     }
 
+	/**
+	 * Move the thumbnails for the current file version to a new storage location
+	 *
+	 * @param string $type
+	 * @param StorageLocation $location
+	 */
     public function updateThumbnailStorageLocation($type, StorageLocation $location) {
 	    if (!($type instanceof ThumbnailTypeVersion)) {
 		    $type = ThumbnailTypeVersion::getByHandle($type);
