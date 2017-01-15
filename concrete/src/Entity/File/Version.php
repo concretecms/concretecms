@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\Entity\File;
 
 use Carbon\Carbon;
@@ -133,15 +134,16 @@ class Version
      */
     protected $fvHasDetailThumbnail = false;
 
-	/**
-	 * Add a new file version
-	 *
-	 * @param File $file
-	 * @param string $filename
-	 * @param string $prefix
-	 * @param array $data
-	 * @return static
-	 */
+    /**
+     * Add a new file version.
+     *
+     * @param File   $file
+     * @param string $filename
+     * @param string $prefix
+     * @param array  $data
+     *
+     * @return static
+     */
     public static function add(\Concrete\Core\Entity\File\File $file, $filename, $prefix, $data = [])
     {
         $u = new User();
@@ -183,15 +185,16 @@ class Version
         return $fv;
     }
 
-	/**
-	 * Clean the tags (removing whitespace)
-	 *
-	 * @param $tagsStr string Delimited by '\n'
-	 * @return string
-	 */
+    /**
+     * Clean the tags (removing whitespace).
+     *
+     * @param $tagsStr string Delimited by '\n'
+     *
+     * @return string
+     */
     public static function cleanTags($tagsStr)
     {
-        $tagsArray = explode("\n", str_replace(["\r", ","], "\n", $tagsStr));
+        $tagsArray = explode("\n", str_replace(["\r", ','], "\n", $tagsStr));
         $cleanTags = [];
         foreach ($tagsArray as $tag) {
             if (!strlen(trim($tag))) {
@@ -200,44 +203,44 @@ class Version
             $cleanTags[] = trim($tag);
         }
         //the leading and trailing line break char is for searching: fvTag like %\ntag\n%
-        return "\n" . implode("\n", $cleanTags) . "\n";
+        return "\n".implode("\n", $cleanTags)."\n";
     }
 
-	/**
-	 * Set the filename
-	 *
-	 * @param string $filename
-	 */
+    /**
+     * Set the filename.
+     *
+     * @param string $filename
+     */
     public function setFilename($filename)
     {
         $this->fvFilename = $filename;
     }
 
-	/**
-	 * Path prefix for a file
-	 *
-	 * @return string
-	 */
+    /**
+     * Path prefix for a file.
+     *
+     * @return string
+     */
     public function getPrefix()
     {
         return $this->fvPrefix;
     }
 
-	/**
-	 * If the current version is approved
-	 *
-	 * @return bool
-	 */
+    /**
+     * If the current version is approved.
+     *
+     * @return bool
+     */
     public function isApproved()
     {
         return $this->fvIsApproved;
     }
 
-	/**
-	 * Get the tags as an array of strings
-	 *
-	 * @return string[]
-	 */
+    /**
+     * Get the tags as an array of strings.
+     *
+     * @return string[]
+     */
     public function getTagsList()
     {
         $tags = explode("\n", str_replace("\r", "\n", trim($this->getTags())));
@@ -251,11 +254,11 @@ class Version
         return $clean_tags;
     }
 
-	/**
-	 * Get the tags for a file
-	 *
-	 * @return null|string
-	 */
+    /**
+     * Get the tags for a file.
+     *
+     * @return null|string
+     */
     public function getTags()
     {
         return $this->fvTags;
@@ -271,31 +274,31 @@ class Version
         return $this->file;
     }
 
-	/**
-	 * Set the current file
-	 *
-	 * @param File $file
-	 */
+    /**
+     * Set the current file.
+     *
+     * @param File $file
+     */
     public function setFile(\Concrete\Core\Entity\File\File $file)
     {
         $this->file = $file;
     }
 
-	/**
-	 * File ID
-	 *
-	 * @return int
-	 */
+    /**
+     * File ID.
+     *
+     * @return int
+     */
     public function getFileID()
     {
         return $this->file->getFileID();
     }
 
-	/**
-	 * File Version ID
-	 *
-	 * @return int
-	 */
+    /**
+     * File Version ID.
+     *
+     * @return int
+     */
     public function getFileVersionID()
     {
         return $this->fvID;
@@ -316,7 +319,7 @@ class Version
             $category->deleteValue($attribute);
         }
 
-        $db->Execute("DELETE FROM FileVersionLog WHERE fID = ? AND fvID = ?", [$this->getFileID(), $this->fvID]);
+        $db->Execute('DELETE FROM FileVersionLog WHERE fID = ? AND fvID = ?', [$this->getFileID(), $this->fvID]);
 
         $types = Type::getVersionList();
 
@@ -371,11 +374,11 @@ class Version
         return $fo;
     }
 
-	/**
-	 * Get the mime type of the file if known
-	 *
-	 * @return string
-	 */
+    /**
+     * Get the mime type of the file if known.
+     *
+     * @return string
+     */
     public function getMimeType()
     {
         $fre = $this->getFileResource();
@@ -383,31 +386,31 @@ class Version
         return $fre->getMimetype();
     }
 
-	/**
-	 * Get the formatted filesize of a file e.g. 123KB
-	 *
-	 * @return mixed|string
-	 */
+    /**
+     * Get the formatted filesize of a file e.g. 123KB.
+     *
+     * @return mixed|string
+     */
     public function getSize()
     {
         return Core::make('helper/number')->formatSize($this->fvSize, 'KB');
     }
 
-	/**
-	 * File size of the file
-	 *
-	 * @return int
-	 */
+    /**
+     * File size of the file.
+     *
+     * @return int
+     */
     public function getFullSize()
     {
         return $this->fvSize;
     }
 
-	/**
-	 * The author of the file (or Unknown)
-	 *
-	 * @return string
-	 */
+    /**
+     * The author of the file (or Unknown).
+     *
+     * @return string
+     */
     public function getAuthorName()
     {
         $ui = \UserInfo::getByID($this->fvAuthorUID);
@@ -418,11 +421,11 @@ class Version
         return t('(Unknown)');
     }
 
-	/**
-	 * Return the uID for the author of the file
-	 *
-	 * @return int
-	 */
+    /**
+     * Return the uID for the author of the file.
+     *
+     * @return int
+     */
     public function getAuthorUserID()
     {
         return $this->fvAuthorUID;
@@ -438,21 +441,21 @@ class Version
         return $this->fvDateAdded;
     }
 
-	/**
-	 * Get the file extension for a file
-	 *
-	 * @return null|string
-	 */
+    /**
+     * Get the file extension for a file.
+     *
+     * @return null|string
+     */
     public function getExtension()
     {
         return $this->fvExtension;
     }
 
-	/**
-	 * Set the ID for the file version
-	 *
-	 * @param int $fvID
-	 */
+    /**
+     * Set the ID for the file version.
+     *
+     * @param int $fvID
+     */
     public function setFileVersionID($fvID)
     {
         $this->fvID = $fvID;
@@ -501,9 +504,9 @@ class Version
         return $fv;
     }
 
-	/**
-	 * Deny a file version update
-	 */
+    /**
+     * Deny a file version update.
+     */
     public function deny()
     {
         $this->fvIsApproved = false;
@@ -512,11 +515,11 @@ class Version
         Events::dispatch('on_file_version_deny', $fe);
     }
 
-	/**
-	 * Save changes to a file
-	 *
-	 * @param bool $flush Flush the EM cache
-	 */
+    /**
+     * Save changes to a file.
+     *
+     * @param bool $flush Flush the EM cache
+     */
     protected function save($flush = true)
     {
         $em = \ORM::entityManager();
@@ -598,7 +601,7 @@ class Version
                     break;
                 case self::UT_EXTENDED_ATTRIBUTE:
                     $val = $db->GetOne(
-                        "SELECT akName FROM AttributeKeys WHERE akID = ?",
+                        'SELECT akName FROM AttributeKeys WHERE akID = ?',
                         [$a['fvUpdateTypeAttributeID']]
                     );
                     if ($val != '') {
@@ -617,11 +620,11 @@ class Version
         return $updates1;
     }
 
-	/**
-	 * Update the Title for a file
-	 *
-	 * @param string $title
-	 */
+    /**
+     * Update the Title for a file.
+     *
+     * @param string $title
+     */
     public function updateTitle($title)
     {
         $this->fvTitle = $title;
@@ -631,9 +634,9 @@ class Version
         Events::dispatch('on_file_version_update_title', $fe);
     }
 
-	/**
-	 * Duplicate a file (adds a new version)
-	 */
+    /**
+     * Duplicate a file (adds a new version).
+     */
     public function duplicateUnderlyingFile()
     {
         $importer = new Importer();
@@ -656,12 +659,12 @@ class Version
         $this->updateFile($this->getFilename(), $prefix);
     }
 
-	/**
-	 * Log updates to files
-	 *
-	 * @param int $updateTypeID Refers to the constants
-	 * @param int $updateTypeAttributeID
-	 */
+    /**
+     * Log updates to files.
+     *
+     * @param int $updateTypeID          Refers to the constants
+     * @param int $updateTypeAttributeID
+     */
     public function logVersionUpdate($updateTypeID, $updateTypeAttributeID = 0)
     {
         $db = Database::get();
@@ -676,11 +679,11 @@ class Version
         );
     }
 
-	/**
-	 * Update the tags for a file
-	 *
-	 * @param string $tags
-	 */
+    /**
+     * Update the tags for a file.
+     *
+     * @param string $tags
+     */
     public function updateTags($tags)
     {
         $tags = self::cleanTags($tags);
@@ -691,11 +694,11 @@ class Version
         Events::dispatch('on_file_version_update_tags', $fe);
     }
 
-	/**
-	 * Update the description of a file
-	 *
-	 * @param string $descr
-	 */
+    /**
+     * Update the description of a file.
+     *
+     * @param string $descr
+     */
     public function updateDescription($descr)
     {
         $this->fvDescription = $descr;
@@ -705,11 +708,11 @@ class Version
         Events::dispatch('on_file_version_update_description', $fe);
     }
 
-	/**
-	 * Rename a file
-	 *
-	 * @param string $filename
-	 */
+    /**
+     * Rename a file.
+     *
+     * @param string $filename
+     */
     public function rename($filename)
     {
         $cf = Core::make('helper/concrete/file');
@@ -731,11 +734,11 @@ class Version
         }
     }
 
-	/**
-	 * Update the contents of a file
-	 *
-	 * @param string $contents
-	 */
+    /**
+     * Update the contents of a file.
+     *
+     * @param string $contents
+     */
     public function updateContents($contents)
     {
         $cf = Core::make('helper/concrete/file');
@@ -754,12 +757,12 @@ class Version
         }
     }
 
-	/**
-	 * Update the filename and prefix of a file
-	 *
-	 * @param string $filename
-	 * @param string $prefix
-	 */
+    /**
+     * Update the filename and prefix of a file.
+     *
+     * @param string $filename
+     * @param string $prefix
+     */
     public function updateFile($filename, $prefix)
     {
         $this->fvFilename = $filename;
@@ -768,9 +771,9 @@ class Version
         $this->logVersionUpdate(self::UT_REPLACE_FILE);
     }
 
-	/**
-	 * Approve the change to a file version
-	 */
+    /**
+     * Approve the change to a file version.
+     */
     public function approve()
     {
         foreach ($this->file->getFileVersions() as $fv) {
@@ -791,7 +794,7 @@ class Version
         $fo = $this->getFile();
         $fo->reindex();
 
-        \Core::make('cache/request')->delete('file/version/approved/' . $this->getFileID());
+        \Core::make('cache/request')->delete('file/version/approved/'.$this->getFileID());
     }
 
     /**
@@ -841,21 +844,21 @@ class Version
         exit;
     }
 
-	/**
-	 * Return the filename for a file if it exists
-	 *
-	 * @return null|string
-	 */
+    /**
+     * Return the filename for a file if it exists.
+     *
+     * @return null|string
+     */
     public function getFileName()
     {
         return $this->fvFilename;
     }
 
-	/**
-	 * Return the relative path for a file (may not exist)
-	 *
-	 * @return string
-	 */
+    /**
+     * Return the relative path for a file (may not exist).
+     *
+     * @return string
+     */
     public function getRelativePath()
     {
         $cf = Core::make('helper/concrete/file');
@@ -868,12 +871,13 @@ class Version
         }
     }
 
-	/**
-	 * Get an array of thumbnails
-	 *
-	 * @return Thumbnail[]
-	 * @throws InvalidDimensionException
-	 */
+    /**
+     * Get an array of thumbnails.
+     *
+     * @return Thumbnail[]
+     *
+     * @throws InvalidDimensionException
+     */
     public function getThumbnails()
     {
         $thumbnails = [];
@@ -907,9 +911,9 @@ class Version
         return $thumbnails;
     }
 
-	/**
-	 * @return \Concrete\Core\Attribute\Category\FileCategory|mixed
-	 */
+    /**
+     * @return \Concrete\Core\Attribute\Category\FileCategory|mixed
+     */
     public function getObjectAttributeCategory()
     {
         return \Core::make('\Concrete\Core\Attribute\Category\FileCategory');
@@ -920,7 +924,7 @@ class Version
      * File Attribute Value object.
      *
      * @param string|FileKey $ak
-     * @param bool $createIfNotExists
+     * @param bool           $createIfNotExists
      *
      * @return mixed|FileValue
      */
@@ -948,11 +952,11 @@ class Version
         }
     }
 
-	/**
-	 * Rescan the thumbnails for a file (images only)
-	 *
-	 * @return bool False on failure
-	 */
+    /**
+     * Rescan the thumbnails for a file (images only).
+     *
+     * @return bool False on failure
+     */
     public function rescanThumbnails()
     {
         if ($this->fvType != \Concrete\Core\File\Type\Type::T_IMAGE) {
@@ -1090,11 +1094,11 @@ class Version
         return false;
     }
 
-	/**
-	 *  Return the thumbnail for an image or a generic type icon for a file.
-	 *
-	 * @return string
-	 */
+    /**
+     *  Return the thumbnail for an image or a generic type icon for a file.
+     *
+     * @return string
+     */
     public function getDetailThumbnailImage()
     {
         if ($this->fvHasDetailThumbnail) {
@@ -1102,7 +1106,7 @@ class Version
             $baseSrc = $this->getThumbnailURL($type->getBaseVersion());
             $doubledSrc = $this->getThumbnailURL($type->getDoubledVersion());
 
-            return '<img src="' . $baseSrc . '" data-at2x="' . $doubledSrc . '" />';
+            return '<img src="'.$baseSrc.'" data-at2x="'.$doubledSrc.'" />';
         } else {
             return $this->getTypeObject()->getThumbnail();
         }
@@ -1137,7 +1141,7 @@ class Version
      * the file is imported into the system as is as the thumbnail.
      *
      * @param ThumbnailTypeVersion $version
-     * @param string $path
+     * @param string               $path
      */
     public function importThumbnail(\Concrete\Core\File\Image\Thumbnail\Type\Version $version, $path)
     {
@@ -1215,6 +1219,7 @@ class Version
      * etc...
      *
      * @param bool $rescanThumbnails Whether or not we should rescan thumbnails as well
+     *
      * @return null|int
      */
     public function refreshAttributes($rescanThumbnails = true)
@@ -1257,11 +1262,11 @@ class Version
         $f->reindex();
     }
 
-	/**
-	 * Title for the file if one exists.
-	 *
-	 * @return null|string
-	 */
+    /**
+     * Title for the file if one exists.
+     *
+     * @return null|string
+     */
     public function getTitle()
     {
         return $this->fvTitle;
@@ -1315,11 +1320,11 @@ class Version
         return false;
     }
 
-	/**
-	 * Checks current viewers for this type and returns true if there is a viewer for this type, false if not.
-	 *
-	 * @return bool
-	 */
+    /**
+     * Checks current viewers for this type and returns true if there is a viewer for this type, false if not.
+     *
+     * @return bool
+     */
     public function canEdit()
     {
         $to = $this->getTypeObject();
@@ -1342,21 +1347,21 @@ class Version
         return $to->getGenericDisplayType();
     }
 
-	/**
-	 * Returns the description for the file if there is one.
-	 *
-	 * @return null|string
-	 */
+    /**
+     * Returns the description for the file if there is one.
+     *
+     * @return null|string
+     */
     public function getDescription()
     {
         return $this->fvDescription;
     }
 
-	/**
-	 * Return the thumbnail for an image or a generic type icon for a file.
-	 *
-	 * @return string
-	 */
+    /**
+     * Return the thumbnail for an image or a generic type icon for a file.
+     *
+     * @return string
+     */
     public function getListingThumbnailImage()
     {
         if ($this->fvHasListingThumbnail) {
