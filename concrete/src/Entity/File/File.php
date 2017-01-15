@@ -5,6 +5,7 @@ use Carbon\Carbon;
 use Concrete\Core\Attribute\Category\AbstractCategory;
 use Concrete\Core\Attribute\Category\CategoryService;
 use Concrete\Core\Attribute\Key\Category;
+use Concrete\Core\File\Image\Thumbnail\Type\Type;
 use Concrete\Core\File\Importer;
 use Concrete\Core\Tree\Node\Node;
 use Concrete\Core\Tree\Node\Type\FileFolder;
@@ -190,9 +191,17 @@ class File implements \Concrete\Core\Permission\ObjectInterface
         $list = $this->getVersionList();
         try {
             foreach ($list as $fv) {
-                $contents = $fv->getFileContents();
-                $newFileSystem->put($fh->prefix($fv->getPrefix(), $fv->getFilename()), $contents);
-                $currentFilesystem->delete($fh->prefix($fv->getPrefix(), $fv->getFilename()));
+	            $manager = new \League\Flysystem\MountManager([
+		            'current' => $currentFilesystem,
+		            'new' => $newFileSystem,
+	            ]);
+	            $fp = $fh->prefix($fv->getPrefix(), $fv->getFilename());
+	            $manager->move('current://' . $fp, 'new://' . $fp);
+
+                $thumbs = Type::getVersionList();
+                foreach ($thumbs as $type) {
+                	$fv->updateThumbnailStorageLocation($type, $newLocation);
+                }
             }
         } catch (\Exception $e) {
             throw new \Exception($e->getMessage());
