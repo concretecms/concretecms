@@ -3,6 +3,7 @@ namespace Concrete\Authentication\Concrete;
 
 use Concrete\Core\Authentication\AuthenticationTypeController;
 use Concrete\Core\Support\Facade\Application;
+use Concrete\Core\Validation\CSRF\Token;
 use Config;
 use Exception;
 use Database;
@@ -231,6 +232,7 @@ class Controller extends AuthenticationTypeController
             $this->redirect('/login', $this->getAuthenticationType()->getAuthenticationTypeHandle(), 'password_sent');
         } else {
             $this->set('authType', $this->getAuthenticationType());
+            $this->set('token', $this->app->make(Token::class));
         }
     }
 
