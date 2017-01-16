@@ -127,7 +127,7 @@ class Resolver
                 'fileVersionID' => $version_id,
                 'storageLocationID' => $storage_location_id,
                 'thumbnailTypeHandle' => $thumbnail_handle,
-                'isBuilt' => $isBuilt
+                'isBuilt' => $isBuilt ? 1 : 0
             ));
         } catch (InvalidFieldNameException $e) {
             // User needs to run the database upgrade routine
