@@ -382,6 +382,8 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
 
             if ($emailChanged) {
                 $db->query("DELETE FROM UserValidationHashes WHERE uID = ?", array(intval($this->getUserID())));
+	            $h = Core::make('helper/validation/identifier');
+	            $h->deleteKey('UserValidationHashes', 'uID', $this->getUserID());
             }
 
             // now we check to see if the user is updated his or her own logged in record
