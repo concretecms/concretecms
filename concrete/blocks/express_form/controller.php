@@ -77,8 +77,8 @@ class Controller extends BlockController
     {
         if ($this->bID == $bID) {
             $this->set('success', $this->thankyouMsg);
-            $this->view();
         }
+        $this->view();
     }
 
     public function delete()
