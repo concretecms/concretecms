@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Concrete\Core\Attribute\Key\FileKey;
 use Concrete\Core\Attribute\ObjectTrait;
 use Concrete\Core\Entity\Attribute\Value\FileValue;
+use Concrete\Core\Entity\File\StorageLocation\StorageLocation;
 use Concrete\Core\File\Exception\InvalidDimensionException;
 use Concrete\Core\File\Image\Thumbnail\Path\Resolver;
 use Concrete\Core\File\Image\Thumbnail\Thumbnail;
@@ -357,6 +358,29 @@ class Version
         $path = $type->getFilePath($this);
         if ($fsl->has($path)) {
             $fsl->delete($path);
+        }
+    }
+
+    /**
+     * Move the thumbnails for the current file version to a new storage location.
+     *
+     * @param string          $type
+     * @param StorageLocation $location
+     */
+    public function updateThumbnailStorageLocation($type, StorageLocation $location)
+    {
+        if (!($type instanceof ThumbnailTypeVersion)) {
+            $type = ThumbnailTypeVersion::getByHandle($type);
+        }
+        $fsl = $this->getFile()->getFileStorageLocationObject()->getFileSystemObject();
+        $path = $type->getFilePath($this);
+        $manager = new \League\Flysystem\MountManager([
+            'current' => $fsl,
+            'new' => $location->getFileSystemObject(),
+        ]);
+        try {
+            $manager->move('current://'.$path, 'new://'.$path);
+        } catch (FileNotFoundException $e) {
         }
     }
 
