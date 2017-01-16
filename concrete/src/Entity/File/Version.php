@@ -15,6 +15,9 @@ use Concrete\Core\File\Importer;
 use Concrete\Core\File\Menu;
 use Concrete\Core\File\Type\TypeList as FileTypeList;
 use Concrete\Core\Http\FlysystemFileResponse;
+use Concrete\Core\Support\Facade\Application;
+use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
+use Concrete\Core\Url\Resolver\PathUrlResolver;
 use Doctrine\Common\Collections\ArrayCollection;
 use League\Flysystem\AdapterInterface;
 use League\Flysystem\FileNotFoundException;
@@ -945,15 +948,20 @@ class Version
      */
     public function getThumbnailURL($type)
     {
+        $app = Application::getFacadeApplication();
+        $canonicalUrl = $app->make('url/canonical');
+
         if (!($type instanceof ThumbnailTypeVersion)) {
             $type = ThumbnailTypeVersion::getByHandle($type);
         }
 
         /** @var Resolver $path_resolver */
-        $path_resolver = Core::make('Concrete\Core\File\Image\Thumbnail\Path\Resolver');
+        $path_resolver = $app->make('Concrete\Core\File\Image\Thumbnail\Path\Resolver');
 
         if ($path = $path_resolver->getPath($this, $type)) {
-            return $path;
+            $urlPath = $canonicalUrl->getPath();
+            $urlPath->append($path);
+            return (string) $canonicalUrl->setPath($urlPath);
         }
 
         return $this->getURL();
