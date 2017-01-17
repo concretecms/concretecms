@@ -182,7 +182,7 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
         // StackList (which extends PageList) needs to have it available.
         $query->setParameter('siteTreeID', $tree->getSiteTreeID());
 
-        if ($this->query->getParameter('cParentID') < 1) {
+        if (($this->query->getParameter('cParentID') < 1) && ($this->query->getParameter('cPath') == '')) {
 
             if (!$this->includeSystemPages) {
                 $query->andWhere('p.siteTreeID = :siteTreeID');
