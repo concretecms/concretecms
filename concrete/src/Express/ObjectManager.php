@@ -18,6 +18,17 @@ class ObjectManager
         $this->entityManager = $entityManager;
     }
 
+    public function getEntities($asObject = false)
+    {
+        $r = $this->entityManager
+            ->getRepository('Concrete\Core\Entity\Express\Entity');
+        if ($asObject) {
+            return $r;
+        } else {
+            return $r->findBy(['include_in_public_list' => true]);
+        }
+    }
+
     public function getList($entityHandle, $asObject = false)
     {
         $entity = $this->entityManager

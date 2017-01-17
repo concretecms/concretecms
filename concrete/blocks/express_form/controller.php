@@ -24,6 +24,7 @@ use Concrete\Core\File\FileProviderInterface;
 use Concrete\Core\File\Set\Set;
 use Concrete\Core\Http\ResponseAssetGroup;
 use Concrete\Core\Routing\Redirect;
+use Concrete\Core\Support\Facade\Express;
 use Concrete\Core\Tree\Node\Node;
 use Concrete\Core\Tree\Node\NodeType;
 use Concrete\Core\Tree\Node\Type\Category;
@@ -358,7 +359,7 @@ class Controller extends BlockController
 
     public function save($data)
     {
-        if (isset($data['exFormID'])) {
+        if (isset($data['exFormID']) && $data['exFormID'] != '') {
             return parent::save($data);
         }
         $requestControls = (array) $this->request->request->get('controlID');
@@ -589,11 +590,15 @@ class Controller extends BlockController
                 $folder = $node->getTreeNodeParentObject();
                 $this->set('resultsFolder', $folder->getTreeNodeID());
             }
+            $this->set('formEntity', $form);
+            $this->set('expressEntity', $form->getEntity());
         }
         $this->set('controls', $controls);
         $this->set('types_select', $select);
         $tree = ExpressEntryResults::get();
         $this->set('tree', $tree);
+
+        $this->set('entities', Express::getEntities());
     }
 
     public function action_get_type_form()
