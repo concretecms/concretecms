@@ -486,7 +486,7 @@ return array(
         /*
          * Express
          */
-        "/ccm/system/dialogs/express/entry/search/{entityID}" => array('\Concrete\Controller\Dialog\Express\Search::entries'),
+        "/ccm/system/dialogs/express/entry/search" => array('\Concrete\Controller\Dialog\Express\Search::entries'),
         "/ccm/system/search/express/entries/submit/{entityID}" => array('\Concrete\Controller\Search\Express\Entries::submit'),
         "/ccm/system/express/entry/get_json" => array('\Concrete\Controller\Backend\Express\Entry::getJSON'),
 
@@ -1192,6 +1192,7 @@ return array(
                 array('javascript', 'underscore'),
                 array('javascript', 'backbone'),
                 array('javascript', 'core/events'),
+                array('javascript', 'bootstrap/tooltip'),
                 array('javascript', 'jquery/ui'),
                 array('javascript-localized', 'core/localization'),
                 array('javascript-localized', 'jquery/ui'),
