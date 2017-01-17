@@ -1,8 +1,10 @@
 <?php
+
 namespace Concrete\Authentication\Concrete;
 
 use Concrete\Core\Authentication\AuthenticationTypeController;
 use Concrete\Core\Support\Facade\Application;
+use Concrete\Core\Validation\CSRF\Token;
 use Config;
 use Exception;
 use Database;
@@ -171,66 +173,73 @@ class Controller extends AuthenticationTypeController
         $error = Core::make('helper/validation/error');
         $vs = Core::make('helper/validation/strings');
         $em = $this->post('uEmail');
+        $token = $this->app->make(Token::class);
+        $this->set('authType', $this->getAuthenticationType());
+        $this->set('token', $token);
 
         if ($em) {
             try {
+                if (!$token->validate()) {
+                    throw new \Exception($token->getErrorMessage());
+                }
+
                 if (!$vs->email($em)) {
                     throw new \Exception(t('Invalid email address.'));
                 }
 
                 $oUser = UserInfo::getByEmail($em);
-                if (!$oUser) {
-                    throw new \Exception(t('We have no record of that email address.'));
-                }
+                if ($oUser) {
+                    $mh = Core::make('helper/mail');
+                    //$mh->addParameter('uPassword', $oUser->resetUserPassword());
+                    if (Config::get('concrete.user.registration.email_registration')) {
+                        $mh->addParameter('uName', $oUser->getUserEmail());
+                    } else {
+                        $mh->addParameter('uName', $oUser->getUserName());
+                    }
+                    $mh->to($oUser->getUserEmail());
 
-                $mh = Core::make('helper/mail');
-                //$mh->addParameter('uPassword', $oUser->resetUserPassword());
-                if (Config::get('concrete.user.registration.email_registration')) {
-                    $mh->addParameter('uName', $oUser->getUserEmail());
-                } else {
-                    $mh->addParameter('uName', $oUser->getUserName());
-                }
-                $mh->to($oUser->getUserEmail());
-
-                //generate hash that'll be used to authenticate user, allowing them to change their password
-                $h = new \Concrete\Core\User\ValidationHash();
-                $uHash = $h->add($oUser->getUserID(), intval(UVTYPE_CHANGE_PASSWORD), true);
-                $changePassURL = View::url(
+                    //generate hash that'll be used to authenticate user, allowing them to change their password
+                    $h = new \Concrete\Core\User\ValidationHash();
+                    $uHash = $h->add($oUser->getUserID(), intval(UVTYPE_CHANGE_PASSWORD), true);
+                    $changePassURL = View::url(
                         '/login',
                         'callback',
                         $this->getAuthenticationType()->getAuthenticationTypeHandle(),
                         'change_password',
                         $uHash);
 
-                $mh->addParameter('changePassURL', $changePassURL);
+                    $mh->addParameter('changePassURL', $changePassURL);
 
-                $fromEmail = (string) Config::get('concrete.email.forgot_password.address');
-                if (!strpos($fromEmail, '@')) {
-                    $adminUser = UserInfo::getByID(USER_SUPER_ID);
-                    if (is_object($adminUser)) {
-                        $fromEmail = $adminUser->getUserEmail();
-                    } else {
-                        $fromEmail = '';
+                    $fromEmail = (string) Config::get('concrete.email.forgot_password.address');
+                    if (!strpos($fromEmail, '@')) {
+                        $adminUser = UserInfo::getByID(USER_SUPER_ID);
+                        if (is_object($adminUser)) {
+                            $fromEmail = $adminUser->getUserEmail();
+                        } else {
+                            $fromEmail = '';
+                        }
                     }
-                }
-                if ($fromEmail) {
-                    $fromName = (string) Config::get('concrete.email.forgot_password.name');
-                    if ($fromName === '') {
-                        $fromName = t('Forgot Password');
+                    if ($fromEmail) {
+                        $fromName = (string) Config::get('concrete.email.forgot_password.name');
+                        if ($fromName === '') {
+                            $fromName = t('Forgot Password');
+                        }
+                        $mh->from($fromEmail, $fromName);
                     }
-                    $mh->from($fromEmail, $fromName);
-                }
 
-                $mh->addParameter('siteName', tc('SiteName', \Core::make('site')->getSite()->getSiteName()));
-                $mh->load('forgot_password');
-                @$mh->sendMail();
+                    $mh->addParameter('siteName', tc('SiteName', \Core::make('site')->getSite()->getSiteName()));
+                    $mh->load('forgot_password');
+                    @$mh->sendMail();
+                }
             } catch (\Exception $e) {
                 $error->add($e);
             }
-
-            $this->redirect('/login', $this->getAuthenticationType()->getAuthenticationTypeHandle(), 'password_sent');
-        } else {
-            $this->set('authType', $this->getAuthenticationType());
+            if ($error->has()) {
+                $this->set('error', $error);
+            } else {
+                $this->redirect('/login', $this->getAuthenticationType()->getAuthenticationTypeHandle(),
+                    'password_sent');
+            }
         }
     }
 
