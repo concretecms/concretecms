@@ -160,7 +160,10 @@ class Controller extends BlockController
         }
 
         if ($this->filterByCustomTopic) {
-            $this->list->filterByTopic(intval($this->customTopicTreeNodeID));
+            $ak = CollectionKey::getByHandle($this->customTopicAttributeKeyHandle);
+            if (is_object($ak)) {
+                $ak->getController()->filterByAttribute($this->list, $this->customTopicTreeNodeID);
+            }
         }
 
         $this->list->filterByExcludePageList(false);
