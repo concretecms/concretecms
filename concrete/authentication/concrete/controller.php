@@ -14,7 +14,7 @@ use UserInfo;
 use View;
 use Session;
 
-class controller extends AuthenticationTypeController
+class Controller extends AuthenticationTypeController
 {
     public $apiMethods = array('forgot_password', 'v', 'change_password', 'password_changed', 'email_validated', 'invalid_token', 'required_password_upgrade');
 
