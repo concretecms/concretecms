@@ -139,7 +139,7 @@
                         },
                         success: function (r) {
                             if (!copyNodes) {
-                                $sourceItems.remove();
+                                my.reloadFolder();
                             }
                             ConcreteAlert.notify({
                                 'message': r.message,
