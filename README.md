@@ -15,7 +15,6 @@ Just log in to the documentation site with your concrete5.org account and edit a
 
 ## Installation
 
-
 1. Clone the repository
 
         git clone https://github.com/concrete5/concrete5.git
