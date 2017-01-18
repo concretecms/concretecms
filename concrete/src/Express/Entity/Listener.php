@@ -45,6 +45,18 @@ class Listener
         } catch (\Exception $e) {
         }
 
+        // Delete the associations.
+        foreach ($entity->getAssociations() as $association) {
+            $em->remove($association);
+        }
+
+        // Make sure to delete the inverse associations
+        $associations = $em->getRepository('Concrete\Core\Entity\Express\Association')
+            ->findBy(['target_entity' => $entity]);
+        foreach ($associations as $association) {
+            $em->remove($association);
+        }
+
         $em->flush();
 
     }
