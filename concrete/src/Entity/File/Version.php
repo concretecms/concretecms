@@ -1148,7 +1148,6 @@ class Version
     public function getThumbnailURL($type)
     {
         $app = Application::getFacadeApplication();
-        $canonicalUrl = $app->make('url/canonical');
 
         if (!($type instanceof ThumbnailTypeVersion)) {
             $type = ThumbnailTypeVersion::getByHandle($type);
@@ -1158,9 +1157,7 @@ class Version
         $path_resolver = $app->make('Concrete\Core\File\Image\Thumbnail\Path\Resolver');
 
         if ($path = $path_resolver->getPath($this, $type)) {
-            $urlPath = $canonicalUrl->getPath();
-            $urlPath->append($path);
-            return (string) $canonicalUrl->setPath($urlPath);
+        	return $path;
         }
 
         return $this->getURL();
