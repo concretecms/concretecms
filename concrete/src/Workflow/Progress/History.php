@@ -31,8 +31,13 @@ class History extends Object
         if ($this->object instanceof Request) {
             $d = $this->object->getWorkflowRequestDescriptionObject();
             $ui = UserInfo::getByID($this->object->getRequesterUserID());
+            if (is_object($ui)) {
+                $userName = $ui->getUserName();
+            } else {
+                $userName = t('(Deleted User)');
+            }
 
-            return $d->getDescription() . ' ' . t('Originally requested by %s.', $ui->getUserName());
+            return $d->getDescription() . ' ' . t('Originally requested by %s.', $userName);
         }
         if ($this->object instanceof HistoryEntry) {
             $d = $this->object->getWorkflowProgressHistoryDescription();
