@@ -89,6 +89,11 @@
       <default value="0"/>
       <notnull/>
     </field>
+    <field name="cvID" type="integer" size="10">
+      <unsigned/>
+      <default value="0"/>
+      <notnull/>
+    </field>
     <field name="arHandle" type="string" size="255"/>
     <field name="cbDisplayOrder" type="integer" size="10">
       <unsigned/>

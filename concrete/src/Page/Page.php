@@ -2403,13 +2403,14 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         $res = $db->executeQuery($q, $v);
 
         // Composer specific
-        $rows = $db->fetchAll('select cID, arHandle, cbDisplayOrder, ptComposerFormLayoutSetControlID, bID from PageTypeComposerOutputBlocks where cID = ?',
+        $rows = $db->fetchAll('select cID, cvID, arHandle, cbDisplayOrder, ptComposerFormLayoutSetControlID, bID from PageTypeComposerOutputBlocks where cID = ?',
             [$this->cID]);
         if ($rows && is_array($rows)) {
             foreach ($rows as $row) {
                 if (is_array($row) && $row['cID']) {
                     $db->insert('PageTypeComposerOutputBlocks', [
                         'cID' => $newCID,
+                        'cvID' => $row['cvID'],
                         'arHandle' => $row['arHandle'],
                         'cbDisplayOrder' => $row['cbDisplayOrder'],
                         'ptComposerFormLayoutSetControlID' => $row['ptComposerFormLayoutSetControlID'],

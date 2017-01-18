@@ -954,14 +954,15 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
 
         // Composer specific
         $row = $db->GetRow(
-            'select cID, arHandle, cbDisplayOrder, ptComposerFormLayoutSetControlID from PageTypeComposerOutputBlocks where cID = ? and bID = ? and arHandle = ?',
-            array($ocID, $this->bID, $this->arHandle)
+            'select cID, cvID, arHandle, cbDisplayOrder, ptComposerFormLayoutSetControlID from PageTypeComposerOutputBlocks where cID = ? and cvID = ? and bID = ? and arHandle = ?',
+            array($ocID, $ovID, $this->bID, $this->arHandle)
         );
         if ($row && is_array($row) && $row['cID']) {
             $db->insert(
                 'PageTypeComposerOutputBlocks',
                 array(
                     'cID' => $ncID,
+                    'cvID' => $nvID,
                     'arHandle' => $this->arHandle,
                     'cbDisplayOrder' => $row['cbDisplayOrder'],
                     'ptComposerFormLayoutSetControlID' => $row['ptComposerFormLayoutSetControlID'],
