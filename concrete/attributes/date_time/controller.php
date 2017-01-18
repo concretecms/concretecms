@@ -40,7 +40,7 @@ class Controller extends AttributeTypeController
     {
         $datetime = $this->getDateTime();
 
-        return ($datetime === null) ? '' : $datetime->format('Y-m-d H:i:s');
+        return ($datetime === null) ? null : $datetime->format('Y-m-d H:i:s');
     }
 
     public function searchForm($list)
