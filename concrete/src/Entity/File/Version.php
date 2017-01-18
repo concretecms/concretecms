@@ -1157,7 +1157,7 @@ class Version
         $path_resolver = $app->make('Concrete\Core\File\Image\Thumbnail\Path\Resolver');
 
         if ($path = $path_resolver->getPath($this, $type)) {
-        	return $path;
+            return $path;
         }
 
         return $this->getURL();
