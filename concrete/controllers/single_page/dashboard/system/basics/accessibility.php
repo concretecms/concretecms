@@ -25,6 +25,7 @@ class Accessibility extends DashboardPageController
     {
         if (!$this->token->validate('accessibility')) {
             $this->error->add(t('Invalid CSRF token. Please refresh and try again.'));
+
             return $this->view();
         }
         Config::save('concrete.accessibility.toolbar_titles', (bool) Request::post('show_titles', false));

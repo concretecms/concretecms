@@ -32,7 +32,7 @@ do {
       <li><a href="<?=$desktop->getCollectionLink()?>"><?=t('My Account')?></a></li>
       <li class="divider"></li>
   <?php
-    $categories = array();
+    $categories = [];
     $children = $account->getCollectionChildrenArray(true);
     foreach ($children as $cID) {
         $nc = Page::getByID($cID, 'ACTIVE');
