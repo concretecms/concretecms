@@ -145,7 +145,8 @@ class Localization
     public function popActiveContext()
     {
         if (!empty($this->activeContextQueue)) {
-            $this->activeContext = array_pop($this->activeContextQueue);
+            $oldContext = array_pop($this->activeContextQueue);
+            $this->setActiveContext($oldContext);
         }
     }
 

@@ -5,7 +5,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
 
 // Arguments
 /* @var bool $disableTrackingCode: set to true to avoid including the footer tracking code. */
-/* @var bool $display_user_menu: set to true to display the user menu, false to avoid it, null (or not set) to use the concrete.accessibility.display_user_menu confguration option. */
+/* @var bool $display_account_menu: set to true to display the user menu, false to avoid it, null (or not set) to use the default confguration option. */
 
 $app = Application::getFacadeApplication();
 $c = Page::getCurrentPage();
