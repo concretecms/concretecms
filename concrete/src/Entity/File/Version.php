@@ -18,6 +18,7 @@ use Concrete\Core\File\Type\TypeList as FileTypeList;
 use Concrete\Core\Http\FlysystemFileResponse;
 use Concrete\Core\Support\Facade\Application;
 use League\Flysystem\AdapterInterface;
+use League\Flysystem\File;
 use League\Flysystem\FileNotFoundException;
 use Core;
 use Database;
@@ -978,6 +979,31 @@ class Version
     }
 
     /**
+     *
+     */
+    public function getImagineImage()
+    {
+        $resource = $this->getFileResource();
+        $mimetype = $resource->getMimeType();
+        $imageLibrary = \Image::getFacadeRoot();
+
+        switch ($mimetype) {
+            case 'image/svg+xml':
+            case 'image/svg-xml':
+                if ($imageLibrary instanceof \Imagine\Gd\Imagine) {
+                    try {
+                        $app = Facade::getFacadeApplication();
+                        $imageLibrary = $app->make('image/imagick');
+                    } catch (\Exception $x) {
+                        return false;
+                    }
+                }
+                break;
+        }
+        return  $imageLibrary->load($resource->read());
+    }
+
+    /**
      * Rescan the thumbnails for a file (images only).
      *
      * @return bool False on failure
@@ -988,28 +1014,13 @@ class Version
             return false;
         }
 
-        $app = Facade::getFacadeApplication();
         $imagewidth = $this->getAttribute('width');
         $imageheight = $this->getAttribute('height');
         $types = Type::getVersionList();
 
-        $fr = $this->getFileResource();
         try {
-            $mimetype = $fr->getMimeType();
-            $imageLibrary = \Image::getFacadeRoot();
-            switch ($mimetype) {
-                case 'image/svg+xml':
-                case 'image/svg-xml':
-                    if ($imageLibrary instanceof \Imagine\Gd\Imagine) {
-                        try {
-                            $imageLibrary = $app->make('image/imagick');
-                        } catch (\Exception $x) {
-                            return false;
-                        }
-                    }
-                    break;
-            }
-            $image = $imageLibrary->load($fr->read());
+            $image = $this->getImagineImage();
+
             /* @var \Imagine\Imagick\Image $image */
             if (!$imagewidth) {
                 $imagewidth = $image->getSize()->getWidth();
@@ -1017,8 +1028,8 @@ class Version
             if (!$imageheight) {
                 $imageheight = $image->getSize()->getHeight();
             }
-            foreach ($types as $type) {
 
+            foreach ($types as $type) {
                 // delete the file if it exists
                 $this->deleteThumbnail($type);
 
@@ -1034,64 +1045,7 @@ class Version
                 }
 
                 // otherwise file is bigger than thumbnail in some way, proceed to create thumbnail
-                $filesystem = $this->getFile()
-                    ->getFileStorageLocationObject()
-                    ->getFileSystemObject();
-
-                $height = $type->getHeight();
-                if ($height) {
-                    $size = new Box($type->getWidth(), $height);
-                    $thumbnailMode = ImageInterface::THUMBNAIL_OUTBOUND;
-                } else {
-                    $size = $image->getSize()->widen($type->getWidth());
-                    $thumbnailMode = ImageInterface::THUMBNAIL_INSET;
-                }
-                $thumbnail = $image->thumbnail($size, $thumbnailMode);
-                $thumbnailPath = $type->getFilePath($this);
-                $thumbnailOptions = [];
-
-                switch ($mimetype) {
-                  case 'image/jpeg':
-                    $thumbnailType = 'jpeg';
-                    $thumbnailOptions = ['jpeg_quality' => \Config::get('concrete.misc.default_jpeg_image_compression')];
-                    break;
-                  case 'image/png':
-                    $thumbnailType = 'png';
-                    break;
-                  case 'image/gif':
-                    $thumbnailType = 'gif';
-                    break;
-                  case 'image/xbm':
-                    $thumbnailType = 'xbm';
-                    break;
-                  case 'image/vnd.wap.wbmp':
-                    $thumbnailType = 'wbmp';
-                    break;
-                  default:
-                    $thumbnailType = 'png';
-                    break;
-                }
-
-                $filesystem->write(
-                    $thumbnailPath,
-                    $thumbnail->get($thumbnailType, $thumbnailOptions),
-                    [
-                        'visibility' => AdapterInterface::VISIBILITY_PUBLIC,
-                        'mimetype' => $mimetype,
-                    ]
-                );
-
-                if ($type->getHandle() == \Config::get('concrete.icons.file_manager_listing.handle')) {
-                    $this->fvHasListingThumbnail = true;
-                }
-
-                if ($type->getHandle() == \Config::get('concrete.icons.file_manager_detail.handle')) {
-                    $this->fvHasDetailThumbnail = true;
-                }
-
-                unset($size);
-                unset($thumbnail);
-                unset($filesystem);
+                $this->generateThumbnail($type);
             }
         } catch (\Imagine\Exception\InvalidArgumentException $e) {
             return false;
@@ -1170,7 +1124,7 @@ class Version
      * @param ThumbnailTypeVersion $version
      * @param string               $path
      */
-    public function importThumbnail(\Concrete\Core\File\Image\Thumbnail\Type\Version $version, $path)
+    public function importThumbnail(ThumbnailTypeVersion $version, $path)
     {
         $thumbnailPath = $version->getFilePath($this);
         $filesystem = $this->getFile()
@@ -1400,5 +1354,74 @@ class Version
         } else {
             return $this->getTypeObject()->getThumbnail();
         }
+    }
+
+    /**
+     * Generate a thumbnail given a type
+     * @param \Concrete\Core\File\Image\Thumbnail\Type\Version $type
+     */
+    public function generateThumbnail(ThumbnailTypeVersion $type)
+    {
+        $image = $this->getImagineImage();
+        $mimetype = $this->getMimetype();
+
+        $filesystem = $this->getFile()
+            ->getFileStorageLocationObject()
+            ->getFileSystemObject();
+
+        $height = $type->getHeight();
+        if ($height) {
+            $size = new Box($type->getWidth(), $height);
+            $thumbnailMode = ImageInterface::THUMBNAIL_OUTBOUND;
+        } else {
+            $size = $image->getSize()->widen($type->getWidth());
+            $thumbnailMode = ImageInterface::THUMBNAIL_INSET;
+        }
+        $thumbnail = $image->thumbnail($size, $thumbnailMode);
+        $thumbnailPath = $type->getFilePath($this);
+        $thumbnailOptions = [];
+
+        switch ($mimetype) {
+            case 'image/jpeg':
+                $thumbnailType = 'jpeg';
+                $thumbnailOptions = ['jpeg_quality' => \Config::get('concrete.misc.default_jpeg_image_compression')];
+                break;
+            case 'image/png':
+                $thumbnailType = 'png';
+                break;
+            case 'image/gif':
+                $thumbnailType = 'gif';
+                break;
+            case 'image/xbm':
+                $thumbnailType = 'xbm';
+                break;
+            case 'image/vnd.wap.wbmp':
+                $thumbnailType = 'wbmp';
+                break;
+            default:
+                $thumbnailType = 'png';
+                break;
+        }
+
+        $filesystem->write(
+            $thumbnailPath,
+            $thumbnail->get($thumbnailType, $thumbnailOptions),
+            [
+                'visibility' => AdapterInterface::VISIBILITY_PUBLIC,
+                'mimetype' => $mimetype,
+            ]
+        );
+
+        if ($type->getHandle() == \Config::get('concrete.icons.file_manager_listing.handle')) {
+            $this->fvHasListingThumbnail = true;
+        }
+
+        if ($type->getHandle() == \Config::get('concrete.icons.file_manager_detail.handle')) {
+            $this->fvHasDetailThumbnail = true;
+        }
+
+        unset($size);
+        unset($thumbnail);
+        unset($filesystem);
     }
 }

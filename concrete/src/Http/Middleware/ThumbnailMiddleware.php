@@ -1,14 +1,19 @@
 <?php
 namespace Concrete\Core\Http\Middleware;
 
-use Concrete\Core\Application\Application;
 use Concrete\Core\Application\ApplicationAwareInterface;
 use Concrete\Core\Application\ApplicationAwareTrait;
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Entity\File\File;
 use Concrete\Core\File\Image\BasicThumbnailer;
+use Concrete\Core\File\Image\Thumbnail\Path\Resolver;
+use Concrete\Core\File\Image\Thumbnail\Type\Version;
+use Concrete\Core\File\StorageLocation\StorageLocationInterface;
 use Doctrine\DBAL\Exception\InvalidFieldNameException;
 use Doctrine\ORM\EntityManagerInterface;
+use League\Flysystem\Adapter\Local;
+use League\Flysystem\Filesystem;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -26,6 +31,31 @@ class ThumbnailMiddleware implements MiddlewareInterface, ApplicationAwareInterf
     use ApplicationAwareTrait;
 
     /**
+     * @var Filesystem
+     */
+    protected $baseFileSystem;
+
+    /**
+     * @var \Concrete\Core\File\Image\BasicThumbnailer
+     */
+    private $thumbnailer;
+
+    /**
+     * @var \Concrete\Core\File\Image\Thumbnail\Path\Resolver
+     */
+    private $resolver;
+
+    /**
+     * @var \Doctrine\ORM\EntityManagerInterface
+     */
+    private $entityManager;
+
+    /**
+     * @var Connection
+     */
+    private $connection;
+
+    /**
      * Process the request and return a response.
      *
      * @param \Symfony\Component\HttpFoundation\Request $request
@@ -41,7 +71,7 @@ class ThumbnailMiddleware implements MiddlewareInterface, ApplicationAwareInterf
             if ($response->getStatusCode() == 200) {
                 /* @var Connection $database */
                 try {
-                    $database = $this->app->make('database')->connection();
+                    $database = $this->getConnection();
                 } catch (\InvalidArgumentException $e) {
                     // Don't die here if there's no available database connection
                     $database = null;
@@ -49,8 +79,10 @@ class ThumbnailMiddleware implements MiddlewareInterface, ApplicationAwareInterf
 
                 if ($database) {
                     try {
-                        $paths = $database->fetchAll('SELECT * FROM FileImageThumbnailPaths WHERE isBuilt=0 LIMIT 5');
-                        $this->generateThumbnails($paths, $database);
+                        $paths = $database->executeQuery('SELECT * FROM FileImageThumbnailPaths WHERE isBuilt=0 LIMIT 5');
+                        if ($paths) {
+                            $this->generateThumbnails($paths, $database);
+                        }
                     } catch (InvalidFieldNameException $e) {
                         // Ignore this, user probably needs to run an upgrade.
                     }
@@ -61,41 +93,197 @@ class ThumbnailMiddleware implements MiddlewareInterface, ApplicationAwareInterf
         return $response;
     }
 
+    /**
+     * Generate thumbnails and and manage db update
+     * @param array[] $paths
+     * @param \Concrete\Core\Database\Connection\Connection $database
+     */
     private function generateThumbnails($paths, Connection $database)
     {
         $database->transactional(function (Connection $database) use ($paths) {
             foreach ($paths as $thumbnail) {
-                /** @var EntityManagerInterface $orm */
-                $orm = $this->app->make('database/orm')->entityManager();
                 /** @var File $file */
-                $file = $orm->find(File::class, $thumbnail['fileID']);
+                $file = $this->getEntityManager()->find(File::class, $thumbnail['fileID']);
 
-                if ($dimensions = $this->getDimensions($thumbnail)) {
-                    list($width, $height, $crop) = $dimensions;
-
-                    /** @var BasicThumbnailer $thumbnailer */
-                    $thumbnailer = $this->app->make(BasicThumbnailer::class);
-                    $thumbnailer->getThumbnail($file, $width, $height, (bool) $crop);
-
-                    $database->query(
-                        'UPDATE FileImageThumbnailPaths set isBuilt=1 where fileID=? AND fileVersionID=? AND thumbnailTypeHandle=? AND path=?',
-                        [
-                            $thumbnail['fileID'],
-                            $thumbnail['fileVersionID'],
-                            $thumbnail['thumbnailTypeHandle'],
-                            $thumbnail['path'],
-                        ])->execute();
+                if ($this->attemptBuild($file, $thumbnail)) {
+                    $this->completeBuild($file, $thumbnail);
+                } else {
+                    $this->failBuild($file, $thumbnail);
                 }
             }
         });
     }
 
+    /**
+     * Try building an unbuild thumbnail
+     * @param \Concrete\Core\Entity\File\File $file
+     * @param array $thumbnail
+     * @return bool
+     */
+    private function attemptBuild(File $file, array $thumbnail)
+    {
+        // If the file is already built, return early
+        if ($this->isBuilt($file, $thumbnail)) {
+            $this->completeBuild($file, $thumbnail);
+            return true;
+        }
+
+        // Otherwise lets attempt to build it
+        if ($dimensions = $this->getDimensions($thumbnail)) {
+            list($width, $height, $crop) = $dimensions;
+
+            $this->getThumbnailer()->getThumbnail($file, $width, $height, (bool)$crop);
+        } elseif ($type = Version::getByHandle($thumbnail['thumbnailTypeHandle'])) {
+            // This is a predefined thumbnail type, lets just call the version->rescan
+            $file->getVersion($thumbnail['fileVersionID'])->generateThumbnail($type);
+        }
+
+        return $this->isBuilt($file, $thumbnail);
+    }
+
+    /**
+     * Get the dimensions out of a thumbnail array
+     * @param array $thumbnail
+     * @return array [ width, height, crop ]
+     */
     private function getDimensions($thumbnail)
     {
         $matches = null;
-
         if (preg_match('/ccm_(\d+)x(\d+)(?:_([10]))?/', $thumbnail['thumbnailTypeHandle'], $matches)) {
             return array_pad(array_slice($matches, 1), 3, 0);
         }
     }
+
+    /**
+     * @param \Concrete\Core\Entity\File\File $file
+     * @param array $thumbnail
+     * @return bool
+     */
+    private function isBuilt(File $file, $thumbnail)
+    {
+        // Get the supposed path for the thumbnail
+        $thumbnailVersion = Version::getByHandle($thumbnail['thumbnailTypeHandle']);
+        $path = $this->getResolver()->getPath($file->getApprovedVersion(), $thumbnailVersion);
+        $location = $this->storageLocation();
+        $baseFileSystem = $this->baseFileSystem();
+
+        if ($path && substr($path, 0, 1) != '/') {
+            // We have a URL. Lets just assume it exists for now.
+            return true;
+        }
+
+        if ($path) {
+            return
+                // If the default location has the path
+                $baseFileSystem->has($path) ||
+                // Or the thumbnailer's storage location has the path
+                ($location && $location->getFileSystemObject()->has($path)) ||
+                // Or the file's storage location has the path
+                $file->getFileStorageLocationObject()->getFileSystemObject()->has($path);
+        }
+
+        return false;
+    }
+
+    /**
+     * @return null|StorageLocationInterface
+     */
+    private function storageLocation()
+    {
+        $thumbnailer = $this->getThumbnailer();
+        if (method_exists($thumbnailer, 'getStorageLocation')) {
+            $thumbnailerLocation = $thumbnailer->getStorageLocation();
+            if ($thumbnailerLocation instanceof StorageLocationInterface) {
+                return $thumbnailerLocation;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * @return \Concrete\Core\File\Image\BasicThumbnailer
+     */
+    protected function getThumbnailer()
+    {
+        if (!$this->thumbnailer) {
+            $this->thumbnailer = $this->app->make(BasicThumbnailer::class);
+        }
+        return $this->thumbnailer;
+    }
+
+    /**
+     * @return \Concrete\Core\File\Image\Thumbnail\Path\Resolver
+     */
+    protected function getResolver()
+    {
+        if (!$this->resolver) {
+            $this->resolver = $this->app->make(Resolver::class);
+        }
+        return $this->resolver;
+    }
+
+    /**
+     * @return \Doctrine\ORM\EntityManagerInterface
+     */
+    protected function getEntityManager()
+    {
+        if (!$this->entityManager) {
+            $this->entityManager = $this->app->make(EntityManagerInterface::class);
+        }
+        return $this->entityManager;
+    }
+
+    /**
+     * @return Connection
+     */
+    protected function getConnection()
+    {
+        if (!$this->connection) {
+            $this->connection = $this->app->make(Connection::class);
+        }
+        return $this->connection;
+    }
+
+    /**
+     * @return \League\Flysystem\Filesystem
+     */
+    private function baseFileSystem()
+    {
+        if (!$this->baseFileSystem) {
+            // Make a local flysystem object relative to the base directory
+            $this->baseFileSystem = $this->app->make(Filesystem::class, [
+                $this->app->make(Local::class, [DIR_BASE])
+            ]);
+        }
+
+        return $this->baseFileSystem;
+    }
+
+    /**
+     * Mark the build complete
+     * @param $file
+     * @param $thumbnail
+     */
+    private function completeBuild(File $file, $thumbnail)
+    {
+        // Update the database to have "1" for isBuilt
+        $this->connection->update('FileImageThumbnailPaths', ['isBuilt' => "1"], $thumbnail);
+    }
+
+    /**
+     * Mark the build failed
+     * @param \Concrete\Core\Entity\File\File $file
+     * @param $thumbnail
+     */
+    private function failBuild(File $file, $thumbnail)
+    {
+        $this->app->make(LoggerInterface::class)
+            ->critical('Failed to generate or locate the thumbnail for file "' . $file->getFileID() . '"');
+
+        // Complete the build anyway.
+        // Cache must be cleared to remove this and attempt rebuild
+        $this->completeBuild($file, $thumbnail);
+    }
+
 }
