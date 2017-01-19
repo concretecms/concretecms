@@ -146,7 +146,8 @@ class BasicThumbnailer implements ThumbnailerInterface, ApplicationAwareInterfac
      */
     public function getThumbnail($obj, $maxWidth, $maxHeight, $crop = false)
     {
-        $storage = $this->getStorageLocation();
+        $storage = $obj->getFileStorageLocationObject();
+        $this->setStorageLocation($storage);
         $filesystem = $storage->getFileSystemObject();
         $configuration = $storage->getConfigurationObject();
         $version = null;
@@ -158,7 +159,6 @@ class BasicThumbnailer implements ThumbnailerInterface, ApplicationAwareInterfac
                 $fID = $obj->getFileID();
                 $filename = md5(implode(':', array($fID, $maxWidth, $maxHeight, $crop, $fr->getTimestamp())))
                   . '.' . $fh->getExtension($fr->getPath());
-                $version = $obj->getVersion();
             } catch (\Exception $e) {
                 $filename = '';
             }
@@ -168,13 +168,6 @@ class BasicThumbnailer implements ThumbnailerInterface, ApplicationAwareInterfac
         }
 
         $abspath = '/cache/' . $filename;
-
-        if ($version) {
-            // Use a path resolver to get the path
-            /** @var Resolver $resolver */
-            $resolver = $this->app[Resolver::class];
-            $abspath = $resolver->getPath($version, new CustomThumbnail($maxWidth, $maxHeight, $abspath, $crop));
-        }
 
         $src = $configuration->getPublicURLToFile($abspath);
 
