@@ -18,7 +18,6 @@ use Concrete\Core\File\Type\TypeList as FileTypeList;
 use Concrete\Core\Http\FlysystemFileResponse;
 use Concrete\Core\Support\Facade\Application;
 use League\Flysystem\AdapterInterface;
-use League\Flysystem\File;
 use League\Flysystem\FileNotFoundException;
 use Core;
 use Database;
