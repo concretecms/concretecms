@@ -6,12 +6,10 @@ use Concrete\Core\Application\ApplicationAwareTrait;
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Entity\File\File;
 use Concrete\Core\File\Image\BasicThumbnailer;
-use Concrete\Core\File\Image\Thumbnail\Path\Resolver;
 use Concrete\Core\File\Image\Thumbnail\Type\Version;
 use Concrete\Core\File\StorageLocation\StorageLocationInterface;
 use Doctrine\DBAL\Exception\InvalidFieldNameException;
 use Doctrine\ORM\EntityManagerInterface;
-use League\Flysystem\Adapter\Local;
 use League\Flysystem\Filesystem;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -39,11 +37,6 @@ class ThumbnailMiddleware implements MiddlewareInterface, ApplicationAwareInterf
      * @var \Concrete\Core\File\Image\BasicThumbnailer
      */
     private $thumbnailer;
-
-    /**
-     * @var \Concrete\Core\File\Image\Thumbnail\Path\Resolver
-     */
-    private $resolver;
 
     /**
      * @var \Doctrine\ORM\EntityManagerInterface
@@ -80,7 +73,7 @@ class ThumbnailMiddleware implements MiddlewareInterface, ApplicationAwareInterf
                 if ($database) {
                     try {
                         $paths = $database->executeQuery('SELECT * FROM FileImageThumbnailPaths WHERE isBuilt=0 LIMIT 5');
-                        if ($paths) {
+                        if ($paths->rowCount()) {
                             $this->generateThumbnails($paths, $database);
                         }
                     } catch (InvalidFieldNameException $e) {
@@ -161,22 +154,12 @@ class ThumbnailMiddleware implements MiddlewareInterface, ApplicationAwareInterf
      */
     private function isBuilt(File $file, $thumbnail)
     {
-        // Get the supposed path for the thumbnail
-        $thumbnailVersion = Version::getByHandle($thumbnail['thumbnailTypeHandle']);
-        $path = $this->getResolver()->getPath($file->getApprovedVersion(), $thumbnailVersion);
+        $path = $thumbnail['path'];
         $location = $this->storageLocation();
-        $baseFileSystem = $this->baseFileSystem();
-
-        if ($path && substr($path, 0, 1) != '/') {
-            // We have a URL. Lets just assume it exists for now.
-            return true;
-        }
 
         if ($path) {
             return
-                // If the default location has the path
-                $baseFileSystem->has($path) ||
-                // Or the thumbnailer's storage location has the path
+                // If the thumbnailer's storage location has the path
                 ($location && $location->getFileSystemObject()->has($path)) ||
                 // Or the file's storage location has the path
                 $file->getFileStorageLocationObject()->getFileSystemObject()->has($path);
@@ -213,17 +196,6 @@ class ThumbnailMiddleware implements MiddlewareInterface, ApplicationAwareInterf
     }
 
     /**
-     * @return \Concrete\Core\File\Image\Thumbnail\Path\Resolver
-     */
-    protected function getResolver()
-    {
-        if (!$this->resolver) {
-            $this->resolver = $this->app->make(Resolver::class);
-        }
-        return $this->resolver;
-    }
-
-    /**
      * @return \Doctrine\ORM\EntityManagerInterface
      */
     protected function getEntityManager()
@@ -243,21 +215,6 @@ class ThumbnailMiddleware implements MiddlewareInterface, ApplicationAwareInterf
             $this->connection = $this->app->make(Connection::class);
         }
         return $this->connection;
-    }
-
-    /**
-     * @return \League\Flysystem\Filesystem
-     */
-    private function baseFileSystem()
-    {
-        if (!$this->baseFileSystem) {
-            // Make a local flysystem object relative to the base directory
-            $this->baseFileSystem = $this->app->make(Filesystem::class, [
-                $this->app->make(Local::class, [DIR_BASE])
-            ]);
-        }
-
-        return $this->baseFileSystem;
     }
 
     /**
