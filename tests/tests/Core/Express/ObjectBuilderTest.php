@@ -22,6 +22,7 @@ class ObjectBuilderTest extends ConcreteDatabaseTestCase
 
     protected $metadatas = [
         'Concrete\Core\Entity\Express\Entity',
+        'Concrete\Core\Entity\Express\Association',
         'Concrete\Core\Entity\Express\Form',
         'Concrete\Core\Entity\Express\FieldSet',
         'Concrete\Core\Entity\Express\Control\Control',
@@ -176,6 +177,77 @@ class ObjectBuilderTest extends ConcreteDatabaseTestCase
         $this->assertInstanceOf('Concrete\Core\Entity\Attribute\Type', $type);
         $this->assertEquals('textarea', $type->getAttributeTypeHandle());
     }
+
+    public function testCreateAssociation()
+    {
+        $student = Express::buildObject('student', 'students', 'Student', $this->pkg);
+        $teacher = Express::buildObject('teacher', 'teachers', 'Teacher', $this->pkg);
+
+        $builder = $student->buildAssociation();
+        $builder->addManyToOne($teacher);
+        $student = $builder->save();
+
+        $this->assertInstanceOf('Concrete\Core\Entity\Express\Entity', $student);
+        $this->assertNotEquals('', $student->getID());
+
+        $associations = $student->getAssociations();
+        $this->assertEquals(1, count($associations));
+
+        $association = $associations[0];
+        /**
+         * @var $association \Concrete\Core\Entity\Express\ManyToOneAssociation
+         */
+        $this->assertInstanceOf('Concrete\Core\Entity\Express\ManyToOneAssociation', $association);
+        $this->assertEquals('teacher', $association->getTargetPropertyName());
+
+        $teacher = Express::getObjectByHandle('teacher');
+        $associations = $teacher->getAssociations();
+        $this->assertEquals(1, count($associations));
+
+        $association = $associations[0];
+        $this->assertInstanceOf('Concrete\Core\Entity\Express\OneToManyAssociation', $association);
+        $this->assertEquals('students', $association->getTargetPropertyName());
+    }
+
+    public function testOtherAssociations()
+    {
+        $project = Express::buildObject('project', 'projects', 'Project');
+        $skill = Express::buildObject('skill', 'skills', 'Skill');
+        $developer = Express::buildObject('developer', 'developers', 'Developer');
+
+        $project->buildAssociation()->addManyToMany($skill)->save();
+        $skill->buildAssociation()->addOneToOne($developer, 'best_developer')->save();
+
+        $project = Express::getObjectByHandle('project');
+        $skill = Express::getObjectByHandle('skill');
+        $developer = Express::getObjectByHandle('developer');
+
+        $associations = $project->getAssociations();
+        $this->assertEquals(1, count($associations));
+        $association = $associations[0];
+        $this->assertInstanceOf('Concrete\Core\Entity\Express\ManyToManyAssociation', $association);
+        $this->assertEquals('skills', $association->getTargetPropertyName());
+
+        $associations = $skill->getAssociations();
+        $this->assertEquals(2, count($associations));
+        $association1 = $associations[0];
+        $association2 = $associations[1];
+        $this->assertInstanceOf('Concrete\Core\Entity\Express\ManyToManyAssociation', $association1);
+        $this->assertEquals('projects', $association1->getTargetPropertyName());
+
+        $this->assertInstanceOf('Concrete\Core\Entity\Express\OneToOneAssociation', $association2);
+        $this->assertEquals('best_developer', $association2->getTargetPropertyName());
+        $this->assertEquals(\Concrete\Core\Entity\Express\OneToOneAssociation::TYPE_OWNING, $association2->getAssociationType());
+
+        $associations = $developer->getAssociations();
+        $this->assertEquals(1, count($associations));
+        $association = $associations[0];
+        $this->assertInstanceOf('Concrete\Core\Entity\Express\OneToOneAssociation', $association);
+        $this->assertEquals('skill', $association->getTargetPropertyName());
+        $this->assertEquals(\Concrete\Core\Entity\Express\OneToOneAssociation::TYPE_INVERSE, $association->getAssociationType());
+
+    }
+
 
 }
 

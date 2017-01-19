@@ -87,6 +87,12 @@ class ObjectBuilder
         return new ObjectBuilder\FormBuilder($this, $formName);
     }
 
+    public function buildAssociation()
+    {
+        return new ObjectBuilder\AssociationBuilder(new ObjectAssociationBuilder(), $this);
+    }
+
+
     public function addAttribute($type_handle, $name, $handle = null, Settings $settings = null)
     {
         $key = new ExpressKey();
