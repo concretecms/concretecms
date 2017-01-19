@@ -548,6 +548,7 @@ class File implements \Concrete\Core\Permission\ObjectInterface
         $db->Execute('delete from FileSearchIndexAttributes where fID = ?', [$this->fID]);
         $db->Execute('delete from DownloadStatistics where fID = ?', [$this->fID]);
         $db->Execute('delete from FilePermissionAssignments where fID = ?', [$this->fID]);
+	    $db->Execute('delete from FileImageThumbnailPaths where fileID = ?', [$this->fID]);
 
         $query = $em->createQuery('select fav from Concrete\Core\Entity\Attribute\Value\Value\ImageFileValue fav inner join fav.file f where f.fID = :fID');
         $query->setParameter('fID', $this->getFileID());
