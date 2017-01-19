@@ -200,7 +200,7 @@ class ObjectBuilderTest extends ConcreteDatabaseTestCase
         $this->assertInstanceOf('Concrete\Core\Entity\Express\ManyToOneAssociation', $association);
         $this->assertEquals('teacher', $association->getTargetPropertyName());
 
-        $teacher = Express::getObjectByHandle('teacher');
+        $teacher = $teacher->getEntity();
         $associations = $teacher->getAssociations();
         $this->assertEquals(1, count($associations));
 
@@ -218,13 +218,14 @@ class ObjectBuilderTest extends ConcreteDatabaseTestCase
         $project->buildAssociation()->addManyToMany($skill)->save();
         $skill->buildAssociation()->addOneToOne($developer, 'best_developer')->save();
 
-        $project = Express::getObjectByHandle('project');
-        $skill = Express::getObjectByHandle('skill');
-        $developer = Express::getObjectByHandle('developer');
+        $project = $project->getEntity();
+        $skill = $skill->getEntity();
+        $developer = $developer->getEntity();
 
         $associations = $project->getAssociations();
         $this->assertEquals(1, count($associations));
         $association = $associations[0];
+        $this->assertNotEquals('', $association->getID());
         $this->assertInstanceOf('Concrete\Core\Entity\Express\ManyToManyAssociation', $association);
         $this->assertEquals('skills', $association->getTargetPropertyName());
 
@@ -233,15 +234,18 @@ class ObjectBuilderTest extends ConcreteDatabaseTestCase
         $association1 = $associations[0];
         $association2 = $associations[1];
         $this->assertInstanceOf('Concrete\Core\Entity\Express\ManyToManyAssociation', $association1);
+        $this->assertNotEquals('', $association1->getID());
         $this->assertEquals('projects', $association1->getTargetPropertyName());
 
         $this->assertInstanceOf('Concrete\Core\Entity\Express\OneToOneAssociation', $association2);
+        $this->assertNotEquals('', $association2->getID());
         $this->assertEquals('best_developer', $association2->getTargetPropertyName());
         $this->assertEquals(\Concrete\Core\Entity\Express\OneToOneAssociation::TYPE_OWNING, $association2->getAssociationType());
 
         $associations = $developer->getAssociations();
         $this->assertEquals(1, count($associations));
         $association = $associations[0];
+        $this->assertNotEquals('', $association->getID());
         $this->assertInstanceOf('Concrete\Core\Entity\Express\OneToOneAssociation', $association);
         $this->assertEquals('skill', $association->getTargetPropertyName());
         $this->assertEquals(\Concrete\Core\Entity\Express\OneToOneAssociation::TYPE_INVERSE, $association->getAssociationType());
