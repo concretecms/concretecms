@@ -1,4 +1,8 @@
-<?php defined('C5_EXECUTE') or die("Access Denied.");
+<?php
+use Concrete\Core\Page\Desktop\DesktopList;
+use Concrete\Core\Support\Facade\Application;
+
+defined('C5_EXECUTE') or die('Access Denied.');
 
 $u = new User();
 if (!$u->isRegistered()) {
@@ -12,7 +16,7 @@ if (!is_object($account) || $account->isError()) {
     return;
 }
 
-$desktop = \Concrete\Core\Page\Desktop\DesktopList::getMyDesktop();
+$desktop = DesktopList::getMyDesktop();
 if (!is_object($desktop) || $desktop->isError()) {
     return;
 }
@@ -20,6 +24,8 @@ $cp = new Permissions($desktop);
 if (!$cp->canRead()) {
     return;
 }
+$app = Application::getFacadeApplication();
+$url = $app->make('url/manager');
 ?>
 <div style="display: none">
     <div class="btn-group" id="ccm-account-menu">
@@ -28,7 +34,7 @@ if (!$cp->canRead()) {
             <span class="caret"></span>
         </button>
         <ul class="dropdown-menu pull-right" role="menu">
-            <li><a href="<?=$desktop->getCollectionLink()?>"><?=t('My Account')?></a></li>
+            <li><a href="<?=$url->resolve([$desktop])?>"><?=t('My Account')?></a></li>
             <li class="divider"></li>
             <?php
                 $categories = [];
@@ -41,12 +47,12 @@ if (!$cp->canRead()) {
                     }
                 }
                 foreach ($categories as $cc) {
-                    ?><li><a href="<?=Core::make('helper/navigation')->getLinkToCollection($cc)?>"><?=h(t($cc->getCollectionName()))?></a></li><?php
+                    ?><li><a href="<?=$url->resolve([$cc])?>"><?=h(t($cc->getCollectionName()))?></a></li><?php
                 }
             ?>
             <li class="divider"></li>
-            <li><a href="<?=URL::to('/')?>"><i class="fa fa-home"></i> <?=t("Home")?></a></li>
-            <li><a href="<?=URL::to('/login', 'logout', Loader::helper('validation/token')->generate('logout'))?>"><i class="fa fa-sign-out"></i> <?=t("Sign Out")?></a></li>
+            <li><a href="<?=$url->resolve(['/'])?>"><i class="fa fa-home"></i> <?=t('Home')?></a></li>
+            <li><a href="<?=$url->resolve(['/login', 'logout', $app->make('token')->generate('logout')])?>"><i class="fa fa-sign-out"></i> <?=t('Sign Out')?></a></li>
         </ul>
     </div>
 </div>
