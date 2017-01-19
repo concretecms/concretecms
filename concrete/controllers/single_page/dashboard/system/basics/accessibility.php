@@ -14,6 +14,7 @@ class Accessibility extends DashboardPageController
         $this->set('show_tooltips', $config->get('concrete.accessibility.toolbar_tooltips'));
         $this->set('increase_font_size', $config->get('concrete.accessibility.toolbar_large_font'));
         $this->set('display_help', $config->get('concrete.accessibility.display_help_system'));
+        $this->set('display_user_menu', $config->get('concrete.accessibility.display_user_menu'));
     }
 
     public function save()
@@ -28,6 +29,7 @@ class Accessibility extends DashboardPageController
             $config->save('concrete.accessibility.toolbar_tooltips', (bool) $post->get('show_tooltips', false));
             $config->save('concrete.accessibility.toolbar_large_font', (bool) $post->get('increase_font_size', false));
             $config->save('concrete.accessibility.display_help_system', (bool) $post->get('display_help', false));
+            $config->save('concrete.accessibility.display_user_menu', (bool) $post->get('display_user_menu', false));
             $this->flash('message', t('Successfully saved accessibility settings.'));
             $this->redirect('/dashboard/system/basics/accessibility');
         }
