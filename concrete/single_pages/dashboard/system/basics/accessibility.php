@@ -26,12 +26,6 @@
             <?= t('Enable Help') ?>
         </label>
     </div>
-    <div class="checkbox">
-        <label class="launch-tooltip" title="<?= h(t('Site themes may override this value.')) ?>">
-            <input name="display_user_menu" value="1" type="checkbox" <?= $display_user_menu ? 'checked' : '' ?> />
-            <?= t('Show the account menu in page footer') ?>
-        </label>
-    </div>
     <div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
             <button class="pull-right btn btn-primary">

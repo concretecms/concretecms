@@ -524,14 +524,6 @@ return [
          * @var bool
          */
         'toolbar_tooltips' => true,
-
-        /*
-         * Show the account menu in page footer when users are not logged in.
-         * Can be overridden in site themes by setting $display_user_menu when using the footer_required element.
-         *
-         * @var bool
-         */
-        'display_user_menu' => true,
     ],
 
     /*
@@ -708,6 +700,7 @@ return [
             'throttle_max' => 20,
             'throttle_max_timespan' => 15, // minutes
         ],
+
     ],
 
     /*

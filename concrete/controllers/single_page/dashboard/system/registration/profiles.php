@@ -31,6 +31,7 @@ class Profiles extends DashboardSitePageController
             $config->save('user.gravatar.enabled', ($this->post('gravatar_fallback') ? true : false));
             $config->save('user.gravatar.max_level', Loader::helper('security')->sanitizeString($this->post('gravatar_max_level')));
             $config->save('user.gravatar.image_set', Loader::helper('security')->sanitizeString($this->post('gravatar_image_set')));
+            $config->save('user.display_account_menu', (bool) $this->post('display_account_menu', false));
 
 
             // $message = ($this->post('public_profiles')?t('Public profiles have been enabled'):t('Public profiles have been disabled.'));
@@ -82,5 +83,6 @@ class Profiles extends DashboardSitePageController
         $this->set('gravatar_level_options', array('g' => 'G', 'pg' => 'PG', 'r' => 'R', 'x' => 'X'));
         $this->set('gravatar_image_set', $config->get('user.gravatar.image_set'));
         $this->set('gravatar_set_options', array('404' => '404', 'mm' => 'mm', 'identicon' => 'identicon', 'monsterid' => 'monsterid', 'wavatar' => "wavatar"));
+        $this->set('display_account_menu', $config->get('user.display_account_menu'));
     }
 }

@@ -10,6 +10,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
 $app = Application::getFacadeApplication();
 $c = Page::getCurrentPage();
 $site = $app->make('site')->getSite();
+$config = $site->getConfigRepository();
 
 if (is_object($c)) {
     $cp = new Permissions($c);
@@ -17,15 +18,15 @@ if (is_object($c)) {
 }
 
 if (empty($disableTrackingCode)) {
-    echo $site->getConfigRepository()->get('seo.tracking.code.footer');
+    echo $config->get('seo.tracking.code.footer');
 }
 
 View::getInstance()->markFooterAssetPosition();
 
-if (!isset($display_user_menu)) {
-    $display_user_menu = $app->make('config')->get('concrete.accessibility.display_user_menu');
+if (!isset($display_account_menu)) {
+    $display_account_menu = $config->get('user.display_account_menu');
 }
-if ($display_user_menu) {
+if ($display_account_menu) {
     $dh = $app->make('helper/concrete/dashboard');
     if (!$dh->inDashboard($c)) {
         View::element('account/menu');

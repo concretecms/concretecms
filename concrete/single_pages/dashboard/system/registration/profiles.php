@@ -20,7 +20,17 @@ $token = \Core::make('token');
         <div class="checkbox">
             <label>
                 <?php echo $form->checkbox('gravatar_fallback', 1, $gravatar_fallback); ?>
-                <span><?php echo t('Use image from <a href="http://gravatar.com" target="_blank">gravatar.com</a> if the user has not uploaded one')?></span>
+                <span><?php echo t('Use image from <a href="http://gravatar.com" target="_blank">gravatar.com</a> if the user has not uploaded one.')?></span>
+            </label>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <?php echo $form->label('display_account_menu', t('Account Menu')); ?>
+        <div class="checkbox">
+            <label>
+                <input name="display_account_menu" id="display_account_menu" value="1" type="checkbox" <?= $display_account_menu ? 'checked' : '' ?> />
+                <span class="launch-tooltip" title="<?= h(t('Site themes may override this value.')) ?>"><?= t('Show the account menu when logged in.') ?></span>
             </label>
         </div>
     </div>
