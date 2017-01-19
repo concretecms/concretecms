@@ -1,27 +1,26 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");
-do {
-    $u = new User();
-    if (!$u->isRegistered()) {
-        break;
-    }
 
-    $ui = $u->getUserInfoObject();
+$u = new User();
+if (!$u->isRegistered()) {
+    return;
+}
 
-    $account = Page::getByPath('/account');
-    if (!is_object($account) || $account->isError()) {
-        break;
-    }
+$ui = $u->getUserInfoObject();
 
-    $desktop = \Concrete\Core\Page\Desktop\DesktopList::getMyDesktop();
-    if (!is_object($desktop) || $desktop->isError()) {
-        break;
-    }
-    $cp = new Permissions($desktop);
-    if (!$cp->canRead()) {
-        break;
-    }
-    ?>
+$account = Page::getByPath('/account');
+if (!is_object($account) || $account->isError()) {
+    return;
+}
 
+$desktop = \Concrete\Core\Page\Desktop\DesktopList::getMyDesktop();
+if (!is_object($desktop) || $desktop->isError()) {
+    return;
+}
+$cp = new Permissions($desktop);
+if (!$cp->canRead()) {
+    return;
+}
+?>
 <div style="display: none">
 <div class="btn-group" id="ccm-account-menu">
   <a class="btn btn-default" href="<?=$desktop->getCollectionLink()?>"><i class="fa fa-user"></i> <?=$ui->getUserDisplayName()?></a>
@@ -55,7 +54,3 @@ do {
 </div>
 </div>
     </div>
-
-<?php
-
-} while (false);
