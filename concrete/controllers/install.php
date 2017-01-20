@@ -375,9 +375,6 @@ class Install extends Controller
         $spl = StartingPointPackage::getClass($pkgHandle);
         require DIR_CONFIG_SITE . '/site_install.php';
         @include DIR_CONFIG_SITE . '/site_install_user.php';
-        if (defined('APP_INSTALL_LANGUAGE') && APP_INSTALL_LANGUAGE) {
-            Localization::changeLocale(APP_INSTALL_LANGUAGE);
-        }
         $jsx = $this->app->make('helper/json');
         $js = new stdClass();
 
@@ -385,7 +382,7 @@ class Install extends Controller
             if ($spl === null) {
                 throw new Exception(t('Invalid starting point: %s', $pkgHandle));
             }
-            call_user_func([$spl, $routine]);
+            $spl->executeInstallRoutine($routine);
             $js->error = false;
         } catch (Exception $e) {
             $js->error = true;
