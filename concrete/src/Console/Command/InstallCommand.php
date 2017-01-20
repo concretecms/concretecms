@@ -44,7 +44,7 @@ class InstallCommand extends Command
             ->addOption('attach', null, InputOption::VALUE_NONE, 'Attach if database contains an existing concrete5 instance')
             ->addOption('force-attach', null, InputOption::VALUE_NONE, 'Always attach')
             ->addOption('interactive', 'i', InputOption::VALUE_NONE, 'Install using interactive (wizard) mode')
-            ->setHelp(<<<EOT
+            ->setHelp(<<<'EOT'
 Returns codes:
   0 operation completed successfully
   1 errors occurred
@@ -91,15 +91,15 @@ EOT
             }
 
             Database::extend('install', function () use ($options) {
-                return Database::getFactory()->createConnection(array(
+                return Database::getFactory()->createConnection([
                     'host' => $options['db-server'],
                     'user' => $options['db-username'],
                     'password' => $options['db-password'],
                     'database' => $options['db-database'],
-                ));
+                ]);
             });
             Database::setDefaultConnection('install');
-            Config::set('database.connections.install', array());
+            Config::set('database.connections.install', []);
 
             $cnt = $app->make(\Concrete\Controller\Install::class);
 
@@ -188,11 +188,11 @@ EOT
                 ($options['demo-username'] !== '') && ($options['demo-password'] !== '') && ($options['demo-email'] !== '')
             ) {
                 $output->write('Adding demo user... ');
-                \UserInfo::add(array(
+                \UserInfo::add([
                     'uName' => $options['demo-username'],
                     'uEmail' => $options['demo-email'],
                     'uPassword' => $options['demo-password'],
-                ))->getUserObject()->enterGroup(
+                ])->getUserObject()->enterGroup(
                     \Group::getByID(ADMIN_GROUP_ID)
                 );
                 $output->writeln('done.');
@@ -266,9 +266,11 @@ EOT
     }
 
     /**
-     * Do some procedural work to a row in the wizard step list to turn it into a proper question
+     * Do some procedural work to a row in the wizard step list to turn it into a proper question.
+     *
      * @param $row
      * @param \Symfony\Component\Console\Input\InputInterface $input
+     *
      * @return \Symfony\Component\Console\Question\Question
      */
     private function getQuestion($row, InputInterface $input)
@@ -276,7 +278,7 @@ EOT
         $definition = $this->getDefinition();
 
         // Define default values
-        $row = (array)$row;
+        $row = (array) $row;
         $default = null;
         $mutator = null;
 
@@ -319,8 +321,10 @@ EOT
     }
 
     /**
-     * A wizard generator
+     * A wizard generator.
+     *
      * @param $input
+     *
      * @return \Generator|Question[]
      */
     private function getWizard(InputInterface $input)
@@ -329,15 +333,17 @@ EOT
 
         // Loop over the questions, parse them, then yield them out
         foreach ($questions as $question) {
-            $question = (array)$question;
+            $question = (array) $question;
             yield $question[0] => $this->getQuestion($question, $input);
         }
     }
 
     /**
-     * Take an option and return a question string
+     * Take an option and return a question string.
+     *
      * @param \Symfony\Component\Console\Input\InputOption $option
      * @param $default
+     *
      * @return string
      */
     private function getQuestionString(InputOption $option, $default)
@@ -351,7 +357,8 @@ EOT
 
     /**
      * An array of steps
-     * Items: [ "option-name", "default-value", function($question, $input, $option) : $question ]
+     * Items: [ "option-name", "default-value", function($question, $input, $option) : $question ].
+     *
      * @return array
      */
     private function wizardSteps()
@@ -364,7 +371,7 @@ EOT
                 'db-password',
                 function (Question $question, InputInterface $input) {
                     return $question->setHidden(true);
-                }
+                },
             ],
             ['site', 'concrete5'],
             'canonical-url',
@@ -375,7 +382,7 @@ EOT
                 function (Question $question, InputInterface $input) {
                     return new ChoiceQuestion($question->getQuestion(), ['elemental_full', 'elemental_blank'],
                         $question->getDefault());
-                }
+                },
             ],
             'admin-email',
             [
@@ -389,8 +396,9 @@ EOT
 
                         throw new \Exception(implode("\n", $error->getArrayCopy()));
                     });
+
                     return $question->setHidden(true);
-                }
+                },
             ],
             'demo-username',
             'demo-email',
@@ -398,7 +406,7 @@ EOT
                 'demo-password',
                 function (Question $question, InputInterface $input) {
                     return $question->setHidden(true);
-                }
+                },
             ],
             ['language', 'en_US'],
             [
@@ -406,11 +414,11 @@ EOT
                 function (Question $question, InputInterface $input, InputOption $option) {
                     $newDefault = $input->getOption('language');
                     $newQuestion = $this->getQuestionString($option, $newDefault);
+
                     return new Question($newQuestion, $newDefault);
-                }
+                },
             ],
-            ['config', 'none']
+            ['config', 'none'],
         ];
     }
-
 }

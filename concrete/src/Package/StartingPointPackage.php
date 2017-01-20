@@ -309,11 +309,11 @@ class StartingPointPackage extends BasePackage
         }
         $installDirectory = DIR_BASE_CORE . '/config';
         try {
-            // Retrieving metadata from the entityManager created with \ORM::entityManager() 
+            // Retrieving metadata from the entityManager created with \ORM::entityManager()
             // will result in a empty metadata array. Because all drivers are wrapped in a driverChain
             // the method getAllMetadata() of Doctrine\Common\Persistence\Mapping\AbstractClassMetadataFactory
             // is going to return a empty array. To overcome this issue a new EntityManager is create with the
-            // only purpose to be used during the installation. 
+            // only purpose to be used during the installation.
             $config = Setup::createConfiguration(true, \Config::get('database.proxy_classes'));
             \Doctrine\Common\Annotations\AnnotationReader::addGlobalIgnoredName('subpackages');
             \Doctrine\Common\Annotations\AnnotationReader::addGlobalIgnoredName('package');
@@ -410,11 +410,10 @@ class StartingPointPackage extends BasePackage
 
     public function make_directories()
     {
-
         // Delete generated overrides and doctrine
         $fh = new File();
-        if (is_dir(DIR_CONFIG_SITE.'/generated_overrides')) {
-            $fh->removeAll(DIR_CONFIG_SITE.'/generated_overrides');
+        if (is_dir(DIR_CONFIG_SITE . '/generated_overrides')) {
+            $fh->removeAll(DIR_CONFIG_SITE . '/generated_overrides');
         }
         if (is_dir(Config::get('database.proxy_classes'))) {
             $fh->removeAll(Config::get('database.proxy_classes'));
@@ -674,7 +673,7 @@ class StartingPointPackage extends BasePackage
         $pt->assignPermissionAccess($pa);
 
         try {
-            Core::make('helper/file')->makeExecutable(DIR_BASE_CORE.'/bin/concrete5', 'all');
+            Core::make('helper/file')->makeExecutable(DIR_BASE_CORE . '/bin/concrete5', 'all');
         } catch (\Exception $x) {
         }
     }
