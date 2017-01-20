@@ -33,6 +33,9 @@ use Concrete\Core\Permission\Access\Access as PermissionAccess;
 use PermissionKey;
 use User;
 use UserInfo;
+use Localization;
+use Exception;
+use Throwable;
 
 class StartingPointPackage extends BasePackage
 {
@@ -143,12 +146,36 @@ class StartingPointPackage extends BasePackage
         return $this->routines;
     }
 
-    public function add_home_page()
+    /**
+     * @param string $routineName
+     *
+     * @throws Exception
+     * @throws Throwable
+     */
+    public function executeInstallRoutine($routineName)
+    {
+        $localization = Localization::getInstance();
+        $localization->pushActiveContext('system');
+        $error = null;
+        try {
+            $this->$routineName();
+        } catch (Exception $x) {
+            $error = $x;
+        } catch (Throwable $x) {
+            $error = $x;
+        }
+        $localization->popActiveContext();
+        if ($error !== null) {
+            throw $error;
+        }
+    }
+
+    protected function add_home_page()
     {
         Page::addHomePage();
     }
 
-    public function install_data_objects()
+    protected function install_data_objects()
     {
         \Concrete\Core\Tree\Node\NodeType::add('category');
         \Concrete\Core\Tree\Node\NodeType::add('express_entry_category');
@@ -175,7 +202,7 @@ class StartingPointPackage extends BasePackage
         );
     }
 
-    public function install_attributes()
+    protected function install_attributes()
     {
         $ci = new ContentImporter();
         $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/attributes.xml');
@@ -184,50 +211,44 @@ class StartingPointPackage extends BasePackage
         $topicNodeType = \Concrete\Core\Tree\Node\NodeType::add('topic');
     }
 
-    public function install_dashboard()
+    protected function install_dashboard()
     {
         $ci = new ContentImporter();
         $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/single_pages/dashboard.xml');
     }
 
-    public function install_gathering()
+    protected function install_gathering()
     {
         $ci = new ContentImporter();
         $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/gathering.xml');
     }
 
-    public function install_page_types()
+    protected function install_page_types()
     {
         $ci = new ContentImporter();
         $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/page_types.xml');
     }
 
-    public function install_page_templates()
-    {
-        $ci = new ContentImporter();
-        $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/page_templates.xml');
-    }
-
-    public function install_required_single_pages()
+    protected function install_required_single_pages()
     {
         $ci = new ContentImporter();
         $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/single_pages/global.xml');
         $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/single_pages/root.xml');
     }
 
-    public function install_image_editor()
+    protected function install_image_editor()
     {
         $ci = new ContentImporter();
         $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/image_editor.xml');
     }
 
-    public function install_blocktypes()
+    protected function install_blocktypes()
     {
         $ci = new ContentImporter();
         $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/blocktypes.xml');
     }
 
-    public function install_themes()
+    protected function install_themes()
     {
         $ci = new ContentImporter();
         $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/themes.xml');
@@ -236,19 +257,19 @@ class StartingPointPackage extends BasePackage
         }
     }
 
-    public function install_jobs()
+    protected function install_jobs()
     {
         $ci = new ContentImporter();
         $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/jobs.xml');
     }
 
-    public function install_config()
+    protected function install_config()
     {
         $ci = new ContentImporter();
         $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/config.xml');
     }
 
-    public function import_files()
+    protected function import_files()
     {
         $type = \Concrete\Core\File\StorageLocation\Type\Type::add('default', t('Default'));
         \Concrete\Core\File\StorageLocation\Type\Type::add('local', t('Local'));
@@ -284,19 +305,19 @@ class StartingPointPackage extends BasePackage
         }
     }
 
-    public function install_content()
+    protected function install_content()
     {
         $ci = new ContentImporter();
         $ci->importContentFile($this->getPackagePath() . '/content.xml');
     }
 
-    public function install_desktops()
+    protected function install_desktops()
     {
         $desktop = \Page::getByPath('/dashboard/welcome');
         $desktop->movePageDisplayOrderToTop();
     }
 
-    public function install_database()
+    protected function install_database()
     {
         $db = Database::get();
         $num = $db->GetCol("show tables");
@@ -349,7 +370,7 @@ class StartingPointPackage extends BasePackage
         $db->Execute('ALTER TABLE UserBannedIPs ADD UNIQUE INDEX (ipFrom (32), ipTo(32))');
     }
 
-    public function add_users()
+    protected function add_users()
     {
         // Firstly, install the core authentication types
         $cba = AuthenticationType::add('concrete', 'Standard');
@@ -408,7 +429,7 @@ class StartingPointPackage extends BasePackage
         $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/conversation.xml');
     }
 
-    public function make_directories()
+    protected function make_directories()
     {
         // Delete generated overrides and doctrine
         $fh = new File();
@@ -434,7 +455,7 @@ class StartingPointPackage extends BasePackage
         }
     }
 
-    public function finish()
+    protected function finish()
     {
         $config = \Core::make('config');
         $site_install = $config->getLoader()->load(null, 'site_install');
@@ -476,13 +497,13 @@ class StartingPointPackage extends BasePackage
         Core::make('cache')->flush();
     }
 
-    public function install_permissions()
+    protected function install_permissions()
     {
         $ci = new ContentImporter();
         $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/permissions.xml');
     }
 
-    public function install_site()
+    protected function install_site()
     {
         \Core::make('site/type')->installDefault();
         $site = \Site::installDefault(SITE_INSTALL_LOCALE);
@@ -496,7 +517,7 @@ class StartingPointPackage extends BasePackage
         Config::save('concrete.misc.login_redirect', 'DESKTOP');
     }
 
-    public function install_site_permissions()
+    protected function install_site_permissions()
     {
         $g1 = Group::getByID(GUEST_GROUP_ID);
         $g2 = Group::getByID(REGISTERED_GROUP_ID);

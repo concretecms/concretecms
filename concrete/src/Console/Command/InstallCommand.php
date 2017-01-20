@@ -174,7 +174,7 @@ EOT
                     }
 
                     $output->writeln($r->getProgress() . '%: ' . $r->getText());
-                    call_user_func(array($spl, $r->getMethod()));
+                    $spl->executeInstallRoutine($r->getMethod());
                 }
             } catch (Exception $ex) {
                 $cnt->reset();
