@@ -16,6 +16,7 @@ class ExecCommand extends Command
             ->setDescription('Execute a PHP script within the concrete5 environment')
             ->addArgument('script', InputArgument::REQUIRED, 'The path of the script to be executed')
             ->addArgument('arguments', InputArgument::IS_ARRAY, 'The arguments to pass to the script')
+            ->addOption('env', null, InputOption::VALUE_REQUIRED, 'The environment (if not specified, we\'ll work with the configuration item valid for all environments)')
         ->setHelp(<<<EOT
 In the included script you'll have these variables:
 - \$input: an instance of \Symfony\Component\Console\Input\InputInterface

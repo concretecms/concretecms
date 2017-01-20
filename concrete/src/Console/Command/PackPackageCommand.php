@@ -46,6 +46,7 @@ final class PackPackageCommand extends Command
             ->addOption('keep', 'k', InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 'Which files should be stored in the zip archive ['.static::KEEP_DOT.'|'.static::KEEP_SOURCES.']')
             ->addOption('update-source-directory', 'u', InputOption::VALUE_NONE, 'Update the files of the source directory (otherwise it remains untouched)')
             ->addOption('zip', 'z', InputOption::VALUE_OPTIONAL, 'Create a zip archive of the package (and optionally set its path)', static::ZIPOUT_AUTO)
+            ->addOption('env', null, InputOption::VALUE_REQUIRED, 'The environment (if not specified, we\'ll work with the configuration item valid for all environments)')
             ->setHelp(<<<EOT
 You have to specify at least the -z option (to create a zip file) and/or the -u option (to update the package directory).
 

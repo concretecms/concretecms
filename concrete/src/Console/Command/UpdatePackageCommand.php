@@ -18,6 +18,7 @@ class UpdatePackageCommand extends Command
             ->addOption('all', 'a', InputOption::VALUE_NONE, 'Update all the installed packages')
             ->addOption('force', 'f', InputOption::VALUE_NONE, 'Force update even if the package is already at last version')
             ->addArgument('packages', InputArgument::IS_ARRAY, 'The handle of the package to be updated (multiple values allowed)')
+            ->addOption('env', null, InputOption::VALUE_REQUIRED, 'The environment (if not specified, we\'ll work with the configuration item valid for all environments)')
             ->setDescription('Update a concrete5 package')
             ->setHelp(<<<EOT
 Returns codes:

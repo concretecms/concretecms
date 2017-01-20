@@ -17,7 +17,9 @@ class CompareSchemaCommand extends Command
     {
         $this
             ->setName('c5:compare-schema')
-            ->setDescription('Compares db.xml in concrete5 XML schema, concrete5 entities, and all installed package schemas and entities with the contents of the database and prints the difference.');
+            ->setDescription('Compares db.xml in concrete5 XML schema, concrete5 entities, and all installed package schemas and entities with the contents of the database and prints the difference.')
+            ->addOption('env', null, InputOption::VALUE_REQUIRED, 'The environment (if not specified, we\'ll work with the configuration item valid for all environments)')
+        ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)

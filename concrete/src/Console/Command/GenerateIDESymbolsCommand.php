@@ -18,6 +18,7 @@ class GenerateIDESymbolsCommand extends Command
             ->setName('c5:ide-symbols')
             ->setDescription('Generate IDE symbols')
             ->addArgument('generate-what', InputArgument::IS_ARRAY, 'Elements to generate [all|ide-classes|phpstorm]', array('all'))
+            ->addOption('env', null, InputOption::VALUE_REQUIRED, 'The environment (if not specified, we\'ll work with the configuration item valid for all environments)')
             ->setHelp(<<<EOT
 Returns codes:
   0 operation completed successfully

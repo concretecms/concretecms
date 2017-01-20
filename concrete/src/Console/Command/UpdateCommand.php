@@ -21,6 +21,7 @@ class UpdateCommand extends Command
             ->setName('c5:update')
             ->setDescription('Runs all database migrations to bring the concrete5 installation up to date.')
             ->addOption('force', 'f', InputOption::VALUE_NONE, 'Force the update')
+            ->addOption('env', null, InputOption::VALUE_REQUIRED, 'The environment (if not specified, we\'ll work with the configuration item valid for all environments)')
             ->setHelp(<<<EOT
 Returns codes:
   0 operation completed successfully
