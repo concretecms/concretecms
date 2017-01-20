@@ -15,6 +15,7 @@ class CustomThumbnail extends ThumbnailVersion
      * @param int $width
      * @param int $height
      * @param string $path The full path to the file (whether it exists or not)
+     * @param bool $cropped
      */
     public function __construct($width, $height, $path, $cropped)
     {
