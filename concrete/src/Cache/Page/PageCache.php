@@ -52,6 +52,14 @@ abstract class PageCache
         if ($cookie->has($loginCookie) && $cookie->get($loginCookie)) {
             return false;
         }
+	    if ($config->get('concrete.seo.redirect_to_canonical_url')) {
+        	$site = $app->make('site')->getActiveSiteForEditing()->getConfigRepository();
+        	$reqhost = $req->getSchemeAndHttpHost();
+        	if ($reqhost != $site->get('seo.canonical_url') && $reqhost != $site->get('seo.canonical_ssl_url')) {
+        		return false;
+	        }
+	    }
+
         return true;
     }
 
