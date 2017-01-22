@@ -6,41 +6,42 @@ use Concrete\Core\Http\Response;
 use Config;
 use Request;
 use Concrete\Core\Page\Page as ConcretePage;
-use \Concrete\Core\Page\View\PageView;
+use Concrete\Core\Page\View\PageView;
 use Permissions;
 use User;
 use Session;
 
 abstract class PageCache
 {
-
-    static $library;
+    public static $library;
 
     public function deliver(PageCacheRecord $record)
     {
         $response = new Response();
         $headers = array();
         if (defined('APP_CHARSET')) {
-            $headers["Content-Type"] = "text/html; charset=" . APP_CHARSET;
+            $headers['Content-Type'] = 'text/html; charset='.APP_CHARSET;
         }
         $headers = array_merge($headers, $record->getCacheRecordHeaders());
 
         $response->headers->add($headers);
         $response->setContent($record->getCacheRecordContent());
+
         return $response;
     }
 
     public static function getLibrary()
     {
-        if (!PageCache::$library) {
+        if (!self::$library) {
             $adapter = Config::get('concrete.cache.page.adapter');
             $class = overrideable_core_class(
-                'Core\\Cache\\Page\\' . camelcase($adapter) . 'PageCache',
-                DIRNAME_CLASSES . '/Cache/Page/' . camelcase($adapter) . 'PageCache.php'
+                'Core\\Cache\\Page\\'.camelcase($adapter).'PageCache',
+                DIRNAME_CLASSES.'/Cache/Page/'.camelcase($adapter).'PageCache.php'
             );
-            PageCache::$library = new $class();
+            self::$library = new $class();
         }
-        return PageCache::$library;
+
+        return self::$library;
     }
 
     public function shouldCheckCache(Request $req)
@@ -52,13 +53,13 @@ abstract class PageCache
         if ($cookie->has($loginCookie) && $cookie->get($loginCookie)) {
             return false;
         }
-	    if ($config->get('concrete.seo.redirect_to_canonical_url')) {
-        	$site = $app->make('site')->getActiveSiteForEditing()->getConfigRepository();
-        	$reqhost = $req->getSchemeAndHttpHost();
-        	if ($reqhost != $site->get('seo.canonical_url') && $reqhost != $site->get('seo.canonical_ssl_url')) {
-        		return false;
-	        }
-	    }
+        if ($config->get('concrete.seo.redirect_to_canonical_url')) {
+            $site = $app->make('site')->getActiveSiteForEditing()->getConfigRepository();
+            $reqhost = $req->getSchemeAndHttpHost();
+            if ($reqhost != $site->get('seo.canonical_url') && $reqhost != $site->get('seo.canonical_ssl_url')) {
+                return false;
+            }
+        }
 
         return true;
     }
@@ -73,12 +74,12 @@ abstract class PageCache
     public function getCacheHeaders(ConcretePage $c)
     {
         $lifetime = $c->getCollectionFullPageCachingLifetimeValue();
-        $expires = gmdate('D, d M Y H:i:s', time() + $lifetime) . ' GMT';
+        $expires = gmdate('D, d M Y H:i:s', time() + $lifetime).' GMT';
 
         $headers = array(
             'Pragma' => 'public',
-            'Cache-Control' => 'max-age=' . $lifetime . ',s-maxage=' . $lifetime,
-            'Expires' => $expires
+            'Cache-Control' => 'max-age='.$lifetime.',s-maxage='.$lifetime,
+            'Expires' => $expires,
         );
 
         return $headers;
@@ -138,6 +139,7 @@ abstract class PageCache
                 return false;
             }
         }
+
         return true;
     }
 
@@ -148,7 +150,7 @@ abstract class PageCache
                 return urlencode(trim($mixed->getCollectionPath(), '/'));
             } else {
                 if ($mixed->getCollectionID() == HOME_CID) {
-                    return '!' . HOME_CID;
+                    return '!'.HOME_CID;
                 }
             }
         } else {
@@ -156,7 +158,7 @@ abstract class PageCache
                 if ($mixed->getPath() != '') {
                     return urlencode(trim($mixed->getPath(), '/'));
                 } else {
-                    return '!' . HOME_CID;
+                    return '!'.HOME_CID;
                 }
             } else {
                 if ($mixed instanceof PageCacheRecord) {
@@ -175,5 +177,4 @@ abstract class PageCache
     abstract public function purge(ConcretePage $c);
 
     abstract public function flush();
-
 }
