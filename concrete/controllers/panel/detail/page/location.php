@@ -125,13 +125,15 @@ class Location extends BackendInterfacePageController
 
             if (is_array($pathArray)) {
                 foreach ($pathArray as $i => $path) {
-                    $p = new PagePath();
-                    $p->setPagePath($path);
-                    $p->setPageObject($this->page);
-                    if ($canonical == $i) {
-                        $p->setPagePathIsCanonical(true);
+                    if ($path) {
+                        $p = new PagePath();
+                        $p->setPagePath($path);
+                        $p->setPageObject($this->page);
+                        if ($canonical == $i) {
+                            $p->setPagePathIsCanonical(true);
+                        }
+                        \ORM::entityManager()->persist($p);
                     }
-                    \ORM::entityManager()->persist($p);
                 }
             }
 

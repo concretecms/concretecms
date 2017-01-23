@@ -2636,6 +2636,9 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
             } else {
                 $pathString = $this->computeCanonicalPagePath();
             }
+            if (!$pathString) {
+                return ''; // We are allowed to pass in a blank path in the event of the home page being scanned.
+            }
             // ensure that the path is unique
             $suffix = 0;
             $cID = ($this->getCollectionPointerOriginalID() > 0) ? $this->getCollectionPointerOriginalID() : $this->cID;
