@@ -6,6 +6,8 @@ use Concrete\Core\Entity\Attribute\Value\ExpressValue;
 use Concrete\Core\Entity\Express\Entry\Association as EntryAssociation;
 use Concrete\Core\Entity\Express\Entry\ManyAssociation;
 use Concrete\Core\Entity\Express\Entry\OneAssociation;
+use Concrete\Core\Express\EntryBuilder\AssociationBuilder;
+use Concrete\Core\Express\EntryBuilder\AssociationUpdater;
 use Concrete\Core\Permission\ObjectInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -50,6 +52,16 @@ class Entry implements \JsonSerializable, ObjectInterface
             // Assume attribute otherwise
             return $this->getAttribute($identifier);
         }
+
+        if (substr($nm, 0, 3) == 'set') {
+            $nm = preg_replace('/(?!^)[[:upper:]]/', '_\0', $nm);
+            $nm = strtolower($nm);
+            $identifier = str_replace('set_', '', $nm);
+
+            // Assume attribute otherwise
+            $this->setAttribute($identifier, $a[0]);
+        }
+
         return null;
     }
 
@@ -277,5 +289,9 @@ class Entry implements \JsonSerializable, ObjectInterface
         $this->exEntryDateCreated = $exEntryDateCreated;
     }
 
+    public function associateEntries()
+    {
+        return \Core::make(AssociationUpdater::class, ['entry' => $this]);
+    }
 
 }

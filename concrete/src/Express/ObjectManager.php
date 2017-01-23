@@ -5,6 +5,7 @@ use Concrete\Core\Application\Application;
 use Concrete\Core\Entity\Express\Entity;
 use Concrete\Core\Entity\Package;
 use Doctrine\ORM\EntityManagerInterface;
+use Concrete\Core\Express\Entry\Manager as EntryManager;
 
 class ObjectManager
 {
@@ -42,6 +43,12 @@ class ObjectManager
         }
     }
 
+    public function refresh($object)
+    {
+        $this->entityManager->refresh($object);
+        return $object;
+    }
+
     public function buildObject($handle, $plural_handle, $name, Package $pkg = null)
     {
         $builder = $this->app->make(ObjectBuilder::class);
@@ -54,11 +61,31 @@ class ObjectManager
         return $builder;
     }
 
+    public function buildEntry($entity)
+    {
+        $entity = is_string($entity) ? $this->getObjectByHandle($entity) : $entity;
+        if ($entity instanceof ObjectBuilder) {
+            $entity = $entity->getEntity();
+        }
+        $builder = $this->app->make(EntryBuilder::class);
+        $builder->createEntry($entity);
+        return $builder;
+    }
+
     public function getEntry($entryID)
     {
         return $this->entityManager
             ->getRepository('Concrete\Core\Entity\Express\Entry')
             ->findOneBy(['exEntryID' => $entryID]);
+    }
+
+    public function deleteEntry($entryID)
+    {
+        $manager = $this->app->make(EntryManager::class);
+        $entry = $this->getEntry($entryID);
+        if (is_object($entry)) {
+            $manager->deleteEntry($entry);
+        }
     }
 
     public function getObjectByHandle($entityHandle)

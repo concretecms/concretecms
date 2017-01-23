@@ -249,9 +249,7 @@ class ObjectBuilderTest extends ConcreteDatabaseTestCase
         $this->assertInstanceOf('Concrete\Core\Entity\Express\OneToOneAssociation', $association);
         $this->assertEquals('skill', $association->getTargetPropertyName());
         $this->assertEquals(\Concrete\Core\Entity\Express\OneToOneAssociation::TYPE_INVERSE, $association->getAssociationType());
-
     }
-
 
 }
 
