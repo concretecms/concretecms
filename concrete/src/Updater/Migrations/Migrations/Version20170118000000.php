@@ -36,9 +36,17 @@ class Version20170118000000 extends AbstractMigration
         }
     }
 
+    protected function removeInvalidPagePaths()
+    {
+	    $db = $this->connection;
+	    $db->executeQuery('delete from PagePaths where cPath like "-1/%"');
+	    $db->executeQuery('delete from PagePaths where cPath = "-1"');
+    }
+
     public function up(Schema $schema)
     {
         $this->addVersionIdToPageTypeOutputBlocks();
+        $this->removeInvalidPagePaths();
     }
 
     public function down(Schema $schema)
