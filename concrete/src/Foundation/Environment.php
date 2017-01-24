@@ -14,13 +14,39 @@ use Config;
  */
 class Environment
 {
+    /**
+     * @var string[]
+     */
     protected $coreOverrides = [];
+
+    /**
+     * @var string[]
+     */
     protected $corePackages = [];
+
+    /**
+     * @var array
+     */
     protected $coreOverridesByPackage = [];
+
+    /**
+     * @var bool
+     */
     protected $overridesScanned = false;
+
+    /**
+     * @var array
+     */
     protected $cachedOverrides = [];
+
+    /**
+     * @var bool
+     */
     protected $autoLoaded = false;
 
+    /**
+     * @return self
+     */
     public static function get()
     {
         static $env;
@@ -62,6 +88,9 @@ class Environment
         $this->cachedOverrides = [];
     }
 
+    /**
+     * @var string
+     */
     protected $ignoreFiles = ['__MACOSX'];
 
     public function reset()
@@ -110,6 +139,13 @@ class Environment
         $this->overridesScanned = true;
     }
 
+    /**
+     * @param string $dir
+     * @param string[] $ignoreFilesArray
+     * @param bool $recursive
+     *
+     * @return string[]
+     */
     public function getDirectoryContents($dir, $ignoreFilesArray = [], $recursive = false)
     {
         $ignoreFiles = array_merge($this->ignoreFiles, $ignoreFilesArray);
@@ -138,12 +174,22 @@ class Environment
         return $aDir;
     }
 
+    /**
+     * @param string $segment
+     * @param \Concrete\Core\Package\Package|\Concrete\Core\Entity\Package|string $pkgOrHandle
+     */
     public function overrideCoreByPackage($segment, $pkgOrHandle)
     {
         $pkgHandle = is_object($pkgOrHandle) ? $pkgOrHandle->getPackageHandle() : $pkgOrHandle;
         $this->coreOverridesByPackage[$segment] = $pkgHandle;
     }
 
+    /**
+     * @param string $segment
+     * @param \Concrete\Core\Package\Package|\Concrete\Core\Entity\Package|string $pkgHandle
+     *
+     * @return EnvironmentRecord
+     */
     public function getRecord($segment, $pkgHandle = false)
     {
         if (is_object($pkgHandle)) {
@@ -202,6 +248,11 @@ class Environment
 
     /**
      * Bypasses overrides cache to get record.
+     *
+     * @param string $segment
+     * @param \Concrete\Core\Package\Package|\Concrete\Core\Entity\Package|string $pkgHandle
+     *
+     * @return EnvironmentRecord
      */
     public function getUncachedRecord($segment, $pkgHandle = false)
     {
@@ -234,6 +285,11 @@ class Environment
 
     /**
      * Returns a full path to the subpath segment. Returns false if not found.
+     *
+     * @param string $subpath
+     * @param \Concrete\Core\Package\Package|\Concrete\Core\Entity\Package|string $pkgIdentifier
+     *
+     * @return string
      */
     public function getPath($subpath, $pkgIdentifier = false)
     {
@@ -244,6 +300,11 @@ class Environment
 
     /**
      * Returns  a public URL to the subpath item. Returns false if not found.
+     *
+     * @param string $subpath
+     * @param \Concrete\Core\Package\Package|\Concrete\Core\Entity\Package|string $pkgIdentifier
+     *
+     * @return string
      */
     public function getURL($subpath, $pkgIdentifier = false)
     {
@@ -252,6 +313,9 @@ class Environment
         return $r->url;
     }
 
+    /**
+     * @return string[]
+     */
     public function getOverrideList()
     {
         $this->getOverrides();
