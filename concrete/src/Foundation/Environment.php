@@ -85,7 +85,6 @@ class Environment
             DIR_FILES_JOBS,
             DIR_APPLICATION.'/'.DIRNAME_CSS,
             DIR_APPLICATION.'/'.DIRNAME_JAVASCRIPT,
-            DIR_APPLICATION.'/'.DIRNAME_LANGUAGES,
             DIR_FILES_EMAIL_TEMPLATES,
             DIR_FILES_CONTENT,
             DIR_FILES_THEMES,
