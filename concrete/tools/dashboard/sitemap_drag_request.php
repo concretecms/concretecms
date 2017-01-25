@@ -1,9 +1,13 @@
 <?php
 
-defined('C5_EXECUTE') or die("Access Denied.");
 use \Concrete\Core\Workflow\Request\MovePageRequest as MovePagePageWorkflowRequest;
+use Concrete\Core\Support\Facade\Application;
 
-$sh = Loader::helper('concrete/dashboard/sitemap');
+defined('C5_EXECUTE') or die("Access Denied.");
+
+$app = Application::getFacadeApplication();
+
+$sh = $app->make('helper/concrete/dashboard/sitemap');
 if (!$sh->canRead()) {
     die(t('Access Denied'));
 }
@@ -64,7 +68,7 @@ if (is_object($dc) && !$dc->isError() && $dc->isAlias()) {
     $canMoveCopyTo = false;
 }
 
-$valt = Loader::helper('validation/token');
+$valt = $app->make('token');
 
 $json = [];
 $json['error'] = false;
@@ -162,15 +166,13 @@ if ($successMessage !== '') {
     $json['error'] = false;
     $json['message'] = $successMessage;
     $json['cID'] = $newCID;
-    $js = Loader::helper('json');
-    echo $js->encode($json);
+    echo json_encode($json);
     exit;
 } elseif ($error) {
     if ($_REQUEST['ctask']) {
         $json['error'] = true;
         $json['message'] = $error;
-        $js = Loader::helper('json');
-        echo $js->encode($json);
+        echo json_encode($json);
     } else {
         echo '<div class="error">' . $error . '</div><div class="dialog-buttons"><a href="javascript:void(0)" onclick="$.fn.dialog.closeTop()" id="ccm-exit-drag-request" class="ccm-button-left btn btn-default">' . t('Cancel') . '</a></div>';
     }
