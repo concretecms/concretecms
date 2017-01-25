@@ -10,7 +10,7 @@ if (!$sh->canRead()) {
 
 $error = t("An unspecified error has occurred.");
 
-$originalPages = array();
+$originalPages = [];
 if (isset($_REQUEST['origCID']) && is_numeric($_REQUEST['origCID'])) {
     $originalPages[] = Page::getByID($_REQUEST['origCID']);
 }
@@ -66,7 +66,7 @@ if (is_object($dc) && !$dc->isError() && $dc->isAlias()) {
 
 $valt = Loader::helper('validation/token');
 
-$json = array();
+$json = [];
 $json['error'] = false;
 $json['message'] = false;
 
@@ -89,7 +89,7 @@ if (!$error) {
                 case "ALIAS":
                     foreach ($originalPages as $oc) {
                         $ncID = $oc->addCollectionAlias($dc);
-                        $successMessage .= '"' . $oc->getCollectionName() . '" '.t('was successfully aliased beneath').' "' . $dc->getCollectionName() . '" ';
+                        $successMessage .= '"' . $oc->getCollectionName() . '" ' . t('was successfully aliased beneath') . ' "' . $dc->getCollectionName() . '" ';
                         $newCID[] = $ncID;
                     }
                     break;
@@ -98,7 +98,7 @@ if (!$error) {
                         foreach ($originalPages as $oc) {
                             $nc2 = $oc->duplicateAll($dc); // new collection is passed back
                             if (is_object($nc2)) {
-                                $successMessage .= '"' . $oc->getCollectionName() . '" '.t('and all its children were successfully copied beneath').' "' . $dc->getCollectionName() . '" ';
+                                $successMessage .= '"' . $oc->getCollectionName() . '" ' . t('and all its children were successfully copied beneath') . ' "' . $dc->getCollectionName() . '" ';
                             }
                         }
                     } else {
@@ -110,7 +110,7 @@ if (!$error) {
                                 $nc2 = $oc->duplicate($dc);
                             }
                             if (is_object($nc2)) {
-                                $successMessage .= '"' . $oc->getCollectionName() . '" '.t('was successfully copied beneath').' "' . $dc->getCollectionName() . '" ';
+                                $successMessage .= '"' . $oc->getCollectionName() . '" ' . t('was successfully copied beneath') . ' "' . $dc->getCollectionName() . '" ';
                             }
                         }
                     }
@@ -132,7 +132,7 @@ if (!$error) {
                         $u->unloadCollectionEdit($oc);
                         $r = $pkr->trigger();
                         if ($r instanceof \Concrete\Core\Workflow\Progress\Response) {
-                            $successMessage .= '"' . $oc->getCollectionName() . '" '.t('was moved beneath').' "' . $dc->getCollectionName() . '." ';
+                            $successMessage .= '"' . $oc->getCollectionName() . '" ' . t('was moved beneath') . ' "' . $dc->getCollectionName() . '." ';
                         } else {
                             $successMessage .= t("Your request to move \"%s\" beneath \"%s\" has been stored. Someone with approval rights will have to activate the change.\n", $oc->getCollectionName(), $dc->getCollectionName());
                         }
@@ -220,9 +220,8 @@ if ($successMessage) {
     ?>
 		<input type="radio" style="vertical-align: middle" id="ctaskAlias" name="ctask" value="ALIAS" />
 		<strong><?=t('Alias')?></strong> <?php if (count($originalPages) == 1) {
-    ?>"<?=$oc->getCollectionName()?>"<?php 
-}
-    ?> <?=t('beneath')?> "<?=$dc->getCollectionName()?>" - <?=t('Pages appear in both locations; all edits to originals will be reflected in their alias.')?>
+        ?>"<?=$oc->getCollectionName()?>"<?php 
+    } ?> <?=t('beneath')?> "<?=$dc->getCollectionName()?>" - <?=t('Pages appear in both locations; all edits to originals will be reflected in their alias.')?>
 		<br/><br/>
 		<?php 
 } ?>
