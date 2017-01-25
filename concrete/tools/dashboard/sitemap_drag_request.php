@@ -17,7 +17,7 @@ if (isset($_REQUEST['origCID']) && is_numeric($_REQUEST['origCID'])) {
 
 if (isset($_REQUEST['destCID']) && is_numeric($_REQUEST['destCID'])) {
     $dc = Page::getByID($_REQUEST['destCID']);
-    if (!$_REQUEST['ctask']) {
+    if (!isset($_REQUEST['ctask']) || !$_REQUEST['ctask']) {
         if ($_REQUEST['dragMode'] == 'after' || $_REQUEST['dragMode'] == 'before') {
             $destSibling = $dc;
             $dc = Page::getByID($dc->getCollectionParentID());
@@ -82,8 +82,9 @@ if (!$canReadSource) {
     $error = false;
 }
 
+$successMessage = '';
 if (!$error) {
-    if ($_REQUEST['ctask']) {
+    if (isset($_REQUEST['ctask']) && $_REQUEST['ctask']) {
         if ($valt->validate()) {
             switch ($_REQUEST['ctask']) {
                 case "ALIAS":
@@ -146,7 +147,7 @@ if (!$error) {
     }
 }
 
-if ($successMessage) {
+if ($successMessage !== '') {
     if (is_array($newCID) && isset($_REQUEST['destSibling'])) {
         $destSibling = Page::getByID($_REQUEST['destSibling']);
         foreach ($newCID as $ncID) {
@@ -202,8 +203,8 @@ if ($successMessage) {
 			<input type="hidden" name="destSibling" id="destSibling" value="<?=$destSibling->getCollectionID()?>" />
 		<?php 
 } ?>
-		<input type="hidden" name="select_mode" id="select_mode" value="<?=h($_REQUEST['select_mode'])?>" />
-		<input type="hidden" name="display_mode" id="display_mode" value="<?=h($_REQUEST['display_mode'])?>" />
+		<input type="hidden" name="select_mode" id="select_mode" value="<?=isset($_REQUEST['select_mode']) ? h($_REQUEST['select_mode']) : ''?>" />
+		<input type="hidden" name="display_mode" id="display_mode" value="<?=isset($_REQUEST['display_mode']) ? h($_REQUEST['display_mode']) : ''?>" />
 
 		<input type="radio" checked style="vertical-align: middle" id="ctaskMove" name="ctask" value="MOVE" />
 		<strong><?=t('Move')?></strong> <?php if (count($originalPages) == 1) {
@@ -246,7 +247,7 @@ if ($successMessage) {
 		<br/>
 	
 	<div class="dialog-buttons">
-	<?php if ($_REQUEST['sitemap_mode'] == 'move_copy_delete') {
+	<?php if (isset($_REQUEST['sitemap_mode']) && $_REQUEST['sitemap_mode'] == 'move_copy_delete') {
     ?>
 		<a href="javascript:void(0)" onclick="$.fn.dialog.closeTop()" id="ccm-exit-drag-request" title="<?=t('Choose Page')?>" class="pull-left btn btn-default"><?=t('Cancel')?></a>
 	<?php 
