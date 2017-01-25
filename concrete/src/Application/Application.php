@@ -308,7 +308,9 @@ class Application extends Container
 
             $service = $this->make('Concrete\Core\Package\PackageService');
             $service->setupLocalization($pkg);
-
+        }
+        $config->set('app.bootstrap.packages_loaded', true);
+        foreach ($this->packages as $pkg) {
             if (method_exists($pkg, 'on_start')) {
                 $pkg->on_start();
             }
@@ -319,8 +321,6 @@ class Application extends Container
                 $checkAfterStart = true;
             }
         }
-
-        $config->set('app.bootstrap.packages_loaded', true);
 
         // After package initialization, the translations adapters need to be
         // reinitialized when accessed the next time because new translations
