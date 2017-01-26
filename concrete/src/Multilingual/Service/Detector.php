@@ -5,6 +5,7 @@ use Concrete\Core\Localization\Localization;
 use Concrete\Core\Multilingual\Page\Section\Section;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Support\Facade\Facade;
+use Concrete\Core\User\User;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
@@ -75,33 +76,42 @@ class Detector
         return Section::getByLocale($site->getDefaultLocale());
     }
 
-    public static function setupSiteInterfaceLocalization(Page $c = null)
+    public function setupSiteInterfaceLocalization(Page $c = null)
     {
-        if (!$c) {
+        $app = Facade::getFacadeApplication();
+        $loc = $app->make(Localization::class);
+        $locale = null;
+        if ($c === null) {
             $c = Page::getCurrentPage();
         }
-        $app = Facade::getFacadeApplication();
-        // don't translate dashboard pages
-        $dh = $app->make('helper/concrete/dashboard');
-        if ($dh->inDashboard($c)) {
-            return;
+        if ($c) {
+            $dh = $app->make('helper/concrete/dashboard');
+            if ($dh->inDashboard($c)) {
+                $u = new User();
+                $locale = $u->getUserLanguageToDisplay();
+            } else {
+                if ($this->isEnabled()) {
+                    $ms = Section::getBySectionOfSite($c);
+                    if (!$ms) {
+                        $ms = static::getPreferredSection();
+                    }
+                    if ($ms) {
+                        $locale = $ms->getLocale();
+                        $app->make('session')->set('multilingual_default_locale', $locale);
+                    }
+                }
+                if (!$locale) {
+                    $siteTree = $c->getSiteTreeObject();
+                    if ($siteTree) {
+                        $locale = $siteTree->getLocale()->getLocale();
+                    }
+                }
+            }
         }
-
-        $ms = Section::getBySectionOfSite($c);
-        if (!is_object($ms)) {
-            $ms = static::getPreferredSection();
+        if (!$locale) {
+            $locale = $app->make('config')->get('concrete.locale');
         }
-
-        if (!$ms) {
-            return;
-        }
-
-        $locale = $ms->getLocale();
-        if ($locale) {
-            $app->make('session')->set('multilingual_default_locale', $locale);
-            $loc = Localization::getInstance();
-            $loc->setContextLocale(Localization::CONTEXT_SITE, $locale);
-        }
+        $loc->setContextLocale(Localization::CONTEXT_SITE, $locale);
     }
 
     /**

@@ -322,9 +322,7 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
         }
 
         $dl = $cms->make('multilingual/detector');
-        if ($dl->isEnabled()) {
-            $dl->setupSiteInterfaceLocalization($collection);
-        }
+        $dl->setupSiteInterfaceLocalization($collection);
 
         if (!$request->getPath()
             && $request->isMethod('GET')
