@@ -507,7 +507,7 @@ var ccmi18n_imageeditor = {
         }
         $found = null;
         foreach ($alternatives as $alternative) {
-            $r = $env->getRecord(DIRNAME_JAVASCRIPT.'/i18n/ui.datepicker-'.str_replace('_', '-', $alternative).'.js');
+            $r = $env->getRecord(DIRNAME_JAVASCRIPT.'/i18n/jquery-ui/datepicker-'.str_replace('_', '-', $alternative).'.js');
             if (is_file($r->file)) {
                 $found = $r->file;
                 break;
