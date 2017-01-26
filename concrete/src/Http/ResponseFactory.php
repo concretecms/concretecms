@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Http;
 
 use Concrete\Controller\Frontend\PageForbidden;
@@ -26,7 +25,6 @@ use Symfony\Component\HttpFoundation\Session\Session;
 
 class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInterface
 {
-
     use ApplicationAwareTrait;
 
     /**
@@ -56,25 +54,25 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
-    public function create($content, $code = Response::HTTP_OK, array $headers = array())
+    public function create($content, $code = Response::HTTP_OK, array $headers = [])
     {
         return \Concrete\Core\Http\Response::create($content, $code, $headers);
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
-    public function json($data, $code = Response::HTTP_OK, array $headers = array())
+    public function json($data, $code = Response::HTTP_OK, array $headers = [])
     {
         return JsonResponse::create($data, $code, $headers);
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
-    public function notFound($content, $code = Response::HTTP_NOT_FOUND, $headers = array())
+    public function notFound($content, $code = Response::HTTP_NOT_FOUND, $headers = [])
     {
         if (strcasecmp($this->request->server->get('HTTP_X_REQUESTED_WITH', ''), 'xmlhttprequest') === 0) {
             $loc = $this->localization;
@@ -96,21 +94,22 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
         }
 
         $cnt = $this->app->make(PageForbidden::class);
+
         return $this->controller($cnt, $code, $headers);
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
-    public function error($content, $code = Response::HTTP_INTERNAL_SERVER_ERROR, $headers = array())
+    public function error($content, $code = Response::HTTP_INTERNAL_SERVER_ERROR, $headers = [])
     {
         return $this->create($content, $code, $headers);
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
-    public function forbidden($requestUrl, $code = Response::HTTP_FORBIDDEN, $headers = array())
+    public function forbidden($requestUrl, $code = Response::HTTP_FORBIDDEN, $headers = [])
     {
         // set page for redirection after successful login
         $this->session->set('rUri', $requestUrl);
@@ -120,6 +119,7 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
         $c = Page::getByPath($item);
         if (is_object($c) && !$c->isError()) {
             $this->request->setCurrentPage($c);
+
             return $this->controller($c->getPageController(), $code, $headers);
         }
 
@@ -128,17 +128,17 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
-    public function redirect($to, $code = Response::HTTP_MOVED_PERMANENTLY, $headers = array())
+    public function redirect($to, $code = Response::HTTP_MOVED_PERMANENTLY, $headers = [])
     {
         return RedirectResponse::create($to, $code, $headers);
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
-    public function view(View $view, $code = Response::HTTP_OK, $headers = array())
+    public function view(View $view, $code = Response::HTTP_OK, $headers = [])
     {
         $this->localization->pushActiveContext(Localization::CONTEXT_SITE);
 
@@ -148,9 +148,9 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
-    public function controller(Controller $controller, $code = Response::HTTP_OK, $headers = array())
+    public function controller(Controller $controller, $code = Response::HTTP_OK, $headers = [])
     {
         $request = $this->request;
 
@@ -181,7 +181,6 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
             if ($response instanceof \Symfony\Component\HttpFoundation\Response) {
                 return $response;
             }
-
         } else {
             if ($response = $controller->runAction('view')) {
                 return $response;
@@ -206,9 +205,9 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
-    public function collection(Collection $collection, $code = Response::HTTP_OK, $headers = array())
+    public function collection(Collection $collection, $code = Response::HTTP_OK, $headers = [])
     {
         if (!$this->app) {
             throw new \RuntimeException('Cannot resolve collections without a reference to the application');
@@ -231,6 +230,7 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
                 $query->modify($request->getQueryString());
 
                 $url = $url->setQuery($query);
+
                 return $this->redirect($url, Response::HTTP_MOVED_PERMANENTLY, $headers);
             }
         }
