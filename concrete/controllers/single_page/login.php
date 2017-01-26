@@ -196,11 +196,6 @@ class Login extends PageController
         $config = $this->app->make('config');
         $this->error = $this->app->make('helper/validation/error');
         $this->set('valt', $this->app->make('helper/validation/token'));
-        if ($config->get('concrete.user.registration.email_registration')) {
-            $this->set('uNameLabel', t('Email Address'));
-        } else {
-            $this->set('uNameLabel', t('Username'));
-        }
 
         $txt = $this->app->make('helper/text');
         if (isset($_GET['uName']) && strlen($_GET['uName'])
@@ -208,6 +203,13 @@ class Login extends PageController
             $this->set("uName", trim($txt->email($_GET['uName'])));
         }
 
+        $loc = Localization::getInstance();
+        $loc->pushActiveContext('site');
+        if ($config->get('concrete.user.registration.email_registration')) {
+            $this->set('uNameLabel', t('Email Address'));
+        } else {
+            $this->set('uNameLabel', t('Username'));
+        }
         $languages = array();
         $locales = array();
         if ($config->get('concrete.i18n.choose_language_login')) {
@@ -222,6 +224,7 @@ class Login extends PageController
             asort($locales);
             $locales = array_merge(array('' => tc('Default locale', '** Default')), $locales);
         }
+        $loc->popActiveContext();
         $this->locales = $locales;
         $this->set('locales', $locales);
     }
