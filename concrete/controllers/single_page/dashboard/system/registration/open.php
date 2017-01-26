@@ -30,6 +30,7 @@ class Open extends DashboardPageController
                     $config->save('concrete.user.registration.enabled', true);
                     $config->save('concrete.user.registration.validate_email', false);
                     $config->save('concrete.user.registration.notification', $this->post('register_notification'));
+                    $config->save('concrete.user.registration.approval', false);
                     $config->save(
                         'concrete.user.registration.notification_email',
                         $security->sanitizeEmail($this->post('register_notification_email')));
@@ -39,6 +40,7 @@ class Open extends DashboardPageController
                     $config->save('concrete.user.registration.enabled', true);
                     $config->save('concrete.user.registration.validate_email', true);
                     $config->save('concrete.user.registration.notification', $this->post('register_notification'));
+                    $config->save('concrete.user.registration.approval', false);
                     $config->save(
                         'concrete.user.registration.notification_email',
                         $security->sanitizeEmail($this->post('register_notification_email')));
@@ -56,6 +58,7 @@ class Open extends DashboardPageController
 
                 default: // disabled
                     $config->save('concrete.user.registration.enabled', false);
+                    $config->save('concrete.user.registration.approval', false);
                     $config->save('concrete.user.registration.notification', false);
                     break;
             }
