@@ -100,7 +100,7 @@ class Detector
         if ($locale) {
             $app->make('session')->set('multilingual_default_locale', $locale);
             $loc = Localization::getInstance();
-            $loc->setContextLocale('site', $locale);
+            $loc->setContextLocale(Localization::CONTEXT_SITE, $locale);
         }
     }
 

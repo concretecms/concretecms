@@ -204,7 +204,7 @@ class Login extends PageController
         }
 
         $loc = Localization::getInstance();
-        $loc->pushActiveContext('site');
+        $loc->pushActiveContext(Localization::CONTEXT_SITE);
         if ($config->get('concrete.user.registration.email_registration')) {
             $this->set('uNameLabel', t('Email Address'));
         } else {
