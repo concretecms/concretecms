@@ -121,18 +121,18 @@ class DateTime
         if ($requestValue !== null) {
             $dateTime = $requestValue;
             $dateTime->setTimezone($dh->getTimezone('user'));
-        } else {
-            if ($value) {
-                if ($value instanceof PHPDateTime) {
-                    $dateTime = clone $value;
-                    $dateTime->setTimezone($dh->getTimezone('user'));
-                } else {
-                    try {
-                        $dateTime = $dh->toDateTime($value, 'user', 'system');
-                    } catch (Exception $x) {
-                    }
+        } elseif ($value) {
+            if ($value instanceof PHPDateTime) {
+                $dateTime = clone $value;
+                $dateTime->setTimezone($dh->getTimezone('user'));
+            } else {
+                try {
+                    $dateTime = $dh->toDateTime($value, 'user', 'system');
+                } catch (Exception $x) {
                 }
             }
+        } elseif ($value !== '') {
+            $dateTime = new PHPDateTime('now', $dh->getTimezone('user'));    
         }
 
         // Determine the date/time parts
@@ -302,12 +302,15 @@ EOT;
         if ($requestValue !== null) {
             $dateTime = $requestValue;
         } elseif ($value) {
-            if (!$value instanceof PHPDateTime) {
-                try {
-                    $dateTime = $dh->toDateTime($value);
-                } catch (Exception $x) {
-                }
-            }
+            if ($value instanceof PHPDateTime) {
+              $dateTime = clone $value;
+              $dateTime->setTimezone($dh->getTimezone('user'));
+            } else {
+              try {
+                $dateTime = $dh->toDateTime($value, 'user', 'system');
+              } catch (Exception $x) {
+              }
+            } 
         } elseif ($value !== '') {
             $dateTime = new PHPDateTime('now', $dh->getTimezone('user'));
         }
