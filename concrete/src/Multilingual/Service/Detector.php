@@ -22,7 +22,6 @@ class Detector
      */
     public static function getPreferredSection()
     {
-
         $site = \Site::getSite();
 
         $locale = false;
@@ -73,9 +72,15 @@ class Detector
         }
 
         $site = \Site::getSite();
+
         return Section::getByLocale($site->getDefaultLocale());
     }
 
+    /**
+     * Set the locale associated to the 'site' localization context.
+     *
+     * @param Page $c The page to be used to determine the site locale (if null we'll use the current page)
+     */
     public function setupSiteInterfaceLocalization(Page $c = null)
     {
         $app = Facade::getFacadeApplication();
@@ -138,6 +143,7 @@ class Detector
         }
 
         $cache->save($item->set($result));
+
         return $result;
     }
 }
