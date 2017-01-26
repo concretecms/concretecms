@@ -155,7 +155,7 @@ class StartingPointPackage extends BasePackage
     public function executeInstallRoutine($routineName)
     {
         $localization = Localization::getInstance();
-        $localization->pushActiveContext('system');
+        $localization->pushActiveContext(Localization::CONTEXT_SYSTEM);
         $error = null;
         try {
             $this->$routineName();

@@ -80,7 +80,7 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
             $loc = $this->localization;
             $changeContext = $this->shouldChangeContext();
             if ($changeContext) {
-                $loc->pushActiveContext('site');
+                $loc->pushActiveContext(Localization::CONTEXT_SITE);
             }
             $responseData = [
                 'error' => t('Page not found'),
@@ -147,7 +147,7 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
     {
         $changeContext = $this->shouldChangeContext();
         if ($changeContext) {
-            $this->localization->pushActiveContext('site');
+            $this->localization->pushActiveContext(Localization::CONTEXT_SITE);
         }
 
         $contents = $view->render();

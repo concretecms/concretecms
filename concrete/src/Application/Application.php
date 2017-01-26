@@ -292,7 +292,7 @@ class Application extends Container
                 $pkgInstalledVersion = $dbPkg->getPackageVersion();
                 $pkgFileVersion = $pkg->getPackageVersion();
                 if (version_compare($pkgFileVersion, $pkgInstalledVersion, '>')) {
-                    $loc->pushActiveContext('system');
+                    $loc->pushActiveContext(Localization::CONTEXT_SYSTEM);
                     $dbPkg->upgradeCoreData();
                     $dbPkg->upgrade();
                     $loc->popActiveContext();

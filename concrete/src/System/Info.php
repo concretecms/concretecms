@@ -61,7 +61,7 @@ class Info
     public function __construct()
     {
         $loc = Localization::getInstance();
-        $loc->pushActiveContext('system');
+        $loc->pushActiveContext(Localization::CONTEXT_SYSTEM);
         try {
             $app = Facade::getFacadeApplication();
             $config = $app->make('config');
