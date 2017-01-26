@@ -14,7 +14,6 @@
 			</label>
 		</div>
 	</fieldset>
-	<hr/>
 	<fieldset>
 		<label class="control-label"><?=t('Editor Plugins')?></label>
 		<?php
