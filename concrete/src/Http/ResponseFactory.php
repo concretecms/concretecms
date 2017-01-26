@@ -78,17 +78,12 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
     {
         if (strcasecmp($this->request->server->get('HTTP_X_REQUESTED_WITH', ''), 'xmlhttprequest') === 0) {
             $loc = $this->localization;
-            $changeContext = $this->shouldChangeContext();
-            if ($changeContext) {
-                $loc->pushActiveContext(Localization::CONTEXT_SITE);
-            }
+            $loc->pushActiveContext(Localization::CONTEXT_SITE);
             $responseData = [
                 'error' => t('Page not found'),
                 'errors' => [t('Page not found')],
             ];
-            if ($changeContext) {
-                $loc->popActiveContext();
-            }
+            $loc->popActiveContext();
 
             return $this->json($responseData, $code, $headers);
         }
@@ -145,15 +140,9 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
      */
     public function view(View $view, $code = Response::HTTP_OK, $headers = array())
     {
-        $changeContext = $this->shouldChangeContext();
-        if ($changeContext) {
-            $this->localization->pushActiveContext(Localization::CONTEXT_SITE);
-        }
+        $this->localization->pushActiveContext(Localization::CONTEXT_SITE);
 
         $contents = $view->render();
-        if ($changeContext) {
-            $this->localization->popActiveContext();
-        }
 
         return $this->create($contents, $code, $headers);
     }
@@ -393,17 +382,4 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
             return $this->notFound('', Response::HTTP_NOT_FOUND, $headers);
         }
     }
-
-    /**
-     * Check to see if we should change the localization context
-     * @return bool
-     */
-    private function shouldChangeContext()
-    {
-        $mlEnabled = $this->app->make('multilingual/detector')->isEnabled();
-        $inDashboard = $this->app->make('helper/concrete/dashboard')->inDashboard();
-
-        return $mlEnabled && !$inDashboard;
-    }
-
 }
