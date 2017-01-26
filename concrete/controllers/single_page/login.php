@@ -6,11 +6,9 @@ use Concrete\Core\Authentication\AuthenticationTypeFailureException;
 use Concrete\Core\Page\Desktop\DesktopList;
 use Concrete\Core\Routing\Redirect;
 use Concrete\Core\Routing\RedirectResponse;
-use Concrete\Core\Url\Url;
-use Localization;
+use Concrete\Core\Localization\Localization;
 use Page;
 use PageController;
-use Permissions;
 use User;
 use UserAttributeKey;
 use UserInfo;
@@ -142,7 +140,7 @@ class Login extends PageController
         if ($config->get('concrete.i18n.choose_language_login')) {
             $userLocale = $this->post('USER_LOCALE');
             if (is_string($userLocale) && ($userLocale !== '')) {
-                if ($userLocale !== 'en_US') {
+                if ($userLocale !== Localization::BASE_LOCALE) {
                     $availableLocales = Localization::getAvailableInterfaceLanguages();
                     if (!in_array($userLocale, $availableLocales)) {
                         $userLocale = '';
@@ -215,7 +213,7 @@ class Login extends PageController
         if ($config->get('concrete.i18n.choose_language_login')) {
             $languages = Localization::getAvailableInterfaceLanguages();
             if (count($languages) > 0) {
-                array_unshift($languages, 'en_US');
+                array_unshift($languages, Localization::BASE_LOCALE);
             }
             $locales = array();
             foreach ($languages as $lang) {

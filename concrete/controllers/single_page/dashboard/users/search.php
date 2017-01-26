@@ -11,7 +11,7 @@ use stdClass;
 use Permissions;
 use PermissionKey;
 use UserAttributeKey;
-use Localization;
+use Concrete\Core\Localization\Localization;
 use Concrete\Core\User\EditResponse as UserEditResponse;
 use Concrete\Core\Workflow\Progress\UserProgress as UserWorkflowProgress;
 
@@ -400,7 +400,7 @@ class Search extends DashboardPageController
     public function get_languages()
     {
         $languages = Localization::getAvailableInterfaceLanguages();
-        array_unshift($languages, 'en_US');
+        array_unshift($languages, Localization::BASE_LOCALE);
         $obj = new stdClass();
         $obj->text = tc('Default locale', '** Default');
         $obj->value = '';
