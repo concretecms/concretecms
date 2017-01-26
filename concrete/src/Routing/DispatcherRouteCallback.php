@@ -78,13 +78,4 @@ class DispatcherRouteCallback extends RouteCallback
     {
         return $this->factory->forbidden($request->getUri());
     }
-
-    /**
-     * @deprecated Use CollectionResponseFactory
-     */
-    protected function shouldChangeContext()
-    {
-        return $this->factory->shouldChangeContext();
-    }
-
 }
