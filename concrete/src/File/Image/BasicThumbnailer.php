@@ -178,7 +178,7 @@ class BasicThumbnailer implements ThumbnailerInterface, ApplicationAwareInterfac
     {
         $format = $this->getThumbnailsFormat();
         if ($format === 'auto') {
-            if (preg_match('/\.jpe?g($|^)/i', $savePath)) {
+            if (preg_match('/\.jpe?g($|\?)/i', $savePath)) {
                 $format = 'jpeg';
             } else {
                 $format = 'png';
