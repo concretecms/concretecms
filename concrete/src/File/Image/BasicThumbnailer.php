@@ -99,7 +99,7 @@ class BasicThumbnailer implements ThumbnailerInterface, ApplicationAwareInterfac
      */
     public function create($mixed, $newPath, $width, $height, $fit = false)
     {
-        $thumbnailOptions = ['jpeg_quality' => \Config::get('concrete.misc.default_jpeg_image_compression')];
+        $thumbnailOptions = ['jpeg_quality' => $this->getJpegCompression()];
         $filesystem = $this->getStorageLocation()
           ->getFileSystemObject();
 
