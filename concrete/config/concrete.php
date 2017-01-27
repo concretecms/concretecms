@@ -700,7 +700,6 @@ return [
             'throttle_max' => 20,
             'throttle_max_timespan' => 15, // minutes
         ],
-
     ],
 
     /*
