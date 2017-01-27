@@ -234,7 +234,7 @@ class DateTime
             if ($dateTime === null) {
                 $defaultDateJs = "''";
             } else {
-                $defaultDateJs = 'new Date('. implode(', ', [$dateTime->format('Y'), $dateTime->format('n') - 1, (int) $dateTime->format('j')]) . ')';
+                $defaultDateJs = 'new Date(' . implode(', ', [$dateTime->format('Y'), $dateTime->format('n') - 1, (int) $dateTime->format('j')]) . ')';
             }
             $html .= <<<EOT
 <script type="text/javascript">
@@ -333,7 +333,7 @@ EOT;
             if ($dateTime === null) {
                 $defaultDateJs = "''";
             } else {
-                $defaultDateJs = 'new Date('. implode(', ', [$dateTime->format('Y'), $dateTime->format('n') - 1, (int) $dateTime->format('j')]) . ')';
+                $defaultDateJs = 'new Date(' . implode(', ', [$dateTime->format('Y'), $dateTime->format('n') - 1, (int) $dateTime->format('j')]) . ')';
             }
             $html .= <<<EOT
 <script type="text/javascript">
