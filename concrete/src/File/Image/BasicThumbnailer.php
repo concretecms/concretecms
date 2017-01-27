@@ -33,7 +33,9 @@ class BasicThumbnailer implements ThumbnailerInterface, ApplicationAwareInterfac
     }
 
     /**
-     * @return StorageLocationInterface
+     * {@inheritdoc}
+     *
+     * @see ThumbnailerInterface::getStorageLocation()
      */
     public function getStorageLocation()
     {
@@ -51,9 +53,9 @@ class BasicThumbnailer implements ThumbnailerInterface, ApplicationAwareInterfac
     }
 
     /**
-     * @param StorageLocationInterface $storageLocation
+     * {@inheritdoc}
      *
-     * @return self
+     * @see ThumbnailerInterface::setStorageLocation()
      */
     public function setStorageLocation(StorageLocationInterface $storageLocation)
     {
@@ -63,14 +65,9 @@ class BasicThumbnailer implements ThumbnailerInterface, ApplicationAwareInterfac
     }
 
     /**
-     * Overrides the default or defined JPEG compression level per instance
-     * of the image helper. This allows for a single-use for a particularly
-     * low or high compression value. Passing a non-integer value will reset
-     * to the default system setting (DEFINE or 80).
+     * {@inheritdoc}
      *
-     * @param int $level the level of compression
-     *
-     * @return self
+     * @see ThumbnailerInterface::setJpegCompression()
      */
     public function setJpegCompression($level)
     {
@@ -81,29 +78,29 @@ class BasicThumbnailer implements ThumbnailerInterface, ApplicationAwareInterfac
         return $this;
     }
 
-    protected function getJpegCompression()
+    /**
+     * {@inheritdoc}
+     *
+     * @see ThumbnailerInterface::getJpegCompression()
+     */
+    public function getJpegCompression()
     {
         if (!isset($this->jpegCompression)) {
-            $this->jpegCompression = $this->app->make('config')->get('concrete.misc.default_jpeg_image_compression');
+            $this->jpegCompression = (int) $this->app->make('config')->get('concrete.misc.default_jpeg_image_compression');
         }
 
         return $this->jpegCompression;
     }
 
     /**
-     * Create a thumbnail.
+     * {@inheritdoc}
      *
-     * @param ImagineInterface|string $mixed
-     * @param string $newPath
-     * @param int $width
-     * @param int $height
-     * @param bool $fit
+     * @see ThumbnailerInterface::create()
      */
-    public function create($mixed, $newPath, $width, $height, $fit = false)
+    public function create($mixed, $savePath, $width, $height, $fit = false)
     {
         $thumbnailOptions = ['jpeg_quality' => $this->getJpegCompression()];
-        $filesystem = $this->getStorageLocation()
-          ->getFileSystemObject();
+        $filesystem = $this->getStorageLocation()->getFileSystemObject();
 
         if ($mixed instanceof ImageInterface) {
             $image = $mixed;
@@ -113,8 +110,8 @@ class BasicThumbnailer implements ThumbnailerInterface, ApplicationAwareInterfac
         if ($fit) {
             $thumb = $image->thumbnail(new Box($width, $height), ImageInterface::THUMBNAIL_OUTBOUND);
             $filesystem->write(
-              $newPath,
-              $thumb->get('jpeg', $thumbnailOptions)
+                $savePath,
+                $thumb->get('jpeg', $thumbnailOptions)
             );
         } else {
             if ($height < 1) {
@@ -125,27 +122,16 @@ class BasicThumbnailer implements ThumbnailerInterface, ApplicationAwareInterfac
                 $thumb = $image->thumbnail(new Box($width, $height));
             }
             $filesystem->write(
-              $newPath,
-              $thumb->get('jpeg', $thumbnailOptions)
+                $savePath,
+                $thumb->get('jpeg', $thumbnailOptions)
             );
         }
     }
 
     /**
-     * Deprecated.
-     */
-
-    /**
-     * Returns a path to the specified item, resized and/or cropped to meet max width and height. $obj can either be
-     * a string (path) or a file object.
-     * Returns an object with the following properties: src, width, height.
+     * {@inheritdoc}
      *
-     * @param File|string $obj
-     * @param int $maxWidth
-     * @param int $maxHeight
-     * @param bool $crop
-     *
-     * @return stdClass Object that has the following properties: src, width, height
+     * @see ThumbnailerInterface::getThumbnail()
      */
     public function getThumbnail($obj, $maxWidth, $maxHeight, $crop = false)
     {
@@ -161,7 +147,7 @@ class BasicThumbnailer implements ThumbnailerInterface, ApplicationAwareInterfac
                 $fr = $obj->getFileResource();
                 $fID = $obj->getFileID();
                 $filename = md5(implode(':', [$fID, $maxWidth, $maxHeight, $crop, $fr->getTimestamp()]))
-                  . '.' . $fh->getExtension($fr->getPath());
+                    . '.' . $fh->getExtension($fr->getPath());
             } catch (Exception $e) {
                 $filename = '';
             }
@@ -186,7 +172,8 @@ class BasicThumbnailer implements ThumbnailerInterface, ApplicationAwareInterfac
                 $abspath,
                 $maxWidth,
                 $maxHeight,
-                $crop);
+                $crop
+            );
         }
 
         $thumb = new stdClass();
@@ -202,18 +189,18 @@ class BasicThumbnailer implements ThumbnailerInterface, ApplicationAwareInterfac
         }
 
         try {
-            //try and get it locally, otherwise use http
-            $dimensions = getimagesize($dimensionsPath);
-            $thumb->width = $dimensions[0];
-            $thumb->height = $dimensions[1];
+            $dimensions = @getimagesize($dimensionsPath);
         } catch (Exception $e) {
+            $dimensions = false;
         }
+        $thumb->width = ($dimensions === false) ? null : $dimensions[0];
+        $thumb->height = ($dimensions === false) ?: $dimensions[1];
 
         return $thumb;
     }
 
     /**
-     * Deprecated.
+     * @deprecated
      */
     public function outputThumbnail($mixed, $maxWidth, $maxHeight, $alt = null, $return = false, $crop = false)
     {
