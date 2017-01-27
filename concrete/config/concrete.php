@@ -434,7 +434,7 @@ return [
          */
         'default_png_image_compression' => 9,
         /*
-         * The default thumbnail format: jpeg, png, auto (if auto: we'll create a png if the source image is png, we'll create a jpeg otherwise).
+         * The default thumbnail format: jpeg, png, auto (if auto: we'll create a jpeg if the source image is jpeg, we'll create a png otherwise).
          */
         'default_thumbnail_format' => 'jpeg',
         'help_overlay' => true,
