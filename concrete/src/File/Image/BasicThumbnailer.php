@@ -13,6 +13,8 @@ use Image;
 use Imagine\Image\Box;
 use Imagine\Image\ImageInterface;
 use Concrete\Core\Entity\File\File;
+use Exception;
+use stdClass;
 
 class BasicThumbnailer implements ThumbnailerInterface, ApplicationAwareInterface
 {
@@ -49,7 +51,7 @@ class BasicThumbnailer implements ThumbnailerInterface, ApplicationAwareInterfac
     }
 
     /**
-     * @param \Concrete\Core\File\StorageLocation\StorageLocationInterface $storageLocation
+     * @param StorageLocationInterface $storageLocation
      *
      * @return self
      */
@@ -91,7 +93,7 @@ class BasicThumbnailer implements ThumbnailerInterface, ApplicationAwareInterfac
     /**
      * Create a thumbnail.
      *
-     * @param \Imagine\Image\ImagineInterface|string $mixed
+     * @param ImagineInterface|string $mixed
      * @param string $newPath
      * @param int $width
      * @param int $height
@@ -103,7 +105,7 @@ class BasicThumbnailer implements ThumbnailerInterface, ApplicationAwareInterfac
         $filesystem = $this->getStorageLocation()
           ->getFileSystemObject();
 
-        if ($mixed instanceof \Imagine\Image\ImageInterface) {
+        if ($mixed instanceof ImageInterface) {
             $image = $mixed;
         } else {
             $image = Image::open($mixed);
@@ -143,7 +145,7 @@ class BasicThumbnailer implements ThumbnailerInterface, ApplicationAwareInterfac
      * @param int $maxHeight
      * @param bool $crop
      *
-     * @return \stdClass Object that has the following properties: src, width, height
+     * @return stdClass Object that has the following properties: src, width, height
      */
     public function getThumbnail($obj, $maxWidth, $maxHeight, $crop = false)
     {
@@ -160,7 +162,7 @@ class BasicThumbnailer implements ThumbnailerInterface, ApplicationAwareInterfac
                 $fID = $obj->getFileID();
                 $filename = md5(implode(':', [$fID, $maxWidth, $maxHeight, $crop, $fr->getTimestamp()]))
                   . '.' . $fh->getExtension($fr->getPath());
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 $filename = '';
             }
         } else {
@@ -175,9 +177,9 @@ class BasicThumbnailer implements ThumbnailerInterface, ApplicationAwareInterfac
         /* Attempt to create the image */
         if (!$filesystem->has($abspath)) {
             if ($obj instanceof File && $fr->exists()) {
-                $image = \Image::load($fr->read());
+                $image = Image::load($fr->read());
             } else {
-                $image = \Image::open($obj);
+                $image = Image::open($obj);
             }
             // create image there
             $this->create($image,
@@ -187,7 +189,7 @@ class BasicThumbnailer implements ThumbnailerInterface, ApplicationAwareInterfac
                 $crop);
         }
 
-        $thumb = new \stdClass();
+        $thumb = new stdClass();
         $thumb->src = $src;
 
         // this is a hack, but we shouldn't go out on the network if we don't have to. We should probably
@@ -204,7 +206,7 @@ class BasicThumbnailer implements ThumbnailerInterface, ApplicationAwareInterfac
             $dimensions = getimagesize($dimensionsPath);
             $thumb->width = $dimensions[0];
             $thumb->height = $dimensions[1];
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
         }
 
         return $thumb;
