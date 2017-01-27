@@ -82,7 +82,7 @@ class BasicThumbnailer implements ThumbnailerInterface, ApplicationAwareInterfac
     protected function getJpegCompression()
     {
         if (!isset($this->jpegCompression)) {
-            $this->jpegCompression = \Config::get('concrete.misc.default_jpeg_image_compression');
+            $this->jpegCompression = $this->app->make('config')->get('concrete.misc.default_jpeg_image_compression');
         }
 
         return $this->jpegCompression;
@@ -153,7 +153,7 @@ class BasicThumbnailer implements ThumbnailerInterface, ApplicationAwareInterfac
         $configuration = $storage->getConfigurationObject();
         $version = null;
 
-        $fh = \Core::make('helper/file');
+        $fh = $this->app->make('helper/file');
         if ($obj instanceof File) {
             try {
                 $fr = $obj->getFileResource();
