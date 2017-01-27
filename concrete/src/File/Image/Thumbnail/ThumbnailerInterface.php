@@ -30,7 +30,7 @@ interface ThumbnailerInterface
      * Overrides the default JPEG compression level per instance of the image helper.
      * This allows for a single-use for a particularly low or high compression value.
      *
-     * @param int $level the level of compression
+     * @param int $level the level of compression (in the range 0...100)
      *
      * @return static
      */
@@ -41,7 +41,40 @@ interface ThumbnailerInterface
      *
      * @return int
      */
-    public function getJpegCompression($level);
+    public function getJpegCompression();
+
+    /**
+     * Overrides the default PNG compression level per instance of the image helper.
+     * This allows for a single-use for a particularly low or high compression value.
+     *
+     * @param int $level the level of compression (in the range 0...9)
+     *
+     * @return static
+     */
+    public function setPngCompression($level);
+
+    /**
+     * Get the currently set PNG compression level.
+     *
+     * @return int
+     */
+    public function getPngCompression();
+
+    /**
+     * Set the format of the generated thumbnails.
+     *
+     * @param string $thumbnailsFormat valid values: 'auto', 'jpeg', 'png'
+     *
+     * @return static
+     */
+    public function setThumbnailsFormat($thumbnailsFormat);
+
+    /**
+     * Get the format of the generated thumbnails.
+     *
+     * @return string one of 'auto', 'jpeg', 'png'
+     */
+    public function getThumbnailsFormat();
 
     /**
      * Create a thumbnail given an image (or a path to an image).

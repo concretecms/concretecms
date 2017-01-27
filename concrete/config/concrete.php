@@ -425,7 +425,18 @@ return [
         'page_search_index_lifetime' => 259200,
         'enable_trash_can' => true,
         'app_version_display_in_header' => true,
+        /*
+         * The JPEG compression level (in range 0... 100)
+         */
         'default_jpeg_image_compression' => 80,
+        /*
+         * The PNG compression level (in range 0... 9)
+         */
+        'default_png_image_compression' => 9,
+        /*
+         * The default thumbnail format: jpeg, png, auto (if auto: we'll create a png if the source image is png, we'll create a jpeg otherwise).
+         */
+        'default_thumbnail_format' => 'jpeg',
         'help_overlay' => true,
         'require_version_comments' => false,
     ],

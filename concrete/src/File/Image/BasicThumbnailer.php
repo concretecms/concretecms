@@ -20,7 +20,26 @@ class BasicThumbnailer implements ThumbnailerInterface, ApplicationAwareInterfac
 {
     use ApplicationAwareTrait;
 
-    protected $jpegCompression;
+    /**
+     * The currently configured JPEG compression level.
+     *
+     * @var int|null
+     */
+    protected $jpegCompression = null;
+
+    /**
+     * The currently configured PNG compression level.
+     *
+     * @var int|null
+     */
+    protected $pngCompression = null;
+
+    /**
+     * The currently configured format of the generated thumbnails.
+     *
+     * @var string|null
+     */
+    protected $thumbnailsFormat = null;
 
     /**
      * @var StorageLocationInterface
@@ -85,7 +104,7 @@ class BasicThumbnailer implements ThumbnailerInterface, ApplicationAwareInterfac
      */
     public function getJpegCompression()
     {
-        if (!isset($this->jpegCompression)) {
+        if ($this->jpegCompression === null) {
             $this->jpegCompression = (int) $this->app->make('config')->get('concrete.misc.default_jpeg_image_compression');
         }
 
@@ -95,11 +114,80 @@ class BasicThumbnailer implements ThumbnailerInterface, ApplicationAwareInterfac
     /**
      * {@inheritdoc}
      *
+     * @see ThumbnailerInterface::setPngCompression()
+     */
+    public function setPngCompression($level)
+    {
+        if (is_int($level) || is_float($level) || (is_string($level) && is_numeric($level))) {
+            $this->pngCompression = min(max((int) $level, 0), 9);
+        }
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see ThumbnailerInterface::getPngCompression()
+     */
+    public function getPngCompression()
+    {
+        if ($this->pngCompression === null) {
+            $this->pngCompression = (int) $this->app->make('config')->get('concrete.misc.default_png_image_compression');
+        }
+
+        return $this->pngCompression;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see ThumbnailerInterface::setThumbnailsFormat()
+     */
+    public function setThumbnailsFormat($thumbnailsFormat)
+    {
+        $thumbnailsFormat = $thumbnailsFormat ? strtolower(trim((string) $thumbnailsFormat)) : '';
+        if ($thumbnailsFormat === 'jpg') {
+            $thumbnailsFormat = 'jpeg';
+        }
+        $this->thumbnailsFormat = in_array($thumbnailsFormat, ['jpeg', 'png', 'auto']) ? $thumbnailsFormat : 'jpeg';
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see ThumbnailerInterface::getThumbnailsFormat()
+     */
+    public function getThumbnailsFormat()
+    {
+        if ($this->thumbnailsFormat === null) {
+            $this->setThumbnailsFormat($this->app->make('config')->get('concrete.misc.default_thumbnail_format'));
+        }
+
+        return $this->thumbnailsFormat;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
      * @see ThumbnailerInterface::create()
      */
     public function create($mixed, $savePath, $width, $height, $fit = false)
     {
-        $thumbnailOptions = ['jpeg_quality' => $this->getJpegCompression()];
+        $format = $this->getThumbnailsFormat();
+        if ($format === 'auto') {
+            if (preg_match('/\.jpe?g($|?)/i', $savePath)) {
+                $format = 'jpeg';
+            } else {
+                $format = 'png';
+            }
+        }
+        $thumbnailOptions = [
+            'jpeg_quality' => $this->getJpegCompression(),
+            'png_compression_level' => $this->getPngCompression(),
+        ];
         $filesystem = $this->getStorageLocation()->getFileSystemObject();
 
         if ($mixed instanceof ImageInterface) {
@@ -111,7 +199,7 @@ class BasicThumbnailer implements ThumbnailerInterface, ApplicationAwareInterfac
             $thumb = $image->thumbnail(new Box($width, $height), ImageInterface::THUMBNAIL_OUTBOUND);
             $filesystem->write(
                 $savePath,
-                $thumb->get('jpeg', $thumbnailOptions)
+                $thumb->get($format, $thumbnailOptions)
             );
         } else {
             if ($height < 1) {
@@ -123,7 +211,7 @@ class BasicThumbnailer implements ThumbnailerInterface, ApplicationAwareInterfac
             }
             $filesystem->write(
                 $savePath,
-                $thumb->get('jpeg', $thumbnailOptions)
+                $thumb->get($format, $thumbnailOptions)
             );
         }
     }
@@ -142,18 +230,47 @@ class BasicThumbnailer implements ThumbnailerInterface, ApplicationAwareInterfac
         $version = null;
 
         $fh = $this->app->make('helper/file');
+        $baseFilename = '';
+        $extension = '';
         if ($obj instanceof File) {
             try {
                 $fr = $obj->getFileResource();
                 $fID = $obj->getFileID();
-                $filename = md5(implode(':', [$fID, $maxWidth, $maxHeight, $crop, $fr->getTimestamp()]))
-                    . '.' . $fh->getExtension($fr->getPath());
+                $extension = $fh->getExtension($fr->getPath());
+                $baseFilename = md5(implode(':', [$fID, $maxWidth, $maxHeight, $crop, $fr->getTimestamp()]));
             } catch (Exception $e) {
-                $filename = '';
             }
         } else {
-            $filename = md5(implode(':', [$obj, $maxWidth, $maxHeight, $crop, filemtime($obj)]))
-                . '.' . $fh->getExtension($obj);
+            $extension = $fh->getExtension($obj);
+            $baseFilename = md5(implode(':', [$obj, $maxWidth, $maxHeight, $crop, filemtime($obj)]));
+        }
+
+        $thumbnailsFormat = $this->getThumbnailsFormat();
+        switch ($thumbnailsFormat) {
+            case 'jpeg':
+                $extension = 'jpg';
+                break;
+            case 'png':
+                $extension = 'png';
+                break;
+            case 'auto':
+                switch (strtolower($extension)) {
+                    case 'jpeg':
+                    case 'jpg':
+                    case 'pjpeg':
+                        $extension = 'jpg';
+                        $thumbnailsFormat = 'jpeg';
+                        break;
+                    default:
+                        $extension = 'png';
+                        $thumbnailsFormat = 'png';
+                        break;
+                }
+                break;
+        }
+        $filename = '';
+        if ($baseFilename !== '') {
+            $filename = $baseFilename . '.' . $extension;
         }
 
         $abspath = '/cache/' . $filename;
@@ -172,7 +289,8 @@ class BasicThumbnailer implements ThumbnailerInterface, ApplicationAwareInterfac
                 $abspath,
                 $maxWidth,
                 $maxHeight,
-                $crop
+                $crop,
+                $thumbnailsFormat
             );
         }
 
