@@ -302,7 +302,9 @@ EOT;
         if ($requestValue !== null) {
             $dateTime = $requestValue;
         } elseif ($value) {
-            if (!$value instanceof PHPDateTime) {
+            if ($value instanceof PHPDateTime) {
+                $dateTime = $value;
+            } else {
                 try {
                     $dateTime = $dh->toDateTime($value);
                 } catch (Exception $x) {
