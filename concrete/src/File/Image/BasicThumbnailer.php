@@ -72,8 +72,8 @@ class BasicThumbnailer implements ThumbnailerInterface, ApplicationAwareInterfac
      */
     public function setJpegCompression($level)
     {
-        if (is_int($level)) {
-            $this->jpegCompression = min(max($level, 0), 100);
+        if (is_int($level) || is_float($level) || (is_string($level) && is_numeric($level))) {
+            $this->jpegCompression = min(max((int) $level, 0), 100);
         }
 
         return $this;
