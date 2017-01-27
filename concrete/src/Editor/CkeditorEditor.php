@@ -143,11 +143,11 @@ EOL;
                 ckeditor.on('ariaWidget', function (e) {
                     setTimeout(function() {
                         var \$contents = $(e.editor.ui.contentsElement.$),
-                            \$textarea = \$contents.find('textarea');
-                        if (\$contents.length === 1) {
+                            \$textarea = \$contents.find('>textarea.cke_source');
+                        if (\$textarea.length === 1) {
                             \$textarea.css({
                                 width: \$contents.innerWidth() + 'px',
-                                height: \$contents.innerHeight() + 'px',
+                                height: \$contents.innerHeight() + 'px'
                             });
                         }
                     }, 50);
