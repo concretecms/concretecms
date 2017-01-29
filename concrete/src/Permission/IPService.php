@@ -12,6 +12,13 @@ class IPService
     use ApplicationAwareTrait;
 
     /**
+     * DateTime value representing 'ban forever' (ie manual bans).
+     *
+     * @var string
+     */
+    const FOREVER_BAN_DATETIME = '1000-01-01 00:00:00';
+
+    /**
      * Check if an IP adress is banned.
      *
      * @param IPAddress|mixed $ip The IPAddress instance containing the IP to check (if it's not an IPAddress instance we'll use the current IP address)
@@ -33,14 +40,14 @@ class IPService
 			OR
 			(ipFrom <= ? AND ipTo >= ?)
 		)
-		AND (expires = '1000-01-01 00:00:00' OR expires > ?)
+		AND (expires = ? OR expires > ?)
 		";
 
         if ($extraParamString !== false) {
             $q .= $extraParamString;
         }
 
-        $v = [$ip->getIp(), $ip->getIp(), $ip->getIp(), date('Y-m-d H:i:s')];
+        $v = [$ip->getIp(), $ip->getIp(), $ip->getIp(), static::FOREVER_BAN_DATETIME, date('Y-m-d H:i:s')];
         $v = array_merge($v, $extraParamValues);
 
         $row = $db->fetchAssoc($q, $v);
@@ -57,7 +64,7 @@ class IPService
      */
     protected function existsManualPermBan(IPAddress $ip)
     {
-        return $this->isBanned($ip, ' AND isManual = ? AND expires = ? ', [1, '1000-01-01 00:00:00']);
+        return $this->isBanned($ip, ' AND isManual = ? AND expires = ? ', [1, static::FOREVER_BAN_DATETIME]);
     }
 
     /**
@@ -157,7 +164,7 @@ class IPService
                     $banUntil->modify('+' . $timeOffset . ' minutes');
                     $banUntil = $banUntil->format('Y-m-d H:i:s');
                 } else {
-                    $banUntil = '1000-01-01 00:00:00';
+                    $banUntil = static::FOREVER_BAN_DATETIME;
                 }
 
                 $q = 'INSERT INTO UserBannedIPs (ipFrom,ipTo,banCode,expires,isManual) VALUES (?,?,?,?,?)';
