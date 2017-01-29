@@ -2,13 +2,15 @@
 namespace Concrete\Core\Permission;
 
 use Concrete\Core\Utility\IPAddress;
-use Config;
 use Concrete\Core\User\UserBannedIp;
-use Database;
 use Request;
+use Concrete\Core\Application\ApplicationAwareTrait;
+use Concrete\Core\Database\Connection\Connection;
 
 class IPService
 {
+    use ApplicationAwareTrait;
+
     /**
      * Check if an IP adress is banned.
      *
@@ -21,7 +23,7 @@ class IPService
     public function isBanned($ip = false, $extraParamString = false, $extraParamValues = [])
     {
         $ip = ($ip instanceof IPAddress) ? $ip : $this->getRequestIP();
-        $db = Database::connection();
+        $db = $this->app->make(Connection::class);
         //do ip check
         $q = "SELECT count(expires) as count
 		FROM UserBannedIPs
@@ -87,8 +89,8 @@ class IPService
      */
     public function logSignupRequest($ignoreConfig = false)
     {
-        if ($ignoreConfig || Config::get('concrete.security.ban.ip.enabled') == 1) {
-            $db = Database::connection();
+        if ($ignoreConfig || $this->app->make('config')->get('concrete.security.ban.ip.enabled')) {
+            $db = $this->app->make(Connection::class);
             $ip = $this->getRequestIP();
             $db->insert('SignupRequests', ['date_access' => date('Y-m-d H:i:s'), 'ipFrom' => $ip->getIp()]);
         }
@@ -103,10 +105,11 @@ class IPService
      */
     public function signupRequestThresholdReached($ignoreConfig = false)
     {
-        if ($ignoreConfig || Config::get('concrete.security.ban.ip.enabled') == 1) {
-            $db = Database::connection();
-            $threshold_attempts = Config::get('concrete.security.ban.ip.attempts');
-            $threshold_seconds = Config::get('concrete.security.ban.ip.time');
+        $config = $this->app->make('config');
+        if ($ignoreConfig || $config->get('concrete.security.ban.ip.enabled') == 1) {
+            $db = $this->app->make(Connection::class);
+            $threshold_attempts = $config->get('concrete.security.ban.ip.attempts');
+            $threshold_seconds = $config->get('concrete.security.ban.ip.time');
             $ip = $this->getRequestIP();
             $q = 'SELECT count(*) as count
 			FROM SignupRequests
@@ -133,10 +136,11 @@ class IPService
      */
     public function createIPBan($ip = false, $ignoreConfig = false)
     {
-        if ($ignoreConfig || Config::get('concrete.security.ban.ip.enabled') == 1) {
+        $config = $this->app->make('config');
+        if ($ignoreConfig || $config->get('concrete.security.ban.ip.enabled') == 1) {
             $ip = ($ip instanceof IPAddress) ? $ip : $this->getRequestIP();
 
-            $db = Database::connection();
+            $db = $this->app->make(Connection::class);
 
             //If there's a permanent ban, obey its setting otherwise set up a temporary ban
             if (!$this->existsManualPermBan($ip)) {
@@ -146,7 +150,7 @@ class IPService
                 $db->executeQuery($q, $v);
 
                 //IP_BAN_LOCK_IP_HOW_LONG_MIN of 0 or undefined  means forever
-                $timeOffset = Config::get('concrete.security.ban.ip.length');
+                $timeOffset = $config->get('concrete.security.ban.ip.length');
                 $timeOffset = $timeOffset ? ($timeOffset) : 0;
                 if ($timeOffset !== 0) {
                     $banUntil = new \DateTime();
@@ -166,7 +170,7 @@ class IPService
     }
 
     /**
-     * @deprecated Use signupRequestThresholdReached (same syntax, just fixed the typo in the name).
+     * @deprecated use signupRequestThresholdReached (same syntax, just fixed the typo in the name)
      */
     public function signupRequestThreshholdReached($ignoreConfig = false)
     {
