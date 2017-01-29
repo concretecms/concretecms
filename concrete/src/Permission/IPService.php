@@ -6,6 +6,8 @@ use Concrete\Core\User\UserBannedIp;
 use Request;
 use Concrete\Core\Application\ApplicationAwareTrait;
 use Concrete\Core\Database\Connection\Connection;
+use DateTime;
+use Concrete\Core\Permission\Event\BanIPEvent;
 
 class IPService
 {
@@ -151,27 +153,38 @@ class IPService
 
             //If there's a permanent ban, obey its setting otherwise set up a temporary ban
             if (!$this->existsManualPermBan($ip)) {
-                $db->beginTransaction();
-                $q = 'DELETE FROM UserBannedIPs WHERE ipFrom = ? AND ipTo = ? AND isManual = ?';
-                $v = [$ip->getIp(), 0, 0];
-                $db->executeQuery($q, $v);
-
                 //IP_BAN_LOCK_IP_HOW_LONG_MIN of 0 or undefined  means forever
                 $timeOffset = $config->get('concrete.security.ban.ip.length');
-                $timeOffset = $timeOffset ? ($timeOffset) : 0;
+                $timeOffset = $timeOffset ? (int) $timeOffset : 0;
                 if ($timeOffset !== 0) {
-                    $banUntil = new \DateTime();
-                    $banUntil->modify('+' . $timeOffset . ' minutes');
-                    $banUntil = $banUntil->format('Y-m-d H:i:s');
+                    $banExpiration = new DateTime();
+                    $banExpiration->modify('+' . $timeOffset . ' minutes');
+                    //$banExpiration = $banExpiration->format('Y-m-d H:i:s');
                 } else {
-                    $banUntil = static::FOREVER_BAN_DATETIME;
+                    $banExpiration = null;
                 }
+                $event = new BanIPEvent($ip, $banExpiration);
+                $this->app->make('director')->dispatch('on_ip_ban', $event);
+                if ($event->proceed()) {
+                    $banExpiration = $event->getBanExpiration();
 
-                $q = 'INSERT INTO UserBannedIPs (ipFrom,ipTo,banCode,expires,isManual) VALUES (?,?,?,?,?)';
-                $v = [$ip->getIp(), 0, UserBannedIp::IP_BAN_CODE_REGISTRATION_THROTTLE, $banUntil, 0];
-                $db->executeQuery($q, $v);
+                    $db->beginTransaction();
+                    $q = 'DELETE FROM UserBannedIPs WHERE ipFrom = ? AND ipTo = ? AND isManual = ?';
+                    $v = [$ip->getIp(), 0, 0];
+                    $db->executeQuery($q, $v);
 
-                $db->commit();
+                    if ($banExpiration === null) {
+                        $banUntil = static::FOREVER_BAN_DATETIME;
+                    } else {
+                        $banUntil = $banExpiration->format('Y-m-d H:i:s');
+                    }
+
+                    $q = 'INSERT INTO UserBannedIPs (ipFrom,ipTo,banCode,expires,isManual) VALUES (?,?,?,?,?)';
+                    $v = [$ip->getIp(), 0, UserBannedIp::IP_BAN_CODE_REGISTRATION_THROTTLE, $banUntil, 0];
+                    $db->executeQuery($q, $v);
+
+                    $db->commit();
+                }
             }
         }
     }
