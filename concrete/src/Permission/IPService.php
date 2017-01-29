@@ -10,9 +10,11 @@ use Request;
 class IPService
 {
     /**
-     * @param bool|IPAddress $ip
-     * @param bool $extraParamString
-     * @param array $extraParamValues
+     * Check if an IP adress is banned.
+     *
+     * @param IPAddress|mixed $ip The IPAddress instance containing the IP to check (if it's not an IPAddress instance we'll use the current IP address)
+     * @param bool $extraParamString An extra SQL chunk to be added to the final query
+     * @param array $extraParamValues Extra parameters to be passed to the final query
      *
      * @return bool
      */
@@ -45,7 +47,9 @@ class IPService
     }
 
     /**
-     * @param IPAddress $ip
+     * CHeck if an IP address has been manually banned.
+     *
+     * @param IPAddress $ip the IP address to ban
      *
      * @return bool
      */
@@ -54,14 +58,21 @@ class IPService
         return $this->isBanned($ip, ' AND isManual = ? AND expires = ? ', [1, '1000-01-01 00:00:00']);
     }
 
-    /** Returns an IPAddress object if one was found, or false if not
-     * @return false|IPAddress
+    /**
+     * Get the IPAddress instance containing the IP address of the current request.
+     *
+     * @return IPAddress
      */
     public function getRequestIP()
     {
         return new IPAddress(Request::getInstance()->getClientIp());
     }
 
+    /**
+     * Get the (localized) message telling the users that their IP address has been banned.
+     *
+     * @return string
+     */
     public function getErrorMessage()
     {
         return t(
@@ -69,6 +80,11 @@ class IPService
         );
     }
 
+    /**
+     * Add the current IP address to the list of IPs with failed login attempts.
+     *
+     * @param bool $ignoreConfig if set to true, we'll add the record even if the IP ban system is disabled in the configuration
+     */
     public function logSignupRequest($ignoreConfig = false)
     {
         if ($ignoreConfig || Config::get('concrete.security.ban.ip.enabled') == 1) {
@@ -78,6 +94,13 @@ class IPService
         }
     }
 
+    /**
+     * Check if the current UP address has reached the failed logi attempts threshold.
+     *
+     * @param bool $ignoreConfig if set to true, we'll check the IP even if the IP ban system is disabled in the configuration
+     *
+     * @return bool
+     */
     public function signupRequestThreshholdReached($ignoreConfig = false)
     {
         if ($ignoreConfig || Config::get('concrete.security.ban.ip.enabled') == 1) {
@@ -103,8 +126,10 @@ class IPService
     }
 
     /**
-     * @param bool|IPAddress $ip
-     * @param bool $ignoreConfig
+     * Add an IP address to the list of IPs banned for too many failed login attempts.
+     *
+     * @param IPAddress|mixed $ip the IPAddress instance containing the IP to check (if it's not an IPAddress instance we'll use the current IP address)
+     * @param bool $ignoreConfig if set to true, we'll add the IP address even if the IP ban system is disabled in the configuration
      */
     public function createIPBan($ip = false, $ignoreConfig = false)
     {
