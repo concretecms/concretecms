@@ -65,7 +65,7 @@ class BanIPEvent extends AbstractEvent
      *
      * @return static
      */
-    public function getBanExpiration(DateTime $banExpiration = null)
+    public function setBanExpiration(DateTime $banExpiration = null)
     {
         $this->banExpiration = $banExpiration;
 
