@@ -16,7 +16,7 @@ class IPService
      *
      * @return bool
      */
-    public function isBanned($ip = false, $extraParamString = false, $extraParamValues = array())
+    public function isBanned($ip = false, $extraParamString = false, $extraParamValues = [])
     {
         $ip = ($ip instanceof IPAddress) ? $ip : $this->getRequestIP();
         $db = Database::connection();
@@ -36,7 +36,7 @@ class IPService
             $q .= $extraParamString;
         }
 
-        $v = array($ip->getIp(), $ip->getIp(), $ip->getIp(), date('Y-m-d H:i:s'));
+        $v = [$ip->getIp(), $ip->getIp(), $ip->getIp(), date('Y-m-d H:i:s')];
         $v = array_merge($v, $extraParamValues);
 
         $row = $db->fetchAssoc($q, $v);
@@ -51,7 +51,7 @@ class IPService
      */
     protected function existsManualPermBan(IPAddress $ip)
     {
-        return $this->isBanned($ip, ' AND isManual = ? AND expires = ? ', array(1, '1000-01-01 00:00:00'));
+        return $this->isBanned($ip, ' AND isManual = ? AND expires = ? ', [1, '1000-01-01 00:00:00']);
     }
 
     /** Returns an IPAddress object if one was found, or false if not
@@ -74,7 +74,7 @@ class IPService
         if ($ignoreConfig || Config::get('concrete.security.ban.ip.enabled') == 1) {
             $db = Database::connection();
             $ip = $this->getRequestIP();
-            $db->insert('SignupRequests', array('date_access' => date('Y-m-d H:i:s'), 'ipFrom' => $ip->getIp()));
+            $db->insert('SignupRequests', ['date_access' => date('Y-m-d H:i:s'), 'ipFrom' => $ip->getIp()]);
         }
     }
 
@@ -89,7 +89,7 @@ class IPService
 			FROM SignupRequests
 			WHERE ipFrom = ?
 			AND date_access > DATE_SUB(?, INTERVAL ? SECOND)';
-            $v = array($ip->getIp(), date('Y-m-d H:i:s'), $threshhold_seconds);
+            $v = [$ip->getIp(), date('Y-m-d H:i:s'), $threshhold_seconds];
 
             $row = $db->fetchAssoc($q, $v);
             if ($row['count'] >= $threshold_attempts) {
@@ -117,7 +117,7 @@ class IPService
             if (!$this->existsManualPermBan($ip)) {
                 $db->beginTransaction();
                 $q = 'DELETE FROM UserBannedIPs WHERE ipFrom = ? AND ipTo = ? AND isManual = ?';
-                $v = array($ip->getIp(), 0, 0);
+                $v = [$ip->getIp(), 0, 0];
                 $db->executeQuery($q, $v);
 
                 //IP_BAN_LOCK_IP_HOW_LONG_MIN of 0 or undefined  means forever
@@ -132,7 +132,7 @@ class IPService
                 }
 
                 $q = 'INSERT INTO UserBannedIPs (ipFrom,ipTo,banCode,expires,isManual) VALUES (?,?,?,?,?)';
-                $v = array($ip->getIp(), 0, UserBannedIp::IP_BAN_CODE_REGISTRATION_THROTTLE, $banUntil, 0);
+                $v = [$ip->getIp(), 0, UserBannedIp::IP_BAN_CODE_REGISTRATION_THROTTLE, $banUntil, 0];
                 $db->executeQuery($q, $v);
 
                 $db->commit();
