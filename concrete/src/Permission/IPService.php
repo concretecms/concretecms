@@ -4,14 +4,25 @@ namespace Concrete\Core\Permission;
 use Concrete\Core\Utility\IPAddress;
 use Concrete\Core\User\UserBannedIp;
 use Request;
-use Concrete\Core\Application\ApplicationAwareTrait;
+use Concrete\Core\Application\Application;
 use Concrete\Core\Database\Connection\Connection;
 use DateTime;
 use Concrete\Core\Permission\Event\BanIPEvent;
 
 class IPService
 {
-    use ApplicationAwareTrait;
+    /**
+     * @var Application
+     */
+    protected $app;
+
+    /**
+     * @param Application $app
+     */
+    public function __construct(Application $app)
+    {
+        $this->app = $app;
+    }
 
     /**
      * DateTime value representing 'ban forever' (ie manual bans).
