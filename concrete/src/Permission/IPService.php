@@ -101,18 +101,18 @@ class IPService
      *
      * @return bool
      */
-    public function signupRequestThreshholdReached($ignoreConfig = false)
+    public function signupRequestThresholdReached($ignoreConfig = false)
     {
         if ($ignoreConfig || Config::get('concrete.security.ban.ip.enabled') == 1) {
             $db = Database::connection();
             $threshold_attempts = Config::get('concrete.security.ban.ip.attempts');
-            $threshhold_seconds = Config::get('concrete.security.ban.ip.time');
+            $threshold_seconds = Config::get('concrete.security.ban.ip.time');
             $ip = $this->getRequestIP();
             $q = 'SELECT count(*) as count
 			FROM SignupRequests
 			WHERE ipFrom = ?
 			AND date_access > DATE_SUB(?, INTERVAL ? SECOND)';
-            $v = [$ip->getIp(), date('Y-m-d H:i:s'), $threshhold_seconds];
+            $v = [$ip->getIp(), date('Y-m-d H:i:s'), $threshold_seconds];
 
             $row = $db->fetchAssoc($q, $v);
             if ($row['count'] >= $threshold_attempts) {
@@ -163,5 +163,13 @@ class IPService
                 $db->commit();
             }
         }
+    }
+
+    /**
+     * @deprecated Use signupRequestThresholdReached (same syntax, just fixed the typo in the name).
+     */
+    public function signupRequestThreshholdReached($ignoreConfig = false)
+    {
+        return $this->signupRequestThresholdReached($ignoreConfig);
     }
 }
