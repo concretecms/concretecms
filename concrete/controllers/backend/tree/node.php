@@ -38,7 +38,7 @@ class Node extends UserInterface
 
         if (count($selected) > 0) {
             foreach ($selected as $match) {
-                $node->selectChildrenNodesByID($match);
+                $node->selectChildrenNodesByID($match, true);
             }
         }
         return $node;
