@@ -236,9 +236,8 @@ class Controller extends BlockController
     public function view()
     {
       // only use the type specific template if there is NOT a custom template defined
-      $db = Database::Connection(); 
-      $template = $db->getOne('SELECT bFilename FROM Blocks WHERE bID = ? ', array($this->bID));
-      if ($template){
+      $b = $this->getBlockObject();
+      if ($b->getBlockFilename()) {      
         // custom template  
       } else {
         $templateHandle = $this->getTemplateHandle();
