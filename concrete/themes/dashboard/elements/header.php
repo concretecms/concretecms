@@ -25,9 +25,6 @@ $v->addFooterItem('<script type="text/javascript">$(function() { ConcreteToolbar
 if (Config::get('concrete.misc.enable_progressive_page_reindex') && Config::get('concrete.misc.do_page_reindex_check')) {
     $v->addFooterItem('<script type="text/javascript">$(function() { ccm_doPageReindexing(); });</script>');
 }
-if (Localization::activeLanguage() != 'en') {
-    $v->addFooterItem($html->javascript('i18n/ui.datepicker-'.Localization::activeLanguage().'.js'));
-}
 
 $v->addHeaderItem('<meta name="viewport" content="width=device-width, initial-scale=1">');
 View::element('header_required', array('disableTrackingCode' => true));
