@@ -169,6 +169,27 @@ $large_font = (bool) $config->get('concrete.accessibility.toolbar_large_font');
                     </div>
                 </div>
             </div>
+            <script>
+            (function() {
+                var ls = window.localStorage;
+                if (!(ls && ls.getItem && ls.setItem && ls.removeItem)) {
+                    return;
+                }
+                var KEY = 'ccm-dashboard-dashboarpanel-scrollTop',
+                    $panel = $('.ccm-panel-content'),
+                    scrollTop = window.localStorage.getItem(KEY);
+                if (scrollTop) {
+                    $panel.scrollTop(scrollTop);
+                }
+                ls.removeItem(KEY);
+                $panel.find('a').on('click', function() {
+                    scrollTop = $panel.scrollTop();
+                    if (scrollTop) {
+                        ls.setItem(KEY, $panel.scrollTop());
+                    }
+                });
+            })();
+            </script>
             <?php
         }
         ?>
