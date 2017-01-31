@@ -16,6 +16,7 @@ class Version20170131000000 extends AbstractMigration
         if (!is_object($sp) || $sp->isError()) {
             $sp = SinglePage::add('/dashboard/system/files/thumbnails/options');
             $sp->update(array('cName' => 'Thumbnail Options'));
+            $sp->setAttribute('exclude_nav', true);
             $sp->setAttribute('meta_keywords', 'thumbnail, format, png, jpg, jpeg, quality, compression, gd, imagick, imagemagick, transparency');
         }
         
