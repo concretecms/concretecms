@@ -57,7 +57,7 @@ class Controller extends AttributeTypeController
         } else {
             $value = null;
         }
-        echo $this->app->make('helper/form')->number($this->field('value'), $value, ['style' => 'width:100px']);
+        echo $this->app->make('helper/form')->number($this->field('value'), $value);
     }
 
     public function validateForm($p)
