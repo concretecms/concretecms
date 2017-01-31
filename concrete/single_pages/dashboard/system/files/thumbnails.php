@@ -106,6 +106,7 @@
     ?>
 
     <div class="ccm-dashboard-header-buttons">
+        <a href="<?php echo $view->action('options')?>" class="btn btn-default"><?php echo t('Options')?></a>
         <a href="<?php echo $view->action('add')?>" class="btn btn-primary"><?php echo t("Add Type")?></a>
     </div>
 
