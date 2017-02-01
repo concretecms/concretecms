@@ -40,8 +40,9 @@ class Properties extends BackendInterfaceController
             $this->files = [];
         }
 
-        if (is_array($_REQUEST['fID'])) {
-            foreach ($_REQUEST['fID'] as $fID) {
+        $requestFID = $this->request->get('fID');
+        if (is_array($requestFID)) {
+            foreach ($requestFID as $fID) {
                 $f = File::getByID($fID);
                 if (is_object($f) && !$f->isError()) {
                     $this->files[] = $f;
@@ -74,9 +75,10 @@ class Properties extends BackendInterfaceController
     public function updateAttribute()
     {
         $fr = new FileEditResponse();
-        $ak = FileAttributeKey::get($_REQUEST['name']);
         if ($this->validateAction()) {
             if ($this->canAccess) {
+                $name = $this->request->get('name');
+                $ak = FileAttributeKey::get($name);
                 foreach ($this->files as $f) {
                     $fv = $f->getVersionToModify();
                     $controller = $ak->getController();
@@ -97,9 +99,10 @@ class Properties extends BackendInterfaceController
     public function clearAttribute()
     {
         $fr = new FileEditResponse();
-        $ak = FileAttributeKey::get($_REQUEST['akID']);
         if ($this->validateAction()) {
             if ($this->canAccess) {
+                $akID = $this->request->get('akID');
+                $ak = FileAttributeKey::get($akID);
                 foreach ($this->files as $f) {
                     $fv = $f->getVersionToModify();
                     $fv->clearAttribute($ak);
