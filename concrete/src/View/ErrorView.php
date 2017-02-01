@@ -1,10 +1,9 @@
 <?php
 namespace Concrete\Core\View;
 
-use View as CoreView;
 use Environment;
 
-class ErrorView extends CoreView
+class ErrorView extends View
 {
     protected $error;
 
@@ -22,13 +21,12 @@ class ErrorView extends CoreView
     }
     public function setupRender()
     {
+        $this->setViewTheme(VIEW_CORE_THEME);
+        $this->loadViewThemeObject();
+
         $env = Environment::get();
         $r = $env->getPath(DIRNAME_THEMES . '/' . DIRNAME_THEMES_CORE . '/' . FILENAME_THEMES_ERROR . '.php');
         $this->setViewTemplate($r);
-    }
-
-    public function onBeforeGetContents()
-    {
     }
 
     public function getScopeItems()

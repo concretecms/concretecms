@@ -2,7 +2,7 @@
 
 namespace Concrete\Core\File\Image\Thumbnail\Type;
 
-use Concrete\Core\Entity\File\Version;
+use Concrete\Core\Entity\File\Version as FileVersion;
 use Concrete\Core\File\Image\Thumbnail\Type\Version as ThumbnailVersion;
 
 class CustomThumbnail extends ThumbnailVersion
@@ -25,7 +25,7 @@ class CustomThumbnail extends ThumbnailVersion
         parent::__construct(REL_DIR_FILES_CACHE, "ccm_{$width}x{$height}_{$cropped}", 'Custom', $width, $height);
     }
 
-    public function getFilePath(Version $fv)
+    public function getFilePath(FileVersion $fv)
     {
         return $this->path;
     }

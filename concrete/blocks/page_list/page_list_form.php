@@ -305,6 +305,11 @@ $form = Loader::helper('form/page_selector');
                     } ?>>
                         <?= t('Sitemap order') ?>
                     </option>
+                    <option value="display_desc" <?php if ($orderBy == 'display_desc') {
+                        ?> selected <?php
+                    } ?>>
+                        <?= t('Reverse sitemap order') ?>
+                    </option>
                     <option value="chrono_desc" <?php if ($orderBy == 'chrono_desc') {
                         ?> selected <?php
                     } ?>>

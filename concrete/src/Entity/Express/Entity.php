@@ -398,6 +398,15 @@ class Entity implements CategoryObjectInterface, ObjectInterface, ExportableInte
         return '\\Concrete\\Core\\Permission\\Response\\ExpressEntityResponse';
     }
 
+    public function getAssociation($handle)
+    {
+        foreach($this->associations as $association) {
+            if ($association->getTargetPropertyName() == $handle) {
+                return $association;
+            }
+        }
+    }
+
     public function getPermissionAssignmentClassName()
     {
         return false;

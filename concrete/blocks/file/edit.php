@@ -11,7 +11,7 @@
 	<?=$al->file('ccm-b-file', 'fID', t('Choose File'), $bf);?>
 </div>
 <div class="form-group">
-	<?=$form->label('fileLinkText', t('Text for Linked File'))?>
+	<?=$form->label('fileLinkText', t('Link Text'))?>
 	<?=$form->text('fileLinkText', $controller->getLinkText())?>
 </div>
 

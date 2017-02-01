@@ -1,11 +1,37 @@
 <?php defined('C5_EXECUTE') or die("Access Denied."); ?>
 
+<div id="ccm-block-express-form-tabs">
 <?php echo Loader::helper('concrete/ui')->tabs(array(
-    array('form-add', t('Add'), true),
+    array('form-add', t('Add')),
     array('form-edit', t('Edit')),
+    array('form-express', t('Express Object')),
     array('form-results', t('Results')),
     array('form-options', t('Options')),
 ));?>
+</div>
+
+<div id="ccm-block-express-form-choose-type">
+
+    <div class="spacer-row-6"></div>
+
+    <fieldset>
+        <legend><?=t('Form Type')?></legend>
+
+        <div class="form-group">
+            <label class="control-label launch-tooltip" title="<?=t('If you are creating a completely new form, choose New Form. If you have already created an express entity in the Dashboard and would like to embed its form on this page, choose Existing Express Entity Form.')?>"><?=t('What kind of form do you want to create?')?></label>
+        </div>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-sm-6">
+                    <button data-action="choose-new-form" type="button" class="btn btn-default btn-block"><i class="fa fa-plus-circle" style="opacity: 0.3"></i> &nbsp; <?=t('New Form')?></button>
+                </div>
+                <div class="col-sm-6">
+                    <button data-action="choose-existing-form" type="button" class="btn btn-default btn-block"><i class="fa fa-database" style="opacity: 0.3"></i> &nbsp; <?=t('Existing Express Entity Form')?></button>
+                </div>
+            </div>
+        </div>
+    </fieldset>
+</div>
 
 <div id="ccm-tab-content-form-add" class="ccm-tab-content" data-action="<?=$view->action('add_control')?>">
     <div class="alert alert-success" style="display: none"><?=t('Field added successfully.')?></div>
@@ -58,6 +84,27 @@
         </fieldset>
 
     </div>
+
+</div>
+
+<div id="ccm-tab-content-form-express" class="ccm-tab-content">
+    <fieldset>
+
+        <div class="form-group">
+            <?=$form->label('exEntityID', t('Choose Entity Form'))?>
+            <select name="exFormID" class="form-control">
+                <option value=""><?=t('** Choose Entity Form')?></option>
+            <?php foreach($entities as $entity) { ?>
+                <optgroup label="<?=t('Entity: %s', $entity->getName())?>">
+                    <?php foreach($entity->getForms() as $entityForm) { ?>
+                        <option value="<?=$entityForm->getID()?>" <?php if ($entityForm->getID() == $exFormID) { ?>selected<?php } ?>><?=$entityForm->getName()?></option>
+                    <?php } ?>
+                </optgroup>
+            <?php } ?>
+            </select>
+        </div>
+
+    </fieldset>
 
 </div>
 
@@ -234,6 +281,14 @@
 
 <script type="application/javascript">
     Concrete.event.publish('open.block_express_form', {
+        task: '<?=$controller->getTask()?>',
+        <?php if ($controller->getTask() == 'edit') { ?>
+            <?php if (isset($expressEntity) && is_object($expressEntity) && $expressEntity->getIncludeInPublicList()) { ?>
+                mode: 'existing',
+            <?php } else { ?>
+                mode: 'new',
+            <?php } ?>
+        <?php } ?>
         controls: <?=json_encode($controls)?>,
         types: <?=json_encode($types_select)?>,
         settings: {

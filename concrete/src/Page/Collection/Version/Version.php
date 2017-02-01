@@ -634,6 +634,11 @@ class Version extends Object implements \Concrete\Core\Permission\ObjectInterfac
             $cvID,
         ));
 
+        $db->executeQuery('delete from PageTypeComposerOutputBlocks where cID = ? and cvID = ?', array(
+            $cID,
+            $cvID,
+        ));
+
         $q = "delete from CollectionVersions where cID = '{$cID}' and cvID='{$cvID}'";
         $db->executeQuery($q);
         $this->refreshCache();

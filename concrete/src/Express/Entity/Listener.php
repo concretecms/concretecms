@@ -15,11 +15,15 @@ class Listener
     public function preRemove(Entity $entity, LifecycleEventArgs $event)
     {
         $em = $event->getEntityManager();
+        $db = $em->getConnection();
+
+        $db->Execute('delete from atExpressSettings where exEntityID = ?', array($entity->getID()));
+
         $entity->setDefaultEditForm(null);
         $entity->setDefaultViewForm(null);
         $em->persist($entity);
 
-        foreach($entity->getForms() as $form) {
+        foreach ($entity->getForms() as $form) {
             $em->remove($form);
         }
 
@@ -27,7 +31,7 @@ class Listener
 
         // Delete the keys
         $category = $entity->getAttributeKeyCategory();
-        foreach($category->getList() as $key) {
+        foreach ($category->getList() as $key) {
             $em->remove($key);
         }
 
@@ -35,10 +39,23 @@ class Listener
 
         try {
             $list = new EntryList($entity);
-            foreach($list->getResults() as $result) {
+            foreach ($list->getResults() as $result) {
                 $em->remove($result);
             }
-        } catch(\Exception $e) {}
+        } catch (\Exception $e) {
+        }
+
+        // Delete the associations.
+        foreach ($entity->getAssociations() as $association) {
+            $em->remove($association);
+        }
+
+        // Make sure to delete the inverse associations
+        $associations = $em->getRepository('Concrete\Core\Entity\Express\Association')
+            ->findBy(['target_entity' => $entity]);
+        foreach ($associations as $association) {
+            $em->remove($association);
+        }
 
         $em->flush();
 
@@ -49,9 +66,11 @@ class Listener
         if (!$entity->getEntityResultsNodeId()) {
             // Create a results node
             $tree = ExpressEntryResultsTree::get();
-            $node = $tree->getRootTreeNodeObject();
-            $node = ExpressEntryResultsNode::add($entity->getName(), $node);
-            $entity->setEntityResultsNodeId($node->getTreeNodeID());
+            if (is_object($tree)) {
+                $node = $tree->getRootTreeNodeObject();
+                $node = ExpressEntryResultsNode::add($entity->getName(), $node);
+                $entity->setEntityResultsNodeId($node->getTreeNodeID());
+            }
         }
 
         $indexer = $entity->getAttributeKeyCategory()->getSearchIndexer();

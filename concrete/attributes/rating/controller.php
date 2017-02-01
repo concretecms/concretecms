@@ -19,9 +19,9 @@ class Controller extends AttributeTypeController
         return new FontAwesomeIconFormatter('star');
     }
 
-    public function getAttributeValueObject()
+    public function getAttributeValueClass()
     {
-        return $this->entityManager->find(NumberValue::class, $this->attributeValue->getGenericValue());
+        return NumberValue::class;
     }
 
     public function getDisplayValue()

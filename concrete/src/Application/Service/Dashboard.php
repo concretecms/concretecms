@@ -339,25 +339,6 @@ class Dashboard
 
         }
 
-        $custHome = Page::getByPath('/dashboard/home');
-        $custHomeP = new Permissions($custHome);
-        if ($custHomeP->canRead()) {
-            ?>
-
-            <div class="ccm-intelligent-search-results-module ccm-intelligent-search-results-module-onsite">
-
-            <h1><?=t('Dashboard Home')?></h1>
-
-
-            <ul class="ccm-intelligent-search-results-list">
-                <li><a href="<?=URL::to('/dashboard/home')?>"><?=t('Customize')?> <span><?=t('Customize Dashboard Home')?></span></a></li>
-            </ul>
-
-            </div>
-
-            <?php
-
-        }
         ?>
 
             <div class="ccm-intelligent-search-results-module">

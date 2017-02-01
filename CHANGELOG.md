@@ -1,3 +1,106 @@
+# 8.1.0
+
+## New Features
+
+* The Form block can now display output from an existing Express entity object, as well as create a new custom form from scratch.
+* Multilingual sites can output <link rel="alternate" hreflang=...> for related pages by setting the site.sites.default.multilingual.set_alternate_hreflang config variable to true (thanks mlocati!)
+* You can now hide the footer My Account menu with a setting in the Profiles Dashboard page (thanks mlocati)
+
+## Behavioral Improvements
+
+* Much improved time zone support; fixes a number of bugs, inconsistencies, tests for database and PHP time zone matching (thanks mlocati)
+* Updated CKEditor to 4.6; much better CKEditor appearance and button wrapping behavior (thanks MrKarlDilkington!)
+* More reliable URL slug generation JavaScript (thanks seebaermichi)
+* Make welcome background image cover full width and height (thanks MrKarlDilkington)
+* DateTime widget - change default displayed past years from 10 to 100 (thanks MrKarlDilkington)
+* Fixed; File Manager Upload does not reflect most recently uploaded files if user doesn't select "View Uploaded"
+* Improved thumbnail generation when using the BasicThumbnailer classes – better support for page caching while generating thumbnails, throttling and better performance when generating thumbnails.
+* Added toolbar tooltips, defaulted to true but with options to disable in Accessibility settings (thanks seebaermichi)
+* Share This Page block now includes full request URI, making it easier to share pages with custom URL parameters (thanks HamedDarragi)
+* Image Slider block now includes option for both bullets and arrows (thanks Siton-Design)
+* Fixed Resize images client side using 2x downsampling on upload results in jagged images (thanks MrKarldilkington)
+* Page Attribute Display block delimiter option works with topics (thanks MrKarlDilkington)
+* Add a semi colon to separate JS scripts in cache
+* Page Type Form shows its icons at all times, appears nicer (thanks MrKarlDilkington)
+* Miscellaneous style improvements (thanks ramonleenders, MrKarlDilkington)
+* Escape translations to prevent JavaScript errors because of containing apostrophes (thanks Ruud-Zuiderlicht)
+* Upgrade improvements and bug fixes
+* When moving a file from one storage location to another the thumbnails will also be moved (thanks Mnkras)
+* Increased max amount of size slider (thanks MrKarlDilkington)
+
+## Express Bug Fixes
+
+* Fix success error when submitting Express Form with two forms on a page.
+* Fixed bug where Express many to many associations weren’t named correctly, so working with them programmatically didn’t work.
+* More reliable deletion of express objects when they have associations to other objects"
+* Fixed Express Entities can't be used in a form unless the user is an administrator
+* Fixed Script error when express attribute edited in dashboard form results
+
+## Other Bug Fixes
+
+* Removed dummy autoloader added to bootstrap/app.php (shouldn’t affect any applications, but shouldn’t be there anyway.)
+* Permissions fixed in the file manager. 
+* Fixed incorrect characters displaying when dragging a stack icon (thanks katzueno)
+* Fixed Embedding CKEditor in single pages triggers fatal error when CSS and JavaScript Cache is enabled
+* Fixed bug where some sites could start rendering -1/ in their paths when editing the home page.
+* Fixed double submit bugs when forms or external forms were placed on the home page.
+* Fixed errors that would occur when moving or copying aliases
+* Fixed http://www.concrete5.org/developers/bugs/8-0-3/404-for-the-dashboard-page-cmsindex.phpdashboardhome/
+* Fixed Dashboard file manager menu clipping on in folders without a lot of files (thanks MrKarlDilkington)
+* Fix exception being thrown when the workflow requester was deleted (thanks jaromirdalecky)
+* Better permissions protection on file manager with File Uploader access entity; better permissions protection on moving files in file manager.
+* Fixed PageList::filterByPath returning no pages when working on multilingual sections (thanks OlegsHanins)
+* Minor localization issues with Punic calendar library fixed (thanks ahukkanen)
+* Fixed File manager file menu does not reflect accurate file after moving files
+* Fixed bug where sitemap selector widget didn’t select pages (thanks Mesuva)
+* Fixed: Page types with attributes throw errors when copied
+* Fixed: Validate Password tokens don’t reset when email is changed (thanks Mnkras)
+* Fixed Manual global cache time is displayed wrong on page cache settings (thanks mlocati)
+* Fixed delete file storage location ERROR
+* Fix filtering of topics in page list block when filtering by topic category
+* Fixed FAQ - Delete Entry breaks the Save button (thanks MrKarlDilkington)
+* Fixed Invalid block type handle exception during upgrade from 5.7.5.13 to 8.0.3 on sites where the RSS DIsplayer block was removed.
+* Fixed: Setting a select attribute default value for page types results in foreign key constraint error in composer
+* Fixed: Default Page Attributes do not persist
+* Fixed bugs where discarding page drafts might cause page blocks to no longer be editable in composer.
+* Fixed: Page Attribute default value not set in composer view
+* Fixed exception when dealing with Oauth in bindUser method in some setups.
+* Updated Zend Mail component to 2.7.2 to fix security issues.
+* Fixed: https://www.concrete5.org/developers/bugs/8-0-3/author-attribute-is-very-tall-when-editing-attributes-from-the-d/
+* Added CSRF protection to Forgot Password (thanks Mnkras)
+* Fixed Page Attribute - Issue with deleting Rich Text Attribute
+* Fix unsanitized file set name displayed in add to sets dialog.
+
+## Developer Updates
+
+* A new search indexing service provider is available, enabling the use of third party search platforms rather than built-in MySQL search for pages. Currently relatively low level and offering our single MySQL implementation, it nevertheless is a good start for adding support for other services like Elasticsearch, Solr and more.
+* Developers can implement getPackageTranslatableStrings() in their package controller in order to specify custom strings to add to the translation repository.
+* Bug fixes in custom package entity manager configurations (thanks Kaapiii)
+* Miscellaneous code commenting (thanks Mnkras)
+* Upgrade Monolog to v1.22.0 (thanks mlocati)
+* Upgrade Punic to 1.6.4, fixes certain incompatibilities with Symfony Intl.
+
+# 8.0.3
+
+## Behavioral Improvements
+
+* Fixed rendering of fatal errors so that it uses the proper stylesheets.
+
+## Bug Fixes
+
+* Fixed bug where activating a theme only changed the home page.
+* Fixed error where all pages added to a multilingual site were showing as system pages.
+* Fixed bug where attributes in the application/attributes directory couldn’t be installed.
+* Bug fixes with attribute validation.
+* Fixed error exception when creating a new page type failed validation
+* Fixed bug where Express Forms could not be added on sites that were upgraded from 5.7.
+* File Date modified in file manager now shows the proper date (instead of the date added)
+* Fixed bug where attempting to delete Express entries or entities that had values attached to express attribute types would trigger an error.
+* Attribute search fields in advanced search dialogs now select their options properly.
+* Fix misnamed config value concrete.file\_manager.images.use\_exif\_data\_to\_rotate\_images (was named concrete.file\_manager.images.use\_exim\_data\_to\_rotate\_images)
+* Fix bug with Legacy Form not being able to be saved under certain conditions.
+* Fixed: Entering a new Express Data Object with the existing Handle will cause error
+
 # 8.0.2
 
 ## New Features
@@ -27,7 +130,7 @@
 * Fixed inability to sort attribute sets, bugs with editing legacy attribute sets.
 * Fixed problems with saving legacy attributes.
 * Made file manager behave better in cases where a file record somehow had no versions.
-* Fixed error where adding a form block would fail intermittently 
+* Fixed error where adding a form block would fail intermittently
 * Fixed typos in the automatically generated Nginx configuration for pretty URL handling (thanks chemett)
 
 # 8.0
@@ -179,6 +282,16 @@ In addition to the credits above, the following users have been very helpful fix
 
 
 Edtrist, mlocati, MrKarlDilkington
+
+# 5.7.5.13 Release Notes
+
+## Bug Fixes
+
+* Once again, Environment Information is now available in the Dashboard.
+
+## Developer Updates
+
+* Added jQuery Select to Dropdown menu support in the Dashboard; just add data-select=”bootstrap” to your select menus.
 
 # 5.7.5.12
 

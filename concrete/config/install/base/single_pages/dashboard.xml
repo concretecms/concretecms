@@ -396,19 +396,6 @@
                 </attributekey>
             </attributes>
         </page>
-        <page name="Dashboard" path="/dashboard/news" filename="/dashboard/news.php" pagetype="" description=""
-              package="">
-            <attributes>
-                <attributekey handle="exclude_nav">
-                    <value><![CDATA[1]]></value>
-                </attributekey>
-            </attributes>
-            <attributes>
-                <attributekey handle="exclude_search_index">
-                    <value><![CDATA[1]]></value>
-                </attributekey>
-            </attributes>
-        </page>
         <page name="Add Functionality" path="/dashboard/extend/install" filename="/dashboard/extend/install.php"
               pagetype="" description="Install add-ons &amp; themes." package="">
             <attributes>

@@ -3,13 +3,15 @@ $(function() {
     function ConcreteBlockForm(data) {
         'use strict';
         this.data = data;
-        this.setupEvents();
+        this.setupEvents(data);
         this.init(data);
     }
 
 
     ConcreteBlockForm.prototype.setupEvents = function(data) {
-        var my = this;
+        var my = this,
+            $chooseContainer = $('#ccm-block-express-form-choose-type'),
+            $tabsContainer = $('#ccm-block-express-form-tabs');
 
         Concrete.event.unbind('add_control.block_express_form');
         Concrete.event.bind('add_control.block_express_form', function(e, data) {
@@ -22,6 +24,7 @@ $(function() {
 
 
         });
+
         Concrete.event.unbind('update_control.block_express_form');
         Concrete.event.bind('update_control.block_express_form', function(e, data) {
 
@@ -35,6 +38,39 @@ $(function() {
 
         });
 
+        if (data.task == 'add') {
+            $tabsContainer.hide();
+        } else {
+            my.chooseFormType(data.mode);
+        }
+
+        $chooseContainer.find('button').on('click', function() {
+            var action = $(this).attr('data-action');
+            if (action == 'choose-new-form') {
+                my.chooseFormType('new');
+            } else {
+                my.chooseFormType('existing');
+            }
+        });
+    }
+
+    ConcreteBlockForm.prototype.chooseFormType = function(mode) {
+        var my = this,
+            $chooseContainer = $('#ccm-block-express-form-choose-type'),
+            $tabsContainer = $('#ccm-block-express-form-tabs');
+
+        switch(mode) {
+            case 'new':
+                $tabsContainer.find('li').eq(2).remove();
+                break;
+            case 'existing':
+                $tabsContainer.find('li').eq(0).remove();
+                $tabsContainer.find('li').eq(0).remove();
+                break;
+        }
+        $tabsContainer.find('li').eq(0).find('a').trigger('click');
+        $tabsContainer.show();
+        $chooseContainer.hide();
     }
 
     ConcreteBlockForm.prototype.destroyContents = function($element) {

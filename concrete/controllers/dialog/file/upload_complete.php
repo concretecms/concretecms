@@ -7,6 +7,12 @@ class UploadComplete extends BulkPropertiesController
 {
     protected $viewPath = '/dialogs/file/upload_complete';
 
+    protected function checkPermissions($file)
+    {
+        $fp = new \Permissions($file);
+        return $fp->canViewFileInFileManager();
+    }
+
     public function view()
     {
         parent::view();
@@ -14,7 +20,12 @@ class UploadComplete extends BulkPropertiesController
 
         $sets = array();
         $ids = array();
+        $canEditFiles = true;
         foreach ($this->files as $file) {
+            $fp = new \Permissions($file);
+            if (!$fp->canEditFileProperties()) {
+                $canEditFiles = false;
+            }
             $ids[] = $file->getFileID();
             foreach ($file->getFileSets() as $set) {
                 $o = $set->getJSONObject();
@@ -23,6 +34,7 @@ class UploadComplete extends BulkPropertiesController
                 }
             }
         }
+        $this->set('canEditFiles', $canEditFiles);
         $this->set('filesets', $sets);
         $this->set('fileIDs', $ids);
 

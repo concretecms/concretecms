@@ -2,7 +2,6 @@
 namespace Concrete\Controller\SinglePage\Dashboard\Files;
 
 use Concrete\Core\Attribute\Key\Category;
-use Concrete\Core\Attribute\Key\FileKey;
 use Concrete\Core\Attribute\Type;
 use Concrete\Core\Page\Controller\DashboardAttributesPageController;
 
@@ -20,7 +19,7 @@ class Attributes extends DashboardAttributesPageController
 
     public function edit($akID = null)
     {
-        $key = FileKey::getByID($akID);
+        $key = $this->getCategoryObject()->getController()->getByID($akID);
         $this->renderEdit($key,
             \URL::to('/dashboard/files/attributes', 'view')
         );
@@ -29,7 +28,7 @@ class Attributes extends DashboardAttributesPageController
     public function update($akID = null)
     {
         $this->edit($akID);
-        $key = FileKey::getByID($akID);
+        $key = $this->getCategoryObject()->getController()->getByID($akID);
         $this->executeUpdate($key,
             \URL::to('/dashboard/files/attributes', 'view')
         );
@@ -52,7 +51,7 @@ class Attributes extends DashboardAttributesPageController
 
     public function delete($akID = null)
     {
-        $key = FileKey::getByID($akID);
+        $key = $this->getCategoryObject()->getController()->getByID($akID);
         $this->executeDelete($key,
             \URL::to('/dashboard/files/attributes', 'view')
         );

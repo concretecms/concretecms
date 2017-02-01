@@ -21,6 +21,15 @@ return [
                     'image_set' => 0,
                 ],
 
+                /*
+                 * Show the account menu in page footer when users are not logged in.
+                 * Can be overridden in site themes by setting $display_account_menu when using the footer_required element.
+                 *
+                 * @var bool
+                 */
+                'display_account_menu' => true,
+
+
             ],
 
             'editor' => [

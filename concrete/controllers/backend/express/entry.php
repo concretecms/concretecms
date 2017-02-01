@@ -42,13 +42,13 @@ class Entry extends AbstractController
 
     public function getJSON()
     {
-        $c = \Page::getByPath('/dashboard/express/entities');
-        $cp = new \Permissions($c);
-        if (!$cp->canViewPage()) {
-            throw new \Exception(t('Access Denied.'));
-        }
-
         $entries = $this->getRequestEntries();
+        foreach($entries as $entry) {
+            $ep = new \Permissions($entry->getEntity());
+            if (!$ep->canViewExpressEntries()) {
+                throw new \Exception(t('Access Denied.'));
+            }
+        }
         $data = array();
         $data['entries'] = $entries;
         return new JsonResponse($data);

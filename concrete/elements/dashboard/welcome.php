@@ -82,6 +82,7 @@ if (Config::get('concrete.white_label.background_image') !== 'none' && !Config::
             background-image: url(<?=$imagePath?>);
             background-repeat: no-repeat;
             background-position: center center;
+            background-size: cover;
         }
     </style>
 <?php } ?>

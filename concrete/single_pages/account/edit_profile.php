@@ -2,7 +2,7 @@
 
 <h2><?=$c->getCollectionName()?></h2>
 
-	<form method="post" action="<?php echo $view->action('save')?>" enctype="multipart/form-data">
+<form method="post" action="<?php echo $view->action('save')?>" enctype="multipart/form-data">
 	<?php  $attribs = UserAttributeKey::getEditableInProfileList();
     $valt->output('profile_edit');
     ?>
@@ -22,7 +22,7 @@
         );
      ?>
 		</div>
-	<?php 
+	<?php
  } ?>
 	<?php  if (is_array($locales) && count($locales)) {
      ?>
@@ -30,7 +30,7 @@
 			<?php echo $form->label('uDefaultLanguage', t('Language'))?>
 			<?php echo $form->select('uDefaultLanguage', $locales, Localization::activeLocale())?>
 		</div>
-	<?php 
+	<?php
  } ?>
 	<?php
     if (is_array($attribs) && count($attribs)) {
@@ -84,9 +84,10 @@
 
 	</fieldset>
 
-	<div class="form-actions">
-		<a href="<?=URL::to('/account')?>" class="btn btn-default" /><?=t('Back to Account')?></a>
-		<input type="submit" name="save" value="<?=t('Save')?>" class="btn btn-primary pull-right" />
+    <div class="ccm-dashboard-form-actions-wrapper">
+        <div class="ccm-dashboard-form-actions">
+    		<input type="submit" name="save" value="<?=t('Save')?>" class="btn btn-primary pull-right" />
+        </div>
 	</div>
 
-	</form>
+</form>

@@ -101,6 +101,14 @@ ConcretePageAttributesDetail = {
 			ConcreteMenuPageAttributes.deselectAttributeKey(akID);
 			$(this).dequeue();
 		}).delay(400).queue(function() {
+			if (typeof CKEDITOR != 'undefined') {
+				for (name in CKEDITOR.instances) {
+					var instance = CKEDITOR.instances[name];
+					if ($.contains($(this).get(0), instance.container.$)) {
+						instance.destroy(true);
+					}
+				}
+			}
 			$(this).remove();
 			$(this).dequeue();
 		});

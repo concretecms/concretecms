@@ -14,7 +14,7 @@ class ClosureRouteCallback extends RouteCallback
         $arguments = $argumentsResolver->getArguments($request, $this->callback);
         $callback_response = call_user_func_array($this->callback, $arguments);
 
-        if ($callback_response instanceof \Concrete\Core\Http\Response) {
+        if ($callback_response instanceof \Symfony\Component\HttpFoundation\Response) {
             return $callback_response;
         }
 

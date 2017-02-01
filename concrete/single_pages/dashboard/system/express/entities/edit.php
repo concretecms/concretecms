@@ -49,7 +49,7 @@
             <fieldset>
                 <legend><?=t('Advanced')?></legend>
                 <div class="form-group">
-                    <label for="name" class="control-label"><?= t('Custom Dispay Order') ?></label>
+                    <label for="name" class="control-label"><?= t('Custom Display Order') ?></label>
                     <div class="checkbox"><label>
                             <?= $form->checkbox('supports_custom_display_order', 1, $entity->supportsCustomDisplayOrder()) ?>
                             <?= t('This entity supports custom display ordering via Dashboard interfaces.') ?>
@@ -133,7 +133,7 @@
         <form method="post" action="<?=$view->action('delete')?>">
             <?=Core::make("token")->output('delete_entity')?>
             <input type="hidden" name="entity_id" value="<?=$entity->getID()?>">
-            <p><?=t('Are you sure you want to delete this entity? All data entries for it will be removed. This cannot be undone.')?></p>
+            <p><?=t('Are you sure you want to delete this entity? All data entries and all its associations to other entities will be removed. This cannot be undone.')?></p>
             <div class="dialog-buttons">
                 <button class="btn btn-default pull-left" onclick="jQuery.fn.dialog.closeTop()"><?=t('Cancel')?></button>
                 <button class="btn btn-danger pull-right" onclick="$('#ccm-dialog-delete-entity form').submit()"><?=t('Delete Entity')?></button>

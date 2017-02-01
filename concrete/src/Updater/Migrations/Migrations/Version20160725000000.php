@@ -820,6 +820,11 @@ class Version20160725000000 extends AbstractMigration
         // Private Messages tweak
         SinglePage::add('/account/messages');
 
+        $bt = BlockType::getByHandle('rss_displayer');
+        if (!is_object($bt)) {
+            BlockType::installBlockType('rss_displayer'); // for those those who have removed this block for some reason.
+        }
+
         $ci = new ContentImporter();
         $ci->importContentFile(DIR_BASE_CORE . '/config/install/upgrade/desktops.xml');
 
@@ -863,7 +868,10 @@ class Version20160725000000 extends AbstractMigration
             $locale = 'en_US';
             if (\Config::get('concrete.multilingual.default_locale')) {
                 $locale = \Config::get('concrete.multilingual.default_locale');
+            } else if (\Config::get('concrete.locale')) { // default app language
+                $locale = \Config::get('concrete.locale');
             }
+
             $site = $service->installDefault($locale);
 
             // migrate name

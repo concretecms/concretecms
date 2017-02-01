@@ -58,8 +58,7 @@ $uninstallToken = $token->generate('uninstall_job');
     		<th style="width: 250px"><?=t('Name')?></th>
     		<th><?=t('Last Run')?></th>
     		<th style="width: 200px"><?=t('Results of Last Run')?></th>
-    		<th><a href="<?=$view->action('reset', $token->generate('reset_jobs'))?>" class="btn btn-default pull-right btn-xs"><?=t('Reset All Jobs')?></a></th>
-    		<th></th>
+    		<th colspan="2"><a href="<?=$view->action('reset', $token->generate('reset_jobs'))?>" class="btn btn-default pull-right btn-xs"><?=t('Reset All Jobs')?></a></th>
     	</tr>
 	</thead>
 
@@ -212,9 +211,8 @@ $uninstallToken = $token->generate('uninstall_job');
     			</fieldset>
 
     			<div class="dialog-buttons">
-                    <button type="button" onclick="$('form[data-schedule-form=<?=$j->getJobID()?>]').submit()" class="btn btn-primary pull-right">
-                        <?=t('Save')?>
-                    </button>
+                    <button href="javascript:void(0)" class="btn btn-default pull-left" onclick="jQuery.fn.dialog.closeTop()"><?=t('Cancel')?></button>
+                    <button type="button" onclick="$('form[data-schedule-form=<?=$j->getJobID()?>]').submit()" class="btn btn-primary pull-right"><?=t('Save')?></button>
                 </div>
     		</form>
     	</div>
@@ -265,7 +263,7 @@ $djs = JobSet::getDefault();
     <h4><?=t('Automation Instructions')?></h4>
     <p><?=t('To run all the jobs in the <a href="%s">%s</a> Job Set, schedule this URL using cron or a similar system:', $view->url('/dashboard/system/optimization/jobs', 'edit_set', $djs->getJobSetID()), $djs->getJobSetDisplayName())?></p>
     <div>
-        <input type="text" style="width: 700px" class="ccm-default-jobs-url" value="<?=$view->url('/ccm/system/jobs?auth=' . $auth)?>" />
+        <input type="text" class="ccm-default-jobs-url form-control ccm-input-text" value="<?=$view->url('/ccm/system/jobs?auth=' . $auth)?>" />
     </div>
 </div>
 <?php

@@ -1,8 +1,11 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
-$form = Loader::helper('form');?>
+$form = Loader::helper('form');
+$request = $controller->getRequest();
+/* @var Concrete\Core\Http\Request $request */
+?>
 
-<?php if (is_array($selectedGroups)) {
+<?php if (isset($selectedGroups) && is_array($selectedGroups)) {
     ?>
 
 <h4><?=t('Confirm')?></h4>
@@ -27,16 +30,16 @@ $form = Loader::helper('form');?>
 </ul>
 
 <form method="post" action="<?=$view->action('confirm')?>" role="form">
-    <input type="hidden" name="gParentNodeID" value="<?=h($_REQUEST['gParentNodeID'])?>" />
+    <input type="hidden" name="gParentNodeID" value="<?=h($request->get('gParentNodeID'))?>" />
     
-	<?php foreach ($_REQUEST['gID'] as $gID) {
+	<?php foreach ($request->get('gID', []) as $gID) {
     ?>
 		<input type="hidden" name="gID[]" value="<?=h($gID)?>" />
 	<?php 
 }
     ?>
 	<br/>
-	<input type="hidden" name="gName" value="<?=h($_REQUEST['gName'])?>" />
+	<input type="hidden" name="gName" value="<?=h($request->get('gName'))?>" />
 	
 	<div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
@@ -47,7 +50,7 @@ $form = Loader::helper('form');?>
 </form>
 
 <?php 
-} elseif (is_array($groups)) {
+} elseif (isset($groups) && is_array($groups)) {
     ?>
 
 <form action="<?=$view->action('move')?>" method="post" data-form="move-groups">
@@ -64,7 +67,7 @@ $form = Loader::helper('form');?>
             <?php foreach ($groups as $g) {
     ?>
                 <div class="checkbox" data-checkbox="group-list"><label>
-                    <input name="gID[]" type="checkbox" <?php if (is_array($_POST['gID']) && in_array($g->getGroupID(), $_POST['gID'])) {
+                    <input name="gID[]" type="checkbox" <?php if (is_array($request->request->get('gID')) && in_array($g->getGroupID(), $request->request->get('gID'))) {
     ?>checked<?php 
 }
     ?> value="<?=$g->getGroupID()?>" /> <?=$g->getGroupDisplayName()?>
@@ -110,7 +113,7 @@ $form = Loader::helper('form');?>
         </div>
     </div>
 
-	<input type="hidden" name="gName" value="<?=h($_REQUEST['gName'])?>" />
+	<input type="hidden" name="gName" value="<?=h($request->get('gName'))?>" />
 </form>
 
 <script type="text/javascript">
@@ -134,7 +137,7 @@ $(function() {
 		  'enableDragAndDrop': false,
           <?php if ($this->controller->isPost()) {
     ?>
-             'selectNodesByKey': [<?=intval($_POST['gParentNodeID'])?>],
+             'selectNodesByKey': [<?=intval($request->request->get('gParentNodeID'))?>],
           <?php 
 }
     ?>

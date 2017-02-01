@@ -1,7 +1,7 @@
 <?php
 
-if (version_compare(phpversion(), '5.5.9') < 0) {
-    die("concrete5 requires PHP 5.5.9+ to run.\n");
+if (version_compare(PHP_VERSION, '5.5.9') < 0) {
+    die("concrete5 requires PHP 5.5.9+ to run.\nYou are running PHP " . PHP_VERSION . "\n");
 }
 
 /*
@@ -164,12 +164,12 @@ define('REL_DIR_METADATA_YAML', DIRNAME_CONFIG . DIRECTORY_SEPARATOR . DIRNAME_M
  * ----------------------------------------------------------------------------
  */
 const CONFIG_ORM_METADATA_BASE = 'database.metadatadriver';
-define('CONFIG_ORM_METADATA_PACKAGES_BASE', CONFIG_ORM_METADATA_BASE.'.packages');
-define('CONFIG_ORM_METADATA_ANNOTATION_LEGACY', CONFIG_ORM_METADATA_PACKAGES_BASE.'.annotation.legacy');
-define('CONFIG_ORM_METADATA_ANNOTATION_DEFAULT', CONFIG_ORM_METADATA_PACKAGES_BASE.'.annotation.default');
-define('CONFIG_ORM_METADATA_XML', CONFIG_ORM_METADATA_PACKAGES_BASE.'.xml');
-define('CONFIG_ORM_METADATA_YAML', CONFIG_ORM_METADATA_PACKAGES_BASE.'.yaml');
-define('CONFIG_ORM_METADATA_APPLICATION', CONFIG_ORM_METADATA_BASE.'.application');
+define('CONFIG_ORM_METADATA_PACKAGES_BASE', CONFIG_ORM_METADATA_BASE . '.packages');
+define('CONFIG_ORM_METADATA_ANNOTATION_LEGACY', CONFIG_ORM_METADATA_PACKAGES_BASE . '.annotation.legacy');
+define('CONFIG_ORM_METADATA_ANNOTATION_DEFAULT', CONFIG_ORM_METADATA_PACKAGES_BASE . '.annotation.default');
+define('CONFIG_ORM_METADATA_XML', CONFIG_ORM_METADATA_PACKAGES_BASE . '.xml');
+define('CONFIG_ORM_METADATA_YAML', CONFIG_ORM_METADATA_PACKAGES_BASE . '.yaml');
+define('CONFIG_ORM_METADATA_APPLICATION', CONFIG_ORM_METADATA_BASE . '.application');
 
 /*
  * ----------------------------------------------------------------------------

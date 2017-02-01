@@ -39,11 +39,6 @@ class NumberValue extends AbstractValue
         }
     }
 
-    /**
-     * {@inheritdoc}
-     *
-     * @see Value::__toString()
-     */
     public function __toString()
     {
         return (string) $this->getValue();

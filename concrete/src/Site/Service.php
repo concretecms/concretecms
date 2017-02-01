@@ -122,6 +122,14 @@ class Service
                 $page->moveToTrash();
             }
         }
+
+        $locales = $site->getLocales();
+        $service = new \Concrete\Core\Localization\Locale\Service($this->entityManager);
+
+        foreach($locales as $locale) {
+            $service->delete($locale);
+        }
+
         $this->entityManager->remove($site);
         $this->entityManager->flush();
     }

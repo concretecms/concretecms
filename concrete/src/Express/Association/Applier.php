@@ -3,6 +3,10 @@ namespace Concrete\Core\Express\Association;
 
 use Concrete\Core\Entity\Express\Association;
 use Concrete\Core\Entity\Express\Entry;
+use Concrete\Core\Entity\Express\ManyToManyAssociation;
+use Concrete\Core\Entity\Express\ManyToOneAssociation;
+use Concrete\Core\Entity\Express\OneToManyAssociation;
+use Concrete\Core\Entity\Express\OneToOneAssociation;
 use Concrete\Core\Express\EntryList;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -13,6 +17,37 @@ class Applier
     public function __construct(EntityManagerInterface $entityManager)
     {
         $this->entityManager = $entityManager;
+    }
+
+    /**
+     * @return EntityManagerInterface
+     */
+    public function getEntityManager()
+    {
+        return $this->entityManager;
+    }
+
+    /**
+     * A generic associate method that can be run from elsewhere. Determines the appropriate associate* method
+     * to run.
+     * @param Association $association
+     * @param Entry $entry
+     * @param $input
+     */
+    public function associate(Association $association, Entry $entry, $input)
+    {
+        if ($association instanceof ManyToOneAssociation) {
+            return $this->associateManyToOne($association, $entry, $input);
+        }
+        if ($association instanceof OneToOneAssociation) {
+            return $this->associateOneToOne($association, $entry, $input);
+        }
+        if ($association instanceof OneToManyAssociation) {
+            return $this->associateOneToMany($association, $entry, $input);
+        }
+        if ($association instanceof ManyToManyAssociation) {
+            return $this->associateManyToMany($association, $entry, $input);
+        }
     }
 
     public function associateManyToOne(Association $association, Entry $entry, Entry $associatedEntry)
@@ -65,6 +100,7 @@ class Applier
         // Now, we go to the inverse side, and we get all possible entries. We loop through them to see whether they're in the associated entries array
         $entity = $association->getTargetEntity();
         $list = new EntryList($entity);
+        $list->ignorePermissions();
         $possibleResults = $list->getResults();
         foreach($possibleResults as $possibleResult) {
             $oneAssociation = $possibleResult->getAssociation($association->getInversedByPropertyName());

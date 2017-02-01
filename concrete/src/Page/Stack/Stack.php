@@ -77,7 +77,7 @@ class Stack extends Page implements ExportableInterface
      *
      * @return Page
      */
-    public static function getByName($stackName, $cvID = 'RECENT', Site $site = null, $multilingualContentSource = self::MULTILINGUAL_CONTENT_SOURCE_CURRENT)
+    public static function getByName($stackName, $cvID = 'RECENT', TreeInterface $site = null, $multilingualContentSource = self::MULTILINGUAL_CONTENT_SOURCE_CURRENT)
     {
         $c = Page::getCurrentPage();
         if (is_object($c) && (!$c->isError())) {
@@ -110,7 +110,11 @@ class Stack extends Page implements ExportableInterface
                 if (!is_object($site)) {
                     $site = \Core::make('site')->getSite();
                 }
-                $q[] = $site->getDefaultLocale()->getSiteTree()->getSiteTreeID();
+                if ($site instanceof Site) {
+                    $q[] = $site->getDefaultLocale()->getSiteTree()->getSiteTreeID();
+                } else {
+                    $q[] = $site->getSiteTreeID();
+                }
                 $cID = $db->fetchColumn($sql, $q);
                 $cache->save($item->set($cID));
             }

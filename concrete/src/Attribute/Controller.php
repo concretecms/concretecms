@@ -303,14 +303,20 @@ class Controller extends AbstractController
         return $e;
     }
 
+    public function getAttributeKeySettingsClass()
+    {
+        return EmptySettings::class;
+    }
+
     public function createAttributeKeySettings()
     {
-        return new EmptySettings();
+        $class = $this->getAttributeKeySettingsClass();
+        return new $class();
     }
 
     protected function retrieveAttributeKeySettings()
     {
-        return $this->entityManager->find('Concrete\Core\Entity\Attribute\Key\Settings\EmptySettings', $this->attributeKey);
+        return $this->entityManager->find($this->getAttributeKeySettingsClass(), $this->attributeKey);
     }
 
     /*
@@ -323,9 +329,17 @@ class Controller extends AbstractController
         }
     }
 
-    public function getAttributeValueObject()
+    public function getAttributeValueClass()
     {
         return null;
+    }
+
+    public function getAttributeValueObject()
+    {
+        $class = $this->getAttributeValueClass();
+        if ($class) {
+            return $this->entityManager->find($class, $this->attributeValue->getGenericValue());
+        }
     }
 
     public function getAttributeKeySettings()

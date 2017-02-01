@@ -299,7 +299,9 @@ class Application extends Container
 
             $service = $this->make('Concrete\Core\Package\PackageService');
             $service->setupLocalization($pkg);
-
+        }
+        $config->set('app.bootstrap.packages_loaded', true);
+        foreach ($this->packages as $pkg) {
             if (method_exists($pkg, 'on_start')) {
                 $pkg->on_start();
             }
@@ -310,8 +312,6 @@ class Application extends Container
                 $checkAfterStart = true;
             }
         }
-
-        $config->set('app.bootstrap.packages_loaded', true);
 
         // After package initialization, the translations adapters need to be
         // reinitialized when accessed the next time because new translations
@@ -362,7 +362,6 @@ class Application extends Container
 
         // If this isn't the homepage
         if ($path && $path != '/') {
-
             // If the trailing slash doesn't match the config, return a redirect response
             if (($trailing_slashes && substr($path, -1) != '/') ||
                 (!$trailing_slashes && substr($path, -1) == '/')) {

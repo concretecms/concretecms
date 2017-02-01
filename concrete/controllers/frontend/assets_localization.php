@@ -507,7 +507,7 @@ var ccmi18n_imageeditor = {
         }
         $found = null;
         foreach ($alternatives as $alternative) {
-            $r = $env->getRecord(DIRNAME_JAVASCRIPT.'/i18n/ui.datepicker-'.str_replace('_', '-', $alternative).'.js');
+            $r = $env->getRecord(DIRNAME_JAVASCRIPT.'/i18n/jquery-ui/datepicker-'.str_replace('_', '-', $alternative).'.js');
             if (is_file($r->file)) {
                 $found = $r->file;
                 break;
@@ -570,7 +570,7 @@ ccmTranslator.setI18NDictionart({
             static::sendJavascriptHeader();
         }
         ?>
-Dropzone.prototype.defaultOptions.dictDefaultMessage = <?=json_encode(t('Drop files here to upload'))?>;
+Dropzone.prototype.defaultOptions.dictDefaultMessage = <?=json_encode(t('Drop files here or click to upload.'))?>;
 Dropzone.prototype.defaultOptions.dictFallbackMessage = <?=json_encode(t("Your browser does not support drag'n'drop file uploads."))?>;
 Dropzone.prototype.defaultOptions.dictFallbackText = <?=json_encode(t('Please use the fallback form below to upload your files like in the olden days.'))?>;
     <?php
