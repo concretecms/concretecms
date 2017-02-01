@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Core\File\Service;
 
-use Concrete\Core\File\Exception\RequestTimeoutException;
+use Zend\Http\Client\Adapter\Exception\TimeoutException;
 use Config;
 use Environment;
 use Core;
@@ -304,7 +304,7 @@ class File
      * @param string $filename
      * @param string $timeout
      *
-     * @throws RequestTimeoutException Request timed out
+     * @throws TimeoutException Request timed out
      *
      * @return string|bool Returns false in case of failure
      */
@@ -316,7 +316,7 @@ class File
             $client = $app->make('http/client')->setUri($file);
             try {
                 $response = $client->send();
-            } catch (RequestTimeoutException $x) {
+            } catch (TimeoutException $x) {
                 throw $x;
             } catch (Exception $x) {
                 $response = null;

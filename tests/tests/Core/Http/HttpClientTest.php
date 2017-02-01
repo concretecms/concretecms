@@ -1,14 +1,15 @@
 <?php
 namespace Concrete\Tests\Core\Localization;
 
-use Concrete\Core\Http\Client\Adapter\Curl;
-use Concrete\Core\Http\Client\Adapter\Socket;
-use Concrete\Core\Http\Client\Client;
-use Concrete\Core\Http\Client\Factory;
+use Concrete\Core\Http\HttpClientFactory;
 use Concrete\Core\Support\Facade\Application;
 use Exception;
 use PHPUnit_Framework_TestCase;
+use Zend\Http\Client as HttpClient;
+use Zend\Http\Client\Adapter\Curl as CurlHttpAdapter;
 use Zend\Http\Client\Adapter\Exception\InitializationException as ZendInitializationException;
+use Zend\Http\Client\Adapter\Socket as SocketHttpAdapter;
+use Zend\Http\Client\Adapter\Proxy as ProxySocketHttpAdapter;
 
 class HttpClientTest extends PHPUnit_Framework_TestCase
 {
@@ -26,28 +27,31 @@ class HttpClientTest extends PHPUnit_Framework_TestCase
 
     public function testAdapterKind()
     {
+        $factory = self::$app->make(HttpClientFactory::class);
+
         if (function_exists('curl_init')) {
-            $defaultAdapter = Curl::class;
+            $defaultAdapter = CurlHttpAdapter::class;
         } else {
-            $defaultAdapter = Socket::class;
+            $defaultAdapter = SocketHttpAdapter::class;
         }
 
-        $client = self::$app->make(Client::class);
-        $this->assertInstanceOf(Client::class, $client);
+        $client = self::$app->make(HttpClient::class);
+        $this->assertInstanceOf(HttpClient::class, $client);
         $this->assertInstanceOf($defaultAdapter, $client->getAdapter());
 
         $client = self::$app->make('http/client');
-        $this->assertInstanceOf(Client::class, $client);
+        $this->assertInstanceOf(HttpClient::class, $client);
         $this->assertInstanceOf($defaultAdapter, $client->getAdapter());
 
         if (function_exists('curl_init')) {
             $client = self::$app->make('http/client/curl');
-            $this->assertInstanceOf(Client::class, $client);
-            $this->assertInstanceOf(Curl::class, $client->getAdapter());
+            $this->assertInstanceOf(HttpClient::class, $client);
+            $this->assertInstanceOf(CurlHttpAdapter::class, $client->getAdapter());
         } else {
             $error = null;
             try {
-                self::$app->make('http/client/curl');
+                $client = self::$app->make('http/client/curl');
+                $adapter = $client->getAdapter();
             } catch (Exception $x) {
                 $error = $x;
             }
@@ -55,31 +59,31 @@ class HttpClientTest extends PHPUnit_Framework_TestCase
         }
 
         $client = self::$app->make('http/client/socket');
-        $this->assertInstanceOf(Client::class, $client);
-        $this->assertInstanceOf(Socket::class, $client->getAdapter());
+        $this->assertInstanceOf(HttpClient::class, $client);
+        $this->assertInstanceOf(SocketHttpAdapter::class, $client->getAdapter());
 
         if (function_exists('curl_init')) {
-            $client = self::$app->make(Factory::class)->createFromOptions([], Curl::class);
-            $this->assertInstanceOf(Curl::class, $client->getAdapter());
+            $client = $factory->createFromOptions([], CurlHttpAdapter::class);
+            $this->assertInstanceOf(CurlHttpAdapter::class, $client->getAdapter());
         }
-        $client = self::$app->make(Factory::class)->createFromOptions([], Socket::class);
-        $this->assertInstanceOf(Socket::class, $client->getAdapter());
+        $client = $factory->createFromOptions([], ProxySocketHttpAdapter::class);
+        $this->assertInstanceOf(SocketHttpAdapter::class, $client->getAdapter());
     }
 
     public function adapterListProvider()
     {
         return [
-            [Curl::class],
-            [Socket::class],
+            [CurlHttpAdapter::class],
+            [ProxySocketHttpAdapter::class],
         ];
     }
 
     private function checkValidAdapter($adapterClass, $forSSL)
     {
-        if ($adapterClass === Curl::class && !function_exists('curl_init')) {
+        if ($adapterClass === CurlHttpAdapter::class && !function_exists('curl_init')) {
             $this->markTestSkipped('Skipped tests on cURL HTTP Client Adapter since the PHP cURL extension is not enabled');
         }
-        if ($adapterClass === Socket::class && $forSSL && !function_exists('stream_socket_enable_crypto')) {
+        if (($adapterClass === SocketHttpAdapter::class || $adapterClass === ProxySocketHttpAdapter::class) && $forSSL && !function_exists('stream_socket_enable_crypto')) {
             $this->markTestSkipped('stream_socket_enable_crypto is not implemented (is this HHVM?)');
         }
     }
@@ -134,8 +138,10 @@ class HttpClientTest extends PHPUnit_Framework_TestCase
     public function testSSLOptions($adapterClass, $caFile, $caPath, $shouldBeOK)
     {
         $this->checkValidAdapter($adapterClass, true);
+        
+        $factory = self::$app->make(HttpClientFactory::class);
 
-        $client = self::$app->make(Factory::class)->createFromOptions([
+        $client = $factory->createFromOptions([
             'ssltransport' => 'tls',
             'sslverifypeer' => false,
             'sslcafile' => $caFile,
@@ -143,7 +149,7 @@ class HttpClientTest extends PHPUnit_Framework_TestCase
         ], $adapterClass);
         $error = null;
         try {
-            $client->setMethod('GET')->setUri('https://www.google.com')->send();
+            $client->setMethod('HEAD')->setUri('https://www.google.com')->send();
         } catch (Exception $x) {
             $error = $x;
         }
@@ -152,7 +158,7 @@ class HttpClientTest extends PHPUnit_Framework_TestCase
         if ($shouldBeOK && $caPath == $certsFolder = self::SKIP_VALID_CERTS) {
             $this->markTestSkipped('Unable to find a local folder containing CA certificates');
         }
-        $client = self::$app->make(Factory::class)->createFromOptions([
+        $client = $factory->createFromOptions([
             'ssltransport' => 'tls',
             'sslverifypeer' => true,
             'sslcafile' => $shouldBeOK ? null : $caFile,
@@ -160,7 +166,7 @@ class HttpClientTest extends PHPUnit_Framework_TestCase
         ], $adapterClass);
         $error = null;
         try {
-            $client->setMethod('GET')->setUri('https://www.google.com')->send();
+            $client->setMethod('HEAD')->setUri('https://www.google.com')->send();
         } catch (Exception $x) {
             $error = $x;
         }
@@ -178,7 +184,9 @@ class HttpClientTest extends PHPUnit_Framework_TestCase
     {
         $this->checkValidAdapter($adapterClass, true);
 
-        $client = self::$app->make(Factory::class)->createFromOptions([
+        $factory = self::$app->make(HttpClientFactory::class);
+
+        $client = $factory->createFromOptions([
             'SSL-VERIFYPEER' => true,
             'proxyHost' => 'host',
             'proxy-port' => '12345',
@@ -191,7 +199,7 @@ class HttpClientTest extends PHPUnit_Framework_TestCase
             'maxredirects' => 5,
             'rfc3986strict' => '1',
             'sslcert' => null,
-            'sslpassphrase' => null,
+            'sslpassphrase' => 'unused',
             'storeresponse' => 0,
             'strictredirects' => 'yes',
             'user agent' => 'Test User Agent',
@@ -212,12 +220,11 @@ class HttpClientTest extends PHPUnit_Framework_TestCase
             'sslcafile' => null,
             'sslcapath' => null,
             'connecttimeout' => 5,
-            'executetimeout' => 60,
+            'timeout' => 60,
             'keepalive' => false,
             'maxredirects' => 5,
             'rfc3986strict' => true,
             'sslcert' => null,
-            'sslpassphrase' => null,
             'storeresponse' => false,
             'streamtmpdir' => self::$app->make('helper/file')->getTemporaryDirectory(),
             'strictredirects' => true,
@@ -228,7 +235,7 @@ class HttpClientTest extends PHPUnit_Framework_TestCase
             'sslallowselfsigned' => true,
             'persistent' => false,
         ];
-        if ($adapterClass === Curl::class) {
+        if ($adapterClass === CurlHttpAdapter::class) {
             $expectedOptions['curloptions'] = [
                 CURLOPT_SSL_VERIFYPEER => $expectedOptions['sslverifypeer'],
                 CURLOPT_PROXY => $expectedOptions['proxyhost'],
@@ -241,7 +248,7 @@ class HttpClientTest extends PHPUnit_Framework_TestCase
             unset($expectedOptions['proxyuser']);
             unset($expectedOptions['proxypass']);
             ksort($expectedOptions['curloptions']);
-        } elseif ($adapterClass === Socket::class) {
+        } elseif ($adapterClass === ProxySocketHttpAdapter::class) {
             foreach (array_keys($expectedOptions) as $key) {
                 if (preg_match('/^(proxy)(.+)$/', $key, $matches)) {
                     $expectedOptions[$matches[1].'_'.$matches[2]] = $expectedOptions[$key];

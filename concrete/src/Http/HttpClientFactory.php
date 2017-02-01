@@ -1,10 +1,14 @@
 <?php
-namespace Concrete\Core\Http\Client;
+namespace Concrete\Core\Http;
 
 use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Support\Facade\Application;
+use Zend\Http\Client;
+use Zend\Http\Client\Adapter\Curl;
+use Zend\Http\Client\Adapter\Socket;
+use Zend\Http\Client\Adapter\Proxy;
 
-class Factory
+class HttpClientFactory
 {
     /**
      * Read the HTTP Client configuration.
@@ -12,24 +16,20 @@ class Factory
      * @param Repository $config
      *
      * @return array {
-     *     @var bool $sslverifypeer [always]
-     *     @var string $proxyhost [optional]
-     *     @var int $proxyport [optional]
-     *     @var string $proxyuser [optional]
-     *     @var string $proxypass [optional]
-     *     ... and all other options set in app.curl
+     *     all the options set in app.http_client
+     *
+     *     @var mixed $proxyhost
+     *     @var mixed $proxyport
+     *     @var mixed $proxyuser
+     *     @var mixed $proxypass
      * }
      */
     protected function getOptions(Repository $config)
     {
-        $result = $config->get('app.curl');
+        $result = $config->get('app.http_client');
         if (!is_array($result)) {
             $result = [];
         }
-        if (isset($result['verifyPeer'])) {
-            $result['sslverifypeer'] = (bool) $result['verifyPeer'];
-        }
-        unset($result['verifyPeer']);
         $result['proxyhost'] = $config->get('concrete.proxy.host');
         $result['proxyport'] = $config->get('concrete.proxy.port');
         $result['proxyuser'] = $config->get('concrete.proxy.user');
@@ -49,7 +49,9 @@ class Factory
     {
         // Default values
         $result = [
+            'adapter' => null,
             'sslverifypeer' => true,
+            'sslverifypeername' => true,
             'proxyhost' => '',
             'proxyport' => 8080,
             'proxyuser' => '',
@@ -57,7 +59,7 @@ class Factory
             'sslcafile' => null,
             'sslcapath' => null,
             'connecttimeout' => 5,
-            'executetimeout' => 60,
+            'timeout' => 60,
             'keepalive' => false,
             'maxredirects' => 5,
             'rfc3986strict' => false,
@@ -80,6 +82,7 @@ class Factory
             switch ($key) {
                 // Not nullable boolean values
                 case 'sslverifypeer':
+                case 'sslverifypeername':
                 case 'keepalive':
                 case 'rfc3986strict':
                 case 'storeresponse':
@@ -94,7 +97,7 @@ class Factory
                 // Not nullable integer values
                 case 'proxyport':
                 case 'connecttimeout':
-                case 'executetimeout':
+                case 'timeout':
                 case 'maxredirects':
                     if (is_int($value) || is_float($value) || (is_string($value) && is_numeric($value))) {
                         $result[$key] = (int) $value;
@@ -116,6 +119,12 @@ class Factory
                 case 'ssltransport':
                 case 'streamtmpdir':
                     if (is_string($value) && $value !== '') {
+                        $result[$key] = $value;
+                    }
+                    break;
+                // Special cases
+                case 'adapter':
+                    if ((is_string($value) && $value !== '') || is_object($value)) {
                         $result[$key] = $value;
                     }
                     break;
@@ -141,7 +150,12 @@ class Factory
         }
         // Don't set sslpassphrase is sslcert is not set (Zend tries to set the sslpassphrase even if no sslcert has been specified)
         if ($result['sslcert'] === null) {
-            $result['sslpassphrase'] = null;
+            unset($result['sslpassphrase']);
+        }
+        // Don't pass sslcafile/sslcapath if sslverifypeer is false
+        if ($result['sslverifypeer'] === false) {
+            unset($result['sslcafile']);
+            unset($result['sslcapath']);
         }
 
         return $result;
@@ -165,7 +179,7 @@ class Factory
     /**
      * Create a new HTTP Client instance starting from configuration.
      *
-     * @param array $options See the app.curl values at concrete/config/app.php, plus the proxy options (proxyhost, proxyport, proxyuser, proxypass)
+     * @param array $options See the app.http_client values at concrete/config/app.php, plus the concrete.proxy values at concrete/config/concrete.php.
      * @param mixed $adapter The adapter to use (defaults to Curl adapter if curl extension is installed, otherwise we'll use the Socket adapter)
      *
      * @return Client
@@ -173,20 +187,18 @@ class Factory
     public function createFromOptions(array $options, $adapter = null)
     {
         $options = $this->normalizeOptions($options);
-        if (!$adapter) {
-            if (isset($options['adapter']) && $options['adapter']) {
-                $adapter = $options['adapter'];
-            } elseif (function_exists('curl_init')) {
-                $adapter = Adapter\Curl::class;
+        if ((is_string($adapter) && $adapter !== '') || is_object($adapter)) {
+            $options['adapter'] = $adapter;
+        } elseif ($options['adapter'] === null) {
+            if (function_exists('curl_init')) {
+                $options['adapter'] = Curl::class;
+            } elseif (isset($options['proxyhost'])) {
+                $options['adapter'] = Proxy::class;
             } else {
-                $adapter = Adapter\Socket::class;
+                $options['adapter'] = Socket::class;
             }
         }
-        $options['adapter'] = $adapter;
-        if (isset($options['sslverifypeer']) && !$options['sslverifypeer']) {
-            $options['sslcafile'] = null;
-            $options['sslcapath'] = null;
-        }
+
         $client = new Client(null, $options);
 
         return $client;

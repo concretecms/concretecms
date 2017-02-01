@@ -1301,44 +1301,46 @@ return array(
         ),
     ),
     // HTTP Client options
-    'curl' => array(
+    'http_client' => array(
         // FALSE to stop from verifying the peer's certificate.
-        'verifyPeer' => true,
-        // The name of a file holding one or more certificates to verify the peer with (used only if verifyPeer is not falsy).
+        'sslverifypeer' => true,
+        // FALSE to stop from verifying the peer's name (used only with Socket connections, not with cURL ones).
+        'sslverifypeername' => false,
+        // The name of a file holding one or more certificates to verify the peer with (used only if sslverifypeer is not falsy).
         'sslcafile' => null,
-        // A directory that holds multiple CA certificates to verify the peer with (used only if verifyPeer is not falsy).
+        // A directory that holds multiple CA certificates to verify the peer with (used only if sslverifypeer is not falsy).
         'sslcapath' => null,
-        // The number of seconds to wait while trying to connect. Use 0 to wait indefinitely.
+        // The number of seconds to wait while trying to connect.
         'connecttimeout' => 5,
         // The maximum number of seconds to allow response from remote server.
-        'executetimeout' => 60,
-        // Whether to enable keep-alive connections with the server. Useful and might improve performance if several consecutive requests to the same server are performed
+        'timeout' => 60,
+        // Whether to enable keep-alive connections with the server. Useful and might improve performance if several consecutive requests to the same server are performed.
         'keepalive' => false,
-        // Maximum number of redirections to follow (0 = none)
+        // Maximum number of redirections to follow (0 = none).
         'maxredirects' => 5,
-        // Whether to strictly adhere to RFC 3986 (in practice, this means replacing "+" with "%20")
+        // Whether to strictly adhere to RFC 3986 (in practice, this means replacing "+" with "%20").
         'rfc3986strict' => false,
-        // Path to a PEM encoded SSL certificate
+        // Path to a PEM encoded SSL certificate.
         'sslcert' => null,
-        // Passphrase for the SSL certificate file
+        // Passphrase for the SSL certificate file.
         'sslpassphrase' => null,
         // Whether to store last response for later retrieval with getLastResponse(). If set to FALSE, getLastResponse() will return NULL.
         'storeresponse' => true,
-        // Directory where to store temporary streams by default
+        // Directory where to store temporary streams by default (if empty, we'll use the default concrete5 temporry directory).
         'streamtmpdir' => null,
-        // Whether to strictly follow the RFC when redirecting (see this section)
+        // Whether to strictly follow the RFC when redirecting (see https://framework.zend.com/manual/2.4/en/modules/zend.http.client.advanced.html#http-redirections )
         'strictredirects' => false,
-        // User agent identifier string
+        // User agent identifier string.
         'useragent' => 'concrete5 CMS',
         // Whether to pass the cookie value through urlencode/urldecode. Enabling this breaks support with some web servers. Disabling this limits the range of values the cookies can contain.
         'encodecookies' => true,
-        // HTTP protocol version (usually '1.1' or '1.0')
+        // HTTP protocol version (usually '1.1' or '1.0').
         'httpversion' => '1.1',
-        // SSL transport layer ['ssl', 'sslv2', 'sslv3', 'tls'] (applicable only to Socket adapters)
+        // SSL transport layer ['ssl', 'sslv2', 'sslv3', 'tls'] (applicable only to Socket adapters).
         'ssltransport' => 'tls',
-        // Whether to allow self-signed certificates (applicable only to Socket adapters)
+        // Whether to allow self-signed certificates (applicable only to Socket adapters).
         'sslallowselfsigned' => false,
-        // Whether to use persistent TCP connections (applicable only to Socket adapters)
+        // Whether to use persistent TCP connections (applicable only to Socket adapters).
         'persistent' => false,
     ),
 
