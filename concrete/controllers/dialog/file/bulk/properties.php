@@ -29,6 +29,7 @@ class Properties extends BackendInterfaceController
     protected function checkPermissions($file)
     {
         $fp = new Permissions($file);
+
         return $fp->canEditFileProperties();
     }
 
@@ -36,7 +37,7 @@ class Properties extends BackendInterfaceController
     {
         parent::on_start();
         if (!isset($this->files)) {
-            $this->files = array();
+            $this->files = [];
         }
 
         if (is_array($_REQUEST['fID'])) {
@@ -86,7 +87,7 @@ class Properties extends BackendInterfaceController
 
                 $fr->setFiles($this->files);
                 $val = $f->getAttributeValueObject($ak);
-                $fr->setAdditionalDataAttribute('value',  $val->getDisplayValue());
+                $fr->setAdditionalDataAttribute('value', $val->getDisplayValue());
                 $fr->setMessage(t('Files updated successfully.'));
             }
         }
@@ -105,7 +106,7 @@ class Properties extends BackendInterfaceController
                     $f->reindex();
                 }
                 $fr->setFiles($this->files);
-                $fr->setAdditionalDataAttribute('value',  false);
+                $fr->setAdditionalDataAttribute('value', false);
                 $fr->setMessage(t('Attributes cleared successfully.'));
             }
         }
