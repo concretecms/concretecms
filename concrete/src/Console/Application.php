@@ -54,19 +54,19 @@ class Application extends \Symfony\Component\Console\Application
 
         $migrationsConfiguration = new MigrationsConfiguration();
         $output = new ConsoleOutput();
-        $migrationsConfiguration->setOutputWriter(new OutputWriter(function($message) use ($output) {
+        $migrationsConfiguration->setOutputWriter(new OutputWriter(function ($message) use ($output) {
             $output->writeln($message);
         }));
 
         /** @var \Doctrine\DBAL\Migrations\Tools\Console\Command\AbstractCommand[] $commands */
-        $commands = array(
+        $commands = [
             new \Doctrine\DBAL\Migrations\Tools\Console\Command\DiffCommand(),
             new \Doctrine\DBAL\Migrations\Tools\Console\Command\ExecuteCommand(),
             new \Doctrine\DBAL\Migrations\Tools\Console\Command\GenerateCommand(),
             new \Doctrine\DBAL\Migrations\Tools\Console\Command\MigrateCommand(),
             new \Doctrine\DBAL\Migrations\Tools\Console\Command\StatusCommand(),
             new \Doctrine\DBAL\Migrations\Tools\Console\Command\VersionCommand(),
-        );
+        ];
 
         foreach ($commands as $migrationsCommand) {
             $migrationsCommand->setMigrationConfiguration($migrationsConfiguration);
