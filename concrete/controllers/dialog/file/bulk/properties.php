@@ -6,7 +6,6 @@ use Concrete\Core\Http\ResponseAssetGroup;
 use Concrete\Core\File\EditResponse as FileEditResponse;
 use FileAttributeKey;
 use Permissions;
-use Loader;
 use File;
 
 class Properties extends BackendInterfaceController
@@ -44,17 +43,18 @@ class Properties extends BackendInterfaceController
         if (is_array($requestFID)) {
             foreach ($requestFID as $fID) {
                 $f = File::getByID($fID);
-                if (is_object($f) && !$f->isError()) {
+                if ($f !== null) {
                     $this->files[] = $f;
                 }
             }
         }
 
-        if (count($this->files) > 0) {
+        if (!empty($this->files)) {
             $this->canAccess = true;
             foreach ($this->files as $f) {
                 if (!$this->checkPermissions($f)) {
                     $this->canAccess = false;
+                    break;
                 }
             }
         } else {
@@ -66,7 +66,7 @@ class Properties extends BackendInterfaceController
     {
         $r = ResponseAssetGroup::get();
         $r->requireAsset('core/app/editable-fields');
-        $form = Loader::helper('form');
+        $form = $this->app->make('helper/form');
         $attribs = FileAttributeKey::getList();
         $this->set('files', $this->files);
         $this->set('attributes', $attribs);
