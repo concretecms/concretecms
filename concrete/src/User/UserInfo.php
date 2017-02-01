@@ -550,7 +550,6 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
         }
 
         $db = $this->connection;
-        $v = array($this->getUserID());
 
         $pkr = new ActivateUserWorkflowRequest();
         // default activate action of workflow is set after workflow request is created
@@ -561,7 +560,11 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
         $pkr->setRequesterUserID($requesterUID);
         $pkr->trigger();
 
-        $this->uIsActive = intval($db->GetOne('select uIsActive from Users where uID = ?', $v));
+        // Figure out whether the user was marked active during the workflow.
+        // Usually happens if no workflows are attached (empty workflow).
+        $query = 'SELECT uIsActive FROM Users WHERE uID = ?';
+        $v = array($this->getUserID());
+        $this->entity->setUserIsActive(intval($db->GetOne($query, $v)) === 1);
 
         return $this->isActive();
     }

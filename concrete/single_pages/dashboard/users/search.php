@@ -332,6 +332,13 @@ if (isset($user) && is_object($user)) {
         });
     </script>
     <?php
+    if (is_array($workflowList)) {
+        View::element('workflow/notifications', [
+            'workflowList' => $workflowList,
+        ]);
+    }
+    ?>
+    <?php
 } else {
     $tp = Core::make('helper/concrete/user');
     if ($tp->canAccessUserSearchInterface()) {
