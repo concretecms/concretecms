@@ -78,7 +78,7 @@ class Properties extends BackendInterfaceController
         if ($this->validateAction()) {
             if ($this->canAccess) {
                 $name = $this->request->get('name');
-                $ak = FileAttributeKey::get($name);
+                $ak = FileAttributeKey::getByID($name);
                 foreach ($this->files as $f) {
                     $fv = $f->getVersionToModify();
                     $controller = $ak->getController();
