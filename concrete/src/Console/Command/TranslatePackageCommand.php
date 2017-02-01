@@ -24,7 +24,7 @@ class TranslatePackageCommand extends Command
             ->addOption('translator', 't', InputOption::VALUE_REQUIRED, 'Translator to be put in the language files (eg the "Last-Translator" gettext header)', '')
             ->addOption('exclude-3rdparty', 'x', InputOption::VALUE_NONE, 'Specify this option to avoid parsing 3rd party folders')
             ->setDescription('Creates or updates translations of a concrete5 package')
-            ->setHelp(<<<EOT
+            ->setHelp(<<<'EOT'
 If the locale option(s) is not specified, we'll generate/update translations for the currently defined locales for the package.
 If currently no locale is defined, we'll generate/update translations for all the currently installed locales of the core of concrete5.
 In order to don't generate the locale files but only the master translations file (.pot), specify "--locale=-" (or "-l-")
@@ -66,7 +66,7 @@ EOT
                 if ($packageDirectory === false) {
                     throw new Exception("Unable to find the directory '$p'");
                 }
-                $controllerFile = $packageDirectory.'/'.FILENAME_CONTROLLER;
+                $controllerFile = $packageDirectory . '/' . FILENAME_CONTROLLER;
                 if (!is_file($controllerFile)) {
                     throw new Exception("The directory '$packageDirectory' does not seems to contain a valid concrete5 package");
                 }
@@ -83,7 +83,7 @@ EOT
                                         switch ($token[0]) {
                                         case T_DOC_COMMENT:
                                         case T_WHITESPACE:
-                                        case T_COMMENT;
+                                        case T_COMMENT:
                                             $keep = false;
                                             break;
                                         }
@@ -101,7 +101,7 @@ EOT
                                 && is_string($tokens[$i + 1]) && $tokens[$i + 1] === '='
                                 && is_array($tokens[$i + 2]) && $tokens[$i + 2][0] === T_CONSTANT_ENCAPSED_STRING
                             ) {
-                                $packageHandle = @eval('return '.$tokens[$i + 2][1].';');
+                                $packageHandle = @eval('return ' . $tokens[$i + 2][1] . ';');
                             }
                             if (
                                 $packageVersion === null
@@ -109,7 +109,7 @@ EOT
                                 && is_string($tokens[$i + 1]) && $tokens[$i + 1] === '='
                                 && is_array($tokens[$i + 2]) && $tokens[$i + 2][0] === T_CONSTANT_ENCAPSED_STRING
                             ) {
-                                $packageVersion = @eval('return '.$tokens[$i + 2][1].';');
+                                $packageVersion = @eval('return ' . $tokens[$i + 2][1] . ';');
                             }
                         }
                     }
@@ -130,10 +130,10 @@ EOT
                     throw new Exception("Unable to find a package with handle '$p'");
                 }
             }
-            $packageLanguagesDirectory = $packageDirectory.'/'.DIRNAME_LANGUAGES;
+            $packageLanguagesDirectory = $packageDirectory . '/' . DIRNAME_LANGUAGES;
 
             // Determine the locales to translate
-            $locales = array();
+            $locales = [];
             $localeOption = $input->getOption('locale');
             if (in_array('-', $localeOption, true)) {
                 // We don't want any locale
@@ -151,7 +151,7 @@ EOT
             } else {
                 // Normalize the locales (eg from it-it to it_IT)
                 foreach ($localeOption as $lo) {
-                    $chunks = array();
+                    $chunks = [];
                     foreach (explode('_', str_replace('-', '_', $lo)) as $index => $chunk) {
                         if ($index === 0) {
                             // Language (eg zh)
@@ -243,7 +243,7 @@ EOT
                 $output->writeln('<info>done.</info>');
             }
         } catch (Exception $x) {
-            $output->writeln('<error>'.$x->getMessage().'</error>');
+            $output->writeln('<error>' . $x->getMessage() . '</error>');
             $rc = 1;
         }
 

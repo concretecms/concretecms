@@ -15,7 +15,7 @@ class InfoCommand extends Command
         $this
             ->setName('c5:info')
             ->setDescription('Get server and concrete5 detailed informations.')
-            ->setHelp(<<<EOT
+            ->setHelp(<<<'EOT'
 Returns codes:
   0 operation completed successfully
   1 errors occurred
@@ -35,13 +35,13 @@ EOT
             /* @var Info $info */
 
             $output->writeln('<info># concrete5 Version</info>');
-            $output->writeln('Installed - '.($info->isInstalled() ? 'Yes' : 'No'));
+            $output->writeln('Installed - ' . ($info->isInstalled() ? 'Yes' : 'No'));
             $output->writeln($info->getCoreVersions());
 
             $output->writeln('');
             $output->writeln('<info># Paths</info>');
-            $output->writeln('Web root - '.$info->getWebRootDirectory());
-            $output->writeln('Core root - '.$info->getCoreRootDirectory());
+            $output->writeln('Web root - ' . $info->getWebRootDirectory());
+            $output->writeln('Core root - ' . $info->getCoreRootDirectory());
 
             $output->writeln('');
             $output->writeln('<info># concrete5 Packages</info>');
@@ -71,7 +71,7 @@ EOT
             $output->writeln('<info># PHP Settings</info>');
             $output->writeln($info->getPhpSettings());
         } catch (Exception $x) {
-            $output->writeln('<error>'.$x->getMessage().'</error>');
+            $output->writeln('<error>' . $x->getMessage() . '</error>');
             $rc = 1;
         }
 

@@ -29,14 +29,14 @@ class CompareSchemaCommand extends Command
 
         $tool = new \Doctrine\ORM\Tools\SchemaTool($em);
         $schemas = [];
-        /**
-         * @var $sm MySqlSchemaManager
-         */
         $sm = $db->getSchemaManager();
+        /**
+         * @var MySqlSchemaManager $sm
+         */
         $dbSchema = $sm->createSchema();
 
         // core xml tables
-        $schemas[]  = Schema::getCoreXMLSchema();
+        $schemas[] = Schema::getCoreXMLSchema();
 
         // core entities
         $sm = new DatabaseStructureManager($em);
@@ -47,7 +47,7 @@ class CompareSchemaCommand extends Command
         $env = Environment::get();
         $list = new BlockTypeList();
         $list->includeInternalBlockTypes();
-        foreach($list->get() as $bt) {
+        foreach ($list->get() as $bt) {
             $r = $env->getRecord(DIRNAME_BLOCKS . '/' . $bt->getBlockTypeHandle() . '/' . FILENAME_BLOCK_DB, $bt->getPackageHandle());
             if ($r->exists()) {
                 $parser = Schema::getSchemaParser(simplexml_load_file($r->file));
@@ -58,7 +58,7 @@ class CompareSchemaCommand extends Command
 
         // packages
         $packages = Package::getInstalledList();
-        foreach($packages as $pkg) {
+        foreach ($packages as $pkg) {
             $xmlFile = $pkg->getPackagePath() . '/' . FILENAME_BLOCK_DB;
             if (file_exists($xmlFile)) {
                 $parser = Schema::getSchemaParser(simplexml_load_file($xmlFile));
@@ -69,8 +69,8 @@ class CompareSchemaCommand extends Command
 
         // Finalize output.
         $comparator = new \Doctrine\DBAL\Schema\Comparator();
-        $saveQueries = array();
-        foreach($schemas as $schema) {
+        $saveQueries = [];
+        foreach ($schemas as $schema) {
             $schemaDiff = $comparator->compare($dbSchema, $schema);
             $saveQueries = array_merge($saveQueries, $schemaDiff->toSaveSql($db->getDatabasePlatform()));
         }
@@ -79,9 +79,9 @@ class CompareSchemaCommand extends Command
         if (count($saveQueries)) {
             $output->writeln(t2('%s query found', '%s queries found', count($saveQueries)));
             $i = 1;
-            foreach($saveQueries as $query) {
+            foreach ($saveQueries as $query) {
                 $output->writeln(sprintf('%s: %s', $i, $query));
-                $i++;
+                ++$i;
             }
         } else {
             $output->writeln(t('No differences found between schema and database.'));
@@ -92,12 +92,12 @@ class CompareSchemaCommand extends Command
      * Filter out all the queries that are platform specific that
      * Doctrine doens't give us a good way to deal with. This is mostly
      * index lengths that are set in installation that Doctrine doesn't
-     * support
+     * support.
      */
     protected function filterQueries($queries)
     {
-        $returnQueries = array();
-        foreach($queries as $query) {
+        $returnQueries = [];
+        foreach ($queries as $query) {
             $addQuery = true;
             if (preg_match('/drop index.*[Groups|UserBannedIPs|SignupRequests|PagePaths]/i', $query)) {
                 $addQuery = false;
@@ -106,6 +106,7 @@ class CompareSchemaCommand extends Command
                 $returnQueries[] = $query;
             }
         }
+
         return $returnQueries;
     }
 }

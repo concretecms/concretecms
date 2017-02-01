@@ -17,8 +17,8 @@ class GenerateIDESymbolsCommand extends Command
         $this
             ->setName('c5:ide-symbols')
             ->setDescription('Generate IDE symbols')
-            ->addArgument('generate-what', InputArgument::IS_ARRAY, 'Elements to generate [all|ide-classes|phpstorm]', array('all'))
-            ->setHelp(<<<EOT
+            ->addArgument('generate-what', InputArgument::IS_ARRAY, 'Elements to generate [all|ide-classes|phpstorm]', ['all'])
+            ->setHelp(<<<'EOT'
 Returns codes:
   0 operation completed successfully
   1 errors occurred
@@ -62,10 +62,10 @@ EOT
                 unset($what[$p]);
             }
             if (!empty($what)) {
-                throw new Exception('Unrecognized arguments: '.implode(', ', $what));
+                throw new Exception('Unrecognized arguments: ' . implode(', ', $what));
             }
         } catch (Exception $x) {
-            $output->writeln('<error>'.$x->getMessage().'</error>');
+            $output->writeln('<error>' . $x->getMessage() . '</error>');
             $rc = 1;
         }
 
@@ -78,7 +78,7 @@ EOT
         $metadata = $metadataGenerator->render();
         $filename = DIR_BASE . '/concrete/src/Support/.phpstorm.meta.php';
         if (file_put_contents($filename, $metadata) === false) {
-            throw new Exception('Error writing to file "'.$filename.'"');
+            throw new Exception('Error writing to file "' . $filename . '"');
         }
     }
 
@@ -98,7 +98,7 @@ EOT
         );
         $filename = DIR_BASE . '/concrete/src/Support/__IDE_SYMBOLS__.php';
         if (file_put_contents($filename, $symbols) === false) {
-            throw new Exception('Error writing to file "'.$filename.'"');
+            throw new Exception('Error writing to file "' . $filename . '"');
         }
     }
 }

@@ -14,7 +14,7 @@ class ClearCacheCommand extends Command
         $this
             ->setName('c5:clear-cache')
             ->setDescription('Clear the concrete5 cache')
-            ->setHelp(<<<EOT
+            ->setHelp(<<<'EOT'
 Returns codes:
   0 operation completed successfully
   1 errors occurred
@@ -22,7 +22,7 @@ Returns codes:
 More info at http://documentation.concrete5.org/developers/appendix/cli-commands#c5-clear-cache
 EOT
             )
-       ;
+        ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -34,7 +34,7 @@ EOT
             $cms->clearCaches();
             $output->writeln('<info>done.</info>');
         } catch (Exception $x) {
-            $output->writeln('<error>'.$x->getMessage().'</error>');
+            $output->writeln('<error>' . $x->getMessage() . '</error>');
             $rc = 1;
         }
 

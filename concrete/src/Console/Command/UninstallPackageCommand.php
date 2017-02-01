@@ -18,7 +18,7 @@ class UninstallPackageCommand extends Command
             ->addOption('trash', null, InputOption::VALUE_NONE, 'If this option is specified the package directory will be moved to the trash directory')
             ->addArgument('package', InputArgument::REQUIRED, 'The handle of the package to be uninstalled')
             ->setDescription('Uninstall a concrete5 package')
-            ->setHelp(<<<EOT
+            ->setHelp(<<<'EOT'
 Returns codes:
   0 operation completed successfully
   1 errors occurred
@@ -51,8 +51,8 @@ EOT
             $output->write('Checking preconditions... ');
             $test = $pkg->testForUninstall();
             if (is_object($test)) {
-                /**
-                 * @var $test Error
+                /*
+                 * @var Error $test
                  */
                 throw new Exception(implode("\n", $test->getList()));
             }

@@ -19,7 +19,7 @@ class UpdatePackageCommand extends Command
             ->addOption('force', 'f', InputOption::VALUE_NONE, 'Force update even if the package is already at last version')
             ->addArgument('packages', InputArgument::IS_ARRAY, 'The handle of the package to be updated (multiple values allowed)')
             ->setDescription('Update a concrete5 package')
-            ->setHelp(<<<EOT
+            ->setHelp(<<<'EOT'
 Returns codes:
   0 operation completed successfully
   1 errors occurred
@@ -34,7 +34,7 @@ EOT
     {
         $rc = 0;
         try {
-            $updatableHandles = array();
+            $updatableHandles = [];
             $force = $input->getOption('force');
             if ($input->getOption('all')) {
                 if (count($input->getArgument('packages')) > 0) {
@@ -65,12 +65,12 @@ EOT
                 try {
                     $this->updatePackage($updatableHandle, $output, $force);
                 } catch (Exception $x) {
-                    $output->writeln('<error>'.$x->getMessage().'</error>');
+                    $output->writeln('<error>' . $x->getMessage() . '</error>');
                     $rc = 1;
                 }
             }
         } catch (Exception $x) {
-            $output->writeln('<error>'.$x->getMessage().'</error>');
+            $output->writeln('<error>' . $x->getMessage() . '</error>');
             $rc = 1;
         }
 
@@ -105,8 +105,8 @@ EOT
         } else {
             $test = $pkg->testForInstall(false);
             if (is_object($test)) {
-                /**
-                 * @var $test Error
+                /*
+                 * @var Error $test
                  */
                 throw new Exception(implode("\n", $test->getList()));
             }

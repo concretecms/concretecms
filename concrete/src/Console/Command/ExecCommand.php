@@ -33,6 +33,7 @@ EOT
             )
             ;
     }
+
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         try {
@@ -45,7 +46,7 @@ EOT
                 $rc = 0;
             }
         } catch (Exception $x) {
-            $output->writeln('<error>'.$x->getMessage().'</error>');
+            $output->writeln('<error>' . $x->getMessage() . '</error>');
             $rc = 1;
         }
 

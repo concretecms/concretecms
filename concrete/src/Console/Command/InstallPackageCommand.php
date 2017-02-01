@@ -20,7 +20,7 @@ class InstallPackageCommand extends Command
             ->setDescription('Install a concrete5 package')
             ->addArgument('package', InputArgument::REQUIRED, 'The handle of the package to be installed')
             ->addArgument('package-options', InputArgument::IS_ARRAY, 'List of key-value pairs to pass to the package install routine (example: foo=bar baz=foo)')
-            ->setHelp(<<<EOT
+            ->setHelp(<<<'EOT'
 Returns codes:
   0 operation completed successfully
   1 errors occurred
@@ -36,7 +36,7 @@ EOT
         $rc = 0;
         try {
             $pkgHandle = $input->getArgument('package');
-            $packageOptions = array();
+            $packageOptions = [];
             foreach ($input->getArgument('package-options') as $keyValuePair) {
                 list($key, $value) = explode('=', $keyValuePair, 2);
                 $key = trim($key);
@@ -95,14 +95,14 @@ EOT
 
             if ($swapper->allowsFullContentSwap($pkg) && $input->getOption('full-content-swap')) {
                 $output->write('Performing full content swap... ');
-                $swapper->swapContent($pkg, array());
+                $swapper->swapContent($pkg, []);
                 if (method_exists($pkg, 'on_after_swap_content')) {
-                    $pkg->on_after_swap_content(array());
+                    $pkg->on_after_swap_content([]);
                 }
                 $output->writeln('<info>done.</info>');
             }
         } catch (Exception $x) {
-            $output->writeln('<error>'.$x->getMessage().'</error>');
+            $output->writeln('<error>' . $x->getMessage() . '</error>');
             $rc = 1;
         }
 
