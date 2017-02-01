@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Core\Console\Command;
 
-use Symfony\Component\Console\Command\Command;
+use Concrete\Core\Console\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
@@ -15,6 +15,7 @@ class UpdatePackageCommand extends Command
     {
         $this
             ->setName('c5:package-update')
+            ->addEnvOption()
             ->addOption('all', 'a', InputOption::VALUE_NONE, 'Update all the installed packages')
             ->addOption('force', 'f', InputOption::VALUE_NONE, 'Force update even if the package is already at last version')
             ->addArgument('packages', InputArgument::IS_ARRAY, 'The handle of the package to be updated (multiple values allowed)')

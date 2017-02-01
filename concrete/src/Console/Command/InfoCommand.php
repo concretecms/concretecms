@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Core\Console\Command;
 
-use Symfony\Component\Console\Command\Command;
+use Concrete\Core\Console\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Exception;
@@ -15,6 +15,7 @@ class InfoCommand extends Command
         $this
             ->setName('c5:info')
             ->setDescription('Get server and concrete5 detailed informations.')
+            ->addEnvOption()
             ->setHelp(<<<'EOT'
 Returns codes:
   0 operation completed successfully

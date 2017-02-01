@@ -6,7 +6,7 @@ use Concrete\Core\Config\FileSaver;
 use Concrete\Core\Config\FileLoader;
 use Concrete\Core\Config\Repository\Repository;
 use Illuminate\Filesystem\Filesystem;
-use Symfony\Component\Console\Command\Command;
+use Concrete\Core\Console\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
@@ -32,6 +32,7 @@ class ConfigCommand extends Command
             ->addArgument('operation', InputArgument::REQUIRED, 'The operation to accomplish (' . implode('|', $this->getAllowedOperations()) . ')')
             ->addArgument('item', InputArgument::REQUIRED, 'The configuration item (eg: concrete.debug.display_errors)')
             ->addArgument('value', InputArgument::OPTIONAL, 'The new value of the configuration item')
+            ->addEnvOption()
             ->addOption('environment', 'e', InputOption::VALUE_REQUIRED, 'The environment (if not specified, we\'ll work with the configuration item valid for all environments)')
             ->addOption('generated-overrides', 'g', InputOption::VALUE_NONE, 'Set this option to save configurations to the generated_overrides folder')
         ;

@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Core\Console\Command;
 
-use Symfony\Component\Console\Command\Command;
+use Concrete\Core\Console\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
@@ -15,6 +15,7 @@ class UninstallPackageCommand extends Command
     {
         $this
             ->setName('c5:package-uninstall')
+            ->addEnvOption()
             ->addOption('trash', null, InputOption::VALUE_NONE, 'If this option is specified the package directory will be moved to the trash directory')
             ->addArgument('package', InputArgument::REQUIRED, 'The handle of the package to be uninstalled')
             ->setDescription('Uninstall a concrete5 package')

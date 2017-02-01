@@ -6,7 +6,7 @@ use Concrete\Core\Database\DatabaseStructureManager;
 use Concrete\Core\Database\Schema\Schema;
 use Concrete\Core\Foundation\Environment;
 use Doctrine\DBAL\Schema\MySqlSchemaManager;
-use Symfony\Component\Console\Command\Command;
+use Concrete\Core\Console\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Concrete\Core\Support\Facade\Package;
@@ -17,7 +17,9 @@ class CompareSchemaCommand extends Command
     {
         $this
             ->setName('c5:compare-schema')
-            ->setDescription('Compares db.xml in concrete5 XML schema, concrete5 entities, and all installed package schemas and entities with the contents of the database and prints the difference.');
+            ->setDescription('Compares db.xml in concrete5 XML schema, concrete5 entities, and all installed package schemas and entities with the contents of the database and prints the difference.')
+            ->addEnvOption()
+        ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)

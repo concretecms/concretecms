@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Core\Console\Command;
 
-use Symfony\Component\Console\Command\Command;
+use Concrete\Core\Console\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
@@ -55,6 +55,7 @@ EOT
         $this
             ->setName('c5:service')
             ->setDescription('Check or update the web server configuration')
+            ->addEnvOption()
             ->addOption('service-version', 'r', InputOption::VALUE_REQUIRED, 'The specific version of the web server software', '')
             ->addArgument('service', InputArgument::REQUIRED, 'The web server to use (' . implode('|', $serviceHandles) . ')')
             ->addArgument('operation', InputArgument::REQUIRED, 'The operation to perform (check|update)')

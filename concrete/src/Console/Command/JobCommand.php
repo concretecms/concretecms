@@ -5,7 +5,7 @@ use Job;
 use JobSet;
 use RuntimeException;
 use Exception;
-use Symfony\Component\Console\Command\Command;
+use Concrete\Core\Console\Command;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -19,6 +19,7 @@ class JobCommand extends Command
         $this
             ->setName('c5:job')
             ->setDescription(t('Run a concrete5 job'))
+            ->addEnvOption()
             ->addOption('set', null, InputOption::VALUE_NONE, t('Find jobs by set instead of job handle'))
             ->addOption('list', null, InputOption::VALUE_NONE, t('List available jobs'))
             ->addArgument(

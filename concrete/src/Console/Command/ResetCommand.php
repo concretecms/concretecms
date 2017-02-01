@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Core\Console\Command;
 
-use Symfony\Component\Console\Command\Command;
+use Concrete\Core\Console\Command;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -17,6 +17,7 @@ class ResetCommand extends Command
         $this
             ->setName('c5:reset')
             ->setDescription('Reset the concrete5 installation, deleting files and emptying the database')
+            ->addEnvOption()
             ->addOption('force', 'f', InputOption::VALUE_NONE, 'Force the reset')
             ->setHelp(<<<'EOT'
 Returns codes:

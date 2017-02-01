@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Core\Console\Command;
 
-use Symfony\Component\Console\Command\Command;
+use Concrete\Core\Console\Command;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -19,6 +19,7 @@ class TranslatePackageCommand extends Command
         $this
             ->setName('c5:package-translate')
             ->addArgument('package', InputArgument::REQUIRED, 'The handle of the package to be translated (or the path to a directory containing a concrete5 package)')
+            ->addEnvOption()
             ->addOption('locale', 'l', InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 'List of locale codes to handle')
             ->addOption('contact', 'c', InputOption::VALUE_REQUIRED, 'Contact information to be put in the language files to report bugs to (eg the "Report-Msgid-Bugs-To" gettext header)', '')
             ->addOption('translator', 't', InputOption::VALUE_REQUIRED, 'Translator to be put in the language files (eg the "Last-Translator" gettext header)', '')

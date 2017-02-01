@@ -3,7 +3,7 @@ namespace Concrete\Core\Console\Command;
 
 use Concrete\Core\Updater\Update;
 use Doctrine\DBAL\Migrations\OutputWriter;
-use Symfony\Component\Console\Command\Command;
+use Concrete\Core\Console\Command;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\ConsoleOutput;
@@ -19,6 +19,7 @@ class UpdateCommand extends Command
         $this
             ->setName('c5:update')
             ->setDescription('Runs all database migrations to bring the concrete5 installation up to date.')
+            ->addEnvOption()
             ->addOption('force', 'f', InputOption::VALUE_NONE, 'Force the update')
             ->setHelp(<<<'EOT'
 Returns codes:

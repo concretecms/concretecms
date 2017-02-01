@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Core\Console\Command;
 
-use Symfony\Component\Console\Command\Command;
+use Concrete\Core\Console\Command;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -40,6 +40,7 @@ final class PackPackageCommand extends Command
             ->setName('c5:package-pack')
             ->setDescription('Process a package (expand PHP short tags, compile icons and translations, create zip archive)')
             ->addArgument('package', InputArgument::REQUIRED, 'The handle of the package to work on (or the path to a directory containing a concrete5 package)')
+            ->addEnvOption()
             ->addOption('short-tags', 's', InputOption::VALUE_REQUIRED, 'Expand PHP short tags [' . static::SHORTTAGS_ALL . '|' . static::SHORTTAGS_KEEPECHO . '|' . static::SHORTTAGS_NO . ']', static::SHORTTAGS_ALL)
             ->addOption('compile-icons', 'i', InputOption::VALUE_REQUIRED, 'Compile SVG icons to PNG icons [' . static::YNA_YES . '|' . static::YNA_NO . '|' . static::YNA_AUTO . ']?', static::YNA_AUTO)
             ->addOption('compile-translations', 't', InputOption::VALUE_REQUIRED, 'Compile source .po translation files to the .mo binary format [' . static::YNA_YES . '|' . static::YNA_NO . '|' . static::YNA_AUTO . ']?', static::YNA_AUTO)
