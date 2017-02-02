@@ -45,6 +45,7 @@ class DateTime
                 if (is_string($value) && trim($value) !== '') {
                     $h = isset($arr[$field . '_h']) ? (int) $arr[$field . '_h'] : 0;
                     $m = isset($arr[$field . '_m']) ? (int) $arr[$field . '_m'] : 0;
+                    $s = isset($arr[$field . '_s']) ? (int) $arr[$field . '_s'] : 0;
                     if (isset($arr[$field . '_a'])) {
                         if ($arr[$field . '_a'] === 'AM' && $h === 12) {
                             $h = 0;
@@ -52,7 +53,7 @@ class DateTime
                             $h += 12;
                         }
                     }
-                    $value .= ' ' . substr("0$h", -2) . ':' . substr("0$m", -2);
+                    $value .= ' ' . substr("0$h", -2) . ':' . substr("0$m", -2) . ':' . substr("0$s", -2);
                     try {
                         $datetime = new PHPDateTime($value, $dh->getTimezone('user'));
                     } catch (Exception $foo) {
@@ -87,14 +88,20 @@ class DateTime
      * @param bool $includeActivation Set to true to include a checkbox to enable/disable the date/time fields
      * @param bool $calendarAutoStart Set to false to avoid initializing the Javascript calendar
      * @param string $classes A list of space-separated classes to add to the ui-datepicker-div container
+     * @param int $timeResolution The time resolution in seconds (60 means we won't ask seconds)
      *
      * @return string
      */
-    public function datetime($field, $value = null, $includeActivation = false, $calendarAutoStart = true, $classes = null)
+    public function datetime($field, $value = null, $includeActivation = false, $calendarAutoStart = true, $classes = null, $timeResolution = 60)
     {
         $app = Application::getFacadeApplication();
         $dh = $app->make('helper/date');
         /* @var \Concrete\Core\Localization\Service\Date $dh */
+
+        $timeResolution = (int) $timeResolution;
+        if ($timeResolution < 1) {
+            $timeResolution = 60;
+        }
 
         // Calculate the field names
         if (substr($field, -1) === ']') {
@@ -103,6 +110,7 @@ class DateTime
             $fieldDate = $prefix . '_dt]';
             $fieldHours = $prefix . '_h]';
             $fieldMinutes = $prefix . '_m]';
+            $fieldSeconds = $prefix . '_s]';
             $fieldAMPM = $prefix . '_a]';
         } else {
             $checkPostField = $field;
@@ -111,6 +119,7 @@ class DateTime
             $fieldDate = $field . '_dt';
             $fieldHours = $field . '_h';
             $fieldMinutes = $field . '_m';
+            $fieldSeconds = $field . '_s';
             $fieldAMPM = $field . '_a';
         }
         $id = trim(preg_replace('/[^0-9A-Za-z-]+/', '_', $field), '_');
@@ -141,9 +150,11 @@ class DateTime
             $now = new PHPDateTime('now', $dh->getTimezone('user'));
             $timeHour = (int) $now->format('G');
             $timeMinute = (int) $now->format('i');
+            $timeSecond = (int) $now->format('s');
         } else {
             $timeHour = (int) $dateTime->format('G');
             $timeMinute = (int) $dateTime->format('i');
+            $timeSecond = (int) $dateTime->format('s');
         }
         if ($timeFormat === 12) {
             $timeAMPM = ($timeHour < 12) ? 'AM' : 'PM';
@@ -151,6 +162,21 @@ class DateTime
             if ($timeHour === 0) {
                 $timeHour = 12;
             }
+        }
+
+        // Split the time resolution
+        $tr = $timeResolution;
+        $stepSeconds = $tr % 60;
+        $tr = (int) (($tr - $stepSeconds) / 60);
+        $stepMinutes = $tr % 60;
+        $tr = (int) (($tr - $stepMinutes) / 60);
+        $stepHours = $tr;
+
+        if ($stepSeconds !== 0 && $stepMinutes === 0) {
+            $stepMinutes = 1;
+        }
+        if ($stepHours === 0) {
+            $stepHours = 1;
         }
 
         // Build HTML
@@ -182,7 +208,12 @@ class DateTime
         $html .= '<select class="form-control" id="' . $id . '_h" name="' . $fieldHours . '"' . $disabled . '>';
         $hourStart = ($timeFormat === 12) ? 1 : 0;
         $hourEnd = ($timeFormat === 12) ? 12 : 23;
-        for ($i = $hourStart; $i <= $hourEnd; ++$i) {
+        $hourList = [];
+        for ($i = $hourStart; $i <= $hourEnd; $i += $stepHours) {
+            $hoursList[] = $i;
+        }
+        $timeHour = $this->selectNearestValue($hoursList, $timeHour);
+        foreach ($hoursList as $i) {
             $html .= '<option value="' . $i . '"';
             if ($i === $timeHour) {
                 $html .= ' selected="selected"';
@@ -190,35 +221,59 @@ class DateTime
             $html .= '>' . $i . '</option>';
         }
         $html .= '</select>';
-        $html .= '<span class="separator">:</span>';
-        $html .= '<select class="form-control"  id="' . $id . '_m" name="' . $fieldMinutes . '"' . $disabled . '>';
-        for ($i = 0; $i < 60; ++$i) {
-            $html .= '<option value="' . sprintf('%02d', $i) . '"';
-            if ($i === $timeMinute) {
-                $html .= ' selected="selected"';
+        if ($stepMinutes !== 0) {
+            $html .= '<span class="separator">:</span>';
+            $html .= '<select class="form-control"  id="' . $id . '_m" name="' . $fieldMinutes . '"' . $disabled . '>';
+            $minutesList = [];
+            for ($i = 0; $i < 60; $i += $stepMinutes) {
+                $minutesList[] = $i;
             }
-            $html .= '>' . sprintf('%02d', $i) . '</option>';
-        }
-        $html .= '</select>';
-        if ($timeFormat === 12) {
-            $html .= '<select class="form-control" id="' . $id . '_a" name="' . $fieldAMPM . '"' . $disabled . '>';
-            $html .= '<option value="AM"';
-            if ($timeAMPM === 'AM') {
-                $html .= ' selected="selected"';
+            $timeMinute = $this->selectNearestValue($minutesList, $timeMinute);
+            foreach ($minutesList as $i) {
+                $html .= '<option value="' . sprintf('%02d', $i) . '"';
+                if ($i === $timeMinute) {
+                    $html .= ' selected="selected"';
+                }
+                $html .= '>' . sprintf('%02d', $i) . '</option>';
             }
-            $html .= '>';
-            // This prints out the translation of "AM" in the current language
-            $html .= $dh->date('A', mktime(1), 'system');
-            $html .= '</option>';
-            $html .= '<option value="PM"';
-            if ($timeAMPM === 'PM') {
-                $html .= ' selected="selected"';
-            }
-            $html .= '>';
-            // This prints out the translation of "PM" in the current language
-            $html .= $dh->date('A', mktime(13), 'system');
-            $html .= '</option>';
             $html .= '</select>';
+            if ($timeFormat === 12) {
+                $html .= '<select class="form-control" id="' . $id . '_a" name="' . $fieldAMPM . '"' . $disabled . '>';
+                $html .= '<option value="AM"';
+                if ($timeAMPM === 'AM') {
+                    $html .= ' selected="selected"';
+                }
+                $html .= '>';
+                // This prints out the translation of "AM" in the current language
+                $html .= $dh->date('A', mktime(1), 'system');
+                $html .= '</option>';
+                $html .= '<option value="PM"';
+                if ($timeAMPM === 'PM') {
+                    $html .= ' selected="selected"';
+                }
+                $html .= '>';
+                // This prints out the translation of "PM" in the current language
+                $html .= $dh->date('A', mktime(13), 'system');
+                $html .= '</option>';
+                $html .= '</select>';
+            }
+            if ($stepSeconds !== 0) {
+                $html .= '<span class="separator">:</span>';
+                $html .= '<select class="form-control"  id="' . $id . '_s" name="' . $fieldSeconds . '"' . $disabled . '>';
+                $secondsList = [];
+                for ($i = 0; $i < 60; $i += $stepSeconds) {
+                    $secondsList[] = $i;
+                }
+                $timeSecond = $this->selectNearestValue($secondsList, $timeSecond);
+                foreach ($secondsList as $i) {
+                    $html .= '<option value="' . sprintf('%02d', $i) . '"';
+                    if ($i === $timeSecond) {
+                        $html .= ' selected="selected"';
+                    }
+                    $html .= '>' . sprintf('%02d', $i) . '</option>';
+                }
+                $html .= '</select>';
+            }
         }
         $html .= '</span>';
         $html .= '</div>';
@@ -282,7 +337,7 @@ EOT;
      * Creates form fields and JavaScript calendar includes for a particular item but includes only calendar controls (no time, so no time-zone conversions will be applied).
      *
      * @param string $field The field name (will be used as $field parameter in the translate method)
-     * @param \DateTime|string $value The initial value (set to null for no value, empty string for the current date)
+     * @param \DateTime|string $value The initial value
      * @param bool $calendarAutoStart Set to false to avoid initializing the Javascript calendar
      */
     public function date($field, $value = null, $calendarAutoStart = true)
@@ -310,8 +365,6 @@ EOT;
                 } catch (Exception $x) {
                 }
             }
-        } elseif ($value !== '') {
-            $dateTime = new PHPDateTime('now', $dh->getTimezone('user'));
         }
 
         // Build HTML
@@ -357,5 +410,35 @@ EOT;
         }
 
         return $html;
+    }
+
+    /**
+     * Choose an array value nearest to a specified value.
+     * Useful when we work with time resolutions.
+     *
+     * @param int $values
+     * @param int $wantedValue
+     *
+     * @return int
+     *
+     * @example If the current time is 10 and the time resolution is 15, we have an array of values of [0, 15, 30, 45]: the closest value is 15.
+     */
+    protected function selectNearestValue(array $values, $wantedValue)
+    {
+        if (in_array($wantedValue, $values)) {
+            $result = $wantedValue;
+        } else {
+            $result = null;
+            $minDelta = PHP_INT_MAX;
+            foreach ($values as $value) {
+                $delta = abs($value - $wantedValue);
+                if ($delta < $minDelta) {
+                    $minDelta = $delta;
+                    $result = $value;
+                }
+            }
+        }
+
+        return $result;
     }
 }
