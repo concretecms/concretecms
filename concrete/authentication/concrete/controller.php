@@ -342,7 +342,7 @@ class Controller extends AuthenticationTypeController
                 case USER_INVALID:
                     // Log failed auth
                     $ip_service->logSignupRequest();
-                    if ($ip_service->signupRequestThreshholdReached()) {
+                    if ($ip_service->signupRequestThresholdReached()) {
                         $ip_service->createIPBan();
                         throw new \Exception($ip_service->getErrorMessage());
                     }
