@@ -22,12 +22,6 @@
     }
   },
   "bin": [ "bin/concrete5" ],
-  "repositories": [
-    {
-      "type": "vcs",
-      "url": "https://github.com/concrete5/less.php"
-    }
-  ],
   "require": {
     "php": ">=5.5.9",
     "doctrine/dbal": "2.*",
@@ -43,7 +37,7 @@
     "illuminate/container": "5.2.*",
     "illuminate/config": "4.*",
     "patchwork/utf8": "1.*",
-    "oyejorge/less.php": "v1.*",
+    "concrete5/less.php": "v1.7.0.11",
     "imagine/imagine": "0.6.*",
     "natxet/cssmin": "3.*",
     "tedivm/jshrink": "1.*",
