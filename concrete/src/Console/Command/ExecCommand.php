@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Core\Console\Command;
 
-use Symfony\Component\Console\Command\Command;
+use Concrete\Core\Console\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputArgument;
@@ -14,6 +14,7 @@ class ExecCommand extends Command
         $this
             ->setName('c5:exec')
             ->setDescription('Execute a PHP script within the concrete5 environment')
+            ->addEnvOption()
             ->addArgument('script', InputArgument::REQUIRED, 'The path of the script to be executed')
             ->addArgument('arguments', InputArgument::IS_ARRAY, 'The arguments to pass to the script')
         ->setHelp(<<<EOT
@@ -33,6 +34,7 @@ EOT
             )
             ;
     }
+
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         try {
@@ -45,7 +47,7 @@ EOT
                 $rc = 0;
             }
         } catch (Exception $x) {
-            $output->writeln('<error>'.$x->getMessage().'</error>');
+            $output->writeln('<error>' . $x->getMessage() . '</error>');
             $rc = 1;
         }
 
