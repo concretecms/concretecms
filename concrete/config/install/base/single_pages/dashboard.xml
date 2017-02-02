@@ -692,6 +692,17 @@
                 </attributekey>
             </attributes>
         </page>
+        <page name="Thumbnail Options" path="/dashboard/system/files/thumbnails/options"
+              filename="/dashboard/system/files/thumbnails/options.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="exclude_nav">
+                    <value>1</value>
+                </attributekey>
+                <attributekey handle="meta_keywords">
+                    <value>thumbnail, format, png, jpg, jpeg, quality, compression, gd, imagick, imagemagick, transparency</value>
+                </attributekey>
+            </attributes>
+        </page>
         <page name="Image Uploading" path="/dashboard/system/files/image_uploading"
               filename="/dashboard/system/files/image_uploading.php" pagetype="" description="" package="">
             <attributes>

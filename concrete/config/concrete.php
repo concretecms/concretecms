@@ -8,7 +8,7 @@ return [
      */
     'version' => '8.1.0',
     'version_installed' => '8.1.0',
-    'version_db' => '20170123000000', // the key of the latest database migration
+    'version_db' => '20170131000000', // the key of the latest database migration
 
     /*
      * Installation status
@@ -425,7 +425,18 @@ return [
         'page_search_index_lifetime' => 259200,
         'enable_trash_can' => true,
         'app_version_display_in_header' => true,
+        /*
+         * The JPEG compression level (in range 0... 100)
+         */
         'default_jpeg_image_compression' => 80,
+        /*
+         * The PNG compression level (in range 0... 9)
+         */
+        'default_png_image_compression' => 9,
+        /*
+         * The default thumbnail format: jpeg, png, auto (if auto: we'll create a jpeg if the source image is jpeg, we'll create a png otherwise).
+         */
+        'default_thumbnail_format' => 'auto',
         'help_overlay' => true,
         'require_version_comments' => false,
     ],
@@ -700,7 +711,6 @@ return [
             'throttle_max' => 20,
             'throttle_max_timespan' => 15, // minutes
         ],
-
     ],
 
     /*
