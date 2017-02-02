@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\Http\Middleware;
 
 use Concrete\Core\Application\ApplicationAwareInterface;
@@ -21,8 +22,6 @@ use Symfony\Component\HttpFoundation\Request;
  * This middleware requires the following to be defined on the Application:
  * "database" DatabaseManager
  * "BasicThumbnailer::class" Basic thumbnailer
- *
- * @package Concrete\Core\Http\Middleware
  */
 class ThumbnailMiddleware implements MiddlewareInterface, ApplicationAwareInterface
 {
@@ -52,7 +51,7 @@ class ThumbnailMiddleware implements MiddlewareInterface, ApplicationAwareInterf
      * Process the request and return a response.
      *
      * @param \Symfony\Component\HttpFoundation\Request $request
-     * @param DelegateInterface $frame
+     * @param DelegateInterface                         $frame
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -87,8 +86,9 @@ class ThumbnailMiddleware implements MiddlewareInterface, ApplicationAwareInterf
     }
 
     /**
-     * Generate thumbnails and and manage db update
-     * @param array[] $paths
+     * Generate thumbnails and and manage db update.
+     *
+     * @param array[]                                       $paths
      * @param \Concrete\Core\Database\Connection\Connection $database
      */
     private function generateThumbnails($paths, Connection $database)
@@ -108,35 +108,43 @@ class ThumbnailMiddleware implements MiddlewareInterface, ApplicationAwareInterf
     }
 
     /**
-     * Try building an unbuild thumbnail
+     * Try building an unbuild thumbnail.
+     *
      * @param \Concrete\Core\Entity\File\File $file
-     * @param array $thumbnail
+     * @param array                           $thumbnail
+     *
      * @return bool
      */
     private function attemptBuild(File $file, array $thumbnail)
     {
-        // If the file is already built, return early
-        if ($this->isBuilt($file, $thumbnail)) {
-            $this->completeBuild($file, $thumbnail);
-            return true;
-        }
+        try {
+            // If the file is already built, return early
+            if ($this->isBuilt($file, $thumbnail)) {
+                return true;
+            }
 
-        // Otherwise lets attempt to build it
-        if ($dimensions = $this->getDimensions($thumbnail)) {
-            list($width, $height, $crop) = $dimensions;
+            // Otherwise lets attempt to build it
+            if ($dimensions = $this->getDimensions($thumbnail)) {
+                list($width, $height, $crop) = $dimensions;
 
-            $this->getThumbnailer()->getThumbnail($file, $width, $height, (bool)$crop);
-        } elseif ($type = Version::getByHandle($thumbnail['thumbnailTypeHandle'])) {
-            // This is a predefined thumbnail type, lets just call the version->rescan
-            $file->getVersion($thumbnail['fileVersionID'])->generateThumbnail($type);
+                $this->getThumbnailer()->getThumbnail($file, $width, $height, (bool) $crop);
+            } elseif ($type = Version::getByHandle($thumbnail['thumbnailTypeHandle'])) {
+                // This is a predefined thumbnail type, lets just call the version->rescan
+                $file->getVersion($thumbnail['fileVersionID'])->generateThumbnail($type);
+            }
+        } catch (\Exception $e) {
+            // Catch any exceptions so we don't break the page and return false
+            return false;
         }
 
         return $this->isBuilt($file, $thumbnail);
     }
 
     /**
-     * Get the dimensions out of a thumbnail array
+     * Get the dimensions out of a thumbnail array.
+     *
      * @param array $thumbnail
+     *
      * @return array [ width, height, crop ]
      */
     private function getDimensions($thumbnail)
@@ -149,7 +157,8 @@ class ThumbnailMiddleware implements MiddlewareInterface, ApplicationAwareInterf
 
     /**
      * @param \Concrete\Core\Entity\File\File $file
-     * @param array $thumbnail
+     * @param array                           $thumbnail
+     *
      * @return bool
      */
     private function isBuilt(File $file, $thumbnail)
@@ -181,7 +190,7 @@ class ThumbnailMiddleware implements MiddlewareInterface, ApplicationAwareInterf
             }
         }
 
-        return null;
+        return;
     }
 
     /**
@@ -192,6 +201,7 @@ class ThumbnailMiddleware implements MiddlewareInterface, ApplicationAwareInterf
         if (!$this->thumbnailer) {
             $this->thumbnailer = $this->app->make(BasicThumbnailer::class);
         }
+
         return $this->thumbnailer;
     }
 
@@ -203,6 +213,7 @@ class ThumbnailMiddleware implements MiddlewareInterface, ApplicationAwareInterf
         if (!$this->entityManager) {
             $this->entityManager = $this->app->make(EntityManagerInterface::class);
         }
+
         return $this->entityManager;
     }
 
@@ -214,33 +225,35 @@ class ThumbnailMiddleware implements MiddlewareInterface, ApplicationAwareInterf
         if (!$this->connection) {
             $this->connection = $this->app->make(Connection::class);
         }
+
         return $this->connection;
     }
 
     /**
-     * Mark the build complete
+     * Mark the build complete.
+     *
      * @param $file
      * @param $thumbnail
      */
     private function completeBuild(File $file, $thumbnail)
     {
         // Update the database to have "1" for isBuilt
-        $this->connection->update('FileImageThumbnailPaths', ['isBuilt' => "1"], $thumbnail);
+        $this->connection->update('FileImageThumbnailPaths', ['isBuilt' => '1'], $thumbnail);
     }
 
     /**
-     * Mark the build failed
+     * Mark the build failed.
+     *
      * @param \Concrete\Core\Entity\File\File $file
      * @param $thumbnail
      */
     private function failBuild(File $file, $thumbnail)
     {
         $this->app->make(LoggerInterface::class)
-            ->critical('Failed to generate or locate the thumbnail for file "' . $file->getFileID() . '"');
+            ->critical('Failed to generate or locate the thumbnail for file "'.$file->getFileID().'"');
 
         // Complete the build anyway.
         // Cache must be cleared to remove this and attempt rebuild
         $this->completeBuild($file, $thumbnail);
     }
-
 }
