@@ -6,15 +6,18 @@ use Concrete\Core\Http\Middleware\DelegateInterface;
 use Concrete\Core\Http\Middleware\MiddlewareDelegate;
 use Concrete\Core\Http\Middleware\MiddlewareStack;
 use Concrete\Core\Http\Middleware\StackInterface;
+use Zend\Http\Client as HttpClient;
+use Zend\Http\Client\Adapter\Curl as CurlHttpAdapter;
+use Zend\Http\Client\Adapter\Proxy as SocketHttpAdapter;
 
 class HttpServiceProvider extends ServiceProvider
 {
     public function register()
     {
-        $singletons = array(
+        $singletons = [
             'helper/ajax' => '\Concrete\Core\Http\Service\Ajax',
             'helper/json' => '\Concrete\Core\Http\Service\Json',
-        );
+        ];
 
         foreach ($singletons as $key => $value) {
             $this->app->singleton($key, $value);
@@ -27,7 +30,7 @@ class HttpServiceProvider extends ServiceProvider
         $this->app->bind(StackInterface::class, MiddlewareStack::class);
         $this->app->bind(DelegateInterface::class, MiddlewareDelegate::class);
         $this->app->bind(DispatcherInterface::class, DefaultDispatcher::class);
-        $this->app->singleton(ServerInterface::class, function($app) {
+        $this->app->singleton(ServerInterface::class, function ($app) {
             $server = $app->build(DefaultServer::class);
 
             $config = $app['config'];
@@ -44,6 +47,26 @@ class HttpServiceProvider extends ServiceProvider
 
         // Response Factory
         $this->app->bind(ResponseFactoryInterface::class, ResponseFactory::class);
-    }
 
+        // HTTP Client
+        $this->app->singleton(HttpClientFactory::class);
+
+        $this->app->bind(HttpClient::class, function ($app) {
+            $factory = $app->make(HttpClientFactory::class);
+
+            return $factory->createFromConfig($app->make('config'));
+        });
+        $this->app->alias(HttpClient::class, 'http/client');
+
+        $this->app->bind('http/client/curl', function ($app) {
+            $factory = $app->make(HttpClientFactory::class);
+
+            return $factory->createFromConfig($app->make('config'), CurlHttpAdapter::class);
+        });
+        $this->app->bind('http/client/socket', function ($app) {
+            $factory = $app->make(HttpClientFactory::class);
+
+            return $factory->createFromConfig($app->make('config'), SocketHttpAdapter::class);
+        });
+    }
 }
