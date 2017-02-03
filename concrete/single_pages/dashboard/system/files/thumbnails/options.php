@@ -63,12 +63,12 @@ defined('C5_EXECUTE') or die('Access Denied.');
     </div>
 
 	<div class="form-group">
-		<?= $form->label('jpeg_compression', t('JPEG compression level'), ['class' => 'launch-tooltip control-label', 'title' => 'JPEG compression level ranges from 0 (worst quality, smaller file) to 100 (best quality, biggest file)']) ?>
+		<?= $form->label('jpeg_compression', t('JPEG compression level'), ['class' => 'launch-tooltip control-label', 'title' => t('JPEG compression level ranges from 0 (worst quality, smaller file) to 100 (best quality, biggest file)')]) ?>
     	<?= $form->number('jpeg_compression', $jpeg_compression, ['required' => 'required', 'min' => '0', 'max' => '100']) ?>
 	</div>
 
     <div class="form-group">
-        <?= $form->label('png_compression', t('PNG compression quality'), ['class' => 'launch-tooltip control-label', 'title' => 'PNG compression quality ranges from 0 (no compression) to 9 (maximum compression)']) ?>
+        <?= $form->label('png_compression', t('PNG compression quality'), ['class' => 'launch-tooltip control-label', 'title' => t('PNG compression quality ranges from 0 (no compression) to 9 (maximum compression)')]) ?>
         <?= $form->number('png_compression', $png_compression, ['required' => 'required', 'min' => '0', 'max' => '9']) ?>
     </div>
 
