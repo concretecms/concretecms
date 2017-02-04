@@ -44,7 +44,6 @@ class Controller extends BlockController
     {
         $this->requireAsset('core/file-manager');
         $this->requireAsset('core/sitemap');
-        $this->requireAsset('redactor');
     }
 
     public function edit()
