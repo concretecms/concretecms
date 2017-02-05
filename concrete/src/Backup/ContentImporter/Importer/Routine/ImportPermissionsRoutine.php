@@ -37,9 +37,12 @@ class ImportPermissionsRoutine extends AbstractRoutine
                             /*
                              * Legacy
                              */
-                            $g = Group::getByName($ch['name']);
+                            $g = Group::getByName(tc("GroupName", $ch['name']));
                             if (!is_object($g)) {
-                                $g = Group::add($g['name'], $g['description']);
+                                $g = Group::add(
+                                    tc("GroupName",        $ch['name']),
+                                    tc("GroupDescription", $ch['description'])
+                                );
                             }
                             $pae = GroupEntity::getOrCreate($g);
                             $assignments[] = $pae;
