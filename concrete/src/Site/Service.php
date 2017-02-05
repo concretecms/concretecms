@@ -178,7 +178,11 @@ class Service
         $type = $service->getDefault();
         $site->setType($type);
 
+        $localeService = new \Concrete\Core\Localization\Locale\Service($this->entityManager);
+        $localeService->updatePluralSettings($locale);
+
         $this->entityManager->persist($site);
+        $this->entityManager->persist($locale);
         $this->entityManager->flush();
 
         return $site;
