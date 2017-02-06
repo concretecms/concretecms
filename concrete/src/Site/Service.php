@@ -80,6 +80,9 @@ class Service
         $locale->setLanguage($data[0]);
         $locale->setCountry($data[1]);
 
+        $localeService = new \Concrete\Core\Localization\Locale\Service($this->entityManager);
+        $localeService->updatePluralSettings($locale);
+
         $this->entityManager->persist($locale);
         $this->entityManager->flush();
 
