@@ -152,6 +152,10 @@
                         if (typeof this.styles !== 'undefined') {
                             style.styles = this.styles;
                         }
+                        if (this.type === 'widget' && typeof this.widget !== 'undefined') {
+                            style.type = 'widget';
+                            style.widget = this.widget;
+                        }
                         additionalStyles.push(style);
                     });
                     editor.fire('stylesSet', {styles: additionalStyles});
