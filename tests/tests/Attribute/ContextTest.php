@@ -7,7 +7,7 @@ class ContextText extends PHPUnit_Framework_TestCase
     {
         $context = new \Concrete\Core\Attribute\Context\AttributePanelContext();
         $this->assertEquals(2, count($context->getActions()));
-        $this->assertEquals(2, count($context->getTemplates()));
+        $this->assertEquals(2, count($context->getControlTemplates()));
     }
 
     protected function getKey($controller, $key_type, $atHandle)

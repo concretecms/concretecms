@@ -2,6 +2,7 @@
 namespace Concrete\Core\Entity\Attribute\Key;
 
 use Concrete\Core\Attribute\AttributeKeyInterface;
+use Concrete\Core\Attribute\Context\ContextInterface;
 use Concrete\Core\Attribute\Key\SearchIndexer\StandardSearchIndexer;
 use Concrete\Core\Attribute\Type;
 use Concrete\Core\Entity\Attribute\Category;
@@ -249,6 +250,11 @@ class Key implements AttributeKeyInterface, ExportableInterface
     public function getExporter()
     {
         return new AttributeKey();
+    }
+
+    public function getFormView(ContextInterface $context)
+    {
+        return $this->getController()->getFormView($context);
     }
 
     /**

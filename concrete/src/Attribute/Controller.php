@@ -1,6 +1,9 @@
 <?php
 namespace Concrete\Core\Attribute;
 
+use Concrete\Core\Attribute\Context\ContextInterface;
+use Concrete\Core\Attribute\Context\FormContextInterface;
+use Concrete\Core\Attribute\Form\FormView;
 use Concrete\Core\Attribute\Value\EmptyRequestAttributeValue;
 use Concrete\Core\Controller\AbstractController;
 use Concrete\Core\Entity\Attribute\Key\Settings\EmptySettings;
@@ -118,6 +121,16 @@ class Controller extends AbstractController
     public function field($fieldName)
     {
         return 'akID[' . $this->attributeKey->getAttributeKeyID() . '][' . $fieldName . ']';
+    }
+
+    /**
+     * @param FormContextInterface $context
+     * @return FormView
+     */
+    public function getFormView(FormContextInterface $context)
+    {
+        $view = $context->getFormView();
+        return $view;
     }
 
     public function label($customText = false)

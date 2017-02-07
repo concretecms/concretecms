@@ -2,8 +2,12 @@
 namespace Concrete\Attribute\Address;
 
 use Concrete\Core\Attribute\Context\BasicFormContext;
+use Concrete\Core\Attribute\Context\ComposerContext;
+use Concrete\Core\Attribute\Context\FormContext;
+use Concrete\Core\Attribute\Context\FormContextInterface;
 use Concrete\Core\Attribute\Controller as AttributeTypeController;
 use Concrete\Core\Attribute\FontAwesomeIconFormatter;
+use Concrete\Core\Attribute\Form\ComposerFormView;
 use Concrete\Core\Entity\Attribute\Key\Settings\AddressSettings;
 use Concrete\Core\Entity\Attribute\Value\Value\AddressValue;
 use Core;
@@ -30,6 +34,16 @@ class Controller extends AttributeTypeController
             $queryBuilder->expr()->like("ak_{$h}_postal_code", ':keywords'),
             $queryBuilder->expr()->like("ak_{$h}_country", ':keywords')
         );
+    }
+
+    public function getFormView(FormContext $context)
+    {
+        /**
+         * @var $view ComposerFormView
+         */
+        $view = parent::getFormView($context);
+        $view->enableGroupedTemplate();
+        return $view;
     }
 
     public function getAttributeValueClass()

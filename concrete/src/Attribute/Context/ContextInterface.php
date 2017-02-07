@@ -5,6 +5,6 @@ interface ContextInterface
 {
 
     function getActions();
-    function getTemplates();
+    function getControlTemplates();
 
 }

@@ -1,0 +1,15 @@
+<?php
+defined('C5_EXECUTE') or die("Access Denied.");
+?>
+
+<fieldset>
+    <?php if ($view->supportsLabel()) { ?>
+        <legend class="control-label"><?=$view->getLabel()?></legend>
+    <?php } ?>
+
+    <?php if ($view->getTooltip()): ?>
+        <i class="fa fa-question-circle launch-tooltip" title="" data-original-title="<?=$view->getTooltip()?>"></i>
+    <?php endif; ?>
+
+    <?php $view->renderControl()?>
+</fieldset>

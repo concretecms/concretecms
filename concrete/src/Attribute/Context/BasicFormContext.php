@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Core\Attribute\Context;
 
-class BasicFormContext extends Context
+class BasicFormContext extends FormContext
 {
 
     public function __construct()
