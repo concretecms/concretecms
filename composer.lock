@@ -1925,7 +1925,7 @@
                     "name": "Michele Locati",
                     "email": "mlocati@gmail.com",
                     "homepage": "https://github.com/mlocati",
-                    "role": "Developer"
+                    "role": "developer"
                 }
             ],
             "description": "Library to handle concrete5 core and package translations",
@@ -2612,16 +2612,16 @@
         },
         {
             "name": "punic/punic",
-            "version": "1.6.4",
+            "version": "1.6.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/punic/punic.git",
-                "reference": "c6a779cb0349948f093d40b9f6a4fe5c6f8a6a36"
+                "reference": "7bc85ce1137cf52db4d2a6298256a4c4a24da99a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/punic/punic/zipball/c6a779cb0349948f093d40b9f6a4fe5c6f8a6a36",
-                "reference": "c6a779cb0349948f093d40b9f6a4fe5c6f8a6a36",
+                "url": "https://api.github.com/repos/punic/punic/zipball/7bc85ce1137cf52db4d2a6298256a4c4a24da99a",
+                "reference": "7bc85ce1137cf52db4d2a6298256a4c4a24da99a",
                 "shasum": ""
             },
             "require": {
@@ -2673,7 +2673,7 @@
                 "translations",
                 "unicode"
             ],
-            "time": "2016-11-21T19:58:31+00:00"
+            "time": "2017-02-03T16:13:09+00:00"
         },
         {
             "name": "sunra/php-simple-html-dom-parser",
