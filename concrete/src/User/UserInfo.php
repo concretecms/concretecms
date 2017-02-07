@@ -845,8 +845,6 @@ class UserInfo extends Object implements AttributeObjectInterface, PermissionObj
 
             return $attributeValue;
         }
-
-        return false;
     }
 
     /**

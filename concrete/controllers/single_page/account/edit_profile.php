@@ -17,13 +17,11 @@ class EditProfile extends AccountPageController
 {
     public function view()
     {
-        $u = new User();
-        $profile = UserInfo::getByID($u->getUserID());
-        if (is_object($profile)) {
-            $this->set('profile', $profile);
-        } else {
+        $profile = $this->get('profile');
+        if (!is_object($profile)) {
             throw new Exception(t('You must be logged in to access this page.'));
         }
+
         $locales = array();
         $languages = Localization::getAvailableInterfaceLanguages();
         if (count($languages) > 0) {
