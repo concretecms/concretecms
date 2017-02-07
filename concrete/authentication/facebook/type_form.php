@@ -1,5 +1,12 @@
 <?php defined('C5_EXECUTE') or die('Access denied.'); ?>
 
+<div class="alert alert-info">
+    <h4><?php echo t('Facebook Login Configuration'); ?></h4>
+    <p><?php echo t('<a href="%s" target="_blank">Click here</a> to obtain your access keys.', 'https://developers.facebook.com/apps/'); ?></p>
+    <p><?php echo t('Add the "Facebook Login" product to a Facebook app.'); ?></p>
+    <p><?php echo t('Set the "Valid OAuth redirect URIs" to: %s', ' <code>'.URL::to('/ccm/system/authentication/oauth2/facebook/callback').'</code>'); ?></p>
+</div>
+
 <div class='form-group'>
     <?=$form->label('apikey', t('App ID'))?>
     <?=$form->text('apikey', $apikey)?>
@@ -15,11 +22,10 @@
 </div>
 <div class='form-group'>
     <div class="input-group">
-        <label type="checkbox">
-            <input type="checkbox" name="registration_enabled" value="1" <?= \Config::get('auth.facebook.registration.enabled', false) ? 'checked' : '' ?>>
+        <label>
+            <input type="checkbox" name="registration_enabled" value="1" <?= Config::get('auth.facebook.registration.enabled', false) ? 'checked' : '' ?>>
             <span style="font-weight:normal"><?= t('Allow automatic registration') ?></span>
         </label>
-        </span>
     </div>
 </div>
 <div class='form-group registration-group'>
@@ -27,11 +33,11 @@
     <select name="registration_group" class="form-control">
         <option value="0"><?= t("None") ?></option>
         <?php
-        /** @var \Group $group */
+        /** @var Group $group */
         foreach ($groups as $group) {
             ?>
             <option value="<?= $group->getGroupID() ?>" <?= intval($group->getGroupID(), 10) === intval(
-                \Config::get('auth.facebook.registration.group', false),
+                Config::get('auth.facebook.registration.group', false),
                 10) ? 'selected' : '' ?>>
                 <?= $group->getGroupDisplayName(false) ?>
             </option>
@@ -40,10 +46,6 @@
         }
         ?>
     </select>
-</div>
-
-<div class="alert alert-info">
-    <?php echo t('<a href="%s" target="_blank">Click here</a> to obtain your access keys.', 'https://developers.facebook.com/apps/'); ?>
 </div>
 
 <script type="text/javascript">
