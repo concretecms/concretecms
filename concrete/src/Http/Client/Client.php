@@ -4,8 +4,10 @@ namespace Concrete\Core\Http\Client;
 use Zend\Http\Client as ZendClient;
 use Zend\Http\Request as ZendRequest;
 use Zend\Uri\Http as ZendUriHttp;
+use Psr\Log\LoggerAwareInterface;
+use Psr\Log\LoggerInterface;
 
-class Client extends ZendClient
+class Client extends ZendClient implements LoggerAwareInterface
 {
     /**
      * @var LoggerInterface|null
@@ -46,7 +48,21 @@ class Client extends ZendClient
         $response = parent::send($request);
         $logger = $this->getLogger();
         if ($logger !== null) {
-            $logger->logResponse($response->getStatusCode(), $response->getHeaders()->toArray(), $response->getBody());
+            $statusCode = $response->getStatusCode();
+            $body = $response->getBody();
+            if (mb_strlen($body) <= 200) {
+                $shortBody = $body;
+            } else {
+                $shortBody = mb_substr($body, 0, 197) . '...';
+            }
+            $logger->debug(
+                "The response code was $statusCode and the body was $shortBody",
+                [
+                    'statusCode' => $statusCode,
+                    'headers' => $response->getHeaders()->toArray(),
+                    'body' => $body,
+                ]
+            );
         }
 
         return $response;
@@ -61,7 +77,21 @@ class Client extends ZendClient
     {
         $logger = $this->getLogger();
         if ($logger !== null) {
-            $logger->logRequest((string) $uri, $method, is_array($headers) ? $headers : (array) $headers, $body);
+            $uriString = (string) $uri;
+            if (mb_strlen($body) <= 200) {
+                $shortBody = (string) $body;
+            } else {
+                $shortBody = mb_substr($body, 0, 197) . '...';
+            }
+            $logger->debug(
+                "Sending $method request to $uriString" . ($shortBody === '' ? '' : " with body $shortBody"),
+                [
+                    'uri' => $uriString,
+                    'method' => $method,
+                    'headers' => is_array($headers) ? $headers : (array) $headers,
+                    'body' => $body,
+                ]
+            );
         }
 
         return parent::doRequest($uri, $method, $secure, $headers, $body);

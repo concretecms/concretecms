@@ -1336,7 +1336,7 @@ return [
         'sslallowselfsigned' => false,
         // Whether to use persistent TCP connections (applicable only to Socket adapters).
         'persistent' => false,
-        // The name of a class that implements Concrete\Core\Http\Client\LoggerInterface
+        // The name of a class that implements Psr\Log\LoggerInterface
         'logger' => null,
     ],
 
