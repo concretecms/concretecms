@@ -1,9 +1,7 @@
 <?php
 namespace Concrete\Core\Attribute\Form\Control;
 
-use Concrete\Core\Attribute\Context\ComposerContext;
 use Concrete\Core\Attribute\Context\ContextInterface;
-use Concrete\Core\Attribute\Key\Key;
 
 class ComposerView extends View
 {

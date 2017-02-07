@@ -29,17 +29,12 @@ defined('C5_EXECUTE') or die("Access Denied.");
 } ?>
 
 	<?php foreach ($attributes as $ak) {
+		$av = $c->getAttributeValueObject($ak);
+		$view = $ak->getFormControlView(new \Concrete\Core\Attribute\Context\ComposerContext());
+		print $view->render($ak, $av);
+
     ?>
-		<?php $av = $c->getAttributeValueObject($ak);
-    ?>
-		<div class="form-group">
-			<label class="control-label"><?=$ak->getAttributeKeyDisplayName()?></label>
-			<div>
-			<?=$ak->render(new \Concrete\Core\Attribute\Context\ComposerContext(), $av);
-    ?>
-			</div>
-		</div>
-	<?php 
+	<?php
 } ?>
 
         <?php if (isset($sitemap) && $sitemap) {
