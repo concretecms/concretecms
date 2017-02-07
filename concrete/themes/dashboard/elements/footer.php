@@ -20,15 +20,26 @@ if (Request::getInstance()->get('_ccm_dashboard_external')) {
         <?php 
     }
     ?>
+    var savePanelStatus = false;
     ConcreteEvent.subscribe('PanelOpen', function(e, data) {
-        if (data.panel === panel) {
+        if (savePanelStatus && data.panel === panel) {
             $.cookie('dashboardPanelStatus', null, {path: '<?=DIR_REL?>/'});
         }
     });
     ConcreteEvent.subscribe('PanelClose', function(e, data) {
-        if (data.panel === panel) {
+        if (savePanelStatus && data.panel === panel) {
             $.cookie('dashboardPanelStatus', 'closed', {path: '<?=DIR_REL?>/'});
         }
+    });
+    $(document).ready(function() {
+        $('a[data-launch-panel=dashboard]').on('click', function() {
+            setTimeout(function() {
+                savePanelStatus = true;
+            }, 0);
+        });
+        $(document).click(function() {
+            savePanelStatus = false;
+        });
     });
 })();
 </script>
