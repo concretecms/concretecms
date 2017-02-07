@@ -1,17 +1,27 @@
 <?php
-namespace Concrete\Core\Attribute\Form\Control;
+namespace Concrete\Core\Form\Group;
 
 use Concrete\Core\Attribute\AttributeValueInterface;
-use Concrete\Core\Attribute\Context\ContextInterface;
+use Concrete\Core\Form\Context\ContextInterface;
 use Concrete\Core\Entity\Attribute\Key\Key;
 use Concrete\Core\Filesystem\TemplateLocator;
 use Concrete\Core\Attribute\View as AttributeView;
+use Concrete\Core\Form\Control\ControlInterface;
+use Concrete\Core\Form\Control\ValueInterface;
 
-abstract class View
+abstract class View implements ViewInterface
 {
 
-    protected $currentKey;
+    /**
+     * @var $currentControl ControlInterface
+     */
+    protected $currentControl;
+
+    /**
+     * @var $currentValue ValueInterface
+     */
     protected $currentValue;
+
     protected $context;
     protected $label;
     protected $supportsLabel = true;
@@ -80,13 +90,9 @@ abstract class View
         return $this->supportsLabel;
     }
 
-    public function render(Key $key, AttributeValueInterface $value = null)
+    public function render(ControlInterface $control, ValueInterface $value = null)
     {
-        if (!isset($this->label)) {
-            $this->setLabel($key->getAttributeKeyDisplayName());
-        }
-
-        $this->currentKey = $key;
+        $this->currentControl = $control;
         $this->currentValue = $value;
 
         $template = $this->getFieldWrapperTemplate();
@@ -94,9 +100,7 @@ abstract class View
         $this->templateLocator->addLocation(
             DIRNAME_ELEMENTS .
             DIRECTORY_SEPARATOR .
-            DIRNAME_ATTRIBUTE .
-            DIRECTORY_SEPARATOR .
-            DIRNAME_ATTRIBUTE_CONTROL_WRAPPER_TEMPLATES .
+            DIRNAME_FORM_CONTROL_WRAPPER_TEMPLATES .
             DIRECTORY_SEPARATOR .
             $template[0] . '.php',
         $pkgHandle);
@@ -105,21 +109,22 @@ abstract class View
 
         include($this->templateLocator->getFile());
 
-        unset($this->currentKey);
+        unset($this->currentControl);
         unset($this->currentValue);
     }
 
     public function renderControl()
     {
-        if (!isset($this->currentKey)) {
+        if (!isset($this->currentControl)) {
             throw new \Exception(t('You may not call this method prior to calling render.'));
         }
 
         if (is_object($this->currentValue)) {
-            $innerView = new AttributeView($this->currentValue);
+            $innerView = $this->currentValue->getControlView();
         } else {
-            $innerView = new AttributeView($this->currentKey);
+            $innerView = $this->currentControl->getControlView();
         }
+
         $innerView->render($this->context);
     }
 

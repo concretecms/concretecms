@@ -3,6 +3,7 @@ namespace Concrete\Core\Attribute\Form;
 
 use Concrete\Core\Attribute\Form\Control\View;
 use Concrete\Core\Entity\Attribute\Key\Key;
+use Concrete\Core\Form\Group\ViewInterface;
 
 class RendererBuilder
 {
@@ -11,11 +12,12 @@ class RendererBuilder
     protected $renderer;
     protected $key;
 
-    public function __construct(Key $key, View $view, Renderer $renderer)
+    public function __construct(Key $key, ViewInterface $view, Renderer $renderer)
     {
         $this->view = $view;
         $this->renderer = $renderer;
         $this->key = $key;
+        $this->view->setLabel($key->getAttributeKeyDisplayName());
     }
 
     public function __call($name, $arguments)

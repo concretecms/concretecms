@@ -1,12 +1,13 @@
 <?php
 namespace Concrete\Core\Attribute;
 
-use Concrete\Core\Attribute\Context\ContextInterface;
 use Concrete\Core\Attribute\Context\FormContextInterface;
-use Concrete\Core\Attribute\Form\Control\View as FormView;
+use Concrete\Core\Attribute\Form\Control\View as ControlView;
 use Concrete\Core\Attribute\Value\EmptyRequestAttributeValue;
 use Concrete\Core\Controller\AbstractController;
 use Concrete\Core\Entity\Attribute\Key\Settings\EmptySettings;
+use Concrete\Core\Form\Context\ContextInterface;
+use Concrete\Core\Form\Group\ViewInterface;
 use Concrete\Core\Search\ItemList\Database\AttributedItemList;
 use Core;
 use Concrete\Core\Attribute\View as AttributeTypeView;
@@ -124,12 +125,15 @@ class Controller extends AbstractController
     }
 
     /**
-     * @param FormContextInterface $context
-     * @return View
+     * @param ContextInterface $context
+     * @return ViewInterface
      */
-    public function getFormControlView(FormContextInterface $context)
+    public function getFormGroupView(ContextInterface $context)
     {
-        $view = $context->getFormControlView();
+        /**
+         * @var $view ViewInterface
+         */
+        $view = $context->getFormGroupView($this->attributeKey);
         return $view;
     }
 

@@ -141,7 +141,7 @@ class CollectionAttributeControl extends Control
             $set = $this->getPageTypeComposerFormLayoutSetControlObject()->getPageTypeComposerFormLayoutSetObject();
             $control = $this;
 
-            $view = $ak->getFormControlView(new ComposerContext());
+            $view = $ak->getFormGroupView(new ComposerContext());
             $view->setTooltip($description);
             $view->setLabel($label);
             print $view->render($ak, $this->getPageTypeComposerControlDraftValue());

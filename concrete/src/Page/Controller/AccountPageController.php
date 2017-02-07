@@ -4,7 +4,7 @@ namespace Concrete\Core\Page\Controller;
 use Concrete\Controller\Element\Navigation\AccountMenu;
 use Concrete\Controller\Element\Navigation\Menu;
 use Concrete\Core\Attribute\Context\DashboardFormContext;
-use Concrete\Core\Attribute\Context\StandardFormContext;
+use Concrete\Core\Attribute\Context\FrontendFormContext;
 use Concrete\Core\Attribute\Form\Renderer;
 use Concrete\Core\Page\Desktop\DesktopList;
 use Loader;
@@ -33,7 +33,7 @@ class AccountPageController extends CorePageController
             ));
         } else {
             $this->set('profileFormRenderer', new Renderer(
-                new StandardFormContext(),
+                new FrontendFormContext(),
                 $profile
             ));
         }

@@ -2,7 +2,8 @@
 namespace Concrete\Core\Entity\Attribute\Key;
 
 use Concrete\Core\Attribute\AttributeKeyInterface;
-use Concrete\Core\Attribute\Context\ContextInterface;
+use Concrete\Core\Attribute\View;
+use Concrete\Core\Form\Context\ContextInterface;
 use Concrete\Core\Attribute\Key\SearchIndexer\StandardSearchIndexer;
 use Concrete\Core\Attribute\Type;
 use Concrete\Core\Entity\Attribute\Category;
@@ -10,6 +11,7 @@ use Concrete\Core\Entity\Attribute\Set;
 use Concrete\Core\Entity\PackageTrait;
 use Concrete\Core\Export\ExportableInterface;
 use Concrete\Core\Export\Item\AttributeKey;
+use Concrete\Core\Form\Control\ControlInterface;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -24,7 +26,7 @@ use Doctrine\ORM\Mapping as ORM;
  *     }
  * )
  */
-class Key implements AttributeKeyInterface, ExportableInterface
+class Key implements AttributeKeyInterface, ExportableInterface, ControlInterface
 {
     use PackageTrait;
 
@@ -252,9 +254,14 @@ class Key implements AttributeKeyInterface, ExportableInterface
         return new AttributeKey();
     }
 
-    public function getFormControlView(ContextInterface $context)
+    public function getFormGroupView(ContextInterface $context)
     {
-        return $this->getController()->getFormControlView($context);
+        return $this->getController()->getFormGroupView($context);
+    }
+
+    public function getControlView()
+    {
+        return new View($this);
     }
 
     /**

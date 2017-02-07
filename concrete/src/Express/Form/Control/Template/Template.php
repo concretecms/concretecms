@@ -1,8 +1,6 @@
 <?php
 namespace Concrete\Core\Express\Form\Control\Template;
 
-use Concrete\Core\Express\Form\Context\ContextInterface;
-
 class Template implements TemplateInterface
 {
 

@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Core\Attribute\Form;
 
-use Concrete\Core\Attribute\Context\FormContextInterface;
+use Concrete\Core\Form\Context\ContextInterface;
 use Concrete\Core\Attribute\Form\Control\View;
 use Concrete\Core\Attribute\ObjectInterface;
 use Concrete\Core\Entity\Attribute\Key\Key;
@@ -12,7 +12,7 @@ class Renderer
     protected $context;
     protected $object;
 
-    public function __construct(FormContextInterface $context, ObjectInterface $object = null)
+    public function __construct(ContextInterface $context, ObjectInterface $object = null)
     {
         $this->context = $context;
         $this->object = $object;
@@ -26,7 +26,7 @@ class Renderer
     }
 
     /**
-     * @return FormContextInterface
+     * @return ContextInterface
      */
     public function getContext()
     {
@@ -34,7 +34,7 @@ class Renderer
     }
 
     /**
-     * @param FormContextInterface $context
+     * @param ContextInterface $context
      */
     public function setContext($context)
     {
@@ -65,7 +65,7 @@ class Renderer
          * @var $view View
          */
         $key = $this->getKey($ak);
-        $view = $key->getFormControlView($this->context);
+        $view = $key->getFormGroupView($this->context);
         return $view;
     }
 

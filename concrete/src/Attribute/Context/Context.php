@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Core\Attribute\Context;
 
-class Context implements ContextInterface
+abstract class Context implements ContextInterface
 {
 
     protected $actions = [];

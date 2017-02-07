@@ -24,17 +24,20 @@ class AttributeKeyControlRenderer extends AbstractControlRenderer
         $ak = $control->getAttributeKey();
         if (is_object($ak)) {
 
-            $template = new Template('attribute_key');
-
             $av = null;
             if (is_object($entry)) {
                 $av = $entry->getAttributeValueObject($ak);
             }
-            $view = new EntityPropertyControlView($context);
-            $view->addScopeItem('key', $ak);
-            $view->addScopeItem('value', $av);
 
-            return $view->render($control, $context->getTemplateLocator($template)->getFile());
+            $view = $ak->getFormGroupView($context);
+            if ($control->isRequired()) {
+                $view->setIsRequired(true);
+            }
+            if ($control->getCustomLabel()) {
+                $view->setLabel($control->getCustomLabel());
+            }
+
+            return $view->render($ak);
         }
     }
 }
