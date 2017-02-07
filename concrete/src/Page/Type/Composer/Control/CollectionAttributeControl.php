@@ -2,7 +2,6 @@
 namespace Concrete\Core\Page\Type\Composer\Control;
 
 use Concrete\Core\Attribute\Context\ComposerContext;
-use Concrete\Core\Attribute\Form\ComposerFormView;
 use Concrete\Core\Validation\ResponseInterface;
 use Controller;
 use CollectionAttributeKey;
@@ -142,10 +141,7 @@ class CollectionAttributeControl extends Control
             $set = $this->getPageTypeComposerFormLayoutSetControlObject()->getPageTypeComposerFormLayoutSetObject();
             $control = $this;
 
-            $view = $ak->getFormView(new ComposerContext());
-            /**
-             * @var $view ComposerFormView
-             */
+            $view = $ak->getFormControlView(new ComposerContext());
             $view->setTooltip($description);
             $view->setLabel($label);
             print $view->render($ak, $this->getPageTypeComposerControlDraftValue());

@@ -4,6 +4,7 @@ namespace Concrete\Core\Entity\File;
 
 use Carbon\Carbon;
 use Concrete\Core\Attribute\Key\FileKey;
+use Concrete\Core\Attribute\ObjectInterface;
 use Concrete\Core\Attribute\ObjectTrait;
 use Concrete\Core\Entity\Attribute\Value\FileValue;
 use Concrete\Core\Entity\File\StorageLocation\StorageLocation;
@@ -44,7 +45,7 @@ use Imagine\Image\Box;
  *     }
  * )
  */
-class Version
+class Version implements ObjectInterface
 {
     use ObjectTrait;
 

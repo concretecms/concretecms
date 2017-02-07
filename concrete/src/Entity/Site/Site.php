@@ -2,6 +2,7 @@
 namespace Concrete\Core\Entity\Site;
 
 use Concrete\Core\Application\Application;
+use Concrete\Core\Attribute\ObjectInterface;
 use Concrete\Core\Attribute\ObjectTrait;
 use Concrete\Core\Attribute\Key\SiteKey;
 use Concrete\Core\Entity\Attribute\Value\SiteValue;
@@ -14,7 +15,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  * @ORM\Table(name="Sites")
  */
-class Site implements TreeInterface
+class Site implements TreeInterface, ObjectInterface
 {
 
     use ObjectTrait;

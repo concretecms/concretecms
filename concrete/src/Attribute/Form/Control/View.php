@@ -1,21 +1,39 @@
 <?php
-namespace Concrete\Core\Attribute\Form;
+namespace Concrete\Core\Attribute\Form\Control;
 
+use Concrete\Core\Attribute\AttributeValueInterface;
 use Concrete\Core\Attribute\Context\ContextInterface;
 use Concrete\Core\Entity\Attribute\Key\Key;
 use Concrete\Core\Filesystem\TemplateLocator;
-use Concrete\Core\Attribute\View;
+use Concrete\Core\Attribute\View as AttributeView;
 
-class FormView
+abstract class View
 {
 
     protected $currentKey;
+    protected $currentValue;
     protected $context;
     protected $label;
     protected $supportsLabel = true;
     protected $isRequired = false;
     protected $templateLocator;
     protected $fieldWrapperTemplate;
+
+    /**
+     * @return boolean
+     */
+    public function isRequired()
+    {
+        return $this->isRequired;
+    }
+
+    /**
+     * @param boolean $isRequired
+     */
+    public function setIsRequired($isRequired)
+    {
+        $this->isRequired = $isRequired;
+    }
 
     /**
      * @return mixed
@@ -62,13 +80,14 @@ class FormView
         return $this->supportsLabel;
     }
 
-    public function render(Key $key)
+    public function render(Key $key, AttributeValueInterface $value = null)
     {
         if (!isset($this->label)) {
             $this->setLabel($key->getAttributeKeyDisplayName());
         }
 
         $this->currentKey = $key;
+        $this->currentValue = $value;
 
         $template = $this->getFieldWrapperTemplate();
         $pkgHandle = $template[1] ? $template[1] : null;
@@ -87,7 +106,7 @@ class FormView
         include($this->templateLocator->getFile());
 
         unset($this->currentKey);
-
+        unset($this->currentValue);
     }
 
     public function renderControl()
@@ -96,7 +115,11 @@ class FormView
             throw new \Exception(t('You may not call this method prior to calling render.'));
         }
 
-        $innerView = new View($this->currentKey);
+        if (is_object($this->currentValue)) {
+            $innerView = new AttributeView($this->currentValue);
+        } else {
+            $innerView = new AttributeView($this->currentKey);
+        }
         $innerView->render($this->context);
     }
 

@@ -3,7 +3,7 @@ namespace Concrete\Core\Attribute;
 
 use Concrete\Core\Attribute\Context\ContextInterface;
 use Concrete\Core\Attribute\Context\FormContextInterface;
-use Concrete\Core\Attribute\Form\FormView;
+use Concrete\Core\Attribute\Form\Control\View as FormView;
 use Concrete\Core\Attribute\Value\EmptyRequestAttributeValue;
 use Concrete\Core\Controller\AbstractController;
 use Concrete\Core\Entity\Attribute\Key\Settings\EmptySettings;
@@ -125,11 +125,11 @@ class Controller extends AbstractController
 
     /**
      * @param FormContextInterface $context
-     * @return FormView
+     * @return View
      */
-    public function getFormView(FormContextInterface $context)
+    public function getFormControlView(FormContextInterface $context)
     {
-        $view = $context->getFormView();
+        $view = $context->getFormControlView();
         return $view;
     }
 

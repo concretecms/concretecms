@@ -252,9 +252,9 @@ class Key implements AttributeKeyInterface, ExportableInterface
         return new AttributeKey();
     }
 
-    public function getFormView(ContextInterface $context)
+    public function getFormControlView(ContextInterface $context)
     {
-        return $this->getController()->getFormView($context);
+        return $this->getController()->getFormControlView($context);
     }
 
     /**

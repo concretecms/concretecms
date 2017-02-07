@@ -8,6 +8,7 @@ use Concrete\Core\Attribute\Context\FormContextInterface;
 use Concrete\Core\Attribute\Controller as AttributeTypeController;
 use Concrete\Core\Attribute\FontAwesomeIconFormatter;
 use Concrete\Core\Attribute\Form\ComposerFormView;
+use Concrete\Core\Attribute\Form\Control\ComposerView;
 use Concrete\Core\Entity\Attribute\Key\Settings\AddressSettings;
 use Concrete\Core\Entity\Attribute\Value\Value\AddressValue;
 use Core;
@@ -36,12 +37,12 @@ class Controller extends AttributeTypeController
         );
     }
 
-    public function getFormView(FormContext $context)
+    public function getFormControlView(FormContext $context)
     {
         /**
-         * @var $view ComposerFormView
+         * @var $view ComposerView
          */
-        $view = parent::getFormView($context);
+        $view = parent::getFormControlView($context);
         $view->enableGroupedTemplate();
         return $view;
     }

@@ -102,9 +102,9 @@ class Controller extends AttributeTypeController
         return $html;
     }
 
-    public function getFormView(FormContext $context)
+    public function getFormControlView(FormContext $context)
     {
-        $view = parent::getFormView($context);
+        $view = parent::getFormControlView($context);
         $view->enableGroupedTemplate();
         return $view;
     }

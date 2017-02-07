@@ -1,11 +1,11 @@
 <?php
-namespace Concrete\Core\Attribute\Form;
+namespace Concrete\Core\Attribute\Form\Control;
 
 use Concrete\Core\Attribute\Context\ComposerContext;
 use Concrete\Core\Attribute\Context\ContextInterface;
 use Concrete\Core\Attribute\Key\Key;
 
-class ComposerFormView extends FormView
+class ComposerView extends View
 {
 
     protected $tooltip;

@@ -8,7 +8,8 @@ use Concrete\Core\Entity\Express\Entry\ManyAssociation;
 use Concrete\Core\Entity\Express\Entry\OneAssociation;
 use Concrete\Core\Express\EntryBuilder\AssociationBuilder;
 use Concrete\Core\Express\EntryBuilder\AssociationUpdater;
-use Concrete\Core\Permission\ObjectInterface;
+use Concrete\Core\Permission\ObjectInterface as PermissionObjectInterface;
+use Concrete\Core\Attribute\ObjectInterface as AttributeObjectInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -17,7 +18,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="ExpressEntityEntries")
  * @ORM\EntityListeners({"\Concrete\Core\Express\Entry\Listener"})
  */
-class Entry implements \JsonSerializable, ObjectInterface
+class Entry implements \JsonSerializable, PermissionObjectInterface, AttributeObjectInterface
 {
 
     use ObjectTrait;

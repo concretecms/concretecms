@@ -1,13 +1,13 @@
 <?php
 namespace Concrete\Core\Attribute\Context;
 
-use Concrete\Core\Attribute\Form\ComposerFormView;
+use Concrete\Core\Attribute\Form\Control\ComposerView;
 
 class ComposerContext extends StandardFormContext
 {
 
-    public function getFormView()
+    public function getFormControlView()
     {
-        return new ComposerFormView($this);
+        return new ComposerView($this);
     }
 }
