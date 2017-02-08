@@ -68,11 +68,5 @@ class HttpServiceProvider extends ServiceProvider
 
             return $factory->createFromConfig($app->make('config'), SocketHttpAdapter::class);
         });
-
-        $this->app->bind(Client\Client::class, function ($app) {
-            $factory = $app->make(Client\Factory::class);
-
-            return $factory->createFromConfig($app->make('config'));
-        });
     }
 }
