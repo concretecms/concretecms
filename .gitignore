@@ -6,6 +6,7 @@ __MACOSX
 ._*
 .*swp
 .*swo
+*.iml
 
 # ignore composer files
 composer.phar
