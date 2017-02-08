@@ -15,7 +15,10 @@
   },
   "config": {
     "process-timeout": 0,
-    "vendor-dir": "./concrete/vendor"
+    "vendor-dir": "./concrete/vendor",
+    "platform": {
+      "php": "5.5.9"
+    }
   },
   "replace": {
     "concrete5/core": "self.version"
