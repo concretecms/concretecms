@@ -212,7 +212,11 @@ class Factory
         $client = new Client(null, $options);
 
         if ($options['logger'] !== null) {
-            $client->setLogger($this->app->make($options['logger']));
+            if (is_object($options['logger'])) {
+                $client->setLogger($options['logger']);
+            } else {
+                $client->setLogger($this->app->make($options['logger']));
+            }
         }
 
         return $client;
