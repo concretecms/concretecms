@@ -7,6 +7,9 @@ use Concrete\Core\Attribute\FontAwesomeIconFormatter;
 use Concrete\Core\Entity\Attribute\Key\Settings\AddressSettings;
 use Concrete\Core\Entity\Attribute\Value\Value\AddressValue;
 use Core;
+use Concrete\Core\Support\Facade\Application;
+use Concrete\Core\Http\ResponseFactoryInterface;
+use Concrete\Core\Http\Response;
 
 class Controller extends AttributeTypeController
 {
@@ -158,15 +161,24 @@ class Controller extends AttributeTypeController
 
     public function action_load_provinces_js()
     {
-        $h = Core::make('helper/lists/states_provinces');
-        echo "var ccm_attributeTypeAddressStatesTextList = '\\\n";
+        $app = isset($this->app) ? $this->app : Application::getFacadeApplication();
+        $h = $app->make('helper/lists/states_provinces');
         $all = $h->getAll();
+        $outputList = [];
         foreach ($all as $country => $countries) {
             foreach ($countries as $value => $text) {
-                echo addslashes($country) . ':' . addslashes($value) . ':' . addslashes($text) . "|\\\n";
+                $outputList[] = "$country:$value:$text";
             }
         }
-        echo "'";
+        $rf = $app->make(ResponseFactoryInterface::class);
+
+        return $rf->create(
+            'var ccm_attributeTypeAddressStatesTextList = ' . json_encode($outputList, JSON_PRETTY_PRINT) . '.join(\'|\');',
+            Response::HTTP_OK,
+            [
+                'Content-Type' => 'application/javascript; charset=' . APP_CHARSET,
+            ]
+        );
     }
 
     public function validateKey($data = false)
