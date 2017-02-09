@@ -31,6 +31,7 @@ if (Loader::helper('validation/numbers')->integer($_POST['cnvMessageID']) && $_P
     }
 }
 
+$canReview = $blockObj->getController()->enableTopCommentReviews && !$message->getConversationMessageParentID();
 $messageAttachmentCount = count($message->getAttachments($_POST['cnvMessageID']));
 $attachmentsToAddCount = count($_POST['attachments']);
 $totalCurrentAttachments = intval($attachmentsToAddCount) + intval($messageAttachmentCount);
@@ -45,8 +46,20 @@ if ($_POST['attachments'] && $attachmentsToAddCount) {
     }
 }
 
+if ($review = intval($_POST['review'])) {
+    if (!$canReview) {
+        $ve->add(t('Reviews have not been enabled for this discussion.'));
+    } elseif ($review > 5 || $review < 1) {
+        $ve->add(t('A review must be a rating between 1 and 5.'));
+    }
+}
+
 if (!$ve->has()) {
     $message->setMessageBody($_POST['cnvMessageBody']);
+
+    if ($review) {
+        $message->setReview($review);
+    }
     if ($_POST['attachments'] && count($_POST['attachments'])) {
         foreach ($_POST['attachments'] as $attachmentID) {
             $message->attachFile(File::getByID($attachmentID));

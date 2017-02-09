@@ -85,15 +85,15 @@ if ($cID) {
                 'totalPages' => $totalPages,
                 'orderBy' => Request::post('orderBy'),
                 'enableOrdering' => $enableOrdering,
+                'enableTopCommentReviews' => !!Request::post('enableTopCommentReviews'),
                 'displayPostingForm' => Request::post('displayPostingForm'),
                 'enableCommentRating' => Request::post('enableCommentRating'),
                 'dateFormat' => Request::post('dateFormat'),
                 'customDateFormat' => Request::post('customDateFormat'),
                 'blockAreaHandle' => Request::post('blockAreaHandle'),
                 'attachmentsEnabled' => Request::post('attachmentsEnabled'),
-                'attachmentOverridesEnabled' => Request::post('attachmentOverridesEnabled'),
+                'attachmentOverridesEnabled' => !!Request::post('attachmentOverridesEnabled'),
             );
             View::element('conversation/display', $args);
-        }
     }
 }

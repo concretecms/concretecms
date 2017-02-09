@@ -38,13 +38,17 @@ if (Loader::helper('validation/numbers')->integer($_POST['cnvMessageID']) && $_P
                     <div class="ccm-conversation-message-form">
                         <div class="ccm-conversation-errors alert alert-danger"></div>
                         <?php $editor->outputConversationEditorReplyMessageForm();
+
+                        View::element('conversation/message/review', [
+                            'review' => $message->getConversationMessageReview(),
+                        ]);
             ?>
                         <button type="button" data-post-message-id="<?=$message->getConversationMessageID()?>" data-submit="update-conversation-message" class="pull-right btn btn-primary btn-small"><?=t('Save')?></button>
                         <?php if ($attachmentsEnabled) {
     ?>
                             <button type="button" class="pull-right btn btn-default ccm-conversation-attachment-toggle" title="<?php echo t('Attach Files');
     ?>"><i class="fa fa-image"></i></button>
-                        <?php 
+                        <?php
 }
             ?>
                         <button type="button" data-post-message-id="<?=$message->getConversationMessageID()?>" data-submit="cancel-update" class="cancel-update pull-right btn btn-small"><?=t('Cancel')?></button>
@@ -66,7 +70,7 @@ if (Loader::helper('validation/numbers')->integer($_POST['cnvMessageID']) && $_P
                             <?php echo $form->hidden('bID', $bID) ?>
                         </form>
                     </div>
-                <?php 
+                <?php
 }
             ?>
             </div>

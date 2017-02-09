@@ -1,6 +1,13 @@
 <?php
 namespace Concrete\Block\CoreConversation;
 
+use Concrete\Core\Attribute\AttributeKeyInterface;
+use Concrete\Core\Attribute\Category\PageCategory;
+use Concrete\Core\Block\Block;
+use Concrete\Core\Entity\Attribute\Key\PageKey;
+use Concrete\Core\Http\ResponseAssetGroup;
+use Concrete\Core\Package\Package;
+use Concrete\Core\Package\PackageService;
 use Core;
 use Database;
 use Concrete\Core\Block\BlockController;
@@ -88,6 +95,9 @@ class Controller extends BlockController implements ConversationFeatureInterface
 
     public function edit()
     {
+        $keys = $this->getReviewAttributeKeys();
+        $this->set('reviewAttributeKeys', iterator_to_array($keys));
+
         $fileSettings = $this->getFileSettings();
         $this->set('maxFilesGuest', $fileSettings['maxFilesGuest']);
         $this->set('maxFilesRegistered', $fileSettings['maxFilesRegistered']);
@@ -114,6 +124,10 @@ class Controller extends BlockController implements ConversationFeatureInterface
     }
     public function view()
     {
+        if ($this->enableTopCommentReviews) {
+            $this->requireAsset('javascript', 'jquery/awesome-rating');
+            $this->requireAsset('css', 'jquery/awesome-rating');
+        }
         $fileSettings = $this->getFileSettings();
         $conversation = $this->getConversationObject();
         if (is_object($conversation)) {
@@ -263,5 +277,21 @@ class Controller extends BlockController implements ConversationFeatureInterface
 
         $values['cnvID'] = $conversation->getConversationID();
         parent::save($values);
+    }
+
+    /**
+     * @return \Generator
+     */
+    private function getReviewAttributeKeys()
+    {
+        $category = $this->app->make(PageCategory::class);
+        $keys = $category->getAttributeKeyRepository()->findAll();
+
+        /** @var PageKey $key */
+        foreach ($keys as $key) {
+            if ($key->getAttributeType()->getAttributeTypeHandle() == 'rating') {
+                yield $key->getAttributeKeyID() => $key->getAttributeKeyDisplayName();
+            }
+        }
     }
 }
