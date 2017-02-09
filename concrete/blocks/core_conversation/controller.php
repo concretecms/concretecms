@@ -37,6 +37,9 @@ class Controller extends BlockController implements ConversationFeatureInterface
         'conversation',
     );
 
+    public $enableTopCommentReviews;
+    public $reviewAggregateAttributeKey;
+
     public function getBlockTypeDescription()
     {
         return t("Displays conversations on a page.");

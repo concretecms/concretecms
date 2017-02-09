@@ -129,5 +129,11 @@ if ($ve->has()) {
     foreach ($attachmentIDs as $attachmentID) {
         $msg->attachFile(File::getByID($attachmentID));
     }
+
+    $event = new \Concrete\Core\Conversation\Message\MessageEvent($msg);
+
+    $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
+    $app->make('director')->dispatch('on_conversations_message_add', $event);
+
     $ax->sendResult($msg);
 }

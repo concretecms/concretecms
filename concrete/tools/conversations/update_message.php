@@ -66,6 +66,11 @@ if (!$ve->has()) {
         }
     }
 
+    $event = new \Concrete\Core\Conversation\Message\MessageEvent($message);
+
+    $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
+    $app->make('director')->dispatch('on_conversations_message_update', $event);
+
     $ax->sendResult($message);
 } else {
     $ax->sendError($ve);

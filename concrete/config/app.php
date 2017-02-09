@@ -143,6 +143,9 @@ return [
 
         // Tracker
         'core_usagetracker' => '\Concrete\Core\Statistics\UsageTracker\ServiceProvider',
+
+        // Conversations
+        'core_conversations' => \Concrete\Core\Conversation\ServiceProvider::class,
     ],
 
     /*
