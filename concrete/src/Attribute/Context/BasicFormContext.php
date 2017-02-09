@@ -1,16 +1,14 @@
 <?php
 namespace Concrete\Core\Attribute\Context;
 
-use Concrete\Core\Attribute\Form\Group\StandardView;
+use Concrete\Core\Attribute\View;
+use Concrete\Core\Entity\Attribute\Key\Key;
+use Concrete\Core\Entity\Attribute\Value\AbstractValue;
+use Concrete\Core\Filesystem\TemplateLocator;
 use Concrete\Core\Form\Control\ControlInterface;
 
 class BasicFormContext extends Context
 {
-
-    public function getFormGroupView(ControlInterface $control)
-    {
-        return new StandardView($control, $this);
-    }
 
     public function __construct()
     {
@@ -19,5 +17,22 @@ class BasicFormContext extends Context
         $this->includeTemplateIfAvailable('composer'); //legacy
         $this->includeTemplateIfAvailable('form');
     }
+
+    public function setLocation(TemplateLocator $locator)
+    {
+        $locator->setTemplate('bootstrap3');
+        return $locator;
+    }
+
+    public function render(Key $key, AbstractValue $value = null)
+    {
+        if (is_object($value)) {
+            $v = new View($value);
+        } else {
+            $v = new View($key);
+        }
+        $v->render($this);
+    }
+
 
 }

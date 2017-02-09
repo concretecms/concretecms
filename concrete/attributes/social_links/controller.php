@@ -4,6 +4,7 @@ namespace Concrete\Attribute\SocialLinks;
 use Concrete\Core\Attribute\Context\ContextInterface;
 use Concrete\Core\Attribute\Context\FormContext;
 use Concrete\Core\Attribute\FontAwesomeIconFormatter;
+use Concrete\Core\Attribute\Form\Control\GroupedView;
 use Concrete\Core\Entity\Attribute\Value\Value\SelectedSocialLink;
 use Concrete\Core\Entity\Attribute\Value\Value\SocialLinksValue;
 use Loader;
@@ -103,13 +104,10 @@ class Controller extends AttributeTypeController
         return $html;
     }
 
-    public function getFormGroupView(ContextInterface $context)
+    public function getControlView(\Concrete\Core\Form\Context\ContextInterface $context)
     {
-        $view = parent::getFormGroupView($context);
-        $view->enableGroupedTemplate();
-        return $view;
+        return new GroupedView($context, $this->getAttributeKey(), $this->getAttributeValue());
     }
-
 
     public function form()
     {

@@ -1,11 +1,14 @@
 <?php
 namespace Concrete\Core\Express\Form\Context;
 
-use Concrete\Core\Entity\Express\Control\Control;
+use Concrete\Core\Entity\Express\Entry;
+use Concrete\Core\Form\Context\ContextInterface as BaseContextInterface;
 
-interface ContextInterface
+interface ContextInterface extends BaseContextInterface
 {
-    function getApplication();
-    function getFormRenderer();
-    function getContextHandle();
+
+    function getAttributeContext();
+    function getEntry();
+    function setEntry(Entry $entry);
+
 }

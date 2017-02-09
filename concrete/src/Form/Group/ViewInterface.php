@@ -1,16 +1,27 @@
 <?php
 namespace Concrete\Core\Form\Group;
 
-use Concrete\Core\Form\Control\ControlInterface;
-use Concrete\Core\Form\Control\ValueInterface;
+use Concrete\Core\Filesystem\TemplateLocator;
+use Concrete\Core\Form\Context\ContextInterface;
 
 interface ViewInterface
 {
-    function isRequired();
-    function getFieldWrapperTemplate();
-    function getLabel();
-    function setLabel($label);
-    function supportsLabel();
-    function render(ControlInterface $control, ValueInterface $value = null);
-    function renderControl();
+
+    /**
+     * @return RendererInterface
+     */
+    function getControlRenderer();
+
+    /**
+     * @return TemplateLocator
+     */
+    function createTemplateLocator();
+
+    /**
+     * @return ContextInterface
+     */
+    function getContext();
+
+    function getScopeItems();
+
 }

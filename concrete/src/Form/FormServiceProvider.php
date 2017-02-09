@@ -1,7 +1,9 @@
 <?php
 namespace Concrete\Core\Form;
 
+use Concrete\Core\Form\Context\Registry\Entry;
 use Concrete\Core\Foundation\Service\Provider as ServiceProvider;
+use Concrete\Core\Form\Context\Registry\Registry;
 
 class FormServiceProvider extends ServiceProvider
 {

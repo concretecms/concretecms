@@ -30,8 +30,10 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 	<?php foreach ($attributes as $ak) {
 		$av = $c->getAttributeValueObject($ak);
-		$view = $ak->getFormGroupView(new \Concrete\Core\Attribute\Context\ComposerContext());
-		print $view->render($ak, $av);
+		$view = $ak->getControlView(new \Concrete\Core\Attribute\Context\ComposerContext());
+		$renderer = $view->getControlRenderer();
+		$view->setValue($av);
+		print $renderer->render();
 
     ?>
 	<?php

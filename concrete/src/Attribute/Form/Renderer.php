@@ -1,10 +1,11 @@
 <?php
 namespace Concrete\Core\Attribute\Form;
 
-use Concrete\Core\Form\Context\ContextInterface;
 use Concrete\Core\Attribute\Form\Control\View;
+use Concrete\Core\Form\Context\ContextInterface;
 use Concrete\Core\Attribute\ObjectInterface;
 use Concrete\Core\Entity\Attribute\Key\Key;
+use Concrete\Core\Form\Group\ViewInterface;
 
 class Renderer
 {
@@ -41,31 +42,10 @@ class Renderer
         $this->context = $context;
     }
 
-    /**
-     * @return ObjectInterface
-     */
-    public function getAttributeObject()
-    {
-        return $this->object;
-    }
-
-    /**
-     * @param ObjectInterface $object
-     */
-    public function setAttributeObject($object)
-    {
-        $this->object = $object;
-    }
-
-
     protected function getView($ak)
     {
-        /**
-         * @var $key Key
-         * @var $view View
-         */
         $key = $this->getKey($ak);
-        $view = $key->getFormGroupView($this->context);
+        $view = $key->getControlView($this->context);
         return $view;
     }
 
@@ -81,12 +61,25 @@ class Renderer
     {
         $ak = $this->getKey($ak);
         $view = $this->getView($ak);
+        $this->renderView($view, $ak);
+    }
+
+    /**
+     * @private
+     */
+    public function renderView(ViewInterface $view, $ak)
+    {
         $value = null;
         if (is_object($this->object)) {
             $value = $this->object->getAttributeValueObject($ak);
         }
-        $view->render($ak, $value);
 
+        /**
+         * @var $view View
+         */
+        $view->setValue($value);
+        $renderer = $view->getControlRenderer();
+        $renderer->render();
     }
 
 }

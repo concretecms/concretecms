@@ -8,6 +8,7 @@ use Concrete\Core\Attribute\Controller as AttributeTypeController;
 use Concrete\Core\Attribute\FontAwesomeIconFormatter;
 use Concrete\Core\Attribute\Form\ComposerFormView;
 use Concrete\Core\Attribute\Form\Control\ComposerView;
+use Concrete\Core\Attribute\Form\Control\GroupedView;
 use Concrete\Core\Entity\Attribute\Key\Settings\AddressSettings;
 use Concrete\Core\Entity\Attribute\Value\Value\AddressValue;
 use Core;
@@ -36,11 +37,9 @@ class Controller extends AttributeTypeController
         );
     }
 
-    public function getFormGroupView(ContextInterface $context)
+    public function getControlView(\Concrete\Core\Form\Context\ContextInterface $context)
     {
-        $view = parent::getFormGroupView($context);
-        $view->enableGroupedTemplate();
-        return $view;
+        return new GroupedView($context, $this->getAttributeKey(), $this->getAttributeValue());
     }
 
     public function getAttributeValueClass()

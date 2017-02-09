@@ -1,6 +1,11 @@
 <?php
 namespace Concrete\Core\Attribute\Context;
 
+use Concrete\Core\Entity\Attribute\Key\Key;
+use Concrete\Core\Entity\Attribute\Value\AbstractValue;
+use Concrete\Core\Filesystem\TemplateLocator;
+use Concrete\Core\Form\Group\ViewInterface;
+
 abstract class Context implements ContextInterface
 {
 
@@ -41,6 +46,16 @@ abstract class Context implements ContextInterface
     public function getControlTemplates()
     {
         return $this->controlTemplates;
+    }
+
+    public function setLocation(TemplateLocator $locator)
+    {
+        return $locator;
+    }
+
+    public function render(Key $key, AbstractValue $value = null)
+    {
+        return;
     }
 
 

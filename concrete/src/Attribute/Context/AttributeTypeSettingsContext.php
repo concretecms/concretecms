@@ -7,11 +7,6 @@ use Concrete\Core\Form\Control\ControlInterface;
 class AttributeTypeSettingsContext extends Context
 {
 
-    public function getFormGroupView(ControlInterface $control)
-    {
-        return null;
-    }
-
     public function __construct()
     {
         $this->runActionIfAvailable('type_form');

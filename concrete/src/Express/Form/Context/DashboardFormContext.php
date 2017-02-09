@@ -1,18 +1,17 @@
 <?php
 namespace Concrete\Core\Express\Form\Context;
 
-use Concrete\Core\Attribute\Context\BasicFormContext;
-use Concrete\Core\Entity\Express\Control\Control;
-use Concrete\Core\Express\Form\Group\FormView;
+use Concrete\Core\Express\Form\Group\DashboardFormView;
 use Concrete\Core\Filesystem\TemplateLocator;
 use Concrete\Core\Form\Control\ControlInterface;
+use Concrete\Core\Attribute\Context\DashboardFormContext as AttributeDashboardFormContext;
 
-class FormContext extends ViewContext
+class DashboardFormContext extends FormContext
 {
 
     public function getAttributeContext()
     {
-        return new BasicFormContext();
+        return new AttributeDashboardFormContext();
     }
 
     public function setLocation(TemplateLocator $locator)
@@ -24,9 +23,14 @@ class FormContext extends ViewContext
             DIRECTORY_SEPARATOR .
             DIRNAME_EXPRESS_FORM_CONTROLS .
             DIRECTORY_SEPARATOR .
-            DIRNAME_EXPRESS_FORM_CONTROLS // not a typo
+            DIRNAME_EXPRESS_FORM_CONTROLS . // not a typo
+            DIRECTORY_SEPARATOR .
+            DIRNAME_DASHBOARD
         );
         return $locator;
     }
+
+
+
 
 }

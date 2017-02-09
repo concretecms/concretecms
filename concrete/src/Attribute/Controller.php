@@ -124,17 +124,9 @@ class Controller extends AbstractController
         return 'akID[' . $this->attributeKey->getAttributeKeyID() . '][' . $fieldName . ']';
     }
 
-    /**
-     * @param ContextInterface $context
-     * @return ViewInterface
-     */
-    public function getFormGroupView(ContextInterface $context)
+    public function getControlView(ContextInterface $context)
     {
-        /**
-         * @var $view ViewInterface
-         */
-        $view = $context->getFormGroupView($this->attributeKey);
-        return $view;
+        return new ControlView($context, $this->getAttributeKey(), $this->getAttributeValue());
     }
 
     public function label($customText = false)

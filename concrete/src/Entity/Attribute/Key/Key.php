@@ -254,14 +254,9 @@ class Key implements AttributeKeyInterface, ExportableInterface, ControlInterfac
         return new AttributeKey();
     }
 
-    public function getFormGroupView(ContextInterface $context)
+    public function getControlView(ContextInterface $context)
     {
-        return $this->getController()->getFormGroupView($context);
-    }
-
-    public function getControlView()
-    {
-        return new View($this);
+        return $this->getController()->getControlView($context);
     }
 
     /**

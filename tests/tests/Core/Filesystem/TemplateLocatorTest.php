@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Tests\Core\Html\Service;
 
+use Concrete\Core\Filesystem\Template;
 use Concrete\Core\Filesystem\TemplateLocator;
 use Illuminate\Filesystem\Filesystem;
 
@@ -31,8 +32,9 @@ class TemplateLocatorTest extends \PHPUnit_Framework_TestCase
 
     public function testBasic()
     {
-        $locator = new TemplateLocator();
-        $locator->addLocation(DIRNAME_ATTRIBUTES.'/'.static::ATTRIBUTE_HANDLE.'/composer.php');
+        $template = new Template('composer');
+        $locator = new TemplateLocator($template);
+        $locator->addLocation(DIRNAME_ATTRIBUTES.'/'.static::ATTRIBUTE_HANDLE);
         $location = $locator->getLocation();
 
         $this->assertInstanceOf('Concrete\Core\Foundation\EnvironmentRecord', $location);
@@ -53,7 +55,7 @@ class TemplateLocatorTest extends \PHPUnit_Framework_TestCase
     public function testPackagedAttribute()
     {
         $locator = new TemplateLocator();
-        $locator->addLocation(DIRNAME_ATTRIBUTES.'/'.static::ATTRIBUTE_HANDLE.'/custom_form.php', 'foo_package');
+        $locator->addLocation([DIRNAME_ATTRIBUTES.'/'.static::ATTRIBUTE_HANDLE.'/custom_form.php', 'foo_package']);
         $location = $locator->getLocation();
 
         $this->assertInstanceOf('Concrete\Core\Foundation\EnvironmentRecord', $location);
