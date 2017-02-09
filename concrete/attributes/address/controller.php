@@ -7,11 +7,10 @@ use Concrete\Core\Attribute\FontAwesomeIconFormatter;
 use Concrete\Core\Entity\Attribute\Key\Settings\AddressSettings;
 use Concrete\Core\Entity\Attribute\Value\Value\AddressValue;
 use Core;
-use Database;
 
 class Controller extends AttributeTypeController
 {
-    public $helpers = array('form');
+    public $helpers = ['form'];
 
     public function getIconFormatter()
     {
@@ -41,7 +40,6 @@ class Controller extends AttributeTypeController
     {
         return $this->entityManager->find(AddressValue::class, $this->attributeValue->getGenericValue());
     }
-
 
     public function searchForm($list)
     {
@@ -75,29 +73,29 @@ class Controller extends AttributeTypeController
         return $list;
     }
 
-    protected $searchIndexFieldDefinition = array(
-        'address1' => array(
+    protected $searchIndexFieldDefinition = [
+        'address1' => [
             'type' => 'string',
-            'options' => array('length' => '255', 'default' => '', 'notnull' => false),
-        ),
-        'address2' => array(
+            'options' => ['length' => '255', 'default' => '', 'notnull' => false],
+        ],
+        'address2' => [
             'type' => 'string',
-            'options' => array('length' => '255', 'default' => '', 'notnull' => false),
-        ),
-        'city' => array('type' => 'string', 'options' => array('length' => '255', 'default' => '', 'notnull' => false)),
-        'state_province' => array(
+            'options' => ['length' => '255', 'default' => '', 'notnull' => false],
+        ],
+        'city' => ['type' => 'string', 'options' => ['length' => '255', 'default' => '', 'notnull' => false]],
+        'state_province' => [
             'type' => 'string',
-            'options' => array('length' => '255', 'default' => '', 'notnull' => false),
-        ),
-        'country' => array(
+            'options' => ['length' => '255', 'default' => '', 'notnull' => false],
+        ],
+        'country' => [
             'type' => 'string',
-            'options' => array('length' => '255', 'default' => '', 'notnull' => false),
-        ),
-        'postal_code' => array(
+            'options' => ['length' => '255', 'default' => '', 'notnull' => false],
+        ],
+        'postal_code' => [
             'type' => 'string',
-            'options' => array('length' => '255', 'default' => '', 'notnull' => false),
-        ),
-    );
+            'options' => ['length' => '255', 'default' => '', 'notnull' => false],
+        ],
+    ];
 
     public function search()
     {
@@ -138,7 +136,7 @@ class Controller extends AttributeTypeController
     public function getSearchIndexValue()
     {
         $v = $this->getAttributeValue()->getValue();
-        $args = array();
+        $args = [];
         $args['address1'] = $v->getAddress1();
         $args['address2'] = $v->getAddress2();
         $args['city'] = $v->getCity();
@@ -154,6 +152,7 @@ class Controller extends AttributeTypeController
         $value = $this->getAttributeValue()->getValue();
         $v = Core::make('helper/text')->entities($value);
         $ret = nl2br($v);
+
         return $ret;
     }
 
@@ -180,7 +179,7 @@ class Controller extends AttributeTypeController
         }
 
         if (!is_array($data['akCustomCountries'])) {
-            $akCustomCountries = array();
+            $akCustomCountries = [];
         }
 
         $e = $this->app->make('error');
@@ -267,7 +266,7 @@ class Controller extends AttributeTypeController
             $type->setHasCustomCountries((bool) $akey->type['custom-countries']);
             $type->setDefaultCountry((string) $akey->type['default-country']);
             if (isset($akey->type->countries)) {
-                $countries = array();
+                $countries = [];
                 foreach ($akey->type->countries->children() as $country) {
                     $countries[] = (string) $country;
                 }
@@ -288,7 +287,7 @@ class Controller extends AttributeTypeController
             $akHasCustomCountries = 0;
         }
         if (!is_array($data['akCustomCountries'])) {
-            $akCustomCountries = array();
+            $akCustomCountries = [];
         }
 
         $type->setCustomCountries($akCustomCountries);
