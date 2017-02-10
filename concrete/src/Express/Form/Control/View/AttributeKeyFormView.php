@@ -29,6 +29,8 @@ class AttributeKeyFormView extends ControlView
         $this->context = $context->getAttributeContext();
         $this->key = $key;
         $this->view = $this->key->getController()->getControlView($this->context);
+        $this->view->setIsRequired($control->isRequired());
+        $this->view->setLabel($control->getDisplayLabel());
         if (is_object($entry)) {
             $this->view->setValue($entry->getAttributeValueObject($key));
         }

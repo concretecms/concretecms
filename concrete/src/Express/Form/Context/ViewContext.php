@@ -5,6 +5,7 @@ use Concrete\Core\Attribute\Context\BasicFormContext;
 use Concrete\Core\Attribute\Context\BasicFormViewContext;
 use Concrete\Core\Entity\Express\Control\Control;
 use Concrete\Core\Entity\Express\Entry;
+use Concrete\Core\Express\Form\FormInterface;
 use Concrete\Core\Express\Form\Group\FormView;
 use Concrete\Core\Filesystem\TemplateLocator;
 use Concrete\Core\Form\Control\ControlInterface;
@@ -13,6 +14,7 @@ class ViewContext implements ContextInterface
 {
 
     protected $entry;
+    protected $form;
 
     /**
      * @return mixed
@@ -33,6 +35,22 @@ class ViewContext implements ContextInterface
     public function getAttributeContext()
     {
         return new BasicFormViewContext();
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getForm()
+    {
+        return $this->form;
+    }
+
+    /**
+     * @param mixed $form
+     */
+    public function setForm(FormInterface $form)
+    {
+        $this->form = $form;
     }
 
     public function setLocation(TemplateLocator $locator)

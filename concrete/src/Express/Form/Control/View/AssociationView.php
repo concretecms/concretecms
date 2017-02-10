@@ -6,6 +6,7 @@ use Concrete\Core\Entity\Express\Control\AssociationControl;
 use Concrete\Core\Entity\Express\Control\Control;
 use Concrete\Core\Express\EntryList;
 use Concrete\Core\Express\Form\Context\ContextInterface;
+use Concrete\Core\Express\Form\OwnedEntityForm;
 use Concrete\Core\Filesystem\TemplateLocator;
 
 class AssociationView extends View
@@ -33,13 +34,10 @@ class AssociationView extends View
                 }
             }
         } else {
-            // Is this an owned entity? In which case we get the association from the owning entity
-            /*$renderer = $context->getFormRenderer();
-            $form = $renderer->getForm();
+            $form = $context->getForm();
             if ($form instanceof OwnedEntityForm) {
                 $this->selectedEntities = array($form->getOwningEntry());
             }
-            */
         }
 
         $this->addScopeItem('entities', $this->selectedEntities);

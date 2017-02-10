@@ -14,7 +14,7 @@ use Concrete\Core\Export\Item\Express\Form as FormExporter;
  * @ORM\Entity
  * @ORM\Table(name="ExpressForms")
  */
-class Form implements \JsonSerializable, ExportableInterface, FormInterface, ControlInterface
+class Form implements \JsonSerializable, ExportableInterface, FormInterface
 {
     /**
      * @ORM\Id @ORM\Column(type="guid")

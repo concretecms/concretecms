@@ -2,7 +2,7 @@
 namespace Concrete\Core\Express\Form;
 
 use Concrete\Core\Entity\Express\Entry;
-use Concrete\Core\Entity\Express\Form;
+use Concrete\Core\Express\Form\FormInterface;
 use Concrete\Core\Express\Form\Context\ContextInterface;
 
 class Renderer
@@ -11,10 +11,11 @@ class Renderer
     protected $context;
     protected $form;
 
-    public function __construct(ContextInterface $context, Form $form)
+    public function __construct(ContextInterface $context, FormInterface $form)
     {
         $this->context = $context;
         $this->form = $form;
+        $this->context->setForm($form);
     }
 
     /**
