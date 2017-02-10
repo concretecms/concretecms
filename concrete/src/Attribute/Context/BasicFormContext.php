@@ -5,7 +5,6 @@ use Concrete\Core\Attribute\View;
 use Concrete\Core\Entity\Attribute\Key\Key;
 use Concrete\Core\Entity\Attribute\Value\AbstractValue;
 use Concrete\Core\Filesystem\TemplateLocator;
-use Concrete\Core\Form\Control\ControlInterface;
 
 class BasicFormContext extends Context
 {

@@ -9,8 +9,11 @@ use Concrete\Core\Filesystem\TemplateLocator;
 use Concrete\Core\Express\Form\Context\ContextInterface;
 use Concrete\Core\Form\Group\ControlView;
 
-class AttributeKeyView extends View
+class AttributeKeyFormView extends ControlView
 {
+
+    protected $key;
+    protected $view;
 
     /**
      * AttributeKeyView constructor.
@@ -19,16 +22,26 @@ class AttributeKeyView extends View
      */
     public function __construct(ContextInterface $context, Control $control)
     {
-        parent::__construct($context, $control);
-        if ($entry = $context->getEntry()) {
-            $this->addScopeItem('value', $entry->getAttributeValueObject($control->getAttributeKey()));
+        $key = $control->getAttributeKey();
+        parent::__construct($context);
+        $entry = $context->getEntry();
+
+        $this->context = $context->getAttributeContext();
+        $this->key = $key;
+        $this->view = $this->key->getController()->getControlView($this->context);
+        if (is_object($entry)) {
+            $this->view->setValue($entry->getAttributeValueObject($key));
         }
     }
 
     public function createTemplateLocator()
     {
-        $locator = new TemplateLocator('attribute_key');
-        return $locator;
+        return $this->view->createTemplateLocator();
+    }
+
+    public function getView()
+    {
+        return $this->view;
     }
 
 

@@ -17,9 +17,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
             <?php
 
             foreach($fieldSet->getControls() as $setControl) {
-                $controlView = $setControl->getControlView(
-                    new \Concrete\Core\Express\Form\Context\DashboardFormContext()
-                );
+                $controlView = $setControl->getControlView($context);
 
                 if (is_object($controlView)) {
                     $renderer = $controlView->getControlRenderer();

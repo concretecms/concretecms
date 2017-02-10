@@ -1,9 +1,7 @@
 <?php
 namespace Concrete\Core\Attribute\Context;
 
-use Concrete\Core\Attribute\Form\Group\ComposerView;
 use Concrete\Core\Filesystem\TemplateLocator;
-use Concrete\Core\Form\Control\ControlInterface;
 
 class ComposerContext extends BasicFormContext
 {
