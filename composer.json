@@ -15,7 +15,10 @@
   },
   "config": {
     "process-timeout": 0,
-    "vendor-dir": "./concrete/vendor"
+    "vendor-dir": "./concrete/vendor",
+    "platform": {
+      "php": "5.5.9"
+    }
   },
   "replace": {
     "concrete5/core": "self.version"
@@ -49,6 +52,9 @@
     "phpcsw": [
       ".\\concrete\\vendor\\bin\\phpcs -p -s --report=full --standard=psr2 --sniffs=Generic.WhiteSpace.DisallowTabIndent,Generic.PHP.DisallowShortOpenTag concrete/src concrete/controllers",
       ".\\concrete\\vendor\\bin\\phpcs -p -s --report=full --standard=psr2 --sniffs=Generic.PHP.DisallowShortOpenTag --ignore=\"*.js,*.css,*.less,concrete/vendor/*,concrete/src/*,concrete/controllers/*\" concrete"
+    ],
+    "post-create-project-cmd": [
+      "composer config --unset platform.php"
     ]
   }
 }
