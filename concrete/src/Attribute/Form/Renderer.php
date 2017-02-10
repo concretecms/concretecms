@@ -1,11 +1,10 @@
 <?php
 namespace Concrete\Core\Attribute\Form;
 
-use Concrete\Core\Attribute\Form\Control\View;
+use Concrete\Core\Attribute\Form\Control\View\View;
 use Concrete\Core\Form\Context\ContextInterface;
 use Concrete\Core\Attribute\ObjectInterface;
-use Concrete\Core\Entity\Attribute\Key\Key;
-use Concrete\Core\Form\Group\ViewInterface;
+use Concrete\Core\Form\Control\ViewInterface;
 
 class Renderer
 {

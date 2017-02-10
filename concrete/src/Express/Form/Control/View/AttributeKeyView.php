@@ -1,13 +1,10 @@
 <?php
 namespace Concrete\Core\Express\Form\Control\View;
 
-use Concrete\Core\Entity\Attribute\Key\Key;
 use Concrete\Core\Entity\Express\Control\AttributeKeyControl;
 use Concrete\Core\Entity\Express\Control\Control;
-use Concrete\Core\Entity\Express\Form;
 use Concrete\Core\Filesystem\TemplateLocator;
 use Concrete\Core\Express\Form\Context\ContextInterface;
-use Concrete\Core\Form\Group\ControlView;
 
 class AttributeKeyView extends View
 {

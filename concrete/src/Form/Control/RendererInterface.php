@@ -1,5 +1,5 @@
 <?php
-namespace Concrete\Core\Form\Group;
+namespace Concrete\Core\Form\Control;
 
 interface RendererInterface
 {

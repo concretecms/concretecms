@@ -1,13 +1,11 @@
 <?php
 namespace Concrete\Core\Attribute;
 
-use Concrete\Core\Attribute\Context\FormContextInterface;
-use Concrete\Core\Attribute\Form\Control\View as ControlView;
+use Concrete\Core\Attribute\Form\Control\View\View as ControlView;
 use Concrete\Core\Attribute\Value\EmptyRequestAttributeValue;
 use Concrete\Core\Controller\AbstractController;
 use Concrete\Core\Entity\Attribute\Key\Settings\EmptySettings;
 use Concrete\Core\Form\Context\ContextInterface;
-use Concrete\Core\Form\Group\ViewInterface;
 use Concrete\Core\Search\ItemList\Database\AttributedItemList;
 use Core;
 use Concrete\Core\Attribute\View as AttributeTypeView;

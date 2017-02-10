@@ -1,9 +1,7 @@
 <?php
-namespace Concrete\Core\Form\Group;
+namespace Concrete\Core\Form\Control;
 
-use Concrete\Core\Form\Context\ContextInterface;
-
-abstract class ControlView extends View implements ControlViewInterface
+abstract class FormView extends View implements FormViewInterface
 {
 
     protected $label;

@@ -2,13 +2,9 @@
 namespace Concrete\Attribute\Address;
 
 use Concrete\Core\Attribute\Context\BasicFormContext;
-use Concrete\Core\Attribute\Context\ContextInterface;
-use Concrete\Core\Attribute\Context\FormContext;
 use Concrete\Core\Attribute\Controller as AttributeTypeController;
 use Concrete\Core\Attribute\FontAwesomeIconFormatter;
-use Concrete\Core\Attribute\Form\ComposerFormView;
-use Concrete\Core\Attribute\Form\Control\ComposerView;
-use Concrete\Core\Attribute\Form\Control\GroupedView;
+use Concrete\Core\Attribute\Form\Control\View\GroupedView;
 use Concrete\Core\Entity\Attribute\Key\Settings\AddressSettings;
 use Concrete\Core\Entity\Attribute\Value\Value\AddressValue;
 use Core;

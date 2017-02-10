@@ -3,7 +3,7 @@ namespace Concrete\Core\Express\Form\Control\View;
 
 use Concrete\Core\Entity\Express\Form;
 use Concrete\Core\Filesystem\TemplateLocator;
-use Concrete\Core\Form\Group\View as AbstractView;
+use Concrete\Core\Form\Control\View as AbstractView;
 use Concrete\Core\Express\Form\Context\ContextInterface;
 
 class FormView extends AbstractView

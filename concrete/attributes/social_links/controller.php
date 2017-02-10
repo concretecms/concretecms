@@ -1,10 +1,8 @@
 <?php
 namespace Concrete\Attribute\SocialLinks;
 
-use Concrete\Core\Attribute\Context\ContextInterface;
-use Concrete\Core\Attribute\Context\FormContext;
 use Concrete\Core\Attribute\FontAwesomeIconFormatter;
-use Concrete\Core\Attribute\Form\Control\GroupedView;
+use Concrete\Core\Attribute\Form\Control\View\GroupedView;
 use Concrete\Core\Entity\Attribute\Value\Value\SelectedSocialLink;
 use Concrete\Core\Entity\Attribute\Value\Value\SocialLinksValue;
 use Loader;

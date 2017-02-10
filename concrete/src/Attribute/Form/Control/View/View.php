@@ -1,17 +1,14 @@
 <?php
-namespace Concrete\Core\Attribute\Form\Control;
+namespace Concrete\Core\Attribute\Form\Control\View;
 
-use Concrete\Core\Attribute\Controller;
 use Concrete\Core\Entity\Attribute\Key\Key;
 use Concrete\Core\Entity\Attribute\Value\AbstractValue;
-use Concrete\Core\Express\Form\Context\ViewContext;
 use Concrete\Core\Form\Context\ContextInterface;
 use Concrete\Core\Filesystem\TemplateLocator;
 use Concrete\Core\Attribute\Context\ContextInterface as AttributeContextInterface;
-use Concrete\Core\Form\Group\ControlViewInterface;
-use Concrete\Core\Form\Group\ControlView;
+use Concrete\Core\Form\Control\FormView as BaseFormView;
 
-class View extends ControlView
+class View extends BaseFormView
 {
 
     protected $controller;

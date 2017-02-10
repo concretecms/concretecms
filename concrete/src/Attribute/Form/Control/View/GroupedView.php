@@ -1,7 +1,5 @@
 <?php
-namespace Concrete\Core\Attribute\Form\Control;
-
-use Concrete\Core\Entity\Attribute\Key\Key;
+namespace Concrete\Core\Attribute\Form\Control\View;
 
 class GroupedView extends View
 {
