@@ -6,7 +6,7 @@ use Concrete\Core\File\StorageLocation\StorageLocationInterface;
 use Database;
 use Doctrine\ORM\Mapping as ORM;
 use League\Flysystem\Cached\CachedAdapter;
-use League\Flysystem\Cached\Storage\Stash as Cache;
+use League\Flysystem\Cached\Storage\Psr6Cache;
 
 /**
  * @ORM\Entity
@@ -130,7 +130,7 @@ class StorageLocation implements StorageLocationInterface
     {
         $adapter = $this->getConfigurationObject()->getAdapter();
         $pool = \Core::make(ExpensiveCache::class)->pool;
-        $cache = new Cache($pool);
+        $cache = new Psr6Cache($pool);
         $cachedAdapter = new CachedAdapter($adapter, $cache);
         $filesystem = new \League\Flysystem\Filesystem($cachedAdapter);
 
