@@ -183,17 +183,9 @@ class UserInterface
         }
         if (!$src) {
             $filename = 'logo.png';
-            if (file_exists(DIR_APPLICATION . '/' . DIRNAME_IMAGES . '/' . $filename)) {
-                $src = REL_DIR_APPLICATION . '/' . DIRNAME_IMAGES . '/' . $filename;
-                $d = getimagesize(DIR_APPLICATION . '/' . DIRNAME_IMAGES . '/' . $filename);
-                $dimensions = $d[3];
-            } else {
-                $src = ASSETS_URL_IMAGES . '/' . $filename;
-                $dimensions = 'width="23" height="23"';
-            }
         }
 
-        return '<img id="ccm-logo" src="' . $src . '" ' . $dimensions . ' alt="' . $alt . '" title="' . $alt . '" />';
+        return '<img id="ccm-logo" src="' . $src . '" alt="' . $alt . '" title="' . $alt . '" />';
     }
 
     /**

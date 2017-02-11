@@ -6,8 +6,8 @@ return [
      *
      * @var string
      */
-    'version' => '8.1.1',
-    'version_installed' => '8.1.1',
+    'version' => '8.2.0a1',
+    'version_installed' => '8.2.0a1',
     'version_db' => '20170131000000', // the key of the latest database migration
 
     /*
@@ -602,11 +602,11 @@ return [
         'name' => false,
 
         /*
-         * Dashboard background image url
+         * Background image url
          *
          * @var null|string
          */
-        'dashboard_background' => null,
+        'background_image' => null,
     ],
     'session' => [
         'name' => 'CONCRETE5',
