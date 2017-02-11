@@ -77,6 +77,7 @@ class BlockType
             $bt->setPackageID($pkg->getPackageID());
         }
         $bt->setBlockTypeHandle($btHandle);
+        $bt->setupAutoCacheCleanActions($bta);
 
         $loc->popActiveContext();
 

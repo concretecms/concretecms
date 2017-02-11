@@ -11,13 +11,13 @@ use Concrete\Core\Filesystem\TemplateFile;
 use Concrete\Core\Package\PackageList;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Support\Facade\Facade;
+use Concrete\Core\Page\Page;
 use Core;
 use Database as DB;
 use Environment;
 use Loader;
 use Localization;
 use Package;
-use Page;
 use User;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -504,6 +504,7 @@ class BlockType
         $bta = $app->build($class);
 
         $this->loadFromController($bta);
+        $this->setupAutoCacheCleanActions($bta);
 
         $em = \ORM::entityManager();
         $em->persist($this);
@@ -539,13 +540,28 @@ class BlockType
         $this->btInterfaceHeight = $bta->getInterfaceHeight();
         $this->btInterfaceWidth = $bta->getInterfaceWidth();
     }
+    
+    /**
+     * Register BlockType in Caching Cleaner
+     * @param \Concrete\Core\Block\BlockController $bta
+     */
+    public function setupAutoCacheCleanActions($bta)
+    {
+        if (!empty($bta->getCacheBlockOutputClearActions())) {
+            $app = Facade::getFacadeApplication();
+            $cacheCleaner = $app->make('cache/block/cleaner');
+            $cacheCleaner->registerBlockType($bta->getCacheBlockOutputClearActions(), $this->btHandle);
+        }
+    }
 
     /**
      * Removes the block type. Also removes instances of content.
      */
     public function delete()
     {
-        $db = Loader::db();
+        $app = Facade::getFacadeApplication();
+        $db = $app->make('database')->connection();
+        
         $r = $db->Execute(
                 'select cID, cvID, b.bID, arHandle
                 from CollectionVersionBlocks cvb
@@ -575,6 +591,10 @@ class BlockType
 
         //Remove gaps in display order numbering (to avoid future sorting errors)
         BlockTypeList::resetBlockTypeDisplayOrder('btDisplayOrder');
+        
+        // Unregister BlockType from Caching Cleaner
+        $cacheCleaner = $app->make('cache/block/cleaner');
+        $cacheCleaner->unregisterBlockType($this->btHandle);
     }
 
     /**
@@ -644,4 +664,48 @@ class BlockType
             $this->controller = Facade::getFacadeApplication()->build($class, [$this]);
         }
     }
+    
+    public final function clearCache()
+    {
+        $app = Facade::getFacadeApplication();
+
+        $btID = $this->getBlockTypeID();
+        $db = $app->make('database')->connection();
+
+        $pageCache = \PageCache::getLibrary();
+        $cache = $app->make('cache/request');
+        if ($cache->isEnabled()) {
+            $qb = $db->createQueryBuilder();
+            $cIDs = $qb->select('cvb.cID')->from('CollectionVersionBlocksOutputCache', 'cvb')
+                    ->innerJoin('cvb', 'Blocks', 'b', 'b.bID = cvb.bID')
+                    ->where($qb->expr()->eq('b.btID', ':btID'))
+                    ->setParameter(':btID', $btID)
+                    ->execute()->fetchAll();
+            foreach ($cIDs as $cID) {
+                $cache->delete('page/' . $cID['cID']);
+                $pageCache->purge(Page::getByID($cID['cID']));
+            }
+        }
+
+        $sm = $db->getSchemaManager();
+        $blocksTable = $sm->listTableDetails('Blocks');
+        if ($blocksTable->hasColumn('btCachedBlockRecord')) {
+            $qb = $db->createQueryBuilder();
+            $qb->update('Blocks')->set('btCachedBlockRecord', 'null')
+                ->where($qb->expr()->eq('btID', ':btID'))
+                ->setParameter(':btID', $btID)
+                ->execute();
+        }
+
+        $qb = $db->createQueryBuilder();
+        $subQb = $db->createQueryBuilder();
+        $qb->delete('CollectionVersionBlocksOutputCache')
+            ->where($qb->expr()->comparison('bID', 'IN', '(' .
+                    $subQb->select('b.bID')->from('Blocks', 'b')
+                    ->where($subQb->expr()->eq('b.btID', ':btID'))
+                    ->getSQL() . ')'))
+            ->setParameter(':btID', $btID)
+            ->execute();
+    }
+
 }

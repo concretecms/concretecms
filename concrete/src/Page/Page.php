@@ -18,6 +18,7 @@ use Concrete\Core\Permission\AssignableObjectInterface;
 use Concrete\Core\Permission\Key\Key;
 use Concrete\Core\Support\Facade\Route;
 use Concrete\Core\Permission\Access\Entity\PageOwnerEntity;
+use Concrete\Core\Support\Facade\Facade;
 use Database;
 use CacheLocal;
 use Collection;
@@ -1759,7 +1760,8 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
 
     public function updateCollectionName($name)
     {
-        $db = Database::connection();
+        $app = Facade::getFacadeApplication();
+        $db = $app->make('database')->connection();
         $vo = $this->getVersionObject();
         $cvID = $vo->getVersionID();
         $this->markModified();
@@ -1777,6 +1779,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
 
             $pe = new Event($this);
             Events::dispatch('on_page_update', $pe);
+            $app->make('cache/block/cleaner')->clear('page_add_update');
         }
     }
 
@@ -1881,7 +1884,8 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
 
     public function update($data)
     {
-        $db = Database::connection();
+        $app = Facade::getFacadeApplication();
+        $db = $app->make('database')->connection();
 
         $vo = $this->getVersionObject();
         $cvID = $vo->getVersionID();
@@ -2029,6 +2033,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         $cache->purge($this);
 
         $this->refreshCache();
+        $app->make('cache/block/cleaner')->clear('page_add_update');
 
         $pe = new Event($this);
         Events::dispatch('on_page_update', $pe);
@@ -2254,10 +2259,11 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
 
     public function move($nc)
     {
-        $db = Database::connection();
-        $newCParentID = $nc->getCollectionID();
-        $dh = Core::make('helper/date');
+        $app = Facade::getFacadeApplication();
+        $db = $app->make('database')->connection();
+        $dh = $app->make('helper/date');
 
+        $newCParentID = $nc->getCollectionID();
         $cID = ($this->getCollectionPointerOriginalID() > 0) ? $this->getCollectionPointerOriginalID() : $this->cID;
 
         PageStatistics::decrementParents($cID);
@@ -2323,13 +2329,14 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         $pe->setNewParentPageObject($newParent);
         Events::dispatch('on_page_move', $pe);
 
-        $multilingual = \Core::make('multilingual/detector');
+        $multilingual = $app->make('multilingual/detector');
         if ($multilingual->isEnabled()) {
             Section::registerMove($this, $oldParent, $newParent);
         }
 
         // now that we've moved the collection, we rescan its path
         $this->rescanCollectionPath();
+        $app->make('cache/block/cleaner')->clear('page_move');
     }
 
     public function duplicateAll($nc = null, $preserveUserID = false, Site $site = null)
@@ -2481,7 +2488,8 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
             return false;
         }
 
-        $db = Database::connection();
+        $app = Facade::getFacadeApplication();
+        $db = $app->make('database')->connection();
 
         // run any internal event we have for page deletion
         $pe = new DeletePageEvent($this);
@@ -2540,11 +2548,12 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
 
         $cache = PageCache::getLibrary();
         $cache->purge($this);
+        $app->make('cache/block/cleaner')->clear('page_delete');
     }
 
     public function moveToTrash()
     {
-
+        $app = Facade::getFacadeApplication();
         // run any internal event we have for page trashing
         $pe = new Event($this);
         Events::dispatch('on_page_move_to_trash', $pe);
@@ -2564,10 +2573,12 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         $cID = ($this->getCollectionPointerOriginalID() > 0) ? $this->getCollectionPointerOriginalID() : $this->cID;
         $pages = [];
         $pages = $this->populateRecursivePages($pages, ['cID' => $cID], $this->getCollectionParentID(), 0, false);
-        $db = Database::connection();
+        $db = $app->make('database')->connection();
         foreach ($pages as $page) {
             $db->executeQuery('update Pages set cIsActive = 0 where cID = ?', [$page['cID']]);
         }
+        
+        $app->make('cache/block/cleaner')->clear('page_delete');
     }
 
     public function rescanChildrenDisplayOrder()
@@ -2968,8 +2979,9 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         $data += [
             'cHandle' => null,
         ];
-        $db = Database::connection();
-        $txt = Core::make('helper/text');
+        $app = Facade::getFacadeApplication();
+        $db = $app->make('database')->connection();
+        $txt = $app->make('helper/text');
 
         // the passed collection is the parent collection
         $cParentID = $this->getCollectionID();
@@ -3090,6 +3102,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
             Events::dispatch('on_page_add', $pe);
 
             $pc->rescanCollectionPath();
+            $app->make('cache/block/cleaner')->clear('page_add_update');
         }
 
         $entities = $u->getUserAccessEntityObjects();
