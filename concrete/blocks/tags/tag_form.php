@@ -1,5 +1,6 @@
 <?php defined('C5_EXECUTE') or die('Access Denied.');
-$form = Loader::helper('form');
+$app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
+$form = $app->make('helper/form');
 $c = Page::getCurrentPage();
 ?>
 
@@ -44,7 +45,7 @@ $c = Page::getCurrentPage();
 	<div class="form-group">
     	<label class="control-label"><?php echo t('Link Tags to Filtered Page List')?></label>
 		<?php
-        $form_selector = Loader::helper('form/page_selector');
+        $form_selector = $app->make('helper/form/page_selector');
         echo $form_selector->selectPage('targetCID', $targetCID);
         ?>
 	</div>
