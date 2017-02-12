@@ -9,7 +9,7 @@
     <?php } ?>
 
     <?php foreach ($options as $option) { ?>
-        <?php if ($target) { ?>
+        <?php if (isset($target) && $target) { ?>
             <a href="<?=$controller->getTagLink($option) ?>">
                 <?php if (isset($selectedTag) && $option->getSelectAttributeOptionValue() == $selectedTag) { ?>
                 <span class="ccm-block-tags-tag ccm-block-tags-tag-selected label"><?=$option->getSelectAttributeOptionValue()?></span>
