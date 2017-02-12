@@ -10,11 +10,19 @@
 
     <?php foreach ($options as $option) { ?>
         <?php if ($target) { ?>
-        <a href="<?=$controller->getTagLink($option) ?>">
-            <span class="ccm-block-tags-tag label"><?=$option->getSelectAttributeOptionValue()?></span>
-        </a>
+            <a href="<?=$controller->getTagLink($option) ?>">
+                <?php if (isset($selectedTag) && $option->getSelectAttributeOptionValue() == $selectedTag) { ?>
+                <span class="ccm-block-tags-tag ccm-block-tags-tag-selected label"><?=$option->getSelectAttributeOptionValue()?></span>
+                <?php } else { ?>
+                <span class="ccm-block-tags-tag label"><?=$option->getSelectAttributeOptionValue()?></span>
+                <?php } ?>
+            </a>
         <?php } else { ?>
-        <span class="ccm-block-tags-tag label"><?=$option->getSelectAttributeOptionValue()?></span>
+            <?php if (isset($selectedTag) && $option->getSelectAttributeOptionValue() == $selectedTag) { ?>
+            <span class="ccm-block-tags-tag ccm-block-tags-tag-selected label"><?=$option->getSelectAttributeOptionValue()?></span>
+            <?php } else { ?>
+            <span class="ccm-block-tags-tag label"><?=$option->getSelectAttributeOptionValue()?></span>
+            <?php } ?>
         <?php } ?>
     <?php } ?>
 </div>

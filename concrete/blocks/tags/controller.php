@@ -150,4 +150,12 @@ class Controller extends BlockController
     {
         return $stack->getCollectionParentID() == Page::getByPath(STACKS_PAGE_PATH)->getCollectionID();
     }
+
+    public function action_tag($tag = false)
+    {
+        if ($tag) {
+            $this->set('selectedTag', $tag);
+        }
+        $this->view();
+    }
 }
