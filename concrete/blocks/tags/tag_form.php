@@ -5,7 +5,7 @@ $c = Page::getCurrentPage();
 if (!$ak instanceof Concrete\Core\Entity\Attribute\Key\Key) {
     ?>
 	<div class="ccm-error"><?=t('Error: The required page attribute with the handle of: "%s" doesn\'t exist', $controller->attributeHandle)?><br/><br/></div>
-<?php 
+<?php
 } else {
     ?>
 <input type="hidden" name="attributeHandle" value="<?=$controller->attributeHandle?>" />
@@ -33,14 +33,14 @@ if (!$ak instanceof Concrete\Core\Entity\Attribute\Key\Key) {
 	<?php if (!$inStackDashboardPage) {
     ?>
 	<div id="ccm-tags-display-page" class="form-group">
-	<label><?php echo $ak->getAttributeKeyDisplayName();
+	<label class="control-label"><?php echo $ak->getAttributeKeyDisplayName();
     ?></label>
             <?php
                 $av = $c->getAttributeValueObject($ak);
     $ak->render(new \Concrete\Core\Attribute\Context\StandardFormContext(), $av);
     ?>
 	</div>
-	<?php 
+	<?php
 }
     ?>
 
@@ -58,7 +58,7 @@ if (!$ak instanceof Concrete\Core\Entity\Attribute\Key\Key) {
     ?>
 	</div>
 
-<?php 
+<?php
 } ?>
 <script>
     $(function(){ tags.init(); });
