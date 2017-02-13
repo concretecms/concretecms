@@ -1,5 +1,6 @@
 <?php defined('C5_EXECUTE') or die('Access Denied.');
-$form = Loader::helper('form');
+$app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
+$form = $app->make('helper/form');
 $request = $controller->getRequest();
 /* @var Concrete\Core\Http\Request $request */
 ?>
@@ -128,4 +129,4 @@ $(function() {
 </form>
 <?php } ?>
 
-<?=Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper(false);?>
+<?=$app->make('helper/concrete/dashboard')->getDashboardPaneFooterWrapper(false);?>
