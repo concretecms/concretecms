@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Http\Middleware;
 
 use Concrete\Core\Application\ApplicationAwareInterface;
@@ -75,7 +74,7 @@ class ThumbnailMiddleware implements MiddlewareInterface, ApplicationAwareInterf
                     try {
                         if ($responseStatusCode === 404) {
                             $searchThumbnailPath = $request->getRequestUri();
-                            $paths = $database->executeQuery('SELECT * FROM FileImageThumbnailPaths WHERE isBuilt=0 ORDER BY '.$database->getDatabasePlatform()->getLocateExpression('?', 'path').' DESC LIMIT 5', [$searchThumbnailPath]);
+                            $paths = $database->executeQuery('SELECT * FROM FileImageThumbnailPaths WHERE isBuilt=0 ORDER BY ' . $database->getDatabasePlatform()->getLocateExpression('?', 'path') . ' DESC LIMIT 5', [$searchThumbnailPath]);
                         } else {
                             $searchThumbnailPath = null;
                             $paths = $database->executeQuery('SELECT * FROM FileImageThumbnailPaths WHERE isBuilt=0 LIMIT 5');
@@ -106,7 +105,7 @@ class ThumbnailMiddleware implements MiddlewareInterface, ApplicationAwareInterf
      * @param \Concrete\Core\Database\Connection\Connection $database
      * @param string|null $searchThumbnailPath
      *
-     * @return bool Returns true if $searchThumbnailPath is set and one of the thumbnails may be for that thumbnail.
+     * @return bool returns true if $searchThumbnailPath is set and one of the thumbnails may be for that thumbnail
      */
     private function generateThumbnails($paths, Connection $database, $searchThumbnailPath)
     {
@@ -291,7 +290,7 @@ class ThumbnailMiddleware implements MiddlewareInterface, ApplicationAwareInterf
     private function failBuild(File $file, $thumbnail)
     {
         $this->app->make(LoggerInterface::class)
-            ->critical('Failed to generate or locate the thumbnail for file "'.$file->getFileID().'"');
+            ->critical('Failed to generate or locate the thumbnail for file "' . $file->getFileID() . '"');
 
         // Complete the build anyway.
         // Cache must be cleared to remove this and attempt rebuild
