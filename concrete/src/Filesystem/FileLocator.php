@@ -70,6 +70,19 @@ class FileLocator
         return implode('.', $keys);
     }
 
+    public function getAllRecords($file)
+    {
+        $this->addDefaultLocations();
+        $records = array();
+        foreach($this->locations as $location) {
+            $location->setFilesystem($this->filesystem);
+            if ($record = $location->contains($file)) {
+                $records[] = $record;
+            }
+        }
+        return $records;
+    }
+
     /**
      * @param $file
      * @return Record
