@@ -92,7 +92,7 @@ class Info
             natcasesort($packages);
             $this->packages = implode(', ', $packages);
 
-            $overrides = Environment::get()->getOverrideList();
+            $overrides = $this->getOverrideList();
             if (empty($overrides)) {
                 $this->overrides = '';
             } else {
@@ -217,6 +217,42 @@ class Info
             $loc->popActiveContext();
             throw $x;
         }
+    }
+
+    protected function getOverrideList()
+    {
+        $overrides = [];
+        $fh = \Core::make("helper/file");
+        $check = array(
+            DIR_FILES_BLOCK_TYPES,
+            DIR_FILES_CONTROLLERS,
+            DIR_FILES_ELEMENTS,
+            DIR_APPLICATION.'/'.DIRNAME_ATTRIBUTES,
+            DIR_APPLICATION.'/'.DIRNAME_AUTHENTICATION,
+            DIR_FILES_JOBS,
+            DIR_APPLICATION.'/'.DIRNAME_CSS,
+            DIR_APPLICATION.'/'.DIRNAME_JAVASCRIPT,
+            DIR_FILES_EMAIL_TEMPLATES,
+            DIR_FILES_CONTENT,
+            DIR_FILES_THEMES,
+            DIR_FILES_TOOLS,
+            DIR_APPLICATION.'/'.DIRNAME_PAGE_TEMPLATES,
+            DIR_APPLICATION.'/'.DIRNAME_VIEWS,
+            DIR_APPLICATION.'/'.DIRNAME_CLASSES,
+            DIR_APPLICATION.'/'.DIRNAME_MENU_ITEMS,
+        );
+        foreach ($check as $loc) {
+            if (is_dir($loc)) {
+                $contents = $fh->getDirectoryContents($loc, array(), true);
+                foreach ($contents as $f) {
+                    $item = str_replace(DIR_APPLICATION.'/', '', $f);
+                    $item = str_replace(DIR_BASE.'/', '', $item);
+                    $overrides[] = $item;
+                }
+            }
+        }
+
+        return $overrides;
     }
 
     /**
