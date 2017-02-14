@@ -34,17 +34,23 @@ abstract class AbstractLocation implements LocationInterface
         $this->filesystem = $filesystem;
     }
 
+    public function getRecord($file)
+    {
+        $record = new Record($this->filesystem);
+        $record->setFile($this->getPath() . DIRECTORY_SEPARATOR . $file);
+        $record->setUrl($this->getURL() . '/' . $file);
+        $record->setIsOverride($this->isOverride());
+        $record->setPackageHandle($this->getPackageHandle());
+        return $record;
+    }
+
     public function contains($file)
     {
         if ($this->filesystem->exists(
             $this->getPath() . DIRECTORY_SEPARATOR . $file
         )) {
-            $record = new Record($this->filesystem);
-            $record->setFile($this->getPath() . DIRECTORY_SEPARATOR . $file);
-            $record->setUrl($this->getURL() . '/' . $file);
-            $record->setIsOverride($this->isOverride());
+            $record = $this->getRecord($file);
             $record->setExists(true);
-            $record->setPackageHandle($this->getPackageHandle());
             return $record;
         }
     }

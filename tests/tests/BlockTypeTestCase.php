@@ -9,6 +9,7 @@ abstract class BlockTypeTestCase extends ConcreteDatabaseTestCase
     protected $tables = ['BlockTypes', 'Blocks', 'Pages', 'CollectionVersionBlocks', 'Collections', 'Config'];
 
     protected $metadatas = [
+        'Concrete\Core\Entity\Package',
         'Concrete\Core\Entity\Page\PagePath',
         'Concrete\Core\Entity\Block\BlockType\BlockType',
     ];

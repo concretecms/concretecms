@@ -35,7 +35,7 @@ class TemplateLocatorTest extends \PHPUnit_Framework_TestCase
         $locator->addLocation(DIRNAME_ATTRIBUTES.'/'.static::ATTRIBUTE_HANDLE.'/composer.php');
         $location = $locator->getLocation();
 
-        $this->assertInstanceOf('Concrete\Core\Foundation\EnvironmentRecord', $location);
+        $this->assertInstanceOf('Concrete\Core\Filesystem\FileLocator\Record', $location);
         $this->assertEquals(DIR_BASE_CORE.'/'.DIRNAME_ATTRIBUTES.'/'.static::ATTRIBUTE_HANDLE.'/composer.php', $location->getFile());
     }
 
@@ -46,7 +46,7 @@ class TemplateLocatorTest extends \PHPUnit_Framework_TestCase
         $locator->addLocation(DIRNAME_ATTRIBUTES.'/'.static::ATTRIBUTE_HANDLE.'/form.php');
         $location = $locator->getLocation();
 
-        $this->assertInstanceOf('Concrete\Core\Foundation\EnvironmentRecord', $location);
+        $this->assertInstanceOf('Concrete\Core\Filesystem\FileLocator\Record', $location);
         $this->assertEquals(DIR_BASE_CORE.'/'.DIRNAME_ATTRIBUTES.'/'.static::ATTRIBUTE_HANDLE.'/form.php', $location->getFile());
     }
 
@@ -56,7 +56,7 @@ class TemplateLocatorTest extends \PHPUnit_Framework_TestCase
         $locator->addLocation(DIRNAME_ATTRIBUTES.'/'.static::ATTRIBUTE_HANDLE.'/custom_form.php', 'foo_package');
         $location = $locator->getLocation();
 
-        $this->assertInstanceOf('Concrete\Core\Foundation\EnvironmentRecord', $location);
+        $this->assertInstanceOf('Concrete\Core\Filesystem\FileLocator\Record', $location);
         $this->assertEquals(DIR_BASE.'/packages/foo_package/attributes/'.static::ATTRIBUTE_HANDLE.'/custom_form.php', $location->getFile());
         $this->assertEquals(false, $location->exists());
     }

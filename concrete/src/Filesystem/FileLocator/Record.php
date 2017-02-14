@@ -9,8 +9,8 @@ class Record
     public $file; // should be public for legacy purposes
     public $url; // should be public for legacy purposes
     public $pkgHandle; // should be public for legacy purposes
+    public $override; // should be public for legacy purposes
     protected $exists;
-    protected $isOverride;
     protected $filesystem;
 
     /**
@@ -94,7 +94,7 @@ class Record
      */
     public function isOverride()
     {
-        return $this->isOverride;
+        return $this->override;
     }
 
     /**
@@ -102,7 +102,7 @@ class Record
      */
     public function setIsOverride($isOverride)
     {
-        $this->isOverride = $isOverride;
+        $this->override = $isOverride;
     }
 
 

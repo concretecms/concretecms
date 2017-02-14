@@ -30,7 +30,8 @@ class AllPackagesLocation implements LocationInterface
         foreach($this->packageList->getPackages() as $pkg) {
             $location = new PackageLocation($pkg->getPackageHandle());
             $location->setFilesystem($this->filesystem);
-            if ($record = $location->contains($file)) {
+            $record = $location->contains($file);
+            if ($record->exists()) {
                 return $record;
             }
         }

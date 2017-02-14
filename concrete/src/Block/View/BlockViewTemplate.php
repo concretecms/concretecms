@@ -79,7 +79,9 @@ class BlockViewTemplate
         if (is_object($this->theme)) {
             $locator->addLocation(new FileLocator\ThemeLocation($this->theme));
         }
-        $locator->addPackageLocation($obj->getPackageHandle());
+        if ($obj->getPackageHandle()) {
+            $locator->addPackageLocation($obj->getPackageHandle());
+        }
         $locator->addLocation(new FileLocator\AllPackagesLocation($this->getPackageList()));
 
         // if we've passed in "templates/" as the first part, we strip that off.

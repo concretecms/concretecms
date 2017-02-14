@@ -113,7 +113,6 @@ class FileLocatorTest extends \PHPUnit_Framework_TestCase
         $this->locator->addLocation(new FileLocator\AllPackagesLocation($packageList, $filesystem));
 
         $record = $this->locator->getRecord(DIRNAME_BLOCKS . '/page_list/templates/fancy_thumbnails/view.php');
-        $this->assertTrue($record->exists());
         $this->assertEquals(DIR_BASE . '/packages/thumbnails_pro/blocks/page_list/templates/fancy_thumbnails/view.php', $record->getFile());
     }
 
@@ -133,7 +132,6 @@ class FileLocatorTest extends \PHPUnit_Framework_TestCase
         $this->locator->addLocation(new FileLocator\ThemeLocation($theme));
         $record = $this->locator->getRecord(DIRNAME_ELEMENTS . '/header_required.php');
         $this->assertEquals(DIR_BASE_CORE . '/elements/header_required.php', $record->getFile());
-        $this->assertTrue($record->exists());
     }
 
     public function testBlockCustomTemplateInATheme()

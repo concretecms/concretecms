@@ -33,4 +33,11 @@ class PackageLocation extends AbstractLocation
     {
         return DIR_REL . '/' . DIRNAME_PACKAGES . '/' . $this->pkgHandle;
     }
+
+    public function contains($file)
+    {
+        $record = $this->getRecord($file);
+        return $record;
+    }
+
 }
