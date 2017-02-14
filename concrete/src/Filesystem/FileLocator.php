@@ -70,6 +70,10 @@ class FileLocator
         return implode('.', $keys);
     }
 
+    /**
+     * @param $file
+     * @return Record
+     */
     public function getRecord($file)
     {
         $this->addDefaultLocations();

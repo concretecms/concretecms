@@ -4,10 +4,11 @@ namespace Concrete\Core\Block\View;
 use Loader;
 use AssetList;
 use View;
-use Block;
+use Concrete\Core\Block\Block;
 use Concrete\Core\Package\PackageList;
 use Concrete\Core\Asset\JavascriptAsset;
 use Concrete\Core\Asset\CssAsset;
+use Concrete\Core\Filesystem\FileLocator;
 
 class BlockViewTemplate
 {
@@ -16,6 +17,7 @@ class BlockViewTemplate
     protected $bFilename;
     protected $btHandle;
     protected $obj;
+    protected $template;
     protected $baseURL;
     protected $checkAssets = true;
     protected $itemsToCheck = array(
@@ -23,21 +25,62 @@ class BlockViewTemplate
         'JAVASCRIPT' => 'view.js',
     );
     protected $render = FILENAME_BLOCK_VIEW;
+    /**
+     * @var PackageList
+     */
+    protected $packageList;
+    protected $theme;
 
-    public function __construct($obj)
+    public function __construct($obj, PackageList $packageList = null)
     {
         $this->btHandle = $obj->getBlockTypeHandle();
         $this->obj = $obj;
         if ($obj instanceof Block) {
             $this->bFilename = $obj->getBlockFilename();
+            $c = $obj->getBlockCollectionObject();
+            if (is_object($c)) {
+                $this->theme = $c->getCollectionThemeObject();
+            }
+        }
+        if ($packageList) {
+            $this->setPackageList($packageList);
+        } else {
+            $this->setPackageList(PackageList::get());
         }
         $this->computeView();
     }
+
+    /**
+     * @return PackageList
+     */
+    public function getPackageList()
+    {
+        return $this->packageList;
+    }
+
+    /**
+     * @param static $packageList
+     */
+    public function setPackageList($packageList)
+    {
+        $this->packageList = $packageList;
+    }
+
 
     protected function computeView()
     {
         $bFilename = $this->bFilename;
         $obj = $this->obj;
+
+        /**
+         * @var $locator FileLocator
+         */
+        $locator = \Core::make(FileLocator::class);
+        if (is_object($this->theme)) {
+            $locator->addLocation(new FileLocator\ThemeLocation($this->theme));
+        }
+        $locator->addPackageLocation($obj->getPackageHandle());
+        $locator->addLocation(new FileLocator\AllPackagesLocation($this->getPackageList()));
 
         // if we've passed in "templates/" as the first part, we strip that off.
         if (strpos($bFilename, 'templates/') === 0) {
@@ -51,34 +94,53 @@ class BlockViewTemplate
         }
 
         if ($bFilename) {
-            if (is_file(DIR_FILES_BLOCK_TYPES . '/' . $obj->getBlockTypeHandle() . '/' . DIRNAME_BLOCK_TEMPLATES . '/' . $bFilename)) {
-                $template = DIR_FILES_BLOCK_TYPES . '/' . $obj->getBlockTypeHandle() . '/' . DIRNAME_BLOCK_TEMPLATES . '/' . $bFilename;
-                $bv = new BlockView($obj);
-                $this->baseURL = $bv->getBlockURL();
-                $this->basePath = $bv->getBlockPath($this->render);
-            } elseif (is_file(DIR_FILES_BLOCK_TYPES_CORE . '/' . $obj->getBlockTypeHandle() . '/' . DIRNAME_BLOCK_TEMPLATES . '/' . $bFilename)) {
-                $template = DIR_FILES_BLOCK_TYPES_CORE . '/' . $obj->getBlockTypeHandle() . '/' . DIRNAME_BLOCK_TEMPLATES . '/' . $bFilename;
-                $this->baseURL = ASSETS_URL . '/' . DIRNAME_BLOCKS . '/' . $obj->getBlockTypeHandle();
-                $this->basePath = DIR_FILES_BLOCK_TYPES_CORE . '/' . $obj->getBlockTypeHandle();
-            } elseif (is_dir(DIR_FILES_BLOCK_TYPES . '/' . $obj->getBlockTypeHandle() . '/' . DIRNAME_BLOCK_TEMPLATES . '/' . $bFilename)) {
-                $template = DIR_FILES_BLOCK_TYPES . '/' . $obj->getBlockTypeHandle() . '/' . DIRNAME_BLOCK_TEMPLATES . '/' . $bFilename . '/' . $this->render;
-                $this->basePath = DIR_FILES_BLOCK_TYPES . '/' . $obj->getBlockTypeHandle() . '/' . DIRNAME_BLOCK_TEMPLATES . '/' . $bFilename;
-                $this->baseURL = REL_DIR_APPLICATION . '/' . DIRNAME_BLOCKS . '/' . $obj->getBlockTypeHandle() . '/' . DIRNAME_BLOCK_TEMPLATES . '/' . $bFilename;
-            } elseif (is_dir(DIR_FILES_BLOCK_TYPES_CORE . '/' . $obj->getBlockTypeHandle() . '/' . DIRNAME_BLOCK_TEMPLATES . '/' . $bFilename)) {
-                $template = DIR_FILES_BLOCK_TYPES_CORE . '/' . $obj->getBlockTypeHandle() . '/' . DIRNAME_BLOCK_TEMPLATES . '/' . $bFilename . '/'  . $this->render;
-                $this->basePath = DIR_FILES_BLOCK_TYPES_CORE . '/' . $obj->getBlockTypeHandle() . '/' . DIRNAME_BLOCK_TEMPLATES . '/' . $bFilename;
-                $this->baseURL = ASSETS_URL . '/' . DIRNAME_BLOCKS . '/' . $obj->getBlockTypeHandle() . '/' . DIRNAME_BLOCK_TEMPLATES . '/' . $bFilename;
-            } elseif ($bFilename !== $bFilenameWithoutDotPhp) {
-                if (is_dir(DIR_FILES_BLOCK_TYPES . '/' . $obj->getBlockTypeHandle() . '/' . DIRNAME_BLOCK_TEMPLATES . '/' . $bFilenameWithoutDotPhp)) {
-                    $template = DIR_FILES_BLOCK_TYPES . '/' . $obj->getBlockTypeHandle() . '/' . DIRNAME_BLOCK_TEMPLATES . '/' . $bFilenameWithoutDotPhp . '/' . $this->render;
-                    $this->basePath = DIR_FILES_BLOCK_TYPES . '/' . $obj->getBlockTypeHandle() . '/' . DIRNAME_BLOCK_TEMPLATES . '/' . $bFilenameWithoutDotPhp;
-                    $this->baseURL = REL_DIR_APPLICATION . '/' . DIRNAME_BLOCKS . '/' . $obj->getBlockTypeHandle() . '/' . DIRNAME_BLOCK_TEMPLATES . '/' . $bFilenameWithoutDotPhp;
-                } elseif (is_dir(DIR_FILES_BLOCK_TYPES_CORE . '/' . $obj->getBlockTypeHandle() . '/' . DIRNAME_BLOCK_TEMPLATES . '/' . $bFilenameWithoutDotPhp)) {
-                    $template = DIR_FILES_BLOCK_TYPES_CORE . '/' . $obj->getBlockTypeHandle() . '/' . DIRNAME_BLOCK_TEMPLATES . '/' . $bFilenameWithoutDotPhp . '/'  . $this->render;
-                    $this->basePath = DIR_FILES_BLOCK_TYPES_CORE . '/' . $obj->getBlockTypeHandle() . '/' . DIRNAME_BLOCK_TEMPLATES . '/' . $bFilenameWithoutDotPhp;
-                    $this->baseURL = ASSETS_URL . '/' . DIRNAME_BLOCKS . '/' . $obj->getBlockTypeHandle() . '/' . DIRNAME_BLOCK_TEMPLATES . '/' . $bFilenameWithoutDotPhp;
+            $record = $locator->getRecord(
+                DIRNAME_BLOCKS . '/' . $obj->getBlockTypeHandle() . '/' . DIRNAME_BLOCK_TEMPLATES . '/' . $bFilename);
+            if ($record->exists()) {
+                if (is_dir($record->getFile())) {
+                    $this->template = $record->getFile() . '/' . FILENAME_BLOCK_VIEW;
+                    $this->baseURL = $record->getUrl();
+                    $this->basePath = $record->getFile();
+                } else {
+                    $this->template = $record->getFile();
+                    $record = $locator->getRecord(
+                        DIRNAME_BLOCKS . '/' . $obj->getBlockTypeHandle() . '/' . $this->render
+                    );
+                    $this->baseURL = dirname($record->getUrl());
+                    $this->basePath = dirname($record->getFile());
+                }
+
+                return;
+            } else if ($bFilename !== $bFilenameWithoutDotPhp) {
+                $record = $locator->getRecord(
+                    DIRNAME_BLOCKS . '/' . $obj->getBlockTypeHandle() . '/' . DIRNAME_BLOCK_TEMPLATES . '/' . $bFilenameWithoutDotPhp
+                );
+                if ($record->exists() && is_dir($record->getFile())) {
+                    $this->template = $record->getFile() . '/' . $this->render;
+                    $this->baseURL = $record->getUrl();
+                    $this->basePath = $record->getFile();
+                    return;
                 }
             }
+        }
+
+        $record = $locator->getRecord(
+            DIRNAME_BLOCKS . '/' . $obj->getBlockTypeHandle() . '/' . $this->render
+        );
+        if ($record->exists()) {
+            $this->baseURL = dirname($record->getUrl());
+            $this->template = $record->getFile();
+            $this->basePath = dirname($this->template);
+            return;
+        }
+
+        // we check all installed packages
+        /*
+        $obj = $this->obj;
+
+
+        if ($bFilename) {
+
 
             // we check all installed packages
             if (!isset($template)) {
@@ -115,10 +177,6 @@ class BlockViewTemplate
                 }
             }
         } elseif (file_exists(DIR_FILES_BLOCK_TYPES . '/' . $obj->getBlockTypeHandle() . '.php')) {
-            $template = DIR_FILES_BLOCK_TYPES . '/' . $obj->getBlockTypeHandle() . '.php';
-            $bv = new BlockView($obj);
-            $this->baseURL = $bv->getBlockURL();
-            $this->basePath = $bv->getBlockPath($this->render);
         } elseif (file_exists(DIR_FILES_BLOCK_TYPES . '/' . $obj->getBlockTypeHandle() . '/' . $this->render)) {
             $template = DIR_FILES_BLOCK_TYPES . '/' . $obj->getBlockTypeHandle() . '/' . $this->render;
             $this->baseURL = REL_DIR_APPLICATION . '/' . DIRNAME_BLOCKS . '/' . $obj->getBlockTypeHandle();
@@ -134,6 +192,10 @@ class BlockViewTemplate
             $this->basePath = dirname($template);
         }
         $this->template = $template;
+        */
+
+
+
     }
 
     public function getBasePath()

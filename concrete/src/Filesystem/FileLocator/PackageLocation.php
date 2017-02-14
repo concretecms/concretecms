@@ -8,6 +8,11 @@ class PackageLocation extends AbstractLocation
      */
     protected $pkgHandle;
 
+    public function getPackageHandle()
+    {
+        return $this->pkgHandle;
+    }
+
     public function __construct($pkgHandle)
     {
         $this->pkgHandle = $pkgHandle;

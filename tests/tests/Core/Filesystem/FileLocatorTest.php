@@ -34,6 +34,14 @@ class FileLocatorTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($record->exists());
     }
 
+    public function testBasicLocateNotExists()
+    {
+        $record = $this->locator->getRecord(DIRNAME_BLOCKS . '/rss_displayer/templates/fancy/view.php');
+        $this->assertInstanceOf('Concrete\Core\Filesystem\FileLocator\Record', $record);
+        $this->assertEquals(DIR_BASE_CORE . '/blocks/rss_displayer/templates/fancy/view.php', $record->getFile());
+        $this->assertFalse($record->exists());
+    }
+
     public function testPackageLocate()
     {
         $filesystem = $this->getMockBuilder(Filesystem::class)

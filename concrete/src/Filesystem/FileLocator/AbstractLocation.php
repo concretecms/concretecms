@@ -11,6 +11,11 @@ abstract class AbstractLocation implements LocationInterface
     abstract public function getPath();
     abstract public function getURL();
 
+    public function getPackageHandle()
+    {
+        return null;
+    }
+
     /**
      * @param Filesystem $filesystem
      */
@@ -39,6 +44,7 @@ abstract class AbstractLocation implements LocationInterface
             $record->setUrl($this->getURL() . '/' . $file);
             $record->setIsOverride($this->isOverride());
             $record->setExists(true);
+            $record->setPackageHandle($this->getPackageHandle());
             return $record;
         }
     }

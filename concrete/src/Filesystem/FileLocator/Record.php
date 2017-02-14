@@ -8,6 +8,7 @@ class Record
 
     public $file; // should be public for legacy purposes
     public $url; // should be public for legacy purposes
+    public $pkgHandle; // should be public for legacy purposes
     protected $exists;
     protected $isOverride;
     protected $filesystem;
@@ -35,6 +36,22 @@ class Record
     public function setFile($file)
     {
         $this->file = $file;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPackageHandle()
+    {
+        return $this->pkgHandle;
+    }
+
+    /**
+     * @param mixed $pkgHandle
+     */
+    public function setPackageHandle($pkgHandle)
+    {
+        $this->pkgHandle = $pkgHandle;
     }
 
     /**

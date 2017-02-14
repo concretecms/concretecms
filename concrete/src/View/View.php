@@ -378,29 +378,29 @@ class View extends AbstractView
         }
         $view = self::getRequestInstance();
 
-        $c = Page::getCurrentPage();
-        if (is_object($c)) {
-            $theme = $c->getCollectionThemeObject();
+        $_c = Page::getCurrentPage();
+        if (is_object($_c)) {
+            $_theme = $_c->getCollectionThemeObject();
         }
 
-        $app = Facade::getFacadeApplication();
-        $filesystem = $app->make(Filesystem::class);
-        $locator = new FileLocator($filesystem, $app);
-        if (isset($theme) && is_object($theme)) {
-            $locator->addLocation(new FileLocator\ThemeElementLocation($theme));
+        $_app = Facade::getFacadeApplication();
+        $_fs = $_app->make(Filesystem::class);
+        $_locator = new FileLocator($_fs, $_app);
+        if (isset($_theme) && is_object($_theme)) {
+            $_locator->addLocation(new FileLocator\ThemeElementLocation($_theme));
         }
         if ($_pkgHandle) {
-            $locator->addPackageLocation($_pkgHandle);
+            $_locator->addPackageLocation($_pkgHandle);
         }
 
-        $record = $locator->getRecord(DIRNAME_ELEMENTS . '/' . $_file . '.php');
-        $_file = $record->getFile();
+        $_record = $_locator->getRecord(DIRNAME_ELEMENTS . '/' . $_file . '.php');
+        $_file = $_record->getFile();
 
-        unset($record);
-        unset($app);
-        unset($filesystem);
-        unset($locator);
-        unset($theme);
+        unset($_record);
+        unset($_app);
+        unset($_fs);
+        unset($_locator);
+        unset($_theme);
 
         include $_file;
     }
