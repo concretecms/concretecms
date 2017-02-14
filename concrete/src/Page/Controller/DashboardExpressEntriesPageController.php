@@ -7,9 +7,12 @@ use Concrete\Core\Express\Entry\Manager;
 use Concrete\Core\Express\Form\Context\DashboardFormContext;
 use Concrete\Core\Express\Form\Context\DashboardViewContext;
 use Concrete\Core\Express\Form\Renderer;
+use Concrete\Core\Express\EntryList;
 use Concrete\Core\Express\Form\Validator;
+use Concrete\Core\Express\Search\ColumnSet\ExportSet;
 use Concrete\Core\Tree\Node\Node;
 use Concrete\Core\Tree\Type\ExpressEntryResults;
+use Core;
 
 abstract class DashboardExpressEntriesPageController extends DashboardPageController
 {
@@ -51,27 +54,12 @@ abstract class DashboardExpressEntriesPageController extends DashboardPageContro
 
     protected function renderList($treeNodeParentID = null)
     {
-        $nodes = null;
-        $parent = null;
-        if ($treeNodeParentID) {
-            $parent = Node::getByID($treeNodeParentID);
-            if (is_object($parent)) {
-                $tree = $parent->getTreeObject();
-                if (!($tree instanceof ExpressEntryResults)) {
-                    unset($parent);
-                }
-            }
-        }
-        if (!isset($parent)) {
-            $parent = $this->getResultsTreeNodeObject();
-        }
+        $parent = $this->getParentNode($treeNodeParentID);
 
         $this->set('breadcrumb', $this->getBreadcrumb($parent));
 
         if (isset($parent) && $parent instanceof \Concrete\Core\Tree\Node\Type\ExpressEntryResults) {
-            // Get the express entry for which this applies.
-            $entity = $this->entityManager->getRepository('Concrete\Core\Entity\Express\Entity')
-                ->findOneByResultsNode($parent);
+            $entity = $this->getEntity($parent);
             $search = new \Concrete\Controller\Search\Express\Entries();
             $search->search($entity);
             $this->set('list', $search->getListObject());
@@ -83,6 +71,31 @@ abstract class DashboardExpressEntriesPageController extends DashboardPageContro
             $this->set('nodes', $parent->getChildNodes());
             $this->render('/dashboard/express/entries/folder', false);
         }
+    }
+
+    /**
+     * Export Express entries into a CSV
+     *
+     * @param null $treeNodeParentID
+     */
+    public function csv_export($treeNodeParentID = null)
+    {
+        $parent = $this->getParentNode($treeNodeParentID);
+        $entity = $this->getEntity($parent);
+        $entryList = new EntryList($entity);
+
+        $csvService = Core::make('helper/csv/entry_list', array($entryList, $entity->getName()));
+        $csvService->generate();
+    }
+
+    /**
+     * @param \Concrete\Core\Tree\Node\Type\ExpressEntryResults $parent
+     * @return \Concrete\Core\Entity\Express\Entity
+     */
+    private function getEntity(\Concrete\Core\Tree\Node\Type\ExpressEntryResults $parent)
+    {
+        return $this->entityManager->getRepository('Concrete\Core\Entity\Express\Entity')
+            ->findOneByResultsNode($parent);
     }
 
     protected function getBreadcrumb(Node $node = null)
@@ -267,5 +280,28 @@ abstract class DashboardExpressEntriesPageController extends DashboardPageContro
         } else {
             throw new \Exception(t('Invalid form.'));
         }
+    }
+
+    /**
+     * @param $treeNodeParentID
+     * @return null
+     */
+    private function getParentNode($treeNodeParentID)
+    {
+        $parent = null;
+        if ($treeNodeParentID) {
+            $parent = Node::getByID($treeNodeParentID);
+            if (is_object($parent)) {
+                $tree = $parent->getTreeObject();
+                if (!($tree instanceof ExpressEntryResults)) {
+                    unset($parent);
+                }
+            }
+        }
+        if (!isset($parent)) {
+            $parent = $this->getResultsTreeNodeObject();
+        }
+
+        return $parent;
     }
 }

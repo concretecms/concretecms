@@ -17,6 +17,13 @@
 
         <?php if ($showAddButton) { ?>
         <ul class="ccm-header-search-navigation">
+            <?php if ($canExportUsers): ?>
+                <li>
+                    <a href="<?php echo URL::to('/dashboard/users/search/csv_export')?>" class="link-primary">
+                        <i class="fa fa-download"></i> <?=t('Export to CSV') ?>
+                    </a>
+                </li>
+            <?php endif ?>
             <li><a href="<?php echo View::url('/dashboard/users/add') ?>" class="link-primary"><i class="fa fa-user"></i> <?php echo t("Add User") ?></a></li>
         </ul>
         <?php } ?>

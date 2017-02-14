@@ -4,6 +4,7 @@ namespace Concrete\Controller\Element\Search\Users;
 use Concrete\Core\Controller\ElementController;
 use Concrete\Core\Entity\Search\Query;
 use Concrete\Core\Search\ProviderInterface;
+use Core;
 
 class Header extends ElementController
 {
@@ -40,8 +41,18 @@ class Header extends ElementController
 
     public function view()
     {
+        $this->set('canExportUsers', $this->canExportUsers());
         $this->set('showAddButton', $this->showAddButton);
         $this->set('query', $this->query);
+    }
+
+    /**
+     * @return mixed
+     */
+    private function canExportUsers()
+    {
+        $dh = Core::make('helper/concrete/user');
+        return $dh->canAccessUserSearchInterface();
     }
 
 }

@@ -9,6 +9,7 @@ class Header extends ElementController
     protected $entity;
     protected $page;
     protected $createURL;
+    protected $exportURL;
 
     /**
      * @return mixed
@@ -19,11 +20,27 @@ class Header extends ElementController
     }
 
     /**
+     * @return mixed
+     */
+    public function getExportURL()
+    {
+        return $this->exportURL;
+    }
+
+    /**
      * @param mixed $createURL
      */
     public function setCreateURL($createURL)
     {
         $this->createURL = $createURL;
+    }
+
+    /**
+     * @param mixed $exportURL
+     */
+    public function setExportURL($exportURL)
+    {
+        $this->exportURL = $exportURL;
     }
 
     public function __construct($entity, $page)
@@ -32,6 +49,7 @@ class Header extends ElementController
         $this->entity = $entity;
         $this->page = $page;
         $this->setCreateURL(\URL::to($page->getCollectionPath(), 'create_entry', $entity->getID()));
+        $this->setExportURL(\URL::to($page->getCollectionPath(), 'csv_export', $entity->getEntityResultsNodeId()));
     }
 
     /**
@@ -60,6 +78,7 @@ class Header extends ElementController
     {
         $this->set('entity', $this->getEntity());
         $this->set('createURL', $this->getCreateURL());
+        $this->set('exportURL', $this->getExportURL());
     }
 
 }

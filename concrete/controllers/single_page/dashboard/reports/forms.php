@@ -17,7 +17,7 @@ class Forms extends DashboardExpressEntriesPageController
 
     public function view($folder = null)
     {
-        $this->set('headerMenu', new Header());
+        $this->set('headerMenu', new Header($folder));
         $this->renderList($folder);
     }
 
