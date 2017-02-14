@@ -14,6 +14,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use League\Flysystem\Filesystem;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Concrete\Core\Http\ResponseFactoryInterface;
 
 /**
  * Class ThumbnailMiddleware
@@ -60,7 +61,8 @@ class ThumbnailMiddleware implements MiddlewareInterface, ApplicationAwareInterf
         $response = $frame->next($request);
 
         if ($this->app->isInstalled()) {
-            if ($response->getStatusCode() == 200) {
+            $responseStatusCode = (int) $response->getStatusCode();
+            if ($responseStatusCode === 200 || $responseStatusCode === 404) {
                 /* @var Connection $database */
                 try {
                     $database = $this->getConnection();
@@ -71,9 +73,21 @@ class ThumbnailMiddleware implements MiddlewareInterface, ApplicationAwareInterf
 
                 if ($database) {
                     try {
-                        $paths = $database->executeQuery('SELECT * FROM FileImageThumbnailPaths WHERE isBuilt=0 LIMIT 5');
+                        if ($responseStatusCode === 404) {
+                            $searchThumbnailPath = $request->getRequestUri();
+                            $paths = $database->executeQuery('SELECT * FROM FileImageThumbnailPaths WHERE isBuilt=0 ORDER BY '.$database->getDatabasePlatform()->getLocateExpression('?', 'path').' DESC LIMIT 5', [$searchThumbnailPath]);
+                        } else {
+                            $searchThumbnailPath = null;
+                            $paths = $database->executeQuery('SELECT * FROM FileImageThumbnailPaths WHERE isBuilt=0 LIMIT 5');
+                        }
                         if ($paths->rowCount()) {
-                            $this->generateThumbnails($paths, $database);
+                            if ($this->generateThumbnails($paths, $database, $searchThumbnailPath) === true && $responseStatusCode === 404) {
+                                $redirectTo = (string) $request->getUri();
+                                $redirectTo .= ((strpos($redirectTo, '?') === false) ? '?' : '&') . mt_rand();
+                                $responseFactory = $this->app->make(ResponseFactoryInterface::class);
+                                $response = $responseFactory->redirect($redirectTo);
+                                $searchThumbnailPath = null;
+                            }
                         }
                     } catch (InvalidFieldNameException $e) {
                         // Ignore this, user probably needs to run an upgrade.
@@ -90,21 +104,30 @@ class ThumbnailMiddleware implements MiddlewareInterface, ApplicationAwareInterf
      *
      * @param array[]                                       $paths
      * @param \Concrete\Core\Database\Connection\Connection $database
+     * @param string|null $searchThumbnailPath
+     *
+     * @return bool Returns true if $searchThumbnailPath is set and one of the thumbnails may be for that thumbnail.
      */
-    private function generateThumbnails($paths, Connection $database)
+    private function generateThumbnails($paths, Connection $database, $searchThumbnailPath)
     {
-        $database->transactional(function (Connection $database) use ($paths) {
+        $result = false;
+        $database->transactional(function (Connection $database) use ($paths, $searchThumbnailPath, &$result) {
             foreach ($paths as $thumbnail) {
                 /** @var File $file */
                 $file = $this->getEntityManager()->find(File::class, $thumbnail['fileID']);
 
                 if ($this->attemptBuild($file, $thumbnail)) {
                     $this->completeBuild($file, $thumbnail);
+                    if ($result === false && $this->maybeTheRequestedThumbnail($thumbnail, $searchThumbnailPath)) {
+                        $result = true;
+                    }
                 } else {
                     $this->failBuild($file, $thumbnail);
                 }
             }
         });
+
+        return $result;
     }
 
     /**
@@ -239,6 +262,24 @@ class ThumbnailMiddleware implements MiddlewareInterface, ApplicationAwareInterf
     {
         // Update the database to have "1" for isBuilt
         $this->connection->update('FileImageThumbnailPaths', ['isBuilt' => '1'], $thumbnail);
+    }
+
+    /**
+     * Check if a thumbnail array may be for the requested path.
+     *
+     * @param array $thumbnail
+     * @param string|null $searchThumbnailPath
+     *
+     * @return bool
+     */
+    private function maybeTheRequestedThumbnail(array $thumbnail, $searchThumbnailPath)
+    {
+        $result = false;
+        if ($searchThumbnailPath && substr($searchThumbnailPath, -strlen($thumbnail['path'])) === $thumbnail['path']) {
+            $result = true;
+        }
+
+        return $result;
     }
 
     /**
