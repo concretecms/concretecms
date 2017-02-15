@@ -33,6 +33,7 @@ use Concrete\Core\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 use View;
+use Exception;
 
 class Application extends Container
 {
@@ -127,7 +128,7 @@ class Application extends Container
         $sql = $connection->getDatabasePlatform()->getTruncateTableSQL('FileImageThumbnailPaths');
         try {
             $connection->executeUpdate($sql);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
         }
 
         // clear the environment overrides cache
@@ -190,13 +191,10 @@ class Application extends Container
                 }
 
                 if (strlen($url)) {
-                    $ch = curl_init($url);
-                    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-                    curl_setopt($ch, CURLOPT_HEADER, 0);
-                    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 1);
-                    curl_setopt($ch, CURLOPT_TIMEOUT, 1);
-                    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, $config->get('app.curl.verifyPeer'));
-                    $res = curl_exec($ch);
+                    try {
+                        $this->make('http/client')->setUri($url)->send();
+                    } catch (Exception $x) {
+                    }
                 }
             }
         }
@@ -209,7 +207,7 @@ class Application extends Container
     {
         if ($this->installed === null) {
             if (!$this->isShared('config')) {
-                throw new \Exception('Attempting to check install status before application initialization.');
+                throw new Exception('Attempting to check install status before application initialization.');
             }
 
             $this->installed = $this->make('config')->get('concrete.installed');
