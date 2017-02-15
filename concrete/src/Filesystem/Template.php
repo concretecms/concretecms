@@ -5,15 +5,17 @@ class Template
 {
 
     protected $templateHandle;
+    protected $pkgHandle;
 
     /**
      * Template constructor.
      * @param $templateHandle
      * @param $pkgHandle
      */
-    public function __construct($templateHandle)
+    public function __construct($templateHandle, $pkgHandle = null)
     {
         $this->templateHandle = $templateHandle;
+        $this->pkgHandle = $pkgHandle;
     }
 
     /**
@@ -31,6 +33,24 @@ class Template
     {
         $this->templateHandle = $templateHandle;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getPackageHandle()
+    {
+        return $this->pkgHandle;
+    }
+
+    /**
+     * @param mixed $pkgHandle
+     */
+    public function setPackageHandle($pkgHandle)
+    {
+        $this->pkgHandle = $pkgHandle;
+    }
+
+
 
 
 

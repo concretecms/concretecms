@@ -12,10 +12,15 @@ class TemplateLocator
     {
         $template = null;
         if (!($input instanceof Template)) {
-            $template = new Template($input);
+            if (is_array($input)) {
+                $template = new Template($input[0], $input[1]);
+            } else if (is_string($input)) {
+                $template = new Template($input);
+            }
         } else {
             $template = $input;
         }
+
         return $template;
     }
 
@@ -92,17 +97,33 @@ class TemplateLocator
         }
      }
 
+    /**
+     * @return array
+     */
+    public function getLocations()
+    {
+        return $this->locations;
+    }
+
     public function getLocation()
     {
         $r = Environment::get();
         $record = false;
         foreach($this->locations as $location) {
+            $pkgHandle = null;
             if ($this->template) {
                 $path = $this->getPath($location, $this->template);
+                if ($this->template->getPackageHandle()) {
+                    $pkgHandle = $this->template->getPackageHandle();
+                }
             } else {
                 $path = $location->getLocation();
             }
-            $record = $r->getRecord($path, $location->getPackageHandle());
+            if (!$pkgHandle) {
+                $pkgHandle = $location->getPackageHandle();
+            }
+
+            $record = $r->getRecord($path, $pkgHandle);
             if ($record->exists()) {
                 return $record;
             }

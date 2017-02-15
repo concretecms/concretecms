@@ -27,6 +27,7 @@ class View extends BaseFormView
         $this->value = $value;
     }
 
+
     public function __construct(ContextInterface $context, Key $key, AbstractValue $value = null)
     {
         parent::__construct($context);
