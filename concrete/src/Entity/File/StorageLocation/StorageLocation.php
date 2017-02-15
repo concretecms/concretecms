@@ -1,10 +1,12 @@
 <?php
 namespace Concrete\Core\Entity\File\StorageLocation;
 
-use Concrete\Core\File\StorageLocation\Configuration\ConfigurationInterface;
+use Concrete\Core\Cache\Level\ExpensiveCache;
 use Concrete\Core\File\StorageLocation\StorageLocationInterface;
 use Database;
 use Doctrine\ORM\Mapping as ORM;
+use League\Flysystem\Cached\CachedAdapter;
+use League\Flysystem\Cached\Storage\Psr6Cache;
 
 /**
  * @ORM\Entity
@@ -56,8 +58,8 @@ class StorageLocation implements StorageLocationInterface
 
     /** Returns the display name for this storage location (localized and escaped accordingly to $format)
      * @param string $format = 'html'
-     *    Escape the result in html format (if $format is 'html').
-     *    If $format is 'text' or any other value, the display name won't be escaped.
+     *                       Escape the result in html format (if $format is 'html').
+     *                       If $format is 'text' or any other value, the display name won't be escaped.
      *
      * @return string
      */
@@ -127,7 +129,10 @@ class StorageLocation implements StorageLocationInterface
     public function getFileSystemObject()
     {
         $adapter = $this->getConfigurationObject()->getAdapter();
-        $filesystem = new \League\Flysystem\Filesystem($adapter);
+        $pool = \Core::make(ExpensiveCache::class)->pool;
+        $cache = new Psr6Cache($pool);
+        $cachedAdapter = new CachedAdapter($adapter, $cache);
+        $filesystem = new \League\Flysystem\Filesystem($cachedAdapter);
 
         return $filesystem;
     }
@@ -137,7 +142,7 @@ class StorageLocation implements StorageLocationInterface
         $default = \Concrete\Core\File\StorageLocation\StorageLocation::getDefault();
         $db = Database::get();
 
-        $fIDs = $db->GetCol('select fID from Files where fslID = ?', array($this->getID()));
+        $fIDs = $db->GetCol('select fID from Files where fslID = ?', [$this->getID()]);
         foreach ($fIDs as $fID) {
             $file = \File::getByID($fID);
             if (is_object($file)) {
