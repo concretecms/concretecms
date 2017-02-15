@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Core\Console\Command;
 
-use Symfony\Component\Console\Command\Command;
+use Concrete\Core\Console\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
@@ -16,7 +16,7 @@ final class ServiceCommand extends Command
 {
     protected function configure()
     {
-        $serviceHandles = array();
+        $serviceHandles = [];
         $help = '';
         $manager = Core::make('Concrete\Core\Service\Manager\ServiceManager');
         /* @var \Concrete\Core\Service\Manager\ServiceManager $manager */
@@ -27,7 +27,7 @@ final class ServiceCommand extends Command
                     /* @var ConfigurableRuleInterface $rule */
                     foreach ($rule->getOptions() as $optionHandle => $option) {
                         $help .= "Rule option for service $serviceHandle, rule $ruleHandle:\n";
-                        $help .= "  - $optionHandle: ".$option->getDescription();
+                        $help .= "  - $optionHandle: " . $option->getDescription();
                         if ($option->isRequired()) {
                             $help .= ' [required]';
                         } else {
@@ -38,7 +38,7 @@ final class ServiceCommand extends Command
                 }
             }
         }
-        $help .= <<<EOT
+        $help .= <<<'EOT'
 
 Return codes for the check operation:
   0 operation completed successfully
@@ -55,8 +55,9 @@ EOT
         $this
             ->setName('c5:service')
             ->setDescription('Check or update the web server configuration')
+            ->addEnvOption()
             ->addOption('service-version', 'r', InputOption::VALUE_REQUIRED, 'The specific version of the web server software', '')
-            ->addArgument('service', InputArgument::REQUIRED, 'The web server to use ('.implode('|', $serviceHandles).')')
+            ->addArgument('service', InputArgument::REQUIRED, 'The web server to use (' . implode('|', $serviceHandles) . ')')
             ->addArgument('operation', InputArgument::REQUIRED, 'The operation to perform (check|update)')
             ->addArgument('rule-options', InputArgument::IS_ARRAY, 'List of key-value pairs to pass to the rules (example: foo=bar baz=foo)')
             ->setHelp(trim($help))
@@ -71,9 +72,9 @@ EOT
             /* @var \Concrete\Core\Service\Manager\ServiceManager $manager */
             $service = $manager->getService($input->getArgument('service'), $input->getOption('service-version'));
             if ($service === null) {
-                $msg = 'Unknown web server handle: '.$input->getArgument('service');
+                $msg = 'Unknown web server handle: ' . $input->getArgument('service');
                 $msg .= PHP_EOL;
-                $msg .= 'Valid handles: '.implode(', ', $manager->getExtensions());
+                $msg .= 'Valid handles: ' . implode(', ', $manager->getExtensions());
                 throw new Exception($msg);
             }
             $operation = $input->getArgument('operation');
@@ -91,7 +92,7 @@ EOT
                     throw new Exception('Invalid value of the operation argument (valid values: check or update');
             }
         } catch (Exception $x) {
-            $output->writeln('<error>'.$x->getMessage().'</error>');
+            $output->writeln('<error>' . $x->getMessage() . '</error>');
             $rc = 1;
         }
 
@@ -102,7 +103,7 @@ EOT
     {
         $storage = $service->getStorage();
         if (!$storage->canRead()) {
-            throw new Exception('Unable to read current server configuration for '.$service->getFullName());
+            throw new Exception('Unable to read current server configuration for ' . $service->getFullName());
         }
         $configuration = $storage->read();
         $generator = $service->getGenerator();
@@ -138,7 +139,7 @@ EOT
         // Initialize some variable
         $storage = $service->getStorage();
         if (!$storage->canRead()) {
-            throw new Exception('Unable to read the current server configuration for '.$service->getFullName());
+            throw new Exception('Unable to read the current server configuration for ' . $service->getFullName());
         }
         $configuration = $storage->read();
         $generator = $service->getGenerator();
@@ -185,7 +186,7 @@ EOT
             // Some rule has been added or removed from the configuration: let's save it
             $output->write("Persisting new configuration... ");
             if (!$storage->canWrite()) {
-                throw new Exception('Unable to write the current server configuration for '.$service->getFullName());
+                throw new Exception('Unable to write the current server configuration for ' . $service->getFullName());
             }
             $storage->write($configuration);
             $output->writeln("<info>done.</info>");
@@ -203,7 +204,7 @@ EOT
      */
     protected function parseRuleOptions(InputInterface $input)
     {
-        $ruleOptions = array();
+        $ruleOptions = [];
         foreach ($input->getArgument('rule-options') as $keyValuePair) {
             list($key, $value) = explode('=', $keyValuePair, 2);
             $key = trim($key);

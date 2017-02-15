@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Core\Console\Command;
 
-use Symfony\Component\Console\Command\Command;
+use Concrete\Core\Console\Command;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -17,8 +17,9 @@ class ResetCommand extends Command
         $this
             ->setName('c5:reset')
             ->setDescription('Reset the concrete5 installation, deleting files and emptying the database')
+            ->addEnvOption()
             ->addOption('force', 'f', InputOption::VALUE_NONE, 'Force the reset')
-            ->setHelp(<<<EOT
+            ->setHelp(<<<'EOT'
 Returns codes:
   0 operation completed successfully
   1 errors occurred
@@ -28,6 +29,7 @@ EOT
             )
         ;
     }
+
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $rc = 0;
@@ -52,7 +54,7 @@ EOT
                 $sm = $cn->getSchemaManager();
                 $tables = $sm->listTables();
                 $output->writeln('<info>done.</info>');
-                $tableNames = array();
+                $tableNames = [];
                 foreach ($tables as $table) {
                     $tableNames[] = $table->getName();
                     foreach ($table->getForeignKeys() as $foreignKey) {
@@ -69,23 +71,23 @@ EOT
             }
             $fh = Core::make('helper/file');
             /* @var $fh \Concrete\Core\File\Service\File */
-            $createEmptyDirs = array(
+            $createEmptyDirs = [
                 'application/files' => DIR_FILES_UPLOADED_STANDARD,
-            );
-            $createEmptyFiles = array(
-                'application/files/index.html' => DIR_FILES_UPLOADED_STANDARD.'/index.html',
-            );
-            if (is_file(DIR_FILES_UPLOADED_STANDARD.'/.gitignore')) {
-                $createEmptyFiles['application/files/.gitignore'] = DIR_FILES_UPLOADED_STANDARD.'/.gitignore';
+            ];
+            $createEmptyFiles = [
+                'application/files/index.html' => DIR_FILES_UPLOADED_STANDARD . '/index.html',
+            ];
+            if (is_file(DIR_FILES_UPLOADED_STANDARD . '/.gitignore')) {
+                $createEmptyFiles['application/files/.gitignore'] = DIR_FILES_UPLOADED_STANDARD . '/.gitignore';
             }
-            $deleteFiles = array(
-                '.htaccess' => DIR_BASE.'/.htaccess',
-                'application/config/app.php' => DIR_CONFIG_SITE.'/app.php',
-                'application/config/database.php' => DIR_CONFIG_SITE.'/database.php',
-                'application/config/site.php' => DIR_CONFIG_SITE.'/site.php',
-                'application/config/site_install.php' => DIR_CONFIG_SITE.'/site_install.php',
-                'application/config/site_install_user.php' => DIR_CONFIG_SITE.'/site_install_user.php',
-            );
+            $deleteFiles = [
+                '.htaccess' => DIR_BASE . '/.htaccess',
+                'application/config/app.php' => DIR_CONFIG_SITE . '/app.php',
+                'application/config/database.php' => DIR_CONFIG_SITE . '/database.php',
+                'application/config/site.php' => DIR_CONFIG_SITE . '/site.php',
+                'application/config/site_install.php' => DIR_CONFIG_SITE . '/site_install.php',
+                'application/config/site_install_user.php' => DIR_CONFIG_SITE . '/site_install_user.php',
+            ];
             foreach ($deleteFiles as $shownName => $fullpath) {
                 if (is_file($fullpath)) {
                     $output->write("Deleting file $shownName... ");
@@ -95,11 +97,11 @@ EOT
                     $output->writeln('<info>done.</info>');
                 }
             }
-            $deleteDirs = array(
-                'application/config/generated_overrides' => DIR_CONFIG_SITE.'/generated_overrides',
-                'application/config/doctrine' => DIR_CONFIG_SITE.'/doctrine',
+            $deleteDirs = [
+                'application/config/generated_overrides' => DIR_CONFIG_SITE . '/generated_overrides',
+                'application/config/doctrine' => DIR_CONFIG_SITE . '/doctrine',
                 'application/files' => DIR_FILES_UPLOADED_STANDARD,
-            );
+            ];
             foreach ($deleteDirs as $shownName => $fullpath) {
                 if (is_dir($fullpath)) {
                     $output->write("Deleting directory $shownName... ");
@@ -128,7 +130,7 @@ EOT
                 }
             }
         } catch (Exception $x) {
-            $output->writeln('<error>'.$x->getMessage().'</error>');
+            $output->writeln('<error>' . $x->getMessage() . '</error>');
             $rc = 1;
         }
 

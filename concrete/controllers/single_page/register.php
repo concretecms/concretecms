@@ -1,6 +1,8 @@
 <?php
 namespace Concrete\Controller\SinglePage;
 
+use Concrete\Core\Attribute\Context\FrontendFormContext;
+use Concrete\Core\Attribute\Form\Renderer;
 use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Page\Controller\PageController;
 use Concrete\Core\Validation\ResponseInterface;
@@ -28,6 +30,8 @@ class Register extends PageController
         $this->set('u', $u);
         $this->set('displayUserName', $this->displayUserName);
         $this->requireAsset('css', 'core/frontend/captcha');
+
+        $this->set('renderer', new Renderer(new FrontendFormContext()));
     }
 
     public function forward($cID = 0)
@@ -160,7 +164,8 @@ class Register extends PageController
                     $attribs = UserAttributeKey::getRegistrationList();
                     $attribValues = array();
                     foreach ($attribs as $ak) {
-                        $attribValues[] = $ak->getAttributeKeyDisplayName('text') . ': ' . $process->getAttribute($ak->getAttributeKeyHandle(), 'display');
+                        $attribValues[] = $ak->getAttributeKeyDisplayName('text') . ': ' . $process->getAttribute($ak->getAttributeKeyHandle(),
+                                'display');
                     }
                     $mh->addParameter('attribs', $attribValues);
                     $mh->addParameter('siteName', tc('SiteName', \Core::make('site')->getSite()->getSiteName()));
@@ -204,9 +209,9 @@ class Register extends PageController
                     $uHash = $process->setupValidation();
 
                     $mh = $this->app->make('mail');
-                    $fromEmail = (string) $config->get('concrete.email.validate_registration.address');
+                    $fromEmail = (string)$config->get('concrete.email.validate_registration.address');
                     if (strpos($fromEmail, '@')) {
-                        $fromName = (string) $config->get('concrete.email.validate_registration.name');
+                        $fromName = (string)$config->get('concrete.email.validate_registration.name');
                         if ($fromName === '') {
                             $fromName = t('Validate Email Address');
                         }

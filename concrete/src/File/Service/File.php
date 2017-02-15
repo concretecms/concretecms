@@ -34,21 +34,33 @@ class File
      * Returns the contents of a directory.
      *
      *
-     * @param string $dir
-     * @param array $ignoreFilesArray
-     * @param bool $recursive
-     *
-     * @return array
-     *
-     * @see \Concrete\Core\Foundation\Environment::getDirectoryContents()
      */
-    public function getDirectoryContents($dir, $ignoreFilesArray = [], $recursive = false)
+    public function getDirectoryContents($dir, $ignoreFiles = [], $recursive = false)
     {
-        $env = Environment::get();
+        $aDir = [];
+        if (is_dir($dir)) {
+            $handle = opendir($dir);
+            while (($file = readdir($handle)) !== false) {
+                if (substr($file, 0, 1) != '.' && (!in_array($file, $ignoreFiles))) {
+                    if (is_dir($dir . '/' . $file)) {
+                        if ($recursive) {
+                            $aDir = array_merge($aDir, $this->getDirectoryContents($dir . '/' . $file, $ignoreFiles, $recursive));
+                            $file = $dir . '/' . $file;
+                        }
+                        $aDir[] = preg_replace("/\/\//si", '/', $file);
+                    } else {
+                        if ($recursive) {
+                            $file = $dir . '/' . $file;
+                        }
+                        $aDir[] = preg_replace("/\/\//si", '/', $file);
+                    }
+                }
+            }
+            closedir($handle);
+        }
 
-        return $env->getDirectoryContents($dir, $ignoreFilesArray, $recursive);
+        return $aDir;
     }
-
     /**
      * Removes the extension of a filename, uncamelcases it.
      *

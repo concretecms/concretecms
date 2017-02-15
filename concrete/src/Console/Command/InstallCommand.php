@@ -8,7 +8,7 @@ use Database;
 use Doctrine\DBAL\Connection;
 use Exception;
 use StartingPointPackage;
-use Symfony\Component\Console\Command\Command;
+use Concrete\Core\Console\Command;
 use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputInterface;
@@ -25,6 +25,7 @@ class InstallCommand extends Command
         $this
             ->setName('c5:install')
             ->setDescription('Install concrete5')
+            ->addEnvOption()
             ->addOption('db-server', null, InputOption::VALUE_REQUIRED, 'Location of database server')
             ->addOption('db-username', null, InputOption::VALUE_REQUIRED, 'Database username')
             ->addOption('db-password', null, InputOption::VALUE_REQUIRED, 'Database password')

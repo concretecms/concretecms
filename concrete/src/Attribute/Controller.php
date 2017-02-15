@@ -1,9 +1,11 @@
 <?php
 namespace Concrete\Core\Attribute;
 
+use Concrete\Core\Attribute\Form\Control\View\View as ControlView;
 use Concrete\Core\Attribute\Value\EmptyRequestAttributeValue;
 use Concrete\Core\Controller\AbstractController;
 use Concrete\Core\Entity\Attribute\Key\Settings\EmptySettings;
+use Concrete\Core\Form\Context\ContextInterface;
 use Concrete\Core\Search\ItemList\Database\AttributedItemList;
 use Core;
 use Concrete\Core\Attribute\View as AttributeTypeView;
@@ -118,6 +120,11 @@ class Controller extends AbstractController
     public function field($fieldName)
     {
         return 'akID[' . $this->attributeKey->getAttributeKeyID() . '][' . $fieldName . ']';
+    }
+
+    public function getControlView(ContextInterface $context)
+    {
+        return new ControlView($context, $this->getAttributeKey(), $this->getAttributeValue());
     }
 
     public function label($customText = false)

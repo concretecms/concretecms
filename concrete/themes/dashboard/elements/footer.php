@@ -6,31 +6,31 @@ if (Request::getInstance()->get('_ccm_dashboard_external')) {
 </div>
 </div>
 
-<?php View::element('footer_required', array('disableTrackingCode' => true)); ?>
+<?php View::element('footer_required', ['disableTrackingCode' => true]); ?>
 <script type="text/javascript">
-	ConcretePanelManager.register({'overlay': false, 'identifier': 'dashboard', 'position': 'right', url: '<?=URL::to("/ccm/system/panels/dashboard")?>'});
-	ConcretePanelManager.register({'identifier': 'sitemap', 'position': 'right', url: '<?=URL::to("/ccm/system/panels/sitemap")?>'});
-    <?php if (!(isset($hideDashboardPanel) && $hideDashboardPanel)) {
-    ?>
-        var panel = ConcretePanelManager.getByIdentifier('dashboard');
+(function() {
+    ConcretePanelManager.register({'overlay': false, 'identifier': 'dashboard', 'position': 'right', url: '<?=URL::to('/ccm/system/panels/dashboard')?>'});
+    ConcretePanelManager.register({'identifier': 'sitemap', 'position': 'right', url: '<?=URL::to('/ccm/system/panels/sitemap')?>'});
+    var panel = ConcretePanelManager.getByIdentifier('dashboard');
+    <?php
+    if (!(isset($hideDashboardPanel) && $hideDashboardPanel)) {
+        ?>
         panel.isOpen = true;
         panel.onPanelLoad();
-    <?php 
-} ?>
-
-    $(function() {
-        $('a[data-launch-panel=dashboard]').on('click', function() {
-            setTimeout(function() {
-                // needs a moment
-                var panel = ConcretePanelManager.getByIdentifier('dashboard');
-                if (panel.isOpen) {
-                    $.cookie('dashboardPanelStatus', 'open', {path: '<?=DIR_REL?>/'});
-                } else {
-                    $.cookie('dashboardPanelStatus', 'closed', {path: '<?=DIR_REL?>/' });
-                }
-            }, 500);
-        });
+        <?php 
+    }
+    ?>
+    ConcreteEvent.subscribe('PanelOpen', function(e, data) {
+        if (data.panel === panel) {
+            $.cookie('dashboardPanelStatus', null, {path: '<?=DIR_REL?>/'});
+        }
     });
+    ConcreteEvent.subscribe('PanelClose', function(e, data) {
+        if (data.panel === panel) {
+            $.cookie('dashboardPanelStatus', 'closed', {path: '<?=DIR_REL?>/'});
+        }
+    });
+})();
 </script>
 </body>
 </html>

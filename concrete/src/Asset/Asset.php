@@ -6,6 +6,17 @@ use Environment;
 
 abstract class Asset implements AssetInterface
 {
+
+    /**
+     * @var string
+     */
+    protected $location;
+
+    /**
+     * @var bool
+     */
+    protected $assetHasBeenMapped = false;
+
     /**
      * @var string
      */
@@ -93,6 +104,14 @@ abstract class Asset implements AssetInterface
     }
 
     /**
+     * @param mixed $location
+     */
+    public function setAssetLocation($location)
+    {
+        $this->location = $location;
+    }
+
+    /**
      * @param bool $minify
      */
     public function setAssetSupportsMinification($minify)
@@ -113,6 +132,10 @@ abstract class Asset implements AssetInterface
      */
     public function getAssetURL()
     {
+        if (!$this->assetHasBeenMapped) {
+            $this->mapAssetLocation($this->location);
+        }
+
         return $this->assetURL;
     }
 
@@ -153,6 +176,9 @@ abstract class Asset implements AssetInterface
      */
     public function getAssetPath()
     {
+        if (!$this->assetHasBeenMapped) {
+            $this->mapAssetLocation($this->location);
+        }
         return $this->assetPath;
     }
 
@@ -226,6 +252,7 @@ abstract class Asset implements AssetInterface
      */
     public function setAssetURL($url)
     {
+        $this->assetHasBeenMapped = true;
         $this->assetURL = $url;
     }
 
@@ -234,6 +261,7 @@ abstract class Asset implements AssetInterface
      */
     public function setAssetPath($path)
     {
+        $this->assetHasBeenMapped = true;
         $this->assetPath = $path;
     }
 
@@ -352,7 +380,7 @@ abstract class Asset implements AssetInterface
             $this->setPackageObject($pkg);
         }
         $this->setAssetIsLocal($args['local']);
-        $this->mapAssetLocation($filename);
+        $this->setAssetLocation($filename);
         if ($args['minify'] === true || $args['minify'] === false) {
             $this->setAssetSupportsMinification($args['minify']);
         }

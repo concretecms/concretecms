@@ -81,12 +81,6 @@ class Application extends Container
                 $connection->close();
             }
         }
-        if ($config->get('concrete.cache.overrides')) {
-            Environment::saveCachedEnvironmentObject();
-        } else {
-            $env = Environment::get();
-            $env->clearOverrideCache();
-        }
         exit;
     }
 

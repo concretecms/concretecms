@@ -668,14 +668,6 @@
         </page>
         <page name="Files" path="/dashboard/system/files" filename="/dashboard/system/files/view.php" pagetype=""
               description="" package=""/>
-        <page name="File Manager Permissions" path="/dashboard/system/files/permissions"
-              filename="/dashboard/system/files/permissions.php" pagetype="" description="" package="">
-            <attributes>
-                <attributekey handle="meta_keywords">
-                    <value>file options, file manager, upload, modify</value>
-                </attributekey>
-            </attributes>
-        </page>
         <page name="Allowed File Types" path="/dashboard/system/files/filetypes"
               filename="/dashboard/system/files/filetypes.php" pagetype="" description="" package="">
             <attributes>
@@ -684,11 +676,30 @@
                 </attributekey>
             </attributes>
         </page>
+        <page name="File Manager Permissions" path="/dashboard/system/files/permissions"
+              filename="/dashboard/system/files/permissions.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>file options, file manager, upload, modify</value>
+                </attributekey>
+            </attributes>
+        </page>
         <page name="Thumbnails" path="/dashboard/system/files/thumbnails"
               filename="/dashboard/system/files/thumbnails.php" pagetype="" description="" package="">
             <attributes>
                 <attributekey handle="meta_keywords">
                     <value>images, picture, responsive, retina</value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Thumbnail Options" path="/dashboard/system/files/thumbnails/options"
+              filename="/dashboard/system/files/thumbnails/options.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="exclude_nav">
+                    <value>1</value>
+                </attributekey>
+                <attributekey handle="meta_keywords">
+                    <value>thumbnail, format, png, jpg, jpeg, quality, compression, gd, imagick, imagemagick, transparency</value>
                 </attributekey>
             </attributes>
         </page>
@@ -808,6 +819,14 @@
         <page name="Login &amp; Registration" path="/dashboard/system/registration"
               filename="/dashboard/system/registration/view.php" pagetype=""
               description="Change login behaviors and setup public profiles." package=""/>
+        <page name="Public Registration" path="/dashboard/system/registration/open"
+              filename="/dashboard/system/registration/open.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>signup, new user, community, public registration, public, registration</value>
+                </attributekey>
+            </attributes>
+        </page>
         <page name="Login Destination" path="/dashboard/system/registration/postlogin"
               filename="/dashboard/system/registration/postlogin.php" pagetype="" description="" package="">
             <attributes>
@@ -821,14 +840,6 @@
             <attributes>
                 <attributekey handle="meta_keywords">
                     <value>member profile, member page, community, forums, social, avatar</value>
-                </attributekey>
-            </attributes>
-        </page>
-        <page name="Public Registration" path="/dashboard/system/registration/open"
-              filename="/dashboard/system/registration/open.php" pagetype="" description="" package="">
-            <attributes>
-                <attributekey handle="meta_keywords">
-                    <value>signup, new user, community, public registration, public, registration</value>
                 </attributekey>
             </attributes>
         </page>
@@ -930,19 +941,19 @@
                 </attributekey>
             </attributes>
         </page>
-        <page name="Sets" path="/dashboard/system/attributes/sets" filename="/dashboard/system/attributes/sets.php"
-              pagetype="" description="Group attributes into sets for easier organization" package="">
-            <attributes>
-                <attributekey handle="meta_keywords">
-                    <value>attributes, sets</value>
-                </attributekey>
-            </attributes>
-        </page>
         <page name="Types" path="/dashboard/system/attributes/types" filename="/dashboard/system/attributes/types.php"
               pagetype="" description="Choose which attribute types are available for different items." package="">
             <attributes>
                 <attributekey handle="meta_keywords">
                     <value>attributes, types</value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Sets" path="/dashboard/system/attributes/sets" filename="/dashboard/system/attributes/sets.php"
+              pagetype="" description="Group attributes into sets for easier organization" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>attributes, sets</value>
                 </attributekey>
             </attributes>
         </page>

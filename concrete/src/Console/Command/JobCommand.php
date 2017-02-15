@@ -5,7 +5,7 @@ use Job;
 use JobSet;
 use RuntimeException;
 use Exception;
-use Symfony\Component\Console\Command\Command;
+use Concrete\Core\Console\Command;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -19,6 +19,7 @@ class JobCommand extends Command
         $this
             ->setName('c5:job')
             ->setDescription(t('Run a concrete5 job'))
+            ->addEnvOption()
             ->addOption('set', null, InputOption::VALUE_NONE, t('Find jobs by set instead of job handle'))
             ->addOption('list', null, InputOption::VALUE_NONE, t('List available jobs'))
             ->addArgument(
@@ -26,7 +27,7 @@ class JobCommand extends Command
                 InputArgument::IS_ARRAY,
                 t('Jobs to run (separate multiple jobs with a space)')
             )
-            ->setHelp(<<<EOT
+            ->setHelp(<<<'EOT'
 Returns codes:
   0 operation completed successfully
   1 errors occurred
@@ -47,26 +48,26 @@ EOT
             if ($options['list']) {
                 $output->writeln(t('Available Jobs'));
                 $table = new Table($output);
-                $table->setHeaders(array(t('Job Handle'), t('Job Name')));
+                $table->setHeaders([t('Job Handle'), t('Job Name')]);
                 foreach (Job::getList() as $job) {
-                    $table->addRow(array($job->getJobHandle(), $job->getJobName()));
+                    $table->addRow([$job->getJobHandle(), $job->getJobName()]);
                 }
                 $table->render();
 
                 $output->writeln('');
                 $output->writeln(t('Available Job Sets'));
                 $table = new Table($output);
-                $table->setHeaders(array(t('Set Name'), t('Jobs')));
+                $table->setHeaders([t('Set Name'), t('Jobs')]);
                 foreach (JobSet::getList() as $jobSet) {
-                    $jobsInSet = array();
+                    $jobsInSet = [];
                     foreach ($jobSet->getJobs() as $job) {
                         $jobsInSet[] = $job->getJobName();
                     }
-                    $table->addRow(array($jobSet->getJobSetName(), implode(', ', $jobsInSet)));
+                    $table->addRow([$jobSet->getJobSetName(), implode(', ', $jobsInSet)]);
                 }
                 $table->render();
             } else {
-                $jobs = array();
+                $jobs = [];
 
                 $jobsArg = $input->getArgument('jobs');
 
@@ -128,7 +129,7 @@ EOT
             }
         } catch (Exception $x) {
             if ($output->getVerbosity() >= OutputInterface::VERBOSITY_NORMAL) {
-                $output->writeln('<error>'.$x->getMessage().'</error>');
+                $output->writeln('<error>' . $x->getMessage() . '</error>');
             }
             $rc = 1;
         }

@@ -127,7 +127,7 @@ class Design extends BackendInterfaceBlockController
             }
             $templates = array();
             if (is_object($bt)) {
-                $templates = $bt->getBlockTypeCustomTemplates();
+                $templates = $bt->getBlockTypeCustomTemplates($this->block);
             }
             $this->set('bFilename', $bFilename);
             $this->set('templates', $templates);

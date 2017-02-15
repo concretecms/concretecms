@@ -28,8 +28,10 @@ use Core;
 use Concrete\Core\User\Avatar\AvatarServiceInterface;
 use Concrete\Core\Workflow\Request\ActivateUserRequest as ActivateUserWorkflowRequest;
 use Concrete\Core\Workflow\Request\DeleteUserRequest as DeleteUserWorkflowRequest;
+use Concrete\Core\Attribute\ObjectInterface as AttributeObjectInterface;
+use Concrete\Core\Permission\ObjectInterface as PermissionObjectInterface;
 
-class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterface
+class UserInfo extends Object implements AttributeObjectInterface, PermissionObjectInterface
 {
     use ObjectTrait;
 
@@ -846,8 +848,6 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
 
             return $attributeValue;
         }
-
-        return false;
     }
 
     /**

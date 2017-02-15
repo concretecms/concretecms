@@ -2,6 +2,7 @@
 namespace Concrete\Core\Form;
 
 use Concrete\Core\Foundation\Service\Provider as ServiceProvider;
+use Concrete\Core\Form\Context\Registry\Registry;
 
 class FormServiceProvider extends ServiceProvider
 {
@@ -24,5 +25,7 @@ class FormServiceProvider extends ServiceProvider
         foreach ($singletons as $key => $value) {
             $this->app->singleton($key, $value);
         }
+
+        $this->app->singleton(Registry::class);
     }
 }

@@ -234,7 +234,7 @@ class DateTime
             if ($dateTime === null) {
                 $defaultDateJs = "''";
             } else {
-                $defaultDateJs = 'new Date('. implode(', ', [$dateTime->format('Y'), $dateTime->format('n') - 1, (int) $dateTime->format('j')]) . ')';
+                $defaultDateJs = 'new Date(' . implode(', ', [$dateTime->format('Y'), $dateTime->format('n') - 1, (int) $dateTime->format('j')]) . ')';
             }
             $html .= <<<EOT
 <script type="text/javascript">
@@ -302,7 +302,9 @@ EOT;
         if ($requestValue !== null) {
             $dateTime = $requestValue;
         } elseif ($value) {
-            if (!$value instanceof PHPDateTime) {
+            if ($value instanceof PHPDateTime) {
+                $dateTime = $value;
+            } else {
                 try {
                     $dateTime = $dh->toDateTime($value);
                 } catch (Exception $x) {
@@ -331,7 +333,7 @@ EOT;
             if ($dateTime === null) {
                 $defaultDateJs = "''";
             } else {
-                $defaultDateJs = 'new Date('. implode(', ', [$dateTime->format('Y'), $dateTime->format('n') - 1, (int) $dateTime->format('j')]) . ')';
+                $defaultDateJs = 'new Date(' . implode(', ', [$dateTime->format('Y'), $dateTime->format('n') - 1, (int) $dateTime->format('j')]) . ')';
             }
             $html .= <<<EOT
 <script type="text/javascript">

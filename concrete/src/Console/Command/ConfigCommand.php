@@ -6,7 +6,7 @@ use Concrete\Core\Config\FileSaver;
 use Concrete\Core\Config\FileLoader;
 use Concrete\Core\Config\Repository\Repository;
 use Illuminate\Filesystem\Filesystem;
-use Symfony\Component\Console\Command\Command;
+use Concrete\Core\Console\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
@@ -29,13 +29,14 @@ class ConfigCommand extends Command
         $this
             ->setName('c5:config')
             ->setDescription('Set or get configuration parameters.')
-            ->addArgument('operation', InputArgument::REQUIRED, 'The operation to accomplish ('.implode('|', $this->getAllowedOperations()).')')
+            ->addArgument('operation', InputArgument::REQUIRED, 'The operation to accomplish (' . implode('|', $this->getAllowedOperations()) . ')')
             ->addArgument('item', InputArgument::REQUIRED, 'The configuration item (eg: concrete.debug.display_errors)')
             ->addArgument('value', InputArgument::OPTIONAL, 'The new value of the configuration item')
+            ->addEnvOption()
             ->addOption('environment', 'e', InputOption::VALUE_REQUIRED, 'The environment (if not specified, we\'ll work with the configuration item valid for all environments)')
             ->addOption('generated-overrides', 'g', InputOption::VALUE_NONE, 'Set this option to save configurations to the generated_overrides folder')
         ;
-        $this->setHelp(<<<EOT
+        $this->setHelp(<<<'EOT'
 When setting values that may be evaluated as boolean (true/false), null or numbers, but you want to store them as strings, you can enclose those values in single or double quotes.
 For instance, with
 concrete5 %command.name% set concrete.test_item 1
@@ -85,10 +86,10 @@ EOT
                     break;
 
                 default:
-                    throw new Exception('Invalid operation specified. Allowed operations: '.implode(', ', $this->getAllowedOperations()));
+                    throw new Exception('Invalid operation specified. Allowed operations: ' . implode(', ', $this->getAllowedOperations()));
             }
         } catch (Exception $x) {
-            $output->writeln('<error>'.$x->getMessage().'</error>');
+            $output->writeln('<error>' . $x->getMessage() . '</error>');
             $rc = 1;
         }
 
@@ -100,10 +101,10 @@ EOT
      */
     protected function getAllowedOperations()
     {
-        return array(
+        return [
             self::OPERATION_GET,
             self::OPERATION_SET,
-        );
+        ];
     }
 
     /**
@@ -153,11 +154,9 @@ EOT
                             $enquote = true;
                         }
                         break;
-
                 }
                 $result = $enquote ? "\"$value\"" : $value;
                 break;
-
         }
         if (!isset($result)) {
             throw new Exception("Unable to represent variable of type '$type'");

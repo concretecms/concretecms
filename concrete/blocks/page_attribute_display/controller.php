@@ -4,6 +4,7 @@ namespace Concrete\Block\PageAttributeDisplay;
 use Concrete\Core\Block\BlockController;
 use Concrete\Core\Attribute\Key\CollectionKey as CollectionAttributeKey;
 use Concrete\Core\Entity\Attribute\Value\Value\SelectValue;
+use Database;
 use Core;
 
 defined('C5_EXECUTE') or die('Access Denied.');
@@ -234,9 +235,15 @@ class Controller extends BlockController
 
     public function view()
     {
+      // only use the type specific template if there is NOT a custom template defined
+      $b = $this->getBlockObject();
+      if ($b->getBlockFilename()) {      
+        // custom template  
+      } else {
         $templateHandle = $this->getTemplateHandle();
         if (in_array($templateHandle, ['date_time', 'boolean'])) {
             $this->render('templates/' . $templateHandle);
         }
+      }
     }
 }

@@ -100,7 +100,7 @@ abstract class Association
     public function getSelectedEntries()
     {
         // I would use criteria for this but once again Doctrine fails
-        if ($this->getAssociation()->isOwningAssociation() && $this->getAssociation()->getTargetEntity()->supportsCustomDisplayOrder()) {
+        if ($this->getAssociation()->getTargetEntity()->supportsCustomDisplayOrder()) {
             $entries = $this->getSelectedEntriesCollection()->toArray();
             usort($entries, function($a, $b) {
                 return $a->getEntryDisplayOrder() - $b->getEntryDisplayOrder();
