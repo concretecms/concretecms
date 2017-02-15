@@ -84,7 +84,9 @@ function ConcretePanel(options) {
             $(this).dequeue();
 
             callback.call(me);
-            Concrete.event.publish('PanelClose', {panel: this});
+            setTimeout(function() {
+                Concrete.event.publish('PanelClose', {panel: obj});
+            }, 0);
         });
     };
 
