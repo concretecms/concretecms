@@ -19,12 +19,10 @@ class SiteTranslationLoader extends AbstractTranslationLoader
      */
     public function loadTranslations(TranslatorAdapterInterface $translatorAdapter)
     {
-        if ($this->app->make('multilingual/detector')->isEnabled()) {
-            $languageFile = DIR_LANGUAGES_SITE_INTERFACE . "/" . $translatorAdapter->getLocale() . ".mo";
-            if (is_file($languageFile)) {
-                $translator = $translatorAdapter->getTranslator();
-                $translator->addTranslationFile('gettext', $languageFile);
-            }
+        $languageFile = DIR_LANGUAGES_SITE_INTERFACE . "/" . $translatorAdapter->getLocale() . ".mo";
+        if (is_file($languageFile)) {
+            $translator = $translatorAdapter->getTranslator();
+            $translator->addTranslationFile('gettext', $languageFile);
         }
     }
 
