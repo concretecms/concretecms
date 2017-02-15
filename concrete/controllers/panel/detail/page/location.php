@@ -127,7 +127,7 @@ class Location extends BackendInterfacePageController
                 foreach ($pathArray as $i => $path) {
                     if ($path) {
                         $p = new PagePath();
-                        $p->setPagePath($path);
+                        $p->setPagePath('/'.trim($path, '/'));
                         $p->setPageObject($this->page);
                         if ($canonical == $i) {
                             $p->setPagePathIsCanonical(true);

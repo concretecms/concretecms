@@ -616,11 +616,11 @@ return [
         'name' => false,
 
         /*
-         * Dashboard background image url
+         * Background image url
          *
          * @var null|string
          */
-        'dashboard_background' => null,
+        'background_image' => null,
     ],
     'session' => [
         'name' => 'CONCRETE5',
