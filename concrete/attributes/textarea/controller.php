@@ -54,7 +54,6 @@ class Controller extends DefaultController
     public function form($additionalClass = false)
     {
         $this->load();
-        $this->requireAsset('jquery/ui');
 
         $value = null;
         if (is_object($this->attributeValue)) {
