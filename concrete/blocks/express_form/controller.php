@@ -175,7 +175,12 @@ class Controller extends BlockController
                         $control = $entityManager->getRepository('Concrete\Core\Entity\Express\Control\Control')
                             ->findOneById($this->replyToEmailControlID);
                         if (is_object($control)) {
-                            $email = $entry->getAttribute($control->getAttributeKey());
+                            foreach($values as $attribute) {
+                                if ($attribute->getAttributeKey()->getAttributeKeyID() == $control->getAttributeKey()->getAttributeKeyID()) {
+                                    $email = $attribute->getValue();
+                                }
+                            }
+
                             if ($email) {
                                 $replyToEmailAddress = $email;
                             }
