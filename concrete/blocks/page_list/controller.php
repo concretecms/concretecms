@@ -316,7 +316,8 @@ class Controller extends BlockController
             $this->list->filterByPublicDate($end, '<=');
 
             $seo = Core::make('helper/seo');
-            $seo->addTitleSegment($dh->date('F Y', $start));
+            $date = ucfirst(\Punic\Calendar::getMonthName($month, 'wide', '', true).' '.$year);
+            $seo->addTitleSegment($date);
         }
         $this->view();
     }
