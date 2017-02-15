@@ -33,6 +33,7 @@ class View extends BaseFormView
         $this->key = $key;
         $this->value = $value;
         $this->setLabel($key->getAttributekeyDisplayName());
+        $this->addScopeItem('key', $key);
     }
 
     public function createTemplateLocator()
