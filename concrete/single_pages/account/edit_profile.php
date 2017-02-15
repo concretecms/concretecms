@@ -34,12 +34,11 @@
  } ?>
 	<?php
     if (is_array($attribs) && count($attribs)) {
-        $af = Loader::helper('form/attribute');
-        $af->setAttributeObject($profile);
         foreach ($attribs as $ak) {
-            echo '<div class="ccm-profile-attribute">';
-            echo $af->display($ak, $ak->isAttributeKeyRequiredOnProfile());
-            echo '</div>';
+            echo $profileFormRenderer
+                ->buildView($ak)
+                ->setIsRequired($ak->isAttributeKeyRequiredOnProfile())
+                ->render();
         }
     }
     ?>

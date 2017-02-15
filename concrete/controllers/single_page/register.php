@@ -1,6 +1,8 @@
 <?php
 namespace Concrete\Controller\SinglePage;
 
+use Concrete\Core\Attribute\Context\FrontendFormContext;
+use Concrete\Core\Attribute\Form\Renderer;
 use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Page\Controller\PageController;
 use Concrete\Core\Validation\ResponseInterface;
@@ -16,17 +18,20 @@ class Register extends PageController
 
     protected $displayUserName = true;
 
-    public function on_start() {
+    public function on_start()
+    {
         $allowedTypes = ['validate_email', 'enabled', 'manual_approve'];
         $currentType = $this->app->make(Repository::class)->get('concrete.user.registration.type');
 
-        if(!in_array($currentType, $allowedTypes)) {
+        if (!in_array($currentType, $allowedTypes)) {
             return $this->replace('/page_not_found');
         }
         $u = new User();
         $this->set('u', $u);
         $this->set('displayUserName', $this->displayUserName);
         $this->requireAsset('css', 'core/frontend/captcha');
+
+        $this->set('renderer', new Renderer(new FrontendFormContext()));
     }
 
     public function forward($cID = 0)
@@ -147,24 +152,26 @@ class Register extends PageController
                         }
                     }
 
-                    $mh->addParameter('uID',    $process->getUserID());
-                    $mh->addParameter('user',   $process);
-                    $mh->addParameter('uName',  $process->getUserName());
+                    $mh->addParameter('uID', $process->getUserID());
+                    $mh->addParameter('user', $process);
+                    $mh->addParameter('uName', $process->getUserName());
                     $mh->addParameter('uEmail', $process->getUserEmail());
                     $attribs = UserAttributeKey::getRegistrationList();
                     $attribValues = array();
                     foreach ($attribs as $ak) {
-                        $attribValues[] = $ak->getAttributeKeyDisplayName('text') . ': ' . $process->getAttribute($ak->getAttributeKeyHandle(), 'display');
+                        $attribValues[] = $ak->getAttributeKeyDisplayName('text') . ': ' . $process->getAttribute($ak->getAttributeKeyHandle(),
+                                'display');
                     }
                     $mh->addParameter('attribs', $attribValues);
                     $mh->addParameter('siteName', tc('SiteName', \Core::make('site')->getSite()->getSiteName()));
 
                     if ($config->get('concrete.user.registration.notification_email')) {
-                        $mh->from(Config::get('concrete.user.registration.notification_email'),  t('Website Registration Notification'));
+                        $mh->from(Config::get('concrete.user.registration.notification_email'),
+                            t('Website Registration Notification'));
                     } else {
                         $adminUser = UserInfo::getByID(USER_SUPER_ID);
                         if (is_object($adminUser)) {
-                            $mh->from($adminUser->getUserEmail(),  t('Website Registration Notification'));
+                            $mh->from($adminUser->getUserEmail(), t('Website Registration Notification'));
                         }
                     }
 
@@ -202,13 +209,13 @@ class Register extends PageController
                     $uHash = $process->setupValidation();
 
                     $mh = $this->app->make('mail');
-                    $fromEmail = (string) $config->get('concrete.email.validate_registration.address');
+                    $fromEmail = (string)$config->get('concrete.email.validate_registration.address');
                     if (strpos($fromEmail, '@')) {
-                        $fromName = (string) $config->get('concrete.email.validate_registration.name');
+                        $fromName = (string)$config->get('concrete.email.validate_registration.name');
                         if ($fromName === '') {
                             $fromName = t('Validate Email Address');
                         }
-                        $mh->from($fromEmail,  $fromName);
+                        $mh->from($fromEmail, $fromName);
                     }
                     $mh->addParameter('uEmail', $_POST['uEmail']);
                     $mh->addParameter('uHash', $uHash);

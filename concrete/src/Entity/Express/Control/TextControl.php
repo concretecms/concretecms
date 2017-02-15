@@ -4,7 +4,8 @@ namespace Concrete\Core\Entity\Express\Control;
 use Concrete\Controller\Element\Dashboard\Express\Control\TextOptions;
 use Concrete\Core\Entity\Express\Entity;
 use Concrete\Core\Entity\Express\Entry;
-use Concrete\Core\Express\Form\Context\ContextInterface;
+use Concrete\Core\Express\Form\Control\View\TextView;
+use Concrete\Core\Form\Context\ContextInterface;
 use Concrete\Core\Express\Form\Control\Renderer\TextEntityPropertyControlRenderer;
 use Concrete\Core\Express\Form\Control\Template\Template;
 use Concrete\Core\Express\Form\Control\Type\SaveHandler\TextControlSaveHandler;
@@ -64,11 +65,6 @@ class TextControl extends Control
         return new TextControlSaveHandler();
     }
 
-    public function getControlRenderer(ContextInterface $context)
-    {
-        return new TextEntityPropertyControlRenderer();
-    }
-
     public function getControlLabel()
     {
         if ($this->getHeadline()) {
@@ -80,6 +76,11 @@ class TextControl extends Control
 
         $label .= ' ' . t('(Text)');
         return $label;
+    }
+
+    public function getControlView(ContextInterface $context)
+    {
+        return new TextView($context, $this);
     }
 
     public function getType()

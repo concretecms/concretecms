@@ -4,6 +4,9 @@ namespace Concrete\Core\Page\Controller;
 use Concrete\Core\Entity\Express\Entity;
 use Concrete\Core\Entity\Express\Entry;
 use Concrete\Core\Express\Entry\Manager;
+use Concrete\Core\Express\Form\Context\DashboardFormContext;
+use Concrete\Core\Express\Form\Context\DashboardViewContext;
+use Concrete\Core\Express\Form\Renderer;
 use Concrete\Core\Express\Form\Validator;
 use Concrete\Core\Tree\Node\Node;
 use Concrete\Core\Tree\Type\ExpressEntryResults;
@@ -151,7 +154,12 @@ abstract class DashboardExpressEntriesPageController extends DashboardPageContro
         $this->set('entity', $entry->getEntity());
         $entity = $entry->getEntity();
         $this->entityManager->refresh($entity); // sometimes this isn't eagerly loaded (?)
-        $renderer = \Core::make('Concrete\Core\Express\Form\DashboardRenderer', ['form' => $entity->getDefaultViewForm()]);
+
+        $renderer = new Renderer(
+            new DashboardViewContext(),
+            $entity->getDefaultViewForm()
+        );
+
         $this->set('renderer', $renderer);
         if ($entity->getOwnedBy()) {
             // the back url is the detail of what is the owner
@@ -194,7 +202,12 @@ abstract class DashboardExpressEntriesPageController extends DashboardPageContro
         $this->set('entity', $entry->getEntity());
         $entity = $entry->getEntity();
         $this->entityManager->refresh($entity); // sometimes this isn't eagerly loaded (?)
-        $renderer = \Core::make('Concrete\Core\Express\Form\StandardFormRenderer', ['form' => $entity->getDefaultEditForm()]);
+
+        $renderer = new Renderer(
+            new DashboardFormContext(),
+            $entity->getDefaultViewForm()
+        );
+
         $this->set('renderer', $renderer);
         $this->set('backURL', $this->getBackURL($entry->getEntity()));
         $this->render('/dashboard/express/entries/update', false);

@@ -19,10 +19,8 @@
 		<legend><?=t('Custom Attributes')?></legend>
 		<?php
 		if (count($attributes) > 0) {
-			$af = Loader::helper('form/attribute');
-			$af->setAttributeObject($site);
 			foreach ($attributes as $ak) {
-				echo $af->display($ak);
+				echo $renderer->render($ak);
 			}
 		} else { ?>
 			<p><?=t('You have not defined any <a href="%s">custom attributes</a> for this site.', URL::to('/dashboard/system/basics/attributes'))?></p>

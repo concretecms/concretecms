@@ -5,8 +5,8 @@ use Concrete\Core\Attribute\Context\AttributeTypeSettingsContext;
 use Concrete\Core\Attribute\Context\BasicFormContext;
 use Concrete\Core\Attribute\Context\BasicSearchContext;
 use Concrete\Core\Attribute\Context\ComposerContext;
-use Concrete\Core\Attribute\Context\ContextInterface;
-use Concrete\Core\Attribute\Context\ViewContext;
+use Concrete\Core\Filesystem\TemplateLocation;
+use Concrete\Core\Form\Context\ContextInterface;
 use Concrete\Core\Filesystem\TemplateLocator;
 use Loader;
 use Concrete\Core\Attribute\Value\Value as AttributeValue;
@@ -90,9 +90,10 @@ class View extends AbstractView
 
         if (is_object($context)) {
             $this->templateLocator = new TemplateLocator();
-            foreach($context->getTemplates() as $template) {
+            foreach($context->getControlTemplates() as $template) {
                 $pkgHandle = $template[1] ? $template[1] : $this->attributePkgHandle;
-                $this->templateLocator->addLocation(DIRNAME_ATTRIBUTES . DIRECTORY_SEPARATOR . $atHandle . DIRECTORY_SEPARATOR . $template[0] . '.php', $pkgHandle);
+                $location = new TemplateLocation(DIRNAME_ATTRIBUTES . DIRECTORY_SEPARATOR . $atHandle . DIRECTORY_SEPARATOR . $template[0] . '.php', $pkgHandle);
+                $this->templateLocator->addLocation($location);
             }
             foreach($context->getActions() as $method) {
                 if (method_exists($this->controller, $method)) {

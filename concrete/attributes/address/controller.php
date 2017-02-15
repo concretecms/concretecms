@@ -4,6 +4,7 @@ namespace Concrete\Attribute\Address;
 use Concrete\Core\Attribute\Context\BasicFormContext;
 use Concrete\Core\Attribute\Controller as AttributeTypeController;
 use Concrete\Core\Attribute\FontAwesomeIconFormatter;
+use Concrete\Core\Attribute\Form\Control\View\GroupedView;
 use Concrete\Core\Entity\Attribute\Key\Settings\AddressSettings;
 use Concrete\Core\Entity\Attribute\Value\Value\AddressValue;
 use Core;
@@ -30,6 +31,11 @@ class Controller extends AttributeTypeController
             $queryBuilder->expr()->like("ak_{$h}_postal_code", ':keywords'),
             $queryBuilder->expr()->like("ak_{$h}_country", ':keywords')
         );
+    }
+
+    public function getControlView(\Concrete\Core\Form\Context\ContextInterface $context)
+    {
+        return new GroupedView($context, $this->getAttributeKey(), $this->getAttributeValue());
     }
 
     public function getAttributeValueClass()
