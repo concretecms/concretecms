@@ -206,11 +206,25 @@ return [
             'directory' => DIR_FILES_UPLOADED_STANDARD . '/cache/pages',
             'adapter' => 'file',
         ],
-        'environment' => [
-            'file' => 'environment.cache',
-        ],
 
         'levels' => [
+            'overrides' => [
+                'drivers' => [
+                    'core_ephemeral' => [
+                        'class' => '\Stash\Driver\Ephemeral',
+                        'options' => [],
+                    ],
+
+                    'core_filesystem' => [
+                        'class' => '\Stash\Driver\FileSystem',
+                        'options' => [
+                            'path' => DIR_FILES_UPLOADED_STANDARD . '/cache',
+                            'dirPermissions' => DIRECTORY_PERMISSIONS_MODE_COMPUTED,
+                            'filePermissions' => FILE_PERMISSIONS_MODE_COMPUTED,
+                        ],
+                    ],
+                ],
+            ],
             'expensive' => [
                 'drivers' => [
                     'core_ephemeral' => [

@@ -285,8 +285,9 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
             $row = $r->fetchRow();
             $cID = $row['cID'];
             $nc = Page::getByID($cID, "ACTIVE");
-
-            return $nc;
+            if (is_object($nc) && !$nc->isError()) {
+                return $nc;
+            }
         }
     }
 

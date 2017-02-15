@@ -151,9 +151,9 @@ class ApplicationUpdate
             }
             $request->getPost()->set('packages', $packages);
         }
-        $overrides = id(Environment::get())->getOverrideList();
-        $request->getPost()->set('overrides', $overrides);
         $info = \Core::make('\Concrete\Core\System\Info');
+        $overrides = $info->getOverrideList();
+        $request->getPost()->set('overrides', $overrides);
         $info = $info->getJSONOBject();
         $request->getPost()->set('environment', json_encode($info));
 
