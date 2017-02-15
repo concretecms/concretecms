@@ -5,6 +5,7 @@ use Zend\Http\Client\Adapter\Exception\TimeoutException;
 use Config;
 use Environment;
 use Exception;
+use Core;
 use Concrete\Core\Support\Facade\Application as CoreApplication;
 
 /**
