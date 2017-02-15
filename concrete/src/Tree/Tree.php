@@ -256,7 +256,7 @@ abstract class Tree extends Object
     {
         $translations = new Translations();
         $loc = Localization::getInstance();
-        $loc->pushActiveContext('system');
+        $loc->pushActiveContext(Localization::CONTEXT_SYSTEM);
         try {
             $app = Application::getFacadeApplication();
             $db = $app->make('database')->connection();

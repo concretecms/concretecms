@@ -1,4 +1,6 @@
 <?php
+use Concrete\Core\Localization\Localization;
+
 defined('C5_EXECUTE') or die("Access Denied.");
 
 /* @var Concrete\Core\Form\Service\Form $form */
@@ -1068,7 +1070,7 @@ if (isset($successMessage)) {
         <form method="post" id="ccm-install-language-form" action="<?= $view->url('/install', 'select_language') ?>">
         <div class="form-group">
             <div class="input-group-lg input-group">
-                <?= $form->select('locale', $locales, 'en_US'); ?>
+                <?= $form->select('locale', $locales, Localization::BASE_LOCALE); ?>
                 <div class="input-group-btn">
                     <button type="submit" class="btn btn-primary">
                         <i class="fa fa-arrow-right"></i>

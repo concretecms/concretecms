@@ -33,6 +33,7 @@ use Concrete\Core\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 use View;
+use Concrete\Core\Package\PackageService;
 
 class Application extends Container
 {
@@ -272,8 +273,6 @@ class Application extends Container
      */
     public function setupPackages()
     {
-        $checkAfterStart = false;
-
         $config = $this['config'];
 
         $loc = Localization::getInstance();
@@ -286,40 +285,26 @@ class Application extends Container
                 $pkgInstalledVersion = $dbPkg->getPackageVersion();
                 $pkgFileVersion = $pkg->getPackageVersion();
                 if (version_compare($pkgFileVersion, $pkgInstalledVersion, '>')) {
-                    $loc->pushActiveContext('system');
+                    $loc->pushActiveContext(Localization::CONTEXT_SYSTEM);
                     $dbPkg->upgradeCoreData();
                     $dbPkg->upgrade();
                     $loc->popActiveContext();
                 }
             }
-
-            $service = $this->make('Concrete\Core\Package\PackageService');
-            $service->setupLocalization($pkg);
         }
-        $config->set('app.bootstrap.packages_loaded', true);
+        $packagesWithOnAfterStart = [];
+        $service = $this->make(PackageService::class);
         foreach ($this->packages as $pkg) {
             if (method_exists($pkg, 'on_start')) {
                 $pkg->on_start();
             }
-
             $service->bootPackageEntityManager($pkg);
-
             if (method_exists($pkg, 'on_after_packages_start')) {
-                $checkAfterStart = true;
+                $packagesWithOnAfterStart[] = $pkg;
             }
         }
-
-        // After package initialization, the translations adapters need to be
-        // reinitialized when accessed the next time because new translations
-        // are now available.
-        $loc->removeLoadedTranslatorAdapters();
-
-        if ($checkAfterStart) {
-            foreach ($this->packages as $pkg) {
-                if (method_exists($pkg, 'on_after_packages_start')) {
-                    $pkg->on_after_packages_start();
-                }
-            }
+        foreach ($packagesWithOnAfterStart as $pkg) {
+            $pkg->on_after_packages_start();
         }
     }
 

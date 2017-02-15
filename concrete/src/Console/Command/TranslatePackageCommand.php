@@ -9,7 +9,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Core;
 use Exception;
 use Package;
-use Localization;
+use Concrete\Core\Localization\Localization;
 use Gettext\Translations;
 
 class TranslatePackageCommand extends Command
@@ -172,7 +172,7 @@ EOT
             // Initialize the master translations file (.pot)
             $pot = new Translations();
             $pot->setHeader('Project-Id-Version', "$packageHandle $packageVersion");
-            $pot->setLanguage('en_US');
+            $pot->setLanguage(Localization::BASE_LOCALE);
             $pot->setHeader('Report-Msgid-Bugs-To', $input->getOption('contact'));
             $pot->setHeader('Last-Translator', $input->getOption('translator'));
 
