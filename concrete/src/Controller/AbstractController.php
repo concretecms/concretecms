@@ -2,7 +2,9 @@
 namespace Concrete\Core\Controller;
 
 use Concrete\Core\Application\ApplicationAwareInterface;
+use Concrete\Core\Http\Exception\RedirectException;
 use Concrete\Core\Http\ResponseAssetGroup;
+use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
 use Core;
 use Request;
 use View;
@@ -152,10 +154,8 @@ abstract class AbstractController implements ApplicationAwareInterface
 
     public function redirect()
     {
-        $args = func_get_args();
-        $r = call_user_func_array(array('Redirect', 'to'), $args);
-        $r->send();
-        exit;
+        $redirectUrl = $this->app->make(ResolverManagerInterface::class)->resolve(func_get_args());
+        throw new RedirectException($redirectUrl);
     }
 
     public function runTask($action, $parameters)

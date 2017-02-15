@@ -53,18 +53,12 @@ class Authentication extends DashboardPageController
 
     public function enable($atid)
     {
+        if (!$this->token->validate("auth_type_toggle.{$atid}")) {
+            $this->app->make('session')->set('authenticationTypesErrorCode', self::ERROR_INVALID_TOKEN);
+            $this->redirect('dashboard/system/registration/authentication/');
+        }
         try {
             $at = AuthenticationType::getByID($atid);
-
-            /** @var Token $token */
-            $token = \Core::make('token');
-
-            if (!$token->validate("auth_type_toggle.{$atid}")) {
-                Session::set('authenticationTypesErrorCode', self::ERROR_INVALID_TOKEN);
-                $this->redirect('dashboard/system/registration/authentication/');
-                exit;
-            }
-
             $at->enable();
             $this->set('message', t('The %s authentication type has been enabled.', $at->getAuthenticationTypeName()));
         } catch (Exception $e) {
@@ -75,18 +69,13 @@ class Authentication extends DashboardPageController
 
     public function disable($atid)
     {
+        if (!$this->token->validate("auth_type_toggle.{$atid}")) {
+            $this->app->make('session')->set('authenticationTypesErrorCode', self::ERROR_INVALID_TOKEN);
+            $this->redirect('dashboard/system/registration/authentication/');
+        }
+
         try {
             $at = AuthenticationType::getByID($atid);
-
-            /** @var Token $token */
-            $token = \Core::make('token');
-
-            if (!$token->validate("auth_type_toggle.{$atid}")) {
-                Session::set('authenticationTypesErrorCode', self::ERROR_INVALID_TOKEN);
-                $this->redirect('dashboard/system/registration/authentication/');
-                exit;
-            }
-
             $at->disable();
             $this->set('message', t('The %s authentication type has been disabled.', $at->getAuthenticationTypeName()));
         } catch (Exception $e) {
@@ -97,30 +86,23 @@ class Authentication extends DashboardPageController
 
     public function save($atid)
     {
+        if (!$this->token->validate("auth_type_save.{$atid}")) {
+            $this->app->make('session')->set('authenticationTypesErrorCode', self::ERROR_INVALID_TOKEN);
+            $this->redirect('dashboard/system/registration/authentication/');
+        }
+
         $values = $this->post();
         try {
             $at = AuthenticationType::getByID($atid);
-
-            /** @var Token $token */
-            $token = \Core::make('token');
-
-            if (!$token->validate("auth_type_save.{$atid}")) {
-                Session::set('authenticationTypesErrorCode', self::ERROR_INVALID_TOKEN);
-                $this->redirect('dashboard/system/registration/authentication/');
-                exit;
-            }
-
             try {
                 $at->controller->saveAuthenticationType($values);
-                $this->set('message',
-                    t('The %s authentication type has been saved.', $at->getAuthenticationTypeName()));
+                $this->set('message', t('The %s authentication type has been saved.', $at->getAuthenticationTypeName()));
             } catch (Exception $e) {
                 $this->error->add($e->getMessage());
             }
         } catch (Exception $e) {
-            Session::set('authenticationTypesErrorCode', self::ERROR_INVALID_TYPE);
+            $this->app->make('session')->set('authenticationTypesErrorCode', self::ERROR_INVALID_TYPE);
             $this->redirect('dashboard/system/registration/authentication/');
-            exit;
         }
         $this->view();
     }
@@ -132,7 +114,6 @@ class Authentication extends DashboardPageController
         } catch (Exception $e) {
             Session::set('authenticationTypesErrorCode', self::ERROR_INVALID_TYPE);
             $this->redirect('dashboard/system/registration/authentication/');
-            exit;
         }
         $this->set('at', $at);
         $this->set('editmode', true);

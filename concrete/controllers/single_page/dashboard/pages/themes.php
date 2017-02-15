@@ -117,13 +117,12 @@ class Themes extends DashboardPageController
         }
 
         $v = Loader::helper('validation/error');
+        $t = null;
         try {
-            if (is_object($th)) {
-                $t = PageTheme::add($pThemeHandle);
-                $this->redirect('/dashboard/pages/themes/inspect', $t->getThemeID(), 'install');
-            } else {
+            if (!is_object($th)) {
                 throw new Exception('Invalid Theme');
             }
+            $t = PageTheme::add($pThemeHandle);
         } catch (Exception $e) {
             switch ($e->getMessage()) {
                 case PageTheme::E_THEME_INSTALLED:
@@ -135,6 +134,9 @@ class Themes extends DashboardPageController
             }
 
             $this->set('error', $v);
+        }
+        if ($t !== null) {
+            $this->redirect('/dashboard/pages/themes/inspect', $t->getThemeID(), 'install');
         }
         $this->view();
     }

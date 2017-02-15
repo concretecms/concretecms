@@ -26,10 +26,11 @@ class Workflows extends DashboardPageController
             }
 
             $wf->delete();
-
-            $this->redirect("/dashboard/system/permissions/workflows", 'workflow_deleted');
         } catch (Exception $e) {
             $this->error->add($e);
+        }
+        if (!$this->error->has()) {
+            $this->redirect('/dashboard/system/permissions/workflows', 'workflow_deleted');
         }
         $this->view();
     }

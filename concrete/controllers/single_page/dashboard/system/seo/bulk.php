@@ -117,8 +117,7 @@ class Bulk extends DashboardPageController
         $newHandle = $text->urlify($cHandle);
         $result = array('success' => $success, 'cID' => $cID, 'cHandle' => $newHandle, 'newPath' => $newHandle, 'newLink' => $newPath);
 
-        JsonResponse::create($result)->send();
-        exit;
+        return JsonResponse::create($result);
     }
 
     /**
