@@ -4,9 +4,8 @@ namespace Concrete\Core\File\Service;
 use Zend\Http\Client\Adapter\Exception\TimeoutException;
 use Config;
 use Environment;
-use Core;
 use Exception;
-use Concrete\Core\Support\Facade\Application;
+use Concrete\Core\Support\Facade\Application as CoreApplication;
 
 /**
  * File helper.
@@ -324,7 +323,7 @@ class File
     {
         $url = @parse_url($file);
         if (isset($url['scheme']) && isset($url['host'])) {
-            $app = Application::getFacadeApplication();
+            $app = CoreApplication::getFacadeApplication();
             $client = $app->make('http/client')->setUri($file);
             try {
                 $response = $client->send();
