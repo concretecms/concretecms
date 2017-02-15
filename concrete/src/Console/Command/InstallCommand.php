@@ -17,6 +17,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ChoiceQuestion;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Symfony\Component\Console\Question\Question;
+use Concrete\Core\Localization\Localization;
 
 class InstallCommand extends Command
 {
@@ -409,7 +410,7 @@ EOT
                     return $question->setHidden(true);
                 },
             ],
-            ['language', 'en_US'],
+            ['language', Localization::BASE_LOCALE],
             [
                 'site-locale',
                 function (Question $question, InputInterface $input, InputOption $option) {

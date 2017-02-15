@@ -3,7 +3,7 @@ namespace Concrete\Core\Localization\Service;
 
 use Request;
 use Punic\Calendar;
-use Localization;
+use Concrete\Core\Localization\Localization;
 use User;
 use Core;
 use Config;
@@ -92,7 +92,7 @@ class Date
         $result = '';
         $datetime = $this->toDateTime($timestamp, $toTimezone);
         if (is_object($datetime)) {
-            if (Localization::activeLocale() == 'en_US') {
+            if (Localization::activeLocale() == Localization::BASE_LOCALE) {
                 $result = $datetime->format($mask);
             } else {
                 $result = Calendar::format(
@@ -806,7 +806,7 @@ class Date
                 }
             }
         }
-        if (Localization::activeLocale() != 'en_US') {
+        if (Localization::activeLocale() != Localization::BASE_LOCALE) {
             return $this->dateTimeFormatLocal($datetime, $mask);
         } else {
             return $datetime->format($mask);
@@ -859,7 +859,7 @@ class Date
                 }
             }
         }
-        if (Localization::activeLocale() != 'en_US') {
+        if (Localization::activeLocale() != Localization::BASE_LOCALE) {
             return $this->dateTimeFormatLocal($datetime, $mask);
         } else {
             return $datetime->format($mask);

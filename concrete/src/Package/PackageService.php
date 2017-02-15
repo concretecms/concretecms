@@ -187,7 +187,7 @@ class PackageService
 
     public function install(Package $p, $data)
     {
-        $this->localization->pushActiveContext('system');
+        $this->localization->pushActiveContext(Localization::CONTEXT_SYSTEM);
         ClassLoader::getInstance()->registerPackage($p);
 
         if (method_exists($p, 'validate_install')) {

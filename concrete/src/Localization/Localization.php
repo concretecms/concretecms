@@ -20,6 +20,35 @@ class Localization
     const BASE_LOCALE = 'en_US';
 
     /**
+     * The context (resolving to en_US) to be considered as the "neutral" one.
+     *
+     * This context must be used for all strings that are system related in concrete5 and should have their own context.
+     * Generally, these are the strings that concrete5 saves in the database, such as package, theme and block type names/descriptions.
+     *
+     * @var string
+     */
+    const CONTEXT_SYSTEM = 'system';
+
+    /**
+     * This is the context for the site interface tranlations.
+     * It contains the page locale, determined by the page-specific locale or by the site section it's contained in.
+     *
+     * These are all the translations that the site visitors see on the site.
+     * The editor also sees these strings in the same language as the visitor.
+     *
+     * @var string
+     */
+    const CONTEXT_SITE = 'site';
+
+    /**
+     * The context containing the locale of the current user (fallsback to CONTEXT_SITE).
+     * This should be the context used when showing the edit dialogs, the concrete5 menus...
+     *
+     * @var string
+     */
+    const CONTEXT_UI = 'ui';
+
+    /**
      * The translator adapter repository to be used.
      *
      * @var TranslatorAdapterRepositoryInterface
@@ -112,7 +141,7 @@ class Localization
      * Change the active translation context, but remember the previous one.
      * Useful when temporarily setting the translation context to something else than the original.
      *
-     * @param string $newContext The new translation context to activate.
+     * @param string $newContext The new translation context to activate (default contexts are defined by the Localization::CONTEXT_... constants).
      *
      * @see Localization::popActiveContext()
      *

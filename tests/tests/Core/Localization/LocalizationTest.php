@@ -70,7 +70,7 @@ class LocalizationTest extends LocalizationTestsBase
         $msp->register();
 
         $loc = Localization::getInstance();
-        $loc->setActiveContext('system');
+        $loc->setActiveContext(Localization::CONTEXT_SYSTEM);
     }
 
     /**
@@ -466,8 +466,8 @@ class LocalizationTest extends LocalizationTestsBase
             return new MultilingualDetector();
         });
 
-        $loc->setContextLocale('site', 'fi_FI');
-        $loc->setActiveContext('site');
+        $loc->setContextLocale(Localization::CONTEXT_SITE, 'fi_FI');
+        $loc->setActiveContext(Localization::CONTEXT_SITE);
 
         // Test setting setup site localization for the active translator
         Localization::setupSiteLocalization();
