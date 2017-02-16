@@ -56,7 +56,7 @@ class FileLocator
 
     protected function getCacheKey($file)
     {
-        $keys[] = 'overrides';
+        $keys = [];
         $file = trim(str_replace('/', DIRECTORY_SEPARATOR, $file), DIRECTORY_SEPARATOR);
         foreach($this->locations as $location) {
             $cacheKey = $location->getCacheKey();
@@ -67,7 +67,7 @@ class FileLocator
             }
         }
         $keys = array_merge($keys, explode(DIRECTORY_SEPARATOR, $file));
-        return implode('.', $keys);
+        return 'overrides.' . md5(implode('.', $keys));
     }
 
     public function getAllRecords($file)
