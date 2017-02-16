@@ -4,7 +4,6 @@ namespace Concrete\Core\Console\Command;
 use Job;
 use JobSet;
 use RuntimeException;
-use Exception;
 use Concrete\Core\Console\Command;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputArgument;

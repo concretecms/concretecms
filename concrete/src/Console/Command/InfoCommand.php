@@ -4,7 +4,6 @@ namespace Concrete\Core\Console\Command;
 use Concrete\Core\Console\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Exception;
 use Concrete\Core\Support\Facade\Facade;
 use Concrete\Core\System\Info;
 

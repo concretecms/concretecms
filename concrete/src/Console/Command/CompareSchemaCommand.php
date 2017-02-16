@@ -39,7 +39,7 @@ EOT
         $tool = new \Doctrine\ORM\Tools\SchemaTool($em);
         $schemas = [];
         $sm = $db->getSchemaManager();
-        /**
+        /*
          * @var MySqlSchemaManager $sm
          */
         $dbSchema = $sm->createSchema();

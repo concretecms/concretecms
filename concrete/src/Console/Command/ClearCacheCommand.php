@@ -5,7 +5,6 @@ use Concrete\Core\Console\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Core;
-use Exception;
 
 class ClearCacheCommand extends Command
 {
