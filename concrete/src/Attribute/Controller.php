@@ -11,7 +11,7 @@ use Core;
 use Concrete\Core\Attribute\View as AttributeTypeView;
 use Doctrine\ORM\EntityManager;
 
-class Controller extends AbstractController
+class Controller extends AbstractController implements AttributeInterface
 {
     protected $entityManager;
 
