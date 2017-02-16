@@ -171,7 +171,6 @@ class UserInterface
     {
         $alt = false;
         $src = false;
-        $dimensions = '';
         if (Config::get('concrete.white_label.name')) {
             $alt = Config::get('concrete.white_label.name');
         }
@@ -182,10 +181,17 @@ class UserInterface
             $src = Config::get('concrete.white_label.logo');
         }
         if (!$src) {
-            $filename = 'logo.png';
+            $filename = 'logo';
+            if (file_exists(DIR_APPLICATION . '/' . DIRNAME_IMAGES . '/' . $filename . '.svg')) {
+                $src = REL_DIR_APPLICATION . '/' . DIRNAME_IMAGES . '/' . $filename . '.svg';
+            } elseif (file_exists(DIR_APPLICATION . '/' . DIRNAME_IMAGES . '/' . $filename . '.png')) {
+                $src = REL_DIR_APPLICATION . '/' . DIRNAME_IMAGES . '/' . $filename . '.png';
+            } else {
+                $src = ASSETS_URL_IMAGES . '/' . $filename . '.svg';
+            }
         }
 
-        return '<img id="ccm-logo" src="' . $src . '" alt="' . $alt . '" title="' . $alt . '" />';
+        return '<img id="ccm-logo" src="' . $src . '" alt="' . $alt . '" title="' . $alt . '">';
     }
 
     /**
