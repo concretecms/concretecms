@@ -9,6 +9,7 @@ class Header extends ElementController
 
     /**
      * Header constructor.
+     *
      * @param $nodeId
      */
     public function __construct($nodeId)
@@ -31,5 +32,4 @@ class Header extends ElementController
             $this->set('exportURL', \URL::to('/dashboard/express/entries', 'csv_export', $this->nodeId));
         }
     }
-
 }

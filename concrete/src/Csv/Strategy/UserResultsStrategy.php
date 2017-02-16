@@ -1,24 +1,21 @@
 <?php
-
 namespace Concrete\Core\Csv\Strategy;
 
 use Concrete\Core\Search\Result\Result;
 
 /**
- * Class UserResultsStrategy
+ * Class UserResultsStrategy.
  *
  * Turns a UserList object into rows for a CSV
- *
- * @package Concrete\Core\Csv\Strategy
  */
 class UserResultsStrategy implements StrategyInterface
 {
-
-    private $rows = array();
+    private $rows = [];
     private $users;
 
     /**
      * UserListStrategy constructor.
+     *
      * @param Result $userSearchResults
      */
     public function __construct(Result $userSearchResults)
@@ -42,7 +39,7 @@ class UserResultsStrategy implements StrategyInterface
     private function processEntries()
     {
         foreach ($this->users as $user) {
-            $row = array();
+            $row = [];
             $row[] = $user->getUserName();
             $row[] = $user->getUserEmail();
 
@@ -65,7 +62,7 @@ class UserResultsStrategy implements StrategyInterface
     private function processHeaders()
     {
         // Static headers
-        $headers = array('Username', 'Email', 'Signup Date', 'Status', '# Logins');
+        $headers = ['Username', 'Email', 'Signup Date', 'Status', '# Logins'];
 
         // Get headers for User attributes
         $firstUser = current($this->users);
@@ -74,6 +71,6 @@ class UserResultsStrategy implements StrategyInterface
             $headers[] = $userAttribute->getAttributeKeyDisplayName();
         }
 
-        $this->rows = array_merge(array($headers), $this->rows);
+        $this->rows = array_merge([$headers], $this->rows);
     }
 }

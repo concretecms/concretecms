@@ -5,7 +5,6 @@ use Concrete\Core\Controller\ElementController;
 
 class Header extends ElementController
 {
-
     protected $entity;
     protected $page;
     protected $createURL;
@@ -20,7 +19,7 @@ class Header extends ElementController
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getExportURL()
     {
@@ -36,7 +35,7 @@ class Header extends ElementController
     }
 
     /**
-     * @param mixed $exportURL
+     * @param string $exportURL
      */
     public function setExportURL($exportURL)
     {
@@ -68,7 +67,6 @@ class Header extends ElementController
         $this->entity = $entity;
     }
 
-
     public function getElement()
     {
         return 'dashboard/express/entries/header';
@@ -80,5 +78,4 @@ class Header extends ElementController
         $this->set('createURL', $this->getCreateURL());
         $this->set('exportURL', $this->getExportURL());
     }
-
 }

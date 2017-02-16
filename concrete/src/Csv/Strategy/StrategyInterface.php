@@ -2,10 +2,9 @@
 namespace Concrete\Core\Csv\Strategy;
 
 /**
- * Interface StrategyInterface
- * @package Concrete\Core\Csv\Strategy
+ * Interface StrategyInterface.
  */
 interface StrategyInterface
 {
-    function getRows();
+    public function getRows();
 }

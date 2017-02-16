@@ -5,12 +5,10 @@ use Concrete\Core\Csv\Strategy\StrategyInterface;
 use Port\Csv\CsvWriter;
 
 /**
- * Class Csv
+ * Class Csv.
  *
  * Helper class to generate and download CSV files.
  * A class implementing StrategyInterface is needed to transform any content into rows.
- *
- * @package Concrete\Core\Csv
  */
 class Csv
 {
@@ -20,6 +18,7 @@ class Csv
 
     /**
      * Csv constructor.
+     *
      * @param CsvWriter $writer
      * @param StrategyInterface $strategy
      * @param null $filename
@@ -34,7 +33,7 @@ class Csv
     }
 
     /**
-     * Set correct headers for CSV and output the file
+     * Set correct headers for CSV and output the file.
      */
     public function generate()
     {

@@ -15,7 +15,8 @@
               </span>
         </div>
 
-        <?php if ($showAddButton) { ?>
+        <?php if ($showAddButton) {
+    ?>
         <ul class="ccm-header-search-navigation">
             <?php if ($canExportUsers): ?>
                 <li>
@@ -26,7 +27,8 @@
             <?php endif ?>
             <li><a href="<?php echo View::url('/dashboard/users/add') ?>" class="link-primary"><i class="fa fa-user"></i> <?php echo t("Add User") ?></a></li>
         </ul>
-        <?php } ?>
+        <?php 
+} ?>
 
     </form>
 </div>

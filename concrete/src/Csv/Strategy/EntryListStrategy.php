@@ -1,25 +1,22 @@
 <?php
-
 namespace Concrete\Core\Csv\Strategy;
 
 use Concrete\Core\Express\EntryList;
 
 /**
- * Class EntryListStrategy
+ * Class EntryListStrategy.
  *
  * Turns entries from an EntryList into rows for a CSV
- *
- * @package Concrete\Core\Csv\Strategy
  */
 class EntryListStrategy implements StrategyInterface
 {
-
-    private $rows = array();
+    private $rows = [];
     private $entries;
     private $entity;
 
     /**
      * EntryListStrategy constructor.
+     *
      * @param EntryList $entryList
      */
     public function __construct(EntryList $entryList)
@@ -45,7 +42,7 @@ class EntryListStrategy implements StrategyInterface
     {
         $entries = $this->entries->getResults();
         foreach ($entries as $entry) {
-            $row = array();
+            $row = [];
             foreach ($entry->getAttributes() as $attribute) {
                 $row[] = $attribute->getPlainTextValue();
             }
@@ -55,11 +52,11 @@ class EntryListStrategy implements StrategyInterface
 
     private function processHeaders()
     {
-        $headers = array();
+        $headers = [];
         foreach ($this->entity->getAttributes() as $attribute) {
             $headers[] = $attribute->getAttributeKeyName();
         }
 
-        $this->rows = array_merge(array($headers), $this->rows);
+        $this->rows = array_merge([$headers], $this->rows);
     }
 }

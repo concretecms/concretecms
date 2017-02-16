@@ -3,17 +3,15 @@ namespace Concrete\Controller\Element\Search\Users;
 
 use Concrete\Core\Controller\ElementController;
 use Concrete\Core\Entity\Search\Query;
-use Concrete\Core\Search\ProviderInterface;
 use Core;
 
 class Header extends ElementController
 {
-
     protected $query;
     protected $showAddButton = false;
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isShowAddButton()
     {
@@ -21,7 +19,7 @@ class Header extends ElementController
     }
 
     /**
-     * @param boolean $showAddButton
+     * @param bool $showAddButton
      */
     public function setShowAddButton($showAddButton)
     {
@@ -47,12 +45,12 @@ class Header extends ElementController
     }
 
     /**
-     * @return mixed
+     * @return bool
      */
     private function canExportUsers()
     {
         $dh = Core::make('helper/concrete/user');
+
         return $dh->canAccessUserSearchInterface();
     }
-
 }
