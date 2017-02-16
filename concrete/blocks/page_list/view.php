@@ -61,7 +61,7 @@ if ($c->isEditMode() && $controller->isBlockEmpty()) {
                     }
                 } else {
                     $url = $page->getCollectionLink();
-                    $page->getAttribute('nav_target');
+                    $target = $page->getAttribute('nav_target');
                 }
                 $target = empty($target) ? '_self' : $target;
                 $description = $page->getCollectionDescription();
