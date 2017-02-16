@@ -22,6 +22,7 @@ class Manager extends FieldManager
             new KeywordsField(),
             new UserGroupField(),
             new IsActiveField(),
+            new IsValidatedField(),
             new DateAddedField(),
             new GroupSetField()
 
