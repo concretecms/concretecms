@@ -26,6 +26,7 @@ class ConfigCommand extends Command
 
     protected function configure()
     {
+        $errExitCode = static::RETURN_CODE_ON_FAILURE;
         $this
             ->setName('c5:config')
             ->setDescription('Set or get configuration parameters.')
@@ -36,7 +37,7 @@ class ConfigCommand extends Command
             ->addOption('environment', 'e', InputOption::VALUE_REQUIRED, 'The environment (if not specified, we\'ll work with the configuration item valid for all environments)')
             ->addOption('generated-overrides', 'g', InputOption::VALUE_NONE, 'Set this option to save configurations to the generated_overrides folder')
         ;
-        $this->setHelp(<<<'EOT'
+        $this->setHelp(<<<EOT
 When setting values that may be evaluated as boolean (true/false), null or numbers, but you want to store them as strings, you can enclose those values in single or double quotes.
 For instance, with
 concrete5 %command.name% set concrete.test_item 1
@@ -45,7 +46,7 @@ concrete5 %command.name% set concrete.test_item '1'
 
 Returns codes:
   0 operation completed successfully
-  1 errors occurred
+  $errExitCode errors occurred
 
 More info at http://documentation.concrete5.org/developers/appendix/cli-commands#c5-config
 EOT
@@ -54,46 +55,37 @@ EOT
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $rc = 0;
+        $default_environment = \Config::getEnvironment();
 
-        try {
-            $default_environment = \Config::getEnvironment();
+        $environment = $input->getOption('environment') ?: $default_environment;
 
-            $environment = $input->getOption('environment') ?: $default_environment;
-
-            $file_system = new Filesystem();
-            $file_loader = new FileLoader($file_system);
-            if ($input->getOption('generated-overrides')) {
-                $file_saver = new FileSaver($file_system, $environment == $default_environment ? null : $environment);
-            } else {
-                $file_saver = new DirectFileSaver($file_system, $environment == $default_environment ? null : $environment);
-            }
-            $this->repository = new Repository($file_loader, $file_saver, $environment);
-
-            $item = $input->getArgument('item');
-            switch ($input->getArgument('operation')) {
-                case self::OPERATION_GET:
-                    $output->writeln($this->serialize($this->repository->get($item)));
-                    break;
-
-                case self::OPERATION_SET:
-                    $value = $input->getArgument('value');
-                    if (!isset($value)) {
-                        throw new Exception('Missing new configuration value');
-                    }
-
-                    $this->repository->save($item, $this->unserialize($value));
-                    break;
-
-                default:
-                    throw new Exception('Invalid operation specified. Allowed operations: ' . implode(', ', $this->getAllowedOperations()));
-            }
-        } catch (Exception $x) {
-            $output->writeln('<error>' . $x->getMessage() . '</error>');
-            $rc = 1;
+        $file_system = new Filesystem();
+        $file_loader = new FileLoader($file_system);
+        if ($input->getOption('generated-overrides')) {
+            $file_saver = new FileSaver($file_system, $environment == $default_environment ? null : $environment);
+        } else {
+            $file_saver = new DirectFileSaver($file_system, $environment == $default_environment ? null : $environment);
         }
+        $this->repository = new Repository($file_loader, $file_saver, $environment);
 
-        return $rc;
+        $item = $input->getArgument('item');
+        switch ($input->getArgument('operation')) {
+            case self::OPERATION_GET:
+                $output->writeln($this->serialize($this->repository->get($item)));
+                break;
+
+            case self::OPERATION_SET:
+                $value = $input->getArgument('value');
+                if (!isset($value)) {
+                    throw new Exception('Missing new configuration value');
+                }
+
+                $this->repository->save($item, $this->unserialize($value));
+                break;
+
+            default:
+                throw new Exception('Invalid operation specified. Allowed operations: ' . implode(', ', $this->getAllowedOperations()));
+        }
     }
 
     /**

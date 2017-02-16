@@ -16,15 +16,16 @@ class UpdateCommand extends Command
 {
     protected function configure()
     {
+        $errExitCode = static::RETURN_CODE_ON_FAILURE;
         $this
             ->setName('c5:update')
             ->setDescription('Runs all database migrations to bring the concrete5 installation up to date.')
             ->addEnvOption()
             ->addOption('force', 'f', InputOption::VALUE_NONE, 'Force the update')
-            ->setHelp(<<<'EOT'
+            ->setHelp(<<<EOT
 Returns codes:
   0 operation completed successfully
-  1 errors occurred
+  $errExitCode errors occurred
 EOT
             )
         ;
@@ -32,28 +33,20 @@ EOT
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $rc = 0;
-        try {
-            if (!$input->getOption('force')) {
-                if (!$input->isInteractive()) {
-                    throw new Exception("You have to specify the --force option in order to run this command");
-                }
-                $confirmQuestion = new ConfirmationQuestion('Are you sure you want to update this concrete5 installation?');
-                if (!$this->getHelper('question')->ask($input, $output, $confirmQuestion)) {
-                    throw new Exception("Operation aborted.");
-                }
+        if (!$input->getOption('force')) {
+            if (!$input->isInteractive()) {
+                throw new Exception("You have to specify the --force option in order to run this command");
             }
-            $configuration = new \Concrete\Core\Updater\Migrations\Configuration();
-            $output = new ConsoleOutput();
-            $configuration->setOutputWriter(new OutputWriter(function ($message) use ($output) {
-                $output->writeln($message);
-            }));
-            Update::updateToCurrentVersion($configuration);
-        } catch (Exception $x) {
-            $output->writeln('<error>' . $x->getMessage() . '</error>');
-            $rc = 1;
+            $confirmQuestion = new ConfirmationQuestion('Are you sure you want to update this concrete5 installation?');
+            if (!$this->getHelper('question')->ask($input, $output, $confirmQuestion)) {
+                throw new Exception("Operation aborted.");
+            }
         }
-
-        return $rc;
+        $configuration = new \Concrete\Core\Updater\Migrations\Configuration();
+        $output = new ConsoleOutput();
+        $configuration->setOutputWriter(new OutputWriter(function ($message) use ($output) {
+            $output->writeln($message);
+        }));
+        Update::updateToCurrentVersion($configuration);
     }
 }
