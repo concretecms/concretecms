@@ -22,7 +22,6 @@ abstract class Command extends SymfonyCommand
      */
     public function run(InputInterface $input, OutputInterface $output)
     {
-        $error = null;
         try {
             return parent::run($input, $output);
         } catch (Exception $x) {
