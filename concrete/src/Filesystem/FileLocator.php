@@ -57,7 +57,7 @@ class FileLocator
     protected function getCacheKey($file)
     {
         $keys[] = 'overrides';
-        $file = trim($file, DIRECTORY_SEPARATOR);
+        $file = trim(str_replace('/', DIRECTORY_SEPARATOR, $file), DIRECTORY_SEPARATOR);
         foreach($this->locations as $location) {
             $cacheKey = $location->getCacheKey();
             if (is_array($cacheKey)) {
