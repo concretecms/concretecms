@@ -41,7 +41,7 @@ class Locale implements LocaleInterface
     /**
      * @return mixed
      */
-    public function getSiteLocaleID()
+    public function getLocaleID()
     {
         return $this->siteLocaleID;
     }

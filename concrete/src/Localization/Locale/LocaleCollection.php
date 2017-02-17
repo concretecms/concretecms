@@ -21,11 +21,11 @@ class LocaleCollection implements \JsonSerializable
         $this->provider = $provider;
     }
 
-    protected function getLocaleDisplayName(Locale $locale)
+    protected function getLocaleDisplayName(LocaleInterface $locale)
     {
         $name = $locale->getLanguageText();
         foreach($this->getLocales() as $otherLocale) {
-            if ($otherLocale->getSiteLocaleID() != $locale->getSiteLocaleID() && $otherLocale->getLanguage () == $locale->getLanguage()) {
+            if ($otherLocale->getLocaleID() != $locale->getLocaleID() && $otherLocale->getLanguage () == $locale->getLanguage()) {
                 $name = sprintf('%s (%s)', $locale->getLanguageText(), $this->countries->getCountryName($locale->getCountry()));
             }
         }
@@ -45,10 +45,10 @@ class LocaleCollection implements \JsonSerializable
         $locales = array();
         foreach($this->getLocales() as $locale) {
             if (isset($this->selectedLocale)) {
-                $selectedLocale = $this->selectedLocale->getSiteLocaleID() == $locale->getSiteLocaleID() ? true : false;
+                $selectedLocale = $this->selectedLocale->getLocaleID() == $locale->getLocaleID() ? true : false;
             }
             $locales[] = [
-                'id' => $locale->getSiteLocaleID(),
+                'id' => $locale->getLocaleID(),
                 'locale' => $locale->getLocale(),
                 'localeDisplayName' => $this->getLocaleDisplayName($locale),
                 'icon' => (string) $this->flag->getLocaleFlagIcon($locale, true),
