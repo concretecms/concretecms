@@ -32,6 +32,7 @@ class Localization
     /**
      * This is the context for the site interface tranlations.
      * It contains the page locale, determined by the page-specific locale or by the site section it's contained in.
+     * When there's no locale associated to the current page, this context is associated to the locale specified in the concrete.locale configuration option.
      *
      * These are all the translations that the site visitors see on the site.
      * The editor also sees these strings in the same language as the visitor.
@@ -41,7 +42,7 @@ class Localization
     const CONTEXT_SITE = 'site';
 
     /**
-     * The context containing the locale of the current user (fallsback to CONTEXT_SITE).
+     * The context containing the locale of the current user (fallsback to the concrete.locale configuration option).
      * This should be the context used when showing the edit dialogs, the concrete5 menus...
      *
      * @var string
