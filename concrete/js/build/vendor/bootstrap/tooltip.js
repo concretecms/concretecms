@@ -14,6 +14,9 @@
   /* concrete5 START */
   function getParentZIndex($e) {
     var position, value;
+    if (typeof $e === 'string') {
+        $e = $($e);
+    }
     while ($e.length && $e[0] !== document) {
       switch ($e.css('position')) {
         case 'absolute':
