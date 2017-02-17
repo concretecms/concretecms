@@ -1,16 +1,13 @@
 <?php
 namespace Concrete\Core\Search;
 
-use Concrete\Core\Application\EditResponse;
 use Concrete\Core\Entity\Search\Query;
 use Concrete\Core\Search\Column\AttributeKeyColumn;
 use Concrete\Core\Search\Column\Set;
-use Concrete\Core\Search\Result\Result as SearchResult;
 use Symfony\Component\HttpFoundation\Session\Session;
 
 abstract class AbstractSearchProvider implements ProviderInterface, SessionQueryProviderInterface
 {
-
     protected $session;
 
     public function __construct(Session $session)
@@ -31,18 +28,19 @@ abstract class AbstractSearchProvider implements ProviderInterface, SessionQuery
     public function getAllColumnSet()
     {
         $columnSet = new Set();
-        foreach($this->getAvailableColumnSet()->getColumns() as $column) {
+        foreach ($this->getAvailableColumnSet()->getColumns() as $column) {
             $columnSet->addColumn($column);
         }
-        foreach($this->getCustomAttributeKeys() as $ak) {
+        foreach ($this->getCustomAttributeKeys() as $ak) {
             $columnSet->addColumn(new AttributeKeyColumn($ak));
         }
+
         return $columnSet;
     }
 
     public function getSessionCurrentQuery()
     {
-        $variable = 'search/'. $this->getSessionNamespace() . '/query';
+        $variable = 'search/' . $this->getSessionNamespace() . '/query';
         if ($this->session->has($variable)) {
             return $this->session->get($variable);
         }
@@ -51,7 +49,7 @@ abstract class AbstractSearchProvider implements ProviderInterface, SessionQuery
     public function getSearchResultFromQuery(Query $query)
     {
         $list = $this->getItemList();
-        foreach($query->getFields() as $field) {
+        foreach ($query->getFields() as $field) {
             $field->filterList($list);
         }
         if (!$list->getActiveSortColumn()) {
@@ -67,9 +65,7 @@ abstract class AbstractSearchProvider implements ProviderInterface, SessionQuery
         $list->setItemsPerPage($query->getItemsPerPage());
         $result = $this->createSearchResultObject($columns, $list);
         $result->setQuery($query);
+
         return $result;
     }
-
-
-
 }

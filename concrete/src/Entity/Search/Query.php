@@ -8,13 +8,12 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Query implements \JsonSerializable
 {
-
     const MAX_ITEMS_PER_PAGE = 10;
 
     /**
      * @ORM\Column(type="object")
      */
-    protected $fields = array();
+    protected $fields = [];
 
     /**
      * @ORM\Column(type="object")
@@ -60,10 +59,9 @@ class Query implements \JsonSerializable
 
     public function jsonSerialize()
     {
-        return array(
+        return [
             'fields' => $this->fields,
-        );
-
+        ];
     }
 
     /**
