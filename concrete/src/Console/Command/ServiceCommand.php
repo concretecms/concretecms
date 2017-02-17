@@ -16,6 +16,7 @@ final class ServiceCommand extends Command
 {
     protected function configure()
     {
+        $errExitCode = static::RETURN_CODE_ON_FAILURE;
         $serviceHandles = [];
         $help = '';
         $manager = Core::make('Concrete\Core\Service\Manager\ServiceManager');
@@ -38,16 +39,16 @@ final class ServiceCommand extends Command
                 }
             }
         }
-        $help .= <<<'EOT'
+        $help .= <<<EOT
 
 Return codes for the check operation:
   0 operation completed successfully
-  1 errors occurred
+  $errExitCode errors occurred
   2 web server configuration is not aligned
 
 Return codes for the update operation:
   0 operation completed successfully
-  1 errors occurred
+  $errExitCode errors occurred
 
 More info at http://documentation.concrete5.org/developers/appendix/cli-commands#c5-service
 EOT
@@ -67,33 +68,28 @@ EOT
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $rc = 0;
-        try {
-            $manager = Core::make('Concrete\Core\Service\Manager\ServiceManager');
-            /* @var \Concrete\Core\Service\Manager\ServiceManager $manager */
-            $service = $manager->getService($input->getArgument('service'), $input->getOption('service-version'));
-            if ($service === null) {
-                $msg = 'Unknown web server handle: ' . $input->getArgument('service');
-                $msg .= PHP_EOL;
-                $msg .= 'Valid handles: ' . implode(', ', $manager->getExtensions());
-                throw new Exception($msg);
-            }
-            $operation = $input->getArgument('operation');
-            $ruleOptions = $this->parseRuleOptions($input);
-            switch ($operation) {
-                case 'check':
-                    if ($this->checkConfiguration($service, $ruleOptions, $output) === false) {
-                        $rc = 2;
-                    }
-                    break;
-                case 'update':
-                    $this->updateConfiguration($service, $ruleOptions, $output);
-                    break;
-                default:
-                    throw new Exception('Invalid value of the operation argument (valid values: check or update');
-            }
-        } catch (Exception $x) {
-            $output->writeln('<error>' . $x->getMessage() . '</error>');
-            $rc = 1;
+        $manager = Core::make('Concrete\Core\Service\Manager\ServiceManager');
+        /* @var \Concrete\Core\Service\Manager\ServiceManager $manager */
+        $service = $manager->getService($input->getArgument('service'), $input->getOption('service-version'));
+        if ($service === null) {
+            $msg = 'Unknown web server handle: ' . $input->getArgument('service');
+            $msg .= PHP_EOL;
+            $msg .= 'Valid handles: ' . implode(', ', $manager->getExtensions());
+            throw new Exception($msg);
+        }
+        $operation = $input->getArgument('operation');
+        $ruleOptions = $this->parseRuleOptions($input);
+        switch ($operation) {
+            case 'check':
+                if ($this->checkConfiguration($service, $ruleOptions, $output) === false) {
+                    $rc = 2;
+                }
+                break;
+            case 'update':
+                $this->updateConfiguration($service, $ruleOptions, $output);
+                break;
+            default:
+                throw new Exception('Invalid value of the operation argument (valid values: check or update');
         }
 
         return $rc;
