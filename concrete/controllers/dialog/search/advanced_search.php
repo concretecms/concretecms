@@ -93,6 +93,10 @@ abstract class AdvancedSearch extends BackendInterfaceController
 
         $query->setFields($fields);
         $query->setColumns($set);
+
+        $itemsPerPage = $this->getItemsPerPage();
+        $query->setItemsPerPage($itemsPerPage);
+
         return $query;
     }
 
@@ -130,5 +134,13 @@ abstract class AdvancedSearch extends BackendInterfaceController
             $result->setBaseURL($this->getBasicSearchBaseURL());
             return new JsonResponse($result->getJSONObject());
         }
+    }
+
+    /**
+     * @return int
+     */
+    private function getItemsPerPage()
+    {
+        return $this->request->request->get('fSearchItemsPerPage');
     }
 }

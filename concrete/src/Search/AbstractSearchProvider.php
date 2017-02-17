@@ -63,6 +63,8 @@ abstract class AbstractSearchProvider implements ProviderInterface, SessionQuery
                 $columns = $this->getDefaultColumnSet();
             }
         }
+
+        $list->setItemsPerPage($query->getItemsPerPage());
         $result = $this->createSearchResultObject($columns, $list);
         $result->setQuery($query);
         return $result;
