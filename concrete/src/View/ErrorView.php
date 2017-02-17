@@ -1,7 +1,10 @@
 <?php
 namespace Concrete\Core\View;
 
+use Concrete\Core\Filesystem\FileLocator;
+use Concrete\Core\Support\Facade\Facade;
 use Environment;
+use Illuminate\Filesystem\Filesystem;
 
 class ErrorView extends View
 {
@@ -16,6 +19,11 @@ class ErrorView extends View
         throw new \Exception(t('Action is not available here.'));
     }
 
+    protected function onBeforeGetContents()
+    {
+        return false; // we don't want to run any internal events.
+    }
+
     protected function runControllerTask()
     {
     }
@@ -24,9 +32,9 @@ class ErrorView extends View
         $this->setViewTheme(VIEW_CORE_THEME);
         $this->loadViewThemeObject();
 
-        $env = Environment::get();
-        $r = $env->getPath(DIRNAME_THEMES . '/' . DIRNAME_THEMES_CORE . '/' . FILENAME_THEMES_ERROR . '.php');
-        $this->setViewTemplate($r);
+        $locator = new FileLocator(new Filesystem(), Facade::getFacadeApplication());
+        $r = $locator->getRecord(DIRNAME_THEMES . '/' . DIRNAME_THEMES_CORE . '/' . FILENAME_THEMES_ERROR . '.php');
+        $this->setViewTemplate($r->getFile());
     }
 
     public function getScopeItems()

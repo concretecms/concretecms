@@ -68,14 +68,7 @@ var ConcreteDashboard = function() {
 				});
 		});
 		$('div.ccm-details-panel[data-details-url]').each(function() {
-			$(this).hover(
-				function() {
-					$(this).addClass('ccm-details-panel-hover');
-				},
-				function() {
-					$(this).removeClass('ccm-details-panel-hover');
-				}
-				)
+			$(this)
 				.on('click', function() {
 					window.location.href = $(this).data('details-url');
 				});

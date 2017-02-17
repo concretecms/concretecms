@@ -341,7 +341,8 @@ class UserInterface
 
         \Response::closeOutputBuffers(1, false);
         $ve = new ErrorView($o);
-        \Response::create($ve->render($o))->send();
+        $contents = $ve->render($o);
+        \Response::create($contents)->send();
     }
 
     /**
