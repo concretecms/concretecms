@@ -7,13 +7,7 @@ use Concrete\Core\Localization\Locale\LocaleCollection;
 interface LocalizableTreeInterface extends TreeInterface
 {
 
-
     function getLocale();
-
-    /**
-     * @return LocaleCollection
-     */
-    function getLocaleCollection();
 
 
 }

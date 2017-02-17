@@ -11,13 +11,14 @@ class LocaleCollection implements \JsonSerializable
 {
 
     protected $flag;
-    protected $tree;
+    protected $selectedLocale;
+    protected $provider;
 
-    public function __construct(SiteTree $tree)
+    public function __construct(LocaleCollectionProviderInterface $provider)
     {
         $this->flag = new Flag();
         $this->countries = new CountryList();
-        $this->tree = $tree;
+        $this->provider = $provider;
     }
 
     protected function getLocaleDisplayName(Locale $locale)
@@ -31,17 +32,28 @@ class LocaleCollection implements \JsonSerializable
         return $name;
     }
 
+    /**
+     * @param mixed $selectedLocale
+     */
+    public function setSelectedLocale($selectedLocale)
+    {
+        $this->selectedLocale = $selectedLocale;
+    }
+
     public function jsonSerialize()
     {
         $locales = array();
         foreach($this->getLocales() as $locale) {
+            if (isset($this->selectedLocale)) {
+                $selectedLocale = $this->selectedLocale->getSiteLocaleID() == $locale->getSiteLocaleID() ? true : false;
+            }
             $locales[] = [
                 'id' => $locale->getSiteLocaleID(),
                 'locale' => $locale->getLocale(),
                 'localeDisplayName' => $this->getLocaleDisplayName($locale),
                 'icon' => (string) $this->flag->getLocaleFlagIcon($locale, true),
                 'treeID' => $locale->getSiteTree()->getSiteTreeID(),
-                'selectedLocale' => $locale->getSiteLocaleID() == $this->tree->getLocale()->getSiteLocaleID(),
+                'selectedLocale' => $selectedLocale,
             ];
         }
         return $locales;
@@ -49,7 +61,7 @@ class LocaleCollection implements \JsonSerializable
 
     public function getLocales()
     {
-        return $this->tree->getSite()->getLocales();
+        return $this->provider->getLocales();
     }
 
 }

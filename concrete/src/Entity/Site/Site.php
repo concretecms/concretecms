@@ -6,6 +6,7 @@ use Concrete\Core\Attribute\ObjectInterface;
 use Concrete\Core\Attribute\ObjectTrait;
 use Concrete\Core\Attribute\Key\SiteKey;
 use Concrete\Core\Entity\Attribute\Value\SiteValue;
+use Concrete\Core\Localization\Locale\LocaleCollectionProviderInterface;
 use Concrete\Core\Site\Config\Liaison;
 use Concrete\Core\Site\Tree\TreeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -15,7 +16,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  * @ORM\Table(name="Sites")
  */
-class Site implements TreeInterface, ObjectInterface
+class Site implements TreeInterface, ObjectInterface, LocaleCollectionProviderInterface
 {
 
     use ObjectTrait;

@@ -77,10 +77,7 @@ if (isset($_REQUEST['displaySingleLevel']) && $_REQUEST['displaySingleLevel']) {
             $tree = $service->getActiveSiteForEditing()->getSiteTreeObject();
         }
         $nodes = $dh->getSubNodes($tree);
-        $locales = null;
-        if ($tree instanceof \Concrete\Core\Entity\Site\SiteTree) {
-            $locales = $tree->getLocaleCollection();
-        }
+        $locales = $tree->getLocaleCollection();
 
         echo json_encode([
             'children' => $nodes,
