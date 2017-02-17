@@ -158,15 +158,15 @@ class UserList extends DatabaseItemList
 
     /**
     * Filter list by whether a user is validated or not
-    * @param $val
+    * @param boolean $isValidated
     */
     public function filterByIsValidated($isValidated)
     {
         $this->includeInactiveUsers();
         if (!$isValidated) {
-          $this->includeUnvalidatedUsers();
-          $this->query->andWhere('u.uIsValidated = :uIsValidated');
-          $this->query->setParameter('uIsValidated', $isValidated);
+            $this->includeUnvalidatedUsers();
+            $this->query->andWhere('u.uIsValidated = :uIsValidated');
+            $this->query->setParameter('uIsValidated', $isValidated);
         }
     }
 

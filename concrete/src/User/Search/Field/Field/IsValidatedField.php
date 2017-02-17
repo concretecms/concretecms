@@ -9,7 +9,6 @@ use Concrete\Core\User\UserList;
 
 class IsValidatedField extends AbstractField
 {
-
     protected $requestVariables = [
         'validated',
     ];
