@@ -139,12 +139,7 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
         return $this->record;
     }
 
-    /**
-     * Run when a block is added or edited. Automatically saves block data against the block's database table. If a block needs to do more than this (save to multiple tables, upload files, etc... it should override this.
-     *
-     * @param array $args
-     */
-    public function save($args)
+    protected function performSave($args, $loadExisting = false)
     {
         //$argsMerged = array_merge($_POST, $args);
         if ($this->btTable) {
@@ -152,11 +147,16 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
             $columns = $db->MetaColumnNames($this->btTable);
             $this->record = new BlockRecord($this->btTable);
             $this->record->bID = $this->bID;
+            if ($loadExisting) {
+                $this->record->Load('bID=' . $this->bID);
+            }
+
             foreach ($columns as $key) {
                 if (isset($args[$key])) {
                     $this->record->{$key} = $args[$key];
                 }
             }
+
             $this->record->Replace();
             if ($this->cacheBlockRecord() && Config::get('concrete.cache.blocks')) {
                 $record = base64_encode(serialize($this->record));
@@ -164,6 +164,16 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
                 $db->Execute('update Blocks set btCachedBlockRecord = ? where bID = ?', [$record, $this->bID]);
             }
         }
+    }
+
+    /**
+     * Run when a block is added or edited. Automatically saves block data against the block's database table. If a block needs to do more than this (save to multiple tables, upload files, etc... it should override this.
+     *
+     * @param array $args
+     */
+    protected function save($args)
+    {
+        $this->performSave($args);
     }
 
     public function cacheBlockRecord()
