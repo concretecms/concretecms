@@ -171,7 +171,7 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
      *
      * @param array $args
      */
-    protected function save($args)
+    public function save($args)
     {
         $this->performSave($args);
     }
