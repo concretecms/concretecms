@@ -145,6 +145,32 @@ class Search extends DashboardPageController
                     $this->redirect('/dashboard/users/search', 'view', $this->user->getUserID(), 'email_validated');
                 }
                 break;
+            case 'send_email_validation':
+                $this->setupUser($uID);
+                if ($this->canActivateUser && $this->app->make('helper/validation/token')->validate()) {
+                  $uHash = $this->user->setupValidation();
+                  $config = $this->app->make('config');
+                  $mh = $this->app->make('helper/mail');
+                  $fromEmail = (string) $config->get('concrete.email.validate_registration.address');
+                  if (strpos($fromEmail, '@')) {
+                      $fromName = (string) $config->get('concrete.email.validate_registration.name');
+                      if ($fromName === '') {
+                          $fromName = t('Validate Email Address');
+                      }
+                      $mh->from($fromEmail, $fromName);
+                  }
+                  $mh->addParameter('uHash', $uHash);
+                  $mh->addParameter('uID', $this->user->getUserID());
+                  $mh->addParameter('user', $this->user);
+                  $mh->addParameter('uName', $this->user->getUserName());
+                  $mh->addParameter('uEmail', $this->user->getUserEmail());
+                  $mh->addParameter('site', tc('SiteName', $config->get('concrete.site')));
+                  $mh->to($this->user->getUserEmail());
+                  $mh->load('validate_user_email');
+                  $mh->sendMail();
+                  $this->redirect('/dashboard/users/search', 'view', $this->user->getUserID(), 'email_validation_sent');
+                }
+                break;
             case 'sudo':
                 $this->setupUser($uID);
                 if ($this->canSignInAsUser && $this->app->make('helper/validation/token')->validate()) {
@@ -501,6 +527,9 @@ class Search extends DashboardPageController
                     break;
                 case 'email_validated':
                     $this->set('message', t('Email marked as valid.'));
+                    break;
+                case 'email_validation_sent':
+                    $this->set('message', t('Email validation sent.'));
                     break;
                 case 'workflow_canceled':
                     $this->set('message', t('Workflow request is canceled.'));
