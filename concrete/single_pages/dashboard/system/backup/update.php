@@ -20,7 +20,7 @@ if ($canUpgrade) {
         <div class="ccm-dashboard-update-details-wrapper">
 
             <div class="ccm-dashboard-update-details">
-                <div class="ccm-dashboard-update-thumbnail"><img src="<?=ASSETS_URL_IMAGES?>/logo.png" /></div>
+                <div class="ccm-dashboard-update-thumbnail"><img src="<?=ASSETS_URL_IMAGES?>/logo.svg" /></div>
                 <h2><?=t('Version %s', $update->getVersion())?></h2>
                 <div><i class="fa fa-cog"></i> <span class="ccm-dashboard-update-details-testing-text"><?=t('Testing System...')?></span></div>
             </div>
@@ -62,7 +62,7 @@ if ($canUpgrade) {
         ?>
                         <p><?=t('No add-ons installed.')?></p>
 
-                    <?php 
+                    <?php
     }
     foreach ($list as $pkg) {
         ?>
@@ -79,7 +79,7 @@ if ($canUpgrade) {
                             </div>
                         </div>
 
-                    <?php 
+                    <?php
     }
     ?>
 
@@ -225,7 +225,7 @@ if ($canUpgrade) {
         </script>
 
 
-    <?php 
+    <?php
 } else {
     ?>
 
@@ -307,16 +307,16 @@ if ($canUpgrade) {
     ?>
             <p><?=t('No updates are ready to be installed.')?></p>
 
-        <?php 
+        <?php
 }
     ?>
-    <?php 
+    <?php
 }
     ?>
 
-<?php 
+<?php
 } else {
     ?>
     <p><?=t('You do not have permission to upgrade this installation of concrete5.')?></p>
-<?php 
+<?php
 } ?>
