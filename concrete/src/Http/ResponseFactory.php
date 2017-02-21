@@ -38,7 +38,7 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
      */
     protected $request;
     /**
-     * @var \Concrete\Core\Http\Localization
+     * @var \Concrete\Core\Localization\Localization
      */
     private $localization;
     /**
