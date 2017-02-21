@@ -13,6 +13,7 @@ use Concrete\Core\Page\Controller\PageController;
 use Concrete\Core\Page\Event;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Page\Relation\Menu\Item\RelationListItem;
+use Concrete\Core\Page\Theme\Theme;
 use Concrete\Core\Permission\Checker;
 use Concrete\Core\Permission\Key\Key;
 use Concrete\Core\Routing\RedirectResponse;
@@ -193,7 +194,7 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
         if ($this->config->get('concrete.misc.mobile_theme_id') > 0) {
             $md = $this->app->make(MobileDetect::class);
             if ($md->isMobile()) {
-                $mobileTheme = Theme::getByID(Config::get('concrete.misc.mobile_theme_id'));
+                $mobileTheme = Theme::getByID($this->app->config->get('concrete.misc.mobile_theme_id'));
                 if ($mobileTheme instanceof Theme) {
                     $view->setViewTheme($mobileTheme);
                     $controller->setTheme($mobileTheme);
