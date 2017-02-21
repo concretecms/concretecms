@@ -59,7 +59,7 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
      */
     public function create($content, $code = Response::HTTP_OK, array $headers = [])
     {
-        return \Concrete\Core\Http\Response::create($content, $code, $headers);
+        return Response::create($content, $code, $headers);
     }
 
     /**
