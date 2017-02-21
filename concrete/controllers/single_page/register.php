@@ -206,8 +206,7 @@ class Register extends PageController
 
                 // now we check whether we need to validate this user's email address
                 if ($config->get('concrete.user.registration.validate_email')) {
-                    $cms = Facade::getFacadeApplication();
-                    $cms->make('user/status')->sendEmailValidation($process);
+                    $this->app->make('user/status')->sendEmailValidation($process);
 
                     //$this->redirect('/register', 'register_success_validate', $rcID);
                     $redirectMethod = 'register_success_validate';

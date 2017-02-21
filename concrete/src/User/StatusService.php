@@ -2,47 +2,44 @@
 namespace Concrete\Core\User;
 
 use Concrete\Core\Application\Application;
-use Concrete\Core\Database\Connection\Connection;
-use Concrete\Core\Entity\User\User as UserEntity;
-use Concrete\Core\Entity\User\UserSignup;
-use Concrete\Core\Notification\Notifier;
-use Concrete\Core\Notification\Type\UserSignupType;
-use Concrete\Core\User\Event\AddUser;
-use Concrete\Core\User\Event\UserInfoWithPassword;
-use Doctrine\ORM\EntityManagerInterface;
-use Hautelook\Phpass\PasswordHash;
+use Concrete\Core\Mail\Service as MailService;
+use Concrete\Core\Config\Repository\Repository;
 
 class StatusService implements StatusServiceInterface
 {
-    protected $entityManager;
     protected $application;
-    protected $userInfoRepository;
+    protected $mh;
+    protected $config;
 
-    public function __construct(Application $application, EntityManagerInterface $entityManager, UserInfoRepository $userInfoRepository)
+    /**
+     * StatusService constructor.
+     * @param \Concrete\Core\Application\Application $application
+     * @param \Concrete\Core\Mail\Service $mh
+     * @param \Concrete\Core\Config\Repository\Repository $config
+     */
+    public function __construct(Application $application, MailService $mh, Repository $config)
     {
         $this->application = $application;
-        $this->entityManager = $entityManager;
-        $this->userInfoRepository = $userInfoRepository;
+        $this->mh = $mh;
+        $this->config = $config;
     }
 
     public function sendEmailValidation($user) {
       $uHash = $user->setupValidation();
-      $config = $this->application->make('config');
-      $mh = $this->application->make('mail');
-      $fromEmail = (string) $config->get('concrete.email.validate_registration.address');
+      $fromEmail = (string) $this->config->get('concrete.email.validate_registration.address');
       if (strpos($fromEmail, '@')) {
-          $fromName = (string) $config->get('concrete.email.validate_registration.name');
+          $fromName = (string) $this->config->get('concrete.email.validate_registration.name');
           if ($fromName === '') {
               $fromName = t('Validate Email Address');
           }
-          $mh->from($fromEmail, $fromName);
+          $this->mh->from($fromEmail, $fromName);
       }
-      $mh->addParameter('uEmail', $user->getUserEmail());
-      $mh->addParameter('uHash', $uHash);
-      $mh->addParameter('uEmail', $user->getUserEmail());
-      $mh->addParameter('site', tc('SiteName', $config->get('concrete.site')));
-      $mh->to($user->getUserEmail());
-      $mh->load('validate_user_email');
-      $mh->sendMail();
+      $this->mh->addParameter('uEmail', $user->getUserEmail());
+      $this->mh->addParameter('uHash', $uHash);
+      $this->mh->addParameter('uEmail', $user->getUserEmail());
+      $this->mh->addParameter('site', tc('SiteName', $this->config->get('concrete.site')));
+      $this->mh->to($user->getUserEmail());
+      $this->mh->load('validate_user_email');
+      $this->mh->sendMail();
     }
 }

@@ -148,9 +148,7 @@ class Search extends DashboardPageController
             case 'send_email_validation':
                 $this->setupUser($uID);
                 if ($this->canActivateUser && $this->app->make('helper/validation/token')->validate()) {
-                    $cms = Facade::getFacadeApplication();
-                    $cms->make('user/status')->sendEmailValidation($this->user);
-
+                    $this->app->make('user/status')->sendEmailValidation($this->user);
                     $this->redirect('/dashboard/users/search', 'view', $this->user->getUserID(), 'email_validation_sent');
                 }
                 break;
