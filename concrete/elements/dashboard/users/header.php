@@ -11,7 +11,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
             <?php if ($user->isValidated() < 1) : ?>
                 <div class="btn-group">
                     <button type="button" class="btn dropdown-toggle btn-default" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="bstb-undefined">
-                        <span><?php echo t('Validate') ?></span><span class="caret"></span>
+                        <span><?php echo t('Validate') ?></span> <span class="caret"></span>
                     </button>
                     <ul class="dropdown-menu">
                         <li>
