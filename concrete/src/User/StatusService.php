@@ -25,21 +25,21 @@ class StatusService implements StatusServiceInterface
     }
 
     public function sendEmailValidation($user) {
-      $uHash = $user->setupValidation();
-      $fromEmail = (string) $this->config->get('concrete.email.validate_registration.address');
-      if (strpos($fromEmail, '@')) {
-          $fromName = (string) $this->config->get('concrete.email.validate_registration.name');
-          if ($fromName === '') {
-              $fromName = t('Validate Email Address');
-          }
-          $this->mh->from($fromEmail, $fromName);
-      }
-      $this->mh->addParameter('uEmail', $user->getUserEmail());
-      $this->mh->addParameter('uHash', $uHash);
-      $this->mh->addParameter('uEmail', $user->getUserEmail());
-      $this->mh->addParameter('site', tc('SiteName', $this->config->get('concrete.site')));
-      $this->mh->to($user->getUserEmail());
-      $this->mh->load('validate_user_email');
-      $this->mh->sendMail();
+        $uHash = $user->setupValidation();
+        $fromEmail = (string) $this->config->get('concrete.email.validate_registration.address');
+        if (strpos($fromEmail, '@')) {
+            $fromName = (string) $this->config->get('concrete.email.validate_registration.name');
+            if ($fromName === '') {
+                $fromName = t('Validate Email Address');
+            }
+            $this->mh->from($fromEmail, $fromName);
+        }
+        $this->mh->addParameter('uEmail', $user->getUserEmail());
+        $this->mh->addParameter('uHash', $uHash);
+        $this->mh->addParameter('uEmail', $user->getUserEmail());
+        $this->mh->addParameter('site', tc('SiteName', $this->config->get('concrete.site')));
+        $this->mh->to($user->getUserEmail());
+        $this->mh->load('validate_user_email');
+        $this->mh->sendMail();
     }
 }
