@@ -53,7 +53,7 @@ $userGroup = $u->getUserGroups();
 
     <!-- user attribut starts -->
     <?php if(count($attributeSets) > 0) : ?>
-        <h3><?php echo t('Other Attributes')?></h3>
+        <h3><?php echo t('User Attributes')?></h3>
         <br>
         <?php foreach ($attributeSets as $set) : ?>
             <h4><?php echo $set->getAttributeSetDisplayName()?></h4>
