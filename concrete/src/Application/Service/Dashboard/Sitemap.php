@@ -172,8 +172,7 @@ class Sitemap
         $cvName = ($c->getCollectionName() !== '') ? $c->getCollectionName() : '(No Title)';
         $cvName = ($c->isSystemPage() || $cID == 1) ? t($cvName) : $cvName;
         if (Config::get('concrete.misc.sitemap_show_permission')){
-            $inheritance = $c->getCollectionInheritance();
-            switch ($inheritance) {
+            switch ($c->getCollectionInheritance()) {
                 case 'TEMPLATE':
                     $inheritance = t("PageType");
                     $cvName = $cvName . ' (' . $inheritance . ')';
