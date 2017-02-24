@@ -176,11 +176,11 @@ class Sitemap
             switch ($inheritance) {
                 case 'TEMPLATE':
                     $inheritance = t("PageType");
-                    $node->title = $node->title . ' (' . $inheritance . ')';
+                    $cvName = $cvName . ' (' . $inheritance . ')';
                     break;
                 case 'OVERRIDE':
                     $inheritance = t("Manual");
-                    $node->title = $node->title . ' (' . $inheritance . ')';
+                    $cvName = $cvName . ' (' . $inheritance . ')';
                     break;
                 case 'PARENT':
                     break;
