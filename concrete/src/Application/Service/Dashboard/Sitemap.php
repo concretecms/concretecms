@@ -171,6 +171,21 @@ class Sitemap
 
         $cvName = ($c->getCollectionName() !== '') ? $c->getCollectionName() : '(No Title)';
         $cvName = ($c->isSystemPage() || $cID == 1) ? t($cvName) : $cvName;
+        if (Config::get('concrete.misc.sitemap_show_permission'){
+            $inheritance = $c->getCollectionInheritance();
+            switch ($inheritance) {
+                case 'TEMPLATE':
+                    $inheritance = t("PageType");
+                    $node->title = $node->title . ' (' . $inheritance . ')';
+                    break;
+                case 'OVERRIDE':
+                    $inheritance = t("Manual");
+                    $node->title = $node->title . ' (' . $inheritance . ')';
+                    break;
+                case 'PARENT':
+                    break;
+            }
+        }
 
         $isInTrash = $c->isInTrash();
 
