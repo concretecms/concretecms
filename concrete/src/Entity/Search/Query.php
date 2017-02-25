@@ -8,16 +8,22 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Query implements \JsonSerializable
 {
+    const MAX_ITEMS_PER_PAGE = 10;
 
     /**
      * @ORM\Column(type="object")
      */
-    protected $fields = array();
+    protected $fields = [];
 
     /**
      * @ORM\Column(type="object")
      */
     protected $columns;
+
+    /**
+     * @ORM\Column(type="smallint")
+     */
+    private $itemsPerPage;
 
     /**
      * @return mixed
@@ -53,11 +59,24 @@ class Query implements \JsonSerializable
 
     public function jsonSerialize()
     {
-        return array(
+        return [
             'fields' => $this->fields,
-        );
-
+        ];
     }
 
+    /**
+     * @param int
+     */
+    public function setItemsPerPage($itemsPerPage)
+    {
+        $this->itemsPerPage = is_numeric($itemsPerPage) ? $itemsPerPage : self::MAX_ITEMS_PER_PAGE;
+    }
 
+    /**
+     * @return int
+     */
+    public function getItemsPerPage()
+    {
+        return $this->itemsPerPage;
+    }
 }
