@@ -1946,16 +1946,16 @@
         },
         {
             "name": "mlocati/concrete5-translation-library",
-            "version": "1.5.3",
+            "version": "1.5.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mlocati/concrete5-translation-library.git",
-                "reference": "841a7ec788e504748c1bc6d38908192f480b5555"
+                "reference": "800362609d394dfdf9666a6c6d65425a37438ace"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mlocati/concrete5-translation-library/zipball/841a7ec788e504748c1bc6d38908192f480b5555",
-                "reference": "841a7ec788e504748c1bc6d38908192f480b5555",
+                "url": "https://api.github.com/repos/mlocati/concrete5-translation-library/zipball/800362609d394dfdf9666a6c6d65425a37438ace",
+                "reference": "800362609d394dfdf9666a6c6d65425a37438ace",
                 "shasum": ""
             },
             "require": {
@@ -1992,7 +1992,7 @@
                 "translate",
                 "translation"
             ],
-            "time": "2016-10-12T15:21:12+00:00"
+            "time": "2017-02-22T08:46:55+00:00"
         },
         {
             "name": "mobiledetect/mobiledetectlib",
