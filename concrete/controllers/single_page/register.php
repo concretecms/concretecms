@@ -20,7 +20,7 @@ class Register extends PageController
 
     public function on_start()
     {
-        $allowedTypes = ['validate_email', 'enabled', 'manual_approve'];
+        $allowedTypes = ['validate_email', 'enabled'];
         $currentType = $this->app->make(Repository::class)->get('concrete.user.registration.type');
 
         if (!in_array($currentType, $allowedTypes)) {
@@ -76,13 +76,17 @@ class Register extends PageController
 
             if ($this->displayUserName) {
                 if (strlen($username) < $config->get('concrete.user.username.minimum')) {
-                    $e->add(t('A username must be at least %s characters long.',
-                        $config->get('concrete.user.username.minimum')));
+                    $e->add(t(
+                        'A username must be at least %s characters long.',
+                        $config->get('concrete.user.username.minimum')
+                    ));
                 }
 
                 if (strlen($username) > $config->get('concrete.user.username.maximum')) {
-                    $e->add(t('A username cannot be more than %s characters long.',
-                        $config->get('concrete.user.username.maximum')));
+                    $e->add(t(
+                        'A username cannot be more than %s characters long.',
+                        $config->get('concrete.user.username.maximum')
+                    ));
                 }
 
                 if (strlen($username) >= $config->get('concrete.user.username.minimum') && strlen($username) <= $config->get('concrete.user.username.maximum') && !$valc->username($username)) {
@@ -115,7 +119,9 @@ class Register extends PageController
                 $controller = $uak->getController();
                 $validator = $controller->getValidator();
                 $response = $validator->validateSaveValueRequest(
-                    $controller, $this->request, $uak->isAttributeKeyRequiredOnRegister()
+                    $controller,
+                    $this->request,
+                    $uak->isAttributeKeyRequiredOnRegister()
                 );
                 /**
                  * @var $response ResponseInterface
@@ -130,7 +136,6 @@ class Register extends PageController
         }
 
         if (!$e->has()) {
-
             // do the registration
             $data = $_POST;
             $data['uName'] = $username;
@@ -166,8 +171,7 @@ class Register extends PageController
                     $mh->addParameter('siteName', tc('SiteName', \Core::make('site')->getSite()->getSiteName()));
 
                     if ($config->get('concrete.user.registration.notification_email')) {
-                        $mh->from(Config::get('concrete.user.registration.notification_email'),
-                            t('Website Registration Notification'));
+                        $mh->from(Config::get('concrete.user.registration.notification_email'), t('Website Registration Notification'));
                     } else {
                         $adminUser = UserInfo::getByID(USER_SUPER_ID);
                         if (is_object($adminUser)) {
@@ -175,11 +179,7 @@ class Register extends PageController
                         }
                     }
 
-                    if ($config->get('concrete.user.registration.type') == 'manual_approve') {
-                        $mh->load('user_register_approval_required');
-                    } else {
-                        $mh->load('user_register');
-                    }
+                    $mh->load('user_register');
 
                     $mh->sendMail();
                 }
@@ -226,21 +226,6 @@ class Register extends PageController
 
                     //$this->redirect('/register', 'register_success_validate', $rcID);
                     $redirectMethod = 'register_success_validate';
-                    $u->logout();
-                } elseif ($config->get('concrete.user.registration.approval')) {
-                    $ui = UserInfo::getByID($u->getUserID());
-                    $ui->deactivate();
-                    // Email to the user when he/she registered but needs approval
-                    $mh = $this->app->make('mail');
-                    $mh->addParameter('uEmail', $this->post('uEmail'));
-                    $mh->addParameter('site', tc('SiteName', $config->get('concrete.site')));
-                    $mh->to($this->post('uEmail'));
-                    $mh->load('user_register_approval_required_to_user');
-                    $mh->sendMail();
-
-                    //$this->redirect('/register', 'register_pending', $rcID);
-                    $redirectMethod = 'register_pending';
-                    $this->set('message', $this->getRegisterPendingMsg());
                     $u->logout();
                 } else {
                     $process->markValidated();
