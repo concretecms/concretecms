@@ -3,7 +3,7 @@
 namespace Concrete\Core\Updater\Migrations\Migrations;
 
 use Concrete\Core\Package\Package;
-use Doctrine\DBAL\Migrations\AbstractMigration;
+use Concrete\Core\Updater\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
 
 /**
@@ -17,7 +17,8 @@ class Version20170227063249 extends AbstractMigration
     public function up(Schema $schema)
     {
         // Install the core_conversations db_xml
-        Package::installDB(DIR_BASE_CORE . "/" . DIRNAME_BLOCKS . "/core_conversation/db.xml");
+        $this->refreshBlockType('core_conversation');
+        $this->refreshDatabaseTables(['ConversationMessages']);
     }
 
     /**
