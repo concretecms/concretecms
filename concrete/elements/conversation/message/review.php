@@ -20,7 +20,7 @@ if (!isset($starsOnly) || !$starsOnly) {
         if (isset($starsOnly) && $starsOnly) {
             ?>
             $('.<?= $selector ?>').children().unbind();
-            <?
+            <?php
         }
         ?>
     }());
