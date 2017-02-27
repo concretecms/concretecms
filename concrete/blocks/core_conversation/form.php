@@ -86,7 +86,17 @@ if (!$dateFormat) {
             <label class="control-label"><?= t('Aggregate ratings by attribute') ?></label>
             <div class="checkbox">
                 <label>
-                    <?= $form->select('reviewAggregateAttributeKey', $reviewAttributeKeys, $reviewAggregateAttributeKey); ?>
+                    <?php
+                    if (count($reviewAttributeKeys) > 0) {
+                        echo $form->select('reviewAggregateAttributeKey', $reviewAttributeKeys, $reviewAggregateAttributeKey);
+                    } else {
+                        ?>
+                        <div class="alert alert-info">
+                            <?= t('Create a `Rating` page attribute in order to aggregate ratings.') ?>
+                        </div>
+                        <?php
+                    }
+                    ?>
                 </label>
             </div>
         </div>
