@@ -205,7 +205,7 @@ for ($i = 0; $i < count($values); $i++) {
                     <div class="col-sm-6"id="pdEndDate_tw">
                         <select class="form-control" name="pdEndDateSelectTime" data-select="time">
                             <?php foreach($values as $value) { ?>
-                                <option value="<?=$value?>"><?=$value?></option>
+                                <option value="<?=$value?>" <?php if ($selectedEndTime == $value) { ?>selected<?php }?>><?=$value?></option>
                             <?php } ?>
                         </select>
                     </div>
