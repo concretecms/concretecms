@@ -9,7 +9,13 @@ $u = User::getByUserID($_REQUEST['uID']);
 $uName = $ui->getUserName();
 $uEmail = $ui->getUserEmail();
 
-$attributeList = UserAttributeKey::getList();
+$service = Core::make('Concrete\Core\Attribute\Category\CategoryService');
+$categoryEntity = $service->getByHandle('user');
+$category = $categoryEntity->getController();
+$setManager = $category->getSetManager();
+$attributeSets = $setManager->getAttributeSets();
+$unassigned = $setManager->getUnassignedAttributeKeys();
+
 $userGroup = $u->getUserGroups();
 ?>
 
@@ -23,7 +29,7 @@ $userGroup = $u->getUserGroups();
             <p><strong><?=t(Username)?></strong></p>
         </div>
 
-        <div class="col-md-2">
+        <div class="col-md-4">
             <p><?=$uName?></p>
         </div>
     </div>
@@ -33,7 +39,7 @@ $userGroup = $u->getUserGroups();
             <p><strong><?=t(Email)?></strong></p>
         </div>
 
-        <div class="col-md-2">
+        <div class="col-md-4">
             <p><a href="mailto:<?=$uEmail?>"><?=$uEmail?></a></p>
         </div>
     </div>
@@ -46,21 +52,41 @@ $userGroup = $u->getUserGroups();
     <!-- user group ends -->
 
     <!-- user attribut starts -->
-    <?php 	if(count($attributeList) > 0) { ?>
-        <h3><?=t('User Attributes')?></h3>
+    <?php if(count($attributeSets) > 0) : ?>
+        <h3><?php echo t('User Attributes')?></h3>
         <br>
-        <?php	foreach ($attributeList as $ak) { ?>
+        <?php foreach ($attributeSets as $set) : ?>
+            <h4><?php echo $set->getAttributeSetDisplayName()?></h4>
+            <?php foreach ($set->getAttributeKeys() as $ak) : ?>
+                <div class="row">
+                    <div class="col-md-8">
+                        <p><strong><?php echo t($ak->getAttributeKeyName()) ?></strong></p>
+                    </div>
+
+                    <div class="col-md-4">
+                        <p><?php echo $ui->getAttribute($ak, 'displaySanitized', 'display') ?></p>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+        <?php endforeach; ?>
+    <?php endif; ?>
+    <?php if (count($unassigned)) :
+        if (count($attributeSets)) {?>
+            <h4><?php echo t('Other')?></h4>
+        <?php } ?>
+        <?php foreach ($unassigned as $ak) : ?>
             <div class="row">
                 <div class="col-md-8">
                     <p><strong><?php echo t($ak->getAttributeKeyName()) ?></strong></p>
                 </div>
 
-                <div class="col-md-2">
+                <div class="col-md-4">
                     <p><?php echo $ui->getAttribute($ak, 'displaySanitized', 'display') ?></p>
                 </div>
             </div>
-        <?php }
-    }?>
+        <?php endforeach; ?>
+    <?php endif; ?>
+
     <!-- // user attribut end -->
 
     <div class="dialog-buttons">

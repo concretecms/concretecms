@@ -2,18 +2,19 @@
 namespace Concrete\Controller\SinglePage\Dashboard\Users;
 
 use Concrete\Controller\Element\Search\Users\Header;
-use Concrete\Core\Page\Controller\DashboardPageController;
-use Imagine\Image\Box;
-use Exception;
-use User;
-use UserInfo;
-use stdClass;
-use Permissions;
-use PermissionKey;
-use UserAttributeKey;
+use Concrete\Core\Attribute\Category\CategoryService;
 use Concrete\Core\Localization\Localization;
+use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Core\User\EditResponse as UserEditResponse;
 use Concrete\Core\Workflow\Progress\UserProgress as UserWorkflowProgress;
+use Exception;
+use Imagine\Image\Box;
+use Permissions;
+use PermissionKey;
+use stdClass;
+use User;
+use UserAttributeKey;
+use UserInfo;
 
 class Search extends DashboardPageController
 {
@@ -457,8 +458,16 @@ class Search extends DashboardPageController
                 $groups[] = $obj;
             }
             $this->set('groupsJSON', json_encode($groups));
-            $attributes = UserAttributeKey::getList(true);
-            $this->set('attributes', $attributes);
+
+            $service = $this->app->make(CategoryService::class);
+            $categoryEntity = $service->getByHandle('user');
+            $category = $categoryEntity->getController();
+            $setManager = $category->getSetManager();
+            $sets = $setManager->getAttributeSets();
+            $unassigned = $setManager->getUnassignedAttributeKeys();
+            $this->set('attributeSets', $sets);
+            $this->set('unassigned', $unassigned);
+
             $this->set('pageTitle', t('View/Edit %s', $this->user->getUserDisplayName()));
 
             $workflowRequestActions = [];

@@ -191,19 +191,38 @@ if (isset($user) && is_object($user)) {
         </section>
 
         <section>
-            <h4><?= t('Other Attributes') ?></h4>
-            <?php
-            View::element('attribute/editable_list', [
-                'attributes' => $attributes,
-                'object' => $user,
-                'saveAction' => $view->action('update_attribute', $user->getUserID()),
-                'clearAction' => $view->action('clear_attribute', $user->getUserID()),
-                'permissionsArguments' => ['attributes' => $allowedEditAttributes],
-                'permissionsCallback' => function ($ak, $permissionsArguments) {
-                    return is_array($permissionsArguments['attributes']) && in_array($ak->getAttributeKeyID(), $permissionsArguments['attributes']);
-                },
-            ]);
-            ?>
+
+            <?php foreach ($attributeSets as $set) : ?>
+                <h4><?php echo $set->getAttributeSetDisplayName()?></h4>
+                <?php
+                    View::element('attribute/editable_list', [
+                        'attributes' => $set->getAttributeKeys(),
+                        'object' => $user,
+                        'saveAction' => $view->action('update_attribute', $user->getUserID()),
+                        'clearAction' => $view->action('clear_attribute', $user->getUserID()),
+                        'permissionsArguments' => ['attributes' => $allowedEditAttributes],
+                        'permissionsCallback' => function ($ak, $permissionsArguments) {
+                            return is_array($permissionsArguments['attributes']) && in_array($ak->getAttributeKeyID(), $permissionsArguments['attributes']);
+                        },
+                    ]); ?>
+            <?php endforeach; ?>
+
+            <?php if (count($unassigned)) :
+                if (count($attributeSets)) { ?>
+                    <h4><?php echo t('Other')?></h4>
+                <?php
+                }
+                View::element('attribute/editable_list', [
+                    'attributes' => $unassigned,
+                    'object' => $user,
+                    'saveAction' => $view->action('update_attribute', $user->getUserID()),
+                    'clearAction' => $view->action('clear_attribute', $user->getUserID()),
+                    'permissionsArguments' => ['attributes' => $allowedEditAttributes],
+                    'permissionsCallback' => function ($ak, $permissionsArguments) {
+                        return is_array($permissionsArguments['attributes']) && in_array($ak->getAttributeKeyID(), $permissionsArguments['attributes']);
+                    },
+                ]); ?>
+            <?php endif; ?>
         </section>
 
     </div>
