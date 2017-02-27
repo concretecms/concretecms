@@ -3,42 +3,48 @@
 namespace Concrete\Core\Conversation;
 
 use Concrete\Block\CoreConversation\Controller;
-use Concrete\Core\Application\ApplicationAwareInterface;
-use Concrete\Core\Application\ApplicationAwareTrait;
 use Concrete\Core\Attribute\Category\PageCategory;
 use Concrete\Core\Block\Block;
 use Concrete\Core\Conversation\Message\Message;
 use Concrete\Core\Database\Connection\Connection;
+use Concrete\Core\Database\DatabaseManager;
 
-class ConversationService implements ApplicationAwareInterface
+/**
+ * Class ConversationService
+ * Currently manages tracking review aggregates
+ */
+class ConversationService
 {
 
-    use ApplicationAwareTrait;
-
+    /** @var Connection */
     protected $connection;
 
-    public function trackReview(Message $message)
-    {
-        $blockID = $this->fetchBlockIDFromMessage($message);
-        $average = $this->fetchConversationAverage($message->getConversationID());
+    /** @var PageCategory  */
+    protected $pageCategory;
 
-        $block = Block::getByID($blockID);
-        $this->assignAverage($block, $average);
+    /** @var DatabaseManager */
+    private $manager;
+
+    /**
+     * ConversationService constructor.
+     * @param PageCategory $category
+     * @param DatabaseManager $manager
+     */
+    public function __construct(PageCategory $category, DatabaseManager $manager)
+    {
+        $this->pageCategory = $category;
+        $this->manager = $manager;
     }
 
-    private function fetchBlockIDFromMessage(Message $message)
+    /**
+     * Track a review on a message
+     * @param \Concrete\Core\Conversation\Message\Message $message
+     * @param \Concrete\Core\Block\Block $block
+     */
+    public function trackReview(Message $message, Block $block)
     {
-        $conversation = $message->getConversationID();
-        $qb = $this->getConnection()->createQueryBuilder();
-
-        $conversationBlockType = new Controller();
-        $result = $qb->select('bID')
-            ->from($conversationBlockType->getBlockTypeDatabaseTable())
-            ->where('cnvID=:id')
-            ->setParameter(':id', $conversation)
-            ->execute();
-
-        return $result->fetchColumn();
+        $average = $this->fetchConversationAverage($message->getConversationID());
+        $this->assignAverage($block, $average);
     }
 
     private function fetchConversationAverage($conversationID)
@@ -62,7 +68,7 @@ class ConversationService implements ApplicationAwareInterface
     private function getConnection()
     {
         if (!$this->connection) {
-            $this->connection = $this->app->make(Connection::class);
+            $this->connection = $this->manager->connection();
         }
 
         return $this->connection;
@@ -77,8 +83,7 @@ class ConversationService implements ApplicationAwareInterface
             return;
         }
 
-        $category = $this->app->make(PageCategory::class);
-        $key = $category->getAttributeKeyByID($controller->reviewAggregateAttributeKey);
+        $key = $this->pageCategory->getAttributeKeyByID($controller->reviewAggregateAttributeKey);
 
         $collection = $block->getBlockCollectionObject();
         $collection->getVersionObject()->setAttribute($key, (100/5) * $average);
