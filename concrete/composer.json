@@ -13,7 +13,7 @@
     "forum": "https://www.concrete5.org/community/forums/",
     "slack": "https://www.concrete5.org/slack"
   },
-  "minimum-stability": "beta",
+  "minimum-stability": "stable",
   "prefer-stable": true,
   "config": {
     "optimize-autoloader": true,
@@ -64,7 +64,7 @@
     "punic/punic": "1.*",
     "tedivm/stash": "0.14.*",
     "lusitanian/oauth": "0.8.*",
-    "oryzone/oauth-user-data": "~1.0@dev",
+    "concrete5/oauth-user-data": "1.*",
     "mlocati/concrete5-translation-library": "1.5.*",
     "league/url": "3.3.*",
     "concrete5/doctrine-xml": "1.*",
