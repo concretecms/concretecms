@@ -71,6 +71,9 @@ if (!$ve->has()) {
     $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
     $app->make('director')->dispatch('on_conversations_message_update', $event);
 
+    $conversationService = $app->make(\Concrete\Core\Conversation\ConversationService::class);
+    $conversationService->trackReview($message, $blockObj);
+
     $ax->sendResult($message);
 } else {
     $ax->sendError($ve);
