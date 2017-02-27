@@ -72,7 +72,37 @@ if (!$dateFormat) {
 			<?=t('Enable Comment Rating')?>
 			</label>
 		</div>
+        <div class="checkbox">
+            <label>
+                <?=$form->checkbox('enableTopCommentReviews', 1, $enableTopCommentReviews)?>
+                <?=t('Turn Top-Level Posts into Reviews')?>
+            </label>
+        </div>
 	</div>
+    <?php
+    if (isset($reviewAttributeKeys)) {
+        ?>
+        <div class="form-group" data-unhide="[name=enableTopCommentReviews]">
+            <label class="control-label"><?= t('Aggregate ratings by attribute') ?></label>
+            <div class="checkbox">
+                <label>
+                    <?php
+                    if (count($reviewAttributeKeys) > 0) {
+                        echo $form->select('reviewAggregateAttributeKey', $reviewAttributeKeys, $reviewAggregateAttributeKey);
+                    } else {
+                        ?>
+                        <div class="alert alert-info">
+                            <?= t('Create a `Rating` page attribute in order to aggregate ratings.') ?>
+                        </div>
+                        <?php
+                    }
+                    ?>
+                </label>
+            </div>
+        </div>
+        <?php
+    }
+    ?>
 	<div class="form-group">
 		<label class="control-label"><?=t('Paginate Message List')?></label>
 		<div class="radio">
@@ -231,6 +261,19 @@ if (!$dateFormat) {
 
 <script type="text/javascript">
 $(function() {
+    $('[data-unhide]').each(function() {
+        var me = $(this),
+            selector = me.data('unhide'),
+            watch = $(selector);
+
+        watch.change(function() {
+            if (watch.is(':checked')) {
+                me.show();
+            } else {
+                me.hide();
+            }
+        }).trigger('change');
+    });
 	$('input[name=paginate]').on('change', function() {
 		var pg = $('input[name=paginate]:checked');
 		if (pg.val() == 1) {
