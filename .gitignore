@@ -18,6 +18,7 @@ composer.phar
 /application/files/*
 !/application/files/index.html
 
+/concrete/composer.lock
 /concrete/vendor
 
 # ignore updates folder

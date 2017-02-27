@@ -7,8 +7,9 @@ use Concrete\Core\Localization\Localization;
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Core\User\EditResponse as UserEditResponse;
 use Concrete\Core\Workflow\Progress\UserProgress as UserWorkflowProgress;
-use Exception;
 use Imagine\Image\Box;
+use Exception;
+use Core;
 use Permissions;
 use PermissionKey;
 use stdClass;
@@ -542,5 +543,17 @@ class Search extends DashboardPageController
                 $this->set('result', $result);
             }
         }
+    }
+
+    /**
+     * Export Users using the current search filters into a CSV.
+     */
+    public function csv_export()
+    {
+        $search = $this->app->make('Concrete\Controller\Search\Users');
+        $searchResults = $search->getCurrentSearchObject();
+
+        $csvService = Core::make('helper/csv/user_list', [$searchResults, 'Users']);
+        $csvService->generate();
     }
 }
