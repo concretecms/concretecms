@@ -38,7 +38,6 @@ EOT
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->lookForWebserverProcessOwner();
         if (!is_file($input->getArgument('script'))) {
             throw new Exception(sprintf('Unable to find the file %s', $input->getArgument('script')));
         }
