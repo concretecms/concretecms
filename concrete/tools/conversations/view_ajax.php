@@ -95,5 +95,6 @@ if ($cID) {
                 'attachmentOverridesEnabled' => !!Request::post('attachmentOverridesEnabled'),
             );
             View::element('conversation/display', $args);
+        }
     }
 }
