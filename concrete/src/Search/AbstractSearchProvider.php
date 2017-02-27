@@ -68,4 +68,24 @@ abstract class AbstractSearchProvider implements ProviderInterface, SessionQuery
 
         return $result;
     }
+
+    /**
+     * @return int
+     */
+    public function getItemsPerPage()
+    {
+        $sessionQuery = $this->getSessionCurrentQuery();
+
+        if ($sessionQuery instanceof Query) {
+            return $sessionQuery->getItemsPerPage() ? $sessionQuery->getItemsPerPage() : 10;
+        }
+    }
+
+    /**
+     * @return array
+     */
+    public function getItemsPerPageOptions()
+    {
+        return [10, 25, 50, 100];
+    }
 }

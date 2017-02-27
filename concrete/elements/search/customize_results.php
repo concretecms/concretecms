@@ -7,6 +7,8 @@ $available = $provider->getAvailableColumnSet();
 $current = $provider->getCurrentColumnSet();
 $all = $provider->getAllColumnSet();
 $list = $provider->getCustomAttributeKeys();
+$itemsPerPageOptions = $provider->getItemsPerPageOptions();
+$itemsPerPage = $provider->getItemsPerPage();
 $form = Core::make('helper/form');
 
 ?>
@@ -109,10 +111,11 @@ $form = Core::make('helper/form');
     <fieldset>
         <legend><?=t('Number of Results')?></legend>
         <select class="form-control" name="fSearchItemsPerPage">
-            <option value="10">10</option>
-            <option value="25">25</option>
-            <option value="50">50</option>
-            <option value="100">100</option>
+            <?php foreach ($itemsPerPageOptions as $option): ?>
+                <option <?php if ($itemsPerPage == $option) { ?> selected="true"<?php } ?> value="<?=$option ?>">
+                    <?=$option ?>
+                </option>
+            <?php endforeach ?>
         </select>
     </fieldset>
 
