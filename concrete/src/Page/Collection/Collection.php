@@ -12,6 +12,7 @@ use Concrete\Core\Feature\Assignment\CollectionVersionAssignment as CollectionVe
 use Concrete\Core\Feature\Feature;
 use Concrete\Core\Foundation\Object as Object;
 use Concrete\Core\Gathering\Item\Page as PageGatheringItem;
+use Concrete\Core\Page\Collection\Version\Version;
 use Concrete\Core\Page\Collection\Version\VersionList;
 use Concrete\Core\Page\Search\IndexedSearch;
 use Concrete\Core\Search\Index\IndexManagerInterface;
@@ -230,6 +231,10 @@ class Collection extends Object implements TrackableInterface
         }
     }
 
+    /**
+     * Get the attached version object
+     * @return Version|null
+     */
     public function getVersionObject()
     {
         return $this->vObj;
