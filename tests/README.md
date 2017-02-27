@@ -20,11 +20,11 @@ As described [here](../README.md#installation)
 
 The test system expects to have access to a MySQL installation on the same computer where the tests will be executed.
 The tests needs to have administration rights on MySQL in order to create and drop the test database and the tables inside it.
-You need to create a MySQL account with login `travis` and an empty password:
+You need to create a MySQL account with login `travis` and an empty password, and give the testing database access to it:
 
 ```sql
 CREATE USER 'travis'@'localhost' IDENTIFIED BY '';
-GRANT ALL ON *.* TO 'travis'@'localhost' WITH GRANT OPTION;
+GRANT ALL ON concrete5_tests.* TO 'travis'@'localhost' WITH GRANT OPTION;
 FLUSH PRIVILEGES;
 ```
 
@@ -33,8 +33,9 @@ FLUSH PRIVILEGES;
 
 For example
 
-	cd tests
 	phpunit
+
+from within the root concrete5/ directory.
 
 Expected output is something like
 
