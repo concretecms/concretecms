@@ -15,17 +15,20 @@ use Concrete\Core\Search\StickyRequest;
 use Concrete\Core\Tree\Node\Node;
 use Concrete\Core\Tree\Node\Type\SearchPreset;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Core;
 
 class FileFolder extends AbstractController
 {
     protected $list;
     protected $result;
     protected $filesystem;
+    protected $session;
 
     public function __construct()
     {
         parent::__construct();
         $this->filesystem = new Filesystem();
+        $this->session = \Core::make('session');
     }
 
     public function search(Query $query = null)
@@ -58,6 +61,7 @@ class FileFolder extends AbstractController
                 $search = $folder->getSavedSearchObject();
                 $query = $search->getQuery();
                 $provider = \Core::make('Concrete\Core\File\Search\SearchProvider');
+                $provider->setSessionCurrentQuery($query);
                 $ilr = $provider->getSearchResultFromQuery($query);
                 $ilr->setBaseURL(\URL::to('/ccm/system/search/files/preset', $search->getID()));
             }
