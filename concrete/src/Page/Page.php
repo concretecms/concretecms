@@ -1628,7 +1628,12 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     public function getParentPermissionsCollectionID()
     {
         $db = Database::connection();
-        $v = [$this->cParentID];
+        $cParentID = $this->cParentID;
+        if (!$cParentID) {
+            $cParentID = $this->getSiteHomePageID();
+        }
+
+        $v = [$cParentID];
         $q = 'select cInheritPermissionsFromCID from Pages where cID = ?';
         $ppID = $db->fetchColumn($q, $v);
 
