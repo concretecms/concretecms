@@ -15,10 +15,10 @@ defined('C5_EXECUTE') or die("Access Denied.");
                     </button>
                     <ul class="dropdown-menu">
                         <li>
-                            <button type="submit" name="task" value="validate"><?php echo t('Mark Email As Valid') ?></button>
+                            <button type="submit" name="task" class="btn-link" value="validate"><?php echo t('Mark Email As Valid') ?></button>
                         </li>
                         <li>
-                            <button type="submit" name="task" value="send_email_validation"><?php echo t('Send Email Validation') ?></button>
+                            <button type="submit" name="task" class="btn-link" value="send_email_validation"><?php echo t('Send Email Validation') ?></button>
                         </li>
                     </ul>
                 </div>
