@@ -206,23 +206,7 @@ class Register extends PageController
 
                 // now we check whether we need to validate this user's email address
                 if ($config->get('concrete.user.registration.validate_email')) {
-                    $uHash = $process->setupValidation();
-
-                    $mh = $this->app->make('mail');
-                    $fromEmail = (string)$config->get('concrete.email.validate_registration.address');
-                    if (strpos($fromEmail, '@')) {
-                        $fromName = (string)$config->get('concrete.email.validate_registration.name');
-                        if ($fromName === '') {
-                            $fromName = t('Validate Email Address');
-                        }
-                        $mh->from($fromEmail, $fromName);
-                    }
-                    $mh->addParameter('uEmail', $_POST['uEmail']);
-                    $mh->addParameter('uHash', $uHash);
-                    $mh->addParameter('site', tc('SiteName', $config->get('concrete.site')));
-                    $mh->to($this->post('uEmail'));
-                    $mh->load('validate_user_email');
-                    $mh->sendMail();
+                    $this->app->make('user/status')->sendEmailValidation($process);
 
                     //$this->redirect('/register', 'register_success_validate', $rcID);
                     $redirectMethod = 'register_success_validate';

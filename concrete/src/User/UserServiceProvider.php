@@ -14,8 +14,14 @@ class UserServiceProvider extends ServiceProvider
         $this->app->bindShared('user/avatar', function() use ($app) {
             return $app->make('Concrete\Core\User\Avatar\AvatarService');
         });
+        $this->app->bindShared('user/status', function() use ($app) {
+            return $app->make('Concrete\Core\User\StatusService');
+        });
         $this->app->bind('Concrete\Core\User\RegistrationServiceInterface', function() use ($app) {
             return $app->make('user/registration');
+        });
+        $this->app->bind('Concrete\Core\User\StatusServiceInterface', function() use ($app) {
+            return $app->make('user/status');
         });
         $this->app->bind('Concrete\Core\User\Avatar\AvatarServiceInterface', function() use ($app) {
             return $app->make('user/avatar');

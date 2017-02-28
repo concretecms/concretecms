@@ -7,18 +7,23 @@ defined('C5_EXECUTE') or die("Access Denied.");
     <div class="btn-group">
 
 
-        <?php if (Config::get('concrete.user.registration.validate_email') == true && $canActivateUser) {
-            ?>
-            <?php if ($user->isValidated() < 1) {
-                ?>
-                <button type="submit" name="task" value="validate"
-                        class="btn btn-default"><?= t('Mark Email as Valid') ?></button>
-                <?php
-            }
-            ?>
-            <?php
-        }
-        ?>
+        <?php if (Config::get('concrete.user.registration.validate_email') == true && $canActivateUser) : ?>
+            <?php if ($user->isValidated() < 1) : ?>
+                <div class="btn-group">
+                    <button type="button" class="btn dropdown-toggle btn-default" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="bstb-undefined">
+                        <span><?php echo t('Validate') ?></span> <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <button type="submit" name="task" value="validate"><?php echo t('Mark Email As Valid') ?></button>
+                        </li>
+                        <li>
+                            <button type="submit" name="task" value="send_email_validation"><?php echo t('Send Email Validation') ?></button>
+                        </li>
+                    </ul>
+                </div>
+            <?php endif; ?>
+        <?php endif; ?>
 
         <?php
         if ($user->getAttribute('profile_private_messages_enabled')) {

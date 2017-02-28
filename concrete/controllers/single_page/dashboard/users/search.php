@@ -147,6 +147,13 @@ class Search extends DashboardPageController
                     $this->redirect('/dashboard/users/search', 'view', $this->user->getUserID(), 'email_validated');
                 }
                 break;
+            case 'send_email_validation':
+                $this->setupUser($uID);
+                if ($this->canActivateUser && $this->app->make('helper/validation/token')->validate()) {
+                    $this->app->make('user/status')->sendEmailValidation($this->user);
+                    $this->redirect('/dashboard/users/search', 'view', $this->user->getUserID(), 'email_validation_sent');
+                }
+                break;
             case 'sudo':
                 $this->setupUser($uID);
                 if ($this->canSignInAsUser && $this->app->make('helper/validation/token')->validate()) {
@@ -511,6 +518,9 @@ class Search extends DashboardPageController
                     break;
                 case 'email_validated':
                     $this->set('message', t('Email marked as valid.'));
+                    break;
+                case 'email_validation_sent':
+                    $this->set('message', t('Email validation sent.'));
                     break;
                 case 'workflow_canceled':
                     $this->set('message', t('Workflow request is canceled.'));
