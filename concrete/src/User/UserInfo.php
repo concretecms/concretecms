@@ -624,7 +624,7 @@ class UserInfo extends Object implements AttributeObjectInterface, PermissionObj
         // resets user's password, and returns the value of the reset password
         if ($this->getUserID() > 0) {
             $id = $this->application->make(Identifier::class);
-            $newPassword = $id->getString(8);
+            $newPassword = $id->getString(256);
             $this->changePassword($newPassword);
 
             return $newPassword;
