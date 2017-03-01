@@ -115,6 +115,7 @@ abstract class AdvancedSearch extends BackendInterfaceController
             $this->onAfterSavePreset($search);
 
             $provider = $this->getSearchProvider();
+            $provider->setSessionCurrentQuery($query);
             $result = $provider->getSearchResultFromQuery($query);
             $result->setBaseURL($this->getSavedSearchBaseURL($search));
 
