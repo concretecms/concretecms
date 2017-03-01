@@ -43,8 +43,8 @@ class NginxGenerator extends Generator implements GeneratorInterface
                 $DISPATCHER_FILENAME = DISPATCHER_FILENAME;
 
                 return <<<EOT
-location $DIR_REL/ {
-	try_files \$uri \$uri/ $DIR_REL/$DISPATCHER_FILENAME?\$query_string;
+location {$DIR_REL}/ {
+	try_files \$uri \$uri/ {$DIR_REL}/{$DISPATCHER_FILENAME}?\$query_string;
 }
 EOT
                 ;
