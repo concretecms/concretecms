@@ -4,6 +4,8 @@ namespace Concrete\Core\Search;
 use Concrete\Core\Entity\Search\Query;
 use Concrete\Core\Search\Column\AttributeKeyColumn;
 use Concrete\Core\Search\Column\Set;
+use Concrete\Core\Tree\Node\Node;
+use Concrete\Core\Tree\Node\Type\SearchPreset;
 use Symfony\Component\HttpFoundation\Session\Session;
 
 abstract class AbstractSearchProvider implements ProviderInterface, SessionQueryProviderInterface
@@ -70,14 +72,25 @@ abstract class AbstractSearchProvider implements ProviderInterface, SessionQuery
     }
 
     /**
+     * Gets items per page from the current preset or from the session
+     *
      * @return int
      */
     public function getItemsPerPage()
     {
-        $sessionQuery = $this->getSessionCurrentQuery();
+        $searchRequest = new StickyRequest('file_manager_folder');
+        $searchParams = $searchRequest->getSearchRequest();
+        $node = Node::getByID($searchParams['folder']);
 
-        if ($sessionQuery instanceof Query) {
-            return $sessionQuery->getItemsPerPage() ? $sessionQuery->getItemsPerPage() : 10;
+        if ($node instanceof SearchPreset) {
+            $searchObj = $node->getSavedSearchObject();
+            return $searchObj->getQuery()->getItemsPerPage();
+        } else {
+            $sessionQuery = $this->getSessionCurrentQuery();
+
+            if ($sessionQuery instanceof Query) {
+                return $sessionQuery->getItemsPerPage();
+            }
         }
     }
 
