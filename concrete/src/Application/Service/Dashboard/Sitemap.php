@@ -174,12 +174,12 @@ class Sitemap
         if (Config::get('concrete.misc.sitemap_show_permission')){
             switch ($c->getCollectionInheritance()) {
                 case 'TEMPLATE':
-                    $inheritance = t("PageType");
-                    $cvName = $cvName . ' (' . $inheritance . ')';
+                    $inheritance = '<i class="fa fa-object-group" title="'. t("PageType") .'" aria-hidden="true"></i>';
+                    $cvName = $cvName . $inheritance;
                     break;
                 case 'OVERRIDE':
-                    $inheritance = t("Manual");
-                    $cvName = $cvName . ' (' . $inheritance . ')';
+                    $inheritance = '<i class="fa fa fa-code-fork" title="'. t("Manual") .'" aria-hidden="true"></i>';
+                    $cvName = $cvName . $inheritance;
                     break;
                 case 'PARENT':
                     break;
