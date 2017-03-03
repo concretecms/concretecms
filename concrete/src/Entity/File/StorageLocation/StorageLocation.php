@@ -137,7 +137,7 @@ class StorageLocation implements StorageLocationInterface
         */
         // The above code is buggy. When moving files between storage locations it thinks files
         // already exist.
-        
+
         $filesystem = new \League\Flysystem\Filesystem($adapter);
         return $filesystem;
     }
