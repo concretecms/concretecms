@@ -13,6 +13,8 @@ use UserList;
 use Events;
 use Concrete\Core\Package\PackageList;
 use File;
+use Concrete\Core\Support\Facade\Application;
+use Concrete\Core\Database\Connection\Connection;
 
 class Group extends Object implements \Concrete\Core\Permission\ObjectInterface
 {
@@ -228,14 +230,36 @@ class Group extends Object implements \Concrete\Core\Permission\ObjectInterface
         return $this->inGroup;
     }
 
+    /**
+     * Get the date/time when a user entered this group.
+     *
+     * @param object|int $user The user ID or an object with a getUserID method.
+     *
+     * @return string|null
+     */
     public function getGroupDateTimeEntered($user)
     {
-        $db = Database::connection();
-        $q = "select ugEntered from UserGroups where gID = ? and uID = ?";
-        $r = $db->GetOne($q, [$this->gID, $user->getUserID()]);
-        if ($r) {
-            return $r;
+        if (is_object($user)) {
+            $userID = (int) $user->getUserID();
+        } elseif (is_numeric($user)) {
+            $userID = (int) $user;
+        } else {
+            $userID = 0;
         }
+        $result = null;
+        if ($userID !== 0) {
+            $db = Application::getFacadeApplication()->make(Connection::class);
+            /* @var Connection $db */
+            $value = $db->fetchColumn(
+                'select ugEntered from UserGroups where gID = ? and uID = ?',
+                [$this->gID, $userID]
+            );
+            if ($value) {
+                $result = $value;
+            }
+        }
+
+        return $result;
     }
 
     public function getGroupID()
