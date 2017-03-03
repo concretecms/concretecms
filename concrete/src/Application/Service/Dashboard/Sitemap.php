@@ -174,7 +174,7 @@ class Sitemap
         if (Config::get('concrete.misc.sitemap_show_permission')){
             switch ($c->getCollectionInheritance()) {
                 case 'TEMPLATE':
-                    $inheritance = ' <i class="fa fa-object-group" title="'. t("PageType Permission.") .'" aria-hidden="true"></i>';
+                    $inheritance = ' <i class="fa fa-object-group" title="'. t("PageType Permission") .'" aria-hidden="true"></i>';
                     $cvName = $cvName . $inheritance;
                     break;
                 case 'OVERRIDE':
