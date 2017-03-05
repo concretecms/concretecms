@@ -197,11 +197,17 @@ class Service
         return $site;
     }
 
+    /**
+     * @return Site
+     */
     final public function getSite()
     {
         return $this->resolverFactory->createResolver($this)->getSite();
     }
 
+    /**
+     * @return Site
+     */
     final public function getActiveSiteForEditing()
     {
         return $this->resolverFactory->createResolver($this)->getActiveSiteForEditing();
