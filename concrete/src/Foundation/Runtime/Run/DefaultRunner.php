@@ -97,7 +97,10 @@ class DefaultRunner implements RunInterface, ApplicationAwareInterface
         Events::dispatch('on_before_dispatch');
 
         $request = Request::createFromGlobals();
-        return $this->server->handleRequest($request);
+        $response = $this->server->handleRequest($request);
+
+        // Prepare and return the response
+        return $response->prepare($request);
     }
 
     /**
