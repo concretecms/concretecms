@@ -286,12 +286,11 @@ class ApplicationDriverTest extends \PHPUnit_Framework_TestCase
     /**
      * Clean up if a Exception is thrown
      */
-    protected function onNotSuccessfulTest($e)
+    protected function onNotSuccessfulTest(\Exception $e)
     {
         $this->cleanupFolderSystem();
         $this->cleanupConfig();
     }
-
 
     /**
      * Clean up altern folder system
