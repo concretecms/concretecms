@@ -42,7 +42,7 @@ class ImportGroupsRoutine extends AbstractRoutine
                         $parentGroup = Group::getByPath($parentPath);
                     }
 
-                    $pkg = static::getPackageObject($g['package']);
+                    $pkg = static::getPackageObject($group['package']);
                     Group::add($group['name'], $group['description'], $parentGroup, $pkg);
                 }
             }
