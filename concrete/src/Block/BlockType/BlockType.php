@@ -103,7 +103,7 @@ class BlockType
     {
         $env = Environment::get();
         $txt = Core::make('helper/text');
-        $r = $env->getRecord(DIRNAME_BLOCKS . '/' . $btHandle . '/' . FILENAME_CONTROLLER);
+        $r = $env->getRecord(DIRNAME_BLOCKS . '/' . $btHandle . '/' . FILENAME_CONTROLLER, $pkgHandle);
 
         // Replace $pkgHandle if overridden via environment
         $r->pkgHandle and $pkgHandle = $r->pkgHandle;
