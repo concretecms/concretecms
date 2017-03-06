@@ -1,6 +1,9 @@
 <?php
 namespace Concrete\Core\Backup\ContentImporter\Importer\Routine;
 
+use Concrete\Core\User\Group\Group;
+use SimpleXMLElement;
+
 class ImportGroupsRoutine extends AbstractRoutine
 {
     public function getHandle()
@@ -8,40 +11,39 @@ class ImportGroupsRoutine extends AbstractRoutine
         return 'groups';
     }
 
-    public function import(\SimpleXMLElement $sx)
+    public function import(SimpleXMLElement $sx)
     {
         if (isset($sx->groups)) {
             $groups = [];
             foreach ($sx->groups->group as $g) {
-                $groups[] = $g;
+                $name = (string) $g['name'];
+                $path = trim((string) $g['path'], '/');
+                $groups[] = [
+                    'name' => $name,
+                    'path' => ($path === '') ? "/$name" : "/$path",
+                    'description' => (string) $g['description'],
+                    'package' => (string) $g['package'],
+                ];
             }
 
             usort($groups, function ($a, $b) {
-                $pathA = (string) $a['path'];
-                $pathB = (string) $b['path'];
-                $numA = count(explode('/', $pathA));
-                $numB = count(explode('/', $pathB));
-                if ($numA == $numB) {
-                    return 0;
-                } else {
-                    return ($numA < $numB) ? -1 : 1;
-                }
+                return count(explode('/', $a['path'])) - count(explode('/', $b['path']));
             });
 
             foreach ($groups as $group) {
-                $existingGroup = \Concrete\Core\User\Group\Group::getByPath((string) $group['path']);
-                if (!is_object($existingGroup)) {
-                    $parent = null;
-                    if ((string) $group['path'] != '') {
-                        $lastSlash = strrpos((string) $group['path'], '/');
-                        $parentPath = substr((string) $group['path'], 0, $lastSlash);
-                        if ($parentPath) {
-                            $parent = \Concrete\Core\User\Group\Group::getByPath($parentPath);
-                        }
+                $existingGroup = Group::getByPath($group['path']);
+                if ($existingGroup === null) {
+                    $pathChunks = explode('/', $group['path']);
+                    if (count($pathChunks) === 2) {
+                        $parentGroup = null;
+                    } else {
+                        array_pop($pathChunks);
+                        $parentPath = implode('/', $pathChunks);
+                        $parentGroup = Group::getByPath($parentPath);
                     }
 
                     $pkg = static::getPackageObject($g['package']);
-                    \Concrete\Core\User\Group\Group::add((string) $group['name'], (string) $group['description'], $parent, $pkg);
+                    Group::add($group['name'], $group['description'], $parentGroup, $pkg);
                 }
             }
         }
