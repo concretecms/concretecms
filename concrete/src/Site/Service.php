@@ -45,6 +45,12 @@ class Service
             ->findByType($type);
     }
 
+    public function getByHandle($handle)
+    {
+        return $this->entityManager->getRepository('Concrete\Core\Entity\Site\Site')
+            ->findOneBy(['siteHandle' => $handle]);
+    }
+
     public function getDefault()
     {
         $factory = new Factory($this->config);

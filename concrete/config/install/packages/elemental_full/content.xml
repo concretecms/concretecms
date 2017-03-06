@@ -59,7 +59,7 @@
         </attributekey>
     </attributekeys>
     <attributesets>
-        <attributeset handle="navigation" category="collection">
+        <attributeset handle="navigation" name="Navigation" category="collection">
             <attributekey handle="thumbnail"/>
             <attributekey handle="exclude_subpages_from_nav"/>
         </attributeset>
