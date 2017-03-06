@@ -1,8 +1,6 @@
 <?php
 namespace Concrete\Core\Backup\ContentImporter\Importer\Routine;
 
-use Concrete\Core\Permission\Category;
-
 class ImportGroupsRoutine extends AbstractRoutine
 {
     public function getHandle()
@@ -13,8 +11,7 @@ class ImportGroupsRoutine extends AbstractRoutine
     public function import(\SimpleXMLElement $sx)
     {
         if (isset($sx->groups)) {
-
-            $groups = array();
+            $groups = [];
             foreach ($sx->groups->group as $g) {
                 $groups[] = $g;
             }
@@ -31,7 +28,7 @@ class ImportGroupsRoutine extends AbstractRoutine
                 }
             });
 
-            foreach($groups as $group) {
+            foreach ($groups as $group) {
                 $existingGroup = \Concrete\Core\User\Group\Group::getByPath((string) $group['path']);
                 if (!is_object($existingGroup)) {
                     $parent = null;
