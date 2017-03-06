@@ -23,8 +23,10 @@ class FileAttributeTest extends \AttributeTestCase
         return $this->object;
     }
 
-    protected function setUp()
+    public function __construct($name = null, array $data = array(), $dataName = '')
     {
+        parent::__construct($name, $data, $dataName);
+
         $this->tables = array_merge($this->tables, array(
                 'FileStorageLocationTypes',
                 'FileVersionLog',
@@ -41,7 +43,6 @@ class FileAttributeTest extends \AttributeTestCase
             'Concrete\Core\Entity\File\StorageLocation\Type\Type',
             'Concrete\Core\Entity\File\StorageLocation\StorageLocation',
         ));
-        parent::setUp();
     }
 
     protected function installAttributeCategoryAndObject()

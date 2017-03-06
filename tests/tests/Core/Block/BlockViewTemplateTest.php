@@ -9,6 +9,8 @@ use Concrete\Core\Package\PackageList;
 class BlockViewTemplateTest extends \PHPUnit_Framework_TestCase
 {
 
+
+
     protected function getMockBlock($handle, $bFilename = null)
     {
         $blockType = $this->getMockBuilder(BlockType::class)

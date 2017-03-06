@@ -9,8 +9,10 @@ class ContentFileTranslateTest extends FileStorageTestCase
 {
     protected $fixtures = array();
 
-    protected function setUp()
+    public function __construct($name = null, array $data = array(), $dataName = '')
     {
+        parent::__construct($name, $data, $dataName);
+
         $this->tables = array_merge($this->tables, array(
             'Users',
             'PermissionAccessEntityTypes',
@@ -39,6 +41,11 @@ class ContentFileTranslateTest extends FileStorageTestCase
             'Concrete\Core\Entity\Attribute\Type',
             'Concrete\Core\Entity\Attribute\Category',
         ));
+
+    }
+
+    public function setUp()
+    {
         parent::setUp();
         \Config::set('concrete.upload.extensions', '*.txt;*.jpg;*.jpeg;*.png');
 

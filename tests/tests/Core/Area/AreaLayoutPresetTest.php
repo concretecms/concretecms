@@ -1,5 +1,7 @@
 <?php
 
+use Concrete\Core\Area\Layout\Preset\Preset;
+
 class HtmlColumn implements \Concrete\Core\Area\Layout\ColumnInterface
 {
     public function __construct($class)
@@ -31,16 +33,20 @@ class TestAreaLayoutPresetFormatter implements \Concrete\Core\Area\Layout\Preset
         return $column;
     }
 }
+
 class TestAreaLayoutPresetProvider implements \Concrete\Core\Area\Layout\Preset\Provider\ProviderInterface
 {
     public function getPresets()
     {
         $formatter = new TestAreaLayoutPresetFormatter();
-        $preset = new \Concrete\Core\Area\Layout\Preset\Preset('preset-1', 'Preset 1',
-            $formatter, array(
-           new HtmlColumn('col-sm-4'),
-            new HtmlColumn('col-sm-8'),
-        ));
+        $preset = new \Concrete\Core\Area\Layout\Preset\Preset(
+            'preset-1',
+            'Preset 1',
+            $formatter,
+            array(
+                new HtmlColumn('col-sm-4'),
+                new HtmlColumn('col-sm-8'),
+            ));
 
         return array($preset);
     }
@@ -129,11 +135,35 @@ class TestThemeClass implements \Concrete\Core\Area\Layout\Preset\Provider\Theme
 
 class AreaLayoutPresetTest extends PageTestCase
 {
-    protected function setUp()
+    public function __construct()
     {
-        $this->tables = array_merge($this->tables, array('AreaLayoutPresets', 'AreaLayoutsUsingPresets', 'AreaLayouts', 'AreaLayoutColumns',
-            'AreaLayoutCustomColumns', 'AreaLayoutThemeGridColumns', ));
-        parent::setUp();
+        $this->tables = array_merge($this->tables, [
+            'AreaLayoutPresets',
+            'AreaLayoutsUsingPresets',
+            'AreaLayouts',
+            'AreaLayoutColumns',
+            'AreaLayoutCustomColumns',
+            'AreaLayoutThemeGridColumns',
+        ]);
+    }
+
+    public function setUp()
+    {
+        $service = \Core::make('site/type');
+        if (!$service->getDefault()) {
+            $service->installDefault();
+        }
+
+        $service = \Core::make('site');
+        if (!$service->getDefault()) {
+            $service->installDefault('en_US');
+        }
+    }
+
+    public function tearDown()
+    {
+        parent::tearDown();
+        $this->truncateTables();
     }
 
     public function testPresetProviderManagerRetrievePresets()
@@ -164,7 +194,7 @@ class AreaLayoutPresetTest extends PageTestCase
 
         $columns = $presets[0]->getColumns();
         $this->assertEquals(2, count($columns));
-        $this->assertEquals('<div class="col-sm-4"></div>', (string) $columns[0]->getColumnHtmlObject());
+        $this->assertEquals('<div class="col-sm-4"></div>', (string)$columns[0]->getColumnHtmlObject());
     }
 
     public function testSavedCustomPresets()
@@ -189,7 +219,8 @@ class AreaLayoutPresetTest extends PageTestCase
         $this->assertInstanceOf('\Concrete\Core\Area\Layout\Preset\Preset', $presets[1]);
 
         $columns = $presets[1]->getColumns();
-        $this->assertEquals('<div class="ccm-layout-column" id="ccm-layout-column-4"><div class="ccm-layout-column-inner"></div></div>', (string) $columns[0]->getColumnHtmlObject());
+        $this->assertEquals('<div class="ccm-layout-column" id="ccm-layout-column-4"><div class="ccm-layout-column-inner"></div></div>',
+            (string)$columns[0]->getColumnHtmlObject());
     }
 
     public function testSavedGridPresets()
@@ -207,24 +238,26 @@ class AreaLayoutPresetTest extends PageTestCase
 
         $elemental = \Concrete\Core\Page\Theme\Theme::add('elemental');
         Core::make('cache/request')->disable();
-        $c = Page::getByID(1);
+
+
+        $c = Page::addHomePage();
         $c->setTheme($elemental);
 
-        $c = Page::getByID(1);
+        $c = Page::getByID($c->getCollectionID());
 
         $req = Request::getInstance();
         $req->setCurrentPage($c);
 
         $presets = $manager->getPresets();
-        $this->assertEquals(1, count($presets));
+        $this->assertCount(1, $presets);
         $c = Page::getCurrentPage();
         $this->assertEquals('Custom Preset', $presets[0]->getName());
-        $this->assertInstanceOf('\Concrete\Core\Area\Layout\Preset\Preset', $presets[0]);
+        $this->assertInstanceOf(Preset::class, $presets[0]);
 
         $columns = $presets[0]->getColumns();
-        $this->assertEquals('<div class="col-sm-4"></div>', (string) $columns[0]->getColumnHtmlObject());
-        $this->assertEquals('<div class="col-sm-2 col-sm-offset-2"></div>', (string) $columns[1]->getColumnHtmlObject());
-        $this->assertEquals('<div class="col-sm-6"></div>', (string) $columns[2]->getColumnHtmlObject());
+        $this->assertEquals('<div class="col-sm-4"></div>', (string)$columns[0]->getColumnHtmlObject());
+        $this->assertEquals('<div class="col-sm-2 col-sm-offset-2"></div>', (string)$columns[1]->getColumnHtmlObject());
+        $this->assertEquals('<div class="col-sm-6"></div>', (string)$columns[2]->getColumnHtmlObject());
 
         $req->clearCurrentPage();
     }
@@ -248,6 +281,7 @@ class AreaLayoutPresetTest extends PageTestCase
         $this->assertEquals($layoutID, $layout->getAreaLayoutPresetHandle());
         $this->assertEquals(2, $layout->getAreaLayoutNumColumns());
     }
+
     public function testThemePresets()
     {
         $manager = Core::make('manager/area_layout_preset_provider');
@@ -261,27 +295,36 @@ class AreaLayoutPresetTest extends PageTestCase
 
         $formatter = $best->getFormatter();
         $this->assertInstanceOf('\Concrete\Core\Area\Layout\Preset\Formatter\ThemeFormatter', $formatter);
-        $this->assertEquals('<div class="row"></div>', (string) $formatter->getPresetContainerHtmlObject());
+        $this->assertEquals('<div class="row"></div>', (string)$formatter->getPresetContainerHtmlObject());
 
         $columns = $best->getColumns();
         $this->assertEquals(6, count($columns));
         $this->assertEquals('theme_test_theme_exciting', $best->getIdentifier());
-        $this->assertEquals('<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2"></div>', (string) $columns[0]->getColumnHtmlObject());
-        $this->assertEquals('<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2"></div>', (string) $columns[1]->getColumnHtmlObject());
-        $this->assertEquals('<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2"></div>', (string) $columns[2]->getColumnHtmlObject());
-        $this->assertEquals('<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2"></div>', (string) $columns[3]->getColumnHtmlObject());
-        $this->assertEquals('<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2"></div>', (string) $columns[4]->getColumnHtmlObject());
-        $this->assertEquals('<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2 visible-lg"></div>', (string) $columns[5]->getColumnHtmlObject());
+        $this->assertEquals('<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2"></div>',
+            (string)$columns[0]->getColumnHtmlObject());
+        $this->assertEquals('<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2"></div>',
+            (string)$columns[1]->getColumnHtmlObject());
+        $this->assertEquals('<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2"></div>',
+            (string)$columns[2]->getColumnHtmlObject());
+        $this->assertEquals('<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2"></div>',
+            (string)$columns[3]->getColumnHtmlObject());
+        $this->assertEquals('<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2"></div>',
+            (string)$columns[4]->getColumnHtmlObject());
+        $this->assertEquals('<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2 visible-lg"></div>',
+            (string)$columns[5]->getColumnHtmlObject());
 
         $custom = $presets[3];
         $formatter = $custom->getFormatter();
         $this->assertInstanceOf('\Concrete\Core\Area\Layout\Preset\Formatter\ThemeFormatter', $formatter);
-        $this->assertEquals('<div class="row" data-testing="top-row"></div>', (string) $formatter->getPresetContainerHtmlObject());
+        $this->assertEquals('<div class="row" data-testing="top-row"></div>',
+            (string)$formatter->getPresetContainerHtmlObject());
 
         $columns = $custom->getColumns();
         $this->assertEquals(2, count($columns));
-        $this->assertEquals('<div data-foo="foo" class="col-md-2 col-sm-3"></div>', (string) $columns[0]->getColumnHtmlObject());
-        $this->assertEquals('<div data-bar="bar" class="col-md-10 col-sm-9"></div>', (string) $columns[1]->getColumnHtmlObject());
+        $this->assertEquals('<div data-foo="foo" class="col-md-2 col-sm-3"></div>',
+            (string)$columns[0]->getColumnHtmlObject());
+        $this->assertEquals('<div data-bar="bar" class="col-md-10 col-sm-9"></div>',
+            (string)$columns[1]->getColumnHtmlObject());
 
         $manager->unregister($provider);
     }
@@ -300,10 +343,10 @@ class AreaLayoutPresetTest extends PageTestCase
         $elemental = \Concrete\Core\Page\Theme\Theme::add('elemental');
 
         Core::make('cache/request')->disable();
-        $c = Page::getByID(1);
+        $c = Page::addHomePage();
         $c->setTheme($elemental);
 
-        $c = Page::getByID(1);
+        $c = Page::getByID($c->getCollectionID());
 
         $req = Request::getInstance();
         $req->setCurrentPage($c);
@@ -316,14 +359,14 @@ class AreaLayoutPresetTest extends PageTestCase
 
         $formatter = $preset->getFormatter();
         $this->assertInstanceOf('\Concrete\Core\Area\Layout\Preset\Formatter\ThemeFormatter', $formatter);
-        $this->assertEquals('<div class="row"></div>', (string) $formatter->getPresetContainerHtmlObject());
+        $this->assertEquals('<div class="row"></div>', (string)$formatter->getPresetContainerHtmlObject());
 
         $this->assertEquals('Left Sidebar', $preset->getName());
         $columns = $preset->getColumns();
         $this->assertEquals(2, count($columns));
         $this->assertEquals('theme_elemental_left_sidebar', $preset->getIdentifier());
-        $this->assertEquals('<div class="col-sm-4"></div>', (string) $columns[0]->getColumnHtmlObject());
-        $this->assertEquals('<div class="col-sm-8"></div>', (string) $columns[1]->getColumnHtmlObject());
+        $this->assertEquals('<div class="col-sm-4"></div>', (string)$columns[0]->getColumnHtmlObject());
+        $this->assertEquals('<div class="col-sm-8"></div>', (string)$columns[1]->getColumnHtmlObject());
 
         $req->clearCurrentPage();
     }

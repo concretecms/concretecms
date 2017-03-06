@@ -17,7 +17,9 @@ class GroupTest extends \UserTestCase
 {
     protected function setUp()
     {
+        $this->truncateTables();
         parent::setUp();
+
         TreeNodeType::add('group');
         TreeType::add('group');
         GroupTreeType::add();

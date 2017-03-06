@@ -1,4 +1,5 @@
 <?php
+use Concrete\Core\Page\PageList;
 
 /**
  * Created by PhpStorm.
@@ -37,6 +38,12 @@ class PageListTest extends \PageTestCase
             'Foo Bar', '/test-page-2',
         ),
         array(
+            'Test Trash', false,
+        ),
+        array(
+            'Foo Bar', '/test-trash',
+        ),
+        array(
             'Test Page 3', false,
         ),
         array(
@@ -50,20 +57,29 @@ class PageListTest extends \PageTestCase
         ),
     );
 
-    public function setUp()
+    public function __construct($name = null, array $data = array(), $dataName = '')
     {
+        parent::__construct($name, $data, $dataName);
+
+        // Add extra tables
         $this->tables = array_merge($this->tables, array(
             'PermissionAccessList',
             'PageTypeComposerFormLayoutSets',
             'PermissionAccessEntityTypes',
         ));
-        $this->metadatas = array_merge($this->metadatas, array(
-            'Concrete\Core\Entity\Attribute\Type',
-            'Concrete\Core\Entity\Attribute\Category',
-            'Concrete\Core\Entity\Page\Feed',
-        ));
 
-        parent::setUp();
+        // Add extra metadata
+        $this->metadatas = array_merge($this->metadatas, array(
+            \Concrete\Core\Entity\Attribute\Type::class,
+            \Concrete\Core\Entity\Attribute\Category::class,
+            \Concrete\Core\Entity\Page\Feed::class,
+        ));
+    }
+
+    public static function setUpBeforeClass()
+    {
+        parent::setUpBeforeClass();
+
         \Concrete\Core\Attribute\Key\Category::add('collection');
         \Concrete\Core\Permission\Access\Entity\Type::add('page_owner', 'Page Owner');
         \Concrete\Core\Permission\Category::add('page');
@@ -79,18 +95,23 @@ class PageListTest extends \PageTestCase
             'name' => 'Another',
         ));
 
-        foreach ($this->pageData as $data) {
-            $c = call_user_func_array(array($this, 'createPage'), $data);
+        $self = new static();
+        foreach ($self->pageData as $data) {
+            $c = call_user_func_array(array($self, 'createPage'), $data);
             $c->reindex();
         }
+    }
 
+    public function setUp()
+    {
+        parent::setUp();
         $this->list = new \Concrete\Core\Page\PageList();
         $this->list->ignorePermissions();
     }
 
     public function testGetUnfilteredTotal()
     {
-        $this->assertEquals(13, $this->list->getTotalResults());
+        $this->assertEquals(15, $this->list->getTotalResults());
     }
 
     public function testFilterByTypeNone()
@@ -102,12 +123,12 @@ class PageListTest extends \PageTestCase
     public function testFilterByTypeValid1()
     {
         $this->list->filterByPageTypeHandle('basic');
-        $this->assertEquals(7, $this->list->getTotalResults());
+        $this->assertEquals(9, $this->list->getTotalResults());
 
         $pagination = $this->list->getPagination();
-        $this->assertEquals(7, $pagination->getTotalResults());
+        $this->assertEquals(9, $pagination->getTotalResults());
         $results = $pagination->getCurrentPageResults();
-        $this->assertEquals(7, count($results));
+        $this->assertCount(9, $results);
         $this->assertInstanceOf('\Concrete\Core\Page\Page', $results[0]);
     }
 
@@ -160,7 +181,7 @@ class PageListTest extends \PageTestCase
         $pagination->setMaxPerPage(2);
         $this->assertInstanceOf('\Concrete\Core\Search\Pagination\Pagination', $pagination);
         $this->assertEquals(2, $pagination->getMaxPerPage());
-        $this->assertEquals(13, $pagination->getTotalResults());
+        $this->assertEquals(15, $pagination->getTotalResults());
         $this->assertEquals(1, $pagination->getCurrentPage());
         $this->assertEquals(false, $pagination->hasPreviousPage());
         $this->assertEquals(true, $pagination->hasNextPage());
@@ -175,7 +196,7 @@ class PageListTest extends \PageTestCase
         $this->list->sortBy('cID', 'desc');
 
         $results = $this->list->getResults();
-        $this->assertEquals(13, count($results));
+        $this->assertEquals(15, count($results));
         $this->assertEquals('Foobler', $results[0]->getCollectionName());
     }
 
@@ -205,8 +226,19 @@ class PageListTest extends \PageTestCase
     {
         $this->list->filterByNumberOfChildren(2, '>=');
         $results = $this->list->getResults();
-        $this->assertEquals(1, count($results));
-        $this->assertEquals(1, $results[0]->getCollectionID());
+        $ids = array_map(function($result) {
+            return $result->getCollectionID();
+        }, $results);
+
+        // A function to reduce a list of pages into the minimum child count
+        $minimumChild = function($carry, $value) {
+            $childCount = $value->getNumChildren();
+            return ($carry === null || $childCount < $carry) ? $childCount : $carry;
+        };
+
+        // Make sure there are no results with less than 2 children
+        $this->assertGreaterThanOrEqual(2, array_reduce($results, $minimumChild));
+        $this->assertContains(1, $ids);
 
         $subject = Page::getByPath('/test-page-2');
         $parent = Page::getByPath('/holy-mackerel');
@@ -216,8 +248,9 @@ class PageListTest extends \PageTestCase
         $nl->ignorePermissions();
         $nl->includeAliases();
         $nl->filterByNumberOfChildren(1, '>=');
-        $results = $nl->getTotalResults();
-        $this->assertEquals(6, $results);
+
+        // Make sure there are no results with less than 1 child
+        $this->assertGreaterThanOrEqual(1, array_reduce($nl->getResults(), $minimumChild));
     }
 
     public function testFilterByActiveAndSystem()
@@ -225,27 +258,27 @@ class PageListTest extends \PageTestCase
 
         \SinglePage::addGlobal(Config::get('concrete.paths.trash'));
 
-        $c = Page::getByPath('/test-page-2');
+        $c = Page::getByPath('/test-trash');
         $c->moveToTrash();
 
         $results = $this->list->getResults();
-        $this->assertEquals(11, count($results));
+        $this->assertCount(13, $results);
 
         $this->list->includeSystemPages(); // This includes the items inside trash because we're stupid.
-        $totalResults = $this->list->getTotalResults();
-        $this->assertEquals(12, $totalResults);
-        $pagination = $this->list->getPagination();
-        $this->assertEquals(12, $pagination->getTotalResults());
-        $results = $this->list->getResults();
-        $this->assertEquals(12, count($results));
-
-        $this->list->includeInactivePages();
         $totalResults = $this->list->getTotalResults();
         $this->assertEquals(14, $totalResults);
         $pagination = $this->list->getPagination();
         $this->assertEquals(14, $pagination->getTotalResults());
         $results = $this->list->getResults();
-        $this->assertEquals(14, count($results));
+        $this->assertCount(14, $results);
+
+        $this->list->includeInactivePages();
+        $totalResults = $this->list->getTotalResults();
+        $this->assertEquals(16, $totalResults);
+        $pagination = $this->list->getPagination();
+        $this->assertEquals(16, $pagination->getTotalResults());
+        $results = $this->list->getResults();
+        $this->assertCount(16, $results);
     }
 
 
@@ -276,12 +309,12 @@ class PageListTest extends \PageTestCase
         $nl->sortByName();
         $total = $nl->getPagination()->getTotalResults();
         $results = $nl->getPagination()->setMaxPerPage(10)->getCurrentPageResults();
-        $this->assertEquals(15, $total);
-        $this->assertEquals(10, count($results));
+        $this->assertEquals(18, $total);
+        $this->assertCount(10, $results);
         $this->assertTrue($results[2]->isAlias());
         $this->assertEquals('Another Fun Page', $results[2]->getCollectionName());
         $this->assertEquals($results[2]->getCollectionID(), $subject->getCollectionID());
-        $this->assertEquals(14, $results[2]->getCollectionPointerOriginalID());
+        $this->assertEquals(20, $results[2]->getCollectionPointerOriginalID());
         $this->assertEquals(8, $results[2]->getCollectionID());
     }
 
@@ -294,7 +327,10 @@ class PageListTest extends \PageTestCase
         $this->list->filterByFulltextKeywords('Page');
         $this->list->sortByRelevance();
         $results = $this->list->getResults();
-        $this->assertEquals(5, count($results));
+        $this->assertCount(6, $results);
+
+        $ids = array_map(function($c) { return $c->getCollectionID(); }, $results);
+        $this->assertContains($c->getCollectionID(), $ids);
 
         $this->assertEquals(8, $results[0]->getCollectionID());
         $this->assertGreaterThan(0, $results[0]->getPageIndexScore());
@@ -322,7 +358,7 @@ class PageListTest extends \PageTestCase
         $this->assertEquals(2, $totalResults);
         $nl = new \Concrete\Core\Page\PageList();
         $nl->ignorePermissions();
-        $nl->filterbyPath('/test-page-1', false);
+        $nl->filterByPath('/test-page-1', false);
         $pagination = $nl->getPagination();
         $this->assertEquals(1, $pagination->getNBResults());
     }
@@ -344,7 +380,7 @@ class PageListTest extends \PageTestCase
 
         $pf->ignorePermissions();
         $pl = $pf->getPageListObject();
-        $this->assertInstanceOf('\Concrete\Core\Page\PageList', $pl);
+        $this->assertInstanceOf(PageList::class, $pl);
         $this->assertEquals(1, $pl->getTotalResults());
 
         $results = $pl->getResults();
