@@ -3,15 +3,16 @@
 class NumberValueTest extends \AttributeValueTestCase
 {
 
-    protected function setUp()
+    public function __construct($name = null, array $data = array(), $dataName = '')
     {
+        parent::__construct($name, $data, $dataName);
+
         $this->tables = array_merge($this->tables, array());
 
         $this->metadatas = array_merge($this->metadatas, array(
             'Concrete\Core\Entity\Attribute\Key\Settings\EmptySettings',
             'Concrete\Core\Entity\Attribute\Value\Value\NumberValue',
         ));
-        parent::setUp();
     }
 
     public function getAttributeKeyHandle()

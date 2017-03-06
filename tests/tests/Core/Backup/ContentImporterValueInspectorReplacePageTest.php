@@ -1,5 +1,7 @@
 <?php
 
+use Concrete\Core\Page\Page;
+
 class CustomPageRoutine extends \Concrete\Core\Backup\ContentImporter\ValueInspector\InspectionRoutine\PageRoutine
 {
 
@@ -14,12 +16,13 @@ class CustomPageRoutine extends \Concrete\Core\Backup\ContentImporter\ValueInspe
 class ContentImporterValueInspectorReplacePageTest extends PageTestCase
 {
 
-    protected function setUp()
+    public function __construct($name = null, array $data = array(), $dataName = '')
     {
+        parent::__construct($name, $data, $dataName);
+
         $this->metadatas = array_merge($this->metadatas, array(
             'Concrete\Core\Entity\Page\Feed'
         ));
-        parent::setUp();
     }
 
     protected function createData()
@@ -52,26 +55,32 @@ class ContentImporterValueInspectorReplacePageTest extends PageTestCase
         <p>This is a content block. Here is a feed. <a href="{ccm:export:pagefeed:blog}">Feed</a>. It is amazing. <a href="{ccm:export:page:/page-2/subpage-b}">Link 1</a>. <a href="{ccm:export:page:}">Home</a>. Here's another. <a href="{ccm:export:page:/page-2/subpage-b}">Link 2</a>. Don't forget a second <a href="{ccm:export:page:/page-4}">link.</a>. It's a pretty good one. <a href="thumbs_up.html">Thumbs up!</a> Excellent! <a href="{ccm:export:page:/}">See you later!</a>
 EOL;
 
+        $link1 = Page::getByPath('/page-2/subpage-b')->getCollectionID();
+        $link2 = Page::getByPath('/page-4')->getCollectionID();
+        $link3 = HOME_CID;
+
         $inspector = Core::make('import/value_inspector');
         $result = $inspector->inspect($content);
         $content = trim($result->getReplacedContent());
-        $this->assertEquals('<p>This is a content block. Here is a feed. <a href="http://www.dummyco.com/path/to/server/index.php/rss/blog">Feed</a>. It is amazing. <a href="{CCM:CID_7}">Link 1</a>. <a href="{CCM:CID_1}">Home</a>. Here\'s another. <a href="{CCM:CID_7}">Link 2</a>. Don\'t forget a second <a href="{CCM:CID_5}">link.</a>. It\'s a pretty good one. <a href="thumbs_up.html">Thumbs up!</a> Excellent! <a href="{CCM:CID_1}">See you later!</a>', $content);
+        $this->assertEquals('<p>This is a content block. Here is a feed. <a href="http://www.dummyco.com/path/to/server/index.php/rss/blog">Feed</a>. It is amazing. <a href="{CCM:CID_' . $link1 . '}">Link 1</a>. <a href="{CCM:CID_' . $link3 . '}">Home</a>. Here\'s another. <a href="{CCM:CID_' . $link1 . '}">Link 2</a>. Don\'t forget a second <a href="{CCM:CID_' . $link2 . '}">link.</a>. It\'s a pretty good one. <a href="thumbs_up.html">Thumbs up!</a> Excellent! <a href="{CCM:CID_' . $link3 . '}">See you later!</a>', $content);
     }
 
     public function testCustomReplaceContent()
     {
-
         $this->createData();
 
         $content = <<<EOL
         <p>This is a content block. We are testing this with a custom handler that can assume all pages in the content are under page 2. <a href="{ccm:export:page:/subpage-b}">Subpage B</a> is first. Now we <a href="{ccm:export:page:/subpage-c}">do subpage C</a></p>
 EOL;
 
+        $link1 = Page::getByPath('/page-2/subpage-b')->getCollectionID();
+        $link2 = Page::getByPath('/page-2/subpage-c')->getCollectionID();
+
         $inspector = Core::make('import/value_inspector');
         $inspector->registerInspectionRoutine(new CustomPageRoutine());
         $result = $inspector->inspect($content);
         $content = trim($result->getReplacedContent());
-        $this->assertEquals('<p>This is a content block. We are testing this with a custom handler that can assume all pages in the content are under page 2. <a href="{CCM:CID_7}">Subpage B</a> is first. Now we <a href="{CCM:CID_8}">do subpage C</a></p>', $content);
+        $this->assertEquals('<p>This is a content block. We are testing this with a custom handler that can assume all pages in the content are under page 2. <a href="{CCM:CID_' . $link1 . '}">Subpage B</a> is first. Now we <a href="{CCM:CID_' . $link2 . '}">do subpage C</a></p>', $content);
 
         $inspector->registerInspectionRoutine(new \Concrete\Core\Backup\ContentImporter\ValueInspector\InspectionRoutine\PageRoutine());
     }
@@ -79,14 +88,16 @@ EOL;
     public function testMatchedObjects()
     {
         $this->createData();
+
+
         $inspector = Core::make('import/value_inspector');
         $content = '{ccm:export:page:/page-3}';
         $result = $inspector->inspect($content);
         $items = $result->getMatchedItems();
         $o = $items[0];
-        $this->assertInstanceOf('\Concrete\Core\Page\Page', $o->getContentObject());
+        $this->assertInstanceOf(Page::class, $o->getContentObject());
         $this->assertEquals('Page 3', $o->getContentObject()->getCollectionName());
-        $this->assertEquals(4, $result->getReplacedValue());
+        $this->assertEquals(Page::getByPath('/page-3')->getCollectionID(), $result->getReplacedValue());
 
         $result = $inspector->inspect('{ccm:export:pagefeed:blog}');
         $items = $result->getMatchedItems();

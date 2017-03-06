@@ -1,11 +1,13 @@
 <?php
 
+use Concrete\Core\Entity\Attribute\Value\Value\SelectValue;
+
 class SelectValueTest extends \AttributeValueTestCase
 {
 
-    protected function setUp()
+    public function __construct($name = null, array $data = array(), $dataName = '')
     {
-        $this->tables = array_merge($this->tables, array());
+        parent::__construct($name, $data, $dataName);
 
         $this->metadatas = array_merge($this->metadatas, array(
             'Concrete\Core\Entity\Attribute\Key\Settings\SelectSettings',
@@ -13,6 +15,11 @@ class SelectValueTest extends \AttributeValueTestCase
             'Concrete\Core\Entity\Attribute\Value\Value\SelectValueOptionList',
             'Concrete\Core\Entity\Attribute\Value\Value\SelectValueOption',
         ));
+    }
+
+    protected function setUp()
+    {
+        \Database::query('truncate atSelectOptionsSelected');
         parent::setUp();
     }
 
@@ -31,17 +38,14 @@ class SelectValueTest extends \AttributeValueTestCase
         $settings = new \Concrete\Core\Entity\Attribute\Key\Settings\SelectSettings();
         $settings->setAllowMultipleValues(true);
         $list = new \Concrete\Core\Entity\Attribute\Value\Value\SelectValueOptionList();
-        foreach(array(
-            'OS X',
-            'Windows',
-            'Linux',
-            'Other'
-                ) as $name) {
+
+        foreach(['OS X', 'Windows', 'Linux', 'Other'] as $name) {
             $option = new \Concrete\Core\Entity\Attribute\Value\Value\SelectValueOption();
             $option->setSelectAttributeOptionValue($name);
             $option->setOptionList($list);
             $list->getOptions()->add($option);
         }
+
         $settings->setOptionList($list);
         return $settings;
     }
@@ -58,7 +62,7 @@ class SelectValueTest extends \AttributeValueTestCase
 
     public function getAttributeValueClassName()
     {
-        return 'Concrete\Core\Entity\Attribute\Value\Value\SelectValue';
+        return SelectValue::class;
     }
 
     protected function prepareBaseValueAfterRetrieving($value)
@@ -139,7 +143,8 @@ class SelectValueTest extends \AttributeValueTestCase
                 array('Linux', 'Unix'),
                 "\nLinux\n"
             )
-        );    }
+        );
+    }
 
 
 

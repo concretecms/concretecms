@@ -1,4 +1,7 @@
 <?php
+use Concrete\Core\Entity\Package;
+use Concrete\Core\Support\Facade\Application;
+use Illuminate\Filesystem\Filesystem;
 
 /**
  * Created by PhpStorm.
@@ -8,15 +11,22 @@
  */
 class PageControllerTest extends PageTestCase
 {
-    public function setUp()
+
+    public function __construct($name = null, array $data = array(), $dataName = '')
     {
-        parent::setUp();
-        $env = \Concrete\Core\Foundation\Environment::get();
-        $env->clearOverrideCache();
+        parent::__construct($name, $data, $dataName);
+        $this->metadatas[] = Package::class;
     }
+
+    public function tearDown()
+    {
+        parent::tearDown();
+        $cache = \Core::make('cache/overrides')->flush();
+    }
+
     protected function addPage1()
     {
-        $home = Page::getByID(HOME_CID);
+        $home = Site::getDefault()->getSiteHomePageObject();
         $pt = PageType::getByID(1);
         $template = PageTemplate::getByID(1);
         $page = $home->add($pt, [
@@ -30,12 +40,13 @@ class PageControllerTest extends PageTestCase
 
     protected function addPage2()
     {
-        $home = Page::getByID(HOME_CID);
+        $home = Site::getDefault()->getSiteHomePageObject();
         PageType::add([
             'handle' => 'alternate',
             'name' => 'Alternate',
         ]);
-        $pt = PageType::getByID(2);
+
+        $pt = PageType::getByHandle('alternate');
         $template = PageTemplate::getByID(1);
         $page = $home->add($pt, [
             'uID' => 1,
@@ -56,7 +67,7 @@ class PageControllerTest extends PageTestCase
     public function testPageTypeController()
     {
         $page = $this->addPage1();
-        require 'fixtures/concrete/basic.php';
+        require __DIR__ . '/fixtures/concrete/basic.php';
         $controller = $page->getPageController();
         $this->assertEquals('Concrete\Controller\PageType\Basic', get_class($controller));
         $this->assertInstanceOf('Concrete\Core\Page\Controller\PageTypeController', $controller);
@@ -66,9 +77,9 @@ class PageControllerTest extends PageTestCase
     {
         $page = $this->addPage2();
 
-        $root = realpath(DIR_BASE_CORE . '/../application');
+        $root = realpath(DIR_BASE . '/application');
         @mkdir($root . '/' . DIRNAME_CONTROLLERS . '/' . DIRNAME_PAGE_TYPES, 0777, true);
-        @copy(dirname(__FILE__) . '/fixtures/application/alternate.php',
+        @copy(__DIR__ . '/fixtures/application/alternate.php',
             $root . '/' . DIRNAME_CONTROLLERS . '/' . DIRNAME_PAGE_TYPES . '/alternate.php');
 
         $controller = $page->getPageController();
@@ -113,7 +124,7 @@ class PageControllerTest extends PageTestCase
 
     public function testPackagedSinglePageViewPhp()
     {
-        $p = new \Concrete\Core\Entity\Package();
+        $p = new Package();
         $p->setPackageHandle('awesome_package');
         require_once dirname(__FILE__) . '/fixtures/package/awesome_package.php';
 
@@ -138,22 +149,16 @@ class PageControllerTest extends PageTestCase
         $fooPage->pkgHandle = 'awesome_package';
         $controller = $fooPage->getPageController();
 
-        @unlink($root . '/awesome_package/' . DIRNAME_CONTROLLERS . '/' . DIRNAME_PAGE_CONTROLLERS . '/testerson/foo.php');
-        @rmdir($root . '/awesome_package/' . DIRNAME_CONTROLLERS . '/' . DIRNAME_PAGE_CONTROLLERS . '/testerson');
-        @rmdir($root . '/awesome_package/' . DIRNAME_CONTROLLERS . '/' . DIRNAME_PAGE_CONTROLLERS);
-        @unlink($root . '/awesome_package/' . DIRNAME_PAGES . '/testerson/foo/view.php');
-        @rmdir($root . '/awesome_package/' . DIRNAME_PAGES . '/testerson/foo');
-        @rmdir($root . '/awesome_package/' . DIRNAME_PAGES . '/testerson');
-        @rmdir($root . '/awesome_package/' . DIRNAME_PAGES);
-        @rmdir($root . '/awesome_package/' . DIRNAME_CONTROLLERS);
-        @rmdir($root . '/awesome_package');
+        $fs = new Filesystem();
+        $fs->deleteDirectory($root . '/awesome_package/');
 
         $this->assertEquals('Concrete\Package\AwesomePackage\Controller\SinglePage\Testerson\Foo', get_class($controller));
         $this->assertInstanceOf('\Concrete\Core\Page\Controller\PageController', $controller);
     }
+
     public function testPackagedSinglePageViewNoPhp()
     {
-        $pkg = new \Concrete\Core\Entity\Package();
+        $pkg = new Package();
         $pkg->setPackageHandle('awesome_package');
         $pkg->setPackageID(1);
         $loader = \Concrete\Core\Foundation\ClassLoader::getInstance();
@@ -171,15 +176,10 @@ class PageControllerTest extends PageTestCase
         $fooPage = Page::getByPath('/testerson/foo');
         $fooPage->pkgHandle = 'awesome_package';
         $controller = $fooPage->getPageController();
+        $fooPage->delete();
 
-        @unlink($root . '/awesome_package/' . DIRNAME_CONTROLLERS . '/' . DIRNAME_PAGE_CONTROLLERS . '/testerson/foo.php');
-        @rmdir($root . '/awesome_package/' . DIRNAME_CONTROLLERS . '/' . DIRNAME_PAGE_CONTROLLERS . '/testerson');
-        @rmdir($root . '/awesome_package/' . DIRNAME_CONTROLLERS . '/' . DIRNAME_PAGE_CONTROLLERS);
-        @rmdir($root . '/awesome_package/' . DIRNAME_CONTROLLERS);
-        @unlink($root . '/awesome_package/' . DIRNAME_PAGES . '/testerson/foo.php');
-        @rmdir($root . '/awesome_package/' . DIRNAME_PAGES . '/testerson');
-        @rmdir($root . '/awesome_package/' . DIRNAME_PAGES);
-        @rmdir($root . '/awesome_package');
+        $fs = new Filesystem();
+        $fs->deleteDirectory($root . '/awesome_package/');
 
         $this->assertEquals('Concrete\Package\AwesomePackage\Controller\SinglePage\Testerson\Foo', get_class($controller));
         $this->assertInstanceOf('\Concrete\Core\Page\Controller\PageController', $controller);
@@ -194,17 +194,23 @@ class PageControllerTest extends PageTestCase
         @copy(dirname(__FILE__) . '/fixtures/application/views/foo.php',
             $root . '/' . DIRNAME_PAGES . '/testerson/foo/view.php');
 
-        SinglePage::add('/testerson/foo');
-        $fooPage = Page::getByPath('/testerson/foo');
-        $controller = $fooPage->getPageController();
+        $failed = false;
+        try {
+            SinglePage::add('/testerson/foo');
+            $fooPage = Page::getByPath('/testerson/foo');
+            $controller = $fooPage->getPageController();
+            $fooPage->delete();
+        } catch (\Exception $e) {
+            $failed = $e->getMessage();
+        }
 
-        @unlink($root . '/' . DIRNAME_CONTROLLERS . '/' . DIRNAME_PAGE_CONTROLLERS . '/testerson/foo.php');
-        @rmdir($root . '/' . DIRNAME_CONTROLLERS . '/' . DIRNAME_PAGE_CONTROLLERS . '/testerson');
-        @rmdir($root . '/' . DIRNAME_CONTROLLERS . '/' . DIRNAME_PAGE_CONTROLLERS);
-        @unlink($root . '/' . DIRNAME_PAGES . '/testerson/foo/view.php');
-        @rmdir($root . '/' . DIRNAME_PAGES . '/testerson/foo');
-        @rmdir($root . '/' . DIRNAME_PAGES . '/testerson');
+        $fs = new Filesystem();
+        $fs->deleteDirectory($root . '/' . DIRNAME_CONTROLLERS . '/' . DIRNAME_PAGE_CONTROLLERS . '/testerson');
+        $fs->deleteDirectory($root . '/' . DIRNAME_PAGES . '/testerson');
 
+        if ($failed) {
+            $this->fail($failed);
+        }
         $this->assertEquals('Application\Controller\SinglePage\Testerson\Foo', get_class($controller));
         $this->assertInstanceOf('\Concrete\Core\Page\Controller\PageController', $controller);
     }
@@ -219,15 +225,22 @@ class PageControllerTest extends PageTestCase
         @copy(dirname(__FILE__) . '/fixtures/application/views/foo.php',
             $root . '/' . DIRNAME_PAGES . '/testerson/foo.php');
 
-        SinglePage::add('/testerson/foo');
-        $fooPage = Page::getByPath('/testerson/foo');
-        $controller = $fooPage->getPageController();
+        $failed = false;
+        try {
+            SinglePage::add('/testerson/foo');
+            $fooPage = Page::getByPath('/testerson/foo');
+            $controller = $fooPage->getPageController();
+        } catch (\Exception $e) {
+            $failed = $e->getMessage();
+        }
 
-        @unlink($root . '/' . DIRNAME_CONTROLLERS . '/' . DIRNAME_PAGE_CONTROLLERS . '/testerson/foo.php');
-        @rmdir($root . '/' . DIRNAME_CONTROLLERS . '/' . DIRNAME_PAGE_CONTROLLERS . '/testerson');
-        @rmdir($root . '/' . DIRNAME_CONTROLLERS . '/' . DIRNAME_PAGE_CONTROLLERS);
-        @unlink($root . '/' . DIRNAME_PAGES . '/testerson/foo.php');
-        @rmdir($root . '/' . DIRNAME_PAGES . '/testerson');
+        $fs = new Filesystem();
+        $fs->deleteDirectory($root . '/' . DIRNAME_CONTROLLERS . '/' . DIRNAME_PAGE_CONTROLLERS . '/testerson');
+        $fs->deleteDirectory($root . '/' . DIRNAME_PAGES . '/testerson');
+
+        if ($failed) {
+            $this->fail($failed);
+        }
 
         $this->assertEquals('Application\Controller\SinglePage\Testerson\Foo', get_class($controller));
         $this->assertInstanceOf('\Concrete\Core\Page\Controller\PageController', $controller);

@@ -3,13 +3,14 @@
 class ContentImporterValueInspectorTest extends FileStorageTestCase
 {
 
-    protected function setUp()
+    public function __construct($name = null, array $data = array(), $dataName = '')
     {
+        parent::__construct($name, $data, $dataName);
+
         $this->tables = array_merge($this->tables, array(
             'Users',
             'PermissionAccessEntityTypes',
         ));
-        parent::setUp();
     }
 
     public function testMake()

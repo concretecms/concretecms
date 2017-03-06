@@ -3,8 +3,10 @@
 class PageListTopicTest extends PageTestCase
 {
 
-    public function setUp()
+    public function __construct($name = null, array $data = array(), $dataName = '')
     {
+        parent::__construct($name, $data, $dataName);
+
         $this->tables = array_merge($this->tables, array(
             'TreeTypes',
             'TopicTrees',
@@ -29,9 +31,11 @@ class PageListTopicTest extends PageTestCase
             'Concrete\Core\Entity\Page\Feed',
         ));
 
+    }
 
+    public function setUp()
+    {
         parent::setUp();
-
 
         $g1 = Group::add(
             tc("GroupName", "Guest"),
@@ -72,9 +76,9 @@ class PageListTopicTest extends PageTestCase
 
         $topics = $category->add($attributeType, $key, $settings);
     }
+
     public function testFilterByTopic()
     {
-
         $topic = \Concrete\Core\Tree\Node\Type\Topic::add("Summer");
         $home = Page::getByID(HOME_CID);
 
