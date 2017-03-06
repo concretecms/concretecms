@@ -191,8 +191,10 @@ class ConcreteDatabaseTestCase extends PHPUnit_Extensions_Database_TestCase
                     return $name !== $table;
                 });
 
-                // Track that we actually have tables to e
+                // Track that we actually have tables to import
                 $importedTables[] = $name;
+
+                static::$existingTables[$name] = true;
             }
 
             if (!$tables) {
