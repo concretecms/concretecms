@@ -53,7 +53,7 @@ abstract class Standard extends AbstractController
     public function searchBasic()
     {
         if ($this->canAccess()) {
-            $result = $this->getDefaultBasicSearchResultObject();
+            $result = $this->getCurrentSearchObject();
             return new JsonResponse($result->getJSONObject());
         } else {
             $this->app->shutdown();
