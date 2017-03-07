@@ -71,6 +71,7 @@ $config->get('concrete');
 $config->set('concrete.cache.blocks', false);
 $config->set('concrete.cache.pages', false);
 $config->set('concrete.cache.enabled', false);
+$config->set('concrete.user.password.hash_cost_log2', 1);
 
 /** @var Concrete\Core\Database\Connection\Connection $cn */
 $cn = $cms->make('database')->connection('travisWithoutDB');
