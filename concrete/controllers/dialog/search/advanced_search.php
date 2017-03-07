@@ -131,8 +131,7 @@ abstract class AdvancedSearch extends BackendInterfaceController
             $provider->setSessionCurrentQuery($query);
 
             $result = $provider->getSearchResultFromQuery($query);
-            $result->setBaseURL($this->getBasicSearchBaseURL());
-
+            $result->setBaseURL($this->getCurrentSearchBaseURL());
             return new JsonResponse($result->getJSONObject());
         }
     }
