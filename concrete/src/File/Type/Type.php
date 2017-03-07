@@ -415,6 +415,18 @@ class Type
     }
 
     /**
+     * Does the file type support thumbnails.
+     *
+     * @return bool|null Return true if the type supports thumbnails, null otherwise
+     */
+    public function supportsThumbnails()
+    {
+        if ($this->getName() == 'PNG' || $this->getName() == 'JPEG') {
+            return true;
+        }
+    }
+
+    /**
      * Get the name of a generic file type.
      *
      * @param int $type Generic category type (one of the \Concrete\Core\File\Type\Type::T_... constants)

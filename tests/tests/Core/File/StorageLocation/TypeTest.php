@@ -1,19 +1,20 @@
 <?php
 namespace Concrete\Tests\Core\File\StorageLocation;
 
+use Concrete\Core\Entity\File\StorageLocation\Type\Type as StorageLocationType;
 use Concrete\Core\File\StorageLocation\Type\Type;
 
 class TypeTest extends \ConcreteDatabaseTestCase
 {
     protected $fixtures = array();
     protected $metadatas = array(
-        'Concrete\Core\Entity\File\StorageLocation\Type\Type',
+        StorageLocationType::class,
     );
 
     public function testCreateType()
     {
         $type = Type::add('local', t('Local Storage'));
-        $this->assertInstanceOf('\Concrete\Core\Entity\File\StorageLocation\Type\Type', $type);
+        $this->assertInstanceOf(StorageLocationType::class, $type);
         $this->assertEquals('Local Storage', $type->getName());
         $this->assertEquals(1, $type->getID());
         $this->assertEquals(0, $type->getPackageID());

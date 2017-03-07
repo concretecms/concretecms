@@ -9,6 +9,7 @@ use Concrete\Core\User\Search\Field\Field\DateAddedField;
 use Concrete\Core\User\Search\Field\Field\GroupSetField;
 use Concrete\Core\User\Search\Field\Field\IsActiveField;
 use Concrete\Core\User\Search\Field\Field\UserGroupField;
+use Concrete\Core\User\Search\Field\Field\IsValidatedField;
 
 class Manager extends FieldManager
 {

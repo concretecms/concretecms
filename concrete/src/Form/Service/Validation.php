@@ -226,7 +226,11 @@ class Validation
     protected function setErrorsFromInvalidFields()
     {
         foreach ($this->fieldsInvalid as $f) {
-            $this->error->add($f->message);
+            if (isset($f->field)) {
+                $this->error->add($f->message, $f->field);
+            } else {
+                $this->error->add($f->message);
+            }
         }
     }
 

@@ -45,6 +45,12 @@ class Service
             ->findByType($type);
     }
 
+    public function getByHandle($handle)
+    {
+        return $this->entityManager->getRepository('Concrete\Core\Entity\Site\Site')
+            ->findOneBy(['siteHandle' => $handle]);
+    }
+
     public function getDefault()
     {
         $factory = new Factory($this->config);
@@ -191,11 +197,17 @@ class Service
         return $site;
     }
 
+    /**
+     * @return Site
+     */
     final public function getSite()
     {
         return $this->resolverFactory->createResolver($this)->getSite();
     }
 
+    /**
+     * @return Site
+     */
     final public function getActiveSiteForEditing()
     {
         return $this->resolverFactory->createResolver($this)->getActiveSiteForEditing();

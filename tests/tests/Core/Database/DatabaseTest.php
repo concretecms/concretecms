@@ -5,9 +5,6 @@ class DatabaseTest extends ConcreteDatabaseTestcase
     protected $fixtures = array(
         'Users',
     );
-    protected $tables = array(
-        'User',
-    );
 
     public function setUp()
     {

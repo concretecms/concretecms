@@ -3,8 +3,6 @@ namespace Concrete\Controller\SinglePage\Dashboard\System\Registration;
 
 use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Page\Controller\DashboardPageController;
-use Config;
-use Loader;
 
 class Open extends DashboardPageController
 {
@@ -30,35 +28,24 @@ class Open extends DashboardPageController
                     $config->save('concrete.user.registration.enabled', true);
                     $config->save('concrete.user.registration.validate_email', false);
                     $config->save('concrete.user.registration.notification', $this->post('register_notification'));
-                    $config->save('concrete.user.registration.approval', false);
                     $config->save(
                         'concrete.user.registration.notification_email',
-                        $security->sanitizeEmail($this->post('register_notification_email')));
+                        $security->sanitizeEmail($this->post('register_notification_email'))
+                    );
                     break;
 
                 case "validate_email":
                     $config->save('concrete.user.registration.enabled', true);
                     $config->save('concrete.user.registration.validate_email', true);
                     $config->save('concrete.user.registration.notification', $this->post('register_notification'));
-                    $config->save('concrete.user.registration.approval', false);
                     $config->save(
                         'concrete.user.registration.notification_email',
-                        $security->sanitizeEmail($this->post('register_notification_email')));
-                    break;
-
-                case "manual_approve":
-                    $config->save('concrete.user.registration.enabled', true);
-                    $config->save('concrete.user.registration.approval', true);
-                    $config->save('concrete.user.registration.validate_email', false);
-                    $config->save('concrete.user.registration.notification', $this->post('register_notification'));
-                    $config->save(
-                        'concrete.user.registration.notification_email',
-                        $security->sanitizeEmail($this->post('register_notification_email')));
+                        $security->sanitizeEmail($this->post('register_notification_email'))
+                    );
                     break;
 
                 default: // disabled
                     $config->save('concrete.user.registration.enabled', false);
-                    $config->save('concrete.user.registration.approval', false);
                     $config->save('concrete.user.registration.notification', false);
                     break;
             }

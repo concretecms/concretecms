@@ -6,8 +6,6 @@ use Concrete\Core\Block\CustomStyle;
 
 class InlineStyleSetTest extends ConcreteDatabaseTestCase
 {
-    protected $fixtures = array();
-    protected $tables = array('StyleCustomizerInlineStyleSets');
 
     public function testPopulateFromRequestEmpty()
     {

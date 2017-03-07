@@ -1,6 +1,6 @@
 <?php
+require_once __DIR__ . '/../BlockTypeTestCase.php';
 
-require_once 'BlockTypeTestCase.php';
 class FormTest extends BlockTypeTestCase
 {
     protected $btHandle = 'form';

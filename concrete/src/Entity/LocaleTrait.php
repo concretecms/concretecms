@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Entity;
 
+use Concrete\Core\Export\Item\Locale;
 use Doctrine\ORM\Mapping as ORM;
 
 trait LocaleTrait
@@ -136,4 +137,8 @@ trait LocaleTrait
         return $text;
     }
 
+    public function getExporter()
+    {
+        return new Locale();
+    }
 }

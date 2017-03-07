@@ -30,8 +30,10 @@ class CollectionAttributeTest extends \AttributeTestCase
         return $c;
     }
 
-    protected function setUp()
+    public function __construct($name = null, array $data = array(), $dataName = '')
     {
+        parent::__construct($name, $data, $dataName);
+
         $this->tables = array_merge($this->tables, array(
             'Collections',
             'CollectionAttributeValues',
@@ -46,7 +48,6 @@ class CollectionAttributeTest extends \AttributeTestCase
             'Concrete\Core\Entity\Page\PagePath',
             'Concrete\Core\Entity\Page\Template'
         ));
-        parent::setUp();
     }
 
     protected function installAttributeCategoryAndObject()

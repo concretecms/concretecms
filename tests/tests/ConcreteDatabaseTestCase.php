@@ -1,25 +1,304 @@
 <?php
+use Concrete\Core\Database\DatabaseStructureManager;
+use Concrete\Core\Database\Schema\Schema;
+use Doctrine\DBAL\Driver\Connection;
+use Doctrine\DBAL\Driver\PDOConnection;
+use Concrete\Core\Support\Facade\Application;
+use Doctrine\DBAL\Platforms\MySqlPlatform;
+use Doctrine\ORM\EntityManagerInterface;
+use Imagine\Exception\RuntimeException;
 
 class ConcreteDatabaseTestCase extends PHPUnit_Extensions_Database_TestCase
 {
-    /** @var PHPUnit_Extensions_Database_DB_DefaultDatabaseConnection */
-    private static $conn = null;
-    private static $db = null;
-    protected $tables = array();
-    protected $fixtures = array();
 
-    /*
-    protected function setUp() {
-        parent::setUp();
+    /** @var Connection The cached database connection */
+    public static $connection = null;
+
+    /** @var bool[] Keys are tables that currently exist */
+    public static $existingTables = [];
+
+    /** @var array[] Table data cache */
+    public static $tableData = [];
+
+    /** @var string[] The tables to import from /concrete/config/db.xml */
+    protected $tables = [];
+
+    /** @var string[] The fixtures to import */
+    protected $fixtures = [];
+
+    /** @var string[] The Entities to import */
+    protected $metadatas = [];
+
+    /**
+     * Get the connection to use
+     *
+     * @return \Doctrine\DBAL\Driver\Connection
+     */
+    protected function connection()
+    {
+        if (!static::$connection) {
+            static::$connection = Application::make('database')->connection('travis');
+        }
+
+        return static::$connection;
     }
-    */
 
-    protected function appendXML($root, $new)
+    /**
+     * Returns the test database connection.
+     *
+     * @return PHPUnit_Extensions_Database_DB_IDatabaseConnection
+     * @throws \Imagine\Exception\RuntimeException
+     */
+    protected function getConnection()
+    {
+        $connection = $this->connection()->getWrappedConnection();
+        if (!$connection instanceof PDOConnection) {
+            throw new RuntimeException('Invalid connection type.');
+        }
+
+        return $this->createDefaultDBConnection($connection, 'test');
+    }
+
+    /**
+     * Returns the test dataset.
+     *
+     * @return PHPUnit_Extensions_Database_DataSet_IDataSet
+     */
+    protected function getDataSet()
+    {
+        $dataSet = new PHPUnit_Extensions_Database_DataSet_CompositeDataSet();
+        $this->importFixtures($dataSet);
+
+        return $dataSet;
+    }
+
+    /**
+     * Set up before any tests run
+     */
+    public static function setUpBeforeClass()
+    {
+        // Make sure tables are imported
+        $testCase = new Static();
+        $testCase->importTables();
+        $testCase->importMetadatas();
+
+        // Call parent setup
+        parent::setUpBeforeClass();
+    }
+
+    /**
+     * Tear down after class has completed
+     */
+    public static function tearDownAfterClass()
+    {
+        // Make sure tables are removed
+        $testCase = new Static();
+        $testCase->removeTables();
+        $testCase->removeMetadatas();
+
+        // Call parent teardown
+        parent::tearDownAfterClass();
+    }
+
+    /**
+     * Import tables from $this->tables
+     */
+    protected function importTables()
+    {
+        $connection = $this->connection();
+
+        // Filter out any tables that have already been imported
+        $tables = array_filter($this->tables, function($table) {
+            return !isset(static::$existingTables[$table]);
+        });
+
+        if ($tables) {
+            // Try to extract the tables
+            if (!$xml = $this->extractTableData($tables)) {
+                throw new RuntimeException('Invalid tables: ' . json_encode($tables));
+            }
+
+            // Import any extracted tables
+            $this->importTableXML($xml, $connection);
+
+            // Check for special `BlockType` case
+            if (in_array('BlockTypes', $tables, false)) {
+                $xml = simplexml_load_file(DIR_BASE_CORE . '/blocks/core_scrapbook_display/db.xml');
+                $this->importTableXML($xml, $connection);
+            }
+        }
+    }
+
+    /**
+     * Remove all existing tables
+     */
+    protected function removeTables()
+    {
+        $connection = $this->connection();
+
+        // Get all existing tables
+        $tables = $connection->query('show tables')->fetchAll();
+        $tables = array_map(function ($table) {
+            return array_shift($table);
+        }, $tables);
+
+        // Turn off foreign key checks
+        $connection->exec('SET FOREIGN_KEY_CHECKS = 0');
+
+        foreach ($tables as $table) {
+            // Drop tables
+            $connection->exec("DROP TABLE `{$table}`");
+        }
+
+        // Reset foreign key checks on
+        $connection->exec('SET FOREIGN_KEY_CHECKS = 1');
+
+        static::$existingTables = [];
+    }
+
+    /**
+     * Extract the table data from the db.xml
+     *
+     * @param array $tables
+     * @return array|null
+     */
+    protected function extractTableData(array $tables)
+    {
+        // If there are no tables, there's no reason to scan the XML
+        if (!count($tables)) {
+            return null;
+        }
+
+        // Initialize an xml document
+        $partial = new SimpleXMLElement('<schema xmlns="http://www.concrete5.org/doctrine-xml/0.5" />');
+
+        // Open the db.xml file
+        $xml1 = simplexml_load_file(DIR_BASE_CORE . '/config/db.xml');
+        $importedTables = [];
+
+        // Loop through tables that exist in the document
+        foreach ($xml1->table as $table) {
+            $name = (string)$table['name'];
+
+            // If this table is being requested
+            if (isset(static::$existingTables[$name]) || in_array($name, $tables, false)) {
+                $this->appendXML($partial, $table);
+
+                // Store the fact that this table should exist now
+                static::$existingTables[$name] = true;
+
+                // Track that we actually have tables to e
+                $importedTables[] = $name;
+            }
+        }
+
+        // Return the partial only if there are tables to import
+        return $importedTables ? $partial : null;
+    }
+
+    /**
+     * Import needed tables
+     *
+     * @param SimpleXMLElement $xml
+     * @param Connection $connection
+     * @internal param $partial
+     */
+    protected function importTableXML(SimpleXMLElement $xml, Connection $connection)
+    {
+        // Convert the given partial into sql create statements
+        $schema = Schema::loadFromXMLElement($xml, $connection);
+        $queries = $schema->toSql(new MySqlPlatform());
+
+        // Run queries
+        foreach ($queries as $query) {
+            $connection->query($query);
+        }
+    }
+
+    /**
+     * @param \PHPUnit_Extensions_Database_DataSet_CompositeDataSet $dataSet
+     */
+    protected function importFixtures(PHPUnit_Extensions_Database_DataSet_CompositeDataSet $dataSet)
+    {
+        $fixtures = $this->fixtures;
+
+        $reflectionClass = new ReflectionClass(get_called_class());
+        $fixturePath = dirname($reflectionClass->getFilename()) . DIRECTORY_SEPARATOR . 'fixtures';
+
+        foreach ((array) $fixtures as $fixture) {
+            $path = $fixturePath . DIRECTORY_SEPARATOR . "$fixture.xml";
+            $ds = $this->createMySQLXMLDataSet($path);
+            $dataSet->addDataSet($ds);
+        }
+    }
+
+    /**
+     * Import requested metadatas
+     */
+    protected function importMetadatas()
+    {
+        $sm = Application::make(DatabaseStructureManager::class);
+
+        if ($metadatas = $this->getMetadatas()) {
+            $sm->installDatabaseFor($metadatas);
+        }
+    }
+
+    protected function removeMetadatas()
+    {
+        $sm = Application::make(DatabaseStructureManager::class);
+
+        if ($metadatas = $this->getMetadatas()) {
+            $sm->uninstallDatabaseFor($metadatas);
+        }
+    }
+
+    /**
+     * Gets the metadatas to import
+     * @return array
+     */
+    protected function getMetadatas()
+    {
+        $metadatas = [];
+
+        // If there are metadatas to import
+        if ($this->metadatas && is_array($this->metadatas)) {
+            /** @var EntityManagerInterface $manager */
+            $manager = Application::make(EntityManagerInterface::class);
+            $factory = $manager->getMetadataFactory();
+
+            // Loop through all metadata
+            foreach ($factory->getAllMetadata() as $meta) {
+                if (in_array($meta->getName(), $this->metadatas, false)) {
+                    $metadatas[] = $meta;
+                }
+            }
+        }
+
+        return $metadatas;
+    }
+
+    public function tearDown()
+    {
+        parent::tearDown();
+        ;
+        \ORM::entityManager('core')->clear();
+        \CacheLocal::flush();
+    }
+
+    /**
+     * Append an xml onto another xml
+     * @param \SimpleXMLElement $root
+     * @param \SimpleXMLElement $new
+     */
+    protected function appendXML(SimpleXMLElement $root, SimpleXMLElement $new)
     {
         $node = $root->addChild($new->getName(), (string) $new);
+
         foreach ($new->attributes() as $attr => $value) {
             $node->addAttribute($attr, $value);
         }
+
         foreach ($new->children() as $ch) {
             $this->appendXML($node, $ch);
         }
@@ -27,133 +306,35 @@ class ConcreteDatabaseTestCase extends PHPUnit_Extensions_Database_TestCase
 
     protected function debug()
     {
-        \Database::get()->getConfiguration()->setSQLLogger(new \Doctrine\DBAL\Logging\EchoSQLLogger());
+        $this->connection()->getConfiguration()->setSQLLogger(new \Doctrine\DBAL\Logging\EchoSQLLogger());
     }
 
-    public function getConnection()
+    /**
+     * Truncate all known databases
+     * @param null|array $tables The tables to truncate
+     */
+    protected function truncateTables($tables = null)
     {
-        if (self::$conn === null) {
-            $config = \Config::get('database');
-            $connection_config = $config['connections'][$config['default-connection']];
-            $db = Database::getFactory()->createConnection(
-            array(
-                'host' => $connection_config['server'],
-                'user' => $connection_config['username'],
-                'password' => $connection_config['password'],
-                'database' => $connection_config['database'],
-            ));
-            self::$conn = $this->createDefaultDBConnection($db->getWrappedConnection(), 'test');
-            self::$db = $db;
+        $connection = $this->connection();
+
+        if ($tables === null) {
+            // Get all existing tables
+            $tables = $connection->query('show tables')->fetchAll();
+            $tables = array_map(function ($table) {
+                return array_shift($table);
+            }, $tables);
         }
 
-        return self::$conn;
+        // Turn off foreign key checks
+        $connection->exec('SET FOREIGN_KEY_CHECKS = 0');
+
+        foreach ($tables as $table) {
+            // Drop tables
+            $connection->exec("TRUNCATE TABLE `{$table}`");
+        }
+
+        // Reset foreign key checks on
+        $connection->exec('SET FOREIGN_KEY_CHECKS = 1');
     }
 
-    public function getDataSet($fixtures = array())
-    {
-        $db = Database::get();
-        if (count($this->tables)) {
-            $partial = new SimpleXMLElement('<schema xmlns="http://www.concrete5.org/doctrine-xml/0.5" />');
-
-            $xml = simplexml_load_file(DIR_BASE_CORE . '/config/db.xml');
-            foreach ($xml->table as $t) {
-                $name = (string) $t['name'];
-                if (in_array($name, $this->tables)) {
-                    $this->appendXML($partial, $t);
-                }
-            }
-
-            $schema = \Concrete\Core\Database\Schema\Schema::loadFromXMLElement($partial, $db);
-            $platform = $db->getDatabasePlatform();
-            $queries = $schema->toSql($platform);
-            foreach ($queries as $query) {
-                $db->query($query);
-            }
-        }
-
-        if (empty($fixtures)) {
-            $fixtures = $this->fixtures;
-        }
-
-        $reflectionClass = new ReflectionClass(get_called_class());
-        $fixturePath = dirname($reflectionClass->getFilename()) . DIRECTORY_SEPARATOR . 'fixtures';
-        $compositeDs = new PHPUnit_Extensions_Database_DataSet_CompositeDataSet(array());
-
-        foreach ((array) $fixtures as $fixture) {
-            $path = $fixturePath . DIRECTORY_SEPARATOR . "$fixture.xml";
-            $ds = $this->createMySQLXMLDataSet($path);
-            $compositeDs->addDataSet($ds);
-        }
-        if (in_array('BlockTypes', $this->tables)) {
-            $xml = simplexml_load_file(DIR_BASE_CORE . '/blocks/core_scrapbook_display/db.xml');
-            $schema = \Concrete\Core\Database\Schema\Schema::loadFromXMLElement($xml, $db);
-            $platform = $db->getDatabasePlatform();
-            $queries = $schema->toSql($platform);
-            foreach ($queries as $query) {
-                $db->query($query);
-            }
-        }
-
-        $sm = \Core::make('Concrete\Core\Database\DatabaseStructureManager');
-        $metadatas = $this->getMetaDatas();
-        if (count($metadatas)) {
-            $sm->installDatabaseFor($metadatas);
-        }
-
-        return $compositeDs;
-    }
-
-    protected function getMetaDatas()
-    {
-        $metadatas = array();
-        if (isset($this->metadatas) && is_array($this->metadatas)) {
-            $em = self::$db->getEntityManager();
-            $cmf = $em->getMetadataFactory();
-            foreach ($cmf->getAllMetadata() as $meta) {
-                if (in_array($meta->getName(), $this->metadatas)) {
-                    $metadatas[] = $meta;
-                }
-            }
-        }
-        return $metadatas;
-    }
-
-    public function tearDown()
-    {
-        parent::tearDown();
-        if (count($this->tables)) {
-            if (in_array('BlockTypes', $this->tables)) {
-                $this->tables[] = 'btCoreScrapbookDisplay';
-            }
-            $conn = $this->getConnection();
-            $pdo = $conn->getConnection();
-            $pdo->exec('set foreign_key_checks = 0');
-            foreach ($this->tables as $table) {
-                // drop table
-                $conn = $this->getConnection();
-                $pdo = $conn->getConnection();
-                $pdo->exec("DROP TABLE IF EXISTS `$table`;");
-            }
-            $pdo->exec('set foreign_key_checks = 1');
-        }
-
-        $allTables = $this->getDataSet($this->fixtures)->getTableNames();
-        foreach ($allTables as $table) {
-            // drop table
-            $conn = $this->getConnection();
-            $pdo = $conn->getConnection();
-            $pdo->exec("DROP TABLE IF EXISTS `$table`;");
-        }
-
-        \ORM::entityManager('core')->clear();
-
-        $sm = \Core::make('Concrete\Core\Database\DatabaseStructureManager');
-        $metadatas = $this->getMetaDatas();
-        if (count($metadatas)) {
-            $sm->uninstallDatabaseFor($metadatas);
-        }
-
-        \CacheLocal::flush();
-
-    }
 }

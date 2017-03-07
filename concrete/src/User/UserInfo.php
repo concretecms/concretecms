@@ -15,6 +15,7 @@ use Concrete\Core\Foundation\Object;
 use Concrete\Core\User\PrivateMessage\Limit;
 use Concrete\Core\User\PrivateMessage\Mailbox as UserPrivateMessageMailbox;
 use Concrete\Core\User\PrivateMessage\PrivateMessage;
+use Concrete\Core\Utility\Service\Identifier;
 use Doctrine\ORM\EntityManagerInterface;
 use Imagine\Image\ImageInterface;
 use League\Flysystem\AdapterInterface;
@@ -552,7 +553,6 @@ class UserInfo extends Object implements AttributeObjectInterface, PermissionObj
         }
 
         $db = $this->connection;
-        $v = array($this->getUserID());
 
         $pkr = new ActivateUserWorkflowRequest();
         // default activate action of workflow is set after workflow request is created
@@ -563,7 +563,11 @@ class UserInfo extends Object implements AttributeObjectInterface, PermissionObj
         $pkr->setRequesterUserID($requesterUID);
         $pkr->trigger();
 
-        $this->uIsActive = intval($db->GetOne('select uIsActive from Users where uID = ?', $v));
+        // Figure out whether the user was marked active during the workflow.
+        // Usually happens if no workflows are attached (empty workflow).
+        $query = 'SELECT uIsActive FROM Users WHERE uID = ?';
+        $v = array($this->getUserID());
+        $this->entity->setUserIsActive(intval($db->GetOne($query, $v)) === 1);
 
         return $this->isActive();
     }
@@ -613,17 +617,16 @@ class UserInfo extends Object implements AttributeObjectInterface, PermissionObj
     }
 
     /**
+     * @param int $length
+     * 
      * @return string|null
      */
-    public function resetUserPassword()
+    public function resetUserPassword($length = 256)
     {
         // resets user's password, and returns the value of the reset password
         if ($this->getUserID() > 0) {
-            $newPassword = '';
-            $chars = 'abcdefghijklmnpqrstuvwxyzABCDEFGHIJKLMNPQRSTUVWXYZ123456789';
-            for ($i = 0; $i < 7; ++$i) {
-                $newPassword .= substr($chars, rand() % strlen($chars), 1);
-            }
+            $id = $this->application->make(Identifier::class);
+            $newPassword = $id->getString($length);
             $this->changePassword($newPassword);
 
             return $newPassword;

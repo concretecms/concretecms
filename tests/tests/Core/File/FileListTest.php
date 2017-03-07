@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Tests\Core\File;
 
+use Concrete\Core\File\Filesystem;
 use Concrete\Core\File\Importer;
 use Concrete\Core\Attribute\Type as AttributeType;
 use Concrete\Core\Attribute\Key\FileKey;
@@ -11,8 +12,11 @@ class FileListTest extends \FileStorageTestCase
     /** @var \Concrete\Core\File\FileList */
     protected $list;
 
-    protected function setUp()
+
+    public function __construct($name = null, array $data = array(), $dataName = '')
     {
+        parent::__construct($name, $data, $dataName);
+
         $this->tables = array_merge($this->tables, array(
             'PermissionAccessEntityTypes',
             'FileAttributeValues',
@@ -36,7 +40,15 @@ class FileListTest extends \FileStorageTestCase
             'Concrete\Core\Entity\Attribute\Type',
             'Concrete\Core\Entity\Attribute\Category',
         ));
+    }
+
+    protected function setUp()
+    {
         parent::setUp();
+
+        $files = \Core::make(Filesystem::class);
+        $files->create();
+
         \Config::set('concrete.upload.extensions', '*.txt;*.jpg;*.jpeg;*.png');
 
         Category::add('file');
@@ -83,6 +95,8 @@ class FileListTest extends \FileStorageTestCase
         if (file_exists(dirname(__FILE__) . '/test.invalid')) {
             unlink(dirname(__FILE__) . '/test.invalid');
         }
+
+        $this->truncateTables();
     }
 
     public function testGetPaginationObject()

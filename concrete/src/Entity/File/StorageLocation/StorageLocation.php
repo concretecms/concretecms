@@ -129,11 +129,16 @@ class StorageLocation implements StorageLocationInterface
     public function getFileSystemObject()
     {
         $adapter = $this->getConfigurationObject()->getAdapter();
+        /*
         $pool = \Core::make(ExpensiveCache::class)->pool;
         $cache = new Psr6Cache($pool);
         $cachedAdapter = new CachedAdapter($adapter, $cache);
         $filesystem = new \League\Flysystem\Filesystem($cachedAdapter);
+        */
+        // The above code is buggy. When moving files between storage locations it thinks files
+        // already exist.
 
+        $filesystem = new \League\Flysystem\Filesystem($adapter);
         return $filesystem;
     }
 

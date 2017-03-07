@@ -338,17 +338,29 @@ class UserInterface
      */
     public function renderError($title, $error, $exception = false)
     {
+        \Response::closeOutputBuffers(1, false);
+        $this->buildErrorResponse($title, $error, $exception)->send();
+    }
+
+    /**
+     * @param string $title
+     * @param string $error
+     * @param bool|\Exception $exception
+     *
+     * @return Response;
+     */
+    public function buildErrorResponse($title, $error, $exception = false)
+    {
         $o = new stdClass();
         $o->title = $title;
         $o->content = $error;
         if ($exception) {
             $o->content .= $exception->getTraceAsString();
         }
-
-        \Response::closeOutputBuffers(1, false);
+    
         $ve = new ErrorView($o);
         $contents = $ve->render($o);
-        \Response::create($contents)->send();
+        return \Response::create($contents);
     }
 
     /**

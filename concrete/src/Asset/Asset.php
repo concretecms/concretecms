@@ -265,6 +265,11 @@ abstract class Asset implements AssetInterface
         $this->assetPath = $path;
     }
 
+    public function hasAssetBeenMapped()
+    {
+        return $this->assetHasBeenMapped;
+    }
+
     /**
      * @return string
      */

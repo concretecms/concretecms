@@ -5,7 +5,7 @@ use \Concrete\Core\Attribute\Type as AttributeType;
 abstract class AttributeTestCase extends ConcreteDatabaseTestCase
 {
     protected $fixtures = array();
-    protected $metadatas = array(
+    protected $metadatas = [
         'Concrete\Core\Entity\Site\Site',
         'Concrete\Core\Entity\Site\Locale',
         'Concrete\Core\Entity\Site\Tree',
@@ -16,7 +16,6 @@ abstract class AttributeTestCase extends ConcreteDatabaseTestCase
         'Concrete\Core\Entity\Attribute\Key\Settings\TextareaSettings',
         'Concrete\Core\Entity\Attribute\Key\Settings\BooleanSettings',
         'Concrete\Core\Entity\Attribute\Key\Settings\EmptySettings',
-        'Concrete\Core\Entity\Attribute\Key\Settings\Settings',
         'Concrete\Core\Entity\Attribute\Key\Key',
         'Concrete\Core\Entity\Attribute\Key\PageKey',
         'Concrete\Core\Entity\Attribute\Type',
@@ -28,7 +27,7 @@ abstract class AttributeTestCase extends ConcreteDatabaseTestCase
         'Concrete\Core\Entity\Attribute\Value\PageValue',
         'Concrete\Core\Entity\Attribute\Key\UserValue',
         'Concrete\Core\Entity\Attribute\Key\UserKey',
-    );
+    ];
 
     protected $object;
     protected $keys = array();
@@ -50,12 +49,14 @@ abstract class AttributeTestCase extends ConcreteDatabaseTestCase
 
     protected function setUp()
     {
+        // Truncate tables
+        $this->truncateTables();
+
         parent::setUp();
         $service = \Core::make('site');
         if (!$service->getDefault()) {
             $service->installDefault('en_US');
         }
-
         $this->installAttributeCategoryAndObject();
         AttributeType::add('boolean', 'Boolean');
         AttributeType::add('textarea', 'Textarea');
