@@ -1,7 +1,6 @@
 <?php
 namespace Concrete\Core\User\Search\Field;
 
-use Concrete\Core\User\Search\Field\Field\IsValidatedField;
 use Concrete\Core\Attribute\Category\UserCategory;
 use Concrete\Core\Attribute\Category\CategoryService;
 use Concrete\Core\Search\Field\AttributeKeyField;
@@ -10,6 +9,7 @@ use Concrete\Core\Search\Field\Manager as FieldManager;
 use Concrete\Core\User\Search\Field\Field\DateAddedField;
 use Concrete\Core\User\Search\Field\Field\GroupSetField;
 use Concrete\Core\User\Search\Field\Field\IsActiveField;
+use Concrete\Core\User\Search\Field\Field\IsValidatedField;
 use Concrete\Core\User\Search\Field\Field\UserGroupField;
 
 class Manager extends FieldManager
