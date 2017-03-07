@@ -4,6 +4,7 @@ namespace Concrete\Core\Page\Stack\Folder;
 use Concrete\Core\Application\Application;
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Page\Type\Type;
+use Concrete\Core\Site\Tree\TreeInterface;
 
 class FolderService
 {
@@ -17,9 +18,9 @@ class FolderService
         $this->application = $application;
     }
 
-    public function getByPath($path)
+    public function getByPath($path, TreeInterface $tree = null)
     {
-        $c = \Page::getByPath(STACKS_PAGE_PATH . '/' . trim($path, '/'));
+        $c = \Page::getByPath(STACKS_PAGE_PATH . '/' . trim($path, '/'), 'RECENT', $tree);
         if ($c->getCollectionTypeHandle() == STACK_CATEGORY_PAGE_TYPE) {
             return $this->application->make('Concrete\Core\Page\Stack\Folder\Folder', array($c));
         }
