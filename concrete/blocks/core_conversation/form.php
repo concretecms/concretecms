@@ -92,7 +92,7 @@ if (!$dateFormat) {
                     } else {
                         ?>
                         <div class="alert alert-info">
-                            <?= t('Create a `Rating` page attribute in order to aggregate ratings.') ?>
+                            <?= t('Create a page attribute of type "%s" in order to aggregate ratings.', tc('AttributeTypeName', 'Rating')) ?>
                         </div>
                         <?php
                     }

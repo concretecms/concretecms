@@ -237,12 +237,12 @@ class ImporterTest extends \FileStorageTestCase
         $fi = new Importer();
         $fo1 = $fi->import($sample, 'sample.txt');
 
-        $sample = dirname(__FILE__) . '/StorageLocation/fixtures/gummies.jpg';
+        $sample = dirname(__FILE__) . '/StorageLocation/fixtures/tiny.png';
         $fi = new Importer();
-        $fo2 = $fi->import($sample, 'gummies.jpg');
+        $fo2 = $fi->import($sample, 'tiny.png');
 
         $this->assertEquals('text/plain', $fo1->getMimeType());
-        $this->assertEquals('image/jpeg', $fo2->getMimeType());
+        $this->assertEquals('image/png', $fo2->getMimeType());
     }
 
     public function testFileDuplicate()
@@ -269,16 +269,16 @@ class ImporterTest extends \FileStorageTestCase
         mkdir($this->getStorageDirectory());
         $this->getStorageLocation();
 
-        $sample = dirname(__FILE__) . '/StorageLocation/fixtures/gummies.jpg';
+        $sample = dirname(__FILE__) . '/StorageLocation/fixtures/tiny.png';
         $fi = new Importer();
-        $f = $fi->import($sample, 'gummies.jpg');
+        $f = $fi->import($sample, 'tiny.png');
 
         $f2 = $f->duplicate();
 
         $attributes = $f->getAttributes();
         $attributesNew = $f2->getAttributes();
-        $this->assertEquals(2, count($attributes));
-        $this->assertEquals(2, count($attributesNew));
+        $this->assertCount(2, $attributes);
+        $this->assertCount(2, $attributesNew);
     }
 
     public function testFileVersionDuplicate()

@@ -17,6 +17,9 @@ class ConcreteDatabaseTestCase extends PHPUnit_Extensions_Database_TestCase
     /** @var bool[] Keys are tables that currently exist */
     public static $existingTables = [];
 
+    /** @var bool[] Keys are entites that currently exist */
+    public static $existingEntites = [];
+
     /** @var array[] Table data cache */
     public static $tableData = [];
 
@@ -94,7 +97,6 @@ class ConcreteDatabaseTestCase extends PHPUnit_Extensions_Database_TestCase
         // Make sure tables are removed
         $testCase = new Static();
         $testCase->removeTables();
-        $testCase->removeMetadatas();
 
         // Call parent teardown
         parent::tearDownAfterClass();
@@ -138,9 +140,7 @@ class ConcreteDatabaseTestCase extends PHPUnit_Extensions_Database_TestCase
 
         // Get all existing tables
         $tables = $connection->query('show tables')->fetchAll();
-        $tables = array_map(function ($table) {
-            return array_shift($table);
-        }, $tables);
+        $tables = array_map('array_shift', $tables);
 
         // Turn off foreign key checks
         $connection->exec('SET FOREIGN_KEY_CHECKS = 0');
@@ -153,7 +153,9 @@ class ConcreteDatabaseTestCase extends PHPUnit_Extensions_Database_TestCase
         // Reset foreign key checks on
         $connection->exec('SET FOREIGN_KEY_CHECKS = 1');
 
+        // Clear exists cache
         static::$existingTables = [];
+        static::$existingEntites = [];
     }
 
     /**
@@ -181,14 +183,22 @@ class ConcreteDatabaseTestCase extends PHPUnit_Extensions_Database_TestCase
             $name = (string)$table['name'];
 
             // If this table is being requested
-            if (isset(static::$existingTables[$name]) || in_array($name, $tables, false)) {
+            if (in_array($name, $tables, false)) {
                 $this->appendXML($partial, $table);
 
-                // Store the fact that this table should exist now
-                static::$existingTables[$name] = true;
+                // Remove the table from our list of tables
+                $tables = array_filter($tables, function($name) use ($table) {
+                    return $name !== $table;
+                });
 
-                // Track that we actually have tables to e
+                // Track that we actually have tables to import
                 $importedTables[] = $name;
+
+                static::$existingTables[$name] = true;
+            }
+
+            if (!$tables) {
+                break;
             }
         }
 
@@ -244,15 +254,6 @@ class ConcreteDatabaseTestCase extends PHPUnit_Extensions_Database_TestCase
         }
     }
 
-    protected function removeMetadatas()
-    {
-        $sm = Application::make(DatabaseStructureManager::class);
-
-        if ($metadatas = $this->getMetadatas()) {
-            $sm->uninstallDatabaseFor($metadatas);
-        }
-    }
-
     /**
      * Gets the metadatas to import
      * @return array
@@ -260,6 +261,7 @@ class ConcreteDatabaseTestCase extends PHPUnit_Extensions_Database_TestCase
     protected function getMetadatas()
     {
         $metadatas = [];
+        $install = $this->metadatas;
 
         // If there are metadatas to import
         if ($this->metadatas && is_array($this->metadatas)) {
@@ -269,8 +271,21 @@ class ConcreteDatabaseTestCase extends PHPUnit_Extensions_Database_TestCase
 
             // Loop through all metadata
             foreach ($factory->getAllMetadata() as $meta) {
-                if (in_array($meta->getName(), $this->metadatas, false)) {
+                if (!isset(self::$existingEntites[$meta->getName()]) && in_array($meta->getName(), $install, false)) {
                     $metadatas[] = $meta;
+
+                    // Remove this from the list of entities to install
+                    $install = array_filter($install, function($name) use ($meta) {
+                        return $name !== $meta->getName();
+                    });
+
+                    // Track that we've created this metadata
+                    self::$existingEntites[$meta->getName()] = true;
+                }
+
+                // If no more entities to install, lets break
+                if (!$install) {
+                    break;
                 }
             }
         }
@@ -281,7 +296,6 @@ class ConcreteDatabaseTestCase extends PHPUnit_Extensions_Database_TestCase
     public function tearDown()
     {
         parent::tearDown();
-        ;
         \ORM::entityManager('core')->clear();
         \CacheLocal::flush();
     }
