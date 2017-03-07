@@ -1144,7 +1144,8 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
         }
         $db = Loader::db();
         $ptID = $this->getPageTypeID();
-        $parent = Page::getByPath(Config::get('concrete.paths.drafts'));
+        $site = \Core::make('site')->getSite();
+        $parent = Page::getByPath(Config::get('concrete.paths.drafts'), 'RECENT', $site);
         $data = array('cvIsApproved' => 0, 'cIsActive' => false, 'cAcquireComposerOutputControls' => true);
         $p = $parent->add($this, $data, $pt);
 

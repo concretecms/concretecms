@@ -582,7 +582,8 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
 
     public function isPageDraft()
     {
-        $nc = self::getByPath(Config::get('concrete.paths.drafts'));
+        $site = \Core::make('site')->getSite();
+        $nc = self::getByPath(Config::get('concrete.paths.drafts'), 'RECENT', $site);
 
         return $this->getCollectionParentID() == $nc->getCollectionID();
     }
