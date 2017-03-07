@@ -205,9 +205,9 @@ class PackageService
         $swapper = $p->getContentSwapper();
         if ($u->isSuperUser() && $swapper->allowsFullContentSwap($p) && $data['pkgDoFullContentSwap']) {
             $swapper->swapContent($p, $data);
-        }
-        if (method_exists($p, 'on_after_swap_content')) {
-            $p->on_after_swap_content($data);
+            if (method_exists($p, 'on_after_swap_content')) {
+                $p->on_after_swap_content($data);
+            }
         }
         $this->localization->popActiveContext();
         $pkg = $this->getByHandle($p->getPackageHandle());

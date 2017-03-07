@@ -2441,11 +2441,13 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
                 $q = 'update Pages set cInheritPermissionsFromCID = ? where cID = ?';
                 $v = [$newCID, $newCID];
                 $db->executeQuery($q, $v);
+                $nc2->cInheritPermissionsFromCID = $newCID;
             } elseif ($this->getCollectionInheritance() == 'PARENT') {
                 // we need to clear out any lingering permissions groups (just in case), and set this collection to inherit from the parent
                 $npID = $nc->getPermissionsCollectionID();
                 $q = 'update Pages set cInheritPermissionsFromCID = ? where cID = ?';
                 $db->executeQuery($q, [$npID, $newCID]);
+                $nc2->cInheritPermissionsFromCID = $npID;
             }
 
             $args = [];

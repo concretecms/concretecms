@@ -21,7 +21,7 @@ class PageType implements ObjectInterface
             return $this->type;
         }
 
-        $type = Type::getByHandle($this->page);
+        $type = Type::getByHandle($this->type);
         if (is_object($type)) {
             return $type;
         }
