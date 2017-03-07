@@ -36,11 +36,11 @@ class Manager extends FieldManager
 
         $attributes = [];
         foreach($attributeSets as $set) {
-          foreach($set->getAttributeKeys() as $key) {
-            $field = new AttributeKeyField($key);
-            $attributes[] = $field;
-          }
-          $this->addGroup($set->getAttributeSetDisplayName(), $attributes);
+            foreach($set->getAttributeKeys() as $key) {
+                $field = new AttributeKeyField($key);
+                $attributes[] = $field;
+            }
+            $this->addGroup($set->getAttributeSetDisplayName(), $attributes);
         }
         $attributes = [];
         foreach($unassigned as $key) {
