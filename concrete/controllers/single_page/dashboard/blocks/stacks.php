@@ -24,7 +24,7 @@ use Exception;
 use Redirect;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
-class Stacks extends DashboardSitePageController
+class Stacks extends DashboardPageController
 {
     public function view_global_areas()
     {
@@ -267,14 +267,15 @@ class Stacks extends DashboardSitePageController
     protected function deliverStackList(StackList $list)
     {
         $list->setFoldersFirst(true);
-        $list->setSiteTreeObject($this->getSite()->getSiteTreeObject());
+//        $list->setSiteTreeObject($this->getSite()->getSiteTreeObject());
         $this->set('list', $list);
         $this->set('stacks', $list->getResults());
     }
 
     public function view()
     {
-        $parent = Page::getByPath(STACKS_PAGE_PATH, 'RECENT', $this->getSite());
+        //$parent = Page::getByPath(STACKS_PAGE_PATH, 'RECENT', $this->getSite());
+        $parent = Page::getByPath(STACKS_PAGE_PATH);
         $stm = new StackList();
         $stm->filterByParentID($parent->getCollectionID());
         $stm->excludeGlobalAreas();
