@@ -14,7 +14,7 @@ use File;
 use Gettext\Translations;
 use GroupTree;
 use GroupTreeNode;
-use UserList;
+use Concrete\Core\User\UserList;
 
 class Group extends Object implements \Concrete\Core\Permission\ObjectInterface
 {
@@ -150,10 +150,9 @@ class Group extends Object implements \Concrete\Core\Permission\ObjectInterface
 
     public function getGroupMembersNum()
     {
-        $db = Database::connection();
-        $cnt = $db->GetOne('select count(uID) from UserGroups where gID = ?', [$this->gID]);
-
-        return $cnt;
+        $user_list = new UserList();
+        $user_list->filterByGroup($this);
+        return $user_list->getTotalResults();
     }
 
     /**

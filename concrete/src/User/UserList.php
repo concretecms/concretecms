@@ -234,13 +234,16 @@ class UserList extends DatabaseItemList
             $group = \Concrete\Core\User\Group\Group::getByName($group);
         }
 
-        $table = 'ug' . $group->getGroupID();
-        $this->query->leftJoin('u', 'UserGroups', $table, 'u.uID = ' . $table . '.uID AND ' . $table . '.gID = ' . $group->getGroupID());
+        $joinTable = 'ug' . $group->getGroupID();
+        $groupTable = 'g' . $group->getGroupID();
+        $path = $group->getGroupPath();
+        $this->query->leftJoin('u', 'UserGroups', $joinTable, 'u.uID = ' . $joinTable . '.uID');
+        $this->query->leftJoin($joinTable, 'Groups', $groupTable, '(' . $joinTable . '.gID = ' . $groupTable . '.gID and ' . $groupTable . '.gPath like :gPath' . $group->getGroupID() . ')');
+        $this->query->setParameter('gPath' . $group->getGroupID(), $path . '%');
         if ($inGroup) {
-            $this->query->andWhere($table . '.gID = :gID' . $group->getGroupID());
-            $this->query->setParameter('gID' . $group->getGroupID(), $group->getGroupID());
+            $this->query->andWhere($groupTable . '.gID is not null');
         } else {
-            $this->query->andWhere($table . '.gID is null');
+            $this->query->andWhere($groupTable . '.gID is null');
         }
     }
 
