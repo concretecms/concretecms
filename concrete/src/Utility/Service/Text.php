@@ -289,10 +289,10 @@ class Text
      */
     public function autolink($input, $newWindow = 0)
     {
-        $target = ($newWindow) ? ' target="_blank" ' : '';
+        $target = ($newWindow) ? ' target="_blank"' : '';
         $output = preg_replace(
             '/(http:\/\/|https:\/\/|(www\.))(([^\s<]{4,80})[^\s<]*)/',
-            '<a href="http://$2$3" ' . $target . ' rel="nofollow">http://$2$4</a>',
+            '<a href="http://$2$3"' . $target . ' rel="nofollow">http://$2$4</a>',
             $input);
 
         return $output;
