@@ -283,16 +283,19 @@ class Text
      * Scans passed text and automatically hyperlinks any URL inside it.
      *
      * @param string $input
-     * @param int    $newWindow
+     * @param bool $newWindow
      *
      * @return string $output
      */
-    public function autolink($input, $newWindow = 0)
+    public function autolink($input, $newWindow = false)
     {
-        $target = ($newWindow) ? ' target="_blank"' : '';
-        $output = preg_replace(
+        $target = $newWindow ? ' target="_blank"' : '';
+        $output = preg_replace_callback(
             '/(http:\/\/|https:\/\/|(www\.))(([^\s<]{4,80})[^\s<]*)/',
-            '<a href="http://$2$3"' . $target . ' rel="nofollow">http://$2$4</a>',
+            function (array $matches) use ($target) {
+                $protocol = strpos($matches[1], ':') ? $matches[1] : 'http://';
+                return "<a href=\"{$protocol}{$matches[2]}{$matches[3]}\"{$target} rel=\"nofollow\">{$matches[2]}{$matches[4]}</a>";
+            },
             $input);
 
         return $output;

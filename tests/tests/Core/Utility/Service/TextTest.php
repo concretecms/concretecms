@@ -113,4 +113,29 @@ class TextTest extends ConcreteDatabaseTestCase
     {
         $this->assertEquals($expected, $this->object->wordSafeShortText($input1, $input2, $input3));
     }
+
+    public function autolinkDataProvider()
+    {
+        return [
+            ['', '', false],
+            ['This is not a link', 'This is not a link', false],
+            ['<a href="http://www.concrete5.org" rel="nofollow">www.concrete5.org</a>', 'www.concrete5.org', false],
+            ['<a href="http://www.concrete5.org" target="_blank" rel="nofollow">www.concrete5.org</a>', 'www.concrete5.org', true],
+            ['Before <a href="http://www.concrete5.org" rel="nofollow">www.concrete5.org</a> after', 'Before www.concrete5.org after', false],
+            ['<a href="http://concrete5.org" rel="nofollow">concrete5.org</a>', 'http://concrete5.org', false],
+            ['<a href="https://concrete5.org" rel="nofollow">concrete5.org</a>', 'https://concrete5.org', false],
+            ['Before <a href="http://concrete5.org" rel="nofollow">concrete5.org</a> after', 'Before http://concrete5.org after', false],
+            ['Before <a href="https://concrete5.org" rel="nofollow">concrete5.org</a> after', 'Before https://concrete5.org after', false],
+            ['<a href="http://concrete5.org" rel="nofollow">concrete5.org</a> <a href="https://concrete5.org" rel="nofollow">concrete5.org</a>', 'http://concrete5.org https://concrete5.org', false],
+            ['<a href="http://www.concrete5.org" rel="nofollow">www.concrete5.org</a> <a href="https://concrete5.org" rel="nofollow">concrete5.org</a>', 'www.concrete5.org https://concrete5.org', false],
+        ];
+    }
+
+    /**
+     * @dataProvider autolinkDataProvider
+     */
+    public function testAutolink($expected, $input, $newWindow)
+    {
+        $this->assertSame($expected, $this->object->autolink($input, $newWindow));
+    }
 }
