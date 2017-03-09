@@ -6,6 +6,7 @@ use Concrete\Core\User\Group\Group;
 use Pagerfanta\Adapter\DoctrineDbalAdapter;
 use Concrete\Core\Search\Pagination\Pagination;
 use UserInfo as CoreUserInfo;
+use Concrete\Core\Support\Facade\Application;
 
 class UserList extends DatabaseItemList
 {
@@ -84,15 +85,42 @@ class UserList extends DatabaseItemList
     }
 
     /**
+     * @var UserInfoRepository|null
+     */
+    private $userInfoRepository = null;
+    
+    /**
+     * @param UserInfoRepository $value
+     *
+     * @return $this;
+     */
+    public function setUserInfoRepository(UserInfoRepository $value)
+    {
+        $this->userInfoRepository = $value;
+
+        return $this;
+    }
+
+    /**
+     * @return UserInfoRepository
+     */
+    public function getUserInfoRepository()
+    {
+        if ($this->userInfoRepository === null) {
+            $this->userInfoRepository = Application::getFacadeApplication()->make(UserInfoRepository::class);
+        }
+
+        return $this->userInfoRepository;
+    }
+
+    /**
      * @param $queryRow
      *
      * @return \Concrete\Core\User\UserInfo
      */
     public function getResult($queryRow)
     {
-        $ui = CoreUserInfo::getByID($queryRow['uID']);
-
-        return $ui;
+        return $this->getUserInfoRepository()->getByID($queryRow['uID']);
     }
 
     /**
