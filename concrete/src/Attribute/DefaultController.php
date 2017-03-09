@@ -9,7 +9,7 @@ use Concrete\Core\Attribute\Controller as AttributeTypeController;
 class DefaultController extends AttributeTypeController
 {
     protected $searchIndexFieldDefinition = array(
-        'type' => 'string',
+        'type' => 'text',
         'options' => array('default' => null, 'notnull' => false),
     );
 
