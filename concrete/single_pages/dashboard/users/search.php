@@ -148,7 +148,7 @@ if (isset($user) && is_object($user)) {
                         ?>
                         <div class="row">
                             <div class="col-md-4"><p><?= t('Full Record') ?></p></div>
-                            <div class="col-md-8"><p><?= ($user->isFullRecord()) ? "Yes" : "No" ?></p></div>
+                            <div class="col-md-8"><p><?= ($user->isFullRecord()) ? t('Yes') : t('No') ?></p></div>
                         </div>
                         <div class="row">
                             <div class="col-md-4"><p><?= t('Email Validated') ?></p></div>
