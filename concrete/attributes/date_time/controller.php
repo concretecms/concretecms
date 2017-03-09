@@ -78,6 +78,7 @@ class Controller extends AttributeTypeController
         if ($datetime === null && $this->akUseNowIfEmpty) {
             $datetime = new DateTime();
         }
+        $placeholder = $datetime->format('n/j/Y g.i A');
         switch ($this->akDateDisplayMode) {
             case 'text':
                 if ($datetime === null) {
@@ -91,7 +92,7 @@ class Controller extends AttributeTypeController
                     );
                 }
                 $form = $this->app->make('helper/form');
-                echo $form->text($this->field('value'), $value);
+                echo $form->text($this->field('value'), $value, array('placeholder' => $placeholder));
                 break;
             case 'date':
                 $this->requireAsset('jquery/ui');
