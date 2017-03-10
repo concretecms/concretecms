@@ -424,6 +424,7 @@ function Translator(data) {
     new Translation(data.translations[i], this);
   }
   this.busy = false;
+  this.getInitialTranslationIndex = data.getInitialTranslationIndex ? data.getInitialTranslationIndex : null;
 }
 Translator.prototype = {
   launch: function() {
@@ -615,7 +616,11 @@ Translator.prototype = {
       }
     });
     if (n > 0) {
-      this.setCurrentTranslation(this.translations[0]);
+      var initialTranslationIndex = 0;
+      if (this.getInitialTranslationIndex) {
+          initialTranslationIndex = this.getInitialTranslationIndex() || 0;
+      }
+      this.setCurrentTranslation(this.translations[initialTranslationIndex]);
     }
     this.UI.$container.on('keydown', function(e) {
       switch (e.keyCode || e.which) {
