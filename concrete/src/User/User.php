@@ -3,6 +3,7 @@ namespace Concrete\Core\User;
 
 use Concrete\Core\Foundation\Object;
 use Concrete\Core\Http\Request;
+use Concrete\Core\Permission\Access\Entity\GroupEntity;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\User\Group\Group;
 use Concrete\Core\Authentication\AuthenticationType;
