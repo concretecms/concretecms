@@ -248,7 +248,7 @@ class Dashboard
     public function getIntelligentSearchMenu()
     {
         $loc = Localization::getInstance();
-        $loc->setActiveContext('system');
+        $loc->pushActiveContext(Localization::CONTEXT_UI);
         $dashboardMenus = Session::get('dashboardMenus', array());
         $dashboardMenusKey = Localization::activeLocale();
         if (array_key_exists($dashboardMenusKey, $dashboardMenus)) {
@@ -397,6 +397,8 @@ class Dashboard
         ob_end_clean();
         $dashboardMenus[$dashboardMenusKey] = str_replace(array("\n", "\r", "\t"), "", $html);
         Session::set('dashboardMenus', $dashboardMenus);
+
+        $loc->popActiveContext();
 
         return $dashboardMenus[$dashboardMenusKey];
     }
