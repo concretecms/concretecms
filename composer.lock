@@ -2000,6 +2000,57 @@
             "time": "2017-02-22T08:46:55+00:00"
         },
         {
+            "name": "mlocati/ip-lib",
+            "version": "1.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mlocati/ip-lib.git",
+                "reference": "c8f6b12f5150dd34b3d5ec9645301f7206aab641"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mlocati/ip-lib/zipball/c8f6b12f5150dd34b3d5ec9645301f7206aab641",
+                "reference": "c8f6b12f5150dd34b3d5ec9645301f7206aab641",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.3"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "IPLib\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Michele Locati",
+                    "email": "mlocati@gmail.com",
+                    "homepage": "https://github.com/mlocati",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Handle IPv4, IPv6 addresses and ranges",
+            "homepage": "https://github.com/mlocati/ip-lib",
+            "keywords": [
+                "IP",
+                "address",
+                "addresses",
+                "ipv4",
+                "ipv6",
+                "matching",
+                "network",
+                "networking",
+                "range",
+                "subnet"
+            ],
+            "time": "2017-02-15T13:11:02+00:00"
+        },
+        {
             "name": "mobiledetect/mobiledetectlib",
             "version": "2.8.24",
             "source": {
