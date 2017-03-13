@@ -9,6 +9,7 @@ use Concrete\Core\Entity\Site\SiteTree;
 use Concrete\Core\Page\Stack\Stack;
 use Concrete\Core\Page\Theme\Theme;
 use Concrete\Core\Permission\AssignableObjectTrait;
+use Concrete\Core\Site\SiteAggregateInterface;
 use Concrete\Core\Site\Tree\TreeInterface;
 use Concrete\Core\Multilingual\Page\Section\Section;
 use Concrete\Core\Page\Type\Composer\Control\BlockControl;
@@ -54,7 +55,7 @@ use Session;
  * The page object in Concrete encapsulates all the functionality used by a typical page and their contents
  * including blocks, page metadata, page permissions.
  */
-class Page extends Collection implements \Concrete\Core\Permission\ObjectInterface, AssignableObjectInterface, TreeInterface
+class Page extends Collection implements \Concrete\Core\Permission\ObjectInterface, AssignableObjectInterface, TreeInterface, SiteAggregateInterface
 {
     protected $controller;
     protected $blocksAliasedFromMasterCollection = null;
@@ -582,7 +583,8 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
 
     public function isPageDraft()
     {
-        $nc = self::getByPath(Config::get('concrete.paths.drafts'));
+        $site = \Core::make('site')->getSite();
+        $nc = self::getByPath(Config::get('concrete.paths.drafts'), 'RECENT', $site);
 
         return $this->getCollectionParentID() == $nc->getCollectionID();
     }
@@ -1155,6 +1157,14 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     public function getSiteTreeID()
     {
         return $this->siteTreeID;
+    }
+
+    public function getSite()
+    {
+        $tree = $this->getSiteTreeObject();
+        if ($tree instanceof SiteTree) {
+            return $tree->getSite();
+        }
     }
 
     public function getSiteTreeObject()
@@ -2440,11 +2450,13 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
                 $q = 'update Pages set cInheritPermissionsFromCID = ? where cID = ?';
                 $v = [$newCID, $newCID];
                 $db->executeQuery($q, $v);
+                $nc2->cInheritPermissionsFromCID = $newCID;
             } elseif ($this->getCollectionInheritance() == 'PARENT') {
                 // we need to clear out any lingering permissions groups (just in case), and set this collection to inherit from the parent
                 $npID = $nc->getPermissionsCollectionID();
                 $q = 'update Pages set cInheritPermissionsFromCID = ? where cID = ?';
                 $db->executeQuery($q, [$npID, $newCID]);
+                $nc2->cInheritPermissionsFromCID = $npID;
             }
 
             $args = [];

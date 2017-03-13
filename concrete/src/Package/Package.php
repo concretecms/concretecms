@@ -370,10 +370,9 @@ abstract class Package implements LocalizablePackageInterface
         \Config::clearNamespace($this->getPackageHandle());
         $this->app->make('config/database')->clearNamespace($this->getPackageHandle());
 
-        $em = $this->getPackageEntityManager();
-        if (is_object($em)) {
-            $this->destroyProxyClasses($em);
-        }
+        $em = $this->getEntityManager();
+        $structureManager = new DatabaseStructureManager($em);
+        $structureManager->refreshEntities();
 
         $em = \ORM::entityManager();
         $em->remove($package);
@@ -662,15 +661,9 @@ abstract class Package implements LocalizablePackageInterface
 
     public function installEntitiesDatabase()
     {
-        $em = $this->getPackageEntityManager();
-        if (is_object($em)) {
-            $structure = new DatabaseStructureManager($em);
-            $structure->installDatabase();
-
-            // Create or update entity proxies
-            $metadata = $em->getMetadataFactory()->getAllMetadata();
-            $em->getProxyFactory()->generateProxyClasses($metadata, $em->getConfiguration()->getProxyDir());
-        }
+        $em = $this->getEntityManager();
+        $structureManager = new DatabaseStructureManager($em);
+        $structureManager->refreshEntities();
     }
 
     /**
@@ -753,11 +746,9 @@ abstract class Package implements LocalizablePackageInterface
      */
     public function upgradeDatabase()
     {
-        $em = $this->getPackageEntityManager();
-        if (is_object($em)) {
-            $this->destroyProxyClasses($em);
-            $this->installEntitiesDatabase();
-        }
+        $em = $this->getEntityManager();
+        $structureManager = new DatabaseStructureManager($em);
+        $structureManager->refreshEntities();
         static::installDB($this->getPackagePath() . '/' . FILENAME_PACKAGE_DB);
     }
 
@@ -776,34 +767,6 @@ abstract class Package implements LocalizablePackageInterface
         }
 
         return $leadingBkslsh . 'Concrete\\Package\\' . camelcase($this->getPackageHandle());
-    }
-
-    /**
-     * Create a entity manager used for the package installation,
-     * update and unistall process.
-     *
-     * @return \Doctrine\ORM\EntityManager
-     */
-    public function getPackageEntityManager()
-    {
-        $providerFactory = new PackageProviderFactory($this->app, $this);
-        $provider = $providerFactory->getEntityManagerProvider();
-        $drivers = $provider->getDrivers();
-        if (count($drivers)) {
-            $config = Setup::createConfiguration(true, $this->app->make('config')->get('database.proxy_classes'));
-            $driverImpl = new MappingDriverChain();
-            $coreDriver = new CoreDriver($this->app);
-            // Add the core driver to it so packages can extend the core and not break.
-            $driverImpl->addDriver($coreDriver->getDriver(), $coreDriver->getNamespace());
-
-            foreach ($drivers as $driver) {
-                $driverImpl->addDriver($driver->getDriver(), $driver->getNamespace());
-            }
-            $config->setMetadataDriverImpl($driverImpl);
-            $em = EntityManager::create(\Database::connection(), $config);
-
-            return $em;
-        }
     }
 
     /**
