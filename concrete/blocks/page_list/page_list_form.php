@@ -160,7 +160,7 @@ $form = Loader::helper('form/page_selector');
                     <?php
                     $datetime = loader::helper('form/date_time');
                     echo $datetime->date('filterDateStart', $filterDateStart);
-                    echo "<p>and</p>";
+                    echo "<p>" . t('and') . "</p>";
                     echo $datetime->date('filterDateEnd', $filterDateEnd);
                     ?>
                 </div>
