@@ -4,6 +4,7 @@ namespace Concrete\Core\Authentication\Type\OAuth;
 use Concrete\Core\Http\Client\Client as CoreHttpClient;
 use OAuth\Common\Http\Client\ClientInterface as OAuthClientInterface;
 use OAuth\Common\Http\Uri\UriInterface as OAuthUriInterface;
+use Zend\Http\Request;
 
 class HttpClient implements OAuthClientInterface
 {
@@ -27,7 +28,7 @@ class HttpClient implements OAuthClientInterface
      */
     public function retrieveResponse(OAuthUriInterface $endpoint, $requestBody, array $extraHeaders = [], $method = 'POST')
     {
-        $request = $this->client->getRequest();
+        $request = new Request();
         $request
             ->setUri($endpoint->getAbsoluteUri())
             ->setMethod($method)
