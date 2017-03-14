@@ -7,7 +7,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 <?php
 $bt = $b->getBlockTypeObject();
 
-if (is_array($extraParams)) { // defined within the area/content classes 
+if (isset($extraParams) && is_array($extraParams)) { // defined within the area/content classes 
     foreach ($extraParams as $key => $value) {
         ?>
 		<input type="hidden" name="<?=$key?>" value="<?=$value?>">
