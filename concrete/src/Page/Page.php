@@ -564,12 +564,12 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         }
     }
 
-    public static function getDrafts()
+    public static function getDrafts(Site $site)
     {
         $db = Database::connection();
         $u = new User();
-        $nc = self::getByPath(Config::get('concrete.paths.drafts'));
-        $r = $db->executeQuery('select Pages.cID from Pages inner join Collections c on Pages.cID = c.cID where cParentID = ? order by cDateAdded desc', [$nc->getCollectionID()]);
+        $nc = self::getByPath(Config::get('concrete.paths.drafts'), 'RECENT', $site);
+        $r = $db->executeQuery('select Pages.cID from Pages inner join Collections c on Pages.cID = c.cID where cParentID = ? and siteTreeID = ? order by cDateAdded desc', [$nc->getCollectionID(), $site->getSiteTreeID()]);
         $pages = [];
         while ($row = $r->FetchRow()) {
             $entry = self::getByID($row['cID']);
