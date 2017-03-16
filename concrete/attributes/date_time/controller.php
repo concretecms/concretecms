@@ -80,18 +80,17 @@ class Controller extends AttributeTypeController
         }
         switch ($this->akDateDisplayMode) {
             case 'text':
+                $dh = $this->app->make('helper/date');
+                $format = t(/*i18n: Short date/time format: see http://www.php.net/manual/en/function.date.php */ 'n/j/Y g.i A');
                 if ($datetime === null) {
                     $value = '';
+                    $placeholder = $dh->formatCustom($format, 'now');
                 } else {
-                    $dh = $this->app->make('helper/date');
-                    /* @var \Concrete\Core\Localization\Service\Date $dh */
-                    $value = $dh->formatCustom(
-                        t(/*i18n: Short date/time format: see http://www.php.net/manual/en/function.date.php */ 'n/j/Y g.i A'),
-                        $datetime
-                    );
+                    $value = $dh->formatCustom($format, $datetime);
+                    $placeholder = $value;
                 }
                 $form = $this->app->make('helper/form');
-                echo $form->text($this->field('value'), $value);
+                echo $form->text($this->field('value'), $value, ['placeholder' => $placeholder]);
                 break;
             case 'date':
                 $this->requireAsset('jquery/ui');
