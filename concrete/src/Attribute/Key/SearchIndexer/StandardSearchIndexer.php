@@ -111,7 +111,8 @@ class StandardSearchIndexer implements SearchIndexerInterface
             $previousHandle = $key->getAttributeKeyHandle();
         }*/
 
-        if ($key->isAttributeKeySearchable() == false ||
+        if ($key->getAttributeKeyHandle() == $previousHandle ||
+	        $key->isAttributeKeySearchable() == false ||
             $category->getIndexedSearchTable() == false ||
             $controller->getSearchIndexFieldDefinition() == false) {
             return false;
