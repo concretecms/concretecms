@@ -2,11 +2,12 @@
 namespace Concrete\Core\Asset;
 
 use Concrete\Core\Package\Package;
+use Concrete\Core\Support\Facade\Application;
 use Environment;
+use Symfony\Component\HttpFoundation\Response;
 
 abstract class Asset implements AssetInterface
 {
-
     /**
      * @var string
      */
@@ -65,7 +66,7 @@ abstract class Asset implements AssetInterface
     /**
      * @var array
      */
-    protected $combinedAssetSourceFiles = array();
+    protected $combinedAssetSourceFiles = [];
 
     const ASSET_POSITION_HEADER = 'H';
     const ASSET_POSITION_FOOTER = 'F';
@@ -168,6 +169,7 @@ abstract class Asset implements AssetInterface
     public function getAssetPointer()
     {
         $pointer = new AssetPointer($this->getAssetType(), $this->getAssetHandle());
+
         return $pointer;
     }
 
@@ -179,6 +181,7 @@ abstract class Asset implements AssetInterface
         if (!$this->assetHasBeenMapped) {
             $this->mapAssetLocation($this->location);
         }
+
         return $this->assetPath;
     }
 
@@ -354,17 +357,37 @@ abstract class Asset implements AssetInterface
                 // Route matcher requires that paths ends with a slash
                 if (preg_match('/^(.*[^\/])($|\?.*)$/', $route, $m)) {
                     try {
-                        $matched = $matcher->match($m[1].'/'.(isset($m[2]) ? $m[2] : ''));
+                        $matched = $matcher->match($m[1] . '/' . (isset($m[2]) ? $m[2] : ''));
                     } catch (\Exception $x) {
                     }
                 }
             }
-            if (isset($matched)) {
+            if ($matched !== null) {
+                $callable = null;
                 $controller = $matched['_controller'];
-                if (is_callable($controller)) {
+                if (is_string($controller)) {
+                    $chunks = explode('::', $controller, 2);
+                    if (count($chunks) === 2) {
+                        if (class_exists($chunks[0])) {
+                            $array = [Application::getFacadeApplication()->make($chunks[0]), $chunks[1]];
+                            if (is_callable($array)) {
+                                $callable = $array;
+                            }
+                        }
+                    } else {
+                        if (class_exists($controller) && method_exists($controller, '__invoke')) {
+                            $callable = Application::getFacadeApplication()->make($controller);
+                        }
+                    }
+                } elseif (is_callable($controller)) {
+                    $callable = $controller;
+                }
+                if ($callable !== null) {
                     ob_start();
-                    $r = call_user_func($controller, false);
-                    if ($r !== false) {
+                    $r = call_user_func($callable, false);
+                    if ($r instanceof Response) {
+                        $result = $r->getContent();
+                    } elseif ($r !== false) {
                         $result = ob_get_contents();
                     }
                     ob_end_clean();
