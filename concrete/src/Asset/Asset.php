@@ -1,7 +1,9 @@
 <?php
 namespace Concrete\Core\Asset;
 
+use Symfony\Component\HttpFoundation\Response;
 use Concrete\Core\Package\Package;
+use Concrete\Core\Support\Facade\Application;
 use Environment;
 
 abstract class Asset implements AssetInterface
@@ -359,12 +361,30 @@ abstract class Asset implements AssetInterface
                     }
                 }
             }
-            if (isset($matched)) {
+            if ($matched !== null) {
+                $callable = null;
                 $controller = $matched['_controller'];
-                if (is_callable($controller)) {
+                if (is_string($controller)) {
+                    $chunks = explode('::', $controller, 2);
+                    if (count($chunks) === 2) {
+                        $array = [Application::getFacadeApplication()->make($chunks[0]), $chunks[1]];
+                        if (is_callable($array)) {
+                            $callable = $array;
+                        }
+                    } else {
+                        if (class_exists($controller) && method_exists($controller, '__invoke')) {
+                            $callable = Application::getFacadeApplication()->make($controller);
+                        }
+                    }
+                } elseif (is_callable($controller)) {
+                    $callable = $controller;
+                }
+                if ($callable !== null) {
                     ob_start();
-                    $r = call_user_func($controller, false);
-                    if ($r !== false) {
+                    $r = call_user_func($callable, false);
+                    if ($r instanceof Response) {
+                        $result = $r->getContent();
+                    } elseif ($r !== false) {
                         $result = ob_get_contents();
                     }
                     ob_end_clean();
