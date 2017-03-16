@@ -246,6 +246,8 @@ class Dashboard
      */
     public function getIntelligentSearchMenu()
     {
+        $loc = Localization::getInstance();
+        $loc->pushActiveContext(Localization::CONTEXT_UI);
         $dashboardMenus = Session::get('dashboardMenus', []);
         $dashboardMenusKey = Localization::activeLocale();
         if (array_key_exists($dashboardMenusKey, $dashboardMenus)) {
@@ -306,12 +308,14 @@ class Dashboard
                 }
                 if ($subpage->getAttribute('exclude_search_index')) {
                     continue;
-                } ?>
-                            <li><a href="<?=$navHelper->getLinkTocollection($subpage)?>"><?=t($subpage->getCollectionName())?></a><span><?php
-                                if ($page->getCollectionPath() != '/dashboard/system') {
-                                    echo t($page->getCollectionName()), ' ', t($page->getAttribute('meta_keywords')), ' ';
-                                } ?><?=t($subpage->getCollectionName())?> <?=t($subpage->getAttribute('meta_keywords'))?></span></li>
-                            <?php
+                }
+
+                ?>
+                    <li><a href="<?=$navHelper->getLinkTocollection($subpage)?>"><?=t($subpage->getCollectionName())?></a><span><?php if ($page->getCollectionPath() != '/dashboard/system') {
+    ?><?=t($page->getCollectionName())?> <?=t($page->getAttribute('meta_keywords'))?> <?php
+}
+                ?><?=t($subpage->getCollectionName())?> <?=t($subpage->getAttribute('meta_keywords'))?></span></li>
+                    <?php
 
             } ?>
                     </ul>
@@ -370,6 +374,8 @@ class Dashboard
 
         $dashboardMenus[$dashboardMenusKey] = str_replace(["\n", "\r", "\t"], '', $html);
         Session::set('dashboardMenus', $dashboardMenus);
+
+        $loc->popActiveContext();
 
         return $dashboardMenus[$dashboardMenusKey];
     }
