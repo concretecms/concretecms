@@ -14,7 +14,7 @@
             'bulkParameterName': 'item',
 			'selectMode': false,
 			'appendToOuterDialog': false,
-			'searchMethod': 'post'
+			'searchMethod': 'get'
 		}, options);
 		this.$element = $element;
 		this.$results = $element.find('div[data-search-element=results]');
