@@ -17,7 +17,7 @@ class Version20170316000000 extends AbstractMigration
             /* @var $entity \Concrete\Core\Entity\Express\Entity */
             $category = $entity->getAttributeKeyCategory();
             foreach ($entity->getAttributes() as $key) {
-                $category->getSearchIndexer()->updateRepositoryColumns($category, $key);
+                $category->getSearchIndexer()->refreshRepositoryColumns($category, $key);
             }
         }
     }

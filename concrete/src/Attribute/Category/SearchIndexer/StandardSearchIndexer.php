@@ -78,4 +78,12 @@ class StandardSearchIndexer implements SearchIndexerInterface
             $attributeIndexer->updateSearchIndexKeyColumns($category, $key, $previousHandle);
         }
     }
+
+	public function refreshRepositoryColumns(CategoryInterface $category, AttributeKeyInterface $key)
+	{
+		if ($this->isValid($category)) {
+			$attributeIndexer = $key->getSearchIndexer();
+			$attributeIndexer->refreshSearchIndexKeyColumns($category, $key);
+		}
+	}
 }

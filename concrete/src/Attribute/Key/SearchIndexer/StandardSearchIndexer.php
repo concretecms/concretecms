@@ -9,6 +9,7 @@ use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Entity\Attribute\Key\Key;
 use Concrete\Core\Entity\Attribute\Value\Value;
 use Doctrine\DBAL\Statement;
+use Doctrine\DBAL\Types\Type;
 
 class StandardSearchIndexer implements SearchIndexerInterface
 {
@@ -31,6 +32,70 @@ class StandardSearchIndexer implements SearchIndexerInterface
         return $column;
     }
 
+	/**
+	 * For certain fields (eg TEXT) Doctrine uses the length of the longest column to determine what field type to use.
+	 * For search indexing even if we may not currently have something long in a column,
+	 * we need the longest possible column so that we don't truncate any data.
+	 *
+	 * @param array $options
+	 * @return array
+	 */
+    private function setTypeLength($options)
+    {
+    	// If we have explicitly set a length, use it
+    	if ($options['length']) {
+    		return $options;
+	    }
+    	if ($options['type']->getName() == 'text') {
+		    $options['length'] = 4294967295; // This forces Doctrine to use `LONGTEXT` instead of `TINYTEXT`
+	    }
+	    return $options;
+
+    }
+
+	/**
+	 * Refresh the Search Index columns (if there are schema changes for example)
+	 *
+	 * @param CategoryInterface $category
+	 * @param AttributeKeyInterface $key
+	 */
+	public function refreshSearchIndexKeyColumns(CategoryInterface $category, AttributeKeyInterface $key)
+	{
+		$controller = $key->getController();
+		$definition = $controller->getSearchIndexFieldDefinition();
+		$sm = $this->connection->getSchemaManager();
+		$fromTable = $sm->listTableDetails($category->getIndexedSearchTable());
+		$toTable = $sm->listTableDetails($category->getIndexedSearchTable());
+
+		if (isset($definition['type'])) {
+			$options = [
+				'type' => Type::getType($definition['type'])
+			];
+			$options = array_merge($options, $definition['options']);
+			$options = $this->setTypeLength($options);
+			$toTable->changeColumn('ak_' . $key->getAttributeKeyHandle(), $options);
+		} else {
+			foreach ($definition as $name => $column) {
+				$options = [
+					'type' => Type::getType($column['type'])
+				];
+				$options = array_merge($options, $column['options']);
+				$options = $this->setTypeLength($options);
+				$toTable->changeColumn('ak_' . $key->getAttributeKeyHandle() . '_' . $name, $options);
+			}
+		}
+		$comparator = new \Doctrine\DBAL\Schema\Comparator();
+		$diff = $comparator->diffTable($fromTable, $toTable);
+		if ($diff !== false) {
+			$sql = $this->connection->getDatabasePlatform()->getAlterTableSQL($diff);
+			$arr = array();
+			foreach ($sql as $q) {
+				$arr[] = $q;
+				$this->connection->exec($q);
+			}
+		}
+	}
+
     /**
      * @param StandardSearchIndexerInterface $category
      * @param Key $key
@@ -46,8 +111,7 @@ class StandardSearchIndexer implements SearchIndexerInterface
             $previousHandle = $key->getAttributeKeyHandle();
         }*/
 
-        if ($key->getAttributeKeyHandle() == $previousHandle ||
-            $key->isAttributeKeySearchable() == false ||
+        if ($key->isAttributeKeySearchable() == false ||
             $category->getIndexedSearchTable() == false ||
             $controller->getSearchIndexFieldDefinition() == false) {
             return false;
