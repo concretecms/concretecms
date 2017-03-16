@@ -61,11 +61,25 @@ class SitemapSelector extends UserInterface
         };
         if ($this->request->query->get('cParentID') > 0) {
             // this is an open node request
-            $nodes = $dh->getSubNodes($this->request->query->get('cParentID'), $callback);
+            $response = $dh->getSubNodes($this->request->query->get('cParentID'), $callback);
+        } else if ($this->request->query->get('startingPoint') && $this->request->query->get('startingPoint') > 1) {
+            $response = $dh->getSubNodes($this->request->query->get('startingPoint'), $callback);
         } else {
-            $nodes = [$dh->getNode($this->request->query->get('startingPoint'), true, $callback)];
+            $service = \Core::make('site');
+            if (isset($_REQUEST['siteTreeID']) && $_REQUEST['siteTreeID'] > 0) {
+                $tree = $service->getSiteTreeByID($_REQUEST['siteTreeID']);
+            } else {
+                $tree = $service->getActiveSiteForEditing()->getSiteTreeObject();
+            }
+            $locales = $tree->getLocaleCollection();
+
+            $response = [
+                'children' => $dh->getSubNodes($tree, $callback),
+                'locales' => $locales
+            ];
+
         }
 
-        return new JsonResponse($nodes);
+        return new JsonResponse($response);
     }
 }

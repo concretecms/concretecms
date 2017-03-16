@@ -161,9 +161,12 @@ class Site implements TreeInterface, ObjectInterface, LocaleCollectionProviderIn
     public function getSiteTreeObject()
     {
         $locale = $this->getDefaultLocale();
-        if (is_object($locale)) {
-            return $locale->getSiteTree();
+        if (!is_object($locale)) {
+            $locales = $this->getLocales()->toArray();
+            $locale = $locales[0];
         }
+
+        return $locale->getSiteTree();
     }
 
     public function getSiteHomePageObject($version = 'RECENT')
