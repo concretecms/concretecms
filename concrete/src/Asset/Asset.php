@@ -1,14 +1,13 @@
 <?php
 namespace Concrete\Core\Asset;
 
-use Symfony\Component\HttpFoundation\Response;
 use Concrete\Core\Package\Package;
 use Concrete\Core\Support\Facade\Application;
 use Environment;
+use Symfony\Component\HttpFoundation\Response;
 
 abstract class Asset implements AssetInterface
 {
-
     /**
      * @var string
      */
@@ -67,7 +66,7 @@ abstract class Asset implements AssetInterface
     /**
      * @var array
      */
-    protected $combinedAssetSourceFiles = array();
+    protected $combinedAssetSourceFiles = [];
 
     const ASSET_POSITION_HEADER = 'H';
     const ASSET_POSITION_FOOTER = 'F';
@@ -170,6 +169,7 @@ abstract class Asset implements AssetInterface
     public function getAssetPointer()
     {
         $pointer = new AssetPointer($this->getAssetType(), $this->getAssetHandle());
+
         return $pointer;
     }
 
@@ -181,6 +181,7 @@ abstract class Asset implements AssetInterface
         if (!$this->assetHasBeenMapped) {
             $this->mapAssetLocation($this->location);
         }
+
         return $this->assetPath;
     }
 
@@ -356,7 +357,7 @@ abstract class Asset implements AssetInterface
                 // Route matcher requires that paths ends with a slash
                 if (preg_match('/^(.*[^\/])($|\?.*)$/', $route, $m)) {
                     try {
-                        $matched = $matcher->match($m[1].'/'.(isset($m[2]) ? $m[2] : ''));
+                        $matched = $matcher->match($m[1] . '/' . (isset($m[2]) ? $m[2] : ''));
                     } catch (\Exception $x) {
                     }
                 }
