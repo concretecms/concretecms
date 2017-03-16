@@ -367,9 +367,11 @@ abstract class Asset implements AssetInterface
                 if (is_string($controller)) {
                     $chunks = explode('::', $controller, 2);
                     if (count($chunks) === 2) {
-                        $array = [Application::getFacadeApplication()->make($chunks[0]), $chunks[1]];
-                        if (is_callable($array)) {
-                            $callable = $array;
+                        if (class_exists($chunks[0])) {
+                            $array = [Application::getFacadeApplication()->make($chunks[0]), $chunks[1]];
+                            if (is_callable($array)) {
+                                $callable = $array;
+                            }
                         }
                     } else {
                         if (class_exists($controller) && method_exists($controller, '__invoke')) {
