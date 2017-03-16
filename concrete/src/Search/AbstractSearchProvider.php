@@ -78,6 +78,10 @@ abstract class AbstractSearchProvider implements ProviderInterface, SessionQuery
      */
     public function getItemsPerPage()
     {
+        // Note: this shouldn't be here. This should be a general function that
+        // checks the current query to see if it's part of a preset. This is file manager
+        // specific functionality in a non-file-manager-specific class.
+        // @TODO fix this
         $searchRequest = new StickyRequest('file_manager_folder');
         $searchParams = $searchRequest->getSearchRequest();
         $node = Node::getByID($searchParams['folder']);

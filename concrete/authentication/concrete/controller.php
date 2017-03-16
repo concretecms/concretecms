@@ -144,6 +144,8 @@ class Controller extends AuthenticationTypeController
     public function required_password_upgrade()
     {
         $email = $this->post('uEmail');
+	    $token = $this->app->make(Token::class);
+	    $this->set('token', $token);
 
         if ($email) {
             $errorValidator = Core::make('helper/validation/error');

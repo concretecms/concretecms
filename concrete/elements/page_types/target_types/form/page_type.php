@@ -6,6 +6,19 @@ $cParentID = false;
 if (is_object($target)) {
     $cParentID = $target->getCollectionID();
 }
+
+$relevantPage = null;
+
+if (is_object($control->getPageObject())) {
+    $relevantPage = $control->getPageObject();
+} else if ($control->getTargetParentPageID()) {
+    $relevantPage = \Page::getByID($control->getTargetParentPageID());
+}
+
+if (is_object($relevantPage) && !$relevantPage->isError()) {
+    $tree = $relevantPage->getSiteTreeObject();
+}
+
 if (is_object($pagetype) && $pagetype->getPageTypePublishTargetTypeID() == $configuration->getPageTypePublishTargetTypeID()) {
     $configuredTarget = $pagetype->getPageTypePublishTargetObject();
 
@@ -21,6 +34,9 @@ if (is_object($pagetype) && $pagetype->getPageTypePublishTargetTypeID() == $conf
         $pl->sortByName();
         $pl->filterByPageTypeID($configuredTarget->getPageTypeID());
         $pl->sortByName();
+        if (isset($tree)) {
+            $pl->setSiteTreeObject($tree);
+        }
         $pages = $pl->get();
         if (count($pages) > 1) {
             $navigation = \Core::make('helper/navigation');

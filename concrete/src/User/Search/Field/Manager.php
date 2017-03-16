@@ -2,6 +2,7 @@
 namespace Concrete\Core\User\Search\Field;
 
 use Concrete\Core\Attribute\Category\UserCategory;
+use Concrete\Core\Attribute\Category\CategoryService;
 use Concrete\Core\Search\Field\AttributeKeyField;
 use Concrete\Core\Search\Field\Field\KeywordsField;
 use Concrete\Core\Search\Field\Manager as FieldManager;
@@ -25,13 +26,27 @@ class Manager extends FieldManager
             new IsValidatedField(),
             new DateAddedField(),
             new GroupSetField()
-
         ]);
+
+        $service = \Core::make(CategoryService::class);
+        $setManager = $service->getByHandle('user')->getController()->getSetManager();
+        $attributeSets = $setManager->getAttributeSets();
+        $unassigned = $setManager->getUnassignedAttributeKeys();
+
         $attributes = [];
-        foreach($fileCategory->getSearchableList() as $key) {
+        foreach($attributeSets as $set) {
+            foreach($set->getAttributeKeys() as $key) {
+                $field = new AttributeKeyField($key);
+                $attributes[] = $field;
+            }
+            $this->addGroup($set->getAttributeSetDisplayName(), $attributes);
+        }
+
+        $attributes = [];
+        foreach($unassigned as $key) {
             $field = new AttributeKeyField($key);
             $attributes[] = $field;
         }
-        $this->addGroup(t('Custom Attributes'), $attributes);
+        $this->addGroup(t('Other Attributes'), $attributes);
     }
 }

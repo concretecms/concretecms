@@ -12,7 +12,7 @@ class Social extends DashboardSitePageController
 {
     public function view()
     {
-        $this->set('links', Link::getList());
+        $this->set('links', Link::getList($this->getSite()));
     }
 
     public function link_updated()
@@ -43,7 +43,7 @@ class Social extends DashboardSitePageController
         $existingLink = false;
         if ($ssHandle) {
             $service = Service::getByHandle($ssHandle);
-            $existingLink = Link::getByServiceHandle($ssHandle);
+            $existingLink = Link::getByServiceHandle($ssHandle, $this->getSite());
         }
         $sec = Core::make('helper/security');
         $url = $sec->sanitizeURL($this->request->request->get('url'));

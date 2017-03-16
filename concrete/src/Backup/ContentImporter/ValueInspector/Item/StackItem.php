@@ -13,7 +13,12 @@ class StackItem extends AbstractItem
 
     public function getContentObject()
     {
-        return Stack::getByPath($this->getReference());
+        $stack = Stack::getByPath($this->getReference());
+        if (!is_object($stack)) {
+            // this is kinda weak.
+            $stack = Stack::getByName($this->getReference());
+        }
+        return $stack;
     }
 
     public function getContentValue()

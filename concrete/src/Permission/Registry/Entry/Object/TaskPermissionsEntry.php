@@ -31,4 +31,24 @@ class TaskPermissionsEntry implements EntryInterface
         $pt->assignPermissionAccess($pa);
     }
 
+    public function remove($mixed)
+    {
+        $key = Key::getByHandle($this->pkHandle);
+        $entity = $mixed->getAccessEntity();
+        $pa = $key->getPermissionAccessObject();
+        if (is_object($pa)) {
+            $listItems = $pa->getAccessListItems($this->accessType);
+            foreach($listItems as $item) {
+                /**
+                 * @var $item ListItem
+                 */
+                $entity = $item->getAccessEntityObject();
+                if ($entity == $mixed->getAccessEntity()) {
+                    $pa->removeListItem($entity);
+                }
+            }
+        }
+    }
+
+
 }
