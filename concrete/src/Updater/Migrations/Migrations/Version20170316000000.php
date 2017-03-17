@@ -1,12 +1,9 @@
 <?php
 namespace Concrete\Core\Updater\Migrations\Migrations;
 
+use Concrete\Core\Express\EntryList;
 use Concrete\Core\Updater\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
-use Concrete\Core\Entity\Attribute\Key\Settings\DateTimeSettings;
-use Concrete\Core\Page\Page;
-use SinglePage;
-use Concrete\Core\Support\Facade\Application;
 
 class Version20170316000000 extends AbstractMigration
 {
@@ -18,6 +15,14 @@ class Version20170316000000 extends AbstractMigration
             $category = $entity->getAttributeKeyCategory();
             foreach ($entity->getAttributes() as $key) {
                 $category->getSearchIndexer()->refreshRepositoryColumns($category, $key);
+            }
+            $list = new EntryList($entity);
+            $entries = $list->getResults();
+            foreach($entries as $entry) {
+                $values = $category->getAttributeValues($entry);
+                foreach ($values as $value) {
+                    $category->getSearchIndexer()->indexEntry($category, $value, $entry);
+                }
             }
         }
     }
