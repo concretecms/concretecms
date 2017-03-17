@@ -48,8 +48,8 @@ var i18n = {
 
 var frontend = {
   colFilter: 'col-md-12',
-  colOriginal: 'col-md-5',
-  colTranslations: 'col-md-7'
+  colOriginal: 'col-md-6',
+  colTranslations: 'col-md-6'
 };
 
 function Translation(data, translator) {
