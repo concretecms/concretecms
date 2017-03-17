@@ -182,6 +182,9 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
             if ($response instanceof \Symfony\Component\HttpFoundation\Response) {
                 return $response;
             }
+            if ($controller->isReplaced()) {
+                return $this->controller($controller->getReplacement(), $code, $headers);
+            }
         } else {
             if ($response = $controller->runAction('view')) {
                 return $response;
