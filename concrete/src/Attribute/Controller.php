@@ -278,6 +278,16 @@ class Controller extends AbstractController implements AttributeInterface
         return new EmptyRequestAttributeValue();
     }
 
+    /**
+     * Create the default attribute value (if needed).
+     *
+     * @return \Concrete\Core\Entity\Attribute\Value\Value|null
+     */
+    public function createDefaultAttributeValue()
+    {
+        return null;
+    }
+
     public function createAttributeValue($mixed)
     {
         return $this->saveValue($mixed);

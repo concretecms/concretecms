@@ -331,6 +331,11 @@ abstract class GenericOauthTypeController extends AuthenticationTypeController
             }
         }
 
+        $attribs = \UserAttributeKey::getRegistrationList();
+        if (!empty($attribs)) {
+            $user_info->saveUserAttributesDefault($attribs);
+        }
+
         $key = \UserAttributeKey::getByHandle('first_name');
         if ($key) {
             $user_info->setAttribute($key, $first_name);
