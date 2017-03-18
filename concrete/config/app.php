@@ -1155,6 +1155,19 @@ return [
                 ['javascript', 'core/file-manager'],
             ],
         ],
+        'core/file-folder-selector' => [
+            [
+                ['javascript', 'core/events'],
+                ['javascript', 'underscore'],
+                ['javascript', 'jquery/ui'],
+                ['javascript-localized', 'jquery/ui'],
+                ['javascript', 'fancytree'],
+                ['javascript-localized', 'fancytree'],
+                ['javascript', 'core/tree'],
+                ['css', 'fancytree'],
+            ],
+        ],
+
         'core/sitemap' => [
             [
                 ['javascript', 'core/events'],
