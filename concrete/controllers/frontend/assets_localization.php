@@ -551,6 +551,7 @@ jQuery.ui.fancytree.prototype.options.strings.loadError = ' . json_encode(t('Loa
     'Context' => t('Context'),
     'ExamplePH' => t('Example: %s'),
     'Filter' => t('Filter'),
+    'No_newlines_in_translations_please' => t('Please don\'t use new lines in translations (there\'s no new line in the source string)'),
     'Original_String' => t('Original String'),
     'Please_fill_in_all_plurals' => t('Please fill-in all plural forms'),
     'Plural_Original_String' => t('Plural Original String'),

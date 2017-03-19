@@ -15,6 +15,7 @@ var i18n = {
   Context: 'Context',
   ExamplePH: 'Example: %s',
   Filter: 'Filter',
+  No_newlines_in_translations_please: 'Please don\'t use new lines in translations (there\'s no new line in the source string)',
   Original_String: 'Original String',
   Please_fill_in_all_plurals: 'Please fill-in all plural forms',
   Plural_Original_String: 'Plural Original String',
@@ -61,6 +62,19 @@ function originalToHtml(s) {
   s = s.replace(/(%(\d+\$)?[a-z])/g, '<span class="ccm-translator-original-copy">$1</span>');
   s = s.replace(/(&lt;\/?[a-zA-Z].*?&gt;)/g, '<span class="ccm-translator-original-copy">$1</span>');
   return s;
+}
+
+function copyBoundarySpaces(from, to) {
+  var m;
+  m = /^(\s+)\S/.exec(from);
+  if (m) {
+    to = m[1] + to;
+  }
+  m = /^\S(\s+)$/.exec(from);
+  if (m) {
+    to = to +  m[1];
+  }
+  return to;
 }
 
 function Translation(data, translator) {
@@ -155,11 +169,9 @@ Translation.prototype = {
 
 var TranslationView = (function() {
 
-  function Base(translation, multiline) {
+  function Base(translation) {
     this.UI = {};
     this.translation = translation;
-    this.multiline = multiline;
-    this.element = this.multiline ? 'textarea rows="8"' : 'input type="text"';
     this.UI.$container = this.translation.translator.UI.$translation;
     this.UI.$container.empty();
     this.UI.$container.closest('.panel').css('visibility', 'visible');
@@ -246,7 +258,7 @@ var TranslationView = (function() {
   Base.prototype = {
     /**
      * @return null if no string is translated
-     * @return false if forSave === true and some string is not translated
+     * @return false if forSave === true and some string is not translated or has errors
      * @return object with {strings: [], approved: bool} in all other cases (approved key is present if and only if current user can mark as approved)
      */
     getTranslatedState: function(forSave) {
@@ -294,7 +306,7 @@ var TranslationView = (function() {
   };
 
   function Singular(translation) {
-    Base.call(this, translation, (translation.original.indexOf("\n") >= 0) ? true : false);
+    Base.call(this, translation);
   }
   $.extend(true, Singular.prototype, Base.prototype, {
     _buildOriginalUI: function() {
@@ -311,7 +323,7 @@ var TranslationView = (function() {
       this.UI.$container
         .append($('<div class="form-group" />')
           .append($('<label class="control-label" />').text(i18n.Translation))
-          .append(this.UI.$translated = $('<' + this.element + ' class="form-control" />').val(this.translation.isTranslated ? this.translation.translations[0] : ''))
+          .append(this.UI.$translated = $('<textarea rows="5" class="form-control" />').val(this.translation.isTranslated ? this.translation.translations[0] : ''))
         )
       ;
       this.UI.$translated.focus();
@@ -326,12 +338,23 @@ var TranslationView = (function() {
      */
     getTranslatedStrings: function(forSave) {
       var s = $.trim(this.UI.$translated.val());
-      return (s.length > 0) ? [s] : null;
+      if (s === '') {
+        return null;
+      }
+      s = copyBoundarySpaces(this.translation.original, s);
+      if (!forSave) {
+        return [s];  
+      }
+      if (s.indexOf('\n') >= 0 && this.translation.original.indexOf('\n') < 0) {
+        window.alert(i18n.No_newlines_in_translations_please);
+        return false;
+      }
+      return [s];
     }
   });
 
   function Plural(translation) {
-    Base.call(this, translation, ((translation.original.indexOf("\n") >= 0) || (translation.originalPlural.indexOf("\n") >= 0)) ? true : false);
+    Base.call(this, translation);
   }
   $.extend(true, Plural.prototype, Base.prototype, {
     _buildOriginalUI: function() {
@@ -382,7 +405,7 @@ var TranslationView = (function() {
         );
         my.UI.$tabBodies.append($('<div class="tab-pane' + ((index === 0) ? ' active' : '') + '" data-key="' + key + '" />')
           .append($('<p />').text(i18n.ExamplePH.replace(/%s/, examples)))
-          .append(my.UI.$translated[key] = $('<' + my.element + ' class="form-control" />').val(my.translation.isTranslated ? my.translation.translations[index] : ''))
+          .append(my.UI.$translated[key] = $('<textarea rows="5" class="form-control" />').val(my.translation.isTranslated ? my.translation.translations[index] : ''))
         );
         index++;
       });
@@ -397,17 +420,25 @@ var TranslationView = (function() {
     },
     /**
      * @return null if no string is translated
-     * @return false if forSave === true and some string is not translated
+     * @return false if forSave === true and some string is not translated or has errors
      * @return array in all other cases
      */
     getTranslatedStrings: function(forSave) {
-      var my = this;
-      var result = [];
-      var some = false, firstNotFilled = null;
+      var my = this,
+        result = [],
+        original = this.translation.original,
+        withNewLines = (this.translation.original + this.translation.originalPlural).indexOf('\n') >= 0,
+        some = false,
+        firstNotFilled = null,
+        firstWithExtraNewlines = null;
       $.each(this.translation.translator.plurals, function(key) {
         var s = $.trim(my.UI.$translated[key].val());
         if (s.length > 0) {
           some = true;
+          if (withNewLines === false && s.indexOf('\n') >= 0) {
+            firstWithExtraNewlines = key;
+          }
+          s = copyBoundarySpaces(original, s);
         } else if (firstNotFilled === null) {
           firstNotFilled = key;
         }
@@ -416,10 +447,17 @@ var TranslationView = (function() {
       if (some === false) {
         return null;
       }
-      if ((firstNotFilled !== null) && (forSave === true)) {
-        this.showTranslationTab(firstNotFilled, true);
-        window.alert(i18n.Please_fill_in_all_plurals);
-        return false;
+      if (forSave === true) {
+        if (firstWithExtraNewlines !== null) {
+          this.showTranslationTab(firstWithExtraNewlines, true);
+          window.alert(i18n.No_newlines_in_translations_please);
+          return false;
+        }
+        if (firstNotFilled !== null) {
+          this.showTranslationTab(firstNotFilled, true);
+          window.alert(i18n.Please_fill_in_all_plurals);
+          return false;
+        }
       }
       return result;
     }
