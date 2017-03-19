@@ -59,7 +59,7 @@ function originalToHtml(s) {
   s = s.replace(/\t/g, '<span class="ccm-translator-original-tab"> </span>');
   s = s.replace(/\n/g, '<span class="ccm-translator-original-lf"></span><br />');
   s = s.replace(/(%(\d+\$)?[a-z])/g, '<span class="ccm-translator-original-copy">$1</span>');
-  s = s.replace(/(&lt;[a-zA-Z].*?&gt;)/g, '<span class="ccm-translator-original-copy">$1</span>');
+  s = s.replace(/(&lt;\/?[a-zA-Z].*?&gt;)/g, '<span class="ccm-translator-original-copy">$1</span>');
   return s;
 }
 
