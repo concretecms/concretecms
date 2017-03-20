@@ -5,6 +5,7 @@ namespace Concrete\Core\User;
 use Concrete\Core\Application\Application;
 use Concrete\Core\Attribute\Category\UserCategory;
 use Concrete\Core\Attribute\Key\UserKey;
+use Concrete\Core\Attribute\ObjectInterface as AttributeObjectInterface;
 use Concrete\Core\Attribute\ObjectTrait;
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Entity\Attribute\Value\UserValue;
@@ -12,25 +13,24 @@ use Concrete\Core\Entity\Attribute\Value\Value\Value;
 use Concrete\Core\Entity\User\User as UserEntity;
 use Concrete\Core\File\StorageLocation\StorageLocation;
 use Concrete\Core\Foundation\Object;
+use Concrete\Core\Mail\Importer\MailImporter;
+use Concrete\Core\Permission\ObjectInterface as PermissionObjectInterface;
+use Concrete\Core\User\Avatar\AvatarServiceInterface;
 use Concrete\Core\User\PrivateMessage\Limit;
 use Concrete\Core\User\PrivateMessage\Mailbox as UserPrivateMessageMailbox;
 use Concrete\Core\User\PrivateMessage\PrivateMessage;
 use Concrete\Core\Utility\Service\Identifier;
-use Doctrine\ORM\EntityManagerInterface;
-use Imagine\Image\ImageInterface;
-use League\Flysystem\AdapterInterface;
-use Concrete\Core\Mail\Importer\MailImporter;
-use View;
-use Events;
-use User as ConcreteUser;
-use Group;
-use Session;
-use Core;
-use Concrete\Core\User\Avatar\AvatarServiceInterface;
 use Concrete\Core\Workflow\Request\ActivateUserRequest as ActivateUserWorkflowRequest;
 use Concrete\Core\Workflow\Request\DeleteUserRequest as DeleteUserWorkflowRequest;
-use Concrete\Core\Attribute\ObjectInterface as AttributeObjectInterface;
-use Concrete\Core\Permission\ObjectInterface as PermissionObjectInterface;
+use Core;
+use Doctrine\ORM\EntityManagerInterface;
+use Events;
+use Group;
+use Imagine\Image\ImageInterface;
+use League\Flysystem\AdapterInterface;
+use Session;
+use User as ConcreteUser;
+use View;
 
 class UserInfo extends Object implements AttributeObjectInterface, PermissionObjectInterface
 {
@@ -54,16 +54,17 @@ class UserInfo extends Object implements AttributeObjectInterface, PermissionObj
         $this->attributeCategory = $attributeCategory;
         $this->connection = $entityManager->getConnection();
     }
+
     /**
      * @return string
      */
     public function __toString()
     {
-        return 'UserInfo: '.$this->getUserID();
+        return 'UserInfo: ' . $this->getUserID();
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getPermissionObjectIdentifier()
     {
@@ -113,8 +114,8 @@ class UserInfo extends Object implements AttributeObjectInterface, PermissionObj
     public function getUserBadges()
     {
         $db = $this->connection;
-        $groups = array();
-        $r = $db->Execute('select g.gID from Groups g inner join UserGroups ug on g.gID = ug.gID where g.gIsBadge = 1 and ug.uID = ? order by ugEntered desc', array($this->getUserID()));
+        $groups = [];
+        $r = $db->Execute('select g.gID from Groups g inner join UserGroups ug on g.gID = ug.gID where g.gIsBadge = 1 and ug.uID = ? order by ugEntered desc', [$this->getUserID()]);
         while ($row = $r->FetchRow()) {
             $groups[] = Group::getByID($row['gID']);
         }
@@ -130,7 +131,7 @@ class UserInfo extends Object implements AttributeObjectInterface, PermissionObj
     public function triggerDelete($requester)
     {
         $db = $this->connection;
-        $v = array($this->getUserID());
+        $v = [$this->getUserID()];
         $pkr = new DeleteUserWorkflowRequest();
         $pkr->setRequestedUserID($this->getUserID());
         $pkr->setRequesterUserID($requester->getUserID());
@@ -164,17 +165,17 @@ class UserInfo extends Object implements AttributeObjectInterface, PermissionObj
             $this->attributeCategory->deleteValue($attribute);
         }
 
-        $r = $db->query('DELETE FROM OauthUserMap WHERE user_id = ?', array(intval($this->getUserID())));
+        $r = $db->query('DELETE FROM OauthUserMap WHERE user_id = ?', [intval($this->getUserID())]);
 
-        $r = $db->query('DELETE FROM UserSearchIndexAttributes WHERE uID = ?', array(intval($this->getUserID())));
+        $r = $db->query('DELETE FROM UserSearchIndexAttributes WHERE uID = ?', [intval($this->getUserID())]);
 
-        $r = $db->query('DELETE FROM UserGroups WHERE uID = ?', array(intval($this->getUserID())));
-        $r = $db->query('DELETE FROM UserValidationHashes WHERE uID = ?', array(intval($this->getUserID())));
+        $r = $db->query('DELETE FROM UserGroups WHERE uID = ?', [intval($this->getUserID())]);
+        $r = $db->query('DELETE FROM UserValidationHashes WHERE uID = ?', [intval($this->getUserID())]);
 
-        $r = $db->query('DELETE FROM Piles WHERE uID = ?', array(intval($this->getUserID())));
+        $r = $db->query('DELETE FROM Piles WHERE uID = ?', [intval($this->getUserID())]);
 
-        $r = $db->query('UPDATE Blocks set uID=? WHERE uID = ?', array(intval(USER_SUPER_ID), intval($this->getUserID())));
-        $r = $db->query('UPDATE Pages set uID=? WHERE uID = ?', array(intval(USER_SUPER_ID), intval($this->getUserID())));
+        $r = $db->query('UPDATE Blocks set uID=? WHERE uID = ?', [intval(USER_SUPER_ID), intval($this->getUserID())]);
+        $r = $db->query('UPDATE Pages set uID=? WHERE uID = ?', [intval(USER_SUPER_ID), intval($this->getUserID())]);
 
         $this->entityManager->remove($this->entity);
         $this->entityManager->flush();
@@ -197,7 +198,7 @@ class UserInfo extends Object implements AttributeObjectInterface, PermissionObj
     {
         $fsl = StorageLocation::getDefault()->getFileSystemObject();
         $image = $image->get('jpg');
-        $file = REL_DIR_FILES_AVATARS.'/'.$this->getUserID().'.jpg';
+        $file = REL_DIR_FILES_AVATARS . '/' . $this->getUserID() . '.jpg';
         if ($fsl->has($file)) {
             $fsl->delete($file);
         }
@@ -205,14 +206,14 @@ class UserInfo extends Object implements AttributeObjectInterface, PermissionObj
         $fsl->write(
             $file,
             $image,
-            array(
+            [
                 'visibility' => AdapterInterface::VISIBILITY_PUBLIC,
                 'mimetype' => 'image/jpeg',
-            )
+            ]
         );
 
         $db = $this->connection;
-        $db->query('update Users set uHasAvatar = 1 where uID = ?', array($this->getUserID()));
+        $db->query('update Users set uHasAvatar = 1 where uID = ?', [$this->getUserID()]);
 
         // run any internal event we have for user update
         $ui = self::getByID($this->getUserID());
@@ -226,7 +227,7 @@ class UserInfo extends Object implements AttributeObjectInterface, PermissionObj
     public function markAsPasswordReset()
     {
         $db = $this->connection;
-        $db->query('UPDATE Users SET uIsPasswordReset = 1 WHERE uID = ?', array($this->getUserID()));
+        $db->query('UPDATE Users SET uIsPasswordReset = 1 WHERE uID = ?', [$this->getUserID()]);
 
         $updateEventData = new \Concrete\Core\User\Event\UserInfo($this);
         Events::dispatch('on_user_update', $updateEventData);
@@ -250,7 +251,7 @@ class UserInfo extends Object implements AttributeObjectInterface, PermissionObj
         $messageText .= "\n";
         $messageText .= t('Message: %s', $text);
 
-        $additionalArgs = array('user' => $this);
+        $additionalArgs = ['user' => $this];
         if (!$antispam->check($messageText, 'private_message', $additionalArgs)) {
             return false;
         }
@@ -259,22 +260,22 @@ class UserInfo extends Object implements AttributeObjectInterface, PermissionObj
         $db = $this->connection;
         $dt = Core::make('helper/date');
         $msgDateCreated = $dt->getOverridableNow();
-        $v = array($this->getUserID(), $msgDateCreated, $subject, $text, $recipient->getUserID());
+        $v = [$this->getUserID(), $msgDateCreated, $subject, $text, $recipient->getUserID()];
         $db->Execute('insert into UserPrivateMessages (uAuthorID, msgDateCreated, msgSubject, msgBody, uToID) values (?, ?, ?, ?, ?)', $v);
 
         $msgID = $db->Insert_ID();
 
         if ($msgID > 0) {
             // we add the private message to the sent box of the sender, and the inbox of the recipient
-            $v = array($msgID, $this->getUserID(), $this->getUserID(), UserPrivateMessageMailbox::MBTYPE_SENT, 0, 1);
+            $v = [$msgID, $this->getUserID(), $this->getUserID(), UserPrivateMessageMailbox::MBTYPE_SENT, 0, 1];
             $db->Execute('insert into UserPrivateMessagesTo (msgID, uID, uAuthorID, msgMailboxID, msgIsNew, msgIsUnread) values (?, ?, ?, ?, ?, ?)', $v);
-            $v = array($msgID, $recipient->getUserID(), $this->getUserID(), UserPrivateMessageMailbox::MBTYPE_INBOX, 1, 1);
+            $v = [$msgID, $recipient->getUserID(), $this->getUserID(), UserPrivateMessageMailbox::MBTYPE_INBOX, 1, 1];
             $db->Execute('insert into UserPrivateMessagesTo (msgID, uID, uAuthorID, msgMailboxID, msgIsNew, msgIsUnread) values (?, ?, ?, ?, ?, ?)', $v);
         }
 
         // If the message is in reply to another message, we make a note of that here
         if (is_object($inReplyTo)) {
-            $db->Execute('update UserPrivateMessagesTo set msgIsReplied = 1 where uID = ? and msgID = ?', array($this->getUserID(), $inReplyTo->getMessageID()));
+            $db->Execute('update UserPrivateMessagesTo set msgIsReplied = 1 where uID = ? and msgID = ?', [$this->getUserID(), $inReplyTo->getMessageID()]);
         }
 
         // send the email notification
@@ -367,7 +368,7 @@ class UserInfo extends Object implements AttributeObjectInterface, PermissionObj
                 if ($data['uPassword'] == $data['uPasswordConfirm']) {
                     $dh = Core::make('helper/date');
                     $dateTime = $dh->getOverridableNow();
-                    $v = array($uName, $uEmail, $this->getUserObject()->getUserPasswordHasher()->HashPassword($data['uPassword']), $uHasAvatar ? 1 : 0, $uTimezone, $uDefaultLanguage, $dateTime, $this->getUserID());
+                    $v = [$uName, $uEmail, $this->getUserObject()->getUserPasswordHasher()->HashPassword($data['uPassword']), $uHasAvatar ? 1 : 0, $uTimezone, $uDefaultLanguage, $dateTime, $this->getUserID()];
                     $r = $db->prepare('update Users set uName = ?, uEmail = ?, uPassword = ?, uHasAvatar = ?, uTimezone = ?, uDefaultLanguage = ?, uLastPasswordChange = ? where uID = ?');
                     $res = $db->execute($r, $v);
 
@@ -380,13 +381,13 @@ class UserInfo extends Object implements AttributeObjectInterface, PermissionObj
                     }
                 }
             } else {
-                $v = array($uName, $uEmail, $uHasAvatar ? 1 : 0, $uTimezone, $uDefaultLanguage, $this->getUserID());
+                $v = [$uName, $uEmail, $uHasAvatar ? 1 : 0, $uTimezone, $uDefaultLanguage, $this->getUserID()];
                 $r = $db->prepare('update Users set uName = ?, uEmail = ?, uHasAvatar = ?, uTimezone = ?, uDefaultLanguage = ? where uID = ?');
                 $res = $db->execute($r, $v);
             }
 
             if ($emailChanged) {
-                $db->query('DELETE FROM UserValidationHashes WHERE uID = ?', array(intval($this->getUserID())));
+                $db->query('DELETE FROM UserValidationHashes WHERE uID = ?', [intval($this->getUserID())]);
                 $h = Core::make('helper/validation/identifier');
                 $h->deleteKey('UserValidationHashes', 'uID', $this->getUserID());
             }
@@ -422,7 +423,7 @@ class UserInfo extends Object implements AttributeObjectInterface, PermissionObj
         $q = 'select gID from UserGroups where uID = ?';
         $r = $db->query($q, [$this->getUserID()]);
         if ($r) {
-            $existingGIDArray = array();
+            $existingGIDArray = [];
             while ($row = $r->fetchRow()) {
                 $existingGIDArray[] = $row['gID'];
             }
@@ -475,13 +476,13 @@ class UserInfo extends Object implements AttributeObjectInterface, PermissionObj
     public function setupValidation()
     {
         $db = $this->connection;
-        $hash = $db->GetOne('select uHash from UserValidationHashes where uID = ? order by uDateGenerated desc', array($this->getUserID()));
+        $hash = $db->GetOne('select uHash from UserValidationHashes where uID = ? order by uDateGenerated desc', [$this->getUserID()]);
         if ($hash) {
             return $hash;
         } else {
             $h = Core::make('helper/validation/identifier');
             $hash = $h->generate('UserValidationHashes', 'uHash');
-            $db->Execute('insert into UserValidationHashes (uID, uHash, uDateGenerated) values (?, ?, ?)', array($this->getUserID(), $hash, time()));
+            $db->Execute('insert into UserValidationHashes (uID, uHash, uDateGenerated) values (?, ?, ?)', [$this->getUserID(), $hash, time()]);
 
             return $hash;
         }
@@ -493,9 +494,9 @@ class UserInfo extends Object implements AttributeObjectInterface, PermissionObj
     public function markValidated()
     {
         $db = $this->connection;
-        $v = array($this->getUserID());
+        $v = [$this->getUserID()];
         $db->query('update Users set uIsValidated = 1, uIsFullRecord = 1 where uID = ?', $v);
-        $db->query('update UserValidationHashes set uDateRedeemed = '.time().' where uID = ?', $v);
+        $db->query('update UserValidationHashes set uDateRedeemed = ' . time() . ' where uID = ?', $v);
 
         $this->uIsValidated = 1;
         $ue = new \Concrete\Core\User\Event\UserInfo($this);
@@ -515,11 +516,11 @@ class UserInfo extends Object implements AttributeObjectInterface, PermissionObj
         if ($this->getUserID()) {
             $dh = Core::make('helper/date');
             $dateTime = $dh->getOverridableNow();
-            $v = array(
+            $v = [
                 $this->getUserObject()->getUserPasswordHasher()->HashPassword($newPassword),
                 $dateTime,
                 $this->getUserID(),
-            );
+            ];
             $q = 'update Users set uPassword = ?, uLastPasswordChange = ?, uIsPasswordReset = 0  where uID = ?';
             $r = $db->prepare($q);
             $res = $db->execute($r, $v);
@@ -566,7 +567,7 @@ class UserInfo extends Object implements AttributeObjectInterface, PermissionObj
         // Figure out whether the user was marked active during the workflow.
         // Usually happens if no workflows are attached (empty workflow).
         $query = 'SELECT uIsActive FROM Users WHERE uID = ?';
-        $v = array($this->getUserID());
+        $v = [$this->getUserID()];
         $this->entity->setUserIsActive(intval($db->GetOne($query, $v)) === 1);
 
         return $this->isActive();
@@ -594,7 +595,7 @@ class UserInfo extends Object implements AttributeObjectInterface, PermissionObj
         }
 
         $db = $this->connection;
-        $v = array($this->getUserID());
+        $v = [$this->getUserID()];
 
         $pkr = new ActivateUserWorkflowRequest();
         $pkr->setRequestAction('deactivate');
@@ -618,7 +619,7 @@ class UserInfo extends Object implements AttributeObjectInterface, PermissionObj
 
     /**
      * @param int $length
-     * 
+     *
      * @return string|null
      */
     public function resetUserPassword($length = 256)
@@ -656,11 +657,11 @@ class UserInfo extends Object implements AttributeObjectInterface, PermissionObj
         }
         $url = $this->application->make('url/manager');
 
-        return $url->resolve(array(
+        return $url->resolve([
             '/members/profile',
             'view',
             $this->getUserID(),
-            )
+            ]
         );
     }
 
@@ -673,7 +674,7 @@ class UserInfo extends Object implements AttributeObjectInterface, PermissionObj
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getLastLogin()
     {
@@ -691,7 +692,7 @@ class UserInfo extends Object implements AttributeObjectInterface, PermissionObj
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getPreviousLogin()
     {
@@ -699,7 +700,7 @@ class UserInfo extends Object implements AttributeObjectInterface, PermissionObj
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function isActive()
     {
@@ -707,7 +708,7 @@ class UserInfo extends Object implements AttributeObjectInterface, PermissionObj
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function isValidated()
     {
@@ -715,7 +716,7 @@ class UserInfo extends Object implements AttributeObjectInterface, PermissionObj
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function isFullRecord()
     {
@@ -723,7 +724,7 @@ class UserInfo extends Object implements AttributeObjectInterface, PermissionObj
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getNumLogins()
     {
@@ -731,7 +732,7 @@ class UserInfo extends Object implements AttributeObjectInterface, PermissionObj
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getUserID()
     {
@@ -739,7 +740,7 @@ class UserInfo extends Object implements AttributeObjectInterface, PermissionObj
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getUserName()
     {
@@ -747,7 +748,7 @@ class UserInfo extends Object implements AttributeObjectInterface, PermissionObj
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getUserDisplayName()
     {
@@ -755,7 +756,7 @@ class UserInfo extends Object implements AttributeObjectInterface, PermissionObj
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getUserPassword()
     {
@@ -763,7 +764,7 @@ class UserInfo extends Object implements AttributeObjectInterface, PermissionObj
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getUserEmail()
     {
@@ -771,7 +772,7 @@ class UserInfo extends Object implements AttributeObjectInterface, PermissionObj
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getUserTimezone()
     {
@@ -779,7 +780,7 @@ class UserInfo extends Object implements AttributeObjectInterface, PermissionObj
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getUserDefaultLanguage()
     {
@@ -787,7 +788,7 @@ class UserInfo extends Object implements AttributeObjectInterface, PermissionObj
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getUserDateAdded()
     {
@@ -795,7 +796,7 @@ class UserInfo extends Object implements AttributeObjectInterface, PermissionObj
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getLastOnline()
     {
