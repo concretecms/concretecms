@@ -63,8 +63,8 @@ class Limit
         $mh = Loader::helper('mail');
 
         $mh->addParameter('offenderUname', $offender->getUserName());
-        $mh->addParameter('profileURL', View::url('/profile', 'view', $offender->getUserID()));
-        $mh->addParameter('profilePreferencesURL', View::url('/profile/edit'));
+        $mh->addParameter('profileURL', $offender->getUserPublicProfileUrl());
+        $mh->addParameter('profilePreferencesURL', View::url('/account/edit_profile'));
 
         $mh->to($admin->getUserEmail());
         $mh->addParameter('siteName', tc('SiteName', \Core::make('site')->getSite()->getSiteName()));

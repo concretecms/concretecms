@@ -331,15 +331,24 @@ class UserInfo extends Object implements AttributeObjectInterface, PermissionObj
 
         // send the email notification
         if ($recipient->getAttribute('profile_private_messages_notification_enabled')) {
+            $site = $this->application->make('site')->getSite();
+            $siteConfig = $site->getConfigRepository();
             $mh = $this->application->make('mail');
+            $mh->addParameter('siteName', tc('SiteName', $site->getSiteName()));
             $mh->addParameter('msgSubject', $subject);
             $mh->addParameter('msgBody', $text);
             $mh->addParameter('msgAuthor', $this->getUserName());
             $mh->addParameter('msgDateCreated', $msgDateCreated);
-            $mh->addParameter('profileURL', $this->getUserPublicProfileUrl());
-            $mh->addParameter('profilePreferencesURL', $this->application->make('url/manager')->resolve(['/account/profile/edit']));
+            $urlManager = $this->application->make('url/manager');
+            $mh->addParameter('profilePreferencesURL', $urlManager->resolve(['/account/edit_profile']));
+            $mh->addParameter('myPrivateMessagesURL', $urlManager->resolve(['/account/messages']));
+            if ($siteConfig->get('user.profiles_enabled')) {
+                $mh->addParameter('profileURL', $this->getUserPublicProfileUrl());
+                if ($this->getAttribute('profile_private_messages_enabled')) {
+                    $mh->addParameter('replyToMessageURL', $urlManager->resolve(['/account/messages', 'reply', $msgID]));
+                }
+            }
             $mh->to($recipient->getUserEmail());
-            $mh->addParameter('siteName', tc('SiteName', $this->application->make('site')->getSite()->getSiteName()));
 
             $mi = MailImporter::getByHandle('private_message');
             if ($mi && $mi->isMailImporterEnabled()) {
