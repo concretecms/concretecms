@@ -89,8 +89,9 @@ class Smtp extends ZendSmtp
      */
     protected function connect()
     {
-        parent::connect();
+        $connection = parent::connect();
         $this->sentMessagesInConnection = 0;
+        return $connection;
     }
 
     /**
