@@ -151,7 +151,7 @@ class Key extends Facade implements AttributeKeyInterface
     /**
      * @deprecated
      */
-    protected function saveAttribute($attributeValue, $passedValue = false)
+    protected function saveAttribute($attributeValue, $passedValue = null)
     {
         $controller = $this->getController();
         $orm = \Database::connection()->getEntityManager();
@@ -170,7 +170,7 @@ class Key extends Facade implements AttributeKeyInterface
             $orm->flush();
         }
 
-        if ($passedValue) {
+        if ($passedValue !== null) {
             $value = $controller->createAttributeValue($passedValue);
         } else {
             $value = $controller->createAttributeValueFromRequest();
