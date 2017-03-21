@@ -1,17 +1,17 @@
 <?php
 namespace Concrete\Core\Mail;
 
-use Config;
 use Concrete\Core\Logging\GroupLogger;
+use Concrete\Core\Mail\Transport\Smtp as SmtpTransport;
+use Concrete\Core\Support\Facade\Application;
+use Config;
+use Exception;
+use Monolog\Logger;
 use Zend\Mail\Message;
 use Zend\Mail\Transport\Sendmail as SendmailTransport;
-use Zend\Mail\Transport\Smtp as SmtpTransport;
-use Zend\Mail\Transport\SmtpOptions;
 use Zend\Mime\Message as MimeMessage;
 use Zend\Mime\Mime;
 use Zend\Mime\Part as MimePart;
-use Exception;
-use Monolog\Logger;
 
 class Service
 {
@@ -62,32 +62,7 @@ class Service
         $response['mail']->setEncoding(APP_CHARSET);
 
         if (strcasecmp(Config::get('concrete.mail.method'), 'smtp') == 0) {
-            $config = [
-                'host' => Config::get('concrete.mail.methods.smtp.server'),
-            ];
-
-            $username = Config::get('concrete.mail.methods.smtp.username');
-            $password = Config::get('concrete.mail.methods.smtp.password');
-            if ($username != '') {
-                $config['connection_class'] = 'login';
-                $config['connection_config'] = [];
-                $config['connection_config']['username'] = $username;
-                $config['connection_config']['password'] = $password;
-            }
-
-            $port = Config::get('concrete.mail.methods.smtp.port', '');
-            if ($port != '') {
-                $config['port'] = $port;
-            }
-
-            $encr = Config::get('concrete.mail.methods.smtp.encryption', '');
-            if ($encr != '') {
-                $config['connection_config']['ssl'] = $encr;
-            }
-            $transport = new SmtpTransport();
-            $options = new SmtpOptions($config);
-            $transport->setOptions($options);
-            $response['transport'] = $transport;
+            $response['transport'] = Application::getFacadeApplication()->make(SmtpTransport::class);
         } else {
             $response['transport'] = new SendmailTransport();
         }
@@ -122,7 +97,6 @@ class Service
      */
     public function addAttachment(\Concrete\Core\Entity\File\File $fob)
     {
-
         // Get file version.
         $fv = $fob->getVersion();
 
@@ -154,17 +128,17 @@ class Service
         extract($this->data);
 
         // loads template from mail templates directory
-        if (file_exists(DIR_FILES_EMAIL_TEMPLATES."/{$template}.php")) {
-            include DIR_FILES_EMAIL_TEMPLATES."/{$template}.php";
+        if (file_exists(DIR_FILES_EMAIL_TEMPLATES . "/{$template}.php")) {
+            include DIR_FILES_EMAIL_TEMPLATES . "/{$template}.php";
         } else {
             if ($pkgHandle != null) {
-                if (is_dir(DIR_PACKAGES.'/'.$pkgHandle)) {
-                    include DIR_PACKAGES.'/'.$pkgHandle.'/'.DIRNAME_MAIL_TEMPLATES."/{$template}.php";
+                if (is_dir(DIR_PACKAGES . '/' . $pkgHandle)) {
+                    include DIR_PACKAGES . '/' . $pkgHandle . '/' . DIRNAME_MAIL_TEMPLATES . "/{$template}.php";
                 } else {
-                    include DIR_PACKAGES_CORE.'/'.$pkgHandle.'/'.DIRNAME_MAIL_TEMPLATES."/{$template}.php";
+                    include DIR_PACKAGES_CORE . '/' . $pkgHandle . '/' . DIRNAME_MAIL_TEMPLATES . "/{$template}.php";
                 }
             } else {
-                include DIR_FILES_EMAIL_TEMPLATES_CORE."/{$template}.php";
+                include DIR_FILES_EMAIL_TEMPLATES_CORE . "/{$template}.php";
             }
         }
 
@@ -263,7 +237,7 @@ class Service
         for ($i = 0; $i < count($arr); ++$i) {
             $v = $arr[$i];
             if (isset($v[1])) {
-                $str .= '"'.$v[1].'" <'.$v[0].'>';
+                $str .= '"' . $v[1] . '" <' . $v[0] . '>';
             } elseif (isset($v[0])) {
                 $str .= $v[0];
             }
@@ -507,17 +481,17 @@ class Service
                 throw $e;
             }
             $l = new GroupLogger(LOG_TYPE_EXCEPTIONS, Logger::CRITICAL);
-            $l->write(t('Mail Exception Occurred. Unable to send mail: ').$e->getMessage());
+            $l->write(t('Mail Exception Occurred. Unable to send mail: ') . $e->getMessage());
             $l->write($e->getTraceAsString());
             if (Config::get('concrete.log.emails')) {
-                $l->write(t('Template Used').': '.$this->template);
-                $l->write(t('To').': '.$toStr);
-                $l->write(t('From').': '.$fromStr);
+                $l->write(t('Template Used') . ': ' . $this->template);
+                $l->write(t('To') . ': ' . $toStr);
+                $l->write(t('From') . ': ' . $fromStr);
                 if (isset($this->replyto)) {
-                    $l->write(t('Reply-To').': '.$replyStr);
+                    $l->write(t('Reply-To') . ': ' . $replyStr);
                 }
-                $l->write(t('Subject').': '.$this->subject);
-                $l->write(t('Body').': '.$this->body);
+                $l->write(t('Subject') . ': ' . $this->subject);
+                $l->write(t('Body') . ': ' . $this->body);
             }
             $l->close();
         }
@@ -526,11 +500,11 @@ class Service
         if (Config::get('concrete.log.emails') && !$this->getTesting()) {
             $l = new GroupLogger(LOG_TYPE_EMAILS, Logger::INFO);
             if (Config::get('concrete.email.enabled')) {
-                $l->write('**'.t('EMAILS ARE ENABLED. THIS EMAIL WAS SENT TO mail()').'**');
+                $l->write('**' . t('EMAILS ARE ENABLED. THIS EMAIL WAS SENT TO mail()') . '**');
             } else {
-                $l->write('**'.t('EMAILS ARE DISABLED. THIS EMAIL WAS LOGGED BUT NOT SENT').'**');
+                $l->write('**' . t('EMAILS ARE DISABLED. THIS EMAIL WAS LOGGED BUT NOT SENT') . '**');
             }
-            $l->write(t('Template Used').': '.$this->template);
+            $l->write(t('Template Used') . ': ' . $this->template);
             $l->write(t('Mail Details: %s', $mail->toString()));
             $l->close();
         }

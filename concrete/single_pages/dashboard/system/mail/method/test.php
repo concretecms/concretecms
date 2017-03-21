@@ -1,10 +1,26 @@
 <?php
+use Concrete\Core\User\UserInfoRepository;
+
 defined('C5_EXECUTE') or die('Access Denied.');
 
 // Arguments
 /* @var bool $emailEnabled */
-/* @var string $mailRecipient */
+/* @var string $mailRecipient [optional] */
+/* @var int $numEmails [optional] */
 
+if (!isset($mailRecipient)) {
+    $mailRecipient = '';
+    $me = new User();
+    if ($me->isRegistered()) {
+        $myInfo = Core::make(UserInfoRepository::class)->getByID($me->getUserID());
+        if ($myInfo !== null) {
+            $mailRecipient = $myInfo->getUserEmail();
+        }
+    }
+}
+if (!isset($numEmails)) {
+    $numEmails = 1;
+}
 ?>
 
 <form method="post" action="<?= $view->action('do_test') ?>" id="mail-settings-test-form">
@@ -21,6 +37,10 @@ defined('C5_EXECUTE') or die('Access Denied.');
         <div class="form-group">
             <?= $form->label('mailRecipient', t('Recipient email address')) ?>
             <?= $form->email('mailRecipient', $mailRecipient, ['required' => 'required']) ?>
+        </div>
+        <div class="form-group">
+            <?= $form->label('numEmails', t('Number of messages to send')) ?>
+            <?= $form->number('numEmails', $numEmails, ['required' => 'required', 'min' => 1]) ?>
         </div>
         <?php
     }
