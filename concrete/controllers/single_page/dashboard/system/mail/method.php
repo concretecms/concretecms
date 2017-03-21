@@ -2,8 +2,8 @@
 namespace Concrete\Controller\SinglePage\Dashboard\System\Mail;
 
 use Concrete\Core\Page\Controller\DashboardPageController;
-use Loader;
 use Config;
+use Loader;
 
 class Method extends DashboardPageController
 {
@@ -11,7 +11,7 @@ class Method extends DashboardPageController
 
     public function settings_updated()
     {
-        $this->set("message", t('Global mail settings saved.'));
+        $this->set('message', t('Global mail settings saved.'));
     }
 
     public function save_settings()
@@ -36,6 +36,6 @@ class Method extends DashboardPageController
             Config::clear('concrete.mail.methods.smtp.port');
             Config::clear('concrete.mail.methods.smtp.encryption');
         }
-        $this->redirect("/dashboard/system/mail/method", "settings_updated");
+        $this->redirect('/dashboard/system/mail/method', 'settings_updated');
     }
 }
