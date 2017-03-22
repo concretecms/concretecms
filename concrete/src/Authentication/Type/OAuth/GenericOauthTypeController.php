@@ -1,17 +1,17 @@
 <?php
 namespace Concrete\Core\Authentication\Type\OAuth;
 
-use Concrete\Core\Authentication\AuthenticationTypeController;
 use Concrete\Core\Authentication\AuthenticationType;
+use Concrete\Core\Authentication\AuthenticationTypeController;
+use Concrete\Core\User\User;
 use OAuth\Common\Exception\Exception;
 use OAuth\Common\Service\AbstractService;
 use OAuth\Common\Token\TokenInterface;
 use OAuth\UserData\Extractor\Extractor;
-use Concrete\Core\User\User;
 
 abstract class GenericOauthTypeController extends AuthenticationTypeController
 {
-    public $apiMethods = array('handle_error', 'handle_success');
+    public $apiMethods = ['handle_error', 'handle_success'];
 
     /**
      * @var \OAuth\Common\Service\AbstractService
@@ -36,12 +36,12 @@ abstract class GenericOauthTypeController extends AuthenticationTypeController
         if (!$manager->tablesExist('OauthUserMap')) {
             $schema = new \Doctrine\DBAL\Schema\Schema();
             $table = $schema->createTable('OauthUserMap');
-            $table->addColumn('user_id', 'integer', array('unsigned' => true));
-            $table->addColumn('binding', 'string', array('length' => 255));
-            $table->addColumn('namespace', 'string', array('length' => 255));
+            $table->addColumn('user_id', 'integer', ['unsigned' => true]);
+            $table->addColumn('binding', 'string', ['length' => 255]);
+            $table->addColumn('namespace', 'string', ['length' => 255]);
 
-            $table->setPrimaryKey(array('user_id', 'namespace'));
-            $table->addUniqueIndex(array('binding', 'namespace'), 'oauth_binding');
+            $table->setPrimaryKey(['user_id', 'namespace']);
+            $table->addUniqueIndex(['binding', 'namespace'], 'oauth_binding');
 
             $manager->createTable($table);
         }
@@ -52,7 +52,7 @@ abstract class GenericOauthTypeController extends AuthenticationTypeController
      */
     public function getAdditionalRequestParameters()
     {
-        return array();
+        return [];
     }
 
     public function handle_error($error = false)
@@ -127,7 +127,7 @@ abstract class GenericOauthTypeController extends AuthenticationTypeController
     /**
      * Hash authentication disabled for oauth.
      *
-     * @param User  $u    object requesting verification.
+     * @param User  $u    object requesting verification
      * @param string $hash
      *
      * @return bool returns true if the hash is valid, false if not
@@ -200,7 +200,7 @@ abstract class GenericOauthTypeController extends AuthenticationTypeController
     public function getExtractor($new = false)
     {
         if ($new || !$this->extractor) {
-            $this->extractor = \Core::make('oauth_extractor', array($this->getService()));
+            $this->extractor = \Core::make('oauth_extractor', [$this->getService()]);
         }
 
         return $this->extractor;
@@ -227,10 +227,10 @@ abstract class GenericOauthTypeController extends AuthenticationTypeController
     {
         $result = \Database::connection()->executeQuery(
             'SELECT user_id FROM OauthUserMap WHERE namespace=? AND binding=?',
-            array(
+            [
                 $this->getHandle(),
                 $binding,
-            ));
+            ]);
 
         return $result->fetchColumn();
     }
@@ -266,14 +266,14 @@ abstract class GenericOauthTypeController extends AuthenticationTypeController
             throw new Exception('Email is already in use.');
         }
 
-        $first_name = "";
-        $last_name = "";
+        $first_name = '';
+        $last_name = '';
 
-        $name_support = array(
+        $name_support = [
             'full' => $this->supportsFullName(),
             'first' => $this->supportsFirstName(),
             'last' => $this->supportsLastName(),
-        );
+        ];
 
         if ($name_support['first'] && $name_support['last']) {
             $first_name = $this->getFirstName();
@@ -311,7 +311,7 @@ abstract class GenericOauthTypeController extends AuthenticationTypeController
 
         $username = $unique_username;
 
-        $data = array();
+        $data = [];
         $data['uName'] = $username;
         $data['uPassword'] = \Illuminate\Support\Str::random(256);
         $data['uEmail'] = $email;
@@ -452,11 +452,11 @@ abstract class GenericOauthTypeController extends AuthenticationTypeController
 
         return \Database::connection()->insert(
             'OauthUserMap',
-            array(
+            [
                 'user_id' => $user_id,
                 'binding' => $binding,
                 'namespace' => $this->getHandle(),
-            ));
+            ]);
     }
 
     public function getUniqueId()
@@ -465,7 +465,10 @@ abstract class GenericOauthTypeController extends AuthenticationTypeController
     }
 
     abstract public function handle_authentication_attempt();
+
     abstract public function handle_authentication_callback();
+
     abstract public function handle_attach_attempt();
+
     abstract public function handle_attach_callback();
 }
