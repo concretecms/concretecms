@@ -3,6 +3,7 @@ namespace Concrete\Core\Authentication\Type\OAuth;
 
 use Concrete\Core\Authentication\AuthenticationType;
 use Concrete\Core\Authentication\AuthenticationTypeController;
+use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\User\User;
 use OAuth\Common\Exception\Exception;
 use OAuth\Common\Service\AbstractService;
@@ -457,6 +458,41 @@ abstract class GenericOauthTypeController extends AuthenticationTypeController
                 'binding' => $binding,
                 'namespace' => $this->getHandle(),
             ]);
+    }
+
+    /**
+     * Get the binding associated to a specific user.
+     *
+     * @param \Concrete\Core\User\User|\Concrete\Core\User\UserInfo|\Concrete\Core\Entity\User\User|int $user
+     *
+     * @return string|null
+     */
+    public function getBindingForUser($user)
+    {
+        $result = null;
+        if (is_object($user)) {
+            $userID = $user->getUserID();
+        } else {
+            $userID = (int) $user;
+        }
+        if ($userID) {
+            $db = $this->app->make(Connection::class);
+            $qb = $db->createQueryBuilder();
+            $qb->select('oum.binding')
+                ->from('OauthUserMap', 'oum')
+                ->where($qb->expr()->eq('oum.user_id', ':user_id'))->setParameter('user_id', $userID)
+                ->andWhere($qb->expr()->eq('oum.namespace', ':namespace'))->setParameter('namespace', $this->getHandle())
+                ->setMaxResults(1);
+            $rs = $qb->execute();
+            /* @var \Concrete\Core\Database\Driver\PDOStatement $rs */
+            $row = $rs->fetch();
+            $rs->closeCursor();
+            if ($row !== false) {
+                $result = array_pop($row);
+            }
+        }
+
+        return $result;
     }
 
     public function getUniqueId()
