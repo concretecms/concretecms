@@ -180,7 +180,7 @@ class DateTime
         }
 
         // Build HTML
-        $shownDateFormat = t(/*i18n: Short date format: see http://www.php.net/manual/en/function.date.php */ 'n/j/Y');
+        $shownDateFormat = $dh->getPHPDatePattern();
         $disabled = '';
         $html = '<div class="form-inline">';
         if ($includeActivation) {
@@ -368,7 +368,7 @@ EOT;
         }
 
         // Build HTML
-        $shownDateFormat = t(/*i18n: Short date format: see http://www.php.net/manual/en/function.date.php */ 'n/j/Y');
+        $shownDateFormat = $dh->getPHPDatePattern();
         $html = '<div class="form-inline">';
         $html .= '<span class="ccm-input-date-wrapper" id="' . $id . '_dw">';
         $html .= '<input type="text" id="' . $id . '_pub" class="form-control ccm-input-date"';

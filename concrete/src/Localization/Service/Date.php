@@ -720,11 +720,11 @@ class Date
      */
     public function getJQueryUIDatePickerFormat($relatedPHPFormat = '')
     {
-        $phpFormat = (is_string($relatedPHPFormat) && strlen($relatedPHPFormat)) ?
-            $relatedPHPFormat :
-            t(/*i18n: Short date format: see http://www.php.net/manual/en/function.date.php */
-                'n/j/Y'
-            );
+        if (is_string($relatedPHPFormat) && $relatedPHPFormat !== '') {
+            $phpFormat = $relatedPHPFormat;
+        } else {
+            $phpFormat = $this->getPHPDatePattern();
+        }
         // Special chars that need to be escaped in the DatePicker format string
         $datepickerSpecials = ['d', 'o', 'D', 'm', 'M', 'y', '@', '!', '\''];
         // Map from php to DatePicker format
