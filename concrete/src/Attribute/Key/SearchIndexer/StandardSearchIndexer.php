@@ -8,6 +8,7 @@ use Concrete\Core\Attribute\Category\SearchIndexer\StandardSearchIndexerInterfac
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Entity\Attribute\Key\Key;
 use Concrete\Core\Entity\Attribute\Value\Value;
+use Doctrine\DBAL\Platforms\MySqlPlatform;
 use Doctrine\DBAL\Statement;
 use Doctrine\DBAL\Types\Type;
 
@@ -47,7 +48,7 @@ class StandardSearchIndexer implements SearchIndexerInterface
             return $options;
         }
         if ($options['type']->getName() == 'text') {
-            $options['length'] = 4294967295; // This forces Doctrine to use `LONGTEXT` instead of `TINYTEXT`
+            $options['length'] = MySqlPlatform::LENGTH_LIMIT_MEDIUMTEXT + 1; // This forces Doctrine to use `LONGTEXT` instead of `TINYTEXT`
         }
 
         return $options;
