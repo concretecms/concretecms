@@ -2,13 +2,12 @@
 namespace Concrete\Core\Mail;
 
 use Concrete\Core\Logging\GroupLogger;
-use Concrete\Core\Mail\Transport\Smtp as SmtpTransport;
 use Concrete\Core\Support\Facade\Application;
 use Config;
 use Exception;
 use Monolog\Logger;
 use Zend\Mail\Message;
-use Zend\Mail\Transport\Sendmail as SendmailTransport;
+use Zend\Mail\Transport\TransportInterface;
 use Zend\Mime\Message as MimeMessage;
 use Zend\Mime\Mime;
 use Zend\Mime\Part as MimePart;
@@ -57,17 +56,12 @@ class Service
 
     public static function getMailerObject()
     {
-        $response = [];
-        $response['mail'] = new Message();
-        $response['mail']->setEncoding(APP_CHARSET);
+        $app = Application::getFacadeApplication();
 
-        if (strcasecmp(Config::get('concrete.mail.method'), 'smtp') == 0) {
-            $response['transport'] = Application::getFacadeApplication()->make(SmtpTransport::class);
-        } else {
-            $response['transport'] = new SendmailTransport();
-        }
-
-        return $response;
+        return [
+            'mail' => (new Message())->setEncoding(APP_CHARSET),
+            'transport' => $app->make(TransportInterface::class),
+        ];
     }
 
     /**

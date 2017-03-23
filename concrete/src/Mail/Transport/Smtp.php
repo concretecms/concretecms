@@ -1,8 +1,6 @@
 <?php
 namespace Concrete\Core\Mail\Transport;
 
-use Exception;
-use Throwable;
 use Zend\Mail\Message;
 use Zend\Mail\Transport\Smtp as ZendSmtp;
 use Zend\Mail\Transport\SmtpOptions;
@@ -24,33 +22,14 @@ class Smtp extends ZendSmtp
     protected $sentMessagesInConnection = 0;
 
     /**
-     * @param array $config
+     * @param SmtpOptions $options
+     * @param int $messagesPerConnection
      */
-    public function __construct(array $config)
+    public function __construct(SmtpOptions $options, $messagesPerConnection)
     {
-        $options = [
-            'host' => $config['server'],
-        ];
-        $username = isset($config['username']) ? (string) $config['username'] : '';
-        if ($username !== '') {
-            $options['connection_class'] = 'login';
-            $options['connection_config'] = [
-                'username' => $username,
-                'password' => isset($config['password']) ? (string) $config['password'] : '',
-            ];
-        }
-        if (isset($config['port']) && $config['port']) {
-            $options['port'] = (int) $config['port'];
-        }
-        if (isset($config['encryption']) && $config['encryption']) {
-            $options['connection_config']['ssl'] = $config['encryption'];
-        }
-        if (isset($config['messages_per_connection']) && $config['messages_per_connection']) {
-            $this->messagesPerConnection = max(1, (int) $config['messages_per_connection']);
-        } else {
-            $this->messagesPerConnection = 1;
-        }
-        parent::__construct(new SmtpOptions($options));
+        parent::__construct($options);
+        $this->messagesPerConnection = $messagesPerConnection;
+        $this->sentMessagesInConnection = 0;
         $this->autoDisconnect = ($this->messagesPerConnection > 1) ? false : true;
     }
 
@@ -61,21 +40,7 @@ class Smtp extends ZendSmtp
      */
     public function send(Message $message)
     {
-        $error = null;
-        try {
-            parent::send($message);
-        } catch (Exception $x) {
-            $error = $x;
-        } catch (Throwable $x) {
-            $error = $x;
-        }
-        if ($error !== null) {
-            try {
-                $this->disconnect();
-            } catch (Exception $foo) {
-            }
-            throw $error;
-        }
+        parent::send($message);
         ++$this->sentMessagesInConnection;
         if ($this->sentMessagesInConnection >= $this->messagesPerConnection) {
             $this->disconnect();
@@ -91,28 +56,7 @@ class Smtp extends ZendSmtp
     {
         $connection = parent::connect();
         $this->sentMessagesInConnection = 0;
+
         return $connection;
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @see \Zend\Mail\Transport\Smtp::disconnect()
-     */
-    public function disconnect()
-    {
-        parent::disconnect();
-        $this->sentMessagesInConnection = 0;
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @see \Zend\Mail\Transport\Smtp::__destruct()
-     */
-    public function __destruct()
-    {
-        $this->disconnect();
-        parent::__destruct();
     }
 }

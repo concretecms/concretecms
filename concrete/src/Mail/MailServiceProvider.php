@@ -2,7 +2,8 @@
 namespace Concrete\Core\Mail;
 
 use Concrete\Core\Foundation\Service\Provider as ServiceProvider;
-use Concrete\Core\Mail\Transport\Smtp as SmtpTransport;
+use Concrete\Core\Mail\Transport\Factory as TransportFactory;
+use Zend\Mail\Transport\TransportInterface;
 
 class MailServiceProvider extends ServiceProvider
 {
@@ -19,8 +20,10 @@ class MailServiceProvider extends ServiceProvider
             $app->bind($key, $value);
         }
 
-        $this->app->singleton(SmtpTransport::class, function () use ($app) {
-            return $app->build(SmtpTransport::class, ['config' => $app->make('config')->get('concrete.mail.methods.smtp')]);
+        $this->app->singleton(TransportInterface::class, function () use ($app) {
+            $factory = $app->make(TransportFactory::class);
+
+            return $factory->createTransportFromConfig($app->make('config'));
         });
     }
 }
