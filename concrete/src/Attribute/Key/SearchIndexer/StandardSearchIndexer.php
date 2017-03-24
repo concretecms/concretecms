@@ -9,6 +9,7 @@ use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Entity\Attribute\Key\Key;
 use Concrete\Core\Entity\Attribute\Value\Value;
 use Doctrine\DBAL\Platforms\MySqlPlatform;
+use Doctrine\DBAL\Schema\Comparator;
 use Doctrine\DBAL\Statement;
 use Doctrine\DBAL\Types\Type;
 
@@ -16,9 +17,12 @@ class StandardSearchIndexer implements SearchIndexerInterface
 {
     protected $connection;
 
-    public function __construct(Connection $connection)
+    protected $comparator;
+
+    public function __construct(Connection $connection, Comparator $comparator)
     {
         $this->connection = $connection;
+        $this->comparator = $comparator;
     }
 
     protected function getIndexEntryColumn(Key $key, $subKey = false)
@@ -85,7 +89,7 @@ class StandardSearchIndexer implements SearchIndexerInterface
                 $toTable->changeColumn('ak_' . $key->getAttributeKeyHandle() . '_' . $name, $options);
             }
         }
-        $comparator = new \Doctrine\DBAL\Schema\Comparator();
+        $comparator = $this->comparator;
         $diff = $comparator->diffTable($fromTable, $toTable);
         if ($diff !== false) {
             $sql = $this->connection->getDatabasePlatform()->getAlterTableSQL($diff);
@@ -158,7 +162,7 @@ class StandardSearchIndexer implements SearchIndexerInterface
 
         $fromTable = $sm->listTableDetails($category->getIndexedSearchTable());
         $parser = new \Concrete\Core\Database\Schema\Parser\ArrayParser();
-        $comparator = new \Doctrine\DBAL\Schema\Comparator();
+        $comparator = $this->comparator;
 
         if ($previousHandle != false) {
             foreach ($dropColumns as $column) {
