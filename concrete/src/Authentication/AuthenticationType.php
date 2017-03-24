@@ -427,13 +427,16 @@ class AuthenticationType extends Object
     public function renderHook()
     {
         $form_hook = $this->mapAuthenticationTypeFilePath('hook.php');
-        if ($form_hook->exists()) {
+        if (method_exists($this->controller, 'hook') || $form_hook->exists()) {
             ob_start();
             if (method_exists($this->controller, 'hook')) {
                 $this->controller->hook();
             }
-            extract($this->controller->getSets());
-            require_once $form_hook->file;
+            if ($form_hook->exists()) {
+                $controller = $this->controller;
+                extract($this->controller->getSets());
+                require_once $form_hook->file;
+            }
             $out = ob_get_contents();
             ob_end_clean();
             echo $out;
@@ -455,14 +458,16 @@ class AuthenticationType extends Object
     public function renderHooked()
     {
         $form_hooked = $this->mapAuthenticationTypeFilePath('hooked.php');
-        if ($form_hooked->exists()) {
+        if (method_exists($this->controller, 'hooked') || $form_hooked->exists()) {
             ob_start();
             if (method_exists($this->controller, 'hooked')) {
                 $this->controller->hooked();
             }
-            $controller = $this->controller;
-            extract($this->controller->getSets());
-            require_once $form_hooked->file;
+            if ($form_hooked->exists()) {
+                $controller = $this->controller;
+                extract($this->controller->getSets());
+                require_once $form_hooked->file;
+            }
             $out = ob_get_contents();
             ob_end_clean();
             echo $out;
