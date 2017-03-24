@@ -460,6 +460,7 @@ class AuthenticationType extends Object
             if (method_exists($this->controller, 'hooked')) {
                 $this->controller->hooked();
             }
+            $controller = $this->controller;
             extract($this->controller->getSets());
             require_once $form_hooked->file;
             $out = ob_get_contents();
