@@ -39,7 +39,6 @@ class LimitedSmtp implements TransportInterface
         $this->transport = $transport;
         $this->limit = max(1, (int) $limit);
         $this->sent = 0;
-        $this->transport->setAutoDisconnect($this->limit === 1);
     }
 
     /**
