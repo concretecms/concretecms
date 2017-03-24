@@ -69,6 +69,8 @@ class SearchProvider extends AbstractSearchProvider
         $result = parent::getSearchResultFromQuery($query);
         $u = new \User();
         if (!$u->isSuperUser()) {
+            $qb = $result->getItemListObject()->getQueryObject();
+            /* @var \Doctrine\DBAL\Query\QueryBuilder $qb */
             $gIDs = array(-1);
             $gs = new GroupList();
             $groups = $gs->getResults();
@@ -78,16 +80,19 @@ class SearchProvider extends AbstractSearchProvider
                     $gIDs[] = $g->getGroupID();
                 }
             }
-            $result->getItemListObject()->getQueryObject()->leftJoin("u", "UserGroups", "ugRequired", "ugRequired.uID = u.uID");
-            $groups = 'ugRequired.gID in (' . implode(',', $gIDs) . ')';
+            $whereGroups = $qb->expr()->in('ugRequired.gID', $gIDs);
             $gg = \Group::getByID(REGISTERED_GROUP_ID);
             $ggp = new \Permissions($gg);
             if ($ggp->canSearchUsersInGroup()) {
-                $null = 'ugRequired.gID is null';
+                $whereGroups = $qb->expr()->orX(
+                    $whereGroups,
+                    $qb->expr()->isNull('ugRequired.gID')
+                );
             }
-            $result->getItemListObject()->getQueryObject()->select('distinct (u.uID)');
-            $expr = $result->getItemListObject()->getQueryObject()->expr()->orX($groups, $null);
-            $result->getItemListObject()->getQueryObject()->andwhere($expr);
+            $qb
+                ->leftJoin('u', 'UserGroups', 'ugRequired', 'ugRequired.uID = u.uID')
+                ->andWhere($whereGroups)
+                ->groupBy('u.uID');
         }
 
         return $result;
