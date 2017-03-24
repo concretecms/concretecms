@@ -446,4 +446,56 @@ class AuthenticationType extends Object
 
         return method_exists($this->controller, 'hook') || $form_hook->exists();
     }
+
+    
+    /**
+     * Render the a form to be displayed when the authentication type is already hooked.
+     * All settings are expected to be saved by each individual authentication type.
+     */
+    public function renderHooked()
+    {
+        $form_hooked = $this->mapAuthenticationTypeFilePath('hooked.php');
+        if ($form_hooked->exists()) {
+            ob_start();
+            if (method_exists($this->controller, 'hooked')) {
+                $this->controller->hooked();
+            }
+            extract($this->controller->getSets());
+            require_once $form_hooked->file;
+            $out = ob_get_contents();
+            ob_end_clean();
+            echo $out;
+        }
+    }
+
+    /**
+     * Does this authentication type support rendering a form when it has already been hooked?
+     *
+     * @return bool
+     */
+    public function hasHooked()
+    {
+        $form_hooked = $this->mapAuthenticationTypeFilePath('hooked.php');
+        
+        return method_exists($this->controller, 'hooked') || $form_hooked->exists();
+    }
+
+    /**
+     * Is this authentication type already hooked for a specific user?
+     *
+     * @param \Concrete\Core\User\User|\Concrete\Core\User\UserInfo|\Concrete\Core\Entity\User\User|int $user
+     *
+     * @return bool|null Returns null if the controller does not implement a way to determine if a user is already hooked or not.
+     */
+    public function isHooked($user)
+    {
+        $result = null;
+        if (is_callable([$this->controller, 'getBindingForUser'])) {
+            $result = $this->controller->getBindingForUser($user) !== null;
+        } else {
+            $result = null;
+        }
+
+        return $result;
+    }
 }
