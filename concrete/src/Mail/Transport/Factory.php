@@ -2,8 +2,9 @@
 namespace Concrete\Core\Mail\Transport;
 
 use Concrete\Core\Config\Repository\Repository;
-use Concrete\Core\Mail\Transport\Smtp as SmtpTransport;
+use Concrete\Core\Mail\Transport\LimitedSmtp as LimitedSmtpTransport;
 use Zend\Mail\Transport\Sendmail as SendmailTransport;
+use Zend\Mail\Transport\Smtp as SmtpTransport;
 use Zend\Mail\Transport\SmtpOptions;
 
 class Factory
@@ -53,7 +54,7 @@ class Factory
     /**
      * @param array $array
      *
-     * @return \Concrete\Core\Mail\Transport\Smtp
+     * @return \Concrete\Core\Mail\Transport\Smtp|\Concrete\Core\Mail\Transport\LimitedSmtp
      */
     public function createSmtpTransportFromArray(array $array)
     {
@@ -79,6 +80,14 @@ class Factory
         $mpc = array_get($array, 'messages_per_connection');
         $messagesPerConnection = $mpc ? max(1, (int) $mpc) : 1;
 
-        return new SmtpTransport(new SmtpOptions($options), $messagesPerConnection);
+        $smtp = new SmtpTransport(new SmtpOptions($options));
+
+        if ($messagesPerConnection > 1) {
+            $result = new LimitedSmtpTransport($smtp, $messagesPerConnection);
+        } else {
+            $result = $smtp;
+        }
+
+        return $result;
     }
 }
