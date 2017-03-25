@@ -392,7 +392,7 @@ class UserInfo extends Object implements AttributeObjectInterface, PermissionObj
      *
      * @return bool|null returns false if the record has not been saved, null if the password confirmation failed, true otherwise
      */
-    public function update(array $data)
+    public function update($data)
     {
         $uID = (int) $this->getUserID();
         if ($uID === 0) {
@@ -848,7 +848,7 @@ class UserInfo extends Object implements AttributeObjectInterface, PermissionObj
     /**
      * @param UserAttributeKey[] $attributes
      */
-    public function saveUserAttributesForm(array $attributes)
+    public function saveUserAttributesForm($attributes)
     {
         foreach ($attributes as $uak) {
             $controller = $uak->getController();
