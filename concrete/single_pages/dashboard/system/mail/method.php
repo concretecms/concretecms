@@ -58,7 +58,7 @@ $secureVals = ['' => t('None'), 'SSL' => tc('Encryption', 'SSL'), 'TLS' => tc('E
 
         <div class="form-group">
             <?= $form->label('MAIL_SEND_METHOD_SMTP_MESSAGES_PER_CONNECTION', t('Messages per connection'), ['class' => 'launch-tooltip', 'title' => t('Sending multiple messages per connection can speed up sending many emails at once, but this feature must be supported by the SMTP server')]) ?>
-            <?= $form->number('MAIL_SEND_METHOD_SMTP_MESSAGES_PER_CONNECTION', $config->get('concrete.mail.methods.smtp.messages_per_connection'), ['min' => 1, 'required' => 'required']) ?>
+            <?= $form->number('MAIL_SEND_METHOD_SMTP_MESSAGES_PER_CONNECTION', $config->get('concrete.mail.methods.smtp.messages_per_connection') ?: '', ['min' => 1, 'placeholder' => t('Leave empty for unlimited messages per connection')]) ?>
         </div>
 
     </fieldset>

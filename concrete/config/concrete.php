@@ -109,7 +109,7 @@ return [
                 'username' => '',
                 'password' => '',
                 'encryption' => '',
-                'messages_per_connection' => 1,
+                'messages_per_connection' => null,
             ],
         ],
     ],

@@ -78,11 +78,11 @@ class Factory
             $options['connection_config']['ssl'] = (string) $encryption;
         }
         $mpc = array_get($array, 'messages_per_connection');
-        $messagesPerConnection = $mpc ? max(1, (int) $mpc) : 1;
+        $messagesPerConnection = $mpc ? (int) $mpc : 0;
 
         $smtp = new SmtpTransport(new SmtpOptions($options));
 
-        if ($messagesPerConnection > 1) {
+        if ($messagesPerConnection >= 1) {
             $result = new LimitedSmtpTransport($smtp, $messagesPerConnection);
         } else {
             $result = $smtp;
