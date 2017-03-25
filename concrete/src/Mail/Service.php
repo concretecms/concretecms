@@ -1,8 +1,9 @@
 <?php
 namespace Concrete\Core\Mail;
 
+use Concrete\Core\Application\Application;
 use Concrete\Core\Logging\GroupLogger;
-use Concrete\Core\Support\Facade\Application;
+use Concrete\Core\Support\Facade\Application as ApplicationFacade;
 use Config;
 use Exception;
 use Monolog\Logger;
@@ -14,6 +15,16 @@ use Zend\Mime\Part as MimePart;
 
 class Service
 {
+    /**
+     * @var Application
+     */
+    protected $app;
+
+    /**
+     * @var TransportInterface
+     */
+    protected $transport;
+
     protected $headers;
     protected $to;
     protected $replyto;
@@ -28,8 +39,14 @@ class Service
     protected $bodyHTML;
     protected $testing;
 
-    public function __construct()
+    /**
+     * @param Application $app
+     * @param TransportInterface $transport the mail transport to use to send emails
+     */
+    public function __construct(Application $app, TransportInterface $transport)
     {
+        $this->app = $app;
+        $this->transport = $transport;
         $this->reset();
     }
 
@@ -52,16 +69,6 @@ class Service
         $this->body = false;
         $this->bodyHTML = false;
         $this->testing = false;
-    }
-
-    public static function getMailerObject()
-    {
-        $app = Application::getFacadeApplication();
-
-        return [
-            'mail' => (new Message())->setEncoding(APP_CHARSET),
-            'transport' => $app->make(TransportInterface::class),
-        ];
     }
 
     /**
@@ -368,14 +375,13 @@ class Service
      */
     public function sendMail($resetData = true)
     {
+        $config = $this->app->make('config');
         $_from[] = $this->from;
         $fromStr = $this->generateEmailStrings($_from);
         $toStr = $this->generateEmailStrings($this->to);
         $replyStr = $this->generateEmailStrings($this->replyto);
-        $zendMailData = self::getMailerObject();
 
-        $mail = $zendMailData['mail'];
-        $transport = $zendMailData['transport'];
+        $mail = (new Message())->setEncoding(APP_CHARSET);
 
         if (is_array($this->from) && count($this->from)) {
             if ($this->from[0] != '') {
@@ -383,8 +389,8 @@ class Service
             }
         }
         if (!isset($from)) {
-            $from = [Config::get('concrete.email.default.address'), Config::get('concrete.email.default.name')];
-            $fromStr = Config::get('concrete.email.default.address');
+            $from = [$config->get('concrete.email.default.address'), $config->get('concrete.email.default.name')];
+            $fromStr = $config->get('concrete.email.default.address');
         }
 
         // The currently included Zend library has a bug in setReplyTo that
@@ -466,8 +472,8 @@ class Service
 
         $sent = false;
         try {
-            if (Config::get('concrete.email.enabled')) {
-                $transport->send($mail);
+            if ($config->get('concrete.email.enabled')) {
+                $this->transport->send($mail);
             }
             $sent = true;
         } catch (Exception $e) {
@@ -477,7 +483,7 @@ class Service
             $l = new GroupLogger(LOG_TYPE_EXCEPTIONS, Logger::CRITICAL);
             $l->write(t('Mail Exception Occurred. Unable to send mail: ') . $e->getMessage());
             $l->write($e->getTraceAsString());
-            if (Config::get('concrete.log.emails')) {
+            if ($config->get('concrete.log.emails')) {
                 $l->write(t('Template Used') . ': ' . $this->template);
                 $l->write(t('To') . ': ' . $toStr);
                 $l->write(t('From') . ': ' . $fromStr);
@@ -491,9 +497,9 @@ class Service
         }
 
         // add email to log
-        if (Config::get('concrete.log.emails') && !$this->getTesting()) {
+        if ($config->get('concrete.log.emails') && !$this->getTesting()) {
             $l = new GroupLogger(LOG_TYPE_EMAILS, Logger::INFO);
-            if (Config::get('concrete.email.enabled')) {
+            if ($config->get('concrete.email.enabled')) {
                 $l->write('**' . t('EMAILS ARE ENABLED. THIS EMAIL WAS SENT TO mail()') . '**');
             } else {
                 $l->write('**' . t('EMAILS ARE DISABLED. THIS EMAIL WAS LOGGED BUT NOT SENT') . '**');
@@ -509,5 +515,18 @@ class Service
         }
 
         return $sent;
+    }
+
+    /**
+     * @deprecated To get the mail transport, call \Core::make(\Zend\Mail\Transport\TransportInterface::class)
+     */
+    public static function getMailerObject()
+    {
+        $app = ApplicationFacade::getFacadeApplication();
+
+        return [
+            'mail' => (new Message())->setEncoding(APP_CHARSET),
+            'transport' => $app->make(TransportInterface::class),
+        ];
     }
 }
