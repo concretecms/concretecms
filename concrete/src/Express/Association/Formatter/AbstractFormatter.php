@@ -3,7 +3,6 @@ namespace Concrete\Core\Express\Association\Formatter;
 
 use Concrete\Core\Entity\Express\Association;
 use Concrete\Core\Entity\Express\Control\AssociationControl;
-use Concrete\Core\Entity\Express\Entity;
 use Concrete\Core\Entity\Express\Entry;
 
 abstract class AbstractFormatter implements FormatterInterface
