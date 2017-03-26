@@ -67,6 +67,13 @@ class StandardSearchIndexer implements SearchIndexerInterface
     public function refreshSearchIndexKeyColumns(CategoryInterface $category, AttributeKeyInterface $key)
     {
         $controller = $key->getController();
+
+        if ($key->isAttributeKeySearchable() == false ||
+            $category->getIndexedSearchTable() == false ||
+            $controller->getSearchIndexFieldDefinition() == false) {
+            return false;
+        }
+        
         $definition = $controller->getSearchIndexFieldDefinition();
         $sm = $this->connection->getSchemaManager();
         $fromTable = $sm->listTableDetails($category->getIndexedSearchTable());
