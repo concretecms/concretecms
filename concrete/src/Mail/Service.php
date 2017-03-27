@@ -500,7 +500,11 @@ class Service
         if ($config->get('concrete.log.emails') && !$this->getTesting()) {
             $l = new GroupLogger(LOG_TYPE_EMAILS, Logger::INFO);
             if ($config->get('concrete.email.enabled')) {
-                $l->write('**' . t('EMAILS ARE ENABLED. THIS EMAIL WAS SENT TO mail()') . '**');
+                if ($sent) {
+                    $l->write('**'.t('EMAILS ARE ENABLED. THIS EMAIL HAS BEEN SENT').'**');
+                } else {
+                    $l->write('**'.t('EMAILS ARE ENABLED. THIS EMAIL HAS NOT BEEN SENT').'**');
+                }
             } else {
                 $l->write('**' . t('EMAILS ARE DISABLED. THIS EMAIL WAS LOGGED BUT NOT SENT') . '**');
             }

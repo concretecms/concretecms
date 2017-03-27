@@ -70,7 +70,7 @@ function copyBoundarySpaces(from, to) {
   if (m) {
     to = m[1] + to;
   }
-  m = /^\S(\s+)$/.exec(from);
+  m = /\S(\s+)$/.exec(from);
   if (m) {
     to = to +  m[1];
   }
