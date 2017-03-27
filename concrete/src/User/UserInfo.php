@@ -72,6 +72,11 @@ class UserInfo extends Object implements AttributeObjectInterface, PermissionObj
     protected $entity;
 
     /**
+     * @var \Symfony\Component\EventDispatcher\EventDispatcher|null
+     */
+    protected $director = null;
+
+    /**
      * @param EntityManagerInterface $entityManager
      * @param UserCategory $attributeCategory
      * @param Application $application
@@ -196,7 +201,7 @@ class UserInfo extends Object implements AttributeObjectInterface, PermissionObj
         // run any internal event we have for user deletion
 
         $ue = new DeleteUserEvent($this);
-        $ue = $this->application->make('director')->dispatch('on_user_delete', $ue);
+        $ue = $this->getDirector()->dispatch('on_user_delete', $ue);
         if (!$ue->proceed()) {
             return false;
         }
@@ -256,7 +261,7 @@ class UserInfo extends Object implements AttributeObjectInterface, PermissionObj
         // run any internal event we have for user update
         $ui = $this->application->make(UserInfoRepository::class)->getByID($this->getUserID());
         $ue = new UserInfoEvent($ui);
-        $this->application->make('director')->dispatch('on_user_update', $ue);
+        $this->getDirector()->dispatch('on_user_update', $ue);
     }
 
     /**
@@ -267,7 +272,7 @@ class UserInfo extends Object implements AttributeObjectInterface, PermissionObj
         $this->connection->executeQuery('UPDATE Users SET uIsPasswordReset = 1 WHERE uID = ? limit 1', [$this->getUserID()]);
 
         $updateEventData = new UserInfoEvent($this);
-        $this->application->make('director')->dispatch('on_user_update', $updateEventData);
+        $this->getDirector()->dispatch('on_user_update', $updateEventData);
     }
 
     /**
@@ -467,11 +472,11 @@ class UserInfo extends Object implements AttributeObjectInterface, PermissionObj
                 }
                 // run any internal event we have for user update
                 $ue = new UserInfoEvent($this);
-                $this->application->make('director')->dispatch('on_user_update', $ue);
+                $this->getDirector()->dispatch('on_user_update', $ue);
                 if ($passwordChangedOn !== null) {
                     $ue = new UserInfoWithPasswordEvent($this);
                     $ue->setUserPassword($data['uPassword']);
-                    $this->application->make('director')->dispatch('on_user_change_password', $ue);
+                    $this->getDirector()->dispatch('on_user_change_password', $ue);
                 }
             }
         }
@@ -526,7 +531,7 @@ class UserInfo extends Object implements AttributeObjectInterface, PermissionObj
                 foreach ($groupObjects as $group) {
                     $ue = new UserGroupEvent($userObject);
                     $ue->setGroupObject($group);
-                    $this->application->make('director')->dispatch('on_user_exit_group', $ue);
+                    $this->getDirector()->dispatch('on_user_exit_group', $ue);
                 }
             }
         }
@@ -561,7 +566,7 @@ class UserInfo extends Object implements AttributeObjectInterface, PermissionObj
 
         $this->uIsValidated = 1;
         $ue = new UserInfoEvent($this);
-        $this->application->make('director')->dispatch('on_user_validate', $ue);
+        $this->getDirector()->dispatch('on_user_validate', $ue);
 
         return true;
     }
@@ -621,7 +626,7 @@ class UserInfo extends Object implements AttributeObjectInterface, PermissionObj
             [$this->getUserID()]
         );
         $ue = new UserInfoEvent($this);
-        $this->application->make('director')->dispatch('on_user_activate', $ue);
+        $this->getDirector()->dispatch('on_user_activate', $ue);
     }
 
     /**
@@ -659,7 +664,7 @@ class UserInfo extends Object implements AttributeObjectInterface, PermissionObj
             [$this->getUserID()]
         );
         $ue = new UserInfoEvent($this);
-        $this->application->make('director')->dispatch('on_user_deactivate', $ue);
+        $this->getDirector()->dispatch('on_user_deactivate', $ue);
     }
 
     /**
@@ -858,7 +863,7 @@ class UserInfo extends Object implements AttributeObjectInterface, PermissionObj
 
         $ue = new UserInfoWithAttributesEvent($this);
         $ue->setAttributes($attributes);
-        $this->application->make('director')->dispatch('on_user_attributes_saved', $ue);
+        $this->getDirector()->dispatch('on_user_attributes_saved', $ue);
     }
 
     /**
@@ -914,6 +919,18 @@ class UserInfo extends Object implements AttributeObjectInterface, PermissionObj
 
             return $this->getAttribute($nm);
         }
+    }
+
+    /**
+     * @return \Symfony\Component\EventDispatcher\EventDispatcher
+     */
+    protected function getDirector()
+    {
+        if ($this->director === null) {
+            $this->director = $this->application->make('director');
+        }
+
+        return $this->director;
     }
 
     /**
