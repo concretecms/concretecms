@@ -100,7 +100,7 @@ switch (Config::get('concrete.cache.full_page_lifetime')) {
         if ($rec instanceof \Concrete\Core\Cache\Page\PageCacheRecord) {
             ?>
 			<div class="alert alert-success">
-				<?=t('This page currently exists in the full page cache. It expires %s.', Loader::helper('date')->date('m/d/Y g:i a', $rec->getCacheRecordExpiration()))?>
+				<?=t('This page currently exists in the full page cache. It expires %s.', Core::make('date')->formatDateTime($rec->getCacheRecordExpiration()))?>
 				&nbsp;&nbsp;<button type="button" class="btn btn-xs btn-default pull-right" id="ccm-button-remove-page-from-cache"><?=t('Purge')?></button>
 			</div>
 		<?php

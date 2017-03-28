@@ -81,7 +81,7 @@ class Controller extends AttributeTypeController
         switch ($this->akDateDisplayMode) {
             case 'text':
                 $dh = $this->app->make('helper/date');
-                $format = t(/*i18n: Short date/time format: see http://www.php.net/manual/en/function.date.php */ 'n/j/Y g.i A');
+                $format = $dh->getPHPDateTimePattern();
                 if ($datetime === null) {
                     $value = '';
                     $placeholder = $dh->formatCustom($format, 'now');
@@ -204,7 +204,7 @@ class Controller extends AttributeTypeController
                     $dh = $this->app->make('helper/date');
                     try {
                         $datetime = DateTime::createFromFormat(
-                            t(/*i18n: Short date/time format: see http://www.php.net/manual/en/function.date.php */ 'n/j/Y g.i A'),
+                            $dh->getPHPDateTimePattern(),
                             $data['value'],
                             $dh->getTimezone('user')
                          );
