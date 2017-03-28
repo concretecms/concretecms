@@ -152,7 +152,7 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
             }
 
             foreach ($columns as $key) {
-                if (isset($args[$key])) {
+                if (array_key_exists($key, $args)) {
                     $this->record->{$key} = $args[$key];
                 }
             }
