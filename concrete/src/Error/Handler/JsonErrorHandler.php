@@ -35,7 +35,7 @@ class JsonErrorHandler extends Handler
         if (Config::get('concrete.log.errors')) {
             try {
                 $e = $this->getInspector()->getException();
-                $l = new Logger(LOG_TYPE_EXCEPTIONS);
+                $l = \Core::make('log/exceptions');
                 $l->emergency(
                     sprintf(
                         "Exception Occurred: %s:%d %s (%d)\n",
