@@ -39,7 +39,7 @@ class Environment
     {
         $app = Facade::getFacadeApplication();
         $logger = $app->make('log');
-        $logger->log('overrideCoreByPackage no longer functions in 8.2.');
+        $logger->warn('overrideCoreByPackage no longer functions in 8.2.');
     }
 
     public function getRecord($segment, $pkgHandle = false)
