@@ -45,10 +45,22 @@
 			var result = r.responseText;
 			if (r.responseJSON) {
 				var json = r.responseJSON;
-				if ($.isArray(json.errors) && json.errors.length > 0 && typeof json.errors[0] === 'string') {
-					result = json.errors.join('\n');
+
+				// first, lets check to see if json.error is an object. Because if it is we've enabled
+				// debug error handling and we have a bunch of interesting information about the error to report.
+				if (typeof json.error === 'object' && $.isArray(json.error.trace)) {
+					result = '<p class="text-danger" style="word-break: break-all"><strong>' + json.error.message + '</strong></p>';
+					result += '<p class="text-muted">' + ccmi18n.errorDetails + '</p>';
+					result += '<table class="table"><tbody>';
+					for (var i = 0; i < json.error.trace.length; i++) {
+						var trace = json.error.trace[i];
+						result += '<tr><td style="word-break: break-all">' + trace.file + '(' + trace.line + '): ' + trace.class + '->' + trace.function + '<td></tr>';
+					}
+					result += '</tbody></table>';
+				} else if ($.isArray(json.errors) && json.errors.length > 0 && typeof json.errors[0] === 'string') {
+					result = '<p class="text-danger" style="word-break: break-all"><strong>' + json.errors.join('\n') + '</strong></p>';
 				} else if (typeof json.error === 'string' && json.error !== '') {
-					result = json.error;
+					result = '<p class="text-danger" style="word-break: break-all"><strong>' + json.error + '</strong></p>';
 				}
 			}
 
@@ -59,6 +71,7 @@
 			ConcreteEvent.fire('AjaxRequestError', {
 				'response': r
 			});
+
 			ConcreteAlert.dialog('Error', my.errorResponseToString(r));
 		},
 
@@ -67,7 +80,7 @@
 				ConcreteEvent.fire('AjaxRequestError', {
 					'response': r
 				});
-				ConcreteAlert.dialog('Error', r.errors.join("<br/>"));
+				ConcreteAlert.dialog('Error', '<p class="text-danger">' + r.errors.join("<br/>") + '</p>');
 				return false;
 			}
 			return true;
