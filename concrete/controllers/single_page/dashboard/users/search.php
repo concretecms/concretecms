@@ -563,7 +563,7 @@ class Search extends DashboardPageController
         $search = $this->app->make('Concrete\Controller\Search\Users');
         $searchResults = $search->getCurrentSearchObject();
 
-        $csvService = Core::make('helper/csv/user_list', [$searchResults, 'Users']);
+        $csvService = $this->app->make('helper/csv/user_list', [$searchResults, 'Users']);
         $csvService->generate();
     }
 }
