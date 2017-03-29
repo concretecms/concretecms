@@ -139,7 +139,14 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
         return $this->record;
     }
 
-    protected function performSave($args, $loadExisting = false)
+    /**
+     * Persist the block options.
+     *
+     * @param array $args An array that contains the block options
+     * @param bool $loadExisting Shall we initialize the record to be saved with the current data?
+     * @param bool $supportNullValues Set to true to allow saving NULL values
+     */
+    protected function performSave($args, $loadExisting = false, $supportNullValues = false)
     {
         //$argsMerged = array_merge($_POST, $args);
         if ($this->btTable) {
@@ -151,9 +158,17 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
                 $this->record->Load('bID=' . $this->bID);
             }
 
-            foreach ($columns as $key) {
-                if (isset($args[$key])) {
-                    $this->record->{$key} = $args[$key];
+            if ($supportNullValues) {
+                foreach ($columns as $key) {
+                    if (array_key_exists($key, $args)) {
+                        $this->record->{$key} = $args[$key];
+                    }
+                }
+            } else {
+                foreach ($columns as $key) {
+                    if (isset($args[$key])) {
+                        $this->record->{$key} = $args[$key];
+                    }
                 }
             }
 
