@@ -85,8 +85,8 @@ class Users extends Controller
             $ggp = new Permissions($gg);
             if ($ggp->canSearchUsersInGroup()) {
                 $whereGroups = $qb->expr()->orX(
-                        $whereGroups,
-                        $qb->expr()->isNull('ugRequired.gID')
+                    $whereGroups,
+                    $qb->expr()->isNull('ugRequired.gID')
                 );
             }
             $qb->leftJoin('u', 'UserGroups', 'ugRequired', 'ugRequired.uID = u.uID')
