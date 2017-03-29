@@ -72,6 +72,7 @@ class Users extends Controller
         if (!$u->isSuperUser()) {
             $gIDs = array(-1);
             $gs = new GroupList();
+            $qb = $this->userList->getQueryObject();
             $groups = $gs->getResults();
             foreach ($groups as $g) {
                 $gp = new Permissions($g);
@@ -79,16 +80,18 @@ class Users extends Controller
                     $gIDs[] = $g->getGroupID();
                 }
             }
-            $this->userList->getQueryObject()->leftJoin("u", "UserGroups", "ugRequired", "ugRequired.uID = u.uID");
-            $groups = 'ugRequired.gID in (' . implode(',', $gIDs) . ')';
+            $whereGroups = $qb->expr()->in('ugRequired.gID', $gIDs);
             $gg = Group::getByID(REGISTERED_GROUP_ID);
             $ggp = new Permissions($gg);
             if ($ggp->canSearchUsersInGroup()) {
-                $null = 'ugRequired.gID is null';
+                $whereGroups = $qb->expr()->orX(
+                        $whereGroups,
+                        $qb->expr()->isNull('ugRequired.gID')
+                );
             }
-            $this->userList->getQueryObject()->select('distinct (u.uID)');
-            $expr = $this->userList->getQueryObject()->expr()->orX($groups, $null);
-            $this->userList->getQueryObject()->andwhere($expr);
+            $qb->leftJoin('u', 'UserGroups', 'ugRequired', 'ugRequired.uID = u.uID')
+                ->andWhere($whereGroups)
+                ->groupBy('u.uID');
         }
 
         $filterGIDs = array();
