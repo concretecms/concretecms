@@ -110,6 +110,15 @@ class FileLocator
         return $record;
     }
 
+    /**
+     * @return array
+     */
+    public function getLocations()
+    {
+        return $this->locations;
+    }
+
+
 }
 
 

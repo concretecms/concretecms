@@ -23,6 +23,14 @@ class ThemeLocation extends AbstractLocation
         $this->pkgHandle = $theme->getPackageHandle();
     }
 
+    /**
+     * @return mixed
+     */
+    public function getThemeHandle()
+    {
+        return $this->themeHandle;
+    }
+
     public function getPath()
     {
         if ($this->pkgHandle) {
