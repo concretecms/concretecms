@@ -19,7 +19,7 @@
             'date' => t('Date Only'),
             'text' => t('Text Input Field'),
         ];
-        if (!isset($akDateDisplayMode) || !in_array($akDateDisplayMode, $akDateDisplayModeOptions)) {
+        if (!isset($akDateDisplayMode) || !isset($akDateDisplayModeOptions[$akDateDisplayMode])) {
             $akDateDisplayMode = key($akDateDisplayModeOptions);
         }
         ?>

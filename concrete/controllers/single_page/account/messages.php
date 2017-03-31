@@ -35,7 +35,7 @@ class Messages extends AccountPageController
             }
         }
 
-        $this->redirect('/profile');
+        $this->redirect('/account');
     }
 
     protected function getMessageMailboxID($box)
