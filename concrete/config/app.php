@@ -451,6 +451,8 @@ return [
             'attribute_action',
             ['action' => '.+'],
         ],
+        "/ccm/system/attribute/attribute_sort/set" => ['\Concrete\Controller\Backend\Attributes::sortInSet'],
+        "/ccm/system/attribute/attribute_sort/user" => ['\Concrete\Controller\Backend\Attributes::sortUser'],
 
         /*
          * Trees
@@ -733,12 +735,16 @@ return [
             ['css', 'css/responsive-slides.css', ['minify' => false]],
         ],
         'html5-shiv' => [
-            ['javascript-conditional', 'js/ie/html5-shiv.js',
+            [
+                'javascript-conditional',
+                'js/ie/html5-shiv.js',
                 ['conditional' => 'lt IE 9'],
             ],
         ],
         'respond' => [
-            ['javascript-conditional', 'js/ie/respond.js',
+            [
+                'javascript-conditional',
+                'js/ie/respond.js',
                 ['conditional' => 'lt IE 9'],
             ],
         ],
