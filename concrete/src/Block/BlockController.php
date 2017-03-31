@@ -55,6 +55,13 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
     protected $identifier;
     protected $btTable = null;
 
+    /**
+     * Set this to true if the data sent to the save/performSave methods can contain NULL values that should be persisted.
+     *
+     * @var bool
+     */
+    protected $supportSavingNullValues = false;
+
     public function getBlockTypeInSetName()
     {
         return $this->getBlockTypeName();
@@ -144,9 +151,8 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
      *
      * @param array $args An array that contains the block options
      * @param bool $loadExisting Shall we initialize the record to be saved with the current data?
-     * @param bool $supportNullValues Set to true to allow saving NULL values
      */
-    protected function performSave($args, $loadExisting = false, $supportNullValues = false)
+    protected function performSave($args, $loadExisting = false)
     {
         //$argsMerged = array_merge($_POST, $args);
         if ($this->btTable) {
@@ -158,7 +164,7 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
                 $this->record->Load('bID=' . $this->bID);
             }
 
-            if ($supportNullValues) {
+            if ($this->supportSavingNullValues) {
                 foreach ($columns as $key) {
                     if (array_key_exists($key, $args)) {
                         $this->record->{$key} = $args[$key];
