@@ -1,14 +1,11 @@
-
+<?php
+/* @var Concrete\Authentication\Community\Controller $controller */
+$url = $controller->getConcrete5ProfileURL(new User())
+?>
 <div class="form-group">
-        <span>
-            <?= t('Attach a community account') ?>
-        </span>
-    <hr>
-</div>
-<div class="form-group">
-    <a href="<?= \URL::to('/ccm/system/authentication/oauth2/community/attempt_attach'); ?>" class="btn btn-primary btn-community">
-        <img src="<?= \Core::getApplicationURL() ?>/concrete/images/logo.svg" class="concrete5-icon" />
-        <?= t('Attach a concrete5.org account') ?>
+    <a href="<?= h($url) ?>" class="btn btn-primary btn-community">
+        <img src="<?= Core::getApplicationURL() ?>/concrete/images/logo.svg" class="concrete5-icon" />
+        <?= t('View your concrete5 account') ?>
     </a>
 </div>
 

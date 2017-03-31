@@ -174,8 +174,15 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
         if (is_object($this->siteTree)) {
             $tree = $this->siteTree;
         } else {
-            $site = \Core::make("site")->getSite();
-            $tree = $site->getSiteTreeObject();
+            $c = \Page::getCurrentPage();
+            $tree = false;
+            if (is_object($c) && !$c->isError()) {
+                $tree = $c->getSiteTreeObject();
+            }
+            if (!is_object($tree)) {
+                $site = \Core::make("site")->getSite();
+                $tree = $site->getSiteTreeObject();
+            }
         }
 
         // Note, we might not use this. We have to set the parameter even if we don't use it because

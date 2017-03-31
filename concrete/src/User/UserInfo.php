@@ -867,6 +867,24 @@ class UserInfo extends Object implements AttributeObjectInterface, PermissionObj
     }
 
     /**
+     * @param \Concrete\Core\Entity\Attribute\Key\UserKey[] $attributes
+     */
+    public function saveUserAttributesDefault(array $attributes)
+    {
+        foreach ($attributes as $uak) {
+            $controller = $uak->getController();
+            if (method_exists($controller, 'createDefaultAttributeValue')) {
+                $value = $controller->createDefaultAttributeValue();
+                if ($value !== null) {
+                    $this->setAttribute($uak, $value);
+                }
+            }
+        }
+        $ue = new UserInfoWithAttributesEvent($this);
+        $ue->setAttributes($attributes);
+        Events::dispatch('on_user_attributes_saved', $ue);
+    }
+    /**
      * {@inheritdoc}
      *
      * @return UserCategory

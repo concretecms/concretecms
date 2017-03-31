@@ -730,6 +730,10 @@ class Controller extends BlockController
     public function view()
     {
         $form = $this->getFormEntity();
+        $renderer = new \Concrete\Core\Express\Form\Renderer(
+            new \Concrete\Core\Express\Form\Context\FrontendFormContext(),
+            $form
+        );
         $app = \Core::make('app');
         if (is_object($form)) {
             $this->set('expressForm', $form);
@@ -738,6 +742,7 @@ class Controller extends BlockController
             $this->requireAsset('css', 'core/frontend/captcha');
         }
         $this->requireAsset('css', 'core/frontend/errors');
+        $this->set('renderer', $renderer);
     }
 
 

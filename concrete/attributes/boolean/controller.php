@@ -106,6 +106,18 @@ class Controller extends AttributeTypeController
         return $v;
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see AttributeTypeController::createDefaultAttributeValue()
+     */
+    public function createDefaultAttributeValue()
+    {
+        $this->load();
+
+        return $this->createAttributeValue($this->akCheckedByDefault ? true : false);
+    }
+
     public function validateValue()
     {
         $v = $this->getAttributeValue()->getValue();

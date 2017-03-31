@@ -1,11 +1,4 @@
-<?php defined('C5_EXECUTE') or die("Access Denied.");
-
-    $renderer = new \Concrete\Core\Express\Form\Renderer(
-        new \Concrete\Core\Express\Form\Context\FrontendFormContext(),
-        $expressForm
-    );
-
-?>
+<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
 <div class="ccm-block-express-form">
     <div class="ccm-form">
         <a name="form<?=$bID?>"></a>
