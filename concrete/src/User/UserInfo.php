@@ -884,6 +884,7 @@ class UserInfo extends Object implements AttributeObjectInterface, PermissionObj
         $ue->setAttributes($attributes);
         Events::dispatch('on_user_attributes_saved', $ue);
     }
+
     /**
      * {@inheritdoc}
      *
