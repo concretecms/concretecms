@@ -2,6 +2,7 @@
     z-index: 10050 !important;
 }
 
+
 .cke_editable_inline {
     padding: 0 5px;
 }
@@ -20,4 +21,8 @@
 
 .cke_float {
     max-width: 600px;
+}
+
+.ccm-ui .cke_contents a {
+    color: #3f9edc; /* concrete5 */
 }
