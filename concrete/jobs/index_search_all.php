@@ -76,7 +76,7 @@ class IndexSearchAll extends QueueableJob
             yield "P{$id}";
         }
         foreach ($this->usersToQueue() as $id) {
-            yield "U($id}";
+            yield "U{$id}";
         }
         foreach ($this->filesToQueue() as $id) {
             yield "F{$id}";
