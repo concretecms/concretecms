@@ -1,200 +1,99 @@
 <?php
-namespace Concrete\Tests\Core\Html\Service;
+namespace Concrete\Tests\Core\Filesystem;
 
 use Concrete\Core\Entity\Package;
+use Concrete\Core\Entity\Site\Type;
+use Concrete\Core\Filesystem\Element;
 use Concrete\Core\Foundation\Environment;
 use Concrete\Core\Package\PackageList;
+use Concrete\Core\Page\Page;
 use Concrete\Core\Page\Theme\Theme;
 use Concrete\Core\Support\Facade\Facade;
 use Illuminate\Filesystem\Filesystem;
 use Concrete\Core\Filesystem\FileLocator;
 
-class FileLocatorTest extends \PHPUnit_Framework_TestCase
+class ElementTest extends \PHPUnit_Framework_TestCase
 {
 
-    protected $app;
-
-    /**
-     * @var FileLocator
-     */
-    protected $locator;
-
-    public function setUp()
-    {
-        $this->app = Facade::getFacadeApplication();
-        $this->locator = $this->app->make(FileLocator::class);
-    }
-
-    public function testBasicLocate()
-    {
-        $record = $this->locator->getRecord(DIRNAME_ATTRIBUTES . '/social_links/view.css');
-        $this->assertInstanceOf('Concrete\Core\Filesystem\FileLocator\Record', $record);
-        $this->assertEquals(DIR_BASE_CORE . '/attributes/social_links/view.css', $record->getFile());
-        $this->assertEquals('/path/to/server/concrete/attributes/social_links/view.css', $record->getUrl());
-        $this->assertTrue($record->exists());
-    }
-
-    public function testBasicLocateNotExists()
-    {
-        $record = $this->locator->getRecord(DIRNAME_BLOCKS . '/rss_displayer/templates/fancy/view.php');
-        $this->assertInstanceOf('Concrete\Core\Filesystem\FileLocator\Record', $record);
-        $this->assertEquals(DIR_BASE_CORE . '/blocks/rss_displayer/templates/fancy/view.php', $record->getFile());
-        $this->assertFalse($record->exists());
-    }
-
-    public function testPackageLocate()
-    {
-        $filesystem = $this->getMockBuilder(Filesystem::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-        $filesystem->expects($this->exactly(2))
-            ->method('exists')
-            ->will($this->returnValueMap(array(
-                array(DIR_APPLICATION . '/' . DIRNAME_ELEMENTS . '/awesome/thing.php', false),
-                array(DIR_PACKAGES . '/awesome/' . DIRNAME_ELEMENTS . '/awesome/thing.php', true),
-            )));
-
-        $this->locator->setFilesystem($filesystem);
-        $this->locator->addPackageLocation('awesome');
-        $record = $this->locator->getRecord(DIRNAME_ELEMENTS . '/awesome/thing.php');
-        $this->assertTrue($record->exists());
-        $this->assertEquals(DIR_PACKAGES . '/awesome/elements/awesome/thing.php', $record->getFile());
-    }
-
-    public function testOverride()
-    {
-        $filesystem = $this->getMockBuilder(Filesystem::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-        $filesystem->expects($this->once())
-            ->method('exists')
-            ->will($this->returnValueMap(array(
-                array(DIR_APPLICATION . '/blocks/autonav/view.php', true),
-            )));
-
-        $this->locator->setFilesystem($filesystem);
-        $this->locator->addPackageLocation('awesome');
-        $record = $this->locator->getRecord(DIRNAME_BLOCKS . '/autonav/view.php');
-        $this->assertTrue($record->exists());
-        $this->assertTrue($record->isOverride());
-        $this->assertEquals(DIR_BASE . '/application/blocks/autonav/view.php', $record->getFile());
-    }
-
-    public function testCheckAllPackages()
+    public function testBasicElementAndController()
     {
 
-        // First, we create the package list we're going to use. It's going to have three mock packages in it
-        $packages = [];
-        foreach(['calendar', 'thumbnails_pro', 'superfish'] as $pkgHandle) {
-            $pkg = new Package();
-            $pkg->setPackageHandle($pkgHandle);
-            $packages[] = $pkg;
-        }
-        $packageList = $this->getMockBuilder(PackageList::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-        $packageList->expects($this->any())
-            ->method('getPackages')
-            ->will($this->returnValue($packages));
+        $element = new Element('header_required');
+        $this->assertTrue($element->exists());
+        $this->assertNull($element->getElementController());
 
-        $filesystem = $this->getMockBuilder(Filesystem::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-        $filesystem->expects($this->exactly(3))
-            ->method('exists')
-            ->will($this->returnValueMap(array(
-                array(DIR_APPLICATION . '/blocks/page_list/templates/fancy_thumbnails/view.php', false),
-                array(DIR_PACKAGES . '/calendar/blocks/page_list/templates/fancy_thumbnails/view.php', false),
-                array(DIR_PACKAGES . '/thumbnails_pro/blocks/page_list/templates/fancy_thumbnails/view.php', true),
-            )));
+        $element = \Element::get('header_required');
+        $this->assertTrue($element->exists());
+        $this->assertNull($element->getElementController());
+        $this->assertEquals(DIRNAME_ELEMENTS . DIRECTORY_SEPARATOR . 'header_required.php', $element->getElementPath());
 
+        $element = \Element::get('workflow/type_form_required');
+        $this->assertTrue($element->exists());
+        $this->assertNull($element->getElementController());
 
-        $this->locator->setFilesystem($filesystem);
-        $this->locator->addLocation(new FileLocator\AllPackagesLocation($packageList, $filesystem));
+        $element = \Element::get('dashboard/pages/types/header', [new Type()]);
+        $this->assertInstanceOf('Concrete\Controller\Element\Dashboard\Pages\Types\Header', $element->getElementController());
+        $this->assertTrue($element->exists());
 
-        $record = $this->locator->getRecord(DIRNAME_BLOCKS . '/page_list/templates/fancy_thumbnails/view.php');
-        $this->assertEquals(DIR_BASE . '/packages/thumbnails_pro/blocks/page_list/templates/fancy_thumbnails/view.php', $record->getFile());
+        $element = \Element::get('dashboard/foo');
+        $this->assertFalse($element->exists());
     }
 
-    public function testCurrentThemeElemental()
+    public function testRender()
     {
-        $theme = $this->getMockBuilder(Theme::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $element = new Element('progress_bar');
+        $element->set('totalItems', 20);
+        $element->set('totalItemsSummary', 50);
+        ob_start();
+        $element->render();
+        $contents = ob_get_contents();
+        ob_end_clean();
 
-        $theme->expects($this->any())
-            ->method('getThemeHandle')
-            ->will($this->returnValue('elemental'));
-        $theme->expects($this->once())
-            ->method('getPackageHandle')
-            ->will($this->returnValue(null));
-
-        $this->locator->addLocation(new FileLocator\ThemeLocation($theme));
-        $record = $this->locator->getRecord(DIRNAME_ELEMENTS . '/header_required.php');
-        $this->assertEquals(DIR_BASE_CORE . '/elements/header_required.php', $record->getFile());
+        $contents = trim(preg_replace('~>\s+<~', '><', $contents));
+        $this->assertEquals('<div class="ccm-ui"><div id="ccm-progressive-operation-progress-bar" data-total-items="20"><div class="progress progress-striped active"><div class="progress-bar" style="width: 0%;"></div></div></div><div><span id="ccm-progressive-operation-status">1</span> of 50</div></div>', $contents);
     }
 
-    public function testBlockCustomTemplateInATheme()
+    public function testPackageLocator()
     {
-        $theme = $this->getMockBuilder(Theme::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $theme->expects($this->any())
-            ->method('getThemeHandle')
-            ->will($this->returnValue('brilliant'));
-        $theme->expects($this->once())
-            ->method('getPackageHandle')
-            ->will($this->returnValue('brilliant_theme'));
-
-        $filesystem = $this->getMockBuilder(Filesystem::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-        $filesystem->expects($this->exactly(2))
-            ->method('exists')
-            ->will($this->returnValueMap(array(
-                array(DIR_APPLICATION . '/blocks/page_list/templates/fancy_list.php', false),
-                array(DIR_PACKAGES . '/brilliant_theme/themes/brilliant/blocks/page_list/templates/fancy_list.php', true),
-            )));
-
-        $this->locator->addLocation(new FileLocator\ThemeLocation($theme));
-        $this->locator->setFilesystem($filesystem);
-        $record = $this->locator->getRecord(DIRNAME_BLOCKS . '/page_list/templates/fancy_list.php');
-        $this->assertEquals(DIR_BASE . '/packages/brilliant_theme/themes/brilliant/blocks/page_list/templates/fancy_list.php', $record->getFile());
-        $this->assertTrue($record->exists());
-
+        $element = new Element('dashboard_menu', 'calendar');
+        $locator = $element->getLocator();
+        $this->assertInstanceOf(FileLocator::class, $locator);
+        $locations = $locator->getLocations();
+        $this->assertCount(1, $locations);
+        $this->assertInstanceOf('\Concrete\Core\Filesystem\FileLocator\PackageLocation', $locations[0]);
+        $this->assertEquals('calendar', $locations[0]->getPackageHandle());
     }
 
-    public function testOverridingConversationElementInPackagedTheme()
+    public function testThemeLocatorAndPackageLocator()
     {
-        $theme = $this->getMockBuilder(Theme::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $theme->expects($this->any())
-            ->method('getThemeHandle')
-            ->will($this->returnValue('brilliant'));
-        $theme->expects($this->once())
-            ->method('getPackageHandle')
-            ->will($this->returnValue('brilliant_theme'));
-
-        $filesystem = $this->getMockBuilder(Filesystem::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-        $filesystem->expects($this->exactly(2))
-            ->method('exists')
-            ->will($this->returnValueMap(array(
-                array(DIR_APPLICATION . '/elements/conversation/display.php', false),
-                array(DIR_PACKAGES . '/brilliant_theme/themes/brilliant/elements/concrete/conversation/display.php', true),
-            )));
-
-        $this->locator->addLocation(new FileLocator\ThemeElementLocation($theme));
-        $this->locator->setFilesystem($filesystem);
-        $record = $this->locator->getRecord(DIRNAME_ELEMENTS . '/conversation/display.php');
-        $this->assertEquals(DIR_BASE . '/packages/brilliant_theme/themes/brilliant/elements/concrete/conversation/display.php', $record->getFile());
-        $this->assertTrue($record->exists());
+        $c = new Page();
+        $theme = new Theme();
+        $theme->setThemeHandle('beautiful');
+        $c->themeObject = $theme;
+        $element = \Element::get('mobile/menu', 'mighty_theme', $c);
+        $locator = $element->getLocator();
+        $locations = $locator->getLocations();
+        $this->assertCount(2, $locations);
+        $this->assertInstanceOf('\Concrete\Core\Filesystem\FileLocator\ThemeLocation', $locations[0]);
+        $this->assertInstanceOf('\Concrete\Core\Filesystem\FileLocator\PackageLocation', $locations[1]);
+        $this->assertEquals('mighty_theme', $locations[1]->getPackageHandle());
+        $this->assertEquals('beautiful', $locations[0]->getThemeHandle());
     }
 
+    public function testOverriding()
+    {
+        \Element::register('header_required', function() {
+            $element = new Element('header_required', 'my_site');
+            return $element;
+        });
 
+        $header = \Element::get('header_required');
+        $locator = $header->getLocator();
+        $locations = $locator->getLocations();
+        $this->assertCount(1, $locations);
+        $this->assertInstanceOf('\Concrete\Core\Filesystem\FileLocator\PackageLocation', $locations[0]);
+        $this->assertEquals('my_site', $locations[0]->getPackageHandle());
+
+    }
 
 }

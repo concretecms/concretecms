@@ -24,10 +24,6 @@ if ($callback) {
 }
 */
 
-if (isset($_REQUEST['requestID']) && Loader::helper('validation/numbers')->integer($_REQUEST['requestID'])) {
-    $requestID = $_REQUEST['requestID'];
-}
-
 ?>
 <div class="ccm-ui" id="ccm-sitemap-search-selector">
 
@@ -68,7 +64,7 @@ $(function() {
 		ccm_sitemapSearchSelectorHideBottom();
 		if ($('#ccm-tab-content-sitemap').html() == '') {
 			jQuery.fn.dialog.showLoader();
-			$('#ccm-tab-content-sitemap').load('<?=REL_DIR_FILES_TOOLS_REQUIRED?>/sitemap_overlay?requestID=<?=$requestID?>', function() {
+			$('#ccm-tab-content-sitemap').load('<?=REL_DIR_FILES_TOOLS_REQUIRED?>/sitemap_overlay', function() {
 				jQuery.fn.dialog.hideLoader();
 			});
 		}
@@ -78,7 +74,7 @@ $(function() {
 		ccm_sitemapSearchSelectorHideBottom();
 		if ($('#ccm-tab-content-explore').html() == '') {
 			jQuery.fn.dialog.showLoader();
-			$('#ccm-tab-content-explore').load('<?=REL_DIR_FILES_TOOLS_REQUIRED?>/sitemap_overlay?display=flat&requestID=<?=$requestID?>', function() {
+			$('#ccm-tab-content-explore').load('<?=REL_DIR_FILES_TOOLS_REQUIRED?>/sitemap_overlay?display=flat', function() {
 				jQuery.fn.dialog.hideLoader();
 			});
 		}
