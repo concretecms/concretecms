@@ -4,7 +4,8 @@
 
     <?php
         $options = $control->getControlOptionsController();
-        if ($options->elementExists()) {
+        $element = Element::get($options->getElement());
+        if ($element->exists()) {
             echo $options->render();
         }
     ?>

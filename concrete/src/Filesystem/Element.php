@@ -6,12 +6,13 @@ use Concrete\Core\Filesystem\FileLocator\PackageLocation;
 use Concrete\Core\Filesystem\FileLocator\ThemeElementLocation;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Support\Facade\Facade;
+use Concrete\Core\View\FileLocatorView;
 
 /**
  * Class Element
  * An object-oriented wrapper for core element functionality, with support for events, locators, controllers and elements.
  */
-class Element
+class Element implements LocatableFileInterface
 {
 
     protected $element;
@@ -94,6 +95,11 @@ class Element
         return $record->exists();
     }
 
+    public function getFileLocatorRecord()
+    {
+        return $this->locator->getRecord($this->getElementPath());
+    }
+
     public function set($key, $value)
     {
         $this->variables[$key] = $value;
@@ -125,21 +131,13 @@ class Element
 
     public function render()
     {
-        $variables = $this->variables;
         $controller = $this->getElementController();
+        $view = new FileLocatorView($this);
+        $view->addScopeItems($this->variables);
         if ($controller) {
-            $controller->view();
-            $variables = array_merge($variables, $controller->getSets());
+            $view->setController($controller);
         }
-
-        extract($variables);
-
-        if ($this->exists()) {
-            $record = $this->locator->getRecord($this->getElementPath());
-            include($record->getFile());
-        } else {
-            throw new \RuntimeException(t('Element %s does not exist', $this->getElementPath()));
-        }
+        $view->render();
     }
 
 }
