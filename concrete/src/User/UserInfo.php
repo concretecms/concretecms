@@ -350,7 +350,7 @@ class UserInfo extends Object implements AttributeObjectInterface, PermissionObj
             if ($siteConfig->get('user.profiles_enabled')) {
                 $mh->addParameter('profileURL', $this->getUserPublicProfileUrl());
                 if ($this->getAttribute('profile_private_messages_enabled')) {
-                    $mh->addParameter('replyToMessageURL', $urlManager->resolve(['/account/messages', 'reply', $msgID]));
+                    $mh->addParameter('replyToMessageURL', $urlManager->resolve(['/account/messages', 'reply', 'inbox', $msgID]));
                 }
             }
             $mh->to($recipient->getUserEmail());
