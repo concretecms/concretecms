@@ -9,8 +9,27 @@ use Illuminate\Filesystem\Filesystem;
 abstract class ElementController extends AbstractController
 {
     protected $pkgHandle;
+    protected $view;
 
     abstract public function getElement();
+
+    public function getViewObject()
+    {
+        if (!isset($this->view)) {
+            /**
+             * @var $locator FileLocator
+             */
+            $locator = new FileLocator(new Filesystem(), Facade::getFacadeApplication());
+            if ($this->pkgHandle) {
+                $locator->addPackageLocation($this->pkgHandle);
+            }
+            $r = $locator->getRecord(DIRNAME_ELEMENTS . '/' . $this->getElement() . '.php');
+            $this->view = new BasicFileView($r->getFile());
+            $this->view->setController($this);
+        }
+
+        return $this->view;
+    }
 
     /**
      * @return mixed
@@ -34,17 +53,7 @@ abstract class ElementController extends AbstractController
      */
     public function render()
     {
-        /**
-         * @var $locator FileLocator
-         */
-        $locator = new FileLocator(new Filesystem(), Facade::getFacadeApplication());
-        if ($this->pkgHandle) {
-            $locator->addPackageLocation($this->pkgHandle);
-        }
-        $r = $locator->getRecord(DIRNAME_ELEMENTS . '/' . $this->getElement() . '.php');
-        $view = new BasicFileView($r->getFile());
-        $view->setController($this);
-        return $view->render();
+        return $this->getViewObject()->render();
     }
 
 }
