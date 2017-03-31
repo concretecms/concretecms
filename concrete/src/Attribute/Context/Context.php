@@ -52,7 +52,7 @@ abstract class Context implements ContextInterface
         return $locator;
     }
 
-    public function render(Key $key, AbstractValue $value = null)
+    public function render(Key $key, $value = null)
     {
         return;
     }

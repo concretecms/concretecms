@@ -9,7 +9,7 @@ class ViewContext extends Context
 {
 
 
-    public function render(Key $key, AbstractValue $value = null)
+    public function render(Key $key, $value = null)
     {
         echo $value->getDisplayValue();
     }
