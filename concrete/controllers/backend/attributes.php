@@ -4,7 +4,6 @@ namespace Concrete\Controller\Backend;
 use Controller;
 use Permissions;
 use Loader;
-use User;
 use Concrete\Core\Attribute\Key\UserKey;
 use Concrete\Core\Attribute\Set;
 use stdClass;
