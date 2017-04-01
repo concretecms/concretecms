@@ -3,7 +3,6 @@ namespace Concrete\Core\Express\Association\Formatter;
 
 use Concrete\Core\Entity\Express\Association;
 use Concrete\Core\Entity\Express\Control\AssociationControl;
-use Concrete\Core\Entity\Express\Entity;
 use Concrete\Core\Entity\Express\Entry;
 
 abstract class AbstractFormatter implements FormatterInterface
@@ -21,7 +20,15 @@ abstract class AbstractFormatter implements FormatterInterface
         if ($control->getAssociationEntityLabelMask()) {
             try {
                 return preg_replace_callback('/%(.*?)%/i', function ($matches) use ($entry) {
-                    return $entry->getAttribute($matches[1]);
+                    $attribute = $entry->getAttribute($matches[1]);
+                    if (is_object($attribute)) {
+                        return $attribute;
+                    }
+
+                    $association = $entry->getAssociation($matches[1]);
+                    if (is_object($association)) {
+                        return $association->getSelectedEntry()->getLabel();
+                    }
                 }, $control->getAssociationEntityLabelMask());
             } catch (\Exception $e) {
             }
