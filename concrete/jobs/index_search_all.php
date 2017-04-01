@@ -1,7 +1,6 @@
 <?php
 namespace Concrete\Job;
 
-use CollectionAttributeKey;
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Entity\Site\Site;
 use Concrete\Core\File\File;
@@ -9,18 +8,14 @@ use Concrete\Core\Job\QueueableJob;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Search\Index\IndexManagerInterface;
 use Concrete\Core\User\User;
-use FileAttributeKey;
-use Loader;
-use UserAttributeKey;
+use Punic\Misc as PunicMisc;
 use ZendQueue\Message as ZendQueueMessage;
 use ZendQueue\Queue as ZendQueue;
-use Punic\Misc as PunicMisc;
 
 class IndexSearchAll extends QueueableJob
 {
-
     // A flag for clearing the index
-    const CLEAR = "-1";
+    const CLEAR = '-1';
 
     public $jNotUninstallable = 1;
     public $jSupportsQueue = true;
@@ -44,12 +39,12 @@ class IndexSearchAll extends QueueableJob
 
     public function getJobName()
     {
-        return t("Index Search Engine - All");
+        return t('Index Search Engine - All');
     }
 
     public function getJobDescription()
     {
-        return t("Empties the page search index and reindexes all pages.");
+        return t('Empties the page search index and reindexes all pages.');
     }
 
     public function __construct(IndexManagerInterface $indexManager, Connection $connection)
@@ -72,7 +67,8 @@ class IndexSearchAll extends QueueableJob
     }
 
     /**
-     * Messages to add to the queue
+     * Messages to add to the queue.
+     *
      * @return \Iterator
      */
     protected function queueMessages()
@@ -137,7 +133,8 @@ class IndexSearchAll extends QueueableJob
     }
 
     /**
-     * Clear out all indexes
+     * Clear out all indexes.
+     *
      * @param $index
      */
     protected function clearIndex($index)
@@ -149,7 +146,8 @@ class IndexSearchAll extends QueueableJob
     }
 
     /**
-     * Get Pages to add to the queue
+     * Get Pages to add to the queue.
+     *
      * @return \Iterator
      */
     protected function pagesToQueue()
@@ -173,7 +171,8 @@ class IndexSearchAll extends QueueableJob
     }
 
     /**
-     * Get Users to add to the queue
+     * Get Users to add to the queue.
+     *
      * @return \Iterator
      */
     protected function usersToQueue()
@@ -188,7 +187,8 @@ class IndexSearchAll extends QueueableJob
     }
 
     /**
-     * Get Files to add to the queue
+     * Get Files to add to the queue.
+     *
      * @return \Iterator
      */
     protected function filesToQueue()
@@ -203,7 +203,8 @@ class IndexSearchAll extends QueueableJob
     }
 
     /**
-     * Get Sites to add to the queue
+     * Get Sites to add to the queue.
+     *
      * @return \Iterator
      */
     protected function sitesToQueue()
@@ -216,5 +217,4 @@ class IndexSearchAll extends QueueableJob
             yield $id;
         }
     }
-
 }
