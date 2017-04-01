@@ -14,6 +14,7 @@ use Loader;
 use UserAttributeKey;
 use ZendQueue\Message as ZendQueueMessage;
 use ZendQueue\Queue as ZendQueue;
+use Punic\Misc as PunicMisc;
 
 class IndexSearchAll extends QueueableJob
 {
@@ -125,11 +126,13 @@ class IndexSearchAll extends QueueableJob
     public function finish(ZendQueue $q)
     {
         return t(
-            'Indexed %d Pages, %d Users, %d Files, and %d Sites.',
-            $this->pagesIndexed,
-            $this->usersIndexed,
-            $this->filesIndexed,
-            $this->sitesIndexed
+            'Index performed on: %s',
+            PunicMisc::join([
+                t2('%d page', '%d pages', $this->pagesIndexed),
+                t2('%d user', '%d users', $this->usersIndexed),
+                t2('%d file', '%d files', $this->filesIndexed),
+                t2('%d site', '%d sites', $this->sitesIndexed),
+            ])
         );
     }
 
