@@ -882,7 +882,7 @@ class UserInfo extends Object implements AttributeObjectInterface, PermissionObj
         }
         $ue = new UserInfoWithAttributesEvent($this);
         $ue->setAttributes($attributes);
-        Events::dispatch('on_user_attributes_saved', $ue);
+        $this->getDirector()->dispatch('on_user_attributes_saved', $ue);
     }
 
     /**
