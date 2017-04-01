@@ -29,6 +29,8 @@ class IndexSearchAll extends QueueableJob
     protected $filesIndexed = 0;
     protected $sitesIndexed = 0;
 
+    protected $clearTable = true;
+
     /*
      * @var \Concrete\Core\Search\Index\IndexManagerInterface
      */
@@ -57,8 +59,10 @@ class IndexSearchAll extends QueueableJob
 
     public function start(ZendQueue $queue)
     {
-        // Send a "clear" queue item to clear out the index
-        $queue->send(self::CLEAR);
+        if ($this->clearTable) {
+            // Send a "clear" queue item to clear out the index
+            $queue->send(self::CLEAR);
+        }
 
         // Queue everything
         foreach ($this->queueMessages() as $message) {
@@ -100,16 +104,20 @@ class IndexSearchAll extends QueueableJob
             switch ($type) {
                 case 'P':
                     $this->pagesIndexed++;
-                    return $index->index(Page::class, $message);
+                    $index->index(Page::class, $message);
+                    break;
                 case 'U':
                     $this->usersIndexed++;
-                    return $index->index(User::class, $message);
+                    $index->index(User::class, $message);
+                    break;
                 case 'F':
                     $this->filesIndexed++;
-                    return $index->index(File::class, $message);
+                    $index->index(File::class, $message);
+                    break;
                 case 'S':
                     $this->sitesIndexed++;
-                    return $index->index(Site::class, $message);
+                    $index->index(Site::class, $message);
+                    break;
             }
         }
     }
@@ -117,7 +125,7 @@ class IndexSearchAll extends QueueableJob
     public function finish(ZendQueue $q)
     {
         return t(
-            'Indexed %s Pages, %s Users, %s Files, and %s Sites.',
+            'Indexed %d Pages, %d Users, %d Files, and %d Sites.',
             $this->pagesIndexed,
             $this->usersIndexed,
             $this->filesIndexed,

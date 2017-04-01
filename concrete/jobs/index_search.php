@@ -9,6 +9,8 @@ class IndexSearch extends IndexSearchAll implements ApplicationAwareInterface
 
     use ApplicationAwareTrait;
 
+    protected $clearTable = false;
+
     public function getJobName()
     {
         return t("Index Search Engine - Updates");
