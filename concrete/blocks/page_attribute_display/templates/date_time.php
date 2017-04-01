@@ -6,7 +6,7 @@ echo $this->controller->getOpenTag();
 echo $this->controller->getTitle();
 try {
     if ($this->controller->dateFormat) {
-        echo $dh->formatCustom($format, $this->controller->getContent());
+        echo $dh->formatCustom($dateFormat, $this->controller->getContent());
     } else {
         echo $dh->formatDateTime($this->controller->getContent());
     }
