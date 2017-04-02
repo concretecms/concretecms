@@ -76,7 +76,7 @@ class Composer extends BackendInterfacePageController
             } else {
                 $target = \Page::getByID($this->page->getCollectionParentID());
             }
-            $e->add($validator->validatePublishLocationRequest($target));
+            $e->add($validator->validatePublishLocationRequest($target, $c));
             $e->add($validator->validatePublishDraftRequest($c));
 
             $ptr->setError($e);
