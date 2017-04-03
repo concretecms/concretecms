@@ -5,14 +5,17 @@ use Concrete\Controller\Element\Search\Users\Header;
 use Concrete\Core\Attribute\Category\CategoryService;
 use Concrete\Core\Localization\Localization;
 use Concrete\Core\Page\Controller\DashboardPageController;
+use Concrete\Core\User\CsvWriter;
 use Concrete\Core\User\EditResponse as UserEditResponse;
 use Concrete\Core\Workflow\Progress\UserProgress as UserWorkflowProgress;
 use Imagine\Image\Box;
 use Exception;
 use Core;
+use League\Csv\Writer;
 use Permissions;
 use PermissionKey;
 use stdClass;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 use User;
 use UserAttributeKey;
 use UserInfo;
@@ -561,9 +564,20 @@ class Search extends DashboardPageController
     public function csv_export()
     {
         $search = $this->app->make('Concrete\Controller\Search\Users');
-        $searchResults = $search->getCurrentSearchObject();
+        $result = $search->getCurrentSearchObject();
 
-        $csvService = $this->app->make('helper/csv/user_list', [$searchResults, 'Users']);
-        $csvService->generate();
+        $app = $this->app;
+        $output = new StreamedResponse(null, 200, ['Content-Type' => 'text/csv']);
+        $output->setCallback(function() use ($app, $result) {
+
+            $writer = $app->make(CsvWriter::class, [
+                Writer::createFromPath('php://output', 'w')
+            ]);
+
+            $writer->insertHeaders();
+            $writer->insertUserList($result->getItemListObject());
+        });
+
+        return $output;
     }
 }
