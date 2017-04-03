@@ -21,6 +21,11 @@
       "*": "dist"
     }
   },
+  "autoload": {
+    "psr-4": {
+      "Concrete\\Core\\": "src"
+    }
+  },
   "bin": [ "bin/concrete5" ],
   "require": {
     "php": ">=5.5.9",
