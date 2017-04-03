@@ -27,4 +27,22 @@ abstract class AbstractTranslationLoader implements TranslationLoaderInterface
      * {@inheritdoc}
      */
     abstract public function loadTranslations(TranslatorAdapterInterface $translator);
+
+    /**
+     * Get the locale identifier alternatives (eg: 'en_US' gives ['en_US', 'en']).
+     *
+     * @param string $localeID
+     *
+     * @return string[]
+     */
+    protected function getLocaleIDAlternatives($localeID)
+    {
+        $result = [$localeID];
+        $p = strpos($localeID, '_');
+        if ($p) {
+            $result[] = substr($localeID, 0, $p);
+        }
+
+        return $result;
+    }
 }
