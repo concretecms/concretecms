@@ -1,10 +1,7 @@
 <?php
-
 namespace Concrete\Core\Localization\Translator\Translation;
 
-use Concrete\Core\Application\Application;
-use Concrete\Core\Localization\Translator\Translation\TranslationLoaderInterface;
-use Zend\I18n\Translator\Translator;
+
 
 /**
  * Basic implementation of the {@link TranslationLoaderRepositoryInterface}.
@@ -14,11 +11,10 @@ use Zend\I18n\Translator\Translator;
  */
 class TranslationLoaderRepository implements TranslationLoaderRepositoryInterface
 {
-
-    protected $loaders = array();
+    protected $loaders = [];
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function registerTranslationLoader($handle, TranslationLoaderInterface $loader)
     {
@@ -26,18 +22,19 @@ class TranslationLoaderRepository implements TranslationLoaderRepositoryInterfac
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getTranslationLoader($handle)
     {
         if ($this->hasTranslationLoader($handle)) {
             return $this->loaders[$handle];
         }
+
         return null;
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function hasTranslationLoader($handle)
     {
@@ -45,7 +42,7 @@ class TranslationLoaderRepository implements TranslationLoaderRepositoryInterfac
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function removeTranslationLoader($handle)
     {
@@ -55,11 +52,10 @@ class TranslationLoaderRepository implements TranslationLoaderRepositoryInterfac
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getTranslationLoaders()
     {
         return $this->loaders;
     }
-
 }

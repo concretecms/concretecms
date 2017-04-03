@@ -1,11 +1,9 @@
 <?php
-
 namespace Concrete\Core\Localization\Translator\Adapter\Zend;
 
-use Concrete\Core\Application\Application;
 use Concrete\Core\Cache\Adapter\ZendCacheDriver;
-use Concrete\Core\Localization\Translator\TranslatorAdapterFactoryInterface;
 use Concrete\Core\Localization\Translator\Translation\TranslationLoaderRepositoryInterface;
+use Concrete\Core\Localization\Translator\TranslatorAdapterFactoryInterface;
 use Zend\I18n\Translator\Translator;
 
 /**
@@ -16,12 +14,11 @@ use Zend\I18n\Translator\Translator;
  */
 class TranslatorAdapterFactory implements TranslatorAdapterFactoryInterface
 {
-
     /** @var TranslationLoaderRepositoryInterface */
     protected $translationLoaderRepository;
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function __construct(TranslationLoaderRepositoryInterface $translationLoaderRepository = null)
     {
@@ -29,7 +26,7 @@ class TranslatorAdapterFactory implements TranslatorAdapterFactoryInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function createTranslatorAdapter($locale)
     {
@@ -49,5 +46,4 @@ class TranslatorAdapterFactory implements TranslatorAdapterFactoryInterface
 
         return $adapter;
     }
-
 }

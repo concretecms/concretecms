@@ -2,14 +2,11 @@
 namespace Concrete\Core\Localization\Locale;
 
 use Concrete\Core\Entity\Site\Locale;
-use Concrete\Core\Entity\Site\SiteTree;
 use Concrete\Core\Localization\Service\CountryList;
 use Concrete\Core\Multilingual\Service\UserInterface\Flag;
-use Doctrine\ORM\EntityManagerInterface;
 
 class LocaleCollection implements \JsonSerializable
 {
-
     protected $flag;
     protected $selectedLocale;
     protected $provider;
@@ -24,11 +21,12 @@ class LocaleCollection implements \JsonSerializable
     protected function getLocaleDisplayName(LocaleInterface $locale)
     {
         $name = $locale->getLanguageText();
-        foreach($this->getLocales() as $otherLocale) {
-            if ($otherLocale->getLocaleID() != $locale->getLocaleID() && $otherLocale->getLanguage () == $locale->getLanguage()) {
+        foreach ($this->getLocales() as $otherLocale) {
+            if ($otherLocale->getLocaleID() != $locale->getLocaleID() && $otherLocale->getLanguage() == $locale->getLanguage()) {
                 $name = sprintf('%s (%s)', $locale->getLanguageText(), $this->countries->getCountryName($locale->getCountry()));
             }
         }
+
         return $name;
     }
 
@@ -42,8 +40,8 @@ class LocaleCollection implements \JsonSerializable
 
     public function jsonSerialize()
     {
-        $locales = array();
-        foreach($this->getLocales() as $locale) {
+        $locales = [];
+        foreach ($this->getLocales() as $locale) {
             if (isset($this->selectedLocale)) {
                 $selectedLocale = $this->selectedLocale->getLocaleID() == $locale->getLocaleID() ? true : false;
             }
@@ -56,6 +54,7 @@ class LocaleCollection implements \JsonSerializable
                 'selectedLocale' => $selectedLocale,
             ];
         }
+
         return $locales;
     }
 
@@ -63,5 +62,4 @@ class LocaleCollection implements \JsonSerializable
     {
         return $this->provider->getLocales();
     }
-
 }

@@ -3,17 +3,25 @@ namespace Concrete\Core\Localization\Locale;
 
 interface LocaleInterface
 {
+    public function getLocaleID();
 
-    function getLocaleID();
-    function getLanguage();
-    function getCountry();
-    function getLocale();
-    function getNumPlurals();
-    function getPluralCases();
-    function getPluralRule();
-    function setNumPlurals($numPlurals);
-    function setPluralCases($numCases);
-    function setPluralRule($pluralRule);
-    function getLanguageText($locale = null);
+    public function getLanguage();
 
+    public function getCountry();
+
+    public function getLocale();
+
+    public function getNumPlurals();
+
+    public function getPluralCases();
+
+    public function getPluralRule();
+
+    public function setNumPlurals($numPlurals);
+
+    public function setPluralCases($numCases);
+
+    public function setPluralRule($pluralRule);
+
+    public function getLanguageText($locale = null);
 }

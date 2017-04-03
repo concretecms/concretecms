@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Localization\Translator\Translation\Loader;
 
 use Concrete\Core\Application\Application;
@@ -14,7 +13,6 @@ use Concrete\Core\Localization\Translator\TranslatorAdapterInterface;
  */
 abstract class AbstractTranslationLoader implements TranslationLoaderInterface
 {
-
     protected $app;
 
     /**
@@ -26,8 +24,7 @@ abstract class AbstractTranslationLoader implements TranslationLoaderInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     abstract public function loadTranslations(TranslatorAdapterInterface $translator);
-
 }

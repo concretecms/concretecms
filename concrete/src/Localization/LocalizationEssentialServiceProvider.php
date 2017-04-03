@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Localization;
 
 use Concrete\Core\Foundation\Service\Provider as ServiceProvider;
@@ -11,7 +10,6 @@ use Concrete\Core\Localization\Translator\TranslatorAdapterRepository;
 
 class LocalizationEssentialServiceProvider extends ServiceProvider
 {
-
     /**
      * Services that are essential for the loading of the localization
      * functionality.
@@ -21,11 +19,11 @@ class LocalizationEssentialServiceProvider extends ServiceProvider
         if (!$this->app->bound('Concrete\Core\Localization\Translator\TranslatorAdapterFactoryInterface')) {
             $this->app->bind('Concrete\Core\Localization\Translator\TranslatorAdapterFactoryInterface', function ($app, $params) {
                 $config = $app->make('config');
-                $loaders = $config->get('i18n.adapters.zend.loaders', array());
+                $loaders = $config->get('i18n.adapters.zend.loaders', []);
 
                 $loaderRepository = new TranslationLoaderRepository();
                 foreach ($loaders as $key => $class) {
-                    $loader = $app->build($class, array($app));
+                    $loader = $app->build($class, [$app]);
                     $loaderRepository->registerTranslationLoader($key, $loader);
                 }
 
@@ -48,5 +46,4 @@ class LocalizationEssentialServiceProvider extends ServiceProvider
             return $loc;
         });
     }
-
 }

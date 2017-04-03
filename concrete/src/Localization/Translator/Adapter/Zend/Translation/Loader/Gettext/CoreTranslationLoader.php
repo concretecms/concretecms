@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Localization\Translator\Adapter\Zend\Translation\Loader\Gettext;
 
 use Concrete\Core\Localization\Translator\Translation\Loader\AbstractTranslationLoader;
@@ -13,9 +12,8 @@ use Concrete\Core\Localization\Translator\TranslatorAdapterInterface;
  */
 class CoreTranslationLoader extends AbstractTranslationLoader
 {
-
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function loadTranslations(TranslatorAdapterInterface $translatorAdapter)
     {
@@ -32,5 +30,4 @@ class CoreTranslationLoader extends AbstractTranslationLoader
             $translator->addTranslationFile('gettext', $languageFile);
         }
     }
-
 }

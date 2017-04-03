@@ -10,7 +10,6 @@ use Doctrine\ORM\EntityManagerInterface;
 
 class Service
 {
-
     protected $entityManager;
 
     public function __construct(EntityManagerInterface $entityManager)
@@ -96,9 +95,10 @@ class Service
         $home->update([
             'cName' => $name,
             'pTemplateID' => $template->getPageTemplateID(),
-            'cHandle' => $url_slug ? $url_slug : $locale->getLocale()
+            'cHandle' => $url_slug ? $url_slug : $locale->getLocale(),
         ]);
         $home->rescanCollectionPath();
+
         return $home;
     }
 
@@ -113,5 +113,4 @@ class Service
         $this->entityManager->remove($locale);
         $this->entityManager->flush();
     }
-
 }
