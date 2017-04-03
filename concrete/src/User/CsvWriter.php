@@ -7,7 +7,6 @@ use League\Csv\Writer;
 
 /**
  * A Writer class for user objects
- * @package Concrete\Core\User
  */
 class CsvWriter
 {
@@ -24,6 +23,9 @@ class CsvWriter
         $this->category = $category;
     }
 
+    /**
+     * Insert a header row for this result set
+     */
     public function insertHeaders()
     {
         $this->writer->insertOne(iterator_to_array($this->getHeaders()));
@@ -35,7 +37,6 @@ class CsvWriter
      */
     public function insertUserList(UserList $list)
     {
-        $list = clone $list;
         $this->writer->insertAll($this->projectList($list));
     }
 
@@ -97,6 +98,10 @@ class CsvWriter
         }
     }
 
+    /**
+     * Memoize the attribute keys so that we aren't looking them up over and over
+     * @return array
+     */
     private function getAttributeKeys()
     {
         if (!isset($this->attributeKeys)) {

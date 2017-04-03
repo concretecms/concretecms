@@ -565,19 +565,23 @@ class Search extends DashboardPageController
     {
         $search = $this->app->make('Concrete\Controller\Search\Users');
         $result = $search->getCurrentSearchObject();
-
+        
+        $headers = [
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => 'attachment; filename=concrete5_users.csv'
+        ];
         $app = $this->app;
-        $output = new StreamedResponse(null, 200, ['Content-Type' => 'text/csv']);
-        $output->setCallback(function() use ($app, $result) {
 
-            $writer = $app->make(CsvWriter::class, [
-                Writer::createFromPath('php://output', 'w')
-            ]);
+        return StreamedResponse::create(
+            function() use ($app, $result) {
+                $writer = $app->make(CsvWriter::class, [
+                    Writer::createFromPath('php://output', 'w')
+                ]);
 
-            $writer->insertHeaders();
-            $writer->insertUserList($result->getItemListObject());
-        });
-
-        return $output;
+                $writer->insertHeaders();
+                $writer->insertUserList($result->getItemListObject());
+            },
+            200,
+            $headers);
     }
 }
