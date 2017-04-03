@@ -1,7 +1,6 @@
 <?php
 namespace Concrete\Job;
 
-use CollectionAttributeKey;
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Entity\Site\Site;
 use Concrete\Core\File\File;
@@ -9,17 +8,14 @@ use Concrete\Core\Job\QueueableJob;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Search\Index\IndexManagerInterface;
 use Concrete\Core\User\User;
-use FileAttributeKey;
-use Loader;
-use UserAttributeKey;
+use Punic\Misc as PunicMisc;
 use ZendQueue\Message as ZendQueueMessage;
 use ZendQueue\Queue as ZendQueue;
 
 class IndexSearchAll extends QueueableJob
 {
-
     // A flag for clearing the index
-    const CLEAR = "-1";
+    const CLEAR = '-1';
 
     public $jNotUninstallable = 1;
     public $jSupportsQueue = true;
@@ -28,6 +24,8 @@ class IndexSearchAll extends QueueableJob
     protected $pagesIndexed = 0;
     protected $filesIndexed = 0;
     protected $sitesIndexed = 0;
+
+    protected $clearTable = true;
 
     /*
      * @var \Concrete\Core\Search\Index\IndexManagerInterface
@@ -41,12 +39,12 @@ class IndexSearchAll extends QueueableJob
 
     public function getJobName()
     {
-        return t("Index Search Engine - All");
+        return t('Index Search Engine - All');
     }
 
     public function getJobDescription()
     {
-        return t("Empties the page search index and reindexes all pages.");
+        return t('Empties the page search index and reindexes all pages.');
     }
 
     public function __construct(IndexManagerInterface $indexManager, Connection $connection)
@@ -57,8 +55,10 @@ class IndexSearchAll extends QueueableJob
 
     public function start(ZendQueue $queue)
     {
-        // Send a "clear" queue item to clear out the index
-        $queue->send(self::CLEAR);
+        if ($this->clearTable) {
+            // Send a "clear" queue item to clear out the index
+            $queue->send(self::CLEAR);
+        }
 
         // Queue everything
         foreach ($this->queueMessages() as $message) {
@@ -67,7 +67,8 @@ class IndexSearchAll extends QueueableJob
     }
 
     /**
-     * Messages to add to the queue
+     * Messages to add to the queue.
+     *
      * @return \Iterator
      */
     protected function queueMessages()
@@ -100,16 +101,20 @@ class IndexSearchAll extends QueueableJob
             switch ($type) {
                 case 'P':
                     $this->pagesIndexed++;
-                    return $index->index(Page::class, $message);
+                    $index->index(Page::class, $message);
+                    break;
                 case 'U':
                     $this->usersIndexed++;
-                    return $index->index(User::class, $message);
+                    $index->index(User::class, $message);
+                    break;
                 case 'F':
                     $this->filesIndexed++;
-                    return $index->index(File::class, $message);
+                    $index->index(File::class, $message);
+                    break;
                 case 'S':
                     $this->sitesIndexed++;
-                    return $index->index(Site::class, $message);
+                    $index->index(Site::class, $message);
+                    break;
             }
         }
     }
@@ -117,16 +122,19 @@ class IndexSearchAll extends QueueableJob
     public function finish(ZendQueue $q)
     {
         return t(
-            'Indexed %s Pages, %s Users, %s Files, and %s Sites.',
-            $this->pagesIndexed,
-            $this->usersIndexed,
-            $this->filesIndexed,
-            $this->sitesIndexed
+            'Index performed on: %s',
+            PunicMisc::join([
+                t2('%d page', '%d pages', $this->pagesIndexed),
+                t2('%d user', '%d users', $this->usersIndexed),
+                t2('%d file', '%d files', $this->filesIndexed),
+                t2('%d site', '%d sites', $this->sitesIndexed),
+            ])
         );
     }
 
     /**
-     * Clear out all indexes
+     * Clear out all indexes.
+     *
      * @param $index
      */
     protected function clearIndex($index)
@@ -138,7 +146,8 @@ class IndexSearchAll extends QueueableJob
     }
 
     /**
-     * Get Pages to add to the queue
+     * Get Pages to add to the queue.
+     *
      * @return \Iterator
      */
     protected function pagesToQueue()
@@ -162,7 +171,8 @@ class IndexSearchAll extends QueueableJob
     }
 
     /**
-     * Get Users to add to the queue
+     * Get Users to add to the queue.
+     *
      * @return \Iterator
      */
     protected function usersToQueue()
@@ -177,7 +187,8 @@ class IndexSearchAll extends QueueableJob
     }
 
     /**
-     * Get Files to add to the queue
+     * Get Files to add to the queue.
+     *
      * @return \Iterator
      */
     protected function filesToQueue()
@@ -192,7 +203,8 @@ class IndexSearchAll extends QueueableJob
     }
 
     /**
-     * Get Sites to add to the queue
+     * Get Sites to add to the queue.
+     *
      * @return \Iterator
      */
     protected function sitesToQueue()
@@ -205,5 +217,4 @@ class IndexSearchAll extends QueueableJob
             yield $id;
         }
     }
-
 }
