@@ -34,7 +34,7 @@ class LocalizationEssentialServiceProvider extends ServiceProvider
             });
         }
 
-        $this->app->bindShared('Concrete\Core\Localization\Localization', function ($app) {
+        $this->app->singleton('Concrete\Core\Localization\Localization', function ($app) {
             $loc = new Localization();
 
             $translatorAdapterFactory = $app->make('Concrete\Core\Localization\Translator\TranslatorAdapterFactoryInterface');
