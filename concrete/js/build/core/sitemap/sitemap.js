@@ -37,15 +37,21 @@
 
 	ConcreteSitemap.prototype = {
 
-		sitemapTemplate: '<div class="ccm-sitemap-wrapper"><div class="ccm-sitemap-locales-wrapper"></div><div class="ccm-sitemap-tree"></div></div>',
+		sitemapTemplate: '<div class="ccm-sitemap-wrapper"><div class="ccm-sitemap-tree-selector-wrapper"></div><div class="ccm-sitemap-tree"></div></div>',
+		/*
 		localesWrapperTemplate: '<ul class="nav nav-tabs ccm-sitemap-locales"></ul>',
-		localeTemplate: '<li <% if (selectedLocale) { %>class="active"<% } %>><a href="#" data-locale-site-tree="<%=treeID%>"><img src="<%=icon%>"> <span><%=localeDisplayName%></span></a></li>',
+		localeTemplate: '<li <% if (selectedLocale) { %>class="active"<% } %>><a href="#" data-locale-site-tree="<%=treeID%>"><img src="<%=icon%>"> <span><%=localeDisplayName%></span></a></li>',*/
 
 		getTree: function() {
 			var my = this;
 			return my.$sitemap.fancytree('getTree');
 		},
 
+		setupSiteTreeSelector: function(tree) {
+			console.log(tree);
+		},
+
+		/*
 		setupLocales: function(locales) {
 			var my = this;
 			if (!locales) {
@@ -76,6 +82,7 @@
 				my.$element.find('div.ccm-sitemap-locales-wrapper').append($menu);
 			}
 		},
+		*/
 
 		setupTree: function() {
 			var minExpandLevel,
@@ -183,7 +190,7 @@
 						my.setupNodePagination(my.$sitemap, my.options.cParentID);
 					}
 
-					my.setupLocales(my.getTree().data.locales);
+					my.setupSiteTreeSelector(my.getTree().data.trees);
 				},
 				/*
                 renderNode: function(event, data) {
