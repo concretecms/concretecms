@@ -114,7 +114,10 @@ class Token
         if ($token == null) {
             $app = Application::getFacadeApplication();
             $request = $app->make(Request::class);
-            $token = $request->get(static::DEFAULT_TOKEN_NAME);
+            $token = $request->request->get(static::DEFAULT_TOKEN_NAME);
+            if ($token === null) {
+                $token = $request->query->get(static::DEFAULT_TOKEN_NAME);
+            }
         }
         if (is_string($token)) {
             $parts = explode(':', $token);
