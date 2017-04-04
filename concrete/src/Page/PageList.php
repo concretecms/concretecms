@@ -23,6 +23,9 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
     const PAGE_VERSION_RECENT = 2;
     const PAGE_VERSION_RECENT_UNAPPROVED = 3;
 
+    const SITE_TREE_CURRENT = -1;
+    const SITE_TREE_ALL = 0;
+
     protected function getAttributeKeyClassName()
     {
         return '\\Concrete\\Core\\Attribute\\Key\\CollectionKey';
@@ -32,7 +35,7 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
     protected $permissionsChecker;
 
     /** @var Tree */
-    protected $siteTree;
+    protected $siteTree = self::SITE_TREE_CURRENT;
 
     /**
      * Columns in this array can be sorted via the request.
@@ -78,6 +81,17 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
     {
         $this->siteTree = $tree;
     }
+
+    public function setSiteTreeToAll()
+    {
+        $this->siteTree = self::SITE_TREE_ALL;
+    }
+
+    public function setSiteTreeToCurrent()
+    {
+        $this->siteTree = self::SITE_TREE_CURRENT;
+    }
+
 
     /**
      * @param boolean $includeSystemPages
@@ -170,19 +184,12 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
             $query->setParameter('cIsActive', true);
         }
 
-
+        /*
         if (is_object($this->siteTree)) {
             $tree = $this->siteTree;
         } else {
-            $c = \Page::getCurrentPage();
-            $tree = false;
-            if (is_object($c) && !$c->isError()) {
-                $tree = $c->getSiteTreeObject();
-            }
-            if (!is_object($tree)) {
-                $site = \Core::make("site")->getSite();
-                $tree = $site->getSiteTreeObject();
-            }
+            $site = \Core::make("site")->getSite();
+            $tree = $site->getSiteTreeObject();
         }
 
         // Note, we might not use this. We have to set the parameter even if we don't use it because
@@ -199,6 +206,47 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
                 $query->andWhere('(p.siteTreeID = :siteTreeID or p.siteTreeID = 0)');
             }
 
+        }*/
+
+        if (($this->query->getParameter('cParentID') < 1) && ($this->query->getParameter('cPath') == '')) {
+
+            // The code above is set up to make it so that we don't filter by site tree
+            // if we have a defined parent. The $cPath portion of this might be problematic though
+            // because multiple paths could live in multiple sites. We might have to revisit this @TODO
+
+            if (is_object($this->siteTree)) {
+                $tree = $this->siteTree;
+            } else {
+                switch($this->siteTree) {
+                    case self::SITE_TREE_CURRENT:
+                        $c = \Page::getCurrentPage();
+                        $tree = false;
+                        if (is_object($c) && !$c->isError()) {
+                            $tree = $c->getSiteTreeObject();
+                        }
+                        if (!is_object($tree)) {
+                            $site = \Core::make("site")->getSite();
+                            $tree = $site->getSiteTreeObject();
+                        }
+                        break;
+                }
+            }
+
+            if (isset($tree)) {
+                // We have either passed in a specific tree or we are looking at the current site.
+                $query->setParameter('siteTreeID', $tree->getSiteTreeID());
+                if ($this->includeSystemPages) {
+                    $query->andWhere('(p.siteTreeID = :siteTreeID or p.siteTreeID = 0)');
+                } else {
+                    $query->andWhere('p.siteTreeID = :siteTreeID');
+                }
+            }
+
+        }
+
+        if (!$this->includeSystemPages) {
+            $query->andWhere('p.cIsSystemPage = :cIsSystemPage');
+            $query->setParameter('cIsSystemPage', false);
         }
 
         return $query;
