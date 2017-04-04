@@ -121,8 +121,7 @@ class Element implements LocatableFileInterface
             }
             $class = overrideable_core_class($class, $path, $this->pkgHandle);
             if (class_exists($class)) {
-                $refl = new \ReflectionClass($class);
-                $this->controller = $refl->newInstanceArgs($this->controllerArguments);
+                $this->controller = \Core::make($class, $this->controllerArguments);
                 $this->controller->setPackageHandle($this->pkgHandle);
             }
         }

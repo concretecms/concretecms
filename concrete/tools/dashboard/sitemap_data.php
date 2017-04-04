@@ -76,12 +76,16 @@ if (isset($_REQUEST['displaySingleLevel']) && $_REQUEST['displaySingleLevel']) {
         } else {
             $tree = $service->getActiveSiteForEditing()->getSiteTreeObject();
         }
+
+        $provider = new \Concrete\Core\Application\UserInterface\Sitemap\StandardSitemapProvider($service);
+        $collection = $provider->getTreeCollection($tree);
+        $formatter = new \Concrete\Core\Application\UserInterface\Sitemap\TreeCollection\TreeCollectionJsonFormatter($collection);
+
         $nodes = $dh->getSubNodes($tree);
-        $locales = $tree->getLocaleCollection();
 
         echo json_encode([
             'children' => $nodes,
-            'locales' => $locales
+            'trees' => $formatter
         ]);
     }
 }

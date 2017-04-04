@@ -6,7 +6,7 @@ use Concrete\Core\Page\Controller\DashboardSitePageController;
 use Loader;
 use Page;
 
-class Explore extends DashboardSitePageController
+class Explore extends DashboardPageController
 {
     public function view($nodeID = 1, $auxMessage = false)
     {
