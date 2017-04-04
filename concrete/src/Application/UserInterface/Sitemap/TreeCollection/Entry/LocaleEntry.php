@@ -31,4 +31,14 @@ class LocaleEntry extends Entry
         return Flag::getLocaleFlagIcon($this->locale);
     }
 
+    public function getID()
+    {
+        return $this->locale->getLocaleID();
+    }
+
+    public function getGroupClass()
+    {
+        return $this->locale->getSite()->getSiteID();
+    }
+
 }

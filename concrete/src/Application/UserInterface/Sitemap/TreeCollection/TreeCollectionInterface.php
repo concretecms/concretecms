@@ -3,6 +3,7 @@ namespace Concrete\Core\Application\UserInterface\Sitemap\TreeCollection;
 
 use Concrete\Core\Application\UserInterface\Sitemap\TreeCollection\Entry\EntryInterface;
 use Concrete\Core\Application\UserInterface\Sitemap\TreeCollection\Entry\EntryGroupInterface;
+use Concrete\Core\Application\UserInterface\Sitemap\TreeCollection\Entry\Group\GroupInterface;
 
 interface TreeCollectionInterface
 {
@@ -13,7 +14,7 @@ interface TreeCollectionInterface
     function getEntries();
 
     /**
-     * @return EntryGroupInterface
+     * @return GroupInterface
      */
     function getEntryGroups();
 
@@ -22,5 +23,7 @@ interface TreeCollectionInterface
      * @return bool
      */
     function displayMenu();
+
+
 
 }

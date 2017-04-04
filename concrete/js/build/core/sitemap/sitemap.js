@@ -38,8 +38,8 @@
 	ConcreteSitemap.prototype = {
 
 		sitemapTemplate: '<div class="ccm-sitemap-wrapper"><div class="ccm-sitemap-tree-selector-wrapper"></div><div class="ccm-sitemap-tree"></div></div>',
+		localesWrapperTemplate: '<select data-select="site-trees"></select>',
 		/*
-		localesWrapperTemplate: '<ul class="nav nav-tabs ccm-sitemap-locales"></ul>',
 		localeTemplate: '<li <% if (selectedLocale) { %>class="active"<% } %>><a href="#" data-locale-site-tree="<%=treeID%>"><img src="<%=icon%>"> <span><%=localeDisplayName%></span></a></li>',*/
 
 		getTree: function() {
@@ -48,7 +48,44 @@
 		},
 
 		setupSiteTreeSelector: function(tree) {
-			console.log(tree);
+			var my = this;
+			if (tree.displayMenu) {
+				if (!my.$element.find('div.ccm-sitemap-tree-selector-wrapper select').length) {
+					my.$element.find('div.ccm-sitemap-tree-selector-wrapper').append($(my.localesWrapperTemplate));
+					var $menu = my.$element.find('div.ccm-sitemap-tree-selector-wrapper select');
+					var itemIDs = [];
+					$.each(tree.entries, function(i, entry) {
+						if (entry.isSelected) {
+							itemIDs.push(entry.id);
+						}
+					});
+
+					$menu.selectize({
+						maxItems: 1,
+						valueField: 'siteTreeID',
+						searchField: 'title',
+						options: tree.entries,
+						items: itemIDs,
+						optgroups: tree.entryGroups,
+						optgroupField: 'class',
+						onItemAdd: function(option) {
+							var treeID = option;
+							var source = my.getTree().options.source;
+							my.options.siteTreeID = treeID;
+							source.data.siteTreeID = treeID;
+							my.getTree().reload(source);
+						},
+						render: {
+							option: function(data, escape) {
+								return '<div class="option">' + data.element + '</div>';
+							},
+							item: function(data, escape) {
+								return '<div class="item">' + data.element + '</div>';
+							}
+						}
+					});
+				}
+			}
 		},
 
 		/*
@@ -191,6 +228,7 @@
 					}
 
 					my.setupSiteTreeSelector(my.getTree().data.trees);
+
 				},
 				/*
                 renderNode: function(event, data) {

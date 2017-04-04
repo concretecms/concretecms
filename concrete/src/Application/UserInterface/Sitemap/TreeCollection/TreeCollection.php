@@ -7,7 +7,11 @@ use Concrete\Core\Application\UserInterface\Sitemap\TreeCollection\Entry\Group\G
 abstract class TreeCollection implements TreeCollectionInterface
 {
 
+    /**
+     * @var EntryInterface[]
+     */
     protected $entries = [];
+
     protected $entryGroups = [];
 
     /**

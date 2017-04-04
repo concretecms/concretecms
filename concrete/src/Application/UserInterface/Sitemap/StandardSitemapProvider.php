@@ -8,6 +8,7 @@ use Concrete\Core\Application\UserInterface\Sitemap\TreeCollection\Entry\Provide
 use Concrete\Core\Application\UserInterface\Sitemap\TreeCollection\Entry\SiteEntry;
 use Concrete\Core\Application\UserInterface\Sitemap\TreeCollection\StandardTreeCollection;
 use Concrete\Core\Application\UserInterface\Sitemap\TreeCollection\TreeCollection;
+use Concrete\Core\Entity\Site\SiteTree;
 use Concrete\Core\Site\Service;
 
 class StandardSitemapProvider implements ProviderInterface
@@ -48,7 +49,7 @@ class StandardSitemapProvider implements ProviderInterface
     }
 
 
-    public function getTreeCollection()
+    public function getTreeCollection(SiteTree $selectedTree = null)
     {
         $collection = new StandardTreeCollection();
         $sites = $this->siteService->getList();
@@ -57,12 +58,20 @@ class StandardSitemapProvider implements ProviderInterface
         if ($this->useLocales($sites)) {
             foreach($sites as $site) {
                 foreach($site->getLocales() as $locale) {
-                    $collection->addEntry(new LocaleEntry($locale));
+                    $entry = new LocaleEntry($locale);
+                    if ($selectedTree && $entry->getSiteTreeID() == $selectedTree->getSiteTreeID()){
+                        $entry->setIsSelected(true);
+                    }
+                    $collection->addEntry($entry);
                 }
             }
         } else {
             foreach($sites as $site) {
-                $collection->addEntry(new SiteEntry($site));
+                $entry = new SiteEntry($site);
+                if ($selectedTree && $entry->getSiteTreeID() == $selectedTree->getSiteTreeID()){
+                    $entry->setIsSelected(true);
+                }
+                $collection->addEntry($entry);
             }
         }
 

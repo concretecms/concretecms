@@ -15,6 +15,10 @@ final class EntryJsonFormatter implements \JsonSerializable
     {
         $response = array(
             'element' => (string) $this->entry->getOptionElement(),
+            'class' => $this->entry->getGroupClass(),
+            'id' => $this->entry->getID(),
+            'title' => $this->entry->getLabel(),
+            'isSelected' => $this->entry->isSelected(),
             'siteTreeID' => $this->entry->getSiteTreeID()
         );
         return $response;

@@ -32,4 +32,14 @@ class SiteEntry extends Entry
         return null;
     }
 
+    public function getID()
+    {
+        return $this->site->getSiteID();
+    }
+
+    public function getGroupClass()
+    {
+        return null;
+    }
+
 }
