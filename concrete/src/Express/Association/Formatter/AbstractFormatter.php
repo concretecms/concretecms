@@ -21,7 +21,7 @@ abstract class AbstractFormatter implements FormatterInterface
             try {
                 return preg_replace_callback('/%(.*?)%/i', function ($matches) use ($entry) {
                     $attribute = $entry->getAttribute($matches[1]);
-                    if (is_object($attribute)) {
+                    if ($attribute) {
                         return $attribute;
                     }
 
