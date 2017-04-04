@@ -76,13 +76,6 @@ class DefaultBooter implements BootInterface, ApplicationAwareInterface
 
         /*
          * ----------------------------------------------------------------------------
-         * Timezone Config
-         * ----------------------------------------------------------------------------
-         */
-        $this->initializeTimezone($config);
-
-        /*
-         * ----------------------------------------------------------------------------
          * Setup core classes aliases.
          * ----------------------------------------------------------------------------
          */
@@ -161,6 +154,8 @@ class DefaultBooter implements BootInterface, ApplicationAwareInterface
                 return $response;
             }
 
+            $this->initializeTimezone($app);
+
             /*
              * ----------------------------------------------------------------------------
              * Now we load all installed packages, and register their package autoloaders.
@@ -207,6 +202,29 @@ class DefaultBooter implements BootInterface, ApplicationAwareInterface
     }
 
     /**
+     * @param Repository $config
+     */
+    private function initializeTimezone(Application $app)
+    {
+        $siteConfig = $app->make('site')->getSite()->getConfigRepository();
+        $config = $app->make('config');
+
+        if (!$siteConfig->has('timezone')) {
+            // There is no timezone set.
+            $siteConfig->set('timezone', @date_default_timezone_get());
+        }
+
+        if (!$config->has('app.server_timezone')) {
+            // There is no server timezone set.
+            $config->set('app.server_timezone', @date_default_timezone_get());
+        }
+
+        @date_default_timezone_set($config->get('app.server_timezone'));
+    }
+
+
+
+    /**
      * Enable localization.
      *
      * This needs to happen very early in the boot process because the
@@ -243,24 +261,6 @@ class DefaultBooter implements BootInterface, ApplicationAwareInterface
 
             return isset($db_config['default-connection']) ? $environment : 'install';
         });
-    }
-
-    /**
-     * @param Repository $config
-     */
-    private function initializeTimezone(Repository $config)
-    {
-        if (!$config->has('app.timezone')) {
-            // There is no timezone set.
-            $config->set('app.timezone', @date_default_timezone_get());
-        }
-
-        if (!$config->has('app.server_timezone')) {
-            // There is no server timezone set.
-            $config->set('app.server_timezone', @date_default_timezone_get());
-        }
-
-        @date_default_timezone_set($config->get('app.server_timezone'));
     }
 
     /**

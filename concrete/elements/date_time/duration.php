@@ -11,7 +11,8 @@ if (Config::get('concrete.misc.user_timezones')) {
     $userInfo = $user->getUserInfoObject();
     $timezone = $userInfo->getUserTimezone();
 } else {
-    $timezone = Config::get('app.timezone');
+    $site = \Core::make('site')->getSite();
+    $timezone = $site->getConfigRepository()->get('timezone');
 }
 
 $repeats = array(
