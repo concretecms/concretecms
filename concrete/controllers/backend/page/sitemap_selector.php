@@ -71,7 +71,6 @@ class SitemapSelector extends UserInterface
             } else {
                 $tree = $service->getActiveSiteForEditing()->getSiteTreeObject();
             }
-            $locales = $tree->getLocaleCollection();
 
             $response = [
                 'children' => $dh->getSubNodes($tree, $callback),
