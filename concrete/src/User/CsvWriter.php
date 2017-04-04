@@ -3,6 +3,7 @@
 namespace Concrete\Core\User;
 
 use Concrete\Core\Attribute\Category\UserCategory;
+use Concrete\Core\Localization\Service\Date;
 use League\Csv\Writer;
 
 /**
@@ -17,13 +18,17 @@ class CsvWriter
     /** @var UserCategory */
     protected $category;
 
+    /** @var Date Date localization service */
+    private $date;
+
     /** @var string[] The memoized result of translating the status strings */
     protected $status;
 
-    public function __construct(Writer $writer, UserCategory $category)
+    public function __construct(Writer $writer, UserCategory $category, Date $date)
     {
         $this->writer = $writer;
         $this->category = $category;
+        $this->date = $date;
     }
 
     /**
@@ -69,7 +74,7 @@ class CsvWriter
         yield $user->getUserEmail();
 
         $userRegistrationDate = $user->getUserDateAdded();
-        yield $userRegistrationDate->format('d/m/Y G:i');
+        yield $this->date->formatCustom(\DateTime::ATOM, $userRegistrationDate);
 
         list($active, $inactive) = $this->getTranslatedStatus();
         yield $user->isActive() ? $active : $inactive;
