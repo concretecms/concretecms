@@ -25,6 +25,7 @@ class Application extends SymfonyApplication
     {
         $this->add(new Command\InfoCommand());
         $this->add(new Command\InstallCommand());
+        $this->add(new Command\InstallLanguageCommand());
         $this->add(new Command\TranslatePackageCommand());
         $this->add(new Command\GenerateIDESymbolsCommand());
         $this->add(new Command\ConfigCommand());

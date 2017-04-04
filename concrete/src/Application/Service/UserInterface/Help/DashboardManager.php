@@ -40,6 +40,7 @@ class DashboardManager extends AbstractManager
             '/dashboard/system/permissions/files' => t("Control how users interact with your site's File Manager, allowing or disallowing actions like search, upload, replace and more."),
             '/dashboard/system/basics/editor' => t("Control which set of tools the content-editor toolbar includes (e.g., Simple, Advanced, Office), and the toolbar's spatial dimensions."),
             '/dashboard/system/basics/multilingual' => t('View available language packs installed for the concrete5 Dashboard and editing interface.'),
+            '/dashboard/system/basics/multilingual/update' => t('Install new language files and update the outdated ones.<br />You can contribute to translations on %s', '<a href="https://translate.concrete5.org" target="_blank">translate.concrete5.org</a>.'),
             '/dashboard/system/basics/timezone' => t('Allow your users to specify their time zone. This setting is editable in the user profile and in the dashboard users section.'),
             '/dashboard/system/basics/icons' => t('Upload an image that will appear in the address bar when visitors go to your site and in the bookmark list if they bookmark it.'),
             '/dashboard/system/basics/name' => t("Even if you change your website's logo, the Site Name is used in some emails."),

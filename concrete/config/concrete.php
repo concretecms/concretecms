@@ -564,6 +564,18 @@ return [
          * @var bool
          */
         'choose_language_login' => false,
+
+        // Community Translation instance offering concrete5 translations
+        'community_translation' => [
+            // API entry point of the Community Translation instance
+            'entry_point' => 'https://translate.concrete5.org/api',
+            // API Token to be used for the Community Translation instance
+            'api_token' => '',
+            // Languages below this translation progress won't be considered
+            'progress_limit' => 60,
+            // Lifetime (in seconds) of the cache items associated to downloaded data 
+            'cache_lifetime' => 3600, // 1 hour
+        ],
     ],
     'urls' => [
         'concrete5' => 'http://www.concrete5.org',

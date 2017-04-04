@@ -499,6 +499,17 @@
                 </attributekey>
             </attributes>
         </page>
+        <page name="Update Languages" path="/dashboard/system/basics/multilingual/update"
+              filename="/dashboard/system/basics/multilingual/update/multilingual/update.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>languages, update, gettext, translation, translate</value>
+                </attributekey>
+                <attributekey handle="exclude_nav">
+                    <value>1</value>
+                </attributekey>
+            </attributes>
+        </page>
         <page name="Time Zone" path="/dashboard/system/basics/timezone" filename="/dashboard/system/basics/timezone.php"
               pagetype="" description="" package="">
             <attributes>
