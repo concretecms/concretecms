@@ -17,6 +17,9 @@ class CsvWriter
     /** @var UserCategory */
     protected $category;
 
+    /** @var string[] The memoized result of translating the status strings */
+    protected $status;
+
     public function __construct(Writer $writer, UserCategory $category)
     {
         $this->writer = $writer;
@@ -68,7 +71,8 @@ class CsvWriter
         $userRegistrationDate = $user->getUserDateAdded();
         yield $userRegistrationDate->format('d/m/Y G:i');
 
-        yield $user->isActive() ? 'Active' : 'Inactive';
+        list($active, $inactive) = $this->getTranslatedStatus();
+        yield $user->isActive() ? $active : $inactive;
         yield $user->getNumLogins();
 
         $attributes = $this->getAttributeKeys();
@@ -85,7 +89,7 @@ class CsvWriter
     private function getHeaders()
     {
         // Static headers
-        $headers = ['Username', 'Email', 'Signup Date', 'Status', '# Logins'];
+        $headers = [t('Username'), t('Email'), t('Signup Date'), t('Status'), t('# Logins')];
 
         foreach ($headers as $header) {
             yield $header;
@@ -109,6 +113,19 @@ class CsvWriter
         }
 
         return $this->attributeKeys;
+    }
+
+    /**
+     * Get the translated status texts
+     * @return string[]
+     */
+    private function getTranslatedStatus()
+    {
+        if ($this->status === null) {
+            $this->status = [t('Active'), t('Inactive')];
+        }
+
+        return $this->status;
     }
 
 }
