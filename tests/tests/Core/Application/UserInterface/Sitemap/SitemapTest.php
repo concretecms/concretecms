@@ -103,8 +103,8 @@ class SitemapTest extends PHPUnit_Framework_TestCase
 
         $this->assertEquals(1, $json['displayMenu']);
         $this->assertEquals(2, $json['entries'][1]['siteTreeID']);
-        $this->assertEquals('<div><img id="ccm-region-flag-us" class="ccm-region-flag" src="/path/to/server/concrete/images/countries/us.png" alt="us"><div class="ccm-sitemap-tree-menu-label">English</div></div>', $json['entries'][0]['element']);
-        $this->assertEquals('<div><img id="ccm-region-flag-de" class="ccm-region-flag" src="/path/to/server/concrete/images/countries/de.png" alt="de"><div class="ccm-sitemap-tree-menu-label">German</div></div>', $json['entries'][1]['element']);
+        $this->assertEquals('<div class="ccm-sitemap-tree-selector-option"><img id="ccm-region-flag-us" class="ccm-region-flag" src="/path/to/server/concrete/images/countries/us.png" alt="us"><span class="ccm-sitemap-tree-menu-label">English</span></div>', $json['entries'][0]['element']);
+        $this->assertEquals('<div class="ccm-sitemap-tree-selector-option"><img id="ccm-region-flag-de" class="ccm-region-flag" src="/path/to/server/concrete/images/countries/de.png" alt="de"><span class="ccm-sitemap-tree-menu-label">German</span></div>', $json['entries'][1]['element']);
         $this->assertEmpty($json['entryGroups']);
 
     }
@@ -137,7 +137,7 @@ class SitemapTest extends PHPUnit_Framework_TestCase
 
         $this->assertEquals(1, $json['displayMenu']);
         $this->assertEquals(2, $json['entries'][1]['siteTreeID']);
-        $this->assertEquals('<div><div class="ccm-sitemap-tree-menu-label">Site A</div></div>', $json['entries'][0]['element']);
+        $this->assertEquals('<div class="ccm-sitemap-tree-selector-option"><span class="ccm-sitemap-tree-menu-label">Site A</span></div>', $json['entries'][0]['element']);
     }
 
     public function testMultipleSiteMultilingualCollection()

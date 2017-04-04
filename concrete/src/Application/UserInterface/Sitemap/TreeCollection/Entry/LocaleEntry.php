@@ -38,7 +38,10 @@ class LocaleEntry extends Entry
 
     public function getGroupClass()
     {
-        return $this->locale->getSite()->getSiteID();
+        $site = $this->locale->getSite();
+        if ($site) {
+            return $site->getSiteID();
+        }
     }
 
 }
