@@ -3,6 +3,27 @@
 $sh = Loader::helper('concrete/dashboard/sitemap');
 ?>
 
+<div class="ccm-dashboard-header-buttons btn-group">
+    <button type="button" class="btn btn-default dropdown-toggle" data-button="attribute-type" data-toggle="dropdown">
+        <?=t('Options')?> <span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu">
+        <?php if ($includeSystemPages) { ?>
+            <li><a href="<?=$view->action('include_system_pages', 0)?>"><span class="text-success"><i class="fa fa-check"></i> <?=t('Include System Pages in Sitemap')?></span></a></li>
+        <?php } else { ?>
+            <li><a href="<?=$view->action('include_system_pages', 1)?>"><?=t('Include System Pages in Sitemap')?></a></li>
+        <?php } ?>
+
+
+        <?php if ($displayDoubleSitemap) { ?>
+            <li><a href="<?=$view->action('display_double_sitemap', 0)?>"><span class="text-success"><i class="fa fa-check"></i> <?=t('View 2-Up Sitemap')?></span></a></li>
+        <?php } else { ?>
+            <li><a href="<?=$view->action('display_double_sitemap', 1)?>"><?=t('View 2-Up Sitemap')?></a></li>
+        <?php } ?>
+    </ul>
+</div>
+
+
 <?php if ($sh->canRead()) { ?>
 
 <?php
@@ -20,17 +41,21 @@ if ($u->isSuperUser()) {
 }
     ?>
 
-<div id="ccm-full-sitemap-container"></div>
-<hr/>
+    <?php if ($displayDoubleSitemap) { ?>
 
-<section>
-	<div class="checkbox">
-    	<label>
-    		<input type="checkbox" name="includeSystemPages" <?php if ($includeSystemPages) { ?>checked<?php } ?> value="1" />
-    		<?=t('Include System Pages in Sitemap')?>
-    	</label>
-	</div>
-</section>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="ccm-dashboard-full-sitemap-container" data-container="sitemap"></div>
+            </div>
+            <div class="col-md-6">
+                <div class="ccm-dashboard-full-sitemap-container" data-container="sitemap"></div>
+            </div>
+        </div>
+
+
+    <?php } else {  ?>
+        <div class="ccm-dashboard-full-sitemap-container" data-container="sitemap"></div>
+    <?php } ?>
 
 <?php
 } else {
@@ -42,8 +67,12 @@ if ($u->isSuperUser()) {
 
 <script>
 $(function() {
-    $('div#ccm-full-sitemap-container').concreteSitemap({
-        includeSystemPages: $('input[name=includeSystemPages]').is(':checked')
+    $('div[data-container=sitemap]').concreteSitemap({
+        <?php if ($includeSystemPages) { ?>
+        includeSystemPages: 1
+        <?php } else { ?>
+        includeSystemPages: 0
+        <?php } ?>
     });
 
     $('input[name=includeSystemPages]').on('click', function() {

@@ -31,12 +31,6 @@ if (isset($_REQUEST['displayNodePagination']) && $_REQUEST['displayNodePaginatio
     $dh->setDisplayNodePagination(false);
 }
 
-if (isset($_GET['includeSystemPages']) && $_GET['includeSystemPages']) {
-    $dh->setIncludeSystemPages(true);
-} else {
-    $dh->setIncludeSystemPages(false);
-}
-
 $cParentID = (isset($_REQUEST['cParentID'])) ? $_REQUEST['cParentID'] : 0;
 if (isset($_REQUEST['displaySingleLevel']) && $_REQUEST['displaySingleLevel']) {
     $c = Page::getByID($cParentID);
