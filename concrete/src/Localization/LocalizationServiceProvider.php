@@ -7,23 +7,33 @@ class LocalizationServiceProvider extends ServiceProvider
 {
     public function register()
     {
-        $singletons = array(
-            'helper/localization/countries' => '\Concrete\Core\Localization\Service\CountryList',
-            'helper/localization/states_provinces' => '\Concrete\Core\Localization\Service\StatesProvincesList',
-            'helper/lists/countries' => '\Concrete\Core\Localization\Service\CountryList',
-            'helper/lists/states_provinces' => '\Concrete\Core\Localization\Service\StatesProvincesList',
-            'helper/date' => '\Concrete\Core\Localization\Service\Date',
+        $singletons = [
+            'Concrete\Core\Localization\Service\CountryList' => [
+                'helper/localization/countries',
+                'helper/lists/countries',
+                'localization/countries',
+                'lists/countries',
+            ],
+            'Concrete\Core\Localization\Service\StatesProvincesList' => [
+                'helper/localization/states_provinces',
+                'helper/lists/states_provinces',
+                'localization/states_provinces',
+                'lists/states_provinces',
+            ],
+            'Concrete\Core\Localization\Service\Date' => [
+                'helper/date',
+                'date',
+            ],
+            'Concrete\Core\Localization\Service\LanguageList' => [
+                'localization/languages',
+            ],
+        ];
 
-            'localization/countries' => '\Concrete\Core\Localization\Service\CountryList',
-            'localization/states_provinces' => '\Concrete\Core\Localization\Service\StatesProvincesList',
-            'localization/languages' => '\Concrete\Core\Localization\Service\LanguageList',
-            'lists/countries' => '\Concrete\Core\Localization\Service\CountryList',
-            'lists/states_provinces' => '\Concrete\Core\Localization\Service\StatesProvincesList',
-            'date' => '\Concrete\Core\Localization\Service\Date',
-        );
-
-        foreach ($singletons as $key => $value) {
-            $this->app->singleton($key, $value);
+        foreach ($singletons as $class => $aliases) {
+            $this->app->singleton($class);
+            foreach ($aliases as $alias) {
+                $this->app->alias($class, $alias);
+            }
         }
     }
 }
