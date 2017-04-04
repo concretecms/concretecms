@@ -2,15 +2,15 @@
 namespace Concrete\Core\Console\Command;
 
 use Concrete\Core\Console\Command;
-use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Input\InputArgument;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
+use Concrete\Core\Localization\Localization;
 use Core;
 use Exception;
-use Package;
-use Concrete\Core\Localization\Localization;
 use Gettext\Translations;
+use Package;
+use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Output\OutputInterface;
 
 class TranslatePackageCommand extends Command
 {
@@ -214,22 +214,22 @@ EOT
             $poFile = "$poDirectory/messages.po";
             $moFile = "$poDirectory/messages.mo";
             if (is_file($poFile)) {
-                $output->write("- reading current .po file... ");
+                $output->write('- reading current .po file... ');
                 $oldPo = Translations::fromPoFile($poFile);
                 $output->writeln('<info>done.</info>');
             } elseif (is_file($moFile)) {
-                $output->write("- decompiling current .mo file... ");
+                $output->write('- decompiling current .mo file... ');
                 $oldPo = Translations::fromMoFile($poFile);
                 $output->writeln('<info>done.</info>');
             } else {
                 $oldPo = null;
             }
             if ($oldPo !== null) {
-                $output->write("- merging translations... ");
+                $output->write('- merging translations... ');
                 $po->mergeWith($oldPo, 0);
                 $output->writeln('<info>done.</info>');
             }
-            $output->write("- saving .po file... ");
+            $output->write('- saving .po file... ');
             if (!is_dir($poDirectory)) {
                 @mkdir($poDirectory, 0775, true);
                 if (!is_dir($poDirectory)) {
@@ -238,7 +238,7 @@ EOT
             }
             $po->toPoFile($poFile);
             $output->writeln('<info>done.</info>');
-            $output->write("- saving .mo file... ");
+            $output->write('- saving .mo file... ');
             $po->toMoFile($moFile);
             $output->writeln('<info>done.</info>');
         }
