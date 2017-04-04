@@ -5,11 +5,15 @@ use Concrete\Core\Cache\Cache;
 use Concrete\Core\Config\Renderer;
 use Concrete\Core\Error\ErrorList\ErrorList;
 use Concrete\Core\Localization\Localization as Localization;
+use Concrete\Core\Localization\Translation\Local\FactoryInterface as LocalTranslationsFactory;
+use Concrete\Core\Localization\Translation\Remote\ProviderInterface as RemoteTranslationsProvider;
 use Concrete\Core\Url\UrlImmutable;
 use Controller;
 use Database;
 use Exception;
 use Hautelook\Phpass\PasswordHash;
+use Punic\Comparer as PunicComparer;
+use Punic\Language as PunicLanguage;
 use ReflectionObject;
 use StartingPointPackage;
 use stdClass;
@@ -72,7 +76,28 @@ class Install extends Controller
 
     protected function getLocales()
     {
-        return Localization::getAvailableInterfaceLanguageDescriptions(null);
+        $coreVersion = $this->app->make('config')->get('concrete.version_installed');
+        $locales = [];
+        $ltf = $this->app->make(LocalTranslationsFactory::class);
+        /* @var LocalTranslationsFactory $ltf */
+        foreach (array_keys($ltf->getAvailableCoreStats()) as $localeID) {
+            if (!isset($locales[$localeID])) {
+                $locales[$localeID] = PunicLanguage::getName($localeID);
+            }
+        }
+        $rtp = $this->app->make(RemoteTranslationsProvider::class);
+        /* @var RemoteTranslationsProvider $rtp */
+        foreach (array_keys($rtp->getAvailableCoreStats($coreVersion)) as $localeID) {
+            if (!isset($locales[$localeID])) {
+                $locales[$localeID] = PunicLanguage::getName($localeID);
+            }
+        }
+        unset($locales[Localization::BASE_LOCALE]);
+        $comparer = new PunicComparer();
+        $comparer->sort($locales, true);
+        $locales[Localization::BASE_LOCALE] = PunicLanguage::getName(Localization::BASE_LOCALE);
+
+        return $locales;
     }
 
     protected function testAndRunInstall()
