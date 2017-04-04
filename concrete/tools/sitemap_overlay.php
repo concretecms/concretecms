@@ -9,12 +9,6 @@ if (!$sh->canRead()) {
 $v = View::getInstance();
 $v->requireAsset('core/sitemap');
 
-$site = \Core::make("site")->getActiveSiteForEditing();
-
-$element = Element::get('sitemap/selector_header');
-if ($element->exists()) {
-    $element->render();
-}
 ?>
 
 <div class="ccm-sitemap-overlay"></div>
@@ -23,7 +17,6 @@ if ($element->exists()) {
 <script type="text/javascript">
     $(function () {
         $('.ccm-sitemap-overlay').concreteSitemap({
-            siteTreeID: <?=$site->getSiteTreeID()?>,
             onClickNode: function (node) {
                 ConcreteEvent.publish('SitemapSelectPage', {
                     cID: node.data.cID,

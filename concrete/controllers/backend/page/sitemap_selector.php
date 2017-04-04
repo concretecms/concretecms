@@ -72,9 +72,13 @@ class SitemapSelector extends UserInterface
                 $tree = $service->getActiveSiteForEditing()->getSiteTreeObject();
             }
 
+            $provider = new \Concrete\Core\Application\UserInterface\Sitemap\StandardSitemapProvider($service);
+            $collection = $provider->getTreeCollection($tree);
+            $formatter = new \Concrete\Core\Application\UserInterface\Sitemap\TreeCollection\TreeCollectionJsonFormatter($collection);
+
             $response = [
                 'children' => $dh->getSubNodes($tree, $callback),
-                'locales' => $locales
+                'trees' => $formatter
             ];
 
         }

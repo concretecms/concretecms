@@ -9,15 +9,24 @@ use Concrete\Core\Application\UserInterface\Sitemap\TreeCollection\Entry\SiteEnt
 use Concrete\Core\Application\UserInterface\Sitemap\TreeCollection\StandardTreeCollection;
 use Concrete\Core\Application\UserInterface\Sitemap\TreeCollection\TreeCollection;
 use Concrete\Core\Entity\Site\SiteTree;
+use Concrete\Core\Permission\Checker;
 use Concrete\Core\Site\Service;
+use Concrete\Core\Site\Tree\TreeInterface;
 
 class StandardSitemapProvider implements ProviderInterface
 {
+
+    protected $permissionsIgnored = false;
 
     /**
      * @var $siteService Service
      */
     protected $siteService;
+
+    public function ignorePermissions()
+    {
+        $this->permissionsIgnored = true;
+    }
 
     /**
      * StandardSitemapProvider constructor.
@@ -35,6 +44,18 @@ class StandardSitemapProvider implements ProviderInterface
         }
 
         return $this->useLocales($sites);
+    }
+
+    protected function checkPermissions(TreeInterface $object)
+    {
+        if (!$this->permissionsIgnored) {
+            $home = $object->getSiteTreeObject()->getSiteHomePageObject();
+            if ($home) {
+                $cp = new Checker($home);
+                return $cp->canViewPageInSitemap();
+            }
+        }
+        return true;
     }
 
     protected function useLocales($sites)
@@ -58,20 +79,24 @@ class StandardSitemapProvider implements ProviderInterface
         if ($this->useLocales($sites)) {
             foreach($sites as $site) {
                 foreach($site->getLocales() as $locale) {
-                    $entry = new LocaleEntry($locale);
+                    if ($this->checkPermissions($locale)) {
+                        $entry = new LocaleEntry($locale);
+                        if ($selectedTree && $entry->getSiteTreeID() == $selectedTree->getSiteTreeID()){
+                            $entry->setIsSelected(true);
+                        }
+                        $collection->addEntry($entry);
+                    }
+                }
+            }
+        } else {
+            foreach($sites as $site) {
+                if ($this->checkPermissions($site)) {
+                    $entry = new SiteEntry($site);
                     if ($selectedTree && $entry->getSiteTreeID() == $selectedTree->getSiteTreeID()){
                         $entry->setIsSelected(true);
                     }
                     $collection->addEntry($entry);
                 }
-            }
-        } else {
-            foreach($sites as $site) {
-                $entry = new SiteEntry($site);
-                if ($selectedTree && $entry->getSiteTreeID() == $selectedTree->getSiteTreeID()){
-                    $entry->setIsSelected(true);
-                }
-                $collection->addEntry($entry);
             }
         }
 

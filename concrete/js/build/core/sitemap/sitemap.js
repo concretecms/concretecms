@@ -49,14 +49,14 @@
 
 		setupSiteTreeSelector: function(tree) {
 			var my = this;
-			if (tree.displayMenu) {
+			if (tree.displayMenu && my.options.siteTreeID < 1) {
 				if (!my.$element.find('div.ccm-sitemap-tree-selector-wrapper select').length) {
 					my.$element.find('div.ccm-sitemap-tree-selector-wrapper').append($(my.localesWrapperTemplate));
 					var $menu = my.$element.find('div.ccm-sitemap-tree-selector-wrapper select');
 					var itemIDs = [];
 					$.each(tree.entries, function(i, entry) {
 						if (entry.isSelected) {
-							itemIDs.push(entry.id);
+							itemIDs.push(entry.siteTreeID);
 						}
 					});
 

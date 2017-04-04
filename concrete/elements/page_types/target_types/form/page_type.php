@@ -3,6 +3,7 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 $form = Loader::helper('form');
 $cParentID = false;
+$tree = null;
 if (is_object($target)) {
     $cParentID = $target->getCollectionID();
 }
@@ -28,7 +29,8 @@ if (is_object($pagetype) && $pagetype->getPageTypePublishTargetTypeID() == $conf
             $siteMapParentID = $configuredTarget->getStartingPointPageID();
         }
         $ps = Loader::helper('form/page_selector');
-        echo $ps->selectFromSitemap('cParentID', $cParentID, $siteMapParentID, array('ptID' => $configuredTarget->getPageTypeID()));
+        $args = array('ptID' => $configuredTarget->getPageTypeID());
+        echo $ps->selectFromSitemap('cParentID', $cParentID, $siteMapParentID, $tree, $args);
     } else {
         $pl = new PageList();
         $pl->sortByName();

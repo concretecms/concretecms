@@ -58,6 +58,7 @@ class SitemapTest extends PHPUnit_Framework_TestCase
         $service = $this->createService([$site]);
 
         $provider = new \Concrete\Core\Application\UserInterface\Sitemap\StandardSitemapProvider($service);
+        $provider->ignorePermissions();
         $this->assertInstanceOf('Concrete\Core\Application\UserInterface\Sitemap\ProviderInterface', $provider);
 
         $collection = $provider->getTreeCollection();
@@ -88,6 +89,7 @@ class SitemapTest extends PHPUnit_Framework_TestCase
         $service = $this->createService([$site]);
 
         $provider = new \Concrete\Core\Application\UserInterface\Sitemap\StandardSitemapProvider($service);
+        $provider->ignorePermissions();
         $collection = $provider->getTreeCollection();
 
         $entries = $collection->getEntries();
@@ -123,6 +125,7 @@ class SitemapTest extends PHPUnit_Framework_TestCase
         $service = $this->createService([$site1, $site2]);
 
         $provider = new \Concrete\Core\Application\UserInterface\Sitemap\StandardSitemapProvider($service);
+        $provider->ignorePermissions();
         $collection = $provider->getTreeCollection();
 
         $entries = $collection->getEntries();
@@ -169,6 +172,7 @@ class SitemapTest extends PHPUnit_Framework_TestCase
         $service = $this->createService([$site1, $site2, $site3, $site4]);
 
         $provider = new \Concrete\Core\Application\UserInterface\Sitemap\StandardSitemapProvider($service);
+        $provider->ignorePermissions();
 
         $collection = $provider->getTreeCollection();
 
