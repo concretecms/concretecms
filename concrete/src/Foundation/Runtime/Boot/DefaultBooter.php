@@ -154,7 +154,6 @@ class DefaultBooter implements BootInterface, ApplicationAwareInterface
                 return $response;
             }
 
-            $this->initializeTimezone($app);
 
             /*
              * ----------------------------------------------------------------------------
@@ -200,29 +199,6 @@ class DefaultBooter implements BootInterface, ApplicationAwareInterface
 
         return $config;
     }
-
-    /**
-     * @param Repository $config
-     */
-    private function initializeTimezone(Application $app)
-    {
-        $siteConfig = $app->make('site')->getSite()->getConfigRepository();
-        $config = $app->make('config');
-
-        if (!$siteConfig->has('timezone')) {
-            // There is no timezone set.
-            $siteConfig->set('timezone', @date_default_timezone_get());
-        }
-
-        if (!$config->has('app.server_timezone')) {
-            // There is no server timezone set.
-            $config->set('app.server_timezone', @date_default_timezone_get());
-        }
-
-        @date_default_timezone_set($config->get('app.server_timezone'));
-    }
-
-
 
     /**
      * Enable localization.
