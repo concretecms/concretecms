@@ -24,7 +24,7 @@ $v->requireAsset('core/sitemap');
                     instance: this
                 });
             },
-            displaySingleLevel: <?= $_REQUEST['display'] == 'flat' ? 'true' : 'false' ?>,
+            displaySingleLevel: <?= (isset($_REQUEST['display']) && $_REQUEST['display'] === 'flat') ? 'true' : 'false' ?>,
         });
     });
 </script>
