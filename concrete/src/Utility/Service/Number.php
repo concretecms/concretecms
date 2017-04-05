@@ -170,17 +170,22 @@ class Number
     public function getBytes($val)
     {
         $val = trim($val);
-        $last = strtolower($val[strlen($val) - 1]);
-        switch ($last) {
-            // The 'G' modifier is available since PHP 5.1.0
-            case 'g':
-                $val *= 1024;
-            case 'm':
-                $val *= 1024;
-            case 'k':
-                $val *= 1024;
+        if ($val !== '') {
+            $last = strtolower($val[strlen($val) - 1]);
+            if (!is_numeric($last)) {
+                $num = trim(substr($val, 0, -1));
+                switch ($last) {
+                    case 'g':
+                        $num *= 1024;
+                    case 'm':
+                        $num *= 1024;
+                    case 'k':
+                        $num *= 1024;
+                        $val = $num;
+                        break;
+                }
+            }
         }
-
         return $val;
     }
 }
