@@ -72,7 +72,7 @@ class SitemapSelector extends UserInterface
                 $tree = $service->getActiveSiteForEditing()->getSiteTreeObject();
             }
 
-            $provider = new \Concrete\Core\Application\UserInterface\Sitemap\StandardSitemapProvider($service);
+            $provider = \Core::make('\Concrete\Core\Application\UserInterface\Sitemap\StandardSitemapProvider');
             $collection = $provider->getTreeCollection($tree);
             $formatter = new \Concrete\Core\Application\UserInterface\Sitemap\TreeCollection\TreeCollectionJsonFormatter($collection);
 

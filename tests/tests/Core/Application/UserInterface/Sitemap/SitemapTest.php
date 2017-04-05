@@ -57,7 +57,7 @@ class SitemapTest extends PHPUnit_Framework_TestCase
         $site = $this->createSite([$locale]);
         $service = $this->createService([$site]);
 
-        $provider = new \Concrete\Core\Application\UserInterface\Sitemap\StandardSitemapProvider($service);
+        $provider = Core::make('Concrete\Core\Application\UserInterface\Sitemap\StandardSitemapProvider', ['siteService' => $service]);
         $provider->ignorePermissions();
         $this->assertInstanceOf('Concrete\Core\Application\UserInterface\Sitemap\ProviderInterface', $provider);
 
@@ -88,7 +88,7 @@ class SitemapTest extends PHPUnit_Framework_TestCase
         $site = $this->createSite([$locale1, $locale2, $locale3]);
         $service = $this->createService([$site]);
 
-        $provider = new \Concrete\Core\Application\UserInterface\Sitemap\StandardSitemapProvider($service);
+        $provider = Core::make('Concrete\Core\Application\UserInterface\Sitemap\StandardSitemapProvider', ['siteService' => $service]);
         $provider->ignorePermissions();
         $collection = $provider->getTreeCollection();
 
@@ -124,7 +124,7 @@ class SitemapTest extends PHPUnit_Framework_TestCase
 
         $service = $this->createService([$site1, $site2]);
 
-        $provider = new \Concrete\Core\Application\UserInterface\Sitemap\StandardSitemapProvider($service);
+        $provider = Core::make('Concrete\Core\Application\UserInterface\Sitemap\StandardSitemapProvider', ['siteService' => $service]);
         $provider->ignorePermissions();
         $collection = $provider->getTreeCollection();
 
@@ -171,7 +171,7 @@ class SitemapTest extends PHPUnit_Framework_TestCase
 
         $service = $this->createService([$site1, $site2, $site3, $site4]);
 
-        $provider = new \Concrete\Core\Application\UserInterface\Sitemap\StandardSitemapProvider($service);
+        $provider = Core::make('Concrete\Core\Application\UserInterface\Sitemap\StandardSitemapProvider', ['siteService' => $service]);
         $provider->ignorePermissions();
 
         $collection = $provider->getTreeCollection();
