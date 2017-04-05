@@ -291,15 +291,14 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
         }
     }
 
-    /*
-     * Returns a path to where the block type's files are located.
-     * @access public
-     * @return string $path
+    /**
+     * Returns the block identifier (if available)
+     *
+     * @return int|null
      */
-
     public function getBlockID()
     {
-        return $this->bID;
+        return isset($this->bID) ? $this->bID : null;
     }
 
     public function setBlockCachedOutput($content, $lifetime, $area)
