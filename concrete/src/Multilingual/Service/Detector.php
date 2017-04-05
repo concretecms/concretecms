@@ -86,7 +86,11 @@ class Detector
             }
         }
 
-        return ($result === null) ? null : array_pop($result);
+        if ($result !== null) {
+            $session->set('multilingual_default_locale', $result[0]);
+        }
+
+        return ($result === null) ? null : $result[1];
     }
 
     /**
