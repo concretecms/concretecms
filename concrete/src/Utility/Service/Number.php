@@ -38,13 +38,13 @@ class Number
                 // Remove initial zeroes
                 $value = ltrim($value, '0');
                 if ($value === '' || $value[0] === '.') {
-                    $value = '0'.$value;
+                    $value = '0' . $value;
                 }
                 if (strpos($value, '.') !== false) {
                     // Remove trailing zeroes after the dot
                     $value = rtrim(rtrim($value, '0'), '.');
                 }
-                $result = $sign.$value;
+                $result = $sign . $value;
             }
         }
 
@@ -186,6 +186,7 @@ class Number
                 }
             }
         }
+
         return $val;
     }
 }
