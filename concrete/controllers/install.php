@@ -81,8 +81,6 @@ class Install extends Controller
         $coreVersion = $this->app->make('config')->get('concrete.version_installed');
         $rtp = $this->app->make(RemoteTranslationsProvider::class);
         /* @var RemoteTranslationsProvider $rtp */
-        // Let's disable the cache (we haven't checked if it exists and it's writable)
-        //$rtp->setCacheLifetime(0);
         // We may be offline, so let's ignore connection issues
         try {
             $remoteLocaleStats = $rtp->getAvailableCoreStats($coreVersion);
