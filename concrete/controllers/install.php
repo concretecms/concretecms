@@ -67,9 +67,11 @@ class Install extends Controller
 
     public function view()
     {
-        list($locales, $onlineLocales) = $this->getLocales();
-        $this->set('locales', $locales);
-        $this->set('onlineLocales', $onlineLocales);
+        if (!file_exists(DIR_CONFIG_SITE . '/site_install_user.php')) {
+            list($locales, $onlineLocales) = $this->getLocales();
+            $this->set('locales', $locales);
+            $this->set('onlineLocales', $onlineLocales);
+        }
         $this->set('backgroundFade', 500);
         $this->testAndRunInstall();
     }
