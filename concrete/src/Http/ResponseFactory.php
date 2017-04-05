@@ -331,7 +331,7 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
                     // Let's retrieve the default language
                     $ms = $dl->getPreferredSection();
                     if (is_object($ms) && !$ms->isDefaultMultilingualSection($site)) {
-                        return $this->redirect(\URL::to($ms));
+                        return $this->redirect(\URL::to($ms), Response::HTTP_FOUND);
                     }
                 }
             }
