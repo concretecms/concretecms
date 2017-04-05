@@ -216,7 +216,7 @@ abstract class Node extends Object implements \Concrete\Core\Permission\ObjectIn
                     $childnode->populateDirectChildrenOnly();
                 }
 
-                $childnode->selectChildrenNodesByID($nodeID, $populateMissingChildren);
+                $childnode->selectChildrenNodesByID($nodeID, $loadMissingChildren);
             }
         }
     }
