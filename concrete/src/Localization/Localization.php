@@ -441,7 +441,7 @@ class Localization
     {
         // cache/expensive should be used by the translator adapters.
         $app = Facade::getFacadeApplication();
-        $app->make('cache/expensive')->flush();
+        $app->make('cache/expensive')->getItem('zend')->clear();
 
         // Also remove the loaded translation adapters so that old strings are
         // not being used from the adapters already in memory.

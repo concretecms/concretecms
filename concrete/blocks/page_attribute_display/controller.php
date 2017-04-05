@@ -42,6 +42,11 @@ class Controller extends BlockController
         return t("Page Attribute Display");
     }
 
+    public function add()
+    {
+        $this->dateFormat = $this->app->make('date')->getPHPDateTimePattern();
+    }
+
     /**
      * @return mixed AttributeValue
      */

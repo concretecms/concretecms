@@ -76,13 +76,6 @@ class DefaultBooter implements BootInterface, ApplicationAwareInterface
 
         /*
          * ----------------------------------------------------------------------------
-         * Timezone Config
-         * ----------------------------------------------------------------------------
-         */
-        $this->initializeTimezone($config);
-
-        /*
-         * ----------------------------------------------------------------------------
          * Setup core classes aliases.
          * ----------------------------------------------------------------------------
          */
@@ -160,6 +153,7 @@ class DefaultBooter implements BootInterface, ApplicationAwareInterface
             if ($response = $this->checkCache($app, $request)) {
                 return $response;
             }
+
 
             /*
              * ----------------------------------------------------------------------------
@@ -243,24 +237,6 @@ class DefaultBooter implements BootInterface, ApplicationAwareInterface
 
             return isset($db_config['default-connection']) ? $environment : 'install';
         });
-    }
-
-    /**
-     * @param Repository $config
-     */
-    private function initializeTimezone(Repository $config)
-    {
-        if (!$config->has('app.timezone')) {
-            // There is no timezone set.
-            $config->set('app.timezone', @date_default_timezone_get());
-        }
-
-        if (!$config->has('app.server_timezone')) {
-            // There is no server timezone set.
-            $config->set('app.server_timezone', @date_default_timezone_get());
-        }
-
-        @date_default_timezone_set($config->get('app.server_timezone'));
     }
 
     /**

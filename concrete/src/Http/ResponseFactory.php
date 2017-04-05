@@ -23,6 +23,7 @@ use Concrete\Core\View\View;
 use Detection\MobileDetect;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Session\Session;
+use Concrete\Core\Http\Service\Ajax;
 
 class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInterface
 {
@@ -75,7 +76,7 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
      */
     public function notFound($content, $code = Response::HTTP_NOT_FOUND, $headers = [])
     {
-        if (strcasecmp($this->request->server->get('HTTP_X_REQUESTED_WITH', ''), 'xmlhttprequest') === 0) {
+        if ($this->app->make(Ajax::class)->isAjaxRequest($this->request)) {
             $loc = $this->localization;
             $loc->pushActiveContext(Localization::CONTEXT_SITE);
             $responseData = [
@@ -181,6 +182,9 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
             $response = $controller->runAction($requestTask, $requestParameters);
             if ($response instanceof \Symfony\Component\HttpFoundation\Response) {
                 return $response;
+            }
+            if ($controller->isReplaced()) {
+                return $this->controller($controller->getReplacement(), $code, $headers);
             }
         } else {
             if ($response = $controller->runAction('view')) {

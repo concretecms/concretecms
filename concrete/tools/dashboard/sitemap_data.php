@@ -7,34 +7,10 @@ if (!$dh->canRead()) {
     die(t("Access Denied."));
 }
 
-/*
-if (isset($_REQUEST['selectedPageID'])) {
-    if (strstr($_REQUEST['selectedPageID'], ',')) {
-        $sanitizedPageID = preg_replace('/[^0-9,]/', '', $_REQUEST['selectedPageID']);
-        $sanitizedPageID = preg_replace('/\s/', '', $sanitizedPageID);
-    } else {
-        $sanitizedPageID = intval($_REQUEST['selectedPageID']);
-    }
-    $dh->setSelectedPageID($sanitizedPageID);
-}
-
-if (isset($_REQUEST['task']) && $_REQUEST['task'] == 'save_sitemap_display_mode') {
-    $u = new User();
-    $u->saveConfig('SITEMAP_OVERLAY_DISPLAY_MODE', $_REQUEST['display_mode']);
-    exit;
-}
-*/
-
 if (isset($_REQUEST['displayNodePagination']) && $_REQUEST['displayNodePagination']) {
     $dh->setDisplayNodePagination(true);
 } else {
     $dh->setDisplayNodePagination(false);
-}
-
-if (isset($_GET['includeSystemPages']) && $_GET['includeSystemPages']) {
-    $dh->setIncludeSystemPages(true);
-} else {
-    $dh->setIncludeSystemPages(false);
 }
 
 $cParentID = (isset($_REQUEST['cParentID'])) ? $_REQUEST['cParentID'] : 0;
@@ -60,29 +36,9 @@ if (isset($_REQUEST['displaySingleLevel']) && $_REQUEST['displaySingleLevel']) {
         'children' => $nodes,
     ]);
 } else {
-    if (isset($_COOKIE['ConcreteSitemap-expand'])) {
-        $openNodeArray = explode(',', str_replace('_', '', $_COOKIE['ConcreteSitemap-expand']));
-        if (is_array($openNodeArray)) {
-            $dh->setExpandedNodes($openNodeArray);
-        }
-    }
-    if ($cParentID || (isset($_REQUEST['reloadNode']) && $_REQUEST['reloadNode'])) {
-        $nodes = $dh->getSubNodes($cParentID);
-        echo json_encode($nodes);
-    } else {
-        $service = \Core::make('site');
-        if (isset($_REQUEST['siteTreeID']) && $_REQUEST['siteTreeID'] > 0) {
-            $tree = $service->getSiteTreeByID($_REQUEST['siteTreeID']);
-        } else {
-            $tree = $service->getActiveSiteForEditing()->getSiteTreeObject();
-        }
-        $nodes = $dh->getSubNodes($tree);
-        $locales = $tree->getLocaleCollection();
 
-        echo json_encode([
-            'children' => $nodes,
-            'locales' => $locales
-        ]);
-    }
+    $provider = \Core::make('Concrete\Core\Application\UserInterface\Sitemap\StandardSitemapProvider');
+    $formatter = new \Concrete\Core\Application\UserInterface\Sitemap\JsonFormatter($provider);
+    print json_encode($formatter);
 }
 

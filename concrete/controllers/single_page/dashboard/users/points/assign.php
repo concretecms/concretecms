@@ -57,7 +57,7 @@ class Assign extends DashboardPageController
         $user = $this->post('upUser');
         if (is_numeric($user)) {
             // rolling as user id
-            $ui = UserInfo::getByUserID($user);
+            $ui = UserInfo::getByID($user);
         } else {
             $ui = UserInfo::getByUserName($user);
             // look up userID

@@ -44,20 +44,27 @@
     ?>
 	</fieldset>
 	<?php
-    $ats = AuthenticationType::getList(true, true);
+    $ats = [];
+    foreach (AuthenticationType::getList(true, true) as $at) {
+        /* @var AuthenticationType $at */
+        if ($at->isHooked($profile)) {
+            if ($at->hasHooked()) {
+                $ats[] = [$at, 'renderHooked'];
+            }
+        } else {
+            if ($at->hasHook()) {
+                $ats[] = [$at, 'renderHook'];
+            }
+        }
+    }
 
-    $ats = array_filter($ats, function (AuthenticationType $type) {
-        return $type->hasHook();
-    });
-
-    $count = count($ats);
-    if ($count) {
+    if (!empty($ats)) {
         ?>
 		<fieldset>
 			<legend><?=t('Authentication Types')?></legend>
 			<?php
             foreach ($ats as $at) {
-                $at->renderHook();
+                call_user_func($at);
             }
         ?>
 		</fieldset>

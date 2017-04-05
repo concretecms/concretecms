@@ -6,6 +6,9 @@ use Concrete\Core\Attribute\Key\CollectionKey;
 use \Concrete\Core\Block\BlockController;
 use Concrete\Core\Express\Entry\Search\Result\Result;
 use Concrete\Core\Express\EntryList;
+use Concrete\Core\Express\Form\Context\FrontendFormContext;
+use Concrete\Core\Express\Form\Context\FrontendViewContext;
+use Concrete\Core\Express\Form\Renderer;
 use Concrete\Core\Search\Result\ItemColumn;
 use Concrete\Core\Support\Facade\Express;
 use Concrete\Core\Support\Facade\Facade;
@@ -87,7 +90,12 @@ class Controller extends BlockController
             }
         }
         $form = $this->entityManager->find('Concrete\Core\Entity\Express\Form', $this->exFormID);
-        $renderer = $this->app->make('Concrete\Core\Express\Form\StandardViewRenderer', ['form' => $form]);
+
+        $renderer = new Renderer(
+            new FrontendViewContext(),
+            $form
+        );
+
         $this->set('renderer', $renderer);
 
     }

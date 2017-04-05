@@ -4,13 +4,14 @@ namespace Concrete\Core\Entity\Site;
 use Concrete\Core\Entity\LocaleTrait;
 use Concrete\Core\Localization\Locale\LocaleInterface;
 use Concrete\Core\Multilingual\Service\UserInterface\Flag;
+use Concrete\Core\Site\Tree\TreeInterface;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
  * @ORM\Table(name="SiteLocales")
  */
-class Locale implements LocaleInterface
+class Locale implements LocaleInterface, TreeInterface
 {
 
     use LocaleTrait;
@@ -94,4 +95,13 @@ class Locale implements LocaleInterface
         $this->tree = $tree;
     }
 
+    public function getSiteTreeID()
+    {
+        return $this->getSiteTree()->getSiteTreeID();
+    }
+
+    public function getSiteTreeObject()
+    {
+        return $this->getSiteTree();
+    }
 }

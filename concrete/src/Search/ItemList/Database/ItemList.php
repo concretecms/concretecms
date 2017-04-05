@@ -98,4 +98,9 @@ abstract class ItemList extends AbstractItemList
             )));
         }
     }
+
+    public function __clone()
+    {
+        $this->query = clone $this->query;
+    }
 }

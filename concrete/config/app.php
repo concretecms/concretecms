@@ -120,6 +120,7 @@ return [
         'core_events' => '\Concrete\Core\Events\EventsServiceProvider',
         'core_whoops' => '\Concrete\Core\Error\Provider\WhoopsServiceProvider',
         'core_logging' => '\Concrete\Core\Logging\LoggingServiceProvider',
+        'core_element' => '\Concrete\Core\Filesystem\FilesystemServiceProvider',
         'core_notification' => '\Concrete\Core\Notification\NotificationServiceProvider',
         'core_cache' => '\Concrete\Core\Cache\CacheServiceProvider',
         'core_url' => '\Concrete\Core\Url\UrlServiceProvider',
@@ -161,6 +162,7 @@ return [
         'Route' => '\Concrete\Core\Support\Facade\Route',
         'Site' => '\Concrete\Core\Support\Facade\Site',
         'UserInfo' => '\Concrete\Core\Support\Facade\UserInfo',
+        'Element' => '\Concrete\Core\Support\Facade\Element',
         'Log' => '\Concrete\Core\Support\Facade\Log',
         'Image' => '\Concrete\Core\Support\Facade\Image',
         'Config' => '\Concrete\Core\Support\Facade\Config',
@@ -449,6 +451,8 @@ return [
             'attribute_action',
             ['action' => '.+'],
         ],
+        "/ccm/system/attribute/attribute_sort/set" => ['\Concrete\Controller\Backend\Attributes::sortInSet'],
+        "/ccm/system/attribute/attribute_sort/user" => ['\Concrete\Controller\Backend\Attributes::sortUser'],
 
         /*
          * Trees
@@ -731,12 +735,16 @@ return [
             ['css', 'css/responsive-slides.css', ['minify' => false]],
         ],
         'html5-shiv' => [
-            ['javascript-conditional', 'js/ie/html5-shiv.js',
+            [
+                'javascript-conditional',
+                'js/ie/html5-shiv.js',
                 ['conditional' => 'lt IE 9'],
             ],
         ],
         'respond' => [
-            ['javascript-conditional', 'js/ie/respond.js',
+            [
+                'javascript-conditional',
+                'js/ie/respond.js',
                 ['conditional' => 'lt IE 9'],
             ],
         ],
@@ -1155,6 +1163,19 @@ return [
                 ['javascript', 'core/file-manager'],
             ],
         ],
+        'core/file-folder-selector' => [
+            [
+                ['javascript', 'core/events'],
+                ['javascript', 'underscore'],
+                ['javascript', 'jquery/ui'],
+                ['javascript-localized', 'jquery/ui'],
+                ['javascript', 'fancytree'],
+                ['javascript-localized', 'fancytree'],
+                ['javascript', 'core/tree'],
+                ['css', 'fancytree'],
+            ],
+        ],
+
         'core/sitemap' => [
             [
                 ['javascript', 'core/events'],

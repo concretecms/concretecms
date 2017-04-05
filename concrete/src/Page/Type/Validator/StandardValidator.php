@@ -38,11 +38,13 @@ class StandardValidator implements ValidatorInterface
         return $e;
     }
 
-    public function validatePublishLocationRequest(Page $target = null)
+    public function validatePublishLocationRequest(Page $target = null, Page $page = null)
     {
         $e = Core::make('error');
         if (!is_object($target) || $target->isError()) {
-            $e->add(t('You must choose a page to publish this page beneath.'));
+            if (!is_object($page) || !$page->isHomePage()) {
+                $e->add(t('You must choose a page to publish this page beneath.'));
+            }
         } else {
             $ppc = new \Permissions($target);
             if (!$ppc->canAddSubCollection($this->getPageTypeObject())) {

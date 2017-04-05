@@ -2,40 +2,38 @@
 namespace Concrete\Controller\SinglePage\Dashboard\System\Mail;
 
 use Concrete\Core\Page\Controller\DashboardPageController;
-use Loader;
-use Config;
 
 class Method extends DashboardPageController
 {
-    protected $sendUndefinedTasksToView = false;
-
-    public function settings_updated()
+    public function view()
     {
-        $this->set("message", t('Global mail settings saved.'));
+        $this->set('config', $this->app->make('config'));
     }
 
     public function save_settings()
     {
-        if (!Loader::helper('validation/token')->validate('save_settings')) {
-            $this->error->add(t('Invalid Token.'));
-
-            return;
-        }
-
-        Config::save('concrete.mail.method', strtolower($this->post('MAIL_SEND_METHOD')));
-        if ($this->post('MAIL_SEND_METHOD') == 'SMTP') {
-            Config::save('concrete.mail.methods.smtp.server', $this->post('MAIL_SEND_METHOD_SMTP_SERVER'));
-            Config::save('concrete.mail.methods.smtp.username', $this->post('MAIL_SEND_METHOD_SMTP_USERNAME'));
-            Config::save('concrete.mail.methods.smtp.password', $this->post('MAIL_SEND_METHOD_SMTP_PASSWORD'));
-            Config::save('concrete.mail.methods.smtp.port', $this->post('MAIL_SEND_METHOD_SMTP_PORT'));
-            Config::save('concrete.mail.methods.smtp.encryption', $this->post('MAIL_SEND_METHOD_SMTP_ENCRYPTION'));
+        if ($this->token->validate('save_settings')) {
+            $config = $this->app->make('config');
+            $config->save('concrete.mail.method', strtolower($this->post('MAIL_SEND_METHOD')));
+            if ($this->post('MAIL_SEND_METHOD') == 'SMTP') {
+                $config->save('concrete.mail.methods.smtp.server', $this->post('MAIL_SEND_METHOD_SMTP_SERVER'));
+                $config->save('concrete.mail.methods.smtp.username', $this->post('MAIL_SEND_METHOD_SMTP_USERNAME'));
+                $config->save('concrete.mail.methods.smtp.password', $this->post('MAIL_SEND_METHOD_SMTP_PASSWORD'));
+                $config->save('concrete.mail.methods.smtp.port', $this->post('MAIL_SEND_METHOD_SMTP_PORT'));
+                $config->save('concrete.mail.methods.smtp.encryption', $this->post('MAIL_SEND_METHOD_SMTP_ENCRYPTION'));
+                $messages_per_connection = (int) $this->post('MAIL_SEND_METHOD_SMTP_MESSAGES_PER_CONNECTION');
+                $config->save('concrete.mail.methods.smtp.messages_per_connection', $messages_per_connection > 0 ? $messages_per_connection : null);
+            } else {
+                $config->clear('concrete.mail.methods.smtp.server');
+                $config->clear('concrete.mail.methods.smtp.username');
+                $config->clear('concrete.mail.methods.smtp.password');
+                $config->clear('concrete.mail.methods.smtp.port');
+                $config->clear('concrete.mail.methods.smtp.encryption');
+            }
+            $this->flash('success', t('Global mail settings saved.'));
+            $this->redirect($this->action(''));
         } else {
-            Config::clear('concrete.mail.methods.smtp.server');
-            Config::clear('concrete.mail.methods.smtp.username');
-            Config::clear('concrete.mail.methods.smtp.password');
-            Config::clear('concrete.mail.methods.smtp.port');
-            Config::clear('concrete.mail.methods.smtp.encryption');
+            $this->error->add($this->token->getErrorMessage());
         }
-        $this->redirect("/dashboard/system/mail/method", "settings_updated");
     }
 }

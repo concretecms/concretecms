@@ -267,6 +267,7 @@ class PageListTest extends \PageTestCase
         $this->list->includeSystemPages(); // This includes the items inside trash because we're stupid.
         $totalResults = $this->list->getTotalResults();
         $this->assertEquals(14, $totalResults);
+
         $pagination = $this->list->getPagination();
         $this->assertEquals(14, $pagination->getTotalResults());
         $results = $this->list->getResults();

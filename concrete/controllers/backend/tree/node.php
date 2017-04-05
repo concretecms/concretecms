@@ -28,7 +28,7 @@ class Node extends UserInterface
     {
         $node = $this->getNode();
         $selected = array();
-        if (is_array($_REQUEST['treeNodeSelectedIDs'])) {
+        if (isset($_REQUEST['treeNodeSelectedIDs']) && is_array($_REQUEST['treeNodeSelectedIDs'])) {
             foreach ($_REQUEST['treeNodeSelectedIDs'] as $nodeID) {
                 $selected[] = intval($nodeID);
             }

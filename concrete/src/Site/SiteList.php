@@ -11,6 +11,13 @@ use Concrete\Core\Search\Pagination\Pagination;
 class SiteList extends DatabaseItemList
 {
 
+    public function filterBySiteTypeHandle($siteTypeHandle)
+    {
+        $this->query->join('s', 'SiteTypes', 'st', 's.siteTypeID = st.siteTypeID');
+        $this->query->andWhere('siteTypeHandle = :siteTypeHandle');
+        $this->query->setParameter('siteTypeHandle', $siteTypeHandle);
+    }
+
     protected function getAttributeKeyClassName()
     {
         return '\\Concrete\\Core\\Attribute\\Key\\SiteKey';

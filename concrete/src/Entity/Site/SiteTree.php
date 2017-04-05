@@ -1,8 +1,6 @@
 <?php
 namespace Concrete\Core\Entity\Site;
 
-use Concrete\Core\Localization\Locale\LocaleCollection;
-use Concrete\Core\Localization\Locale\LocaleCollectionAggregateInterface;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -13,7 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
  *     name="SiteTreeTrees"
  * )
  */
-class SiteTree extends Tree implements LocaleCollectionAggregateInterface
+class SiteTree extends Tree
 {
 
     /**
@@ -54,10 +52,4 @@ class SiteTree extends Tree implements LocaleCollectionAggregateInterface
         return $this->getLocale()->getSite()->getSiteName();
     }
 
-    public function getLocaleCollection()
-    {
-        $collection = new LocaleCollection($this->getSite());
-        $collection->setSelectedLocale($this->getLocale());
-        return $collection;
-    }
 }
