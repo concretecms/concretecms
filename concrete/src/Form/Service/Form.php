@@ -459,11 +459,23 @@ class Form
         }
         $str = '<select id="' . $id . '" name="' . $key . '"' . $this->parseMiscFields('form-control', $miscFields) . '>';
         foreach ($optionValues as $k => $text) {
-            $str .= '<option value="' . $k . '"';
-            if ((string) $k === (string) $selectedValue) {
-                $str .= ' selected="selected"';
+            if (is_array($text)) {
+                $str .= '<optgroup label="' . h($k) . '">';
+                foreach ($text as $optionValue => $optionText) {
+                    $str .= '<option value="' . h($optionValue) . '"';
+                    if ((string) $optionValue === (string) $selectedValue) {
+                        $str .= ' selected="selected"';
+                    }
+                    $str .= '>' . h($optionText) . '</option>';
+                }
+                $str .= '</optgroup>';
+            } else {
+                $str .= '<option value="' . $k . '"';
+                if ((string) $k === (string) $selectedValue) {
+                    $str .= ' selected="selected"';
+                }
+                $str .= '>' . $text . '</option>';
             }
-            $str .= '>' . $text . '</option>';
         }
         $str .= '</select>';
 
