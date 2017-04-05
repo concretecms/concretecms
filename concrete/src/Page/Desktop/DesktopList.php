@@ -12,7 +12,7 @@ class DesktopList
         $list->filterByAttribute('is_desktop', true);
         $list->sortByDesktopPriority('desc');
         $results = $list->getResults();
-        if (is_object($results[0])) {
+        if (!empty($results)) {
             return $results[0];
         }
     }
