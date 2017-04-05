@@ -8,7 +8,7 @@ use Page;
 
 class Explore extends DashboardPageController
 {
-    public function view($nodeID = 1, $auxMessage = false)
+    public function view($nodeID = 0, $auxMessage = false)
     {
         $this->requireAsset('core/sitemap');
 

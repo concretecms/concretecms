@@ -29,20 +29,15 @@ if ($callback) {
 
 <?=Loader::helper('concrete/ui')->tabs(array(
     array('sitemap', t('Full Sitemap')),
-	/*
     array('explore', t('Flat View')),
-	*/
     array('search', t('Search')),
 ));
 ?>
 
 <div id="ccm-tab-content-sitemap" class="ccm-tab-content"></div>
 
-	<?php /* ?>
 
 <div id="ccm-tab-content-explore" class="ccm-tab-content"></div>
-
- 	*/ ?>
 
 <div id="ccm-tab-content-search" class="ccm-tab-content"></div>
 

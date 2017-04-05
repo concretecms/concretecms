@@ -136,16 +136,26 @@ class StandardSitemapProvider implements ProviderInterface
         }
     }
 
-    public function getRequestedNodes()
+    protected function getSitemapDataProvider()
     {
         $dh = $this->app->make('helper/concrete/dashboard/sitemap');
+        if ($this->request->query->has('displayNodePagination') && $this->request->query->get('displayNodePagination')){
+            $dh->setDisplayNodePagination(true);
+        } else {
+            $dh->setDisplayNodePagination(false);
+        }
+        return $dh;
+    }
+
+    public function getRequestedNodes()
+    {
+        $dh = $this->getSitemapDataProvider();
         if ($this->cookieJar->has('ConcreteSitemap-expand')) {
             $openNodeArray = explode(',', str_replace('_', '', $this->cookieJar->get('ConcreteSitemap-expand')));
             if (is_array($openNodeArray)) {
                 $dh->setExpandedNodes($openNodeArray);
             }
         }
-
         if (!$this->includeMenuInResponse()) {
             $nodes = $dh->getSubNodes($this->request->query->get('cParentID'));
         } else {

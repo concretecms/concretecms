@@ -149,10 +149,10 @@
 				minExpandLevel = my.options.minExpandLevel;
 			} else {
 				if (my.options.displaySingleLevel) {
-					if (my.options.cParentID == 1) {
-						minExpandLevel = 2;
-					} else {
+					if (my.options.cParentID) {
 						minExpandLevel = 3;
+					} else {
+						minExpandLevel = 2;
 					}
 					doPersist = false;
 				} else {
