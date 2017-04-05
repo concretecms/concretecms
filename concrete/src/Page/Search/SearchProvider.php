@@ -55,7 +55,10 @@ class SearchProvider extends AbstractSearchProvider
 
     public function getItemList()
     {
-        return new PageList();
+        $site = \Core::make('site')->getActiveSiteForEditing();
+        $list = new PageList();
+        $list->setSiteTreeObject($site);
+        return $list;
     }
 
     public function getDefaultColumnSet()
