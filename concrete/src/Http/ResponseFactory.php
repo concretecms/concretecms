@@ -325,10 +325,14 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
 
             // First, we check to see if we need to redirect to a default multilingual section.
             if ($dl->isEnabled() && $site->getConfigRepository()->get('multilingual.redirect_home_to_default_locale')) {
-                // Let's retrieve the default language
-                $ms = $dl->getPreferredSection();
-                if (is_object($ms) && !$ms->isDefaultMultilingualSection($site)) {
-                    return $this->redirect(\URL::to($ms));
+                // Redirect only if it's the first request, otherwise we can't browse to the root locale
+                $session = $cms->make('session');
+                if (!$session->has('multilingual_default_locale')) {
+                    // Let's retrieve the default language
+                    $ms = $dl->getPreferredSection();
+                    if (is_object($ms) && !$ms->isDefaultMultilingualSection($site)) {
+                        return $this->redirect(\URL::to($ms));
+                    }
                 }
             }
 
