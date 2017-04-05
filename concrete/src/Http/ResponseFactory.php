@@ -316,7 +316,6 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
         }
 
         $dl = $cms->make('multilingual/detector');
-        $dl->setupSiteInterfaceLocalization($collection);
 
         if (!$request->getPath()
             && $request->isMethod('GET')
@@ -339,6 +338,8 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
                 return $this->redirect(\URL::to($collection));
             }
         }
+
+        $dl->setupSiteInterfaceLocalization($collection);
 
         $request->setCurrentPage($collection);
         $c = $collection; // process.php needs this
