@@ -5,7 +5,7 @@ use Concrete\Core\Cache\Cache;
 use Concrete\Core\Config\Renderer;
 use Concrete\Core\Error\ErrorList\ErrorList;
 use Concrete\Core\Localization\Localization as Localization;
-use Concrete\Core\Localization\Translation\Local\FactoryInterface as LocalTranslationsFactory;
+use Concrete\Core\Localization\Service\TranslationsUpdater;
 use Concrete\Core\Localization\Translation\Remote\ProviderInterface as RemoteTranslationsProvider;
 use Concrete\Core\Url\UrlImmutable;
 use Controller;
@@ -13,7 +13,6 @@ use Database;
 use Exception;
 use Hautelook\Phpass\PasswordHash;
 use Punic\Comparer as PunicComparer;
-use Punic\Language as PunicLanguage;
 use ReflectionObject;
 use StartingPointPackage;
 use stdClass;
@@ -68,36 +67,43 @@ class Install extends Controller
 
     public function view()
     {
-        $locales = $this->getLocales();
+        list($locales, $onlineLocales) = $this->getLocales();
         $this->set('locales', $locales);
+        $this->set('onlineLocales', $onlineLocales);
         $this->set('backgroundFade', 500);
         $this->testAndRunInstall();
     }
 
     protected function getLocales()
     {
+        $localLocales = Localization::getAvailableInterfaceLanguageDescriptions(null);
+
         $coreVersion = $this->app->make('config')->get('concrete.version_installed');
-        $locales = [];
-        $ltf = $this->app->make(LocalTranslationsFactory::class);
-        /* @var LocalTranslationsFactory $ltf */
-        foreach (array_keys($ltf->getAvailableCoreStats()) as $localeID) {
-            if (!isset($locales[$localeID])) {
-                $locales[$localeID] = PunicLanguage::getName($localeID);
-            }
-        }
         $rtp = $this->app->make(RemoteTranslationsProvider::class);
         /* @var RemoteTranslationsProvider $rtp */
-        foreach (array_keys($rtp->getAvailableCoreStats($coreVersion)) as $localeID) {
-            if (!isset($locales[$localeID])) {
-                $locales[$localeID] = PunicLanguage::getName($localeID);
+        // Let's disable the cache (we haven't checked if it exists and it's writable)
+        //$rtp->setCacheLifetime(0);
+        // We may be offline, so let's ignore connection issues
+        try {
+            $remoteLocaleStats = $rtp->getAvailableCoreStats($coreVersion);
+        } catch (Exception $x) {
+            $remoteLocaleStats = [];
+        }
+        $remoteLocales = [];
+        foreach (array_keys($remoteLocaleStats) as $remoteLocaleID) {
+            if (!isset($localLocales[$remoteLocaleID])) {
+                $remoteLocales[$remoteLocaleID] = Localization::getLanguageDescription($remoteLocaleID, null);
             }
         }
-        unset($locales[Localization::BASE_LOCALE]);
         $comparer = new PunicComparer();
-        $comparer->sort($locales, true);
-        $locales[Localization::BASE_LOCALE] = PunicLanguage::getName(Localization::BASE_LOCALE);
+        $comparer->sort($remoteLocales, true);
+        if (empty($localLocales) && !empty($remoteLocales)) {
+            $localLocales = [
+                Localization::BASE_LOCALE => Localization::getLanguageDescription(Localization::BASE_LOCALE, null),
+            ];
+        }
 
-        return $locales;
+        return [$localLocales, $remoteLocales];
     }
 
     protected function testAndRunInstall()
@@ -267,6 +273,26 @@ class Install extends Controller
 
     public function select_language()
     {
+        $localeID = $this->request->request->get('wantedLocale');
+        if ($localeID) {
+            if ($localeID !== Localization::BASE_LOCALE) {
+                $localLocales = Localization::getAvailableInterfaceLanguageDescriptions(null);
+                if (!isset($localLocales[$localeID])) {
+                    $tu = $this->app->make(TranslationsUpdater::class);
+                    /* @var TranslationsUpdater $tu */
+                    try {
+                        $tu->installCoreTranslations($localeID);
+                    } catch (Exception $x) {
+                        $this->set('error', $x);
+                        $this->view();
+
+                        return;
+                    }
+                }
+            }
+            $this->set('locale', $localeID);
+            Localization::changeLocale($localeID);
+        }
     }
 
     /**

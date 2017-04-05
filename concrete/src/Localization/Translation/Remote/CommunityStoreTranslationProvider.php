@@ -163,11 +163,9 @@ class CommunityStoreTranslationProvider implements ProviderInterface
     protected $cacheLifetime = null;
 
     /**
-     * Set the cache life time (in seconds).
+     * {@inheritdoc}
      *
-     * @param int $cacheLifetime if 0 (or less), the cache is disabled
-     *
-     * @return $this
+     * @see ProviderInterface::setCacheLifetime()
      */
     public function setCacheLifetime($value)
     {
@@ -223,12 +221,14 @@ class CommunityStoreTranslationProvider implements ProviderInterface
         }
         $data = null;
         $cacheLifetime = $this->getCacheLifetime();
-        if ($cacheLifetime > 0) {
+        if ($cacheLifetime > 0 && $this->cache->isEnabled()) {
             $cacheItem = $this->cache->getItem('community_translation/' . $packageHandle . '@' . $packageVersion . 'L' . $progressLimit);
             /* @var \Stash\Item $cacheItem */
             if (!$cacheItem->isMiss()) {
                 $data = $cacheItem->get();
             }
+        } else {
+            $cacheItem = null;
         }
         if ($data === null) {
             $request = $this->buildRequest('package/' . rawurlencode($packageHandle) . '/best-match-version/locales/' . $progressLimit . '/?v=' . rawurlencode($packageVersion));
@@ -240,7 +240,7 @@ class CommunityStoreTranslationProvider implements ProviderInterface
             } else {
                 $data = $this->getJsonFromResponse($response);
             }
-            if ($cacheLifetime > 0) {
+            if ($cacheItem !== null) {
                 $cacheItem->set($data)->expiresAfter($cacheLifetime)->save();
             }
         }

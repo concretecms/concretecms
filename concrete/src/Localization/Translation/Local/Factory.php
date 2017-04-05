@@ -161,8 +161,12 @@ class Factory implements FactoryInterface
     {
         if ($this->fs->isFile($moFile)) {
             $lastModifiedTimestamp = $this->fs->lastModified($moFile);
-            $cache = $this->cache->getItem(self::CACHE_PREFIX . '/' . md5($mo) . '_' . $lastModifiedTimestamp);
-            if ($cache->isMiss()) {
+            if ($this->cache->isEnabled()) {
+                $cacheItem = $this->cache->getItem(self::CACHE_PREFIX . '/' . md5($mo) . '_' . $lastModifiedTimestamp);
+            } else {
+                $cacheItem = null;
+            }
+            if ($cacheItem === null || $cacheItem->isMiss()) {
                 list($translated, $lastUpdated) = $this->getTranslationsStats(Translations::fromMoFile($moFile));
                 if ($translated > 0 && $lastUpdated === null) {
                     $lastUpdated = new DateTime('@' . $lastModifiedTimestamp);
@@ -171,9 +175,11 @@ class Factory implements FactoryInterface
                     'translated' => $translated,
                     'lastUpdated' => $lastUpdated,
                 ];
-                $cache->set($data)->expiresAfter(self::CACHE_DURATION)->save();
+                if ($cacheItem !== null) {
+                    $cacheItem->set($data)->expiresAfter(self::CACHE_DURATION)->save();
+                }
             } else {
-                $data = $cache->get();
+                $data = $cacheItem->get();
                 $translated = $data['translated'];
                 $lastUpdated = $data['lastUpdated'];
             }
