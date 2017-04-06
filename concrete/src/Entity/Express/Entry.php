@@ -225,20 +225,46 @@ class Entry implements \JsonSerializable, PermissionObjectInterface, AttributeOb
         $this->associations = $associations;
     }
 
+
+    /**
+     * @deprecated See \Concrete\Core\Entity\Express\Entry::getEntryAssociation
+     */
     public function getAssociation($handle)
     {
         if ($handle instanceof Association) {
-            $handle = $handle->getTargetPropertyName();
+            return $this->getEntryAssociation($handle);
         }
 
         /**
-         * @var $association EntryAssociation
+         * @var $entryAssociation EntryAssociation
          */
-        foreach($this->associations as $association) {
-            if ($association->getAssociation()->getTargetPropertyName() == $handle) {
-                return $association;
+        foreach ($this->associations as $entryAssociation) {
+            if ($entryAssociation->getAssociation()->getTargetPropertyName() === $handle) {
+                return $entryAssociation;
             }
         }
+    }
+
+    /**
+     * Get the EntryAssociation for a given association
+     *
+     * @param \Concrete\Core\Entity\Express\Association $association
+     * @return \Concrete\Core\Entity\Express\Entry\Association|null
+     */
+    public function getEntryAssociation(Association $association)
+    {
+        $id = $association->getId();
+
+        /**
+         * @var $entryAssociation EntryAssociation
+         */
+        foreach ($this->associations as $entryAssociation) {
+            if ($entryAssociation->getAssociation()->getId() === $id) {
+                return $entryAssociation;
+            }
+        }
+
+        return null;
     }
 
     public function getOwnedByEntry()
