@@ -11,6 +11,7 @@ use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Entity\Attribute\Value\UserValue;
 use Concrete\Core\Entity\Attribute\Value\Value\Value;
 use Concrete\Core\Entity\User\User as UserEntity;
+use Concrete\Core\Export\ExportableInterface;
 use Concrete\Core\File\StorageLocation\StorageLocationFactory;
 use Concrete\Core\Foundation\Object;
 use Concrete\Core\Mail\Importer\MailImporter;
@@ -36,8 +37,9 @@ use League\Flysystem\AdapterInterface;
 use stdClass;
 use User as ConcreteUser;
 use View;
+use Concrete\Core\Export\Item\User as UserExporter;
 
-class UserInfo extends Object implements AttributeObjectInterface, PermissionObjectInterface
+class UserInfo extends Object implements AttributeObjectInterface, PermissionObjectInterface, ExportableInterface
 {
     use ObjectTrait;
 
@@ -153,6 +155,11 @@ class UserInfo extends Object implements AttributeObjectInterface, PermissionObj
     public function getEntityObject()
     {
         return $this->entity;
+    }
+
+    public function getExporter()
+    {
+        return new UserExporter();
     }
 
     /**

@@ -39,6 +39,9 @@ class Element implements LocatableFileInterface
                 }
                 if (is_array($arg)) {
                     $this->controllerArguments = $arg;
+                    foreach($arg as $key => $value) {
+                        $this->set($key, $value);
+                    }
                 }
                 if (is_string($arg)) {
                     $this->pkgHandle = $arg;
