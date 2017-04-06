@@ -25,8 +25,11 @@ class Version20170316000000 extends AbstractMigration
             $category = $entity->getAttributeKeyCategory();
             // Get all the attributes for the entity
             foreach ($entity->getAttributes() as $key) {
-                // Refresh the column from the attribute's search index definition
-                $category->getSearchIndexer()->refreshRepositoryColumns($category, $key);
+                // Refresh the column from the attribute's search index definition if we can
+                // (we don't require this method in the interface yet)
+                try {
+                    $category->getSearchIndexer()->refreshRepositoryColumns($category, $key);
+                } catch (\Exception $e) {}
             }
             // Get a list of the entities
             $list = new EntryList($entity);
