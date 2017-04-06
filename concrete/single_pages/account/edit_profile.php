@@ -1,6 +1,6 @@
 <?php defined('C5_EXECUTE') or die("Access Denied."); ?>
 
-<h2><?=$c->getCollectionName()?></h2>
+<h2><?=t($c->getCollectionName())?></h2>
 
 <form method="post" action="<?php echo $view->action('save')?>" enctype="multipart/form-data">
 	<?php  $attribs = UserAttributeKey::getEditableInProfileList();

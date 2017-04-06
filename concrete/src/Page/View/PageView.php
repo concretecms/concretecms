@@ -278,7 +278,7 @@ class PageView extends View
         }
     }
 
-    protected function constructView($page)
+    protected function constructView($page = false)
     {
         $this->c = $page;
         parent::constructView($page->getCollectionPath());

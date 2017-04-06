@@ -10,7 +10,7 @@ class ErrorView extends View
 {
     protected $error;
 
-    protected function constructView($error)
+    protected function constructView($error = false)
     {
         $this->error = $error;
     }
@@ -40,8 +40,8 @@ class ErrorView extends View
     public function getScopeItems()
     {
         $items = parent::getScopeItems();
-        $items['innerContent'] = $this->error->content;
-        $items['titleContent'] = $this->error->title;
+        $items['innerContent'] = $this->error ? $this->error->content : '';
+        $items['titleContent'] = $this->error ? $this->error->title : '';
 
         return $items;
     }
