@@ -4,6 +4,7 @@ namespace Concrete\Core\Page\Controller;
 use Concrete\Core\Entity\Express\Entity;
 use Concrete\Core\Entity\Express\Entry;
 use Concrete\Core\Express\Entry\Manager;
+use Concrete\Core\Express\Export\EntryList\CsvWriter;
 use Concrete\Core\Express\Form\Context\DashboardFormContext;
 use Concrete\Core\Express\Form\Context\DashboardViewContext;
 use Concrete\Core\Express\Form\Renderer;
@@ -12,6 +13,10 @@ use Concrete\Core\Express\Form\Validator;
 use Concrete\Core\Tree\Node\Node;
 use Concrete\Core\Tree\Type\ExpressEntryResults;
 use Core;
+use GuzzleHttp\Psr7\Stream;
+use League\Csv\Writer;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 abstract class DashboardExpressEntriesPageController extends DashboardPageController
 {
@@ -75,16 +80,27 @@ abstract class DashboardExpressEntriesPageController extends DashboardPageContro
     /**
      * Export Express entries into a CSV.
      *
-     * @param null $treeNodeParentID
+     * @param int|null $treeNodeParentID
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function csv_export($treeNodeParentID = null)
     {
-        $parent = $this->getParentNode($treeNodeParentID);
-        $entity = $this->getEntity($parent);
-        $entryList = new EntryList($entity);
+        $me = $this;
+        $parent = $me->getParentNode($treeNodeParentID);
+        $entity = $me->getEntity($parent);
 
-        $csvService = Core::make('helper/csv/entry_list', [$entryList, $entity->getName()]);
-        $csvService->generate();
+        $headers = [
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => 'attachment; filename=' . $entity->getPluralHandle() . '.csv'
+        ];
+
+        return StreamedResponse::create(function() use ($entity, $me) {
+            $entryList = new EntryList($entity);
+
+            $writer = new CsvWriter(Writer::createFromPath('php://output', 'w'));
+            $writer->insertHeaders($entity);
+            $writer->insertEntryList($entryList);
+        }, 200, $headers);
     }
 
     /**
