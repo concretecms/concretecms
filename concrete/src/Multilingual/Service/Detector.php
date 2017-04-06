@@ -90,8 +90,14 @@ class Detector
             $c = Page::getCurrentPage();
         }
         if ($c) {
-            $dh = $app->make('helper/concrete/dashboard');
-            if ($dh->inDashboard($c)) {
+            $pageController = $c->getPageController();
+            if (is_callable([$pageController, 'useUserLocale'])) {
+                $useUserLocale = $pageController->useUserLocale();
+            } else {
+                $dh = $app->make('helper/concrete/dashboard');
+                $useUserLocale = $dh->inDashboard($c);
+            }
+            if ($useUserLocale) {
                 $u = new User();
                 $locale = $u->getUserLanguageToDisplay();
             } else {
