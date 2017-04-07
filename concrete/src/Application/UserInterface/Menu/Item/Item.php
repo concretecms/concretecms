@@ -7,7 +7,7 @@ class Item implements ItemInterface
 {
     protected $controller;
 
-    protected $linkAttributes = array();
+    protected $linkAttributes = [];
 
     public function __construct($handle, $pkgHandle = false)
     {
@@ -90,7 +90,7 @@ class Item implements ItemInterface
                 DIRNAME_MENU_ITEMS . '/' . $this->handle . '/' . FILENAME_CONTROLLER,
                 $this->pkgHandle
             );
-            $this->setController(\Core::make($class, array($this)));
+            $this->setController(\Core::make($class, [$this]));
 
             return $this->controller;
         }
