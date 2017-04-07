@@ -9,7 +9,8 @@ php:
   - hhvm
   - nightly
 env:
-  - COMPOSER_DISABLE_XDEBUG_WARN=1
+  global:
+    - COMPOSER_DISABLE_XDEBUG_WARN=1
   matrix:
     - PREFER_LOWEST="--prefer-lowest"
     - PREFER_LOWEST=""
