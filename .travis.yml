@@ -12,8 +12,11 @@ env:
   - COMPOSER_DISABLE_XDEBUG_WARN=1
 
 matrix:
+  fast_finish: true
   include:
-    - php: 7.0
+    - PREFER_LOWEST="--prefer-lowest"
+    - PREFER_LOWEST=""
+    - php: 7.1
       env: CODESTYLE="yes"
   allow_failures:
     - php: hhvm
@@ -21,7 +24,7 @@ matrix:
 
 before_script:
   - if [[ $TRAVIS_PHP_VERSION = hhvm ]]; then cat tests/travis.hhvm.ini >> /etc/hhvm/php.ini; else phpenv config-add tests/travis.php.ini; fi
-  - travis_retry composer install --no-interaction
+  - travis_retry composer update --prefer-source $PREFER_LOWEST
   - mysql -e "SET GLOBAL sql_mode = 'STRICT_TRANS_TABLES,STRICT_ALL_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION,ONLY_FULL_GROUP_BY'"
   - phpunit --version
 
