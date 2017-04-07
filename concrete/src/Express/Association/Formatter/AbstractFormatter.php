@@ -33,10 +33,35 @@ abstract class AbstractFormatter implements FormatterInterface
             } catch (\Exception $e) {
             }
         }
-        $targetEntity = $this->association->getTargetEntity();
-        $attribute = $targetEntity->getAttributes()[0];
+
+        $entity = $entry->getEntity();
+
+        /** @var \Concrete\Core\Entity\Attribute\Key\ExpressKey[] $attributes */
+        $attributes = $entity->getAttributes();
+
+        if ($keyId = $entity->getDisplayAttributeKey()) {
+
+            foreach ($attributes as $key) {
+                if ($key->getAttributeKeyID() == $keyId) {
+                    $attribute = $key;
+                    break;
+                }
+            }
+        } else {
+            foreach ($attributes as $attribute) {
+                if ($attribute->getAttributeType()->getAttributeTypeHandle() === 'text') {
+                    break;
+                }
+            }
+        }
+
         if (is_object($attribute)) {
-            return $entry->getAttribute($attribute);
+            $result = $entry->getAttribute($attribute);
+            if (!$result || (!is_string($result) && !is_callable($result, '__toString'))) {
+                return t('[Invalid Name]');
+            }
+
+            return $result;
         }
     }
 

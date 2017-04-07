@@ -2,6 +2,7 @@
 namespace Concrete\Controller\SinglePage\Dashboard\System\Express\Entities;
 
 use Concrete\Controller\Element\Search\CustomizeResults;
+use Concrete\Core\Entity\Express\Entity;
 use Concrete\Core\Express\Search\ColumnSet\ColumnSet;
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Core\User\Search\SearchProvider;
@@ -25,6 +26,9 @@ class CustomizeSearch extends DashboardPageController
             if (!$this->token->validate('save')) {
                 $this->error->add($this->token->getErrorMessage());
             }
+
+            $this->validateDisplayAttribute($entity);
+
             if (!$this->error->has()) {
                 /**
                  * @var $provider \Concrete\Core\Express\Search\SearchProvider
@@ -67,5 +71,19 @@ class CustomizeSearch extends DashboardPageController
         }
     }
 
+    private function validateDisplayAttribute(Entity $entity)
+    {
+        $key = (int) $this->request->post('displayAttributeKey');
+
+        foreach ($entity->getAttributes() as $attribute) {
+            if ($attribute->getAttributeKeyID() === $key) {
+                $entity->setDisplayAttributeKey($key);
+                return true;
+            }
+        }
+
+        $this->error->add(t('Invalid display attribute key.'));
+        return false;
+    }
 
 }

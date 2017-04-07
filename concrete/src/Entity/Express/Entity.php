@@ -2,6 +2,7 @@
 namespace Concrete\Core\Entity\Express;
 
 use Concrete\Core\Attribute\CategoryObjectInterface;
+use Concrete\Core\Entity\Attribute\Key\ExpressKey;
 use Concrete\Core\Entity\PackageTrait;
 use Concrete\Core\Export\ExportableInterface;
 use Concrete\Core\Express\Search\ColumnSet\ColumnSet;
@@ -87,6 +88,12 @@ class Entity implements CategoryObjectInterface, ObjectInterface, ExportableInte
      * @ORM\OneToOne(targetEntity="Form", cascade={"persist"})
      **/
     protected $default_view_form;
+
+    /**
+     * Stores the Key ID of the default attribute
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $display_attribute_key;
 
     /**
      * @ORM\OneToOne(targetEntity="Form", cascade={"persist"})
@@ -420,6 +427,22 @@ class Entity implements CategoryObjectInterface, ObjectInterface, ExportableInte
     public function getExporter()
     {
         return new EntityExporter();
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDisplayAttributeKey()
+    {
+        return $this->display_attribute_key;
+    }
+
+    /**
+     * @param mixed $display_attribute_key
+     */
+    public function setDisplayAttributeKey($display_attribute_key)
+    {
+        $this->display_attribute_key = $display_attribute_key;
     }
 
 }
