@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Core\Localization\Service;
 
-use Concrete\Core\Application\Application;
+use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Localization\Translation\Local\FactoryInterface as LocalFactory;
 use Concrete\Core\Localization\Translation\Remote\ProviderInterface as RemoteProvider;
 use Concrete\Core\Package\Package;
@@ -11,9 +11,9 @@ use Illuminate\Filesystem\Filesystem;
 class TranslationsInstaller
 {
     /**
-     * @var Application
+     * @var Repository
      */
-    protected $app;
+    protected $config;
 
     /**
      * @var LocalFactory
@@ -31,14 +31,14 @@ class TranslationsInstaller
     protected $fs;
 
     /**
-     * @param Application $app
+     * @param Repository $config
      * @param LocalFactory $localFactory
      * @param RemoteProvider $remoteProvider
      * @param Filesystem $fs
      */
-    public function __construct(Application $app, LocalFactory $localFactory, RemoteProvider $remoteProvider, Filesystem $fs)
+    public function __construct(Repository $config, LocalFactory $localFactory, RemoteProvider $remoteProvider, Filesystem $fs)
     {
-        $this->app = $app;
+        $this->config = $config;
         $this->localFactory = $localFactory;
         $this->remoteProvider = $remoteProvider;
         $this->fs = $fs;
@@ -94,7 +94,7 @@ class TranslationsInstaller
             throw new Exception(t('Please be sure that the %s directory is writable', $shownDirectoryName));
         }
         if ($package === null) {
-            $coreVersion = $this->app->make('config')->get('concrete.version_installed');
+            $coreVersion = $this->config->get('concrete.version_installed');
             $translations = $this->remoteProvider->fetchCoreTranslations($coreVersion, $localeID);
         } else {
             $translations = $this->remoteProvider->fetchPackageTranslations($package->getPackageHandle(), $package->getPackageVersion(), $localeID);
