@@ -5,7 +5,7 @@ use Concrete\Core\Cache\Cache;
 use Concrete\Core\Config\Renderer;
 use Concrete\Core\Error\ErrorList\ErrorList;
 use Concrete\Core\Localization\Localization as Localization;
-use Concrete\Core\Localization\Service\TranslationsUpdater;
+use Concrete\Core\Localization\Service\TranslationsInstaller;
 use Concrete\Core\Localization\Translation\Remote\ProviderInterface as RemoteTranslationsProvider;
 use Concrete\Core\Url\UrlImmutable;
 use Controller;
@@ -278,10 +278,10 @@ class Install extends Controller
             if ($localeID !== Localization::BASE_LOCALE) {
                 $localLocales = Localization::getAvailableInterfaceLanguageDescriptions(null);
                 if (!isset($localLocales[$localeID])) {
-                    $tu = $this->app->make(TranslationsUpdater::class);
-                    /* @var TranslationsUpdater $tu */
+                    $ti = $this->app->make(TranslationsInstaller::class);
+                    /* @var TranslationsInstaller $ti */
                     try {
-                        $tu->installCoreTranslations($localeID);
+                        $ti->installCoreTranslations($localeID);
                     } catch (Exception $x) {
                         $this->set('error', $x);
                         $this->view();

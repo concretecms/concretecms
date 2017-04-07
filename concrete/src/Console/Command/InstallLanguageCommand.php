@@ -3,7 +3,8 @@ namespace Concrete\Core\Console\Command;
 
 use Concrete\Core\Console\Command;
 use Concrete\Core\Localization\Localization;
-use Concrete\Core\Localization\Service\TranslationsUpdater;
+use Concrete\Core\Localization\Service\TranslationsChecker;
+use Concrete\Core\Localization\Service\TranslationsInstaller;
 use Concrete\Core\Localization\Translation\PackageLocaleStatus;
 use Concrete\Core\Package\Package;
 use Concrete\Core\Package\PackageService;
@@ -62,9 +63,14 @@ EOT
     protected $app;
 
     /**
-     * @var TranslationsUpdater|null
+     * @var TranslationsChecker|null
      */
-    protected $translationsUpdater;
+    protected $translationsChecker;
+
+    /**
+     * @var TranslationsInstaller|null
+     */
+    protected $translationsInstaller;
 
     /**
      * @var OutputInterface|null
@@ -83,7 +89,8 @@ EOT
         }
 
         $this->app = Application::getFacadeApplication();
-        $this->translationsUpdater = $this->app->make(TranslationsUpdater::class);
+        $this->translationsChecker = $this->app->make(TranslationsChecker::class);
+        $this->translationsInstaller = $this->app->make(TranslationsInstaller::class);
         $this->output = $output;
         $this->shouldClearLocalizationCache = false;
 
@@ -166,10 +173,10 @@ EOT
         }
         $result = [];
         if ($processCore) {
-            $result[] = $this->translationsUpdater->getCoreTranslations();
+            $result[] = $this->translationsChecker->getCoreTranslations();
         }
         foreach ($processPackages as $package) {
-            $result[] = $this->translationsUpdater->getPackageTranslations($package);
+            $result[] = $this->translationsChecker->getPackageTranslations($package);
         }
         if ($this->output->getVerbosity() > OutputInterface::VERBOSITY_NORMAL) {
             $this->output->writeln('done.');
@@ -225,9 +232,9 @@ EOT
                     $this->output->write('    - ' . $localeID . '... ');
                 }
                 if ($package === null) {
-                    $this->translationsUpdater->installCoreTranslations($localeID);
+                    $this->translationsInstaller->installCoreTranslations($localeID);
                 } else {
-                    $this->translationsUpdater->installPackageTranslations($package, $localeID);
+                    $this->translationsInstaller->installPackageTranslations($package, $localeID);
                 }
                 $this->shouldClearLocalizationCache = true;
                 ++$result;
@@ -288,9 +295,9 @@ EOT
                 }
             }
             if ($package === null) {
-                $this->translationsUpdater->installCoreTranslations($localeID);
+                $this->translationsInstaller->installCoreTranslations($localeID);
             } else {
-                $this->translationsUpdater->installPackageTranslations($package, $localeID);
+                $this->translationsInstaller->installPackageTranslations($package, $localeID);
             }
             $this->shouldClearLocalizationCache = true;
             $result = true;
