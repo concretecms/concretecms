@@ -49,7 +49,7 @@
     "monolog/monolog": "~1.5.0",
     "sunra/php-simple-html-dom-parser": "1.*",
     "hautelook/phpass": "0.3.*",
-    "voku/urlify": "~1.0.0",
+    "voku/urlify": "~1.0.1",
     "dapphp/securimage": "3.*",
     "anahkiasen/html-object": "~1.4",
     "primal/color": "1.0.*",
