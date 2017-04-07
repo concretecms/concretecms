@@ -82,18 +82,17 @@ class Item implements ItemInterface
 
     public function getController()
     {
-        if (isset($this->controller)) {
-            return $this->controller;
-        } else {
+        if (!isset($this->controller)) {
+            $handle = $this->getHandle();
             $class = overrideable_core_class(
-                'MenuItem\\' . camelcase($this->handle) . '\\Controller',
-                DIRNAME_MENU_ITEMS . '/' . $this->handle . '/' . FILENAME_CONTROLLER,
+                'MenuItem\\' . camelcase($handle) . '\\Controller',
+                DIRNAME_MENU_ITEMS . '/' . $handle . '/' . FILENAME_CONTROLLER,
                 $this->pkgHandle
             );
             $this->setController(\Core::make($class, [$this]));
-
-            return $this->controller;
         }
+
+        return $this->controller;
     }
 
     public function setController(ControllerInterface $controller)
