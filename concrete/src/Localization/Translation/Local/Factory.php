@@ -122,32 +122,41 @@ class Factory implements FactoryInterface
      * Get stats for a \Gettext\Translations instance.
      *
      * @param Translations $translations
+     * @param DateTime $defaultUpdatedOn
      *
-     * @return First array item is the number of translated strings, second array item is the date/time of the last update (if available)
+     * @return null|array {
+     *     @var string $version
+     *     @var DateTime $updatedOn
+     * }
      */
-    protected function getTranslationsStats(Translations $translations)
+    protected function getTranslationsStats(Translations $translations, DateTime $defaultUpdatedOn)
     {
-        $translated = 0;
+        $result = null;
         foreach ($translations as $translation) {
             if ($translation->hasTranslation()) {
-                ++$translated;
+                $result = [
+                    'version' => '',
+                    'updatedOn' => $defaultUpdatedOn,
+                ];
+                break;
             }
         }
-        $lastUpdated = null;
-        $dt = ($translated > 0) ? $translations->getHeader('PO-Revision-Date') : false;
-        unset($translations);
-        if ($dt) {
-            try {
-                $lastUpdated = new DateTime($dt);
-            } catch (Exception $x) {
-            } catch (Throwable $x) {
+        if ($result !== null) {
+            $h = $translations->getHeader('Project-Id-Version');
+            if ($h && preg_match('/\s([\S]*\d[\S]*)$/', $h, $m)) {
+                $result['version'] = $m[1];
+            }
+            $h = $translations->getHeader('PO-Revision-Date');
+            if ($h) {
+                try {
+                    $result['updatedOn'] = new DateTime($h);
+                } catch (Exception $x) {
+                } catch (Throwable $x) {
+                }
             }
         }
 
-        return [
-            $translated,
-            $lastUpdated,
-        ];
+        return $result;
     }
 
     /**
@@ -162,32 +171,22 @@ class Factory implements FactoryInterface
         if ($this->fs->isFile($moFile)) {
             $lastModifiedTimestamp = $this->fs->lastModified($moFile);
             if ($this->cache->isEnabled()) {
-                $cacheItem = $this->cache->getItem(self::CACHE_PREFIX . '/' . md5($mo) . '_' . $lastModifiedTimestamp);
+                $cacheItem = $this->cache->getItem(self::CACHE_PREFIX . '/' . md5($moFile) . '_' . $lastModifiedTimestamp);
             } else {
                 $cacheItem = null;
             }
             if ($cacheItem === null || $cacheItem->isMiss()) {
-                list($translated, $lastUpdated) = $this->getTranslationsStats(Translations::fromMoFile($moFile));
-                if ($translated > 0 && $lastUpdated === null) {
-                    $lastUpdated = new DateTime('@' . $lastModifiedTimestamp);
-                }
-                $data = [
-                    'translated' => $translated,
-                    'lastUpdated' => $lastUpdated,
-                ];
+                $stats = $this->getTranslationsStats(Translations::fromMoFile($moFile), new DateTime('@' . $lastModifiedTimestamp));
                 if ($cacheItem !== null) {
-                    $cacheItem->set($data)->expiresAfter(self::CACHE_DURATION)->save();
+                    $cacheItem->set($stats)->expiresAfter(self::CACHE_DURATION)->save();
                 }
             } else {
-                $data = $cacheItem->get();
-                $translated = $data['translated'];
-                $lastUpdated = $data['lastUpdated'];
+                $stats = $cacheItem->get();
             }
         } else {
-            $translated = 0;
-            $lastUpdated = null;
+            $stats = null;
         }
 
-        return new Stats('mo', $moFile, $translated, $lastUpdated);
+        return new Stats('mo', $moFile, ($stats === null) ? '' : $stats['version'], ($stats === null) ? null : $stats['updatedOn']);
     }
 }

@@ -130,7 +130,7 @@ class TranslationsUpdater
                 $result->addOnlyRemote($remoteLocaleID, $remoteInfo);
             } else {
                 $couple = new LocalRemoteCouple($localInfo, $remoteInfo);
-                if ($localInfo->getLastUpdated() === null || $localInfo->getLastUpdated() < $remoteInfo->getUpdated()) {
+                if ($localInfo->getUpdatedOn() === null || $localInfo->getUpdatedOn() < $remoteInfo->getUpdatedOn() || $localInfo->getVersion() !== $remoteInfo->getVersion()) {
                     $result->addInstalledOutdated($remoteLocaleID, $couple);
                 } else {
                     $result->addInstalledUpdated($remoteLocaleID, $couple);

@@ -31,21 +31,20 @@ class Stats
      *
      * @var DateTime|null
      */
-    protected $updated;
+    protected $updatedOn;
 
     /**
      * @param string $version the version handle
      * @param int $total the total number of strings (translated and not translated)
      * @param int $translated the number of translated strings
-     * @param DateTime|null $updated The date/time of the last update of the translations (null if and only if $translated is null)
+     * @param DateTime|null $updatedOn The date/time of the last update of the translations (null if and only if $translated is null)
      */
-    public function __construct($version, $total, $translated, DateTime $updated = null)
+    public function __construct($version, $total, $translated, DateTime $updatedOn = null)
     {
-        $this->versionHandle = $versionHandle;
-        $this->localeID = $localeID;
+        $this->version = (string) $version;
         $this->total = (int) $total;
         $this->translated = (int) $translated;
-        $this->updated = $updated;
+        $this->updatedOn = $updatedOn;
     }
 
     /**
@@ -83,9 +82,9 @@ class Stats
      *
      * @return DateTime|null
      */
-    public function getUpdated()
+    public function getUpdatedOn()
     {
-        return $this->updated;
+        return $this->updatedOn;
     }
 
     /**

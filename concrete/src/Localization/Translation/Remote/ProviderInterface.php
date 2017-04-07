@@ -6,15 +6,6 @@ use Gettext\Translations;
 interface ProviderInterface
 {
     /**
-     * Set the cache life time (in seconds).
-     *
-     * @param int $cacheLifetime if 0 (or less), the cache is disabled
-     *
-     * @return $this
-     */
-    public function setCacheLifetime($value);
-
-    /**
      * List the available translations for a specific core version.
      *
      * @param string $coreVersion The version of the concrete5 core

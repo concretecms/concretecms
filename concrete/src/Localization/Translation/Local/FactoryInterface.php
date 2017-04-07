@@ -8,7 +8,7 @@ interface FactoryInterface
     /**
      * Get stats about all the locally available translation files for the core.
      *
-     * @return Stats[] Keys are the locale IDs, values are the stats.
+     * @return Stats[] keys are the locale IDs, values are the stats
      */
     public function getAvailableCoreStats();
 
@@ -26,7 +26,7 @@ interface FactoryInterface
      *
      * @param Package $package
      *
-     * @return Stats[] Keys are the locale IDs, values are the stats.
+     * @return Stats[] keys are the locale IDs, values are the stats
      */
     public function getAvailablePackageStats(Package $package);
 

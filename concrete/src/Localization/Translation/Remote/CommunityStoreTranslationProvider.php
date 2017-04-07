@@ -163,9 +163,11 @@ class CommunityStoreTranslationProvider implements ProviderInterface
     protected $cacheLifetime = null;
 
     /**
-     * {@inheritdoc}
+     * Set the cache life time (in seconds).
      *
-     * @see ProviderInterface::setCacheLifetime()
+     * @param int $cacheLifetime if 0 (or less), the cache is disabled
+     *
+     * @return $this
      */
     public function setCacheLifetime($value)
     {

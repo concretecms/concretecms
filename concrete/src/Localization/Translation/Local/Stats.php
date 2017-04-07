@@ -20,31 +20,31 @@ class Stats
     protected $filename;
 
     /**
-     * The number of translated strings.
+     * The version of the translations.
      *
-     * @var int
+     * @var string
      */
-    protected $translated;
+    protected $version;
 
     /**
      * The date/time of the last update of the translations (null if and only if no translated string is present).
      *
      * @var DateTime|null
      */
-    protected $lastUpdated;
+    protected $updatedOn;
 
     /**
      * @param string $formatHandle the translations file format handle
      * @param string $filename the translations file name
-     * @param int $translated the number of translated strings
-     * @param DateTime $lastUpdated the date/time of the last update of the translations (null if and only if no translated string is present)
+     * @param string $version the version of the file
+     * @param DateTime $updatedOn the date/time of the last update of the translations (null if and only if no translated string is present)
      */
-    public function __construct($formatHandle, $filename, $translated, DateTime $lastUpdated = null)
+    public function __construct($formatHandle, $filename, $version, DateTime $updatedOn = null)
     {
         $this->formatHandle = $formatHandle;
         $this->filename = $filename;
-        $this->translated = $numTranslated;
-        $this->lastUpdated = $lastUpdated;
+        $this->version = (string) $version;
+        $this->updatedOn = $updatedOn;
     }
 
     /**
@@ -68,13 +68,13 @@ class Stats
     }
 
     /**
-     * Get the number of translated strings.
+     * Get the version of the translations.
      *
-     * @return int
+     * @return string
      */
-    public function getTranslated()
+    public function getVersion()
     {
-        return $this->translated;
+        return $this->version;
     }
 
     /**
@@ -82,8 +82,8 @@ class Stats
      *
      * @return DateTime|null
      */
-    public function getLastUpdated()
+    public function getUpdatedOn()
     {
-        return $this->lastUpdated;
+        return $this->updatedOn;
     }
 }

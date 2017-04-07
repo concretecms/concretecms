@@ -105,7 +105,7 @@ class Update extends DashboardPageController
         $progressTitle = h(t2('%1$s translated string out of %2$s', '%1$s translated strings out of %2$s', $remote->getTranslated(), $remote->getTotal()));
         $hLocaleID = h($localeID);
         $hLocaleName = h(\Punic\Language::getName($localeID));
-        $hUpdatedOn = h(tc('DateTime', 'Updated: %s', $dateHelper->formatPrettyDateTime($remote->getUpdated(), true)));
+        $hUpdatedOn = h(tc('DateTime', 'Updated: %s', $dateHelper->formatPrettyDateTime($remote->getUpdatedOn(), true)));
         switch ($action) {
             case 'update':
                 $button = '<button class="btn btn-xs btn-primary ccm-install-package-locale" data-is-update="true" data-token="' . h($this->token->generate("install-package-locale-{$handle}@" . $localeID)) . '" data-action="' . h($this->action('install_package_locale', $handle, $localeID)) . '">' . t('Update') . '</button>';

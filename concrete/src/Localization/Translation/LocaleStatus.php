@@ -65,7 +65,7 @@ class LocaleStatus
 
         return $this;
     }
-    
+
     /**
      * @return LocalRemoteCouple[]
      */
@@ -73,7 +73,7 @@ class LocaleStatus
     {
         return $this->installedOutdated;
     }
-    
+
     /**
      * @param RemoteStats $value
      *
