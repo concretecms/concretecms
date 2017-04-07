@@ -132,6 +132,7 @@ class Update extends DashboardPageController
     <td>{$hLocaleName}</td>
     <td class="hidden-xs">{$hUpdatedOn}</td>
     <td>{$button}</td>
+</tr>
 EOT;
     }
 }
