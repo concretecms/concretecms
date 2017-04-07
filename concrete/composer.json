@@ -67,7 +67,7 @@
     "concrete5/oauth-user-data": "~1.0",
     "mlocati/concrete5-translation-library": "1.5.*",
     "mlocati/ip-lib": "1.*",
-    "league/url": "3.3.*",
+    "league/url": "~3.3.5",
     "concrete5/doctrine-xml": "1.*",
     "symfony/yaml":"3.*",
     "ocramius/proxy-manager": "^1.0",
