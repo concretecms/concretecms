@@ -1,12 +1,12 @@
 <?php
 namespace Concrete\Core\Console;
 
+use Concrete\Core\Application\Application as CMSApplication;
+use Concrete\Core\Updater\Migrations\Configuration as MigrationsConfiguration;
 use Doctrine\DBAL\Migrations\OutputWriter;
 use Doctrine\ORM\Tools\Console\ConsoleRunner;
-use Concrete\Core\Updater\Migrations\Configuration as MigrationsConfiguration;
-use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Application as SymfonyApplication;
-use Concrete\Core\Application\Application as CMSApplication;
+use Symfony\Component\Console\Output\ConsoleOutput;
 
 class Application extends SymfonyApplication
 {
@@ -25,6 +25,7 @@ class Application extends SymfonyApplication
     {
         $this->add(new Command\InfoCommand());
         $this->add(new Command\InstallCommand());
+        $this->add(new Command\InstallLanguageCommand());
         $this->add(new Command\TranslatePackageCommand());
         $this->add(new Command\GenerateIDESymbolsCommand());
         $this->add(new Command\ConfigCommand());
