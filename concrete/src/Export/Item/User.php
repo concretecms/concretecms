@@ -1,7 +1,10 @@
 <?php
 namespace Concrete\Core\Export\Item;
 
+use Concrete\Core\Attribute\Key\Category;
 use Concrete\Core\Export\Item\ItemInterface;
+use Concrete\Core\User\Group\Group;
+use Concrete\Core\User\Group\GroupList;
 use Concrete\Core\User\UserInfo;
 
 defined('C5_EXECUTE') or die("Access Denied.");
@@ -10,7 +13,7 @@ class User implements ItemInterface
 {
 
     /**
-     * @param $set UserInfo
+     * @param $user UserInfo
      * @param \SimpleXMLElement $xml
      * @return \SimpleXMLElement
      */
@@ -36,9 +39,36 @@ class User implements ItemInterface
         }
 
         // attributes
-
+        $category = Category::getByHandle('user');
+        $attributes = $category->getController()->getAttributeValues($user->getEntityObject());
+        if (count($attributes) > 0) {
+            $child = $node->addChild('attributes');
+            foreach ($attributes as $av) {
+                $ak = $av->getAttributeKey();
+                $cnt = $ak->getController();
+                $cnt->setAttributeValue($av);
+                $attributeKey = $child->addChild('attributekey');
+                $attributeKey->addAttribute('handle', $ak->getAttributeKeyHandle());
+                $cnt->exportValue($attributeKey);
+            }
+        }
 
         // groups
+        $list = new GroupList();
+        $list->filterByUserID($user->getUserID());
+        $groups = $list->getResults();
+        if (count($groups)) {
+            $child = $node->addChild('groups');
+            foreach($groups as $groupObject) {
+                $group = $child->addChild('group');
+                $group->addAttribute('path', $groupObject->getGroupPath());
+            }
+        }
+
+
+        unset($user);
+        unset($category);
+
         return $node;
     }
 
