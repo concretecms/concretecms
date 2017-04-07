@@ -2456,16 +2456,16 @@
         },
         {
             "name": "patchwork/utf8",
-            "version": "v1.2.6",
+            "version": "v1.3.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tchwork/utf8.git",
-                "reference": "f986d18f4e37ab70b792e977c7d85970cf84f164"
+                "reference": "30ec6451aec7d2536f0af8fe535f70c764f2c47a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tchwork/utf8/zipball/f986d18f4e37ab70b792e977c7d85970cf84f164",
-                "reference": "f986d18f4e37ab70b792e977c7d85970cf84f164",
+                "url": "https://api.github.com/repos/tchwork/utf8/zipball/30ec6451aec7d2536f0af8fe535f70c764f2c47a",
+                "reference": "30ec6451aec7d2536f0af8fe535f70c764f2c47a",
                 "shasum": ""
             },
             "require": {
@@ -2481,7 +2481,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.2-dev"
+                    "dev-master": "1.3-dev"
                 }
             },
             "autoload": {
@@ -2511,7 +2511,7 @@
                 "utf-8",
                 "utf8"
             ],
-            "time": "2015-12-15T15:33:41+00:00"
+            "time": "2016-05-18T13:57:10+00:00"
         },
         {
             "name": "primal/color",
@@ -3717,34 +3717,46 @@
         },
         {
             "name": "voku/portable-utf8",
-            "version": "1.2.4",
+            "version": "1.6.18",
             "source": {
                 "type": "git",
                 "url": "https://github.com/voku/portable-utf8.git",
-                "reference": "962329281ec78971b11185fd2d4336ba097b6cc5"
+                "reference": "b49c259b0f5c563422d466d10802c5db35328000"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/voku/portable-utf8/zipball/962329281ec78971b11185fd2d4336ba097b6cc5",
-                "reference": "962329281ec78971b11185fd2d4336ba097b6cc5",
+                "url": "https://api.github.com/repos/voku/portable-utf8/zipball/b49c259b0f5c563422d466d10802c5db35328000",
+                "reference": "b49c259b0f5c563422d466d10802c5db35328000",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.0"
             },
             "require-dev": {
-                "phpunit/phpunit": "4.*",
-                "satooshi/php-coveralls": "0.7.*@dev"
+                "phpunit/phpunit": "4.*"
+            },
+            "suggest": {
+                "ext-iconv": "Use iconv for best performance",
+                "ext-intl": "Use Intl for best performance",
+                "ext-mbstring": "Use Mbstring for best performance"
             },
             "type": "library",
-            "autoload": {
-                "psr-0": {
-                    "voku": "src"
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.6.x-dev"
                 }
+            },
+            "autoload": {
+                "psr-4": {
+                    "voku\\": "src/voku/"
+                },
+                "classmap": [
+                    "src/Normalizer.php"
+                ]
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "CC-BY-3.0"
+                "(Apache-2.0 or GPL-2.0)"
             ],
             "authors": [
                 {
@@ -3754,35 +3766,41 @@
                 {
                     "name": "Lars Moelleken",
                     "homepage": "http://www.moelleken.org/"
+                },
+                {
+                    "name": "Nicolas Grekas",
+                    "email": "p@tchwork.com"
                 }
             ],
-            "description": "Portable UTF-8 library",
+            "description": "Portable UTF-8 library with polyfill / shim for Iconv, Intl, Mbstring, Normalizrer etc.",
             "homepage": "https://github.com/voku/portable-utf8",
             "keywords": [
                 "UTF",
                 "clean",
                 "php",
+                "unicode",
+                "utf-8",
                 "utf8"
             ],
-            "time": "2015-02-23T00:39:08+00:00"
+            "time": "2015-12-06T21:26:23+00:00"
         },
         {
             "name": "voku/urlify",
-            "version": "1.1.1-stable",
+            "version": "1.0.10-stable",
             "source": {
                 "type": "git",
                 "url": "https://github.com/voku/urlify.git",
-                "reference": "dd87bea37d690331cd6b56a99fa20bbd16943cd3"
+                "reference": "ff7ba3bd53e4612fd34e9003928d804c4b212f6a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/voku/urlify/zipball/dd87bea37d690331cd6b56a99fa20bbd16943cd3",
-                "reference": "dd87bea37d690331cd6b56a99fa20bbd16943cd3",
+                "url": "https://api.github.com/repos/voku/urlify/zipball/ff7ba3bd53e4612fd34e9003928d804c4b212f6a",
+                "reference": "ff7ba3bd53e4612fd34e9003928d804c4b212f6a",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3",
-                "voku/portable-utf8": "1.2.*"
+                "voku/portable-utf8": "~1.0"
             },
             "require-dev": {
                 "phpunit/phpunit": "4.*",
@@ -3823,7 +3841,7 @@
                 "url",
                 "urlify"
             ],
-            "time": "2015-02-11T08:21:20+00:00"
+            "time": "2015-02-10T07:24:31+00:00"
         },
         {
             "name": "wikimedia/composer-merge-plugin",
