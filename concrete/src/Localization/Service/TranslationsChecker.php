@@ -11,10 +11,8 @@ use Concrete\Core\Localization\Translation\Remote\ProviderInterface as RemotePro
 use Concrete\Core\Localization\Translation\Remote\Stats as RemoteStats;
 use Concrete\Core\Package\Package;
 use Concrete\Core\Package\PackageService;
-use Exception;
-use Illuminate\Filesystem\Filesystem;
 
-class TranslationsUpdater
+class TranslationsChecker
 {
     /**
      * @var Application
@@ -32,11 +30,6 @@ class TranslationsUpdater
     protected $remoteProvider;
 
     /**
-     * @var Filesystem|null
-     */
-    protected $fs = null;
-
-    /**
      * @param LocalTranslationFactoryInterface $localFactory
      * @param RemoteTranslationsProviderInterface $remoteProvider
      */
@@ -45,26 +38,6 @@ class TranslationsUpdater
         $this->app = $app;
         $this->localFactory = $localFactory;
         $this->remoteProvider = $remoteProvider;
-    }
-
-    /**
-     * @param Filesystem $fs
-     */
-    public function setFilesystem(Filesystem $fs)
-    {
-        $this->fs = $fs;
-    }
-
-    /**
-     * @return Filesystem
-     */
-    public function getFilesystem()
-    {
-        if ($this->fs === null) {
-            $this->fs = new Filesystem();
-        }
-
-        return $this->fs;
     }
 
     /**
@@ -144,71 +117,5 @@ class TranslationsUpdater
         }
 
         return $result;
-    }
-
-    /**
-     * Install a new core locale, or update an existing one.
-     *
-     * @param string $localeID
-     *
-     * @throws Exception
-     */
-    public function installCoreTranslations($localeID)
-    {
-        $this->installTranslations($localeID, null);
-    }
-
-    /**
-     * Install a new locale for a package, or update an existing one.
-     *
-     * @param Package $package
-     * @param string $localeID
-     *
-     * @throws Exception
-     */
-    public function installPackageTranslations(Package $package, $localeID)
-    {
-        $this->installTranslations($localeID, $package);
-    }
-
-    /**
-     * @param string $localeID
-     * @param Package|null $package
-     *
-     * @throws Exception
-     */
-    private function installTranslations($localeID, Package $package = null)
-    {
-        if ($package === null) {
-            $shownDirectoryName = '/' . DIRNAME_APPLICATION . '/' . DIRNAME_LANGUAGES;
-        } else {
-            $shownDirectoryName = '/' . DIRNAME_PACKAGES . '/' . $package->getPackageHandle() . '/' . DIRNAME_LANGUAGES;
-        }
-        if ($package === null) {
-            $localStats = $this->localFactory->getCoreStats($localeID);
-        } else {
-            $localStats = $this->localFactory->getPackageStats($package, $localeID);
-        }
-        $directory = dirname($localStats->getFilename());
-        $fs = $this->getFilesystem();
-        if (!$fs->isDirectory($directory)) {
-            if ($fs->makeDirectory($directory, DIRECTORY_PERMISSIONS_MODE_COMPUTED, true, true) !== true) {
-                throw new Exception(t('Failed to create the directory for the language file. Please be sure that the %s directory is writable', $shownDirectoryName));
-            }
-        }
-        if (!$fs->isWritable($directory)) {
-            throw new Exception(t('Please be sure that the %s directory is writable', $shownDirectoryName));
-        }
-        if ($package === null) {
-            $coreVersion = $this->app->make('config')->get('concrete.version_installed');
-            $translations = $this->remoteProvider->fetchCoreTranslations($coreVersion, $localeID);
-        } else {
-            $translations = $this->remoteProvider->fetchPackageTranslations($package->getPackageHandle(), $package->getPackageVersion(), $localeID);
-        }
-        $saved = @$fs->put($localStats->getFilename(), $translations, true) !== false;
-        unset($translations);
-        if ($saved === false) {
-            throw new Exception(t('Failed to save the language file: please be sure that PHP can write files in the directory %s', $shownDirectoryName));
-        }
     }
 }

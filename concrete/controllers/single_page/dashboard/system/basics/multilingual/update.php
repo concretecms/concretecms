@@ -3,7 +3,8 @@ namespace Concrete\Controller\SinglePage\Dashboard\System\Basics\Multilingual;
 
 use Concrete\Core\Http\ResponseFactoryInterface;
 use Concrete\Core\Localization\Localization;
-use Concrete\Core\Localization\Service\TranslationsUpdater;
+use Concrete\Core\Localization\Service\TranslationsChecker;
+use Concrete\Core\Localization\Service\TranslationsInstaller;
 use Concrete\Core\Localization\Translation\Local\Stats as LocalStats;
 use Concrete\Core\Localization\Translation\LocaleStatus;
 use Concrete\Core\Localization\Translation\PackageLocaleStatus;
@@ -21,9 +22,9 @@ class Update extends DashboardPageController
 
     private function getData()
     {
-        $translationsUpdater = $this->app->make(TranslationsUpdater::class);
-        /* @var TranslationsUpdater $translationsUpdater */
-        $data = array_merge([$translationsUpdater->getCoreTranslations()], $translationsUpdater->getPackagesTranslations());
+        $translationsChecker = $this->app->make(TranslationsChecker::class);
+        /* @var TranslationsChecker $translationsChecker */
+        $data = array_merge([$translationsChecker->getCoreTranslations()], $translationsChecker->getPackagesTranslations());
         $data = array_filter($data, function (LocaleStatus $status) {
             return !empty($status->getInstalledUpdated()) || !empty($status->getInstalledOutdated()) || !empty($status->getOnlyRemote());
         });
@@ -39,10 +40,10 @@ class Update extends DashboardPageController
             if (!$this->token->validate("install-package-locale-{$packageHandle}@{$localeID}")) {
                 throw new Exception($this->token->getErrorMessage());
             }
-            $updater = $this->app->make(TranslationsUpdater::class);
-            /* @var TranslationsUpdater $updater */
+            $installer = $this->app->make(TranslationsInstaller::class);
+            /* @var TranslationsInstaller $installer */
             if ($packageHandle === 'concrete5') {
-                $updater->installCoreTranslations($localeID);
+                $installer->installCoreTranslations($localeID);
             } else {
                 $package = null;
                 $ps = $this->app->make(PackageService::class);
@@ -56,7 +57,7 @@ class Update extends DashboardPageController
                 if ($package === null) {
                     throw new Exception(t('Unable to find the specified package'));
                 }
-                $updater->installPackageTranslations($package, $localeID);
+                $installer->installPackageTranslations($package, $localeID);
             }
             Localization::clearCache();
         } catch (Exception $x) {
@@ -71,15 +72,15 @@ class Update extends DashboardPageController
         try {
             if ($this->token->validate('update-all-outdated')) {
                 $numUpdated = 0;
-                $updater = $this->app->make(TranslationsUpdater::class);
-                /* @var TranslationsUpdater $updater */
+                $installer = $this->app->make(TranslationsInstaller::class);
+                /* @var TranslationsInstaller $installer */
                 foreach ($this->getData() as $details) {
                     $package = ($details instanceof PackageLocaleStatus) ? $details->getPackage() : null;
                     foreach ($details->getInstalledOutdated() as $localeID => $rl) {
                         if ($package === null) {
-                            $updater->installCoreTranslations($localeID);
+                            $installer->installCoreTranslations($localeID);
                         } else {
-                            $updater->installPackageTranslations($package, $localeID);
+                            $installer->installPackageTranslations($package, $localeID);
                         }
                         ++$numUpdated;
                     }
