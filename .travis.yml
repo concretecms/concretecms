@@ -10,12 +10,13 @@ php:
   - nightly
 env:
   - COMPOSER_DISABLE_XDEBUG_WARN=1
+  matrix:
+    - PREFER_LOWEST="--prefer-lowest"
+    - PREFER_LOWEST=""
 
 matrix:
   fast_finish: true
   include:
-    - PREFER_LOWEST="--prefer-lowest"
-    - PREFER_LOWEST=""
     - php: 7.1
       env: CODESTYLE="yes"
   allow_failures:
