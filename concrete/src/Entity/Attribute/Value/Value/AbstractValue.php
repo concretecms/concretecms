@@ -17,7 +17,7 @@ abstract class AbstractValue
     /**
      * @ORM\Id
      * @ORM\OneToOne(targetEntity="\Concrete\Core\Entity\Attribute\Value\Value\Value")
-     * @ORM\JoinColumn(name="avID", referencedColumnName="avID")
+     * @ORM\JoinColumn(name="avID", referencedColumnName="avID", onDelete="CASCADE")
      */
     protected $generic_value;
 
