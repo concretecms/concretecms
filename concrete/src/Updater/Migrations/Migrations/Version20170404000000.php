@@ -1,11 +1,11 @@
 <?php
 namespace Concrete\Core\Updater\Migrations\Migrations;
 
-use Concrete\Core\Entity\File\File;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Page\Single as SinglePage;
 use Concrete\Core\Updater\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
+use ORM;
 
 class Version20170404000000 extends AbstractMigration
 {
@@ -27,10 +27,9 @@ class Version20170404000000 extends AbstractMigration
             $sp->setAttribute('exclude_nav', true);
             $sp->setAttribute('meta_keywords', 'languages, update, gettext, translation');
         }
-
-        $this->refreshEntities([
-            File::class,
-        ]);
+        $em = ORM::entityManager();
+        $manager = new DatabaseStructureManager($em);
+        $manager->refreshEntities();
     }
 
     public function down(Schema $schema)
