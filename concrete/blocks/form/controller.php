@@ -163,6 +163,12 @@ class Controller extends BlockController
         if (!$data['qsID']) {
             $data['qsID'] = time();
         }
+
+        if (isset($data['questionSetId'])) {
+            // This is specifically set when using the migration tool
+            $data['qsID'] = $data['questionSetId'];
+        }
+
         if (!$data['oldQsID']) {
             $data['oldQsID'] = $data['qsID'];
         }
