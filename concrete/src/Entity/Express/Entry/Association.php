@@ -42,6 +42,11 @@ abstract class Association
     protected $selectedEntries;
 
     /**
+     * @var bool A boolean to track whether the selected entries are sorted
+     */
+    protected $sorted;
+
+    /**
      * @return \Concrete\Core\Entity\Express\Association
      */
     public function getAssociation()
@@ -99,14 +104,22 @@ abstract class Association
      */
     public function getSelectedEntries()
     {
+        if ($this->sorted) {
+            return $this->selectedEntries;
+        }
+
+        $this->sorted = true;
+
         // I would use criteria for this but once again Doctrine fails
         if ($this->getAssociation()->getTargetEntity()->supportsCustomDisplayOrder()) {
             $entries = $this->getSelectedEntriesCollection()->toArray();
             usort($entries, function($a, $b) {
                 return $a->getEntryDisplayOrder() - $b->getEntryDisplayOrder();
             });
-            return new ArrayCollection($entries);
+
+            $this->setSelectedEntries(new ArrayCollection($entries));
         }
+
         return $this->getSelectedEntriesCollection();
     }
 
