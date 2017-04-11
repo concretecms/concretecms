@@ -558,4 +558,40 @@ class Form
 
         return $attr;
     }
+
+    /**
+     * Generates HTML code that can be added at the beginning of a form to disable username/password autocompletion.
+     *
+     * @return string
+     */
+    public function getAutocompletionDisabler()
+    {
+        $id = 'ccm_form_autocompletiondisabler_' . md5(microtime()) . '_' . uniqid();
+        $result = <<<EOT
+<div id="{$id}" style="position: absolute; top: -1000px; opacity: 0">
+    <input type="text" id="{$id}_username" tabindex="-1" />
+    <input type="password" id="{$id}_password" tabindex="-1" />
+    <script>
+    (function() {
+        function removeFake() {
+            setTimeout(
+                function() {
+                    var div = document.getElementById('{$id}');
+                    div.parentNode.removeChild(div);
+                },
+                500
+            );
+        }
+        if (window.addEventListener) {
+            window.addEventListener('load', removeFake, false);
+        } else if (window.attachEvent) {
+            window.attachEvent('onload', removeFake);
+        }
+    })();
+    </script>
+</div>
+EOT;
+
+        return $result;
+    }
 }

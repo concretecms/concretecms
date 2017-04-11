@@ -22,6 +22,7 @@ if ($editmode) {
 
     $token = \Core::make('token');
     $token->output("auth_type_save.{$at->getAuthenticationTypeID()}");
+    echo $form->getAutocompletionDisabler();
 }
 if (!$editmode) {
     ?>
