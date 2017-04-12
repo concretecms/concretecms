@@ -4,14 +4,15 @@
   "description": "concrete5 open source CMS",
   "type": "project",
   "keywords": [ "concrete5", "CMS", "concreteCMS" ],
+  "minimum-stability": "stable",
+  "prefer-stable": true,
   "archive": {
     "exclude": [
       "/tests", "/build", "/.github", "/.gitattributes", "/.travis.yml", "/CONTRIBUTING.md", "/phpunit.xml"
     ]
   },
   "require": {
-    "wikimedia/composer-merge-plugin": "~1.3",
-    "composer/installers": "^1.2"
+    "wikimedia/composer-merge-plugin": "~1.3"
   },
   "require-dev": {
     "squizlabs/php_codesniffer": "^2.7",
