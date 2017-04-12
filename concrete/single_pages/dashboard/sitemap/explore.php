@@ -16,6 +16,7 @@ $view = View::getInstance();
                     displayNodePagination: true,
                     cParentID: '<?=$nodeID?>',
                     displaySingleLevel: true,
+                    includeSystemPages: <?php echo $includeSystemPages ? 'true' : 'false'; ?>,
                     persist: false,
                     onDisplaySingleLevel: function (node) {
                         if (window && window.history && window.history.pushState) {
