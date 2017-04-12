@@ -566,7 +566,7 @@ class Form
      */
     public function getAutocompletionDisabler()
     {
-        $id = 'ccm_form_autocompletiondisabler_' . md5(microtime()) . '_' . uniqid();
+        $id = str_replace('.', '_', uniqid('ccm_form_autocompletiondisabler_', true));
         $result = <<<EOT
 <div id="{$id}" style="position: absolute; top: -1000px; opacity: 0">
     <input type="text" id="{$id}_username" tabindex="-1" />
