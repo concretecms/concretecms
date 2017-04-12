@@ -9,13 +9,8 @@ $secureVals = ['' => t('None'), 'SSL' => tc('Encryption', 'SSL'), 'TLS' => tc('E
 ?>
 
 <form method="post" action="<?= $view->action('save_settings') ?>" id="mail-settings-form">
-
+    <?= $form->getAutocompletionDisabler() ?>
     <?php $token->output('save_settings') ?>
-
-    <div style="position: absolute; margin-top: -500px; opacity: 0">
-        <input type="text" name="_fake_username_to_get_rid_of_autocompletion_" tabindex="-1" />
-        <input type="password" name="_fake_password_to_get_rid_of_autocompletion_" tabindex="-1" />
-    </div>
 
     <fieldset>
         <div class="form-group">
