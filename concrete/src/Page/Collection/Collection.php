@@ -165,7 +165,7 @@ class Collection extends Object implements TrackableInterface
                 $data['cDescription'],
                 $cDatePublic,
                 $cDate,
-                VERSION_INITIAL_COMMENT,
+                t(VERSION_INITIAL_COMMENT),
                 $data['uID'],
                 $cvIsApproved,
                 $cvIsNew,

@@ -19,6 +19,7 @@ module.exports = function(grunt, config, parameters, done) {
 				'config.inc.php.SAMPLE',
 			],
 			byPath: [
+				'/concrete/src/Support/i18n.php',
 				'/concrete/vendor/dapphp/securimage/example_form.ajax.php',
 				'/concrete/vendor/dapphp/securimage/example_form.php',
 				'/concrete/vendor/htmlawed/htmlawed/htmLawedTest.php',
