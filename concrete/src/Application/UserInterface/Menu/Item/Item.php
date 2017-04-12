@@ -5,9 +5,23 @@ use Concrete\Core\Package\Package;
 
 class Item implements ItemInterface
 {
-    protected $controller;
+    protected $controller = null;
 
     protected $linkAttributes = [];
+    
+    protected $handle = null;
+
+    protected $label = null;
+    
+    protected $position = null;
+    
+    protected $linkAttributes = null;
+    
+    protected $href = null;
+    
+    protected $icon = null;
+    
+    protected $pkgHandle = null;
 
     public function __construct($handle, $pkgHandle = false)
     {
@@ -17,12 +31,12 @@ class Item implements ItemInterface
 
     public function getHandle()
     {
-        return isset($this->handle) ? $this->handle : null;
+        return $this->handle;
     }
 
     public function getLabel()
     {
-        return isset($this->label) ? $this->label : null;
+        return $this->label;
     }
 
     public function setLabel($label)
@@ -32,12 +46,12 @@ class Item implements ItemInterface
 
     public function getPosition()
     {
-        return isset($this->position) ? $this->position : null;
+        return $this->position;
     }
 
     public function getLinkAttributes()
     {
-        return isset($this->linkAttributes) ? $this->linkAttributes : null;
+        return $this->linkAttributes;
     }
 
     public function setLinkAttributes($linkAttributes)
@@ -52,7 +66,7 @@ class Item implements ItemInterface
 
     public function getLink()
     {
-        return isset($this->href) ? $this->href : null;
+        return $this->href;
     }
 
     public function setIcon($icon)
@@ -62,7 +76,7 @@ class Item implements ItemInterface
 
     public function getIcon()
     {
-        return isset($this->icon) ? $this->icon : null;
+        return $this->icon;
     }
 
     public function setPosition($position)
@@ -72,7 +86,7 @@ class Item implements ItemInterface
 
     public function getPackageHandle()
     {
-        return isset($this->pkgHandle) ? $this->pkgHandle : null;
+        return $this->pkgHandle;
     }
 
     public function getPackageObject()
