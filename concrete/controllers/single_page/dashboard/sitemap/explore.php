@@ -37,6 +37,6 @@ class Explore extends DashboardPageController
             }
         }
         $this->set('dh', $dh);
-		$this->set('includeSystemPages', $dh->includeSystemPages());
+        $this->set('includeSystemPages', $dh->includeSystemPages());
     }
 }
