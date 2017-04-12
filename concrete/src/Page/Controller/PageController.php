@@ -341,4 +341,14 @@ class PageController extends Controller
 
         return $valid;
     }
+
+    /**
+     * Should this page be displayed using the user's language?
+     *
+     * @return bool
+     */
+    public function useUserLocale()
+    {
+        return false;
+    }
 }

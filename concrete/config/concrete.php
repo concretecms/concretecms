@@ -568,7 +568,7 @@ return [
         // Community Translation instance offering concrete5 translations
         'community_translation' => [
             // API entry point of the Community Translation instance
-            'entry_point' => 'https://translate.concrete5.org/api',
+            'entry_point' => 'http://translate.concrete5.org/api',
             // API Token to be used for the Community Translation instance
             'api_token' => '',
             // Languages below this translation progress won't be considered

@@ -18,6 +18,8 @@ class Listener
         $db = $em->getConnection();
 
         $db->Execute('delete from atExpressSettings where exEntityID = ?', array($entity->getID()));
+        $table = $entity->getAttributeKeyCategory()->getIndexedSearchTable();
+        $db->Execute('DROP TABLE IF EXISTS ' . $table);
 
         $entity->setDefaultEditForm(null);
         $entity->setDefaultViewForm(null);
