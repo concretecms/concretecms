@@ -42,12 +42,16 @@ class Key extends Facade implements AttributeKeyInterface
      */
     public function getController()
     {
-        return $this->legacyAttributeKey->getController();
+        if (isset($this->legacyAttributeKey)) {
+            return $this->legacyAttributeKey->getController();
+        }
     }
 
     public function __toString()
     {
-        return (string) $this->legacyAttributeKey->getAttributeKeyID();
+        if (isset($this->legacyAttributeKey)) {
+            return (string) $this->legacyAttributeKey->getAttributeKeyID();
+        }
     }
 
     /**
@@ -55,7 +59,9 @@ class Key extends Facade implements AttributeKeyInterface
      */
     public function getAttributeKeyID()
     {
-        return $this->legacyAttributeKey->getAttributeKeyID();
+        if (isset($this->legacyAttributeKey)) {
+            return $this->legacyAttributeKey->getAttributeKeyID();
+        }
     }
 
     /**
@@ -63,7 +69,9 @@ class Key extends Facade implements AttributeKeyInterface
      */
     public function getAttributeKeyHandle()
     {
-        return $this->legacyAttributeKey->getAttributeKeyHandle();
+        if (isset($this->legacyAttributeKey)) {
+            return $this->legacyAttributeKey->getAttributeKeyHandle();
+        }
     }
 
     /**
@@ -71,7 +79,9 @@ class Key extends Facade implements AttributeKeyInterface
      */
     public function getAttributeType()
     {
-        return $this->legacyAttributeKey->getAttributeType();
+        if (isset($this->legacyAttributeKey)) {
+            return $this->legacyAttributeKey->getAttributeType();
+        }
     }
 
     /**
@@ -79,12 +89,16 @@ class Key extends Facade implements AttributeKeyInterface
      */
     public function isAttributeKeySearchable()
     {
-        return $this->legacyAttributeKey->isAttributeKeySearchable();
+        if (isset($this->legacyAttributeKey)) {
+            return $this->legacyAttributeKey->isAttributeKeySearchable();
+        }
     }
 
     public function getSearchIndexer()
     {
-        return $this->legacyAttributeKey->getSearchIndexer();
+        if (isset($this->legacyAttributeKey)) {
+            return $this->legacyAttributeKey->getSearchIndexer();
+        }
     }
 
     /**
@@ -125,7 +139,7 @@ class Key extends Facade implements AttributeKeyInterface
      */
     public function __call($name, $arguments)
     {
-        if (is_object($this->legacyAttributeKey)) {
+        if (isset($this->legacyAttributeKey) && is_object($this->legacyAttributeKey)) {
             return call_user_func_array([$this->legacyAttributeKey, $name], $arguments);
         } else {
             throw new \Exception(t('Unable to retrieve legacy attribute key for method: %s', $name));
