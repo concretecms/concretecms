@@ -17,7 +17,6 @@ use UserInfo;
 
 class BasicWorkflow extends \Concrete\Core\Workflow\Workflow implements AssignableObjectInterface
 {
-
     use AssignableObjectTrait;
 
     public function executeBeforePermissionAssignment($cascadeToChildren = true)
@@ -62,22 +61,22 @@ class BasicWorkflow extends \Concrete\Core\Workflow\Workflow implements Assignab
         $pk = Key::getByHandle('approve_basic_workflow_action');
         $pk->setPermissionObject($this);
         $access = $pk->getPermissionAssignmentObject()->getPermissionAccessObject();
-        $users = array(\UserInfo::getByID(USER_SUPER_ID));
-        $usersToRemove = array();
+        $users = [\UserInfo::getByID(USER_SUPER_ID)];
+        $usersToRemove = [];
 
         if (is_object($access)) {
             // Loop through all items and get the relevant users.
             $items = $access->getAccessListItems(Key::ACCESS_TYPE_INCLUDE);
-            foreach($items as $item) {
+            foreach ($items as $item) {
                 $entity = $item->getAccessEntityObject();
                 $users = array_merge($entity->getAccessEntityUsers($access), $users);
             }
 
             // Now we loop through the array and remove
             $items = $access->getAccessListItems(Key::ACCESS_TYPE_EXCLUDE);
-            foreach($items as $item) {
+            foreach ($items as $item) {
                 $entity = $item->getAccessEntityObject();
-                foreach($entity->getAccessEntityUsers($access) as $user) {
+                foreach ($entity->getAccessEntityUsers($access) as $user) {
                     $usersToRemove[] = $user->getUserID();
                 }
             }
@@ -85,10 +84,11 @@ class BasicWorkflow extends \Concrete\Core\Workflow\Workflow implements Assignab
             $users = array_unique($users);
             $usersToRemove = array_unique($usersToRemove);
 
-            $users = array_filter($users, function($element) use ($usersToRemove) {
+            $users = array_filter($users, function ($element) use ($usersToRemove) {
                 if (in_array($element->getUserID(), $usersToRemove)) {
                     return false;
                 }
+
                 return true;
             });
         }
@@ -97,12 +97,13 @@ class BasicWorkflow extends \Concrete\Core\Workflow\Workflow implements Assignab
     }
 
     /**
-     * Returns true if the logged-in user can approve the current workflow
+     * Returns true if the logged-in user can approve the current workflow.
      */
     public function canApproveWorkflow()
     {
         $pk = Key::getByHandle('approve_basic_workflow_action');
         $pk->setPermissionObject($this);
+
         return $pk->validate();
     }
 
@@ -113,7 +114,7 @@ class BasicWorkflow extends \Concrete\Core\Workflow\Workflow implements Assignab
     public function delete()
     {
         $db = Core::make('database')->connection();
-        $db->executeQuery('DELETE FROM BasicWorkflowPermissionAssignments WHERE wfID = ?', array($this->wfID));
+        $db->executeQuery('DELETE FROM BasicWorkflowPermissionAssignments WHERE wfID = ?', [$this->wfID]);
         parent::delete();
     }
 
@@ -124,20 +125,18 @@ class BasicWorkflow extends \Concrete\Core\Workflow\Workflow implements Assignab
 
         // Check if the workflow is not already approved
         if (is_object($req)) {
-
             if ($this->canApproveWorkflow()) {
                 // Then that means we have the ability to approve the workflow we just started.
                 // In that case, we transparently approve it, and skip the entry notification step.
                 $wpr = $req->approve($wp);
                 $wp->delete();
+
                 return $wpr;
-
             } else {
-
                 $db = Core::make('database')->connection();
                 $db->executeQuery(
                     'INSERT INTO BasicWorkflowProgressData (wpID, uIDStarted) VALUES (?, ?)',
-                    array($wp->getWorkflowProgressID(), $req->getRequesterUserID()));
+                    [$wp->getWorkflowProgressID(), $req->getRequesterUserID()]);
 
                 $ui = UserInfo::getByID($req->getRequesterUserID());
 
@@ -149,18 +148,15 @@ class BasicWorkflow extends \Concrete\Core\Workflow\Workflow implements Assignab
                     $req->getWorkflowRequestDescriptionObject()->getEmailDescription());
                 $this->notify($wp, $message, 'notify_on_basic_workflow_entry');
             }
-
         }
-
     }
 
     protected function notify(
         WorkflowProgress $wp,
         $message,
         $permission = 'notify_on_basic_workflow_entry',
-        $parameters = array()
-    )
-    {
+        $parameters = []
+    ) {
         $nk = PermissionKey::getByHandle($permission);
         $nk->setPermissionObject($this);
         $users = $nk->getCurrentlyActiveUsers($wp);
@@ -186,13 +182,18 @@ class BasicWorkflow extends \Concrete\Core\Workflow\Workflow implements Assignab
     {
         $bdw = new BasicWorkflowProgressData($wp);
         $ux = UserInfo::getByID($bdw->getUserStartedID());
+        if (is_object($ux)) {
+            $userName = $ux->getUserName();
+        } else {
+            $userName = t('(Deleted User)');
+        }
         $req = $wp->getWorkflowRequestObject();
         $description = $req->getWorkflowRequestDescriptionObject()->getInContextDescription();
 
         return t(
             '%s Submitted by <strong>%s</strong> on %s.',
             $description,
-            $ux->getUserName(),
+            $userName,
             Core::make('helper/date')->formatDateTime($wp->getWorkflowProgressDateAdded(), true)
         );
     }
@@ -207,7 +208,6 @@ class BasicWorkflow extends \Concrete\Core\Workflow\Workflow implements Assignab
     public function cancel(WorkflowProgress $wp)
     {
         if ($this->canApproveWorkflowProgressObject($wp)) {
-
             $req = $wp->getWorkflowRequestObject();
             $bdw = new BasicWorkflowProgressData($wp);
             $u = new User();
@@ -236,6 +236,7 @@ class BasicWorkflow extends \Concrete\Core\Workflow\Workflow implements Assignab
 
             return $wpr;
         }
+
         return null;
     }
 
@@ -275,6 +276,7 @@ class BasicWorkflow extends \Concrete\Core\Workflow\Workflow implements Assignab
 
             return $wpr;
         }
+
         return null;
     }
 
@@ -282,7 +284,7 @@ class BasicWorkflow extends \Concrete\Core\Workflow\Workflow implements Assignab
     {
         $pk = PermissionKey::getByHandle('approve_basic_workflow_action');
         $pk->setPermissionObject($this);
-        $buttons = array();
+        $buttons = [];
         if ($this->canApproveWorkflowProgressObject($wp)) {
             $req = $wp->getWorkflowRequestObject();
             $button1 = new WorkflowProgressCancelAction();
@@ -300,5 +302,4 @@ class BasicWorkflow extends \Concrete\Core\Workflow\Workflow implements Assignab
 
         return $buttons;
     }
-
 }

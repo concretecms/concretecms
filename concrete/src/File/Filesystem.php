@@ -8,6 +8,7 @@ use Concrete\Core\Permission\Access\Access;
 use Concrete\Core\Permission\Access\Entity\GroupEntity;
 use Concrete\Core\Permission\Key\CategoryTreeNodeKey;
 use Concrete\Core\File\FolderItemList;
+use Concrete\Core\Tree\Node\Node;
 use Concrete\Core\Tree\Node\NodeType;
 use Concrete\Core\Tree\Node\Type\FileFolder;
 use Concrete\Core\Tree\TreeType;
@@ -56,6 +57,14 @@ class Filesystem
         $pa->addListItem($adminGroupEntity);
         $pt = $pk->getPermissionAssignmentObject();
         $pt->assignPermissionAccess($pa);
+    }
+
+    public function getFolder($folderID)
+    {
+        $node = Node::getByID($folderID);
+        if ($node instanceof FileFolder) {
+            return $node;
+        }
     }
 
     public function getRootFolder()

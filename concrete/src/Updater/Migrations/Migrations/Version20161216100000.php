@@ -13,6 +13,7 @@ use Concrete\Core\File\Filesystem;
 use Concrete\Core\File\Set\Set;
 use Concrete\Core\Multilingual\Page\Section\Section;
 use Concrete\Core\Page\Template;
+use Concrete\Core\Page\Type\Composer\FormLayoutSetControl;
 use Concrete\Core\Permission\Access\Access;
 use Concrete\Core\Permission\Access\Entity\GroupEntity;
 use Concrete\Core\Permission\Access\Entity\UserEntity;
@@ -61,6 +62,17 @@ class Version20161216100000 extends AbstractMigration
     public function up(Schema $schema)
     {
         $this->installEntities(array('Concrete\Core\Entity\Express\Entity'));
+        $this->fixSerializedComposerControls();
+    }
+
+    protected function fixSerializedComposerControls()
+    {
+        $r = $this->connection->executeQuery('select ptComposerFormLayoutSetControlID from PageTypeComposerFormLayoutSetControls');
+        while ($row = $r->fetch()) {
+            $control = FormLayoutSetControl::getByID($row['ptComposerFormLayoutSetControlID']);
+            $object = $control->getPageTypeComposerControlObject();
+            $this->connection->executeQuery('update PageTypeComposerFormLayoutSetControls set ptComposerControlObject = ? where ptComposerFormLayoutSetControlID = ?', [serialize($object), $row['ptComposerFormLayoutSetControlID']]);
+        }
     }
 
     public function down(Schema $schema)

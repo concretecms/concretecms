@@ -43,8 +43,6 @@ abstract class AttributeValueTestCase extends ConcreteDatabaseTestCase
 
     protected function setUp()
     {
-        parent::setUp();
-
         $service = \Core::make('site/type');
         if (!$service->getDefault()) {
             $service->installDefault();
@@ -64,6 +62,16 @@ abstract class AttributeValueTestCase extends ConcreteDatabaseTestCase
         $key->setAttributeKeyHandle($this->getAttributeKeyHandle());
 
         \Concrete\Core\Attribute\Key\CollectionKey::add($type, $key, $this->createAttributeKeySettings());
+
+        parent::setUp();
+    }
+
+    public function tearDown()
+    {
+        // Attribute tests need tables truncated after every test
+        $this->truncateTables();
+
+        parent::tearDown();
     }
 
     /**

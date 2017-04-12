@@ -20,6 +20,7 @@ class PageController extends Controller
     protected $passThruBlocks = array();
     protected $parameters = array();
     protected $replacement = null;
+    protected $requestValidated;
 
     /**
      * array of method names that can't be called through the url
@@ -291,6 +292,11 @@ class PageController extends Controller
 
     public function validateRequest()
     {
+
+        if (isset($this->requestValidated)) {
+            return $this->requestValidated;
+        }
+
         $valid = true;
 
         if (!$this->isValidControllerTask($this->action, $this->parameters)) {
@@ -330,6 +336,8 @@ class PageController extends Controller
                 }
             }
         }
+
+        $this->requestValidated = $valid;
 
         return $valid;
     }

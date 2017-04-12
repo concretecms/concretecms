@@ -29,6 +29,7 @@ $form = Loader::helper('form');
     'position' => 'top',
     'enablePosting' => $enablePosting,
     'conversation' => $conversation,
+    'enableTopCommentReviews' => $enableTopCommentReviews
 ));?>
 
 
@@ -48,19 +49,19 @@ $form = Loader::helper('form');
     ?>
 		<select class="form-control pull-right ccm-sort-conversations" data-sort="conversation-message-list">
 			<option value="date_asc" <?php if ($orderBy == 'date_asc') {
-    ?>selected="selected"<?php 
+    ?>selected="selected"<?php
 }
     ?>><?=t('Earliest First')?></option>
 			<option value="date_desc" <?php if ($orderBy == 'date_desc') {
-    ?>selected="selected"<?php 
+    ?>selected="selected"<?php
 }
     ?>><?=t('Most Recent First')?></option>
 			<option value="rating" <?php if ($orderBy == 'rating') {
-    ?>selected="selected"<?php 
+    ?>selected="selected"<?php
 }
     ?>><?=t('Highest Rated')?></option>
 		</select>
-		<?php 
+		<?php
 } ?>
 
 		<?php Loader::element('conversation/count_header', array('conversation' => $conversation))?>
@@ -68,7 +69,7 @@ $form = Loader::helper('form');
 
 
 	<div class="ccm-conversation-no-messages well well-small" <?php if (count($messages) > 0) {
-    ?>style="display: none" <?php 
+    ?>style="display: none" <?php
 } ?>><?=t('No messages in this conversation.')?></div>
 
 	<div class="ccm-conversation-messages">
@@ -84,7 +85,7 @@ $form = Loader::helper('form');
 	<div class="ccm-conversation-load-more-messages">
 		<button class="btn btn-large" type="button" data-load-page="conversation-message-list" data-total-pages="<?=$totalPages?>" data-next-page="<?=$currentPage + 1?>" ><?=t('Load More')?></button>
 	</div>
-	<?php 
+	<?php
 } ?>
 
 
@@ -102,4 +103,5 @@ $form = Loader::helper('form');
     'position' => 'bottom',
     'enablePosting' => $enablePosting,
     'conversation' => $conversation,
+    'enableTopCommentReviews' => $enableTopCommentReviews
 ));?>

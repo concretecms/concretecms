@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Tests\AttributeValue;
 
+use Concrete\Core\Entity\Attribute\Value\Value\Value;
 use ConcreteDatabaseTestCase;
 use Database;
 use ORM;
@@ -8,12 +9,12 @@ use Concrete\Core\Entity\Attribute\Value\Value\NumberValue;
 
 class NumberValueTest extends ConcreteDatabaseTestCase
 {
-    protected $fixtures = [];
-    protected $tables = [];
+
+    protected static $lastID = 1;
 
     protected $metadatas = [
         NumberValue::class,
-        \Concrete\Core\Entity\Attribute\Value\Value\Value::class,
+        Value::class,
     ];
 
     public function renderProvider()
@@ -44,7 +45,9 @@ class NumberValueTest extends ConcreteDatabaseTestCase
      */
     public function testRender($value, $expectedGetValue, $expectedToString)
     {
-        $avID = isset($avID) ? $avID + 1 : 1;
+        $avID = static::$lastID + 1;
+        static::$lastID = $avID;
+
         $db = Database::connection();
         $db->executeQuery('insert into AttributeValues (avID) values (?)', [$avID]);
         $avID = $db->lastInsertId();

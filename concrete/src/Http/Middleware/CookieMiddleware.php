@@ -38,12 +38,12 @@ class CookieMiddleware implements MiddlewareInterface
 
         $cleared = $this->cookies->getClearedCookies();
         foreach ($cleared as $cookie) {
-            $response->headers->clearCookie($cookie);
+            $response->headers->clearCookie($cookie, DIR_REL . '/');
         }
 
         $cookies = $this->cookies->getCookies();
         foreach ($cookies as $cookie) {
-            $response->headers->setCookie($cookie);
+            $response->headers->setCookie($cookie, DIR_REL . '/');
         }
 
         return $response;

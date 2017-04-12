@@ -40,6 +40,7 @@ class FileAssignment extends TreeNodeAssignment
     public function getPermissionAccessObject()
     {
         $db = Database::connection();
+        $r = null;
         if ($this->permissionObjectToCheck instanceof File) {
             $r = $db->GetOne(
                 'select paID from FilePermissionAssignments where fID = ? and pkID = ?',
@@ -48,14 +49,18 @@ class FileAssignment extends TreeNodeAssignment
                     $this->pk->getPermissionKeyID(),
                 )
             );
-            if ($r) {
-                return Access::getByID($r, $this->pk, false);
-            }
         } else if (isset($this->inheritedPermissions[$this->pk->getPermissionKeyHandle()])) {
-            $pk = Key::getByHandle($this->inheritedPermissions[$this->pk->getPermissionKeyHandle()]);
-            $pk->setPermissionObject($this->permissionObjectToCheck);
-            $pae = $pk->getPermissionAccessObject();
-            return $pae;
+            $inheritedPKID = $db->GetOne('select pkID from PermissionKeys where pkHandle = ?', array($this->inheritedPermissions[$this->pk->getPermissionKeyHandle()]));
+            $r = $db->GetOne(
+                'select paID from TreeNodePermissionAssignments where treeNodeID = ? and pkID = ?',
+                array(
+                    $this->permissionObjectToCheck->getTreeNodePermissionsNodeID(),
+                    $inheritedPKID,
+                )
+            );
+        }
+        if ($r) {
+            return Access::getByID($r, $this->pk, false);
         }
     }
 

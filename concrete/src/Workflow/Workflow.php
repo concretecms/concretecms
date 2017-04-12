@@ -79,7 +79,7 @@ abstract class Workflow extends Object implements \Concrete\Core\Permission\Obje
 
     public function getPermissionObjectKeyCategoryHandle()
     {
-        return 'page';
+        return 'basic_workflow';
     }
 
     public function getPermissionObjectIdentifier()

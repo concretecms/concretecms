@@ -22,6 +22,19 @@ class Manager implements ManagerInterface
         $group->setFields($fields);
         $this->addGroupObject($group);
     }
+
+    public function getGroupByName($name)
+    {
+        /**
+         * @var $group GroupInterface
+         */
+        foreach($this->groups as $group) {
+            if ($group->getName() == $name) {
+                return $group;
+            }
+        }
+    }
+
     public function addGroupObject(GroupInterface $group)
     {
         $this->groups[] = $group;

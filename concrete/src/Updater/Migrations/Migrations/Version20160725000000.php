@@ -30,6 +30,7 @@ use Concrete\Core\Page\Page;
 use Concrete\Core\Page\Single as SinglePage;
 use Concrete\Block\ExpressForm\Controller as ExpressFormBlockController;
 use Concrete\Core\Support\Facade\Facade;
+use Concrete\Core\Localization\Localization;
 
 class Version20160725000000 extends AbstractMigration
 {
@@ -820,6 +821,11 @@ class Version20160725000000 extends AbstractMigration
         // Private Messages tweak
         SinglePage::add('/account/messages');
 
+        $bt = BlockType::getByHandle('rss_displayer');
+        if (!is_object($bt)) {
+            BlockType::installBlockType('rss_displayer'); // for those those who have removed this block for some reason.
+        }
+
         $ci = new ContentImporter();
         $ci->importContentFile(DIR_BASE_CORE . '/config/install/upgrade/desktops.xml');
 
@@ -860,10 +866,13 @@ class Version20160725000000 extends AbstractMigration
         }
 
         if (!is_object($site) || $site->getSiteID() < 1) {
-            $locale = 'en_US';
+            $locale = Localization::BASE_LOCALE;
             if (\Config::get('concrete.multilingual.default_locale')) {
                 $locale = \Config::get('concrete.multilingual.default_locale');
+            } else if (\Config::get('concrete.locale')) { // default app language
+                $locale = \Config::get('concrete.locale');
             }
+
             $site = $service->installDefault($locale);
 
             // migrate name

@@ -211,7 +211,11 @@ class File extends Controller
         }
 
         $files = array();
-        $fp = FilePermissions::getGlobal();
+        if (is_object($folder)) {
+            $fp = new \Permissions($folder);
+        } else {
+            $fp = FilePermissions::getGlobal();
+        }
         $cf = Loader::helper('file');
         if (!$fp->canAddFileType($cf->getExtension($name))) {
             throw new Exception(FileImporter::getErrorMessage(FileImporter::E_FILE_INVALID_EXTENSION), 403);

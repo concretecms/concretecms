@@ -793,6 +793,21 @@ abstract class Package implements LocalizablePackageInterface
             $config = Setup::createConfiguration(true, $this->app->make('config')->get('database.proxy_classes'));
             $driverImpl = new MappingDriverChain();
             $coreDriver = new CoreDriver($this->app);
+
+            // Add all the installed packages so that the new package could potentially extend packages that are already
+            // installed
+            $packages = $this->app->make(PackageService::class)->getInstalledList();
+            foreach($packages as $package) {
+                $existingProviderFactory = new PackageProviderFactory($this->app, $package->getController());
+                $existingProvider = $existingProviderFactory->getEntityManagerProvider();
+                $existingDrivers = $existingProvider->getDrivers();
+                if (count($existingDrivers)) {
+                    foreach($existingDrivers as $existingDriver) {
+                        $driverImpl->addDriver($existingDriver->getDriver(), $existingDriver->getNamespace());
+                    }
+                }
+            }
+
             // Add the core driver to it so packages can extend the core and not break.
             $driverImpl->addDriver($coreDriver->getDriver(), $coreDriver->getNamespace());
 

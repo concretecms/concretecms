@@ -4,11 +4,18 @@ class ContentPageTranslateTest extends PageTestCase
 {
     protected $fixtures = array();
 
-    protected function setUp()
+    public function __construct($name = null, array $data = array(), $dataName = '')
     {
+        parent::__construct($name, $data, $dataName);
+
         $this->tables = array_merge($this->tables, array(
             'SystemContentEditorSnippets',
         ));
+
+    }
+
+    public function setUp()
+    {
         \Core::forgetInstance('url/canonical');
         parent::setUp();
     }

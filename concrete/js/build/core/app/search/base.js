@@ -14,7 +14,7 @@
             'bulkParameterName': 'item',
 			'selectMode': false,
 			'appendToOuterDialog': false,
-			'searchMethod': 'post'
+			'searchMethod': 'get'
 		}, options);
 		this.$element = $element;
 		this.$results = $element.find('div[data-search-element=results]');
@@ -57,12 +57,21 @@
 		}
 	}
 
-	ConcreteAjaxSearch.prototype.setupResetButton = function(result) {
-		var my = this;
-		if (result.query) {
+	ConcreteAjaxSearch.prototype.setupResetButton = function (result) {
+		var my = this,
+			advancedSearchText;
+
+		if (result.query || (result.folder && result.folder.treeNodeTypeHandle === 'search_preset')) {
+			advancedSearchText = ccmi18n_filemanager.edit;
+		} else {
+			advancedSearchText = ccmi18n.advanced;
+		}
+
+		my.$advancedSearchButton.html(advancedSearchText);
+
+		if (result.query && result.folder && result.folder.treeNodeTypeHandle !== 'search_preset') {
 			my.$headerSearchInput.prop('disabled', true);
 			my.$headerSearchInput.attr('placeholder', '');
-			my.$advancedSearchButton.html(ccmi18n_filemanager.edit);
 			my.$resetSearchButton.show();
 		}
 	};

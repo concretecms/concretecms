@@ -1,5 +1,5 @@
 /* jshint unused:vars, undef:true, browser:true, jquery:true */
-(function() {
+(function($, undefined) {
 'use strict';
 
 if (window.ccmTranslator) {
@@ -7,14 +7,20 @@ if (window.ccmTranslator) {
 }
 
 var MAX_TRANSLATIONS_FOR_FASTSEARCH = 500;
+var KEYCODE_TAB = 9;
+var KEYCODE_RETURN = 13;
 
 var i18n = {
   AskDiscardDirtyTranslation: 'The current item has changed.\nIf you proceed you will lose your changes.\n\nDo you want to proceed anyway?',
+  Approve_and_Continue: 'Approve & Continue',
   Approved: 'Approved',
   Comments: 'Comments',
   Context: 'Context',
   ExamplePH: 'Example: %s',
   Filter: 'Filter',
+  Keystroke_ctrl_return: '[CTRL]+[RETURN]',
+  Keystroke_ctrl_shift_return: '[CTRL]+[SHIFT]+[RETURN]',
+  No_newlines_in_translations_please: 'Please don\'t use new lines in translations (there\'s no new line in the source string)',
   Original_String: 'Original String',
   Please_fill_in_all_plurals: 'Please fill-in all plural forms',
   Plural_Original_String: 'Plural Original String',
@@ -30,8 +36,6 @@ var i18n = {
   Show_untranslated: 'Show untranslated',
   Singular_Original_String: 'Singular Original String',
   Toggle_Dropdown: 'Toggle Dropdown',
-  TAB: '[TAB] Forward',
-  TAB_SHIFT: '[SHIFT]+[TAB] Backward',
   Translate: 'Translate',
   Translation: 'Translation',
   TranslationIsApproved_WillNeedApproval: 'This translation is approved: your changes will need approval.',
@@ -48,9 +52,56 @@ var i18n = {
 
 var frontend = {
   colFilter: 'col-md-12',
-  colOriginal: 'col-md-5',
-  colTranslations: 'col-md-7'
+  colOriginal: 'col-md-6',
+  colTranslations: 'col-md-6'
 };
+
+function originalToHtml(s) {
+  s = (s === null || s === undefined) ? '' : s.toString();
+  s = s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  s = s.replace(/ /g, '<span class="ccm-translator-original-space"> </span>');
+  s = s.replace(/\t/g, '<span class="ccm-translator-original-tab"> </span>');
+  s = s.replace(/\n/g, '<span class="ccm-translator-original-lf"></span><br />');
+  s = s.replace(/(%(\d+\$)?[a-z])/g, '<span class="ccm-translator-original-copy">$1</span>');
+  s = s.replace(/(&lt;\/?[a-zA-Z].*?&gt;)/g, '<span class="ccm-translator-original-copy">$1</span>');
+  return s;
+}
+
+function copyBoundarySpaces(from, to) {
+  var m;
+  m = /^(\s+)\S/.exec(from);
+  if (m) {
+    to = m[1] + to;
+  }
+  m = /\S(\s+)$/.exec(from);
+  if (m) {
+    to = to +  m[1];
+  }
+  return to;
+}
+
+function buildTranslatedTextarea(translationView, value) {
+  return $('<textarea rows="5" class="form-control" />')
+    .val((typeof value === 'string') ? value : '')
+    .on('keydown', function(e) {
+      switch (e.keyCode || e.which) {
+        case KEYCODE_TAB:
+          if (translationView.translation.originalContains('\t')) {
+            e.preventDefault();
+            if ('selectionStart' in this && 'selectionEnd' in this) {
+              var selectionStart = this.selectionStart, selectionEnd = this.selectionEnd;
+              this.value = this.value.substring(0, selectionStart) + '\t' + this.value.substring(selectionEnd);
+              this.selectionEnd = this.selectionStart = selectionStart + 1;
+            } else if (window.document.selection && window.document.selection.createRange) {
+              this.focus();
+              document.selection.createRange().text = '\t';
+            }
+          }
+          break;
+      }
+    })
+  ;
+}
 
 function Translation(data, translator) {
   $.extend(this, data);
@@ -144,11 +195,9 @@ Translation.prototype = {
 
 var TranslationView = (function() {
 
-  function Base(translation, multiline) {
+  function Base(translation) {
     this.UI = {};
     this.translation = translation;
-    this.multiline = multiline;
-    this.element = this.multiline ? 'textarea rows="8"' : 'input type="text"';
     this.UI.$container = this.translation.translator.UI.$translation;
     this.UI.$container.empty();
     this.UI.$container.closest('.panel').css('visibility', 'visible');
@@ -235,7 +284,7 @@ var TranslationView = (function() {
   Base.prototype = {
     /**
      * @return null if no string is translated
-     * @return false if forSave === true and some string is not translated
+     * @return false if forSave === true and some string is not translated or has errors
      * @return object with {strings: [], approved: bool} in all other cases (approved key is present if and only if current user can mark as approved)
      */
     getTranslatedState: function(forSave) {
@@ -269,6 +318,13 @@ var TranslationView = (function() {
       }
       return dirty;
     },
+    buildOriginalUI: function() {
+      var my = this;
+      my._buildOriginalUI();
+      my.UI.$container.find('div.ccm-translator-original span.ccm-translator-original-copy').on('click', function() {
+        my.translation.translator.setTranslationText($(this).text(), false);
+      });
+    },
     dispose: function() {
       $(this.translation.li).removeClass('list-group-item-info');
       this.UI.$container.empty().closest('.panel').css('visibility', 'hidden');
@@ -276,14 +332,16 @@ var TranslationView = (function() {
   };
 
   function Singular(translation) {
-    Base.call(this, translation, (translation.original.indexOf("\n") >= 0) ? true : false);
+    Base.call(this, translation);
   }
   $.extend(true, Singular.prototype, Base.prototype, {
-    buildOriginalUI: function() {
+    _buildOriginalUI: function() {
       this.UI.$container
         .append($('<div class="form-group" />')
           .append($('<label class="control-label" />').text(i18n.Original_String))
-          .append($('<' + this.element + ' class="form-control" readonly="readonly" />').val(this.translation.original))
+          .append($('<div class="form-control ccm-translator-original" />')
+            .html(originalToHtml(this.translation.original))
+          )
         )
       ;
     },
@@ -291,7 +349,7 @@ var TranslationView = (function() {
       this.UI.$container
         .append($('<div class="form-group" />')
           .append($('<label class="control-label" />').text(i18n.Translation))
-          .append(this.UI.$translated = $('<' + this.element + ' class="form-control" />').val(this.translation.isTranslated ? this.translation.translations[0] : ''))
+          .append(this.UI.$translated = buildTranslatedTextarea(this, this.translation.isTranslated ? this.translation.translations[0] : ''))
         )
       ;
       this.UI.$translated.focus();
@@ -306,23 +364,38 @@ var TranslationView = (function() {
      */
     getTranslatedStrings: function(forSave) {
       var s = $.trim(this.UI.$translated.val());
-      return (s.length > 0) ? [s] : null;
+      if (s === '') {
+        return null;
+      }
+      s = copyBoundarySpaces(this.translation.original, s);
+      if (!forSave) {
+        return [s];  
+      }
+      if (s.indexOf('\n') >= 0 && this.translation.original.indexOf('\n') < 0) {
+        window.alert(i18n.No_newlines_in_translations_please);
+        return false;
+      }
+      return [s];
     }
   });
 
   function Plural(translation) {
-    Base.call(this, translation, ((translation.original.indexOf("\n") >= 0) || (translation.originalPlural.indexOf("\n") >= 0)) ? true : false);
+    Base.call(this, translation);
   }
   $.extend(true, Plural.prototype, Base.prototype, {
-    buildOriginalUI: function() {
+    _buildOriginalUI: function() {
       this.UI.$container
         .append($('<div class="form-group" />')
           .append($('<label class="control-label" />').text(i18n.Singular_Original_String))
-          .append($('<' + this.element + ' class="form-control" readonly="readonly" />').val(this.translation.original))
+          .append($('<div class="form-control ccm-translator-original" />')
+            .html(originalToHtml(this.translation.original))
+          )
         )
         .append($('<div class="form-group" />')
           .append($('<label class="control-label" />').text(i18n.Plural_Original_String))
-          .append($('<' + this.element + ' class="form-control" readonly="readonly" />').val(this.translation.originalPlural))
+          .append($('<div class="form-control ccm-translator-original" />')
+            .html(originalToHtml(this.translation.originalPlural))
+          )
         )
       ;
     },
@@ -358,7 +431,7 @@ var TranslationView = (function() {
         );
         my.UI.$tabBodies.append($('<div class="tab-pane' + ((index === 0) ? ' active' : '') + '" data-key="' + key + '" />')
           .append($('<p />').text(i18n.ExamplePH.replace(/%s/, examples)))
-          .append(my.UI.$translated[key] = $('<' + my.element + ' class="form-control" />').val(my.translation.isTranslated ? my.translation.translations[index] : ''))
+          .append(my.UI.$translated[key] = buildTranslatedTextarea(this, my.translation.isTranslated ? my.translation.translations[index] : ''))
         );
         index++;
       });
@@ -373,17 +446,25 @@ var TranslationView = (function() {
     },
     /**
      * @return null if no string is translated
-     * @return false if forSave === true and some string is not translated
+     * @return false if forSave === true and some string is not translated or has errors
      * @return array in all other cases
      */
     getTranslatedStrings: function(forSave) {
-      var my = this;
-      var result = [];
-      var some = false, firstNotFilled = null;
+      var my = this,
+        result = [],
+        original = this.translation.original,
+        withNewLines = (this.translation.original + this.translation.originalPlural).indexOf('\n') >= 0,
+        some = false,
+        firstNotFilled = null,
+        firstWithExtraNewlines = null;
       $.each(this.translation.translator.plurals, function(key) {
         var s = $.trim(my.UI.$translated[key].val());
         if (s.length > 0) {
           some = true;
+          if (withNewLines === false && s.indexOf('\n') >= 0) {
+            firstWithExtraNewlines = key;
+          }
+          s = copyBoundarySpaces(original, s);
         } else if (firstNotFilled === null) {
           firstNotFilled = key;
         }
@@ -392,10 +473,17 @@ var TranslationView = (function() {
       if (some === false) {
         return null;
       }
-      if ((firstNotFilled !== null) && (forSave === true)) {
-        this.showTranslationTab(firstNotFilled, true);
-        window.alert(i18n.Please_fill_in_all_plurals);
-        return false;
+      if (forSave === true) {
+        if (firstWithExtraNewlines !== null) {
+          this.showTranslationTab(firstWithExtraNewlines, true);
+          window.alert(i18n.No_newlines_in_translations_please);
+          return false;
+        }
+        if (firstNotFilled !== null) {
+          this.showTranslationTab(firstNotFilled, true);
+          window.alert(i18n.Please_fill_in_all_plurals);
+          return false;
+        }
       }
       return result;
     }
@@ -424,6 +512,7 @@ function Translator(data) {
     new Translation(data.translations[i], this);
   }
   this.busy = false;
+  this.getInitialTranslationIndex = data.getInitialTranslationIndex ? data.getInitialTranslationIndex : null;
 }
 Translator.prototype = {
   launch: function() {
@@ -516,20 +605,29 @@ Translator.prototype = {
           .append($('<div class="panel panel-primary" />')
             .append($('<div class="panel-heading" />').text(i18n.Translate))
             .append(this.UI.$translation = $('<div class="panel-body" />'))
-            .append($('<div class="panel-footer" />')
-              .append($('<button class="btn btn-primary ccm-translator-savecontinue" />')
+            .append($('<div class="panel-footer text-center" />')
+              .append($('<button class="btn btn-primary ccm-translator-savecontinue" data-toggle="tooltip" style="margin: 0 5px" />')
+                .attr('title', i18n.Keystroke_ctrl_return)
+                .data('text', i18n.Save_and_Continue)
                 .text(i18n.Save_and_Continue)
                 .on('click', function() {
                   my.saveAndContinue();
                 })
               )
-              .append($('<small class="text-muted" style="margin-left: 20px" />').text(i18n.TAB))
-              .append($('<small class="text-muted" style="margin-left: 20px" />').text(i18n.TAB_SHIFT))
+              .append($('<button class="btn btn-success ccm-translator-savecontinue ccm-translator-approvecontinue" data-toggle="tooltip" style="margin: 0 5px" />')
+                .attr('title', i18n.Keystroke_ctrl_shift_return)
+                .data('text', i18n.Approve_and_Continue)
+                .text(i18n.Approve_and_Continue)
+                .on('click', function() {
+                  my.saveAndContinue(null, true);
+                })
+              )
             )
           )
         )
       )
     ;
+    this.UI.$container.find('[data-toggle="tooltip"]').tooltip();
     if (this.on.uiLaunched) {
       this.on.uiLaunched(this);
     }
@@ -548,7 +646,7 @@ Translator.prototype = {
       });
     } else {
       this.UI.$searchText.on('keypress', function(e) {
-        if ((e.keyCode || e.charCode) === 13) {
+        if ((e.keyCode || e.charCode) === KEYCODE_RETURN) {
           my.filter();
         }
       });
@@ -601,6 +699,10 @@ Translator.prototype = {
       delete this.UI.$showUnapproved;
       delete this.UI.$showApproved;
     }
+    if (!(this.approvalSupport && this.canModifyApproved)) {
+      this.UI.$container.find('.ccm-translator-approvecontinue').remove();
+    }
+
     if (someContexts) {
       this.UI.$searchInContexts.on('click', function() {
         my.filter({searchInContexts: !my.appliedFilter.searchInContexts});
@@ -615,15 +717,21 @@ Translator.prototype = {
       }
     });
     if (n > 0) {
-      this.setCurrentTranslation(this.translations[0]);
+      var initialTranslationIndex = 0;
+      if (this.getInitialTranslationIndex) {
+          initialTranslationIndex = this.getInitialTranslationIndex() || 0;
+      }
+      this.setCurrentTranslation(this.translations[initialTranslationIndex]);
     }
     this.UI.$container.on('keydown', function(e) {
       switch (e.keyCode || e.which) {
-        case 9:
-          e.preventDefault();
-          setTimeout(function() {
-            my.saveAndContinue(e.shiftKey ? true : false);
-          }, 0);
+        case KEYCODE_RETURN:
+          if (e.ctrlKey) {
+            e.preventDefault();
+            setTimeout(function() {
+              my.saveAndContinue(false, e.shiftKey);
+            }, 0);
+          }
           break;
       }
     });
@@ -716,19 +824,47 @@ Translator.prototype = {
       goOn();
     }
   },
-  setBusy: function(busy) {
-    this.busy = !!busy;
-    var $btn = this.UI.$container.find('button.ccm-translator-savecontinue');
-    if (this.busy) {
-      $btn.css('width', $btn.outerWidth() + 'px').html('<span class="fa fa-spinner fa-spin"></span>');
-    } else {
-      $btn.css('width', 'auto').text(i18n.Save_and_Continue);
-    }
+  setTranslationText: function(textToSet, full) {
+    var $i = this.currentTranslationView.getCurrentTextInput(), currentValue = $i.val();
+    if (full) {
+      $i.val(textToSet);
+    } else if (textToSet !== '') {
+      var native = $i[0];
+      native.focus();
+      if ('selectionStart' in native && 'selectionEnd' in native) {
+        var before = currentValue.substring(0, native.selectionStart),
+          after = currentValue.substring(native.selectionEnd);
+        native.value = before + textToSet + after;
+        native.selectionEnd = native.selectionStart = before.length + textToSet.length;
+      } else if (window.document.selection && window.document.selection.createRange) {
+        native.focus();
+        document.selection.createRange().text = textToSet;
+      } else {
+        $i.val(textToSet);
+      }
+   }
+   $i.trigger('change');
+   return $i;
   },
-  saveAndContinue: function(backward) {
+  setBusy: function(busy) {
+    var me = this;
+    me.busy = !!busy;
+    me.UI.$container.find('button.ccm-translator-savecontinue').each(function() {
+      var $btn = $(this);
+      if (me.busy) {
+        $btn.css('width', $btn.outerWidth() + 'px').html('<span class="fa fa-spinner fa-spin"></span>');
+      } else {
+        $btn.css('width', 'auto').text($btn.data('text'));
+      }
+    });
+  },
+  saveAndContinue: function(backward, markApproved) {
     var my = this;
     if (this.busy) {
       return;
+    }
+    if (my.approvalSupport && markApproved) {
+      my.currentTranslationView.UI.$approved.prop('checked', true).trigger('change');
     }
     if (this.currentTranslationView.isDirty() === false) {
       this.gotoNextTranslation(backward);
@@ -856,4 +992,4 @@ $(document).ready(function() {
   Startup.setDomReady();
 });
 
-})();
+})(jQuery);

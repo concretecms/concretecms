@@ -1,14 +1,14 @@
 <?php
 namespace Concrete\Core\Localization\Service;
 
-use Request;
-use Punic\Calendar;
-use Localization;
-use User;
-use Core;
+use Concrete\Core\Localization\Localization;
 use Config;
+use Core;
+use Punic\Calendar;
 use Punic\Comparer;
 use Punic\Misc;
+use Request;
+use User;
 
 class Date
 {
@@ -92,7 +92,7 @@ class Date
         $result = '';
         $datetime = $this->toDateTime($timestamp, $toTimezone);
         if (is_object($datetime)) {
-            if (Localization::activeLocale() == 'en_US') {
+            if (Localization::activeLocale() == Localization::BASE_LOCALE) {
                 $result = $datetime->format($mask);
             } else {
                 $result = Calendar::format(
@@ -369,12 +369,12 @@ class Date
                 $chunks[] = t2('%d hour', '%d hours', $hours, $hours);
             }
         } elseif ($hours > 0) {
-            $chunks[] =t2('%d hour', '%d hours', $hours, $hours);
+            $chunks[] = t2('%d hour', '%d hours', $hours, $hours);
             if ($precise) {
                 $chunks[] = t2('%d minute', '%d minutes', $minutes, $minutes);
             }
         } elseif ($minutes > 0) {
-            $chunks[] =t2('%d minute', '%d minutes', $minutes, $minutes);
+            $chunks[] = t2('%d minute', '%d minutes', $minutes, $minutes);
             if ($precise) {
                 $chunks[] = t2('%d second', '%d seconds', $seconds, $seconds);
             }
@@ -404,7 +404,8 @@ class Date
                 $timezone = Config::get('app.server_timezone', date_default_timezone_get());
                 break;
             case 'app':
-                $timezone = Config::get('app.timezone', date_default_timezone_get());
+                $site = \Core::make('site')->getSite();
+                $timezone = $site->getConfigRepository()->get('timezone', date_default_timezone_get());
                 break;
             case 'user':
                 $tz = null;
@@ -720,11 +721,11 @@ class Date
      */
     public function getJQueryUIDatePickerFormat($relatedPHPFormat = '')
     {
-        $phpFormat = (is_string($relatedPHPFormat) && strlen($relatedPHPFormat)) ?
-            $relatedPHPFormat :
-            t(/*i18n: Short date format: see http://www.php.net/manual/en/function.date.php */
-                'n/j/Y'
-            );
+        if (is_string($relatedPHPFormat) && $relatedPHPFormat !== '') {
+            $phpFormat = $relatedPHPFormat;
+        } else {
+            $phpFormat = $this->getPHPDatePattern();
+        }
         // Special chars that need to be escaped in the DatePicker format string
         $datepickerSpecials = ['d', 'o', 'D', 'm', 'M', 'y', '@', '!', '\''];
         // Map from php to DatePicker format
@@ -779,6 +780,49 @@ class Date
         return \Punic\Calendar::has12HoursClock() ? 12 : 24;
     }
 
+    public function getPHPDatePattern()
+    {
+        $isoFormat = \Punic\Calendar::getDateFormat('short');
+        $result = \Punic\Calendar::tryConvertIsoToPhpFormat($isoFormat);
+        if ($result === null) {
+            $result = t(/*i18n: Short date format: see http://www.php.net/manual/en/function.date.php */ 'n/j/Y');
+        }
+
+        return $result;
+    }
+
+    /**
+     * Get the PHP date format string for times.
+     *
+     * @return string
+     */
+    public function getPHPTimePattern()
+    {
+        $isoFormat = \Punic\Calendar::getTimeFormat('short');
+        $result = \Punic\Calendar::tryConvertIsoToPhpFormat($isoFormat);
+        if ($result === null) {
+            $result = t(/*i18n: Short time format: see http://www.php.net/manual/en/function.date.php */ 'g.i A');
+        }
+
+        return $result;
+    }
+
+    /**
+     * Get the PHP date format string for dates/times.
+     *
+     * @return string
+     */
+    public function getPHPDateTimePattern()
+    {
+        $isoFormat = \Punic\Calendar::getDateTimeFormat('short');
+        $result = \Punic\Calendar::tryConvertIsoToPhpFormat($isoFormat);
+        if ($result === null) {
+            $result = t(/*i18n: Short date/time format: see http://www.php.net/manual/en/function.date.php */ 'n/j/Y g.i A');
+        }
+
+        return $result;
+    }
+
     /**
      * @deprecated
      */
@@ -806,7 +850,7 @@ class Date
                 }
             }
         }
-        if (Localization::activeLocale() != 'en_US') {
+        if (Localization::activeLocale() != Localization::BASE_LOCALE) {
             return $this->dateTimeFormatLocal($datetime, $mask);
         } else {
             return $datetime->format($mask);
@@ -827,7 +871,7 @@ class Date
         }
         $datetime = new \DateTime($userDateTime);
 
-        $timezone = Config::get('app.timezone');
+        $timezone = \Core::make('site')->getSite()->getConfigRepository()->get('timezone');
         if ($timezone) {
             $tz = new \DateTimeZone($timezone);
 
@@ -859,7 +903,7 @@ class Date
                 }
             }
         }
-        if (Localization::activeLocale() != 'en_US') {
+        if (Localization::activeLocale() != Localization::BASE_LOCALE) {
             return $this->dateTimeFormatLocal($datetime, $mask);
         } else {
             return $datetime->format($mask);

@@ -42,6 +42,8 @@ class URLTest extends PHPUnit_Framework_TestCase
         Config::set('concrete.seo.url_rewriting', false);
         Config::set('concrete.seo.url_rewriting_all', false);
         $this->oldUrl = Config::get('concrete.seo.canonical_url');
+        Config::set('concrete.seo.canonical_url', 'http://dummyurl.com');
+        Core::clearCaches();
 
         parent::setUp();
     }

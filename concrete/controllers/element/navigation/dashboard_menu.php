@@ -33,6 +33,13 @@ class DashboardMenu extends Menu
         }
     }
 
+    protected function getPageList($parent)
+    {
+        $list = parent::getPageList($parent);
+        $list->includeSystemPages();
+        return $list;
+    }
+
     public function getMenuItemClass(Page $page)
     {
         $class = parent::getMenuItemClass($page);

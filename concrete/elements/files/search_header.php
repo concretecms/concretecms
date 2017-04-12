@@ -37,7 +37,7 @@
             <?=$form->hidden('currentFolder', $currentFolder);?>
             <div class="form-group">
                 <?=$form->label('folderName', t('Folder Name'))?>
-                <?=$form->text('folderName')?>
+                <?=$form->text('folderName', '', array('autofocus' => true))?>
             </div>
         </form>
         <div class="dialog-buttons">

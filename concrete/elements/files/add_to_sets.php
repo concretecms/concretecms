@@ -21,7 +21,7 @@ $sets = FileSet::getMySets();
 				<label>
 				<?php echo $getCheckbox($fs);
         ?>
-				<span data-label="file-set-name"><?=$fs->getFileSetName()?></span>
+				<span data-label="file-set-name"><?=$fs->getFileSetDisplayName()?></span>
 				</label>
 			</div>
 			<?php 

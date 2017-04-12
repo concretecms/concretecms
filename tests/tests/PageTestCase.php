@@ -1,17 +1,34 @@
 <?php
 
-use Concrete\Core\Attribute\Key\Category;
-
 abstract class PageTestCase extends ConcreteDatabaseTestCase
 {
     protected $fixtures = array();
-    protected $tables = array('Pages', 'PageThemes', 'PermissionKeys', 'PermissionKeyCategories', 'PageTypes',
-        'Collections', 'CollectionVersions', 'CollectionVersionFeatureAssignments',
-        'CollectionVersionBlockStyles', 'CollectionVersionThemeCustomStyles',
-        'CollectionVersionRelatedEdits', 'CollectionVersionAreaStyles', 'PermissionAccessEntityTypes',
-        'PagePermissionAssignments', 'CollectionVersionBlocks', 'Areas', 'PageSearchIndex', 'ConfigStore',
-        'GatheringDataSources', 'Logs', 'PageTypePublishTargetTypes', 'AttributeKeyCategories',
-        'PageTypeComposerOutputBlocks', ); // so brutal
+    protected $tables = [
+        'Pages',
+        'PageThemes',
+        'PermissionKeys',
+        'PermissionKeyCategories',
+        'PageTypes',
+        'Collections',
+        'CollectionVersions',
+        'CollectionVersionFeatureAssignments',
+        'CollectionVersionBlockStyles',
+        'CollectionVersionThemeCustomStyles',
+        'CollectionVersionRelatedEdits',
+        'CollectionVersionAreaStyles',
+        'PermissionAccessEntityTypes',
+        'PagePermissionAssignments',
+        'CollectionVersionBlocks',
+        'Areas',
+        'PageSearchIndex',
+        'ConfigStore',
+        'GatheringDataSources',
+        'Logs',
+        'PageTypePublishTargetTypes',
+        'AttributeKeyCategories',
+        'PageTypeComposerOutputBlocks',
+        'PageTypeComposerFormLayoutSets'
+    ]; // so brutal
 
     protected $metadatas = array(
         'Concrete\Core\Entity\Site\Site',
@@ -29,13 +46,15 @@ abstract class PageTestCase extends ConcreteDatabaseTestCase
         'Concrete\Core\Entity\Attribute\Key\Key',
     );
 
-    protected function setUp()
+    public static function setUpBeforeClass()
     {
-        parent::setUp();
+        parent::setUpBeforeClass();
+
         $service = \Core::make('site/type');
         if (!$service->getDefault()) {
             $service->installDefault();
         }
+
         $service = \Core::make('site');
         if (!$service->getDefault()) {
             $service->installDefault();
@@ -44,10 +63,14 @@ abstract class PageTestCase extends ConcreteDatabaseTestCase
         Page::addHomePage();
         PageTemplate::add('full', 'Full');
         PageType::add(array(
-                'handle' => 'basic',
-                'name' => 'Basic',
-            ));
+            'handle' => 'basic',
+            'name' => 'Basic',
+        ));
+    }
 
+    public function setUp()
+    {
+        parent::setUp();
     }
 
     protected static function createPage($name, $parent = false, $type = false, $template = false)
@@ -69,7 +92,7 @@ abstract class PageTestCase extends ConcreteDatabaseTestCase
         }
 
         if ($template === false) {
-            $template = 1;
+            $template = 'full';
         }
 
         if (is_string($template)) {

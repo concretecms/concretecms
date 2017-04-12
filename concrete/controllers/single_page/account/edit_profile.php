@@ -11,23 +11,21 @@ use Concrete\Core\Authentication\AuthenticationTypeFailureException;
 use Loader;
 use User;
 use UserAttributeKey;
-use Localization;
+use Concrete\Core\Localization\Localization;
 
 class EditProfile extends AccountPageController
 {
     public function view()
     {
-        $u = new User();
-        $profile = UserInfo::getByID($u->getUserID());
-        if (is_object($profile)) {
-            $this->set('profile', $profile);
-        } else {
+        $profile = $this->get('profile');
+        if (!is_object($profile)) {
             throw new Exception(t('You must be logged in to access this page.'));
         }
+
         $locales = array();
         $languages = Localization::getAvailableInterfaceLanguages();
         if (count($languages) > 0) {
-            array_unshift($languages, 'en_US');
+            array_unshift($languages, Localization::BASE_LOCALE);
         }
         if (count($languages) > 0) {
             foreach ($languages as $lang) {

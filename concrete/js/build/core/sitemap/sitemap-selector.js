@@ -9,6 +9,7 @@
                 'inputName': 'cID',
                 'selected': 0,
                 'startingPoint': 1,
+                'siteTreeID': 0,
                 'token': '',
                 filters: {}
             }, options);
@@ -20,6 +21,7 @@
         my.$element.concreteSitemap({
             selectMode: my.options.mode,
             minExpandLevel: 0,
+            siteTreeID: my.options.siteTreeID,
             dataSource: CCM_DISPATCHER_FILENAME + '/ccm/system/page/select_sitemap',
             ajaxData: {
                 'startingPoint': my.options.startingPoint,

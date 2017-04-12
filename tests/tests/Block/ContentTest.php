@@ -4,11 +4,12 @@ class ContentTest extends BlockTypeTestCase
 {
     protected $btHandle = 'content';
 
-    protected function setUp()
+    public function __construct($name = null, array $data = array(), $dataName = '')
     {
+        parent::__construct($name, $data, $dataName);
+
         $this->tables[] = 'SystemContentEditorSnippets';
         $this->tables[] = 'btContentLocal';
-        parent::setUp();
     }
 
     protected $requestData = array(

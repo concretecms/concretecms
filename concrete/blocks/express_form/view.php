@@ -1,8 +1,4 @@
-<?php defined('C5_EXECUTE') or die("Access Denied.");
-
-    $renderer = Core::make('Concrete\Core\Express\Form\StandardFormRenderer', ['form' => $expressForm]);
-
-?>
+<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
 <div class="ccm-block-express-form">
     <div class="ccm-form">
         <a name="form<?=$bID?>"></a>
@@ -22,10 +18,7 @@
 
         <form enctype="multipart/form-data" class="form-stacked" method="post" action="<?=$view->action('submit')?>#form<?=$bID?>">
         <?php
-        if (is_object($renderer)) {
-            $renderer->setRequiredHtmlElement('<span class="text-muted small">' . t('Required') . '</span>');
-            print $renderer->render();
-        }
+        print $renderer->render();
 
         if ($displayCaptcha) {
             $captcha = \Core::make('helper/validation/captcha');

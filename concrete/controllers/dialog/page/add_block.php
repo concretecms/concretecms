@@ -67,7 +67,7 @@ class AddBlock extends BackendInterfacePageController
                 $this->area->setCustomTemplate($btHandle, $template);
             }
         }
-        $bv->addScopeItems(array('a' => $this->a, 'cp' => $this->permissions, 'ap' => $this->areaPermissions));
+        $bv->addScopeItems(array('a' => isset($this->a) ? $this->a : null, 'cp' => $this->permissions, 'ap' => $this->areaPermissions));
         $this->set('blockView', $bv);
         $this->set('blockType', $this->blockType);
         $this->set('btHandle', $this->blockType->getBlockTypeHandle());
@@ -106,6 +106,7 @@ class AddBlock extends BackendInterfacePageController
                     $xvc->relateVersionEdits($nvc);
                 }
 
+                $db = null;
                 // now we check to see if there's a block in this area that we are adding it after.
                 if ($_REQUEST['dragAreaBlockID'] > 0 && Loader::helper('validation/numbers')->integer(
                                                               $_REQUEST['dragAreaBlockID'])

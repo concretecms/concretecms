@@ -139,7 +139,7 @@
                         },
                         success: function (r) {
                             if (!copyNodes) {
-                                $sourceItems.remove();
+                                my.reloadFolder();
                             }
                             ConcreteAlert.notify({
                                 'message': r.message,
@@ -268,17 +268,7 @@
                     if (errors.length) {
                         ConcreteAlert.dialog(ccmi18n_filemanager.uploadFailed, error_template({errors: errors}));
                     } else {
-                        var canAdd = false;
-                        _.each(files, function(file) {
-                            if (file.canEditFileProperties) {
-                                canAdd = true;
-                            }
-                        });
-                        if (canAdd) {
-                            my._launchUploadCompleteDialog(files);
-                        } else {
-                            my.reloadFolder();
-                        }
+                        my._launchUploadCompleteDialog(files);
                         files = [];
                     }
                 }
@@ -299,7 +289,10 @@
                 height: 500,
                 modal: true,
                 title: ccmi18n_filemanager.addFiles,
-                href: CCM_DISPATCHER_FILENAME + '/tools/required/files/import?currentFolder=' + my.currentFolder
+                href: CCM_DISPATCHER_FILENAME + '/tools/required/files/import?currentFolder=' + my.currentFolder,
+                onClose: function() {
+                    my.reloadFolder();
+                }
             });
         });
 
@@ -452,6 +445,8 @@
         var my = this;
         my.$element.find('a[data-launch-dialog=add-file-manager-folder]').on('click', function() {
             $('div[data-dialog=add-file-manager-folder] input[name=currentFolder]').val(my.currentFolder);
+            $('div[data-dialog=add-file-manager-folder] input[name=folderName]').val('');
+            
             jQuery.fn.dialog.open({
                 element: 'div[data-dialog=add-file-manager-folder]',
                 modal: true,
@@ -459,6 +454,13 @@
                 title: 'Add Folder',
                 height: 'auto'
             });
+
+            $('div[data-dialog=add-file-manager-folder]').on('dialogopen', function(){
+                var $this = $(this);
+                $this.off('dialogopen');
+                $this.find('[autofocus]').focus();
+            });
+
         });
     }
 

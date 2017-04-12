@@ -2,12 +2,11 @@
 namespace Concrete\Controller\SinglePage\Dashboard;
 
 use Concrete\Core\Page\Controller\DashboardPageController;
-use Concrete\Core\Routing\RedirectResponse;
 
 class Users extends DashboardPageController
 {
-    public function validateRequest()
+    public function view()
     {
-        return new RedirectResponse($this->app->make('url/manager')->resolve(['/dashboard/users/search']));
+        $this->redirect('/dashboard/users/search');
     }
 }

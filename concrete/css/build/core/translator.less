@@ -3,7 +3,6 @@
 		.panel-heading span {
 			float: left;
 			width: 50%;
-			height: 20px;
 			overflow: hidden;
 		}
 		ul {
@@ -27,6 +26,44 @@
 	.ccm-translator-col-translations {
 		> .panel {
 			visibility: hidden;
+		}
+		div.ccm-translator-original {
+			min-height: 20px;
+			height: auto;
+			span.ccm-translator-original-space {
+				display: inline-block;
+				width: 0.4em;
+				&:after {
+					content: '\b7';
+					margin-left:0.05em;
+					opacity:0.4;
+				}
+			}
+			span.ccm-translator-original-tab {
+				display: inline-block;
+				width: 1.0em;
+				&:after {
+					content: '\21b9';
+					font-size:80%;
+					margin-left:0.2em;
+					opacity:0.4;
+				}
+			}
+			span.ccm-translator-original-lf {
+				&:before {
+					content: '\23ce';
+					width:10px;
+					opacity:0.4;
+					display:inline-block;
+				}
+			}
+			span.ccm-translator-original-copy {
+				cursor:pointer;
+				color: #c7254e;
+				background-color: #f9f2f4;
+				border-radius: 4px;
+				font-family:monospace;
+			}
 		}
 	}
 }

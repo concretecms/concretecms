@@ -1,16 +1,19 @@
 <?php
 namespace Concrete\Core\Attribute\Context;
 
-class Context implements ContextInterface
+use Concrete\Core\Entity\Attribute\Key\Key;
+use Concrete\Core\Entity\Attribute\Value\AbstractValue;
+use Concrete\Core\Filesystem\TemplateLocator;
+
+abstract class Context implements ContextInterface
 {
 
     protected $actions = [];
-
-    protected $templates = [];
+    protected $controlTemplates = [];
 
     public function preferTemplateIfAvailable($template, $pkgHandle = null)
     {
-        array_unshift($this->templates, [$template, $pkgHandle]);
+        array_unshift($this->controlTemplates, [$template, $pkgHandle]);
     }
 
     public function preferActionIfAvailable($action)
@@ -20,7 +23,7 @@ class Context implements ContextInterface
 
     public function includeTemplateIfAvailable($template, $pkgHandle = null)
     {
-        $this->templates[] = [$template, $pkgHandle];
+        $this->controlTemplates[] = [$template, $pkgHandle];
     }
 
     public function runActionIfAvailable($action)
@@ -39,9 +42,20 @@ class Context implements ContextInterface
     /**
      * @return array
      */
-    public function getTemplates()
+    public function getControlTemplates()
     {
-        return $this->templates;
+        return $this->controlTemplates;
     }
+
+    public function setLocation(TemplateLocator $locator)
+    {
+        return $locator;
+    }
+
+    public function render(Key $key, $value = null)
+    {
+        return;
+    }
+
 
 }

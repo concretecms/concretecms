@@ -13,14 +13,17 @@ class History extends Object
     {
         return $this->timestamp;
     }
+
     public function getWorkflowProgressHistoryID()
     {
         return $this->wphID;
     }
+
     public function getWorkflowProgressID()
     {
         return $this->wpID;
     }
+
     public function getWorkflowProgressHistoryInnerObject()
     {
         return $this->object;
@@ -31,8 +34,13 @@ class History extends Object
         if ($this->object instanceof Request) {
             $d = $this->object->getWorkflowRequestDescriptionObject();
             $ui = UserInfo::getByID($this->object->getRequesterUserID());
+            if (is_object($ui)) {
+                $userName = $ui->getUserName();
+            } else {
+                $userName = t('(Deleted User)');
+            }
 
-            return $d->getDescription() . ' ' . t('Originally requested by %s.', $ui->getUserName());
+            return $d->getDescription() . ' ' . t('Originally requested by %s.', $userName);
         }
         if ($this->object instanceof HistoryEntry) {
             $d = $this->object->getWorkflowProgressHistoryDescription();
@@ -44,8 +52,8 @@ class History extends Object
     public static function getList(Progress $wp)
     {
         $db = Loader::db();
-        $r = $db->Execute('select wphID from WorkflowProgressHistory where wpID = ? order by timestamp desc', array($wp->getWorkflowProgressID()));
-        $list = array();
+        $r = $db->Execute('select wphID from WorkflowProgressHistory where wpID = ? order by timestamp desc', [$wp->getWorkflowProgressID()]);
+        $list = [];
         while ($row = $r->FetchRow()) {
             $obj = $wp->getWorkflowProgressHistoryObjectByID($row['wphID']);
             if (is_object($obj)) {

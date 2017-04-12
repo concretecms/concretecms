@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Core\Entity\Block\BlockType;
 
-use Block;
+use Concrete\Core\Block\Block;
 use BlockTypeSet;
 use Concrete\Block\CoreStackDisplay\Controller;
 use Concrete\Core\Block\BlockType\BlockTypeList;
@@ -429,7 +429,7 @@ class BlockType
      *
      * @return TemplateFile[]
      */
-    public function getBlockTypeCustomTemplates()
+    public function getBlockTypeCustomTemplates(Block $b)
     {
         $btHandle = $this->getBlockTypeHandle();
         $fh = Loader::helper('file');
@@ -437,6 +437,32 @@ class BlockType
         $dir = DIR_FILES_BLOCK_TYPES . "/{$btHandle}/" . DIRNAME_BLOCK_TEMPLATES;
         if (is_dir($dir)) {
             $files = array_merge($files, $fh->getDirectoryContents($dir));
+        }
+
+        // Next, check the current theme.
+        $c = $b->getBlockCollectionObject();
+        if (is_object($c)) {
+            $theme = $c->getCollectionThemeObject();
+            if (is_object($theme)) {
+                $dir = DIR_FILES_THEMES . "/" . $theme->getThemeHandle() . "/" . DIRNAME_BLOCKS . "/" . $btHandle . "/" . DIRNAME_BLOCK_TEMPLATES;
+                if (is_dir($dir)) {
+                    $files = array_merge($files, $fh->getDirectoryContents($dir));
+                }
+
+                if ($theme->getPackageHandle()) {
+                    $dir =
+                        (is_dir(DIR_PACKAGES . '/' . $theme->getPackageHandle()) ? DIR_PACKAGES : DIR_PACKAGES_CORE)
+                        . '/' . $theme->getPackageHandle() . '/' . DIRNAME_THEMES . '/' . $theme->getThemeHandle() . '/' . DIRNAME_BLOCKS . '/' . $btHandle . '/' . DIRNAME_BLOCK_TEMPLATES;
+                    if (is_dir($dir)) {
+                        $files = array_merge($files, $fh->getDirectoryContents($dir));
+                    }
+                }
+
+                $dir = DIR_FILES_THEMES_CORE . "/" . $theme->getThemeHandle() . "/" . DIRNAME_BLOCKS . "/" . $btHandle . "/" . DIRNAME_BLOCK_TEMPLATES;
+                if (is_dir($dir)) {
+                    $files = array_merge($files, $fh->getDirectoryContents($dir));
+                }
+            }
         }
         // NOW, we check to see if this btHandle has any custom templates that have been installed as separate packages
         foreach (PackageList::get()->getPackages() as $pkg) {

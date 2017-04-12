@@ -56,7 +56,7 @@ class Service
         return $locale;
     }
 
-    public function updatePluralSettings(Locale $l, $numPlurals = null, $pluralRule = '', $pluralCases = [])
+    public function updatePluralSettings(LocaleInterface $l, $numPlurals = null, $pluralRule = '', $pluralCases = [])
     {
         if (empty($numPlurals) || ($pluralRule === '') || (empty($pluralCases))) {
             $locale = $l->getLocale();

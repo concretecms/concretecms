@@ -6,7 +6,6 @@ use Concrete\Core\Http\ResponseAssetGroup;
 use Concrete\Core\File\EditResponse as FileEditResponse;
 use FileAttributeKey;
 use Permissions;
-use Loader;
 use File;
 
 class Properties extends BackendInterfaceController
@@ -14,11 +13,11 @@ class Properties extends BackendInterfaceController
     protected $viewPath = '/dialogs/file/bulk/properties';
     protected $controllerActionPath = '/ccm/system/dialogs/file/bulk/properties';
     protected $files;
-    protected $canEdit = false;
+    protected $canAccess = false;
 
     protected function canAccess()
     {
-        return $this->canEdit;
+        return $this->canAccess;
     }
 
     protected function setFiles($files)
@@ -26,32 +25,40 @@ class Properties extends BackendInterfaceController
         $this->files = $files;
     }
 
+    protected function checkPermissions($file)
+    {
+        $fp = new Permissions($file);
+
+        return $fp->canEditFileProperties();
+    }
+
     public function on_start()
     {
         parent::on_start();
         if (!isset($this->files)) {
-            $this->files = array();
+            $this->files = [];
         }
 
-        if (is_array($_REQUEST['fID'])) {
-            foreach ($_REQUEST['fID'] as $fID) {
+        $requestFID = $this->request->get('fID');
+        if (is_array($requestFID)) {
+            foreach ($requestFID as $fID) {
                 $f = File::getByID($fID);
-                if (is_object($f) && !$f->isError()) {
+                if ($f !== null) {
                     $this->files[] = $f;
                 }
             }
         }
 
-        if (count($this->files) > 0) {
-            $this->canEdit = true;
+        if (!empty($this->files)) {
+            $this->canAccess = true;
             foreach ($this->files as $f) {
-                $fp = new Permissions($f);
-                if (!$fp->canEditFileProperties()) {
-                    $this->canEdit = false;
+                if (!$this->checkPermissions($f)) {
+                    $this->canAccess = false;
+                    break;
                 }
             }
         } else {
-            $this->canEdit = false;
+            $this->canAccess = false;
         }
     }
 
@@ -59,7 +66,7 @@ class Properties extends BackendInterfaceController
     {
         $r = ResponseAssetGroup::get();
         $r->requireAsset('core/app/editable-fields');
-        $form = Loader::helper('form');
+        $form = $this->app->make('helper/form');
         $attribs = FileAttributeKey::getList();
         $this->set('files', $this->files);
         $this->set('attributes', $attribs);
@@ -68,9 +75,10 @@ class Properties extends BackendInterfaceController
     public function updateAttribute()
     {
         $fr = new FileEditResponse();
-        $ak = FileAttributeKey::get($_REQUEST['name']);
         if ($this->validateAction()) {
-            if ($this->canEdit) {
+            if ($this->canAccess) {
+                $name = $this->request->get('name');
+                $ak = FileAttributeKey::getByID($name);
                 foreach ($this->files as $f) {
                     $fv = $f->getVersionToModify();
                     $controller = $ak->getController();
@@ -81,7 +89,7 @@ class Properties extends BackendInterfaceController
 
                 $fr->setFiles($this->files);
                 $val = $f->getAttributeValueObject($ak);
-                $fr->setAdditionalDataAttribute('value',  $val->getDisplayValue());
+                $fr->setAdditionalDataAttribute('value', $val->getDisplayValue());
                 $fr->setMessage(t('Files updated successfully.'));
             }
         }
@@ -91,16 +99,17 @@ class Properties extends BackendInterfaceController
     public function clearAttribute()
     {
         $fr = new FileEditResponse();
-        $ak = FileAttributeKey::get($_REQUEST['akID']);
         if ($this->validateAction()) {
-            if ($this->canEdit) {
+            if ($this->canAccess) {
+                $akID = $this->request->get('akID');
+                $ak = FileAttributeKey::get($akID);
                 foreach ($this->files as $f) {
                     $fv = $f->getVersionToModify();
                     $fv->clearAttribute($ak);
                     $f->reindex();
                 }
                 $fr->setFiles($this->files);
-                $fr->setAdditionalDataAttribute('value',  false);
+                $fr->setAdditionalDataAttribute('value', false);
                 $fr->setMessage(t('Attributes cleared successfully.'));
             }
         }

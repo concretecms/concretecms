@@ -2,6 +2,7 @@
 namespace Concrete\Core\Conversation\Discussion;
 
 use Loader;
+use Core;
 use Concrete\Core\Foundation\Object;
 use Page;
 
@@ -44,7 +45,7 @@ class Discussion extends Object
     }
     public function getConversationDiscussionDateTimeOutput()
     {
-        return tc('Message posted date', 'Posted on %s', Loader::helper('date')->date('F d, Y \a\t g:i a', strtotime($this->cnvDiscussionDateCreated)));
+        return tc('Message posted date', 'Posted on %s', Core::make('date')->formatDateTime($this->cnvDiscussionDateCreated, true));
     }
 
     public static function getByID($cnvDiscussionID)

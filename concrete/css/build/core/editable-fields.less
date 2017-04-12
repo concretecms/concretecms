@@ -29,6 +29,58 @@ div[data-container=editable-fields] {
 
         }
     }
+
+    /*
+     * Editable attribute hover background
+     */
+    .editable-attribute-wrapper {
+        .editable-attribute-display-name {
+            padding: 8px 0 8px 0;
+            margin-bottom: 2px;
+        }
+
+        div[data-editable-field-inline-commands] {
+            .editable-attribute-field-inline {
+                padding: 8px;
+                margin-bottom: 2px;
+
+                &:hover {
+                    background: #e7e7e7;
+                    border-radius: 4px;
+                    transition: background-color .1s linear;
+
+                    .editable-empty {
+                        color: #666;
+                    }
+
+                    ul.ccm-edit-mode-inline-commands {
+                        opacity: 1;
+                        background-color: transparent;
+                        right: 15px;
+                        top: 4px;
+                        font-size: 16px;
+
+                        li a {
+                            width: 30px !important;
+                            height: 30px !important;
+
+                            &:hover {
+                                color: #0088cc !important;
+                                transition: background-color .1s linear;
+                            }
+
+                            i {
+                                font-size: 16px !important;
+                                top: 8px;
+                                left: 9px;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     /**
      * Editable images
      */

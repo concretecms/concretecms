@@ -160,7 +160,10 @@ class Controller extends BlockController
         }
 
         if ($this->filterByCustomTopic) {
-            $this->list->filterByTopic(intval($this->customTopicTreeNodeID));
+            $ak = CollectionKey::getByHandle($this->customTopicAttributeKeyHandle);
+            if (is_object($ak)) {
+                $ak->getController()->filterByAttribute($this->list, $this->customTopicTreeNodeID);
+            }
         }
 
         $this->list->filterByExcludePageList(false);
@@ -313,7 +316,8 @@ class Controller extends BlockController
             $this->list->filterByPublicDate($end, '<=');
 
             $seo = Core::make('helper/seo');
-            $seo->addTitleSegment($dh->date('F Y', $start));
+            $date = ucfirst(\Punic\Calendar::getMonthName($month, 'wide', '', true).' '.$year);
+            $seo->addTitleSegment($date);
         }
         $this->view();
     }

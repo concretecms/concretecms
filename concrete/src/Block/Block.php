@@ -285,20 +285,20 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
             $row = $r->fetchRow();
             $cID = $row['cID'];
             $nc = Page::getByID($cID, "ACTIVE");
-
-            return $nc;
+            if (is_object($nc) && !$nc->isError()) {
+                return $nc;
+            }
         }
     }
 
-    /*
-     * Returns a path to where the block type's files are located.
-     * @access public
-     * @return string $path
+    /**
+     * Returns the block identifier (if available)
+     *
+     * @return int|null
      */
-
     public function getBlockID()
     {
-        return $this->bID;
+        return isset($this->bID) ? $this->bID : null;
     }
 
     public function setBlockCachedOutput($content, $lifetime, $area)
@@ -954,14 +954,15 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
 
         // Composer specific
         $row = $db->GetRow(
-            'select cID, arHandle, cbDisplayOrder, ptComposerFormLayoutSetControlID from PageTypeComposerOutputBlocks where cID = ? and bID = ? and arHandle = ?',
-            array($ocID, $this->bID, $this->arHandle)
+            'select cID, cvID, arHandle, cbDisplayOrder, ptComposerFormLayoutSetControlID from PageTypeComposerOutputBlocks where cID = ? and cvID = ? and bID = ? and arHandle = ?',
+            array($ocID, $ovID, $this->bID, $this->arHandle)
         );
         if ($row && is_array($row) && $row['cID']) {
             $db->insert(
                 'PageTypeComposerOutputBlocks',
                 array(
                     'cID' => $ncID,
+                    'cvID' => $nvID,
                     'arHandle' => $this->arHandle,
                     'cbDisplayOrder' => $row['cbDisplayOrder'],
                     'ptComposerFormLayoutSetControlID' => $row['ptComposerFormLayoutSetControlID'],

@@ -81,7 +81,7 @@ $(function() {
     <?php 
 } elseif (Config::get('concrete.white_label.background_url')) {
     ?>
-        $.backstretch("<?= Config::get('concrete.urls.background_url') ?>", {
+        $.backstretch("<?= Config::get('concrete.white_label.background_url') ?>", {
             fade: 500
         });
     <?php 

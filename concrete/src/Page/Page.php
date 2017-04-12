@@ -9,6 +9,7 @@ use Concrete\Core\Entity\Site\SiteTree;
 use Concrete\Core\Page\Stack\Stack;
 use Concrete\Core\Page\Theme\Theme;
 use Concrete\Core\Permission\AssignableObjectTrait;
+use Concrete\Core\Site\SiteAggregateInterface;
 use Concrete\Core\Site\Tree\TreeInterface;
 use Concrete\Core\Multilingual\Page\Section\Section;
 use Concrete\Core\Page\Type\Composer\Control\BlockControl;
@@ -54,7 +55,7 @@ use Session;
  * The page object in Concrete encapsulates all the functionality used by a typical page and their contents
  * including blocks, page metadata, page permissions.
  */
-class Page extends Collection implements \Concrete\Core\Permission\ObjectInterface, AssignableObjectInterface, TreeInterface
+class Page extends Collection implements \Concrete\Core\Permission\ObjectInterface, AssignableObjectInterface, TreeInterface, SiteAggregateInterface
 {
     protected $controller;
     protected $blocksAliasedFromMasterCollection = null;
@@ -563,12 +564,12 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         }
     }
 
-    public static function getDrafts()
+    public static function getDrafts(Site $site)
     {
         $db = Database::connection();
         $u = new User();
-        $nc = self::getByPath(Config::get('concrete.paths.drafts'));
-        $r = $db->executeQuery('select Pages.cID from Pages inner join Collections c on Pages.cID = c.cID where cParentID = ? order by cDateAdded desc', [$nc->getCollectionID()]);
+        $nc = self::getByPath(Config::get('concrete.paths.drafts'), 'RECENT', $site);
+        $r = $db->executeQuery('select Pages.cID from Pages inner join Collections c on Pages.cID = c.cID where cParentID = ? and siteTreeID = ? order by cDateAdded desc', [$nc->getCollectionID(), $site->getSiteTreeID()]);
         $pages = [];
         while ($row = $r->FetchRow()) {
             $entry = self::getByID($row['cID']);
@@ -582,7 +583,8 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
 
     public function isPageDraft()
     {
-        $nc = self::getByPath(Config::get('concrete.paths.drafts'));
+        $site = \Core::make('site')->getSite();
+        $nc = self::getByPath(Config::get('concrete.paths.drafts'), 'RECENT', $site);
 
         return $this->getCollectionParentID() == $nc->getCollectionID();
     }
@@ -1157,6 +1159,14 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         return $this->siteTreeID;
     }
 
+    public function getSite()
+    {
+        $tree = $this->getSiteTreeObject();
+        if ($tree instanceof SiteTree) {
+            return $tree->getSite();
+        }
+    }
+
     public function getSiteTreeObject()
     {
         if (!isset($this->siteTree) && $this->getSiteTreeID()) {
@@ -1628,7 +1638,12 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     public function getParentPermissionsCollectionID()
     {
         $db = Database::connection();
-        $v = [$this->cParentID];
+        $cParentID = $this->cParentID;
+        if (!$cParentID) {
+            $cParentID = $this->getSiteHomePageID();
+        }
+
+        $v = [$cParentID];
         $q = 'select cInheritPermissionsFromCID from Pages where cID = ?';
         $ppID = $db->fetchColumn($q, $v);
 
@@ -2264,7 +2279,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
 
         $cDateModified = $dh->getOverridableNow();
 //      if ($this->getPermissionsCollectionID() != $this->getCollectionID() && $this->getPermissionsCollectionID() != $this->getMasterCollectionID()) {
-        if ($this->getPermissionsCollectionID() != $this->getCollectionID()) {
+        if ($this->getPermissionsCollectionID() != $cID) {
             // implicitly, we're set to inherit the permissions of wherever we are in the site.
             // as such, we'll change to inherit whatever permissions our new parent has
             $npID = $nc->getPermissionsCollectionID();
@@ -2273,8 +2288,8 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
                 //as well as all collections beneath it that are set to inherit from this parent
                 // first we do this one
                 $q = 'update Pages set cInheritPermissionsFromCID = ? where cID = ?';
-                $r = $db->executeQuery($q, [$npID, $this->cID]);
-                $this->updatePermissionsCollectionID($this->getCollectionID(), $npID);
+                $r = $db->executeQuery($q, [$npID, $cID]);
+                $this->updatePermissionsCollectionID($cID, $npID);
             }
         }
 
@@ -2291,7 +2306,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
             $this->activate();
             // if we're moving from the trash, we have to activate recursively
             if ($this->isInTrash()) {
-                $childPages = $this->populateRecursivePages([], ['cID' => $this->getCollectionID()], $this->getCollectionParentID(), 0, false);
+                $childPages = $this->populateRecursivePages([], ['cID' => $cID], $this->getCollectionParentID(), 0, false);
                 foreach ($childPages as $page) {
                     $db->executeQuery('update Pages set cIsActive = 1 where cID = ?', [$page['cID']]);
                 }
@@ -2299,9 +2314,9 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         }
 
         if ($nc->getSiteTreeID() != $this->getSiteTreeID()) {
-            $db->executeQuery('update Pages set siteTreeID = ? where cID = ?', [$nc->getSiteTreeID(), $this->getCollectionID()]);
+            $db->executeQuery('update Pages set siteTreeID = ? where cID = ?', [$nc->getSiteTreeID(), $cID]);
             if (!isset($childPages)) {
-                $childPages = $this->populateRecursivePages([], ['cID' => $this->getCollectionID()], $this->getCollectionParentID(), 0, false);
+                $childPages = $this->populateRecursivePages([], ['cID' => $cID], $this->getCollectionParentID(), 0, false);
             }
             foreach ($childPages as $page) {
                 $db->executeQuery('update Pages set siteTreeID = ? where cID = ?', [$nc->getSiteTreeID(), $page['cID']]);
@@ -2309,6 +2324,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         }
 
         $this->siteTreeID = $nc->getSiteTreeID();
+        $this->siteTree = null; // in case we need to get the updated one
         $this->cParentID = $newCParentID;
         $this->movePageDisplayOrderToBottom();
         // run any event we have for page move. Arguments are
@@ -2403,13 +2419,14 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         $res = $db->executeQuery($q, $v);
 
         // Composer specific
-        $rows = $db->fetchAll('select cID, arHandle, cbDisplayOrder, ptComposerFormLayoutSetControlID, bID from PageTypeComposerOutputBlocks where cID = ?',
+        $rows = $db->fetchAll('select cID, cvID, arHandle, cbDisplayOrder, ptComposerFormLayoutSetControlID, bID from PageTypeComposerOutputBlocks where cID = ?',
             [$this->cID]);
         if ($rows && is_array($rows)) {
             foreach ($rows as $row) {
                 if (is_array($row) && $row['cID']) {
                     $db->insert('PageTypeComposerOutputBlocks', [
                         'cID' => $newCID,
+                        'cvID' => $row['cvID'],
                         'arHandle' => $row['arHandle'],
                         'cbDisplayOrder' => $row['cbDisplayOrder'],
                         'ptComposerFormLayoutSetControlID' => $row['ptComposerFormLayoutSetControlID'],
@@ -2433,11 +2450,13 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
                 $q = 'update Pages set cInheritPermissionsFromCID = ? where cID = ?';
                 $v = [$newCID, $newCID];
                 $db->executeQuery($q, $v);
+                $nc2->cInheritPermissionsFromCID = $newCID;
             } elseif ($this->getCollectionInheritance() == 'PARENT') {
                 // we need to clear out any lingering permissions groups (just in case), and set this collection to inherit from the parent
                 $npID = $nc->getPermissionsCollectionID();
                 $q = 'update Pages set cInheritPermissionsFromCID = ? where cID = ?';
                 $db->executeQuery($q, [$npID, $newCID]);
+                $nc2->cInheritPermissionsFromCID = $npID;
             }
 
             $args = [];
@@ -2635,6 +2654,9 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
             } else {
                 $pathString = $this->computeCanonicalPagePath();
             }
+            if (!$pathString) {
+                return ''; // We are allowed to pass in a blank path in the event of the home page being scanned.
+            }
             // ensure that the path is unique
             $suffix = 0;
             $cID = ($this->getCollectionPointerOriginalID() > 0) ? $this->getCollectionPointerOriginalID() : $this->cID;
@@ -2722,7 +2744,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     {
         //this line was added to allow changing the display order of aliases
         if (!intval($cID)) {
-            $cID = $this->getCollectionID();
+            $cID = ($this->getCollectionPointerOriginalID() > 0) ? $this->getCollectionPointerOriginalID() : $this->cID;
         }
         $db = Database::connection();
         $db->executeQuery('update Pages set cDisplayOrder = ? where cID = ?', [$do, $cID]);
@@ -2906,6 +2928,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         $attributes = CollectionKey::getAttributeValues($mc);
         foreach($attributes as $attribute) {
             $value = $attribute->getValueObject();
+            $value = clone $value;
             $nc->setAttribute($attribute->getAttributeKey(), $value);
         }
     }

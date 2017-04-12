@@ -68,7 +68,7 @@
                 url: CCM_DISPATCHER_FILENAME + '/ccm/system/user/get_json',
                 data: {'uID': uID},
                 error: function(r) {
-                    ConcreteAlert.dialog('Error', r.responseText);
+                    ConcreteAlert.dialog('Error', ConcreteAjaxRequest.errorResponseToString(r));
                 },
                 success: function(r) {
                     var user = r.users[0];

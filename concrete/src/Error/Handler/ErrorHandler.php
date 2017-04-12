@@ -49,7 +49,7 @@ class ErrorHandler extends PrettyPageHandler
                 $e = $this->getInspector()->getException();
                 $db = Database::get();
                 if ($db->isConnected()) {
-                    $l = new Logger(LOG_TYPE_EXCEPTIONS);
+                    $l = \Core::make('log/exceptions');
                     $l->emergency(
                         sprintf(
                             "Exception Occurred: %s:%d %s (%d)\n",

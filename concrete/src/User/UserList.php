@@ -2,10 +2,10 @@
 namespace Concrete\Core\User;
 
 use Concrete\Core\Search\ItemList\Database\AttributedItemList as DatabaseItemList;
+use Concrete\Core\Search\Pagination\Pagination;
+use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\User\Group\Group;
 use Pagerfanta\Adapter\DoctrineDbalAdapter;
-use Concrete\Core\Search\Pagination\Pagination;
-use UserInfo as CoreUserInfo;
 
 class UserList extends DatabaseItemList
 {
@@ -49,9 +49,9 @@ class UserList extends DatabaseItemList
             // When uStatus column is selected, we also get the "status" column for
             // multilingual sorting purposes.
             $sql =
-                ", CASE WHEN u.uIsActive = 1 THEN '" . t("Active") . "' " .
-                "WHEN u.uIsValidated = 1 AND u.uIsActive = 0 THEN '". t("Inactive") . "' " .
-                "ELSE '". t("Unvalidated") . "' END AS uStatus";
+                ", CASE WHEN u.uIsActive = 1 THEN '" . t('Active') . "' " .
+                "WHEN u.uIsValidated = 1 AND u.uIsActive = 0 THEN '" . t('Inactive') . "' " .
+                "ELSE '" . t('Unvalidated') . "' END AS uStatus";
         }
         $this->setQuery('SELECT DISTINCT u.uID, u.uName' . $sql . ' FROM Users u ');
     }
@@ -84,15 +84,42 @@ class UserList extends DatabaseItemList
     }
 
     /**
+     * @var UserInfoRepository|null
+     */
+    private $userInfoRepository = null;
+
+    /**
+     * @param UserInfoRepository $value
+     *
+     * @return $this;
+     */
+    public function setUserInfoRepository(UserInfoRepository $value)
+    {
+        $this->userInfoRepository = $value;
+
+        return $this;
+    }
+
+    /**
+     * @return UserInfoRepository
+     */
+    public function getUserInfoRepository()
+    {
+        if ($this->userInfoRepository === null) {
+            $this->userInfoRepository = Application::getFacadeApplication()->make(UserInfoRepository::class);
+        }
+
+        return $this->userInfoRepository;
+    }
+
+    /**
      * @param $queryRow
      *
      * @return \Concrete\Core\User\UserInfo
      */
     public function getResult($queryRow)
     {
-        $ui = CoreUserInfo::getByID($queryRow['uID']);
-
-        return $ui;
+        return $this->getUserInfoRepository()->getByID($queryRow['uID']);
     }
 
     /**
@@ -156,7 +183,22 @@ class UserList extends DatabaseItemList
         $this->query->setParameter('uIsActive', $isActive);
     }
 
-    public function sortByStatus($dir = "asc")
+    /**
+     * Filter list by whether a user is validated or not.
+     *
+     * @param bool $isValidated
+     */
+    public function filterByIsValidated($isValidated)
+    {
+        $this->includeInactiveUsers();
+        if (!$isValidated) {
+            $this->includeUnvalidatedUsers();
+            $this->query->andWhere('u.uIsValidated = :uIsValidated');
+            $this->query->setParameter('uIsValidated', $isValidated);
+        }
+    }
+
+    public function sortByStatus($dir = 'asc')
     {
         $this->sortUserStatus = 1;
         parent::sortBy('uStatus', $dir);
@@ -220,13 +262,16 @@ class UserList extends DatabaseItemList
             $group = \Concrete\Core\User\Group\Group::getByName($group);
         }
 
-        $table = 'ug' . $group->getGroupID();
-        $this->query->leftJoin('u', 'UserGroups', $table, 'u.uID = ' . $table . '.uID AND ' . $table . '.gID = ' . $group->getGroupID());
+        $joinTable = 'ug' . $group->getGroupID();
+        $groupTable = 'g' . $group->getGroupID();
+        $path = $group->getGroupPath();
+        $this->query->leftJoin('u', 'UserGroups', $joinTable, 'u.uID = ' . $joinTable . '.uID');
+        $this->query->leftJoin($joinTable, 'Groups', $groupTable, '(' . $joinTable . '.gID = ' . $groupTable . '.gID and ' . $groupTable . '.gPath like :gPath' . $group->getGroupID() . ')');
+        $this->query->setParameter('gPath' . $group->getGroupID(), $path . '%');
         if ($inGroup) {
-            $this->query->andWhere($table . '.gID = :gID' . $group->getGroupID());
-            $this->query->setParameter('gID' . $group->getGroupID(), $group->getGroupID());
+            $this->query->andWhere($groupTable . '.gID is not null');
         } else {
-            $this->query->andWhere($table . '.gID is null');
+            $this->query->andWhere($groupTable . '.gID is null');
         }
     }
 

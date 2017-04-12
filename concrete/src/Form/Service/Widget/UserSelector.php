@@ -1,6 +1,8 @@
 <?php
 namespace Concrete\Core\Form\Service\Widget;
 
+use Concrete\Core\Permission\Checker;
+use Concrete\Core\User\Avatar\EmptyAvatar;
 use UserInfo;
 use URL;
 use Loader;
@@ -19,6 +21,7 @@ class UserSelector
     {
         $v = \View::getInstance();
         $v->requireAsset('core/users');
+        $permissions = new Checker();
 
         $selectedUID = 0;
         if (isset($_REQUEST[$fieldName])) {
@@ -37,14 +40,48 @@ class UserSelector
 
         $identifier = new \Concrete\Core\Utility\Service\Identifier();
         $identifier = $identifier->getString(32);
-        $html = <<<EOL
-        <div data-user-selector="{$identifier}"></div>
-        <script type="text/javascript">
-        $(function() {
-            $('[data-user-selector={$identifier}]').concreteUserSelector({$args});
-        });
-        </script>
+
+        if ($permissions->canAccessUserSearch()) {
+
+            $html = <<<EOL
+            <div data-user-selector="{$identifier}"></div>
+            <script type="text/javascript">
+            $(function() {
+                $('[data-user-selector={$identifier}]').concreteUserSelector({$args});
+            });
+            </script>
 EOL;
+
+        } else {
+
+            // Read only
+            $ui = false;
+            if ($selectedUID) {
+                $ui = UserInfo::getByID($selectedUID);
+            }
+
+            if (is_object($ui)) {
+                $uName = $ui->getUserDisplayName();
+                $uAvatar = $ui->getUserAvatar()->getPath();
+            } else {
+                $uName = t('(None Selected)');
+                $uAvatar = \Config::get('concrete.icons.user_avatar.default');
+            }
+
+            $html = <<<EOL
+            <div class="ccm-item-selector">
+            <div class="ccm-item-selector-item-selected">
+                <input type="hidden" name="{$fieldName}" value="{$selectedUID}">
+                <div class="ccm-item-selector-item-selected-thumbnail">
+                   <img src="{$uAvatar}" alt="admin" class="u-avatar">
+               </div>
+               <div class="ccm-item-selector-item-selected-title">{$uName}</div>
+           </div>
+           </div>
+EOL;
+
+        }
+
 
         return $html;
     }

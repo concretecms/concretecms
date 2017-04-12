@@ -50,29 +50,43 @@ if ((!$message->isConversationMessageDeleted() && $message->isConversationMessag
                     <?php if ($canEditMessage) {
     ?>
                         <span class="ccm-conversation-message-admin-control ccm-conversation-message-divider"><a href="javascript:void(0)" class="admin-edit" data-conversation-message-id="<?=$message->getConversationMessageID()?>" data-load="edit-conversation-message"><?php echo t('Edit') ?></a></span>
-                    <?php 
+                    <?php
 }
     ?>
                     <?php if ($canDeleteMessage) {
     ?>
                         <span class="ccm-conversation-message-admin-control ccm-conversation-message-divider"><a href="#" class="admin-delete" data-submit="delete-conversation-message" data-conversation-message-id="<?=$message->getConversationMessageID()?>"><?=t('Delete')?></a></span>
-                    <?php 
+                    <?php
 }
     ?>
                     <?php if ($canFlagMessage) {
     ?>
                         <span class="ccm-conversation-message-admin-control ccm-conversation-message-divider"><a href="#" class="admin-flag" data-submit="flag-conversation-message" data-conversation-message-id="<?=$message->getConversationMessageID()?>"><?=t('Flag As Spam')?></a></span>
-                    <?php 
+                    <?php
 }
     ?>
-                <?php 
+                <?php
 }
     ?>
 
 
 			</div>
-			
+
 		</div>
+        <?php
+        if ($review = $message->getConversationMessageReview()) {
+            ?>
+            <div class="ccm-conversation-review">
+                <?php
+                View::element('conversation/message/review', [
+                    'review' => $message->getConversationMessageReview(),
+                    'starsOnly' => true
+                ]);
+                ?>
+            </div>
+            <?php
+        }
+        ?>
 		<div class="ccm-conversation-message-body">
 			<?=$message->getConversationMessageBodyOutput()?>
 		</div>
@@ -100,7 +114,7 @@ if ((!$message->isConversationMessageDeleted() && $message->isConversationMessag
                                 ?>" height="<?php  echo $thumb->height;
                                 ?>" alt="attachment image" />
 						  </div>
-						 <?php 
+						 <?php
                             }
                             ?>
 							<p class="<?php echo $paragraphPadding ?> filename" rel="<?php echo $attachment['cnvMessageAttachmentID'];
@@ -110,12 +124,12 @@ if ((!$message->isConversationMessageDeleted() && $message->isConversationMessag
                                 ?>
                                 <a rel="<?php echo $attachment['cnvMessageAttachmentID'];
                                 ?>" class="attachment-delete ccm-conversation-message-control-icon ccm-conversation-message-admin-control" href="#"><i class="fa fa-trash-o"></i></a>
-                            <?php 
+                            <?php
                             }
                             ?>
                             </p>
 						</div>
-					<?php 
+					<?php
                         }
                         $paragraphPadding = '';
                     }
@@ -128,7 +142,7 @@ if ((!$message->isConversationMessageDeleted() && $message->isConversationMessag
 				<?php if ($enablePosting == Conversation::POSTING_ENABLED && $displayMode == 'threaded') {
     ?>
 					<li><a href="#" data-toggle="conversation-reply" data-post-parent-id="<?=$message->getConversationMessageID()?>"><?=t('Reply')?></a></li>
-				<?php 
+				<?php
 }
     ?>
                 <?php if ($enableCommentRating && $canRateMessage) {
@@ -140,12 +154,12 @@ if ((!$message->isConversationMessageDeleted() && $message->isConversationMessag
         ?>
                         <li><?php echo $ratingType->outputRatingTypeHTML();
         ?></li>
-                    <?php 
+                    <?php
     }
     ?>
                     <li><span class="ccm-conversation-message-rating-score" data-message-rating="<?=$message->getConversationMessageID()?>"><?=$message->getConversationMessageTotalRatingScore();
     ?></span></li>
-              <?php 
+              <?php
 }
     ?>
               <li class="ccm-conversation-social-share"><span class="ccm-conversation-message-divider">|</span></li>
@@ -160,11 +174,11 @@ if ((!$message->isConversationMessageDeleted() && $message->isConversationMessag
               </li>
 
             </ul>
-			<?php 
+			<?php
 }
     ?>
 
 		</div>
 	</div>
-<?php 
+<?php
 } ?>

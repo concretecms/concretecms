@@ -14,13 +14,13 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
     $token = '&' . $valt->getParameter();
     $cID = $c->getCollectionID();
     $permissions = new Permissions($c);
-    
+
     $workflowList = \Concrete\Core\Workflow\Progress\PageProgress::getList($c);
-    
+
     $show_titles = (bool) $config->get('concrete.accessibility.toolbar_titles');
     $show_tooltips = (bool) $config->get('concrete.accessibility.toolbar_tooltips');
     $large_font = (bool) $config->get('concrete.accessibility.toolbar_large_font');
-    
+
     $canApprovePageVersions = $cp->canApprovePageVersions();
     $vo = $c->getVersionObject();
     $pageInUseBySomeoneElse = false;
@@ -35,7 +35,7 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
         echo $app->make('helper/concrete/ui/help')->displayHelpDialogLauncher();
     }
 
-    
+
     if ($cih->showHelpOverlay()) {
         print '<div style="display: none">';
         View::element('help/dialog/introduction');
@@ -439,51 +439,10 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
             }
             $hasPendingPageApproval = false;
 
-            if (is_array($workflowList) && !empty($workflowList)) {
-                ?>
-                    <?php
-                    foreach ($workflowList as $i => $wl) {
-                        $wr = $wl->getWorkflowRequestObject();
-                        $wf = $wl->getWorkflowObject();
-                        $form = '<form data-form="workflow" method="post" action="' . $wl->getWorkflowProgressFormAction() . '">';
-                        $text = $wf->getWorkflowProgressCurrentDescription($wl);
-
-                        $actions = $wl->getWorkflowProgressActions();
-                        $buttons = [];
-                        if (!empty($actions)) { ?>
-                            <?php
-                            foreach ($actions as $act) {
-                                $parameters = 'class="btn btn-xs ' . $act->getWorkflowProgressActionStyleClass() . '" ';
-                                if (!empty($act->getWorkflowProgressActionExtraButtonParameters())) {
-                                    foreach ($act->getWorkflowProgressActionExtraButtonParameters() as $key => $value) {
-                                        $parameters .= $key . '="' . $value . '" ';
-                                    }
-                                }
-
-                                $inner = $act->getWorkflowProgressActionStyleInnerButtonLeftHTML() . ' ' .
-                                $act->getWorkflowProgressActionLabel() . ' ' .
-                                $act->getWorkflowProgressActionStyleInnerButtonRightHTML();
-
-                                if ($act->getWorkflowProgressActionURL() != '') {
-                                    $button = '<a href="' . $act->getWorkflowProgressActionURL() . '" ' . $parameters . '>' . $inner . '</a>';
-                                } else {
-                                    $button = '<button type="submit" name="action_' . $act->getWorkflowProgressActionTask() . '" ' . $parameters . '>' . $inner . '</button>';
-                                }
-
-                                $buttons[] = $button;
-                            }
-                        }
-
-                        echo $cih->notify(array(
-                            'text' => $text,
-                            'type' => 'info',
-                            'form' => $form,
-                            'icon' => 'fa fa-info-circle',
-                            'buttons' => $buttons
-                        ));
-                    }
-                    ?>
-                <?php
+            if (is_array($workflowList)) {
+                View::element('workflow/notifications', [
+                    'workflowList' => $workflowList,
+                ]);
             }
 
             if (!$c->getCollectionPointerID() && (!is_array($workflowList) || empty($workflowList))) {

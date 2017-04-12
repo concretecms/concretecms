@@ -22,6 +22,11 @@ class Manager
         $this->entityManager = $entityManager;
     }
 
+    public function getEntityManager()
+    {
+        return $this->entityManager;
+    }
+
     /**
      * @TODO This function needs to do a better job of computing display order when in use by an
      * owned entity. The problem is if you have an entity like Service owned by Category then if you add

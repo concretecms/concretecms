@@ -47,12 +47,12 @@ abstract class Configuration extends Object
         return 0;
     }
 
-    public function includeChooseTargetForm($pagetype = false, $target = false)
+    public function includeChooseTargetForm($control, $pagetype = false, $target = false)
     {
         Loader::element(
             DIRNAME_PAGE_TYPES . '/' . DIRNAME_ELEMENTS_PAGE_TYPES_PUBLISH_TARGET_TYPES . '/' . DIRNAME_ELEMENTS_PAGE_TYPES_PUBLISH_TARGET_TYPES_FORM . '/' . $this->getPageTypePublishTargetTypeHandle(
             ),
-            array('configuration' => $this, 'target' => $target, 'pagetype' => $pagetype),
+            array('configuration' => $this, 'target' => $target, 'pagetype' => $pagetype, 'control' => $control),
             $this->pkgHandle
         );
     }

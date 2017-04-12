@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Localization\Translator\Adapter\Zend\Translation\Loader\Gettext;
 
 use Concrete\Core\Localization\Translator\Translation\Loader\AbstractTranslationLoader;
@@ -14,14 +13,12 @@ use Concrete\Core\Package\PackageList;
  */
 class PackagesTranslationLoader extends AbstractTranslationLoader
 {
-
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function loadTranslations(TranslatorAdapterInterface $translatorAdapter)
     {
-        $config = $this->app->make('config');
-        if ($config->get('app.bootstrap.packages_loaded') === true) {
+        if ($this->app->isInstalled()) {
             $pkgList = PackageList::get();
             $translator = $translatorAdapter->getTranslator();
             $locale = $translatorAdapter->getLocale();
@@ -34,5 +31,4 @@ class PackagesTranslationLoader extends AbstractTranslationLoader
             }
         }
     }
-
 }
