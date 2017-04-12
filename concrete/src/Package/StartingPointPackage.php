@@ -2,14 +2,17 @@
 namespace Concrete\Core\Package;
 
 use AuthenticationType;
+use Concrete\Block\ExpressForm\Controller as ExpressFormBlockController;
 use Concrete\Core\Backup\ContentImporter;
 use Concrete\Core\Config\Renderer;
 use Concrete\Core\Database\DatabaseStructureManager;
 use Concrete\Core\Entity\Site\Locale;
 use Concrete\Core\File\Filesystem;
 use Concrete\Core\File\Service\File;
+use Concrete\Core\Localization\Localization;
 use Concrete\Core\Mail\Importer\MailImporter;
 use Concrete\Core\Package\Routine\AttachModeInstallRoutine;
+use Concrete\Core\Permission\Access\Access as PermissionAccess;
 use Concrete\Core\Permission\Access\Entity\ConversationMessageAuthorEntity;
 use Concrete\Core\Permission\Access\Entity\GroupEntity as GroupPermissionAccessEntity;
 use Concrete\Core\Permission\Access\Entity\UserEntity;
@@ -18,24 +21,21 @@ use Concrete\Core\Tree\Node\Type\ExpressEntryCategory;
 use Concrete\Core\Tree\Type\ExpressEntryResults;
 use Concrete\Core\Updater\Migrations\Configuration;
 use Concrete\Core\User\Point\Action\Action as UserPointAction;
-use Concrete\Block\ExpressForm\Controller as ExpressFormBlockController;
 use Config;
 use Core;
 use Database;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\Setup;
+use Exception;
 use Group;
 use GroupTree;
 use Hautelook\Phpass\PasswordHash;
 use Package as BasePackage;
 use Page;
-use Concrete\Core\Permission\Access\Access as PermissionAccess;
 use PermissionKey;
+use Throwable;
 use User;
 use UserInfo;
-use Concrete\Core\Localization\Localization;
-use Exception;
-use Throwable;
 
 class StartingPointPackage extends BasePackage
 {
@@ -320,7 +320,7 @@ class StartingPointPackage extends BasePackage
     protected function install_database()
     {
         $db = Database::get();
-        $num = $db->GetCol("show tables");
+        $num = $db->GetCol('show tables');
 
         if (count($num) > 0) {
             throw new \Exception(
@@ -391,18 +391,18 @@ class StartingPointPackage extends BasePackage
         // create the groups our site users
         // specify the ID's since auto increment may not always be +1
         $g1 = Group::add(
-            tc("GroupName", "Guest"),
-            tc("GroupDescription", "The guest group represents unregistered visitors to your site."),
+            tc('GroupName', 'Guest'),
+            tc('GroupDescription', 'The guest group represents unregistered visitors to your site.'),
             false,
             false,
             GUEST_GROUP_ID);
         $g2 = Group::add(
-            tc("GroupName", "Registered Users"),
-            tc("GroupDescription", "The registered users group represents all user accounts."),
+            tc('GroupName', 'Registered Users'),
+            tc('GroupDescription', 'The registered users group represents all user accounts.'),
             false,
             false,
             REGISTERED_GROUP_ID);
-        $g3 = Group::add(tc("GroupName", "Administrators"), "", false, false, ADMIN_GROUP_ID);
+        $g3 = Group::add(tc('GroupName', 'Administrators'), '', false, false, ADMIN_GROUP_ID);
 
         // insert admin user into the user table
         if (defined('INSTALL_USER_PASSWORD')) {
@@ -544,19 +544,19 @@ class StartingPointPackage extends BasePackage
         $u->saveConfig('NEWSFLOW_LAST_VIEWED', 'FIRSTRUN');
 
         // login
-        $login = Page::getByPath('/login', "RECENT");
+        $login = Page::getByPath('/login', 'RECENT');
         $login->assignPermissions($g1, ['view_page']);
 
         // register
-        $register = Page::getByPath('/register', "RECENT");
+        $register = Page::getByPath('/register', 'RECENT');
         $register->assignPermissions($g1, ['view_page']);
 
         // dashboard
-        $dashboard = Page::getByPath('/dashboard', "RECENT");
+        $dashboard = Page::getByPath('/dashboard', 'RECENT');
         $dashboard->assignPermissions($g3, ['view_page']);
 
         // drafts
-        $drafts = Page::getByPath('/!drafts', "RECENT");
+        $drafts = Page::getByPath('/!drafts', 'RECENT');
         $drafts->assignPermissions(
             $g3,
             [
@@ -581,7 +581,7 @@ class StartingPointPackage extends BasePackage
             ]
         );
 
-        $home = Page::getByID(1, "RECENT");
+        $home = Page::getByID(1, 'RECENT');
         $home->assignPermissions($g1, ['view_page']);
         $home->assignPermissions(
             $g3,
