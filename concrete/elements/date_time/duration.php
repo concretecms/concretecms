@@ -184,7 +184,7 @@ for ($i = 0; $i < count($values); $i++) {
             <div class="col-sm-6 ccm-date-time-date-group">
                 <div class="row">
                     <div class="col-sm-12">
-                        <label class="control-label"><?=t('From')?></label>
+                        <label class="control-label"><?=t('From')?></label> <i class="fa fa-info-circle launch-tooltip" title="<?php echo t('Choose Repeat Event and choose a frequency to make this event recurring.')?>"></i>
                     </div>
                 </div>
                 <div class="row">
