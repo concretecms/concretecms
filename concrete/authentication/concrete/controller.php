@@ -326,7 +326,7 @@ class Controller extends AuthenticationTypeController
 
         /** @var \Concrete\Core\Permission\IPService $ip_service */
         $ip_service = Core::make('ip');
-        if ($ip_service->isBanned()) {
+        if ($ip_service->isBlacklisted()) {
             throw new \Exception($ip_service->getErrorMessage());
         }
 
@@ -343,9 +343,9 @@ class Controller extends AuthenticationTypeController
                     break;
                 case USER_INVALID:
                     // Log failed auth
-                    $ip_service->logSignupRequest();
-                    if ($ip_service->signupRequestThresholdReached()) {
-                        $ip_service->createIPBan();
+                    $ip_service->logFailedLogin();
+                    if ($ip_service->failedLoginsThresholdReached()) {
+                        $ip_service->addToBlacklistForThresholdReached();
                         throw new \Exception($ip_service->getErrorMessage());
                     }
 

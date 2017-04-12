@@ -8,7 +8,7 @@ return [
      */
     'version' => '8.2.0a2',
     'version_installed' => '8.2.0a2',
-    'version_db' => '20170404000000', // the key of the latest database migration
+    'version_db' => '20170412000000', // the key of the latest database migration
 
     /*
      * Installation status
@@ -774,21 +774,13 @@ return [
         ],
         'ban' => [
             'ip' => [
+                // Is the automatic ban system enabled?
                 'enabled' => true,
-
-                /*
-                 * Maximum attempts
-                 */
+                // Maximum number of login attempts before banning the IP address
                 'attempts' => 5,
-
-                /*
-                 * Threshold time
-                 */
+                // Time window (in seconds) for past failed login attempts
                 'time' => 300,
-
-                /*
-                 * Ban length in minutes
-                 */
+                // Ban duration (in minutes) when <attempts> failed logins occurred in the past <time> seconds
                 'length' => 10,
             ],
         ],

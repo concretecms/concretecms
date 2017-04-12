@@ -366,8 +366,6 @@ class StartingPointPackage extends BasePackage
 
         $db->Execute('ALTER TABLE PagePaths ADD INDEX (`cPath` (255))');
         $db->Execute('ALTER TABLE Groups ADD INDEX (`gPath` (255))');
-        $db->Execute('ALTER TABLE SignupRequests ADD INDEX (`ipFrom` (32))');
-        $db->Execute('ALTER TABLE UserBannedIPs ADD UNIQUE INDEX (ipFrom (32), ipTo(32))');
     }
 
     protected function add_users()

@@ -1,93 +1,131 @@
 <?php
 namespace Concrete\Core\Permission;
 
-use Concrete\Core\Utility\IPAddress;
-use Concrete\Core\User\UserBannedIp;
-use Request;
-use Concrete\Core\Application\Application;
+use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Database\Connection\Connection;
+use Concrete\Core\Http\Request;
+use Concrete\Core\Utility\IPAddress;
 use DateTime;
-use Concrete\Core\Permission\Event\BanIPEvent;
+use IPLib\Address\AddressInterface;
+use IPLib\Factory as IPFactory;
+use IPLib\Range\RangeInterface;
 
 class IPService
 {
     /**
-     * @var Application
+     * Bit mask for blacklist ranges.
+     *
+     * @var int
      */
-    protected $app;
+    const IPRANGEFLAG_BLACKLIST = 0x0001;
 
     /**
-     * @param Application $app
+     * Bit mask for whitelist ranges.
+     *
+     * @var int
      */
-    public function __construct(Application $app)
+    const IPRANGEFLAG_WHITELIST = 0x0002;
+
+    /**
+     * Bit mask for manually generated ranges.
+     *
+     * @var int
+     */
+    const IPRANGEFLAG_MANUAL = 0x0010;
+
+    /**
+     * Bit mask for automatically generated ranges.
+     *
+     * @var int
+     */
+    const IPRANGEFLAG_AUTOMATIC = 0x0020;
+
+    /**
+     * IP range type: manually added to the blacklist.
+     *
+     * @var int
+     */
+    const IPRANGETYPE_BLACKLIST_MANUAL = 0x0011; // IPRANGEFLAG_BLACKLIST | IPRANGEFLAG_MANUAL
+
+    /**
+     * IP range type: automatically added to the blacklist.
+     *
+     * @var int
+     */
+    const IPRANGETYPE_BLACKLIST_AUTOMATIC = 0x0021; // IPRANGEFLAG_BLACKLIST | IPRANGEFLAG_AUTOMATIC
+
+    /**
+     * IP range type: manually added to the whitelist.
+     *
+     * @var int
+     */
+    const IPRANGETYPE_WHITELIST_MANUAL = 0x0012; // IPRANGEFLAG_WHITELIST | IPRANGEFLAG_MANUAL
+
+    /**
+     * @var Repository
+     */
+    protected $config;
+
+    /**
+     * @var Connection
+     */
+    protected $connection;
+
+    /**
+     * @var Request
+     */
+    protected $request;
+
+    /**
+     * @param Repository $config
+     * @param Connection $connection
+     * @param Request $request
+     */
+    public function __construct(Repository $config, Connection $connection, Request $request)
     {
-        $this->app = $app;
+        $this->config = $config;
+        $this->connection = $connection;
+        $this->request = $request;
     }
 
     /**
-     * DateTime value representing 'ban forever' (ie manual bans).
+     * Get the IP address of the current request.
      *
-     * @var string
+     * @return \IPLib\Address\AddressInterface
      */
-    const FOREVER_BAN_DATETIME = '1000-01-01 00:00:00';
+    public function getRequestIPAddress()
+    {
+        return IPFactory::addressFromString($this->request->getClientIp());
+    }
 
     /**
-     * Check if an IP adress is banned.
-     *
-     * @param IPAddress|mixed $ip The IPAddress instance containing the IP to check (if it's not an IPAddress instance we'll use the current IP address)
-     * @param bool $extraParamString An extra SQL chunk to be added to the final query
-     * @param array $extraParamValues Extra parameters to be passed to the final query
+     * Check if an IP adress is blacklisted.
      *
      * @return bool
      */
-    public function isBanned($ip = false, $extraParamString = false, $extraParamValues = [])
+    public function isBlacklisted(AddressInterface $ip = null)
     {
-        $ip = ($ip instanceof IPAddress) ? $ip : $this->getRequestIP();
-        $db = $this->app->make(Connection::class);
-        //do ip check
-        $q = "SELECT count(expires) as count
-		FROM UserBannedIPs
-		WHERE
-		(
-			(ipFrom = ? AND ipTo = 0)
-			OR
-			(ipFrom <= ? AND ipTo >= ?)
-		)
-		AND (expires = ? OR expires > ?)
-		";
-
-        if ($extraParamString !== false) {
-            $q .= $extraParamString;
+        if ($ip === null) {
+            $ip = $this->getRequestIPAddress();
         }
+        $rangeType = $this->getRangeType($ip);
 
-        $v = [$ip->getIp(), $ip->getIp(), $ip->getIp(), static::FOREVER_BAN_DATETIME, date('Y-m-d H:i:s')];
-        $v = array_merge($v, $extraParamValues);
-
-        $row = $db->fetchAssoc($q, $v);
-
-        return ($row['count'] > 0) ? true : false;
+        return $rangeType !== null && ($rangeType & static::IPRANGEFLAG_BLACKLIST) === static::IPRANGEFLAG_BLACKLIST;
     }
 
     /**
-     * CHeck if an IP address has been manually banned.
-     *
-     * @param IPAddress $ip the IP address to ban
+     * Check if an IP adress is blacklisted.
      *
      * @return bool
      */
-    protected function existsManualPermBan(IPAddress $ip)
+    public function isWhitelisted(AddressInterface $ip = null)
     {
-        return $this->isBanned($ip, ' AND isManual = ? AND expires = ? ', [1, static::FOREVER_BAN_DATETIME]);
-    }
+        if ($ip === null) {
+            $ip = $this->getRequestIPAddress();
+        }
+        $rangeType = $this->getRangeType($ip);
 
-    /**
-     * Get the IPAddress instance containing the IP address of the current request.
-     *
-     * @return IPAddress
-     */
-    public function getRequestIP()
-    {
-        return new IPAddress(Request::getInstance()->getClientIp());
+        return $rangeType !== null && ($rangeType & static::IPRANGEFLAG_WHITELIST) === static::IPRANGEFLAG_WHITELIST;
     }
 
     /**
@@ -97,107 +135,269 @@ class IPService
      */
     public function getErrorMessage()
     {
-        return t(
-            "Unable to complete action: your IP address has been banned. Please contact the administrator of this site for more information."
-        );
+        return t('Unable to complete action: your IP address has been banned. Please contact the administrator of this site for more information.');
     }
 
     /**
      * Add the current IP address to the list of IPs with failed login attempts.
      *
+     * @param AddressInterface $ip the IP address to log (if null, we'll use the current IP address)
      * @param bool $ignoreConfig if set to true, we'll add the record even if the IP ban system is disabled in the configuration
      */
-    public function logSignupRequest($ignoreConfig = false)
+    public function logFailedLogin(AddressInterface $ip = null, $ignoreConfig = false)
     {
-        if ($ignoreConfig || $this->app->make('config')->get('concrete.security.ban.ip.enabled')) {
-            $db = $this->app->make(Connection::class);
-            $ip = $this->getRequestIP();
-            $db->insert('SignupRequests', ['date_access' => date('Y-m-d H:i:s'), 'ipFrom' => $ip->getIp()]);
+        if ($ignoreConfig || $this->config->get('concrete.security.ban.ip.enabled')) {
+            if ($ip === null) {
+                $ip = $this->getRequestIPAddress();
+            }
+            $comparableIP = $ip->getComparableString();
+            $this->connection->executeQuery(
+                '
+                    INSERT INTO FailedLoginAttempts
+                        (flaIp, flaTimestamp)
+                    VALUES
+                        (?, ' . $this->connection->getDatabasePlatform()->getNowExpression() . ')
+                ',
+                [$ip->getComparableString()]
+            );
         }
     }
 
     /**
-     * Check if the current UP address has reached the failed logi attempts threshold.
+     * Check if the current IP address has reached the failed login attempts threshold.
      *
+     * @param AddressInterface $ip the IP address to log (if null, we'll use the current IP address)
      * @param bool $ignoreConfig if set to true, we'll check the IP even if the IP ban system is disabled in the configuration
      *
      * @return bool
      */
-    public function signupRequestThresholdReached($ignoreConfig = false)
+    public function failedLoginsThresholdReached(AddressInterface $ip = null, $ignoreConfig = false)
     {
-        $config = $this->app->make('config');
-        if ($ignoreConfig || $config->get('concrete.security.ban.ip.enabled') == 1) {
-            $db = $this->app->make(Connection::class);
-            $threshold_attempts = $config->get('concrete.security.ban.ip.attempts');
-            $threshold_seconds = $config->get('concrete.security.ban.ip.time');
-            $ip = $this->getRequestIP();
-            $q = 'SELECT count(*) as count
-			FROM SignupRequests
-			WHERE ipFrom = ?
-			AND date_access > DATE_SUB(?, INTERVAL ? SECOND)';
-            $v = [$ip->getIp(), date('Y-m-d H:i:s'), $threshold_seconds];
-
-            $row = $db->fetchAssoc($q, $v);
-            if ($row['count'] >= $threshold_attempts) {
-                return true;
-            } else {
-                return false;
+        $result = false;
+        if ($ignoreConfig || $this->config->get('concrete.security.ban.ip.enabled')) {
+            if ($ip === null) {
+                $ip = $this->getRequestIPAddress();
+            }
+            if (!$this->isWhitelisted($ip)) {
+                $thresholdSeconds = (int) $this->config->get('concrete.security.ban.ip.time');
+                $thresholdTimestamp = new DateTime("-{$thresholdSeconds} seconds");
+                $rs = $this->connection->executeQuery(
+                    '
+                        SELECT
+                            ' . $this->connection->getDatabasePlatform()->getCountExpression('lcirID') . ' AS n
+                        FROM
+                            FailedLoginAttempts
+                        WHERE
+                            flaIp = ?
+                            AND flaTimestamp > ?
+                    ',
+                    [$ip->getComparableString(), $thresholdTimestamp->format($this->connection->getDatabasePlatform()->getDateTimeFormatString())]
+                );
+                $count = $rs->fetchColumn();
+                $rs->closeCursor();
+                $thresholdAttempts = (int) $this->config->get('concrete.security.ban.ip.attempts');
+                if ($count !== false && (int) $count >= $thresholdAttempts) {
+                    $result = true;
+                }
             }
         }
 
-        return false;
+        return $result;
     }
 
     /**
      * Add an IP address to the list of IPs banned for too many failed login attempts.
      *
-     * @param IPAddress|mixed $ip the IPAddress instance containing the IP to check (if it's not an IPAddress instance we'll use the current IP address)
+     * @param AddressInterface $ip the IP to add to the blacklist (if null, we'll use the current IP address)
      * @param bool $ignoreConfig if set to true, we'll add the IP address even if the IP ban system is disabled in the configuration
+     */
+    public function addToBlacklistForThresholdReached(AddressInterface $ip = null, $ignoreConfig = false)
+    {
+        if ($ignoreConfig || $this->config->get('concrete.security.ban.ip.enabled')) {
+            if ($ip === null) {
+                $ip = $this->getRequestIPAddress();
+            }
+            $banDurationMinutes = (int) $this->config->get('concrete.security.ban.ip.length');
+            if ($banDurationMinutes > 0) {
+                $expires = new DateTime("+{$banDurationMinutes} minutes");
+            } else {
+                $expires = null;
+            }
+            $this->createRange(IPFactory::rangeFromBoundaries($ip, $ip), static::IPRANGETYPE_BLACKLIST_AUTOMATIC, $expires);
+        }
+    }
+
+    /**
+     * Add persist an IP address range type.
+     *
+     * @param RangeInterface $range the IP address range to persist
+     * @param int $type The range type (one of the IPService::IPRANGETYPE_... constants)
+     * @param DateTime $expiration The optional expiration of the range type
+     *
+     * @return IPRange
+     */
+    public function createRange(RangeInterface $range, $type, DateTime $expiration = null)
+    {
+        $dateTimeFormat = $this->connection->getDatabasePlatform()->getDateTimeFormatString();
+        $this->connection->executeQuery(
+            '
+                INSERT INTO LoginControlIpRanges
+                    (lcirIpFrom, lcirIpTo, lcirType, lcirExpires)
+                VALUES
+                    (?, ?, ?, ?)
+            ',
+            [
+                $range->getComparableStartString(),
+                $range->getComparableEndString(),
+                $type,
+                ($expiration === null) ? null : $expiration->format($dateTimeFormat),
+            ]
+        );
+        $id = $this->connection->lastInsertId();
+        $rs = $this->connection->executeQuery('SELECT * FROM LoginControlIpRanges WHERE lcirID = ? LIMIT 1', [$id]);
+        $row = $rs->fetch();
+        $rs->closeCursor();
+
+        return IPRange::createFromRow($row, $dateTimeFormat);
+    }
+
+    /**
+     * Get the list of currently available ranges.
+     *
+     * @param int $type (one of the IPService::IPRANGETYPE_... constants)
+     * @param bool $includeExpired Include expired records?
+     *
+     * @return IPRange[]|Generator
+     */
+    public function getRanges($type, $includeExpired = false)
+    {
+        $sql = 'SELECT * FROM LoginControlIpRanges WHERE lcirType = ?';
+        $params = [(int) $type];
+        if (!$includeExpired) {
+            $sql .= ' AND (lcirExpires IS NULL OR lcirExpires > ' . $this->connection->getDatabasePlatform()->getNowExpression() . ')';
+        }
+        $sql .= ' ORDER BY lcirID';
+        $result = [];
+        $dateTimeFormat = $this->connection->getDatabasePlatform()->getDateTimeFormatString();
+        $rs = $this->connection->executeQuery($sql, $params);
+        while (($row = $rs->fetch()) !== false) {
+            yield IPRange::createFromRow($row, $dateTimeFormat);
+        }
+    }
+
+    /**
+     * Find already defined range given its record ID.
+     *
+     * @param int $id
+     *
+     * @return IPRange|null
+     */
+    public function getRangeByID($id)
+    {
+        $result = null;
+        if ($id) {
+            $rs = $this->connection->executeQuery(
+                'SELECT * FROM LoginControlIpRanges WHERE lcirID = ? LIMIT 1',
+                [$id]
+            );
+            $row = $rs->fetch();
+            $rs->closeCursor();
+            if ($row !== false) {
+                $result = IPRange::createFromRow($row, $this->connection->getDatabasePlatform()->getDateTimeFormatString());
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * Delete a range record.
+     *
+     * @param IPRange|int $range
+     */
+    public function deleteRange($range)
+    {
+        if ($range instanceof IPRange) {
+            $id = $range->getID();
+        } else {
+            $id = (int) $range;
+        }
+        if ($id) {
+            $this->connection->executeQuery('DELETE FROM LoginControlIpRanges WHERE lcirID = ? LIMIT 1', [$id]);
+        }
+    }
+
+    /**
+     * Get the range type (if defined) of an IP adress.
+     *
+     * @return int|null One of the IPRANGETYPE_... constants (or null if range is not defined).
+     */
+    protected function getRangeType(AddressInterface $ip)
+    {
+        $comparableIP = $ip->getComparableString();
+        $rs = $this->connection->executeQuery(
+            '
+                SELECT
+                    lcirType
+                FROM
+                    LoginControlIpRanges
+                WHERE
+                    lcirIpFrom <= ? AND ? <= lcirIpTo
+                    AND (lcirExpires IS NULL OR lcirExpires > ' . $this->connection->getDatabasePlatform()->getNowExpression() . ')
+            ',
+            [$comparableIP, $comparableIP]
+        );
+        $type = null;
+        while (($col = $rs->fetchColumn()) !== false) {
+            $type = (int) $col;
+            if (($type & static::IPRANGEFLAG_WHITELIST) === static::IPRANGEFLAG_WHITELIST) {
+                break;
+            }
+        }
+        $rs->closeCursor();
+
+        return $type;
+    }
+
+    /**
+     * @deprecated Use \Core::make('ip')->getRequestIPAddress()
+     */
+    public function getRequestIP()
+    {
+        return new IPAddress(Request::getInstance()->getClientIp());
+    }
+
+    /**
+     * @deprecated Use \Core::make('ip')->isBlacklisted()
+     */
+    public function isBanned($ip = false)
+    {
+        $ipAddress = null;
+        if ($ip instanceof IPAddress) {
+            $ipAddress = IPFactory::addressFromString($ip->getIp(IPAddress::FORMAT_IP_STRING));
+        }
+
+        return $this->isBlacklisted($ipAddress);
+    }
+
+    /**
+     * @deprecated Use \Core::make('ip')->addToBlacklist()
      */
     public function createIPBan($ip = false, $ignoreConfig = false)
     {
-        $config = $this->app->make('config');
-        if ($ignoreConfig || $config->get('concrete.security.ban.ip.enabled') == 1) {
-            $ip = ($ip instanceof IPAddress) ? $ip : $this->getRequestIP();
-
-            $db = $this->app->make(Connection::class);
-
-            //If there's a permanent ban, obey its setting otherwise set up a temporary ban
-            if (!$this->existsManualPermBan($ip)) {
-                //IP_BAN_LOCK_IP_HOW_LONG_MIN of 0 or undefined  means forever
-                $timeOffset = $config->get('concrete.security.ban.ip.length');
-                $timeOffset = $timeOffset ? (int) $timeOffset : 0;
-                if ($timeOffset !== 0) {
-                    $banExpiration = new DateTime();
-                    $banExpiration->modify('+' . $timeOffset . ' minutes');
-                    //$banExpiration = $banExpiration->format('Y-m-d H:i:s');
-                } else {
-                    $banExpiration = null;
-                }
-                $event = new BanIPEvent($ip, $banExpiration);
-                $this->app->make('director')->dispatch('on_ip_ban', $event);
-                if ($event->proceed()) {
-                    $banExpiration = $event->getBanExpiration();
-
-                    $db->beginTransaction();
-                    $q = 'DELETE FROM UserBannedIPs WHERE ipFrom = ? AND ipTo = ? AND isManual = ?';
-                    $v = [$ip->getIp(), 0, 0];
-                    $db->executeQuery($q, $v);
-
-                    if ($banExpiration === null) {
-                        $banUntil = static::FOREVER_BAN_DATETIME;
-                    } else {
-                        $banUntil = $banExpiration->format('Y-m-d H:i:s');
-                    }
-
-                    $q = 'INSERT INTO UserBannedIPs (ipFrom,ipTo,banCode,expires,isManual) VALUES (?,?,?,?,?)';
-                    $v = [$ip->getIp(), 0, UserBannedIp::IP_BAN_CODE_REGISTRATION_THROTTLE, $banUntil, 0];
-                    $db->executeQuery($q, $v);
-
-                    $db->commit();
-                }
-            }
+        $ipAddress = null;
+        if ($ip instanceof IPAddress) {
+            $ipAddress = IPFactory::addressFromString($ip->getIp(IPAddress::FORMAT_IP_STRING));
         }
+        $this->addToBlacklistForThresholdReached($ipAddress, $ignoreConfig);
+    }
+
+    /**
+     * @deprecated Use \Core::make('ip')->logFailedLogin()
+     */
+    public function logSignupRequest($ignoreConfig = false)
+    {
+        $this->logFailedLogin(null, $ignoreConfig);
     }
 
     /**
@@ -205,6 +405,14 @@ class IPService
      */
     public function signupRequestThreshholdReached($ignoreConfig = false)
     {
-        return $this->signupRequestThresholdReached($ignoreConfig);
+        return $this->failedLoginsThresholdReached(null, $ignoreConfig);
+    }
+
+    /**
+     * @deprecated Use \Core::make('ip')->failedLoginsThresholdReached()
+     */
+    public function signupRequestThresholdReached($ignoreConfig = false)
+    {
+        return $this->failedLoginsThresholdReached(null, $ignoreConfig);
     }
 }

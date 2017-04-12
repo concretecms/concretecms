@@ -35,7 +35,7 @@ class ConcreteDatabaseTestCase extends PHPUnit_Extensions_Database_TestCase
     /**
      * Get the connection to use
      *
-     * @return \Doctrine\DBAL\Driver\Connection
+     * @return \Concrete\Core\Database\Connection\Connection
      */
     protected function connection()
     {

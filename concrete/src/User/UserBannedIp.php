@@ -1,8 +1,9 @@
 <?php
 namespace Concrete\Core\User;
 
-use Loader;
-
+/**
+ * @deprecated
+ */
 class UserBannedIp
 {
     protected $unique_keys;
@@ -56,28 +57,11 @@ class UserBannedIp
 
     public function Find($where)
     {
-        $db = Loader::db();
-        $r = $db->Execute('select * from UserBannedIPs where ' . $where);
-        $ips = array();
-        while ($row = $r->FetchRow()) {
-            $ip = new self();
-            $ip = array_to_object(new self(), $row);
-            $ips[] = $ip;
-        }
-
-        return $ips;
+        return [];
     }
 
     public function save()
     {
-        $db = Loader::db();
-        $db->Replace('UserBannedIPs', array(
-            'ipFrom' => $this->ipFrom,
-            'ipTo' => $this->ipTo,
-            'banCode' => $this->banCode,
-            'expires' => $this->expires,
-            'isManual' => $this->isManual,
-        ), array('ipFrom', 'ipTo'));
     }
 
     const IP_BAN_CODE_REGISTRATION_THROTTLE = 1;

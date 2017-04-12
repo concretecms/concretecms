@@ -343,7 +343,7 @@ class Controller extends BlockController
         $ip = Core::make('helper/validation/ip');
         $this->view();
 
-        if ($ip->isBanned()) {
+        if ($ip->isBlacklisted()) {
             $this->set('invalidIP', $ip->getErrorMessage());
 
             return;
