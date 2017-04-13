@@ -12,7 +12,7 @@ class ImageFileValue extends AbstractValue implements FileProviderInterface
 {
     /**
      * @ORM\ManyToOne(targetEntity="\Concrete\Core\Entity\File\File")
-     * @ORM\JoinColumn(name="fID", referencedColumnName="fID")
+     * @ORM\JoinColumn(name="fID", referencedColumnName="fID", onDelete="CASCADE")
      */
     protected $file;
 
