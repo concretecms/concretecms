@@ -8,19 +8,17 @@ class Item implements ItemInterface
     protected $controller = null;
 
     protected $linkAttributes = [];
-    
+
     protected $handle = null;
 
     protected $label = null;
-    
+
     protected $position = null;
-    
-    protected $linkAttributes = null;
-    
+
     protected $href = null;
-    
+
     protected $icon = null;
-    
+
     protected $pkgHandle = null;
 
     public function __construct($handle, $pkgHandle = false)
