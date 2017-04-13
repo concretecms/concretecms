@@ -12,23 +12,11 @@ abstract class AbstractMigration extends DoctrineAbstractMigration
         $this->version->getConfiguration()->getOutputWriter()->write($message);
     }
 
-    protected function refreshEntities($entities)
+    protected function refreshEntities($entities = null)
     {
         // Add tables for new entities or moved entities
         $sm = \Core::make('Concrete\Core\Database\DatabaseStructureManager');
-
-        $em = $this->connection->getEntityManager();
-        $cmf = $em->getMetadataFactory();
-        $metadatas = array();
-        $existingMetadata = $cmf->getAllMetadata();
-        foreach($existingMetadata as $meta) {
-            if (in_array($meta->getName(), $entities)) {
-                $this->output(t('Installing entity %s...', $meta->getName()));
-                $metadatas[] = $meta;
-            }
-        }
-
-        $sm->installDatabaseFor($metadatas);
+        $sm->refreshEntities();
     }
 
     protected function refreshDatabaseTables($tables)
