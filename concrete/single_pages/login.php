@@ -31,6 +31,14 @@ $attribute_mode = (isset($required_attributes) && count($required_attributes));
 ?>
 
 <div class="login-page">
+
+    <?php
+    $disclaimer = new Area('Disclaimer');
+    if ($disclaimer->getTotalBlocksInArea($c) || $c->isEditMode()) { ?>
+        <div class="ccm-login-disclaimer">
+            <?=$disclaimer->display($c);?>
+        </div>
+    <?php } ?>
     <div class="col-sm-6 col-sm-offset-3">
         <h1><?= !$attribute_mode ? t('Sign In.') : t('Required Attributes') ?></h1>
     </div>
