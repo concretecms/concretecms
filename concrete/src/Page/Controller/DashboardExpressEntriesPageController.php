@@ -7,6 +7,7 @@ use Concrete\Core\Express\Entry\Manager;
 use Concrete\Core\Express\Export\EntryList\CsvWriter;
 use Concrete\Core\Express\Form\Context\DashboardFormContext;
 use Concrete\Core\Express\Form\Context\DashboardViewContext;
+use Concrete\Core\Form\Context\Registry\ContextRegistry;
 use Concrete\Core\Express\Form\Renderer;
 use Concrete\Core\Express\EntryList;
 use Concrete\Core\Express\Form\Validator;
@@ -184,8 +185,9 @@ abstract class DashboardExpressEntriesPageController extends DashboardPageContro
         $entity = $entry->getEntity();
         $this->entityManager->refresh($entity); // sometimes this isn't eagerly loaded (?)
 
+        $registry = $this->app->make(ContextRegistry::class);
         $renderer = new Renderer(
-            new DashboardViewContext(),
+            $registry->create(new DashboardViewContext()),
             $entity->getDefaultViewForm()
         );
 
@@ -232,8 +234,9 @@ abstract class DashboardExpressEntriesPageController extends DashboardPageContro
         $entity = $entry->getEntity();
         $this->entityManager->refresh($entity); // sometimes this isn't eagerly loaded (?)
 
+        $registry = $this->app->make(ContextRegistry::class);
         $renderer = new Renderer(
-            new DashboardFormContext(),
+            $registry->getContext(new DashboardFormContext()),
             $entity->getDefaultViewForm()
         );
 

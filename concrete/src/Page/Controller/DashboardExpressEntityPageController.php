@@ -12,6 +12,7 @@ use Concrete\Core\Express\Form\Renderer;
 use Concrete\Core\Express\Form\Validator;
 use Concrete\Core\Tree\Node\Node;
 use Concrete\Core\Tree\Node\Type\Category;
+use Concrete\Core\Form\Context\Registry\ContextRegistry;
 use Concrete\Core\Tree\Type\ExpressEntryResults;
 
 abstract class DashboardExpressEntityPageController extends DashboardExpressEntriesPageController
@@ -66,8 +67,9 @@ abstract class DashboardExpressEntityPageController extends DashboardExpressEntr
             $this->set('backURL', $this->getBackURL($entity));
         }
 
+        $registry = $this->app->make(ContextRegistry::class);
         $renderer = new Renderer(
-            new DashboardFormContext(),
+            $registry->getContext(new DashboardFormContext()),
             $form
         );
         $this->set('renderer', $renderer);

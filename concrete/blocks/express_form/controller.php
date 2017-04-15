@@ -12,6 +12,7 @@ use Concrete\Core\Entity\Express\Control\AttributeKeyControl;
 use Concrete\Core\Entity\Express\Control\TextControl;
 use Concrete\Core\Entity\Express\Entity;
 use Concrete\Core\Entity\Express\Entry;
+use Concrete\Core\Form\Context\Registry\ContextRegistry;
 use Concrete\Core\Entity\Express\FieldSet;
 use Concrete\Core\Entity\Express\Form;
 use Concrete\Core\Express\Attribute\AttributeKeyHandleGenerator;
@@ -730,8 +731,9 @@ class Controller extends BlockController
     public function view()
     {
         $form = $this->getFormEntity();
+        $registry = $this->app->make(ContextRegistry::class);
         $renderer = new \Concrete\Core\Express\Form\Renderer(
-            new \Concrete\Core\Express\Form\Context\FrontendFormContext(),
+            $registry->getContext(new \Concrete\Core\Express\Form\Context\FrontendFormContext()),
             $form
         );
         $app = \Core::make('app');

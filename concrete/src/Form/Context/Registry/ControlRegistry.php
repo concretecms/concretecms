@@ -14,7 +14,7 @@ use Concrete\Core\Express\Form\Control\View\AttributeKeyView;
  * A simple class for registering context to view bindings, in the event that certain contexts ought to
  * deliver different views. (Used by Express Attribute Key View vs Form)
  */
-class Registry
+class ControlRegistry
 {
 
     public function __construct()
@@ -31,7 +31,7 @@ class Registry
     }
 
     /**
-     * @var Entry[]
+     * @var ControlEntry[]
      */
     protected $entries = [];
 
@@ -44,11 +44,11 @@ class Registry
 
     public function register(ContextInterface $context, $handle, $viewClass)
     {
-        $entry = new Entry($context, $handle, $viewClass);
+        $entry = new ControlEntry($context, $handle, $viewClass);
         $this->addOrReplaceEntry($entry);
     }
 
-    protected function addOrReplaceEntry(Entry $entry)
+    protected function addOrReplaceEntry(ControlEntry $entry)
     {
         $index = null;
         foreach($this->entries as $key => $existingEntry) {
