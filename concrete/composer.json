@@ -51,7 +51,7 @@
     "pagerfanta/pagerfanta": "~1.0.1 ~1.0",
     "htmlawed/htmlawed": "1.*",
     "mobiledetect/mobiledetectlib": "2.*",
-    "monolog/monolog": "~1.5.0",
+    "monolog/monolog": "^1.5.0",
     "sunra/php-simple-html-dom-parser": "1.*",
     "hautelook/phpass": "0.3.*",
     "voku/urlify": "~1.0.1",
