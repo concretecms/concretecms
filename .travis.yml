@@ -19,8 +19,6 @@ matrix:
       env: CODESTYLE="yes"
     - php: 7.1
       env: PREFER_LOWEST="--prefer-lowest"
-    - php: 5.5
-      env: PREFER_LOWEST="--prefer-lowest"
   allow_failures:
     - php: nightly
 
@@ -32,8 +30,20 @@ before_script:
   - phpunit --version
 
 script:
-  # Run PHPUnit if we're not checking code style, otherwise run phpcs
-  - if [[ $CODESTYLE != "yes" ]]; then composer test; else composer phpcs; fi
+  - |
+    if [[ $CODESTYLE != "yes" ]]; then
+      concrete/vendor/bin/phpunit  --coverage-text --coverage-clover=coverage.clover
+    else
+      composer phpcs
+    fi
+
+after_script:
+  - |
+    if [[ "$TRAVIS_PHP_VERSION" == '7.0' ]]; then
+      wget https://scrutinizer-ci.com/ocular.phar
+      php ocular.phar code-coverage:upload --format=php-clover coverage.clover
+    fi
+
 cache:
   directories:
     - vendor
