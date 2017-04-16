@@ -261,7 +261,7 @@
         <ul class="item-select-list">
             <?php foreach ($feeds as $feed) {
     ?>
-                <li><a href="<?=$view->action('edit', $feed->getID())?>"><i class="fa fa-rss"></i> <?=$feed->getTitle()?></a></li>
+                <li><a href="<?=$view->action('edit', $feed->getID())?>"><i class="fa fa-rss"></i> <?=$feed->getFeedDisplayTitle()?></a></li>
             <?php 
 }
     ?>
