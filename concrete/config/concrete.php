@@ -252,6 +252,10 @@ return [
                 ],
             ],
         ],
+
+        'clear' => [
+            'thumbnails' => true
+        ],
     ],
 
     'multilingual' => [
@@ -573,7 +577,7 @@ return [
             'api_token' => '',
             // Languages below this translation progress won't be considered
             'progress_limit' => 60,
-            // Lifetime (in seconds) of the cache items associated to downloaded data 
+            // Lifetime (in seconds) of the cache items associated to downloaded data
             'cache_lifetime' => 3600, // 1 hour
         ],
     ],
