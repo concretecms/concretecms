@@ -5,7 +5,7 @@
     <fieldset>
         <div class="form-group">
             <label class="control-label" for="name"><?=t('Source Object')?></label>
-            <p><?=$entity->getName()?></p>
+            <p><?=$entity->getEntityDisplayName()?></p>
         </div>
         <div class="form-group">
             <label class="control-label" for="name"><?=t('Type')?></label>
@@ -15,7 +15,7 @@
             <label class="control-label" for="name"><?=t('Target Object')?></label>
             <select name="target_entity" class="form-control">
                 <?php foreach($entities as $targetEntity) { ?>
-                    <option value="<?=$targetEntity->getID()?>" data-plural="<?=$targetEntity->getPluralHandle()?>" data-singular="<?=$targetEntity->getHandle()?>"><?=$targetEntity->getName()?></option>
+                    <option value="<?=$targetEntity->getID()?>" data-plural="<?=$targetEntity->getPluralHandle()?>" data-singular="<?=$targetEntity->getHandle()?>"><?=$targetEntity->getEntityDisplayName()?></option>
                 <?php } ?>
             </select>
         </div>

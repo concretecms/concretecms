@@ -6,7 +6,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 <div class="btn-group">
 
 <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-    <?=$currentType->getName()?>
+    <?=$currentType->getEntityDisplayName()?>
     <span class="caret"></span>
 </button>
 
@@ -19,7 +19,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
             $action = URL::to('/dashboard/system/express/entities', 'view_entity', $type->getID());
         }
     ?>
-        <li><a href="<?=$action?>"><?=$type->getName()?></a></li>
+        <li><a href="<?=$action?>"><?=$type->getEntityDisplayName()?></a></li>
     <?php
 
 }
