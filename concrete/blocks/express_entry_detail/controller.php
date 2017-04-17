@@ -144,7 +144,7 @@ class Controller extends BlockController
         $entityObjects = $r->findAll();
         $entities = array('' => t("** Choose Entity"));
         foreach($entityObjects as $entity) {
-            $entities[$entity->getID()] = $entity->getName();
+            $entities[$entity->getID()] = $entity->getEntityDisplayName();
         }
         $this->set('entities', $entities);
         $keys = CollectionKey::getList();

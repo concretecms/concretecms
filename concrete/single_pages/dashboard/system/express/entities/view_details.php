@@ -14,7 +14,7 @@
     <?php View::element('dashboard/express/detail_navigation', array('entity' => $entity))?>
     <div class="col-md-8">
         <h3><?=t('Name')?></h3>
-        <p><?=$entity->getName()?></p>
+        <p><?=$entity->getEntityDisplayName()?></p>
 
         <h3><?=t('Handle')?></h3>
         <p><?=$entity->getHandle()?></p>

@@ -86,7 +86,7 @@ class Entities extends DashboardPageController
         $entities = $r->findAll(array(), array('name' => 'asc'));
         $select = ['' => t('** Choose Entity')];
         foreach($entities as $entity) {
-            $select[$entity->getID()] = $entity->getName();
+            $select[$entity->getID()] = $entity->getEntityDisplayName();
         }
         $this->set('entities', $select);
         $this->render('/dashboard/system/express/entities/add');
