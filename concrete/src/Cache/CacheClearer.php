@@ -8,6 +8,7 @@ use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Database\DatabaseManager;
 use Concrete\Core\Foundation\Environment;
 use Concrete\Core\Localization\Localization;
+use Exception;
 use FilesystemIterator;
 use Illuminate\Filesystem\Filesystem;
 use Symfony\Component\EventDispatcher\EventDispatcher;
