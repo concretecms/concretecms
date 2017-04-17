@@ -155,6 +155,22 @@ class Feed
     }
 
     /**
+     * @param string $format
+     * @return string
+     */
+    public function getFeedDisplayTitle($format = 'html')
+    {
+        $value = t($this->getTitle());
+        switch ($format) {
+            case 'html':
+                return h($value);
+            case 'text':
+            default:
+                return $value;
+        }
+    }
+
+    /**
      * @return mixed
      */
     public function getCustomTopicAttributeKeyHandle()
