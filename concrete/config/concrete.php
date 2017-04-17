@@ -217,7 +217,7 @@ return [
                     ],
 
                     'core_filesystem' => [
-                        'class' => '\Stash\Driver\FileSystem',
+                        'class' => \Concrete\Core\Cache\Driver\FileSystemStashDriver::class,
                         'options' => [
                             'path' => DIR_FILES_UPLOADED_STANDARD . '/cache',
                             'dirPermissions' => DIRECTORY_PERMISSIONS_MODE_COMPUTED,
@@ -234,7 +234,7 @@ return [
                     ],
 
                     'core_filesystem' => [
-                        'class' => '\Stash\Driver\FileSystem',
+                        'class' => \Concrete\Core\Cache\Driver\FileSystemStashDriver::class,
                         'options' => [
                             'path' => DIR_FILES_UPLOADED_STANDARD . '/cache',
                             'dirPermissions' => DIRECTORY_PERMISSIONS_MODE_COMPUTED,
@@ -573,7 +573,7 @@ return [
             'api_token' => '',
             // Languages below this translation progress won't be considered
             'progress_limit' => 60,
-            // Lifetime (in seconds) of the cache items associated to downloaded data 
+            // Lifetime (in seconds) of the cache items associated to downloaded data
             'cache_lifetime' => 3600, // 1 hour
         ],
     ],
