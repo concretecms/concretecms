@@ -18,7 +18,7 @@ class Detector
      * Since the user's language is not a locale but a language,
      * attempts to determine best section for the given language.
      *
-     * @return Section
+     * @return Section|null
      */
     public static function getPreferredSection()
     {
@@ -26,54 +26,71 @@ class Detector
 
         $locale = false;
         $app = Facade::getFacadeApplication();
-        // they have a language in a certain session going already
         $session = $app->make('session');
-        if ($session->has('multilingual_default_locale')) {
-            $locale = $session->get('multilingual_default_locale');
-        } else {
-            $cookie = $app->make('cookie');
-            if ($cookie->has('multilingual_default_locale')) {
-                $locale = $cookie->get('multilingual_default_locale');
+
+        $result = null;
+        if ($result === null) {
+            // Detect locale by value stored in session or cookie 
+            if ($session->has('multilingual_default_locale')) {
+                $locale = $session->get('multilingual_default_locale');
+            } else {
+                $cookie = $app->make('cookie');
+                if ($cookie->has('multilingual_default_locale')) {
+                    $locale = $cookie->get('multilingual_default_locale');
+                }
+            }
+            if ($locale) {
+                $home = Section::getByLocale($locale);
+                if ($home) {
+                    $result = [$locale, $home];
+                }
+            }
+        }
+        
+        if ($result === null) {
+            // Detect locale by user's preferred language
+            $u = new \User();
+            if ($u->isRegistered()) {
+                $userDefaultLanguage = $u->getUserDefaultLanguage();
+                if ($userDefaultLanguage) {
+                    $home = Section::getByLocaleOrLanguage($userDefaultLanguage);
+                    if ($home) {
+                        $result = [$userDefaultLanguage, $home];
+                    }
+                }
             }
         }
 
-        if ($locale) {
+        if ($result === null) {
+            // Detect locale by browsers headers
+            $config = $site->getConfigRepository();
+            if ($config->get('multilingual.use_browser_detected_locale')) {
+                $home = false;
+                $locales = \Punic\Misc::getBrowserLocales();
+                foreach (array_keys($locales) as $locale) {
+                    $home = Section::getByLocaleOrLanguage($locale);
+                    if ($home) {
+                        $result = [$locale, $home];
+                        break;
+                    }
+                }
+            }
+        }
+
+        if ($result === null) {
+            // Use the default site locale
+            $locale = $site->getDefaultLocale();
             $home = Section::getByLocale($locale);
             if ($home) {
-                return $home;
+                $result = [$locale, $home];
             }
         }
 
-        $u = new \User();
-        if ($u->isRegistered()) {
-            $userDefaultLanguage = $u->getUserDefaultLanguage();
-            if ($userDefaultLanguage) {
-                $home = Section::getByLocaleOrLanguage($userDefaultLanguage);
-                if ($home) {
-                    return $home;
-                }
-            }
+        if ($result !== null) {
+            $session->set('multilingual_default_locale', $result[0]);
         }
 
-        $config = $site->getConfigRepository();
-        if ($config->get('multilingual.use_browser_detected_locale')) {
-            $home = false;
-            $locales = \Punic\Misc::getBrowserLocales();
-            foreach (array_keys($locales) as $locale) {
-                $home = Section::getByLocaleOrLanguage($locale);
-                if ($home) {
-                    break;
-                }
-            }
-
-            if ($home) {
-                return $home;
-            }
-        }
-
-        $site = \Site::getSite();
-
-        return Section::getByLocale($site->getDefaultLocale());
+        return ($result === null) ? null : $result[1];
     }
 
     /**

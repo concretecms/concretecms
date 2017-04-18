@@ -254,13 +254,6 @@ return [
         ],
     ],
 
-    'multilingual' => [
-        'redirect_home_to_default_locale' => false,
-        'use_browser_detected_locale' => false,
-        'default_locale' => false,
-        'default_source_locale' => 'en_US',
-    ],
-
     'design' => [
         'enable_custom' => true,
         'enable_layouts' => true,
