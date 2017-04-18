@@ -286,7 +286,7 @@ abstract class DashboardExpressEntriesPageController extends DashboardPageContro
                     $manager->saveEntryAttributesForm($form, $entry);
                     $this->flash(
                         'success',
-                        tc(/*i18n: %s is an Express entity name*/'Express', 'New record %s added successfully.', $entity->getName())
+                        tc(/*i18n: %s is an Express entity name*/'Express', 'New record %s added successfully.', $entity->getEntityDisplayName())
                         . '<br />'
                         . '<a class="btn btn-default" href="' . \URL::to(\Page::getCurrentPage(), 'view_entry', $entry->getID()) . '">' . t('View Record Here') . '</a>',
                         true
@@ -295,7 +295,7 @@ abstract class DashboardExpressEntriesPageController extends DashboardPageContro
                 } else {
                     // update
                     $manager->saveEntryAttributesForm($form, $entry);
-                    $this->flash('success', t('%s updated successfully.', $entity->getName()));
+                    $this->flash('success', t('%s updated successfully.', $entity->getEntityDisplayName()));
                     $this->redirect($this->getBackURL($entity));
                 }
             }

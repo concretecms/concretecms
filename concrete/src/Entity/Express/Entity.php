@@ -323,6 +323,22 @@ class Entity implements CategoryObjectInterface, ObjectInterface, ExportableInte
     }
 
     /**
+     * @param string $format
+     * @return string
+     */
+    public function getEntityDisplayName($format = 'html')
+    {
+        $value = t($this->getName());
+        switch ($format) {
+            case 'html':
+                return h($value);
+            case 'text':
+            default:
+                return $value;
+        }
+    }
+
+    /**
      * @return ArrayCollection[]
      */
     public function getAttributes()
