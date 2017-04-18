@@ -3,9 +3,11 @@ namespace Concrete\Core\Page\Controller;
 
 use Concrete\Core\Entity\Express\Entity;
 use Concrete\Core\Entity\Express\Entry;
+use Concrete\Core\Express\Entry\Notifier\NotificationInterface;
 use Concrete\Core\Express\Export\EntryList\CsvWriter;
 use Concrete\Core\Express\Form\Context\DashboardFormContext;
 use Concrete\Core\Express\Form\Context\DashboardViewContext;
+use Concrete\Core\Express\Form\Processor\ProcessorInterface;
 use Concrete\Core\Express\Form\Renderer;
 use Concrete\Core\Express\EntryList;
 use Concrete\Core\Express\Form\Validator\ValidatorInterface;
@@ -276,19 +278,24 @@ abstract class DashboardExpressEntriesPageController extends DashboardPageContro
             $validator = $processor->getValidator($this->request);
 
             if ($entry === null) {
-                $validator->validate($form, ValidatorInterface::REQUEST_TYPE_ADD);
+                $validator->validate($form, ProcessorInterface::REQUEST_TYPE_ADD);
             } else {
-                $validator->validate($form, ValidatorInterface::REQUEST_TYPE_UPDATE);
+                $validator->validate($form, ProcessorInterface::REQUEST_TYPE_UPDATE);
             }
 
             $this->error = $validator->getErrorList();
             if (!$this->error->has()) {
+
+                $notifier = $controller->getNotifier();
+                $notifications = $notifier->createNotificationList();
 
                 $manager = $controller->getEntryManager($this->request);
                 if ($entry === null) {
                     // create
                     $entry = $manager->addEntry($entity);
                     $manager->saveEntryAttributesForm($form, $entry);
+                    $notifier->sendNotifications($notifications, $entry, ProcessorInterface::REQUEST_TYPE_ADD);
+
                     $this->flash(
                         'success',
                         tc(/*i18n: %s is an Express entity name*/'Express', 'New record %s added successfully.', $entity->getEntityDisplayName())
@@ -300,6 +307,7 @@ abstract class DashboardExpressEntriesPageController extends DashboardPageContro
                 } else {
                     // update
                     $manager->saveEntryAttributesForm($form, $entry);
+                    $notifier->sendNotifications($notifications, $entry, ProcessorInterface::REQUEST_TYPE_UPDATE);
                     $this->flash('success', t('%s updated successfully.', $entity->getEntityDisplayName()));
                     $this->redirect($this->getBackURL($entity));
                 }

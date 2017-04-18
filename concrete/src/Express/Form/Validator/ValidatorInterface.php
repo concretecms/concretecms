@@ -9,9 +9,6 @@ use Concrete\Core\Express\Form\Validator\Routine\RoutineInterface;
 interface ValidatorInterface
 {
 
-    const REQUEST_TYPE_ADD = 1;
-    const REQUEST_TYPE_UPDATE = 2;
-
     function addRoutine(RoutineInterface $routine);
 
     /**

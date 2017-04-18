@@ -22,6 +22,7 @@ use Concrete\Core\Express\Entry\Notifier\NotificationInterface;
 use Concrete\Core\Express\Form\Context\FrontendFormContext;
 use Concrete\Core\Express\Form\Control\Type\EntityPropertyType;
 use Concrete\Core\Express\Form\Control\SaveHandler\SaveHandlerInterface;
+use Concrete\Core\Express\Form\Processor\ProcessorInterface;
 use Concrete\Core\Express\Form\Validator\Routine\CaptchaRoutine;
 use Concrete\Core\Express\Form\Validator\ValidatorInterface;
 use Concrete\Core\Express\Generator\EntityHandleGenerator;
@@ -126,7 +127,7 @@ class Controller extends BlockController
                     $validator->addRoutine(new CaptchaRoutine(\Core::make('helper/validation/captcha')));
                 }
 
-                $validator->validate($form, ValidatorInterface::REQUEST_TYPE_ADD);
+                $validator->validate($form, ProcessorInterface::REQUEST_TYPE_ADD);
 
                 $e = $validator->getErrorList();
 
@@ -177,23 +178,25 @@ class Controller extends BlockController
                     $notifications = $notifier->createNotificationList();
                     $notifications->addNotification(new FormBlockSubmissionEmailNotification($this->app, $this));
                     $notifications->addNotification(new FormBlockSubmissionNotification($this->app, $this));
-                    $notifier->sendNotifications($notifications, $entry, NotificationInterface::ENTRY_UPDATE_TYPE_ADD);
+                    $notifier->sendNotifications($notifications, $entry, ProcessorInterface::REQUEST_TYPE_ADD);
 
+                    $r = null;
                     if ($this->redirectCID > 0) {
                         $c = \Page::getByID($this->redirectCID);
                         if (is_object($c) && !$c->isError()) {
                             $r = Redirect::page($c);
                             $r->setTargetUrl($r->getTargetUrl() . '?form_success=1');
-                            return $r;
                         }
                     }
 
-                    $c = \Page::getCurrentPage();
-                    $url = \URL::to($c, 'form_success', $this->bID);
-                    $r = Redirect::to($url);
-                    $r->setTargetUrl($r->getTargetUrl() . '#form' . $this->bID);
-                    return $r;
+                    if (!$r) {
+                        $c = \Page::getCurrentPage();
+                        $url = \URL::to($c, 'form_success', $this->bID);
+                        $r = Redirect::to($url);
+                        $r->setTargetUrl($r->getTargetUrl() . '#form' . $this->bID);
+                    }
 
+                    return $processor->deliverResponse($entry, ProcessorInterface::REQUEST_TYPE_ADD, $r);
                 }
             }
         }
