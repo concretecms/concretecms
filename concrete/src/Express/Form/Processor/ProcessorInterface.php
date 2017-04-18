@@ -2,9 +2,11 @@
 
 namespace Concrete\Core\Express\Form\Processor;
 
+use Symfony\Component\HttpFoundation\Request;
+
 interface ProcessorInterface
 {
 
-    function getValidator();
+    function getValidator(Request $request);
 
 }

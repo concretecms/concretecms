@@ -15,7 +15,10 @@ use Concrete\Core\Entity\Express\Entry;
 use Concrete\Core\Entity\Express\FieldSet;
 use Concrete\Core\Entity\Express\Form;
 use Concrete\Core\Express\Attribute\AttributeKeyHandleGenerator;
-use Concrete\Core\Express\Entry\Manager;
+use Concrete\Core\Express\Controller\ControllerInterface;
+use Concrete\Core\Express\Entry\Notifier\Notification\FormBlockSubmissionEmailNotification;
+use Concrete\Core\Express\Entry\Notifier\Notification\FormBlockSubmissionNotification;
+use Concrete\Core\Express\Entry\Notifier\NotificationInterface;
 use Concrete\Core\Express\Form\Context\FrontendFormContext;
 use Concrete\Core\Express\Form\Control\Type\EntityPropertyType;
 use Concrete\Core\Express\Form\Control\SaveHandler\SaveHandlerInterface;
@@ -43,6 +46,10 @@ class Controller extends BlockController
     protected $btInterfaceHeight = 480;
     protected $btTable = 'btExpressForm';
     protected $entityManager;
+
+    public $notifyMeOnSubmission;
+    public $recipientEmail;
+    public $replyToEmailControlID;
 
     const FORM_RESULTS_CATEGORY_NAME = 'Forms';
 
@@ -109,9 +116,12 @@ class Controller extends BlockController
 
                 $express = \Core::make('express');
                 $entity = $form->getEntity();
+                /**
+                 * @var $controller ControllerInterface
+                 */
                 $controller = $express->getEntityController($entity);
                 $processor = $controller->getFormProcessor();
-                $validator = $processor->getValidator();
+                $validator = $processor->getValidator($this->request);
                 if ($this->displayCaptcha) {
                     $validator->addRoutine(new CaptchaRoutine(\Core::make('helper/validation/captcha')));
                 }
@@ -124,7 +134,7 @@ class Controller extends BlockController
 
                 if (isset($e) && !$e->has()) {
 
-                    $manager = new Manager($entityManager, $this->request);
+                    $manager = $controller->getEntryManager($this->request);
                     $entry = $manager->addEntry($entity);
                     $entry = $manager->saveEntryAttributesForm($form, $entry);
                     $values = $entity->getAttributeKeyCategory()->getAttributeValues($entry);
@@ -163,44 +173,11 @@ class Controller extends BlockController
                         }
                     }
 
-                    if ($this->notifyMeOnSubmission) {
-                        if (\Config::get('concrete.email.form_block.address') && strstr(\Config::get('concrete.email.form_block.address'), '@')) {
-                            $formFormEmailAddress = \Config::get('concrete.email.form_block.address');
-                        } else {
-                            $adminUserInfo = \UserInfo::getByID(USER_SUPER_ID);
-                            $formFormEmailAddress = $adminUserInfo->getUserEmail();
-                        }
-
-                        $replyToEmailAddress = $formFormEmailAddress;
-                        if ($this->replyToEmailControlID) {
-                            $control = $entityManager->getRepository('Concrete\Core\Entity\Express\Control\Control')
-                                ->findOneById($this->replyToEmailControlID);
-                            if (is_object($control)) {
-                                foreach($values as $attribute) {
-                                    if ($attribute->getAttributeKey()->getAttributeKeyID() == $control->getAttributeKey()->getAttributeKeyID()) {
-                                        $email = $attribute->getValue();
-                                    }
-                                }
-
-                                if ($email) {
-                                    $replyToEmailAddress = $email;
-                                }
-                            }
-                        }
-
-                        $formName = $this->getFormEntity()->getEntity()->getName();
-
-                        $mh = \Core::make('helper/mail');
-                        $mh->to($this->recipientEmail);
-                        $mh->from($formFormEmailAddress);
-                        $mh->replyto($replyToEmailAddress);
-                        $mh->addParameter('entity', $entity);
-                        $mh->addParameter('formName', $formName);
-                        $mh->addParameter('attributes', $values);
-                        $mh->load('block_express_form_submission');
-                        $mh->setSubject(t('Website Form Submission – %s', $formName));
-                        $mh->sendMail();
-                    }
+                    $notifier = $controller->getNotifier();
+                    $notifications = $notifier->createNotificationList();
+                    $notifications->addNotification(new FormBlockSubmissionEmailNotification($this->app, $this));
+                    $notifications->addNotification(new FormBlockSubmissionNotification($this->app, $this));
+                    $notifier->sendNotifications($notifications, $entry, NotificationInterface::ENTRY_UPDATE_TYPE_ADD);
 
                     if ($this->redirectCID > 0) {
                         $c = \Page::getByID($this->redirectCID);

@@ -2,7 +2,11 @@
 namespace Concrete\Core\Express\Controller;
 
 use Concrete\Core\Application\Application;
+use Concrete\Core\Express\Entry\Manager as EntryManager;
+use Concrete\Core\Express\Entry\Notifier\StandardNotifier;
 use Concrete\Core\Express\Form\Processor\StandardProcessor;
+use Doctrine\ORM\EntityManager;
+use Symfony\Component\HttpFoundation\Request;
 
 class StandardController implements ControllerInterface
 {
@@ -22,6 +26,17 @@ class StandardController implements ControllerInterface
     {
         return $this->app->make(StandardProcessor::class);
     }
+
+    public function getEntryManager(Request $request)
+    {
+        return new EntryManager($this->app->make(EntityManager::class), $request);
+    }
+
+    public function getNotifier()
+    {
+        return $this->app->make(StandardNotifier::class);
+    }
+
 
 
 }

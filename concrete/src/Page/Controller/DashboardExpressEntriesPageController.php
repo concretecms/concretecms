@@ -3,13 +3,12 @@ namespace Concrete\Core\Page\Controller;
 
 use Concrete\Core\Entity\Express\Entity;
 use Concrete\Core\Entity\Express\Entry;
-use Concrete\Core\Express\Entry\Manager;
 use Concrete\Core\Express\Export\EntryList\CsvWriter;
 use Concrete\Core\Express\Form\Context\DashboardFormContext;
 use Concrete\Core\Express\Form\Context\DashboardViewContext;
 use Concrete\Core\Express\Form\Renderer;
 use Concrete\Core\Express\EntryList;
-use Concrete\Core\Express\Form\Validator;
+use Concrete\Core\Express\Form\Validator\ValidatorInterface;
 use Concrete\Core\Form\Context\ContextFactory;
 use Concrete\Core\Tree\Node\Node;
 use Concrete\Core\Tree\Type\ExpressEntryResults;
@@ -160,9 +159,10 @@ abstract class DashboardExpressEntriesPageController extends DashboardPageContro
             $this->error->add($this->token->getErrorMessage());
         }
         if (!$this->error->has()) {
-            $url = $this->getBackURL($entry->getEntity());
-
-            $manager = new Manager($this->entityManager, $this->request);
+            $entity = $entry->getEntity();
+            $url = $this->getBackURL($entity);
+            $controller = \Core::make('express')->getEntityController($entity);
+            $manager = $controller->getEntryManager($this->request);
             $manager->deleteEntry($entry);
 
             $this->flash('success', t('Entry deleted successfully.'));
@@ -233,14 +233,19 @@ abstract class DashboardExpressEntriesPageController extends DashboardPageContro
             throw new \Exception(t('Access Denied'));
         }
 
+        $entity = $entry->getEntity();
         $this->set('entry', $entry);
-        $this->set('entity', $entry->getEntity());
+        $this->set('entity', $entity);
         $entity = $entry->getEntity();
         $this->entityManager->refresh($entity); // sometimes this isn't eagerly loaded (?)
 
-        $registry = $this->app->make(ContextRegistry::class);
+        $express = \Core::make('express');
+        $controller = $express->getEntityController($entity);
+        $factory = new ContextFactory($controller);
+        $context = $factory->getContext(new DashboardFormContext());
+
         $renderer = new Renderer(
-            $registry->getContext(new DashboardFormContext()),
+            $context,
             $entity->getDefaultViewForm()
         );
 
@@ -263,23 +268,23 @@ abstract class DashboardExpressEntriesPageController extends DashboardPageContro
                 ->findOneById($this->request->request->get('entry_id'));
         }
 
-        if ($entry === null) {
-            $permissions = new \Permissions($entity);
-            if (!$permissions->canAddExpressEntries()) {
-                $this->error->add(t('You do not have access to add entries of this entity type.'));
-            }
-        } else {
-            $permissions = new \Permissions($entry);
-            if (!$permissions->canEditExpressEntry()) {
-                $this->error->add(t('You do not have access to edit entries of this entity type.'));
-            }
-        }
-
         if ($form !== null) {
-            $validator = new Validator($this->error, $this->request);
-            $validator->validate($form);
+
+            $express = $this->app->make('express');
+            $controller = $express->getEntityController($entity);
+            $processor = $controller->getFormProcessor();
+            $validator = $processor->getValidator($this->request);
+
+            if ($entry === null) {
+                $validator->validate($form, ValidatorInterface::REQUEST_TYPE_ADD);
+            } else {
+                $validator->validate($form, ValidatorInterface::REQUEST_TYPE_UPDATE);
+            }
+
+            $this->error = $validator->getErrorList();
             if (!$this->error->has()) {
-                $manager = new Manager($this->entityManager, $this->request);
+
+                $manager = $controller->getEntryManager($this->request);
                 if ($entry === null) {
                     // create
                     $entry = $manager->addEntry($entity);

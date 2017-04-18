@@ -4,6 +4,7 @@ namespace Concrete\Core\Express\Form\Processor;
 
 use Concrete\Core\Express\Form\Validator\StandardValidator;
 use Concrete\Core\Application\Application;
+use Symfony\Component\HttpFoundation\Request;
 
 class StandardProcessor implements ProcessorInterface
 {
@@ -15,9 +16,10 @@ class StandardProcessor implements ProcessorInterface
     }
 
 
-    public function getValidator()
+    public function getValidator(Request $request)
     {
-        return $this->app->make(StandardValidator::class);
+        $validator = new StandardValidator($this->app, $this->app->make('error'), $request);
+        return $validator;
     }
 
 }

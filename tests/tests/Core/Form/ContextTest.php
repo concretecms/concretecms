@@ -12,6 +12,7 @@ use Concrete\Core\Form\Context\ContextFactory;
 use Core;
 use Concrete\Core\Express\Controller\ControllerInterface;
 use Concrete\Core\Form\Context\Registry\ContextRegistry;
+use Symfony\Component\HttpFoundation\Request;
 
 class TestFrontendFormContext extends FrontendFormContext
 {
@@ -34,6 +35,16 @@ class TestController implements ControllerInterface
     }
 
     public function getFormProcessor()
+    {
+        return null;
+    }
+
+    public function getEntryManager(Request $request)
+    {
+        return null;
+    }
+
+    public function getNotifier()
     {
         return null;
     }
@@ -74,7 +85,7 @@ class ContextTest extends \PHPUnit_Framework_TestCase
 
         $this->assertInstanceOf('Concrete\Core\Express\Form\Processor\ProcessorInterface', $processor);
 
-        $validator = $processor->getValidator();
+        $validator = $processor->getValidator(Request::createFromGlobals());
         $this->assertInstanceOf('Concrete\Core\Express\Form\Validator\ValidatorInterface', $validator);
         $this->assertInstanceOf('Concrete\Core\Express\Form\Validator\StandardValidator', $validator);
     }
