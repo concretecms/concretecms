@@ -22,7 +22,7 @@ class Controller extends AttributeTypeController
     private $akSelectOptionDisplayOrder;
 
     protected $searchIndexFieldDefinition = array(
-        'type' => 'string',
+        'type' => 'text',
         'options' => array('default' => null, 'notnull' => false),
     );
 
