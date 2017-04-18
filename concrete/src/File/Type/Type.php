@@ -421,7 +421,7 @@ class Type
      */
     public function supportsThumbnails()
     {
-        if ($this->getName() == 'PNG' || $this->getName() == 'JPEG') {
+        if ($this->getName() == 'PNG' || $this->getName() == 'JPEG'|| $this->getName() == 'GIF') {
             return true;
         }
     }
