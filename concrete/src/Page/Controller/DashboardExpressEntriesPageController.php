@@ -287,7 +287,7 @@ abstract class DashboardExpressEntriesPageController extends DashboardPageContro
             if (!$this->error->has()) {
 
                 $notifier = $controller->getNotifier();
-                $notifications = $notifier->createNotificationList();
+                $notifications = $notifier->getNotificationList();
 
                 $manager = $controller->getEntryManager($this->request);
                 if ($entry === null) {

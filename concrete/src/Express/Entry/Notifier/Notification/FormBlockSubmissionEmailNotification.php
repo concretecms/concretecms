@@ -8,51 +8,80 @@ use Doctrine\ORM\EntityManager;
 class FormBlockSubmissionEmailNotification extends AbstractFormBlockSubmissionNotification
 {
 
-    public function notify(Entry $entry, $updateType)
+    protected $from;
+    protected $replyTo;
+    protected $attributeValues;
+
+    protected function getFromEmail()
     {
-        $config = $this->app->make('config');
-        $entityManager = $this->app->make(EntityManager::class);
-        $mh = $this->app->make('mail');
-
-        $entity = $entry->getEntity();
-        $values = $entity->getAttributeKeyCategory()->getAttributeValues($entry);
-
-        if ($this->blockController->notifyMeOnSubmission) {
+        if (!isset($this->from)) {
+            $config = $this->app->make('config');
             if ($config->get('concrete.email.form_block.address') && strstr($config->get('concrete.email.form_block.address'), '@')) {
-                $formFromEmailAddress = $config->get('concrete.email.form_block.address');
+                $this->from = $config->get('concrete.email.form_block.address');
             } else {
                 $adminUserInfo = $this->app->make(UserInfoRepository::class)->getByID(USER_SUPER_ID);
-                $formFromEmailAddress = $adminUserInfo->getUserEmail();
+                $this->from = $adminUserInfo->getUserEmail();
             }
+        }
+        return $this->from;
+    }
 
-            $replyToEmailAddress = $formFromEmailAddress;
-            $email = false;
-            if ($this->blockController->replyToEmailControlID) {
-                $control = $entityManager->getRepository('Concrete\Core\Entity\Express\Control\Control')
-                    ->findOneById($this->blockController->replyToEmailControlID);
-                if (is_object($control)) {
-                    foreach($values as $attribute) {
-                        if ($attribute->getAttributeKey()->getAttributeKeyID() == $control->getAttributeKey()->getAttributeKeyID()) {
-                            $email = $attribute->getValue();
-                        }
-                    }
-
-                    if ($email) {
-                        $replyToEmailAddress = $email;
+    protected function getReplyToEmail(Entry $entry)
+    {
+        $entityManager = $this->app->make(EntityManager::class);
+        $replyToEmailAddress = $this->getFromEmail();
+        $email = false;
+        if ($this->blockController->replyToEmailControlID) {
+            $control = $entityManager->getRepository('Concrete\Core\Entity\Express\Control\Control')
+                ->findOneById($this->blockController->replyToEmailControlID);
+            if (is_object($control)) {
+                foreach($this->getAttributeValues($entry) as $attribute) {
+                    if ($attribute->getAttributeKey()->getAttributeKeyID() == $control->getAttributeKey()->getAttributeKeyID()) {
+                        $email = $attribute->getValue();
                     }
                 }
+
+                if ($email) {
+                    $replyToEmailAddress = $email;
+                }
             }
+        }
+        return $replyToEmailAddress;
+    }
 
-            $formName = $entity->getName();
+    protected function getToEmail()
+    {
+        return $this->blockController->recipientEmail;
+    }
 
-            $mh->to($this->blockController->recipientEmail);
-            $mh->from($formFromEmailAddress);
-            $mh->replyto($replyToEmailAddress);
-            $mh->addParameter('entity', $entity);
-            $mh->addParameter('formName', $formName);
-            $mh->addParameter('attributes', $values);
+    protected function getAttributeValues(Entry $entry)
+    {
+        $entity = $entry->getEntity();
+        if (!isset($this->attributeValues)) {
+            $this->attributeValues = $entity->getAttributeKeyCategory()->getAttributeValues($entry);
+        }
+        return $this->attributeValues;
+    }
+
+    protected function getFormName(Entry $entry)
+    {
+        $entity = $entry->getEntity();
+        $formName = $entity->getName();
+        return $formName;
+    }
+
+    public function notify(Entry $entry, $updateType)
+    {
+        if ($this->blockController->notifyMeOnSubmission) {
+            $mh = $this->app->make('mail');
+            $mh->to($this->getToEmail());
+            $mh->from($this->getFromEmail());
+            $mh->replyto($this->getReplyToEmail($entry));
+            $mh->addParameter('entity', $entry->getEntity());
+            $mh->addParameter('formName', $this->getFormName($entry));
+            $mh->addParameter('attributes', $this->getAttributeValues($entry));
             $mh->load('block_express_form_submission');
-            $mh->setSubject(t('Website Form Submission – %s', $formName));
+            $mh->setSubject(t('Website Form Submission – %s', $this->getFormName($entry)));
             $mh->sendMail();
         }
 

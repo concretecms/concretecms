@@ -3,6 +3,7 @@ namespace Concrete\Core\Express\Controller;
 
 use Concrete\Core\Application\Application;
 use Concrete\Core\Express\Entry\Manager as EntryManager;
+use Concrete\Core\Express\Entry\Notifier\NotificationProviderInterface;
 use Concrete\Core\Express\Entry\Notifier\StandardNotifier;
 use Concrete\Core\Express\Form\Processor\StandardProcessor;
 use Doctrine\ORM\EntityManager;
@@ -32,9 +33,18 @@ class StandardController implements ControllerInterface
         return new EntryManager($this->app->make(EntityManager::class), $request);
     }
 
-    public function getNotifier()
+    public function getNotifier(NotificationProviderInterface $provider = null)
     {
-        return $this->app->make(StandardNotifier::class);
+        /**
+         * @var $notifier StandardNotifier
+         */
+        $notifier = $this->app->make(StandardNotifier::class);
+        if ($provider) {
+            foreach($provider->getNotifications() as $notification) {
+                $notifier->getNotificationList()->addNotification($notification);
+            }
+        }
+        return $notifier;
     }
 
 

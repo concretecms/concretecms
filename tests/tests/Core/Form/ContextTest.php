@@ -3,6 +3,7 @@ namespace Concrete\Tests\Core\Form;
 
 use Concrete\Core\Entity\Express\Entity;
 use Concrete\Core\Entity\Express\Form;
+use Concrete\Core\Express\Entry\Notifier\NotificationProviderInterface;
 use Concrete\Core\Express\Form\Context\DashboardFormContext;
 use Concrete\Core\Express\Form\Context\DashboardViewContext;
 use Concrete\Core\Express\Form\Context\FrontendFormContext;
@@ -44,7 +45,7 @@ class TestController implements ControllerInterface
         return null;
     }
 
-    public function getNotifier()
+    public function getNotifier(NotificationProviderInterface $provider = null)
     {
         return null;
     }

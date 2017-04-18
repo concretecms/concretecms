@@ -19,6 +19,7 @@ use Concrete\Core\Express\Controller\ControllerInterface;
 use Concrete\Core\Express\Entry\Notifier\Notification\FormBlockSubmissionEmailNotification;
 use Concrete\Core\Express\Entry\Notifier\Notification\FormBlockSubmissionNotification;
 use Concrete\Core\Express\Entry\Notifier\NotificationInterface;
+use Concrete\Core\Express\Entry\Notifier\NotificationProviderInterface;
 use Concrete\Core\Express\Form\Context\FrontendFormContext;
 use Concrete\Core\Express\Form\Control\Type\EntityPropertyType;
 use Concrete\Core\Express\Form\Control\SaveHandler\SaveHandlerInterface;
@@ -40,7 +41,7 @@ use Concrete\Core\Tree\Type\ExpressEntryResults;
 use Doctrine\ORM\Id\UuidGenerator;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
-class Controller extends BlockController
+class Controller extends BlockController implements NotificationProviderInterface
 {
     protected $btInterfaceWidth = 640;
     protected $btCacheBlockOutput = false;
@@ -83,6 +84,14 @@ class Controller extends BlockController
         $this->set('thankyouMsg', t('Thanks!'));
         $this->edit();
         $this->set('resultsFolder', $this->get('formResultsRootFolderNodeID'));
+    }
+
+    public function getNotifications()
+    {
+        return array(
+            new FormBlockSubmissionEmailNotification($this->app, $this),
+            new FormBlockSubmissionNotification($this->app, $this)
+        );
     }
 
     public function action_form_success($bID = null)
@@ -174,10 +183,10 @@ class Controller extends BlockController
                         }
                     }
 
-                    $notifier = $controller->getNotifier();
-                    $notifications = $notifier->createNotificationList();
-                    $notifications->addNotification(new FormBlockSubmissionEmailNotification($this->app, $this));
-                    $notifications->addNotification(new FormBlockSubmissionNotification($this->app, $this));
+                    $entityManager->refresh($entry);
+
+                    $notifier = $controller->getNotifier($this);
+                    $notifications = $notifier->getNotificationList();
                     $notifier->sendNotifications($notifications, $entry, ProcessorInterface::REQUEST_TYPE_ADD);
 
                     $r = null;

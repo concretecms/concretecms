@@ -8,9 +8,16 @@ use Concrete\Core\Entity\Express\Form;
 class StandardNotifier extends AbstractNotifier
 {
 
-    public function createNotificationList()
+    protected $notifications;
+
+    public function __construct()
     {
-        return new NotificationList();
+        $this->notifications = new NotificationList();
+    }
+
+    public function getNotificationList()
+    {
+        return $this->notifications;
     }
 
     public function sendNotifications(NotificationListInterface $notifications, Entry $entry, $updateType)
