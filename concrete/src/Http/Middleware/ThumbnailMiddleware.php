@@ -130,7 +130,11 @@ class ThumbnailMiddleware implements MiddlewareInterface, ApplicationAwareInterf
                 $this->getThumbnailer()->getThumbnail($file, $width, $height, (bool) $crop);
             } elseif ($type = Version::getByHandle($thumbnail['thumbnailTypeHandle'])) {
                 // This is a predefined thumbnail type, lets just call the version->rescan
-                $file->getVersion($thumbnail['fileVersionID'])->generateThumbnail($type);
+                $fv = $file->getVersion($thumbnail['fileVersionID']);
+
+                if ($fv->getTypeObject()->supportsThumbnails()) {
+                    $fv->generateThumbnail($type);
+                }
             }
         } catch (\Exception $e) {
             // Catch any exceptions so we don't break the page and return false
