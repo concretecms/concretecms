@@ -1,52 +1,24 @@
 <?php
 namespace Concrete\Core\Form\Context\Registry;
 
-use Concrete\Core\Form\Context\ContextInterface;
-
-/**
- * A simple class for registering form context to actual implemented classes.
- */
 class ContextRegistry
 {
 
+    protected $contexts = array();
+
     /**
-     * @var ContextEntry[]
+     * ContextRegistry constructor.
+     * @param array $contexts
      */
-    protected $entries = [];
-
-    public function getContext(ContextInterface $context)
+    public function __construct(array $contexts)
     {
-        $class = get_class($context);
-        foreach($this->entries as $entry) {
-            if ($class == $entry->getContext()) {
-                return call_user_func(
-                    [new \ReflectionClass($entry->getContextToReturn()), 'newInstance']
-                );
-            }
-        }
-        return $context;
+        $this->contexts = $contexts;
     }
 
-    public function register($context, $return)
-    {
-        $entry = new ContextEntry($context, $return);
-        $this->addOrReplaceEntry($entry);
-    }
 
-    protected function addOrReplaceEntry(ContextEntry $replace)
+    public function getContexts()
     {
-        $index = null;
-        foreach($this->entries as $key => $entry) {
-            if ($entry->getContext() == $replace->getContext()) {
-                $index = $key;
-            }
-        }
-
-        if ($index) {
-            $this->entries[$index] = $replace;
-        } else {
-            $this->entries[] = $replace;
-        }
+        return $this->contexts;
     }
 
 }

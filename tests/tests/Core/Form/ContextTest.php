@@ -1,10 +1,16 @@
 <?php
 namespace Concrete\Tests\Core\Form;
 
+use Concrete\Core\Entity\Express\Entity;
+use Concrete\Core\Entity\Express\Form;
 use Concrete\Core\Express\Form\Context\DashboardFormContext;
+use Concrete\Core\Express\Form\Context\DashboardViewContext;
 use Concrete\Core\Express\Form\Context\FrontendFormContext;
 use Concrete\Core\Express\Form\Context\ViewContext;
+use Concrete\Core\Express\Controller\StandardController;
+use Concrete\Core\Form\Context\ContextFactory;
 use Core;
+use Concrete\Core\Express\Controller\ControllerInterface;
 use Concrete\Core\Form\Context\Registry\ContextRegistry;
 
 class TestFrontendFormContext extends FrontendFormContext
@@ -17,33 +23,59 @@ class TestDashboardFormContext extends DashboardFormContext
 
 }
 
+class TestController implements ControllerInterface
+{
+    public function getContextRegistry()
+    {
+        return new ContextRegistry([
+            FrontendFormContext::class => new TestFrontendFormContext(),
+            DashboardFormContext::class => new TestDashboardFormContext()
+        ]);
+    }
+
+    public function getFormProcessor()
+    {
+        return null;
+    }
+}
+
 class ContextTest extends \PHPUnit_Framework_TestCase
 {
 
-    public function testContextManager()
+    public function testController()
     {
-        $registry = new ContextRegistry();
-        $context = $registry->getContext(new FrontendFormContext());
-        $this->assertEquals(new FrontendFormContext(), $context);
-        $registry->register(FrontendFormContext::class, TestFrontendFormContext::class);
+        $entity = $this->getMockBuilder(Entity::class)
+            ->getMock();
 
-        $context = $registry->getContext(new FrontendFormContext());
+        $express = \Core::make('express');
+        $controller = $express->getEntityController($entity);
+        $this->assertInstanceOf(ControllerInterface::class, $controller);
+        $this->assertInstanceOf(StandardController::class, $controller);
+        $factory = new ContextFactory($controller);
+        $context = $factory->getContext(new FrontendFormContext());
+        $this->assertEquals(new FrontendFormContext(), $context);
+
+        $controller2 = new TestController();
+        $factory = new ContextFactory($controller2);
+        $context = $factory->getContext(new FrontendFormContext());
         $this->assertEquals(new TestFrontendFormContext(), $context);
-        $this->assertInstanceOf(FrontendFormContext::class, $context);
+        $this->assertEquals(new DashboardViewContext(), $factory->getContext(new DashboardViewContext()));
+        $this->assertEquals(new TestFrontendFormContext(), $factory->getContext(new FrontendFormContext()));
+        $this->assertEquals(new TestDashboardFormContext(), $factory->getContext(new DashboardFormContext()));
     }
 
-    public function testMultipleRegisters()
+    public function testFormProcessor()
     {
-        $registry = new ContextRegistry();
-        $registry->register(DashboardFormContext::class, TestDashboardFormContext::class);
-        $registry->register(FrontendFormContext::class, TestFrontendFormContext::class);
+        $entity = $this->getMockBuilder(Entity::class)
+            ->getMock();
+        $express = \Core::make('express');
+        $controller = $express->getEntityController($entity);
+        $processor = $controller->getFormProcessor();
 
-        $context1 = $registry->getContext(new FrontendFormContext());
-        $context2 = $registry->getContext(new ViewContext());
-        $context3 = $registry->getContext(new DashboardFormContext());
+        $this->assertInstanceOf('Concrete\Core\Express\Form\Processor\ProcessorInterface', $processor);
 
-        $this->assertEquals(new TestFrontendFormContext(), $context1);
-        $this->assertEquals(new ViewContext(), $context2);
-        $this->assertEquals(new TestDashboardFormContext(), $context3);
+        $validator = $processor->getValidator();
+        $this->assertInstanceOf('Concrete\Core\Express\Form\Validator\ValidatorInterface', $validator);
+        $this->assertInstanceOf('Concrete\Core\Express\Form\Validator\StandardValidator', $validator);
     }
 }
