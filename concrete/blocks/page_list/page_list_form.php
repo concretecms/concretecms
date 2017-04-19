@@ -1,5 +1,14 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");
 $c = Page::getCurrentPage();
+$siteType = null;
+if ($c) {
+    $pageType = $c->getPageTypeObject();
+    if ($pageType) {
+        $siteType = $pageType->getSiteTypeObject(); // gotta have this for editing defaults pages.
+    } else {
+        $siteType = $c->getSite()->getType();
+    }
+}
 $form = Loader::helper('form/page_selector');
 ?>
 
@@ -22,7 +31,7 @@ $form = Loader::helper('form/page_selector');
             <div class="form-group">
                 <label class="control-label"><?= t('Page Type') ?></label>
                 <?php
-                $ctArray = PageType::getList();
+                $ctArray = PageType::getList(false, $siteType);
 
                 if (is_array($ctArray)) {
                     ?>
@@ -160,7 +169,7 @@ $form = Loader::helper('form/page_selector');
                     <?php
                     $datetime = loader::helper('form/date_time');
                     echo $datetime->date('filterDateStart', $filterDateStart);
-                    echo "<p>and</p>";
+                    echo "<p>" . t('and') . "</p>";
                     echo $datetime->date('filterDateEnd', $filterDateEnd);
                     ?>
                 </div>
@@ -304,6 +313,11 @@ $form = Loader::helper('form/page_selector');
                         ?> selected <?php
                     } ?>>
                         <?= t('Sitemap order') ?>
+                    </option>
+                    <option value="display_desc" <?php if ($orderBy == 'display_desc') {
+                        ?> selected <?php
+                    } ?>>
+                        <?= t('Reverse sitemap order') ?>
                     </option>
                     <option value="chrono_desc" <?php if ($orderBy == 'chrono_desc') {
                         ?> selected <?php

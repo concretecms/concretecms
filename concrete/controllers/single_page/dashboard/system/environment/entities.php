@@ -32,20 +32,9 @@ class Entities extends DashboardPageController
 
                 if ($this->request->request->get('refresh')) {
                     $em = ORM::entityManager();
-                    $config = $em->getConfiguration();
+                    $manager = new DatabaseStructureManager($em);
+                    $manager->refreshEntities();
 
-                    // First, we flush the metadata cache.
-                    if (is_object($cache = $config->getMetadataCacheImpl())) {
-                        $cache->flushAll();
-                    }
-
-                    // Next, we regnerate proxies
-                    $metadatas = $em->getMetadataFactory()->getAllMetadata();
-                    $em->getProxyFactory()->generateProxyClasses($metadatas, $this->app->make('config')->get('database.proxy_classes'));
-
-                    // Finally, we update the schema
-                    $tool = new SchemaTool($em);
-                    $tool->updateSchema($metadatas, true);
                     $this->flash('success', t('Doctrine cache cleared, proxy classes regenerated, entity database table schema updated.'));
                     $this->redirect('/dashboard/system/environment/entities', 'view');
                 } else {

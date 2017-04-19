@@ -6,7 +6,7 @@ use Concrete\Core\Authentication\AuthenticationTypeFailureException;
 use Concrete\Core\Page\Desktop\DesktopList;
 use Concrete\Core\Routing\RedirectResponse;
 use Exception;
-use Localization;
+use Concrete\Core\Localization\Localization;
 use Page;
 use PageController;
 use User;
@@ -140,7 +140,7 @@ class Login extends PageController
         if ($config->get('concrete.i18n.choose_language_login')) {
             $userLocale = $this->post('USER_LOCALE');
             if (is_string($userLocale) && ($userLocale !== '')) {
-                if ($userLocale !== 'en_US') {
+                if ($userLocale !== Localization::BASE_LOCALE) {
                     $availableLocales = Localization::getAvailableInterfaceLanguages();
                     if (!in_array($userLocale, $availableLocales)) {
                         $userLocale = '';
@@ -197,11 +197,6 @@ class Login extends PageController
         $config = $this->app->make('config');
         $this->error = $this->app->make('helper/validation/error');
         $this->set('valt', $this->app->make('helper/validation/token'));
-        if ($config->get('concrete.user.registration.email_registration')) {
-            $this->set('uNameLabel', t('Email Address'));
-        } else {
-            $this->set('uNameLabel', t('Username'));
-        }
 
         $txt = $this->app->make('helper/text');
         if (isset($_GET['uName']) && strlen($_GET['uName'])
@@ -209,12 +204,20 @@ class Login extends PageController
             $this->set("uName", trim($txt->email($_GET['uName'])));
         }
 
+        $loc = Localization::getInstance();
+        $loc->pushActiveContext(Localization::CONTEXT_SITE);
+        if ($config->get('concrete.user.registration.email_registration')) {
+            $this->set('uNameLabel', t('Email Address'));
+        } else {
+            $this->set('uNameLabel', t('Username'));
+        }
         $languages = [];
         $locales = [];
+
         if ($config->get('concrete.i18n.choose_language_login')) {
             $languages = Localization::getAvailableInterfaceLanguages();
             if (count($languages) > 0) {
-                array_unshift($languages, 'en_US');
+                array_unshift($languages, Localization::BASE_LOCALE);
             }
             $locales = [];
             foreach ($languages as $lang) {
@@ -223,6 +226,7 @@ class Login extends PageController
             asort($locales);
             $locales = array_merge(['' => tc('Default locale', '** Default')], $locales);
         }
+        $loc->popActiveContext();
         $this->locales = $locales;
         $this->set('locales', $locales);
     }

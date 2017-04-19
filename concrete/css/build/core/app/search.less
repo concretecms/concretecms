@@ -215,7 +215,7 @@ table.ccm-search-results-table {
       padding-top: 2px !important;
       padding-bottom: 2px !important;
       padding-left: 10px;
-      padding-right: 10px;
+      padding-right: 30px;
     }
   }
 
@@ -425,6 +425,18 @@ table.ccm-search-results-table {
       }
       td.ccm-search-results-icon {
         color: #333;
+      }
+    }
+  }
+
+  &.compact-results {
+    thead,
+    tbody {
+      th,
+      td {
+        &:first-child {
+          padding-left: 15px;
+        }
       }
     }
   }

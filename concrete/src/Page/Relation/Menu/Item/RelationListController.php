@@ -48,7 +48,14 @@ class RelationListController extends Controller
         $link->setAttribute('data-panel-url', \URL::to('/ccm/system/panels/page/relations'));
         $link->setAttribute('title', t('View related pages'));
         $link->setAttribute('data-launch-panel', 'page_relations');
-
+        $show_tooltips = (bool) \Config::get('concrete.accessibility.toolbar_tooltips');
+        if ($show_tooltips) {
+            $link->setAttribute('class', 'launch-tooltip');
+            $link->setAttribute('data-toggle', 'tooltip');
+            $link->setAttribute('data-placement', 'bottom');
+            $link->setAttribute('data-delay', '{ "show": 500, "hide": 0 }');
+        }
+        
         if (is_object($this->multilingualSection)) {
             $icon = $this->flagService->getFlagIcon($this->multilingualSection->getIcon());
 

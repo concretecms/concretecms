@@ -18,9 +18,9 @@ class Controller extends AttributeTypeController
         return new FontAwesomeIconFormatter('database');
     }
 
-    public function getAttributeValueObject()
+    public function getAttributeValueClass()
     {
-        return $this->entityManager->find(ExpressValue::class, $this->attributeValue->getGenericValue());
+        return ExpressValue::class;
     }
 
     public function saveKey($data)
@@ -54,6 +54,12 @@ class Controller extends AttributeTypeController
         }
         $form_selector = $this->app->make('form/express/entry_selector');
         print $form_selector->selectEntry($this->getEntity(), $this->field('value'), $entry);
+    }
+    
+    public function searchForm($list)
+    {
+        $list->filterByAttribute($this->attributeKey->getAttributeKeyHandle(), '%' . $this->request('value') . '%', 'like');
+        return $list;
     }
 
 
@@ -136,14 +142,9 @@ class Controller extends AttributeTypeController
         $this->set('entities', $entities);
     }
 
-    public function createAttributeKeySettings()
+    public function getAttributeKeySettingsClass()
     {
-        return new ExpressSettings();
-    }
-
-    protected function retrieveAttributeKeySettings()
-    {
-        return $this->entityManager->find(ExpressSettings::class, $this->attributeKey);
+        return ExpressSettings::class;
     }
 
 }

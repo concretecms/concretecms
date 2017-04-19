@@ -22,7 +22,7 @@ class PackagesTranslationLoaderTest extends ConcreteDatabaseTestCase
     private static $packagesInstalled = false;
 
     protected $metadatas = array(
-        'Concrete\Core\Entity\Package',
+        \Concrete\Core\Entity\Package::class,
     );
 
     /**
@@ -31,6 +31,8 @@ class PackagesTranslationLoaderTest extends ConcreteDatabaseTestCase
      */
     public static function setUpBeforeClass()
     {
+        parent::setUpBeforeClass();
+
         $filesystem = new Filesystem();
         if (!$filesystem->isWritable(DIR_PACKAGES)) {
             throw new Exception("Cannot write to the packages directory for the testing purposes. Please check permissions!");

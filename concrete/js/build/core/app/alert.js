@@ -41,11 +41,11 @@ PNotify.prototype.options.buttons.closer_hover = false;
         },*/
 
         dialog : function(title, message, onCloseFn) {
-            var $div = $('<div id="ccm-popup-alert" class="ccm-ui"><div id="ccm-popup-alert-message" class="alert alert-danger">' + message + '</div></div>');
+            var $div = $('<div id="ccm-popup-alert" class="ccm-ui"><div id="ccm-popup-alert-message">' + message + '</div></div>');
             $div.dialog({
                 title: title,
                 width: 500,
-                height: 'auto',
+                maxHeight: 500,
                 modal: true,
                 dialogClass: 'ccm-ui',
                 close: function() {

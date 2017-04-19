@@ -7,6 +7,7 @@ use Concrete\Core\Entity\Attribute\Value\Value\SelectedTopic;
 use Concrete\Core\Entity\Attribute\Value\Value\TopicsValue;
 use Concrete\Core\Search\ItemList\Database\AttributedItemList;
 use Concrete\Core\Tree\Node\Node;
+use Concrete\Core\Tree\Node\Type\Category;
 use Concrete\Core\Tree\Node\Type\Topic;
 use Concrete\Core\Tree\Type\Topic as TopicTree;
 use Concrete\Core\Tree\Tree;
@@ -27,9 +28,9 @@ class Controller extends AttributeTypeController
         return new FontAwesomeIconFormatter('tag');
     }
 
-    public function getAttributeValueObject()
+    public function getAttributeValueClass()
     {
-        return $this->entityManager->find(TopicsValue::class, $this->attributeValue->getGenericValue());
+        return TopicsValue::class;
     }
 
     public function filterByAttribute(AttributedItemList $list, $value, $comparison = '=')
@@ -49,7 +50,9 @@ class Controller extends AttributeTypeController
             } else {
                 $topic = Node::getByID(intval($value));
             }
-            if (is_object($topic) && $topic instanceof \Concrete\Core\Tree\Node\Type\Topic) {
+            if (is_object($topic) && (
+                    $topic instanceof \Concrete\Core\Tree\Node\Type\Topic ||
+                    $topic instanceof Category)) {
                 $column = 'ak_' . $this->attributeKey->getAttributeKeyHandle();
                 $expressions[] = $qb->expr()->like($column, ':topicPath' . $i);
                 $qb->setParameter('topicPath' . $i, "%||" . $topic->getTreeNodeDisplayPath() . '%||');
@@ -370,14 +373,9 @@ class Controller extends AttributeTypeController
         );
     }
 
-    public function createAttributeKeySettings()
+    public function getAttributeKeySettingsClass()
     {
-        return new TopicsSettings();
-    }
-
-    protected function retrieveAttributeKeySettings()
-    {
-        return $this->entityManager->find(TopicsSettings::class, $this->attributeKey);
+        return TopicsSettings::class;
     }
 
 }

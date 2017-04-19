@@ -1,12 +1,14 @@
 <?php
 namespace Concrete\Core\Localization\Service;
 
-use Request;
-use Punic\Calendar;
-use Localization;
-use User;
-use Core;
+use Concrete\Core\Localization\Localization;
 use Config;
+use Core;
+use Punic\Calendar;
+use Punic\Comparer;
+use Punic\Misc;
+use Request;
+use User;
 
 class Date
 {
@@ -69,7 +71,14 @@ class Date
      * If you're not working with timestamps you may want to use the formatCustom method.
      *
      * @param string $mask The PHP format mask
-     * @param bool|int $timestamp Use false for the current date/time, otherwise a valid Unix timestamp.
+     * @param bool|int $timestamp Use false for the current date/time, otherwise a valid Unix timestamp (we assume it's in the system timezone)
+     * @param string $toTimezone The destination timezone.<br />
+     * Special values are:<ul>
+     *    <li>'system' (default) for the current system timezone</li>
+     *    <li>'user' for the user's timezone</li>
+     *    <li>'app' for the app's timezone</li>
+     *    <li>Other values: one of the PHP supported time zones (see http://us1.php.net/manual/en/timezones.php )</li>
+     * </ul>
      *
      * @return string
      *
@@ -83,7 +92,7 @@ class Date
         $result = '';
         $datetime = $this->toDateTime($timestamp, $toTimezone);
         if (is_object($datetime)) {
-            if (Localization::activeLocale() == 'en_US') {
+            if (Localization::activeLocale() == Localization::BASE_LOCALE) {
                 $result = $datetime->format($mask);
             } else {
                 $result = Calendar::format(
@@ -91,6 +100,24 @@ class Date
                     Calendar::convertPhpToIsoFormat($mask)
                 );
             }
+        }
+
+        return $result;
+    }
+
+    /**
+     * Retrieve the display name (localized) of a time zone given its PHP identifier.
+     *
+     * @param string $timezoneID
+     *
+     * @return string
+     */
+    public function getTimezoneName($timezoneID)
+    {
+        $result = '';
+        if (is_string($timezoneID) && $timezoneID !== '') {
+            $names = $this->getTimezones();
+            $result = isset($names[$timezoneID]) ? $names[$timezoneID] : $timezoneID;
         }
 
         return $result;
@@ -105,13 +132,13 @@ class Date
      */
     public function getTimezones()
     {
-        static $cache = array();
+        static $cache = [];
         $locale = Localization::activeLocale();
         if (array_key_exists($locale, $cache)) {
             $result = $cache[$locale];
         } else {
-            $result = array();
-            $continentNames = array(
+            $result = [];
+            $continentNames = [
                 'Africa' => \Punic\Territory::getName('002'),
                 'Asia' => \Punic\Territory::getName('142'),
                 'America' => \Punic\Territory::getName('019'),
@@ -122,12 +149,12 @@ class Date
                 'Europe' => \Punic\Territory::getName('150'),
                 'Indian' => t('Indian Ocean'),
                 'Pacific' => t('Pacific Ocean'),
-            );
+            ];
             foreach (\DateTimeZone::listIdentifiers() as $timezoneID) {
                 switch ($timezoneID) {
                     case 'UTC':
                     case 'GMT':
-                        $timezoneName = t('Greenwich Mean Time');
+                        $timezoneName = t(/*i18n: %s is an acronym like UTC, GMT, ... */'Greenwich Mean Time (%s)', $timezoneID);
                         break;
                     default:
                         $chunks = explode('/', $timezoneID);
@@ -138,19 +165,49 @@ class Date
                             $city = \Punic\Calendar::getTimezoneExemplarCity($timezoneID, false);
                             if (!strlen($city)) {
                                 switch ($timezoneID) {
-                                    case 'Antarctica/South_Pole':
-                                        $city = t('South Pole');
+                                    case 'America/Fort_Nelson':
+                                        $city = tc(/*i18n: Canadian territory */'Territory', 'Fort Nelson');
                                         break;
                                     case 'America/Montreal':
-                                        $city = t('Montreal');
+                                        $city = tc(/*i18n: Canadian city */'Territory', 'Montreal');
                                         break;
                                     case 'America/Shiprock':
-                                        $city = t('Shiprock');
+                                        $city = tc(/*i18n: Territory in New Mexico (USA) */'Territory', 'Shiprock');
+                                        break;
+                                    case 'Antarctica/South_Pole':
+                                        $city = tc(/*i18n: The South Pole */'Territory', 'South Pole');
+                                        break;
+                                    case 'Asia/Atyrau':
+                                        $city = tc(/*i18n: Kazakh territory */'Territory', 'Atyrau');
+                                        break;
+                                    case 'Asia/Barnaul':
+                                        $city = tc(/*i18n: Russian city */'Territory', 'Barnaul');
+                                        break;
+                                    case 'Asia/Famagusta':
+                                        $city = tc(/*i18n: City in Cyprus Island */'Territory', 'Famagusta');
+                                        break;
+                                    case 'Asia/Tomsk':
+                                        $city = tc(/*i18n: Russian city */'Territory', 'Tomsk');
+                                        break;
+                                    case 'Asia/Yangon':
+                                        $city = tc(/*i18n: Burmese city */'Territory', 'Yangon');
+                                        break;
+                                    case 'Europe/Astrakhan':
+                                        $city = tc(/*i18n: Russian city */'Territory', 'Astrakhan');
+                                        break;
+                                    case 'Europe/Kirov':
+                                        $city = tc(/*i18n: Russian city */'Territory', 'Kirov');
+                                        break;
+                                    case 'Europe/Saratov':
+                                        $city = tc(/*i18n: Russian city */'Territory', 'Saratov');
+                                        break;
+                                    case 'Europe/Ulyanovsk':
+                                        $city = tc(/*i18n: Russian city */'Territory', 'Ulyanovsk');
                                         break;
                                 }
                             }
                             if (strlen($city)) {
-                                $chunks = array($chunks[0], $city);
+                                $chunks = [$chunks[0], $city];
                             }
                         }
                         $timezoneName = implode('/', $chunks);
@@ -158,11 +215,84 @@ class Date
                 }
                 $result[$timezoneID] = $timezoneName;
             }
-            natcasesort($result);
+            $comparer = new Comparer();
+            $comparer->sort($result, true);
             $cache[$locale] = $result;
         }
 
         return $result;
+    }
+
+    /**
+     * Returns the list of timezones with translated names, grouped by region.
+     *
+     * @return array
+     *
+     * @example
+     * <pre>[
+     *     'Africa' => [
+     *         'Africa/Abidjan' => 'Abidjan',
+     *         'Africa/Addis_Ababa' => 'Addis Abeba',
+     *     ],
+     *     'Americas' => [
+     *         'America/North_Dakota/Beulah' => 'Beulah, North Dakota',
+     *     ],
+     *     'Antarctica' => [
+     *         'Antarctica/McMurdo' => 'McMurdo',
+     *     ],
+     *     'Arctic' => [
+     *         ...
+     *     ],
+     *     'Asia' => [
+     *         ....
+     *     ],
+     *     'Atlantic Ocean' => [
+     *         ....
+     *     ],
+     *     'Australia' => [
+     *         ....
+     *     ],
+     *     'Europe' => [
+     *         ....
+     *     ],
+     *     'Indian Ocean' => [
+     *         ....
+     *     ],
+     *     'Pacific Ocean' => [
+     *         ....
+     *     ],
+     *     'Others' => [
+     *         'UTC' => 'Greenwich Mean Time (UTC)',
+     *     ],
+     *  ]</pre>
+     *
+     * @see http://www.php.net/datetimezone.listidentifiers.php
+     */
+    public function getGroupedTimezones()
+    {
+        $groups = [];
+        $generics = [];
+        $genericGroupName = tc('GenericTimezonesGroupName', 'Others');
+        foreach ($this->getTimezones() as $id => $fullName) {
+            $chunks = explode('/', $fullName, 2);
+            if (!isset($chunks[1])) {
+                array_unshift($chunks, $genericGroupName);
+            }
+            list($groupName, $territoryName) = $chunks;
+            if ($groupName === $genericGroupName) {
+                $generics[$id] = $territoryName;
+            } else {
+                if (!isset($groups[$groupName])) {
+                    $groups[$groupName] = [];
+                }
+                $groups[$groupName][$id] = $territoryName;
+            }
+        }
+        if (!empty($generics)) {
+            $groups[$genericGroupName] = $generics;
+        }
+
+        return $groups;
     }
 
     /**
@@ -232,26 +362,27 @@ class Date
         $diff = $diff - $hours * $secondsPerHour;
         $minutes = floor($diff / $secondsPerMinute);
         $seconds = $diff - $minutes * $secondsPerMinute;
+        $chunks = [];
         if ($days > 0) {
-            $description = t2('%d day', '%d days', $days, $days);
+            $chunks[] = t2('%d day', '%d days', $days, $days);
             if ($precise) {
-                $description .= ', ' . t2('%d hour', '%d hours', $hours, $hours);
+                $chunks[] = t2('%d hour', '%d hours', $hours, $hours);
             }
         } elseif ($hours > 0) {
-            $description = t2('%d hour', '%d hours', $hours, $hours);
+            $chunks[] = t2('%d hour', '%d hours', $hours, $hours);
             if ($precise) {
-                $description .= ', ' . t2('%d minute', '%d minutes', $minutes, $minutes);
+                $chunks[] = t2('%d minute', '%d minutes', $minutes, $minutes);
             }
         } elseif ($minutes > 0) {
-            $description = t2('%d minute', '%d minutes', $minutes, $minutes);
+            $chunks[] = t2('%d minute', '%d minutes', $minutes, $minutes);
             if ($precise) {
-                $description .= ', ' . t2('%d second', '%d seconds', $seconds, $seconds);
+                $chunks[] = t2('%d second', '%d seconds', $seconds, $seconds);
             }
         } else {
-            $description = t2('%d second', '%d seconds', $seconds, $seconds);
+            $chunks[] = t2('%d second', '%d seconds', $seconds, $seconds);
         }
 
-        return $description;
+        return Misc::join($chunks);
     }
 
     /**
@@ -273,7 +404,8 @@ class Date
                 $timezone = Config::get('app.server_timezone', date_default_timezone_get());
                 break;
             case 'app':
-                $timezone = Config::get('app.timezone', date_default_timezone_get());
+                $site = \Core::make('site')->getSite();
+                $timezone = $site->getConfigRepository()->get('timezone', date_default_timezone_get());
                 break;
             case 'user':
                 $tz = null;
@@ -301,6 +433,14 @@ class Date
         }
 
         return $timezone;
+    }
+
+    /**
+     * @return string
+     */
+    public function getUserTimeZoneID()
+    {
+        return $this->getTimezoneID('user');
     }
 
     /**
@@ -344,7 +484,7 @@ class Date
      *    <li>'app' for the app's timezone</li>
      *    <li>Other values: one of the PHP supported time zones (see http://us1.php.net/manual/en/timezones.php )</li>
      * </ul>
-     * @param string $fromTimezone The original timezone of $value (useful only if $value is a string like '2000-12-31 23:59'); it accepts the same values as $toTimezone.
+     * @param string $fromTimezone The original timezone of $value (useful only if $value is a string like '2000-12-31 23:59'); it accepts the same values as $toTimezone
      *
      * @return \DateTime|null Returns the \DateTime instance (or null if $value couldn't be parsed)
      */
@@ -366,7 +506,7 @@ class Date
      * </ul>
      *
      * @return int|null Returns the difference in days (less than zero if $dateFrom if greater than $dateTo).
-     * Returns null if one of both the dates can't be parsed.
+     * Returns null if one of both the dates can't be parsed
      */
     public function getDeltaDays($from, $to, $timezone = 'user')
     {
@@ -405,9 +545,10 @@ class Date
         // legacy
         if ($format === true) {
             $format = 'medium';
-        } else if ($format === false) {
+        } elseif ($format === false) {
             $format = 'short';
         }
+
         return Calendar::formatDate(
             $this->toDateTime($value, $toTimezone),
             $format
@@ -560,7 +701,7 @@ class Date
      *     <li>'app' for the app's timezone</li>
      *     <li>Other values: one of the PHP supported time zones (see http://us1.php.net/manual/en/timezones.php )</li>
      * </ul>
-     * @param string $fromTimezone The original timezone of $value (useful only if $value is a string like '2000-12-31 23:59'); it accepts the same values as $toTimezone.
+     * @param string $fromTimezone The original timezone of $value (useful only if $value is a string like '2000-12-31 23:59'); it accepts the same values as $toTimezone
      *
      * @return string Returns an empty string if $value couldn't be parsed, the localized string otherwise
      */
@@ -580,15 +721,15 @@ class Date
      */
     public function getJQueryUIDatePickerFormat($relatedPHPFormat = '')
     {
-        $phpFormat = (is_string($relatedPHPFormat) && strlen($relatedPHPFormat)) ?
-            $relatedPHPFormat :
-            t(/*i18n: Short date format: see http://www.php.net/manual/en/function.date.php */
-                'n/j/Y'
-            );
+        if (is_string($relatedPHPFormat) && $relatedPHPFormat !== '') {
+            $phpFormat = $relatedPHPFormat;
+        } else {
+            $phpFormat = $this->getPHPDatePattern();
+        }
         // Special chars that need to be escaped in the DatePicker format string
-        $datepickerSpecials = array('d', 'o', 'D', 'm', 'M', 'y', '@', '!', '\'');
+        $datepickerSpecials = ['d', 'o', 'D', 'm', 'M', 'y', '@', '!', '\''];
         // Map from php to DatePicker format
-        $map = array(
+        $map = [
             'j' => 'd',
             'd' => 'dd',
             'z' => 'o',
@@ -600,7 +741,7 @@ class Date
             'F' => 'MM',
             'y' => 'y',
             'Y' => 'yy',
-        );
+        ];
         $datepickerFormat = '';
         $escaped = false;
         for ($i = 0; $i < strlen($phpFormat); ++$i) {
@@ -639,6 +780,49 @@ class Date
         return \Punic\Calendar::has12HoursClock() ? 12 : 24;
     }
 
+    public function getPHPDatePattern()
+    {
+        $isoFormat = \Punic\Calendar::getDateFormat('short');
+        $result = \Punic\Calendar::tryConvertIsoToPhpFormat($isoFormat);
+        if ($result === null) {
+            $result = t(/*i18n: Short date format: see http://www.php.net/manual/en/function.date.php */ 'n/j/Y');
+        }
+
+        return $result;
+    }
+
+    /**
+     * Get the PHP date format string for times.
+     *
+     * @return string
+     */
+    public function getPHPTimePattern()
+    {
+        $isoFormat = \Punic\Calendar::getTimeFormat('short');
+        $result = \Punic\Calendar::tryConvertIsoToPhpFormat($isoFormat);
+        if ($result === null) {
+            $result = t(/*i18n: Short time format: see http://www.php.net/manual/en/function.date.php */ 'g.i A');
+        }
+
+        return $result;
+    }
+
+    /**
+     * Get the PHP date format string for dates/times.
+     *
+     * @return string
+     */
+    public function getPHPDateTimePattern()
+    {
+        $isoFormat = \Punic\Calendar::getDateTimeFormat('short');
+        $result = \Punic\Calendar::tryConvertIsoToPhpFormat($isoFormat);
+        if ($result === null) {
+            $result = t(/*i18n: Short date/time format: see http://www.php.net/manual/en/function.date.php */ 'n/j/Y g.i A');
+        }
+
+        return $result;
+    }
+
     /**
      * @deprecated
      */
@@ -666,7 +850,7 @@ class Date
                 }
             }
         }
-        if (Localization::activeLocale() != 'en_US') {
+        if (Localization::activeLocale() != Localization::BASE_LOCALE) {
             return $this->dateTimeFormatLocal($datetime, $mask);
         } else {
             return $datetime->format($mask);
@@ -687,7 +871,7 @@ class Date
         }
         $datetime = new \DateTime($userDateTime);
 
-        $timezone = Config::get('app.timezone');
+        $timezone = \Core::make('site')->getSite()->getConfigRepository()->get('timezone');
         if ($timezone) {
             $tz = new \DateTimeZone($timezone);
 
@@ -719,7 +903,7 @@ class Date
                 }
             }
         }
-        if (Localization::activeLocale() != 'en_US') {
+        if (Localization::activeLocale() != Localization::BASE_LOCALE) {
             return $this->dateTimeFormatLocal($datetime, $mask);
         } else {
             return $datetime->format($mask);

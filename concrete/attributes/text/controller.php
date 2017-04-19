@@ -9,7 +9,6 @@ use Database;
 use Concrete\Core\Entity\Attribute\Value\Value\TextValue;
 class Controller extends DefaultController
 {
-    protected $searchIndexFieldDefinition = array('type' => 'text', 'options' => array('default' => null, 'notnull' => false));
 
     protected $akTextPlaceholder;
     public $helpers = array('form');

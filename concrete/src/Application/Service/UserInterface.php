@@ -171,7 +171,6 @@ class UserInterface
     {
         $alt = false;
         $src = false;
-        $dimensions = '';
         if (Config::get('concrete.white_label.name')) {
             $alt = Config::get('concrete.white_label.name');
         }
@@ -182,18 +181,17 @@ class UserInterface
             $src = Config::get('concrete.white_label.logo');
         }
         if (!$src) {
-            $filename = 'logo.png';
-            if (file_exists(DIR_APPLICATION . '/' . DIRNAME_IMAGES . '/' . $filename)) {
-                $src = REL_DIR_APPLICATION . '/' . DIRNAME_IMAGES . '/' . $filename;
-                $d = getimagesize(DIR_APPLICATION . '/' . DIRNAME_IMAGES . '/' . $filename);
-                $dimensions = $d[3];
+            $filename = 'logo';
+            if (file_exists(DIR_APPLICATION . '/' . DIRNAME_IMAGES . '/' . $filename . '.svg')) {
+                $src = REL_DIR_APPLICATION . '/' . DIRNAME_IMAGES . '/' . $filename . '.svg';
+            } elseif (file_exists(DIR_APPLICATION . '/' . DIRNAME_IMAGES . '/' . $filename . '.png')) {
+                $src = REL_DIR_APPLICATION . '/' . DIRNAME_IMAGES . '/' . $filename . '.png';
             } else {
-                $src = ASSETS_URL_IMAGES . '/' . $filename;
-                $dimensions = 'width="23" height="23"';
+                $src = ASSETS_URL_IMAGES . '/' . $filename . '.svg';
             }
         }
 
-        return '<img id="ccm-logo" src="' . $src . '" ' . $dimensions . ' alt="' . $alt . '" title="' . $alt . '" />';
+        return '<img id="ccm-logo" src="' . $src . '" alt="' . $alt . '" title="' . $alt . '">';
     }
 
     /**
@@ -340,16 +338,29 @@ class UserInterface
      */
     public function renderError($title, $error, $exception = false)
     {
+        \Response::closeOutputBuffers(1, false);
+        $this->buildErrorResponse($title, $error, $exception)->send();
+    }
+
+    /**
+     * @param string $title
+     * @param string $error
+     * @param bool|\Exception $exception
+     *
+     * @return Response;
+     */
+    public function buildErrorResponse($title, $error, $exception = false)
+    {
         $o = new stdClass();
         $o->title = $title;
         $o->content = $error;
         if ($exception) {
             $o->content .= $exception->getTraceAsString();
         }
-
-        \Response::closeOutputBuffers(1, false);
+    
         $ve = new ErrorView($o);
-        \Response::create($ve->render($o))->send();
+        $contents = $ve->render($o);
+        return \Response::create($contents);
     }
 
     /**

@@ -22,9 +22,6 @@ class AttributeKey implements ItemInterface
         $akey = $xml->addChild('attributekey');
         $akey->addAttribute('handle', $key->getAttributeKeyHandle());
 
-        // @TODO If we're exporting attribute sets we don't include these items.
-        // Add in a good way to disable them when running through attribute set export.
-
         $akey->addAttribute('name', $key->getAttributeKeyName());
         $akey->addAttribute('package', $key->getPackageHandle());
         $akey->addAttribute('searchable', $key->isAttributeKeySearchable());

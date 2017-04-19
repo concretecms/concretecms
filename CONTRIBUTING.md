@@ -1,5 +1,5 @@
 
-#  How to Contribute to Concrete5 Core Code
+#  How to Contribute to concrete5 Core Code
 
 Community contributions are one of the key points that make open source software so great.
 And concrete5 is no exception, so we'd like to thank you for your help.
@@ -24,7 +24,7 @@ Before submitting pull requests, please be sure to read these pages:
 
   One easy, secure and fast way to fix coding style problems is using [php-cs-fixer](http://cs.sensiolabs.org/). To fix a file simply call
 
-  `php-cs-fixer --config-file==<webroot>/.php_cs fix <filename>`
+  `php-cs-fixer --config=<webroot>/.php_cs.dist fix <filename>`
 
   Please run the above command on every PHP-only file included in your pull requests (preferably in a separated commit).
 

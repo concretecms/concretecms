@@ -4,13 +4,22 @@ namespace Concrete\Core\Page\Controller;
 use Concrete\Core\Entity\Express\Entity;
 use Concrete\Core\Entity\Express\Entry;
 use Concrete\Core\Express\Entry\Manager;
+use Concrete\Core\Express\Export\EntryList\CsvWriter;
+use Concrete\Core\Express\Form\Context\DashboardFormContext;
+use Concrete\Core\Express\Form\Context\DashboardViewContext;
+use Concrete\Core\Express\Form\Renderer;
+use Concrete\Core\Express\EntryList;
 use Concrete\Core\Express\Form\Validator;
 use Concrete\Core\Tree\Node\Node;
 use Concrete\Core\Tree\Type\ExpressEntryResults;
+use Core;
+use GuzzleHttp\Psr7\Stream;
+use League\Csv\Writer;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 abstract class DashboardExpressEntriesPageController extends DashboardPageController
 {
-
     protected function getBackURL(Entity $entity)
     {
         return \URL::to($this->getPageObject()
@@ -23,6 +32,7 @@ abstract class DashboardExpressEntriesPageController extends DashboardPageContro
         if (is_object($ownedBy)) {
             $ownedByID = $ownedBy->getID();
         }
+
         return \URL::to($this->getPageObject()
             ->getCollectionPath(), 'create_entry', $entity->getID(), $ownedByID);
     }
@@ -48,27 +58,12 @@ abstract class DashboardExpressEntriesPageController extends DashboardPageContro
 
     protected function renderList($treeNodeParentID = null)
     {
-        $nodes = null;
-        $parent = null;
-        if ($treeNodeParentID) {
-            $parent = Node::getByID($treeNodeParentID);
-            if (is_object($parent)) {
-                $tree = $parent->getTreeObject();
-                if (!($tree instanceof ExpressEntryResults)) {
-                    unset($parent);
-                }
-            }
-        }
-        if (!isset($parent)) {
-            $parent = $this->getResultsTreeNodeObject();
-        }
+        $parent = $this->getParentNode($treeNodeParentID);
 
         $this->set('breadcrumb', $this->getBreadcrumb($parent));
 
         if (isset($parent) && $parent instanceof \Concrete\Core\Tree\Node\Type\ExpressEntryResults) {
-            // Get the express entry for which this applies.
-            $entity = $this->entityManager->getRepository('Concrete\Core\Entity\Express\Entity')
-                ->findOneByResultsNode($parent);
+            $entity = $this->getEntity($parent);
             $search = new \Concrete\Controller\Search\Express\Entries();
             $search->search($entity);
             $this->set('list', $search->getListObject());
@@ -80,6 +75,43 @@ abstract class DashboardExpressEntriesPageController extends DashboardPageContro
             $this->set('nodes', $parent->getChildNodes());
             $this->render('/dashboard/express/entries/folder', false);
         }
+    }
+
+    /**
+     * Export Express entries into a CSV.
+     *
+     * @param int|null $treeNodeParentID
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function csv_export($treeNodeParentID = null)
+    {
+        $me = $this;
+        $parent = $me->getParentNode($treeNodeParentID);
+        $entity = $me->getEntity($parent);
+
+        $headers = [
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => 'attachment; filename=' . $entity->getPluralHandle() . '.csv'
+        ];
+
+        return StreamedResponse::create(function() use ($entity, $me) {
+            $entryList = new EntryList($entity);
+
+            $writer = new CsvWriter(Writer::createFromPath('php://output', 'w'));
+            $writer->insertHeaders($entity);
+            $writer->insertEntryList($entryList);
+        }, 200, $headers);
+    }
+
+    /**
+     * @param \Concrete\Core\Tree\Node\Type\ExpressEntryResults $parent
+     *
+     * @return \Concrete\Core\Entity\Express\Entity
+     */
+    private function getEntity(\Concrete\Core\Tree\Node\Type\ExpressEntryResults $parent)
+    {
+        return $this->entityManager->getRepository('Concrete\Core\Entity\Express\Entity')
+            ->findOneByResultsNode($parent);
     }
 
     protected function getBreadcrumb(Node $node = null)
@@ -151,7 +183,12 @@ abstract class DashboardExpressEntriesPageController extends DashboardPageContro
         $this->set('entity', $entry->getEntity());
         $entity = $entry->getEntity();
         $this->entityManager->refresh($entity); // sometimes this isn't eagerly loaded (?)
-        $renderer = \Core::make('Concrete\Core\Express\Form\DashboardRenderer', ['form' => $entity->getDefaultViewForm()]);
+
+        $renderer = new Renderer(
+            new DashboardViewContext(),
+            $entity->getDefaultViewForm()
+        );
+
         $this->set('renderer', $renderer);
         if ($entity->getOwnedBy()) {
             // the back url is the detail of what is the owner
@@ -170,8 +207,8 @@ abstract class DashboardExpressEntriesPageController extends DashboardPageContro
         } else {
             $this->set('allowDelete', false);
         }
-        $subEntities = array();
-        foreach($entry->getEntity()->getAssociations() as $association) {
+        $subEntities = [];
+        foreach ($entry->getEntity()->getAssociations() as $association) {
             if ($association->isOwningAssociation()) {
                 $subEntities[] = $association->getTargetEntity();
             }
@@ -194,7 +231,12 @@ abstract class DashboardExpressEntriesPageController extends DashboardPageContro
         $this->set('entity', $entry->getEntity());
         $entity = $entry->getEntity();
         $this->entityManager->refresh($entity); // sometimes this isn't eagerly loaded (?)
-        $renderer = \Core::make('Concrete\Core\Express\Form\StandardFormRenderer', ['form' => $entity->getDefaultEditForm()]);
+
+        $renderer = new Renderer(
+            new DashboardFormContext(),
+            $entity->getDefaultViewForm()
+        );
+
         $this->set('renderer', $renderer);
         $this->set('backURL', $this->getBackURL($entry->getEntity()));
         $this->render('/dashboard/express/entries/update', false);
@@ -237,22 +279,43 @@ abstract class DashboardExpressEntriesPageController extends DashboardPageContro
                     $manager->saveEntryAttributesForm($form, $entry);
                     $this->flash(
                         'success',
-                        tc(/*i18n: %s is an Express entity name*/'Express', 'New record %s added successfully.', $entity->getName())
-                        .'<br />'
-                        .'<a class="btn btn-default" href="'.\URL::to(\Page::getCurrentPage(), 'view_entry', $entry->getID()).'">'.t('View Record Here').'</a>',
+                        tc(/*i18n: %s is an Express entity name*/'Express', 'New record %s added successfully.', $entity->getEntityDisplayName())
+                        . '<br />'
+                        . '<a class="btn btn-default" href="' . \URL::to(\Page::getCurrentPage(), 'view_entry', $entry->getID()) . '">' . t('View Record Here') . '</a>',
                         true
                     );
                     $this->redirect(\URL::to(\Page::getCurrentPage(), 'create_entry', $entity->getID()));
                 } else {
                     // update
                     $manager->saveEntryAttributesForm($form, $entry);
-                    $this->flash('success', t('%s updated successfully.', $entity->getName()));
+                    $this->flash('success', t('%s updated successfully.', $entity->getEntityDisplayName()));
                     $this->redirect($this->getBackURL($entity));
                 }
-
             }
         } else {
             throw new \Exception(t('Invalid form.'));
         }
+    }
+
+    /**
+     * @param $treeNodeParentID
+     */
+    private function getParentNode($treeNodeParentID)
+    {
+        $parent = null;
+        if ($treeNodeParentID) {
+            $parent = Node::getByID($treeNodeParentID);
+            if (is_object($parent)) {
+                $tree = $parent->getTreeObject();
+                if (!($tree instanceof ExpressEntryResults)) {
+                    unset($parent);
+                }
+            }
+        }
+        if (!isset($parent)) {
+            $parent = $this->getResultsTreeNodeObject();
+        }
+
+        return $parent;
     }
 }

@@ -9,6 +9,7 @@ use Symfony\Component\HttpFoundation\Request;
 interface CategoryInterface
 {
     public function getAttributeKeyByID($akID);
+    public function getAttributeKeyByHandle($akHandle);
     public function getList();
     public function getSetManager();
     public function getAttributeTypes();

@@ -53,7 +53,7 @@ class File extends TreeNode
     {
         $f = \Concrete\Core\File\File::getByID($this->fID);
         if (is_object($f)) {
-            return $f->getFileName();
+            return $f->getTitle();
         }
     }
     public function getTreeNodeDisplayName($format = 'html')
@@ -82,7 +82,10 @@ class File extends TreeNode
     {
         $f = $this->getTreeNodeFileObject();
         if (is_object($f)) {
-            return $f->getDateAdded();
+            $version = $f->getVersion();
+            if (is_object($version)) {
+                return $version->getDateAdded();
+            }
         }
     }
 

@@ -18,7 +18,7 @@ class DefaultSet extends Set
     {
         $fv = $f->getVersion();
 
-        return Core::make('helper/date')->formatDateTime($f->getDateAdded()->getTimestamp());
+        return Core::make('helper/date')->formatDateTime($fv->getDateAdded()->getTimestamp());
     }
 
     public function __construct()

@@ -15,6 +15,12 @@ class Listener
     public function preRemove(Entity $entity, LifecycleEventArgs $event)
     {
         $em = $event->getEntityManager();
+        $db = $em->getConnection();
+
+        $db->Execute('delete from atExpressSettings where exEntityID = ?', array($entity->getID()));
+        $table = $entity->getAttributeKeyCategory()->getIndexedSearchTable();
+        $db->Execute('DROP TABLE IF EXISTS ' . $table);
+
         $entity->setDefaultEditForm(null);
         $entity->setDefaultViewForm(null);
         $em->persist($entity);
@@ -39,6 +45,18 @@ class Listener
                 $em->remove($result);
             }
         } catch (\Exception $e) {
+        }
+
+        // Delete the associations.
+        foreach ($entity->getAssociations() as $association) {
+            $em->remove($association);
+        }
+
+        // Make sure to delete the inverse associations
+        $associations = $em->getRepository('Concrete\Core\Entity\Express\Association')
+            ->findBy(['target_entity' => $entity]);
+        foreach ($associations as $association) {
+            $em->remove($association);
         }
 
         $em->flush();

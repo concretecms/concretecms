@@ -53,7 +53,7 @@ var ConcreteDashboard = function() {
 		}
 	}
 
-	var setupTables = function() {
+	var setupDetailsURLs = function() {
 		$('table.ccm-search-results-table tr[data-details-url]').each(function() {
 			$(this).hover(
 				function() {
@@ -63,6 +63,12 @@ var ConcreteDashboard = function() {
 					$(this).removeClass('ccm-search-select-hover');
 				}
 				)
+				.on('click', function() {
+					window.location.href = $(this).data('details-url');
+				});
+		});
+		$('div.ccm-details-panel[data-details-url]').each(function() {
+			$(this)
 				.on('click', function() {
 					window.location.href = $(this).data('details-url');
 				});
@@ -80,6 +86,10 @@ var ConcreteDashboard = function() {
         $('.dialog-launch').dialog();
 
 		$('div#ccm-dashboard-page').on('click', '[data-dialog]', function() {
+			if ($(this).attr('disabled')) {
+				return false;
+			}
+
 			var width = $(this).attr('data-dialog-width');
 			if (!width) {
 				width = 320;
@@ -129,7 +139,7 @@ var ConcreteDashboard = function() {
 			//setupHeaderMenu();
             setupDialogs();
 			setupSelects();
-			setupTables();
+			setupDetailsURLs();
 			setupFavorites();
 		}
 

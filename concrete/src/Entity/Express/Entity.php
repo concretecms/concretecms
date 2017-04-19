@@ -323,6 +323,22 @@ class Entity implements CategoryObjectInterface, ObjectInterface, ExportableInte
     }
 
     /**
+     * @param string $format
+     * @return string
+     */
+    public function getEntityDisplayName($format = 'html')
+    {
+        $value = t($this->getName());
+        switch ($format) {
+            case 'html':
+                return h($value);
+            case 'text':
+            default:
+                return $value;
+        }
+    }
+
+    /**
      * @return ArrayCollection[]
      */
     public function getAttributes()
@@ -396,6 +412,15 @@ class Entity implements CategoryObjectInterface, ObjectInterface, ExportableInte
     public function getPermissionResponseClassName()
     {
         return '\\Concrete\\Core\\Permission\\Response\\ExpressEntityResponse';
+    }
+
+    public function getAssociation($handle)
+    {
+        foreach($this->associations as $association) {
+            if ($association->getTargetPropertyName() == $handle) {
+                return $association;
+            }
+        }
     }
 
     public function getPermissionAssignmentClassName()

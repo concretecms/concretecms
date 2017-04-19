@@ -22,9 +22,9 @@ class Controller extends AttributeTypeController
         return floatval($this->attributeValue->getValue());
     }
 
-    public function getAttributeValueObject()
+    public function getAttributeValueClass()
     {
-        return $this->entityManager->find(NumberValue::class, $this->attributeValue->getGenericValue());
+        return NumberValue::class;
     }
 
     public function searchForm($list)
@@ -57,7 +57,7 @@ class Controller extends AttributeTypeController
         } else {
             $value = null;
         }
-        echo $this->app->make('helper/form')->number($this->field('value'), $value, ['style' => 'width:100px']);
+        echo $this->app->make('helper/form')->number($this->field('value'), $value, ['step' => 'any']);
     }
 
     public function validateForm($p)

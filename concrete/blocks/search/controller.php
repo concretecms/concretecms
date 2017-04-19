@@ -221,7 +221,7 @@ class Controller extends BlockController
             $year = @intval($request->request('year'));
             $month = abs(@intval($request->request('month')));
             if (strlen(abs($year)) < 4) {
-                $year = (($year < 0) ? '-' : '') . str_pad($year, 4, '0', STR_PAD_LEFT);
+                $year = (($year < 0) ? '-' : '') . str_pad(abs($year), 4, '0', STR_PAD_LEFT);
             }
             if ($month < 12) {
                 $month = str_pad($month, 2, '0', STR_PAD_LEFT);

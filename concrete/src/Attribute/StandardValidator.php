@@ -57,7 +57,7 @@ class StandardValidator implements ValidatorInterface
         return $response;
     }
 
-    public function validateCurrentAttributeValue(Controller $controller, Value $value)
+    public function validateCurrentAttributeValue(Controller $controller, AttributeValueInterface $value)
     {
         $key = $controller->getAttributeKey();
         $controller->setAttributeValue($value);

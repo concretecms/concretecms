@@ -3,12 +3,15 @@ namespace Concrete\Core\View;
 
 use Concrete\Core\Asset\Asset;
 use Concrete\Core\Asset\Output\StandardFormatter;
+use Concrete\Core\Filesystem\FileLocator;
 use Concrete\Core\Http\ResponseAssetGroup;
 use Environment;
 use Events;
+use Concrete\Core\Support\Facade\Facade;
 use PageTheme;
 use Page;
 use Config;
+use Illuminate\Filesystem\Filesystem;
 
 class View extends AbstractView
 {
@@ -375,6 +378,30 @@ class View extends AbstractView
         }
         $view = self::getRequestInstance();
 
-        include Environment::get()->getPath(DIRNAME_ELEMENTS.'/'.$_file.'.php', $_pkgHandle);
+        $_c = Page::getCurrentPage();
+        if (is_object($_c)) {
+            $_theme = $_c->getCollectionThemeObject();
+        }
+
+        $_app = Facade::getFacadeApplication();
+        $_fs = $_app->make(Filesystem::class);
+        $_locator = new FileLocator($_fs, $_app);
+        if (isset($_theme) && is_object($_theme)) {
+            $_locator->addLocation(new FileLocator\ThemeElementLocation($_theme));
+        }
+        if ($_pkgHandle) {
+            $_locator->addPackageLocation($_pkgHandle);
+        }
+
+        $_record = $_locator->getRecord(DIRNAME_ELEMENTS . '/' . $_file . '.php');
+        $_file = $_record->getFile();
+
+        unset($_record);
+        unset($_app);
+        unset($_fs);
+        unset($_locator);
+        unset($_theme);
+
+        include $_file;
     }
 }

@@ -2,6 +2,8 @@
 namespace Concrete\Core\Entity\Site;
 
 use Concrete\Core\Application\Application;
+use Concrete\Core\Attribute\ObjectInterface;
+use Concrete\Core\Permission\ObjectInterface as PermissionObjectInterface;
 use Concrete\Core\Attribute\ObjectTrait;
 use Concrete\Core\Attribute\Key\SiteKey;
 use Concrete\Core\Entity\Attribute\Value\SiteValue;
@@ -14,10 +16,30 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  * @ORM\Table(name="Sites")
  */
-class Site implements TreeInterface
+class Site implements TreeInterface, ObjectInterface, PermissionObjectInterface
 {
 
     use ObjectTrait;
+
+    public function getPermissionObjectIdentifier()
+    {
+        return $this->siteID;
+    }
+
+    public function getPermissionResponseClassName()
+    {
+        return '\\Concrete\\Core\\Permission\\Response\\SiteResponse';
+    }
+
+    public function getPermissionAssignmentClassName()
+    {
+        return false;
+    }
+
+    public function getPermissionObjectKeyCategoryHandle()
+    {
+        return false;
+    }
 
     public function getObjectAttributeCategory()
     {
@@ -159,9 +181,12 @@ class Site implements TreeInterface
     public function getSiteTreeObject()
     {
         $locale = $this->getDefaultLocale();
-        if (is_object($locale)) {
-            return $locale->getSiteTree();
+        if (!is_object($locale)) {
+            $locales = $this->getLocales()->toArray();
+            $locale = $locales[0];
         }
+
+        return $locale->getSiteTree();
     }
 
     public function getSiteHomePageObject($version = 'RECENT')

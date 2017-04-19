@@ -39,10 +39,27 @@ class DragRequest extends UserInterface
     protected function canAccess()
     {
         list($sourceNodes, $destNode) = $this->getNodes();
+        if (!$sourceNodes || (is_array($sourceNodes) && count($sourceNodes) == 0)) {
+            return false;
+        }
+
         if (is_object($destNode)) {
             $dp = new \Permissions($destNode);
-            return $dp->canAddTreeSubNode();
+            if (!$dp->canAddTreeSubNode()) {
+                return false;
+            }
+        } else {
+            return false;
         }
+
+        foreach($sourceNodes as $sourceNode) {
+            $dp = new \Permissions($sourceNode);
+            if (!$dp->canEditTreeNode()) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     public function execute()

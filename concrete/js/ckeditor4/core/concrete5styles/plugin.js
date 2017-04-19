@@ -136,13 +136,25 @@
                     $.each(response.classes, function () {
                         var style = {};
                         style.name = this.title;
-                        if (typeof this.forceBlock !== 'undefined' && this.forceBlock == 1) {
+                        if (typeof this.element !== 'undefined') {
+                            style.element = this.element;
+                        } else if (typeof this.forceBlock !== 'undefined' && this.forceBlock == 1) {
                             style.element = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p'];
                         } else {
                             style.element = 'span';
                         }
                         if (typeof this.spanClass !== 'undefined') {
                             style.attributes = {'class': this.spanClass};
+                        }
+                        if (typeof this.attributes !== 'undefined') {
+                            style.attributes = this.attributes;
+                        }
+                        if (typeof this.styles !== 'undefined') {
+                            style.styles = this.styles;
+                        }
+                        if (this.type === 'widget' && typeof this.widget !== 'undefined') {
+                            style.type = 'widget';
+                            style.widget = this.widget;
                         }
                         additionalStyles.push(style);
                     });

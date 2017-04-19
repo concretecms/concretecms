@@ -66,14 +66,14 @@ defined('C5_EXECUTE') or die("Access Denied.");
     $(function () {
 
         var steps = [{
-            content: '<p><span class="h5"><?=t('Pretty URLs')?></span><br/><?=t('Check this checkbox to remove index.php from your URLs. You will be given code to place in a file named .htaccess in your web root. concrete5 will try and place this code in the file for you.')?></p>',
+            content: <?= json_encode('<p><span class="h5">' . t('Pretty URLs') . '</span><br/>' . t('Check this checkbox to remove index.php from your URLs. You will be given code to place in a file named .htaccess in your web root. concrete5 will try and place this code in the file for you.') . '</p>') ?>,
             highlightTarget: false,
             nextButton: true,
             target: $('input[name=URL_REWRITING]'),
             my: 'bottom left',
             at: 'top left'
         },{
-            content: '<p><span class="h5"><?=t('Canonical URL')?></span><br/><?=t('If you are running a site at multiple domains, enter the canonical domain here. This will be used for sitemap generation, any other purposes that require a specific domain. You can usually leave this blank.')?></p>',
+            content: <?= json_encode('<p><span class="h5">' . t('Canonical URL') . '</span><br/>' . t('If you are running a site at multiple domains, enter the canonical domain here. This will be used for sitemap generation, any other purposes that require a specific domain. You can usually leave this blank.') . '</p>') ?>,
             highlightTarget: false,
             nextButton: true,
             target: $('input[name=canonical_url]'),
@@ -84,14 +84,14 @@ defined('C5_EXECUTE') or die("Access Denied.");
                 $(document).scrollTop($url.offset().top);
             }
         },{
-            content: '<p><span class="h5"><?=t('SSL URL')?></span><br/><?=t('Certain add-ons require a secure SSL URL. Enter that URL here.')?></p>',
+            content: <?= json_encode('<p><span class="h5">' . t('SSL URL') . '</span><br/>' . t('Certain add-ons require a secure SSL URL. Enter that URL here.') . '</p>') ?>,
             highlightTarget: false,
             nextButton: true,
             target: $('input[name=canonical_ssl_url]'),
             my: 'bottom center',
             at: 'top center'
         },{
-            content: '<p><span class="h5"><?=t('SSL URL')?></span><br/><?=t('Ensure that your site ONLY renders at the canonical URL or the canonical SSL URL.')?></p>',
+            content: <?= json_encode('<p><span class="h5">' . t('SSL URL') . '</span><br/>' . t('Ensure that your site ONLY renders at the canonical URL or the canonical SSL URL.') . '</p>') ?>,
             highlightTarget: false,
             nextButton: true,
             target: $('input[name=redirect_to_canonical_url]'),

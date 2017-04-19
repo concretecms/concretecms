@@ -15,6 +15,13 @@ class LoggingServiceProvider extends ServiceProvider
 
         // Bind the PSR-3 logger interface against the singleton
         $this->app->bind('Psr\Log\LoggerInterface', 'Concrete\Core\Logging\Logger');
-        $this->app->bind('log', 'Concrete\Core\Logging\Logger');
+        $this->app->singleton('log', function() {
+            $logger = new Logger(Logger::CHANNEL_APPLICATION);
+            return $logger;
+        });
+        $this->app->singleton('log/exceptions', function() {
+            $logger = new Logger(LOG_TYPE_EXCEPTIONS);
+            return $logger;
+        });
     }
 }

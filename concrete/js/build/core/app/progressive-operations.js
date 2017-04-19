@@ -78,46 +78,28 @@ ccm_doProgressiveOperation = function(url, params, totalItems, onComplete, onErr
 		error:function(xhr, status, r) {
 			switch(status) {
 				case 'timeout':
-					var text = ccmi18n.requestTimeout;
+					var text = '<div class="alert alert-danger">' + ccmi18n.requestTimeout + '</div>';
 					break;
 				default:
 					var text = ConcreteAjaxRequest.errorResponseToString(xhr);
 					break;
 			}
-			if ($element) {
-				$element.html('<div class="alert alert-error">' + text + '</div>');
-			} else {
+			if (!$element) {
 				pnotify.remove();
 				NProgress.remove();
-				ConcreteAlert.error({
-					message: text,
-					title: ccmi18n.error,
-					hide: false,
-					buttons: {
-						closer: false
-					}
-				});
 			}
+			ConcreteAlert.dialog(ccmi18n.error, text);
 		},
 
 		success: function(r) {
 			if (r.error) {
 				var text = r.message;
-				if ($element) {
-					$('#ccm-progressive-operation-progress-bar').html('<div class="alert alert-error">' + text + '</div>');
-				} else {
+				if (!$element) {
 					pnotify.remove();
 					NProgress.remove();
-					ConcreteAlert.error({
-						message: text,
-						title: ccmi18n.error,
-						hide: false,
-						buttons: {
-							closer: false
-						}
-					});
-
 				}
+				ConcreteAlert.dialog(ccmi18n.error, text);
+
 				if (typeof(onError) == 'function') {
 					onError(r);
 				}

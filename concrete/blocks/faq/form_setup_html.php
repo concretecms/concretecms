@@ -65,7 +65,7 @@ $tp = new TaskPermission();
         ?></span>
             </div>
         </div>
-    <?php 
+    <?php
     }
 } else {
     ?>
@@ -74,7 +74,7 @@ $tp = new TaskPermission();
                 $('.ccm-add-faq-entry').click();
             });
         </script>
-    <?php 
+    <?php
 } ?>
     <div class="ccm-faq-entry well ccm-faq-entry-template" style="display: none;">
         <i class="fa-sort-asc fa"></i>
@@ -108,12 +108,21 @@ $tp = new TaskPermission();
 
     (function() {
         var container = $('.ccm-faq-block-container');
+
         var doSortCount = function () {
             $('.ccm-faq-entry', container).each(function (index) {
                 $(this).find('.ccm-faq-entry-sort').val(index);
             });
         };
         doSortCount();
+
+        var uniqueEntryID = function () {
+            $('.ccm-faq-entry', container).each(function () {
+                $(this).find('.editor-content').not('.ccm-faq-entry-template').attr('id', _.uniqueId());
+            });
+        };
+        uniqueEntryID();
+
         var cloneTemplate = $('.ccm-faq-entry-template', container).clone(true);
         cloneTemplate.removeClass('.ccm-faq-entry-template');
         $('.ccm-faq-entry-template').remove();
@@ -121,6 +130,11 @@ $tp = new TaskPermission();
         $(cloneTemplate).add($('.ccm-faq-entry', container)).find('.ccm-delete-faq-entry').click(function () {
             var deleteIt = confirm('<?php echo t('Are you sure?') ?>');
             if (deleteIt == true) {
+                entryID = $(this).closest('.ccm-faq-entry').find('.editor-content').attr('id');
+                if (typeof CKEDITOR === 'object') {
+                    CKEDITOR.instances[entryID].destroy();
+                }
+
                 $(this).closest('.ccm-faq-entry').remove();
                 doSortCount();
             }
@@ -153,7 +167,7 @@ $tp = new TaskPermission();
         });
         $('.ccm-add-faq-entry', container).click(function () {
             var newClone = cloneTemplate.clone(true);
-
+            newClone.find('.editor-content').attr('id', _.uniqueId());
             launchEditor(newClone.show().find('.editor-content'));
             container.append(newClone);
             attachSortAsc(newClone.find('i.fa-sort-asc'));

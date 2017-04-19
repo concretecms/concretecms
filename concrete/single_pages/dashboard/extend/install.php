@@ -21,7 +21,7 @@ $nav = $app->make('helper/navigation');
 
 $catList = AttributeCategory::getList();
 
-if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScreen && $tp->canInstallPackages()) {
+if ($this->controller->getTask() == 'install_package' && isset($showInstallOptionsScreen) && $showInstallOptionsScreen && $tp->canInstallPackages()) {
     ?>
     <form method="post" action="<?=$this->action('install_package', $pkg->getPackageHandle())?>">
         <?php
@@ -322,7 +322,7 @@ if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScre
                 <div class="well clearfix" style="padding:10px 20px;">
                     <h4><?= t('Connect to Community'); ?></h4>
                     <p><?= t('Your site is not connected to the concrete5 community. Connecting lets you easily extend a site with themes and add-ons.'); ?></p>
-                    <p><a class="btn btn-primary pull-right" href="<?= $view->url('/dashboard/extend/connect', 'register_step1'); ?>"><?= t("Connect to Community"); ?></a></p>
+                    <p><a class="btn btn-primary" href="<?= $view->url('/dashboard/extend/connect', 'register_step1'); ?>"><?= t("Connect to Community"); ?></a></p>
                 </div>
                 <?php
             }

@@ -14,7 +14,7 @@ class PublicProfilePageController extends CorePageController
         $config = $site->getConfigRepository();
 
         if (!$config->get('user.profiles_enabled')) {
-            $this->replace('/page_not_found');
+            return $this->replace('/page_not_found');
         }
     }
 }

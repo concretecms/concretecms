@@ -10,6 +10,7 @@ module.exports = function(grunt, config, parameters, done) {
 				'.gitignore',
 				'.gitmodules',
 				'.php_cs',
+				'.php_cs.dist',
 				'.scrutinizer.yml',
 				'.travis.install.sh',
 				'.travis.yml',
@@ -18,6 +19,7 @@ module.exports = function(grunt, config, parameters, done) {
 				'config.inc.php.SAMPLE',
 			],
 			byPath: [
+				'/concrete/src/Support/i18n.php',
 				'/concrete/vendor/dapphp/securimage/example_form.ajax.php',
 				'/concrete/vendor/dapphp/securimage/example_form.php',
 				'/concrete/vendor/htmlawed/htmlawed/htmLawedTest.php',

@@ -19,11 +19,11 @@ use Concrete\Tests\Core\Database\Traits\DirectoryHelpers;
  */
 class DefaultPackageProviderTest extends \PHPUnit_Framework_TestCase
 {
-    
+
     use DirectoryHelpers;
-    
+
     /**
-     * @var \Concrete\Core\Application\Application 
+     * @var \Concrete\Core\Application\Application
      */
     protected $app;
 
@@ -39,7 +39,7 @@ class DefaultPackageProviderTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Test packages with removed getPackageEntityPath() method
-     * 
+     *
      * @covers DefaultPackageProvider::getDrivers
      */
     public function testGetDriversWithGetPackageEntityPath()
@@ -56,7 +56,7 @@ class DefaultPackageProviderTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Test package with default driver and not existing source directory
-     * 
+     *
      * @covers DefaultPackageProvider::getDrivers
      */
     public function testGetDriversWithNoExistingSrcDirectory()
@@ -70,7 +70,7 @@ class DefaultPackageProviderTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Covers real word case of a package with $appVersionRequired < 8.0.0
-     * 
+     *
      * @covers DefaultPackageProvider::getDrivers
      */
     public function testGetDriversWithPackageWithLegacyNamespaceAndLegacyAnnotationReader()
@@ -91,7 +91,7 @@ class DefaultPackageProviderTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Covers real word case of a package with $appVersionRequired >= 8.0.0
-     * 
+     *
      * @covers DefaultPackageProvider::getDrivers
      */
     public function testGetDriversWithPackageWithDefaultNamespaceAndDefaultAnnotationReader()
@@ -109,16 +109,16 @@ class DefaultPackageProviderTest extends \PHPUnit_Framework_TestCase
 
         $this->removePackageFolderOfTestMetadataDriverDefault();
     }
-    
+
     /**
      * Covers package with additional namespaces and with $appVersionRewuired >= 8.0.0
-     * 
+     *
      * @covers DefaultPackageProvider::getDrivers
      */
     public function testGetDriversWithPackageWithAdditionalNamespaces()
     {
         $this->createPackageFolderOfTestMetadataDriverAdditionalNamespace();
-        
+
         $package = new PackageControllerDefaultWithAdditionalNamespaces($this->app);
         $dpp = new DefaultPackageProvider($this->app, $package);
         $drivers = $dpp->getDrivers();
@@ -130,13 +130,13 @@ class DefaultPackageProviderTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('Concrete\Core\Database\EntityManager\Driver\Driver', $c5Driver1);
         $this->assertInstanceOf('Doctrine\ORM\Mapping\Driver\AnnotationDriver', $driver1);
         $this->assertEquals('PortlandLabs\Concrete5\MigrationTool', $c5Driver1->getNamespace());
-        
+
         $pathsOfDriver1 = $driver1->getPaths();
         $this->assertEquals('src/PortlandLabs/Concrete5/MigrationTool', $this->folderPathCleaner($pathsOfDriver1[0], 4));
-        
+
         $this->removePackageFolderOfTestMetadataDriverAdditionalNamespace();
     }
-    
+
     private function createPackageFolderOfTestMetadataDriverAdditionalNamespace()
     {
         $this->filesystem->makeDirectory(DIR_BASE . DIRECTORY_SEPARATOR .
@@ -222,7 +222,7 @@ class DefaultPackageProviderTest extends \PHPUnit_Framework_TestCase
     /**
      * Clean up if a Exception is thrown
      */
-    protected function onNotSuccessfulTest($e)
+    protected function onNotSuccessfulTest(\Exception $e)
     {
         $this->removePackageFolderOfTestMetadataDriverDefault();
         $this->removePackageFolderOfTestMetadataDriverDefault();

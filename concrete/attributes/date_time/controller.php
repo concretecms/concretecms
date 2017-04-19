@@ -7,12 +7,18 @@ use Concrete\Core\Entity\Attribute\Value\Value\DateTimeValue;
 use Loader;
 use Core;
 use Concrete\Core\Attribute\Controller as AttributeTypeController;
+use DateTime;
+use Exception;
 
 class Controller extends AttributeTypeController
 {
-    public $helpers = array('form');
+    public $helpers = ['form'];
 
-    protected $searchIndexFieldDefinition = array('type' => 'datetime', 'options' => array('notnull' => false));
+    protected $searchIndexFieldDefinition = ['type' => 'datetime', 'options' => ['notnull' => false]];
+
+    protected $akUseNowIfEmpty = null;
+    protected $akDateDisplayMode = null;
+    protected $akTimeResolution = null;
 
     public function getIconFormatter()
     {
@@ -21,8 +27,19 @@ class Controller extends AttributeTypeController
 
     public function saveKey($data)
     {
+        if (!is_array($data)) {
+            $data = [];
+        }
+        $data += [
+            'akUseNowIfEmpty' => false,
+        ];
         $type = $this->getAttributeKeySettings();
+        $type->setUseNowIfEmpty($data['akUseNowIfEmpty']);
         $type->setMode($data['akDateDisplayMode']);
+        if (isset($data['akTimeResolution'])) {
+            $type->setTimeResolution($data['akTimeResolution']);
+        }
+
         return $type;
     }
 
@@ -33,7 +50,9 @@ class Controller extends AttributeTypeController
 
     public function getSearchIndexValue()
     {
-        return $this->attributeValue->getValue()->format('Y-m-d H:i:s');
+        $datetime = $this->getDateTime();
+
+        return ($datetime === null) ? null : $datetime->format('Y-m-d H:i:s');
     }
 
     public function searchForm($list)
@@ -55,25 +74,35 @@ class Controller extends AttributeTypeController
     public function form()
     {
         $this->load();
-        $dt = Loader::helper('form/date_time');
+        $datetime = $this->getDateTime();
+        if ($datetime === null && $this->akUseNowIfEmpty) {
+            $datetime = new DateTime();
+        }
         switch ($this->akDateDisplayMode) {
             case 'text':
-                $form = Loader::helper('form');
-                echo $form->text($this->field('value'), $this->getDisplayValue());
+                $dh = $this->app->make('helper/date');
+                $format = $dh->getPHPDateTimePattern();
+                if ($datetime === null) {
+                    $value = '';
+                    $placeholder = $dh->formatCustom($format, 'now');
+                } else {
+                    $value = $dh->formatCustom($format, $datetime);
+                    $placeholder = $value;
+                }
+                $form = $this->app->make('helper/form');
+                echo $form->text($this->field('value'), $value, ['placeholder' => $placeholder]);
                 break;
             case 'date':
-                $data = $this->post();
-                $value = $dt->translate('value', $data);
-                $caValue = $value ? $value : $this->getDisplayValue();
                 $this->requireAsset('jquery/ui');
-                echo $dt->date($this->field('value'), $caValue == null ? '' : $caValue);
+                $dt = $this->app->make('helper/form/date_time');
+                /* @var \Concrete\Core\Form\Service\Widget\DateTime $dt */
+                echo $dt->date($this->field('value'), $datetime);
                 break;
             default:
                 $this->requireAsset('jquery/ui');
-                $data = $this->post();
-                $value = $dt->translate('value', $data);
-                $caValue = $value ? $value : $this->getDisplayValue();
-                echo $dt->datetime($this->field('value'), $caValue == null ? '' : $caValue);
+                $dt = $this->app->make('helper/form/date_time');
+                /* @var \Concrete\Core\Form\Service\Widget\DateTime $dt */
+                echo $dt->datetime($this->field('value'), $datetime, false, true, null, $this->akTimeResolution);
                 break;
         }
     }
@@ -82,7 +111,9 @@ class Controller extends AttributeTypeController
     {
         $this->load();
         $type = $akey->addChild('type');
+        $type->addAttribute('use-now-if-empty', $this->akUseNowIfEmpty ? 1 : 0);
         $type->addAttribute('mode', $this->akDateDisplayMode);
+        $type->addAttribute('time-resolution', $this->akTimeResolution);
 
         return $akey;
     }
@@ -91,7 +122,9 @@ class Controller extends AttributeTypeController
     {
         $type = $this->getAttributeKeySettings();
         if (isset($akey->type)) {
-            $type->setDisplayMode((string) $akey->type['mode']);
+            $type->setUseNowIfEmpty($akey->type['use-now-if-empty']);
+            $type->setMode($akey->type['mode']);
+            $type->setTimeResolution($akey->type['time-resolution']);
         }
 
         return $type;
@@ -100,12 +133,13 @@ class Controller extends AttributeTypeController
     public function validateValue()
     {
         $v = $this->getAttributeValue()->getValue();
+
         return $v != false;
     }
 
     public function validateForm($data)
     {
-        if (!isset($this->akDateDisplayMode)) {
+        if ($this->akDateDisplayMode === null) {
             $this->load();
         }
         switch ($this->akDateDisplayMode) {
@@ -137,21 +171,25 @@ class Controller extends AttributeTypeController
         echo $html;
     }
 
-    public function getAttributeValueObject()
+    public function getAttributeValueClass()
     {
-        return $this->entityManager->find(DateTimeValue::class, $this->attributeValue->getGenericValue());
+        return DateTimeValue::class;
     }
 
     public function createAttributeValue($value)
     {
-        if ($value != '') {
-            $value = date('Y-m-d H:i:s', strtotime($value));
+        if ($value) {
+            if (!($value instanceof DateTime)) {
+                $timestamp = strtotime($value);
+                $value = new DateTime(date('Y-m-d H:i:s', $timestamp));
+            }
         } else {
             $value = null;
         }
 
         $av = new DateTimeValue();
-        $av->setValue(new \DateTime($value));
+        $av->setValue($value);
+
         return $av;
     }
 
@@ -159,17 +197,34 @@ class Controller extends AttributeTypeController
     {
         $this->load();
         $data = $this->post();
-        $dt = Loader::helper('form/date_time');
+        $datetime = null;
         switch ($this->akDateDisplayMode) {
             case 'text':
-                return $this->createAttributeValue($data['value']);
+                if (isset($data['value']) && is_string($data['value']) && $data['value'] !== '') {
+                    $dh = $this->app->make('helper/date');
+                    try {
+                        $datetime = DateTime::createFromFormat(
+                            $dh->getPHPDateTimePattern(),
+                            $data['value'],
+                            $dh->getTimezone('user')
+                         );
+                    } catch (Exception $x) {
+                    }
+                    if ($datetime !== null) {
+                        $datetime->setTimezone($dh->getTimezone('system'));
+                    }
+                }
                 break;
             case 'date':
             case 'date_time':
-                $value = $dt->translate('value', $data);
-                return $this->createAttributeValue($value);
+            default:
+                $dt = $this->app->make('helper/form/date_time');
+                /* @var \Concrete\Core\Form\Service\Widget\DateTime $dt */
+                $datetime = $dt->translate('value', $data, true);
                 break;
         }
+
+        return $this->createAttributeValue($datetime);
     }
 
     protected function load()
@@ -184,18 +239,67 @@ class Controller extends AttributeTypeController
          * @var $type DateTimeType
          */
 
-        $this->akDateDisplayMode = $type->getMode();
+        $this->akUseNowIfEmpty = $type->getUseNowIfEmpty();
+        $this->set('akUseNowIfEmpty', $this->akUseNowIfEmpty);
+        $this->akDateDisplayMode = (string) $type->getMode();
         $this->set('akDateDisplayMode', $this->akDateDisplayMode);
+        $this->akTimeResolution = $type->getTimeResolution();
+        $this->set('akTimeResolution', $this->akTimeResolution);
     }
 
-    public function createAttributeKeySettings()
+    public function getAttributeKeySettingsClass()
     {
-        return new DateTimeSettings();
+        return DateTimeSettings::class;
     }
 
-    protected function retrieveAttributeKeySettings()
+    /**
+     * Retrieve the date/time value.
+     *
+     * @return DateTime|null
+     */
+    protected function getDateTime()
     {
-        return $this->entityManager->find(DateTimeSettings::class, $this->attributeKey);
+        $result = null;
+        if ($this->attributeValue) {
+            $valueObject = $this->getAttributeValueObject();
+            if ($valueObject !== null) {
+                $dateTime = $valueObject->getValue();
+                if ($dateTime instanceof DateTime) {
+                    $result = $dateTime;
+                }
+            }
+        }
+
+        return $result;
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see AttributeTypeController::getDisplayValue()
+     */
+    public function getDisplayValue()
+    {
+        $result = '';
+        $datetime = $this->getDateTime();
+        if ($datetime !== null) {
+            if ($this->akDateDisplayMode === null) {
+                $this->load();
+            }
+            $dh = $this->app->make('helper/date');
+            /* @var \Concrete\Core\Localization\Service\Date $dh */
+            switch ($this->akDateDisplayMode) {
+                case 'date':
+                    $result = $dh->formatDate($datetime, 'short', $datetime->getTimezone());
+                    break;
+                case 'text':
+                case 'date_time':
+                default:
+                    $result = $dh->formatDateTime($datetime);
+                    break;
+            }
+        }
+
+        return $result;
+    }
 }

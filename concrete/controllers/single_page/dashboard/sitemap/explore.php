@@ -6,9 +6,9 @@ use Concrete\Core\Page\Controller\DashboardSitePageController;
 use Loader;
 use Page;
 
-class Explore extends DashboardSitePageController
+class Explore extends DashboardPageController
 {
-    public function view($nodeID = 1, $auxMessage = false)
+    public function view($nodeID = 0, $auxMessage = false)
     {
         $this->requireAsset('core/sitemap');
 
@@ -37,5 +37,6 @@ class Explore extends DashboardSitePageController
             }
         }
         $this->set('dh', $dh);
+        $this->set('includeSystemPages', $dh->includeSystemPages());
     }
 }

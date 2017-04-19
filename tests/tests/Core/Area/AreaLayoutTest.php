@@ -1,5 +1,7 @@
 <?php
 
+use Concrete\Core\Area\Layout\Layout;
+use Concrete\Core\Area\Layout\ThemeGridLayout;
 
 class AreaLayoutTest extends ConcreteDatabaseTestCase
 {
@@ -24,7 +26,7 @@ class AreaLayoutTest extends ConcreteDatabaseTestCase
         $layout->addLayoutColumn();
         $layout->addLayoutColumn();
 
-        $layout = \Concrete\Core\Area\Layout\Layout::getByID(1);
+        $layout = Layout::getByID(1);
         $this->assertInstanceOf('\Concrete\Core\Area\Layout\CustomLayout', $layout);
         $columns = $layout->getAreaLayoutColumns();
         $this->assertEquals(3, count($columns));
@@ -34,8 +36,13 @@ class AreaLayoutTest extends ConcreteDatabaseTestCase
         $this->assertEquals('<div class="ccm-layout-column-wrapper" id="ccm-layout-column-wrapper-1"></div>', (string) $formatter->getLayoutContainerHtmlObject());
     }
 
+    /**
+     *
+     */
     public function testThemeGridAreaLayoutContainer()
     {
+        $this->truncateTables();
+
         $layout = \Concrete\Core\Area\Layout\ThemeGridLayout::add();
         $layout->addLayoutColumn()->setAreaLayoutColumnSpan(4);
         $column = $layout->addLayoutColumn();
@@ -62,10 +69,10 @@ class AreaLayoutTest extends ConcreteDatabaseTestCase
         $req = Request::getInstance();
         $req->setCurrentPage($c);
 
-        $layout = \Concrete\Core\Area\Layout\Layout::getByID(1);
-        $this->assertInstanceOf('\Concrete\Core\Area\Layout\ThemeGridLayout', $layout);
+        $layout = Layout::getByID(1);
+        $this->assertInstanceOf(ThemeGridLayout::class, $layout);
         $columns = $layout->getAreaLayoutColumns();
-        $this->assertEquals(3, count($columns));
+        $this->assertCount(3, $columns);
 
         $formatter = $layout->getFormatter();
         $this->assertInstanceOf('\Concrete\Core\Area\Layout\Formatter\ThemeGridFormatter', $formatter);

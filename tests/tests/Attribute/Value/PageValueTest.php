@@ -1,15 +1,17 @@
 <?php
 
+require_once __DIR__ . '/fixtures/RelatedPageController.php';
+
 class PageValueTest extends \AttributeValueTestCase
 {
 
-    protected function setUp()
+    public function __construct($name = null, array $data = array(), $dataName = '')
     {
-
-        require_once __DIR__ . '/fixtures/RelatedPageController.php';
+        parent::__construct($name, $data, $dataName);
 
         $this->tables = array_merge($this->tables, array(
             'PageTypes',
+            'PageThemes',
             'PermissionAccessEntityTypes',
             'PermissionKeyCategories',
             'PermissionKeys',
@@ -22,6 +24,12 @@ class PageValueTest extends \AttributeValueTestCase
             'Concrete\Core\Entity\Attribute\Value\Value\NumberValue',
             'Concrete\Core\Entity\Page\Template',
         ));
+
+    }
+
+    public function setUp()
+    {
+        $this->truncateTables();
 
         parent::setUp();
 

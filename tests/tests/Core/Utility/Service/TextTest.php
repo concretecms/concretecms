@@ -9,8 +9,8 @@ class TextTest extends ConcreteDatabaseTestCase
      */
     protected $object;
 
-    protected $fixtures = array();
-    protected $tables = array('ConfigStore');
+    protected $fixtures = [];
+    protected $tables = ['ConfigStore'];
 
     /**
      * Sets up the fixture, for example, opens a network connection.
@@ -33,37 +33,37 @@ class TextTest extends ConcreteDatabaseTestCase
 
     public function asciifyDataProvider()
     {
-        return array(
-            array('Mixed with English and Germaen', 'Mixed with English and Germän', 'de_DE'),
-            array('Mixed with English and ', 'Mixed with English and 日本人', ''),
-            array('Mixed with English and .doc', 'Mixed with English and 日本人.doc', ''),
-            array('Mixed with English and .', 'Mixed with English and 日本人.日本人', ''),
-            array('', '日本人', ''),
-            array('.doc', '日本人.doc', ''),
-            array('.', '日本人.日本人', ''),
-        );
+        return [
+            ['Mixed with English and Germaen', 'Mixed with English and Germän', 'de_DE'],
+            ['Mixed with English and ', 'Mixed with English and 日本人', ''],
+            ['Mixed with English and .doc', 'Mixed with English and 日本人.doc', ''],
+            ['Mixed with English and .', 'Mixed with English and 日本人.日本人', ''],
+            ['', '日本人', ''],
+            ['.doc', '日本人.doc', ''],
+            ['.', '日本人.日本人', ''],
+        ];
     }
 
     public function urlifyDataProvider()
     {
-        return array(
-            array('jetudie-le-francais', " J'étudie le français "),
-            array('lo-siento-no-hablo-espanol', 'Lo siento, no hablo español.'),
-            array('f3pws', 'ΦΞΠΏΣ'),
-            array('yo-hablo-espanol', '¿Yo hablo español?'),
-        );
+        return [
+            ['jetudie-le-francais', " J'étudie le français "],
+            ['lo-siento-no-hablo-espanol', 'Lo siento, no hablo español.'],
+            ['f3pws', 'ΦΞΠΏΣ'],
+            ['yo-hablo-espanol', '¿Yo hablo español?'],
+        ];
     }
 
     public function shortenDataProvider()
     {
-        return array(
-            array('This is a simple test...', 'This is a simple test case', 24, '...'),
-            array('This is a simple test etc', 'This is a simple test case', 22, ' etc'),
-            array('This is a simple test.', 'This is a simple test case', 21, '.'),
-            array('The quick brown fox jumps over the lazy dog', 'The quick brown fox jumps over the lazy dog', 255, '…'),
-            array('The lazy fox jumps over the quick brown dog', 'The lazy fox jumps over the quick brown dog', 0, '…'),
-            array('This_is_a_simple_test_ca…', 'This_is_a_simple_test_case', 24, '…'),
-        );
+        return [
+            ['This is a simple test...', 'This is a simple test case', 24, '...'],
+            ['This is a simple test etc', 'This is a simple test case', 22, ' etc'],
+            ['This is a simple test.', 'This is a simple test case', 21, '.'],
+            ['The quick brown fox jumps over the lazy dog', 'The quick brown fox jumps over the lazy dog', 255, '…'],
+            ['The lazy fox jumps over the quick brown dog', 'The lazy fox jumps over the quick brown dog', 0, '…'],
+            ['This_is_a_simple_test_ca…', 'This_is_a_simple_test_case', 24, '…'],
+        ];
     }
 
     public function testTextHelper()
@@ -112,5 +112,31 @@ class TextTest extends ConcreteDatabaseTestCase
     public function testWordSafeShortText($expected, $input1, $input2, $input3)
     {
         $this->assertEquals($expected, $this->object->wordSafeShortText($input1, $input2, $input3));
+    }
+
+    public function autolinkDataProvider()
+    {
+        return [
+            ['', ''],
+            ['This is not a link', 'This is not a link'],
+            ['<a href="http://www.concrete5.org" rel="nofollow">www.concrete5.org</a>', 'www.concrete5.org'],
+            ['<a href="http://www.concrete5.org" target="_blank" rel="nofollow">www.concrete5.org</a>', 'www.concrete5.org', true],
+            ['Before <a href="http://www.concrete5.org" rel="nofollow">www.concrete5.org</a> after', 'Before www.concrete5.org after'],
+            ['<a href="http://concrete5.org" rel="nofollow">concrete5.org</a>', 'http://concrete5.org'],
+            ['<a href="https://concrete5.org" rel="nofollow">concrete5.org</a>', 'https://concrete5.org'],
+            ['Before <a href="http://concrete5.org" rel="nofollow">concrete5.org</a> after', 'Before http://concrete5.org after'],
+            ['Before <a href="https://concrete5.org" rel="nofollow">concrete5.org</a> after', 'Before https://concrete5.org after'],
+            ['<a href="http://concrete5.org" rel="nofollow">concrete5.org</a> <a href="https://concrete5.org" rel="nofollow">concrete5.org</a>', 'http://concrete5.org https://concrete5.org'],
+            ['<a href="http://www.concrete5.org" rel="nofollow">www.concrete5.org</a> <a href="https://concrete5.org" rel="nofollow">concrete5.org</a>', 'www.concrete5.org https://concrete5.org'],
+            ['<a href="https://www.concrete5.org" rel="nofollow">www.concrete5.org</a>', 'www.concrete5.org', false, 'https://'],
+        ];
+    }
+
+    /**
+     * @dataProvider autolinkDataProvider
+     */
+    public function testAutolink($expected, $input, $newWindow = false, $defaultProtocol = 'http://')
+    {
+        $this->assertSame($expected, $this->object->autolink($input, $newWindow, $defaultProtocol));
     }
 }

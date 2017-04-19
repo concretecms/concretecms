@@ -5,24 +5,6 @@ $th = Loader::helper('text');
 $ip = Loader::helper('validation/ip');
 ?>
 
-<div class="ccm-dashboard-header-buttons">
-    <div class="ccm-header-search-form ccm-ui">
-        <form role="form" action="<?=$controller->action('view')?>">
-            <div class="input-group">
-                <input type="text" class="form-control" autocomplete="off" name="cmpMessageKeywords" value="<?=h($_REQUEST['cmpMessageKeywords'])?>" placeholder="<?=t('Keywords')?>">
-                <span class="input-group-btn">
-                <select data-select="bootstrap" name="cmpMessageFilter">
-                    <?php foreach ($cmpFilterTypes as $optionValue => $optionText) { ?>
-                    <option value="<?php echo $optionValue; ?>" <?php if ($optionValue == $cmpMessageFilter) { echo 'selected'; } ?>><?php echo $optionText; ?></option>
-                    <?php } ?>
-                </select>
-                <button class="btn btn-info" type="submit"><i class="fa fa-search"></i></button>
-                </span>
-            </div>
-        </form>
-    </div>
-</div>
-
 <div class="ccm-dashboard-content-full">
     <div data-search-element="results">
         <div class="table-responsive">
@@ -137,6 +119,25 @@ $ip = Loader::helper('validation/ip');
         </div>
     </div>
 </div>
+
+<div class="ccm-dashboard-header-buttons">
+    <div class="ccm-header-search-form ccm-ui">
+        <form role="form" action="<?=$controller->action('view')?>">
+            <div class="input-group">
+                <input type="text" class="form-control" autocomplete="off" name="cmpMessageKeywords" value="<?=h($_REQUEST['cmpMessageKeywords'])?>" placeholder="<?=t('Keywords')?>">
+                <span class="input-group-btn">
+                <select data-select="bootstrap" name="cmpMessageFilter">
+                    <?php foreach ($cmpFilterTypes as $optionValue => $optionText) { ?>
+                        <option value="<?php echo $optionValue; ?>" <?php if ($optionValue == $cmpMessageFilter) { echo 'selected'; } ?>><?php echo $optionText; ?></option>
+                    <?php } ?>
+                </select>
+                <button class="btn btn-info" type="submit"><i class="fa fa-search"></i></button>
+                </span>
+            </div>
+        </form>
+    </div>
+</div>
+
 
 <script>
 $(function() {

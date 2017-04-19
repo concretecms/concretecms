@@ -50,7 +50,7 @@ class PackageService
     public function getInstalledList()
     {
         $r = $this->entityManager->getRepository('\Concrete\Core\Entity\Package');
-        return $r->findAll(array('pkgIsInstalled' => true), array('pkgDateInstalled', 'asc'));
+        return $r->findBy(array('pkgIsInstalled' => true), array('pkgDateInstalled' => 'asc'));
     }
 
     /**
@@ -187,40 +187,32 @@ class PackageService
 
     public function install(Package $p, $data)
     {
-        $this->localization->pushActiveContext('system');
-        try {
+        $this->localization->pushActiveContext(Localization::CONTEXT_SYSTEM);
+        ClassLoader::getInstance()->registerPackage($p);
 
-            ClassLoader::getInstance()->registerPackage($p);
+        if (method_exists($p, 'validate_install')) {
+            $response = $p->validate_install($data);
+        }
 
-            if (method_exists($p, 'validate_install')) {
-                $response = $p->validate_install($data);
-            }
+        if (isset($response) && $response instanceof ErrorList && $response->has()) {
+            return $response;
+        }
 
-            if (isset($response) && $response instanceof ErrorList && $response->has()) {
-                return $response;
-            }
+        $this->bootPackageEntityManager($p);
+        $p->install($data);
 
-            $this->bootPackageEntityManager($p);
-            $p->install($data);
-
-            $u = new \User();
-            $swapper = $p->getContentSwapper();
-            if ($u->isSuperUser() && $swapper->allowsFullContentSwap($p) && $data['pkgDoFullContentSwap']) {
-                $swapper->swapContent($p, $data);
-            }
+        $u = new \User();
+        $swapper = $p->getContentSwapper();
+        if ($u->isSuperUser() && $swapper->allowsFullContentSwap($p) && $data['pkgDoFullContentSwap']) {
+            $swapper->swapContent($p, $data);
             if (method_exists($p, 'on_after_swap_content')) {
                 $p->on_after_swap_content($data);
             }
-            $this->localization->popActiveContext();
-            $pkg = $this->getByHandle($p->getPackageHandle());
-
-            return $p;
-        } catch (\Exception $e) {
-            $this->localization->popActiveContext();
-            $error = $this->application->make('error');
-            $error->add($e);
-            return $error;
         }
+        $this->localization->popActiveContext();
+        $pkg = $this->getByHandle($p->getPackageHandle());
+
+        return $p;
     }
 
     /**

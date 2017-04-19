@@ -88,4 +88,24 @@ class Controller extends GenericOauth2TypeController
         }
     }
 
+    /**
+     * Get the URL of the concrete5 account associated to a user.
+     *
+    * @param \Concrete\Core\User\User|\Concrete\Core\User\UserInfo|\Concrete\Core\Entity\User\User|int $user
+    *
+    * @return string|null Returns null if the user is not bound to a concrete5 account.
+    */
+    public function getConcrete5ProfileURL($user)
+    {
+        $result = null;
+        $binding = $this->getBindingForUser($user);
+        if ($binding !== null) {
+            $concrete5UserID = (int) $binding;
+            if ($concrete5UserID !== 0) {
+                $result = "https://www.concrete5.org/profile/-/view/$concrete5UserID/";
+            }
+        }
+
+        return $result;
+    }
 }

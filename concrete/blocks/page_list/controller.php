@@ -160,7 +160,10 @@ class Controller extends BlockController
         }
 
         if ($this->filterByCustomTopic) {
-            $this->list->filterByTopic(intval($this->customTopicTreeNodeID));
+            $ak = CollectionKey::getByHandle($this->customTopicAttributeKeyHandle);
+            if (is_object($ak)) {
+                $ak->getController()->filterByAttribute($this->list, $this->customTopicTreeNodeID);
+            }
         }
 
         $this->list->filterByExcludePageList(false);
@@ -303,9 +306,9 @@ class Controller extends BlockController
                 $start = "$year-01-01 00:00:00";
                 $end = "$year-12-31 23:59:59";
             }
+            $dh = Core::make('helper/date');
+            /* @var $dh \Concrete\Core\Localization\Service\Date */
             if ($timezone !== 'system') {
-                $dh = Core::make('helper/date');
-                /* @var $dh \Concrete\Core\Localization\Service\Date */
                 $start = $dh->toDB($start, $timezone);
                 $end = $dh->toDB($end, $timezone);
             }
@@ -313,8 +316,8 @@ class Controller extends BlockController
             $this->list->filterByPublicDate($end, '<=');
 
             $seo = Core::make('helper/seo');
-            $srv = Core::make('helper/date');
-            $seo->addTitleSegment($srv->date('F Y', $start));
+            $date = ucfirst(\Punic\Calendar::getMonthName($month, 'wide', '', true).' '.$year);
+            $seo->addTitleSegment($date);
         }
         $this->view();
     }

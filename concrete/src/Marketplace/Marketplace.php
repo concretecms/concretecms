@@ -6,6 +6,7 @@ use Core;
 use Concrete\Core\Support\Facade\Package;
 use TaskPermission;
 use URL;
+use Zend\Http\Client\Adapter\Exception\TimeoutException;
 
 class Marketplace
 {
@@ -206,7 +207,7 @@ class Marketplace
                         $connectMethod = 'view';
                         try {
                             $csToken = self::generateSiteToken();
-                        } catch (\Concrete\Core\File\Exception\RequestTimeoutException $exception) {
+                        } catch (TimeoutException $exception) {
                             return '<div class="ccm-error">' .
                             t('Unable to generate a marketplace token. Request timed out.') .
                             '</div>';
@@ -218,7 +219,7 @@ class Marketplace
                     // new connection
                     try {
                         $csToken = self::generateSiteToken();
-                    } catch (\Concrete\Core\File\Exception\RequestTimeoutException $exception) {
+                    } catch (TimeoutException $exception) {
                         return '<div class="ccm-error">' .
                         t('Unable to generate a marketplace token. Request timed out.') .
                         '</div>';
@@ -273,7 +274,7 @@ class Marketplace
     /**
      * @return bool|string
      *
-     * @throws \Concrete\Core\File\Exception\RequestTimeoutException
+     * @throws TimeoutException
      */
     public function generateSiteToken()
     {

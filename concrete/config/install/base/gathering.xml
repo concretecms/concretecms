@@ -140,12 +140,12 @@
     <permissionkeys>
         <permissionkey handle="edit_gatherings" name="Edit Gatherings" description="Can edit the footprint and items in all gatherings." package="" category="admin">
             <access>
-                <group name="Administrators"/>
+                <group name="Administrators" description=""/>
             </access>
         </permissionkey>
         <permissionkey handle="edit_gathering_items" name="Edit Gathering Items" description="" package="" category="gathering">
             <access>
-                <group name="Administrators"/>
+                <group name="Administrators" description=""/>
             </access>
         </permissionkey>
     </permissionkeys>

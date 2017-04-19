@@ -10,10 +10,12 @@ use Page;
 use PageType;
 use Permissions;
 use User;
+use Concrete\Core\Attribute\ObjectInterface as AttributeObjectInterface;
+use Concrete\Core\Permission\ObjectInterface as PermissionObjectInterface;
 use Concrete\Core\Feature\Assignment\CollectionVersionAssignment as CollectionVersionFeatureAssignment;
 use Concrete\Core\Support\Facade\Facade;
 
-class Version extends Object implements \Concrete\Core\Permission\ObjectInterface
+class Version extends Object implements PermissionObjectInterface, AttributeObjectInterface
 {
     use ObjectTrait;
 
@@ -630,6 +632,11 @@ class Version extends Object implements \Concrete\Core\Permission\ObjectInterfac
             $cvID,
         ));
         $db->executeQuery('delete from CollectionVersionAreaStyles where cID = ? and cvID = ?', array(
+            $cID,
+            $cvID,
+        ));
+
+        $db->executeQuery('delete from PageTypeComposerOutputBlocks where cID = ? and cvID = ?', array(
             $cID,
             $cvID,
         ));

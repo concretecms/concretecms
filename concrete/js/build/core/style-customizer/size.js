@@ -25,7 +25,7 @@
         }
         my.$slider.slider({
             min: 0,
-            max: 400,
+            max: 1000,
             step: step,
             value: my.options.value,
             create: function (e, ui) {

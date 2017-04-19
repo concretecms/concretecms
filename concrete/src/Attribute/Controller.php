@@ -1,15 +1,17 @@
 <?php
 namespace Concrete\Core\Attribute;
 
+use Concrete\Core\Attribute\Form\Control\View\View as ControlView;
 use Concrete\Core\Attribute\Value\EmptyRequestAttributeValue;
 use Concrete\Core\Controller\AbstractController;
 use Concrete\Core\Entity\Attribute\Key\Settings\EmptySettings;
+use Concrete\Core\Form\Context\ContextInterface;
 use Concrete\Core\Search\ItemList\Database\AttributedItemList;
 use Core;
 use Concrete\Core\Attribute\View as AttributeTypeView;
 use Doctrine\ORM\EntityManager;
 
-class Controller extends AbstractController
+class Controller extends AbstractController implements AttributeInterface
 {
     protected $entityManager;
 
@@ -118,6 +120,11 @@ class Controller extends AbstractController
     public function field($fieldName)
     {
         return 'akID[' . $this->attributeKey->getAttributeKeyID() . '][' . $fieldName . ']';
+    }
+
+    public function getControlView(ContextInterface $context)
+    {
+        return new ControlView($context, $this->getAttributeKey(), $this->getAttributeValue());
     }
 
     public function label($customText = false)
@@ -271,6 +278,16 @@ class Controller extends AbstractController
         return new EmptyRequestAttributeValue();
     }
 
+    /**
+     * Create the default attribute value (if needed).
+     *
+     * @return \Concrete\Core\Entity\Attribute\Value\Value|null
+     */
+    public function createDefaultAttributeValue()
+    {
+        return null;
+    }
+
     public function createAttributeValue($mixed)
     {
         return $this->saveValue($mixed);
@@ -303,14 +320,20 @@ class Controller extends AbstractController
         return $e;
     }
 
+    public function getAttributeKeySettingsClass()
+    {
+        return EmptySettings::class;
+    }
+
     public function createAttributeKeySettings()
     {
-        return new EmptySettings();
+        $class = $this->getAttributeKeySettingsClass();
+        return new $class();
     }
 
     protected function retrieveAttributeKeySettings()
     {
-        return $this->entityManager->find('Concrete\Core\Entity\Attribute\Key\Settings\EmptySettings', $this->attributeKey);
+        return $this->entityManager->find($this->getAttributeKeySettingsClass(), $this->attributeKey);
     }
 
     /*
@@ -323,9 +346,17 @@ class Controller extends AbstractController
         }
     }
 
-    public function getAttributeValueObject()
+    public function getAttributeValueClass()
     {
         return null;
+    }
+
+    public function getAttributeValueObject()
+    {
+        $class = $this->getAttributeValueClass();
+        if ($class) {
+            return $this->entityManager->find($class, $this->attributeValue->getGenericValue());
+        }
     }
 
     public function getAttributeKeySettings()

@@ -28,7 +28,7 @@
         $.fn.dialog.open({
             width: w,
             height: '100%',
-            href: CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/express/entry/search/' + entityID,
+            href: CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/express/entry/search?exEntityID=' + entityID,
             modal: true,
             title: ccmi18n_express.entriesTitle,
             onClose: function() {

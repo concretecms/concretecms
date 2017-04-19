@@ -2,19 +2,17 @@
 namespace Concrete\Controller\Backend;
 
 use Concrete\Controller\Backend\UserInterface\Block as BackendInterfaceBlockController;
-use Concrete\Core\Block\Events\BlockDelete;
 use Concrete\Core\Block\View\BlockView;
 use Concrete\Core\View\DialogView;
 use Core;
-use Localization;
-use Symfony\Component\HttpFoundation\JsonResponse;
+use Concrete\Core\Localization\Localization;
 
 class Block extends BackendInterfaceBlockController
 {
     public function render()
     {
         $loc = Localization::getInstance();
-        $loc->setActiveContext('site');
+        $loc->setActiveContext(Localization::CONTEXT_SITE);
 
         $c = $this->block->getBlockCollectionObject();
         $dl = Core::make('multilingual/detector');

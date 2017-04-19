@@ -9,7 +9,7 @@ use Concrete\Core\Attribute\Controller as AttributeTypeController;
 class DefaultController extends AttributeTypeController
 {
     protected $searchIndexFieldDefinition = array(
-        'type' => 'string',
+        'type' => 'text',
         'options' => array('default' => null, 'notnull' => false),
     );
 
@@ -38,9 +38,9 @@ class DefaultController extends AttributeTypeController
         return Core::make('helper/text')->entities($this->attributeValue->getValue());
     }
 
-    public function getAttributeValueObject()
+    public function getAttributeValueClass()
     {
-        return $this->entityManager->find(TextValue::class, $this->attributeValue->getGenericValue());
+        return TextValue::class;
     }
 
     public function search()
@@ -58,16 +58,11 @@ class DefaultController extends AttributeTypeController
         return $av;
     }
 
-    public function createAttributeKeySettings()
+    public function getAttributeKeySettingsClass()
     {
-        return new TextSettings();
+        return TextSettings::class;
     }
-
-    protected function retrieveAttributeKeySettings()
-    {
-        return $this->entityManager->find(TextSettings::class, $this->attributeKey);
-    }
-
+    
     public function createAttributeValueFromRequest()
     {
         $data = $this->post();

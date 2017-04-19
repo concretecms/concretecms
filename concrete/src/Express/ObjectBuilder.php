@@ -73,11 +73,14 @@ class ObjectBuilder
         $this->entityManager->flush();
 
         // grab and persist all attribute key settings object
+        $category = $this->entity->getAttributeKeyCategory();
         foreach($this->entity->getAttributes() as $key) {
             $settings = $key->getAttributeKeySettings();
             $this->entityManager->persist($settings);
+            $this->entityManager->flush();
+
+            $category->getSearchIndexer()->updateRepositoryColumns($category, $key);
         }
-        $this->entityManager->flush();
 
         return $this->entity;
     }
@@ -86,6 +89,12 @@ class ObjectBuilder
     {
         return new ObjectBuilder\FormBuilder($this, $formName);
     }
+
+    public function buildAssociation()
+    {
+        return new ObjectBuilder\AssociationBuilder(new ObjectAssociationBuilder(), $this);
+    }
+
 
     public function addAttribute($type_handle, $name, $handle = null, Settings $settings = null)
     {

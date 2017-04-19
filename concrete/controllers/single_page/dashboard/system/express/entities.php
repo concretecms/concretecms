@@ -5,6 +5,7 @@ use Concrete\Core\Attribute\Category\SearchIndexer\ExpressSearchIndexer;
 use Concrete\Core\Entity\Express\Entity;
 use Concrete\Core\Entity\Express\Form;
 use Concrete\Core\Page\Controller\DashboardPageController;
+use Concrete\Core\Support\Facade\Express;
 use Concrete\Core\Tree\Node\Node;
 use Concrete\Core\Tree\Type\ExpressEntryResults;
 use Doctrine\DBAL\Schema\Schema;
@@ -26,6 +27,11 @@ class Entities extends DashboardPageController
 
             if (!$vs->handle($handle)) {
                 $this->error->add(t('You must create a handle for your data object. It may contain only lowercase letters and underscores.'), 'handle');
+            } else {
+                $entity = Express::getObjectByHandle($handle);
+                if (is_object($entity)) {
+                    $this->error->add(t('An express object with this handle already exists.'));
+                }
             }
 
             if (!$name) {
@@ -80,7 +86,7 @@ class Entities extends DashboardPageController
         $entities = $r->findAll(array(), array('name' => 'asc'));
         $select = ['' => t('** Choose Entity')];
         foreach($entities as $entity) {
-            $select[$entity->getID()] = $entity->getName();
+            $select[$entity->getID()] = $entity->getEntityDisplayName();
         }
         $this->set('entities', $select);
         $this->render('/dashboard/system/express/entities/add');
@@ -189,6 +195,11 @@ class Entities extends DashboardPageController
 
         if (!$vs->handle($handle)) {
             $this->error->add(t('You must create a handle for your data object. It may contain only lowercase letters and underscores.'), 'handle');
+        } else {
+            $exist = Express::getObjectByHandle($handle);
+            if (is_object($exist) && $exist->getID() != $id) {
+                $this->error->add(t('An express object with this handle already exists.'));
+            }
         }
 
         if (!$name) {

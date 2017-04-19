@@ -55,10 +55,14 @@ function ConcretePanel(options) {
 
     this.onPanelLoad = function (element) {
         var $link = $('a[data-launch-panel=' + this.getIdentifier() + ']');
+        var hasTooltip = $link.hasClass('launch-tooltip');
 
         this.setupSubPanels();
         this.setupPanelDetails();
         $link.removeClass().addClass('ccm-launch-panel-active');
+        if (hasTooltip) {
+            $link.addClass('launch-tooltip');
+        }
         Concrete.event.publish('PanelLoad', {panel: this, element: element});
     };
 
@@ -80,7 +84,9 @@ function ConcretePanel(options) {
             $(this).dequeue();
 
             callback.call(me);
-            Concrete.event.publish('PanelClose', {panel: this});
+            setTimeout(function() {
+                Concrete.event.publish('PanelClose', {panel: obj});
+            }, 0);
         });
     };
 

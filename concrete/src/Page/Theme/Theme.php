@@ -666,7 +666,7 @@ class Theme extends Object
                 throw new \Exception(static::E_THEME_INSTALLED);
             }
             $loc = Localization::getInstance();
-            $loc->pushActiveContext('system');
+            $loc->pushActiveContext(Localization::CONTEXT_SYSTEM);
             try {
                 $res = static::getThemeNameAndDescription($dir, $pThemeHandle, is_object($pkg) ? $pkg->getPackageHandle() : '');
             } catch (\Exception $x) {
@@ -871,6 +871,12 @@ class Theme extends Object
         $site->setThemeID($this->getThemeID());
         $entityManager->persist($site);
         $entityManager->flush();
+
+        $db = Loader::db();
+        $r = $db->query(
+            "update CollectionVersions inner join Pages on CollectionVersions.cID = Pages.cID left join Packages on Pages.pkgID = Packages.pkgID set CollectionVersions.pThemeID = ? where cIsTemplate = 0 and siteTreeID = ? and (Packages.pkgHandle <> 'core' or pkgHandle is null or Pages.ptID > 0)",
+            array($this->pThemeID, $site->getSiteTreeID())
+        );
     }
 
     /**

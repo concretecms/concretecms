@@ -1,6 +1,9 @@
 <?php defined('C5_EXECUTE') or die('Access Denied.');
 
 $json = Loader::helper('json');
+if (!isset($editmode)) {
+    $editmode = null;
+}
 ?>
 <style>
     .table.authentication-types i.handle {
@@ -22,6 +25,7 @@ if ($editmode) {
 
     $token = \Core::make('token');
     $token->output("auth_type_save.{$at->getAuthenticationTypeID()}");
+    echo $form->getAutocompletionDisabler();
 }
 if (!$editmode) {
     ?>

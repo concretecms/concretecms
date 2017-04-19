@@ -262,6 +262,14 @@ class Access extends Object
         );
     }
 
+    public function removeWorkflow(Workflow $wf)
+    {
+        $db = Database::connection();
+        $db->executeQuery('delete from PermissionAccessWorkflows where paID = ? and wfID = ?', array(
+            $this->getPermissionAccessID(), $wf->getWorkflowID()
+        ));
+    }
+
     public function getWorkflows()
     {
         $db = Database::connection();

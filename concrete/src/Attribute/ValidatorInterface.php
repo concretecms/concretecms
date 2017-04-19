@@ -38,7 +38,7 @@ interface ValidatorInterface
     /**
      * @param Controller $controller
      */
-    function validateCurrentAttributeValue(Controller $controller, Value $value);
+    function validateCurrentAttributeValue(Controller $controller, AttributeValueInterface $value);
 
 
 }

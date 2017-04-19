@@ -40,7 +40,8 @@ class ContentImporter
         $manager = Core::make('import/item/manager');
         foreach ($manager->getImporterRoutines() as $routine) {
             if (isset($this->home) && $routine instanceof SpecifiableHomePageRoutineInterface) {
-                $routine->setHomePage($this->home);
+                $home = \Page::getByID($this->home->getCollectionID()); // we always need the most recent version.
+                $routine->setHomePage($home);
             }
             $routine->import($element);
             if (isset($this->home) && $routine instanceof SpecifiableHomePageRoutineInterface) {
