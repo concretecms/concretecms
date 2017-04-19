@@ -10,7 +10,6 @@ use Database;
 
 class Controller extends DefaultController
 {
-    protected $searchIndexFieldDefinition = array('type' => 'text', 'options' => array('default' => null, 'notnull' => false));
 
     public function getIconFormatter()
     {

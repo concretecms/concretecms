@@ -87,17 +87,29 @@ foreach ($locales as $locale) {
     <div class="form-group">
         <div class="checkbox">
             <label>
-                <?php echo $form->checkbox('useBrowserDetectedLocale', 1, $useBrowserDetectedLocale) ?>
-                <span><?php echo t('Attempt to use visitor\'s locale based on their browser information.') ?></span>
-            </label>
-        </div>
-        <div class="checkbox">
-            <label>
                 <?php echo $form->checkbox('redirectHomeToDefaultLocale', 1, $redirectHomeToDefaultLocale) ?>
                 <span><?php echo t('Redirect home page to default locale.') ?></span>
             </label>
         </div>
+        <div style="margin-left: 20px">
+            <div class="checkbox<?= $redirectHomeToDefaultLocale ? '' : ' disabled' ?>">
+                <label>
+                    <?php echo $form->checkbox('useBrowserDetectedLocale', 1, $useBrowserDetectedLocale, $redirectHomeToDefaultLocale ? [] : ['disabled' => 'disabled']) ?>
+                    <span><?php echo t('Attempt to use visitor\'s locale based on their browser information.') ?></span>
+                </label>
+            </div>
+        </div>
     </div>
+    <script>
+    $(document).ready(function() {
+        $('#redirectHomeToDefaultLocale').on('change', function() {
+            $('#useBrowserDetectedLocale')
+                .prop('disabled', !this.checked)
+                .closest('div.checkbox')[this.checked ? 'removeClass' : 'addClass']('disabled')
+            ;
+        });
+    });
+    </script>
 
     <div class="form-group">
         <label class="control-label"><?php echo t('Site interface source locale');

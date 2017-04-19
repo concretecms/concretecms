@@ -316,7 +316,6 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
         }
 
         $dl = $cms->make('multilingual/detector');
-        $dl->setupSiteInterfaceLocalization($collection);
 
         if (!$request->getPath()
             && $request->isMethod('GET')
@@ -326,10 +325,14 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
 
             // First, we check to see if we need to redirect to a default multilingual section.
             if ($dl->isEnabled() && $site->getConfigRepository()->get('multilingual.redirect_home_to_default_locale')) {
-                // Let's retrieve the default language
-                $ms = $dl->getPreferredSection();
-                if (is_object($ms)) {
-                    return $this->redirect(\URL::to($ms));
+                // Redirect only if it's the first request, otherwise we can't browse to the root locale
+                $session = $cms->make('session');
+                if (!$session->has('multilingual_default_locale')) {
+                    // Let's retrieve the default language
+                    $ms = $dl->getPreferredSection();
+                    if (is_object($ms) && !$ms->isDefaultMultilingualSection($site)) {
+                        return $this->redirect(\URL::to($ms), Response::HTTP_FOUND);
+                    }
                 }
             }
 
@@ -339,6 +342,8 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
                 return $this->redirect(\URL::to($collection));
             }
         }
+
+        $dl->setupSiteInterfaceLocalization($collection);
 
         $request->setCurrentPage($collection);
         $c = $collection; // process.php needs this

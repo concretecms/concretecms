@@ -13,7 +13,7 @@ abstract class AbstractMigration extends DoctrineAbstractMigration
         $this->version->getConfiguration()->getOutputWriter()->write($message);
     }
 
-    protected function refreshEntities($entities)
+    protected function refreshEntities($entities = null)
     {
         $classes = array();
         $em = $this->connection->getEntityManager();
