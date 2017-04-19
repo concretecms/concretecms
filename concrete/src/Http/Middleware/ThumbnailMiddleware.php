@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Http\Middleware;
 
 use Concrete\Core\Application\ApplicationAwareInterface;
@@ -109,7 +108,7 @@ class ThumbnailMiddleware implements MiddlewareInterface, ApplicationAwareInterf
     }
 
     /**
-     * Try building an unbuilt thumbnail
+     * Try building an unbuilt thumbnail.
      *
      * @param \Concrete\Core\Entity\File\File $file
      * @param array                           $thumbnail
@@ -258,7 +257,7 @@ class ThumbnailMiddleware implements MiddlewareInterface, ApplicationAwareInterf
     private function failBuild(File $file, $thumbnail)
     {
         $this->app->make(LoggerInterface::class)
-            ->critical('Failed to generate or locate the thumbnail for file "'.$file->getFileID().'"');
+            ->critical('Failed to generate or locate the thumbnail for file "' . $file->getFileID() . '"');
 
         // Complete the build anyway.
         // Cache must be cleared to remove this and attempt rebuild
