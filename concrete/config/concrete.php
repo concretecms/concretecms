@@ -254,7 +254,7 @@ return [
         ],
 
         'clear' => [
-            'thumbnails' => true
+            'thumbnails' => false
         ],
     ],
 
