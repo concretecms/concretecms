@@ -96,9 +96,6 @@ class Controller extends BlockController
                         } elseif ($content instanceof SelectValue) {
                             $content = (string) $content;
                         } else {
-                            var_dump_safe($content);
-                            var_dump_safe($content_alt);
-                            dd(0);
                             $content = $content_alt->getDisplayValue();
                         }
                     }
