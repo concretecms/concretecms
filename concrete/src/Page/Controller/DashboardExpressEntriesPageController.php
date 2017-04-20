@@ -3,15 +3,22 @@ namespace Concrete\Core\Page\Controller;
 
 use Concrete\Core\Entity\Express\Entity;
 use Concrete\Core\Entity\Express\Entry;
-use Concrete\Core\Express\Entry\Manager;
+use Concrete\Core\Express\Entry\Notifier\NotificationInterface;
+use Concrete\Core\Express\Export\EntryList\CsvWriter;
 use Concrete\Core\Express\Form\Context\DashboardFormContext;
 use Concrete\Core\Express\Form\Context\DashboardViewContext;
+use Concrete\Core\Express\Form\Processor\ProcessorInterface;
 use Concrete\Core\Express\Form\Renderer;
 use Concrete\Core\Express\EntryList;
-use Concrete\Core\Express\Form\Validator;
+use Concrete\Core\Express\Form\Validator\ValidatorInterface;
+use Concrete\Core\Form\Context\ContextFactory;
 use Concrete\Core\Tree\Node\Node;
 use Concrete\Core\Tree\Type\ExpressEntryResults;
 use Core;
+use GuzzleHttp\Psr7\Stream;
+use League\Csv\Writer;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 abstract class DashboardExpressEntriesPageController extends DashboardPageController
 {
@@ -75,16 +82,27 @@ abstract class DashboardExpressEntriesPageController extends DashboardPageContro
     /**
      * Export Express entries into a CSV.
      *
-     * @param null $treeNodeParentID
+     * @param int|null $treeNodeParentID
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function csv_export($treeNodeParentID = null)
     {
-        $parent = $this->getParentNode($treeNodeParentID);
-        $entity = $this->getEntity($parent);
-        $entryList = new EntryList($entity);
+        $me = $this;
+        $parent = $me->getParentNode($treeNodeParentID);
+        $entity = $me->getEntity($parent);
 
-        $csvService = Core::make('helper/csv/entry_list', [$entryList, $entity->getName()]);
-        $csvService->generate();
+        $headers = [
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => 'attachment; filename=' . $entity->getPluralHandle() . '.csv'
+        ];
+
+        return StreamedResponse::create(function() use ($entity, $me) {
+            $entryList = new EntryList($entity);
+
+            $writer = new CsvWriter(Writer::createFromPath('php://output', 'w'));
+            $writer->insertHeaders($entity);
+            $writer->insertEntryList($entryList);
+        }, 200, $headers);
     }
 
     /**
@@ -143,9 +161,10 @@ abstract class DashboardExpressEntriesPageController extends DashboardPageContro
             $this->error->add($this->token->getErrorMessage());
         }
         if (!$this->error->has()) {
-            $url = $this->getBackURL($entry->getEntity());
-
-            $manager = new Manager($this->entityManager, $this->request);
+            $entity = $entry->getEntity();
+            $url = $this->getBackURL($entity);
+            $controller = \Core::make('express')->getEntityController($entity);
+            $manager = $controller->getEntryManager($this->request);
             $manager->deleteEntry($entry);
 
             $this->flash('success', t('Entry deleted successfully.'));
@@ -168,8 +187,13 @@ abstract class DashboardExpressEntriesPageController extends DashboardPageContro
         $entity = $entry->getEntity();
         $this->entityManager->refresh($entity); // sometimes this isn't eagerly loaded (?)
 
+        $express = \Core::make('express');
+        $controller = $express->getEntityController($entity);
+        $factory = new ContextFactory($controller);
+        $context = $factory->getContext(new DashboardViewContext());
+
         $renderer = new Renderer(
-            new DashboardViewContext(),
+            $context,
             $entity->getDefaultViewForm()
         );
 
@@ -211,13 +235,19 @@ abstract class DashboardExpressEntriesPageController extends DashboardPageContro
             throw new \Exception(t('Access Denied'));
         }
 
+        $entity = $entry->getEntity();
         $this->set('entry', $entry);
-        $this->set('entity', $entry->getEntity());
+        $this->set('entity', $entity);
         $entity = $entry->getEntity();
         $this->entityManager->refresh($entity); // sometimes this isn't eagerly loaded (?)
 
+        $express = \Core::make('express');
+        $controller = $express->getEntityController($entity);
+        $factory = new ContextFactory($controller);
+        $context = $factory->getContext(new DashboardFormContext());
+
         $renderer = new Renderer(
-            new DashboardFormContext(),
+            $context,
             $entity->getDefaultViewForm()
         );
 
@@ -240,30 +270,35 @@ abstract class DashboardExpressEntriesPageController extends DashboardPageContro
                 ->findOneById($this->request->request->get('entry_id'));
         }
 
-        if ($entry === null) {
-            $permissions = new \Permissions($entity);
-            if (!$permissions->canAddExpressEntries()) {
-                $this->error->add(t('You do not have access to add entries of this entity type.'));
-            }
-        } else {
-            $permissions = new \Permissions($entry);
-            if (!$permissions->canEditExpressEntry()) {
-                $this->error->add(t('You do not have access to edit entries of this entity type.'));
-            }
-        }
-
         if ($form !== null) {
-            $validator = new Validator($this->error, $this->request);
-            $validator->validate($form);
+
+            $express = $this->app->make('express');
+            $controller = $express->getEntityController($entity);
+            $processor = $controller->getFormProcessor();
+            $validator = $processor->getValidator($this->request);
+
+            if ($entry === null) {
+                $validator->validate($form, ProcessorInterface::REQUEST_TYPE_ADD);
+            } else {
+                $validator->validate($form, ProcessorInterface::REQUEST_TYPE_UPDATE);
+            }
+
+            $this->error = $validator->getErrorList();
             if (!$this->error->has()) {
-                $manager = new Manager($this->entityManager, $this->request);
+
+                $notifier = $controller->getNotifier();
+                $notifications = $notifier->getNotificationList();
+
+                $manager = $controller->getEntryManager($this->request);
                 if ($entry === null) {
                     // create
                     $entry = $manager->addEntry($entity);
                     $manager->saveEntryAttributesForm($form, $entry);
+                    $notifier->sendNotifications($notifications, $entry, ProcessorInterface::REQUEST_TYPE_ADD);
+
                     $this->flash(
                         'success',
-                        tc(/*i18n: %s is an Express entity name*/'Express', 'New record %s added successfully.', $entity->getName())
+                        tc(/*i18n: %s is an Express entity name*/'Express', 'New record %s added successfully.', $entity->getEntityDisplayName())
                         . '<br />'
                         . '<a class="btn btn-default" href="' . \URL::to(\Page::getCurrentPage(), 'view_entry', $entry->getID()) . '">' . t('View Record Here') . '</a>',
                         true
@@ -272,7 +307,8 @@ abstract class DashboardExpressEntriesPageController extends DashboardPageContro
                 } else {
                     // update
                     $manager->saveEntryAttributesForm($form, $entry);
-                    $this->flash('success', t('%s updated successfully.', $entity->getName()));
+                    $notifier->sendNotifications($notifications, $entry, ProcessorInterface::REQUEST_TYPE_UPDATE);
+                    $this->flash('success', t('%s updated successfully.', $entity->getEntityDisplayName()));
                     $this->redirect($this->getBackURL($entity));
                 }
             }

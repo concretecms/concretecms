@@ -1,6 +1,8 @@
 <?php
 namespace Concrete\Core\Form\Service\Widget;
 
+use Concrete\Core\Entity\Site\SiteTree;
+use Concrete\Core\Site\Tree\TreeInterface;
 use Core;
 use Page;
 use Permissions;
@@ -158,7 +160,7 @@ EOL;
         return $html;
     }
 
-    public function selectFromSitemap($field, $page = null, $startingPoint = HOME_CID, $filters = array())
+    public function selectFromSitemap($field, $page = null, $startingPoint = HOME_CID, SiteTree $siteTree = null, $filters = array())
     {
         $v = \View::getInstance();
         $v->requireAsset('core/sitemap');
@@ -180,6 +182,9 @@ EOL;
         $args->selected = $selected;
         $args->inputName = $field;
         $args->startingPoint = $startingPoint;
+        if ($siteTree) {
+            $args->siteTreeID = $siteTree->getSiteTreeID();
+        }
         $args->token = Core::make('token')->generate('select_sitemap');
         if (count($filters)) {
             $args->filters = $filters;

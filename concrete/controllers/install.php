@@ -5,17 +5,20 @@ use Concrete\Core\Cache\Cache;
 use Concrete\Core\Config\Renderer;
 use Concrete\Core\Error\ErrorList\ErrorList;
 use Concrete\Core\Localization\Localization as Localization;
+use Concrete\Core\Localization\Service\TranslationsInstaller;
+use Concrete\Core\Localization\Translation\Remote\ProviderInterface as RemoteTranslationsProvider;
+use Concrete\Core\Url\UrlImmutable;
 use Controller;
+use Database;
 use Exception;
 use Hautelook\Phpass\PasswordHash;
-use StartingPointPackage;
-use View;
-use Database;
+use Punic\Comparer as PunicComparer;
 use ReflectionObject;
+use StartingPointPackage;
 use stdClass;
-use Concrete\Core\Url\UrlImmutable;
+use View;
 
-defined('C5_EXECUTE') or die("Access Denied.");
+defined('C5_EXECUTE') or die('Access Denied.');
 
 if (!ini_get('safe_mode')) {
     @set_time_limit(1000);
@@ -64,15 +67,43 @@ class Install extends Controller
 
     public function view()
     {
-        $locales = $this->getLocales();
-        $this->set('locales', $locales);
+        if (!file_exists(DIR_CONFIG_SITE . '/site_install_user.php')) {
+            list($locales, $onlineLocales) = $this->getLocales();
+            $this->set('locales', $locales);
+            $this->set('onlineLocales', $onlineLocales);
+        }
         $this->set('backgroundFade', 500);
         $this->testAndRunInstall();
     }
 
     protected function getLocales()
     {
-        return Localization::getAvailableInterfaceLanguageDescriptions(null);
+        $localLocales = Localization::getAvailableInterfaceLanguageDescriptions(null);
+
+        $coreVersion = $this->app->make('config')->get('concrete.version_installed');
+        $rtp = $this->app->make(RemoteTranslationsProvider::class);
+        /* @var RemoteTranslationsProvider $rtp */
+        // We may be offline, so let's ignore connection issues
+        try {
+            $remoteLocaleStats = $rtp->getAvailableCoreStats($coreVersion);
+        } catch (Exception $x) {
+            $remoteLocaleStats = [];
+        }
+        $remoteLocales = [];
+        foreach (array_keys($remoteLocaleStats) as $remoteLocaleID) {
+            if (!isset($localLocales[$remoteLocaleID])) {
+                $remoteLocales[$remoteLocaleID] = Localization::getLanguageDescription($remoteLocaleID, null);
+            }
+        }
+        $comparer = new PunicComparer();
+        $comparer->sort($remoteLocales, true);
+        if (empty($localLocales) && !empty($remoteLocales)) {
+            $localLocales = [
+                Localization::BASE_LOCALE => Localization::getLanguageDescription(Localization::BASE_LOCALE, null),
+            ];
+        }
+
+        return [$localLocales, $remoteLocales];
     }
 
     protected function testAndRunInstall()
@@ -131,7 +162,7 @@ class Install extends Controller
                 if (!$db) {
                     $e->add(t('Unable to connect to database.'));
                 } elseif (!$this->isAutoAttachEnabled()) {
-                    $num = $db->GetCol("show tables");
+                    $num = $db->GetCol('show tables');
                     if (count($num) > 0) {
                         $e->add(
                             t(
@@ -180,14 +211,14 @@ class Install extends Controller
             $passwordAttributes['required'] = 'required';
             if ($passwordMaxLength > 0) {
                 $passwordAttributes['placeholder'] = t('Between %1$s and %2$s Characters', $passwordMinLength, $passwordMaxLength);
-                $passwordAttributes['pattern'] = '.{'.$passwordMinLength.','.$passwordMaxLength.'}';
+                $passwordAttributes['pattern'] = '.{' . $passwordMinLength . ',' . $passwordMaxLength . '}';
             } else {
                 $passwordAttributes['placeholder'] = t('at least %s characters', $passwordMinLength);
-                $passwordAttributes['pattern'] = '.{'.$passwordMinLength.',}';
+                $passwordAttributes['pattern'] = '.{' . $passwordMinLength . ',}';
             }
         } elseif ($passwordMaxLength > 0) {
             $passwordAttributes['placeholder'] = t('up to %s characters', $passwordMaxLength);
-            $passwordAttributes['pattern'] = '.{0,'.$passwordMaxLength.'}';
+            $passwordAttributes['pattern'] = '.{0,' . $passwordMaxLength . '}';
         }
         $this->set('passwordAttributes', $passwordAttributes);
         $canonicalUrl = '';
@@ -195,9 +226,9 @@ class Install extends Controller
         $canonicalSSLUrl = '';
         $canonicalSSLUrlChecked = false;
         $uri = $this->request->getUri();
-        if (preg_match('/^(https?)(:.+?)(?:\/'.preg_quote(DISPATCHER_FILENAME, '%').')?\/install(?:$|\/|\?)/i', $uri, $m)) {
-            $canonicalUrl = 'http'.rtrim($m[2], '/');
-            $canonicalSSLUrl = 'https'.rtrim($m[2], '/');
+        if (preg_match('/^(https?)(:.+?)(?:\/' . preg_quote(DISPATCHER_FILENAME, '%') . ')?\/install(?:$|\/|\?)/i', $uri, $m)) {
+            $canonicalUrl = 'http' . rtrim($m[2], '/');
+            $canonicalSSLUrl = 'https' . rtrim($m[2], '/');
             /*switch (strtolower($m[1])) {
                 case 'http':
                     $canonicalUrlChecked = true;
@@ -242,6 +273,26 @@ class Install extends Controller
 
     public function select_language()
     {
+        $localeID = $this->request->request->get('wantedLocale');
+        if ($localeID) {
+            if ($localeID !== Localization::BASE_LOCALE) {
+                $localLocales = Localization::getAvailableInterfaceLanguageDescriptions(null);
+                if (!isset($localLocales[$localeID])) {
+                    $ti = $this->app->make(TranslationsInstaller::class);
+                    /* @var TranslationsInstaller $ti */
+                    try {
+                        $ti->installCoreTranslations($localeID);
+                    } catch (Exception $x) {
+                        $this->set('error', $x);
+                        $this->view();
+
+                        return;
+                    }
+                }
+            }
+            $this->set('locale', $localeID);
+            Localization::changeLocale($localeID);
+        }
     }
 
     /**
@@ -249,7 +300,7 @@ class Install extends Controller
      */
     public function on_start()
     {
-        $this->addHeaderItem('<link href="'.ASSETS_URL_CSS.'/views/install.css" rel="stylesheet" type="text/css" media="all" />');
+        $this->addHeaderItem('<link href="' . ASSETS_URL_CSS . '/views/install.css" rel="stylesheet" type="text/css" media="all" />');
         $this->requireAsset('core/app');
         $this->requireAsset('javascript', 'backstretch');
         $this->requireAsset('javascript', 'bootstrap/collapse');
@@ -419,10 +470,10 @@ class Install extends Controller
             $val = $this->app->make('helper/validation/form');
             /* @var \Concrete\Core\Form\Service\Validation $val */
             $val->setData($this->post());
-            $val->addRequired("SITE", t("Please specify your site's name"));
-            $val->addRequiredEmail("uEmail", t('Please specify a valid email address'));
-            $val->addRequired("DB_DATABASE", t('You must specify a valid database name'));
-            $val->addRequired("DB_SERVER", t('You must specify a valid database server'));
+            $val->addRequired('SITE', t("Please specify your site's name"));
+            $val->addRequiredEmail('uEmail', t('Please specify a valid email address'));
+            $val->addRequired('DB_DATABASE', t('You must specify a valid database name'));
+            $val->addRequired('DB_SERVER', t('You must specify a valid database server'));
 
             $password = $_POST['uPassword'];
             $passwordConfirm = $_POST['uPasswordConfirm'];
@@ -467,7 +518,6 @@ class Install extends Controller
                 $canonicalSSLUrl = '';
             }
             if ($val->test() && (!$error->has())) {
-
                 // write the config file
                 $vh = $this->app->make('helper/validation/identifier');
                 $this->fp = @fopen(DIR_CONFIG_SITE . '/site_install.php', 'w+');
@@ -543,7 +593,7 @@ class Install extends Controller
         $pkg = StartingPointPackage::getClass($this->post('SAMPLE_CONTENT'));
 
         if ($pkg === null) {
-            $e->add(t("You must select a valid sample content starting point."));
+            $e->add(t('You must select a valid sample content starting point.'));
         }
 
         return $e;

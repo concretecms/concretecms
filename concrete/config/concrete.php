@@ -8,7 +8,7 @@ return [
      */
     'version' => '8.2.0a2',
     'version_installed' => '8.2.0a2',
-    'version_db' => '20170313000000', // the key of the latest database migration
+    'version_db' => '20170418000000', // the key of the latest database migration
 
     /*
      * Installation status
@@ -217,7 +217,7 @@ return [
                     ],
 
                     'core_filesystem' => [
-                        'class' => '\Stash\Driver\FileSystem',
+                        'class' => \Concrete\Core\Cache\Driver\FileSystemStashDriver::class,
                         'options' => [
                             'path' => DIR_FILES_UPLOADED_STANDARD . '/cache',
                             'dirPermissions' => DIRECTORY_PERMISSIONS_MODE_COMPUTED,
@@ -234,7 +234,7 @@ return [
                     ],
 
                     'core_filesystem' => [
-                        'class' => '\Stash\Driver\FileSystem',
+                        'class' => \Concrete\Core\Cache\Driver\FileSystemStashDriver::class,
                         'options' => [
                             'path' => DIR_FILES_UPLOADED_STANDARD . '/cache',
                             'dirPermissions' => DIRECTORY_PERMISSIONS_MODE_COMPUTED,
@@ -252,13 +252,6 @@ return [
                 ],
             ],
         ],
-    ],
-
-    'multilingual' => [
-        'redirect_home_to_default_locale' => false,
-        'use_browser_detected_locale' => false,
-        'default_locale' => false,
-        'default_source_locale' => 'en_US',
     ],
 
     'design' => [
@@ -564,6 +557,18 @@ return [
          * @var bool
          */
         'choose_language_login' => false,
+
+        // Community Translation instance offering concrete5 translations
+        'community_translation' => [
+            // API entry point of the Community Translation instance
+            'entry_point' => 'http://translate.concrete5.org/api',
+            // API Token to be used for the Community Translation instance
+            'api_token' => '',
+            // Languages below this translation progress won't be considered
+            'progress_limit' => 60,
+            // Lifetime (in seconds) of the cache items associated to downloaded data
+            'cache_lifetime' => 3600, // 1 hour
+        ],
     ],
     'urls' => [
         'concrete5' => 'http://www.concrete5.org',

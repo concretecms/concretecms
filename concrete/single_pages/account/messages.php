@@ -244,12 +244,12 @@ $subject = $text->entities($msgSubject);
 
 			<table class="table table-striped" border="0" cellspacing="0" cellpadding="0">
 			<tr>
-				<th class="ccm-profile-messages-item-name"><?=t('Mailbox')?></th>
+				<th class="ccm-profile-messages-item-mailbox"><?=t('Mailbox')?></th>
 				<th><?=t('Messages')?></th>
-				<th><?=t('Latest Message')?></th>
+				<th class="ccm-profile-mailbox-last-message"><?=t('Latest Message')?></th>
 			</tr>
 			<tr>
-				<td class="ccm-profile-messages-item-name"><a href="<?=$view->action('view_mailbox', 'inbox')?>"><?=t('Inbox')?></a></td>
+				<td class="ccm-profile-messages-item-mailbox"><a href="<?=$view->action('view_mailbox', 'inbox')?>"><?=t('Inbox')?></a></td>
 				<td><?=$inbox->getTotalMessages()?></td>
 				<td class="ccm-profile-mailbox-last-message"><?php
 				$msg = $inbox->getLastMessageObject();
@@ -259,7 +259,7 @@ $subject = $text->entities($msgSubject);
 				?></td>
 			</tr>
 			<tr>
-				<td class="ccm-profile-messages-item-name"><a href="<?=$view->action('view_mailbox', 'sent')?>"><?=t('Sent Messages')?></a></td>
+				<td class="ccm-profile-messages-item-mailbox"><a href="<?=$view->action('view_mailbox', 'sent')?>"><?=t('Sent Messages')?></a></td>
 				<td><?=$sent->getTotalMessages()?></td>
 				<td class="ccm-profile-mailbox-last-message"><?php
 				 $msg = $sent->getLastMessageObject();

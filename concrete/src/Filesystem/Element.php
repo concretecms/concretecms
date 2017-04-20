@@ -39,6 +39,9 @@ class Element implements LocatableFileInterface
                 }
                 if (is_array($arg)) {
                     $this->controllerArguments = $arg;
+                    foreach($arg as $key => $value) {
+                        $this->set($key, $value);
+                    }
                 }
                 if (is_string($arg)) {
                     $this->pkgHandle = $arg;
@@ -121,8 +124,7 @@ class Element implements LocatableFileInterface
             }
             $class = overrideable_core_class($class, $path, $this->pkgHandle);
             if (class_exists($class)) {
-                $refl = new \ReflectionClass($class);
-                $this->controller = $refl->newInstanceArgs($this->controllerArguments);
+                $this->controller = \Core::make($class, $this->controllerArguments);
                 $this->controller->setPackageHandle($this->pkgHandle);
             }
         }

@@ -3,18 +3,20 @@ namespace Concrete\Controller\SinglePage\Dashboard\System\Basics;
 
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Core\Database\Connection\Connection;
+use Concrete\Core\Page\Controller\DashboardSitePageController;
 use DateTime;
 use DateTimeZone;
 use Exception;
 
-class Timezone extends DashboardPageController
+class Timezone extends DashboardSitePageController
 {
     public function view()
     {
         $dh = $this->app->make('date');
+        $siteConfig = $this->getSite()->getConfigRepository();
         $config = $this->app->make('config');
         $this->set('user_timezones', $config->get('concrete.misc.user_timezones'));
-        $this->set('timezone', $config->get('app.timezone'));
+        $this->set('timezone', $siteConfig->get('timezone'));
         $this->set('timezones', $dh->getGroupedTimezones());
         $phpTimezone = $config->get('app.server_timezone');
         $this->set('serverTimezonePHP', $dh->getTimezoneName($phpTimezone));
@@ -54,6 +56,7 @@ class Timezone extends DashboardPageController
         if ($this->token->validate('update_timezone')) {
             if ($this->request->isPost()) {
                 $config = $this->app->make('config');
+                $siteConfig = $this->getSite()->getConfigRepository();
                 $oldValue = $config->get('concrete.misc.user_timezones') ? true : false;
                 $newValue = $this->request->request->get('user_timezones') ? true : false;
                 $messages = [];
@@ -61,10 +64,10 @@ class Timezone extends DashboardPageController
                     $config->save('concrete.misc.user_timezones', $newValue);
                     $messages[] = $newValue ? t('User time zones have been enabled') : t('User time zones have been disabled.');
                 }
-                $oldValue = (string) $config->get('app.timezone');
+                $oldValue = (string) $siteConfig->get('timezone');
                 $newValue = $this->request->request->get('timezone');
                 if (is_string($newValue) && strcasecmp($newValue, $oldValue) !== 0) {
-                    $config->save('app.timezone', $newValue);
+                    $siteConfig->save('timezone', $newValue);
                     $messages[] .= t('Default application timezone has been updated.');
                 }
                 if (!empty($messages)) {

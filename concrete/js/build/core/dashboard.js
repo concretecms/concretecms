@@ -86,6 +86,10 @@ var ConcreteDashboard = function() {
         $('.dialog-launch').dialog();
 
 		$('div#ccm-dashboard-page').on('click', '[data-dialog]', function() {
+			if ($(this).attr('disabled')) {
+				return false;
+			}
+
 			var width = $(this).attr('data-dialog-width');
 			if (!width) {
 				width = 320;

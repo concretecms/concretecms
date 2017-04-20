@@ -404,7 +404,8 @@ class Date
                 $timezone = Config::get('app.server_timezone', date_default_timezone_get());
                 break;
             case 'app':
-                $timezone = Config::get('app.timezone', date_default_timezone_get());
+                $site = \Core::make('site')->getSite();
+                $timezone = $site->getConfigRepository()->get('timezone', date_default_timezone_get());
                 break;
             case 'user':
                 $tz = null;
@@ -870,7 +871,7 @@ class Date
         }
         $datetime = new \DateTime($userDateTime);
 
-        $timezone = Config::get('app.timezone');
+        $timezone = \Core::make('site')->getSite()->getConfigRepository()->get('timezone');
         if ($timezone) {
             $tz = new \DateTimeZone($timezone);
 

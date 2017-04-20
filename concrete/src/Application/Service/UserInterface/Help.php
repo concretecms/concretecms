@@ -44,7 +44,7 @@ class Help
         if (!Config::get('concrete.accessibility.display_help_system')) {
             return false;
         }
-        $title = t('launch help');
+        $title = t('Get Help');
         $html = <<<EOT
         <div class="ccm-notification-help-launcher">
             <a href="#" data-help-launch-dialog="main" class="launch-tooltip" data-toggle="tooltip" data-placement="left" data-delay='{ "show": 500, "hide": 0 }' title="{$title}">

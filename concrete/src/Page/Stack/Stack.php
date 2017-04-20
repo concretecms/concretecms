@@ -235,7 +235,7 @@ class Stack extends Page implements ExportableInterface
 
         $db = Database::connection();
         $db->executeQuery(
-            'insert into Stacks (stName, cID, stType, stMultilingualSection, siteTreeID) values (?, ?, ?, ?, ?)',
+            'insert into Stacks (stName, cID, stType, stMultilingualSection) values (?, ?, ?, ?)',
             [
                 $newPage->getCollectionName(),
                 $newPage->getCollectionID(),

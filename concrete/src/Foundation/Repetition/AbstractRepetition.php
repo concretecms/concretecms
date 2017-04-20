@@ -497,7 +497,17 @@ abstract class AbstractRepetition implements RepetitionInterface
             $text .= t('No End Date. ');
         }
         if ($this->repeats()) {
-            $text .= t('Repeats %s. ', ucfirst($this->getRepeatPeriod()));
+            switch($this->getRepeatPeriod()) {
+                case self::REPEAT_DAILY:
+                    $text .= t('Repeats Daily until %s.', $dh->formatDate($this->getRepeatPeriodEnd()));
+                    break;
+                case self::REPEAT_WEEKLY:
+                    $text .= t('Repeats Weekly until %s.', $dh->formatDate($this->getRepeatPeriodEnd()));
+                    break;
+                case self::REPEAT_MONTHLY:
+                    $text .= t('Repeats Monthly until %s.', $dh->formatDate($this->getRepeatPeriodEnd()));
+                    break;
+            }
         }
 
         return $text;

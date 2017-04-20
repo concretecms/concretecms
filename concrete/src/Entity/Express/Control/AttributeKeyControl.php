@@ -8,7 +8,7 @@ use Concrete\Core\Export\Item\AttributeKey;
 use Concrete\Core\Express\ObjectBuilder;
 use Doctrine\ORM\Mapping as ORM;
 use Concrete\Core\Form\Context\ContextInterface;
-use Concrete\Core\Form\Context\Registry\Registry;
+use Concrete\Core\Form\Context\Registry\ControlRegistry;
 
 /**
  * @ORM\Entity
@@ -62,7 +62,7 @@ class AttributeKeyControl extends Control
 
     public function getControlView(ContextInterface $context)
     {
-        $registry = \Core::make(Registry::class);
+        $registry = \Core::make(ControlRegistry::class);
         return $registry->getControlView($context, 'express_control_attribute_key', [
             $this
         ]);

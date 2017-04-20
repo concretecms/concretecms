@@ -3,6 +3,7 @@ namespace Concrete\Core\Updater\Migrations;
 
 use Concrete\Core\Block\BlockType\BlockType;
 use Doctrine\DBAL\Migrations\AbstractMigration as DoctrineAbstractMigration;
+use Doctrine\ORM\Tools\SchemaTool;
 
 abstract class AbstractMigration extends DoctrineAbstractMigration
 {
@@ -12,23 +13,15 @@ abstract class AbstractMigration extends DoctrineAbstractMigration
         $this->version->getConfiguration()->getOutputWriter()->write($message);
     }
 
-    protected function refreshEntities($entities)
+    protected function refreshEntities($entities = null)
     {
-        // Add tables for new entities or moved entities
-        $sm = \Core::make('Concrete\Core\Database\DatabaseStructureManager');
-
+        $classes = array();
         $em = $this->connection->getEntityManager();
-        $cmf = $em->getMetadataFactory();
-        $metadatas = array();
-        $existingMetadata = $cmf->getAllMetadata();
-        foreach($existingMetadata as $meta) {
-            if (in_array($meta->getName(), $entities)) {
-                $this->output(t('Installing entity %s...', $meta->getName()));
-                $metadatas[] = $meta;
-            }
+        $tool = new SchemaTool($em);
+        foreach($entities as $entity) {
+            $classes[] = $em->getClassMetadata($entity);
         }
-
-        $sm->installDatabaseFor($metadatas);
+        $tool->updateSchema($classes, true);
     }
 
     protected function refreshDatabaseTables($tables)

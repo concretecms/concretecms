@@ -50,10 +50,15 @@ table.ccm-profile-messages-list td {
   vertical-align: middle !important;
 }
 
-td.ccm-profile-messages-item-name {
-  width: 100%;
+td.ccm-profile-messages-item-mailbox, td.ccm-profile-messages-item-name {
   font-size: 16px;
   font-weight: bold;
+}
+td.ccm-profile-messages-item-mailbox {
+  white-space: nowrap;
+}
+td.ccm-profile-messages-item-name, td.ccm-profile-mailbox-last-message {
+  width: 100%;
 }
 
 table.ccm-profile-messages-list td.ccm-profile-message-from {

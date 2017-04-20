@@ -42,7 +42,7 @@ class FileLocatorView extends AbstractView
     {
         $r = $this->locator->getFileLocatorRecord();
         if (!$r->exists()) {
-            throw new \RuntimeException(t('Element %s does not exist', $this->element));
+            throw new \RuntimeException(t('File %s does not exist', $r->file));
         }
         $this->setViewTemplate($r->getFile());
     }

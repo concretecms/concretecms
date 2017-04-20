@@ -36,6 +36,7 @@ class StandardSetManager implements SetManagerInterface
                 'select sk from \Concrete\Core\Entity\Attribute\SetKey sk where sk.attribute_key = :key'
             );
             $query->setParameter('key', $key);
+            $query->setMaxResults(1);
             $r = $query->getOneOrNullResult();
             if (!is_object($r)) {
                 $attributes[] = $key;

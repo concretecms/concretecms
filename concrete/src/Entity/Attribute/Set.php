@@ -3,8 +3,10 @@ namespace Concrete\Core\Entity\Attribute;
 
 use Concrete\Core\Entity\Attribute\Key\Key;
 use Concrete\Core\Entity\PackageTrait;
+use Concrete\Core\Export\ExportableInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Concrete\Core\Export\Item\AttributeSet;
 
 /**
  * @ORM\Entity
@@ -16,7 +18,7 @@ use Doctrine\ORM\Mapping as ORM;
  *     }
  * )
  */
-class Set
+class Set implements ExportableInterface
 {
     use PackageTrait;
 
@@ -69,6 +71,11 @@ class Set
     public function getAttributeKeyCollection()
     {
         return $this->keys;
+    }
+
+    public function getExporter()
+    {
+        return new AttributeSet();
     }
 
     /**

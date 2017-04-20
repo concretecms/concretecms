@@ -6,12 +6,15 @@ defined('C5_EXECUTE') or die("Access Denied.");
 $r = \Concrete\Core\Http\ResponseAssetGroup::get();
 $r->requireAsset('selectize');
 
-if (Config::get('concrete.misc.user_timezones')) {
-    $user = new User();
-    $userInfo = $user->getUserInfoObject();
-    $timezone = $userInfo->getUserTimezone();
-} else {
-    $timezone = Config::get('app.timezone');
+if (!$timezone) {
+    if (Config::get('concrete.misc.user_timezones')) {
+        $user = new User();
+        $userInfo = $user->getUserInfoObject();
+        $timezone = $userInfo->getUserTimezone();
+    } else {
+        $site = \Core::make('site')->getSite();
+        $timezone = $site->getConfigRepository()->get('timezone');
+    }
 }
 
 $repeats = array(
@@ -34,7 +37,7 @@ for ($i = 1; $i <= 12; ++$i) {
 }
 
 $service = Core::make('helper/date');
-$now = $service->toDateTime('now', 'user');
+$now = $service->toDateTime('now', $timezone);
 
 $pdStartDate = $now->format('Y-m-d');
 
@@ -49,7 +52,7 @@ $pdRepeatPeriodMonthsRepeatBy = 'month';
 $pdEndRepeatDateSpecific = false;
 $pdEndRepeatDate = '';
 
-$now = $service->toDateTime('now', 'user');
+$now = $service->toDateTime('now', $timezone);
 $currentHour = $now->format('g');
 $currentMinutes = $now->format('i');
 $currentAM = $now->format('a');
@@ -64,8 +67,13 @@ $selectedEndTime = null;
 if (is_object($pd)) {
     $pdStartDate = $pd->getStartDate();
     $pdEndDate = $pd->getEndDate();
-    $selectedStartTime = date('g:ia', strtotime($pdStartDate));
-    $selectedEndTime = date('g:ia', strtotime($pdEndDate));
+
+    $selectedStartTime = $service->toDateTime($pdStartDate, $timezone)->format('g:ia');
+    $selectedEndTime = $service->toDateTime($pdEndDate, $timezone)->format('g:ia');
+
+    $pdStartDate = $service->toDateTime($pdStartDate, $timezone)->format('Y-m-d');
+    $pdEndDate = $service->toDateTime($pdEndDate, $timezone)->format('Y-m-d');
+
     $pdRepeats = $pd->repeats();
     $pdStartDateAllDay = $pd->isStartDateAllDay();
     $pdEndDateAllDay = $pd->isEndDateAllDay();
@@ -176,7 +184,7 @@ for ($i = 0; $i < count($values); $i++) {
             <div class="col-sm-6 ccm-date-time-date-group">
                 <div class="row">
                     <div class="col-sm-12">
-                        <label class="control-label"><?=t('From')?></label>
+                        <label class="control-label"><?=t('From')?></label> <i class="fa fa-info-circle launch-tooltip" title="<?php echo t('Choose Repeat Event and choose a frequency to make this event recurring.')?>"></i>
                     </div>
                 </div>
                 <div class="row">

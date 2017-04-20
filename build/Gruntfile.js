@@ -617,7 +617,7 @@ module.exports = function(grunt) {
             'build-release-build',
             'build-release-clean',
             'build-release-remove-short-tags',
-            'build-release-translations',
+            //'build-release-translations',
             'build-release-create-zip',
             'build-release-cleanup'
         ]

@@ -134,8 +134,11 @@ class Setup extends DashboardSitePageController
             $locale = $service->getByID($this->post('defaultLocale'));
             if (is_object($locale)) {
                 $service->setDefaultLocale($locale);
-                $this->getSite()->getConfigRepository()->save('multilingual.redirect_home_to_default_locale', $this->post('redirectHomeToDefaultLocale'));
-                $this->getSite()->getConfigRepository()->save('multilingual.use_browser_detected_locale', $this->post('useBrowserDetectedLocale'));
+                $redirectHomeToDefaultLocale = $this->post('redirectHomeToDefaultLocale') ? true : false;
+                $this->getSite()->getConfigRepository()->save('multilingual.redirect_home_to_default_locale', $redirectHomeToDefaultLocale);
+                if ($redirectHomeToDefaultLocale) {
+                    $this->getSite()->getConfigRepository()->save('multilingual.use_browser_detected_locale', $this->post('useBrowserDetectedLocale') ? true : false);
+                }
                 $defaultSourceLocale = '';
                 $s = $this->post('defaultSourceLanguage');
                 if (is_string($s) && array_key_exists($s, $languages)) {

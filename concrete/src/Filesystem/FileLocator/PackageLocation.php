@@ -8,14 +8,17 @@ class PackageLocation extends AbstractLocation
      */
     protected $pkgHandle;
 
+    protected $checkExists;
+
     public function getPackageHandle()
     {
         return $this->pkgHandle;
     }
 
-    public function __construct($pkgHandle)
+    public function __construct($pkgHandle, $checkExists = false)
     {
         $this->pkgHandle = $pkgHandle;
+        $this->checkExists = $checkExists;
     }
 
     public function getCacheKey()
@@ -36,8 +39,12 @@ class PackageLocation extends AbstractLocation
 
     public function contains($file)
     {
-        $record = $this->getRecord($file);
-        return $record;
+        if ($this->checkExists) {
+            return parent::contains($file);
+        } else {
+            $record = $this->getRecord($file);
+            return $record;
+        }
     }
 
 }

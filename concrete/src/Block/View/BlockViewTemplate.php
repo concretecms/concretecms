@@ -80,7 +80,7 @@ class BlockViewTemplate
             $locator->addLocation(new FileLocator\ThemeLocation($this->theme));
         }
         if ($obj->getPackageHandle()) {
-            $locator->addPackageLocation($obj->getPackageHandle());
+            $locator->addLocation(new FileLocator\PackageLocation($obj->getPackageHandle(), true));
         }
         $locator->addLocation(new FileLocator\AllPackagesLocation($this->getPackageList()));
 
