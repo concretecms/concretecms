@@ -106,7 +106,7 @@ class Group extends TreeNode
         $obj = parent::getTreeNodeJSON();
         if (is_object($obj)) {
             $obj->gID = $this->gID;
-            $obj->iconClass = 'fa fa-users';
+            $obj->icon = 'fa fa-users';
             if (isset($this->gID)) {
                 $obj->title = $this->getTreeNodeDisplayName('text');
             }
