@@ -82,7 +82,7 @@ class Controller extends BlockController
             $s
         );
         $s = preg_replace(
-            "#&lt;(.*)(\[)(.*)(\])&gt;#isU",
+            "#&lt;([^[]*+)(\[)([^]]*+)(\])&gt;#i",
             "&lt;\\1<font color=\"#800080\">\\2\\3\\4</font>&gt;",
             $s
         );
