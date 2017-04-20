@@ -36,16 +36,13 @@ class Controller extends BlockController
                 $relatedID = $lang->getTranslatedPageID($page);
                 if ($relatedID) {
                     $pc = \Page::getByID($relatedID);
-                    Redirect::page($pc)->send();
-                    exit;
+                    return Redirect::page($pc);
                 }
             }
-            Redirect::page($lang)->send();
-            exit;
+            return Redirect::page($lang);
         }
 
-        Redirect::to('/');
-        exit;
+        return Redirect::to('/');
     }
 
     public function action_set_current_language()
