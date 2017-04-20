@@ -5,6 +5,7 @@ use BlockType;
 use CollectionAttributeKey;
 use Concrete\Core\Block\BlockController;
 use Concrete\Core\Page\Feed;
+use Concrete\Core\Tree\Node\Node;
 use Database;
 use Page;
 use Core;
@@ -162,7 +163,10 @@ class Controller extends BlockController
         if ($this->filterByCustomTopic) {
             $ak = CollectionKey::getByHandle($this->customTopicAttributeKeyHandle);
             if (is_object($ak)) {
-                $ak->getController()->filterByAttribute($this->list, $this->customTopicTreeNodeID);
+                $topic = Node::getByID($this->customTopicTreeNodeID);
+                if ($topic) {
+                    $ak->getController()->filterByAttribute($this->list, $this->customTopicTreeNodeID);
+                }
             }
         }
 
