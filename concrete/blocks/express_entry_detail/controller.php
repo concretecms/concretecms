@@ -93,16 +93,18 @@ class Controller extends BlockController
         }
         $form = $this->entityManager->find('Concrete\Core\Entity\Express\Form', $this->exFormID);
 
-        $express = \Core::make('express');
-        $controller = $express->getEntityController($entity);
-        $factory = new ContextFactory($controller);
-        $context = $factory->getContext(new FrontendViewContext());
-        $renderer = new Renderer(
-            $context,
-            $form
-        );
+        if ($form) {
+            $express = \Core::make('express');
+            $controller = $express->getEntityController($entity);
+            $factory = new ContextFactory($controller);
+            $context = $factory->getContext(new FrontendViewContext());
+            $renderer = new Renderer(
+                $context,
+                $form
+            );
 
-        $this->set('renderer', $renderer);
+            $this->set('renderer', $renderer);
+        }
 
     }
 
