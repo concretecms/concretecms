@@ -38,6 +38,10 @@ class Controller extends BlockController
                     $pc = \Page::getByID($relatedID);
                     return Redirect::page($pc);
                 }
+                if ($page->isGeneratedCollection()) {
+                    $this->app->make('session')->set('multilingual_default_locale', $lang->getLocale());
+                    return Redirect::page($page);
+                }
             }
             return Redirect::page($lang);
         }
