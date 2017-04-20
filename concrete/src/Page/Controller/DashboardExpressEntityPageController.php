@@ -3,13 +3,12 @@ namespace Concrete\Core\Page\Controller;
 
 use Concrete\Controller\Element\Dashboard\Express\Entries\Header;
 use Concrete\Core\Entity\Express\Entry;
-use Concrete\Core\Express\Entry\Manager;
 use Concrete\Core\Express\Event\Event;
 use Concrete\Core\Express\Form\Context\DashboardFormContext;
 use Concrete\Core\Express\Form\Control\SaveHandler\SaveHandlerInterface;
 use Concrete\Core\Express\Form\OwnedEntityForm;
 use Concrete\Core\Express\Form\Renderer;
-use Concrete\Core\Express\Form\Validator;
+use Concrete\Core\Form\Context\ContextFactory;
 use Concrete\Core\Tree\Node\Node;
 use Concrete\Core\Tree\Node\Type\Category;
 use Concrete\Core\Tree\Type\ExpressEntryResults;
@@ -66,8 +65,13 @@ abstract class DashboardExpressEntityPageController extends DashboardExpressEntr
             $this->set('backURL', $this->getBackURL($entity));
         }
 
+        $express = \Core::make('express');
+        $controller = $express->getEntityController($entity);
+        $factory = new ContextFactory($controller);
+        $context = $factory->getContext(new DashboardFormContext());
+
         $renderer = new Renderer(
-            new DashboardFormContext(),
+            $context,
             $form
         );
         $this->set('renderer', $renderer);

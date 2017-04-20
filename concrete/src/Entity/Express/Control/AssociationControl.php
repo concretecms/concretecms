@@ -5,7 +5,7 @@ use Concrete\Core\Entity\Express\Entry;
 use Concrete\Core\Express\Form\Control\View\AssociationView;
 use Concrete\Core\Form\Context\ContextInterface;
 use Concrete\Core\Express\Form\Control\Type\SaveHandler\AssociationControlSaveHandler;
-use Concrete\Core\Form\Context\Registry\Registry;
+use Concrete\Core\Form\Context\Registry\ControlRegistry;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -35,7 +35,7 @@ class AssociationControl extends Control
 
     public function getControlView(ContextInterface $context)
     {
-        $registry = \Core::make(Registry::class);
+        $registry = \Core::make(ControlRegistry::class);
         return $registry->getControlView($context, 'express_control_association', [
             $this
         ]);

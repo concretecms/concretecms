@@ -438,4 +438,8 @@ class Entity implements CategoryObjectInterface, ObjectInterface, ExportableInte
         return new EntityExporter();
     }
 
+    public function getController()
+    {
+
+    }
 }

@@ -10,7 +10,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query;
 use Symfony\Component\HttpFoundation\Request;
 
-class Manager
+class Manager implements EntryManagerInterface
 {
 
     protected $entityManager;

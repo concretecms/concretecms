@@ -3,7 +3,7 @@ namespace Concrete\Core\Form\Context\Registry;
 
 use Concrete\Core\Form\Context\ContextInterface;
 
-class Entry
+class ControlEntry
 {
 
     protected $context;

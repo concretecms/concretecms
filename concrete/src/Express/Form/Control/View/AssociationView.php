@@ -1,7 +1,6 @@
 <?php
 namespace Concrete\Core\Express\Form\Control\View;
 
-use Concrete\Core\Express\Form\Context\ViewContext;
 use Concrete\Core\Entity\Express\Control\AssociationControl;
 use Concrete\Core\Entity\Express\Control\Control;
 use Concrete\Core\Express\EntryList;
