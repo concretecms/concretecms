@@ -40,6 +40,8 @@ class Design extends BackendInterfaceBlockController
             $oldStyle = $b->getCustomStyle();
             if (is_object($oldStyle)) {
                 $oldStyleSet = $oldStyle->getStyleSet();
+            } else {
+                $oldStyleSet = null;
             }
 
             $r = $this->request->request->all();
