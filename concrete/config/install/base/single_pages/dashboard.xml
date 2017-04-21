@@ -544,6 +544,9 @@
                 <attributekey handle="exclude_nav">
                     <value><![CDATA[1]]></value>
                 </attributekey>
+                <attributekey handle="exclude_search_index">
+                    <value>1</value>
+                </attributekey>
             </attributes>
 
         </page>
@@ -554,6 +557,9 @@
                 <attributekey handle="exclude_nav">
                     <value><![CDATA[1]]></value>
                 </attributekey>
+                <attributekey handle="exclude_search_index">
+                    <value>1</value>
+                </attributekey>
             </attributes>
         </page>
 
@@ -562,6 +568,9 @@
             <attributes>
                 <attributekey handle="exclude_nav">
                     <value><![CDATA[1]]></value>
+                </attributekey>
+                <attributekey handle="exclude_search_index">
+                    <value>1</value>
                 </attributekey>
             </attributes>
         </page>
@@ -572,6 +581,9 @@
                 <attributekey handle="exclude_nav">
                     <value><![CDATA[1]]></value>
                 </attributekey>
+                <attributekey handle="exclude_search_index">
+                    <value>1</value>
+                </attributekey>
             </attributes>
         </page>
 
@@ -581,6 +593,9 @@
                 <attributekey handle="exclude_nav">
                     <value><![CDATA[1]]></value>
                 </attributekey>
+                <attributekey handle="exclude_search_index">
+                    <value>1</value>
+                </attributekey>
             </attributes>
         </page>
 
@@ -589,6 +604,9 @@
             <attributes>
                 <attributekey handle="exclude_nav">
                     <value><![CDATA[1]]></value>
+                </attributekey>
+                <attributekey handle="exclude_search_index">
+                    <value>1</value>
                 </attributekey>
             </attributes>
         </page>
