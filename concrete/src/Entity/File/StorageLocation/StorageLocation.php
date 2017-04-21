@@ -3,6 +3,7 @@ namespace Concrete\Core\Entity\File\StorageLocation;
 
 use Concrete\Core\Cache\Level\ExpensiveCache;
 use Concrete\Core\File\StorageLocation\StorageLocationInterface;
+use Concrete\Core\Filesystem\FlysystemCache;
 use Database;
 use Doctrine\ORM\Mapping as ORM;
 use League\Flysystem\Cached\CachedAdapter;
@@ -132,7 +133,7 @@ class StorageLocation implements StorageLocationInterface
 
         $pool = \Core::make(ExpensiveCache::class)->pool;
         $cache = new Psr6Cache($pool, 'flysystem-id-' . $this->getID());
-        $cachedAdapter = new CachedAdapter($adapter, $cache);
+        $cachedAdapter = new FlysystemCache($adapter, $cache);
         $filesystem = new \League\Flysystem\Filesystem($cachedAdapter);
 
         return $filesystem;
