@@ -15,6 +15,7 @@ class Version20170421000000 extends AbstractMigration
             'Concrete\Core\Entity\Search\SavedPageSearch',
             'Concrete\Core\Entity\Search\SavedFileSearch',
         ]);
+        $this->refreshBlockType('image');
     }
 
     public function down(Schema $schema)
