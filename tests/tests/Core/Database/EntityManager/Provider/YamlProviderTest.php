@@ -58,11 +58,11 @@ class YamlProviderTest extends \PHPUnit_Framework_TestCase
     
     /**
      * Test custom mapping location and namespace for YamlProvider
+     * 
+     * @dataProvider dataProviderGetDriversAddManuallyLocationAndNamespace
      */
-    public function testGetDriversAddManuallyLocationAndNamespace(){
+    public function testGetDriversAddManuallyLocationAndNamespace($namespace, $locations){
         $yamlProvider = new YamlProvider($this->packageStub, false);
-        $namespace = 'MyNamespace\Some\Foo';
-        $locations = array('mapping/yaml', 'mapping/test/yaml');
         $yamlProvider->addDriver($namespace, $locations);
         
         $drivers = $yamlProvider->getDrivers();
@@ -76,6 +76,24 @@ class YamlProviderTest extends \PHPUnit_Framework_TestCase
         $shortenedPath = $this->folderPathCleaner($driverPaths[0]);
         $this->assertEquals($locations[0], $shortenedPath);
         $driverNamespace = $c5Driver->getNamespace();
-        $this->assertEquals($namespace, $driverNamespace);
+        // Important: Doctrine internally works with namespaces that don't start 
+        // with a backslash. If a namespace which starts with a backslash 
+        // is provided, doctrine wouldn't find it in the DriverChain and 
+        // through a MappingException.
+        // To simulate this, the namespace is wrapped in ltrim function.
+        $this->assertEquals(ltrim($namespace,'\\'), $driverNamespace);
+    }
+    
+    public function dataProviderGetDriversAddManuallyLocationAndNamespace(){
+        return array(
+            array(
+                'namespace' => 'MyNamespace\Some\Foo',
+                'locations' => array('mapping/yaml', 'mapping/test/yaml')
+            ),
+            array(
+                'namespace' => '\MyNamespace\Some\Foo',
+                'locations' => array('config/yaml')
+            )
+        );
     }
 }
