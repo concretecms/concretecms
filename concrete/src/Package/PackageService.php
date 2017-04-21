@@ -66,15 +66,7 @@ class PackageService
         $packages = $dh->getDirectoryContents(DIR_PACKAGES);
         if ($filterInstalled) {
             $handles = self::getInstalledHandles();
-
-            // strip out packages we've already installed
-            $packagesTemp = array();
-            foreach ($packages as $p) {
-                if (!in_array($p, $handles)) {
-                    $packagesTemp[] = $p;
-                }
-            }
-            $packages = $packagesTemp;
+            $packages = array_intersect($packages, $handles);
         }
 
         if (count($packages) > 0) {

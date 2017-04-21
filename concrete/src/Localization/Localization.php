@@ -1,10 +1,10 @@
 <?php
 namespace Concrete\Core\Localization;
 
-use Concrete\Core\Support\Facade\Facade;
 use Concrete\Core\Localization\Translator\Adapter\Zend\Translation\Loader\Gettext\SiteTranslationLoader as ZendSiteTranslationLoader;
 use Concrete\Core\Localization\Translator\Adapter\Zend\TranslatorAdapter as ZendTranslatorAdapter;
 use Concrete\Core\Localization\Translator\TranslatorAdapterRepositoryInterface;
+use Concrete\Core\Support\Facade\Facade;
 use Core;
 use Exception;
 use Punic\Data as PunicData;
@@ -61,7 +61,7 @@ class Localization
      *
      * @var array
      */
-    protected $contextLocales = array();
+    protected $contextLocales = [];
 
     /**
      * The currently active translation context.
@@ -78,15 +78,15 @@ class Localization
      * @see Localization::pushActiveContext()
      * @see Localization::popActiveContext()
      */
-    protected $activeContextQueue = array();
+    protected $activeContextQueue = [];
 
     /**
      * Gets the translator adapter repository.
      *
      * @return TranslatorAdapterRepositoryInterface
      *
-     * @throws Exception In case the translator adapter repository has not been
-     *                   set, an exception is thrown.
+     * @throws Exception in case the translator adapter repository has not been
+     *                   set, an exception is thrown
      */
     public function getTranslatorAdapterRepository()
     {
@@ -94,7 +94,7 @@ class Localization
             // Note: Do NOT call the t() function here as it would cause an
             // infinte loop if the translator adapter repository has not been
             // set.
-            throw new Exception("Translator adapter repository has not been set.");
+            throw new Exception('Translator adapter repository has not been set.');
         }
 
         return $this->translatorAdapterRepository;
@@ -186,8 +186,8 @@ class Localization
      *
      * @return \Concrete\Core\Localization\Translator\TranslatorAdapterInterface
      *
-     * @throws Exception In case trying to fetch an adapter for an unknown
-     *                   context, an exception is thrown.
+     * @throws Exception in case trying to fetch an adapter for an unknown
+     *                   context, an exception is thrown
      */
     public function getTranslatorAdapter($context)
     {
@@ -195,7 +195,7 @@ class Localization
             // Note: Do NOT call the t() function here as it might possibly
             // cause an infinte loop in case this happens with the active
             // context.
-            throw new Exception(sprintf("Context locale has not been set for context: %s", $context));
+            throw new Exception(sprintf('Context locale has not been set for context: %s', $context));
         }
         $locale = $this->contextLocales[$context];
 
@@ -364,7 +364,7 @@ class Localization
      */
     public static function getAvailableInterfaceLanguages()
     {
-        $languages = array();
+        $languages = [];
         $fh = Core::make('helper/file');
 
         if (file_exists(DIR_LANGUAGES)) {
@@ -408,7 +408,7 @@ class Localization
         if (count($languages) > 0) {
             array_unshift($languages, static::BASE_LOCALE);
         }
-        $locales = array();
+        $locales = [];
         foreach ($languages as $lang) {
             $locales[$lang] = self::getLanguageDescription($lang, $displayLocale);
         }
@@ -452,7 +452,7 @@ class Localization
     /**
      * Load the site language files (must be done after all packages called their setupPackageLocalization).
      *
-     * @deprecated Use \Concrete\Core\Localization\Translator\Adapter\Zend\Translation\Loader\Gettext\SiteTranslationLoader instead.
+     * @deprecated use \Concrete\Core\Localization\Translator\Adapter\Zend\Translation\Loader\Gettext\SiteTranslationLoader instead
      *
      * @param ZendTranslator $translate
      */
