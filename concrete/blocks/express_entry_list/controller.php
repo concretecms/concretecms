@@ -119,7 +119,7 @@ class Controller extends BlockController
                 $list->sanitizedSortBy($defaultSortColumn->getColumnKey(), $direction);
             }
 
-            if ($this->request->query->has('keywords') && $this->enableSearch) {
+            if ($this->request->query->get('keywords') && $this->enableSearch) {
                 $list->filterByKeywords($this->request->query->get('keywords'));
             }
 
@@ -156,13 +156,32 @@ class Controller extends BlockController
     {
         $this->on_start();
 
-        if (isset($data['searchProperties']) && is_array($data['searchProperties'])) {
-            $searchProperties = $data['searchProperties'];
+        if (isset($data['enableSearch']) && $data['enableSearch']) {
+            if (isset($data['searchProperties']) && is_array($data['searchProperties'])) {
+                $searchProperties = $data['searchProperties'];
+            } else {
+                $searchProperties = array();
+            }
             $data['searchProperties'] = json_encode($searchProperties);
-        }
-        if (isset($data['linkedProperties']) && is_array($data['linkedProperties'])) {
-            $linkedProperties = $data['linkedProperties'];
+            if (isset($data['linkedProperties']) && is_array($data['linkedProperties'])) {
+                $linkedProperties = $data['linkedProperties'];
+            } else {
+                $linkedProperties = array();
+            }
             $data['linkedProperties'] = json_encode($linkedProperties);
+
+            if (empty($searchProperties) && empty($linkedProperties) && empty($data['enableKeywordSearch'])) {
+                $data['enableSearch'] = 0;
+            }
+        } else {
+            $data['searchProperties'] = array();
+            $data['linkedProperties'] = array();
+            $data['enableKeywordSearch'] = 0;
+            $data['enableSearch'] = 0;
+        }
+
+        if (empty($data['enableKeywordSearch'])) {
+            $data['enableKeywordSearch'] = 0;
         }
 
         $entity = $this->entityManager->find('Concrete\Core\Entity\Express\Entity', $data['exEntityID']);
