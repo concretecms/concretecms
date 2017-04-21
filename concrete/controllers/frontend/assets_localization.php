@@ -616,14 +616,14 @@ Dropzone.prototype.defaultOptions.dictFallbackText = ' . json_encode(t('Please u
     'Unspecified_error_occurred' => t('An unspecified error occurred.'),
     'Error_deleting_message' => t('Something went wrong while deleting this message, please refresh and try again.'),
     'Error_flagging_message' => t('Something went wrong while flagging this message, please refresh and try again.'),
-]) . ';
+]) . ');
 jQuery.fn.concreteConversationAttachments.localize(' . json_encode([
     'Too_many_files' => t('Too many files'),
     'Invalid_file_extension' => t('Invalid file extension'),
     'Max_file_size_exceeded' => t('Max file size exceeded'),
     'Error_deleting_attachment' => t('Something went wrong while deleting this attachment, please refresh and try again.'),
     'Confirm_remove_attachment' => t('Remove this attachment?'),
-]) . ';
+]) . ');
 ';
 
         return $this->createJavascriptResponse($content);

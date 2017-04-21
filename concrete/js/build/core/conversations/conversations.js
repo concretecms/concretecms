@@ -398,6 +398,7 @@
       obj.$element.on('click.cnv', '[data-load-page=conversation-message-list]', function() {
         var nextPage = parseInt(obj.$loadmore.attr('data-next-page'));
         var totalPages = parseInt(obj.$loadmore.attr('data-total-pages'));
+        var orderBy = obj.$sortselect.length ? obj.$sortselect.val() : obj.options.orderBy;
         var data = {
           'cnvID':               obj.options.cnvID,
           'cID':                 obj.options.cID,
@@ -408,7 +409,7 @@
           'enablePosting':       enablePosting,
           'addMessageLabel':     addMessageLabel,
           'page':                nextPage,
-          'orderBy':             obj.$sortselect.val(),
+          'orderBy':             orderBy,
           'enableCommentRating': obj.options.enableCommentRating,
           'enableTopCommentReviews': obj.options.enableTopCommentReviews,
           'dateFormat':          obj.options.dateFormat,
