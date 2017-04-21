@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Http\Middleware;
 
 use Concrete\Core\Application\ApplicationAwareInterface;
@@ -7,6 +6,7 @@ use Concrete\Core\Application\ApplicationAwareTrait;
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Entity\File\File;
 use Concrete\Core\File\Image\BasicThumbnailer;
+use Concrete\Core\File\Image\Thumbnail\Type\CustomThumbnail;
 use Concrete\Core\File\Image\Thumbnail\Type\Version;
 use Concrete\Core\File\StorageLocation\StorageLocationInterface;
 use Doctrine\DBAL\Exception\InvalidFieldNameException;
@@ -108,7 +108,7 @@ class ThumbnailMiddleware implements MiddlewareInterface, ApplicationAwareInterf
     }
 
     /**
-     * Try building an unbuild thumbnail.
+     * Try building an unbuilt thumbnail.
      *
      * @param \Concrete\Core\Entity\File\File $file
      * @param array                           $thumbnail
@@ -126,8 +126,11 @@ class ThumbnailMiddleware implements MiddlewareInterface, ApplicationAwareInterf
             // Otherwise lets attempt to build it
             if ($dimensions = $this->getDimensions($thumbnail)) {
                 list($width, $height, $crop) = $dimensions;
-
-                $this->getThumbnailer()->getThumbnail($file, $width, $height, (bool) $crop);
+                $type = new CustomThumbnail($width, $height, $thumbnail['path'], $crop);
+                $fv = $file->getVersion($thumbnail['fileVersionID']);
+                if ($fv->getTypeObject()->supportsThumbnails()) {
+                    $fv->generateThumbnail($type);
+                }
             } elseif ($type = Version::getByHandle($thumbnail['thumbnailTypeHandle'])) {
                 // This is a predefined thumbnail type, lets just call the version->rescan
                 $fv = $file->getVersion($thumbnail['fileVersionID']);
@@ -254,7 +257,7 @@ class ThumbnailMiddleware implements MiddlewareInterface, ApplicationAwareInterf
     private function failBuild(File $file, $thumbnail)
     {
         $this->app->make(LoggerInterface::class)
-            ->critical('Failed to generate or locate the thumbnail for file "'.$file->getFileID().'"');
+            ->critical('Failed to generate or locate the thumbnail for file "' . $file->getFileID() . '"');
 
         // Complete the build anyway.
         // Cache must be cleared to remove this and attempt rebuild
