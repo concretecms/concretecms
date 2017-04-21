@@ -83,16 +83,18 @@ class Permissions extends BackendInterfacePageController
             $pt->clearPermissionAssignment();
             $pa = Access::create($pk);
 
-            if (is_array($_POST['readGID'])) {
-                foreach ($_POST['readGID'] as $gID) {
+            $readGID = $this->request->request->get('readGID');
+            if (is_array($readGID)) {
+                foreach ($readGID as $gID) {
                     $pa->addListItem(GroupPermissionAccessEntity::getOrCreate(Group::getByID($gID)));
                 }
             }
             $pt->assignPermissionAccess($pa);
 
             $editAccessEntities = [];
-            if (is_array($_POST['editGID'])) {
-                foreach ($_POST['editGID'] as $gID) {
+            $editGID = $this->request->request->get('editGID');
+            if (is_array($editGID)) {
+                foreach ($editGID as $gID) {
                     $editAccessEntities[] = GroupPermissionAccessEntity::getOrCreate(Group::getByID($gID));
                 }
             }
