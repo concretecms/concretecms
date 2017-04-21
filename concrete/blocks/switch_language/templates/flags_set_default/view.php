@@ -5,9 +5,9 @@ $ih = Core::make('multilingual/interface/flag');
 <div class="ccm-block-language-list-set-default-wrapper">
     <form method="post" action="<?= $view->action('set_current_language') ?>" class="form-stacked">
         <?php
-        if (Loader::helper('validation/numbers')->integer($_REQUEST['rcID'])) {
+        if (isset($_REQUEST['rcID']) && Core::make('helper/validation/numbers')->integer($_REQUEST['rcID'])) {
             ?>
-            <input type="hidden" name="rcID" value="<?= Loader::helper('text')->entities($_REQUEST['rcID']) ?>" />
+            <input type="hidden" name="rcID" value="<?= $_REQUEST['rcID'] ?>" />
             <?php
         }
         ?>
