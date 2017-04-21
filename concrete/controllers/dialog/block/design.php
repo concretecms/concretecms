@@ -64,7 +64,7 @@ class Design extends BackendInterfaceBlockController
             }
 
             if ($this->permissions->canEditBlockCustomTemplate()) {
-                $data = array();
+                $data = [];
                 $data['bFilename'] = $r['bFilename'];
                 $b->updateBlockInformation($data);
             }
@@ -99,7 +99,7 @@ class Design extends BackendInterfaceBlockController
         $btc = $this->block->getInstance();
         $btc->outputAutoHeaderItems();
         $bv = new BlockView($this->block);
-        $bv->addScopeItems(array('c' => $this->page, 'a' => $this->area, 'dialogController' => $this));
+        $bv->addScopeItems(['c' => $this->page, 'a' => $this->area, 'dialogController' => $this]);
         $this->set('bv', $bv);
 
         $canEditCustomTemplate = false;
@@ -127,7 +127,7 @@ class Design extends BackendInterfaceBlockController
                     $bFilename = $this->block->getBlockFilename();
                     break;
             }
-            $templates = array();
+            $templates = [];
             if (is_object($bt)) {
                 $templates = $bt->getBlockTypeCustomTemplates($this->block);
             }
