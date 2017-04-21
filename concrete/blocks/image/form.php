@@ -74,7 +74,7 @@ $al = $app->make('helper/concrete/asset_library');
 
     <div class="form-group">
         <div class="checkbox" data-checkbox-wrapper="constrain-image">
-            <label class="control-label">
+            <label>
                 <?php
                 echo $form->checkbox('constrainImage', 1, $constrainImage);
                 echo t('Constrain Image Size');
@@ -85,14 +85,14 @@ $al = $app->make('helper/concrete/asset_library');
 
     <div data-fields="constrain-image" style="display: none">
         <div class="well">
-            <div class="checkbox">
-                <div class="form-group">
-                    <label class="control-label">
-                        <?php
-                        echo $form->checkbox('cropImage', 1, $cropImage);
-                        echo t('Crop Image');
-                        ?>
-                    </label>
+            <div class="form-group">
+                <div class="checkbox">
+                <label>
+                    <?php
+                    echo $form->checkbox('cropImage', 1, $cropImage);
+                    echo t('Crop Image');
+                    ?>
+                </label>
                 </div>
             </div>
 
