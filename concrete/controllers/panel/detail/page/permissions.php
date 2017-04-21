@@ -2,14 +2,14 @@
 namespace Concrete\Controller\Panel\Detail\Page;
 
 use Concrete\Controller\Backend\UserInterface\Page as BackendInterfacePageController;
-use PageEditResponse;
-use Concrete\Core\Permission\Key\PageKey as PagePermissionKey;
-use PermissionKey;
-use GroupList;
-use Config;
 use Concrete\Core\Permission\Access\Access;
 use Concrete\Core\Permission\Access\Entity\GroupEntity as GroupPermissionAccessEntity;
+use Concrete\Core\Permission\Key\PageKey as PagePermissionKey;
+use Config;
 use Group;
+use GroupList;
+use PageEditResponse;
+use PermissionKey;
 use View;
 
 class Permissions extends BackendInterfacePageController
@@ -30,8 +30,8 @@ class Permissions extends BackendInterfacePageController
                 $this->set('editPermissions', true);
             }
         } else {
-            $editAccess = array();
-            $viewAccess = array();
+            $editAccess = [];
+            $viewAccess = [];
             $c = $this->page;
 
             $pk = PagePermissionKey::getByHandle('view_page');
@@ -90,14 +90,14 @@ class Permissions extends BackendInterfacePageController
             }
             $pt->assignPermissionAccess($pa);
 
-            $editAccessEntities = array();
+            $editAccessEntities = [];
             if (is_array($_POST['editGID'])) {
                 foreach ($_POST['editGID'] as $gID) {
                     $editAccessEntities[] = GroupPermissionAccessEntity::getOrCreate(Group::getByID($gID));
                 }
             }
 
-            $editPermissions = array(
+            $editPermissions = [
                 'view_page_versions',
                 'edit_page_properties',
                 'edit_page_contents',
@@ -114,7 +114,7 @@ class Permissions extends BackendInterfacePageController
                 'approve_page_versions',
                 'add_subpage',
                 'move_or_copy_page',
-            );
+            ];
             foreach ($editPermissions as $pkHandle) {
                 $pk = PermissionKey::getByHandle($pkHandle);
                 $pk->setPermissionObject($c);
