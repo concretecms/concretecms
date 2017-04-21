@@ -2,6 +2,7 @@
 namespace Concrete\Core\Updater\Migrations;
 
 use Concrete\Core\Block\BlockType\BlockType;
+use Concrete\Core\Database\DatabaseStructureManager;
 use Doctrine\DBAL\Migrations\AbstractMigration as DoctrineAbstractMigration;
 use Doctrine\ORM\Tools\SchemaTool;
 
@@ -15,12 +16,17 @@ abstract class AbstractMigration extends DoctrineAbstractMigration
 
     protected function refreshEntities($entities = null)
     {
-        $classes = array();
         $em = $this->connection->getEntityManager();
+        $sm = new DatabaseStructureManager($em);
+        $sm->clearCacheAndProxies();
+
+        $classes = array();
         $tool = new SchemaTool($em);
         foreach($entities as $entity) {
+            $this->output(t('Refreshing schema for %s...', $entity));
             $classes[] = $em->getClassMetadata($entity);
         }
+
         $tool->updateSchema($classes, true);
     }
 

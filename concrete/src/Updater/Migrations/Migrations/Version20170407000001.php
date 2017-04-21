@@ -10,9 +10,10 @@ class Version20170407000001 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
-        $em = ORM::entityManager();
-        $manager = new DatabaseStructureManager($em);
-        $manager->refreshEntities();
+        $this->refreshEntities([
+            'Concrete\Core\Entity\File\File',
+            'Concrete\Core\Entity\User\User'
+        ]);
     }
 
     public function down(Schema $schema)
