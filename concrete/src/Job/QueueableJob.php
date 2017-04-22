@@ -65,7 +65,9 @@ abstract class QueueableJob extends AbstractJob
         $q = $this->markStarted();
         $this->start($q);
         try {
-            $messages = $q->receive(PHP_INT_MAX);
+            // ORGINAL: $messages = $q->receive(PHP_INT_MAX);            
+            // We need to use the JobQueueBatchSize (not the PHP_INT_MAX)
+            $messages = $q->receive($this->getJobQueueBatchSize());            
             foreach ($messages as $p) {
                 $this->processQueueItem($p);
                 $q->deleteMessage($p);
