@@ -64,7 +64,7 @@ class PackageService
         $packages = $dh->getDirectoryContents(DIR_PACKAGES);
         if ($filterInstalled) {
             $handles = self::getInstalledHandles();
-            $packages = array_intersect($packages, $handles);
+            $packages = array_diff($packages, $handles);
         }
 
         if (count($packages) > 0) {
