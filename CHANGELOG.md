@@ -1,9 +1,3 @@
-# 8.2.0
-
-## Developer Updates
-
-* Added protected properties to class `Concrete\Core\Application\UserInterface\Menu\Item\Item` in order to avoid accessing undefined properties and optimize memory usage (See: https://github.com/concrete5/concrete5/issues/5307)
-
 # 8.1.0
 
 ## New Features

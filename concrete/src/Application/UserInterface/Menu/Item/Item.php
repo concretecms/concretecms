@@ -5,21 +5,9 @@ use Concrete\Core\Package\Package;
 
 class Item implements ItemInterface
 {
-    protected $controller = null;
+    protected $controller;
 
     protected $linkAttributes = [];
-
-    protected $handle = null;
-
-    protected $label = null;
-
-    protected $position = null;
-
-    protected $href = null;
-
-    protected $icon = null;
-
-    protected $pkgHandle = null;
 
     public function __construct($handle, $pkgHandle = false)
     {
@@ -29,12 +17,12 @@ class Item implements ItemInterface
 
     public function getHandle()
     {
-        return $this->handle;
+        return isset($this->handle) ? $this->handle : null;
     }
 
     public function getLabel()
     {
-        return $this->label;
+        return isset($this->label) ? $this->label : null;
     }
 
     public function setLabel($label)
@@ -44,12 +32,12 @@ class Item implements ItemInterface
 
     public function getPosition()
     {
-        return $this->position;
+        return isset($this->position) ? $this->position : null;
     }
 
     public function getLinkAttributes()
     {
-        return $this->linkAttributes;
+        return isset($this->linkAttributes) ? $this->linkAttributes : null;
     }
 
     public function setLinkAttributes($linkAttributes)
@@ -64,7 +52,7 @@ class Item implements ItemInterface
 
     public function getLink()
     {
-        return $this->href;
+        return isset($this->href) ? $this->href : null;
     }
 
     public function setIcon($icon)
@@ -74,7 +62,7 @@ class Item implements ItemInterface
 
     public function getIcon()
     {
-        return $this->icon;
+        return isset($this->icon) ? $this->icon : null;
     }
 
     public function setPosition($position)
@@ -84,7 +72,7 @@ class Item implements ItemInterface
 
     public function getPackageHandle()
     {
-        return $this->pkgHandle;
+        return isset($this->pkgHandle) ? $this->pkgHandle : null;
     }
 
     public function getPackageObject()
