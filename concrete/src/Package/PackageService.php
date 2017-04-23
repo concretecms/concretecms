@@ -54,7 +54,7 @@ class PackageService
     /**
      * Returns all available packages.
      *
-     * @param bool $filterInstalled True to only return installed packages
+     * @param bool $filterInstalled True to only return not installed packages
      *
      * @return Package[]
      */
