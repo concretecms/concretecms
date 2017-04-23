@@ -143,6 +143,9 @@ class CollectionAttributeControl extends Control
 
             $context = new ComposerContext();
             $context->setTooltip($description);
+            if ($this->isPageTypeComposerControlRequiredByDefault() || $this->isPageTypeComposerFormControlRequiredOnThisRequest()) {
+                $context->setRequired(true);
+            }
             $view = $ak->getControlView($context);
             $view->setValue($this->getPageTypeComposerControlDraftValue());
             $view->setLabel($label);
