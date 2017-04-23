@@ -1,9 +1,9 @@
 <?php
 namespace Concrete\Core\Localization\Translator\Adapter\Zend\Translation\Loader\Gettext;
 
+use Concrete\Core\Entity\Package;
 use Concrete\Core\Localization\Translator\Translation\Loader\AbstractTranslationLoader;
 use Concrete\Core\Localization\Translator\TranslatorAdapterInterface;
-use Concrete\Core\Package\Package;
 use Concrete\Core\Package\PackageService;
 
 /**
@@ -21,7 +21,7 @@ class PackagesTranslationLoader extends AbstractTranslationLoader
     {
         if ($this->app->isInstalled()) {
             $packageService = $this->app->make(PackageService::class);
-            $pkgList = $packageService->getAvailablePackages();
+            $pkgList = $packageService->getInstalledList();
             $translator = $translatorAdapter->getTranslator();
             $locale = $translatorAdapter->getLocale();
             foreach ($pkgList as $pkg) {
@@ -46,7 +46,7 @@ class PackagesTranslationLoader extends AbstractTranslationLoader
         $localeIDAlternatives = $this->getLocaleIDAlternatives($localeID);
         $result = null;
         foreach ($localeIDAlternatives as $localeIDAlternative) {
-            $languageFile = $this->getLanguageFilePath($package, $localeIDAlternative);
+            $languageFile = $package->getTranslationFile($localeIDAlternative);
             if (is_file($languageFile)) {
                 $result = $languageFile;
                 break;
@@ -54,18 +54,5 @@ class PackagesTranslationLoader extends AbstractTranslationLoader
         }
 
         return $result;
-    }
-
-    /**
-     * Get the full path to the file containing the localized strings for a specific locale.
-     *
-     * @param Package $package The package for which you want the file path
-     * @param string $localeID The ID of the locale
-     *
-     * @return string
-     */
-    private function getLanguageFilePath(Package $package, $localeID)
-    {
-        return $package->getPackagePath() . '/' . DIRNAME_LANGUAGES . '/' . $localeID . '/LC_MESSAGES/messages.mo';
     }
 }
