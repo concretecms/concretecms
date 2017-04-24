@@ -1,7 +1,6 @@
 <?php
 namespace Concrete\Core\Entity\Attribute\Key\Settings;
 
-use Concrete\Core\Entity\Attribute\Value\Value\TopicsValue;
 use Concrete\Core\Tree\Tree;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -78,5 +77,4 @@ class TopicsSettings extends Settings
     {
         $this->akTopicAllowMultipleValues = $allowMultipleValues;
     }
-
 }
