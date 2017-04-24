@@ -88,7 +88,7 @@ class Controller extends AttributeTypeController
         if ($akTopicTreeID) {
             $type->setTopicTreeID($akTopicTreeID);
         }
-        $type->setAllowMultipleValues((bool) $data['akTopicAllowMultipleValues']);
+        $type->setAllowMultipleValues((bool) $akTopicAllowMultipleValues);
 
         return $type;
     }
