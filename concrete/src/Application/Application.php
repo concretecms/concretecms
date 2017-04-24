@@ -2,6 +2,7 @@
 namespace Concrete\Core\Application;
 
 use Concrete\Core\Block\BlockType\BlockType;
+use Concrete\Core\Cache\CacheClearer;
 use Concrete\Core\Cache\Page\PageCache;
 use Concrete\Core\Cache\Page\PageCacheRecord;
 use Concrete\Core\Cache\OpCache;
@@ -104,48 +105,7 @@ class Application extends Container
      */
     public function clearCaches()
     {
-        \Events::dispatch('on_cache_flush');
-
-        $this['cache']->flush();
-        $this['cache/expensive']->flush();
-
-        $config = $this['config'];
-
-        // Delete and re-create the cache directory
-        $cacheDir = $config->get('concrete.cache.directory');
-        if (is_dir($cacheDir)) {
-            $fh = Core::make('helper/file');
-            $fh->removeAll($cacheDir, true);
-        }
-        $this->setupFilesystem();
-
-        $pageCache = PageCache::getLibrary();
-        if (is_object($pageCache)) {
-            $pageCache->flush();
-        }
-
-        // Clear the file thumbnail path cache
-        $connection = $this['database'];
-        $sql = $connection->getDatabasePlatform()->getTruncateTableSQL('FileImageThumbnailPaths');
-        try {
-            $connection->executeUpdate($sql);
-        } catch (Exception $e) {
-        }
-
-        // clear the environment overrides cache
-        $env = \Environment::get();
-        $env->clearOverrideCache();
-
-        // Clear localization cache
-        Localization::clearCache();
-
-        // clear block type cache
-        BlockType::clearCache();
-
-        // Clear precompiled script bytecode caches
-        OpCache::clear();
-
-        \Events::dispatch('on_cache_flush_end');
+        $this->make(CacheClearer::class)->flush();
     }
 
     /**

@@ -20,7 +20,7 @@ use Stash\Pool;
  * This class imports the various caching settings from Config class, sets
  * up the Stash pools and provides a basic caching API for all of Concrete5.
  */
-abstract class Cache
+abstract class Cache implements FlushableInterface
 {
     /** @var Pool */
     public $pool = null;

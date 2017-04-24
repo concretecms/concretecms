@@ -2,6 +2,7 @@
 
 namespace Concrete\Core\Cache\Page;
 
+use Concrete\Core\Cache\FlushableInterface;
 use Concrete\Core\Http\Response;
 use Config;
 use Request;
@@ -11,7 +12,7 @@ use Permissions;
 use User;
 use Session;
 
-abstract class PageCache
+abstract class PageCache implements FlushableInterface
 {
 
     static $library;
