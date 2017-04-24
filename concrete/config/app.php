@@ -476,6 +476,8 @@ return [
         '/ccm/system/dialogs/tree/node/delete' => ['\Concrete\Controller\Dialog\Tree\Node\Delete::view'],
         '/ccm/system/dialogs/tree/node/delete/remove_tree_node' => ['\Concrete\Controller\Dialog\Tree\Node\Delete::remove_tree_node'],
         '/ccm/system/dialogs/tree/node/permissions' => ['\Concrete\Controller\Dialog\Tree\Node\Permissions::view'],
+        '/ccm/system/dialogs/tree/node/category/delete_express' => ['\Concrete\Controller\Dialog\Tree\Node\Category\DeleteExpress::view'],
+        '/ccm/system/dialogs/tree/node/category/delete_express/remove_tree_node' => ['\Concrete\Controller\Dialog\Tree\Node\Category\DeleteExpress::remove_tree_node'],
 
         /*
          * Marketplace

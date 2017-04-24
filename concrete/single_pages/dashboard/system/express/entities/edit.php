@@ -69,7 +69,7 @@
 
             </fieldset>
             <fieldset>
-                <legend><?=t('Results Folder')?></legend>
+                <legend><?=t('Results Folder Location')?></legend>
                 <input type="hidden" name="entity_results_node_id" value="<?=$folder->getTreeNodeID()?>">
 
                 <div data-tree="<?=$tree->getTreeID()?>">
