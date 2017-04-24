@@ -66,6 +66,14 @@
             <legend><?=t('Topic Default Parent Node')?></legend>
         </div>
     </div>
+        <legend><?= t('Select Mode'); ?></legend>
+        <div class="form-group">
+            <div class="checkbox">
+                <label>
+                    <?= $form->checkbox('allowMultipleValues', 1, $allowMultipleValues)?> <span><?=t('Allow multiple nodes to be chosen.') ?></span>
+                </label>
+            </div>
+        </div>
     <input type="hidden" name="akTopicParentNodeID" value="<?php echo $parentNode ?>">
     <input type="hidden" name="akTopicTreeID" value="<?php echo $tree->getTreeID();
     ?>">

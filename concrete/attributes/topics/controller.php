@@ -19,6 +19,10 @@ use Database;
 
 class Controller extends AttributeTypeController
 {
+    private $akTopicParentNodeID;
+    private $akTopicTreeID;
+    private $akTopicAllowMultipleValues = true;
+
     protected $searchIndexFieldDefinition = array('type' => 'text', 'options' => array('default' => null, 'notnull' => false));
 
     public $helpers = array('form');
@@ -73,12 +77,18 @@ class Controller extends AttributeTypeController
         );
         $akTopicParentNodeID = $data['akTopicParentNodeID'];
         $akTopicTreeID = $data['akTopicTreeID'];
+        if (isset($data['akTopicAllowMultipleValues']) && $data['akTopicAllowMultipleValues'] == 1) {
+            $akTopicAllowMultipleValues = 1;
+        } else {
+            $akTopicAllowMultipleValues = 0;
+        }
         if ($akTopicParentNodeID) {
             $type->setParentNodeID($akTopicParentNodeID);
         }
         if ($akTopicTreeID) {
             $type->setTopicTreeID($akTopicTreeID);
         }
+        $type->setAllowMultipleValues((bool) $data['akTopicAllowMultipleValues']);
 
         return $type;
     }
@@ -137,6 +147,9 @@ class Controller extends AttributeTypeController
         $selected = array();
         $this->load();
         $tree = Tree::getByID($this->akTopicTreeID);
+        if (is_array($nodes) && $this->akTopicAllowMultipleValues == false) {
+            $nodes = $nodes[0];
+        }
         if ($nodes instanceof Topic) {
             $selected[] = $nodes->getTreeNodeID();
         } else {
@@ -172,6 +185,7 @@ class Controller extends AttributeTypeController
         $treeNode = $key->addChild('tree');
         $treeNode->addAttribute('name', $tree->getTreeName());
         $treeNode->addAttribute('path', $path);
+        $treeNode->addAttribute('allow-multiple-values', $this->akTopicAllowMultipleValues);
 
         return $key;
     }
@@ -182,8 +196,10 @@ class Controller extends AttributeTypeController
         $name = (string) $key->tree['name'];
         $tree = \Concrete\Core\Tree\Type\Topic::getByName($name);
         $node = $tree->getNodeByDisplayPath((string) $key->tree['path']);
+        $allowMultipleValues = $key->tree['allow-multiple-values'];
         $type->setTopicTreeID($tree->getTreeID());
         $type->setParentNodeID($node->getTreeNodeID());
+        $type->setAllowMultipleValues(((string) $allowMultipleValues) == '1' ? true : false);
 
         return $type;
     }
@@ -223,6 +239,7 @@ class Controller extends AttributeTypeController
         $this->set('akID', $ak->getAttributeKeyID());
         $this->set('parentNode', $this->akTopicParentNodeID);
         $this->set('treeID', $this->akTopicTreeID);
+        $this->set('allowMultipleValues', $this->akTopicAllowMultipleValues);
     }
 
     public function searchForm($list)
@@ -306,6 +323,7 @@ class Controller extends AttributeTypeController
         }
         $this->set('trees', $trees);
         $this->set('parentNode', $this->akTopicParentNodeID);
+        $this->set('allowMultipleValues', $this->akTopicAllowMultipleValues);
     }
 
     public function validateKey($data = false)
@@ -350,14 +368,27 @@ class Controller extends AttributeTypeController
         return $this->akTopicTreeID;
     }
 
+    public function getAllowMultipleValues()
+    {
+        $this->load();
+
+        return $this->akTopicAllowMultipleValues;
+    }
+
     protected function load()
     {
         $ak = $this->getAttributeKey();
         if (!is_object($ak)) {
             return false;
         }
-        $this->akTopicParentNodeID = $ak->getAttributeKeySettings()->getParentNodeID();
-        $this->akTopicTreeID = $ak->getAttributeKeySettings()->getTopicTreeID();
+
+        /** @var TopicsSettings $type */
+        $type = $ak->getAttributeKeySettings();
+        if (is_object($type)) {
+            $this->akTopicParentNodeID = $type->getParentNodeID();
+            $this->akTopicTreeID = $type->getTopicTreeID();
+            $this->akTopicAllowMultipleValues = $type->getAllowMultipleValues();
+        }
     }
 
     public function duplicateKey($newAK)
@@ -370,6 +401,7 @@ class Controller extends AttributeTypeController
                 'akID' => $newAK->getAttributeKeyID(),
                 'akTopicParentNodeID' => $this->akTopicParentNodeID,
                 'akTopicTreeID' => $this->akTopicTreeID,
+                'akTopicAllowMultipleValues' => $this->akTopicAllowMultipleValues,
             ),
             array('akID'),
             true

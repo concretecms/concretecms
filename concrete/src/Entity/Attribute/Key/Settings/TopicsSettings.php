@@ -22,6 +22,11 @@ class TopicsSettings extends Settings
     protected $akTopicTreeID = 0;
 
     /**
+     * @ORM\Column(type="boolean", options={"default":true})
+     */
+    protected $akTopicAllowMultipleValues = true;
+
+    /**
      * @return mixed
      */
     public function getTopicTreeID()
@@ -57,4 +62,21 @@ class TopicsSettings extends Settings
     {
         return Tree::getByID($this->akTopicTreeID);
     }
+
+    /**
+     * @return mixed
+     */
+    public function getAllowMultipleValues()
+    {
+        return $this->akTopicAllowMultipleValues;
+    }
+
+    /**
+     * @param mixed $allowMultipleValues
+     */
+    public function setAllowMultipleValues($allowMultipleValues)
+    {
+        $this->akTopicAllowMultipleValues = $allowMultipleValues;
+    }
+
 }
