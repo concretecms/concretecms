@@ -7,11 +7,13 @@ use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Http\Request;
 use Concrete\Core\Http\Response;
 use Concrete\Core\Http\ServerInterface;
+use Concrete\Core\Localization\Localization;
 use Concrete\Core\Permission\Key\Key;
 use Concrete\Core\Routing\RouterInterface;
 use Concrete\Core\Site\Service as SiteService;
 use Concrete\Core\Url\Resolver\CanonicalUrlResolver;
 use Concrete\Core\Url\Resolver\UrlResolverInterface;
+use Concrete\Core\User\User;
 use Exception;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
@@ -76,6 +78,11 @@ class DefaultRunner implements RunInterface, ApplicationAwareInterface
                 // Load site specific timezones. Has to come after packages because it
                 // instantiates the site service, which sometimes packages need to override.
                 'initializeTimezone',
+
+                // Set the active language for the site, based either on the site locale, or the
+                // current user record. This can be changed later as well, during runtime.
+                // Start localization library.
+                'setSystemLocale',
 
                 // Define legacy urls, this may be the first thing that loads the entity manager
                 'initializeLegacyUrlDefinitions',
@@ -151,6 +158,16 @@ class DefaultRunner implements RunInterface, ApplicationAwareInterface
         @date_default_timezone_set($config->get('app.server_timezone'));
     }
 
+    /**
+     * Initialize localization.
+     */
+    protected function setSystemLocale()
+    {
+        $u = new User();
+        $lan = $u->getUserLanguageToDisplay();
+        $loc = Localization::getInstance();
+        $loc->setContextLocale(Localization::CONTEXT_UI, $lan);
+    }
 
     /**
      * Set legacy config values
