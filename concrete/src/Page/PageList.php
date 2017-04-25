@@ -184,35 +184,10 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
             $query->setParameter('cIsActive', true);
         }
 
-        /*
-        if (is_object($this->siteTree)) {
-            $tree = $this->siteTree;
-        } else {
-            $site = \Core::make("site")->getSite();
-            $tree = $site->getSiteTreeObject();
-        }
-
-        // Note, we might not use this. We have to set the parameter even if we don't use it because
-        // StackList (which extends PageList) needs to have it available.
-        $query->setParameter('siteTreeID', $tree->getSiteTreeID());
-
-        if (($this->query->getParameter('cParentID') < 1) && ($this->query->getParameter('cPath') == '')) {
-
-            if (!$this->includeSystemPages) {
-                $query->andWhere('p.siteTreeID = :siteTreeID');
-                $query->andWhere('p.cIsSystemPage = :cIsSystemPage');
-                $query->setParameter('cIsSystemPage', false);
-            } else {
-                $query->andWhere('(p.siteTreeID = :siteTreeID or p.siteTreeID = 0)');
-            }
-
-        }*/
-
-        if (($this->query->getParameter('cParentID') < 1) && ($this->query->getParameter('cPath') == '')) {
+        if ($this->query->getParameter('cParentID') < 1) {
 
             // The code above is set up to make it so that we don't filter by site tree
-            // if we have a defined parent. The $cPath portion of this might be problematic though
-            // because multiple paths could live in multiple sites. We might have to revisit this @TODO
+            // if we have a defined parent.
 
             if (is_object($this->siteTree)) {
                 $tree = $this->siteTree;
