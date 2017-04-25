@@ -17,6 +17,7 @@ class IndexSearchAll extends QueueableJob
     // A flag for clearing the index
     const CLEAR = '-1';
 
+    public $jQueueBatchSize = 50;
     public $jNotUninstallable = 1;
     public $jSupportsQueue = true;
 
