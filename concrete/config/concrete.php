@@ -252,6 +252,10 @@ return [
                 ],
             ],
         ],
+
+        'clear' => [
+            'thumbnails' => false
+        ],
     ],
 
     'design' => [

@@ -273,7 +273,7 @@ class BasicThumbnailer implements ThumbnailerInterface, ApplicationAwareInterfac
             $filename = $baseFilename . '.' . $extension;
         }
 
-        $abspath = '/cache/' . $filename;
+        $abspath = '/cache/thumbnails/' . $filename;
 
         if ($obj instanceof File) {
             $customThumb = new CustomThumbnail($maxWidth, $maxHeight, $abspath, false);
