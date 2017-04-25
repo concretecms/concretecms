@@ -64,7 +64,7 @@ abstract class AbstractRepetition implements RepetitionInterface
      */
     public function isStartDateAllDay()
     {
-        return (bool) $this->startDateAllDay;
+        return (bool)$this->startDateAllDay;
     }
 
     /**
@@ -82,7 +82,7 @@ abstract class AbstractRepetition implements RepetitionInterface
      */
     public function isEndDateAllDay()
     {
-        return (bool) $this->endDateAllDay;
+        return (bool)$this->endDateAllDay;
     }
 
     /**
@@ -102,7 +102,7 @@ abstract class AbstractRepetition implements RepetitionInterface
      */
     public function isActive($now = null)
     {
-        return (bool) $this->getActiveRange($now);
+        return (bool)$this->getActiveRange($now);
     }
 
     /**
@@ -436,7 +436,7 @@ abstract class AbstractRepetition implements RepetitionInterface
      */
     public function getRepeatPeriodWeekDays()
     {
-        return (array) $this->repeatPeriodWeekDays;
+        return (array)$this->repeatPeriodWeekDays;
     }
 
     /**
@@ -468,7 +468,7 @@ abstract class AbstractRepetition implements RepetitionInterface
      */
     public function getTextRepresentation()
     {
-        return (string) $this;
+        return (string)$this;
     }
 
     public function __toString()
@@ -497,16 +497,30 @@ abstract class AbstractRepetition implements RepetitionInterface
             $text .= t('No End Date. ');
         }
         if ($this->repeats()) {
-            switch($this->getRepeatPeriod()) {
+            switch ($this->getRepeatPeriod()) {
                 case self::REPEAT_DAILY:
-                    $text .= t('Repeats Daily until %s.', $dh->formatDate($this->getRepeatPeriodEnd()));
+                    $text .= t('Repeats Daily until %s. ', $dh->formatDate($this->getRepeatPeriodEnd()));
                     break;
                 case self::REPEAT_WEEKLY:
-                    $text .= t('Repeats Weekly until %s.', $dh->formatDate($this->getRepeatPeriodEnd()));
+                    $text .= t('Repeats Weekly until %s. ', $dh->formatDate($this->getRepeatPeriodEnd()));
                     break;
                 case self::REPEAT_MONTHLY:
-                    $text .= t('Repeats Monthly until %s.', $dh->formatDate($this->getRepeatPeriodEnd()));
+                    $text .= t('Repeats Monthly until %s. ', $dh->formatDate($this->getRepeatPeriodEnd()));
                     break;
+            }
+            if ($this->getRepeatEveryNum() > 1) {
+                switch ($this->getRepeatPeriod()) {
+                    case self::REPEAT_DAILY:
+                        $item = t('days');
+                        break;
+                    case self::REPEAT_WEEKLY:
+                        $item = t('weeks');
+                        break;
+                    case self::REPEAT_MONTHLY:
+                        $item = t('months');
+                        break;
+                }
+                $text .= t('Repeats every %s %s. ', $this->getRepeatEveryNum(), $item);
             }
         }
 
@@ -723,7 +737,8 @@ abstract class AbstractRepetition implements RepetitionInterface
                             while ($current_datetime->getTimestamp() < $end) {
                                 $occurrence_start = $current_datetime->getTimestamp();
                                 $occurrence_start = strtotime(
-                                    date('Y-m-d ', strtotime('Last ' . $weekday . ' of ' . date('F Y', $occurrence_start))) .
+                                    date('Y-m-d ',
+                                        strtotime('Last ' . $weekday . ' of ' . date('F Y', $occurrence_start))) .
                                     date('H:i:s', $repetition_start));
 
                                 if ($occurrence_start >= $start && $occurrence_start <= $end) {
