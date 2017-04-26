@@ -20,10 +20,8 @@ class IndexSearchAll extends QueueableJob
     public $jNotUninstallable = 1;
     public $jSupportsQueue = true;
 
-    protected $usersIndexed = 0;
-    protected $pagesIndexed = 0;
-    protected $filesIndexed = 0;
-    protected $sitesIndexed = 0;
+    /** @var array The result from the last queue item */
+    protected $result;
 
     protected $clearTable = true;
 
@@ -73,18 +71,27 @@ class IndexSearchAll extends QueueableJob
      */
     protected function queueMessages()
     {
+        $pages = $users = $files = $sites = 0;
+
         foreach ($this->pagesToQueue() as $id) {
             yield "P{$id}";
+            $pages++;
         }
         foreach ($this->usersToQueue() as $id) {
             yield "U{$id}";
+            $users++;
         }
         foreach ($this->filesToQueue() as $id) {
             yield "F{$id}";
+            $files++;
         }
         foreach ($this->sitesToQueue() as $id) {
             yield "S{$id}";
+            $sites++;
         }
+
+        // Yield the result very last
+        yield 'R' . json_encode([$pages, $users, $files, $sites]);
     }
 
     public function processQueueItem(ZendQueueMessage $msg)
@@ -98,38 +105,38 @@ class IndexSearchAll extends QueueableJob
             $message = substr($msg->body, 1);
             $type = substr($msg->body, 0, 1);
 
-            switch ($type) {
-                case 'P':
-                    $this->pagesIndexed++;
-                    $index->index(Page::class, $message);
-                    break;
-                case 'U':
-                    $this->usersIndexed++;
-                    $index->index(User::class, $message);
-                    break;
-                case 'F':
-                    $this->filesIndexed++;
-                    $index->index(File::class, $message);
-                    break;
-                case 'S':
-                    $this->sitesIndexed++;
-                    $index->index(Site::class, $message);
-                    break;
+            $map = [
+                'P' => Page::class,
+                'U' => User::class,
+                'F' => File::class,
+                'S' => Site::class
+            ];
+
+            if (isset($map[$type])) {
+                $index->index($map[$type], $message);
+            } elseif ($type === 'R') {
+                // Store this result, this is likely the last item.
+                $this->result = json_decode($message);
             }
         }
     }
 
     public function finish(ZendQueue $q)
     {
-        return t(
-            'Index performed on: %s',
-            PunicMisc::join([
-                t2('%d page', '%d pages', $this->pagesIndexed),
-                t2('%d user', '%d users', $this->usersIndexed),
-                t2('%d file', '%d files', $this->filesIndexed),
-                t2('%d site', '%d sites', $this->sitesIndexed),
-            ])
-        );
+        if ($this->result) {
+            list($pages, $users, $files, $sites) = $this->result;
+            return t(
+                'Index performed on: %s',
+                PunicMisc::join([
+                    t2('%d page', '%d pages', $pages),
+                    t2('%d user', '%d users', $users),
+                    t2('%d file', '%d files', $files),
+                    t2('%d site', '%d sites', $sites),
+                ])
+            );
+        } else {
+            return t('Indexed pages, users, files, and sites.');
+        }
     }
 
     /**
