@@ -7,6 +7,7 @@ class ComposerContext extends BasicFormContext
 {
 
     protected $tooltip;
+    protected $required = false;
 
     /**
      * @return mixed
@@ -22,6 +23,22 @@ class ComposerContext extends BasicFormContext
     public function setTooltip($tooltip)
     {
         $this->tooltip = $tooltip;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isRequired()
+    {
+        return $this->required;
+    }
+
+    /**
+     * @param bool $required
+     */
+    public function setRequired($required)
+    {
+        $this->required = $required;
     }
 
     public function setLocation(TemplateLocator $locator)
