@@ -73,7 +73,8 @@ $(function() {
             if (totalCompleted == totalStarted && totalCompleted > 0) {
                 $('[data-button=launch-upload-complete]').show();
             }
-        }
+        },
+        previewTemplate: "<div class=\"dz-preview dz-file-preview\">\n  <div class=\"dz-details\">\n    <div class=\"dz-filename\"><span data-dz-name></span></div>\n    <div class=\"dz-size\" data-dz-size></div>\n    <img data-dz-thumbnail />\n  </div>\n  <div class=\"dz-progress\"><span class=\"dz-upload\" data-dz-uploadprogress></span></div>\n  <div class=\"dz-success-mark\"><span>✔</span></div>\n  <div class=\"dz-error-mark\"><span>✘</span></div>\n  <div class=\"dz-error-message\"><span data-dz-errormessage></span></div>\n</div>"
     });
 
     $('a[data-tab=incoming], a[data-tab=local], a[data-tab=remote]').on('click', function() {
