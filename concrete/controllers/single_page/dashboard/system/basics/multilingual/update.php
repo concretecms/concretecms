@@ -144,7 +144,7 @@ EOT
         }
         $result .= <<<EOT
     <td><code>{$hLocaleID}</code></td>
-    <td><a class="dialog-launch" dialog-width="550" dialog-height="490" dialog-modal="true" dialog-title="{$dialogTitle}" href="{$dialogUrl}">{$hLocaleName}</a></td>
+    <td><a class="dialog-launch" dialog-width="580" dialog-height="490" dialog-modal="true" dialog-title="{$dialogTitle}" href="{$dialogUrl}">{$hLocaleName}</a></td>
     <td class="hidden-xs">{$hUpdatedOn}</td>
     <td>{$button}</td>
 </tr>
