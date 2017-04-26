@@ -102,8 +102,10 @@ class IndexSearchAll extends QueueableJob
         if ($msg->body == self::CLEAR) {
             $this->clearIndex($index);
         } else {
-            $message = substr($msg->body, 1);
-            $type = substr($msg->body, 0, 1);
+            $body = $msg->body;
+
+            $message = substr($body, 1);
+            $type = $body[0];
 
             $map = [
                 'P' => Page::class,

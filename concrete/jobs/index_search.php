@@ -53,9 +53,10 @@ class IndexSearch extends IndexSearchAll implements ApplicationAwareInterface
 
         parent::processQueueItem($msg);
 
-        $message = substr($msg->body, 2);
-        $remove = substr($msg->body, 0, 1);
-        $type = substr($msg->body, 1, 1);
+        $body = $msg->body;
+        $message = substr($body, 2);
+        $remove = $body[0];
+        $type = $body[1];
 
         // Make sure that we were meant to remove this item
         if ($remove !== 'R') {
