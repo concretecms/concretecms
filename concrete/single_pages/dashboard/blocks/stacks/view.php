@@ -89,11 +89,13 @@ if (isset($neutralStack)) {
                     <?php if (!$isGlobalArea && $cpc->canMoveOrCopyPage()) { ?>
                         <li><a href="<?=$view->action('duplicate', $neutralStack->getCollectionID())?>" style="margin-right: 4px;"><?=t('Duplicate')?></a></li>
                     <?php } ?>
+                    <?php if (!$isGlobalArea) { ?>
                     <li>
                         <a dialog-width="640" dialog-height="340" class="dialog-launch" id="stackUsage" dialog-title="<?=t('Usage')?>" href="<?= $view->action('usage', $stackToEdit->getCollectionID()) ?>">
                    <?=t('Stack Usage')?>
                     </a>
                     </li>
+                    <?php } ?>
                     <?php
                     if ($cpc->canDeletePage()) {
                         if ($isGlobalArea) {
