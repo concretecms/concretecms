@@ -108,12 +108,14 @@ div#ccm-popover-menu-container {
 div#ccm-file-manager-import-files {
   form.dropzone {
     .transition(0.1s linear all);
-    span {
-      font-size: 32px;
-      -webkit-font-smoothing: antialiased;
-      font-weight: normal;
-      display: block;
-      color: #999;
+    .dz-default.dz-message {
+      span {
+        font-size: 32px;
+        -webkit-font-smoothing: antialiased;
+        font-weight: normal;
+        display: block;
+        color: #999;
+      }
     }
 
     &.drag-hover {
