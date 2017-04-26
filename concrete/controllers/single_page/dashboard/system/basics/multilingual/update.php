@@ -99,14 +99,11 @@ class Update extends DashboardPageController
         $this->redirect($this->action(''));
     }
 
-    public function getLocaleRowHtml($localeID, $handle, RemoteStats $remote, LocalStats $local = null, $action = '')
+    public function getLocaleRowHtml($localeID, $handle, RemoteStats $remote = null, LocalStats $local = null, $action = '')
     {
         $dateHelper = $this->app->make('date');
-        $progress = $remote->getProgress();
-        $progressTitle = h(t2('%1$s translated string out of %2$s', '%1$s translated strings out of %2$s', $remote->getTranslated(), $remote->getTotal()));
         $hLocaleID = h($localeID);
         $hLocaleName = h(\Punic\Language::getName($localeID));
-        $hUpdatedOn = h(tc('DateTime', 'Updated: %s', $dateHelper->formatPrettyDateTime($remote->getUpdatedOn(), true)));
         switch ($action) {
             case 'update':
                 $button = '<button class="btn btn-xs btn-primary ccm-install-package-locale" data-is-update="true" data-token="' . h($this->token->generate("install-package-locale-{$handle}@" . $localeID)) . '" data-action="' . h($this->action('install_package_locale', $handle, $localeID)) . '">' . t('Update') . '</button>';
@@ -120,8 +117,21 @@ class Update extends DashboardPageController
                 break;
         }
 
-        return <<<EOT
-<tr>
+        $dialogTitle = t('Language Details');
+        $dialogUrl = \URL::to('/ccm/system/dialogs/language/update/details') . '?cID=' . $this->request->getCurrentPage()->getCollectionID() . '&locale=' . rawurlencode($localeID);
+        if ($handle !== 'concrete5') {
+            $dialogUrl .= '&pkgHandle=' . rawurldecode($handle);
+        }
+
+        $result = '<tr>';
+        if ($remote === null) {
+            $result .= '<td></td>';
+            $hUpdatedOn = h(tc('DateTime', 'Updated: %s', $dateHelper->formatPrettyDateTime($local->getUpdatedOn(), true)));
+        } else {
+            $progress = $remote->getProgress();
+            $progressTitle = h(t2('%1$s translated string out of %2$s', '%1$s translated strings out of %2$s', $remote->getTranslated(), $remote->getTotal()));
+            $hUpdatedOn = h(tc('DateTime', 'Updated: %s', $dateHelper->formatPrettyDateTime($remote->getUpdatedOn(), true)));
+            $result .= <<<EOT
     <td>
         <div class="progress launch-tooltip" title="{$progressTitle}">
             <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="{$progress}" aria-valuemin="0" aria-valuemax="100" style="width: {$progress}%;">
@@ -129,11 +139,18 @@ class Update extends DashboardPageController
             </div>
         </div>
     </td>
+EOT
+            ;
+        }
+        $result .= <<<EOT
     <td><code>{$hLocaleID}</code></td>
-    <td>{$hLocaleName}</td>
+    <td><a class="dialog-launch" dialog-width="550" dialog-height="490" dialog-modal="true" dialog-title="{$dialogTitle}" href="{$dialogUrl}">{$hLocaleName}</a></td>
     <td class="hidden-xs">{$hUpdatedOn}</td>
     <td>{$button}</td>
 </tr>
-EOT;
+EOT
+        ;
+
+        return $result;
     }
 }
