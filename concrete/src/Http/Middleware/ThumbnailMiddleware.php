@@ -4,16 +4,18 @@ namespace Concrete\Core\Http\Middleware;
 use Concrete\Core\Application\ApplicationAwareInterface;
 use Concrete\Core\Application\ApplicationAwareTrait;
 use Concrete\Core\Database\Connection\Connection;
+use Concrete\Core\Database\Driver\PDOStatement as ConcretePDOStatement;
 use Concrete\Core\Entity\File\File;
 use Concrete\Core\File\Image\BasicThumbnailer;
 use Concrete\Core\File\Image\Thumbnail\Type\Version;
 use Concrete\Core\File\StorageLocation\StorageLocationInterface;
+use Concrete\Core\Http\ResponseFactoryInterface;
 use Doctrine\DBAL\Exception\InvalidFieldNameException;
 use Doctrine\ORM\EntityManagerInterface;
+use InvalidArgumentException;
 use League\Flysystem\Filesystem;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Concrete\Core\Http\ResponseFactoryInterface;
 
 /**
  * Class ThumbnailMiddleware
@@ -51,7 +53,7 @@ class ThumbnailMiddleware implements MiddlewareInterface, ApplicationAwareInterf
      * Process the request and return a response.
      *
      * @param \Symfony\Component\HttpFoundation\Request $request
-     * @param DelegateInterface                         $frame
+     * @param DelegateInterface $frame
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -62,31 +64,21 @@ class ThumbnailMiddleware implements MiddlewareInterface, ApplicationAwareInterf
         if ($this->app->isInstalled()) {
             $responseStatusCode = (int) $response->getStatusCode();
             if ($responseStatusCode === 200 || $responseStatusCode === 404) {
-                /* @var Connection $database */
-                try {
-                    $database = $this->getConnection();
-                } catch (\InvalidArgumentException $e) {
-                    // Don't die here if there's no available database connection
-                    $database = null;
-                }
-
-                if ($database) {
+                $database = $this->tryGetConnection();
+                if ($database !== null) {
                     try {
                         if ($responseStatusCode === 404) {
                             $searchThumbnailPath = $request->getRequestUri();
-                            $paths = $database->executeQuery('SELECT * FROM FileImageThumbnailPaths WHERE isBuilt=0 ORDER BY ' . $database->getDatabasePlatform()->getLocateExpression('?', 'path') . ' DESC LIMIT 5', [$searchThumbnailPath]);
                         } else {
                             $searchThumbnailPath = null;
-                            $paths = $database->executeQuery('SELECT * FROM FileImageThumbnailPaths WHERE isBuilt=0 LIMIT 5');
                         }
-                        if ($paths->rowCount()) {
-                            if ($this->generateThumbnails($paths, $database, $searchThumbnailPath) === true && $responseStatusCode === 404) {
-                                $redirectTo = (string) $request->getUri();
-                                $redirectTo .= ((strpos($redirectTo, '?') === false) ? '?' : '&') . mt_rand();
-                                $responseFactory = $this->app->make(ResponseFactoryInterface::class);
-                                $response = $responseFactory->redirect($redirectTo);
+                        $paths = $this->getThumbnailPathsToGenerate($database, $searchThumbnailPath);
+                        if ($paths !== null) {
+                            if ($this->generateThumbnails($paths, $database, $searchThumbnailPath) === true) {
+                                $response = $this->buildRedirectToThumbnailResponse($request);
                                 $searchThumbnailPath = null;
                             }
+                            $paths->closeCursor();
                         }
                     } catch (InvalidFieldNameException $e) {
                         // Ignore this, user probably needs to run an upgrade.
@@ -99,15 +91,51 @@ class ThumbnailMiddleware implements MiddlewareInterface, ApplicationAwareInterf
     }
 
     /**
+     * @param Request $request
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    private function buildRedirectToThumbnailResponse(Request $request)
+    {
+        $redirectTo = (string) $request->getUri();
+        $redirectTo .= ((strpos($redirectTo, '?') === false) ? '?' : '&') . mt_rand();
+        $responseFactory = $this->app->make(ResponseFactoryInterface::class);
+        $response = $responseFactory->redirect($redirectTo);
+
+        return $response;
+    }
+
+    /**
+     * @param Connection $database
+     * @param string|null $searchThumbnailPath
+     *
+     * @return ConcretePDOStatement|null
+     */
+    private function getThumbnailPathsToGenerate(Connection $database, $searchThumbnailPath = null)
+    {
+        if ($searchThumbnailPath === null) {
+            $rs = $database->executeQuery('SELECT * FROM FileImageThumbnailPaths WHERE isBuilt = 0 LIMIT 5');
+        } else {
+            $rs = $database->executeQuery('SELECT * FROM FileImageThumbnailPaths WHERE isBuilt = 0 ORDER BY ' . $database->getDatabasePlatform()->getLocateExpression('?', 'path') . ' DESC LIMIT 5', [$searchThumbnailPath]);
+        }
+        if (!$rs->rowCount()) {
+            $rs->closeCursor();
+            $rs = null;
+        }
+
+        return $rs;
+    }
+
+    /**
      * Generate thumbnails and and manage db update.
      *
-     * @param array[]                                       $paths
+     * @param ConcretePDOStatement $paths
      * @param \Concrete\Core\Database\Connection\Connection $database
      * @param string|null $searchThumbnailPath
      *
      * @return bool returns true if $searchThumbnailPath is set and one of the thumbnails may be for that thumbnail
      */
-    private function generateThumbnails($paths, Connection $database, $searchThumbnailPath)
+    private function generateThumbnails(ConcretePDOStatement $paths, Connection $database, $searchThumbnailPath)
     {
         $result = false;
         $database->transactional(function (Connection $database) use ($paths, $searchThumbnailPath, &$result) {
@@ -133,7 +161,7 @@ class ThumbnailMiddleware implements MiddlewareInterface, ApplicationAwareInterf
      * Try building an unbuild thumbnail.
      *
      * @param \Concrete\Core\Entity\File\File $file
-     * @param array                           $thumbnail
+     * @param array $thumbnail
      *
      * @return bool
      */
@@ -179,7 +207,7 @@ class ThumbnailMiddleware implements MiddlewareInterface, ApplicationAwareInterf
 
     /**
      * @param \Concrete\Core\Entity\File\File $file
-     * @param array                           $thumbnail
+     * @param array $thumbnail
      *
      * @return bool
      */
@@ -249,6 +277,18 @@ class ThumbnailMiddleware implements MiddlewareInterface, ApplicationAwareInterf
         }
 
         return $this->connection;
+    }
+
+    /**
+     * @return Connection|null
+     */
+    private function tryGetConnection()
+    {
+        try {
+            return $this->getConnection();
+        } catch (InvalidArgumentException $e) {
+            return null;
+        }
     }
 
     /**
