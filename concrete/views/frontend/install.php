@@ -409,17 +409,22 @@ if (isset($successMessage)) {
 
                                 <div class="form-group">
                                     <label class="control-label" for="sessionHandler"><?=t('Country')?></label>
-                                    <select name="siteLocaleCountry" class="form-control">
-                                        <optgroup label="<?=t('** Recommended Countries')?>"></optgroup>
-                                        <?php foreach($recommendedCountries as $key => $value) { ?>
-                                            <option value="<?=$key?>" <?php if ($computedSiteLocaleCountry == $key || isset($_POST['siteLocaleCountry']) && $_POST['siteLocaleCountry'] == $key) { ?>selected<?php } ?>><?=$value?></option>
-                                        <?php } ?>
-                                        <optgroup label="<?=t('** Other Countries')?>"></optgroup>
-                                        <?php foreach($otherCountries as $key => $value) { ?>
-                                            <option value="<?=$key?>" <?php if ($computedSiteLocaleCountry == $key || isset($_POST['siteLocaleCountry']) && $_POST['siteLocaleCountry'] == $key) { ?>selected<?php } ?>><?=$value?></option>
-                                        <?php } ?>
-                                    </select>
+                                    <?= $form->select('siteLocaleCountry', $countries, $computedSiteLocaleCountry) ?>
                                 </div>
+                                
+                                <script>
+                                $('#siteLocaleLanguage').on('change', function() {
+                                    $.ajax(
+                                        <?= json_encode((string) $view->url('/install', 'get_site_locale_countries')) ?> + '/' + encodeURIComponent(<?= json_encode(Localization::activeLocale()) ?>) + '/' + encodeURIComponent(this.value) + '/' + encodeURIComponent($('#siteLocaleCountry').val()),
+                                        {
+                                            dataType: 'json'
+                                        }
+                                    )
+                                    .done(function (r) {
+                                        $('#siteLocaleCountry').replaceWith(r);
+                                    });
+                                });
+                                </script>
                             </div>
                         </div>
                     </div>

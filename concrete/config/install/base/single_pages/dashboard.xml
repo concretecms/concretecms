@@ -1047,18 +1047,11 @@
                 </attributekey>
             </attributes>
         </page>
-        <page name="Backup &amp; Restore" path="/dashboard/system/backup" filename="/dashboard/system/backup/view.php"
-              pagetype="" description="Backup or restore your website." package="">
-            <attributes>
-                <attributekey handle="meta_keywords">
-                    <value>export, backup, database, sql, mysql, encryption, restore</value>
-                </attributekey>
-            </attributes>
+        <page name="Update concrete5" path="/dashboard/system/update" filename="/dashboard/system/update/view.php"
+              pagetype="" description="" package="">
         </page>
-        <page name="Backup Database" path="/dashboard/system/backup/backup"
-              filename="/dashboard/system/backup/backup.php" pagetype="" description="" package=""/>
-        <page name="Update concrete5" path="/dashboard/system/backup/update"
-              filename="/dashboard/system/backup/update.php" pagetype="" description="" package="">
+        <page name="Apply Update" path="/dashboard/system/update/update"
+              filename="/dashboard/system/update/update.php" pagetype="" description="" package="">
             <attributes>
                 <attributekey handle="meta_keywords">
                     <value>upgrade, new version, update</value>

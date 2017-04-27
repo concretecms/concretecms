@@ -145,7 +145,13 @@ class CacheClearer
      */
     protected function filesToClear($directory)
     {
-        $iterator = new FilesystemIterator($directory);
+        try {
+            $iterator = new FilesystemIterator($directory);
+        } catch (\UnexpectedValueException $e) {
+            // The directory doesn't exist
+            return;
+        }
+
         $exclude = [];
 
         if (!$this->repository->get('concrete.cache.clear.thumbnails', true)) {

@@ -9,10 +9,10 @@
         foreach($items as $item) {
             $notification = $item->getNotification();
             /**
-             * @var $view \Concrete\Core\Notification\View\ListViewInterface
+             * @var $listView \Concrete\Core\Notification\View\ListViewInterface
              */
-            $view = $notification->getListView();
-            $action = $view->getFormAction();
+            $listView = $notification->getListView();
+            $action = $listView->getFormAction();
 
             ?>
 
@@ -23,15 +23,15 @@
             <?php }  ?>
 
                 <div class="ccm-block-desktop-waiting-for-me-icon">
-                    <?php print $view->renderIcon() ?>
+                    <?php print $listView->renderIcon() ?>
                 </div>
 
                 <div class="ccm-block-desktop-waiting-for-me-details">
-                    <?php print $view->renderDetails() ?>
+                    <?php print $listView->renderDetails() ?>
                 </div>
 
                 <div class="ccm-block-desktop-waiting-for-me-menu">
-                    <?php print $view->renderMenu() ?>
+                    <?php print $listView->renderMenu() ?>
                 </div>
 
 
