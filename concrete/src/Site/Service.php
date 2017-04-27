@@ -41,14 +41,24 @@ class Service
 
     public function getByType(Type $type)
     {
-        return $this->entityManager->getRepository('Concrete\Core\Entity\Site\Site')
+        $site = $this->entityManager->getRepository('Concrete\Core\Entity\Site\Site')
             ->findByType($type);
+
+        $factory = new Factory($this->config);
+        if (is_object($site)) {
+            return $factory->createEntity($site);
+        }
     }
 
     public function getByHandle($handle)
     {
-        return $this->entityManager->getRepository('Concrete\Core\Entity\Site\Site')
+        $site = $this->entityManager->getRepository('Concrete\Core\Entity\Site\Site')
             ->findOneBy(['siteHandle' => $handle]);
+
+        $factory = new Factory($this->config);
+        if (is_object($site)) {
+            return $factory->createEntity($site);
+        }
     }
 
     public function getDefault()
