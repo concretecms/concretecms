@@ -55,7 +55,7 @@ $sets = FileSet::getMySets();
 		});
 		$('#ccm-file-set-list').on('click', 'a', function(e) {
 			e.preventDefault();
-			var $row = $(this).parent();
+			var $row = $(this).parents('.input-group');
 			$row.remove();
 		});
 		$('input[data-field=file-set-search]').liveUpdate('ccm-file-set-list', 'fileset').closest('form').unbind('submit.liveupdate');
