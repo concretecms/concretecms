@@ -214,7 +214,7 @@ return [
                     'core_ephemeral' => [
                         'class' => '\Stash\Driver\Ephemeral',
                         'options' => [],
-        ],
+                    ],
 
                     'core_filesystem' => [
                         'class' => \Concrete\Core\Cache\Driver\FileSystemStashDriver::class,
@@ -254,8 +254,8 @@ return [
         ],
 
         'clear' => [
-            'thumbnails' => false
-    ],
+            'thumbnails' => false,
+        ],
     ],
 
     'design' => [
@@ -572,7 +572,7 @@ return [
             'progress_limit' => 60,
             // Lifetime (in seconds) of the cache items associated to downloaded data
             'cache_lifetime' => 3600, // 1 hour
-    ],
+        ],
     ],
     'urls' => [
         'concrete5' => 'http://www.concrete5.org',
