@@ -4372,6 +4372,9 @@
       <col>thumbnailTypeHandle</col>
       <col>storageLocationID</col>
     </index>
+    <index name="thumbnailPathIsBuilt">
+    	<col>isBuilt</col>
+    </index>
   </table>
 
 </schema>
