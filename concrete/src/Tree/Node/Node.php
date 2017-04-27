@@ -666,4 +666,26 @@ abstract class Node extends Object implements \Concrete\Core\Permission\ObjectIn
             return static::getByID($treeNodeID);
         }
     }
+
+    public static function getNodesOfType($treeNodeTypeHandle)
+    {
+        $db = Database::connection();
+        $type = TreeNodeType::getByHandle($treeNodeTypeHandle);
+        $treeNodes = $db->fetchAll(
+            'select treeNodeID from TreeNodes where treeNodeTypeID = ?',
+            [$type->getTreeNodeTypeID()]
+        );
+
+        $nodeList = [];
+        if (count($treeNodes)) {
+            foreach ($treeNodes as $treeNode) {
+                $node = self::getByID($treeNode['treeNodeID']);
+                if (is_object($node)) {
+                    $nodeList[] = $node;
+                }
+            }
+        }
+
+        return $nodeList;
+    }
 }

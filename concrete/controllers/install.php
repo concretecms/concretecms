@@ -257,6 +257,7 @@ class Install extends Controller
             }
             $recommendedCountries[$country] = $cl->getCountryName($country);
         }
+
         $languages = $ll->getLanguageList();
         $this->set('languages', $languages);
         $this->set('countries', $countries);
