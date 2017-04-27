@@ -41,6 +41,8 @@ class ObjectBuilderTest extends ConcreteDatabaseTestCase
     {
         parent::setUp();
 
+        $this->truncateTables();
+
         \Concrete\Core\Tree\Node\NodeType::add('category');
         \Concrete\Core\Tree\Node\NodeType::add('express_entry_category');
         \Concrete\Core\Tree\TreeType::add('express_entry_results');

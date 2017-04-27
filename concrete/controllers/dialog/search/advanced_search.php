@@ -8,20 +8,19 @@ use Concrete\Core\Entity\Search\SavedFileSearch;
 use Concrete\Core\Entity\Search\SavedSearch;
 use Concrete\Core\Search\Field\Field\KeywordsField;
 use Concrete\Core\Search\ProviderInterface;
-use FilePermissions;
-use Loader;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 abstract class AdvancedSearch extends BackendInterfaceController
 {
-
     protected $viewPath = '/dialogs/search/advanced_search';
     protected $supportsSavedSearch = true;
 
     abstract public function getFieldManager();
 
     abstract public function getSavedSearchBaseURL(SavedSearch $search);
+
     abstract public function getBasicSearchBaseURL();
+
     abstract public function getCurrentSearchBaseURL();
 
     /**
@@ -38,6 +37,7 @@ abstract class AdvancedSearch extends BackendInterfaceController
     {
         $query = new Query();
         $query->setFields([new KeywordsField()]);
+
         return $query;
     }
 
@@ -93,6 +93,10 @@ abstract class AdvancedSearch extends BackendInterfaceController
 
         $query->setFields($fields);
         $query->setColumns($set);
+
+        $itemsPerPage = $this->getItemsPerPage();
+        $query->setItemsPerPage($itemsPerPage);
+
         return $query;
     }
 
@@ -127,8 +131,16 @@ abstract class AdvancedSearch extends BackendInterfaceController
             $provider->setSessionCurrentQuery($query);
 
             $result = $provider->getSearchResultFromQuery($query);
-            $result->setBaseURL($this->getBasicSearchBaseURL());
+            $result->setBaseURL($this->getCurrentSearchBaseURL());
             return new JsonResponse($result->getJSONObject());
         }
+    }
+
+    /**
+     * @return int
+     */
+    private function getItemsPerPage()
+    {
+        return $this->request->request->get('fSearchItemsPerPage');
     }
 }

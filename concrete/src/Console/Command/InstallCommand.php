@@ -17,11 +17,13 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ChoiceQuestion;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Symfony\Component\Console\Question\Question;
+use Concrete\Core\Localization\Localization;
 
 class InstallCommand extends Command
 {
     protected function configure()
     {
+        $errExitCode = static::RETURN_CODE_ON_FAILURE;
         $this
             ->setName('c5:install')
             ->setDescription('Install concrete5')
@@ -45,10 +47,10 @@ class InstallCommand extends Command
             ->addOption('attach', null, InputOption::VALUE_NONE, 'Attach if database contains an existing concrete5 instance')
             ->addOption('force-attach', null, InputOption::VALUE_NONE, 'Always attach')
             ->addOption('interactive', 'i', InputOption::VALUE_NONE, 'Install using interactive (wizard) mode')
-            ->setHelp(<<<'EOT'
+            ->setHelp(<<<EOT
 Returns codes:
   0 operation completed successfully
-  1 errors occurred
+  $errExitCode errors occurred
 
 More info at http://documentation.concrete5.org/developers/appendix/cli-commands#c5-install
 EOT
@@ -57,154 +59,146 @@ EOT
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $rc = 0;
-        try {
-            $app = Application::getFacadeApplication();
-            $options = $input->getOptions();
-            if (isset($options['config']) && $options['config'] && strtolower($options['config']) !== 'none') {
-                if (!is_file($options['config'])) {
-                    throw new Exception('Unable to find the configuration file ' . $options['config']);
-                }
-                $configOptions = include $options['config'];
-                if (!is_array($configOptions)) {
-                    throw new Exception('The configuration file did not returned an array.');
-                }
-                foreach ($configOptions as $k => $v) {
-                    if (!$input->hasParameterOption("--$k")) {
-                        $options[$k] = $v;
-                    }
+        $app = Application::getFacadeApplication();
+        $options = $input->getOptions();
+        if (isset($options['config']) && $options['config'] && strtolower($options['config']) !== 'none') {
+            if (!is_file($options['config'])) {
+                throw new Exception('Unable to find the configuration file ' . $options['config']);
+            }
+            $configOptions = include $options['config'];
+            if (!is_array($configOptions)) {
+                throw new Exception('The configuration file did not returned an array.');
+            }
+            foreach ($configOptions as $k => $v) {
+                if (!$input->hasParameterOption("--$k")) {
+                    $options[$k] = $v;
                 }
             }
-            if (file_exists(DIR_CONFIG_SITE . '/database.php')) {
-                throw new Exception('concrete5 is already installed.');
-            }
-            if (isset($options['site-locale'])) {
-                $locale = explode('_', $options['site-locale']);
-                $_POST['siteLocaleLanguage'] = $locale[0];
-                $_POST['siteLocaleCountry'] = $locale[1];
-            } else {
-                $_POST['siteLocaleLanguage'] = 'en';
-                $_POST['siteLocaleCountry'] = 'US';
-            }
-
-            if (isset($options['language'])) {
-                $_POST['locale'] = $options['language'];
-            }
-
-            Database::extend('install', function () use ($options) {
-                return Database::getFactory()->createConnection([
-                    'host' => $options['db-server'],
-                    'user' => $options['db-username'],
-                    'password' => $options['db-password'],
-                    'database' => $options['db-database'],
-                ]);
-            });
-            Database::setDefaultConnection('install');
-            Config::set('database.connections.install', []);
-
-            $cnt = $app->make(\Concrete\Controller\Install::class);
-
-            $force_attach = $input->getOption('force-attach');
-            $auto_attach = $force_attach || $input->getOption('attach');
-            $cnt->setAutoAttach($auto_attach);
-
-            $cnt->on_start();
-            $fileWriteErrors = clone $cnt->fileWriteErrors;
-            $e = $app->make('helper/validation/error');
-            if (!$cnt->get('imageTest')) {
-                $e->add('GD library must be enabled to install concrete5.');
-            }
-            if (!$cnt->get('mysqlTest')) {
-                $e->add($cnt->getDBErrorMsg());
-            }
-            if (!$cnt->get('xmlTest')) {
-                $e->add('SimpleXML and DOM must be enabled to install concrete5.');
-            }
-            if (!$cnt->get('phpVtest')) {
-                $e->add('concrete5 requires PHP ' . $cnt->getMinimumPhpVersion() . ' or greater.');
-            }
-            if (is_object($fileWriteErrors)) {
-                $e->add($fileWriteErrors);
-            }
-            $spl = StartingPointPackage::getClass($options['starting-point']);
-            if ($spl === null) {
-                $e->add('Invalid starting-point: ' . $options['starting-point']);
-            }
-            if (!$e->has()) {
-                $_POST['DB_SERVER'] = $options['db-server'];
-                $_POST['DB_USERNAME'] = $options['db-username'];
-                $_POST['DB_PASSWORD'] = $options['db-password'];
-                $_POST['DB_DATABASE'] = $options['db-database'];
-                $_POST['SITE'] = $options['site'];
-                $_POST['SAMPLE_CONTENT'] = $options['starting-point'];
-                $_POST['uEmail'] = $options['admin-email'];
-                $_POST['uPasswordConfirm'] = $_POST['uPassword'] = $options['admin-password'];
-                if ($options['canonical-url']) {
-                    $_POST['canonicalUrlChecked'] = '1';
-                    $_POST['canonicalUrl'] = $options['canonical-url'];
-                }
-                if ($options['canonical-ssl-url']) {
-                    $_POST['canonicalSSLUrlChecked'] = '1';
-                    $_POST['canonicalSSLUrl'] = $options['canonical-ssl-url'];
-                }
-                $e = $cnt->configure();
-            }
-            if ($e->has()) {
-                throw new Exception(implode("\n", $e->getList()));
-            }
-            try {
-                $attach_mode = $force_attach;
-
-                if (!$force_attach && $cnt->isAutoAttachEnabled()) {
-                    /** @var Connection $db */
-                    $db = $app->make('database')->connection();
-
-                    if ($db->query('show tables')->rowCount()) {
-                        $attach_mode = true;
-                    }
-                }
-
-                require DIR_CONFIG_SITE . '/site_install.php';
-                require DIR_CONFIG_SITE . '/site_install_user.php';
-                $routines = $spl->getInstallRoutines();
-                foreach ($routines as $r) {
-                    // If we're
-                    if ($attach_mode && !$r instanceof AttachModeCompatibleRoutineInterface) {
-                        $output->writeln("{$r->getProgress()}%: {$r->getText()} (Skipped)");
-                        continue;
-                    }
-
-                    $output->writeln($r->getProgress() . '%: ' . $r->getText());
-                    $spl->executeInstallRoutine($r->getMethod());
-                }
-            } catch (Exception $ex) {
-                $cnt->reset();
-                throw $ex;
-            }
-            if (
-                isset($options['demo-username']) && isset($options['demo-password']) && isset($options['demo-email'])
-                &&
-                is_string($options['demo-username']) && is_string($options['demo-password']) && is_string($options['demo-email'])
-                &&
-                ($options['demo-username'] !== '') && ($options['demo-password'] !== '') && ($options['demo-email'] !== '')
-            ) {
-                $output->write('Adding demo user... ');
-                \UserInfo::add([
-                    'uName' => $options['demo-username'],
-                    'uEmail' => $options['demo-email'],
-                    'uPassword' => $options['demo-password'],
-                ])->getUserObject()->enterGroup(
-                    \Group::getByID(ADMIN_GROUP_ID)
-                );
-                $output->writeln('done.');
-            }
-            $output->writeln('<info>Installation Complete!</info>');
-        } catch (Exception $x) {
-            $output->writeln('<error>' . $x->getMessage() . '(' . $x->getTraceAsString() . ')</error>');
-            $rc = 1;
+        }
+        if (file_exists(DIR_CONFIG_SITE . '/database.php')) {
+            throw new Exception('concrete5 is already installed.');
+        }
+        if (isset($options['site-locale'])) {
+            $locale = explode('_', $options['site-locale']);
+            $_POST['siteLocaleLanguage'] = $locale[0];
+            $_POST['siteLocaleCountry'] = $locale[1];
+        } else {
+            $_POST['siteLocaleLanguage'] = 'en';
+            $_POST['siteLocaleCountry'] = 'US';
         }
 
-        return $rc;
+        if (isset($options['language'])) {
+            $_POST['locale'] = $options['language'];
+        }
+
+        Database::extend('install', function () use ($options) {
+            return Database::getFactory()->createConnection([
+                'host' => $options['db-server'],
+                'user' => $options['db-username'],
+                'password' => $options['db-password'],
+                'database' => $options['db-database'],
+            ]);
+        });
+        Database::setDefaultConnection('install');
+        Config::set('database.connections.install', []);
+
+        $cnt = $app->make(\Concrete\Controller\Install::class);
+
+        $force_attach = $input->getOption('force-attach');
+        $auto_attach = $force_attach || $input->getOption('attach');
+        $cnt->setAutoAttach($auto_attach);
+
+        $cnt->on_start();
+        $fileWriteErrors = clone $cnt->fileWriteErrors;
+        $e = $app->make('helper/validation/error');
+        if (!$cnt->get('imageTest')) {
+            $e->add('GD library must be enabled to install concrete5.');
+        }
+        if (!$cnt->get('mysqlTest')) {
+            $e->add($cnt->getDBErrorMsg());
+        }
+        if (!$cnt->get('xmlTest')) {
+            $e->add('SimpleXML and DOM must be enabled to install concrete5.');
+        }
+        if (!$cnt->get('phpVtest')) {
+            $e->add('concrete5 requires PHP ' . $cnt->getMinimumPhpVersion() . ' or greater.');
+        }
+        if (is_object($fileWriteErrors)) {
+            $e->add($fileWriteErrors);
+        }
+        $spl = StartingPointPackage::getClass($options['starting-point']);
+        if ($spl === null) {
+            $e->add('Invalid starting-point: ' . $options['starting-point']);
+        }
+        if (!$e->has()) {
+            $_POST['DB_SERVER'] = $options['db-server'];
+            $_POST['DB_USERNAME'] = $options['db-username'];
+            $_POST['DB_PASSWORD'] = $options['db-password'];
+            $_POST['DB_DATABASE'] = $options['db-database'];
+            $_POST['SITE'] = $options['site'];
+            $_POST['SAMPLE_CONTENT'] = $options['starting-point'];
+            $_POST['uEmail'] = $options['admin-email'];
+            $_POST['uPasswordConfirm'] = $_POST['uPassword'] = $options['admin-password'];
+            if ($options['canonical-url']) {
+                $_POST['canonicalUrlChecked'] = '1';
+                $_POST['canonicalUrl'] = $options['canonical-url'];
+            }
+            if ($options['canonical-ssl-url']) {
+                $_POST['canonicalSSLUrlChecked'] = '1';
+                $_POST['canonicalSSLUrl'] = $options['canonical-ssl-url'];
+            }
+            $e = $cnt->configure();
+        }
+        if ($e->has()) {
+            throw new Exception(implode("\n", $e->getList()));
+        }
+        try {
+            $attach_mode = $force_attach;
+
+            if (!$force_attach && $cnt->isAutoAttachEnabled()) {
+                /** @var Connection $db */
+                $db = $app->make('database')->connection();
+
+                if ($db->query('show tables')->rowCount()) {
+                    $attach_mode = true;
+                }
+            }
+
+            require DIR_CONFIG_SITE . '/site_install.php';
+            require DIR_CONFIG_SITE . '/site_install_user.php';
+            $routines = $spl->getInstallRoutines();
+            foreach ($routines as $r) {
+                // If we're
+                if ($attach_mode && !$r instanceof AttachModeCompatibleRoutineInterface) {
+                    $output->writeln("{$r->getProgress()}%: {$r->getText()} (Skipped)");
+                    continue;
+                }
+
+                $output->writeln($r->getProgress() . '%: ' . $r->getText());
+                $spl->executeInstallRoutine($r->getMethod());
+            }
+        } catch (Exception $ex) {
+            $cnt->reset();
+            throw $ex;
+        }
+        if (
+            isset($options['demo-username']) && isset($options['demo-password']) && isset($options['demo-email'])
+            &&
+            is_string($options['demo-username']) && is_string($options['demo-password']) && is_string($options['demo-email'])
+            &&
+            ($options['demo-username'] !== '') && ($options['demo-password'] !== '') && ($options['demo-email'] !== '')
+        ) {
+            $output->write('Adding demo user... ');
+            \UserInfo::add([
+                'uName' => $options['demo-username'],
+                'uEmail' => $options['demo-email'],
+                'uPassword' => $options['demo-password'],
+            ])->getUserObject()->enterGroup(
+                \Group::getByID(ADMIN_GROUP_ID)
+            );
+            $output->writeln('done.');
+        }
+        $output->writeln('<info>Installation Complete!</info>');
     }
 
     /**
@@ -409,7 +403,7 @@ EOT
                     return $question->setHidden(true);
                 },
             ],
-            ['language', 'en_US'],
+            ['language', Localization::BASE_LOCALE],
             [
                 'site-locale',
                 function (Question $question, InputInterface $input, InputOption $option) {

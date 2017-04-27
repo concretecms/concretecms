@@ -1,7 +1,6 @@
 <?php
 namespace Concrete\Job;
 
-use CollectionAttributeKey;
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Entity\Site\Site;
 use Concrete\Core\File\File;
@@ -9,25 +8,23 @@ use Concrete\Core\Job\QueueableJob;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Search\Index\IndexManagerInterface;
 use Concrete\Core\User\User;
-use FileAttributeKey;
-use Loader;
-use UserAttributeKey;
+use Punic\Misc as PunicMisc;
 use ZendQueue\Message as ZendQueueMessage;
 use ZendQueue\Queue as ZendQueue;
 
 class IndexSearchAll extends QueueableJob
 {
-
     // A flag for clearing the index
-    const CLEAR = "-1";
+    const CLEAR = '-1';
 
+    public $jQueueBatchSize = 50;
     public $jNotUninstallable = 1;
     public $jSupportsQueue = true;
 
-    protected $usersIndexed = 0;
-    protected $pagesIndexed = 0;
-    protected $filesIndexed = 0;
-    protected $sitesIndexed = 0;
+    /** @var array The result from the last queue item */
+    protected $result;
+
+    protected $clearTable = true;
 
     /*
      * @var \Concrete\Core\Search\Index\IndexManagerInterface
@@ -41,12 +38,12 @@ class IndexSearchAll extends QueueableJob
 
     public function getJobName()
     {
-        return t("Index Search Engine - All");
+        return t('Index Search Engine - All');
     }
 
     public function getJobDescription()
     {
-        return t("Empties the page search index and reindexes all pages.");
+        return t('Empties the page search index and reindexes all pages.');
     }
 
     public function __construct(IndexManagerInterface $indexManager, Connection $connection)
@@ -57,8 +54,10 @@ class IndexSearchAll extends QueueableJob
 
     public function start(ZendQueue $queue)
     {
-        // Send a "clear" queue item to clear out the index
-        $queue->send(self::CLEAR);
+        if ($this->clearTable) {
+            // Send a "clear" queue item to clear out the index
+            $queue->send(self::CLEAR);
+        }
 
         // Queue everything
         foreach ($this->queueMessages() as $message) {
@@ -67,23 +66,33 @@ class IndexSearchAll extends QueueableJob
     }
 
     /**
-     * Messages to add to the queue
+     * Messages to add to the queue.
+     *
      * @return \Iterator
      */
     protected function queueMessages()
     {
+        $pages = $users = $files = $sites = 0;
+
         foreach ($this->pagesToQueue() as $id) {
             yield "P{$id}";
+            $pages++;
         }
         foreach ($this->usersToQueue() as $id) {
-            yield "U($id}";
+            yield "U{$id}";
+            $users++;
         }
         foreach ($this->filesToQueue() as $id) {
             yield "F{$id}";
+            $files++;
         }
         foreach ($this->sitesToQueue() as $id) {
             yield "S{$id}";
+            $sites++;
         }
+
+        // Yield the result very last
+        yield 'R' . json_encode([$pages, $users, $files, $sites]);
     }
 
     public function processQueueItem(ZendQueueMessage $msg)
@@ -97,36 +106,43 @@ class IndexSearchAll extends QueueableJob
             $message = substr($msg->body, 1);
             $type = substr($msg->body, 0, 1);
 
-            switch ($type) {
-                case 'P':
-                    $this->pagesIndexed++;
-                    return $index->index(Page::class, $message);
-                case 'U':
-                    $this->usersIndexed++;
-                    return $index->index(User::class, $message);
-                case 'F':
-                    $this->filesIndexed++;
-                    return $index->index(File::class, $message);
-                case 'S':
-                    $this->sitesIndexed++;
-                    return $index->index(Site::class, $message);
+            $map = [
+                'P' => Page::class,
+                'U' => User::class,
+                'F' => File::class,
+                'S' => Site::class
+            ];
+
+            if (isset($map[$type])) {
+                $index->index($map[$type], $message);
+            } elseif ($type === 'R') {
+                // Store this result, this is likely the last item.
+                $this->result = json_decode($message);
             }
         }
     }
 
     public function finish(ZendQueue $q)
     {
-        return t(
-            'Indexed %s Pages, %s Users, %s Files, and %s Sites.',
-            $this->pagesIndexed,
-            $this->usersIndexed,
-            $this->filesIndexed,
-            $this->sitesIndexed
-        );
+        if ($this->result) {
+            list($pages, $users, $files, $sites) = $this->result;
+            return t(
+                'Index performed on: %s',
+                PunicMisc::join([
+                    t2('%d page', '%d pages', $pages),
+                    t2('%d user', '%d users', $users),
+                    t2('%d file', '%d files', $files),
+                    t2('%d site', '%d sites', $sites),
+                ])
+            );
+        } else {
+            return t('Indexed pages, users, files, and sites.');
+        }
     }
 
     /**
-     * Clear out all indexes
+     * Clear out all indexes.
+     *
      * @param $index
      */
     protected function clearIndex($index)
@@ -138,7 +154,8 @@ class IndexSearchAll extends QueueableJob
     }
 
     /**
-     * Get Pages to add to the queue
+     * Get Pages to add to the queue.
+     *
      * @return \Iterator
      */
     protected function pagesToQueue()
@@ -162,7 +179,8 @@ class IndexSearchAll extends QueueableJob
     }
 
     /**
-     * Get Users to add to the queue
+     * Get Users to add to the queue.
+     *
      * @return \Iterator
      */
     protected function usersToQueue()
@@ -177,7 +195,8 @@ class IndexSearchAll extends QueueableJob
     }
 
     /**
-     * Get Files to add to the queue
+     * Get Files to add to the queue.
+     *
      * @return \Iterator
      */
     protected function filesToQueue()
@@ -192,7 +211,8 @@ class IndexSearchAll extends QueueableJob
     }
 
     /**
-     * Get Sites to add to the queue
+     * Get Sites to add to the queue.
+     *
      * @return \Iterator
      */
     protected function sitesToQueue()
@@ -205,5 +225,4 @@ class IndexSearchAll extends QueueableJob
             yield $id;
         }
     }
-
 }

@@ -11,8 +11,11 @@ use Concrete\Core\Attribute\Key\Category;
 
 class ImporterTest extends \FileStorageTestCase
 {
-    protected function setUp()
+
+    public function __construct($name = null, array $data = array(), $dataName = '')
     {
+        parent::__construct($name, $data, $dataName);
+
         $this->tables = array_merge($this->tables, array(
             'Users',
             'PermissionAccessEntityTypes',
@@ -36,8 +39,12 @@ class ImporterTest extends \FileStorageTestCase
             'Concrete\Core\Entity\Attribute\Type',
             'Concrete\Core\Entity\Attribute\Category',
         ));
-        parent::setUp();
         Config::set('concrete.upload.extensions', '*.txt;*.jpg;*.jpeg;*.png');
+    }
+
+    public static function setUpBeforeClass()
+    {
+        parent::setUpBeforeClass();
 
         $category = Category::add('file');
         $number = AttributeType::add('number', 'Number');
@@ -208,9 +215,9 @@ class ImporterTest extends \FileStorageTestCase
 
         $sample = dirname(__FILE__) . '/StorageLocation/fixtures/sample.txt';
         $fi = new Importer();
-        $fi->import($sample, 'sample.txt');
+        $file = $fi->import($sample, 'sample.txt');
 
-        $f = \File::getByID(1);
+        $f = \File::getByID($file->getFileID());
         $fv = $f->getVersion(1);
         $this->assertEquals('sample.txt', $fv->getFilename());
         $fv->delete();
@@ -230,12 +237,12 @@ class ImporterTest extends \FileStorageTestCase
         $fi = new Importer();
         $fo1 = $fi->import($sample, 'sample.txt');
 
-        $sample = dirname(__FILE__) . '/StorageLocation/fixtures/gummies.jpg';
+        $sample = dirname(__FILE__) . '/StorageLocation/fixtures/tiny.png';
         $fi = new Importer();
-        $fo2 = $fi->import($sample, 'gummies.jpg');
+        $fo2 = $fi->import($sample, 'tiny.png');
 
         $this->assertEquals('text/plain', $fo1->getMimeType());
-        $this->assertEquals('image/jpeg', $fo2->getMimeType());
+        $this->assertEquals('image/png', $fo2->getMimeType());
     }
 
     public function testFileDuplicate()
@@ -245,15 +252,16 @@ class ImporterTest extends \FileStorageTestCase
 
         $sample = dirname(__FILE__) . '/StorageLocation/fixtures/sample.txt';
         $fi = new Importer();
-        $fi->import($sample, 'sample.txt');
+        $file = $fi->import($sample, 'sample.txt');
 
-        $f = \File::getByID(1);
+        $f = \File::getByID($file->getFileID());
         $f2 = $f->duplicate();
-        $this->assertEquals(2, $f2->getFileID());
+        $this->assertNotEquals($file->getFileID(), $f2->getFileID());
+
         $versions = $f2->getVersionList();
-        $this->assertEquals(1, count($versions));
+        $this->assertCount(1, $versions);
         $this->assertEquals(1, $versions[0]->getFileVersionID());
-        $this->assertEquals(2, $versions[0]->getFileID());
+        $this->assertEquals($f2->getFileID(), $versions[0]->getFileID());
     }
 
     public function testFileAttributesDuplicate()
@@ -261,22 +269,16 @@ class ImporterTest extends \FileStorageTestCase
         mkdir($this->getStorageDirectory());
         $this->getStorageLocation();
 
-        $sample = dirname(__FILE__) . '/StorageLocation/fixtures/gummies.jpg';
+        $sample = dirname(__FILE__) . '/StorageLocation/fixtures/tiny.png';
         $fi = new Importer();
-        $fi->import($sample, 'gummies.jpg');
+        $f = $fi->import($sample, 'tiny.png');
 
-        $f = \File::getByID(1);
         $f2 = $f->duplicate();
-        $this->assertEquals(2, $f2->getFileID());
-        $versions = $f2->getVersionList();
-        $this->assertEquals(1, count($versions));
-        $this->assertEquals(1, $versions[0]->getFileVersionID());
-        $this->assertEquals(2, $versions[0]->getFileID());
 
         $attributes = $f->getAttributes();
         $attributesNew = $f2->getAttributes();
-        $this->assertEquals(2, count($attributes));
-        $this->assertEquals(2, count($attributesNew));
+        $this->assertCount(2, $attributes);
+        $this->assertCount(2, $attributesNew);
     }
 
     public function testFileVersionDuplicate()
@@ -286,15 +288,9 @@ class ImporterTest extends \FileStorageTestCase
 
         $sample = dirname(__FILE__) . '/StorageLocation/fixtures/sample.txt';
         $fi = new Importer();
-        $fi->import($sample, 'sample.txt');
+        $f = $fi->import($sample, 'sample.txt')->getFile();
 
-        $f = \File::getByID(1);
         $fv = $f->getVersion(1);
-
-        $this->assertEquals(1, $fv->getFileVersionID());
-        $this->assertEquals('sample.txt', $fv->getFilename());
-        $this->assertEquals(true, $fv->isApproved());
-
         $fv2 = $fv->duplicate();
         $this->assertEquals(2, $fv2->getFileVersionID());
         $this->assertEquals(false, $fv->isApproved());
@@ -336,10 +332,11 @@ class ImporterTest extends \FileStorageTestCase
         $fi = new Importer();
         $r = $fi->import($file, 'test.txt');
 
+
         $fv2 = $r->duplicate();
         $fv3 = $r->duplicate();
         $fv4 = $r->duplicate();
-        $f = \File::getByID(1);
+        $f = \File::getByID($r->getFileID());
         $fv4b = $f->getVersion(4);
 
         $this->assertEquals(1, $r->getFileVersionID());
@@ -352,7 +349,7 @@ class ImporterTest extends \FileStorageTestCase
         $fv3->approve();
         $this->assertEquals(true, $fv3->isApproved());
 
-        $f = \File::getByID(1);
+        $f = \File::getByID($r->getFileID());
         $fv1 = $f->getVersion(1);
         $this->assertEquals(false, $fv1->isApproved());
         $fva = $f->getApprovedVersion();

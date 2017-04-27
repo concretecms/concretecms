@@ -36,6 +36,7 @@ final class PackPackageCommand extends Command
         $zipAuto = static::ZIPOUT_AUTO;
         $keepDot = static::KEEP_DOT;
         $keepSources = static::KEEP_SOURCES;
+        $errExitCode = static::RETURN_CODE_ON_FAILURE;
         $this
             ->setName('c5:package-pack')
             ->setDescription('Process a package (expand PHP short tags, compile icons and translations, create zip archive)')
@@ -62,7 +63,7 @@ Please remark that this command can also parse legacy (pre-5.7) packages.
 
 Returns codes:
   0 operation completed successfully
-  1 errors occurred
+  $errExitCode errors occurred
 
 More info at http://documentation.concrete5.org/developers/appendix/cli-commands#c5-package-pack
 EOT
@@ -72,7 +73,6 @@ EOT
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $rc = 0;
         try {
             $state = static::parseInput($input);
             if ($state->updateSourceDirectory === false && $state->zipFilename === null) {
@@ -112,11 +112,8 @@ EOT
                 $state->zip = null;
                 @unlink($state->zipFilename);
             }
-            $output->writeln('<error>' . $x->getMessage() . '</error>');
-            $rc = 1;
+            throw $x;
         }
-
-        return $rc;
     }
 
     /**

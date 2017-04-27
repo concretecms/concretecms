@@ -33,7 +33,7 @@ use Concrete\Core\Permission\Access\Access as PermissionAccess;
 use PermissionKey;
 use User;
 use UserInfo;
-use Localization;
+use Concrete\Core\Localization\Localization;
 use Exception;
 use Throwable;
 
@@ -155,7 +155,7 @@ class StartingPointPackage extends BasePackage
     public function executeInstallRoutine($routineName)
     {
         $localization = Localization::getInstance();
-        $localization->pushActiveContext('system');
+        $localization->pushActiveContext(Localization::CONTEXT_SYSTEM);
         $error = null;
         try {
             $this->$routineName();
@@ -509,7 +509,7 @@ class StartingPointPackage extends BasePackage
         $site = \Site::installDefault(SITE_INSTALL_LOCALE);
         $site->getConfigRepository()->save('name', SITE);
 
-        if (defined('APP_INSTALL_LANGUAGE') && APP_INSTALL_LANGUAGE != '' && APP_INSTALL_LANGUAGE != 'en_US') {
+        if (defined('APP_INSTALL_LANGUAGE') && APP_INSTALL_LANGUAGE != '' && APP_INSTALL_LANGUAGE != Localization::BASE_LOCALE) {
             Config::save('concrete.locale', APP_INSTALL_LANGUAGE);
         }
 

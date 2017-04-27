@@ -1,18 +1,20 @@
 <?php
 namespace Concrete\Core\User\Group;
 
+use CacheLocal;
+use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Foundation\Object;
+use Concrete\Core\Package\PackageList;
+use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\User\User;
 use Config;
-use Gettext\Translations;
 use Database;
-use CacheLocal;
+use Events;
+use File;
+use Gettext\Translations;
 use GroupTree;
 use GroupTreeNode;
-use UserList;
-use Events;
-use Concrete\Core\Package\PackageList;
-use File;
+use Concrete\Core\User\UserList;
 
 class Group extends Object implements \Concrete\Core\Permission\ObjectInterface
 {
@@ -55,7 +57,7 @@ class Group extends Object implements \Concrete\Core\Permission\ObjectInterface
             return $g;
         }
 
-        $row = $db->getRow("select * from Groups where gID = ?", [$gID]);
+        $row = $db->getRow('select * from Groups where gID = ?', [$gID]);
         if (isset($row['gID'])) {
             $g = \Core::make('\Concrete\Core\User\Group\Group');
             $g->setPropertiesFromArray($row);
@@ -75,7 +77,7 @@ class Group extends Object implements \Concrete\Core\Permission\ObjectInterface
     public static function getByName($gName)
     {
         $db = Database::connection();
-        $row = $db->getRow("select * from Groups where gName = ?", [$gName]);
+        $row = $db->getRow('select * from Groups where gName = ?', [$gName]);
         if (isset($row['gID'])) {
             $g = new static();
             $g->setPropertiesFromArray($row);
@@ -92,7 +94,7 @@ class Group extends Object implements \Concrete\Core\Permission\ObjectInterface
     public static function getByPath($gPath)
     {
         $db = Database::connection();
-        $row = $db->getRow("select * from Groups where gPath = ?", [$gPath]);
+        $row = $db->getRow('select * from Groups where gPath = ?', [$gPath]);
         if (isset($row['gID'])) {
             $g = new static();
             $g->setPropertiesFromArray($row);
@@ -148,10 +150,9 @@ class Group extends Object implements \Concrete\Core\Permission\ObjectInterface
 
     public function getGroupMembersNum()
     {
-        $db = Database::connection();
-        $cnt = $db->GetOne("select count(uID) from UserGroups where gID = ?", [$this->gID]);
-
-        return $cnt;
+        $user_list = new UserList();
+        $user_list->filterByGroup($this);
+        return $user_list->getTotalResults();
     }
 
     /**
@@ -184,8 +185,8 @@ class Group extends Object implements \Concrete\Core\Permission\ObjectInterface
         }
 
         $db = Database::connection();
-        $r = $db->query("DELETE FROM UserGroups WHERE gID = ?", [intval($this->gID)]);
-        $r = $db->query("DELETE FROM Groups WHERE gID = ?", [intval($this->gID)]);
+        $r = $db->query('DELETE FROM UserGroups WHERE gID = ?', [intval($this->gID)]);
+        $r = $db->query('DELETE FROM Groups WHERE gID = ?', [intval($this->gID)]);
     }
 
     public function rescanGroupPath()
@@ -228,14 +229,36 @@ class Group extends Object implements \Concrete\Core\Permission\ObjectInterface
         return $this->inGroup;
     }
 
+    /**
+     * Get the date/time when a user entered this group.
+     *
+     * @param object|int $user the user ID or an object with a getUserID method
+     *
+     * @return string|null
+     */
     public function getGroupDateTimeEntered($user)
     {
-        $db = Database::connection();
-        $q = "select ugEntered from UserGroups where gID = ? and uID = ?";
-        $r = $db->GetOne($q, [$this->gID, $user->getUserID()]);
-        if ($r) {
-            return $r;
+        if (is_object($user)) {
+            $userID = (int) $user->getUserID();
+        } elseif (is_numeric($user)) {
+            $userID = (int) $user;
+        } else {
+            $userID = 0;
         }
+        $result = null;
+        if ($userID !== 0) {
+            $db = Application::getFacadeApplication()->make(Connection::class);
+            /* @var Connection $db */
+            $value = $db->fetchColumn(
+                'select ugEntered from UserGroups where gID = ? and uID = ?',
+                [$this->gID, $userID]
+            );
+            if ($value) {
+                $result = $value;
+            }
+        }
+
+        return $result;
     }
 
     public function getGroupID()
@@ -499,7 +522,7 @@ class Group extends Object implements \Concrete\Core\Permission\ObjectInterface
         if ($this->gID) {
             $g = CacheLocal::delete('group', $this->gID);
             $v = [$gName, $gDescription, $this->gID];
-            $r = $db->prepare("update Groups set gName = ?, gDescription = ? where gID = ?");
+            $r = $db->prepare('update Groups set gName = ?, gDescription = ? where gID = ?');
             $res = $db->Execute($r, $v);
             $group = static::getByID($this->gID);
             $group->rescanGroupPathRecursive();
@@ -525,7 +548,7 @@ class Group extends Object implements \Concrete\Core\Permission\ObjectInterface
             $pkgID = $pkg->getPackageID();
         }
         $v = [$gID, $gName, $gDescription, $pkgID];
-        $r = $db->prepare("insert into Groups (gID, gName, gDescription, pkgID) values (?, ?, ?, ?)");
+        $r = $db->prepare('insert into Groups (gID, gName, gDescription, pkgID) values (?, ?, ?, ?)');
         $res = $db->Execute($r, $v);
 
         if ($res) {

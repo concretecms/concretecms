@@ -26,7 +26,8 @@ class JavascriptLocalizedAsset extends JavascriptAsset
 
     public function getAssetURL()
     {
-        return URL::to($this->assetURL)->getRelativeUrl();
+        $url = parent::getAssetURL();
+        return URL::to($url)->getRelativeUrl();
     }
 
     /**

@@ -57,15 +57,18 @@ class EntryList extends DatabaseItemList implements PermissionableListItemInterf
 
     public function filterByKeywords($keywords)
     {
-
         $keys = $this->category->getSearchableIndexedList();
-        foreach ($keys as $ak) {
-            $cnt = $ak->getController();
-            $expressions[] = $cnt->searchKeywords($keywords, $this->query);
+        if (count($keys)) {
+            foreach ($keys as $ak) {
+                $cnt = $ak->getController();
+                $expressions[] = $cnt->searchKeywords($keywords, $this->query);
+            }
+            $expr = $this->query->expr();
+            $this->query->andWhere(call_user_func_array(array($expr, 'orX'), $expressions));
+            $this->query->setParameter('keywords', '%' . $keywords . '%');
+        } else {
+            $this->query->andWhere('1 = 0');
         }
-        $expr = $this->query->expr();
-        $this->query->andWhere(call_user_func_array(array($expr, 'orX'), $expressions));
-        $this->query->setParameter('keywords', '%' . $keywords . '%');
     }
 
 

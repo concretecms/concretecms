@@ -122,7 +122,7 @@ if (isset($_REQUEST['ctask']) && $_REQUEST['ctask'] && $valt->validate()) {
                 $u->unloadCollectionEdit($c);
                 $response = $pkr->trigger();
                 header(
-                    'Location: ' . \Core::getApplicationURL() . '/' . DISPATCHER_FILENAME . '?cID=' . $c->getCollectionID() . $step);
+                    'Location: ' . \Core::getApplicationURL() . '/' . DISPATCHER_FILENAME . '?cID=' . $c->getCollectionID());
                 exit;
             }
             break;
@@ -133,7 +133,7 @@ if (isset($_REQUEST['ctask']) && $_REQUEST['ctask'] && $valt->validate()) {
                 $v->approve(false);
 
                 header('Location: ' . \Core::getApplicationURL() . '/' . DISPATCHER_FILENAME .
-                    '?cID=' . $c->getCollectionID() . $step);
+                    '?cID=' . $c->getCollectionID());
 
                 exit;
             }

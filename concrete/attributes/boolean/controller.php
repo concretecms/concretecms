@@ -41,6 +41,13 @@ class Controller extends AttributeTypeController
         }
     }
 
+    public function exportValue(\SimpleXMLElement $akv)
+    {
+        $val = $this->attributeValue->getValue();
+        $cnode = $akv->addChild('value', $val ? '1' : '0');
+        return $cnode;
+    }
+
     public function exportKey($akey)
     {
         $this->load();
@@ -104,6 +111,18 @@ class Controller extends AttributeTypeController
         $v->setValue($value);
 
         return $v;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see AttributeTypeController::createDefaultAttributeValue()
+     */
+    public function createDefaultAttributeValue()
+    {
+        $this->load();
+
+        return $this->createAttributeValue($this->akCheckedByDefault ? true : false);
     }
 
     public function validateValue()

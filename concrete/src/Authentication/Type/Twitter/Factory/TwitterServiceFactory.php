@@ -61,10 +61,9 @@ class TwitterServiceFactory implements ApplicationAwareInterface
     {
         $appId = $this->config->get('auth.twitter.appid');
         $appSecret = $this->config->get('auth.twitter.secret');
-        $verifyPeer = $this->config->get('app.curl.verifyPeer');
 
         /** @var ServiceFactory $factory */
-        $factory = $this->app->make('oauth/factory/service', array(CURLOPT_SSL_VERIFYPEER => $verifyPeer));
+        $factory = $this->app->make('oauth/factory/service');
 
         // Get the callback url
         $callbackUrl = $this->urlResolver->resolve(['/ccm/system/authentication/oauth2/twitter/callback/']);

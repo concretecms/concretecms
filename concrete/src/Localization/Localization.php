@@ -1,10 +1,10 @@
 <?php
 namespace Concrete\Core\Localization;
 
-use Concrete\Core\Support\Facade\Facade;
 use Concrete\Core\Localization\Translator\Adapter\Zend\Translation\Loader\Gettext\SiteTranslationLoader as ZendSiteTranslationLoader;
 use Concrete\Core\Localization\Translator\Adapter\Zend\TranslatorAdapter as ZendTranslatorAdapter;
 use Concrete\Core\Localization\Translator\TranslatorAdapterRepositoryInterface;
+use Concrete\Core\Support\Facade\Facade;
 use Core;
 use Exception;
 use Punic\Data as PunicData;
@@ -20,6 +20,36 @@ class Localization
     const BASE_LOCALE = 'en_US';
 
     /**
+     * The context (resolving to en_US) to be considered as the "neutral" one.
+     *
+     * This context must be used for all strings that are system related in concrete5 and should have their own context.
+     * Generally, these are the strings that concrete5 saves in the database, such as package, theme and block type names/descriptions.
+     *
+     * @var string
+     */
+    const CONTEXT_SYSTEM = 'system';
+
+    /**
+     * This is the context for the site interface tranlations.
+     * It contains the page locale, determined by the page-specific locale or by the site section it's contained in.
+     * When there's no locale associated to the current page, this context is associated to the locale specified in the concrete.locale configuration option.
+     *
+     * These are all the translations that the site visitors see on the site.
+     * The editor also sees these strings in the same language as the visitor.
+     *
+     * @var string
+     */
+    const CONTEXT_SITE = 'site';
+
+    /**
+     * The context containing the locale of the current user (fallsback to the concrete.locale configuration option).
+     * This should be the context used when showing the edit dialogs, the concrete5 menus...
+     *
+     * @var string
+     */
+    const CONTEXT_UI = 'ui';
+
+    /**
      * The translator adapter repository to be used.
      *
      * @var TranslatorAdapterRepositoryInterface
@@ -31,7 +61,7 @@ class Localization
      *
      * @var array
      */
-    protected $contextLocales = array();
+    protected $contextLocales = [];
 
     /**
      * The currently active translation context.
@@ -48,15 +78,15 @@ class Localization
      * @see Localization::pushActiveContext()
      * @see Localization::popActiveContext()
      */
-    protected $activeContextQueue = array();
+    protected $activeContextQueue = [];
 
     /**
      * Gets the translator adapter repository.
      *
      * @return TranslatorAdapterRepositoryInterface
      *
-     * @throws Exception In case the translator adapter repository has not been
-     *                   set, an exception is thrown.
+     * @throws Exception in case the translator adapter repository has not been
+     *                   set, an exception is thrown
      */
     public function getTranslatorAdapterRepository()
     {
@@ -64,7 +94,7 @@ class Localization
             // Note: Do NOT call the t() function here as it would cause an
             // infinte loop if the translator adapter repository has not been
             // set.
-            throw new Exception("Translator adapter repository has not been set.");
+            throw new Exception('Translator adapter repository has not been set.');
         }
 
         return $this->translatorAdapterRepository;
@@ -112,7 +142,7 @@ class Localization
      * Change the active translation context, but remember the previous one.
      * Useful when temporarily setting the translation context to something else than the original.
      *
-     * @param string $newContext The new translation context to activate.
+     * @param string $newContext The new translation context to activate (default contexts are defined by the Localization::CONTEXT_... constants).
      *
      * @see Localization::popActiveContext()
      *
@@ -156,8 +186,8 @@ class Localization
      *
      * @return \Concrete\Core\Localization\Translator\TranslatorAdapterInterface
      *
-     * @throws Exception In case trying to fetch an adapter for an unknown
-     *                   context, an exception is thrown.
+     * @throws Exception in case trying to fetch an adapter for an unknown
+     *                   context, an exception is thrown
      */
     public function getTranslatorAdapter($context)
     {
@@ -165,7 +195,7 @@ class Localization
             // Note: Do NOT call the t() function here as it might possibly
             // cause an infinte loop in case this happens with the active
             // context.
-            throw new Exception(sprintf("Context locale has not been set for context: %s", $context));
+            throw new Exception(sprintf('Context locale has not been set for context: %s', $context));
         }
         $locale = $this->contextLocales[$context];
 
@@ -334,7 +364,7 @@ class Localization
      */
     public static function getAvailableInterfaceLanguages()
     {
-        $languages = array();
+        $languages = [];
         $fh = Core::make('helper/file');
 
         if (file_exists(DIR_LANGUAGES)) {
@@ -378,7 +408,7 @@ class Localization
         if (count($languages) > 0) {
             array_unshift($languages, static::BASE_LOCALE);
         }
-        $locales = array();
+        $locales = [];
         foreach ($languages as $lang) {
             $locales[$lang] = self::getLanguageDescription($lang, $displayLocale);
         }
@@ -411,7 +441,7 @@ class Localization
     {
         // cache/expensive should be used by the translator adapters.
         $app = Facade::getFacadeApplication();
-        $app->make('cache/expensive')->flush();
+        $app->make('cache/expensive')->getItem('zend')->clear();
 
         // Also remove the loaded translation adapters so that old strings are
         // not being used from the adapters already in memory.
@@ -422,7 +452,7 @@ class Localization
     /**
      * Load the site language files (must be done after all packages called their setupPackageLocalization).
      *
-     * @deprecated Use \Concrete\Core\Localization\Translator\Adapter\Zend\Translation\Loader\Gettext\SiteTranslationLoader instead.
+     * @deprecated use \Concrete\Core\Localization\Translator\Adapter\Zend\Translation\Loader\Gettext\SiteTranslationLoader instead
      *
      * @param ZendTranslator $translate
      */

@@ -6,6 +6,8 @@ use Concrete\Core\Multilingual\Page\Section\Section;
 use Concrete\Core\Page\Template;
 use Concrete\Core\Page\Type\Composer\Control\CorePageProperty\NameCorePageProperty;
 use Concrete\Core\Page\Type\Composer\FormLayoutSet;
+use Concrete\Core\Permission\AssignableObjectInterface;
+use Concrete\Core\Permission\AssignableObjectTrait;
 use Concrete\Core\Permission\Key\Key;
 use Loader;
 use Concrete\Core\Foundation\Object;
@@ -32,9 +34,11 @@ use Concrete\Core\Page\Type\Composer\FormLayoutSetControl as PageTypeComposerFor
 use Concrete\Core\Page\Collection\Version\VersionList;
 use Concrete\Core\Page\Type\Composer\Control\CorePageProperty\CorePageProperty as CorePagePropertyPageTypeComposerControl;
 
-class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
+class Type extends Object implements \Concrete\Core\Permission\ObjectInterface, AssignableObjectInterface
 {
     protected $ptDefaultPageTemplateID = 0;
+
+    use AssignableObjectTrait;
 
     public function getPageTypeID()
     {
@@ -127,6 +131,16 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
     public function getPermissionObjectKeyCategoryHandle()
     {
         return 'page_type';
+    }
+
+    public function setChildPermissionsToOverride()
+    {
+        return false;
+    }
+
+    public function setPermissionsToOverride()
+    {
+        return false;
     }
 
     public function isPageTypeInternal()
@@ -1144,7 +1158,8 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
         }
         $db = Loader::db();
         $ptID = $this->getPageTypeID();
-        $parent = Page::getByPath(Config::get('concrete.paths.drafts'));
+        $site = \Core::make('site')->getSite();
+        $parent = Page::getByPath(Config::get('concrete.paths.drafts'), 'RECENT', $site);
         $data = array('cvIsApproved' => 0, 'cIsActive' => false, 'cAcquireComposerOutputControls' => true);
         $p = $parent->add($this, $data, $pt);
 

@@ -2,6 +2,7 @@
 namespace Concrete\Core\Application;
 
 use Concrete\Core\Block\BlockType\BlockType;
+use Concrete\Core\Cache\CacheClearer;
 use Concrete\Core\Cache\Page\PageCache;
 use Concrete\Core\Cache\Page\PageCacheRecord;
 use Concrete\Core\Cache\OpCache;
@@ -33,6 +34,8 @@ use Concrete\Core\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 use View;
+use Concrete\Core\Package\PackageService;
+use Exception;
 
 class Application extends Container
 {
@@ -81,12 +84,6 @@ class Application extends Container
                 $connection->close();
             }
         }
-        if ($config->get('concrete.cache.overrides')) {
-            Environment::saveCachedEnvironmentObject();
-        } else {
-            $env = Environment::get();
-            $env->clearOverrideCache();
-        }
         exit;
     }
 
@@ -108,48 +105,7 @@ class Application extends Container
      */
     public function clearCaches()
     {
-        \Events::dispatch('on_cache_flush');
-
-        $this['cache']->flush();
-        $this['cache/expensive']->flush();
-
-        $config = $this['config'];
-
-        // Delete and re-create the cache directory
-        $cacheDir = $config->get('concrete.cache.directory');
-        if (is_dir($cacheDir)) {
-            $fh = Core::make('helper/file');
-            $fh->removeAll($cacheDir, true);
-        }
-        $this->setupFilesystem();
-
-        $pageCache = PageCache::getLibrary();
-        if (is_object($pageCache)) {
-            $pageCache->flush();
-        }
-
-        // Clear the file thumbnail path cache
-        $connection = $this['database'];
-        $sql = $connection->getDatabasePlatform()->getTruncateTableSQL('FileImageThumbnailPaths');
-        try {
-            $connection->executeUpdate($sql);
-        } catch (\Exception $e) {
-        }
-
-        // clear the environment overrides cache
-        $env = \Environment::get();
-        $env->clearOverrideCache();
-
-        // Clear localization cache
-        Localization::clearCache();
-
-        // clear block type cache
-        BlockType::clearCache();
-
-        // Clear precompiled script bytecode caches
-        OpCache::clear();
-
-        \Events::dispatch('on_cache_flush_end');
+        $this->make(CacheClearer::class)->flush();
     }
 
     /**
@@ -196,13 +152,10 @@ class Application extends Container
                 }
 
                 if (strlen($url)) {
-                    $ch = curl_init($url);
-                    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-                    curl_setopt($ch, CURLOPT_HEADER, 0);
-                    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 1);
-                    curl_setopt($ch, CURLOPT_TIMEOUT, 1);
-                    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, $config->get('app.curl.verifyPeer'));
-                    $res = curl_exec($ch);
+                    try {
+                        $this->make('http/client')->setUri($url)->send();
+                    } catch (Exception $x) {
+                    }
                 }
             }
         }
@@ -215,7 +168,7 @@ class Application extends Container
     {
         if ($this->installed === null) {
             if (!$this->isShared('config')) {
-                throw new \Exception('Attempting to check install status before application initialization.');
+                throw new Exception('Attempting to check install status before application initialization.');
             }
 
             $this->installed = $this->make('config')->get('concrete.installed');
@@ -278,8 +231,6 @@ class Application extends Container
      */
     public function setupPackages()
     {
-        $checkAfterStart = false;
-
         $config = $this['config'];
 
         $loc = Localization::getInstance();
@@ -292,40 +243,26 @@ class Application extends Container
                 $pkgInstalledVersion = $dbPkg->getPackageVersion();
                 $pkgFileVersion = $pkg->getPackageVersion();
                 if (version_compare($pkgFileVersion, $pkgInstalledVersion, '>')) {
-                    $loc->pushActiveContext('system');
+                    $loc->pushActiveContext(Localization::CONTEXT_SYSTEM);
                     $dbPkg->upgradeCoreData();
                     $dbPkg->upgrade();
                     $loc->popActiveContext();
                 }
             }
-
-            $service = $this->make('Concrete\Core\Package\PackageService');
-            $service->setupLocalization($pkg);
         }
-        $config->set('app.bootstrap.packages_loaded', true);
+        $packagesWithOnAfterStart = [];
+        $service = $this->make(PackageService::class);
         foreach ($this->packages as $pkg) {
             if (method_exists($pkg, 'on_start')) {
                 $pkg->on_start();
             }
-
             $service->bootPackageEntityManager($pkg);
-
             if (method_exists($pkg, 'on_after_packages_start')) {
-                $checkAfterStart = true;
+                $packagesWithOnAfterStart[] = $pkg;
             }
         }
-
-        // After package initialization, the translations adapters need to be
-        // reinitialized when accessed the next time because new translations
-        // are now available.
-        $loc->removeLoadedTranslatorAdapters();
-
-        if ($checkAfterStart) {
-            foreach ($this->packages as $pkg) {
-                if (method_exists($pkg, 'on_after_packages_start')) {
-                    $pkg->on_after_packages_start();
-                }
-            }
+        foreach ($packagesWithOnAfterStart as $pkg) {
+            $pkg->on_after_packages_start();
         }
     }
 

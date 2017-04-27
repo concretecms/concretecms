@@ -381,10 +381,7 @@ class DatabaseStructureManager
         }
     }
 
-    /**
-     * Clears cache, regenerates all proxy classes, and updates metadatas in all entity managers
-     */
-    public function refreshEntities()
+    public function clearCacheAndProxies()
     {
         $config = $this->entityManager->getConfiguration();
 
@@ -396,6 +393,16 @@ class DatabaseStructureManager
         // Next, we regnerate proxies
         $metadatas = $this->entityManager->getMetadataFactory()->getAllMetadata();
         $this->entityManager->getProxyFactory()->generateProxyClasses($metadatas, \Config::get('database.proxy_classes'));
+        return $metadatas;
+    }
+
+    /**
+     * Clears cache, regenerates all proxy classes, and updates metadatas in all entity managers
+     */
+    public function refreshEntities()
+    {
+
+        $metadatas = $this->clearCacheAndProxies();
 
         // Finally, we update the schema
         $tool = new SchemaTool($this->entityManager);

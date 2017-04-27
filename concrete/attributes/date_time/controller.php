@@ -16,7 +16,9 @@ class Controller extends AttributeTypeController
 
     protected $searchIndexFieldDefinition = ['type' => 'datetime', 'options' => ['notnull' => false]];
 
+    protected $akUseNowIfEmpty = null;
     protected $akDateDisplayMode = null;
+    protected $akTimeResolution = null;
 
     public function getIconFormatter()
     {
@@ -25,8 +27,18 @@ class Controller extends AttributeTypeController
 
     public function saveKey($data)
     {
+        if (!is_array($data)) {
+            $data = [];
+        }
+        $data += [
+            'akUseNowIfEmpty' => false,
+        ];
         $type = $this->getAttributeKeySettings();
+        $type->setUseNowIfEmpty($data['akUseNowIfEmpty']);
         $type->setMode($data['akDateDisplayMode']);
+        if (isset($data['akTimeResolution'])) {
+            $type->setTimeResolution($data['akTimeResolution']);
+        }
 
         return $type;
     }
@@ -63,20 +75,22 @@ class Controller extends AttributeTypeController
     {
         $this->load();
         $datetime = $this->getDateTime();
+        if ($datetime === null && $this->akUseNowIfEmpty) {
+            $datetime = new DateTime();
+        }
         switch ($this->akDateDisplayMode) {
             case 'text':
+                $dh = $this->app->make('helper/date');
+                $format = $dh->getPHPDateTimePattern();
                 if ($datetime === null) {
                     $value = '';
+                    $placeholder = $dh->formatCustom($format, 'now');
                 } else {
-                    $dh = $this->app->make('helper/date');
-                    /* @var \Concrete\Core\Localization\Service\Date $dh */
-                    $value = $dh->formatCustom(
-                        t(/*i18n: Short date/time format: see http://www.php.net/manual/en/function.date.php */ 'n/j/Y g.i A'),
-                        $datetime
-                    );
+                    $value = $dh->formatCustom($format, $datetime);
+                    $placeholder = $value;
                 }
                 $form = $this->app->make('helper/form');
-                echo $form->text($this->field('value'), $value);
+                echo $form->text($this->field('value'), $value, ['placeholder' => $placeholder]);
                 break;
             case 'date':
                 $this->requireAsset('jquery/ui');
@@ -88,7 +102,7 @@ class Controller extends AttributeTypeController
                 $this->requireAsset('jquery/ui');
                 $dt = $this->app->make('helper/form/date_time');
                 /* @var \Concrete\Core\Form\Service\Widget\DateTime $dt */
-                echo $dt->datetime($this->field('value'), $datetime);
+                echo $dt->datetime($this->field('value'), $datetime, false, true, null, $this->akTimeResolution);
                 break;
         }
     }
@@ -97,7 +111,9 @@ class Controller extends AttributeTypeController
     {
         $this->load();
         $type = $akey->addChild('type');
+        $type->addAttribute('use-now-if-empty', $this->akUseNowIfEmpty ? 1 : 0);
         $type->addAttribute('mode', $this->akDateDisplayMode);
+        $type->addAttribute('time-resolution', $this->akTimeResolution);
 
         return $akey;
     }
@@ -106,7 +122,9 @@ class Controller extends AttributeTypeController
     {
         $type = $this->getAttributeKeySettings();
         if (isset($akey->type)) {
-            $type->setDisplayMode((string) $akey->type['mode']);
+            $type->setUseNowIfEmpty($akey->type['use-now-if-empty']);
+            $type->setMode($akey->type['mode']);
+            $type->setTimeResolution($akey->type['time-resolution']);
         }
 
         return $type;
@@ -186,7 +204,7 @@ class Controller extends AttributeTypeController
                     $dh = $this->app->make('helper/date');
                     try {
                         $datetime = DateTime::createFromFormat(
-                            t(/*i18n: Short date/time format: see http://www.php.net/manual/en/function.date.php */ 'n/j/Y g.i A'),
+                            $dh->getPHPDateTimePattern(),
                             $data['value'],
                             $dh->getTimezone('user')
                          );
@@ -221,8 +239,12 @@ class Controller extends AttributeTypeController
          * @var $type DateTimeType
          */
 
+        $this->akUseNowIfEmpty = $type->getUseNowIfEmpty();
+        $this->set('akUseNowIfEmpty', $this->akUseNowIfEmpty);
         $this->akDateDisplayMode = (string) $type->getMode();
         $this->set('akDateDisplayMode', $this->akDateDisplayMode);
+        $this->akTimeResolution = $type->getTimeResolution();
+        $this->set('akTimeResolution', $this->akTimeResolution);
     }
 
     public function getAttributeKeySettingsClass()

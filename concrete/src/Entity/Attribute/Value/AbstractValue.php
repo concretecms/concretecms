@@ -2,7 +2,9 @@
 namespace Concrete\Core\Entity\Attribute\Value;
 
 use Concrete\Core\Attribute\AttributeValueInterface;
+use Concrete\Core\Attribute\View;
 use Concrete\Core\Entity\Attribute\Key\Key;
+use Concrete\Core\Form\Control\ValueInterface;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -94,7 +96,6 @@ abstract class AbstractValue implements AttributeValueInterface
         if (is_object($value)) {
             return $value->getValue();
         }
-
     }
 
     /**

@@ -63,11 +63,7 @@ class DeletePageRequest extends PageRequest
         $c = Page::getByID($this->getRequestedPageID());
         if ($c->getPageTypeHandle() == STACKS_PAGE_TYPE) {
             $c = Stack::getByID($this->getRequestedPageID());
-            if ($c->getStackType() == Stack::ST_TYPE_GLOBAL_AREA && $c->isNeutralStack()) {
-                $c->cloneVersion(t('Global Area emptied'), true);
-            } else {
-                $c->delete();
-            }
+            $c->delete();
             $wpr = new WorkflowProgressResponse();
             $wpr->setWorkflowProgressResponseURL(URL::to('/dashboard/blocks/stacks', 'stack_deleted'));
 

@@ -21,8 +21,12 @@ class Driver implements DriverInterface
      * @param \Doctrine\Common\Persistence\Mapping\Driver\MappingDriver $driver
      */
     public function __construct($namespace, MappingDriver $driver)
-    {
-        $this->namespace = $namespace;
+    {   
+        // Important: Doctrine internally works with namespaces that don't start 
+        // with a backslash. If a namespace which starts with a backslash 
+        // is provided, doctrine wouldn't find it in the DriverChain and 
+        // through a MappingException
+        $this->namespace = ltrim($namespace, '\\');
         $this->driver = $driver;
     }
     

@@ -15,6 +15,7 @@ if ($entity) { ?>
 
     <?php if ($enableSearch) { ?>
         <form method="get" action="<?=$c->getCollectionLink()?>">
+            <?php if ($enableKeywordSearch) { ?>
             <div class="form-inline">
                 <div class="form-group">
                     <?=$form->label('keywords', t('Keyword Search'))?>
@@ -27,9 +28,12 @@ if ($entity) { ?>
                 <?php } ?>
             </div>
 
+            <?php } ?>
+
             <?php if (count($tableSearchProperties)) { ?>
                 <div data-express-entry-list-advanced-search-fields="<?=$bID?>"
                      class="ccm-block-express-entry-list-advanced-search-fields">
+                    <h3><?=t('Search Entries')?></h3>
                     <input type="hidden" name="advancedSearchDisplayed" value="">
                     <?php foreach($tableSearchProperties as $ak) { ?>
                         <h4><?=$ak->getAttributeKeyDisplayName()?></h4>
@@ -123,7 +127,8 @@ if ($entity) { ?>
     <script type="text/javascript">
         $(function() {
             $.concreteExpressEntryList({
-                'bID': '<?=$bID?>'
+                'bID': '<?=$bID?>',
+                'hideFields': <?php $enableKeywordSearch && !$_REQUEST['advancedSearchDisplayed'] ? print 'true' : print 'false'; ?>
             });
         });
     </script>

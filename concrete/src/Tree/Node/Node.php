@@ -216,7 +216,7 @@ abstract class Node extends Object implements \Concrete\Core\Permission\ObjectIn
                     $childnode->populateDirectChildrenOnly();
                 }
 
-                $childnode->selectChildrenNodesByID($nodeID, $populateMissingChildren);
+                $childnode->selectChildrenNodesByID($nodeID, $loadMissingChildren);
             }
         }
     }
@@ -628,6 +628,7 @@ abstract class Node extends Object implements \Concrete\Core\Permission\ObjectIn
         if ($row && $row['treeNodeID']) {
             $tt = TreeNodeType::getByID($row['treeNodeTypeID']);
             $node = Core::make($tt->getTreeNodeTypeClass());
+            $row['treeNodeTypeHandle'] = $tt->getTreeNodeTypeHandle();
             $node->setPropertiesFromArray($row);
             $node->loadDetails();
 

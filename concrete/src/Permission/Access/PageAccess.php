@@ -1,8 +1,18 @@
 <?php
 namespace Concrete\Core\Permission\Access;
 
-class PageAccess extends Access
+use Concrete\Core\Permission\Access\SiteAccessInterface;
+
+class PageAccess extends Access implements SiteAccessInterface
 {
+
+    public function getSite()
+    {
+        $cID = $this->getPermissionObject()->getCollectionID();
+        $page = \Page::getByID($cID);
+        return $page->getSite();
+    }
+
     public static function usePermissionCollectionIDForIdentifier()
     {
         static $usePermissionsCollectionID;

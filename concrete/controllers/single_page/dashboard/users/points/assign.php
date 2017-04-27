@@ -57,7 +57,7 @@ class Assign extends DashboardPageController
         $user = $this->post('upUser');
         if (is_numeric($user)) {
             // rolling as user id
-            $ui = UserInfo::getByUserID($user);
+            $ui = UserInfo::getByID($user);
         } else {
             $ui = UserInfo::getByUserName($user);
             // look up userID
@@ -101,7 +101,7 @@ class Assign extends DashboardPageController
         $userPointActions = $upal->get(0);
         if (is_array($userPointActions) && count($userPointActions)) {
             foreach ($userPointActions as $upa) {
-                $res[$upa['upaID']] = h($upa['upaDefaultPoints']." - ".$upa['upaName']);
+                $res[$upa['upaID']] = h($upa['upaDefaultPoints']." - ".t($upa['upaName']));
             }
         }
 

@@ -3,18 +3,18 @@ namespace Concrete\Core\File\Image;
 
 use Concrete\Core\Application\ApplicationAwareInterface;
 use Concrete\Core\Application\ApplicationAwareTrait;
+use Concrete\Core\Entity\File\File;
 use Concrete\Core\Entity\File\StorageLocation\StorageLocation;
 use Concrete\Core\File\Image\Thumbnail\ThumbnailerInterface;
+use Concrete\Core\File\Image\Thumbnail\Type\CustomThumbnail;
 use Concrete\Core\File\StorageLocation\Configuration\DefaultConfiguration;
 use Concrete\Core\File\StorageLocation\StorageLocationInterface;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
+use Exception;
 use Image;
 use Imagine\Image\Box;
 use Imagine\Image\ImageInterface;
-use Concrete\Core\Entity\File\File;
-use Exception;
-use stdClass;
 
 class BasicThumbnailer implements ThumbnailerInterface, ApplicationAwareInterface
 {
@@ -273,28 +273,36 @@ class BasicThumbnailer implements ThumbnailerInterface, ApplicationAwareInterfac
             $filename = $baseFilename . '.' . $extension;
         }
 
-        $abspath = '/cache/' . $filename;
+        $abspath = '/cache/thumbnails/' . $filename;
 
-        $src = $configuration->getPublicURLToFile($abspath);
+        if ($obj instanceof File) {
+            $customThumb = new CustomThumbnail($maxWidth, $maxHeight, $abspath, false);
 
-        /* Attempt to create the image */
-        if (!$filesystem->has($abspath)) {
-            if ($obj instanceof File && $fr->exists()) {
-                $image = Image::load($fr->read());
-            } else {
-                $image = Image::open($obj);
+            $path_resolver = $this->app->make('Concrete\Core\File\Image\Thumbnail\Path\Resolver');
+            $path_resolver->getPath($obj->getVersion(), $customThumb);
+        } else { // @TODO This is a path or url and doesn't have a file object, so we just make the thumbnail now...
+            if (!$filesystem->has($abspath)) {
+                try {
+                    $image = \Image::open($obj);
+                    // create image there
+                    $this->create($image,
+                        $abspath,
+                        $maxWidth,
+                        $maxHeight,
+                        $crop,
+                        $thumbnailsFormat);
+                } catch (\Exception $e) {
+                    $abspath = false;
+                }
             }
-            // create image there
-            $this->create($image,
-                $abspath,
-                $maxWidth,
-                $maxHeight,
-                $crop,
-                $thumbnailsFormat
-            );
         }
 
-        $thumb = new stdClass();
+        $src = '';
+        if ($abspath) {
+            $src = $configuration->getPublicURLToFile($abspath);
+        }
+
+        $thumb = new \stdClass();
         $thumb->src = $src;
 
         // this is a hack, but we shouldn't go out on the network if we don't have to. We should probably

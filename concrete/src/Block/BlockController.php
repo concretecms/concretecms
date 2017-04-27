@@ -55,6 +55,13 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
     protected $identifier;
     protected $btTable = null;
 
+    /**
+     * Set this to true if the data sent to the save/performSave methods can contain NULL values that should be persisted.
+     *
+     * @var bool
+     */
+    protected $supportSavingNullValues = false;
+
     public function getBlockTypeInSetName()
     {
         return $this->getBlockTypeName();
@@ -140,11 +147,12 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
     }
 
     /**
-     * Run when a block is added or edited. Automatically saves block data against the block's database table. If a block needs to do more than this (save to multiple tables, upload files, etc... it should override this.
+     * Persist the block options.
      *
-     * @param array $args
+     * @param array $args An array that contains the block options
+     * @param bool $loadExisting Shall we initialize the record to be saved with the current data?
      */
-    public function save($args)
+    protected function performSave($args, $loadExisting = false)
     {
         //$argsMerged = array_merge($_POST, $args);
         if ($this->btTable) {
@@ -152,11 +160,24 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
             $columns = $db->MetaColumnNames($this->btTable);
             $this->record = new BlockRecord($this->btTable);
             $this->record->bID = $this->bID;
-            foreach ($columns as $key) {
-                if (isset($args[$key])) {
-                    $this->record->{$key} = $args[$key];
+            if ($loadExisting) {
+                $this->record->Load('bID=' . $this->bID);
+            }
+
+            if ($this->supportSavingNullValues) {
+                foreach ($columns as $key) {
+                    if (array_key_exists($key, $args)) {
+                        $this->record->{$key} = $args[$key];
+                    }
+                }
+            } else {
+                foreach ($columns as $key) {
+                    if (isset($args[$key])) {
+                        $this->record->{$key} = $args[$key];
+                    }
                 }
             }
+
             $this->record->Replace();
             if ($this->cacheBlockRecord() && Config::get('concrete.cache.blocks')) {
                 $record = base64_encode(serialize($this->record));
@@ -164,6 +185,16 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
                 $db->Execute('update Blocks set btCachedBlockRecord = ? where bID = ?', [$record, $this->bID]);
             }
         }
+    }
+
+    /**
+     * Run when a block is added or edited. Automatically saves block data against the block's database table. If a block needs to do more than this (save to multiple tables, upload files, etc... it should override this.
+     *
+     * @param array $args
+     */
+    public function save($args)
+    {
+        $this->performSave($args);
     }
 
     public function cacheBlockRecord()

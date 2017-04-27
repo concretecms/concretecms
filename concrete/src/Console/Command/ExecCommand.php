@@ -11,13 +11,14 @@ class ExecCommand extends Command
 {
     protected function configure()
     {
+        $errExitCode = static::RETURN_CODE_ON_FAILURE;
         $this
             ->setName('c5:exec')
             ->setDescription('Execute a PHP script within the concrete5 environment')
             ->addEnvOption()
             ->addArgument('script', InputArgument::REQUIRED, 'The path of the script to be executed')
             ->addArgument('arguments', InputArgument::IS_ARRAY, 'The arguments to pass to the script')
-        ->setHelp(<<<EOT
+            ->setHelp(<<<EOT
 In the included script you'll have these variables:
 - \$input: an instance of \Symfony\Component\Console\Input\InputInterface
 - \$output: an instance of \Symfony\Component\Console\Input\OutputInterface
@@ -27,30 +28,22 @@ To specify the command return code, define an int variable named '\$rc'.
 
 Returns codes:
   0 operation completed successfully
-  1 errors occurred
+  $errExitCode errors occurred
 
 More info at http://documentation.concrete5.org/developers/appendix/cli-commands#c5-exec
 EOT
             )
-            ;
+        ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        try {
-            if (!is_file($input->getArgument('script'))) {
-                throw new Exception(sprintf('Unable to find the file %s', $input->getArgument('script')));
-            }
-            $args = $input->getArgument('arguments');
-            require $input->getArgument('script');
-            if (!isset($rc)) {
-                $rc = 0;
-            }
-        } catch (Exception $x) {
-            $output->writeln('<error>' . $x->getMessage() . '</error>');
-            $rc = 1;
+        if (!is_file($input->getArgument('script'))) {
+            throw new Exception(sprintf('Unable to find the file %s', $input->getArgument('script')));
         }
+        $args = $input->getArgument('arguments');
+        require $input->getArgument('script');
 
-        return $rc;
+        return isset($rc) ? $rc : 0;
     }
 }

@@ -84,12 +84,18 @@ class Menu extends ElementController
         return false;
     }
 
-    public function getChildPages($parent)
+    protected function getPageList($parent)
     {
         $list = new PageList();
         $list->filterByExcludeNav(false);
         $list->sortByDisplayOrder();
         $list->filterByParentID($parent->getCollectionID());
+        return $list;
+    }
+
+    public function getChildPages($parent)
+    {
+        $list = $this->getPageList($parent);
         $pages = $list->getResults();
         return $pages;
     }

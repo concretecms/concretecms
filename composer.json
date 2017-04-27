@@ -4,14 +4,20 @@
   "description": "concrete5 open source CMS",
   "type": "project",
   "keywords": [ "concrete5", "CMS", "concreteCMS" ],
+  "minimum-stability": "stable",
+  "prefer-stable": true,
   "archive": {
     "exclude": [
       "/tests", "/build", "/.github", "/.gitattributes", "/.travis.yml", "/CONTRIBUTING.md", "/phpunit.xml"
     ]
   },
   "require": {
-    "wikimedia/composer-merge-plugin": "~1.3",
-    "composer/installers": "^1.2"
+    "wikimedia/composer-merge-plugin": "~1.3"
+  },
+  "require-dev": {
+    "squizlabs/php_codesniffer": "^2.7",
+    "phpunit/phpunit": "^4",
+    "phpunit/dbunit": "^2.0"
   },
   "config": {
     "process-timeout": 0,
@@ -40,18 +46,11 @@
       "Concrete\\Tests\\": "tests/tests"
     }
   },
-  "require-dev": {
-    "squizlabs/php_codesniffer": "^2.7"
-  },
   "scripts": {
     "test": "phpunit",
     "phpcs": [
-      "./concrete/vendor/bin/phpcs -p -s --colors --report=full --standard=psr2 --sniffs=Generic.WhiteSpace.DisallowTabIndent,Generic.PHP.DisallowShortOpenTag concrete/src concrete/controllers",
-      "./concrete/vendor/bin/phpcs -p -s --colors --report=full --standard=psr2 --sniffs=Generic.PHP.DisallowShortOpenTag --ignore=\"*.js,*.css,*.less,concrete/vendor/*,concrete/src/*,concrete/controllers/*\" concrete"
-    ],
-    "phpcsw": [
-      ".\\concrete\\vendor\\bin\\phpcs -p -s --report=full --standard=psr2 --sniffs=Generic.WhiteSpace.DisallowTabIndent,Generic.PHP.DisallowShortOpenTag concrete/src concrete/controllers",
-      ".\\concrete\\vendor\\bin\\phpcs -p -s --report=full --standard=psr2 --sniffs=Generic.PHP.DisallowShortOpenTag --ignore=\"*.js,*.css,*.less,concrete/vendor/*,concrete/src/*,concrete/controllers/*\" concrete"
+      "phpcs -p -s --report=full --standard=psr2 --sniffs=Generic.WhiteSpace.DisallowTabIndent,Generic.PHP.DisallowShortOpenTag concrete/src concrete/controllers",
+      "phpcs -p -s --report=full --standard=psr2 --sniffs=Generic.PHP.DisallowShortOpenTag --ignore=\"*.js,*.css,*.less,concrete/vendor/*,concrete/src/*,concrete/controllers/*\" concrete"
     ],
     "post-create-project-cmd": [
       "composer config --unset platform.php"

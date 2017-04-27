@@ -30,6 +30,7 @@ use Concrete\Core\Page\Page;
 use Concrete\Core\Page\Single as SinglePage;
 use Concrete\Block\ExpressForm\Controller as ExpressFormBlockController;
 use Concrete\Core\Support\Facade\Facade;
+use Concrete\Core\Localization\Localization;
 
 class Version20160725000000 extends AbstractMigration
 {
@@ -865,7 +866,7 @@ class Version20160725000000 extends AbstractMigration
         }
 
         if (!is_object($site) || $site->getSiteID() < 1) {
-            $locale = 'en_US';
+            $locale = Localization::BASE_LOCALE;
             if (\Config::get('concrete.multilingual.default_locale')) {
                 $locale = \Config::get('concrete.multilingual.default_locale');
             } else if (\Config::get('concrete.locale')) { // default app language

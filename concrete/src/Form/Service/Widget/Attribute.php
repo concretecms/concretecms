@@ -1,6 +1,9 @@
 <?php
 namespace Concrete\Core\Form\Service\Widget;
 
+/**
+ * @deprecated
+ */
 class Attribute
 {
     protected $obj;

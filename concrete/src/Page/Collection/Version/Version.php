@@ -10,10 +10,12 @@ use Page;
 use PageType;
 use Permissions;
 use User;
+use Concrete\Core\Attribute\ObjectInterface as AttributeObjectInterface;
+use Concrete\Core\Permission\ObjectInterface as PermissionObjectInterface;
 use Concrete\Core\Feature\Assignment\CollectionVersionAssignment as CollectionVersionFeatureAssignment;
 use Concrete\Core\Support\Facade\Facade;
 
-class Version extends Object implements \Concrete\Core\Permission\ObjectInterface
+class Version extends Object implements PermissionObjectInterface, AttributeObjectInterface
 {
     use ObjectTrait;
 

@@ -55,6 +55,12 @@ class Controller extends AttributeTypeController
         $form_selector = $this->app->make('form/express/entry_selector');
         print $form_selector->selectEntry($this->getEntity(), $this->field('value'), $entry);
     }
+    
+    public function searchForm($list)
+    {
+        $list->filterByAttribute($this->attributeKey->getAttributeKeyHandle(), '%' . $this->request('value') . '%', 'like');
+        return $list;
+    }
 
 
     public function getSearchIndexValue()

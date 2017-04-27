@@ -6,6 +6,7 @@ use Concrete\Core\Attribute\Key\CollectionKey as CollectionAttributeKey;
 use Concrete\Core\Entity\Attribute\Value\Value\SelectValue;
 use Database;
 use Core;
+use Concrete\Core\Localization\Service\Date;
 
 defined('C5_EXECUTE') or die('Access Denied.');
 
@@ -42,6 +43,11 @@ class Controller extends BlockController
         return t("Page Attribute Display");
     }
 
+    public function add()
+    {
+        $this->dateFormat = $this->app->make('date')->getPHPDateTimePattern();
+    }
+
     /**
      * @return mixed AttributeValue
      */
@@ -67,27 +73,31 @@ class Controller extends BlockController
                 break;
             default:
                 $content = $c->getAttribute($this->attributeHandle);
-                $content_alt = $c->getAttributeValue($this->attributeHandle);
-                if (is_object($content) && $content instanceof \Concrete\Core\Entity\File\File) {
-                    if ($this->thumbnailWidth > 0 || $this->thumbnailHeight > 0) {
-                        $im = Core::make('helper/image');
-                        $thumb = $im->getThumbnail(
-                            $content,
-                            $this->thumbnailWidth,
-                            $this->thumbnailHeight
-                        ); //<-- set these 2 numbers to max width and height of thumbnails
-                        $content = "<img src=\"{$thumb->src}\" width=\"{$thumb->width}\" height=\"{$thumb->height}\" alt=\"\" />";
-                    } else {
-                        $image = Core::make('html/image', [$content]);
-                        $content = (string) $image->getTag();
-                    }
-                } elseif (is_object($content_alt)) {
-                    if (is_array($content) && $content[0] instanceof \Concrete\Core\Tree\Node\Type\Topic) {
-                        $content = str_replace(', ', "\n", $content_alt->getDisplayValue());
-                    } elseif ($content instanceof SelectValue) {
-                        $content = (string) $content;
-                    } else {
-                        $content = $content_alt->getDisplayValue();
+                if ($content instanceof \DateTime) {
+                    $content = $content->format(Date::DB_FORMAT);
+                } else {
+                    $content_alt = $c->getAttributeValue($this->attributeHandle);
+                    if (is_object($content) && $content instanceof \Concrete\Core\Entity\File\File) {
+                        if ($this->thumbnailWidth > 0 || $this->thumbnailHeight > 0) {
+                            $im = Core::make('helper/image');
+                            $thumb = $im->getThumbnail(
+                                $content,
+                                $this->thumbnailWidth,
+                                $this->thumbnailHeight
+                            ); //<-- set these 2 numbers to max width and height of thumbnails
+                            $content = "<img src=\"{$thumb->src}\" width=\"{$thumb->width}\" height=\"{$thumb->height}\" alt=\"\" />";
+                        } else {
+                            $image = Core::make('html/image', [$content]);
+                            $content = (string) $image->getTag();
+                        }
+                    } elseif (is_object($content_alt)) {
+                        if (is_array($content) && $content[0] instanceof \Concrete\Core\Tree\Node\Type\Topic) {
+                            $content = str_replace(', ', "\n", $content_alt->getDisplayValue());
+                        } elseif ($content instanceof SelectValue) {
+                            $content = (string) $content;
+                        } else {
+                            $content = $content_alt->getDisplayValue();
+                        }
                     }
                 }
                 break;

@@ -35,7 +35,7 @@
             <td><?php echo $locale->getLanguageText() ?></td>
             <td><?php echo $locale->getLocale() ?></td>
             <td><?php if (!$locale->getIsDefault()) { ?><a data-dialog-title="<?= t('Delete Locale') ?>"
-                                                           data-dialog="delete-section-<?= $locale->getSiteLocaleID() ?>"
+                                                           data-dialog="delete-section-<?= $locale->getLocaleID() ?>"
                                                            href="#" class="icon-link"><i
                             class="fa fa-trash"></i></a><?php } ?></td>
         </tr>
@@ -46,17 +46,17 @@
 foreach ($locales as $locale) {
     if (!$locale->getIsDefault() && $u->isSuperUser()) { ?>
         <div style="display: none">
-            <div data-dialog-wrapper="delete-section-<?= $locale->getSiteLocaleID() ?>">
+            <div data-dialog-wrapper="delete-section-<?= $locale->getLocaleID() ?>">
                 <?php if ($u->isSuperUser()) { ?>
-                    <form data-form="delete-locale-<?= $locale->getSiteLocaleID() ?>" method="post"
+                    <form data-form="delete-locale-<?= $locale->getLocaleID() ?>" method="post"
                           action="<?= $view->action('remove_locale_section') ?>">
                         <?= $token->output('remove_locale_section') ?>
-                        <input type="hidden" name="siteLocaleID" value="<?= $locale->getSiteLocaleID() ?>">
+                        <input type="hidden" name="siteLocaleID" value="<?= $locale->getLocaleID() ?>">
                         <p><?= t('Delete this multilingual section? This will remove the entire site tree and its content from your website.') ?></p>
                         <div class="dialog-buttons">
                             <button class="btn btn-default" data-dialog-action="cancel"><?= t('Cancel') ?></button>
                             <button class="btn btn-danger pull-right"
-                                    onclick="$('form[data-form=delete-locale-<?= $locale->getSiteLocaleID() ?>]').submit()"
+                                    onclick="$('form[data-form=delete-locale-<?= $locale->getLocaleID() ?>]').submit()"
                                     type="submit"><?= t('Delete') ?></button>
                         </div>
                     </form>
@@ -71,9 +71,9 @@ foreach ($locales as $locale) {
 $defaultLocales = array();
 $defaultLocaleID = 0;
 foreach ($locales as $locale) {
-    $defaultLocales[$locale->getSiteLocaleID()] = sprintf('%s (%s)', $locale->getLanguageText(), $locale->getLocale());
+    $defaultLocales[$locale->getLocaleID()] = sprintf('%s (%s)', $locale->getLanguageText(), $locale->getLocale());
     if ($locale->getIsDefault()) {
-        $defaultLocaleID = $locale->getSiteLocaleID();
+        $defaultLocaleID = $locale->getLocaleID();
     }
 }
 ?>
@@ -87,17 +87,29 @@ foreach ($locales as $locale) {
     <div class="form-group">
         <div class="checkbox">
             <label>
-                <?php echo $form->checkbox('useBrowserDetectedLocale', 1, $useBrowserDetectedLocale) ?>
-                <span><?php echo t('Attempt to use visitor\'s locale based on their browser information.') ?></span>
-            </label>
-        </div>
-        <div class="checkbox">
-            <label>
                 <?php echo $form->checkbox('redirectHomeToDefaultLocale', 1, $redirectHomeToDefaultLocale) ?>
                 <span><?php echo t('Redirect home page to default locale.') ?></span>
             </label>
         </div>
+        <div style="margin-left: 20px">
+            <div class="checkbox<?= $redirectHomeToDefaultLocale ? '' : ' disabled' ?>">
+                <label>
+                    <?php echo $form->checkbox('useBrowserDetectedLocale', 1, $useBrowserDetectedLocale, $redirectHomeToDefaultLocale ? [] : ['disabled' => 'disabled']) ?>
+                    <span><?php echo t('Attempt to use visitor\'s locale based on their browser information.') ?></span>
+                </label>
+            </div>
+        </div>
     </div>
+    <script>
+    $(document).ready(function() {
+        $('#redirectHomeToDefaultLocale').on('change', function() {
+            $('#useBrowserDetectedLocale')
+                .prop('disabled', !this.checked)
+                .closest('div.checkbox')[this.checked ? 'removeClass' : 'addClass']('disabled')
+            ;
+        });
+    });
+    </script>
 
     <div class="form-group">
         <label class="control-label"><?php echo t('Site interface source locale');

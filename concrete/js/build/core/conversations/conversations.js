@@ -78,6 +78,7 @@
       var enableOrdering     = (obj.options.enableOrdering);
       var displayPostingForm = (obj.options.displayPostingForm);
       var enableCommentRating = (obj.options.enableCommentRating);
+      var enableTopCommentReviews = (obj.options.enableTopCommentReviews);
       var commentRatingUserID = (obj.options.commentRatingUserID);
       var commentRatingIP = (obj.options.commentRatingIP);
       var addMessageLabel = (obj.options.addMessageLabel) ? obj.options.addMessageLabel : '';
@@ -104,6 +105,7 @@
           'enableOrdering':      enableOrdering,
           'displayPostingForm':  displayPostingForm,
           'enableCommentRating': enableCommentRating,
+          'enableTopCommentReviews': enableTopCommentReviews,
           'commentRatingUserID': commentRatingUserID,
           'commentRatingIP':     commentRatingIP,
           'dateFormat':          dateFormat,
@@ -367,6 +369,7 @@
           'enableOrdering':      obj.options.enableOrdering,
           'displayPostingForm':  obj.options.displayPostingForm,
           'enableCommentRating': obj.options.enableCommentRating,
+          'enableTopCommentReviews': obj.options.enableTopCommentReviews,
           'dateFormat':          obj.options.dateFormat,
           'customDateFormat':    obj.options.customDateFormat,
           'blockAreaHandle':     obj.options.blockAreaHandle,
@@ -395,6 +398,7 @@
       obj.$element.on('click.cnv', '[data-load-page=conversation-message-list]', function() {
         var nextPage = parseInt(obj.$loadmore.attr('data-next-page'));
         var totalPages = parseInt(obj.$loadmore.attr('data-total-pages'));
+        var orderBy = obj.$sortselect.length ? obj.$sortselect.val() : obj.options.orderBy;
         var data = {
           'cnvID':               obj.options.cnvID,
           'cID':                 obj.options.cID,
@@ -405,8 +409,9 @@
           'enablePosting':       enablePosting,
           'addMessageLabel':     addMessageLabel,
           'page':                nextPage,
-          'orderBy':             obj.$sortselect.val(),
+          'orderBy':             orderBy,
           'enableCommentRating': obj.options.enableCommentRating,
+          'enableTopCommentReviews': obj.options.enableTopCommentReviews,
           'dateFormat':          obj.options.dateFormat,
           'customDateFormat':    obj.options.customDateFormat,
           'attachmentsEnabled':  obj.options.attachmentsEnabled,

@@ -457,7 +457,7 @@ require.register("dropzone/lib/dropzone.js", function(exports, require, module){
           }
         }
         if (!messageElement) {
-          messageElement = createElement("<div class=\"message\"><span></span></div>");
+          messageElement = createElement("<div class=\"message\"></div>");
           this.element.appendChild(messageElement);
         }
         span = messageElement.getElementsByTagName("span")[0];
@@ -584,7 +584,7 @@ require.register("dropzone/lib/dropzone.js", function(exports, require, module){
         this.element.setAttribute("enctype", "multipart/form-data");
       }
       if (this.element.classList.contains("dropzone") && !this.element.querySelector(".message")) {
-        this.element.appendChild(createElement("<div class=\"default message\"><span>" + this.options.dictDefaultMessage + "</span></div>"));
+        this.element.appendChild(createElement("<div class=\"default message\">" + this.options.dictDefaultMessage + "</div>"));
       }
       if (this.options.clickable) {
         this.hiddenFileInput = document.createElement("input");

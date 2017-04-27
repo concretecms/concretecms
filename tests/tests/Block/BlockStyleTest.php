@@ -2,8 +2,11 @@
 
 class BlockStyleTest extends PageTestCase
 {
-    public function setUp()
+
+    public function __construct($name = null, array $data = array(), $dataName = '')
     {
+        parent::__construct($name, $data, $dataName);
+
         $this->tables = array_merge($this->tables,
            array('StyleCustomizerInlineStyleSets', 'Blocks', 'AttributeKeyCategories')
         );
@@ -14,7 +17,6 @@ class BlockStyleTest extends PageTestCase
                 'Concrete\Core\Entity\Block\BlockType\BlockType',
             )
         );
-        parent::setUp();
     }
 
     public function testPageStyles()
@@ -39,17 +41,22 @@ class BlockStyleTest extends PageTestCase
         $bt = BlockType::installBlockType('content');
         $b = $c->addBlock($bt, 'Main', array('content' => 'Sample content.'));
         $b->setCustomStyleSet($ps);
-        $this->assertEquals(1, $b->getCustomStyleSetID());
+        $this->assertEquals($ps->getID(), $b->getCustomStyleSetID());
 
-        $b2 = Block::getByID(1, $c, 'Main');
-        $this->assertEquals(1, $b2->getBlockID());
+        $b2 = Block::getByID($b->getBlockID(), $c, 'Main');
+        $this->assertEquals($b->getBlockID(), $b2->getBlockID());
         $style = $b2->getCustomStyle();
         $this->assertInstanceOf('\Concrete\Core\Block\CustomStyle', $style);
 
         $b2->resetCustomStyle();
-
+        $id = $b->getBlockID();
         $css = $style->getCSS();
-        $this->assertEquals('ccm-custom-style-container ccm-custom-style-main-1', $style->getContainerClass());
-        $this->assertEquals('.ccm-custom-style-container.ccm-custom-style-main-1{background-color:#aaa}', $css);
+
+        $this->assertEquals(
+            'ccm-custom-style-container ccm-custom-style-main-' . $id,
+            $style->getContainerClass());
+        $this->assertEquals(
+            '.ccm-custom-style-container.ccm-custom-style-main-' . $id . '{background-color:#aaa}',
+            $css);
     }
 }

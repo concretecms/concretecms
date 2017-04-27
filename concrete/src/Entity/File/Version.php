@@ -4,6 +4,7 @@ namespace Concrete\Core\Entity\File;
 
 use Carbon\Carbon;
 use Concrete\Core\Attribute\Key\FileKey;
+use Concrete\Core\Attribute\ObjectInterface;
 use Concrete\Core\Attribute\ObjectTrait;
 use Concrete\Core\Entity\Attribute\Value\FileValue;
 use Concrete\Core\Entity\File\StorageLocation\StorageLocation;
@@ -44,7 +45,7 @@ use Imagine\Image\Box;
  *     }
  * )
  */
-class Version
+class Version implements ObjectInterface
 {
     use ObjectTrait;
 
@@ -1020,31 +1021,33 @@ class Version
         try {
             $image = $this->getImagineImage();
 
-            /* @var \Imagine\Imagick\Image $image */
-            if (!$imagewidth) {
-                $imagewidth = $image->getSize()->getWidth();
-            }
-            if (!$imageheight) {
-                $imageheight = $image->getSize()->getHeight();
-            }
-
-            foreach ($types as $type) {
-                // delete the file if it exists
-                $this->deleteThumbnail($type);
-
-                // if image is smaller than width, don't create thumbnail
-                if ($imagewidth < $type->getWidth()) {
-                    continue;
+            if ($image) {
+                /* @var \Imagine\Imagick\Image $image */
+                if (!$imagewidth) {
+                    $imagewidth = $image->getSize()->getWidth();
+                }
+                if (!$imageheight) {
+                    $imageheight = $image->getSize()->getHeight();
                 }
 
-                // if image is the same width as thumbnail, and there's no thumbnail height set,
-                // or if a thumbnail height set and the image has a smaller or equal height, don't create thumbnail
-                if ($imagewidth == $type->getWidth() && (!$type->getHeight() || $imageheight <= $type->getHeight())) {
-                    continue;
-                }
+                foreach ($types as $type) {
+                    // delete the file if it exists
+                    $this->deleteThumbnail($type);
 
-                // otherwise file is bigger than thumbnail in some way, proceed to create thumbnail
-                $this->generateThumbnail($type);
+                    // if image is smaller than width, don't create thumbnail
+                    if ($imagewidth < $type->getWidth()) {
+                        continue;
+                    }
+
+                    // if image is the same width as thumbnail, and there's no thumbnail height set,
+                    // or if a thumbnail height set and the image has a smaller or equal height, don't create thumbnail
+                    if ($imagewidth == $type->getWidth() && (!$type->getHeight() || $imageheight <= $type->getHeight())) {
+                        continue;
+                    }
+
+                    // otherwise file is bigger than thumbnail in some way, proceed to create thumbnail
+                    $this->generateThumbnail($type);
+                }
             }
         } catch (\Imagine\Exception\InvalidArgumentException $e) {
             return false;

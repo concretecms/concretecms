@@ -1,7 +1,9 @@
 <?php
 namespace Concrete\Core\Express\Form;
 
-interface FormInterface
+use Concrete\Core\Form\Control\ControlInterface;
+
+interface FormInterface extends ControlInterface
 {
 
     function getFieldSets();

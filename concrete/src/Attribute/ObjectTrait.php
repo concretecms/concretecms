@@ -63,6 +63,7 @@ trait ObjectTrait
      *
      * @param AttributeKeyInterface | string $ak
      * @param mixed $value
+     * @return \Concrete\Core\Entity\Attribute\Value\Value
      */
     public function setAttribute($ak, $value)
     {

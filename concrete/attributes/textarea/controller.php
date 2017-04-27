@@ -10,7 +10,6 @@ use Database;
 
 class Controller extends DefaultController
 {
-    protected $searchIndexFieldDefinition = array('type' => 'text', 'options' => array('default' => null, 'notnull' => false));
 
     public function getIconFormatter()
     {
@@ -54,7 +53,6 @@ class Controller extends DefaultController
     public function form($additionalClass = false)
     {
         $this->load();
-        $this->requireAsset('jquery/ui');
 
         $value = null;
         if (is_object($this->attributeValue)) {
