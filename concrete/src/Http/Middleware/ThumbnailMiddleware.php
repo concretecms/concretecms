@@ -299,8 +299,11 @@ class ThumbnailMiddleware implements MiddlewareInterface, ApplicationAwareInterf
      */
     private function completeBuild(File $file, $thumbnail)
     {
+        $key = $thumbnail;
+        unset($key['path']);
+        unset($key['isBuilt']);
         // Update the database to have "1" for isBuilt
-        $this->connection->update('FileImageThumbnailPaths', ['isBuilt' => '1'], $thumbnail);
+        $this->connection->update('FileImageThumbnailPaths', ['isBuilt' => '1'], $key);
     }
 
     /**
